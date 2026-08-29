@@ -1,0 +1,102 @@
+name: Nightly validation
+
+on:
+  schedule:
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nightly-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CI: true
+
+jobs:
+  coverage:
+    name: Full coverage gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - run: npm run test:coverage
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-coverage
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            coverage/
+            coverage-history.json
+
+  multiuser:
+    name: Multi-user E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      NODE_ENV: test
+      VITE_TEST_BUILD: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run multi-user suite
+        run: npm run e2e:multiuser
+      - name: Upload multi-user artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-multiuser
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results/
+            playwright-report-multiuser/
+            playwright-report/
+
+  performance:
+    name: Performance and scale E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      NODE_ENV: test
+      VITE_TEST_BUILD: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run performance suite
+        run: npm run e2e:nightly -- tests/e2e/perf-scale.nightly.spec.ts
+      - name: Upload performance artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-performance
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results/
+            playwright-report-nightly/
+            playwright-report/

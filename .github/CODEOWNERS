@@ -1,0 +1,36 @@
+# CODEOWNERS — BookmarkForge
+# Sustituye estos placeholders por equipos o usuarios reales de GitHub.
+# Los patrones más específicos tienen prioridad sobre los generales.
+
+* @bookmarkforge/maintainers
+
+# Seguridad y criptografía — revisión obligatoria del equipo de seguridad.
+/src/utils/crypto-core.ts @bookmarkforge/security
+/src/services/EncryptionService.ts @bookmarkforge/security
+/src/services/SecurityVault.ts @bookmarkforge/security
+/src/services/SecureStorage.ts @bookmarkforge/security
+/src/services/security/ @bookmarkforge/security
+/src/services/security-vault/ @bookmarkforge/security
+/server/src/ai-session.ts @bookmarkforge/security
+/server/src/ai-proxy.ts @bookmarkforge/security
+/server/src/license-signing.ts @bookmarkforge/security
+/scripts/check-secrets-in-commit.mjs @bookmarkforge/security
+/scripts/csp-config.js @bookmarkforge/security
+/public/_headers @bookmarkforge/security
+/public/nginx.conf @bookmarkforge/security
+
+# Infraestructura, despliegue y continuidad.
+/.github/ @bookmarkforge/platform
+/Dockerfile @bookmarkforge/platform
+/docker-compose*.yml @bookmarkforge/platform
+/scripts/deploy-prod.mjs @bookmarkforge/platform
+/scripts/rollback.mjs @bookmarkforge/platform
+/scripts/drill-rollback.mjs @bookmarkforge/platform
+/scripts/prod-blindeo-checklist.mjs @bookmarkforge/platform
+
+# Backend e integraciones.
+/server/ @bookmarkforge/backend
+
+# Aplicación y extensión.
+/src/ @bookmarkforge/frontend
+/extension/ @bookmarkforge/frontend

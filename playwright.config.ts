@@ -1,0 +1,65 @@
+import { defineConfig, devices } from "@playwright/test";
+
+const port = Number(process.env.PLAYWRIGHT_PORT ?? 4173);
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`;
+const companionPort = Number(process.env.CRISIS_COMPANION_PORT ?? 8799);
+const signalingPort = Number(process.env.SIGNALING_PORT ?? 8787);
+
+export default defineConfig({
+  testDir: "./tests/e2e",
+  timeout: 60_000,
+  expect: { timeout: 15_000 },
+  fullyParallel: true,
+  forbidOnly: Boolean(process.env.CI),
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 2 : undefined,
+  reporter: process.env.CI
+    ? [["html", { outputFolder: "playwright-report", open: "never" }], ["line"]]
+    : "list",
+  outputDir: "test-results",
+  use: {
+    baseURL,
+    contextOptions: { serviceWorkers: "block" },
+    trace: "retain-on-failure",
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
+    testIdAttribute: "data-testid",
+  },
+  projects: [
+    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+  ],
+  webServer: [
+    {
+      command: `npm run server`,
+      url: `http://127.0.0.1:${signalingPort}/health`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      env: {
+        NODE_ENV: "test",
+        HOST: "127.0.0.1",
+        PORT: String(signalingPort),
+        TRUST_PROXY: "0",
+        AI_SESSION_REQUIRE_LICENSE: "0",
+        GEMINI_API_KEY: "e2e-ai-key",
+        GEMINI_API_BASE: "http://127.0.0.1:9/v1beta/models",
+        WHOP_LICENSE_API_URL: "http://127.0.0.1:9/license",
+        WHOP_API_KEY: "e2e-license-key",
+        SIGNALING_ADMIN_TOKEN: process.env.SIGNALING_ADMIN_TOKEN ?? "e2e-admin-token",
+      },
+    },
+    {
+      command: `npm run dev -- --host 127.0.0.1 --port ${port}`,
+      url: baseURL,
+      reuseExistingServer: !process.env.CI,
+      timeout: 120_000,
+      env: {
+        NODE_ENV: "test",
+        VITE_TEST_BUILD: "true",
+        VITE_FORCE_DEXIE_STORAGE: "true",
+        VITE_P2P_SIGNALING_URL: `ws://127.0.0.1:${signalingPort}`,
+        CRISIS_COMPANION_PORT: String(companionPort),
+        SIGNALING_ADMIN_TOKEN: process.env.SIGNALING_ADMIN_TOKEN ?? "e2e-admin-token",
+      },
+    },
+  ],
+});

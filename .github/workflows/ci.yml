@@ -42,6 +42,11 @@ jobs:
       CI: true
       NODE_ENV: test
       VITE_TEST_BUILD: 'true'
+      VITE_FORCE_DEXIE_STORAGE: 'true'
+      VITE_P2P_SIGNALING_URL: ws://127.0.0.1:8787
+      SIGNALING_ADMIN_TOKEN: e2e-admin-token
+      SIGNALING_PORT: '8787'
+      CRISIS_COMPANION_PORT: '8799'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -52,7 +57,7 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
       - name: Run Playwright E2E
-        run: npm run e2e -- --config=playwright.config.ts
+        run: npm run e2e -- --config=playwright.config.ts --grep-invert "@nightly|@multiuser|@visual"
       - name: Upload Playwright artifacts
         if: always()
         uses: actions/upload-artifact@v4

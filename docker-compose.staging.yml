@@ -1,0 +1,103 @@
+# BookmarkForge local staging only. Never use this file for production.
+# All published ports bind to loopback; mocks are private to the Docker network.
+services:
+  web:
+    # Imagen etiquetada por SHA (igual que prod): permite el rollback
+    # imagen-por-SHA (rollback.mjs CAMINO A) en staging/CI sin rebuild.
+    image: bookmarkforge/web:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+      args:
+        VITE_APP_VERSION: ${VITE_APP_VERSION:-staging}
+        VITE_DB_NAME: ${VITE_DB_NAME:-bookmarkforge_staging}
+        VITE_P2P_SIGNALING_URL: ${VITE_P2P_SIGNALING_URL:-ws://127.0.0.1:18080}
+        VITE_WHOP_CHECKOUT_URL: ${VITE_WHOP_CHECKOUT_URL:-https://example.invalid/staging-checkout}
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      staging:
+        aliases: [bookmarkforge_web]
+    ports:
+      - "127.0.0.1:${HTTP_PORT:-18080}:8080"
+
+  api:
+    # Imagen etiquetada por SHA — ver nota en el servicio web.
+    image: bookmarkforge/api:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    depends_on:
+      ai-mock:
+        condition: service_healthy
+      license-mock:
+        condition: service_healthy
+    environment:
+      NODE_ENV: staging
+      HOST: 0.0.0.0
+      PORT: 8787
+      TRUST_PROXY: "1"
+      GEMINI_API_KEY: staging-ai-key
+      GEMINI_API_BASE: http://ai-mock:8081/v1beta/models
+      AI_SESSION_REQUIRE_LICENSE: "0"
+      AI_SESSION_ORIGINS: http://127.0.0.1:18080,http://localhost:18080
+      AI_PROXY_REDIS_FAILURE_MODE: fail-open
+      WHOP_LICENSE_API_URL: http://license-mock:8082/license
+      WHOP_API_KEY: staging-license-key
+      LICENSE_PROVIDER_ALLOW_HTTP: "1"
+      LICENSE_SIGNING_PRIVATE_KEY_FILE: /run/secrets/license_signing_key
+    secrets: [license_signing_key]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8787/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      staging:
+        aliases: [bookmarkforge_api]
+
+  ai-mock:
+    image: node:22-alpine
+    command: ["node", "/app/scripts/ai-mock.mjs"]
+    volumes: [.:/app:ro]
+    environment:
+      AI_MOCK_PORT: 8081
+      AI_MOCK_KEY: staging-ai-key
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8081/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+    networks: [staging]
+
+  license-mock:
+    image: node:22-alpine
+    command: ["node", "/app/scripts/license-mock.mjs"]
+    volumes: [.:/app:ro]
+    environment:
+      LICENSE_MOCK_PORT: 8082
+      LICENSE_MOCK_KEY: staging-license-key
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8082/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+    networks: [staging]
+
+  # No host port is published. This is intentionally ephemeral and unused by
+  # default; operators may enable it through AI_PROXY_REDIS_URL if needed.
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    networks: [staging]
+
+networks:
+  staging:
+    driver: bridge
+
+secrets:
+  license_signing_key:
+    file: ${STAGING_LICENSE_SIGNING_KEY_FILE:-./server/.license-signing-key.pkcs8}

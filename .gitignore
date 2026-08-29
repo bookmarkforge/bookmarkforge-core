@@ -1,0 +1,31 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+!.env.production.example
+*.pem
+*.key
+*.crt
+server/.license-signing-key.pkcs8
+
+# Dependencies and build output
+node_modules/
+dist/
+dist-extension/
+coverage/
+playwright-report/
+test-results/
+.vite/
+
+# Local runtime state
+*.log
+*.jsonl
+.monitor-state.json
+.api-degradation-history.json
+ci-chunk-report.json
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

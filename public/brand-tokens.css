@@ -1,0 +1,87 @@
+/* ============================================================
+   brand-tokens.css
+   Single source of truth for the BookmarkForge brand tokens used
+   by the static pages (404, offline, privacy-and-terms). Loaded
+   BEFORE each page's own stylesheet so the palette variables and
+   the self-hosted Inter Variable font are available everywhere.
+
+   Mirrors the app's design tokens in src/index.css ("Dark Flat UI
+   with Glow"). NAVY is the brand default; [data-theme="light"]
+   provides the app's light-theme tokens for pages with a toggle.
+
+   Self-hosted fonts keep the local-first / zero-knowledge promise
+   (no external font CDN, no third-party IP log on page load) and
+   stay inside the strict CSP (font-src 'self').
+   ============================================================ */
+
+/* Inter Variable — latin subset */
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url(/fonts/inter-latin-wght-normal.woff2) format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Inter Variable — latin-ext subset */
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url(/fonts/inter-latin-ext-wght-normal.woff2) format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ── Brand default: NAVY "Dark Flat UI" ─────────────────────── */
+:root,
+[data-theme="dark"] {
+  /* Fondos */
+  --bg: #0f1c2e;             /* --bg-primary */
+  --bg-surface: #111e30;     /* --bg-topbar (header/footer/nav) */
+  --bg-card: #1a2a40;        /* --bg-card */
+
+  /* Texto */
+  --text: #e8f0f8;           /* --text-primary */
+  --text-muted: #b9d4ea;     /* --text-secondary / --text-muted */
+
+  /* Acento / brand */
+  --accent: #00aeef;         /* --accent-primary */
+  --accent-strong: #0d7fc4;  /* --accent-secondary */
+  --accent-soft: rgba(0, 174, 239, 0.10);
+  --accent-glow: rgba(0, 174, 239, 0.25);
+  --accent-glow-strong: rgba(0, 174, 239, 0.30);
+  --text-on-accent: #0f1c2e; /* dark text on cyan — WCAG AA */
+
+  /* Bordes / radios */
+  --divider: #1e3352;        /* --divider */
+  --radius-card: 12px;
+  --radius-btn: 6px;
+  --radius-item: 8px;
+}
+
+/* ── Light theme (app tokens) ───────────────────────────────── */
+[data-theme="light"] {
+  --bg: #f4f7fb;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+
+  --text: #1a2a3e;
+  --text-muted: #3d5673;
+
+  --accent: #0095d6;
+  --accent-strong: #0a6fa8;
+  --accent-soft: rgba(0, 149, 214, 0.08);
+  --accent-glow: rgba(0, 149, 214, 0.20);
+  --accent-glow-strong: rgba(0, 149, 214, 0.25);
+  --text-on-accent: #04121f;
+
+  --divider: #d0dae8;
+  --radius-card: 12px;
+  --radius-btn: 6px;
+  --radius-item: 8px;
+}

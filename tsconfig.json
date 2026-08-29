@@ -1,0 +1,59 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "jsx": "react-jsx",
+    "strict": true,
+    // Unused-variable policy is enforced by ESLint (see declarations.d.ts),
+    // not the compiler: the codebase deliberately keeps underscore-prefixed
+    // params and test files import React for jsx without referencing it.
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    // e2e specs import app modules by their Vite dev URL, which includes
+    // the explicit .ts extension (import("/src/.../X.ts")).
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "types": ["vite/client", "vitest/globals", "node"],
+    // e2e specs import app modules from inside page.evaluate() with the
+    // Vite dev-server URL convention (/src/...), e.g.
+    //   await import("/src/services/ai/ProviderManager.ts")
+    // and Vite-served e2e helpers (/tests/e2e/...).
+    "paths": {
+      "/src/*": ["./src/*"],
+      "/tests/*": ["./tests/*"]
+    }
+  },
+  "include": [
+    "src",
+    "tests",
+    "server",
+    "vite.config.ts",
+    "vitest.config.ts",
+    "playwright.config.ts",
+    "playwright.human-like.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "dist-extension",
+    "extension",
+    // src/tests/db/encryption.test.ts accesses db.secrets / db.close() on
+    // the RxDatabase returned by createRxDatabase(); rxdb ships its own
+    // strict types (no index signature), so those dynamic collection
+    // accesses can't typecheck. The file still RUNS (vitest/esbuild do not
+    // typecheck). Excluded here to keep `tsc --noEmit` green.
+    "src/tests/db/encryption.test.ts"
+  ]
+}

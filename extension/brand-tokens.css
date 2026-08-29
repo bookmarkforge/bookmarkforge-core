@@ -1,0 +1,40 @@
+/* ============================================================
+   extension/brand-tokens.css
+   Single source of truth for the extension's brand tokens —
+   the browser-action popup (and any future extension UI page).
+   Mirrors public/brand-tokens.css / src/index.css "Dark Flat UI"
+   (navy default). Uses the SAME token names as the app so a brand
+   restyle is a one-file edit shared across web + extension.
+
+   NOTE: the extension intentionally does NOT self-host Inter here.
+   It runs offline in a sandboxed 320px popup where network font
+   loading is disproportionate; the popup falls back to the system
+   font stack via font-family in popup.css. If self-hosted Inter is
+   ever wanted, drop the woff2 into extension/ and add the @font-face
+   HERE (this file is the single place for it).
+   ============================================================ */
+:root,
+[data-theme="dark"] {
+  /* Fondos */
+  --bg: #0f1c2e;             /* --bg-primary */
+  --bg-surface: #111e30;     /* --bg-topbar */
+  --bg-card: #1a2a40;        /* --bg-card */
+
+  /* Texto */
+  --text: #e8f0f8;           /* --text-primary */
+  --text-muted: #b9d4ea;     /* --text-secondary / --text-muted */
+
+  /* Acento / brand */
+  --accent: #00aeef;         /* --accent-primary */
+  --accent-strong: #0d7fc4;  /* --accent-secondary */
+  --accent-soft: rgba(0, 174, 239, 0.10);
+  --accent-glow: rgba(0, 174, 239, 0.25);
+  --accent-glow-strong: rgba(0, 174, 239, 0.30);
+  --text-on-accent: #0f1c2e; /* dark text on cyan — WCAG AA */
+
+  /* Bordes / radios */
+  --divider: #1e3352;        /* --divider */
+  --radius-card: 12px;
+  --radius-btn: 6px;
+  --radius-item: 8px;
+}

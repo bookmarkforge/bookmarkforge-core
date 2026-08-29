@@ -1,0 +1,121 @@
+# BookmarkForge production topology. All provider credentials and endpoints
+# are required at deploy time; this file contains no mock services or defaults.
+services:
+  web:
+    # Imagen etiquetada por SHA (deploy-prod.mjs) para rollback determinista
+    # sin rebuild: IMAGE_TAG=<sha> docker compose up -d web api.
+    image: bookmarkforge/web:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+      args:
+        VITE_APP_VERSION: ${VITE_APP_VERSION:?VITE_APP_VERSION is required}
+        VITE_DB_NAME: ${VITE_DB_NAME:?VITE_DB_NAME is required}
+        VITE_P2P_SIGNALING_URL: ${VITE_P2P_SIGNALING_URL:?VITE_P2P_SIGNALING_URL is required}
+        VITE_WHOP_CHECKOUT_URL: ${VITE_WHOP_CHECKOUT_URL:?VITE_WHOP_CHECKOUT_URL is required}
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "${HTTP_PORT:-8080}:8080"
+    restart: unless-stopped
+    networks: [prod]
+
+  api:
+    # Imagen etiquetada por SHA (deploy-prod.mjs). Ver nota en el servicio web.
+    image: bookmarkforge/api:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 8787
+      TRUST_PROXY: "1"
+      GEMINI_API_KEY: ${GEMINI_API_KEY:?GEMINI_API_KEY is required}
+      GEMINI_API_BASE: ${GEMINI_API_BASE:?GEMINI_API_BASE is required}
+      AI_SESSION_REQUIRE_LICENSE: ${AI_SESSION_REQUIRE_LICENSE:-1}
+      AI_SESSION_ORIGINS: ${AI_SESSION_ORIGINS:?AI_SESSION_ORIGINS is required}
+      AI_PROXY_REDIS_FAILURE_MODE: ${AI_PROXY_REDIS_FAILURE_MODE:-fail-closed}
+      AI_PROXY_STATE_FILE: ${AI_PROXY_STATE_FILE:-}
+      # Set AI_PROXY_REDIS_URL to share quota/breaker/session state across
+      # replicas (e.g. redis://:password@redis:6379/0 when using the bundled
+      # `redis` service below). Leave empty for a stateless single instance.
+      AI_PROXY_REDIS_URL: ${AI_PROXY_REDIS_URL:-}
+      AI_PROXY_DAILY_QUOTA: ${AI_PROXY_DAILY_QUOTA:-10000}
+      AI_PROXY_IP_RATE_LIMIT: ${AI_PROXY_IP_RATE_LIMIT:-60}
+      AI_PROXY_IDENTITY_RATE_LIMIT: ${AI_PROXY_IDENTITY_RATE_LIMIT:-60}
+      WHOP_LICENSE_API_URL: ${WHOP_LICENSE_API_URL:?WHOP_LICENSE_API_URL is required}
+      WHOP_API_KEY: ${WHOP_API_KEY:?WHOP_API_KEY is required}
+      LICENSE_SIGNING_PRIVATE_KEY_FILE: /run/secrets/license_signing_key
+      TURN_RELAY_HOST: ${TURN_RELAY_HOST:-}
+      TURN_STATIC_AUTH_SECRET: ${TURN_STATIC_AUTH_SECRET:-}
+      # Client events endpoint (/api/client-events): alert webhook fired on
+      # the >= CRITICAL_CLIENTS threshold, and the admin token for the
+      # diagnostics GET. Empty defaults are fail-safe: no webhook (no leak)
+      # and no diagnostics (503). check-env-config.mjs verifies the webhook
+      # is https-only and required compose vars are present at deploy time.
+      CLIENT_EVENTS_WEBHOOK_URL: ${CLIENT_EVENTS_WEBHOOK_URL:-}
+      CLIENT_EVENTS_ADMIN_TOKEN: ${CLIENT_EVENTS_ADMIN_TOKEN:-}
+      CLIENT_EVENTS_CRITICAL_CLIENTS: ${CLIENT_EVENTS_CRITICAL_CLIENTS:-3}
+      CLIENT_EVENTS_WINDOW_MS: ${CLIENT_EVENTS_WINDOW_MS:-600000}
+      CLIENT_EVENTS_LIMIT: ${CLIENT_EVENTS_LIMIT:-30}
+      CLIENT_EVENTS_MAX: ${CLIENT_EVENTS_MAX:-200}
+      CLIENT_EVENTS_IP_HASH_SALT: ${CLIENT_EVENTS_IP_HASH_SALT:-}
+    depends_on:
+      redis:
+        condition: service_healthy
+    secrets: [license_signing_key]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8787/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+    networks:
+      prod:
+        # La imagen web hornea public/nginx.conf con upstream
+        # `bookmarkforge_api:8787`; sin este alias el DNS de compose no
+        # resuelve el nombre y nginx muere con "host not found in upstream".
+        aliases: [bookmarkforge_api]
+
+  # Optional in-stack Redis for shared AI state. The api service consumes it
+  # only when AI_PROXY_REDIS_URL is set (e.g.
+  # redis://:REDIS_PASSWORD@redis:6379/0) and REDIS_PASSWORD is set in
+  # .env.production. With no password configured the server runs unauthenticated
+  # on the private bridge network only — never publish port 6379 to the host.
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |-
+        if [ -n "$${REDIS_PASSWORD}" ]; then
+          exec redis-server --requirepass "$${REDIS_PASSWORD}" --save ""
+        else
+          exec redis-server --save ""
+        fi
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-${AI_PROXY_REDIS_PASSWORD:-}}
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "if [ -n \"$${REDIS_PASSWORD}\" ]; then redis-cli -a \"$${REDIS_PASSWORD}\" ping | grep -q PONG; else redis-cli ping | grep -q PONG; fi"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+    networks: [prod]
+
+secrets:
+  license_signing_key:
+    file: ${LICENSE_SIGNING_KEY_FILE:?LICENSE_SIGNING_KEY_FILE is required}
+
+volumes:
+  redis-data:
+
+networks:
+  prod:
+    driver: bridge

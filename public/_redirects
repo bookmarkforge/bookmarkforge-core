@@ -1,0 +1,33 @@
+# SPA Routing — client-side routes are served by index.html.
+
+# Legacy markdown privacy policy -> HTML
+/privacy-and-terms.md  /privacy-and-terms.html  301
+
+# Legal pages — serve the static HTML directly before SPA catch-all
+/privacy  /privacy-and-terms.html  200
+/terms    /privacy-and-terms.html  200
+
+# App entry (PWA start_url / share_target point here)
+/app  /index.html  200
+
+# App routes (SPA fallback)
+/*
+  !/index.html
+  !/*.js
+  !/*.css
+  !/*.ico
+  !/*.png
+  !/*.svg
+  !/*.json
+  !/*.woff2
+  !/*.woff
+  !/*.ttf
+  !/*.eot
+  !/*.webp
+  !/*.avif
+  !/*.webmanifest
+  !/*.xml
+  !/*.txt
+  !/*.html
+  !/*.bmf
+  /index.html 200

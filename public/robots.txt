@@ -1,0 +1,6 @@
+# robots.txt for BookmarkForge
+
+User-agent: *
+Allow: /
+
+Sitemap: https://bookmarkforge.com/sitemap.xml

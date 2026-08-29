@@ -1,0 +1,104 @@
+name: Staging smoke tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      staging_url:
+        description: 'HTTPS URL del staging recién desplegado'
+        required: true
+        type: string
+      image_tag:
+        description: 'Tag/SHA desplegado, sólo para trazabilidad'
+        required: true
+        type: string
+  workflow_call:
+    inputs:
+      staging_url:
+        required: true
+        type: string
+      image_tag:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+env:
+  CI: true
+  STAGING_URL: ${{ inputs.staging_url }}
+  IMAGE_TAG: ${{ inputs.image_tag }}
+
+jobs:
+  smoke:
+    name: Post-deploy staging smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate staging target
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="${STAGING_URL:-}"
+          tag="${IMAGE_TAG:-}"
+          [[ "$url" == https://* ]] || { echo "staging_url must use HTTPS" >&2; exit 1; }
+          host="${url#https://}"; host="${host%%/*}"
+          case "$host" in
+            bookmarkforge.com|www.bookmarkforge.com|api.bookmarkforge.com|signal.bookmarkforge.com)
+              echo "Refusing production target: $host" >&2; exit 1 ;;
+          esac
+          [[ "$host" == *staging* || "$host" == *-stage* || "$host" == *.test.* ]] || {
+            echo "URL host does not identify staging" >&2; exit 1;
+          }
+          [[ "$tag" =~ ^[A-Za-z0-9._/-]+$ ]] || { echo "Invalid image tag" >&2; exit 1; }
+          echo "Testing staging target $url (image tag $tag)"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Health and production smoke
+        env:
+          PROD_BASE_URL: ${{ env.STAGING_URL }}
+        run: npm run production-smoke
+      - name: Playwright staging smoke
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ env.STAGING_URL }}
+        run: npx playwright test --config=playwright.config.ts tests/e2e/vault-init.spec.ts tests/e2e/a11y.spec.ts
+      - name: Upload smoke diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-smoke-${{ github.run_id }}
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results/
+            playwright-report/
+
+  rollback-manual:
+    name: Manual rollback instructions
+    needs: smoke
+    if: failure() && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print rollback procedure
+        shell: bash
+        run: |
+          cat <<'EOF'
+          Smoke tests failed. No rollback was performed automatically.
+
+          Manual rollback:
+            1. Confirm the incident and stop further releases.
+            2. Select the last validated prod-* tag/image SHA.
+            3. Run the approved deployment rollback procedure:
+               node scripts/rollback.mjs --auto --verify
+            4. Verify /health and run production-smoke against staging/target.
+            5. Record the incident, image tag, logs and final decision.
+
+          Never use :latest for rollback and never run this procedure against
+          production without the required operator approval.
+          EOF

@@ -20,6 +20,23 @@ La protección de la rama debe configurarse en GitHub en **Settings → Branches
 
 ## Importante
 
-`CODEOWNERS` sólo exige revisores si la opción **Require review from Code Owners** está activada. Los nombres `@bookmarkforge/...` son placeholders: deben sustituirse por equipos reales existentes en la organización antes de activar la regla.
+`CODEOWNERS` sólo exige revisores si la opción **Require review from Code Owners** está activada. Los nombres `@YOUR_GITHUB_ORG/...` son placeholders deliberados: deben sustituirse por equipos reales existentes en la organización antes de activar la regla. El gate `npm run check:codeowners` bloqueará cualquier merge mientras permanezcan sin sustituir.
 
-La protección de ramas es una configuración del repositorio remoto y no puede aplicarse desde este checkout local sin acceso administrativo a GitHub. Después de crear la regla, abrir un PR de prueba para comprobar que un cambio en criptografía o infraestructura solicita los owners correctos.
+La protección de ramas es una configuración del repositorio remoto y no puede aplicarse desde este checkout local sin acceso administrativo a GitHub. El ruleset exportable está en `.github/rulesets/main-protection.json`.
+
+## Importación del ruleset
+
+En GitHub: **Settings → Rules → Rulesets → New branch ruleset → Import a ruleset**. Selecciona `.github/rulesets/main-protection.json`, revisa los equipos/owners y activa el ruleset.
+
+Alternativamente, mediante GitHub CLI/API con permisos de administración del repositorio:
+
+```bash
+gh api --method POST \
+  -H 'Accept: application/vnd.github+json' \
+  /repos/ORG/REPO/rulesets \
+  --input .github/rulesets/main-protection.json
+```
+
+Sustituye `ORG/REPO` por el repositorio real. Los `integration_id` de los checks estándar de GitHub Actions son `15368`; si la organización usa una aplicación CI distinta, actualízalos según la documentación de GitHub.
+
+Después de importar la regla, abre un PR de prueba para comprobar que un cambio en criptografía o infraestructura solicita los owners correctos y que los checks aparecen con los nombres exactos definidos en `.github/workflows/ci.yml`.

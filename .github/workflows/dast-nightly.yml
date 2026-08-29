@@ -1,0 +1,81 @@
+name: Nightly DAST staging
+
+on:
+  schedule:
+    - cron: '43 3 * * *'
+  workflow_dispatch:
+    inputs:
+      staging_url:
+        description: 'HTTPS URL del staging autorizado (no producción)'
+        required: true
+        type: string
+
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dast-staging
+  cancel-in-progress: false
+
+env:
+  CI: true
+  # Prefer repository variable; manual dispatch can provide an explicit URL.
+  STAGING_URL: ${{ inputs.staging_url || vars.STAGING_URL }}
+
+jobs:
+  dast:
+    name: OWASP ZAP baseline against staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Validate staging target
+        shell: bash
+        run: |
+          set -euo pipefail
+          url="${STAGING_URL:-}"
+          if [[ -z "$url" ]]; then
+            echo "STAGING_URL is required" >&2
+            exit 1
+          fi
+          if [[ "$url" != https://* ]]; then
+            echo "DAST target must use HTTPS" >&2
+            exit 1
+          fi
+          host="${url#https://}"
+          host="${host%%/*}"
+          # Explicit production deny-list. Keep this conservative: a typo
+          # must fail closed rather than scan production.
+          case "$host" in
+            bookmarkforge.com|www.bookmarkforge.com|api.bookmarkforge.com|signal.bookmarkforge.com)
+              echo "Refusing to run DAST against production host: $host" >&2
+              exit 1
+              ;;
+          esac
+          if [[ "$host" != *staging* && "$host" != *-stage* && "$host" != *.test.* ]]; then
+            echo "Target host must identify staging (*.staging.*, *staging*, *-stage*, or *.test.*)" >&2
+            exit 1
+          fi
+          echo "DAST target accepted: $url"
+
+      - name: Run OWASP ZAP baseline
+        uses: zaproxy/action-baseline@v0.15.0
+        with:
+          target: ${{ env.STAGING_URL }}
+          allow_issue_writing: false
+          fail_action: true
+          artifact_name: zap-baseline-staging
+          cmd_options: '-a -j'
+
+      - name: Upload ZAP report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dast-staging-report
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            report_html.html
+            report_md.md
+            report_json.json
+            zap-baseline-staging/

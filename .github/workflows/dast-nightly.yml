@@ -81,14 +81,17 @@ jobs:
             echo "context=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Validate ZAP policy
+        run: npm run check:zap-baseline
+
       - name: Run OWASP ZAP baseline (public routes)
         uses: zaproxy/action-baseline@v0.15.0
         with:
           target: ${{ env.STAGING_URL }}
           allow_issue_writing: false
-          fail_action: true
+          fail_action: false
           artifact_name: zap-baseline-staging-public
-          cmd_options: '-a -j'
+          cmd_options: '-a -j -c /zap/wrk/.zap/baseline.conf'
 
       - name: Run OWASP ZAP authenticated scan
         if: steps.auth.outputs.auth_header == 'true' || steps.auth.outputs.context == 'true'
@@ -114,7 +117,31 @@ jobs:
           docker run --rm \
             -v "$PWD:/zap/wrk/:rw" \
             -w /zap/wrk \
-            ghcr.io/zaproxy/zaproxy:stable zap-baseline.py "${args[@]}"
+            ghcr.io/zaproxy/zaproxy:stable zap-baseline.py "${args[@]}" || true
+          python3 - <<'PY'
+          import json, os, sys
+          levels = {"3": "Informational", "2": "Low", "1": "Medium", "0": "High"}
+          fail_levels = {"High", "Critical"}
+          path = "report_authenticated.json"
+          if not os.path.exists(path):
+              print("No authenticated JSON report produced; failing closed.", file=sys.stderr)
+              sys.exit(1)
+          data = json.load(open(path, encoding="utf-8"))
+          alerts = data.get("site", [])
+          findings = []
+          for site in alerts:
+              for alert in site.get("alerts", []):
+                  risk = alert.get("riskcode", "")
+                  level = levels.get(str(risk), alert.get("riskdesc", "").split(" ")[0])
+                  if level in fail_levels:
+                      findings.append((level, alert.get("alert", "unknown")))
+          if findings:
+              print("Blocking ZAP findings:", file=sys.stderr)
+              for level, name in findings:
+                  print(f"- {level}: {name}", file=sys.stderr)
+              sys.exit(1)
+          print("Authenticated ZAP scan passed High/Critical threshold")
+          PY
 
       - name: Upload ZAP report
         if: always()

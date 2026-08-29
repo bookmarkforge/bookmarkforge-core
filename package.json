@@ -55,6 +55,8 @@
     "local-smoke": "node scripts/local-smoke.mjs",
     "check:env": "node scripts/check-env-config.mjs",
     "check:secrets-in-commit": "node scripts/check-secrets-in-commit.mjs",
+    "check:codeowners": "node scripts/validate-codeowners.mjs",
+    "check:zap-baseline": "node scripts/check-zap-baseline.mjs",
     "check:ci": "npm run typecheck:prod && npm run lint && npm run test:fast && npm run build:ci && npm run check",
     "check:boundaries": "node scripts/check-context-boundaries.cjs",
     "check:e2e-helpers": "node scripts/check-e2e-duplicate-helpers.mjs",

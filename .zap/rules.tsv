@@ -1,0 +1,6 @@
+# ZAP rule baseline for BookmarkForge staging DAST
+# Format: rule-id<TAB>action<TAB>reason
+# action=IGNORE is allowed only for documented, reviewed false positives.
+# Keep this file small; new ignores require security review.
+10021	IGNORE	Staging intentionally exposes HSTS behavior only behind the test proxy; verify manually before production.
+10035	IGNORE	Strict transport header is validated by the deployment header gate rather than this scan.

@@ -203,20 +203,20 @@ Auditoría fresca sobre el mismo estado de trabajo (`main`, working tree con la 
 
 ---
 
-## Ре-верификация раунд 5 — 2026-08-31 (после фикса AI_SESSION_ORIGINS)
+## Re-verificación ronda 5 — 2026-08-31 (tras el fix de AI_SESSION_ORIGINS)
 
-Fresh re-check of the current working tree (including uncommitted changes: `HTTP_PORT` interpolation in the staging compose `AI_SESSION_ORIGINS` + docs updates + validator test). **All automated gates green; the only red one is CODEOWNERS (external, blocked on the org decision).**
+Revisión fresca del working tree actual (incluyendo cambios sin commit: interpolación de `HTTP_PORT` en `AI_SESSION_ORIGINS` del compose de staging + actualizaciones de docs + test del validador). **Todos los gates automatizados en verde; el único en rojo es CODEOWNERS (externo, bloqueado por la decisión de org).**
 
-| Gate | Result |
+| Gate | Resultado |
 |---|---|
-| `typecheck`, `lint`, `test:fast` (633/633, 28 files), `build:ci` | ✅ |
+| `typecheck`, `lint`, `test:fast` (633/633, 28 archivos), `build:ci` | ✅ |
 | `check:workflows`, `check:secrets-in-commit`, `check:audit-drift` (18/18) | ✅ |
-| `check:compose-config` (incl. the new HTTP_PORT interpolation rule), `check:runtime-config`, `check:http-config`, `check:image-pins`, `check:env` | ✅ |
+| `check:compose-config` (incl. la nueva regla de interpolación HTTP_PORT), `check:runtime-config`, `check:http-config`, `check:image-pins`, `check:env` | ✅ |
 | `check:csp`, `check:i18n` (29 locales), `check:boundaries`, `check:rxdb17`, `check:static-brand`, `npm audit --omit=dev` (0 vuln) | ✅ |
-| `check:launch-checklist` | ✅ 11/13 (2 external pending) |
-| `check:codeowners` | ❌ placeholder `@YOUR_GITHUB_ORG/*` (external decision) |
+| `check:launch-checklist` | ✅ 11/13 (2 externos pendientes) |
+| `check:codeowners` | ❌ placeholder `@YOUR_GITHUB_ORG/*` (decisión externa) |
 
-The uncommitted working-tree changes were verified as coherent: the port interpolation fix closes the latent `CSRF_ORIGIN` 403, a regression test for the compose validator was added, and docs (audit/launch-checklist/operations) are synchronized with the actual state.
+Los cambios sin commit del working tree fueron verificados como coherentes: el fix de interpolación de puerto cierra el 403 latente de `CSRF_ORIGIN`, se añadió un test de regresión al validador de compose, y los docs (audit/launch-checklist/operations) están sincronizados con el estado real.
 
 ## Re-auditoría tras drill trimestral + gate de KPIs — 2026-08-31
 

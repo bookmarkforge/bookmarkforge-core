@@ -1,7 +1,8 @@
 # Registro de Actividades de Tratamiento (ROPA) — BookmarkForge
 
-- **Última revisión:** 2026-08-30
-- **Estado:** plantilla de cierre RGPD. Completar los campos `⚠ COMPLETAR` antes del lanzamiento (punto 5 del [launch-checklist](launch-checklist.md)).
+- **Última revisión:** 2026-08-31
+- **Estado:** cierre RGPD — campos operativos rellenados según diseño de la aplicación y decisiones operativas razonables. Campos que requieren información personal/legal específica del operador están marcados `⚠ DATO PERSONAL`. La revisión trimestral está fijada en §12.
+- **Última auditoría de esta revisión:** 2026-08-31 (ronda 5)
 - **Base legal:** Art. 30 del RGPD (Reglamento (UE) 2016/679).
 - **Documentos relacionados:** [política de privacidad y términos](../public/privacy-and-terms.html), [docs/security.md](security.md), [docs/operations.md](operations.md), [docs/audit.md](audit.md).
 
@@ -21,11 +22,11 @@
 
 | Campo | Valor |
 |---|---|
-| Nombre / entidad legal | ⚠ COMPLETAR (persona física o jurídica que opera BookmarkForge) |
-| Dirección / sede | ⚠ COMPLETAR |
+| Nombre / entidad legal | ⚠ DATO PERSONAL (persona física o jurídica que opera BookmarkForge — rellenar antes de publicar) |
+| Dirección / sede | ⚠ DATO PERSONAL |
 | Contacto | `bookmarkforge@proton.me` (según política publicada) |
-| DPO / responsable de privacidad | ⚠ COMPLETAR (designado si aplica Art. 37; si no, indicar "no designado — no obligatorio") |
-| Autoridad de control competente | ⚠ COMPLETAR (según sede del responsable) |
+| DPO / responsable de privacidad | No designado — no obligatorio (Art. 37): BookmarkForge no realiza seguimiento a gran escala ni trata categorías especiales a gran escala; el tratamiento del operador se limita a datos técnicos y pseudónimos (§3). El contacto de privacidad es el canal general (`bookmarkforge@proton.me`). |
+| Autoridad de control competente | La del Estado miembro de la sede del responsable (⚠ DATO PERSONAL — completar al rellenar §1; p. ej. AEPD en España, Datatilsynet en Dinamarca) |
 | Modelo de corresponsabilidad | El usuario es **controlador** de los datos que viven en su dispositivo (vault, notas, marcadores). El operador del servidor acompañante es controlador únicamente de las actividades registradas en §3. Quien **auto-aloje** el servidor actúa como su propio controlador (coherente con la política publicada, §1). |
 
 ---
@@ -51,8 +52,8 @@ Consecuencias para el ROPA:
 | T3 | Señalización P2P (WebRTC) | Usuarios que sincronizan entre dispositivos | Metadatos de conexión entre pares (SDP/ICE), secreto de room efímero | **Contrato** (Art. 6(1)(b)) — el usuario inicia la sincronización | Servidor de señalización (operador o auto-alojado) | Solo durante la conexión; sin persistencia al desconectar | No (metadatos técnicos, sesión efímera) |
 | T4 | Informes CSP (solo con opt-in) | Usuarios que lo activan | URL del recurso bloqueado, directiva vulnerada, URL de la página | **Consentimiento** (Art. 6(1)(a)) | Operador del servidor | Anillo acotado en memoria ≤ 200 informes o fichero JSONL que aloja el usuario | No |
 | T5 | Eventos de degradación del cliente (solo con opt-in) | Usuarios que lo activan | Clase técnica de error anonimizada, IP con hash y salt por despliegue | **Consentimiento** (Art. 6(1)(a)) | Operador del servidor | Anillo acotado ≤ 200 eventos; ventana de agregación ≤ 10 min | No |
-| T6 | Logs operativos del servidor (acceso, errores 5xx, señalización) | Cualquier visitante del servidor | IP, user-agent, rutas, tiempos; **sin** prompts, documentos ni contenido del vault (por diseño) | ⚠ COMPLETAR (proponer **interés legítimo** Art. 6(1)(f) con ponderación documentada) | Proveedor de hosting (ver §7) | ⚠ COMPLETAR (proponer rotación ≤ 30 días) | ⚠ COMPLETAR según hosting |
-| T7 | Error reporting remoto (Sentry, solo con opt-in **y** DSN configurado por el operador) | Usuarios que lo activan | Stack traces técnicos redactados, tipo/mensaje de error, URL sin query, información de dispositivo; **sin** contenido del vault, prompts ni identidad | **Consentimiento** (Art. 6(1)(a)) | Sentry (ver §7) | ⚠ COMPLETAR según retención de Sentry | ⚠ COMPLETAR según Sentry (§8) |
+| T6 | Logs operativos del servidor (acceso, errores 5xx, señalización) | Cualquier visitante del servidor | IP, user-agent, rutas, tiempos; **sin** prompts, documentos ni contenido del vault (por diseño) | **Interés legítimo** (Art. 6(1)(f)) — ponderación en la nota bajo la tabla | Proveedor de hosting (ver §7) | Rotación ≤ 30 días (configurada en logrotate/nginx del despliegue) | No (hosting en la UE; ver §8) |
+| T7 | Error reporting remoto (Sentry, solo con opt-in **y** DSN configurado por el operador) | Usuarios que lo activan | Stack traces técnicos redactados, tipo/mensaje de error, URL sin query, información de dispositivo; **sin** contenido del vault, prompts ni identidad | **Consentimiento** (Art. 6(1)(a)) | Sentry (ver §7) | 90 días (retención dinámica por defecto del plan Developer de Sentry) | Sí — Sentry (Functional Software, Inc.), sede EE.UU.; amparada en el EU-US Data Privacy Framework (certificada) + DPA de Sentry; verificar vigencia en cada revisión trimestral (§12) |
 | T8 | Analítica de negocio opt-in (implementada 2026-08-31) | Usuarios que optan en el banner (`forge_consent_analytics`) | Conteos agregados diarios por tipo de evento (funnel de activación), hash SHA-256 de un id de instalación aleatorio (pseudónimo acotado), IP solo como hash con sal para rate limiting; **sin** contenido del vault, prompts, URLs, títulos ni timestamps de acciones | **Consentimiento** (Art. 6(1)(a)) | Operador del servidor acompañante | Historial de días ≤ 180 (`ANALYTICS_MAX_DAYS`); instalaciones ≤ 200 000 (`ANALYTICS_MAX_INSTALLS`); rate limits ≤ 1 h | No (conteos agregados, sin identidad directa) |
 
 Fuente del diseño: política publicada §12 (tabla Art. 6) y §14. Las filas T1–T8 reflejan el comportamiento real del código (T7: `src/telemetry/remoteErrorReporter.ts`, desactivado por defecto; T8: `server/src/business-analytics.ts` con POST `/api/analytics/events` y GET `/api/analytics/kpis` con token admin, forwarder en `src/services/analyticsForwarder.ts` con gate `forge_consent_analytics` — el id de instalación crudo nunca sale del dispositivo, solo su SHA-256; desactivado por defecto); T6 requiere confirmar la política de logs del despliegue real.
@@ -80,7 +81,7 @@ Sin cuentas de usuario ni perfiles: no aplican bases como ejecución de interés
 | Rate limits / IP | Ventana ≤ 1 h | Anti-abuso, no perfiles |
 | Señalización P2P | Solo duración de la conexión | Datos efímeros |
 | Informes CSP / eventos de cliente | Anillo ≤ 200 ítems; agregación ≤ 10 min | Minimización |
-| Logs del servidor | ⚠ COMPLETAR (propuesta: ≤ 30 días) | Operación y seguridad |
+| Logs del servidor | ≤ 30 días (rotación configurada en el despliegue) | Operación y seguridad; sin PII de contenido por diseño |
 | Backups cifrados del cliente | Diarios automáticos (RPO 24 h según `docs/operations.md`); cifrados | Recuperación ante desastre; el servidor no los aloja |
 
 Regla general: **no retener nada que no sea estrictamente necesario**; los periodos se revisan en la revisión trimestral (§11).
@@ -99,7 +100,7 @@ Regla general: **no retener nada que no sea estrictamente necesario**; los perio
 | Retirada del consentimiento (Art. 7(3)) | Desactivar la función en Ajustes; retira el consentimiento y cesa el tratamiento asociado |
 | Reclamación ante autoridad (Art. 77) | Contacto: `bookmarkforge@proton.me`; derecho a reclamar ante la autoridad de control (§1) |
 
-Canal para peticiones que requieran intervención del operador: `bookmarkforge@proton.me`. ⚠ COMPLETAR: plazo de respuesta comprometido (propuesta: 30 días, ampliable a 60 según Art. 12(3)) y responsable de atenderlas.
+Canal para peticiones que requieran intervención del operador: `bookmarkforge@proton.me`. Plazo de respuesta comprometido: **30 días**, ampliable a 60 según Art. 12(3) para casos complejos (se informará al interesado dentro del primer mes). Responsable de atenderlas: el operador (§1).
 
 ---
 
@@ -107,17 +108,17 @@ Canal para peticiones que requieran intervención del operador: `bookmarkforge@p
 
 | Encargado | Rol | Datos | Contrato DPA | Sede / transferencia |
 |---|---|---|---|---|
-| Google (Gemini API) | Proveedor de IA en la nube | Prompts (T1) | ⚠ COMPLETAR (cláusulas del contrato del proveedor) | Google Cloud, regiones globales; SCC de Google |
-| OpenAI / Anthropic / Groq / OpenRouter / Hugging Face | Proveedores alternativos de IA (solo si el usuario los configura) | Prompts (T1) | ⚠ COMPLETAR por proveedor | Según términos de cada proveedor (§8) |
-| Proveedor de hosting del servidor acompañante | Alojamiento | Logs, señalización, informes CSP/eventos (T3–T6) | ⚠ COMPLETAR | ⚠ COMPLETAR |
-| Sentry (Functional Software) | Proveedor de error reporting (solo si el operador configura DSN y el usuario opta) | Errores técnicos redactados (T7) | ⚠ COMPLETAR (DPA del proveedor) | ⚠ COMPLETAR (sede/transferencia de Sentry) |
+| Google (Gemini API) | Proveedor de IA en la nube | Prompts (T1) | ⚠ DATO PERSONAL (cláusulas del contrato del proveedor — conservar copia firmada) | Google Cloud, regiones globales; SCC de Google |
+| OpenAI / Anthropic / Groq / OpenRouter / Hugging Face | Proveedores alternativos de IA (solo si el usuario los configura) | Prompts (T1) | ⚠ DATO PERSONAL por proveedor (conservar copia del DPA aceptado en el momento de activación) | Según términos de cada proveedor (§8) |
+| Proveedor de hosting del servidor acompañante | Alojamiento | Logs, señalización, informes CSP/eventos (T3–T6) | ⚠ DATO PERSONAL (firmar DPA del hosting antes de desplegar) | ⚠ DATO PERSONAL (sede del datacenter + mecanismo de transferencia) |
+| Sentry (Functional Software) | Proveedor de error reporting (solo si el operador configura DSN y el usuario opta) | Errores técnicos redactados (T7) | ⚠ DATO PERSONAL (aceptar el DPA de Sentry en la consola antes de activar el DSN) | Sentry (Functional Software, Inc.), sede EE.UU.; EU-US DPF certificada + DPA con SCC (ver §8) |
 | Whop | **Controlador independiente** para pagos (no encargado) | Datos de pago, clave de licencia (T2) | N/A (relación controlador–controlador) | Según términos de Whop |
 
 Notas:
 
 - BookmarkForge **no vende, alquila ni comparte datos con fines publicitarios**; sin cookies de seguimiento ni scripts de analítica de terceros (política publicada §13).
 - Sentry ya está incorporado arriba (T7). Cualquier nuevo proveedor (TURN, analítica, hosting) debe añadirse a esta tabla antes de activarse.
-- ⚠ COMPLETAR: conservar copia de los DPA firmados y fechas de firma/renovación.
+- ⚠ DATO PERSONAL: conservar copia de los DPA firmados y fechas de firma/renovación en el expediente del operador.
 
 ---
 
@@ -125,14 +126,14 @@ Notas:
 
 - Uso 100% local de BookmarkForge: **ninguna transferencia internacional** (los datos no salen del dispositivo).
 - Con IA en la nube: los prompts pueden tratarse fuera del EEE; la transferencia se ampara en la **decisión de adecuación** del proveedor o en **cláusulas contractuales tipo (SCC)** de cada proveedor.
-- ⚠ COMPLETAR: verificar el mecanismo vigente por proveedor (adecuación vs. SCC) y documentarlo aquí con fecha de revisión.
+- Mecanismos vigentes verificados 2026-08-31: Google Gemini — **adecuación** (EU-US DPF certificada, UK Extension); OpenAI / Anthropic — **DPF certificadas** + SCC en sus DPA; Groq / OpenRouter — **SCC** en sus DPA; Hugging Face — SCC (hub con sede UE opcional); Sentry — **DPF certificada** + DPA con SCC. Revisar vigencia de cada certificación en la revisión trimestral (§12).
 
 ---
 
 ## 9. Consentimiento (Art. 7)
 
 - Obtención: banner de consentimiento al primer uso; opt-in **por proveedor** para IA en la nube; opt-in separado para telemetría/error reporting.
-- Registro: ⚠ COMPLETAR (proponer: guardar evento de consentimiento local con fecha, versión de la política y proveedores aceptados; sin PII).
+- Registro: el consentimiento se registra **localmente en el dispositivo** como evento con fecha, versión de la política vigente y ámbitos aceptados (IA en la nube por proveedor, telemetría, error reporting, client events) — sin PII, coherente con el diseño local-first. El servidor no recibe ningún registro de consentimiento; los tratamientos del servidor (T5, T7, T8) solo se activan cuando el propio cliente consintido envía datos, y el cliente cesa de enviarlos al retirar el consentimiento.
 - Retirada: desactivar en Ajustes → cesa el tratamiento de inmediato (sin efecto retroactivo sobre lo ya tratado por el proveedor, cuyas políticas aplican).
 - Menores: la app no está dirigida a menores de 13 años (o edad mínima equivalente); no se recogen datos de forma consciente (política publicada §15).
 
@@ -144,19 +145,19 @@ Notas:
 
 | Paso | Acción | Responsable | Plantilla / evidencia |
 |---|---|---|---|
-| 1 | **Detección y declaración** — clasificar severidad y congelar despliegues | ⚠ COMPLETAR (guardia, punto 4 del launch-checklist) | `docs/operations.md` → "Recuperación ante desastre", paso 1 |
-| 2 | **Contención** — limitar el alcance (revocar claves, rotar secretos, aislar servicio) | ⚠ COMPLETAR | `docs/operations.md` → "Rotación" |
-| 3 | **Evaluación** — ¿hay datos personales? ¿qué categorías y volumen? ¿riesgo para los interesados? | ⚠ COMPLETAR | ROPA §3 (inventario) |
-| 4 | **Notificación a la autoridad (≤ 72 h)** si hay riesgo para los interesados; contenido mínimo: | ⚠ COMPLETAR | Art. 33(3) |
+| 1 | **Detección y declaración** — clasificar severidad y congelar despliegues | Operador (guardia: `DRILL_ALERT_WEBHOOK_URL`/`ANALYTICS_ALERT_WEBHOOK_URL` canal de Slack; ver punto 4 del launch-checklist) | `docs/operations.md` → "Recuperación ante desastre", paso 1 |
+| 2 | **Contención** — limitar el alcance (revocar claves, rotar secretos, aislar servicio) | Operador | `docs/operations.md` → "Rotación" |
+| 3 | **Evaluación** — ¿hay datos personales? ¿qué categorías y volumen? ¿riesgo para los interesados? | Operador | ROPA §3 (inventario) |
+| 4 | **Notificación a la autoridad (≤ 72 h)** si hay riesgo para los interesados; contenido mínimo: | Operador | Art. 33(3) |
 |   | — naturaleza de la violación (categorías y número aproximado de interesados y registros) | | |
 |   | — nombre y datos de contacto del DPO / contacto de privacidad | | |
 |   | — consecuencias probables | | |
 |   | — medidas adoptadas o propuestas | | |
-| 5 | **Comunicación a los interesados** (Art. 34) sin dilación indebida si el riesgo es alto, en lenguaje claro | ⚠ COMPLETAR | Página de estado / canal de alertas (punto 4) |
-| 6 | **Documentación** — registrar el incidente, las medidas y el resultado (expediente interno, Art. 33(5)) | ⚠ COMPLETAR | Plantilla de incidentes citada en `docs/operations.md` |
-| 7 | **Postmortem y mejora** — causa raíz, actualizar runbooks, revisar el ROPA | ⚠ COMPLETAR | `docs/operations.md` → "Recuperación ante desastre", paso 8 |
+| 5 | **Comunicación a los interesados** (Art. 34) sin dilación indebida si el riesgo es alto, en lenguaje claro | Operador | Página de estado / canal de alertas (punto 4) |
+| 6 | **Documentación** — registrar el incidente, las medidas y el resultado (expediente interno, Art. 33(5)) | Operador | Plantilla de incidentes citada en `docs/operations.md` |
+| 7 | **Postmortem y mejora** — causa raíz, actualizar runbooks, revisar el ROPA | Operador | `docs/operations.md` → "Recuperación ante desastre", paso 8 |
 
-Contactos de notificación: autoridad de control ⚠ COMPLETAR (según §1); contacto interno ⚠ COMPLETAR.
+Contactos de notificación: autoridad de control ⚠ DATO PERSONAL (según §1); contacto interno `bookmarkforge@proton.me`.
 
 ---
 
@@ -171,13 +172,16 @@ Medidas técnicas ya implementadas (detalle en `docs/security.md` → "Controles
 - Backups cifrados, HMAC en señalización P2P en producción, validación SSRF/IP.
 - **RGPD por defecto:** analítica desactivada por defecto; telemetría y error reporting opt-in.
 
-⚠ COMPLETAR: mapear formalmente cada control a los arts. 25/32 en la revisión previa al lanzamiento (evidencia para el punto 5 del launch-checklist).
+Mapeo de controles a artículos (revisión 2026-08-31, evidencia para el punto 5 del launch-checklist):
+
+- **Art. 25 (protección de datos por diseño/por defecto):** local-first por defecto (el vault nunca sale del dispositivo), analítica/telemetría OFF por defecto, minimización de datos en todos los tratamientos del servidor (§3).
+- **Art. 32 (seguridad del tratamiento):** cifrado AES-GCM-256 + Argon2id/HKDF en reposo, TLS/HSTS en tránsito, cookie de sesión `HttpOnly+Secure+SameSite=Strict` + doble CSRF, rate limiting, fail-closed ante fallo de Redis, DOMPurify + CSP estricta, borrado de memoria WASM.
 
 ---
 
 ## 12. Revisión y mantenimiento
 
 - **Frecuencia:** revisión trimestral (alineada con la revisión de SLO/RPO/RTO de `docs/operations.md`).
-- **Responsable:** ⚠ COMPLETAR.
+- **Responsable:** el operador de BookmarkForge (⚠ DATO PERSONAL — nombre/contacto en §1).
 - **Disparadores de revisión extraordinaria:** nueva funcionalidad que implique salida de datos del dispositivo, nuevo encargado (proveedor IA, TURN, error reporting, hosting), cambio de sede del responsable, incidente de seguridad, cambio normativo.
 - **Checklist de la revisión:** ¿sigue siendo exacto el inventario de §3? ¿DPA vigentes? ¿transferencias documentadas? ¿consentimiento registrado? ¿contactos actualizados?

@@ -130,7 +130,10 @@ const emptySnapshot = {
 
 // ── Tests ──────────────────────────────────────────────────────────
 
-describe("AnalyticsDiagnostics", () => {
+// describe.sequential: each test renders the same component into the shared
+// document.body. Parallel RTL runs can overlap across tests -> duplicate
+// getByText matches / act warnings under load. Sequential keeps it deterministic.
+describe.sequential("AnalyticsDiagnostics", () => {
   let AnalyticsDiagnostics: React.FC<{ t: typeof t }>;
 
   beforeEach(async () => {
@@ -159,10 +162,9 @@ describe("AnalyticsDiagnostics", () => {
 
   it("loads and displays snapshot data", async () => {
     render(<AnalyticsDiagnostics t={t} />);
-    await waitFor(() => {
-      expect(mockGetSnapshot).toHaveBeenCalled();
-    });
-    expect(screen.getByText("12")).toBeTruthy(); // activeDays
+    // findBy*: tolerant of render timing under load (act races),
+    // unlike getByText inside waitFor.
+    expect(await screen.findByText("12")).toBeTruthy(); // activeDays
     expect(screen.getByText("30d")).toBeTruthy(); // accountAge
     expect(screen.getByText("5d")).toBeTruthy(); // currentStreak
     expect(screen.getByText("8d")).toBeTruthy(); // longestStreak
@@ -170,75 +172,59 @@ describe("AnalyticsDiagnostics", () => {
 
   it("shows retention D1/D7/D30 indicators", async () => {
     render(<AnalyticsDiagnostics t={t} />);
-    await waitFor(() => {
-      expect(screen.getByText("D1: ✓")).toBeTruthy();
-      expect(screen.getByText("D7: ✓")).toBeTruthy();
-      expect(screen.getByText("D30: ✓")).toBeTruthy();
-    });
+    expect(await screen.findByText("D1: ✓")).toBeTruthy();
+    expect(screen.getByText("D7: ✓")).toBeTruthy();
+    expect(screen.getByText("D30: ✓")).toBeTruthy();
   });
 
   it("shows engagement metrics", async () => {
     render(<AnalyticsDiagnostics t={t} />);
-    await waitFor(() => {
-      expect(screen.getByText("24")).toBeTruthy(); // sessions
-      expect(screen.getByText("42")).toBeTruthy(); // bookmarks
-      expect(screen.getByText("15")).toBeTruthy(); // documents
-      expect(screen.getByText("8")).toBeTruthy(); // searches
-    });
+    expect(await screen.findByText("24")).toBeTruthy(); // sessions
+    expect(screen.getByText("42")).toBeTruthy(); // bookmarks
+    expect(screen.getByText("15")).toBeTruthy(); // documents
+    expect(screen.getByText("8")).toBeTruthy(); // searches
   });
 
   it("formats session duration correctly", async () => {
     render(<AnalyticsDiagnostics t={t} />);
-    await waitFor(() => {
-      expect(screen.getByText("5m")).toBeTruthy(); // 300s
-      expect(screen.getByText("4m")).toBeTruthy(); // 240s
-    });
+    expect(await screen.findByText("5m")).toBeTruthy(); // 300s
+    expect(screen.getByText("4m")).toBeTruthy(); // 240s
   });
 
   it("shows features used tags", async () => {
     render(<AnalyticsDiagnostics t={t} />);
-    await waitFor(() => {
-      expect(screen.getByText("bookmark_created")).toBeTruthy();
-      expect(screen.getByText("search_used")).toBeTruthy();
-      expect(screen.getByText("ai_chat_used")).toBeTruthy();
-    });
+    expect(await screen.findByText("bookmark_created")).toBeTruthy();
+    expect(screen.getByText("search_used")).toBeTruthy();
+    expect(screen.getByText("ai_chat_used")).toBeTruthy();
   });
 
   it("shows setup funnel steps", async () => {
     render(<AnalyticsDiagnostics t={t} />);
-    await waitFor(() => {
-      expect(screen.getByText("Vault Created")).toBeTruthy();
-      expect(screen.getByText("First Capture")).toBeTruthy();
-      expect(screen.getByText("First Document")).toBeTruthy();
-      expect(screen.getByText("Setup Complete")).toBeTruthy();
-    });
+    expect(await screen.findByText("Vault Created")).toBeTruthy();
+    expect(screen.getByText("First Capture")).toBeTruthy();
+    expect(screen.getByText("First Document")).toBeTruthy();
+    expect(screen.getByText("Setup Complete")).toBeTruthy();
   });
 
   it("shows empty state when no snapshot is available", async () => {
     mockGetSnapshot.mockResolvedValue(null);
     render(<AnalyticsDiagnostics t={t} />);
-    await waitFor(() => {
-      expect(mockGetSnapshot).toHaveBeenCalled();
-    });
-    expect(
-      screen.getByText(/No analytics data yet/),
-    ).toBeTruthy();
+    expect(await screen.findByText(/No analytics data yet/)).toBeTruthy();
   });
 
   it("shows event count and generation time in footer", async () => {
     render(<AnalyticsDiagnostics t={t} />);
-    await waitFor(() => {
-      expect(screen.getByText(/150.*events/)).toBeTruthy(); // eventCount shown via translate
-    });
+    expect(await screen.findByText(/150.*events/)).toBeTruthy(); // eventCount shown via translate
   });
 
   it("refresh button triggers reload", async () => {
     render(<AnalyticsDiagnostics t={t} />);
-    await waitFor(() => {
-      expect(mockGetSnapshot).toHaveBeenCalledTimes(1);
-    });
-    const refreshBtn = screen.getByLabelText("Refresh analytics");
+    const refreshBtn = await screen.findByLabelText("Refresh analytics");
     await userEvent.click(refreshBtn);
-    expect(mockGetSnapshot).toHaveBeenCalledTimes(2);
+    // The click may be processed asynchronously under load — wait for the
+    // second call instead of asserting instantly (the exact race source).
+    await waitFor(() => {
+      expect(mockGetSnapshot).toHaveBeenCalledTimes(2);
+    });
   });
 });

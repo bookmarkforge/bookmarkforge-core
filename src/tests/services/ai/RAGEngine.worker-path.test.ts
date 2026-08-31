@@ -36,7 +36,10 @@ vi.mock("../../../utils/WorkerPool", () => ({
   }),
 }));
 
-describe("RAGEngine worker path", () => {
+// describe.sequential: tests share ragEngineMod and global mocks; parallel
+// in-file execution can race worker teardown under heavy machine load
+// (the source of rare flakes in full runs).
+describe.sequential("RAGEngine worker path", () => {
   let ragEngineMod: typeof import("../../../services/ai/RAGEngine");
 
   beforeEach(async () => {

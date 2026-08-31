@@ -1,0 +1,102 @@
+name: Manual staging rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_tag:
+        description: 'Tag prod-* anterior validado; no usar latest ni SHA arbitrario'
+        required: true
+        type: string
+      staging_url:
+        description: 'URL HTTPS del staging'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: staging-rollback
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Validate rollback target
+    runs-on: ubuntu-latest
+    outputs:
+      target_tag: ${{ steps.target.outputs.target_tag }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Validate target tag and staging URL
+        id: target
+        env:
+          TARGET_TAG: ${{ inputs.target_tag }}
+          STAGING_URL: ${{ inputs.staging_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="$TARGET_TAG"
+          [[ "$tag" =~ ^prod-[0-9]{8}-[0-9]{4}-[0-9a-fA-F]{7,40}$ ]] || {
+            echo 'target_tag must match prod-YYYYMMDD-HHMM-<sha>' >&2; exit 1;
+          }
+          git check-ref-format "refs/tags/$tag"
+          git show-ref --verify --quiet "refs/tags/$tag" || {
+            echo "Rollback tag does not exist locally: $tag" >&2; exit 1;
+          }
+          object_type="$(git cat-file -t "refs/tags/$tag")"
+          [[ "$object_type" == tag ]] || { echo 'target_tag must be an annotated tag' >&2; exit 1; }
+          sha="$(git rev-list -1 "refs/tags/$tag^{commit}")"
+          [[ "$sha" =~ ^[0-9a-fA-F]{40}$ ]] || { echo 'tag does not resolve to a commit' >&2; exit 1; }
+          [[ "$STAGING_URL" == https://* ]] || { echo 'staging_url must use HTTPS' >&2; exit 1; }
+          host="${STAGING_URL#https://}"; host="${host%%/*}"
+          [[ "$host" != *:* ]] || { echo 'staging_url must not include a port' >&2; exit 1; }
+          case "$host" in
+            bookmarkforge.com|www.bookmarkforge.com|api.bookmarkforge.com|signal.bookmarkforge.com)
+              echo 'Refusing production target' >&2; exit 1 ;;
+          esac
+          [[ "$host" == *staging* || "$host" == *-stage* || "$host" == *.test.* ]] || {
+            echo 'URL host does not identify staging' >&2; exit 1;
+          }
+          echo "target_tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Validated rollback target $tag (${sha:0:12})"
+
+  approval:
+    name: Manual rollback approval
+    needs: validate
+    runs-on: ubuntu-latest
+    environment:
+      name: staging-rollback-approval
+    steps:
+      - name: Await protected environment approval
+        run: echo 'Rollback approved by the protected GitHub environment.'
+
+  rollback:
+    name: Execute approved staging rollback
+    needs: [validate, approval]
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: ${{ inputs.staging_url }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Execute rollback against staging only
+        env:
+          TARGET_TAG: ${{ needs.validate.outputs.target_tag }}
+          PROD_BASE_URL: ${{ inputs.staging_url }}
+          DEPLOY_COMPOSE_FILE: docker-compose.staging.yml
+        run: node scripts/staging-rollback.mjs
+      - name: Install dependencies for staging verification
+        run: npm ci
+      - name: Verify staging after rollback
+        env:
+          STAGING_URL: ${{ inputs.staging_url }}
+        run: npm run check:staging-http

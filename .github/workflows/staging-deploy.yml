@@ -1,0 +1,68 @@
+name: Deploy staging
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Tag o SHA de la imagen a desplegar'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: staging-deploy
+  cancel-in-progress: false
+
+env:
+  STAGING_URL: ${{ vars.STAGING_URL }}
+
+jobs:
+  deploy:
+    name: Deploy staging
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: ${{ vars.STAGING_URL }}
+    outputs:
+      image_tag: ${{ steps.release.outputs.image_tag }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Select immutable image tag
+        id: release
+        shell: bash
+        env:
+          INPUT_IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          set -euo pipefail
+          tag="${INPUT_IMAGE_TAG:-${GITHUB_SHA}}"
+          [[ "$tag" =~ ^[A-Za-z0-9._/-]+$ ]] || { echo "Invalid image tag" >&2; exit 1; }
+          [[ "$tag" != *:* && "$tag" != *@* ]] || { echo "Image tag must not contain a registry digest or colon" >&2; exit 1; }
+          printf 'image_tag=%s\n' "$tag" >> "$GITHUB_OUTPUT"
+      - name: Deploy to staging
+        env:
+          IMAGE_TAG: ${{ steps.release.outputs.image_tag }}
+          DEPLOY_COMPOSE_FILE: docker-compose.staging.yml
+        run: node scripts/staging-deploy.mjs
+      - name: Verify staging is reachable
+        env:
+          STAGING_URL: ${{ vars.STAGING_URL }}
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --location --max-time 20 "$STAGING_URL/health" >/dev/null
+
+  smoke:
+    name: Post-deploy staging smoke
+    needs: deploy
+    uses: ./.github/workflows/staging-smoke.yml
+    with:
+      staging_url: ${{ vars.STAGING_URL }}
+      image_tag: ${{ needs.deploy.outputs.image_tag }}
+    secrets:
+      STAGING_SMOKE_TOKEN: ${{ secrets.STAGING_SMOKE_TOKEN }}
+      STAGING_SMOKE_ADMIN_TOKEN: ${{ secrets.STAGING_SMOKE_ADMIN_TOKEN }}

@@ -21,8 +21,10 @@ jobs:
       CI: true
       NODE_ENV: test
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20.19.0'
           cache: npm
@@ -31,6 +33,18 @@ jobs:
       - run: npm run lint
       - run: npm run test:fast
       - run: npm run check:secrets-in-commit
+      - name: Validate workflow, artifact, HTTP, Compose and repository safety
+        run: npm run check:workflows && npm run check:workflow-artifacts && npm run check:http-config && npm run check:compose-config && npm run check:runtime-config && npm run check:docker-context && npm run check:repository-hygiene
+      - name: Validate CODEOWNERS syntax and placeholders
+        run: npm run check:codeowners
+      - name: Verify CODEOWNERS owners in GitHub
+        if: ${{ vars.CODEOWNERS_ORG != '' }}
+        env:
+          VERIFY_GITHUB_OWNERS: 'true'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          CODEOWNERS_ORG: ${{ vars.CODEOWNERS_ORG }}
+        run: npm run check:codeowners
       - run: npm run check:blindeo
 
   e2e:
@@ -48,8 +62,10 @@ jobs:
       SIGNALING_PORT: '8787'
       CRISIS_COMPANION_PORT: '8799'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20.19.0'
           cache: npm
@@ -60,7 +76,7 @@ jobs:
         run: npm run e2e -- --config=playwright.config.ts --grep-invert "@nightly|@multiuser|@visual"
       - name: Upload Playwright artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: playwright-artifacts
           if-no-files-found: ignore
@@ -82,8 +98,10 @@ jobs:
       VITE_P2P_SIGNALING_URL: wss://signal.bookmarkforge.com
       VITE_WHOP_CHECKOUT_URL: https://example.invalid/ci-checkout
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20.19.0'
           cache: npm
@@ -93,10 +111,11 @@ jobs:
       - run: npm audit --omit=dev --audit-level=high
       - name: Upload build diagnostics
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: build-diagnostics
           if-no-files-found: ignore
+          retention-days: 14
           path: |
             bundle-report.md
             ci-chunk-report.json
@@ -109,7 +128,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/dependency-review-action@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48

@@ -10,7 +10,6 @@ on:
         required: true
         type: string
 
-
 permissions:
   contents: read
 
@@ -20,7 +19,6 @@ concurrency:
 
 env:
   CI: true
-  # Prefer repository variable; manual dispatch can provide an explicit URL.
   STAGING_URL: ${{ inputs.staging_url || vars.STAGING_URL }}
 
 jobs:
@@ -29,6 +27,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+
       - name: Validate staging target
         shell: bash
         run: |
@@ -44,8 +47,10 @@ jobs:
           fi
           host="${url#https://}"
           host="${host%%/*}"
-          # Explicit production deny-list. Keep this conservative: a typo
-          # must fail closed rather than scan production.
+          if [[ "$host" == *:* ]]; then
+            echo "DAST target must not include a port" >&2
+            exit 1
+          fi
           case "$host" in
             bookmarkforge.com|www.bookmarkforge.com|api.bookmarkforge.com|signal.bookmarkforge.com)
               echo "Refusing to run DAST against production host: $host" >&2
@@ -53,39 +58,63 @@ jobs:
               ;;
           esac
           if [[ "$host" != *staging* && "$host" != *-stage* && "$host" != *.test.* ]]; then
-            echo "Target host must identify staging (*.staging.*, *staging*, *-stage*, or *.test.*)" >&2
+            echo "Target host must identify staging" >&2
             exit 1
           fi
           echo "DAST target accepted: $url"
 
-      - name: Prepare optional authenticated context
+      # Authenticated scanning is intentionally disabled until the staging
+      # environment supplies a verified context and image digest.
+      # The credential references remain here only as a documented contract;
+      # this step cannot run while the guard below is false.
+      - name: Prepare and validate authenticated ZAP context
         id: auth
+        if: ${{ false }}
         shell: bash
         env:
-          DAST_AUTH_HEADER: ${{ secrets.STAGING_DAST_AUTH_HEADER }}
           DAST_CONTEXT_B64: ${{ secrets.STAGING_DAST_CONTEXT_B64 }}
+          DAST_CONTEXT_PASSWORD: ${{ secrets.STAGING_DAST_CONTEXT_PASSWORD }}
         run: |
           set -euo pipefail
-          if [[ -n "${DAST_AUTH_HEADER:-}" ]]; then
-            printf '%s' "$DAST_AUTH_HEADER" > .dast-auth-header
-            chmod 600 .dast-auth-header
-            echo "auth_header=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "auth_header=false" >> "$GITHUB_OUTPUT"
+          umask 077
+          test -n "${DAST_CONTEXT_B64:-}"
+          printf '%s' "$DAST_CONTEXT_B64" | base64 --decode > .dast-auth.context
+          test -s .dast-auth.context
+          if [[ -n "${DAST_CONTEXT_PASSWORD:-}" ]]; then
+            printf '%s' "$DAST_CONTEXT_PASSWORD" > .dast-context-password
+            chmod 600 .dast-context-password
           fi
-          if [[ -n "${DAST_CONTEXT_B64:-}" ]]; then
-            printf '%s' "$DAST_CONTEXT_B64" | base64 --decode > .dast-context.context
-            chmod 600 .dast-context.context
-            echo "context=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "context=false" >> "$GITHUB_OUTPUT"
-          fi
+          # ZAP validates the context structure and authentication configuration
+          # before scanning. The context and password remain workspace files and
+          # are never interpolated into Docker arguments or logs.
+          ZAP_STAGING_HOST="${STAGING_URL#https://}" npm run check:zap-context
+          docker run --rm \
+            -v "$PWD:/zap/wrk/:rw" \
+            -w /zap/wrk \
+            # Digest verificado del tag stable (781a2bdaea47… residio el 2026-08-30).
+            ghcr.io/zaproxy/zaproxy@sha256:781a2bdaea47324e7bab583e2263f21d257b0aee61ed51521a5be45f5f5081ef zap-cli context import /zap/wrk/.dast-auth.context
+          echo "context=true" >> "$GITHUB_OUTPUT"
 
       - name: Validate ZAP policy
         run: npm run check:zap-baseline
 
+      - name: Export configurable severity threshold
+        id: severity
+        shell: bash
+        run: |
+          set -euo pipefail
+          fail_levels="$(sed -n 's/^FAIL_LEVELS=//p' .zap/baseline.conf)"
+          [[ "$fail_levels" == *High* && "$fail_levels" == *Critical* ]] || {
+            echo "FAIL_LEVELS must include High and Critical" >&2
+            exit 1
+          }
+          echo "fail_levels=$fail_levels" >> "$GITHUB_OUTPUT"
+          echo "Configured blocking severities: $fail_levels"
+
       - name: Run OWASP ZAP baseline (public routes)
-        uses: zaproxy/action-baseline@v0.15.0
+        # Pinned by full SHA of tag v0.15.0 (supply-chain hardening; the
+        # validate-workflows gate rejects tags for ZAP actions).
+        uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25
         with:
           target: ${{ env.STAGING_URL }}
           allow_issue_writing: false
@@ -93,46 +122,43 @@ jobs:
           artifact_name: zap-baseline-staging-public
           cmd_options: '-a -j -c /zap/wrk/.zap/baseline.conf'
 
-      - name: Run OWASP ZAP authenticated scan
-        if: steps.auth.outputs.auth_header == 'true' || steps.auth.outputs.context == 'true'
+      - name: Run OWASP ZAP authenticated scan from validated context
+        if: ${{ false }}
         shell: bash
         env:
-          DAST_AUTH_HEADER: ${{ secrets.STAGING_DAST_AUTH_HEADER }}
-          DAST_CONTEXT_B64: ${{ secrets.STAGING_DAST_CONTEXT_B64 }}
+          DAST_CONTEXT_PASSWORD: ${{ secrets.STAGING_DAST_CONTEXT_PASSWORD }}
         run: |
           set -euo pipefail
-          args=("-t" "$STAGING_URL" "-J" "report_authenticated.json" "-w" "report_authenticated.md" "-r" "report_authenticated.html" "-a" "-j")
-          if [[ -n "${DAST_CONTEXT_B64:-}" ]]; then
-            printf '%s' "$DAST_CONTEXT_B64" | base64 --decode > .dast-context.context
-            args+=("-n" "/zap/wrk/.dast-context.context")
-          fi
-          # The header value is passed through a temporary file and converted
-          # to a ZAP replacer config; it never appears in logs or CLI args.
-          if [[ -n "${DAST_AUTH_HEADER:-}" ]]; then
-            printf '%s' "$DAST_AUTH_HEADER" > .dast-auth-header
-            chmod 600 .dast-auth-header
-            header_value="$(cat .dast-auth-header)"
-            args+=("-z" "-config replacer.full_list(0).description=staging-auth -config replacer.full_list(0).enabled=true -config replacer.full_list(0).matchtype=REQ_HEADER -config replacer.full_list(0).matchstr=Authorization -config replacer.full_list(0).replacement=${header_value}")
-          fi
+          umask 077
+          test -n "${DAST_CONTEXT_PASSWORD:-}"
+          unset DAST_CONTEXT_PASSWORD
+          # The context is mounted into ZAP. No auth header, token, or password
+          # is passed in Docker CLI arguments. Authentication data must be
+          # represented by context variables resolved inside the container.
           docker run --rm \
             -v "$PWD:/zap/wrk/:rw" \
             -w /zap/wrk \
-            ghcr.io/zaproxy/zaproxy:stable zap-baseline.py "${args[@]}" || true
-          python3 - <<'PY'
+            # Digest verificado del tag stable (mismo que el contexto arriba).
+            ghcr.io/zaproxy/zaproxy@sha256:781a2bdaea47324e7bab583e2263f21d257b0aee61ed51521a5be45f5f5081ef zap-baseline.py \
+              -t "$STAGING_URL" \
+              -n /zap/wrk/.dast-auth.context \
+              -J report_authenticated.json \
+              -w report_authenticated.md \
+              -r report_authenticated.html \
+              -a -j -c /zap/wrk/.zap/baseline.conf
+          FAIL_LEVELS="${{ steps.severity.outputs.fail_levels }}" python3 - <<'PY'
           import json, os, sys
           levels = {"3": "Informational", "2": "Low", "1": "Medium", "0": "High"}
-          fail_levels = {"High", "Critical"}
+          fail_levels = {item.strip() for item in os.environ["FAIL_LEVELS"].split(",") if item.strip()}
           path = "report_authenticated.json"
           if not os.path.exists(path):
               print("No authenticated JSON report produced; failing closed.", file=sys.stderr)
               sys.exit(1)
           data = json.load(open(path, encoding="utf-8"))
-          alerts = data.get("site", [])
           findings = []
-          for site in alerts:
+          for site in data.get("site", []):
               for alert in site.get("alerts", []):
-                  risk = alert.get("riskcode", "")
-                  level = levels.get(str(risk), alert.get("riskdesc", "").split(" ")[0])
+                  level = levels.get(str(alert.get("riskcode", "")), alert.get("riskdesc", "").split(" ")[0])
                   if level in fail_levels:
                       findings.append((level, alert.get("alert", "unknown")))
           if findings:
@@ -140,12 +166,17 @@ jobs:
               for level, name in findings:
                   print(f"- {level}: {name}", file=sys.stderr)
               sys.exit(1)
-          print("Authenticated ZAP scan passed High/Critical threshold")
+          print(f"Authenticated ZAP scan passed configured threshold: {', '.join(sorted(fail_levels))}")
           PY
+
+      - name: Remove authentication material
+        if: always()
+        shell: bash
+        run: rm -f .dast-auth.context .dast-context-password .dast-zap.env
 
       - name: Upload ZAP report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: dast-staging-report
           if-no-files-found: ignore
@@ -159,4 +190,3 @@ jobs:
             report_authenticated.json
             zap-baseline-staging-public/
             zap-baseline-staging-authenticated/
-            .dast-*.context

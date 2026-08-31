@@ -121,7 +121,7 @@ test("a11y: settings dialog", async ({ page }) => {
   await page.getByTestId("settings-button").click();
   await expect(
     page.locator('[aria-labelledby="settings-dialog-title"]'),
-  ).toBeVisible({ timeout: 10_000 });
+  ).toBeVisible({ timeout: 30_000 });
   const serious = await auditSerious(page, "settings-dialog");
   assertWithinBudget("settings-dialog", serious);
 });

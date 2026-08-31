@@ -87,10 +87,13 @@ export async function dismissOverlays(page: Page): Promise<void> {
     name: "Skip onboarding",
   });
   if (await skipOnboarding.isVisible().catch(() => false)) {
-    await skipOnboarding.click({ timeout: 3_000 });
+    // noWaitAfter: the onboarding is a soft UI dismissal, but Playwright's
+    // default post-click nav-wait can hang on "scheduled navigations" under
+    // load. The overlay's disappearance is asserted by callers.
+    await skipOnboarding.click({ timeout: 5_000, noWaitAfter: true });
   }
   if (await skipTour.isVisible().catch(() => false)) {
-    await skipTour.click({ timeout: 3_000 });
+    await skipTour.click({ timeout: 5_000, noWaitAfter: true });
   }
 
   // These are dismissible dashboard notices rather than modal overlays. Clear

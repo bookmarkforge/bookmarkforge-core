@@ -60,8 +60,10 @@ test("rejects a truncated backup without changing the vault", async ({ page }) =
     buffer: Buffer.from('{"bookmarks":[{"id":"partial"}'),
   });
 
+  // Exact match on the error title — the looser regex also matched the
+  // settings dialog wrapper that contains the message (strict-mode conflict).
   await expect(
-    page.getByText(/(?:failed|error).*import.*backup/i),
+    page.getByText("Error importing backup", { exact: true }),
   ).toBeVisible({ timeout: 15_000 });
 
   const afterCount = await page.evaluate(async () => {

@@ -20,6 +20,25 @@ export default defineConfig({
   use: {
     baseURL,
     contextOptions: { serviceWorkers: "block" },
+    // Seed an accepted consent decision so the bottom-anchored GDPR banner
+    // (ConsentBanner) never covers the UI or intercepts pointer events during
+    // E2E. Banner behavior itself is unit-tested in vitest; the e2e suite
+    // exercises the app, not the first-run consent prompt.
+    storageState: {
+      cookies: [],
+      origins: [
+        {
+          origin: baseURL,
+          localStorage: [
+            { name: "forge_consent_decision_made", value: "true" },
+            { name: "forge_consent_analytics", value: "true" },
+            { name: "forge_consent_error_reporting", value: "true" },
+            { name: "forge_consent_client_events", value: "true" },
+            { name: "bmf_local_error_storage", value: "true" },
+          ],
+        },
+      ],
+    },
     trace: "retain-on-failure",
     screenshot: "only-on-failure",
     video: "retain-on-failure",

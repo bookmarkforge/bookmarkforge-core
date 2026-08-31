@@ -17,6 +17,12 @@
  *   DRILL_BACKUP_SPEC       ruta del spec (default tests/e2e/drill-backup-restore.spec.ts)
  *   DRILL_BACKUP_TIMEOUT_MS timeout total (default 600_000)
  *   E2E_CONFIG              playwright config (default playwright.config.ts)
+ *   DRILL_RTO_MS            gate RTO duro (default 120_000 ms)
+ *   DRILL_RTO_WARN_MS       umbral de degradación (default 90% del gate). Usar
+ *                           0 para desactivar la alerta de degradación.
+ *   DRILL_ALERT_WEBHOOK_URL webhook HTTPS opcional (rechaza http, como el resto
+ *                           de canales de alerta). Se dispara si una restauración
+ *                           pasa el gate RTO pero supera el umbral de degradación.
  */
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -37,10 +43,52 @@ function recordPhase(name, ok, detail, ms) {
 }
 
 const GATE_RTO_MS = Number(process.env.DRILL_RTO_MS ?? 120_000);
+const WARN_RTO_MS = Number(process.env.DRILL_RTO_WARN_MS ?? Math.floor(GATE_RTO_MS * 0.9));
 
 /** Pure gate: a restore mark is within RTO when present and below the gate. */
 export function isRestoreWithinRto(ms, gateMs) {
   return typeof ms === "number" && Number.isFinite(ms) && ms < gateMs;
+}
+
+/** A restore is degraded when it passes the RTO gate but exceeds the warn threshold. */
+export function isRestoreDegraded(ms, gateMs, warnMs) {
+  return (
+    typeof ms === "number" &&
+    Number.isFinite(ms) &&
+    ms >= gateMs === false &&
+    typeof warnMs === "number" &&
+    warnMs > 0 &&
+    ms >= warnMs
+  );
+}
+
+function resolveWebhook(raw) {
+  const value = raw?.trim() ?? "";
+  if (!value) return "";
+  if (/^https:\/\//i.test(value)) return value;
+  console.error(JSON.stringify({
+    event: "drill_webhook_url_rejected",
+    reason: "only https is accepted",
+  }));
+  return "";
+}
+
+async function fireDrillAlertWebhook(url, payload) {
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "User-Agent": "bookmarkforge-drill" },
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(5_000),
+    });
+    if (!response.ok) throw new Error(`webhook responded ${response.status}`);
+    console.error(JSON.stringify({ event: "drill_webhook_delivered" }));
+  } catch (error) {
+    console.error(JSON.stringify({
+      event: "drill_webhook_failed",
+      reason: String(error),
+    }));
+  }
 }
 
 // ── Ejecución ───────────────────────────────────────────────────────
@@ -52,6 +100,7 @@ const IS_CLI = Boolean(
 );
 if (IS_CLI) {
 
+(async () => {
 // Windows expone npx como npx.cmd; spawnSync con shell resuelve .cmd sin
 // pasar args separados (evita el warning DEP0190 de concatenación). En
 // Windows el path del spec se pasa entre comillas para escaparlo.
@@ -81,14 +130,22 @@ const rtoOk =
   (restoreBmf ? isRestoreWithinRto(restoreBmf.ms, GATE_RTO_MS) : true) &&
   (restorePlain ? isRestoreWithinRto(restorePlain.ms, GATE_RTO_MS) : true);
 
+const restores = [restoreBmf, restorePlain].filter(Boolean);
+const degraded = restores.filter((m) => isRestoreDegraded(m.ms, GATE_RTO_MS, WARN_RTO_MS));
+
 for (const m of marks) {
   const isRestore = m.name.startsWith("restore_");
-  recordPhase(
-    m.name,
-    !isRestore || isRestoreWithinRto(m.ms, GATE_RTO_MS),
-    isRestore ? `${m.ms}ms (gate RTO < ${GATE_RTO_MS}ms)` : `${m.ms}ms`,
-    m.ms,
-  );
+  if (isRestore) {
+    if (!isRestoreWithinRto(m.ms, GATE_RTO_MS)) {
+      recordPhase(m.name, false, `${m.ms}ms (gate RTO < ${GATE_RTO_MS}ms)`, m.ms);
+    } else if (isRestoreDegraded(m.ms, GATE_RTO_MS, WARN_RTO_MS)) {
+      recordPhase(m.name, true, `${m.ms}ms (DEGRADADA — warn < ${WARN_RTO_MS}ms, gate < ${GATE_RTO_MS}ms)`, m.ms);
+    } else {
+      recordPhase(m.name, true, `${m.ms}ms (gate RTO < ${GATE_RTO_MS}ms)`, m.ms);
+    }
+  } else {
+    recordPhase(m.name, true, `${m.ms}ms`, m.ms);
+  }
 }
 
 const failedMatch = output.match(/(\d+) failed/);
@@ -111,18 +168,37 @@ recordPhase(
   0,
 );
 
+const degradedMs = degraded.map((m) => ({ name: m.name, ms: m.ms, gate_ms: GATE_RTO_MS, warn_ms: WARN_RTO_MS }));
+
+// Alerta de degradación: pasa el gate RTO pero supera el umbral de advertencia.
+const webhookUrl = resolveWebhook(process.env.DRILL_ALERT_WEBHOOK_URL ?? "");
+if ((degraded.length > 0) && webhookUrl) {
+  await fireDrillAlertWebhook(webhookUrl, {
+    event: "drill_rto_degraded",
+    drill: "backup-restore",
+    degraded: degradedMs,
+    gate_ms: GATE_RTO_MS,
+    warn_ms: WARN_RTO_MS,
+    ok,
+  });
+}
+
 if (!ok) {
   if (out.error) {
     console.error(`[DRILL-BACKUP] spawn error: ${String(out.error)}`);
   }
   console.error(output.slice(-4_000));
   if (isJson) {
-    console.log(JSON.stringify({ ok: false, phases }));
+    console.log(JSON.stringify({ ok: false, degraded: degradedMs, phases }));
   }
   process.exit(1);
 }
 
 if (isJson) {
-  console.log(JSON.stringify({ ok: true, phases }));
+  console.log(JSON.stringify({ ok: true, degraded: degradedMs, phases }));
 }
+})().catch((error) => {
+  console.error(`[DRILL-BACKUP] unexpected error: ${String(error)}`);
+  process.exit(1);
+});
 }

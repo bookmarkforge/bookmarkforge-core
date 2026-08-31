@@ -120,3 +120,36 @@ jobs:
           path: |
             drill-rollback.json
             drill-rollback-*.log
+
+  kpi-collector-local:
+    name: KPI collector (local, sin staging)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CI: true
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Validate analytics collector locally (ingest → agregación → kpi-report)
+        # Arranca el collector real (createAnalyticsHandler) en localhost, hace
+        # un POST en vivo y corre el gate kpi-report contra local — valida el
+        # pipeline de analítica sin depender de staging ni de red externa.
+        shell: bash
+        run: |
+          set -o pipefail
+          npx tsx scripts/kpi-local-collector-check.mjs > kpi-local-collector.json
+      - name: Upload collector evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: kpi-local-collector-${{ github.run_id }}
+          if-no-files-found: ignore
+          retention-days: 90
+          path: |
+            kpi-local-collector.json

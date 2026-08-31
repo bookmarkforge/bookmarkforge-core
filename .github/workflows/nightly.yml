@@ -3,6 +3,7 @@ name: Nightly validation
 on:
   schedule:
     - cron: '17 2 * * *'
+    - cron: '17 3 1 * *'
   workflow_dispatch:
 
 permissions:
@@ -183,3 +184,42 @@ jobs:
           retention-days: 30
           path: kpi-report.json
 
+
+  drill-backup-restore:
+    name: Backup-restore DR drill (monthly)
+    # Runs monthly (1st of month, 03:17 UTC) via the extra schedule entry, and
+    # on manual dispatch. The RTO gate (<120s) is enforced by the drill script;
+    # if a restore passes the gate but exceeds the warning threshold the script
+    # pages DRILL_ALERT_WEBHOOK_URL (HTTPS).
+    if: ${{ github.event_name == 'workflow_dispatch' || startsWith(github.event.schedule, '17 3 1') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NODE_ENV: test
+      VITE_TEST_BUILD: 'true'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run backup-restore DR drill (RTO gate + degradation alert)
+        env:
+          DRILL_RTO_MS: ${{ vars.DRILL_RTO_MS }}
+          DRILL_RTO_WARN_MS: ${{ vars.DRILL_RTO_WARN_MS }}
+          DRILL_ALERT_WEBHOOK_URL: ${{ secrets.DRILL_ALERT_WEBHOOK_URL }}
+        run: node scripts/drill-backup-restore.mjs --json
+      - name: Upload drill evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: drill-backup-restore-${{ github.run_id }}
+          if-no-files-found: ignore
+          retention-days: 90
+          path: |
+            test-results/

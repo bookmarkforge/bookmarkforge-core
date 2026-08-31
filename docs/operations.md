@@ -100,11 +100,23 @@ Ejecuta `tests/e2e/drill-backup-restore.spec.ts` contra el stack de staging:
 El script reporta una tabla PASS/FAIL por fase y sale 0/1 (CI-ready). Programa
 la ejecución mensual (cron) y regístrala en el checklist operativo.
 
-## Simulacro trimestral de recuperación ante desastre (DR drill)
+## Simulacro de recuperación ante desastre (DR drill)
 
-El ensayo completo trimestral se ejecuta en CI con `.github/workflows/drill-quarterly.yml`
-(primer día de enero/abril/julio/octubre a las 06:00 UTC + `workflow_dispatch`)
-y cubre los dos caminos de recuperación contra la topología staging local:
+**Frecuencia:** el ensayo de **backup-restore** corre **cada mes** en
+`.github/workflows/nightly.yml` (job `drill-backup-restore`, día 1 de cada mes
+03:17 UTC + `workflow_dispatch`), y el ensayo completo de ambos caminos corre
+**cada trimestre** en `.github/workflows/drill-quarterly.yml` (primer día de
+enero/abril/julio/octubre a las 06:00 UTC + `workflow_dispatch`). Ambos cubren
+los caminos de recuperación contra la topología staging local:
+
+> **Alerta de degradación del RTO.** El drill pasa si la restauración cumple el
+gate RTO (< 120 s por defecto). Si una restauración **supera el umbral de
+degradación** (`DRILL_RTO_WARN_MS`, default 90 % del gate = 108 s) sin romper el
+gate, el script emite el evento `drill_rto_degraded` y dispara el webhook HTTPS
+`DRILL_ALERT_WEBHOOK_URL` (misma política `https`-only que el gate de KPIs),
+pero la run **no falla** — es una señal temprana antes de romper el SLO. Para
+verla en el run del drill se puede apuntar `DRILL_ALERT_WEBHOOK_URL` al canal
+de incidencias (p. ej. un webhook de Slack).
 
 1. **Backup-restore (job `backup-restore`)** — `npm run drill:backup-restore`:
    baseline → desastre → restore → verify, con gate RTO de referencia < 120 s.
@@ -114,6 +126,13 @@ y cubre los dos caminos de recuperación contra la topología staging local:
    gate < 60 s) → re-verificación. Construye las imágenes REALES del tag
    `prod-*` previo desde su worktree, de modo que el rollback sea imagen == código.
 
+3. **KPI collector (job `kpi-collector-local`)** — `npx tsx
+   scripts/kpi-local-collector-check.mjs` valida el pipeline de analítica
+   contra un servidor LOCAL (sin staging): arranca el collector real
+   (`createAnalyticsHandler`) en 127.0.0.1, siembra un dataset con cohorte de
+   retención D7 madura, hace un POST `/api/analytics/events` en vivo y corre
+   el gate `kpi-report` con umbrales exactos (DAU/WAU/MAU + retención D7).
+
 Precondiciones que el workflow resuelve:
 
 - **Historial y tags:** `fetch-depth: 0` + `fetch-tags: true` (el rollback
@@ -122,7 +141,7 @@ Precondiciones que el workflow resuelve:
 - **Secreto de firma de licencias:** `node scripts/generate-license-keys.mjs
   --server-key-only` escribe solo el PKCS#8 gitignored (el compose staging
   necesita el archivo; los archivos commiteados quedan intactos).
-- **Evidencia:** cada job sube un artifact `drill-{backup-restore,rollback}-<run_id>`
+- **Evidencia:** cada job sube un artifact `drill-{backup-restore,rollback}-<run_id>` y `kpi-local-collector-<run_id>`
   (salida JSON + `test-results/`) con retención de 90 días y escribe el resumen
   en el job summary de la run.
 

@@ -17,7 +17,11 @@ const QUOTA_FILL_MAX_ITERATIONS = Number.parseInt(process.env.CRISIS_QUOTA_MAX_I
 let companionPort = 0;
 let companionUrl = "";
 let adminToken = "";
-const configuredCompanionPort = Number.parseInt(process.env.CRISIS_COMPANION_PORT ?? "0", 10);
+// Default must match the vite dev-server proxy target (playwright.config.ts
+// passes CRISIS_COMPANION_PORT=8799 to the webServer env, and vite.config.ts
+// proxies /api/* to CRISIS_COMPANION_PORT || 8799). Reserving a random port
+// here would strand the companion on a port the proxy never forwards to.
+const configuredCompanionPort = Number.parseInt(process.env.CRISIS_COMPANION_PORT ?? "8799", 10);
 const configuredAdminToken = process.env.CRISIS_ADMIN_TOKEN?.trim() ?? "";
 const ADMIN_TOKEN_BYTES = 24;
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");

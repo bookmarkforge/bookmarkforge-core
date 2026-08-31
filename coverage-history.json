@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "metric": "lines",
+  "areas": [
+    "src/components",
+    "src/constants",
+    "src/contexts",
+    "src/data",
+    "src/db",
+    "src/hooks",
+    "src/memory",
+    "src/observability",
+    "src/services",
+    "src/services/ai",
+    "src/store",
+    "src/telemetry",
+    "src/types",
+    "src/utils"
+  ],
+  "runs": [
+    {
+      "timestamp": "2026-08-31T09:34:10.015Z",
+      "values": {
+        "src/components": 90.68,
+        "src/constants": 93.94,
+        "src/contexts": 84.44,
+        "src/data": 100,
+        "src/db": 88.64,
+        "src/hooks": 89.6,
+        "src/memory": 89.72,
+        "src/observability": 90.58,
+        "src/services": 86.14,
+        "src/services/ai": 86.16,
+        "src/store": 98.67,
+        "src/telemetry": 94.55,
+        "src/types": 100,
+        "src/utils": 86.08
+      }
+    }
+  ]
+}

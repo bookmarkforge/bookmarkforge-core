@@ -1,6 +1,6 @@
 # Checklist de pre-lanzamiento — BookmarkForge
 
-- **Última revisión:** 2026-08-30
+- **Última revisión:** 2026-08-31
 - **Fuente:** derivado de [docs/audit.md](audit.md), [docs/security.md](security.md), [docs/operations.md](operations.md) y [docs/internal-security-checklist.md](internal-security-checklist.md).
 - **Cómo usar:** marca `[x]` cuando el punto esté completo. Cada punto indica dónde está la evidencia o el estado actual. "Evidencia" = documento/archivo donde verificar; "Gate" = comando automatizado que lo comprueba.
 
@@ -85,7 +85,7 @@
 - [x] **10. Analítica de negocio opt-in (decisión tomada e implementada 2026-08-31)**
   Canal opt-in, agregado y no-PII: el cliente envía UN bucket diario por instalación (conteos por tipo de evento, sin contenido del vault, sin IP, sin id crudo — solo el SHA-256 de un id de instalación aleatorio) al companion server cuando el usuario opta en el banner (`forge_consent_analytics`, default OFF). El servidor agrega DAU/WAU/MAU, retención por cohorte D1/D7/D30 y funnel de activación; GET `/api/analytics/kpis` con token admin (`ANALYTICS_ADMIN_TOKEN`) y estado persistible (`ANALYTICS_STATE_FILE`).
   - Evidencia: [server/src/business-analytics.ts](../server/src/business-analytics.ts), [src/services/analyticsForwarder.ts](../src/services/analyticsForwarder.ts), `npm run kpi-report`, [docs/ROPA.md](ROPA.md) §3 T8 y §4.
-  - Gate: tests unitarios `src/tests/server/business-analytics.test.ts` y `src/tests/services/analyticsForwarder.test.ts`; smoke end-to-end verificado (POST 204, KPIs 200, 401 sin token, 400 inválido).
+  - Gate: tests unitarios `src/tests/server/business-analytics.test.ts` y `src/tests/services/analyticsForwarder.test.ts`; smoke end-to-end verificado (POST 204, KPIs 200, 401 sin token, 400 inválido). La vigilancia automatizada del canal es el ítem 19 (Gate nocturno de KPIs).
 
 - [x] **11. Prueba de carga del companion server**
   Validar los límites actuales (conexiones WS, rate limits, proxy IA) con carga real. Implementado en [scripts/load-test-server.mjs](../scripts/load-test-server.mjs) (`npm run test:load`): arranca el servidor aislado contra un mock upstream de IA y valida los presupuestos alineados con los SLO de [docs/operations.md](operations.md) — p95 join y relay de señalización < 500 ms, p95 del proxy IA < 3 s, éxito ≥ 99 %, saturación (rechazo 1013 por encima de `MAX_CONNECTIONS`) y `/health` vivo bajo carga.
@@ -95,14 +95,24 @@
   Documentar formalmente los contratos (p. ej. OpenAPI) con Whop y los proveedores de IA. Riesgo de dependencia sin contrato versionado.
   - Evidencia: [docs/audit.md](audit.md) §1 ("Integraciones | Mixto") y §5 (Whop).
 
-- [x] **13. Simulacro de desastre trimestral (automatizado 2026-08-31)**
+- [x] **13. Simulacro de desastre trimestral (automatizado y ejecutado 2026-08-31)**
   El ensayo completo trimestral está formalizado en CI: `.github/workflows/drill-quarterly.yml` (primer día de cada trimestre + dispatch manual) ejecuta el drill de backup-restore (RTO < 120 s) **y** el drill de rollback Docker (CAMINO A por imagen < 60 s, imágenes reales del tag `prod-*` previo). Requiere ≥ 2 tags `prod-*` en el repo.
-  - Evidencia: [.github/workflows/drill-quarterly.yml](../.github/workflows/drill-quarterly.yml), [docs/operations.md](operations.md) → "Simulacro trimestral de recuperación ante desastre"; `npm run drill:backup-restore` y `DRILL_DOCKER=1 npm run drill:rollback` verificados localmente (2026-08-31).
-  - Pendiente: ejecutar la primera run del workflow (necesita tags `prod-*` reales, p. ej. tras `deploy-prod`) y registrar el enlace como evidencia trimestral.
+  - Evidencia: [.github/workflows/drill-quarterly.yml](../.github/workflows/drill-quarterly.yml), [docs/operations.md](operations.md) → "Simulacro trimestral de recuperación ante desastre" y "Evidencia de ejecución local (re-run) — rollback Docker"; [docs/drill-run-2026-08-31-rollback-docker.md](drill-run-2026-08-31-rollback-docker.md).
+  - **Ejecutado (2026-08-31)** contra el stack local y tags `prod-*` reales (`prod-20260831-1320-00b24d6` → `prod-20260831-1315-8f44a84`):
+    - **Rollback Docker** (`DRILL_DOCKER=1`): 6 fases, exit 0 — CAMINO A por imagen **9.6 s < 60 s (gate)** · BASELINE/RE-VERIFY 11/11 (re-run 224.6 s; primera run 167.4 s, CAMINO A 12.2 s).
+    - **Backup-restore** (`npm run drill:backup-restore`): restore BMF 6.6 s / plaintext 6.5 s, gate RTO < 120 s, `degraded: []` (sin alerta).
+    - **Ensayo mensual** en `nightly.yml` (job `drill-backup-restore`, día 1 de mes 03:17 UTC + dispatch) con alerta de degradación del RTO (`DRILL_ALERT_WEBHOOK_URL`).
+  - Pendiente externo: primera run en CI — requiere push del repo a GitHub (los workflows aún no existen en el remoto) y ≥ 2 tags `prod-*` remotos; registrar el enlace de la run como evidencia trimestral.
 
 - [ ] **14. Checklist de publicación de extensiones**
   Preparar la publicación en Chrome Web Store / AMO (descripción, capturas, política de privacidad de la extensión).
   - Evidencia: [docs/audit.md](audit.md) §5 ("Falta checklist ASO/tiendas de extensiones").
+
+- [x] **19. Gate nocturno de KPIs (automatizado y verificado 2026-08-31)**
+  La analítica opt-in (ítem 10) deja de ser un colector pasivo: `kpi-report.mjs` calcula DAU/WAU/MAU y retención D1/D7/D30 por cohorte y los contrasta con umbrales configurables (`KPI_MIN_DAU/WAU/MAU`, `KPI_MIN_D7/D30_PCT`); por debajo de umbral emite `analytics_kpi_below_threshold` y dispara un webhook HTTPS (payload nativo Slack para `hooks.slack.com`, sin PII; `http` rechazado). El job `kpi-staging` en `nightly.yml` lo corre contra staging (token admin `STAGING_ANALYTICS_ADMIN_TOKEN`) y **falla la run** si un KPI cae. El collector se valida a sí mismo en CI contra un servidor local (`kpi-collector-local` en `drill-quarterly.yml`).
+  - Evidencia: [scripts/kpi-report.mjs](../scripts/kpi-report.mjs), [.github/workflows/nightly.yml](../.github/workflows/nightly.yml), [scripts/kpi-local-collector-check.mjs](../scripts/kpi-local-collector-check.mjs), [docs/operations.md](operations.md) → "Gate nocturno de KPIs" y "Conexión a Slack (Incoming Webhook)".
+  - Gate: 17 tests unitarios de `kpi-report` (incl. detección de Slack y shape del payload); harness local ejecutado en PASS (DAU/WAU/MAU + retención D7 con umbrales exactos, exit 0).
+  - Pendiente externo: configurar en GitHub los secrets (`STAGING_ANALYTICS_ADMIN_TOKEN`, `ANALYTICS_ALERT_WEBHOOK_URL`) y vars (`KPI_MIN_*`, `STAGING_URL`) y activar el token admin en staging (mismo valor que el secret).
 
 ---
 

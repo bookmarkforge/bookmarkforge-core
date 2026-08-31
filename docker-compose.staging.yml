@@ -43,7 +43,7 @@ services:
       GEMINI_API_KEY: staging-ai-key
       GEMINI_API_BASE: http://ai-mock:8081/v1beta/models
       AI_SESSION_REQUIRE_LICENSE: "0"
-      AI_SESSION_ORIGINS: http://127.0.0.1:18080,http://localhost:18080
+      AI_SESSION_ORIGINS: http://127.0.0.1:${HTTP_PORT:-18080},http://localhost:${HTTP_PORT:-18080}
       AI_PROXY_REDIS_FAILURE_MODE: fail-closed
       AI_PROXY_REDIS_URL: redis://redis:6379/0
       WHOP_LICENSE_API_URL: http://license-mock:8082/license

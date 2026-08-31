@@ -150,6 +150,16 @@ Ejecuta `tests/e2e/drill-backup-restore.spec.ts` contra el stack de staging:
 El script reporta una tabla PASS/FAIL por fase y sale 0/1 (CI-ready). Programa
 la ejecución mensual (cron) y regístrala en el checklist operativo.
 
+**Evidencia de ejecución local (re-run) — 2026-08-31:** ✅ PASS — `npm run drill:backup-restore` (exit 0, `ok:true`, `degraded:[]`):
+
+| Fase | Resultado | RTO medido | Gate |
+|---|---|---|---|
+| restore_plaintext (JSON) | PASS | **6.5 s** (6528 ms) | < 120 s |
+| restore_bmf (cifrado .bmf) | PASS | **6.6 s** (6640 ms) | < 120 s |
+| playwright (spec) | PASS | 2 passed / 0 failed | exit 0 |
+| rto_gate | PASS | ambos caminos < gate | sin degradación (`drill_rto_degraded` no emitido) |
+
+
 ## Simulacro de recuperación ante desastre (DR drill)
 
 **Frecuencia:** el ensayo de **backup-restore** corre **cada mes** en
@@ -225,13 +235,35 @@ Hallazgos de la ejecución (corregidos durante el run):
    `deploy-prod.mjs`); los tags con sufijo (`prod-YYYYMMDD-NNNN-<sufijo>`) los
    rechaza con `Invalid target tag format` — crear los tags de release con
    `scripts/deploy-prod.mjs`.
-3. **Compose hardcodea `AI_SESSION_ORIGINS` a 18080** — correr el drill con el
-   puerto por defecto (o interpolar `HTTP_PORT` en el compose) o el bootstrap
-   de sesión IA responde 403.
+3. **Compose hardcodeaba `AI_SESSION_ORIGINS` a 18080** — corregido: ahora
+   interpola `http://127.0.0.1:${HTTP_PORT:-18080},http://localhost:${HTTP_PORT:-18080}`
+   en `docker-compose.staging.yml`, así el drill funciona con puertos no
+   estándar (verificado: `HTTP_PORT=18085 docker compose config` → orígenes y
+   puerto publicados a 18085; default 18080).
 4. **En run local desde worktree**, el smoke necesita `node_modules` para el
    `import("ws")` dinámico (en CI lo instala `npm ci`).
 
 Evidencia JSON del run (fases y tiempos) registrada en el artifact de CI.
+
+### Evidencia de ejecución local (re-run) — 2026-08-31 (rollback Docker)
+
+Re-ejecución completa con `DRILL_DOCKER=1` desde un worktree aislado en HEAD 
+`949f6b7` (post fix de build hermenéutico + redis), sobre los mismos tags de 
+release (deploy actual `prod-20260831-1320-00b24d6`, target `prod-20260831-1315-8f44a84`).
+
+**Resultado: ✅ PASS** — 6 fases en 224.6 s (exit 0):
+
+| Fase | Resultado | Detalle | Tiempo |
+|---|---|---|---|
+| PREP | PASS | imágenes del tag previo existentes (web/api:8f44a84), sin build | 2.3 s |
+| BASELINE | PASS | 11/11 checks (build de imágenes HEAD + smoke: health, AI session/proxy/SSE, TTS, imagen, client-events, WS signaling) | 87.5 s |
+| KILL | PASS | api caído, mocks vivos | 6.2 s |
+| DETECT | PASS | `APP_CAIDA` detectado · `BUNDLE_CORRUPTO` probe OK (SRI) | 108.0 s |
+| ROLLBACK | PASS | **CAMINO A (imagen por SHA) medido 9.6 s < 60 s (GATE)** — HEAD=8f44a84=target, rollback exit 0 | 17.2 s |
+| RE-VERIFY | PASS | 11/11 checks post-rollback | 0.3 s |
+
+Evidencia JSON del run (fases y tiempos) registrada en el artifact de CI.
+
 
 ## Prueba de carga del companion server
 

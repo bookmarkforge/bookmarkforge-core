@@ -20,6 +20,7 @@ export function validateCompose(name, source) {
     if (/AI_PROXY_REDIS_FAILURE_MODE:\s*fail-open/.test(source)) errors.push(`${name}: staging Redis failure mode must fail-closed`);
     if (!/127\.0\.0\.1:/.test(source)) errors.push(`${name}: staging published ports must bind loopback`);
     if (/bookmarkforge\.com|api\.bookmarkforge\.com|signal\.bookmarkforge\.com/i.test(source)) errors.push(`${name}: production domain referenced by staging compose`);
+    if (!/AI_SESSION_ORIGINS:[^\n]*\$\{HTTP_PORT/.test(source)) errors.push(`${name}: staging AI session origins must interpolate HTTP_PORT (hardcoded 18080 → 403 con puertos no estándar)`);
   }
   return { errors };
 }

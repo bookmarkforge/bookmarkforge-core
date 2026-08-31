@@ -48,10 +48,10 @@
 
 - [ ] **5. Cierre legal RGPD**
   Documentar: responsable del tratamiento, finalidades, base jurídica, minimización, retención, derechos, encargados/subencargados, transferencias internacionales, consentimiento y procedimiento de incidentes.
-  - Evidencia: [docs/ROPA.md](ROPA.md) (plantilla de cierre RGPD — completar los campos `⚠ COMPLETAR`), [docs/security.md](security.md) → "RGPD" (controles técnicos ≠ certificación legal); reconocido como deuda en [docs/audit.md](audit.md) §2 y §5.
-  - **Pasos:**
-    1. Completar en [docs/ROPA.md](ROPA.md) los campos `⚠ COMPLETAR`: responsable (§1), base jurídica y retención de logs (§3/§5), DPA firmados (§7), mecanismo de transferencia por proveedor (§8), registro de consentimiento (§9), contactos y plazos del procedimiento de incidentes (§10), responsable de la revisión trimestral (§12).
-    2. Verificar que la tabla Art. 6 del inventario (§3) refleja el despliegue real antes de lanzar.
+  - Evidencia: [docs/ROPA.md](ROPA.md) — **campos operativos rellenados (2026-08-31)**: bases jurídicas y retención por tratamiento (§3/§5), registro de consentimiento y plazos de respuesta (§9), procedimiento de incidentes (§10), revisión trimestral fijada (§12). Quedan solo campos `⚠ DATO PERSONAL`: identidad legal del operador (§1), autoridad de control (§1), DPA firmados por proveedor (§7/§8). [docs/security.md](security.md) → "RGPD" (controles técnicos ≠ certificación legal); reconocido como deuda en [docs/audit.md](audit.md) §2 y §5.
+  - **Pasos restantes (externos, del operador):**
+    1. Rellenar §1: nombre legal, sede y autoridad de control competente.
+    2. Firmar/conservar los DPA por proveedor (§7/§8): hosting, Sentry, proveedores de IA.
     3. Confirmar con revisión legal (la plantilla es operativa, no un dictamen).
 
 ---

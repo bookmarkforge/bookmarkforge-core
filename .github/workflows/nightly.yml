@@ -23,8 +23,10 @@ jobs:
     env:
       NODE_ENV: test
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20.19.0'
           cache: npm
@@ -32,7 +34,7 @@ jobs:
       - run: npm run test:coverage
       - name: Upload coverage
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: nightly-coverage
           if-no-files-found: ignore
@@ -49,8 +51,10 @@ jobs:
       NODE_ENV: test
       VITE_TEST_BUILD: 'true'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20.19.0'
           cache: npm
@@ -61,7 +65,7 @@ jobs:
         run: npm run e2e:multiuser
       - name: Upload multi-user artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: nightly-multiuser
           if-no-files-found: ignore
@@ -79,8 +83,10 @@ jobs:
       NODE_ENV: test
       VITE_TEST_BUILD: 'true'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '20.19.0'
           cache: npm
@@ -91,7 +97,7 @@ jobs:
         run: npm run e2e:nightly -- tests/e2e/perf-scale.nightly.spec.ts
       - name: Upload performance artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: nightly-performance
           if-no-files-found: ignore
@@ -100,3 +106,36 @@ jobs:
             test-results/
             playwright-report-nightly/
             playwright-report/
+
+  launch-readiness:
+    name: Launch checklist blockers
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - name: Enforce launch checklist blockers (strict)
+        run: npm run check:launch-checklist:strict
+
+  load-test:
+    name: Companion server load test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Run companion server load test (WS + SLO gates)
+        run: node scripts/load-test-server.mjs --connections=50 --json

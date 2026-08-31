@@ -48,7 +48,12 @@ export default defineConfig({
       },
     },
     {
-      command: `npm run dev -- --host 127.0.0.1 --port ${port}`,
+      // --mode test: enables the fast Argon2id test parameters (8 MiB, t=1)
+      // via env.mode === "test". Without it Vite runs in development mode and
+      // the E2E vault setup does the full 128 MiB desktop KDF (~28 s on slow
+      // machines), blowing the 30 s setupVault budget and the 60 s test
+      // timeout. Production builds keep the strong parameters via isProdBuild().
+      command: `npm run dev -- --host 127.0.0.1 --port ${port} --mode test`,
       url: baseURL,
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,

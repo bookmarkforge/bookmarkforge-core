@@ -23,7 +23,10 @@
  *                      ≥ 7 días de antigüedad
  *   KPI_MIN_D30_PCT    retención D30 mínima (cohorte ≥ 30 días)
  *   ANALYTICS_ALERT_WEBHOOK_URL  webhook HTTPS (rechaza http, como el resto
- *                      de canales de alerta del repo)
+ *                      de canales de alerta del repo). Si la URL es un
+ *                      Incoming Webhook de Slack (`hooks.slack.com/services`),
+ *                      envía automáticamente un payload nativo `{ text, blocks }`;
+ *                      cualquier otro webhook HTTPS recibe el JSON estructurado.
  *
  * La retención de una cohorte es d7/cohortSize (o d30/cohortSize): el script
  * elige la cohorte MÁS RECIENTE que ya tenga la antigüedad necesaria, de modo
@@ -140,6 +143,36 @@ export function buildAlertPayload(kpis, violations) {
   };
 }
 
+// True cuando la URL apunta a un Incoming Webhook real de Slack (que solo
+// acepta el shape `{ text, blocks }`). Cualquier otro webhook HTTPS recibe el
+// payload estructurado `buildAlertPayload`.
+export function isSlackWebhook(raw) {
+  return /^https:\/\/(hooks\.slack\.com\/services|api\.slack\.com)/i.test(raw?.trim() ?? "");
+}
+
+// Payload nativo de Slack (Incoming Webhook): text + blocks, sin datos PII.
+export function buildSlackPayload(kpis, violations) {
+  const lines = [
+    `generatedAt  ${kpis.generatedAt}`,
+    `installs     ${kpis.activeInstalls}`,
+    `DAU/WAU/MAU  ${kpis.dau} / ${kpis.wau} / ${kpis.mau}`,
+    ...violations.map((v) => `• ${v}`),
+  ].join("\n");
+  return {
+    text: "⚠️ BookmarkForge — KPIs por debajo del umbral",
+    blocks: [
+      {
+        type: "section",
+        text: { type: "mrkdwn", text: "⚠️ *KPIs por debajo del umbral*" },
+      },
+      {
+        type: "section",
+        text: { type: "mrkdwn", text: ["```", lines, "```"].join("\n") },
+      },
+    ],
+  };
+}
+
 function resolveWebhook(raw) {
   const value = raw?.trim() ?? "";
   if (!value) return "";
@@ -226,9 +259,15 @@ export async function runKpiReport(options = {}) {
     for (const violation of evaluation.violations) {
       console.error(`[kpi-report] ❌ ${violation}`);
     }
-    console.error(JSON.stringify(buildAlertPayload(kpis, evaluation.violations)));
+    const payload = buildAlertPayload(kpis, evaluation.violations);
+    console.error(JSON.stringify(payload));
     const webhook = resolveWebhook(webhookUrl);
-    if (webhook) await fireAlertWebhook(webhook, buildAlertPayload(kpis, evaluation.violations));
+    if (webhook) {
+      // Slack Incoming Webhooks solo entienden `{ text, blocks }`; cualquier
+      // otro webhook HTTPS recibe el JSON estructurado del evento.
+      const slack = isSlackWebhook(webhook) ? buildSlackPayload(kpis, evaluation.violations) : payload;
+      await fireAlertWebhook(webhook, slack);
+    }
     return { code: 1, reason: "below-threshold", violations: evaluation.violations };
   }
 

@@ -77,6 +77,56 @@ ANALYTICS_ADMIN_TOKEN=... ANALYTICS_BASE_URL=https://staging... \
   KPI_MIN_DAU=10 KPI_MIN_D7_PCT=0.15 node scripts/kpi-report.mjs
 ```
 
+### Conexión a Slack (Incoming Webhook)
+
+**1 · Crea el webhook en Slack** — en el workspace, *Settings → Incoming
+Webhooks* (o crea una app `Incoming Webhook`) y elige el canal de alertas
+(p. ej. `#ops-alerts`). Slack expide una URL del tipo
+`https://hooks.slack.com/services/T000/B000/xxxx`.
+
+**2 · Regístrala como secreto en GitHub** para que el job `kpi-staging` la
+inyecte:
+
+```bash
+gh secret set ANALYTICS_ALERT_WEBHOOK_URL --repo <owner>/<repo>
+```
+
+El script **detecta automáticamente** si la URL es un Incoming Webhook de
+Slack (`hooks.slack.com/services`) y, en ese caso, envía un payload nativo
+`{ text, blocks }` con mrkdwn. Cualquier otro webhook HTTPS recibe el JSON
+estructurado del evento. `http` se rechaza (misma política de los demás
+canales de alerta).
+
+### Payload de ejemplo
+
+Con un umbral roto, el job `kpi-staging` hace `POST` con JSON. En un Incoming
+Webhook de Slack el cuerpo es:
+
+```json
+{
+  "text": "⚠️ BookmarkForge — KPIs por debajo del umbral",
+  "blocks": [
+    { "type": "section", "text": { "type": "mrkdwn", "text": "⚠️ *KPIs por debajo del umbral*" } },
+    { "type": "section", "text": { "type": "mrkdwn", "text": "> *generatedAt* 2026-08-31T00:10:00.000Z\n> *Installs* 120\n> *DAU / WAU / MAU* 42 / 180 / 350\n> *Violación:* DAU=42 por debajo del umbral 60" } }
+  ]
+}
+```
+
+Y para un webhook HTTPS no-Slack (p. ej. un colector propio), el payload es el
+evento estructurado:
+
+```json
+{
+  "event": "analytics_kpi_below_threshold",
+  "generatedAt": "2026-08-31T00:10:00.000Z",
+  "dau": 42,
+  "wau": 180,
+  "mau": 350,
+  "activeInstalls": 120,
+  "violations": ["DAU=42 por debajo del umbral 60"]
+}
+```
+
 ## Simulacro de restauración (drill mensual)
 
 El drill automatiza el procedimiento mensual completo (crear backup de una

@@ -9,8 +9,10 @@
 import { describe, expect, it } from "vitest";
 import {
   buildAlertPayload,
+  buildSlackPayload,
   evaluateKpis,
   isoToEpochDay,
+  isSlackWebhook,
   latestCohortRetention,
   parseNonNegativeInt,
   parsePct,
@@ -147,6 +149,37 @@ describe("buildAlertPayload", () => {
     expect(payload.violations).toEqual(["DAU=50 por debajo del umbral 60"]);
     expect(JSON.stringify(payload)).not.toContain("iid");
     expect(JSON.stringify(payload)).not.toContain("counts");
+  });
+});
+
+describe("isSlackWebhook", () => {
+  it("detects real Slack Incoming Webhook URLs (hooks.slack.com)", () => {
+    expect(isSlackWebhook("https://hooks.slack.com/services/T000/B000/xxxx")).toBe(true);
+    expect(isSlackWebhook(" https://hooks.slack.com/services/T000/B000/xxxx ")).toBe(true);
+  });
+  it("accepts Slack api endpoints and rejects http / generic https", () => {
+    expect(isSlackWebhook("https://api.slack.com/apps")).toBe(true);
+    expect(isSlackWebhook("http://hooks.slack.com/services/T000/B000/xxxx")).toBe(false);
+    expect(isSlackWebhook("https://example.com/hook")).toBe(false);
+    expect(isSlackWebhook("")).toBe(false);
+  });
+});
+
+describe("buildSlackPayload", () => {
+  const payload = buildSlackPayload(baseKpis, ["DAU=50 por debajo del umbral 60"]);
+  it("is a Slack-native { text, blocks } payload", () => {
+    expect(payload.text).toContain("BookmarkForge");
+    expect(payload.blocks).toHaveLength(2);
+    expect(payload.blocks[0].type).toBe("section");
+    expect(payload.blocks[0].text.type).toBe("mrkdwn");
+  });
+  it("embeds the violation as mrkdwn and no PII", () => {
+    const body = JSON.stringify(payload);
+    expect(body).toContain("DAU=50 por debajo del umbral 60");
+    expect(body).toContain("DAU/WAU/MAU");
+    expect(body).not.toContain("iid");
+    expect(body).not.toContain("counts");
+    expect(body).not.toContain("serverInstanceId");
   });
 });
 

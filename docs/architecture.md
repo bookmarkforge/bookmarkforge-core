@@ -29,9 +29,15 @@ El servidor tiene límites de conexiones, rooms, peers, payloads y rate limits. 
 
 La capacidad del cliente está limitada por memoria IndexedDB, coste de indexación, tamaño del vault y potencia del dispositivo. No se debe prometer capacidad ilimitada.
 
+## Decisiones registradas (baseline 2026-08-31)
+
+- **SLO/RPO/RTO:** valores de referencia registrados en `docs/operations.md` → "SLOs y objetivos" (disponibilidad 99,9 %/30 días, p95 proxy IA < 3 s, p95 señalización < 500 ms, 5xx < 0,5 %, saturación WS < 70 %; **RPO 24 h**, **RTO 24 h** vault / **4 h** topología). Pendiente solo la confirmación oficial del responsable y su revisión trimestral (punto 3 del launch-checklist).
+- **Contratos versionados:** `docs/openapi.yaml` (OpenAPI 3.1.0) cubre los endpoints HTTP del companion server; los contratos con integraciones externas (Whop, proveedores IA) quedan documentados como deuda P2.
+- **Prueba de carga del companion server:** implementada y validada (`scripts/load-test-server.mjs`, `npm run test:load`) con presupuestos alineados a los SLO; el cron nocturno la ejecuta con 50 clientes.
+- **Analítica de negocio opt-in:** `server/src/business-analytics.ts` + `src/services/analyticsForwarder.ts` (ver `docs/audit.md` §5 y ROPA §3 T8).
+
 ## Decisiones pendientes
 
-- Persistencia central multiusuario si el producto deja de ser exclusivamente local-first.
-- Objetivos SLO/RPO/RTO.
-- Contratos versionados para integraciones externas.
-- Política formal de migraciones RxDB.
+- Persistencia central multiusuario si el producto deja de ser exclusivamente local-first (mantenido abierto a propósito).
+- Política formal de migraciones RxDB (mantenido abierto a propósito).
+- Confirmación oficial (firma del responsable) de SLO/RPO/RTO y simulacro de desastre trimestral ejecutado.

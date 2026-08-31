@@ -139,3 +139,47 @@ jobs:
       - run: npm ci
       - name: Run companion server load test (WS + SLO gates)
         run: node scripts/load-test-server.mjs --connections=50 --json
+
+  kpi-staging:
+    name: Business KPIs (staging) with thresholds
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CI: true
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Run business KPI gate against staging
+        env:
+          ANALYTICS_BASE_URL: ${{ vars.STAGING_URL }}
+          ANALYTICS_ADMIN_TOKEN: ${{ secrets.STAGING_ANALYTICS_ADMIN_TOKEN }}
+          # Thresholds (repo vars, opcionales; sin configurar = solo informe):
+          # KPI_MIN_DAU / KPI_MIN_WAU / KPI_MIN_MAU (enteros ≥ 0) y
+          # KPI_MIN_D7_PCT / KPI_MIN_D30_PCT (proporción 0..1). Un valor por
+          # debajo del umbral hace fallar el job (página durable) y dispara el
+          # webhook ANALYTICS_ALERT_WEBHOOK_URL si está configurado.
+          KPI_MIN_DAU: ${{ vars.KPI_MIN_DAU }}
+          KPI_MIN_WAU: ${{ vars.KPI_MIN_WAU }}
+          KPI_MIN_MAU: ${{ vars.KPI_MIN_MAU }}
+          KPI_MIN_D7_PCT: ${{ vars.KPI_MIN_D7_PCT }}
+          KPI_MIN_D30_PCT: ${{ vars.KPI_MIN_D30_PCT }}
+          ANALYTICS_ALERT_WEBHOOK_URL: ${{ secrets.ANALYTICS_ALERT_WEBHOOK_URL }}
+        shell: bash
+        run: |
+          set -o pipefail
+          node scripts/kpi-report.mjs --json 2>&1 | tee kpi-report.json
+      - name: Upload KPI report evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: kpi-report-${{ github.run_id }}
+          if-no-files-found: ignore
+          retention-days: 30
+          path: kpi-report.json
+

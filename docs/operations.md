@@ -49,6 +49,34 @@ servidor (imágenes por SHA) + Redis si procede.
 Guardia: responsables y canal de alertas deben registrarse antes del lanzamiento
 público; severidades según la plantilla de incidentes.
 
+## Gate nocturno de KPIs de negocio (staging)
+
+El job `kpi-staging` de `.github/workflows/nightly.yml` ejecuta
+`npm run kpi-report` contra staging y **pagina** cuando una métrica cae por
+debajo de su umbral:
+
+- **Métricas:** DAU/WAU/MAU y retención D7/D30 de la cohorte más reciente que
+ya tenga la antigüedad necesaria (el gate no mide cohortes demasiado jóvenes).
+- **Umbrales (repo vars, opcionales):** `KPI_MIN_DAU`, `KPI_MIN_WAU`,
+  `KPI_MIN_MAU` (enteros ≥ 0) y `KPI_MIN_D7_PCT`, `KPI_MIN_D30_PCT`
+  (proporción 0..1). Sin configurar, el job es solo informe (exit 0).
+- **Paginación:** por debajo del umbral el script emite el evento estructurado
+  `analytics_kpi_below_threshold`, dispara el webhook HTTPS
+  `ANALYTICS_ALERT_WEBHOOK_URL` (p. ej. Slack; `http` rechazado, misma política
+  que los demás canales de alerta) y sale 1 → la run de CI queda en FAIL.
+- **Evidencia:** artifact `kpi-report-<run_id>` (30 días) con el JSON del
+  informe + evaluación.
+- Requiere en staging: `ANALYTICS_ADMIN_TOKEN` configurado en el companion
+  server (secret `STAGING_ANALYTICS_ADMIN_TOKEN` en CI) — sin él el endpoint
+  devuelve 503 y el job falla a propósito (requiere atención del operador).
+
+Ejecución local:
+
+```bash
+ANALYTICS_ADMIN_TOKEN=... ANALYTICS_BASE_URL=https://staging... \
+  KPI_MIN_DAU=10 KPI_MIN_D7_PCT=0.15 node scripts/kpi-report.mjs
+```
+
 ## Simulacro de restauración (drill mensual)
 
 El drill automatiza el procedimiento mensual completo (crear backup de una

@@ -7,8 +7,8 @@ const signalingPort = Number(process.env.SIGNALING_PORT ?? 8787);
 
 export default defineConfig({
   testDir: "./tests/e2e",
-  timeout: 60_000,
-  expect: { timeout: 15_000 },
+  timeout: 120_000,
+  expect: { timeout: 30_000 },
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,

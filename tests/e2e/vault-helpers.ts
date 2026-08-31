@@ -18,6 +18,21 @@ import { assertDurableBackend } from "./storage-backend-guard";
 export const VAULT_PASSWORD = "correct-horse-42";
 
 /**
+ * Environment-aware timeout multiplier. Slow CI runners and local VMs need
+ * larger budgets for KDF operations. Set E2E_TIMEOUT_MULTIPLIER=N to
+ * override (e.g. 2 doubles every timeout).
+ */
+const multiplier =
+  Number(process.env.E2E_TIMEOUT_MULTIPLIER) ||
+  (process.env.CI ? 1 : 1);
+function scaled(ms: number): number {
+  return Math.round(ms * multiplier);
+}
+
+/** Default timeout for vault KDF-dependent waits (e.g. setupVault). */
+const VAULT_SHELL_TIMEOUT = scaled(60_000);
+
+/**
  * Cross-browser safe reload. Firefox occasionally interprets page.reload()
  * as a download when a PWA service worker is registered, throwing
  * "Download is starting". This helper catches that and falls back to a
@@ -35,7 +50,7 @@ export async function safeReload(page: Page): Promise<void> {
 export async function expectUnlockedApp(
   page: Page,
   diagnostics: string[] = [],
-  timeoutMs: number = 30_000,
+  timeoutMs: number = VAULT_SHELL_TIMEOUT,
 ): Promise<void> {
   try {
     await page
@@ -170,13 +185,13 @@ export async function setupVault(
   // SecurityConfirmation is the first screen on a pristine context.
   await expect(
     page.getByRole("heading", { name: "Secure your vault" }),
-  ).toBeVisible({ timeout: 30_000 });
+  ).toBeVisible({ timeout: VAULT_SHELL_TIMEOUT });
   await human.click(page.getByRole("button", { name: "Set up password" }));
 
   // SecurityManager first-time setup screen.
   await expect(
     page.getByRole("heading", { name: "Setup Secure Vault" }),
-  ).toBeVisible({ timeout: 30_000 });
+  ).toBeVisible({ timeout: VAULT_SHELL_TIMEOUT });
 
   // Recovery kit download unlocks the confirmation checkbox.
   const download = page.waitForEvent("download");
@@ -186,7 +201,7 @@ export async function setupVault(
   const confirmCheckbox = page.getByRole("checkbox", {
     name: "I have safely saved the recovery phrase",
   });
-  await expect(confirmCheckbox).toBeEnabled({ timeout: 10_000 });
+  await expect(confirmCheckbox).toBeEnabled({ timeout: scaled(10_000) });
   await human.check(confirmCheckbox);
 
   await human.type(page.getByLabel("Master Password"), VAULT_PASSWORD);
@@ -200,8 +215,8 @@ export async function setupVault(
   const setupErrorBanner = page.locator(".security-error-in");
   try {
     await Promise.race([
-      settingsButton.waitFor({ state: "visible", timeout: 30_000 }),
-      setupErrorBanner.waitFor({ state: "visible", timeout: 30_000 }).then(
+      settingsButton.waitFor({ state: "visible", timeout: VAULT_SHELL_TIMEOUT }),
+      setupErrorBanner.waitFor({ state: "visible", timeout: VAULT_SHELL_TIMEOUT }).then(
         async () => {
           const bannerText = (await setupErrorBanner.textContent()) ?? "";
           throw new Error(
@@ -331,7 +346,7 @@ export async function lockVault(page: Page): Promise<void> {
   // React onClick handler is delivered exactly once.
   await confirm.evaluate((button) => (button as HTMLButtonElement).click());
   await expect(page.getByTestId("vault-locked-screen")).toBeVisible({
-    timeout: 30_000,
+    timeout: VAULT_SHELL_TIMEOUT,
   });
 }
 
@@ -383,7 +398,7 @@ export async function unlockExpectingError(
   await human.click(page.getByRole("button", { name: "Unlock" }));
   await expect(
     page.getByText(errorText, { exact: true }),
-  ).toBeVisible({ timeout: 30_000 });
+  ).toBeVisible({ timeout: VAULT_SHELL_TIMEOUT });
 }
 
 /**
@@ -395,7 +410,7 @@ export async function unlockAfterReload(
   password: string,
 ): Promise<void> {
   await expect(page.getByTestId("vault-locked-screen")).toBeVisible({
-    timeout: 30_000,
+    timeout: VAULT_SHELL_TIMEOUT,
   });
   await unlockVault(page, password);
 }

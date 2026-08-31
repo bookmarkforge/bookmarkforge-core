@@ -290,6 +290,11 @@ export default defineConfig(({ mode, isPreview }) => ({
               target: process.env.VITE_API_PROXY_TARGET || `http://127.0.0.1:${process.env.CRISIS_COMPANION_PORT || "8799"}`,
             },
           },
+          // Exclude Playwright trace/artifact directories from the file watcher
+          // to prevent EBUSY errors on Windows when traces are being written.
+          watch: {
+            ignored: ["**/test-results/**", "**/test-results-*/**", "**/.playwright-artifacts-*/**"],
+          },
         }
       : undefined,
   // `vite preview` (production build): same /api proxy, so the crisis E2E

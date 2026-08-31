@@ -14,8 +14,14 @@ dist/
 dist-extension/
 coverage/
 playwright-report/
+playwright-report-*/
 test-results/
+test-results-*/
 .vite/
+
+# Playwright generated comparison/artifact dirs (never versioned)
+tests/e2e/__diffs__/
+tests/e2e/__snapshots__/
 
 # Local runtime state
 .freebuff/

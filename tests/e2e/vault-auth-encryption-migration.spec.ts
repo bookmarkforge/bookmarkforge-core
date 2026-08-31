@@ -334,9 +334,14 @@ test("legacy v6 vault migrates to authenticated format and survives backup/resto
   );
   await expect(securityDialog).toBeVisible({ timeout: 30_000 });
   await securityDialog.getByRole("button").last().click();
-  await expect(
-    page.getByRole("heading", { name: "Your vault is empty" }),
-  ).toBeVisible({ timeout: 30_000 });
+  const recoveryHeading = page.getByRole("heading", {
+    name: "Your vault is empty",
+  });
+  // The empty-vault check runs asynchronously after DB initialization. Wait
+  // for the recovery heading rather than assuming it is present immediately
+  // after the security gate is dismissed; this removes the load-sensitive
+  // race without weakening the restore-first contract.
+  await expect(recoveryHeading).toBeVisible({ timeout: 60_000 });
 
   // Restore the encrypted backup. The .bmf path prompts for the decrypt
   // password. The prompt fires synchronously INSIDE the file input's change

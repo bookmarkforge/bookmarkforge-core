@@ -141,17 +141,13 @@ export async function closeQuickCapture(page: Page): Promise<void> {
   // DOM for ~200ms after a save closes it) so a mid-exit panel is never
   // mistaken for an open one and toggled back open.
   await page.waitForTimeout(300);
-  // A mid-exit panel still reports the input as visible while AnimatePresence
-  // animates it out. If it disappears within a short window, the panel was
-  // already closing — return instead of toggling it back open via the FAB.
-  try {
-    await page
-      .getByTestId('quick-capture-input')
-      .waitFor({ state: 'hidden', timeout: 1_000 });
-    return;
-  } catch {
-    // Still visible: the panel is genuinely open.
-  }
+  // If the input is already hidden the panel is closed (or closing) —
+  // return immediately so we never accidentally toggle it back open.
+  const inputVisible = await page
+    .getByTestId('quick-capture-input')
+    .isVisible()
+    .catch(() => false);
+  if (!inputVisible) return;
   // Prefer the panel's explicit close control (unique testid, never ambiguous
   // with the FAB, which shares the "Close quick capture" accessible name
   // while open). Fall back to the FAB toggle if the close control is gone.

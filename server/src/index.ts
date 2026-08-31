@@ -48,6 +48,7 @@ import { createGeminiMediaHandler } from "./ai-media";
 import { createAiSessionManager } from "./ai-session";
 import { createLicenseHandler } from "./license-server";
 import { createClientEventsHandler } from "./client-events";
+import { createAnalyticsHandler } from "./business-analytics";
 
 const PORT = Number(process.env.PORT ?? 8787);
 const HOST = process.env.HOST ?? "0.0.0.0";
@@ -1054,6 +1055,11 @@ const licenseHandler = createLicenseHandler();
 const clientEventsHandler = createClientEventsHandler({
   serverInstanceId: SERVER_INSTANCE_ID,
 });
+// Business analytics collector (opt-in, pseudonymous, no content) — daily
+// aggregated buckets → DAU/WAU/MAU + cohort retention + activation funnel.
+const analyticsHandler = createAnalyticsHandler({
+  serverInstanceId: SERVER_INSTANCE_ID,
+});
 
 const httpServer = createServer((req, res) => {
   // Apply the same non-sensitive response hardening to health, admin, CSP reports,
@@ -1113,6 +1119,14 @@ const httpServer = createServer((req, res) => {
     req.url?.startsWith("/api/client-events/")
   ) {
     return clientEventsHandler(req, res);
+  }
+  if (
+    req.url === "/api/analytics/events" ||
+    req.url?.startsWith("/api/analytics/events?") ||
+    req.url === "/api/analytics/kpis" ||
+    req.url?.startsWith("/api/analytics/kpis?")
+  ) {
+    return analyticsHandler(req, res);
   }
   // Any other HTTP request gets a 426 Upgrade Required — the server
   // only speaks WebSocket beyond /health, /admin, /csp-report and

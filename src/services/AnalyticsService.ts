@@ -2,8 +2,8 @@
  * AnalyticsService — Privacy-first, local-only product analytics.
  *
  * All data stays in the browser's IndexedDB. Nothing is sent to any remote
- * server unless the user explicitly opts in via the same consent mechanism
- * as the error reporter (bmf_local_error_storage).
+ * server unless the user explicitly opts in via the consent banner
+ * (`forge_consent_analytics`, default OFF).
  *
  * Measures:
  *   - Retention: D1, D7, D30 (active days since first visit)
@@ -26,6 +26,8 @@
  */
 import { logger } from "../utils/logger";
 import { safeGet } from "../store/safeStorage";
+import { STORAGE_KEYS } from "../constants/storage-keys";
+import { forwardAnalytics, forwardAnalyticsBeacon } from "./analyticsForwarder";
 
 // ── Constants ─────────────────────────────────────────────────────
 
@@ -36,8 +38,13 @@ const MAX_EVENTS = 10_000;
 const FLUSH_INTERVAL_MS = 30_000;
 // const SESSION_IDLE_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes (reserved for future idle detection)
 
-const TELEMETRY_KEY = "bmf_local_error_storage";
-const LEGACY_TELEMETRY_KEY = "bmf_telemetry_optin";
+// Consent key (audit 2026-08-30): AnalyticsService previously read the
+// error-storage consent key (bmf_local_error_storage), meaning the user's
+// analytics choice in ConsentBanner (forge_consent_analytics) had no effect.
+// Now reads the correct analytics consent key; the legacy bmf_telemetry_optin
+// key is honored as a read-only migration fallback.
+const CONSENT_KEY = STORAGE_KEYS.CONSENT_ANALYTICS;
+const LEGACY_CONSENT_KEY = "bmf_telemetry_optin";
 
 // ── Types ─────────────────────────────────────────────────────────
 
@@ -172,9 +179,9 @@ function openDB(): Promise<IDBDatabase> {
 
 function isAnalyticsEnabled(): boolean {
   try {
-    const current = safeGet(TELEMETRY_KEY);
+    const current = safeGet(CONSENT_KEY);
     if (current !== null) return current === "true";
-    return safeGet(LEGACY_TELEMETRY_KEY) === "true";
+    return safeGet(LEGACY_CONSENT_KEY) === "true";
   } catch {
     return false;
   }
@@ -272,10 +279,13 @@ class AnalyticsService {
     this.buffer.push(event);
   }
 
-  /** Flush buffered events to IndexedDB. */
+  /** Flush buffered events to IndexedDB (+ opt-in server bucket). */
   private async flush(): Promise<void> {
     if (this.buffer.length === 0) return;
     const events = this.buffer.splice(0);
+    // Opt-in, aggregated, non-PII server bucket (consent-gated inside).
+    // Fire-and-forget: never awaited, failures contained by the forwarder.
+    void forwardAnalytics(events);
     try {
       const db = await openDB();
       try {
@@ -328,6 +338,8 @@ class AnalyticsService {
   private flushToStorage(): void {
     if (this.buffer.length === 0) return;
     const events = this.buffer.splice(0);
+    // sendBeacon keeps the daily bucket even while navigating away.
+    forwardAnalyticsBeacon(events);
     // Best-effort: open DB and write synchronously via put
     void openDB()
       .then((db) => {

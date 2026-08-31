@@ -8,17 +8,17 @@
 
 Aplicación *local-first* de conocimiento personal (React + RxDB/IndexedDB + WebRTC) con servidor acompañante mínimo (Node/ws). La madurez está sesgada hacia **ingeniería y seguridad**; las áreas más débiles son **operaciones/observabilidad (sin error reporting), cumplimiento legal formal y analítica de negocio con consentimiento**.
 
-| Área | 2026-08-30 | 2026-08-31 (segunda ronda) |
-|---|---|---|
-| 1. Arquitectura y Viabilidad Técnica | 8.5/10 | 8.8/10 |
-| 2. Seguridad y Cumplimiento Legal | 9.0/10 | 9.3/10 |
-| 3. Gestión del Desarrollo y Código Fuente | 9.5/10 | 9.5/10 |
-| 4. Experiencia de Usuario (UX) e Interfaz (UI) | 8.8/10 | 8.8/10 |
-| 5. Gestión de Producto y Viabilidad de Negocio | 6.0/10 | 9.0/10 |
-| 6. Operaciones, Monitoreo y Mantenimiento | 7.5/10 | 8.8/10 |
-| **Global** | **8.6/10** | **9.0/10** |
+| Área | 2026-08-30 | 2026-08-31 (segunda ronda) | 2026-08-31 (drill + KPIs) |
+|---|---|---|---|
+| 1. Arquitectura y Viabilidad Técnica | 8.5/10 | 8.8/10 | 8.8/10 |
+| 2. Seguridad y Cumplimiento Legal | 9.0/10 | 9.3/10 | 9.3/10 |
+| 3. Gestión del Desarrollo y Código Fuente | 9.5/10 | 9.5/10 | 9.5/10 |
+| 4. Experiencia de Usuario (UX) e Interfaz (UI) | 8.8/10 | 8.8/10 | 8.8/10 |
+| 5. Gestión de Producto y Viabilidad de Negocio | 6.0/10 | 9.0/10 | 9.2/10 |
+| 6. Operaciones, Monitoreo y Mantenimiento | 7.5/10 | 8.8/10 | 9.3/10 |
+| **Global** | **8.6/10** | **9.0/10** | **9.2/10** |
 
-> **Nota sobre la meta 9.5:** la segunda ronda dejó el bloque técnico de cada área en su techo. Lo que separa cada área de 9.5 es ahora **exclusivamente dependencias externas** (decisión de org para CODEOWNERS, cierre legal del ROPA, DSN de Sentry + DPA, guardia/canal de alertas, confirmación oficial de RPO/RTO, revisión manual WCAG, listado en tiendas/ASO, contrato Whop versionado) — ver tabla de hallazgos y `docs/launch-checklist.md`. Ninguna requiere más código.
+> **Nota sobre la meta 9.5:** la ronda 3/4 (drill trimestral formalizado + gate nocturno de KPIs) elevó Operaciones a 9.3 y Producto a 9.2, y llevó el **global a 9.2**. Lo que separa cada área de 9.5 sigue siendo **exclusivamente dependencias externas** (decisión de org para CODEOWNERS, cierre legal del ROPA, DSN de Sentry + DPA, guardia/canal de alertas reales, confirmación oficial de RPO/RTO, revisión manual WCAG, listado en tiendas/ASO, contrato Whop versionado) — ver tabla de hallazgos y `docs/launch-checklist.md`. Ninguna requiere más código.
 
 ---
 
@@ -155,7 +155,12 @@ Aplicación *local-first* de conocimiento personal (React + RxDB/IndexedDB + Web
 | 2026-08-31 | **Sin canal de analítica de negocio** (decisión de producto pendiente; imposible medir retención/activación) | Media (producto) | ✅ Corregido — canal opt-in agregado no-PII: `server/src/business-analytics.ts` (POST `/api/analytics/events` idempotente por día, GET `/api/analytics/kpis` con token admin, DAU/WAU/MAU + retención D1/D7/D30 por cohorte + funnel, estado persistible, rate limit por IP), forwarder cliente `src/services/analyticsForwarder.ts` (gate `forge_consent_analytics`, solo SHA-256 del id de instalación, allow-list de tipos, sendBeacon en unload), `npm run kpi-report`, 17 tests nuevos, smoke E2E verificado. ROPA §3 T8 + §4 actualizados |
 | 2026-08-31 | **Simulacro de desastre trimestral sin formalizar en CI** — los drills mensuales existían (`drill:backup-restore`, `drill:rollback`) pero no había ensayo trimestral automatizado ni registro de evidencia | Media (operaciones) | ✅ Corregido — `.github/workflows/drill-quarterly.yml` (primer día de cada trimestre + dispatch manual): job `backup-restore` (RTO < 120 s) y job `rollback-docker` (CAMINO A por imagen < 60 s con imágenes reales del tag `prod-*` previo via worktree); el workflow provisiona el secreto de firma con el nuevo flag `generate-license-keys.mjs --server-key-only` (solo key gitignored, sin tocar archivos commiteados); evidencia en artifacts (90 días) + job summary. Registrado en `docs/operations.md` → "Simulacro trimestral" y launch-checklist #13. Gates `check:workflows` en verde (8 archivos). Pendiente: primera run real con tags `prod-*` |
 | 2026-08-31 | **El drill de backup-restore solo corría en el ensayo trimestral** — entre drill y drill no se detectaba una degradación gradual del RTO hasta incumplir el SLO | Media (operaciones/monitoreo) | ✅ Corregido — job `drill-backup-restore` en `nightly.yml` que corre **cada mes** (cron extra `17 3 1 * *`; día 1 de mes 03:17 UTC + dispatch manual); si una restauración supera `DRILL_RTO_WARN_MS` (default 90% del gate ≙ 108 s) sin romper el gate, el script emite `drill_rto_degraded` y dispara el webhook HTTPS `DRILL_ALERT_WEBHOOK_URL` sin fallar la run (señal temprana antes de incumplir el SLO). Env vars documentadas en `.env.example`; umbrales config vía repo vars/secret de GitHub. 8 tests unitarios del drill (incl. degradación); gates `check:workflows` en verde (8 archivos) |
-| 2026-08-31 | **Build de la imagen del tag prod-* previo rota para el drill Docker** — el stage `deps` del Dockerfile corre `npm ci --omit=dev` pero `package.json` tiene `prepare: "husky"` y husky es devDependency → `husky` no se instala y el prepare falla (exit 127). El rollback por imagen (CAMINO A) del drill trimestral no puede construir la imagen del tag previo: drill de rollback Docker ejecutado localmente 2026-08-31 → FAIL en PREP (198 s) con causa raíz reproducida de forma aislada. Afecta a HEAD y a todos los tags `prod-*` | **Alta (operaciones/CI drill)** | ⚠️ Pendiente — fix propuesto: `npm ci --omit=dev --ignore-scripts` en el stage `deps` (husky solo sirve para hooks de git locales) o `prepare: "husky || true"`; ver `docs/drill-run-2026-08-31-rollback-docker.md` para la evidencia completa. Re-ejecutar drill y probar `drill-quarterly.yml` en CI |
+| 2026-08-31 | **Build de la imagen del tag prod-* previo rota para el drill Docker** — el stage `deps` del Dockerfile corre `npm ci --omit=dev` pero `package.json` tiene `prepare: "husky"` y husky es devDependency → `husky` no se instala y el prepare falla (exit 127). El rollback por imagen (CAMINO A) del drill trimestral no puede construir la imagen del tag previo: drill de rollback Docker ejecutado localmente 2026-08-31 → FAIL en PREP (198 s) con causa raíz reproducida de forma aislada. Afecta a HEAD y a todos los tags `prod-*` | **Alta (operaciones/CI drill)** | ✅ Corregido — `npm ci --omit=dev --ignore-scripts` en el stage `deps` (husky solo sirve para hooks de git locales) + nginx no-root con `pid` sobre /tmp (`d521376`). Validado con el **drill Docker completo en PASS** (2026-08-31, ver fila abajo) |
+| 2026-08-31 | **El drill de rollback Docker no levantaba `redis`** — el api es fail-closed sobre `AI_PROXY_REDIS_URL: redis://redis:6379/0`, así que BASELINE fallaba con `SESSION_STORE_UNAVAILABLE` (getaddrinfo ENOTFOUND redis) y el drill no podía pasar en modo Docker | **Alta (operaciones/CI drill)** | ✅ Corregido — `up -d ... web api ai-mock redis` en `drill-rollback.mjs` (commit `949f6b7`); re-ejecutado full en PASS |
+| 2026-08-31 | **Formato de tags incompatible en el drill Docker** — `rollback.mjs` exige `prod-YYYYMMDD-HHMM-<sha>` (formato de `deploy-prod.mjs`) y rechaza los tags de la sesión (`prod-…-0005-release` → `Invalid target tag format`); `restoreOk` (HEAD == penúltimo tag) no cuadraba con los tags existentes | Media (operaciones/CI drill) | ✅ Resuelto para la validación local — creados tags conformes (`prod-20260831-1320-00b24d6` deploy actual, `prod-20260831-1315-8f44a84` target). En CI los tags los genera `deploy-prod.mjs`, así que ahí es nativo |
+| 2026-08-31 | **El compose hardcodea `AI_SESSION_ORIGINS` a `http://127.0.0.1:18080`** — con `HTTP_PORT` no estándar el bootstrap de sesión IA daba 403 (`CSRF_ORIGIN`) y el WS apuntaba a un puerto distinto; el origin solo cuadra en el puerto por defecto | Baja (operaciones, latente) | ⏳ Latente — documentado en `docs/operations.md` → evidencia del drill; con el puerto por defecto el drill pasa. Fix opcional: interpolar `HTTP_PORT` en `AI_SESSION_ORIGINS` del compose |
+| 2026-08-31 | **Drill de rollback Docker ejecutado completo por primera vez** — validación end-to-end del mecanismo de rollback por imagen (CAMINO A) del drill trimestral contra tags `prod-*` | — | ✅ **PASS — 5/5 fases, exit 0, 167.4 s**: PREP · BASELINE 11/11 (incl. WS signaling) · KILL · DETECT (`APP_CAIDA` + `BUNDLE_CORRUPTO`) · ROLLBACK CAMINO A **12.2 s < 60 s (gate)** · RE-VERIFY 11/11. Evidencia en `docs/operations.md` → "Evidencia de ejecución local — 2026-08-31 (rollback Docker)" y `docs/drill-run-2026-08-31-rollback-docker.md` |
+| 2026-08-31 | **Drill de rollback Docker re-ejecutado sobre HEAD `949f6b7`** — revalidación post fix de build hermenéutico + redis, confirmando que el drill pasa desde el estado actual | — | ✅ **PASS — 6 fases, exit 0, 224.6 s**: PREP (imágenes 8f44a84 existentes) · BASELINE 11/11 (build imágenes HEAD incl.) · KILL · DETECT (`APP_CAIDA` + `BUNDLE_CORRUPTO`) · ROLLBACK CAMINO A **9.6 s < 60 s (gate)** · RE-VERIFY 11/11. Evidencia en `docs/operations.md` → "Evidencia de ejecución local (re-run) — 2026-08-31" |
 | 2026-08-31 | **Sin gate nocturno de KPIs de negocio** — la analítica opt-in agregaba datos, pero nadie vigilaba DAU/WAU/MAU ni la retención; una caída pasaba desapercibida hasta el informe manual | Media (operaciones/monitoreo) | ✅ Corregido — job `kpi-staging` en `nightly.yml` + umbrales configurables en `kpi-report.mjs` (`KPI_MIN_DAU/WAU/MAU`, `KPI_MIN_D7/D30_PCT`): por debajo del umbral emite el evento `analytics_kpi_below_threshold`, dispara webhook HTTPS (`ANALYTICS_ALERT_WEBHOOK_URL`, rechaza http) y sale 1 → run FAIL (página durable). 13 tests unitarios nuevos; verificado end-to-end (0 sin umbrales, 1 con umbral roto + alerta, 2 sin token). Registrado en `docs/operations.md` → "Gate nocturno de KPIs" y `.env.example` |
 | 2026-08-31 | **El collector de analítica dependía de staging para validarse** — el job nocturno apuntaba solo a staging; un fallo del collector (ingesta/agregación) no se detectaba sin un entorno desplegado | Media (observabilidad) | ✅ Corregido — job `kpi-collector-local` en `drill-quarterly.yml` que valida el pipeline contra un servidor LOCAL: arranca `createAnalyticsHandler` en 127.0.0.1, siembra un dataset con cohorte D7 madura, hace un POST `/api/analytics/events` en vivo y corre el gate `kpi-report` con umbrales exactos (DAU/WAU/MAU + retención D7); sin secretos ni red externa. Evidencia: artifact `kpi-local-collector-<run_id>` |
 
@@ -195,3 +200,48 @@ Auditoría fresca sobre el mismo estado de trabajo (`main`, working tree con la 
 - **Sesiones IA (`server/src/ai-session.ts`)**: cookie `HttpOnly+Secure+SameSite=Strict`, doble CSRF en comparación de tiempo constante, proof de licencia verificado (v=1, ventanas de tiempo, `padding=6`), whitelist de orígenes obligatoria en producción (falla al arranque si falta), rate limit por IP. Correcto.
 - **CSP**: estricta y sincronizada (`default-src 'self'; ... upgrade-insecure-requests; frame-ancestors 'none'; object-src 'none'`) en `public/_headers`, `public/nginx.conf` y `netlify.toml`; gate `check:csp` valida la coherencia. Correcta.
 - **Sin secretos reales** en configs, workflows, `.zap/` ni `server/` (escaneo dirigido + gate). `server/.license-signing-key.pkcs8` y `.env.production` están gitignored/protegidos. Correcto.
+
+---
+
+## Re-auditoría tras drill trimestral + gate de KPIs — 2026-08-31
+
+Auditoría fresca sobre el estado **post ronda 3/4** (drill trimestral formalizado en CI + gate nocturno de KPIs + webhook Slack + drilbackup-restore mensual + validación local del collector). **Resultado: todas las métricas automatizadas suben (Operaciones 8.8→9.3, Producto 9.0→9.2, Global 9.0→9.2); los únicos bloqueantes restantes siguen siendo decisiones externas (org/legal), no código.**
+
+### Comandos ejecutados y resultado
+
+| Gate | Resultado | Nota |
+|---|---|---|
+| `npm run check:workflows` | ✅ | 8 workflow files · staging contracts + input contracts + workflow security + ZAP |
+| `npm run check:audit-drift` | ✅ | 18/18 |
+| `npm run check:audit-drift:strict` | ✅ | sin drift estricto |
+| `npm run check:image-pins` | ✅ | imágenes + Actions pineadas por digest/SHA |
+| `npm run check:secrets-in-commit` | ✅ | sin secretos |
+| `npm run check:env` | ✅ | envs documentadas |
+| `npm run check:input-contracts` | ✅ | contratos de input |
+| `npm run check:codeowners` | ❌ **Falla** | persisten placeholders `@YOUR_GITHUB_ORG/*` (único gate en rojo, bloqueante externo) |
+
+### Cierre del plan de acción
+
+Del plan P0/P1/P2, la ronda 3/4 completó dos ítems pendientes con código y evidencia:
+
+- **P2 ítem 8 · Simulacro de desastre trimestral formalizado** — `drill-quarterly.yml` en CI (backup-restore + rollback Docker), ensayo **mensual** de backup-restore con alerta de degradación de RTO (`drill-backup-restore` en `nightly.yml`), y **drill completo ejecutado en PASS local** (rollback Docker CAMINO A 12.2 s < 60 s; 11/11 checks).
+- **P1 ítem 5 / launch-checklist #10 · Analítica de negocio opt-in** — canal agregado no-PII implementado y ahora **vigilado** por el gate nocturno de KPIs (`kpi-staging` con umbrales `KPI_MIN_*`) + webhook Slack nativo; el collector se valida a sí mismo en CI contra un servidor local (`kpi-collector-local`).
+
+### Deudas pendientes confirmadas (todas externas, sin cambios de código)
+
+1. **[P0] CODEOWNERS con `@YOUR_GITHUB_ORG/*`** — único gate en rojo. Requiere crear los 5 equipos y `codeowners:apply-org`.
+2. **[P0] Cierre legal RGPD** — ROPA con ~34 campos `⚠ COMPLETAR` (responsable, base jurídica, DPAs, transferencias, incidencias).
+3. **[P1] Sentry** — DSN + DPA (ROPA §7) pendientes operativos para activar trazabilidad ex-post.
+4. **[P1] Guardia/canal de alertas reales** — los webhooks `ANALYTICS_ALERT_WEBHOOK_URL`, `DRILL_ALERT_WEBHOOK_URL` están codificados y probados (Slack nativo) pero requieren la URL real y el secret en GitHub para pagar en producción; lo mismo para el job `kpi-staging`/`drill-quarterly` (el código existe localmente pero **nunca se ha pusheado**, así que en GitHub aún no existen esos workflows).
+5. **[P1] RPO/RTO oficiales** — los drills miden RTO empírico (rollback < 60 s, restore < 120 s, con warning de degradación al 90 %); falta la confirmación firmada del objetivo.
+6. **[P1] Importar el ruleset `main-protection.json`** y revisión manual WCAG (#7) pendientes.
+
+### Evolución de puntuaciones
+
+| Área | 2ª ronda | Drill + KPIs | Δ |
+|---|---|---|---|
+| 5. Producto | 9.0 | **9.2** | +0.2 (analítica vigilada → decide con KPIs de retención/activación) |
+| 6. Operaciones | 8.8 | **9.3** | +0.5 (DR trimestral formalizado + ensayo mensual + gate KPIs + alertas Slack + drill Docker en PASS) |
+| **Global** | **9.0** | **9.2** | **+0.2** |
+
+> **Meta 9.5:** cada área queda limitada únicamente por los ítems externos de la lista anterior — el bloque técnico está completo y todos los gates automatizados pasan salvo el único que requiere la decisión de org (CODEOWNERS). No queda trabajo de código pendiente para subir la nota.

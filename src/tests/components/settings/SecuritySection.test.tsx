@@ -147,13 +147,26 @@ describe("SecuritySection", () => {
     expect(setAutoLockEnabled).toHaveBeenCalledWith(true);
   });
 
-  it("persists the telemetry opt-in", () => {
+  it("persists the telemetry opt-in to all consent keys", () => {
     render(<SecuritySection {...defaultProps} />);
     fireEvent.click(screen.getByLabelText("app_telemetryOptInLabel"));
+    // Audit 2026-08-30: the toggle must write the ConsentBanner consent keys
+    // (forge_consent_*) so every service sees the same state.
     expect(safeStorage.safeSet).toHaveBeenCalledWith(
-      "bmf_local_error_storage",
+      "forge_consent_error_reporting",
       "true",
     );
+    expect(safeStorage.safeSet).toHaveBeenCalledWith(
+      "forge_consent_analytics",
+      "true",
+    );
+    expect(safeStorage.safeSet).toHaveBeenCalledWith(
+      "forge_consent_client_events",
+      "true",
+    );
+    // Legacy keys are cleared so a stale "true" cannot resurface an opt-in
+    // the user just turned off.
+    expect(safeStorage.safeRemove).toHaveBeenCalledWith("bmf_local_error_storage");
     expect(safeStorage.safeRemove).toHaveBeenCalledWith("bmf_telemetry_optin");
   });
 

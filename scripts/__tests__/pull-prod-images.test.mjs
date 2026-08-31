@@ -1,12 +1,26 @@
 import { describe, it, expect } from "vitest";
 import {
   planPullTargets,
+  validateRegistry,
   isPrimed,
 } from "../pull-prod-images.mjs";
 
 // Helpers para construir líneas de `docker images --format "{{.Repository}}:{{.Tag}}"`.
 const web = (sha) => `bookmarkforge/web:${sha}`;
 const api = (sha) => `bookmarkforge/api:${sha}`;
+
+describe("validateRegistry", () => {
+  it("acepta host y host:puerto, pero no rutas ni traversal", () => {
+    expect(validateRegistry("registry.example.com")).toBe(true);
+    expect(validateRegistry("registry.example.com:5000")).toBe(true);
+    expect(validateRegistry("registry.example.com:65535")).toBe(true);
+    expect(validateRegistry("registry.example.com/path")).toBe(false);
+    expect(validateRegistry("registry..example.com")).toBe(false);
+    expect(validateRegistry("registry.example.com\\path")).toBe(false);
+    expect(validateRegistry("registry.example.com:0")).toBe(false);
+    expect(validateRegistry("registry.example.com:65536")).toBe(false);
+  });
+});
 
 describe("planPullTargets", () => {
   it("compone remote+local para web y api con sha válido y registro", () => {

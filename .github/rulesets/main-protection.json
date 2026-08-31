@@ -1,7 +1,6 @@
 {
   "name": "Protect main",
   "target": "branch",
-  "source": "main",
   "enforcement": "active",
   "conditions": {
     "ref_name": {
@@ -47,6 +46,14 @@
           },
           {
             "context": "Dependency review",
+            "integration_id": 15368
+          },
+          {
+            "context": "CodeQL analysis",
+            "integration_id": 15368
+          },
+          {
+            "context": "Semgrep analysis",
             "integration_id": 15368
           }
         ],

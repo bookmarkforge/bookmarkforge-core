@@ -500,3 +500,51 @@ describe("telemetry lifecycle and bounds", () => {
     errorReporter.dispose();
   });
 });
+
+/*
+ * Consent integration (audit 2026-08-30): the ConsentBanner writes to
+ * STORAGE_KEYS.CONSENT_ERROR_REPORTING ("forge_consent_error_reporting").
+ * Previously the reporter read bmf_local_error_storage instead — the
+ * banner choice had no effect. These tests pin the correct contract.
+ */
+describe("consent banner integration", () => {
+  const CONSENT_KEY = "forge_consent_error_reporting";
+
+  beforeEach(async () => {
+    localStorage.clear();
+    vi.restoreAllMocks();
+    const mod = await import("../../telemetry/errorReporter");
+    errorReporter = mod.errorReporter;
+    await errorReporter.clearErrors();
+  });
+
+  it("stores errors when ConsentBanner grants consent", async () => {
+    localStorage.setItem(CONSENT_KEY, "true");
+    await errorReporter.reportError(new Error("consent-on test"));
+    const stored = await errorReporter.getStoredErrors();
+    expect(stored).toHaveLength(1);
+    expect(stored[0].message).toBe("consent-on test");
+  });
+
+  it("does NOT store errors when ConsentBanner denies consent", async () => {
+    localStorage.setItem(CONSENT_KEY, "false");
+    await errorReporter.reportError(new Error("consent-off test"));
+    const stored = await errorReporter.getStoredErrors();
+    expect(stored).toHaveLength(0);
+  });
+
+  it("falls back to legacy bmf_local_error_storage when consent key absent", async () => {
+    localStorage.setItem("bmf_local_error_storage", "true");
+    await errorReporter.reportError(new Error("legacy fallback"));
+    const stored = await errorReporter.getStoredErrors();
+    expect(stored).toHaveLength(1);
+  });
+
+  it("consent key false overrides legacy key true", async () => {
+    localStorage.setItem("bmf_local_error_storage", "true");
+    localStorage.setItem(CONSENT_KEY, "false");
+    await errorReporter.reportError(new Error("override test"));
+    const stored = await errorReporter.getStoredErrors();
+    expect(stored).toHaveLength(0);
+  });
+});

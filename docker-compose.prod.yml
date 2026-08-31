@@ -4,7 +4,7 @@ services:
   web:
     # Imagen etiquetada por SHA (deploy-prod.mjs) para rollback determinista
     # sin rebuild: IMAGE_TAG=<sha> docker compose up -d web api.
-    image: bookmarkforge/web:${IMAGE_TAG:-latest}
+    image: bookmarkforge/web:${IMAGE_TAG:?IMAGE_TAG is required}
     build:
       context: .
       dockerfile: Dockerfile
@@ -18,13 +18,13 @@ services:
       api:
         condition: service_healthy
     ports:
-      - "${HTTP_PORT:-8080}:8080"
+      - "127.0.0.1:${HTTP_PORT:-8080}:8080"
     restart: unless-stopped
     networks: [prod]
 
   api:
     # Imagen etiquetada por SHA (deploy-prod.mjs). Ver nota en el servicio web.
-    image: bookmarkforge/api:${IMAGE_TAG:-latest}
+    image: bookmarkforge/api:${IMAGE_TAG:?IMAGE_TAG is required}
     build:
       context: .
       dockerfile: Dockerfile
@@ -35,6 +35,7 @@ services:
       HOST: 0.0.0.0
       PORT: 8787
       TRUST_PROXY: "1"
+      READ_ONLY: "true"
       GEMINI_API_KEY: ${GEMINI_API_KEY:?GEMINI_API_KEY is required}
       GEMINI_API_BASE: ${GEMINI_API_BASE:?GEMINI_API_BASE is required}
       AI_SESSION_REQUIRE_LICENSE: ${AI_SESSION_REQUIRE_LICENSE:-1}
@@ -44,7 +45,7 @@ services:
       # Set AI_PROXY_REDIS_URL to share quota/breaker/session state across
       # replicas (e.g. redis://:password@redis:6379/0 when using the bundled
       # `redis` service below). Leave empty for a stateless single instance.
-      AI_PROXY_REDIS_URL: ${AI_PROXY_REDIS_URL:-}
+      AI_PROXY_REDIS_URL: ${AI_PROXY_REDIS_URL:-redis://redis:6379/0}
       AI_PROXY_DAILY_QUOTA: ${AI_PROXY_DAILY_QUOTA:-10000}
       AI_PROXY_IP_RATE_LIMIT: ${AI_PROXY_IP_RATE_LIMIT:-60}
       AI_PROXY_IDENTITY_RATE_LIMIT: ${AI_PROXY_IDENTITY_RATE_LIMIT:-60}
@@ -87,7 +88,7 @@ services:
   # .env.production. With no password configured the server runs unauthenticated
   # on the private bridge network only — never publish port 6379 to the host.
   redis:
-    image: redis:7-alpine
+    image: redis:7-alpine@sha256:ff02b58f971e7d7d156a1267e283fcbbeee91773b6aa36c49dac28ecfe28eadf
     restart: unless-stopped
     entrypoint:
       - /bin/sh

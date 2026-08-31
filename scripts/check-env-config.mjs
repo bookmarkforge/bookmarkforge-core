@@ -155,9 +155,16 @@ export function runEnvConfigChecks({ allowed, found, baseline }) {
  *     rejects http webhooks fail-closed in production).
  * Optional vars (`${VAR:-...}`) are never violations (fail-safe defaults).
  */
-export function runComposeEnvContract({ composeSource, envProdSource }) {
+export function runComposeEnvContract({ composeSource, envProdSource, deployInjectedVars = ["IMAGE_TAG"] }) {
   const violations = [];
   const summary = [];
+
+  // Vars injected by deploy tooling at deploy time (scripts/deploy-prod.mjs,
+  // rollback.mjs, staging-deploy.mjs all pass IMAGE_TAG=<sha> explicitly in
+  // the compose environment). They must NOT live in .env.production: a value
+  // there would silently pin every deploy to one image tag and defeat the
+  // per-deploy SHA injection. So they are exempt from the presence check.
+  const deployInjected = new Set(deployInjectedVars);
 
   const composeVars = new Map(); // name -> { required: boolean }
   const re = /(?<!\$)\$\{([A-Za-z_][A-Za-z0-9_]*)(?::([^}]*))?\}/g;
@@ -182,7 +189,9 @@ export function runComposeEnvContract({ composeSource, envProdSource }) {
 
   const missing = [];
   for (const [name, info] of composeVars) {
-    if (info.required && !envProdVars.has(name)) missing.push(name);
+    if (!info.required) continue;
+    if (deployInjected.has(name)) continue;
+    if (!envProdVars.has(name)) missing.push(name);
   }
   if (missing.length > 0) {
     violations.push(

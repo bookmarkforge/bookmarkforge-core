@@ -1,0 +1,480 @@
+openapi: 3.1.0
+info:
+  title: BookmarkForge Companion Server API
+  version: 1.0.0
+  description: |
+    Self-hosted companion server for BookmarkForge — P2P signaling, AI proxy,
+    license validation and client event collection.
+
+    Security model: local-first. The server never receives the user's vault.
+    All endpoints that touch AI, licensing or diagnostics require origin
+    allow-listing, CSRF tokens, rate limiting and (in production) a signed
+    license proof. See docs/security.md and docs/api.md for the full contract.
+  license:
+    name: AGPL-3.0
+    url: https://www.gnu.org/licenses/agpl-3.0.html
+  contact:
+    email: bookmarkforge@proton.me
+
+servers:
+  - url: https://{host}
+    description: Production (behind reverse proxy TLS)
+    variables:
+      host:
+        default: bookmarkforge.com
+  - url: http://127.0.0.1:{port}
+    description: Local development / load testing
+    variables:
+      port:
+        default: '8787'
+
+# ── Security schemes ──────────────────────────────────────────────
+security:
+  - sessionCookie: []
+
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: bf_ai_session
+      description: |
+        HttpOnly, Secure, SameSite=Strict session cookie set by POST
+        /api/services/ai/session. Paired with X-CSRF-Token header.
+    csrfToken:
+      type: apiKey
+      in: header
+      name: X-CSRF-Token
+      description: |
+        Non-HttpOnly CSRF token matching the bf_ai_csrf cookie value.
+        Required for all state-changing AI endpoints.
+    adminToken:
+      type: apiKey
+      in: header
+      name: X-Signaling-Admin-Token
+      description: Admin diagnostic token (disabled by default).
+    signalingAdminToken:
+      type: apiKey
+      in: header
+      name: X-Signaling-Admin-Token
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+      required: [error]
+
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [ok]
+        instanceId:
+          type: string
+          description: Server instance UUID (changes on restart)
+      required: [status]
+
+    AiSessionRequest:
+      type: object
+      properties:
+        licenseProof:
+          type: object
+          properties:
+            payload:
+              type: object
+              description: License state object (instanceId, status, expiry)
+            signature:
+              type: string
+              description: Ed25519 signature of the payload (base64)
+      description: |
+        Required in production (AI_SESSION_REQUIRE_LICENSE=1).
+        Omitted in staging with AI_SESSION_REQUIRE_LICENSE=0.
+
+    AiSessionResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        sessionCreated:
+          type: boolean
+      required: [ok]
+
+    AiGenerateRequest:
+      type: object
+      properties:
+        model:
+          type: string
+          description: Provider model identifier (e.g. gemini-2.0-flash)
+        contents:
+          type: array
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+                enum: [user, model]
+              parts:
+                type: array
+                items:
+                  type: object
+        generationConfig:
+          type: object
+      required: [model, contents]
+
+    ClientEvent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - storage-pressure
+            - bundle-integrity-spike
+            - error-spike
+            - csp-violation-spike
+        level:
+          type: string
+        pct:
+          type: number
+        usage:
+          type: number
+        quota:
+          type: number
+        persisted:
+          type: boolean
+        count:
+          type: integer
+        reason:
+          type: string
+          maxLength: 64
+
+  parameters:
+    csrfHeader:
+      name: X-CSRF-Token
+      in: header
+      required: true
+      schema:
+        type: string
+
+# ── Paths ─────────────────────────────────────────────────────────
+paths:
+  /health:
+    get:
+      summary: Liveness check
+      description: Minimal health endpoint for load balancers and monitoring.
+      security: []
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: Server unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/services/ai/session:
+    post:
+      summary: Create ephemeral AI session
+      description: |
+        Creates a short-lived session (30 min TTL) with HttpOnly cookie +
+        CSRF token. Rate limited per-IP and per-identity. Requires a signed
+        license proof in production.
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiSessionRequest'
+      responses:
+        '200':
+          description: Session created
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                description: |
+                  bf_ai_session=...; HttpOnly; Secure; SameSite=Strict; Path=/api/services/ai
+                  bf_ai_csrf=...; Secure; SameSite=Strict; Path=/api/services/ai
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AiSessionResponse'
+        '429':
+          description: Rate limited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Origin not allowed or invalid license
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/services/ai/generate:
+    post:
+      summary: AI text generation proxy
+      description: |
+        Proxies generation requests to the configured AI provider (Gemini by
+        default). Requires valid session cookie + CSRF token. Rate limited
+        per-identity with daily quota.
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/csrfHeader'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AiGenerateRequest'
+      responses:
+        '200':
+          description: Generation result
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Session expired or invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limited or quota exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/services/ai/generate-tts:
+    post:
+      summary: Text-to-speech proxy
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/csrfHeader'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  maxLength: 4096
+      responses:
+        '200':
+          description: Audio data
+          content:
+            audio/mpeg:
+              schema:
+                type: string
+                format: binary
+
+  /api/services/ai/generate-image:
+    post:
+      summary: Image generation proxy
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: '#/components/parameters/csrfHeader'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+      responses:
+        '200':
+          description: Image data
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+
+  /api/services/ai/admin:
+    get:
+      summary: AI diagnostics
+      description: Returns session counts, rate limit state, quota usage.
+      security:
+        - adminToken: []
+      responses:
+        '200':
+          description: Diagnostic data
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: Invalid or missing admin token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Diagnostics disabled
+
+  /api/services/ai/metrics:
+    get:
+      summary: AI metrics
+      description: Prometheus-format metrics for the AI proxy.
+      security: []
+      responses:
+        '200':
+          description: Metrics in text/plain
+
+  /api/license/health:
+    get:
+      summary: License server health
+      security: []
+      responses:
+        '200':
+          description: License server operational
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/license/activate:
+    post:
+      summary: Activate a license
+      description: Validates a license key with Whop and returns a signed license state.
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                licenseKey:
+                  type: string
+                instanceId:
+                  type: string
+      responses:
+        '200':
+          description: License activated
+          content:
+            application/json:
+              schema:
+                type: object
+        '429':
+          description: Rate limited
+
+  /api/license/validate:
+    post:
+      summary: Validate a license state
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: object
+                signature:
+                  type: string
+      responses:
+        '200':
+          description: License valid
+        '403':
+          description: License invalid or expired
+
+  /api/license/deactivate:
+    post:
+      summary: Deactivate a license instance
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                licenseKey:
+                  type: string
+                instanceId:
+                  type: string
+      responses:
+        '200':
+          description: License deactivated
+
+  /admin:
+    get:
+      summary: Signaling server diagnostics
+      security:
+        - signalingAdminToken: []
+      responses:
+        '200':
+          description: Server state (connections, rooms, peers)
+          content:
+            application/json:
+              schema:
+                type: object
+        '403':
+          description: Invalid admin token
+
+  /csp-report:
+    post:
+      summary: CSP violation report endpoint
+      description: Collects Content-Security-Policy violation reports.
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                'csp-report':
+                  type: object
+      responses:
+        '204':
+          description: Report received
+
+  /api/client-events:
+    post:
+      summary: Client event collector
+      description: |
+        Aggregates operational events (storage-pressure, error-spike,
+        csp-violation-spike, bundle-integrity-spike) from opt-in clients.
+        Alerts when ≥ CRITICAL_CLIENTS threshold within the window.
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClientEvent'
+      responses:
+        '204':
+          description: Event received
+        '429':
+          description: Rate limited (CLIENT_EVENTS_MAX/window)
+        '503':
+          description: Collector disabled
+
+  /api/client-events/retry-stats:
+    post:
+      summary: Client event retry stats
+      description: Reports retry attempts/coalesced/dropped counts for diagnostics.
+      security: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '204':
+          description: Stats received

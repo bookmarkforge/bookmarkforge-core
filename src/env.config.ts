@@ -124,6 +124,11 @@ export const ENV_REGISTRY = {
   // durable backend. NEVER set in real production builds (no hook shipped).
   e2ePreviewDiagnostics:  { envVar: "VITE_E2E_PREVIEW_DIAGNOSTICS", parser: parseBool, default: false},
   testBuild:              { envVar: "VITE_TEST_BUILD",              parser: parseBool, default: false},
+  // Optional Sentry DSN for remote error reporting (opt-in, see
+  // src/telemetry/remoteErrorReporter.ts). Empty by default: error reporting
+  // stays strictly local unless the operator configures a DSN AND the user
+  // consents via the banner.
+  sentryDsn:              { envVar: "VITE_SENTRY_DSN",               parser: parseString},
 
   // ─── AI provider keys (all optional — validated per-provider) ───
   // NOTE: VITE_GEMINI_API_KEY is intentionally NOT registered here.

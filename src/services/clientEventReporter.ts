@@ -34,12 +34,17 @@
 
 import { logger } from "../utils/logger";
 import { safeGet } from "../store/safeStorage";
+import { STORAGE_KEYS } from "../constants/storage-keys";
 import type { StoragePressureDetail } from "../utils/storageMonitor";
 
 const EVENT_ENDPOINT = "/api/client-events";
 const RETRY_STATS_ENDPOINT = "/api/client-events/retry-stats";
-const TELEMETRY_KEY = "bmf_local_error_storage";
-const LEGACY_TELEMETRY_KEY = "bmf_telemetry_optin";
+// Audit 2026-08-30: previously read bmf_local_error_storage (the error
+// storage key) instead of the client-events consent key from ConsentBanner.
+// The user's client-events choice in the banner therefore had no effect.
+const CONSENT_KEY = STORAGE_KEYS.CONSENT_CLIENT_EVENTS;
+const LEGACY_CONSENT_KEY_1 = "bmf_local_error_storage";
+const LEGACY_CONSENT_KEY_2 = "bmf_telemetry_optin";
 const PENDING_EVENT_STORAGE_KEY = "bmf_pending_client_event";
 
 /** Total send attempts per event (1 initial + retries). Bounded — never retries forever. */
@@ -68,12 +73,14 @@ const listeners: Array<{
 /** Pending retries, one entry per event type (coalesced — latest wins). */
 const pendingRetries = new Map<string, PendingRetry>();
 
-/** Same consent signal as errorReporter: local diagnostics opt-in. */
+/** Consent gate: client-events forwarding opt-in from ConsentBanner. */
 function isReportingEnabled(): boolean {
   try {
-    const current = safeGet(TELEMETRY_KEY);
+    const current = safeGet(CONSENT_KEY);
     if (current !== null) return current === "true";
-    return safeGet(LEGACY_TELEMETRY_KEY) === "true";
+    const legacy1 = safeGet(LEGACY_CONSENT_KEY_1);
+    if (legacy1 !== null) return legacy1 === "true";
+    return safeGet(LEGACY_CONSENT_KEY_2) === "true";
   } catch (_err) {
     return false;
   }

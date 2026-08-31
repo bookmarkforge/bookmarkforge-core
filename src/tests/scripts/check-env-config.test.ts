@@ -196,6 +196,28 @@ describe("runComposeEnvContract (unit)", () => {
     expect(r.ok).toBe(true);
     expect(r.violations).toEqual([]);
   });
+
+  it("exempts deploy-injected vars (e.g. IMAGE_TAG) from the presence check", () => {
+    // Deploy tooling (deploy-prod.mjs, rollback.mjs, staging-deploy.mjs)
+    // injects IMAGE_TAG=<sha> per deploy; it must NOT live in .env.production
+    // or every deploy would silently pin to one tag.
+    const r = runComposeEnvContract({
+      composeSource: "services:\n  web:\n    image: app:${IMAGE_TAG:?IMAGE_TAG is required}\n  api:\n    environment:\n      GEMINI_API_KEY: ${GEMINI_API_KEY:?required}\n",
+      envProdSource: "GEMINI_API_KEY=sk-test\n",
+    });
+    expect(r.ok).toBe(true);
+    expect(r.violations).toEqual([]);
+  });
+
+  it("still flags other required vars while exempting deploy-injected ones", () => {
+    const r = runComposeEnvContract({
+      composeSource: "services:\n  web:\n    image: app:${IMAGE_TAG:?required}\n  api:\n    environment:\n      GEMINI_API_KEY: ${GEMINI_API_KEY:?required}\n",
+      envProdSource: "",
+    });
+    expect(r.ok).toBe(false);
+    expect(r.violations.join("\n")).toContain("GEMINI_API_KEY");
+    expect(r.violations.join("\n")).not.toContain("IMAGE_TAG");
+  });
 });
 
 // ─── Integration: CLI as a subprocess ────────────────────────────────

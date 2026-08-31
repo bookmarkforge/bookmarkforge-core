@@ -163,11 +163,15 @@ export function createAiSessionManager(options: AiSessionManagerOptions = {}): A
   // the Origin header against a Host-derived origin. That derivation trusts
   // the Host header, so surface the risk at startup rather than silently
   // running on the weaker default.
+  if (allowedOrigins.size === 0 && process.env.NODE_ENV === "production") {
+    console.error(
+      "[ai-session] refusing production session manager without explicit AI_SESSION_ORIGINS",
+    );
+    throw new Error("AI_SESSION_ORIGINS is required in production");
+  }
   if (allowedOrigins.size === 0) {
     console.warn(
-      "[ai-session] AI_SESSION_ORIGINS is not configured; falling back to Host-derived origin checks. " +
-      "A spoofable Host/x-forwarded-proto pair could satisfy this check. " +
-      "Set AI_SESSION_ORIGINS to the deployment's browser origins to remove this warning.",
+      "[ai-session] AI_SESSION_ORIGINS is not configured; using Host-derived origin checks outside production.",
     );
   }
   const allowMissingOrigin = options.allowMissingOrigin ?? process.env.NODE_ENV !== "production";

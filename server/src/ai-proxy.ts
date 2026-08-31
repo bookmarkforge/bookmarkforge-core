@@ -960,7 +960,7 @@ export function applySecurityHeaders(res: ServerResponse): void {
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("X-Frame-Options", "DENY");
   res.setHeader("Referrer-Policy", "no-referrer");
-  res.setHeader("Permissions-Policy", "camera=(), geolocation=(), microphone=()");
+  res.setHeader("Permissions-Policy", "camera=(), geolocation=(), microphone=(), interest-cohort=()");
   res.setHeader(
     "Content-Security-Policy",
     "default-src 'none'; base-uri 'none'; frame-ancestors 'none'",

@@ -809,6 +809,7 @@ describe.skipIf(!serverEntryExists)("CSP report collector — webhook URL harden
       env: {
         ...process.env,
         NODE_ENV: "production",
+        AI_SESSION_ORIGINS: "http://127.0.0.1",
         PORT: String(port),
         HOST: "127.0.0.1",
         CSP_REPORT_LIMIT: "10",

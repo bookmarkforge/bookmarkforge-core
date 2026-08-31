@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { RxCollection, RxDatabase, RxDocument, RxQuery } from "rxdb";
+import { logger } from "../utils/logger";
 import { useRxCollection as useOfficialRxCollection } from "rxdb/plugins/react";
 
 const DatabaseContext = createContext<RxDatabase | null>(null);
@@ -83,8 +84,9 @@ export function useRxQuery<T = unknown>(
           setLoading(false);
         }
       })
-      .catch(() => {
+      .catch((error) => {
         if (!cancelled) {
+          logger.warn("[useRxDB] Query failed, returning empty result", { error });
           setResult([]);
           setLoading(false);
         }

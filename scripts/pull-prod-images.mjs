@@ -28,6 +28,9 @@
 import { execSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 import { extractSha } from "./rollback.mjs";
+import { validateRegistry } from "./registry-policy.mjs";
+import { runCommandOk } from "./command-runner.mjs";
+export { validateRegistry };
 
 // ── Lógica pura (extraída para test unitario sin docker ni git) ────────
 
@@ -40,7 +43,7 @@ export function planPullTargets(sha, registry) {
   if (!sha || !/^[0-9a-f]{7,12}$/i.test(sha)) return [];
   const reg =
     typeof registry === "string" ? registry.trim().replace(/\/+$/, "") : "";
-  if (!reg) return [];
+  if (!validateRegistry(reg)) return [];
   return ["web", "api"].map((name) => ({
     name,
     remote: `${reg}/bookmarkforge/${name}:${sha}`,
@@ -68,6 +71,7 @@ export function isPrimed(sha, imageList) {
 const args = process.argv.slice(2);
 
 function runOk(cmd) {
+  if (Array.isArray(cmd)) return runCommandOk(cmd[0], cmd.slice(1), { stdio: "inherit" });
   console.log(`$ ${cmd}`);
   try {
     execSync(cmd, { stdio: "inherit" });
@@ -100,6 +104,11 @@ if (isMain) {
   if (args.includes("--help") || args.includes("-h")) {
     console.log(help);
     process.exit(0);
+  }
+
+  if (REGISTRY && !validateRegistry(REGISTRY)) {
+    console.error("[pull-prod-images] DOCKER_REGISTRY contiene un host inválido. Exit 1.");
+    process.exit(1);
   }
 
   if (!REGISTRY) {
@@ -223,12 +232,12 @@ if (isMain) {
 
   let primed = true;
   for (const t of need) {
-    if (!runOk(`docker pull ${t.remote}`, { timeout: 180_000 })) {
+    if (!runOk(["docker", "pull", t.remote], { timeout: 180_000 })) {
       console.warn(`[pull-prod-images] pull de ${t.remote} falló (¿no existe en el registro?)`);
       primed = false;
       break;
     }
-    if (!runOk(`docker tag ${t.remote} ${t.local}`)) {
+    if (!runOk(["docker", "tag", t.remote, t.local])) {
       console.warn(`[pull-prod-images] tag local de ${t.remote} falló`);
       primed = false;
       break;

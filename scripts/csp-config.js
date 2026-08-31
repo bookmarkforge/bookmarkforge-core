@@ -58,6 +58,24 @@ const CLOUD_AI_AND_SYNC =
   " https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe" +
   ` ${SIGNALING_WS}`;
 
+/**
+ * Optional Sentry ingest host for remote error reporting. Derived from the
+ * operator's VITE_SENTRY_DSN at build time; when unset (default) the CSP is
+ * unchanged and error reporting stays strictly local. Only added to the
+ * MODERATE profile — CSP_STRICT stays privacy-maximal (see check:csp-sync).
+ * After changing it, regenerate the shipped copies: `npm run nginx:render`.
+ */
+const SENTRY_DSN = process.env.VITE_SENTRY_DSN ?? "";
+const SENTRY_HOST = (() => {
+  if (!SENTRY_DSN) return "";
+  try {
+    return new URL(SENTRY_DSN).host;
+  } catch {
+    return "";
+  }
+})();
+const SENTRY_CONNECT = SENTRY_HOST ? ` https://${SENTRY_HOST}` : "";
+
 /** Identical to the shipped production header policy (dist/_headers). */
 // report-uri endpoint — declared here so CSP_MODERATE/CSP_STRICT can
 // reference it inline.
@@ -95,7 +113,7 @@ export const REPORTING_ENDPOINTS_HEADER =
   `${REPORT_TO_GROUP}="/csp-report"`;
 
 export const CSP_MODERATE =
-  `${BASE}${CLOUD_AI_AND_SYNC};${TAIL}` +
+  `${BASE}${CLOUD_AI_AND_SYNC}${SENTRY_CONNECT};${TAIL}` +
   `; report-uri ${REPORT_URI}; report-to ${REPORT_TO_GROUP}`;
 
 /** Privacy-maximal: no cloud AI providers in connect-src. */

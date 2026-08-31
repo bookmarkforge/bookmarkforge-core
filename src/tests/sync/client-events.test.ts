@@ -496,6 +496,7 @@ describe.skipIf(!serverEntryExists)("Client events collector — webhook URL har
       env: {
         ...process.env,
         NODE_ENV: "production",
+        AI_SESSION_ORIGINS: "http://127.0.0.1",
         PORT: String(port),
         HOST: "127.0.0.1",
         CLIENT_EVENTS_LIMIT: "10",

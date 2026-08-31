@@ -33,17 +33,20 @@
 
 import { execSync, spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
+import { validateRegistry } from "./registry-policy.mjs";
+import { runCommand, runCommandOk } from "./command-runner.mjs";
 
 function run(cmd, opts = {}) {
+  if (Array.isArray(cmd)) return runCommand(cmd[0], cmd.slice(1), opts);
   console.log(`$ ${cmd}`);
   return execSync(cmd, { stdio: "inherit", ...opts });
 }
 
 /** run() que no lanza: devuelve true/false según el exit code. */
 function runOk(cmd, opts = {}) {
-  console.log(`$ ${cmd}`);
+  if (Array.isArray(cmd)) return runCommandOk(cmd[0], cmd.slice(1), opts);
   try {
-    execSync(cmd, { stdio: "inherit", ...opts });
+    run(cmd, opts);
     return true;
   } catch {
     return false;
@@ -58,7 +61,27 @@ const args = process.argv.slice(2);
 
 // URL base para el smoke post-rollback: honra PROD_BASE_URL (igual que
 // deploy-prod.mjs y monitoring-alerts.mjs). Default = prod local 8080.
+export function validateRollbackTargetTag(tag) {
+  return typeof tag === "string" && /^prod-[0-9]{8}-[0-9]{4}-[0-9a-fA-F]{7,40}$/.test(tag);
+}
+
+export function validateRollbackBaseUrl(value) {
+  if (typeof value !== "string" || value.trim() === "" || value.length > 2048) return false;
+  try {
+    const url = new URL(value);
+    if (url.username || url.password || url.search || url.hash) return false;
+    if (url.protocol === "http:") return url.hostname === "127.0.0.1" || url.hostname === "localhost";
+    return url.protocol === "https:" && !url.port;
+  } catch {
+    return false;
+  }
+}
+
 const PROD_BASE_URL = process.env.PROD_BASE_URL ?? "http://127.0.0.1:8080";
+if (!validateRollbackBaseUrl(PROD_BASE_URL) && process.argv[1]?.endsWith("rollback.mjs")) {
+  console.error("[rollback] PROD_BASE_URL must be a valid HTTPS URL or local HTTP URL");
+  process.exit(1);
+}
 const SMOKE_ENV = { ...process.env, PROD_BASE_URL };
 
 // ── Lógica pura (extraída para test unitario sin git/docker) ──────────
@@ -68,7 +91,7 @@ const SMOKE_ENV = { ...process.env, PROD_BASE_URL };
  * no termina en un sha de 7-12 hex — en ese caso el rollback cae a rebuild.
  */
 export function extractSha(tag) {
-  if (typeof tag !== "string") return "";
+  if (typeof tag !== "string" || !tag.startsWith("prod-")) return "";
   const sha = tag.split("-").pop() ?? "";
   return /^[0-9a-f]{7,12}$/i.test(sha) ? sha : "";
 }
@@ -263,17 +286,25 @@ if (!targetTag) {
 
 // VALIDACIÓN PREVIA: Verificar que el tag existe y tiene estructura mínima
 try {
-  const tagCheck = execSync(`git cat-file -t ${targetTag}`, { encoding: "utf8" }).trim();
-  if (tagCheck !== "tag") {
+  if (!validateRollbackTargetTag(targetTag)) {
+    console.error(`[rollback] Invalid target tag format: ${targetTag}`);
+    process.exit(1);
+  }
+  const tagCheck = spawnSync("git", ["cat-file", "-t", `refs/tags/${targetTag}`], { encoding: "utf8" });
+  if (tagCheck.status !== 0) throw new Error(tagCheck.stderr?.trim() || "tag lookup failed");
+  const tagType = tagCheck.stdout.trim();
+  if (tagType !== "tag") {
     console.error(`[rollback] El tag ${targetTag} no existe o no es un tag válido`);
     process.exit(1);
   }
   // Verificar que tiene al menos un archivo (evita tags vacíos/corruptos)
   // Cross-platform: count lines in JS instead of piping to `wc` (missing under
   // cmd.exe on Windows dev boxes).
-  const filesInTag = execSync(`git ls-tree -r ${targetTag} --name-only`, {
+  const filesInTagResult = spawnSync("git", ["ls-tree", "-r", `refs/tags/${targetTag}`, "--name-only"], {
     encoding: "utf8",
-  }).trim().split("\n").length;
+  });
+  if (filesInTagResult.status !== 0) throw new Error(filesInTagResult.stderr?.trim() || "tag tree lookup failed");
+  const filesInTag = filesInTagResult.stdout.trim().split("\n").filter(Boolean).length;
   if (filesInTag < 5) {
     console.error(`[rollback] El tag ${targetTag} parece vacío o corrupto (pocos archivos)`);
     process.exit(1);
@@ -286,7 +317,7 @@ try {
 
 // ── Estrategia: IMAGEN PRIMERO ─────────────────────────────────────────
 // deploy-prod.mjs etiqueta las imágenes por SHA y docker-compose.prod.yml
-// declara image: bookmarkforge/{web,api}:${IMAGE_TAG:-latest}. El rollback
+// declara imágenes parametrizadas por IMAGE_TAG. El rollback
 // preferente arranca la imagen YA construida (up -d sin --build → segundos);
 // solo si la imagen <sha> no existe localmente cae al rebuild desde el tag.
 
@@ -304,6 +335,10 @@ const composeBase = `docker compose -f ${COMPOSE_FILE} ${envFileArg}`.trim();
 // que construyó). Mismo env que deploy-prod.mjs; sin la var, el rollback
 // solo usa imágenes locales (comportamiento original).
 const REGISTRY = (process.env.DOCKER_REGISTRY ?? "").trim().replace(/\/+$/, "");
+if (REGISTRY && !validateRegistry(REGISTRY)) {
+  console.error("[rollback] DOCKER_REGISTRY contiene un host inválido");
+  process.exit(1);
+}
 
 console.log(`\n[rollback] INICIANDO ROLLBACK A ${targetTag} — cronómetro 1:00`);
 console.log(
@@ -339,7 +374,11 @@ try {
       let remotePublished = true;
       for (const remote of remoteRefs) {
         try {
-          execSync(`docker manifest inspect ${remote}`, { stdio: "ignore", timeout: 60_000 });
+          const manifest = spawnSync("docker", ["manifest", "inspect", remote], {
+            stdio: "ignore",
+            timeout: 60_000,
+          });
+          if (manifest.status !== 0) throw new Error("docker manifest inspect failed");
         } catch {
           remotePublished = false;
           console.error(`[rollback] imagen no publicada en el registro: ${remote}`);
@@ -355,13 +394,13 @@ try {
       for (const name of pullDecision.missing) {
         const remote = `${REGISTRY}/bookmarkforge/${name}:${sha}`;
         const local = `bookmarkforge/${name}:${sha}`;
-        const pullOk = runOk(`docker pull ${remote}`, { timeout: 120_000 });
+        const pullOk = runOk(["docker", "pull", remote], { timeout: 120_000 });
         if (!pullOk) {
           pulled = false;
           console.warn(`[rollback] pull de ${remote} falló — no hay imagen en el registro para este sha`);
           break;
         }
-        if (run(`docker tag ${remote} ${local}`, { timeout: 30_000 }) !== 0) {
+        if (run(["docker", "tag", remote, local], { timeout: 30_000 }) !== 0) {
           pulled = false;
           console.warn(`[rollback] tag local de ${remote} falló`);
           break;
@@ -449,7 +488,7 @@ try {
     console.log(`[T+0:05] git checkout ${targetTag}`);
     run(`git checkout ${targetTag}`);
 
-    console.log(`[T+0:10] ${composeBase} up -d --build web api (IMAGE_TAG=${sha || "latest"})`);
+    console.log(`[T+0:10] ${composeBase} up -d --build web api (IMAGE_TAG=${sha || "(rebuild desde tag)"})`);
     try {
       run(`${composeBase} up -d --build web api`, {
         env: { ...process.env, IMAGE_TAG: sha },
@@ -521,7 +560,7 @@ try {
 
   const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
   console.log(`\n[rollback] ROLLBACK OK en ${elapsed}s — verifica https://tu-dominio.com`);
-  console.log(`[rollback] Tag: ${targetTag} — imagen bookmarkforge/web:${shaLooksValid ? sha : "latest"}`);
+  console.log(`[rollback] Tag: ${targetTag} — imagen bookmarkforge/web:${shaLooksValid ? sha : "(rebuild desde tag)"}`);
   console.log(`[rollback] Siguiente: monitoriza con 'node scripts/production-smoke.mjs' cada 60s`);
 } catch (e) {
   console.error(`[rollback] FATAL: ${e.message}`);

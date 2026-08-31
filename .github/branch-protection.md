@@ -11,7 +11,7 @@ La protección de la rama debe configurarse en GitHub en **Settings → Branches
 - Require review from Code Owners: activado.
 - Require status checks to pass before merging: activado.
 - Require branches to be up to date before merging: activado.
-- Checks obligatorios: `Typecheck, lint, tests and security gates`, `Playwright E2E`, `Production build and repository checks` y `Dependency review` cuando GitHub lo ofrezca para el Pull Request.
+- Checks obligatorios: `Typecheck, lint, tests and security gates`, `Playwright E2E`, `Production build and repository checks`, `Dependency review` (cuando GitHub lo ofrezca para el Pull Request), `CodeQL analysis` y `Semgrep analysis`.
 - Require conversation resolution before merging: activado.
 - Require signed commits: recomendado si la política de la organización lo permite.
 - Restrict who can push to matching branches: activado.
@@ -39,4 +39,6 @@ gh api --method POST \
 
 Sustituye `ORG/REPO` por el repositorio real. Los `integration_id` de los checks estándar de GitHub Actions son `15368`; si la organización usa una aplicación CI distinta, actualízalos según la documentación de GitHub.
 
-Después de importar la regla, abre un PR de prueba para comprobar que un cambio en criptografía o infraestructura solicita los owners correctos y que los checks aparecen con los nombres exactos definidos en `.github/workflows/ci.yml`.
+> **Formato del archivo:** `.github/rulesets/main-protection.json` es el **payload directo del body de creación** de la API (`POST /repos/{owner}/{repo}/rulesets`), no una exportación. No debe contener campos de export como `id`, `source`, `source_type`, `node_id`, `_links`, `created_at` o `updated_at` — el body de creación documentado es `name`, `target`, `enforcement`, `bypass_actors`, `conditions` y `rules`. El gate `npm run check:launch-checklist` falla si aparece alguno de esos campos de export.
+
+Después de importar la regla, abre un PR de prueba para comprobar que un cambio en criptografía o infraestructura solicita los owners correctos y que los checks aparecen con los nombres exactos definidos en `.github/workflows/ci.yml` y `.github/workflows/sast.yml`.

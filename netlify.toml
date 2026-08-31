@@ -1,0 +1,31 @@
+# BookmarkForge — Netlify deployment configuration.
+#
+# The three CSP-derived header values below (Reporting-Endpoints, Report-To
+# and Content-Security-Policy) are rendered from scripts/csp-config.js by
+# `npm run nginx:render` (surgical, non-wholesale — only those three lines
+# are rewritten). Every other section, per-path header block and comment is
+# static and must be edited by hand. The `check:csp` gate validates that
+# this copy carries the canonical CSP verbatim.
+#
+# NOTE: keep this file free of the deployment domain outside the three
+# rendered lines — a BOOKMARKFORGE_DOMAIN change propagates through those
+# lines and `nginx:render` verify treats any stray domain reference as drift.
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    Cross-Origin-Embedder-Policy = "require-corp"
+    Cross-Origin-Opener-Policy = "same-origin"
+    Reporting-Endpoints = 'csp-endpoint="/csp-report"'
+    Report-To = '{"group":"csp-endpoint","max_age":86400,"endpoints":[{"url":"https://bookmarkforge.com/csp-report"}]}'
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data:; connect-src 'self' https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforge.com; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri https://bookmarkforge.com/csp-report; report-to csp-endpoint"
+
+[[headers]]
+  for = "/payment/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"

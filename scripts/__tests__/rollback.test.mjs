@@ -6,6 +6,8 @@ import {
   selectAutoTarget,
   decideImagePath,
   shouldPullFromRegistry,
+  validateRollbackTargetTag,
+  validateRollbackBaseUrl,
 } from "../rollback.mjs";
 
 /**
@@ -44,6 +46,40 @@ describe("guard isMain (importación sin efectos de lado)", () => {
     } finally {
       process.argv = originalArgv;
     }
+  });
+});
+
+async function sourceForRollback() {
+  return import("node:fs/promises").then(({ readFile }) => readFile("scripts/rollback.mjs", "utf8"));
+}
+
+describe("rollback input validation", () => {
+  it("uses argument arrays for tag inspection instead of shell interpolation", async () => {
+    const source = await sourceForRollback();
+    expect(source).toContain('spawnSync("git", ["cat-file", "-t", `refs/tags/${targetTag}`]');
+    expect(source).toContain('spawnSync("git", ["ls-tree", "-r", `refs/tags/${targetTag}`, "--name-only"]');
+    expect(source).not.toContain('execSync(`git cat-file -t ${targetTag}`');
+    expect(source).not.toContain('execSync(`docker manifest inspect ${remote}`');
+    expect(source).not.toContain('execSync(`docker pull ${remote}`');
+    expect(source).not.toContain('run(`docker tag ${remote} ${local}`');
+    expect(source).toContain('import { runCommand, runCommandOk } from "./command-runner.mjs";');
+    expect(source).not.toContain('execSync(`git ls-tree -r ${targetTag}');
+  });
+
+  it("accepts only annotated production tag names", () => {
+    expect(validateRollbackTargetTag("prod-20260827-2128-84c7fe5")).toBe(true);
+    expect(validateRollbackTargetTag("prod-20260827-2128-latest")).toBe(false);
+    expect(validateRollbackTargetTag("refs/tags/prod-20260827-2128-84c7fe5")).toBe(false);
+  });
+
+  it("accepts HTTPS URLs and local HTTP only", () => {
+    expect(validateRollbackBaseUrl("https://staging.example.test")).toBe(true);
+    expect(validateRollbackBaseUrl("http://127.0.0.1:8080")).toBe(true);
+    expect(validateRollbackBaseUrl("http://staging.example.test")).toBe(false);
+    expect(validateRollbackBaseUrl("not-a-url")).toBe(false);
+    expect(validateRollbackBaseUrl("http://127.0.0.1:8080?token=secret")).toBe(false);
+    expect(validateRollbackBaseUrl("https://staging.example.test:8443")).toBe(false);
+    expect(validateRollbackBaseUrl("https://user:pass@staging.example.test")).toBe(false);
   });
 });
 

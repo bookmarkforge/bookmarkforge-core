@@ -38,7 +38,7 @@ import {
 const args = process.argv.slice(2);
 const JSON_OUT = args.includes("--json");
 const registryIdx = args.indexOf("--registry");
-const REGISTRY = registryIdx !== -1 ? args[registryIdx + 1] : "127.0.0.1:5000";
+const REGISTRY = registryIdx !== -1 ? args[registryIdx + 1] : "127.0.0.1:5001";
 const shaIdx = args.indexOf("--sha");
 const SHA =
   shaIdx !== -1 ? args[shaIdx + 1] : `c0ffee${String(Date.now()).slice(-5)}`;
@@ -135,7 +135,12 @@ async function main() {
       return;
     }
     containerName = `bmf-test-registry-${Date.now()}`;
-    if (!runOk(`docker run -d --rm --name ${containerName} -p 127.0.0.1:5000:5000 registry:2`)) {
+    const hostPort = REGISTRY.split(":").pop();
+    if (!/^[0-9]+$/.test(hostPort) || Number(hostPort) < 1 || Number(hostPort) > 65535) {
+      fatal(`registro de prueba debe usar un puerto válido: ${REGISTRY}`);
+      return;
+    }
+    if (!runOk(`docker run -d --rm --name ${containerName} -p 127.0.0.1:${hostPort}:5000 registry:2`)) {
       fatal("no se pudo levantar registry:2 (¿puerto 5000 en uso o daemon abajo?)");
       return;
     }
@@ -162,7 +167,7 @@ async function main() {
     // ── Check 4: verificación de que el sha existe en el registro ─────────
     console.log("\n[4/5] Verificación remota (manifest inspect + pull de vuelta)");
     const inspect = (name, tag) =>
-      runOk(`docker buildx imagetools inspect ${REGISTRY}/bookmarkforge/${name}:${tag} >/dev/null`, {
+      runOk(`docker pull ${REGISTRY}/bookmarkforge/${name}:${tag}`, {
         timeout: 60_000,
       });
     const webRemote = inspect("web", SHA);

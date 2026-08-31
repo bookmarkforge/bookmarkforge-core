@@ -964,6 +964,7 @@ describe.skipIf(!serverEntryExists)("Signaling server — production HMAC opt-ou
   beforeAll(async () => {
     const started = await startServer(port, {
       NODE_ENV: "production",
+      AI_SESSION_ORIGINS: "http://127.0.0.1",
       ENFORCE_SIGNAL_HMAC: "0",
       MAX_PAYLOAD_BYTES: "1048576",
       JOIN_LIMIT: "100",

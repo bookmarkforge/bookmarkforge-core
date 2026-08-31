@@ -132,7 +132,7 @@ export const ConsentBanner: React.FC<ConsentBannerProps> = ({
       title: t("consent_errorReporting", "Error Reporting"),
       description: t(
         "consent_errorReporting_desc",
-        "Store error logs locally for diagnostics. No data is sent externally."
+        "Store error logs locally and, with your consent, send redacted technical errors to a remote diagnostics service. Never your bookmarks, notes, or AI prompts."
       ),
     },
     clientEvents: {

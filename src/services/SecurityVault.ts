@@ -857,7 +857,8 @@ class SecurityVault {
    * Locks the vault and clears the master password from memory.
    * Note: JS strings are immutable and may linger in the heap until GC;
    * this is a best-effort measure to minimize the exposure window.
-   */  async lock(): Promise<void> {
+   */
+  async lock(): Promise<void> {
     if (this.lockPromise) {
       return this.lockPromise;
     }

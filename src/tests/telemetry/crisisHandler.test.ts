@@ -4,6 +4,7 @@ const reportError = vi.fn().mockResolvedValue(undefined);
 const setupGlobalErrorHandler = vi.fn(() => vi.fn());
 const initProductionMonitor = vi.fn();
 const stopProductionMonitor = vi.fn();
+const initRemoteErrorReporting = vi.fn().mockResolvedValue(undefined);
 
 vi.mock("../../telemetry/errorReporter", () => ({
   setupGlobalErrorHandler,
@@ -12,6 +13,9 @@ vi.mock("../../telemetry/errorReporter", () => ({
 vi.mock("../../telemetry/productionMonitor", () => ({
   initProductionMonitor,
   stopProductionMonitor,
+}));
+vi.mock("../../telemetry/remoteErrorReporter", () => ({
+  initRemoteErrorReporting,
 }));
 
 describe("crisisHandler", () => {
@@ -26,6 +30,7 @@ describe("crisisHandler", () => {
 
     expect(setupGlobalErrorHandler).toHaveBeenCalledOnce();
     expect(initProductionMonitor).toHaveBeenCalledOnce();
+    expect(initRemoteErrorReporting).toHaveBeenCalledOnce();
     expect(reportError).toHaveBeenCalledWith(
       expect.any(Error),
       { source: "crisisHandler", critical: "true" },

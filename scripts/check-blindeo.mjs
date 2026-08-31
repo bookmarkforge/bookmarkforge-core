@@ -6,7 +6,7 @@
  * Fallo en cualquiera de estos puntos = BLOQUEO de deploy.
  */
 
-import { execSync } from "node:child_process";
+import { execSync, execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -174,7 +174,7 @@ try {
   // public/nginx.conf es el que se hornea en la imagen web al build
   // (Dockerfile), por lo que validar el archivo del tag == validar la
   // imagen del tag.
-  const nginxConf = execSync(`git show ${target}:public/nginx.conf`, { encoding: "utf8" }).toString();
+  const nginxConf = execFileSync("git", ["show", `${target}:public/nginx.conf`], { encoding: "utf8" }).toString();
   const violations = findProxyPassWithoutPort(nginxConf);
   if (violations.length > 0) {
     fail(
@@ -197,6 +197,23 @@ try {
   }
 } catch (_e) {
   fail("No se pudo leer docker-compose.prod.yml");
+}
+
+// Punto 10: Checklist de pre-lanzamiento (bloqueantes) — check:launch-checklist:strict.
+// No lanzar mientras haya bloqueantes 🔴 abiertos (CODEOWNERS, ruleset, RPO/RTO,
+// guardia, RGPD). El gate emite el informe completo y sale != 0 con bloqueantes.
+try {
+  execFileSync(
+    process.execPath,
+    [join(WORKSPACE, "scripts", "check-launch-checklist.mjs"), "--strict"],
+    { stdio: "inherit" },
+  );
+  pass("Checklist de pre-lanzamiento: sin bloqueantes (check:launch-checklist:strict)");
+} catch (_e) {
+  fail(
+    "Checklist de pre-lanzamiento con bloqueantes sin completar (check:launch-checklist:strict). " +
+    "Corrige los 🔴 bloqueantes (docs/launch-checklist.md) antes de desplegar a producción.",
+  );
 }
 
 console.log("\n" + "=".repeat(50));

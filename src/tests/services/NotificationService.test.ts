@@ -40,7 +40,7 @@ function stubBaseGlobals(): void {
   });
   vi.stubGlobal("navigator", {
     serviceWorker: {
-      ready: Promise.resolve({
+      getRegistration: vi.fn().mockResolvedValue({
         showNotification: mockShowNotification,
       }),
     },
@@ -333,23 +333,23 @@ describe("NotificationService.sendNotification", () => {
     });
   });
 
-  test("swallows serviceWorker.ready failures because delivery is best effort", async () => {
+  test("falls back to Notification constructor when no SW registration exists", async () => {
     mockPermissionValue = "granted";
-    const swReject = Promise.reject(new Error("SW not ready"));
-    swReject.catch(() => { /* INTENTIONAL SILENCE: the test asserts the rejection separately. */ }); // Suppress vitest unhandled rejection detection
     vi.stubGlobal("navigator", {
       serviceWorker: {
-        ready: swReject,
+        getRegistration: vi.fn().mockResolvedValue(undefined),
       },
     });
 
-    // NOTE: The source does NOT have a try/catch around
-    // await navigator.serviceWorker.ready, so the rejection propagates.
-    // If a try/catch is added to the source in the future, this test
-    // should be updated to expect().resolves.toBeUndefined() instead.
-    await expect(
-      notificationService.sendNotification("SW Error"),
-    ).resolves.toBeUndefined();
+    // getRegistration() resolves undefined when no SW is registered; the
+    // service must take the constructor path instead of hanging on ready.
+    await notificationService.sendNotification("No SW registered");
+
+    expect(mockShowNotification).not.toHaveBeenCalled();
+    expect(mockNotificationConstructor).toHaveBeenCalledWith("No SW registered", {
+      icon: "/icon-192x192.png",
+      badge: "/badge-72x72.png",
+    });
   });
 });
 
@@ -468,13 +468,13 @@ describe("NotificationService — edge cases", () => {
     // re-applies the base stubs via stubBaseGlobals().
   });
 
-  test("handles missing serviceWorker.ready gracefully", async () => {
+  test("handles getRegistration rejection gracefully", async () => {
     mockPermissionValue = "granted";
     const swReject = Promise.reject(new Error("SW registration not found"));
     swReject.catch(() => { /* INTENTIONAL SILENCE: the test asserts the rejection separately. */ }); // Suppress vitest unhandled rejection detection
     vi.stubGlobal("navigator", {
       serviceWorker: {
-        ready: swReject,
+        getRegistration: vi.fn().mockReturnValue(swReject),
       },
     });
 

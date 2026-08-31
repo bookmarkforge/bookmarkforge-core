@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+  <context>
+    <name>BookmarkForge staging authenticated</name>
+    <desc>Authenticated staging context. Credentials are injected only by the staging secret manager.</desc>
+    <inscope>true</inscope>
+    <authentication>
+      <method>formBasedAuthentication</method>
+      <loginurl>https://staging.example.test/login</loginurl>
+      <loginpageurl>https://staging.example.test/login</loginpageurl>
+      <loggedinregex>\\Qauthenticated\\E</loggedinregex>
+      <loggedoutregex>\\Qsign-in\\E</loggedoutregex>
+    </authentication>
+    <sessionManagement>
+      <method>cookieBasedSessionManagement</method>
+    </sessionManagement>
+    <technology>
+      <technology>Modern Web Technology</technology>
+    </technology>
+    <url>https://staging.example.test.*</url>
+  </context>
+</configuration>

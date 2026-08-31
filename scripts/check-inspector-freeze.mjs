@@ -52,6 +52,10 @@ const KNOWN_GATES = {
   "check:static-brand": "meta",
   "check:audit-drift": "security",
   "check:env": "security",
+  "check:workflows": "security",
+  "check:http-config": "security",
+  "check:compose-config": "security",
+  "check:runtime-config": "security",
 
   // Protected core — language (may grow without an ADR).
   "check:i18n": "language",

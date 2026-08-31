@@ -18,6 +18,7 @@ test-results/
 .vite/
 
 # Local runtime state
+.freebuff/
 *.log
 *.jsonl
 .monitor-state.json

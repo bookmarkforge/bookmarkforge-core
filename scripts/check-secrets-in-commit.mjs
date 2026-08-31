@@ -30,7 +30,7 @@
  *   node scripts/check-secrets-in-commit.mjs <files...> # scan explicit files
  */
 import { execFileSync } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 
 // ── Patterns ─────────────────────────────────────────────────────────
 
@@ -98,8 +98,6 @@ function readSafe(file) {
 }
 
 function readFileSyncUtf8(file) {
-  // Lazy require keeps the top of the file dependency-free for unit tests.
-  const { readFileSync } = require("node:fs");
   return readFileSync(file, "utf8");
 }
 

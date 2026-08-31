@@ -38,9 +38,10 @@
  *   Imprime el tag creado y el comando exacto de rollback al final.
  */
 
-import { execSync, spawnSync } from "node:child_process";
+import { execSync, execFileSync, spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { resolveRegistry, pushImages, defaultInspectVisible } from "./push-images-lib.mjs";
+import { runCommand, formatCommand, captureShell, captureCommand } from "./command-runner.mjs";
 
 const T0 = Date.now();
 
@@ -107,13 +108,13 @@ const NO_TAG = argSet.has("--no-tag");
 if (isMain && DRY_RUN) console.log("⚠️  --dry-run: no se ejecuta nada, solo se imprime.\n");
 
 // ── helpers ────────────────────────────────────────────────────────────────
-function capture(cmd) {
+function capture(cmd, opts = {}) {
   if (DRY_RUN) {
     console.log(`$ ${cmd}`);
     return null; // dry-run: nada real; el caller debe proveer un fallback.
   }
   try {
-    return execSync(cmd, { encoding: "utf8" }).trim();
+    return captureShell(cmd, opts);
   } catch (e) {
     throw new Error(`comando falló: ${cmd}\n${e.stderr || e.message}`);
   }
@@ -127,6 +128,26 @@ function run(cmd, opts = {}) {
     return 0;
   } catch (e) {
     return e.status ?? 1;
+  }
+}
+
+/** run() con argumentos separados: sin shell, sin interpolación. */
+function runArgs(argv, opts = {}) {
+  console.log(`$ ${formatCommand(argv[0], argv.slice(1))}`);
+  if (DRY_RUN) return 0;
+  return runCommand(argv[0], argv.slice(1), opts);
+}
+
+/** capture() con argumentos separados; devuelve null en --dry-run. */
+function captureArgs(argv, opts = {}) {
+  if (DRY_RUN) {
+    console.log(`$ ${formatCommand(argv[0], argv.slice(1))}`);
+    return null;
+  }
+  try {
+    return captureCommand(argv[0], argv.slice(1), opts);
+  } catch (e) {
+    throw new Error(`comando falló: ${formatCommand(argv[0], argv.slice(1))}\n${e.message}`);
   }
 }
 
@@ -171,8 +192,7 @@ log(`inicio deploy — timestamp local ${stamp}`);
 
 if (runNode("scripts/check-blindeo.mjs") !== 0) {
   fail("check-blindeo.mjs FAIL — bloqueado (corrige antes de deploy).");
-}
-log("check-blindeo.mjs PASS (8 puntos estáticos)");
+}    log("check-blindeo.mjs PASS (10 puntos estáticos)");
 
 if (!SKIP_CHECKLIST) {
   log("corriendo prod-blindeo-checklist.mjs (build:ci + tests + gates completos)…");
@@ -220,7 +240,7 @@ log(`tag git objetivo: ${tagName}`);
 
 // Colisión de tag: mismo minuto + mismo SHA = ya desplegado.
 try {
-  execSync(`git cat-file -t ${tagName}`, { stdio: "ignore" });
+  execFileSync("git", ["cat-file", "-t", tagName], { stdio: "ignore" });
   fail(`el tag ${tagName} ya existe — ya desplegaste este commit. ¿Quieres --deploy --verify sin re-tag?`);
 } catch {
   // tag no existe: bien
@@ -262,8 +282,8 @@ if (!NO_DOCKER) {
   if (rc !== 0) fail("docker compose build falló — revisa los build args / .env.production");
 
   // latest apunta al SHA recién construido (ops manuales y fallback).
-  run(`docker tag bookmarkforge/web:${sha} bookmarkforge/web:latest`);
-  run(`docker tag bookmarkforge/api:${sha} bookmarkforge/api:latest`);
+  runArgs(["docker", "tag", `bookmarkforge/web:${sha}`, "bookmarkforge/web:latest"]);
+  runArgs(["docker", "tag", `bookmarkforge/api:${sha}`, "bookmarkforge/api:latest"]);
   log(`imágenes: bookmarkforge/web:${sha}  +  bookmarkforge/api:${sha}  (+ :latest)`);
 }
 
@@ -275,10 +295,10 @@ if (NO_TAG) {
 } else {
   // Tag anotado: scripts/rollback.mjs valida `git cat-file -t <tag>` === "tag".
   const tagMsg = `Deploy prod ${stamp} — ${sha}`;
-  run(`git tag -a ${tagName} -m "${tagMsg}"`);
+  runArgs(["git", "tag", "-a", tagName, "-m", tagMsg]);
   let tagType = "";
   try {
-    tagType = capture(`git cat-file -t ${tagName}`) ?? "";
+    tagType = captureArgs(["git", "cat-file", "-t", tagName]) ?? "";
   } catch (e) {
     fail(`no se pudo verificar el tag recién creado ${tagName}: ${e.message}`);
   }
@@ -375,7 +395,7 @@ if (PUSH_IMAGES) {
 if (PUSH_TAG) {
   if (NO_TAG) fail("--push-tag requiere que el tag se cree; incompatible con --no-tag.");
   console.log("\n⬆️  FASE H — Push tag al remoto\n");
-  const rc = run(`git push origin ${tagName}`);
+  const rc = runArgs(["git", "push", "origin", tagName]);
   if (rc !== 0) fail(`git push origin ${tagName} falló — el tag existe localmente pero no en el remoto.`);
   log(`tag ${tagName} pusheado ✓`);
 } else {

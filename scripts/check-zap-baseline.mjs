@@ -12,7 +12,9 @@ if (!errors.length) {
   const policy = readFileSync(policyPath, "utf8");
   const fail = policy.match(/^FAIL_LEVELS=(.+)$/m)?.[1]?.split(",").map((v) => v.trim()) ?? [];
   const warn = policy.match(/^WARN_LEVELS=(.+)$/m)?.[1]?.split(",").map((v) => v.trim()) ?? [];
+  const allowed = new Set(["Critical", "High", "Medium", "Low", "Informational"]);
   if (!fail.includes("High") || !fail.includes("Critical")) errors.push("FAIL_LEVELS must include High and Critical");
+  if (fail.some((level) => !allowed.has(level)) || warn.some((level) => !allowed.has(level))) errors.push("severity names must be Critical, High, Medium, Low or Informational");
   if (fail.some((level) => warn.includes(level))) errors.push("FAIL_LEVELS and WARN_LEVELS overlap");
   if (!policy.includes("IGNORE_FILE=.zap/rules.tsv")) errors.push("policy must reference the reviewed ignore file");
 

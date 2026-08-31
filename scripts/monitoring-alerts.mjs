@@ -65,6 +65,7 @@
 import { readFileSync, writeFileSync, renameSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
+import { runCommandLine } from "./command-runner.mjs";
 
 const PROD_BASE_URL = process.env.PROD_BASE_URL ?? "http://127.0.0.1:8080";
 const SLACK_WEBHOOK = process.env.SLACK_WEBHOOK ?? "";
@@ -104,6 +105,15 @@ const API_HISTORY_MAX_ENTRIES = 1_440;
 const APP_DOWN_AUTO_ROLLBACK = process.env.APP_DOWN_AUTO_ROLLBACK === "1";
 // Consecutivos de APP_CAIDA que disparan rollback (2 = dos ticks seguidos).
 const APP_DOWN_THRESHOLD = Number(process.env.APP_DOWN_THRESHOLD ?? 2);
+
+// ── AI_PROVIDER_DOWN: salud del upstream de IA (mock Gemini u Ollama) ───
+// Sondea AI_PROVIDER_HEALTH_URL (default: {PROD_BASE_URL}/health) y cuenta
+// fallos consecutivos. NUNCA dispara rollback (la caída del proveedor de IA
+// no es una regresión de código): solo página al operador con cooldown.
+const AI_PROVIDER_HEALTH_URL = process.env.AI_PROVIDER_HEALTH_URL?.trim() ?? "";
+const AI_PROVIDER_TIMEOUT_MS = Number(process.env.AI_PROVIDER_TIMEOUT_MS ?? 5_000);
+const AI_PROVIDER_THRESHOLD = Number(process.env.AI_PROVIDER_THRESHOLD ?? 3);
+const AI_PROVIDER_COOLDOWN_MS = Number(process.env.AI_PROVIDER_COOLDOWN_MS ?? 600_000);
 
 // Kept as the single integration point for future API-surface checks.
 async function checkAppDown() {
@@ -301,7 +311,6 @@ export function parseClientCriticalLog(text, now = Date.now(), windowMs = CLIENT
  * RETRY_DEGRADED para que ambos vean exactamente la misma fuente.
  */
 async function readClientEventsLog(logFile, logCmd) {
-  const { spawnSync } = await import("node:child_process");
   const { existsSync, openSync, readSync, closeSync, statSync } = await import("node:fs");
   if (logFile) {
     if (!existsSync(logFile)) return { error: `log no legible (${logFile}) — fail-closed` };
@@ -321,7 +330,7 @@ async function readClientEventsLog(logFile, logCmd) {
     }
     return { text: buf.toString("utf8") };
   }
-  const r = spawnSync(logCmd, { encoding: "utf8", shell: true, timeout: 30_000 });
+  const r = runCommandLine(logCmd, { encoding: "utf8", timeout: 30_000 });
   if (r.status !== 0 && !(r.stdout ?? "") && !(r.stderr ?? "")) {
     return { error: `log no legible (${logCmd}) — fail-closed` };
   }
@@ -538,6 +547,59 @@ export async function checkApiDegradado({
   };
 }
 
+/**
+ * checkAiProvider — sondea el upstream de IA (mock Gemini u Ollama).
+ * Detecta caídas del proveedor que el smoke normal no cubre (el smoke pasa
+ * mientras el api contesta /health aunque su upstream esté caído).
+ * Fallos consecutivos >= AI_PROVIDER_THRESHOLD → alerta. NUNCA rollback.
+ */
+export function parseAiProviderProbe(status, consecutiveBefore, threshold = AI_PROVIDER_THRESHOLD) {
+  const consecutive = status === true ? 0 : consecutiveBefore + 1;
+  return { ok: consecutive < threshold, consecutive };
+}
+
+export async function checkAiProvider({
+  healthUrl = AI_PROVIDER_HEALTH_URL || `${PROD_BASE_URL}/health`,
+  timeoutMs = AI_PROVIDER_TIMEOUT_MS,
+  threshold = AI_PROVIDER_THRESHOLD,
+  stateFile = MONITOR_STATE_FILE,
+} = {}) {
+  try {
+    let state = {};
+    try { state = JSON.parse(readFileSync(stateFile, "utf8")); } catch {}
+    const before = state.aiProviderConsecutive ?? 0;
+
+    let alive = false;
+    let detail = "";
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const res = await fetch(healthUrl, { signal: controller.signal, cache: "no-store" });
+      alive = res.ok;
+      detail = `HTTP ${res.status}`;
+    } catch (e) {
+      detail = e.name === "AbortError" ? `timeout >${timeoutMs}ms` : String(e.message || e);
+    } finally {
+      clearTimeout(timer);
+    }
+
+    const { ok, consecutive } = parseAiProviderProbe(alive, before, threshold);
+    state.aiProviderConsecutive = consecutive;
+    try { writeFileSync(stateFile, JSON.stringify(state)); } catch {}
+
+    return {
+      name: "AI_PROVIDER_DOWN",
+      ok,
+      detail: ok
+        ? `upstream AI OK (${detail}) — racha de fallos ${consecutive}/${threshold}`
+        : `upstream AI CAÍDO ×${consecutive} (umbral ${threshold}) — ${detail} @ ${healthUrl}`,
+      consecutive,
+    };
+  } catch (e) {
+    return { name: "AI_PROVIDER_DOWN", ok: false, detail: String(e) };
+  }
+}
+
 // API surface is exercised by production-smoke; this monitor only verifies
 // the client-side monitoring sources are present.
 /**
@@ -594,6 +656,7 @@ export async function checkMonitoringActivo({ root = process.cwd(), nginxPath = 
  * deja que el event loop drene solo con `process.exitCode` (failsafe de
  * 5s por si algo ref'd mantiene el loop vivo).
  */
+let shutdownFailsafeTimer = null;
 export async function shutdownExit(code) {
   process.exitCode = code;
   try {
@@ -608,7 +671,16 @@ export async function shutdownExit(code) {
   }
   // Failsafe: si algo ref'd mantiene el loop vivo (fs threadpool, timers),
   // forzamos la salida tras un margen — ya sin sockets de undici abiertos.
-  setTimeout(() => process.exit(process.exitCode ?? code), 5_000).unref();
+  shutdownFailsafeTimer = setTimeout(() => process.exit(process.exitCode ?? code), 5_000).unref();
+}
+
+/** Cancela el failsafe de shutdownExit — usado por los tests para que el
+ * timer unref'd no dispare process.exit() a mitad de la suite. */
+export function cancelShutdownFailsafe() {
+  if (shutdownFailsafeTimer) {
+    clearTimeout(shutdownFailsafeTimer);
+    shutdownFailsafeTimer = null;
+  }
 }
 
 const isMain =
@@ -623,6 +695,7 @@ const results = [
   await checkClientCritical(),
   await checkRetryDegraded(),
   await checkApiDegradado(),
+  await checkAiProvider(),
 ];
 
 const allOk = results.every((r) => r.ok);
@@ -662,13 +735,11 @@ if (appDown && !appDown.ok) {
     } catch {}
 
     if (APP_DOWN_AUTO_ROLLBACK) {
-      const { spawnSync } = await import("node:child_process");
       console.error(`[monitor] APP_CAIDA ×${APP_DOWN_THRESHOLD} consecutivos → rollback: ${ROLLBACK_CMD}`);
       let rollbackStatus = -1;
       try {
-        const r = spawnSync(ROLLBACK_CMD, {
+        const r = runCommandLine(ROLLBACK_CMD, {
           encoding: "utf8",
-          shell: true,
           timeout: 180_000,
           env: { ...process.env, PROD_BASE_URL, ...(DOCKER_REGISTRY ? { DOCKER_REGISTRY } : {}) },
         });
@@ -682,10 +753,9 @@ if (appDown && !appDown.ok) {
         console.error("[monitor] rollback OK (exit 0) — confirmando con --verify...");
         let verifyStatus = -1;
         try {
-          const v = spawnSync(ROLLBACK_VERIFY_CMD, {
+          const v = runCommandLine(ROLLBACK_VERIFY_CMD, {
             encoding: "utf8",
             stdio: "inherit",
-            shell: true,
             timeout: 120_000,
             env: { ...process.env, PROD_BASE_URL, ...(DOCKER_REGISTRY ? { DOCKER_REGISTRY } : {}) },
           });
@@ -748,10 +818,8 @@ if (clientCritical && !clientCritical.ok) {
     // 1) Página (notificación ruidosa) — ej: /usr/local/bin/bmf-page.sh
     if (PAGE_CMD) {
       try {
-        const { spawnSync } = await import("node:child_process");
-        spawnSync(PAGE_CMD, {
+        runCommandLine(PAGE_CMD, {
           encoding: "utf8",
-          shell: true,
           timeout: 30_000,
           env: { ...process.env, CLUSTER_DETAIL: clientCritical.detail },
         });
@@ -763,10 +831,8 @@ if (clientCritical && !clientCritical.ok) {
     if (AUTO_ROLLBACK) {
       console.error(`[monitor] CLIENT_CRITICAL → rollback automático: ${ROLLBACK_CMD}`);
       try {
-        const { spawnSync } = await import("node:child_process");
-        const r = spawnSync(ROLLBACK_CMD, {
+        const r = runCommandLine(ROLLBACK_CMD, {
           encoding: "utf8",
-          shell: true,
           timeout: 180_000,
           env: { ...process.env, PROD_BASE_URL, ...(DOCKER_REGISTRY ? { DOCKER_REGISTRY } : {}) },
         });
@@ -783,6 +849,38 @@ if (clientCritical && !clientCritical.ok) {
     }
   } else {
     console.error(`[monitor] cooldown activo (${Math.round((now - lastAction) / 1000)}s desde la última acción) — sin nueva página/rollback`);
+  }
+}
+
+// ── Escalation: AI_PROVIDER_DOWN → página (sin rollback) ────────────
+// El upstream de IA caído degrada el producto pero NO es una regresión de
+// código: página con cooldown, nunca rollback automático.
+const aiProvider = results.find((r) => r.name === "AI_PROVIDER_DOWN");
+if (aiProvider && !aiProvider.ok) {
+  let state = {};
+  try { state = JSON.parse(readFileSync(MONITOR_STATE_FILE, "utf8")); } catch {}
+  const now = Date.now();
+  const lastAction = state.aiProviderActionAt ?? 0;
+
+  if (shouldRunClientCriticalAction(lastAction, now, AI_PROVIDER_COOLDOWN_MS)) {
+    state.aiProviderActionAt = now;
+    state.lastAiProviderDetail = aiProvider.detail;
+    try { writeFileSync(MONITOR_STATE_FILE, JSON.stringify(state)); } catch {}
+
+    if (PAGE_CMD) {
+      try {
+        runCommandLine(PAGE_CMD, {
+          encoding: "utf8",
+          timeout: 30_000,
+          env: { ...process.env, CLUSTER_DETAIL: aiProvider.detail },
+        });
+        console.error(`[monitor] PAGE enviada por caída del upstream AI (${PAGE_CMD})`);
+      } catch {}
+    } else {
+      console.error(`[monitor] AI_PROVIDER_DOWN sin PAGE_CMD — define PAGE_CMD para paginar caída del proveedor IA`);
+    }
+  } else {
+    console.error(`[monitor] cooldown de upstream AI activo (${Math.round((now - lastAction) / 1000)}s) — sin nueva página`);
   }
 }
 
@@ -809,10 +907,8 @@ if (retryDegraded && !retryDegraded.ok) {
 
     if (PAGE_CMD) {
       try {
-        const { spawnSync } = await import("node:child_process");
-        spawnSync(PAGE_CMD, {
+        runCommandLine(PAGE_CMD, {
           encoding: "utf8",
-          shell: true,
           timeout: 30_000,
           env: { ...process.env, CLUSTER_DETAIL: retryDegraded.detail },
         });
@@ -848,10 +944,8 @@ if (apiDegraded && !apiDegraded.ok) {
 
     if (PAGE_CMD) {
       try {
-        const { spawnSync } = await import("node:child_process");
-        spawnSync(PAGE_CMD, {
+        runCommandLine(PAGE_CMD, {
           encoding: "utf8",
-          shell: true,
           timeout: 30_000,
           env: { ...process.env, CLUSTER_DETAIL: apiDegraded.detail },
         });
@@ -881,6 +975,7 @@ if (isJson) {
     console.log("  MONITORING_ACTIVO FAIL → verifica que src/utils/storageMonitor.ts existe");
     console.log("  CLIENT_CRITICAL FAIL → cluster de clientes críticos: página + rollback automático (AUTO_ROLLBACK=1)");
     console.log("  RETRY_DEGRADED FAIL → clientes perdieron eventos: página (infra/red), revisa la entrega cliente→servidor");
+  console.log("  AI_PROVIDER_DOWN FAIL → upstream IA caído (mock/Ollama): página (no rollback); revisa GEMINI_API_BASE/Ollama");
     console.log("  API_DEGRADADO FAIL → p95/error-rate sobre umbral: página (no rollback); revisa trend24h y sube API_LATENCY_P95_MS si es falso positivo");
   }
 }

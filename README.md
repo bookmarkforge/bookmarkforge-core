@@ -95,3 +95,7 @@ El cifrado y las medidas técnicas no constituyen por sí solos una declaración
 - [Seguridad](docs/security.md)
 - [Operaciones](docs/operations.md)
 - [API](docs/api.md)
+- [Especificación OpenAPI](docs/openapi.yaml)
+- [Auditoría](docs/audit.md)
+- [ROPA (RGPD)](docs/ROPA.md)
+- [Checklist de lanzamiento](docs/launch-checklist.md)

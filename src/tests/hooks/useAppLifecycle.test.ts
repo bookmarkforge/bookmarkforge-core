@@ -19,7 +19,7 @@ vi.mock("../\.\./services/ai/AutoProcessorService", () => ({
   autoProcessorService: mockAutoProcessor,
 }));
 vi.mock("../../utils/logger", () => ({
-  logger: { error: vi.fn(), warn: vi.fn() },
+  logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() },
 }));
 
 describe("useAppLifecycle", () => {

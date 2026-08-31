@@ -35,6 +35,18 @@ describe("resolveRegistry", () => {
       ok: false,
       reason: "invalid",
     });
+    expect(resolveRegistry("registry..example.com", { push: true, dryRun: false })).toEqual({
+      ok: false,
+      reason: "invalid",
+    });
+    expect(resolveRegistry("registry.example.com/path", { push: true, dryRun: false })).toEqual({
+      ok: false,
+      reason: "invalid",
+    });
+    expect(resolveRegistry("registry.example.com:0", { push: true, dryRun: false })).toEqual({
+      ok: false,
+      reason: "invalid",
+    });
   });
 
   it("--dry-run sin registro simula registry.example.com (no falla)", () => {
@@ -68,7 +80,7 @@ describe("planPushTargets", () => {
 });
 
 describe("pushImages", () => {
-  it("hace retag + push de web y api (4 comandos) y devuelve pushed", () => {
+  it("hace retag + push de web y api (4 comandos, argv separati) y devuelve pushed", () => {
     const ran = [];
     const run = (cmd, _o) => {
       ran.push(cmd);
@@ -88,10 +100,10 @@ describe("pushImages", () => {
       ],
     });
     expect(ran).toEqual([
-      "docker tag bookmarkforge/web:deadbeef reg.io:5000/bookmarkforge/web:deadbeef",
-      "docker push reg.io:5000/bookmarkforge/web:deadbeef",
-      "docker tag bookmarkforge/api:deadbeef reg.io:5000/bookmarkforge/api:deadbeef",
-      "docker push reg.io:5000/bookmarkforge/api:deadbeef",
+      ["docker", "tag", "bookmarkforge/web:deadbeef", "reg.io:5000/bookmarkforge/web:deadbeef"],
+      ["docker", "push", "reg.io:5000/bookmarkforge/web:deadbeef"],
+      ["docker", "tag", "bookmarkforge/api:deadbeef", "reg.io:5000/bookmarkforge/api:deadbeef"],
+      ["docker", "push", "reg.io:5000/bookmarkforge/api:deadbeef"],
     ]);
   });
 
@@ -136,6 +148,13 @@ describe("pushImages", () => {
     expect(res.step).toBe("config");
   });
 
+  it("fail-closed ante registro inválido antes de ejecutar comandos", () => {
+    const ran = [];
+    const res = pushImages({ sha: "deadbeef", registry: "reg.io/path", run: (cmd) => { ran.push(cmd); return 0; }, runVisible: () => true });
+    expect(res).toEqual({ ok: false, step: "config", remote: "<configuración inválida>" });
+    expect(ran).toEqual([]);
+  });
+
   it("verifica visibilidad de CADA imagen tras el push (manifest inspect)", () => {
     const run = () => 0; // push OK
     const llamadas = []; // qué remotes se inspeccionaron
@@ -164,6 +183,16 @@ describe("pushImages", () => {
       remote: "reg.io:5000/bookmarkforge/web:deadbeef",
     });
     expect(llamadas).toHaveLength(1); // no sigue inspeccionando el api
+  });
+
+  it("no usa shell interpolation per tag/push né per l'inspect remoto", async () => {
+    const source = await import("node:fs/promises").then(({ readFile }) => readFile("scripts/push-images-lib.mjs", "utf8"));
+    expect(source).toContain('spawnSync("docker", ["buildx", "imagetools", "inspect", remoteRef]');
+    expect(source).toContain('["docker", "tag", local, remote]');
+    expect(source).toContain('["docker", "push", remote]');
+    expect(source).not.toContain("execSync(`docker buildx imagetools inspect ${remoteRef}");
+    expect(source).not.toContain("run(`docker tag ${local} ${remote}`)");
+    expect(source).not.toContain("run(`docker push ${remote}`)");
   });
 
   it("FAIL step:'not-visible' si el push api no es visible (web sí)", () => {

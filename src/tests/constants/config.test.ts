@@ -145,6 +145,34 @@ describe("validateEnvVars — PROD error paths", () => {
       true,
     );
   });
+
+  it("rejects PROD + test-only bypasses (firewall, memory, test build)", async () => {
+    vi.stubEnv("PROD", "true" as any);
+    vi.stubEnv("VITE_DISABLE_NETWORK_FIREWALL", "true");
+    vi.stubEnv("VITE_FORCE_MEMORY_STORAGE", "true");
+    vi.stubEnv("VITE_TEST_BUILD", "true");
+    const { validateEnvVars } = await reimport();
+    const result = validateEnvVars();
+    expect(result.errors).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("VITE_DISABLE_NETWORK_FIREWALL"),
+        expect.stringContaining("VITE_FORCE_MEMORY_STORAGE"),
+        expect.stringContaining("VITE_TEST_BUILD"),
+      ]),
+    );
+    expect(result.isValid).toBe(false);
+  });
+
+  it("rejects a non-HTTPS embed-free gemini proxy URL in PROD", async () => {
+    vi.stubEnv("PROD", "true" as any);
+    vi.stubEnv("VITE_GEMINI_PROXY_URL", "http://insecure.example.com/v1");
+    const { validateEnvVars } = await reimport();
+    const result = validateEnvVars();
+    expect(
+      result.errors.some((e: string) => e.includes("VITE_GEMINI_PROXY_URL")),
+    ).toBe(true);
+    expect(result.isValid).toBe(false);
+  });
 });
 
 describe("getEnvironmentInfo", () => {
@@ -163,6 +191,7 @@ describe("getEnvironmentInfo", () => {
 
   it("falls back to defaults when optional env vars are missing", async () => {
     // MODE is a compile-time constant ("test" in Vitest), cannot be stubbed
+    vi.stubEnv("VITE_GEMINI_PROXY_URL", "");
     const { getEnvironmentInfo } = await reimport();
     const info = getEnvironmentInfo();
     expect(info.mode).toBe("test");

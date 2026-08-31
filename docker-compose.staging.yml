@@ -4,7 +4,7 @@ services:
   web:
     # Imagen etiquetada por SHA (igual que prod): permite el rollback
     # imagen-por-SHA (rollback.mjs CAMINO A) en staging/CI sin rebuild.
-    image: bookmarkforge/web:${IMAGE_TAG:-latest}
+    image: bookmarkforge/web:${IMAGE_TAG:-staging}
     build:
       context: .
       dockerfile: Dockerfile
@@ -25,7 +25,7 @@ services:
 
   api:
     # Imagen etiquetada por SHA — ver nota en el servicio web.
-    image: bookmarkforge/api:${IMAGE_TAG:-latest}
+    image: bookmarkforge/api:${IMAGE_TAG:-staging}
     build:
       context: .
       dockerfile: Dockerfile
@@ -44,7 +44,8 @@ services:
       GEMINI_API_BASE: http://ai-mock:8081/v1beta/models
       AI_SESSION_REQUIRE_LICENSE: "0"
       AI_SESSION_ORIGINS: http://127.0.0.1:18080,http://localhost:18080
-      AI_PROXY_REDIS_FAILURE_MODE: fail-open
+      AI_PROXY_REDIS_FAILURE_MODE: fail-closed
+      AI_PROXY_REDIS_URL: redis://redis:6379/0
       WHOP_LICENSE_API_URL: http://license-mock:8082/license
       WHOP_API_KEY: staging-license-key
       LICENSE_PROVIDER_ALLOW_HTTP: "1"
@@ -60,7 +61,7 @@ services:
         aliases: [bookmarkforge_api]
 
   ai-mock:
-    image: node:22-alpine
+    image: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     command: ["node", "/app/scripts/ai-mock.mjs"]
     volumes: [.:/app:ro]
     environment:
@@ -74,7 +75,7 @@ services:
     networks: [staging]
 
   license-mock:
-    image: node:22-alpine
+    image: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
     command: ["node", "/app/scripts/license-mock.mjs"]
     volumes: [.:/app:ro]
     environment:
@@ -87,10 +88,41 @@ services:
       retries: 20
     networks: [staging]
 
+  # Optional local LLM provider for deterministic CI runs (see docs/staging-smoke.md).
+  # Off by default: activate with `docker compose --profile ai-local ...`.
+  # Serves the Ollama REST API inside the staging network only (no host port).
+  # The llama3.2 model is pulled automatically on first start by ollama-pull.
+  ollama:
+    image: ollama/ollama:latest@sha256:020e4134285e2ef4d8fd801234176de3b4faadc992a3eb06c8e66a2f9d4c4ba2
+    profiles: [ai-local]
+    command: ["serve"]
+    volumes:
+      - ollama-data:/root/.ollama
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list >/dev/null 2>&1 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    networks: [staging]
+
+  # One-shot model pull: waits for the Ollama API, pulls the model named by
+  # OLLAMA_MODEL (default llama3.2, same default as the app), then exits 0.
+  ollama-pull:
+    image: ollama/ollama:latest@sha256:020e4134285e2ef4d8fd801234176de3b4faadc992a3eb06c8e66a2f9d4c4ba2
+    profiles: [ai-local]
+    depends_on:
+      ollama:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - "sleep 3; OLLAMA_HOST=http://ollama:11434 ollama pull ${OLLAMA_MODEL:-llama3.2}"
+    restart: "no"
+    networks: [staging]
+
   # No host port is published. This is intentionally ephemeral and unused by
   # default; operators may enable it through AI_PROXY_REDIS_URL if needed.
   redis:
-    image: redis:7-alpine
+    image: redis:7-alpine@sha256:ff02b58f971e7d7d156a1267e283fcbbeee91773b6aa36c49dac28ecfe28eadf
     command: ["redis-server", "--save", "", "--appendonly", "no"]
     networks: [staging]
 
@@ -101,3 +133,6 @@ networks:
 secrets:
   license_signing_key:
     file: ${STAGING_LICENSE_SIGNING_KEY_FILE:-./server/.license-signing-key.pkcs8}
+
+volumes:
+  ollama-data:

@@ -3,14 +3,18 @@
  *
  * BookmarkForge does NOT identify users, track IPs, or use cookies.
  * Errors are stored locally in IndexedDB (max 100 entries).
- * Storage is gated by the user's `bmf_local_error_storage` setting
- * (default OFF).
+ * Storage is gated by the user's consent (`forge_consent_error_reporting`,
+ * default OFF). Legacy keys (`bmf_local_error_storage`, `bmf_telemetry_optin`)
+ * are honored as read-only migration fallbacks.
  * Errors are fingerprinted and grouped to avoid duplicates.
  * Sensitive data (passwords, API keys, tokens) is sanitized before storage.
  *
- * External telemetry has been intentionally removed: there is no Sentry,
- * no third-party SDK, and no remote sink. `flush()` is a local-only no-op
- * kept to preserve backwards compatibility with existing callers.
+ * Remote telemetry is OPT-IN and disabled by default: when the operator
+ * configures VITE_SENTRY_DSN at build time AND the user consents, redacted
+ * technical errors are forwarded to Sentry (see remoteErrorReporter.ts,
+ * with a sanitizing beforeSend). Without consent or without a DSN, error
+ * reporting stays strictly local. `flush()` is a local-only no-op kept to
+ * preserve backwards compatibility with existing callers.
  *
  * @example
  * ```ts
@@ -21,27 +25,34 @@
  */
 import { logger, redactSecrets } from "../utils/logger";
 import { safeGet } from "../store/safeStorage";
+import { STORAGE_KEYS } from "../constants/storage-keys";
+import {
+  MAX_MESSAGE_LENGTH,
+  MAX_STACK_LENGTH,
+  sanitizeMessage,
+  sanitizeStack,
+} from "./sanitize";
+import { initRemoteErrorReporting } from "./remoteErrorReporter";
 
 const DB_NAME = "bookmarkforge-errors";
 const STORE_NAME = "errors";
 const DEFAULT_MAX = 100;
-const MAX_MESSAGE_LENGTH = 4096;
-const MAX_STACK_LENGTH = 12_000;
 const MAX_CONTEXT_ENTRIES = 16;
 const MAX_CONTEXT_VALUE_LENGTH = 512;
 
 /**
- * Local opt-in for IndexedDB-based error storage.
- * IMPORTANT: Despite the historical name, this key does NOT enable external
- * telemetry. Since v1.0.1 the app has zero remote error sinks; this key
- * only controls whether errors are persisted to local IndexedDB.
+ * Consent key for local IndexedDB-based error storage.
+ *
+ * Audit 2026-08-30: this previously read `bmf_local_error_storage`, a key
+ * the ConsentBanner never writes. The user's error-reporting choice in the
+ * banner (forge_consent_error_reporting) therefore had no effect — the
+ * reporter was gated by a key that only the settings UI toggled. Now reads
+ * the correct consent key; the legacy bmf_telemetry_optin and
+ * bmf_local_error_storage keys are honored as read-only migration fallbacks.
  */
-// I2 (audit 2026-08-13): the key was renamed from `bmf_telemetry_optin` to
-// reflect what it actually controls — LOCAL IndexedDB error storage only
-// (there is no external telemetry since v1.0.1). The legacy key is honored
-// as a read-only migration fallback; new writes only touch the new key.
-const TELEMETRY_KEY = "bmf_local_error_storage";
-const LEGACY_TELEMETRY_KEY = "bmf_telemetry_optin";
+const CONSENT_KEY = STORAGE_KEYS.CONSENT_ERROR_REPORTING;
+const LEGACY_CONSENT_KEY_1 = "bmf_local_error_storage";
+const LEGACY_CONSENT_KEY_2 = "bmf_telemetry_optin";
 
 interface StoredError {
   id: string;
@@ -96,35 +107,6 @@ function generateId(): string {
   return `${Date.now()}-${hex}`;
 }
 
-function sanitizeMessage(msg: string): string {
-  return redactSecrets(
-    msg.slice(0, MAX_MESSAGE_LENGTH * 2)
-      .replace(
-        /(["']?password["']?\s*[:=]\s*["']?)[^"'\s,;]+/gi,
-        "$1[REDACTED]",
-      )
-      .replace(
-        /(["']?api[_-]?key["']?\s*[:=]\s*["']?)[^"'\s,;]+/gi,
-        "$1[REDACTED]",
-      )
-      .replace(/(["']?token["']?\s*[:=]\s*["']?)[^"'\s,;]+/gi, "$1[REDACTED]")
-      .replace(/(["']?secret["']?\s*[:=]\s*["']?)[^"'\s,;]+/gi, "$1[REDACTED]")
-      .replace(/(https?:\/\/)[^:/\s]+:[^@/\s]+@/g, "$1[REDACTED]:[REDACTED]@")
-      .slice(0, MAX_MESSAGE_LENGTH),
-  );
-}
-
-function sanitizeStack(stack: string | undefined): string | undefined {
-  if (!stack) {return undefined;}
-  return redactSecrets(
-    stack
-      .slice(0, MAX_STACK_LENGTH)
-      .replace(/password[=:]\s*\S+/gi, "password=[REDACTED]")
-      .replace(/api[_-]?key[=:]\s*\S+/gi, "api_key=[REDACTED]")
-      .replace(/token[=:]\s*\S+/gi, "token=[REDACTED]"),
-  ).slice(0, MAX_STACK_LENGTH);
-}
-
 function generateFingerprint(
   type: string,
   message: string,
@@ -140,14 +122,15 @@ function generateFingerprint(
 
 function isTelemetryEnabled(): boolean {
   try {
-    // Migration (I2): the renamed key wins when present. The legacy
-    // bmf_telemetry_optin value is only a fallback for installs that never
-    // wrote the new key — an explicit "false" on the new key must never be
-    // overridden by a stale legacy "true". The settings UI clears the
-    // legacy key when the user toggles the new one.
-    const current = safeGet(TELEMETRY_KEY);
+    // The ConsentBanner consent key wins when present. Legacy keys
+    // (bmf_local_error_storage, bmf_telemetry_optin) are fallbacks for
+    // installs that predate the consent banner — an explicit "false" on the
+    // current key must never be overridden by a stale legacy "true".
+    const current = safeGet(CONSENT_KEY);
     if (current !== null) {return current === "true";}
-    return safeGet(LEGACY_TELEMETRY_KEY) === "true";
+    const legacy1 = safeGet(LEGACY_CONSENT_KEY_1);
+    if (legacy1 !== null) return legacy1 === "true";
+    return safeGet(LEGACY_CONSENT_KEY_2) === "true";
   } catch (_err) {
     return false;
   }
@@ -467,6 +450,9 @@ export function setupGlobalErrorHandler(): () => void {
       error: error instanceof Error ? error.message : String(error),
     });
   });
+  // Optional remote sink: no-op unless VITE_SENTRY_DSN is set; every event
+  // is additionally gated by the user's consent in beforeSend.
+  void initRemoteErrorReporting();
   if (typeof window === "undefined") {
     return () => {};
   }

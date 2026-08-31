@@ -390,7 +390,8 @@ export function useBlockEditorLogic({
           .slice(0, 6)
           .map((r: { doc: { title?: string } }) => r.doc.title || "Untitled");
         if (!cancelled) state.setSuggestions?.(scored);
-      } catch {
+      } catch (error) {
+        logger.warn("[useBlockEditorLogic] Smart-links query failed", { error });
         if (!cancelled) state.setSuggestions?.([]);
       }
     }, 400);

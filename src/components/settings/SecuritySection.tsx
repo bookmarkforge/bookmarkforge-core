@@ -35,20 +35,30 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
 }) => {
   const { t } = useTranslation();
   const [telemetryOptIn, setTelemetryOptIn] = useState(() => {
-    // I2 (audit 2026-08-13): the renamed key wins when present; the legacy
-    // bmf_telemetry_optin value only migrates installs that never wrote it.
-    const current = safeGet(STORAGE_KEYS.LOCAL_ERROR_STORAGE);
-    return current !== null
-      ? current === "true"
-      : safeGet("bmf_telemetry_optin") === "true";
+    // Audit 2026-08-30: read the consent keys that ConsentBanner writes
+    // (forge_consent_*). The legacy bmf_local_error_storage and
+    // bmf_telemetry_optin keys are read-only migration fallbacks.
+    const errorConsent = safeGet(STORAGE_KEYS.CONSENT_ERROR_REPORTING);
+    if (errorConsent !== null) return errorConsent === "true";
+    const legacy = safeGet(STORAGE_KEYS.LOCAL_ERROR_STORAGE);
+    if (legacy !== null) return legacy === "true";
+    return safeGet("bmf_telemetry_optin") === "true";
   });
 
   const handleTelemetryToggle = () => {
     const nextVal = !telemetryOptIn;
     setTelemetryOptIn(nextVal);
-    safeSet(STORAGE_KEYS.LOCAL_ERROR_STORAGE, String(nextVal));
-    // Clear the legacy key so a stale "true" can never resurface an opt-in
+    // Audit 2026-08-30: write to ALL consent keys so the ConsentBanner,
+    // AnalyticsService, errorReporter and clientEventReporter all see the
+    // same state. Previously this only wrote bmf_local_error_storage, which
+    // the services (after the consent-key fix) no longer read as primary.
+    const val = String(nextVal);
+    safeSet(STORAGE_KEYS.CONSENT_ERROR_REPORTING, val);
+    safeSet(STORAGE_KEYS.CONSENT_ANALYTICS, val);
+    safeSet(STORAGE_KEYS.CONSENT_CLIENT_EVENTS, val);
+    // Clear legacy keys so a stale "true" can never resurface an opt-in
     // the user just turned off.
+    safeRemove(STORAGE_KEYS.LOCAL_ERROR_STORAGE);
     safeRemove("bmf_telemetry_optin");
   };
 

@@ -84,8 +84,15 @@ export class NotificationService {
     }
 
     try {
-      if (typeof navigator !== "undefined" && "serviceWorker" in navigator) {
-        const registration = await navigator.serviceWorker.ready;
+      // navigator.serviceWorker.ready never resolves when no service
+      // worker is registered (this app does not register one), which would
+      // hang delivery forever. Use getRegistration() instead and fall back
+      // to the Notification constructor when no SW registration exists.
+      const registration =
+        typeof navigator !== "undefined" && "serviceWorker" in navigator
+          ? await navigator.serviceWorker.getRegistration()
+          : undefined;
+      if (registration) {
         await registration.showNotification(title, {
           icon: "/icon-192x192.png",
           badge: "/badge-72x72.png",

@@ -40,11 +40,11 @@ Si una credencial fue expuesta, revócala y rótala; eliminarla del archivo no i
 
 ## RGPD
 
-Estas medidas son controles técnicos, no una certificación legal. Antes del lanzamiento hay que documentar responsable, finalidades, base jurídica, minimización, retención, derechos, encargados/subencargados, transferencias internacionales, consentimiento y procedimiento de incidentes.
+Estas medidas son controles técnicos, no una certificación legal. La plantilla de cierre RGPD (responsable, finalidades, base jurídica, minimización, retención, derechos, encargados/subencargados, transferencias internacionales, consentimiento y procedimiento de incidentes) está en [docs/ROPA.md](ROPA.md); completar sus campos `⚠ COMPLETAR` antes del lanzamiento.
 
 ## Validación externa requerida
 
-- SAST y dependencia/SBOM.
+- SAST independiente (CodeQL + Semgrep en CI con gate de severidad High/Critical; ver `.github/workflows/sast.yml`, `scripts/check-sarif-severity.mjs` y la [guía de triage del primer run](sast-triage.md)). Dependencias: `npm audit` + dependency-review; SBOM formal pendiente.
 - DAST de endpoints HTTP.
 - Pentest del proxy, sesiones, integraciones, WebSocket y flujos de backup.
 - Revisión manual WCAG y privacidad.

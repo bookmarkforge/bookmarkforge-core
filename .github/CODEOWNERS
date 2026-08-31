@@ -1,36 +1,45 @@
 # CODEOWNERS — BookmarkForge
-# Sustituye estos placeholders por equipos o usuarios reales de GitHub.
+# Owners se configuran mediante la variable CODEOWNERS_ORG en CI.
+# Sustituye YOUR_GITHUB_ORG por la organización real antes de activar
+# "Require review from Code Owners" en GitHub. No uses aliases ficticios.
+# Sustitución en un comando: npm run codeowners:apply-org -- --org TU_ORG
+# (usa --dry-run para previsualizar el cambio sin escribir).
 # Los patrones más específicos tienen prioridad sobre los generales.
 
-* @bookmarkforge/maintainers
+* @YOUR_GITHUB_ORG/maintainers
 
-# Seguridad y criptografía — revisión obligatoria del equipo de seguridad.
-/src/utils/crypto-core.ts @bookmarkforge/security
-/src/services/EncryptionService.ts @bookmarkforge/security
-/src/services/SecurityVault.ts @bookmarkforge/security
-/src/services/SecureStorage.ts @bookmarkforge/security
-/src/services/security/ @bookmarkforge/security
-/src/services/security-vault/ @bookmarkforge/security
-/server/src/ai-session.ts @bookmarkforge/security
-/server/src/ai-proxy.ts @bookmarkforge/security
-/server/src/license-signing.ts @bookmarkforge/security
-/scripts/check-secrets-in-commit.mjs @bookmarkforge/security
-/scripts/csp-config.js @bookmarkforge/security
-/public/_headers @bookmarkforge/security
-/public/nginx.conf @bookmarkforge/security
+# Seguridad y criptografía.
+/src/utils/crypto-core.ts @YOUR_GITHUB_ORG/security
+/src/services/EncryptionService.ts @YOUR_GITHUB_ORG/security
+/src/services/SecurityVault.ts @YOUR_GITHUB_ORG/security
+/src/services/SecureStorage.ts @YOUR_GITHUB_ORG/security
+/src/services/security/ @YOUR_GITHUB_ORG/security
+/src/services/security-vault/ @YOUR_GITHUB_ORG/security
+/server/src/ai-session.ts @YOUR_GITHUB_ORG/security
+/server/src/ai-proxy.ts @YOUR_GITHUB_ORG/security
+/server/src/license-signing.ts @YOUR_GITHUB_ORG/security
+/scripts/check-secrets-in-commit.mjs @YOUR_GITHUB_ORG/security
+/scripts/check-sarif-severity.mjs @YOUR_GITHUB_ORG/security
+/.github/sast-baseline.json @YOUR_GITHUB_ORG/security
+/docs/sast-triage.md @YOUR_GITHUB_ORG/security
+/scripts/csp-config.js @YOUR_GITHUB_ORG/security
+/public/_headers @YOUR_GITHUB_ORG/security
+/public/nginx.conf @YOUR_GITHUB_ORG/security
 
 # Infraestructura, despliegue y continuidad.
-/.github/ @bookmarkforge/platform
-/Dockerfile @bookmarkforge/platform
-/docker-compose*.yml @bookmarkforge/platform
-/scripts/deploy-prod.mjs @bookmarkforge/platform
-/scripts/rollback.mjs @bookmarkforge/platform
-/scripts/drill-rollback.mjs @bookmarkforge/platform
-/scripts/prod-blindeo-checklist.mjs @bookmarkforge/platform
+/.github/ @YOUR_GITHUB_ORG/platform
+/Dockerfile @YOUR_GITHUB_ORG/platform
+/docker-compose*.yml @YOUR_GITHUB_ORG/platform
+/scripts/deploy-prod.mjs @YOUR_GITHUB_ORG/platform
+/scripts/rollback.mjs @YOUR_GITHUB_ORG/platform
+/scripts/drill-rollback.mjs @YOUR_GITHUB_ORG/platform
+/scripts/prod-blindeo-checklist.mjs @YOUR_GITHUB_ORG/platform
+/scripts/check-launch-checklist.mjs @YOUR_GITHUB_ORG/platform
+/scripts/load-test-server.mjs @YOUR_GITHUB_ORG/platform
 
 # Backend e integraciones.
-/server/ @bookmarkforge/backend
+/server/ @YOUR_GITHUB_ORG/backend
 
 # Aplicación y extensión.
-/src/ @bookmarkforge/frontend
-/extension/ @bookmarkforge/frontend
+/src/ @YOUR_GITHUB_ORG/frontend
+/extension/ @YOUR_GITHUB_ORG/frontend

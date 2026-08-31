@@ -16,7 +16,8 @@
  * suyos. Así el comportamiento es idéntico donde sea que se ejecute.
  */
 
-import { execSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
+import { validateRegistry } from "./registry-policy.mjs";
 
 /**
  * Valida y normaliza el registro destino para --push-images.
@@ -42,7 +43,7 @@ export function resolveRegistry(rawRegistry, { push: _push, dryRun }) {
     }
     return { ok: false, reason: "missing" };
   }
-  if (!/^[A-Za-z0-9][A-Za-z0-9._:-]*$/.test(registry)) {
+  if (!validateRegistry(registry)) {
     return { ok: false, reason: "invalid" };
   }
   return { ok: true, registry };
@@ -81,17 +82,17 @@ export function pushImages({
   run,
   runVisible = defaultInspectVisible,
 }) {
-  if (!sha || !/^[0-9a-f]{7,12}$/i.test(sha)) {
-    return { ok: false, step: "config", remote: `<sha inválido ${sha}>` };
+  if (!sha || !/^[0-9a-f]{7,12}$/i.test(sha) || !validateRegistry(registry)) {
+    return { ok: false, step: "config", remote: `<configuración inválida>` };
   }
   const pushed = [];
   for (const name of images) {
     const local = `bookmarkforge/${name}:${sha}`;
     const remote = `${registry}/bookmarkforge/${name}:${sha}`;
-    if (run(`docker tag ${local} ${remote}`) !== 0) {
+    if (run(["docker", "tag", local, remote]) !== 0) {
       return { ok: false, step: "tag", remote };
     }
-    if (run(`docker push ${remote}`, { timeout: 300_000 }) !== 0) {
+    if (run(["docker", "push", remote], { timeout: 300_000 }) !== 0) {
       return { ok: false, step: "push", remote };
     }
     // Confirmar visibilidad real: el push puede reportar éxito pero la imagen
@@ -112,13 +113,10 @@ export function pushImages({
  * aunque el resto del push estuviera simulado.
  */
 export function defaultInspectVisible(remoteRef) {
-  try {
-    execSync(`docker buildx imagetools inspect ${remoteRef} >/dev/null`, {
-      stdio: "ignore",
-      timeout: 60_000,
-    });
-    return true;
-  } catch {
-    return false;
-  }
+  if (typeof remoteRef !== "string" || !/^[A-Za-z0-9][A-Za-z0-9._:-]*\/bookmarkforge\/(?:web|api):[0-9a-f]{7,12}$/i.test(remoteRef)) return false;
+  const result = spawnSync("docker", ["buildx", "imagetools", "inspect", remoteRef], {
+    stdio: "ignore",
+    timeout: 60_000,
+  });
+  return result.status === 0;
 }

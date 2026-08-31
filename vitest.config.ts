@@ -107,6 +107,11 @@ export default defineConfig({
       reporter: ["text", "html", "json"],
       include: ["src/**/*.{ts,tsx}"],
       exclude: [
+        // Server infra (server/**) is collected by the spawn-based sync
+        // tests via child-process coverage, but it is not frontend code and
+        // is not covered by any src/ area budget — excluding it keeps the
+        // aggregate a truthful measure of the shipped src/ tree.
+        "server/**",
         "src/tests/**",
         "src/**/*.test.{ts,tsx}",
         // Declaration files carry no executable statements and would skew

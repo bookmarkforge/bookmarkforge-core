@@ -199,6 +199,40 @@ Registro del drill: cada run del workflow es la evidencia (RPO/RTO y resultado
 PASS/FAIL); anotar el enlace de la run en el checklist operativo trimestral y
 revisar los SLOs de la sección anterior en la misma ventana.
 
+### Evidencia de ejecución local — 2026-08-31 (rollback Docker)
+
+Run completa con `DRILL_DOCKER=1` desde un worktree aislado en `8f44a84` (los
+tags `prod-*` de release en formato `prod-YYYYMMDD-HHMM-<sha>` creados para el
+rollback: deploy actual `prod-20260831-1320-00b24d6`, target `prod-20260831-1315-8f44a84`).
+
+**Resultado: ✅ PASS** — 6 fases en 167.4 s (exit 0):
+
+| Fase | Resultado | Detalle | Tiempo |
+|---|---|---|---|
+| PREP | PASS | imágenes del tag previo ya existen, sin build | 2.1 s |
+| BASELINE | PASS | 11/11 checks (health, AI session/proxy/SSE, TTS, imagen, client-events, WS signaling) | 14.2 s |
+| KILL | PASS | api caído, mocks vivos | 6.1 s |
+| DETECT | PASS | `APP_CAIDA` detectado · `BUNDLE_CORRUPTO` probe OK (SRI) | 113.5 s |
+| ROLLBACK | PASS | **CAMINO A (imagen por SHA) medido 12.2 s < 60 s (GATE)** — rollback exit 0 | 23.0 s |
+| RE-VERIFY | PASS | 11/11 checks post-rollback | 0.2 s |
+
+Hallazgos de la ejecución (corregidos durante el run):
+
+1. **El drill no levantaba `redis`** — el api es fail-closed sobre
+   `AI_PROXY_REDIS_URL` y BASELINE fallaba con `SESSION_STORE_UNAVAILABLE`;
+   fix aplicado: `up -d ... redis` en `scripts/drill-rollback.mjs`.
+2. **`rollback.mjs` exige tags `prod-YYYYMMDD-HHMM-<sha>`** (formato de
+   `deploy-prod.mjs`); los tags con sufijo (`prod-YYYYMMDD-NNNN-<sufijo>`) los
+   rechaza con `Invalid target tag format` — crear los tags de release con
+   `scripts/deploy-prod.mjs`.
+3. **Compose hardcodea `AI_SESSION_ORIGINS` a 18080** — correr el drill con el
+   puerto por defecto (o interpolar `HTTP_PORT` en el compose) o el bootstrap
+   de sesión IA responde 403.
+4. **En run local desde worktree**, el smoke necesita `node_modules` para el
+   `import("ws")` dinámico (en CI lo instala `npm ci`).
+
+Evidencia JSON del run (fases y tiempos) registrada en el artifact de CI.
+
 ## Prueba de carga del companion server
 
 `npm run test:load` arranca un servidor aislado (límites propios + mock upstream

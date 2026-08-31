@@ -249,7 +249,7 @@ async function startStack() {
     const buildArgs = hasWeb && hasApi ? [] : ["--build"];
     const composeProject = process.env.COMPOSE_PROJECT_NAME ?? (PRODUCTION_COMPOSE ? "bookmarkforge-prod-drill" : "bookmarkforge-staging");
     const up = dockerOk(
-      ["compose", "-p", composeProject, ...COMPOSE_ENV_ARGS, "-f", COMPOSE_FILE, "up", "-d", ...buildArgs, "web", "api", "ai-mock"],
+      ["compose", "-p", composeProject, ...COMPOSE_ENV_ARGS, "-f", COMPOSE_FILE, "up", "-d", ...buildArgs, "web", "api", "ai-mock", "redis"],
       { IMAGE_TAG: sha, HTTP_PORT: String(WEB_PORT), AI_SESSION_ORIGINS: `http://127.0.0.1:${WEB_PORT},http://localhost:${WEB_PORT}` },
     );
     if (up.status !== 0) {

@@ -95,9 +95,10 @@
   Documentar formalmente los contratos (p. ej. OpenAPI) con Whop y los proveedores de IA. Riesgo de dependencia sin contrato versionado.
   - Evidencia: [docs/audit.md](audit.md) §1 ("Integraciones | Mixto") y §5 (Whop).
 
-- [ ] **13. Simulacro de desastre trimestral**
-  El drill mensual de restauración ya existe (`npm run drill:backup-restore`); falta el ensayo completo trimestral de recuperación registrado (RPO/RTO).
-  - Evidencia: [docs/operations.md](operations.md) → "Simulacro de restauración (drill mensual)" y "Recuperación ante desastre"; [docs/audit.md](audit.md) §6 ("simulacro trimestral sin ejecutar").
+- [x] **13. Simulacro de desastre trimestral (automatizado 2026-08-31)**
+  El ensayo completo trimestral está formalizado en CI: `.github/workflows/drill-quarterly.yml` (primer día de cada trimestre + dispatch manual) ejecuta el drill de backup-restore (RTO < 120 s) **y** el drill de rollback Docker (CAMINO A por imagen < 60 s, imágenes reales del tag `prod-*` previo). Requiere ≥ 2 tags `prod-*` en el repo.
+  - Evidencia: [.github/workflows/drill-quarterly.yml](../.github/workflows/drill-quarterly.yml), [docs/operations.md](operations.md) → "Simulacro trimestral de recuperación ante desastre"; `npm run drill:backup-restore` y `DRILL_DOCKER=1 npm run drill:rollback` verificados localmente (2026-08-31).
+  - Pendiente: ejecutar la primera run del workflow (necesita tags `prod-*` reales, p. ej. tras `deploy-prod`) y registrar el enlace como evidencia trimestral.
 
 - [ ] **14. Checklist de publicación de extensiones**
   Preparar la publicación en Chrome Web Store / AMO (descripción, capturas, política de privacidad de la extensión).

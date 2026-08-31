@@ -72,6 +72,36 @@ Ejecuta `tests/e2e/drill-backup-restore.spec.ts` contra el stack de staging:
 El script reporta una tabla PASS/FAIL por fase y sale 0/1 (CI-ready). Programa
 la ejecución mensual (cron) y regístrala en el checklist operativo.
 
+## Simulacro trimestral de recuperación ante desastre (DR drill)
+
+El ensayo completo trimestral se ejecuta en CI con `.github/workflows/drill-quarterly.yml`
+(primer día de enero/abril/julio/octubre a las 06:00 UTC + `workflow_dispatch`)
+y cubre los dos caminos de recuperación contra la topología staging local:
+
+1. **Backup-restore (job `backup-restore`)** — `npm run drill:backup-restore`:
+   baseline → desastre → restore → verify, con gate RTO de referencia < 120 s.
+2. **Rollback por imagen (job `rollback-docker`)** — `DRILL_DOCKER=1 node
+   scripts/drill-rollback.mjs` contra `docker-compose.staging.yml`: baseline →
+   kill del api → detección (monitoring) → rollback por imagen (CAMINO A,
+   gate < 60 s) → re-verificación. Construye las imágenes REALES del tag
+   `prod-*` previo desde su worktree, de modo que el rollback sea imagen == código.
+
+Precondiciones que el workflow resuelve:
+
+- **Historial y tags:** `fetch-depth: 0` + `fetch-tags: true` (el rollback
+  requiere ≥ 2 tags `prod-*`; sin ellos el drill falla de forma explícita —
+  crear tags con `scripts/deploy-prod.mjs`).
+- **Secreto de firma de licencias:** `node scripts/generate-license-keys.mjs
+  --server-key-only` escribe solo el PKCS#8 gitignored (el compose staging
+  necesita el archivo; los archivos commiteados quedan intactos).
+- **Evidencia:** cada job sube un artifact `drill-{backup-restore,rollback}-<run_id>`
+  (salida JSON + `test-results/`) con retención de 90 días y escribe el resumen
+  en el job summary de la run.
+
+Registro del drill: cada run del workflow es la evidencia (RPO/RTO y resultado
+PASS/FAIL); anotar el enlace de la run en el checklist operativo trimestral y
+revisar los SLOs de la sección anterior en la misma ventana.
+
 ## Prueba de carga del companion server
 
 `npm run test:load` arranca un servidor aislado (límites propios + mock upstream

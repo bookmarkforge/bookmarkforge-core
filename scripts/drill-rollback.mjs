@@ -377,8 +377,12 @@ if (overallOk && DOCKER) {
       } else {
         try {
           // Sincroniza la topología del drill al árbol del tag (archivos
-          // untracked/gitignored que el compose y el build necesitan).
-          for (const rel of ["docker-compose.staging.yml", "public/nginx.conf"]) {
+          // untracked/gitignored que el compose y el build necesitan). El
+          // Dockerfile de HEAD se copia también para que el build del tag
+          // use el stage deps corregido (--ignore-scripts): uno antiguo,
+          // roto por `prepare: husky` + `--omit=dev`, imposibilitaba
+          // reconstruir la imagen del tag previo (CAMINO A).
+          for (const rel of ["Dockerfile", "docker-compose.staging.yml", "public/nginx.conf"]) {
             const src = join(ROOT, rel);
             if (existsSync(src)) copyFileSync(src, join(wt, rel));
           }

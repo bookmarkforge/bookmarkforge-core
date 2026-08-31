@@ -30,6 +30,13 @@
  *   node scripts/generate-license-keys.mjs --check   # CI gate: committed
  *                                                    # public key + fixture
  *                                                    # are consistent
+ *   node scripts/generate-license-keys.mjs --server-key-only
+ *                                                    # write ONLY the gitignored
+ *                                                    # private key (no committed
+ *                                                    # files touched) — used by
+ *                                                    # the quarterly DR drill CI
+ *                                                    # to provision the staging
+ *                                                    # compose secret
  */
 import {
   generateKeyPairSync,
@@ -175,6 +182,15 @@ if (process.argv.includes("--check")) {
 }
 
 const { publicSpki, privatePkcs8, fixtureSignature } = generate();
+if (process.argv.includes("--server-key-only")) {
+  // Operational/CI provisioning: the staging compose needs the secret file to
+  // exist, but regenerating the keypair must NEVER touch the committed public
+  // key module. Emits only the gitignored PKCS#8 and exits.
+  mkdirSync(join(ROOT, "server"), { recursive: true });
+  writeFileSync(PRIVATE_KEY_PATH, privatePkcs8 + "\n", "utf8");
+  console.log(`[generate-license-keys] wrote PRIVATE key to ${PRIVATE_KEY_PATH} (GITIGNORED — committed files untouched)`);
+  process.exit(0);
+}
 if (process.argv.includes("--write")) {
   writeFileSync(OUT_PATH, renderModule({ publicSpki, fixtureSignature }));
   mkdirSync(join(ROOT, "server"), { recursive: true });

@@ -1,0 +1,122 @@
+name: Quarterly disaster recovery drill
+
+# Formaliza el simulacro trimestral de recuperación (docs/operations.md →
+# "Simulacro de restauración" y "Recuperación ante desastre"): ejecuta el
+# drill de backup-restore (RTO de referencia < 120 s) y el drill de rollback
+# Docker (CAMINO A por imagen < 60 s) contra la topología staging local.
+# Primer día de cada trimestre (enero/abril/julio/octubre) + dispatch manual.
+on:
+  schedule:
+    - cron: '0 6 1 1,4,7,10 *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: drill-quarterly
+  cancel-in-progress: false
+
+env:
+  CI: true
+
+jobs:
+  backup-restore:
+    name: Backup-restore drill (E2E, RTO < 120 s)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      NODE_ENV: test
+      VITE_TEST_BUILD: 'true'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run backup-restore drill (baseline → desastre → restore → verify)
+        shell: bash
+        run: |
+          set -o pipefail
+          node scripts/drill-backup-restore.mjs --json 2>&1 | tee drill-backup-restore.json
+      - name: Append drill summary to job summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Backup-restore drill (trimestral)"
+            if [ -f drill-backup-restore.json ]; then
+              cat drill-backup-restore.json
+            else
+              echo "Sin salida JSON (drill no ejecutado)."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload drill evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: drill-backup-restore-${{ github.run_id }}
+          if-no-files-found: ignore
+          retention-days: 90
+          path: |
+            drill-backup-restore.json
+            test-results/
+            playwright-report/
+
+  rollback-docker:
+    name: Rollback drill (docker staging, CAMINO A < 60 s)
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      NODE_ENV: test
+      DRILL_DOCKER: '1'
+      HTTP_PORT: '18082'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          # El drill necesita el historial completo (worktree del tag prod-*
+          # previo) y los tags prod-* para el blanco del rollback.
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Provision gitignored license signing key (no committed files touched)
+        run: node scripts/generate-license-keys.mjs --server-key-only
+      - name: Run rollback drill (baseline → kill → detect → rollback → verify)
+        shell: bash
+        run: |
+          set -o pipefail
+          node scripts/drill-rollback.mjs --json 2>&1 | tee drill-rollback.json
+      - name: Append drill summary to job summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Rollback drill (trimestral, docker)"
+            if [ -f drill-rollback.json ]; then
+              cat drill-rollback.json
+            else
+              echo "Sin salida JSON (drill no ejecutado)."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload drill evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: drill-rollback-${{ github.run_id }}
+          if-no-files-found: ignore
+          retention-days: 90
+          path: |
+            drill-rollback.json
+            drill-rollback-*.log

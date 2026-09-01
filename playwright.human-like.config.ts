@@ -18,7 +18,12 @@ export default defineConfig(baseConfig, {
   workers: 1,
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI
-    ? [["html", { outputFolder: "playwright-report-human-like", open: "never" }], ["line"]]
+    ? process.env.HUMAN_LIKE_BLOB_REPORT
+      // CI split-run mode: two shard jobs each write a blob report into a
+      // per-shard folder; the nightly merge job consumes these with
+      // `playwright merge-reports` to produce one unified HTML report.
+      ? [["blob", { outputDir: `playwright-report-human-like-${process.env.HUMAN_LIKE_SHARD ?? "1"}`, open: "never" }]]
+      : [["html", { outputFolder: "playwright-report-human-like", open: "never" }], ["line"]]
     : "list",
   outputDir: "test-results-human-like",
   // Let Playwright manage webServers (base config reuseExistingServer logic).

@@ -43,6 +43,8 @@
     "check:webrtc-certification": "node scripts/check-webrtc-certification.mjs",
     "e2e:browsers": "playwright test --config=playwright.browsers.config.ts",
     "test:all-human-like": "playwright test --config=playwright.human-like.config.ts",
+    "test:human-like:core": "playwright test --config=playwright.human-like.config.ts src/tests/human-like/examples/full-coverage-tests.spec.ts src/tests/human-like/examples/advanced-human-tests.spec.ts src/tests/human-like/examples/edge-cases-tests.spec.ts src/tests/human-like/examples/regression-tests.spec.ts src/tests/human-like/examples/privacy-security-tests.spec.ts src/tests/human-like/examples/persistence-roundtrip-tests.spec.ts src/tests/human-like/examples/dsl-executestep-regression.spec.ts src/tests/human-like/examples/basic-human-behavior-tests.spec.ts",
+    "test:human-like:depth": "playwright test --config=playwright.human-like.config.ts src/tests/human-like/examples/bookmark-app-tests.spec.ts src/tests/human-like/examples/deep-feature-tests.spec.ts src/tests/human-like/examples/human-like-tests.spec.ts src/tests/human-like/examples/mobile-import-settings-tests.spec.ts src/tests/human-like/examples/pwa-flow-tests.spec.ts src/tests/human-like/examples/additional-features-tests.spec.ts src/tests/human-like/examples/detailed-performance-tests.spec.ts",
     "test:human-full": "playwright test --config=playwright.human-like.config.ts src/tests/human-like/examples/full-coverage-tests.spec.ts",
     "test:human-advanced": "playwright test --config=playwright.human-like.config.ts src/tests/human-like/examples/advanced-human-tests.spec.ts",
     "test:human-edge": "playwright test --config=playwright.human-like.config.ts src/tests/human-like/examples/edge-cases-tests.spec.ts",

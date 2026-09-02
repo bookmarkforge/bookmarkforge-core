@@ -9,7 +9,7 @@ import {
   AlertCircle,
   RotateCcw,
 } from "lucide-react";
-import { initDB } from "../db/database";
+import { initDB } from "../container/database";
 import { flashcardService } from "../services/ai/FlashcardService";
 import { useTranslation } from "react-i18next";
 import type { FlashcardDocument } from "../db/types";

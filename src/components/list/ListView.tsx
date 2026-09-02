@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { formatDate } from "../../utils/localization";
 import { motion } from "motion/react";
 import { List, FileText, Bookmark, Search, X } from "lucide-react";
-import { initDB } from "../../db/database";
+import { initDB } from "../../container/database";
 import type { DocumentDocType, BookmarkDocType } from "../../db/schema";
 import type { RxDocument } from "rxdb";
 import { logger } from "../../utils/logger";

@@ -1,5 +1,5 @@
 import { generateId } from "../../utils/id";
-import { initDB } from "../../db/database";
+import { initDB } from "../../container/database";
 import { logger } from "../../utils/logger";
 import { safeGet, safeSet } from "../../store/safeStorage";
 import { STORAGE_KEYS } from "../../constants/storage-keys";

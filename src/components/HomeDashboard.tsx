@@ -20,7 +20,7 @@ import { formatDate } from "../utils/localization";
 import { motion, Variants, AnimatePresence } from "motion/react";
 import { EASE_OUT, DURATION_MENU } from "../constants/motion";
 import { securityVault } from "../services/SecurityVault";
-import { initDB } from "../db/database";
+import { initDB } from "../container/database";
 import { fileSystemService } from "../services/FileSystemService";
 import { toast } from "sonner";
 import { Document } from "../types";

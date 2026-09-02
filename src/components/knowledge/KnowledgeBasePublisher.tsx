@@ -56,7 +56,7 @@ export const KnowledgeBasePublisher: React.FC<Props> = ({ cardVariants }) => {
     loading: _collectionsLoading,
   } = useGuardedDataLoad<{ tag: string; count: number }[]>(
     async (signal) => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       // Tag counts are intentionally a bounded, recent sample: materializing
       // the whole vault here freezes the dashboard on large local databases.
@@ -120,7 +120,7 @@ export const KnowledgeBasePublisher: React.FC<Props> = ({ cardVariants }) => {
   const handlePublish = (tag: string) => {
     setSelectedTag(tag);
     void runPublish(async (signal) => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       // Query only the selected tag and cap the source material. The prior
       // full-vault read was both unnecessary and capable of creating an

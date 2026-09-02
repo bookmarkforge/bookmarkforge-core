@@ -15,7 +15,7 @@ import {
   type BackupFolderInfo,
 } from "../../services/DiskBackupService";
 import { useTranslation } from "react-i18next";
-import { initDB } from "../../db/database";
+import { initDB } from "../../container/database";
 import { garbageCollectionService } from "../../services/GarbageCollectionService";
 import { toast } from "sonner";
 import { logger } from "../../utils/logger";

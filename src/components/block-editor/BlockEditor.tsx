@@ -9,7 +9,7 @@ import { Sparkles, Undo, Link } from "lucide-react";
 import { sanitizeText } from "../../services/SanitizationService";
 import { ExportMenu } from "../ExportMenu";
 import { ShareButton } from "../ShareButton";
-import { initDB } from "../../db/database";
+import { initDB } from "../../container/database";
 import { normalizeTemplateBlocksToBlockNote } from "../../services/DocumentTemplateService";
 import { filterSuggestionItems, type PartialBlock, type Block } from "@blocknote/core";
 import { ObjectUrlRegistry } from "../../utils/objectUrlRegistry";

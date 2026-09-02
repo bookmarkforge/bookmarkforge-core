@@ -38,7 +38,7 @@ export const AISommelier: React.FC<Props> = ({ cardVariants, t }) => {
     loading: _bookmarksLoading,
   } = useGuardedDataLoad<BookmarkView[]>(
     async (signal) => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       // Bound the pick-list: the card only needs bookmarks to choose from,
       // not a census. The limit caps both the materialization (find().exec()

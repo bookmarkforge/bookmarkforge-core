@@ -77,7 +77,7 @@ export function CrossLanguageBridge({
   const scanBridges = useCallback(() => {
     setScanProgress(null);
     void scan.runWithSignal(async (signal) => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB();
       if (signal.aborted) {return [];}
       const rows = await db.bookmarks

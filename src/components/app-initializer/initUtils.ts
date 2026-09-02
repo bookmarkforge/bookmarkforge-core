@@ -1,4 +1,4 @@
-import { destroyDB, initDB } from "../../db/database";
+import { destroyDB, initDB } from "../../container/database";
 import { secureStorage } from "../../services/SecureStorage";
 import { safeClear, safeGet, safeSessionClear } from "../../store/safeStorage";
 import { logger } from "../../utils/logger";

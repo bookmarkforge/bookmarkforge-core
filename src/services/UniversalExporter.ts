@@ -36,6 +36,21 @@ function reportProgress(options: ExportOptions, progress: number): void {
 const MAX_EXPORT_RECORDS = 100_000;
 const EXPORT_YIELD_EVERY = 500;
 
+/**
+ * Materialize RxDocument proxies into plain data. RxDB v17 documents are
+ * Proxy wrappers whose destructure/spread (`{ ...doc }`, `{ a, ...rest }`)
+ * copies internal rxjs state (SafeSubscriber/Subscription trees) into the
+ * result; JSON.stringify then dies with "Converting circular structure to
+ * JSON" — every ExportDialog export failed this way. `toJSON()` returns the
+ * clean record. The cast is deliberate: the pipeline types records as
+ * plain data while the DB hands out RxDocuments.
+ */
+function toPlainRecords<T>(records: readonly T[]): T[] {
+  return (records as unknown as Array<{ toJSON(): T }>).map((record) =>
+    record.toJSON(),
+  );
+}
+
 async function filterExportRecords<T>(
   records: readonly T[],
   predicate: (record: T) => boolean,
@@ -230,12 +245,15 @@ export class UniversalExporter {
     // export contract unless explicitly requested. Create shallow export
     // records instead of mutating RxDB documents or retaining vectors in the
     // formatter pipeline by default.
-    // The RxDB schema carries `embedding` vectors even though the static
-    // BookmarkData/DocumentData types omit the field; cast so the destructure
-    // strips it from export records without leaking implicit any.
+    // Records must be plain data BEFORE any destructure/spread: RxDB v17
+    // documents are proxies whose spread copies rxjs internals (see
+    // toPlainRecords). The RxDB schema carries `embedding` vectors even
+    // though the static BookmarkData/DocumentData types omit the field;
+    // strip it from the plain records without leaking implicit any.
+    const plainBookmarks = toPlainRecords(filteredBookmarks);
     const exportBookmarks = options.includeEmbeddings
-      ? filteredBookmarks
-      : (filteredBookmarks as (BookmarkData & { embedding?: unknown })[]).map(
+      ? plainBookmarks
+      : (plainBookmarks as (BookmarkData & { embedding?: unknown })[]).map(
           ({ embedding: _embedding, ...bookmark }) => bookmark,
         );
 
@@ -243,9 +261,10 @@ export class UniversalExporter {
     // textContent. Resolve them to self-contained `data:` URLs before the
     // formatters run, so the Obsidian exporter can extract them into an
     // `attachments/` folder and JSON/Markdown exports stay faithful instead
-    // of shipping dead refs.
+    // of shipping dead refs. Spread the PLAIN record (see toPlainRecords).
+    const plainDocuments = toPlainRecords(filteredDocuments);
     const resolvedDocuments = await Promise.all(
-      filteredDocuments.map(async (document) => ({
+      plainDocuments.map(async (document) => ({
         ...document,
         textContent: await attachmentStore.resolveTextForExport(
           document.id,
@@ -263,7 +282,7 @@ export class UniversalExporter {
     return {
       bookmarks: exportBookmarks,
       documents: exportDocuments,
-      folders: options.includeFolders ? folders : [],
+      folders: options.includeFolders ? toPlainRecords(folders) : [],
     };
   }
 }

@@ -10,7 +10,7 @@ import {
   Settings,
 } from "lucide-react";
 import { universalExporter } from "../services/UniversalExporter";
-import { initDB } from "../db/database";
+import { initDB } from "../container/database";
 import { logger } from "../utils/logger";
 import { downloadBlob } from "../utils/download";
 import { useTranslation } from "react-i18next";

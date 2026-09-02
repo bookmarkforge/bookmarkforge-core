@@ -145,7 +145,21 @@ export const BookmarkRow = ({
           background: isSelected ? "var(--state-hover-bg)" : "transparent",
           border: isFocused ? "2px solid var(--accent-primary)" : "none",
         }}
-        onClick={() => handleSelect(bookmark.id)}
+        onClick={(e) => {
+          // The row is a selectable surface, but its inner interactive
+          // controls (select checkbox, expand, edit, delete, read, share,
+          // links…) handle their own actions. Ignore clicks that started in
+          // one of them so they never ALSO toggle row selection (the bubbled
+          // duplicate would otherwise make the checkbox a no-op).
+          const target = e.target as HTMLElement;
+          // NOTE: the row itself is [role=button], so only native interactive
+          // elements are excluded — [role=button] would match the row surface
+          // itself and break click-to-select.
+          if (target.closest("button, a, input, textarea, select")) {
+            return;
+          }
+          handleSelect(bookmark.id);
+        }}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
@@ -162,7 +176,14 @@ export const BookmarkRow = ({
               </div>
             ) : (
               <button
-                onClick={() => handleSelect(bookmark.id)}
+                onClick={(e) => {
+                  // The row wrapper is also a selectable role=button, so
+                  // without stopping propagation the bubbled click would
+                  // toggle the selection a second time (select on, then
+                  // immediately off), making the checkbox a no-op.
+                  e.stopPropagation();
+                  handleSelect(bookmark.id);
+                }}
                 className="truncate transition-colors flex items-center justify-center p-1 rounded"
                 style={{
                   color: isSelected

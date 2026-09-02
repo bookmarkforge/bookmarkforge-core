@@ -8,7 +8,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { universalImporter } from "../services/UniversalImporter";
-import { initDB } from "../db/database";
+import { initDB } from "../container/database";
 import { logger } from "../utils/logger";
 import { useTranslation } from "react-i18next";
 import { useGuardedAction } from "../hooks/useGuardedAction";

@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { Wifi, WifiOff, RefreshCw, Loader2, Cloud } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { initDB } from "../../db/database";
+import { initDB } from "../../container/database";
 import { syncService } from "../../services/SyncService";
 import { logger } from "../../utils/logger";
 import { licenseService } from "../../services/LicenseService";

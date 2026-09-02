@@ -38,7 +38,7 @@ export const BookmarkCoverSongs: React.FC<Props> = ({ cardVariants, t }) => {
   // drops late results (the original loadBookmarks + `return loadGuard.cancel`).
   useGuardedDataLoad<BookmarkView[]>(
     async (signal) => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       if (signal.aborted) {return [];}
       // Bound the pick-list: the card only needs bookmarks to choose from,

@@ -83,7 +83,7 @@ export const BookmarkNostalgia: React.FC<Props> = ({ cardVariants, t }) => {
     cancel: cancelNostalgiaLoad,
   } = useGuardedDataLoad<YearData | null>(
     async (signal) => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       if (signal.aborted) {return null;}
       const db = await initDB() as BookmarkForgeDB;
       const bookmarks = await db.bookmarks

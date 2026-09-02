@@ -65,7 +65,7 @@ export function EphemeralBookmarks({
   // each mutation reloads via the stable `load` identity.
   const { load: loadEphemeral, loading } = useGuardedDataLoad<EphemeralEntry[]>(
     async () => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB();
       // `lastChecked` is a JSON payload rather than an indexed expiry field,
       // so scan a bounded recent sample instead of materializing the vault.
@@ -119,7 +119,7 @@ export function EphemeralBookmarks({
   const handleSetExpiry = () => {
     if (!titleInput.trim()) {return;}
     void applyExpiry.run(async () => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB();
       const bookmarks = await boundedBookmarkQuery(
         db.bookmarks,
@@ -152,7 +152,7 @@ export function EphemeralBookmarks({
   });
   const handleRestore = (id: string) => {
     void restoreEntry.run(async () => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB();
       const doc = await db.bookmarks.findOne(id).exec();
       if (doc) {
@@ -173,7 +173,7 @@ export function EphemeralBookmarks({
   });
   const handleArchiveAll = () => {
     void archiveAll.run(async () => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB();
       const now = new Date().toISOString();
 

@@ -32,21 +32,25 @@ describe("UniversalExporter", () => {
   let exporter: UniversalExporter;
   let mockDb: any;
 
-  const createMockDoc = (overrides = {}) => ({
-    id: "1",
-    url: "https://example.com",
-    title: "Test",
-    content: "Content",
-    summary: "Summary",
-    tags: ["tag1"],
-    createdAt: "2024-01-01T00:00:00.000Z",
-    updatedAt: "2024-01-02T00:00:00.000Z",
-    isDeleted: false,
-    isPrivate: false,
-    folderId: "root",
-    textContent: "Document text",
-    ...overrides,
-  });
+  const createMockDoc = (overrides = {}) => {
+    const data = {
+      id: "1",
+      url: "https://example.com",
+      title: "Test",
+      content: "Content",
+      summary: "Summary",
+      tags: ["tag1"],
+      createdAt: "2024-01-01T00:00:00.000Z",
+      updatedAt: "2024-01-02T00:00:00.000Z",
+      isDeleted: false,
+      isPrivate: false,
+      folderId: "root",
+      textContent: "Document text",
+      ...overrides,
+    };
+    // The exporter materializes records via toJSON (RxDB v17 contract).
+    return { ...data, toJSON: () => ({ ...data }) };
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -71,11 +75,22 @@ describe("UniversalExporter", () => {
       },
       folders: {
         find: vi.fn(() => ({
-          exec: vi
-            .fn()
-            .mockResolvedValue([
-              { id: "root", title: "Root", createdAt: "2024-01-01" },
-            ]),
+          exec: vi.fn().mockResolvedValue([
+            {
+              id: "root",
+              title: "Root",
+              parentId: "",
+              createdAt: "2024-01-01",
+              toJSON() {
+                return {
+                  id: "root",
+                  title: "Root",
+                  parentId: "",
+                  createdAt: "2024-01-01",
+                };
+              },
+            },
+          ]),
         })),
       },
     };
@@ -91,6 +106,76 @@ describe("UniversalExporter", () => {
       expect(result.success).toBe(true);
       expect(result.format).toBe("json");
       expect(result.blob).toBeInstanceOf(Blob);
+    });
+
+    it("handles RxDB v17 documents whose spread carries circular internals", async () => {
+      // Regression: RxDB v17 RxDocuments are proxies that answer `toJSON()`
+      // with clean data but whose destructure/spread copies hidden rxjs
+      // state (SafeSubscriber/Subscription). The exporter used to spread
+      // them, so every real ExportDialog export failed with "Converting
+      // circular structure to JSON". Simulate the proxy faithfully:
+      // JSON.stringify({ ...doc }) must explode without the fix.
+      const circularState: { finalizers: Array<Record<string, unknown>> } = {
+        finalizers: [],
+      };
+      circularState.finalizers.push({ parentage: circularState });
+      const rxProxy = (data: Record<string, unknown>) =>
+        new Proxy(data, {
+          ownKeys() {
+            return [...Reflect.ownKeys(data), "_rxState"];
+          },
+          getOwnPropertyDescriptor(target, prop) {
+            if (prop === "_rxState") {
+              return {
+                enumerable: true,
+                configurable: true,
+                value: circularState,
+              };
+            }
+            return Reflect.getOwnPropertyDescriptor(target, prop);
+          },
+          get(target, prop, receiver) {
+            if (prop === "toJSON") {
+              return () => ({ ...target });
+            }
+            return Reflect.get(target, prop, receiver);
+          },
+        });
+
+      mockDb.bookmarks.find = vi.fn(() => ({
+        exec: vi.fn().mockResolvedValue([
+          rxProxy({
+            id: "px-b1",
+            url: "https://example.com/px",
+            title: "Proxy",
+            content: "C",
+            summary: "S",
+            tags: [],
+            relatedLinks: [],
+            visitCount: 1,
+            isDeleted: false,
+            isPrivate: false,
+            createdAt: "2024-01-01T00:00:00.000Z",
+            updatedAt: "2024-01-01T00:00:00.000Z",
+          }),
+        ]),
+      }));
+
+      const result = await exporter.exportData(mockDb, {
+        format: "json",
+        includeFolders: true,
+      });
+      expect(result.success).toBe(true);
+      const parsed = JSON.parse(
+        new TextDecoder().decode(await result.blob.arrayBuffer()),
+      );
+      expect(parsed.data.bookmarks[0]).toMatchObject({
+        url: "https://example.com/px",
+        title: "Proxy",
+      });
+      expect(
+        JSON.stringify(parsed).includes("SafeSubscriber"),
+      ).toBe(false);
     });
 
     it("should export to JSONL", async () => {

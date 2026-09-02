@@ -383,7 +383,7 @@ export function AppContent() {
       // Wipe the corrupt database state first: importBackup opens its own
       // fresh instance via initDB, which would otherwise collide with the
       // stale/corrupt storage on the same adapter.
-      const { destroyDB } = await import("../../db/database");
+      const { destroyDB } = await import("../../container/database");
       await destroyDB();
       await BackupService.importBackup(file, password);
       toast.success(

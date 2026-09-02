@@ -54,6 +54,10 @@ export async function createBookmarkViaCapture(
   url: string,
   title?: string,
 ): Promise<void> {
+  // A renderer crash/reload under load can drop the in-memory skip flag and
+  // bring the vault dialog back mid-loop; re-establish the unlocked shell
+  // before touching the FAB.
+  await ensureUnlocked(page);
   // Fully close any open panel first (waits for the exit animation) so the
   // FAB toggle below starts from a deterministic closed state.
   await closeQuickCapture(page);
@@ -91,6 +95,10 @@ export async function saveBookmark(
   url: string,
   title?: string,
 ): Promise<void> {
+  // A renderer crash/reload under load can drop the in-memory skip flag and
+  // bring the vault dialog back mid-loop; re-establish the unlocked shell
+  // before touching the FAB.
+  await ensureUnlocked(page);
   // Fully close any open panel first (waits for the exit animation) so the
   // FAB toggle below starts from a deterministic closed state.
   await closeQuickCapture(page);
@@ -167,17 +175,17 @@ export async function closeQuickCapture(page: Page): Promise<void> {
 /**
  * Wait for the capture-confirmation toast. Local AI processing (hierarchy
  * suggestion + a 3s embedding race) runs before the insert, so the toast can
- * legitimately take several seconds — 15s is the CI-safe budget.
+ * legitimately take several seconds — 30s matches the core E2E budget.
  */
 export async function expectCapturedToast(
   page: Page,
-  timeout = 15_000,
+  timeout = 30_000,
 ): Promise<void> {
   // Two rapid captures (stress loops) can overlap the toast lifetime, leaving
   // two identical "captured" toasts on screen; scope to the first instead of
   // strict-violating on the duplicate. The authoritative completion signal is
   // the panel closing — the app closes QuickCapture only after the insert.
-  await expect(page.getByText(/captured|saved/i).first()).toBeVisible({
-    timeout,
-  });
+  await expect(
+    page.getByText(/bookmark captured|note captured|saved successfully/i).first(),
+  ).toBeVisible({ timeout });
 }

@@ -56,7 +56,7 @@ export const KnowledgeAudit: React.FC<Props> = ({ cardVariants, t }) => {
   } = useGuardedDataLoad<Report | null>(
     async (signal) => {
       setScanProgress(0);
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       // Bound the scan: the audit is a health dashboard, so the newest
       // MAX_AUDIT_SAMPLE bookmarks (index-backed sort + limit) are a

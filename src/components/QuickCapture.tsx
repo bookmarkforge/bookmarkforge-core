@@ -169,7 +169,7 @@ export const QuickCapture: React.FC = () => {
       // avoiding a serial waterfall on the first capture.
       const [{ initDB }, { aiManager }, { ragEngine }, { taggingService }] =
         await Promise.all([
-          import("../db/database"),
+          import("../container/database"),
           import("../services/ai/ProviderManager"),
           import("../services/ai/RAGEngine"),
           import("../services/ai/TaggingService"),

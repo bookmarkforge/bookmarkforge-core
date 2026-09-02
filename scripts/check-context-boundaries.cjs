@@ -5,14 +5,29 @@
  * Enforces import boundaries between the app's main layers so the
  * dependency graph stays acyclic and UI / workers / memory stay isolated:
  *
- *   - UI components (src/components) must never import workers or the
- *     memory subsystem directly (they go through services, hooks or
- *     zustand stores).
+ *   - UI components (src/components) must never import workers, the
+ *     memory subsystem, or the db layer directly (they go through
+ *     services, hooks, zustand stores, or — for bootstrap — the DI
+ *     container's database gate, src/container/database.ts).
  *   - Workers (src/workers) must never import components or memory.
  *   - The memory subsystem (src/memory) must never import components or
  *     workers.
  *   - Hooks (src/hooks) must never import components (the dependency runs
  *     the other way).
+ *
+ * Type-only imports (`import type { X } from "…"` / `export type { … } from
+ * "…"`) are exempt from every rule: TypeScript erases them at compile time,
+ * so they can never create a runtime edge between layers. RxDB collection
+ * types (BookmarkDocType, BookmarkForgeDB, …) are intentionally consumed
+ * across layers — enforcing them would be pure noise with zero coupling
+ * benefit.
+ *
+ * components -> db background: the db layer was historically importable
+ * from the UI without a gate, which let bootstrap calls (initDB/destroyDB)
+ * spread across ~25 components. They now import from
+ * src/container/database.ts (a leaf re-export, so the app-containing
+ * bundle is unchanged) and the allowlist is expected to stay EMPTY — any
+ * new components -> db runtime edge must be refactored, not allowlisted.
  *
  * Existing violations are documented in scripts/context-boundaries.allowlist.json;
  * NEW violations fail CI. Workers are allowed to share pure logic with
@@ -48,6 +63,7 @@ const LAYERS = {
 const RULES = [
   { from: "components", to: "workers", label: "UI must not import workers directly; use services/hooks (e.g. WorkerPool)." },
   { from: "components", to: "memory", label: "UI must not import the memory subsystem directly; use useMemoryStore / AgentService." },
+  { from: "components", to: "db", label: "UI must not import the db layer directly; bootstrap through src/container/database.ts and query through services." },
   { from: "workers", to: "components", label: "Workers must not depend on UI components." },
   { from: "workers", to: "memory", label: "Workers must not depend on the memory subsystem." },
   { from: "memory", to: "components", label: "The memory subsystem must not depend on UI components." },
@@ -85,7 +101,7 @@ function walk(dir, out = []) {
 // String stripping is intentionally NOT applied: import specifiers live
 // inside quotes, so stripping them would hide real imports.
 const IMPORT_RE =
-  /\b(?:import[^'"]*\bfrom\s+|export[^'"]*\bfrom\s+|import\s*\(\s*)[`'"]([^`'"]+)[`'"]/g;
+  /\b(import[^'"]*\bfrom\s+|export[^'"]*\bfrom\s+|import\s*\(\s*)[`'"]([^`'"]+)[`'"]/g;
 
 function parseImports(source) {
   const cleaned = source
@@ -94,7 +110,14 @@ function parseImports(source) {
   const out = [];
   let m;
   while ((m = IMPORT_RE.exec(cleaned)) !== null) {
-    out.push(m[1]);
+    const prefix = m[1] ?? "";
+    const specifier = m[2] ?? "";
+    // Type-only imports / re-exports are erased by TypeScript and can never
+    // create a runtime edge between layers; they are exempt from every rule.
+    if (/^(?:import|export)\s+type\b/.test(prefix)) {
+      continue;
+    }
+    out.push(specifier);
   }
   return out;
 }

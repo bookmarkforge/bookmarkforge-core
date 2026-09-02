@@ -125,7 +125,13 @@ test.describe('3. Import/Export Features', () => {
   });
 
   test('3.2 Export dialog opens', async ({ page }) => {
-    const exportBtn = page.getByRole('button', { name: /export/i }).first();
+    // Pin to the Dashboard's exporter button: a loose /export/i regex also
+    // matches the BackupReminderBanner's "Export Physical Backup File" (which
+    // appears earlier in the DOM), clicking which starts a real backup instead
+    // of opening the dialog.
+    const exportBtn = page.getByRole('button', {
+      name: 'Open Exporter',
+    });
     if (await exportBtn.isVisible()) {
       await exportBtn.click();
       await settle(page.locator('[role="dialog"]').first());
@@ -133,7 +139,10 @@ test.describe('3. Import/Export Features', () => {
   });
 
   test('3.3 Export as JSON option', async ({ page }) => {
-    const exportBtn = page.getByRole('button', { name: /export/i }).first();
+    // Pin to the Dashboard's exporter button (see 3.2 for the banner trap).
+    const exportBtn = page.getByRole('button', {
+      name: 'Open Exporter',
+    });
     if (await exportBtn.isVisible()) {
       await exportBtn.click();
       await settle(page.locator('[role="menuitem"], [role="dialog"]').first());
@@ -146,7 +155,10 @@ test.describe('3. Import/Export Features', () => {
   });
 
   test('3.4 Export as Markdown option', async ({ page }) => {
-    const exportBtn = page.getByRole('button', { name: /export/i }).first();
+    // Pin to the Dashboard's exporter button (see 3.2 for the banner trap).
+    const exportBtn = page.getByRole('button', {
+      name: 'Open Exporter',
+    });
     if (await exportBtn.isVisible()) {
       await exportBtn.click();
       await settle(page.locator('[role="menuitem"], [role="dialog"]').first());

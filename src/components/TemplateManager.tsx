@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { initDB } from "../db/database";
+import { initDB } from "../container/database";
 import { Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import type { TemplateDocument } from "../db/types";

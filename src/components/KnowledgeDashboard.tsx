@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from "react";
-import { initDB } from "../db/database";
+import { initDB } from "../container/database";
 import { Activity, Bookmark, Tag, Brain, FileText, Eye } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { formatDate } from "../utils/localization";

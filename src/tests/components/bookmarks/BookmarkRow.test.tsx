@@ -124,6 +124,21 @@ describe("BookmarkRow", () => {
     expect(handleSelect).toHaveBeenCalledWith("bm-1");
   });
 
+  it("calls handleSelect exactly once when clicking the Select checkbox", async () => {
+    // Regression: the row wrapper is a selectable role=button with its own
+    // onClick, so without stopPropagation the checkbox click bubbled up and
+    // toggled the selection twice (on, then immediately off) — making the
+    // checkbox a no-op in the real app.
+    const handleSelect = vi.fn();
+    const { container } = render(
+      <BookmarkRow {...defaultProps} handleSelect={handleSelect} />,
+    );
+    const checkbox = container.querySelector('[aria-label="Select"]')!;
+    await userEvent.click(checkbox);
+    expect(handleSelect).toHaveBeenCalledTimes(1);
+    expect(handleSelect).toHaveBeenCalledWith("bm-1");
+  });
+
   it("llama handleSelect con Enter", async () => {
     const handleSelect = vi.fn();
     const { container } = render(

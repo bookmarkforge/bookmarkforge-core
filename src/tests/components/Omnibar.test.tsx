@@ -65,6 +65,7 @@ vi.mock("lucide-react", () => {
     ArrowRight: mock("ArrowRight"),
     Copy: mock("Copy"),
     Trash2: mock("Trash2"),
+    BarChart3: mock("BarChart3"),
   };
 });
 
@@ -127,6 +128,18 @@ describe("Omnibar", () => {
     render(<Omnibar {...defaultProps} />);
     expect(screen.getByText("app_dashboard")).toBeTruthy();
     expect(screen.getByText("app_newDocument")).toBeTruthy();
+    // Regression: the Intelligence Center entry (Export/Import UI) was
+    // missing, leaving the Dashboard modal with no reachable trigger.
+    expect(screen.getByText("intelligenceCenter")).toBeTruthy();
+  });
+
+  it("Intelligence Center command fires show_analysis and closes", async () => {
+    render(<Omnibar {...defaultProps} />);
+    await userEvent.click(
+      screen.getByRole("option", { name: "intelligenceCenter" }),
+    );
+    expect(defaultProps.onAction).toHaveBeenCalledWith("show_analysis");
+    expect(defaultProps.onClose).toHaveBeenCalled();
   });
 
   it("updates query when typing in the input", async () => {
@@ -138,9 +151,14 @@ describe("Omnibar", () => {
 
   it("navigates with ArrowDown/ArrowUp and changes selectedIndex", async () => {
     render(<Omnibar {...defaultProps} />);
-    await userEvent.keyboard("{ArrowDown}");
-    await userEvent.keyboard("{ArrowDown}");
-    await userEvent.keyboard("{ArrowUp}");
+    // Command count is a moving target; clamp-driven navigation must always
+    // return to the top (the selection clamps at the last result either way).
+    for (let i = 0; i < 10; i += 1) {
+      await userEvent.keyboard("{ArrowDown}");
+    }
+    for (let i = 0; i < 10; i += 1) {
+      await userEvent.keyboard("{ArrowUp}");
+    }
     const options = screen.getAllByRole("option");
     expect(options[0]).toHaveAttribute("aria-selected", "true");
   });

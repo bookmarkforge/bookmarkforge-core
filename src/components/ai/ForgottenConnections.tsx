@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { History, RefreshCw, Sparkles, ExternalLink } from "lucide-react";
 import { motion } from "motion/react";
-import { initDB } from "../../db/database";
+import { initDB } from "../../container/database";
 import { BookmarkView, toBookmarkView } from "../../types/bookmark";
 import { useTranslation } from "react-i18next";
 import { logger } from "../../utils/logger";

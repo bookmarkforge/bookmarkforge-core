@@ -70,7 +70,7 @@ export const AIReadingPartner: React.FC<Props> = ({
       if (!content || keywords.length === 0) {
         return [];
       }
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB();
       const allBookmarks = await boundedBookmarkQuery(
         db.bookmarks,

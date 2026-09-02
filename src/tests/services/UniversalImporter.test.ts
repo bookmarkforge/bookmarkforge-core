@@ -64,7 +64,9 @@ describe("UniversalImporter", () => {
         })),
       },
       folders: {
-        find: vi.fn().mockResolvedValue([]),
+        find: vi.fn(() => ({
+          exec: vi.fn().mockResolvedValue([]),
+        })),
         findOne: vi.fn(() => ({
           exec: vi.fn().mockResolvedValue(null),
         })),
@@ -182,6 +184,28 @@ describe("UniversalImporter", () => {
       );
     });
 
+    it("includes urlHash in JSON-imported bookmarks (schema required field)", async () => {
+      // Regression: the JSON importer computed urlHash for the dedup query
+      // but omitted it from the inserted document, so every bookmark failed
+      // the RxDB schema (urlHash is required) and was silently skipped.
+      const file = new File(
+        [
+          JSON.stringify({
+            bookmarks: [{ url: "https://example.com", title: "T" }],
+          }),
+        ],
+        "export.json",
+        { type: "application/json" },
+      );
+
+      const result = await importer.importData(mockDb, file);
+      expect(result.success).toBe(true);
+      expect(result.importedCount).toBe(1);
+      const inserted = mockDb.bookmarks.insert.mock.calls[0][0];
+      expect(typeof inserted.urlHash).toBe("string");
+      expect(inserted.urlHash).toMatch(/^[a-f0-9]{64}$/);
+    });
+
     it("should import a bookmark with Notion-format fields", async () => {
       const file = new File(
         [
@@ -204,6 +228,84 @@ describe("UniversalImporter", () => {
       expect(result.success).toBe(true);
       expect(mockDb.bookmarks.insert).toHaveBeenCalledWith(
         expect.objectContaining({ summary: "desc" }),
+      );
+    });
+
+    it("preserves bookmark summary from a BMF self-export (summary field)", async () => {
+      // Regression: the JSON importer only read `description` (legacy
+      // Notion), so a JSON export → import round-trip silently dropped every
+      // bookmark summary the exporter writes under `summary`.
+      const file = new File(
+        [
+          JSON.stringify({
+            version: "1.0",
+            data: {
+              bookmarks: [
+                {
+                  url: "https://example.com",
+                  title: "T",
+                  summary: "AI summary text",
+                  content: "body content",
+                  tags: [],
+                },
+              ],
+              documents: [],
+              folders: [],
+            },
+            metadata: {},
+          }),
+        ],
+        "export.json",
+        { type: "application/json" },
+      );
+
+      const result = await importer.importData(mockDb, file);
+      expect(result.success).toBe(true);
+      expect(result.importedCount).toBe(1);
+      expect(mockDb.bookmarks.insert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          summary: "AI summary text",
+          content: "body content",
+        }),
+      );
+    });
+
+    it("preserves document summary from a BMF self-export", async () => {
+      // Regression: the JSON importer never read `summary` for documents, so
+      // AI-generated document summaries were lost on a round-trip.
+      const file = new File(
+        [
+          JSON.stringify({
+            version: "1.0",
+            data: {
+              bookmarks: [],
+              documents: [
+                {
+                  id: "doc-1",
+                  title: "Doc",
+                  folderId: "root",
+                  textContent: "body",
+                  summary: "doc summary",
+                  tags: [],
+                },
+              ],
+              folders: [],
+            },
+            metadata: {},
+          }),
+        ],
+        "export.json",
+        { type: "application/json" },
+      );
+
+      const result = await importer.importData(mockDb, file);
+      expect(result.success).toBe(true);
+      expect(result.importedCount).toBe(1);
+      expect(mockDb.documents.insert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          summary: "doc summary",
+          textContent: "body",
+        }),
       );
     });
 

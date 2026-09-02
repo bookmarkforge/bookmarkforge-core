@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link as LinkIcon, FileText, ChevronRight } from "lucide-react";
-import { initDB } from "../db/database";
+import { initDB } from "../container/database";
 import { useTranslation } from "react-i18next";
 import type { DocumentDocument } from "../db/types";
 import { useGuardedDataLoad } from "../hooks/useGuardedDataLoad";

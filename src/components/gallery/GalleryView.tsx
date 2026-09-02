@@ -2,7 +2,7 @@ import { useState, useMemo, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
 import { Image, FileText, Bookmark, Search, X, Grid3X3 } from "lucide-react";
-import { initDB } from "../../db/database";
+import { initDB } from "../../container/database";
 import type { DocumentDocType, BookmarkDocType } from "../../db/schema";
 import type { RxDocument } from "rxdb";
 import { logger } from "../../utils/logger";

@@ -31,7 +31,7 @@ export const BookmarkEchoes: React.FC<Props> = ({ cardVariants }) => {
   // unmount is dropped, and a revive superseded mid-patch is a no-op.
   const { loading } = useGuardedDataLoad<EchoEntry[]>(
     async () => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       const bookmarks = await db.bookmarks.find().exec();
 
@@ -90,7 +90,7 @@ export const BookmarkEchoes: React.FC<Props> = ({ cardVariants }) => {
   });
   const handleRevive = (id: string) => {
     void revive.run(async () => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       const doc = await db.bookmarks.findOne(id).exec();
       if (doc) {

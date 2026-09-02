@@ -42,7 +42,7 @@ export const QuizGenerator: React.FC<Props> = ({ cardVariants }) => {
     loading: _bookmarksLoading,
   } = useGuardedDataLoad<BookmarkDocType[]>(
     async (signal) => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       const docs = await boundedBookmarkQuery(
         db.bookmarks,

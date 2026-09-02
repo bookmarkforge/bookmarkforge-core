@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useDeferredValue, useRef, useState } from "react";
 import React from "react";
-import { initDB } from "../../db/database";
+import { initDB } from "../../container/database";
 import { aiManager } from "../../services/ai/ProviderManager";
 import { ragEngine } from "../../services/ai/RAGEngine";
 import { ttsService } from "../../services/ai/TTSService";

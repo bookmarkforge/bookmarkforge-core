@@ -32,7 +32,7 @@ export const ReadingStreaksDebt: React.FC<Props> = ({ cardVariants }) => {
     debtDays: number;
   }>(
     async () => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       const bookmarks = await db.bookmarks.find().exec();
 

@@ -73,7 +73,7 @@ export const MeetingPrepMode: React.FC<Props> = ({ cardVariants, t }) => {
     setGenerating(true);
     setStreamText("");
     try {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       // The briefing only uses the top 20 visited bookmarks. Materialize a
       // bounded recent sample instead of every bookmark in the vault; updatedAt

@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo, useEffect, useTransition } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { initDB } from "../db/database";
+import { initDB } from "../container/database";
 import {
   Search,
   FileText,

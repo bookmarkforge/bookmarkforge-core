@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { logger } from "../utils/logger";
 import { hashString } from "../utils/crypto-core";
 import { SanitizationService } from "../services/SanitizationService";
-import { initDB } from "../db/database";
+import { initDB } from "../container/database";
 import { useGuardedAction } from "../hooks/useGuardedAction";
 
 const APP_SALT = "bookmarkforge-share-v1";

@@ -20,7 +20,7 @@ import {
 import { useTranslation } from "react-i18next";
 import type { BlockEditorState } from "./useBlockEditorState";
 import { insertOrUpdateBlockForSlashMenu, type PartialBlock } from "@blocknote/core";
-import { initDB } from "../../db/database";
+import { initDB } from "../../container/database";
 import { attachmentStore } from "../../services/documentAttachments";
 import { logger } from "../../utils/logger";
 import {

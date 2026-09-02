@@ -35,7 +35,7 @@ export const BookmarkAntonyms: React.FC<Props> = ({ cardVariants, t }) => {
     loading: _bookmarksLoading,
   } = useGuardedDataLoad<BookmarkDocType[]>(
     async (signal) => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB();
       const docs = await db.bookmarks
         .find({ selector: { isDeleted: false, isPrivate: false } })

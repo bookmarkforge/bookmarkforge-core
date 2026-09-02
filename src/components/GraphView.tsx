@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Share2 } from "lucide-react";
-import { initDB } from "../db/database";
+import { initDB } from "../container/database";
 import { useTranslation } from "react-i18next";
 import { logger } from "../utils/logger";
 import { useGuardedDataLoad } from "../hooks/useGuardedDataLoad";

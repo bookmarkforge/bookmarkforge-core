@@ -1196,6 +1196,7 @@ export class UniversalImporter {
               await insertTrackedBookmark(db, {
                 id: generateId(),
                 url,
+                urlHash: await hashString(url),
                 title: normalizeImportedTitle(
                   item.title,
                   "Untitled Bookmark",
@@ -1206,8 +1207,14 @@ export class UniversalImporter {
                   ),
                   true,
                 ),
+                // BMF self-exports carry the AI summary in `summary`; the
+                // legacy Notion field `description` is kept as a fallback.
+                // Reading only `description` silently dropped every bookmark
+                // summary on a JSON export → import round-trip.
                 summary: SanitizationService.sanitizeHtml(
-                  normalizeImportedContent(item.description || ""),
+                  normalizeImportedContent(
+                    item.description || item.summary || "",
+                  ),
                   true,
                 ),
                 tags: normalizeImportedTags(item.tags),
@@ -1276,6 +1283,12 @@ export class UniversalImporter {
               textContent: normalizeImportedContent(
                 item.textContent || item.content || "",
               ),
+              // BMF self-exports carry the AI summary in `summary`; it was
+              // previously never read, so document summaries were lost on a
+              // JSON export → import round-trip.
+              ...(typeof item.summary === "string"
+                ? { summary: normalizeImportedContent(item.summary) }
+                : {}),
               tags: Array.isArray(item.tags)
                 ? item.tags.map((t: unknown) =>
                     sanitizeUserInput(String(t), 50),

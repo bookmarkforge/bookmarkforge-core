@@ -32,7 +32,7 @@ export const AmbientSerendipity: React.FC<Props> = ({ cardVariants }) => {
   translationRef.current = t;
   const { loading } = useGuardedDataLoad<BookmarkDoc[]>(
     async (signal) => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB();
       const all: BookmarkDoc[] = (await db.bookmarks
         .find({ selector: { isDeleted: false, isPrivate: false } })

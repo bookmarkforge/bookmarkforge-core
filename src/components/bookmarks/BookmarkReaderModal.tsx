@@ -99,7 +99,7 @@ export const BookmarkReaderModal = ({
     // maps to useGuardedDataLoad (no loading UI is shown for a visit).
     const { load: trackVisit } = useGuardedDataLoad<void>(
       async () => {
-        const db = await (await import("../../db/database")).initDB();
+        const db = await (await import("../../container/database")).initDB();
         const doc = await db.bookmarks.findOne(viewingContent.id).exec();
         if (doc) {
           await doc.incrementalPatch({

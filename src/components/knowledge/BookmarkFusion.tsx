@@ -24,7 +24,7 @@ export const BookmarkFusion: React.FC<Props> = ({ cardVariants }) => {
   // unmount is dropped, and a fuse superseded mid-generation is a no-op.
   useGuardedDataLoad<BookmarkView[]>(
     async () => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB();
       // This card uses the default cloud-capable chat path; private bookmarks
       // are not eligible source material for it.

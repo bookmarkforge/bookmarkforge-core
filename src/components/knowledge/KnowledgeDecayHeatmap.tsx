@@ -27,7 +27,7 @@ export const KnowledgeDecayHeatmap: React.FC<Props> = ({ cardVariants, t }) => {
     loading,
   } = useGuardedDataLoad(
     async (signal) => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       const bookmarks = await db.bookmarks.find().exec();
       if (signal.aborted) {return [];}
@@ -80,7 +80,7 @@ export const KnowledgeDecayHeatmap: React.FC<Props> = ({ cardVariants, t }) => {
 
   const handleReset = (tag: string) =>
     runReset(async () => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       const bookmarks = await db.bookmarks.find().exec();
       const now = new Date().toISOString();

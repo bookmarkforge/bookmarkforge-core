@@ -115,7 +115,7 @@ export const SecurityManager: React.FC<{ children: React.ReactNode }> = ({
         isInvalidDbPasswordError,
         isDbInaccessibleError,
         isVaultLockedError,
-      } = await import("../db/database");
+      } = await import("../container/database");
       if (isInvalidDbPasswordError(err)) {
         return t("app_invalid_password");
       }
@@ -231,7 +231,7 @@ Date Generated: ${formatDate(new Date(), {
       if (!vaultUnlocked) {
         throw new Error("INVALID_VAULT_PASSWORD");
       }
-      const { initDB } = await import("../db/database");
+      const { initDB } = await import("../container/database");
       await initDB(passwordInput);
       unlock();
       setError("");
@@ -284,7 +284,7 @@ Date Generated: ${formatDate(new Date(), {
       }
       await securityVault.setMasterPasswordFlag();
       await securityVault.setRecoveryData(encryptedMasterPassword);
-      const { destroyDB, initDB } = await import("../db/database");
+      const { destroyDB, initDB } = await import("../container/database");
       await destroyDB();
       await initDB(passwordInput);
 
@@ -357,7 +357,7 @@ Date Generated: ${formatDate(new Date(), {
       if (!vaultUnlocked) {
         throw new Error("INVALID_VAULT_PASSWORD");
       }
-      const { initDB } = await import("../db/database");
+      const { initDB } = await import("../container/database");
       await initDB(recoveredPassword);
 
       unlock();

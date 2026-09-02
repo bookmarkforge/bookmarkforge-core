@@ -18,7 +18,7 @@ import { Header } from "../Header";
 import { Sidebar } from "../Sidebar";
 import { KeyboardShortcuts } from "../KeyboardShortcuts";
 import { Toaster } from "sonner";
-import { initDB } from "../../db/database";
+import { initDB } from "../../container/database";
 import { generateId } from "../../utils/id";
 import {
   Dashboard,

@@ -72,7 +72,7 @@ export const KnowledgeFengShui: React.FC<Props> = ({ cardVariants, t }) => {
     loading,
   } = useGuardedDataLoad<Record<string, number>>(
     async (signal) => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       const all = await db.bookmarks
         .find({ selector: { isDeleted: false, isPrivate: false } })

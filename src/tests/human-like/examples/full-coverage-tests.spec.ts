@@ -96,7 +96,13 @@ test.describe('1. Bookmarks - Complete Coverage', () => {
   });
 
   test('1.5 Export bookmarks as JSON', async ({ page }) => {
-    const exportButton = page.getByRole('button', { name: /export/i }).first();
+    // Pin to the Dashboard's exporter button: a loose /export/i regex also
+    // matches the BackupReminderBanner's "Export Physical Backup File" (which
+    // appears earlier in the DOM), clicking which starts a real backup instead
+    // of opening the dialog.
+    const exportButton = page.getByRole('button', {
+      name: 'Open Exporter',
+    });
     if (await exportButton.isVisible()) {
       await exportButton.click();
       // App shell stays responsive after the interaction
@@ -258,7 +264,11 @@ test.describe('3. Block Editor - Complete Coverage', () => {
   });
 
   test('3.9 Export menu in editor', async ({ page }) => {
-    const exportMenu = page.getByRole('button', { name: /export/i }).first();
+    // Pin to the Dashboard's exporter button: a loose /export/i regex also
+    // matches the BackupReminderBanner's "Export Physical Backup File" button.
+    const exportMenu = page.getByRole('button', {
+      name: 'Open Exporter',
+    });
     if (await exportMenu.isVisible()) {
       await exportMenu.click();
       // App shell stays responsive after the interaction

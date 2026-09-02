@@ -14,6 +14,7 @@ import {
   ArrowRight,
   Copy,
   Trash2,
+  BarChart3,
 } from "lucide-react";
 import { useRxCollection, useRxQuery } from "../hooks/useRxDB";
 import { useTranslation } from "react-i18next";
@@ -142,6 +143,20 @@ const Omnibar = ({
         icon: FileText,
         action: () => {
           onAction("create_doc");
+          onClose();
+        },
+      },
+      {
+        // The Intelligence Center modal (Export/Import sovereign-data UI)
+        // had no reachable trigger: MainApp only mounts it on the
+        // `show_analysis` action, which the Omnibar never offered (the
+        // unit-test mock still expects an `omnibar-analysis` entry).
+        id: "cmd-analysis",
+        title: t("intelligenceCenter"),
+        type: "command" as const,
+        icon: BarChart3,
+        action: () => {
+          onAction("show_analysis");
           onClose();
         },
       },

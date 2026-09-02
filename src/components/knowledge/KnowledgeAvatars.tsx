@@ -112,7 +112,7 @@ export const KnowledgeAvatars: React.FC<Props> = ({ cardVariants, t: _t }) => {
     loading: _bookmarksLoading,
   } = useGuardedDataLoad<BookmarkDocType[]>(
     async (signal) => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       const docs = await db.bookmarks
         .find({ selector: { isDeleted: false, isPrivate: false } })

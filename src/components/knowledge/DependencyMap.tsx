@@ -61,7 +61,7 @@ export const DependencyMap: React.FC<Props> = ({ cardVariants }) => {
     loading,
   } = useGuardedDataLoad<BookmarkDocType[]>(
     async (signal) => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       const bookmarks = await db.bookmarks
         .find({ selector: { isDeleted: false, isPrivate: false } })

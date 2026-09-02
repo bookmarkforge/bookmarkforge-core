@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from "react";
 import { Bookmark, Globe, X, Check, Loader2 } from "lucide-react";
-import { initDB } from "../db/database";
+import { initDB } from "../container/database";
 import { generateId } from "../utils/id";
 import { hashString } from "../utils/crypto-core";
 import { toast } from "sonner";

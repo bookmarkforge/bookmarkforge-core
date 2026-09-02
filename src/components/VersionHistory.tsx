@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { initDB } from "../db/database";
+import { initDB } from "../container/database";
 import { History, RotateCcw, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { formatDate } from "../utils/localization";

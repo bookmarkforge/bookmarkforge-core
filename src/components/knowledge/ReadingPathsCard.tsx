@@ -79,7 +79,7 @@ export const ReadingPathsCard: React.FC<Props> = ({ cardVariants, t }) => {
 
   const handleGenerate = () => {
     void generate.runWithSignal(async (signal) => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       // Reading paths need titles only; cap both the RxDB materialization and
       // the prompt. The recent sample keeps the result useful without making

@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { Bookmark } from "../../types";
-import { initDB } from "../../db/database";
+import { initDB } from "../../container/database";
 import { aiManager } from "../../services/ai/ProviderManager";
 import { taggingService } from "../../services/ai/TaggingService";
 import { ragEngine } from "../../services/ai/RAGEngine";

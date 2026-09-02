@@ -36,7 +36,7 @@ export const BookmarkTimeMachine: React.FC<Props> = ({ cardVariants, t }) => {
   // and loading resets automatically.
   const { loading } = useGuardedDataLoad<TimelineMonth[]>(
     async () => {
-      const { initDB } = await import("../../db/database");
+      const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
       const bookmarks = await db.bookmarks.find().exec();
 

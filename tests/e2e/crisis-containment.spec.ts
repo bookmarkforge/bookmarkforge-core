@@ -73,6 +73,74 @@ function startCompanion(): Promise<void> {
     void poll();
   });
 }
+
+// ── Companion startup retry (exponential backoff) ──────────────────────
+// Transient startup failures — a lingering process from a previous run
+// holding the port (EADDRINUSE inside the server), a slow tsx boot under
+// parallel worker load — previously failed the whole crisis suite on the
+// first attempt. Retries with exponential backoff absorb them.
+const COMPANION_START_ATTEMPTS = 3;
+const COMPANION_RETRY_BASE_DELAY_MS = 500;
+const COMPANION_RETRY_MAX_DELAY_MS = 4_000;
+
+const sleep = (ms: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Exponential backoff with ±25% jitter: base * 2^(attempt-1), capped at
+ * COMPANION_RETRY_MAX_DELAY_MS. Jitter prevents thundering-herd retries if
+ * several Playwright workers ever probe the same companion port.
+ */
+function companionRetryDelayMs(attempt: number): number {
+  const exponential = Math.min(
+    COMPANION_RETRY_BASE_DELAY_MS * 2 ** (attempt - 1),
+    COMPANION_RETRY_MAX_DELAY_MS,
+  );
+  const jitter = exponential * 0.25 * (Math.random() * 2 - 1);
+  return Math.max(0, Math.round(exponential + jitter));
+}
+
+/** Kill a half-started companion from a failed attempt before retrying. */
+function stopCompanion(): void {
+  if (companion) {
+    try {
+      companion.kill();
+    } catch {
+      /* INTENTIONAL SILENCE: already-dead child — kill is best-effort. */
+    }
+    companion = null;
+  }
+}
+
+/**
+ * Start the companion with retry + exponential backoff. Each failed
+ * attempt's child is killed before the next spawn so a zombie listener can
+ * never cause EADDRINUSE on the retry. Worst case (3 × 30s health deadline
+ * + ~1.5s total backoff) stays inside the 120s Playwright beforeAll budget.
+ */
+async function startCompanionWithRetry(): Promise<void> {
+  let lastError: Error | null = null;
+  for (let attempt = 1; attempt <= COMPANION_START_ATTEMPTS; attempt += 1) {
+    companionLog += `\n[crisis] --- companion spawn attempt ${attempt}/${COMPANION_START_ATTEMPTS} ---\n`;
+    try {
+      await startCompanion();
+      if (attempt > 1) {
+        console.warn(`[crisis] companion started on attempt ${attempt}/${COMPANION_START_ATTEMPTS}`);
+      }
+      return;
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      console.warn(`[crisis] companion start attempt ${attempt}/${COMPANION_START_ATTEMPTS} failed: ${lastError.message}`);
+      stopCompanion();
+      if (attempt < COMPANION_START_ATTEMPTS) {
+        const delay = companionRetryDelayMs(attempt);
+        console.warn(`[crisis] retrying companion start in ${delay}ms`);
+        await sleep(delay);
+      }
+    }
+  }
+  throw lastError ?? new Error("companion failed to start");
+}
 async function startWebhookCapture(): Promise<void> {
   webhookServer = createHttpServer((req, res) => {
     const chunks: Buffer[] = [];
@@ -94,7 +162,7 @@ test.beforeAll(async () => {
   await configureCompanionIdentity();
   await startWebhookCapture();
   try {
-    await startCompanion();
+    await startCompanionWithRetry();
     companionReady = true;
   } catch (error) {
     console.warn(`Crisis companion server failed to start — skipping companion-dependent tests: ${error}`);

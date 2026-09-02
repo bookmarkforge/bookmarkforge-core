@@ -461,7 +461,13 @@ export function MainApp() {
       )}
       {showSettings && (
         <RouteErrorBoundary showReset onReset={() => setShowSettings(false)}>
-          <Settings onClose={() => setShowSettings(false)} />
+          {/* The Settings chunk is lazy; without a local Suspense the whole
+              shell unmounts to the App-level "Loading…" fallback while the
+              chunk loads, blanking the UI and racing any screenshot taken
+              right after opening. fallback={null} keeps the shell visible. */}
+          <Suspense fallback={null}>
+            <Settings onClose={() => setShowSettings(false)} />
+          </Suspense>
         </RouteErrorBoundary>
       )}
 

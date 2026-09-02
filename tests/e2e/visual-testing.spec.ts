@@ -61,6 +61,13 @@ test.describe("Visual Regression Testing", () => {
     await skipPassword(page);
     await dismissOverlays(page);
     await page.getByTestId("settings-button").click();
+    // The Settings component is a lazy chunk; on first open the modal mounts
+    // asynchronously. Wait for it so the screenshot captures the panel itself
+    // instead of racing the chunk load (which previously produced a "Loading…"
+    // splash baseline — byte-identical "passes" that never showed the panel).
+    await expect(
+      page.locator('[aria-labelledby="settings-dialog-title"]'),
+    ).toBeVisible({ timeout: 10_000 });
     await expect(page).toHaveScreenshot("settings-panel.png", {
       // The sync-status pill races between "Connecting…" / "Disconnected";
       // 5% tolerance absorbs this transient state without masking real

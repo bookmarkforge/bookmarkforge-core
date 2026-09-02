@@ -138,7 +138,17 @@ npm run check                   # the 17-gate chain: env, workflows, http/compos
 - Tracked artifacts: visual baselines under `*.spec.ts-snapshots/`.
   Regenerating them is an intentional act — review pixel diffs; two views
   sharing a byte-identical baseline is a bug (previously found:
-  `bookmark-list-empty` == `main-app-layout`).
+  `bookmark-list-empty` == `main-app-layout`). CI enforces this: the
+  `visual-baseline-drift` job (`npm run check:baseline-drift`) pixelmaches
+  every baseline in the PR head against the merge base and fails when a
+  baseline was regenerated with >10% pixel drift, so a content change is
+  reviewed instead of silently shipped. The same job also runs
+  `check:baseline-gaps`, which statically derives every baseline a spec's
+  `toHaveScreenshot` will compare against (locale loops, backstop-set
+  guards and template call sites are constant-folded) and fails when any
+  of them is not tracked in git — so a spec-can-reference-but-repo-hasn't-
+  committed gap breaks CI instead of auto-writing an unreviewed baseline
+  on the first fresh-checkout run.
 - Do not stage broadly (`git add -A`); stage exactly what a commit is about.
 - Known documentation gaps to close when you touch the area:
   `AGENTS.md` consistency, `docs/ARCHITECTURE.md` coverage, and `eslint-rules/`

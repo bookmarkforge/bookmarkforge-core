@@ -85,6 +85,38 @@ jobs:
             test-results/
             playwright-report/
 
+  visual-baseline-drift:
+    name: Visual baseline drift gate
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 10
+    env:
+      CI: true
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Flag visual baselines regenerated with >10% pixel drift
+        run: node scripts/check-baseline-drift.mjs --base "${BASE_REF}" --max-ratio 0.10
+        env:
+          # Compare the PR head against the merge base so a regenerated
+          # baseline's content shift is reviewed, not silently updated.
+          BASE_REF: ${{ github.base_ref && format('origin/{0}', github.base_ref) || format('HEAD~1') }}
+      - name: Fail on toHaveScreenshot references to untracked baselines
+        # A spec comparing against a baseline the repo has never committed is
+        # the silent-gap failure class that twice broke the nightly text-fit
+        # suite on fresh checkouts (a first run auto-writes the "expected"
+        # image and passes with an unreviewed baseline). The gate statically
+        # derives every name a spec's toHaveScreenshot will compare against
+        # and fails when one is not tracked in git.
+        run: node scripts/check-baseline-gaps.mjs
+
   build:
     name: Production build and repository checks
     runs-on: ubuntu-latest

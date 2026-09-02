@@ -71,6 +71,8 @@ const KNOWN_GATES = {
   // Other / meta gates (not documentation-format; no ADR required).
   "check:boundaries": "meta",
   "check:e2e-helpers": "meta",
+  "check:baseline-drift": "meta",
+  "check:baseline-gaps": "meta",
   "check:tailwind-drift": "meta",
   "check:rxdb17": "meta",
   "check:chunks": "meta",

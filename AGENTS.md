@@ -151,6 +151,14 @@ npm run check                   # the 17-gate chain: env, workflows, http/compos
   of them is not tracked in git — so a spec-can-reference-but-repo-hasn't-
   committed gap breaks CI instead of auto-writing an unreviewed baseline
   on the first fresh-checkout run.
+- Documented baseline acceptances (drift reviewed, kept): 2026-09-02
+  `settings-panel` (+54.3%) — the old baseline had captured the App-level
+  "Loading…" splash (lazy-chunk race: `Settings` unmounted the whole shell
+  while its chunk resolved), i.e. the degenerate-baseline class above; the
+  fix adds a local `<Suspense fallback={null}>` in `MainApp` and a dialog
+  visibility wait in the spec. The new baseline is the actual panel
+  (content-dense, fingerprint-identical to `text-fit-settings-panel-en`,
+  byte-stable across two runs).
 - Do not stage broadly (`git add -A`); stage exactly what a commit is about.
 - Known documentation gaps to close when you touch the area:
   `AGENTS.md` consistency, `docs/ARCHITECTURE.md` coverage, and `eslint-rules/`

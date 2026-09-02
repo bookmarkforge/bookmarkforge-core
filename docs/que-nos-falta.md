@@ -79,6 +79,18 @@
 
 ## 6. Deuda técnica conocida (código)
 
+- **Baseline visual aceptado tras revisión** (2026-09-02):
+  `settings-panel-chromium-win32.png` regenerado con +54.3% de deriva —
+  **aceptado**. El baseline antiguo había capturado el splash "Loading…"
+  de la App (carrera del chunk lazy de `Settings`: sin `Suspense` local el
+  shell se desmontaba mientras cargaba el chunk), es decir, un baseline
+  degenerado que nunca mostró el panel. Corrección: `<Suspense
+  fallback={null}>` local en `MainApp.tsx` + espera del diálogo en el spec.
+  Verificado: nuevo baseline denso en contenido (2.477 colores únicos vs
+  186 del splash), fingerprint idéntico a `text-fit-settings-panel-en`,
+  byte-estable en dos runs. Nota: `check:baseline-drift` seguirá fallando
+  en CI hasta que se commite — comportamiento previsto del gate (forzar
+  exactamente esta revisión).
 - **Test flaky**: `scripts/__tests__/monitoring-alerts.test.mjs` →
   `API_DEGRADADO end-to-end` falla intermitentemente en el run completo
   (basado en latencia real con temporizadores) y pasa aislado. No está

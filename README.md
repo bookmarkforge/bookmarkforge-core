@@ -2,6 +2,20 @@
 
 Aplicación local-first de conocimiento personal, con almacenamiento cifrado, funcionamiento offline, sincronización P2P opcional y servicios de IA con proxy server-side.
 
+## Estado del proyecto
+
+<!-- ADR-019: reemplazar OWNER por el owner real de GitHub (no hay remote
+     configurado en el checkout). El badge de CI (ci.yml) refleja cada push;
+     el del nightly (nightly.yml) las caídas de las suites
+     human-like/multiuser/performance. El enlace de runs fallidos filtra por
+     conclusion=failure; el de release apunta al último release publicado.
+     Cobertura: el badge de codecov es el servicio externo (se activa con el
+     secret CODECOV_TOKEN en el nightly); el enlace 'cobertura del nightly'
+     apunta a los artifacts del último run exitoso y funciona sin servicio
+     externo. -->
+
+[![CI](https://github.com/OWNER/bookmarkforge/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/bookmarkforge/actions/workflows/ci.yml) · [![Nightly validation](https://github.com/OWNER/bookmarkforge/actions/workflows/nightly.yml/badge.svg)](https://github.com/OWNER/bookmarkforge/actions/workflows/nightly.yml) · [![Cobertura](https://codecov.io/gh/OWNER/bookmarkforge/branch/main/graph/badge.svg)](https://codecov.io/gh/OWNER/bookmarkforge) · [runs fallidos](https://github.com/OWNER/bookmarkforge/actions/workflows/nightly.yml?query=conclusion%3Afailure) · [último release](https://github.com/OWNER/bookmarkforge/releases/latest) · [cobertura del nightly](https://github.com/OWNER/bookmarkforge/actions/workflows/nightly.yml?query=conclusion%3Asuccess) · [operación del nightly](docs/ops-nightly.md)
+
 ## Requisitos
 
 - Node.js `>=20.19.0`

@@ -104,7 +104,8 @@ export default defineConfig({
       // coverage/coverage-final.json, and the v8 provider only writes it
       // when the json reporter is enabled. Without it the per-directory
       // gate silently skips in CI (input file never produced).
-      reporter: ["text", "html", "json"],
+      // "lcov" feeds the codecov badge (nightly upload, CODECOV_TOKEN).
+      reporter: ["text", "html", "json", "lcov"],
       include: ["src/**/*.{ts,tsx}"],
       exclude: [
         // Server infra (server/**) is collected by the spawn-based sync

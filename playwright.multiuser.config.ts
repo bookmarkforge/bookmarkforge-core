@@ -12,6 +12,11 @@ export default defineConfig(baseConfig, {
     video: "retain-on-failure",
   },
   reporter: process.env.CI
-    ? [["html", { outputFolder: "playwright-report-multiuser", open: "never" }], ["line"]]
+    ? process.env.MULTIUSER_BLOB_REPORT
+      // CI split-run mode: each shard job writes a blob report into a
+      // per-shard folder; the nightly merge job consumes these with
+      // `playwright merge-reports` to produce one unified HTML report.
+      ? [["blob", { outputDir: `playwright-report-multiuser-${process.env.MULTIUSER_SHARD ?? "1"}`, open: "never" }]]
+      : [["html", { outputFolder: "playwright-report-multiuser", open: "never" }], ["line"]]
     : "list",
 });

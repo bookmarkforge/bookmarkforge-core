@@ -5,6 +5,19 @@ on:
     - cron: '17 2 * * *'
     - cron: '17 3 1 * *'
   workflow_dispatch:
+    inputs:
+      test_alert:
+        description: 'Send a synthetic test alert to NIGHTLY_ALERT_WEBHOOK_URL'
+        type: boolean
+        default: false
+      smoke_suite:
+        description: 'Suite to label the synthetic test alert with'
+        type: choice
+        default: human-like
+        options:
+          - human-like
+          - multiuser
+          - perf-scale
 
 permissions:
   contents: read
@@ -17,12 +30,39 @@ env:
   CI: true
 
 jobs:
+  webhook-smoke:
+    # Manual webhook validation: dispatch the workflow with test_alert=true and
+    # the job posts a synthetic payload to NIGHTLY_ALERT_WEBHOOK_URL (HTTPS-only)
+    # so the alert wiring can be confirmed without waiting for a nightly run.
+    # Fails loudly when the webhook is unreachable — smoke tests SHOULD fail.
+    name: Webhook smoke test
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.test_alert }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Send synthetic alert to webhook
+        env:
+          NIGHTLY_ALERT_WEBHOOK_URL: ${{ secrets.NIGHTLY_ALERT_WEBHOOK_URL }}
+          NIGHTLY_ALERT_JOB_LABEL: ${{ inputs.smoke_suite }}
+        run: node scripts/nightly-alert.mjs --test
+
   coverage:
     name: Full coverage gates
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
       NODE_ENV: test
+      # ADR-019: feeds the codecov badge in README. Step is skipped when the
+      # secret is absent, so the nightly never depends on it.
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -43,14 +83,42 @@ jobs:
           path: |
             coverage/
             coverage-history.json
+      - name: Upload coverage to Codecov
+        if: env.CODECOV_TOKEN != ''
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f
+        with:
+          files: coverage/lcov.info
+          fail_ci_if_error: false
 
-  multiuser:
-    name: Multi-user E2E
+  multiuser-sharded:
+    # Multi-user E2E suite (51 spec files / ~136 tests) split into N equal
+    # shards by Playwright's NATIVE test-count sharding (--shard=n/N). The
+    # suite runs serial (workers=1) and exceeds the 30 min single-job budget,
+    # so N=2 keeps each shard around 20-25 min on CI hardware.
+    #
+    # The blob reporter is enabled (MULTIUSER_BLOB_REPORT) so each shard
+    # writes into playwright-report-multiuser-<N> (MULTIUSER_SHARD drives the
+    # per-shard output dir in playwright.multiuser.config.ts); the
+    # multiuser-report merge job combines them into one unified HTML report.
+    name: Multi-user E2E (shard ${{ matrix.shard }}/${{ matrix.total }})
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+        total: [2]
     env:
       NODE_ENV: test
       VITE_TEST_BUILD: 'true'
+      MULTIUSER_BLOB_REPORT: '1'
+      MULTIUSER_SHARD: ${{ matrix.shard }}
+      # ADR-019: WoW duration budget — per-shard history persisted in cache
+      NIGHTLY_MULTIUSER_HISTORY_FILE: .nightly-history/multiuser-shard-${{ matrix.shard }}.jsonl
+      # Every fired alert is appended here for the alert-vs-trend consistency
+      # report (nightly-consistency job); rides the same .nightly-history cache.
+      NIGHTLY_MULTIUSER_ALERT_LOG_FILE: .nightly-history/alerts/multiuser-shard-${{ matrix.shard }}.jsonl
+      NIGHTLY_MULTIUSER_DEGRADE_RATIO: ${{ vars.NIGHTLY_MULTIUSER_DEGRADE_RATIO || '1.25' }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -60,35 +128,149 @@ jobs:
           node-version: '20.19.0'
           cache: npm
       - run: npm ci
+      - name: Restore duration history cache (WoW budget)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: .nightly-history
+          key: nightly-multiuser-history-v1-${{ github.run_id }}
+          restore-keys: |
+            nightly-multiuser-history-v1-
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
-      - name: Run multi-user suite
-        run: npm run e2e:multiuser
-      - name: Upload multi-user artifacts
+      - name: Run multi-user shard ${{ matrix.shard }}/${{ matrix.total }}
+        run: |
+          set -o pipefail
+          start=$(date +%s)
+          npm run e2e:multiuser:shard -- --shard=${{ matrix.shard }}/${{ matrix.total }}
+          code=$?
+          end=$(date +%s)
+          echo "NIGHTLY_MULTIUSER_MINUTES=$(( (end - start) / 60 ))" >> "$GITHUB_ENV"
+          exit $code
+      - name: Upload multi-user blob report (shard ${{ matrix.shard }})
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: nightly-multiuser
+          name: multiuser-blob-${{ matrix.shard }}
+          if-no-files-found: ignore
+      - name: Alert on failure, over-duration, or week-over-week regression
+        if: always()
+        env:
+          NIGHTLY_ALERT_JOB_LABEL: multiuser
+          NIGHTLY_MULTIUSER_STATUS: ${{ job.status }}
+          NIGHTLY_MULTIUSER_SHARD: ${{ matrix.shard }}
+          NIGHTLY_MULTIUSER_MINUTES: ${{ env.NIGHTLY_MULTIUSER_MINUTES }}
+          NIGHTLY_MULTIUSER_MAX_MINUTES: ${{ vars.NIGHTLY_MULTIUSER_MAX_MINUTES }}
+          NIGHTLY_ALERT_WEBHOOK_URL: ${{ secrets.NIGHTLY_ALERT_WEBHOOK_URL }}
+        run: node scripts/nightly-alert.mjs
+      - name: Save duration history cache (WoW budget)
+        if: always()
+        # Advisory only: a missing history dir (job cancelled before the run
+        # step) or a full cache must never flip a passing job to failed.
+        continue-on-error: true
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: .nightly-history
+          key: nightly-multiuser-history-v1-${{ github.run_id }}-${{ matrix.shard }}
+          retention-days: 7
+          path: playwright-report-multiuser-${{ matrix.shard }}/
+
+  multiuser-report:
+    name: Merge multi-user reports
+    needs: [multiuser-sharded]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Download multi-user blob reports
+        if: always()
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          path: blobs/
+          pattern: multiuser-blob-*
+          merge-multiple: true
+          if-no-files-found: warn
+      - name: Merge multi-user reports into one HTML report
+        # Resilient merge: skips (exit 0) when no or incomplete blobs — a
+        # shard cancelled before its run produces none, and its own job
+        # already reports the failure. Only a REAL merge failure exits 1.
+        env:
+          BLOBS_DIR: blobs
+          EXPECTED_SHARDS: '2'
+          MERGE_STATUS_FILE: multiuser-merge-status.json
+        run: node scripts/merge-nightly-blobs.mjs
+      - name: Upload multi-user merge status
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: multiuser-merge-status
           if-no-files-found: ignore
           retention-days: 14
-          path: |
-            test-results/
-            playwright-report-multiuser/
-            playwright-report/
+          path: multiuser-merge-status.json
+      - name: Upload raw multi-user blob reports (triage evidence)
+        # Consolidated copy of the shard blobs, kept alongside the report so
+        # a REAL merge failure can be triaged from the raw input (the
+        # per-shard artifacts themselves expire after 7 days).
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: multiuser-raw-blobs
+          if-no-files-found: ignore
+          retention-days: 14
+          path: blobs/
+      - name: Upload merged multi-user report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: nightly-multiuser-report
+          if-no-files-found: ignore
+          retention-days: 14
+          path: playwright-report/
 
-  human-like-core:
-    # Human-like E2E suite split into two parallel jobs to shorten the
-    # nightly wall clock. Each job runs its share of the 15 spec files with
-    # the blob reporter enabled (HUMAN_LIKE_BLOB_REPORT); the human-like-report
-    # merge job then combines the two blob reports into one unified HTML report.
-    name: Human-like E2E (core)
+  human-like-sharded:
+    # Human-like E2E suite (290 tests in 15 spec files) split into N equal
+    # shards by Playwright's NATIVE test-count sharding (--shard=n/N): each
+    # shard runs the same fraction of TESTS regardless of which spec file they
+    # live in. This balances the wall clock far better than splitting by file
+    # (full-coverage-tests alone is ~20 min; bookmark-app only ~6 min), so no
+    # single job owns a heavyweight spec.
+    #
+    # N=4 keeps every shard well under the 60 min per-job budget: the whole
+    # suite measures ~75 min serial on a local 1-worker run, so each shard
+    # carries ~73 tests and lands around 11-19 min on CI hardware — roughly
+    # 4x headroom. Bump N (matrix.shard + matrix.total) as the suite grows;
+    # the blob-report merge (human-like-report) is shard-agnostic.
+    #
+    # The blob reporter is enabled (HUMAN_LIKE_BLOB_REPORT) so each shard
+    # writes into playwright-report-human-like-<N> (HUMAN_LIKE_SHARD drives
+    # the per-shard output dir in playwright.human-like.config.ts); the
+    # human-like-report merge job combines them into one unified HTML report.
+    name: Human-like E2E (shard ${{ matrix.shard }}/${{ matrix.total }})
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+        total: [4]
     env:
       NODE_ENV: test
       VITE_TEST_BUILD: 'true'
       HUMAN_LIKE_BLOB_REPORT: '1'
-      HUMAN_LIKE_SHARD: '1'
+      HUMAN_LIKE_SHARD: ${{ matrix.shard }}
+      # ADR-019: WoW duration budget — per-shard history persisted in cache
+      NIGHTLY_HUMAN_LIKE_HISTORY_FILE: .nightly-history/human-like-shard-${{ matrix.shard }}.jsonl
+      # Every fired alert is appended here for the alert-vs-trend consistency
+      # report (nightly-consistency job); rides the same .nightly-history cache.
+      NIGHTLY_HUMAN_LIKE_ALERT_LOG_FILE: .nightly-history/alerts/human-like-shard-${{ matrix.shard }}.jsonl
+      NIGHTLY_HUMAN_LIKE_DEGRADE_RATIO: ${{ vars.NIGHTLY_HUMAN_LIKE_DEGRADE_RATIO || '1.25' }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -98,85 +280,54 @@ jobs:
           node-version: '20.19.0'
           cache: npm
       - run: npm ci
+      - name: Restore duration history cache (WoW budget)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: .nightly-history
+          key: nightly-human-like-history-v1-${{ github.run_id }}
+          restore-keys: |
+            nightly-human-like-history-v1-
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
-      - name: Run human-like core suite
+      - name: Run human-like shard ${{ matrix.shard }}/${{ matrix.total }}
         run: |
           set -o pipefail
           start=$(date +%s)
-          npm run test:human-like:core
+          npm run test:human-like:shard -- --shard=${{ matrix.shard }}/${{ matrix.total }}
           code=$?
           end=$(date +%s)
           echo "NIGHTLY_HUMAN_LIKE_MINUTES=$(( (end - start) / 60 ))" >> "$GITHUB_ENV"
           exit $code
-      - name: Upload human-like core blob report
+      - name: Upload human-like blob report (shard ${{ matrix.shard }})
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: human-like-blob-core
+          name: human-like-blob-${{ matrix.shard }}
           if-no-files-found: error
           retention-days: 7
-          path: playwright-report-human-like-1/
-      - name: Alert on failure or over-duration
+          path: playwright-report-human-like-${{ matrix.shard }}/
+      - name: Alert on failure, over-duration, or week-over-week regression
         if: always()
         env:
           NIGHTLY_HUMAN_LIKE_STATUS: ${{ job.status }}
-          NIGHTLY_HUMAN_LIKE_SHARD: core
+          NIGHTLY_HUMAN_LIKE_SHARD: ${{ matrix.shard }}
           NIGHTLY_HUMAN_LIKE_MINUTES: ${{ env.NIGHTLY_HUMAN_LIKE_MINUTES }}
           NIGHTLY_HUMAN_LIKE_MAX_MINUTES: ${{ vars.NIGHTLY_HUMAN_LIKE_MAX_MINUTES }}
           NIGHTLY_ALERT_WEBHOOK_URL: ${{ secrets.NIGHTLY_ALERT_WEBHOOK_URL }}
         run: node scripts/nightly-alert.mjs
-
-  human-like-depth:
-    name: Human-like E2E (depth)
-    runs-on: ubuntu-latest
-    timeout-minutes: 60
-    env:
-      NODE_ENV: test
-      VITE_TEST_BUILD: 'true'
-      HUMAN_LIKE_BLOB_REPORT: '1'
-      HUMAN_LIKE_SHARD: '2'
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
-        with:
-          node-version: '20.19.0'
-          cache: npm
-      - run: npm ci
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
-      - name: Run human-like depth suite
-        run: |
-          set -o pipefail
-          start=$(date +%s)
-          npm run test:human-like:depth
-          code=$?
-          end=$(date +%s)
-          echo "NIGHTLY_HUMAN_LIKE_MINUTES=$(( (end - start) / 60 ))" >> "$GITHUB_ENV"
-          exit $code
-      - name: Upload human-like depth blob report
+      - name: Save duration history cache (WoW budget)
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        # Advisory only: a missing history dir (job cancelled before the run
+        # step) or a full cache must never flip a passing job to failed.
+        continue-on-error: true
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
-          name: human-like-blob-depth
-          if-no-files-found: error
-          retention-days: 7
-          path: playwright-report-human-like-2/
-      - name: Alert on failure or over-duration
-        if: always()
-        env:
-          NIGHTLY_HUMAN_LIKE_STATUS: ${{ job.status }}
-          NIGHTLY_HUMAN_LIKE_SHARD: depth
-          NIGHTLY_HUMAN_LIKE_MINUTES: ${{ env.NIGHTLY_HUMAN_LIKE_MINUTES }}
-          NIGHTLY_HUMAN_LIKE_MAX_MINUTES: ${{ vars.NIGHTLY_HUMAN_LIKE_MAX_MINUTES }}
-          NIGHTLY_ALERT_WEBHOOK_URL: ${{ secrets.NIGHTLY_ALERT_WEBHOOK_URL }}
-        run: node scripts/nightly-alert.mjs
+          path: .nightly-history
+          key: nightly-human-like-history-v1-${{ github.run_id }}-${{ matrix.shard }}
 
   human-like-report:
     name: Merge human-like reports
-    needs: [human-like-core, human-like-depth]
+    needs: [human-like-sharded]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -190,13 +341,41 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Download human-like blob reports
+        if: always()
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           path: blobs/
           pattern: human-like-blob-*
           merge-multiple: true
+          if-no-files-found: warn
       - name: Merge human-like reports into one HTML report
-        run: npx playwright merge-reports --reporter html blobs/
+        # Resilient merge: skips (exit 0) when no or incomplete blobs — a
+        # shard cancelled before its run produces none, and its own job
+        # already reports the failure. Only a REAL merge failure exits 1.
+        env:
+          BLOBS_DIR: blobs
+          EXPECTED_SHARDS: '4'
+          MERGE_STATUS_FILE: human-like-merge-status.json
+        run: node scripts/merge-nightly-blobs.mjs
+      - name: Upload human-like merge status
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: human-like-merge-status
+          if-no-files-found: ignore
+          retention-days: 14
+          path: human-like-merge-status.json
+      - name: Upload raw human-like blob reports (triage evidence)
+        # Consolidated copy of the shard blobs, kept alongside the report so
+        # a REAL merge failure can be triaged from the raw input (the
+        # per-shard artifacts themselves expire after 7 days).
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: human-like-raw-blobs
+          if-no-files-found: ignore
+          retention-days: 14
+          path: blobs/
       - name: Upload merged human-like report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -206,13 +385,44 @@ jobs:
           retention-days: 14
           path: playwright-report/
 
-  performance:
-    name: Performance and scale E2E
+  nightly-trends:
+    # Aggregates the per-suite WoW duration histories (JSONL from the Actions
+    # cache) into CSV evidence artifacts. Runs after both merge jobs so all
+    # suites have recorded their samples this run. Advisory except for one
+    # fail-loud gate: a suite whose median trips the degradation criterion
+    # (>= 1.25x previous week) for TRENDS_MIN_CONSECUTIVE_DEGRADED consecutive
+    # weeks (default 3, repo var; 0 disables) turns the job red — sustained
+    # trends are a real signal, not noise. A missing history just yields a
+    # header-only CSV.
+    name: Nightly WoW trends report
+    needs: [multiuser-report, human-like-report]
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 10
     env:
-      NODE_ENV: test
-      VITE_TEST_BUILD: 'true'
+      # Global sustained-degradation gate (consecutive weeks); per-suite repo
+      # vars TRENDS_MIN_CONSECUTIVE_DEGRADED_<SUITE> (upper-snaked, e.g.
+      # HUMAN_LIKE) override it per suite, so human-like / multiuser /
+      # perf-scale can have different N thresholds.
+      TRENDS_MIN_CONSECUTIVE_DEGRADED: ${{ vars.TRENDS_MIN_CONSECUTIVE_DEGRADED || '3' }}
+      TRENDS_MIN_CONSECUTIVE_DEGRADED_HUMAN_LIKE: ${{ vars.TRENDS_MIN_CONSECUTIVE_DEGRADED_HUMAN_LIKE || vars.TRENDS_MIN_CONSECUTIVE_DEGRADED || '3' }}
+      TRENDS_MIN_CONSECUTIVE_DEGRADED_MULTIUSER: ${{ vars.TRENDS_MIN_CONSECUTIVE_DEGRADED_MULTIUSER || vars.TRENDS_MIN_CONSECUTIVE_DEGRADED || '3' }}
+      TRENDS_MIN_CONSECUTIVE_DEGRADED_PERF_SCALE: ${{ vars.TRENDS_MIN_CONSECUTIVE_DEGRADED_PERF_SCALE || vars.TRENDS_MIN_CONSECUTIVE_DEGRADED || '3' }}
+      # Optional SVG embed in the job summary: an https URL where the chart is
+      # reachable (signed artifact URL or private host). GitHub sanitizes
+      # inline data URIs in summaries, so a real URL is required; unset keeps
+      # the summary to raw-data links (nothing leaves the repo).
+      TRENDS_SVG_PUBLIC_URL: ${{ vars.TRENDS_SVG_PUBLIC_URL || '' }}
+      # Two-phase presigned-URL embed: when TRENDS_SVG_BUCKET is set, the first
+      # pass defers the summary (TRENDS_DEFER_SUMMARY=1), the Sign SVG step
+      # uploads the chart to the private bucket and presigns it, and the final
+      # pass rewrites the summary with the URL (TRENDS_SUMMARY_ONLY=1). The
+      # artifact itself stays private — only the short-lived signed URL leaks.
+      TRENDS_DEFER_SUMMARY: ${{ vars.TRENDS_SVG_BUCKET != '' && '1' || '' }}
+      TRENDS_SVG_BUCKET: ${{ vars.TRENDS_SVG_BUCKET || '' }}
+      # Shared alert webhook: on sustained degradation the job posts a
+      # nightly_trends_sustained alert (best-effort, never affects exit code).
+      NIGHTLY_ALERT_WEBHOOK_URL: ${{ secrets.NIGHTLY_ALERT_WEBHOOK_URL }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -222,10 +432,183 @@ jobs:
           node-version: '20.19.0'
           cache: npm
       - run: npm ci
+      - name: Restore duration history cache (WoW trends)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: .nightly-history
+          key: nightly-trends-${{ github.run_id }}
+          restore-keys: |
+            nightly-human-like-history-v1-
+            nightly-multiuser-history-v1-
+            nightly-perf-scale-history-v1-
+      - name: Build nightly trends CSV
+        run: node scripts/nightly-trends.mjs
+      - name: Sign SVG URL (private bucket)
+        # Upload the SVG to the private bucket and mint a short-lived presigned
+        # URL so the job summary can embed the chart without publishing the
+        # artifact. Best-effort: a bucket misconfiguration must not red the job.
+        if: ${{ always() && vars.TRENDS_SVG_BUCKET != '' }}
+        continue-on-error: true
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TRENDS_SVG_BUCKET: ${{ vars.TRENDS_SVG_BUCKET }}
+          TRENDS_SVG_OBJECT_KEY: nightly/trends-${{ github.run_id }}.svg
+          TRENDS_SVG_PRESIGN_EXPIRES: ${{ vars.TRENDS_SVG_PRESIGN_EXPIRES || '3600' }}
+        run: |
+          set -euo pipefail
+          aws s3 cp nightly-trends.svg "s3://${TRENDS_SVG_BUCKET}/${TRENDS_SVG_OBJECT_KEY}" --acl private --no-progress
+          PRESIGNED="$(aws s3 presign "s3://${TRENDS_SVG_BUCKET}/${TRENDS_SVG_OBJECT_KEY}" --expires-in "${TRENDS_SVG_PRESIGN_EXPIRES}")"
+          echo "TRENDS_SVG_PUBLIC_URL=${PRESIGNED}" >> "$GITHUB_ENV"
+      - name: Rewrite job summary with embedded SVG
+        # Phase 2 of the presigned-URL embed: rewrite the summary (and its md
+        # artifact copy) with the signed URL now in the environment. Never
+        # re-runs the gate/alerts; always exits 0 (display sugar only).
+        if: ${{ always() && vars.TRENDS_SVG_BUCKET != '' }}
+        env:
+          TRENDS_SUMMARY_ONLY: '1'
+        run: node scripts/nightly-trends.mjs
+      - name: Upload nightly trends report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: nightly-trends
+          if-no-files-found: ignore
+          retention-days: 90
+          path: |
+            nightly-trends.csv
+            nightly-trends-summary.csv
+            nightly-trends-summary.md
+            nightly-trends.svg
+
+  nightly-consistency:
+    # Cross-checks the trend summary's degradedWoW (per suite+week, recomputed
+    # with the same summarizeEntries that builds the summary CSV) against the
+    # alert log that nightly-alert.mjs appends to whenever an alert fires.
+    # The report flags missed-alert (suite DEGRADED with no shard WoW alert,
+    # possibly a median-aggregation artifact) and phantom-alert (WoW alerts
+    # without suite-level corroboration). Advisory EXCEPT for one fail-loud
+    # gate: CONSISTENCY_MIN_CONSECUTIVE_PHANTOM (default 2, repo var; 0
+    # disables) consecutive phantom-alert weeks in the same suite turn the
+    # job red — repeated phantoms hint at a bug in the degradation criterion.
+    name: Nightly alert-vs-trend consistency
+    needs: [nightly-trends]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CONSISTENCY_MIN_CONSECUTIVE_PHANTOM: ${{ vars.CONSISTENCY_MIN_CONSECUTIVE_PHANTOM || '2' }}
+      # Opt-in SVG embed in the job summary: GitHub strips inline data URIs,
+      # so the chart only renders when a public/signed https URL is provided.
+      CONSISTENCY_SVG_PUBLIC_URL: ${{ vars.CONSISTENCY_SVG_PUBLIC_URL || '' }}
+      # Two-phase presigned-URL embed (same pattern as nightly-trends): when
+      # CONSISTENCY_SVG_BUCKET is set, the first pass defers the summary, the
+      # Sign SVG step uploads the chart to the private bucket and presigns it,
+      # and the final pass rewrites the summary with the URL.
+      CONSISTENCY_DEFER_SUMMARY: ${{ vars.CONSISTENCY_SVG_BUCKET != '' && '1' || '' }}
+      CONSISTENCY_SVG_BUCKET: ${{ vars.CONSISTENCY_SVG_BUCKET || '' }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Restore duration history cache (alert log + trends)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: .nightly-history
+          key: nightly-consistency-${{ github.run_id }}
+          restore-keys: |
+            nightly-human-like-history-v1-
+            nightly-multiuser-history-v1-
+            nightly-perf-scale-history-v1-
+      - name: Build nightly alert-vs-trend consistency report
+        run: node scripts/nightly-consistency.mjs
+      - name: Sign SVG URL (private bucket)
+        # Upload the consistency bar chart to the private bucket and mint a
+        # short-lived presigned URL so the job summary can embed it without
+        # publishing the artifact. Best-effort: a bucket misconfiguration must
+        # not red the job.
+        if: ${{ always() && vars.CONSISTENCY_SVG_BUCKET != '' }}
+        continue-on-error: true
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          CONSISTENCY_SVG_BUCKET: ${{ vars.CONSISTENCY_SVG_BUCKET }}
+          CONSISTENCY_SVG_OBJECT_KEY: nightly/consistency-${{ github.run_id }}.svg
+          CONSISTENCY_SVG_PRESIGN_EXPIRES: ${{ vars.CONSISTENCY_SVG_PRESIGN_EXPIRES || '3600' }}
+        run: |
+          set -euo pipefail
+          aws s3 cp nightly-consistency.svg "s3://${CONSISTENCY_SVG_BUCKET}/${CONSISTENCY_SVG_OBJECT_KEY}" --acl private --no-progress
+          PRESIGNED="$(aws s3 presign "s3://${CONSISTENCY_SVG_BUCKET}/${CONSISTENCY_SVG_OBJECT_KEY}" --expires-in "${CONSISTENCY_SVG_PRESIGN_EXPIRES}")"
+          echo "CONSISTENCY_SVG_PUBLIC_URL=${PRESIGNED}" >> "$GITHUB_ENV"
+      - name: Rewrite job summary with embedded SVG
+        # Phase 2 of the presigned-URL embed: rewrite the summary with the
+        # signed URL now in the environment. Never re-runs the gate; always
+        # exits 0 (display sugar only).
+        if: ${{ always() && vars.CONSISTENCY_SVG_BUCKET != '' }}
+        env:
+          CONSISTENCY_SUMMARY_ONLY: '1'
+        run: node scripts/nightly-consistency.mjs
+      - name: Upload nightly consistency report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: nightly-consistency
+          if-no-files-found: ignore
+          retention-days: 90
+          path: |
+            nightly-consistency.csv
+            nightly-consistency.json
+            nightly-consistency.svg
+
+  performance:
+    # Performance and scale E2E suite (perf-scale.nightly.spec.ts). Not
+    # sharded — a single job — but it gets the same WoW duration budget as the
+    # sharded suites: NIGHTLY_ALERT_JOB_LABEL=perf-scale selects the
+    # NIGHTLY_PERF_SCALE_* env family in scripts/nightly-alert.mjs.
+    name: Performance and scale E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      NODE_ENV: test
+      VITE_TEST_BUILD: 'true'
+      # ADR-019: WoW duration budget — single-job history persisted in cache
+      NIGHTLY_PERF_SCALE_HISTORY_FILE: .nightly-history/perf-scale.jsonl
+      # Every fired alert is appended here for the alert-vs-trend consistency
+      # report (nightly-consistency job); rides the same .nightly-history cache.
+      NIGHTLY_PERF_SCALE_ALERT_LOG_FILE: .nightly-history/alerts/perf-scale.jsonl
+      NIGHTLY_PERF_SCALE_DEGRADE_RATIO: ${{ vars.NIGHTLY_PERF_SCALE_DEGRADE_RATIO || '1.25' }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Restore duration history cache (WoW budget)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: .nightly-history
+          key: nightly-perf-scale-history-v1-${{ github.run_id }}
+          restore-keys: |
+            nightly-perf-scale-history-v1-
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
       - name: Run performance suite
-        run: npm run e2e:nightly -- tests/e2e/perf-scale.nightly.spec.ts
+        run: |
+          set -o pipefail
+          start=$(date +%s)
+          npm run e2e:nightly -- tests/e2e/perf-scale.nightly.spec.ts
+          code=$?
+          end=$(date +%s)
+          echo "NIGHTLY_PERF_SCALE_MINUTES=$(( (end - start) / 60 ))" >> "$GITHUB_ENV"
+          exit $code
       - name: Upload performance artifacts
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -237,6 +620,25 @@ jobs:
             test-results/
             playwright-report-nightly/
             playwright-report/
+      - name: Alert on failure, over-duration, or week-over-week regression
+        if: always()
+        env:
+          NIGHTLY_ALERT_JOB_LABEL: perf-scale
+          NIGHTLY_PERF_SCALE_STATUS: ${{ job.status }}
+          NIGHTLY_PERF_SCALE_SHARD: single
+          NIGHTLY_PERF_SCALE_MINUTES: ${{ env.NIGHTLY_PERF_SCALE_MINUTES }}
+          NIGHTLY_PERF_SCALE_MAX_MINUTES: ${{ vars.NIGHTLY_PERF_SCALE_MAX_MINUTES }}
+          NIGHTLY_ALERT_WEBHOOK_URL: ${{ secrets.NIGHTLY_ALERT_WEBHOOK_URL }}
+        run: node scripts/nightly-alert.mjs
+      - name: Save duration history cache (WoW budget)
+        if: always()
+        # Advisory only: a missing history dir (job cancelled before the run
+        # step) or a full cache must never flip a passing job to failed.
+        continue-on-error: true
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: .nightly-history
+          key: nightly-perf-scale-history-v1-${{ github.run_id }}
 
   launch-readiness:
     name: Launch checklist blockers

@@ -39,7 +39,7 @@ export async function checkStoragePressure(): Promise<StoragePressureDetail | nu
     let persisted: boolean | null = null;
     try {
       if (navigator.storage.persisted) persisted = await navigator.storage.persisted();
-    } catch {}
+    } catch { /* INTENTIONAL SILENCE: persistence status is best-effort; it falls back to null (unknown) on failure. */ }
     const level = getStoragePressureLevel(pct);
     const detail: StoragePressureDetail = { pct, usage, quota, persisted, level };
 
@@ -51,7 +51,7 @@ export async function checkStoragePressure(): Promise<StoragePressureDetail | nu
       });
       try {
         window.dispatchEvent(new CustomEvent("storage-pressure", { detail }));
-      } catch {}
+      } catch { /* INTENTIONAL SILENCE: a throwing event listener must not break the pressure check itself. */ }
     } else {
       logger.debug("[StorageMonitor] Storage OK", { pct: pct.toFixed(1), persisted });
     }

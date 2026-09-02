@@ -81,7 +81,7 @@ export class WorkerManager<Req = unknown, Res = unknown> {
 
   private terminateWorker(): void {
     if (this.worker) {
-      try { this.worker.terminate(); } catch {}
+      try { this.worker.terminate(); } catch { /* INTENTIONAL SILENCE: terminating an already-dead worker is idempotent. */ }
       this.worker = null;
     }
     this.generation++;

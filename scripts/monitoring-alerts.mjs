@@ -566,7 +566,7 @@ export async function checkAiProvider({
 } = {}) {
   try {
     let state = {};
-    try { state = JSON.parse(readFileSync(stateFile, "utf8")); } catch {}
+    try { state = JSON.parse(readFileSync(stateFile, "utf8")); } catch { /* INTENTIONAL SILENCE: state file missing/corrupt — start from empty state; monitoring continues. */ }
     const before = state.aiProviderConsecutive ?? 0;
 
     let alive = false;
@@ -585,7 +585,7 @@ export async function checkAiProvider({
 
     const { ok, consecutive } = parseAiProviderProbe(alive, before, threshold);
     state.aiProviderConsecutive = consecutive;
-    try { writeFileSync(stateFile, JSON.stringify(state)); } catch {}
+    try { writeFileSync(stateFile, JSON.stringify(state)); } catch { /* INTENTIONAL SILENCE: state persistence is best-effort; the probe result still counts for this tick. */ }
 
     return {
       name: "AI_PROVIDER_DOWN",
@@ -718,12 +718,12 @@ if (appDown && !appDown.ok) {
   let state = {};
   try {
     state = JSON.parse(readFileSync(MONITOR_STATE_FILE, "utf8"));
-  } catch {}
+  } catch { /* INTENTIONAL SILENCE: state file missing/corrupt — start from empty state; monitoring continues. */ }
   const consecutive = (state.appDownConsecutive ?? 0) + 1;
   state.appDownConsecutive = consecutive;
   try {
     writeFileSync(MONITOR_STATE_FILE, JSON.stringify(state));
-  } catch {}
+  } catch { /* INTENTIONAL SILENCE: state persistence is best-effort; the in-memory decision for this tick still stands. */ }
   console.error(`[monitor] APP_CAIDA consecutivo #${consecutive} (disparo de rollback en #${APP_DOWN_THRESHOLD})`);
 
   if (consecutive >= APP_DOWN_THRESHOLD) {
@@ -732,7 +732,7 @@ if (appDown && !appDown.ok) {
     state.appDownConsecutive = 0;
     try {
       writeFileSync(MONITOR_STATE_FILE, JSON.stringify(state));
-    } catch {}
+    } catch { /* INTENTIONAL SILENCE: state persistence is best-effort; the in-memory decision for this tick still stands. */ }
 
     if (APP_DOWN_AUTO_ROLLBACK) {
       console.error(`[monitor] APP_CAIDA ×${APP_DOWN_THRESHOLD} consecutivos → rollback: ${ROLLBACK_CMD}`);
@@ -785,12 +785,12 @@ if (appDown && !appDown.ok) {
   let state = {};
   try {
     state = JSON.parse(readFileSync(MONITOR_STATE_FILE, "utf8"));
-  } catch {}
+  } catch { /* INTENTIONAL SILENCE: state file missing/corrupt — start from empty state; monitoring continues. */ }
   if (state.appDownConsecutive) {
     state.appDownConsecutive = 0;
     try {
       writeFileSync(MONITOR_STATE_FILE, JSON.stringify(state));
-    } catch {}
+    } catch { /* INTENTIONAL SILENCE: state persistence is best-effort; the in-memory decision for this tick still stands. */ }
     console.error("[monitor] APP_CAIDA recuperado — contador de consecutivos reseteado.");
   }
 }
@@ -804,7 +804,7 @@ if (clientCritical && !clientCritical.ok) {
   let state = {};
   try {
     state = JSON.parse(readFileSync(MONITOR_STATE_FILE, "utf8"));
-  } catch {}
+  } catch { /* INTENTIONAL SILENCE: state file missing/corrupt — start from empty state; monitoring continues. */ }
   const now = Date.now();
   const lastAction = state.clientCriticalActionAt ?? 0;
 
@@ -813,7 +813,7 @@ if (clientCritical && !clientCritical.ok) {
     state.lastClusterDetail = clientCritical.detail;
     try {
       writeFileSync(MONITOR_STATE_FILE, JSON.stringify(state));
-    } catch {}
+    } catch { /* INTENTIONAL SILENCE: state persistence is best-effort; the in-memory decision for this tick still stands. */ }
 
     // 1) Página (notificación ruidosa) — ej: /usr/local/bin/bmf-page.sh
     if (PAGE_CMD) {
@@ -824,7 +824,7 @@ if (clientCritical && !clientCritical.ok) {
           env: { ...process.env, CLUSTER_DETAIL: clientCritical.detail },
         });
         console.error(`[monitor] PAGE enviada (${PAGE_CMD})`);
-      } catch {}
+      } catch { /* INTENTIONAL SILENCE: a failing page command must not abort escalation or the monitor tick. */ }
     }
 
     // 2) Rollback automático (fail-closed: solo con AUTO_ROLLBACK=1)
@@ -858,14 +858,14 @@ if (clientCritical && !clientCritical.ok) {
 const aiProvider = results.find((r) => r.name === "AI_PROVIDER_DOWN");
 if (aiProvider && !aiProvider.ok) {
   let state = {};
-  try { state = JSON.parse(readFileSync(MONITOR_STATE_FILE, "utf8")); } catch {}
+  try { state = JSON.parse(readFileSync(MONITOR_STATE_FILE, "utf8")); } catch { /* INTENTIONAL SILENCE: state file missing/corrupt — start from empty state; monitoring continues. */ }
   const now = Date.now();
   const lastAction = state.aiProviderActionAt ?? 0;
 
   if (shouldRunClientCriticalAction(lastAction, now, AI_PROVIDER_COOLDOWN_MS)) {
     state.aiProviderActionAt = now;
     state.lastAiProviderDetail = aiProvider.detail;
-    try { writeFileSync(MONITOR_STATE_FILE, JSON.stringify(state)); } catch {}
+    try { writeFileSync(MONITOR_STATE_FILE, JSON.stringify(state)); } catch { /* INTENTIONAL SILENCE: state persistence is best-effort; the in-memory decision for this tick still stands. */ }
 
     if (PAGE_CMD) {
       try {
@@ -875,7 +875,7 @@ if (aiProvider && !aiProvider.ok) {
           env: { ...process.env, CLUSTER_DETAIL: aiProvider.detail },
         });
         console.error(`[monitor] PAGE enviada por caída del upstream AI (${PAGE_CMD})`);
-      } catch {}
+      } catch { /* INTENTIONAL SILENCE: a failing page command must not abort escalation or the monitor tick. */ }
     } else {
       console.error(`[monitor] AI_PROVIDER_DOWN sin PAGE_CMD — define PAGE_CMD para paginar caída del proveedor IA`);
     }
@@ -894,7 +894,7 @@ if (retryDegraded && !retryDegraded.ok) {
   let state = {};
   try {
     state = JSON.parse(readFileSync(MONITOR_STATE_FILE, "utf8"));
-  } catch {}
+  } catch { /* INTENTIONAL SILENCE: state file missing/corrupt — start from empty state; monitoring continues. */ }
   const now = Date.now();
   const lastAction = state.retryDegradedActionAt ?? 0;
 
@@ -903,7 +903,7 @@ if (retryDegraded && !retryDegraded.ok) {
     state.lastRetryDegradedDetail = retryDegraded.detail;
     try {
       writeFileSync(MONITOR_STATE_FILE, JSON.stringify(state));
-    } catch {}
+    } catch { /* INTENTIONAL SILENCE: state persistence is best-effort; the in-memory decision for this tick still stands. */ }
 
     if (PAGE_CMD) {
       try {
@@ -913,7 +913,7 @@ if (retryDegraded && !retryDegraded.ok) {
           env: { ...process.env, CLUSTER_DETAIL: retryDegraded.detail },
         });
         console.error(`[monitor] PAGE enviada por entrega degradada (${PAGE_CMD})`);
-      } catch {}
+      } catch { /* INTENTIONAL SILENCE: a failing page command must not abort escalation or the monitor tick. */ }
     } else {
       console.error(`[monitor] RETRY_DEGRADED sin PAGE_CMD — define PAGE_CMD para paginar entrega degradada`);
     }
@@ -931,7 +931,7 @@ if (apiDegraded && !apiDegraded.ok) {
   let state = {};
   try {
     state = JSON.parse(readFileSync(MONITOR_STATE_FILE, "utf8"));
-  } catch {}
+  } catch { /* INTENTIONAL SILENCE: state file missing/corrupt — start from empty state; monitoring continues. */ }
   const now = Date.now();
   const lastAction = state.apiDegradedActionAt ?? 0;
 
@@ -940,7 +940,7 @@ if (apiDegraded && !apiDegraded.ok) {
     state.lastApiDegradedDetail = apiDegraded.detail;
     try {
       writeFileSync(MONITOR_STATE_FILE, JSON.stringify(state));
-    } catch {}
+    } catch { /* INTENTIONAL SILENCE: state persistence is best-effort; the in-memory decision for this tick still stands. */ }
 
     if (PAGE_CMD) {
       try {
@@ -950,7 +950,7 @@ if (apiDegraded && !apiDegraded.ok) {
           env: { ...process.env, CLUSTER_DETAIL: apiDegraded.detail },
         });
         console.error(`[monitor] PAGE enviada por degradación (${PAGE_CMD})`);
-      } catch {}
+      } catch { /* INTENTIONAL SILENCE: a failing page command must not abort escalation or the monitor tick. */ }
     } else {
       console.error(`[monitor] API_DEGRADADO sin PAGE_CMD — define PAGE_CMD para paginar degradación`);
     }
@@ -988,7 +988,7 @@ if (!allOk && SLACK_WEBHOOK && !skipOperatorNotify) {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ text: `🚨 BookmarkForge ALERTA — ${PROD_BASE_URL}\n${fails}` }),
     });
-  } catch {}
+  } catch { /* INTENTIONAL SILENCE: alert delivery is best-effort; a dead webhook must not crash the cron. */ }
 }
 
 await shutdownExit(allOk ? 0 : 1);

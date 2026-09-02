@@ -52,13 +52,13 @@ function recordIntegritySpike(detail: unknown): void {
           detail: { count: integrityFailCount, at: new Date().toISOString(), reason: "spike" },
         }),
       );
-    } catch {}
+    } catch { /* INTENTIONAL SILENCE: a throwing monitor listener must not abort integrity handling. */ }
     try {
       void errorReporter.reportError(new Error("Integrity spike detected"), {
         source: "productionMonitor",
         count: String(integrityFailCount),
       });
-    } catch {}
+    } catch { /* INTENTIONAL SILENCE: the monitoring signal already fired; reporting failure is non-fatal. */ }
   }
 }
 
@@ -77,7 +77,7 @@ function recordCspViolation(): void {
           detail: { count: cspViolationCount, at: new Date().toISOString() },
         }),
       );
-    } catch {}
+    } catch { /* INTENTIONAL SILENCE: a throwing monitor listener must not abort CSP spike handling. */ }
   }
 }
 
@@ -104,7 +104,7 @@ function recordGlobalError(): void {
           detail: { count: errorSpikeCount, at: new Date().toISOString(), reason: "spike" },
         }),
       );
-    } catch {}
+    } catch { /* INTENTIONAL SILENCE: a throwing monitor listener must not abort global error spike handling. */ }
   }
 }
 

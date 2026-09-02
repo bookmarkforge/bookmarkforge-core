@@ -24,7 +24,7 @@ export async function safeFetch(input: RequestInfo | URL, init?: RequestInit): P
     const err = e instanceof Error ? e : new Error(String(e));
     try {
       void errorReporter.reportError(err, { source: "safeFetch", url: String(input).slice(0, 200) });
-    } catch {}
+    } catch { /* INTENTIONAL SILENCE: reporting is best-effort; the original error must still reach the caller. */ }
     logger.error("[GlobalGuard] safeFetch failed", { url: String(input).slice(0, 200), error: err.message });
     throw err;
   }
@@ -41,7 +41,7 @@ export function guardAsync<T extends (...args: unknown[]) => Promise<unknown>>(f
       const err = e instanceof Error ? e : new Error(String(e));
       try {
         void errorReporter.reportError(err, { source: context });
-      } catch {}
+      } catch { /* INTENTIONAL SILENCE: reporting is best-effort; the original promise rejection must still propagate. */ }
       logger.error(`[GlobalGuard] ${context} failed`, { error: err.message });
       throw err;
     }

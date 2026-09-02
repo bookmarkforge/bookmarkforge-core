@@ -483,7 +483,7 @@ try {
     // Stash any uncommitted changes so checkout doesn't fail
     try {
       run("git stash push -m rollback-auto-stash");
-    } catch {}
+    } catch { /* INTENTIONAL SILENCE: stashing is best-effort; the tag checkout path still proceeds below. */ }
 
     console.log(`[T+0:05] git checkout ${targetTag}`);
     run(`git checkout ${targetTag}`);
@@ -516,7 +516,7 @@ try {
   await new Promise((r) => setTimeout(r, 3000));
   try {
     run("docker ps --format \"{{.Names}} {{.Status}}\"");
-  } catch {}
+  } catch { /* INTENTIONAL SILENCE: the container listing is a diagnostic log line; rollback continues without it. */ }
 
   // Intento de smoke (contra PROD_BASE_URL — nunca hardcodear el puerto)
   console.log(`[T+0:25] production-smoke contra ${PROD_BASE_URL}...`);
@@ -551,7 +551,7 @@ try {
   try {
     const sw = await fetch(`${PROD_BASE_URL}/sw.js`).then((r) => r.text()).then((t) => t.slice(0, 200));
     console.log(sw);
-  } catch {}
+  } catch { /* INTENTIONAL SILENCE: SW fetch is a diagnostic step; a non-200/timeout must not fail the rollback. */ }
 
   // T+0:45 — validar datos (no borrar IndexedDB jamás)
   console.log("[T+0:45] Validando RxDB / datos locales — NUNCA borrar volumen");

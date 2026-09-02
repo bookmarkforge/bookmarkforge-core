@@ -6,6 +6,7 @@ import noUnboundedCardHeader from "./eslint-rules/no-unbounded-card-header.mjs";
 import noSecurityVaultMockWithoutLock from "./eslint-rules/require-securityvault-mock-lock-unlock.mjs";
 import noUnexplainedTestSkip from "./eslint-rules/no-unexplained-test-skip.mjs";
 import noUnboundedLoop from "./eslint-rules/no-unbounded-loop.mjs";
+import noSilentCatch from "./eslint-rules/no-silent-catch.mjs";
 import reactCompiler from "eslint-plugin-react-compiler";
 
 const SOURCE_TS = ["**/*.{ts,tsx,mts,cts}"];
@@ -44,8 +45,18 @@ export default tseslint.config(
   { files: ["src/declarations.d.ts", "src/types/*.d.ts", "src/**/*.d.ts"], rules: { "@typescript-eslint/no-explicit-any": "off", "@typescript-eslint/no-unused-vars": "off" } },
   { files: ["src/env.config.ts"], rules: { "@typescript-eslint/no-explicit-any": "off" } },
   {
-    files: ["src/**/*.{ts,tsx}", "tests/e2e/**/*.{ts,tsx}"],
-    plugins: { bmf: { rules: { "no-unbounded-text": noUnboundedText, "no-unbounded-card-header": noUnboundedCardHeader, "no-securityvault-mock-without-lock": noSecurityVaultMockWithoutLock, "no-unexplained-test-skip": noUnexplainedTestSkip, "no-unbounded-loop": noUnboundedLoop } } },
+    files: ["src/**/*.{ts,tsx}", "tests/e2e/**/*.{ts,tsx}", "scripts/**/*.{mjs,cjs,js}", "server/src/**/*.ts", "extension/**/*.js"],
+    plugins: { bmf: { rules: { "no-unbounded-text": noUnboundedText, "no-unbounded-card-header": noUnboundedCardHeader, "no-securityvault-mock-without-lock": noSecurityVaultMockWithoutLock, "no-unexplained-test-skip": noUnexplainedTestSkip, "no-unbounded-loop": noUnboundedLoop, "no-silent-catch": noSilentCatch } } },
+  },
+  {
+    // NOTE: exclusions MUST go in `ignores`, never as `!`-prefixed entries in
+    // `files` — @eslint/config-array feeds each `files` glob to minimatch, so
+    // a leading `!` is parsed as a NEGATED glob (`!false` == true) and the
+    // block silently matches every file that does not match the literal
+    // pattern. This rule is scoped to non-test code only.
+    files: ["src/**/*.{ts,tsx}", "scripts/**/*.{mjs,cjs,js}", "server/src/**/*.ts", "extension/**/*.js"],
+    ignores: ["src/tests/**", "**/*.d.ts", "scripts/**/*.test.mjs", "scripts/__tests__/**", "server/src/__tests__/**"],
+    rules: { "bmf/no-silent-catch": "error" },
   },
   { files: ["src/**/*.tsx"], rules: { "bmf/no-unbounded-text": "error", "bmf/no-unbounded-card-header": "error" } },
   { files: ["src/tests/**/*.{ts,tsx}"], rules: { "bmf/no-securityvault-mock-without-lock": "error" } },

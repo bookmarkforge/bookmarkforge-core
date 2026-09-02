@@ -1,9 +1,9 @@
 {
-  "totalAnchors": 18,
+  "totalAnchors": 19,
   "missingCount": 0,
-  "presentCount": 18,
+  "presentCount": 19,
   "discoveredCount": 0,
-  "updatedAt": "2026-08-28T20:58:26.285Z",
+  "updatedAt": "2026-09-02T00:00:00.000Z",
   "anchors": [
     {
       "id": "p0-ice-whitelist",
@@ -24,6 +24,11 @@
       "id": "p3-verify-password-private",
       "adr": "ADR-026 / ADR-027",
       "glob": "src/tests/security/p3-verify-password-private*.regression.test.*"
+    },
+    {
+      "id": "p3-constant-time-hmac",
+      "adr": "ADR-038",
+      "glob": "src/tests/security/p3-constant-time-hmac*.regression.test.*"
     },
     {
       "id": "p4-sync-transfer-watchdog",

@@ -90,7 +90,9 @@ The codebase has an explicit ownership contract for secrets-as-bytes:
 ```bash
 npm run typecheck:prod          # tsc --noEmit (prod tsconfig)
 npm run lint                    # eslint . (custom rules in eslint-rules/)
-npm run test:fast               # bounded Vitest suites (62 files)
+npm run test:fast               # bounded Vitest suites (security, db, services,
+                                #   key components — count deliberately unnumbered,
+                                #   see ADR-038)
 npm run build:ci                # vite build + secret-scan + SRI + integrity
                                 #   manifest + chunk-boundary + bundle-size gates
 npm run check                   # the 17-gate chain: env, workflows, http/compose/

@@ -1,4 +1,8 @@
+// ADR-038: HMAC signature verification compares secret digests with the
+// shared constant-time primitive (security-vault/compare) — never ===/!==,
+// which leak the longest matching prefix to an attacker who controls one side.
 import { securityVault } from "../SecurityVault";
+import { constantTimeCompare } from "../security-vault/compare";
 import { logger } from "../../utils/logger";
 
 interface SignedMutation<T> {
@@ -39,7 +43,8 @@ class MutationGuard {
   async verify<T>(signed: SignedMutation<T>): Promise<boolean> {
     const payload = `${signed.key}|${JSON.stringify(signed.value)}|${signed.timestamp}|${signed.version}`;
     const expectedSig = await this.sign(signed.key, payload);
-    return signed.signature === expectedSig;
+    // ADR-038: constant-time comparison — === would leak prefix-match length.
+    return constantTimeCompare(signed.signature, expectedSig);
   }
 
   /**
@@ -64,7 +69,7 @@ class MutationGuard {
       const payload = `${storedSig.key}|${JSON.stringify(curVal)}|${storedSig.timestamp}|${storedSig.version}`;
       const expectedSig = await this.sign(storedSig.key, payload);
 
-      if (storedSig.signature !== expectedSig) {
+      if (!constantTimeCompare(storedSig.signature, expectedSig)) {
         tamperedKeys.push(storedSig.key);
       }
     }

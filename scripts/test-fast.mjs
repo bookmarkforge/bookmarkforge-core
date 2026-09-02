@@ -77,7 +77,12 @@ const selectors = [
   rel("security/networkFirewall.test.ts"),
   rel("security/networkFirewall-proxy.test.ts"),
   rel("security/rxdb-cache.test.ts"),
-  rel("security/MutationGuard.test.ts"),
+  // NOTE: these two must keep their real extensions — the `.filter(has)`
+  // below silently drops a stale selector (the `.ts` spelling of the
+  // `.tsx` MutationGuard file did exactly that: its 12 tests never ran
+  // in this profile; found by the 2026-09-02 audit, ADR-038).
+  rel("security/MutationGuard.test.tsx"),
+  rel("security/AttestationChain.test.tsx"),
   rel("security/inputFuzzing.test.tsx"),
 ].filter(has);
 

@@ -3,10 +3,10 @@
  *
  * Vitest unit tests for `scripts/audit-anchors.mjs`. Covers the anchor
  * guarantees, the baseline catalog contract, and the current advisory:
- *   (a) all 18 anchors resolve today, and no canonical-shape file in
+ *   (a) all 19 anchors resolve today, and no canonical-shape file in
  *        the catalog is mis-classified as `discovered`
  *   (b) a `.bak` rename of any anchored file produces exactly 1 missing,
- *        leaving the other 17 anchors intact
+ *        leaving the other 18 anchors intact
  *   (c) a non-test suffix (`.txt`, etc.) that matches the bare regex is
  *        rejected by the suffix filter
  *   (d) `--fix` (i.e. `runAuditAnchors({ fix: true })`) writes baseline
@@ -91,6 +91,7 @@ const BASELINE_ANCHORS = Object.freeze([
   { id: "p1-private-sync", glob: "src/tests/security/p1-private-sync*.regression.test.*" },
   { id: "p2-secure-storage-prod-guard", glob: "src/tests/security/p2-secure-storage-prod-guard*.regression.test.*" },
   { id: "p3-verify-password-private", glob: "src/tests/security/p3-verify-password-private*.regression.test.*" },
+  { id: "p3-constant-time-hmac", glob: "src/tests/security/p3-constant-time-hmac*.regression.test.*" },
   { id: "p4-sync-transfer-watchdog", glob: "src/tests/services/WebRTCSyncService.test.ts" },
   { id: "p5-sdp-shape-gate", glob: "src/tests/services/WebRTCSyncService.test.ts" },
   { id: "p4-constant-time-cmp", glob: "src/tests/services/WebRTCSyncService.test.ts" },
@@ -117,6 +118,7 @@ const ALL_ANCHORED_FILES = Object.freeze({
     "anchor-c",
   "src/tests/security/p3-verify-password-private.fake.regression.test.ts":
     "anchor-d",
+  "src/tests/security/p3-constant-time-hmac.regression.test.ts": "anchor-k",
   "src/services/SecureStorage.ts": "anchor-secure-storage-source",
   "src/services/WebRTCSyncService.ts": "anchor-webrtc-sync-source",
   "src/tests/services/WebRTCSyncService.test.ts": "anchor-webrtc-sync-test",
@@ -177,15 +179,15 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
     const result = runAuditAnchors();
 
     expect(result.failures).toEqual([]);
-    expect(result.present).toHaveLength(18);
-    expect(result.total).toBe(18);
+    expect(result.present).toHaveLength(19);
+    expect(result.total).toBe(19);
     // Every present entry has at least one matching file path.
     for (const present of result.present) {
       expect(present.id).toMatch(/^[a-z0-9-]+$/);
       expect(present.matches.length).toBeGreaterThanOrEqual(1);
     }
     // No "advisory NEW" lines when only the catalog is installed. This
-    // pins down the contract that the 18-anchor catalog's regression files
+    // pins down the contract that the 19-anchor catalog's regression files
     // themselves never get surfaced as discoveries (they are caught by
     // their anchor's glob).
     expect(result.discovered).toEqual([]);
@@ -219,11 +221,11 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
         glob: "src/services/WebRTCSyncService.ts",
       }),
     ]);
-    expect(result.present).toHaveLength(17);
-    expect(result.total).toBe(18);
+    expect(result.present).toHaveLength(18);
+    expect(result.total).toBe(19);
   });
 
-  test("(b) renaming p0-ice-whitelist to .bak produces 1 missing, others 17 intact", async () => {
+  test("(b) renaming p0-ice-whitelist to .bak produces 1 missing, others 18 intact", async () => {
     // Copy ALL_ANCHORED_FILES, then surgically rename one file from
     // `.regression.test.ts` → `.regression.test.ts.bak`. The glob regex
     // matches the `.bak` file (bare `*` in the suffix), but the
@@ -242,10 +244,10 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
 
     expect(result.failures).toHaveLength(1);
     expect(result.failures[0]).toMatchObject({ id: "p0-ice-whitelist" });
-    expect(result.present).toHaveLength(17);
-    expect(result.total).toBe(18);
+    expect(result.present).toHaveLength(18);
+    expect(result.total).toBe(19);
 
-    // The remaining 17 must be present (id order is stable per ANCHORS[]).
+    // The remaining 18 must be present (id order is stable per ANCHORS[]).
     const presentIds = result.present.map((p) => p.id).sort();
     expect(presentIds).toEqual(
       [
@@ -253,6 +255,7 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
         "p1-private-sync",
         "p2-secure-storage-prod-guard",
         "p3-verify-password-private",
+        "p3-constant-time-hmac",
         "p4-sync-transfer-watchdog",
         "p5-sdp-shape-gate",
         "p4-constant-time-cmp",
@@ -287,7 +290,7 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
 
     expect(result.failures).toHaveLength(1);
     expect(result.failures[0].id).toBe("p0-ice-whitelist");
-    expect(result.present).toHaveLength(17);
+    expect(result.present).toHaveLength(18);
   });
 
   test("(d) --fix rewrites scripts/audit-anchors-baseline.json with a new updatedAt", async () => {
@@ -315,12 +318,12 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
 
     const { runAuditAnchors } = await importAuditScript("d");
     const result = runAuditAnchors({ fix: true });    expect(result.failures).toEqual([]);
-    expect(result.present).toHaveLength(18);
+    expect(result.present).toHaveLength(19);
     expect(existsSync(baselinePath)).toBe(true);
     const rewritten = JSON.parse(readFileSync(baselinePath, "utf8"));
-    expect(rewritten.totalAnchors).toBe(18);
+    expect(rewritten.totalAnchors).toBe(19);
     expect(rewritten.missingCount).toBe(0);
-    expect(rewritten.presentCount).toBe(18);
+    expect(rewritten.presentCount).toBe(19);
     expect(rewritten.updatedAt).not.toBe(ONE_HUNDRED_YEARS_AGO);
 
     // updatedAt must parse as a valid ISO string AND be newer than the
@@ -334,7 +337,7 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
 
     // Catalog shape must round-trip every anchor by id.
     expect(Array.isArray(rewritten.anchors)).toBe(true);
-    expect(rewritten.anchors).toHaveLength(18);
+    expect(rewritten.anchors).toHaveLength(19);
     const ids = rewritten.anchors.map((a) => a.id).sort();
     expect(ids).toEqual(
       [
@@ -343,6 +346,7 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
         "p1-private-sync",
         "p2-secure-storage-prod-guard",
         "p3-verify-password-private",
+        "p3-constant-time-hmac",
         "p4-sync-transfer-watchdog",
         "p5-sdp-shape-gate",
         "p4-constant-time-cmp",
@@ -361,7 +365,7 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
   });
 
   test("(e) extra canonical-shape regression test is surfaced as `discovered` (advisory, non-failing)", async () => {
-    // Install all 17 non-umbrella anchored files plus a canonical p5 file.
+    // Install all 18 non-umbrella anchored files plus a canonical p5 file.
     // Run against the pre-umbrella catalog to preserve the advisory
     // discovery contract; the production catalog now intentionally covers
     // this shape.
@@ -376,10 +380,10 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
     );
     const result = runAuditAnchors({ anchors: legacyCatalog });
 
-    // The legacy catalog tier is unchanged — same 17 of 17, no failures.
+    // The legacy catalog tier is unchanged — same 18 of 18, no failures.
     expect(result.failures).toEqual([]);
-    expect(result.present).toHaveLength(17);
-    expect(result.total).toBe(17);
+    expect(result.present).toHaveLength(18);
+    expect(result.total).toBe(18);
 
     // The extra file shows up exactly once, with its full path, and
     // does NOT shadow any anchor (the 14 anchored files are filtered out
@@ -452,7 +456,7 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
         id: "p3-verify-password-private",
       }),
     ]);
-    expect(result.present).toHaveLength(18);
+    expect(result.present).toHaveLength(19);
   });
 
   test("(i) every source-kind anchor resolves against the actual repository", async () => {
@@ -510,7 +514,7 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
         }),
       ]),
     );
-    expect(result.present).toHaveLength(18);
-    expect(result.total).toBe(19);
+    expect(result.present).toHaveLength(19);
+    expect(result.total).toBe(20);
   });
 });

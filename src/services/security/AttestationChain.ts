@@ -1,7 +1,9 @@
 // ADR-019: Argon2id migration / Security hardening (attestation chain storage)
+// ADR-038: chain verification compares secret digests in constant time.
 import { securityVault } from "../SecurityVault";
 import { secureStorage } from "../SecureStorage";
 import { logRateLimited } from "../../utils/boundedLog";
+import { constantTimeCompare } from "../security-vault/compare";
 
 interface AttestedEntry {
   index: number;
@@ -86,12 +88,14 @@ class AttestationChain {
     for (let i = 1; i < this.chain.length; i++) {
       const prev = this.chain[i - 1]!;
       const curr = this.chain[i]!;
-      if (curr.prevHash !== prev.signature) {
+      // ADR-038: prevHash carries the previous entry's secret HMAC — same
+      // prefix-oracle risk as the signature itself, so constant-time here too.
+      if (!constantTimeCompare(curr.prevHash, prev.signature)) {
         return { valid: false, brokenAt: i };
       }
       const payload = `${curr.prevHash}|${curr.data}|${curr.timestamp}`;
       const expectedSig = await this.sign(payload);
-      if (curr.signature !== expectedSig) {
+      if (!constantTimeCompare(curr.signature, expectedSig)) {
         return { valid: false, brokenAt: i };
       }
     }

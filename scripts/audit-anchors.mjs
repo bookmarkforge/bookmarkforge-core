@@ -79,6 +79,13 @@ export const ANCHORS = [
     glob: "src/tests/security/p3-verify-password-private*.regression.test.*",
   },
   {
+    id: "p3-constant-time-hmac",
+    adr: "ADR-038",
+    description:
+      "MutationGuard and AttestationChain verify HMAC signatures with the shared constant-time primitive (security-vault/compare) — never ===/!== prefix-oracle comparisons.",
+    glob: "src/tests/security/p3-constant-time-hmac*.regression.test.*",
+  },
+  {
     id: "p4-sync-transfer-watchdog",
     adr: "ADR-029 D1",
     description:

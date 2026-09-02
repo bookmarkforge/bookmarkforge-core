@@ -27,10 +27,13 @@
  *                          chip (collapses to a 3-row subset).
  *   5. settings-panel     — Mantine modal opened via `settings-button`
  *
- * Per-view baselines are captured as `text-fit-{view}-{locale}.png`
- * and live in `tests/e2e/text-fit.nightly.spec.ts-snapshots/` —
- * Playwright namespaces by spec filename so the snapshots do NOT
- * collide with the critical spec's baselines.
+ * Pixel baselines are captured for a single visual-backstop locale only
+ * (`fi`: all views incl. narrow; see `VISUAL_BACKSTOP_LOCALES`) as
+ * `text-fit-{view}-{locale}.png` in
+ * `tests/e2e/text-fit.nightly.spec.ts-snapshots/` — Playwright namespaces
+ * by spec filename so the snapshots do NOT collide with the critical
+ * spec's baselines. All 24 locales still run the authoritative DOM
+ * overflow audit.
  *
  * Why a separate dev-server port (5175): the dedicated
  * `playwright.nightly.config.ts` boots its own Vite so a nightly run
@@ -56,30 +59,33 @@ import {
 import { dismissOverlays, skipPassword } from "./vault-helpers";
 
 /**
- * Slightly looser pixel-diff tolerance than the critical spec:
- *   - Settings panel races the same as the critical spec.
- *   - Dashboard gets a hair more slack because the nightly locales
- *     include clustered LTR Cyrillic (uk, bg, sr) and clustered
- *     multi-byte CJK (ja, ko, th) where font fallback adds noise
- *     against a Chromium-only stable device library.
+ * Visual-backstop policy (ADR-030 note / 2026-09 audit):
+ *
+ * The pixel screenshots here are a VISUAL BACKSTOP, NOT the gate. The
+ * authoritative check is the DOM overflow audit (`assertAggregatedOverflow`),
+ * which walks every visible element and reports overflow + pixel offset;
+ * it runs for ALL 24 nightly locales. A layout break (element off-canvas,
+ * collapsed columns, missing glyph band) breaks EVERY locale's screenshot
+ * equally — so capturing the same 9 views × 24 locales stores 17 MB of PNGs
+ * without adding coverage, while making fresh-checkout runs fragile when the
+ * matrix drifts.
+ *
+ * Per the audit, only ONE locale gets pixel captures as the backstop:
+ * `fi` was chosen because it already has the complete tracked set — 9
+ * desktop views + all 4 narrow-viewport captures — so the trimmed set
+ * requires zero regeneration and still parks a pixel on every view,
+ * including the nightly-only views (editor, chat, canvas, collaboration)
+ * that exist in no other suite. The other 23 locales run the DOM audit and
+ * deliberately skip the screenshot.
+ *
+ * Real visual-regression coverage for shared views stays in
+ * `tests/e2e/visual-testing.spec.ts` (every-CI, pixelmach) and the
+ * critical-scope `text-fit.spec.ts`; the drift gate
+ * (`npm run check:baseline-drift`, ci.yml `visual-baseline-drift`) fails
+ * if a remaining baseline is ever regenerated with >10% pixel drift.
  */
-function snapshotRatio(view: ViewId, nameSuffix = ""): number {
-  // Narrow-viewport captures get extra slack: at 360px the layout wraps
-  // more aggressively and font-fallback noise is higher (a failed
-  // self-hosted font resolves `document.fonts.ready` with fallback
-  // metrics — observed as a sparse text band diff). The DOM-based
-  // overflow audit (`assertAggregatedOverflow`) remains the authoritative
-  // check, so the pixel diff here is a visual backstop, not a gate.
-  // All views use 5% tolerance — the same rationale as the critical spec:
-  // font fallback timing, dynamic dashboard content, and React concurrent
-  // rendering produce real per-pixel differences across runs. The DOM audit
-  // (`assertAggregatedOverflow`) is the authoritative check; the screenshot
-  // is a visual backstop.
-  if (nameSuffix === "-narrow") {
-    return 0.05;
-  }
-  return 0.05;
-}
+const VISUAL_BACKSTOP_MAX_DIFF_RATIO = 0.05;
+const VISUAL_BACKSTOP_LOCALES: ReadonlySet<LocaleCode> = new Set(["fi"]);
 
 async function captureBaselineAndCollect(
   page: Page,
@@ -87,22 +93,24 @@ async function captureBaselineAndCollect(
   view: ViewId,
   nameSuffix = "",
 ): Promise<ViewAudit> {
-  // Stabilize the render BEFORE the baseline capture: wait for the
-  // self-hosted font + finite entrance animations to settle, and (for
-  // the settings modal) for async spinner-gated sections to load.
-  // Fixes intermittent snapshot pixel diffs under parallel load
-  // (observed hi/hr/pt/ro failures) without masking content.
+  // Stabilize the render BEFORE the DOM audit (and baseline capture when
+  // this locale is the visual backstop): wait for the self-hosted font +
+  // finite entrance animations to settle, and (for the settings modal) for
+  // async spinner-gated sections to load. Fixes intermittent snapshot
+  // pixel diffs under parallel load without masking content.
   await stabilizeRender(page, { waitSpinners: view === "settings-panel" });
-      // Playwright auto-places the baseline in
-      // `tests/e2e/text-fit.nightly.spec.ts-snapshots/text-fit-${view}-${locale}.png`.
-      // The name is just a NAME — passing a directory prefix would create
-      // a nested re-run mismatch on subsequent runs. Narrow-viewport
-      // passes pass a `-narrow` suffix so their 360px captures never
-      // collide with the 1280px desktop baselines of the same views.
-      await expect(page).toHaveScreenshot(
-        `text-fit-${view}-${locale}${nameSuffix}.png`,
-        { maxDiffPixelRatio: snapshotRatio(view, nameSuffix) },
-      );
+  if (VISUAL_BACKSTOP_LOCALES.has(locale)) {
+    // Playwright auto-places the baseline in
+    // `tests/e2e/text-fit.nightly.spec.ts-snapshots/text-fit-${view}-${locale}.png`.
+    // The name is just a NAME — passing a directory prefix would create
+    // a nested re-run mismatch on subsequent runs. Narrow-viewport
+    // passes pass a `-narrow` suffix so their 360px captures never
+    // collide with the 1280px desktop baselines of the same views.
+    await expect(page).toHaveScreenshot(
+      `text-fit-${view}-${locale}${nameSuffix}.png`,
+      { maxDiffPixelRatio: VISUAL_BACKSTOP_MAX_DIFF_RATIO },
+    );
+  }
   const rows = await auditViewRows(page, locale, view);
   return { view, rows };
 }

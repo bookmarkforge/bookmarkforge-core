@@ -37,7 +37,7 @@
   "syst_arm64Optim": "אופטימיזציה מקורית של ARM64",
   "syst_perfMismatch": "אי-התאמה בפוטנציאל הביצועים",
   "syst_arm64OptimDesc": "ה-Galaxy Book4 Edge (ARM64) שלך מריץ את BookmarkForge ביעילות מקורית. יחידות העיבוד העצבי מוכנות ל-LLM מקומיים.",
-  "syst_perfMismatchDesc": "Your hardware is powerful ({{cores}} cores) but WebGPU is disabled. Consider using an ARM64 native browser for high-speed Local AI.",
+  "syst_perfMismatchDesc": "למערכת שלך יש {{cores}} ליבות אך WebGPU מנוטרל. הפעלת האצת חומרה תשפר משמעותית את ביצועי ה-AI המקומי.",
   "syst_dbOptimal": "מצב מסד הנתונים: מיטבי",
   "syst_dbOptimalDesc": "RxDB פועל ביעילות שיא עם אחסון מקומי דרך Dexie.",
   "app_resetting": "מאפס...",

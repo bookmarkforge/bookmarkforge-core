@@ -161,7 +161,9 @@ npm run check                   # the 17-gate chain: env, workflows, http/compos
   sync hardening D1/D2/D5/D6), ADR-030 (umbrella security regression suite),
   ADR-032 (disk backup pruning D1), ADR-033 (restore surface on auth errors
   D3), ADR-034 (backup age freshness + storage quota D1/D5) and ADR-037
-  (backup-deletion ownership). Numbers ADR-031/035/036 and ADR-028/040/042 are
-  not in the anchor catalog: 031/035/036 are unassigned, while 028/040/042
-  remain implicit prose references (`check-inspector-freeze.mjs`,
-  `ThemeService.ts`) until formalized.
+  (backup-deletion ownership). Numbers ADR-031/035/036 and ADR-040/042 are
+  not in the anchor catalog: 031/035/036 are unassigned, ADR-028 (gate-drift-
+  detection, referenced by `check-inspector-freeze.mjs`) is formalized in
+  `docs/ADR-028-gate-drift-detection.md`, and ADR-040/042 remain implicit
+  prose references (`check-inspector-freeze.mjs`, `ThemeService.ts`) until
+  formalized.

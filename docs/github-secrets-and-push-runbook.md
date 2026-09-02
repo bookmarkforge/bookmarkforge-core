@@ -49,6 +49,8 @@ git push -u origin main
 | `KPI_MIN_DAU` / `KPI_MIN_WAU` / `KPI_MIN_MAU` | Variables | e.g. `10` / `30` / `60` |
 | `KPI_MIN_D7_PCT` / `KPI_MIN_D30_PCT` | Variables | e.g. `0.15` / `0.30` |
 | `DRILL_RTO_MS` / `DRILL_RTO_WARN_MS` | Variables | Defaults `120000` / `108000` (90% of gate) |
+| `STAGING_SMOKE_TOKEN` | Secret | Bearer token for the staging smoke endpoint checks (`staging-smoke.yml`) |
+| `STAGING_SMOKE_ADMIN_TOKEN` | Secret | Admin token for the staging smoke endpoint checks (`staging-smoke.yml`); also used as gate in `staging-deploy.yml` |
 
 > Generate a strong random token locally, set it as the secret **and** in staging's `.env` (`ANALYTICS_ADMIN_TOKEN`) so both sides match.
 

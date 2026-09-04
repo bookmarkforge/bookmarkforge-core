@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
+import { STORAGE_KEYS } from "../../constants/storage-keys";
 
 // ── Mocks ──────────────────────────────────────────────────────────
 
@@ -126,19 +127,18 @@ function createMockIDB() {
   };
 }
 
-const mockIDB = createMockIDB();
-
 // ── Test suite ─────────────────────────────────────────────────────
 
 describe("AnalyticsService", () => {
   let originalIndexedDB: typeof globalThis.indexedDB;
+  let mockIDB: ReturnType<typeof createMockIDB>;
 
   beforeEach(() => {
     store.clear();
-    store.set("bmf_local_error_storage", "true"); // opt-in
+    store.set(STORAGE_KEYS.CONSENT_ANALYTICS, "true"); // explicit analytics opt-in
+    mockIDB = createMockIDB();
     originalIndexedDB = globalThis.indexedDB;
     (globalThis as unknown as Record<string, unknown>).indexedDB = mockIDB;
-    vi.useFakeTimers();
   });
 
   afterEach(() => {
@@ -159,7 +159,7 @@ describe("AnalyticsService", () => {
   });
 
   it("track() is a no-op when analytics is disabled", async () => {
-    store.set("bmf_local_error_storage", "false");
+    store.set(STORAGE_KEYS.CONSENT_ANALYTICS, "false");
     const { analyticsService } = await import("../../services/AnalyticsService");
     analyticsService.start();
     // Should not throw
@@ -178,10 +178,16 @@ describe("AnalyticsService", () => {
     analyticsService.stop();
   });
 
+  // The mock IndexedDB uses real zero-delay callbacks, so KPI reads can be
+  // awaited directly without fake timers competing with the service interval.
+  async function withKpiRead<T>(read: () => Promise<T>): Promise<T> {
+    return read();
+  }
+
   it("getRetention() returns empty KPIs when no events exist", async () => {
     const { analyticsService } = await import("../../services/AnalyticsService");
     analyticsService.start();
-    const retention = await analyticsService.getRetention();
+    const retention = await withKpiRead(() => analyticsService.getRetention());
     expect(retention.activeDays).toBe(0);
     expect(retention.accountAge).toBe(0);
     expect(retention.activeD1).toBe(false);
@@ -195,7 +201,7 @@ describe("AnalyticsService", () => {
   it("getEngagement() returns empty KPIs when no events exist", async () => {
     const { analyticsService } = await import("../../services/AnalyticsService");
     analyticsService.start();
-    const engagement = await analyticsService.getEngagement();
+    const engagement = await withKpiRead(() => analyticsService.getEngagement());
     expect(engagement.totalSessions).toBe(0);
     expect(engagement.totalBookmarks).toBe(0);
     expect(engagement.totalDocuments).toBe(0);
@@ -210,7 +216,7 @@ describe("AnalyticsService", () => {
   it("getSnapshot() returns both retention and engagement", async () => {
     const { analyticsService } = await import("../../services/AnalyticsService");
     analyticsService.start();
-    const snapshot = await analyticsService.getSnapshot();
+    const snapshot = await withKpiRead(() => analyticsService.getSnapshot());
     expect(snapshot.retention).toBeDefined();
     expect(snapshot.engagement).toBeDefined();
     expect(snapshot.generatedAt).toBeDefined();
@@ -232,7 +238,7 @@ describe("AnalyticsService", () => {
   });
 
   it("does not start when consent is not granted", async () => {
-    store.set("bmf_local_error_storage", "false");
+    store.set(STORAGE_KEYS.CONSENT_ANALYTICS, "false");
     const { analyticsService } = await import("../../services/AnalyticsService");
     analyticsService.start();
     // track should be a no-op

@@ -46,9 +46,19 @@ const EXPORT_YIELD_EVERY = 500;
  * plain data while the DB hands out RxDocuments.
  */
 function toPlainRecords<T>(records: readonly T[]): T[] {
-  return (records as unknown as Array<{ toJSON(): T }>).map((record) =>
-    record.toJSON(),
-  );
+  return (records as unknown as Array<T | { toJSON(): T }>).map((record) => {
+    if (
+      typeof record === "object" &&
+      record !== null &&
+      "toJSON" in record &&
+      typeof (record as { toJSON?: unknown }).toJSON === "function"
+    ) {
+      return (record as { toJSON(): T }).toJSON();
+    }
+    // Plain records are valid at this service boundary in tests and in
+    // adapters that materialize RxDB documents before calling the exporter.
+    return record as T;
+  });
 }
 
 async function filterExportRecords<T>(

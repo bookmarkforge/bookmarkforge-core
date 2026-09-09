@@ -37,3 +37,15 @@
 
 /pricing/*
   X-Robots-Tag: noindex
+
+# Private app — local-first vault, SPA shell only, never indexable
+/app
+  X-Robots-Tag: noindex
+/app/*
+  X-Robots-Tag: noindex
+/capture
+  X-Robots-Tag: noindex
+/capture/*
+  X-Robots-Tag: noindex
+/offline*
+  X-Robots-Tag: noindex

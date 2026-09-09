@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef">
+  <meta name="description" content="Guarda artículos, notas y documentos en una bóveda privada, cifrada y 100% local. Búsqueda con IA, editor estilo Notion y sincronización P2P. La alternativa privada a Pocket — gratis.">
+  <title>BookmarkForge — Alternativa privada a Pocket con IA (Marcadores y notas)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang (ES landing; EN es la versión por defecto) -->
+  <link rel="canonical" href="https://bookmarkforge.com/es/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforge.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
+  <!-- Open Graph (og-image.png es 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — Alternativa privada a Pocket con IA (Marcadores y notas)">
+  <meta property="og:description" content="Guarda artículos, notas y documentos en una bóveda privada, cifrada y 100% local. Búsqueda con IA, editor estilo Notion y sincronización P2P. La alternativa privada a Pocket — gratis.">
+  <meta property="og:url" content="https://bookmarkforge.com/es/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:locale:alternate" content="en_US">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — Alternativa privada a Pocket con IA (Marcadores y notas)">
+  <meta name="twitter:description" content="Guarda artículos, notas y documentos en una bóveda privada, cifrada y 100% local. Búsqueda con IA, editor estilo Notion y sincronización P2P. La alternativa privada a Pocket — gratis.">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Datos estructurados: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://bookmarkforge.com/es/#website",
+        "url": "https://bookmarkforge.com/es/",
+        "name": "BookmarkForge",
+        "description": "Tu bóveda de conocimiento privada con IA. 100% local. La alternativa privada a Pocket.",
+        "inLanguage": "es",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://bookmarkforge.com/es/?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": { "@id": "https://bookmarkforge.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://bookmarkforge.com/#organization",
+        "name": "BookmarkForge",
+        "url": "https://bookmarkforge.com/",
+        "logo": { "@type": "ImageObject", "url": "https://bookmarkforge.com/logo.png", "width": 64, "height": 64 },
+        "email": "bookmarkforge@proton.me"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://bookmarkforge.com/es/#software",
+        "name": "BookmarkForge",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "url": "https://bookmarkforge.com/es/",
+        "image": "https://bookmarkforge.com/og-image.png",
+        "description": "Guarda artículos, notas y documentos en una bóveda privada, cifrada y 100% local. Búsqueda con IA, editor estilo Notion y sincronización P2P. La alternativa privada a Pocket.",
+        "offers": [
+          { "@type": "Offer", "name": "Gratis", "price": "0", "priceCurrency": "USD" },
+          { "@type": "Offer", "name": "Pro de por vida", "price": "79", "priceCurrency": "USD" }
+        ],
+        "featureList": [
+          "Almacenamiento 100% local",
+          "Cifrado de extremo a extremo",
+          "Funciona sin conexión",
+          "Búsqueda con IA",
+          "Editor estilo Notion",
+          "Sincronización P2P"
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://bookmarkforge.com/es/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "¿El plan gratis es realmente gratis para siempre?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Sí. Sin pruebas limitadas ni funciones bloqueadas en lo esencial. El plan gratis incluye todo lo necesario para gestionar tu conocimiento personal." }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Qué significa \"pago único\" en Pro?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Pagas una vez (79 $) y la licencia es tuya para siempre. Incluye todas las actualizaciones futuras. Sin cargos recurrentes. La clave de licencia se entrega al instante a través de Whop." }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Qué métodos de pago aceptan?",
+            "acceptedAnswer": { "@type": "Answer", "text": "A través de Whop: tarjeta de crédito, PayPal y criptomonedas. Nunca vemos tus datos de pago." }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Cuál es la política de reembolso?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Garantía de devolución de 30 días en las licencias Pro. Contacta con support@bookmarkforge.com" }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Saltar al contenido principal</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/es/" class="nav-brand" aria-label="BookmarkForge inicio">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navegación principal">
+        <a href="#alternativa-pocket">Alternativa a Pocket</a>
+        <a href="#funciones">Funciones</a>
+        <a href="#ia">IA</a>
+        <a href="#privacidad">Privacidad</a>
+        <a href="#precios">Precios</a>
+        <a href="/?lang=en" hreflang="en" lang="en">English</a>
+        <a href="/app" class="btn-primary nav-cta">Abrir la App</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">Versión 1.0</span>
+          <h1 id="hero-title">Tu Bóveda de Conocimiento <span class="accent-text">Privada con IA</span></h1>
+          <p class="hero-subtitle">La alternativa privada a Pocket para guardar artículos y leerlos después: marcadores, notas y documentos — cifrados en tu dispositivo, buscables con IA y sincronizados de igual a igual. Cero nube. Cero seguimiento. 100% tuyo.</p>
+          <div class="hero-actions">
+            <a href="/app" class="btn-primary btn-lg">Abrir la App Gratis</a>
+            <a href="#precios" class="btn-outline btn-lg">Ver Precios</a>
+          </div>
+          <div class="hero-trust">
+            <span class="trust-item"><strong>100% Local</strong> — tus datos no salen de tu dispositivo</span>
+            <span class="trust-item"><strong>Cifrado</strong> — AES-256-GCM + Argon2id</span>
+            <span class="trust-item"><strong>Sin conexión</strong> — funciona sin internet</span>
+            <span class="trust-item"><strong>Privado</strong> — cero telemetría por defecto</span>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="device-frame">
+            <div class="device-screen">
+              <div class="screen-content">
+                <div class="screen-header">
+                  <div class="screen-dots"><span></span><span></span><span></span></div>
+                </div>
+                <div class="screen-body">
+                  <div class="demo-sidebar">
+                    <div class="demo-nav-item active">📚 Panel</div>
+                    <div class="demo-nav-item">🔖 Marcadores</div>
+                    <div class="demo-nav-item">📝 Documentos</div>
+                    <div class="demo-nav-item">🤖 Chat IA</div>
+                    <div class="demo-nav-item">🕸️ Grafo</div>
+                  </div>
+                  <div class="demo-main">
+                    <div class="demo-card">
+                      <div class="demo-card-title">Primeros pasos</div>
+                      <div class="demo-card-text">Bienvenido a tu bóveda de conocimiento privada...</div>
+                    </div>
+                    <div class="demo-card">
+                      <div class="demo-card-title">Asistente IA</div>
+                      <div class="demo-card-text">Haz preguntas sobre tu contenido guardado...</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Alternativa a Pocket -->
+    <section id="alternativa-pocket" class="pocket" aria-labelledby="pocket-title">
+      <div class="container">
+        <header class="section-header">
+          <span class="section-label">Leer después, sin renunciar a tu privacidad</span>
+          <h2 id="pocket-title">La Alternativa Privada a Pocket</h2>
+          <p>Pocket se va. BookmarkForge mantiene vivo el hábito de leer después — con cada artículo, nota y subrayado cifrado en tu dispositivo.</p>
+        </header>
+        <div class="features-grid">
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <h3>Guarda artículos para leer después, tuyos para siempre</h3>
+            <p>Guarda artículos, vídeos y PDF con un clic — desde la app PWA, la extensión del navegador o el menú compartir. A diferencia de Pocket, tu lista de lectura vive en tu dispositivo, cifrada, y sigue funcionando sin conexión.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            </div>
+            <h3>Notas estilo Notion en cada artículo</h3>
+            <p>Subraya, resume y toma notas por bloques en cualquier marcador. Convierte un artículo guardado en tu propia base de conocimiento — no solo en una lista de enlaces.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Cero seguimiento, cero anuncios</h3>
+            <p>BookmarkForge no tiene cuentas, ni analíticas, ni anuncios por defecto. Tus hábitos de lectura no son asunto de nadie más que tuyo.</p>
+          </article>
+        </div>
+        <div class="pocket-cta">
+          <a href="/app" class="btn-primary btn-lg">Empezar a Guardar Gratis</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Funciones -->
+    <section id="funciones" class="features" aria-labelledby="features-title">
+      <div class="container">
+        <header class="section-header">
+          <h2 id="features-title">Todo lo que Necesitas</h2>
+          <p>Funciones potentes para gestionar tu conocimiento, todo ejecutándose en local</p>
+        </header>
+
+        <div class="features-grid">
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <h3>Marcadores y Documentos</h3>
+            <p>Guarda cualquier página con un clic. Editor de bloques enriquecido (estilo Notion) para notas. Listas virtualizadas que manejan más de 100.000 elementos con fluidez.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            </div>
+            <h3>Búsqueda de Texto Completo y Semántica</h3>
+            <p>Busca por palabra clave o por significado. Los vectores semánticos (HNSW) encuentran contenido relacionado incluso sin coincidencias exactas.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+            </div>
+            <h3>IA Local (WebLLM / Ollama)</h3>
+            <p>Ejecuta Llama 3.2, Gemma o Phi-3 directamente en tu navegador con WebGPU. Cero datos fuera de tu dispositivo. O conecta proveedores en la nube.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            </div>
+            <h3>Chat RAG sobre tus Datos</h3>
+            <p>Haz preguntas y obtén respuestas basadas en TUS marcadores y notas. Con citas incluidas. Modo privado = 100% local.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><path d="M11 18H8a2 2 0 0 1-2-2v-7"/></svg>
+            </div>
+            <h3>Sincronización P2P (WebRTC)</h3>
+            <p>Sincroniza tu bóveda entre dispositivos directamente. Sin servidor central. Cifrado de extremo a extremo. Emparejamiento por QR en segundos.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            </div>
+            <h3>Copias de Seguridad Cifradas</h3>
+            <p>Copias automáticas diarias en formato .bmf. Exportación manual a Markdown, JSON, CSV y PDF. Restauración en segundos. Las claves las tienes tú.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3>Grafo de Conocimiento</h3>
+            <p>Visualiza las conexiones entre tus notas y marcadores. Filtra por etiquetas, fechas y similitud. Zoom y desplazamiento en un lienzo infinito.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h12"/><path d="M6 12h9"/><path d="M6 16h6"/></svg>
+            </div>
+            <h3>Tarjetas de Estudio (Repetición Espaciada)</h3>
+            <p>Genera tarjetas desde cualquier documento. Algoritmo de repetición espaciada estilo Anki que programa los repasos en los intervalos óptimos. Ideal para aprender.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Privacidad por Defecto</h3>
+            <p>Sin analíticas, sin seguimiento, sin cuentas. Telemetría opcional solo si la activas. Cumplimiento GDPR. El control lo tienes tú.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- IA -->
+    <section id="ia" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="ai-content">
+          <div class="ai-text">
+            <span class="section-label">IA que Te Respeta</span>
+            <h2 id="ai-title">Tu Conocimiento, Amplificado</h2>
+            <p>BookmarkForge te da a elegir: ejecuta modelos 100% en local en tu navegador (WebLLM, WebGPU) o conecta tus propias claves API para proveedores en la nube. Tus indicaciones, tus datos, tus reglas.</p>
+
+            <div class="ai-providers">
+              <h4>Proveedores Compatibles</h4>
+              <div class="provider-grid">
+                <div class="provider local"><span class="provider-badge">Local</span>WebLLM (Llama 3.2, Gemma, Phi-3)</div>
+                <div class="provider local"><span class="provider-badge">Local</span>Ollama (cualquier modelo que ejecutes)</div>
+                <div class="provider cloud"><span class="provider-badge">Nube</span>Google Gemini</div>
+                <div class="provider cloud"><span class="provider-badge">Nube</span>OpenAI (GPT-4o, etc.)</div>
+                <div class="provider cloud"><span class="provider-badge">Nube</span>Anthropic Claude</div>
+                <div class="provider cloud"><span class="provider-badge">Nube</span>Groq (instantáneo)</div>
+                <div class="provider cloud"><span class="provider-badge">Nube</span>OpenRouter</div>
+                <div class="provider cloud"><span class="provider-badge">Nube</span>Hugging Face</div>
+              </div>
+            </div>
+
+            <div class="ai-modes">
+              <h4>Modos de Chat</h4>
+              <div class="mode-cards">
+                <div class="mode-card">
+                  <h5>Modo Privado</h5>
+                  <p>Solo IA local. Cero datos fuera del dispositivo. Funciona sin conexión.</p>
+                </div>
+                <div class="mode-card">
+                  <h5>Modo Búsqueda Web</h5>
+                  <p>Combina tu bóveda con resultados de búsqueda en vivo.</p>
+                </div>
+                <div class="mode-card">
+                  <h5>Agentes Expertos</h5>
+                  <p>Personas especializadas: Programador, Escritor, Analista, Investigador.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ai-visual" aria-hidden="true">
+            <div class="chat-demo">
+              <div class="chat-header">
+                <div class="chat-dots"><span></span><span></span><span></span></div>
+                <div class="chat-title">Asistente IA</div>
+                <span class="chat-badge private">🔒 Privado</span>
+              </div>
+              <div class="chat-messages">
+                <div class="msg user">¿Cuántos marcadores tengo sobre rendimiento de React?</div>
+                <div class="msg assistant">Según tu bóveda, tienes <strong>23 marcadores</strong> y <strong>5 documentos</strong> etiquetados con rendimiento de React. El más reciente es "React 19 Compiler en profundidad" (guardado hace 2 días).</div>
+                <div class="msg user">Resume los puntos clave</div>
+                <div class="msg assistant">Estas son las estrategias de optimización principales de tu contenido guardado...</div>
+              </div>
+              <div class="chat-input">
+                <input type="text" placeholder="Pregunta sobre tu conocimiento..." disabled>
+                <button disabled aria-label="Enviar">↑</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacidad -->
+    <section id="privacidad" class="privacy" aria-labelledby="privacy-title">
+      <div class="container">
+        <header class="section-header">
+          <h2 id="privacy-title">La Privacidad No Es una Función — Es la Base</h2>
+          <p>Cada decisión de arquitectura te pone a ti en control</p>
+        </header>
+
+        <div class="privacy-grid">
+          <article class="privacy-card">
+            <div class="privacy-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h3>Cifrado de Extremo a Extremo</h3>
+            <p>AES-256-GCM con claves derivadas de tu contraseña maestra mediante Argon2id. Nunca vemos tu contraseña ni tus claves.</p>
+          </article>
+
+          <article class="privacy-card">
+            <div class="privacy-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+            </div>
+            <h3>Arquitectura 100% Local</h3>
+            <p>Tu bóveda vive en IndexedDB en tu dispositivo. El servidor complementario solo gestiona el proxy de IA, licencias y señalización — nunca tu contenido.</p>
+          </article>
+
+          <article class="privacy-card">
+            <div class="privacy-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            </div>
+            <h3>Cero Telemetría por Defecto</h3>
+            <p>Sin analíticas, sin informes de errores, sin seguimiento. Estadísticas de uso e informes de errores opcionales, cada uno controlado de forma independiente.</p>
+          </article>
+
+          <article class="privacy-card">
+            <div class="privacy-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Las Claves las Tienes Tú</h3>
+            <p>Separación de claves por dispositivo: JWK en localStorage + textos cifrados en IndexedDB. Se necesitan ambos. Sin contraseña maestra = sin acceso. Sin puerta trasera de "contraseña olvidada".</p>
+          </article>
+
+          <article class="privacy-card">
+            <div class="privacy-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01"/><path d="M15 9h.01"/></svg>
+            </div>
+            <h3>Cumplimiento GDPR</h3>
+            <p>Consentimiento granular (analíticas, informes de errores, eventos de cliente). Derecho de acceso, rectificación, borrado y portabilidad — todo realizable en local.</p>
+          </article>
+
+          <article class="privacy-card">
+            <div class="privacy-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><path d="M10 11h14"/></svg>
+            </div>
+            <h3>Sin Dependencia de un Proveedor</h3>
+            <p>Exporta tus datos cuando quieras en formatos abiertos (JSON, Markdown, CSV, PDF). Tu conocimiento siempre es portable.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Precios -->
+    <section id="precios" class="pricing" aria-labelledby="pricing-title">
+      <div class="container">
+        <header class="section-header">
+          <h2 id="pricing-title">Precios Simples y Justos</h2>
+          <p>La app principal es gratis para siempre. Pro es una compra única — sin suscripciones.</p>
+        </header>
+
+        <div class="pricing-grid" id="pricingGrid">
+          <!-- Plan Gratis -->
+          <article class="pricing-card free">
+            <header>
+              <h3>Gratis</h3>
+              <div class="price" data-monthly="0" data-yearly="0">
+                <span class="currency">$</span><span class="amount">0</span><span class="period">/mes</span>
+              </div>
+              <p>Para la gestión personal de conocimiento</p>
+            </header>
+            <ul class="features-list">
+              <li>✅ Marcadores, notas y documentos ilimitados</li>
+              <li>✅ Búsqueda de texto completo y semántica</li>
+              <li>✅ IA local (WebLLM + Ollama)</li>
+              <li>✅ Chat RAG sobre tus datos</li>
+              <li>✅ Grafo de conocimiento, tarjetas, lienzo</li>
+              <li>✅ Copias de seguridad cifradas y exportación</li>
+              <li>✅ PWA + extensiones de navegador</li>
+              <li>❌ Sincronización P2P entre dispositivos</li>
+              <li>❌ Modelos de IA locales ilimitados</li>
+            </ul>
+            <a href="/app" class="btn-outline btn-block">Empezar Gratis</a>
+          </article>
+
+          <!-- Plan Pro -->
+          <article class="pricing-card pro">
+            <div class="pro-badge">El Más Popular</div>
+            <header>
+              <h3>Pro</h3>
+              <div class="price" data-monthly="79" data-yearly="79">
+                <span class="currency">$</span><span class="amount">79</span><span class="period">pago único</span>
+              </div>
+              <p>Licencia de por vida — sin suscripción</p>
+            </header>
+            <ul class="features-list">
+              <li>✅ Todo lo incluido en Gratis</li>
+              <li>✅ Sincronización P2P en 3 dispositivos</li>
+              <li>✅ Modelos de IA locales ilimitados</li>
+              <li>✅ Soporte prioritario</li>
+              <li>✅ Acceso anticipado a nuevas funciones</li>
+              <li>✅ Clave de licencia vía Whop (entrega inmediata)</li>
+            </ul>
+            <a href="https://whop.com/bookmarkforge" target="_blank" rel="noopener noreferrer" class="btn-primary btn-block">Obtener Pro de por Vida</a>
+          </article>
+        </div>
+
+        <div class="pricing-faq">
+          <h3>Preguntas Frecuentes</h3>
+          <dl class="faq-list">
+            <dt>¿El plan gratis es realmente gratis para siempre?</dt>
+            <dd>Sí. Sin prueba limitada ni funciones bloqueadas en lo esencial. El plan gratis incluye todo lo necesario para la gestión personal de conocimiento.</dd>
+            <dt>¿Qué significa "pago único" en Pro?</dt>
+            <dd>Pagas una vez (79 $) y posees la licencia para siempre. Incluye todas las actualizaciones futuras. Sin cargos recurrentes. La clave de licencia se entrega al instante a través de Whop.</dd>
+            <dt>¿Qué métodos de pago aceptan?</dt>
+            <dd>A través de Whop: tarjeta de crédito, PayPal y criptomonedas. Nunca vemos tus datos de pago.</dd>
+            <dt>¿Cuál es la política de reembolso?</dt>
+            <dd>Garantía de devolución de 30 días en las licencias Pro. Contacta con support@bookmarkforge.com</dd>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" aria-labelledby="cta-title">
+      <div class="container">
+        <div class="cta-content">
+          <h2 id="cta-title">¿Listo para Ser Dueño de tu Conocimiento?</h2>
+          <p>Únete a miles de investigadores, desarrolladores y estudiantes que confían en BookmarkForge como su segundo cerebro.</p>
+          <div class="cta-actions">
+            <a href="/app" class="btn-primary btn-lg">Abrir la App Gratis</a>
+            <a href="#precios" class="btn-outline btn-lg">Pasar a Pro</a>
+          </div>
+          <p class="cta-note">Sin necesidad de cuenta. Funciona al instante en tu navegador.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/es/" class="footer-logo" aria-label="BookmarkForge inicio">
+            <img src="/logo-64.png" width="24" height="24" alt="" />
+            <span>BookmarkForge</span>
+          </a>
+          <p>Tu bóveda de conocimiento privada con IA. 100% local.</p>
+        </div>
+
+        <nav class="footer-links" aria-label="Producto">
+          <h4>Producto</h4>
+          <ul>
+            <li><a href="#funciones">Funciones</a></li>
+            <li><a href="#ia">Capacidades de IA</a></li>
+            <li><a href="#privacidad">Privacidad</a></li>
+            <li><a href="#precios">Precios</a></li>
+            <li><a href="/app">Abrir la App</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-links" aria-label="Recursos">
+          <h4>Recursos</h4>
+          <ul>
+            <li><a href="/pocket-alternative">Comparativa con Pocket</a></li>
+            <li><a href="/es/privacy-and-terms.html">Privacidad y Términos</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-links" aria-label="Idiomas">
+          <h4>Idiomas</h4>
+          <ul>
+            <li><a href="/?lang=en" hreflang="en" lang="en">English</a></li>
+            <li><a href="/es/?lang=es" hreflang="es" lang="es">Español</a></li>
+            <li><a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a></li>
+            <li><a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a></li>
+            <li><a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a></li>
+            <li><a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-links" aria-label="Soporte">
+          <h4>Soporte</h4>
+          <ul>
+            <li><a href="mailto:bookmarkforge@proton.me">Contacto</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 BookmarkForge. Todos los derechos reservados.</p>
+        <p class="footer-legal">
+          <a href="/es/privacy-and-terms.html">Política de Privacidad</a> ·
+          <a href="/es/privacy-and-terms.html#terms">Términos de Servicio</a> ·
+          <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

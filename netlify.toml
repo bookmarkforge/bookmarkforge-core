@@ -29,3 +29,136 @@
   for = "/payment/*"
   [headers.values]
     X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/pricing/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+# Private app — local-first vault, SPA shell only, never indexable
+[[headers]]
+  for = "/app"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/app/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/capture"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/capture/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/offline*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+# Landing pages (SEO) — static HTML at clean URLs (200 rewrite keeps the
+# canonical at / and /es/)
+#
+# Accept-Language negotiation (mirrors public/nginx.conf and
+# functions/_middleware.js): a browser whose PRIMARY language is one of the
+# localized landings gets a 302 to it. Netlify matches Language conditions
+# against the first language in the Accept-Language header (quality values
+# ignored) and serves these redirects from the CDN edge via alternate
+# headers — same semantics as the `if ($http_accept_language ~* "^<lang>")`
+# rules. 302 (not 301) on purpose: negotiation must stay temporary so search
+# engines keep the EN canonical at /. Rules must precede the 200 fallback
+# below — Netlify applies the first matching rule. Pinned by check:seo.
+[[redirects]]
+  from = "/"
+  to = "/es/"
+  status = 302
+  conditions = { Language = ["es"] }
+
+[[redirects]]
+  from = "/"
+  to = "/fr/"
+  status = 302
+  conditions = { Language = ["fr"] }
+
+[[redirects]]
+  from = "/"
+  to = "/de/"
+  status = 302
+  conditions = { Language = ["de"] }
+
+[[redirects]]
+  from = "/"
+  to = "/pt/"
+  status = 302
+  conditions = { Language = ["pt"] }
+
+[[redirects]]
+  from = "/"
+  to = "/it/"
+  status = 302
+  conditions = { Language = ["it"] }
+
+[[redirects]]
+  from = "/"
+  to = "/landing.html"
+  status = 200
+
+[[redirects]]
+  from = "/es"
+  to = "/es.html"
+  status = 200
+
+[[redirects]]
+  from = "/es/"
+  to = "/es.html"
+  status = 200
+
+[[redirects]]
+  from = "/fr"
+  to = "/fr.html"
+  status = 200
+
+[[redirects]]
+  from = "/fr/"
+  to = "/fr.html"
+  status = 200
+
+[[redirects]]
+  from = "/de"
+  to = "/de.html"
+  status = 200
+
+[[redirects]]
+  from = "/de/"
+  to = "/de.html"
+  status = 200
+
+[[redirects]]
+  from = "/pt"
+  to = "/pt.html"
+  status = 200
+
+[[redirects]]
+  from = "/pt/"
+  to = "/pt.html"
+  status = 200
+
+[[redirects]]
+  from = "/it"
+  to = "/it.html"
+  status = 200
+
+[[redirects]]
+  from = "/it/"
+  to = "/it.html"
+  status = 200
+
+[[redirects]]
+  from = "/pocket-alternative"
+  to = "/pocket-alternative.html"
+  status = 200

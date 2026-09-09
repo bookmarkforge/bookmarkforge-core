@@ -38,6 +38,12 @@ jobs:
       # check in the Actions UI instead of being buried in `npm run check`.
       - name: Enforce brand logo consistency
         run: npm run check:brand-logo
+      # Its own named step so SEO contract drift (canonical/hreflang/OG/Twitter
+      # regressions or a noindex leak across landings, legal and aux pages)
+      # surfaces as a separate red check instead of being buried in
+      # `npm run check`.
+      - name: Enforce SEO visibility contract
+        run: npm run check:seo
       - name: Validate workflow, artifact, HTTP, Compose and repository safety
         run: npm run check:workflows && npm run check:workflow-artifacts && npm run check:http-config && npm run check:compose-config && npm run check:runtime-config && npm run check:docker-context && npm run check:repository-hygiene
       - name: Validate CODEOWNERS syntax and placeholders

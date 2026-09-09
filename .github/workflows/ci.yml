@@ -33,6 +33,11 @@ jobs:
       - run: npm run lint
       - run: npm run test:fast
       - run: npm run check:secrets-in-commit
+      # Its own named step so a brand drift (icon or share card deviating
+      # from the canonical logo-512.png artwork) surfaces as a separate red
+      # check in the Actions UI instead of being buried in `npm run check`.
+      - name: Enforce brand logo consistency
+        run: npm run check:brand-logo
       - name: Validate workflow, artifact, HTTP, Compose and repository safety
         run: npm run check:workflows && npm run check:workflow-artifacts && npm run check:http-config && npm run check:compose-config && npm run check:runtime-config && npm run check:docker-context && npm run check:repository-hygiene
       - name: Validate CODEOWNERS syntax and placeholders

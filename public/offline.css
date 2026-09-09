@@ -22,13 +22,6 @@ body {
   width: 64px; height: 64px;
   margin-bottom: 1.5rem;
   border-radius: 16px;
-  background: var(--accent);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--text-on-accent);
   box-shadow: 0 4px 14px var(--accent-glow-strong);
 }
 h1 { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text); }

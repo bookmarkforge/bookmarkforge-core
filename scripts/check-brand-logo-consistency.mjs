@@ -443,11 +443,41 @@ export function collectInlineBrandSvgViolations(root = REPO_ROOT) {
 // OG share-card copy sync (Guard 3)
 // ---------------------------------------------------------------------------
 
-/** EN landing page the share-card copy must stay in sync with. */
+/**
+ * Landing locales (mirror of scripts/check-seo.mjs's LANDING_LOCALES) so the
+ * brand gate can locate each localized landing's og:description without importing
+ * from check-seo (avoids a circular dep between the two gates).
+ */
+import { metaContent } from "./check-seo.mjs";
+export const LANDING_LOCALES = [
+  { file: "public/landing.html", lang: "en", locale: "en_US", alternateLocale: "es_ES", path: "/" },
+  { file: "public/es.html", lang: "es", locale: "es_ES", alternateLocale: "en_US", path: "/es/" },
+  { file: "public/fr.html", lang: "fr", locale: "fr_FR", alternateLocale: "en_US", path: "/fr/" },
+  { file: "public/de.html", lang: "de", locale: "de_DE", alternateLocale: "en_US", path: "/de/" },
+  { file: "public/pt.html", lang: "pt", locale: "pt_PT", alternateLocale: "en_US", path: "/pt/" },
+  { file: "public/it.html", lang: "it", locale: "it_IT", alternateLocale: "en_US", path: "/it/" },
+];
 export const LANDING_FILE = "public/landing.html";
 
-/** The canonical EN share cards guarded for copy sync. */
-export const OG_CARD_FILES = ["public/og-image.svg", "public/og-image-pricing.svg"];
+/** The canonical share cards guarded for copy sync.
+ *
+ * The localized cards (og-image-<lang>.png) are generated from the same
+ * template as og-image.png (navy bg, accent rules, embedded logo, the
+ * BookmarkForge wordmark) with only the tagline line localized, so they
+ * are covered by the same logo-artwork guard (Guard 1) and only the
+ * localized tagline needs a per-card copy check below. We list the SVG
+ * sources here (the PNGs are the rendered output and are guarded as icon
+ * assets by Guard 1 / check:seo's asset-existence checks).
+ */
+export const OG_CARD_FILES = [
+  "public/og-image.svg",
+  "public/og-image-pricing.svg",
+  "public/og-image-es.png",
+  "public/og-image-fr.png",
+  "public/og-image-de.png",
+  "public/og-image-pt.png",
+  "public/og-image-it.png",
+];
 
 /**
  * Brand copy registered here — the single source for the main card's
@@ -510,16 +540,20 @@ export function extractSectionText(html, sectionId) {
 }
 
 /**
- * Pure evaluator for Guard 3. `cards` = [{ file, svg, kind }] with kind
- * "pricing" (live-synced against the landing #pricing section) or "main"
- * (must carry only registered brand copy). Card highlights may condense
+ * Pure evaluator for Guard 3. `cards` = [{ file, svg, kind, lang? }] with
+ * kind "pricing" (live-synced against the landing #pricing section), "lang"
+ * (localized PNG tagline must match the matching landing's og:description), or
+ * "main" (must carry only registered brand copy). Card highlights may condense
  * several landing bullets into one line — the rule is token-based: every
  * significant token of a pricing-card text run must exist somewhere in the
  * live #pricing text, so a landing copy change that orphans a highlight
  * (price, device count, feature name) fails with the missing words named.
+ * Localized cards use the same rule against the matching landing's og:description.
+ * The caller (evaluateBrandConsistency) passes `root` so the evaluator can read
+ * localized landing files only when both sides are present on disk.
  * Returns an array of failure strings.
  */
-export function evaluateCardCopySync({ landingHtml, cards }) {
+export function evaluateCardCopySync({ landingHtml, cards, root }) {
   const failures = [];
   const pricingText = extractSectionText(landingHtml, "pricing");
   if (pricingText == null) {
@@ -530,13 +564,44 @@ export function evaluateCardCopySync({ landingHtml, cards }) {
   }
   const landingTokens = new Set(copyTokens(pricingText));
 
-  for (const { file, svg, kind } of cards) {
+  for (const c of cards) {
+    const { file, svg, kind, lang } = c;
     if (kind === "pricing") {
       for (const run of extractSvgTextRuns(svg)) {
         const missing = copyTokens(run).filter((t) => !landingTokens.has(t));
         if (missing.length > 0) {
           failures.push(
             `${file}: card text "${run}" is not backed by the live #pricing section (missing: ${missing.join(", ")}) — update the card and the landing together`,
+          );
+        }
+      }
+    } else if (kind === "lang") {
+      // Localized tagline must appear (token-wise) in the matching landing's
+      // og:description, so a localized copy change that orphans a card tagline
+      // fails with the missing words named.
+      const langPage = LANDING_LOCALES.find((l) => l.lang === lang);
+      if (!langPage) {
+        failures.push(
+          `${file}: localized card for unknown lang "${lang}" — add it to LANDING_LOCALES in scripts/check-seo.mjs`,
+        );
+        continue;
+      }
+      const landPath = join(root, langPage.file);
+      if (!existsSync(landPath)) continue;
+      const landHtml = readFileSync(landPath, "utf8");
+      const ogDesc = metaContent(landHtml, "og:description");
+      if (!ogDesc) {
+        failures.push(
+          `${file}: localized card but ${langPage.file} has no og:description — add the localized tagline there`,
+        );
+        continue;
+      }
+      const pageTokens = new Set(copyTokens(ogDesc));
+      for (const run of extractSvgTextRuns(svg)) {
+        const missing = copyTokens(run).filter((t) => !pageTokens.has(t));
+        if (missing.length > 0) {
+          failures.push(
+            `${file}: card tagline "${run}" is not backed by the live ${langPage.file} og:description (missing: ${missing.join(", ")}) — update the card and the landing together`,
           );
         }
       }
@@ -634,15 +699,24 @@ export function evaluateBrandConsistency(root = REPO_ROOT) {
   const cardFiles = OG_CARD_FILES.filter((f) => existsSync(join(root, f)));
   if (cardFiles.length > 0 && existsSync(landingPath)) {
     const landingHtml = readFileSync(landingPath, "utf8");
-    const cards = cardFiles.map((f) => ({
-      file: f,
-      svg: readFileSync(join(root, f), "utf8"),
-      kind: f.includes("pricing") ? "pricing" : "main",
-    }));
-    for (const msg of evaluateCardCopySync({ landingHtml, cards })) fail(msg);
+    const cards = cardFiles.map((f) => {
+      let kind = "main";
+      let lang = null;
+      if (f.includes("pricing")) {
+        kind = "pricing";
+      } else {
+        const ml = f.match(/og-image-(es|fr|de|pt|it)\.png$/);
+        if (ml) {
+          kind = "lang";
+          lang = ml[1];
+        }
+      }
+      return { file: f, svg: readFileSync(join(root, f), "utf8"), kind, lang };
+    })
+    for (const msg of evaluateCardCopySync({ landingHtml, cards, root })) fail(msg);
     checked += 1;
     notes.push(
-      `ok  share-card copy in sync (${cards.length} card(s) vs ${LANDING_FILE} #pricing + registered brand copy)`,
+      `ok  share-card copy in sync (${cards.length} card(s) vs ${LANDING_FILE} #pricing + registered brand copy + localized landing taglines)`,
     );
   }
 

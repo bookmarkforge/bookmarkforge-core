@@ -74,3 +74,21 @@ cada página.
 - Las dos tarjetas siguen gemelas en estilo y verificadas por
   `check:brand-logo` (logo incrustado contra `logo-512.png`), de modo que
   cualquier tarjeta que una página comparta mantiene la marca.
+- **Tarjetas localizadas (og-image-<lang>.png).** Las cinco landings locales
+  (es, fr, de, pt, it) now usan su propia tarjeta (`og-image-es.png`,
+  `og-image-fr.png`, `og-image-de.png`, `og-image-pt.png`, `og-image-it.png`)
+  con el mismo estilo, mismo logo incrustado y mismo nombre de marca, pero con
+  el eslogan traducido al idioma de esa landing (`Tu cerebro digital local y
+  privado` / `Ton cerveau numérique local et privé` / `Dein lokaler und
+  privater digitaler Geist` / `Seu cérebro digital local e privado` / `Il
+  tuo cervello digitale locale e privato`). La política las incluye en
+  `OG_IMAGE_POLICY` y el gate `check:seo` exige el valor exacto por página.
+  El gate `check:brand-logo` (Guard 1) verifica que el logo incrustado de
+  cada una coincide con la obra canónica, y Guard 3 verifica que el eslogan
+  traducido aparece (token a token) en el `og:description` de esa misma
+  landing, de modo que un cambio de copia localizada que deje huérfano el
+  eslogan de la tarjeta rompe CI nombrando las palabras huérfanas.
+  Las tarjetas PNG se generan a partir del mismo SVG base
+  (`public/og-image.svg`) con el eslogan localizado; el proceso se documenta
+  en `scripts/og-image-locale-gen.mjs` (una sola función sharp + logo
+  data-URI del SVG base).

@@ -355,7 +355,8 @@ describe("evaluateCardCopySync", () => {
 
   test("a live-backed pricing card passes", () => {
     const card = { file: "public/og-image-pricing.svg", kind: "pricing", svg: "<text>PRO</text><text>$79 one-time</text><text>P2P sync across 3 devices</text><text>FREE</text><text>$0 /month</text>" };
-    expect(evaluateCardCopySync({ landingHtml: LANDING, cards: [card] })).toEqual([]);
+    const fails = evaluateCardCopySync({ landingHtml: LANDING, cards: [card] });
+    expect(fails).toEqual([]);
   });
 
   test("an orphaned highlight names the missing words", () => {

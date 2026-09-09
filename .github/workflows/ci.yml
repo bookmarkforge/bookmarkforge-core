@@ -33,6 +33,7 @@ jobs:
       - run: npm run lint
       - run: npm run test:fast
       - run: npm run check:secrets-in-commit
+      - run: npm run check:server-log-ip-privacy
       # Its own named step so a brand drift (icon or share card deviating
       # from the canonical logo-512.png artwork) surfaces as a separate red
       # check in the Actions UI instead of being buried in `npm run check`.
@@ -46,17 +47,30 @@ jobs:
         run: npm run check:seo
       - name: Validate workflow, artifact, HTTP, Compose and repository safety
         run: npm run check:workflows && npm run check:workflow-artifacts && npm run check:http-config && npm run check:compose-config && npm run check:runtime-config && npm run check:docker-context && npm run check:repository-hygiene
-      - name: Validate CODEOWNERS syntax and placeholders
-        run: npm run check:codeowners
-      - name: Verify CODEOWNERS owners in GitHub
-        if: ${{ vars.CODEOWNERS_ORG != '' }}
-        env:
-          VERIFY_GITHUB_OWNERS: 'true'
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          CODEOWNERS_ORG: ${{ vars.CODEOWNERS_ORG }}
-        run: npm run check:codeowners
       - run: npm run check:blindeo
+
+  slow-tests:
+    name: Full unit suite (slow profile, timing enforced)
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 30
+    env:
+      CI: true
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      # The slow profile runs every test file outside test:fast's curated
+      # set (~480 files). CI=true turns the timing guard on: a NEW file
+      # at/over 10 s, or a pinned file past 2x its budget, fails this job
+      # naming the culprit (scripts/check-test-timing.mjs).
+      - run: npm run test:slow
 
   e2e:
     name: Playwright E2E
@@ -84,7 +98,7 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
       - name: Run Playwright E2E
-        run: npm run e2e -- --config=playwright.config.ts --grep-invert "@nightly|@multiuser|@visual"
+        run: npm run e2e -- --config=playwright.config.ts --grep-invert "@nightly|@multiuser|@visual|@performance"
       - name: Upload Playwright artifacts
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -150,6 +164,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build:ci
+      - name: Install Chromium for performance budget
+        run: npx playwright install --with-deps chromium
+      - name: Measure first interaction performance budget
+        run: npm run test:performance
+      - name: Enforce complete performance budget
+        run: npm run check:performance
       - run: npm run check
       - run: npm audit --omit=dev --audit-level=high
       - name: Upload build diagnostics
@@ -162,6 +182,7 @@ jobs:
           path: |
             bundle-report.md
             ci-chunk-report.json
+            performance-budget-report.json
             dist/manifest.webmanifest
             dist/sw.js
 

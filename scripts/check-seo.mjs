@@ -124,6 +124,9 @@ export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
  *
  *   - og-image.png         → the general product card (navy background, app
  *     logo, "Your Local-First Digital Brain"). Default for every page.
+ *   - og-image-<lang>.png → the localized product card for /<lang>/ (es,
+ *     fr, de, pt, it). Same navy/logo style, localized tagline so the
+ *     shared URL renders the right language on the social card.
  *   - og-image-pricing.png → the pricing card (same style, "Simple, Fair
  *     Pricing" / "Free forever · Pro $79 one-time — no subscriptions").
  *     Reserved for pricing-adjacent surfaces. Today that is
@@ -140,6 +143,11 @@ export const OG_IMAGE_POLICY = [
     file: "public/pocket-alternative.html",
     ogImage: `${SITE_URL}/og-image-pricing.png`,
   },
+  { file: "public/es.html", ogImage: `${SITE_URL}/og-image-es.png` },
+  { file: "public/fr.html", ogImage: `${SITE_URL}/og-image-fr.png` },
+  { file: "public/de.html", ogImage: `${SITE_URL}/og-image-de.png` },
+  { file: "public/pt.html", ogImage: `${SITE_URL}/og-image-pt.png` },
+  { file: "public/it.html", ogImage: `${SITE_URL}/og-image-it.png` },
 ];
 
 /** og:image URL a page must use per OG_IMAGE_POLICY (default: the general card). */

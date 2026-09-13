@@ -280,6 +280,7 @@ declare module "lucide-react" {
   export const FolderOpen: LucideComponent;
   export const Infinity: LucideComponent;
   export const XCircle: LucideComponent;
+  export const LifeBuoy: LucideComponent;
 }
 
 declare module "rxdb/plugins/storage-dexie" {

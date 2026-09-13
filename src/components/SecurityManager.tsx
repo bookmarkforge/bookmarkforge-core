@@ -286,7 +286,7 @@ Date Generated: ${formatDate(new Date(), {
       await securityVault.setRecoveryData(encryptedMasterPassword);
       const { destroyDB, initDB } = await import("../container/database");
       await destroyDB();
-      await initDB(passwordInput);
+      const db = await initDB(passwordInput);
 
       // F0-4: export the optional .bmf recovery kit NOW — the vault is
       // fully created (verification token, flags, recovery data and DB key
@@ -316,6 +316,11 @@ Date Generated: ${formatDate(new Date(), {
         }
       }
 
+      if (db) {
+        logger.info("[SecurityManager] Vault created and database initialized", {
+          collections: db.collections.length,
+        });
+      }
       unlock();
       // `forceSetup` is a separate store flag from `isLocked`. Clear it
       // after first-time setup so AppContent can mount the authenticated
@@ -373,15 +378,14 @@ Date Generated: ${formatDate(new Date(), {
 
   if (!isLocked) {return <>{children}</>;}
 
-  return (
-    <main
-      className="fixed inset-0 z-[100] flex items-center justify-center ds-bg-primary"
+  return (      <main
+      className="fixed inset-0 z-[100] flex items-center justify-center ds-bg-primary p-4"
       data-testid="vault-locked-screen"
     >
       {/* CSS animation replaces the former motion.div entrance — keeping
           this first-painted screen free of the ui-runtime vendor chunk. */}
       <div
-        className="security-card-in w-full max-w-md p-8 shadow-2xl relative ds-radius-card ds-bg-card ds-border"
+        className="security-card-in w-full max-w-md max-h-[calc(100vh-2rem)] overflow-y-auto p-8 shadow-2xl relative ds-radius-card ds-bg-card ds-border"
       >
         {/* REMOVED: Insecure DEV bypass mode for security */}
         {isFirstTime && import.meta.env.DEV && (
@@ -394,30 +398,28 @@ Date Generated: ${formatDate(new Date(), {
               aria-label="DEV mode bypass removed"
             />
           </div>
-        )}
-
-        <div className="flex flex-col items-center text-center mb-8">
+        )}          <div className="flex flex-col items-center text-center mb-6">
           <div
-            className="size-16 flex items-center justify-center mb-4 ds-radius-widget"
+            className="size-14 flex items-center justify-center mb-3 ds-radius-widget"
             style={{
               background: "var(--accent-soft)",
               border: "1px solid var(--accent-glow)",
             }}
           >
             {isRecovering ? (
-              <IconRefreshCw className="size-8 ds-text-accent" />
+              <IconRefreshCw className="size-7 ds-text-accent" />
             ) : (
-              <IconShield className="size-8 ds-text-accent" />
+              <IconShield className="size-7 ds-text-accent" />
             )}
           </div>
-          <h1 className="text-2xl font-semibold mb-2 ds-text-primary line-clamp-2">
+          <h1 className="text-xl font-semibold mb-1 ds-text-primary line-clamp-2">
             {isFirstTime
               ? t("app_setup_vault")
               : isRecovering
                 ? t("app_recoverVault")
                 : t("app_vault_locked")}
           </h1>
-          <p className="text-sm ds-text-secondary">
+          <p className="text-xs ds-text-secondary">
             {isFirstTime
               ? t("app_setup_vault_desc")
               : isRecovering
@@ -427,19 +429,19 @@ Date Generated: ${formatDate(new Date(), {
         </div>
 
         {isFirstTime ? (
-          <div className="space-y-4">
-            <div className="p-4 ds-radius-card ds-bg-secondary ds-border">
-              <p className="text-xs mb-2 ds-text-secondary">
+          <div className="space-y-3">
+            <div className="p-3 ds-radius-card ds-bg-secondary ds-border">
+              <p className="text-xs mb-1 ds-text-secondary">
                 {t("app_recoveryPhraseLabel")}
               </p>
-              <p className="text-sm font-mono break-all mb-4 ds-text-primary">
+              <p className="text-sm font-mono break-all mb-3 ds-text-primary">
                 {recoveryPhrase}
               </p>
-              <div className="flex items-center gap-4 flex-wrap">
+              <div className="flex items-center gap-3 flex-wrap">
                 <button
                   onClick={handleCopy}
                   disabled={!recoveryPhrase}
-                  className="truncate flex items-center gap-2 text-xs text-cyan-400 hover:text-cyan-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-cyan-400"
+                  className="truncate flex items-center gap-1 text-xs text-cyan-400 hover:text-cyan-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-cyan-400"
                 >
                   {copied ? (
                     <IconCheck className="size-3" />
@@ -451,7 +453,7 @@ Date Generated: ${formatDate(new Date(), {
                 <button
                   onClick={downloadRecoveryKit}
                   disabled={!recoveryPhrase}
-                  className="truncate flex items-center gap-2 text-xs text-blue-400 hover:text-blue-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-blue-400"
+                  className="truncate flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-blue-400"
                 >
                   <IconDownload className="size-3" />
                   {t("app_downloadRecoveryKit")}
@@ -459,7 +461,7 @@ Date Generated: ${formatDate(new Date(), {
                 <button
                   onClick={handleRegeneratePhrase}
                   disabled={isRegenerating}
-                  className="truncate flex items-center gap-2 text-xs ds-text-success hover:ds-text-success disabled:opacity-50"
+                  className="truncate flex items-center gap-1 text-xs ds-text-success hover:ds-text-success disabled:opacity-50"
                 >
                   <IconRefreshCw className="size-3" />
                   {t("app_regeneratePhrase")}
@@ -471,8 +473,8 @@ Date Generated: ${formatDate(new Date(), {
                 backup restores the vault DATA on a new device or browser
                 — and needs the master password to open. Optional and
                 never blocking. */}
-            <div className="p-4 ds-radius-card ds-bg-secondary ds-border">
-              <p className="text-xs mb-3 ds-text-secondary">
+            <div className="p-3 ds-radius-card ds-bg-secondary ds-border">
+              <p className="text-xs mb-2 ds-text-secondary">
                 {t(
                   "app_bmfKitPasswordWarning",
                   "Optional: this file is encrypted with your master password — without the password, it is useless.",
@@ -481,7 +483,7 @@ Date Generated: ${formatDate(new Date(), {
               <button
                 onClick={handleSaveBmfKit}
                 disabled={!passwordInput || isUnlocking || isExportingKit}
-                className="truncate flex items-center gap-2 text-xs text-cyan-400 hover:text-cyan-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-cyan-400"
+                className="truncate flex items-center gap-1 text-xs text-cyan-400 hover:text-cyan-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-cyan-400"
               >
                 {isExportingKit ? (
                   <div className="size-3 border-2 border-cyan-400/30 border-t-cyan-400 rounded-full animate-spin" />
@@ -493,7 +495,7 @@ Date Generated: ${formatDate(new Date(), {
                   : t("app_saveBmfKit", "Save recovery kit (.bmf)")}
               </button>
             </div>
-            <span className="flex items-center gap-2 text-sm text-[var(--text-secondary)] cursor-pointer">
+            <span className="flex items-center gap-2 text-xs text-[var(--text-secondary)] cursor-pointer">
               <input
                 type="checkbox"
                 aria-label={t("app_confirmRecovery")}
@@ -513,30 +515,29 @@ Date Generated: ${formatDate(new Date(), {
               value={passwordInput}
               onChange={(e) => setPasswordInput(e.target.value)}
               placeholder={t("app_master_password")}
-              className="w-full px-4 py-4 transition-all outline-none ds-radius-card ds-bg-input ds-border-inactive ds-text-primary"
+              className="w-full px-3 py-3 transition-all outline-none ds-radius-card ds-bg-input ds-border-inactive ds-text-primary"
             />
-          </div>
-        ) : isRecovering ? (
-          <div className="space-y-4">
+          </div>        ) : isRecovering ? (
+          <div className="space-y-3">
             <textarea
               aria-label={t("app_enterRecoveryPhrase")}
               value={recoveryInput}
               onChange={(e) => setRecoveryInput(e.target.value)}
               placeholder={t("app_enterRecoveryPhrase")}
-              className="w-full px-4 py-4 transition-all resize-none h-32 outline-none ds-radius-card ds-bg-input ds-border-inactive ds-text-primary"
+              className="w-full px-3 py-3 transition-all resize-none h-24 outline-none ds-radius-card ds-bg-input ds-border-inactive ds-text-primary"
               disabled={isUnlocking}
             />
           </div>
         ) : (
           <div className="relative">
-            <IconLock className="absolute start-4 top-1/2 -translate-y-1/2 size-5 ds-text-muted" />
+            <IconLock className="absolute start-3 top-1/2 -translate-y-1/2 size-4 ds-text-muted" />
             <input
               type="password"
               aria-label={t("app_master_password")}
               value={passwordInput}
               onChange={(e) => setPasswordInput(e.target.value)}
               placeholder={t("app_master_password")}
-              className="w-full ps-12 pe-4 py-4 transition-all outline-none ds-radius-card ds-bg-input ds-border-inactive ds-text-primary"
+              className="w-full ps-10 pe-3 py-3 transition-all outline-none ds-radius-card ds-bg-input ds-border-inactive ds-text-primary"
               onKeyDown={(e) => e.key === "Enter" && handleUnlock()}
               disabled={isUnlocking}
             />
@@ -544,8 +545,8 @@ Date Generated: ${formatDate(new Date(), {
         )}
 
         {error && (
-          <div className="security-error-in flex items-center gap-2 p-4 bg-[var(--color-danger)]/10 border border-[var(--danger-soft-border)]/20 rounded-2xl ds-text-danger text-sm mt-4">
-            <IconAlertCircle className="size-4 shrink-0" />
+          <div className="security-error-in flex items-center gap-2 p-3 bg-[var(--color-danger)]/10 border border-[var(--danger-soft-border)]/20 rounded-2xl ds-text-danger text-xs mt-3">
+            <IconAlertCircle className="size-3 shrink-0" />
             <p>{error}</p>
           </div>
         )}
@@ -556,7 +557,7 @@ Date Generated: ${formatDate(new Date(), {
               ? handleSetup
               : isRecovering
                 ? handleRecovery
-                : handleUnlock
+              : handleUnlock
           }
           disabled={
             isUnlocking ||
@@ -564,7 +565,7 @@ Date Generated: ${formatDate(new Date(), {
             (isRecovering && !recoveryInput) ||
             (!isFirstTime && !isRecovering && !passwordInput)
           }
-          className="truncate w-full py-4 disabled:opacity-50 font-semibold transition-all flex items-center justify-center gap-2 mt-4 ds-radius-card ds-bg-accent-primary ds-shadow-accent"
+          className="truncate w-full py-3 disabled:opacity-50 font-semibold transition-all flex items-center justify-center gap-2 mt-3 ds-radius-card ds-bg-accent-primary ds-shadow-accent"
           style={{ color: "var(--bg-primary)" }}
         >
           {isUnlocking ? (
@@ -590,7 +591,7 @@ Date Generated: ${formatDate(new Date(), {
         </button>
 
         {!isFirstTime && (
-          <div className="mt-4 text-center">
+          <div className="mt-3 text-center">
             <button
               onClick={() => {
                 setIsRecovering(!isRecovering);
@@ -598,15 +599,15 @@ Date Generated: ${formatDate(new Date(), {
                 setPasswordInput("");
                 setRecoveryInput("");
               }}
-              className="truncate text-sm transition-colors ds-text-secondary"
+              className="truncate text-xs transition-colors ds-text-secondary"
             >
               {isRecovering ? t("app_backToLogin") : t("app_forgotPassword")}
             </button>
           </div>
         )}
 
-        <div className="mt-8 pt-6 text-center ds-divider-t">
-          <p className="text-xs leading-relaxed ds-text-muted">
+        <div className="mt-6 pt-4 text-center ds-divider-t">
+          <p className="text-[10px] leading-relaxed ds-text-muted">
             {t("app_vault_security_note_full")}
           </p>
         </div>

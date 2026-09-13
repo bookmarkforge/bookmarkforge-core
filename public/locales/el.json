@@ -47,16 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "Ο κωδικός πρόσβασης του χρηματοκιβωτίου είναι άκυρος.",
     "dbStorageUnavailable": "Η μόνιμη κρυπτογραφημένη αποθήκευση δεν είναι διαθέσιμη. Τα δεδομένα σας δεν φορτώθηκαν ούτε εγγράφηκαν. Ενεργοποιήστε το IndexedDB, ελευθερώστε χώρο ή φορτώστε ξανά αφού κλείσετε άλλες καρτέλες του χρηματοκιβωτίου."
   },
@@ -905,8 +895,8 @@
   "telemetry": "Μηδενική τηλεμετρία",
   "offline": "Πρώτα εκτός σύνδεσης",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "Πλαίσιο υπαρχόντων ετικετών",
+    "folder_list": "Λίστα φακέλων"
   },
   "general_folder": "Γενικά",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1550,5 +1540,11 @@
   "app_maintenancePartial_other": "Συντήρηση ολοκληρώθηκε με {{count}} προβλήματα",
   "app_fuseSelected": "Επιλεγμένες {{count}} συνδέσεις",
   "app_maintenanceFinished": "Συντήρηση ολοκληρώθηκε: επιδιορθώθηκαν {{count}}",
-  "app_maintenancePartial": "Συντήρηση ολοκληρώθηκε με {{count}} προβλήματα"
+  "app_maintenancePartial": "Συντήρηση ολοκληρώθηκε με {{count}} προβλήματα",
+  "app_fuseSelected_few": "Επιλεγμένες συνδέσεις",
+  "app_fuseSelected_many": "Επιλεγμένες συνδέσεις",
+  "app_maintenanceFinished_few": "Συντήρηση ολοκληρώθηκε: έγιναν επιδιορθώσεις",
+  "app_maintenanceFinished_many": "Συντήρηση ολοκληρώθηκε: έγιναν επιδιορθώσεις",
+  "app_maintenancePartial_few": "Συντήρηση ολοκληρώθηκε με προβλήματα",
+  "app_maintenancePartial_many": "Συντήρηση ολοκληρώθηκε με προβλήματα"
 }

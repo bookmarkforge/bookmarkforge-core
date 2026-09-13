@@ -1,13 +1,13 @@
 /* Privacy & Terms — consumes the shared brand tokens + Inter
    Variable from /brand-tokens.css (loaded first). Brand default
-   is navy; this page is dark-only. */
+   is dark navy; this page supports both dark and light themes. */
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
   font-family: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  background: var(--bg-primary);
+  color: var(--text-primary);
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -15,7 +15,7 @@ body {
 
 header {
   border-bottom: 1px solid var(--divider);
-  background: var(--bg-surface);
+  background: var(--bg-topbar);
   padding: 24px 0;
 }
 
@@ -31,7 +31,7 @@ header {
   gap: 12px;
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--accent-primary);
   text-decoration: none;
 }
 
@@ -53,10 +53,10 @@ h2 {
 h3 {
   font-size: 1.1rem;
   margin: 24px 0 8px;
-  color: var(--accent);
+  color: var(--accent-primary);
 }
 
-p, li { color: var(--text); }
+p, li { color: var(--text-primary); }
 
 p { margin: 0 0 16px; }
 
@@ -67,7 +67,7 @@ ul, ol {
 
 li { margin-bottom: 8px; }
 
-a { color: var(--accent); text-decoration: none; }
+a { color: var(--accent-primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
 hr {
@@ -84,7 +84,7 @@ hr {
 
 footer {
   border-top: 1px solid var(--divider);
-  background: var(--bg-surface);
+  background: var(--bg-topbar);
   padding: 24px 0;
   text-align: center;
   color: var(--text-muted);
@@ -115,7 +115,7 @@ td {
 
 thead th {
   background: var(--bg-card);
-  color: var(--accent);
+  color: var(--accent-primary);
   font-weight: 600;
 }
 

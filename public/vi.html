@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Lưu bài viết, ghi chú và tài liệu trong một vault riêng tư, mã hóa và 100% cục bộ. Tìm kiếm AI, trình soạn thảo kiểu Notion và đồng bộ P2P. Kế hoạch miễn phí: 1.000 bookmark.">
+  <title>BookmarkForge — Giải pháp thay thế Private cho Pocket với AI (Bookmark và ghi chú)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforge.com/vi/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforge.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — Giải pháp thay thế Private cho Pocket với AI (Bookmark và ghi chú)">
+  <meta property="og:description" content="Lưu bài viết, ghi chú và tài liệu trong một vault riêng tư, mã hóa và 100% cục bộ. Tìm kiếm AI, trình soạn thảo kiểu Notion và đồng bộ P2P. Kế hoạch miễn phí: 1.000 bookmark.">
+  <meta property="og:url" content="https://bookmarkforge.com/vi/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image-vi.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="vi_VN">
+  <meta property="og:locale:alternate" content="ar_AR">
+  <meta property="og:locale:alternate" content="bg_BG">
+  <meta property="og:locale:alternate" content="cs_CZ">
+  <meta property="og:locale:alternate" content="da_DK">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="el_GR">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="fi_FI">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="he_IL">
+  <meta property="og:locale:alternate" content="hi_IN">
+  <meta property="og:locale:alternate" content="hr_HR">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:locale:alternate" content="id_ID">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:locale:alternate" content="ja_JP">
+  <meta property="og:locale:alternate" content="ko_KR">
+  <meta property="og:locale:alternate" content="nl_NL">
+  <meta property="og:locale:alternate" content="no_NO">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:locale:alternate" content="pt_BR">
+  <meta property="og:locale:alternate" content="ro_RO">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:locale:alternate" content="sv_SE">
+  <meta property="og:locale:alternate" content="th_TH">
+  <meta property="og:locale:alternate" content="tr_TR">
+  <meta property="og:locale:alternate" content="uk_UA">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — Giải pháp thay thế Private cho Pocket với AI (Bookmark và ghi chú)">
+  <meta name="twitter:description" content="Lưu bài viết, ghi chú và tài liệu trong một vault riêng tư, mã hóa và 100% cục bộ. Tìm kiếm AI, trình soạn thảo kiểu Notion và đồng bộ P2P. Kế hoạch miễn phí: 1.000 bookmark.">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image-vi.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://bookmarkforge.com/vi/#website",
+      "url": "https://bookmarkforge.com/vi/",
+      "name": "BookmarkForge",
+      "description": "Giải pháp thay thế private cho Pocket để lưu bài viết và đọc sau: bookmark, ghi chú và tài liệu — mã hóa trên thiết bị của bạn, tìm kiếm được bằng AI và đồng bộ peer-to-peer. Không có cloud. Không theo dõi. 100% của bạn.",
+      "inLanguage": "vi",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://bookmarkforge.com/vi/?s={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@id": "https://bookmarkforge.com/#organization"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://bookmarkforge.com/#organization",
+      "name": "BookmarkForge",
+      "url": "https://bookmarkforge.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://bookmarkforge.com/logo.png",
+        "width": 64,
+        "height": 64
+      },
+      "email": "bookmarkforge@proton.me"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://bookmarkforge.com/vi/#software",
+      "name": "BookmarkForge",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web",
+      "url": "https://bookmarkforge.com/vi/",
+      "image": "https://bookmarkforge.com/og-image-vi.png",
+      "description": "Giải pháp thay thế private cho Pocket để lưu bài viết và đọc sau: bookmark, ghi chú và tài liệu — mã hóa trên thiết bị của bạn, tìm kiếm được bằng AI và đồng bộ peer-to-peer. Không có cloud. Không theo dõi. 100% của bạn.",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro Lifetime",
+          "price": "79",
+          "priceCurrency": "USD"
+        }
+      ],
+      "featureList": [
+        "100% local storage",
+        "End-to-end encryption",
+        "Offline-first",
+        "AI search",
+        "Notion-style editor",
+        "P2P sync"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://bookmarkforge.com/vi/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Kế hoạch miễn phí có thực sự miễn phí mãi mãi không?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Có. Không có thời gian dùng thử giới hạn hay subscription. Kế hoạch miễn phí bao gồm 1.000 bookmark, tìm kiếm đầy đủ văn bản và ngữ nghĩa, đồ thị tri thức và AI với API key của bạn (bạn trả cho nhà cung cấp)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "'Mua một lần' trong Pro có nghĩa là gì?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Bạn trả một lần ($79), và giấy phép là của bạn mãi mãi. Bao gồm tất cả cập nhật trong 12 tháng. Không có phí lặp lại. Chìa khóa giấy phép được giao ngay lập tức qua Whop."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Bạn chấp nhận phương thức thanh toán nào?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Qua Whop: thẻ tín dụng, PayPal và tiền điện tử. Chúng tôi không bao giờ thấy thông tin thanh toán của bạn."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Chính sách hoàn tiền của bạn là gì?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Bảo đảm hoàn tiền 30 ngày cho giấy phép Pro. Liên hệ: support@bookmarkforge.com"
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/vi/" class="nav-brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navigation">
+        <a href="#features">Bookmark và tài liệu</a>
+        <a href="#ai">AI tôn trọng bạn</a>
+        <a href="#privacy">Mã hóa đầu cuối</a>
+        <a href="#pricing">Giá Đơn Giản, Công Bằng</a>
+
+        <a href="/ar/?lang=ar" hreflang="ar" lang="ar">العربية</a>
+        <a href="/bg/?lang=bg" hreflang="bg" lang="bg">Български</a>
+        <a href="/cs/?lang=cs" hreflang="cs" lang="cs">Čeština</a>
+        <a href="/da/?lang=da" hreflang="da" lang="da">Dansk</a>
+        <a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a>
+        <a href="/el/?lang=el" hreflang="el" lang="el">Ελληνικά</a>
+        <a href="/?lang=en" hreflang="en" lang="en">English</a>
+        <a href="/es/?lang=es" hreflang="es" lang="es">Español</a>
+        <a href="/fi/?lang=fi" hreflang="fi" lang="fi">Suomi</a>
+        <a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a>
+        <a href="/he/?lang=he" hreflang="he" lang="he">עברית</a>
+        <a href="/hi/?lang=hi" hreflang="hi" lang="hi">हिन्दी</a>
+        <a href="/hr/?lang=hr" hreflang="hr" lang="hr">Hrvatski</a>
+        <a href="/hu/?lang=hu" hreflang="hu" lang="hu">Magyar</a>
+        <a href="/id/?lang=id" hreflang="id" lang="id">Bahasa Indonesia</a>
+        <a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a>
+        <a href="/ja/?lang=ja" hreflang="ja" lang="ja">日本語</a>
+        <a href="/ko/?lang=ko" hreflang="ko" lang="ko">한국어</a>
+        <a href="/nl/?lang=nl" hreflang="nl" lang="nl">Nederlands</a>
+        <a href="/no/?lang=no" hreflang="no" lang="no">Norsk</a>
+        <a href="/pl/?lang=pl" hreflang="pl" lang="pl">Polski</a>
+        <a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a>
+        <a href="/ro/?lang=ro" hreflang="ro" lang="ro">Română</a>
+        <a href="/ru/?lang=ru" hreflang="ru" lang="ru">Русский</a>
+        <a href="/sv/?lang=sv" hreflang="sv" lang="sv">Svenska</a>
+        <a href="/th/?lang=th" hreflang="th" lang="th">ไทย</a>
+        <a href="/tr/?lang=tr" hreflang="tr" lang="tr">Türkçe</a>
+        <a href="/uk/?lang=uk" hreflang="uk" lang="uk">Українська</a>
+        <a href="/vi/?lang=vi" hreflang="vi" lang="vi">Tiếng Việt</a>
+        <a href="/zh/?lang=zh" hreflang="zh" lang="zh">中文</a>
+        <a href="/app" class="btn-primary nav-cta">Mở Miễn Phí</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">Phiên bản 1.0</span>
+          <h1 id="hero-title"><span class='accent-text'>AI Vault Riêng Tư</span> Của Bạn</h1>
+          <p class="hero-subtitle">Giải pháp thay thế private cho Pocket để lưu bài viết và đọc sau: bookmark, ghi chú và tài liệu — mã hóa trên thiết bị của bạn, tìm kiếm được bằng AI và đồng bộ peer-to-peer. Không có cloud. Không theo dõi. 100% của bạn.</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">Mở Miễn Phí</a>
+            <a href="#pricing" class="btn-secondary">Xem Giá</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>100% Cục Bộ</strong> — dữ liệu của bạn không rời khỏi thiết bị</span>
+            <span><strong>Mã Hóa</strong> — AES-256-GCM + Argon2id</span>
+            <span><strong>Offline</strong> — hoạt động không cần internet</span>
+            <span><strong>Riêng Tư</strong> — zero telemetri theo mặc định</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="alternativa-pocket" class="comparison-section" aria-labelledby="alternativa-pocket-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Đọc sau mà không hy sinh quyền riêng tư</span>
+          <h2 id="alternativa-pocket-title">Giải Pháp Thay Thế Private Cho Pocket</h2>
+          <p class="section-subtitle">Pocket biến mất. BookmarkForge giữ thói quen đọc sống — mỗi bài viết, ghi chú và đánh dấu đều được mã hóa trên thiết bị của bạn.</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>Lưu bài viết để đọc sau, mãi là của bạn</h3>
+            <p>Lưu bài viết, video và PDF bằng một cú nhấp — từ ứng dụng PWA, tiện ích trình duyệt hoặc menu chia sẻ. Không giống Pocket, danh sách đọc của bạn sống trên thiết bị, được mã hóa và hoạt động offline.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Ghi chú kiểu Notion trong mỗi bài viết</h3>
+            <p>Đánh dấu, tóm tắt và viết ghi chú trong mỗi bookmark. Biến một bài viết đã lưu thành cơ sở tri thức của riêng bạn — không chỉ là danh sách liên kết.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Zero theo dõi, zero quảng cáo</h3>
+            <p>BookmarkForge theo mặc định không sử dụng tài khoản, phân tích hay quảng cáo. Thói quen đọc của bạn chỉ là trách nhiệm của bạn.</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Bắt Đầu Lưu Miễn Phí</a>
+          <a href="/pocket-alternative" class="btn-link">So sánh đầy đủ và hướng dẫn di chuyển</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Tất cả những gì bạn cần</span>
+          <h2 id="features-title">Các tính năng mạnh mẽ để quản lý tri thức, tất cả chạy cục bộ</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Bookmark và tài liệu</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Tìm kiếm đầy đủ văn bản và ngữ nghĩa</h3>
+          </div>
+          <div class="feature-item">
+            <h3>AI cục bộ (WebLLM / Ollama) — Chỉ Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Chat RAG trên dữ liệu — Chỉ Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Đồng bộ P2P (WebRTC) — Chỉ Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Sao lưu được mã hóa</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Đồ thị tri thức</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Flashcards (Spaced Repetition) — Chỉ Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Quyền riêng tư theo mặc định</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">AI tôn trọng bạn</span>
+          <h2 id="ai-title">Tri Thức Được Tăng Cường</h2>
+          <p class="section-subtitle">BookmarkForge đưa ra lựa chọn: chạy mô hình 100% cục bộ trong trình duyệt (WebLLM, WebGPU) với Pro, kết nối API keys của bạn với nhà cung cấp cloud hoặc sử dụng Ollama cục bộ. Chỉ dẫn của bạn, dữ liệu của bạn, quy tắc của bạn.</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>Nhà cung cấp được hỗ trợ</h3>
+            <ul class="providers-list">
+              <li>WebLLM local (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Pro only</li>
+              <li>Ollama local (any model you run)</li>
+              <li>Google Gemini cloud (your API key)</li>
+              <li>OpenAI / GPT-4o cloud (your API key)</li>
+              <li>Anthropic Claude cloud (your API key)</li>
+              <li>Groq cloud (your API key)</li>
+              <li>Custom / OpenRouter via custom provider (your API key)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>Chế độ chat</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>Chế Độ Private</h4>
+                <p>Chỉ AI cục bộ (WebLLM/Ollama). Zero dữ liệu rời khỏi thiết bị. Hoạt động offline. Yêu cầu Pro cho WebLLM.</p>
+              </div>
+              <div class="mode-item">
+                <h4>Chế Độ Tìm Kiếm Web</h4>
+                <p>Kết hợp vault của bạn với kết quả tìm kiếm thời gian thực (nhà cung cấp cloud).</p>
+              </div>
+              <div class="mode-item">
+                <h4>Chuyên Gia</h4>
+                <p>Nhân vật chuyên biệt: Lập trình viên, Nhà văn, Phân tích viên, Nghiên cứu viên. Yêu cầu Pro cho AI cục bộ.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">Quyền riêng tư không phải tính năng — đó là nền tảng</h2>
+          <p class="section-subtitle">Mỗi quyết định kiến trúc mang lại cho bạn sự kiểm soát</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Mã hóa đầu cuối</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Kiến trúc 100% cục bộ</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Zero telemetri theo mặc định</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Chìa khóa là của bạn</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Tuân thủ GDPR</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Độc lập với nhà cung cấp</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">Giá Đơn Giản, Công Bằng</h2>
+          <p class="section-subtitle">Kế hoạch miễn phí: 1.000 bookmark. Pro là mua một lần $79 — không có subscription.</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Miễn Phí</h3>
+            <div class="price">$ 0<span>/ mãi mãi</span></div>
+            <p>Cho quản lý tri thức cá nhân (1.000 bookmark, 1 thiết bị)</p>
+            <ul>
+              <li>1.000 bookmark, ghi chú và tài liệu</li>
+              <li>Tìm kiếm đầy đủ văn bản và ngữ nghĩa</li>
+              <li>AI với API key của bạn (bạn trả cho nhà cung cấp)</li>
+              <li>Đồ thị tri thức</li>
+              <li>Mẫu cơ bản</li>
+              <li>Xuất JSON/HTML</li>
+              <li>PWA + tiện ích trình duyệt</li>
+              <li><span aria-hidden='true'>❌</span> Đồng bộ P2P giữa các thiết bị</li>
+              <li><span aria-hidden='true'>❌</span> AI cục bộ (WebLLM/Ollama)</li>
+              <li><span aria-hidden='true'>❌</span> Chat RAG trên dữ liệu</li>
+              <li><span aria-hidden='true'>❌</span> Flashcards với spaced repetition</li>
+              <li><span aria-hidden='true'>❌</span> PDF + OCR</li>
+              <li><span aria-hidden='true'>❌</span> Xuất nâng cao (10+ định dạng)</li>
+            </ul>
+            <a href="/app" class="btn-outline ">Bắt Đầu Miễn Phí</a>
+          </div>
+          <div class="price-card popular">
+            <span class="badge">Most Popular</span>
+            <h3>Pro</h3>
+            <div class="price">$ 79<span>mua một lần (mãi mãi)</span></div>
+            <p>Bookmark không giới hạn, 3 thiết bị, AI cục bộ, đồng bộ P2P — không có subscription</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Tất cả trong Miễn Phí</li>
+              <li><span aria-hidden="true">✅</span> Bookmark không giới hạn</li>
+              <li><span aria-hidden="true">✅</span> 3 thiết bị</li>
+              <li><span aria-hidden="true">✅</span> Đồng bộ P2P trên 3 thiết bị</li>
+              <li><span aria-hidden="true">✅</span> AI cục bộ (WebLLM, không cần API key)</li>
+              <li><span aria-hidden="true">✅</span> Chat RAG trên dữ liệu</li>
+              <li><span aria-hidden="true">✅</span> Chuyên gia (Lập trình viên, Nhà văn, Phân tích viên, Nghiên cứu viên)</li>
+              <li><span aria-hidden="true">✅</span> Flashcards với spaced repetition</li>
+              <li><span aria-hidden="true">✅</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> Xuất nâng cao (10+ định dạng)</li>
+              <li><span aria-hidden="true">✅</span> Vault bảo mật (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> Cập nhật 12 tháng</li>
+              <li><span aria-hidden="true">✅</span> Hỗ trợ email</li>
+            </ul>
+            <a href="https://whop.com/bookmarkforge" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Nhận Pro Mãi Mãi</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">Câu Hỏi Thường Gặp</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Kế hoạch miễn phí có thực sự miễn phí mãi mãi không?</h3>
+            <p>Có. Không có thời gian dùng thử giới hạn hay subscription. Kế hoạch miễn phí bao gồm 1.000 bookmark, tìm kiếm đầy đủ văn bản và ngữ nghĩa, đồ thị tri thức và AI với API key của bạn (bạn trả cho nhà cung cấp).</p>
+          </div>
+          <div class="faq-item">
+            <h3>'Mua một lần' trong Pro có nghĩa là gì?</h3>
+            <p>Bạn trả một lần ($79), và giấy phép là của bạn mãi mãi. Bao gồm tất cả cập nhật trong 12 tháng. Không có phí lặp lại. Chìa khóa giấy phép được giao ngay lập tức qua Whop.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Bạn chấp nhận phương thức thanh toán nào?</h3>
+            <p>Qua Whop: thẻ tín dụng, PayPal và tiền điện tử. Chúng tôi không bao giờ thấy thông tin thanh toán của bạn.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Chính sách hoàn tiền của bạn là gì?</h3>
+            <p>Bảo đảm hoàn tiền 30 ngày cho giấy phép Pro. Liên hệ: support@bookmarkforge.com</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>Sẵn Sàng Lấy Lại Quyền Kiểm Soát Tri Thức?</h2>
+        <p>Tham gia cùng hàng ngàn nghiên cứu viên, lập trình viên và sinh viên tin tưởng BookmarkForge như bộ não thứ hai.</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">Mở Miễn Phí</a>
+          <a href="#pricing" class="btn-secondary">Nâng Cấp Lên Pro</a>
+        </div>
+        <p class="note">Không cần tài khoản. Hoạt động ngay lập tức trong trình duyệt. Kế hoạch miễn phí: 1.000 bookmark.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>Vault AI riêng tư cho tri thức. 100% cục bộ.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Sản Phẩm</h4>
+        <ul>
+          <li><a href="#features">Tính Năng</a></li>
+          <li><a href="#ai">Khả Năng AI</a></li>
+          <li><a href="#privacy">Quyền Riêng Tư</a></li>
+          <li><a href="#pricing">Giá</a></li>
+          <li><a href="/app">Mở Ứng Dụng</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Tài Nguyên</h4>
+        <ul>
+          <li><a href="/pocket-alternative">So Sánh Pocket</a></li>
+          <li><a href="/vi/privacy-and-terms.html">Quyền Riêng Tư và Điều Khoản</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Ngôn Ngữ</h4>
+        <ul>
+          <li><a href="/ar/?lang=ar">العربية</a></li>
+          <li><a href="/bg/?lang=bg">Български</a></li>
+          <li><a href="/cs/?lang=cs">Čeština</a></li>
+          <li><a href="/da/?lang=da">Dansk</a></li>
+          <li><a href="/de/?lang=de">Deutsch</a></li>
+          <li><a href="/el/?lang=el">Ελληνικά</a></li>
+          <li><a href="/?lang=en">English</a></li>
+          <li><a href="/es/?lang=es">Español</a></li>
+          <li><a href="/fi/?lang=fi">Suomi</a></li>
+          <li><a href="/fr/?lang=fr">Français</a></li>
+          <li><a href="/he/?lang=he">עברית</a></li>
+          <li><a href="/hi/?lang=hi">हिन्दी</a></li>
+          <li><a href="/hr/?lang=hr">Hrvatski</a></li>
+          <li><a href="/hu/?lang=hu">Magyar</a></li>
+          <li><a href="/id/?lang=id">Bahasa Indonesia</a></li>
+          <li><a href="/it/?lang=it">Italiano</a></li>
+          <li><a href="/ja/?lang=ja">日本語</a></li>
+          <li><a href="/ko/?lang=ko">한국어</a></li>
+          <li><a href="/nl/?lang=nl">Nederlands</a></li>
+          <li><a href="/no/?lang=no">Norsk</a></li>
+          <li><a href="/pl/?lang=pl">Polski</a></li>
+          <li><a href="/pt/?lang=pt">Português</a></li>
+          <li><a href="/ro/?lang=ro">Română</a></li>
+          <li><a href="/ru/?lang=ru">Русский</a></li>
+          <li><a href="/sv/?lang=sv">Svenska</a></li>
+          <li><a href="/th/?lang=th">ไทย</a></li>
+          <li><a href="/tr/?lang=tr">Türkçe</a></li>
+          <li><a href="/uk/?lang=uk">Українська</a></li>
+          <li><a href="/vi/?lang=vi">Tiếng Việt</a></li>
+          <li><a href="/zh/?lang=zh">中文</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Hỗ Trợ</h4>
+        <ul>
+          <li><a href="mailto:bookmarkforge@proton.me">Liên Hệ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. Bảo lưu mọi quyền.</p>
+      <a href="/vi/privacy-and-terms.html">Chính Sách Quyền Riêng Tư</a> · <a href="/vi/privacy-and-terms.html#terms">Điều Khoản Dịch Vụ</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

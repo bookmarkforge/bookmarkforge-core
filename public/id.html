@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Simpan artikel, catatan, dan dokumen di vault privat, terenkripsi, dan 100% lokal. Pencarian AI, editor ala Notion, dan sinkronisasi P2P. Paket gratis: 1.000 bookmark.">
+  <title>BookmarkForge — Alternatif Privat Pocket dengan AI (Bookmark dan Catatan)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforge.com/id/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforge.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — Alternatif Privat Pocket dengan AI (Bookmark dan Catatan)">
+  <meta property="og:description" content="Simpan artikel, catatan, dan dokumen di vault privat, terenkripsi, dan 100% lokal. Pencarian AI, editor ala Notion, dan sinkronisasi P2P. Paket gratis: 1.000 bookmark.">
+  <meta property="og:url" content="https://bookmarkforge.com/id/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image-id.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="id_ID">
+  <meta property="og:locale:alternate" content="ar_AR">
+  <meta property="og:locale:alternate" content="bg_BG">
+  <meta property="og:locale:alternate" content="cs_CZ">
+  <meta property="og:locale:alternate" content="da_DK">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="el_GR">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="fi_FI">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="he_IL">
+  <meta property="og:locale:alternate" content="hi_IN">
+  <meta property="og:locale:alternate" content="hr_HR">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:locale:alternate" content="ja_JP">
+  <meta property="og:locale:alternate" content="ko_KR">
+  <meta property="og:locale:alternate" content="nl_NL">
+  <meta property="og:locale:alternate" content="no_NO">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:locale:alternate" content="pt_BR">
+  <meta property="og:locale:alternate" content="ro_RO">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:locale:alternate" content="sv_SE">
+  <meta property="og:locale:alternate" content="th_TH">
+  <meta property="og:locale:alternate" content="tr_TR">
+  <meta property="og:locale:alternate" content="uk_UA">
+  <meta property="og:locale:alternate" content="vi_VN">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — Alternatif Privat Pocket dengan AI (Bookmark dan Catatan)">
+  <meta name="twitter:description" content="Simpan artikel, catatan, dan dokumen di vault privat, terenkripsi, dan 100% lokal. Pencarian AI, editor ala Notion, dan sinkronisasi P2P. Paket gratis: 1.000 bookmark.">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image-id.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://bookmarkforge.com/id/#website",
+      "url": "https://bookmarkforge.com/id/",
+      "name": "BookmarkForge",
+      "description": "Alternatif privat Pocket untuk menyimpan artikel dan membaca nanti: bookmark, catatan, dan dokumen — terenkripsi di perangkat Anda, bisa dicari dengan AI, dan disinkronkan peer-to-peer. Tanpa cloud. Tanpa pelacakan. 100% milik Anda.",
+      "inLanguage": "id",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://bookmarkforge.com/id/?s={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@id": "https://bookmarkforge.com/#organization"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://bookmarkforge.com/#organization",
+      "name": "BookmarkForge",
+      "url": "https://bookmarkforge.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://bookmarkforge.com/logo.png",
+        "width": 64,
+        "height": 64
+      },
+      "email": "bookmarkforge@proton.me"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://bookmarkforge.com/id/#software",
+      "name": "BookmarkForge",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web",
+      "url": "https://bookmarkforge.com/id/",
+      "image": "https://bookmarkforge.com/og-image-id.png",
+      "description": "Alternatif privat Pocket untuk menyimpan artikel dan membaca nanti: bookmark, catatan, dan dokumen — terenkripsi di perangkat Anda, bisa dicari dengan AI, dan disinkronkan peer-to-peer. Tanpa cloud. Tanpa pelacakan. 100% milik Anda.",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro Lifetime",
+          "price": "79",
+          "priceCurrency": "USD"
+        }
+      ],
+      "featureList": [
+        "100% local storage",
+        "End-to-end encryption",
+        "Offline-first",
+        "AI search",
+        "Notion-style editor",
+        "P2P sync"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://bookmarkforge.com/id/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Apakah paket gratis benar-benar gratis selamanya?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ya. Tanpa masa uji coba terbatas atau langganan. Paket gratis mencakup 1.000 bookmark, pencarian full-text dan semantik, graf pengetahuan, dan AI dengan kunci API sendiri (Anda membayar penyedia)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Apa arti 'pembelian satu kali' di Pro?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Anda membayar sekali ($79), dan lisensi adalah milik Anda selamanya. Termasuk semua pembaruan selama 12 bulan. Tanpa biaya berulang. Kunci lisensi dikirim instan melalui Whop."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Metode pembayaran apa yang Anda terima?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Melalui Whop: kartu kredit, PayPal, dan cryptocurrency. Kami tidak pernah melihat informasi pembayaran Anda."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Apa kebijakan pengembalian dana Anda?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Jaminan pengembalian 30 hari untuk lisensi Pro. Hubungi: support@bookmarkforge.com"
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/id/" class="nav-brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navigation">
+        <a href="#features">Bookmark dan dokumen</a>
+        <a href="#ai">AI yang menghargai Anda</a>
+        <a href="#privacy">Enkripsi end-to-end</a>
+        <a href="#pricing">Harga Sederhana dan Adil</a>
+
+        <a href="/ar/?lang=ar" hreflang="ar" lang="ar">العربية</a>
+        <a href="/bg/?lang=bg" hreflang="bg" lang="bg">Български</a>
+        <a href="/cs/?lang=cs" hreflang="cs" lang="cs">Čeština</a>
+        <a href="/da/?lang=da" hreflang="da" lang="da">Dansk</a>
+        <a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a>
+        <a href="/el/?lang=el" hreflang="el" lang="el">Ελληνικά</a>
+        <a href="/?lang=en" hreflang="en" lang="en">English</a>
+        <a href="/es/?lang=es" hreflang="es" lang="es">Español</a>
+        <a href="/fi/?lang=fi" hreflang="fi" lang="fi">Suomi</a>
+        <a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a>
+        <a href="/he/?lang=he" hreflang="he" lang="he">עברית</a>
+        <a href="/hi/?lang=hi" hreflang="hi" lang="hi">हिन्दी</a>
+        <a href="/hr/?lang=hr" hreflang="hr" lang="hr">Hrvatski</a>
+        <a href="/hu/?lang=hu" hreflang="hu" lang="hu">Magyar</a>
+        <a href="/id/?lang=id" hreflang="id" lang="id">Bahasa Indonesia</a>
+        <a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a>
+        <a href="/ja/?lang=ja" hreflang="ja" lang="ja">日本語</a>
+        <a href="/ko/?lang=ko" hreflang="ko" lang="ko">한국어</a>
+        <a href="/nl/?lang=nl" hreflang="nl" lang="nl">Nederlands</a>
+        <a href="/no/?lang=no" hreflang="no" lang="no">Norsk</a>
+        <a href="/pl/?lang=pl" hreflang="pl" lang="pl">Polski</a>
+        <a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a>
+        <a href="/ro/?lang=ro" hreflang="ro" lang="ro">Română</a>
+        <a href="/ru/?lang=ru" hreflang="ru" lang="ru">Русский</a>
+        <a href="/sv/?lang=sv" hreflang="sv" lang="sv">Svenska</a>
+        <a href="/th/?lang=th" hreflang="th" lang="th">ไทย</a>
+        <a href="/tr/?lang=tr" hreflang="tr" lang="tr">Türkçe</a>
+        <a href="/uk/?lang=uk" hreflang="uk" lang="uk">Українська</a>
+        <a href="/vi/?lang=vi" hreflang="vi" lang="vi">Tiếng Việt</a>
+        <a href="/zh/?lang=zh" hreflang="zh" lang="zh">中文</a>
+        <a href="/app" class="btn-primary nav-cta">Buka Gratis</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">Versi 1.0</span>
+          <h1 id="hero-title"><span class='accent-text'>Vault AI Privat</span> Anda</h1>
+          <p class="hero-subtitle">Alternatif privat Pocket untuk menyimpan artikel dan membaca nanti: bookmark, catatan, dan dokumen — terenkripsi di perangkat Anda, bisa dicari dengan AI, dan disinkronkan peer-to-peer. Tanpa cloud. Tanpa pelacakan. 100% milik Anda.</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">Buka Gratis</a>
+            <a href="#pricing" class="btn-secondary">Lihat Harga</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>100% Lokal</strong> — data Anda tidak meninggalkan perangkat</span>
+            <span><strong>Terenkripsi</strong> — AES-256-GCM + Argon2id</span>
+            <span><strong>Offline</strong> — berfungsi tanpa internet</span>
+            <span><strong>Privat</strong> — nol telemetry secara default</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="alternativa-pocket" class="comparison-section" aria-labelledby="alternativa-pocket-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Baca nanti tanpa mengorbankan privasi</span>
+          <h2 id="alternativa-pocket-title">Alternatif Privat Pocket</h2>
+          <p class="section-subtitle">Pocket menghilang. BookmarkForge menjaga kebiasaan membaca tetap hidup — setiap artikel, catatan, dan penanda terenkripsi di perangkat Anda.</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>Simpan artikel untuk nanti, milik Anda selamanya</h3>
+            <p>Simpan artikel, video, dan PDF dengan satu klik — dari aplikasi PWA, ekstensi browser, atau menu berbagi. Berbeda dengan Pocket, daftar baca Anda hidup di perangkat Anda, terenkripsi, dan berfungsi offline.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Catatan ala Notion di setiap artikel</h3>
+            <p>Soroti, ringkas, dan tulis catatan di setiap bookmark. Ubah artikel yang tersimpan menjadi basis pengetahuan Anda sendiri — bukan sekadar daftar tautan.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Nol pelacakan, nol iklan</h3>
+            <p>BookmarkForge tidak menggunakan akun, analitik, atau iklan secara default. Kebiasaan membaca Anda menjadi tanggung jawab Anda sendiri.</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Mulai Menyimpan Gratis</a>
+          <a href="/pocket-alternative" class="btn-link">Perbandingan lengkap dan panduan migrasi</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Semua yang Anda butuhkan</span>
+          <h2 id="features-title">Fitur kuat untuk mengelola pengetahuan Anda, semuanya berjalan lokal</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Bookmark dan dokumen</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Pencarian full-text dan semantik</h3>
+          </div>
+          <div class="feature-item">
+            <h3>AI lokal (WebLLM / Ollama) — Hanya Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>RAG chat atas data Anda — Hanya Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Sinkronisasi P2P (WebRTC) — Hanya Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Cadangan terenkripsi</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Graf pengetahuan</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Flashcards (Spaced Repetition) — Hanya Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Privasi secara default</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">AI yang menghargai Anda</span>
+          <h2 id="ai-title">Pengetahuan Anda, Diperkuat</h2>
+          <p class="section-subtitle">BookmarkForge memberi Anda pilihan: jalankan model 100% lokal di browser Anda (WebLLM, WebGPU) dengan Pro, hubungkan kunci API Anda sendiri ke penyedia cloud, atau gunakan Ollama lokal. Instruksi Anda, data Anda, aturan Anda.</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>Penyedia yang didukung</h3>
+            <ul class="providers-list">
+              <li>WebLLM local (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Pro only</li>
+              <li>Ollama local (any model you run)</li>
+              <li>Google Gemini cloud (your API key)</li>
+              <li>OpenAI / GPT-4o cloud (your API key)</li>
+              <li>Anthropic Claude cloud (your API key)</li>
+              <li>Groq cloud (your API key)</li>
+              <li>Custom / OpenRouter via custom provider (your API key)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>Mode chat</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>Mode Privat</h4>
+                <p>Hanya AI lokal (WebLLM/Ollama). Nol data meninggalkan perangkat. Berfungsi offline. Membutuhkan Pro untuk WebLLM.</p>
+              </div>
+              <div class="mode-item">
+                <h4>Mode Pencarian Web</h4>
+                <p>Menggabungkan vault Anda dengan hasil pencarian real-time (penyedia cloud).</p>
+              </div>
+              <div class="mode-item">
+                <h4>Agen Ahli</h4>
+                <p>Karakter spesialis: Programmer, Penulis, Analis, Peneliti. Membutuhkan Pro untuk AI lokal.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">Privasi bukan fitur — itu fondasi</h2>
+          <p class="section-subtitle">Setiap keputusan arsitektural memberi Anda kendali</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Enkripsi end-to-end</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Arsitektur 100% lokal</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Nol telemetry secara default</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Kunci milik Anda</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Kepatuhan GDPR</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Independen dari penyedia</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">Harga Sederhana dan Adil</h2>
+          <p class="section-subtitle">Paket gratis: 1.000 bookmark. Pro adalah pembelian satu kali seharga $79 — tanpa langganan.</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Gratis</h3>
+            <div class="price">$ 0<span>/ selamanya</span></div>
+            <p>Untuk manajemen pengetahuan pribadi (1.000 bookmark, 1 perangkat)</p>
+            <ul>
+              <li>1.000 bookmark, catatan, dan dokumen</li>
+              <li>Pencarian full-text dan semantik</li>
+              <li>AI dengan kunci API sendiri (Anda membayar penyedia)</li>
+              <li>Graf pengetahuan</li>
+              <li>Template dasar</li>
+              <li>Ekspor JSON/HTML</li>
+              <li>PWA + ekstensi browser</li>
+              <li><span aria-hidden='true'>❌</span> Sinkronisasi P2P antar perangkat</li>
+              <li><span aria-hidden='true'>❌</span> AI lokal (WebLLM/Ollama)</li>
+              <li><span aria-hidden='true'>❌</span> RAG chat atas data Anda</li>
+              <li><span aria-hidden='true'>❌</span> Flashcards dengan spaced repetition</li>
+              <li><span aria-hidden='true'>❌</span> PDF + OCR</li>
+              <li><span aria-hidden='true'>❌</span> Ekspor lanjutan (10+ format)</li>
+            </ul>
+            <a href="/app" class="btn-outline ">Mulai Gratis</a>
+          </div>
+          <div class="price-card popular">
+            <span class="badge">Most Popular</span>
+            <h3>Pro</h3>
+            <div class="price">$ 79<span>pembelian satu kali (selamanya)</span></div>
+            <p>Bookmark tanpa batas, 3 perangkat, AI lokal, sinkronisasi P2P — tanpa langganan</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Semua di Gratis</li>
+              <li><span aria-hidden="true">✅</span> Bookmark tanpa batas</li>
+              <li><span aria-hidden="true">✅</span> 3 perangkat</li>
+              <li><span aria-hidden="true">✅</span> Sinkronisasi P2P di 3 perangkat</li>
+              <li><span aria-hidden="true">✅</span> AI lokal (WebLLM, tanpa kunci API)</li>
+              <li><span aria-hidden="true">✅</span> RAG chat atas data Anda</li>
+              <li><span aria-hidden="true">✅</span> Agen ahli (Programmer, Penulis, Analis, Peneliti)</li>
+              <li><span aria-hidden="true">✅</span> Flashcards dengan spaced repetition</li>
+              <li><span aria-hidden="true">✅</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> Ekspor lanjutan (10+ format)</li>
+              <li><span aria-hidden="true">✅</span> Vault keamanan (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> Pembaruan selama 12 bulan</li>
+              <li><span aria-hidden="true">✅</span> Dukungan email</li>
+            </ul>
+            <a href="https://whop.com/bookmarkforge" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Dapatkan Pro Selamanya</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">Pertanyaan yang Sering Diajukan</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Apakah paket gratis benar-benar gratis selamanya?</h3>
+            <p>Ya. Tanpa masa uji coba terbatas atau langganan. Paket gratis mencakup 1.000 bookmark, pencarian full-text dan semantik, graf pengetahuan, dan AI dengan kunci API sendiri (Anda membayar penyedia).</p>
+          </div>
+          <div class="faq-item">
+            <h3>Apa arti 'pembelian satu kali' di Pro?</h3>
+            <p>Anda membayar sekali ($79), dan lisensi adalah milik Anda selamanya. Termasuk semua pembaruan selama 12 bulan. Tanpa biaya berulang. Kunci lisensi dikirim instan melalui Whop.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Metode pembayaran apa yang Anda terima?</h3>
+            <p>Melalui Whop: kartu kredit, PayPal, dan cryptocurrency. Kami tidak pernah melihat informasi pembayaran Anda.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Apa kebijakan pengembalian dana Anda?</h3>
+            <p>Jaminan pengembalian 30 hari untuk lisensi Pro. Hubungi: support@bookmarkforge.com</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>Siap Mengambil Kendali Atas Pengetahuan Anda?</h2>
+        <p>Bergabunglah dengan ribuan peneliti, pengembang, dan mahasiswa yang mempercayai BookmarkForge sebagai otak kedua mereka.</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">Buka Gratis</a>
+          <a href="#pricing" class="btn-secondary">Tingkatkan ke Pro</a>
+        </div>
+        <p class="note">Tidak perlu akun. Berfungsi langsung di browser Anda. Paket gratis: 1.000 bookmark.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>Vault AI privat Anda untuk pengetahuan. 100% lokal.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Produk</h4>
+        <ul>
+          <li><a href="#features">Fitur</a></li>
+          <li><a href="#ai">Kemampuan AI</a></li>
+          <li><a href="#privacy">Privasi</a></li>
+          <li><a href="#pricing">Harga</a></li>
+          <li><a href="/app">Buka Aplikasi</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Sumber Daya</h4>
+        <ul>
+          <li><a href="/pocket-alternative">Perbandingan Pocket</a></li>
+          <li><a href="/id/privacy-and-terms.html">Privasi dan Ketentuan</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Bahasa</h4>
+        <ul>
+          <li><a href="/ar/?lang=ar">العربية</a></li>
+          <li><a href="/bg/?lang=bg">Български</a></li>
+          <li><a href="/cs/?lang=cs">Čeština</a></li>
+          <li><a href="/da/?lang=da">Dansk</a></li>
+          <li><a href="/de/?lang=de">Deutsch</a></li>
+          <li><a href="/el/?lang=el">Ελληνικά</a></li>
+          <li><a href="/?lang=en">English</a></li>
+          <li><a href="/es/?lang=es">Español</a></li>
+          <li><a href="/fi/?lang=fi">Suomi</a></li>
+          <li><a href="/fr/?lang=fr">Français</a></li>
+          <li><a href="/he/?lang=he">עברית</a></li>
+          <li><a href="/hi/?lang=hi">हिन्दी</a></li>
+          <li><a href="/hr/?lang=hr">Hrvatski</a></li>
+          <li><a href="/hu/?lang=hu">Magyar</a></li>
+          <li><a href="/id/?lang=id">Bahasa Indonesia</a></li>
+          <li><a href="/it/?lang=it">Italiano</a></li>
+          <li><a href="/ja/?lang=ja">日本語</a></li>
+          <li><a href="/ko/?lang=ko">한국어</a></li>
+          <li><a href="/nl/?lang=nl">Nederlands</a></li>
+          <li><a href="/no/?lang=no">Norsk</a></li>
+          <li><a href="/pl/?lang=pl">Polski</a></li>
+          <li><a href="/pt/?lang=pt">Português</a></li>
+          <li><a href="/ro/?lang=ro">Română</a></li>
+          <li><a href="/ru/?lang=ru">Русский</a></li>
+          <li><a href="/sv/?lang=sv">Svenska</a></li>
+          <li><a href="/th/?lang=th">ไทย</a></li>
+          <li><a href="/tr/?lang=tr">Türkçe</a></li>
+          <li><a href="/uk/?lang=uk">Українська</a></li>
+          <li><a href="/vi/?lang=vi">Tiếng Việt</a></li>
+          <li><a href="/zh/?lang=zh">中文</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Dukungan</h4>
+        <ul>
+          <li><a href="mailto:bookmarkforge@proton.me">Hubungi Kami</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. Hak cipta dilindungi.</p>
+      <a href="/id/privacy-and-terms.html">Kebijakan Privasi</a> · <a href="/id/privacy-and-terms.html#terms">Syarat Layanan</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

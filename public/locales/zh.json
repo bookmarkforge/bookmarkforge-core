@@ -47,18 +47,6 @@
     "retry": "重试",
     "loading": "加载中...",
     "untitledDocument": "无标题文档",
-    "localFirstArchitecture": "100%本地优先架构",
-    "onboardingHeadline": "你的大脑。你的硬盘。",
-    "onboardingSubheadline": "BookmarkForge不使用中央云。你的IndexedDB数据库完全存在于你的硬盘上。关闭Wi-Fi，运行本地AI，完全掌控你的知识。",
-    "secureVaultTitle": "安全保险库",
-    "setupVaultDesc": "BookmarkForge使用军事级本地加密（AES-256-GCM）保护你的数据。没有主密码，任何人都无法读取你的书签。",
-    "create_vault": "创建安全保险库",
-    "continueWithoutPassword": "不加密继续",
-    "telemetryTitle": "崩溃报告",
-    "telemetryDesc": "由于应用100%私密且本地运行，我们完全无法感知错误。如果应用因内存不足崩溃，除非你告知我们，否则我们不会知道。",
-    "telemetryOptInTitle": "帮助我们改进（可选）",
-    "telemetryOptInDesc": "崩溃时发送匿名技术堆栈跟踪。我们绝不收集你的书签、文本、URL或提示。",
-    "onboardingFooter": "以隐私为最高优先级设计。",
     "invalidPassword": "保险库密码无效。",
     "dbStorageUnavailable": "持久加密存储不可用。您的数据未加载或未写入。请启用 IndexedDB、释放磁盘空间，或在关闭其他保险库标签页后重新加载。"
   },
@@ -905,8 +893,8 @@
   "telemetry": "零遥测",
   "offline": "离线优先",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "现有标签上下文",
+    "folder_list": "文件夹列表"
   },
   "general_folder": "通用",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1528,5 +1516,20 @@
   "app_diskBackupBlockedShort": "磁盘已阻止",
   "app_diskCopyShort": "磁盘已阻止",
   "app_loadingVault": "正在加载保险库…",
-  "app_loadingVaultDetail": "正在准备 {{rows}} 个项目…"
+  "app_loadingVaultDetail": "正在准备 {{rows}} 个项目…",
+  "app_fuseSelected": "合并所选（{{count}}）",
+  "app_fuseSelected_one": "合并所选（1）",
+  "app_fuseSelected_few": "合并所选",
+  "app_fuseSelected_many": "合并所选",
+  "app_fuseSelected_other": "合并所选（{{count}}）",
+  "app_maintenanceFinished": "维护完成：已修复 {{count}} 项",
+  "app_maintenanceFinished_one": "维护完成：已修复 1 项",
+  "app_maintenanceFinished_few": "维护完成：已修复",
+  "app_maintenanceFinished_many": "维护完成：已修复",
+  "app_maintenanceFinished_other": "维护完成：已修复 {{count}} 项",
+  "app_maintenancePartial": "维护结束，存在 {{count}} 个问题",
+  "app_maintenancePartial_one": "维护结束，存在 1 个问题",
+  "app_maintenancePartial_few": "维护结束，存在问题",
+  "app_maintenancePartial_many": "维护结束，存在问题",
+  "app_maintenancePartial_other": "维护结束，存在 {{count}} 个问题"
 }

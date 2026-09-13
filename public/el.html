@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Αποθηκεύστε άρθρα, σημειώσεις και έγγραφα σε ένα ιδιωτικό, κρυπτογραφημένο και 100% τοπικό vault. Αναζήτηση AI, επεξεργαστής στυλ Notion και P2P συγχρονισμός. Δωρεάν σχέδιο: 1.000 σελιδοδείκτες.">
+  <title>BookmarkForge — Ιδιωτική εναλλακτική του Pocket με AI (Σελιδοδείκτες και σημειώσεις)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforge.com/el/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforge.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — Ιδιωτική εναλλακτική του Pocket με AI (Σελιδοδείκτες και σημειώσεις)">
+  <meta property="og:description" content="Αποθηκεύστε άρθρα, σημειώσεις και έγγραφα σε ένα ιδιωτικό, κρυπτογραφημένο και 100% τοπικό vault. Αναζήτηση AI, επεξεργαστής στυλ Notion και P2P συγχρονισμός. Δωρεάν σχέδιο: 1.000 σελιδοδείκτες.">
+  <meta property="og:url" content="https://bookmarkforge.com/el/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image-el.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="el_GR">
+  <meta property="og:locale:alternate" content="ar_AR">
+  <meta property="og:locale:alternate" content="bg_BG">
+  <meta property="og:locale:alternate" content="cs_CZ">
+  <meta property="og:locale:alternate" content="da_DK">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="fi_FI">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="he_IL">
+  <meta property="og:locale:alternate" content="hi_IN">
+  <meta property="og:locale:alternate" content="hr_HR">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:locale:alternate" content="id_ID">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:locale:alternate" content="ja_JP">
+  <meta property="og:locale:alternate" content="ko_KR">
+  <meta property="og:locale:alternate" content="nl_NL">
+  <meta property="og:locale:alternate" content="no_NO">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:locale:alternate" content="pt_BR">
+  <meta property="og:locale:alternate" content="ro_RO">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:locale:alternate" content="sv_SE">
+  <meta property="og:locale:alternate" content="th_TH">
+  <meta property="og:locale:alternate" content="tr_TR">
+  <meta property="og:locale:alternate" content="uk_UA">
+  <meta property="og:locale:alternate" content="vi_VN">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — Ιδιωτική εναλλακτική του Pocket με AI (Σελιδοδείκτες και σημειώσεις)">
+  <meta name="twitter:description" content="Αποθηκεύστε άρθρα, σημειώσεις και έγγραφα σε ένα ιδιωτικό, κρυπτογραφημένο και 100% τοπικό vault. Αναζήτηση AI, επεξεργαστής στυλ Notion και P2P συγχρονισμός. Δωρεάν σχέδιο: 1.000 σελιδοδείκτες.">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image-el.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://bookmarkforge.com/el/#website",
+      "url": "https://bookmarkforge.com/el/",
+      "name": "BookmarkForge",
+      "description": "Η ιδιωτική εναλλακτική του Pocket για αποθήκευση άρθρων και ανάγνωση αργότερα: σελιδοδείκτες, σημειώσεις και έγγραφα — κρυπτογραφημένα στη συσκευή σας, αναζητήσιμα με AI και συγχρονισμένα peer-to-peer. Χωρίς σύννεφο. Χωρίς παρακολούθηση. 100% δικά σας.",
+      "inLanguage": "el",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://bookmarkforge.com/el/?s={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@id": "https://bookmarkforge.com/#organization"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://bookmarkforge.com/#organization",
+      "name": "BookmarkForge",
+      "url": "https://bookmarkforge.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://bookmarkforge.com/logo.png",
+        "width": 64,
+        "height": 64
+      },
+      "email": "bookmarkforge@proton.me"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://bookmarkforge.com/el/#software",
+      "name": "BookmarkForge",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web",
+      "url": "https://bookmarkforge.com/el/",
+      "image": "https://bookmarkforge.com/og-image-el.png",
+      "description": "Η ιδιωτική εναλλακτική του Pocket για αποθήκευση άρθρων και ανάγνωση αργότερα: σελιδοδείκτες, σημειώσεις και έγγραφα — κρυπτογραφημένα στη συσκευή σας, αναζητήσιμα με AI και συγχρονισμένα peer-to-peer. Χωρίς σύννεφο. Χωρίς παρακολούθηση. 100% δικά σας.",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro Lifetime",
+          "price": "79",
+          "priceCurrency": "USD"
+        }
+      ],
+      "featureList": [
+        "100% local storage",
+        "End-to-end encryption",
+        "Offline-first",
+        "AI search",
+        "Notion-style editor",
+        "P2P sync"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://bookmarkforge.com/el/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Είναι πραγματικά δωρεάν για πάντα το δωρεάν σχέδιο;",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ναι. Χωρίς περιορισμένη δοκιμή ή συνδρομή. Το δωρεάν σχέδιο περιλαμβάνει 1.000 σελιδοδείκτες, πλήρη και σημασιολογική αναζήτηση, γράφο γνώσεων και AI με το δικό σας API key (πληρώνετε τον provider)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Τι σημαίνει 'μοναδική αγορά' στο Pro;",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Πληρώνετε μία φορά ($79) και η άδεια είναι δικά σας για πάντα. Περιλαμβάνει όλες τις ενημερώσεις για 12 μήνες. Χωρίς επαναλαμβανόμενες χρεώσεις. Το κλειδί άδειας παραδίδεται αμέσως μέσω Whop."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ποιες μέθοδοι πληρωμής δέχεστε;",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Μέσω Whop: πιστωτική κάρτα, PayPal και κρυπτονομίσματα. Δεν βλέπουποτε τα στοιχεία πληρωμής σας."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ποια είναι η πολιτική επιστροφής χρημάτων;",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "30 ημερών εγγύηση επιστροφής για άδειες Pro. Επικοινωνήστε με support@bookmarkforge.com"
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/el/" class="nav-brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navigation">
+        <a href="#features">Σελιδοδείκτες και Έγγραφα</a>
+        <a href="#ai">AI που σας σέβεται</a>
+        <a href="#privacy">Κρυπτογράφηση από άκρο σε άκρο</a>
+        <a href="#pricing">Απλές, Δίκαιες Τιμές</a>
+
+        <a href="/ar/?lang=ar" hreflang="ar" lang="ar">العربية</a>
+        <a href="/bg/?lang=bg" hreflang="bg" lang="bg">Български</a>
+        <a href="/cs/?lang=cs" hreflang="cs" lang="cs">Čeština</a>
+        <a href="/da/?lang=da" hreflang="da" lang="da">Dansk</a>
+        <a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a>
+        <a href="/el/?lang=el" hreflang="el" lang="el">Ελληνικά</a>
+        <a href="/?lang=en" hreflang="en" lang="en">English</a>
+        <a href="/es/?lang=es" hreflang="es" lang="es">Español</a>
+        <a href="/fi/?lang=fi" hreflang="fi" lang="fi">Suomi</a>
+        <a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a>
+        <a href="/he/?lang=he" hreflang="he" lang="he">עברית</a>
+        <a href="/hi/?lang=hi" hreflang="hi" lang="hi">हिन्दी</a>
+        <a href="/hr/?lang=hr" hreflang="hr" lang="hr">Hrvatski</a>
+        <a href="/hu/?lang=hu" hreflang="hu" lang="hu">Magyar</a>
+        <a href="/id/?lang=id" hreflang="id" lang="id">Bahasa Indonesia</a>
+        <a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a>
+        <a href="/ja/?lang=ja" hreflang="ja" lang="ja">日本語</a>
+        <a href="/ko/?lang=ko" hreflang="ko" lang="ko">한국어</a>
+        <a href="/nl/?lang=nl" hreflang="nl" lang="nl">Nederlands</a>
+        <a href="/no/?lang=no" hreflang="no" lang="no">Norsk</a>
+        <a href="/pl/?lang=pl" hreflang="pl" lang="pl">Polski</a>
+        <a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a>
+        <a href="/ro/?lang=ro" hreflang="ro" lang="ro">Română</a>
+        <a href="/ru/?lang=ru" hreflang="ru" lang="ru">Русский</a>
+        <a href="/sv/?lang=sv" hreflang="sv" lang="sv">Svenska</a>
+        <a href="/th/?lang=th" hreflang="th" lang="th">ไทย</a>
+        <a href="/tr/?lang=tr" hreflang="tr" lang="tr">Türkçe</a>
+        <a href="/uk/?lang=uk" hreflang="uk" lang="uk">Українська</a>
+        <a href="/vi/?lang=vi" hreflang="vi" lang="vi">Tiếng Việt</a>
+        <a href="/zh/?lang=zh" hreflang="zh" lang="zh">中文</a>
+        <a href="/app" class="btn-primary nav-cta">Άνοιγμα Δωρεάν</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">Έκδοση 1.0</span>
+          <h1 id="hero-title">Το <span class='accent-text'>Ιδιωτικό AI Vault</span> σας</h1>
+          <p class="hero-subtitle">Η ιδιωτική εναλλακτική του Pocket για αποθήκευση άρθρων και ανάγνωση αργότερα: σελιδοδείκτες, σημειώσεις και έγγραφα — κρυπτογραφημένα στη συσκευή σας, αναζητήσιμα με AI και συγχρονισμένα peer-to-peer. Χωρίς σύννεφο. Χωρίς παρακολούθηση. 100% δικά σας.</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">Άνοιγμα Δωρεάν</a>
+            <a href="#pricing" class="btn-secondary">Προβολή Τιμών</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>100% Τοπικό</strong> — τα δεδομένα σας δεν εγκαταλείπουν τη συσκευή</span>
+            <span><strong>Κρυπτογραφημένο</strong> — AES-256-GCM + Argon2id</span>
+            <span><strong>Εκτός σύνδεσης</strong> — λειτουργεί χωρίς internet</span>
+            <span><strong>Ιδιωτικό</strong> — μηδενική τηλεμετρία από προεπιλογή</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="alternativa-pocket" class="comparison-section" aria-labelledby="alternativa-pocket-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Διαβάστε αργότερα χωρίς να θυσιάσετε το απόρρητο</span>
+          <h2 id="alternativa-pocket-title">Η Ιδιωτική Εναλλακτική του Pocket</h2>
+          <p class="section-subtitle">Το Pocket εξαφανίζεται. Το BookmarkForge διατηρεί τη συνήθεια ανάγνωσης αργότερα — με κάθε άρθρο, σημείωση και επισήμανση κρυπτογραφημένη στη συσκευή σας.</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>Αποθηκεύστε άρθρα για αργότερα, δικά σας για πάντα</h3>
+            <p>Αποθηκεύστε άρθρα, βίντεο και PDF με ένα κλικ — από την εφαρμογή PWA, την επέκταση browser ή το μενού κοινής χρήσης. Σε αντίθεση με το Pocket, η λίστα ανάγνωσής σας ζει στη συσκευή σας, κρυπτογραφημένη, και λειτουργεί εκτός σύνδεσης.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Σημειώσεις στυλ Notion σε κάθε άρθρο</h3>
+            <p>Επισημάνετε, συνοψίστε και γράψτε σημειώσεις σε κάθε σελιδοδείκτη. Μετατρέψτε ένα αποθηκευμένο άρθρο στη δική σας βάση γνώσεων — όχι απλά μια λίστα συνδέσμων.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Μηδενική παρακολούθηση, μηδενικές διαφημίσεις</h3>
+            <p>Το BookmarkForge δεν έχει λογαριασμούς, αναλύσεις ή διαφημίσεις από προεπιλογή. Οι συνήθειες ανάγνωσής σας δεν αφορούν κανέναν άλλον εκτός εσάς.</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Ξεκινήστε να Αποθηκεύετε Δωρεάν</a>
+          <a href="/pocket-alternative" class="btn-link">Πλήρης σύγκριση και οδηγός μεταφοράς</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Ό,τι χρειάζεστε</span>
+          <h2 id="features-title">Ισχυρές λειτουργίες για τη διαχείριση της γνώσης σας, όλες τρέχουν τοπικά</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Σελιδοδείκτες και Έγγραφα</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Πλήρης και σημασιολογική αναζήτηση</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Τοπικό AI (WebLLM / Ollama) — Μόνο Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>RAG chat πάνω στα δεδομένα σας — Μόνο Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>P2P συγχρονισμός (WebRTC) — Μόνο Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Κρυπτογραφημένα backups</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Γράφος γνώσεων</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Flashcards (Spaced Repetition) — Μόνο Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Απόρρητο από προεπιλογή</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">AI που σας σέβεται</span>
+          <h2 id="ai-title">Η Γνώση σας, Ενισχυμένη</h2>
+          <p class="section-subtitle">Το BookmarkForge σας δίνει την επιλογή: εκτελέστε 100% τοπικά μοντέλα στον browser σας (WebLLM, WebGPU) με Pro, συνδέστε τα δικά σας API keys σε cloud providers, ή χρησιμοποιήστε τοπικό Ollama. Οι οδηγίες σας, τα δεδομένα σας, οι κανόνες σας.</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>Υποστηριζόμενοι providers</h3>
+            <ul class="providers-list">
+              <li>WebLLM local (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Pro only</li>
+              <li>Ollama local (any model you run)</li>
+              <li>Google Gemini cloud (your API key)</li>
+              <li>OpenAI / GPT-4o cloud (your API key)</li>
+              <li>Anthropic Claude cloud (your API key)</li>
+              <li>Groq cloud (your API key)</li>
+              <li>Custom / OpenRouter via custom provider (your API key)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>Λειτουργίες chat</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>Ιδιωτική Λειτουργία</h4>
+                <p>Μόνο τοπικό AI (WebLLM/Ollama). Μηδενικά δεδομένα εγκαταλείπουν τη συσκευή. Λειτουργεί εκτός σύνδεσης. Απαιτεί Pro για WebLLM.</p>
+              </div>
+              <div class="mode-item">
+                <h4>Λειτουργία Αναζήτησης Web</h4>
+                <p>Συνδυάζει το vault σας με αποτελέσματα αναζήτησης σε πραγματικό χρόνο (cloud providers).</p>
+              </div>
+              <div class="mode-item">
+                <h4>Ειδικοί Πράκτορες</h4>
+                <p>Εξειδικευμένα άτομα: Προγραμματιστής, Συγγραφέας, Αναλυτής, Ερευνητής. Απαιτεί Pro για τοπικό AI.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">Το απόρρητο δεν είναι λειτουργία — είναι η βάση</h2>
+          <p class="section-subtitle">Κάθε αρχιτεκτονική απόφαση σας βάζει σε έλεγχο</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Κρυπτογράφηση από άκρο σε άκρο</h3>
+          </div>
+          <div class="feature-item">
+            <h3>100% τοπική αρχιτεκτονική</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Μηδενική τηλεμετρία από προεπιλογή</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Τα κλειδιά είναι δικά σας</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Συμμόρφωση GDPR</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Ανεξαρτησία από provider</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">Απλές, Δίκαιες Τιμές</h2>
+          <p class="section-subtitle">Δωρεάν σχέδιο: 1.000 σελιδοδείκτες. Pro είναι μοναδική αγορά $79 — χωρίς συνδρομές.</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Δωρεάν</h3>
+            <div class="price">$ 0<span>/ για πάντα</span></div>
+            <p>Για προσωπική διαχείριση γνώσεων (1.000 σελιδοδείκτες, 1 συσκευή)</p>
+            <ul>
+              <li>1.000 σελιδοδείκτες, σημειώσεις και έγγραφα</li>
+              <li>Πλήρης και σημασιολογική αναζήτηση</li>
+              <li>AI με το δικό σας API key (πληρώνετε τον provider)</li>
+              <li>Γράφος γνώσεων</li>
+              <li>Βασικά πρότυπα</li>
+              <li>JSON/HTML εξαγωγή</li>
+              <li>PWA + επεκτάσεις browser</li>
+              <li><span aria-hidden='true'>❌</span> P2P συγχρονισμός μεταξύ συσκευών</li>
+              <li><span aria-hidden='true'>❌</span> Τοπικό AI (WebLLM/Ollama)</li>
+              <li><span aria-hidden='true'>❌</span> RAG chat πάνω στα δεδομένα σας</li>
+              <li><span aria-hidden='true'>❌</span> Flashcards με spaced repetition</li>
+              <li><span aria-hidden='true'>❌</span> PDF + OCR</li>
+              <li><span aria-hidden='true'>❌</span> Προηγμένη εξαγωγή (10+ μορφές)</li>
+            </ul>
+            <a href="/app" class="btn-outline ">Ξεκινήστε Δωρεάν</a>
+          </div>
+          <div class="price-card popular">
+            <span class="badge">Most Popular</span>
+            <h3>Pro</h3>
+            <div class="price">$ 79<span>μοναδική αγορά (για πάντα)</span></div>
+            <p>Απεριόριστοι σελιδοδείκτες, 3 συσκευές, τοπικό AI, P2P συγχρονισμός — χωρίς συνδρομή</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Όλα στο Δωρεάν</li>
+              <li><span aria-hidden="true">✅</span> Απεριόριστοι σελιδοδείκτες</li>
+              <li><span aria-hidden="true">✅</span> 3 συσκευές</li>
+              <li><span aria-hidden="true">✅</span> P2P συγχρονισμός σε 3 συσκευές</li>
+              <li><span aria-hidden="true">✅</span> Τοπικό AI (WebLLM, χωρίς API key)</li>
+              <li><span aria-hidden="true">✅</span> RAG chat πάνω στα δεδομένα σας</li>
+              <li><span aria-hidden="true">✅</span> Ειδικοί πράκτορες (Προγραμματιστής, Συγγραφέας, Αναλυτής, Ερευνητής)</li>
+              <li><span aria-hidden="true">✅</span> Flashcards με spaced repetition</li>
+              <li><span aria-hidden="true">✅</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> Προηγμένη εξαγωγή (10+ μορφές)</li>
+              <li><span aria-hidden="true">✅</span> Vault ασφαλείας (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> Ενημερώσεις για 12 μήνες</li>
+              <li><span aria-hidden="true">✅</span> Email υποστήριξη</li>
+            </ul>
+            <a href="https://whop.com/bookmarkforge" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Πάρτε Pro Για Πάντα</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">Συχνές Ερωτήσεις</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Είναι πραγματικά δωρεάν για πάντα το δωρεάν σχέδιο;</h3>
+            <p>Ναι. Χωρίς περιορισμένη δοκιμή ή συνδρομή. Το δωρεάν σχέδιο περιλαμβάνει 1.000 σελιδοδείκτες, πλήρη και σημασιολογική αναζήτηση, γράφο γνώσεων και AI με το δικό σας API key (πληρώνετε τον provider).</p>
+          </div>
+          <div class="faq-item">
+            <h3>Τι σημαίνει 'μοναδική αγορά' στο Pro;</h3>
+            <p>Πληρώνετε μία φορά ($79) και η άδεια είναι δικά σας για πάντα. Περιλαμβάνει όλες τις ενημερώσεις για 12 μήνες. Χωρίς επαναλαμβανόμενες χρεώσεις. Το κλειδί άδειας παραδίδεται αμέσως μέσω Whop.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Ποιες μέθοδοι πληρωμής δέχεστε;</h3>
+            <p>Μέσω Whop: πιστωτική κάρτα, PayPal και κρυπτονομίσματα. Δεν βλέπουποτε τα στοιχεία πληρωμής σας.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Ποια είναι η πολιτική επιστροφής χρημάτων;</h3>
+            <p>30 ημερών εγγύηση επιστροφής για άδειες Pro. Επικοινωνήστε με support@bookmarkforge.com</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>Έτοιμοι να Γίνετε Κύριοι της Γνώσης σας;</h2>
+        <p>Ενωθείτε με χιλιάδες ερευνητές, προγραμματιστές και φοιτητές που εμπιστεύονται το BookmarkForge ως τον δεύτερο εγκέφαλό τους.</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">Άνοιγμα Δωρεάν</a>
+          <a href="#pricing" class="btn-secondary">Αναβάθμιση σε Pro</a>
+        </div>
+        <p class="note">Χωρίς λογαριασμό. Λειτουργεί αμέσως στον browser σας. Δωρεάν σχέδιο: 1.000 σελιδοδείκτες.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>Το ιδιωτικό AI vault γνώσεων σας. 100% τοπικό.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Προϊόν</h4>
+        <ul>
+          <li><a href="#features">Λειτουργίες</a></li>
+          <li><a href="#ai">Δυνατότητες AI</a></li>
+          <li><a href="#privacy">Απόρρητο</a></li>
+          <li><a href="#pricing">Τιμές</a></li>
+          <li><a href="/app">Άνοιγμα App</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Πόροι</h4>
+        <ul>
+          <li><a href="/pocket-alternative">Σύγκριση με Pocket</a></li>
+          <li><a href="/el/privacy-and-terms.html">Απόρρητο και Όροι</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Γλώσσες</h4>
+        <ul>
+          <li><a href="/ar/?lang=ar">العربية</a></li>
+          <li><a href="/bg/?lang=bg">Български</a></li>
+          <li><a href="/cs/?lang=cs">Čeština</a></li>
+          <li><a href="/da/?lang=da">Dansk</a></li>
+          <li><a href="/de/?lang=de">Deutsch</a></li>
+          <li><a href="/el/?lang=el">Ελληνικά</a></li>
+          <li><a href="/?lang=en">English</a></li>
+          <li><a href="/es/?lang=es">Español</a></li>
+          <li><a href="/fi/?lang=fi">Suomi</a></li>
+          <li><a href="/fr/?lang=fr">Français</a></li>
+          <li><a href="/he/?lang=he">עברית</a></li>
+          <li><a href="/hi/?lang=hi">हिन्दी</a></li>
+          <li><a href="/hr/?lang=hr">Hrvatski</a></li>
+          <li><a href="/hu/?lang=hu">Magyar</a></li>
+          <li><a href="/id/?lang=id">Bahasa Indonesia</a></li>
+          <li><a href="/it/?lang=it">Italiano</a></li>
+          <li><a href="/ja/?lang=ja">日本語</a></li>
+          <li><a href="/ko/?lang=ko">한국어</a></li>
+          <li><a href="/nl/?lang=nl">Nederlands</a></li>
+          <li><a href="/no/?lang=no">Norsk</a></li>
+          <li><a href="/pl/?lang=pl">Polski</a></li>
+          <li><a href="/pt/?lang=pt">Português</a></li>
+          <li><a href="/ro/?lang=ro">Română</a></li>
+          <li><a href="/ru/?lang=ru">Русский</a></li>
+          <li><a href="/sv/?lang=sv">Svenska</a></li>
+          <li><a href="/th/?lang=th">ไทย</a></li>
+          <li><a href="/tr/?lang=tr">Türkçe</a></li>
+          <li><a href="/uk/?lang=uk">Українська</a></li>
+          <li><a href="/vi/?lang=vi">Tiếng Việt</a></li>
+          <li><a href="/zh/?lang=zh">中文</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Υποστήριξη</h4>
+        <ul>
+          <li><a href="mailto:bookmarkforge@proton.me">Επικοινωνήστε μαζί μας</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. Με επιφύλαξη παντός δικαιώματος.</p>
+      <a href="/el/privacy-and-terms.html">Πολιτική Απορρήτου</a> · <a href="/el/privacy-and-terms.html#terms">Όροι Υπηρεσίας</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Sla artikelen, notities en documenten op in een privé, versleutelde en 100% lokale kluis. AI-zoekfunctie, Notion-achtige editor en P2P-synchronisatie. Gratis plan: 1.000 bladwijzers.">
+  <title>BookmarkForge — Privé Pocket-alternatief met AI (Bladwijzers en notities)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforge.com/nl/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforge.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — Privé Pocket-alternatief met AI (Bladwijzers en notities)">
+  <meta property="og:description" content="Sla artikelen, notities en documenten op in een privé, versleutelde en 100% lokale kluis. AI-zoekfunctie, Notion-achtige editor en P2P-synchronisatie. Gratis plan: 1.000 bladwijzers.">
+  <meta property="og:url" content="https://bookmarkforge.com/nl/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image-nl.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="nl_NL">
+  <meta property="og:locale:alternate" content="ar_AR">
+  <meta property="og:locale:alternate" content="bg_BG">
+  <meta property="og:locale:alternate" content="cs_CZ">
+  <meta property="og:locale:alternate" content="da_DK">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="el_GR">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="fi_FI">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="he_IL">
+  <meta property="og:locale:alternate" content="hi_IN">
+  <meta property="og:locale:alternate" content="hr_HR">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:locale:alternate" content="id_ID">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:locale:alternate" content="ja_JP">
+  <meta property="og:locale:alternate" content="ko_KR">
+  <meta property="og:locale:alternate" content="no_NO">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:locale:alternate" content="pt_BR">
+  <meta property="og:locale:alternate" content="ro_RO">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:locale:alternate" content="sv_SE">
+  <meta property="og:locale:alternate" content="th_TH">
+  <meta property="og:locale:alternate" content="tr_TR">
+  <meta property="og:locale:alternate" content="uk_UA">
+  <meta property="og:locale:alternate" content="vi_VN">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — Privé Pocket-alternatief met AI (Bladwijzers en notities)">
+  <meta name="twitter:description" content="Sla artikelen, notities en documenten op in een privé, versleutelde en 100% lokale kluis. AI-zoekfunctie, Notion-achtige editor en P2P-synchronisatie. Gratis plan: 1.000 bladwijzers.">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image-nl.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://bookmarkforge.com/nl/#website",
+      "url": "https://bookmarkforge.com/nl/",
+      "name": "BookmarkForge",
+      "description": "Het privé alternatief voor Pocket om artikelen op te slaan en later te lezen: bladwijzers, notities en documenten — versleuteld op uw apparaat, doorzoekbaar met AI en peer-to-peer gesynchroniseerd. Geen cloud. Geen tracking. 100% van u.",
+      "inLanguage": "nl",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://bookmarkforge.com/nl/?s={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@id": "https://bookmarkforge.com/#organization"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://bookmarkforge.com/#organization",
+      "name": "BookmarkForge",
+      "url": "https://bookmarkforge.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://bookmarkforge.com/logo.png",
+        "width": 64,
+        "height": 64
+      },
+      "email": "bookmarkforge@proton.me"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://bookmarkforge.com/nl/#software",
+      "name": "BookmarkForge",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web",
+      "url": "https://bookmarkforge.com/nl/",
+      "image": "https://bookmarkforge.com/og-image-nl.png",
+      "description": "Het privé alternatief voor Pocket om artikelen op te slaan en later te lezen: bladwijzers, notities en documenten — versleuteld op uw apparaat, doorzoekbaar met AI en peer-to-peer gesynchroniseerd. Geen cloud. Geen tracking. 100% van u.",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro Lifetime",
+          "price": "79",
+          "priceCurrency": "USD"
+        }
+      ],
+      "featureList": [
+        "100% local storage",
+        "End-to-end encryption",
+        "Offline-first",
+        "AI search",
+        "Notion-style editor",
+        "P2P sync"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://bookmarkforge.com/nl/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is het gratis plan echt gratis voor altijd?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ja. Geen beperkte proefperiode of abonnement. Het gratis plan bevat 1.000 bladwijzers, volledige tekst- en semantisch zoeken, kennisgraf en AI met uw eigen API-sleutel (u betaalt de provider)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wat betekent 'eenmalige aankoop' bij Pro?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "U betaalt eenmalig ($79) en de licentie is voor altijd van u. Bevat alle updates gedurende 12 maanden. Geen terugkerende kosten. De licentiesleutel wordt onmiddellijk geleverd via Whop."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Welke betaalmethoden accepteert u?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Via Whop: creditcard, PayPal en cryptocurrency. Wij zien uw betalingsgegevens nooit."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Wat is uw retourbeleid?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "30-dagen retourgarantie voor Pro-licenties. Neem contact op: support@bookmarkforge.com"
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/nl/" class="nav-brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navigation">
+        <a href="#features">Bladwijzers en documenten</a>
+        <a href="#ai">AI die u respecteert</a>
+        <a href="#privacy">End-to-end versleuteling</a>
+        <a href="#pricing">Eenvoudige, Eerlijke Prijzen</a>
+
+        <a href="/ar/?lang=ar" hreflang="ar" lang="ar">العربية</a>
+        <a href="/bg/?lang=bg" hreflang="bg" lang="bg">Български</a>
+        <a href="/cs/?lang=cs" hreflang="cs" lang="cs">Čeština</a>
+        <a href="/da/?lang=da" hreflang="da" lang="da">Dansk</a>
+        <a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a>
+        <a href="/el/?lang=el" hreflang="el" lang="el">Ελληνικά</a>
+        <a href="/?lang=en" hreflang="en" lang="en">English</a>
+        <a href="/es/?lang=es" hreflang="es" lang="es">Español</a>
+        <a href="/fi/?lang=fi" hreflang="fi" lang="fi">Suomi</a>
+        <a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a>
+        <a href="/he/?lang=he" hreflang="he" lang="he">עברית</a>
+        <a href="/hi/?lang=hi" hreflang="hi" lang="hi">हिन्दी</a>
+        <a href="/hr/?lang=hr" hreflang="hr" lang="hr">Hrvatski</a>
+        <a href="/hu/?lang=hu" hreflang="hu" lang="hu">Magyar</a>
+        <a href="/id/?lang=id" hreflang="id" lang="id">Bahasa Indonesia</a>
+        <a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a>
+        <a href="/ja/?lang=ja" hreflang="ja" lang="ja">日本語</a>
+        <a href="/ko/?lang=ko" hreflang="ko" lang="ko">한국어</a>
+        <a href="/nl/?lang=nl" hreflang="nl" lang="nl">Nederlands</a>
+        <a href="/no/?lang=no" hreflang="no" lang="no">Norsk</a>
+        <a href="/pl/?lang=pl" hreflang="pl" lang="pl">Polski</a>
+        <a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a>
+        <a href="/ro/?lang=ro" hreflang="ro" lang="ro">Română</a>
+        <a href="/ru/?lang=ru" hreflang="ru" lang="ru">Русский</a>
+        <a href="/sv/?lang=sv" hreflang="sv" lang="sv">Svenska</a>
+        <a href="/th/?lang=th" hreflang="th" lang="th">ไทย</a>
+        <a href="/tr/?lang=tr" hreflang="tr" lang="tr">Türkçe</a>
+        <a href="/uk/?lang=uk" hreflang="uk" lang="uk">Українська</a>
+        <a href="/vi/?lang=vi" hreflang="vi" lang="vi">Tiếng Việt</a>
+        <a href="/zh/?lang=zh" hreflang="zh" lang="zh">中文</a>
+        <a href="/app" class="btn-primary nav-cta">Open Gratis</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">Versie 1.0</span>
+          <h1 id="hero-title">Uw <span class='accent-text'>Privé AI Vault</span></h1>
+          <p class="hero-subtitle">Het privé alternatief voor Pocket om artikelen op te slaan en later te lezen: bladwijzers, notities en documenten — versleuteld op uw apparaat, doorzoekbaar met AI en peer-to-peer gesynchroniseerd. Geen cloud. Geen tracking. 100% van u.</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">Open Gratis</a>
+            <a href="#pricing" class="btn-secondary">Bekijk Prijzen</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>100% Lokaal</strong> — uw gegevens verlaten uw apparaat niet</span>
+            <span><strong>Versleuteld</strong> — AES-256-GCM + Argon2id</span>
+            <span><strong>Offline</strong> — werkt zonder internet</span>
+            <span><strong>Privé</strong> — nul telemetrie standaard</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="alternativa-pocket" class="comparison-section" aria-labelledby="alternativa-pocket-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Lees later zonder uw privacy op te offeren</span>
+          <h2 id="alternativa-pocket-title">Het Privé Pocket-alternatief</h2>
+          <p class="section-subtitle">Pocket verdwijnt. BookmarkForge houdt de leesgewoonte levend — met elk artikel, notitie en markering versleuteld op uw apparaat.</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>Sla artikelen op voor later, voorgoed van u</h3>
+            <p>Sla artikelen, video's en PDF op met één klik — vanuit de PWA-app, browserextensie of deelmenu. In tegenstelling tot Pocket leeft uw leeslijst op uw apparaat, versleuteld, en werkt offline.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Notion-achtige notities in elk artikel</h3>
+            <p>Markeer, vat samen en schrijf notities in elke bladwijzer. Verander een opgeslagen artikel in uw eigen kennisbank — niet zomaar een lijst met links.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Nul tracking, nul advertenties</h3>
+            <p>BookmarkForge heeft standaard geen accounts, analyses of advertenties. Uw leesgewoonten zijn alleen uw verantwoordelijkheid.</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Begin met Opslaan Gratis</a>
+          <a href="/pocket-alternative" class="btn-link">Volledige vergelijking en migratiegids</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Alles wat u nodig heeft</span>
+          <h2 id="features-title">Krachtige functies voor het beheren van uw kennis, alles draait lokaal</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Bladwijzers en documenten</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Volledige tekst en semantisch zoeken</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Lokaal AI (WebLLM / Ollama) — Alleen Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>RAG-chat over uw gegevens — Alleen Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>P2P-synchronisatie (WebRTC) — Alleen Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Versleutelde back-ups</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Kennisgraf</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Flashcards (Spaced Repetition) — Alleen Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Privacy standaard</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">AI die u respecteert</span>
+          <h2 id="ai-title">Uw Kennis, Versterkt</h2>
+          <p class="section-subtitle">BookmarkForge geeft u de keuze: voer 100% lokale modellen uit in uw browser (WebLLM, WebGPU) met Pro, verbind uw eigen API-sleutels met cloudproviders of gebruik lokale Ollama. Uw instructies, uw gegevens, uw regels.</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>Ondersteunde providers</h3>
+            <ul class="providers-list">
+              <li>WebLLM local (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Pro only</li>
+              <li>Ollama local (any model you run)</li>
+              <li>Google Gemini cloud (your API key)</li>
+              <li>OpenAI / GPT-4o cloud (your API key)</li>
+              <li>Anthropic Claude cloud (your API key)</li>
+              <li>Groq cloud (your API key)</li>
+              <li>Custom / OpenRouter via custom provider (your API key)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>Chat-modi</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>Privé Modus</h4>
+                <p>Alleen lokaal AI (WebLLM/Ollama). Nul gegevens verlaten het apparaat. Werkt offline. Vereist Pro voor WebLLM.</p>
+              </div>
+              <div class="mode-item">
+                <h4>Web Zoekmodus</h4>
+                <p>Combineert uw kluis met live zoekresultaten (cloudproviders).</p>
+              </div>
+              <div class="mode-item">
+                <h4>Expert Agents</h4>
+                <p>Gespecialiseerde personages: Programmeur, Schrijver, Analist, Onderzoeker. Vereist Pro voor lokaal AI.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">Privacy is geen functie — het is de basis</h2>
+          <p class="section-subtitle">Elke architectuurkeuze geeft u controle</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>End-to-end versleuteling</h3>
+          </div>
+          <div class="feature-item">
+            <h3>100% lokale architectuur</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Nul telemetrie standaard</h3>
+          </div>
+          <div class="feature-item">
+            <h3>De sleutels zijn van u</h3>
+          </div>
+          <div class="feature-item">
+            <h3>GDPR-naleving</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Onafhankelijk van provider</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">Eenvoudige, Eerlijke Prijzen</h2>
+          <p class="section-subtitle">Gratis plan: 1.000 bladwijzers. Pro is een eenmalige aankoop van $79 — geen abonnementen.</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Gratis</h3>
+            <div class="price">$ 0<span>/ voor altijd</span></div>
+            <p>Voor persoonlijk kennisbeheer (1.000 bladwijzers, 1 apparaat)</p>
+            <ul>
+              <li>1.000 bladwijzers, notities en documenten</li>
+              <li>Volledige tekst en semantisch zoeken</li>
+              <li>AI met uw eigen API-sleutel (u betaalt de provider)</li>
+              <li>Kennisgraf</li>
+              <li>Basis templates</li>
+              <li>JSON/HTML export</li>
+              <li>PWA + browserextensies</li>
+              <li><span aria-hidden='true'>❌</span> P2P-synchronisatie tussen apparaten</li>
+              <li><span aria-hidden='true'>❌</span> Lokaal AI (WebLLM/Ollama)</li>
+              <li><span aria-hidden='true'>❌</span> RAG-chat over uw gegevens</li>
+              <li><span aria-hidden='true'>❌</span> Flashcards met spaced repetition</li>
+              <li><span aria-hidden='true'>❌</span> PDF + OCR</li>
+              <li><span aria-hidden='true'>❌</span> Geavanceerde export (10+ formaten)</li>
+            </ul>
+            <a href="/app" class="btn-outline ">Begin Gratis</a>
+          </div>
+          <div class="price-card popular">
+            <span class="badge">Most Popular</span>
+            <h3>Pro</h3>
+            <div class="price">$ 79<span>eenmalige aankoop (voor altijd)</span></div>
+            <p>Onbeperkte bladwijzers, 3 apparaten, lokaal AI, P2P-synchronisatie — geen abonnement</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Alles in Gratis</li>
+              <li><span aria-hidden="true">✅</span> Onbeperkte bladwijzers</li>
+              <li><span aria-hidden="true">✅</span> 3 apparaten</li>
+              <li><span aria-hidden="true">✅</span> P2P-synchronisatie op 3 apparaten</li>
+              <li><span aria-hidden="true">✅</span> Lokaal AI (WebLLM, geen API-sleutel)</li>
+              <li><span aria-hidden="true">✅</span> RAG-chat over uw gegevens</li>
+              <li><span aria-hidden="true">✅</span> Expert agents (Programmeur, Schrijver, Analist, Onderzoeker)</li>
+              <li><span aria-hidden="true">✅</span> Flashcards met spaced repetition</li>
+              <li><span aria-hidden="true">✅</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> Geavanceerde export (10+ formaten)</li>
+              <li><span aria-hidden="true">✅</span> Veiligheidskluis (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> Updates gedurende 12 maanden</li>
+              <li><span aria-hidden="true">✅</span> E-mailondersteuning</li>
+            </ul>
+            <a href="https://whop.com/bookmarkforge" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Krijg Pro Voor Altijd</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">Veelgestelde Vragen</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Is het gratis plan echt gratis voor altijd?</h3>
+            <p>Ja. Geen beperkte proefperiode of abonnement. Het gratis plan bevat 1.000 bladwijzers, volledige tekst- en semantisch zoeken, kennisgraf en AI met uw eigen API-sleutel (u betaalt de provider).</p>
+          </div>
+          <div class="faq-item">
+            <h3>Wat betekent 'eenmalige aankoop' bij Pro?</h3>
+            <p>U betaalt eenmalig ($79) en de licentie is voor altijd van u. Bevat alle updates gedurende 12 maanden. Geen terugkerende kosten. De licentiesleutel wordt onmiddellijk geleverd via Whop.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Welke betaalmethoden accepteert u?</h3>
+            <p>Via Whop: creditcard, PayPal en cryptocurrency. Wij zien uw betalingsgegevens nooit.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Wat is uw retourbeleid?</h3>
+            <p>30-dagen retourgarantie voor Pro-licenties. Neem contact op: support@bookmarkforge.com</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>Klaar om Uw Kennis in Handen te Nemen?</h2>
+        <p>Sluit u aan bij duizenden onderzoekers, ontwikkelaars en studenten die vertrouwen op BookmarkForge als hun tweede brein.</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">Open Gratis</a>
+          <a href="#pricing" class="btn-secondary">Upgrade naar Pro</a>
+        </div>
+        <p class="note">Geen account nodig. Werkt direct in uw browser. Gratis plan: 1.000 bladwijzers.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>Uw privé AI-kluis voor kennis. 100% lokaal.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="#features">Functies</a></li>
+          <li><a href="#ai">AI-mogelijkheden</a></li>
+          <li><a href="#privacy">Privacy</a></li>
+          <li><a href="#pricing">Prijzen</a></li>
+          <li><a href="/app">Open App</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Bronnen</h4>
+        <ul>
+          <li><a href="/pocket-alternative">Pocket-vergelijking</a></li>
+          <li><a href="/nl/privacy-and-terms.html">Privacy en voorwaarden</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Talen</h4>
+        <ul>
+          <li><a href="/ar/?lang=ar">العربية</a></li>
+          <li><a href="/bg/?lang=bg">Български</a></li>
+          <li><a href="/cs/?lang=cs">Čeština</a></li>
+          <li><a href="/da/?lang=da">Dansk</a></li>
+          <li><a href="/de/?lang=de">Deutsch</a></li>
+          <li><a href="/el/?lang=el">Ελληνικά</a></li>
+          <li><a href="/?lang=en">English</a></li>
+          <li><a href="/es/?lang=es">Español</a></li>
+          <li><a href="/fi/?lang=fi">Suomi</a></li>
+          <li><a href="/fr/?lang=fr">Français</a></li>
+          <li><a href="/he/?lang=he">עברית</a></li>
+          <li><a href="/hi/?lang=hi">हिन्दी</a></li>
+          <li><a href="/hr/?lang=hr">Hrvatski</a></li>
+          <li><a href="/hu/?lang=hu">Magyar</a></li>
+          <li><a href="/id/?lang=id">Bahasa Indonesia</a></li>
+          <li><a href="/it/?lang=it">Italiano</a></li>
+          <li><a href="/ja/?lang=ja">日本語</a></li>
+          <li><a href="/ko/?lang=ko">한국어</a></li>
+          <li><a href="/nl/?lang=nl">Nederlands</a></li>
+          <li><a href="/no/?lang=no">Norsk</a></li>
+          <li><a href="/pl/?lang=pl">Polski</a></li>
+          <li><a href="/pt/?lang=pt">Português</a></li>
+          <li><a href="/ro/?lang=ro">Română</a></li>
+          <li><a href="/ru/?lang=ru">Русский</a></li>
+          <li><a href="/sv/?lang=sv">Svenska</a></li>
+          <li><a href="/th/?lang=th">ไทย</a></li>
+          <li><a href="/tr/?lang=tr">Türkçe</a></li>
+          <li><a href="/uk/?lang=uk">Українська</a></li>
+          <li><a href="/vi/?lang=vi">Tiếng Việt</a></li>
+          <li><a href="/zh/?lang=zh">中文</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Ondersteuning</h4>
+        <ul>
+          <li><a href="mailto:bookmarkforge@proton.me">Neem contact op</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. Alle rechten voorbehouden.</p>
+      <a href="/nl/privacy-and-terms.html">Privacybeleid</a> · <a href="/nl/privacy-and-terms.html#terms">Servicevoorwaarden</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

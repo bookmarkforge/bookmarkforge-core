@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="บันทึกบทความ บันทึก และเอกสารในคลังส่วนตัวที่เข้ารหัสและเป็น 100% ในเครื่อง AI ค้นหา เอดิเตอร์แบบ Notion และการซิงค์ P2P แผนฟรี: 1,000 บุ๊กมาร์ก">
+  <title>BookmarkForge — ทางเลือกส่วนตัวของ Pocket พร้อม AI (บุ๊กมาร์กและบันทึก)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforge.com/th/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforge.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — ทางเลือกส่วนตัวของ Pocket พร้อม AI (บุ๊กมาร์กและบันทึก)">
+  <meta property="og:description" content="บันทึกบทความ บันทึก และเอกสารในคลังส่วนตัวที่เข้ารหัสและเป็น 100% ในเครื่อง AI ค้นหา เอดิเตอร์แบบ Notion และการซิงค์ P2P แผนฟรี: 1,000 บุ๊กมาร์ก">
+  <meta property="og:url" content="https://bookmarkforge.com/th/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image-th.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="th_TH">
+  <meta property="og:locale:alternate" content="ar_AR">
+  <meta property="og:locale:alternate" content="bg_BG">
+  <meta property="og:locale:alternate" content="cs_CZ">
+  <meta property="og:locale:alternate" content="da_DK">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="el_GR">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="fi_FI">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="he_IL">
+  <meta property="og:locale:alternate" content="hi_IN">
+  <meta property="og:locale:alternate" content="hr_HR">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:locale:alternate" content="id_ID">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:locale:alternate" content="ja_JP">
+  <meta property="og:locale:alternate" content="ko_KR">
+  <meta property="og:locale:alternate" content="nl_NL">
+  <meta property="og:locale:alternate" content="no_NO">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:locale:alternate" content="pt_BR">
+  <meta property="og:locale:alternate" content="ro_RO">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:locale:alternate" content="sv_SE">
+  <meta property="og:locale:alternate" content="tr_TR">
+  <meta property="og:locale:alternate" content="uk_UA">
+  <meta property="og:locale:alternate" content="vi_VN">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — ทางเลือกส่วนตัวของ Pocket พร้อม AI (บุ๊กมาร์กและบันทึก)">
+  <meta name="twitter:description" content="บันทึกบทความ บันทึก และเอกสารในคลังส่วนตัวที่เข้ารหัสและเป็น 100% ในเครื่อง AI ค้นหา เอดิเตอร์แบบ Notion และการซิงค์ P2P แผนฟรี: 1,000 บุ๊กมาร์ก">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image-th.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://bookmarkforge.com/th/#website",
+      "url": "https://bookmarkforge.com/th/",
+      "name": "BookmarkForge",
+      "description": "ทางเลือกส่วนตัวของ Pocket สำหรับบันทึกบทความและอ่านทีหลัง: บุ๊กมาร์ก บันทึก และเอกสาร — เข้ารหัสบนอุปกรณ์ของคุณ ค้นหาด้วย AI และซิงค์แบบ peer-to-peer ไม่มีคลาวด์ ไม่มีการติดตาม 100% เป็นของคุณ",
+      "inLanguage": "th",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://bookmarkforge.com/th/?s={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@id": "https://bookmarkforge.com/#organization"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://bookmarkforge.com/#organization",
+      "name": "BookmarkForge",
+      "url": "https://bookmarkforge.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://bookmarkforge.com/logo.png",
+        "width": 64,
+        "height": 64
+      },
+      "email": "bookmarkforge@proton.me"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://bookmarkforge.com/th/#software",
+      "name": "BookmarkForge",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web",
+      "url": "https://bookmarkforge.com/th/",
+      "image": "https://bookmarkforge.com/og-image-th.png",
+      "description": "ทางเลือกส่วนตัวของ Pocket สำหรับบันทึกบทความและอ่านทีหลัง: บุ๊กมาร์ก บันทึก และเอกสาร — เข้ารหัสบนอุปกรณ์ของคุณ ค้นหาด้วย AI และซิงค์แบบ peer-to-peer ไม่มีคลาวด์ ไม่มีการติดตาม 100% เป็นของคุณ",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro Lifetime",
+          "price": "79",
+          "priceCurrency": "USD"
+        }
+      ],
+      "featureList": [
+        "100% local storage",
+        "End-to-end encryption",
+        "Offline-first",
+        "AI search",
+        "Notion-style editor",
+        "P2P sync"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://bookmarkforge.com/th/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "แผนฟรีฟรีจริงตลอดกาลหรือไม่?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ใช่ ไม่มีช่วงทดลองใช้จำกัดหรือการสมัครสมาชิก แผนฟรีรวมถึง 1,000 บุ๊กมาร์ก การค้นหาแบบเต็มข้อความและอรรถศาสตร์ กราฟความรู้ และ AI ด้วย API Key ของคุณ (คุณจ่ายให้ผู้ให้บริการ)"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "'การซื้อครั้งเดียว' ใน Pro หมายถึงอะไร?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "คุณจ่ายครั้งเดียว ($79) และลิขสิทธิ์เป็นของคุณตลอดกาล รวมถึงการอัปเดตทั้งหมด 12 เดือน ไม่มีค่าใช้จ่ายซ้ำ ลิขสิทธิ์คีย์จะถูกส่งทันทีผ่าน Whop"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "วิธีการชำระเงินใดบ้างที่คุณยอมรับ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ผ่าน Whop: บัตรเครดิต PayPal และคริปโตเคอเรนซี่ เราไม่เคยเห็นข้อมูลการชำระเงินของคุณ"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "นโยบายการคืนเงินของคุณคืออะไร?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "การรับประกันคืนเงิน 30 วันสำหรับลิขสิทธิ์ Pro ติดต่อ: support@bookmarkforge.com"
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/th/" class="nav-brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navigation">
+        <a href="#features">บุ๊กมาร์กและเอกสาร</a>
+        <a href="#ai">AI ที่เคารพคุณ</a>
+        <a href="#privacy">การเข้ารหัสแบบ end-to-end</a>
+        <a href="#pricing">ราคาที่เรียบง่ายและยุติธรรม</a>
+
+        <a href="/ar/?lang=ar" hreflang="ar" lang="ar">العربية</a>
+        <a href="/bg/?lang=bg" hreflang="bg" lang="bg">Български</a>
+        <a href="/cs/?lang=cs" hreflang="cs" lang="cs">Čeština</a>
+        <a href="/da/?lang=da" hreflang="da" lang="da">Dansk</a>
+        <a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a>
+        <a href="/el/?lang=el" hreflang="el" lang="el">Ελληνικά</a>
+        <a href="/?lang=en" hreflang="en" lang="en">English</a>
+        <a href="/es/?lang=es" hreflang="es" lang="es">Español</a>
+        <a href="/fi/?lang=fi" hreflang="fi" lang="fi">Suomi</a>
+        <a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a>
+        <a href="/he/?lang=he" hreflang="he" lang="he">עברית</a>
+        <a href="/hi/?lang=hi" hreflang="hi" lang="hi">हिन्दी</a>
+        <a href="/hr/?lang=hr" hreflang="hr" lang="hr">Hrvatski</a>
+        <a href="/hu/?lang=hu" hreflang="hu" lang="hu">Magyar</a>
+        <a href="/id/?lang=id" hreflang="id" lang="id">Bahasa Indonesia</a>
+        <a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a>
+        <a href="/ja/?lang=ja" hreflang="ja" lang="ja">日本語</a>
+        <a href="/ko/?lang=ko" hreflang="ko" lang="ko">한국어</a>
+        <a href="/nl/?lang=nl" hreflang="nl" lang="nl">Nederlands</a>
+        <a href="/no/?lang=no" hreflang="no" lang="no">Norsk</a>
+        <a href="/pl/?lang=pl" hreflang="pl" lang="pl">Polski</a>
+        <a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a>
+        <a href="/ro/?lang=ro" hreflang="ro" lang="ro">Română</a>
+        <a href="/ru/?lang=ru" hreflang="ru" lang="ru">Русский</a>
+        <a href="/sv/?lang=sv" hreflang="sv" lang="sv">Svenska</a>
+        <a href="/th/?lang=th" hreflang="th" lang="th">ไทย</a>
+        <a href="/tr/?lang=tr" hreflang="tr" lang="tr">Türkçe</a>
+        <a href="/uk/?lang=uk" hreflang="uk" lang="uk">Українська</a>
+        <a href="/vi/?lang=vi" hreflang="vi" lang="vi">Tiếng Việt</a>
+        <a href="/zh/?lang=zh" hreflang="zh" lang="zh">中文</a>
+        <a href="/app" class="btn-primary nav-cta">เปิดใช้งานฟรี</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">เวอร์ชัน 1.0</span>
+          <h1 id="hero-title"><span class='accent-text'>AI Vault ส่วนตัว</span> ของคุณ</h1>
+          <p class="hero-subtitle">ทางเลือกส่วนตัวของ Pocket สำหรับบันทึกบทความและอ่านทีหลัง: บุ๊กมาร์ก บันทึก และเอกสาร — เข้ารหัสบนอุปกรณ์ของคุณ ค้นหาด้วย AI และซิงค์แบบ peer-to-peer ไม่มีคลาวด์ ไม่มีการติดตาม 100% เป็นของคุณ</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">เปิดใช้งานฟรี</a>
+            <a href="#pricing" class="btn-secondary">ดูราคา</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>100% ในเครื่อง</strong> — ข้อมูลของคุณไม่ออกจากอุปกรณ์</span>
+            <span><strong>เข้ารหัส</strong> — AES-256-GCM + Argon2id</span>
+            <span><strong>ออฟไลน์</strong> — ทำงานโดยไม่ต้องมีอินเทอร์เน็ต</span>
+            <span><strong>ส่วนตัว</strong> — เทเลเมทรีเป็นศูนย์ตามค่าเริ่มต้น</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="alternativa-pocket" class="comparison-section" aria-labelledby="alternativa-pocket-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">อ่านทีหลังโดยไม่กระทบความเป็นส่วนตัว</span>
+          <h2 id="alternativa-pocket-title">ทางเลือกส่วนตัวของ Pocket</h2>
+          <p class="section-subtitle">Pocket กำลังหายไป BookmarkForge รักษาความเคยชินในการอ่าน — ทุกบทความ บันทึก และการเน้นถูกเข้ารหัสบนอุปกรณ์ของคุณ</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>บันทึกบทความไว้อ่านทีหลัง เป็นของคุณตลอดไป</h3>
+            <p>บันทึกบทความ วิดีโอ และ PDF ด้วยคลิกเดียว — จากแอป PWA ส่วนขยายเบราว์เซอร์ หรือเมนูแชร์ ต่างจาก Pocket รายการอ่านของคุณอยู่บนอุปกรณ์ เข้ารหัส และทำงานออฟไลน์</p>
+          </div>
+          <div class="feat-card">
+            <h3>บันทึกแบบ Notion ในทุกบทความ</h3>
+            <p>เน้น สรุป และเขียนบันทึกในทุกบุ๊กมาร์ก เปลี่ยนบทความที่บันทึกไว้เป็นฐานความรู้ของคุณเอง — ไม่ใช่แค่รายการลิงก์</p>
+          </div>
+          <div class="feat-card">
+            <h3>ไม่มีการติดตาม ไม่มีโฆษณา</h3>
+            <p>BookmarkForge ไม่ใช้บัญชี การวิเคราะห์ หรือโฆษณาตามค่าเริ่มต้น นิสัยการอ่านของคุณเป็นความรับผิดชอบของคุณเท่านั้น</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">เริ่มบันทึกฟรี</a>
+          <a href="/pocket-alternative" class="btn-link">การเปรียบเทียบและคู่มือย้ายข้อมูล</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">ทุกสิ่งที่คุณต้องการ</span>
+          <h2 id="features-title">ฟีเจอร์ทรงพลังสำหรับจัดการความรู้ ทั้งหมดทำงานในเครื่อง</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>บุ๊กมาร์กและเอกสาร</h3>
+          </div>
+          <div class="feature-item">
+            <h3>ค้นหาแบบเต็มข้อความและอรรถศาสตร์</h3>
+          </div>
+          <div class="feature-item">
+            <h3>AI ในเครื่อง (WebLLM / Ollama) — เฉพาะ Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>RAG แชทเหนือข้อมูลของคุณ — เฉพาะ Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>การซิงค์ P2P (WebRTC) — เฉพาะ Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>การสำรองข้อมูลที่เข้ารหัส</h3>
+          </div>
+          <div class="feature-item">
+            <h3>กราฟความรู้</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Flashcards (Spaced Repetition) — เฉพาะ Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>ความเป็นส่วนตัวตามค่าเริ่มต้น</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">AI ที่เคารพคุณ</span>
+          <h2 id="ai-title">ความรู้ของคุณ เสริมพลัง</h2>
+          <p class="section-subtitle">BookmarkForge ให้คุณเลือก: รันโมเดล 100% ในเครื่องในเบราว์เซอร์ของคุณ (WebLLM, WebGPU) กับ Pro เชื่อมต่อ API Key ของคุณกับผู้ให้บริการคลาวด์ หรือใช้ Ollama ในเครื่อง คำแนะนำของคุณ ข้อมูลของคุณ กฎของคุณ</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>ผู้ให้บริการที่รองรับ</h3>
+            <ul class="providers-list">
+              <li>WebLLM local (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Pro only</li>
+              <li>Ollama local (any model you run)</li>
+              <li>Google Gemini cloud (your API key)</li>
+              <li>OpenAI / GPT-4o cloud (your API key)</li>
+              <li>Anthropic Claude cloud (your API key)</li>
+              <li>Groq cloud (your API key)</li>
+              <li>Custom / OpenRouter via custom provider (your API key)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>โหมดแชท</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>โหมดส่วนตัว</h4>
+                <p>AI ในเครื่องเท่านั้น (WebLLM/Ollama) ข้อมูลไม่ออกจากอุปกรณ์ ทำงานออฟไลน์ ต้องใช้ Pro สำหรับ WebLLM</p>
+              </div>
+              <div class="mode-item">
+                <h4>โหมดค้นหาเว็บ</h4>
+                <p>รวมคลังของคุณกับผลลัพธ์การค้นหาแบบเรียลไทม์ (ผู้ให้บริการคลาวด์)</p>
+              </div>
+              <div class="mode-item">
+                <h4>ตัวแทนผู้เชี่ยวชาญ</h4>
+                <p>ตัวละครเฉพาะทาง: โปรแกรมเมอร์ นักเขียน นักวิเคราะห์ นักวิจัย ต้องใช้ Pro สำหรับ AI ในเครื่อง</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">ความเป็นส่วนตัวไม่ใช่ฟีเจอร์ — มันคือรากฐาน</h2>
+          <p class="section-subtitle">ทุกการตัดสินใจด้านสถาปัตยกรรมทำให้คุณควบคุมได้</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>การเข้ารหัสแบบ end-to-end</h3>
+          </div>
+          <div class="feature-item">
+            <h3>สถาปัตยกรรม 100% ในเครื่อง</h3>
+          </div>
+          <div class="feature-item">
+            <h3>เทเลเมทรีเป็นศูนย์ตามค่าเริ่มต้น</h3>
+          </div>
+          <div class="feature-item">
+            <h3>กุญแจเป็นของคุณ</h3>
+          </div>
+          <div class="feature-item">
+            <h3>สอดคล้อง GDPR</h3>
+          </div>
+          <div class="feature-item">
+            <h3>อิสระจากผู้ให้บริการ</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">ราคาที่เรียบง่ายและยุติธรรม</h2>
+          <p class="section-subtitle">แผนฟรี: 1,000 บุ๊กมาร์ก Pro เป็นการซื้อครั้งเดียว $79 — ไม่มีการสมัครสมาชิก</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>ฟรี</h3>
+            <div class="price">$ 0<span>/ ตลอดกาล</span></div>
+            <p>สำหรับการจัดการความรู้ส่วนบุคคล (1,000 บุ๊กมาร์ก, 1 อุปกรณ์)</p>
+            <ul>
+              <li>1,000 บุ๊กมาร์ก บันทึก และเอกสาร</li>
+              <li>ค้นหาแบบเต็มข้อความและอรรถศาสตร์</li>
+              <li>AI ด้วย API Key ของคุณ (คุณจ่ายให้ผู้ให้บริการ)</li>
+              <li>กราฟความรู้</li>
+              <li>แม่แบบพื้นฐาน</li>
+              <li>ส่งออก JSON/HTML</li>
+              <li>PWA + ส่วนขยายเบราว์เซอร์</li>
+              <li><span aria-hidden='true'>❌</span> การซิงค์ P2P ระหว่างอุปกรณ์</li>
+              <li><span aria-hidden='true'>❌</span> AI ในเครื่อง (WebLLM/Ollama)</li>
+              <li><span aria-hidden='true'>❌</span> RAG แชทเหนือข้อมูลของคุณ</li>
+              <li><span aria-hidden='true'>❌</span> Flashcards ด้วย spaced repetition</li>
+              <li><span aria-hidden='true'>❌</span> PDF + OCR</li>
+              <li><span aria-hidden='true'>❌</span> ส่งออกขั้นสูง (10+ รูปแบบ)</li>
+            </ul>
+            <a href="/app" class="btn-outline ">เริ่มใช้งานฟรี</a>
+          </div>
+          <div class="price-card popular">
+            <span class="badge">Most Popular</span>
+            <h3>Pro</h3>
+            <div class="price">$ 79<span>ซื้อครั้งเดียว (ตลอดกาล)</span></div>
+            <p>บุ๊กมาร์กไม่จำกัด 3 อุปกรณ์ AI ในเครื่อง การซิงค์ P2P — ไม่มีการสมัครสมาชิก</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> ทั้งหมดในแผนฟรี</li>
+              <li><span aria-hidden="true">✅</span> บุ๊กมาร์กไม่จำกัด</li>
+              <li><span aria-hidden="true">✅</span> 3 อุปกรณ์</li>
+              <li><span aria-hidden="true">✅</span> การซิงค์ P2P บน 3 อุปกรณ์</li>
+              <li><span aria-hidden="true">✅</span> AI ในเครื่อง (WebLLM ไม่ต้องใช้ API Key)</li>
+              <li><span aria-hidden="true">✅</span> RAG แชทเหนือข้อมูลของคุณ</li>
+              <li><span aria-hidden="true">✅</span> ตัวแทนผู้เชี่ยวชาญ (โปรแกรมเมอร์ นักเขียน นักวิเคราะห์ นักวิจัย)</li>
+              <li><span aria-hidden="true">✅</span> Flashcards ด้วย spaced repetition</li>
+              <li><span aria-hidden="true">✅</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> ส่งออกขั้นสูง (10+ รูปแบบ)</li>
+              <li><span aria-hidden="true">✅</span> คลังความปลอดภัย (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> อัปเดต 12 เดือน</li>
+              <li><span aria-hidden="true">✅</span> การสนับสนุนทางอีเมล</li>
+            </ul>
+            <a href="https://whop.com/bookmarkforge" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">รับ Pro ตลอดกาล</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">คำถามที่พบบ่อย</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>แผนฟรีฟรีจริงตลอดกาลหรือไม่?</h3>
+            <p>ใช่ ไม่มีช่วงทดลองใช้จำกัดหรือการสมัครสมาชิก แผนฟรีรวมถึง 1,000 บุ๊กมาร์ก การค้นหาแบบเต็มข้อความและอรรถศาสตร์ กราฟความรู้ และ AI ด้วย API Key ของคุณ (คุณจ่ายให้ผู้ให้บริการ)</p>
+          </div>
+          <div class="faq-item">
+            <h3>'การซื้อครั้งเดียว' ใน Pro หมายถึงอะไร?</h3>
+            <p>คุณจ่ายครั้งเดียว ($79) และลิขสิทธิ์เป็นของคุณตลอดกาล รวมถึงการอัปเดตทั้งหมด 12 เดือน ไม่มีค่าใช้จ่ายซ้ำ ลิขสิทธิ์คีย์จะถูกส่งทันทีผ่าน Whop</p>
+          </div>
+          <div class="faq-item">
+            <h3>วิธีการชำระเงินใดบ้างที่คุณยอมรับ?</h3>
+            <p>ผ่าน Whop: บัตรเครดิต PayPal และคริปโตเคอเรนซี่ เราไม่เคยเห็นข้อมูลการชำระเงินของคุณ</p>
+          </div>
+          <div class="faq-item">
+            <h3>นโยบายการคืนเงินของคุณคืออะไร?</h3>
+            <p>การรับประกันคืนเงิน 30 วันสำหรับลิขสิทธิ์ Pro ติดต่อ: support@bookmarkforge.com</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>พร้อมที่จะควบคุมความรู้ของคุณ?</h2>
+        <p>เข้าร่วมกับนักวิจัย นักพัฒนา และนักศึกษาหลายพันคนที่เชื่อมั่นใน BookmarkForge เป็นสมองที่สอง</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">เปิดใช้งานฟรี</a>
+          <a href="#pricing" class="btn-secondary">อัปเกรดเป็น Pro</a>
+        </div>
+        <p class="note">ไม่ต้องมีบัญชี ทำงานทันทีในเบราว์เซอร์ แผนฟรี: 1,000 บุ๊กมาร์ก</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>AI Vault ส่วนตัวสำหรับความรู้ของคุณ 100% ในเครื่อง</p>
+      </div>
+      <div class="footer-links">
+        <h4>ผลิตภัณฑ์</h4>
+        <ul>
+          <li><a href="#features">ฟีเจอร์</a></li>
+          <li><a href="#ai">ความสามารถ AI</a></li>
+          <li><a href="#privacy">ความเป็นส่วนตัว</a></li>
+          <li><a href="#pricing">ราคา</a></li>
+          <li><a href="/app">เปิดแอป</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>ทรัพยากร</h4>
+        <ul>
+          <li><a href="/pocket-alternative">เปรียบเทียบ Pocket</a></li>
+          <li><a href="/th/privacy-and-terms.html">ความเป็นส่วนตัวและเงื่อนไข</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>ภาษา</h4>
+        <ul>
+          <li><a href="/ar/?lang=ar">العربية</a></li>
+          <li><a href="/bg/?lang=bg">Български</a></li>
+          <li><a href="/cs/?lang=cs">Čeština</a></li>
+          <li><a href="/da/?lang=da">Dansk</a></li>
+          <li><a href="/de/?lang=de">Deutsch</a></li>
+          <li><a href="/el/?lang=el">Ελληνικά</a></li>
+          <li><a href="/?lang=en">English</a></li>
+          <li><a href="/es/?lang=es">Español</a></li>
+          <li><a href="/fi/?lang=fi">Suomi</a></li>
+          <li><a href="/fr/?lang=fr">Français</a></li>
+          <li><a href="/he/?lang=he">עברית</a></li>
+          <li><a href="/hi/?lang=hi">हिन्दी</a></li>
+          <li><a href="/hr/?lang=hr">Hrvatski</a></li>
+          <li><a href="/hu/?lang=hu">Magyar</a></li>
+          <li><a href="/id/?lang=id">Bahasa Indonesia</a></li>
+          <li><a href="/it/?lang=it">Italiano</a></li>
+          <li><a href="/ja/?lang=ja">日本語</a></li>
+          <li><a href="/ko/?lang=ko">한국어</a></li>
+          <li><a href="/nl/?lang=nl">Nederlands</a></li>
+          <li><a href="/no/?lang=no">Norsk</a></li>
+          <li><a href="/pl/?lang=pl">Polski</a></li>
+          <li><a href="/pt/?lang=pt">Português</a></li>
+          <li><a href="/ro/?lang=ro">Română</a></li>
+          <li><a href="/ru/?lang=ru">Русский</a></li>
+          <li><a href="/sv/?lang=sv">Svenska</a></li>
+          <li><a href="/th/?lang=th">ไทย</a></li>
+          <li><a href="/tr/?lang=tr">Türkçe</a></li>
+          <li><a href="/uk/?lang=uk">Українська</a></li>
+          <li><a href="/vi/?lang=vi">Tiếng Việt</a></li>
+          <li><a href="/zh/?lang=zh">中文</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>การสนับสนุน</h4>
+        <ul>
+          <li><a href="mailto:bookmarkforge@proton.me">ติดต่อเรา</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge สงวนลิขสิทธิ์</p>
+      <a href="/th/privacy-and-terms.html">นโยบายความเป็นส่วนตัว</a> · <a href="/th/privacy-and-terms.html#terms">เงื่อนไขการให้บริการ</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

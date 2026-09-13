@@ -1,16 +1,40 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://bookmarkforge.com/</loc>
     <lastmod>2026-09-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
     <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
     <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
     <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
   </url>
   <url>
@@ -18,12 +42,36 @@
     <lastmod>2026-09-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
     <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
     <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
     <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
   </url>
   <url>
@@ -31,12 +79,36 @@
     <lastmod>2026-09-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
     <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
     <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
     <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
   </url>
   <url>
@@ -44,12 +116,36 @@
     <lastmod>2026-09-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
     <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
     <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
     <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
   </url>
   <url>
@@ -57,12 +153,36 @@
     <lastmod>2026-09-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
     <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
     <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
     <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
   </url>
   <url>
@@ -70,12 +190,924 @@
     <lastmod>2026-09-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
     <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
     <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
     <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
     <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/ar/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/bg/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/cs/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/da/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/el/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/fi/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/he/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/hi/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/hr/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/hu/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/id/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/ja/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/ko/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/nl/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/no/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/pl/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/ro/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/ru/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/sv/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/th/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/tr/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/uk/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/vi/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/zh/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/" />
   </url>
   <url>
@@ -89,12 +1121,36 @@
     <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
   </url>
   <url>
@@ -102,12 +1158,36 @@
     <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
   </url>
   <url>
@@ -115,12 +1195,36 @@
     <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
   </url>
   <url>
@@ -128,12 +1232,36 @@
     <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
   </url>
   <url>
@@ -141,12 +1269,36 @@
     <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
   </url>
   <url>
@@ -154,12 +1306,925 @@
     <lastmod>2026-09-09</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
-    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
-    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/ar/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/bg/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/cs/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/da/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/el/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/fi/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/he/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/hi/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/hr/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/hu/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/id/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/ja/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/ko/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/nl/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/no/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/pl/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/ro/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/ru/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/sv/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/th/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/tr/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/uk/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/vi/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
+  </url>
+  <url>
+    <loc>https://bookmarkforge.com/zh/privacy-and-terms.html</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/privacy-and-terms.html" />
+    <xhtml:link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/privacy-and-terms.html" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html" />
   </url>
 </urlset>
+

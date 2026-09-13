@@ -47,16 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "Het wachtwoord van de kluis is ongeldig.",
     "dbStorageUnavailable": "Blijvende versleutelde opslag is niet beschikbaar. Uw gegevens zijn niet geladen of geschreven. Schakel IndexedDB in, maak schijfruimte vrij of herlaad na het sluiten van andere kluis-tabbladen."
   },
@@ -905,8 +895,8 @@
   "telemetry": "Nul telemetrie",
   "offline": "Offline eerst",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "Context van bestaande tags",
+    "folder_list": "Maplijst"
   },
   "general_folder": "Algemeen",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1526,5 +1516,20 @@
   "app_diskBackupBlockedShort": "schijf geblokkeerd",
   "app_diskCopyShort": "schijf geblokkeerd",
   "app_loadingVault": "Kluis laden…",
-  "app_loadingVaultDetail": "{{rows}} items voorbereiden…"
+  "app_loadingVaultDetail": "{{rows}} items voorbereiden…",
+  "app_fuseSelected": "Selectie samenvoegen ({{count}})",
+  "app_fuseSelected_one": "Selectie samenvoegen (1)",
+  "app_fuseSelected_few": "Selectie samenvoegen",
+  "app_fuseSelected_many": "Selectie samenvoegen",
+  "app_fuseSelected_other": "Selectie samenvoegen ({{count}})",
+  "app_maintenanceFinished": "Onderhoud voltooid: {{count}} gerepareerd",
+  "app_maintenanceFinished_one": "Onderhoud voltooid: 1 gerepareerd",
+  "app_maintenanceFinished_few": "Onderhoud voltooid: gerepareerd",
+  "app_maintenanceFinished_many": "Onderhoud voltooid: gerepareerd",
+  "app_maintenanceFinished_other": "Onderhoud voltooid: {{count}} gerepareerd",
+  "app_maintenancePartial": "Onderhoud voltooid met {{count}} problemen",
+  "app_maintenancePartial_one": "Onderhoud voltooid met 1 probleem",
+  "app_maintenancePartial_few": "Onderhoud voltooid met problemen",
+  "app_maintenancePartial_many": "Onderhoud voltooid met problemen",
+  "app_maintenancePartial_other": "Onderhoud voltooid met {{count}} problemen"
 }

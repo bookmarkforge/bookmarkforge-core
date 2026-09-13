@@ -1703,5 +1703,8 @@
   "app_maintenancePartial_one": "Maintenance finished with 1 issue",
   "app_maintenancePartial_few": "Maintenance finished with 0 issues",
   "app_maintenancePartial_many": "Maintenance finished with 0 issues",
-  "app_maintenancePartial_other": "Maintenance finished with {{count}} issues"
+  "app_maintenancePartial_other": "Maintenance finished with {{count}} issues",
+  "app_diagWebLLMBlockerWebGPU": "WebLLM cannot run: this browser does not support WebGPU.",
+  "app_diagWebLLMBlockerF16": "WebLLM cannot run: the GPU lacks shader-f16 (half-precision) support.",
+  "app_diagWebLLMBlockerRAM": "WebLLM cannot run: at least 4 GB of device memory is required."
 }

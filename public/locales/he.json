@@ -47,18 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingHeadline": "המוח שלך. הכונן הקשיח שלך.",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInTitle": "עזרו לנו להשתפר (אופציונלי)",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "סיסמת הכספת אינה תקינה.",
     "dbStorageUnavailable": "אחסון מוצפן קבוע אינו זמין. הנתונים שלך לא נטענו ולא נכתבו. הפעל את IndexedDB, פנה שטח דיסק או טען מחדש לאחר סגירת לשוניות כספת אחרות."
   },
@@ -905,8 +893,8 @@
   "telemetry": "אפס טלמטריה",
   "offline": "אופליין קודם",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "הקשר של תגיות קיימות",
+    "folder_list": "רשימת תיקיות"
   },
   "general_folder": "כללי",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1528,5 +1516,20 @@
   "app_diskBackupBlockedShort": "כונן חסום",
   "app_diskCopyShort": "כונן חסום",
   "app_loadingVault": "טוען כספת…",
-  "app_loadingVaultDetail": "מכין {{rows}} פריטים…"
+  "app_loadingVaultDetail": "מכין {{rows}} פריטים…",
+  "app_fuseSelected": "מיזוג הנבחרים ({{count}})",
+  "app_fuseSelected_one": "מיזוג הנבחרים (1)",
+  "app_fuseSelected_few": "מיזוג הנבחרים",
+  "app_fuseSelected_many": "מיזוג הנבחרים",
+  "app_fuseSelected_other": "מיזוג הנבחרים ({{count}})",
+  "app_maintenanceFinished": "התחזוקה הושלמה: {{count}} תוקנו",
+  "app_maintenanceFinished_one": "התחזוקה הושלמה: תוקן 1",
+  "app_maintenanceFinished_few": "התחזוקה הושלמה: בוצעו תיקונים",
+  "app_maintenanceFinished_many": "התחזוקה הושלמה: בוצעו תיקונים",
+  "app_maintenanceFinished_other": "התחזוקה הושלמה: {{count}} תוקנו",
+  "app_maintenancePartial": "התחזוקה הסתיימה עם {{count}} בעיות",
+  "app_maintenancePartial_one": "התחזוקה הסתיימה עם בעיה אחת",
+  "app_maintenancePartial_few": "התחזוקה הסתיימה עם בעיות",
+  "app_maintenancePartial_many": "התחזוקה הסתיימה עם בעיות",
+  "app_maintenancePartial_other": "התחזוקה הסתיימה עם {{count}} בעיות"
 }

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Makaleleri, notları ve belgeleri özel, şifreli ve %100 yerel kasada saklayın. AI araması, Notion benzeri düzenleyici ve P2P senkronizasyonu. Ücretsiz plan: 1.000 yer imi.">
+  <title>BookmarkForge — AI ile Özel Pocket Alternatifi (Yer İmleri ve Notlar)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforge.com/tr/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforge.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — AI ile Özel Pocket Alternatifi (Yer İmleri ve Notlar)">
+  <meta property="og:description" content="Makaleleri, notları ve belgeleri özel, şifreli ve %100 yerel kasada saklayın. AI araması, Notion benzeri düzenleyici ve P2P senkronizasyonu. Ücretsiz plan: 1.000 yer imi.">
+  <meta property="og:url" content="https://bookmarkforge.com/tr/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image-tr.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="tr_TR">
+  <meta property="og:locale:alternate" content="ar_AR">
+  <meta property="og:locale:alternate" content="bg_BG">
+  <meta property="og:locale:alternate" content="cs_CZ">
+  <meta property="og:locale:alternate" content="da_DK">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="el_GR">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="fi_FI">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="he_IL">
+  <meta property="og:locale:alternate" content="hi_IN">
+  <meta property="og:locale:alternate" content="hr_HR">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:locale:alternate" content="id_ID">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:locale:alternate" content="ja_JP">
+  <meta property="og:locale:alternate" content="ko_KR">
+  <meta property="og:locale:alternate" content="nl_NL">
+  <meta property="og:locale:alternate" content="no_NO">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:locale:alternate" content="pt_BR">
+  <meta property="og:locale:alternate" content="ro_RO">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:locale:alternate" content="sv_SE">
+  <meta property="og:locale:alternate" content="th_TH">
+  <meta property="og:locale:alternate" content="uk_UA">
+  <meta property="og:locale:alternate" content="vi_VN">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — AI ile Özel Pocket Alternatifi (Yer İmleri ve Notlar)">
+  <meta name="twitter:description" content="Makaleleri, notları ve belgeleri özel, şifreli ve %100 yerel kasada saklayın. AI araması, Notion benzeri düzenleyici ve P2P senkronizasyonu. Ücretsiz plan: 1.000 yer imi.">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image-tr.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://bookmarkforge.com/tr/#website",
+      "url": "https://bookmarkforge.com/tr/",
+      "name": "BookmarkForge",
+      "description": "Makaleleri kaydetmek ve sonra okumak için özel Pocket alternatifi: yer imleri, notlar ve belgeler — cihazınızda şifreli, AI ile aranabilir ve peer-to-peer senkronize. Bulut yok. Takip yok. %100 sizin.",
+      "inLanguage": "tr",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://bookmarkforge.com/tr/?s={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@id": "https://bookmarkforge.com/#organization"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://bookmarkforge.com/#organization",
+      "name": "BookmarkForge",
+      "url": "https://bookmarkforge.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://bookmarkforge.com/logo.png",
+        "width": 64,
+        "height": 64
+      },
+      "email": "bookmarkforge@proton.me"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://bookmarkforge.com/tr/#software",
+      "name": "BookmarkForge",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web",
+      "url": "https://bookmarkforge.com/tr/",
+      "image": "https://bookmarkforge.com/og-image-tr.png",
+      "description": "Makaleleri kaydetmek ve sonra okumak için özel Pocket alternatifi: yer imleri, notlar ve belgeler — cihazınızda şifreli, AI ile aranabilir ve peer-to-peer senkronize. Bulut yok. Takip yok. %100 sizin.",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro Lifetime",
+          "price": "79",
+          "priceCurrency": "USD"
+        }
+      ],
+      "featureList": [
+        "100% local storage",
+        "End-to-end encryption",
+        "Offline-first",
+        "AI search",
+        "Notion-style editor",
+        "P2P sync"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://bookmarkforge.com/tr/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Ücretsiz plan gerçekten sonsuza kadar ücretsiz mi?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Evet. Sınırlı deneme süresi veya abonelik yok. Ücretsiz plan 1.000 yer imi, tam metin ve anlamsal arama, bilgi grafiği ve kendi API anahtarınızla AI (sağlayıcıya siz ödersiniz) içerir."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Pro'da 'tek seferlik satın alma' ne anlama gelir?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Bir kez ödersiniz ($79) ve lisans sonsuza kadar sizindir. 12 ay boyunca tüm güncellemeler dahildir. Tekrarlayan ücret yok. Lisans anahtarı anında Whop aracılığıyla teslim edilir."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Hangi ödeme yöntemlerini kabul ediyorsunuz?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Whop aracılığıyla: kredi kartı, PayPal ve kripto para. Ödeme bilgilerinizi hiç görmeyiz."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "İade politikanız nedir?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pro lisansları için 30 gün para iade garantisi. İletişim: support@bookmarkforge.com"
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/tr/" class="nav-brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navigation">
+        <a href="#features">Yer imleri ve belgeler</a>
+        <a href="#ai">Sizi saygıyla karşılayan AI</a>
+        <a href="#privacy">Uçtan uca şifreleme</a>
+        <a href="#pricing">Basit, Adil Fiyatlar</a>
+
+        <a href="/ar/?lang=ar" hreflang="ar" lang="ar">العربية</a>
+        <a href="/bg/?lang=bg" hreflang="bg" lang="bg">Български</a>
+        <a href="/cs/?lang=cs" hreflang="cs" lang="cs">Čeština</a>
+        <a href="/da/?lang=da" hreflang="da" lang="da">Dansk</a>
+        <a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a>
+        <a href="/el/?lang=el" hreflang="el" lang="el">Ελληνικά</a>
+        <a href="/?lang=en" hreflang="en" lang="en">English</a>
+        <a href="/es/?lang=es" hreflang="es" lang="es">Español</a>
+        <a href="/fi/?lang=fi" hreflang="fi" lang="fi">Suomi</a>
+        <a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a>
+        <a href="/he/?lang=he" hreflang="he" lang="he">עברית</a>
+        <a href="/hi/?lang=hi" hreflang="hi" lang="hi">हिन्दी</a>
+        <a href="/hr/?lang=hr" hreflang="hr" lang="hr">Hrvatski</a>
+        <a href="/hu/?lang=hu" hreflang="hu" lang="hu">Magyar</a>
+        <a href="/id/?lang=id" hreflang="id" lang="id">Bahasa Indonesia</a>
+        <a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a>
+        <a href="/ja/?lang=ja" hreflang="ja" lang="ja">日本語</a>
+        <a href="/ko/?lang=ko" hreflang="ko" lang="ko">한국어</a>
+        <a href="/nl/?lang=nl" hreflang="nl" lang="nl">Nederlands</a>
+        <a href="/no/?lang=no" hreflang="no" lang="no">Norsk</a>
+        <a href="/pl/?lang=pl" hreflang="pl" lang="pl">Polski</a>
+        <a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a>
+        <a href="/ro/?lang=ro" hreflang="ro" lang="ro">Română</a>
+        <a href="/ru/?lang=ru" hreflang="ru" lang="ru">Русский</a>
+        <a href="/sv/?lang=sv" hreflang="sv" lang="sv">Svenska</a>
+        <a href="/th/?lang=th" hreflang="th" lang="th">ไทย</a>
+        <a href="/tr/?lang=tr" hreflang="tr" lang="tr">Türkçe</a>
+        <a href="/uk/?lang=uk" hreflang="uk" lang="uk">Українська</a>
+        <a href="/vi/?lang=vi" hreflang="vi" lang="vi">Tiếng Việt</a>
+        <a href="/zh/?lang=zh" hreflang="zh" lang="zh">中文</a>
+        <a href="/app" class="btn-primary nav-cta">Ücretsiz Aç</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">Sürüm 1.0</span>
+          <h1 id="hero-title"><span class='accent-text'>Özel AI Kasanız</span></h1>
+          <p class="hero-subtitle">Makaleleri kaydetmek ve sonra okumak için özel Pocket alternatifi: yer imleri, notlar ve belgeler — cihazınızda şifreli, AI ile aranabilir ve peer-to-peer senkronize. Bulut yok. Takip yok. %100 sizin.</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">Ücretsiz Aç</a>
+            <a href="#pricing" class="btn-secondary">Fiyatları Gör</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>%100 Yerel</strong> — verileriniz cihazınızı terk etmez</span>
+            <span><strong>Şifreli</strong> — AES-256-GCM + Argon2id</span>
+            <span><strong>Çevrimdışı</strong> — internetsiz çalışır</span>
+            <span><strong>Özel</strong> — varsayılan olarak sıfır telemetri</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="alternativa-pocket" class="comparison-section" aria-labelledby="alternativa-pocket-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Gizliliğinizi feda etmeden sonra okuyun</span>
+          <h2 id="alternativa-pocket-title">Özel Pocket Alternatifi</h2>
+          <p class="section-subtitle">Pocket ortadan kayboluyor. BookmarkForge okuma alışkanlığını canlı tutuyor — her makale, not ve vurgu cihazınızda şifreli.</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>Makaleleri sonra için kaydedin, sonsuza kadar sizin</h3>
+            <p>PWA uygulamasından, tarayıcı eklentisinden veya paylaşım menüsinden tek tıkla makaleleri, videoları ve PDF'leri kaydedin. Pocket'in aksine, okuma listeniz cihazınızda yaşar, şifrelidir ve çevrimdışı çalışır.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Her makalede Notion benzeri notlar</h3>
+            <p>Her yer iminde vurgulayın, özetleyin ve not yazın. Kayıtlı bir makaleyi kendi bilgi tabanınıza dönüştürün — sadece bir bağlantı listesi değil.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Sıfır takip, sıfır reklam</h3>
+            <p>BookmarkForge varsayılan olarak hesap, analitik veya reklam kullanmaz. Okuma alışkanlıklarınız yalnızca sizin sorumluluğunuzdadır.</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Ücretsiz Kaydetmeye Başla</a>
+          <a href="/pocket-alternative" class="btn-link">Tam karşılaştırma ve geçiş rehberi</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">İhtiyacınız olan her şey</span>
+          <h2 id="features-title">Bilgi yönetimi için güçlü özellikler, hepsi yerel çalışır</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Yer imleri ve belgeler</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Tam metin ve anlamsal arama</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Yerel AI (WebLLM / Ollama) — Yalnızca Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Verileriniz üzerine RAG sohbeti — Yalnızca Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>P2P senkronizasyonu (WebRTC) — Yalnızca Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Şifreli yedeklemeler</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Bilgi grafiği</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Flashcards (Spaced Repetition) — Yalnızca Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Varsayılan gizlilik</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Sizi saygıyla karşılayan AI</span>
+          <h2 id="ai-title">Bilginiz, Güçlendirilmiş</h2>
+          <p class="section-subtitle">BookmarkForge size seçim sunar: tarayıcınızda %100 yerel modelleri çalıştırın (WebLLM, WebGPU) Pro ile, kendi API anahtarlarınızı bulut sağlayıcılara bağlayın veya yerel Ollama kullanın. Talimatlarınız, verileriniz, kurallarınız.</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>Desteklenen sağlayıcılar</h3>
+            <ul class="providers-list">
+              <li>WebLLM local (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Pro only</li>
+              <li>Ollama local (any model you run)</li>
+              <li>Google Gemini cloud (your API key)</li>
+              <li>OpenAI / GPT-4o cloud (your API key)</li>
+              <li>Anthropic Claude cloud (your API key)</li>
+              <li>Groq cloud (your API key)</li>
+              <li>Custom / OpenRouter via custom provider (your API key)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>Sohbet modları</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>Özel Mod</h4>
+                <p>Yalnızca yerel AI (WebLLM/Ollama). Sıfır veri cihazı terk eder. Çevrimdışı çalışır. WebLLM için Pro gerekir.</p>
+              </div>
+              <div class="mode-item">
+                <h4>Web Arama Modu</h4>
+                <p>Kasanızı gerçek zamanlı arama sonuçlarıyla (bulut sağlayıcılar) birleştirir.</p>
+              </div>
+              <div class="mode-item">
+                <h4>Uzman Ajanlar</h4>
+                <p>Özelleşmiş karakterler: Programcı, Yazar, Analist, Araştırmacı. Yerel AI için Pro gerekir.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">Gizlilik bir özellik değil — temeldir</h2>
+          <p class="section-subtitle">Her mimari karar size kontrol verir</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Uçtan uca şifreleme</h3>
+          </div>
+          <div class="feature-item">
+            <h3>%100 yerel mimari</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Varsayılan olarak sıfır telemetri</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Anahtarlar sizin</h3>
+          </div>
+          <div class="feature-item">
+            <h3>GDPR uyumluluğu</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Sağlayıcıdan bağımsız</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">Basit, Adil Fiyatlar</h2>
+          <p class="section-subtitle">Ücretsiz plan: 1.000 yer imi. Pro tek seferlik satın alma $79 — abonelik yok.</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Ücretsiz</h3>
+            <div class="price">$ 0<span>/ sonsuza kadar</span></div>
+            <p>Kişisel bilgi yönetimi için (1.000 yer imi, 1 cihaz)</p>
+            <ul>
+              <li>1.000 yer imi, not ve belge</li>
+              <li>Tam metin ve anlamsal arama</li>
+              <li>Kendi API anahtarınızla AI (sağlayıcıya siz ödersiniz)</li>
+              <li>Bilgi grafiği</li>
+              <li>Temel şablonlar</li>
+              <li>JSON/HTML dışa aktarma</li>
+              <li>PWA + tarayıcı eklentileri</li>
+              <li><span aria-hidden='true'>❌</span> Cihazlar arası P2P senkronizasyonu</li>
+              <li><span aria-hidden='true'>❌</span> Yerel AI (WebLLM/Ollama)</li>
+              <li><span aria-hidden='true'>❌</span> Verileriniz üzerine RAG sohbeti</li>
+              <li><span aria-hidden='true'>❌</span> Spaced repetition ile flashcards</li>
+              <li><span aria-hidden='true'>❌</span> PDF + OCR</li>
+              <li><span aria-hidden='true'>❌</span> Gelişmiş dışa aktarma (10+ format)</li>
+            </ul>
+            <a href="/app" class="btn-outline ">Ücretsiz Başla</a>
+          </div>
+          <div class="price-card popular">
+            <span class="badge">Most Popular</span>
+            <h3>Pro</h3>
+            <div class="price">$ 79<span>tek seferlik satın alma (sonsuza kadar)</span></div>
+            <p>Sınırsız yer imi, 3 cihaz, yerel AI, P2P senkronizasyonu — abonelik yok</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Ücretsiz'deki her şey</li>
+              <li><span aria-hidden="true">✅</span> Sınırsız yer imi</li>
+              <li><span aria-hidden="true">✅</span> 3 cihaz</li>
+              <li><span aria-hidden="true">✅</span> 3 cihazda P2P senkronizasyonu</li>
+              <li><span aria-hidden="true">✅</span> Yerel AI (WebLLM, API anahtarı yok)</li>
+              <li><span aria-hidden="true">✅</span> Verileriniz üzerine RAG sohbeti</li>
+              <li><span aria-hidden="true">✅</span> Uzman ajanlar (Programcı, Yazar, Analist, Araştırmacı)</li>
+              <li><span aria-hidden="true">✅</span> Spaced repetition ile flashcards</li>
+              <li><span aria-hidden="true">✅</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> Gelişmiş dışa aktarma (10+ format)</li>
+              <li><span aria-hidden="true">✅</span> Güvenlik kasası (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> 12 ay güncelleme</li>
+              <li><span aria-hidden="true">✅</span> E-posta desteği</li>
+            </ul>
+            <a href="https://whop.com/bookmarkforge" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Pro'yu Sonsuza Kadar Al</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">Sıkça Sorulan Sorular</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Ücretsiz plan gerçekten sonsuza kadar ücretsiz mi?</h3>
+            <p>Evet. Sınırlı deneme süresi veya abonelik yok. Ücretsiz plan 1.000 yer imi, tam metin ve anlamsal arama, bilgi grafiği ve kendi API anahtarınızla AI (sağlayıcıya siz ödersiniz) içerir.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Pro'da 'tek seferlik satın alma' ne anlama gelir?</h3>
+            <p>Bir kez ödersiniz ($79) ve lisans sonsuza kadar sizindir. 12 ay boyunca tüm güncellemeler dahildir. Tekrarlayan ücret yok. Lisans anahtarı anında Whop aracılığıyla teslim edilir.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Hangi ödeme yöntemlerini kabul ediyorsunuz?</h3>
+            <p>Whop aracılığıyla: kredi kartı, PayPal ve kripto para. Ödeme bilgilerinizi hiç görmeyiz.</p>
+          </div>
+          <div class="faq-item">
+            <h3>İade politikanız nedir?</h3>
+            <p>Pro lisansları için 30 gün para iade garantisi. İletişim: support@bookmarkforge.com</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>Bilginizin Kontrolünü Almaya Hazır mısınız?</h2>
+        <p>BookmarkForge'a ikinci beyinleri olarak güvenen binlerce araştırmacı, geliştirici ve öğrenciye katılın.</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">Ücretsiz Aç</a>
+          <a href="#pricing" class="btn-secondary">Pro'ya Yükselt</a>
+        </div>
+        <p class="note">Hesap gerekmez. Tarayıcınızda anında çalışır. Ücretsiz plan: 1.000 yer imi.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>Bilgi için özel AI kasanız. %100 yerel.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Ürün</h4>
+        <ul>
+          <li><a href="#features">Özellikler</a></li>
+          <li><a href="#ai">AI Yetenekleri</a></li>
+          <li><a href="#privacy">Gizlilik</a></li>
+          <li><a href="#pricing">Fiyatlar</a></li>
+          <li><a href="/app">Uygulamayı Aç</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Kaynaklar</h4>
+        <ul>
+          <li><a href="/pocket-alternative">Karşılaştırma</a></li>
+          <li><a href="/tr/privacy-and-terms.html">Gizlilik ve Koşullar</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Diller</h4>
+        <ul>
+          <li><a href="/ar/?lang=ar">العربية</a></li>
+          <li><a href="/bg/?lang=bg">Български</a></li>
+          <li><a href="/cs/?lang=cs">Čeština</a></li>
+          <li><a href="/da/?lang=da">Dansk</a></li>
+          <li><a href="/de/?lang=de">Deutsch</a></li>
+          <li><a href="/el/?lang=el">Ελληνικά</a></li>
+          <li><a href="/?lang=en">English</a></li>
+          <li><a href="/es/?lang=es">Español</a></li>
+          <li><a href="/fi/?lang=fi">Suomi</a></li>
+          <li><a href="/fr/?lang=fr">Français</a></li>
+          <li><a href="/he/?lang=he">עברית</a></li>
+          <li><a href="/hi/?lang=hi">हिन्दी</a></li>
+          <li><a href="/hr/?lang=hr">Hrvatski</a></li>
+          <li><a href="/hu/?lang=hu">Magyar</a></li>
+          <li><a href="/id/?lang=id">Bahasa Indonesia</a></li>
+          <li><a href="/it/?lang=it">Italiano</a></li>
+          <li><a href="/ja/?lang=ja">日本語</a></li>
+          <li><a href="/ko/?lang=ko">한국어</a></li>
+          <li><a href="/nl/?lang=nl">Nederlands</a></li>
+          <li><a href="/no/?lang=no">Norsk</a></li>
+          <li><a href="/pl/?lang=pl">Polski</a></li>
+          <li><a href="/pt/?lang=pt">Português</a></li>
+          <li><a href="/ro/?lang=ro">Română</a></li>
+          <li><a href="/ru/?lang=ru">Русский</a></li>
+          <li><a href="/sv/?lang=sv">Svenska</a></li>
+          <li><a href="/th/?lang=th">ไทย</a></li>
+          <li><a href="/tr/?lang=tr">Türkçe</a></li>
+          <li><a href="/uk/?lang=uk">Українська</a></li>
+          <li><a href="/vi/?lang=vi">Tiếng Việt</a></li>
+          <li><a href="/zh/?lang=zh">中文</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Destek</h4>
+        <ul>
+          <li><a href="mailto:bookmarkforge@proton.me">Bize Ulaşın</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. Tüm hakları saklıdır.</p>
+      <a href="/tr/privacy-and-terms.html">Gizlilik Politikası</a> · <a href="/tr/privacy-and-terms.html#terms">Hizmet Koşulları</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

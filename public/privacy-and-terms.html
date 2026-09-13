@@ -7,6 +7,29 @@
   <meta name="description" content="BookmarkForge Privacy Policy and Terms of Service. Your data stays on your device. Local-first, encrypted, zero-knowledge.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://bookmarkforge.com/privacy-and-terms.html">
+  <!-- SEO: the full hreflang set (6 languages + x-default) mirrors the
+       landing pages — this document is translated into all of them. -->
+  <link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/privacy-and-terms.html">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/privacy-and-terms.html">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/privacy-and-terms.html">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/privacy-and-terms.html">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="Privacy Policy &amp; Terms of Service | BookmarkForge">
+  <meta property="og:description" content="BookmarkForge Privacy Policy and Terms of Service. Your data stays on your device. Local-first, encrypted, zero-knowledge.">
+  <meta property="og:url" content="https://bookmarkforge.com/privacy-and-terms.html">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Privacy Policy &amp; Terms of Service | BookmarkForge">
+  <meta name="twitter:description" content="BookmarkForge Privacy Policy and Terms of Service. Your data stays on your device. Local-first, encrypted, zero-knowledge.">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
   <link rel="stylesheet" href="/brand-tokens.css">
   <link rel="stylesheet" href="/privacy-and-terms.css">
@@ -22,12 +45,12 @@
   </header>
 
   <main class="container">
-    <p class="last-updated"><strong>Last Updated:</strong> August 29, 2026</p>
+    <p class="last-updated"><strong>Last Updated:</strong> September 4, 2026</p>
 
     <h1>Privacy Policy</h1>
 
     <h2>1. Data Controller</h2>
-    <p>The data controller for the processing described in this policy is BookmarkForge (contact in section 17). For the companion server and license infrastructure, the operator of that deployment acts as controller; users who self-host act as their own controller.</p>
+    <p>The data controller for the processing described in this policy is BookmarkForge (contact in section 17). For the companion server and license infrastructure, the operator of that deployment acts as controller.</p>
 
     <h2>2. Introduction & Scope</h2>
     <p>BookmarkForge ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we handle your data when you use our application.</p>
@@ -68,13 +91,14 @@
     <p>We do not have access to your encryption keys or passwords.</p>
 
     <h2>6. Content Security Policy (CSP) Reports</h2>
-    <p>BookmarkForge uses Content Security Policy (CSP) headers to prevent cross-site scripting and data injection attacks. If a CSP violation occurs, a brief technical report may be generated locally. This report contains:</p>
+    <p>BookmarkForge uses Content Security Policy (CSP) headers to prevent cross-site scripting and data injection attacks. If your browser blocks a resource because of these headers, it automatically sends a brief technical violation report to the same origin that served the application (the <code>/csp-report</code> endpoint). The operator's collector keeps only:</p>
     <ul>
-      <li>The blocked resource URL (never your personal data)</li>
-      <li>The CSP directive violated</li>
-      <li>The page URL where the violation occurred</li>
+      <li>The <strong>origin</strong> of the blocked resource (path, query and fragment are stripped; never your personal data)</li>
+      <li>The CSP directive that was violated</li>
+      <li>The origin of the page where the violation occurred</li>
+      <li>A one-way salted hash of your IP address, used solely for rate limiting -- your IP is never stored</li>
     </ul>
-    <p>These reports are processed locally and are never sent to our servers. They help us improve the security of the application.</p>
+    <p>This is standard browser behavior mandated by the CSP specification (the <code>report-uri</code> / <code>Reporting-Endpoints</code> headers): the browser sends these reports on its own, without any per-user opt-in, because they are part of the security machinery that protects you. No cookies, identifiers or browsing history are attached, and no vault content is ever included.</p>
 
     <h2>7. AI Providers</h2>
     <p>When you use AI features:</p>
@@ -108,11 +132,11 @@
     </ul>
 
     <h2>11. Your Rights (GDPR / RGPD)</h2>
-    <p>BookmarkForge is designed so that <strong>we never receive your personal data</strong>, which means most GDPR obligations fall away by design. Under the General Data Protection Regulation (GDPR / Reglamento General de Protección de Datos), you retain the following rights:</p>
+    <p>BookmarkForge is designed so that <strong>we never receive your personal data</strong>, which means most GDPR obligations fall away by design. Under the General Data Protection Regulation (GDPR), you retain the following rights:</p>
     <ul>
       <li><strong>Right of access (Art. 15):</strong> All your data is on your device. Use the Export feature to obtain a complete, machine-readable copy at any time.</li>
       <li><strong>Right to rectification (Art. 16):</strong> Edit your bookmarks, notes, and documents directly in the app.</li>
-      <li><strong>Right to erasure (Art. 17):</strong> Use the built-in data removal (Settings → Danger Zone / Nuclear Forget). This permanently deletes all local data, including encrypted keys and recovery data. We hold no copy.</li>
+      <li><strong>Right to erasure (Art. 17):</strong> Use the built-in data removal (Settings -> Danger Zone / Nuclear Forget). This permanently deletes all local data, including encrypted keys and recovery data. We hold no copy.</li>
       <li><strong>Right to data portability (Art. 20):</strong> Exports are open formats (JSON, Markdown, HTML) usable in other applications.</li>
       <li><strong>Right to object and restrict processing (Arts. 18/21):</strong> All optional processing (cloud AI, telemetry, error reporting) is strictly opt-in and can be disabled at any time in Settings.</li>
       <li><strong>Right to withdraw consent (Art. 7):</strong> Disabling optional features in Settings withdraws consent immediately and stops all associated processing.</li>
@@ -129,51 +153,56 @@
         <tr>
           <td>Cloud AI (via our server-side proxy)</td>
           <td>Your prompts, sent to the provider you selected</td>
-          <td><strong>Consent</strong> (Art. 6(1)(a)) — opt-in per provider in Settings</td>
+          <td><strong>Consent</strong> (Art. 6(1)(a)) -- opt-in per provider in Settings</td>
           <td>Not stored by us; provider policies apply</td>
         </tr>
         <tr>
           <td>Pro license validation (Whop adapter)</td>
           <td>License key, instance/device identifier, IP for rate limiting</td>
-          <td><strong>Contract</strong> (Art. 6(1)(b)) — required to deliver the paid feature</td>
-          <td>Entitlement state while the license is active; rate-limit windows ≤ 1 hour</td>
+          <td><strong>Contract</strong> (Art. 6(1)(b)) -- required to deliver the paid feature</td>
+          <td>Entitlement state while the license is active; rate-limit windows <= 1 hour</td>
         </tr>
         <tr>
-          <td>CSP violation reports (only if you opt in)</td>
-          <td>Blocked resource URL, directive, page URL</td>
-          <td><strong>Consent</strong> (Art. 6(1)(a))</td>
-          <td>Bounded in-memory ring (≤ 200 reports) or JSONL file you host</td>
+          <td>CSP violation reports</td>
+          <td>Blocked resource <em>origin</em>, violated directive, page origin, salted one-way IP hash for rate limiting</td>
+          <td><strong>Legitimate interest</strong> (Art. 6(1)(f)) -- browser-mandated security reporting; see Section 6</td>
+          <td>Bounded in-memory ring (<= 200 reports) or JSONL file you host</td>
+        </tr>
+        <tr>
+          <td>Opt-in business analytics (only if you accept it in the consent banner)</td>
+          <td>Daily aggregated counts of a fixed list of event types, plus a SHA-256 hash of a random per-install id; no content, URLs, titles or timestamps</td>
+          <td><strong>Consent</strong> (Art. 6(1)(a)) -- off by default</td>
+          <td><= 180 days of daily totals; <= 200,000 installs of bounded per-install state</td>
         </tr>
         <tr>
           <td>Client degradation events (only if you opt in)</td>
           <td>Anonymized technical error class, hashed IP with per-deployment salt</td>
           <td><strong>Consent</strong> (Art. 6(1)(a))</td>
-          <td>Bounded ring (≤ 200 events), aggregation window ≤ 10 minutes</td>
+          <td>Bounded ring (<= 200 events), aggregation window <= 10 minutes</td>
         </tr>
         <tr>
           <td>P2P sync signaling</td>
           <td>Peer connection metadata (SDP/ICE), ephemeral room secret</td>
-          <td><strong>Contract</strong> (Art. 6(1)(b)) — you initiated the sync</td>
+          <td><strong>Contract</strong> (Art. 6(1)(b)) -- you initiated the sync</td>
           <td>Connection lifetime only; no persistence after disconnect</td>
         </tr>
       </tbody>
     </table>
-    <p>Everything else — your bookmarks, notes, documents, passwords, encryption keys, analytics events — is processed <strong>exclusively on your device under your control</strong>, and is therefore outside the scope of GDPR processing by us.</p>
+    <p>Everything else -- your bookmarks, notes, documents, passwords, encryption keys, analytics events -- is processed <strong>exclusively on your device under your control</strong>, and is therefore outside the scope of GDPR processing by us.</p>
 
     <h2>13. Third-Party Processors &amp; Data Transfers</h2>
     <p>When you use optional features, data may be processed by the following third parties (sub-processors). Each transfer happens only when you explicitly use the feature:</p>
     <ul>
-      <li><strong>Google (Gemini API)</strong> — cloud AI prompts and generated media. Processes data in Google Cloud (global regions, data residency configurable by Google; see Google's Gemini API terms). Transfers outside the EU may occur under Google's Standard Contractual Clauses.</li>
-      <li><strong>OpenAI / Anthropic / Groq / OpenRouter / Hugging Face</strong> — alternative cloud AI providers, only if you configure them. Their respective terms and SCCs apply.</li>
-      <li><strong>Whop</strong> — Pro license payment and entitlement verification. Receives your license key and payment details when you purchase Pro. Whop acts as an independent controller for payment data.</li>
-      <li><strong>Sentry (Functional Software)</strong> — optional error reporting, only if you enable it in Settings and the operator has configured a diagnostic endpoint. Receives redacted technical stack traces (URLs without query strings, secrets removed, no user identity). Sentry acts as a processor under its Data Processing Agreement; see Sentry's privacy policy for international transfers.</li>
-      <li><strong>Your own server host</strong> — if you self-host the companion server, you are the controller for its logs and configuration.</li>
-    </ul>
+      <li><strong>Google (Gemini API)</strong> -- cloud AI prompts and generated media. Processes data in Google Cloud (global regions, data residency configurable by Google; see Google's Gemini API terms). Transfers outside the EU may occur under Google's Standard Contractual Clauses.</li>
+      <li><strong>OpenAI / Anthropic / Groq / OpenRouter / Hugging Face</strong> -- alternative cloud AI providers, only if you configure them. Their respective terms and SCCs apply.</li>
+      <li><strong>Whop</strong> -- Pro license payment and entitlement verification. Receives your license key and payment details when you purchase Pro. Whop acts as an independent controller for payment data.</li>
+<li><strong>Sentry (Functional Software)</strong> -- optional error reporting, only if you enable it in Settings and the operator has configured a diagnostic endpoint. Receives redacted technical stack traces (URLs without query strings, secrets removed, no user identity). Sentry acts as a processor under its Data Processing Agreement; see Sentry's privacy policy for international transfers.</li>
+</ul>
     <p>We do <strong>not</strong> sell, rent, or share your data for advertising. We do not use tracking cookies or third-party analytics scripts. Cloud providers are bound by their own GDPR-compliant data processing agreements; we recommend reviewing them before enabling cloud AI.</p>
     <p><strong>International transfers:</strong> when a provider processes data outside the EEA, transfers rely on the provider's EU adequacy decision or Standard Contractual Clauses. Local-only use of BookmarkForge involves no international transfer at all.</p>
 
     <h2>14. Record of Processing Activities (ROPA summary)</h2>
-    <p>A summarized record of processing activities (GDPR Art. 30) is maintained in the open-source repository (<code>docs/ROPA.md</code>), covering: purposes, categories of data subjects (app users, paying customers), categories of personal data (license keys, hashed IPs, opt-in technical reports), recipients (the processors above), retention limits, and security measures (client-side AES-256-GCM encryption, TLS 1.3 in transit, HMAC-signed signaling, rate limiting).</p>
+    <p>A summarized record of processing activities (GDPR Art. 30) is maintained covering: purposes, categories of data subjects (app users, paying customers), categories of personal data (license keys, hashed IPs, opt-in technical reports), recipients (the processors above), retention limits, and security measures (client-side AES-256-GCM encryption, TLS 1.3 in transit, HMAC-signed signaling, rate limiting).</p>
 
     <h2>15. Children's Privacy</h2>
     <p>BookmarkForge is not designed for children under 13 (or the equivalent minimum age in your jurisdiction). We do not knowingly collect any personal information from anyone.</p>
@@ -189,7 +218,7 @@
 
     <hr>
 
-    <h1>Terms of Service</h1>
+    <h1 id="terms">Terms of Service</h1>
     <p class="last-updated"><strong>Last Updated:</strong> July 23, 2026</p>
 
     <h2>1. Acceptance of Terms</h2>

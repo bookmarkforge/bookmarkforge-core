@@ -8,8 +8,8 @@
 :root {
   --success: #0ea37e;
   --success-text: #2dd4a7;
-  --error: #ef4444;
-  --error-text: #ff6b6b;
+  --error: var(--color-danger);
+  --error-text: var(--color-danger-text);
   --focus-ring: rgba(0, 174, 239, 0.35);
   --focus-ring-soft: rgba(0, 174, 239, 0.20);
 }
@@ -19,8 +19,8 @@ body {
   width: 320px;
   font-family: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont,
     'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  background: var(--bg-primary);
+  color: var(--text-primary);
   padding: 16px;
   line-height: 1.4;
 }
@@ -41,7 +41,7 @@ body {
 .brand {
   font-size: 16px;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--accent-primary);
 }
 
 /* ── Cards ─────────────────────────────────────────────────────── */
@@ -85,12 +85,12 @@ body {
   width: 100%;
   padding: 10px;
   border: none;
-  border-radius: var(--radius-btn);
+  border-radius: var(--radius-button);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.2s, box-shadow 0.2s;
-  background: var(--accent);
+  background: var(--accent-primary);
   color: var(--text-on-accent);
 }
 
@@ -99,7 +99,7 @@ body {
 }
 
 .btn:focus-visible {
-  outline: 2px solid var(--text);
+  outline: 2px solid var(--text-primary);
   outline-offset: 2px;
   box-shadow: 0 0 0 4px var(--focus-ring);
 }
@@ -115,17 +115,17 @@ body {
   font-size: 12px;
   margin-top: 10px;
   padding: 6px;
-  border-radius: var(--radius-btn);
+  border-radius: var(--radius-button);
 }
 
 .status-success {
-  background: rgba(14, 163, 126, 0.15);
+  background: var(--success-soft);
   color: var(--success-text);
 }
 
 .status-error {
-  background: rgba(220, 38, 38, 0.15);
-  color: var(--error-text);
+  background: var(--danger-soft);
+  color: var(--danger-text);
 }
 
 /* ── Footer ─────────────────────────────────────────────────────── */
@@ -137,7 +137,7 @@ body {
 }
 
 .footer a {
-  color: var(--accent);
+  color: var(--accent-primary);
   text-decoration: underline;
 }
 
@@ -169,7 +169,7 @@ body {
 }
 
 .settings-toggle:hover {
-  color: var(--accent);
+  color: var(--accent-primary);
 }
 
 .settings-panel {
@@ -206,27 +206,27 @@ body {
   width: 100%;
   padding: 6px 8px;
   border: 1px solid var(--divider);
-  border-radius: var(--radius-btn);
-  background: var(--bg);
-  color: var(--text);
+  border-radius: var(--radius-button);
+  background: var(--input-bg);
+  color: var(--text-primary);
   font-size: 12px;
   margin-bottom: 8px;
   outline: none;
 }
 
 .settings-input:focus {
-  border-color: var(--accent);
+  border-color: var(--accent-primary);
   box-shadow: 0 0 0 3px var(--focus-ring-soft);
 }
 
 .settings-btn {
   padding: 6px 14px;
   border: none;
-  border-radius: var(--radius-btn);
+  border-radius: var(--radius-button);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  background: var(--accent);
+  background: var(--accent-primary);
   color: var(--text-on-accent);
 }
 
@@ -237,7 +237,7 @@ body {
 .settings-btn-secondary {
   background: transparent;
   border: 1px solid var(--divider);
-  color: var(--text);
+  color: var(--text-primary);
   margin-right: 6px;
 }
 
@@ -260,5 +260,5 @@ body {
 }
 
 .url-status-error {
-  color: var(--error-text);
+  color: var(--danger-text);
 }

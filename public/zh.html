@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="保存文章、笔记和文档到一个私密、加密且100%本地的保险库。AI搜索、Notion风格编辑器和P2P同步。免费计划：1,000个书签。">
+  <title>BookmarkForge — 带AI的私密Pocket替代品（书签和笔记）</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforge.com/zh/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforge.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — 带AI的私密Pocket替代品（书签和笔记）">
+  <meta property="og:description" content="保存文章、笔记和文档到一个私密、加密且100%本地的保险库。AI搜索、Notion风格编辑器和P2P同步。免费计划：1,000个书签。">
+  <meta property="og:url" content="https://bookmarkforge.com/zh/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image-zh.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="ar_AR">
+  <meta property="og:locale:alternate" content="bg_BG">
+  <meta property="og:locale:alternate" content="cs_CZ">
+  <meta property="og:locale:alternate" content="da_DK">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="el_GR">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="fi_FI">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="he_IL">
+  <meta property="og:locale:alternate" content="hi_IN">
+  <meta property="og:locale:alternate" content="hr_HR">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:locale:alternate" content="id_ID">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:locale:alternate" content="ja_JP">
+  <meta property="og:locale:alternate" content="ko_KR">
+  <meta property="og:locale:alternate" content="nl_NL">
+  <meta property="og:locale:alternate" content="no_NO">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:locale:alternate" content="pt_BR">
+  <meta property="og:locale:alternate" content="ro_RO">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:locale:alternate" content="sv_SE">
+  <meta property="og:locale:alternate" content="th_TH">
+  <meta property="og:locale:alternate" content="tr_TR">
+  <meta property="og:locale:alternate" content="uk_UA">
+  <meta property="og:locale:alternate" content="vi_VN">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — 带AI的私密Pocket替代品（书签和笔记）">
+  <meta name="twitter:description" content="保存文章、笔记和文档到一个私密、加密且100%本地的保险库。AI搜索、Notion风格编辑器和P2P同步。免费计划：1,000个书签。">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image-zh.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://bookmarkforge.com/zh/#website",
+      "url": "https://bookmarkforge.com/zh/",
+      "name": "BookmarkForge",
+      "description": "Pocket的私密替代品，用于保存文章和稍后阅读：书签、笔记和文档——在您的设备上加密，可通过AI搜索，并通过点对点同步。无云端。无追踪。100%属于您。",
+      "inLanguage": "zh",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://bookmarkforge.com/zh/?s={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@id": "https://bookmarkforge.com/#organization"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://bookmarkforge.com/#organization",
+      "name": "BookmarkForge",
+      "url": "https://bookmarkforge.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://bookmarkforge.com/logo.png",
+        "width": 64,
+        "height": 64
+      },
+      "email": "bookmarkforge@proton.me"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://bookmarkforge.com/zh/#software",
+      "name": "BookmarkForge",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web",
+      "url": "https://bookmarkforge.com/zh/",
+      "image": "https://bookmarkforge.com/og-image-zh.png",
+      "description": "Pocket的私密替代品，用于保存文章和稍后阅读：书签、笔记和文档——在您的设备上加密，可通过AI搜索，并通过点对点同步。无云端。无追踪。100%属于您。",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro Lifetime",
+          "price": "79",
+          "priceCurrency": "USD"
+        }
+      ],
+      "featureList": [
+        "100% local storage",
+        "End-to-end encryption",
+        "Offline-first",
+        "AI search",
+        "Notion-style editor",
+        "P2P sync"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://bookmarkforge.com/zh/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "免费计划真的永久免费吗？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "是的。没有受限试用期或订阅。免费计划包括1,000个书签、全文和语义搜索、知识图谱以及使用您自己的API密钥的AI（您支付提供商）。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Pro中的'一次性购买'是什么意思？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "您支付一次（$79），许可证永久属于您。包含12个月的所有更新。无重复费用。许可证密钥通过Whop即时交付。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "您接受哪些支付方式？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "通过Whop：信用卡、PayPal和加密货币。我们从不查看您的支付信息。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "您的退款政策是什么？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pro许可证30天退款保证。联系：support@bookmarkforge.com"
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/zh/" class="nav-brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navigation">
+        <a href="#features">书签和文档</a>
+        <a href="#ai">尊重您的AI</a>
+        <a href="#privacy">端到端加密</a>
+        <a href="#pricing">简单、公平的价格</a>
+
+        <a href="/ar/?lang=ar" hreflang="ar" lang="ar">العربية</a>
+        <a href="/bg/?lang=bg" hreflang="bg" lang="bg">Български</a>
+        <a href="/cs/?lang=cs" hreflang="cs" lang="cs">Čeština</a>
+        <a href="/da/?lang=da" hreflang="da" lang="da">Dansk</a>
+        <a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a>
+        <a href="/el/?lang=el" hreflang="el" lang="el">Ελληνικά</a>
+        <a href="/?lang=en" hreflang="en" lang="en">English</a>
+        <a href="/es/?lang=es" hreflang="es" lang="es">Español</a>
+        <a href="/fi/?lang=fi" hreflang="fi" lang="fi">Suomi</a>
+        <a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a>
+        <a href="/he/?lang=he" hreflang="he" lang="he">עברית</a>
+        <a href="/hi/?lang=hi" hreflang="hi" lang="hi">हिन्दी</a>
+        <a href="/hr/?lang=hr" hreflang="hr" lang="hr">Hrvatski</a>
+        <a href="/hu/?lang=hu" hreflang="hu" lang="hu">Magyar</a>
+        <a href="/id/?lang=id" hreflang="id" lang="id">Bahasa Indonesia</a>
+        <a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a>
+        <a href="/ja/?lang=ja" hreflang="ja" lang="ja">日本語</a>
+        <a href="/ko/?lang=ko" hreflang="ko" lang="ko">한국어</a>
+        <a href="/nl/?lang=nl" hreflang="nl" lang="nl">Nederlands</a>
+        <a href="/no/?lang=no" hreflang="no" lang="no">Norsk</a>
+        <a href="/pl/?lang=pl" hreflang="pl" lang="pl">Polski</a>
+        <a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a>
+        <a href="/ro/?lang=ro" hreflang="ro" lang="ro">Română</a>
+        <a href="/ru/?lang=ru" hreflang="ru" lang="ru">Русский</a>
+        <a href="/sv/?lang=sv" hreflang="sv" lang="sv">Svenska</a>
+        <a href="/th/?lang=th" hreflang="th" lang="th">ไทย</a>
+        <a href="/tr/?lang=tr" hreflang="tr" lang="tr">Türkçe</a>
+        <a href="/uk/?lang=uk" hreflang="uk" lang="uk">Українська</a>
+        <a href="/vi/?lang=vi" hreflang="vi" lang="vi">Tiếng Việt</a>
+        <a href="/zh/?lang=zh" hreflang="zh" lang="zh">中文</a>
+        <a href="/app" class="btn-primary nav-cta">免费使用</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">版本 1.0</span>
+          <h1 id="hero-title">您的<span class='accent-text'>私密AI保险库</span></h1>
+          <p class="hero-subtitle">Pocket的私密替代品，用于保存文章和稍后阅读：书签、笔记和文档——在您的设备上加密，可通过AI搜索，并通过点对点同步。无云端。无追踪。100%属于您。</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">免费使用</a>
+            <a href="#pricing" class="btn-secondary">查看价格</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>100% 本地</strong> — 您的数据不会离开您的设备</span>
+            <span><strong>加密</strong> — AES-256-GCM + Argon2id</span>
+            <span><strong>离线</strong> — 无需互联网即可工作</span>
+            <span><strong>私密</strong> — 默认零遥测</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="alternativa-pocket" class="comparison-section" aria-labelledby="alternativa-pocket-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">在不牺牲隐私的情况下稍后阅读</span>
+          <h2 id="alternativa-pocket-title">私密的Pocket替代品</h2>
+          <p class="section-subtitle">Pocket正在消失。BookmarkForge保持阅读习惯——每篇文章、笔记和标注都加密存储在您的设备上。</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>保存文章供稍后阅读，永远属于您</h3>
+            <p>从PWA应用、浏览器扩展或分享菜单一键保存文章、视频和PDF。与Pocket不同，您的阅读列表存在于您的设备上，加密存储，并可离线使用。</p>
+          </div>
+          <div class="feat-card">
+            <h3>每篇文章中的Notion风格笔记</h3>
+            <p>在每个书签中高亮、总结和撰写笔记。将保存的文章转变为您的知识库——而不仅仅是链接列表。</p>
+          </div>
+          <div class="feat-card">
+            <h3>零追踪，零广告</h3>
+            <p>BookmarkForge默认不使用账户、分析或广告。您的阅读习惯仅由您负责。</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">开始免费保存</a>
+          <a href="/pocket-alternative" class="btn-link">完整比较和迁移指南</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">您需要的一切</span>
+          <h2 id="features-title">管理知识的强大功能，全部本地运行</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>书签和文档</h3>
+          </div>
+          <div class="feature-item">
+            <h3>全文和语义搜索</h3>
+          </div>
+          <div class="feature-item">
+            <h3>本地AI (WebLLM / Ollama) — 仅Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>数据上的RAG聊天 — 仅Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>P2P同步 (WebRTC) — 仅Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>加密备份</h3>
+          </div>
+          <div class="feature-item">
+            <h3>知识图谱</h3>
+          </div>
+          <div class="feature-item">
+            <h3>闪卡 (间隔重复) — 仅Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>默认隐私</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">尊重您的AI</span>
+          <h2 id="ai-title">您的知识，得到增强</h2>
+          <p class="section-subtitle">BookmarkForge给您选择：在浏览器中运行100%本地模型（WebLLM、WebGPU，Pro），将您的API密钥连接到云提供商，或使用本地Ollama。您的指令、您的数据、您的规则。</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>支持的提供商</h3>
+            <ul class="providers-list">
+              <li>WebLLM local (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Pro only</li>
+              <li>Ollama local (any model you run)</li>
+              <li>Google Gemini cloud (your API key)</li>
+              <li>OpenAI / GPT-4o cloud (your API key)</li>
+              <li>Anthropic Claude cloud (your API key)</li>
+              <li>Groq cloud (your API key)</li>
+              <li>Custom / OpenRouter via custom provider (your API key)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>聊天模式</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>私密模式</h4>
+                <p>仅本地AI（WebLLM/Ollama）。零数据离开设备。离线工作。WebLLM需要Pro。</p>
+              </div>
+              <div class="mode-item">
+                <h4>网络搜索模式</h4>
+                <p>将您的保险库与实时搜索结果（云提供商）结合。</p>
+              </div>
+              <div class="mode-item">
+                <h4>专家代理</h4>
+                <p>专业角色：程序员、作家、分析师、研究员。本地AI需要Pro。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">隐私不是功能——而是基础</h2>
+          <p class="section-subtitle">每个架构决策都给您控制权</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>端到端加密</h3>
+          </div>
+          <div class="feature-item">
+            <h3>100%本地架构</h3>
+          </div>
+          <div class="feature-item">
+            <h3>默认零遥测</h3>
+          </div>
+          <div class="feature-item">
+            <h3>密钥属于您</h3>
+          </div>
+          <div class="feature-item">
+            <h3>GDPR合规</h3>
+          </div>
+          <div class="feature-item">
+            <h3>独立于提供商</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">简单、公平的价格</h2>
+          <p class="section-subtitle">免费计划：1,000个书签。Pro是一次性购买$79——无订阅。</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>免费</h3>
+            <div class="price">$ 0<span>/ 永久</span></div>
+            <p>用于个人知识管理（1,000个书签，1台设备）</p>
+            <ul>
+              <li>1,000个书签、笔记和文档</li>
+              <li>全文和语义搜索</li>
+              <li>使用您自己的API密钥的AI（您支付提供商）</li>
+              <li>知识图谱</li>
+              <li>基础模板</li>
+              <li>JSON/HTML导出</li>
+              <li>PWA + 浏览器扩展</li>
+              <li><span aria-hidden='true'>❌</span> 设备间的P2P同步</li>
+              <li><span aria-hidden='true'>❌</span> 本地AI (WebLLM/Ollama)</li>
+              <li><span aria-hidden='true'>❌</span> 数据上的RAG聊天</li>
+              <li><span aria-hidden='true'>❌</span> 间隔重复的闪卡</li>
+              <li><span aria-hidden='true'>❌</span> PDF + OCR</li>
+              <li><span aria-hidden='true'>❌</span> 高级导出 (10+格式)</li>
+            </ul>
+            <a href="/app" class="btn-outline ">免费开始</a>
+          </div>
+          <div class="price-card popular">
+            <span class="badge">Most Popular</span>
+            <h3>Pro</h3>
+            <div class="price">$ 79<span>一次性购买（永久）</span></div>
+            <p>无限书签、3台设备、本地AI、P2P同步——无订阅</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> 免费版的所有功能</li>
+              <li><span aria-hidden="true">✅</span> 无限书签</li>
+              <li><span aria-hidden="true">✅</span> 3台设备</li>
+              <li><span aria-hidden="true">✅</span> 3台设备的P2P同步</li>
+              <li><span aria-hidden="true">✅</span> 本地AI (WebLLM，无需API密钥)</li>
+              <li><span aria-hidden="true">✅</span> 数据上的RAG聊天</li>
+              <li><span aria-hidden="true">✅</span> 专家代理 (程序员、作家、分析师、研究员)</li>
+              <li><span aria-hidden="true">✅</span> 间隔重复的闪卡</li>
+              <li><span aria-hidden="true">✅</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> 高级导出 (10+格式)</li>
+              <li><span aria-hidden="true">✅</span> 安全保险库 (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> 12个月更新</li>
+              <li><span aria-hidden="true">✅</span> 邮件支持</li>
+            </ul>
+            <a href="https://whop.com/bookmarkforge" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">永久获取Pro</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">常见问题</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>免费计划真的永久免费吗？</h3>
+            <p>是的。没有受限试用期或订阅。免费计划包括1,000个书签、全文和语义搜索、知识图谱以及使用您自己的API密钥的AI（您支付提供商）。</p>
+          </div>
+          <div class="faq-item">
+            <h3>Pro中的'一次性购买'是什么意思？</h3>
+            <p>您支付一次（$79），许可证永久属于您。包含12个月的所有更新。无重复费用。许可证密钥通过Whop即时交付。</p>
+          </div>
+          <div class="faq-item">
+            <h3>您接受哪些支付方式？</h3>
+            <p>通过Whop：信用卡、PayPal和加密货币。我们从不查看您的支付信息。</p>
+          </div>
+          <div class="faq-item">
+            <h3>您的退款政策是什么？</h3>
+            <p>Pro许可证30天退款保证。联系：support@bookmarkforge.com</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>准备好掌控您的知识了吗？</h2>
+        <p>加入数千名研究者、开发者和学生，他们信任BookmarkForge作为他们的第二大脑。</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">免费使用</a>
+          <a href="#pricing" class="btn-secondary">升级到Pro</a>
+        </div>
+        <p class="note">无需账户。在浏览器中立即可用。免费计划：1,000个书签。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>您的私密AI知识保险库。100%本地。</p>
+      </div>
+      <div class="footer-links">
+        <h4>产品</h4>
+        <ul>
+          <li><a href="#features">功能</a></li>
+          <li><a href="#ai">AI能力</a></li>
+          <li><a href="#privacy">隐私</a></li>
+          <li><a href="#pricing">价格</a></li>
+          <li><a href="/app">打开应用</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>资源</h4>
+        <ul>
+          <li><a href="/pocket-alternative">与Pocket比较</a></li>
+          <li><a href="/zh/privacy-and-terms.html">隐私和条款</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>语言</h4>
+        <ul>
+          <li><a href="/ar/?lang=ar">العربية</a></li>
+          <li><a href="/bg/?lang=bg">Български</a></li>
+          <li><a href="/cs/?lang=cs">Čeština</a></li>
+          <li><a href="/da/?lang=da">Dansk</a></li>
+          <li><a href="/de/?lang=de">Deutsch</a></li>
+          <li><a href="/el/?lang=el">Ελληνικά</a></li>
+          <li><a href="/?lang=en">English</a></li>
+          <li><a href="/es/?lang=es">Español</a></li>
+          <li><a href="/fi/?lang=fi">Suomi</a></li>
+          <li><a href="/fr/?lang=fr">Français</a></li>
+          <li><a href="/he/?lang=he">עברית</a></li>
+          <li><a href="/hi/?lang=hi">हिन्दी</a></li>
+          <li><a href="/hr/?lang=hr">Hrvatski</a></li>
+          <li><a href="/hu/?lang=hu">Magyar</a></li>
+          <li><a href="/id/?lang=id">Bahasa Indonesia</a></li>
+          <li><a href="/it/?lang=it">Italiano</a></li>
+          <li><a href="/ja/?lang=ja">日本語</a></li>
+          <li><a href="/ko/?lang=ko">한국어</a></li>
+          <li><a href="/nl/?lang=nl">Nederlands</a></li>
+          <li><a href="/no/?lang=no">Norsk</a></li>
+          <li><a href="/pl/?lang=pl">Polski</a></li>
+          <li><a href="/pt/?lang=pt">Português</a></li>
+          <li><a href="/ro/?lang=ro">Română</a></li>
+          <li><a href="/ru/?lang=ru">Русский</a></li>
+          <li><a href="/sv/?lang=sv">Svenska</a></li>
+          <li><a href="/th/?lang=th">ไทย</a></li>
+          <li><a href="/tr/?lang=tr">Türkçe</a></li>
+          <li><a href="/uk/?lang=uk">Українська</a></li>
+          <li><a href="/vi/?lang=vi">Tiếng Việt</a></li>
+          <li><a href="/zh/?lang=zh">中文</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>支持</h4>
+        <ul>
+          <li><a href="mailto:bookmarkforge@proton.me">联系我们</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. 保留所有权利。</p>
+      <a href="/zh/privacy-and-terms.html">隐私政策</a> · <a href="/zh/privacy-and-terms.html#terms">服务条款</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

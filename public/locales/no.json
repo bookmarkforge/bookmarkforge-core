@@ -47,16 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "Passordet for boksen er ugyldig.",
     "dbStorageUnavailable": "Permanent kryptert lagring er ikke tilgjengelig. Dataene dine ble ikke lastet eller skrevet. Aktiver IndexedDB, frigjør diskplass, eller last inn på nytt etter at du har lukket andre boks-faner."
   },
@@ -905,8 +895,8 @@
   "telemetry": "Null telemetri",
   "offline": "Offline først",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "Kontekst for eksisterende tagger",
+    "folder_list": "Mappeliste"
   },
   "general_folder": "Generelt",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1526,5 +1516,20 @@
   "app_diskBackupBlockedShort": "disk blokkert",
   "app_diskCopyShort": "disk blokkert",
   "app_loadingVault": "Laster safe…",
-  "app_loadingVaultDetail": "Forbereder {{rows}} elementer…"
+  "app_loadingVaultDetail": "Forbereder {{rows}} elementer…",
+  "app_fuseSelected": "Flett valgte ({{count}})",
+  "app_fuseSelected_one": "Flett valgte (1)",
+  "app_fuseSelected_few": "Flett valgte",
+  "app_fuseSelected_many": "Flett valgte",
+  "app_fuseSelected_other": "Flett valgte ({{count}})",
+  "app_maintenanceFinished": "Vedlikehold fullført: {{count}} reparert",
+  "app_maintenanceFinished_one": "Vedlikehold fullført: 1 reparert",
+  "app_maintenanceFinished_few": "Vedlikehold fullført: reparert",
+  "app_maintenanceFinished_many": "Vedlikehold fullført: reparert",
+  "app_maintenanceFinished_other": "Vedlikehold fullført: {{count}} reparert",
+  "app_maintenancePartial": "Vedlikehold avsluttet med {{count}} problemer",
+  "app_maintenancePartial_one": "Vedlikehold avsluttet med 1 problem",
+  "app_maintenancePartial_few": "Vedlikehold avsluttet med problemer",
+  "app_maintenancePartial_many": "Vedlikehold avsluttet med problemer",
+  "app_maintenancePartial_other": "Vedlikehold avsluttet med {{count}} problemer"
 }

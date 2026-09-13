@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Salvați articole, note și documente într-un seif privat, criptat și 100% local. Căutare AI, editor în stil Notion și sincronizare P2P. Plan gratuit: 1.000 marcaje.">
+  <title>BookmarkForge — Alternativă privată la Pocket cu AI (Marcaje și note)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforge.com/ro/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforge.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — Alternativă privată la Pocket cu AI (Marcaje și note)">
+  <meta property="og:description" content="Salvați articole, note și documente într-un seif privat, criptat și 100% local. Căutare AI, editor în stil Notion și sincronizare P2P. Plan gratuit: 1.000 marcaje.">
+  <meta property="og:url" content="https://bookmarkforge.com/ro/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image-ro.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="ro_RO">
+  <meta property="og:locale:alternate" content="ar_AR">
+  <meta property="og:locale:alternate" content="bg_BG">
+  <meta property="og:locale:alternate" content="cs_CZ">
+  <meta property="og:locale:alternate" content="da_DK">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="el_GR">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="fi_FI">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="he_IL">
+  <meta property="og:locale:alternate" content="hi_IN">
+  <meta property="og:locale:alternate" content="hr_HR">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:locale:alternate" content="id_ID">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:locale:alternate" content="ja_JP">
+  <meta property="og:locale:alternate" content="ko_KR">
+  <meta property="og:locale:alternate" content="nl_NL">
+  <meta property="og:locale:alternate" content="no_NO">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:locale:alternate" content="pt_BR">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:locale:alternate" content="sv_SE">
+  <meta property="og:locale:alternate" content="th_TH">
+  <meta property="og:locale:alternate" content="tr_TR">
+  <meta property="og:locale:alternate" content="uk_UA">
+  <meta property="og:locale:alternate" content="vi_VN">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — Alternativă privată la Pocket cu AI (Marcaje și note)">
+  <meta name="twitter:description" content="Salvați articole, note și documente într-un seif privat, criptat și 100% local. Căutare AI, editor în stil Notion și sincronizare P2P. Plan gratuit: 1.000 marcaje.">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image-ro.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://bookmarkforge.com/ro/#website",
+      "url": "https://bookmarkforge.com/ro/",
+      "name": "BookmarkForge",
+      "description": "Alternativa privată la Pocket pentru salvarea articolelor și citirea mai târziu: marcaje, note și documente — criptate pe dispozitivul tău, căutabile cu AI și sincronizate peer-to-peer. Fără cloud. Fără urmărire. 100% al tău.",
+      "inLanguage": "ro",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://bookmarkforge.com/ro/?s={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@id": "https://bookmarkforge.com/#organization"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://bookmarkforge.com/#organization",
+      "name": "BookmarkForge",
+      "url": "https://bookmarkforge.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://bookmarkforge.com/logo.png",
+        "width": 64,
+        "height": 64
+      },
+      "email": "bookmarkforge@proton.me"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://bookmarkforge.com/ro/#software",
+      "name": "BookmarkForge",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web",
+      "url": "https://bookmarkforge.com/ro/",
+      "image": "https://bookmarkforge.com/og-image-ro.png",
+      "description": "Alternativa privată la Pocket pentru salvarea articolelor și citirea mai târziu: marcaje, note și documente — criptate pe dispozitivul tău, căutabile cu AI și sincronizate peer-to-peer. Fără cloud. Fără urmărire. 100% al tău.",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro Lifetime",
+          "price": "79",
+          "priceCurrency": "USD"
+        }
+      ],
+      "featureList": [
+        "100% local storage",
+        "End-to-end encryption",
+        "Offline-first",
+        "AI search",
+        "Notion-style editor",
+        "P2P sync"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://bookmarkforge.com/ro/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Este planul gratuit cu adevărat gratuit pentru totdeauna?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Da. Fără perioadă de probă limitată sau abonament. Planul gratuit include 1.000 marcaje, căutare full-text și semantică, graf de cunoștințe și AI cu cheia ta de API (tu plătești furnizorul)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce înseamnă 'achiziție unică' în Pro?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Plătești o singură dată ($79), iar licența este a ta pentru totdeauna. Include toate actualizările timp de 12 luni. Fără taxe recurente. Cheia de licență este livrată instant prin Whop."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Ce metode de plată acceptați?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Prin Whop: card de credit, PayPal și criptomonede. Nu vedem niciodată informațiile tale de plată."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Care este politica de returnare?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Garanție de returnare de 30 de zile pentru licențele Pro. Contact: support@bookmarkforge.com"
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/ro/" class="nav-brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navigation">
+        <a href="#features">Marcaje și documente</a>
+        <a href="#ai">AI care te respectă</a>
+        <a href="#privacy">Criptare end-to-end</a>
+        <a href="#pricing">Prețuri Simple, Echitabile</a>
+
+        <a href="/ar/?lang=ar" hreflang="ar" lang="ar">العربية</a>
+        <a href="/bg/?lang=bg" hreflang="bg" lang="bg">Български</a>
+        <a href="/cs/?lang=cs" hreflang="cs" lang="cs">Čeština</a>
+        <a href="/da/?lang=da" hreflang="da" lang="da">Dansk</a>
+        <a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a>
+        <a href="/el/?lang=el" hreflang="el" lang="el">Ελληνικά</a>
+        <a href="/?lang=en" hreflang="en" lang="en">English</a>
+        <a href="/es/?lang=es" hreflang="es" lang="es">Español</a>
+        <a href="/fi/?lang=fi" hreflang="fi" lang="fi">Suomi</a>
+        <a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a>
+        <a href="/he/?lang=he" hreflang="he" lang="he">עברית</a>
+        <a href="/hi/?lang=hi" hreflang="hi" lang="hi">हिन्दी</a>
+        <a href="/hr/?lang=hr" hreflang="hr" lang="hr">Hrvatski</a>
+        <a href="/hu/?lang=hu" hreflang="hu" lang="hu">Magyar</a>
+        <a href="/id/?lang=id" hreflang="id" lang="id">Bahasa Indonesia</a>
+        <a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a>
+        <a href="/ja/?lang=ja" hreflang="ja" lang="ja">日本語</a>
+        <a href="/ko/?lang=ko" hreflang="ko" lang="ko">한국어</a>
+        <a href="/nl/?lang=nl" hreflang="nl" lang="nl">Nederlands</a>
+        <a href="/no/?lang=no" hreflang="no" lang="no">Norsk</a>
+        <a href="/pl/?lang=pl" hreflang="pl" lang="pl">Polski</a>
+        <a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a>
+        <a href="/ro/?lang=ro" hreflang="ro" lang="ro">Română</a>
+        <a href="/ru/?lang=ru" hreflang="ru" lang="ru">Русский</a>
+        <a href="/sv/?lang=sv" hreflang="sv" lang="sv">Svenska</a>
+        <a href="/th/?lang=th" hreflang="th" lang="th">ไทย</a>
+        <a href="/tr/?lang=tr" hreflang="tr" lang="tr">Türkçe</a>
+        <a href="/uk/?lang=uk" hreflang="uk" lang="uk">Українська</a>
+        <a href="/vi/?lang=vi" hreflang="vi" lang="vi">Tiếng Việt</a>
+        <a href="/zh/?lang=zh" hreflang="zh" lang="zh">中文</a>
+        <a href="/app" class="btn-primary nav-cta">Deschide Gratis</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">Versiunea 1.0</span>
+          <h1 id="hero-title"><span class='accent-text'>Vaultul tău AI Privat</span></h1>
+          <p class="hero-subtitle">Alternativa privată la Pocket pentru salvarea articolelor și citirea mai târziu: marcaje, note și documente — criptate pe dispozitivul tău, căutabile cu AI și sincronizate peer-to-peer. Fără cloud. Fără urmărire. 100% al tău.</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">Deschide Gratis</a>
+            <a href="#pricing" class="btn-secondary">Vezi Prețurile</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>100% Local</strong> — datele tale nu părăsesc dispozitivul</span>
+            <span><strong>Criptat</strong> — AES-256-GCM + Argon2id</span>
+            <span><strong>Offline</strong> — funcționează fără internet</span>
+            <span><strong>Privat</strong> — zero telemetrieimplicit</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="alternativa-pocket" class="comparison-section" aria-labelledby="alternativa-pocket-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Citește mai târziu fără a compromite confidențialitatea</span>
+          <h2 id="alternativa-pocket-title">Alternativa privată la Pocket</h2>
+          <p class="section-subtitle">Pocket dispare. BookmarkForge menține obiceiul de citire — cu fiecare articol, notă și evidențiere criptată pe dispozitivul tău.</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>Salvează articole pentru mai târziu, ale tale pentru totdeauna</h3>
+            <p>Salvează articole, videoclipuri și PDF cu un singur click — din aplicația PWA, extensia de browser sau meniul de partajare. Spre deosebire de Pocket, lista ta de lectură trăiește pe dispozitivul tău, criptată, și funcționează offline.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Note în stil Notion în fiecare articol</h3>
+            <p>Evidențiază, rezumă și scrie note în fiecare marcaj. Transformă un articol salvat în propria ta bază de cunoștințe — nu doar o listă de linkuri.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Zero urmărire, zero reclame</h3>
+            <p>BookmarkForge nu folosește conturi, analize sau reclame implicit. Obiceiurile tale de citire sunt doar responsabilitatea ta.</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Începe să Salvezi Gratis</a>
+          <a href="/pocket-alternative" class="btn-link">Comparație completă și ghid de migrare</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Tot ce ai nevoie</span>
+          <h2 id="features-title">Funcții puternice pentru gestionarea cunoștințelor tale, totul rulează local</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Marcaje și documente</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Căutare full-text și semantică</h3>
+          </div>
+          <div class="feature-item">
+            <h3>AI local (WebLLM / Ollama) — Doar Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Chat RAG peste datele tale — Doar Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Sincronizare P2P (WebRTC) — Doar Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Copii de siguranță criptate</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Graf de cunoștințe</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Flashcards (Spaced Repetition) — Doar Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Confidențialitateimplicit</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">AI care te respectă</span>
+          <h2 id="ai-title">Cunoștințele tale, Întărite</h2>
+          <p class="section-subtitle">BookmarkForge îți oferă alegerea: rulează modele 100% locale în browser-ul tău (WebLLM, WebGPU) cu Pro, conectează cheile tale API la furnizorii cloud sau folosește Ollama local. Instrucțiunile tale, datele tale, regulile tale.</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>Furnizori suportați</h3>
+            <ul class="providers-list">
+              <li>WebLLM local (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Pro only</li>
+              <li>Ollama local (any model you run)</li>
+              <li>Google Gemini cloud (your API key)</li>
+              <li>OpenAI / GPT-4o cloud (your API key)</li>
+              <li>Anthropic Claude cloud (your API key)</li>
+              <li>Groq cloud (your API key)</li>
+              <li>Custom / OpenRouter via custom provider (your API key)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>Moduri de chat</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>Mod Privat</h4>
+                <p>Doar AI local (WebLLM/Ollama). Zero date părăsesc dispozitivul. Funcționează offline. Necesită Pro pentru WebLLM.</p>
+              </div>
+              <div class="mode-item">
+                <h4>Mod Căutare Web</h4>
+                <p>Combină vaultul tău cu rezultate de căutare în timp real (furnizori cloud).</p>
+              </div>
+              <div class="mode-item">
+                <h4>Agenți Experți</h4>
+                <p>Personaje specializate: Programator, Scriitor, Analist, Cercetător. Necesită Pro pentru AI local.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">Confidențialitatea nu este o funcție — este fundamentul</h2>
+          <p class="section-subtitle">Fiecare decizie arhitecturală îți oferă control</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Criptare end-to-end</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Arhitectură 100% locală</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Zero telemetrieimplicit</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Cheile sunt ale tale</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Conformitate GDPR</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Independent de furnizor</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">Prețuri Simple, Echitabile</h2>
+          <p class="section-subtitle">Plan gratuit: 1.000 marcaje. Pro este o achiziție unică de $79 — fără abonamente.</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Gratis</h3>
+            <div class="price">$ 0<span>/ pentru totdeauna</span></div>
+            <p>Pentru gestionarea personală a cunoștințelor (1.000 marcaje, 1 dispozitiv)</p>
+            <ul>
+              <li>1.000 marcaje, note și documente</li>
+              <li>Căutare full-text și semantică</li>
+              <li>AI cu cheia ta de API (tu plătești furnizorul)</li>
+              <li>Graf de cunoștințe</li>
+              <li>Șabloane de bază</li>
+              <li>Export JSON/HTML</li>
+              <li>PWA + extensii de browser</li>
+              <li><span aria-hidden='true'>❌</span> Sincronizare P2P între dispozitive</li>
+              <li><span aria-hidden='true'>❌</span> AI local (WebLLM/Ollama)</li>
+              <li><span aria-hidden='true'>❌</span> Chat RAG peste datele tale</li>
+              <li><span aria-hidden='true'>❌</span> Flashcards cu spaced repetition</li>
+              <li><span aria-hidden='true'>❌</span> PDF + OCR</li>
+              <li><span aria-hidden='true'>❌</span> Export avansat (10+ formate)</li>
+            </ul>
+            <a href="/app" class="btn-outline ">Începe Gratis</a>
+          </div>
+          <div class="price-card popular">
+            <span class="badge">Most Popular</span>
+            <h3>Pro</h3>
+            <div class="price">$ 79<span>achiziție unică (pentru totdeauna)</span></div>
+            <p>Marcaje nelimitate, 3 dispozitive, AI local, sincronizare P2P — fără abonament</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Tot din Gratis</li>
+              <li><span aria-hidden="true">✅</span> Marcaje nelimitate</li>
+              <li><span aria-hidden="true">✅</span> 3 dispozitive</li>
+              <li><span aria-hidden="true">✅</span> Sincronizare P2P pe 3 dispozitive</li>
+              <li><span aria-hidden="true">✅</span> AI local (WebLLM, fără cheie API)</li>
+              <li><span aria-hidden="true">✅</span> Chat RAG peste datele tale</li>
+              <li><span aria-hidden="true">✅</span> Agenți experți (Programator, Scriitor, Analist, Cercetător)</li>
+              <li><span aria-hidden="true">✅</span> Flashcards cu spaced repetition</li>
+              <li><span aria-hidden="true">✅</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> Export avansat (10+ formate)</li>
+              <li><span aria-hidden="true">✅</span> Seif de securitate (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> Actualizări timp de 12 luni</li>
+              <li><span aria-hidden="true">✅</span> Suport email</li>
+            </ul>
+            <a href="https://whop.com/bookmarkforge" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Obține Pro Pentru Totdeauna</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">Întrebări Frecvente</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Este planul gratuit cu adevărat gratuit pentru totdeauna?</h3>
+            <p>Da. Fără perioadă de probă limitată sau abonament. Planul gratuit include 1.000 marcaje, căutare full-text și semantică, graf de cunoștințe și AI cu cheia ta de API (tu plătești furnizorul).</p>
+          </div>
+          <div class="faq-item">
+            <h3>Ce înseamnă 'achiziție unică' în Pro?</h3>
+            <p>Plătești o singură dată ($79), iar licența este a ta pentru totdeauna. Include toate actualizările timp de 12 luni. Fără taxe recurente. Cheia de licență este livrată instant prin Whop.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Ce metode de plată acceptați?</h3>
+            <p>Prin Whop: card de credit, PayPal și criptomonede. Nu vedem niciodată informațiile tale de plată.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Care este politica de returnare?</h3>
+            <p>Garanție de returnare de 30 de zile pentru licențele Pro. Contact: support@bookmarkforge.com</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>Gata să Îți Iei Controlul asupra Cunoștințelor?</h2>
+        <p>Alătură-te sutelor de cercetători, dezvoltatori și studenți care au încredere în BookmarkForge ca al doilea creier.</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">Deschide Gratis</a>
+          <a href="#pricing" class="btn-secondary">Actualizează la Pro</a>
+        </div>
+        <p class="note">Nu necesită cont. Funcționează imediat în browser. Plan gratuit: 1.000 marcaje.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>Vaultul tău AI privat pentru cunoștințe. 100% local.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Produs</h4>
+        <ul>
+          <li><a href="#features">Funcții</a></li>
+          <li><a href="#ai">Capabilități AI</a></li>
+          <li><a href="#privacy">Confidențialitate</a></li>
+          <li><a href="#pricing">Prețuri</a></li>
+          <li><a href="/app">Deschide Aplicația</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Resurse</h4>
+        <ul>
+          <li><a href="/pocket-alternative">Comparație cu Pocket</a></li>
+          <li><a href="/ro/privacy-and-terms.html">Confidențialitate și termeni</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Limbi</h4>
+        <ul>
+          <li><a href="/ar/?lang=ar">العربية</a></li>
+          <li><a href="/bg/?lang=bg">Български</a></li>
+          <li><a href="/cs/?lang=cs">Čeština</a></li>
+          <li><a href="/da/?lang=da">Dansk</a></li>
+          <li><a href="/de/?lang=de">Deutsch</a></li>
+          <li><a href="/el/?lang=el">Ελληνικά</a></li>
+          <li><a href="/?lang=en">English</a></li>
+          <li><a href="/es/?lang=es">Español</a></li>
+          <li><a href="/fi/?lang=fi">Suomi</a></li>
+          <li><a href="/fr/?lang=fr">Français</a></li>
+          <li><a href="/he/?lang=he">עברית</a></li>
+          <li><a href="/hi/?lang=hi">हिन्दी</a></li>
+          <li><a href="/hr/?lang=hr">Hrvatski</a></li>
+          <li><a href="/hu/?lang=hu">Magyar</a></li>
+          <li><a href="/id/?lang=id">Bahasa Indonesia</a></li>
+          <li><a href="/it/?lang=it">Italiano</a></li>
+          <li><a href="/ja/?lang=ja">日本語</a></li>
+          <li><a href="/ko/?lang=ko">한국어</a></li>
+          <li><a href="/nl/?lang=nl">Nederlands</a></li>
+          <li><a href="/no/?lang=no">Norsk</a></li>
+          <li><a href="/pl/?lang=pl">Polski</a></li>
+          <li><a href="/pt/?lang=pt">Português</a></li>
+          <li><a href="/ro/?lang=ro">Română</a></li>
+          <li><a href="/ru/?lang=ru">Русский</a></li>
+          <li><a href="/sv/?lang=sv">Svenska</a></li>
+          <li><a href="/th/?lang=th">ไทย</a></li>
+          <li><a href="/tr/?lang=tr">Türkçe</a></li>
+          <li><a href="/uk/?lang=uk">Українська</a></li>
+          <li><a href="/vi/?lang=vi">Tiếng Việt</a></li>
+          <li><a href="/zh/?lang=zh">中文</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Suport</h4>
+        <ul>
+          <li><a href="mailto:bookmarkforge@proton.me">Contactează-ne</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. Toate drepturile rezervate.</p>
+      <a href="/ro/privacy-and-terms.html">Politica de Confidențialitate</a> · <a href="/ro/privacy-and-terms.html#terms">Termeni și Condiții</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

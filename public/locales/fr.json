@@ -47,16 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "Le mot de passe du coffre est invalide.",
     "dbStorageUnavailable": "Le stockage chiffré persistant est indisponible. Vos données n'ont pas été chargées ni écrites. Activez IndexedDB, libérez de l'espace ou rechargez après avoir fermé les autres onglets du coffre."
   },
@@ -906,8 +896,8 @@
   "telemetry": "Zéro télémétrie",
   "offline": "Hors ligne d'abord",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "Contexte des étiquettes existantes",
+    "folder_list": "Liste des dossiers"
   },
   "general_folder": "Général",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1526,5 +1516,20 @@
   "app_diskBackupBlockedShort": "disque bloqué",
   "app_diskCopyShort": "disque bloqué",
   "app_loadingVault": "Chargement du coffre-fort…",
-  "app_loadingVaultDetail": "Préparation de {{rows}} éléments…"
+  "app_loadingVaultDetail": "Préparation de {{rows}} éléments…",
+  "app_fuseSelected": "Fusionner la sélection ({{count}})",
+  "app_fuseSelected_one": "Fusionner la sélection (1)",
+  "app_fuseSelected_few": "Fusionner la sélection",
+  "app_fuseSelected_many": "Fusionner la sélection",
+  "app_fuseSelected_other": "Fusionner la sélection ({{count}})",
+  "app_maintenanceFinished": "Maintenance terminée : {{count}} réparations",
+  "app_maintenanceFinished_one": "Maintenance terminée : 1 réparation",
+  "app_maintenanceFinished_few": "Maintenance terminée : réparations",
+  "app_maintenanceFinished_many": "Maintenance terminée : réparations",
+  "app_maintenanceFinished_other": "Maintenance terminée : {{count}} réparations",
+  "app_maintenancePartial": "Maintenance terminée avec {{count}} problèmes",
+  "app_maintenancePartial_one": "Maintenance terminée avec 1 problème",
+  "app_maintenancePartial_few": "Maintenance terminée avec des problèmes",
+  "app_maintenancePartial_many": "Maintenance terminée avec des problèmes",
+  "app_maintenancePartial_other": "Maintenance terminée avec {{count}} problèmes"
 }

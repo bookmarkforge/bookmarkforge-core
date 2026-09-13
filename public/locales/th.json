@@ -47,16 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "รหัสผ่านห้องนิรภัยไม่ถูกต้อง",
     "dbStorageUnavailable": "พื้นที่เก็บข้อมูลที่เข้ารหัสแบบถาวรไม่พร้อมใช้งาน ข้อมูลของคุณไม่ถูกโหลดหรือเขียน เปิดใช้งาน IndexedDB เพิ่มพื้นที่ดิสก์ หรือโหลดใหม่หลังจากปิดแท็บห้องนิรภัยอื่น ๆ"
   },
@@ -905,8 +895,8 @@
   "telemetry": "ไม่มีเทเลเมทรี",
   "offline": "ออฟไลน์ก่อน",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "บริบทของแท็กที่มีอยู่",
+    "folder_list": "รายการโฟลเดอร์"
   },
   "general_folder": "ทั่วไป",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1526,5 +1516,20 @@
   "app_diskBackupBlockedShort": "ดิสก์ถูกบล็อก",
   "app_diskCopyShort": "ดิสก์ถูกบล็อก",
   "app_loadingVault": "กำลังโหลดนิรภัย…",
-  "app_loadingVaultDetail": "กำลังเตรียม {{rows}} รายการ…"
+  "app_loadingVaultDetail": "กำลังเตรียม {{rows}} รายการ…",
+  "app_fuseSelected": "รวมรายการที่เลือก ({{count}})",
+  "app_fuseSelected_one": "รวมรายการที่เลือก (1)",
+  "app_fuseSelected_few": "รวมรายการที่เลือก",
+  "app_fuseSelected_many": "รวมรายการที่เลือก",
+  "app_fuseSelected_other": "รวมรายการที่เลือก ({{count}})",
+  "app_maintenanceFinished": "การบำรุงรักษาเสร็จสมบูรณ์: ซ่อมแล้ว {{count}} รายการ",
+  "app_maintenanceFinished_one": "การบำรุงรักษาเสร็จสมบูรณ์: ซ่อมแล้ว 1 รายการ",
+  "app_maintenanceFinished_few": "การบำรุงรักษาเสร็จสมบูรณ์: มีการซ่อมแล้ว",
+  "app_maintenanceFinished_many": "การบำรุงรักษาเสร็จสมบูรณ์: มีการซ่อมแล้ว",
+  "app_maintenanceFinished_other": "การบำรุงรักษาเสร็จสมบูรณ์: ซ่อมแล้ว {{count}} รายการ",
+  "app_maintenancePartial": "การบำรุงรักษาเสร็จสิ้นด้วย {{count}} ปัญหา",
+  "app_maintenancePartial_one": "การบำรุงรักษาเสร็จสิ้นด้วย 1 ปัญหา",
+  "app_maintenancePartial_few": "การบำรุงรักษาเสร็จสิ้นด้วยปัญหา",
+  "app_maintenancePartial_many": "การบำรุงรักษาเสร็จสิ้นด้วยปัญหา",
+  "app_maintenancePartial_other": "การบำรุงรักษาเสร็จสิ้นด้วย {{count}} ปัญหา"
 }

@@ -47,16 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "Holin salasana on virheellinen.",
     "dbStorageUnavailable": "Pysyvä salattu tallennustila ei ole käytettävissä. Tietojasi ei ladattu tai kirjoitettu. Ota IndexedDB käyttöön, vapauta levytilaa tai lataa uudelleen suljettuasi muut holin välilehdet."
   },
@@ -905,8 +895,8 @@
   "telemetry": "Nolla telemetriaa",
   "offline": "Offline ensin",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "Olemassa olevien tunnisteiden konteksti",
+    "folder_list": "Kansioluettelo"
   },
   "general_folder": "Yleinen",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1526,5 +1516,20 @@
   "app_diskBackupBlockedShort": "levy estetty",
   "app_diskCopyShort": "levy estetty",
   "app_loadingVault": "Ladataan lattiaa…",
-  "app_loadingVaultDetail": "Valmistellaan {{rows}} kohdetta…"
+  "app_loadingVaultDetail": "Valmistellaan {{rows}} kohdetta…",
+  "app_fuseSelected": "Yhdistä valitut ({{count}})",
+  "app_fuseSelected_one": "Yhdistä valitut (1)",
+  "app_fuseSelected_few": "Yhdistä valitut",
+  "app_fuseSelected_many": "Yhdistä valitut",
+  "app_fuseSelected_other": "Yhdistä valitut ({{count}})",
+  "app_maintenanceFinished": "Ylläpito valmis: {{count}} korjattu",
+  "app_maintenanceFinished_one": "Ylläpito valmis: 1 korjattu",
+  "app_maintenanceFinished_few": "Ylläpito valmis: korjattu",
+  "app_maintenanceFinished_many": "Ylläpito valmis: korjattu",
+  "app_maintenanceFinished_other": "Ylläpito valmis: {{count}} korjattu",
+  "app_maintenancePartial": "Ylläpito päättyi {{count}} ongelmaan",
+  "app_maintenancePartial_one": "Ylläpito päättyi 1 ongelmaan",
+  "app_maintenancePartial_few": "Ylläpito päättyi ongelmiin",
+  "app_maintenancePartial_many": "Ylläpito päättyi ongelmiin",
+  "app_maintenancePartial_other": "Ylläpito päättyi {{count}} ongelmaan"
 }

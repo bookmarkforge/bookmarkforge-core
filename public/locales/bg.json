@@ -47,16 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "Паролата на трезора е невалидна.",
     "dbStorageUnavailable": "Постоянното криптирано хранилище е недостъпно. Данните ви не са заредени или записани. Активирайте IndexedDB, освободете място или презаредете след затваряне на други раздели на трезора."
   },
@@ -905,8 +895,8 @@
   "telemetry": "Нулева телеметрия",
   "offline": "Първо офлайн",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "Контекст на съществуващите етикети",
+    "folder_list": "Списък с папки"
   },
   "general_folder": "Общи",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1550,5 +1540,11 @@
   "app_maintenancePartial_other": "Поддръжка завършена с {{count}} проблема",
   "app_fuseSelected": "Избрани {{count}} връзки",
   "app_maintenanceFinished": "Поддръжка завършена: {{count}} ремонтирани",
-  "app_maintenancePartial": "Поддръжка завършена с {{count}} проблема"
+  "app_maintenancePartial": "Поддръжка завършена с {{count}} проблема",
+  "app_fuseSelected_few": "Избрани връзки",
+  "app_fuseSelected_many": "Избрани връзки",
+  "app_maintenanceFinished_few": "Поддръжка завършена: ремонтирани",
+  "app_maintenanceFinished_many": "Поддръжка завършена: ремонтирани",
+  "app_maintenancePartial_few": "Поддръжка завършена с проблеми",
+  "app_maintenancePartial_many": "Поддръжка завършена с проблеми"
 }

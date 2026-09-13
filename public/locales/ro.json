@@ -47,16 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "Parola seifului este invalidă.",
     "dbStorageUnavailable": "Stocarea criptată persistentă este indisponibilă. Datele dvs. nu au fost încărcate sau scrise. Activați IndexedDB, eliberați spațiu pe disc sau reîncărcați după ce închideți alte file ale seifului."
   },
@@ -905,8 +895,8 @@
   "telemetry": "Zero telemetrie",
   "offline": "Offline în primul rând",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "Contextul etichetelor existente",
+    "folder_list": "Lista dosarelor"
   },
   "general_folder": "General",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1525,5 +1515,20 @@
   "app_diskBackupBlocked": "Copie pe disc blocată: browserul necesită acțiunea utilizatorului (exportați manual)",
   "app_diskBackupBlockedShort": "disc blocat",
   "app_diskCopyShort": "disc blocat",
-  "app_loadingVaultDetail": "Pregătire {{rows}} elemente…"
+  "app_loadingVaultDetail": "Pregătire {{rows}} elemente…",
+  "app_fuseSelected": "Fuzionează selecția ({{count}})",
+  "app_fuseSelected_one": "Fuzionează selecția (1)",
+  "app_fuseSelected_few": "Fuzionează selecția",
+  "app_fuseSelected_many": "Fuzionează selecția",
+  "app_fuseSelected_other": "Fuzionează selecția ({{count}})",
+  "app_maintenanceFinished": "Întreținere finalizată: {{count}} reparate",
+  "app_maintenanceFinished_one": "Întreținere finalizată: 1 reparat",
+  "app_maintenanceFinished_few": "Întreținere finalizată: reparate",
+  "app_maintenanceFinished_many": "Întreținere finalizată: reparate",
+  "app_maintenanceFinished_other": "Întreținere finalizată: {{count}} reparate",
+  "app_maintenancePartial": "Întreținere finalizată cu {{count}} probleme",
+  "app_maintenancePartial_one": "Întreținere finalizată cu 1 problemă",
+  "app_maintenancePartial_few": "Întreținere finalizată cu probleme",
+  "app_maintenancePartial_many": "Întreținere finalizată cu probleme",
+  "app_maintenancePartial_other": "Întreținere finalizată cu {{count}} probleme"
 }

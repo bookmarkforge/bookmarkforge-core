@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Зберігайте статті, нотатки та документи в приватному, зашифрованому та 100% локальному сховищі. AI-пошук, редактор у стилі Notion та P2P-синхронізація. Безкоштовний план: 1 000 закладок.">
+  <title>BookmarkForge — Приватна альтернатива Pocket з AI (Закладки та нотатки)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforge.com/uk/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforge.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — Приватна альтернатива Pocket з AI (Закладки та нотатки)">
+  <meta property="og:description" content="Зберігайте статті, нотатки та документи в приватному, зашифрованому та 100% локальному сховищі. AI-пошук, редактор у стилі Notion та P2P-синхронізація. Безкоштовний план: 1 000 закладок.">
+  <meta property="og:url" content="https://bookmarkforge.com/uk/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image-uk.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="uk_UA">
+  <meta property="og:locale:alternate" content="ar_AR">
+  <meta property="og:locale:alternate" content="bg_BG">
+  <meta property="og:locale:alternate" content="cs_CZ">
+  <meta property="og:locale:alternate" content="da_DK">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="el_GR">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="fi_FI">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="he_IL">
+  <meta property="og:locale:alternate" content="hi_IN">
+  <meta property="og:locale:alternate" content="hr_HR">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:locale:alternate" content="id_ID">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:locale:alternate" content="ja_JP">
+  <meta property="og:locale:alternate" content="ko_KR">
+  <meta property="og:locale:alternate" content="nl_NL">
+  <meta property="og:locale:alternate" content="no_NO">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:locale:alternate" content="pt_BR">
+  <meta property="og:locale:alternate" content="ro_RO">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:locale:alternate" content="sv_SE">
+  <meta property="og:locale:alternate" content="th_TH">
+  <meta property="og:locale:alternate" content="tr_TR">
+  <meta property="og:locale:alternate" content="vi_VN">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — Приватна альтернатива Pocket з AI (Закладки та нотатки)">
+  <meta name="twitter:description" content="Зберігайте статті, нотатки та документи в приватному, зашифрованому та 100% локальному сховищі. AI-пошук, редактор у стилі Notion та P2P-синхронізація. Безкоштовний план: 1 000 закладок.">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image-uk.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://bookmarkforge.com/uk/#website",
+      "url": "https://bookmarkforge.com/uk/",
+      "name": "BookmarkForge",
+      "description": "Приватна альтернатива Pocket для збереження статей та читання пізніше: закладки, нотатки та документи — зашифровані на вашому пристрої, доступні для пошуку через AI та синхронізуються peer-to-peer. Без хмари. Без відстеження. 100% ваші.",
+      "inLanguage": "uk",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://bookmarkforge.com/uk/?s={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@id": "https://bookmarkforge.com/#organization"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://bookmarkforge.com/#organization",
+      "name": "BookmarkForge",
+      "url": "https://bookmarkforge.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://bookmarkforge.com/logo.png",
+        "width": 64,
+        "height": 64
+      },
+      "email": "bookmarkforge@proton.me"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://bookmarkforge.com/uk/#software",
+      "name": "BookmarkForge",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web",
+      "url": "https://bookmarkforge.com/uk/",
+      "image": "https://bookmarkforge.com/og-image-uk.png",
+      "description": "Приватна альтернатива Pocket для збереження статей та читання пізніше: закладки, нотатки та документи — зашифровані на вашому пристрої, доступні для пошуку через AI та синхронізуються peer-to-peer. Без хмари. Без відстеження. 100% ваші.",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro Lifetime",
+          "price": "79",
+          "priceCurrency": "USD"
+        }
+      ],
+      "featureList": [
+        "100% local storage",
+        "End-to-end encryption",
+        "Offline-first",
+        "AI search",
+        "Notion-style editor",
+        "P2P sync"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://bookmarkforge.com/uk/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Безкоштовний план дійсно безкоштовний назавжди?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Так. Без обмеженого пробного періоду або підписки. Безкоштовний план включає 1 000 закладок, повнотекстовий та семантичний пошук, граф знань та AI з вашим API-ключем (ви платите провайдеру)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Що означає 'разова покупка' в Pro?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ви платите один раз ($79), і ліцензія ваша назавжди. Включає всі оновлення протягом 12 місяців. Без повторюваних платежів. Ліцензійний ключ доставляється миттєво через Whop."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Які способи оплати ви приймаєте?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Через Whop: кредитна картка, PayPal та криптовалюта. Ми ніколи не бачимо ваші платіжні дані."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Яка ваша політика повернення?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "30-денна гарантія повернення для ліцензій Pro. Контакт: support@bookmarkforge.com"
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/uk/" class="nav-brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navigation">
+        <a href="#features">Закладки та документи</a>
+        <a href="#ai">AI, який вас поважає</a>
+        <a href="#privacy">Скразне шифрування</a>
+        <a href="#pricing">Прості, Справедливі Ціни</a>
+
+        <a href="/ar/?lang=ar" hreflang="ar" lang="ar">العربية</a>
+        <a href="/bg/?lang=bg" hreflang="bg" lang="bg">Български</a>
+        <a href="/cs/?lang=cs" hreflang="cs" lang="cs">Čeština</a>
+        <a href="/da/?lang=da" hreflang="da" lang="da">Dansk</a>
+        <a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a>
+        <a href="/el/?lang=el" hreflang="el" lang="el">Ελληνικά</a>
+        <a href="/?lang=en" hreflang="en" lang="en">English</a>
+        <a href="/es/?lang=es" hreflang="es" lang="es">Español</a>
+        <a href="/fi/?lang=fi" hreflang="fi" lang="fi">Suomi</a>
+        <a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a>
+        <a href="/he/?lang=he" hreflang="he" lang="he">עברית</a>
+        <a href="/hi/?lang=hi" hreflang="hi" lang="hi">हिन्दी</a>
+        <a href="/hr/?lang=hr" hreflang="hr" lang="hr">Hrvatski</a>
+        <a href="/hu/?lang=hu" hreflang="hu" lang="hu">Magyar</a>
+        <a href="/id/?lang=id" hreflang="id" lang="id">Bahasa Indonesia</a>
+        <a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a>
+        <a href="/ja/?lang=ja" hreflang="ja" lang="ja">日本語</a>
+        <a href="/ko/?lang=ko" hreflang="ko" lang="ko">한국어</a>
+        <a href="/nl/?lang=nl" hreflang="nl" lang="nl">Nederlands</a>
+        <a href="/no/?lang=no" hreflang="no" lang="no">Norsk</a>
+        <a href="/pl/?lang=pl" hreflang="pl" lang="pl">Polski</a>
+        <a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a>
+        <a href="/ro/?lang=ro" hreflang="ro" lang="ro">Română</a>
+        <a href="/ru/?lang=ru" hreflang="ru" lang="ru">Русский</a>
+        <a href="/sv/?lang=sv" hreflang="sv" lang="sv">Svenska</a>
+        <a href="/th/?lang=th" hreflang="th" lang="th">ไทย</a>
+        <a href="/tr/?lang=tr" hreflang="tr" lang="tr">Türkçe</a>
+        <a href="/uk/?lang=uk" hreflang="uk" lang="uk">Українська</a>
+        <a href="/vi/?lang=vi" hreflang="vi" lang="vi">Tiếng Việt</a>
+        <a href="/zh/?lang=zh" hreflang="zh" lang="zh">中文</a>
+        <a href="/app" class="btn-primary nav-cta">Відкрити безкоштовно</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">Версія 1.0</span>
+          <h1 id="hero-title">Ваш <span class='accent-text'>Приватний AI Vault</span></h1>
+          <p class="hero-subtitle">Приватна альтернатива Pocket для збереження статей та читання пізніше: закладки, нотатки та документи — зашифровані на вашому пристрої, доступні для пошуку через AI та синхронізуються peer-to-peer. Без хмари. Без відстеження. 100% ваші.</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">Відкрити безкоштовно</a>
+            <a href="#pricing" class="btn-secondary">Переглянути ціни</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>100% Локально</strong> — ваші дані не покидають пристрій</span>
+            <span><strong>Зашифровано</strong> — AES-256-GCM + Argon2id</span>
+            <span><strong>Офлайн</strong> — працює без інтернету</span>
+            <span><strong>Приватно</strong> — нульова телеметрія за замовчуванням</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="alternativa-pocket" class="comparison-section" aria-labelledby="alternativa-pocket-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Читайте пізніше без компромісів у приватності</span>
+          <h2 id="alternativa-pocket-title">Приватна альтернатива Pocket</h2>
+          <p class="section-subtitle">Pocket зникає. BookmarkForge зберігає звичку читання — кожна стаття, нотатка та виділення зашифровані на вашому пристрої.</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>Зберігайте статті на потім, ваші назавжди</h3>
+            <p>Зберігайте статті, відео та PDF одним кліком — з PWA-додатку, розширення браузера або меню поширення. На відміну від Pocket, ваш список читання живе на вашому пристрої, зашифрований і працює офлайн.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Нотатки у стилі Notion у кожній статті</h3>
+            <p>Виділяйте, резюмуйте та пишіть нотатки у кожній закладці. Перетворіть збережену статтю на власну базу знань — а не просто список посилань.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Нуль відстеження, нуль реклами</h3>
+            <p>BookmarkForge за замовчуванням не використовує акаунти, аналітику чи рекламу. Ваші звички читання — лише ваша відповідальність.</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Почати зберігати безкоштовно</a>
+          <a href="/pocket-alternative" class="btn-link">Повне порівняння та керівництво з міграції</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Все, що вам потрібно</span>
+          <h2 id="features-title">Потужні функції для управління знаннями, все працює локально</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Закладки та документи</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Повнотекстовий та семантичний пошук</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Локальний AI (WebLLM / Ollama) — Тільки Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>RAG-чат над вашими даними — Тільки Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>P2P-синхронізація (WebRTC) — Тільки Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Зашифровані резервні копії</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Граф знань</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Флешкарти (Spaced Repetition) — Тільки Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Приватність за замовчуванням</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">AI, який вас поважає</span>
+          <h2 id="ai-title">Ваші Знання, Посилені</h2>
+          <p class="section-subtitle">BookmarkForge дає вам вибір: запускайте 100% локальні моделі у браузері (WebLLM, WebGPU) з Pro, підключайте свої API-ключі до хмарних провайдерів або використовуйте локальний Ollama. Ваші інструкції, ваші дані, ваші правила.</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>Підтримувані провайдери</h3>
+            <ul class="providers-list">
+              <li>WebLLM local (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Pro only</li>
+              <li>Ollama local (any model you run)</li>
+              <li>Google Gemini cloud (your API key)</li>
+              <li>OpenAI / GPT-4o cloud (your API key)</li>
+              <li>Anthropic Claude cloud (your API key)</li>
+              <li>Groq cloud (your API key)</li>
+              <li>Custom / OpenRouter via custom provider (your API key)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>Режими чату</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>Приватний Режим</h4>
+                <p>Тільки локальний AI (WebLLM/Ollama). Нуль даних покидає пристрій. Працює офлайн. Вимагає Pro для WebLLM.</p>
+              </div>
+              <div class="mode-item">
+                <h4>Режим Веб-Пошуку</h4>
+                <p>З'єднує ваше сховище з результатами пошуку в реальному часі (хмарні провайдери).</p>
+              </div>
+              <div class="mode-item">
+                <h4>Експертні Агенти</h4>
+                <p>Спеціалізовані персонажі: Програміст, Письменник, Аналітик, Дослідник. Вимагає Pro для локального AI.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">Приватність — не функція, а основа</h2>
+          <p class="section-subtitle">Кожне архітектурне рішення дає вам контроль</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Скразне шифрування</h3>
+          </div>
+          <div class="feature-item">
+            <h3>100% локальна архітектура</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Нульова телеметрія за замовчуванням</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Ключі — ваші</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Відповідність GDPR</h3>
+          </div>
+          <div class="feature-item">
+            <h3>Незалежність від провайдера</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">Прості, Справедливі Ціни</h2>
+          <p class="section-subtitle">Безкоштовний план: 1 000 закладок. Pro — разова покупка за $79 — без підписок.</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Безкоштовно</h3>
+            <div class="price">$ 0<span>/ назавжди</span></div>
+            <p>Для особистого управління знаннями (1 000 закладок, 1 пристрій)</p>
+            <ul>
+              <li>1 000 закладок, нотаток та документів</li>
+              <li>Повнотекстовий та семантичний пошук</li>
+              <li>AI з вашим API-ключем (ви платите провайдеру)</li>
+              <li>Граф знань</li>
+              <li>Базові шаблони</li>
+              <li>JSON/HTML експорт</li>
+              <li>PWA + розширення браузера</li>
+              <li><span aria-hidden='true'>❌</span> P2P-синхронізація між пристроями</li>
+              <li><span aria-hidden='true'>❌</span> Локальний AI (WebLLM/Ollama)</li>
+              <li><span aria-hidden='true'>❌</span> RAG-чат над вашими даними</li>
+              <li><span aria-hidden='true'>❌</span> Флешкарти зі spaced repetition</li>
+              <li><span aria-hidden='true'>❌</span> PDF + OCR</li>
+              <li><span aria-hidden='true'>❌</span> Розширений експорт (10+ форматів)</li>
+            </ul>
+            <a href="/app" class="btn-outline ">Почати безкоштовно</a>
+          </div>
+          <div class="price-card popular">
+            <span class="badge">Most Popular</span>
+            <h3>Pro</h3>
+            <div class="price">$ 79<span>разова покупка (назавжди)</span></div>
+            <p>Необмежені закладки, 3 пристрої, локальний AI, P2P-синхронізація — без підписки</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Все з Безкоштовного</li>
+              <li><span aria-hidden="true">✅</span> Необмежені закладки</li>
+              <li><span aria-hidden="true">✅</span> 3 пристрої</li>
+              <li><span aria-hidden="true">✅</span> P2P-синхронізація на 3 пристроях</li>
+              <li><span aria-hidden="true">✅</span> Локальний AI (WebLLM, без API-ключа)</li>
+              <li><span aria-hidden="true">✅</span> RAG-чат над вашими даними</li>
+              <li><span aria-hidden="true">✅</span> Експертні агенти (Програміст, Письменник, Аналітик, Дослідник)</li>
+              <li><span aria-hidden="true">✅</span> Флешкарти зі spaced repetition</li>
+              <li><span aria-hidden="true">✅</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> Розширений експорт (10+ форматів)</li>
+              <li><span aria-hidden="true">✅</span> Безпечне сховище (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> Оновлення протягом 12 місяців</li>
+              <li><span aria-hidden="true">✅</span> Email-підтримка</li>
+            </ul>
+            <a href="https://whop.com/bookmarkforge" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Отримати Pro Назавжди</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">Часто Задані Питання</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Безкоштовний план дійсно безкоштовний назавжди?</h3>
+            <p>Так. Без обмеженого пробного періоду або підписки. Безкоштовний план включає 1 000 закладок, повнотекстовий та семантичний пошук, граф знань та AI з вашим API-ключем (ви платите провайдеру).</p>
+          </div>
+          <div class="faq-item">
+            <h3>Що означає 'разова покупка' в Pro?</h3>
+            <p>Ви платите один раз ($79), і ліцензія ваша назавжди. Включає всі оновлення протягом 12 місяців. Без повторюваних платежів. Ліцензійний ключ доставляється миттєво через Whop.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Які способи оплати ви приймаєте?</h3>
+            <p>Через Whop: кредитна картка, PayPal та криптовалюта. Ми ніколи не бачимо ваші платіжні дані.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Яка ваша політика повернення?</h3>
+            <p>30-денна гарантія повернення для ліцензій Pro. Контакт: support@bookmarkforge.com</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>Готові Взяти Контроль над Знаннями?</h2>
+        <p>Приєднуйтесь до тисяч дослідників, розробників та студентів, які довіряють BookmarkForge як другому мозку.</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">Відкрити безкоштовно</a>
+          <a href="#pricing" class="btn-secondary">Оновити до Pro</a>
+        </div>
+        <p class="note">Акаунт не потрібен. Працює одразу у браузері. Безкоштовний план: 1 000 закладок.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>Ваше приватне AI-сховище для знань. 100% локально.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Продукт</h4>
+        <ul>
+          <li><a href="#features">Функції</a></li>
+          <li><a href="#ai">Можливості AI</a></li>
+          <li><a href="#privacy">Приватність</a></li>
+          <li><a href="#pricing">Ціни</a></li>
+          <li><a href="/app">Відкрити додаток</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Ресурси</h4>
+        <ul>
+          <li><a href="/pocket-alternative">Порівняння з Pocket</a></li>
+          <li><a href="/uk/privacy-and-terms.html">Конфіденційність та умови</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Мови</h4>
+        <ul>
+          <li><a href="/ar/?lang=ar">العربية</a></li>
+          <li><a href="/bg/?lang=bg">Български</a></li>
+          <li><a href="/cs/?lang=cs">Čeština</a></li>
+          <li><a href="/da/?lang=da">Dansk</a></li>
+          <li><a href="/de/?lang=de">Deutsch</a></li>
+          <li><a href="/el/?lang=el">Ελληνικά</a></li>
+          <li><a href="/?lang=en">English</a></li>
+          <li><a href="/es/?lang=es">Español</a></li>
+          <li><a href="/fi/?lang=fi">Suomi</a></li>
+          <li><a href="/fr/?lang=fr">Français</a></li>
+          <li><a href="/he/?lang=he">עברית</a></li>
+          <li><a href="/hi/?lang=hi">हिन्दी</a></li>
+          <li><a href="/hr/?lang=hr">Hrvatski</a></li>
+          <li><a href="/hu/?lang=hu">Magyar</a></li>
+          <li><a href="/id/?lang=id">Bahasa Indonesia</a></li>
+          <li><a href="/it/?lang=it">Italiano</a></li>
+          <li><a href="/ja/?lang=ja">日本語</a></li>
+          <li><a href="/ko/?lang=ko">한국어</a></li>
+          <li><a href="/nl/?lang=nl">Nederlands</a></li>
+          <li><a href="/no/?lang=no">Norsk</a></li>
+          <li><a href="/pl/?lang=pl">Polski</a></li>
+          <li><a href="/pt/?lang=pt">Português</a></li>
+          <li><a href="/ro/?lang=ro">Română</a></li>
+          <li><a href="/ru/?lang=ru">Русский</a></li>
+          <li><a href="/sv/?lang=sv">Svenska</a></li>
+          <li><a href="/th/?lang=th">ไทย</a></li>
+          <li><a href="/tr/?lang=tr">Türkçe</a></li>
+          <li><a href="/uk/?lang=uk">Українська</a></li>
+          <li><a href="/vi/?lang=vi">Tiếng Việt</a></li>
+          <li><a href="/zh/?lang=zh">中文</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Підтримка</h4>
+        <ul>
+          <li><a href="mailto:bookmarkforge@proton.me">Зв'яжіться з нами</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. Усі права захищені.</p>
+      <a href="/uk/privacy-and-terms.html">Політика Конфіденційності</a> · <a href="/uk/privacy-and-terms.html#terms">Умови Використання</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

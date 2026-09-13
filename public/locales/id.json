@@ -47,16 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "Kata sandi brankas tidak valid.",
     "dbStorageUnavailable": "Penyimpanan terenkripsi permanen tidak tersedia. Data Anda tidak dimuat atau ditulis. Aktifkan IndexedDB, kosongkan ruang disk, atau muat ulang setelah menutup tab brankas lainnya."
   },
@@ -905,8 +895,8 @@
   "telemetry": "Nol telemetri",
   "offline": "Offline dulu",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "Konteks tag yang ada",
+    "folder_list": "Daftar folder"
   },
   "general_folder": "Umum",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1525,5 +1515,20 @@
   "app_diskBackupBlockedShort": "disk diblokir",
   "app_diskCopyShort": "disk diblokir",
   "app_loadingVault": "Memuat brankas…",
-  "app_loadingVaultDetail": "Menyiapkan {{rows}} item…"
+  "app_loadingVaultDetail": "Menyiapkan {{rows}} item…",
+  "app_fuseSelected": "Gabungkan terpilih ({{count}})",
+  "app_fuseSelected_one": "Gabungkan terpilih (1)",
+  "app_fuseSelected_few": "Gabungkan terpilih",
+  "app_fuseSelected_many": "Gabungkan terpilih",
+  "app_fuseSelected_other": "Gabungkan terpilih ({{count}})",
+  "app_maintenanceFinished": "Pemeliharaan selesai: {{count}} diperbaiki",
+  "app_maintenanceFinished_one": "Pemeliharaan selesai: 1 diperbaiki",
+  "app_maintenanceFinished_few": "Pemeliharaan selesai: diperbaiki",
+  "app_maintenanceFinished_many": "Pemeliharaan selesai: diperbaiki",
+  "app_maintenanceFinished_other": "Pemeliharaan selesai: {{count}} diperbaiki",
+  "app_maintenancePartial": "Pemeliharaan selesai dengan {{count}} masalah",
+  "app_maintenancePartial_one": "Pemeliharaan selesai dengan 1 masalah",
+  "app_maintenancePartial_few": "Pemeliharaan selesai dengan masalah",
+  "app_maintenancePartial_many": "Pemeliharaan selesai dengan masalah",
+  "app_maintenancePartial_other": "Pemeliharaan selesai dengan {{count}} masalah"
 }

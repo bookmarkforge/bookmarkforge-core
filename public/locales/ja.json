@@ -47,18 +47,6 @@
     "retry": "再試行",
     "loading": "読み込み中...",
     "untitledDocument": "無題のドキュメント",
-    "localFirstArchitecture": "100%ローカルファーストアーキテクチャ",
-    "onboardingHeadline": "あなたの頭脳。あなたのハードドライブ。",
-    "onboardingSubheadline": "BookmarkForgeはクラウドを使用しません。IndexedDBデータベースはハードドライブ上のみに存在します。Wi-Fiを切ってローカルAIを実行し、ナレッジの完全な主権を保持してください。",
-    "secureVaultTitle": "セキュアボールト",
-    "setupVaultDesc": "BookmarkForgeはAES-256-GCM軍事グレードのローカル暗号化を使用してデータを保護します。マスターパスワードなしでは、誰も（私たちでさえ）ブックマークを読むことはできません。",
-    "create_vault": "セキュアボールトを作成",
-    "continueWithoutPassword": "暗号化なしで続行",
-    "telemetryTitle": "クラッシュ報告",
-    "telemetryDesc": "アプリは100%プライベートかつローカルであるため、エラーを把握できません。メモリ不足でアプリがクラッシュした場合、報告がない限り知ることができません。",
-    "telemetryOptInTitle": "改善にご協力ください（任意）",
-    "telemetryOptInDesc": "クラッシュ発生時に匿名の技術スタックトレースを送信します。ブックマーク、テキスト、URL、プロンプトは一切収集しません。",
-    "onboardingFooter": "プライバシーを最優先に設計されています。",
     "invalidPassword": "ボールトのパスワードが無効です。",
     "dbStorageUnavailable": "永続的な暗号化ストレージが利用できません。データは読み込まれず、書き込まれませんでした。IndexedDB を有効にし、ディスク容量を空けるか、他のボールトのタブを閉じてから再読み込みしてください。"
   },
@@ -905,8 +893,8 @@
   "telemetry": "テレメトリなし",
   "offline": "オフライン優先",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "既存タグのコンテキスト",
+    "folder_list": "フォルダ一覧"
   },
   "general_folder": "一般",
   "summarizePrompt": "タイトルとURLに基づいて保存されたリンクを簡単に要約してください。タイトル：{{title}}。URL：{{url}}。",
@@ -1528,5 +1516,20 @@
   "app_diskBackupBlockedShort": "ディスクブロック",
   "app_diskCopyShort": "ディスクブロック",
   "app_loadingVault": "金庫を読み込み中…",
-  "app_loadingVaultDetail": "{{rows}}件のアイテムを準備中…"
+  "app_loadingVaultDetail": "{{rows}}件のアイテムを準備中…",
+  "app_fuseSelected": "選択を統合 ({{count}})",
+  "app_fuseSelected_one": "選択を統合 (1)",
+  "app_fuseSelected_few": "選択を統合",
+  "app_fuseSelected_many": "選択を統合",
+  "app_fuseSelected_other": "選択を統合 ({{count}})",
+  "app_maintenanceFinished": "メンテナンス完了: {{count}}件を修復",
+  "app_maintenanceFinished_one": "メンテナンス完了: 1件を修復",
+  "app_maintenanceFinished_few": "メンテナンス完了: 修復あり",
+  "app_maintenanceFinished_many": "メンテナンス完了: 修復あり",
+  "app_maintenanceFinished_other": "メンテナンス完了: {{count}}件を修復",
+  "app_maintenancePartial": "メンテナンス終了: {{count}}件の問題",
+  "app_maintenancePartial_one": "メンテナンス終了: 1件の問題",
+  "app_maintenancePartial_few": "メンテナンス終了: 問題あり",
+  "app_maintenancePartial_many": "メンテナンス終了: 問題あり",
+  "app_maintenancePartial_other": "メンテナンス終了: {{count}}件の問題"
 }

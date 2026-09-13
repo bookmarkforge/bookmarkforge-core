@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="he"
+  dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="שמרו מאמרים, הערות ומסמכים בכספת פרטית, מוצפנת ומקומית ב-100%. חיפוש AI, עורך בסגנון Notion וסנכרון P2P. תכנית חינם: 1,000 סימניות.">
+  <title>BookmarkForge — חלופה פרטית לPocket עם AI (סימניות והערות)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforge.com/he/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforge.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — חלופה פרטית לPocket עם AI (סימניות והערות)">
+  <meta property="og:description" content="שמרו מאמרים, הערות ומסמכים בכספת פרטית, מוצפנת ומקומית ב-100%. חיפוש AI, עורך בסגנון Notion וסנכרון P2P. תכנית חינם: 1,000 סימניות.">
+  <meta property="og:url" content="https://bookmarkforge.com/he/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image-he.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="he_IL">
+  <meta property="og:locale:alternate" content="ar_AR">
+  <meta property="og:locale:alternate" content="bg_BG">
+  <meta property="og:locale:alternate" content="cs_CZ">
+  <meta property="og:locale:alternate" content="da_DK">
+  <meta property="og:locale:alternate" content="de_DE">
+  <meta property="og:locale:alternate" content="el_GR">
+  <meta property="og:locale:alternate" content="es_ES">
+  <meta property="og:locale:alternate" content="fi_FI">
+  <meta property="og:locale:alternate" content="fr_FR">
+  <meta property="og:locale:alternate" content="hi_IN">
+  <meta property="og:locale:alternate" content="hr_HR">
+  <meta property="og:locale:alternate" content="hu_HU">
+  <meta property="og:locale:alternate" content="id_ID">
+  <meta property="og:locale:alternate" content="it_IT">
+  <meta property="og:locale:alternate" content="ja_JP">
+  <meta property="og:locale:alternate" content="ko_KR">
+  <meta property="og:locale:alternate" content="nl_NL">
+  <meta property="og:locale:alternate" content="no_NO">
+  <meta property="og:locale:alternate" content="pl_PL">
+  <meta property="og:locale:alternate" content="pt_BR">
+  <meta property="og:locale:alternate" content="ro_RO">
+  <meta property="og:locale:alternate" content="ru_RU">
+  <meta property="og:locale:alternate" content="sv_SE">
+  <meta property="og:locale:alternate" content="th_TH">
+  <meta property="og:locale:alternate" content="tr_TR">
+  <meta property="og:locale:alternate" content="uk_UA">
+  <meta property="og:locale:alternate" content="vi_VN">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — חלופה פרטית לPocket עם AI (סימניות והערות)">
+  <meta name="twitter:description" content="שמרו מאמרים, הערות ומסמכים בכספת פרטית, מוצפנת ומקומית ב-100%. חיפוש AI, עורך בסגנון Notion וסנכרון P2P. תכנית חינם: 1,000 סימניות.">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image-he.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://bookmarkforge.com/he/#website",
+      "url": "https://bookmarkforge.com/he/",
+      "name": "BookmarkForge",
+      "description": "החלופה הפרטית ל-Pocket לשמירת מאמרים וקריאה מאוחר יותר: סימניות, הערות ומסמכים — מוצפנים על המכשיר שלכם, ניתנים לחיפוש עם AI ומסונכרנים בין עמיתים. אין ענן. אין מעקב. 100% שלכם.",
+      "inLanguage": "he",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://bookmarkforge.com/he/?s={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "publisher": {
+        "@id": "https://bookmarkforge.com/#organization"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://bookmarkforge.com/#organization",
+      "name": "BookmarkForge",
+      "url": "https://bookmarkforge.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://bookmarkforge.com/logo.png",
+        "width": 64,
+        "height": 64
+      },
+      "email": "bookmarkforge@proton.me"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://bookmarkforge.com/he/#software",
+      "name": "BookmarkForge",
+      "applicationCategory": "ProductivityApplication",
+      "operatingSystem": "Web",
+      "url": "https://bookmarkforge.com/he/",
+      "image": "https://bookmarkforge.com/og-image-he.png",
+      "description": "החלופה הפרטית ל-Pocket לשמירת מאמרים וקריאה מאוחר יותר: סימניות, הערות ומסמכים — מוצפנים על המכשיר שלכם, ניתנים לחיפוש עם AI ומסונכרנים בין עמיתים. אין ענן. אין מעקב. 100% שלכם.",
+      "offers": [
+        {
+          "@type": "Offer",
+          "name": "Free",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro Lifetime",
+          "price": "79",
+          "priceCurrency": "USD"
+        }
+      ],
+      "featureList": [
+        "100% local storage",
+        "End-to-end encryption",
+        "Offline-first",
+        "AI search",
+        "Notion-style editor",
+        "P2P sync"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://bookmarkforge.com/he/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "האם התכנית החינם באמת בחינם לתמיד?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "כן. ללא תקופת ניסיון מוגבלת או מנוי. התכנית החינם כוללת 1,000 סימניות, חיפוש מלא וסמנטי, גרף ידע ו-AI עם מפתח ה-API שלכם (אתם משלמים לספק)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "מה המשמעות של 'רכישה חד-פעמית' ב-Pro?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "אתם משלמים פעם אחת ($79), והרישיון שלכם לתמיד. כולל את כל העדכונים ל-12 חודשים. ללא חיובים חוזרים. מפתח הרישיון מועבר מיד דרך Whop."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "אילו אמצעי תשלום אתם מקבלים?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "דרך Whop: כרטיס אשראי, PayPal וקריפטו. אנחנו לעולם לא רואים את פרטי התשלום שלכם."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "מה מדיניות ההחזרים שלכם?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "אחריות החזר של 30 יום לרישיונות Pro. צרו קשר: support@bookmarkforge.com"
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">דלג לתוכן הראשי</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/he/" class="nav-brand" aria-label="BookmarkForge דף הבית">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navigation">
+        <a href="#features">סימניות ומסמכים</a>
+        <a href="#ai">AI שמכבד אתכם</a>
+        <a href="#privacy">הצפנה מקצה לקצה</a>
+        <a href="#pricing">מחירים פשוטים והוגנים</a>
+
+        <a href="/ar/?lang=ar" hreflang="ar" lang="ar">العربية</a>
+        <a href="/bg/?lang=bg" hreflang="bg" lang="bg">Български</a>
+        <a href="/cs/?lang=cs" hreflang="cs" lang="cs">Čeština</a>
+        <a href="/da/?lang=da" hreflang="da" lang="da">Dansk</a>
+        <a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a>
+        <a href="/el/?lang=el" hreflang="el" lang="el">Ελληνικά</a>
+        <a href="/?lang=en" hreflang="en" lang="en">English</a>
+        <a href="/es/?lang=es" hreflang="es" lang="es">Español</a>
+        <a href="/fi/?lang=fi" hreflang="fi" lang="fi">Suomi</a>
+        <a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a>
+        <a href="/he/?lang=he" hreflang="he" lang="he">עברית</a>
+        <a href="/hi/?lang=hi" hreflang="hi" lang="hi">हिन्दी</a>
+        <a href="/hr/?lang=hr" hreflang="hr" lang="hr">Hrvatski</a>
+        <a href="/hu/?lang=hu" hreflang="hu" lang="hu">Magyar</a>
+        <a href="/id/?lang=id" hreflang="id" lang="id">Bahasa Indonesia</a>
+        <a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a>
+        <a href="/ja/?lang=ja" hreflang="ja" lang="ja">日本語</a>
+        <a href="/ko/?lang=ko" hreflang="ko" lang="ko">한국어</a>
+        <a href="/nl/?lang=nl" hreflang="nl" lang="nl">Nederlands</a>
+        <a href="/no/?lang=no" hreflang="no" lang="no">Norsk</a>
+        <a href="/pl/?lang=pl" hreflang="pl" lang="pl">Polski</a>
+        <a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a>
+        <a href="/ro/?lang=ro" hreflang="ro" lang="ro">Română</a>
+        <a href="/ru/?lang=ru" hreflang="ru" lang="ru">Русский</a>
+        <a href="/sv/?lang=sv" hreflang="sv" lang="sv">Svenska</a>
+        <a href="/th/?lang=th" hreflang="th" lang="th">ไทย</a>
+        <a href="/tr/?lang=tr" hreflang="tr" lang="tr">Türkçe</a>
+        <a href="/uk/?lang=uk" hreflang="uk" lang="uk">Українська</a>
+        <a href="/vi/?lang=vi" hreflang="vi" lang="vi">Tiếng Việt</a>
+        <a href="/zh/?lang=zh" hreflang="zh" lang="zh">中文</a>
+        <a href="/app" class="btn-primary nav-cta">פתחו בחינם</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">גרסה 1.0</span>
+          <h1 id="hero-title"><span class='accent-text'>הכספת הפרטית שלכם עם AI</span></h1>
+          <p class="hero-subtitle">החלופה הפרטית ל-Pocket לשמירת מאמרים וקריאה מאוחר יותר: סימניות, הערות ומסמכים — מוצפנים על המכשיר שלכם, ניתנים לחיפוש עם AI ומסונכרנים בין עמיתים. אין ענן. אין מעקב. 100% שלכם.</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">פתחו בחינם</a>
+            <a href="#pricing" class="btn-secondary">צפו במחירים</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>100% מקומי</strong> — הנתונים שלכם לא עוזבים את המכשיר</span>
+            <span><strong>מוצפן</strong> — AES-256-GCM + Argon2id</span>
+            <span><strong>לא מקוון</strong> — עובד ללא אינטרנט</span>
+            <span><strong>פרטי</strong> — אפס טלמטריה כברירת מחדל</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="alternativa-pocket" class="comparison-section" aria-labelledby="alternativa-pocket-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">קראו מאוחר יותר מבלי להתפשר על פרטיות</span>
+          <h2 id="alternativa-pocket-title">החלופה הפרטית ל-Pocket</h2>
+          <p class="section-subtitle">Pocket נעלם. BookmarkForge שומר על הרגל הקריאה — עם כל מאמר, הערה וסימון מוצפנים על המכשיר שלכם.</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>שמרו מאמרים לקריאה מאוחרת, שלכם לתמיד</h3>
+            <p>שמרו מאמרים, סרטונים ו-PDF בלחיצה אחת — מאפליקציית PWA, תוסף הדפדפן או תפריט השיתוף. בניגוד ל-Pocket, רשימת הקריאה שלכם חיה על המכשיר שלכם, מוצפנת, ועובדת לא מקוון.</p>
+          </div>
+          <div class="feat-card">
+            <h3>הערות בסגנון Notion בכל מאמר</h3>
+            <p>סמנו, סכמו וכתבו הערות בכל סימניה. הפכו מאמר שמור לבסיס הידע שלכם — לא רק רשימת קישורים.</p>
+          </div>
+          <div class="feat-card">
+            <h3>אפס מעקב, אפס מודעות</h3>
+            <p>BookmarkForge אינו משתמש בחשבון, ניתוח או מודעות כברירת מחדל. הרגלי הקריאה שלכם הם באחריותכם הבלעדית.</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">תחילו לשמור בחינם</a>
+          <a href="/pocket-alternative" class="btn-link">השוואה מלאה ומדריך מעבר</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">כל מה שצריך</span>
+          <h2 id="features-title">תכונות עוצמתיות לניהול הידע שלכם, הכל פועל מקומי</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>סימניות ומסמכים</h3>
+          </div>
+          <div class="feature-item">
+            <h3>חיפוש מלא וסמנטי</h3>
+          </div>
+          <div class="feature-item">
+            <h3>AI מקומי (WebLLM / Ollama) — רק Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>צ'אט RAG על הנתונים שלכם — רק Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>סנכרון P2P (WebRTC) — רק Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>גיבויים מוצפנים</h3>
+          </div>
+          <div class="feature-item">
+            <h3>גרף ידע</h3>
+          </div>
+          <div class="feature-item">
+            <h3>כרטיסי פלאש (חזרה מרווחת) — רק Pro</h3>
+          </div>
+          <div class="feature-item">
+            <h3>פרטיות כברירת מחדל</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">AI שמכבד אתכם</span>
+          <h2 id="ai-title">הידע שלכם, מחוזק</h2>
+          <p class="section-subtitle">BookmarkForge נותן לכם את הבחירה: הפעילו מודלים מקומיים ב-100% בדפדפן שלכם (WebLLM, WebGPU) עם Pro, חברו את מפתחות ה-API שלכם לספקי ענן, או השתמשו ב-Ollama מקומי. ההוראות שלכם, הנתונים שלכם, הכללים שלכם.</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>ספקים נתמכים</h3>
+            <ul class="providers-list">
+              <li>WebLLM local (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Pro only</li>
+              <li>Ollama local (any model you run)</li>
+              <li>Google Gemini cloud (your API key)</li>
+              <li>OpenAI / GPT-4o cloud (your API key)</li>
+              <li>Anthropic Claude cloud (your API key)</li>
+              <li>Groq cloud (your API key)</li>
+              <li>Custom / OpenRouter via custom provider (your API key)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>מצבי צ'אט</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>מצב פרטי</h4>
+                <p>רק AI מקומי (WebLLM/Ollama). אפס נתונים עוזבים את המכשיר. עובד לא מקוון. דורש Pro עבור WebLLM.</p>
+              </div>
+              <div class="mode-item">
+                <h4>מצב חיפוש אינטרנט</h4>
+                <p>משלב את הכספת שלכם עם תוצאות חיפוש בזמן אמת (ספקי ענן).</p>
+              </div>
+              <div class="mode-item">
+                <h4>סוכנים מומחים</h4>
+                <p>דמויות מומחיות: מתכנת, סופר, אנליסט, חוקר. דורש Pro עבור AI מקומי.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">פרטיות אינה תכונה — היא הבסיס</h2>
+          <p class="section-subtitle">כל החלטה ארכיטקטונית מעניקה לכם שליטה</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>הצפנה מקצה לקצה</h3>
+          </div>
+          <div class="feature-item">
+            <h3>ארכיטקטורה מקומית ב-100%</h3>
+          </div>
+          <div class="feature-item">
+            <h3>אפס טלמטריה כברירת מחדל</h3>
+          </div>
+          <div class="feature-item">
+            <h3>המפתחות שלכם</h3>
+          </div>
+          <div class="feature-item">
+            <h3>תאימות GDPR</h3>
+          </div>
+          <div class="feature-item">
+            <h3>לא תלוי בספק</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">מחירים פשוטים והוגנים</h2>
+          <p class="section-subtitle">תכנית חינם: 1,000 סימניות. Pro הוא רכישה חד-פעמית של $79 — ללא מנויים.</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>חינם</h3>
+            <div class="price">$ 0<span>/ לתמיד</span></div>
+            <p>לניהול ידע אישי (1,000 סימניות, מכשיר אחד)</p>
+            <ul>
+              <li>1,000 סימניות, הערות ומסמכים</li>
+              <li>חיפוש מלא וסמנטי</li>
+              <li>AI עם מפתח ה-API שלכם (אתם משלמים לספק)</li>
+              <li>גרף ידע</li>
+              <li>תבניות בסיסיות</li>
+              <li>ייצוא JSON/HTML</li>
+              <li>PWA + תוספי דפדפן</li>
+              <li><span aria-hidden='true'>❌</span> סנכרון P2P בין מכשירים</li>
+              <li><span aria-hidden='true'>❌</span> AI מקומי (WebLLM/Ollama)</li>
+              <li><span aria-hidden='true'>❌</span> צ'אט RAG על הנתונים שלכם</li>
+              <li><span aria-hidden='true'>❌</span> כרטיסי פלאש עם חזרה מרווחת</li>
+              <li><span aria-hidden='true'>❌</span> PDF + OCR</li>
+              <li><span aria-hidden='true'>❌</span> ייצוא מתקדם (10+ פורמטים)</li>
+            </ul>
+            <a href="/app" class="btn-outline ">התחילו בחינם</a>
+          </div>
+          <div class="price-card popular">
+            <span class="badge">Most Popular</span>
+            <h3>Pro</h3>
+            <div class="price">$ 79<span>רכישה חד-פעמית (לתמיד)</span></div>
+            <p>סימניות ללא הגבלה, 3 מכשירים, AI מקומי, סנכרון P2P — ללא מנוי</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> כל מה שב计划 החינם</li>
+              <li><span aria-hidden="true">✅</span> סימניות ללא הגבלה</li>
+              <li><span aria-hidden="true">✅</span> 3 מכשירים</li>
+              <li><span aria-hidden="true">✅</span> סנכרון P2P על 3 מכשירים</li>
+              <li><span aria-hidden="true">✅</span> AI מקומי (WebLLM, ללא מפתח API)</li>
+              <li><span aria-hidden="true">✅</span> צ'אט RAG על הנתונים שלכם</li>
+              <li><span aria-hidden="true">✅</span> סוכנים מומחים (מתכנת, סופר, אנליסט, חוקר)</li>
+              <li><span aria-hidden="true">✅</span> כרטיסי פלאש עם חזרה מרווחת</li>
+              <li><span aria-hidden="true">✅</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> ייצוא מתקדם (10+ פורמטים)</li>
+              <li><span aria-hidden="true">✅</span> כספת אבטחה (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> עדכונים ל-12 חודשים</li>
+              <li><span aria-hidden="true">✅</span> תמיכה באימייל</li>
+            </ul>
+            <a href="https://whop.com/bookmarkforge" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">קבלו Pro לתמיד</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">שאלות נפוצות</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>האם התכנית החינם באמת בחינם לתמיד?</h3>
+            <p>כן. ללא תקופת ניסיון מוגבלת או מנוי. התכנית החינם כוללת 1,000 סימניות, חיפוש מלא וסמנטי, גרף ידע ו-AI עם מפתח ה-API שלכם (אתם משלמים לספק).</p>
+          </div>
+          <div class="faq-item">
+            <h3>מה המשמעות של 'רכישה חד-פעמית' ב-Pro?</h3>
+            <p>אתם משלמים פעם אחת ($79), והרישיון שלכם לתמיד. כולל את כל העדכונים ל-12 חודשים. ללא חיובים חוזרים. מפתח הרישיון מועבר מיד דרך Whop.</p>
+          </div>
+          <div class="faq-item">
+            <h3>אילו אמצעי תשלום אתם מקבלים?</h3>
+            <p>דרך Whop: כרטיס אשראי, PayPal וקריפטו. אנחנו לעולם לא רואים את פרטי התשלום שלכם.</p>
+          </div>
+          <div class="faq-item">
+            <h3>מה מדיניות ההחזרים שלכם?</h3>
+            <p>אחריות החזר של 30 יום לרישיונות Pro. צרו קשר: support@bookmarkforge.com</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>מוכנים לקחת שליטה על הידע שלכם?</h2>
+        <p>הצטרפו לאלפי חוקרים, מפתחים וסטודנטים שסומכים על BookmarkForge כמוח השני שלהם.</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">פתחו בחינם</a>
+          <a href="#pricing" class="btn-secondary">שדרגו ל-Pro</a>
+        </div>
+        <p class="note">לא צריך חשבון. עובד מיד בדפדפן שלכם. תכנית חינם: 1,000 סימניות.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>הכספת הפרטית שלכם עם AI לידע. 100% מקומי.</p>
+      </div>
+      <div class="footer-links">
+        <h4>מוצר</h4>
+        <ul>
+          <li><a href="#features">תכונות</a></li>
+          <li><a href="#ai">יכולות AI</a></li>
+          <li><a href="#privacy">פרטיות</a></li>
+          <li><a href="#pricing">מחירים</a></li>
+          <li><a href="/app">פתחו את האפליקציה</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>משאבים</h4>
+        <ul>
+          <li><a href="/pocket-alternative">השוואה ל-Pocket</a></li>
+          <li><a href="/he/privacy-and-terms.html">פרטיות ותנאים</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>שפות</h4>
+        <ul>
+          <li><a href="/ar/?lang=ar">العربية</a></li>
+          <li><a href="/bg/?lang=bg">Български</a></li>
+          <li><a href="/cs/?lang=cs">Čeština</a></li>
+          <li><a href="/da/?lang=da">Dansk</a></li>
+          <li><a href="/de/?lang=de">Deutsch</a></li>
+          <li><a href="/el/?lang=el">Ελληνικά</a></li>
+          <li><a href="/?lang=en">English</a></li>
+          <li><a href="/es/?lang=es">Español</a></li>
+          <li><a href="/fi/?lang=fi">Suomi</a></li>
+          <li><a href="/fr/?lang=fr">Français</a></li>
+          <li><a href="/he/?lang=he">עברית</a></li>
+          <li><a href="/hi/?lang=hi">हिन्दी</a></li>
+          <li><a href="/hr/?lang=hr">Hrvatski</a></li>
+          <li><a href="/hu/?lang=hu">Magyar</a></li>
+          <li><a href="/id/?lang=id">Bahasa Indonesia</a></li>
+          <li><a href="/it/?lang=it">Italiano</a></li>
+          <li><a href="/ja/?lang=ja">日本語</a></li>
+          <li><a href="/ko/?lang=ko">한국어</a></li>
+          <li><a href="/nl/?lang=nl">Nederlands</a></li>
+          <li><a href="/no/?lang=no">Norsk</a></li>
+          <li><a href="/pl/?lang=pl">Polski</a></li>
+          <li><a href="/pt/?lang=pt">Português</a></li>
+          <li><a href="/ro/?lang=ro">Română</a></li>
+          <li><a href="/ru/?lang=ru">Русский</a></li>
+          <li><a href="/sv/?lang=sv">Svenska</a></li>
+          <li><a href="/th/?lang=th">ไทย</a></li>
+          <li><a href="/tr/?lang=tr">Türkçe</a></li>
+          <li><a href="/uk/?lang=uk">Українська</a></li>
+          <li><a href="/vi/?lang=vi">Tiếng Việt</a></li>
+          <li><a href="/zh/?lang=zh">中文</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>תמיכה</h4>
+        <ul>
+          <li><a href="mailto:bookmarkforge@proton.me">צרו קשר</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. כל הזכויות שמורות.</p>
+      <a href="/he/privacy-and-terms.html">מדיניות פרטיות</a> · <a href="/he/privacy-and-terms.html#terms">תנאי שימוש</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

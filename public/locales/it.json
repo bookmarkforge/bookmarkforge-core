@@ -47,16 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "La password del caveau non è valida.",
     "dbStorageUnavailable": "L'archivio cifrato persistente non è disponibile. I tuoi dati non sono stati caricati né scritti. Abilita IndexedDB, libera spazio su disco o ricarica dopo aver chiuso le altre schede del caveau."
   },
@@ -905,8 +895,8 @@
   "telemetry": "Zero telemetria",
   "offline": "Offline first",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "Contesto dei tag esistenti",
+    "folder_list": "Elenco delle cartelle"
   },
   "general_folder": "Generale",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1525,5 +1515,20 @@
   "app_diskBackupBlockedShort": "disco bloccato",
   "app_diskCopyShort": "disco bloccato",
   "app_loadingVault": "Caricamento cassaforte…",
-  "app_loadingVaultDetail": "Preparazione di {{rows}} elementi…"
+  "app_loadingVaultDetail": "Preparazione di {{rows}} elementi…",
+  "app_fuseSelected": "Unisci selezione ({{count}})",
+  "app_fuseSelected_one": "Unisci selezione (1)",
+  "app_fuseSelected_few": "Unisci selezione",
+  "app_fuseSelected_many": "Unisci selezione",
+  "app_fuseSelected_other": "Unisci selezione ({{count}})",
+  "app_maintenanceFinished": "Manutenzione completata: {{count}} riparazioni",
+  "app_maintenanceFinished_one": "Manutenzione completata: 1 riparazione",
+  "app_maintenanceFinished_few": "Manutenzione completata: riparazioni",
+  "app_maintenanceFinished_many": "Manutenzione completata: riparazioni",
+  "app_maintenanceFinished_other": "Manutenzione completata: {{count}} riparazioni",
+  "app_maintenancePartial": "Manutenzione completata con {{count}} problemi",
+  "app_maintenancePartial_one": "Manutenzione completata con 1 problema",
+  "app_maintenancePartial_few": "Manutenzione completata con problemi",
+  "app_maintenancePartial_many": "Manutenzione completata con problemi",
+  "app_maintenancePartial_other": "Manutenzione completata con {{count}} problemi"
 }

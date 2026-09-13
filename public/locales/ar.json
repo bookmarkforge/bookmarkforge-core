@@ -47,18 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingHeadline": "عقلك. قرصك الصلب.",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInTitle": "ساعدنا على التحسين (اختياري)",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "كلمة مرور الخزنة غير صالحة.",
     "dbStorageUnavailable": "التخزين المشفر الدائم غير متاح. لم يتم تحميل بياناتك أو كتابتها. فعّل IndexedDB أو حرّر مساحة أو أعد التحميل بعد إغلاق تبويبات الخزنة الأخرى."
   },
@@ -905,8 +893,8 @@
   "telemetry": "صفر تتبع",
   "offline": "دون اتصال أولاً",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "سياق العلامات الموجودة",
+    "folder_list": "قائمة المجلدات"
   },
   "general_folder": "عام",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1528,5 +1516,20 @@
   "app_diskBackupBlockedShort": "القرص محظور",
   "app_diskCopyShort": "القرص محظور",
   "app_loadingVault": "جارٍ تحميل الخزينة…",
-  "app_loadingVaultDetail": "جارٍ تجهيز {{rows}} عنصر…"
+  "app_loadingVaultDetail": "جارٍ تجهيز {{rows}} عنصر…",
+  "app_fuseSelected": "دمج المحدد ({{count}})",
+  "app_fuseSelected_one": "دمج المحدد (1)",
+  "app_fuseSelected_few": "دمج المحدد",
+  "app_fuseSelected_many": "دمج المحدد",
+  "app_fuseSelected_other": "دمج المحدد ({{count}})",
+  "app_maintenanceFinished": "اكتمل الصيانة: تم إصلاح {{count}}",
+  "app_maintenanceFinished_one": "اكتمل الصيانة: تم إصلاح 1",
+  "app_maintenanceFinished_few": "اكتمل الصيانة: تم الإصلاح",
+  "app_maintenanceFinished_many": "اكتمل الصيانة: تم الإصلاح",
+  "app_maintenanceFinished_other": "اكتمل الصيانة: تم إصلاح {{count}}",
+  "app_maintenancePartial": "انتهت الصيانة مع {{count}} من المشكلات",
+  "app_maintenancePartial_one": "انتهت الصيانة مع مشكلة واحدة",
+  "app_maintenancePartial_few": "انتهت الصيانة مع مشكلات",
+  "app_maintenancePartial_many": "انتهت الصيانة مع مشكلات",
+  "app_maintenancePartial_other": "انتهت الصيانة مع {{count}} من المشكلات"
 }

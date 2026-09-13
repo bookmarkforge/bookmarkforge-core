@@ -47,18 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingHeadline": "आपका दिमाग़। आपकी हार्ड ड्राइव।",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInTitle": "सुधारने में हमारी मदद करें (वैकल्पिक)",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "वॉल्ट पासवर्ड अमान्य है।",
     "dbStorageUnavailable": "स्थायी एन्क्रिप्टेड स्टोरेज उपलब्ध नहीं है। आपका डेटा लोड या लिखा नहीं गया। IndexedDB सक्षम करें, डिस्क स्थान खाली करें, या अन्य वॉल्ट टैब बंद करने के बाद रीलोड करें।"
   },
@@ -905,8 +893,8 @@
   "telemetry": "शून्य टेलीमेट्री",
   "offline": "पहले ऑफ़लाइन",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "मौजूदा टैग का संदर्भ",
+    "folder_list": "फ़ोल्डर सूची"
   },
   "general_folder": "सामान्य",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1528,5 +1516,20 @@
   "app_diskBackupBlockedShort": "डिस्क ब्लॉक",
   "app_diskCopyShort": "डिस्क ब्लॉक",
   "app_loadingVault": "तिजोरी लोड हो रही है…",
-  "app_loadingVaultDetail": "{{rows}} आइटम तैयार हो रहे हैं…"
+  "app_loadingVaultDetail": "{{rows}} आइटम तैयार हो रहे हैं…",
+  "app_fuseSelected": "चयनित मर्ज करें ({{count}})",
+  "app_fuseSelected_one": "चयनित मर्ज करें (1)",
+  "app_fuseSelected_few": "चयनित मर्ज करें",
+  "app_fuseSelected_many": "चयनित मर्ज करें",
+  "app_fuseSelected_other": "चयनित मर्ज करें ({{count}})",
+  "app_maintenanceFinished": "रखरखाव पूर्ण: {{count}} की मरम्मत",
+  "app_maintenanceFinished_one": "रखरखाव पूर्ण: 1 की मरम्मत",
+  "app_maintenanceFinished_few": "रखरखाव पूर्ण: मरम्मत हुई",
+  "app_maintenanceFinished_many": "रखरखाव पूर्ण: मरम्मत हुई",
+  "app_maintenanceFinished_other": "रखरखाव पूर्ण: {{count}} की मरम्मत",
+  "app_maintenancePartial": "रखरखाव {{count}} समस्याओं के साथ समाप्त",
+  "app_maintenancePartial_one": "रखरखाव 1 समस्या के साथ समाप्त",
+  "app_maintenancePartial_few": "रखरखाव समस्याओं के साथ समाप्त",
+  "app_maintenancePartial_many": "रखरखाव समस्याओं के साथ समाप्त",
+  "app_maintenancePartial_other": "रखरखाव {{count}} समस्याओं के साथ समाप्त"
 }

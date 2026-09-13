@@ -47,16 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "Kasa şifresi geçersiz.",
     "dbStorageUnavailable": "Kalıcı şifrelenmiş depolama kullanılamıyor. Verileriniz yüklenmedi veya yazılmadı. IndexedDB'yi etkinleştirin, disk alanı açın veya diğer kasa sekmelerini kapattıktan sonra yeniden yükleyin."
   },
@@ -905,8 +895,8 @@
   "telemetry": "Sıfır telemetri",
   "offline": "Önce çevrimdışı",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "Mevcut etiketlerin bağlamı",
+    "folder_list": "Klasör listesi"
   },
   "general_folder": "Genel",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1526,5 +1516,20 @@
   "app_diskBackupBlockedShort": "disk engellendi",
   "app_diskCopyShort": "disk engellendi",
   "app_loadingVault": "Kasa yükleniyor…",
-  "app_loadingVaultDetail": "{{rows}} öğe hazırlanıyor…"
+  "app_loadingVaultDetail": "{{rows}} öğe hazırlanıyor…",
+  "app_fuseSelected": "Seçilenleri birleştir ({{count}})",
+  "app_fuseSelected_one": "Seçilenleri birleştir (1)",
+  "app_fuseSelected_few": "Seçilenleri birleştir",
+  "app_fuseSelected_many": "Seçilenleri birleştir",
+  "app_fuseSelected_other": "Seçilenleri birleştir ({{count}})",
+  "app_maintenanceFinished": "Bakım tamamlandı: {{count}} onarıldı",
+  "app_maintenanceFinished_one": "Bakım tamamlandı: 1 onarıldı",
+  "app_maintenanceFinished_few": "Bakım tamamlandı: onarıldı",
+  "app_maintenanceFinished_many": "Bakım tamamlandı: onarıldı",
+  "app_maintenanceFinished_other": "Bakım tamamlandı: {{count}} onarıldı",
+  "app_maintenancePartial": "Bakım {{count}} sorunla tamamlandı",
+  "app_maintenancePartial_one": "Bakım 1 sorunla tamamlandı",
+  "app_maintenancePartial_few": "Bakım sorunlarla tamamlandı",
+  "app_maintenancePartial_many": "Bakım sorunlarla tamamlandı",
+  "app_maintenancePartial_other": "Bakım {{count}} sorunla tamamlandı"
 }

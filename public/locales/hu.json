@@ -47,16 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "A széf jelszava érvénytelen.",
     "dbStorageUnavailable": "A tartós titkosított tárhely nem érhető el. Az adatai nem lettek betöltve vagy kiírva. Engedélyezze az IndexedDB-t, szabadítson fel lemezterületet, vagy töltse újra a többi széf fül bezárása után."
   },
@@ -905,8 +895,8 @@
   "telemetry": "Nulla telemetria",
   "offline": "Offline elsőként",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "Meglévő címkék kontextusa",
+    "folder_list": "Mappák listája"
   },
   "general_folder": "Általános",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1526,5 +1516,20 @@
   "app_diskBackupBlockedShort": "lemez letiltva",
   "app_diskCopyShort": "lemez letiltva",
   "app_loadingVault": "Trezor betöltése…",
-  "app_loadingVaultDetail": "{{rows}} elem előkészítése…"
+  "app_loadingVaultDetail": "{{rows}} elem előkészítése…",
+  "app_fuseSelected": "Kijelöltek összefűzése ({{count}})",
+  "app_fuseSelected_one": "Kijelöltek összefűzése (1)",
+  "app_fuseSelected_few": "Kijelöltek összefűzése",
+  "app_fuseSelected_many": "Kijelöltek összefűzése",
+  "app_fuseSelected_other": "Kijelöltek összefűzése ({{count}})",
+  "app_maintenanceFinished": "Karbantartás befejezve: {{count}} javítva",
+  "app_maintenanceFinished_one": "Karbantartás befejezve: 1 javítva",
+  "app_maintenanceFinished_few": "Karbantartás befejezve: javítva",
+  "app_maintenanceFinished_many": "Karbantartás befejezve: javítva",
+  "app_maintenanceFinished_other": "Karbantartás befejezve: {{count}} javítva",
+  "app_maintenancePartial": "Karbantartás {{count}} problémával befejeződött",
+  "app_maintenancePartial_one": "Karbantartás 1 problémával befejeződött",
+  "app_maintenancePartial_few": "Karbantartás problémákkal befejeződött",
+  "app_maintenancePartial_many": "Karbantartás problémákkal befejeződött",
+  "app_maintenancePartial_other": "Karbantartás {{count}} problémával befejeződött"
 }

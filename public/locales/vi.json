@@ -47,16 +47,6 @@
     "retry": "Retry",
     "loading": "Loading...",
     "untitledDocument": "Untitled Document",
-    "localFirstArchitecture": "100% Local-First Architecture",
-    "onboardingSubheadline": "BookmarkForge doesn't use a central cloud. Your IndexedDB database lives exclusively on your hard drive. Turn off your Wi-Fi, run local AI, and keep total sovereignty over your knowledge.",
-    "secureVaultTitle": "Secure Vault",
-    "setupVaultDesc": "BookmarkForge uses military-grade local encryption (AES-256-GCM) to protect your data. Without your master password, nobody (not even us) can read your bookmarks.",
-    "create_vault": "Create Secure Vault",
-    "continueWithoutPassword": "Continue Without Encryption",
-    "telemetryTitle": "Crash Reporting",
-    "telemetryDesc": "Because the app is 100% private and local, we are totally blind to errors. If the app crashes from lack of memory, we won't know unless you tell us.",
-    "telemetryOptInDesc": "Send anonymous technical stack traces when a crash happens. We NEVER collect your bookmarks, text, URLs, or prompts.",
-    "onboardingFooter": "Designed with privacy as the ultimate priority.",
     "invalidPassword": "Mật khẩu kho dữ liệu không hợp lệ.",
     "dbStorageUnavailable": "Lưu trữ mã hóa lâu dài không khả dụng. Dữ liệu của bạn không được tải hoặc ghi. Bật IndexedDB, giải phóng dung lượng ổ đĩa hoặc tải lại sau khi đóng các tab kho dữ liệu khác."
   },
@@ -905,8 +895,8 @@
   "telemetry": "Không telemetry",
   "offline": "Ngoại tuyến trước",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "Ngữ cảnh các thẻ hiện có",
+    "folder_list": "Danh sách thư mục"
   },
   "general_folder": "Chung",
   "summarizePrompt": "Briefly summarize the saved link based on its title and URL. Title: {{title}}. URL: {{url}}.",
@@ -1520,5 +1510,20 @@
   "app_diskBackupBlockedShort": "ổ đĩa bị chặn",
   "app_diskCopyShort": "ổ đĩa bị chặn",
   "app_loadingVault": "Đang tải két sắt…",
-  "app_loadingVaultDetail": "Đang chuẩn bị {{rows}} mục…"
+  "app_loadingVaultDetail": "Đang chuẩn bị {{rows}} mục…",
+  "app_fuseSelected": "Hợp nhất mục đã chọn ({{count}})",
+  "app_fuseSelected_one": "Hợp nhất mục đã chọn (1)",
+  "app_fuseSelected_few": "Hợp nhất mục đã chọn",
+  "app_fuseSelected_many": "Hợp nhất mục đã chọn",
+  "app_fuseSelected_other": "Hợp nhất mục đã chọn ({{count}})",
+  "app_maintenanceFinished": "Bảo trì hoàn tất: đã sửa {{count}}",
+  "app_maintenanceFinished_one": "Bảo trì hoàn tất: đã sửa 1",
+  "app_maintenanceFinished_few": "Bảo trì hoàn tất: đã sửa",
+  "app_maintenanceFinished_many": "Bảo trì hoàn tất: đã sửa",
+  "app_maintenanceFinished_other": "Bảo trì hoàn tất: đã sửa {{count}}",
+  "app_maintenancePartial": "Bảo trì kết thúc với {{count}} vấn đề",
+  "app_maintenancePartial_one": "Bảo trì kết thúc với 1 vấn đề",
+  "app_maintenancePartial_few": "Bảo trì kết thúc với các vấn đề",
+  "app_maintenancePartial_many": "Bảo trì kết thúc với các vấn đề",
+  "app_maintenancePartial_other": "Bảo trì kết thúc với {{count}} vấn đề"
 }

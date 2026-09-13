@@ -47,18 +47,6 @@
     "retry": "재시도",
     "loading": "로드 중...",
     "untitledDocument": "제목 없는 문서",
-    "localFirstArchitecture": "100% 로컬-우선 아키텍처",
-    "onboardingHeadline": "귀하의 뇌. 귀하의 하드 드라이브.",
-    "onboardingSubheadline": "BookmarkForge는 중앙 클라우드를 사용하지 않습니다. IndexedDB 데이터베이스는 귀하의 하드 드라이브에만 존재합니다. Wi-Fi를 끄고 로컬 AI를 실행하고 지식에 대한 완전한 주권을 유지하세요.",
-    "secureVaultTitle": "보안 볼트",
-    "setupVaultDesc": "BookmarkForge는 군사 등급 로컬 암호화(AES-256-GCM)를 사용하여 데이터를 보호합니다. 마스터 비밀번호 없이는 누구도(우리 포함) 북마크를 읽을 수 없습니다.",
-    "create_vault": "보안 볼트 만들기",
-    "continueWithoutPassword": "암호화 없이 계속",
-    "telemetryTitle": "크래시 보고",
-    "telemetryDesc": "앱이 100% 프라이빗하고 로컬이므로 오류를 완전히 알 수 없습니다. 메모리 부족으로 앱이 크래시되면 알려주지 않는 한 알 수 없습니다.",
-    "telemetryOptInTitle": "개선에 도움 주세요 (선택)",
-    "telemetryOptInDesc": "크래시 발생 시 익명의 기술 스택 트레이스를 전송합니다. 북마크, 텍스트, URL 또는 프롬프트는 절대 수집하지 않습니다.",
-    "onboardingFooter": "프라이버시를 최우선으로 설계되었습니다.",
     "invalidPassword": "볼트 비밀번호가 유효하지 않습니다.",
     "dbStorageUnavailable": "영구 암호화 저장소를 사용할 수 없습니다. 데이터가 로드되거나 기록되지 않았습니다. IndexedDB를 활성화하고 디스크 공간을 확보하거나 다른 볼트 탭을 닫은 후 다시 로드하세요."
   },
@@ -907,8 +895,8 @@
   "telemetry": "제로 텔레메트리",
   "offline": "오프라인 우선",
   "ai_prompts": {
-    "existing_tags_context": null,
-    "folder_list": null
+    "existing_tags_context": "기존 태그 컨텍스트",
+    "folder_list": "폴더 목록"
   },
   "general_folder": "일반",
   "summarizePrompt": "제목과 URL을 기반으로 저장된 링크를 간략히 요약하세요. 제목: {{title}}. URL: {{url}}.",
@@ -1528,5 +1516,20 @@
   "app_diskBackupBlockedShort": "디스크 차단됨",
   "app_diskCopyShort": "디스크 차단됨",
   "app_loadingVault": "금고 로딩 중…",
-  "app_loadingVaultDetail": "{{rows}}개 항목 준비 중…"
+  "app_loadingVaultDetail": "{{rows}}개 항목 준비 중…",
+  "app_fuseSelected": "선택 항목 병합 ({{count}})",
+  "app_fuseSelected_one": "선택 항목 병합 (1)",
+  "app_fuseSelected_few": "선택 항목 병합",
+  "app_fuseSelected_many": "선택 항목 병합",
+  "app_fuseSelected_other": "선택 항목 병합 ({{count}})",
+  "app_maintenanceFinished": "유지 관리 완료: {{count}}개 복구됨",
+  "app_maintenanceFinished_one": "유지 관리 완료: 1개 복구됨",
+  "app_maintenanceFinished_few": "유지 관리 완료: 복구됨",
+  "app_maintenanceFinished_many": "유지 관리 완료: 복구됨",
+  "app_maintenanceFinished_other": "유지 관리 완료: {{count}}개 복구됨",
+  "app_maintenancePartial": "유지 관리 종료: {{count}}개 문제",
+  "app_maintenancePartial_one": "유지 관리 종료: 1개 문제",
+  "app_maintenancePartial_few": "유지 관리 종료: 문제 있음",
+  "app_maintenancePartial_many": "유지 관리 종료: 문제 있음",
+  "app_maintenancePartial_other": "유지 관리 종료: {{count}}개 문제"
 }

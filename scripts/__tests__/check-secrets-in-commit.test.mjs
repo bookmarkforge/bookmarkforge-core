@@ -7,9 +7,16 @@
  * exercise the real logic directly without spawning git.
  */
 import { describe, expect, it } from "vitest";
-import { checkSecrets } from "../check-secrets-in-commit.mjs";
+import { checkSecrets, parseGitPathList } from "../check-secrets-in-commit.mjs";
 
 describe("check-secrets-in-commit", () => {
+  it("parses git's NUL-delimited paths without trimming valid names", () => {
+    expect(parseGitPathList(`plain.ts${String.fromCharCode(0)}dir/file with spaces.ts${String.fromCharCode(0)}`)).toEqual([
+      "plain.ts",
+      "dir/file with spaces.ts",
+    ]);
+  });
+
   describe("env-file tripwire", () => {
     it("blocks committing .env production files", () => {
       const { ok, violations } = checkSecrets([".env.production"]);

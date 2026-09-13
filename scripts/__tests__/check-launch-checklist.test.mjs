@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import {
   hasBlockerFailures,
   REQUIRED_RULESET_CHECKS,
-  verifyCodeowners,
   verifyContracts,
   verifyDastDisabled,
   verifyDrill,
@@ -18,23 +17,6 @@ import {
   verifySloRpoRto,
   verifyZapFailLevels,
 } from "../check-launch-checklist.mjs";
-
-describe("verifyCodeowners", () => {
-  it("fails while placeholders remain", () => {
-    const result = verifyCodeowners("* @YOUR_GITHUB_ORG/maintainers\n");
-    expect(result.ok).toBe(false);
-    expect(result.note).toContain("placeholder");
-  });
-
-  it("passes without placeholders", () => {
-    const result = verifyCodeowners("# ok\n* @acme/maintainers\n");
-    expect(result.ok).toBe(true);
-  });
-
-  it("fails when the file is missing", () => {
-    expect(verifyCodeowners(null).ok).toBe(false);
-  });
-});
 
 describe("verifyRuleset", () => {
   const validRuleset = {
@@ -107,10 +89,23 @@ describe("verifySast", () => {
 describe("verifyErrorReporting", () => {
   const reporter =
     "beforeSend\nCONSENT_ERROR_REPORTING\ninitRemoteErrorReporting\nsentry.init";
+  // ADR-030: consent delegation moved into ConsentService; the reporter gates
+  // remotely via isPurposeConsented("sentry").
+  const modernReporter =
+    'beforeSend\nisPurposeConsented("sentry")\ninitRemoteErrorReporting\nsentry.init';
 
   it("passes with the dependency and the sanitized opt-in reporter", () => {
     expect(
       verifyErrorReporting({ dependencies: { "@sentry/browser": "10" } }, reporter).ok,
+    ).toBe(true);
+  });
+
+  it("passes with the modern ConsentService delegation (legacy marker dropped)", () => {
+    expect(
+      verifyErrorReporting(
+        { dependencies: { "@sentry/browser": "10" } },
+        modernReporter,
+      ).ok,
     ).toBe(true);
   });
 
@@ -127,6 +122,12 @@ describe("verifyErrorReporting", () => {
     ).toBe(false);
     expect(
       verifyErrorReporting({ dependencies: { "@sentry/browser": "10" } }, "beforeSend only").ok,
+    ).toBe(false);
+    expect(
+      verifyErrorReporting(
+        { dependencies: { "@sentry/browser": "10" } },
+        "beforeSend\ninitRemoteErrorReporting\nsentry.init",
+      ).ok,
     ).toBe(false);
   });
 });

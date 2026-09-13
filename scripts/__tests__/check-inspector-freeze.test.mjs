@@ -3,6 +3,7 @@ import {
   runInspectorFreezeChecks,
   checkChain,
   adrNamesGate,
+  adrBodies,
 } from "../check-inspector-freeze.mjs";
 
 const PKG = {
@@ -69,5 +70,20 @@ describe("inspector freeze (O-1)", () => {
     expect(adrNamesGate("check:adr-render", "no mention here")).toBe(false);
     // A bare name without the check: prefix must not match.
     expect(adrNamesGate("check:adr-render", "adr-render")).toBe(false);
+  });
+
+  // FS regression — the corpus reader must point at the REAL ADR location.
+  // It used to read docs/adr/ (a directory that never existed), so the
+  // corpus was always empty and the "new gate must be named by an ADR"
+  // acceptance path was unreachable dead code. The real repo's ADRs live at
+  // docs/ADR-*.md (AGENTS.md §2); this test fails if the directory or the
+  // naming contract regresses again.
+  it("adrBodies() reads the real ADR corpus from docs/", () => {
+    const bodies = adrBodies();
+    expect(bodies.length).toBeGreaterThan(1000); // real corpus, not empty
+    expect(bodies).toContain("ADR-026"); // anchor-catalog hardening set
+    // ADR-040 is the ADR that justifies check:docs-markdown — the freeze's
+    // self-enforcing acceptance path depends on finding this token on disk.
+    expect(adrNamesGate("check:docs-markdown", bodies)).toBe(true);
   });
 });

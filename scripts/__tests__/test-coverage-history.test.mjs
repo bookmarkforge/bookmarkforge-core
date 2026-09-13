@@ -53,7 +53,7 @@ describe("test-coverage-history", () => {
     expect(next.runs[0].values).not.toHaveProperty("lines");
   });
 
-  it("requires the production catalog to contain exactly 14 areas", () => {
+  it("requires the production catalog to contain exactly 15 areas", () => {
     const dir = mkdtempSync(join(tmpdir(), "bmf-coverage-history-"));
     const coverageFile = join(dir, "coverage-final.json");
     const budgetsFile = join(dir, "budgets.json");
@@ -62,7 +62,7 @@ describe("test-coverage-history", () => {
     writeFileSync(budgetsFile, JSON.stringify({ areas: { "src/memory": {} } }), "utf8");
 
     expect(() => appendCoverageHistoryFile({ coverageFile, budgetsFile, historyFile })).toThrow(
-      "expected 14 configured areas",
+      "expected 15 configured areas",
     );
     expect(() => readFileSync(historyFile, "utf8")).toThrow();
   });

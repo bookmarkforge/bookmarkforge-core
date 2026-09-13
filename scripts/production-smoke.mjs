@@ -74,7 +74,9 @@ function makeRequester(baseUrl) {
  *
  * @param {object} opts
  * @param {string} opts.baseUrl       scheme+host[:port] of the api origin
- * @param {object} [opts.sessionProof] signed license proof for production
+ * @param {object} [opts.sessionProof] signed license proof, required to
+ *                                    exercise the licensed AI surface on a
+ *                                    deployment that enforces entitlements
  * @param {boolean} [opts.skipLicense] skip the license checks entirely (no
  *                                    signing key present)
  */
@@ -96,6 +98,13 @@ export async function runApiSurfaceChecks({
   );
 
   // ── AI session bootstrap ─────────────────────────────────────────
+  // Two postures are valid, and the smoke must not assume either:
+  //   - entitlement ENFORCED (production): an unlicensed caller gets 401
+  //     LICENSE_REQUIRED/LICENSE_EXPIRED and that IS the correct answer;
+  //   - anonymous sessions explicitly enabled (local/staging smoke): 200.
+  // The old check demanded a 200 unconditionally, so it was only ever green
+  // on deployments that had licensing disabled. A 200 for an unlicensed
+  // caller on an enforcing deployment is caught instead.
   const session = await request("/api/services/ai/session", {
     method: "POST",
     headers: {
@@ -104,12 +113,23 @@ export async function runApiSurfaceChecks({
     },
     body: JSON.stringify(sessionProof ?? {}),
   });
+  const sessionGranted =
+    session.response.status === 200 && typeof session.body?.csrfToken === "string";
+  const sessionDenied =
+    session.response.status === 401 &&
+    ["LICENSE_REQUIRED", "LICENSE_EXPIRED"].includes(session.body?.error?.code ?? "");
   check(
     "AI session bootstrap",
-    session.response.status === 200 && typeof session.body?.csrfToken === "string",
-    `HTTP ${session.response.status}`,
+    sessionProof ? sessionGranted : sessionGranted || sessionDenied,
+    `${sessionProof ? "" : "unlicensed: "}HTTP ${session.response.status}` +
+      (session.body?.error?.code ? ` ${session.body.error.code}` : ""),
   );
-  const csrfToken = session.body?.csrfToken;
+  if (sessionDenied) {
+    console.log(
+      "INFO entitlement enforced: anonymous AI sessions are refused — licensed AI surface checks are skipped",
+    );
+  }
+  const csrfToken = sessionGranted ? session.body?.csrfToken : undefined;
   const setCookie = session.response.headers.get("set-cookie") ?? "";
   const cookie = setCookie
     .split(/,(?=[^;=]+=)/)
@@ -142,8 +162,11 @@ export async function runApiSurfaceChecks({
   });
   check(
     "AI proxy returns a successful response",
-    ai.response.status === 200 && typeof ai.body?.text === "string" && ai.body.text.length > 0,
-    `HTTP ${ai.response.status}`,
+    !sessionGranted ||
+      (ai.response.status === 200 && typeof ai.body?.text === "string" && ai.body.text.length > 0),
+    sessionGranted
+      ? `HTTP ${ai.response.status}`
+      : "SKIPPED — no license proof supplied and the deployment enforces entitlements",
   );
 
   const stream = await request("/api/services/ai/generate", {
@@ -153,8 +176,11 @@ export async function runApiSurfaceChecks({
   });
   check(
     "AI proxy preserves SSE contract",
-    stream.response.status === 200 && stream.text.includes("data: [DONE]"),
-    `HTTP ${stream.response.status}`,
+    !sessionGranted ||
+      (stream.response.status === 200 && stream.text.includes("data: [DONE]")),
+    sessionGranted
+      ? `HTTP ${stream.response.status}`
+      : "SKIPPED — entitlement enforced, session not created",
   );
 
   // ── AI media proxy (TTS + image) ──────────────────────────────────
@@ -176,8 +202,13 @@ export async function runApiSurfaceChecks({
   });
   check(
     "TTS proxy returns audio",
-    tts.response.status === 200 && typeof tts.body?.audioBase64 === "string" && tts.body.audioBase64.length > 0,
-    `HTTP ${tts.response.status}`,
+    !sessionGranted ||
+      (tts.response.status === 200 &&
+        typeof tts.body?.audioBase64 === "string" &&
+        tts.body.audioBase64.length > 0),
+    sessionGranted
+      ? `HTTP ${tts.response.status}`
+      : "SKIPPED — entitlement enforced, session not created",
   );
 
   const imgUnauth = await request("/api/services/ai/generate-image", {
@@ -198,8 +229,13 @@ export async function runApiSurfaceChecks({
   });
   check(
     "image proxy returns an image",
-    img.response.status === 200 && typeof img.body?.imageBase64 === "string" && img.body.imageBase64.length > 0,
-    `HTTP ${img.response.status}`,
+    !sessionGranted ||
+      (img.response.status === 200 &&
+        typeof img.body?.imageBase64 === "string" &&
+        img.body.imageBase64.length > 0),
+    sessionGranted
+      ? `HTTP ${img.response.status}`
+      : "SKIPPED — entitlement enforced, session not created",
   );
 
   // ── License adapter ──────────────────────────────────────────────

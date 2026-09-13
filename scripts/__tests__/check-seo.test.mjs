@@ -95,6 +95,7 @@ ${alternateTags}
 }
 
 const CFG = LANDING_PAGES[0];
+const SITE_URL = new URL(DEFAULT_OG_IMAGE).origin;
 
 function validLanguageNegotiation(overrides = {}) {
   return {
@@ -722,6 +723,7 @@ describe("check-seo gate", () => {
       locale: "es_ES",
       alternateLocale: "en_US",
       canonical: "https://bookmarkforge.com/es/",
+      ogImage: ogImageForFile("public/es.html"),
       alternates: [
         { hreflang: "es", href: "https://bookmarkforge.com/es/" },
         { hreflang: "en", href: "https://bookmarkforge.com/" },
@@ -1063,10 +1065,17 @@ describe("og:image policy (card → page mapping)", () => {
     expect(ogImageForFile("public/pocket-alternative.html")).toContain(
       "og-image-pricing.png",
     );
-    // Landings and legal pages carry the general product card, and the policy
-    // now also enumerates the localized product cards per landing page.
-    for (const page of [...LANDING_PAGES, ...LEGAL_PAGES]) {
+    // Legal pages carry the general product card; each localized landing
+    // carries the card assigned to its language in OG_IMAGE_POLICY.
+    for (const page of LEGAL_PAGES) {
       expect(ogImageForFile(page.file)).toBe(DEFAULT_OG_IMAGE);
+    }
+    for (const page of LANDING_PAGES) {
+      expect(ogImageForFile(page.file)).toBe(
+        page.lang === "en"
+          ? DEFAULT_OG_IMAGE
+          : `${SITE_URL}/og-image-${page.lang}.png`,
+      );
     }
     for (const entry of OG_IMAGE_POLICY) {
       if (entry.file.endsWith(".html") && entry.file !== "public/pocket-alternative.html") {

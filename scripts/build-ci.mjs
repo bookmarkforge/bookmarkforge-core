@@ -7,6 +7,10 @@
  *      integrity check hard-fails without it — src/utils/bundleIntegrity.ts).
  *   2. /assets/ script/link tags carry SRI integrity="sha256-…".
  *   3. dist/sw.js (Workbox service worker) was generated.
+ *   4. ADR-039: dist/sw.js embeds the SW-side integrity runtime + manifest
+ *      (scripts/sw-integrity-runtime.js) and the embedded bytes actually run:
+ *      enablement, genuine-asset verification and tampered-asset rejection
+ *      are proven against the real dist/ artifacts on every build.
  *
  * Exit code is non-zero on any failure. Use via `npm run build:ci`.
  */
@@ -106,6 +110,169 @@ if (failures.length > 0) {
 }
 console.log("[build-ci] integrity manifest + SRI + service worker verified");
 
+// ── ADR-039: SW integrity embed gate ──────────────────────────────────
+// dist/sw.js must embed the hash-verification runtime + manifest, and the
+// EMBEDDED BYTES must actually work: this executes the embed in a synthetic
+// SW environment and proves (a) the runtime enables against the embedded
+// manifest, (b) a genuine shipped asset verifies, (c) a flipped byte is
+// rejected. Catches the two failure classes found during development: the
+// plugin silently skipping (hook ordering) and the manifest/runtime ASI
+// join that made the whole SW throw at eval time.
+{
+  const swPath = join(ROOT, "dist", "sw.js");
+  const sw = readFileSync(swPath, "utf8");
+  const START = "// __BMF_SW_INTEGRITY_EMBED_START__";
+  const END = "// __BMF_SW_INTEGRITY_EMBED_END__";
+  const startIdx = sw.indexOf(START);
+  const endIdx = sw.indexOf(END);
+  if (
+    startIdx !== 0 ||
+    endIdx === -1 ||
+    (sw.match(/__BMF_SW_INTEGRITY_EMBED_START__/g) ?? []).length !== 1
+  ) {
+    console.error(
+      "[build-ci] FAIL: dist/sw.js missing the ADR-039 integrity embed " +
+        "(swIntegrityEmbedPlugin closeBundle did not run or ran twice)",
+    );
+    process.exit(1);
+  }
+  const embed = sw.slice(startIdx, endIdx);
+
+  // Extract the embedded manifest (brace-depth scan, string-aware).
+  const assignAt = embed.indexOf("self.__BMF_SW_INTEGRITY_MANIFEST__ = ");
+  const jsonStart = assignAt === -1 ? -1 : embed.indexOf("{", assignAt);
+  if (jsonStart === -1) {
+    console.error("[build-ci] FAIL: manifest assignment not found in sw embed");
+    process.exit(1);
+  }
+  let depth = 0;
+  let inString = false;
+  let escape = false;
+  let jsonEnd = -1;
+  for (let i = jsonStart; i < embed.length; i++) {
+    const ch = embed[i];
+    if (inString) {
+      if (escape) escape = false;
+      else if (ch === "\\") escape = true;
+      else if (ch === '"') inString = false;
+      continue;
+    }
+    if (ch === '"') inString = true;
+    else if (ch === "{") depth++;
+    else if (ch === "}") {
+      depth--;
+      if (depth === 0) {
+        jsonEnd = i + 1;
+        break;
+      }
+    }
+  }
+  if (jsonEnd === -1) {
+    console.error("[build-ci] FAIL: embedded manifest JSON not terminated");
+    process.exit(1);
+  }
+  let manifest;
+  try {
+    manifest = JSON.parse(embed.slice(jsonStart, jsonEnd));
+  } catch (error) {
+    console.error(`[build-ci] FAIL: embedded manifest is not valid JSON: ${error.message}`);
+    process.exit(1);
+  }
+  const entries = Object.keys(manifest.files ?? {});
+  if (entries.length === 0) {
+    console.error("[build-ci] FAIL: embedded manifest has no files");
+    process.exit(1);
+  }
+  const selfReferential = entries.filter(
+    (f) => f === "/index.html" || f === "/sw.js" || f === "/integrity-manifest.json",
+  );
+  if (selfReferential.length > 0) {
+    console.error(
+      `[build-ci] FAIL: self-referential entries in embedded manifest: ${selfReferential.join(", ")}`,
+    );
+    process.exit(1);
+  }
+
+  // Execute the embedded runtime against a synthetic SW environment.
+  const openedCaches = new Map();
+  const fakeSelf = {
+    location: { origin: "https://build-ci.local" },
+    clients: null,
+    caches: {
+      keys: async () => [...openedCaches.keys()],
+      open: async (name) => {
+        if (!openedCaches.has(name)) openedCaches.set(name, new Map());
+        const cache = openedCaches.get(name);
+        return {
+          delete: async (request) => cache.delete(String(request).split("?")[0]),
+        };
+      },
+    },
+  };
+  class FakeFetchEvent {
+    constructor(request) {
+      this.request = request;
+    }
+  }
+  // Marker on the pre-patch stub: the runtime wrapper must REPLACE this
+  // method, so after eval the marker must be gone from the prototype.
+  FakeFetchEvent.prototype.respondWith = function respondWithStub() {};
+  FakeFetchEvent.prototype.respondWith.__bmfOriginal = true;
+  let api;
+  try {
+    new Function("self", "FetchEvent", "Response", "crypto", embed)(
+      fakeSelf,
+      FakeFetchEvent,
+      Response,
+      globalThis.crypto,
+    );
+    api = fakeSelf.__BMF_SW_INTEGRITY__;
+  } catch (error) {
+    console.error(
+      `[build-ci] FAIL: embedded SW integrity runtime threw at eval time: ${error.message}`,
+    );
+    process.exit(1);
+  }
+  if (!api || api.enabled !== true) {
+    console.error("[build-ci] FAIL: embedded SW integrity runtime did not enable");
+    process.exit(1);
+  }
+  if (FakeFetchEvent.prototype.respondWith.__bmfOriginal === true) {
+    console.error("[build-ci] FAIL: FetchEvent.respondWith was not wrapped by the embed");
+    process.exit(1);
+  }
+
+  // Prove genuine verifies and tampering is rejected, using a REAL asset.
+  const asset = entries.find((f) => f.startsWith("/assets/") && f.endsWith(".js"));
+  if (!asset) {
+    console.error("[build-ci] FAIL: no /assets/*.js entry in embedded manifest");
+    process.exit(1);
+  }
+  const good = readFileSync(join(ROOT, "dist", asset));
+  const genuineOk = await api.verifyResponse(
+    "https://build-ci.local" + asset,
+    new Response(good),
+  );
+  const tampered = Buffer.from(good);
+  tampered[0] ^= 0xff;
+  const tamperedOk = await api.verifyResponse(
+    "https://build-ci.local" + asset,
+    new Response(tampered),
+  );
+  if (!genuineOk || tamperedOk) {
+    console.error(
+      `[build-ci] FAIL: SW verification verdict wrong for ${asset} ` +
+        `(genuineOk=${genuineOk}, tamperedOk=${tamperedOk})`,
+    );
+    process.exit(1);
+  }
+
+  console.log(
+    `[build-ci] sw-integrity embed verified: enabled, ${entries.length} files, ` +
+      `respondWith wrapped, genuine+tampered verdicts correct (${asset})`,
+  );
+}
+
 // P60 chunk-boundary guard: fail if the ui-runtime vendor chunk (lucide +
 // motion) ever leaks into the entry chunk or pre-unlock security screens.
 // Kept separate from the checks above so its own failure message is clear.
@@ -139,4 +306,16 @@ const bundleSize = spawnSync(
 );
 if (bundleSize.status !== 0) {
   process.exit(bundleSize.status ?? 1);
+}
+
+// Performance budget: static metrics are deterministic build artifacts and
+// must fail in the same job as the production build. First interaction is
+// measured separately with Chromium against this exact dist/ preview.
+const performanceStatic = spawnSync(
+  process.execPath,
+  [join(ROOT, "scripts", "check-performance-budget.mjs"), "--static-only"],
+  { stdio: "inherit" },
+);
+if (performanceStatic.status !== 0) {
+  process.exit(performanceStatic.status ?? 1);
 }

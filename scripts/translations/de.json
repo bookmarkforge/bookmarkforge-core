@@ -1,0 +1,236 @@
+{
+  "lang": "de",
+  "langName": "Deutsch",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforge.com/de/",
+  "ogLocale": "de_DE",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Die private Pocket-Alternative mit KI (Lesezeichen & Notizen)",
+  "description": "Speichere Artikel, Notizen und Dokumente in einem privaten, verschlüsselten, 100% lokalen Tresor. KI-Suche, Notion-Editor, P2P-Sync. Kostenloser Tarif: 1.000 Lesezeichen.",
+  "ogTitle": "BookmarkForge — Die private Pocket-Alternative mit KI (Lesezeichen & Notizen)",
+  "ogDescription": "Speichere Artikel, Notizen und Dokumente in einem privaten, verschlüsselten, 100% lokalen Tresor. KI-Suche, Notion-Editor, P2P-Sync. Kostenloser Tarif: 1.000 Lesezeichen.",
+  "ogImage": "https://bookmarkforge.com/og-image-de.png",
+  "twitterTitle": "BookmarkForge — Die private Pocket-Alternative mit KI (Lesezeichen & Notizen)",
+  "twitterDescription": "Speichere Artikel, Notizen und Dokumente in einem privaten, verschlüsselten, 100% lokalen Tresor. KI-Suche, Notion-Editor, P2P-Sync. Kostenloser Tarif: 1.000 Lesezeichen.",
+  "twitterImage": "https://bookmarkforge.com/og-image-de.png",
+  "skipLink": "Zum Hauptinhalt springen",
+  "navBrandAria": "BookmarkForge Startseite",
+  "navAriaLabel": "Hauptnavigation",
+  "homeHref": "/de/",
+  "navLinks": {
+    "pocketAlternative": "Pocket-Alternative",
+    "features": "Funktionen",
+    "ai": "KI",
+    "privacy": "Datenschutz",
+    "pricing": "Preise"
+  },
+  "langLink": {
+    "href": "/?lang=en",
+    "hreflang": "en",
+    "lang": "en",
+    "text": "English"
+  },
+  "navCta": "App öffnen",
+  "themeToggleAria": "Design wechseln",
+  "hero": {
+    "badge": "Version 1.0",
+    "title": "Dein privater <span class=\"accent-text\">KI-Wissensspeicher</span>",
+    "subtitle": "Die private Pocket-Alternative zum Später-Lesen: Lesezeichen, Notizen und Dokumente — verschlüsselt auf deinem Gerät, mit KI durchsuchbar und Peer-to-Peer synchronisiert. Keine Cloud. Kein Tracking. 100% deins.",
+    "ctaPrimary": "App kostenlos öffnen",
+    "ctaSecondary": "Preise ansehen",
+    "pillars": [
+      { "strong": "100% Lokal", "text": "deine Daten verlassen nie dein Gerät" },
+      { "strong": "Verschlüsselt", "text": "AES-256-GCM + Argon2id" },
+      { "strong": "Offline", "text": "funktioniert ohne Internet" },
+      { "strong": "Privat", "text": "keine Telemetrie standardmäßig" }
+    ]
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Später lesen, ohne deine Privatsphäre aufzugeben",
+    "title": "Die Private Pocket-Alternative",
+    "subtitle": "Pocket verschwindet. BookmarkForge hält die Später-Lesen-Gewohnheit am Leben — jeder Artikel, jede Notiz und jede Markierung verschlüsselt auf deinem Gerät.",
+    "features": [
+      {
+        "title": "Später lesen — für immer deins",
+        "text": "Speichere Artikel, Videos und PDFs mit einem Klick — aus der PWA, der Browser-Erweiterung oder dem Teilen-Menü. Anders als bei Pocket lebt deine Leseliste auf deinem Gerät, verschlüsselt, und funktioniert offline."
+      },
+      {
+        "title": "Notion-Notizen zu jedem Artikel",
+        "text": "Markiere, fasse zusammen und schreibe Block-Notizen zu jedem Lesezeichen. Mach aus einem gespeicherten Artikel deine eigene Wissensbasis — nicht nur eine Linkliste."
+      },
+      {
+        "title": "Kein Tracking, keine Werbung",
+        "text": "BookmarkForge hat standardmäßig keine Konten, keine Analysen und keine Werbung. Deine Lesegewohnheiten gehen niemanden etwas an außer dich."
+      }
+    ],
+    "ctaPrimary": "Kostenlos mit dem Speichern beginnen",
+    "ctaSecondary": "Vollständiger Vergleich & Migrationsanleitung",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "features": {
+    "id": "funktionen",
+    "tag": "Alles, was du brauchst",
+    "title": "Leistungsstarke Funktionen für dein Wissensmanagement, komplett lokal",
+    "items": [
+      { "title": "Lesezeichen & Dokumente", "text": "Speichere jede Seite mit einem Klick. Rich-Text-Block-Editor (Notion-Stil) für Notizen. Virtualisierte Listen verarbeiten über 100.000 Einträge flüssig." },
+      { "title": "Volltext- & semantische Suche", "text": "Suche nach Stichwort oder Bedeutung. Semantische Vektoren (HNSW) finden verwandte Inhalte sogar ohne exakte Übereinstimmung." },
+      { "title": "Lokale KI (WebLLM / Ollama) — Nur Pro", "text": "Führe Llama 3.2, Phi-3, TinyLlama direkt im Browser mit WebGPU aus. Keine Daten verlassen dein Gerät. Erfordert Pro (79 $ lebenslang)." },
+      { "title": "RAG-Chat über deine Daten — Nur Pro", "text": "Stelle Fragen und erhalte Antworten, die auf DEINEN Lesezeichen und Notizen basieren. Inklusive Quellenangaben. Privater Modus = 100% lokal. Erfordert Pro." },
+      { "title": "P2P-Synchronisierung (WebRTC) — Nur Pro", "text": "Synchronisiere deinen Tresor direkt zwischen deinen Geräten. Kein zentraler Server. Ende-zu-Ende-Verschlüsselung. QR-Kopplung in Sekunden. Bis zu 3 Geräte mit Pro." },
+      { "title": "Verschlüsselte Backups", "text": "Tägliche automatische .bmf-Backups. Manueller Export nach Markdown, JSON, CSV, PDF. Wiederherstellung in Sekunden. Du behältst die Schlüssel." },
+      { "title": "Wissensgraph", "text": "Visualisiere die Verbindungen zwischen deinen Notizen und Lesezeichen. Filtere nach Tags, Daten und Ähnlichkeit. Zoom und Navigation auf unendlicher Leinwand." },
+      { "title": "Lernkarten (Spaced Repetition) — Nur Pro", "text": "Erstelle Karten aus jedem Dokument. Anki-artiger Algorithmus plant Wiederholungen in optimalen Abständen. Ideal zum Lernen. Erfordert Pro." },
+      { "title": "Datenschutz standardmäßig", "text": "Keine Analysen, kein Tracking, keine Konten. Optionale Telemetrie nur, wenn du sie aktivierst. DSGVO-konform. Du hast die Kontrolle." }
+    ]
+  },
+  "ai": {
+    "id": "ki",
+    "tag": "KI, die dich respektiert",
+    "title": "Dein Wissen, verstärkt",
+    "subtitle": "BookmarkForge gibt dir die Wahl: führe Modelle zu 100% lokal im Browser aus (WebLLM, WebGPU) mit Pro, verbinde deine eigenen API-Schlüssel für Cloud-Anbieter, oder nutze lokales Ollama. Deine Anfragen, deine Daten, deine Regeln.",
+    "providers": {
+      "title": "Unterstützte Anbieter",
+      "list": [
+        { "type": "local", "name": "WebLLM lokal (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Nur Pro" },
+        { "type": "local", "name": "Ollama lokal (jedes Modell, das du ausführst)" },
+        { "type": "cloud", "name": "Google Gemini Cloud (dein API-Schlüssel)" },
+        { "type": "cloud", "name": "OpenAI Cloud / GPT-4o (dein API-Schlüssel)" },
+        { "type": "cloud", "name": "Anthropic Claude Cloud (dein API-Schlüssel)" },
+        { "type": "cloud", "name": "Groq Cloud (dein API-Schlüssel)" },
+        { "type": "cloud", "name": "Custom / OpenRouter via custom provider (dein API-Schlüssel)" }
+      ]
+    },
+    "modes": {
+      "title": "Chat-Modi",
+      "items": [
+        { "title": "Privater Modus", "text": "Nur lokale KI (WebLLM/Ollama). Keine Daten verlassen das Gerät. Funktioniert offline. Erfordert Pro für WebLLM." },
+        { "title": "Websuche-Modus", "text": "Kombiniert deinen Tresor mit Live-Suchergebnissen (Cloud-Anbieter)." },
+        { "title": "Experten-Agenten", "text": "Spezialisierte Personas: Programmierer, Autor, Analytiker, Forscher. Erfordert Pro für lokale KI." }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "datenschutz",
+    "title": "Datenschutz ist kein Feature — er ist das Fundament",
+    "subtitle": "Jede Architekturentscheidung gibt dir die Kontrolle",
+    "items": [
+      { "title": "Ende-zu-Ende-Verschlüsselung", "text": "AES-256-GCM mit Schlüsseln, die per Argon2id aus deinem Master-Passwort abgeleitet werden. Wir sehen nie dein Passwort oder deine Schlüssel." },
+      { "title": "100% lokale Architektur", "text": "Dein Tresor lebt in IndexedDB auf deinem Gerät. Der Begleitserver verwaltet nur KI-Proxy, Lizenzen und Signalisierung — nie deine Inhalte." },
+      { "title": "Keine Telemetrie standardmäßig", "text": "Keine Analysen, keine Fehlerberichte, kein Tracking. Nutzungsstatistiken und Fehlerberichte optional, jeweils unabhängig steuerbar." },
+      { "title": "Du behältst die Schlüssel", "text": "Geräteschlüssel-Trennung: JWK im localStorage + Chiffretexte in IndexedDB. Beides ist nötig. Kein Master-Passwort = kein Zugriff. Keine „Passwort vergessen“-Hintertür." },
+      { "title": "DSGVO-konform", "text": "Granulare Einwilligung (Analysen, Fehlerberichte, Client-Events). Recht auf Auskunft, Berichtigung, Löschung und Datenübertragbarkeit — alles lokal machbar." },
+      { "title": "Kein Vendor-Lock-in", "text": "Exportiere deine Daten jederzeit in offenen Formaten (JSON, Markdown, CSV, PDF). Dein Wissen bleibt portabel." }
+    ]
+  },
+  "pricing": {
+    "id": "preise",
+    "title": "Einfache, faire Preise",
+    "subtitle": "Kostenloser Tarif: 1.000 Lesezeichen. Pro ist ein einmaliger Kauf von 79 $ — keine Abos.",
+    "plans": [
+      {
+        "name": "Kostenlos",
+        "price": "$ 0",
+        "period": "/lebenslang",
+        "description": "Für persönliches Wissensmanagement (1.000 Lesezeichen, 1 Gerät)",
+        "features": [
+          { "included": true, "text": "1.000 Lesezeichen, Notizen, Dokumente" },
+          { "included": true, "text": "Volltext- & semantische Suche" },
+          { "included": true, "text": "KI mit deinem eigenen API-Schlüssel (du zahlst dem Anbieter)" },
+          { "included": true, "text": "Wissensgraph" },
+          { "included": true, "text": "Basis-Vorlagen" },
+          { "included": true, "text": "JSON/HTML-Export" },
+          { "included": true, "text": "PWA + Browser-Erweiterungen" },
+          { "included": false, "text": "P2P-Sync zwischen Geräten" },
+          { "included": false, "text": "Lokale KI (WebLLM/Ollama)" },
+          { "included": false, "text": "RAG-Chat über deine Daten" },
+          { "included": false, "text": "Lernkarten mit Spaced Repetition" },
+          { "included": false, "text": "PDF + OCR" },
+          { "included": false, "text": "Erweiterter Export (10+ Formate)" }
+        ],
+        "cta": "Kostenlos starten",
+        "ctaHref": "/app",
+        "ctaClass": "btn-outline"
+      },
+      {
+        "name": "Pro",
+        "badge": "Am Beliebtesten",
+        "price": "$ 79",
+        "period": "einmalig (lebenslang)",
+        "description": "Unbegrenzte Lesezeichen, 3 Geräte, lokale KI, P2P-Sync — kein Abo",
+        "features": [
+          { "included": true, "text": "Alles aus Kostenlos" },
+          { "included": true, "text": "Unbegrenzte Lesezeichen" },
+          { "included": true, "text": "3 Geräte" },
+          { "included": true, "text": "P2P-Sync auf 3 Geräten" },
+          { "included": true, "text": "Lokale KI (WebLLM, ohne API-Schlüssel)" },
+          { "included": true, "text": "RAG-Chat über deine Daten" },
+          { "included": true, "text": "Experten-Agenten (Programmierer, Autor, Analytiker, Forscher)" },
+          { "included": true, "text": "Lernkarten mit Spaced Repetition" },
+          { "included": true, "text": "PDF + OCR" },
+          { "included": true, "text": "Erweiterter Export (10+ Formate)" },
+          { "included": true, "text": "Sicherheitstresor (AES-GCM)" },
+          { "included": true, "text": "Updates für 12 Monate" },
+          { "included": true, "text": "E-Mail-Support" }
+        ],
+        "cta": "Pro für immer sichern",
+        "ctaHref": "https://whop.com/bookmarkforge",
+        "ctaClass": "btn-primary"
+      }
+    ]
+  },
+  "faq": {
+    "title": "Häufige Fragen",
+    "items": [
+      { "question": "Ist der kostenlose Tarif wirklich für immer kostenlos?", "answer": "Ja. Keine Testphase, kein Abo. Der kostenlose Tarif enthält 1.000 Lesezeichen, Volltextsuche, Wissensgraph und KI mit deinem eigenen API-Schlüssel (du zahlst dem Anbieter)." },
+      { "question": "Was bedeutet „einmalige Zahlung“ bei Pro?", "answer": "Du zahlst einmal (79 $) und besitzt die Lizenz für immer. Alle Updates für 12 Monate sind inklusive. Keine laufenden Kosten. Der Lizenzschlüssel wird sofort über Whop geliefert." },
+      { "question": "Welche Zahlungsmethoden gibt es?", "answer": "Über Whop: Kreditkarte, PayPal und Kryptowährungen. Wir sehen niemals deine Zahlungsdaten." },
+      { "question": "Wie lautet die Rückerstattungsrichtlinie?", "answer": "30 Tage Geld-zurück-Garantie auf Pro-Lizenzen. Kontaktiere support@bookmarkforge.com" }
+    ]
+  },
+  "cta": {
+    "title": "Bereit, dein Wissen zu besitzen?",
+    "text": "Schließ dich Tausenden Forschenden, Entwicklern und Lernenden an, die BookmarkForge als ihr zweites Gehirn nutzen.",
+    "ctaPrimary": "App kostenlos öffnen",
+    "ctaSecondary": "Auf Pro upgraden",
+    "note": "Kein Konto nötig. Funktioniert sofort im Browser. Kostenloser Tarif: 1.000 Lesezeichen."
+  },
+  "footer": {
+    "brand": "Dein privater KI-Wissensspeicher. 100% lokal.",
+    "product": { "title": "Produkt", "links": ["Funktionen", "KI-Funktionen", "Datenschutz", "Preise", "App öffnen"] },
+    "resources": { "title": "Ressourcen", "links": ["Pocket-Vergleich", "Datenschutz & Nutzungsbedingungen"] },
+    "languages": { "title": "Sprachen", "links": ["English", "Español", "Français", "Deutsch", "Português", "Italiano"] },
+    "support": { "title": "Support", "links": ["Kontakt"] },
+    "copyright": "© 2026 BookmarkForge. Alle Rechte vorbehalten.",
+    "legal": ["Datenschutzerklärung", "Nutzungsbedingungen", "bookmarkforge@proton.me"]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Dein privater KI-Wissensspeicher. 100% lokal. Die private Pocket-Alternative. Kostenlos: 1.000 Lesezeichen.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforge.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforge.com/de/",
+    "offers": [
+      { "name": "Kostenlos", "price": "0", "currency": "USD" },
+      { "name": "Pro lebenslang", "price": "79", "currency": "USD" }
+    ],
+    "featureList": [
+      "100% lokale Speicherung",
+      "Ende-zu-Ende-Verschlüsselung",
+      "Funktioniert offline",
+      "KI-Suche",
+      "Notion-Editor",
+      "P2P-Synchronisierung"
+    ],
+    "faq": [
+      { "question": "Ist der kostenlose Tarif wirklich für immer kostenlos?", "answer": "Ja. Keine Testphase, kein Abo. Der kostenlose Tarif enthält 1.000 Lesezeichen, Volltextsuche, Wissensgraph und KI mit deinem eigenen API-Schlüssel (du zahlst dem Anbieter)." },
+      { "question": "Was bedeutet „einmalige Zahlung“ bei Pro?", "answer": "Du zahlst einmal (79 $) und besitzt die Lizenz für immer. Alle Updates für 12 Monate sind inklusive. Keine laufenden Kosten. Der Lizenzschlüssel wird sofort über Whop geliefert." },
+      { "question": "Welche Zahlungsmethoden gibt es?", "answer": "Über Whop: Kreditkarte, PayPal und Kryptowährungen. Wir sehen niemals deine Zahlungsdaten." },
+      { "question": "Wie lautet die Rückerstattungsrichtlinie?", "answer": "30 Tage Geld-zurück-Garantie auf Pro-Lizenzen. Kontaktiere support@bookmarkforge.com" }
+    ]
+  }
+}

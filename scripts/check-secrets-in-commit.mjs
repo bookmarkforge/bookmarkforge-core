@@ -66,25 +66,38 @@ const KEY_PATTERNS = [
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
+/** Parse the NUL-delimited path output produced by git. */
+export function parseGitPathList(output) {
+  return output.split(String.fromCharCode(0)).filter(Boolean);
+}
+
 /** Basenames of files staged for the current commit (staged-new or modified). */
-function stagedFiles() {
+export function stagedFiles() {
   if (!existsSync(".git")) {
-    console.warn("[check-secrets] WARNING: .git unavailable — cannot list staged files");
-    return [];
+    throw new Error(".git unavailable; refusing to scan an unknown staged set");
   }
   try {
     const out = execFileSync(
       "git",
-      ["diff", "--cached", "--name-only", "--diff-filter=ACMR"],
+      [
+        "-c",
+        `safe.directory=${process.cwd()}`,
+        "diff-index",
+        "--cached",
+        "--name-only",
+        "--diff-filter=ACMR",
+        "-z",
+        "HEAD",
+        "--",
+      ],
       { encoding: "utf8", maxBuffer: 8 * 1024 * 1024 },
     );
-    return out.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
-  } catch {
-    // Not in a git work tree, or git unavailable — fail open with a warning
-    // so the gate never blocks a legit non-git usage (e.g. running the
-    // script standalone from a tarball).
-    console.warn("[check-secrets] WARNING: git unavailable — cannot list staged files");
-    return [];
+    return parseGitPathList(out);
+  } catch (error) {
+    throw new Error(
+      `could not enumerate staged files; refusing to scan an unknown set (${error instanceof Error ? error.message : String(error)})`,
+      { cause: error },
+    );
   }
 }
 
@@ -140,9 +153,15 @@ const isMain =
     new URL(`file://${process.argv[1].replace(/\\/g, "/")}`).href;
 
 if (isMain) {
-  const files = process.argv.slice(2).length > 0
-    ? process.argv.slice(2)
-    : stagedFiles();
+  let files;
+  try {
+    files = process.argv.slice(2).length > 0
+      ? process.argv.slice(2)
+      : stagedFiles();
+  } catch (error) {
+    console.error(`[check-secrets] FAIL: ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
+  }
 
   const { ok, violations } = checkSecrets(files);
   if (!ok) {

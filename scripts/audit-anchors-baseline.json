@@ -1,7 +1,7 @@
 {
-  "totalAnchors": 19,
+  "totalAnchors": 20,
   "missingCount": 0,
-  "presentCount": 19,
+  "presentCount": 20,
   "discoveredCount": 0,
   "updatedAt": "2026-09-02T00:00:00.000Z",
   "anchors": [
@@ -29,6 +29,11 @@
       "id": "p3-constant-time-hmac",
       "adr": "ADR-038",
       "glob": "src/tests/security/p3-constant-time-hmac*.regression.test.*"
+    },
+    {
+      "id": "p3-sw-integrity-runtime",
+      "adr": "ADR-039",
+      "glob": "src/tests/security/p3-sw-integrity-runtime*.regression.test.*"
     },
     {
       "id": "p4-sync-transfer-watchdog",

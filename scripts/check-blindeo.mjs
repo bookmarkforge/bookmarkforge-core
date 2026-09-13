@@ -200,7 +200,7 @@ try {
 }
 
 // Punto 10: Checklist de pre-lanzamiento (bloqueantes) — check:launch-checklist:strict.
-// No lanzar mientras haya bloqueantes 🔴 abiertos (CODEOWNERS, ruleset, RPO/RTO,
+// No lanzar mientras haya bloqueantes 🔴 abiertos (ruleset, RPO/RTO,
 // guardia, RGPD). El gate emite el informe completo y sale != 0 con bloqueantes.
 try {
   execFileSync(

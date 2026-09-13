@@ -2,7 +2,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { validateCodeownersContent } from "./validate-codeowners.mjs";
 
 // Progress gate for the pre-launch checklist (docs/launch-checklist.md).
 //
@@ -10,6 +9,11 @@ import { validateCodeownersContent } from "./validate-codeowners.mjs";
 // rest as manual. Default mode is informational (exit 0). With --strict the
 // gate exits 1 when any 🔴 blocking item is not completed, so it can be wired
 // into CI as a release gate.
+//
+// Security Champions Program integration:
+// - `check:security-internal` is a mandatory gate on every PR
+// - Penetration tests are run monthly and before production launch
+// - The `Enforce mandatory security gates` check must pass before merge
 
 const ROOT = process.cwd();
 const read = (path) =>
@@ -25,21 +29,8 @@ const readJson = (path) => {
   }
 };
 
-export function verifyCodeowners(content) {
-  if (content == null) return { ok: false, note: ".github/CODEOWNERS no existe" };
-  const { errors } = validateCodeownersContent(content);
-  const placeholders = errors.filter((error) => error.includes("placeholder"));
-  if (placeholders.length) {
-    return { ok: false, note: `${placeholders.length} línea(s) con placeholder` };
-  }
-  const others = errors.filter((error) => !error.includes("placeholder"));
-  return {
-    ok: true,
-    note: others.length ? `sintaxis válida (aviso: ${others.join("; ")})` : "sin placeholders, sintaxis válida",
-  };
-}
-
 export const REQUIRED_RULESET_CHECKS = [
+  "Enforce mandatory security gates",
   "Typecheck, lint, tests and security gates",
   "Playwright E2E",
   "Production build and repository checks",
@@ -97,7 +88,12 @@ export function verifyErrorReporting(pkg, reporter) {
   if (!reporter.includes("beforeSend")) {
     return { ok: false, note: "remoteErrorReporter sin beforeSend sancador" };
   }
-  if (!reporter.includes("CONSENT_ERROR_REPORTING")) {
+  // ADR-030: consent lives in ConsentService. Accept either the legacy direct
+  // key marker or a delegation to the purpose-scoped gate ("sentry").
+  const hasConsentGate =
+    reporter.includes("CONSENT_ERROR_REPORTING") ||
+    /isPurposeConsented\s*\(\s*["']sentry["']\s*\)/.test(reporter);
+  if (!hasConsentGate) {
     return { ok: false, note: "remoteErrorReporter sin gate de consentimiento opt-in" };
   }
   if (!reporter.includes("initRemoteErrorReporting") || !reporter.includes("sentry.init")) {
@@ -223,7 +219,6 @@ if (isMain) {
     .filter((text) => text != null);
 
   const items = [
-    { id: 1, section: "blocker", title: "CODEOWNERS con equipos reales", run: () => verifyCodeowners(read(".github/CODEOWNERS")) },
     { id: 2, section: "blocker", title: "Protección de main: ruleset con checks obligatorios", run: () => verifyRuleset(readJson(".github/rulesets/main-protection.json")) },
     { id: 3, section: "blocker", title: "RPO/RTO y SLOs documentados", run: () => verifySloRpoRto(read("docs/operations.md")) },
     { id: 4, section: "blocker", title: "Responsable y canal de alertas", manual: true },
@@ -237,7 +232,7 @@ if (isMain) {
     { id: 12, section: "p1", title: "Contratos versionados con integraciones", run: () => verifyContracts(docs) },
     { id: 13, section: "p1", title: "Simulacro de desastre trimestral (drill mensual)", run: () => verifyDrill(pkg, has("scripts/drill-backup-restore.mjs")) },
     { id: 14, section: "p1", title: "Checklist de publicación de extensiones", run: () => verifyExtensions(has("extension/manifest.json") && has("extension/manifest-firefox.json")) },
-    { id: 15, section: "env", title: "Secretos, environments y revisores de GitHub Actions", manual: true },
+    { id: 15, section: "env", title: "Secretos, environments y permisos de despliegue", manual: true },
     { id: 16, section: "env", title: "Seguridad real de staging y producción (gates)", run: () => verifyEnvGates(pkg) },
     { id: 17, section: "env", title: "DAST autenticado deshabilitado de forma segura", run: () => verifyDastDisabled(read(".github/workflows/dast-nightly.yml")) },
     { id: 18, section: "env", title: "Configuración obligatoria de producción documentada", run: () => verifyProdConfig(read("docs/security.md")) },

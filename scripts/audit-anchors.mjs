@@ -86,6 +86,13 @@ export const ANCHORS = [
     glob: "src/tests/security/p3-constant-time-hmac*.regression.test.*",
   },
   {
+    id: "p3-sw-integrity-runtime",
+    adr: "ADR-039",
+    description:
+      "Service-worker-side integrity verification (lazy chunks included) — the build embeds the manifest + hash-verification runtime into dist/sw.js and the app bridges SW notifications onto bundle-integrity-failed.",
+    glob: "src/tests/security/p3-sw-integrity-runtime*.regression.test.*",
+  },
+  {
     id: "p4-sync-transfer-watchdog",
     adr: "ADR-029 D1",
     description:

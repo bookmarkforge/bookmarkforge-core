@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="{{ t.lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="{{ t.description }}">
+  <title>{{ t.title }}</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="{{ t.canonical }}">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforge.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="{{ t.ogTitle }}">
+  <meta property="og:description" content="{{ t.ogDescription }}">
+  <meta property="og:url" content="{{ t.canonical }}">
+  <meta property="og:image" content="{{ t.ogImage }}">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="{{ t.ogLocale }}">
+  <meta property="og:locale:alternate" content="{{ t.ogLocaleAlternate }}">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ t.twitterTitle }}">
+  <meta name="twitter:description" content="{{ t.twitterDescription }}">
+  <meta name="twitter:image" content="{{ t.twitterImage }}">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "{{ t.canonical }}#website",
+        "url": "{{ t.canonical }}",
+        "name": "{{ t.structuredData.websiteName }}",
+        "description": "{{ t.structuredData.websiteDescription }}",
+        "inLanguage": "{{ t.lang }}",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "{{ t.canonical }}?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": { "@id": "https://bookmarkforge.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://bookmarkforge.com/#organization",
+        "name": "{{ t.structuredData.organizationName }}",
+        "url": "{{ t.structuredData.organizationUrl }}",
+        "logo": { "@type": "ImageObject", "url": "https://bookmarkforge.com/logo.png", "width": 64, "height": 64 },
+        "email": "{{ t.structuredData.organizationEmail }}"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "{{ t.canonical }}#software",
+        "name": "{{ t.structuredData.softwareName }}",
+        "applicationCategory": "{{ t.structuredData.softwareCategory }}",
+        "operatingSystem": "{{ t.structuredData.softwareOs }}",
+        "url": "{{ t.structuredData.softwareUrl }}",
+        "image": "{{ t.ogImage }}",
+        "description": "{{ t.description }}",
+        "offers": [
+          {% for offer in t.structuredData.offers %}
+          { "@type": "Offer", "name": "{{ offer.name }}", "price": "{{ offer.price }}", "priceCurrency": "{{ offer.currency }}" }{% if not loop.last %},{% endif %}
+          {% endfor %}
+        ],
+        "featureList": [
+          {% for feature in t.structuredData.featureList %}
+          "{{ feature }}"{% if not loop.last %},{% endif %}
+          {% endfor %}
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "{{ t.canonical }}#faq",
+        "mainEntity": [
+          {% for faq in t.structuredData.faq %}
+          {
+            "@type": "Question",
+            "name": "{{ faq.question | escapejs }}",
+            "acceptedAnswer": { "@type": "Answer", "text": "{{ faq.answer | escapejs }}" }
+          }{% if not loop.last %},{% endif %}
+          {% endfor %}
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">{{ t.skipLink }}</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="{{ t.homeHref }}" class="nav-brand" aria-label="{{ t.navBrandAria }}">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="{{ t.navAriaLabel }}">
+        <a href="#{{ t.pocketAlternative.id }}">{{ t.pocketAlternative.tag }}</a>
+        <a href="#{{ t.features.id }}">{{ t.navLinks.features }}</a>
+        <a href="#{{ t.ai.id }}">{{ t.navLinks.ai }}</a>
+        <a href="#{{ t.privacy.id }}">{{ t.navLinks.privacy }}</a>
+        <a href="#{{ t.pricing.id }}">{{ t.navLinks.pricing }}</a>
+        <a href="{{ t.langLink.href }}" hreflang="{{ t.langLink.hreflang }}" lang="{{ t.langLink.lang }}">{{ t.langLink.text }}</a>
+        <a href="/app" class="btn-primary nav-cta">{{ t.navCta }}</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="{{ t.themeToggleAria }}" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">{{ t.hero.badge }}</span>
+          <h1 id="hero-title">{{ t.hero.title | safe }}</h1>
+          <p class="hero-subtitle">{{ t.hero.subtitle }}</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">{{ t.hero.ctaPrimary }}</a>
+            <a href="#{{ t.pricing.id }}" class="btn-secondary">{{ t.hero.ctaSecondary }}</a>
+          </div>
+          <div class="hero-pillars">
+            {% for pillar in t.hero.pillars %}
+            <span><strong>{{ pillar.strong }}</strong> — {{ pillar.text }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="{{ t.pocketAlternative.id }}" class="comparison-section" aria-labelledby="{{ t.pocketAlternative.id }}-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">{{ t.pocketAlternative.tag }}</span>
+          <h2 id="{{ t.pocketAlternative.id }}-title">{{ t.pocketAlternative.title }}</h2>
+          <p class="section-subtitle">{{ t.pocketAlternative.subtitle }}</p>
+        </div>
+        <div class="features-grid-3">
+          {% for feature in t.pocketAlternative.features %}
+          <div class="feat-card">
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.text }}</p>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">{{ t.pocketAlternative.ctaPrimary }}</a>
+          <a href="{{ t.pocketAlternative.ctaSecondaryHref }}" class="btn-link">{{ t.pocketAlternative.ctaSecondary }}</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="{{ t.features.id }}" class="features-section" aria-labelledby="{{ t.features.id }}-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">{{ t.features.tag }}</span>
+          <h2 id="{{ t.features.id }}-title">{{ t.features.title }}</h2>
+        </div>
+        <div class="features-grid">
+          {% for feature in t.features.items %}
+          <div class="feature-item">
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.text }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="{{ t.ai.id }}" class="ai-section" aria-labelledby="{{ t.ai.id }}-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">{{ t.ai.tag }}</span>
+          <h2 id="{{ t.ai.id }}-title">{{ t.ai.title }}</h2>
+          <p class="section-subtitle">{{ t.ai.subtitle }}</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>{{ t.ai.providers.title }}</h3>
+            <ul class="providers-list">
+              {% for provider in t.ai.providers.list %}
+              <li>{{ provider.name }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>{{ t.ai.modes.title }}</h3>
+            <div class="mode-items">
+              {% for mode in t.ai.modes.items %}
+              <div class="mode-item">
+                <h4>{{ mode.title }}</h4>
+                <p>{{ mode.text }}</p>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="{{ t.privacy.id }}" class="privacy-section" aria-labelledby="{{ t.privacy.id }}-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="{{ t.privacy.id }}-title">{{ t.privacy.title }}</h2>
+          <p class="section-subtitle">{{ t.privacy.subtitle }}</p>
+        </div>
+        <div class="features-grid">
+          {% for item in t.privacy.items %}
+          <div class="feature-item">
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.text }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="{{ t.pricing.id }}" class="pricing-section" aria-labelledby="{{ t.pricing.id }}-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="{{ t.pricing.id }}-title">{{ t.pricing.title }}</h2>
+          <p class="section-subtitle">{{ t.pricing.subtitle }}</p>
+        </div>
+        <div class="pricing-cards">
+          {% for plan in t.pricing.plans %}
+          <div class="price-card {% if plan.badge %}popular{% endif %}">
+            {% if plan.badge %}
+            <span class="badge">{{ plan.badge }}</span>
+            {% endif %}
+            <h3>{{ plan.name }}</h3>
+            <div class="price">{{ plan.price }}<span>{{ plan.period }}</span></div>
+            <p>{{ plan.description }}</p>
+            <ul>
+              {% for feature in plan.features %}
+              <li><span aria-hidden="true">{{ '✅' if feature.included else '❌' }}</span> {{ feature.text }}</li>
+              {% endfor %}
+            </ul>
+            <a href="{{ plan.ctaHref }}" class="{{ plan.ctaClass }} {% if plan.ctaClass == 'btn-primary' %}btn-block{% endif %}" {% if plan.ctaHref | startsWith('http') %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ plan.cta }}</a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">{{ t.faq.title }}</h2>
+        <div class="faq-grid">
+          {% for item in t.faq.items %}
+          <div class="faq-item">
+            <h3>{{ item.question }}</h3>
+            <p>{{ item.answer | safe }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>{{ t.cta.title }}</h2>
+        <p>{{ t.cta.text }}</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">{{ t.cta.ctaPrimary }}</a>
+          <a href="#{{ t.pricing.id }}" class="btn-secondary">{{ t.cta.ctaSecondary }}</a>
+        </div>
+        <p class="note">{{ t.cta.note }}</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>{{ t.footer.brand }}</p>
+      </div>
+      <div class="footer-links">
+        <h4>{{ t.footer.product.title }}</h4>
+        <ul>
+          {% for link in t.footer.product.links %}
+          <li><a href="#">{{ link }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>{{ t.footer.resources.title }}</h4>
+        <ul>
+          {% for link in t.footer.resources.links %}
+          <li><a href="#">{{ link }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>{{ t.footer.languages.title }}</h4>
+        <ul>
+          {% for link in t.footer.languages.links %}
+          <li><a href="#">{{ link }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>{{ t.footer.support.title }}</h4>
+        <ul>
+          {% for link in t.footer.support.links %}
+          <li><a href="mailto:bookmarkforge@proton.me">{{ link }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>{{ t.footer.copyright }}</p>
+      <a href="/{{ t.lang }}/privacy-and-terms.html">{{ t.footer.legal[0] }}</a> · <a href="/{{ t.lang }}/privacy-and-terms.html#terms">{{ t.footer.legal[1] }}</a> · <a href="mailto:bookmarkforge@proton.me">{{ t.footer.legal[2] }}</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

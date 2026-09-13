@@ -36,7 +36,11 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = process.cwd();
-const ADR_DIR = join(ROOT, "docs", "adr");
+// ADRs live in docs/ as ADR-###-*.md (AGENTS.md §2). An earlier version
+// pointed at docs/adr/ — a directory that never existed — so the corpus was
+// always empty and the "new gate must be named by an ADR" rule was
+// unreachable. Pinned by check-inspector-freeze.test.mjs (FS regression).
+const ADR_DIR = join(ROOT, "docs");
 
 /**
  * The freeze baseline. Every gate currently in the `npm run check` chain
@@ -49,8 +53,17 @@ const KNOWN_GATES = {
   "check:extension-csp": "security",
   "check:extension-dist": "security",
   "check:license-keys": "security",
+  "check:server-log-ip-privacy": "security",
   "check:static-brand": "meta",
   "check:audit-drift": "security",
+  "check:override-cve": "security",
+  // Paid-route enforcement: a route under a paid namespace must be
+  // entitlement-gated. Security core, like check:license-keys.
+  "check:pro-routes": "security",
+  // Declared-dependency vulnerabilities: every advisory classified as ours or
+  // inherited, with the minimal bump. Security core, like check:override-cve.
+  "check:direct-cve": "security",
+  "check:direct-cve:dev": "security",
   "check:env": "security",
   "check:workflows": "security",
   "check:http-config": "security",
@@ -69,12 +82,14 @@ const KNOWN_GATES = {
   // present in an ADR before the gate accepts it (self-enforcing).
 
   // Other / meta gates (not documentation-format; no ADR required).
+  "check:brand-logo": "meta",
   "check:boundaries": "meta",
   "check:e2e-helpers": "meta",
   "check:baseline-drift": "meta",
   "check:baseline-gaps": "meta",
   "check:tailwind-drift": "meta",
   "check:rxdb17": "meta",
+  "check:seo": "meta",
   "check:chunks": "meta",
   "check:inspector-freeze": "meta",
   lint: "meta",

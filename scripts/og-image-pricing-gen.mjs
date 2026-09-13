@@ -44,10 +44,8 @@ if (!existsSync(SVG_PATH)) {
 // npm) and exit non-zero so CI surfaces the gap instead of a cryptic ENOENT.
 function requireSharp() {
   try {
-    // eslint-disable-next-line node/no-missing-require -- dynamic require
-    // for a dep that may be absent; guarded by the try/catch below.
     return require("sharp");
-  } catch (err) {
+  } catch (_err) {
     const hasPnpmLock = existsSync(resolve(ROOT, "pnpm-lock.yaml"));
     const hasYarnLock = existsSync(resolve(ROOT, "yarn.lock"));
     const hasBunLock = existsSync(resolve(ROOT, "bun.lockb"));

@@ -111,8 +111,8 @@ export function appendCoverageHistoryFile({
   const coverageMap = JSON.parse(readFileSync(coverageFile, "utf8"));
   const budgets = JSON.parse(readFileSync(budgetsFile, "utf8"));
   const areas = Object.keys(budgets.areas ?? {});
-  if (areas.length !== 14) {
-    throw new Error(`[coverage-history] expected 14 configured areas, found ${areas.length}`);
+  if (areas.length !== 15) {
+    throw new Error(`[coverage-history] expected 15 configured areas, found ${areas.length}`);
   }
 
   const existing = existsSync(historyFile)

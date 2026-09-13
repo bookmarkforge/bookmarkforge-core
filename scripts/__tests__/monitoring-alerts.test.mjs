@@ -464,10 +464,15 @@ describe("API_DEGRADADO end-to-end", () => {
     const dir = mkdtempSync(join(tmpdir(), "bmf-monitor-api-e2e-"));
     let latencyMs = 250;
     const server = createServer((_req, res) => {
-      setTimeout(() => {
+      const respond = () => {
         res.writeHead(200, { "content-type": "application/json" });
         res.end(JSON.stringify({ status: "ok", csrfToken: "test-token" }));
-      }, latencyMs);
+      };
+      // A 0ms latency must answer synchronously: a setTimeout(0) hop adds
+      // measurable wall-clock jitter that flakes the recovery assertions
+      // under parallel CI load.
+      if (latencyMs === 0) respond();
+      else setTimeout(respond, latencyMs);
     });
     await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
     const address = server.address();
@@ -481,9 +486,13 @@ describe("API_DEGRADADO end-to-end", () => {
       expect(degraded.totalProbes).toBe(6);
 
       latencyMs = 0;
-      const recovered = await checkApiDegradado({ baseUrl, samples: 3, timeoutMs: 1000, latencyThresholdMs: 50, errorRateThreshold: 0.2 });
+      // Recovery threshold stays far below the degraded regime (~250ms) but
+      // well above realistic load-induced jitter, so a single slow probe
+      // cannot flip p95 (the max of the 6 probes) — that was the flaky bit.
+      const recovered = await checkApiDegradado({ baseUrl, samples: 3, timeoutMs: 1000, latencyThresholdMs: 150, errorRateThreshold: 0.2 });
       expect(recovered.ok).toBe(true);
       expect(recovered.errorRate).toBe(0);
+      expect(recovered.p95Ms).toBeLessThan(degraded.p95Ms);
       expect(recovered.detail).toContain("health+business");
       expect(recovered.businessPath).toBe("/api/services/ai/session");
     } finally {

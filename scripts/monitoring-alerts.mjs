@@ -501,8 +501,15 @@ export async function checkApiDegradado({
         const res = await fetch(probe.url, { ...probe.init, signal: controller.signal, cache: "no-store" });
         latencies.push(Date.now() - started);
         if (!res.ok) {
-          errors += 1;
-          if (probe.name === "business") businessErrors += 1;
+          // The business probe is deliberately unauthenticated: when the
+          // deployment enforces entitlements (server/src/ai-session.ts) the
+          // documented answer is 401 LICENSE_REQUIRED. That is policy, not
+          // degradation, and counting it as an error would page 24/7.
+          const policyResponse = probe.name === "business" && res.status < 500;
+          if (!policyResponse) {
+            errors += 1;
+            if (probe.name === "business") businessErrors += 1;
+          }
         }
       } catch {
         errors += 1;

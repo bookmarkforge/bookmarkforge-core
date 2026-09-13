@@ -61,6 +61,40 @@ const CSP_COMMENT = [
   "    # rewritten/corrupt the next line — see vite.config.ts renderStaticPolicy.)",
 ].join("\n");
 
+/** Landing languages (besides the default /). Kept in sync with the
+ *  hreflang sets in scripts/check-seo.mjs LANDING_PAGES — a new language
+ *  must be added in both places. */
+export const LANDING_LANGS = ["es", "fr", "de", "pt", "it"];
+
+/** Every landing language with its URL path, for the sitemap xhtml:link
+ *  alternates (hreflang annotated at sitemap level, not only in HTML). */
+export const SITEMAP_LANGS = [
+  { hreflang: "en", path: "/" },
+  ...LANDING_LANGS.map((lang) => ({ hreflang: lang, path: `/${lang}/` })),
+];
+
+/** The six legal-document URLs (privacy + terms), one per language. They
+ *  form their own hreflang cluster (x-default → the EN legal page), so
+ *  every legal <url> block carries the same xhtml:link annotation set as
+ *  the landings. */
+export const SITEMAP_LEGAL = [
+  { hreflang: "en", path: "/privacy-and-terms.html" },
+  ...LANDING_LANGS.map((lang) => ({
+    hreflang: lang,
+    path: `/${lang}/privacy-and-terms.html`,
+  })),
+];
+
+/** The six preference languages (?lang= and bf_lang cookie values), en
+ *  included ("en" means "stop negotiating, serve the EN landing"). */
+export const PREF_LANGS = ["en", ...LANDING_LANGS];
+
+/** Preference cookie, shared by every host. nf_lang is Netlify's native
+ *  override for its Language conditions; bf_lang is read by this nginx
+ *  config and functions/_middleware.js. Same cookie in landing.js and
+ *  pinned by scripts/check-seo.mjs. */
+export const LANG_COOKIE_ATTRS = "Path=/; Max-Age=31536000; SameSite=Lax; Secure";
+
 /** Render the nginx server block (matches public/nginx.conf). */
 export function renderNginxPolicy(csp = CSP_MODERATE) {
   const pre = SECURITY_HEADERS.slice(0, -1)
@@ -68,6 +102,16 @@ export function renderNginxPolicy(csp = CSP_MODERATE) {
     .join("\n");
   const cspHeader = `    add_header Content-Security-Policy "${csp}" always;`;
   const repeat = SECURITY_HEADERS.map((h) => `        ${h}`).join("\n");
+  const langPrefLocations = PREF_LANGS.map((lang) => {
+    const cleanTarget = lang === "en" ? "/" : `/${lang}/`;
+    return `    location = /_lang/${lang} {
+        internal;
+${repeat}
+        add_header Set-Cookie "bf_lang=${lang}; ${LANG_COOKIE_ATTRS}" always;
+        add_header Set-Cookie "nf_lang=${lang}; ${LANG_COOKIE_ATTRS}" always;
+        return 302 ${cleanTarget};
+    }`;
+  }).join("\n\n");
 
   return `server {
     listen 8080;
@@ -316,6 +360,89 @@ ${repeat}
         add_header Cache-Control "no-cache, must-revalidate";
     }
 
+    # ── Landing pages (SEO) — static HTML at clean URLs ─────────────
+    # The marketing landing (public/landing.html) is the only indexable
+    # content: serve it at / with an INTERNAL 200 rewrite so the canonical
+    # URL stays https://<domain>/ instead of the private SPA shell (which
+    # is noindexed — see robots.txt). /es/ is the Spanish landing
+    # (hreflang pair of the English one). Both files are plain .html, so
+    # the ~*\.html$ location below applies the security headers and the
+    # no-cache Cache-Control automatically.
+    # WebSocket upgrades to the root (same-origin signaling) must keep
+    # routing to /_ws_ exactly as before — only plain HTTP goes to the
+    # landing page.
+    # Language negotiation with a manual preference override. Order in
+    # location = /: (1) explicit ?lang= choice wins over everything — it
+    # sets a persistent preference cookie (internal /_lang/<lang> target)
+    # and bounces to the clean URL; (2) the bf_lang cookie (set by ?lang=
+    # or landing.js) overrides Accept-Language so a manual choice stops
+    # the redirect from bouncing the user back; (3) only visitors WITHOUT
+    # a preference cookie get Accept-Language negotiation (internal
+    # /_negotiate): a browser whose PRIMARY language is one of the
+    # localized landings gets a 302 to it (/fr/, /es/, ...). 302 (not 301)
+    # on purpose — language negotiation must stay temporary so search
+    # engines keep the en canonical at / (Google's guidance). Covers
+    # "fr-FR,fr;q=0.9" and "FR" alike (case-insensitive ^ match). Kept in
+    # sync with functions/_middleware.js (Cloudflare Pages) and
+    # scripts/check-seo.mjs.
+    location = / {
+        if ($http_upgrade != "") {
+            rewrite ^ /_ws_ last;
+        }
+        if ($arg_lang ~* "^en$") { rewrite ^ /_lang/en last; }
+        if ($arg_lang ~* "^fr$") { rewrite ^ /_lang/fr last; }
+        if ($arg_lang ~* "^de$") { rewrite ^ /_lang/de last; }
+        if ($arg_lang ~* "^it$") { rewrite ^ /_lang/it last; }
+        if ($arg_lang ~* "^pt$") { rewrite ^ /_lang/pt last; }
+        if ($arg_lang ~* "^es$") { rewrite ^ /_lang/es last; }
+        if ($cookie_bf_lang ~* "^fr$") { rewrite ^ /fr/ redirect; }
+        if ($cookie_bf_lang ~* "^de$") { rewrite ^ /de/ redirect; }
+        if ($cookie_bf_lang ~* "^it$") { rewrite ^ /it/ redirect; }
+        if ($cookie_bf_lang ~* "^pt$") { rewrite ^ /pt/ redirect; }
+        if ($cookie_bf_lang ~* "^es$") { rewrite ^ /es/ redirect; }
+        if ($cookie_bf_lang = "") {
+            rewrite ^ /_negotiate last;
+        }
+        # Cookie present with a non-localized value (e.g. en): EN landing.
+        rewrite ^ /landing.html last;
+    }
+
+    # Internal: Accept-Language negotiation ONLY for visitors without a
+    # preference cookie (first visit). Keeping it out of location = / makes
+    # a cookie=en choice short-circuit negotiation entirely.
+    location = /_negotiate {
+        internal;
+        if ($http_accept_language ~* "^fr") { rewrite ^ /fr/ redirect; }
+        if ($http_accept_language ~* "^de") { rewrite ^ /de/ redirect; }
+        if ($http_accept_language ~* "^it") { rewrite ^ /it/ redirect; }
+        if ($http_accept_language ~* "^pt") { rewrite ^ /pt/ redirect; }
+        if ($http_accept_language ~* "^es") { rewrite ^ /es/ redirect; }
+        rewrite ^ /landing.html last;
+    }
+
+    # /_lang/<lang> — internal targets of the ?lang= choice: set the
+    # persistent preference cookie (bf_lang read by this config and the
+    # Cloudflare middleware; nf_lang is Netlify's native override for its
+    # Language conditions) and 302 to the clean landing URL (no query).
+    # Security headers are repeated because location-scoped add_header
+    # overrides server-level inheritance (see server block above).
+${langPrefLocations}
+
+${LANDING_LANGS.map(
+      (lang) => `    location = /${lang} {
+        rewrite ^ /${lang}.html last;
+    }
+
+    location = /${lang}/ {
+        rewrite ^ /${lang}.html last;
+    }`,
+    ).join("\n\n")}
+
+    # Pocket comparison page (SEO) — static HTML at a clean URL
+    location = /pocket-alternative {
+        rewrite ^ /pocket-alternative.html last;
+    }
+
     # ── SPA fallback + WebSocket routing ─────────────────────────────
     location / {
         if ($http_upgrade != "") {
@@ -368,23 +495,76 @@ export function renderHeaders(csp = CSP_MODERATE) {
 
 /pricing/*
   X-Robots-Tag: noindex
+
+# Private app — local-first vault, SPA shell only, never indexable
+/app
+  X-Robots-Tag: noindex
+/app/*
+  X-Robots-Tag: noindex
+/capture
+  X-Robots-Tag: noindex
+/capture/*
+  X-Robots-Tag: noindex
+/offline*
+  X-Robots-Tag: noindex
 `;
 }
 
 /** Render public/sitemap.xml with the current deployment domain. */
 export function renderSitemap(domain = APP_DOMAIN) {
+  // lastmod is deliberately static: the gate compares the rendered output
+  // byte-identical to the committed copy, so a "today" date would drift
+  // every day. Bump the dates here when the pages change materially.
+  // Every landing URL and every legal URL annotates the full hreflang
+  // set (6 languages + x-default) via xhtml:link alternates, mirroring
+  // the HTML <head> of each cluster (legal x-default → the EN legal
+  // page).
+  const xhtmlLinks = [
+    ...SITEMAP_LANGS.map(
+      (l) => `    <xhtml:link rel="alternate" hreflang="${l.hreflang}" href="https://${domain}${l.path}" />`,
+    ),
+    `    <xhtml:link rel="alternate" hreflang="x-default" href="https://${domain}/" />`,
+  ].join("\n");
+  const legalXhtmlLinks = [
+    ...SITEMAP_LEGAL.map(
+      (l) => `    <xhtml:link rel="alternate" hreflang="${l.hreflang}" href="https://${domain}${l.path}" />`,
+    ),
+    `    <xhtml:link rel="alternate" hreflang="x-default" href="https://${domain}/privacy-and-terms.html" />`,
+  ].join("\n");
+  // Element order inside <url> follows the official sitemaps.org XSD
+  // sequence (loc, lastmod?, changefreq?, priority?, xs:any) with the
+  // xhtml:link alternates LAST: the 2008 schema validates strictly
+  // sequentially, so placing xhtml:link before lastmod fails XSD
+  // validation. Google/Bing parse any order — the XSD-compliant order
+  // keeps both worlds. (Verified with libxml2 + sitemap.js, 2026-09-09.)
+  const landingUrls = ["", ...LANDING_LANGS].map(
+    (lang) => `  <url>
+    <loc>https://${domain}/${lang}${lang ? "/" : ""}</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>${lang ? "0.9" : "1.0"}</priority>
+${xhtmlLinks}
+  </url>`,
+  );
+  const legalUrls = SITEMAP_LEGAL.map(
+    (l) => `  <url>
+    <loc>https://${domain}${l.path}</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+${legalXhtmlLinks}
+  </url>`,
+  );
   return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${landingUrls.join("\n")}
   <url>
-    <loc>https://${domain}/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <loc>https://${domain}/pocket-alternative</loc>
+    <lastmod>2026-09-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://${domain}/app</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
+${legalUrls.join("\n")}
 </urlset>
 `;
 }
@@ -393,8 +573,18 @@ export function renderSitemap(domain = APP_DOMAIN) {
 export function renderRobotsTxt(domain = APP_DOMAIN) {
   return `# robots.txt for BookmarkForge
 
+# Only the marketing landing (served at / and /es/) is indexable content.
+# The app is a private local-first vault behind /app — its routes render an
+# empty SPA shell, so nothing under the app must be crawled.
+
 User-agent: *
 Allow: /
+
+# Private app routes (local-first vault — no indexable content)
+Disallow: /app
+Disallow: /capture
+Disallow: /offline
+Disallow: /api
 
 Sitemap: https://${domain}/sitemap.xml
 `;
@@ -480,6 +670,11 @@ const TARGETS_SURGICAL = [
     label: "public/privacy-and-terms.html",
     render: (existing) => replaceDomainInFile(existing, APP_DOMAIN),
   },
+  // Localized legal pages (canonical/hreflang/OG links carry the domain).
+  ...["es", "fr", "de", "pt", "it"].map((lang) => ({
+    label: `public/${lang}/privacy-and-terms.html`,
+    render: (existing) => replaceDomainInFile(existing, APP_DOMAIN),
+  })),
   // ── PWA manifest (related_applications url) ───────────────────────
   {
     label: "public/manifest.json",

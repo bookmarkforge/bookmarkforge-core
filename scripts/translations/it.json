@@ -1,0 +1,236 @@
+{
+  "lang": "it",
+  "langName": "Italiano",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforge.com/it/",
+  "ogLocale": "it_IT",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — L'alternativa privata a Pocket con IA (Segnalibri e note)",
+  "description": "Salva articoli, note e documenti in una cassaforte privata, crittografata e 100% locale. Ricerca con IA, editor stile Notion, sincronizzazione P2P. Livello gratis: 1.000 segnalibri.",
+  "ogTitle": "BookmarkForge — L'alternativa privata a Pocket con IA (Segnalibri e note)",
+  "ogDescription": "Salva articoli, note e documenti in una cassaforte privata, crittografata e 100% locale. Ricerca con IA, editor stile Notion, sincronizzazione P2P. Livello gratis: 1.000 segnalibri.",
+  "ogImage": "https://bookmarkforge.com/og-image-it.png",
+  "twitterTitle": "BookmarkForge — L'alternativa privata a Pocket con IA (Segnalibri e note)",
+  "twitterDescription": "Salva articoli, note e documenti in una cassaforte privata, crittografata e 100% locale. Ricerca con IA, editor stile Notion, sincronizzazione P2P. Livello gratis: 1.000 segnalibri.",
+  "twitterImage": "https://bookmarkforge.com/og-image-it.png",
+  "skipLink": "Vai al contenuto principale",
+  "navBrandAria": "BookmarkForge home",
+  "navAriaLabel": "Navigazione principale",
+  "homeHref": "/it/",
+  "navLinks": {
+    "pocketAlternative": "Alternativa a Pocket",
+    "features": "Funzionalità",
+    "ai": "IA",
+    "privacy": "Privacy",
+    "pricing": "Prezzi"
+  },
+  "langLink": {
+    "href": "/?lang=en",
+    "hreflang": "en",
+    "lang": "en",
+    "text": "English"
+  },
+  "navCta": "Apri l'App",
+  "themeToggleAria": "Cambia tema",
+  "hero": {
+    "badge": "Versione 1.0",
+    "title": "La Tua Cassaforte di Conoscenza <span class=\"accent-text\">Privata con IA</span>",
+    "subtitle": "L'alternativa privata a Pocket per salvare articoli e leggerli dopo: segnalibri, note e documenti — crittografati sul tuo dispositivo, ricercabili con IA e sincronizzati peer-to-peer. Zero cloud. Zero tracciamento. 100% tuo.",
+    "ctaPrimary": "Apri l'App Gratis",
+    "ctaSecondary": "Vedi i Prezzi",
+    "pillars": [
+      { "strong": "100% Locale", "text": "i tuoi dati non lasciano mai il tuo dispositivo" },
+      { "strong": "Crittografato", "text": "AES-256-GCM + Argon2id" },
+      { "strong": "Offline", "text": "funziona senza internet" },
+      { "strong": "Privato", "text": "zero telemetria per impostazione predefinita" }
+    ]
+  },
+  "pocketAlternative": {
+    "id": "alternativa-pocket",
+    "tag": "Leggi dopo, senza rinunciare alla privacy",
+    "title": "L'Alternativa Privata a Pocket",
+    "subtitle": "Pocket sta chiudendo. BookmarkForge tiene vivo il piacere di leggere dopo — con ogni articolo, nota ed evidenziazione crittografati sul tuo dispositivo.",
+    "features": [
+      {
+        "title": "Leggi dopo, tuo per sempre",
+        "text": "Salva articoli, video e PDF con un clic — dalla PWA, dall'estensione del browser o dal menu di condivisione. A differenza di Pocket, la tua lista di lettura vive sul tuo dispositivo, crittografata, e funziona offline."
+      },
+      {
+        "title": "Note stile Notion su ogni articolo",
+        "text": "Evidenzia, riassumi e prendi note a blocchi su qualsiasi segnalibro. Trasforma un articolo salvato nella tua base di conoscenza personale — non solo in un elenco di link."
+      },
+      {
+        "title": "Zero tracciamento, zero pubblicità",
+        "text": "BookmarkForge non ha account, né analisi, né pubblicità per impostazione predefinita. Le tue abitudini di lettura sono affari tuoi e basta."
+      }
+    ],
+    "ctaPrimary": "Inizia a Salvare Gratis",
+    "ctaSecondary": "Confronto completo e guida alla migrazione",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "features": {
+    "id": "funzionalita",
+    "tag": "Tutto Quello che Ti Serve",
+    "title": "Funzionalità potenti per gestire le tue conoscenze, tutto in locale",
+    "items": [
+      { "title": "Segnalibri e Documenti", "text": "Salva qualsiasi pagina con un clic. Editor a blocchi ricco (stile Notion) per le note. Elenchi virtualizzati che gestiscono oltre 100.000 elementi in modo fluido." },
+      { "title": "Ricerca full-text e semantica", "text": "Cerca per parola chiave o per significato. I vettori semantici (HNSW) trovano contenuti correlati anche senza corrispondenze esatte." },
+      { "title": "IA locale (WebLLM / Ollama) — Solo Pro", "text": "Esegui Llama 3.2, Phi-3, TinyLlama direttamente nel tuo browser con WebGPU. Zero dati fuori dal tuo dispositivo. Richiede Pro (79 $ a vita)." },
+      { "title": "Chat RAG sui tuoi dati — Solo Pro", "text": "Fai domande e ottieni risposte basate sui TUOI segnalibri e le tue note. Citazioni incluse. Modalità privata = 100% locale. Richiede Pro." },
+      { "title": "Sincronizzazione P2P (WebRTC) — Solo Pro", "text": "Sincronizza la tua cassaforte tra i dispositivi direttamente. Nessun server centrale. Crittografia end-to-end. Abbinamento QR in pochi secondi. Fino a 3 dispositivi con Pro." },
+      { "title": "Backup crittografati", "text": "Backup automatici giornalieri in formato .bmf. Esportazione manuale in Markdown, JSON, CSV, PDF. Ripristino in pochi secondi. Le chiavi sono tue." },
+      { "title": "Grafo della conoscenza", "text": "Visualizza le connessioni tra le tue note e i tuoi segnalibri. Filtra per etichette, date e somiglianza. Zoom e navigazione su tela infinita." },
+      { "title": "Carte di studio (ripetizione spaziata) — Solo Pro", "text": "Genera carte da qualsiasi documento. Algoritmo stile Anki che programma i ripassi a intervalli ottimali. Ideale per imparare. Richiede Pro." },
+      { "title": "Privacy per impostazione predefinita", "text": "Senza analisi, senza tracciamento, senza account. Telemetria opzionale solo se la attivi. Conforme al GDPR. Il controllo è tuo." }
+    ]
+  },
+  "ai": {
+    "id": "ia",
+    "tag": "IA che ti rispetta",
+    "title": "Le Tue Conoscenze, Amplificate",
+    "subtitle": "BookmarkForge ti dà la scelta: esegui modelli 100% in locale nel tuo browser (WebLLM, WebGPU) con Pro, collega le tue chiavi API per i provider cloud, o usa Ollama locale. Le tue richieste, i tuoi dati, le tue regole.",
+    "providers": {
+      "title": "Provider supportati",
+      "list": [
+        { "type": "local", "name": "WebLLM locale (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Solo Pro" },
+        { "type": "local", "name": "Ollama locale (qualsiasi modello tu esegua)" },
+        { "type": "cloud", "name": "Google Gemini cloud (tua chiave API)" },
+        { "type": "cloud", "name": "OpenAI cloud / GPT-4o (tua chiave API)" },
+        { "type": "cloud", "name": "Anthropic Claude cloud (tua chiave API)" },
+        { "type": "cloud", "name": "Groq cloud (tua chiave API)" },
+        { "type": "cloud", "name": "Personalizzato / OpenRouter via provider custom (tua chiave API)" }
+      ]
+    },
+    "modes": {
+      "title": "Modalità di chat",
+      "items": [
+        { "title": "Modalità privata", "text": "Solo IA locale (WebLLM/Ollama). Zero dati fuori dal dispositivo. Funziona offline. Richiede Pro per WebLLM." },
+        { "title": "Modalità ricerca web", "text": "Combina la tua cassaforte con risultati di ricerca in tempo reale (provider cloud)." },
+        { "title": "Agenti esperti", "text": "Persona specializzate: Programmatore, Scrittore, Analista, Ricercatore. Richiede Pro per IA locale." }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "La Privacy Non È una Funzione — È il Fondamento",
+    "subtitle": "Ogni decisione architetturale ti mette al controllo",
+    "items": [
+      { "title": "Crittografia end-to-end", "text": "AES-256-GCM con chiavi derivate dalla tua password principale tramite Argon2id. Non vediamo mai la tua password né le tue chiavi." },
+      { "title": "Architettura 100% locale", "text": "La tua cassaforte vive in IndexedDB sul tuo dispositivo. Il server di supporto gestisce solo proxy IA, licenze e segnalazione — mai i tuoi contenuti." },
+      { "title": "Zero telemetria per impostazione predefinita", "text": "Senza analisi, senza report di errore, senza tracciamento. Statistiche di utilizzo e report di errore opzionali, ciascuno controllato in modo indipendente." },
+      { "title": "Le chiavi le hai tu", "text": "Separazione delle chiavi per dispositivo: JWK in localStorage + testi crittografati in IndexedDB. Servono entrambi. Senza password principale = nessun accesso. Nessuna backdoor \"password dimenticata\"." },
+      { "title": "Conforme al GDPR", "text": "Consenso granulare (analisi, report di errore, eventi client). Diritto di accesso, rettifica, cancellazione e portabilità — tutto realizzabile in locale." },
+      { "title": "Senza dipendenza da un fornitore", "text": "Esporta i tuoi dati in qualsiasi momento in formati aperti (JSON, Markdown, CSV, PDF). La tua conoscenza resta portabile." }
+    ]
+  },
+  "pricing": {
+    "id": "prezzi",
+    "title": "Prezzi Semplici e Giusti",
+    "subtitle": "Livello gratis: 1.000 segnalibri. Pro è un acquisto una tantum di 79 $ — niente abbonamenti.",
+    "plans": [
+      {
+        "name": "Gratis",
+        "price": "$ 0",
+        "period": "/per sempre",
+        "description": "Per la gestione personale della conoscenza (1.000 segnalibri, 1 dispositivo)",
+        "features": [
+          { "included": true, "text": "1.000 segnalibri, note e documenti" },
+          { "included": true, "text": "Ricerca full-text e semantica" },
+          { "included": true, "text": "IA con la tua chiave API (paghi il provider)" },
+          { "included": true, "text": "Grafo della conoscenza" },
+          { "included": true, "text": "Modelli base" },
+          { "included": true, "text": "Esportazione JSON/HTML" },
+          { "included": true, "text": "PWA + estensioni browser" },
+          { "included": false, "text": "Sincronizzazione P2P tra dispositivi" },
+          { "included": false, "text": "IA locale (WebLLM/Ollama)" },
+          { "included": false, "text": "Chat RAG sui tuoi dati" },
+          { "included": false, "text": "Carte di studio (ripetizione spaziata)" },
+          { "included": false, "text": "PDF + OCR" },
+          { "included": false, "text": "Esportazione avanzata (10+ formati)" }
+        ],
+        "cta": "Inizia Gratis",
+        "ctaHref": "/app",
+        "ctaClass": "btn-outline"
+      },
+      {
+        "name": "Pro",
+        "badge": "Il Più Popolare",
+        "price": "$ 79",
+        "period": "una tantum (a vita)",
+        "description": "Segnalibri illimitati, 3 dispositivi, IA locale, sync P2P — senza abbonamento",
+        "features": [
+          { "included": true, "text": "Tutto ciò che è incluso in Gratis" },
+          { "included": true, "text": "Segnalibri illimitati" },
+          { "included": true, "text": "3 dispositivi" },
+          { "included": true, "text": "Sincronizzazione P2P su 3 dispositivi" },
+          { "included": true, "text": "IA locale (WebLLM, senza chiave API)" },
+          { "included": true, "text": "Chat RAG sui tuoi dati" },
+          { "included": true, "text": "Agenti esperti (Programmatore, Scrittore, Analista, Ricercatore)" },
+          { "included": true, "text": "Carte di studio (ripetizione spaziata)" },
+          { "included": true, "text": "PDF + OCR" },
+          { "included": true, "text": "Esportazione avanzata (10+ formati)" },
+          { "included": true, "text": "Cassaforte di sicurezza (AES-GCM)" },
+          { "included": true, "text": "Aggiornamenti per 12 mesi" },
+          { "included": true, "text": "Supporto via email" }
+        ],
+        "cta": "Ottieni Pro a Vita",
+        "ctaHref": "https://whop.com/bookmarkforge",
+        "ctaClass": "btn-primary"
+      }
+    ]
+  },
+  "faq": {
+    "title": "Domande Frequenti",
+    "items": [
+      { "question": "Il piano gratuito è davvero gratis per sempre?", "answer": "Sì. Nessun periodo di prova né abbonamento. Il piano gratuito include 1.000 segnalibri, ricerca full-text, grafo della conoscenza e IA con la tua chiave API (paghi il provider)." },
+      { "question": "Cosa significa «pagamento una tantum» per Pro?", "answer": "Paghi una volta (79 $) e la licenza è tua per sempre. Include tutti gli aggiornamenti per 12 mesi. Nessun costo ricorrente. La chiave di licenza viene consegnata immediatamente tramite Whop." },
+      { "question": "Quali metodi di pagamento accettate?", "answer": "Tramite Whop: carta di credito, PayPal e criptovalute. Non vediamo mai i tuoi dati di pagamento." },
+      { "question": "Qual è la politica di rimborso?", "answer": "Garanzia di rimborso di 30 giorni sulle licenze Pro. Contatta support@bookmarkforge.com" }
+    ]
+  },
+  "cta": {
+    "title": "Pronto a Possedere le Tue Conoscenze?",
+    "text": "Unisciti a migliaia di ricercatori, sviluppatori e studenti che affidano a BookmarkForge il loro secondo cervello.",
+    "ctaPrimary": "Apri l'App Gratis",
+    "ctaSecondary": "Passa a Pro",
+    "note": "Nessun account richiesto. Funziona immediatamente nel tuo browser. Livello gratis: 1.000 segnalibri."
+  },
+  "footer": {
+    "brand": "La tua cassaforte di conoscenza privata con IA. 100% locale.",
+    "product": { "title": "Prodotto", "links": ["Funzionalità", "Capacità IA", "Privacy", "Prezzi", "Apri l'App"] },
+    "resources": { "title": "Risorse", "links": ["Confronto con Pocket", "Privacy e Termini"] },
+    "languages": { "title": "Lingue", "links": ["English", "Español", "Français", "Deutsch", "Português", "Italiano"] },
+    "support": { "title": "Supporto", "links": ["Contatto"] },
+    "copyright": "© 2026 BookmarkForge. Tutti i diritti riservati.",
+    "legal": ["Informativa sulla privacy", "Termini di servizio", "bookmarkforge@proton.me"]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "La tua cassaforte di conoscenza privata con IA. 100% locale. L'alternativa privata a Pocket. Gratis: 1.000 segnalibri.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforge.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforge.com/it/",
+    "offers": [
+      { "name": "Gratis", "price": "0", "currency": "USD" },
+      { "name": "Pro a vita", "price": "79", "currency": "USD" }
+    ],
+    "featureList": [
+      "Archiviazione 100% locale",
+      "Crittografia end-to-end",
+      "Funziona offline",
+      "Ricerca con IA",
+      "Editor stile Notion",
+      "Sincronizzazione P2P"
+    ],
+    "faq": [
+      { "question": "Il piano gratuito è davvero gratis per sempre?", "answer": "Sì. Nessun periodo di prova né abbonamento. Il piano gratuito include 1.000 segnalibri, ricerca full-text, grafo della conoscenza e IA con la tua chiave API (paghi il provider)." },
+      { "question": "Cosa significa «pagamento una tantum» per Pro?", "answer": "Paghi una volta (79 $) e possiedi la licenza per sempre. Include tutti gli aggiornamenti per 12 mesi. Nessun costo ricorrente. La chiave di licenza viene consegnata immediatamente tramite Whop." },
+      { "question": "Quali metodi di pagamento accettate?", "answer": "Tramite Whop: carta di credito, PayPal e criptovalute. Non vediamo mai i tuoi dati di pagamento." },
+      { "question": "Qual è la politica di rimborso?", "answer": "Garanzia di rimborso di 30 giorni sulle licenze Pro. Contatta support@bookmarkforge.com" }
+    ]
+  }
+}

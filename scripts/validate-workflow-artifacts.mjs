@@ -8,7 +8,12 @@ export function validateWorkflowArtifacts(name, text) {
   if (!/uses:\s*actions\/upload-artifact@/i.test(text)) return errors;
   if (!/permissions:\s*[\s\S]{0,160}contents:\s*read/im.test(text)) errors.push(`${name}: artifact workflow must declare read-only contents permission`);
   if (!/retention-days:\s*(?:[1-9]|[1-8][0-9]|90)\s*$/im.test(text)) errors.push(`${name}: artifact retention must be between 1 and 90 days`);
-  const paths = text.split(/\bpath:\s*[|>]?/i)[1]?.split(/\n\s*(?:[A-Za-z_-]+:|$)/)[0] ?? "";
+  // The path block ends at the next YAML key at the start of a line. Job ids
+  // legitimately contain digits (`e2e-public-relay:`) — leaving them out of the
+  // class does not "scan more paths", it makes the slice run past the block and
+  // scan unrelated workflow text, where an innocuous comment about credentials
+  // reads as a sensitive artifact path.
+  const paths = text.split(/\bpath:\s*[|>]?/i)[1]?.split(/\n\s*(?:[A-Za-z0-9_-]+:|$)/)[0] ?? "";
   if (/(?:\.env(?:\b|\.)|\.pem\b|\.key\b|password|secret|credential|token)/i.test(paths)) errors.push(`${name}: artifact paths must exclude credentials and secret material`);
   if (!/if-no-files-found:\s*(?:ignore|warn|error)/i.test(text)) errors.push(`${name}: artifact upload must define if-no-files-found`);
   return errors;

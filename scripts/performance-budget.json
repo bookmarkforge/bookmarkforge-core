@@ -1,0 +1,9 @@
+{
+  "schema": "bmf.performance-budget/1",
+  "description": "Production performance budgets measured on the Chromium CI profile.",
+  "budgets": {
+    "entryStaticChainBytes": 786432,
+    "precacheBytes": 10485760,
+    "firstInteractionMs": 2500
+  }
+}

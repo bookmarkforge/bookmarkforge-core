@@ -1531,5 +1531,8 @@
   "app_maintenancePartial_one": "Ylläpito päättyi 1 ongelmaan",
   "app_maintenancePartial_few": "Ylläpito päättyi ongelmiin",
   "app_maintenancePartial_many": "Ylläpito päättyi ongelmiin",
-  "app_maintenancePartial_other": "Ylläpito päättyi {{count}} ongelmaan"
+  "app_maintenancePartial_other": "Ylläpito päättyi {{count}} ongelmaan",
+  "app_helpDiagnostics": "Help & diagnostics",
+  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
+  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
 }

@@ -67,6 +67,10 @@
 # Pocket comparison page (SEO)
 /pocket-alternative  /pocket-alternative.html  200
 
+# Help Center — static HTML with same headers as landing/legal
+/help  /help.html  200
+/help/  /help.html  200
+
 # Legacy markdown privacy policy -> HTML
 /privacy-and-terms.md  /privacy-and-terms.html  301
 

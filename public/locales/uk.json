@@ -1561,5 +1561,8 @@
   "app_maintenancePartial_other": "Обслуговування завершено з {{count}} проблемами",
   "app_fuseSelected": "Обрано з'''єднань ({{count}})",
   "app_maintenanceFinished": "Обслуговування завершено: виправлено {{count}}",
-  "app_maintenancePartial": "Обслуговування завершено з {{count}} проблемами"
+  "app_maintenancePartial": "Обслуговування завершено з {{count}} проблемами",
+  "app_helpDiagnostics": "Help & diagnostics",
+  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
+  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
 }

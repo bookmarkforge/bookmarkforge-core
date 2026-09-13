@@ -1689,5 +1689,8 @@
   "app_maintenanceReason_vault_locked": "Tresor gesperrt",
   "app_maintenanceReason_disabled": "Deaktiviert",
   "app_maintenanceReason_battery_low": "Akku niedrig",
-  "app_maintenanceReason_memory_pressure": "Speicherdruck"
+  "app_maintenanceReason_memory_pressure": "Speicherdruck",
+  "app_helpDiagnostics": "Help & diagnostics",
+  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
+  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
 }

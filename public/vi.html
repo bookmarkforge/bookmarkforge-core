@@ -140,13 +140,30 @@
           "@type": "Offer",
           "name": "Free",
           "price": "0",
-          "priceCurrency": "USD"
+          "priceCurrency": "USD",
+          "description": "1,000 bookmarks. Forever free."
         },
         {
           "@type": "Offer",
-          "name": "Pro Lifetime",
+          "name": "Pro Lifetime v1 — Early Bird",
+          "price": "59",
+          "priceCurrency": "USD",
+          "description": "Early Bird 200. Lifetime of v1, 12 months features, security forever, v2 60% off.",
+          "priceValidUntil": "2026-12-31"
+        },
+        {
+          "@type": "Offer",
+          "name": "Pro Lifetime v1",
           "price": "79",
-          "priceCurrency": "USD"
+          "priceCurrency": "USD",
+          "description": "Regular. Lifetime of v1."
+        },
+        {
+          "@type": "Offer",
+          "name": "Founder Edition",
+          "price": "99",
+          "priceCurrency": "USD",
+          "description": "Same Pro v1 + Founder badge + beta. Limited 100."
         }
       ],
       "featureList": [
@@ -192,6 +209,22 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Bảo đảm hoàn tiền 30 ngày cho giấy phép Pro. Liên hệ: support@bookmarkforge.com"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Support — how fast?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Free: Community best effort. Pro: email 48h. Founder: priority 24h."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What if I forget my password?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper."
           }
         }
       ]
@@ -425,9 +458,9 @@
       <div class="container">
         <div class="section-header">
           <h2 id="pricing-title">Giá Đơn Giản, Công Bằng</h2>
-          <p class="section-subtitle">Kế hoạch miễn phí: 1.000 bookmark. Pro là mua một lần $79 — không có subscription.</p>
+          <p class="section-subtitle">Kế hoạch miễn phí: 1.000 bookmark. Pro là mua một lần $59 Early Bird then $79 — không có subscription.</p>
         </div>
-        <div class="pricing-cards">
+        <div class="pricing-cards three-col">
           <div class="price-card ">
             <h3>Miễn Phí</h3>
             <div class="price">$ 0<span>/ mãi mãi</span></div>
@@ -451,9 +484,10 @@
           </div>
           <div class="price-card popular">
             <span class="badge">Most Popular</span>
+            <span class="badge badge-early">Early Bird — 200</span>
             <h3>Pro</h3>
-            <div class="price">$ 79<span>mua một lần (mãi mãi)</span></div>
-            <p>Bookmark không giới hạn, 3 thiết bị, AI cục bộ, đồng bộ P2P — không có subscription</p>
+            <div class="price">$ 59<span>Early Bird (then $79)</span></div>
+            <p>Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off</p>
             <ul>
               <li><span aria-hidden="true">✅</span> Tất cả trong Miễn Phí</li>
               <li><span aria-hidden="true">✅</span> Bookmark không giới hạn</li>
@@ -471,7 +505,23 @@
             </ul>
             <a href="https://whop.com/bookmarkforge" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Nhận Pro Mãi Mãi</a>
           </div>
+          <div class="price-card founder">
+            <span class="badge badge-founder">Founder — 100</span>
+            <h3>Founder</h3>
+            <div class="price">$ 99<span>lifetime v1</span></div>
+            <p>Same Pro v1 + Founder badge + beta · 60% off v2 lifetime</p>
+            <ul>
+              <li><span aria-hidden='true'>✅</span> Everything in Pro Lifetime v1</li>
+              <li><span aria-hidden='true'>✅</span> Founder badge #042 in app</li>
+              <li><span aria-hidden='true'>✅</span> Beta access to v2 early builds</li>
+              <li><span aria-hidden='true'>✅</span> 60% off v2 forever for this account</li>
+              <li><span aria-hidden='true'>✅</span> Lifetime of v1 · Security forever</li>
+              <li><span aria-hidden='true'>✅</span> Priority support (24h)</li>
+            </ul>
+            <a href="https://whop.com/bookmarkforge" class="btn-primary btn-block btn-founder" target="_blank" rel="noopener noreferrer">Get Founder $99</a>
+          </div>
         </div>
+        <p class="pricing-legal">Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.</p>
       </div>
     </section>
 

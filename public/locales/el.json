@@ -1546,5 +1546,8 @@
   "app_maintenanceFinished_few": "Συντήρηση ολοκληρώθηκε: έγιναν επιδιορθώσεις",
   "app_maintenanceFinished_many": "Συντήρηση ολοκληρώθηκε: έγιναν επιδιορθώσεις",
   "app_maintenancePartial_few": "Συντήρηση ολοκληρώθηκε με προβλήματα",
-  "app_maintenancePartial_many": "Συντήρηση ολοκληρώθηκε με προβλήματα"
+  "app_maintenancePartial_many": "Συντήρηση ολοκληρώθηκε με προβλήματα",
+  "app_helpDiagnostics": "Help & diagnostics",
+  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
+  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
 }

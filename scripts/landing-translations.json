@@ -61,7 +61,7 @@
       "استقلالية عن المزود"
     ],
     "priceTitle": "أسعار بسيطة وعادلة",
-    "priceSub": "الخطة المجانية: 1,000 إشارة مرجعية. Pro شراء لمرة واحدة بـ $79 — بدون اشتراكات.",
+    "priceSub": "الخطة المجانية: 1,000 إشارة مرجعية. Pro شراء لمرة واحدة بـ $59 Early Bird then $79 — بدون اشتراكات.",
     "priceFreeName": "مجاني",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ للأبد",
@@ -83,9 +83,9 @@
     ],
     "priceFreeCta": "ابدأ مجاناً",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "شراء لمرة واحدة (للأبد)",
-    "priceProDesc": "إشارات مرجعية غير محدودة، 3 أجهزة، ذكاء اصطناعي محلي، مزامنة نظير إلى نظير — بدون اشتراك",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "كل شيء في المجاني",
       "إشارات مرجعية غير محدودة",
@@ -149,7 +149,26 @@
     "footerCopyright": "© 2026 BookmarkForge. جميع الحقوق محفوظة.",
     "footerPrivacy": "سياسة الخصوصية",
     "footerTerms": "شروط الخدمة",
-    "faq": "الأسئلة الشائعة"
+    "faq": "الأسئلة الشائعة",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "bg": {
     "lang": "bg",
@@ -213,7 +232,7 @@
       "Независимост от доставчик"
     ],
     "priceTitle": "Прости, Справедливи Цени",
-    "priceSub": "Безплатен план: 1 000 отметки. Pro е еднократно закупуване за $79 — без абонаменти.",
+    "priceSub": "Безплатен план: 1 000 отметки. Pro е еднократно закупуване за $59 Early Bird then $79 — без абонаменти.",
     "priceFreeName": "Безплатно",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ завинаги",
@@ -235,9 +254,9 @@
     ],
     "priceFreeCta": "Започнете Безплатно",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "еднократно закупуване (завинаги)",
-    "priceProDesc": "Неограничени отметки, 3 устройства, локален AI, P2P синхронизация — без абонамент",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Всичко от Безплатния",
       "Неограничени отметки",
@@ -301,7 +320,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Всички права запазени.",
     "footerPrivacy": "Политика за Поверителност",
     "footerTerms": "Условия за Ползване",
-    "faq": "Често Задавани Въпроси"
+    "faq": "Често Задавани Въпроси",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "cs": {
     "lang": "cs",
@@ -365,7 +403,7 @@
       "Nezávislost na poskytovateli"
     ],
     "priceTitle": "Jednoduché, Spravedlivé Ceny",
-    "priceSub": "Bezplatný plán: 1 000 záložek. Pro je jednorázový nákup za $79 — bez předplatného.",
+    "priceSub": "Bezplatný plán: 1 000 záložek. Pro je jednorázový nákup za $59 Early Bird then $79 — bez předplatného.",
     "priceFreeName": "Zdarma",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ navždy",
@@ -387,9 +425,9 @@
     ],
     "priceFreeCta": "Začněte Zdarma",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "jednorázový nákup (navždy)",
-    "priceProDesc": "Neomezené záložky, 3 zařízení, místní AI, P2P synchronizace — bez předplatného",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Vše ze Zdarma",
       "Neomezené záložky",
@@ -453,7 +491,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Všechna práva vyhrazena.",
     "footerPrivacy": "Zásady Ochrany Soukromí",
     "footerTerms": "Podmínky Služby",
-    "faq": "Často Kladené Dotazy"
+    "faq": "Často Kladené Dotazy",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "da": {
     "lang": "da",
@@ -517,7 +574,7 @@
       "Uafhængighed af udbyder"
     ],
     "priceTitle": "Enkle, Retfærdige Priser",
-    "priceSub": "Gratis plan: 1.000 bogmærker. Pro er et engangskøb på $79 — ingen abonnementer.",
+    "priceSub": "Gratis plan: 1.000 bogmærker. Pro er et engangskøb på $59 Early Bird then $79 — ingen abonnementer.",
     "priceFreeName": "Gratis",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ for altid",
@@ -539,9 +596,9 @@
     ],
     "priceFreeCta": "Begynd Gratis",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "engangsbeløb (for altid)",
-    "priceProDesc": "Ubegrænsede bogmærker, 3 enheder, lokal AI, P2P-synkronisering — ingen abonnement",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Alt i Gratis",
       "Ubegrænsede bogmærker",
@@ -605,7 +662,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Alle rettigheder forbeholdes.",
     "footerPrivacy": "Privatlivspolitik",
     "footerTerms": "Servicevilkår",
-    "faq": "Ofte Stillede Spørgsmål"
+    "faq": "Ofte Stillede Spørgsmål",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "el": {
     "lang": "el",
@@ -669,7 +745,7 @@
       "Ανεξαρτησία από provider"
     ],
     "priceTitle": "Απλές, Δίκαιες Τιμές",
-    "priceSub": "Δωρεάν σχέδιο: 1.000 σελιδοδείκτες. Pro είναι μοναδική αγορά $79 — χωρίς συνδρομές.",
+    "priceSub": "Δωρεάν σχέδιο: 1.000 σελιδοδείκτες. Pro είναι μοναδική αγορά $59 Early Bird then $79 — χωρίς συνδρομές.",
     "priceFreeName": "Δωρεάν",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ για πάντα",
@@ -691,9 +767,9 @@
     ],
     "priceFreeCta": "Ξεκινήστε Δωρεάν",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "μοναδική αγορά (για πάντα)",
-    "priceProDesc": "Απεριόριστοι σελιδοδείκτες, 3 συσκευές, τοπικό AI, P2P συγχρονισμός — χωρίς συνδρομή",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Όλα στο Δωρεάν",
       "Απεριόριστοι σελιδοδείκτες",
@@ -757,7 +833,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Με επιφύλαξη παντός δικαιώματος.",
     "footerPrivacy": "Πολιτική Απορρήτου",
     "footerTerms": "Όροι Υπηρεσίας",
-    "faq": "Συχνές Ερωτήσεις"
+    "faq": "Συχνές Ερωτήσεις",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "fi": {
     "lang": "fi",
@@ -843,9 +938,9 @@
     ],
     "priceFreeCta": "Aloita Ilmaiseksi",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "kertamaksu (ikuisesti)",
-    "priceProDesc": "Rajoittamattomat kirjanmerkit, 3 laitetta, paikallinen AI, P2P-synkronointi — ei tilausta",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Kaikki Ilmaisessa",
       "Rajoittamattomat kirjanmerkit",
@@ -909,7 +1004,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Kaikki oikeudet pidätetään.",
     "footerPrivacy": "Yksityisyyskäytäntö",
     "footerTerms": "Käyttöehdot",
-    "faq": "Usein Kysytyt Kysymykset"
+    "faq": "Usein Kysytyt Kysymykset",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "he": {
     "lang": "he",
@@ -973,7 +1087,7 @@
       "לא תלוי בספק"
     ],
     "priceTitle": "מחירים פשוטים והוגנים",
-    "priceSub": "תכנית חינם: 1,000 סימניות. Pro הוא רכישה חד-פעמית של $79 — ללא מנויים.",
+    "priceSub": "תכנית חינם: 1,000 סימניות. Pro הוא רכישה חד-פעמית של $59 Early Bird then $79 — ללא מנויים.",
     "priceFreeName": "חינם",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ לתמיד",
@@ -995,9 +1109,9 @@
     ],
     "priceFreeCta": "התחילו בחינם",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "רכישה חד-פעמית (לתמיד)",
-    "priceProDesc": "סימניות ללא הגבלה, 3 מכשירים, AI מקומי, סנכרון P2P — ללא מנוי",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "כל מה שב计划 החינם",
       "סימניות ללא הגבלה",
@@ -1061,7 +1175,26 @@
     "footerCopyright": "© 2026 BookmarkForge. כל הזכויות שמורות.",
     "footerPrivacy": "מדיניות פרטיות",
     "footerTerms": "תנאי שימוש",
-    "faq": "שאלות נפוצות"
+    "faq": "שאלות נפוצות",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "hi": {
     "lang": "hi",
@@ -1125,7 +1258,7 @@
       "प्रदाता से स्वतंत्र"
     ],
     "priceTitle": "सरल, उचित मूल्य",
-    "priceSub": "मुफ़्त प्लान: 1,000 बुकमार्क। Pro एक बार की खरीद है $79 — कोई सदस्यता नहीं।",
+    "priceSub": "मुफ़्त प्लान: 1,000 बुकमार्क। Pro एक बार की खरीद है $59 Early Bird then $79 — कोई सदस्यता नहीं।",
     "priceFreeName": "मुफ़्त",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ हमेशा के लिए",
@@ -1147,9 +1280,9 @@
     ],
     "priceFreeCta": "मुफ़्त में शुरू करें",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "एक बार की खरीद (हमेशा के लिए)",
-    "priceProDesc": "असीमित बुकमार्क, 3 डिवाइस, स्थानीय AI, P2P सिंक — कोई सदस्यता नहीं",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "मुफ़्त की सब कुछ",
       "असीमित बुकमार्क",
@@ -1213,7 +1346,26 @@
     "footerCopyright": "© 2026 BookmarkForge। सर्वाधिकार सुरक्षित।",
     "footerPrivacy": "गोपनीयता नीति",
     "footerTerms": "सेवा की शर्तें",
-    "faq": "अक्सर पूछे जाने वाले प्रश्न"
+    "faq": "अक्सर पूछे जाने वाले प्रश्न",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "hr": {
     "lang": "hr",
@@ -1299,9 +1451,9 @@
     ],
     "priceFreeCta": "Počnite Besplatno",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "jednokratna kupnja (zauvijek)",
-    "priceProDesc": "Neograničene oznake, 3 uređaja, lokalni AI, P2P sinkronizacija — bez pretplate",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Sve iz Besplatnog",
       "Neograničene oznake",
@@ -1365,7 +1517,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Sva prava pridržana.",
     "footerPrivacy": "Pravila privatnosti",
     "footerTerms": "Uvjeti korištenja",
-    "faq": "Često Postavljana Pitanja"
+    "faq": "Često Postavljana Pitanja",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "hu": {
     "lang": "hu",
@@ -1451,9 +1622,9 @@
     ],
     "priceFreeCta": "Kezdjen El Ingyenesen",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "egyszeri vásárlás (örök)",
-    "priceProDesc": "Korlátlan könyvjelzők, 3 eszköz, helyi AI, P2P szinkronizálás — előfizetés nélkül",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Minden az Ingyenesben",
       "Korlátlan könyvjelzők",
@@ -1517,7 +1688,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Minden jog fenntartva.",
     "footerPrivacy": "Adatvédelmi Irányelvek",
     "footerTerms": "Szolgáltatási Feltételek",
-    "faq": "Gyakran Ismételt Kérdések"
+    "faq": "Gyakran Ismételt Kérdések",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "id": {
     "lang": "id",
@@ -1581,7 +1771,7 @@
       "Independen dari penyedia"
     ],
     "priceTitle": "Harga Sederhana dan Adil",
-    "priceSub": "Paket gratis: 1.000 bookmark. Pro adalah pembelian satu kali seharga $79 — tanpa langganan.",
+    "priceSub": "Paket gratis: 1.000 bookmark. Pro adalah pembelian satu kali seharga $59 Early Bird then $79 — tanpa langganan.",
     "priceFreeName": "Gratis",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ selamanya",
@@ -1603,9 +1793,9 @@
     ],
     "priceFreeCta": "Mulai Gratis",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "pembelian satu kali (selamanya)",
-    "priceProDesc": "Bookmark tanpa batas, 3 perangkat, AI lokal, sinkronisasi P2P — tanpa langganan",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Semua di Gratis",
       "Bookmark tanpa batas",
@@ -1669,7 +1859,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Hak cipta dilindungi.",
     "footerPrivacy": "Kebijakan Privasi",
     "footerTerms": "Syarat Layanan",
-    "faq": "Pertanyaan yang Sering Diajukan"
+    "faq": "Pertanyaan yang Sering Diajukan",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "ja": {
     "lang": "ja",
@@ -1733,7 +1942,7 @@
       "プロバイダー非依存"
     ],
     "priceTitle": "シンプルで公正な価格",
-    "priceSub": "無料プラン：1,000件のブックマーク。Proは一括購入$79 — サブスクリプションなし。",
+    "priceSub": "無料プラン：1,000件のブックマーク。Proは一括購入$59 Early Bird then $79 — サブスクリプションなし。",
     "priceFreeName": "無料",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ 永遠に",
@@ -1755,9 +1964,9 @@
     ],
     "priceFreeCta": "無料で利用開始",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "一括購入（永遠に）",
-    "priceProDesc": "無制限のブックマーク、3デバイス、ローカルAI、P2P同期 — サブスクリプションなし",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "無料プランのすべて",
       "無制限のブックマーク",
@@ -1821,7 +2030,26 @@
     "footerCopyright": "© 2026 BookmarkForge. All rights reserved.",
     "footerPrivacy": "プライバシーポリシー",
     "footerTerms": "利用規約",
-    "faq": "よくある質問"
+    "faq": "よくある質問",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "ko": {
     "lang": "ko",
@@ -1885,7 +2113,7 @@
       "공급업체 독립적"
     ],
     "priceTitle": "간단하고 공정한 가격",
-    "priceSub": "무료 플랜: 1,000개 북마크. Pro는 일회성 구매 $79 — 구독 없음.",
+    "priceSub": "무료 플랜: 1,000개 북마크. Pro는 일회성 구매 $59 Early Bird then $79 — 구독 없음.",
     "priceFreeName": "무료",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ 영원히",
@@ -1907,9 +2135,9 @@
     ],
     "priceFreeCta": "무료로 시작",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "일회성 구매 (영원히)",
-    "priceProDesc": "무제한 북마크, 3개 기기, 로컬 AI, P2P 동기화 — 구독 없음",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "무료의 모든 것",
       "무제한 북마크",
@@ -1973,7 +2201,26 @@
     "footerCopyright": "© 2026 BookmarkForge. All rights reserved.",
     "footerPrivacy": "개인정보 처리방침",
     "footerTerms": "이용약관",
-    "faq": "자주 묻는 질문"
+    "faq": "자주 묻는 질문",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "nl": {
     "lang": "nl",
@@ -2037,7 +2284,7 @@
       "Onafhankelijk van provider"
     ],
     "priceTitle": "Eenvoudige, Eerlijke Prijzen",
-    "priceSub": "Gratis plan: 1.000 bladwijzers. Pro is een eenmalige aankoop van $79 — geen abonnementen.",
+    "priceSub": "Gratis plan: 1.000 bladwijzers. Pro is een eenmalige aankoop van $59 Early Bird then $79 — geen abonnementen.",
     "priceFreeName": "Gratis",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ voor altijd",
@@ -2059,9 +2306,9 @@
     ],
     "priceFreeCta": "Begin Gratis",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "eenmalige aankoop (voor altijd)",
-    "priceProDesc": "Onbeperkte bladwijzers, 3 apparaten, lokaal AI, P2P-synchronisatie — geen abonnement",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Alles in Gratis",
       "Onbeperkte bladwijzers",
@@ -2125,7 +2372,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Alle rechten voorbehouden.",
     "footerPrivacy": "Privacybeleid",
     "footerTerms": "Servicevoorwaarden",
-    "faq": "Veelgestelde Vragen"
+    "faq": "Veelgestelde Vragen",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "no": {
     "lang": "no",
@@ -2189,7 +2455,7 @@
       "Uavhengig av leverandør"
     ],
     "priceTitle": "Enkle, Rettferdige Priser",
-    "priceSub": "Gratis plan: 1.000 bokmerker. Pro er engangskjøp på $79 — ingen abonnementer.",
+    "priceSub": "Gratis plan: 1.000 bokmerker. Pro er engangskjøp på $59 Early Bird then $79 — ingen abonnementer.",
     "priceFreeName": "Gratis",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ for alltid",
@@ -2211,9 +2477,9 @@
     ],
     "priceFreeCta": "Begynn Gratis",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "engangskjøp (for alltid)",
-    "priceProDesc": "Ubegrensede bokmerker, 3 enheter, lokal AI, P2P-synkronisering — ingen abonnement",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Alt i Gratis",
       "Ubegrensede bokmerker",
@@ -2277,7 +2543,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Alle rettigheter forbeholdt.",
     "footerPrivacy": "Personvernpolicy",
     "footerTerms": "Vilkår for tjenesten",
-    "faq": "Ofte Stilte Spørsmål"
+    "faq": "Ofte Stilte Spørsmål",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "pl": {
     "lang": "pl",
@@ -2341,7 +2626,7 @@
       "Niezależność od dostawcy"
     ],
     "priceTitle": "Proste, Uczciwe Ceny",
-    "priceSub": "Darmowy plan: 1 000 zakładek. Pro to jednorazowy zakup za $79 — bez subskrypcji.",
+    "priceSub": "Darmowy plan: 1 000 zakładek. Pro to jednorazowy zakup za $59 Early Bird then $79 — bez subskrypcji.",
     "priceFreeName": "Darmowy",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ na zawsze",
@@ -2363,9 +2648,9 @@
     ],
     "priceFreeCta": "Zacznij za darmo",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "jednorazowy zakup (na zawsze)",
-    "priceProDesc": "Nieograniczone zakładki, 3 urządzenia, AI lokalne, synchronizacja P2P — bez subskrypcji",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Wszystko z Darmowego",
       "Nieograniczone zakładki",
@@ -2429,7 +2714,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Wszelkie prawa zastrzeżone.",
     "footerPrivacy": "Polityka prywatności",
     "footerTerms": "Regulamin",
-    "faq": "Najczęściej zadawane pytania"
+    "faq": "Najczęściej zadawane pytania",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "ro": {
     "lang": "ro",
@@ -2493,7 +2797,7 @@
       "Independent de furnizor"
     ],
     "priceTitle": "Prețuri Simple, Echitabile",
-    "priceSub": "Plan gratuit: 1.000 marcaje. Pro este o achiziție unică de $79 — fără abonamente.",
+    "priceSub": "Plan gratuit: 1.000 marcaje. Pro este o achiziție unică de $59 Early Bird then $79 — fără abonamente.",
     "priceFreeName": "Gratis",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ pentru totdeauna",
@@ -2515,9 +2819,9 @@
     ],
     "priceFreeCta": "Începe Gratis",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "achiziție unică (pentru totdeauna)",
-    "priceProDesc": "Marcaje nelimitate, 3 dispozitive, AI local, sincronizare P2P — fără abonament",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Tot din Gratis",
       "Marcaje nelimitate",
@@ -2581,7 +2885,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Toate drepturile rezervate.",
     "footerPrivacy": "Politica de Confidențialitate",
     "footerTerms": "Termeni și Condiții",
-    "faq": "Întrebări Frecvente"
+    "faq": "Întrebări Frecvente",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "ru": {
     "lang": "ru",
@@ -2645,7 +2968,7 @@
       "Независимость от провайдера"
     ],
     "priceTitle": "Простые, Справедливые Цены",
-    "priceSub": "Бесплатный план: 1 000 закладок. Pro — разовая покупка за $79 — без подписок.",
+    "priceSub": "Бесплатный план: 1 000 закладок. Pro — разовая покупка за $59 Early Bird then $79 — без подписок.",
     "priceFreeName": "Бесплатно",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ навсегда",
@@ -2667,9 +2990,9 @@
     ],
     "priceFreeCta": "Начать бесплатно",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "разовая покупка (навсегда)",
-    "priceProDesc": "Безлимитные закладки, 3 устройства, локальный AI, P2P-синхронизация — без подписки",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Всё из Бесплатного",
       "Безлимитные закладки",
@@ -2733,7 +3056,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Все права защищены.",
     "footerPrivacy": "Политика Конфиденциальности",
     "footerTerms": "Условия Использования",
-    "faq": "Часто Задаваемые Вопросы"
+    "faq": "Часто Задаваемые Вопросы",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "sv": {
     "lang": "sv",
@@ -2797,7 +3139,7 @@
       "Oberoende av tjänst"
     ],
     "priceTitle": "Enkla, Rättvisa Priser",
-    "priceSub": "Gratisplan: 1 000 bokmärken. Pro är engångsköp på $79 — inga prenumerationer.",
+    "priceSub": "Gratisplan: 1 000 bokmärken. Pro är engångsköp på $59 Early Bird then $79 — inga prenumerationer.",
     "priceFreeName": "Gratis",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ för alltid",
@@ -2819,9 +3161,9 @@
     ],
     "priceFreeCta": "Börja Gratis",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "engångsköp (för alltid)",
-    "priceProDesc": "Obegränsade bokmärken, 3 enheter, lokal AI, P2P-synkronisering — ingen prenumeration",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Allt i Gratis",
       "Obegränsade bokmärken",
@@ -2885,7 +3227,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Alla rättigheter förbehållna.",
     "footerPrivacy": "Integritetspolicy",
     "footerTerms": "Användarvillkor",
-    "faq": "Vanliga Frågor"
+    "faq": "Vanliga Frågor",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "th": {
     "lang": "th",
@@ -2949,7 +3310,7 @@
       "อิสระจากผู้ให้บริการ"
     ],
     "priceTitle": "ราคาที่เรียบง่ายและยุติธรรม",
-    "priceSub": "แผนฟรี: 1,000 บุ๊กมาร์ก Pro เป็นการซื้อครั้งเดียว $79 — ไม่มีการสมัครสมาชิก",
+    "priceSub": "แผนฟรี: 1,000 บุ๊กมาร์ก Pro เป็นการซื้อครั้งเดียว $59 Early Bird then $79 — ไม่มีการสมัครสมาชิก",
     "priceFreeName": "ฟรี",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ ตลอดกาล",
@@ -2971,9 +3332,9 @@
     ],
     "priceFreeCta": "เริ่มใช้งานฟรี",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "ซื้อครั้งเดียว (ตลอดกาล)",
-    "priceProDesc": "บุ๊กมาร์กไม่จำกัด 3 อุปกรณ์ AI ในเครื่อง การซิงค์ P2P — ไม่มีการสมัครสมาชิก",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "ทั้งหมดในแผนฟรี",
       "บุ๊กมาร์กไม่จำกัด",
@@ -3037,7 +3398,26 @@
     "footerCopyright": "© 2026 BookmarkForge สงวนลิขสิทธิ์",
     "footerPrivacy": "นโยบายความเป็นส่วนตัว",
     "footerTerms": "เงื่อนไขการให้บริการ",
-    "faq": "คำถามที่พบบ่อย"
+    "faq": "คำถามที่พบบ่อย",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "tr": {
     "lang": "tr",
@@ -3101,7 +3481,7 @@
       "Sağlayıcıdan bağımsız"
     ],
     "priceTitle": "Basit, Adil Fiyatlar",
-    "priceSub": "Ücretsiz plan: 1.000 yer imi. Pro tek seferlik satın alma $79 — abonelik yok.",
+    "priceSub": "Ücretsiz plan: 1.000 yer imi. Pro tek seferlik satın alma $59 Early Bird then $79 — abonelik yok.",
     "priceFreeName": "Ücretsiz",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ sonsuza kadar",
@@ -3123,9 +3503,9 @@
     ],
     "priceFreeCta": "Ücretsiz Başla",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "tek seferlik satın alma (sonsuza kadar)",
-    "priceProDesc": "Sınırsız yer imi, 3 cihaz, yerel AI, P2P senkronizasyonu — abonelik yok",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Ücretsiz'deki her şey",
       "Sınırsız yer imi",
@@ -3189,7 +3569,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Tüm hakları saklıdır.",
     "footerPrivacy": "Gizlilik Politikası",
     "footerTerms": "Hizmet Koşulları",
-    "faq": "Sıkça Sorulan Sorular"
+    "faq": "Sıkça Sorulan Sorular",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "uk": {
     "lang": "uk",
@@ -3253,7 +3652,7 @@
       "Незалежність від провайдера"
     ],
     "priceTitle": "Прості, Справедливі Ціни",
-    "priceSub": "Безкоштовний план: 1 000 закладок. Pro — разова покупка за $79 — без підписок.",
+    "priceSub": "Безкоштовний план: 1 000 закладок. Pro — разова покупка за $59 Early Bird then $79 — без підписок.",
     "priceFreeName": "Безкоштовно",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ назавжди",
@@ -3275,9 +3674,9 @@
     ],
     "priceFreeCta": "Почати безкоштовно",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "разова покупка (назавжди)",
-    "priceProDesc": "Необмежені закладки, 3 пристрої, локальний AI, P2P-синхронізація — без підписки",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Все з Безкоштовного",
       "Необмежені закладки",
@@ -3341,7 +3740,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Усі права захищені.",
     "footerPrivacy": "Політика Конфіденційності",
     "footerTerms": "Умови Використання",
-    "faq": "Часто Задані Питання"
+    "faq": "Часто Задані Питання",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "vi": {
     "lang": "vi",
@@ -3405,7 +3823,7 @@
       "Độc lập với nhà cung cấp"
     ],
     "priceTitle": "Giá Đơn Giản, Công Bằng",
-    "priceSub": "Kế hoạch miễn phí: 1.000 bookmark. Pro là mua một lần $79 — không có subscription.",
+    "priceSub": "Kế hoạch miễn phí: 1.000 bookmark. Pro là mua một lần $59 Early Bird then $79 — không có subscription.",
     "priceFreeName": "Miễn Phí",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ mãi mãi",
@@ -3427,9 +3845,9 @@
     ],
     "priceFreeCta": "Bắt Đầu Miễn Phí",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "mua một lần (mãi mãi)",
-    "priceProDesc": "Bookmark không giới hạn, 3 thiết bị, AI cục bộ, đồng bộ P2P — không có subscription",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "Tất cả trong Miễn Phí",
       "Bookmark không giới hạn",
@@ -3493,7 +3911,26 @@
     "footerCopyright": "© 2026 BookmarkForge. Bảo lưu mọi quyền.",
     "footerPrivacy": "Chính Sách Quyền Riêng Tư",
     "footerTerms": "Điều Khoản Dịch Vụ",
-    "faq": "Câu Hỏi Thường Gặp"
+    "faq": "Câu Hỏi Thường Gặp",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   },
   "zh": {
     "lang": "zh",
@@ -3557,7 +3994,7 @@
       "独立于提供商"
     ],
     "priceTitle": "简单、公平的价格",
-    "priceSub": "免费计划：1,000个书签。Pro是一次性购买$79——无订阅。",
+    "priceSub": "免费计划：1,000个书签。Pro是一次性购买$59 Early Bird then $79——无订阅。",
     "priceFreeName": "免费",
     "priceFreePrice": "$ 0",
     "priceFreeInterval": "/ 永久",
@@ -3579,9 +4016,9 @@
     ],
     "priceFreeCta": "免费开始",
     "priceProName": "Pro",
-    "priceProPrice": "$ 79",
-    "priceProInterval": "一次性购买（永久）",
-    "priceProDesc": "无限书签、3台设备、本地AI、P2P同步——无订阅",
+    "priceProPrice": "$ 59",
+    "priceProInterval": "Early Bird (then $79)",
+    "priceProDesc": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
     "priceProItems": [
       "免费版的所有功能",
       "无限书签",
@@ -3645,6 +4082,25 @@
     "footerCopyright": "© 2026 BookmarkForge. 保留所有权利。",
     "footerPrivacy": "隐私政策",
     "footerTerms": "服务条款",
-    "faq": "常见问题"
+    "faq": "常见问题",
+    "priceFounderName": "Founder",
+    "priceFounderPrice": "$ 99",
+    "priceFounderInterval": "lifetime v1",
+    "priceFounderDesc": "Same Pro v1 + Founder badge + beta · 60% off v2 lifetime",
+    "priceFounderItems": [
+      "Everything in Pro Lifetime v1",
+      "Founder badge #042 in app",
+      "Beta access to v2 early builds",
+      "60% off v2 forever for this account",
+      "Lifetime of v1 · Security forever",
+      "Priority support (24h)"
+    ],
+    "priceFounderCta": "Get Founder $99",
+    "faq5Q": "Support — how fast?",
+    "faq5A": "Free: Community best effort. Pro: email 48h. Founder: priority 24h.",
+    "faq6Q": "What if I forget my password?",
+    "faq6A": "We cannot recover it. See BF-E101. 12-word seed shown once — write on paper.",
+    "priceLegal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.",
+    "footerSupportHelp": "Help Center"
   }
 }

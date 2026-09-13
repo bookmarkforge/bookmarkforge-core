@@ -49,6 +49,46 @@ servidor (imágenes por SHA) + Redis si procede.
 Guardia: responsables y canal de alertas deben registrarse antes del lanzamiento
 público; severidades según la plantilla de incidentes.
 
+## Modelo comercial y soporte — Lifetime v1 (sin suscripción)
+
+BookmarkForge es local-first y cifrado: el operador no puede ver el vault.
+El soporte se apoya en un Help Center estático y un diagnóstico redactado
+copiable desde la app.
+
+**Precios v1 (src/constants/pricing.ts, landing, /help):**
+
+| Tier | Precio | Qué incluye | Supply |
+|---|---|---|---|
+| Free | $0 forever | 1 000 bookmarks, 1 dispositivo, full-text + semantic search, knowledge graph, AI con API key propia | ilimitado |
+| Pro Lifetime v1 · Early Bird | **$59** (→ $79 regular → $99 tras tracción) | Ilimitado, 3 dispositivos + P2P sync, Local AI (WebLLM/Ollama) + RAG + agentes, flashcards, PDF/OCR, 10+ exports, vault. <em>Lifetime de v1 · 12 meses de features · security forever · v2 60% off</em> | 200 |
+| Founder | **$99** lifetime v1 | Mismo Pro v1 + badge Founder # + beta v2 + 60% off v2/v3 lifetime | 100 |
+
+Upgrade v2/v3: **$89 nuevos / $35 owners v1 (60% off)**. Sin upgrade, v1 sigue
+funcional para siempre. Línea legal canónica en `/help#pricing`, `privacy-and-terms.html` §Terms
+y `landing.html` pricing-legal: `Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off.` Reembolso 30 días vía Whop (card/PayPal/crypto; el operador nunca ve la tarjeta).
+
+**Help Center:** `public/help.html` en `/help` (EN-only; hreflang x-default). Contiene
+pricing, SLA, troubleshooting (vault/storage/P2P/WebLLM), 9 códigos `BF-E101..202` y la
+sección `Copy diagnostic`. Routing: `public/_redirects` + `public/nginx.conf` + `netlify.toml`
+(`200` a `help.html`). Añadir `/help` al sitemap si se localiza; hoy no es bloqueante
+(`check:seo` no lo exige).
+
+**Diagnóstico redactado:** `src/utils/supportDiagnostics.ts` + botón `Settings → Advanced → Copy diagnostic`
+(`src/components/settings/AdvancedSection.tsx`). No incluye contenido del vault, URLs ni prompts:
+`version | browser | counts | storage % | P2P | AI | errors | BF-E | build`. IP solo como
+hash salteado (ROPA §3/§6). El usuario lo pega en email/Discussions; cubre el 90% de tickets.
+
+**SLA soporte:**
+
+| Tier | Canal | Respuesta (Mon–Fri) |
+|---|---|---|
+| Free | Self-service: `/help` + GitHub Discussions | Best effort (comunidad) |
+| Pro | `bookmarkforge@proton.me` (subject: Pro) + diagnóstico | **48h** |
+| Founder | Email priority (subject: Founder #) | **24h** + beta queue |
+
+Soporte nunca pide password del vault ni frase de 12 palabras. Sin frase = vault irrecuperable
+por diseño (BF-E101). Ver `/help#sla` y `#bf-e`.
+
 ## Gate nocturno de KPIs de negocio (staging)
 
 El job `kpi-staging` de `.github/workflows/nightly.yml` ejecuta

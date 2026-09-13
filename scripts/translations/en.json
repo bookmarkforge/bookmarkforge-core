@@ -22,7 +22,8 @@
     "features": "Features",
     "ai": "AI",
     "privacy": "Privacy",
-    "pricing": "Pricing"
+    "pricing": "Pricing",
+    "help": "Help"
   },
   "langLink": {
     "href": "/es/",
@@ -39,10 +40,22 @@
     "ctaPrimary": "Launch App Free",
     "ctaSecondary": "View Pricing",
     "pillars": [
-      { "strong": "Local-First", "text": "data never leaves your device" },
-      { "strong": "Encrypted", "text": "AES-256-GCM + Argon2id" },
-      { "strong": "Offline", "text": "works without internet" },
-      { "strong": "Private", "text": "zero telemetry by default" }
+      {
+        "strong": "Local-First",
+        "text": "data never leaves your device"
+      },
+      {
+        "strong": "Encrypted",
+        "text": "AES-256-GCM + Argon2id"
+      },
+      {
+        "strong": "Offline",
+        "text": "works without internet"
+      },
+      {
+        "strong": "Private",
+        "text": "zero telemetry by default"
+      }
     ]
   },
   "pocketAlternative": {
@@ -73,15 +86,42 @@
     "tag": "Everything You Need",
     "title": "Powerful features for knowledge management, all running locally",
     "items": [
-      { "title": "Bookmarks & Documents", "text": "Save any page with one click. Rich block editor (Notion-style) for notes. Virtualized lists handle 100k+ items smoothly." },
-      { "title": "Full-Text & Semantic Search", "text": "Search by keyword or meaning. Vector embeddings (HNSW) find related content even without exact matches." },
-      { "title": "Local AI (WebLLM / Ollama) — Pro only", "text": "Run Llama 3.2, Phi-3, TinyLlama entirely in your browser via WebGPU. Zero data leaves your device. Requires Pro ($79 lifetime)." },
-      { "title": "RAG Chat Over Your Data — Pro only", "text": "Ask questions and get answers grounded in YOUR bookmarks and notes. Citations included. Private mode = 100% local. Requires Pro." },
-      { "title": "P2P Sync (WebRTC) — Pro only", "text": "Sync vaults between your devices directly. No central server. Encrypted end-to-end. QR pairing in seconds. Up to 3 devices with Pro." },
-      { "title": "Encrypted Backups", "text": "Daily automatic .bmf backups. Manual export to Markdown, JSON, CSV, PDF. Restore in seconds. You hold the keys." },
-      { "title": "Knowledge Graph", "text": "Visualize connections between your notes and bookmarks. Filter by tags, dates, similarity. Zoom and pan infinite canvas." },
-      { "title": "Flashcards (Spaced Repetition) — Pro only", "text": "Generate cards from any document. Anki-style SR algorithm schedules reviews at optimal intervals. Great for learning. Requires Pro." },
-      { "title": "Privacy by Default", "text": "No analytics, no tracking, no accounts. Optional opt-in telemetry only. GDPR compliant. You are the controller." }
+      {
+        "title": "Bookmarks & Documents",
+        "text": "Save any page with one click. Rich block editor (Notion-style) for notes. Virtualized lists handle 100k+ items smoothly."
+      },
+      {
+        "title": "Full-Text & Semantic Search",
+        "text": "Search by keyword or meaning. Vector embeddings (HNSW) find related content even without exact matches."
+      },
+      {
+        "title": "Local AI (WebLLM / Ollama) — Pro only",
+        "text": "Run Llama 3.2, Phi-3, TinyLlama entirely in your browser via WebGPU. Zero data leaves your device. Requires Pro ($79 lifetime)."
+      },
+      {
+        "title": "RAG Chat Over Your Data — Pro only",
+        "text": "Ask questions and get answers grounded in YOUR bookmarks and notes. Citations included. Private mode = 100% local. Requires Pro."
+      },
+      {
+        "title": "P2P Sync (WebRTC) — Pro only",
+        "text": "Sync vaults between your devices directly. No central server. Encrypted end-to-end. QR pairing in seconds. Up to 3 devices with Pro."
+      },
+      {
+        "title": "Encrypted Backups",
+        "text": "Daily automatic .bmf backups. Manual export to Markdown, JSON, CSV, PDF. Restore in seconds. You hold the keys."
+      },
+      {
+        "title": "Knowledge Graph",
+        "text": "Visualize connections between your notes and bookmarks. Filter by tags, dates, similarity. Zoom and pan infinite canvas."
+      },
+      {
+        "title": "Flashcards (Spaced Repetition) — Pro only",
+        "text": "Generate cards from any document. Anki-style SR algorithm schedules reviews at optimal intervals. Great for learning. Requires Pro."
+      },
+      {
+        "title": "Privacy by Default",
+        "text": "No analytics, no tracking, no accounts. Optional opt-in telemetry only. GDPR compliant. You are the controller."
+      }
     ]
   },
   "ai": {
@@ -92,21 +132,51 @@
     "providers": {
       "title": "Supported Providers",
       "list": [
-        { "type": "local", "name": "Local WebLLM (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Pro only" },
-        { "type": "local", "name": "Local Ollama (any model you run)" },
-        { "type": "cloud", "name": "Cloud Google Gemini (your API key)" },
-        { "type": "cloud", "name": "Cloud OpenAI / GPT-4o (your API key)" },
-        { "type": "cloud", "name": "Cloud Anthropic Claude (your API key)" },
-        { "type": "cloud", "name": "Cloud Groq (your API key)" },
-        { "type": "cloud", "name": "Custom / OpenRouter via custom provider (your API key)" }
+        {
+          "type": "local",
+          "name": "Local WebLLM (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Pro only"
+        },
+        {
+          "type": "local",
+          "name": "Local Ollama (any model you run)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud Google Gemini (your API key)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud OpenAI / GPT-4o (your API key)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud Anthropic Claude (your API key)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud Groq (your API key)"
+        },
+        {
+          "type": "cloud",
+          "name": "Custom / OpenRouter via custom provider (your API key)"
+        }
       ]
     },
     "modes": {
       "title": "Chat Modes",
       "items": [
-        { "title": "Private Mode", "text": "Local AI only (WebLLM/Ollama). Zero data leaves device. Works offline. Requires Pro for WebLLM." },
-        { "title": "Web Search Mode", "text": "Combines your vault with live search results (cloud providers)." },
-        { "title": "Expert Agents", "text": "Specialized personas: Coder, Writer, Analyst, Researcher. Requires Pro for local AI." }
+        {
+          "title": "Private Mode",
+          "text": "Local AI only (WebLLM/Ollama). Zero data leaves device. Works offline. Requires Pro for WebLLM."
+        },
+        {
+          "title": "Web Search Mode",
+          "text": "Combines your vault with live search results (cloud providers)."
+        },
+        {
+          "title": "Expert Agents",
+          "text": "Specialized personas: Coder, Writer, Analyst, Researcher. Requires Pro for local AI."
+        }
       ]
     }
   },
@@ -115,18 +185,36 @@
     "title": "Privacy Isn't a Feature — It's the Foundation",
     "subtitle": "Every architectural decision puts you in control",
     "items": [
-      { "title": "End-to-End Encryption", "text": "AES-256-GCM with keys derived from your master password via Argon2id. We never see your password or keys." },
-      { "title": "Local-First Architecture", "text": "Your vault lives in IndexedDB on your device. The companion server only handles AI proxy, licensing, and signaling — never your content." },
-      { "title": "Zero Telemetry by Default", "text": "No analytics, no crash reports, no tracking. Optional opt-in for aggregated usage stats and error reporting — each independently controlled." },
-      { "title": "You Hold the Keys", "text": "Device key separation: JWK in localStorage + ciphertexts in IndexedDB. Both required. No master password = no access. No \"forgot password\" backdoor." },
-      { "title": "GDPR Compliant", "text": "Granular consent (analytics, error reporting, client events). Right to access, rectify, erase, port — all doable locally. ROPA documented." },
-      { "title": "No Vendor Lock-in", "text": "Export your data anytime in open formats (JSON, Markdown, CSV, PDF). Your knowledge stays portable." }
+      {
+        "title": "End-to-End Encryption",
+        "text": "AES-256-GCM with keys derived from your master password via Argon2id. We never see your password or keys."
+      },
+      {
+        "title": "Local-First Architecture",
+        "text": "Your vault lives in IndexedDB on your device. The companion server only handles AI proxy, licensing, and signaling — never your content."
+      },
+      {
+        "title": "Zero Telemetry by Default",
+        "text": "No analytics, no crash reports, no tracking. Optional opt-in for aggregated usage stats and error reporting — each independently controlled."
+      },
+      {
+        "title": "You Hold the Keys",
+        "text": "Device key separation: JWK in localStorage + ciphertexts in IndexedDB. Both required. No master password = no access. No \"forgot password\" backdoor."
+      },
+      {
+        "title": "GDPR Compliant",
+        "text": "Granular consent (analytics, error reporting, client events). Right to access, rectify, erase, port — all doable locally. ROPA documented."
+      },
+      {
+        "title": "No Vendor Lock-in",
+        "text": "Export your data anytime in open formats (JSON, Markdown, CSV, PDF). Your knowledge stays portable."
+      }
     ]
   },
   "pricing": {
     "id": "pricing",
-    "title": "Simple, Fair Pricing",
-    "subtitle": "Free tier: 1,000 bookmarks. Pro is a one-time $79 purchase — no subscriptions.",
+    "title": "Simple, Fair Pricing — No Subscriptions",
+    "subtitle": "Free 1,000 bookmarks forever. Pro is a Lifetime license for v1 — pay once, own v1 forever. Includes all v1.x updates and 12 months of feature updates. Security updates forever. No monthly billing.",
     "plans": [
       {
         "name": "Free",
@@ -134,58 +222,190 @@
         "period": "/forever",
         "description": "For personal knowledge management (1,000 bookmarks, 1 device)",
         "features": [
-          { "included": true, "text": "1,000 bookmarks, notes, documents" },
-          { "included": true, "text": "Full-text & semantic search" },
-          { "included": true, "text": "AI with your own API key (you pay usage)" },
-          { "included": true, "text": "Knowledge graph" },
-          { "included": true, "text": "Basic templates" },
-          { "included": true, "text": "JSON/HTML export" },
-          { "included": true, "text": "PWA + browser extensions" },
-          { "included": false, "text": "P2P sync across devices" },
-          { "included": false, "text": "Local AI (WebLLM/Ollama)" },
-          { "included": false, "text": "RAG chat over your data" },
-          { "included": false, "text": "Flashcards with spaced repetition" },
-          { "included": false, "text": "PDF + OCR" },
-          { "included": false, "text": "Advanced export (10+ formats)" }
+          {
+            "included": true,
+            "text": "1,000 bookmarks, notes, documents"
+          },
+          {
+            "included": true,
+            "text": "Full-text & semantic search"
+          },
+          {
+            "included": true,
+            "text": "AI with your own API key (you pay usage)"
+          },
+          {
+            "included": true,
+            "text": "Knowledge graph"
+          },
+          {
+            "included": true,
+            "text": "Basic templates"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML export"
+          },
+          {
+            "included": true,
+            "text": "PWA + browser extensions"
+          },
+          {
+            "included": false,
+            "text": "P2P sync across devices"
+          },
+          {
+            "included": false,
+            "text": "Local AI (WebLLM/Ollama) & RAG chat"
+          },
+          {
+            "included": false,
+            "text": "Flashcards with spaced repetition"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": false,
+            "text": "Advanced export (10+ formats)"
+          }
         ],
         "cta": "Start Free",
         "ctaHref": "/app",
         "ctaClass": "btn-secondary"
       },
       {
-        "name": "Pro",
-        "badge": "Most Popular",
-        "price": "$ 79",
-        "period": "one-time (lifetime)",
-        "description": "Unlimited bookmarks, 3 devices, local AI, P2P sync — no subscription",
+        "name": "Pro Lifetime v1",
+        "badge": "Most Popular — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (then $79)",
+        "description": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
         "features": [
-          { "included": true, "text": "Everything in Free" },
-          { "included": true, "text": "Unlimited bookmarks" },
-          { "included": true, "text": "3 devices" },
-          { "included": true, "text": "P2P sync across 3 devices" },
-          { "included": true, "text": "Local AI (WebLLM, no API key)" },
-          { "included": true, "text": "RAG chat over your data" },
-          { "included": true, "text": "Expert agents (Coder, Writer, Analyst, Researcher)" },
-          { "included": true, "text": "Flashcards with spaced repetition" },
-          { "included": true, "text": "PDF + OCR" },
-          { "included": true, "text": "Advanced export (10+ formats)" },
-          { "included": true, "text": "Security vault (AES-GCM)" },
-          { "included": true, "text": "Updates for 12 months" },
-          { "included": true, "text": "Email support" }
+          {
+            "included": true,
+            "text": "Everything in Free"
+          },
+          {
+            "included": true,
+            "text": "Unlimited bookmarks"
+          },
+          {
+            "included": true,
+            "text": "3 devices · P2P sync across 3 devices"
+          },
+          {
+            "included": true,
+            "text": "Local AI models (WebLLM, no API key) · RAG chat"
+          },
+          {
+            "included": true,
+            "text": "Expert agents (Coder, Writer, Analyst, Researcher)"
+          },
+          {
+            "included": true,
+            "text": "Flashcards with spaced repetition · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Advanced export (10+ formats) · Encrypted backups"
+          },
+          {
+            "included": true,
+            "text": "Security vault (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Lifetime of v1 · 12 months feature updates"
+          },
+          {
+            "included": true,
+            "text": "Security updates forever"
+          },
+          {
+            "included": true,
+            "text": "Email support (48h) + early access"
+          }
         ],
-        "cta": "Get Pro Lifetime",
+        "cta": "Get Pro $59 Early Bird",
         "ctaHref": "/buy-pro",
-        "ctaClass": "btn-primary"
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "then $79 regular · Founder $99",
+        "sla": "Support: Email 48h (Mon–Fri)"
+      },
+      {
+        "name": "Founder",
+        "badge": "Founder — 100 limited",
+        "price": "$ 99",
+        "period": "lifetime v1",
+        "priceSub": "Same Pro v1 + Founder badge + beta",
+        "description": "Founder badge #042 in app · Beta access · v2 60% off lifetime",
+        "features": [
+          {
+            "included": true,
+            "text": "Everything in Pro Lifetime v1"
+          },
+          {
+            "included": true,
+            "text": "Founder badge #042 in app"
+          },
+          {
+            "included": true,
+            "text": "Beta access to v2 early builds"
+          },
+          {
+            "included": true,
+            "text": "60% off v2 (and v3) forever for this account"
+          },
+          {
+            "included": true,
+            "text": "Lifetime of v1 · Security forever"
+          },
+          {
+            "included": true,
+            "text": "Priority email support (24h) + early access"
+          },
+          {
+            "included": true,
+            "text": "30-day refund via Whop"
+          }
+        ],
+        "cta": "Get Founder $99",
+        "ctaHref": "/buy-founder",
+        "ctaClass": "btn-primary btn-founder",
+        "sla": "Support: Priority 24h · Founder queue"
       }
-    ]
+    ],
+    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Common Questions",
     "items": [
-      { "question": "Is the Free tier really free forever?", "answer": "Yes. No trial, no subscription. The free tier includes 1,000 bookmarks, full-text search, knowledge graph, and AI with your own API key (you pay the provider)." },
-      { "question": "What does \"one-time\" mean for Pro?", "answer": "Pay once ($79), own the license forever. Includes all updates for 12 months. No recurring charges. License key delivered instantly via Whop." },
-      { "question": "What payment methods?", "answer": "Via Whop: credit card, PayPal, crypto. We never see your payment details." },
-      { "question": "Refund policy?", "answer": "30-day money-back guarantee on Pro licenses. Contact <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>" }
+      {
+        "question": "Is the Free tier really free forever?",
+        "answer": "Yes. No trial, no subscription. The free tier includes 1,000 bookmarks, full-text & semantic search, knowledge graph, and AI with your own API key (you pay the provider)."
+      },
+      {
+        "question": "What does \"Lifetime of v1\" mean for Pro?",
+        "answer": "Pay once, own v1 forever. Includes all v1.x updates (bugfixes + minor features) forever and 12 months of feature updates from purchase. Security updates forever. After month 13 you keep v1 functional, just without new features. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off)."
+      },
+      {
+        "question": "What about Founder Edition?",
+        "answer": "Same Pro v1 binary — not a feature tier. Founder gives you a Founder # badge in the app, beta access to v2, and 60% off future majors forever for this account. Limited 100. Vanity, not paywall."
+      },
+      {
+        "question": "What payment methods & refunds?",
+        "answer": "Via Whop: credit card, PayPal, crypto. We never see your payment details. 30-day refund — contact <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
+      },
+      {
+        "question": "Support — how fast do you answer?",
+        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Founder: priority 24h + beta queue. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help#sla\">Support SLA</a>."
+      },
+      {
+        "question": "What if I forget my vault password?",
+        "answer": "We cannot recover it. When you create a vault we show 12-word seed phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
     ]
   },
   "cta": {
@@ -197,12 +417,50 @@
   },
   "footer": {
     "brand": "Your private, AI-powered knowledge vault. 100% Local-First.",
-    "product": { "title": "Product", "links": ["Features", "AI Capabilities", "Privacy", "Pricing", "Launch App"] },
-    "resources": { "title": "Resources", "links": ["Pocket Comparison", "Privacy & Terms", "Security", "Operations"] },
-    "languages": { "title": "Languages", "links": ["English", "Español", "Français", "Deutsch", "Português", "Italiano"] },
-    "support": { "title": "Support", "links": ["Contact"] },
+    "product": {
+      "title": "Product",
+      "links": [
+        "Features",
+        "AI Capabilities",
+        "Privacy",
+        "Pricing",
+        "Launch App"
+      ]
+    },
+    "resources": {
+      "title": "Resources",
+      "links": [
+        "Pocket Comparison",
+        "Privacy & Terms",
+        "Security",
+        "Operations"
+      ]
+    },
+    "languages": {
+      "title": "Languages",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Support",
+      "links": [
+        "Contact"
+      ],
+      "helpCenter": "Help Center",
+      "errorCodes": "Error Codes"
+    },
     "copyright": "© 2026 BookmarkForge. All rights reserved.",
-    "legal": ["Privacy Policy", "Terms of Service", "bookmarkforge@proton.me"]
+    "legal": [
+      "Privacy Policy",
+      "Terms of Service",
+      "bookmarkforge@proton.me"
+    ]
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
@@ -215,8 +473,33 @@
     "softwareOs": "Web",
     "softwareUrl": "https://bookmarkforge.com/",
     "offers": [
-      { "name": "Free", "price": "0", "currency": "USD" },
-      { "name": "Pro Lifetime", "price": "79", "currency": "USD" }
+      {
+        "name": "Free",
+        "price": "0",
+        "currency": "USD",
+        "description": "1,000 bookmarks. Forever free."
+      },
+      {
+        "name": "Pro Lifetime v1 — Early Bird",
+        "price": "59",
+        "currency": "USD",
+        "description": "Early Bird 200. Lifetime of v1, 12 months features, security forever, v2 60% off.",
+        "priceValidUntil": "2026-12-31",
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "price": "79",
+        "currency": "USD",
+        "description": "Regular. Lifetime of v1."
+      },
+      {
+        "name": "Founder Edition",
+        "price": "99",
+        "currency": "USD",
+        "description": "Same Pro v1 + Founder badge + beta. Limited 100.",
+        "availability": "https://schema.org/LimitedAvailability"
+      }
     ],
     "featureList": [
       "Local-first storage",
@@ -227,10 +510,30 @@
       "P2P sync"
     ],
     "faq": [
-      { "question": "Is the Free tier really free forever?", "answer": "Yes. No trial, no subscription. The free tier includes 1,000 bookmarks, full-text search, knowledge graph, and AI with your own API key (you pay the provider)." },
-      { "question": "What does \"one-time\" mean for Pro?", "answer": "Pay once ($79), own the license forever. Includes all updates for 12 months. No recurring charges. License key delivered instantly via Whop." },
-      { "question": "What payment methods?", "answer": "Via Whop: credit card, PayPal, crypto. We never see your payment details." },
-      { "question": "Refund policy?", "answer": "30-day money-back guarantee on Pro licenses. Contact bookmarkforge@proton.me" }
+      {
+        "question": "Is the Free tier really free forever?",
+        "answer": "Yes. No trial, no subscription. The free tier includes 1,000 bookmarks, full-text & semantic search, knowledge graph, and AI with your own API key (you pay the provider)."
+      },
+      {
+        "question": "What does \"Lifetime of v1\" mean for Pro?",
+        "answer": "Pay once, own v1 forever. Includes all v1.x updates (bugfixes + minor features) forever and 12 months of feature updates from purchase. Security updates forever. After month 13 you keep v1 functional, just without new features. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off)."
+      },
+      {
+        "question": "What about Founder Edition?",
+        "answer": "Same Pro v1 binary — not a feature tier. Founder gives you a Founder # badge in the app, beta access to v2, and 60% off future majors forever for this account. Limited 100. Vanity, not paywall."
+      },
+      {
+        "question": "What payment methods & refunds?",
+        "answer": "Via Whop: credit card, PayPal, crypto. We never see your payment details. 30-day refund — contact bookmarkforge@proton.me."
+      },
+      {
+        "question": "Support — how fast do you answer?",
+        "answer": "Free: Community help via Help Center + GitHub Discussions (best effort). Pro: email 48h business days. Founder: priority 24h + beta queue. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See Support SLA."
+      },
+      {
+        "question": "What if I forget my vault password?",
+        "answer": "We cannot recover it. When you create a vault we show 12-word seed phrase once — write it on paper. Without it, no one (including us) can open the vault. See BF-E101."
+      }
     ]
   }
 }

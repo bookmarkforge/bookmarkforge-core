@@ -22,7 +22,8 @@
     "features": "Fonctionnalités",
     "ai": "IA",
     "privacy": "Confidentialité",
-    "pricing": "Tarifs"
+    "pricing": "Tarifs",
+    "help": "Aide"
   },
   "langLink": {
     "href": "/?lang=en",
@@ -39,10 +40,22 @@
     "ctaPrimary": "Ouvrir l'App Gratuitement",
     "ctaSecondary": "Voir les Tarifs",
     "pillars": [
-      { "strong": "100% Local", "text": "vos données ne quittent jamais votre appareil" },
-      { "strong": "Chiffré", "text": "AES-256-GCM + Argon2id" },
-      { "strong": "Hors ligne", "text": "fonctionne sans internet" },
-      { "strong": "Privé", "text": "zéro télémétrie par défaut" }
+      {
+        "strong": "100% Local",
+        "text": "vos données ne quittent jamais votre appareil"
+      },
+      {
+        "strong": "Chiffré",
+        "text": "AES-256-GCM + Argon2id"
+      },
+      {
+        "strong": "Hors ligne",
+        "text": "fonctionne sans internet"
+      },
+      {
+        "strong": "Privé",
+        "text": "zéro télémétrie par défaut"
+      }
     ]
   },
   "pocketAlternative": {
@@ -73,15 +86,42 @@
     "tag": "Tout ce dont Vous Avez Besoin",
     "title": "Des fonctionnalités puissantes pour gérer vos connaissances, entièrement en local",
     "items": [
-      { "title": "Signets et Documents", "text": "Enregistrez n'importe quelle page en un clic. Éditeur de blocs enrichi (style Notion) pour vos notes. Listes virtualisées qui gèrent plus de 100 000 éléments avec fluidité." },
-      { "title": "Recherche plein texte et sémantique", "text": "Cherchez par mot-clé ou par sens. Les vecteurs sémantiques (HNSW) trouvent du contenu connexe même sans correspondance exacte." },
-      { "title": "IA locale (WebLLM / Ollama) — Pro uniquement", "text": "Exécutez Llama 3.2, Phi-3, TinyLlama directement dans votre navigateur avec WebGPU. Zéro donnée hors de votre appareil. Nécessite Pro (79 $ à vie)." },
-      { "title": "Chat RAG sur vos données — Pro uniquement", "text": "Posez des questions et obtenez des réponses fondées sur VOS signets et notes. Citations incluses. Mode privé = 100% local. Nécessite Pro." },
-      { "title": "Synchronisation P2P (WebRTC) — Pro uniquement", "text": "Synchronisez votre coffre entre vos appareils directement. Aucun serveur central. Chiffrement de bout en bout. Appairage par QR en quelques secondes. Jusqu'à 3 appareils avec Pro." },
-      { "title": "Sauvegardes chiffrées", "text": "Sauvegardes automatiques quotidiennes au format .bmf. Export manuel en Markdown, JSON, CSV et PDF. Restauration en quelques secondes. Vous détenez les clés." },
-      { "title": "Graphe de connaissances", "text": "Visualisez les connexions entre vos notes et signets. Filtrez par étiquettes, dates et similarité. Zoom et navigation sur un canevas infini." },
-      { "title": "Cartes mémoire (répétition espacée) — Pro uniquement", "text": "Générez des cartes depuis n'importe quel document. Algorithme de répétition espacée style Anki qui planifie les révisions aux intervalles optimaux. Idéal pour apprendre. Nécessite Pro." },
-      { "title": "Confidentialité par défaut", "text": "Sans analyses, sans suivi, sans comptes. Télémétrie optionnelle uniquement si vous l'activez. Conformité RGPD. Vous êtes maître de vos données." }
+      {
+        "title": "Signets et Documents",
+        "text": "Enregistrez n'importe quelle page en un clic. Éditeur de blocs enrichi (style Notion) pour vos notes. Listes virtualisées qui gèrent plus de 100 000 éléments avec fluidité."
+      },
+      {
+        "title": "Recherche plein texte et sémantique",
+        "text": "Cherchez par mot-clé ou par sens. Les vecteurs sémantiques (HNSW) trouvent du contenu connexe même sans correspondance exacte."
+      },
+      {
+        "title": "IA locale (WebLLM / Ollama) — Pro uniquement",
+        "text": "Exécutez Llama 3.2, Phi-3, TinyLlama directement dans votre navigateur avec WebGPU. Zéro donnée hors de votre appareil. Nécessite Pro (79 $ à vie)."
+      },
+      {
+        "title": "Chat RAG sur vos données — Pro uniquement",
+        "text": "Posez des questions et obtenez des réponses fondées sur VOS signets et notes. Citations incluses. Mode privé = 100% local. Nécessite Pro."
+      },
+      {
+        "title": "Synchronisation P2P (WebRTC) — Pro uniquement",
+        "text": "Synchronisez votre coffre entre vos appareils directement. Aucun serveur central. Chiffrement de bout en bout. Appairage par QR en quelques secondes. Jusqu'à 3 appareils avec Pro."
+      },
+      {
+        "title": "Sauvegardes chiffrées",
+        "text": "Sauvegardes automatiques quotidiennes au format .bmf. Export manuel en Markdown, JSON, CSV et PDF. Restauration en quelques secondes. Vous détenez les clés."
+      },
+      {
+        "title": "Graphe de connaissances",
+        "text": "Visualisez les connexions entre vos notes et signets. Filtrez par étiquettes, dates et similarité. Zoom et navigation sur un canevas infini."
+      },
+      {
+        "title": "Cartes mémoire (répétition espacée) — Pro uniquement",
+        "text": "Générez des cartes depuis n'importe quel document. Algorithme de répétition espacée style Anki qui planifie les révisions aux intervalles optimaux. Idéal pour apprendre. Nécessite Pro."
+      },
+      {
+        "title": "Confidentialité par défaut",
+        "text": "Sans analyses, sans suivi, sans comptes. Télémétrie optionnelle uniquement si vous l'activez. Conformité RGPD. Vous êtes maître de vos données."
+      }
     ]
   },
   "ai": {
@@ -92,21 +132,51 @@
     "providers": {
       "title": "Fournisseurs pris en charge",
       "list": [
-        { "type": "local", "name": "WebLLM local (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Pro uniquement" },
-        { "type": "local", "name": "Ollama local (n'importe quel modèle que vous exécutez)" },
-        { "type": "cloud", "name": "Google Gemini cloud (votre clé API)" },
-        { "type": "cloud", "name": "OpenAI cloud / GPT-4o (votre clé API)" },
-        { "type": "cloud", "name": "Anthropic Claude cloud (votre clé API)" },
-        { "type": "cloud", "name": "Groq cloud (votre clé API)" },
-        { "type": "cloud", "name": "Personnalisé / OpenRouter via fournisseur custom (votre clé API)" }
+        {
+          "type": "local",
+          "name": "WebLLM local (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Pro uniquement"
+        },
+        {
+          "type": "local",
+          "name": "Ollama local (n'importe quel modèle que vous exécutez)"
+        },
+        {
+          "type": "cloud",
+          "name": "Google Gemini cloud (votre clé API)"
+        },
+        {
+          "type": "cloud",
+          "name": "OpenAI cloud / GPT-4o (votre clé API)"
+        },
+        {
+          "type": "cloud",
+          "name": "Anthropic Claude cloud (votre clé API)"
+        },
+        {
+          "type": "cloud",
+          "name": "Groq cloud (votre clé API)"
+        },
+        {
+          "type": "cloud",
+          "name": "Personnalisé / OpenRouter via fournisseur custom (votre clé API)"
+        }
       ]
     },
     "modes": {
       "title": "Modes de chat",
       "items": [
-        { "title": "Mode privé", "text": "IA locale uniquement (WebLLM/Ollama). Zéro donnée hors de l'appareil. Fonctionne hors ligne. Nécessite Pro pour WebLLM." },
-        { "title": "Mode recherche web", "text": "Combine votre coffre avec des résultats de recherche en direct (fournisseurs cloud)." },
-        { "title": "Agents experts", "text": "Personas spécialisées : Développeur, Rédacteur, Analyste, Chercheur. Nécessite Pro pour l'IA locale." }
+        {
+          "title": "Mode privé",
+          "text": "IA locale uniquement (WebLLM/Ollama). Zéro donnée hors de l'appareil. Fonctionne hors ligne. Nécessite Pro pour WebLLM."
+        },
+        {
+          "title": "Mode recherche web",
+          "text": "Combine votre coffre avec des résultats de recherche en direct (fournisseurs cloud)."
+        },
+        {
+          "title": "Agents experts",
+          "text": "Personas spécialisées : Développeur, Rédacteur, Analyste, Chercheur. Nécessite Pro pour l'IA locale."
+        }
       ]
     }
   },
@@ -115,18 +185,36 @@
     "title": "La Confidentialité N'est Pas une Fonction — C'est le Fondement",
     "subtitle": "Chaque décision d'architecture vous place en contrôle",
     "items": [
-      { "title": "Chiffrement de bout en bout", "text": "AES-256-GCM avec clés dérivées de votre mot de passe maître via Argon2id. Nous ne voyons jamais votre mot de passe ni vos clés." },
-      { "title": "Architecture 100% locale", "text": "Votre coffre vit dans IndexedDB sur votre appareil. Le serveur compagnon ne gère que le proxy IA, les licences et la signalisation — jamais votre contenu." },
-      { "title": "Zéro télémétrie par défaut", "text": "Sans analyses, sans rapports d'erreur, sans suivi. Statistiques d'usage et rapports d'erreur optionnels, chacun contrôlé indépendamment." },
-      { "title": "Vous détenez les clés", "text": "Séparation des clés par appareil : JWK dans localStorage + textes chiffrés dans IndexedDB. Les deux sont nécessaires. Sans mot de passe maître = pas d'accès. Pas de porte dérobée « mot de passe oublié »." },
-      { "title": "Conformité RGPD", "text": "Consentement granulaire (analyses, rapports d'erreur, événements client). Droit d'accès, de rectification, d'effacement et de portabilité — tout réalisable en local." },
-      { "title": "Pas de dépendance à un fournisseur", "text": "Exportez vos données à tout moment dans des formats ouverts (JSON, Markdown, CSV, PDF). Vos connaissances restent portables." }
+      {
+        "title": "Chiffrement de bout en bout",
+        "text": "AES-256-GCM avec clés dérivées de votre mot de passe maître via Argon2id. Nous ne voyons jamais votre mot de passe ni vos clés."
+      },
+      {
+        "title": "Architecture 100% locale",
+        "text": "Votre coffre vit dans IndexedDB sur votre appareil. Le serveur compagnon ne gère que le proxy IA, les licences et la signalisation — jamais votre contenu."
+      },
+      {
+        "title": "Zéro télémétrie par défaut",
+        "text": "Sans analyses, sans rapports d'erreur, sans suivi. Statistiques d'usage et rapports d'erreur optionnels, chacun contrôlé indépendamment."
+      },
+      {
+        "title": "Vous détenez les clés",
+        "text": "Séparation des clés par appareil : JWK dans localStorage + textes chiffrés dans IndexedDB. Les deux sont nécessaires. Sans mot de passe maître = pas d'accès. Pas de porte dérobée « mot de passe oublié »."
+      },
+      {
+        "title": "Conformité RGPD",
+        "text": "Consentement granulaire (analyses, rapports d'erreur, événements client). Droit d'accès, de rectification, d'effacement et de portabilité — tout réalisable en local."
+      },
+      {
+        "title": "Pas de dépendance à un fournisseur",
+        "text": "Exportez vos données à tout moment dans des formats ouverts (JSON, Markdown, CSV, PDF). Vos connaissances restent portables."
+      }
     ]
   },
   "pricing": {
     "id": "tarifs",
-    "title": "Des Tarifs Simples et Justes",
-    "subtitle": "Niveau gratuit : 1 000 signets. Pro est un achat unique de 79 $ — sans abonnement.",
+    "title": "Tarifs simples et justes — Sans abonnement",
+    "subtitle": "1 000 signets gratuits pour toujours. Pro est une licence Lifetime v1 — payez une fois, gardez v1 pour toujours. Inclut toutes les v1.x et 12 mois de nouveautés. Sécurité à vie. Sans mensualité.",
     "plans": [
       {
         "name": "Gratuit",
@@ -134,58 +222,194 @@
         "period": "/à vie",
         "description": "Pour la gestion personnelle de connaissances (1 000 signets, 1 appareil)",
         "features": [
-          { "included": true, "text": "1 000 signets, notes et documents" },
-          { "included": true, "text": "Recherche plein texte et sémantique" },
-          { "included": true, "text": "IA avec votre propre clé API (vous payez le fournisseur)" },
-          { "included": true, "text": "Graphe de connaissances" },
-          { "included": true, "text": "Modèles de base" },
-          { "included": true, "text": "Export JSON/HTML" },
-          { "included": true, "text": "PWA + extensions navigateur" },
-          { "included": false, "text": "Synchronisation P2P entre appareils" },
-          { "included": false, "text": "IA locale (WebLLM/Ollama)" },
-          { "included": false, "text": "Chat RAG sur vos données" },
-          { "included": false, "text": "Cartes mémoire avec répétition espacée" },
-          { "included": false, "text": "PDF + OCR" },
-          { "included": false, "text": "Export avancé (10+ formats)" }
+          {
+            "included": true,
+            "text": "1 000 signets, notes et documents"
+          },
+          {
+            "included": true,
+            "text": "Recherche plein texte et sémantique"
+          },
+          {
+            "included": true,
+            "text": "IA avec votre propre clé API (vous payez le fournisseur)"
+          },
+          {
+            "included": true,
+            "text": "Graphe de connaissances"
+          },
+          {
+            "included": true,
+            "text": "Modèles de base"
+          },
+          {
+            "included": true,
+            "text": "Export JSON/HTML"
+          },
+          {
+            "included": true,
+            "text": "PWA + extensions navigateur"
+          },
+          {
+            "included": false,
+            "text": "Synchronisation P2P entre appareils"
+          },
+          {
+            "included": false,
+            "text": "IA locale (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "Chat RAG sur vos données"
+          },
+          {
+            "included": false,
+            "text": "Cartes mémoire avec répétition espacée"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": false,
+            "text": "Export avancé (10+ formats)"
+          }
         ],
         "cta": "Commencer Gratuitement",
         "ctaHref": "/app",
         "ctaClass": "btn-outline"
       },
       {
-        "name": "Pro",
-        "badge": "Le Plus Populaire",
-        "price": "$ 79",
-        "period": "paiement unique (à vie)",
-        "description": "Signets illimités, 3 appareils, IA locale, sync P2P — sans abonnement",
+        "name": "Pro Lifetime v1",
+        "badge": "Le Plus Populaire — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (then $79)",
+        "description": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
         "features": [
-          { "included": true, "text": "Tout ce qui est inclus dans Gratuit" },
-          { "included": true, "text": "Signets illimités" },
-          { "included": true, "text": "3 appareils" },
-          { "included": true, "text": "Synchronisation P2P sur 3 appareils" },
-          { "included": true, "text": "IA locale (WebLLM, sans clé API)" },
-          { "included": true, "text": "Chat RAG sur vos données" },
-          { "included": true, "text": "Agents experts (Développeur, Rédacteur, Analyste, Chercheur)" },
-          { "included": true, "text": "Cartes mémoire avec répétition espacée" },
-          { "included": true, "text": "PDF + OCR" },
-          { "included": true, "text": "Export avancé (10+ formats)" },
-          { "included": true, "text": "Coffre de sécurité (AES-GCM)" },
-          { "included": true, "text": "Mises à jour pendant 12 mois" },
-          { "included": true, "text": "Support par email" }
+          {
+            "included": true,
+            "text": "Everything in Free"
+          },
+          {
+            "included": true,
+            "text": "Unlimited bookmarks"
+          },
+          {
+            "included": true,
+            "text": "3 devices · P2P sync across 3 devices"
+          },
+          {
+            "included": true,
+            "text": "Local AI models (WebLLM, no API key) · RAG chat"
+          },
+          {
+            "included": true,
+            "text": "Expert agents (Coder, Writer, Analyst, Researcher)"
+          },
+          {
+            "included": true,
+            "text": "Flashcards with spaced repetition · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Advanced export (10+ formats) · Encrypted backups"
+          },
+          {
+            "included": true,
+            "text": "Security vault (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Lifetime of v1 · 12 months feature updates"
+          },
+          {
+            "included": true,
+            "text": "Security updates forever"
+          },
+          {
+            "included": true,
+            "text": "Email support (48h) + early access"
+          }
         ],
-        "cta": "Obtenir Pro à Vie",
-        "ctaHref": "https://whop.com/bookmarkforge",
-        "ctaClass": "btn-primary"
+        "cta": "Get Pro $59 Early Bird",
+        "ctaHref": "/buy-pro",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "puis $79 régulier · Founder $99",
+        "sla": "Support : Email 48h (lun–ven)"
+      },
+      {
+        "name": "Founder",
+        "badge": "Founder — 100 limitées",
+        "price": "$ 99",
+        "period": "lifetime v1",
+        "priceSub": "Même Pro v1 + badge Founder + bêta",
+        "description": "Founder badge #042 in app · Beta access · v2 60% off lifetime",
+        "features": [
+          {
+            "included": true,
+            "text": "Everything in Pro Lifetime v1"
+          },
+          {
+            "included": true,
+            "text": "Founder badge #042 in app"
+          },
+          {
+            "included": true,
+            "text": "Beta access to v2 early builds"
+          },
+          {
+            "included": true,
+            "text": "60% off v2 (and v3) forever for this account"
+          },
+          {
+            "included": true,
+            "text": "Lifetime of v1 · Security forever"
+          },
+          {
+            "included": true,
+            "text": "Priority email support (24h) + early access"
+          },
+          {
+            "included": true,
+            "text": "30-day refund via Whop"
+          }
+        ],
+        "cta": "Get Founder $99",
+        "ctaHref": "/buy-founder",
+        "ctaClass": "btn-primary btn-founder",
+        "sla": "Support : Prioritaire 24h · File Founder"
       }
-    ]
+    ],
+    "legal": "Licence Lifetime pour BookmarkForge v1. Inclut toutes les v1.x et 12 mois de nouveautés. Sécurité à vie. Futures majeures (v2, v3) -60% pour les propriétaires. Remboursement 30 jours via Whop. <a href=\"/fr/privacy-and-terms.html#terms\">Conditions</a> · <a href=\"/help#pricing\">En savoir plus</a>"
   },
   "faq": {
     "title": "Questions Fréquentes",
     "items": [
-      { "question": "Le plan gratuit est-il vraiment gratuit pour toujours ?", "answer": "Oui. Sans période d'essai ni abonnement. Le plan gratuit comprend 1 000 signets, recherche plein texte, graphe de connaissances et IA avec votre propre clé API (vous payez le fournisseur)." },
-      { "question": "Que signifie « paiement unique » pour Pro ?", "answer": "Vous payez une fois (79 $) et la licence vous appartient pour toujours. Toutes les mises à jour pendant 12 mois sont incluses. Aucun frais récurrent. La clé de licence est livrée instantanément via Whop." },
-      { "question": "Quels moyens de paiement acceptez-vous ?", "answer": "Via Whop : carte bancaire, PayPal et cryptomonnaies. Nous ne voyons jamais vos données de paiement." },
-      { "question": "Quelle est la politique de remboursement ?", "answer": "Garantie de remboursement de 30 jours sur les licences Pro. Contactez support@bookmarkforge.com" }
+      {
+        "question": "Le plan Gratuit est-il vraiment gratuit à vie ?",
+        "answer": "Oui. Sans essai ni abonnement. Inclut 1 000 signets, recherche plein texte et sémantique, graphe de connaissances et IA avec votre propre clé API (vous payez le fournisseur)."
+      },
+      {
+        "question": "Que signifie \"Lifetime de v1\" pour Pro ?",
+        "answer": "Payez une fois, à vous pour toujours. Inclut toutes les v1.x à vie et 12 mois de nouveautés dès l’achat. Sécurité à vie. Après le mois 13, v1 reste fonctionnel sans les nouveautés. Futures majeures (v2, v3) : 89 $ nouveaux, 35 $ propriétaires v1 (-60%)."
+      },
+      {
+        "question": "Qu’est-ce que Founder Edition ?",
+        "answer": "Même binaire Pro v1 — pas un palier différent. Badge Founder # dans l’app, accès bêta v2 et -60% à vie sur les futures majeures. Limité à 100. Prestige, pas paywall."
+      },
+      {
+        "question": "Moyens de paiement & remboursements ?",
+        "answer": "Via Whop : carte, PayPal, crypto. Nous ne voyons jamais vos paiements. Remboursement 30 jours : <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
+      },
+      {
+        "question": "Support — délai de réponse ?",
+        "answer": "Gratuit : entraide via <a href=\"/help\">Centre d’aide</a> + GitHub Discussions (meilleur effort). Pro : 48h ouvrées par email. Founder : 24h prioritaire + file bêta. Coffre chiffré — on ne demande jamais mot de passe ni phrase. Voir <a href=\"/help#sla\">SLA</a>."
+      },
+      {
+        "question": "J’ai oublié le mot de passe de mon coffre ?",
+        "answer": "Nous ne pouvons pas le récupérer. À la création, une phrase de 12 mots s’affiche une seule fois — notez-la sur papier. Sans elle, personne (nous inclus) ne peut ouvrir le coffre. Voir <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
     ]
   },
   "cta": {
@@ -197,12 +421,48 @@
   },
   "footer": {
     "brand": "Votre coffre de connaissances privé avec IA. 100% local.",
-    "product": { "title": "Produit", "links": ["Fonctionnalités", "Capacités IA", "Confidentialité", "Tarifs", "Ouvrir l'App"] },
-    "resources": { "title": "Ressources", "links": ["Comparatif Pocket", "Confidentialité et Conditions"] },
-    "languages": { "title": "Langues", "links": ["English", "Español", "Français", "Deutsch", "Português", "Italiano"] },
-    "support": { "title": "Support", "links": ["Contact"] },
+    "product": {
+      "title": "Produit",
+      "links": [
+        "Fonctionnalités",
+        "Capacités IA",
+        "Confidentialité",
+        "Tarifs",
+        "Ouvrir l'App"
+      ]
+    },
+    "resources": {
+      "title": "Ressources",
+      "links": [
+        "Comparatif Pocket",
+        "Confidentialité et Conditions"
+      ]
+    },
+    "languages": {
+      "title": "Langues",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Support",
+      "links": [
+        "Contact"
+      ],
+      "helpCenter": "Centre d’aide",
+      "errorCodes": "Codes d’erreur"
+    },
     "copyright": "© 2026 BookmarkForge. Tous droits réservés.",
-    "legal": ["Politique de confidentialité", "Conditions d'utilisation", "bookmarkforge@proton.me"]
+    "legal": [
+      "Politique de confidentialité",
+      "Conditions d'utilisation",
+      "bookmarkforge@proton.me"
+    ]
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
@@ -215,8 +475,33 @@
     "softwareOs": "Web",
     "softwareUrl": "https://bookmarkforge.com/fr/",
     "offers": [
-      { "name": "Gratuit", "price": "0", "currency": "USD" },
-      { "name": "Pro à vie", "price": "79", "currency": "USD" }
+      {
+        "name": "Gratuit",
+        "price": "0",
+        "currency": "USD",
+        "description": "1,000 bookmarks. Forever free."
+      },
+      {
+        "name": "Pro Lifetime v1 — Early Bird",
+        "price": "59",
+        "currency": "USD",
+        "description": "Early Bird 200. Lifetime of v1, 12 months features, security forever, v2 60% off.",
+        "priceValidUntil": "2026-12-31",
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "price": "79",
+        "currency": "USD",
+        "description": "Regular. Lifetime of v1."
+      },
+      {
+        "name": "Founder Edition",
+        "price": "99",
+        "currency": "USD",
+        "description": "Same Pro v1 + Founder badge + beta. Limited 100.",
+        "availability": "https://schema.org/LimitedAvailability"
+      }
     ],
     "featureList": [
       "Stockage 100% local",
@@ -227,10 +512,30 @@
       "Synchronisation P2P"
     ],
     "faq": [
-      { "question": "Le plan gratuit est-il vraiment gratuit pour toujours ?", "answer": "Oui. Sans période d'essai ni abonnement. Le plan gratuit comprend 1 000 signets, recherche plein texte, graphe de connaissances et IA avec votre propre clé API (vous payez le fournisseur)." },
-      { "question": "Que signifie « paiement unique » pour Pro ?", "answer": "Vous payez une fois (79 $) et possédez la licence pour toujours. Toutes les mises à jour pendant 12 mois sont incluses. Aucun frais récurrent. La clé de licence est livrée instantanément via Whop." },
-      { "question": "Quels moyens de paiement acceptez-vous ?", "answer": "Via Whop : carte bancaire, PayPal et cryptomonnaies. Nous ne voyons jamais vos données de paiement." },
-      { "question": "Quelle est la politique de remboursement ?", "answer": "Garantie de remboursement de 30 jours sur les licences Pro. Contactez support@bookmarkforge.com" }
+      {
+        "question": "Le plan Gratuit est-il vraiment gratuit à vie ?",
+        "answer": "Oui. Sans essai ni abonnement. Inclut 1 000 signets, recherche plein texte et sémantique, graphe de connaissances et IA avec votre propre clé API (vous payez le fournisseur)."
+      },
+      {
+        "question": "Que signifie \"Lifetime de v1\" pour Pro ?",
+        "answer": "Payez une fois, à vous pour toujours. Inclut toutes les v1.x à vie et 12 mois de nouveautés dès l’achat. Sécurité à vie. Après le mois 13, v1 reste fonctionnel sans les nouveautés. Futures majeures (v2, v3) : 89 $ nouveaux, 35 $ propriétaires v1 (-60%)."
+      },
+      {
+        "question": "Qu’est-ce que Founder Edition ?",
+        "answer": "Même binaire Pro v1 — pas un palier différent. Badge Founder # dans l’app, accès bêta v2 et -60% à vie sur les futures majeures. Limité à 100. Prestige, pas paywall."
+      },
+      {
+        "question": "Moyens de paiement & remboursements ?",
+        "answer": "Via Whop : carte, PayPal, crypto. Nous ne voyons jamais vos paiements. Remboursement 30 jours : bookmarkforge@proton.me."
+      },
+      {
+        "question": "Support — délai de réponse ?",
+        "answer": "Gratuit : entraide via Centre d’aide + GitHub Discussions (meilleur effort). Pro : 48h ouvrées par email. Founder : 24h prioritaire + file bêta. Coffre chiffré — on ne demande jamais mot de passe ni phrase. Voir SLA."
+      },
+      {
+        "question": "J’ai oublié le mot de passe de mon coffre ?",
+        "answer": "Nous ne pouvons pas le récupérer. À la création, une phrase de 12 mots s’affiche une seule fois — notez-la sur papier. Sans elle, personne (nous inclus) ne peut ouvrir le coffre. Voir BF-E101."
+      }
     ]
   }
 }

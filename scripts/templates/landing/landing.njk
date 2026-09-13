@@ -79,7 +79,7 @@
         "description": "{{ t.description }}",
         "offers": [
           {% for offer in t.structuredData.offers %}
-          { "@type": "Offer", "name": "{{ offer.name }}", "price": "{{ offer.price }}", "priceCurrency": "{{ offer.currency }}" }{% if not loop.last %},{% endif %}
+          { "@type": "Offer", "name": "{{ offer.name | escapejs }}", "price": "{{ offer.price }}", "priceCurrency": "{{ offer.currency }}"{% if offer.description %}, "description": "{{ offer.description | escapejs }}"{% endif %}{% if offer.priceValidUntil %}, "priceValidUntil": "{{ offer.priceValidUntil }}"{% endif %}{% if offer.availability %}, "availability": "{{ offer.availability }}"{% endif %} }{% if not loop.last %},{% endif %}
           {% endfor %}
         ],
         "featureList": [
@@ -121,7 +121,13 @@
         <a href="#{{ t.ai.id }}">{{ t.navLinks.ai }}</a>
         <a href="#{{ t.privacy.id }}">{{ t.navLinks.privacy }}</a>
         <a href="#{{ t.pricing.id }}">{{ t.navLinks.pricing }}</a>
-        <a href="{{ t.langLink.href }}" hreflang="{{ t.langLink.hreflang }}" lang="{{ t.langLink.lang }}">{{ t.langLink.text }}</a>
+        <a href="/help">{{ t.navLinks.help | default('Help') }}</a>
+        <a href="/?lang=en" hreflang="en" lang="en">English</a>
+        <a href="/es/?lang=es" hreflang="es" lang="es">Español</a>
+        <a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a>
+        <a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a>
+        <a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a>
+        <a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a>
         <a href="/app" class="btn-primary nav-cta">{{ t.navCta }}</a>
       </nav>
 
@@ -253,24 +259,40 @@
           <h2 id="{{ t.pricing.id }}-title">{{ t.pricing.title }}</h2>
           <p class="section-subtitle">{{ t.pricing.subtitle }}</p>
         </div>
-        <div class="pricing-cards">
+        <div class="pricing-cards{% if t.pricing.plans.length == 3 %} three-col{% endif %}">
           {% for plan in t.pricing.plans %}
-          <div class="price-card {% if plan.badge %}popular{% endif %}">
+          <div class="price-card {% if plan.badge %}popular{% endif %}{% if plan.name == 'Founder' or plan.name == 'Founder Edition' %} founder{% endif %}">
             {% if plan.badge %}
-            <span class="badge">{{ plan.badge }}</span>
+            <span class="badge{% if plan.name == 'Founder' or plan.name == 'Founder Edition' %} badge-founder{% endif %}">{{ plan.badge }}</span>
+            {% endif %}
+            {% if plan.badgeEarly %}
+            <span class="badge badge-early">{{ plan.badgeEarly }}</span>
             {% endif %}
             <h3>{{ plan.name }}</h3>
+            {% if plan.priceWas %}
+            <div class="price"><span class="price-now">{{ plan.price }}</span> <span class="price-was">{{ plan.priceWas }}</span><span>{{ plan.period }}</span></div>
+            {% else %}
             <div class="price">{{ plan.price }}<span>{{ plan.period }}</span></div>
+            {% endif %}
+            {% if plan.priceSub %}
+            <div class="price-sub">{{ plan.priceSub }}</div>
+            {% endif %}
             <p>{{ plan.description }}</p>
             <ul>
               {% for feature in plan.features %}
               <li><span aria-hidden="true">{{ '✅' if feature.included else '❌' }}</span> {{ feature.text }}</li>
               {% endfor %}
             </ul>
-            <a href="{{ plan.ctaHref }}" class="{{ plan.ctaClass }} {% if plan.ctaClass == 'btn-primary' %}btn-block{% endif %}" {% if plan.ctaHref | startsWith('http') %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ plan.cta }}</a>
+            <a href="{{ plan.ctaHref }}" class="{{ plan.ctaClass }} {% if 'btn-primary' in plan.ctaClass %}btn-block{% endif %}" {% if plan.ctaHref | startsWith('http') or plan.ctaHref | startsWith('/buy') %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ plan.cta }}</a>
+            {% if plan.sla %}
+            <p class="sla-note">{{ plan.sla }} · <a href="/help#sla">SLA</a></p>
+            {% endif %}
           </div>
           {% endfor %}
         </div>
+        {% if t.pricing.legal %}
+        <p class="pricing-legal">{{ t.pricing.legal | safe }}</p>
+        {% endif %}
       </div>
     </section>
 
@@ -336,6 +358,9 @@
       <div class="footer-links">
         <h4>{{ t.footer.support.title }}</h4>
         <ul>
+          <li><a href="/help">{{ t.footer.support.helpCenter | default('Help Center') }}</a></li>
+          <li><a href="/help#sla">SLA</a></li>
+          <li><a href="/help#bf-e">{{ t.footer.support.errorCodes | default('Error Codes') }}</a></li>
           {% for link in t.footer.support.links %}
           <li><a href="mailto:bookmarkforge@proton.me">{{ link }}</a></li>
           {% endfor %}

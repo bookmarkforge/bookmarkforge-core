@@ -1,14 +1,18 @@
 # Que nos falta — deuda pendiente del pre-lanzamiento
 
-> Estado del working tree: **2026-09-13 — versionado**. Este archivo documenta lo que falta
+> Estado del working tree: **2026-09-13 — migración Lifetime versionada en disco, pendiente de commit**. Este archivo documenta lo que falta
 > para el lanzamiento público. Las fuentes vivas son `docs/audit.md`,
 > `docs/launch-checklist.md`, `docs/ROPA.md` y `docs/ops-nightly.md` — este
 > archivo es el índice consolidado, no la autoridad.
 
-## 1. El working tree está sin commitear (bloqueo #1) — ✅ RESUELTO 2026-09-13
+## 1. Working tree con migración Lifetime (bloqueo #1) — ⚠️ PENDIENTE DE COMMIT 2026-09-13
 
-- **2026-09-13: 0 archivos pendientes** — `git status --porcelain` vacío tras 9 commits
-  atómicos sobre `8ce4867` (3dfa700 fix fail-closed → e50bfa8 tests E2E). Ver `git log --oneline -9`.
+- **2026-09-13: 80 ficheros en disco sin commitear** — migración lifetime versionada lista (pricing
+  `Free $0 / Pro $59→$79→$99 / Founder $99`, landings EN+5 + 24 locales regeneradas, `og-image-pricing.svg`,
+  `help.html` + `supportDiagnostics.ts` + `AdvancedSection.tsx`, `privacy-and-terms.html`,
+  `translations`/`landing-translations`/`locales`, `nginx.conf`+`netlify.toml`+`_redirects` routing `/help`).
+  `git status --porcelain` → 78 M + 2 `??`. Pendiente commit atómico antes del push.
+- Históricamente **2026-09-13 09:00: 0 pendientes** tras 9 commits `3dfa700→e50bfa8` sobre `8ce4867` (ver log).
 - Artefactos huérfanos de la auditoría anterior (`nightly-trends.svg`,
   `nightly-consistency.svg`, `nightly-trends-summary.md`, `blob-report/`,
   `.tmp-audit*`) **no existen en disco** — ya ignorados/eliminados; no hay baselines huérfanos que decidir.
@@ -61,6 +65,11 @@
 
 ## 5. Documentación que falta o está incompleta (gaps conocidos de AGENTS.md) — residual
 
+- **Modelo Lifetime + Help (2026-09-13 en disco, pendiente commit):** pricing lifetime versionado
+  (`src/constants/pricing.ts` Free/Pro $59→$79/Founder $99, v1 12 meses + security forever, v2 60% off),
+  Help Center `/help` (`public/help.html` + `/help` routing + `supportDiagnostics.ts` + SLA Pro 48h/Founder 24h),
+  FAQ 6x + JSON-LD 4 Offers. Ops actualizado en `docs/operations.md` §Modelo comercial. Pendiente
+  reflejar en `launch-checklist` si se quiere gate de pricing/SLA.
 - **Registro ADR — completo 2026-09-13**: 19 ADRs vivos (001/019/026/027/028/029/030/032/033/034/037/038/039/040/042/043/044/045/046;
   ver `docs/docs-state-index.md` + `AGENTS.md` §7). **ADR-040 ya implementado** (`scripts/check-docs-markdown.mjs`
   + `scripts/docs-markdown-baseline.json`, 44 files, 4 reglas, integrado en `npm run check` y aceptado por el
@@ -92,7 +101,7 @@
 
 ## 7. Orden sugerido de ejecución — actualizado 2026-09-13
 
-1. ~~**Commitear el working tree** (§1)~~ — ✅ hecho 2026-09-13 (9 commits).
+1. **Commitear la migración Lifetime** (§1) — 80 ficheros en disco (pricing + help + landings + routing).
 2. **Configurar el remote** y sustituir `OWNER` en el README (§2) — `docs/github-secrets-and-push-runbook.md`.
 3. **Importar el ruleset de `main`** y verificar los 7 checks obligatorios (PR dummy).
 4. **Secrets reales** (webhooks, `STAGING_ANALYTICS_ADMIN_TOKEN`, `STAGING_URL`, DSN Sentry) (§3).

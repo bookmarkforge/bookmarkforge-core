@@ -209,6 +209,23 @@ body {
 .save-badge { margin-left: 6px; }
 
 .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: start; }
+.pricing-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: stretch; }
+.pricing-cards.three-col { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 1024px) { .pricing-cards.three-col { grid-template-columns: 1fr; } }
+.price-card { background: var(--bg-card); border: 1px solid var(--divider); border-radius: var(--radius-card); padding: 32px; display: flex; flex-direction: column; position: relative; }
+.price-card.popular { border-color: var(--accent-primary); box-shadow: 0 0 0 1px var(--accent-primary), 0 20px 60px rgba(0,174,239,0.12); }
+.price-card.founder { border-color: #f59e0b; box-shadow: 0 0 0 1px rgba(245,158,11,0.35); }
+.price-card .badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent-primary); color: #fff; padding: 4px 12px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+.price-card .badge.badge-early { background: #0ea5e9; top: -28px; }
+.price-card .badge.badge-founder { background: #f59e0b; color: #111; }
+.price { display: flex; gap: 8px; align-items: baseline; justify-content: center; flex-wrap: wrap; font-size: 2.25rem; font-weight: 800; }
+.price .price-now { color: var(--text-primary); }
+.price .price-was { color: var(--text-muted); text-decoration: line-through; font-size: 1.25rem; font-weight: 600; }
+.price-sub { text-align: center; font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; }
+.pricing-legal { max-width: 860px; margin: 28px auto 0; text-align: center; font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
+.sla-note { margin-top: 12px; text-align: center; font-size: 0.78rem; color: var(--text-muted); }
+.btn-founder { background: #f59e0b; color: #111; }
+.btn-founder:hover { background: #fbbf24; }
 .pricing-card { position: relative; background: var(--bg-card); border: 1px solid var(--divider); border-radius: var(--radius-card); padding: 32px; display: flex; flex-direction: column; transition: all 0.2s; }
 .pricing-card:hover { border-color: var(--accent-glow); }
 .pricing-card.pro { border-color: var(--accent-primary); box-shadow: 0 0 0 1px var(--accent-primary), 0 20px 60px rgba(0,174,239,0.15); }

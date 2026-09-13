@@ -360,8 +360,6 @@
   "app_diagWebLLMModel": "Modelo cargado: {{model}}",
   "app_diagWebLLMNotLoaded": "El modelo aún no está cargado.",
   "app_diagWebLLMOk": "WebLLM está listo en este dispositivo.",
-  "app_diagWebLLMModel": "Modelo cargado: {{model}}",
-  "app_diagWebLLMNotLoaded": "El modelo aún no está cargado.",
   "app_diagWebRTC": "Conectividad P2P (WebRTC)",
   "app_diagWebRTCError": "La API de WebRTC no está disponible. La sincronización P2P no funcionará.",
   "app_diagWebRTCOk": "La API WebRTC está disponible para sincronización P2P.",
@@ -1708,5 +1706,8 @@
   "app_maintenancePartial_one": "Mantenimiento terminado con 1 problema",
   "app_maintenancePartial_few": "Mantenimiento terminado con problemas",
   "app_maintenancePartial_many": "Mantenimiento terminado con problemas",
-  "app_maintenancePartial_other": "Mantenimiento terminado con {{count}} problemas"
+  "app_maintenancePartial_other": "Mantenimiento terminado con {{count}} problemas",
+  "app_helpDiagnostics": "Help & diagnostics",
+  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
+  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
 }

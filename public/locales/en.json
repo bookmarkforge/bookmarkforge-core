@@ -274,7 +274,7 @@
   "app_deselectAll": "Deselect All",
   "app_diagStorage": "Storage (IndexedDB)",
   "app_diagWebGPU": "Local AI Capability (WebGPU)",
-  "app_diagCopyReport": "Copy Report",
+  "app_diagCopyReport": "Copy diagnostic",
   "app_diagCopyReportCopied": "Copied!",
   "app_diagCopyReportTitle": "Copy the diagnostics report as JSON",
   "app_diagWebRTC": "P2P Connectivity (WebRTC)",
@@ -1706,5 +1706,8 @@
   "app_maintenancePartial_other": "Maintenance finished with {{count}} issues",
   "app_diagWebLLMBlockerWebGPU": "WebLLM cannot run: this browser does not support WebGPU.",
   "app_diagWebLLMBlockerF16": "WebLLM cannot run: the GPU lacks shader-f16 (half-precision) support.",
-  "app_diagWebLLMBlockerRAM": "WebLLM cannot run: at least 4 GB of device memory is required."
+  "app_diagWebLLMBlockerRAM": "WebLLM cannot run: at least 4 GB of device memory is required.",
+  "app_helpDiagnostics": "Help & diagnostics",
+  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
+  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
 }

@@ -1531,5 +1531,8 @@
   "app_maintenancePartial_one": "维护结束，存在 1 个问题",
   "app_maintenancePartial_few": "维护结束，存在问题",
   "app_maintenancePartial_many": "维护结束，存在问题",
-  "app_maintenancePartial_other": "维护结束，存在 {{count}} 个问题"
+  "app_maintenancePartial_other": "维护结束，存在 {{count}} 个问题",
+  "app_helpDiagnostics": "Help & diagnostics",
+  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
+  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
 }

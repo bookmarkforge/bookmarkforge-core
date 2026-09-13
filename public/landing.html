@@ -12,36 +12,12 @@
   <link rel="manifest" href="/manifest.json">
   <!-- SEO: canonical + hreflang -->
   <link rel="canonical" href="https://bookmarkforge.com/">
-  <link rel="alternate" hreflang="ar" href="https://bookmarkforge.com/ar/">
-  <link rel="alternate" hreflang="bg" href="https://bookmarkforge.com/bg/">
-  <link rel="alternate" hreflang="cs" href="https://bookmarkforge.com/cs/">
-  <link rel="alternate" hreflang="da" href="https://bookmarkforge.com/da/">
-  <link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/">
-  <link rel="alternate" hreflang="el" href="https://bookmarkforge.com/el/">
   <link rel="alternate" hreflang="en" href="https://bookmarkforge.com/">
   <link rel="alternate" hreflang="es" href="https://bookmarkforge.com/es/">
-  <link rel="alternate" hreflang="fi" href="https://bookmarkforge.com/fi/">
   <link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/">
-  <link rel="alternate" hreflang="he" href="https://bookmarkforge.com/he/">
-  <link rel="alternate" hreflang="hi" href="https://bookmarkforge.com/hi/">
-  <link rel="alternate" hreflang="hr" href="https://bookmarkforge.com/hr/">
-  <link rel="alternate" hreflang="hu" href="https://bookmarkforge.com/hu/">
-  <link rel="alternate" hreflang="id" href="https://bookmarkforge.com/id/">
-  <link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/">
-  <link rel="alternate" hreflang="ja" href="https://bookmarkforge.com/ja/">
-  <link rel="alternate" hreflang="ko" href="https://bookmarkforge.com/ko/">
-  <link rel="alternate" hreflang="nl" href="https://bookmarkforge.com/nl/">
-  <link rel="alternate" hreflang="no" href="https://bookmarkforge.com/no/">
-  <link rel="alternate" hreflang="pl" href="https://bookmarkforge.com/pl/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforge.com/de/">
   <link rel="alternate" hreflang="pt" href="https://bookmarkforge.com/pt/">
-  <link rel="alternate" hreflang="ro" href="https://bookmarkforge.com/ro/">
-  <link rel="alternate" hreflang="ru" href="https://bookmarkforge.com/ru/">
-  <link rel="alternate" hreflang="sv" href="https://bookmarkforge.com/sv/">
-  <link rel="alternate" hreflang="th" href="https://bookmarkforge.com/th/">
-  <link rel="alternate" hreflang="tr" href="https://bookmarkforge.com/tr/">
-  <link rel="alternate" hreflang="uk" href="https://bookmarkforge.com/uk/">
-  <link rel="alternate" hreflang="vi" href="https://bookmarkforge.com/vi/">
-  <link rel="alternate" hreflang="zh" href="https://bookmarkforge.com/zh/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforge.com/it/">
   <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
   <!-- Open Graph (og-image.png is 1200x630) -->
   <meta property="og:type" content="website">
@@ -102,7 +78,7 @@
         "image": "https://bookmarkforge.com/og-image.png",
         "description": "The private Pocket alternative. Save articles, notes and documents in an encrypted, local-first vault. AI search, Notion-style editor, P2P sync. Free tier: 1,000 bookmarks.",
         "offers": [
-          { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },          { "@type": "Offer", "name": "Pro Lifetime", "price": "79", "priceCurrency": "USD" }        ],
+          { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD", "description": "1,000 bookmarks. Forever free." },          { "@type": "Offer", "name": "Pro Lifetime v1 — Early Bird", "price": "59", "priceCurrency": "USD", "description": "Early Bird 200. Lifetime of v1, 12 months features, security forever, v2 60% off.", "priceValidUntil": "2026-12-31", "availability": "https://schema.org/InStock" },          { "@type": "Offer", "name": "Pro Lifetime v1", "price": "79", "priceCurrency": "USD", "description": "Regular. Lifetime of v1." },          { "@type": "Offer", "name": "Founder Edition", "price": "99", "priceCurrency": "USD", "description": "Same Pro v1 + Founder badge + beta. Limited 100.", "availability": "https://schema.org/LimitedAvailability" }        ],
         "featureList": [
           "Local-first storage",          "End-to-end encryption",          "Works offline",          "AI search",          "Notion-style editor",          "P2P sync"        ]
       },
@@ -113,19 +89,27 @@
           {
             "@type": "Question",
             "name": "Is the Free tier really free forever?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Yes. No trial, no subscription. The free tier includes 1,000 bookmarks, full-text search, knowledge graph, and AI with your own API key (you pay the provider)." }
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. No trial, no subscription. The free tier includes 1,000 bookmarks, full-text \u0026 semantic search, knowledge graph, and AI with your own API key (you pay the provider)." }
           },          {
             "@type": "Question",
-            "name": "What does \"one-time\" mean for Pro?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Pay once ($79), own the license forever. Includes all updates for 12 months. No recurring charges. License key delivered instantly via Whop." }
+            "name": "What does \"Lifetime of v1\" mean for Pro?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Pay once, own v1 forever. Includes all v1.x updates (bugfixes + minor features) forever and 12 months of feature updates from purchase. Security updates forever. After month 13 you keep v1 functional, just without new features. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off)." }
           },          {
             "@type": "Question",
-            "name": "What payment methods?",
-            "acceptedAnswer": { "@type": "Answer", "text": "Via Whop: credit card, PayPal, crypto. We never see your payment details." }
+            "name": "What about Founder Edition?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Same Pro v1 binary — not a feature tier. Founder gives you a Founder # badge in the app, beta access to v2, and 60% off future majors forever for this account. Limited 100. Vanity, not paywall." }
           },          {
             "@type": "Question",
-            "name": "Refund policy?",
-            "acceptedAnswer": { "@type": "Answer", "text": "30-day money-back guarantee on Pro licenses. Contact bookmarkforge@proton.me" }
+            "name": "What payment methods \u0026 refunds?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Via Whop: credit card, PayPal, crypto. We never see your payment details. 30-day refund — contact bookmarkforge@proton.me." }
+          },          {
+            "@type": "Question",
+            "name": "Support — how fast do you answer?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Free: Community help via Help Center + GitHub Discussions (best effort). Pro: email 48h business days. Founder: priority 24h + beta queue. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See Support SLA." }
+          },          {
+            "@type": "Question",
+            "name": "What if I forget my vault password?",
+            "acceptedAnswer": { "@type": "Answer", "text": "We cannot recover it. When you create a vault we show 12-word seed phrase once — write it on paper. Without it, no one (including us) can open the vault. See BF-E101." }
           }        ]
       }
     ]
@@ -148,8 +132,7 @@
         <a href="#ai">AI</a>
         <a href="#privacy">Privacy</a>
         <a href="#pricing">Pricing</a>
-
-
+        <a href="/help">Help</a>
         <a href="/?lang=en" hreflang="en" lang="en">English</a>
         <a href="/es/?lang=es" hreflang="es" lang="es">Español</a>
         <a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a>
@@ -349,25 +332,24 @@
     <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
       <div class="container">
         <div class="section-header">
-          <h2 id="pricing-title">Simple, Fair Pricing</h2>
-          <p class="section-subtitle">Free tier: 1,000 bookmarks. Pro is a one-time $79 license — no monthly subscriptions.</p>
+          <h2 id="pricing-title">Simple, Fair Pricing — No Subscriptions</h2>
+          <p class="section-subtitle">Free 1,000 bookmarks forever. Pro is a Lifetime license for v1 — pay once, own v1 forever. Includes all v1.x updates and 12 months of feature updates. Security updates forever. No monthly billing.</p>
         </div>
-        <div class="pricing-cards">
+        <div class="pricing-cards three-col">
           <div class="price-card ">
             <h3>Free</h3>
             <div class="price">$ 0<span>/forever</span></div>
             <p>For personal knowledge management (1,000 bookmarks, 1 device)</p>
             <ul>
               <li><span aria-hidden="true">✅</span> 1,000 bookmarks, notes, documents</li>
-              <li><span aria-hidden="true">✅</span> Full-text search</li>
+              <li><span aria-hidden="true">✅</span> Full-text & semantic search</li>
               <li><span aria-hidden="true">✅</span> AI with your own API key (you pay usage)</li>
               <li><span aria-hidden="true">✅</span> Knowledge graph</li>
               <li><span aria-hidden="true">✅</span> Basic templates</li>
               <li><span aria-hidden="true">✅</span> JSON/HTML export</li>
               <li><span aria-hidden="true">✅</span> PWA + browser extensions</li>
               <li><span aria-hidden="true">❌</span> P2P sync across devices</li>
-              <li><span aria-hidden="true">❌</span> Local AI (WebLLM/Ollama)</li>
-              <li><span aria-hidden="true">❌</span> RAG chat over your data</li>
+              <li><span aria-hidden="true">❌</span> Local AI (WebLLM/Ollama) & RAG chat</li>
               <li><span aria-hidden="true">❌</span> Flashcards with spaced repetition</li>
               <li><span aria-hidden="true">❌</span> PDF + OCR</li>
               <li><span aria-hidden="true">❌</span> Advanced export (10+ formats)</li>
@@ -375,29 +357,47 @@
             <a href="/app" class="btn-secondary " >Start Free</a>
           </div>
           <div class="price-card popular">
-            <span class="badge">Most Popular</span>
-            <h3>Pro</h3>
-            <div class="price">$ 79<span>one-time (lifetime)</span></div>
-            <p>Unlimited bookmarks, 3 devices, local AI, P2P sync — no subscription</p>
+            <span class="badge">Most Popular — Early Bird 200</span>
+            <h3>Pro Lifetime v1</h3>
+            <div class="price"><span class="price-now">$ 59</span> <span class="price-was">$79</span><span>Early Bird (then $79)</span></div>
+            <div class="price-sub">then $79 regular · Founder $99</div>
+            <p>Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off</p>
             <ul>
               <li><span aria-hidden="true">✅</span> Everything in Free</li>
               <li><span aria-hidden="true">✅</span> Unlimited bookmarks</li>
-              <li><span aria-hidden="true">✅</span> 3 devices</li>
-              <li><span aria-hidden="true">✅</span> P2P sync across 3 devices</li>
-              <li><span aria-hidden="true">✅</span> Local AI models (WebLLM, no API key)</li>
-              <li><span aria-hidden="true">✅</span> Encrypted backups & export</li>
-              <li><span aria-hidden="true">✅</span> RAG chat over your data</li>
+              <li><span aria-hidden="true">✅</span> 3 devices · P2P sync across 3 devices</li>
+              <li><span aria-hidden="true">✅</span> Local AI models (WebLLM, no API key) · RAG chat</li>
               <li><span aria-hidden="true">✅</span> Expert agents (Coder, Writer, Analyst, Researcher)</li>
-              <li><span aria-hidden="true">✅</span> Flashcards with spaced repetition</li>
-              <li><span aria-hidden="true">✅</span> PDF + OCR</li>
-              <li><span aria-hidden="true">✅</span> Advanced export (10+ formats)</li>
+              <li><span aria-hidden="true">✅</span> Flashcards with spaced repetition · PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> Advanced export (10+ formats) · Encrypted backups</li>
               <li><span aria-hidden="true">✅</span> Security vault (AES-GCM)</li>
-              <li><span aria-hidden="true">✅</span> Updates for 12 months</li>
-              <li><span aria-hidden="true">✅</span> Email support + early access</li>
+              <li><span aria-hidden="true">✅</span> Lifetime of v1 · 12 months feature updates</li>
+              <li><span aria-hidden="true">✅</span> Security updates forever</li>
+              <li><span aria-hidden="true">✅</span> Email support (48h) + early access</li>
             </ul>
-            <a href="/buy-pro" class="btn-primary btn-block" >Get Pro Lifetime</a>
+            <a href="/buy-pro" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Get Pro $59 Early Bird</a>
+            <p class="sla-note">Support: Email 48h (Mon–Fri) · <a href="/help#sla">SLA</a></p>
+          </div>
+          <div class="price-card popular founder">
+            <span class="badge badge-founder">Founder — 100 limited</span>
+            <h3>Founder</h3>
+            <div class="price">$ 99<span>lifetime v1</span></div>
+            <div class="price-sub">Same Pro v1 + Founder badge + beta</div>
+            <p>Founder badge #042 in app · Beta access · v2 60% off lifetime</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Everything in Pro Lifetime v1</li>
+              <li><span aria-hidden="true">✅</span> Founder badge #042 in app</li>
+              <li><span aria-hidden="true">✅</span> Beta access to v2 early builds</li>
+              <li><span aria-hidden="true">✅</span> 60% off v2 (and v3) forever for this account</li>
+              <li><span aria-hidden="true">✅</span> Lifetime of v1 · Security forever</li>
+              <li><span aria-hidden="true">✅</span> Priority email support (24h) + early access</li>
+              <li><span aria-hidden="true">✅</span> 30-day refund via Whop</li>
+            </ul>
+            <a href="/buy-founder" class="btn-primary btn-founder btn-block" target="_blank" rel="noopener noreferrer">Get Founder $99</a>
+            <p class="sla-note">Support: Priority 24h · Founder queue · <a href="/help#sla">SLA</a></p>
           </div>
         </div>
+        <p class="pricing-legal">Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href="/privacy-and-terms.html#terms">Terms</a> · <a href="/help#pricing">Learn more</a></p>
       </div>
     </section>
 
@@ -408,19 +408,27 @@
         <div class="faq-grid">
           <div class="faq-item">
             <h3>Is the Free tier really free forever?</h3>
-            <p>Yes. No trial, no subscription. The free tier includes 1,000 bookmarks, full-text search, knowledge graph, and AI with your own API key (you pay the provider).</p>
+            <p>Yes. No trial, no subscription. The free tier includes 1,000 bookmarks, full-text & semantic search, knowledge graph, and AI with your own API key (you pay the provider).</p>
           </div>
           <div class="faq-item">
-            <h3>What does "one-time" mean for Pro?</h3>
-            <p>Pay once ($79), own the license forever. Includes all updates for 12 months. No recurring charges. License key delivered instantly via Whop.</p>
+            <h3>What does "Lifetime of v1" mean for Pro?</h3>
+            <p>Pay once, own v1 forever. Includes all v1.x updates (bugfixes + minor features) forever and 12 months of feature updates from purchase. Security updates forever. After month 13 you keep v1 functional, just without new features. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off).</p>
           </div>
           <div class="faq-item">
-            <h3>What payment methods?</h3>
-            <p>Via Whop: credit card, PayPal, crypto. We never see your payment details.</p>
+            <h3>What about Founder Edition?</h3>
+            <p>Same Pro v1 binary — not a feature tier. Founder gives you a Founder # badge in the app, beta access to v2, and 60% off future majors forever for this account. Limited 100. Vanity, not paywall.</p>
           </div>
           <div class="faq-item">
-            <h3>Refund policy?</h3>
-            <p>30-day money-back guarantee on Pro licenses. Contact <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></p>
+            <h3>What payment methods & refunds?</h3>
+            <p>Via Whop: credit card, PayPal, crypto. We never see your payment details. 30-day refund — contact <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Support — how fast do you answer?</h3>
+            <p>Free: Community help via <a href="/help">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Founder: priority 24h + beta queue. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href="/help#sla">Support SLA</a>.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What if I forget my vault password?</h3>
+            <p>We cannot recover it. When you create a vault we show 12-word seed phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href="/help#bf-e101">BF-E101</a>.</p>
           </div>
         </div>
       </div>
@@ -449,67 +457,46 @@
       <div class="footer-links">
         <h4>Product</h4>
         <ul>
-          <li><a href="#features">Features</a></li>
-          <li><a href="#ai">AI Capabilities</a></li>
-          <li><a href="#privacy">Privacy</a></li>
-          <li><a href="#pricing">Pricing</a></li>
-          <li><a href="/app">Launch App</a></li>
+          <li><a href="#">Features</a></li>
+          <li><a href="#">AI Capabilities</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Launch App</a></li>
         </ul>
       </div>
       <div class="footer-links">
         <h4>Resources</h4>
         <ul>
-          <li><a href="/pocket-alternative">Pocket Comparison</a></li>
-          <li><a href="/privacy-and-terms.html">Privacy & Terms</a></li>
-          <li><a href="#security">Security</a></li>
-          <li><a href="#operations">Operations</a></li>
+          <li><a href="#">Pocket Comparison</a></li>
+          <li><a href="#">Privacy & Terms</a></li>
+          <li><a href="#">Security</a></li>
+          <li><a href="#">Operations</a></li>
         </ul>
       </div>
       <div class="footer-links">
         <h4>Languages</h4>
         <ul>
-          <li><a href="/?lang=en">English</a></li>
-          <li><a href="/es/?lang=es">Español</a></li>
-          <li><a href="/fr/?lang=fr">Français</a></li>
-          <li><a href="/de/?lang=de">Deutsch</a></li>
-          <li><a href="/pt/?lang=pt">Português</a></li>
-          <li><a href="/it/?lang=it">Italiano</a></li>
-          <li><a href="/ar/?lang=ar">العربية</a></li>
-          <li><a href="/bg/?lang=bg">Български</a></li>
-          <li><a href="/cs/?lang=cs">Čeština</a></li>
-          <li><a href="/da/?lang=da">Dansk</a></li>
-          <li><a href="/el/?lang=el">Ελληνικά</a></li>
-          <li><a href="/fi/?lang=fi">Suomi</a></li>
-          <li><a href="/he/?lang=he">עברית</a></li>
-          <li><a href="/hi/?lang=hi">हिन्दी</a></li>
-          <li><a href="/hr/?lang=hr">Hrvatski</a></li>
-          <li><a href="/hu/?lang=hu">Magyar</a></li>
-          <li><a href="/id/?lang=id">Bahasa Indonesia</a></li>
-          <li><a href="/ja/?lang=ja">日本語</a></li>
-          <li><a href="/ko/?lang=ko">한국어</a></li>
-          <li><a href="/nl/?lang=nl">Nederlands</a></li>
-          <li><a href="/no/?lang=no">Norsk</a></li>
-          <li><a href="/pl/?lang=pl">Polski</a></li>
-          <li><a href="/ro/?lang=ro">Română</a></li>
-          <li><a href="/ru/?lang=ru">Русский</a></li>
-          <li><a href="/sv/?lang=sv">Svenska</a></li>
-          <li><a href="/th/?lang=th">ไทย</a></li>
-          <li><a href="/tr/?lang=tr">Türkçe</a></li>
-          <li><a href="/uk/?lang=uk">Українська</a></li>
-          <li><a href="/vi/?lang=vi">Tiếng Việt</a></li>
-          <li><a href="/zh/?lang=zh">中文</a></li>
+          <li><a href="#">English</a></li>
+          <li><a href="#">Español</a></li>
+          <li><a href="#">Français</a></li>
+          <li><a href="#">Deutsch</a></li>
+          <li><a href="#">Português</a></li>
+          <li><a href="#">Italiano</a></li>
         </ul>
       </div>
       <div class="footer-links">
         <h4>Support</h4>
         <ul>
+          <li><a href="/help">Help Center</a></li>
+          <li><a href="/help#sla">SLA</a></li>
+          <li><a href="/help#bf-e">Error Codes</a></li>
           <li><a href="mailto:bookmarkforge@proton.me">Contact</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. All rights reserved.</p>
-      <a href="/privacy-and-terms.html">Privacy Policy</a> · <a href="/privacy-and-terms.html#terms">Terms of Service</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+      <a href="/en/privacy-and-terms.html">Privacy Policy</a> · <a href="/en/privacy-and-terms.html#terms">Terms of Service</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
     </div>
   </footer>
 

@@ -1,9 +1,10 @@
-import React from "react";
-import { RefreshCw } from "lucide-react";
+import React, { useState } from "react";
+import { RefreshCw, Copy, Check, LifeBuoy } from "lucide-react";
 import type { TFunction } from "i18next";
 import { autoProcessorService } from "../../services/ai/AutoProcessorService";
 import { toast } from "sonner";
 import { useGuardedAction } from "../../hooks/useGuardedAction";
+import { copyRedactedDiagnostic } from "../../utils/supportDiagnostics";
 
 interface AdvancedSectionProps {
   t: TFunction;
@@ -20,6 +21,20 @@ export const AdvancedSection: React.FC<AdvancedSectionProps> = ({ t }) => {
     void runReprocess(() => autoProcessorService.forceReprocessAll());
   };
 
+  const [copied, setCopied] = useState(false);
+  const { run: runCopy, isRunning: isCopying } = useGuardedAction<string>({
+    onSuccess: () => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      toast.success(t("app_diagCopyReportCopied", "Copied!"));
+    },
+    onError: () => toast.error(t("app_diagCopyFailed", "Could not copy diagnostic. See Help."))
+  });
+
+  const handleCopyDiagnostic = () => {
+    void runCopy(() => copyRedactedDiagnostic(null));
+  };
+
   return (
   <section data-testid="settings-advanced" className="pt-6 border-t border-[var(--divider)] dark:border-[var(--divider)]/50">
     {" "}
@@ -27,6 +42,7 @@ export const AdvancedSection: React.FC<AdvancedSectionProps> = ({ t }) => {
       <RefreshCw className="size-4" />
       {t("app_advancedSettings")}
     </h3>
+    <div className="space-y-3">
     <div className="p-5 ds-bg-warning-soft dark:bg-[var(--color-warning)]/10 border border-[var(--warning-soft-border)] dark:border-[var(--warning-soft-border)]/20 rounded-2xl shadow-sm">
       <div className="flex items-center justify-between gap-4">
         <div className="space-y-1.5">
@@ -45,6 +61,17 @@ export const AdvancedSection: React.FC<AdvancedSectionProps> = ({ t }) => {
           {t("app_start", "Iniciar")}
         </button>
       </div>
+    </div>
+    <div className="p-4 rounded-xl border ds-card flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="min-w-0">
+        <h4 className="text-sm font-semibold flex items-center gap-2"><LifeBuoy className="size-4 ds-text-accent" /> {t("app_helpDiagnostics", "Help & diagnostics")}</h4>
+        <p className="text-xs ds-text-muted mt-1">{t("app_helpDiagnosticsDesc", "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.")} <a href="/help" className="underline" target="_blank" rel="noopener">/help</a></p>
+      </div>
+      <button onClick={handleCopyDiagnostic} disabled={isCopying} className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold ds-bg-secondary ds-border shadow-sm disabled:opacity-50">
+        {copied ? <Check className="size-4 ds-text-success" /> : <Copy className="size-4" />}
+        {copied ? t("app_diagCopyReportCopied", "Copied!") : t("app_diagCopyReport", "Copy diagnostic")}
+      </button>
+    </div>
     </div>
   </section>
   );

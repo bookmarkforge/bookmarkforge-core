@@ -438,6 +438,15 @@ ${LANDING_LANGS.map(
     }`,
     ).join("\n\n")}
 
+    # Help Center — static HTML at clean URLs (EN-only; localized help is hreflang only, not routed)
+    location = /help {
+        rewrite ^ /help.html last;
+    }
+
+    location = /help/ {
+        rewrite ^ /help.html last;
+    }
+
     # Pocket comparison page (SEO) — static HTML at a clean URL
     location = /pocket-alternative {
         rewrite ^ /pocket-alternative.html last;

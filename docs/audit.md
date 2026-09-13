@@ -18,7 +18,7 @@ Aplicación *local-first* de conocimiento personal (React + RxDB/IndexedDB + Web
 | 6. Operaciones, Monitoreo y Mantenimiento | 7.5/10 | 8.8/10 | 9.3/10 |
 | **Global** | **8.6/10** | **9.0/10** | **9.2/10** |
 
-> **Nota sobre la meta 9.5:** la ronda 3/4 (drill trimestral formalizado + gate nocturno de KPIs) elevó Operaciones a 9.3 y Producto a 9.2, y llevó el **global a 9.2**. Lo que separa cada área de 9.5 sigue siendo **exclusivamente dependencias externas** (decisión de org para CODEOWNERS, cierre legal del ROPA, DSN de Sentry + DPA, guardia/canal de alertas reales, confirmación oficial de RPO/RTO, revisión manual WCAG, listado en tiendas/ASO, contrato Whop versionado) — ver tabla de hallazgos y `docs/launch-checklist.md`. Ninguna requiere más código.
+> **Nota sobre la meta 9.5:** la ronda 3/4 (drill trimestral formalizado + gate nocturno de KPIs) elevó Operaciones a 9.3 y Producto a 9.2, y llevó el **global a 9.2**. Lo que separa cada área de 9.5 sigue siendo **exclusivamente dependencias externas** (cierre legal del ROPA, DSN de Sentry + DPA, guardia/canal de alertas reales, confirmación oficial de RPO/RTO, revisión manual WCAG, listado en tiendas/ASO, contrato Whop versionado y activación de la protección remota de `main`) — ver tabla de hallazgos y `docs/launch-checklist.md`. Ninguna requiere más código.
 
 ---
 
@@ -48,7 +48,7 @@ Aplicación *local-first* de conocimiento personal (React + RxDB/IndexedDB + Web
 | Vulnerabilidades | Cubierto | SAST (ESLint + reglas propias), DAST nocturno ZAP (`.zap/`), chequeo de secretos en commits, `npm audit`. Pentest documentado como pendiente |
 | Políticas | Parcial | `privacy-and-terms.html` publicado. **Falta:** inventario formal de tratamientos, retención, derechos y base jurídica (reconocido en `docs/security.md` — "no certificación legal") |
 
-**Hallazgo clave:** la seguridad técnica es madura; la deuda es **legal/organizativa** (RGPD), no técnica. CODEOWNERS protege `/src/utils/crypto-core.ts`, `/server/`, nginx y workflows con equipo `@YOUR_GITHUB_ORG/security` — **placeholder que bloquea merges hasta sustituirlo**.
+**Hallazgo clave:** la seguridad técnica es madura; la deuda es principalmente **legal/operativa** (RGPD y configuración del despliegue), no técnica. El repositorio usa un único mantenedor; la protección de cambios sensibles depende de checks automatizados y de la revisión personal antes de publicar.
 
 ---
 
@@ -57,7 +57,7 @@ Aplicación *local-first* de conocimiento personal (React + RxDB/IndexedDB + Web
 | Aspecto | Veredicto | Evidencia |
 |---|---|---|
 | Calidad de código | Excelente | TypeScript estricto, ESLint 9 + typescript-eslint + 5 reglas custom (`bmf/no-unbounded-text`, loops, vault mocks…), husky + lint-staged |
-| Control de versiones | Sólido | Ruleset exportable `main-protection.json`: PR obligatorio, 1-2 approvals, Code Owners, `required_linear_history`, sin force-push. **Pendiente:** importarlo en GitHub (documentado en `branch-protection.md`) |
+| Control de versiones | Sólido | Ruleset exportable `main-protection.json`: PR obligatorio, checks obligatorios, `required_linear_history`, sin force-push y sin aprobación de equipos. **Pendiente:** importarlo en GitHub (documentado en `branch-protection.md`) |
 | Testing | Sobresaliente | Vitest unit + integración, Playwright E2E multi-config (browsers, multiuser, nightly, human-like), **axe-core WCAG AA en CI** (`tests/e2e/a11y.spec.ts`), fast-check (property-based), visual testing (pixelmatch), gráficos de cobertura por área con gates |
 | CI/CD | Sólido | `ci.yml` (typecheck, lint, tests, security gates, E2E), `nightly.yml` (perf/scale), `staging-deploy/rollback/smoke.yml`, imágenes por SHA, gates `check:*` (~30 checks automatizados) |
 
@@ -107,7 +107,7 @@ Aplicación *local-first* de conocimiento personal (React + RxDB/IndexedDB + Web
 ## Plan de acción recomendado (priorizado)
 
 **P0 — Antes de lanzar (bloqueantes):**
-1. Sustituir `@YOUR_GITHUB_ORG/*` en CODEOWNERS e importar el ruleset `main-protection.json` en GitHub.
+1. Importar el ruleset `main-protection.json` en GitHub y verificar los checks obligatorios para el mantenedor único.
 2. Definir y registrar RPO/RTO + SLOs (disponibilidad, latencia p95, tasa de error).
 3. Cierre legal RGPD: inventario de tratamientos, retención, base jurídica, encargados.
 
@@ -130,7 +130,7 @@ Aplicación *local-first* de conocimiento personal (React + RxDB/IndexedDB + Web
 | 2026-08-30 | `dast-nightly.yml`: `zaproxy/action-baseline@v0.15.0` sin pin SHA + imagen ZAP con digest placeholder (`REPLACE_WITH_VERIFIED_ZAP_IMAGE_DIGEST`) en el scan autenticado | Alta (supply-chain) | ✅ Corregido — pin por SHA `de8ad967…b8b25` (tag v0.15.0) y digest verificado `sha256:781a2bda…5081ef` (tag stable). Verificación del pin: el tag `v0.15.0` es un tag anotado firmado PGP por `thc202` (2025-10-24, verificación GitHub `verified: true`) que dereferencia al commit `de8ad967d3548d44ef623df22cf95c3b0baf8b25`, coincidiendo con el SHA pineado en `dast-nightly.yml`. `check:workflows` en verde |
 | 2026-08-30 | `validate-workflows.mjs`: falso positivo de "acción sin pin" en referencias locales (`uses: ./.github/workflows/...`) | Media | ✅ Corregido — se ignoran refs que empiezan por `./` o `.github/` |
 | 2026-08-30 | `validate-runtime-config.mjs`: falso positivo "staging ports must bind loopback" por bloques `command:` (ej. `ollama-pull`) y CRLF en Windows | Media | ✅ Corregido — validación por líneas, robusta a CRLF e indentación laxa |
-| 2026-08-30 | CODEOWNERS con `@YOUR_GITHUB_ORG/*` (27 refs) | Media | ⏳ Pendiente de decisión — sustituir con `npm run codeowners:apply-org -- --org TU_ORG`; gate `check:codeowners` lo bloquea hasta entonces |
+| 2026-09-03 | Gobernanza basada en equipos | Baja | ✅ Eliminada — repositorio de mantenedor único; la protección se mantiene mediante checks automatizados y ruleset sin asignación de revisores |
 | 2026-08-30 | Gap de observabilidad ex-post (punto 9 del launch-checklist): sin trazado remoto de errores | Media | ✅ Corregido — Sentry opcional (`VITE_SENTRY_DSN` + opt-in) con `beforeSend` sancador y consentimiento por evento; gate `check:launch-checklist` verifica dependencia + módulo con redacción y opt-in. Pendiente operativo: DSN y DPA (ROPA §7) |
 | 2026-08-30 | **Bug RGPD:** `AnalyticsService`, `errorReporter` y `clientEventReporter` leían `bmf_local_error_storage` en vez de las keys de consentimiento del `ConsentBanner` (`forge_consent_analytics`, `forge_consent_error_reporting`, `forge_consent_client_events`). La elección del usuario en el banner no tenía efecto real | **Alta (RGPD)** | ✅ Corregido — los 3 servicios ahora leen la key correcta con fallback legacy; 4 tests de integración de consentimiento añadidos (`errorReporter.test.ts`) |
 | 2026-08-30 | Imágenes Docker sin pin por digest (`node:20-alpine`, `nginx:1.27-alpine`, `redis:7-alpine`, `node:22-alpine`, `ollama/ollama:latest`) — tags mutables, riesgo de supply-chain | Media (supply-chain) | ✅ Corregido — todas pineadas por digest SHA verificado vía registry API; nuevo gate `check:image-pins` + 10 tests unitarios |
@@ -180,14 +180,14 @@ Auditoría fresca sobre el mismo estado de trabajo (`main`, working tree con la 
 | `npm run build:ci` | ✅ | Chunks dentro de presupuestos, `bundle-report.md` regenerado |
 | `npm audit --omit=dev` | ✅ | 0 vulnerabilidades |
 | `npm run check:secrets-in-commit` | ✅ | 319 archivos staged, sin secretos (solo mocks en tests) |
-| `npm run check:codeowners` | ❌ **Falla** | Persisten placeholders `@YOUR_GITHUB_ORG/*` (bloqueante #1) |
+| Protección de `main` | ✅ Configuración local | Ruleset sin aprobación externa; activación remota pendiente |
 | `npm run check:workflows` | ✅ | 7 workflows validados; DAST recurrencia correcta |
 | `npm run check:security-internal` | ✅ | http/compose/runtime/docker-context/image-pins/hygiene/zap |
 | `npm run check:launch-checklist` | ✅ | 11/13 verificables completados · 0 bloqueantes de código |
 
 ### Hallazgos nuevos o confirmados
 
-1. **[P0] CODEOWNERS con `@YOUR_GITHUB_ORG/*`** (confirmado por `check:codeowners`). Bloquea merges y `require_code_owner_review`. Requiere decisión del equipo (no se deduce del repo): crear equipos y ejecutar `npm run codeowners:apply-org -- --org TU_ORG`. Sin cambios de código necesarios.
+1. **Gobernanza de mantenedor único**: El repositorio opera con un único mantenedor. La protección remota de `main` sigue pendiente de activación, pero no requiere aprobación externa.
 2. **[P1 / supply-chain] GitHub Actions referenciadas por tag mutable (`@v4`)** — `actions/checkout@v4`, `actions/setup-node@v4`, `actions/upload-artifact@v4`, `actions/dependency-review-action@v4`, `github/codeql-action/{init,analyze,upload-sarif}@v4` NO llevan pin por SHA. Solo la action ZAP (`zaproxy/action-baseline@de8ad967…b8b25`) está pineada por SHA. Los tags de primer fabricante se parchean en caliente (p. ej. `upload-artifact` tuvo CVEs recientes), así que un tag mutable puede arrastrar un cambio no auditado. **Recomendado:** pinear por SHA-256 todas las actions (mismo patrón ya usado con ZAP). El gate local no lo exige; añadir validación de pin por SHA en `validate-workflows.mjs` sería el cierre defensivo.
 3. **[P1] ROPA con 34 campos `⚠ COMPLETAR`** — cierre legal RGPD (responsable, base jurídica, DPAs, transferencias, plazo de incidencias). Requiere decisión legal/organizativa; la plantilla está lista.
 4. **[P1] Sentry**: código con redacción y opt-in listo; pendiente operativo configurar `VITE_SENTRY_DSN` y firmar el DPA (ROPA §7) antes de activarlo.
@@ -205,7 +205,7 @@ Auditoría fresca sobre el mismo estado de trabajo (`main`, working tree con la 
 
 ## Re-verificación ronda 5 — 2026-08-31 (tras el fix de AI_SESSION_ORIGINS)
 
-Revisión fresca del working tree actual (incluyendo cambios sin commit: interpolación de `HTTP_PORT` en `AI_SESSION_ORIGINS` del compose de staging + actualizaciones de docs + test del validador). **Todos los gates automatizados en verde; el único en rojo es CODEOWNERS (externo, bloqueado por la decisión de org).**
+Revisión fresca del working tree actual (incluyendo cambios sin commit: interpolación de `HTTP_PORT` en `AI_SESSION_ORIGINS` del compose de staging + actualizaciones de docs + tests de validadores). **Los gates automatizados reproducibles están en verde; la activación de la protección remota de `main` sigue siendo manual.**
 
 | Gate | Resultado |
 |---|---|
@@ -214,7 +214,7 @@ Revisión fresca del working tree actual (incluyendo cambios sin commit: interpo
 | `check:compose-config` (incl. la nueva regla de interpolación HTTP_PORT), `check:runtime-config`, `check:http-config`, `check:image-pins`, `check:env` | ✅ |
 | `check:csp`, `check:i18n` (29 locales), `check:boundaries`, `check:rxdb17`, `check:static-brand`, `npm audit --omit=dev` (0 vuln) | ✅ |
 | `check:launch-checklist` | ✅ 11/13 (2 externos pendientes) |
-| `check:codeowners` | ❌ placeholder `@YOUR_GITHUB_ORG/*` (decisión externa) |
+| Protección de `main` | ✅ payload local sin equipos; activación remota manual |
 
 Los cambios sin commit del working tree fueron verificados como coherentes: el fix de interpolación de puerto cierra el 403 latente de `CSRF_ORIGIN`, se añadió un test de regresión al validador de compose, y los docs (audit/launch-checklist/operations) están sincronizados con el estado real.
 
@@ -233,7 +233,7 @@ Auditoría fresca sobre el estado **post ronda 3/4** (drill trimestral formaliza
 | `npm run check:secrets-in-commit` | ✅ | sin secretos |
 | `npm run check:env` | ✅ | envs documentadas |
 | `npm run check:input-contracts` | ✅ | contratos de input |
-| `npm run check:codeowners` | ❌ **Falla** | persisten placeholders `@YOUR_GITHUB_ORG/*` (único gate en rojo, bloqueante externo) |
+| Protección de `main` | ✅ | ruleset sin aprobación externa; activación remota pendiente |
 
 ### Cierre del plan de acción
 
@@ -244,7 +244,7 @@ Del plan P0/P1/P2, la ronda 3/4 completó dos ítems pendientes con código y ev
 
 ### Deudas pendientes confirmadas (todas externas, sin cambios de código)
 
-1. **[P0] CODEOWNERS con `@YOUR_GITHUB_ORG/*`** — único gate en rojo. Requiere crear los 5 equipos y `codeowners:apply-org`.
+1. **Protección remota de `main`** — importar el ruleset y verificar los checks obligatorios; no requiere equipos ni revisores externos.
 2. **[P0] Cierre legal RGPD** — ROPA con ~34 campos `⚠ COMPLETAR` (responsable, base jurídica, DPAs, transferencias, incidencias).
 3. **[P1] Sentry** — DSN + DPA (ROPA §7) pendientes operativos para activar trazabilidad ex-post.
 4. **[P1] Guardia/canal de alertas reales** — los webhooks `ANALYTICS_ALERT_WEBHOOK_URL`, `DRILL_ALERT_WEBHOOK_URL` están codificados y probados (Slack nativo) pero requieren la URL real y el secret en GitHub para pagar en producción; lo mismo para el job `kpi-staging`/`drill-quarterly` (el código existe localmente pero **nunca se ha pusheado**, así que en GitHub aún no existen esos workflows).
@@ -259,4 +259,4 @@ Del plan P0/P1/P2, la ronda 3/4 completó dos ítems pendientes con código y ev
 | 6. Operaciones | 8.8 | **9.3** | +0.5 (DR trimestral formalizado + ensayo mensual + gate KPIs + alertas Slack + drill Docker en PASS) |
 | **Global** | **9.0** | **9.2** | **+0.2** |
 
-> **Meta 9.5:** cada área queda limitada únicamente por los ítems externos de la lista anterior — el bloque técnico está completo y todos los gates automatizados pasan salvo el único que requiere la decisión de org (CODEOWNERS). No queda trabajo de código pendiente para subir la nota.
+> **Meta 9.5:** cada área queda limitada únicamente por los ítems externos de la lista anterior. El bloque técnico está completo; la protección remota de `main` requiere activación manual, sin depender de equipos o colaboradores.

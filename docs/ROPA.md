@@ -12,9 +12,9 @@
 
 ## Cómo usar esta plantilla
 
-- Los campos `⚠ COMPLETAR` requieren una decisión real (nombre legal, fechas, sedes, contratos) que no puede deducirse del repositorio.
+- Los campos `⚠ DATO PERSONAL` requieren una decisión real (nombre legal, fechas, sedes, contratos, copias de DPA) que no puede deducirse del repositorio y debe completar el operador (o su asesor legal) en el expediente antes de la publicación.
 - Todo lo demás está pre-rellenado a partir del diseño actual de la aplicación (política de privacidad publicada, `docs/security.md`, `docs/operations.md` y `docs/audit.md`).
-- Este documento es la **evidencia** del punto 5 del launch-checklist; marcar `[x]` solo cuando no queden campos `⚠ COMPLETAR` pendientes y la revisión trimestral esté fijada (§11).
+- Este documento es la **evidencia** del punto 5 del launch-checklist; marcar `[x]` solo cuando los campos `⚠ DATO PERSONAL` pendientes estén completados en el expediente del operador y la revisión trimestral esté fijada (§12).
 
 ---
 
@@ -84,7 +84,7 @@ Sin cuentas de usuario ni perfiles: no aplican bases como ejecución de interés
 | Logs del servidor | ≤ 30 días (rotación configurada en el despliegue) | Operación y seguridad; sin PII de contenido por diseño |
 | Backups cifrados del cliente | Diarios automáticos (RPO 24 h según `docs/operations.md`); cifrados | Recuperación ante desastre; el servidor no los aloja |
 
-Regla general: **no retener nada que no sea estrictamente necesario**; los periodos se revisan en la revisión trimestral (§11).
+Regla general: **no retener nada que no sea estrictamente necesario**; los periodos se revisan en la revisión trimestral (§12).
 
 ---
 

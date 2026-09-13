@@ -30,7 +30,7 @@ Verified against the workflow YAML:
 2. From the repo root:
 
 ```bash
-git remote add origin git@github.com:YOUR_ORG/bookmarkforge.git
+git remote add origin git@github.com:TU_USUARIO/bookmarkforge.git
 git push -u origin main
 ```
 
@@ -62,7 +62,7 @@ After `gh auth login`, from the repo root:
 
 ```bash
 # Repo creation + push in one shot
-gh repo create YOUR_ORG/bookmarkforge --private --source=. --remote=origin --push
+gh repo create TU_USUARIO/bookmarkforge --private --source=. --remote=origin --push
 
 # Secrets
 gh secret set STAGING_ANALYTICS_ADMIN_TOKEN     # paste value when prompted
@@ -100,6 +100,6 @@ Watch: `gh run watch` or the Actions tab.
 
 ## Related external items (audit round 5)
 
-- CODEOWNERS: `npm run codeowners:apply-org -- --org TU_ORG` + repo variable `CODEOWNERS_ORG`
+- Gobernanza de `main`: activar el ruleset sin aprobación externa; los checks automatizados siguen siendo obligatorios.
 - ROPA: remaining `⚠ DATO PERSONAL` fields (operator legal identity, signed DPAs)
 - Sentry DSN + DPA (ROPA §7) before enabling error reporting

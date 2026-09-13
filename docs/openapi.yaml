@@ -57,6 +57,25 @@ components:
       type: apiKey
       in: header
       name: X-Signaling-Admin-Token
+    analyticsAdminToken:
+      type: apiKey
+      in: header
+      name: X-Analytics-Admin-Token
+      description: |
+        Token for GET /api/analytics/kpis diagnostics. Fail-closed: when
+        ANALYTICS_ADMIN_TOKEN is unset the endpoint answers 503.
+    clientEventsAdminToken:
+      type: apiKey
+      in: header
+      name: X-Client-Events-Admin-Token
+      description: |
+        Token for the GET /api/client-events diagnostics dashboard.
+        Fail-closed: when CLIENT_EVENTS_ADMIN_TOKEN is unset it answers 503.
+    cspAdminToken:
+      type: apiKey
+      in: header
+      name: X-CSP-Admin-Token
+      description: Token for the GET /csp-report diagnostics endpoint.
 
   schemas:
     Error:
@@ -74,9 +93,6 @@ components:
         status:
           type: string
           enum: [ok]
-        instanceId:
-          type: string
-          description: Server instance UUID (changes on restart)
       required: [status]
 
     AiSessionRequest:
@@ -136,21 +152,87 @@ components:
             - bundle-integrity-spike
             - error-spike
             - csp-violation-spike
+            - client-event-retry-stats
         level:
           type: string
+          description: storage-pressure only (ok | pressure | critical)
         pct:
           type: number
-        usage:
-          type: number
-        quota:
-          type: number
+          description: storage-pressure only
         persisted:
           type: boolean
+          description: storage-pressure only
         count:
           type: integer
-        reason:
+          description: spike events only
+        attempts:
+          type: integer
+          description: client-event-retry-stats only (cumulative per client)
+        coalesced:
+          type: integer
+          description: client-event-retry-stats only
+        dropped:
+          type: integer
+          description: client-event-retry-stats only
+
+    AnalyticsBatch:
+      type: object
+      description: |
+        Daily aggregated, non-PII counts for one install. batchId makes the
+        ingest additive and idempotent: partial batches add up and a retried
+        batch is accepted (204) without double counting. Payloads without
+        batchId keep legacy same-day replace semantics.
+      properties:
+        iid:
           type: string
-          maxLength: 64
+          pattern: '^[0-9a-f]{64}$'
+          description: SHA-256 of a random per-install id; the raw id never leaves the device
+        batchId:
+          type: string
+          maxLength: 128
+          pattern: '^[A-Za-z0-9._-]+$'
+        counts:
+          type: object
+          description: Bounded allow-list of event types (vault_created, session_start, bookmark_created, ...)
+          additionalProperties:
+            type: integer
+            minimum: 1
+      required: [iid, counts]
+
+    AnalyticsKpis:
+      type: object
+      properties:
+        generatedAt:
+          type: string
+          format: date-time
+        activeInstalls:
+          type: integer
+        dau:
+          type: integer
+        wau:
+          type: integer
+        mau:
+          type: integer
+        cohorts:
+          type: object
+          description: firstDay -> { cohortSize, d1, d7, d30 }
+          additionalProperties:
+            type: object
+        funnel:
+          type: object
+          description: Total events per type across retained days
+          additionalProperties:
+            type: integer
+        daily:
+          type: object
+          description: UTC day -> event type -> count
+          additionalProperties:
+            type: object
+        counters:
+          type: object
+        serverInstanceId:
+          type: string
+      required: [generatedAt, activeInstalls, dau, wau, mau, funnel]
 
   parameters:
     csrfHeader:
@@ -430,7 +512,11 @@ paths:
   /csp-report:
     post:
       summary: CSP violation report endpoint
-      description: Collects Content-Security-Policy violation reports.
+      description: |
+        Collects Content-Security-Policy violation reports sent automatically
+        by the browser (report-uri / Reporting-Endpoints). The collector keeps
+        only origins and the violated directive — never paths, query strings,
+        IPs or vault content.
       security: []
       requestBody:
         content:
@@ -443,6 +529,23 @@ paths:
       responses:
         '204':
           description: Report received
+        '400':
+          description: Missing or malformed csp-report key
+        '429':
+          description: Rate limited per IP
+    get:
+      summary: CSP reports diagnostics
+      security:
+        - cspAdminToken: []
+      responses:
+        '200':
+          description: Recent redacted reports
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Invalid admin token
 
   /api/client-events:
     post:
@@ -450,7 +553,10 @@ paths:
       description: |
         Aggregates operational events (storage-pressure, error-spike,
         csp-violation-spike, bundle-integrity-spike) from opt-in clients.
-        Alerts when ≥ CRITICAL_CLIENTS threshold within the window.
+        Alerts when ≥ CLIENT_EVENTS_CRITICAL_CLIENTS distinct clients report
+        a critical condition within the window. Unauthenticated (browsers
+        cannot attach an admin token to background fetches); the raw client
+        IP is never stored — only a salted one-way hash for distinct counting.
       security: []
       requestBody:
         content:
@@ -460,21 +566,108 @@ paths:
       responses:
         '204':
           description: Event received
+        '400':
+          description: Invalid event or JSON
         '429':
-          description: Rate limited (CLIENT_EVENTS_MAX/window)
+          description: Rate limited (CLIENT_EVENTS_LIMIT/window)
+    get:
+      summary: Client events diagnostics
+      description: |
+        Collector dashboard (recent events, totals, alert/webhook counters).
+        Fail-closed: 503 when CLIENT_EVENTS_ADMIN_TOKEN is unset, 401 on a
+        wrong token.
+      security:
+        - clientEventsAdminToken: []
+      responses:
+        '200':
+          description: Diagnostics snapshot
+          content:
+            application/json:
+              schema:
+                type: object
+        '401':
+          description: Invalid admin token
         '503':
-          description: Collector disabled
+          description: Diagnostics disabled (no token configured)
 
   /api/client-events/retry-stats:
     post:
       summary: Client event retry stats
-      description: Reports retry attempts/coalesced/dropped counts for diagnostics.
+      description: |
+        Cumulative delivery counters (attempts/coalesced/dropped) from the
+        PWA reporter. Diagnostics channel: events are not stored; each new
+        increase in dropped emits the client_events_retry_degraded alert.
       security: []
       requestBody:
         content:
           application/json:
             schema:
               type: object
+              properties:
+                type:
+                  type: string
+                  const: client-event-retry-stats
+                attempts:
+                  type: integer
+                coalesced:
+                  type: integer
+                dropped:
+                  type: integer
       responses:
         '204':
           description: Stats received
+        '400':
+          description: Invalid payload
+        '429':
+          description: Rate limited
+
+  /api/analytics/events:
+    post:
+      summary: Opt-in analytics ingest
+      description: |
+        Accepts one daily aggregated bucket from a consented install.
+        Additive + idempotent per (install, batchId); a retried batch returns
+        204 without double counting. Capacity exhaustion answers 503 with
+        Retry-After instead of silently dropping data.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsBatch'
+      responses:
+        '204':
+          description: Bucket applied (or duplicate retry accepted)
+        '400':
+          description: Invalid bucket (unknown event type, bad iid, non-integer counts)
+        '413':
+          description: Payload too large
+        '429':
+          description: Rate limited per IP
+        '503':
+          description: Per-install batch capacity exhausted; retry later
+          headers:
+            Retry-After:
+              schema:
+                type: string
+
+  /api/analytics/kpis:
+    get:
+      summary: Analytics KPI report
+      description: |
+        Aggregated product KPIs (DAU/WAU/MAU, cohort retention D1/D7/D30,
+        activation funnel, daily totals). Fail-closed behind the admin token.
+      security:
+        - analyticsAdminToken: []
+      responses:
+        '200':
+          description: KPI report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsKpis'
+        '401':
+          description: Invalid admin token
+        '503':
+          description: Diagnostics disabled (ANALYTICS_ADMIN_TOKEN unset)

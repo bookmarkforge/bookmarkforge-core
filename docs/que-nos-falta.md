@@ -19,13 +19,11 @@
 
 ## 2. Infraestructura de GitHub sin configurar
 
-- **No hay `git remote` configurado** — no se puede pushear nada. `git remote -v`
-  devuelve vacío.
+- **No hay `git remote` configurado** — no se puede publicar ni activar la configuración remota de GitHub. `git remote -v` devuelve vacío.
 - **README con 5 URLs placeholder `OWNER/`** (badges de CI, nightly, cobertura,
   runs fallidos, último release). Hasta que exista el remote real no se puede
   sustituir el slug.
-- **CODEOWNERS inexistente** — único gate en rojo (P0). Requiere crear los 5
-  equipos en la org y ejecutar `codeowners:apply-org` (ver `scripts/apply-codeowners-org.mjs`).
+- La gobernanza es de **mantenedor único**. La protección de `main` se basa en checks automatizados y permanece pendiente de activar en GitHub.
 - **Ruleset `main-protection.json` sin importar** — la protección de `main`
   (checks obligatorios, SAST como required) existe como archivo local pero no
   está activa en GitHub.
@@ -63,9 +61,15 @@
 ## 5. Documentación que falta o está incompleta (gaps conocidos de AGENTS.md)
 
 - **Registro ADR**: completado para el catálogo de anclas — ADR-001/019/026/027/028/
-  029/030/032/033/034/037 existen en disco (ver `AGENTS.md` §7); ADR-040/042
-  aparecen solo en prosa (freeze de inspectores, `ThemeService`) y ADR-031/035/036
-  no están asignados. Pendiente opcional: crear los registros restantes.
+  029/030/032/033/034/037 existen en disco (ver `AGENTS.md` §7). Los registros
+  restantes ya formalizados: **ADR-040** (fusión de los inspectores de Markdown
+  en `check:docs-markdown` — el gate unificado queda pre-justificado ante el
+  freeze; su implementación es el paso pendiente) y **ADR-042** (temas de
+  usuario solo-CSS, decisión D4 de `ThemeService.ts`). ADR-031/035/036 siguen
+  sin asignar (números libres). El gate `check:docs-markdown` que ADR-040
+  reserva ya está implementado (`scripts/check-docs-markdown.mjs` + baseline
+  `scripts/docs-markdown-baseline.json`, integrado en `npm run check` y
+  aceptado por el freeze vía ADR-040).
 - **`eslint-rules/README.md` no existe** (las reglas custom se auto-documentan
   en headers, pero falta el índice).
 - **`docs/architecture.md` → "Decisiones pendientes"**: persistencia central
@@ -108,7 +112,7 @@
 
 1. **Commitear el working tree** (§1) — nada más puede avanzar sin versión.
 2. **Configurar el remote** y sustituir `OWNER` en el README (§2).
-3. **Importar ruleset + CODEOWNERS** (desbloquea el único gate rojo).
+3. **Importar el ruleset de protección de `main`** y verificar los checks obligatorios.
 4. **Secrets reales** (webhooks, token staging, DSN Sentry) (§3).
 5. **Cierre legal** (ROPA, DPA, RPO/RTO firmado) (§4) — externo, paralelo.
 6. **Docs** (ADR registry, eslint-rules/README) (§5) — barato, elimina gaps del repo.

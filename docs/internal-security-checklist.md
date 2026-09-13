@@ -38,11 +38,11 @@ npm run build:ci
 
 ## No se puede verificar localmente
 
-- Existencia real de equipos y usuarios de `CODEOWNERS`.
+- Configuración efectiva de la protección de `main` en GitHub para el mantenedor único.
 - Protección efectiva de `main` en GitHub.
 - Hashes actuales de actions remotas e imágenes Docker de ZAP; deben verificarse contra sus releases oficiales antes de incorporarse.
 - Secretos de GitHub Actions.
-- Configuración de environments y revisores.
+- Configuración de environments y permisos de despliegue.
 - Seguridad de la infraestructura de staging/producción.
 - DAST real, pentest, carga, restore y rollback operativo.
 - Hallazgos reales de CodeQL/Semgrep (requieren ejecución en CI).

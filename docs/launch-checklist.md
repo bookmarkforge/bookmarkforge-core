@@ -1,30 +1,25 @@
 # Checklist de pre-lanzamiento — BookmarkForge
 
-- **Última revisión:** 2026-08-31
+- **Última revisión:** 2026-09-12
 - **Fuente:** derivado de [docs/audit.md](audit.md), [docs/security.md](security.md), [docs/operations.md](operations.md) y [docs/internal-security-checklist.md](internal-security-checklist.md).
 - **Cómo usar:** marca `[x]` cuando el punto esté completo. Cada punto indica dónde está la evidencia o el estado actual. "Evidencia" = documento/archivo donde verificar; "Gate" = comando automatizado que lo comprueba.
+- **Programa Security Champions:** Ver [`.github/SECURITY_CHAMPIONS.md`](../.github/SECURITY_CHAMPIONS.md) para designación, responsabilidades y escalamiento.
 
 ---
 
 ## 🔴 Bloqueante — sin esto, no lanzar
 
-- [ ] **1. CODEOWNERS con equipos reales**
-  Sustituir los placeholders `@YOUR_GITHUB_ORG/*` por los equipos reales de la organización. Mientras permanezcan, los cambios protegidos quedan bloqueados.
-  - Evidencia: [.github/CODEOWNERS](../.github/CODEOWNERS), hallazgo en [docs/audit.md](audit.md) §2.
-  - Gate: `npm run check:codeowners` (falla mientras existan placeholders); coherencia con la org configurada vía `CODEOWNERS_ORG` (CI).
-  - **Pasos:**
-    1. Crear los equipos en GitHub (org → Settings → Member privileges → Teams): `maintainers`, `security`, `platform`, `backend`, `frontend` (o los reales).
-    2. Sustituir el placeholder con un solo comando (previsualiza antes con `--dry-run`):
-       ```bash
-       npm run codeowners:apply-org -- --org TU_ORG --dry-run
-       npm run codeowners:apply-org -- --org TU_ORG
-       ```
-    3. Confirmar que el gate pasa: `npm run check:codeowners`.
-    4. Configurar la variable de repositorio `CODEOWNERS_ORG=TU_ORG` en GitHub (Settings → Secrets and variables → Actions → Variables) para que CI valide la coherencia.
-    5. Verificar manualmente en GitHub que los equipos existen y ven el repositorio (Settings → Collaborators and teams).
+- [ ] **1. `Enforce mandatory security gates` activo en rama `main`**
+   El ruleset `.github/rulesets/main-protection.json` debe incluir `Enforce mandatory security gates` como check obligatorio. Este gate ejecuta `npm run check:security-internal` en cada PR.
+   - Evidencia: [.github/rulesets/main-protection.json](../.github/rulesets/main-protection.json), [.github/branch-protection.md](../.github/branch-protection.md).
+   - Gate: `npm run check:launch-checklist` — valida que el payload sea correcto para la API (`Enforce mandatory security gates` presente y **sin** campos de export como `source`/`id`).
+   - **Pasos:**
+     1. Verificar que el ruleset importado en GitHub incluye `Enforce mandatory security gates`.
+     2. Abrir un PR de prueba que toque criptografía/infraestructura y comprobar que el check bloquea cambios si falla.
+   - Pendiente manual: reimportar el ruleset tras cualquier cambio en los checks obligatorios.
 
 - [ ] **2. Protección de `main` importada y activa**
-  Importar el ruleset `.github/rulesets/main-protection.json` en GitHub (Settings → Rules → Rulesets). Debe exigir PR, aprobaciones, Code Owners y checks obligatorios.
+  Importar el ruleset `.github/rulesets/main-protection.json` en GitHub (Settings → Rules → Rulesets). Debe exigir PR y checks obligatorios; el repositorio tiene un único mantenedor y no depende de aprobación externa.
   - Evidencia: [.github/rulesets/main-protection.json](../.github/rulesets/main-protection.json), instrucciones en [.github/branch-protection.md](../.github/branch-protection.md).
   - Gate: `npm run check:launch-checklist` — valida que el payload sea correcto para la API (checks obligatorios presentes y **sin** campos de export como `source`/`id`).
   - **Pasos:**
@@ -33,8 +28,7 @@
        gh api --method POST -H 'Accept: application/vnd.github+json' \
          /repos/ORG/REPO/rulesets --input .github/rulesets/main-protection.json
        ```
-    2. Sustituir los placeholders de [.github/CODEOWNERS](../.github/CODEOWNERS) antes de activarlo si `require_code_owner_review` está habilitado (punto 1).
-    3. Abrir un PR de prueba que toque criptografía/infraestructura y comprobar owners y checks.
+    2. Abrir un PR de prueba que toque criptografía/infraestructura y comprobar que los checks obligatorios bloquean cambios si fallan.
   - Pendiente manual: reimportar el ruleset tras cualquier cambio en los checks obligatorios.
 
 - [ ] **3. RPO/RTO y SLOs registrados y confirmados**
@@ -59,8 +53,10 @@
 ## 🟠 Validación externa — revisión independiente
 
 - [ ] **6. Pentest (prueba de ataque real)**
-  Probar el proxy de IA, sesiones, integraciones, WebSocket y flujos de backup. Documentado como pendiente.
-  - Evidencia: [docs/audit.md](audit.md) §2 ("Pentest documentado como pendiente"), [docs/security.md](security.md) → "Validación externa requerida", [docs/internal-security-checklist.md](internal-security-checklist.md) → "No se puede verificar localmente".
+   Probar el proxy de IA, sesiones, integraciones, WebSocket y flujos de backup. Documentado como pendiente.
+   - Evidencia: [docs/audit.md](audit.md) §2 ("Pentest documentado como pendiente"), [docs/security.md](security.md) → "Validación externa requerida", [docs/internal-security-checklist.md](internal-security-checklist.md) → "No se puede verificar localmente".
+   - **Progreso:** `scripts/penetration-test.mjs` — runner de pentest con 7 fases (reconocimiento, escaneo de vulnerabilidades, pruebas de autenticación, revisión criptográfica, OWASP Top 10, lógica de negocio, generación de informe). Flujo CI en `.github/workflows/pen-test.yml` (mensual + pre-producción).
+   - Gate: `node scripts/penetration-test.mjs --target <url> --scope full` genera informes JSON/MD en `pen-test-reports/`. Todos los hallazgos CRITICAL y HIGH deben remediarse antes del despliegue a producción.
 
 - [ ] **7. Revisión manual de accesibilidad (WCAG) y privacidad**
   La revisión automática (axe-core WCAG A/AA en CI) ya existe; falta la revisión manual con personas (lector de pantalla, teclado, contraste) y la revisión humana de la política de privacidad.
@@ -118,9 +114,9 @@
 
 ## 🟢 Verificación del entorno — no verificable desde el repositorio
 
-- [ ] **15. Secretos, environments y revisores de GitHub Actions**
+- [ ] **15. Secretos, environments y permisos de GitHub Actions**
   Revisar qué secretos existen, qué entornos están configurados y quién puede lanzar despliegues.
-  - Evidencia: [docs/internal-security-checklist.md](internal-security-checklist.md) → "No se puede verificar localmente" (configuración de environments y revisores).
+  - Evidencia: [docs/internal-security-checklist.md](internal-security-checklist.md) → "No se puede verificar localmente" (configuración de environments y permisos).
 
 - [ ] **16. Seguridad real de staging y producción**
   Revisar la infraestructura desplegada: TLS, usuario no-root, Redis sin puerto público, puertos de staging ligados a loopback, etc. (el código fuerza casi todo; falta inspeccionar el despliegue).

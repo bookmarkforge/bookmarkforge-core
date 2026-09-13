@@ -47,7 +47,7 @@ evidencia de que la cadena funciona. Ningún gate se rompió.
 | `npm run lint` | ✅ sin violaciones |
 | `npm run test:fast` | ✅ 633 tests / 28 archivos + batch completo de 62 archivos |
 | Tests de scripts (drill + KPI) | ✅ 25/25 (`drill-backup-restore` 8/8 · `kpi-report` 17/17) |
-| `check:codeowners` | ⚠️ único en rojo — placeholder `@YOUR_GITHUB_ORG/*` (decisión de org, externa) |
+| Protección de `main` | ⚠️ activación remota pendiente — ruleset local sin aprobación externa |
 
 ## Ejecución real de los drills (evidencia)
 
@@ -85,7 +85,7 @@ Evidencia completa en `docs/operations.md` → "Simulacro de restauración (dril
 
 ## Deudas pendientes para la release (externas, sin cambios de código)
 
-1. **CODEOWNERS** con `@YOUR_GITHUB_ORG/*` — sustituir org + importar ruleset `main-protection.json`.
+1. **Protección de `main`** — importar el ruleset `main-protection.json`; no requiere aprobación externa.
 2. **Cierre legal RGPD** — ROPA con ~34 campos `⚠ COMPLETAR`.
 3. **Sentry** — DSN + DPA antes de activar trazabilidad ex-post.
 4. **Activación en GitHub** — push de `main` + tags `prod-*`, secrets/vars de los jobs (`STAGING_ANALYTICS_ADMIN_TOKEN`, `ANALYTICS_ALERT_WEBHOOK_URL`, `DRILL_ALERT_WEBHOOK_URL`, `KPI_MIN_*`, `STAGING_URL`, `DRILL_RTO_*`). Los workflows aún no existen en el remoto.

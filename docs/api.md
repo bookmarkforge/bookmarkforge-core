@@ -15,8 +15,12 @@ El companion server se ejecuta con `npm run server`. En producción debe estar d
 | GET | `/api/services/ai/metrics` | Métricas IA | Token/política del proxy |
 | GET/POST | `/api/license/*` | Salud, activación, validación y desactivación | Política de licencias |
 | GET | `/admin` | Diagnóstico señalización | `X-Signaling-Admin-Token` |
-| GET/POST | `/csp-report` | Informes CSP y diagnóstico | GET requiere token |
-| POST/GET | `/api/client-events` | Eventos y diagnósticos de cliente | Política del collector |
+| GET/POST | `/csp-report` | Informes CSP y diagnóstico | GET requiere `X-CSP-Admin-Token` |
+| POST | `/api/client-events` | Eventos de degradación del cliente (opt-in en el cliente) | Rate limit por IP; sin contenido |
+| GET | `/api/client-events` | Diagnóstico del collector | `X-Client-Events-Admin-Token` (503 si no está configurado) |
+| POST | `/api/client-events/retry-stats` | Contadores acumulados de reintentos del reporter | Rate limit por IP |
+| POST | `/api/analytics/events` | Bucket diario agregado de analítica opt-in (`iid` + `batchId` + `counts`) | Rate limit por IP (hash con sal); sin PII |
+| GET | `/api/analytics/kpis` | KPIs agregados (DAU/WAU/MAU, cohortes, funnel) | `X-Analytics-Admin-Token` (503 si no está configurado) |
 
 Las rutas y contratos exactos deben mantenerse sincronizados con los handlers de `server/src`. No añadir endpoints que devuelvan secretos, contenido del vault o datos operativos sin autenticación.
 
@@ -40,6 +44,18 @@ Mensajes principales:
 ```
 
 Las rooms con secreto requieren autenticación HMAC de cada señal. El servidor valida el sender, room, peer destinatario, tamaño, rate limits y replay window.
+
+> **Alcance del `roomSecret` (A-3):** el cliente solo lo envía al servidor de señalización autoalojado que tenga configurado (`VITE_P2P_SIGNALING_URL`). Sobre los relays públicos (rxdb.info/PubNub) el `join` va SIN el secreto: el relay únicamente ve el nombre de sala opaco derivado por HMAC (A-2), y el secreto —que es la capability de la sala y la clave de cada `signalAuth`— nunca sale de los peers. Sin servidor autoalojado configurado no se envía jamás (fail-closed), y el servidor sigue aceptando `roomSecret` opcional para enforcement de salas con secreto. La mitad "relay público" de este contrato se verifica end-to-end (`npm run e2e:relay`): la app se arranca **sin** `VITE_P2P_SIGNALING_URL` contra un relay de prueba dentro de la página y se inspecciona el `join` emitido.
+
+> **Nota de despliegue:** el estado de rooms de señalización vive en memoria del proceso (una sola réplica). Escalar horizontalmente el WebSocket requiere un adaptador compartido (p. ej. Redis pub/sub) o enrutamiento por afinidad; no hacerlo divide rooms entre réplicas y rompe la entrega de señales.
+
+## Analítica opt-in (`/api/analytics/*`)
+
+- El cliente solo envía datos tras el consentimiento explícito (`forge_consent_analytics`); por defecto nada sale del dispositivo.
+- El payload es `{ iid, batchId, counts }`: `iid` es el SHA-256 de un id aleatorio por instalación, `counts` son totales diarios de una lista cerrada de tipos de evento, sin contenido.
+- `batchId` hace el ingest aditivo e idempotente: los lotes parciales se suman y un reintento del mismo lote no duplica (respuesta 204 sin recontar). Los payloads sin `batchId` (clientes antiguos) conservan la semántica de reemplazo por día.
+- Si el estado por instalación alcanza su tope, el endpoint responde `503` con `Retry-After` (fail-closed, sin descartar datos silenciosamente).
+- Los KPIs (`GET /api/analytics/kpis`) exigen `X-Analytics-Admin-Token`; sin token configurado el endpoint responde `503`.
 
 ## Versionado
 

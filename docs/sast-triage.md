@@ -3,7 +3,7 @@
 - **Última revisión:** 2026-08-30
 - **Alcance:** primer run de `.github/workflows/sast.yml` (jobs "CodeQL analysis" y "Semgrep analysis") y el gate `scripts/check-sarif-severity.mjs`.
 - **Documentos relacionados:** [launch-checklist.md](launch-checklist.md) punto 8, [security.md](security.md) → "Validación externa requerida", [internal-security-checklist.md](internal-security-checklist.md).
-- **Propietario:** equipo `security` (el gate y esta guía están bajo su revisión en CODEOWNERS).
+- **Mantenimiento:** mantenedor único del repositorio; el gate y esta guía se validan mediante CI.
 
 ---
 
@@ -71,7 +71,7 @@ Cada hallazgo termina en una de estas cuatro veredictos:
 
 ## 4. Supresión con justificación
 
-La exclusión es una decisión de seguridad, no una comodidad. Toda exclusión necesita: la regla concreta, un comentario con el porqué y revisión del equipo `security`.
+La exclusión es una decisión de seguridad, no una comodidad. Toda exclusión necesita: la regla concreta, un comentario con el porqué y revisión explícita del mantenedor único.
 
 ### Semgrep — `nosemgrep` (inline, en el código)
 
@@ -125,19 +125,19 @@ Formato (`.github/sast-baseline.json`):
 - **Fail-closed:** toda entrada requiere `approved: true` y `justification` no vacía; si falta alguna, el gate falla. Un hallazgo sin aprobar jamás se ignora.
 - **Stale:** si una entrada ya no coincide con ningún hallazgo (el código se arregló), el gate avisa para que se limpie el baseline.
 - **Cuándo usar baseline en vez de `nosemgrep`:** FP con referencia externa (ticket, decisión), riesgos aceptados con fecha de revisión, o silenciar rutas/reglas que CodeQL no permite excluir inline. Prefiere `nosemgrep` para FPs triviales y evidentes en el propio código.
-- El archivo vive en `.github/sast-baseline.json` y está bajo revisión del equipo `security` (CODEOWNERS); cada alta en el baseline es un cambio de seguridad revisable en el PR.
+- El archivo vive en `.github/sast-baseline.json`; cada alta en el baseline es un cambio de seguridad revisable en el PR y debe quedar justificada.
 
 ### Reglas de oro de la exclusión
 
 1. Exclusión ≠ arreglo: primero intenta corregir el código.
 2. Justificación obligatoria en el propio artefacto (comentario o `paths-ignore` con explicación en el PR).
-3. Revisión por el equipo `security` (CODEOWNERS protege el gate).
+3. Revisión por el mantenedor único y validación de los checks del PR.
 4. Nunca excluir clases enteras ("todo lo que marque regla X") sin justificar cada ocurrencia.
 5. Revisar la lista de exclusiones en cada revisión trimestral: el código cambia y un FP de ayer puede ser un TP de hoy.
 
 ## 5. Cuándo subir o bajar el umbral
 
-El umbral vive en los dos pasos "Enforce severity policy (block High/Critical)" de `sast.yml` (`--min-severity`). Cambiarlo exige tocar ambos y aprobación del equipo `security`.
+El umbral vive en los dos pasos "Enforce severity policy (block High/Critical)" de `sast.yml` (`--min-severity`). Cambiarlo exige tocar ambos y una revisión explícita del mantenedor único.
 
 | Cambio | Efecto | Cuándo |
 |---|---|---|

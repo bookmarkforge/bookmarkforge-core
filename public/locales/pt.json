@@ -1535,7 +1535,7 @@
   "app_maintenancePartial_few": "Manutenção concluída com problemas",
   "app_maintenancePartial_many": "Manutenção concluída com problemas",
   "app_maintenancePartial_other": "Manutenção concluída com {{count}} problemas",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "Ajuda e diagnóstico",
+  "app_helpDiagnosticsDesc": "Copie um diagnóstico anonimizado (apenas contagens e versões — sem conteúdo do cofre) para colar no suporte. Inclui o código BF-E, se existir.",
+  "app_diagCopyFailed": "Não foi possível copiar o diagnóstico. Veja Ajuda."
 }

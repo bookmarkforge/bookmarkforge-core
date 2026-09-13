@@ -1565,7 +1565,7 @@
   "app_fuseSelected": "Выбрано соединений ({{count}})",
   "app_maintenanceFinished": "Обслуживание завершено: исправлено {{count}}",
   "app_maintenancePartial": "Обслуживание завершено с {{count}} проблемами",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "Справка и диагностика",
+  "app_helpDiagnosticsDesc": "Скопируйте обезличенную диагностику (только счётчики и версии — без содержимого хранилища), чтобы вставить её в обращение в поддержку. Включает код BF-E, если он есть.",
+  "app_diagCopyFailed": "Не удалось скопировать диагностику. См. Справку."
 }

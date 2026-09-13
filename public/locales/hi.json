@@ -1535,7 +1535,7 @@
   "app_maintenancePartial_few": "रखरखाव समस्याओं के साथ समाप्त",
   "app_maintenancePartial_many": "रखरखाव समस्याओं के साथ समाप्त",
   "app_maintenancePartial_other": "रखरखाव {{count}} समस्याओं के साथ समाप्त",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "सहायता और निदान",
+  "app_helpDiagnosticsDesc": "समर्थन में पेस्ट करने के लिए एक गुमनाम निदान कॉपी करें (केवल संख्याएँ और संस्करण — वॉल्ट सामग्री नहीं)। यदि उपलब्ध हो तो BF-E कोड शामिल है।",
+  "app_diagCopyFailed": "निदान कॉपी नहीं हो सका। सहायता देखें।"
 }

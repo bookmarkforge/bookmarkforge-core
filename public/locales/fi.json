@@ -1535,7 +1535,7 @@
   "app_maintenancePartial_few": "Ylläpito päättyi ongelmiin",
   "app_maintenancePartial_many": "Ylläpito päättyi ongelmiin",
   "app_maintenancePartial_other": "Ylläpito päättyi {{count}} ongelmaan",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "Ohje ja diagnostiikka",
+  "app_helpDiagnosticsDesc": "Kopioi anonymisoitu diagnostiikka (vain määrät ja versiot — ei holvin sisältöä) liitettäväksi tukeen. Sisältää BF-E-koodin, jos sellainen on.",
+  "app_diagCopyFailed": "Diagnostiikkaa ei voitu kopioida. Katso Ohje."
 }

@@ -1535,7 +1535,7 @@
   "app_maintenancePartial_few": "Vedlikehold avsluttet med problemer",
   "app_maintenancePartial_many": "Vedlikehold avsluttet med problemer",
   "app_maintenancePartial_other": "Vedlikehold avsluttet med {{count}} problemer",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "Hjelp og diagnostikk",
+  "app_helpDiagnosticsDesc": "Kopier en anonymisert diagnostikk (kun antall og versjoner — ingen innhold fra boksen) for å lime inn i supporten. Inkluderer BF-E-kode hvis den finnes.",
+  "app_diagCopyFailed": "Kunne ikke kopiere diagnostikken. Se Hjelp."
 }

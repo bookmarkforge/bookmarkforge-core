@@ -1534,7 +1534,7 @@
   "app_maintenancePartial_few": "Întreținere finalizată cu probleme",
   "app_maintenancePartial_many": "Întreținere finalizată cu probleme",
   "app_maintenancePartial_other": "Întreținere finalizată cu {{count}} probleme",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "Ajutor și diagnostic",
+  "app_helpDiagnosticsDesc": "Copiați un diagnostic anonimizat (doar contoare și versiuni — fără conținutul seifului) pentru a-l trimite la asistență. Include codul BF-E, dacă există.",
+  "app_diagCopyFailed": "Nu s-a putut copia diagnosticul. Consultați Ajutorul."
 }

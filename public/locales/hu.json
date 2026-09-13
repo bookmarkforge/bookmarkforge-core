@@ -1535,7 +1535,7 @@
   "app_maintenancePartial_few": "Karbantartás problémákkal befejeződött",
   "app_maintenancePartial_many": "Karbantartás problémákkal befejeződött",
   "app_maintenancePartial_other": "Karbantartás {{count}} problémával befejeződött",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "Súgó és diagnosztika",
+  "app_helpDiagnosticsDesc": "Másoljon leanonimizált diagnosztikát (csak számok és verziók — széf tartalma nélkül) az ügyfélszolgálatnak. Ha van, tartalmazza a BF-E kódot.",
+  "app_diagCopyFailed": "A diagnosztika nem másolható. Lásd a Súgót."
 }

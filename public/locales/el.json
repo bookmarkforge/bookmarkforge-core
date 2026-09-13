@@ -1550,7 +1550,7 @@
   "app_maintenanceFinished_many": "Συντήρηση ολοκληρώθηκε: έγιναν επιδιορθώσεις",
   "app_maintenancePartial_few": "Συντήρηση ολοκληρώθηκε με προβλήματα",
   "app_maintenancePartial_many": "Συντήρηση ολοκληρώθηκε με προβλήματα",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "Βοήθεια & διαγνωστικά",
+  "app_helpDiagnosticsDesc": "Αντιγράψτε μια ανωνυμοποιημένη διάγνωση (μόνο μετρήσεις και εκδόσεις — χωρίς περιεχόμενο θησαυροφυλακίου) για επικόλληση στην υποστήριξη. Περιλαμβάνει κωδικό BF-E αν υπάρχει.",
+  "app_diagCopyFailed": "Δεν ήταν δυνατή η αντιγραφή της διάγνωσης. Δείτε Βοήθεια."
 }

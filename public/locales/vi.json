@@ -1529,7 +1529,7 @@
   "app_maintenancePartial_few": "Bảo trì kết thúc với các vấn đề",
   "app_maintenancePartial_many": "Bảo trì kết thúc với các vấn đề",
   "app_maintenancePartial_other": "Bảo trì kết thúc với {{count}} vấn đề",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "Trợ giúp & chẩn đoán",
+  "app_helpDiagnosticsDesc": "Sao chép thông tin chẩn đoán đã ẩn danh (chỉ số đếm và phiên bản — không có nội dung két sắt) để dán vào phần hỗ trợ. Bao gồm mã BF-E nếu có.",
+  "app_diagCopyFailed": "Không thể sao chép thông tin chẩn đoán. Xem Trợ giúp."
 }

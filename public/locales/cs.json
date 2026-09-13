@@ -1565,7 +1565,7 @@
   "app_fuseSelected": "Vybrané spojení ({{count}})",
   "app_maintenanceFinished": "Údržba dokončena: {{count}} opraveno",
   "app_maintenancePartial": "Údržba dokončena s {{count}} problémy",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "Nápověda a diagnostika",
+  "app_helpDiagnosticsDesc": "Zkopírujte anonymizovanou diagnostiku (pouze počty a verze — bez obsahu trezoru) pro vložení do podpory. Pokud existuje, zahrnuje kód BF-E.",
+  "app_diagCopyFailed": "Diagnostiku se nepodařilo zkopírovat. Viz Nápověda."
 }

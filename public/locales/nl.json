@@ -1535,7 +1535,7 @@
   "app_maintenancePartial_few": "Onderhoud voltooid met problemen",
   "app_maintenancePartial_many": "Onderhoud voltooid met problemen",
   "app_maintenancePartial_other": "Onderhoud voltooid met {{count}} problemen",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "Hulp & diagnostiek",
+  "app_helpDiagnosticsDesc": "Kopieer een geanonimiseerde diagnose (alleen aantallen en versies — geen kluisinhoud) om te plakken in support. Bevat de BF-E-code indien aanwezig.",
+  "app_diagCopyFailed": "Kon de diagnose niet kopiëren. Zie Hulp."
 }

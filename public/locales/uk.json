@@ -1565,7 +1565,7 @@
   "app_fuseSelected": "Обрано з'''єднань ({{count}})",
   "app_maintenanceFinished": "Обслуговування завершено: виправлено {{count}}",
   "app_maintenancePartial": "Обслуговування завершено з {{count}} проблемами",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "Довідка та діагностика",
+  "app_helpDiagnosticsDesc": "Скопіюйте знеособлену діагностику (лише лічильники та версії — без вмісту сховища), щоб вставити її в звернення до підтримки. Містить код BF-E, якщо він є.",
+  "app_diagCopyFailed": "Не вдалося скопіювати діагностику. Див. Довідку."
 }

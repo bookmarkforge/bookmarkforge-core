@@ -1565,7 +1565,7 @@
   "app_fuseSelected": "Odabrano spajanja ({{count}})",
   "app_maintenanceFinished": "Održavanje završeno: {{count}} ispravljeno",
   "app_maintenancePartial": "Održavanje završeno s {{count}} problema",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "Pomoć i dijagnostika",
+  "app_helpDiagnosticsDesc": "Kopirajte anonimiziranu dijagnostiku (samo brojevi i verzije — bez sadržaja sefa) za slanje podrci. Uključuje BF-E kod ako postoji.",
+  "app_diagCopyFailed": "Dijagnostiku nije moguće kopirati. Pogledajte Pomoć."
 }

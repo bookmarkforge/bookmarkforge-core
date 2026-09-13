@@ -1535,7 +1535,7 @@
   "app_maintenancePartial_few": "メンテナンス終了: 問題あり",
   "app_maintenancePartial_many": "メンテナンス終了: 問題あり",
   "app_maintenancePartial_other": "メンテナンス終了: {{count}}件の問題",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "ヘルプと診断",
+  "app_helpDiagnosticsDesc": "匿名化された診断情報（件数とバージョンのみ — 保管庫の内容は含まれません）をコピーしてサポートに貼り付けてください。BF-E コードがあれば表示されます。",
+  "app_diagCopyFailed": "診断情報をコピーできませんでした。ヘルプを参照してください。"
 }

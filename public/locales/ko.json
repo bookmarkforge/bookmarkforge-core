@@ -1535,7 +1535,7 @@
   "app_maintenancePartial_few": "유지 관리 종료: 문제 있음",
   "app_maintenancePartial_many": "유지 관리 종료: 문제 있음",
   "app_maintenancePartial_other": "유지 관리 종료: {{count}}개 문제",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "도움말 및 진단",
+  "app_helpDiagnosticsDesc": "지원팀에 붙여넣을 수 있도록 익명화된 진단 정보를 복사하세요(개수와 버전만 — 보관함 내용 없음). BF-E 코드가 있으면 포함됩니다.",
+  "app_diagCopyFailed": "진단 정보를 복사할 수 없습니다. 도움말을 참조하세요."
 }

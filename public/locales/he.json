@@ -1535,7 +1535,7 @@
   "app_maintenancePartial_few": "התחזוקה הסתיימה עם בעיות",
   "app_maintenancePartial_many": "התחזוקה הסתיימה עם בעיות",
   "app_maintenancePartial_other": "התחזוקה הסתיימה עם {{count}} בעיות",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "עזרה ואבחון",
+  "app_helpDiagnosticsDesc": "העתיקו אבחון מאולח (ספירות וגרסאות בלבד — ללא תוכן הכספת) להדבקה בתמיכה. כולל קוד BF-E אם קיים.",
+  "app_diagCopyFailed": "לא ניתן היה להעתיק את האבחון. ראו עזרה."
 }

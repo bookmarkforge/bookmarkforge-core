@@ -1565,7 +1565,7 @@
   "app_fuseSelected": "Wybrane połączenia ({{count}})",
   "app_maintenanceFinished": "Konserwacja zakończona: {{count}} naprawiono",
   "app_maintenancePartial": "Konserwacja zakończona z {{count}} problemami",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "Pomoc i diagnostyka",
+  "app_helpDiagnosticsDesc": "Skopiuj zanonimizowaną diagnostykę (tylko liczniki i wersje — bez zawartości sejfu), aby wkleić ją do wsparcia. Zawiera kod BF-E, jeśli występuje.",
+  "app_diagCopyFailed": "Nie można skopiować diagnostyki. Zobacz Pomoc."
 }

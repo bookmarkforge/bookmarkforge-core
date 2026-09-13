@@ -1535,7 +1535,7 @@
   "app_maintenancePartial_few": "การบำรุงรักษาเสร็จสิ้นด้วยปัญหา",
   "app_maintenancePartial_many": "การบำรุงรักษาเสร็จสิ้นด้วยปัญหา",
   "app_maintenancePartial_other": "การบำรุงรักษาเสร็จสิ้นด้วย {{count}} ปัญหา",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "ช่วยเหลือและการวินิจฉัย",
+  "app_helpDiagnosticsDesc": "คัดลอกข้อมูลวินิจฉัยที่ไม่ระบุตัวตน (เฉพาะจำนวนและเวอร์ชัน — ไม่มีเนื้อหาตู้เซฟ) เพื่อวางให้ฝ่ายสนับสนุน รวมรหัส BF-E หากมี",
+  "app_diagCopyFailed": "ไม่สามารถคัดลอกข้อมูลวินิจฉัยได้ ดูช่วยเหลือ"
 }

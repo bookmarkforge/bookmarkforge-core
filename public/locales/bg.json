@@ -1550,7 +1550,7 @@
   "app_maintenanceFinished_many": "Поддръжка завършена: ремонтирани",
   "app_maintenancePartial_few": "Поддръжка завършена с проблеми",
   "app_maintenancePartial_many": "Поддръжка завършена с проблеми",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "Помощ и диагностика",
+  "app_helpDiagnosticsDesc": "Копирайте обезличена диагностика (само бройки и версии — без съдържание от трезора), за да я изпратите на поддръжката. Включва BF-E код, ако има такъв.",
+  "app_diagCopyFailed": "Диагностиката не можа да се копира. Вижте Помощ."
 }

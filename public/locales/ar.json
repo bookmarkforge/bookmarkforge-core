@@ -1535,7 +1535,7 @@
   "app_maintenancePartial_few": "انتهت الصيانة مع مشكلات",
   "app_maintenancePartial_many": "انتهت الصيانة مع مشكلات",
   "app_maintenancePartial_other": "انتهت الصيانة مع {{count}} من المشكلات",
-  "app_helpDiagnostics": "Help & diagnostics",
-  "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_helpDiagnostics": "المساعدة والتشخيص",
+  "app_helpDiagnosticsDesc": "انسخ تشخيصًا مُجرّدًا (الأعداد والإصدارات فقط — بلا محتوى من الخزنة) لإلصاقه في الدعم. يتضمن رمز BF-E إن وُجد.",
+  "app_diagCopyFailed": "تعذّر نسخ التشخيص. راجع المساعدة."
 }

@@ -56,6 +56,7 @@ Decisión: **esta fase solo retira documentos con estado `retirable` y referenci
 | `docs/que-nos-falta.md` | vivo | Resumen de deudas pendientes. |
 | `docs/release-note-r3-4.md` | vivo | Notas de release. |
 | `docs/sast-triage.md` | vivo | Guía de triaje SAST. |
+| `docs/support-data-loss-runbook.md` | vivo | Runbook de soporte para pérdida de datos: 3 caminos de recuperación, plantillas y prevención. |
 | `docs/security.md` | vivo | Controles de seguridad, RGPD, configuración obligatoria de producción. |
 | `docs/server-api-index.md` | vivo | Índice detallado de endpoints del servidor. |
 | `docs/staging-smoke.md` | vivo | Notas de smoke de staging. |

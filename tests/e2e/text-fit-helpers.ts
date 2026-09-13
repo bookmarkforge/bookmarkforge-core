@@ -379,7 +379,9 @@ export async function seedLocale(
   await page.addInitScript((code: string) => {
     window.localStorage.setItem("i18nextLng", code);
     // Skip the WebLLM warmup download (ProviderManager reads
-    // forge_test_mode from localStorage): the model card with its moving
+    // forge_test_mode from localStorage, which suppresses warmup no matter
+    // which production trigger fires it — unlock listener or editor-focus
+    // handler): the model card with its moving
     // progress bar would make the chat-view baseline non-deterministic.
     window.localStorage.setItem("forge_test_mode", "true");
     // WelcomeTour: never render the guided tour overlay.

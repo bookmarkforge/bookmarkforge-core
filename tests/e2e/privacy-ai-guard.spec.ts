@@ -31,7 +31,7 @@ import { setupVault } from "./vault-helpers";
  * Determinism: Math.random pinned (RoutingOptimizer never randomizes to a
  * local provider on a fresh Q-table), connection=4g + full battery (the
  * "low battery / slow network -> gemini" branch must not fire before the
- * API-key branch), deviceMemory=2 + 2 cores (shouldUseLocalLLM() is false,
+ * API-key branch), deviceMemory=2 + 2 cores (isHighEndDevice() is false,
  * so private tasks route to mocked Ollama, never WebLLM). Both endpoint
  * mocks are registered BEFORE app boot (Ollama's 60s availability cache).
  */

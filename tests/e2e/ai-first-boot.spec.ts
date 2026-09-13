@@ -7,13 +7,26 @@
  * The real WebLLM engine needs WebGPU + a 1.5–4.5 GB model download, which
  * is unavailable in headless CI. This spec therefore stubs ONLY the
  * device-dependent boundary (WebLLMService.init → fake engine) while running
- * the real production flow everywhere else:
+ * the real production flow everywhere else — INCLUDING the automatic
+ * opportunistic warmups: ProviderManager subscribes to securityVault.onUnlock
+ * and fires guarded warmup() on every successful unlock, and the block
+ * editor's one-shot focus handler (createEditorFocusHandler →
+ * aiManager.warmup()) does the same on the user's first editor interaction.
+ * Both funnel into the same guarded warmup(), which is why this spec must
+ * set forge_test_mode before setupVault (suppressing any automatic warmup
+ * until the stub below is installed) and clear it before its explicit
+ * warmup below. The editor-focus trigger is inert in THIS spec — the flow
+ * never mounts the editor — but the guard spec's capable-device scenario
+ * proves it preloads exactly once on the same wiring.
  *
  *   1. First boot: SecurityConfirmation → vault setup → unlocked shell
  *      (setupVault, the same helper the vault suite uses).
  *   2. Local AI active: ProviderManager.warmup() installs the local model
- *      (the real warmup path the app runs on unlock), and the global
- *      AIModelHydration progress card is asserted during the download.
+ *      (invoked explicitly in step 2 — the same guarded warmup the app
+ *      fires automatically from its two production triggers: the
+ *      securityVault.onUnlock listener and the editor's one-shot focus
+ *      handler), and the global AIModelHydration
+ *      progress card is asserted during the download.
  *   3. First summary: the real Chat → AgentService.globalChat →
  *      ProviderManager.streamGenerateText → WebLLMService.generateText path
  *      produces the first summary through the (fake) engine, so the real
@@ -50,16 +63,18 @@ test.describe("first boot with local AI active (F1-D)", () => {
       try {
         // Local AI is the active provider from the very first boot.
         localStorage.setItem("selected_ai_provider", "webllm");
-        // Skip the opportunistic warmup that runs during setupVault's unlock:
-        // it would call the REAL WebLLMService.init (device model download)
-        // before this spec can install its stub. We re-trigger warmup manually
-        // after stubbing below.
+        // Skip the PRODUCTION opportunistic warmup (ProviderManager's
+        // securityVault.onUnlock listener fires guarded warmup() on every
+        // real unlock, including setupVault's): without test mode it would
+        // call the REAL WebLLMService.init (device model download) before
+        // this spec can install its stub. Step 2 below re-triggers warmup
+        // manually once the stub is in place.
         localStorage.setItem("forge_test_mode", "true");
         localStorage.setItem("forge_welcome_tour_complete", "true");
       } catch {
         /* ignore: non-fatal localStorage denial */
       }
-      // A capable device so canRunLocalLLM()/shouldUseLocalLLM() report true
+      // A capable device so canRunLocalLLM()/isHighEndDevice() report true
       // and the fake WebGPU probe below succeeds (the real init is stubbed).
       Object.defineProperty(navigator, "deviceMemory", {
         configurable: true,
@@ -110,7 +125,12 @@ test.describe("first boot with local AI active (F1-D)", () => {
       await svc.init("Llama-3.2-1B-Instruct-q4f16_1-MLC");
       const { aiManager } = await import("/src/services/ai/ProviderManager.ts");
       // forge_test_mode was cleared inside installLocalAIStub, so this runs
-      // the production warmup path and calls the stubbed init() below.
+      // the production warmup path (capability guard → init) and calls the
+      // stubbed init() below — the same guarded orchestration the app's
+      // production triggers fire automatically (the securityVault.onUnlock
+      // listener on every unlock; the editor's one-shot focus handler on
+      // first editor interaction — inert here, the flow never mounts the
+      // editor).
       await aiManager.warmup();
     });
 
@@ -206,7 +226,8 @@ test.describe("first boot with local AI active (F1-D)", () => {
  * REAL generateText() runs so firstSummaryLatencyMs is recorded for real.
  *
  * Also pins the orthogonal RAG/embedding boundaries to empty/no-op results
- * and clears forge_test_mode so the subsequent warmup() actually installs.
+ * and clears forge_test_mode so the subsequent warmup() passes the
+ * test-mode gate and actually installs.
  */
 async function installLocalAIStub(page: Page, summary: string): Promise<void> {
   await page.evaluate(async (mockSummary) => {
@@ -219,6 +240,7 @@ async function installLocalAIStub(page: Page, summary: string): Promise<void> {
       init: (modelId?: string, force?: boolean) => Promise<void>;
       canRunLocalLLM: () => Promise<boolean>;
       isWebGPUSupported: () => Promise<boolean>;
+      f16Supported: boolean;
       progressListeners?: Set<(p: { text: string; progress: number }) => void>;
       engine: unknown;
       currentModel: string;
@@ -226,12 +248,19 @@ async function installLocalAIStub(page: Page, summary: string): Promise<void> {
       __fakeInstalled?: boolean;
     };
 
-    // ProviderManager.getOptimalProvider() routes to WebLLM only when
+    // ProviderManager.resolveProvider() routes to WebLLM only when
     // canRunLocalLLM() reports true (webGPU + shader-f16 + ≥4GB RAM). A
     // headless driver returns no GPU adapter/features, so force the
     // capability probe so routing reaches the stubbed engine below.
     svc.isWebGPUSupported = async () => true;
     svc.canRunLocalLLM = async () => true;
+    // getHealthStatus() reads the cached f16Supported field (set to false by
+    // the boot-time probe against the fake adapter, which exposes no
+    // features). generateWithWebLLM's fail-closed pre-check consults
+    // getHealthStatus() before touching the engine, so the fake device must
+    // report f16 support too — matching the spec's stated intent of a fully
+    // capable device.
+    svc.f16Supported = true;
 
     svc.init = async (modelId?: string) => {
       if (svc.__fakeInstalled) {

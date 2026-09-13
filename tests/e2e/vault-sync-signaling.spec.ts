@@ -15,10 +15,18 @@
  *   - The `/admin` endpoint of the signaling server is verified in both
  *     states: fail-closed without the token (503 / 401) and — while the
  *     room is live — reporting `connections ≥ 3`, `rooms ≥ 1` and a
- *     `roomMetrics[]` entry for OUR roomId with `peers ≥ 3` and
+ *     `roomMetrics[]` entry for OUR room with `peers ≥ 3` and
  *     `secretPresent: true`. That last assertion is also the proof the sync
  *     actually went through the LOCAL server rather than the public
  *     rxdb.info/PubNub fallbacks.
+ *
+ *   - A-2: the room name is NOT the readable room id. It is
+ *     HMAC-SHA256(roomSecret, `bookmarkforge-sync-topic:v1:${roomId}:${collection}`),
+ *     so every server/relay (including the public fallbacks) sees an opaque
+ *     64-hex string. This spec derives the expected topic with the app's own
+ *     `deriveSyncTopic` from inside the page (never a duplicated copy of the
+ *     derivation) and asserts /admin reports exactly that room — and that no
+ *     room name on the wire contains the plaintext room id.
  *
  * Runtime wiring (see playwright.multiuser.config.ts and the nightly
  * config): the Vite dev server is started with VITE_P2P_SIGNALING_URL
@@ -37,7 +45,11 @@ import {
   type TestInfo,
 } from "@playwright/test";
 import { randomBytes } from "node:crypto";
-import { skipPassword } from "./vault-helpers";
+import {
+  readSyncTopic,
+  skipPassword,
+  startP2PSync,
+} from "./vault-helpers";
 
 /** Must match the webServer env fallback in the Playwright configs. */
 const ADMIN_TOKEN = process.env.SIGNALING_ADMIN_TOKEN ?? "e2e-admin-token";
@@ -92,24 +104,6 @@ async function seedDocuments(
       await db.documents.upsert(doc);
     }
   }, records);
-}
-
-async function startSignalingSync(
-  page: Page,
-  roomId: string,
-  roomSecret: string,
-): Promise<void> {
-  await page.evaluate(
-    async ({ roomId, roomSecret }) => {
-      const { initDB } = await import("/src/db/database.ts");
-      const db = await initDB();
-      const { syncService } = await import("/src/services/SyncService.ts");
-      // Same entry point the collaboration UI uses
-      // (CollaborationService.start → syncService.startP2PSync).
-      await syncService.startP2PSync(db, roomId, roomSecret);
-    },
-    { roomId, roomSecret },
-  );
 }
 
 async function readDocumentTitles(page: Page): Promise<string[]> {
@@ -281,9 +275,9 @@ test.describe("multiuser WebRTC sync via the local signaling server", () => {
       // ── Join the same room with the same secret from all three ──
       phase = "starting P2P sync in all three contexts";
       await Promise.all([
-        startSignalingSync(hostPage, roomId, roomSecret),
-        startSignalingSync(peerCPage, roomId, roomSecret),
-        startSignalingSync(peerDPage, roomId, roomSecret),
+        startP2PSync(hostPage, roomId, roomSecret),
+        startP2PSync(peerCPage, roomId, roomSecret),
+        startP2PSync(peerDPage, roomId, roomSecret),
       ]);
 
       // ── Convergence: every context must hold the union of all seeds ──
@@ -311,6 +305,24 @@ test.describe("multiuser WebRTC sync via the local signaling server", () => {
       }
 
       // ── /admin must now report the live room with 3 peers ──
+      phase = "deriving the keyed room names";
+      const documentsTopic = await readSyncTopic(
+        hostPage,
+        roomId,
+        roomSecret,
+        "documents",
+      );
+      const bookmarksTopic = await readSyncTopic(
+        hostPage,
+        roomId,
+        roomSecret,
+        "bookmarks",
+      );
+      // Per-collection rooms stay distinct, and the keyed names are opaque.
+      expect(documentsTopic).not.toBe(bookmarksTopic);
+      expect(documentsTopic).toMatch(/^[0-9a-f]{64}$/);
+      expect(bookmarksTopic).toMatch(/^[0-9a-f]{64}$/);
+
       phase = "verifying /admin reports the live room";
       const live = await request.get(`${base}/admin`, {
         headers: { "x-signaling-admin-token": ADMIN_TOKEN },
@@ -328,20 +340,24 @@ test.describe("multiuser WebRTC sync via the local signaling server", () => {
       };
       expect(liveMetrics.connections).toBeGreaterThanOrEqual(3);
       expect(liveMetrics.rooms).toBeGreaterThanOrEqual(1);
-      // Each collection replicates in its own collection-scoped room
-      // (`${roomId}-bookmarks` / `${roomId}-documents`) so peers never mix
-      // schemas; find this session's rooms and require the documents room to
-      // hold the full three-context mesh.
-      const ourRooms = liveMetrics.roomMetrics.filter((room) =>
-        room.roomId.startsWith(`${roomId}-`),
-      );
-      expect(ourRooms.length).toBeGreaterThanOrEqual(1);
-      const documentsRoom = ourRooms.find((room) =>
-        room.roomId.endsWith("-documents"),
+      // A-2: the room name on the wire is the keyed HMAC topic, so the server
+      // must report THAT room — and no room name may contain the plaintext
+      // room id (the whole point of the change: relays never learn the
+      // capability).
+      expect(
+        liveMetrics.roomMetrics.some((room) => room.roomId.includes(roomId)),
+      ).toBe(false);
+      const documentsRoom = liveMetrics.roomMetrics.find(
+        (room) => room.roomId === documentsTopic,
       );
       expect(documentsRoom).toBeDefined();
       expect(documentsRoom?.peers).toBeGreaterThanOrEqual(3);
       expect(documentsRoom?.secretPresent).toBe(true);
+      // Each collection replicates in its own collection-scoped room so peers
+      // never mix schemas; the bookmarks room must exist too.
+      expect(
+        liveMetrics.roomMetrics.some((room) => room.roomId === bookmarksTopic),
+      ).toBe(true);
 
       // ── Evidence for the audit ──
       try {
@@ -349,6 +365,8 @@ test.describe("multiuser WebRTC sync via the local signaling server", () => {
           body: JSON.stringify(
             {
               roomId,
+              documentsTopic,
+              bookmarksTopic,
               convergedTitles: EXPECTED_TITLES,
               liveMetrics,
               trustProxy: liveMetrics.trustProxy,

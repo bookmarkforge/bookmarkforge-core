@@ -414,3 +414,158 @@ export async function unlockAfterReload(
   });
   await unlockVault(page, password);
 }
+
+/**
+ * Start RxDB WebRTC replication for one room, through the same entry point the
+ * collaboration UI uses (`CollaborationService.start` →
+ * `syncService.startP2PSync`).
+ *
+ * Shared by every sync spec (the multiuser suite and the public-relay suite):
+ * the two differ in how the app is CONFIGURED (self-hosted server vs public
+ * relay), not in how a room is joined.
+ */
+export async function startP2PSync(
+  page: Page,
+  roomId: string,
+  roomSecret: string,
+): Promise<void> {
+  await page.evaluate(
+    async ({ roomId, roomSecret }) => {
+      const { initDB } = await import("/src/db/database.ts");
+      const db = await initDB();
+      const { syncService } = await import("/src/services/SyncService.ts");
+      await syncService.startP2PSync(db, roomId, roomSecret);
+    },
+    { roomId, roomSecret },
+  );
+}
+
+/**
+ * Derive the keyed signaling room name the client actually joins (A-2), using
+ * the app's own derivation from inside the page rather than a duplicated copy
+ * of the HMAC — a copy that could silently drift from what the client sends.
+ */
+export async function readSyncTopic(
+  page: Page,
+  roomId: string,
+  roomSecret: string,
+  collectionName: string,
+): Promise<string> {
+  return page.evaluate(
+    async ({ roomId, roomSecret, collectionName }) => {
+      const { deriveSyncTopic } = await import("/src/services/SyncService.ts");
+      return deriveSyncTopic(roomSecret, roomId, collectionName);
+    },
+    { roomId, roomSecret, collectionName },
+  );
+}
+
+/**
+ * Reads the per-vault Argon2id KDF salt a stored record was WRITTEN with,
+ * straight out of its ciphertext: a `v6:` payload embeds the 16-byte salt in
+ * its header, so the derivation the app actually used is observable from the
+ * bytes without reaching into app internals.
+ *
+ * Works for records stored raw (the H5 verification token, which is
+ * password-encrypted only and stays readable while the vault is locked) as well
+ * as for probe writes performed by a spec.
+ *
+ * @returns the salt as 32 hex chars, or null when the record is
+ *   missing/legacy (`v5:`/`v4:` carry no vault salt).
+ */
+export async function readVaultKdfSaltFromSecret(
+  page: Page,
+  key: string,
+): Promise<string | null> {
+  return await page.evaluate(async ({ key }) => {
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open("bookmarkforge_secure_vault");
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    try {
+      if (!db.objectStoreNames.contains("secrets")) {return null;}
+      const record = await new Promise<{ value?: unknown } | undefined>(
+        (resolve, reject) => {
+          const transaction = db.transaction(["secrets"], "readonly");
+          const request = transaction.objectStore("secrets").get(key);
+          request.onsuccess = () =>
+            resolve(request.result as { value?: unknown } | undefined);
+          request.onerror = () => reject(request.error);
+        },
+      );
+      const value = record?.value;
+      if (typeof value !== "string" || !value.startsWith("v6:")) {return null;}
+      const bytes = Uint8Array.from(atob(value.slice(3)), (character) =>
+        character.charCodeAt(0),
+      );
+      return Array.from(bytes.subarray(0, 16), (byte) =>
+        byte.toString(16).padStart(2, "0"),
+      ).join("");
+    } finally {
+      db.close();
+    }
+  }, { key });
+}
+
+/** The vault's salt as embedded in the H5 verification token ciphertext. */
+export const VAULT_VERIFICATION_KEY = "vault_verification";
+
+export async function readVaultKdfSaltFromToken(
+  page: Page,
+): Promise<string | null> {
+  return await readVaultKdfSaltFromSecret(page, VAULT_VERIFICATION_KEY);
+}
+
+/**
+ * The salt INSTALLED in this tab's crypto layer (module state), which is what
+ * its next write will be keyed with. Distinct from the stored salt on purpose:
+ * the gap between the two is exactly the multi-tab window A-1 closes.
+ */
+export async function readInstalledVaultKdfSalt(
+  page: Page,
+): Promise<string | null> {
+  return await page.evaluate(async () => {
+    const { encryptionService } = await import(
+      "/src/services/EncryptionService.ts"
+    );
+    return encryptionService.getVaultKdfSaltHex();
+  });
+}
+
+/**
+ * Performs a REAL vault write (a password-encrypted payload persisted through
+ * `securityVault.encryptSecret`) and returns the salt that write was keyed
+ * with, read out of the returned `v6:` ciphertext.
+ *
+ * This is the observable behind "the tab stopped writing under the retired
+ * salt": the payload embeds the salt it was encrypted with, so what the tab is
+ * actually using is what the caller sees — not what some internal getter
+ * claims. `readVaultKdfSaltFromSecret` cannot serve here because
+ * `SecureStorage.setSecret` wraps the payload in the device-key layer before
+ * persisting it (`rawPut` of `encryptValue(payload)`), leaving only records
+ * written raw — the H5 verification token — readable as `v6:` in IndexedDB.
+ *
+ * @returns the salt as 32 hex chars, or null when the payload is legacy
+ *   (`v5:`/`v4:` carry no vault salt).
+ */
+export async function writeVaultProbeSecret(
+  page: Page,
+  key: string,
+  value = "e2e-kdf-probe",
+): Promise<string | null> {
+  return await page.evaluate(
+    async ({ key, value }) => {
+      const { securityVault } = await import("/src/services/SecurityVault.ts");
+      const payload = await securityVault.encryptSecret(value, key);
+      if (!payload.startsWith("v6:")) {return null;}
+      const bytes = Uint8Array.from(atob(payload.slice(3)), (character) =>
+        character.charCodeAt(0),
+      );
+      return Array.from(bytes.subarray(0, 16), (byte) =>
+        byte.toString(16).padStart(2, "0"),
+      ).join("");
+    },
+    { key, value },
+  );
+}

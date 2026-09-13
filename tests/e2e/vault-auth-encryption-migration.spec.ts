@@ -195,12 +195,12 @@ test("legacy v6 vault migrates to authenticated format and survives backup/resto
   ).toBe(true);
 
   // Sanity: the seeded row is legacy-only — inner CryptoJS ciphertext with
-  // NO outer envelope (no `v5:` marker anywhere).
+  // NO outer envelope (no `v4:`/`v5:`/`v6:` marker anywhere).
   const preRaw = await dumpRawVaultStorage(page);
   const preDump = preRaw.join("\n");
   expect(preDump).toContain("U2FsdGVkX1"); // CryptoJS marker
   expect(preDump).not.toContain(LEGACY_BOOKMARK.title); // encrypted at rest
-  expect(preDump).not.toMatch(/v[45]:/); // no authenticated envelope yet
+  expect(preDump).not.toMatch(/v[456]:/); // no authenticated envelope yet
 
   // ── Phase 3: reload → the app migrates v6 → v7 on unlock ────────────
   await page.reload();
@@ -238,8 +238,9 @@ test("legacy v6 vault migrates to authenticated format and survives backup/resto
   // Raw storage now carries the authenticated format. Extract the raw
   // `title`/`url` ciphertext of the migrated row from IndexedDB (bypassing
   // the app), decrypt the INNER CryptoJS layer here in Node, and assert the
-  // recovered plaintext is itself a `v5:` envelope — the F-06 marker — not
-  // the raw bookmark value.
+  // recovered plaintext is itself a `v4:`/`v5:`/`v6:` envelope — the F-06
+  // marker, now written under the per-vault KDF salt (A-1) — not the raw
+  // bookmark value.
   const postRaw = await dumpRawVaultStorage(page);
   const postDump = postRaw.join("\n");
   expect(postDump).toContain("U2FsdGVkX1");
@@ -261,14 +262,14 @@ test("legacy v6 vault migrates to authenticated format and survives backup/resto
     return secrets;
   }, postRaw);
   expect(migratedCiphertexts.length).toBeGreaterThan(0);
-  // Every migrated encrypted field must decrypt (inner layer) into a v5
+  // Every migrated encrypted field must decrypt (inner layer) into a v4/v5/v6
   // envelope — never into the raw legacy plaintext.
   for (const cipher of migratedCiphertexts) {
     expect(cipher.startsWith("U2FsdGVkX1")).toBe(true);
     const inner = CryptoJS.AES.decrypt(cipher, resolvedPassword).toString(
       CryptoJS.enc.Utf8,
     );
-    expect(inner).toMatch(/^"?v[45]:/);
+    expect(inner).toMatch(/^"?v[456]:/);
     expect(inner).not.toContain(LEGACY_BOOKMARK.title);
   }
 

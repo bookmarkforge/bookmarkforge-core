@@ -1,5 +1,11 @@
 import { test, expect } from "@playwright/test";
 import { setupVault, safeReload } from "./vault-helpers";
+// Single source of truth: the same list the app's LanguageSelector renders
+// (src/constants/locales.ts). The E2E selector gate resolves the
+// `[data-language-code="${code}"]` interpolation against this import
+// mechanically — a locale added to the app's list is automatically covered
+// here, and one removed from the app fails the loop here.
+import { SUPPORTED_LOCALE_CODES } from "../../src/constants/locales";
 
 /**
  * vault-locale-switch: runs under playwright.idb-persistence.ts. Switching
@@ -40,11 +46,7 @@ test("pre-vault language selector exposes all 30 locales and applies RTL", async
   );
   await expect(securityDialog).toBeVisible({ timeout: 30_000 });
 
-  const locales = [
-    "ar", "bg", "cs", "da", "de", "el", "en", "es", "fi", "fr",
-    "he", "hi", "hr", "hu", "id", "it", "ja", "ko", "nl", "no",
-    "pl", "pt", "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh",
-  ];
+  const locales = SUPPORTED_LOCALE_CODES;
 
   const languageButton = page.getByTestId("language-select");
   await languageButton.click();

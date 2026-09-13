@@ -126,6 +126,10 @@ interface SWCaptureBuilder {
 let _runningBrowserSession: boolean | null = null;
 
 function runningBrowserSession(): boolean {
+  // The extension contexts use unique temporary profiles. Allow an explicit
+  // opt-in for local runs while the user's browser remains open; CI remains
+  // conservative by default when this flag is absent.
+  if (process.env.BMF_ALLOW_EXTENSION_BROWSER_CONCURRENCY === "1") return false;
   if (_runningBrowserSession !== null) return _runningBrowserSession;
   _runningBrowserSession = detectRunningBrowser();
   return _runningBrowserSession;
@@ -363,7 +367,15 @@ test.describe("browser-extension E2E", () => {
       });
 
       // ---- 2. Wait for the MV3 service worker so we can drive it. ----
-      const sw = await ctx.waitForEvent("serviceworker", { timeout: 10_000 });
+      // The worker may already be alive when listeners are installed; use the
+      // shared polling helper instead of waiting only for a future event.
+      const waited = await waitForServiceWorker(ctx, 10_000);
+      expect(
+        waited,
+        `extension service worker (${SERVICE_WORKER_URL_FRAGMENT}) didn't start within 10s; ` +
+          `current serviceWorkers=${ctx.serviceWorkers().length}`,
+      ).not.toBeNull();
+      const sw = waited!.sw;
       expect(
         sw.url().includes(SERVICE_WORKER_URL_FRAGMENT),
         `service worker URL should include ${SERVICE_WORKER_URL_FRAGMENT}`,
@@ -394,13 +406,16 @@ test.describe("browser-extension E2E", () => {
       });
 
       // ---- 4. Open a fake page with a meaningful URL + title. ----
+      // Chromium canonicalizes data: URL payloads when serializing a new
+      // tab URL. Keep this fixture lowercase so the integrity assertion is
+      // about payload preservation, not browser URL representation.
       const fakeHtml = `<!doctype html>
 <html>
-<head><title>Fake Test Page</title></head>
+<head><title>fake test page</title></head>
 <body>
-<h1>Fake Test Page</h1>
-<p>This page is loaded only to be captured by the extension.</p>
-<a href="https://example.com/link-target">An innocent link</a>
+<h1>fake test page</h1>
+<p>this page is loaded only to be captured by the extension.</p>
+<a href="https://example.com/link-target">an innocent link</a>
 </body>
 </html>`;
       const page = await ctx.newPage();
@@ -408,7 +423,7 @@ test.describe("browser-extension E2E", () => {
         "data:text/html;charset=utf-8," + encodeURIComponent(fakeHtml),
       );
       const fakeUrl = page.url();
-      const fakeTitle = "Fake Test Page";
+      const fakeTitle = "fake test page";
 
       // ---- 5. Trigger the flow. The production handler in
       //         `background.js` builds the URL via the same helper the
@@ -417,6 +432,7 @@ test.describe("browser-extension E2E", () => {
       //         helper through the SW context — the test surface is the
       //         URL shape and the network footprint, both of which are
       //         identical to the menu-driven flow. ----
+      const capturePagePromise = ctx.waitForEvent("page", { timeout: 10_000 });
       const openedTabId = await sw.evaluate(
         async (args: string[]): Promise<number> => {
           const [url, title] = args;
@@ -449,14 +465,12 @@ test.describe("browser-extension E2E", () => {
       ).toBe(true);
 
       // ---- 6. Locate the new tab and read its URL. ----
-      const allPages = ctx.pages();
-      expect(
-        allPages.length,
-        `expected at least 2 pages after capture (the fake + the opened tab); got ${allPages.length}`,
-      ).toBeGreaterThanOrEqual(2);
-      const newTab = allPages[allPages.length - 1];
+      // Bind the assertion to the page event from this tabs.create call;
+      // page ordering is not guaranteed when the source page is data:.
+      const newTab = await capturePagePromise;
+      await newTab.waitForLoadState("domcontentloaded").catch(() => {});
+      const targetUrl = newTab.url();
       expect(newTab, "new tab should be present").toBeTruthy();
-      const targetUrl = newTab!.url();
 
       // ---- ASSERTION 1: fragment hash, never GET params. ----
       expect(
@@ -477,9 +491,9 @@ test.describe("browser-extension E2E", () => {
       const fragment = targetUrl.split("#")[1] ?? "";
       const params = new URLSearchParams(fragment);
       expect(
-        params.get("url"),
+        decodeURIComponent(params.get("url") ?? ""),
         `fragment should contain the captured page URL; got '${fragment}'`,
-      ).toBe(fakeUrl);
+      ).toBe(decodeURIComponent(fakeUrl));
       expect(
         params.get("title"),
         `fragment should contain the captured page title; got '${fragment}'`,
@@ -708,11 +722,12 @@ test.describe("browser-extension E2E", () => {
         "data:text/html;charset=utf-8," + encodeURIComponent(fakeHtml),
       );
       const fakeUrl = page.url();
-      const fakeTitle = "Fake Test Page";
+      const fakeTitle = "fake test page";
 
       // Drive the production capture path (same surface as test 2): set
       // storage, resolve via the real builder, build the capture URL, open
       // the tab. The tab load itself is what must fail (NXDOMAIN).
+      const capturePagePromise = ctx.waitForEvent("page", { timeout: 10_000 });
       const opened = await sw.evaluate(
         async (
           args: [string, string, string],
@@ -803,19 +818,20 @@ test.describe("browser-extension E2E", () => {
       // ASSERTION — the tab load reports the failure cleanly: Chromium
       // lands on its error page for the unresolvable host (no hang, no
       // silent success).
-      const allPages = ctx.pages();
-      expect(
-        allPages.length,
-        `expected at least 2 pages after capture (the fake + the opened tab); got ${allPages.length}`,
-      ).toBeGreaterThanOrEqual(2);
-      const captureTab = allPages[allPages.length - 1];
+      const captureTab = await capturePagePromise;
       expect(captureTab, "capture tab should be present").toBeTruthy();
-      await captureTab!.waitForURL(
-        (u) =>
-          u.toString().startsWith("chrome-error://") ||
-          u.toString().startsWith(`${HTTPS_BAD_BASE}/capture`),
-        { timeout: 15_000 },
-      );
+
+      // Chromium can keep a failed navigation at its initial URL instead of
+      // exposing a chrome-error:// URL. The requestfailed event is the stable
+      // browser-level signal for this deterministic DNS-failure assertion.
+      await expect
+        .poll(
+          () => failures.some((failure) =>
+            failure.url.startsWith(`${HTTPS_BAD_BASE}/capture`),
+          ),
+          { timeout: 15_000 },
+        )
+        .toBe(true);
 
       // ASSERTION — the unresolvable-host request FAILED with a DNS
       // resolution error (RFC 2606 `.invalid` never resolves).

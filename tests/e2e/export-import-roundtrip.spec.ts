@@ -387,9 +387,12 @@ test("export → wipe → re-import: bookmarks, documents and folders survive wi
   ).toBe("Roundtrip Doc B");
 
   // Folders: the NESTED hierarchy survived (Work → Projects stays nested).
+  // Folder ids are stable across the round-trip (unlike document ids), and
+  // parentId stores the parent's ID, not its title — so the hierarchy is
+  // asserted against the seeded ids directly.
   const folderByTitle = new Map(restored.folders.map((f) => [f.title, f]));
   expect(folderByTitle.get("Work")?.parentId).toBe("root");
-  expect(folderByTitle.get("Projects")?.parentId).toBe("Work");
+  expect(folderByTitle.get("Projects")?.parentId).toBe("rt-folder-work");
   expect(folderByTitle.get("Personal")?.parentId).toBe("root");
 });
 
@@ -428,12 +431,20 @@ test("a second export after the round-trip is identical (no drift)", async ({
     documents: Array<Record<string, unknown>>;
     folders: Array<Record<string, unknown>>;
   }) => ({
-    bookmarks: data.bookmarks.map((b) => strip(b, ["id", "urlHash", "processed"])),
-    documents: data.documents.map((d) => strip(d, ["id", "processed", "links"])),
-    folders: data.folders,
+    bookmarks: data.bookmarks
+      .map((b) => strip(b, ["id", "urlHash", "processed"]))
+      .sort((a, b) => String(a.url).localeCompare(String(b.url))),
+    documents: data.documents
+      .map((d) => strip(d, ["id", "processed", "links"]))
+      .sort((a, b) => String(a.title).localeCompare(String(b.title))),
+    folders: [...data.folders].sort(
+      (a, b) =>
+        String(a.title).localeCompare(String(b.title)) ||
+        String(a.parentId ?? "").localeCompare(String(b.parentId ?? "")),
+    ),
   });
 
-  expect(second.data).toEqual(normalize(first.data));
+  expect(normalize(second.data)).toEqual(normalize(first.data));
   expect(second.metadata.totalBookmarks).toBe(3);
   expect(second.metadata.totalDocuments).toBe(2);
   expect(second.metadata.totalFolders).toBe(3);

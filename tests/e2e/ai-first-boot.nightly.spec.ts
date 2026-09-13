@@ -174,7 +174,8 @@ test.describe("first boot with local AI active — real device budget (F1-D)", (
         mem.addMessage = async () => "e2e-memory-message";
       });
 
-      // After unlock the app runs the REAL warmup: real WebGPU init, real
+      // After unlock the app's securityVault.onUnlock listener runs the
+      // REAL warmup: real WebGPU init, real
       // digest-pinned model download (≤ 10 min per budget) and engine
       // load. The LIVE system, no stubs.
       await page.waitForTimeout(500);

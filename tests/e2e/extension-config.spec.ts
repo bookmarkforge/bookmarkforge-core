@@ -51,6 +51,10 @@ let _runningBrowserSession: boolean | null = null;
  * false positive. Memoized: the OS probe runs once per worker.
  */
 function runningBrowserSession(): boolean {
+  // The extension context uses a dedicated temporary profile. Allow an
+  // explicit opt-in for local runs while the user's browser remains open;
+  // CI remains conservative by default when this flag is absent.
+  if (process.env.BMF_ALLOW_EXTENSION_BROWSER_CONCURRENCY === "1") return false;
   if (_runningBrowserSession !== null) return _runningBrowserSession;
   _runningBrowserSession = detectRunningBrowser();
   return _runningBrowserSession;
@@ -217,7 +221,9 @@ async function openSettings(popup: Page): Promise<void> {
   const toggle = popup.locator("#settingsToggle");
   const panel = popup.locator("#settingsPanel");
 
-  const isOpen = (await panel.getAttribute("style"))?.includes("block");
+  const isOpen = await panel.evaluate((element) =>
+    element.classList.contains("is-open"),
+  );
   if (!isOpen) {
     await toggle.click();
   }

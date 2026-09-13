@@ -72,14 +72,14 @@ test("RoutingOptimizer never routes to an unconfigured provider (Phase 1)", asyn
 
   // Now run selectProvider 200 times — every result MUST be a configured
   // provider. With the fix, the optimizer receives availableProviders from
-  // getOptimalProvider containing only ["ollama"] (the selected provider);
+  // resolveProvider containing only ["ollama"] (the selected provider);
   // without the fix it would explore across all 6 and often return
   // "anthropic", "groq", etc.
   const results = await page.evaluate(async () => {
     const { routingOptimizer } = await import(
       "/src/services/ai/adapters/RoutingOptimizer.ts"
     );
-    // Mirror getOptimalProvider: only Ollama is configured and reachable.
+    // Mirror resolveProvider: only Ollama is configured and reachable.
     const available = ["ollama"] as Array<
       "gemini" | "ollama" | "webllm" | "openai" | "anthropic" | "groq"
     >;
@@ -219,7 +219,7 @@ test("CostTracker hard-stop blocks cloud AI calls when budget is exhausted (Phas
     );
     return {
       info: aiManager.getProviderInfo(),
-      optimal: await (aiManager as any).getOptimalProvider({ complexity: "complex" }),
+      optimal: await (aiManager as any).resolveProvider({ complexity: "complex" }),
       hasKey: Boolean(aiManager.getApiKey()),
       selected: (aiManager as any).config?.getSelectedProvider?.() ?? null,
       browser: {
@@ -236,9 +236,9 @@ test("CostTracker hard-stop blocks cloud AI calls when budget is exhausted (Phas
     );
     await aiManager.setProvider("openai");
     console.log("[phase1] provider inside control", aiManager.getProviderInfo());
-    // Pass complexity: "complex" so getOptimalProvider doesn't override
+    // Pass complexity: "complex" so resolveProvider doesn't override
     // to Ollama for simple tasks (E2E routes are mocked for Ollama).
-    // isPrivate: false is required — without it, getOptimalProvider treats
+    // isPrivate: false is required — without it, resolveProvider treats
     // the request as private (fails closed) and routes to local Ollama.
     return aiManager.generateText("e2e budget control prompt", undefined, {
       complexity: "complex",

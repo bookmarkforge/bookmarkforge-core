@@ -15,9 +15,9 @@ export const OPENAI_REPLY = "Mock reply from OpenAI";
  * Pin the environment before any app code executes so provider routing is
  * deterministic:
  *  - Math.random → RoutingOptimizer's 10% exploration never fires.
- *  - navigator.connection="4g" + full battery → getOptimalProvider's
+ *  - navigator.connection="4g" + full battery → resolveProvider's
  *    "low battery / slow network -> gemini" branch never fires.
- *  - deviceMemory=2 + 2 cores → resourceManager.shouldUseLocalLLM() is false,
+ *  - deviceMemory=2 + 2 cores → resourceManager.isHighEndDevice() is false,
  *    so "simple task -> local" routes to Ollama, never WebLLM.
  */
 export async function pinDeterministicEnv(page: Page): Promise<void> {

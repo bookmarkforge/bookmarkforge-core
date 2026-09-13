@@ -4,6 +4,7 @@ import { connect as connectNet, type Socket } from "node:net";
 import { connect as connectTls } from "node:tls";
 import { accessSync, constants as fsConstants, readFileSync, renameSync, writeFileSync } from "node:fs";
 import type { AiSessionManager } from "./ai-session";
+import { readEntitlementContext } from "./entitlement-context";
 
 const DEFAULT_GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 const MAX_REQUEST_BODY_BYTES = 256 * 1024;
@@ -450,7 +451,7 @@ export function createRedisClientFromUrl(
       closeSocket(protocolError(`Redis command timed out after ${commandTimeoutMs}ms`));
     }, commandTimeoutMs);
     pending.push({ resolve, reject, timer });
-    if (!target.write(payload)) target.once("drain", () => undefined);
+    target.write(payload);
   });
   const ensure = async (): Promise<Socket> => {
     if (socket && !socket.destroyed) return socket;
@@ -479,7 +480,7 @@ export function createRedisClientFromUrl(
       });
       candidate.on("error", (error) => {
         if (connecting) reject(error);
-        rejectPending(error instanceof Error ? error : new Error(String(error)));
+        closeSocket(error instanceof Error ? error : new Error(String(error)));
       });
       candidate.on("close", () => {
         if (socket === candidate) socket = null;
@@ -909,6 +910,32 @@ export function identityKey(token: string): string {
 }
 
 /**
+ * Legacy server-to-server bearer tokens this process accepts: the injected
+ * options plus the `AI_PROXY_AUTH_TOKEN` / `AI_PROXY_AUTH_TOKENS` env forms.
+ *
+ * Exported so the entitlement guard and the proxy handlers read ONE set. If the
+ * guard had its own copy, a paid route could be admitted by a handler that
+ * accepts a token the guard rejects (or the reverse) — two admissions decisions
+ * for the same request, which is exactly how a Pro gate stops meaning anything.
+ */
+export function readConfiguredBearerTokens(
+  options: { authToken?: string; authTokens?: readonly string[] } = {},
+  env: NodeJS.ProcessEnv = process.env,
+): Set<string> {
+  const tokens = new Set<string>();
+  for (const token of [options.authToken, ...(options.authTokens ?? [])]) {
+    if (typeof token === "string" && token.length > 0) tokens.add(token);
+  }
+  for (const token of (env.AI_PROXY_AUTH_TOKEN ?? "").split(",")) {
+    if (token.trim()) tokens.add(token.trim());
+  }
+  for (const token of (env.AI_PROXY_AUTH_TOKENS ?? "").split(",")) {
+    if (token.trim()) tokens.add(token.trim());
+  }
+  return tokens;
+}
+
+/**
  * Tokens shipped as documented dry-run defaults. Accepting any of them in a
  * production process would let anyone who read the docs spend the operator's
  * AI budget, so the proxy refuses to start with them.
@@ -1160,21 +1187,25 @@ export function createIdentityPolicy(
    * concurrent instances never clobber unrelated counters.
    */
   const persist = (identity: string): void => {
-    const durable: Record<string, PersistedIdentityState> = {};
-    for (const [id, s] of states) {
-      if (s.dayCount > 0 || s.breakerFailures > 0 || s.breakerOpenedAt !== null) {
-        durable[id] = {
-          dayKey: s.dayKey,
-          dayCount: s.dayCount,
-          breakerFailures: s.breakerFailures,
-          breakerOpenedAt: s.breakerOpenedAt,
-        };
-      }
-    }
-    store.save(durable);
-    const entry = durable[identity];
-    if (entry && store.saveIdentity) {
-      store.saveIdentity(identity, entry);
+    const entry = states.get(identity);
+    if (!entry) {return;}
+    const persisted: PersistedIdentityState = {
+      dayKey: entry.dayKey,
+      dayCount: entry.dayCount,
+      breakerFailures: entry.breakerFailures,
+      breakerOpenedAt: entry.breakerOpenedAt,
+    };
+    // Per-identity write: avoids O(n) iteration of all identities on every
+    // request. The full-map save (store.save) is only used on startup to
+    // restore state and on shutdown for a clean snapshot.
+    if (store.saveIdentity) {
+      store.saveIdentity(identity, persisted);
+    } else {
+      // Fallback for stores without per-identity write: persist only the
+      // changed identity rather than rebuilding the entire map.
+      const durable: Record<string, PersistedIdentityState> = {};
+      durable[identity] = persisted;
+      store.save(durable);
     }
   };
 
@@ -1432,17 +1463,9 @@ export function createGeminiProxyHandler(options: GeminiProxyOptions = {}) {
   const fetchImpl = options.fetchImpl ?? fetch;
 
   // Identity tokens: a single shared token (backward-compatible) plus an
-  // optional comma-separated list for multi-tenant deployments.
-  const configuredTokens = new Set<string>();
-  for (const token of [options.authToken, ...(options.authTokens ?? [])]) {
-    if (typeof token === "string" && token.length > 0) configuredTokens.add(token);
-  }
-  for (const token of (process.env.AI_PROXY_AUTH_TOKEN ?? "").split(",")) {
-    if (token.trim()) configuredTokens.add(token.trim());
-  }
-  for (const token of (process.env.AI_PROXY_AUTH_TOKENS ?? "").split(",")) {
-    if (token.trim()) configuredTokens.add(token.trim());
-  }
+  // optional comma-separated list for multi-tenant deployments. The same set
+  // backs the entitlement guard's `session-or-bearer` mode.
+  const configuredTokens = readConfiguredBearerTokens(options);
   assertProductionProxyConfig(configuredTokens, apiBase);
 
   const ipRateLimit = readBoundedInteger(
@@ -1677,13 +1700,23 @@ export function createGeminiProxyHandler(options: GeminiProxyOptions = {}) {
       return;
     }
 
-    const session = options.sessionManager ? await options.sessionManager.authenticate(req) : null;
-    const token = session ? null : readBearerToken(req);
-    if (!session && (!token || !matchesAnyToken(token, configuredTokens))) {
+    // Admission for a paid route is decided ONCE per request, by the router's
+    // entitlement guard, which attached the context it resolved before this
+    // handler was allowed to run. Reuse it: re-authenticating here would repeat
+    // the same cookie/CSRF/store lookup the guard just performed as a SECOND
+    // admission decision for one request, and two decisions can only ever
+    // disagree. A standalone mount (a unit test, embedded use) has no attached
+    // context and falls through to the handler's own admission below.
+    const entitlement = readEntitlementContext(req);
+    const session = entitlement === null && options.sessionManager
+      ? await options.sessionManager.authenticate(req)
+      : null;
+    const token = entitlement === null && session === null ? readBearerToken(req) : null;
+    if (entitlement === null && session === null && (!token || !matchesAnyToken(token, configuredTokens))) {
       sendJson(res, 401, { error: { code: "UNAUTHORIZED", message: "AI proxy authentication required" } });
       return;
     }
-    const identity = session?.identity ?? identityKey(token!);
+    const identity = entitlement?.identity ?? session?.identity ?? identityKey(token!);
 
     // The shared policy refreshes durable state before every modality.
     await identityPolicy.prepare(identity);

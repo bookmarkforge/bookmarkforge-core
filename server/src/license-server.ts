@@ -254,10 +254,9 @@ function providerError(response: ProviderResponse, fallback: string): { code: st
   if (/activation|limit|maximum|exceeded/i.test(message)) {
     return { code: "MAX_ACTIVATIONS", message: "license activation limit reached" };
   }
-  if (/key|license|code/i.test(message) && /invalid|not found|incorrect|unknown/i.test(message)) {
-    return { code: "INVALID_KEY", message: "license key is invalid" };
-  }
-  return { code: "SERVER", message: "license provider rejected the request" };
+  // Always return the same code for invalid keys and provider errors to
+  // prevent license key enumeration via response-code analysis.
+  return { code: "INVALID_KEY", message: "license key is invalid" };
 }
 
 function buildPayload(
@@ -448,7 +447,9 @@ export function createLicenseHandler(options: WhopLicenseServerOptions = {}) {
       }
       if (!isProviderActive(providerResponse, action, options.now ?? Date.now)) {
         const error = providerError(providerResponse, "license is not active");
-        sendJson(res, error.code === "INVALID_KEY" ? 400 : 401, { error });
+        // Use the same HTTP status for all error codes to prevent license key
+        // enumeration via response-code analysis (400 = invalid, 401 = at limit).
+        sendJson(res, 400, { error });
         return;
       }
       const deviceId = instanceName || instanceId;

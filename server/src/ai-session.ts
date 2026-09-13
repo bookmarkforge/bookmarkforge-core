@@ -1,38 +1,84 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { createHash, createPublicKey, randomBytes, timingSafeEqual, verify } from "node:crypto";
+import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 import {
   applySecurityHeaders,
-  readBody,
+  readConfiguredBearerTokens,
   sendJson,
   createRateLimiter,
   createRedisClientFromUrl,
   clientIp,
   type RedisValueStore,
 } from "./ai-proxy";
+import { resolveLicensePublicKeySpki } from "./entitlement";
+import {
+  createEntitlementGuard,
+  resolveEntitlementContext,
+  writeGuardDenial,
+  type EntitlementGuard,
+} from "./entitlement-guard";
 
 const SESSION_COOKIE = "bf_ai_session";
 const CSRF_COOKIE = "bf_ai_csrf";
 const SESSION_TTL_MS = 30 * 60 * 1000;
 const MAX_SESSIONS = 50_000;
 const MAX_TOKEN_LENGTH = 512;
-const MAX_PROOF_BYTES = 32 * 1024;
 const SESSION_PATH = "/api/services/ai";
-const LICENSE_PUBLIC_KEY_SPKI = process.env.LICENSE_PUBLIC_KEY_SPKI ??
-  "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwZzwxnhR4fVnzIp6Tw6867D9t2IgCTHWmNWIm8/JP+W3fbD9QKxepUm5OZL/2lIPHe3eDqJ9j0IayJsVN5jv3R0m0Xdbcn43yow5pY72i+AvuMtFildPrVMYUb9/RjoZttOXST1Ngqd5FfV9kGcUCvt+tEiGE6A1onToY7oe4F1OEBmDA33GIiR0YRWw6D3AVFJSaVPDi3/6HBvorfpQOI2vNDZinO2m6WqZqzK69b1mJFhAwVHPui+bntuz61GB/fPHxt7L4KQ5f+I7b0GYtUyrAMDho2thcqM5bqeHTiH3FytHGGTGi5ZUpeaXKwnyGIh7UOBr9hNL4XEn0oHBsQIDAQAB";
+
+const ENV_TRUTHY = new Set(["1", "true", "yes", "on"]);
+const ENV_FALSY = new Set(["0", "false", "no", "off"]);
+
+/**
+ * Decide whether creating an AI session requires a verified license proof.
+ *
+ * Fail closed in EVERY environment. The previous default
+ * (`NODE_ENV === "production"`) handed anonymous sessions to every staging,
+ * preview or misconfigured deployment — precisely the deployments where
+ * cloud AI costs money — and the penetration-test suite flagged it as a
+ * licensing bypass. Anonymous sessions now exist only under the explicit
+ * `AI_SESSION_REQUIRE_LICENSE=0`, which production refuses outright and any
+ * other environment announces on startup (and reports through the health
+ * surface) so an unlicensed deployment can never be silent.
+ */
+function resolveLicensePolicy(): {
+  requireLicense: boolean;
+  anonymousReason: string | null;
+} {
+  const raw = process.env.AI_SESSION_REQUIRE_LICENSE?.trim().toLowerCase();
+  if (raw === undefined || raw === "" || ENV_TRUTHY.has(raw)) {
+    return { requireLicense: true, anonymousReason: null };
+  }
+  if (ENV_FALSY.has(raw)) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        "AI_SESSION_REQUIRE_LICENSE=0 is refused in production: anonymous AI sessions would bypass the license entitlement",
+      );
+    }
+    console.warn(
+      "[ai-session] AI_SESSION_REQUIRE_LICENSE=0 — issuing ANONYMOUS AI sessions; every accepted request is unlicensed (non-production only)",
+    );
+    return { requireLicense: false, anonymousReason: "AI_SESSION_REQUIRE_LICENSE=0" };
+  }
+  console.warn(
+    `[ai-session] unrecognized AI_SESSION_REQUIRE_LICENSE="${raw}" — requiring a verified license (fail closed)`,
+  );
+  return { requireLicense: true, anonymousReason: null };
+}
 
 interface SessionRecord {
   tokenDigest: string;
   csrfToken: string;
   createdAt: number;
   expiresAt: number;
+  /**
+   * Epoch ms the entitlement backing this session ends (undefined = lifetime
+   * license or anonymous session). The cookie TTL is not enough: a license
+   * that expires or is revoked mid-session must stop working when it does,
+   * not when the 30-minute session happens to end.
+   */
+  entitlementExpiresAt?: number;
   // Deliberately not bound to IP: client addresses can change legitimately
   // behind load balancers, mobile networks, and rotating IPv6 prefixes.
   identity: string;
-}
-
-interface LicenseProof {
-  payload?: unknown;
-  signature?: unknown;
 }
 
 export interface AiSessionManagerOptions {
@@ -44,12 +90,22 @@ export interface AiSessionManagerOptions {
   maxSessions?: number;
   allowedOrigins?: string[];
   allowMissingOrigin?: boolean;
-  /** Require a client-provided server-signed license state. Defaults on in production. */
+  /**
+   * Require a client-provided server-signed license proof. Defaults to true
+   * in every environment (fail closed); false is an explicit opt-in for
+   * isolated test topologies.
+   */
   requireLicense?: boolean;
   licensePublicKeySpki?: string;
   sessionRateLimit?: number;
   /** Trust X-Forwarded-For for the session-creation rate limit (mirrors the proxy handlers). */
   trustProxy?: boolean;
+  /**
+   * The shared entitlement guard. Defaults to one built here from this
+   * manager's license policy; inject it to share a single guard instance with
+   * the router (see server/src/route-table.ts).
+   */
+  entitlementGuard?: EntitlementGuard;
 }
 
 export interface AiSessionIdentity {
@@ -61,6 +117,16 @@ export interface AiSessionManager {
   createSessionHandler(): (req: IncomingMessage, res: ServerResponse) => Promise<void>;
   authenticate(req: IncomingMessage): Promise<AiSessionIdentity | null>;
   prune(): void;
+  /** True when a verified license proof is required to create a session. */
+  readonly licenseEnforced: boolean;
+  /** Set when the deployment explicitly opted into anonymous sessions. */
+  readonly anonymousSessionsReason?: string;
+  /**
+   * The server's single entitlement enforcement point. The router mounts it in
+   * front of every paid route, so the session route and the paid routes it
+   * mints sessions for answer one policy, not three.
+   */
+  readonly entitlementGuard: EntitlementGuard;
 }
 
 function parseCookies(header: string | undefined): Map<string, string> {
@@ -77,52 +143,35 @@ function parseCookies(header: string | undefined): Map<string, string> {
 }
 
 function constantTimeEqual(left: string, right: string): boolean {
+  // Always compare the full byte length to avoid truncation: two equal-length
+  // strings that differ only after byte 128 would compare as equal with a
+  // fixed-size buffer. Use a dynamic size derived from the actual byte lengths.
   const a = Buffer.from(left, "utf8");
   const b = Buffer.from(right, "utf8");
-  return a.length === b.length && timingSafeEqual(a, b);
+  if (a.length !== b.length) {
+    // Compare anyway to avoid length-based timing leak, then return false.
+    timingSafeEqual(
+      Buffer.alloc(a.length, 0),
+      Buffer.alloc(b.length, 0),
+    );
+    return false;
+  }
+  return timingSafeEqual(a, b);
 }
 
 function digest(token: string): string {
   return createHash("sha256").update(token).digest("hex");
 }
 
-function canonicalLicenseJson(payload: Record<string, unknown>): string {
-  const sorted: Record<string, unknown> = {};
-  for (const key of Object.keys(payload).sort()) {
-    if (payload[key] !== undefined) sorted[key] = payload[key];
-  }
-  return JSON.stringify(sorted);
-}
 
-function validLicenseProof(proof: LicenseProof, now: number, publicKeySpki: string): string | null {
-  if (typeof proof.signature !== "string" || proof.signature.length < 32 || proof.signature.length > 4096) return null;
-  if (typeof proof.payload !== "object" || proof.payload === null || Array.isArray(proof.payload)) return null;
-  const payload = proof.payload as Record<string, unknown>;
-  if (payload.v !== 1 || typeof payload.deviceId !== "string" || payload.deviceId.length === 0 || payload.deviceId.length > 256) return null;
-  if (typeof payload.validatedAt !== "number" || !Number.isFinite(payload.validatedAt)) return null;
-  if (payload.validatedAt > now + 5 * 60_000 || payload.validatedAt < now - 30 * 24 * 60 * 60_000) return null;
-  if (payload.expiresAt !== undefined &&
-      (typeof payload.expiresAt !== "number" || !Number.isFinite(payload.expiresAt) || payload.expiresAt <= now)) return null;
-  try {
-    const publicKey = createPublicKey({ key: Buffer.from(publicKeySpki, "base64"), format: "der", type: "spki" });
-    const valid = verify(
-      "sha256",
-      Buffer.from(canonicalLicenseJson(payload), "utf8"),
-      { key: publicKey, padding: 6, saltLength: 32 },
-      Buffer.from(proof.signature, "base64"),
-    );
-    return valid ? digest(`${payload.deviceId}:${proof.signature}`) : null;
-  } catch {
-    return null;
-  }
-}
-
-function requestOrigin(req: IncomingMessage): string | null {
+/** Origin of the request, or null when the browser sent none. */
+export function requestOrigin(req: IncomingMessage): string | null {
   const origin = req.headers.origin;
   return typeof origin === "string" && origin.length <= 2048 ? origin : null;
 }
 
-function expectedOrigin(req: IncomingMessage): string | null {
+/** Origin this deployment would serve the request from, derived from Host. */
+export function expectedOrigin(req: IncomingMessage): string | null {
   const host = req.headers.host;
   if (!host || /[\u0000-\u001f\u007f-\u009f]/.test(host)) return null;
   const forwardedProto = req.headers["x-forwarded-proto"];
@@ -133,7 +182,8 @@ function expectedOrigin(req: IncomingMessage): string | null {
   return `${protocol}://${host}`;
 }
 
-function hasValidOrigin(req: IncomingMessage, allowedOrigins: ReadonlySet<string>, allowMissingOrigin: boolean): boolean {
+/** Same-origin/allow-list CSRF check shared by the session and entitlement routes. */
+export function hasValidOrigin(req: IncomingMessage, allowedOrigins: ReadonlySet<string>, allowMissingOrigin: boolean): boolean {
   const origin = requestOrigin(req);
   if (!origin) return allowMissingOrigin;
   // Once the operator supplies an allow-list, it is authoritative. Falling
@@ -152,9 +202,14 @@ export function createAiSessionManager(options: AiSessionManagerOptions = {}): A
   const now = options.now ?? Date.now;
   const ttlMs = Math.max(60_000, Math.min(options.ttlMs ?? SESSION_TTL_MS, 24 * 60 * 60 * 1000));
   const maxSessions = Math.max(100, Math.min(options.maxSessions ?? MAX_SESSIONS, 1_000_000));
-  const requireLicense = options.requireLicense ??
-    (process.env.AI_SESSION_REQUIRE_LICENSE !== "0" && process.env.NODE_ENV === "production");
-  const publicKeySpki = options.licensePublicKeySpki ?? LICENSE_PUBLIC_KEY_SPKI;
+  const policy = options.requireLicense === undefined
+    ? resolveLicensePolicy()
+    : {
+        requireLicense: options.requireLicense,
+        anonymousReason: options.requireLicense ? null : "explicit test policy",
+      };
+  const requireLicense = policy.requireLicense;
+  const publicKeySpki = options.licensePublicKeySpki ?? resolveLicensePublicKeySpki();
   const allowedOrigins = new Set(
     (options.allowedOrigins ?? (process.env.AI_SESSION_ORIGINS ?? "").split(","))
       .map((origin) => origin.trim()).filter(Boolean),
@@ -185,6 +240,21 @@ export function createAiSessionManager(options: AiSessionManagerOptions = {}): A
   const sessionKey = (tokenDigest: string): string =>
     `${options.redisKeyPrefix ?? "bf:ai-session"}:${tokenDigest}`;
 
+  // One guard per deployment, owned here because this manager is the authority
+  // on the license policy: the router reuses this instance for every paid
+  // route, so "does this caller hold a verified entitlement?" is answered by
+  // one piece of code. `authenticateSession` defers to `authenticate` below
+  // (declared later in this scope, only ever called at request time).
+  const entitlementGuard =
+    options.entitlementGuard ??
+    createEntitlementGuard({
+      now,
+      requireEntitlement: requireLicense,
+      publicKeySpki,
+      authenticateSession: (req) => authenticate(req),
+      bearerTokens: readConfiguredBearerTokens(),
+    });
+
   const prune = (): void => {
     const timestamp = now();
     for (const [key, session] of sessions) if (session.expiresAt <= timestamp) sessions.delete(key);
@@ -211,21 +281,20 @@ export function createAiSessionManager(options: AiSessionManagerOptions = {}): A
       sendJson(res, 429, { error: { code: "RATE_LIMITED", message: "too many session requests" } });
       return;
     }
-    let proof: LicenseProof = {};
-    try {
-      const raw = await readBody(req);
-      if (raw.length > MAX_PROOF_BYTES) throw new Error("proof_too_large");
-      const parsed = JSON.parse(raw) as unknown;
-      if (typeof parsed === "object" && parsed !== null && !Array.isArray(parsed)) proof = parsed as LicenseProof;
-    } catch {
-      sendJson(res, 400, { error: { code: "INVALID_REQUEST", message: "session proof is invalid" } });
+    // The entitlement is resolved server-side by the shared guard: the router
+    // has normally already run it for this route (both go through the same
+    // code), and a standalone caller — unit tests, embedded use — falls through
+    // to it here. The body belongs to the guard, so it is read exactly once;
+    // the client cannot present an opinion, just a proof this server verifies.
+    const decision = await resolveEntitlementContext(req, entitlementGuard, "proof", {
+      proofLabel: "session proof",
+    });
+    if (!decision.ok) {
+      writeGuardDenial(res, decision.denial);
       return;
     }
-    const identity = requireLicense ? validLicenseProof(proof, now(), publicKeySpki) : "anonymous";
-    if (!identity) {
-      sendJson(res, 401, { error: { code: "LICENSE_REQUIRED", message: "a valid active license is required" } });
-      return;
-    }
+    const { context } = decision;
+    const identity = context.identity;
     prune();
     if (sessions.size >= maxSessions) {
       sendJson(res, 503, { error: { code: "SESSION_CAPACITY", message: "AI sessions temporarily unavailable" } });
@@ -241,6 +310,9 @@ export function createAiSessionManager(options: AiSessionManagerOptions = {}): A
       createdAt,
       expiresAt,
       identity,
+      ...(context.entitlementExpiresAt !== undefined
+        ? { entitlementExpiresAt: context.entitlementExpiresAt }
+        : {}),
     };
     if (sessionStore) {
       try {
@@ -280,7 +352,9 @@ export function createAiSessionManager(options: AiSessionManagerOptions = {}): A
             typeof parsed.csrfToken === "string" &&
             typeof parsed.createdAt === "number" &&
             typeof parsed.expiresAt === "number" &&
-            typeof parsed.identity === "string"
+            typeof parsed.identity === "string" &&
+            (parsed.entitlementExpiresAt === undefined ||
+              typeof parsed.entitlementExpiresAt === "number")
           ) {
             record = parsed as SessionRecord;
             sessions.set(tokenDigest, record);
@@ -290,7 +364,13 @@ export function createAiSessionManager(options: AiSessionManagerOptions = {}): A
         return null;
       }
     }
-    if (!record || record.expiresAt <= now()) {
+    // A session outlives its license otherwise: the cookie TTL (30 min) and
+    // the entitlement expiry are independent, so both must hold.
+    const entitlementExpired =
+      record !== null &&
+      record.entitlementExpiresAt !== undefined &&
+      record.entitlementExpiresAt <= now();
+    if (!record || record.expiresAt <= now() || entitlementExpired) {
       if (record) {
         sessions.delete(record.tokenDigest);
         if (sessionStore) {
@@ -306,11 +386,22 @@ export function createAiSessionManager(options: AiSessionManagerOptions = {}): A
       }
       return null;
     }
-    if (!constantTimeEqual(csrfCookie, record.csrfToken) || !constantTimeEqual(csrfHeader, record.csrfToken)) return null;
+    const cookieOk = constantTimeEqual(csrfCookie, record.csrfToken);
+    const headerOk = constantTimeEqual(csrfHeader, record.csrfToken);
+    if (!cookieOk || !headerOk) return null;
     return { identity: record.identity, csrfToken: record.csrfToken };
   };
 
-  return { createSessionHandler, authenticate, prune };
+  return {
+    createSessionHandler,
+    authenticate,
+    prune,
+    entitlementGuard,
+    licenseEnforced: requireLicense,
+    ...(policy.anonymousReason !== null
+      ? { anonymousSessionsReason: policy.anonymousReason }
+      : {}),
+  };
 }
 
 function createRedisSessionStore(client: {

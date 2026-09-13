@@ -47,6 +47,8 @@ import { createGeminiProxyHandler } from "./ai-proxy";
 import { createGeminiMediaHandler } from "./ai-media";
 import { createAiSessionManager } from "./ai-session";
 import { createLicenseHandler } from "./license-server";
+import { createEntitlementHandler } from "./entitlement-endpoint";
+import { createGuardedDispatcher } from "./route-table";
 import { createClientEventsHandler } from "./client-events";
 import { createAnalyticsHandler } from "./business-analytics";
 
@@ -57,6 +59,14 @@ const HOST = process.env.HOST ?? "0.0.0.0";
 // the last-seen instance ID and use a change to detect that the server
 // restarted (rooms lost) so they can proactively rejoin.
 const SERVER_INSTANCE_ID = randomUUID();
+const SIGNALING_IP_HASH_SALT = process.env.SIGNALING_IP_HASH_SALT || SERVER_INSTANCE_ID;
+
+function hashSignalingIp(ip: string): string {
+  return createHash("sha256")
+    .update(`${SIGNALING_IP_HASH_SALT}:${ip}`)
+    .digest("hex")
+    .slice(0, 24);
+}
 
 /** Monotonic milliseconds for all in-memory rate/replay windows. */
 const monotonicNow = (): number => performance.now();
@@ -1044,12 +1054,31 @@ const aiSessionManager = createAiSessionManager({
   redisUrl: process.env.AI_PROXY_REDIS_URL || undefined,
   trustProxy: process.env.TRUST_PROXY === "1" || process.env.TRUST_PROXY === "true",
 });
+
+// WebSocket origin allowlist: prevents unauthenticated pages from opening
+// WebSocket connections and exhausting MAX_CONNECTIONS (512). When empty,
+// all origins are allowed (backward-compatible for local development).
+const WS_ALLOWED_ORIGINS = new Set(
+  (process.env.AI_SESSION_ORIGINS ?? "")
+    .split(",")
+    .map((o) => o.trim())
+    .filter(Boolean),
+);
+
 const geminiProxyHandler = createGeminiProxyHandler({ sessionManager: aiSessionManager });
 const geminiMediaHandler = createGeminiMediaHandler({
   sessionManager: aiSessionManager,
   accessPolicy: geminiProxyHandler.accessPolicy,
 });
 const licenseHandler = createLicenseHandler();
+// Server-authoritative entitlement answer. Unlike the signing service it needs
+// no private key and no license key from the caller — just the signed proof the
+// client already holds — so any deployment that serves the app can enforce or
+// confirm Pro.
+const entitlementHandler = createEntitlementHandler({
+  allowedOrigins: (process.env.AI_SESSION_ORIGINS ?? "").split(",").map((origin) => origin.trim()).filter(Boolean),
+  trustProxy: process.env.TRUST_PROXY === "1" || process.env.TRUST_PROXY === "true",
+});
 // Client events collector (storage-pressure / bundle-integrity-spike) with
 // the 3-distinct-clients-in-10-min critical threshold alert.
 const clientEventsHandler = createClientEventsHandler({
@@ -1061,10 +1090,15 @@ const analyticsHandler = createAnalyticsHandler({
   serverInstanceId: SERVER_INSTANCE_ID,
 });
 
-const httpServer = createServer((req, res) => {
-  // Apply the same non-sensitive response hardening to health, admin, CSP reports,
-  // and unsupported routes before any handler can finish the response.
-  applyHttpSecurityHeaders(res);
+/**
+ * The unguarded HTTP dispatch.
+ *
+ * The name is deliberately uninviting: `scripts/check-pro-routes.mjs` proves
+ * this function has exactly one caller — the entitlement-guarded dispatcher
+ * below — so a new route cannot be mounted without passing through the route
+ * policy table. Call it directly and a paid route becomes reachable by anyone.
+ */
+const dispatchUnGuardedRequest = (req: IncomingMessage, res: ServerResponse): void => {
   if (req.url === "/api/services/ai/session") {
     void aiSessionManager.createSessionHandler()(req, res);
     return;
@@ -1096,6 +1130,10 @@ const httpServer = createServer((req, res) => {
     req.url === "/api/license/deactivate"
   ) {
     void licenseHandler(req, res);
+    return;
+  }
+  if (req.url === "/api/license/entitlement") {
+    void entitlementHandler(req, res);
     return;
   }
   if (req.method === "GET" && req.url === "/health") {
@@ -1133,6 +1171,23 @@ const httpServer = createServer((req, res) => {
   // /api/client-events.
   res.writeHead(426, { "Content-Type": "text/plain" });
   res.end("Upgrade Required — this is a WebSocket signaling server.");
+};
+
+// Every HTTP request goes through the entitlement-guarded dispatcher, which
+// reads the route policy (server/src/route-table.ts) and resolves the
+// entitlement for a paid route before its handler is allowed to run. Routes the
+// table does not declare fall through unchanged, so the 426 catch-all above and
+// the handlers' own 405s keep their exact behaviour.
+const settleHttpRequest = createGuardedDispatcher({
+  guard: aiSessionManager.entitlementGuard,
+  dispatch: dispatchUnGuardedRequest,
+});
+
+const httpServer = createServer((req, res) => {
+  // Apply the same non-sensitive response hardening to health, admin, CSP reports,
+  // and unsupported routes before any handler can finish the response.
+  applyHttpSecurityHeaders(res);
+  void settleHttpRequest(req, res);
 });
 
 // Start listening and only then announce readiness. The signaling test waits
@@ -1143,6 +1198,19 @@ httpServer.listen(PORT, HOST, () => {
   wss = new WebSocketServer({
     server: httpServer,
     maxPayload: MAX_PAYLOAD_BYTES,
+    verifyClient: (info, cb) => {
+      // When an origin allowlist is configured, reject WebSocket upgrades
+      // from unknown origins to prevent unauthenticated DoS via connection
+      // exhaustion. Skip verification when the list is empty (local dev).
+      if (WS_ALLOWED_ORIGINS.size > 0) {
+        const origin = info.origin ?? "";
+        if (!WS_ALLOWED_ORIGINS.has(origin)) {
+          cb(false, 403, "Forbidden");
+          return;
+        }
+      }
+      cb(true);
+    },
   });
   console.log(`Server running on ws://${HOST}:${PORT}`);
 
@@ -1173,6 +1241,7 @@ function setupWebSocketHandlers(wss: WebSocketServer): void {
   wss.on("connection", (ws, req) => {
     const peerId = randomUUID();
     const ip = clientIp(req);
+    const ipHash = hashSignalingIp(ip);
 
     // A socket error (e.g. maxPayload exceeded, aborted handshake) must never
     // crash the process: log and swallow. Without a listener, an 'error' event
@@ -1182,7 +1251,7 @@ function setupWebSocketHandlers(wss: WebSocketServer): void {
         JSON.stringify({
           event: "signaling_socket_error",
           peerId,
-          ip,
+          ipHash,
           message: err.message,
           serverInstanceId: SERVER_INSTANCE_ID,
         }),
@@ -1206,7 +1275,7 @@ function setupWebSocketHandlers(wss: WebSocketServer): void {
         JSON.stringify({
           event: "signaling_connection_rejected_overload",
           peerId,
-          ip,
+          ipHash,
           clients: wss.clients.size,
           max: MAX_CONNECTIONS,
           serverInstanceId: SERVER_INSTANCE_ID,
@@ -1222,7 +1291,7 @@ function setupWebSocketHandlers(wss: WebSocketServer): void {
       JSON.stringify({
         event: "signaling_connection_accepted",
         peerId,
-        ip,
+        ipHash,
         turnConfigured: turnIceServers.length > 0,
         serverInstanceId: SERVER_INSTANCE_ID,
       }),
@@ -1309,7 +1378,7 @@ function setupWebSocketHandlers(wss: WebSocketServer): void {
               event: "signaling_join_rate_limited",
               roomId: rid,
               peerId,
-              ip,
+              ipHash,
               serverInstanceId: SERVER_INSTANCE_ID,
             }),
           );
@@ -1323,7 +1392,7 @@ function setupWebSocketHandlers(wss: WebSocketServer): void {
               JSON.stringify({
                 event: "signaling_max_rooms_reached",
                 peerId,
-                ip,
+                ipHash,
                 rooms: rooms.size,
                 max: MAX_ROOMS,
                 serverInstanceId: SERVER_INSTANCE_ID,
@@ -1356,7 +1425,7 @@ function setupWebSocketHandlers(wss: WebSocketServer): void {
               event: "signaling_room_full",
               roomId: rid,
               peerId,
-              ip,
+              ipHash,
               peersInRoom: room.peers.size,
               max: MAX_PEERS_PER_ROOM,
               serverInstanceId: SERVER_INSTANCE_ID,
@@ -1379,7 +1448,7 @@ function setupWebSocketHandlers(wss: WebSocketServer): void {
               event: "signaling_invalid_room_secret",
               roomId: rid,
               peerId,
-              ip,
+              ipHash,
               serverInstanceId: SERVER_INSTANCE_ID,
             }),
           );
@@ -1407,7 +1476,7 @@ function setupWebSocketHandlers(wss: WebSocketServer): void {
             event: "signaling_peer_joined",
             roomId: rid,
             peerId,
-            ip,
+            ipHash,
             peersInRoom: room.peers.size,
             secretPresent: room.secret !== null,
             serverInstanceId: SERVER_INSTANCE_ID,
@@ -1585,7 +1654,13 @@ function setupWebSocketHandlers(wss: WebSocketServer): void {
 
   // Server-level error handler (binding failures, etc.).
   wss.on("error", (err) => {
-    console.error(`[signaling] server error: ${err.message}`);
+    console.error(
+      JSON.stringify({
+        event: "signaling_server_error",
+        message: err.message,
+        serverInstanceId: SERVER_INSTANCE_ID,
+      }),
+    );
   });
 
   // Dead-socket sweep. unref() so the interval alone never keeps the

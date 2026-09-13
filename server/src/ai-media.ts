@@ -27,11 +27,13 @@ import {
   readBearerToken,
   readBoundedInteger,
   readBody,
+  readConfiguredBearerTokens,
   sendJson,
   identityKey,
   type AiAccessPolicy,
 } from "./ai-proxy";
 import type { AiSessionManager } from "./ai-session";
+import { readEntitlementContext } from "./entitlement-context";
 
 const DEFAULT_GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 const MEDIA_TIMEOUT_MS = 60_000;
@@ -111,16 +113,9 @@ export function createGeminiMediaHandler(options: GeminiMediaOptions = {}) {
 
   // Bearer support remains injectable for isolated server-side tests only;
   // the real router supplies a sessionManager and has no bearer configured.
-  const configuredTokens = new Set<string>();
-  for (const token of [options.authToken, ...(options.authTokens ?? [])]) {
-    if (typeof token === "string" && token.length > 0) configuredTokens.add(token);
-  }
-  for (const token of (process.env.AI_PROXY_AUTH_TOKEN ?? "").split(",")) {
-    if (token.trim()) configuredTokens.add(token.trim());
-  }
-  for (const token of (process.env.AI_PROXY_AUTH_TOKENS ?? "").split(",")) {
-    if (token.trim()) configuredTokens.add(token.trim());
-  }
+  // Read through the shared helper so the entitlement guard accepts exactly the
+  // tokens these handlers do (see ai-proxy.readConfiguredBearerTokens).
+  const configuredTokens = readConfiguredBearerTokens(options);
   assertProductionProxyConfig(configuredTokens, apiBase);
 
   const allowIp = createRateLimiter({
@@ -151,13 +146,21 @@ export function createGeminiMediaHandler(options: GeminiMediaOptions = {}) {
       sendJson(res, 503, { error: { code: "NOT_CONFIGURED", message: "AI proxy is not configured" } });
       return;
     }
-    const session = options.sessionManager ? await options.sessionManager.authenticate(req) : null;
-    const token = session ? null : readBearerToken(req);
-    if (!session && (!token || !matchesAnyToken(token, configuredTokens))) {
+    // Same single-admission contract as the text proxy: the router's entitlement
+    // guard resolved this request and attached its context (session or legacy
+    // bearer), so authenticating again here would be a second verdict on the
+    // same request. Only a standalone mount — no guard in front — reaches the
+    // handler's own admission below.
+    const entitlement = readEntitlementContext(req);
+    const session = entitlement === null && options.sessionManager
+      ? await options.sessionManager.authenticate(req)
+      : null;
+    const token = entitlement === null && session === null ? readBearerToken(req) : null;
+    if (entitlement === null && session === null && (!token || !matchesAnyToken(token, configuredTokens))) {
       sendJson(res, 401, { error: { code: "UNAUTHORIZED", message: "AI proxy authentication required" } });
       return;
     }
-    const identity = session?.identity ?? identityKey(token!);
+    const identity = entitlement?.identity ?? session?.identity ?? identityKey(token!);
     if (!allowIp(clientIp(req, trustProxy))) {
       sendJson(res, 429, { error: { code: "RATE_LIMITED", message: "too many requests" } });
       return;

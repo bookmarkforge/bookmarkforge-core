@@ -64,6 +64,12 @@ interface RateWindow {
   windowStart: number;
 }
 
+interface RetryStatsSnapshot {
+  attempts: number;
+  coalesced: number;
+  dropped: number;
+}
+
 type ClientEventType = "storage-pressure" | "bundle-integrity-spike" | "error-spike" | "csp-violation-spike" | "client-event-retry-stats";
 
 interface StoredClientEvent {
@@ -132,9 +138,11 @@ export function createClientEventsHandler(options: ClientEventsOptions) {
   let clientRetryAttempts = 0;
   let clientRetryCoalesced = 0;
   let clientRetryDropped = 0;
-  // Reports carry cumulative counters per client; only INCREASES in dropped
-  // are new lost events (dedupes re-alerting on unchanged totals).
-  let lastRetryDroppedSeen = 0;
+  // The browser sends cumulative counters. Keep the last snapshot per hashed
+  // client so repeated reports count only deltas and one noisy client cannot
+  // suppress or inflate another client's diagnostics. The map is bounded by
+  // the same cardinality cap as the rate limiter.
+  const retryStatsByClient = new Map<string, RetryStatsSnapshot>();
 
   // ── Helpers ──────────────────────────────────────────────────────────
   function clientIp(req: IncomingMessage): string {
@@ -208,6 +216,32 @@ export function createClientEventsHandler(options: ClientEventsOptions) {
     return undefined;
   }
 
+  function retryStatsDelta(
+    clientHash: string,
+    current: RetryStatsSnapshot,
+  ): RetryStatsSnapshot {
+    const previous = retryStatsByClient.get(clientHash);
+    if (!previous && retryStatsByClient.size >= RATE_MAX_ENTRIES) {
+      const oldest = retryStatsByClient.keys().next().value as string | undefined;
+      if (oldest) retryStatsByClient.delete(oldest);
+    }
+    retryStatsByClient.set(clientHash, current);
+    if (!previous) return current;
+    return {
+      // A lower value means the browser counters reset after a restart; count
+      // the new snapshot as a fresh contribution rather than losing it.
+      attempts: current.attempts >= previous.attempts
+        ? current.attempts - previous.attempts
+        : current.attempts,
+      coalesced: current.coalesced >= previous.coalesced
+        ? current.coalesced - previous.coalesced
+        : current.coalesced,
+      dropped: current.dropped >= previous.dropped
+        ? current.dropped - previous.dropped
+        : current.dropped,
+    };
+  }
+
   /** Fire-and-forget threshold webhook. The structured error log is the
    *  durable alert; the webhook is an immediate, best-effort notification. */
   function fireAlertWebhook(payload: Record<string, unknown>): void {
@@ -234,18 +268,23 @@ export function createClientEventsHandler(options: ClientEventsOptions) {
 
   function recordEvent(stored: StoredClientEvent, current: number): void {
     // Retry-stats is a diagnostics channel, not a stored/critical event: the
-    // counters accumulate and new drops emit the degraded-delivery signal.
+    // browser reports cumulative counters, so aggregate only per-client
+    // deltas and emit one signal for each newly dropped event.
     if (stored.type === "client-event-retry-stats") {
       accepted += 1;
-      const attempts = stored.attempts ?? 0;
-      const coalesced = stored.coalesced ?? 0;
-      const dropped = stored.dropped ?? 0;
-      clientRetryAttempts += attempts;
-      clientRetryCoalesced += coalesced;
-      clientRetryDropped += dropped;
-      if (dropped > lastRetryDroppedSeen) {
-        const newDropped = dropped - lastRetryDroppedSeen;
-        lastRetryDroppedSeen = dropped;
+      const delta = retryStatsDelta(stored.ipHash, {
+        attempts: stored.attempts ?? 0,
+        coalesced: stored.coalesced ?? 0,
+        dropped: stored.dropped ?? 0,
+      });
+      clientRetryAttempts += delta.attempts;
+      clientRetryCoalesced += delta.coalesced;
+      clientRetryDropped += delta.dropped;
+      if (delta.dropped > 0) {
+        const newDropped = delta.dropped;
+        const attempts = delta.attempts;
+        const coalesced = delta.coalesced;
+        const dropped = delta.dropped;
         console.error(JSON.stringify({
           event: "client_events_retry_degraded",
           timestamp: stored.timestamp,

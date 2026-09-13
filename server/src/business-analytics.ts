@@ -25,9 +25,10 @@
  *   - Per-install state is bounded (ANALYTICS_MAX_INSTALLS); day data is
  *     retained for MAX_DAYS_RETAINED days, then pruned.
  *
- * Idempotency: the server keeps only the LATEST bucket per (install, day), so
- * a client retry of the same day REPLACES the previous bucket instead of
- * double-counting — clients may safely retry transient failures.
+ * Idempotency: new clients include a batchId. The server applies each
+ * (install, batchId) once, so partial flushes add up and retries never
+ * double-count. Payloads without batchId keep the legacy per-day replace
+ * semantics for older clients.
  *
  * POST stays unauthenticated (browsers cannot attach an admin token to a
  * background fetch; payloads are bounded and non-sensitive); the diagnostics
@@ -80,16 +81,23 @@ const DAY_MS = 86_400_000;
 const MAX_FORWARDED_IP_LENGTH = 128;
 const IID_RE = /^[0-9a-f]{64}$/;
 const MAX_COUNT = 1_000_000;
+const BATCH_ID_RE = /^[A-Za-z0-9._-]{1,128}$/;
+const DEFAULT_MAX_BATCHES_PER_INSTALL = 2_048;
+const DEFAULT_MAX_BATCHES_TOTAL = 500_000;
 
 interface RateWindow {
   count: number;
   windowStart: number;
 }
 
-interface InstallBucket {
-  /** UTC epoch-day of the LATEST submitted bucket (replace semantics). */
+interface BatchContribution {
   day: number;
   counts: Map<string, number>;
+}
+
+interface InstallBucket {
+  /** Bounded contributions used for idempotency and historical totals. */
+  batches: Map<string, BatchContribution>;
 }
 
 export interface AnalyticsKpis {
@@ -125,22 +133,134 @@ export function createAnalyticsHandler(options: { serverInstanceId: string }) {
   const BODY_MAX_BYTES = readBoundedInteger(process.env.ANALYTICS_BODY_MAX_BYTES, 16_384, 1_024, 4 * 1024 * 1024);
   const ADMIN_TOKEN = process.env.ANALYTICS_ADMIN_TOKEN ?? "";
   const MAX_DAYS = readBoundedInteger(process.env.ANALYTICS_MAX_DAYS, 180, 30, 730);
+  const MAX_BATCHES_PER_INSTALL = readBoundedInteger(
+    process.env.ANALYTICS_MAX_BATCHES_PER_INSTALL,
+    DEFAULT_MAX_BATCHES_PER_INSTALL,
+    32,
+    16_384,
+  );
+  const MAX_BATCHES_TOTAL = readBoundedInteger(
+    process.env.ANALYTICS_MAX_BATCHES_TOTAL,
+    DEFAULT_MAX_BATCHES_TOTAL,
+    1_000,
+    5_000_000,
+  );
   const STATE_FILE = process.env.ANALYTICS_STATE_FILE?.trim() ?? "";
   const IP_HASH_SALT = process.env.ANALYTICS_IP_HASH_SALT || serverInstanceId;
 
   // ── State ────────────────────────────────────────────────────────────
   /** iid → first/last active UTC epoch-day (cohort retention). */
   const installs = new Map<string, { firstDay: number; lastDay: number }>();
-  /** iid → latest bucket (idempotent replace per day). Bounded by MAX_INSTALLS. */
+  /** iid → bounded batch contributions. Bounded by MAX_INSTALLS. */
   const buckets = new Map<string, InstallBucket>();
   /** UTC epoch-day → event type → total count. Pruned to MAX_DAYS. */
   const dailyTotals = new Map<number, Map<string, number>>();
+  /** Reverse index used to prune old batch ids without scanning every install. */
+  const batchRefsByDay = new Map<number, Set<string>>();
   const rateWindows = new Map<string, RateWindow>();
   let accepted = 0;
   let rejected = 0;
   let rateLimited = 0;
+  let totalBatchCount = 0;
   let stateDirty = false;
   let persistTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function parseCounts(raw: Record<string, unknown>): Map<string, number> {
+    const counts = new Map<string, number>();
+    for (const [type, count] of Object.entries(raw)) {
+      if (
+        !ANALYTICS_EVENT_TYPES.has(type) ||
+        typeof count !== "number" ||
+        !Number.isInteger(count) ||
+        count < 1 ||
+        count > MAX_COUNT
+      ) {
+        return new Map();
+      }
+      counts.set(type, count);
+    }
+    return counts.size <= 32 ? counts : new Map();
+  }
+
+  function batchRef(iid: string, batchId: string): string {
+    return `${iid}\u0000${batchId}`;
+  }
+
+  function splitBatchRef(ref: string): [string, string] | null {
+    const separator = ref.indexOf("\u0000");
+    if (separator <= 0) return null;
+    return [ref.slice(0, separator), ref.slice(separator + 1)];
+  }
+
+  function registerBatchRef(iid: string, batchId: string, day: number): void {
+    let refs = batchRefsByDay.get(day);
+    if (!refs) {
+      refs = new Set<string>();
+      batchRefsByDay.set(day, refs);
+    }
+    refs.add(batchRef(iid, batchId));
+  }
+
+  function unregisterBatchRef(iid: string, batchId: string, day: number): void {
+    const refs = batchRefsByDay.get(day);
+    if (!refs) return;
+    refs.delete(batchRef(iid, batchId));
+    if (refs.size === 0) batchRefsByDay.delete(day);
+  }
+
+  function removeContribution(iid: string, bucket: InstallBucket, batchId: string): void {
+    const contribution = bucket.batches.get(batchId);
+    if (!contribution) return;
+    const totals = dailyTotals.get(contribution.day);
+    if (totals) {
+      for (const [type, count] of contribution.counts) {
+        const next = (totals.get(type) ?? 0) - count;
+        if (next <= 0) totals.delete(type);
+        else totals.set(type, next);
+      }
+      if (totals.size === 0) dailyTotals.delete(contribution.day);
+    }
+    bucket.batches.delete(batchId);
+    totalBatchCount = Math.max(0, totalBatchCount - 1);
+    unregisterBatchRef(iid, batchId, contribution.day);
+    if (bucket.batches.size === 0) buckets.delete(iid);
+  }
+
+  function pruneOldDays(currentDay: number): void {
+    const cutoff = currentDay - MAX_DAYS;
+    for (const [day, refs] of [...batchRefsByDay.entries()]) {
+      if (day >= cutoff) continue;
+      for (const ref of [...refs]) {
+        const parsed = splitBatchRef(ref);
+        if (!parsed) continue;
+        const [iid, batchId] = parsed;
+        const bucket = buckets.get(iid);
+        if (bucket) removeContribution(iid, bucket, batchId);
+      }
+      dailyTotals.delete(day);
+      batchRefsByDay.delete(day);
+    }
+    for (const day of [...dailyTotals.keys()]) {
+      if (day < cutoff) dailyTotals.delete(day);
+    }
+  }
+
+  function enforceInstallCap(): void {
+    if (installs.size <= MAX_INSTALLS) return;
+    const sorted = [...installs.entries()].sort((a, b) => a[1].lastDay - b[1].lastDay);
+    let excess = installs.size - MAX_INSTALLS;
+    for (const [iid] of sorted) {
+      if (excess <= 0) break;
+      const bucket = buckets.get(iid);
+      if (bucket) {
+        for (const batchId of [...bucket.batches.keys()]) {
+          removeContribution(iid, bucket, batchId);
+        }
+      }
+      installs.delete(iid);
+      excess -= 1;
+    }
+  }
 
   // ── State file persistence (atomic write: tmp + rename) ──────────────
   function loadState(): void {
@@ -149,7 +269,7 @@ export function createAnalyticsHandler(options: { serverInstanceId: string }) {
       if (!existsSync(STATE_FILE)) return;
       const raw = JSON.parse(readFileSync(STATE_FILE, "utf8")) as {
         installs?: Array<[string, { firstDay: number; lastDay: number }]>;
-        buckets?: Array<[string, { day: number; counts: Record<string, number> }]>;
+        buckets?: Array<[string, unknown]>;
         daily?: Array<[number, Record<string, number>]>;
       };
       for (const [iid, value] of raw.installs ?? []) {
@@ -158,22 +278,49 @@ export function createAnalyticsHandler(options: { serverInstanceId: string }) {
         }
       }
       for (const [iid, value] of raw.buckets ?? []) {
-        if (typeof iid === "string" && IID_RE.test(iid) && value && Number.isInteger(value.day) && value.counts && typeof value.counts === "object") {
-          const counts = new Map<string, number>();
-          for (const [type, count] of Object.entries(value.counts)) {
-            if (typeof count === "number" && Number.isInteger(count) && count >= 0) counts.set(type, count);
+        if (typeof iid !== "string" || !IID_RE.test(iid) || !value || typeof value !== "object") continue;
+        const bucket = value as {
+          day?: unknown;
+          counts?: unknown;
+          batches?: unknown;
+        };
+        const installBucket: InstallBucket = { batches: new Map() };
+        // Current format: all bounded batch contributions for the install.
+        if (Array.isArray(bucket.batches)) {
+          for (const entry of bucket.batches) {
+            if (!Array.isArray(entry) || entry.length !== 2) continue;
+            const [batchId, contribution] = entry as [unknown, unknown];
+            if (typeof batchId !== "string" || !BATCH_ID_RE.test(batchId) || !contribution || typeof contribution !== "object") continue;
+            const record = contribution as { day?: unknown; counts?: unknown };
+            if (!Number.isInteger(record.day) || !record.counts || typeof record.counts !== "object" || Array.isArray(record.counts)) continue;
+            const counts = parseCounts(record.counts as Record<string, unknown>);
+            if (counts.size === 0) continue;
+            if (installBucket.batches.size >= MAX_BATCHES_PER_INSTALL || totalBatchCount >= MAX_BATCHES_TOTAL) continue;
+            installBucket.batches.set(batchId, { day: record.day as number, counts });
+            totalBatchCount += 1;
+            registerBatchRef(iid, batchId, record.day as number);
           }
-          if (counts.size > 0) buckets.set(iid, { day: value.day, counts });
+        // Legacy format: one latest bucket. Preserve it as a per-day entry so
+        // a later day cannot erase the historical totals that were retained.
+        } else if (Number.isInteger(bucket.day) && bucket.counts && typeof bucket.counts === "object" && !Array.isArray(bucket.counts)) {
+          const counts = parseCounts(bucket.counts as Record<string, unknown>);
+          if (counts.size > 0) {
+            const batchId = `legacy:${bucket.day as number}`;
+            if (totalBatchCount < MAX_BATCHES_TOTAL) {
+              installBucket.batches.set(batchId, { day: bucket.day as number, counts });
+              totalBatchCount += 1;
+              registerBatchRef(iid, batchId, bucket.day as number);
+            }
+          }
         }
+        if (installBucket.batches.size > 0) buckets.set(iid, installBucket);
       }
       for (const [day, map] of raw.daily ?? []) {
-        if (!Number.isInteger(day) || !map || typeof map !== "object") continue;
-        const totals = new Map<string, number>();
-        for (const [type, count] of Object.entries(map)) {
-          if (typeof count === "number" && Number.isInteger(count) && count >= 0) totals.set(type, count);
-        }
-        dailyTotals.set(day, totals);
+        if (!Number.isInteger(day) || !map || typeof map !== "object" || Array.isArray(map)) continue;
+        const totals = parseCounts(map);
+        if (totals.size > 0) dailyTotals.set(day, totals);
       }
+      enforceInstallCap();
     } catch (error) {
       console.error(JSON.stringify({ event: "analytics_state_load_failed", reason: String(error) }));
     }
@@ -184,23 +331,36 @@ export function createAnalyticsHandler(options: { serverInstanceId: string }) {
     stateDirty = true;
     if (persistTimer) return;
     // Debounce bursts of buckets into one atomic write.
+    // .unref() prevents the timer from delaying graceful shutdown.
     persistTimer = setTimeout(() => {
       persistTimer = null;
       if (!stateDirty) return;
-      stateDirty = false;
       try {
         const tmp = `${STATE_FILE}.tmp`;
         writeFileSync(tmp, JSON.stringify({
           installs: [...installs.entries()],
-          buckets: [...buckets.entries()].map(([iid, b]) => [iid, { day: b.day, counts: Object.fromEntries(b.counts) }]),
+          buckets: [...buckets.entries()].map(([iid, bucket]) => [
+            iid,
+            {
+              batches: [...bucket.batches.entries()].map(([batchId, contribution]) => [
+                batchId,
+                { day: contribution.day, counts: Object.fromEntries(contribution.counts) },
+              ]),
+            },
+          ]),
           daily: [...dailyTotals.entries()].map(([day, map]) => [day, Object.fromEntries(map)]),
         }));
         renameSync(tmp, STATE_FILE);
+        // Clear the dirty flag ONLY after the atomic rename succeeds.
+        // If a crash occurs between writeFileSync and renameSync, the flag
+        // stays true and the next startup re-persists the latest state.
+        stateDirty = false;
       } catch (error) {
         stateDirty = true;
         console.error(JSON.stringify({ event: "analytics_state_persist_failed", reason: String(error) }));
       }
     }, 2_000);
+    persistTimer?.unref();
   }
 
   loadState();
@@ -247,59 +407,50 @@ export function createAnalyticsHandler(options: { serverInstanceId: string }) {
     return true;
   }
 
-  /** Drop per-install state beyond the cap, oldest lastDay first. */
-  function enforceInstallCap(_currentDay: number): void {
-    if (installs.size <= MAX_INSTALLS) return;
-    const sorted = [...installs.entries()].sort((a, b) => a[1].lastDay - b[1].lastDay);
-    let excess = installs.size - MAX_INSTALLS;
-    for (const [iid] of sorted) {
-      if (excess <= 0) break;
-      const bucket = buckets.get(iid);
-      if (bucket) {
-        const totals = dailyTotals.get(bucket.day);
-        if (totals) {
-          for (const [type, count] of bucket.counts) {
-            const next = (totals.get(type) ?? 0) - count;
-            if (next <= 0) totals.delete(type);
-            else totals.set(type, next);
-          }
-        }
-        buckets.delete(iid);
-      }
-      installs.delete(iid);
-      excess -= 1;
-    }
-  }
+  type ApplyResult = "applied" | "duplicate" | "capacity";
 
-  function pruneOldDays(currentDay: number): void {
-    const cutoff = currentDay - MAX_DAYS;
-    for (const day of dailyTotals.keys()) {
-      if (day < cutoff) dailyTotals.delete(day);
-    }
-  }
-
-  function applyBucket(iid: string, counts: Map<string, number>, currentDay: number): void {
+  function applyBucket(
+    iid: string,
+    counts: Map<string, number>,
+    currentDay: number,
+    batchId: string | undefined,
+  ): ApplyResult {
+    pruneOldDays(currentDay);
     const existingInstall = installs.get(iid);
-    installs.set(iid, {
+    const bucket = buckets.get(iid) ?? { batches: new Map<string, BatchContribution>() };
+    const effectiveBatchId = batchId ?? `legacy:${currentDay}`;
+    const previous = bucket.batches.get(effectiveBatchId);
+
+    // A new batch is additive. A duplicate is a successful no-op, which makes
+    // retries safe even when the original 204 response was lost in transit.
+    if (batchId && previous) {
+      accepted += 1;
+      return "duplicate";
+    }
+
+    // Legacy payloads cannot distinguish partial flushes. Keep their old
+    // replace semantics for the same server day, while new batchId payloads
+    // retain every partial contribution independently.
+    if (
+      !previous &&
+      (bucket.batches.size >= MAX_BATCHES_PER_INSTALL || totalBatchCount >= MAX_BATCHES_TOTAL)
+    ) {
+      return "capacity";
+    }
+    if (previous) {
+      removeContribution(iid, bucket, effectiveBatchId);
+    }
+
+    const nextInstall = {
       firstDay: existingInstall ? Math.min(existingInstall.firstDay, currentDay) : currentDay,
       lastDay: currentDay,
-    });
-
-    // Idempotent replace: subtract the previous bucket for this install (if
-    // any) before adding the new one, so a retried day (same OR different)
-    // never double-counts.
-    const previous = buckets.get(iid);
-    if (previous) {
-      const totals = dailyTotals.get(previous.day);
-      if (totals) {
-        for (const [type, count] of previous.counts) {
-          const next = (totals.get(type) ?? 0) - count;
-          if (next <= 0) totals.delete(type);
-          else totals.set(type, next);
-        }
-      }
-    }
-    buckets.set(iid, { day: currentDay, counts });
+    };
+    installs.set(iid, nextInstall);
+    const targetBucket = buckets.get(iid) ?? bucket;
+    targetBucket.batches.set(effectiveBatchId, { day: currentDay, counts });
+    buckets.set(iid, targetBucket);
+    totalBatchCount += 1;
+    registerBatchRef(iid, effectiveBatchId, currentDay);
 
     let totals = dailyTotals.get(currentDay);
     if (!totals) {
@@ -310,14 +461,14 @@ export function createAnalyticsHandler(options: { serverInstanceId: string }) {
       totals.set(type, (totals.get(type) ?? 0) + count);
     }
 
-    pruneOldDays(currentDay);
-    enforceInstallCap(currentDay);
+    enforceInstallCap();
     accepted += 1;
     persistState();
+    return "applied";
   }
 
   /** Validate and normalize a daily bucket; null when invalid. */
-  function validateBucket(payload: Record<string, unknown>): { iid: string; counts: Map<string, number> } | null {
+  function validateBucket(payload: Record<string, unknown>): { iid: string; counts: Map<string, number>; batchId?: string } | null {
     if (typeof payload.iid !== "string" || !IID_RE.test(payload.iid)) return null;
     if (!payload.counts || typeof payload.counts !== "object" || Array.isArray(payload.counts)) return null;
     const counts = new Map<string, number>();
@@ -327,7 +478,12 @@ export function createAnalyticsHandler(options: { serverInstanceId: string }) {
       counts.set(type, value);
     }
     if (counts.size === 0 || counts.size > 32) return null;
-    return { iid: payload.iid, counts };
+    let batchId: string | undefined;
+    if (payload.batchId !== undefined) {
+      if (typeof payload.batchId !== "string" || !BATCH_ID_RE.test(payload.batchId)) return null;
+      batchId = payload.batchId;
+    }
+    return { iid: payload.iid, counts, batchId };
   }
 
   // ── KPI computation ──────────────────────────────────────────────────
@@ -392,7 +548,10 @@ export function createAnalyticsHandler(options: { serverInstanceId: string }) {
   return function analyticsHandler(req: IncomingMessage, res: ServerResponse): void {
     applySecurityHeaders(res);
 
-    if (req.method === "GET" && req.url === "/api/analytics/kpis") {
+    const pathname = req.url
+      ? new URL(req.url, "http://localhost").pathname
+      : "";
+    if (req.method === "GET" && pathname === "/api/analytics/kpis") {
       const token = req.headers["x-analytics-admin-token"];
       const tokenMatches = typeof token === "string" && constantTimeUtf8Equal(ADMIN_TOKEN, token);
       if (!ADMIN_TOKEN || !tokenMatches) {
@@ -405,7 +564,7 @@ export function createAnalyticsHandler(options: { serverInstanceId: string }) {
       return;
     }
 
-    if (req.method !== "POST" || req.url !== "/api/analytics/events") {
+    if (req.method !== "POST" || pathname !== "/api/analytics/events") {
       res.writeHead(405, { "Content-Type": "text/plain" });
       res.end("Method Not Allowed");
       return;
@@ -481,13 +640,22 @@ export function createAnalyticsHandler(options: { serverInstanceId: string }) {
           return;
         }
         const day = utcDay(current);
-        applyBucket(validated.iid, validated.counts, day);
+        const result = applyBucket(validated.iid, validated.counts, day, validated.batchId);
+        if (result === "capacity") {
+          res.writeHead(503, {
+            "Content-Type": "text/plain",
+            "Retry-After": "60",
+          });
+          res.end("Analytics batch capacity temporarily unavailable");
+          return;
+        }
         console.log(JSON.stringify({
-          event: "analytics_bucket_accepted",
+          event: result === "duplicate" ? "analytics_bucket_duplicate" : "analytics_bucket_accepted",
           timestamp: new Date(current).toISOString(),
           day: String(day),
           installs: installs.size,
           types: validated.counts.size,
+          hasBatchId: validated.batchId !== undefined,
         }));
         res.writeHead(204);
         res.end();

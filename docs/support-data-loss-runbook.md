@@ -58,6 +58,43 @@ Nunca responder "los datos se han perdido" antes de agotar los 3 caminos.
 - Recordatorio de backup >48h (banner) + auto-backup al desbloquear.
 - Toast tras exportar: indica guardar copia fuera del dispositivo.
 
+## Política de reembolsos y anti-fraude
+
+El fraude de reembolso existe, pero el modelo lo hace poco rentable:
+**reembolso = revocación de licencia**. El defraudador recupera el dinero y
+pierde el Pro (cae al tier Free), así que su mentira no compra nada.
+
+### Reglas por caso
+
+- **≤ 30 días:** reembolso sin preguntas + revocación inmediata de la
+  licencia. Sin interrogatorio: el fraude a este plazo no da beneficio.
+- **> 30 días con alegato de pérdida:** caso a caso. Pedir mínimo de
+  evidencia: ID de pedido + captura de la pantalla de bloqueo. La fricción
+  mínima disuade al oportunista sin castigar al cliente honesto.
+- **Reincidente:** ban del comprador en Whop. Sin segunda oportunidad.
+
+### Chargebacks (el riesgo real)
+
+Un comprador puede disputar el cargo con su banco sin avisar. Evidencia
+para la disputa, sin violar la privacidad del vault:
+
+- ID de pedido, fecha e importe (dashboard de Whop).
+- Registro de activaciones de licencia del license-server (instanceId,
+  timestamps): prueba objetiva de entrega y uso del producto.
+- Nota de que el producto es zero-knowledge: el soporte nunca tuvo acceso
+  al contenido y no existe mécanismo de recuperación forzada.
+
+### Procedimiento de revocación
+
+1. Procesar el reembolso desde el dashboard de Whop.
+2. Marcar la licencia como revocada en el license-server (`status`
+   revocado): la validación Pro deja de pasar en la siguiente comprobación
+   y el cliente queda en tier Free.
+3. Reincidente: ban del comprador en Whop.
+
+Nunca condicionar la amabilidad del trato a la sospecha de fraude: la
+estructura (revocación + ban + evidencia) es la defensa, no el trato seco.
+
 ## Métrica a vigilar
 
 - Tickets por pérdida de datos / total tickets. Si sube del 20%, revisar si los

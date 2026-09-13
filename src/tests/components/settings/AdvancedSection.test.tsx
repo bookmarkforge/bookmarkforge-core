@@ -11,7 +11,7 @@ vi.mock("lucide-react", () => {
     Icon.displayName = name;
     return Icon;
   };
-  return { RefreshCw: mock("RefreshCw") };
+  return { RefreshCw: mock("RefreshCw"), Copy: mock("Copy"), Check: mock("Check"), LifeBuoy: mock("LifeBuoy") };
 });
 
 const mockForceReprocessAll = vi.fn().mockResolvedValue(undefined);

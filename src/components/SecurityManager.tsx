@@ -480,6 +480,12 @@ Date Generated: ${formatDate(new Date(), {
                   "Optional: this file is encrypted with your master password — without the password, it is useless.",
                 )}
               </p>
+              <p className="text-xs mb-2 ds-text-warning font-medium">
+                {t(
+                  "app_bmfKitOffDeviceWarning",
+                  "Important: do not keep the file only on this device. Copy it to a second place — cloud storage (Google Drive, Dropbox), a USB drive, or email it to yourself. If this device fails, a copy on it is lost too.",
+                )}
+              </p>
               <button
                 onClick={handleSaveBmfKit}
                 disabled={!passwordInput || isUnlocking || isExportingKit}
@@ -609,6 +615,12 @@ Date Generated: ${formatDate(new Date(), {
         <div className="mt-6 pt-4 text-center ds-divider-t">
           <p className="text-[10px] leading-relaxed ds-text-muted">
             {t("app_vault_security_note_full")}
+          </p>
+          <p className="text-[10px] leading-relaxed ds-text-warning mt-2">
+            {t(
+              "app_vault_offsite_note",
+              "Recommended: keep at least one backup copy outside this device (cloud, USB or email). Your vault lives only in this browser.",
+            )}
           </p>
         </div>
       </div>

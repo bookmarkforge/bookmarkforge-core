@@ -43,8 +43,9 @@ export const BackupReminderBanner: React.FC<BackupReminderBannerProps> = ({
       toast.success(
         t(
           "backup_success",
-          "Backup exported successfully. Keep it in a safe place!",
+          "Backup exported. Store a copy outside this device — cloud, USB or email — before you need it.",
         ),
+        { duration: 8000 },
       );
       safeSet(STORAGE_KEYS.LAST_MANUAL_BACKUP_DATE, Date.now().toString());
       onDismiss();
@@ -96,7 +97,7 @@ export const BackupReminderBanner: React.FC<BackupReminderBannerProps> = ({
                         "Protect Your Knowledge Vault: Everything is Local \uD83D\uDD12",
                       )}
                 </h3>
-                <p className="text-sm text-cyan-900 dark:text-cyan-200 leading-relaxed mb-4">
+                <p className="text-sm text-cyan-900 dark:text-cyan-200 leading-relaxed mb-2">
                   {backupAgeMs !== null
                     ? t(
                         "backup_bannerStaleDesc",
@@ -106,6 +107,12 @@ export const BackupReminderBanner: React.FC<BackupReminderBannerProps> = ({
                         "backup_bannerDesc",
                         "BookmarkForge prioritizes your privacy by keeping all bookmarks, summaries, and documents exclusively on this device. However, if you clear your browser history, run out of disk space, or your browser clears IndexedDB data, you could lose your vault. We highly recommend exporting a physical backup file periodically.",
                       )}
+                </p>
+                <p className="text-xs text-cyan-800/90 dark:text-cyan-300/90 leading-relaxed mb-4 font-medium">
+                  {t(
+                    "backup_offsiteRule",
+                    "Golden rule: a backup on the same device is not a backup. Keep copies in at least two places — e.g. cloud storage (Google Drive, Dropbox, OneDrive) and a USB drive, or email the file to yourself.",
+                  )}
                 </p>
                 <div className="flex flex-wrap items-center gap-3">
                   <button

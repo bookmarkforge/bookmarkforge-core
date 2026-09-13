@@ -98,13 +98,22 @@ export class SecureStorage {
       return this.db;
     }
     if (this.initPromise) {
+      const pendingInit = this.initPromise;
       try {
-        return await this.initPromise;
+        return await pendingInit;
       } catch (error) {
         logger.warn("[SecureStorage] Previous init failed, retrying", {
           error,
         });
-        this.initPromise = null;
+        // Another concurrent caller may have already replaced the failed
+        // promise while we were awaiting it — reuse that fresh promise
+        // instead of opening a duplicate connection. Compare by identity
+        // so we don't return the same rejected promise.
+        if (this.initPromise && this.initPromise !== pendingInit) {
+          return this.initPromise;
+        }
+        this.initPromise = this.openWithRetry();
+        return this.initPromise;
       }
     }
     this.initPromise = this.openWithRetry();
@@ -544,6 +553,26 @@ export class SecureStorage {
     await this.rawPut(SecureStorage.IDB_VERIFICATION_TOKEN, ciphertext);
   }
 
+  /**
+   * Store the verification token AND its S1 integrity record in a single
+   * IndexedDB transaction.
+   *
+   * The two records must always agree: verifyPassword() rejects any unlock
+   * whose stored token does not match the HMAC record, so a crash between two
+   * independent writes would leave a vault that no password can open. The A-1
+   * vault-salt migration rewrites both records, which is exactly the window
+   * this removes (rotation carries the same risk and uses it too).
+   */
+  async storeVerificationTokenWithIntegrity(
+    ciphertext: string,
+    integrityRecord: string,
+  ): Promise<void> {
+    await this.rawPutMany([
+      [SecureStorage.IDB_VERIFICATION_TOKEN, ciphertext],
+      [SecureStorage.IDB_VERIFICATION_INTEGRITY, integrityRecord],
+    ]);
+  }
+
   async restoreVerificationToken(ciphertext: string | null): Promise<void> {
     if (ciphertext === null) {
       await this.rawDelete(SecureStorage.IDB_VERIFICATION_TOKEN);
@@ -981,6 +1010,37 @@ export class SecureStorage {
       }
     }
     throw new Error("[SecureStorage] Failed to acquire a live connection");
+  }
+
+  /**
+   * Low-level multi-record put in ONE transaction (no encryption — callers
+   * pass already-stored-raw values, e.g. the verification token pair).
+   */
+  private async rawPutMany(entries: Array<[string, string]>): Promise<void> {
+    if (entries.length === 0) {return;}
+    return this.enqueue(() =>
+      this.withLiveConnection(async (db) => {
+        const transaction = db.transaction(
+          [SecureStorage.STORE_NAME],
+          "readwrite",
+        );
+        const store = transaction.objectStore(SecureStorage.STORE_NAME);
+        const requests: IDBRequest[] = [];
+        for (const [id, value] of entries) {
+          const now = Date.now();
+          const data: SecureData = {
+            id,
+            value,
+            createdAt: now,
+            updatedAt: now,
+          };
+          requests.push(store.put(data));
+        }
+        // Resolve on transaction commit: every put in this transaction is
+        // durable together, or none of them are.
+        await this.waitForWriteTransaction(transaction, requests[0]!);
+      }),
+    );
   }
 
   /** Low-level put that does NOT encrypt (used for the device key itself). */

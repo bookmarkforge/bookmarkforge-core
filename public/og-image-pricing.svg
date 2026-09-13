@@ -5,7 +5,7 @@
        (public/icons/logo-512.png) — keep it in sync when the logo changes
        and regenerate og-image-pricing.png from this SVG.
        Free and Pro tier cards side by side; copy mirrors the live
-       #pricing section (Free $0/month, Pro $79 one-time, no subscriptions). -->
+       #pricing section (Free $0/forever, Pro $79 one-time, no subscriptions). -->
   <rect width="1200" height="630" fill="#0f1c2e"/>
   <rect x="0" y="0" width="1200" height="4" fill="#00aeef"/>
   <rect x="0" y="626" width="1200" height="4" fill="#00aeef"/>
@@ -22,7 +22,7 @@
   <text x="340" y="338" font-family="system-ui, -apple-system, sans-serif" font-size="17" fill="#8b95a5" text-anchor="middle">For personal knowledge management</text>
   <text x="300" y="392" font-family="system-ui, -apple-system, sans-serif" font-size="42" font-weight="700" fill="#ffffff" text-anchor="end">$</text>
   <text x="312" y="392" font-family="system-ui, -apple-system, sans-serif" font-size="56" font-weight="700" fill="#ffffff" text-anchor="start">0</text>
-  <text x="348" y="392" font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#a1a1aa" text-anchor="start">/month</text>
+  <text x="348" y="392" font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#a1a1aa" text-anchor="start">/forever</text>
   <line x1="135" y1="414" x2="545" y2="414" stroke="#2a3b52" stroke-width="1"/>
   <g>
     <circle cx="147" cy="442" r="9" fill="none" stroke="#00aeef" stroke-width="2"/>
@@ -32,7 +32,7 @@
   <g>
     <circle cx="147" cy="472" r="9" fill="none" stroke="#00aeef" stroke-width="2"/>
     <path d="M 142.5 472 l 3.5 3.5 l 6 -6.5" stroke="#00aeef" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="167" y="478" font-family="system-ui, -apple-system, sans-serif" font-size="17" fill="#e5e7eb" text-anchor="start">Full-text &amp; semantic search</text>
+    <text x="167" y="478" font-family="system-ui, -apple-system, sans-serif" font-size="17" fill="#e5e7eb" text-anchor="start">Full-text search</text>
   </g>
   <g>
     <circle cx="147" cy="502" r="9" fill="none" stroke="#00aeef" stroke-width="2"/>
@@ -73,6 +73,6 @@
   <g>
     <circle cx="667" cy="532" r="9" fill="none" stroke="#00aeef" stroke-width="2"/>
     <path d="M 662.5 532 l 3.5 3.5 l 6 -6.5" stroke="#00aeef" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="687" y="538" font-family="system-ui, -apple-system, sans-serif" font-size="17" fill="#e5e7eb" text-anchor="start">Priority support + early access</text>
+    <text x="687" y="538" font-family="system-ui, -apple-system, sans-serif" font-size="17" fill="#e5e7eb" text-anchor="start">Email support + early access</text>
   </g>
 </svg>

@@ -169,7 +169,7 @@ describe("authenticatedEncryptionStorage — writes", () => {
     expect(String(row.document.secret)).not.toContain("plain-secret");
   });
 
-  it("encrypts the `previous` document of an update row too", async () => {
+  it("leaves `previous` untouched (ADR-044: only `document` is encrypted; previous is conflict-detection only)", async () => {
     const wrapped = await makeWrapped(ENC_SCHEMA, PASSWORD);
     await wrapped.inst.bulkWrite(
       [{
@@ -179,8 +179,9 @@ describe("authenticatedEncryptionStorage — writes", () => {
       "unit",
     );
     const row = wrapped.calls.writes[0];
-    expect(String(row.previous.secret)).toMatch(/^v[45]:/);
-    expect(String(row.previous.secret)).not.toContain("old-secret");
+    // ADR-044: encrypting `previous` caused the conflict error path to
+    // double-decrypt and surface as WRONG_PASSWORD — only `document` is encrypted.
+    expect(row.previous.secret).toBe("old-secret");
     expect(String(row.document.secret)).toMatch(/^v[45]:/);
     expect(String(row.document.secret)).not.toContain("new-secret");
   });

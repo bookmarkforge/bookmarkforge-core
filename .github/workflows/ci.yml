@@ -32,8 +32,17 @@ jobs:
       - run: npm run typecheck:prod
       - run: npm run lint
       - run: npm run test:fast
-      - run: npm run check:secrets-in-commit
-      - run: npm run check:server-log-ip-privacy
+      # Security gate — MANDATORY. Blocks PR merge on any failure.
+      # check:security-internal runs the full internal security pipeline:
+      # secrets scan, workflow validation, HTTP/Compose/runtime config,
+      # Docker context, image pins, repository hygiene, and ZAP baseline.
+      # check:server-log-ip-privacy and check:blindeo are separate
+      # security checks not covered by check:security-internal.
+      - name: Enforce mandatory security gates
+        run: |
+          npm run check:security-internal
+          npm run check:server-log-ip-privacy
+          npm run check:blindeo
       # Its own named step so a brand drift (icon or share card deviating
       # from the canonical logo-512.png artwork) surfaces as a separate red
       # check in the Actions UI instead of being buried in `npm run check`.
@@ -47,7 +56,13 @@ jobs:
         run: npm run check:seo
       - name: Validate workflow, artifact, HTTP, Compose and repository safety
         run: npm run check:workflows && npm run check:workflow-artifacts && npm run check:http-config && npm run check:compose-config && npm run check:runtime-config && npm run check:docker-context && npm run check:repository-hygiene
-      - run: npm run check:blindeo
+      # Its own named step so a fabricated E2E selector (one that exists only
+      # in a unit-test mock, like the lazy BlockNoteView stub's
+      # "blocknote-view") surfaces as a separate red check: such a selector
+      # can never fail on production drift, which is exactly the failure
+      # class the unit-side mock audit exposed.
+      - name: Enforce E2E selector reality
+        run: npm run check:e2e-selectors
 
   slow-tests:
     name: Full unit suite (slow profile, timing enforced)
@@ -104,6 +119,51 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: playwright-artifacts
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results/
+            playwright-report/
+
+  e2e-public-relay:
+    # A-3: the one deployment shape the main E2E config cannot exercise — the app
+    # built WITHOUT VITE_P2P_SIGNALING_URL, i.e. public-relay mode, where the
+    # room secret must never reach the relay the app falls back to. Booting it
+    # needs its own Vite dev server (Vite bakes the variable at start-up), which
+    # playwright.public-relay.config.ts provides; the spec then stands in for the
+    # public relay and asserts the `join` frame carries the keyed room and no
+    # secret. Kept a separate job so its budget cannot eat the main E2E suite's.
+    name: Playwright E2E (public relay)
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 20
+    env:
+      CI: true
+      NODE_ENV: test
+      VITE_TEST_BUILD: 'true'
+      VITE_FORCE_DEXIE_STORAGE: 'true'
+      # Deliberately empty: this job's whole premise is an app with no
+      # configured signaling server. (The Playwright config forces it empty too,
+      # because Playwright merges `process.env` into the webServer environment.)
+      VITE_P2P_SIGNALING_URL: ''
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run public-relay E2E
+        run: npm run e2e:relay
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: playwright-public-relay-artifacts
           if-no-files-found: ignore
           retention-days: 14
           path: |
@@ -172,6 +232,25 @@ jobs:
         run: npm run check:performance
       - run: npm run check
       - run: npm audit --omit=dev --audit-level=high
+      # `overrides` is the only hand-picked version surface. npm audit alone
+      # cannot tell an unfixable upstream advisory from a pin that quietly
+      # reintroduced a fixable one, so this gate ties the audit result back to
+      # the pins and also fails when a pin no longer applies in the lockfile.
+      - name: Override pins must not resolve known CVEs
+        run: npm run check:override-cve
+      # The declared tree, not only the hand-picked versions: each advisory is
+      # classified as ours (a package package.json declares) or inherited (with
+      # the direct dependency it arrives through and the minimal bump). The
+      # production profile runs inside `npm run check`; this step adds the dev
+      # tree, where a vulnerability in the toolchain is still ours to answer.
+      - name: Declared dependencies must not carry known CVEs
+        run: npm run check:direct-cve:dev
+      # Entitlement is only enforceable if every paid route actually requires
+      # it. The route table declares each route's access; this gate compares
+      # that declaration against the router that runs and fails when a route
+      # under a paid namespace is not entitlement-gated.
+      - name: Paid routes must require a verified entitlement
+        run: npm run check:pro-routes
       - name: Upload build diagnostics
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

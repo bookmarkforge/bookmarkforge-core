@@ -94,8 +94,16 @@ jobs:
           PROD_BASE_URL: ${{ inputs.staging_url }}
           DEPLOY_COMPOSE_FILE: docker-compose.staging.yml
         run: node scripts/staging-rollback.mjs
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+
       - name: Install dependencies for staging verification
         run: npm ci
+
       - name: Verify staging after rollback
         env:
           STAGING_URL: ${{ inputs.staging_url }}

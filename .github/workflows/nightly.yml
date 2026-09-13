@@ -2,8 +2,14 @@ name: Nightly validation
 
 on:
   schedule:
+    # Daily: E2E suites, coverage, trends and consistency reports.
     - cron: '17 2 * * *'
+    # Monthly (1st, 03:17 UTC): backup-restore DR drill.
     - cron: '17 3 1 * *'
+    # Weekly (Monday, 02:23 UTC): dependency CVE report. The weekly cadence is
+    # deliberate — this job publishes a classification, not a signal, and the
+    # database of advisories does not move every night.
+    - cron: '23 2 * * 1'
   workflow_dispatch:
     inputs:
       test_alert:
@@ -171,6 +177,14 @@ jobs:
         with:
           path: .nightly-history
           key: nightly-multiuser-history-v1-${{ github.run_id }}-${{ matrix.shard }}
+          retention-days: 7
+
+      - name: Upload multiuser playwright reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: playwright-report-multiuser-${{ matrix.shard }}
+          if-no-files-found: ignore
           retention-days: 7
           path: playwright-report-multiuser-${{ matrix.shard }}/
 
@@ -640,6 +654,75 @@ jobs:
           path: .nightly-history
           key: nightly-perf-scale-history-v1-${{ github.run_id }}
 
+  embedding-quality:
+    # Compare the pinned q8 production baseline with the uint8 candidate in a
+    # real Chromium/WASM runtime. This is intentionally nightly-only because
+    # it downloads both model variants and fails on retrieval-quality drift.
+    name: Embedding model quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NODE_ENV: test
+      VITE_TEST_BUILD: 'true'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: Run embedding quality gate
+        run: npm run e2e:nightly -- tests/e2e/embedding-quality.nightly.spec.ts
+      - name: Upload embedding quality evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: embedding-quality
+          if-no-files-found: ignore
+          retention-days: 30
+          path: |
+            test-results/
+            playwright-report-nightly/
+            playwright-report/
+
+  sw-integrity-tamper:
+    # ADR-039 browser-level proof: build the gated production artifact
+    # (build:ci) and run the SW integrity tamper suite against a real
+    # Chromium — tampered precache and runtime-cache entries must be 504'd
+    # and evicted, and unlisted paths must pass through untouched. The
+    # synthetic runtime tests cannot see the real Workbox precache/
+    # StaleWhileRevalidate wiring, so this job is the end-to-end contract.
+    name: SW integrity tamper (browser)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Build production bundle and run SW integrity tamper suite
+        run: npm run e2e:sw-integrity
+      - name: Upload tamper evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sw-integrity-tamper
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results/
+            playwright-report/
+
   launch-readiness:
     name: Launch checklist blockers
     runs-on: ubuntu-latest
@@ -716,6 +799,55 @@ jobs:
           retention-days: 30
           path: kpi-report.json
 
+
+  dependency-cve-report:
+    # Weekly visibility for the dependency advisory classification: which
+    # advisories sit on a package `package.json` declares (`own`) and which only
+    # arrive through one (`inherited`, with the direct dependency it comes
+    # through and the minimal bump that clears it). The CI gate only speaks when
+    # it FAILS — `npm run check` prints one ok line when the tree is clean — so
+    # without this job the classification is invisible exactly when the tree is
+    # clean, which is most weeks. Runs on the Monday cron and on manual
+    # dispatch; both audit profiles are published because the gate covers prod
+    # inside `npm run check` and dev in its own CI step.
+    name: Dependency CVE report (weekly)
+    if: ${{ github.event_name == 'workflow_dispatch' || startsWith(github.event.schedule, '23 2 * * 1') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Build the dependency CVE report (prod + dev)
+        # Read-only digests of package.json + package-lock.json + the registry:
+        # no secrets, no deployment surface, nothing written outside the two
+        # report pairs. Report mode never gates, so the exit code here is about
+        # the audit being runnable at all (it fails closed otherwise).
+        # `--step-summary` puts the same tables in the run summary, so the
+        # own-vs-inherited split is readable without downloading the artifact.
+        run: |
+          node scripts/check-direct-cve.mjs --report dependency-cve-report-prod.md --step-summary
+          node scripts/check-direct-cve.mjs --include-dev --report dependency-cve-report-dev.md --step-summary
+      - name: Upload dependency CVE report
+        # The artifact IS the deliverable, so a missing report is a real
+        # failure (`error`) rather than background noise. 90 days keeps a full
+        # quarter of weekly reports comparable.
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: nightly-dependency-cve-report
+          if-no-files-found: error
+          retention-days: 90
+          path: |
+            dependency-cve-report-prod.md
+            dependency-cve-report-prod.json
+            dependency-cve-report-dev.md
+            dependency-cve-report-dev.json
 
   drill-backup-restore:
     name: Backup-restore DR drill (monthly)

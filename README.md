@@ -87,7 +87,8 @@ No ejecutes scripts de despliegue contra producción sin aprobación operativa e
 
 - TLS debe terminar en el reverse proxy con redirección HTTPS y HSTS.
 - Configura `AI_SESSION_ORIGINS` con orígenes exactos; no dependas del fallback derivado de `Host`.
-- Mantén `AI_SESSION_REQUIRE_LICENSE=1` en producción.
+- Deja `AI_SESSION_REQUIRE_LICENSE` sin definir (o en `1`): una sesión de IA exige un proof de licencia firmado en TODOS los entornos. `AI_SESSION_REQUIRE_LICENSE=0` emite sesiones anónimas — se rechaza en producción y solo vale para test/staging aislado, con aviso en el arranque.
+- La clave pública de licencias vive en dos copias (`src/services/licenseKeys.ts` y `server/src/license-public-key.ts`, la imagen de la API solo copia `server/`). `node scripts/generate-license-keys.mjs --sync-server-key` las alinea y `npm run check:license-keys` falla si divergen.
 - Mantén `ENFORCE_SIGNAL_HMAC=1` en producción.
 - No publiques Redis ni expongas sus puertos al host.
 - No registres contraseñas, claves, prompts ni contenido del vault.

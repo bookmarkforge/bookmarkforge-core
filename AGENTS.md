@@ -89,10 +89,15 @@ The codebase has an explicit ownership contract for secrets-as-bytes:
 
 ```bash
 npm run typecheck:prod          # tsc --noEmit (prod tsconfig)
-npm run lint                    # eslint . (custom rules in eslint-rules/)
+npm run lint                    # ESLint acotado por dominios (sin heap global de 4 GiB)
 npm run test:fast               # bounded Vitest suites (security, db, services,
-                                #   key components — count deliberately unnumbered,
-                                #   see ADR-038)
+                                #   key components; successful-test logs are
+                                #   suppressed by default; use BMF_TEST_LOGS=full
+                                #   for diagnostic output)
+npm run test:slow               # every other test file (~480; CI's slow-tests job
+                                #   enforces timing on it; `npm test` is the same
+                                #   surface — run it before merging areas the fast
+                                #   profile does not cover)
 npm run build:ci                # vite build + secret-scan + SRI + integrity
                                 #   manifest + chunk-boundary + bundle-size gates
 npm run check                   # the 17-gate chain: env, workflows, http/compose/
@@ -105,10 +110,11 @@ npm run check                   # the 17-gate chain: env, workflows, http/compos
 
 - `npm run ci:local` aggregates the CI job (`typecheck:prod && lint &&
   test:fast && build:ci && check`).
-- Before a release: `npm run check:launch-checklist --strict` (Sentry DSN/DPA,
-  RPO/RTO sign-off, manual WCAG, CODEOWNERS are tracked as open operational
-  items in `docs/launch-checklist.md` — see `docs/audit.md` for the known-gap
-  ledger and `docs/ROPA.md` for GDPR processing records).
+- Before a release: `npm run check:launch-checklist:strict` (Sentry DSN/DPA,
+  RPO/RTO sign-off and manual WCAG are tracked as open operational items in
+  `docs/launch-checklist.md` — see `docs/audit.md` for the known-gap ledger
+  and `docs/ROPA.md` for GDPR processing records). This repository is operated
+  by a single maintainer; automated checks remain the release control.
 - **i18n:** every user-facing string goes through `t()` — hardcoded UI strings
   fail `check:i18n`/`check:english-only`. All 30 locales must stay
   key-complete with matching `{{placeholders}}`; add keys to every locale file
@@ -125,14 +131,107 @@ npm run check                   # the 17-gate chain: env, workflows, http/compos
 - E2E: Playwright specs in `tests/e2e/` (browsers/multiuser/nightly/human-like
   configs); vault setup runs Argon2id, so on slow runners raise timeouts via
   `E2E_TIMEOUT_MULTIPLIER` instead of deleting waits.
+- Live test loop (local): `npm run test:fast:watch` re-runs only the
+  fast-profile tests affected by the file you save. For browser-level
+  feedback run `npm run e2e:ui` (Playwright UI mode over the full suite,
+  affected specs re-run on save) or `npm run e2e:smoke:ui` (UI mode over the
+  <60 s critical-vault smoke set in `playwright.smoke.config.ts`); plain
+  `npm run e2e:smoke` is the pre-push gate. E2E configs reuse
+  already-running servers, and the `--mode test` webServer keeps Argon2id
+  on fast test params — never start the dev server for E2E without it
+  (~28 s per vault setup otherwise).
+- Test profiles: `scripts/test-profiles.mjs` owns the two bounded surfaces —
+  `test:fast` (curated smoke + critical areas) and `test:slow` (every other
+  file; `npm test` with no selectors runs the same surface). Both are driven
+  by `scripts/test-bounded.mjs --profile fast|slow`, which never schedules
+  files vitest excludes (`src/tests/scripts/check-rxdb17.test.ts`,
+  `src/tests/utils/crypto-core.fuzz.test.ts` — gated by dedicated tooling),
+  so scheduled == executed.
+- Slow-test guard: the bounded runner pipes each run through
+  `scripts/check-test-timing.mjs` — on CI (`CI=true`) a NEW test file at/over
+  the profile's bar fails the run naming the culprit: 5 s for `test:fast`,
+  10 s for the slow profile (its files are legitimately heavier; a 5 s bar
+  would flake), plus 2× its pinned time in
+  `scripts/test-timing-baseline.json` for every pinned file; locally it
+  warns only. The `slow-tests` CI job enforces timing on the slow profile.
+  Re-pin an intended slowdown with `BMF_TEST_TIMING=update` (baseline is
+  reviewed in the PR diff); `BMF_TEST_TIMING_OFF=1` is the explicit opt-out.
 - Security tests are adversarial, not happy-path: property tests (fast-check),
   fuzzed SSRF gate parity (P81 differential), format-level crypto vectors.
   Tests may not be skipped without a reason — the custom rule
   `no-unexplained-test-skip` enforces it.
 - Mock crypto-carefully: `require-securityvault-mock-lock-unlock` demands
-  lock/unlock lifecycle symmetry when mocking `SecurityVault`.
+   lock/unlock lifecycle symmetry when mocking `SecurityVault`.
 
-## 7. Repository hygiene
+## 7. Security Champions Program
+
+BookmarkForge operates a **Security Champions program** for distributed
+security responsibility across the development team. Every PR must pass
+mandatory security gates before merge.
+
+### Mandatory Security Gates (every PR)
+
+1. **`Enforce mandatory security gates`** (CI step in `ci.yml`) — Runs:
+   - `npm run check:security-internal` — The full internal security pipeline (9 checks):
+     - `check:secrets-in-commit` — No secrets in git history
+     - `check:workflows` — CI/CD workflow validation
+     - `check:http-config` — HTTP configuration security
+     - `check:compose-config` — Docker Compose security
+     - `check:runtime-config` — Runtime configuration validation
+     - `check:docker-context` — Docker context security
+     - `check:image-pins` — Container image digest verification
+     - `check:repository-hygiene` — Repository security hygiene
+     - `check:zap-baseline` — OWASP ZAP baseline scan
+   - `npm run check:server-log-ip-privacy` — IP privacy in server logs
+   - `npm run check:blindeo` — Blindeo security scanner
+   - Blocks PR merge on any failure.
+
+2. **`npm run check`** — The 17-gate chain (includes CSP, i18n, audit-drift, etc.)
+
+3. **SAST** (CodeQL + Semgrep) — Blocked on High/Critical findings
+
+4. **Dependency review** — Automated dependency vulnerability scanning
+
+### Branch Protection
+
+The `main` branch requires these status checks to pass before merge:
+- `Enforce mandatory security gates` ← **New: blocks merge on any failure**
+- `Typecheck, lint, tests and security gates`
+- `Playwright E2E`
+- `Production build and repository checks`
+- `Dependency review`
+- `CodeQL analysis`
+- `Semgrep analysis`
+
+The ruleset is at `.github/rulesets/main-protection.json` with `integration_id: 15368` for all status checks. Import it via GitHub Settings → Rules → Rulesets, or via API with `gh api --method POST /repos/ORG/REPO/rulesets --input .github/rulesets/main-protection.json`. See `.github/branch-protection.md` for instructions.
+
+### Security Champions Responsibilities
+
+| Responsibility | Frequency |
+|----------------|-----------|
+| Verify `npm run check:security-internal` passes | Every PR |
+| Review security-critical PRs (server/, crypto/, db/) | Every PR |
+| Investigate High/Critical SAST findings | Within 48h |
+| Participate in external penetration test | Quarterly |
+| Update `.zap/rules.tsv` for new false positives | As needed |
+| Review DAST reports and remediate | Weekly |
+| Update this AGENTS.md with new vulnerabilities | After incidents |
+
+### Penetration Testing
+
+- **Monthly DAST**: `.github/workflows/pen-test.yml` runs OWASP ZAP against staging
+- **Pre-production penetration test**: `node scripts/penetration-test.mjs --target <url> --scope full`
+- **Reports**: Written to `pen-test-reports/` with JSON and Markdown formats
+- **Gate**: All CRITICAL and HIGH findings must be remediated before production deployment
+
+### Security Champions Program
+
+See `.github/SECURITY_CHAMPIONS.md` for the full program documentation.
+- Designation criteria, escalation procedures, and metrics
+- Checklist per change type (server/, CSP, headers, extension, dependencies)
+- Incident response scale (P0–P3 with SLAs)
+
+## 8. Repository hygiene
 
 - Ignored (never commit): `dist/`, `coverage/`, `test-results*/`,
   `playwright-report*/`, `tests/e2e/__diffs__/`, `tests/e2e/__snapshots__/`,
@@ -147,7 +246,7 @@ npm run check                   # the 17-gate chain: env, workflows, http/compos
   reviewed instead of silently shipped. The same job also runs
   `check:baseline-gaps`, which statically derives every baseline a spec's
   `toHaveScreenshot` will compare against (locale loops, backstop-set
-  guards and template call sites are constant-folded) and fails when any
+  guards and template call sites are constant-folded)  and fails when any
   of them is not tracked in git — so a spec-can-reference-but-repo-hasn't-
   committed gap breaks CI instead of auto-writing an unreviewed baseline
   on the first fresh-checkout run.
@@ -168,10 +267,20 @@ npm run check                   # the 17-gate chain: env, workflows, http/compos
   ADR-026 (hardening wave 1), ADR-027 (hardening wave 2), ADR-029 (WebRTC
   sync hardening D1/D2/D5/D6), ADR-030 (umbrella security regression suite),
   ADR-032 (disk backup pruning D1), ADR-033 (restore surface on auth errors
-  D3), ADR-034 (backup age freshness + storage quota D1/D5) and ADR-037
-  (backup-deletion ownership). Numbers ADR-031/035/036 and ADR-040/042 are
-  not in the anchor catalog: 031/035/036 are unassigned, ADR-028 (gate-drift-
+  D3), ADR-034 (backup age freshness + storage quota D1/D5), ADR-037
+  (backup-deletion ownership), ADR-038 (constant-time HMAC in attestation
+  chains) and ADR-039 (SW-side integrity verification incl. lazy chunks).
+  Numbers ADR-031/035/036 are
+  not in the anchor catalog and remain unassigned. ADR-028 (gate-drift-
   detection, referenced by `check-inspector-freeze.mjs`) is formalized in
-  `docs/ADR-028-gate-drift-detection.md`, and ADR-040/042 remain implicit
-  prose references (`check-inspector-freeze.mjs`, `ThemeService.ts`) until
-  formalized.
+  `docs/ADR-028-gate-drift-detection.md`; ADR-040 (fusion of the Markdown
+  inspectors into the unified `check:docs-markdown` gate — implemented in
+  `scripts/check-docs-markdown.mjs` with its drift baseline at
+  `scripts/docs-markdown-baseline.json`, in the `npm run check` chain, and
+  accepted by the freeze via the ADR token), ADR-042 (CSS-only user
+  themes, decision D4) and ADR-043 (SEO contract gate — `check:seo`:
+  canonical/hreflang/OG/Twitter/JSON-LD, noindex, negociación de idioma
+  y preferencia manual, sitemap con hreflang y terminología legal) are
+  formalized in `docs/ADR-040-docs-markdown-gate-fusion.md`,
+  `docs/ADR-042-css-only-user-themes.md` and
+  `docs/ADR-043-check-seo-gate.md`.

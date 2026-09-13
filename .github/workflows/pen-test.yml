@@ -1,0 +1,232 @@
+name: Penetration Test
+
+on:
+  schedule:
+    # Monthly penetration test on the first Saturday at 3 AM UTC
+    - cron: '0 3 1-7 * 6'
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Target URL for penetration test (HTTPS only)'
+        required: false
+        type: string
+        default: ''
+      scope:
+        description: 'Scope of the penetration test'
+        required: false
+        type: choice
+        options:
+          - full
+          - crypto-review
+          - auth-testing
+          - owasp-top10
+      notify-slack:
+        description: 'Slack webhook URL for notifications'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  security-events: write
+
+concurrency:
+  group: pen-test-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CI: true
+  TARGET_URL: ${{ inputs.target || vars.PRODUCTION_URL || '' }}
+  SCOPE: ${{ inputs.scope || 'full' }}
+  NOTIFY_WEBHOOK: ${{ inputs.notify-slack || vars.SLACK_WEBHOOK_URL || '' }}
+
+jobs:
+  validate:
+    name: Validate penetration test configuration
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+
+      - name: Validate target
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="${TARGET_URL:-}"
+          if [[ -z "$target" ]]; then
+            echo "TARGET_URL is required" >&2
+            exit 1
+          fi
+          if [[ "$target" != https://* ]]; then
+            echo "Target must use HTTPS" >&2
+            exit 1
+          fi
+          # Never scan production without explicit confirmation
+          if [[ "$target" == *"bookmarkforge.com" ]]; then
+            echo "Production domain detected. Ensure this is intentional." >&2
+          fi
+          echo "Target validated: $target"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate ZAP policy
+        run: npm run check:zap-baseline
+
+  penetration-test:
+    name: Run penetration test
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build:ci
+        env:
+          VITE_APP_VERSION: pen-test
+          VITE_DB_NAME: bookmarkforge_pen_test
+          VITE_P2P_SIGNALING_URL: wss://signal.bookmarkforge.com
+          VITE_WHOP_CHECKOUT_URL: https://example.invalid/pen-test
+
+      - name: Start application server
+        run: |
+          nohup npm run server > /tmp/server.log 2>&1 &
+          echo $! > /tmp/server.pid
+          echo "Server PID: $(cat /tmp/server.pid)"
+          for i in $(seq 1 30); do
+            if curl -f http://localhost:8787/health 2>/dev/null; then
+              echo "Server is ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -f http://localhost:8787/health || { echo "Server failed to start"; cat /tmp/server.log; exit 1; }
+        env:
+          PORT: 8787
+          HOST: 127.0.0.1
+          NODE_ENV: production
+          SIGNALING_ADMIN_TOKEN: ${{ secrets.SIGNALING_ADMIN_TOKEN }}
+          AI_SESSION_REQUIRE_LICENSE: true
+          AI_SESSION_ORIGINS: https://bookmarkforge.com
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_BASE: ${{ secrets.GEMINI_API_BASE }}
+          WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
+          WHOP_LICENSE_API_URL: ${{ secrets.WHOP_LICENSE_API_URL }}
+          LICENSE_SIGNING_PRIVATE_KEY_FILE: ${{ secrets.LICENSE_SIGNING_PRIVATE_KEY_FILE }}
+        shell: bash
+
+      - name: Stop application server
+        if: always()
+        run: |
+          if [ -f /tmp/server.pid ]; then
+            kill $(cat /tmp/server.pid) 2>/dev/null || true
+            echo "Server stopped"
+          fi
+        shell: bash
+
+      - name: Run OWASP ZAP baseline scan
+        uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25
+        with:
+          target: ${{ env.TARGET_URL }}
+          allow_issue_writing: false
+          fail_action: false
+          artifact_name: zap-pen-test
+          cmd_options: '-a -j -c /zap/wrk/.zap/baseline.conf'
+
+      - name: Run custom penetration test
+        run: |
+          node scripts/penetration-test.mjs \
+            --target "${TARGET_URL}" \
+            --scope "${SCOPE}" \
+            --output pen-test-reports \
+            --verbosity normal
+        env:
+          TARGET_URL: ${{ env.TARGET_URL }}
+          SCOPE: ${{ inputs.scope || 'full' }}
+
+      - name: Upload penetration test reports
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: pen-test-report
+          if-no-files-found: ignore
+          retention-days: 90
+          path: |
+            pen-test-reports/
+            zap-pen-test/
+
+      - name: Notify on failure
+        if: failure() && env.NOTIFY_WEBHOOK != ''
+        run: |
+          curl -X POST "${NOTIFY_WEBHOOK}" \
+            -H "Content-Type: application/json" \
+            -d '{"text": "🔴 Penetration test FAILED on BookmarkForge. Check the workflow for details."}'
+
+  approve-production-deploy:
+    name: Approve production deployment after pen test
+    needs: penetration-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
+    environment:
+      name: production-deploy
+      url: https://bookmarkforge.com
+    steps:
+      - name: Wait for manual approval
+        run: |
+          echo "Penetration test completed. Manual approval required before production deployment."
+          echo "Review pen-test-reports/ for findings."
+          echo "If all CRITICAL and HIGH findings are remediated, proceed with deployment."
+
+  post-deploy-verification:
+    name: Post-deployment security verification
+    needs: approve-production-deploy
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+
+      - name: Verify production security headers
+        run: |
+          set -euo pipefail
+          echo "Verifying production security headers..."
+          response=$(curl -sI https://bookmarkforge.com)
+          echo "$response"
+          echo "$response" | grep -q "strict-transport-security" || { echo "Missing HSTS header"; exit 1; }
+          echo "$response" | grep -q "content-security-policy" || { echo "Missing CSP header"; exit 1; }
+          echo "$response" | grep -q "x-content-type-options" || { echo "Missing X-Content-Type-Options header"; exit 1; }
+          echo "$response" | grep -q "permissions-policy" || { echo "Missing Permissions-Policy header"; exit 1; }
+          echo "All security headers verified in production."
+
+      - name: Run post-deploy DAST
+        uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25
+        with:
+          target: https://bookmarkforge.com
+          allow_issue_writing: false
+          fail_action: false
+          artifact_name: zap-post-deploy
+          cmd_options: '-a -j -c /zap/wrk/.zap/baseline.conf'

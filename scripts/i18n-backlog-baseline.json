@@ -1,5 +1,5 @@
 {
-  "total": 1682,
+  "total": 1703,
   "locales": {
     "ar": {
       "untranslated": 177
@@ -14,13 +14,13 @@
       "untranslated": 177
     },
     "de": {
-      "untranslated": 177
+      "untranslated": 23
     },
     "el": {
       "untranslated": 177
     },
     "es": {
-      "untranslated": 83
+      "untranslated": 0
     },
     "fi": {
       "untranslated": 177
@@ -89,5 +89,5 @@
       "untranslated": 177
     }
   },
-  "updatedAt": "2026-08-28T13:46:53.146Z"
+  "updatedAt": "2026-09-13T22:04:07.601Z"
 }

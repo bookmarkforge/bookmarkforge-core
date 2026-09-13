@@ -1,92 +1,92 @@
 {
   "locales": {
     "ar": {
-      "issues": 5
+      "issues": 9
     },
     "bg": {
-      "issues": 4
+      "issues": 7
     },
     "cs": {
-      "issues": 7
+      "issues": 10
     },
     "da": {
-      "issues": 8
+      "issues": 11
     },
     "de": {
-      "issues": 8
+      "issues": 11
     },
     "el": {
-      "issues": 5
+      "issues": 8
     },
     "es": {
-      "issues": 94
+      "issues": 62
     },
     "fi": {
-      "issues": 5
+      "issues": 8
     },
     "fr": {
-      "issues": 4
-    },
-    "he": {
-      "issues": 2
-    },
-    "hi": {
-      "issues": 1
-    },
-    "hr": {
-      "issues": 6
-    },
-    "hu": {
-      "issues": 5
-    },
-    "id": {
-      "issues": 5
-    },
-    "it": {
-      "issues": 6
-    },
-    "ja": {
-      "issues": 10
-    },
-    "ko": {
-      "issues": 5
-    },
-    "nl": {
-      "issues": 10
-    },
-    "no": {
       "issues": 7
     },
-    "pl": {
+    "he": {
+      "issues": 5
+    },
+    "hi": {
       "issues": 4
+    },
+    "hr": {
+      "issues": 9
+    },
+    "hu": {
+      "issues": 8
+    },
+    "id": {
+      "issues": 8
+    },
+    "it": {
+      "issues": 9
+    },
+    "ja": {
+      "issues": 12
+    },
+    "ko": {
+      "issues": 7
+    },
+    "nl": {
+      "issues": 13
+    },
+    "no": {
+      "issues": 10
+    },
+    "pl": {
+      "issues": 7
     },
     "pt": {
-      "issues": 5
+      "issues": 8
     },
     "ro": {
-      "issues": 5
+      "issues": 8
     },
     "ru": {
-      "issues": 3
-    },
-    "sv": {
       "issues": 6
     },
+    "sv": {
+      "issues": 9
+    },
     "th": {
-      "issues": 4
+      "issues": 7
     },
     "tr": {
-      "issues": 5
+      "issues": 8
     },
     "uk": {
-      "issues": 3
+      "issues": 6
     },
     "vi": {
-      "issues": 4
+      "issues": 7
     },
     "zh": {
-      "issues": 8
+      "issues": 10
     }
   },
-  "updatedAt": "2026-08-28T21:56:44.279Z"
+  "updatedAt": "2026-09-13T22:04:08.226Z"
 }

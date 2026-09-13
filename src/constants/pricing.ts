@@ -1,6 +1,6 @@
 /**
  * PRICING STRATEGY — BookmarkForge v1
- * "Lifetime de la versión mayor" — pays once, owns forever.
+ * "Lifetime of the major version" — pays once, owns forever.
  *
  * Model: Lifetime License for Major Version (no subscriptions)
  * — Buy Pro v1 once, use v1.x forever (all minor + patch + security updates forever).

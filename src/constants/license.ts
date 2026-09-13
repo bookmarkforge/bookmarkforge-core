@@ -46,7 +46,12 @@ export const LICENSE_CONFIG = {
    * period covers travel, outages and the license server being
    * unreachable).
    */
-  cacheTtlMs: 7 * 24 * 60 * 60 * 1000,
+  // How long a signed Pro payload is trusted offline before re-validation.
+  // 48h (was 7d): a refunded/revoked license must fall back to Free within
+  // two days of normal app use, while a 2-day offline window still covers
+  // honest users (vacations, travel). The entitlement endpoint independently
+  // rejects proofs older than 30d regardless of this value.
+  cacheTtlMs: 48 * 60 * 60 * 1000,
 
   /**
    * Legacy UI compatibility value. Local trial timestamps never grant Pro;

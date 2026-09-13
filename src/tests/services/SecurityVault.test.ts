@@ -20,6 +20,9 @@ vi.mock("../../services/EncryptionService", () => ({
     clearDatabase: vi.fn().mockResolvedValue(undefined),
     clear: vi.fn().mockResolvedValue(undefined),
     destroy: vi.fn().mockResolvedValue(undefined),
+    // A-1: per-vault Argon2id salt installation (unlock provisions it).
+    configureVaultKdfSalt: vi.fn().mockResolvedValue(undefined),
+    getVaultKdfSaltHex: vi.fn(() => null),
   },
 }));
 
@@ -53,6 +56,8 @@ const secureStorageMock = {
   // Audit H5 — master-password wrapping + raw tokens
   getVerificationToken: vi.fn((): Promise<string | null> => Promise.resolve(null)),
   storeVerificationToken: vi.fn(() => Promise.resolve(undefined)),
+  // A-1: token + integrity record are written in ONE transaction.
+  storeVerificationTokenWithIntegrity: vi.fn(() => Promise.resolve(undefined)),
   // S1: raw integrity record (readable while the vault is locked).
   getVerificationIntegrity: vi.fn((): Promise<string | null> =>
     Promise.resolve(TEST_INTEGRITY_RECORD),
@@ -97,6 +102,16 @@ vi.mock("../../services/AuditLogService", () => ({
     flushPending: vi.fn().mockResolvedValue(undefined),
   },
   rotateAuditSessionId: vi.fn(),
+}));
+
+// A-1 / ADR-046: the cross-tab notification is mocked so the assertions can be
+// about WHEN the vault announces (a committed rotation, never a rollback). The
+// transport itself — channel, storage-authoritative adoption, forged-message
+// inertness — is covered by p0-vault-kdf-salt.regression.test.ts.
+vi.mock("../../services/security-vault/kdf-salt-sync", () => ({
+  announceVaultKdfSaltChange: vi.fn(),
+  startVaultKdfSaltSync: vi.fn(),
+  stopVaultKdfSaltSync: vi.fn(),
 }));
 
 const { securityVault } = await import("../../services/SecurityVault");
@@ -367,14 +382,97 @@ describe("SecurityVault", () => {
         expect.any(Uint8Array),
       );
       // Audit H5: token is stored raw (password-encrypted only), so it
-      // stays readable while the vault is locked.
-      expect(secureStorage.storeVerificationToken).toHaveBeenCalledWith(
+      // stays readable while the vault is locked. A-1: the token and its S1
+      // integrity record are persisted in ONE transaction so a crash can
+      // never leave a token/HMAC pair that no password unlocks.
+      expect(
+        secureStorage.storeVerificationTokenWithIntegrity,
+      ).toHaveBeenCalledWith(
         "encrypted_data",
+        expect.stringMatching(/^[0-9a-f]{64}:[0-9a-f]{64}$/),
       );
       // H5: first unlock wraps the device key with the master password.
       expect(secureStorage.wrapDeviceKeyWithPassword).toHaveBeenCalledWith(
         "first_time_password",
       );
+    });
+
+    // ── A-1: per-vault Argon2id salt + transparent migration ─────────────
+
+    it("provisions a per-vault KDF salt on unlock and re-wraps a legacy token", async () => {
+      const { secureStorage } = await import("../../services/SecureStorage");
+      const { encryptionService } =
+        await import("../../services/EncryptionService");
+      secureStorageMock.hasSecret.mockImplementation((key: string) =>
+        Promise.resolve(key === "vault_verification"),
+      );
+      secureStorageMock.getVerificationToken.mockResolvedValue(
+        "v5:legacy-token",
+      );
+      (encryptionService.decryptWithBytes as any).mockResolvedValue(
+        "bookmarkforge-verify-ok",
+      );
+
+      const result = await securityVault.unlock("correct_password");
+
+      expect(result).toBe(true);
+      // The salt is minted, persisted under its own storage key and installed
+      // in the crypto layer.
+      const storedSalt = secureStorageMock._store.get("kdf_salt");
+      expect(storedSalt).toMatch(/^[0-9a-f]{32}$/);
+      expect(encryptionService.configureVaultKdfSalt).toHaveBeenCalledWith(
+        storedSalt,
+      );
+      // …and the legacy (fixed-salt) verification token is re-minted as a v6
+      // payload, together with its integrity record in one write.
+      expect(
+        secureStorage.storeVerificationTokenWithIntegrity,
+      ).toHaveBeenCalledWith(
+        "encrypted_data",
+        expect.stringMatching(/^[0-9a-f]{64}:[0-9a-f]{64}$/),
+      );
+    });
+
+    it("does not re-mint a token that is already salted (idempotent unlock)", async () => {
+      const { secureStorage } = await import("../../services/SecureStorage");
+      const { encryptionService } =
+        await import("../../services/EncryptionService");
+      secureStorageMock.hasSecret.mockImplementation((key: string) =>
+        Promise.resolve(key === "vault_verification"),
+      );
+      secureStorageMock.getVerificationToken.mockResolvedValue(
+        "v6:already-salted-token",
+      );
+      (encryptionService.decryptWithBytes as any).mockResolvedValue(
+        "bookmarkforge-verify-ok",
+      );
+
+      const result = await securityVault.unlock("correct_password");
+
+      expect(result).toBe(true);
+      expect(
+        secureStorage.storeVerificationTokenWithIntegrity,
+      ).not.toHaveBeenCalled();
+    });
+
+    it("keeps unlocking when the KDF salt cannot be provisioned", async () => {
+      const { encryptionService } =
+        await import("../../services/EncryptionService");
+      // Storage rejects the read (e.g. wrapped device key): the vault stays in
+      // legacy mode instead of failing the unlock.
+      (secureStorageMock.getSecret as any).mockImplementation(
+        (key: string) => {
+          if (key === "kdf_salt") {
+            return Promise.reject(new Error("unreadable"));
+          }
+          return Promise.resolve(null);
+        },
+      );
+
+      const result = await securityVault.unlock("correct_password");
+
+      expect(result).toBe(true);
+      expect(encryptionService.configureVaultKdfSalt).not.toHaveBeenCalled();
     });
 
     it("initializes zero-memory processor after successful unlock", async () => {
@@ -1022,9 +1120,19 @@ describe("SecurityVault", () => {
       (encryptionService.encryptWithBytes as any).mockRejectedValueOnce(
         new Error("Encryption failed"),
       );
-      // setSecret fails during rollback — the .catch(() => {}) swallows it
-      (secureStorage.setSecret as any).mockRejectedValueOnce(
-        new Error("Storage write failed"),
+      // Every payload write fails (the salt one excepted), so the failure AND
+      // the rollback writes both hit a dead storage — the .catch(() => {})
+      // must swallow both and still report a clean `false`. Expressed as a
+      // per-key rule rather than a `...Once()` so the test cannot depend on
+      // which write happens to come first.
+      (secureStorage.setSecret as any).mockImplementation(
+        (key: string, value: string) => {
+          if (key === "kdf_salt") {
+            secureStorageMock._store.set(key, value);
+            return Promise.resolve(undefined);
+          }
+          return Promise.reject(new Error("Storage write failed"));
+        },
       );
 
       const result = await securityVault.rotateMasterPassword(
@@ -1257,6 +1365,200 @@ describe("SecurityVault", () => {
         "bookmarkforge-verify-ok",
         expect.any(Uint8Array),
       );
+    });
+
+    it("re-mints the per-vault KDF salt and re-wraps every secret under it (A-1)", async () => {
+      const { encryptionService } =
+        await import("../../services/EncryptionService");
+      const { secureStorage } = await import("../../services/SecureStorage");
+      const OLD_SALT = "ab".repeat(16);
+
+      await securityVault.unlock("old_password123");
+      (secureStorage.getSecret as any).mockImplementation((key: string) =>
+        Promise.resolve(
+          key === "kdf_salt"
+            ? OLD_SALT
+            : key === "encrypted_api_key"
+              ? "original_api_encrypted"
+              : key === "encrypted_db_key"
+                ? "original_db_encrypted"
+                : null,
+        ),
+      );
+      (encryptionService.getVaultKdfSaltHex as any).mockReturnValue(OLD_SALT);
+      // Drop the calls made by unlock() itself, so the order assertions below
+      // describe the rotation and nothing else.
+      (secureStorage.setSecret as any).mockClear();
+      (encryptionService.configureVaultKdfSalt as any).mockClear();
+      (encryptionService.encryptWithBytes as any).mockClear();
+      (encryptionService.decryptWithBytes as any).mockClear();
+
+      const result = await securityVault.rotateMasterPassword(
+        "new_password_123",
+        "old_password123",
+      );
+      expect(result).toBe(true);
+
+      const setSecretCalls = (secureStorage.setSecret as any).mock
+        .calls as Array<[string, string]>;
+      const saltWrites = setSecretCalls.filter(([key]) => key === "kdf_salt");
+      expect(saltWrites).toHaveLength(1);
+      const newSalt = saltWrites[0]![1];
+      expect(newSalt).toMatch(/^[0-9a-f]{32}$/);
+      expect(newSalt).not.toBe(OLD_SALT);
+
+      // Persist-then-install, and persist BEFORE anything is re-wrapped: the
+      // vault must not write a single payload under a salt storage has not
+      // accepted yet.
+      expect(setSecretCalls[0]![0]).toBe("kdf_salt");
+      expect(encryptionService.configureVaultKdfSalt).toHaveBeenCalledWith(
+        newSalt,
+      );
+      expect(
+        (encryptionService.configureVaultKdfSalt as any).mock
+          .invocationCallOrder[0],
+      ).toBeLessThan(
+        (encryptionService.encryptWithBytes as any).mock
+          .invocationCallOrder[0]!,
+      );
+
+      // Every re-wrapped payload was re-encrypted AFTER the swap, i.e. under
+      // the new salt (`v6:` payloads embed it).
+      expect(secureStorage.setSecret).toHaveBeenCalledWith(
+        "encrypted_api_key",
+        "encrypted_data",
+      );
+      expect(secureStorage.setSecret).toHaveBeenCalledWith(
+        "encrypted_db_key",
+        "encrypted_data",
+      );
+
+      // A-1 / ADR-046: the committed rotation is announced ONCE to the sibling
+      // tabs, so the ones already open re-read the salt instead of keeping to
+      // write under the one the vault just retired.
+      const { announceVaultKdfSaltChange } = await import(
+        "../../services/security-vault/kdf-salt-sync"
+      );
+      expect(announceVaultKdfSaltChange).toHaveBeenCalledTimes(1);
+    });
+
+    it("restores the previous KDF salt when the rotation fails halfway (A-1 rollback)", async () => {
+      const { encryptionService } =
+        await import("../../services/EncryptionService");
+      const { secureStorage } = await import("../../services/SecureStorage");
+      const OLD_SALT = "cd".repeat(16);
+
+      await securityVault.unlock("old_password123");
+      (secureStorage.getSecret as any).mockImplementation((key: string) =>
+        Promise.resolve(
+          key === "kdf_salt"
+            ? OLD_SALT
+            : key === "encrypted_api_key"
+              ? "original_api_encrypted"
+              : key === "encrypted_db_key"
+                ? "original_db_encrypted"
+                : null,
+        ),
+      );
+      (encryptionService.getVaultKdfSaltHex as any).mockReturnValue(OLD_SALT);
+      (encryptionService.decryptWithBytes as any).mockResolvedValue("plaintext");
+      // First key re-wraps (under the new salt), second one fails.
+      (encryptionService.encryptWithBytes as any)
+        .mockResolvedValueOnce("re-encrypted_api")
+        .mockRejectedValueOnce(new Error("Encryption failed"));
+      (encryptionService.configureVaultKdfSalt as any).mockClear();
+
+      const result = await securityVault.rotateMasterPassword(
+        "new_password_123",
+        "old_password123",
+      );
+      expect(result).toBe(false);
+
+      const installed = (
+        (encryptionService.configureVaultKdfSalt as any).mock.calls as Array<
+          [string | null]
+        >
+      ).map((call) => call[0]);
+      // The new salt did reach the crypto layer…
+      expect(installed.some((salt) => salt !== null && salt !== OLD_SALT)).toBe(
+        true,
+      );
+      // …but the LAST thing installed is the previous salt: the session keeps
+      // the old password, so it must keep the derivation that password was
+      // stretched with.
+      expect(installed[installed.length - 1]).toBe(OLD_SALT);
+      // Both halves are restored — the stored one is what the next unlock uses.
+      expect(secureStorage.setSecret).toHaveBeenCalledWith(
+        "kdf_salt",
+        OLD_SALT,
+      );
+      expect(secureStorage.setSecret).toHaveBeenCalledWith(
+        "encrypted_api_key",
+        "original_api_encrypted",
+      );
+      expect(secureStorage.setSecret).toHaveBeenCalledWith(
+        "encrypted_db_key",
+        "original_db_encrypted",
+      );
+
+      // A-1 / ADR-046: no announcement. The sibling tabs never left the
+      // previous salt, and storage holds it again, so notifying them would
+      // only make them re-read a value nothing changed — and announcing while
+      // the rotation was still undoable is precisely what would leave them on
+      // an uncommitted salt.
+      const { announceVaultKdfSaltChange } = await import(
+        "../../services/security-vault/kdf-salt-sync"
+      );
+      expect(announceVaultKdfSaltChange).not.toHaveBeenCalled();
+    });
+
+    it("aborts before touching any payload when the new salt cannot be persisted (A-1)", async () => {
+      const { encryptionService } =
+        await import("../../services/EncryptionService");
+      const { secureStorage } = await import("../../services/SecureStorage");
+      const OLD_SALT = "ef".repeat(16);
+
+      await securityVault.unlock("old_password123");
+      (secureStorage.getSecret as any).mockImplementation((key: string) =>
+        Promise.resolve(
+          key === "kdf_salt"
+            ? OLD_SALT
+            : key === "encrypted_api_key"
+              ? "original_api_encrypted"
+              : key === "encrypted_db_key"
+                ? "original_db_encrypted"
+                : null,
+        ),
+      );
+      (encryptionService.getVaultKdfSaltHex as any).mockReturnValue(OLD_SALT);
+      (encryptionService.configureVaultKdfSalt as any).mockClear();
+      (encryptionService.encryptWithBytes as any).mockClear();
+      (encryptionService.decryptWithBytes as any).mockClear();
+      // The FIRST write of the rotation is the salt: make it fail.
+      (secureStorage.setSecret as any).mockRejectedValueOnce(
+        new Error("quota exceeded"),
+      );
+
+      const result = await securityVault.rotateMasterPassword(
+        "new_password_123",
+        "old_password123",
+      );
+      expect(result).toBe(false);
+      // Fail-closed: no payload was read, re-wrapped or written, and the salt
+      // the session continues on is the old one.
+      expect(encryptionService.decryptWithBytes).not.toHaveBeenCalled();
+      expect(encryptionService.encryptWithBytes).not.toHaveBeenCalled();
+      const installed = (
+        (encryptionService.configureVaultKdfSalt as any).mock.calls as Array<
+          [string | null]
+        >
+      ).map((call) => call[0]);
+      expect(installed.every((salt) => salt === OLD_SALT)).toBe(true);
+      expect(
+        securityVault.withMasterPasswordBytes(testCaller, (p) =>
+          p ? new TextDecoder().decode(p) : null,
+        ),
+      ).toBe("old_password123");
     });
   });
 

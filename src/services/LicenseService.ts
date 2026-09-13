@@ -80,6 +80,18 @@ interface SigningServiceResponse {
   error?: { code: string; message: string };
 }
 
+/** Server-authoritative answer of /api/license/entitlement. */
+interface EntitlementServiceResponse {
+  plan?: "pro" | "free";
+  source?: string;
+  /** Why the plan is free (EXPIRED, INVALID_SIGNATURE, VALIDATION_WINDOW…). */
+  reason?: string;
+  message?: string;
+  expiresAt?: number;
+  activationsLeft?: number;
+  error?: { code: string; message: string; reason?: string };
+}
+
 export class LicenseError extends Error {
   constructor(
     message: string,
@@ -309,6 +321,87 @@ class LicenseService {
     } catch {
       return null;
     }
+  }
+
+  /**
+   * Ask the DEPLOYMENT (not the browser) to resolve the entitlement.
+   *
+   * Pro has been a local conclusion so far: the client verified the signed
+   * payload it cached and decided on its own. This hands the same proof to
+   * the server, which verifies it with the committed public key and answers
+   * with the plan. It needs no license key (SecureStorage may still be locked)
+   * and no signing key, so every deployment can enforce it.
+   *
+   * Semantics — deliberately asymmetric:
+   *   - explicit `plan: "free"` (expired, revoked, unverifiable) → the local
+   *     state is cleared: this is what makes revocation bite;
+   *   - `plan: "pro"` → the signed payload remains the evidence, so nothing
+   *     local changes (a positive answer cannot promote an unverified cache);
+   *   - unreachable server or a 503 (the deployment's own key is unusable) →
+   *     the verified offline state is kept. A misconfigured server must never
+   *     revoke a paying user, and a network blip must not either.
+   *
+   * Throws LicenseError on transport/misconfiguration; callers keep grace.
+   */
+  async refreshEntitlementFromServer(): Promise<Entitlements> {
+    const proof = await this.getAiSessionProof();
+    if (!proof) {return this.getEntitlements();}
+
+    let response: Response;
+    try {
+      response = await firewalledFetch(
+        `${signingBase()}/entitlement`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(proof),
+        },
+        "LicenseService",
+      );
+    } catch (error) {
+      throw new LicenseError(
+        error instanceof Error ? error.message : "Network error",
+        "NETWORK",
+      );
+    }
+
+    let parsed: EntitlementServiceResponse | null = null;
+    try {
+      parsed = await readBoundedResponseJson<EntitlementServiceResponse>(
+        response,
+        MAX_LICENSE_RESPONSE_CHARS,
+      );
+    } catch (_error) {
+      await cancelResponseBody(response);
+      throw new LicenseError(
+        `Entitlement service responded ${response.status}`,
+        response.status === 503 ? "SERVER" : "NETWORK",
+      );
+    }
+    if (!response.ok) {
+      throw new LicenseError(
+        parsed?.error?.message ??
+          `Entitlement service responded ${response.status}`,
+        response.status === 503 ? "SERVER" : "NETWORK",
+      );
+    }
+    if (parsed?.plan === "pro") {
+      return this.getEntitlements();
+    }
+    if (parsed?.plan === "free") {
+      this.clearState();
+      auditLog
+        .record({
+          action: "license_validated",
+          target: "license",
+          result: "failure",
+          origin: "LicenseService",
+          context: { status: parsed.reason ?? "server_reported_free" },
+        })
+        .catch((err) => logger.warn("[License] audit failed", err));
+      return this.getEntitlements();
+    }
+    throw new LicenseError("Malformed entitlement response", "SERVER");
   }
 
   /** Per-install UUID consumed as the license server `instance_name`. Stable across reloads. */

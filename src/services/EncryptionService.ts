@@ -1,6 +1,6 @@
 // ADR-019: Argon2id migration / Security hardening (AES-GCM + Argon2id V4)
 import i18n from "../i18n";
-import { logger } from "../utils/logger";
+import { logger, redactSecrets } from "../utils/logger";
 import {
   decrypt,
   decryptBinary,
@@ -12,6 +12,7 @@ import {
   generateSecureSalt,
   hashString,
   resetSessionKeyCache,
+  setVaultKdfSalt,
 } from "../utils/crypto-core";
 
 /**
@@ -70,6 +71,14 @@ export class EncryptionService {
   private initPromise: Promise<void> | null = null;
   /** When false, crypto runs on the main thread (test/headless fallback). */
   private useWorker = !IS_TEST_ENV;
+  /**
+   * A-1: per-vault Argon2id salt (32 hex chars) currently installed, or null
+   * for legacy mode. Not key material — see crypto-core.setVaultKdfSalt — but
+   * it is retained across clear() so that re-initialising the worker (lock /
+   * reset) can never silently downgrade new writes to the legacy fixed salt.
+   * The security vault re-provisions it on every unlock.
+   */
+  private vaultKdfSaltHex: string | null = null;
 
   constructor() {
     this.initWorker();
@@ -114,6 +123,24 @@ export class EncryptionService {
         { type: "module" },
       );
       this.worker = worker;
+      if (this.vaultKdfSaltHex) {
+        // Re-apply the vault salt to every freshly created worker (worker
+        // replacement after clear(), or lazy re-init). Fire-and-forget: the
+        // worker's FIFO queue guarantees it lands before any later operation,
+        // and there is nothing to await (the salt setter cannot fail for a
+        // salt this class already validated).
+        try {
+          worker.postMessage({
+            id: crypto.randomUUID(),
+            type: "set-vault-salt",
+            payload: { salt: this.vaultKdfSaltHex },
+          });
+        } catch (error) {
+          logger.error("[EncryptionService] Failed to re-apply vault salt", {
+            error,
+          });
+        }
+      }
       worker.onmessage = (e) => {
         // Ignore messages queued by a worker that was already replaced.
         if (this.worker !== worker) {return;}
@@ -345,6 +372,11 @@ export class EncryptionService {
           return await hashString(payload!.input as string);
         case "generateSecureSalt":
           return generateSecureSalt();
+        case "set-vault-salt": {
+          const salt = payload?.salt;
+          setVaultKdfSalt(typeof salt === "string" ? salt : null);
+          return "ok";
+        }
         case "reset-session":
         case "clearDatabase":
           resetSessionKeyCache();
@@ -365,12 +397,51 @@ export class EncryptionService {
     }
   }
 
+  /**
+   * A-1: install (or clear) the per-vault Argon2id salt used by the v5/v6 and
+   * session-key derivations.
+   *
+   * Callers own persistence: the security vault stores the salt in
+   * SecureStorage and calls this on every unlock. Passing `null` restores
+   * legacy fixed-salt behaviour (only tests and locked-vault paths do this).
+   *
+   * @param saltHex - 32 lowercase hex chars, or null.
+   */
+  async configureVaultKdfSalt(saltHex: string | null): Promise<void> {
+    const normalized = saltHex === null ? null : saltHex.trim().toLowerCase();
+    // Fail loudly on malformed input: a silently ignored salt would leave the
+    // vault encrypting under the legacy fixed salt.
+    setVaultKdfSalt(normalized);
+    this.vaultKdfSaltHex = normalized;
+    if (this.worker && this.useWorker) {
+      try {
+        this.worker.postMessage({
+          id: crypto.randomUUID(),
+          type: "set-vault-salt",
+          payload: { salt: normalized },
+        });
+      } catch (error) {
+        // A failed post leaves the worker on the previous salt, which would
+        // mix formats within a session; surface it instead of hiding it.
+        logger.error("[EncryptionService] Failed to configure vault salt", {
+          error,
+        });
+        throw error instanceof Error ? error : new Error(String(error));
+      }
+    }
+  }
+
+  /** The vault KDF salt currently installed, or null in legacy mode. */
+  getVaultKdfSaltHex(): string | null {
+    return this.vaultKdfSaltHex;
+  }
+
   async encrypt(text: string, password: string): Promise<string> {
     await this.ensureInitialized();
     try {
       return await this.runInWorker("encrypt", { text, password }) as string;
     } catch (error) {
-      logger.error("[EncryptionService] Encryption failed", { error });
+      logger.error("[EncryptionService] Encryption failed", { error: redactSecrets(error instanceof Error ? error.message : String(error)) });
       throw new Error(localizedError("encryptionError"));
     }
   }
@@ -380,7 +451,7 @@ export class EncryptionService {
     try {
       return await this.runInWorker("encrypt", { text }, password) as string;
     } catch (error) {
-      logger.error("[EncryptionService] encryptWithBytes failed", { error });
+      logger.error("[EncryptionService] encryptWithBytes failed", { error: redactSecrets(error instanceof Error ? error.message : String(error)) });
       throw new Error(localizedError("encryptionError"));
     }
   }
@@ -390,7 +461,7 @@ export class EncryptionService {
     try {
       return await this.runInWorker("decrypt", { encryptedBase64, password }) as string;
     } catch (error) {
-      logger.error("[EncryptionService] Decryption failed", { error });
+      logger.error("[EncryptionService] Decryption failed", { error: redactSecrets(error instanceof Error ? error.message : String(error)) });
       throw new Error(localizedError("decryptionError"));
     }
   }
@@ -403,7 +474,7 @@ export class EncryptionService {
     try {
       return await this.runInWorker("decrypt", { encryptedBase64 }, password) as string;
     } catch (error) {
-      logger.error("[EncryptionService] decryptWithBytes failed", { error });
+      logger.error("[EncryptionService] decryptWithBytes failed", { error: redactSecrets(error instanceof Error ? error.message : String(error)) });
       throw new Error(localizedError("decryptionError"));
     }
   }
@@ -420,7 +491,7 @@ export class EncryptionService {
       }) as Uint8Array;
     } catch (error) {
       logger.error("[EncryptionService] SessionKey encryption failed", {
-        error,
+        error: redactSecrets(error instanceof Error ? error.message : String(error)),
       });
       throw new Error(localizedError("encryptionError"));
     }
@@ -438,7 +509,7 @@ export class EncryptionService {
       }) as Uint8Array;
     } catch (error) {
       logger.error("[EncryptionService] SessionKey decryption failed", {
-        error,
+        error: redactSecrets(error instanceof Error ? error.message : String(error)),
       });
       throw new Error(localizedError("decryptionError"));
     }
@@ -449,7 +520,7 @@ export class EncryptionService {
     try {
       return await this.runInWorker("encryptBinary", { data, password }) as Uint8Array;
     } catch (error) {
-      logger.error("[EncryptionService] Binary encryption failed", { error });
+      logger.error("[EncryptionService] Binary encryption failed", { error: redactSecrets(error instanceof Error ? error.message : String(error)) });
       throw new Error(localizedError("encryptionError"));
     }
   }
@@ -459,7 +530,7 @@ export class EncryptionService {
     try {
       return await this.runInWorker("decryptBinary", { data, password }) as Uint8Array;
     } catch (error) {
-      logger.error("[EncryptionService] Binary decryption failed", { error });
+      logger.error("[EncryptionService] Binary decryption failed", { error: redactSecrets(error instanceof Error ? error.message : String(error)) });
       throw new Error(localizedError("decryptionError"));
     }
   }
@@ -469,7 +540,7 @@ export class EncryptionService {
     try {
       return await this.runInWorker("deriveDbKey", { password, salt }) as string;
     } catch (error) {
-      logger.error("[EncryptionService] DB key derivation failed", { error });
+      logger.error("[EncryptionService] DB key derivation failed", { error: redactSecrets(error instanceof Error ? error.message : String(error)) });
       throw new Error(localizedError("encryptionError"));
     }
   }
@@ -483,7 +554,7 @@ export class EncryptionService {
       return await this.runInWorker("deriveDbKey", { salt }, password) as string;
     } catch (error) {
       logger.error("[EncryptionService] DB key derivation (bytes) failed", {
-        error,
+        error: redactSecrets(error instanceof Error ? error.message : String(error)),
       });
       throw new Error(localizedError("encryptionError"));
     }
@@ -494,20 +565,21 @@ export class EncryptionService {
     try {
       return await this.runInWorker("hash", { input: data }) as string;
     } catch (error) {
-      logger.error("[EncryptionService] Hash failed", { error });
+      logger.error("[EncryptionService] Hash failed", { error: redactSecrets(error instanceof Error ? error.message : String(error)) });
       throw new Error(localizedError("encryptionError"));
     }
   }
 
   /**
-   * Checks whether a string appears to be V4 or V5 encrypted data.
+   * Checks whether a string appears to be V4, V5 or V6 encrypted data.
    * Uses a strict base64 regex to avoid atob/btoa side effects and OOM risks.
    * Minimum body length of 40 base64 chars (~30 decoded bytes: 16 hkdf_salt
    * + 12 iv + 1+ ciphertext) prevents trivial spoofs like "v5:AAAA".
    */
   isEncrypted(str: string): boolean {
     if (typeof str !== "string" || !str) {return false;}
-    const prefix = str.startsWith("v5:") || str.startsWith("v4:");
+    const prefix =
+      str.startsWith("v6:") || str.startsWith("v5:") || str.startsWith("v4:");
     if (!prefix) {return false;}
     const body = str.slice(3);
     // Minimum: 16-byte salt/hkdf_salt + 12-byte IV + 1-byte ciphertext
@@ -521,7 +593,7 @@ export class EncryptionService {
     try {
       await this.runInWorker("clearDatabase", { userPassword });
     } catch (error) {
-      logger.error("[EncryptionService] Clear database failed", { error });
+      logger.error("[EncryptionService] Clear database failed", { error: redactSecrets(error instanceof Error ? error.message : String(error)) });
       throw new Error(localizedError("encryptionError"));
     }
   }

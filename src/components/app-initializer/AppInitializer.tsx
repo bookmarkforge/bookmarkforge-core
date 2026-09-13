@@ -11,6 +11,14 @@ import {
   stopScriptInjectionGuard,
 } from "../../utils/bundleIntegrity";
 import { securityVault } from "../../services/SecurityVault";
+// A-1 / ADR-046: the cross-tab salt listener. Imported statically on purpose —
+// this module is already reachable eagerly through SecurityVault (which owns the
+// announce side and is what the pre-unlock screen runs), so a dynamic import
+// here would be indirection, not lazy loading.
+import {
+  startVaultKdfSaltSync,
+  stopVaultKdfSaltSync,
+} from "../../services/security-vault/kdf-salt-sync";
 import { auditLog } from "../../services/AuditLogService";
 import { toast } from "sonner";
 import i18n from "../../i18n";
@@ -363,6 +371,19 @@ export function AppInitializer() {
       cancelled = true;
       service?.stop();
     };
+  }, [isLocked, isResetting]);
+
+  useEffect(() => {
+    // A-1 / ADR-046: while this tab is unlocked, follow the vault's KDF salt so
+    // a rotation performed in a sibling tab reaches this tab's crypto layer
+    // instead of leaving it writing under the salt the vault just retired.
+    // Unlocked-only by design: reading the stored salt needs the device key,
+    // and a locked tab has nothing to write with — its next unlock provisions
+    // the current salt anyway. Both calls are idempotent, so StrictMode's
+    // mount/unmount/mount cycle is harmless.
+    if (isResetting || isLocked) {return;}
+    startVaultKdfSaltSync();
+    return () => stopVaultKdfSaltSync();
   }, [isLocked, isResetting]);
 
   // Startup AI hint: when the user is offline or has no AI provider

@@ -35,6 +35,8 @@ import { BottomNav } from "../BottomNav";
 import { RouteErrorBoundary } from "../errors/RouteErrorBoundary";
 import { ConsentBanner, getStoredConsent, hasConsentDecision } from "../ConsentBanner";
 import { analyticsService } from "../../services/AnalyticsService";
+import { clearPendingClientEvents } from "../../services/clientEventReporter";
+import { initRemoteErrorReporting } from "../../telemetry/remoteErrorReporter";
 
 /**
  * Fresh lazy wrapper per attempt. React.lazy caches the loader promise, so a
@@ -152,10 +154,9 @@ export function MainApp() {
       if (consent.analytics) {
         analyticsService.start();
       }
-      // Error reporting and client events are already gated by their own
-      // isReportingEnabled() checks in errorReporter.ts and clientEventReporter.ts,
-      // which read LOCAL_ERROR_STORAGE. persistConsent() in ConsentBanner
-      // syncs that key, so no additional wiring is needed here.
+      // Error reporting and client events are independently gated by their
+      // own forge_consent_* keys. No shared legacy key is used for remote
+      // purposes, so no additional startup authorization is needed here.
     }
   }, []);
 
@@ -165,6 +166,12 @@ export function MainApp() {
       analyticsService.start();
     } else {
       analyticsService.stop();
+    }
+    if (consent.errorReporting) {
+      void initRemoteErrorReporting();
+    }
+    if (!consent.clientEvents) {
+      clearPendingClientEvents();
     }
   }, []);
 
@@ -378,9 +385,13 @@ export function MainApp() {
           the actual sidebar <aside> is correctly sized. */}
       <nav
         aria-label={t("app_mainNavigation", "Main navigation")}
-        aria-hidden={showSettings || location.pathname === t("routeSettings", "/settings")}
+        aria-hidden={
+          showSettings || showAnalysis ||
+          location.pathname === t("routeSettings", "/settings")
+        }
         style={
-          showSettings || location.pathname === t("routeSettings", "/settings")
+          showSettings || showAnalysis ||
+          location.pathname === t("routeSettings", "/settings")
             ? { visibility: "hidden" }
             : undefined
         }
@@ -391,8 +402,12 @@ export function MainApp() {
 
       {/* Main content area */}
       <div
-        aria-hidden={showSettings}
-        style={showSettings ? { visibility: "hidden" } : undefined}
+        aria-hidden={showSettings || showAnalysis}
+        style={
+          showSettings || showAnalysis
+            ? { visibility: "hidden" }
+            : undefined
+        }
         className="flex-1 flex flex-col min-h-screen md:ms-[220px] md:sidebar-collapsed:ms-[64px] transition-[margin-inline-start] duration-200 ease-[var(--ease-out)]"
       >
         {!isDistractionFree && (
@@ -478,17 +493,61 @@ export function MainApp() {
           <DeferredQuickCapture />
         </Suspense>
       </RouteErrorBoundary>
-      {/* Background components — fire-and-forget. RouteErrorBoundary catches
-          crashes silently so a broken SyncStatus doesn't blank the whole app. */}
+      {/* Background components — fire-and-forget. Each gets its own
+          RouteErrorBoundary so a broken SyncStatus doesn't blank
+          AIModelHydration, BackgroundProgress, or ReloadPrompt. */}
       <RouteErrorBoundary fallback={null}>
         <div
-          aria-hidden={showSettings}
-          style={showSettings ? { visibility: "hidden" } : undefined}
+          aria-hidden={showSettings || showAnalysis}
+          style={
+            showSettings || showAnalysis
+              ? { visibility: "hidden" }
+              : undefined
+          }
         >
           <Suspense fallback={null}>
             <AIModelHydration />
+          </Suspense>
+        </div>
+      </RouteErrorBoundary>
+      <RouteErrorBoundary fallback={null}>
+        <div
+          aria-hidden={showSettings || showAnalysis}
+          style={
+            showSettings || showAnalysis
+              ? { visibility: "hidden" }
+              : undefined
+          }
+        >
+          <Suspense fallback={null}>
             <SyncStatus />
+          </Suspense>
+        </div>
+      </RouteErrorBoundary>
+      <RouteErrorBoundary fallback={null}>
+        <div
+          aria-hidden={showSettings || showAnalysis}
+          style={
+            showSettings || showAnalysis
+              ? { visibility: "hidden" }
+              : undefined
+          }
+        >
+          <Suspense fallback={null}>
             <BackgroundProgress />
+          </Suspense>
+        </div>
+      </RouteErrorBoundary>
+      <RouteErrorBoundary fallback={null}>
+        <div
+          aria-hidden={showSettings || showAnalysis}
+          style={
+            showSettings || showAnalysis
+              ? { visibility: "hidden" }
+              : undefined
+          }
+        >
+          <Suspense fallback={null}>
             <ReloadPrompt />
           </Suspense>
         </div>
@@ -498,8 +557,12 @@ export function MainApp() {
         <ConsentBanner onConsentDecided={handleConsentDecided} />
       )}
       <div
-        aria-hidden={showSettings}
-        style={showSettings ? { visibility: "hidden" } : undefined}
+        aria-hidden={showSettings || showAnalysis}
+        style={
+          showSettings || showAnalysis
+            ? { visibility: "hidden" }
+            : undefined
+        }
       >
         <BottomNav
           activeTab={typedActiveTab}

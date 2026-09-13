@@ -21,6 +21,7 @@ import {
 } from "../../services/AnalyticsService";
 import { getStoredConsent } from "../ConsentBanner";
 import { toast } from "sonner";
+import { logger } from "../../utils/logger";
 
 // ── Reusable sub-components ────────────────────────────────────────
 
@@ -138,7 +139,7 @@ export const AnalyticsDiagnostics: React.FC<AnalyticsDiagnosticsProps> = ({
       const data = await analyticsService.getSnapshot();
       setSnapshot(data);
     } catch (err) {
-      console.error("[AnalyticsDiagnostics] Failed to load snapshot", err);
+      logger.error("[AnalyticsDiagnostics] Failed to load snapshot", { error: err });
     } finally {
       setLoading(false);
     }

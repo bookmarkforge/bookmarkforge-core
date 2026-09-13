@@ -1644,6 +1644,24 @@ export class UniversalImporter {
         if (!attachmentByBasename.has(basename)) {
           attachmentByBasename.set(basename, bytes);
         }
+      } else {
+        // Non-markdown, non-attachment entries still consume decompressed
+        // memory during extraction. Account for their size toward the
+        // cumulative limit to prevent ZIP bombs that use many small
+        // non-matching files to bypass the per-entry check.
+        const entryBytes = await entry.async("uint8array");
+        if (
+          entryBytes.length > UniversalImporter.MAX_ZIP_ENTRY_BYTES ||
+          totalUncompressedBytes > UniversalImporter.MAX_ZIP_UNCOMPRESSED_BYTES - entryBytes.length
+        ) {
+          return {
+            success: false,
+            importedCount: 0,
+            skippedCount: 0,
+            error: "ZIP contents exceed the safety size limit.",
+          };
+        }
+        totalUncompressedBytes += entryBytes.length;
       }
     }
     if (notes.length === 0) {

@@ -257,6 +257,8 @@ export function useGraphSimulation({
   const zoomRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null);
   const simulationRef = useRef<ReturnType<typeof forceSimulation> | null>(null);
   const renderGenerationRef = useRef(0);
+  const onNodeClickRef = useRef(onNodeClick);
+  onNodeClickRef.current = onNodeClick;
   const renderGraph = useCallback(
     async (filter = "", sourceData?: GraphData) => {
       const generation = ++renderGenerationRef.current;
@@ -294,6 +296,9 @@ export function useGraphSimulation({
         simulationRef.current?.stop();
         const svg = select(svgRef.current);
         svg.selectAll("*").remove();
+        // Remove any previous zoom listeners to prevent accumulation when
+        // renderGraph is called multiple times without the unmount cleanup.
+        svg.on(".zoom", null);
 
         const g = svg.append("g");
 
@@ -354,7 +359,7 @@ export function useGraphSimulation({
           .attr("fill", "var(--text-secondary)");
 
         nodeGroup.on("click", (_event: unknown, d: GraphNode) => {
-          onNodeClick?.(d.type, d.id);
+          onNodeClickRef.current?.(d.type, d.id);
         });
 
         nodeGroup
@@ -383,7 +388,7 @@ export function useGraphSimulation({
         return { nodes: 0, links: 0, clusters: 0 };
       }
     },
-    [db, onNodeClick],
+    [db],
   );
 
   useEffect(() => {

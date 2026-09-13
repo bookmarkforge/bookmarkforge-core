@@ -37,6 +37,16 @@ export const useLicenseStore = create<LicenseStoreState>((set) => ({
     if (entitlements.plan === "pro" && entitlements.grace) {
       let refreshFailed = false;
       try {
+        // Server first: it needs no license key (the vault may still be
+        // locked) and produces the authoritative answer, including the
+        // downgrade when the proof is expired, revoked or unverifiable.
+        const serverVerdict = await licenseService.refreshEntitlementFromServer();
+        set({ entitlements: serverVerdict });
+        if (serverVerdict.plan === "free") {
+          return;
+        }
+        // Still Pro per the server: refresh the signed evidence itself so the
+        // offline grace window starts over from a freshly validated payload.
         await licenseService.validateInBackground();
       } catch (err) {
         // Boot calls this method without awaiting it. Never leak a provider

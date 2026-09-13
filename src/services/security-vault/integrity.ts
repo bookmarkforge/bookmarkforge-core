@@ -114,11 +114,13 @@ export async function createVerificationToken(password: string): Promise<void> {
     // encryptWithBytes zeroizes the transferred buffer (ownership
     // contract in crypto-core.ts). Pass a fresh copy so passwordBytes
     // survives for the HMAC integrity derivation below.
+    // A-1: when a per-vault KDF salt is installed (the security vault installs
+    // it before calling this, on both setup and rotation) the token is written
+    // as a self-describing v6 payload; otherwise it stays v5.
     const ciphertext = await encryptionService.encryptWithBytes(
       VERIFICATION_PLAINTEXT,
       new Uint8Array(passwordBytes),
     );
-    await secureStorage.storeVerificationToken(ciphertext);
 
     // S1: generate a fresh integrity nonce and HMAC over the ciphertext.
     // The record is stored raw (non-secret: public nonce + password-derived
@@ -135,16 +137,25 @@ export async function createVerificationToken(password: string): Promise<void> {
       hmacKey,
       new TextEncoder().encode(ciphertext),
     );
+    // Zeroize passwordBytes immediately after HMAC derivation — no further
+    // use. This shrinks the exposure window: the bytes no longer survive
+    // during the IDB write below.
+    passwordBytes.fill(0);
     const nonceHex = Array.from(nonce, (b) =>
       b.toString(16).padStart(2, "0"),
     ).join("");
     const hmacHex = Array.from(new Uint8Array(hmacSig), (b) =>
       b.toString(16).padStart(2, "0"),
     ).join("");
-    await secureStorage.storeVerificationIntegrity(
+    // Token + HMAC go in ONE transaction: verifyPassword() rejects an unlock
+    // whose stored token does not match the record, so a crash between two
+    // separate writes would leave a vault no password can open.
+    await secureStorage.storeVerificationTokenWithIntegrity(
+      ciphertext,
       `${nonceHex}:${hmacHex}`,
     );
   } finally {
+    // Defense-in-depth: zeroize even if the early fill(0) already ran.
     passwordBytes.fill(0);
   }
 }

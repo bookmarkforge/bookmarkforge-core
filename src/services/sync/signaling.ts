@@ -66,6 +66,18 @@ function isBoundedSignalFrame(value: unknown): value is string {
  * accumulating in the serial chain indefinitely (audit: sync client).
  * Exported for the unit tests.
  */
+/** Options for {@link createSignalingSocketFactory}. */
+export interface SignalingSocketFactoryOptions {
+  /** WebSocket constructor to instantiate. Injectable for tests. */
+  webSocketImpl?: typeof WebSocket;
+  /**
+   * The self-hosted signaling server this deployment configured
+   * (`VITE_P2P_SIGNALING_URL`). The room secret is sent only to this origin;
+   * `null`/absent means public-relay mode and no secret is sent at all.
+   */
+  selfHostedSignalingUrl?: string | null;
+}
+
 export const SIGNAL_INIT_TIMEOUT_MS = 10_000;
 /** Maximum number of signal frames retained while waiting for server init. */
 export const SIGNAL_QUEUE_LIMIT = 64;
@@ -75,6 +87,8 @@ const MAX_SIGNAL_ROOM_ID_LENGTH = 64;
 const MAX_SIGNAL_SECRET_LENGTH = 128;
 const MAX_SIGNAL_PEER_ID_LENGTH = 128;
 const SIGNAL_CONTROL_CHARACTERS = /[\u0000-\u001f\u007f-\u009f]/;
+/** WebSocket schemes accepted for the "is this the configured server?" match. */
+const WS_PROTOCOLS = new Set(["ws:", "wss:"]);
 function toHex(buffer: ArrayBuffer): string {
   return Array.from(new Uint8Array(buffer), (b) =>
     b.toString(16).padStart(2, "0"),
@@ -112,6 +126,57 @@ export async function deriveClientSignalKey(
 }
 
 /**
+ * Domain separator for the room-name HMAC. Distinct from
+ * `bookmarkforge-signal-auth:` so the same room secret can never produce the
+ * same value for both purposes. The `v1` tag is a migration hook: a future
+ * derivation change can ship a `v2` topic alongside `v1` instead of silently
+ * splitting live rooms.
+ */
+export const SYNC_TOPIC_DOMAIN = "bookmarkforge-sync-topic:v1";
+
+/**
+ * SECURITY (A-2): derive the signaling room name (RxDB `topic`) as
+ * HMAC-SHA256(roomSecret, `${SYNC_TOPIC_DOMAIN}:${roomId}:${collectionName}`)
+ * hex-encoded, instead of the readable `${roomId}-${collectionName}`.
+ *
+ * Why the topic must not be derivable from the room ID alone: the topic IS the
+ * room name handed to the signaling server, and the public RxDB/PubNub relays
+ * treat the room name as the whole capability — any peer that learns it can
+ * join the mesh and receive replicated documents. Sending the raw room ID
+ * therefore published the capability to a third party (and let anyone who saw
+ * it correlate, or join, the session). Keyed with the shared 256-bit room
+ * secret, the topic is indistinguishable from random to the relay, to passive
+ * observers, and to peers that know only the room ID.
+ *
+ * The collection name stays inside the HMAC input (never in the clear) so each
+ * collection still replicates in its own room and peers never exchange
+ * documents from different schemas.
+ *
+ * The output is exactly 64 lowercase hex characters, which satisfies both the
+ * client credential guard (`MAX_SIGNAL_ROOM_ID_LENGTH`) and the server's
+ * `ROOM_ID_PATTERN`.
+ */
+export async function deriveSyncTopic(
+  roomSecret: string,
+  roomId: string,
+  collectionName: string,
+): Promise<string> {
+  const secretKey = await crypto.subtle.importKey(
+    "raw",
+    TEXT_ENCODER.encode(roomSecret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    secretKey,
+    TEXT_ENCODER.encode(`${SYNC_TOPIC_DOMAIN}:${roomId}:${collectionName}`),
+  );
+  return toHex(signature);
+}
+
+/**
  * Canonical payload the server re-derives for verification (signal branch in
  * server/src/index.ts). Key order and `?? ""` / `?? null` normalization MUST
  * match the server exactly or the HMAC never verifies.
@@ -130,6 +195,41 @@ export function canonicalSignalPayload(
 }
 
 /**
+ * True when `socketUrl` targets EXACTLY the self-hosted signaling server this
+ * deployment configured — the only origin allowed to receive the room secret.
+ *
+ * Compared by origin (scheme + host + port), never by string equality: the
+ * room name normally travels in the path or query, so `wss://host` and
+ * `wss://host/<topic>` are the same server. Any other origin — a different
+ * host, a different port, a scheme change, the public rxdb.info/PubNub relays,
+ * or an unparseable URL — is not that server and must not receive the secret.
+ *
+ * @internal exported for tests
+ */
+export function isSelfHostedSignalingUrl(
+  socketUrl: string,
+  configuredUrl: string | null | undefined,
+): boolean {
+  if (!configuredUrl) {return false;}
+  let socket: URL;
+  let configured: URL;
+  try {
+    socket = new URL(socketUrl);
+    configured = new URL(configuredUrl);
+  } catch {
+    // A URL we cannot parse is never "the configured server".
+    return false;
+  }
+  if (!WS_PROTOCOLS.has(socket.protocol)) {return false;}
+  if (!WS_PROTOCOLS.has(configured.protocol)) {return false;}
+  return (
+    socket.protocol === configured.protocol &&
+    socket.hostname === configured.hostname &&
+    socket.port === configured.port
+  );
+}
+
+/**
  * SECURITY (audit #4): WebSocket constructor (callable with `new`, as RxDB's
  * simple-peer handler requires) that signs every outgoing `signal` with an
  * HMAC-SHA256 `signalAuth` derived from the per-session room secret,
@@ -139,13 +239,25 @@ export function canonicalSignalPayload(
  * peerId the HMAC is bound to) are queued until it arrives; a closed socket
  * invalidates queued work instead of sending stale frames.
  *
- * @param webSocketImpl Injectable for tests (default: global WebSocket).
+ * SECURITY (A-3): the room secret is injected into the `join` frame ONLY when
+ * the socket's origin is the configured self-hosted signaling server
+ * (`options.selfHostedSignalingUrl`, see `isSelfHostedSignalingUrl`). The
+ * secret is the room capability — it keys the derived room name (A-2) and every
+ * `signalAuth` — so a third-party relay that receives it would hold the room.
+ * Public relays never get it; the derived room name alone keeps them working.
+ *
+ * @param options.webSocketImpl Injectable for tests (default: global WebSocket).
+ * @param options.selfHostedSignalingUrl The deployment's self-hosted signaling
+ *   server, or null/undefined for public-relay mode — in which case no secret
+ *   is ever sent (fail closed).
  */
 export function createSignalingSocketFactory(
   roomSecret: string,
   roomId: string,
-  webSocketImpl: typeof WebSocket = globalThis.WebSocket,
+  options: SignalingSocketFactoryOptions = {},
 ): (url: string) => WebSocket {
+  const webSocketImpl = options.webSocketImpl ?? globalThis.WebSocket;
+  const selfHostedSignalingUrl = options.selfHostedSignalingUrl ?? null;
   return function makeSignalingSocket(url: string): WebSocket {
     if (
       roomId.length === 0 ||
@@ -161,6 +273,14 @@ export function createSignalingSocketFactory(
     // socket to a remote signaling host, regardless of how the URL reached
     // this constructor.
     assertSecureWsUrl(url, "signaling");
+    // SECURITY (A-3): decided once per socket, from the URL the socket is
+    // actually opened against — not from a flag the caller could get wrong. A
+    // relay that is not the configured self-hosted server never sees the room
+    // secret, even if a future caller hands this factory its URL by mistake.
+    const shareRoomSecret = isSelfHostedSignalingUrl(
+      url,
+      selfHostedSignalingUrl,
+    );
     const ws = new webSocketImpl(url);
     const nativeSend = ws.send.bind(ws);
 
@@ -300,6 +420,22 @@ export function createSignalingSocketFactory(
 
       if (msg && typeof msg === "object") {
         if (msg.type === "join" && typeof msg.room === "string") {
+          if (!shareRoomSecret) {
+            // SECURITY (A-3): public relay (or any origin that is not the
+            // configured self-hosted signaling server). Forward the join
+            // UNCHANGED — re-serializing it without the secret would be equal
+            // today but would start leaking the moment a field is added. The
+            // relay only gets the opaque derived room name; the room stays
+            // unopened to it because it holds no secret to key anything with.
+            try {
+              nativeSend(data);
+            } catch (sendError) {
+              logger.warn("[SyncService] Signaling send failed", {
+                error: sendError,
+              });
+            }
+            return;
+          }
           // Synchronous fast path: inject roomSecret and forward
           // immediately (the contract RxDB's simple-peer handler and the
           // signaling server rely on).

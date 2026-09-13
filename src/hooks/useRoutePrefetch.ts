@@ -10,11 +10,16 @@ export function useRoutePrefetch(options: UseRoutePrefetchOptions = {}) {
   const { enabled = true, routes = {} } = options;
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Store routes in a ref to avoid re-running the effect when the caller
+  // passes a new object reference (inline object literal in JSX).
+  const routesRef = useRef(routes);
+  routesRef.current = routes;
+
   useEffect(() => {
     if (!enabled) {return;}
 
     // Configure route prefetcher
-    routePrefetcher.config.routes = routes;
+    routePrefetcher.config.routes = routesRef.current;
     routePrefetcher.config.enabled = true;
 
     // Start observing for prefetching opportunities
@@ -25,7 +30,7 @@ export function useRoutePrefetch(options: UseRoutePrefetchOptions = {}) {
     return () => {
       routePrefetcher.disconnect();
     };
-  }, [enabled, routes]);
+  }, [enabled]);
 
   const prefetchRoute = (route: string) => {
     routePrefetcher.prefetchRoute(route);

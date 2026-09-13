@@ -5,6 +5,9 @@ import React from "react";
 
 const mockWebLLM = vi.hoisted(() => ({
   onProgress: vi.fn(() => vi.fn()),
+  init: vi.fn(),
+  canRunLocalLLM: vi.fn(),
+  isWebGPUSupported: vi.fn(),
 }));
 
 vi.mock("../../services/ai/WebLLMService", () => ({
@@ -139,5 +142,25 @@ describe("AIModelHydration", () => {
     };
     render(<AIModelHydration />);
     expect(screen.getByText("app_localFirstAi")).toBeTruthy();
+  });
+
+  it("is purely passive: never starts the engine or probes capability", async () => {
+    // The hydration card must only subscribe to progress events — it must
+    // never itself call init(), canRunLocalLLM() or isWebGPUSupported()
+    // (those are ProviderManager.warmup()/UI-gate concerns, both gated on
+    // the strict capability check). A regression that adds an engine call
+    // here would fail loudly instead of downloading a model in the UI.
+    mockStore = {
+      isDownloading: true,
+      isWarmingUp: false,
+      progressValue: 0.5,
+      progressText: "Downloading...",
+      error: null,
+    };
+    render(<AIModelHydration />);
+    await waitFor(() => expect(mockWebLLM.onProgress).toHaveBeenCalled());
+    expect(mockWebLLM.init).not.toHaveBeenCalled();
+    expect(mockWebLLM.canRunLocalLLM).not.toHaveBeenCalled();
+    expect(mockWebLLM.isWebGPUSupported).not.toHaveBeenCalled();
   });
 });

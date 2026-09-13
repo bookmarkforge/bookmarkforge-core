@@ -29,6 +29,7 @@ const store = new Map<string, string>();
 vi.mock("../../store/safeStorage", () => ({
   safeGet: (key: string) => store.get(key) ?? null,
   safeSet: (key: string, value: string) => { store.set(key, value); },
+  safeRemove: (key: string) => { store.delete(key); },
 }));
 
 // ── Test suite ─────────────────────────────────────────────────────
@@ -90,9 +91,12 @@ describe("ConsentBanner", () => {
     fireEvent.click(screen.getByRole("button", { name: /Accept All/i }));
     expect(store.get(STORAGE_KEYS.CONSENT_DECISION_MADE)).toBe("true");
     expect(store.get(STORAGE_KEYS.CONSENT_ANALYTICS)).toBe("true");
-    expect(store.get(STORAGE_KEYS.CONSENT_ERROR_REPORTING)).toBe("true");
+    expect(store.get(STORAGE_KEYS.CONSENT_SENTRY)).toBe("true");
     expect(store.get(STORAGE_KEYS.CONSENT_CLIENT_EVENTS)).toBe("true");
-    expect(store.get(STORAGE_KEYS.LOCAL_ERROR_STORAGE)).toBe("true");
+    // ADR-030: a complete modern decision removes the legacy keys so they
+    // can never resurrect an old decision.
+    expect(store.has(STORAGE_KEYS.CONSENT_ERROR_REPORTING)).toBe(false);
+    expect(store.has(STORAGE_KEYS.LOCAL_ERROR_STORAGE)).toBe(false);
   });
 
   it("persists consent to storage on Reject All", () => {
@@ -100,9 +104,10 @@ describe("ConsentBanner", () => {
     fireEvent.click(screen.getByRole("button", { name: /Reject All/i }));
     expect(store.get(STORAGE_KEYS.CONSENT_DECISION_MADE)).toBe("true");
     expect(store.get(STORAGE_KEYS.CONSENT_ANALYTICS)).toBe("false");
-    expect(store.get(STORAGE_KEYS.CONSENT_ERROR_REPORTING)).toBe("false");
+    expect(store.get(STORAGE_KEYS.CONSENT_SENTRY)).toBe("false");
     expect(store.get(STORAGE_KEYS.CONSENT_CLIENT_EVENTS)).toBe("false");
-    expect(store.get(STORAGE_KEYS.LOCAL_ERROR_STORAGE)).toBe("false");
+    expect(store.has(STORAGE_KEYS.CONSENT_ERROR_REPORTING)).toBe(false);
+    expect(store.has(STORAGE_KEYS.LOCAL_ERROR_STORAGE)).toBe(false);
   });
 
   it("expands preferences when Manage preferences is clicked", () => {
@@ -125,9 +130,9 @@ describe("ConsentBanner", () => {
     fireEvent.click(screen.getByRole("button", { name: /Save Preferences/i }));
     
     expect(mockOnConsentDecided).toHaveBeenCalledWith({
-      analytics: false,
-      errorReporting: true,
-      clientEvents: true,
+      analytics: true,
+      errorReporting: false,
+      clientEvents: false,
     });
   });
 

@@ -108,8 +108,7 @@ async function persistChatMessage(
 function classifyChatError(error: unknown): ChatErrorAction {
   const message = String(error).toLowerCase();
   if (
-    typeof navigator !== "undefined" &&
-    !navigator.onLine ||
+    (typeof navigator !== "undefined" && !navigator.onLine) ||
     /network|offline|fetch|timeout|connection/.test(message)
   ) {
     return "offline";

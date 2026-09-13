@@ -24,8 +24,13 @@ describe("isRemoteErrorReportingConsented", () => {
     expect(isRemoteErrorReportingConsented()).toBe(false);
   });
 
-  it("honors legacy keys only when the current key is unset", () => {
+  it("does not treat local error storage as remote consent", () => {
     localStorage.setItem("bmf_local_error_storage", "true");
+    expect(isRemoteErrorReportingConsented()).toBe(false);
+  });
+
+  it("honors the pre-banner broad telemetry key only when current consent is unset", () => {
+    localStorage.setItem("bmf_telemetry_optin", "true");
     expect(isRemoteErrorReportingConsented()).toBe(true);
     localStorage.setItem(CONSENT_KEY, "false");
     expect(isRemoteErrorReportingConsented()).toBe(false);
@@ -82,6 +87,7 @@ describe("initRemoteErrorReporting", () => {
   it("initializes Sentry with the DSN and a sanitizer when configured", async () => {
     vi.resetModules();
     vi.stubEnv("VITE_SENTRY_DSN", "https://abc@o1.ingest.sentry.io/123");
+    localStorage.setItem(CONSENT_KEY, "true");
     const { init } = await import("@sentry/browser");
     const { initRemoteErrorReporting } = await import("../../telemetry/remoteErrorReporter");
     await initRemoteErrorReporting();

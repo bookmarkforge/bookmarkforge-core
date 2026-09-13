@@ -14,6 +14,28 @@ vi.mock("../../\.\./services/ai/aiSession", () => ({
   ) => request(options),
 }));
 
+// getApiKey falls back to securityVault/SecureStorage when aiManager has
+// no key. Both are mocked to exercise those paths without the real vault.
+const mockSecurityVault = vi.hoisted(() => ({
+  onLock: vi.fn(),
+  onUnlock: vi.fn(),
+  isLocked: vi.fn(() => false),
+  decryptSecret: vi.fn().mockResolvedValue(null),
+  encryptSecret: vi.fn().mockResolvedValue(undefined),
+}));
+vi.mock("../../\.\./services/SecurityVault", () => ({
+  securityVault: mockSecurityVault,
+  SECURE_STORAGE_KEYS: { API_KEY: "encrypted_api_key" },
+}));
+
+const mockSecureStorage = vi.hoisted(() => ({
+  getSecret: vi.fn().mockResolvedValue(null),
+  deleteSecret: vi.fn().mockResolvedValue(undefined),
+}));
+vi.mock("../../\.\./services/SecureStorage", () => ({
+  secureStorage: mockSecureStorage,
+}));
+
 // TTS tests exercise audio behavior, not locale transport. The real i18n
 // module starts HttpBackend and fetches /locales/en.json during import, which
 // would contaminate tests that assert data URLs never use network fetch.
@@ -1479,6 +1501,986 @@ describe("TTSService", () => {
       }
 
       expect(speakSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe("coverage de ramas adicionales", () => {
+    // Earlier describes leave spies unrestored (e.g. generateAudio); this
+    // block relies on the real flow, so restore all spies before each test.
+    beforeEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    describe("init - indexedDB upgrade and early-return paths", () => {
+      // Same recipe as "audio cache resiliencia": a fresh module so the
+      // AudioCache starts with db=null (beforeEach already opened the original).
+      async function loadFreshService(): Promise<TTSClass> {
+        vi.resetModules();
+        vi.stubGlobal("URL", RealURL);
+        const { setFirewallDisabled } = await import(
+          "../../../utils/networkFirewall"
+        );
+        setFirewallDisabled(true);
+        const { TTSService: FreshTTS } = await import(
+          "../../../services/ai/TTSService"
+        );
+        return new FreshTTS();
+      }
+
+      function mockOpenWith(autoFireSuccess = false, result?: any) {
+        let onsuccess: ((e: Event) => void) | undefined;
+        let upgradeneeded: ((e: any) => void) | undefined;
+        const openSpy = vi.spyOn(indexedDB, "open").mockImplementation(() => {
+          const req: any = { result };
+          Object.defineProperty(req, "onupgradeneeded", {
+            set: (v: any) => {
+              upgradeneeded = v;
+            },
+          });
+          Object.defineProperty(req, "onsuccess", {
+            set: (v: any) => {
+              onsuccess = v;
+              if (autoFireSuccess) {
+                setTimeout(() => v?.(new Event("success")), 0);
+              }
+            },
+          });
+          return req;
+        });
+        return {
+          openSpy,
+          fireSuccess: () => onsuccess?.(new Event("success")),
+          fireUpgrade: (e: any) => upgradeneeded?.(e),
+        };
+      }
+
+      function successDb(transactionImpl?: any) {
+        return {
+          onversionchange: null,
+          transaction:
+            transactionImpl ??
+            (() => {
+              throw new Error("no tx");
+            }),
+        };
+      }
+
+      it("creates the object store and timestamp index on first upgrade", async () => {
+        const createIndex = vi.fn();
+        const createObjectStore = vi.fn(() => ({ createIndex }));
+        const { openSpy, fireUpgrade } = mockOpenWith(true, successDb());
+        try {
+          const fresh = await loadFreshService();
+          const clearing = fresh.clearCache();
+          fireUpgrade({
+            target: {
+              result: {
+                objectStoreNames: { contains: () => false },
+                createObjectStore,
+              },
+              transaction: null,
+            },
+          });
+          await clearing;
+          expect(createObjectStore).toHaveBeenCalledWith("audio", {
+            keyPath: "key",
+          });
+          expect(createIndex).toHaveBeenCalledWith("timestamp", "timestamp", {
+            unique: false,
+          });
+        } finally {
+          openSpy.mockRestore();
+        }
+      });
+
+      it("adds the timestamp index when the store exists without it", async () => {
+        const createIndex = vi.fn();
+        const createObjectStore = vi.fn();
+        const { openSpy, fireUpgrade } = mockOpenWith(true, successDb());
+        try {
+          const fresh = await loadFreshService();
+          const clearing = fresh.clearCache();
+          fireUpgrade({
+            target: {
+              result: {
+                objectStoreNames: { contains: () => true },
+                createObjectStore,
+              },
+              transaction: {
+                objectStore: () => ({
+                  indexNames: { contains: () => false },
+                  createIndex,
+                }),
+              },
+            },
+          });
+          await clearing;
+          expect(createIndex).toHaveBeenCalledWith("timestamp", "timestamp", {
+            unique: false,
+          });
+          expect(createObjectStore).not.toHaveBeenCalled();
+        } finally {
+          openSpy.mockRestore();
+        }
+      });
+
+      it("skips index creation when the store already has it", async () => {
+        const createIndex = vi.fn();
+        const { openSpy, fireUpgrade } = mockOpenWith(true, successDb());
+        try {
+          const fresh = await loadFreshService();
+          const clearing = fresh.clearCache();
+          fireUpgrade({
+            target: {
+              result: {
+                objectStoreNames: { contains: () => true },
+                createObjectStore: vi.fn(),
+              },
+              transaction: {
+                objectStore: () => ({
+                  indexNames: { contains: () => true },
+                  createIndex,
+                }),
+              },
+            },
+          });
+          await clearing;
+          expect(createIndex).not.toHaveBeenCalled();
+        } finally {
+          openSpy.mockRestore();
+        }
+      });
+
+      it("closes the database and reopens on versionchange", async () => {
+        const closeSpy = vi.fn();
+        const db = {
+          onversionchange: null,
+          close: closeSpy,
+          transaction: () => {
+            throw new Error("no tx");
+          },
+        };
+        const { openSpy } = mockOpenWith(true, db);
+        try {
+          const fresh = await loadFreshService();
+          await fresh.clearCache();
+          expect(openSpy).toHaveBeenCalledTimes(1);
+          (db as any).onversionchange?.();
+          expect(closeSpy).toHaveBeenCalled();
+          await fresh.clearCache();
+          expect(openSpy).toHaveBeenCalledTimes(2);
+        } finally {
+          openSpy.mockRestore();
+        }
+      });
+
+      it("does not reopen the database when it is already open", async () => {
+        const { openSpy } = mockOpenWith(true, successDb());
+        try {
+          const fresh = await loadFreshService();
+          await fresh.clearCache();
+          await fresh.clearCache();
+          expect(openSpy).toHaveBeenCalledTimes(1);
+        } finally {
+          openSpy.mockRestore();
+        }
+      });
+
+      it("shares a single open across concurrent clears", async () => {
+        const { openSpy, fireSuccess } = mockOpenWith(false, successDb());
+        try {
+          const fresh = await loadFreshService();
+          expect(openSpy).toHaveBeenCalledTimes(1); // constructor
+          const first = fresh.clearCache();
+          const second = fresh.clearCache();
+          expect(openSpy).toHaveBeenCalledTimes(1); // initPromise dedup
+          fireSuccess();
+          await Promise.all([first, second]);
+          expect(openSpy).toHaveBeenCalledTimes(1);
+        } finally {
+          openSpy.mockRestore();
+        }
+      });
+
+      it("skips the clear transaction when the cache generation rotated mid-flight", async () => {
+        const transactionSpy = vi.fn(() => {
+          throw new Error("no tx");
+        });
+        const { openSpy, fireSuccess } = mockOpenWith(
+          false,
+          successDb(transactionSpy),
+        );
+        try {
+          const fresh = await loadFreshService();
+          const rotate = mockSecurityVault.onLock.mock.calls.at(-1)?.[0];
+          const clearing = fresh.clearCache();
+          rotate?.();
+          fireSuccess();
+          await clearing;
+          expect(transactionSpy).toHaveBeenCalledTimes(1);
+        } finally {
+          openSpy.mockRestore();
+        }
+      });
+
+      it("settles once when the transaction fires multiple completion events", async () => {
+        let tx: any;
+        const openSpy = vi.spyOn(indexedDB, "open").mockImplementation(() => {
+          const req: any = {
+            result: {
+              onversionchange: null,
+              transaction: () => {
+                tx = {
+                  objectStore: () => ({ clear: vi.fn() }),
+                  oncomplete: null,
+                  onerror: null,
+                  onabort: null,
+                };
+                // Fire oncomplete as soon as clearStore assigns it.
+                Object.defineProperty(tx, "oncomplete", {
+                  get: () => tx._oncomplete,
+                  set: (v: any) => {
+                    tx._oncomplete = v;
+                    setTimeout(() => v?.(new Event("complete")), 0);
+                  },
+                });
+                return tx;
+              },
+            },
+          };
+          Object.defineProperty(req, "onsuccess", {
+            set: (v: any) =>
+              setTimeout(() => v?.(new Event("success")), 0),
+          });
+          return req;
+        });
+        try {
+          const fresh = await loadFreshService();
+          await fresh.clearCache();
+          // A second transaction event after finish already ran must not hang.
+          tx.onerror?.(new Event("error"));
+          tx.onabort?.(new Event("abort"));
+          await fresh.clearCache();
+        } finally {
+          openSpy.mockRestore();
+        }
+      });
+    });
+
+    describe("getApiKey - SecureStorage and vault fallbacks", () => {
+      beforeEach(() => {
+        mockGetApiKey.mockReturnValue(null);
+        mockGetProviderInfo.mockReturnValue({ provider: "unknown" });
+        mockSecurityVault.isLocked.mockReturnValue(false);
+        mockSecurityVault.decryptSecret
+          .mockReset()
+          .mockResolvedValue(null);
+        mockSecurityVault.encryptSecret
+          .mockReset()
+          .mockResolvedValue(undefined);
+        mockSecureStorage.getSecret.mockReset().mockResolvedValue(null);
+        mockSecureStorage.deleteSecret
+          .mockReset()
+          .mockResolvedValue(undefined);
+      });
+
+      it("uses the decrypted secret when aiManager has no key", async () => {
+        mockSecurityVault.decryptSecret.mockResolvedValue("sk-vault-key");
+        const result = await (service as any).getApiKey();
+        expect(result).toEqual({ key: "sk-vault-key", provider: "openai" });
+        expect(mockSecureStorage.getSecret).not.toHaveBeenCalled();
+      });
+
+      it("returns null when decryptSecret throws", async () => {
+        mockSecurityVault.decryptSecret.mockRejectedValue(
+          new Error("locked"),
+        );
+        const result = await (service as any).getApiKey();
+        expect(result).toBeNull();
+      });
+
+      it("returns null when aiManager.getApiKey throws a non-Error", async () => {
+        mockGetApiKey.mockImplementation(() => {
+          throw "boom";
+        });
+        const result = await (service as any).getApiKey();
+        expect(result).toBeNull();
+      });
+
+      it("returns null when decryptSecret throws a non-Error", async () => {
+        mockSecurityVault.decryptSecret.mockRejectedValue("locked-string");
+        const result = await (service as any).getApiKey();
+        expect(result).toBeNull();
+      });
+
+      it("migrates a pending key from SecureStorage into the vault", async () => {
+        mockSecureStorage.getSecret.mockResolvedValue("AIza-pending-key");
+        const result = await (service as any).getApiKey();
+        expect(result).toEqual({
+          key: "AIza-pending-key",
+          provider: "gemini",
+        });
+        expect(mockSecurityVault.encryptSecret).toHaveBeenCalledWith(
+          "AIza-pending-key",
+          "encrypted_api_key",
+        );
+        expect(mockSecureStorage.deleteSecret).toHaveBeenCalledWith(
+          "pending_api_key",
+        );
+      });
+
+      it("refuses a plaintext pending key while the vault is locked", async () => {
+        mockSecurityVault.isLocked.mockReturnValue(true);
+        mockSecureStorage.getSecret.mockResolvedValue("sk-plaintext");
+        const result = await (service as any).getApiKey();
+        expect(result).toBeNull();
+        expect(mockSecurityVault.encryptSecret).not.toHaveBeenCalled();
+        expect(mockSecureStorage.deleteSecret).not.toHaveBeenCalled();
+      });
+
+      it("does not throw when a locked vault cannot read storage", async () => {
+        mockSecurityVault.isLocked.mockReturnValue(true);
+        mockSecureStorage.getSecret.mockRejectedValue(
+          new Error("storage error"),
+        );
+        await expect((service as any).getApiKey()).resolves.toBeNull();
+      });
+    });
+
+    describe("audioCache - byte cap, entry cap and TTL boundaries", () => {
+      function stubOpenAiSuccess(dataUrl: string) {
+        mockGetApiKey.mockReturnValue("sk-test123");
+        mockGetProviderInfo.mockReturnValue({ provider: "openai" });
+        (globalThis.fetch as any).mockResolvedValue({
+          ok: true,
+          blob: vi.fn().mockResolvedValue(new Blob(["audio"])),
+        });
+        class MockFileReader {
+          result = "";
+          onloadend: (() => void) | null = null;
+          onerror: (() => void) | null = null;
+          readAsDataURL(_blob: Blob) {
+            this.result = dataUrl;
+            setTimeout(() => this.onloadend?.(), 0);
+          }
+        }
+        vi.stubGlobal("FileReader", MockFileReader as any);
+      }
+
+      it("does not cache payloads over the byte cap", async () => {
+        const dataUrl =
+          "data:audio/mp3;base64," + "A".repeat(35 * 1024 * 1024 + 1);
+        stubOpenAiSuccess(dataUrl);
+        const first = await service.generateAudio("bytecap-text", "en", undefined, {
+          isPrivate: false,
+        });
+        expect(first?.provider).toBe("openai");
+        (globalThis.fetch as any).mockClear();
+        const second = await service.generateAudio("bytecap-text", "en", undefined, {
+          isPrivate: false,
+        });
+        expect(second?.provider).toBe("openai");
+        expect(globalThis.fetch).toHaveBeenCalled();
+      });
+
+      it("evicts the oldest entries beyond the 100-entry cap", async () => {
+        stubOpenAiSuccess("data:audio/mp3;base64,cap-entry");
+        // Fill the cache past its 100-entry cap. Each entry has a distinct
+        // text (and therefore hash), so the cache sees 101 unique keys.
+        for (let i = 0; i <= 100; i++) {
+          await service.generateAudio(`cap-text-${i}`, "en", undefined, {
+            isPrivate: false,
+          });
+        }
+        (globalThis.fetch as any).mockClear();
+
+        // The newest entry (cap-text-100) must still be cached.
+        const newest = await service.generateAudio(
+          "cap-text-100",
+          "en",
+          undefined,
+          { isPrivate: false },
+        );
+        expect(newest?.provider).toBe("cached");
+
+        // The two oldest entries (cap-text-0 and cap-text-1) must have been
+        // evicted by the 101st insert, so they re-fetch from OpenAI.
+        const oldest0 = await service.generateAudio(
+          "cap-text-0",
+          "en",
+          undefined,
+          { isPrivate: false },
+        );
+        expect(oldest0?.provider).toBe("openai");
+
+        const oldest1 = await service.generateAudio(
+          "cap-text-1",
+          "en",
+          undefined,
+          { isPrivate: false },
+        );
+        expect(oldest1?.provider).toBe("openai");
+
+        // Both re-fetches hit the network.
+        expect(globalThis.fetch).toHaveBeenCalledTimes(2);
+      });
+
+      it("evicts entries when the total exceeds the byte cap", async () => {
+        stubOpenAiSuccess(
+          "data:audio/mp3;base64," + "B".repeat(20 * 1024 * 1024),
+        );
+        await service.generateAudio("byteprune-a", "en", undefined, {
+          isPrivate: false,
+        });
+        await service.generateAudio("byteprune-b", "en", undefined, {
+          isPrivate: false,
+        });
+        (globalThis.fetch as any).mockClear();
+        const again = await service.generateAudio("byteprune-a", "en", undefined, {
+          isPrivate: false,
+        });
+        expect(again?.provider).toBe("openai");
+        expect(globalThis.fetch).toHaveBeenCalled();
+      });
+
+      it("expires cached entries after the 24h TTL", async () => {
+        const t0 = Date.now();
+        vi.setSystemTime(t0);
+        stubOpenAiSuccess("data:audio/mp3;base64,ttl-entry");
+        await service.generateAudio("ttl-text-a", "en", undefined, {
+          isPrivate: false,
+        });
+        vi.setSystemTime(t0 + 25 * 60 * 60 * 1000);
+        (globalThis.fetch as any).mockClear();
+        const again = await service.generateAudio("ttl-text-a", "en", undefined, {
+          isPrivate: false,
+        });
+        expect(again?.provider).toBe("openai");
+        expect(globalThis.fetch).toHaveBeenCalled();
+        vi.useRealTimers();
+      });
+    });
+
+    describe("readBlobAsDataUrl - failure paths", () => {
+      function stubOpenAiFetch() {
+        mockGetApiKey.mockReturnValue("sk-test123");
+        mockGetProviderInfo.mockReturnValue({ provider: "openai" });
+        (globalThis.fetch as any).mockResolvedValue({
+          ok: true,
+          blob: vi.fn().mockResolvedValue(new Blob(["audio"])),
+        });
+      }
+
+      it("falls back to webspeech when FileReader errors", async () => {
+        stubOpenAiFetch();
+        class MockFileReader {
+          result = "";
+          onloadend: (() => void) | null = null;
+          onerror: ((_e?: Event) => void) | null = null;
+          readAsDataURL(_blob: Blob) {
+            setTimeout(() => this.onerror?.(new Event("error")), 0);
+          }
+        }
+        vi.stubGlobal("FileReader", MockFileReader as any);
+        const result = await service.generateAudio("reader-error-text", "en", undefined, {
+          isPrivate: false,
+        });
+        expect(result).toEqual({ url: "", provider: "webspeech" });
+      });
+
+      it("uses reader.error when FileReader reports one", async () => {
+        stubOpenAiFetch();
+        class MockFileReader {
+          result = "";
+          error: unknown = "boom";
+          onloadend: (() => void) | null = null;
+          onerror: ((_e?: Event) => void) | null = null;
+          readAsDataURL(_blob: Blob) {
+            setTimeout(() => this.onerror?.(new Event("error")), 0);
+          }
+        }
+        vi.stubGlobal("FileReader", MockFileReader as any);
+        const result = await service.generateAudio("reader-custom-error-text", "en", undefined, {
+          isPrivate: false,
+        });
+        expect(result).toEqual({ url: "", provider: "webspeech" });
+      });
+
+      it("falls back to webspeech when the encoded result is not a string", async () => {
+        stubOpenAiFetch();
+        class MockFileReader {
+          result: unknown = 42;
+          onloadend: (() => void) | null = null;
+          onerror: (() => void) | null = null;
+          readAsDataURL(_blob: Blob) {
+            setTimeout(() => {
+              this.onloadend?.();
+              // Second firing: the settled guard must ignore it.
+              this.onloadend?.();
+            }, 0);
+          }
+        }
+        vi.stubGlobal("FileReader", MockFileReader as any);
+        const result = await service.generateAudio("reader-nonstring-text", "en", undefined, {
+          isPrivate: false,
+        });
+        expect(result).toEqual({ url: "", provider: "webspeech" });
+      });
+
+      it("falls back to webspeech when readAsDataURL throws", async () => {
+        stubOpenAiFetch();
+        class MockFileReader {
+          result = "";
+          onloadend: (() => void) | null = null;
+          onerror: (() => void) | null = null;
+          readAsDataURL(_blob: Blob) {
+            throw new Error("read failed");
+          }
+        }
+        vi.stubGlobal("FileReader", MockFileReader as any);
+        const result = await service.generateAudio("reader-throw-text", "en", undefined, {
+          isPrivate: false,
+        });
+        expect(result).toEqual({ url: "", provider: "webspeech" });
+      });
+    });
+
+    describe("downloadAudio - remote streaming paths", () => {
+      function stubRemoteAudio(url = "https://cdn.example.com/audio.mp3") {
+        vi.spyOn(service, "generateAudio").mockResolvedValue({
+          url,
+          provider: "openai",
+        } as any);
+        vi.spyOn(document.body, "appendChild").mockImplementation(
+          () => null as any,
+        );
+        vi.spyOn(document.body, "removeChild").mockImplementation(
+          () => null as any,
+        );
+        vi.spyOn(document, "createElement").mockReturnValue({
+          setAttribute: vi.fn(),
+          href: "",
+          download: "",
+          click: vi.fn(),
+          parentNode: document.body,
+        } as any);
+      }
+
+      afterEach(() => {
+        vi.restoreAllMocks();
+      });
+
+      it("streams audio from the response body", async () => {
+        stubRemoteAudio();
+        const stream = new ReadableStream({
+          start(controller) {
+            controller.enqueue(new TextEncoder().encode("chunk1"));
+            controller.enqueue(new TextEncoder().encode("chunk2"));
+            controller.close();
+          },
+        });
+        (globalThis.fetch as any).mockResolvedValue({
+          ok: true,
+          headers: { get: () => null },
+          body: stream,
+        });
+        await service.downloadAudio("stream text");
+        expect(document.createElement).toHaveBeenCalled();
+      });
+
+      it("wraps non-Uint8Array chunks from the stream", async () => {
+        stubRemoteAudio();
+        const stream = new ReadableStream({
+          start(controller) {
+            controller.enqueue(new ArrayBuffer(4));
+            controller.close();
+          },
+        });
+        (globalThis.fetch as any).mockResolvedValue({
+          ok: true,
+          headers: { get: () => null },
+          body: stream,
+        });
+        await service.downloadAudio("arraybuffer text");
+        expect(document.createElement).toHaveBeenCalled();
+      });
+
+      it("rejects when content-length exceeds the limit", async () => {
+        stubRemoteAudio();
+        const cancelSpy = vi.fn();
+        (globalThis.fetch as any).mockResolvedValue({
+          ok: true,
+          headers: {
+            get: (key: string) =>
+              key === "content-length" ? String(30 * 1024 * 1024) : null,
+          },
+          body: { cancel: cancelSpy },
+        });
+        await expect(service.downloadAudio("oversized text")).rejects.toThrow(
+          "TTS audio exceeds the 25 MB limit",
+        );
+        expect(cancelSpy).toHaveBeenCalled();
+      });
+
+      it("rejects when the stream exceeds the byte cap", async () => {
+        stubRemoteAudio();
+        const cancelSpy = vi.fn().mockResolvedValue(undefined);
+        (globalThis.fetch as any).mockResolvedValue({
+          ok: true,
+          headers: { get: () => null },
+          body: {
+            getReader: () => ({
+              read: vi.fn().mockResolvedValueOnce({
+                done: false,
+                value: new Uint8Array(26 * 1024 * 1024),
+              }),
+              cancel: cancelSpy,
+              releaseLock: vi.fn(),
+            }),
+          },
+        });
+        await expect(service.downloadAudio("stream overflow text")).rejects.toThrow(
+          "TTS audio exceeds the 25 MB limit",
+        );
+        expect(cancelSpy).toHaveBeenCalled();
+      });
+
+      it("rejects with AbortError when the stream aborts mid-read", async () => {
+        stubRemoteAudio();
+        let pendingRead:
+          | ((value: { done: boolean; value?: Uint8Array }) => void)
+          | undefined;
+        const readMock = vi.fn(
+          () =>
+            new Promise<{ done: boolean; value?: Uint8Array }>((resolve) => {
+              pendingRead = resolve;
+            }),
+        );
+        const body = {
+          getReader: () => ({
+            read: readMock,
+            cancel: vi.fn(() => {
+              pendingRead?.({ done: true, value: undefined });
+              return Promise.resolve();
+            }),
+            releaseLock: vi.fn(),
+          }),
+        };
+        (globalThis.fetch as any).mockResolvedValue({
+          ok: true,
+          headers: { get: () => null },
+          body,
+        });
+        const controller = new AbortController();
+        const download = service.downloadAudio("abort text", "en", undefined, {
+          signal: controller.signal,
+        });
+        await vi.waitFor(() => expect(readMock).toHaveBeenCalled());
+        controller.abort();
+        await expect(download).rejects.toThrow("Audio download aborted");
+      });
+
+      it("falls back to a plain Error when DOMException is unavailable", async () => {
+        stubRemoteAudio();
+        vi.stubGlobal("DOMException", undefined);
+        let pendingRead:
+          | ((value: { done: boolean; value?: Uint8Array }) => void)
+          | undefined;
+        const readMock = vi.fn(
+          () =>
+            new Promise<{ done: boolean; value?: Uint8Array }>((resolve) => {
+              pendingRead = resolve;
+            }),
+        );
+        const body = {
+          getReader: () => ({
+            read: readMock,
+            cancel: vi.fn(() => {
+              pendingRead?.({ done: true, value: undefined });
+              return Promise.resolve();
+            }),
+            releaseLock: vi.fn(),
+          }),
+        };
+        (globalThis.fetch as any).mockResolvedValue({
+          ok: true,
+          headers: { get: () => null },
+          body,
+        });
+        const controller = new AbortController();
+        const download = service.downloadAudio("abort no dom", "en", undefined, {
+          signal: controller.signal,
+        });
+        await vi.waitFor(() => expect(readMock).toHaveBeenCalled());
+        controller.abort();
+        await expect(download).rejects.toMatchObject({ name: "AbortError" });
+      });
+
+      it("rejects when getReader throws", async () => {
+        stubRemoteAudio();
+        const cancelSpy = vi.fn();
+        (globalThis.fetch as any).mockResolvedValue({
+          ok: true,
+          headers: { get: () => null },
+          body: {
+            getReader: () => {
+              throw new Error("reader failed");
+            },
+            cancel: cancelSpy,
+          },
+        });
+        await expect(service.downloadAudio("reader throw text")).rejects.toThrow(
+          "reader failed",
+        );
+        expect(cancelSpy).toHaveBeenCalled();
+      });
+
+      it("rejects when the blob exceeds the limit (no stream)", async () => {
+        stubRemoteAudio();
+        (globalThis.fetch as any).mockResolvedValue({
+          ok: true,
+          headers: { get: () => null },
+          body: {},
+          blob: vi
+            .fn()
+            .mockResolvedValue(new Blob([new Uint8Array(26 * 1024 * 1024)])),
+        });
+        const controller = new AbortController();
+        await expect(
+          service.downloadAudio("huge blob text", "en", undefined, {
+            signal: controller.signal,
+          }),
+        ).rejects.toThrow("TTS audio exceeds the 25 MB limit");
+      });
+
+      it("returns silently when the remote response is not ok", async () => {
+        stubRemoteAudio();
+        const cancelSpy = vi.fn();
+        (globalThis.fetch as any).mockResolvedValue({
+          ok: false,
+          status: 500,
+          body: { cancel: cancelSpy },
+        });
+        await service.downloadAudio("not ok text");
+        expect(cancelSpy).toHaveBeenCalled();
+        expect(document.createElement).not.toHaveBeenCalled();
+      });
+    });
+
+    describe("downloadAudio - data URL edge cases", () => {
+      function stubDataUrl(url: string) {
+        vi.spyOn(service, "generateAudio").mockResolvedValue({
+          url,
+          provider: "openai",
+        } as any);
+      }
+
+      afterEach(() => {
+        vi.restoreAllMocks();
+      });
+
+      it("ignores data URLs without a comma", async () => {
+        stubDataUrl("data:audio/mp3;base64");
+        const createElementSpy = vi.spyOn(document, "createElement");
+        await service.downloadAudio("no comma text");
+        expect(createElementSpy).not.toHaveBeenCalled();
+      });
+
+      it("skips invalid base64 payloads", async () => {
+        stubDataUrl("data:audio/mp3;base64,!!!");
+        const createElementSpy = vi.spyOn(document, "createElement");
+        await service.downloadAudio("bad base64 text");
+        expect(createElementSpy).not.toHaveBeenCalled();
+      });
+
+      it("skips malformed percent-encoded payloads", async () => {
+        stubDataUrl("data:text/plain,%E0%A4%A");
+        const createElementSpy = vi.spyOn(document, "createElement");
+        await service.downloadAudio("bad uri text");
+        expect(createElementSpy).not.toHaveBeenCalled();
+      });
+
+      it("downloads a percent-encoded payload", async () => {
+        stubDataUrl("data:text/plain,hello%20world");
+        vi.spyOn(document.body, "appendChild").mockImplementation(
+          () => null as any,
+        );
+        vi.spyOn(document.body, "removeChild").mockImplementation(
+          () => null as any,
+        );
+        const createElementSpy = vi.spyOn(document, "createElement").mockReturnValue({
+          setAttribute: vi.fn(),
+          href: "",
+          download: "",
+          click: vi.fn(),
+          parentNode: document.body,
+        } as any);
+        await service.downloadAudio("percent text");
+        expect(createElementSpy).toHaveBeenCalled();
+      });
+
+      it("uses the default mime for data URLs without a type", async () => {
+        stubDataUrl("data:,hello%20world");
+        vi.spyOn(document.body, "appendChild").mockImplementation(
+          () => null as any,
+        );
+        vi.spyOn(document.body, "removeChild").mockImplementation(
+          () => null as any,
+        );
+        const createElementSpy = vi.spyOn(document, "createElement").mockReturnValue({
+          setAttribute: vi.fn(),
+          href: "",
+          download: "",
+          click: vi.fn(),
+          parentNode: document.body,
+        } as any);
+        await service.downloadAudio("default mime text");
+        expect(createElementSpy).toHaveBeenCalled();
+      });
+    });
+
+    describe("playNextChunk - stale sessions and playback failures", () => {
+      afterEach(() => {
+        vi.restoreAllMocks();
+      });
+
+      it("falls back to WebSpeech when audio.play() rejects", async () => {
+        const mockAudio = createMockAudio();
+        mockAudio.play.mockRejectedValue(new Error("NotAllowedError"));
+        vi.stubGlobal("Audio", function () {
+          return mockAudio;
+        } as any);
+        vi.spyOn(service, "generateAudio").mockResolvedValue({
+          url: "data:audio/mp3;base64,abc",
+          provider: "openai",
+        });
+        const fallbackSpy = vi.spyOn(service as any, "speakWithWebSpeech");
+        await service.speak("play rejects", "en", {
+          rate: 1,
+          pitch: 1,
+          volume: 1,
+        });
+        expect(fallbackSpy).toHaveBeenCalled();
+        expect((service as any).currentAudio).toBeNull();
+      });
+
+      it("falls back to WebSpeech when audio.play() rejects a non-Error", async () => {
+        const mockAudio = createMockAudio();
+        mockAudio.play.mockRejectedValue("NotAllowedError");
+        vi.stubGlobal("Audio", function () {
+          return mockAudio;
+        } as any);
+        vi.spyOn(service, "generateAudio").mockResolvedValue({
+          url: "data:audio/mp3;base64,abc",
+          provider: "openai",
+        });
+        const fallbackSpy = vi.spyOn(service as any, "speakWithWebSpeech");
+        await service.speak("play rejects string", "en", {
+          rate: 1,
+          pitch: 1,
+          volume: 1,
+        });
+        expect(fallbackSpy).toHaveBeenCalled();
+        expect((service as any).currentAudio).toBeNull();
+      });
+
+      it("ignores onended when the session is no longer active", async () => {
+        const mockAudio = createMockAudio();
+        vi.stubGlobal("Audio", function () {
+          return mockAudio;
+        } as any);
+        vi.spyOn(service, "generateAudio").mockResolvedValue({
+          url: "data:audio/mp3;base64,abc",
+          provider: "openai",
+        });
+        await service.speak("stale ended", "en", {
+          rate: 1,
+          pitch: 1,
+          volume: 1,
+        });
+        (service as any).abortController.abort();
+        if (mockAudio.onended) {
+          mockAudio.onended();
+        }
+        expect((service as any).currentChunkIndex).toBe(0);
+      });
+
+      it("ignores onerror when the session is no longer active", async () => {
+        const mockAudio = createMockAudio();
+        vi.stubGlobal("Audio", function () {
+          return mockAudio;
+        } as any);
+        vi.spyOn(service, "generateAudio").mockResolvedValue({
+          url: "data:audio/mp3;base64,abc",
+          provider: "openai",
+        });
+        const fallbackSpy = vi.spyOn(service as any, "speakWithWebSpeech");
+        await service.speak("stale error", "en", {
+          rate: 1,
+          pitch: 1,
+          volume: 1,
+        });
+        (service as any).abortController.abort();
+        if (mockAudio.onerror) {
+          mockAudio.onerror();
+        }
+        expect(fallbackSpy).not.toHaveBeenCalled();
+      });
+
+      it("returns when the session aborts mid-generation", async () => {
+        let resolveGeneration: ((value: any) => void) | undefined;
+        vi.spyOn(service, "generateAudio").mockImplementation(
+          () =>
+            new Promise((resolve) => {
+              resolveGeneration = resolve;
+            }),
+        );
+        const speaking = service.speak("mid generation", "en", {
+          rate: 1,
+          pitch: 1,
+          volume: 1,
+        });
+        service.stop();
+        resolveGeneration?.({
+          url: "data:audio/mp3;base64,abc",
+          provider: "openai",
+        });
+        await speaking;
+        expect((service as any).currentAudio).toBeNull();
+      });
+
+      it("passes opts through to generateAudio during playback", async () => {
+        const mockAudio = createMockAudio();
+        vi.stubGlobal("Audio", function () {
+          return mockAudio;
+        } as any);
+        const generateSpy = vi.spyOn(service, "generateAudio").mockResolvedValue({
+          url: "data:audio/mp3;base64,abc",
+          provider: "openai",
+        });
+        await service.speak(
+          "with opts",
+          "en",
+          { rate: 1, pitch: 1, volume: 1 },
+          { isPrivate: false },
+        );
+        const call = (generateSpy.mock.calls[0] as any)[3];
+        expect(call).toEqual(
+          expect.objectContaining({
+            isPrivate: false,
+            signal: expect.any(AbortSignal),
+          }),
+        );
+      });
+
+      it("returns null for a pre-aborted signal", async () => {
+        const controller = new AbortController();
+        controller.abort();
+        const result = await service.generateAudio("pre aborted", "en", undefined, {
+          signal: controller.signal,
+        });
+        expect(result).toBeNull();
+      });
     });
   });
 });

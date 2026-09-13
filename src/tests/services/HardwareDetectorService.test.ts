@@ -341,6 +341,65 @@ describe("HardwareDetectorService", () => {
     });
   });
 
+  describe("cache reset on environment change", () => {
+    it("re-probes and upgrades the tier when navigator.gpu appears after the first probe", async () => {
+      // Boot without a GPU surface (e.g. the GPU stack is still initializing
+      // after boot in embedded/E2E environments): the first probe caches
+      // webgpuSupported=false, which forces the low-end tier even at 16 GB.
+      vi.stubGlobal("navigator", {
+        ...navigator,
+        deviceMemory: 16,
+        hardwareConcurrency: 8,
+        gpu: undefined,
+      });
+      const mod = await import("../../services/HardwareDetectorService");
+      const before = await mod.hardwareDetector.getHardwareInfo();
+      expect(before.webgpuSupported).toBe(false);
+      expect(before.tier).toBe("low-end");
+
+      // The GPU API appears later. Without reset() the cached profile would
+      // be served forever; with it, the next probe re-classifies.
+      vi.stubGlobal("navigator", {
+        ...navigator,
+        deviceMemory: 16,
+        hardwareConcurrency: 8,
+        gpu: { requestAdapter: vi.fn().mockResolvedValue({}) },
+      });
+      mod.hardwareDetector.reset();
+
+      const after = await mod.hardwareDetector.getHardwareInfo();
+      expect(after.webgpuSupported).toBe(true);
+      expect(after.tier).toBe("high-end");
+      // Genuinely re-probed: a NEW profile object, not the stale cached one.
+      expect(after).not.toBe(before);
+    });
+
+    it("keeps serving the stale cached profile when reset() is NOT called", async () => {
+      // The negative half of the contract: the cache deliberately wins
+      // until reset() is invoked — the reset seam is the ONLY way a later
+      // GPU appearance becomes visible to tier classification.
+      vi.stubGlobal("navigator", {
+        ...navigator,
+        deviceMemory: 16,
+        hardwareConcurrency: 8,
+        gpu: undefined,
+      });
+      const mod = await import("../../services/HardwareDetectorService");
+      const before = await mod.hardwareDetector.getHardwareInfo();
+      expect(before.webgpuSupported).toBe(false);
+
+      vi.stubGlobal("navigator", {
+        ...navigator,
+        deviceMemory: 16,
+        hardwareConcurrency: 8,
+        gpu: { requestAdapter: vi.fn().mockResolvedValue({}) },
+      });
+      const after = await mod.hardwareDetector.getHardwareInfo();
+      expect(after.webgpuSupported).toBe(false);
+      expect(after).toBe(before);
+    });
+  });
+
   describe("hardwareDetector singleton", () => {
     it("exports and works", async () => {
       vi.stubGlobal("navigator", {

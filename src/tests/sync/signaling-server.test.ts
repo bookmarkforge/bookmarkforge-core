@@ -5,7 +5,7 @@ import http from "node:http";
 import { fileURLToPath } from "url";
 import { dirname, resolve } from "path";
 import fs from "node:fs";
-import { createHmac } from "node:crypto";
+import { createHash, createHmac } from "node:crypto";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SERVER_ENTRY = resolve(__dirname, "../../../server/src/index.ts");
@@ -18,7 +18,7 @@ const serverEntryExists = fs.existsSync(SERVER_ENTRY);
 function startServer(
   port: number,
   extraEnv: Record<string, string> = {},
-): Promise<{ proc: ChildProcess; url: string }> {
+): Promise<{ proc: ChildProcess; url: string; logs: string[] }> {
   return new Promise((resolvePromise, reject) => {
     const tsxBin = resolve(__dirname, "../../../node_modules/tsx/dist/cli.mjs");
     const proc = spawn(process.execPath, [tsxBin, SERVER_ENTRY], {
@@ -31,22 +31,45 @@ function startServer(
       stdio: ["ignore", "pipe", "pipe"],
     });
     const url = `ws://127.0.0.1:${port}`;
+    const logs: string[] = [];
+    const capture = (d: Buffer) => logs.push(d.toString());
     const timeout = setTimeout(
       () => reject(new Error("server start timeout")),
       8000,
     );
     proc.stdout?.on("data", (d: Buffer) => {
+      capture(d);
       if (d.toString().includes("Server running")) {
         clearTimeout(timeout);
-        resolvePromise({ proc, url });
+        resolvePromise({ proc, url, logs });
       }
     });
     proc.stderr?.on("data", (d: Buffer) => {
-      if (!d.toString().includes("ExperimentalWarning")) {
-        // surface unexpected errors during startup
-      }
+      capture(d);
     });
     proc.on("error", reject);
+  });
+}
+
+function waitForServerLog(
+  logs: string[],
+  marker: string,
+  timeoutMs = 3000,
+): Promise<void> {
+  return new Promise((resolvePromise, rejectPromise) => {
+    const deadline = Date.now() + timeoutMs;
+    const check = () => {
+      if (logs.join("").includes(marker)) {
+        resolvePromise();
+        return;
+      }
+      if (Date.now() >= deadline) {
+        rejectPromise(new Error(`server log marker not found: ${marker}`));
+        return;
+      }
+      setTimeout(check, 10);
+    };
+    check();
   });
 }
 
@@ -63,9 +86,12 @@ interface MessageQueue {
 // from socket creation makes message delivery race-free.
 const messageQueues = new WeakMap<WebSocket, MessageQueue>();
 
-function open(url: string): Promise<WebSocket> {
+function open(
+  url: string,
+  options?: { headers?: Record<string, string> },
+): Promise<WebSocket> {
   return new Promise((resolvePromise, reject) => {
-    const ws = new WebSocket(url);
+    const ws = new WebSocket(url, options);
     const queue: MessageQueue = { buffered: [], waiters: [] };
     messageQueues.set(ws, queue);
     ws.on("message", (d) => {
@@ -355,6 +381,173 @@ describe.skipIf(!serverEntryExists)("Signaling server — NET-01/02/04 security"
       setTimeout(() => resolvePromise(false), 3000);
     });
     expect(closed).toBe(true);
+  });
+});
+
+// ─── Signaling log privacy ───────────────────────────────────────────────
+// The server may use the client address for rate limiting, but operational
+// logs must contain only the salted, truncated fingerprint. Exercise the real
+// child process and inspect both stdout and stderr so a new logging path cannot
+// accidentally reintroduce a raw address.
+describe.skipIf(!serverEntryExists)("Signaling server — log IP privacy", () => {
+  it("never writes an unhashed client IP to signaling logs", async () => {
+    const port = 8822;
+    const rawClientIp = "198.51.100.77";
+    const salt = "signaling-log-privacy-test-salt";
+    const server = await startServer(port, {
+      HOST: "0.0.0.0",
+      TRUST_PROXY: "1",
+      SIGNALING_IP_HASH_SALT: salt,
+      JOIN_LIMIT: "1",
+      JOIN_WINDOW_MS: "60000",
+      MAX_CONNECTIONS: "64",
+    });
+    const sockets: WebSocket[] = [];
+
+    try {
+      const accepted = await open(server.url, {
+        headers: { "x-forwarded-for": rawClientIp },
+      });
+      sockets.push(accepted);
+      await nextMessage(accepted);
+      send(accepted, { type: "join", room: "log-privacy-room" });
+      await nextMessage(accepted);
+
+      const rejected = await open(server.url, {
+        headers: { "x-forwarded-for": rawClientIp },
+      });
+      sockets.push(rejected);
+      await nextMessage(rejected);
+      send(rejected, { type: "join", room: "log-privacy-rejected-room" });
+      expect(await expectClosed(rejected)).toBe(true);
+      await waitForServerLog(server.logs, "signaling_join_rate_limited");
+
+      const output = server.logs.join("");
+      const expectedIpHash = createHash("sha256")
+        .update(`${salt}:${rawClientIp}`)
+        .digest("hex")
+        .slice(0, 24);
+      expect(output).not.toContain(rawClientIp);
+      expect(output).toContain(expectedIpHash);
+    } finally {
+      for (const socket of sockets) {
+        if (socket.readyState === socket.OPEN) socket.close();
+        await waitClose(socket);
+      }
+      server.proc.kill("SIGTERM");
+    }
+  });
+});
+
+// Rejection-path log privacy: exercise each high-value overload/auth branch
+// against a real child process and assert the raw forwarded address never
+// appears in stdout/stderr. The server logs only the salted ipHash.
+describe.skipIf(!serverEntryExists)("Signaling server — rejection log IP privacy", () => {
+  async function assertRejectedLogIsPrivate(options: {
+    port: number;
+    env: Record<string, string>;
+    rawIp: string;
+    trigger: (url: string, logs: string[], sockets: WebSocket[]) => Promise<void>;
+    marker: string;
+  }): Promise<void> {
+    const salt = `rejection-log-${options.port}`;
+    const server = await startServer(options.port, {
+      TRUST_PROXY: "1",
+      SIGNALING_IP_HASH_SALT: salt,
+      MAX_PAYLOAD_BYTES: "1048576",
+      JOIN_LIMIT: "100",
+      MAX_CONNECTIONS: "64",
+      ...options.env,
+    });
+    const sockets: WebSocket[] = [];
+    try {
+      await options.trigger(server.url, server.logs, sockets);
+      await waitForServerLog(server.logs, options.marker);
+      const output = server.logs.join("");
+      const expectedIpHash = createHash("sha256")
+        .update(`${salt}:${options.rawIp}`)
+        .digest("hex")
+        .slice(0, 24);
+      expect(output).toContain(options.marker);
+      expect(output).not.toContain(options.rawIp);
+      expect(output).toContain(expectedIpHash);
+    } finally {
+      for (const socket of sockets) {
+        if (socket.readyState === socket.OPEN) socket.close();
+        await waitClose(socket);
+      }
+      server.proc.kill("SIGTERM");
+    }
+  }
+
+  it("redacts the IP in room-full rejection logs", async () => {
+    const rawIp = "198.51.100.81";
+    await assertRejectedLogIsPrivate({
+      port: 8831,
+      rawIp,
+      marker: "signaling_room_full",
+      env: { MAX_PEERS_PER_ROOM: "1" },
+      trigger: async (url, _logs, sockets) => {
+        const host = await open(url, { headers: { "x-forwarded-for": rawIp } });
+        sockets.push(host);
+        await nextMessage(host);
+        send(host, { type: "join", room: "full-log-room" });
+        await nextMessage(host);
+
+        const guest = await open(url, { headers: { "x-forwarded-for": rawIp } });
+        sockets.push(guest);
+        await nextMessage(guest);
+        send(guest, { type: "join", room: "full-log-room" });
+        expect(await expectClosed(guest)).toBe(true);
+      },
+    });
+  });
+
+  it("redacts the IP in invalid-HMAC rejection logs", async () => {
+    const rawIp = "198.51.100.82";
+    await assertRejectedLogIsPrivate({
+      port: 8832,
+      rawIp,
+      marker: "signaling_invalid_hmac",
+      env: {},
+      trigger: async (url, _logs, sockets) => {
+        const sender = await open(url, { headers: { "x-forwarded-for": rawIp } });
+        sockets.push(sender);
+        const init = await nextMessage(sender);
+        send(sender, {
+          type: "join",
+          room: "hmac-log-room",
+          roomSecret: "log-secret",
+        });
+        await nextMessage(sender);
+        send(sender, {
+          type: "signal",
+          senderPeerId: init.yourPeerId,
+          receiverPeerId: "receiver-peer",
+          data: { sdp: "offer" },
+          signalAuth: "0".repeat(64),
+        });
+        expect(await expectClosed(sender)).toBe(true);
+      },
+    });
+  });
+
+  it("redacts the IP in connection-overload rejection logs", async () => {
+    const rawIp = "198.51.100.83";
+    await assertRejectedLogIsPrivate({
+      port: 8833,
+      rawIp,
+      marker: "signaling_connection_rejected_overload",
+      env: { MAX_CONNECTIONS: "1" },
+      trigger: async (url, _logs, sockets) => {
+        const first = await open(url, { headers: { "x-forwarded-for": rawIp } });
+        sockets.push(first);
+        await nextMessage(first);
+        const second = await open(url, { headers: { "x-forwarded-for": rawIp } });
+        sockets.push(second);
+        expect(await expectClosed(second)).toBe(true);
+      },
+    });
   });
 });
 

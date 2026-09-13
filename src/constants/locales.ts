@@ -90,6 +90,16 @@ export type LocaleCode = (typeof SUPPORTED_LANGUAGES)[number]["code"];
 export const SUPPORTED_LOCALE_CODES: ReadonlyArray<LocaleCode> =
   SUPPORTED_LANGUAGES.map((l): LocaleCode => l.code);
 
+// ---- Machine-readable projection (for tooling, NOT for app code) ---------
+// scripts/check-e2e-selectors.mjs parses THIS STRING LITERAL from the file
+// text: it must run on Node 20 CI (no .ts type-stripping) and under vitest
+// (whose module graph cannot load repo-external .ts). The literal MUST stay
+// equal to SUPPORTED_LOCALE_CODES.join(",") — src/tests/constants-vocab.test.ts
+// pins that equality, and the gate refuses any CSV entry that is not a
+// string literal in this same file.
+export const SUPPORTED_LOCALE_CODES_CSV =
+  "ar,bg,cs,da,de,el,en,es,fi,fr,he,hi,hr,hu,id,it,ja,ko,nl,no,pl,pt,ro,ru,sv,th,tr,uk,vi,zh";
+
 /** Critical locales run on every CI gate (see gate-split rationale above). */
 export const CRITICAL_LOCALE_CODES: ReadonlyArray<LocaleCode> = [
   "en",

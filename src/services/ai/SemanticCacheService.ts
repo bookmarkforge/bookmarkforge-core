@@ -13,6 +13,11 @@ import { getIndexedDB } from "../../utils/indexedDB";
 import { AIResponse } from "./types";
 import { encryptionService } from "../EncryptionService";
 import { securityVault } from "../SecurityVault";
+import {
+  EMBEDDING_MODEL_DIMENSIONS,
+  EMBEDDING_MODEL_ID,
+  EMBEDDING_MODEL_PIPELINE_OPTIONS,
+} from "./embeddingModel";
 
 // Extend the Neighbor interface to include distance property that voy-search actually returns
 // despite not being in the official type definitions
@@ -216,11 +221,12 @@ export class SemanticCacheService {
       env.allowLocalModels = true;
       this.extractor = (await pipeline(
         "feature-extraction",
-        "Xenova/all-MiniLM-L6-v2",
+        EMBEDDING_MODEL_ID,
+        { ...EMBEDDING_MODEL_PIPELINE_OPTIONS },
       )) as unknown as import("@huggingface/transformers").FeatureExtractionPipeline;
 
       // 2. Initialize Voy vector database
-      // Voy requires providing the dimension of the vectors. all-MiniLM-L6-v2 outputs 384 dimensions.
+      // Voy requires providing the dimension of the vectors.
       const { Voy } = await import("voy-search");
       const resource = {
         embeddings: [
@@ -228,7 +234,7 @@ export class SemanticCacheService {
             id: "init",
             title: "init",
             url: "init",
-            embeddings: new Array(384).fill(0),
+            embeddings: new Array(EMBEDDING_MODEL_DIMENSIONS).fill(0),
           },
         ],
       };
@@ -340,7 +346,7 @@ export class SemanticCacheService {
             typeof parsed.timestamp !== "number" ||
             !Number.isFinite(parsed.timestamp) ||
             !Array.isArray(parsed.embedding) ||
-            parsed.embedding.length !== 384 ||
+            parsed.embedding.length !== EMBEDDING_MODEL_DIMENSIONS ||
             !parsed.embedding.every((value) => typeof value === "number" && Number.isFinite(value)) ||
             typeof parsed.response !== "object" ||
             parsed.response === null

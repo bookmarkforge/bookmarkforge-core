@@ -251,7 +251,11 @@ function extractOrigin(url: string): string {
       ? new URL(url).origin
       : new URL(url, base).origin;
   } catch (_err) {
-    return url;
+    // Return a sentinel that can never match a whitelisted origin. The raw
+    // URL could theoretically collide with an allowlist entry (e.g. an
+    // attacker-crafted string matching a trusted origin). Return a value that
+    // is guaranteed to not be in any allowlist so the request is blocked.
+    return "__invalid-origin__";
   }
 }
 

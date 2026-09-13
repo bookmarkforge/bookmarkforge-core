@@ -819,19 +819,22 @@ async function createDBInstance(
 
       let createdDb: RxDatabase;
       try {
-        createdDb = await Promise.race([
-          createRxDatabase({
-            name,
-            storage: finalStorage,
-            password: pw || "",
-            closeDuplicates: true,
-            cleanupPolicy: {
-              minimumDeletedTime: 1000 * 60 * 60 * 24 * 30,
-              runEach: 1000 * 60 * 60 * 12,
-            },
-          }),
-          timeoutPromise,
-        ]);
+        const dbPromise = createRxDatabase({
+          name,
+          storage: finalStorage,
+          password: pw || "",
+          closeDuplicates: true,
+          cleanupPolicy: {
+            minimumDeletedTime: 1000 * 60 * 60 * 24 * 30,
+            runEach: 1000 * 60 * 60 * 12,
+          },
+        });
+        // Suppress unhandled rejection from the losing Promise.race
+        // participant. When the timeout fires first, createRxDatabase
+        // continues in the background and eventually rejects; without this
+        // handler that rejection becomes an unhandled promise rejection.
+        dbPromise.catch(() => {});
+        createdDb = await Promise.race([dbPromise, timeoutPromise]);
       } catch (e) {
         // createRxDatabase rejected (likely DB_INIT_TIMEOUT). The outer
         // for-loop catch handles the retry/fallback. Do not clearTimeout
@@ -883,8 +886,11 @@ async function createDBInstance(
         // plain loading state.
         const migrationCleanup = wireMigrationProgress(createdDb);
         try {
+          const addCollectionsPromise = (createdDb as BookmarkForgeDB).addCollections(missingCollections);
+          // Same unhandled-rejection suppression as the createRxDatabase race.
+          addCollectionsPromise.catch(() => {});
           await Promise.race([
-            (createdDb as BookmarkForgeDB).addCollections(missingCollections),
+            addCollectionsPromise,
             timeoutPromise,
           ]);
         } catch (collectionErr) {
@@ -1074,7 +1080,7 @@ export const initDB = async (password?: string): Promise<BookmarkForgeDB> => {
   }
 
   const initStartedAt = performance.now();
-  state.initPromise = (async () => {
+  const currentInitPromise = (async () => {
     if (state.dbInstance) {
       return state.dbInstance;
     }
@@ -1152,11 +1158,16 @@ export const initDB = async (password?: string): Promise<BookmarkForgeDB> => {
     state.initDurationMs = Math.round(performance.now() - initStartedAt);
     return db;
   })();
+  state.initPromise = currentInitPromise;
 
   try {
     return await state.initPromise;
   } catch (error) {
-    state.initPromise = null;
+    // Only clear initPromise if we still own it — another caller may have
+    // already set a new one after our createDBInstance failed.
+    if (state.initPromise === currentInitPromise) {
+      state.initPromise = null;
+    }
     throw error;
   }
 };
@@ -1323,13 +1334,6 @@ export const destroyDB = async (): Promise<void> => {
       }
     }
 
-    state.dbInstance = null;
-    state.initPromise = null;
-    state.activeBackend = null;
-    state.initDurationMs = null;
-    state.initAttempts = null;
-    publishStorageBackend(null);
-
     try {
       const dbName = import.meta.env.VITE_DB_NAME || "bookmarkforge_v5";
       // NOTE: the previous implementation also deleted the Dexie-per-collection
@@ -1372,6 +1376,15 @@ export const destroyDB = async (): Promise<void> => {
         dbDestroyError = err instanceof Error ? err : new Error(String(err));
       }
     }
+
+    // Nullify state AFTER IndexedDB deletion to prevent initDB from creating
+    // a new instance that races with the in-flight deleteDatabase call.
+    state.dbInstance = null;
+    state.initPromise = null;
+    state.activeBackend = null;
+    state.initDurationMs = null;
+    state.initAttempts = null;
+    publishStorageBackend(null);
 
     if (dbDestroyError) {
       throw dbDestroyError;

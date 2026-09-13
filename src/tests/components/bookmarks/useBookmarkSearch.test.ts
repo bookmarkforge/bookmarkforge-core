@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
 
+const mockPrefetch = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 vi.mock("../../\.\./services/ai/RAGEngine", () => ({
-  ragEngine: { searchSimilar: vi.fn() },
+  ragEngine: { searchSimilar: vi.fn(), prefetch: mockPrefetch },
 }));
 
 vi.mock("../../\.\./services/ai/SemanticSearchService", () => ({
@@ -228,6 +229,7 @@ describe("useBookmarkSearch", () => {
       { timeout: 1000 },
     );
     expect(ragEngine.searchSimilar).toHaveBeenCalled();
+    expect(mockPrefetch).toHaveBeenCalledTimes(1);
   });
 
   it("should ignore an older semantic search after a newer query starts", async () => {
@@ -286,7 +288,7 @@ describe("useBookmarkSearch", () => {
     expect(result.current.filteredBookmarks[0].id).toBe("bm-2");
   });
 
-  it("should not do semantic search when query is 2 chars or less", async () => {
+  it("should prefetch when semantic mode opens but defer search for short queries", async () => {
     const { semanticSearchService } =
       await import("../../\.\./services/ai/SemanticSearchService");
     const { result } = renderHook(() =>
@@ -298,6 +300,7 @@ describe("useBookmarkSearch", () => {
     await waitFor(() =>
       expect(semanticSearchService.expandQuery).not.toHaveBeenCalled(),
     );
+    expect(mockPrefetch).toHaveBeenCalledTimes(1);
   });
 
   it("should not do semantic search when disabled", async () => {
@@ -310,6 +313,7 @@ describe("useBookmarkSearch", () => {
     await waitFor(() =>
       expect(semanticSearchService.expandQuery).not.toHaveBeenCalled(),
     );
+    expect(mockPrefetch).not.toHaveBeenCalled();
   });
 
   it("filters semantic results by selected tags", async () => {

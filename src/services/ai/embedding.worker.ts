@@ -5,6 +5,10 @@ import type { FeatureExtractionPipeline } from "@huggingface/transformers";
 // custom cache on the transformers env so every HF download is hashed against
 // the pinned digest manifest (fail-closed in production).
 import { configureModelIntegrity } from "../../utils/modelIntegrity";
+import {
+  EMBEDDING_MODEL_ID,
+  EMBEDDING_MODEL_PIPELINE_OPTIONS,
+} from "./embeddingModel";
 
 let embedder: FeatureExtractionPipeline | null = null;
 let initializationPromise: Promise<FeatureExtractionPipeline> | null = null;
@@ -131,7 +135,11 @@ async function getEmbedder(currentTaskId?: string): Promise<FeatureExtractionPip
         });
       }
 
-      embedder = await pipeline("feature-extraction", "Xenova/all-MiniLM-L6-v2");
+      embedder = await pipeline(
+        "feature-extraction",
+        EMBEDDING_MODEL_ID,
+        { ...EMBEDDING_MODEL_PIPELINE_OPTIONS },
+      );
 
       if (currentTaskId) {
         self.postMessage({ taskId: currentTaskId, status: "ready" });
@@ -165,7 +173,8 @@ async function getEmbedder(currentTaskId?: string): Promise<FeatureExtractionPip
           await import("@huggingface/transformers");
         embedder = await fallbackPipeline(
           "feature-extraction",
-          "Xenova/all-MiniLM-L6-v2",
+          EMBEDDING_MODEL_ID,
+          { ...EMBEDDING_MODEL_PIPELINE_OPTIONS },
         );
         if (currentTaskId) {
           self.postMessage({ taskId: currentTaskId, status: "ready" });
@@ -287,16 +296,33 @@ self.onmessage = async (e) => {
     return;
   }
 
-  const { text, id, taskId, type: _type, payload } = e.data;
-  const actualText = payload || text || "";
-  // Keep only the string copied into taskQueue; release the original message
-  // references immediately so large article text is not retained twice while
-  // model initialization or inference is pending.
+  const { text, id, taskId, type, payload } = e.data;
+  // Release any caller-owned text references before model initialization. The
+  // prefetch task intentionally has no text payload and only warms the model.
   releaseInputText(e.data);
   const actualId =
     taskId ||
     id ||
     `task_${Date.now()}_${crypto.randomUUID().slice(0, 8)}`;
+
+  if (type === "prefetch") {
+    try {
+      await getEmbedder(actualId);
+      self.postMessage({ taskId: actualId, result: true });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      const fatal = isFatalTimeout(error);
+      if (fatal) {workerFatal = true;}
+      self.postMessage({
+        taskId: actualId,
+        error: message,
+        ...(fatal ? { fatal: true } : {}),
+      });
+    }
+    return;
+  }
+
+  const actualText = payload || text || "";
   if (typeof actualText !== "string") {
     self.postMessage({ taskId: actualId, error: "Embedding payload must be text" });
     return;

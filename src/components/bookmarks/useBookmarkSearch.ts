@@ -144,6 +144,12 @@ export function useBookmarkSearch({
   }, [searchQuery]);
 
   useEffect(() => {
+    if (isSemanticSearch) {
+      void ragEngine.prefetch();
+    }
+  }, [isSemanticSearch]);
+
+  useEffect(() => {
     if (isSemanticSearch && debouncedSearchQuery.trim().length > 2) {
       setSemanticSearchError(false);
       // Clear the previous semantic result set before starting a new query;

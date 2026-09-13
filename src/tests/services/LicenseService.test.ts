@@ -590,4 +590,71 @@ describe("LicenseService", () => {
       expect(licenseService.hasLicense()).toBe(false);
     });
   });
+
+  // The deployment verifies the proof and answers with the plan; Pro stops
+  // being a claim the browser makes about itself.
+  describe("refreshEntitlementFromServer", () => {
+    test("downgrades to Free when the server denies the entitlement", async () => {
+      seedState();
+      firewalledFetchMock.mockResolvedValue(
+        okJson({ plan: "free", source: "none", reason: "EXPIRED" }),
+      );
+
+      const entitlements = await licenseService.refreshEntitlementFromServer();
+
+      expect(entitlements.plan).toBe("free");
+      expect(localStorage.getItem(LICENSE_CONFIG.storageKeys.licenseState)).toBeNull();
+      expect(auditLog.record).toHaveBeenCalledWith(
+        expect.objectContaining({ action: "license_validated", result: "failure" }),
+      );
+      // The proof travels in the body: the license key never leaves the device.
+      const call = firewalledFetchMock.mock.calls[0] as [unknown, RequestInit];
+      const [url, init] = call;
+      expect(String(url)).toContain("/entitlement");
+      expect(String(init.body)).toContain("signature");
+      expect(String(init.body)).not.toContain("BF-1111-2222-3333");
+    });
+
+    test("keeps the local state when the server confirms Pro", async () => {
+      seedState();
+      firewalledFetchMock.mockResolvedValue(okJson({ plan: "pro", source: "license" }));
+
+      const entitlements = await licenseService.refreshEntitlementFromServer();
+
+      expect(entitlements.plan).toBe("pro");
+      expect(licenseService.hasProAccess()).toBe(true);
+    });
+
+    test("keeps offline grace when the endpoint is unreachable", async () => {
+      seedState();
+      firewalledFetchMock.mockRejectedValue(new Error("Failed to fetch"));
+
+      await expect(licenseService.refreshEntitlementFromServer()).rejects.toMatchObject({
+        code: "NETWORK",
+      });
+      expect(licenseService.hasProAccess()).toBe(true);
+    });
+
+    test("never downgrades a paying user when the deployment cannot verify", async () => {
+      seedState();
+      firewalledFetchMock.mockResolvedValue({
+        ok: false,
+        status: 503,
+        json: vi.fn().mockResolvedValue({
+          error: { code: "SIGNING_KEY_INVALID", message: "license verification is misconfigured" },
+        }),
+      });
+
+      await expect(licenseService.refreshEntitlementFromServer()).rejects.toMatchObject({
+        code: "SERVER",
+      });
+      expect(licenseService.getEntitlements().plan).toBe("pro");
+      expect(localStorage.getItem(LICENSE_CONFIG.storageKeys.licenseState)).not.toBeNull();
+    });
+
+    test("does not call the network without a signed proof to present", async () => {
+      expect((await licenseService.refreshEntitlementFromServer()).plan).toBe("free");
+      expect(firewalledFetchMock).not.toHaveBeenCalled();
+    });
+  });
 });

@@ -149,19 +149,29 @@ export function useSettings() {
   }, [globalFontSize]);
 
   useEffect(() => {
+    let disposed = false;
     let webLLM: { webLLMService: { progressCallback?: unknown } } | null = null;
     import("../services/ai/WebLLMService")
       .then((mod) => {
+        if (disposed) return;
         webLLM = mod;
-        mod.webLLMService.canRunLocalLLM().then(setCanRunWebLLM);
+        // canRunWebLLM is the device-capability verdict ONLY
+        // (canRunLocalLLM(): WebGPU surface + shader-f16 + >= 4 GB RAM).
+        // It drives whether the Settings <option> is enabled — never an
+        // engine/model state. See AIConfigSection's {canRunWebLLM && ...}
+        // render and the E2E capability profiles.
+        mod.webLLMService.canRunLocalLLM().then((result) => {
+          if (!disposed) setCanRunWebLLM(result);
+        });
         mod.webLLMService.progressCallback = (progress: WebLLMProgress) => {
-          setWebLlmProgress(progress);
+          if (!disposed) setWebLlmProgress(progress);
         };
       })
       .catch(() => {
-        logger.warn("[Settings] WebLLM not available");
+        if (!disposed) logger.warn("[Settings] WebLLM not available");
       });
     return () => {
+      disposed = true;
       if (webLLM) {
         webLLM.webLLMService.progressCallback = undefined;
       }

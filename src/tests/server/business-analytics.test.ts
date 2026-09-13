@@ -33,6 +33,7 @@ async function start(handler: (req: IncomingMessage, res: ServerResponse) => voi
 interface BucketBody {
   iid: string;
   counts: Record<string, number>;
+  batchId?: string;
 }
 
 function postBucket(base: string, body: BucketBody, clientIp = "10.0.0.1"): Promise<Response> {
@@ -129,6 +130,70 @@ describe("business analytics collector", () => {
     const kpis = await getKpis(base).then((r) => r.json());
     expect(kpis.funnel.bookmark_created).toBe(5);
     expect(kpis.dau).toBe(1);
+  });
+
+  // ADR-030: new clients send batchId — partial flushes must ADD UP (the
+  // legacy per-day replace semantics silently lost activity from earlier
+  // partial flushes of the same day) and a retried batch must be a no-op
+  // even when the original 204 was lost in transit.
+  it("accumulates batchId partial flushes additively within the same day", async () => {
+    const base = await start(createAnalyticsHandler({ serverInstanceId: "test" }));
+    const r1 = await postBucket(base, { iid: IID_A, batchId: "batch-1", counts: { bookmark_created: 3 } });
+    const r2 = await postBucket(base, { iid: IID_A, batchId: "batch-2", counts: { bookmark_created: 4, vault_created: 1 } });
+    expect(r1.status).toBe(204);
+    expect(r2.status).toBe(204);
+
+    const kpis = await getKpis(base).then((r) => r.json());
+    // Both partial contributions survive — nothing is replaced.
+    expect(kpis.funnel.bookmark_created).toBe(7);
+    expect(kpis.funnel.vault_created).toBe(1);
+    expect(kpis.dau).toBe(1);
+  });
+
+  it("is idempotent per batchId: a retried batch returns 204 without double counting", async () => {
+    const base = await start(createAnalyticsHandler({ serverInstanceId: "test" }));
+    await postBucket(base, { iid: IID_A, batchId: "batch-1", counts: { bookmark_created: 3 } });
+    // Network lost the first 204 → client retries the SAME batchId.
+    const retry = await postBucket(base, { iid: IID_A, batchId: "batch-1", counts: { bookmark_created: 3 } });
+    expect(retry.status).toBe(204);
+
+    const kpis = await getKpis(base).then((r) => r.json());
+    expect(kpis.funnel.bookmark_created).toBe(3);
+    expect(kpis.counters.accepted).toBe(2);
+  });
+
+  it("fails closed with 503 when the per-install batch capacity is exhausted", async () => {
+    vi.stubEnv("ANALYTICS_MAX_BATCHES_PER_INSTALL", "32");
+    const base = await start(createAnalyticsHandler({ serverInstanceId: "test" }));
+    // Fill the bounded idempotency window (32 batches).
+    for (let i = 0; i < 32; i++) {
+      const response = await postBucket(base, { iid: IID_A, batchId: `batch-${i}`, counts: { session_start: 1 } });
+      expect(response.status).toBe(204);
+    }
+    // A NEW batch beyond the window must be rejected, not silently dropped
+    // or double counted.
+    const overflow = await postBucket(base, { iid: IID_A, batchId: "batch-overflow", counts: { session_start: 1 } });
+    expect(overflow.status).toBe(503);
+    expect(overflow.headers.get("retry-after")).toBe("60");
+    // Retrying an EXISTING batch stays a harmless duplicate (204).
+    const duplicate = await postBucket(base, { iid: IID_A, batchId: "batch-0", counts: { session_start: 1 } });
+    expect(duplicate.status).toBe(204);
+
+    const kpis = await getKpis(base).then((r) => r.json());
+    expect(kpis.funnel.session_start).toBe(32);
+  });
+
+  it("validates the batchId format and rejects malformed values", async () => {
+    const base = await start(createAnalyticsHandler({ serverInstanceId: "test" }));
+    const cases: Array<[string, string]> = [
+      ["empty", ""],
+      ["too long", "b".repeat(129)],
+      ["bad chars", "bad id/with\nnewline"],
+    ];
+    for (const [name, batchId] of cases) {
+      const response = await postBucket(base, { iid: IID_A, batchId, counts: { session_start: 1 } });
+      expect(response.status, name).toBe(400);
+    }
   });
 
   it("computes cohort retention D1/D7/D30 from first/last active days", async () => {

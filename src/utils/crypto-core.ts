@@ -7,8 +7,10 @@
  *
  * Format timeline:
  *   v2 — PBKDF2 (legacy, read-only)
- *   v4 — Argon2id per operation (current stored data)
- *   v5 — Argon2id-once + HKDF per operation (new encryptions)
+ *   v4 — Argon2id per operation (stored data)
+ *   v5 — Argon2id-once + HKDF per operation, fixed bundle-wide Argon2id salt
+ *   v6 — same as v5 but keyed by a random PER-VAULT Argon2id salt that is
+ *        embedded in the payload (see setVaultKdfSalt / VAULT_KDF_SALT_BYTES)
  */
 
 import {
@@ -33,14 +35,130 @@ export const CRYPTO_ALGORITHM = "AES-GCM";
 // hits; lock/reset clears it immediately.
 const SESSION_KEY_CACHE_TTL_MS = 5 * 60_000;
 
+/**
+ * Maximum number of master keys retained. Entries are keyed by
+ * `purpose:salt`, so one vault normally holds two (legacy V5 blobs + V6
+ * vault-salted blobs); the bound only exists to stop a stream of foreign
+ * salts (shares/backups from other vaults) from growing the cache forever.
+ */
+const MAX_MASTER_KEY_CACHE_ENTRIES = 8;
+
 interface CachedMasterKey {
   passwordTag: Uint8Array;
   key: CryptoKey;
   expiresAt: number;
 }
 
-let cachedMasterKey: CachedMasterKey | null = null;
+/**
+ * Master-key cache. Keyed by `purpose:saltTag`, NOT by password alone: a
+ * single vault legitimately holds blobs under two different Argon2id salts
+ * (legacy V5 blobs under the fixed bundle salt + V6 blobs under the vault's
+ * random salt) and interleaved reads of both must never thrash, which would
+ * re-run Argon2id on every row.
+ */
+const masterKeyCache = new Map<string, CachedMasterKey>();
 let cacheExpiryTimer: ReturnType<typeof setTimeout> | null = null;
+
+/** Tag used for the legacy, bundle-wide (fixed) Argon2id salt. */
+const LEGACY_SALT_TAG = "legacy";
+
+/**
+ * Per-vault Argon2id salt (A-1 mitigation). `null` = legacy mode: the
+ * derivation falls back to the fixed, bundle-wide salt and emits `v5:`
+ * payloads. Set once per vault by the security vault
+ * (src/services/security-vault/kdf-salt.ts) from a random value persisted in
+ * SecureStorage.
+ */
+let vaultKdfSalt: Uint8Array | null = null;
+
+/** Length of the per-vault Argon2id salt, in bytes. */
+export const VAULT_KDF_SALT_BYTES = 16;
+
+const HEX_SALT_RE = /^[0-9a-f]{32}$/;
+
+function _errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function bytesToHex(bytes: Uint8Array): string {
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/**
+ * Installs (or clears) the per-vault Argon2id salt.
+ *
+ * The salt is NOT secret — it is stored next to the ciphertexts and travels
+ * embedded in every `v6:` payload — but it must be unique per vault, which is
+ * what defeats the cross-user precomputed-dictionary attack: with a shared
+ * salt, one Argon2id pass over a candidate password serves every vault in the
+ * world; with a per-vault salt, that pass only serves the vault the salt
+ * belongs to.
+ *
+ * Cache safety: entries are keyed by salt, so switching salts never returns a
+ * key derived under a different one. Pass `null` to return to legacy mode
+ * (used by tests and by code paths that have no vault salt — e.g. a locked
+ * vault whose storage is unreadable); new payloads are then `v5:` again.
+ *
+ * @param salt - 32 lowercase-hex characters, a 16-byte salt, or `null`.
+ */
+export function setVaultKdfSalt(salt: string | Uint8Array | null): void {
+  if (salt === null) {
+    if (vaultKdfSalt) {
+      vaultKdfSalt.fill(0);
+      vaultKdfSalt = null;
+    }
+    return;
+  }
+  let bytes: Uint8Array;
+  if (typeof salt === "string") {
+    const normalized = salt.trim().toLowerCase();
+    if (!HEX_SALT_RE.test(normalized)) {
+      throw new Error(
+        `[crypto-core] Invalid vault KDF salt: expected ${VAULT_KDF_SALT_BYTES * 2} hex characters`,
+      );
+    }
+    bytes = new Uint8Array(VAULT_KDF_SALT_BYTES);
+    for (let i = 0; i < bytes.length; i++) {
+      bytes[i] = parseInt(normalized.slice(i * 2, i * 2 + 2), 16);
+    }
+  } else if (
+    salt instanceof Uint8Array &&
+    salt.length === VAULT_KDF_SALT_BYTES
+  ) {
+    bytes = new Uint8Array(salt);
+  } else {
+    throw new Error(
+      `[crypto-core] Invalid vault KDF salt: expected ${VAULT_KDF_SALT_BYTES} bytes`,
+    );
+  }
+  if (vaultKdfSalt) {vaultKdfSalt.fill(0);}
+  vaultKdfSalt = bytes;
+}
+
+/** The active per-vault Argon2id salt as lowercase hex, or `null`. */
+export function getVaultKdfSaltHex(): string | null {
+  return vaultKdfSalt ? bytesToHex(vaultKdfSalt) : null;
+}
+
+/**
+ * Context salt fed to Argon2id: SHA-256 over the (public) context string,
+ * extended with the per-vault salt when one is active.
+ *
+ * Legacy compatibility is bit-exact: with no vault salt the digest input is
+ * the bare context string, which is exactly what every pre-A-1 vault used, so
+ * existing `v5:` ciphertexts keep decrypting.
+ */
+async function deriveContextSalt(
+  context: string,
+  salt: Uint8Array | null,
+): Promise<Uint8Array> {
+  const input = salt ? `${context}:v2:${bytesToHex(salt)}` : context;
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(input),
+  );
+  return new Uint8Array(digest);
+}
 
 async function hashBytes(bytes: Uint8Array): Promise<Uint8Array> {
   const buf = await crypto.subtle.digest(
@@ -69,125 +187,161 @@ function scheduleCacheExpiry(): void {
     cacheExpiryTimer = null;
   }
   const now = Date.now();
-  const expiries = [cachedMasterKey, cachedV5MasterKey]
-    .filter((entry): entry is CachedMasterKey => entry !== null)
-    .map((entry) => entry.expiresAt);
-  const nextExpiry = Math.min(...expiries);
-  if (Number.isFinite(nextExpiry)) {
-    cacheExpiryTimer = setTimeout(() => {
-      const currentTime = Date.now();
-      if (cachedMasterKey && cachedMasterKey.expiresAt <= currentTime) {
-        clearCacheEntry(cachedMasterKey);
-        cachedMasterKey = null;
+  const nextExpiry = Math.min(
+    ...Array.from(masterKeyCache.values(), (entry) => entry.expiresAt),
+  );
+  if (!Number.isFinite(nextExpiry)) {return;}
+  cacheExpiryTimer = setTimeout(() => {
+    const currentTime = Date.now();
+    for (const [key, entry] of masterKeyCache) {
+      if (entry.expiresAt <= currentTime) {
+        clearCacheEntry(entry);
+        masterKeyCache.delete(key);
       }
-      if (cachedV5MasterKey && cachedV5MasterKey.expiresAt <= currentTime) {
-        clearCacheEntry(cachedV5MasterKey);
-        cachedV5MasterKey = null;
+    }
+    scheduleCacheExpiry();
+  }, Math.max(0, nextExpiry - now));
+}
+
+function cacheKey(purpose: "session" | "v5", salt: Uint8Array | null): string {
+  return `${purpose}:${salt ? bytesToHex(salt) : LEGACY_SALT_TAG}`;
+}
+
+/**
+ * Returns the cached master key for this (purpose, salt, password) triple,
+ * refreshing its TTL. A password mismatch for the same purpose+salt evicts
+ * the stale entry (a vault never legitimately holds two passwords' keys).
+ */
+function takeCachedMasterKey(
+  key: string,
+  passwordTag: Uint8Array,
+): CryptoKey | null {
+  const entry = masterKeyCache.get(key);
+  if (!entry) {return null;}
+  if (
+    entry.expiresAt <= Date.now() ||
+    !equalBytes(entry.passwordTag, passwordTag)
+  ) {
+    clearCacheEntry(entry);
+    masterKeyCache.delete(key);
+    return null;
+  }
+  entry.expiresAt = Date.now() + SESSION_KEY_CACHE_TTL_MS;
+  scheduleCacheExpiry();
+  return entry.key;
+}
+
+function storeCachedMasterKey(
+  key: string,
+  entry: CachedMasterKey,
+): void {
+  const existing = masterKeyCache.get(key);
+  if (existing) {clearCacheEntry(existing);}
+  if (!existing && masterKeyCache.size >= MAX_MASTER_KEY_CACHE_ENTRIES) {
+    // Evict the entry closest to expiry (it is the least recently refreshed).
+    let oldestKey: string | null = null;
+    let oldestExpiry = Number.POSITIVE_INFINITY;
+    for (const [candidate, value] of masterKeyCache) {
+      if (value.expiresAt < oldestExpiry) {
+        oldestExpiry = value.expiresAt;
+        oldestKey = candidate;
       }
-      scheduleCacheExpiry();
-    }, Math.max(0, nextExpiry - now));
+    }
+    if (oldestKey !== null) {
+      clearCacheEntry(masterKeyCache.get(oldestKey) ?? null);
+      masterKeyCache.delete(oldestKey);
+    }
+  }
+  masterKeyCache.set(key, entry);
+  scheduleCacheExpiry();
+}
+
+/**
+ * Argon2id-once master key for the given salt, cached per (purpose, salt).
+ * @param purpose - Domain separation between session keys and V5/V6 keys.
+ */
+async function deriveCachedMasterKey(
+  purpose: "session" | "v5",
+  context: string,
+  passwordBytes: Uint8Array,
+  salt: Uint8Array | null,
+): Promise<CryptoKey> {
+  const key = cacheKey(purpose, salt);
+  const passwordTag = await hashBytes(passwordBytes);
+  const cached = takeCachedMasterKey(key, passwordTag);
+  if (cached) {
+    passwordTag.fill(0);
+    return cached;
+  }
+  // HKDF base key (deriveKey usage) — not an AES-GCM key.
+  try {
+    const argonSalt = await deriveContextSalt(context, salt);
+    const derived = await deriveArgon2idHkdfBaseKey(passwordBytes, argonSalt);
+    storeCachedMasterKey(key, {
+      passwordTag,
+      key: derived,
+      expiresAt: Date.now() + SESSION_KEY_CACHE_TTL_MS,
+    });
+    return derived;
+  } catch (_error) {
+    passwordTag.fill(0);
+    throw new Error(
+      "[crypto-core] Master key derivation failed",
+    );
   }
 }
 
-function cacheEntryIsValid(
-  entry: CachedMasterKey | null,
-  passwordTag: Uint8Array,
-): entry is CachedMasterKey {
-  return Boolean(
-    entry &&
-      entry.expiresAt > Date.now() &&
-      equalBytes(entry.passwordTag, passwordTag),
-  );
-}
-
+/**
+ * Session master key. Argon2id runs once per (password, salt) and is cached;
+ * per-operation keys are derived from it with HKDF (see
+ * encryptWithSessionKey).
+ */
 async function getSessionMasterKey(
   passwordBytes: Uint8Array,
+  salt: Uint8Array | null,
 ): Promise<CryptoKey> {
-  const passwordTag = await hashBytes(passwordBytes);
-  if (cacheEntryIsValid(cachedMasterKey, passwordTag)) {
-    passwordTag.fill(0);
-    cachedMasterKey.expiresAt = Date.now() + SESSION_KEY_CACHE_TTL_MS;
-    scheduleCacheExpiry();
-    return cachedMasterKey.key;
-  }
-  clearCacheEntry(cachedMasterKey);
-  cachedMasterKey = null;
-  // Deterministic 32-byte salt so the same password always yields the
-  // same master key across encrypt / decrypt calls in this session.
-  const contextSalt = new TextEncoder().encode(
+  return deriveCachedMasterKey(
+    "session",
     "bookmarkforge-session-master-key-v6",
+    passwordBytes,
+    salt,
   );
-  const saltHash = await crypto.subtle.digest("SHA-256", contextSalt);
-  // HKDF base key (deriveKey usage) — not an AES-GCM key.
-  try {
-    const key = await deriveArgon2idHkdfBaseKey(
-      passwordBytes,
-      new Uint8Array(saltHash),
-    );
-    cachedMasterKey = {
-      passwordTag,
-      key,
-      expiresAt: Date.now() + SESSION_KEY_CACHE_TTL_MS,
-    };
-    scheduleCacheExpiry();
-    return key;
-  } catch (error) {
-    passwordTag.fill(0);
-    throw error;
-  }
 }
 
-// ─── V5 master-key cache (domain-separated from session keys) ───────
-//
-// V5 uses the same Argon2id-once + HKDF pattern as session keys but with
-// a different context salt so the derived master key is distinct even for
-// the same password.
-
-let cachedV5MasterKey: CachedMasterKey | null = null;
-
+/**
+ * V5/V6 master key. Same Argon2id-once + HKDF pattern as the session key, but
+ * domain-separated by context so the same password never yields the same key
+ * for both purposes.
+ */
 async function getV5MasterKey(
   passwordBytes: Uint8Array,
+  salt: Uint8Array | null,
 ): Promise<CryptoKey> {
-  const passwordTag = await hashBytes(passwordBytes);
-  if (cacheEntryIsValid(cachedV5MasterKey, passwordTag)) {
-    passwordTag.fill(0);
-    cachedV5MasterKey.expiresAt = Date.now() + SESSION_KEY_CACHE_TTL_MS;
-    scheduleCacheExpiry();
-    return cachedV5MasterKey.key;
-  }
-  clearCacheEntry(cachedV5MasterKey);
-  cachedV5MasterKey = null;
-  const contextSalt = new TextEncoder().encode("bookmarkforge-v5-master-key");
-  const saltHash = await crypto.subtle.digest("SHA-256", contextSalt);
-  // HKDF base key (deriveKey usage) — not an AES-GCM key.
-  try {
-    const key = await deriveArgon2idHkdfBaseKey(
-      passwordBytes,
-      new Uint8Array(saltHash),
-    );
-    cachedV5MasterKey = {
-      passwordTag,
-      key,
-      expiresAt: Date.now() + SESSION_KEY_CACHE_TTL_MS,
-    };
-    scheduleCacheExpiry();
-    return key;
-  } catch (error) {
-    passwordTag.fill(0);
-    throw error;
-  }
+  return deriveCachedMasterKey(
+    "v5",
+    "bookmarkforge-v5-master-key",
+    passwordBytes,
+    salt,
+  );
 }
 
-/** Clear all cached master keys (called on vault lock / reset). */
+/**
+ * Clear all cached master keys (called on vault lock / reset).
+ *
+ * The per-vault Argon2id salt is NOT part of the cache and is deliberately
+ * kept: it is public vault metadata, not key material, and dropping it would
+ * silently downgrade every subsequent write back to the legacy fixed salt.
+ * Use `setVaultKdfSalt(null)` to clear it explicitly.
+ */
 export function resetSessionKeyCache(): void {
   if (cacheExpiryTimer) {
     clearTimeout(cacheExpiryTimer);
     cacheExpiryTimer = null;
   }
-  clearCacheEntry(cachedMasterKey);
-  clearCacheEntry(cachedV5MasterKey);
-  cachedMasterKey = null;
-  cachedV5MasterKey = null;
+  for (const entry of masterKeyCache.values()) {
+    clearCacheEntry(entry);
+  }
+  masterKeyCache.clear();
 }
 
 /** @deprecated Use resetSessionKeyCache() instead. */
@@ -258,7 +412,16 @@ export function zeroPasswordBytes(bytes: Uint8Array): Uint8Array {
 }
 
 /**
- * Encrypts `text` with `password`, returning a `v5:`-prefixed payload.
+ * Encrypts `text` with `password`, returning a `v6:`-prefixed payload when a
+ * per-vault KDF salt is active, or `v5:` in legacy mode.
+ *
+ * Wire formats:
+ *   v6: base64(vault_salt(16) || hkdf_salt(16) || iv(12) || ciphertext)
+ *   v5: base64(hkdf_salt(16) || iv(12) || ciphertext)   (legacy)
+ *
+ * The vault salt is embedded so every payload is self-describing: decryption
+ * never depends on the local salt state, which is what makes cross-device
+ * shares/backups and post-provisioning reads of pre-migration blobs work.
  *
  * Ownership contract: when `password` is a `Uint8Array`, the buffer is
  * CONSUMED — zeroized via `zeroPasswordBytes` right after the master key
@@ -271,16 +434,17 @@ export async function encrypt(
   text: string,
   password: string | Uint8Array,
 ): Promise<string> {
-  // V5: Argon2id-once + HKDF per operation. The master key is cached
-  // per password so subsequent encryptions with the same password skip
-  // the expensive Argon2id derivation entirely.
+  // V5/V6: Argon2id-once + HKDF per operation. The master key is cached
+  // per (password, salt) so subsequent encryptions with the same password
+  // skip the expensive Argon2id derivation entirely.
+  const vaultSalt = vaultKdfSalt;
   const hkdfSalt = crypto.getRandomValues(new Uint8Array(16));
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const encoder = new TextEncoder();
   const pwBytes = getPasswordBytes(password);
   let masterKey: CryptoKey;
   try {
-    masterKey = await getV5MasterKey(pwBytes);
+    masterKey = await getV5MasterKey(pwBytes, vaultSalt);
   } finally {
     // Argon2id/HKDF can reject before the normal post-derivation cleanup.
     // Clear the caller-owned bytes on both success and failure.
@@ -306,18 +470,26 @@ export async function encrypt(
     encoder.encode(text),
   );
 
-  const combined = new Uint8Array(
-    hkdfSalt.length + iv.length + ciphertext.byteLength,
-  );
-  combined.set(hkdfSalt);
-  combined.set(iv, hkdfSalt.length);
-  combined.set(new Uint8Array(ciphertext), hkdfSalt.length + iv.length);
+  const headerLength = (vaultSalt ? vaultSalt.length : 0) + 16 + 12;
+  const combined = new Uint8Array(headerLength + ciphertext.byteLength);
+  let offset = 0;
+  if (vaultSalt) {
+    combined.set(vaultSalt, 0);
+    offset += vaultSalt.length;
+  }
+  combined.set(hkdfSalt, offset);
+  combined.set(iv, offset + 16);
+  combined.set(new Uint8Array(ciphertext), headerLength);
 
-  return "v5:" + u8aToBase64(combined);
+  return (vaultSalt ? "v6:" : "v5:") + u8aToBase64(combined);
 }
 
 /**
- * Decrypts a `v5:`/`v4:`/`v2:` payload with `password`.
+ * Decrypts a `v6:`/`v5:`/`v4:`/`v2:` payload with `password`.
+ *
+ * `v6:` carries its own per-vault salt, so it decrypts with the password from
+ * any device/session regardless of the locally provisioned salt. `v5:` and
+ * older formats keep using the legacy fixed-salt/Argon2id-per-op derivations.
  *
  * Ownership contract: same as `encrypt` — a `Uint8Array` password is
  * CONSUMED (zeroized via `zeroPasswordBytes` after key derivation) and
@@ -327,8 +499,57 @@ export async function decrypt(
   encryptedBase64: string,
   password: string | Uint8Array,
 ): Promise<string> {
+  if (encryptedBase64.startsWith("v6:")) {
+    // V6 (per-vault Argon2id salt) — current format.
+    // Wire format: vault_salt(16) || hkdf_salt(16) || iv(12) || ciphertext
+    const data = encryptedBase64.substring(3);
+    const combined = base64ToU8a(data);
+    const vaultSalt = combined.slice(0, VAULT_KDF_SALT_BYTES);
+    const hkdfSalt = combined.slice(
+      VAULT_KDF_SALT_BYTES,
+      VAULT_KDF_SALT_BYTES + 16,
+    );
+    const iv = combined.slice(VAULT_KDF_SALT_BYTES + 16, VAULT_KDF_SALT_BYTES + 28);
+    const ciphertext = combined.slice(VAULT_KDF_SALT_BYTES + 28);
+    if (vaultSalt.length !== VAULT_KDF_SALT_BYTES) {
+      throw new Error("[crypto-core] Malformed v6 payload: missing vault salt");
+    }
+
+    const pwBytes = getPasswordBytes(password);
+    let masterKey: CryptoKey;
+    try {
+      // The EMBEDDED salt wins over the module-level one: it is the salt the
+      // payload was actually written with.
+      masterKey = await getV5MasterKey(pwBytes, vaultSalt);
+    } finally {
+      pwBytes.fill(0);
+    }
+
+    const opKey = await crypto.subtle.deriveKey(
+      {
+        name: "HKDF",
+        salt: hkdfSalt as Uint8Array<ArrayBuffer>,
+        info: new TextEncoder().encode("bmf-v5-op-key"),
+        hash: "SHA-256",
+      },
+      masterKey,
+      { name: "AES-GCM", length: 256 },
+      false,
+      ["decrypt"],
+    );
+
+    const decrypted = await crypto.subtle.decrypt(
+      { name: CRYPTO_ALGORITHM, iv },
+      opKey,
+      ciphertext,
+    );
+    return new TextDecoder().decode(decrypted);
+  }
+
   if (encryptedBase64.startsWith("v5:")) {
-    // V5 (Argon2id-once + HKDF) — current format
+    // V5 (Argon2id-once + HKDF, legacy fixed salt) — still read for every
+    // payload written before the per-vault salt existed, and for new writes
+    // on code paths that run without a provisioned vault salt.
     // Wire format: hkdf_salt(16) || iv(12) || ciphertext
     const data = encryptedBase64.substring(3);
     const combined = base64ToU8a(data);
@@ -339,7 +560,7 @@ export async function decrypt(
     const pwBytes = getPasswordBytes(password);
     let masterKey: CryptoKey;
     try {
-      masterKey = await getV5MasterKey(pwBytes);
+      masterKey = await getV5MasterKey(pwBytes, null);
     } finally {
       pwBytes.fill(0);
     }
@@ -442,11 +663,24 @@ export async function decrypt(
     }
   }
 
-  throw new Error("Unsupported encryption format — expected v5:, v4: or v2:");
+  throw new Error("Unsupported encryption format — expected v6:, v5:, v4: or v2:");
 }
 
 /**
+ * Marker byte prefixing the vault-salted session-key wire format.
+ * Legacy payloads start with the (random) HKDF salt, so a legacy blob matches
+ * this marker with probability 1/256 — see `decryptWithSessionKey`, which
+ * falls back to the legacy layout after a failed v6 attempt.
+ */
+const SESSION_V6_MARKER = 0x06;
+
+/**
  * Encrypts `data` with a session-scoped HKDF-derived key.
+ *
+ * Wire format (v6, when a per-vault KDF salt is active):
+ *   0x06 || vault_salt(16) || hkdf_salt(16) || iv(12) || ciphertext
+ * Wire format (legacy, no vault salt):
+ *   hkdf_salt(16) || iv(12) || ciphertext
  *
  * Ownership contract: when `password` is a `Uint8Array`, the buffer is
  * CONSUMED — zeroized via `zeroPasswordBytes` right after the session
@@ -461,12 +695,13 @@ export async function encryptWithSessionKey(
   // S6: derive the session master key via Argon2id ONCE (cached per
   // password). Per-operation keys are derived from it via HKDF-SHA256,
   // which is ~1000× faster than a fresh Argon2id per operation.
+  const vaultSalt = vaultKdfSalt;
   const hkdfSalt = crypto.getRandomValues(new Uint8Array(16));
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const pwBytes = getPasswordBytes(password);
   let masterKey: CryptoKey;
   try {
-    masterKey = await getSessionMasterKey(pwBytes);
+    masterKey = await getSessionMasterKey(pwBytes, vaultSalt);
   } finally {
     pwBytes.fill(0);
   }
@@ -491,16 +726,18 @@ export async function encryptWithSessionKey(
     data as Uint8Array<ArrayBuffer>,
   );
 
-  // Wire format: hkdf_salt(16) || iv(12) || ciphertext
-  const combined = new Uint8Array(
-    hkdfSalt.length + iv.length + ciphertext.byteLength,
-  );
-  combined.set(hkdfSalt);
-  combined.set(iv, hkdfSalt.length);
-  combined.set(
-    new Uint8Array(ciphertext),
-    hkdfSalt.length + iv.length,
-  );
+  // Wire format: [0x06 || vault_salt(16)] || hkdf_salt(16) || iv(12) || ct
+  const headerLength = (vaultSalt ? 1 + vaultSalt.length : 0) + 16 + 12;
+  const combined = new Uint8Array(headerLength + ciphertext.byteLength);
+  let offset = 0;
+  if (vaultSalt) {
+    combined[0] = SESSION_V6_MARKER;
+    combined.set(vaultSalt, 1);
+    offset = 1 + vaultSalt.length;
+  }
+  combined.set(hkdfSalt, offset);
+  combined.set(iv, offset + 16);
+  combined.set(new Uint8Array(ciphertext), headerLength);
   return combined;
 }
 
@@ -515,14 +752,52 @@ export async function decryptWithSessionKey(
   data: Uint8Array,
   password: string | Uint8Array,
 ): Promise<Uint8Array> {
-  // S6 wire format: hkdf_salt(16) || iv(12) || ciphertext
-  const hkdfSalt = data.slice(0, 16);
-  const iv = data.slice(16, 28);
-  const ciphertext = data.slice(28);
+  if (data.length > 1 + VAULT_KDF_SALT_BYTES + 28 && data[0] === SESSION_V6_MARKER) {
+    // V6 layout. The marker is not a hard guarantee for LEGACY blobs (their
+    // first byte is random HKDF salt), so a failed v6 attempt falls through
+    // to the legacy layout instead of surfacing an auth error for a blob that
+    // is actually legacy.
+    const vaultSalt = data.slice(1, 1 + VAULT_KDF_SALT_BYTES);
+    const hkdfSalt = data.slice(1 + VAULT_KDF_SALT_BYTES, 1 + VAULT_KDF_SALT_BYTES + 16);
+    const iv = data.slice(1 + VAULT_KDF_SALT_BYTES + 16, 1 + VAULT_KDF_SALT_BYTES + 28);
+    const ciphertext = data.slice(1 + VAULT_KDF_SALT_BYTES + 28);
+    try {
+      return await decryptSessionPayload(
+        ciphertext,
+        iv,
+        hkdfSalt,
+        vaultSalt,
+        password,
+      );
+    } catch (error) {
+      // Ambiguous legacy payload whose first byte happened to equal the
+      // marker: retry with the legacy layout before failing.
+      void error;
+    }
+  }
+
+  // Legacy layout: hkdf_salt(16) || iv(12) || ciphertext
+  return decryptSessionPayload(
+    data.slice(28),
+    data.slice(16, 28),
+    data.slice(0, 16),
+    null,
+    password,
+  );
+}
+
+/** Shared body of the session-key decrypt paths (v6 and legacy). */
+async function decryptSessionPayload(
+  ciphertext: Uint8Array,
+  iv: Uint8Array,
+  hkdfSalt: Uint8Array,
+  vaultSalt: Uint8Array | null,
+  password: string | Uint8Array,
+): Promise<Uint8Array> {
   const pwBytes = getPasswordBytes(password);
   let masterKey: CryptoKey;
   try {
-    masterKey = await getSessionMasterKey(pwBytes);
+    masterKey = await getSessionMasterKey(pwBytes, vaultSalt);
   } finally {
     pwBytes.fill(0);
   }
@@ -542,9 +817,9 @@ export async function decryptWithSessionKey(
   );
 
   const decrypted = await crypto.subtle.decrypt(
-    { name: CRYPTO_ALGORITHM, iv },
+    { name: CRYPTO_ALGORITHM, iv: iv as Uint8Array<ArrayBuffer> },
     opKey,
-    ciphertext,
+    ciphertext as Uint8Array<ArrayBuffer>,
   );
   return new Uint8Array(decrypted);
 }

@@ -5,7 +5,8 @@
  *   1. The operator configured a Sentry DSN at build time (`VITE_SENTRY_DSN`),
  *      and
  *   2. the user explicitly opted in via the consent banner
- *      (`forge_consent_error_reporting`, with legacy fallbacks).
+ *      (`forge_consent_error_reporting`, with only the pre-banner broad
+ *      telemetry key as a migration fallback).
  *
  * The SDK is loaded with a dynamic import so it never ships in the initial
  * bundle — without a configured DSN the module is a no-op and the SDK chunk
@@ -25,14 +26,9 @@
  */
 import type { ErrorEvent as SentryErrorEvent, EventHint } from "@sentry/browser";
 import { env } from "../env.config";
-import { safeGet } from "../store/safeStorage";
-import { STORAGE_KEYS } from "../constants/storage-keys";
+import { isPurposeConsented } from "../services/ConsentService";
 import { logger } from "../utils/logger";
 import { sanitizeMessage } from "./sanitize";
-
-const CONSENT_KEY = STORAGE_KEYS.CONSENT_ERROR_REPORTING;
-const LEGACY_CONSENT_KEY_1 = "bmf_local_error_storage";
-const LEGACY_CONSENT_KEY_2 = "bmf_telemetry_optin";
 
 // Benign browser noise that carries no diagnostic value; matched as
 // substrings against the error message by the SDK.
@@ -50,17 +46,16 @@ export function getSentryDsn(): string {
 }
 
 /**
- * Consent gate for the REMOTE sink. Mirrors the local errorReporter's
- * isTelemetryEnabled() so both sinks honor the same user decision, with the
- * same legacy fallbacks. An explicit "false" on the current key always wins.
+ * Consent gate for the REMOTE sink. An explicit current-scope decision wins;
+ * only the pre-banner broad telemetry opt-in remains as a migration fallback.
+ * The legacy local-error-storage flag is intentionally excluded.
  */
 export function isRemoteErrorReportingConsented(): boolean {
   try {
-    const current = safeGet(CONSENT_KEY);
-    if (current !== null) return current === "true";
-    const legacy1 = safeGet(LEGACY_CONSENT_KEY_1);
-    if (legacy1 !== null) return legacy1 === "true";
-    return safeGet(LEGACY_CONSENT_KEY_2) === "true";
+    // ConsentService also honors the pre-banner error-reporting key as a
+    // read-only migration fallback, while the dedicated Sentry key remains
+    // authoritative once written.
+    return isPurposeConsented("sentry");
   } catch {
     return false;
   }
@@ -144,6 +139,12 @@ export function sanitizeBeforeSend(
  */
 export async function initRemoteErrorReporting(): Promise<void> {
   const dsn = getSentryDsn();
+  // Do not even initialize the SDK before consent: SDK startup can create
+  // implicit envelopes/session traffic independently of application errors.
+  if (!isRemoteErrorReportingConsented()) {
+    logger.debug("[RemoteErrorReporter] disabled — consent not granted");
+    return;
+  }
   if (!dsn) {
     logger.debug("[RemoteErrorReporter] disabled — VITE_SENTRY_DSN no configurado");
     return;

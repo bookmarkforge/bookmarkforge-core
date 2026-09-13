@@ -22,6 +22,15 @@ import {
   validateVerificationIntegrity,
 } from "./security-vault/integrity";
 import { deriveShareCredential, parseShareSalt } from "./security-vault/share";
+import { announceVaultKdfSaltChange } from "./security-vault/kdf-salt-sync";
+import {
+  ensureVaultKdfSalt,
+  migrateVaultSecretsToVaultSalt,
+  restoreVaultKdfSalt,
+  rotateVaultKdfSalt,
+  snapshotVaultKdfSalt,
+  type VaultKdfSaltSnapshot,
+} from "./security-vault/kdf-salt";
 
 // Re-exported for backward compatibility — the canonical definition lives in
 // security-vault/constants.ts (refactor, no behavior change).
@@ -281,6 +290,17 @@ class SecurityVault {
       return false;
     }
 
+    // ── A-1: per-vault Argon2id salt (best-effort, never blocks the unlock) ──
+    // Runs after the device key is materialized (SecureStorage is readable and
+    // writable from here) and before any password-encrypted write below, so a
+    // token minted on this path is already v6-keyed. Legacy blobs are re-wrapped
+    // in the same step; a failure leaves them under the legacy fixed salt, where
+    // they stay readable.
+    const vaultKdfSaltHex = await this.installVaultKdfSalt();
+    if (vaultKdfSaltHex) {
+      await this.migrateVaultToPerVaultSalt(trimmedPassword);
+    }
+
     // SECURITY: create verification token ATOMICALLY before setting any
     // session state. If the process dies between setting masterPasswordBytes
     // and persisting the token, the vault would be left unverifiable on
@@ -518,6 +538,62 @@ class SecurityVault {
    *   - If a master password is already configured → reject (tampering)
    *   - On first run (no flag) → accept for the registration flow
    */
+  /**
+   * A-1: install the per-vault Argon2id salt in the crypto layer.
+   *
+   * Best-effort by design: the unlock path must not fail because the salt
+   * could not be provisioned (the vault then simply keeps using the legacy
+   * fixed salt, which is exactly the pre-change behavior).
+   *
+   * @returns the installed salt (32 hex) or null when unavailable.
+   */
+  private async installVaultKdfSalt(): Promise<string | null> {
+    try {
+      return await ensureVaultKdfSalt();
+    } catch (error) {
+      logger.warn(
+        "[SecurityVault] Vault KDF salt unavailable — continuing with the legacy fixed salt",
+        { error: error instanceof Error ? error.message : String(error) },
+      );
+      return null;
+    }
+  }
+
+  /**
+   * A-1: transparently re-wrap master-password material under the per-vault
+   * salt, once the per-vault salt is installed.
+   *
+   * Two targets, in order of exposure:
+   *   1. the verification token + its S1 integrity record — this is the blob an
+   *      attacker with device access can mount an offline dictionary against
+   *      while the vault is LOCKED, so it is the primary reason for the fix.
+   *      Re-minted only while it is still a legacy `v5:` payload, and always
+   *      together with its integrity record (one IndexedDB transaction) so a
+   *      crash can never leave a token/HMAC pair that no password unlocks.
+   *   2. the other persisted password-encrypted secrets (see
+   *      migrateVaultSecretsToVaultSalt).
+   *
+   * Never throws: the password was just verified, so the session is valid
+   * whatever the outcome; the caller's unlock result is unaffected.
+   */
+  private async migrateVaultToPerVaultSalt(password: string): Promise<void> {
+    try {
+      const storedToken = await secureStorage.getVerificationToken();
+      if (storedToken && !storedToken.startsWith("v6:")) {
+        await createVerificationToken(password);
+        logger.info(
+          "[SecurityVault] Verification token re-wrapped under the per-vault KDF salt (A-1)",
+        );
+      }
+      await migrateVaultSecretsToVaultSalt(password);
+    } catch (error) {
+      logger.warn(
+        "[SecurityVault] Per-vault salt migration incomplete — legacy payloads remain readable",
+        { error: error instanceof Error ? error.message : String(error) },
+      );
+    }
+  }
+
   private async verifyPassword(password: string): Promise<boolean> {
     const stored = await secureStorage.getVerificationToken();
     if (!stored) {
@@ -1147,6 +1223,15 @@ class SecurityVault {
 
   /**
    * Rotates the master password by re-encrypting all stored secrets with the new key.
+   *
+   * The per-vault Argon2id KDF salt is re-minted as part of the same operation
+   * (A-1), so every re-wrapped `v6:` payload is keyed by the new password AND
+   * the new salt — a dictionary built against the old password stops applying
+   * to the vault the moment this returns `true`. All of it is undone together:
+   * a failure anywhere in the middle restores the previous secrets, the wrapped
+   * device key, the verification token, its S1 integrity record, and the
+   * previous salt.
+   *
    * @param newPassword - The new master password
    * @param oldPassword - Current password (uses in-memory bytes if omitted)
    */
@@ -1199,6 +1284,10 @@ class SecurityVault {
     let verificationIntegritySnapshot: string | null = null;
     let wrappedDeviceKeySnapshotted = false;
     let verificationTokenSnapshotted = false;
+    // A-1: pre-rotation KDF-salt state. Set before the salt is swapped (never
+    // after), so a rotation that fails between "stored" and "installed" is
+    // still fully undoable.
+    let vaultSaltSnapshot: VaultKdfSaltSnapshot | null = null;
     let oldPwBytes: Uint8Array | null = null;
     let newPwBytes: Uint8Array | null = null;
 
@@ -1253,6 +1342,21 @@ class SecurityVault {
       const deviceKeyWrapped = await secureStorage.isDeviceKeyWrapped();
       assertRotationActive();
 
+      // A-1 / ADR-046: rotate the per-vault Argon2id salt with the password.
+      // The salt is the other half of the offline-attack cost, and it is only
+      // worth what its corpus is worth: leaving it in place would let a
+      // dictionary built against the OLD password keep applying to the blobs
+      // written under the new one. Everything rewritten below (the rotated
+      // secrets, the wrapped device key, the verification token) is therefore
+      // re-keyed onto the new salt; `v6:` payloads embed the salt they were
+      // written with, so nothing already migrated becomes unreadable whatever
+      // the outcome. Decryption needs no cooperation from the module-level
+      // salt (v6 carries its own, v5 uses the legacy fixed one), so swapping it
+      // here cannot break the reads performed below.
+      vaultSaltSnapshot = await snapshotVaultKdfSalt();
+      await rotateVaultKdfSalt(vaultSaltSnapshot);
+      assertRotationActive();
+
       try {
         for (const key of rotatedKeys) {
           const encrypted = snapshot[key];
@@ -1290,6 +1394,7 @@ class SecurityVault {
       // Persist the new verification token before replacing the in-memory
       // password. If this write fails, the catch block can restore the old
       // token while the current session still uses the old password.
+      // A-1: re-minted as a `v6:` payload, so it embeds the salt rotated above.
       await createVerificationToken(newPassword);
       assertRotationActive();
       // Generate the replacement session token while the old session is still
@@ -1329,11 +1434,35 @@ class SecurityVault {
         ),
       );
 
+      // Corpus hygiene: the auto-backup in IDB was encrypted with the OLD
+      // password. Leaving it in place gives an attacker who harvests the IDB
+      // a brute-forceable corpus under the retired key material. Clear it so
+      // the next auto-backup cycle creates one under the new password. The
+      // cloud-sync backup blob is similarly stale; clearing the local
+      // metadata forces the next sync to re-upload with the new password.
+      // Both are best-effort: a failure must not abort the committed rotation.
+      try {
+        const { BackupService } = await import("./BackupService");
+        await BackupService.clearAutoBackup();
+      } catch (err) {
+        logger.warn(
+          "[SecurityVault] Failed to clear stale auto-backup after rotation",
+          { error: err },
+        );
+      }
+
       this.recordAudit({
         action: "master_password_rotate",
         result: "success",
         origin: "SecurityVault",
       });
+      // A-1 / ADR-046: the salt changed, so the tabs that are already open
+      // must re-read it or they keep writing under the retired one. Announced
+      // ONLY here — after the rotation is committed and no longer undoable: a
+      // notification sent mid-rotation would make sibling tabs adopt a salt
+      // this tab may still roll back, and every `v6:` payload written in that
+      // window would be keyed to a salt the vault no longer holds.
+      announceVaultKdfSaltChange();
       return true;
     } catch (error) {
       logger.error("[SecurityVault] Failed to rotate master password", {
@@ -1372,6 +1501,18 @@ class SecurityVault {
             logger.error("[SecurityVault] Rollback integrity record delete failed", { error: err }),
           );
         }
+      }
+      // A-1 / ADR-046: restore the previous KDF salt LAST, once every payload
+      // under the new one has been put back. Only the in-memory half is
+      // load-bearing for the current session (it continues with the OLD
+      // password, so it must also continue under the derivation that password
+      // was stretched with); the stored half is what the next unlock installs.
+      if (vaultSaltSnapshot) {
+        await restoreVaultKdfSalt(vaultSaltSnapshot).catch((err) =>
+          logger.error("[SecurityVault] Rollback vault KDF salt failed", {
+            error: err,
+          }),
+        );
       }
       this.recordAudit({
         action: "master_password_rotate",

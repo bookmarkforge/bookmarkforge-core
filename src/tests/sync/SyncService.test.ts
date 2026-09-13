@@ -1,5 +1,5 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
-import { SyncService } from "../../services/SyncService";
+import { SyncService, deriveSyncTopic } from "../../services/SyncService";
 import { securityVault } from "../../services/SecurityVault";
 import { SYNC_CONFIG } from "../../constants/config";
 
@@ -291,6 +291,21 @@ describe("SyncService", () => {
       );
     });
 
+    it("A-2: replicates under the keyed HMAC topic, never the readable room id", async () => {
+      const roomSecret = "a".repeat(64);
+      (replicateWebRTC as any).mockClear();
+      await service.startP2PSync(dbMock, "room-A2", roomSecret);
+
+      const options = (replicateWebRTC as any).mock.calls[0]?.[0] as {
+        topic?: string;
+      };
+      const expected = await deriveSyncTopic(roomSecret, "room-A2", "bookmarks");
+      expect(options.topic).toBe(expected);
+      // The signaling server (or a public relay) must never see the room id.
+      expect(options.topic).toMatch(/^[0-9a-f]{64}$/);
+      expect(options.topic).not.toContain("room-A2");
+    });
+
     it("should filter out chunks collection", async () => {
       const dbWithChunks = {
         collections: { bookmarks: { name: "bookmarks" }, chunks: { name: "chunks" } },
@@ -570,7 +585,14 @@ describe("SyncService", () => {
       vi.mocked(getConnectionHandlerSimplePeer).mockReturnValue({} as any);
     });
 
-    it("should inject roomSecret into join messages via makeSignalingSocket", async () => {
+    it("injects roomSecret into join messages via makeSignalingSocket for the self-hosted server", async () => {
+      // A-3: the secret travels only to the configured self-hosted server, so
+      // the deployment below is part of the contract this test pins.
+      vi.mocked(getEnvVar).mockImplementation((name: string): any =>
+        name === "VITE_P2P_SIGNALING_URL"
+          ? "wss://signaling.example.com"
+          : undefined,
+      );
       vi.mocked(replicateWebRTC).mockResolvedValue({
         error$: { subscribe: vi.fn(() => ({ unsubscribe: vi.fn() })) } as any,
         peerStates$: null as any,
@@ -597,6 +619,65 @@ describe("SyncService", () => {
         type: "join",
         room: "room-1",
         roomSecret,
+      });
+    });
+
+    it("A-3: never sends roomSecret to the public relays (no self-hosted server configured)", async () => {
+      // Public-relay mode: the app must keep working over rxdb.info/PubNub
+      // without handing those third parties the room capability.
+      vi.mocked(getEnvVar).mockReturnValue(undefined);
+      vi.mocked(replicateWebRTC).mockResolvedValue({
+        error$: { subscribe: vi.fn(() => ({ unsubscribe: vi.fn() })) } as any,
+        peerStates$: null as any,
+        cancel: vi.fn(),
+      } as any);
+
+      const syncPromise = service.startP2PSync(
+        { collections: { bookmarks: { name: "bookmarks" } } } as any,
+        "room",
+      );
+      await vi.advanceTimersByTimeAsync(3001);
+      await syncPromise;
+
+      const roomSecret = (service as any).roomSecret;
+      expect(roomSecret).toBeTruthy();
+
+      const ws = capturedWsConstructor!("wss://signaling.rxdb.info/");
+      ws.send(JSON.stringify({ type: "join", room: "room-1" }));
+
+      expect(wsSendSpy).toHaveBeenCalledTimes(1);
+      const frame = wsSendSpy.mock.calls[0]![0] as string;
+      expect(JSON.parse(frame)).toEqual({ type: "join", room: "room-1" });
+      expect(frame).not.toContain(roomSecret);
+    });
+
+    it("A-3: withholds roomSecret when a self-hosted server is configured but the socket is not on it", async () => {
+      // Defense in depth: the decision is re-derived per socket from the URL,
+      // so even a wrong URL cannot leak the secret to a relay.
+      vi.mocked(getEnvVar).mockImplementation((name: string): any =>
+        name === "VITE_P2P_SIGNALING_URL"
+          ? "wss://signaling.example.com"
+          : undefined,
+      );
+      vi.mocked(replicateWebRTC).mockResolvedValue({
+        error$: { subscribe: vi.fn(() => ({ unsubscribe: vi.fn() })) } as any,
+        peerStates$: null as any,
+        cancel: vi.fn(),
+      } as any);
+
+      const syncPromise = service.startP2PSync(
+        { collections: { bookmarks: { name: "bookmarks" } } } as any,
+        "room",
+      );
+      await vi.advanceTimersByTimeAsync(3001);
+      await syncPromise;
+
+      const ws = capturedWsConstructor!("wss://signaling.rxdb.info/");
+      ws.send(JSON.stringify({ type: "join", room: "room-1" }));
+
+      expect(JSON.parse(wsSendSpy.mock.calls[0]![0])).toEqual({
+        type: "join",
+        room: "room-1",
       });
     });
 
@@ -846,9 +927,14 @@ describe("SyncService", () => {
       // The old behaviour returned room-A's promise, so room-B never started.
       expect(second).not.toBe(first);
 
-      // Let room-B's startup reach the pending replicateWebRTC call.
-      for (let i = 0; i < 20 && resolvers.length === 0; i++) {
+      // Let room-B's startup reach the pending replicateWebRTC call. The
+      // startup awaits an HMAC (crypto.subtle) to derive the keyed room name
+      // (A-2) before replicating, so a fixed number of plain microtask yields
+      // is not enough — pump microtasks and let fake timers flush real async
+      // work until the pending call appears.
+      for (let i = 0; i < 100 && resolvers.length === 0; i++) {
         await Promise.resolve();
+        await vi.advanceTimersByTimeAsync(0);
       }
       expect(resolvers.length).toBe(1);
       resolvers[0]!(mockReplicationState);

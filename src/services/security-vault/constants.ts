@@ -15,6 +15,13 @@ export const SECURE_STORAGE_KEYS = {
   DB_KEY: "encrypted_db_key",
   MASTER_PASSWORD_SETUP: "master_password_setup",
   VERIFICATION: "vault_verification",
+  /**
+   * A-1: random 16-byte per-vault Argon2id salt (32 hex chars). Not a secret —
+   * it is stored next to the ciphertexts and embedded in every `v6:` payload —
+   * only unique per vault, which is what defeats cross-user precomputed
+   * dictionaries. Provisioned by security-vault/kdf-salt.ts.
+   */
+  KDF_SALT: "kdf_salt",
 } as const;
 
 /** Plaintext marker the verification token must decrypt to. */

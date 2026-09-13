@@ -30,6 +30,7 @@ vi.mock("../../services/ai/ProviderManager", () => ({
 }));
 
 const mockWebLLMService = {
+  getCapabilityBlocker: vi.fn().mockResolvedValue(null),
   canRunLocalLLM: vi.fn().mockResolvedValue(true),
   isModelLoaded: vi.fn().mockReturnValue(true),
   getCurrentModel: vi.fn().mockReturnValue("llama3.2"),
@@ -875,7 +876,9 @@ describe("SupportChat", () => {
     vi.useFakeTimers();
     try {
       mockAiManager.isOllamaAvailable.mockResolvedValue(false);
-      mockWebLLMService.canRunLocalLLM.mockResolvedValue(false);
+      mockWebLLMService.getCapabilityBlocker.mockResolvedValue(
+        "webgpu-unavailable",
+      );
       Object.defineProperty(navigator, "onLine", {
         configurable: true,
         get: () => false,
@@ -887,12 +890,75 @@ describe("SupportChat", () => {
       });
       expect(screen.getByText(/You are offline/)).toBeTruthy();
       expect(screen.getByText(/Ollama is not running/)).toBeTruthy();
-      expect(screen.getByText(/WebLLM cannot run/)).toBeTruthy();
+      // The blocker enum must reach the user as the SPECIFIC cause, not the
+      // generic fallback — this is the end of the thread that starts at
+      // WebLLMService.getCapabilityBlocker().
+      expect(
+        screen.getByText(
+          /WebLLM cannot run: this browser does not support WebGPU/,
+        ),
+      ).toBeTruthy();
     } finally {
       vi.useRealTimers();
       vi.mocked(mockAiManager.isOllamaAvailable).mockResolvedValue(true);
-      vi.mocked(mockWebLLMService.canRunLocalLLM).mockResolvedValue(true);
+      vi.mocked(mockWebLLMService.getCapabilityBlocker).mockResolvedValue(
+        null,
+      );
       delete (navigator as unknown as Record<string, unknown>).onLine;
+    }
+  });
+
+  it("names insufficient device memory as the WebLLM blocker cause", async () => {
+    // Second rung of the ladder: the enum -> message mapping must be
+    // cause-specific, not collapsed into one string for every blocker.
+    vi.useFakeTimers();
+    try {
+      mockAiManager.isOllamaAvailable.mockResolvedValue(true);
+      mockWebLLMService.getCapabilityBlocker.mockResolvedValue(
+        "insufficient-memory",
+      );
+      render(<SupportChat />);
+      fireEvent.click(screen.getByTestId("icon-Activity"));
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(2000);
+      });
+      expect(
+        screen.getByText(
+          /WebLLM cannot run: at least 4 GB of device memory is required/,
+        ),
+      ).toBeTruthy();
+      expect(
+        screen.queryByText(/does not support WebGPU/),
+      ).toBeNull();
+    } finally {
+      vi.useRealTimers();
+      vi.mocked(mockWebLLMService.getCapabilityBlocker).mockResolvedValue(null);
+    }
+  });
+
+  it("falls back to the generic WebLLM message when the probe produced no verdict", async () => {
+    // A rejected probe yields no blocker enum (SupportDiagnostics drops it),
+    // so the UI must show the honest generic message instead of guessing a
+    // specific cause it does not know.
+    vi.useFakeTimers();
+    try {
+      mockAiManager.isOllamaAvailable.mockResolvedValue(true);
+      mockWebLLMService.getCapabilityBlocker.mockRejectedValue(
+        new Error("probe crashed"),
+      );
+      render(<SupportChat />);
+      fireEvent.click(screen.getByTestId("icon-Activity"));
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(2000);
+      });
+      expect(
+        screen.getByText(
+          /WebLLM cannot run: WebGPU or sufficient RAM is required/,
+        ),
+      ).toBeTruthy();
+    } finally {
+      vi.useRealTimers();
+      vi.mocked(mockWebLLMService.getCapabilityBlocker).mockResolvedValue(null);
     }
   });
 

@@ -45,6 +45,13 @@ vi.mock("../../services/integrations/cloudSync", () => ({
 vi.mock("../../services/ai/WebLLMService", () => ({
   webLLMService: {
     getMetrics: vi.fn().mockReturnValue({ firstSummaryLatencyMs: 1234 }),
+    getHealthStatus: vi.fn().mockResolvedValue({
+      engineReady: false,
+      isInitializing: false,
+      canRunLocalLLM: true,
+      lastError: null,
+    }),
+    init: vi.fn(),
   },
 }));
 
@@ -161,6 +168,87 @@ describe("DiagnosticService", () => {
       expect(diag.ai).toHaveProperty("webGpuSupported");
       expect(diag.ai).toHaveProperty("webLlmStatus");
       expect(diag.ai).toHaveProperty("webGpuAdapter");
+    });
+
+    it("ai: webLlmStatus reflects the REAL health state, not a hardcoded value", async () => {
+      // Regression: webLlmStatus used to be hardcoded "Ready", promising
+      // more than the diagnostics data verified. Every state must come
+      // from webLLMService.getHealthStatus().
+      const { webLLMService } = await import(
+        "../../services/ai/WebLLMService"
+      );
+      const health = vi.mocked(webLLMService.getHealthStatus);
+      // Full WebLLMHealthStatus baseline (capable device, nothing loaded);
+      // each scenario below overrides only the fields under test.
+      const baseHealth = {
+        healthy: false,
+        webGPUSupported: true,
+        f16Supported: true,
+        engineReady: false,
+        modelLoaded: null,
+        isInitializing: false,
+        deviceMemoryGB: 8,
+        hardwareConcurrency: 8,
+        lastError: null,
+        canRunLocalLLM: true,
+        timestamp: Date.now(),
+      } as const;
+
+      // Capable + engine ready → the ONLY path that reports "Ready".
+      health.mockResolvedValueOnce({
+        ...baseHealth,
+        healthy: true,
+        engineReady: true,
+        modelLoaded: "Llama-3.2-1B-Instruct-q4f16_1-MLC",
+      });
+      expect((await diagnosticService.getDiagnostics()).ai.webLlmStatus).toBe(
+        "Ready",
+      );
+
+      // Engine mid-initialization → transient state wins over blockers.
+      health.mockResolvedValueOnce({ ...baseHealth, isInitializing: true });
+      expect((await diagnosticService.getDiagnostics()).ai.webLlmStatus).toBe(
+        "Initializing",
+      );
+
+      // Device cannot run local AI → the hard blocker beats a stale
+      // lastError (init failed BECAUSE of the capability gate).
+      health.mockResolvedValueOnce({
+        ...baseHealth,
+        webGPUSupported: false,
+        f16Supported: false,
+        canRunLocalLLM: false,
+        lastError: "WebGPU is not supported in this browser",
+      });
+      expect((await diagnosticService.getDiagnostics()).ai.webLlmStatus).toBe(
+        "Device not capable",
+      );
+
+      // Capable but a previous init failed → the failure is surfaced.
+      health.mockResolvedValueOnce({
+        ...baseHealth,
+        lastError: "WebGPU context lost during engine creation",
+      });
+      expect((await diagnosticService.getDiagnostics()).ai.webLlmStatus).toBe(
+        "Initialization failed",
+      );
+
+      // Capable, nothing loaded, no failure → honest idle state.
+      expect((await diagnosticService.getDiagnostics()).ai.webLlmStatus).toBe(
+        "Not initialized",
+      );
+
+      // The health probe itself failed → "Unknown", never a fabricated
+      // positive.
+      health.mockRejectedValueOnce(new Error("health read exploded"));
+      expect((await diagnosticService.getDiagnostics()).ai.webLlmStatus).toBe(
+        "Unknown",
+      );
+      // ...and the probe failure is logged, not silent.
+      expect(logger.warn).toHaveBeenCalledWith(
+        "WebLLM health probe failed in diagnostics",
+        "health read exploded",
+      );
     });
 
     it("ai: surfaces time-to-first-summary from WebLLM metrics (F1-D)", async () => {
@@ -309,6 +397,31 @@ describe("DiagnosticService", () => {
       const diag = await diagnosticService.getDiagnostics();
       expect(diag.ai.webGpuSupported).toBe(true);
       expect(diag.ai.webGpuAdapter).toContain("NVIDIA");
+    });
+
+    it("runs its own read-only WebGPU probe without initializing WebLLM", async () => {
+      // The diagnostics report must be purely informational: its WebGPU probe
+      // (getNavigatorGPU().requestAdapter) must never start the engine — that
+      // is warmup()'s job, gated by canRunLocalLLM(). If diagnostics ever
+      // called init(), a support report on a GPU-less device would trigger a
+      // model download.
+      const mockAdapter = {
+        requestAdapterInfo: vi.fn().mockResolvedValue({
+          vendor: "AMD",
+          architecture: "RDNA2",
+          description: "RX 6800",
+        }),
+      };
+      vi.stubGlobal("navigator", {
+        ...navigator,
+        gpu: { requestAdapter: vi.fn().mockResolvedValue(mockAdapter) },
+      });
+      const diag = await diagnosticService.getDiagnostics();
+      expect(diag.ai.webGpuSupported).toBe(true);
+      const { webLLMService } = await import(
+        "../../services/ai/WebLLMService"
+      );
+      expect(webLLMService.init).not.toHaveBeenCalled();
     });
 
     it("webGpuSupported false when adapter is null", async () => {

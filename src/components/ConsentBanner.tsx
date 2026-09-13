@@ -2,15 +2,16 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { Shield, ChevronDown, ChevronUp, ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "motion/react";
-import { safeGet, safeSet } from "../store/safeStorage";
-import { STORAGE_KEYS } from "../constants/storage-keys";
 import { useFocusTrap } from "../hooks/useFocusTrap";
+import {
+  getConsent,
+  hasConsentDecision as hasStoredConsentDecision,
+  setConsent,
+  type ConsentToggles,
+} from "../services/ConsentService";
 
-interface ConsentToggles {
-  analytics: boolean;
-  errorReporting: boolean;
-  clientEvents: boolean;
-}
+// ADR-030: optional purposes are independent and default to opt-in only
+// after the user explicitly selects them.
 
 interface ConsentBannerProps {
   onConsentDecided: (consent: ConsentToggles) => void;
@@ -21,36 +22,23 @@ interface ConsentBannerProps {
  * Returns null if no consent decision has been made yet.
  */
 export function getStoredConsent(): ConsentToggles | null {
-  const decided = safeGet(STORAGE_KEYS.CONSENT_DECISION_MADE);
-  if (decided !== "true") return null;
-  return {
-    analytics: safeGet(STORAGE_KEYS.CONSENT_ANALYTICS) === "true",
-    errorReporting: safeGet(STORAGE_KEYS.CONSENT_ERROR_REPORTING) === "true",
-    clientEvents: safeGet(STORAGE_KEYS.CONSENT_CLIENT_EVENTS) === "true",
-  };
+  return getConsent();
 }
 
 /**
  * Check if the user has already made a consent decision.
  */
 export function hasConsentDecision(): boolean {
-  return safeGet(STORAGE_KEYS.CONSENT_DECISION_MADE) === "true";
+  return hasStoredConsentDecision();
 }
 
 /**
  * Persist consent toggles to storage.
- * Also syncs the legacy LOCAL_ERROR_STORAGE key for backward compatibility
- * with errorReporter and clientEventReporter.
+ * Also mirrors only the error-reporting choice to the legacy local storage
+ * key. A client-events decision must never authorize local error storage.
  */
 function persistConsent(consent: ConsentToggles): void {
-  safeSet(STORAGE_KEYS.CONSENT_DECISION_MADE, "true");
-  safeSet(STORAGE_KEYS.CONSENT_ANALYTICS, String(consent.analytics));
-  safeSet(STORAGE_KEYS.CONSENT_ERROR_REPORTING, String(consent.errorReporting));
-  safeSet(STORAGE_KEYS.CONSENT_CLIENT_EVENTS, String(consent.clientEvents));
-
-  // Sync legacy key used by errorReporter and clientEventReporter
-  const anyReporting = consent.errorReporting || consent.clientEvents;
-  safeSet(STORAGE_KEYS.LOCAL_ERROR_STORAGE, String(anyReporting));
+  setConsent(consent);
 }
 
 /**
@@ -74,9 +62,9 @@ export const ConsentBanner: React.FC<ConsentBannerProps> = ({
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   const [toggles, setToggles] = useState<ConsentToggles>({
-    analytics: true,
-    errorReporting: true,
-    clientEvents: true,
+    analytics: false,
+    errorReporting: false,
+    clientEvents: false,
   });
   const bannerRef = useRef<HTMLDivElement>(null);
 

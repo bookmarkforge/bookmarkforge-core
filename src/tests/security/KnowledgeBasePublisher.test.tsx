@@ -67,7 +67,9 @@ describe("KnowledgeBasePublisher", () => {
     expect(
       await screen.findByText("Knowledge Base Publisher"),
     ).toBeInTheDocument();
-    expect(screen.getByText("ml")).toBeInTheDocument();
+    // The header renders immediately; wait for the async bookmark load to
+    // produce the computed collections before asserting on their content.
+    expect(await screen.findByText("ml")).toBeInTheDocument();
     expect(screen.getAllByText(/bookmarks/).length).toBeGreaterThan(0);
     expect(screen.getAllByText("Publish").length).toBeGreaterThan(0);
   });

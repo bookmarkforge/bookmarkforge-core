@@ -16,6 +16,10 @@ import { STORAGE_KEYS } from "../../constants/storage-keys";
 import { toast } from "sonner";
 import { SECURITY_CONFIG } from "../../constants/config";
 import { useGuardedAction } from "../../hooks/useGuardedAction";
+
+// ADR-030: this legacy settings control changes only the error-reporting
+// purpose; it must never grant analytics or client-event consent implicitly.
+
 interface SecuritySectionProps {
   vaultKey: string;
   setVaultKey: (key: string) => void;
@@ -48,16 +52,13 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
   const handleTelemetryToggle = () => {
     const nextVal = !telemetryOptIn;
     setTelemetryOptIn(nextVal);
-    // Audit 2026-08-30: write to ALL consent keys so the ConsentBanner,
-    // AnalyticsService, errorReporter and clientEventReporter all see the
-    // same state. Previously this only wrote bmf_local_error_storage, which
-    // the services (after the consent-key fix) no longer read as primary.
+    // Keep the settings shortcut scoped to error reporting. Analytics and
+    // operational client events require their own explicit banner choices.
     const val = String(nextVal);
+    safeSet(STORAGE_KEYS.CONSENT_DECISION_MADE, "true");
     safeSet(STORAGE_KEYS.CONSENT_ERROR_REPORTING, val);
-    safeSet(STORAGE_KEYS.CONSENT_ANALYTICS, val);
-    safeSet(STORAGE_KEYS.CONSENT_CLIENT_EVENTS, val);
-    // Clear legacy keys so a stale "true" can never resurface an opt-in
-    // the user just turned off.
+    // Clear legacy keys so a stale broad opt-in cannot resurface after the
+    // user changes this setting. The current scoped key remains authoritative.
     safeRemove(STORAGE_KEYS.LOCAL_ERROR_STORAGE);
     safeRemove("bmf_telemetry_optin");
   };

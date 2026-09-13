@@ -13,6 +13,7 @@ import {
   generateSecureSalt,
   hashString,
   resetSessionKeyCache,
+  setVaultKdfSalt,
 } from "../utils/crypto-core";
 import { logger } from "../utils/logger";
 
@@ -163,6 +164,7 @@ async function handleCryptoMessage(e: MessageEvent): Promise<void> {
     "generateSecureSalt",
     "clearDatabase",
     "reset-session",
+    "set-vault-salt",
     "deriveArgon2AesKey",
   ]);
   if (!KNOWN_TYPES.has(type)) {
@@ -182,6 +184,25 @@ async function handleCryptoMessage(e: MessageEvent): Promise<void> {
     self.postMessage({ id, result: "ok" });
     return;
   }
+  // A-1: install the per-vault Argon2id salt. Runs without a password (the
+  // salt is public metadata) and is ordered ahead of every crypto operation by
+  // the worker's FIFO message queue, so a salt set before an encrypt always
+  // applies first.
+  if (type === "set-vault-salt") {
+    clearPayloadPassword(payload);
+    clearPayloadPassword(safePayload);
+    try {
+      const salt = safePayload.salt;
+      setVaultKdfSalt(typeof salt === "string" ? salt : null);
+      self.postMessage({ id, result: "ok" });
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Crypto operation failed";
+      self.postMessage({ id, error: message, code: "OPERATION_FAILED" });
+    }
+    return;
+  }
+
   if (type === "hash" || type === "generateSecureSalt") {
     clearPayloadPassword(payload);
     clearPayloadPassword(safePayload);
@@ -293,6 +314,13 @@ async function handleCryptoMessage(e: MessageEvent): Promise<void> {
       }
     } finally {
       zeroPassword(passwordBytes);
+      // ADR-044: Always clear the original MessageEvent payload's password
+      // bytes on BOTH success and error paths. The success path only zeroed
+      // the derived `passwordBytes` from `resolvePassword`, leaving the
+      // original `payload.passwordBytes` Uint8Array in the worker's
+      // MessageEvent buffer until GC.
+      clearPayloadPassword(payload);
+      clearPayloadPassword(safePayload);
     }
   } catch (error: unknown) {
     // Covers malformed password payloads that fail inside resolvePassword

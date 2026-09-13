@@ -36,6 +36,9 @@ mockExec.mockResolvedValueOnce = (val: any) => {
 };
 const mockFindOne = vi.fn((_id: string) => ({ exec: mockExec }));
 const mockDocumentsUpsert = vi.fn().mockResolvedValue({});
+const mockDocumentsFind = vi.fn(() => ({
+  exec: vi.fn().mockResolvedValue([]),
+}));
 const mockVersionsUpsert = vi.fn().mockResolvedValue({});
 
 vi.mock("../../db/database", () => ({
@@ -43,10 +46,28 @@ vi.mock("../../db/database", () => ({
     documents: {
       findOne: mockFindOne,
       upsert: mockDocumentsUpsert,
+      find: mockDocumentsFind,
     },
     bookmarks: { find: vi.fn(() => ({ exec: vi.fn().mockResolvedValue([]) })) },
     versions: { upsert: mockVersionsUpsert },
   }),
+}));
+
+// The REAL useBlockEditorLogic round-trips attachments through this store on
+// load (hydrate) and autosave (persist); stub it so no real storage or
+// decryption is touched while the real hook effects run.
+vi.mock("../../services/documentAttachments", () => ({
+  attachmentStore: {
+    hydrateBlocks: vi.fn(async (_docId: string, blocks: unknown[]) => blocks),
+    hydrateText: vi.fn(async (_docId: string, text: string) => text),
+    persistBlocks: vi.fn(async (_docId: string, blocks: unknown[]) => blocks),
+    persistText: vi.fn(async (_docId: string, text: string) => text),
+    persistFile: vi.fn(async () => "att-1"),
+    register: vi.fn(),
+    revokeAll: vi.fn(),
+    revokeUnreferenced: vi.fn(),
+    revokeDocumentUrls: vi.fn(),
+  },
 }));
 
 vi.mock("@blocknote/mantine", () => ({
@@ -93,22 +114,64 @@ vi.mock("@blocknote/core", () => ({
   filterSuggestionItems: vi.fn((items) => items),
 }));
 
-const _mockGenerateEmbedding = vi.fn().mockResolvedValue([0.1, 0.2]);
-const _mockSearchSimilar = vi.fn().mockResolvedValue([]);
+// BroadcastChannel double: the REAL hook receives collaborator presence
+// through a "block-editor-presence" channel; this mock captures instances so
+// tests can drive real messages. (The old fabricated hook had no channel at
+// all — its "presence" existed only inside the mock.)
+class MockBroadcastChannel {
+  static instances: MockBroadcastChannel[] = [];
+  listeners = new Set<(e: { data: unknown }) => void>();
+  closed = false;
+  constructor(public name: string) {
+    MockBroadcastChannel.instances.push(this);
+  }
+  addEventListener(_t: string, cb: (e: { data: unknown }) => void) {
+    this.listeners.add(cb);
+  }
+  removeEventListener(_t: string, cb: (e: { data: unknown }) => void) {
+    this.listeners.delete(cb);
+  }
+  close() {
+    this.closed = true;
+  }
+}
+vi.stubGlobal(
+  "BroadcastChannel",
+  MockBroadcastChannel as unknown as typeof BroadcastChannel,
+);
 
-vi.mock("../\.\./services/ai/RAGEngine", () => ({
-  ragEngine: {
-    generateEmbedding: _mockGenerateEmbedding,
-    searchSimilar: _mockSearchSimilar,
-  },
+// vi.hoisted: mocked-module factories can run during the top-of-file import
+// phase, before plain const declarations initialize.
+const _mockAiManager = vi.hoisted(() => ({
+  warmup: vi.fn().mockResolvedValue(undefined),
 }));
 
-const _mockAiManager = { warmup: vi.fn() };
+// Canary spies for the never-starts-WebLLM contract: the editor UI layer must
+// not touch the WebLLM engine directly — local-AI preload goes exclusively
+// through the guarded aiManager.warmup() inside editorFocusWarmup.
+const _mockWebLLM = vi.hoisted(() => ({
+  init: vi.fn().mockResolvedValue(undefined),
+  generateText: vi.fn().mockResolvedValue(""),
+  unload: vi.fn().mockResolvedValue(undefined),
+  canRunLocalLLM: vi.fn().mockResolvedValue(true),
+  getHealthStatus: vi.fn().mockResolvedValue({
+    ready: false,
+    modelLoaded: false,
+    currentModel: "",
+    webGPUSupported: true,
+    f16Supported: true,
+    deviceMemoryGB: 8,
+  }),
+}));
 const _mockEditorDocument = [
   { type: "paragraph", content: [{ type: "text", text: "initial" }] },
 ];
 vi.mock("../\.\./services/ai/ProviderManager", () => ({
   aiManager: _mockAiManager,
+}));
+
+vi.mock("../../services/ai/WebLLMService", () => ({
+  webLLMService: _mockWebLLM,
 }));
 
 vi.mock("../../hooks/useBlockEditorAI", () => ({
@@ -128,24 +191,6 @@ vi.mock("../../hooks/useBlockEditorAI", () => ({
   }),
 }));
 
-let _collabLastMessage: any = null;
-let _collabIsConnected = false;
-let _collabActiveUsers: string[] = [];
-const _mockSendMessage = vi.fn();
-const _mockJoinRoom = vi.fn();
-
-vi.mock("../../components/CollaborationProvider", () => ({
-  useCollaborationActions: () => ({
-    sendMessage: _mockSendMessage,
-    joinRoom: _mockJoinRoom,
-  }),
-  useCollaborationState: () => ({
-    lastMessage: _collabLastMessage,
-    isConnected: _collabIsConnected,
-    activeUsers: _collabActiveUsers,
-  }),
-}));
-
 vi.mock("../../components/ShareButton", () => ({
   ShareButton: ({ documentId }: any) => (
     <div data-testid="share-button" data-docid={documentId} />
@@ -161,16 +206,9 @@ vi.mock("../../services/SanitizationService", () => ({
   sanitizeText: (t: string) => t,
 }));
 
-vi.mock("lucide-react", () => {
-  const mock = (name: string) => {
-    const Icon = (props: any) => (
-      <svg data-testid={`icon-${name}`} {...props} />
-    );
-    Icon.displayName = name;
-    return Icon;
-  };
-  return { Undo: mock("Undo"), Sparkles: mock("Sparkles"), X: mock("X") };
-});
+// lucide-react is NOT mocked: the REAL hook imports many icons (Heading1,
+// Heading2, Sparkles, ...) and no test asserts icon internals, so the real
+// module loads as-is.
 
 vi.mock("react-markdown", () => ({
   default: ({ children }: any) => <div data-testid="markdown">{children}</div>,
@@ -180,18 +218,15 @@ vi.mock("remark-gfm", () => ({ default: () => {} }));
 vi.mock("react-router", () => ({
   useNavigate: () => vi.fn(),
 }));
-vi.mock("../../components/block-editor/lazy-editor-components", () => ({
-  chatPanelImport: () => Promise.resolve({ default: () => null }),
-  versionHistoryImport: () => Promise.resolve({ default: () => null }),
-  backlinksImport: () => Promise.resolve({ default: () => null }),
-  expertAgentsPanelImport: () => Promise.resolve({ default: () => null }),
-  aiCopilotPanelImport: () => Promise.resolve({ default: () => null }),
-  suggestionsPanelImport: () => Promise.resolve({ default: () => null }),
-  editorToolbarImport: () => Promise.resolve({ default: () => null }),
-}));
+// Lazy-panel doubles: boundary stubs at the lazy-import seam. The real JSX
+// mounts these components when their state flags are on, so the stubs emit
+// data-testids (letting the JSX-wiring regression tests pass against the
+// REAL hook + REAL JSX) and capture the two callback props the JSX wires
+// (onRestore/onSelect) so tests can drive the real handlers.
 
-// Mock useBlockEditorLogic — the real hook is a stub that doesn't match test expectations
-// These mocks use real React hooks to properly handle state, effects, and reactivity
+// State double: controlled, React-backed editor state fed to the REAL
+// useBlockEditorLogic hook, so its load/autosave effects run for real
+// against the mocked db/attachment boundaries.
 let _mockInitialContentVal: any = "loading";
 const _mockDocTitleVal = "";
 const _mockEditorTextVal = "";
@@ -240,7 +275,7 @@ vi.mock("../../components/block-editor/useBlockEditorState", () => ({
     const [error, setError] = React.useState<string | null>(null);
     const editorRef = React.useRef<HTMLElement | null>(null);
     const isRemoteUpdate = false;
-    const isWarmedUp = false;
+    const isWarmedUpRef = React.useRef(false);
     const handleSuggestionClickRef = React.useRef<
       ((suggestion: string) => void) | null
     >(null);
@@ -281,216 +316,24 @@ vi.mock("../../components/block-editor/useBlockEditorState", () => ({
       setError,
       editorRef,
       isRemoteUpdate,
-      isWarmedUp,
+      isWarmedUpRef,
       handleSuggestionClickRef,
     };
   },
 }));
 
-vi.mock("../../components/block-editor/useBlockEditorLogic", () => ({
-  useBlockEditorLogic: ({ documentId, state }: any) => {
-    const { t } = React.useMemo(() => ({ t: mockT }), []);
-
-    // Load document from DB on mount
-    React.useEffect(() => {
-      (async () => {
-        const result = await (mockFindOne as any)(documentId).exec();
-        if (result) {
-          (state as any).setDocTitle(result.title || "");
-          state.setEditorText(result.textContent || "");
-          state.setIsPrivate(!!result.isPrivate);
-          state.setInitialContent("empty");
-          if (result.blocks && result.blocks.length > 0) {
-            mockReplaceBlocks(_mockEditorDocument, result.blocks);
-          }
-          state.setLastVersionSavedAt(result.lastVersionSavedAt || null);
-          if (result.textContent && result.textContent.length > 10) {
-            _mockGenerateEmbedding();
-          }
-        } else {
-          mockDocumentsUpsert({
-            id: documentId,
-            title: "Untitled Document",
-            folderId: "root",
-            isPrivate: false,
-            blocks: [],
-            tags: [],
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-            incrementalPatch: mockPatch,
-          });
-        }
-      })();
-    }, [documentId]);
-
-    // Collaboration: join room
-    React.useEffect(() => {
-      _mockJoinRoom(documentId);
-    }, [documentId]);
-
-    // Collaboration message handler — polls _collabLastMessage on each render
-    const prevMsgRef = React.useRef<any>(null);
-    const msg = _collabLastMessage;
-    if (msg !== prevMsgRef.current) {
-      prevMsgRef.current = msg;
-    }
-    // Process collaboration message
-    React.useEffect(() => {
-      if (msg?.type === "remote-update" && msg.documentId === documentId) {
-        mockReplaceBlocks(_mockEditorDocument, msg.blocks);
-      }
-    }, [msg, documentId]);
-
-    // Keyboard shortcuts: Ctrl/Meta+D toggles theme
-    React.useEffect(() => {
-      const handler = (e: KeyboardEvent) => {
-        if ((e.ctrlKey || e.metaKey) && e.key === "d") {
-          e.preventDefault();
-          state.setTheme((prev: string) =>
-            prev === "dark" ? "light" : "dark",
-          );
-        }
-      };
-      window.addEventListener("keydown", handler);
-      return () => window.removeEventListener("keydown", handler);
-    }, []);
-
-    // Auto-save: save document after 2s of idle time
-    React.useEffect(() => {
-      if (state.initialContent !== "loading") {
-        state.setSaveStatus("unsaved");
-        const timer = window.setTimeout(async () => {
-          state.setSaveStatus("saving");
-          mockDocumentsUpsert({
-            id: documentId,
-            title: state.docTitle,
-            blocks: [],
-            isPrivate: state.isPrivate,
-            incrementalPatch: mockPatch,
-          });
-          mockPatch({
-            title: state.docTitle,
-            processed: false,
-            updatedAt: new Date().toISOString(),
-            isPrivate: state.isPrivate,
-          });
-          state.setSaveStatus("saved");
-        }, 2000);
-        return () => window.clearTimeout(timer);
-      }
-    }, [state.initialContent, state.docTitle, state.editorText]);
-
-    // Embedding generation
-    React.useEffect(() => {
-      if (
-        state.initialContent !== "loading" &&
-        state.editorText.length > 10 &&
-        state.editorText !== _mockEditorTextVal
-      ) {
-        const timer = window.setTimeout(async () => {
-          state.setLastEmbeddingSavedAt(Date.now());
-          _mockGenerateEmbedding();
-        }, 1000);
-        return () => window.clearTimeout(timer);
-      }
-    }, [state.editorText]);
-
-    // Version creation: create version after first save
-    React.useEffect(() => {
-      if (state.saveStatus === "saved" && state.initialContent !== "loading") {
-        if (
-          state.lastVersionSavedAt === null ||
-          state.lastVersionSavedAt === 0 ||
-          Date.now() - state.lastVersionSavedAt >= 300000
-        ) {
-          mockVersionsUpsert({
-            id: `ver-${documentId}-${Date.now()}`,
-            documentId,
-            blocks: [],
-            title: state.docTitle,
-            incrementalPatch: mockPatch,
-            createdAt: Date.now(),
-          });
-          state.setLastVersionSavedAt(Date.now());
-        }
-      }
-    }, [state.saveStatus]);
-
-    // Suggestions: fetch when showSuggestions is true
-    React.useEffect(() => {
-      if (state.showSuggestions) {
-        (async () => {
-          const items = await _mockSearchSimilar(state.editorText);
-          state.setSuggestions(items);
-        })();
-      }
-    }, [state.showSuggestions]);
-
-    // Title auto-save effect
-    React.useEffect(() => {
-      if (state.docTitle && state.initialContent !== "loading") {
-        const timer = window.setTimeout(async () => {
-          await mockDocumentsUpsert({
-            id: documentId,
-            title: state.docTitle,
-            incrementalPatch: mockPatch,
-          });
-        }, 1000);
-        return () => window.clearTimeout(timer);
-      }
-    }, [state.docTitle]);
-
-    // Broadcast changes to collaborators
-    const lastEditorTextRef = React.useRef(state.editorText);
-    React.useEffect(() => {
-      if (
-        state.initialContent !== "loading" &&
-        state.editorText !== lastEditorTextRef.current
-      ) {
-        lastEditorTextRef.current = state.editorText;
-        const timer = window.setTimeout(() => {
-          _mockSendMessage({
-            type: "content-update",
-            documentId,
-            content: state.editorText,
-          });
-        }, 300);
-        return () => window.clearTimeout(timer);
-      }
-    }, [state.editorText]);
-
-    // Handle editor focus → warm up AI
-    React.useEffect(() => {
-      if (state.isWarmedUp) {
-        _mockAiManager.warmup();
-      }
-    }, [state.isWarmedUp]);
-
-    return {
-      t,
-      lang: "en",
-      isConnected: _collabIsConnected,
-      activeUsers: _collabActiveUsers,
-      isTagging: false,
-      isGeneratingCards: false,
-      isSpeaking: false,
-      isCopilotThinking: false,
-      isSuggestingFolder: false,
-      _aiError: null,
-      _setAiError: vi.fn(),
-      autoTag: vi.fn(),
-      generateFlashcards: vi.fn(),
-      audioSummary: vi.fn(),
-      suggestFolder: vi.fn(),
-      copilotAction: vi.fn(),
-      slashMenuItems: [],
-      filterSlashMenuItems: vi.fn(async () => []),
-      // Detectable stubs: the real JSX must RENDER the toolbar and side panels
-      // when their state flags are set (regression: they were exposed by the
-      // hook but never wired into the JSX, so all editor features were
-      // unreachable in production).
-      ChatPanelLazy: () => <div data-testid="panel-chat" />,
-      VersionHistoryLazy: ({
+// Lazy-panel doubles at the lazy-import seam: the REAL JSX mounts these
+// components when their state flags are on (Backlinks always, once the editor
+// exists), so the doubles emit data-testids — letting the JSX-wiring
+// regression tests run against the REAL hook + REAL JSX — and capture the
+// two callback props the JSX wires (onRestore/onSelect) so tests can drive
+// the real handlers.
+vi.mock("../../components/block-editor/lazy-editor-components", () => ({
+  chatPanelImport: () =>
+    Promise.resolve({ default: () => <div data-testid="panel-chat" /> }),
+  versionHistoryImport: () =>
+    Promise.resolve({
+      default: ({
         onRestore,
       }: {
         onRestore?: (blocks: unknown[]) => void;
@@ -498,35 +341,34 @@ vi.mock("../../components/block-editor/useBlockEditorLogic", () => ({
         _mockVersionRestore = onRestore ?? null;
         return <div data-testid="panel-history" />;
       },
-      BacklinksLazy: ({ onSelect }: { onSelect?: (id: string) => void }) => {
+    }),
+  backlinksImport: () =>
+    Promise.resolve({
+      default: ({ onSelect }: { onSelect?: (id: string) => void }) => {
         _mockBacklinksOnSelect = onSelect ?? null;
         return <div data-testid="panel-backlinks" />;
       },
-      ExpertAgentsPanelLazy: () => <div data-testid="panel-agents" />,
-      AICopilotPanel: () => <div data-testid="panel-copilot" />,
-      SuggestionsPanel: () => <div data-testid="panel-suggestions" />,
-      EditorToolbar: () => <div data-testid="editor-toolbar" />,
-      handleEditorFocus: (() => {
-        let warmed = false;
-        return () => {
-          if (!warmed) {
-            warmed = true;
-            _mockAiManager.warmup();
-          }
-        };
-      })(),
-      handlePdfText: vi.fn(),
-      handleVoiceTranscript: vi.fn(),
-      handleGenerateFlashcards: vi.fn(),
-      handleAudioSummary: vi.fn(),
-      handleSuggestFolder: vi.fn(),
-      handleCopilotAction: vi.fn(),
-      getSuggestionIcon: () => () => null,
-      getSuggestionColor: () => "violet",
-      editor: { document: _mockEditorDocument },
-    };
-  },
+    }),
+  expertAgentsPanelImport: () =>
+    Promise.resolve({ default: () => <div data-testid="panel-agents" /> }),
+  aiCopilotPanelImport: () =>
+    Promise.resolve({ default: () => <div data-testid="panel-copilot" /> }),
+  suggestionsPanelImport: () =>
+    Promise.resolve({
+      default: () => <div data-testid="panel-suggestions" />,
+    }),
+  editorToolbarImport: () =>
+    Promise.resolve({ default: () => <div data-testid="editor-toolbar" /> }),
 }));
+
+// NOTE: useBlockEditorLogic is deliberately NOT mocked. A previous version of
+// this file replaced the entire hook with a factory that re-implemented its
+// orchestration (load, autosave, versions, presence) — the tests then
+// verified the factory script instead of production code, and production
+// drift could never fail them. The REAL hook now runs against the mocked
+// db / attachmentStore / BroadcastChannel boundaries; its logic-level
+// contracts live in useBlockEditorLogic.hook.test.ts and
+// useBlockEditorLogic.persistence.test.ts.
 
 describe("BlockEditor", () => {
   let BlockEditor: React.FC<any>;
@@ -542,13 +384,7 @@ describe("BlockEditor", () => {
     _mockShowExpertAgentsVal = false;
     _mockShowPreviewVal = false;
     mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
+    MockBroadcastChannel.instances.length = 0;
     const mod = await import("../../components/block-editor/BlockEditor");
     BlockEditor = mod.default;
   });
@@ -751,15 +587,31 @@ describe("BlockEditor", () => {
     });
   });
 
-  it("joins the collaboration room on mount", async () => {
-    _mockJoinRoom.mockClear();
+  it("receives collaborator presence through the real BroadcastChannel wiring", async () => {
+    // The REAL hook subscribes to a "block-editor-presence" BroadcastChannel
+    // and maps incoming users to avatars. (The old test asserted a fabricated
+    // joinRoom() that production never calls — presence has no room concept.)
     mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
     await act(async () => {
       render(<BlockEditor documentId="doc-room" />);
       await vi.advanceTimersByTimeAsync(0);
     });
     await waitFor(() => {
-      expect(_mockJoinRoom).toHaveBeenCalledWith("doc-room");
+      expect(MockBroadcastChannel.instances.length).toBe(1);
+      expect(MockBroadcastChannel.instances[0]!.name).toBe(
+        "block-editor-presence",
+      );
+    });
+
+    // Deliver a real presence message through the channel the hook subscribed to.
+    await act(async () => {
+      MockBroadcastChannel.instances[0]!.listeners.forEach((cb) =>
+        cb({ data: { type: "presence", users: ["Alice", "Bob"] } }),
+      );
+    });
+    await waitFor(() => {
+      expect(screen.getByText("AL")).toBeTruthy();
+      expect(screen.getByText("BO")).toBeTruthy();
     });
   });
 
@@ -821,20 +673,14 @@ describe("BlockEditor", () => {
   });
 });
 
-describe("BlockEditor - Keyboard shortcuts", () => {
+describe("BlockEditor - Keyboard shortcuts (production inventory)", () => {
   let BlockEditor: React.FC<any>;
 
   beforeEach(async () => {
     vi.clearAllMocks();
     vi.useFakeTimers({ shouldAdvanceTime: true });
     mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
+    MockBroadcastChannel.instances.length = 0;
     const mod = await import("../../components/block-editor/BlockEditor");
     BlockEditor = mod.default;
   });
@@ -843,7 +689,13 @@ describe("BlockEditor - Keyboard shortcuts", () => {
     vi.useRealTimers();
   });
 
-  it("Ctrl+D toggles theme from dark to light", async () => {
+  // Production has NO Ctrl/Meta+D theme toggle inside BlockEditor — the old
+  // suite asserted a toggle that existed only in the deleted hook mock (the
+  // app-wide shortcuts are Ctrl+K / Ctrl+Shift+P / Ctrl+Shift+B, see
+  // KeyboardShortcuts.tsx). This test documents that reality: key events
+  // must not change the theme, so a future editor-local shortcut cannot be
+  // added silently.
+  it("does not toggle the theme on Ctrl+D or Meta+D (no such production shortcut)", async () => {
     mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
     await act(async () => {
       render(<BlockEditor documentId="doc-1" />);
@@ -858,74 +710,16 @@ describe("BlockEditor - Keyboard shortcuts", () => {
     await act(async () => {
       fireEvent.keyDown(window, { key: "d", ctrlKey: true });
     });
-
-    expect(
-      screen.getByTestId("blocknote-view").getAttribute("data-theme"),
-    ).toBe("light");
-  });
-
-  it("Ctrl+D toggles theme from light back to dark", async () => {
-    mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
-    await act(async () => {
-      render(<BlockEditor documentId="doc-1" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    await act(async () => {
-      fireEvent.keyDown(window, { key: "d", ctrlKey: true });
-    });
-    expect(
-      screen.getByTestId("blocknote-view").getAttribute("data-theme"),
-    ).toBe("light");
-
-    await act(async () => {
-      fireEvent.keyDown(window, { key: "d", ctrlKey: true });
-    });
-    expect(
-      screen.getByTestId("blocknote-view").getAttribute("data-theme"),
-    ).toBe("dark");
-  });
-
-  it("Meta+D also toggles theme on Mac", async () => {
-    mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
-    await act(async () => {
-      render(<BlockEditor documentId="doc-1" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
     await act(async () => {
       fireEvent.keyDown(window, { key: "d", metaKey: true });
     });
-    expect(
-      screen.getByTestId("blocknote-view").getAttribute("data-theme"),
-    ).toBe("light");
-  });
-
-  it("D key without modifier does not toggle theme", async () => {
-    mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
     await act(async () => {
-      render(<BlockEditor documentId="doc-1" />);
-      await vi.advanceTimersByTimeAsync(0);
+      fireEvent.keyDown(window, { key: "d", ctrlKey: true, shiftKey: true });
     });
-
     await act(async () => {
       fireEvent.keyDown(window, { key: "d" });
     });
-    expect(
-      screen.getByTestId("blocknote-view").getAttribute("data-theme"),
-    ).toBe("dark");
-  });
 
-  it("Ctrl+Shift+D does not toggle theme", async () => {
-    mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
-    await act(async () => {
-      render(<BlockEditor documentId="doc-1" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    await act(async () => {
-      fireEvent.keyDown(window, { key: "D", ctrlKey: true, shiftKey: true });
-    });
     expect(
       screen.getByTestId("blocknote-view").getAttribute("data-theme"),
     ).toBe("dark");
@@ -939,13 +733,7 @@ describe("BlockEditor - handleEditorFocus", () => {
     vi.clearAllMocks();
     vi.useFakeTimers({ shouldAdvanceTime: true });
     mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
+    MockBroadcastChannel.instances.length = 0;
     const mod = await import("../../components/block-editor/BlockEditor");
     BlockEditor = mod.default;
   });
@@ -954,8 +742,16 @@ describe("BlockEditor - handleEditorFocus", () => {
     vi.useRealTimers();
   });
 
-  it("calls aiManager.warmup on first focus", async () => {
-    const { aiManager } = await import("../\.\./services/ai/ProviderManager");
+  it("forwards focus through the REAL one-shot warmup wiring: exactly one guarded warmup, no direct WebLLM use", async () => {
+    // The REAL hook's handleEditorFocus is the production editorFocusWarmup
+    // handler: it clears the AI error and delegates the preload to the
+    // guarded aiManager.warmup() (one-shot per editor instance). The
+    // canRunLocalLLM() device gate lives INSIDE warmup, so this component
+    // test pins the wiring — focus → warmup ×1 → zero direct WebLLM calls —
+    // while the guard's skip behavior is pinned at the ProviderManager unit
+    // level and by the guard E2E.
+    const { aiManager } = await import("../../services/ai/ProviderManager");
+    const { webLLMService } = await import("../../services/ai/WebLLMService");
     mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
     await act(async () => {
       render(<BlockEditor documentId="doc-1" />);
@@ -965,31 +761,19 @@ describe("BlockEditor - handleEditorFocus", () => {
     const wrapper = screen.getByTestId("blocknote-view").parentElement!;
     await act(async () => {
       fireEvent.focus(wrapper);
+      fireEvent.focus(wrapper);
+      fireEvent.focus(wrapper);
     });
 
+    // The one-shot focus handler absorbed the repeat focuses: exactly one
+    // guarded warmup, and the UI layer never touched the engine directly.
     expect(aiManager.warmup).toHaveBeenCalledTimes(1);
-  });
-
-  it("does not call aiManager.warmup again on subsequent focuses", async () => {
-    const { aiManager } = await import("../\.\./services/ai/ProviderManager");
-    mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
-    await act(async () => {
-      render(<BlockEditor documentId="doc-1" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    const wrapper = screen.getByTestId("blocknote-view").parentElement!;
-    await act(async () => {
-      fireEvent.focus(wrapper);
-    });
-    await act(async () => {
-      fireEvent.focus(wrapper);
-    });
-    await act(async () => {
-      fireEvent.focus(wrapper);
-    });
-
-    expect(aiManager.warmup).toHaveBeenCalledTimes(1);
+    expect(webLLMService.init).not.toHaveBeenCalled();
+    expect(webLLMService.generateText).not.toHaveBeenCalled();
+    expect(webLLMService.unload).not.toHaveBeenCalled();
+    expect(webLLMService.canRunLocalLLM).not.toHaveBeenCalled();
+    // The focus handler clears any stale AI error banner.
+    expect(screen.queryByTestId("ai-error")).toBeNull();
   });
 });
 
@@ -1000,13 +784,7 @@ describe("BlockEditor - Connection status display", () => {
     vi.clearAllMocks();
     vi.useFakeTimers({ shouldAdvanceTime: true });
     mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
+    MockBroadcastChannel.instances.length = 0;
     const mod = await import("../../components/block-editor/BlockEditor");
     BlockEditor = mod.default;
   });
@@ -1015,20 +793,11 @@ describe("BlockEditor - Connection status display", () => {
     vi.useRealTimers();
   });
 
-  it("shows LIVE when connected", async () => {
-    _collabIsConnected = true;
-    mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
-    await act(async () => {
-      render(<BlockEditor documentId="doc-1" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-    await waitFor(() => {
-      expect(screen.getByText("app_live")).toBeTruthy();
-    });
-  });
-
-  it("shows OFFLINE when not connected", async () => {
-    _collabIsConnected = false;
+  it("shows OFFLINE and no presence users before any presence message", async () => {
+    // isConnected is hardwired false in the real hook (peer-to-peer sync is
+    // not implemented): the LIVE branch of the JSX is unreachable in
+    // production, so it is deliberately not asserted here. The OFFLINE state
+    // and empty presence ARE production-reachable and pinned.
     mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
     await act(async () => {
       render(<BlockEditor documentId="doc-1" />);
@@ -1037,6 +806,7 @@ describe("BlockEditor - Connection status display", () => {
     await waitFor(() => {
       expect(screen.getByText("app_offline")).toBeTruthy();
     });
+    expect(screen.queryByText("app_live")).toBeNull();
   });
 });
 
@@ -1047,13 +817,7 @@ describe("BlockEditor - Active users display", () => {
     vi.clearAllMocks();
     vi.useFakeTimers({ shouldAdvanceTime: true });
     mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
+    MockBroadcastChannel.instances.length = 0;
     const mod = await import("../../components/block-editor/BlockEditor");
     BlockEditor = mod.default;
   });
@@ -1063,11 +827,18 @@ describe("BlockEditor - Active users display", () => {
   });
 
   it("renders user avatars for active users", async () => {
-    _collabActiveUsers = ["Alice", "Bob"];
     mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
     await act(async () => {
       render(<BlockEditor documentId="doc-1" />);
       await vi.advanceTimersByTimeAsync(0);
+    });
+    await waitFor(() => {
+      expect(MockBroadcastChannel.instances.length).toBe(1);
+    });
+    await act(async () => {
+      MockBroadcastChannel.instances[0]!.listeners.forEach((cb) =>
+        cb({ data: { type: "presence", users: ["Alice", "Bob"] } }),
+      );
     });
     await waitFor(() => {
       expect(screen.getByText("AL")).toBeTruthy();
@@ -1075,8 +846,7 @@ describe("BlockEditor - Active users display", () => {
     });
   });
 
-  it("renders no avatars when active users is empty", async () => {
-    _collabActiveUsers = [];
+  it("renders no avatars before any presence message arrives", async () => {
     mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
     await act(async () => {
       render(<BlockEditor documentId="doc-1" />);
@@ -1085,14 +855,22 @@ describe("BlockEditor - Active users display", () => {
     await waitFor(() => {
       expect(screen.getByTestId("blocknote-view")).toBeTruthy();
     });
+    expect(screen.queryByText("AL")).toBeNull();
   });
 
   it("truncates long user names to 2 characters", async () => {
-    _collabActiveUsers = ["Christopher"];
     mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
     await act(async () => {
       render(<BlockEditor documentId="doc-1" />);
       await vi.advanceTimersByTimeAsync(0);
+    });
+    await waitFor(() => {
+      expect(MockBroadcastChannel.instances.length).toBe(1);
+    });
+    await act(async () => {
+      MockBroadcastChannel.instances[0]!.listeners.forEach((cb) =>
+        cb({ data: { type: "presence", users: ["Christopher"] } }),
+      );
     });
     await waitFor(() => {
       expect(screen.getByText("CH")).toBeTruthy();
@@ -1107,107 +885,84 @@ describe("BlockEditor - Collaboration message handling", () => {
     vi.clearAllMocks();
     vi.useFakeTimers({ shouldAdvanceTime: true });
     mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
+    MockBroadcastChannel.instances.length = 0;
     const mod = await import("../../components/block-editor/BlockEditor");
     BlockEditor = mod.default;
   });
 
   afterEach(() => {
     vi.useRealTimers();
-  });
-
-  it("replaces blocks on remote-update with matching documentId", async () => {
-    const remoteBlocks = [
-      {
-        type: "paragraph",
-        content: [{ type: "text", text: "remote content" }],
-      },
-    ];
-    _collabLastMessage = {
-      type: "remote-update",
-      documentId: "doc-1",
-      blocks: remoteBlocks,
-    };
-
+  });  it("applies presence messages and ignores other message shapes", async () => {
+    // The real channel contract carries PRESENCE only — remote-update/
+    // cursor-sync messaging does not exist in production (the old tests
+    // asserted a fabricated lastMessage pipeline). Non-presence and
+    // malformed messages must be ignored without crashing.
     mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
     await act(async () => {
       render(<BlockEditor documentId="doc-1" />);
       await vi.advanceTimersByTimeAsync(0);
     });
+    const channel = await waitFor(() => {
+      expect(MockBroadcastChannel.instances.length).toBe(1);
+      return MockBroadcastChannel.instances[0]!;
+    });
 
+    await act(async () => {
+      channel.listeners.forEach((cb) =>
+        cb({ data: { type: "cursor-update", position: 5 } }),
+      );
+    });
+    await act(async () => {
+      channel.listeners.forEach((cb) => cb({ data: { type: "presence" } }));
+    });
+    expect(screen.queryByText("AL")).toBeNull();
+
+    await act(async () => {
+      channel.listeners.forEach((cb) =>
+        cb({ data: { type: "presence", users: ["Alice"] } }),
+      );
+    });
     await waitFor(() => {
-      expect(mockReplaceBlocks).toHaveBeenCalled();
-      const lastCall =
-        mockReplaceBlocks.mock.calls[mockReplaceBlocks.mock.calls.length - 1];
-      expect(lastCall![1]).toEqual(remoteBlocks);
+      expect(screen.getByText("AL")).toBeTruthy();
     });
   });
 
-  it("handles non-matching documentId gracefully", async () => {
+  it("filters non-string entries out of the users array", async () => {
     mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
     await act(async () => {
       render(<BlockEditor documentId="doc-1" />);
       await vi.advanceTimersByTimeAsync(0);
     });
-    expect(screen.getByTestId("blocknote-view")).toBeTruthy();
-  });
-
-  it("ignores non-remote-update message types", async () => {
-    _collabLastMessage = {
-      type: "cursor-update",
-      documentId: "doc-1",
-      position: 5,
-    };
-
-    mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
-    await act(async () => {
-      render(<BlockEditor documentId="doc-1" />);
-      await vi.advanceTimersByTimeAsync(0);
+    const channel = await waitFor(() => {
+      expect(MockBroadcastChannel.instances.length).toBe(1);
+      return MockBroadcastChannel.instances[0]!;
     });
 
+    await act(async () => {
+      channel.listeners.forEach((cb) =>
+        cb({ data: { type: "presence", users: [42, "Alice", null, "Bob"] } }),
+      );
+    });
     await waitFor(() => {
-      expect(screen.getByTestId("blocknote-view")).toBeTruthy();
+      expect(screen.getByText("AL")).toBeTruthy();
+      expect(screen.getByText("BO")).toBeTruthy();
     });
   });
 
-  it("does nothing when lastMessage is null", async () => {
-    _collabLastMessage = null;
+  it("closes the presence channel on unmount", async () => {
     mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
+    let unmountFn: () => void = () => {};
     await act(async () => {
-      render(<BlockEditor documentId="doc-1" />);
+      const result = render(<BlockEditor documentId="doc-1" />);
       await vi.advanceTimersByTimeAsync(0);
+      unmountFn = result.unmount;
+    });
+    await waitFor(() => {
+      expect(MockBroadcastChannel.instances.length).toBe(1);
     });
 
-    expect(screen.getByTestId("blocknote-view")).toBeTruthy();
-  });
-
-  it("resets isRemoteUpdate flag after 100ms timeout", async () => {
-    const remoteBlocks = [
-      { type: "paragraph", content: [{ type: "text", text: "remote" }] },
-    ];
-    _collabLastMessage = {
-      type: "remote-update",
-      documentId: "doc-1",
-      blocks: remoteBlocks,
-    };
-
-    mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
-    await act(async () => {
-      render(<BlockEditor documentId="doc-1" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    await act(async () => {
-      vi.advanceTimersByTime(200);
-    });
-
-    expect(screen.getByTestId("blocknote-view")).toBeTruthy();
+    unmountFn();
+    expect(MockBroadcastChannel.instances[0]!.closed).toBe(true);
   });
 });
 
@@ -1218,13 +973,7 @@ describe("BlockEditor - Auto-save behavior", () => {
     vi.clearAllMocks();
     vi.useFakeTimers({ shouldAdvanceTime: true });
     mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
+    MockBroadcastChannel.instances.length = 0;
     const mod = await import("../../components/block-editor/BlockEditor");
     BlockEditor = mod.default;
   });
@@ -1265,14 +1014,17 @@ describe("BlockEditor - Auto-save behavior", () => {
     });
   });
 
-  it("sets saveStatus to Saving before save completes", async () => {
+  it("autosave persists text through the attachment pipeline", async () => {
+    // The real autosave round-trips blocks/text through attachmentStore
+    // (blob: refs → bmf-attachment:// refs) before patching the document.
+    const { attachmentStore } = await import(
+      "../../services/documentAttachments",
+    );
     mockExec.mockResolvedValue({
       title: "Doc",
       isPrivate: false,
       blocks: [],
       textContent: "",
-      embedding: [],
-      incrementalPatch: mockPatch,
     });
 
     await act(async () => {
@@ -1280,8 +1032,19 @@ describe("BlockEditor - Auto-save behavior", () => {
       await vi.advanceTimersByTimeAsync(0);
     });
 
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2000);
+    });
+
     await waitFor(() => {
-      expect(screen.getByTestId("blocknote-view")).toBeTruthy();
+      expect(attachmentStore.persistBlocks).toHaveBeenCalledWith(
+        "doc-1",
+        expect.anything(),
+      );
+      expect(attachmentStore.persistText).toHaveBeenCalledWith(
+        "doc-1",
+        expect.any(String),
+      );
     });
   });
 
@@ -1298,339 +1061,6 @@ describe("BlockEditor - Auto-save behavior", () => {
 
     expect(mockPatch).not.toHaveBeenCalled();
   });
-
-  it("skips save when isRemoteUpdate is true", async () => {
-    const remoteBlocks = [
-      { type: "paragraph", content: [{ type: "text", text: "remote" }] },
-    ];
-    _collabLastMessage = {
-      type: "remote-update",
-      documentId: "doc-save",
-      blocks: remoteBlocks,
-    };
-
-    mockExec.mockResolvedValue({
-      title: "Doc",
-      isPrivate: false,
-      blocks: [],
-      textContent: "",
-      embedding: [],
-      incrementalPatch: mockPatch,
-    });
-
-    await act(async () => {
-      render(<BlockEditor documentId="doc-save" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    await act(async () => {
-      vi.advanceTimersByTime(2000);
-    });
-  });
-});
-
-describe("BlockEditor - Embedding generation", () => {
-  let BlockEditor: React.FC<any>;
-
-  beforeEach(async () => {
-    vi.clearAllMocks();
-    vi.useFakeTimers({ shouldAdvanceTime: true });
-    mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
-    const mod = await import("../../components/block-editor/BlockEditor");
-    BlockEditor = mod.default;
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  it("generates embedding when text changed and text length > 10", async () => {
-    const { useCreateBlockNote } = await import("@blocknote/react");
-    vi.mocked(useCreateBlockNote).mockReturnValue({
-      document: [
-        {
-          type: "paragraph",
-          content: [
-            {
-              type: "text",
-              text: "This is a sufficiently long text for embedding generation that exceeds ten characters",
-            },
-          ],
-        },
-      ],
-      replaceBlocks: mockReplaceBlocks,
-      insertBlocks: mockInsertBlocks,
-    } as any);
-
-    mockExec.mockResolvedValue({
-      title: "Doc",
-      isPrivate: false,
-      blocks: [],
-      textContent: "old content",
-      embedding: [],
-      incrementalPatch: mockPatch,
-    });
-
-    await act(async () => {
-      render(<BlockEditor documentId="doc-emb" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    await act(async () => {
-      vi.advanceTimersByTime(2000);
-    });
-
-    await waitFor(() => {
-      expect(_mockGenerateEmbedding).toHaveBeenCalled();
-    });
-  });
-
-  it("skips embedding when text length is short", async () => {
-    mockExec.mockResolvedValue({
-      title: "Doc",
-      isPrivate: false,
-      blocks: [],
-      textContent: "old",
-      embedding: [],
-      incrementalPatch: mockPatch,
-    });
-
-    await act(async () => {
-      render(<BlockEditor documentId="doc-emb2" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    await act(async () => {
-      vi.advanceTimersByTime(2000);
-    });
-
-    await waitFor(() => {
-      expect(mockPatch).toHaveBeenCalled();
-    });
-  });
-
-  it("skips embedding when text unchanged", async () => {
-    mockExec.mockResolvedValue({
-      title: "Doc",
-      isPrivate: false,
-      blocks: [
-        { type: "paragraph", content: [{ type: "text", text: "initial" }] },
-      ],
-      textContent: "initial",
-      embedding: [0.1],
-      incrementalPatch: mockPatch,
-    });
-
-    await act(async () => {
-      render(<BlockEditor documentId="doc-emb3" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    await waitFor(() => {
-      expect(screen.getByLabelText("app_title")).toHaveValue("Doc");
-    });
-  });
-
-  it("handles embedding generation failure gracefully", async () => {
-    const { useCreateBlockNote } = await import("@blocknote/react");
-    vi.mocked(useCreateBlockNote).mockReturnValue({
-      document: [
-        {
-          type: "paragraph",
-          content: [
-            {
-              type: "text",
-              text: "This text is long enough to trigger embedding generation",
-            },
-          ],
-        },
-      ],
-      replaceBlocks: mockReplaceBlocks,
-      insertBlocks: mockInsertBlocks,
-    } as any);
-
-    _mockGenerateEmbedding.mockRejectedValueOnce(new Error("API error"));
-
-    mockExec.mockResolvedValue({
-      title: "Doc",
-      isPrivate: false,
-      blocks: [],
-      textContent: "different",
-      embedding: [],
-      incrementalPatch: mockPatch,
-    });
-
-    await act(async () => {
-      render(<BlockEditor documentId="doc-emb-fail" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    await act(async () => {
-      vi.advanceTimersByTime(2000);
-    });
-
-    await waitFor(() => {
-      expect(mockPatch).toHaveBeenCalled();
-    });
-  });
-});
-
-describe("BlockEditor - Version creation", () => {
-  let BlockEditor: React.FC<any>;
-
-  beforeEach(async () => {
-    vi.clearAllMocks();
-    vi.useFakeTimers({ shouldAdvanceTime: true });
-    mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
-    const mod = await import("../../components/block-editor/BlockEditor");
-    BlockEditor = mod.default;
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  it("creates version on first save when lastVersionSavedAt is 0", async () => {
-    mockExec.mockResolvedValue({
-      title: "Doc",
-      isPrivate: false,
-      blocks: [],
-      textContent: "",
-      embedding: [],
-      incrementalPatch: mockPatch,
-    });
-
-    await act(async () => {
-      render(<BlockEditor documentId="doc-ver" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    await act(async () => {
-      vi.advanceTimersByTime(2000);
-    });
-
-    await waitFor(() => {
-      expect(mockVersionsUpsert).toHaveBeenCalled();
-      const versionCall = mockVersionsUpsert.mock.calls[0]![0];
-      expect(versionCall.documentId).toBe("doc-ver");
-      expect(versionCall.id).toMatch(/^ver-doc-ver-/);
-      expect(versionCall.blocks).toBeDefined();
-      expect(versionCall.createdAt).toBeDefined();
-    });
-  });
-
-  it("does not create version when less than 5 minutes have passed since last version", async () => {
-    mockExec.mockResolvedValue({
-      title: "Doc",
-      isPrivate: false,
-      blocks: [],
-      textContent: "",
-      embedding: [],
-      incrementalPatch: mockPatch,
-    });
-
-    await act(async () => {
-      render(<BlockEditor documentId="doc-ver2" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    await act(async () => {
-      vi.advanceTimersByTime(2000);
-    });
-
-    await waitFor(() => {
-      expect(mockVersionsUpsert).toHaveBeenCalledTimes(1);
-    });
-  });
-});
-
-describe("BlockEditor - isPrivate state", () => {
-  let BlockEditor: React.FC<any>;
-
-  beforeEach(async () => {
-    vi.clearAllMocks();
-    vi.useFakeTimers({ shouldAdvanceTime: true });
-    mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
-    const mod = await import("../../components/block-editor/BlockEditor");
-    BlockEditor = mod.default;
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  it("passes isPrivate true to save when document is private", async () => {
-    mockExec.mockResolvedValue({
-      title: "Private Doc",
-      isPrivate: true,
-      blocks: [],
-      textContent: "",
-      embedding: [],
-      incrementalPatch: mockPatch,
-    });
-
-    await act(async () => {
-      render(<BlockEditor documentId="doc-priv" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    await act(async () => {
-      vi.advanceTimersByTime(2000);
-    });
-
-    await waitFor(() => {
-      expect(mockPatch).toHaveBeenCalled();
-      const patchCall = mockPatch.mock.calls[0]![0];
-      expect(patchCall.isPrivate).toBe(true);
-    });
-  });
-
-  it("passes isPrivate false to save when document is not private", async () => {
-    mockExec.mockResolvedValue({
-      title: "Public Doc",
-      isPrivate: false,
-      blocks: [],
-      textContent: "",
-      embedding: [],
-      incrementalPatch: mockPatch,
-    });
-
-    await act(async () => {
-      render(<BlockEditor documentId="doc-pub" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    await act(async () => {
-      vi.advanceTimersByTime(2000);
-    });
-
-    await waitFor(() => {
-      expect(mockPatch).toHaveBeenCalled();
-      const patchCall = mockPatch.mock.calls[0]![0];
-      expect(patchCall.isPrivate).toBe(false);
-    });
-  });
 });
 
 describe("BlockEditor - Document loading edge cases", () => {
@@ -1640,13 +1070,7 @@ describe("BlockEditor - Document loading edge cases", () => {
     vi.clearAllMocks();
     vi.useFakeTimers({ shouldAdvanceTime: true });
     mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
+    MockBroadcastChannel.instances.length = 0;
     const mod = await import("../../components/block-editor/BlockEditor");
     BlockEditor = mod.default;
   });
@@ -1765,7 +1189,10 @@ describe("BlockEditor - Document loading edge cases", () => {
       const upsertCall = mockDocumentsUpsert.mock.calls[0]![0];
       expect(upsertCall.id).toBe("doc-new-123");
       expect(upsertCall.folderId).toBe("root");
-      expect(upsertCall.title).toBe("Untitled Document");
+      // The hook persists the LOCALIZED key, not the English default — the
+      // display fallback (BlockEditor's untitled handling) must stay able to
+      // resolve per-locale strings for non-English users.
+      expect(upsertCall.title).toBe("app_untitledDocument");
       expect(upsertCall.blocks).toEqual([]);
       expect(upsertCall.tags).toEqual([]);
       expect(upsertCall.isPrivate).toBe(false);
@@ -1906,70 +1333,6 @@ describe("BlockEditor - Document loading edge cases", () => {
   });
 });
 
-describe("BlockEditor - Collaboration broadcast", () => {
-  let BlockEditor: React.FC<any>;
-
-  beforeEach(async () => {
-    vi.clearAllMocks();
-    vi.useFakeTimers({ shouldAdvanceTime: true });
-    mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
-    const mod = await import("../../components/block-editor/BlockEditor");
-    BlockEditor = mod.default;
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  it("does not broadcast before 300ms delay", async () => {
-    mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
-
-    await act(async () => {
-      render(<BlockEditor documentId="doc-broadcast" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    await act(async () => {
-      vi.advanceTimersByTime(200);
-    });
-
-    expect(_mockSendMessage).not.toHaveBeenCalled();
-  });
-
-  it("skips broadcast when isRemoteUpdate is true", async () => {
-    const remoteBlocks = [
-      { type: "paragraph", content: [{ type: "text", text: "remote" }] },
-    ];
-    _collabLastMessage = {
-      type: "remote-update",
-      documentId: "doc-broadcast",
-      blocks: remoteBlocks,
-    };
-
-    mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
-
-    await act(async () => {
-      render(<BlockEditor documentId="doc-broadcast" />);
-      await vi.advanceTimersByTimeAsync(0);
-    });
-
-    _mockSendMessage.mockClear();
-
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    expect(_mockSendMessage).not.toHaveBeenCalled();
-  });
-});
-
 describe("BlockEditor - Smart suggestions", () => {
   let BlockEditor: React.FC<any>;
 
@@ -1977,13 +1340,7 @@ describe("BlockEditor - Smart suggestions", () => {
     vi.clearAllMocks();
     vi.useFakeTimers({ shouldAdvanceTime: true });
     mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
+    MockBroadcastChannel.instances.length = 0;
     const mod = await import("../../components/block-editor/BlockEditor");
     BlockEditor = mod.default;
   });
@@ -1992,7 +1349,11 @@ describe("BlockEditor - Smart suggestions", () => {
     vi.useRealTimers();
   });
 
-  it("does not fetch suggestions when showSuggestions is false", async () => {
+  it("does not query documents for suggestions when showSuggestions is false", async () => {
+    // The real hook's smart-links panel ranks OTHER documents via
+    // db.documents.find() when the panel opens; with the flag off it must
+    // never query at all. (The old test asserted a fabricated searchSimilar
+    // call that production never makes.)
     mockExec.mockResolvedValue({ title: "Doc", isPrivate: false, blocks: [] });
 
     await act(async () => {
@@ -2004,7 +1365,7 @@ describe("BlockEditor - Smart suggestions", () => {
       vi.advanceTimersByTime(2000);
     });
 
-    expect(_mockSearchSimilar).not.toHaveBeenCalled();
+    expect(mockDocumentsFind).not.toHaveBeenCalled();
   });
 });
 
@@ -2015,13 +1376,7 @@ describe("BlockEditor - Panel layout width", () => {
     vi.clearAllMocks();
     vi.useFakeTimers({ shouldAdvanceTime: true });
     mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
+    MockBroadcastChannel.instances.length = 0;
     const mod = await import("../../components/block-editor/BlockEditor");
     BlockEditor = mod.default;
   });
@@ -2049,13 +1404,7 @@ describe("BlockEditor - Title input", () => {
     vi.clearAllMocks();
     vi.useFakeTimers({ shouldAdvanceTime: true });
     mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
+    MockBroadcastChannel.instances.length = 0;
     const mod = await import("../../components/block-editor/BlockEditor");
     BlockEditor = mod.default;
   });
@@ -2095,13 +1444,7 @@ describe("BlockEditor - Rendered structure", () => {
     vi.clearAllMocks();
     vi.useFakeTimers({ shouldAdvanceTime: true });
     mockExec.mockResolvedValue(null);
-    _collabLastMessage = null;
-    _collabIsConnected = false;
-    _collabActiveUsers = [];
-    _mockSendMessage.mockClear();
-    _mockJoinRoom.mockClear();
-    _mockGenerateEmbedding.mockClear();
-    _mockSearchSimilar.mockClear();
+    MockBroadcastChannel.instances.length = 0;
     const mod = await import("../../components/block-editor/BlockEditor");
     BlockEditor = mod.default;
   });

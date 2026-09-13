@@ -16,7 +16,7 @@ const serverEntryExists = fs.existsSync(SERVER_ENTRY);
  * which previously only shipped `/api/services/ai/generate` while the
  * client called `/generate-tts` and `/generate-image` into the void.
  */
-describe.skipIf(!serverEntryExists)(
+describe(
   "companion server HTTP route composition",
   () => {
     let proc: ChildProcess;
@@ -24,6 +24,9 @@ describe.skipIf(!serverEntryExists)(
     const port = 8822;
 
     beforeAll(async () => {
+      if (!serverEntryExists) {
+        throw new Error("server/src/index.ts is required for route composition tests");
+      }
       base = await new Promise<string>((resolvePromise, reject) => {
         const tsxBin = resolve(__dirname, "../../../node_modules/tsx/dist/cli.mjs");
         proc = spawn(process.execPath, [tsxBin, SERVER_ENTRY], {
@@ -32,6 +35,11 @@ describe.skipIf(!serverEntryExists)(
             PORT: String(port),
             HOST: "127.0.0.1",
             NODE_ENV: "test",
+            // Explicit test-only policy: the session manager requires a
+            // verified license proof in every environment by default, so this
+            // route-composition test declares its own anonymous posture
+            // instead of inheriting a silent bypass.
+            AI_SESSION_REQUIRE_LICENSE: "0",
             GEMINI_API_KEY: "server-key",
             GEMINI_API_BASE: "http://127.0.0.1:1/v1beta/models",
             WHOP_LICENSE_API_URL: "http://127.0.0.1:1/license",
@@ -102,6 +110,25 @@ describe.skipIf(!serverEntryExists)(
         headers: { ...headers, cookie, "x-csrf-token": csrf },
       });
       expect(authed.status).toBe(502);
+    });
+
+    it("keeps the session body contract through the router guard", async () => {
+      // The entitlement guard owns the session route's body (it resolves the
+      // proof the handler then uses), so these two wire contracts must survive
+      // the composition: a malformed body is still a 400, and a method the
+      // route does not answer still reaches the handler's own 405.
+      const malformed = await fetch(`${base}/api/services/ai/session`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: "{not json",
+      });
+      expect(malformed.status).toBe(400);
+      expect(await malformed.json()).toEqual({
+        error: { code: "INVALID_REQUEST", message: "session proof is invalid" },
+      });
+
+      const wrongMethod = await fetch(`${base}/api/services/ai/generate`, { method: "GET" });
+      expect(wrongMethod.status).toBe(405);
     });
 
     it("serves the proxy admin and metrics routes", async () => {

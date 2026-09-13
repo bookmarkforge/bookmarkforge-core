@@ -86,6 +86,12 @@ class SemanticSearchService {
     // Probe local providers first — they work regardless of online status.
     try {
       const { webLLMService } = await import("./WebLLMService");
+      // canRunLocalLLM() is the device-capability verdict (WebGPU surface +
+      // shader-f16 + >= 4 GB RAM), cached after the first probe — the right
+      // filter for deciding whether a local LLM may run the query
+      // expansion at all. It deliberately says nothing about model/engine
+      // state; the generation call's own capability guard is the second
+      // layer if state changes between probe and use.
       if (
         await runWithTimeout(
           () => webLLMService.canRunLocalLLM(),

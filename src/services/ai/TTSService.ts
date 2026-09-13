@@ -71,10 +71,12 @@ class AudioCache {
   // Audio data is user-derived content. Keep the active-session cache in
   // memory only; the IndexedDB store below is used solely to purge legacy
   // plaintext entries and is never written by get/set.
+  private seqCounter = 0;
   private memoryCache = new Map<string, {
     data: string;
     size: number;
     timestamp: number;
+      seq: number;
     expiresAt: number;
     scope: string;
   }>();
@@ -178,6 +180,7 @@ class AudioCache {
       timestamp: now,
       expiresAt: now + this.ENTRY_TTL_MS,
       scope,
+      seq: this.seqCounter++,
     });
     await this.pruneOldEntries();
   }
@@ -188,7 +191,7 @@ class AudioCache {
       .filter(([, value]) =>
         value.scope === this.cacheScope && value.expiresAt > now,
       )
-      .sort(([, a], [, b]) => b.timestamp - a.timestamp);
+      .sort(([, a], [, b]) => b.timestamp - a.timestamp || b.seq - a.seq);
     let totalBytes = 0;
     for (const [index, [key, value]] of current.entries()) {
       if (

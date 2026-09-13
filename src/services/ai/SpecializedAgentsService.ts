@@ -257,7 +257,7 @@ const agentDefinitions: AgentDefinition[] = [
   {
     id: "repoManagementExpert",
     systemPrompt:
-      "You are a Repository Management Expert. Your goal is to optimize repository structure, governance, and the pull request review process. Focus on branch protection rules, CODEOWNERS, issue templates, and efficient collaboration workflows.",
+      "You are a Repository Management Expert. Your goal is to optimize repository structure, governance, and the maintenance workflow. Focus on branch protection rules, issue templates, and efficient solo-maintainer workflows.",
   },
 ];
 

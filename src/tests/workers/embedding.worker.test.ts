@@ -49,6 +49,22 @@ describe("EmbeddingWorker", () => {
     expect(typeof self.onmessage).toBe("function");
   });
 
+  it("prefetches the model without running inference", async () => {
+    fireMessage({ type: "prefetch", taskId: "prefetch-1" });
+
+    await vi.waitFor(() => {
+      expect(postMessageSpy).toHaveBeenCalledWith({
+        taskId: "prefetch-1",
+        result: true,
+      });
+    });
+    expect(mockPipeline).toHaveBeenCalledWith(
+      "feature-extraction",
+      "Xenova/all-MiniLM-L6-v2",
+      { dtype: "q8" },
+    );
+  });
+
   it("generates embedding for a text message", async () => {
     fireMessage({ text: "hello world", id: "task-1" });
     await vi.waitFor(() => {
@@ -56,6 +72,11 @@ describe("EmbeddingWorker", () => {
         expect.objectContaining({ id: "task-1", embedding: [1, 2, 3] }),
       );
     });
+    expect(mockPipeline).toHaveBeenCalledWith(
+      "feature-extraction",
+      "Xenova/all-MiniLM-L6-v2",
+      { dtype: "q8" },
+    );
   });
 
   it("releases the model output buffer after copying the embedding", async () => {

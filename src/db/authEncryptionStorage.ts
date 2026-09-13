@@ -25,7 +25,7 @@
 // Legacy compatibility: rows written before this wrapper exist only as
 // inner CryptoJS ciphertext (no outer envelope). Writes always apply the
 // outer envelope; reads accept BOTH shapes:
-//   - values starting with the envelope marker (v4:/v5:) → decrypt the
+//   - values starting with the envelope marker (v4:/v5:/v6:) → decrypt the
 //     outer envelope, hand the inner ciphertext to the inner layer
 //   - anything else → pass through untouched (legacy inner-only row)
 // Collection schema version bumps force RxDB to rewrite every row through
@@ -51,8 +51,14 @@ import type {
 import { encrypt, decrypt } from "../utils/crypto-core";
 import { logger } from "../utils/logger";
 
-/** v4/v5 wire markers emitted by crypto-core (the outer envelope format). */
-const OUTER_MARKER_RE = /^v[45]:/;
+/**
+ * Envelope wire markers emitted by crypto-core: v4/v5 (legacy) and v6 (A-1:
+ * per-vault Argon2id salt). A v6 payload that is NOT recognised here would be
+ * passed through to RxDB as if it were a pre-F-06 inner-only row, surfacing the
+ * raw `v6:` envelope as the field value — the multiuser/migration e2e catches
+ * exactly that.
+ */
+const OUTER_MARKER_RE = /^v[456]:/;
 
 /**
  * Prefix applied to non-string encrypted fields so decryptDoc can
@@ -325,14 +331,15 @@ function wrapAuthInstance(
       documentWrites: BulkWriteRow<any>[],
       context: string,
     ) => {
+      // ADR-044: Only encrypt `row.document`, NOT `row.previous`. The
+      // `previous` field is used by the inner storage for conflict detection
+      // only — never persisted directly. Encrypting it causes the conflict
+      // error path to double-decrypt and surface as WRONG_PASSWORD.
       const useRows: BulkWriteRow<any>[] = await Promise.all(
-        documentWrites.map(async (row) => {
-          const [previous, document] = await Promise.all([
-            row.previous ? encryptDoc(row.previous) : undefined,
-            encryptDoc(row.document),
-          ]);
-          return { previous, document };
-        }),
+        documentWrites.map(async (row) => ({
+          previous: row.previous,
+          document: await encryptDoc(row.document),
+        })),
       );
       const writeResult: RxStorageBulkWriteResponse<any> =
         await instance.bulkWrite(useRows, context);

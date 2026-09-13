@@ -217,6 +217,33 @@ class DiagnosticService {
     const cacheStats = aiManager.getCacheStats();
     const ollamaAvailable = await aiManager.isOllamaAvailable();
 
+    // Derive the WebLLM status from the service's REAL health (engine
+    // readiness + device capability) instead of hardcoding "Ready" — a
+    // hardcoded value promised more than the diagnostics data verified.
+    // The ladder is mutually exclusive and ordered: a transient
+    // "Initializing" beats the blocker check, a hard capability blocker
+    // beats a stale lastError (the init failed BECAUSE the device cannot
+    // run local AI), and a probe failure reports "Unknown" — never a lie.
+    let webLlmStatus = "Not initialized";
+    try {
+      const webLlmHealth = await webLLMService.getHealthStatus();
+      webLlmStatus = webLlmHealth.isInitializing
+        ? "Initializing"
+        : !webLlmHealth.canRunLocalLLM
+          ? "Device not capable"
+          : webLlmHealth.engineReady
+            ? "Ready"
+            : webLlmHealth.lastError
+              ? "Initialization failed"
+              : "Not initialized";
+    } catch (e: unknown) {
+      logger.warn(
+        "WebLLM health probe failed in diagnostics",
+        e instanceof Error ? e.message : String(e),
+      );
+      webLlmStatus = "Unknown";
+    }
+
     let webGpuAdapter: string | null = null;
     let webGpuSupported = false;
     if ("gpu" in navigator) {
@@ -277,7 +304,7 @@ class DiagnosticService {
         model: aiInfo.model,
         cacheStats,
         ollamaAvailable,
-        webLlmStatus: "Ready",
+        webLlmStatus,
         webLlmFirstSummaryLatencyMs:
           webLLMService.getMetrics().firstSummaryLatencyMs,
         webGpuSupported,

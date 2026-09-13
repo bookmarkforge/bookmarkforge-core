@@ -7,6 +7,10 @@ import {
   Settings,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import {
+  BOTTOM_NAV_TAB_IDS,
+  type BottomNavTabId,
+} from "../constants/navigation";
 
 interface BottomNavProps {
   activeTab: string;
@@ -23,12 +27,23 @@ export const BottomNav = ({
 }: BottomNavProps) => {
   const { t } = useTranslation();
 
-  const navItems = [
-    { id: "dashboard", label: t("app_dashboard"), icon: LayoutDashboard },
-    { id: "documents", label: t("app_documents"), icon: FileText },
-    { id: "bookmarks", label: t("app_bookmarksTitle"), icon: Bookmark },
-    { id: "chatLocal", label: t("app_chatLocal"), icon: MessageSquare },
-  ];
+  // Per-tab presentation keyed by the CANONICAL tab id from
+  // src/constants/navigation.ts (the same array the E2E selector gate
+  // imports); Record keying enforces both drift directions at typecheck.
+  const NAV_ITEM_META: Record<
+    BottomNavTabId,
+    { labelKey: string; icon: React.ComponentType<{ className?: string }> }
+  > = {
+    dashboard: { labelKey: "app_dashboard", icon: LayoutDashboard },
+    documents: { labelKey: "app_documents", icon: FileText },
+    bookmarks: { labelKey: "app_bookmarksTitle", icon: Bookmark },
+    chatLocal: { labelKey: "app_chatLocal", icon: MessageSquare },
+  };
+  const navItems = BOTTOM_NAV_TAB_IDS.map((id) => ({
+    id,
+    label: t(NAV_ITEM_META[id].labelKey),
+    icon: NAV_ITEM_META[id].icon,
+  }));
 
   return (
     <nav

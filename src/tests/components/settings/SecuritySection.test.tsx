@@ -147,20 +147,21 @@ describe("SecuritySection", () => {
     expect(setAutoLockEnabled).toHaveBeenCalledWith(true);
   });
 
-  it("persists the telemetry opt-in to all consent keys", () => {
+  it("persists the telemetry opt-in only to the error-reporting scope", () => {
     render(<SecuritySection {...defaultProps} />);
     fireEvent.click(screen.getByLabelText("app_telemetryOptInLabel"));
-    // Audit 2026-08-30: the toggle must write the ConsentBanner consent keys
-    // (forge_consent_*) so every service sees the same state.
+    // The legacy settings shortcut is intentionally limited to the
+    // error-reporting purpose; analytics and client events need their own
+    // explicit choices in the consent banner.
     expect(safeStorage.safeSet).toHaveBeenCalledWith(
       "forge_consent_error_reporting",
       "true",
     );
-    expect(safeStorage.safeSet).toHaveBeenCalledWith(
+    expect(safeStorage.safeSet).not.toHaveBeenCalledWith(
       "forge_consent_analytics",
       "true",
     );
-    expect(safeStorage.safeSet).toHaveBeenCalledWith(
+    expect(safeStorage.safeSet).not.toHaveBeenCalledWith(
       "forge_consent_client_events",
       "true",
     );

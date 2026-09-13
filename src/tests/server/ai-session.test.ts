@@ -1,8 +1,15 @@
+import {
+  constants,
+  createPrivateKey,
+  createSign,
+  generateKeyPairSync,
+} from "node:crypto";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import type { AddressInfo } from "node:net";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createAiSessionManager } from "../../../server/src/ai-session";
 import type { RedisValueStore } from "../../../server/src/ai-proxy";
+import { canonicalLicenseJson } from "../../../server/src/entitlement";
 
 const servers: Array<ReturnType<typeof createServer>> = [];
 
@@ -141,6 +148,212 @@ describe("AI session manager", () => {
     expect(response.status).toBe(503);
     expect(await response.json()).toEqual({
       error: { code: "SESSION_STORE_UNAVAILABLE", message: "AI sessions temporarily unavailable" },
+    });
+  });
+});
+
+describe("AI session entitlement enforcement", () => {
+  function memoryStore(): RedisValueStore {
+    const data = new Map<string, string>();
+    return {
+      get: async (key) => data.get(key) ?? null,
+      set: async (key, value) => { data.set(key, value); },
+      delete: async (key) => { data.delete(key); },
+    };
+  }
+
+  function licensedKeyPair() {
+    const { publicKey, privateKey } = generateKeyPairSync("rsa", {
+      modulusLength: 2048,
+      publicKeyEncoding: { type: "spki", format: "der" },
+      privateKeyEncoding: { type: "pkcs8", format: "der" },
+    });
+    return { publicKeySpki: publicKey.toString("base64"), privateKey };
+  }
+
+  function signedProof(
+    payload: Record<string, unknown>,
+    privateKey: Buffer,
+  ): { payload: Record<string, unknown>; signature: string } {
+    const signer = createSign("sha256");
+    signer.update(canonicalLicenseJson(payload));
+    const signature = signer
+      .sign({
+        key: createPrivateKey({ key: privateKey, format: "der", type: "pkcs8" }),
+        padding: constants.RSA_PKCS1_PSS_PADDING,
+        saltLength: 32,
+      })
+      .toString("base64");
+    return { payload, signature };
+  }
+
+  async function postSession(base: string, body: unknown) {
+    return fetch(`${base}/api/services/ai/session`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  }
+
+  it("requires a verified license proof by default, in every environment", async () => {
+    // The old default only required a license when NODE_ENV was exactly
+    // "production", so staging/preview/misconfigured deployments served cloud
+    // AI anonymously. Fail closed is the default now.
+    const manager = createAiSessionManager({ sessionStore: memoryStore() });
+    expect(manager.licenseEnforced).toBe(true);
+    const base = await start((req, res) => { void manager.createSessionHandler()(req, res); });
+
+    const response = await postSession(base, {});
+    expect(response.status).toBe(401);
+    expect(await response.json()).toMatchObject({
+      error: { code: "LICENSE_REQUIRED", reason: "MISSING_PROOF" },
+    });
+  });
+
+  it("issues anonymous sessions only under an explicit non-production opt-out", async () => {
+    vi.stubEnv("AI_SESSION_REQUIRE_LICENSE", "0");
+    const manager = createAiSessionManager({ sessionStore: memoryStore() });
+    expect(manager.licenseEnforced).toBe(false);
+    expect(manager.anonymousSessionsReason).toBe("AI_SESSION_REQUIRE_LICENSE=0");
+
+    const base = await start((req, res) => { void manager.createSessionHandler()(req, res); });
+    const response = await postSession(base, {});
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({ csrfToken: expect.any(String) });
+  });
+
+  it("refuses the anonymous opt-out in production", () => {
+    vi.stubEnv("AI_SESSION_REQUIRE_LICENSE", "0");
+    vi.stubEnv("NODE_ENV", "production");
+    expect(() => createAiSessionManager({})).toThrow(/refused in production/);
+  });
+
+  it("fails closed on an unrecognized policy value", async () => {
+    vi.stubEnv("AI_SESSION_REQUIRE_LICENSE", "maybe");
+    const manager = createAiSessionManager({ sessionStore: memoryStore() });
+    expect(manager.licenseEnforced).toBe(true);
+  });
+
+  it("accepts a server-signed proof and stops the session when the license expires", async () => {
+    const { publicKeySpki, privateKey } = licensedKeyPair();
+    let current = 1_750_000_000_000;
+    const expiry = current + 60_000;
+    const proof = signedProof(
+      { v: 1, deviceId: "device-entitled", validatedAt: current, expiresAt: expiry },
+      privateKey,
+    );
+    const manager = createAiSessionManager({
+      licensePublicKeySpki: publicKeySpki,
+      now: () => current,
+      sessionStore: memoryStore(),
+    });
+    const base = await start((req, res) => { void manager.createSessionHandler()(req, res); });
+
+    const session = await postSession(base, proof);
+    expect(session.status).toBe(200);
+    const csrf = (await session.json() as { csrfToken: string }).csrfToken;
+    const cookie = cookieHeader(session.headers.get("set-cookie") ?? "");
+    const request = {
+      headers: { cookie, "x-csrf-token": csrf },
+    } as unknown as IncomingMessage;
+
+    // Identity is the proof digest, so one install shares one quota bucket.
+    await expect(manager.authenticate(request)).resolves.toMatchObject({
+      identity: expect.stringMatching(/^[0-9a-f]{64}$/),
+    });
+
+    // The license expires mid-session: the 30-minute cookie TTL must not
+    // outlive the entitlement that justified the session.
+    current = expiry + 1;
+    await expect(manager.authenticate(request)).resolves.toBeNull();
+  });
+
+  it("mints a session through the router guard without re-reading the proof", async () => {
+    const { publicKeySpki, privateKey } = licensedKeyPair();
+    const current = 1_750_000_000_000;
+    const manager = createAiSessionManager({
+      licensePublicKeySpki: publicKeySpki,
+      now: () => current,
+      sessionStore: memoryStore(),
+    });
+    const proof = signedProof(
+      { v: 1, deviceId: "device-router", validatedAt: current },
+      privateKey,
+    );
+    // The exact composition server/src/index.ts mounts: the shared guard
+    // resolves the proof from the body and attaches it, then the handler runs
+    // on that context. A body that was read twice would fail here.
+    const base = await start((req, res) => {
+      void manager
+        .entitlementGuard.middleware("proof", { proofLabel: "session proof" })(
+          req,
+          res,
+          () => manager.createSessionHandler()(req, res),
+        );
+    });
+
+    const session = await postSession(base, proof);
+    expect(session.status).toBe(200);
+    const csrf = (await session.json() as { csrfToken: string }).csrfToken;
+    const cookie = cookieHeader(session.headers.get("set-cookie") ?? "");
+
+    // The session still carries the proof's identity, so the guard and the
+    // handler resolved the same entitlement.
+    await expect(
+      manager.authenticate({ headers: { cookie, "x-csrf-token": csrf } } as unknown as IncomingMessage),
+    ).resolves.toMatchObject({ identity: expect.stringMatching(/^[0-9a-f]{64}$/) });
+  });
+
+  it("exposes the deployment's entitlement guard as the router's enforcement point", () => {
+    const enforcing = createAiSessionManager({ sessionStore: memoryStore() });
+    expect(enforcing.licenseEnforced).toBe(true);
+    expect(enforcing.entitlementGuard.enforced).toBe(true);
+
+    vi.stubEnv("AI_SESSION_REQUIRE_LICENSE", "0");
+    const anonymous = createAiSessionManager({ sessionStore: memoryStore() });
+    expect(anonymous.licenseEnforced).toBe(false);
+    expect(anonymous.entitlementGuard.enforced).toBe(false);
+  });
+
+  it("answers LICENSE_EXPIRED for an expired proof", async () => {
+    const { publicKeySpki, privateKey } = licensedKeyPair();
+    const current = 1_750_000_000_000;
+    const proof = signedProof(
+      { v: 1, deviceId: "device-expired", validatedAt: current - 1_000, expiresAt: current - 1 },
+      privateKey,
+    );
+    const manager = createAiSessionManager({
+      licensePublicKeySpki: publicKeySpki,
+      now: () => current,
+      sessionStore: memoryStore(),
+    });
+    const base = await start((req, res) => { void manager.createSessionHandler()(req, res); });
+
+    const response = await postSession(base, proof);
+    expect(response.status).toBe(401);
+    expect(await response.json()).toMatchObject({
+      error: { code: "LICENSE_EXPIRED", reason: "EXPIRED" },
+    });
+  });
+
+  it("rejects a proof signed by a foreign key", async () => {
+    const { publicKeySpki } = licensedKeyPair();
+    const foreign = licensedKeyPair();
+    const current = 1_750_000_000_000;
+    const manager = createAiSessionManager({
+      licensePublicKeySpki: publicKeySpki,
+      now: () => current,
+      sessionStore: memoryStore(),
+    });
+    const base = await start((req, res) => { void manager.createSessionHandler()(req, res); });
+
+    const response = await postSession(
+      base,
+      signedProof({ v: 1, deviceId: "device-forged", validatedAt: current }, foreign.privateKey),
+    );
+    expect(response.status).toBe(401);
+    expect(await response.json()).toMatchObject({
+      error: { code: "LICENSE_REQUIRED", reason: "INVALID_SIGNATURE" },
     });
   });
 });

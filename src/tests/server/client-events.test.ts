@@ -165,14 +165,19 @@ describe("client-event-retry-stats diagnostics", () => {
       void handler(req, res);
     });
 
-    const postStats = (dropped: number) =>
+    const postStats = (
+      dropped: number,
+      clientIp = "203.0.113.50",
+      attempts = 3,
+      coalesced = 1,
+    ) =>
       realFetch(`${base}/api/client-events/retry-stats`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
-          "x-forwarded-for": "203.0.113.50",
+          "x-forwarded-for": clientIp,
         },
-        body: JSON.stringify({ type: "client-event-retry-stats", attempts: 3, coalesced: 1, dropped }),
+        body: JSON.stringify({ type: "client-event-retry-stats", attempts, coalesced, dropped }),
       });
     const degradedLines = () =>
       errorSpy.mock.calls.filter((args) => String(args[0]).includes("client_events_retry_degraded"));
@@ -194,7 +199,13 @@ describe("client-event-retry-stats diagnostics", () => {
     expect(degradedLines()).toHaveLength(2);
     expect(String(degradedLines()[1]![0])).toContain('"newDropped":2');
 
-    // Diagnostics expose the accumulated counters (attempts 3+3+3, dropped 3+3+5).
+    // A second client has its own cumulative counter stream; it must not be
+    // treated as a reset of the first client's counters.
+    const otherClient = await postStats(4, "203.0.113.51", 2, 0);
+    expect(otherClient.status).toBe(204);
+
+    // Diagnostics expose per-client deltas: first client contributes
+    // attempts=3/coalesced=1/dropped=5, second contributes 2/0/4.
     const diagnostics = await realFetch(`${base}/api/client-events`, {
       headers: { "x-client-events-admin-token": "diagnostics-token" },
     });
@@ -204,9 +215,9 @@ describe("client-event-retry-stats diagnostics", () => {
       clientRetryCoalesced?: number;
       clientRetryDropped?: number;
     };
-    expect(body.clientRetryAttempts).toBe(9);
-    expect(body.clientRetryCoalesced).toBe(3);
-    expect(body.clientRetryDropped).toBe(11);
+    expect(body.clientRetryAttempts).toBe(5);
+    expect(body.clientRetryCoalesced).toBe(1);
+    expect(body.clientRetryDropped).toBe(9);
 
     errorSpy.mockRestore();
   });

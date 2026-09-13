@@ -19,9 +19,11 @@ vi.mock("../../services/ai/ProviderManager", () => ({
 }));
 
 const mockWebLLMService = {
+  getCapabilityBlocker: vi.fn(),
   canRunLocalLLM: vi.fn(),
   isModelLoaded: vi.fn(),
   getCurrentModel: vi.fn(),
+  init: vi.fn(),
 };
 vi.mock("../../services/ai/WebLLMService", () => ({
   webLLMService: mockWebLLMService,
@@ -235,8 +237,8 @@ describe("SupportDiagnostics", () => {
   });
 
   describe("checkWebLLM", () => {
-    it("returns canRun with the loaded model info", async () => {
-      mockWebLLMService.canRunLocalLLM.mockResolvedValue(true);
+    it("returns canRun=true and no blocker key on a capable device", async () => {
+      mockWebLLMService.getCapabilityBlocker.mockResolvedValue(null);
       mockWebLLMService.isModelLoaded.mockReturnValue(true);
       mockWebLLMService.getCurrentModel.mockReturnValue("llama3.2");
       await expect(checkWebLLM()).resolves.toEqual({
@@ -244,10 +246,16 @@ describe("SupportDiagnostics", () => {
         modelLoaded: true,
         currentModel: "llama3.2",
       });
+      // `canRun` is DERIVED from the blocker (null = capable): the enum from
+      // getCapabilityBlocker() is the single capability verdict, so the
+      // support view's "why" and the boolean can never disagree. A capable
+      // status must not carry a blocker key at all (absent, not null).
+      const status = await checkWebLLM();
+      expect(status).not.toHaveProperty("blocker");
     });
 
     it("reports not-loaded when no model is in memory", async () => {
-      mockWebLLMService.canRunLocalLLM.mockResolvedValue(true);
+      mockWebLLMService.getCapabilityBlocker.mockResolvedValue(null);
       mockWebLLMService.isModelLoaded.mockReturnValue(false);
       mockWebLLMService.getCurrentModel.mockReturnValue("");
       await expect(checkWebLLM()).resolves.toEqual({
@@ -257,14 +265,49 @@ describe("SupportDiagnostics", () => {
       });
     });
 
-    it("returns canRun false when the probe rejects", async () => {
-      mockWebLLMService.canRunLocalLLM.mockRejectedValue(
-        new Error("webgpu context lost"),
+    it("surfaces the precise blocker enum when the device is blocked", async () => {
+      // One representative of the ladder at this layer — the enum's own
+      // ordering/values are pinned in the WebLLMService suites, and the
+      // enum -> user message mapping is pinned in the SupportChat tests.
+      mockWebLLMService.getCapabilityBlocker.mockResolvedValue(
+        "insufficient-memory",
       );
+      mockWebLLMService.isModelLoaded.mockReturnValue(false);
+      mockWebLLMService.getCurrentModel.mockReturnValue("");
       await expect(checkWebLLM()).resolves.toEqual({
         canRun: false,
         modelLoaded: false,
+        blocker: "insufficient-memory",
       });
+    });
+
+    it("returns canRun=false WITHOUT a blocker when the probe itself rejects", async () => {
+      // A rejected probe produces no verdict of any kind, so no blocker may
+      // be reported — the UI falls back to the generic message instead of
+      // naming a cause it does not know.
+      mockWebLLMService.getCapabilityBlocker.mockRejectedValue(
+        new Error("webgpu context lost"),
+      );
+      const status = await checkWebLLM();
+      expect(status).toEqual({ canRun: false, modelLoaded: false });
+      expect(status).not.toHaveProperty("blocker");
+    });
+
+    it("gates on getCapabilityBlocker() and never inits the engine", async () => {
+      // The diagnostics hint path (StartupAIHint) must read readiness through
+      // the strict capability ladder and must NEVER start the engine itself —
+      // init() belongs exclusively to ProviderManager.warmup() (guarded) and
+      // to WebLLMService's own user-confirmed retry. canRunLocalLLM() is
+      // deliberately NOT consulted anymore: the blocker enum replaced it as
+      // the verdict source (same cache underneath, strictly more info).
+      mockWebLLMService.getCapabilityBlocker.mockResolvedValue(null);
+      mockWebLLMService.isModelLoaded.mockReturnValue(false);
+      mockWebLLMService.getCurrentModel.mockReturnValue("");
+      await checkWebLLM();
+
+      expect(mockWebLLMService.getCapabilityBlocker).toHaveBeenCalledTimes(1);
+      expect(mockWebLLMService.canRunLocalLLM).not.toHaveBeenCalled();
+      expect(mockWebLLMService.init).not.toHaveBeenCalled();
     });
   });
 });

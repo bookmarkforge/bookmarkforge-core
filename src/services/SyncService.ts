@@ -21,6 +21,7 @@ import {
   MAX_ICE_CREDENTIAL_LENGTH,
   MAX_ICE_URL_LENGTH,
   createSignalingSocketFactory,
+  deriveSyncTopic,
   fetchIceServersFromSignaling,
   isSafeIceString,
 } from "./sync/signaling";
@@ -30,9 +31,11 @@ import {
 export {
   SIGNAL_INIT_TIMEOUT_MS,
   SIGNAL_QUEUE_LIMIT,
+  SYNC_TOPIC_DOMAIN,
   createSignalingSocketFactory,
   canonicalSignalPayload,
   deriveClientSignalKey,
+  deriveSyncTopic,
 } from "./sync/signaling";
 export { SYNC_ALLOWED_COLLECTIONS } from "./sync/replication";
 
@@ -564,12 +567,18 @@ export class SyncService {
     // BookmarkForge signaling servers (server/src/index.ts) can enforce
     // access control. The RxDB simple-peer handler only sends `{type:'join',
     // room}`; we inject `roomSecret` by wrapping the WebSocket constructor
-    // and augmenting the outgoing `join` message. Public rxdb.info/pubnub
-    // servers ignore the extra field, which is safe.
+    // and augmenting the outgoing `join` message.
     // A host creates the secret; a joiner receives the same high-entropy
     // value from the URL fragment (never sent to the HTTP server). This makes
     // self-hosted signaling rooms usable without putting the secret in query
     // logs or Referer headers.
+    //
+    // SECURITY (A-3): that injection is scoped to the self-hosted server below
+    // (`customUrl`). The secret is the room capability — it keys the derived
+    // room name (A-2) and every `signalAuth` — so a public rxdb.info/PubNub
+    // relay must never receive it, and "the relay ignores the extra field" was
+    // never a reason to hand it over. Public relays get the opaque room name
+    // and nothing else.
     if (sharedRoomSecret !== undefined) {
       this.roomSecret = sharedRoomSecret.toLowerCase();
     } else {
@@ -579,10 +588,11 @@ export class SyncService {
     }
     const roomSecret = this.roomSecret;
     // SECURITY (audit #2 + #4): the socket constructor enforces wss:// for
-    // remote hosts, injects the room secret into `join`, and signs every
-    // `signal` with an HMAC (signalAuth) so the self-hosted signaling server
-    // can enforce ENFORCE_SIGNAL_HMAC. Public rxdb.info/PubNub servers ignore
-    // the extra fields. The returned factory is callable with `new` (RxDB's
+    // remote hosts, injects the room secret into `join` when (and only when)
+    // the socket targets the configured self-hosted server, and signs every
+    // `signal` with an HMAC (signalAuth) so the server can enforce
+    // ENFORCE_SIGNAL_HMAC (public relays ignore the extra field, which carries
+    // no secret). The returned factory is callable with `new` (RxDB's
     // simple-peer handler instantiates it as `new webSocketConstructor(url)`;
     // an arrow function would throw "is not a constructor" at runtime).
     // The factory is created PER COLLECTION with a collection-scoped topic:
@@ -591,9 +601,23 @@ export class SyncService {
     // collection would receive documents (and vice versa) and fail schema
     // validation on every pull (the multiuser e2e caught this). The topic is
     // also the room the HMAC is bound to, so it must match the `join` room.
+    //
+    // SECURITY (A-2): the topic is NOT the readable room ID. It is derived as
+    // HMAC-SHA256(roomSecret, `${SYNC_TOPIC_DOMAIN}:${roomId}:${collection}`)
+    // (see deriveSyncTopic), so the room name a relay, an observer or a peer
+    // that only knows the room ID sees is an opaque 64-hex string. Both peers
+    // hold the same room secret and therefore derive the same room; the public
+    // rxdb.info/PubNub relays learn nothing that identifies or opens the room.
 
     if (!isCurrentSession()) {return;}
     this.installPrivacyGuards(db);
+    // A-3: state the secret policy once per sync session. "Why does /admin
+    // report secretPresent: false?" is answered by this line: without a
+    // configured self-hosted server the vault runs over public relays, which
+    // are never given the room secret.
+    logger.info("[SyncService] Signaling room-secret policy", {
+      sharesSecretWithServer: Boolean(customUrl),
+    });
 
     // P0: do not derive the sync set from every RxDB collection. A new
     // collection may contain private conversations or memory records and
@@ -625,10 +649,22 @@ export class SyncService {
         // own room so peers never mix schemas. The room secret is shared (it
         // is the session capability), and the HMAC key is bound to this exact
         // topic so the server's deriveSignalKey(topic, secret) matches.
-        const syncTopic = `${roomId}-${collection.name}`;
+        // The room name itself is keyed by that secret (A-2), so neither the
+        // signaling server nor any relay can read the room ID off the wire.
+        const syncTopic = await deriveSyncTopic(
+          roomSecret,
+          roomId,
+          collection.name,
+        );
+        // Stale-session checkpoint after the async key derivation.
+        if (!isCurrentSession()) {return;}
         const makeSignalingSocket = createSignalingSocketFactory(
           roomSecret,
           syncTopic,
+          // A-3: only the configured self-hosted server may receive the room
+          // secret; `null` (public-relay mode) means it is never sent, and the
+          // factory re-checks the socket URL against this origin per socket.
+          { selfHostedSignalingUrl: customUrl ?? null },
         );
 
         let replicationState: ReplicationState | undefined;
@@ -926,7 +962,10 @@ export class SyncService {
     // error→reconnect cycle. The counter resets naturally on success via the
     // health check (peers > 0).
     const backoffAttempts = this.reconnectAttempts;
-    this.stopAll();
+    // Preserve dedup cache across reconnect to the same room — only clear
+    // on explicit room switch to prevent re-application of recently-seen
+    // operations that the peer didn't receive ACKs for.
+    this.stopAll(false);
     this.reconnectAttempts = backoffAttempts;
     if (roomId) {
       await this.startP2PSync(db, roomId, roomSecret ?? undefined);
@@ -936,8 +975,11 @@ export class SyncService {
   /**
    * Stops all active replications.
    * Clears all timers, subscriptions and replication handles.
+   * @param clearDedupe - Whether to clear the deduplication cache. Pass
+   *   `false` when reconnecting to the same room to prevent re-application
+   *   of recently-seen operations. Default `true` (full cleanup).
    */
-  stopAll() {
+  stopAll(clearDedupe = true) {
     // Invalidate every pending async startup before releasing resources.
     this.sessionGeneration++;
     // Allow a new caller to start a fresh session while an invalidated startup
@@ -989,9 +1031,13 @@ export class SyncService {
     this.privacyGuardSubscriptions = [];
     this.closeDedupeChannel();
     // Dedupe hashes are scoped to one replication session. Retaining them
-    // across a room switch/reconnect can suppress a legitimate operation in
-    // the new session when it has the same collection/id/action tuple.
-    this.clearDedupeCache();
+    // across a room switch can suppress a legitimate operation in the new
+    // session when it has the same collection/id/action tuple. On reconnect
+    // to the same room, preserve them to prevent re-application of
+    // operations the peer didn't receive ACKs for.
+    if (clearDedupe) {
+      this.clearDedupeCache();
+    }
     this.isSyncing = false;
     this.currentRoomId = null;
     this.roomSecret = null;

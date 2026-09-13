@@ -1,7 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { ErrorBoundaryWrapper } from "./components/ErrorBoundary";
 import { AppInitializer } from "./components/AppInitializer";
-import { AppContent } from "./components/app";
 import { computeShareRewrite } from "./utils/shareRewrite";
 
 const MantineThemeProvider = lazy(
@@ -9,6 +8,9 @@ const MantineThemeProvider = lazy(
 );
 const MotionThemeProvider = lazy(
   () => import("./components/MotionThemeProvider"),
+);
+const AppContent = lazy(() =>
+  import("./components/app").then((m) => ({ default: m.AppContent })),
 );
 
 const CaptureApp = lazy(() =>

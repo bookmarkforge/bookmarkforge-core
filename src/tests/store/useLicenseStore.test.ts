@@ -11,6 +11,12 @@ const { mockService } = vi.hoisted(() => ({
   mockService: {
     getEntitlements: vi.fn<() => Entitlements>(() => ({ plan: "free", source: "none" })),
     verifyCachedState: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+    // Server-authoritative check: runs BEFORE the key-based re-validation, so
+    // an authoritative downgrade short-circuits it.
+    refreshEntitlementFromServer: vi.fn<() => Promise<Entitlements>>().mockResolvedValue({
+      plan: "pro",
+      source: "license",
+    }),
     validateInBackground: vi.fn<() => Promise<boolean>>().mockResolvedValue(true),
     activate: vi.fn<(key: string) => Promise<Entitlements>>().mockResolvedValue({
       plan: "pro",
@@ -40,6 +46,8 @@ const PRO_TRIAL: Entitlements = { plan: "pro", source: "trial", expiresAt: Date.
 describe("useLicenseStore", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockService.refreshEntitlementFromServer.mockResolvedValue(PRO_LICENSE);
+    mockService.validateInBackground.mockResolvedValue(true);
     mockService.getEntitlements.mockReturnValue(FREE);
     mockService.activate.mockResolvedValue(PRO_LICENSE);
     mockService.startTrial.mockReturnValue(PRO_TRIAL);
@@ -90,16 +98,32 @@ describe("useLicenseStore", () => {
   test("refresh() does not re-validate while not in grace", async () => {
     await useLicenseStore.getState().refresh();
     expect(mockService.validateInBackground).not.toHaveBeenCalled();
+    expect(mockService.refreshEntitlementFromServer).not.toHaveBeenCalled();
   });
 
-  test("refresh() re-validates and re-snapshots while in grace", async () => {
+  test("refresh() asks the server first and re-snapshots while in grace", async () => {
     mockService.getEntitlements.mockReturnValueOnce(PRO_GRACE);
     useLicenseStore.setState({ entitlements: PRO_GRACE });
     mockService.getEntitlements.mockReturnValue(PRO_LICENSE);
 
     await useLicenseStore.getState().refresh();
+    expect(mockService.refreshEntitlementFromServer).toHaveBeenCalled();
     expect(mockService.validateInBackground).toHaveBeenCalled();
     expect(useLicenseStore.getState().entitlements).toEqual(PRO_LICENSE);
+  });
+
+  test("refresh() stops at an authoritative downgrade from the server", async () => {
+    mockService.getEntitlements.mockReturnValueOnce(PRO_GRACE);
+    useLicenseStore.setState({ entitlements: PRO_GRACE });
+    mockService.refreshEntitlementFromServer.mockResolvedValueOnce(FREE);
+    mockService.getEntitlements.mockReturnValue(FREE);
+
+    await useLicenseStore.getState().refresh();
+
+    expect(useLicenseStore.getState().entitlements).toEqual(FREE);
+    expect(useLicenseStore.getState().error).toBeNull();
+    // No point re-validating with the license key: the entitlement is gone.
+    expect(mockService.validateInBackground).not.toHaveBeenCalled();
   });
 
   test("refresh() contains background validation failures", async () => {

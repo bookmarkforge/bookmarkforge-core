@@ -20,6 +20,7 @@ import {
 import { useTranslation } from "react-i18next";
 import type { BlockEditorState } from "./useBlockEditorState";
 import { insertOrUpdateBlockForSlashMenu, type PartialBlock } from "@blocknote/core";
+import { createEditorFocusHandler } from "./editorFocusWarmup";
 import { initDB } from "../../container/database";
 import { attachmentStore } from "../../services/documentAttachments";
 import { logger } from "../../utils/logger";
@@ -697,9 +698,18 @@ export function useBlockEditorLogic({
     ],
   );
 
-  const handleEditorFocus = useCallback(() => {
-    setAiError(null);
-  }, []);
+  // Opportunistic local-AI preload on first editor focus. The BlockEditor
+  // tests have always described this behavior; this wiring is what makes it
+  // real. warmup() guards init() with canRunLocalLLM() (WebGPU + f16 + RAM)
+  // and init() is idempotent for the loaded model, so capable devices preload
+  // once per editor while GPU-less devices skip silently.
+  const handleEditorFocus = useCallback(
+    createEditorFocusHandler({
+      setAiError,
+      isWarmedUpRef: state.isWarmedUpRef,
+    }),
+    [setAiError, state.isWarmedUpRef],
+  );
 
   const handlePdfText = useCallback(
     async (text: string) => {

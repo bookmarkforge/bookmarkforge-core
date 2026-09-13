@@ -54,8 +54,8 @@ export function useRouteTransitionTiming(): void {
             performance.clearMarks(markName);
           }
         } catch {
-          // Performance.measure may throw in rare cross-origin or test
-          // environments — never let timing crash the app.
+          /* INTENTIONAL SILENCE: Performance.measure may throw in rare
+             cross-origin or test environments — never let timing crash the app. */
         }
       });
       rafIdsRef.current = [raf2];

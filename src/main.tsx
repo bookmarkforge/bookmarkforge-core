@@ -32,6 +32,7 @@ import { reportWebVitals } from "./utils/webVitals";
 import { initCrisisHandler } from "./telemetry/crisisHandler";
 import { applyUserCspProfile } from "./utils/cspReportThrottle";
 import { initLicenseStore } from "./store/useLicenseStore";
+import { initSwIntegrityBridge } from "./utils/swIntegrityBridge";
 
 import i18n from "./i18n";
 
@@ -150,6 +151,14 @@ registerSW({
     logger.info("[SW] Application ready for offline use");
   },
 });
+
+// ADR-039: the service worker verifies every asset it serves against the
+// integrity manifest embedded at build time (vite.config.ts
+// integrityManifestPlugin). A mismatch never reaches the page as executable
+// code (the SW answers 504); this bridge replays the notification onto the
+// SAME window contract the app already reacts to — bundle-integrity-failed —
+// so the AppInitializer recovery screen and telemetry/productionMonitor fire.
+initSwIntegrityBridge();
 
 // Request persistent storage to prevent browser from clearing AI models and DB
 if (navigator.storage && navigator.storage.persist) {

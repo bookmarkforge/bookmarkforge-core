@@ -87,10 +87,12 @@ vi.mock("motion/react", async () => {
 // tests never trigger.
 const mockSearchSimilar = vi.hoisted(() => vi.fn().mockResolvedValue([]));
 const mockExpandQuery = vi.hoisted(() => vi.fn().mockResolvedValue(""));
+const mockPrefetch = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
 vi.mock("../../services/ai/RAGEngine", () => ({
   ragEngine: {
     searchSimilar: mockSearchSimilar,
     generateEmbedding: vi.fn().mockResolvedValue([]),
+    prefetch: mockPrefetch,
   },
   onEmbeddingProgress: vi.fn(() => () => {}),
 }));
@@ -619,6 +621,7 @@ describe("DocumentManager - Branch coverage maximization", () => {
     await userEvent.click(aiBtn);
     // After toggle, the AI Search button should have the active class
     expect(aiBtn).toHaveClass(/bg-blue-500/);
+    expect(mockPrefetch).toHaveBeenCalledTimes(1);
   });
 
   // ── Breadcrumb with selected folder ──

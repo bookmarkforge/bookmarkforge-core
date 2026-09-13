@@ -2,8 +2,8 @@
  * Unit tests for src/services/clientEventReporter.ts
  *
  * Covers the three contracts of the client-side event forwarder:
- *   1. Opt-in gating — nothing leaves the device unless the local diagnostics
- *      opt-in (bmf_local_error_storage / legacy bmf_telemetry_optin) is on.
+ *   1. Opt-in gating — nothing leaves the device unless the independent
+ *      client-events opt-in (forge_consent_client_events) is on.
  *   2. Payload shape — the exact JSON posted to /api/client-events for both
  *      storage-pressure and bundle-integrity-spike.
  *   3. Error containment — a dead/blocked server must never surface an
@@ -20,7 +20,7 @@ import {
 } from "../../services/clientEventReporter";
 import type { StoragePressureDetail } from "../../utils/storageMonitor";
 
-const TELEMETRY_KEY = "bmf_local_error_storage";
+const TELEMETRY_KEY = "forge_consent_client_events";
 const LEGACY_TELEMETRY_KEY = "bmf_telemetry_optin";
 
 const fetchMock = () => fetch as unknown as ReturnType<typeof vi.fn>;
@@ -89,11 +89,19 @@ describe("opt-in gating", () => {
     stop();
   });
 
-  it("honors the legacy bmf_telemetry_optin key as a fallback", () => {
+  it("honors the pre-banner bmf_telemetry_optin key as a migration fallback", () => {
     localStorage.setItem(LEGACY_TELEMETRY_KEY, "true");
     const stop = startClientEventReporter();
     dispatchIntegritySpike({ count: 3, reason: "spike" });
     expect(fetchMock()).toHaveBeenCalledTimes(1);
+    stop();
+  });
+
+  it("does not use the legacy local-error key as remote consent", () => {
+    localStorage.setItem("bmf_local_error_storage", "true");
+    const stop = startClientEventReporter();
+    dispatchStoragePressure({ level: "critical", pct: 95 });
+    expect(fetchMock()).not.toHaveBeenCalled();
     stop();
   });
 

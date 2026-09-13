@@ -109,7 +109,7 @@ test.describe('Import round-trip', () => {
 
     // Close the dialog and verify the data is really in the list.
     await importDialog
-      .getByRole('button', { name: '×', exact: true })
+      .getByRole('button', { name: 'Close', exact: true })
       .evaluate((button) => (button as HTMLButtonElement).click());
     await expect(importDialog).toBeHidden();
 

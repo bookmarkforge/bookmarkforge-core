@@ -14,20 +14,31 @@
  *     leaves the device. The hash is pseudonymous and bounded (it enables
  *     cohort retention D1/D7/D30 without exposing the raw identifier).
  *   - The server stamps the UTC day at ingest, so client clocks are never
- *     trusted and a retried day REPLACES the previous bucket (idempotent).
+ *     trusted. New payloads carry a batchId: partial batches are additive and
+ *     a retried batch is applied only once. Payloads without batchId keep the
+ *     legacy replace semantics.
  *   - Fire-and-forget: a dead/absent companion server must never surface as
  *     an error or retry storm. No queue — analytics is best-effort.
  *   - Same-origin POSTs pass the network firewall; the endpoint only exists
  *     when the deployment runs the companion server.
  */
 import { logger } from "../utils/logger";
-import { safeGet } from "../store/safeStorage";
 import { STORAGE_KEYS } from "../constants/storage-keys";
+import { isPurposeConsented } from "./ConsentService";
 import type { AnalyticsEvent, AnalyticsEventType } from "./AnalyticsService";
 
+// ADR-030: explicit batch identity makes opt-in analytics additive and
+// idempotent without sending raw event identifiers or content.
+
 const EVENTS_ENDPOINT = "/api/analytics/events";
-const INSTALL_ID_KEY = "bmf_analytics_install_id";
-const LEGACY_CONSENT_KEY = "bmf_telemetry_optin";
+const INSTALL_ID_KEY = STORAGE_KEYS.ANALYTICS_INSTALL_ID;
+const MAX_INSTALL_ID_LENGTH = 128;
+const MAX_BATCH_ID_LENGTH = 128;
+const BATCH_ID_RE = /^[A-Za-z0-9._-]{1,128}$/;
+/** Hard cap for direct callers and unload paths; analytics is best-effort. */
+export const MAX_FORWARDED_EVENTS = 512;
+/** Prevent a forged local batch from overflowing aggregate counters. */
+const MAX_FORWARDED_COUNT = 1_000_000;
 
 /** Allow-list mirrored on the server — only these types leave the device. */
 const FORWARDED_TYPES = new Set<AnalyticsEventType>([
@@ -51,12 +62,13 @@ const FORWARDED_TYPES = new Set<AnalyticsEventType>([
   "extension_captured",
 ]);
 
-/** Consent gate: same key and legacy fallback as AnalyticsService. */
+/** Consent gate: analytics has its own independent purpose. */
 export function isAnalyticsForwardingEnabled(): boolean {
   try {
-    const current = safeGet(STORAGE_KEYS.CONSENT_ANALYTICS);
-    if (current !== null) return current === "true";
-    return safeGet(LEGACY_CONSENT_KEY) === "true";
+    // ConsentService keeps the complete-decision rule and the legacy migration
+    // in one place. In particular, a missing modern key is denied once a
+    // complete purpose-specific decision exists.
+    return isPurposeConsented("analytics");
   } catch {
     return false;
   }
@@ -66,7 +78,9 @@ export function isAnalyticsForwardingEnabled(): boolean {
 export function getOrCreateInstallId(): string {
   try {
     const existing = localStorage.getItem(INSTALL_ID_KEY);
-    if (existing) return existing;
+    // Keep legacy non-empty identifiers for compatibility, but never allow a
+    // corrupted/attacker-controlled value to cause unbounded hashing.
+    if (existing && existing.length <= MAX_INSTALL_ID_LENGTH) return existing;
     const created = crypto.randomUUID();
     localStorage.setItem(INSTALL_ID_KEY, created);
     return created;
@@ -78,6 +92,9 @@ export function getOrCreateInstallId(): string {
 
 /** SHA-256 hex of the install id — the only identifier that leaves the device. */
 export async function hashInstallId(installId: string): Promise<string> {
+  if (!installId || installId.length > MAX_INSTALL_ID_LENGTH) {
+    throw new Error("Invalid analytics install id");
+  }
   const bytes = new TextEncoder().encode(installId);
   const digest = await crypto.subtle.digest("SHA-256", bytes);
   return [...new Uint8Array(digest)]
@@ -90,22 +107,39 @@ export function buildDailyCounts(
   events: Array<Pick<AnalyticsEvent, "type">>,
 ): Record<string, number> {
   const counts: Record<string, number> = {};
-  for (const event of events) {
-    if (!FORWARDED_TYPES.has(event.type)) continue;
-    counts[event.type] = (counts[event.type] ?? 0) + 1;
+  const limit = Math.min(events.length, MAX_FORWARDED_EVENTS);
+  for (let index = 0; index < limit; index += 1) {
+    const event = events[index];
+    if (!event || !FORWARDED_TYPES.has(event.type)) continue;
+    counts[event.type] = Math.min(
+      MAX_FORWARDED_COUNT,
+      (counts[event.type] ?? 0) + 1,
+    );
   }
   return counts;
+}
+
+function isValidBatchId(batchId: string): boolean {
+  return batchId.length <= MAX_BATCH_ID_LENGTH && BATCH_ID_RE.test(batchId);
 }
 
 /** Build the wire payload for a batch of local events. */
 export async function buildAnalyticsPayload(
   events: Array<Pick<AnalyticsEvent, "type">>,
-): Promise<{ iid: string; counts: Record<string, number> } | null> {
-  if (!isAnalyticsForwardingEnabled()) return null;
+  batchId: string = crypto.randomUUID(),
+): Promise<{ iid: string; batchId: string; counts: Record<string, number> } | null> {
+  if (!isAnalyticsForwardingEnabled() || !isValidBatchId(batchId)) return null;
   const counts = buildDailyCounts(events);
   if (Object.keys(counts).length === 0) return null;
-  const iid = await hashInstallId(getOrCreateInstallId());
-  return { iid, counts };
+  try {
+    const iid = await hashInstallId(getOrCreateInstallId());
+    // Revocation may happen while WebCrypto is pending; never materialize a
+    // payload into a request after the purpose has been withdrawn.
+    if (!isAnalyticsForwardingEnabled()) return null;
+    return { iid, batchId, counts };
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -115,17 +149,18 @@ export async function buildAnalyticsPayload(
  */
 export async function forwardAnalytics(
   events: Array<Pick<AnalyticsEvent, "type">>,
+  batchId: string = crypto.randomUUID(),
 ): Promise<boolean> {
-  const payload = await buildAnalyticsPayload(events);
-  if (!payload) return false;
+  const payload = await buildAnalyticsPayload(events, batchId);
+  if (!payload || !isAnalyticsForwardingEnabled()) return false;
   try {
-    await fetch(EVENTS_ENDPOINT, {
+    const response = await fetch(EVENTS_ENDPOINT, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(payload),
       keepalive: true,
     });
-    return true;
+    return response.ok;
   } catch {
     // Contained: analytics must never break the app or surface errors.
     return false;
@@ -135,13 +170,16 @@ export async function forwardAnalytics(
 /** Page-unload path: sendBeacon keeps the bucket even on navigation. */
 export function forwardAnalyticsBeacon(
   events: Array<Pick<AnalyticsEvent, "type">>,
+  batchId: string = crypto.randomUUID(),
 ): void {
   if (!isAnalyticsForwardingEnabled()) return;
   const counts = buildDailyCounts(events);
   if (Object.keys(counts).length === 0) return;
+  if (!isValidBatchId(batchId)) return;
   void hashInstallId(getOrCreateInstallId())
     .then((iid) => {
-      const blob = new Blob([JSON.stringify({ iid, counts })], {
+      if (!isAnalyticsForwardingEnabled()) return;
+      const blob = new Blob([JSON.stringify({ iid, batchId, counts })], {
         type: "application/json",
       });
       navigator.sendBeacon(EVENTS_ENDPOINT, blob);

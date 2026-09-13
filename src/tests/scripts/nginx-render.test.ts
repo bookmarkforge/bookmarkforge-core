@@ -92,6 +92,14 @@ describe("npm run nginx:render integration", () => {
       join(REPO, "public", "privacy-and-terms.html"),
       join(renderDir, "public", "privacy-and-terms.html"),
     );
+    // Localized legal pages (surgical domain replacement, same as the EN one)
+    for (const lang of ["es", "fr", "de", "pt", "it"]) {
+      mkdirSync(join(renderDir, "public", lang), { recursive: true });
+      copyFileSync(
+        join(REPO, "public", lang, "privacy-and-terms.html"),
+        join(renderDir, "public", lang, "privacy-and-terms.html"),
+      );
+    }
     copyFileSync(
       join(REPO, "public", "manifest.json"),
       join(renderDir, "public", "manifest.json"),
@@ -185,6 +193,9 @@ describe("npm run nginx:render integration", () => {
     const surgicalDriftTargets = [
       join(renderDir, "public", "404.html"),
       join(renderDir, "public", "privacy-and-terms.html"),
+      ...["es", "fr", "de", "pt", "it"].map((lang) =>
+        join(renderDir, "public", lang, "privacy-and-terms.html"),
+      ),
       join(renderDir, "public", "manifest.json"),
       join(renderDir, "extension", "background.js"),
       join(renderDir, "extension", "popup.js"),
@@ -211,7 +222,7 @@ describe("npm run nginx:render integration", () => {
   it("verify fails on the injected drift; npm run nginx:render repairs it and exits 0", () => {
     const before = runVerify(renderDir);
     expect(before.status).toBe(1);
-    // All 13 surgical targets + 1 full-rendered target should show drift.
+    // All 14 surgical targets + 4 full-rendered targets should show drift.
     const driftedTargets = [
       "public/_headers",
       "netlify.toml",
@@ -219,6 +230,11 @@ describe("npm run nginx:render integration", () => {
       "public/robots.txt",
       "public/404.html",
       "public/privacy-and-terms.html",
+      "public/es/privacy-and-terms.html",
+      "public/fr/privacy-and-terms.html",
+      "public/de/privacy-and-terms.html",
+      "public/pt/privacy-and-terms.html",
+      "public/it/privacy-and-terms.html",
       "public/manifest.json",
       "extension/background.js",
       "extension/popup.js",
@@ -243,6 +259,11 @@ describe("npm run nginx:render integration", () => {
       "public/robots.txt",
       "public/404.html",
       "public/privacy-and-terms.html",
+      "public/es/privacy-and-terms.html",
+      "public/fr/privacy-and-terms.html",
+      "public/de/privacy-and-terms.html",
+      "public/pt/privacy-and-terms.html",
+      "public/it/privacy-and-terms.html",
       "public/manifest.json",
       "extension/background.js",
       "extension/popup.js",
@@ -286,7 +307,7 @@ describe("npm run nginx:render integration", () => {
     expect(runVerify(renderDir).status).toBe(0);
   });
 
-  it("round-trip: BOOKMARKFORGE_DOMAIN changes all 14 files and restores cleanly", () => {
+  it("round-trip: BOOKMARKFORGE_DOMAIN changes all 19 files and restores cleanly", () => {
     // Start from a canonical state (the test above already left it clean,
     // but an explicit npm run makes this test order-independent).
     const clean = runNpm(renderDir, "nginx:render");
@@ -336,6 +357,31 @@ describe("npm run nginx:render integration", () => {
       privacy: {
         path: join(renderDir, "public", "privacy-and-terms.html"),
         needle: "https://custom.example/privacy-and-terms.html",
+        fullyRendered: false,
+      },
+      privacyEs: {
+        path: join(renderDir, "public", "es", "privacy-and-terms.html"),
+        needle: "https://custom.example/es/privacy-and-terms.html",
+        fullyRendered: false,
+      },
+      privacyFr: {
+        path: join(renderDir, "public", "fr", "privacy-and-terms.html"),
+        needle: "https://custom.example/fr/privacy-and-terms.html",
+        fullyRendered: false,
+      },
+      privacyDe: {
+        path: join(renderDir, "public", "de", "privacy-and-terms.html"),
+        needle: "https://custom.example/de/privacy-and-terms.html",
+        fullyRendered: false,
+      },
+      privacyPt: {
+        path: join(renderDir, "public", "pt", "privacy-and-terms.html"),
+        needle: "https://custom.example/pt/privacy-and-terms.html",
+        fullyRendered: false,
+      },
+      privacyIt: {
+        path: join(renderDir, "public", "it", "privacy-and-terms.html"),
+        needle: "https://custom.example/it/privacy-and-terms.html",
         fullyRendered: false,
       },
       pwaManifest: {

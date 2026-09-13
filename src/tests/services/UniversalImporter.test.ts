@@ -5,6 +5,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import JSZip from "jszip";
 import { attachmentStore } from "../../services/documentAttachments";
+import { createStreamingCsvFile } from "../helpers/csvFixtures";
 
 vi.mock("../../utils/logger", () => ({
   logger: { error: vi.fn(), info: vi.fn(), warn: vi.fn(), debug: vi.fn() },
@@ -112,11 +113,9 @@ describe("UniversalImporter", () => {
     });
 
     it("should import a CSV file with URLs", async () => {
-      const file = new File(
-        ["Title,URL\nTest Site,https://testsite.com\n,https://another.com"],
-        "bookmarks.csv",
-        { type: "text/csv" },
-      );
+      const file = createStreamingCsvFile([
+        "Title,URL\nTest Site,https://testsite.com\n,https://another.com",
+      ]);
 
       const result = await importer.importData(mockDb, file);
       expect(result.success).toBe(true);

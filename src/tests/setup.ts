@@ -2,8 +2,6 @@ import { vi, beforeAll } from "vitest";
 import "@testing-library/jest-dom/vitest";
 import "fake-indexeddb/auto";
 import "vitest-canvas-mock";
-import React from "react";
-import { MantineProvider } from "@mantine/core";
 import DOMPurify from "dompurify";
 
 // ─── Mocking conventions ───────────────────────────────────────────
@@ -34,6 +32,23 @@ import DOMPurify from "dompurify";
 // (React.createElement does not auto-promote 3rd-arg children for it).
 vi.mock("@testing-library/react", async () => {
   const actual: any = await vi.importActual("@testing-library/react");
+  // PERF (2026-09-04): the @mantine/core barrel is ~400 ms of module
+  // evaluation, and vitest re-evaluates setup.ts in a fresh registry for
+  // EVERY test file. It is imported here — inside the mock factory, which
+  // runs only when a test file actually imports @testing-library/react —
+  // instead of at setup top level, where pure service/db/crypto files
+  // (which never render) paid the barrel cost too.
+  // vi.importActual, not bare import(): the factory runs inside the
+  // module registry of whichever test file imported RTL, and that file
+  // may have vi.mock("@mantine/core") in scope (MantineThemeProvider.test.tsx
+  // does) — a bare import() would resolve the MOCK, nesting a fake
+  // provider inside the real render wrapper. importActual bypasses mocks.
+  const [{ default: React }, { MantineProvider }] = await Promise.all([
+    vi.importActual<{ default: typeof import("react") }>("react"),
+    vi.importActual<{
+      MantineProvider: typeof import("@mantine/core").MantineProvider;
+    }>("@mantine/core"),
+  ]);
   return {
     ...actual,
     render: (ui: React.ReactElement, options?: any) => {
@@ -47,7 +62,6 @@ vi.mock("@testing-library/react", async () => {
     },
   };
 });
-
 // Disable network firewall globally in tests (individual test files re-enable as needed)
 beforeAll(async () => {
   const { setFirewallDisabled } = await import("../utils/networkFirewall");

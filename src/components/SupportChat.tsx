@@ -25,6 +25,9 @@ import {
   Trash2,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import {
+  type SupportChatTabId,
+} from "../constants/navigation";
 import { SUPPORT_KNOWLEDGE } from "../data/SupportKnowledge";
 import { safeGet, safeSet } from "../store/safeStorage";
 import { STORAGE_KEYS } from "../constants/storage-keys";
@@ -403,7 +406,7 @@ const SupportChat = function SupportChat() {
   const handleTabClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       const tabId = e.currentTarget.getAttribute("data-tab-id") as
-        "chat" | "faq" | "diagnostics" | null;
+        SupportChatTabId | null;
       if (tabId) {
         setActiveTab(tabId);
         setShowClearConfirm(false);
@@ -636,13 +639,37 @@ const SupportChat = function SupportChat() {
             }
             if (d.id === "webllm") {
               if (!webLlm.canRun) {
+                // Name the precise cause when the probe produced a verdict,
+                // mirroring the capability errors the generation gates throw
+                // (same ladder: WebGPU surface -> shader-f16 -> 4 GB RAM).
+                // The generic fallback stays for the verdict-less case (the
+                // probe itself failed), so a broken probe degrades to the
+                // honest "something is required" message instead of a wrong
+                // specific one.
+                const blockerMessage =
+                  webLlm.blocker === "webgpu-unavailable"
+                    ? t(
+                        "app_diagWebLLMBlockerWebGPU",
+                        "WebLLM cannot run: this browser does not support WebGPU.",
+                      )
+                    : webLlm.blocker === "shader-f16-unsupported"
+                      ? t(
+                          "app_diagWebLLMBlockerF16",
+                          "WebLLM cannot run: the GPU lacks shader-f16 (half-precision) support.",
+                        )
+                      : webLlm.blocker === "insufficient-memory"
+                        ? t(
+                            "app_diagWebLLMBlockerRAM",
+                            "WebLLM cannot run: at least 4 GB of device memory is required.",
+                          )
+                        : t(
+                            "app_diagWebLLMError",
+                            "WebLLM cannot run: WebGPU or sufficient RAM is required.",
+                          );
                 return {
                   ...d,
                   status: "error",
-                  details: t(
-                    "app_diagWebLLMError",
-                    "WebLLM cannot run: WebGPU or sufficient RAM is required.",
-                  ),
+                  details: blockerMessage,
                 };
               }
               const modelDetail =
@@ -770,7 +797,10 @@ const SupportChat = function SupportChat() {
         </div>
 
         {((): React.ReactElement[] => {
-          type TabId = "chat" | "faq" | "diagnostics";
+          // Tab ids come from the canonical shared array in
+          // src/constants/navigation.ts (also consumed by the E2E selector
+          // gate); the union type keeps this list drift-proof.
+          type TabId = SupportChatTabId;
           const tabs: Array<{
             id: TabId;
             Icon: React.ComponentType<{ className?: string }>;

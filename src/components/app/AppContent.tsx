@@ -9,7 +9,6 @@ import {
   type ReactNode,
 } from "react";
 import { toast } from "sonner";
-import { BackupService } from "../../services/BackupService";
 import type { RxDatabase } from "rxdb";
 import { useTranslation } from "react-i18next";
 import { BrowserRouter } from "react-router";
@@ -385,6 +384,7 @@ export function AppContent() {
       // stale/corrupt storage on the same adapter.
       const { destroyDB } = await import("../../container/database");
       await destroyDB();
+      const { BackupService } = await import("../../services/BackupService");
       await BackupService.importBackup(file, password);
       toast.success(
         t("onboarding_restoreSuccess", "Vault restored successfully."),
@@ -439,31 +439,6 @@ export function AppContent() {
   const handleSetupPassword = () => {
     setForceSetup(true);
   };
-
-  useEffect(() => {
-    // Do not download or initialize the AI provider while the vault is
-    // locked. AppContent remains mounted across the lock screen, so an
-    // unconditional dynamic import here would defeat the security/lazy
-    // boundary even though the authenticated shell is not rendered yet.
-    if (isLocked) {return;}
-
-    let cancelled = false;
-    logger.info("[AppContent] Mounting, scheduling AI warmup");
-    import("../../services/ai/ProviderManager")
-      .then(({ aiManager }) => {
-        if (!cancelled) {
-          return aiManager.warmup();
-        }
-        return undefined;
-      })
-      .catch((error: unknown) => {
-        // AI warmup is opportunistic; it must never block vault/database UI.
-        logger.warn("[AppContent] AI warmup unavailable", { error });
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [isLocked]);
 
   useEffect(() => {
     const globalFont = safeGet("global_font") as

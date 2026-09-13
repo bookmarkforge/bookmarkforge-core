@@ -363,6 +363,7 @@ export class BackupService {
    * @throws {Error} If backup creation fails
    */
   private static exportInFlight = false;
+  private static autoBackupInFlight = false;
 
   static async exportBackup(password?: string | Uint8Array): Promise<void> {
     if (this.exportInFlight) {
@@ -909,6 +910,11 @@ export class BackupService {
    * @returns Backup metadata if created, `null` if skipped or failed
    */
   static async runAutoBackup(): Promise<BackupMetadata | null> {
+    if (this.autoBackupInFlight) {
+      logger.info("[AutoBackup] Skipping — auto-backup already in progress");
+      return null;
+    }
+    this.autoBackupInFlight = true;
     try {
       const lastBackup = safeGet(AUTO_BACKUP_KEY);
       if (lastBackup) {
@@ -1019,6 +1025,8 @@ export class BackupService {
         error: error instanceof Error ? error.message : String(error),
       });
       return null;
+    } finally {
+      this.autoBackupInFlight = false;
     }
   }
 
@@ -1357,6 +1365,13 @@ export class BackupService {
       1,
       Math.ceil(blob.size / AUTO_BACKUP_CHUNK_BYTES),
     );
+
+    // Write new chunk count FIRST (commit marker). A crash after this point
+    // is safe: the new count points to the new chunks; old chunks are pruned
+    // after the count is committed, so a crash between count-write and
+    // prune only leaves harmless orphaned old chunks.
+    await secureStorage.setSecret(AUTO_BACKUP_CHUNKS_KEY, String(chunkCount));
+
     for (let i = 0; i < chunkCount; i++) {
       const slice = blob.slice(
         i * AUTO_BACKUP_CHUNK_BYTES,
@@ -1367,14 +1382,13 @@ export class BackupService {
     }
 
     // Prune stale chunks left over from a previous (larger) backup.
+    // Safe to run after count commit: if we crash here, orphaned old chunks
+    // are harmless (the count already points to the new chunks).
     for (let i = chunkCount; i < previousCount; i++) {
       await secureStorage.deleteSecret(`${AUTO_BACKUP_DATA_PREFIX}${i}`);
     }
 
     await secureStorage.deleteSecret(AUTO_BACKUP_DATA_KEY);
-    // Commit point: record the chunk count last so a crash mid-loop is never
-    // mistaken for a complete chunked backup.
-    await secureStorage.setSecret(AUTO_BACKUP_CHUNKS_KEY, String(chunkCount));
   }
 
   /**

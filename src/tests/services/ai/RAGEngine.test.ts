@@ -28,6 +28,11 @@ describe("RAGEngine", () => {
     vi.clearAllMocks();
     (ragEngine as any).embeddingCache.clear();
     (ragEngine as any).inFlightEmbeddings.clear();
+    (ragEngine as any).prefetchPromise = null;
+  });
+
+  it("does not create embedding workers before explicit demand", () => {
+    expect(ragEngine.getStats().workerStats).toBeNull();
   });
 
   describe("cosineSimilarity", () => {
@@ -117,6 +122,20 @@ describe("RAGEngine", () => {
       const result = await ragEngine.generateEmbedding(null as any);
       expect(result).toHaveLength(384);
       expect(result.every((v) => v === 0)).toBe(true);
+    });
+
+    it("prefetches the model without generating a user embedding", async () => {
+      mockExecute.mockResolvedValue(true);
+
+      await ragEngine.prefetch();
+
+      expect(mockExecute).toHaveBeenCalledWith(
+        "prefetch",
+        null,
+        undefined,
+        expect.any(Function),
+      );
+      expect(mockExecute).toHaveBeenCalledTimes(1);
     });
 
     it("uses the worker pool to generate the embedding", async () => {

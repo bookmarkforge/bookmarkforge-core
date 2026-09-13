@@ -3,6 +3,7 @@ import { sanitizeText } from "../services/SanitizationService";
 import { downloadBlob } from "../utils/download";
 import { useGuardedActions } from "../hooks/useGuardedActions";
 import i18n from "../i18n";
+import { logger } from "../utils/logger";
 
 interface BlockContent {
   text?: string;
@@ -117,7 +118,7 @@ export const ExportMenu = ({ editor, title }: ExportMenuProps) => {
             // The PDF generator is an external chunk: a failed load (offline
             // or cache miss) or a render error must surface instead of dying
             // as an unhandled rejection with no user feedback.
-            console.error("[ExportMenu] PDF export failed", error);
+            logger.error("[ExportMenu] PDF export failed", { error });
             toast.error(i18n.t("app_exportError"));
           });
       },

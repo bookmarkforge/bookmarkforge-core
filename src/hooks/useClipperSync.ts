@@ -19,8 +19,8 @@ interface ClipperMessage {
 export const useClipperSync = (
   lastMessage: unknown | null,
   t: (key: string) => string,
-  setCurrentDocId: (id: string) => void,
-  setActiveTab: (tab: TabType) => void,
+  _setCurrentDocId: (id: string) => void,
+  _setActiveTab: (tab: TabType) => void,
 ) => {
   useEffect(() => {
     if (
@@ -61,9 +61,14 @@ export const useClipperSync = (
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         } as BookmarkDocType);
-        toast.success(t("app_bookmarksTitle") + ": " + data.title);
       };
-      saveClipperData();
+      let cancelled = false;
+      saveClipperData().then(() => {
+        if (!cancelled) {
+          toast.success(t("app_bookmarksTitle") + ": " + data.title);
+        }
+      }).catch(() => { /* INTENTIONAL SILENCE: clipper save failure is non-critical */ });
+      return () => { cancelled = true; };
     }
-  }, [lastMessage, t, setCurrentDocId, setActiveTab]);
+  }, [lastMessage, t]);
 };

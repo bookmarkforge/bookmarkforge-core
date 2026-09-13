@@ -1,12 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (s: string, opts?: any) => opts?.defaultValue || s,
-    i18n: { language: "en" },
-  }),
-  initReactI18next: {},
-}));
+vi.mock("react-i18next", async () => {
+  const actual = await vi.importActual<typeof import("react-i18next")>(
+    "react-i18next",
+  );
+  return {
+    ...actual,
+    useTranslation: () => ({
+      t: (s: string, opts?: any) => opts?.defaultValue || s,
+      i18n: { language: "en" },
+    }),
+  };
+});
 
 // The hook module now imports initDB; these tests only exercise the pure
 // helpers, so keep the DB (and its i18n chain) out of the import graph.
@@ -565,6 +570,7 @@ describe("editorLogic — hook state management", () => {
         state: {
           editorText: "",
           setError: vi.fn(),
+          isWarmedUpRef: { current: false },
         },
       };
       const { result } = await import("@testing-library/react").then((m) =>

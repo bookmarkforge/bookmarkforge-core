@@ -36,6 +36,18 @@ vi.mock("../../../utils/WorkerPool", () => ({
   }),
 }));
 
+// Mock ResourceManager: its singleton constructor starts a 200ms
+// leader-election timer that logs via console when it fires. Every
+// beforeEach re-imports RAGEngine (vi.resetModules()), so the last timer
+// can fire after the file completes, leaving an onUserConsoleLog RPC
+// pending at worker teardown (EnvironmentTeardownError). This spec only
+// locks the worker dispatch path and never calls resourceManager.
+vi.mock("../../../services/ai/ResourceManager", () => ({
+  resourceManager: {
+    switchToRAG: vi.fn().mockResolvedValue(undefined),
+  },
+}));
+
 // describe.sequential: tests share ragEngineMod and global mocks; parallel
 // in-file execution can race worker teardown under heavy machine load
 // (the source of rare flakes in full runs).
@@ -98,7 +110,11 @@ describe.sequential("RAGEngine worker path", () => {
     const result = await ragEngineMod.ragEngine.generateEmbedding("fallback");
 
     expect(executeMock).toHaveBeenCalled();
-    expect(mockPipeline).toHaveBeenCalled();
+    expect(mockPipeline).toHaveBeenCalledWith(
+      "feature-extraction",
+      "Xenova/all-MiniLM-L6-v2",
+      { dtype: "q8" },
+    );
     expect(result).toEqual([9, 9]);
   });
 

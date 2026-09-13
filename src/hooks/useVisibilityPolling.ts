@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 /**
  * Options for {@link useVisibilityPolling}.
@@ -64,6 +64,12 @@ export function useVisibilityPolling(
     waitForVisibility = true,
     pauseOnHidden = true,
   } = options;
+
+  // Store the latest callback in a ref to avoid re-creating the interval
+  // when the caller passes a new function reference (inline arrow, etc.).
+  const callbackRef = useRef(callback);
+  callbackRef.current = callback;
+
   useEffect(() => {
     if (typeof document === "undefined") {
       // SSR safety: nothing to do without a document.
@@ -72,7 +78,7 @@ export function useVisibilityPolling(
     let interval: ReturnType<typeof setInterval> | null = null;
     const start = () => {
       if (interval !== null) {return;}
-      interval = setInterval(callback, intervalMs);
+      interval = setInterval(() => callbackRef.current(), intervalMs);
     };
     const stop = () => {
       if (interval !== null) {
@@ -83,7 +89,7 @@ export function useVisibilityPolling(
     const onVisibility = () => {
       if (document.visibilityState === "visible") {
         if (refreshOnResume) {
-          callback();
+          callbackRef.current();
         }
         start();
       } else if (pauseOnHidden) {
@@ -101,5 +107,5 @@ export function useVisibilityPolling(
       document.removeEventListener("visibilitychange", onVisibility);
       stop();
     };
-  }, [callback, intervalMs, refreshOnResume, waitForVisibility, pauseOnHidden]);
+  }, [intervalMs, refreshOnResume, waitForVisibility, pauseOnHidden]);
 }

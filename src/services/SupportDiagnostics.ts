@@ -11,6 +11,7 @@
  */
 
 import { getNavigatorExtensions } from "../utils/browser-types";
+import type { WebLLMCapabilityBlocker } from "./ai/WebLLMService";
 
 export interface StorageEstimate {
   usageBytes: number;
@@ -48,6 +49,15 @@ interface WebLLMStatus {
   /** Whether a model is currently loaded in memory. */
   modelLoaded: boolean;
   currentModel?: string;
+  /**
+   * The precise capability blocker when `canRun` is false, from the SAME
+   * ladder the generation gates throw (webgpu-unavailable /
+   * shader-f16-unsupported / insufficient-memory). Absent when the device
+   * is capable — and also absent on probe failure, where no verdict of any
+   * kind exists. Lets the support view tell users WHY local AI is
+   * unavailable instead of a generic "WebGPU or RAM required".
+   */
+  blocker?: WebLLMCapabilityBlocker;
 }
 
 interface StorageApi {
@@ -266,20 +276,32 @@ export async function checkOllama(): Promise<OllamaStatus> {
 }
 
 /**
- * Probes WebLLM readiness using the existing `webLLMService`: whether this
- * device can run local LLMs (WebGPU + RAM check) and whether a model is
- * currently loaded in memory.
+ * Probes WebLLM readiness using the existing `webLLMService`.
+ *
+ * The returned fields carry two DIFFERENT verdicts that must not be
+ * conflated: `canRun` is the device-capability check (webLLMService
+ * .canRunLocalLLM(): WebGPU surface + shader-f16 + >= 4 GB RAM — says
+ * nothing about engine/model state), while `modelLoaded`/`currentModel`
+ * are the ENGINE state. A device can be runable with no model loaded
+ * (canRun=true, modelLoaded=false) or blocked with nothing loaded
+ * (canRun=false, modelLoaded=false); the support view's WebLLM line
+ * renders from exactly this pair.
  */
 export async function checkWebLLM(): Promise<WebLLMStatus> {
   try {
     const { webLLMService } = await import("./ai/WebLLMService");
-    const canRun = await webLLMService.canRunLocalLLM();
+    const blocker = await webLLMService.getCapabilityBlocker();
+    const canRun = blocker === null;
     const modelLoaded = webLLMService.isModelLoaded();
     const currentModel = webLLMService.getCurrentModel();
     return {
       canRun,
       modelLoaded,
       currentModel: currentModel || undefined,
+      // Present exactly when canRun is false — the enum is the user-facing
+      // "why". Dropped (not null) when capable so the shape stays lean and
+      // `blocker in status` is a valid truthiness test for callers.
+      ...(blocker ? { blocker } : {}),
     };
   } catch {
     return { canRun: false, modelLoaded: false };

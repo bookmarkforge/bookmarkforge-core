@@ -5,6 +5,11 @@ import React from "react";
 const mockT = vi.fn((key: string) => key);
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({ t: mockT, i18n: { language: "en" } }),
+  // The real hook's import chain (editorFocusWarmup → ProviderManager →
+  // i18n-backed services) reaches src/i18n.ts, which calls
+  // i18n.use(initReactI18next) at module scope. i18next.use() validates the
+  // module shape, so the stub must carry the 3rdParty type marker.
+  initReactI18next: { type: "3rdParty", init: () => {} },
 }));
 
 vi.mock("@blocknote/core", () => ({
@@ -207,6 +212,50 @@ describe("useBlockEditorLogic — persistence (load + autosave)", () => {
     expect(state.setLastVersionSavedAt).toHaveBeenCalledWith(expect.any(Number));
     expect(state.setSaveStatus).toHaveBeenCalledWith("saving");
     expect(state.setSaveStatus).toHaveBeenCalledWith("saved");
+  });
+
+  it("private documents: the autosave patch preserves isPrivate=true (no privacy-flag loss)", async () => {
+    // Component-level tests once asserted this against a fabricated hook;
+    // here it is pinned against the REAL autosave: a document loaded as
+    // private must be persisted as private — the flag must never be dropped
+    // from the incrementalPatch payload.
+    dbMocks.findOne.mockReturnValue({
+      exec: vi.fn().mockResolvedValue({
+        title: "Privado",
+        textContent: "",
+        blocks: [],
+        isPrivate: true,
+        lastVersionSavedAt: null,
+        incrementalPatch: dbMocks.incrementalPatch,
+      }),
+    });
+    state = makeState({
+      docTitle: "Privado",
+      editorText: "contenido privado",
+      isPrivate: true,
+      lastVersionSavedAt: null,
+    });
+
+    renderHook(() =>
+      useBlockEditorLogic({
+        documentId: "doc-priv",
+        state,
+        getBlocks: () => [],
+      }),
+    );
+    await act(async () => {
+      await Promise.resolve();
+    });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2000);
+    });
+
+    expect(dbMocks.incrementalPatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: "Privado",
+        isPrivate: true,
+      }),
+    );
   });
 
   it("does not create a version if the last one is recent (< 5 min)", async () => {

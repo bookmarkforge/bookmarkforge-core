@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useCallback, useMemo, Suspense, lazy } from "react";
 import { useTranslation } from "react-i18next";
 import type { TFunction } from "i18next";
+import {
+  SIDEBAR_TAB_IDS,
+  type SidebarTabId,
+} from "../constants/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { RouteErrorBoundary } from "./errors/RouteErrorBoundary";
 import {
@@ -36,56 +40,78 @@ interface SidebarProps {
   setActiveTab: (tab: string) => void;
 }
 
-const sidebarItems = (t: TFunction) => [
-  { id: "dashboard", label: t("app_dashboard"), icon: LayoutDashboard },
-  { id: "documents", label: t("app_documents"), icon: FileText },
-  { id: "bookmarks", label: t("app_bookmarksTitle"), icon: Bookmark },
-  { id: "graph", label: t("app_graph"), icon: Share2 },
+// Per-tab presentation (label i18n key + icon), keyed by the CANONICAL tab
+// id from src/constants/navigation.ts — the same array the E2E selector gate
+// imports. The Record<...> keying enforces both drift directions at
+// typecheck: a tab id removed from the shared array becomes an excess-key
+// error here, and a shared id missing here fails the Record completeness
+// check. The id strings themselves live ONLY in navigation.ts.
+const SIDEBAR_ITEM_META: Record<
+  SidebarTabId,
   {
-    id: "canvas",
-    label: t("app_canvas", { defaultValue: "Canvas" }),
+    labelKey: string;
+    defaultValue?: string;
+    icon: React.ComponentType<{ className?: string }>;
+  }
+> = {
+  dashboard: { labelKey: "app_dashboard", icon: LayoutDashboard },
+  documents: { labelKey: "app_documents", icon: FileText },
+  bookmarks: { labelKey: "app_bookmarksTitle", icon: Bookmark },
+  graph: { labelKey: "app_graph", icon: Share2 },
+  canvas: {
+    labelKey: "app_canvas",
+    defaultValue: "Canvas",
     icon: LayoutDashboard,
   },
-  {
-    id: "database",
-    label: t("app_database", { defaultValue: "Database" }),
+  database: {
+    labelKey: "app_database",
+    defaultValue: "Database",
     icon: Table,
   },
-  {
-    id: "kanban",
-    label: t("app_kanban", { defaultValue: "Kanban" }),
+  kanban: {
+    labelKey: "app_kanban",
+    defaultValue: "Kanban",
     icon: Columns,
   },
-  {
-    id: "calendar",
-    label: t("app_calendar", { defaultValue: "Calendar" }),
+  calendar: {
+    labelKey: "app_calendar",
+    defaultValue: "Calendar",
     icon: CalendarDays,
   },
-  {
-    id: "list",
-    label: t("app_listView", { defaultValue: "List" }),
-    icon: List,
-  },
-  {
-    id: "gallery",
-    label: t("app_galleryView", { defaultValue: "Gallery" }),
+  list: { labelKey: "app_listView", defaultValue: "List", icon: List },
+  gallery: {
+    labelKey: "app_galleryView",
+    defaultValue: "Gallery",
     icon: Grid3X3,
   },
-  {
-    id: "timeline",
-    label: t("app_timelineView", { defaultValue: "Timeline" }),
+  timeline: {
+    labelKey: "app_timelineView",
+    defaultValue: "Timeline",
     icon: History,
   },
-  { id: "chatLocal", label: t("app_chatLocal"), icon: MessageSquare },
-  { id: "voiceLocal", label: t("app_voiceLocal"), icon: Mic },
-  { id: "collaboration", label: t("app_collaborationTitle"), icon: Users },
-  { id: "analytics", label: t("app_analytics"), icon: Activity },
-  {
-    id: "chat",
-    label: t("app_supportChat", { defaultValue: "Support" }),
+  chatLocal: { labelKey: "app_chatLocal", icon: MessageSquare },
+  voiceLocal: { labelKey: "app_voiceLocal", icon: Mic },
+  collaboration: { labelKey: "app_collaborationTitle", icon: Users },
+  analytics: { labelKey: "app_analytics", icon: Activity },
+  chat: {
+    labelKey: "app_supportChat",
+    defaultValue: "Support",
     icon: HelpCircle,
   },
-];
+};
+
+// Display order comes from the shared SIDEBAR_TAB_IDS array.
+const sidebarItems = (t: TFunction) =>
+  SIDEBAR_TAB_IDS.map((id) => {
+    const meta = SIDEBAR_ITEM_META[id];
+    return {
+      id,
+      label: meta.defaultValue
+        ? t(meta.labelKey, { defaultValue: meta.defaultValue })
+        : t(meta.labelKey),
+      icon: meta.icon,
+    };
+  });
 
 const Sidebar = function Sidebar({
   activeTab,

@@ -14,19 +14,17 @@ import { contentFetchService } from "../services/ContentFetchService";
 
 export function useBookmarkFacade() {
   const getDB = useCallback(() => initDB(), []);
-  const getAIManager = useCallback(() => aiManager, []);
-  const getRAGEngine = useCallback(() => ragEngine, []);
-  const getTTS = useCallback(() => ttsService, []);
-  const getFlashcards = useCallback(() => flashcardService, []);
-  const getContentFetch = useCallback(() => contentFetchService, []);
 
   return {
     getDB,
-    aiManager: getAIManager(),
-    ragEngine: getRAGEngine(),
-    ttsService: getTTS(),
-    flashcardService: getFlashcards(),
-    contentFetchService: getContentFetch(),
+    // Return getter functions (not invoked values) so callers always get
+    // the current singleton reference — prevents stale references after
+    // vault reset/re-initialization when singletons are replaced.
+    getAIManager: useCallback(() => aiManager, []),
+    getRAGEngine: useCallback(() => ragEngine, []),
+    getTTS: useCallback(() => ttsService, []),
+    getFlashcards: useCallback(() => flashcardService, []),
+    getContentFetch: useCallback(() => contentFetchService, []),
   };
 }
 

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { TabType } from "./useTabManager";
 
 /**
@@ -19,6 +19,17 @@ export const useKeyboardShortcuts = (
   setShowSettings: React.Dispatch<React.SetStateAction<boolean>>,
   setActiveTab: (tab: TabType) => void,
 ) => {
+  // Store callbacks in refs to avoid re-registering the keydown listener
+  // when the caller passes new function references (inline arrows).
+  const setShowOmnibarRef = useRef(setShowOmnibar);
+  setShowOmnibarRef.current = setShowOmnibar;
+  const toggleThemeRef = useRef(toggleTheme);
+  toggleThemeRef.current = toggleTheme;
+  const setShowSettingsRef = useRef(setShowSettings);
+  setShowSettingsRef.current = setShowSettings;
+  const setActiveTabRef = useRef(setActiveTab);
+  setActiveTabRef.current = setActiveTab;
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ignore auto-repeat so holding a key doesn't toggle repeatedly.
@@ -27,20 +38,20 @@ export const useKeyboardShortcuts = (
       // the remaining shortcuts must not hijack keys while the user types.
       if ((e.ctrlKey || e.metaKey) && e.key === "k") {
         e.preventDefault();
-        setShowOmnibar((prev) => !prev);
+        setShowOmnibarRef.current((prev) => !prev);
       }
       if ((e.ctrlKey || e.metaKey) && e.key === "p" && e.shiftKey) {
         e.preventDefault();
-        setShowOmnibar((prev) => !prev);
+        setShowOmnibarRef.current((prev) => !prev);
       }
       if (isEditableTarget(e.target)) {return;}
       if ((e.ctrlKey || e.metaKey) && e.key === "d") {
         e.preventDefault();
-        toggleTheme();
+        toggleThemeRef.current();
       }
       if ((e.ctrlKey || e.metaKey) && e.key === ",") {
         e.preventDefault();
-        setShowSettings((prev) => !prev);
+        setShowSettingsRef.current((prev) => !prev);
       }
       // Tab switching shortcuts
       if ((e.ctrlKey || e.metaKey) && e.key >= "1" && e.key <= "6") {
@@ -54,11 +65,11 @@ export const useKeyboardShortcuts = (
           "canvas",
         ];
         const tab = tabs[parseInt(e.key) - 1];
-        if (tab) {setActiveTab(tab);}
+        if (tab) {setActiveTabRef.current(tab);}
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [setShowOmnibar, toggleTheme, setShowSettings, setActiveTab]);
+  }, []);
 };

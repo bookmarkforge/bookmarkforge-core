@@ -57,6 +57,8 @@ const STORAGE_KEYS = {
   DB_KEY: "encrypted_db_key",
   MASTER_PASSWORD_SETUP: "master_password_setup",
   VERIFICATION: "vault_verification",
+  // A-1: per-vault Argon2id salt (public metadata, embedded in v6 payloads).
+  KDF_SALT: "kdf_salt",
 } as const;
 
 describe("securityVault public contract (post-split regression)", () => {

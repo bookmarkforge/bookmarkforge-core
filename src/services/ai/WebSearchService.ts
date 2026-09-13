@@ -450,7 +450,9 @@ Incluye fuentes cuando sea posible.`;
           current.url = raw;
           current.source = parsed.hostname;
         } catch {
-          current.url = raw; // invalid URL: keep the text, no hostname
+          // Malformed URL: discard it rather than keeping raw text as a URL.
+          // A malformed URL could be dangerous if rendered as a link.
+          current.url = undefined;
         }
         continue;
       }

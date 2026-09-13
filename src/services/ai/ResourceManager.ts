@@ -393,14 +393,39 @@ class ResourceManager {
   }
 
   /**
-   * Decides whether to use local WebLLM or fallback to cloud based on device capabilities.
+   * RAM/CPU-only device tier check (>= 8GB RAM and >= 4 cores).
+   *
+   * Deliberately NOT a WebGPU/WebLLM capability test: it knows nothing about
+   * GPU availability or shader-f16 support, so it reports true even on a
+   * GPU-less machine as long as the RAM/CPU tier qualifies. Treat it as a
+   * coarse pre-filter; pair it with webLLMService.canRunLocalLLM() before
+   * actually running WebLLM.
    */
-  shouldUseLocalLLM(): boolean {
+  isHighEndDevice(): boolean {
     return !this.isLowEndDevice();
   }
 
   async switchToWebLLM() {
     if (this.activeComponent === "webllm") {return;}
+
+    // Defensive capability gate (fail-closed, mirrors WebLLMService's
+    // assertCanRunLocalLLM surface check): a device without a WebGPU surface
+    // must never acquire GPU resources — the RAG unload below and the
+    // exclusive-component flag flip would both be wasted work forcing the
+    // next RAG user through its own unload cycle. The cheap surface check
+    // (no adapter request) is deliberate: the full probe (adapter + f16 +
+    // RAM) is initializeInternal's assertCanRunLocalLLM, which runs right
+    // after this on every real init path. Deliberately NOT applied to
+    // switchToRAG — RAG embeddings do not require WebGPU.
+    const gpu = (
+      navigator as NavigatorWithDeviceMemory & { gpu?: unknown }
+    ).gpu;
+    if (!gpu) {
+      logger.warn(
+        "[ResourceManager] WebLLM switch refused: no WebGPU surface in this browser",
+      );
+      throw new Error("WebGPU is not supported in this browser");
+    }
 
     const memory = (navigator as NavigatorWithDeviceMemory).deviceMemory || 4;
     if (memory <= 8) {

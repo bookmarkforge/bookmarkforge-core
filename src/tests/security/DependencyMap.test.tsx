@@ -76,7 +76,9 @@ describe("DependencyMap", () => {
   it("renders the analyze button once bookmarks are loaded", async () => {
     render(<DependencyMap cardVariants={{}} t={tMock} />);
     const btn = await screen.findByText("Analyze Dependencies");
-    expect(btn).toBeEnabled();
+    // The button is rendered immediately but stays disabled until the
+    // async bookmark load resolves (allBookmarks.length > 0).
+    await waitFor(() => expect(btn).toBeEnabled());
     expect(screen.getByText("Dependency Map")).toBeInTheDocument();
   });
 

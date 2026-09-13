@@ -144,15 +144,15 @@ describe.skipIf(!serverEntryExists)(
       const roomSecret = "integration-secret";
 
       // The REAL client signing path: createSignalingSocketFactory injects
-      // roomSecret into `join` and signs every `signal` with the canonical
-      // payload that the server re-derives. If SyncService's normalization
-      // drifted from the server's, the server would close the sender and the
-      // awaited relayed message would never arrive.
-      const hostSocket = createSignalingSocketFactory(
-        roomSecret,
-        roomId,
-        WsWebSocket as unknown as typeof WebSocket,
-      )(url);
+      // roomSecret into `join` (this server IS the configured self-hosted one,
+      // A-3) and signs every `signal` with the canonical payload that the
+      // server re-derives. If SyncService's normalization drifted from the
+      // server's, the server would close the sender and the awaited relayed
+      // message would never arrive.
+      const hostSocket = createSignalingSocketFactory(roomSecret, roomId, {
+        webSocketImpl: WsWebSocket as unknown as typeof WebSocket,
+        selfHostedSignalingUrl: url,
+      })(url);
       const hostWs = hostSocket as unknown as WsWebSocket;
       const hostInit = await nextMessage(hostWs);
       expect(hostInit.type).toBe("init");
@@ -160,11 +160,10 @@ describe.skipIf(!serverEntryExists)(
       hostWs.send(JSON.stringify({ type: "join", room: roomId }));
       await nextMessage(hostWs); // joined
 
-      const guestSocket = createSignalingSocketFactory(
-        roomSecret,
-        roomId,
-        WsWebSocket as unknown as typeof WebSocket,
-      )(url);
+      const guestSocket = createSignalingSocketFactory(roomSecret, roomId, {
+        webSocketImpl: WsWebSocket as unknown as typeof WebSocket,
+        selfHostedSignalingUrl: url,
+      })(url);
       const guestWs = guestSocket as unknown as WsWebSocket;
       const guestInit = await nextMessage(guestWs);
       const guestPeerId: string = guestInit.yourPeerId;
@@ -247,6 +246,54 @@ describe.skipIf(!serverEntryExists)(
       });
       expect(closed).toBe(true);
       await waitClose(raw);
+    });
+
+    it("A-3: a client in public-relay mode sends NO roomSecret and cannot enter a secret room", async () => {
+      // The other half of the A-3 contract, verified against the REAL server:
+      // withholding the secret must be observable, not merely intended. The
+      // host joins with the secret (self-hosted mode), and a client that does
+      // not treat this server as its configured self-hosted one joins without
+      // it — the server must reject that join, because the room is secret.
+      const roomId = "integration-room-3";
+      const roomSecret = "integration-secret";
+
+      const hostSocket = createSignalingSocketFactory(roomSecret, roomId, {
+        webSocketImpl: WsWebSocket as unknown as typeof WebSocket,
+        selfHostedSignalingUrl: url,
+      })(url);
+      const hostWs = hostSocket as unknown as WsWebSocket;
+      await nextMessage(hostWs); // init
+      hostWs.send(JSON.stringify({ type: "join", room: roomId }));
+      await nextMessage(hostWs); // joined
+
+      // Public-relay semantics: no configured self-hosted server at all.
+      const relayModeSocket = createSignalingSocketFactory(roomSecret, roomId, {
+        webSocketImpl: WsWebSocket as unknown as typeof WebSocket,
+        selfHostedSignalingUrl: null,
+      })(url);
+      let sentJoin = "";
+      const relayModeWs = relayModeSocket as unknown as WsWebSocket;
+      const nativeSend = relayModeWs.send.bind(relayModeWs);
+      (relayModeWs as unknown as { send: (data: string) => void }).send = (
+        data: string,
+      ) => {
+        sentJoin = data;
+        nativeSend(data);
+      };
+      await nextMessage(relayModeWs); // init
+      relayModeWs.send(JSON.stringify({ type: "join", room: roomId }));
+
+      // The wire frame carried no secret…
+      expect(JSON.parse(sentJoin)).toEqual({ type: "join", room: roomId });
+      expect(sentJoin).not.toContain(roomSecret);
+
+      // …and the server refused the join (the room already holds a secret it
+      // cannot produce), closing the socket by policy rather than admitting it.
+      await waitClose(relayModeWs);
+      expect(relayModeWs.readyState).toBe(relayModeWs.CLOSED);
+
+      hostWs.close();
+      await waitClose(hostWs);
     });
   },
 );

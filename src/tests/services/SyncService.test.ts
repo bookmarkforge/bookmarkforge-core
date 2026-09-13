@@ -1005,6 +1005,11 @@ function referenceSignalAuth(
   return createHmac("sha256", signalKey).update(payload).digest("hex");
 }
 
+// A-3: the one origin allowed to receive the room secret in these tests. The
+// factory re-checks it against the URL each socket is opened against, so the
+// test URLs below (`wss://sig.example.com/room-1`) stay on the allowed origin.
+const SIGNALING_ORIGIN = "wss://sig.example.com";
+
 describe("createSignalingSocketFactory — HMAC signal signing", () => {
   beforeEach(() => {
     MockWebSocket.instances = [];
@@ -1033,15 +1038,39 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
     );
   });
 
+  it("A-3: withholds the room secret from any relay that is not the configured server", async () => {
+    const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
+    const ws = factory("wss://signaling.rxdb.info/") as unknown as MockWebSocket;
+    ws.send(JSON.stringify({ type: "join", room: "room-1" }));
+    await waitForSent(1);
+
+    const frame = MockWebSocket.instances[0]!.sent[0]!;
+    expect(JSON.parse(frame)).toEqual({ type: "join", room: "room-1" });
+    expect(frame).not.toContain("secret-1");
+  });
+
   it("rejects invalid room credentials before opening a socket", () => {
-    const invalidFactory = createSignalingSocketFactory(`secret${String.fromCharCode(0)}`, "room-1", MockWebSocket as unknown as typeof WebSocket);
+    const invalidFactory = createSignalingSocketFactory(
+      `secret${String.fromCharCode(0)}`,
+      "room-1",
+      {
+        webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+        selfHostedSignalingUrl: SIGNALING_ORIGIN,
+      },
+    );
     expect(() => invalidFactory("wss://sig.example.com/room-1")).toThrow(
       "Invalid signaling room credentials",
     );
   });
 
   it("injects roomSecret into join messages", async () => {
-    const factory = createSignalingSocketFactory("secret-1", "room-1", MockWebSocket as unknown as typeof WebSocket);
+    const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
     const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
     ws.send(JSON.stringify({ type: "join", room: "room-1" }));
     await waitForSent(1);
@@ -1050,7 +1079,10 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
   });
 
   it("bounds the serialized join after roomSecret injection", async () => {
-    const factory = createSignalingSocketFactory("s".repeat(128), "room-1", MockWebSocket as unknown as typeof WebSocket);
+    const factory = createSignalingSocketFactory("s".repeat(128), "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
     const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
     ws.send(JSON.stringify({
       type: "join",
@@ -1065,7 +1097,10 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
   });
 
   it("rejects a server peer id containing control characters", async () => {
-    const factory = createSignalingSocketFactory("secret-1", "room-1", MockWebSocket as unknown as typeof WebSocket);
+    const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
     const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
     ws.emit("message", JSON.stringify({
       type: "init",
@@ -1085,7 +1120,10 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
   });
 
   it("signs signals with a signalAuth that verifies server-side", async () => {
-    const factory = createSignalingSocketFactory("secret-1", "room-1", MockWebSocket as unknown as typeof WebSocket);
+    const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
     const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
     const peerId = "peer-111";
     const msg = { type: "signal", senderPeerId: peerId, receiverPeerId: "peer-222", data: { sdp: "offer" } };
@@ -1105,7 +1143,10 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
   });
 
   it("queues signals that race init until the peerId arrives", async () => {
-    const factory = createSignalingSocketFactory("secret-1", "room-1", MockWebSocket as unknown as typeof WebSocket);
+    const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
     const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
     const peerId = "peer-333";
     ws.send(JSON.stringify({ type: "signal", senderPeerId: peerId, receiverPeerId: "peer-444", data: {} }));
@@ -1124,7 +1165,10 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
   });
 
   it("bounds signals queued before init so a stalled server cannot grow memory", async () => {
-    const factory = createSignalingSocketFactory("secret-1", "room-1", MockWebSocket as unknown as typeof WebSocket);
+    const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
     const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
     for (let i = 0; i < SIGNAL_QUEUE_LIMIT + 1; i++) {
       ws.send(JSON.stringify({
@@ -1144,7 +1188,10 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
   });
 
   it("rejects a frame whose UTF-8 bytes exceed the limit even when code units do not", async () => {
-    const factory = createSignalingSocketFactory("secret-1", "room-1", MockWebSocket as unknown as typeof WebSocket);
+    const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
     const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
     ws.send(JSON.stringify({
       type: "signal",
@@ -1160,7 +1207,10 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
   });
 
   it("drops an oversized signaling frame before parsing or queuing it", async () => {
-    const factory = createSignalingSocketFactory("secret-1", "room-1", MockWebSocket as unknown as typeof WebSocket);
+    const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
     const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
     ws.send(JSON.stringify({
       type: "signal",
@@ -1176,7 +1226,10 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
   });
 
   it("closes on an oversized server frame instead of falling back to unsigned sends", async () => {
-    const factory = createSignalingSocketFactory("secret-1", "room-1", MockWebSocket as unknown as typeof WebSocket);
+    const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
     const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
     ws.emit("message", "x".repeat(256 * 1024 + 1));
     ws.send(JSON.stringify({
@@ -1193,7 +1246,10 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
   });
 
   it("rejects an invalid server peer id before signing queued signals", async () => {
-    const factory = createSignalingSocketFactory("secret-1", "room-1", MockWebSocket as unknown as typeof WebSocket);
+    const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
     const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
     ws.emit("message", JSON.stringify({
       type: "init",
@@ -1213,7 +1269,10 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
   });
 
   it("discards queued signals when the socket dies before init", async () => {
-    const factory = createSignalingSocketFactory("secret-1", "room-1", MockWebSocket as unknown as typeof WebSocket);
+    const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
     const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
     const msg = { type: "signal", senderPeerId: "p", receiverPeerId: "q", data: 1 };
     ws.send(JSON.stringify(msg));
@@ -1234,7 +1293,10 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
     // after SIGNAL_INIT_TIMEOUT_MS it must fall through to the raw send.
     vi.useFakeTimers();
     try {
-      const factory = createSignalingSocketFactory("secret-1", "room-1", MockWebSocket as unknown as typeof WebSocket);
+      const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
       const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
       const msg = { type: "signal", senderPeerId: "p", receiverPeerId: "q", data: 1 };
       ws.send(JSON.stringify(msg));
@@ -1254,7 +1316,10 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
   it("watchdog does NOT fire once init has arrived", async () => {
     vi.useFakeTimers();
     try {
-      const factory = createSignalingSocketFactory("secret-1", "room-1", MockWebSocket as unknown as typeof WebSocket);
+      const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
       const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
       const peerId = "peer-777";
       const msg = { type: "signal", senderPeerId: peerId, receiverPeerId: "q", data: 2 };
@@ -1283,7 +1348,10 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
   });
 
   it("passes non-signal, non-join frames through untouched", async () => {
-    const factory = createSignalingSocketFactory("secret-1", "room-1", MockWebSocket as unknown as typeof WebSocket);
+    const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
     const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
     const ping = JSON.stringify({ type: "ping", data: "hello" });
     ws.send(ping);
@@ -1292,7 +1360,10 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
   });
 
   it("recovers the FIFO queue after a native send failure", async () => {
-    const factory = createSignalingSocketFactory("secret-1", "room-1", MockWebSocket as unknown as typeof WebSocket);
+    const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
     const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
     const socket = MockWebSocket.instances[0]!;
     socket.failNextSend = true;
@@ -1307,7 +1378,10 @@ describe("createSignalingSocketFactory — HMAC signal signing", () => {
   });
 
   it("keeps signal send order with async signing", async () => {
-    const factory = createSignalingSocketFactory("secret-1", "room-1", MockWebSocket as unknown as typeof WebSocket);
+    const factory = createSignalingSocketFactory("secret-1", "room-1", {
+      webSocketImpl: MockWebSocket as unknown as typeof WebSocket,
+      selfHostedSignalingUrl: SIGNALING_ORIGIN,
+    });
     const ws = factory("wss://sig.example.com/room-1") as unknown as MockWebSocket;
     const peerId = "peer-555";
     ws.emit("message", JSON.stringify({ type: "init", yourPeerId: peerId }));

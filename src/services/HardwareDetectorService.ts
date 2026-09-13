@@ -45,6 +45,19 @@ class HardwareDetectorService {
     return info.tier;
   }
 
+  /**
+   * Discards the cached hardware profile so the next getHardwareInfo()
+   * re-probes the device. The WebGPU surface can appear AFTER the first
+   * probe (e.g. a GPU stack still initializing after boot in embedded/E2E
+   * environments, or a driver recovering from a transient failure): without
+   * this, a device cached as low-end on boot would never re-classify, even
+   * once the adapter is fully available. Read-only callers are unaffected;
+   * call this when the environment may have changed since the last probe.
+   */
+  public reset(): void {
+    this.cachedInfo = null;
+  }
+
   private getDeviceMemory(): number {
     // navigator.deviceMemory is available in Chromium-based browsers
     // Returns approximate RAM in GB

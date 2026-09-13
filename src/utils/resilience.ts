@@ -4,6 +4,7 @@
  * Provides retry, circuit breaker, and fallback patterns
  * for critical services like encryption, sync, and storage.
  */
+import { logger } from "./logger";
 
 // ============================================================================
 // Types
@@ -284,7 +285,7 @@ export class StateManager<T extends Record<string, unknown>> {
         }
       }
     } catch (error) {
-      console.warn('Failed to load state:', error);
+      logger.warn("[StateManager] Failed to load state", { error });
     }
     return this.state;
   }
@@ -303,7 +304,7 @@ export class StateManager<T extends Record<string, unknown>> {
         localStorage.setItem(this.stateFile, JSON.stringify(this.state));
       }
     } catch (error) {
-      console.warn('Failed to save state:', error);
+      logger.warn("[StateManager] Failed to save state", { error });
     }
   }
 
@@ -316,7 +317,7 @@ export class StateManager<T extends Record<string, unknown>> {
         localStorage.removeItem(this.stateFile);
       }
     } catch (error) {
-      console.warn('Failed to clear state:', error);
+      logger.warn("[StateManager] Failed to clear state", { error });
     }
   }
 
@@ -339,7 +340,7 @@ export const encryptionCircuitBreaker = new CircuitBreaker({
   failureThreshold: 3,
   recoveryTimeout: 30000,
   onStateChange: (state) => {
-    console.log(`Encryption circuit breaker: ${state}`);
+    logger.info("[CircuitBreaker] Encryption circuit state changed", { state });
   },
 });
 
@@ -350,7 +351,7 @@ export const syncCircuitBreaker = new CircuitBreaker({
   failureThreshold: 5,
   recoveryTimeout: 60000,
   onStateChange: (state) => {
-    console.log(`Sync circuit breaker: ${state}`);
+    logger.info("[CircuitBreaker] Sync circuit state changed", { state });
   },
 });
 
@@ -361,6 +362,6 @@ export const networkCircuitBreaker = new CircuitBreaker({
   failureThreshold: 3,
   recoveryTimeout: 30000,
   onStateChange: (state) => {
-    console.log(`Network circuit breaker: ${state}`);
+    logger.info("[CircuitBreaker] Network circuit state changed", { state });
   },
 });

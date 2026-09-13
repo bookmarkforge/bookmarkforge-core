@@ -177,7 +177,7 @@ export default function ImportDialog({ isOpen, onClose }: ImportDialogProps) {
               <button
                 type="button"
                 onClick={handleClose}
-                aria-label={t("close", "Close")}
+                aria-label={t("app_close", "Close")}
                 className="truncate text-[var(--text-muted)] hover:text-[var(--text-secondary)] dark:text-[var(--text-muted)] dark:hover:text-[var(--text-secondary)]"
               >
                 {t("close", "×")}

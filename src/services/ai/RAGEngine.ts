@@ -15,6 +15,11 @@ import { logger } from "../../utils/logger";
 import { securityVault } from "../SecurityVault";
 import { hashCacheKey } from "../../utils/hash";
 import type { Bookmark } from "../../types";
+import {
+  EMBEDDING_MODEL_DIMENSIONS,
+  EMBEDDING_MODEL_ID,
+  EMBEDDING_MODEL_PIPELINE_OPTIONS,
+} from "./embeddingModel";
 
 type EmbeddingProgressListener = (
   status: "loading" | "ready",
@@ -47,6 +52,10 @@ function notifyProgress(status: "loading" | "ready", message?: string) {
 let transformersModule: { pipeline: unknown; env: unknown } | null = null;
 let initPromise: Promise<void> | null = null;
 let transformersGeneration = 0;
+// Track the active main-thread pipeline for deterministic disposal on unload.
+// @huggingface/transformers pipelines hold WASM/ONNX model weights that are
+// only released by dispose() — GC cannot reclaim them promptly.
+let activePipelineRef: { dispose?: () => void } | null = null;
 
 export type BookmarkWithSimilarity = Bookmark & { similarity: number };
 
@@ -107,6 +116,7 @@ class RAGEngine {
   private inFlightEmbeddings: Map<string, Promise<number[]>> = new Map();
   private MAX_CACHE_SIZE = 1000; // Increased cache size
   private initializationPromise: Promise<void> | null = null;
+  private prefetchPromise: Promise<void> | null = null;
   private lifecycleGeneration = 0;
   // A completed embedding request may resolve after a vault transition. The
   // generation prevents that stale result from repopulating this cache.
@@ -138,9 +148,73 @@ class RAGEngine {
     this.inFlightEmbeddings.clear();
     this._workerPool?.terminate();
     this._workerPool = null;
+    this.prefetchPromise = null;
     transformersGeneration += 1;
     transformersModule = null;
     initPromise = null;
+    // Dispose the main-thread ONNX pipeline to release WASM model memory
+    // deterministically instead of waiting for GC.
+    if (activePipelineRef?.dispose) {
+      try {
+        activePipelineRef.dispose();
+      } catch {
+        /* INTENTIONAL SILENCE: dispose may fail if the runtime already released resources */
+      }
+    }
+    activePipelineRef = null;
+  }
+
+  /**
+   * Warm the embedding worker after the user explicitly opens a semantic
+   * feature. This deliberately does not generate or cache a user embedding.
+   * The app shell never calls this method, so startup remains WASM/model-free.
+   */
+  prefetch(): Promise<void> {
+    if (this.prefetchPromise) {return this.prefetchPromise;}
+    if (typeof window === "undefined") {return Promise.resolve();}
+
+    try {
+      const pool = this.workerPool;
+      if (!pool) {return Promise.resolve();}
+
+      const operationRef: { current?: Promise<void> } = {};
+      const operation = pool
+        .execute<null, boolean>(
+          "prefetch",
+          null,
+          undefined,
+          (_taskId, status, message) => {
+            if (status === "loading") {
+              notifyProgress("loading", message || "Preparing semantic search...");
+            } else if (status === "ready") {
+              notifyProgress("ready");
+            }
+          },
+        )
+        .then(() => undefined)
+        .catch((error: unknown) => {
+          // Prefetch is an optimization. A failed warm-up must not make the
+          // semantic feature unusable; the first real query still owns the
+          // normal worker/main-thread fallback path. Clear only this request
+          // so reopening the semantic feature can retry, without allowing an
+          // old operation to clear a newer one after unload().
+          if (this.prefetchPromise === operationRef.current) {
+            this.prefetchPromise = null;
+          }
+          logger.warn("[RAGEngine] Semantic model prefetch failed", {
+            error: error instanceof Error ? error.message : String(error),
+          });
+        });
+      operationRef.current = operation;
+
+      this.prefetchPromise = operation;
+      return operation;
+    } catch (error: unknown) {
+      logger.warn("[RAGEngine] Semantic model prefetch unavailable", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return Promise.resolve();
+    }
   }
 
   /**
@@ -225,7 +299,9 @@ class RAGEngine {
       const error = new DOMException("Embedding request aborted", "AbortError");
       throw error;
     }
-    if (!text || typeof text !== "string") {return new Array(384).fill(0);}
+    if (!text || typeof text !== "string") {
+      return new Array(EMBEDDING_MODEL_DIMENSIONS).fill(0);
+    }
 
     // Keep document text out of the in-memory Map key. The embedding itself
     // is still cleared on vault transitions and bounded by MAX_CACHE_SIZE.
@@ -263,6 +339,13 @@ class RAGEngine {
     signal?: AbortSignal,
   ): Promise<number[]> {
     const requestGeneration = this.cacheGeneration;
+
+    // If semantic mode was just opened, let the explicit model warm-up finish
+    // before dispatching the first real query. This keeps the query on the
+    // already-warmed worker and avoids a second concurrent WASM download.
+    if (this.prefetchPromise) {
+      await this.prefetchPromise;
+    }
 
     // Use WorkerPool for parallel embedding generation
     if (this.workerPool) {
@@ -349,8 +432,21 @@ class RAGEngine {
       };
       const embedFn = await pipeline(
         "feature-extraction",
-        "Xenova/all-MiniLM-L6-v2",
+        EMBEDDING_MODEL_ID,
+        { ...EMBEDDING_MODEL_PIPELINE_OPTIONS },
       );
+      // Track for disposal on unload so WASM memory is released deterministically.
+      // Dispose any previous pipeline first to prevent WASM memory leaks when
+      // multiple concurrent calls create overlapping pipeline instances.
+      if (activePipelineRef?.dispose) {
+        try {
+          activePipelineRef.dispose();
+        } catch {
+          /* INTENTIONAL SILENCE: dispose may fail if the runtime already released resources */
+        }
+      }
+      activePipelineRef = embedFn as unknown as { dispose?: () => void };
+
       if (signal?.aborted) {
         throw new DOMException("Embedding request aborted", "AbortError");
       }
@@ -382,7 +478,7 @@ class RAGEngine {
       logger.error("[RAGEngine] Failed to generate embedding", {
         error: error instanceof Error ? error.message : String(error),
       });
-      return new Array(384).fill(0);
+      return new Array(EMBEDDING_MODEL_DIMENSIONS).fill(0);
     }
   }
 

@@ -16,7 +16,7 @@
  *   - All timestamps are local; no cross-device tracking
  *   - Events are stored in a bounded ring (max 10,000 events)
  *   - Retention is computed client-side from visit timestamps
- *   - Opt-in gated: same consent as errorReporter
+ *   - Opt-in gated: independent analytics consent (`forge_consent_analytics`)
  *
  * Architecture:
  *   - Events are appended to an in-memory buffer and flushed to IndexedDB
@@ -25,8 +25,13 @@
  *   - Export produces a JSON snapshot for the Settings → Diagnostics view
  */
 import { logger } from "../utils/logger";
-import { safeGet } from "../store/safeStorage";
+import { safeRemove } from "../store/safeStorage";
 import { STORAGE_KEYS } from "../constants/storage-keys";
+import {
+  CONSENT_CHANGED_EVENT,
+  isPurposeConsented,
+  type ConsentToggles,
+} from "./ConsentService";
 import { forwardAnalytics, forwardAnalyticsBeacon } from "./analyticsForwarder";
 
 // ── Constants ─────────────────────────────────────────────────────
@@ -35,16 +40,14 @@ const DB_NAME = "bookmarkforge-analytics";
 const DB_VERSION = 1;
 const STORE_NAME = "events";
 const MAX_EVENTS = 10_000;
+/** Runtime cap: a blocked IndexedDB write must not grow memory without bound. */
+export const MAX_BUFFER_EVENTS = 512;
+const MAX_META_KEYS = 16;
+const MAX_META_KEY_LENGTH = 32;
+const MAX_META_STRING_LENGTH = 128;
+const MAX_META_ABS_NUMBER = 1_000_000_000;
 const FLUSH_INTERVAL_MS = 30_000;
 // const SESSION_IDLE_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes (reserved for future idle detection)
-
-// Consent key (audit 2026-08-30): AnalyticsService previously read the
-// error-storage consent key (bmf_local_error_storage), meaning the user's
-// analytics choice in ConsentBanner (forge_consent_analytics) had no effect.
-// Now reads the correct analytics consent key; the legacy bmf_telemetry_optin
-// key is honored as a read-only migration fallback.
-const CONSENT_KEY = STORAGE_KEYS.CONSENT_ANALYTICS;
-const LEGACY_CONSENT_KEY = "bmf_telemetry_optin";
 
 // ── Types ─────────────────────────────────────────────────────────
 
@@ -90,6 +93,62 @@ export interface AnalyticsEvent {
   timestamp: number; // Date.now()
   /** Optional metadata (bounded, no PII). */
   meta?: Record<string, string | number | boolean>;
+}
+
+const ANALYTICS_EVENT_TYPES = new Set<AnalyticsEventType>([
+  "vault_created",
+  "vault_unlocked",
+  "first_capture",
+  "first_document",
+  "session_start",
+  "session_end",
+  "bookmark_created",
+  "bookmark_deleted",
+  "document_created",
+  "document_deleted",
+  "search_used",
+  "import_used",
+  "export_used",
+  "graph_viewed",
+  "kanban_viewed",
+  "calendar_viewed",
+  "gallery_viewed",
+  "timeline_viewed",
+  "canvas_viewed",
+  "flashcard_reviewed",
+  "voice_command_used",
+  "ai_chat_used",
+  "ai_summary_generated",
+  "p2p_sync_started",
+  "p2p_sync_completed",
+  "extension_captured",
+  "theme_changed",
+  "language_changed",
+  "auto_lock_toggled",
+  "network_permission_added",
+]);
+
+function sanitizeMeta(
+  meta: Record<string, string | number | boolean> | undefined,
+): Record<string, string | number | boolean> | undefined {
+  if (!meta || typeof meta !== "object" || Array.isArray(meta)) return undefined;
+  const sanitized: Record<string, string | number | boolean> = {};
+  for (const [rawKey, rawValue] of Object.entries(meta).slice(0, MAX_META_KEYS)) {
+    const key = rawKey.slice(0, MAX_META_KEY_LENGTH);
+    if (!key) continue;
+    if (typeof rawValue === "string") {
+      sanitized[key] = rawValue.slice(0, MAX_META_STRING_LENGTH);
+    } else if (
+      typeof rawValue === "number" &&
+      Number.isFinite(rawValue) &&
+      Math.abs(rawValue) <= MAX_META_ABS_NUMBER
+    ) {
+      sanitized[key] = rawValue;
+    } else if (typeof rawValue === "boolean") {
+      sanitized[key] = rawValue;
+    }
+  }
+  return Object.keys(sanitized).length > 0 ? sanitized : undefined;
 }
 
 export interface RetentionKPIs {
@@ -179,9 +238,10 @@ function openDB(): Promise<IDBDatabase> {
 
 function isAnalyticsEnabled(): boolean {
   try {
-    const current = safeGet(CONSENT_KEY);
-    if (current !== null) return current === "true";
-    return safeGet(LEGACY_CONSENT_KEY) === "true";
+    // ConsentService centralizes the explicit-purpose decision and its legacy
+    // migration rule. This prevents a stale broad opt-in from resurrecting
+    // analytics after a complete modern decision denied it.
+    return isPurposeConsented("analytics");
   } catch {
     return false;
   }
@@ -197,6 +257,17 @@ class AnalyticsService {
   private sessionStart: number = 0;
   private lastActivity: number = 0;
   private started = false;
+  /** A locally failed write keeps its batch id so a later retry cannot
+   * double-count a batch that the server already accepted. */
+  private pendingBatch: {
+    events: AnalyticsEvent[];
+    batchId: string;
+  } | null = null;
+  private consentListener: (() => void) | null = null;
+  private lifecycleGeneration = 0;
+  private flushInFlight: Promise<void> | null = null;
+  private flushRequested = false;
+  private forceFlushRequested = false;
 
   /** Start tracking. Call once after consent is established. */
   start(): void {
@@ -209,6 +280,8 @@ class AnalyticsService {
     this.sessionId = crypto.randomUUID();
     this.sessionStart = Date.now();
     this.lastActivity = Date.now();
+
+    this.installConsentListener();
 
     // Flush periodically
     this.flushTimer = setInterval(() => {
@@ -237,7 +310,9 @@ class AnalyticsService {
   /** Stop tracking and flush remaining events. */
   stop(): void {
     if (!this.started) return;
+    const consentStillGranted = isAnalyticsEnabled();
     this.started = false;
+    this.removeConsentListener();
     if (this.flushTimer) {
       clearInterval(this.flushTimer);
       this.flushTimer = null;
@@ -246,19 +321,88 @@ class AnalyticsService {
       window.removeEventListener("pagehide", this.unloadHandler);
       this.unloadHandler = null;
     }
-    void this.flush();
+    // Withdrawal must discard unsent events and any retryable batch before
+    // the consent-gated forwarder can observe the new state. A normal stop
+    // preserves the historical contract by flushing what is already queued.
+    if (!consentStillGranted) {
+      this.lifecycleGeneration += 1;
+      this.buffer = [];
+      this.pendingBatch = null;
+      return;
+    }
+    void this.flush(true);
+  }
+
+  /**
+   * Permanently revoke analytics for this browser profile. Unsent events,
+   * retryable batches, the local analytics database, and the install
+   * pseudonym are removed; already transmitted server data is not claimed to
+   * be deleted by this client operation.
+   */
+  async revoke(): Promise<void> {
+    this.started = false;
+    this.lifecycleGeneration += 1;
+    this.removeConsentListener();
+    if (this.flushTimer) {
+      clearInterval(this.flushTimer);
+      this.flushTimer = null;
+    }
+    if (this.unloadHandler && typeof window !== "undefined") {
+      window.removeEventListener("pagehide", this.unloadHandler);
+      this.unloadHandler = null;
+    }
+    this.buffer = [];
+    this.pendingBatch = null;
+    // An in-flight IndexedDB transaction may otherwise write after clear and
+    // resurrect revoked local events. Wait for the serialized flush loop first.
+    const inFlight = this.flushInFlight;
+    if (inFlight) {
+      try {
+        await inFlight;
+      } catch {
+        /* INTENTIONAL SILENCE: the revocation path is fail-closed; cleanup continues. */
+      }
+    }
+    this.buffer = [];
+    this.pendingBatch = null;
+    safeRemove(STORAGE_KEYS.ANALYTICS_INSTALL_ID);
+    await this.clearStoredEvents();
+  }
+
+  private installConsentListener(): void {
+    if (typeof window === "undefined" || this.consentListener) return;
+    const listener = (event: Event) => {
+      const consent = (event as CustomEvent<ConsentToggles | null>).detail;
+      if (consent && !consent.analytics) {
+        void this.revoke();
+      }
+    };
+    window.addEventListener(CONSENT_CHANGED_EVENT, listener);
+    this.consentListener = () => window.removeEventListener(CONSENT_CHANGED_EVENT, listener);
+  }
+
+  private removeConsentListener(): void {
+    this.consentListener?.();
+    this.consentListener = null;
+  }
+
+  /** Append an event while keeping memory bounded if storage is blocked. */
+  private appendEvent(event: AnalyticsEvent): void {
+    if (this.buffer.length >= MAX_BUFFER_EVENTS) {
+      this.buffer.splice(0, this.buffer.length - MAX_BUFFER_EVENTS + 1);
+    }
+    this.buffer.push(event);
   }
 
   /** Track an event (async, fire-and-forget). */
   track(type: AnalyticsEventType, meta?: Record<string, string | number | boolean>): void {
-    if (!this.started || !isAnalyticsEnabled()) return;
-    const event: AnalyticsEvent = {
+    if (!this.started || !isAnalyticsEnabled() || !ANALYTICS_EVENT_TYPES.has(type)) return;
+    this.appendEvent({
       id: crypto.randomUUID(),
       type,
       timestamp: Date.now(),
-      meta,
-    };
-    this.buffer.push(event);
+      meta: sanitizeMeta(meta),
+    });
     this.lastActivity = Date.now();
 
     // Auto-flush when buffer is large
@@ -269,26 +413,64 @@ class AnalyticsService {
 
   /** Track an event synchronously (for pagehide where async is unsafe). */
   private trackSync(type: AnalyticsEventType, meta?: Record<string, string | number | boolean>): void {
-    if (!isAnalyticsEnabled()) return;
-    const event: AnalyticsEvent = {
+    if (!isAnalyticsEnabled() || !ANALYTICS_EVENT_TYPES.has(type)) return;
+    this.appendEvent({
       id: crypto.randomUUID(),
       type,
       timestamp: Date.now(),
-      meta,
-    };
-    this.buffer.push(event);
+      meta: sanitizeMeta(meta),
+    });
+  }
+
+  /** Serialize flushes so failed batches cannot overwrite one another. */
+  private flush(force = false): Promise<void> {
+    if (this.flushInFlight) {
+      this.flushRequested = true;
+      this.forceFlushRequested ||= force;
+      return this.flushInFlight;
+    }
+    this.flushRequested = false;
+    this.forceFlushRequested = force;
+    const run = this.runFlushLoop();
+    this.flushInFlight = run;
+    void run.then(
+      () => {
+        if (this.flushInFlight === run) this.flushInFlight = null;
+      },
+      () => {
+        if (this.flushInFlight === run) this.flushInFlight = null;
+      },
+    );
+    return run;
+  }
+
+  private async runFlushLoop(): Promise<void> {
+    do {
+      const force = this.forceFlushRequested;
+      this.forceFlushRequested = false;
+      this.flushRequested = false;
+      await this.flushOnce(force);
+    } while (this.flushRequested);
   }
 
   /** Flush buffered events to IndexedDB (+ opt-in server bucket). */
-  private async flush(): Promise<void> {
-    if (this.buffer.length === 0) return;
-    const events = this.buffer.splice(0);
-    // Opt-in, aggregated, non-PII server bucket (consent-gated inside).
-    // Fire-and-forget: never awaited, failures contained by the forwarder.
-    void forwardAnalytics(events);
+  private async flushOnce(force: boolean): Promise<void> {
+    if ((!this.started && !force) || !isAnalyticsEnabled()) return;
+    const generation = this.lifecycleGeneration;
+    const pending = this.pendingBatch;
+    this.pendingBatch = null;
+    const events = pending?.events ?? this.buffer.splice(0);
+    if (events.length === 0) return;
+    // Reusing the id after a local write failure prevents a remote success
+    // followed by a local retry from double-counting the same batch.
+    const batchId = pending?.batchId ?? crypto.randomUUID();
+    let persisted = false;
     try {
       const db = await openDB();
       try {
+        // Revoke/re-enable can happen while openDB is pending. The old
+        // generation must not write back into a freshly cleared database.
+        if (generation !== this.lifecycleGeneration || !isAnalyticsEnabled()) return;
         await new Promise<void>((resolve, reject) => {
           const tx = db.transaction(STORE_NAME, "readwrite");
           const store = tx.objectStore(STORE_NAME);
@@ -321,6 +503,7 @@ class AnalyticsService {
           tx.onerror = () => reject(tx.error);
           tx.onabort = () => reject(tx.error || new Error("Analytics transaction aborted"));
         });
+        persisted = true;
       } finally {
         db.close();
       }
@@ -329,17 +512,31 @@ class AnalyticsService {
         error: err instanceof Error ? err.message : String(err),
         eventCount: events.length,
       });
-      // Re-add events to buffer for retry on next flush
-      this.buffer.unshift(...events);
+      // Keep the same id for the next attempt only while this lifecycle is
+      // still active and consent remains granted. A revoke wins any race with
+      // an in-flight IndexedDB operation.
+      if (generation === this.lifecycleGeneration && isAnalyticsEnabled()) {
+        this.pendingBatch = { events, batchId };
+      }
+    }
+
+    // Send only after the asynchronous boundary has re-checked consent. A
+    // revocation that wins while IndexedDB is opening cannot start a new
+    // disclosure; an already-started request cannot be recalled by a client.
+    if ((persisted || generation === this.lifecycleGeneration) &&
+        generation === this.lifecycleGeneration &&
+        isAnalyticsEnabled()) {
+      void forwardAnalytics(events, batchId);
     }
   }
 
   /** Synchronous flush for page unload (best-effort). */
   private flushToStorage(): void {
-    if (this.buffer.length === 0) return;
+    if (!this.started || !isAnalyticsEnabled() || this.buffer.length === 0) return;
     const events = this.buffer.splice(0);
-    // sendBeacon keeps the daily bucket even while navigating away.
-    forwardAnalyticsBeacon(events);
+    // sendBeacon keeps the daily bucket even while navigating away. The
+    // explicit id makes this unload batch deduplicable by the server.
+    forwardAnalyticsBeacon(events, crypto.randomUUID());
     // Best-effort: open DB and write synchronously via put
     void openDB()
       .then((db) => {
@@ -360,6 +557,27 @@ class AnalyticsService {
       .catch(() => {
         // Silently fail — analytics is best-effort
       });
+  }
+
+  private async clearStoredEvents(): Promise<void> {
+    try {
+      const db = await openDB();
+      try {
+        await new Promise<void>((resolve, reject) => {
+          const tx = db.transaction(STORE_NAME, "readwrite");
+          tx.objectStore(STORE_NAME).clear();
+          tx.oncomplete = () => resolve();
+          tx.onerror = () => reject(tx.error);
+          tx.onabort = () => reject(tx.error || new Error("Analytics clear aborted"));
+        });
+      } finally {
+        db.close();
+      }
+    } catch (error) {
+      logger.warn("[AnalyticsService] Failed to clear local events", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
   }
 
   // ── KPI Computation ─────────────────────────────────────────────
@@ -463,9 +681,11 @@ class AnalyticsService {
     }
     longestStreak = Math.max(longestStreak, streak);
 
-    // Current streak: count backwards from today
+    // Current streak: count backwards from today, or yesterday when there
+    // was no activity today. A user who was active yesterday still has a
+    // current streak of one; it is not a broken streak until two days pass.
     currentStreak = 0;
-    let checkDay = today;
+    let checkDay = activeDaysSet.has(today) ? today : today - 86_400_000;
     for (let i = 0; i < activeDaysArray.length; i++) {
       if (activeDaysSet.has(checkDay)) {
         currentStreak++;

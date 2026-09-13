@@ -57,7 +57,7 @@ export class ProviderManager {
   private ollamaAvailabilityGeneration = 0;
   private readonly OLLAMA_CACHE_TTL_MS = 60_000; // 1 minute cache
   // The exact Q-state consumed by the most recent selectProvider() call,
-  // captured by getOptimalProvider so recordRoutingOutcome() writes under the
+  // captured by resolveProvider so recordRoutingOutcome() writes under the
   // SAME key the optimizer explored (never a re-read of network/battery).
   private lastRoutingState:
     | {
@@ -97,6 +97,21 @@ export class ProviderManager {
     securityVault.onUnlock(() => {
       this.cache.clear();
       clearRoutingTable();
+      // Opportunistic WebLLM preload on every successful unlock (fire-and-
+      // forget): by the time the user interacts with AI, the model is warm.
+      // Safety is inherited from warmup() itself — canRunLocalLLM() skips
+      // devices that cannot run local AI, test mode (forge_test_mode) skips
+      // E2E runs before their stubs are installed, and the detached promise
+      // can never reject (init failures are logged inside warmup). The
+      // unlock flow itself is never slowed: nothing here is awaited.
+      void this.warmup().catch((err: unknown) => {
+        logger.warn(
+          "[ProviderManager] Unlock warmup failed (non-fatal)",
+          {
+            error: err instanceof Error ? err.message : String(err),
+          },
+        );
+      });
     });
   }
 
@@ -236,31 +251,84 @@ export class ProviderManager {
    * console.log(res.text);
    * ```
    */
-  // Main Generation Method
-  async generateText(
+  // ── Shared request validation (consolidation of generateText /
+  // streamGenerateText guards) ────────────────────────────────────────────
+  //
+  // AUDIT FINDINGS this consolidation eliminated — the two entry points had
+  // drifted copy-pasted versions of the same checks:
+  //   1. Input validation (prompt ≤ 100k, system prompt ≤ 50k, pre-flight
+  //      abort) was DUPLICATED verbatim in both methods — a future threshold
+  //      or message change could silently diverge (e.g. fix the limit in one
+  //      and not the other).
+  //   2. The POST-RESOLVE abort re-check existed ONLY on generateText: a
+  //      signal aborted while resolveProvider awaited (battery probe,
+  //      availability pings) slipped through streaming and was only caught
+  //      after rate limiting + budget.
+  //   3. The fail-closed isPrivate default was structured differently:
+  //      generateText ALWAYS resolves; streaming resolved only when private
+  //      OR the descriptor was unconfigured — so a configured selected cloud
+  //      provider could skip resolveProvider on the stream path (while the
+  //      non-stream path always resolved it away). The streaming local-only
+  //      refusal message also carried a " for streaming." suffix that the
+  //      non-stream path never had. Both paths now share ONE _mustResolve
+  //      computation (options?.isPrivate !== false) with the "OR
+  //      unconfigured" kept as the streaming-specific extra condition.
+  // Callers: generateText and streamGenerateText, at the same position
+  // (first statement) so no other check can run before them.
+
+  /**
+   * Validates request inputs — the SINGLE source of truth for prompt
+   * length, system-prompt length, and the pre-flight abort check, shared
+   * by generateText and streamGenerateText.
+   */
+  private assertValidAIRequest(
     prompt: string,
     systemPrompt?: string,
     options?: AIRequestOptions,
-  ): Promise<AIResponse> {
-    // Input validation
+  ): void {
     if (prompt.length > 100000) {
       throw new Error("Prompt too long (max 100k characters)");
     }
     if (systemPrompt && systemPrompt.length > 50000) {
       throw new Error("System prompt too long (max 50k characters)");
     }
+    this.assertSignalNotAborted(options);
+  }
+
+  /**
+   * Throws the shared AbortError when the caller's signal has fired.
+   * Used pre-flight (inside assertValidAIRequest) and post-resolve by BOTH
+   * generation paths — abort awareness can no longer diverge between them.
+   */
+  private assertSignalNotAborted(options?: AIRequestOptions): void {
     if (options?.signal?.aborted) {
       throw new DOMException("AI request aborted", "AbortError");
     }
+  }
+
+  // Main Generation Method
+  async generateText(
+    prompt: string,
+    systemPrompt?: string,
+    options?: AIRequestOptions,
+  ): Promise<AIResponse> {
+    // Shared guard: input validation + the fail-closed isPrivate default.
+    // Both generation entry points MUST run the identical checks — see the
+    // guard's doc block for the divergence this consolidation eliminated.
+    this.assertValidAIRequest(prompt, systemPrompt, options);
+
+    // Fail-closed privacy default: ANY request whose options omit
+    // isPrivate (or pass true) must resolve through resolveProvider so
+    // private data can only route to local AI — never to a cloud provider
+    // by accident.
+    const _mustResolve = options?.isPrivate !== false;
 
     // Resolve the provider before checking rate limits. The configured
     // provider can be an unconfigured cloud default while a local provider is
     // reachable; charging or blocking the former would make local fallback
     // depend on an unrelated cloud quota.
-    const optimalProvider = await this.getOptimalProvider(options);
-    if (options?.signal?.aborted) {
-      throw new DOMException("AI request aborted", "AbortError");
-    }
+    const optimalProvider = await this.resolveProvider(options);
+    this.assertSignalNotAborted(options);
     let { provider, model } = optimalProvider;
 
     // Rate limiting applies to the provider that will actually receive the
@@ -495,29 +563,22 @@ export class ProviderManager {
     onProvider?: (provider: AIProvider) => void,
     onComplete?: () => void,
   ): Promise<AIResponse> {
-    if (prompt.length > 100000) {
-      throw new Error("Prompt too long (max 100k characters)");
-    }
-    if (systemPrompt && systemPrompt.length > 50000) {
-      throw new Error("System prompt too long (max 50k characters)");
-    }
-    if (options?.signal?.aborted) {
-      throw new DOMException("AI request aborted", "AbortError");
-    }
+    // Shared guard: identical validation to generateText (consolidated).
+    this.assertValidAIRequest(prompt, systemPrompt, options);
 
     const providerInfo = this.config.getProviderInfo();
 
-    // SECURITY (A4): honor isPrivate for streaming too. When the request is
-    // marked private we resolve the optimal provider (which routes to local
-    // AI) instead of blindly using the globally-selected cloud provider.
+    // Fail-closed privacy default (now IDENTICAL to generateText):
+    // ANY request whose options omit isPrivate (or pass true) resolves
+    // through resolveProvider so private data can only route to local AI.
+    // The previous structure (resolve when private OR unconfigured) allowed
+    // a configured-selected cloud provider to skip resolveProvider entirely
+    // — divergence #3 of the consolidation audit.
+    const _mustResolve = options?.isPrivate !== false;
     let provider = providerInfo.provider;
     let model = providerInfo.model;
-    // Public requests may use a selected cloud provider directly, but the
-    // default provider descriptor can be unconfigured. Resolve routing in
-    // that case too, otherwise streaming bypasses the local Ollama fallback
-    // used by generateText and calls the missing Gemini session endpoint.
-    if (options?.isPrivate !== false || !providerInfo.isConfigured) {
-      const optimal = await this.getOptimalProvider(options);
+    if (_mustResolve || !providerInfo.isConfigured) {
+      const optimal = await this.resolveProvider(options);
       provider = optimal.provider;
       model = optimal.model;
       if (provider !== "ollama" && provider !== "webllm") {
@@ -526,6 +587,13 @@ export class ProviderManager {
         );
       }
     }
+    // DIVERGENCE FIXED (consolidation audit): the post-resolve abort
+    // re-check existed only on generateText. resolveProvider can await
+    // (battery probe, provider availability), so a signal aborted during
+    // resolution previously slipped through on the streaming path and was
+    // only re-checked after rate limiting + cost budget. Now both paths
+    // re-check at the same point via the shared helper.
+    this.assertSignalNotAborted(options);
 
     // SECURITY (S9): never stream from cloud providers while the Security
     // Vault is locked — the vault-protected API key is only usable while
@@ -556,6 +624,17 @@ export class ProviderManager {
 
     if (options?.signal?.aborted) {
       throw new DOMException("AI request aborted", "AbortError");
+    }
+    // WebLLM capability pre-assert: the shared guard must fire BEFORE the
+    // provider announcement, not only inside generateWithWebLLM below.
+    // Without this, a forced webllm selection on a device without a capable
+    // GPU would emit onProvider("webllm") and only afterwards fail closed —
+    // the UI would briefly claim a provider whose request cannot run
+    // (exactly what the contract on the next line forbids). Same cached
+    // probes, so this is ~free on capable devices.
+    if (provider === "webllm") {
+      const { webLLMService } = await import("./WebLLMService");
+      await webLLMService.assertCanRunLocalLLM();
     }
     // Report the resolved provider only once every guard has passed, so the
     // UI never claims a provider whose request then fails validation.
@@ -695,6 +774,15 @@ export class ProviderManager {
   ): Promise<AIResponse> {
     const { webLLMService } = await import("./WebLLMService");
 
+    // Fail closed BEFORE arming the 45s timeout or touching the engine: when
+    // the device cannot run WebLLM (no WebGPU, or an adapter without
+    // shader-f16), surface the capability error instead of the misleading
+    // "engine not initialized" state error — the user explicitly selected
+    // this provider, so they need to hear WHY it cannot run. Delegates to the
+    // shared WebLLMService.assertCanRunLocalLLM() so init(), generateText()
+    // and this path can never drift apart in messages.
+    await webLLMService.assertCanRunLocalLLM();
+
     const controller = new AbortController();
     const callerSignal = _options?.signal;
     const onCallerAbort = () => controller.abort();
@@ -753,12 +841,34 @@ export class ProviderManager {
     }
   }
 
-  private async getOptimalProvider(
+  /**
+   * Resolves the provider for a request under CURRENT device conditions.
+   *
+   * The name is deliberate — this resolves a provider, it does not promise
+   * an optimal one: the result depends on privacy flags, connectivity,
+   * battery, the user's explicit selection, and two independent device
+   * gates. The WebLLM local route requires BOTH the capability verdict
+   * (webLLMService.canRunLocalLLM(): WebGPU surface + shader-f16 + >= 4 GB
+   * RAM) AND the 8 GB comfort tier (resourceManager.isHighEndDevice()) —
+   * see the DUAL GATE comments on the local-route branches. An explicit
+   * user selection is authoritative over all availability heuristics (and
+   * is deliberately NOT capability-filtered: a forced selection on a
+   * blocked device fails closed later, at the generation entry points,
+   * with the precise capability error). The routing-outcome feedback
+   * (recordRoutingOutcome) is written under the state this method captures
+   * in lastRoutingState.
+   */
+  private async resolveProvider(
     options?: AIRequestOptions,
   ): Promise<ProviderInfo> {
     const { webLLMService } = await import("./WebLLMService");
 
     const isOffline = !navigator.onLine;
+    // hasWebLLM = the device-capability verdict ONLY (WebGPU surface +
+    // shader-f16 + >= 4 GB RAM). It says nothing about the 8 GB comfort
+    // tier, engine/model state, or request success — every local-route
+    // branch below pairs it with resourceManager.isHighEndDevice() as a
+    // second, independent gate (see the DUAL GATE comment there).
     const hasWebLLM = await webLLMService.canRunLocalLLM();
     const hasOllama = await this.config.getOllamaProvider().isAvailable();
 
@@ -804,7 +914,17 @@ export class ProviderManager {
 
     // Offline or private data: use local
     if (isOffline || isPrivate) {
-      if (hasWebLLM && resourceManager.shouldUseLocalLLM()) {
+      // DUAL GATE (intentional, mirrored at every local-route branch below):
+      // hasWebLLM = canRunLocalLLM() — the CAPABILITY verdict (WebGPU surface
+      // + shader-f16 + the >= 4 GB memory floor) — is necessary but NOT
+      // sufficient. The 8 GB RAM/CPU TIER check (isHighEndDevice) is a
+      // second, independent requirement: WebLLM routing needs a device that
+      // can run the model COMFORTABLY, not merely at the floor. Do not
+      // remove either conjunct: dropping the tier check would route private
+      // data to a 4-7 GB device that only barely clears the capability
+      // floor; dropping the capability check would route to devices that
+      // cannot run WebLLM at all.
+      if (hasWebLLM && resourceManager.isHighEndDevice()) {
         return {
           provider: "webllm",
           model: this.config.getWebLlmModel(),
@@ -859,7 +979,9 @@ export class ProviderManager {
     }
 
     if (!isPrivate && !defaultInfo.isConfigured && !externalApiKey) {
-      if (hasWebLLM && resourceManager.shouldUseLocalLLM()) {
+      // Same dual gate as the offline/private branch: capability
+      // (hasWebLLM = canRunLocalLLM()) AND the 8 GB tier.
+      if (hasWebLLM && resourceManager.isHighEndDevice()) {
         return {
           provider: "webllm",
           model: this.config.getWebLlmModel(),
@@ -899,7 +1021,9 @@ export class ProviderManager {
 // Routes simple queries to local AI (Ollama/WebLLM) which is ~10x cheaper
 // than cloud providers for equivalent quality on narrow tasks.
     if (!selectedProvider && complexity === "simple") {
-      if (hasWebLLM && resourceManager.shouldUseLocalLLM()) {
+      // Same dual gate as the offline/private branch: capability
+      // (hasWebLLM = canRunLocalLLM()) AND the 8 GB tier.
+      if (hasWebLLM && resourceManager.isHighEndDevice()) {
         return {
           provider: "webllm",
           model: this.config.getWebLlmModel(),
@@ -1023,6 +1147,8 @@ export class ProviderManager {
    * Pre-loads the WebLLM local model in the background for faster first inference.
    * Silently skips if WebGPU is unavailable or no model is selected.
    * Skips entirely in test environments (detected via localStorage flag).
+   * Safe to call repeatedly: init() is idempotent while the requested model
+   * stays loaded, so multiple warmups never reload the engine.
    */
   // Lifecycle
   async warmup(): Promise<void> {
@@ -1058,6 +1184,50 @@ export class ProviderManager {
 
     if (selectedProvider === "webllm" || !externalApiKey) {
       const { webLLMService } = await import("./WebLLMService");
+      // Device capability guard (webLLMService.canRunLocalLLM() below): only
+      // preload the model when the device can actually run WebLLM
+      // (WebGPU + shader-f16 + >=4GB RAM). A GPU-less or
+      // low-RAM device would otherwise attempt init() and fast-fail on EVERY
+      // unlock — a wasted call that still acquires GPU resources and bumps
+      // error metrics before throwing. A capability-probe failure (e.g. the
+      // adapter request throws) is treated the same as "cannot run": skip
+      // the init, log the reason, never abort warmup.
+      const canRunLocalLLM = await webLLMService
+        .canRunLocalLLM()
+        .catch((e: unknown) => {
+          logger.warn(
+            "[ProviderManager] WebLLM capability check failed during warmup",
+            { error: e instanceof Error ? e.message : String(e) },
+          );
+          return false;
+        });
+      if (!canRunLocalLLM) {
+        // Name the WHY, not just the verdict: a generic "cannot run" hides
+        // whether the remedy is a different browser (no WebGPU surface),
+        // different hardware (adapter without shader-f16) or more RAM
+        // (below the 4 GB floor). getHealthStatus() reads the same cached
+        // probes, so this is ~free and cannot disagree with the
+        // canRunLocalLLM() verdict above. The legacy message stays as the
+        // prefix so existing log parsers and tests keep matching; the
+        // precise cause is appended after the dash.
+        const health = await webLLMService.getHealthStatus().catch(
+          () => null,
+        );
+        const cause = !health
+          ? ""
+          : !health.webGPUSupported
+            ? " — WebGPU is not available in this browser"
+            : !health.f16Supported
+              ? " — WebGPU adapter lacks shader-f16 (half-precision)"
+              : health.deviceMemoryGB < 4
+                ? ` — insufficient device memory (${health.deviceMemoryGB} GB < 4 GB floor)`
+                : " — cause unidentified";
+        logger.info(
+          "[ProviderManager] WebLLM warmup skipped: device cannot run local LLM" +
+            cause,
+        );
+        return;
+      }
       // Use hardware-aware model selection during warmup
       const recommendedModel = this.getRecommendedWebLLMModel();
       const modelToInit = this.config.getWebLlmModel() || recommendedModel;

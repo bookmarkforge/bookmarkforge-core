@@ -84,16 +84,18 @@ describe("BookmarkFusion", () => {
     render(<BookmarkFusion cardVariants={{}} />);
     const fuse = await screen.findByText("Fuse Selected (0)");
     expect(fuse).toBeDisabled();
-    expect(screen.getByLabelText("BM One")).toBeInTheDocument();
-    expect(screen.getByLabelText("BM Two")).toBeInTheDocument();
+    // Bookmark cards load asynchronously — the fuse button (initial state)
+    // can appear before them, so await the cards themselves.
+    expect(await screen.findByLabelText("BM One")).toBeInTheDocument();
+    expect(await screen.findByLabelText("BM Two")).toBeInTheDocument();
   });
 
   it("fuses two selected bookmarks via AI and shows the result", async () => {
     aiManager.generateText.mockResolvedValue({ text: "Fused insight" });
     render(<BookmarkFusion cardVariants={{}} />);
     await screen.findByText("Fuse Selected (0)");
-    fireEvent.click(screen.getByLabelText("BM One"));
-    fireEvent.click(screen.getByLabelText("BM Two"));
+    fireEvent.click(await screen.findByLabelText("BM One"));
+    fireEvent.click(await screen.findByLabelText("BM Two"));
     const fuse = await screen.findByText("Fuse Selected (2)");
     expect(fuse).toBeEnabled();
     fireEvent.click(fuse);
@@ -105,7 +107,7 @@ describe("BookmarkFusion", () => {
   it("does not call AI when fewer than 2 bookmarks are selected", async () => {
     render(<BookmarkFusion cardVariants={{}} />);
     await screen.findByText("Fuse Selected (0)");
-    fireEvent.click(screen.getByLabelText("BM One"));
+    fireEvent.click(await screen.findByLabelText("BM One"));
     const fuse = await screen.findByText("Fuse Selected (1)");
     expect(fuse).toBeDisabled();
     expect(aiManager.generateText).not.toHaveBeenCalled();
@@ -115,8 +117,8 @@ describe("BookmarkFusion", () => {
     aiManager.generateText.mockRejectedValue(new Error("ai down"));
     render(<BookmarkFusion cardVariants={{}} />);
     await screen.findByText("Fuse Selected (0)");
-    fireEvent.click(screen.getByLabelText("BM One"));
-    fireEvent.click(screen.getByLabelText("BM Two"));
+    fireEvent.click(await screen.findByLabelText("BM One"));
+    fireEvent.click(await screen.findByLabelText("BM Two"));
     fireEvent.click(await screen.findByText("Fuse Selected (2)"));
     expect(
       await screen.findByText("Failed to fuse bookmarks. Please try again."),

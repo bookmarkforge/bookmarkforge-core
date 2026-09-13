@@ -142,7 +142,12 @@ describe("WebLLMService", () => {
 
   describe("getHealthStatus", () => {
     it("returns healthy status when engine loaded and WebGPU supported", async () => {
+      // Mirror what real init() publishes: the engine AND the model name.
+      // (Faking only the engine used to leak the initial sentinel id into
+      // modelLoaded — with the empty-string contract the test must state
+      // the model it claims is loaded.)
       (service as any).engine = mockEngine;
+      (service as any).currentModel = "Llama-3.2-1B-Instruct-q4f16_1-MLC";
 
       const status = await service.getHealthStatus();
 
@@ -311,6 +316,45 @@ describe("WebLLMService", () => {
 
       expect(toast.warning).not.toHaveBeenCalled();
       expect(CreateMLCEngine).toHaveBeenCalled();
+    });
+
+    it("Download-anyway re-entry re-runs the capability checks before the force-init (no bypass)", async () => {
+      // The toast's "Download anyway" action calls init(model, true). Force
+      // skips ONLY the network warning — never the capability gate, which
+      // sits before the `if (!force)` block. The no-bypass proof: WebGPU/f16
+      // probes are cached per instance, but the RAM floor reads deviceMemory
+      // at call time, so dropping RAM between the toast and the click can
+      // ONLY be caught if the gate genuinely re-executes on the re-entry.
+      (hasModelInCache as any).mockResolvedValue(false);
+      Object.defineProperty(navigator, "connection", {
+        value: { type: "cellular", effectiveType: "4g", saveData: false },
+        configurable: true,
+      });
+
+      await service.init();
+
+      expect(toast.warning).toHaveBeenCalledTimes(1);
+      const [, options] = (toast.warning as any).mock.calls[0];
+      expect(options.action.label).toBe("Download anyway");
+      expect(CreateMLCEngine).not.toHaveBeenCalled();
+
+      // The device degrades between the warning and the user's click.
+      Object.defineProperty(navigator, "deviceMemory", {
+        value: 3,
+        configurable: true,
+      });
+
+      await expect(options.action.onClick()).rejects.toThrow(
+        /Insufficient device memory for local AI models: 3 GB available/,
+      );
+
+      // The forced re-entry never reached engine creation: no engine, and
+      // the failure is accounted and surfaced like any gated init.
+      expect(CreateMLCEngine).not.toHaveBeenCalled();
+      expect((service as any).engine).toBeNull();
+      expect(service.getMetrics().initializationCount).toBe(2);
+      expect(service.getMetrics().errorCount).toBe(1);
+      expect((service as any).lastError).toMatch(/Insufficient device memory/);
     });
 
     it("increments initializationCount metric", async () => {
@@ -620,6 +664,117 @@ describe("WebLLMService", () => {
     });
   });
 
+  describe("idle-TTL × opportunistic-warmup interplay", () => {
+    // The TTL timer is the deliberate release path: after 30 minutes of
+    // inactivity the model is unloaded to free VRAM. The ONLY non-force
+    // init() caller is warmup() (the unlock listener and the editor-focus
+    // handler funnel into it), so if non-force init could re-acquire the
+    // model, every editor focus after an idle unload would resurrect a
+    // multi-GB engine the policy deliberately freed. These tests pin that
+    // the latch keeps it down and that ONLY the user's explicit retry
+    // (init(force=true), the settings toast action) reloads.
+
+    it("refuses a non-force init after the TTL timer unloads, without touching GPU resources", async () => {
+      // The WHOLE lifecycle runs under fake timers: the TTL timer is armed
+      // by init's own finally (resetUnloadTimer), so it must be armed while
+      // the fake clock controls time — arming it under real timers first
+      // would leave the 30-minute callback outside the test's control.
+      vi.useFakeTimers();
+      try {
+        await service.init();
+        expect(service.isModelLoaded()).toBe(true);
+        const initsAfterLoad = service.getMetrics().initializationCount;
+        const createCallsAfterLoad =
+          vi.mocked(CreateMLCEngine).mock.calls.length;
+
+        // Fire the REAL 30-minute TTL callback (the same unload the timer
+        // triggers in production).
+        vi.advanceTimersByTime(30 * 60 * 1000 + 1);
+        await vi.runAllTimersAsync();
+        expect(service.isModelLoaded()).toBe(false);
+        expect(service.getCurrentModel()).toBe("");
+
+        // The opportunistic preload arrives (exactly what warmup issues) and
+        // must be REFUSED before any resource acquisition: no second engine
+        // creation, no extra initializationCount bump, no reset of the latch.
+        await expect(service.init()).rejects.toThrow(
+          /unloaded after 30 minutes of inactivity/,
+        );
+        expect(service.isModelLoaded()).toBe(false);
+        expect(vi.mocked(CreateMLCEngine).mock.calls.length).toBe(
+          createCallsAfterLoad,
+        );
+        expect(service.getMetrics().initializationCount).toBe(initsAfterLoad);
+        // And the skip is NAMED, not silent: an operator sees why the model
+        // did not come back.
+        expect(logger.info).toHaveBeenCalledWith(
+          expect.stringContaining("idle TTL"),
+        );
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("still refuses when the model was NOT cached — the latch is not a network gate", async () => {
+      // Deliberate contrast with the pre-download cost warning: even a
+      // cached-model check and the cellular/save-data toast must never run
+      // for a refused preload — the latch fires BEFORE init's network
+      // awareness, so the refused warmup cannot even prompt the user.
+      vi.useFakeTimers();
+      try {
+        await service.init();
+        vi.advanceTimersByTime(30 * 60 * 1000 + 1);
+        await vi.runAllTimersAsync();
+        (hasModelInCache as any).mockResolvedValue(false);
+
+        await expect(service.init()).rejects.toThrow(
+          /unloaded after 30 minutes of inactivity/,
+        );
+        expect(toast.warning).not.toHaveBeenCalled();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("lets the explicit forced init (user-confirmed retry) reload and clears the latch", async () => {
+      vi.useFakeTimers();
+      try {
+        await service.init();
+        vi.advanceTimersByTime(30 * 60 * 1000 + 1);
+        await vi.runAllTimersAsync();
+        expect(service.isModelLoaded()).toBe(false);
+
+        // The ONLY re-acquisition path: force=true, wired to the settings
+        // toast's "reload" action — re-acquisition must be deliberate.
+        await expect(service.init(undefined, true)).resolves.not.toThrow();
+        expect(service.isModelLoaded()).toBe(true);
+
+        // The latch is consumed: after the deliberate reload, the service
+        // behaves like a normally loaded engine again.
+        await expect(service.init()).resolves.not.toThrow();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it("does not latch on a manual unload — memory pressure and provider switches must stay warmup-recoverable", async () => {
+      // Negative control pinning the latch's SCOPE: only the idle-TTL path
+      // records "stay down". unload() callers like useMemoryPressure,
+      // ResourceManager's mutual exclusion and ProviderManager.setProvider
+      // release the engine for THEIR reason — a later plain warmup (unlock,
+      // editor focus) must still be able to reload.
+      await service.init();
+      await service.unload();
+      expect(service.isModelLoaded()).toBe(false);
+
+      await expect(service.init()).resolves.not.toThrow();
+      expect(service.isModelLoaded()).toBe(true);
+      expect(logger.info).not.toHaveBeenCalledWith(
+        expect.stringContaining("idle TTL"),
+      );
+    });
+  });
+
   describe("isModelLoaded", () => {
     it("returns true when engine loaded", async () => {
       await service.init();
@@ -635,18 +790,60 @@ describe("WebLLMService", () => {
       await service.unload();
       expect(service.isModelLoaded()).toBe(false);
     });
+
+    it("resets the current model to the empty string so getCurrentModel no longer reports it", async () => {
+      // "current" must mean currently loaded: after unload() the model name
+      // resets to the EMPTY STRING ("no model in memory") instead of reporting
+      // a model that no longer exists — and not even to the default id, which
+      // would still be a model the engine does not hold. SupportDiagnostics
+      // combines this with isModelLoaded() and coalesces the empty string to
+      // undefined; getHealthStatus() maps it to null.
+      await service.init("Llama-3.1-8B-Instruct-q4f16_1-MLC");
+      expect(service.getCurrentModel()).toBe(
+        "Llama-3.1-8B-Instruct-q4f16_1-MLC",
+      );
+
+      await service.unload();
+
+      expect(service.getCurrentModel()).toBe("");
+      expect(service.isModelLoaded()).toBe(false);
+    });
   });
 
   describe("getCurrentModel", () => {
     it("returns current model", async () => {
-      expect(service.getCurrentModel()).toBe(
-        "Llama-3.2-1B-Instruct-q4f16_1-MLC",
-      );
+      expect(service.getCurrentModel()).toBe("");
 
       await service.init("Llama-3.1-8B-Instruct-q4f16_1-MLC");
       expect(service.getCurrentModel()).toBe(
         "Llama-3.1-8B-Instruct-q4f16_1-MLC",
       );
+    });
+
+    it("returns the empty string after unload (no staleness)", async () => {
+      // The staleness contract, end to end: a non-default model is loaded,
+      // then unloaded — getCurrentModel() must return "" ("none"), never a
+      // model id the engine no longer holds. Also pins that getHealthStatus()
+      // maps the empty string to a null modelLoaded for its consumers.
+      await service.init("Llama-3.2-3B-Instruct-q4f16_1-MLC");
+      expect(service.getCurrentModel()).toBe(
+        "Llama-3.2-3B-Instruct-q4f16_1-MLC",
+      );
+
+      await service.unload();
+
+      expect(service.getCurrentModel()).toBe("");
+      const status = await service.getHealthStatus();
+      expect(status.modelLoaded).toBeNull();
+      expect(status.engineReady).toBe(false);
+    });
+
+    it("reports the empty string on a fresh instance (before any load)", async () => {
+      // The initial value carries the same contract as the post-unload one:
+      // a service that has never loaded anything must not advertise a model.
+      const fresh = new WebLLMService();
+      expect(fresh.getCurrentModel()).toBe("");
+      expect(fresh.isModelLoaded()).toBe(false);
     });
   });
 
@@ -678,6 +875,37 @@ describe("WebLLMService", () => {
       const init2 = service.init("Llama-3.2-3B-Instruct-q4f16_1-MLC");
       await expect(Promise.all([init1, init2])).resolves.not.toThrow();
       expect(CreateMLCEngine).toHaveBeenCalledTimes(1);
+    });
+
+    it("is idempotent for the already-loaded model", async () => {
+      // Warmup-triggered re-init must never reload the engine: when the
+      // requested model id matches the one currently loaded, init() is a
+      // no-op — no teardown, no second CreateMLCEngine call, no second
+      // initializationCount bump. This is what makes repeated focus-triggered
+      // warmups safe on a capable device.
+      await service.init("Llama-3.2-3B-Instruct-q4f16_1-MLC");
+      expect(CreateMLCEngine).toHaveBeenCalledTimes(1);
+      const countAfterFirst = service.getMetrics().initializationCount;
+
+      await service.init("Llama-3.2-3B-Instruct-q4f16_1-MLC");
+
+      expect(CreateMLCEngine).toHaveBeenCalledTimes(1);
+      expect(service.getMetrics().initializationCount).toBe(countAfterFirst);
+      expect(service.isModelLoaded()).toBe(true);
+    });
+
+    it("re-initializes when a DIFFERENT model is requested", async () => {
+      // The idempotency guard is model-scoped, not global: an explicit user
+      // model change must still create a new engine.
+      await service.init("Llama-3.2-3B-Instruct-q4f16_1-MLC");
+      expect(CreateMLCEngine).toHaveBeenCalledTimes(1);
+
+      await service.init("Llama-3.1-8B-Instruct-q4f16_1-MLC");
+
+      expect(CreateMLCEngine).toHaveBeenCalledTimes(2);
+      expect(service.getCurrentModel()).toBe(
+        "Llama-3.1-8B-Instruct-q4f16_1-MLC",
+      );
     });
   });
 

@@ -75,25 +75,38 @@ describe("ResourceManager", () => {
     vi.unstubAllGlobals();
   });
 
-  describe("shouldUseLocalLLM", () => {
+  describe("isHighEndDevice", () => {
     it("returns true if the device has >= 8GB RAM and >= 4 cores", () => {
       mockNavigator({ deviceMemory: 8, hardwareConcurrency: 8 });
-      expect(resourceManager.shouldUseLocalLLM()).toBe(true);
+      expect(resourceManager.isHighEndDevice()).toBe(true);
+    });
+
+    it("returns true on a device WITHOUT WebGPU — it is deliberately a RAM/CPU-only check", () => {
+      // Contract pin: isHighEndDevice() knows nothing about GPU availability.
+      // A high-end RAM/CPU tier on a GPU-less machine still qualifies as
+      // "high-end"; the WebGPU/f16 gate is canRunLocalLLM()'s job, and every
+      // production caller pairs this check with it before running WebLLM.
+      mockNavigator({
+        deviceMemory: 16,
+        hardwareConcurrency: 16,
+        gpu: undefined,
+      });
+      expect(resourceManager.isHighEndDevice()).toBe(true);
     });
 
     it("returns false if RAM < 8GB", () => {
       mockNavigator({ deviceMemory: 4, hardwareConcurrency: 8 });
-      expect(resourceManager.shouldUseLocalLLM()).toBe(false);
+      expect(resourceManager.isHighEndDevice()).toBe(false);
     });
 
     it("returns false if cores < 4", () => {
       mockNavigator({ deviceMemory: 16, hardwareConcurrency: 2 });
-      expect(resourceManager.shouldUseLocalLLM()).toBe(false);
+      expect(resourceManager.isHighEndDevice()).toBe(false);
     });
 
     it("uses 4GB/4cores default when navigator does not report", () => {
       mockNavigator({});
-      expect(resourceManager.shouldUseLocalLLM()).toBe(false);
+      expect(resourceManager.isHighEndDevice()).toBe(false);
     });
   });
 
@@ -533,7 +546,7 @@ describe("ResourceManager", () => {
 
     it("unloads RAG engine and waits cooldown on <=8GB RAM", async () => {
       (resourceManager as any).activeComponent = "rag";
-      mockNavigator({ deviceMemory: 8 });
+      mockNavigator({ deviceMemory: 8, gpu: { requestAdapter: vi.fn() } });
       await resourceManager.switchToWebLLM();
       expect(ragEngine.unload).toHaveBeenCalled();
       expect(logger.info).toHaveBeenCalledWith(
@@ -547,7 +560,7 @@ describe("ResourceManager", () => {
 
     it("skips RAG unload on >8GB RAM", async () => {
       (resourceManager as any).activeComponent = "rag";
-      mockNavigator({ deviceMemory: 12 });
+      mockNavigator({ deviceMemory: 12, gpu: { requestAdapter: vi.fn() } });
       await resourceManager.switchToWebLLM();
       expect(ragEngine.unload).not.toHaveBeenCalled();
       expect((resourceManager as any).activeComponent).toBe("webllm");
@@ -555,10 +568,43 @@ describe("ResourceManager", () => {
 
     it("switches from null active component", async () => {
       (resourceManager as any).activeComponent = null;
-      mockNavigator({ deviceMemory: 8 });
+      mockNavigator({ deviceMemory: 8, gpu: { requestAdapter: vi.fn() } });
       await resourceManager.switchToWebLLM();
       expect(ragEngine.unload).toHaveBeenCalled();
       expect((resourceManager as any).activeComponent).toBe("webllm");
+    });
+
+    it("refuses GPU-less devices BEFORE any resource work (defensive capability gate)", async () => {
+      // Mirrors WebLLMService's surface check: without a WebGPU surface the
+      // switch must throw BEFORE the RAG unload, the GC cooldown, and the
+      // exclusive-component flag flip — none of that work is useful on a
+      // device that can never run a WebLLM engine.
+      (resourceManager as any).activeComponent = "rag";
+      mockNavigator({ deviceMemory: 8, gpu: undefined });
+
+      await expect(resourceManager.switchToWebLLM()).rejects.toThrow(
+        "WebGPU is not supported in this browser",
+      );
+
+      // Nothing was acquired or released: no RAG unload, no flag flip.
+      expect(ragEngine.unload).not.toHaveBeenCalled();
+      expect((resourceManager as any).activeComponent).toBe("rag");
+      // The refusal is logged so operators see why the switch failed.
+      expect(logger.warn).toHaveBeenCalledWith(
+        "[ResourceManager] WebLLM switch refused: no WebGPU surface in this browser",
+      );
+    });
+
+    it("switchToRAG is NOT gated on WebGPU (embeddings work without a GPU)", async () => {
+      // The gate is deliberately one-sided: RAG embeddings do not require
+      // WebGPU, so switchToRAG must keep working on a GPU-less device.
+      (resourceManager as any).activeComponent = "webllm";
+      mockNavigator({ deviceMemory: 8, gpu: undefined });
+
+      await resourceManager.switchToRAG();
+
+      expect(webLLMService.unload).toHaveBeenCalled();
+      expect((resourceManager as any).activeComponent).toBe("rag");
     });
   });
 
@@ -718,24 +764,24 @@ describe("ResourceManager", () => {
     });
   });
 
-  describe("isLowEndDevice edge cases", () => {
+  describe("isHighEndDevice edge cases", () => {
     it("uses defaults when deviceMemory and hardwareConcurrency are undefined", () => {
       mockNavigator({
         deviceMemory: undefined,
         hardwareConcurrency: undefined,
       });
-      expect(resourceManager.shouldUseLocalLLM()).toBe(false);
+      expect(resourceManager.isHighEndDevice()).toBe(false);
     });
 
     it("correctly identifies low end with exact thresholds", () => {
       mockNavigator({ deviceMemory: 8, hardwareConcurrency: 4 });
-      expect(resourceManager.shouldUseLocalLLM()).toBe(true);
+      expect(resourceManager.isHighEndDevice()).toBe(true);
 
       mockNavigator({ deviceMemory: 7.9, hardwareConcurrency: 4 });
-      expect(resourceManager.shouldUseLocalLLM()).toBe(false);
+      expect(resourceManager.isHighEndDevice()).toBe(false);
 
       mockNavigator({ deviceMemory: 8, hardwareConcurrency: 3.9 });
-      expect(resourceManager.shouldUseLocalLLM()).toBe(false);
+      expect(resourceManager.isHighEndDevice()).toBe(false);
     });
   });
 });

@@ -323,6 +323,8 @@ export class DiskBackupService {
       .replace(/[/\\]/g, "_")
       .replace(/\.{2,}/g, "_")
       .replace(/^\.+/, "")
+      // Block Windows-unsafe characters that cause download failures or path issues.
+      .replace(/[*?:"<>|]/g, "_")
       .trim();
     cleaned = Array.from(cleaned)
       .filter((ch) => {

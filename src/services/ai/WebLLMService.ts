@@ -20,6 +20,17 @@ interface WebLLMGenerateOptions {
   complexity?: "simple" | "complex";
 }
 
+/**
+ * The precise reason a device cannot run local AI, enumerated in the same
+ * order as the capability ladder. `getCapabilityBlocker()` resolves to
+ * `null` exactly when the device is capable — i.e. when canRunLocalLLM()
+ * is true and assertCanRunLocalLLM() would not throw.
+ */
+export type WebLLMCapabilityBlocker =
+  | "webgpu-unavailable"
+  | "shader-f16-unsupported"
+  | "insufficient-memory";
+
 interface WebLLMHealthStatus {
   healthy: boolean;
   webGPUSupported: boolean;
@@ -60,6 +71,11 @@ function createAbortError(message = "WebLLM generation aborted"): DOMException {
 // Cache for dynamically imported module
 let mlcModule: typeof WebLLM | null = null;
 
+// Default timeout for GPU inference — without this, a degenerate prompt or a
+// slow GPU could cause the generation to run indefinitely when no caller-provided
+// AbortSignal is supplied.
+const GPU_INFERENCE_TIMEOUT_MS = 120_000;
+
 // Dynamically import MLC-WebLLM only when needed
 async function getMLC(): Promise<typeof WebLLM> {
   if (mlcModule) {return mlcModule;}
@@ -76,7 +92,10 @@ async function getMLC(): Promise<typeof WebLLM> {
 export class WebLLMService {
   private engine: WebLLM.MLCEngine | null = null;
   private isInitializing = false;
-  private currentModel = "Llama-3.2-1B-Instruct-q4f16_1-MLC";
+  // Empty string means "no model loaded" — a fresh service and an unloaded
+  // one must both report the same honest "none" via getCurrentModel(), not
+  // a default model id that is not actually in memory.
+  private currentModel = "";
   public progressCallback:
     ((progress: { text: string; progress: number }) => void) | null = null;
   private progressListeners = new Set<
@@ -95,6 +114,17 @@ export class WebLLMService {
   private f16Supported = false;
   private unloadTimer: ReturnType<typeof setTimeout> | null = null;
   private readonly TTL_MS = 30 * 60 * 1000; // 30 minutes of inactivity
+  /**
+   * Latch set ONLY by the idle-TTL callback: the engine was released by the
+   * 30-minute idle policy, so opportunistic init callers (warmup — the unlock
+   * listener and the editor-focus handler, the only non-force init callers)
+   * must not silently resurrect it. Cleared exclusively by init(force=true),
+   * i.e. the user's explicit re-acquisition — never by unload() itself (the
+   * TTL path sets the latch and THEN unloads) and never by other unload
+   * callers (memory pressure, provider switch, vault lock): those must stay
+   * recoverable by a plain warmup, which the vault re-unlock flow relies on.
+   */
+  private unloadedByIdleTimer = false;
 
   // Device budget (audit §4.3 item 5): engine init served from the model
   // cache (no download) must stay under 60 s. Exceeding it is a device/
@@ -155,6 +185,10 @@ export class WebLLMService {
     if (this.unloadTimer) {clearTimeout(this.unloadTimer);}
     this.unloadTimer = setTimeout(() => {
       logger.info("[WebLLM] TTL expired. Unloading model to free VRAM");
+      // Record WHY the engine went away before unloading: the latch is what
+      // lets init() tell "idle-policy release — stay down" apart from the
+      // other unload reasons that a plain warmup may recover from.
+      this.unloadedByIdleTimer = true;
       this.unload();
     }, this.TTL_MS);
   }
@@ -168,6 +202,23 @@ export class WebLLMService {
 
   /**
    * Checks if WebGPU is supported in the current environment.
+   *
+   * The name describes the RETURN value precisely: whether a WebGPU adapter
+   * can be acquired (surface present + an adapter answers). It is NOT a
+   * full runnability check — shader-f16 and the 4 GB RAM floor are separate
+   * gates (see assertCanRunLocalLLM()/canRunLocalLLM()).
+   *
+   * SIDE EFFECT (part of the contract, relied on by assertCanRunLocalLLM
+   * and getHealthStatus): a successful adapter acquisition also populates
+   * this.f16Supported from the adapter's feature set. A rejection or a
+   * missing surface caches webGpuSupported=false (and leaves the f16
+   * verdict at its false default) — the catch path is what makes probe
+   * failures behave as "not supported" everywhere.
+   *
+   * Cached after the first probe for the service instance's lifetime; a GPU
+   * appearing later is not observed. Pair with assertCanRunLocalLLM() when
+   * the precise blocker (no surface / no shader-f16 / low RAM) is needed as
+   * an error message.
    */
   async isWebGPUSupported(): Promise<boolean> {
     if (this.webGpuSupported !== null) {return this.webGpuSupported;}
@@ -223,6 +274,71 @@ export class WebLLMService {
   }
 
   /**
+   * Throws the precise capability error when the device cannot run WebLLM.
+   *
+   * The single source of truth for the hard capability blockers — no WebGPU
+   * surface, an adapter without shader-f16, or device memory below the
+   * 4 GB floor — shared by init(), generateText() and ProviderManager's
+   * generation path so the messages can never drift and every entry point
+   * surfaces the same fail-closed error. This is the throw-based mirror of
+   * canRunLocalLLM(): a device that passes this check is exactly a device
+   * for which canRunLocalLLM() is true (in particular, a forced webllm
+   * selection on a low-RAM device fails HERE with the memory error instead
+   * of the misleading "engine not initialized" state error). All checks are
+   * cached after the first probe, so calling this on a capable device is
+   * ~free.
+   */
+  async assertCanRunLocalLLM(): Promise<void> {
+    const blocker = await this.getCapabilityBlocker();
+    if (blocker === "webgpu-unavailable") {
+      throw new Error("WebGPU is not supported in this browser");
+    }
+    if (blocker === "shader-f16-unsupported") {
+      throw new Error(
+        "WebGPU adapter does not support shader-f16 (half-precision). " +
+          "Local AI models require a GPU with f16 support. " +
+          "Use a cloud provider (Gemini, OpenAI, etc.) instead.",
+      );
+    }
+    if (blocker === "insufficient-memory") {
+      const deviceMemory = getNavigatorExtensions().deviceMemory || 4;
+      throw new Error(
+        `Insufficient device memory for local AI models: ${deviceMemory} GB ` +
+          "available, 4 GB required. " +
+          "Use a cloud provider (Gemini, OpenAI, etc.) instead.",
+      );
+    }
+  }
+
+  /**
+   * Returns the precise capability blocker for this device, or `null` when
+   * the device can run local AI.
+   *
+   * The non-throwing mirror of assertCanRunLocalLLM(): the SAME ladder
+   * (WebGPU surface -> shader-f16 -> >= 4 GB RAM), the SAME cache, so both
+   * gates can never disagree — assertCanRunLocalLLM() is implemented on top
+   * of this method and merely maps each blocker to its user-facing error.
+   * Support diagnostics consumes the enum to tell end users WHY local AI
+   * is unavailable (missing WebGPU vs. f16 vs. RAM) instead of a generic
+   * "WebGPU or RAM required" message. Never throws: a device that reaches
+   * the end of the ladder is capable and yields `null`.
+   */
+  async getCapabilityBlocker(): Promise<WebLLMCapabilityBlocker | null> {
+    const webGpuSupported = await this.isWebGPUSupported();
+    if (!webGpuSupported) {
+      return "webgpu-unavailable";
+    }
+    if (!this.f16Supported) {
+      return "shader-f16-unsupported";
+    }
+    const deviceMemory = getNavigatorExtensions().deviceMemory || 4;
+    if (deviceMemory < 4) {
+      return "insufficient-memory";
+    }
+    return null;
+  }
+
+  /**
    * Returns health status of the WebLLM service.
    */
   async getHealthStatus(): Promise<WebLLMHealthStatus> {
@@ -236,7 +352,7 @@ export class WebLLMService {
       webGPUSupported: webGpuSupported,
       f16Supported: this.f16Supported,
       engineReady: this.engine !== null,
-      modelLoaded: this.currentModel,
+      modelLoaded: this.currentModel || null,
       isInitializing: this.isInitializing,
       deviceMemoryGB: deviceMemory,
       hardwareConcurrency,
@@ -253,6 +369,29 @@ export class WebLLMService {
     return { ...this.metrics };
   }
 
+  /**
+   * Device-capability check ONLY: whether THIS DEVICE can run local LLM
+   * inference at all (WebGPU surface present, adapter supports shader-f16,
+   * and device memory is at least the 4 GB floor).
+   *
+   * Deliberately says NOTHING about whether a model is downloaded or the
+   * engine is ready (see isModelLoaded()/getHealthStatus()), about network
+   * connectivity, or about whether a specific generation request will
+   * succeed. A `true` verdict does not mean a model is loaded; a `false`
+   * verdict means every WebLLM entry point (init, generateText, warmup)
+   * will refuse (including the opportunistic preload paths: warmup is a
+   * CALLER that consults the verdict, not an entry point that bypasses it).
+   *
+   * Non-throwing by design: probe failures (e.g. requestAdapter rejecting)
+   * surface as `false`. Callers that need the PRECISE reason as an error
+   * should use assertCanRunLocalLLM() instead — it throws the
+   * capability-specific message (no surface / no shader-f16 / low RAM) and
+   * shares this method's verdict by construction.
+   *
+   * Caching: the WebGPU surface verdict is computed once per service
+   * instance and cached for its lifetime (the RAM floor is read per call).
+   * A GPU appearing after the first probe is not observed.
+   */
   async canRunLocalLLM(): Promise<boolean> {
     const status = await this.getHealthStatus();
     return status.canRunLocalLLM;
@@ -260,6 +399,20 @@ export class WebLLMService {
 
   /**
    * Initializes the WebLLM engine with the specified model.
+   *
+   * Safe to call repeatedly: an init for the already-loaded model is a
+   * no-op (model-scoped idempotency in initializeInternal); a DIFFERENT
+   * model id re-initializes.
+   *
+   * @param modelId - Model to load; defaults to the hardware-aware
+   *   recommendation when omitted.
+   * @param force - Skips ONLY the network-awareness gate (the cellular /
+   *   save-data "Data Usage Warning" shown when the model is not cached —
+   *   this is what the toast's "Download anyway" action calls). It NEVER
+   *   bypasses the capability gates: assertCanRunLocalLLM() runs on every
+   *   path, so a forced init on a device that cannot run local AI still
+   *   fails closed with the capability error, and the pinned-model
+   *   registry check applies with or without force.
    */
   async init(modelId?: string, force: boolean = false): Promise<void> {
     if (this.initializationPromise) {return this.initializationPromise;}
@@ -279,6 +432,38 @@ export class WebLLMService {
     modelId?: string,
     force: boolean = false,
   ): Promise<void> {
+    // Idempotent for the already-loaded model: a warmup that races an active
+    // session (e.g. focus-triggered preload while the engine is in use) must
+    // not tear down and reload a multi-GB model it already has. A DIFFERENT
+    // model id still re-initializes (explicit user model change), and the
+    // concurrent-call dedup below is unaffected.
+    if (this.engine !== null && modelId === this.currentModel) {
+      logger.debug(
+        "[WebLLM] init skipped: requested model already loaded",
+        { model: this.currentModel },
+      );
+      return;
+    }
+    // Idle-unload latch (checked BEFORE any resource acquisition, so a
+    // refused opportunistic preload does not even touch the GPU resource
+    // switch or bump metrics): after the TTL timer released the model, a
+    // non-force init — which only warmup ever issues — must not re-acquire
+    // a multi-GB engine the idle policy deliberately freed. The user's
+    // explicit retry (init(force=true), the settings toast action) is the
+    // only path that may reload, making re-acquisition always deliberate.
+    if (this.unloadedByIdleTimer) {
+      if (!force) {
+        logger.info(
+          "[WebLLM] init skipped: model was unloaded by the idle TTL " +
+            "timer — opportunistic preload does not resurrect it",
+        );
+        throw new Error(
+          "Local AI model was unloaded after 30 minutes of inactivity. " +
+            "Reload it explicitly from the AI settings.",
+        );
+      }
+      this.unloadedByIdleTimer = false;
+    }
     if (this.isInitializing) {return;}
     this.isInitializing = true;
     this.metrics.initializationCount++;
@@ -294,21 +479,12 @@ export class WebLLMService {
       initGeneration = this.lifecycleGeneration;
       await resourceManager.switchToWebLLM();
 
-      const webGpuSupported = await this.isWebGPUSupported();
-      if (!webGpuSupported) {
-        throw new Error("WebGPU is not supported in this browser");
-      }
-
-      // MLC models use q4f16 quantization which requires shader-f16.
-      // If the adapter lacks it, CreateMLCEngine will fail with an
-      // uncaptured GPU error. Bail early with a clear message.
-      if (!this.f16Supported) {
-        throw new Error(
-          "WebGPU adapter does not support shader-f16 (half-precision). " +
-            "Local AI models require a GPU with f16 support. " +
-            "Use a cloud provider (Gemini, OpenAI, etc.) instead.",
-        );
-      }
+      // Capability gate (shared with generateText and ProviderManager's
+      // generation path so the messages can never drift): bail early with a
+      // clear message before CreateMLCEngine can fail with an uncaptured GPU
+      // error on devices that cannot run WebLLM (MLC models use q4f16
+      // quantization, which requires shader-f16).
+      await this.assertCanRunLocalLLM();
 
       const deviceMemory =
         getNavigatorExtensions().deviceMemory || 4;
@@ -492,6 +668,13 @@ export class WebLLMService {
           ) {
             throw createAbortError();
           }
+          // Capability guard (defense in depth): a caller that reaches
+          // generateText without going through ProviderManager's generation
+          // path still surfaces the precise capability error on unsupported
+          // devices instead of the misleading "engine not initialized" state
+          // error. Cached after the first probe, so ~free on capable devices.
+          await this.assertCanRunLocalLLM();
+
           const engine = this.engine;
           if (!engine) {
             throw new Error(
@@ -520,11 +703,20 @@ export class WebLLMService {
               content: buildSafeUserContent(prompt),
             } as WebLLM.ChatCompletionUserMessageParam);
 
-            const response = await engine.chat.completions.create({
-              messages,
-              temperature: options?.temperature ?? 0.7,
-              max_tokens: options?.max_tokens ?? 2048,
-            });
+            const response = await Promise.race([
+              engine.chat.completions.create({
+                messages,
+                temperature: options?.temperature ?? 0.7,
+                max_tokens: options?.max_tokens ?? 2048,
+              }),
+              new Promise<never>((_, reject) => {
+                const timer = setTimeout(
+                  () => reject(new Error("GPU inference timeout")),
+                  GPU_INFERENCE_TIMEOUT_MS,
+                );
+                signal?.addEventListener("abort", () => clearTimeout(timer), { once: true });
+              }),
+            ]);
             if (
               signal?.aborted ||
               item.cancelled ||
@@ -615,6 +807,11 @@ export class WebLLMService {
     const engine = this.engine;
     this.engine = null;
     this.modelInstalledAt = null;
+    // Reset the model name too: leaving it stale made getCurrentModel()
+    // report a model that was no longer loaded ("current" must mean current).
+    // Empty string = no model in memory; SupportDiagnostics coalesces this
+    // to undefined and getHealthStatus() maps it to null.
+    this.currentModel = "";
     this.metrics.firstSummaryLatencyMs = null;
     mlcModule = null;
     if (!engine) {return;}

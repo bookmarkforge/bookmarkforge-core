@@ -122,9 +122,16 @@ export function initProductionMonitor(): void {
   // In production CSP is enforced via nginx header; violations fire here.
   addListener(document, "securitypolicyviolation", (e) => {
     const ev = e as SecurityPolicyViolationEvent;
+    // Redact sensitive query parameters from blockedURI to prevent PII
+    // (session tokens, JWTs, OAuth codes) from leaking into error stores
+    // or Sentry. Only log the directive and truncated, sanitized URI.
+    const rawURI = ev.blockedURI ?? "";
+    const sanitized = rawURI
+      .slice(0, 200)
+      .replace(/[?&](?:session|sid|jwt|code|token|key|auth|access_token|refresh_token)=[^&]*/gi, "=[REDACTED]");
     logger.warn("[ProductionMonitor] CSP violation", {
       directive: ev.violatedDirective,
-      blockedURI: ev.blockedURI?.slice(0, 200),
+      blockedURI: sanitized,
     });
     recordCspViolation();
   });

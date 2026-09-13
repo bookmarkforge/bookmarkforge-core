@@ -175,6 +175,12 @@ const DocumentManager = ({ onSelectDocument }: { onSelectDocument: (id: string) 
     useEffect(() => cancelMutations, [cancelMutations, selectedFolderId]);
 
     useEffect(() => {
+      if (isSemanticSearch) {
+        void ragEngine.prefetch();
+      }
+    }, [isSemanticSearch]);
+
+    useEffect(() => {
       if (isSemanticSearch && debouncedSearchTerm.trim().length > 2) {
         setSemanticSearchError(false);
         setSemanticResults((prev) => (prev.length > 0 ? [] : prev));

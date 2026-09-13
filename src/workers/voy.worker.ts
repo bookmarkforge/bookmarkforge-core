@@ -29,6 +29,10 @@ let cachedMemoryUsage = 0;
 // typed error if searches are pending, forcing the caller to flush.
 let pendingSearches = 0;
 let workerFatal = false;
+// Tracks committed-but-unpersisted documents: SET_KEY must not wipe state
+// that has not been persisted to IndexedDB yet, otherwise the data is lost
+// (no LOAD_INDEX can rehydrate what was never saved).
+let isDirty = false;
 
 function isOperationTimeout(error: unknown): boolean {
   return (
@@ -258,23 +262,26 @@ function commitBuffer() {
   // Validate and normalize the whole batch before mutating the committed
   // index. This prevents a malformed item halfway through a batch from
   // deleting an existing document and leaving the buffer partially applied.
-  const prepared = uncommittedDocuments.map((item) => ({
-    item,
-    embedding: item.embedding ?? item.embeddings,
-  }));
-  if (
-    prepared.some(
-      ({ item, embedding }) =>
-        !item.id ||
-        !item.title ||
-        !item.url ||
-        !Array.isArray(embedding) ||
-        embedding.length === 0 ||
-        embedding.length > MAX_EMBEDDING_SIZE ||
-        !embedding.every((value) => Number.isFinite(value)),
-    )
-  ) {
-    throw new Error("Invalid embedding payload in pending vector batch");
+  const prepared = uncommittedDocuments
+    .map((item) => ({
+      item,
+      embedding: item.embedding ?? item.embeddings,
+    }))
+    .filter(({ item, embedding }) =>
+      item.id &&
+      item.title &&
+      item.url &&
+      Array.isArray(embedding) &&
+      embedding.length > 0 &&
+      embedding.length <= MAX_EMBEDDING_SIZE &&
+      embedding.every((value) => Number.isFinite(value)),
+    );
+
+  if (prepared.length === 0) {
+    // All items were invalid — clear the buffer to prevent an infinite
+    // crash loop where the same bad batch is retried on every operation.
+    uncommittedDocuments = [];
+    return;
   }
 
   const incomingIds = new Set(prepared.map(({ item }) => item.id));
@@ -285,6 +292,8 @@ function commitBuffer() {
       0,
     );
   cachedMemoryUsage = Math.max(0, cachedMemoryUsage - replacedMemory);
+  const previousDocuments = documents;
+  const previousVoy = voy;
   documents = documents.filter((d) => !incomingIds.has(d.id));
   if (quantizedDocuments.length > 0) {
     quantizedDocuments = quantizedDocuments.filter(
@@ -296,8 +305,26 @@ function commitBuffer() {
     const processed = processEmbedding(item.id, item.title, item.url, embedding!);
     documents.push(processed);
   }
-  voy = new Voy({ embeddings: documents });
+  try {
+    voy = new Voy({ embeddings: documents });
+  } catch (voyError) {
+    // Roll back the mutated documents array and restore the previous
+    // Voy instance so the worker stays usable. Keep uncommittedDocuments
+    // intact so the caller can retry or flush — and prevent an infinite
+    // retry loop by setting workerFatal.
+    documents = previousDocuments;
+    voy = previousVoy;
+    cachedMemoryUsage = Math.max(0, cachedMemoryUsage - replacedMemory);
+    workerFatal = true;
+    logger.error("[VoyWorker] commitBuffer: Voy construction failed — worker disabled", {
+      error: voyError instanceof Error ? voyError.message : String(voyError),
+    });
+    throw voyError;
+  }
   uncommittedDocuments = [];
+  // Documents are now committed in memory but not yet persisted to IndexedDB.
+  // SET_KEY must refuse to wipe state while this flag is set.
+  isDirty = true;
 }
 
 const OPERATION_TIMEOUT_MS = 15000;
@@ -595,6 +622,20 @@ async function handleWorkerMessage(e: MessageEvent): Promise<void> {
           });
           return;
         }
+        // HIGH-severity fix: refuse SET_KEY when committed documents have
+        // not been persisted to IndexedDB yet. Without this guard, SET_KEY
+        // wipes the in-memory index and the next LOAD_INDEX finds nothing
+        // because SAVE_INDEX was never called — the data is permanently lost.
+        if (isDirty) {
+          self.postMessage({
+            id,
+            type: "ERROR",
+            error:
+              "REFUSE_KEY_REPLACE_DIRTY: " +
+              "SAVE_INDEX first — committed documents are not yet persisted.",
+          });
+          return;
+        }
         // MEDIUM #8 (third review pass): guard against in-flight searches
         // so we don't null out `voy` mid-await.
         if (pendingSearches > 0) {
@@ -648,8 +689,9 @@ async function handleWorkerMessage(e: MessageEvent): Promise<void> {
         documents = [];
         quantizedDocuments = [];
         uncommittedDocuments = [];
-        rotationMatrix = null;
+        voy = null;
         cachedMemoryUsage = 0;
+        isDirty = false;
 
         const embeddings = payload.embeddings || [];
         for (const item of embeddings) {
@@ -871,6 +913,7 @@ async function handleWorkerMessage(e: MessageEvent): Promise<void> {
         voy = null;
         rotationMatrix = null;
         cachedMemoryUsage = 0;
+        isDirty = false;
         self.postMessage({ id, type: "SUCCESS" });
         break;
 
@@ -915,6 +958,8 @@ async function handleWorkerMessage(e: MessageEvent): Promise<void> {
             derivedAesKey,
           );
           await idb.set("indexData", envelope);
+          // Documents are now persisted — SET_KEY can safely proceed.
+          isDirty = false;
           self.postMessage({
             id,
             type: "SUCCESS",
@@ -1129,6 +1174,15 @@ async function handleWorkerMessage(e: MessageEvent): Promise<void> {
         ? "Internal worker error"
         : message.replace(/\/.*?\/[^:]*/g, "[path]").substring(0, 200);
     self.postMessage({ id, type: "ERROR", error: sanitized });
+    // Mark the worker as fatal for non-transient errors (not validation
+    // or timeout) so subsequent messages are rejected immediately instead
+    // of failing repeatedly and filling the error log.
+    if (
+      !message.includes("Validation failed") &&
+      !message.startsWith("Timeout:")
+    ) {
+      workerFatal = true;
+    }
   }
 }
 

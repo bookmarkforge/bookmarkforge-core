@@ -86,6 +86,9 @@ export default defineConfig({
       "**/dist-extension/**",
       "**/extension/**",
       "tests/e2e/**",
+      // Public-relay Playwright suite (its own dev server, see
+      // playwright.public-relay.config.ts) — a browser suite like tests/e2e.
+      "tests/e2e-public-relay/**",
       "src/tests/scripts/check-rxdb17.test.ts",
       "src/tests/utils/crypto-core.fuzz.test.ts",
     ],

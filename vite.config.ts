@@ -18,6 +18,15 @@
  *        runtime integrity check (src/utils/bundleIntegrity.ts) treats the
  *        absence of this manifest in production as a hard failure, so the
  *        plugin is required for a functional production build.
+ *      * ADR-039: writes dist/integrity-manifest.json — the single source
+ *        of truth for the SW-side verification surface.
+ *  - bookmarkforge:sw-integrity-embed — reads that manifest and embeds it
+ *        plus a hash-verification runtime (scripts/sw-integrity-runtime.js)
+ *        at the top of the Workbox-generated dist/sw.js, so EVERY served
+ *        chunk (lazy ones included) is hash-checked inside the service
+ *        worker before it reaches the page (mismatch ⇒ 504 + cache
+ *        eviction + bundle-integrity-failed notification). Its closeBundle
+ *        is `order: "post"` so it runs after Workbox generated sw.js.
  *
  * Build-time env inlining: VITE_APP_VERSION is defined here so
  * `import.meta.env.VITE_APP_VERSION` resolves in the bundle without a .env.
@@ -68,6 +77,73 @@ function readPackageVersion(root: string): string {
 }
 
 /**
+ * ADR-039: source of the SW-side integrity runtime
+ * (scripts/sw-integrity-runtime.js). Embedded verbatim into the generated
+ * dist/sw.js by swIntegrityEmbedPlugin (see below) and kept as a standalone
+ * file so it can be unit-tested in isolation — vitest executes it against a
+ * synthetic self/FetchEvent environment.
+ */
+function readSwIntegrityRuntime(): string {
+  return readFileSync(
+    join(process.cwd(), "scripts", "sw-integrity-runtime.js"),
+    "utf8",
+  );
+}
+
+/**
+ * ADR-039: embeds the integrity manifest + verification runtime into the
+ * Workbox-generated dist/sw.js. Ordering: vite-plugin-pwa writes sw.js inside
+ * ITS OWN closeBundle hook, and Rollup runs same-order closeBundle hooks in
+ * plain plugin-array order (verified empirically — a "reverse order"
+ * assumption made this hook run BEFORE sw.js existed and silently skip).
+ * Declaring the hook `order: "post"` guarantees it runs after all
+ * no-order hooks (VitePWA's generator and integrityManifestPlugin's
+ * manifest writer), regardless of array position.
+ *
+ * The runtime is PREPENDED at the very top of sw.js so it installs before
+ * any Workbox code, and the manifest is read from dist/integrity-manifest.
+ * json written moments earlier by integrityManifestPlugin — a single source
+ * of truth for the verified surface.
+ */
+function swIntegrityEmbedPlugin(): Plugin {
+  return {
+    name: "bookmarkforge:sw-integrity-embed",
+    apply: "build",
+    closeBundle: {
+      // ADR-039: run after VitePWA's closeBundle has generated sw.js.
+      order: "post",
+      sequential: true,
+      handler() {
+        const swPath = join("dist", "sw.js");
+        const manifestPath = join("dist", "integrity-manifest.json");
+        if (!existsSync(swPath) || !existsSync(manifestPath)) {
+          return; // no SW (e.g. PWA disabled) or no manifest — nothing to guard
+        }
+        let sw = readFileSync(swPath, "utf8");
+        // Idempotency: strip any previous embed — closeBundle runs on every
+        // rebuild and must not stack duplicate runtimes.
+        sw = sw.replace(
+          /\/\/ __BMF_SW_INTEGRITY_EMBED_START__[\s\S]*?\/\/ __BMF_SW_INTEGRITY_EMBED_END__\n?/g,
+          "",
+        );
+        const embed =
+          "// __BMF_SW_INTEGRITY_EMBED_START__ (ADR-039; injected by bookmarkforge:sw-integrity-embed)\n" +
+          // Trailing semicolon is REQUIRED: the runtime body opens with an
+          // IIFE `(function(){…})()` and without it the assignment would
+          // ASI-join into a call of the object literal (caught by the
+          // artifact smoke check — the SW would throw at eval time).
+          "self.__BMF_SW_INTEGRITY_MANIFEST__ = " +
+          readFileSync(manifestPath, "utf8").trim() +
+          ";\n" +
+          readSwIntegrityRuntime() +
+          "\n// __BMF_SW_INTEGRITY_EMBED_END__\n";
+        writeFileSync(swPath, embed + sw);
+      },
+    },
+  };
+}
+
+/**
  * Recreates the BookmarkForge build-time integrity manifest + SRI hashes.
  * See the file header for why this exists. Production-only (`apply`).
  */
@@ -98,11 +174,17 @@ function integrityManifestPlugin(): Plugin {
       const files: Record<string, string> = {};
       for (const file of walkDir(outDir)) {
         const rel = relative(outDir, file);
-        if (rel.split(sep).includes("..") || rel === "index.html") {
-          // index.html contains this manifest, so including its digest would
-          // create a self-referential hash. Runtime checks validate the
-          // emitted assets instead; the HTML itself is protected by its
-          // server transport/CSP and the SRI attributes below.
+        if (
+          rel.split(sep).includes("..") ||
+          rel === "index.html" ||
+          rel === "sw.js"
+        ) {
+          // index.html contains this manifest and sw.js embeds the SW-side
+          // copy (ADR-039), so hashing either would be self-referential —
+          // and the sw.js embed below would invalidate the stored digest.
+          // The HTML is protected by server transport + SRI attributes; the
+          // SW is integrity-verified on every update check by the browser's
+          // byte-diff and guarded in-flight by its own embedded runtime.
           continue;
         }
         files[`/${rel.split(sep).join("/")}`] = sha256Hex(readFileSync(file));
@@ -113,6 +195,15 @@ function integrityManifestPlugin(): Plugin {
         buildTime: new Date().toISOString(),
         files,
       };
+
+      // ── ADR-039: persist the manifest for tooling/diagnostics and as
+      // the single source of truth for the SW embed (swIntegrityEmbedPlugin
+      // reads this file in its own closeBundle, declared `order: "post"` so
+      // it runs after BOTH this hook and VitePWA's Workbox generation).
+      writeFileSync(
+        join(outDir, "integrity-manifest.json"),
+        JSON.stringify(manifest, null, 2) + "\n",
+      );
       let html = readFileSync(indexHtmlPath, "utf8");
       // SRI: hash straight from the on-disk files (the hashes in
       // `files`) so integrity attributes always match what is actually
@@ -168,6 +259,16 @@ export default defineConfig(({ mode, isPreview }) => ({
           /^\/404/,
           /^\/offline/,
           /^\/privacy-and-terms/,
+          /^\/[a-z]{2}\/privacy-and-terms/,
+          // SEO: the landing pages (served at / and /es/ with a 200
+          // rewrite) are the only indexable content. If the SW precached
+          // shell answered these navigations, users with the SW installed
+          // would see the private SPA instead of the marketing page — and
+          // crawlers executing the SW would index an empty shell. Always
+          // go to the network for them.
+          /^\/(?:landing\.html)?$/,
+          /^\/(?:es|fr|de|pt|it)\/?$/,
+          /^\/pocket-alternative/,
         ],
         globPatterns: [
           "**/*.{js,css,html,ico,png,svg,woff2,json}",
@@ -179,6 +280,10 @@ export default defineConfig(({ mode, isPreview }) => ({
         // demand.
         globIgnores: [
           "**/assets/ort-wasm-*",
+          // The integrity manifest is verified by the SW integrity runtime
+          // (sw-integrity-runtime.js) and must NOT be precached — a poisoned
+          // precache entry could serve a tampered manifest with relaxed hashes.
+          "**/integrity-manifest.json",
           // These feature bundles are reached only after navigating to PDF,
           // import or editor flows. Keep them out of the install-time
           // precache and cache them on first use via runtimeCaching below.
@@ -202,6 +307,20 @@ export default defineConfig(({ mode, isPreview }) => ({
           // use via runtimeCaching instead, exactly like the PDF/editor flows.
           "**/assets/lib-*.js",
           "**/assets/transformers.web-*.js",
+          // Public marketing/legal/share-card assets are served by the
+          // network and are not part of the private app shell. Keeping them
+          // out of the install precache avoids downloading duplicate
+          // localized landing pages, legal pages, OG cards and comparison
+          // assets for every app user; their navigation routes are already
+          // denied by navigateFallbackDenylist above.
+          "**/landing.{html,css,js}",
+          "**/{de,es,fr,it,pt}.html",
+          "**/{de,es,fr,it,pt}/**",
+          "**/privacy-and-terms.{html,css}",
+          "**/*/privacy-and-terms.html",
+          "**/pocket-alternative.{html,css}",
+          "**/404.{html,css,js}",
+          "**/og-image*.{svg,png}",
           // i18n locale files: only the user's active language is ever
           // requested (loadPath /locales/{{lng}}.json), so precaching all 30
           // (~3.3 MB) would download ~29 unused files on every install.
@@ -267,7 +386,11 @@ export default defineConfig(({ mode, isPreview }) => ({
         maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
       },
     }),
+    // ADR-039: last in the array for readability — its `order: "post"`
+    // closeBundle runs after VitePWA (sw.js generated) and
+    // integrityManifestPlugin (manifest written) regardless of position.
     integrityManifestPlugin(),
+    swIntegrityEmbedPlugin(),
   ],
   // Workers are created with `new Worker(url, { type: "module" })`
   // (EncryptionService, VectorIndexService, WorkerPool) and the voy-search

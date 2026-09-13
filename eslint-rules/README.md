@@ -53,6 +53,21 @@ terminación. Motivación: un bucle sin salida llegó a producirse en
 `GarbageCollectionService.pruneVersions()`.
 → `no-unbounded-loop.mjs`
 
+### `bmf/require-adr-template`
+**Ámbito:** `docs/ADR-*.md`.
+Exige que todo ADR nuevo lleve las cinco secciones de la plantilla del repo
+(Estado / Fecha / Contexto / Decisión / Consecuencias, en formato bold-list o
+heading, insensible a mayúsculas y consciente de bloques de código), que los
+metadatos `Estado`/`Fecha` lleven valor y que el primer heading sea
+`# ADR-###: <título>` con el número coincidente con el nombre del archivo.
+ESLint no trae parser de Markdown: la regla corre sobre un parser trivial de
+líneas (`lib/markdown-parser.mjs`) enchufado como `languageOptions.parser` en
+el bloque `docs/ADR-*.md` de `eslint.config.js`. La regla se auto-limita por
+nombre de archivo, así que el resto del Markdown del repo queda fuera de
+alcance. Corpus verificado limpio (15 ADRs) — cualquier ADR nuevo sin plantilla
+rompe `npm run lint`.
+→ `require-adr-template.mjs`
+
 ## Wiring en `eslint.config.js`
 
 - El plugin se registra como `bmf` en el bloque de archivos

@@ -61,16 +61,33 @@ function getReturnedObject(factory, scope) {
 
   const unwrap = (obj) => {
     // Drill into one level of wrapper: { securityVault: { ... } }
+    // Prefer the 'securityVault' property if present (most common pattern).
+    // Fall back to the first non-empty ObjectExpression property.
+    let fallback = null;
     for (const prop of obj.properties) {
       if (prop.type === "Property") {
-        if (prop.value.type === "ObjectExpression") return prop.value;
+        if (prop.key.type === "Identifier" && prop.key.name === "securityVault") {
+          if (prop.value.type === "ObjectExpression") return prop.value;
+          if (prop.value.type === "Identifier") {
+            const resolved = resolveIdentifierObject(prop.value, scope);
+            if (resolved) return resolved;
+          }
+        }
+      }
+    }
+    // No explicit securityVault property — try the first ObjectExpression
+    for (const prop of obj.properties) {
+      if (prop.type === "Property") {
+        if (prop.value.type === "ObjectExpression") {
+          if (!fallback) fallback = prop.value;
+        }
         if (prop.value.type === "Identifier") {
           const resolved = resolveIdentifierObject(prop.value, scope);
           if (resolved) return resolved;
         }
       }
     }
-    return obj;
+    return fallback || obj;
   };
 
   const analyze = (expr) => {
@@ -118,12 +135,9 @@ function resolveIdentifierObject(idNode, scope) {
     // must exist before the module body runs. The hoisted factory is
     // statically analyzable; analyze its argument object directly.
     if (
-      init.type === "CallExpression" &&
-      init.callee.type === "MemberExpression" &&
-      init.callee.object.type === "Identifier" &&
-      init.callee.object.name === "vi" &&
-      init.callee.property.type === "Identifier" &&
-      init.callee.property.name === "hoisted"
+      init.type === "CallExpression" && init.callee.type === "MemberExpression" &&
+      init.callee.object.type === "Identifier" && init.callee.object.name === "vi" &&
+      init.callee.property.type === "Identifier" && init.callee.property.name === "hoisted"
     ) {
       const arg = init.arguments[0];
       if (arg && arg.type === "ArrowFunctionExpression" && arg.expression) {

@@ -7,6 +7,8 @@ import noSecurityVaultMockWithoutLock from "./eslint-rules/require-securityvault
 import noUnexplainedTestSkip from "./eslint-rules/no-unexplained-test-skip.mjs";
 import noUnboundedLoop from "./eslint-rules/no-unbounded-loop.mjs";
 import noSilentCatch from "./eslint-rules/no-silent-catch.mjs";
+import markdownParser from "./eslint-rules/lib/markdown-parser.mjs";
+import requireAdrTemplate from "./eslint-rules/require-adr-template.mjs";
 import reactCompiler from "eslint-plugin-react-compiler";
 
 const SOURCE_TS = ["**/*.{ts,tsx,mts,cts}"];
@@ -46,7 +48,7 @@ export default tseslint.config(
   { files: ["src/env.config.ts"], rules: { "@typescript-eslint/no-explicit-any": "off" } },
   {
     files: ["src/**/*.{ts,tsx}", "tests/e2e/**/*.{ts,tsx}", "scripts/**/*.{mjs,cjs,js}", "server/src/**/*.ts", "extension/**/*.js"],
-    plugins: { bmf: { rules: { "no-unbounded-text": noUnboundedText, "no-unbounded-card-header": noUnboundedCardHeader, "no-securityvault-mock-without-lock": noSecurityVaultMockWithoutLock, "no-unexplained-test-skip": noUnexplainedTestSkip, "no-unbounded-loop": noUnboundedLoop, "no-silent-catch": noSilentCatch } } },
+    plugins: { bmf: { rules: { "no-unbounded-text": noUnboundedText, "no-unbounded-card-header": noUnboundedCardHeader, "no-securityvault-mock-without-lock": noSecurityVaultMockWithoutLock, "no-unexplained-test-skip": noUnexplainedTestSkip, "no-unbounded-loop": noUnboundedLoop, "no-silent-catch": noSilentCatch, "require-adr-template": requireAdrTemplate } } },
   },
   {
     // NOTE: exclusions MUST go in `ignores`, never as `!`-prefixed entries in
@@ -59,6 +61,19 @@ export default tseslint.config(
     rules: { "bmf/no-silent-catch": "error" },
   },
   { files: ["src/**/*.tsx"], rules: { "bmf/no-unbounded-text": "error", "bmf/no-unbounded-card-header": "error" } },
+  {
+    // Markdown: ESLint ships no MD parser, so the ADR template rule runs over
+    // docs/ADR-*.md through the trivial line-node parser in
+    // eslint-rules/lib/markdown-parser.mjs (see its header for the design).
+    // The plugin is re-declared HERE because flat config resolves plugins per
+    // config object — a rule without its plugin in the same block fails with
+    // "could not find plugin \"bmf\"". Non-ADR markdown stays out of scope
+    // both here (glob) and in the rule (basename self-gate).
+    files: ["docs/ADR-*.md"],
+    plugins: { bmf: { rules: { "require-adr-template": requireAdrTemplate } } },
+    languageOptions: { parser: markdownParser },
+    rules: { "bmf/require-adr-template": "error" },
+  },
   { files: ["src/tests/**/*.{ts,tsx}"], rules: { "bmf/no-securityvault-mock-without-lock": "error" } },
   { files: ["tests/e2e/**/*.{ts,tsx}"], rules: { "bmf/no-unexplained-test-skip": "error" } },
   { files: ["src/services/**/*.{ts,tsx}", "src/workers/**/*.{ts,tsx}", "src/utils/**/*.{ts,tsx}", "src/tests/**/*.{ts,tsx}"], rules: { "bmf/no-unbounded-loop": "error" } },

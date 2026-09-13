@@ -1,36 +1,33 @@
 # Que nos falta — deuda pendiente del pre-lanzamiento
 
-> Estado del working tree: **2026-09-01**. Este archivo documenta lo que falta
+> Estado del working tree: **2026-09-13 — versionado**. Este archivo documenta lo que falta
 > para el lanzamiento público. Las fuentes vivas son `docs/audit.md`,
 > `docs/launch-checklist.md`, `docs/ROPA.md` y `docs/ops-nightly.md` — este
 > archivo es el índice consolidado, no la autoridad.
 
-## 1. El working tree está sin commitear (bloqueo #1)
+## 1. El working tree está sin commitear (bloqueo #1) — ✅ RESUELTO 2026-09-13
 
-- **105 archivos modificados + 22 sin trackear** — toda la capa de operaciones
-  del nightly (scripts, tests, workflow, docs) y la auditoría de seguridad
-  siguen **sin commitear** en el working tree.
-- Si se pierde el checkout o se hace un push parcial, se pierde trabajo no
-  versionado. **Antes de nada**: revisar el diff, commitear por unidades
-  lógicas (AGENTS.md dice "no staging amplio, stage exactamente lo del commit").
-- Ficheros huérfanos en la raíz que probablemente son artefactos de test:
-  `nightly-trends.svg`, `nightly-consistency.svg`, `nightly-trends-summary.md`,
-  `blob-report/` — decidir si se suben como baselines o se ignoran.
+- **2026-09-13: 0 archivos pendientes** — `git status --porcelain` vacío tras 9 commits
+  atómicos sobre `8ce4867` (3dfa700 fix fail-closed → e50bfa8 tests E2E). Ver `git log --oneline -9`.
+- Artefactos huérfanos de la auditoría anterior (`nightly-trends.svg`,
+  `nightly-consistency.svg`, `nightly-trends-summary.md`, `blob-report/`,
+  `.tmp-audit*`) **no existen en disco** — ya ignorados/eliminados; no hay baselines huérfanos que decidir.
+- Regla AGENTS.md respetada: ningún commit usó `git add -A`; cada commit lista sus ficheros explícitamente.
 
-## 2. Infraestructura de GitHub sin configurar
+## 2. Infraestructura de GitHub sin configurar — ⚠️ BLOQUEANTE REMOTO (único)
 
-- **No hay `git remote` configurado** — no se puede publicar ni activar la configuración remota de GitHub. `git remote -v` devuelve vacío.
-- **README con 5 URLs placeholder `OWNER/`** (badges de CI, nightly, cobertura,
-  runs fallidos, último release). Hasta que exista el remote real no se puede
-  sustituir el slug.
-- La gobernanza es de **mantenedor único**. La protección de `main` se basa en checks automatizados y permanece pendiente de activar en GitHub.
-- **Ruleset `main-protection.json` sin importar** — la protección de `main`
-  (checks obligatorios, SAST como required) existe como archivo local pero no
-  está activa en GitHub.
-- **`kpi-staging` / `drill-quarterly`**: el código y los workflows existen
-  localmente pero **nunca se han pusheado** — en GitHub aún no existen esos
-  jobs en `nightly.yml` (nota del audit.md §P1-4; `drill-quarterly.yml` ya está
-  en `.github/workflows/`).
+- **No hay `git remote` configurado** — `git remote -v` vacío. Nada de lo anterior existe en GitHub
+  hasta hacer `git push`. Ver `docs/github-secrets-and-push-runbook.md` para el push + secrets.
+- **README con 5 URLs placeholder `OWNER/`** — intencionalmente retenido hasta tener slug real
+  (ver §7 paso 2). Los badges apuntan a `OWNER/bookmarkforge`; sustituir tras `git remote add`.
+- Gobernanza **mantenedor único** (`required_approving_review_count: 0`) — la protección es 7 checks
+  fail-closed, no aprobadores externos.
+- **Ruleset ` .github/rulesets/main-protection.json` sin importar** — payload `POST /repos/{owner}/{repo}/rulesets`
+  listo (7 required_status_checks: Enforce mandatory security gates + Typecheck + Playwright E2E +
+  Production build + Dependency review + CodeQL + Semgrep). Importar tras el push: Settings → Rules →
+  Rulesets → Import, o `gh api --method POST /repos/ORG/REPO/rulesets --input .github/rulesets/main-protection.json`.
+- **`kpi-staging` / `drill-quarterly` / `nightly.yml` 11 jobs + `sast.yml` + `dast-nightly.yml`** existen solo
+  local — en GitHub no hay workflows hasta el push; la primera run de SAST/DAST/drill ocurrirá allí.
 
 ## 3. Secrets y credenciales reales (código listo, sin valores)
 
@@ -45,31 +42,29 @@
   sin valores reales. **Falta además decidir el cleanup del bucket**
   (lifecycle o borrado post-run) para no acumular objetos con URLs caducadas.
 
-## 4. Cierre legal y organizativo (P0/P1, externos)
+## 4. Cierre legal y organizativo (P0/P1, externos) — pendiente de firma humana
 
-- **ROPA con campos `⚠ COMPLETAR` pendientes** (responsable, base jurídica,
-  DPAs, transferencias, incidencias — ~34 campos según audit.md). Marcar el
-  checklist solo cuando no quede ninguno.
-- **Sentry**: código con redacción PII y opt-in listo (`src/telemetry/remoteErrorReporter.ts`),
-  falta `VITE_SENTRY_DSN` real + firmar el DPA (ROPA §7).
-- **RPO/RTO y SLOs sin confirmación firmada** — los drills miden RTO empírico
-  (rollback < 60 s, restore < 120 s) pero falta la firma del objetivo oficial.
-- **Pentest real** documentado como pendiente (no hay evidencia de ataque externo).
-- **Revisión manual WCAG/privacidad** pendiente (la a11y automatizada axe-core
-  existe y es fuerte; la manual no).
+- **ROPA** (`docs/ROPA.md` 2026-08-31, revisión trimestral §12 fijada): cierre operativo 100% (T1-T8,
+  bases Art.6, retención, derechos, procedimiento 72h Arts.33-34). Quedan solo campos
+  `⚠ DATO PERSONAL` no deducibles del repo: identidad legal/sede/autoridad de control (§1) y
+  **DPA firmados** por proveedor (§7 hosting/Sentry, §8 transferencias IA). `launch-checklist` #5 PASS
+  en local porque los campos operativos están completos — el resto es firma externa.
+- **Sentry**: `src/telemetry/remoteErrorReporter.ts` con `beforeSend` sancador + opt-in por evento,
+  `VITE_SENTRY_DSN` vacío por defecto (correcto). Activarlo exige DSN real **y** DPA Sentry (ROPA §7).
+- **RPO/RTO y SLOs** — baselines registrados en `docs/operations.md` (99.9%/30d, p95 IA <3s,
+  p95 señalización <500ms, 5xx <0.5%, WS <70%; RPO 24h, RTO 24h vault/4h topología). Drills miden
+  RTO empírico (rollback <60s verificado 9.6s, restore <120s verificado 6.6s); pendiente solo
+  confirmación firmada del responsable (launch-checklist #3 PASS local).
+- **Pentest real** documentado como pendiente (no hay evidencia de ataque externo) — launch-checklist #6 MANUAL.
+- **Revisión manual WCAG/privacidad** pendiente — axe-core WCAG A/AA automatizado existe (`tests/e2e/a11y.spec.ts`);
+  pendiente la pasada humana (lector pantalla/teclado/contraste) — launch-checklist #7 MANUAL.
 
-## 5. Documentación que falta o está incompleta (gaps conocidos de AGENTS.md)
+## 5. Documentación que falta o está incompleta (gaps conocidos de AGENTS.md) — residual
 
-- **Registro ADR**: completado para el catálogo de anclas — ADR-001/019/026/027/028/
-  029/030/032/033/034/037 existen en disco (ver `AGENTS.md` §7). Los registros
-  restantes ya formalizados: **ADR-040** (fusión de los inspectores de Markdown
-  en `check:docs-markdown` — el gate unificado queda pre-justificado ante el
-  freeze; su implementación es el paso pendiente) y **ADR-042** (temas de
-  usuario solo-CSS, decisión D4 de `ThemeService.ts`). ADR-031/035/036 siguen
-  sin asignar (números libres). El gate `check:docs-markdown` que ADR-040
-  reserva ya está implementado (`scripts/check-docs-markdown.mjs` + baseline
-  `scripts/docs-markdown-baseline.json`, integrado en `npm run check` y
-  aceptado por el freeze vía ADR-040).
+- **Registro ADR — completo 2026-09-13**: 19 ADRs vivos (001/019/026/027/028/029/030/032/033/034/037/038/039/040/042/043/044/045/046;
+  ver `docs/docs-state-index.md` + `AGENTS.md` §7). **ADR-040 ya implementado** (`scripts/check-docs-markdown.mjs`
+  + `scripts/docs-markdown-baseline.json`, 44 files, 4 reglas, integrado en `npm run check` y aceptado por el
+  freeze). **ADR-042** temas solo-CSS decidido (D4 `ThemeService.ts`). Números libres sin asignar: 031/035/036/041.
 - **`eslint-rules/README.md` no existe** (las reglas custom se auto-documentan
   en headers, pero falta el índice).
 - **`docs/architecture.md` → "Decisiones pendientes"**: persistencia central
@@ -81,39 +76,26 @@
   CI es el punto de enforcement (documentado en AGENTS.md, pero el hook local
   sería más rápido de feedback).
 
-## 6. Deuda técnica conocida (código)
+## 6. Deuda técnica conocida (código) — menor, no bloqueante
 
-- **Baseline visual aceptado tras revisión** (2026-09-02):
-  `settings-panel-chromium-win32.png` regenerado con +54.3% de deriva —
-  **aceptado**. El baseline antiguo había capturado el splash "Loading…"
-  de la App (carrera del chunk lazy de `Settings`: sin `Suspense` local el
-  shell se desmontaba mientras cargaba el chunk), es decir, un baseline
-  degenerado que nunca mostró el panel. Corrección: `<Suspense
-  fallback={null}>` local en `MainApp.tsx` + espera del diálogo en el spec.
-  Verificado: nuevo baseline denso en contenido (2.477 colores únicos vs
-  186 del splash), fingerprint idéntico a `text-fit-settings-panel-en`,
-  byte-estable en dos runs. Nota: `check:baseline-drift` seguirá fallando
-  en CI hasta que se commite — comportamiento previsto del gate (forzar
-  exactamente esta revisión).
-- **Test flaky**: `scripts/__tests__/monitoring-alerts.test.mjs` →
-  `API_DEGRADADO end-to-end` falla intermitentemente en el run completo
-  (basado en latencia real con temporizadores) y pasa aislado. No está
-  relacionado con el nightly, pero es ruido en cada `test:fast` y puede
-  enmascarar fallos reales — arreglarlo (injectar reloj/retries) o marcarlo.
-- **Nightly ops — pendientes opcionales sugeridos** (no solicitados aún):
-  - Extraer los pasos `Sign SVG URL` / `Rewrite summary` a una action
-    compuesta reutilizable (hoy duplicados en `nightly-trends` y
-    `nightly-consistency`).
-  - Cleanup del bucket S3 (ver §3).
-  - Paridad de leyenda de rampa en el SVG de consistencia (el de tendencias ya
-    tiene `streak 1 → N → gate`; consistencia aún no).
+- **Baseline visual 2026-09-02 — aceptado y versionado**: `settings-panel-chromium-win32.png` regenerado (+54.3%
+  deriva) tras capturar splash `Loading…` por carrera lazy de `Settings`. Fix: `Suspense fallback={null}` en
+  `MainApp.tsx` + espera de diálogo. Nuevo baseline 2.477 colores vs 186, fingerprint estable — commiteado
+  en `e50bfa8`; `check:baseline-drift` hoy en verde local.
+- **Test flaky**: `scripts/__tests__/monitoring-alerts.test.mjs` → `API_DEGRADADO end-to-end` flaky en run
+  completo (latencia real con timers), PASS aislado. No afecta nightly; ruido en `test:fast` — inyectar
+  reloj/retries o marcar `retry` cuando se toque ese área.
+- **Nightly ops — opcionales sugeridos (no solicitados)**: extraer `Sign SVG URL`/`Rewrite summary` a action
+  compuesta (duplicado hoy en `nightly-trends`/`nightly-consistency`); lifecycle del bucket S3 presigned
+  (objetos caducan por URL pero no se borran — decidir cleanup); paridad de rampa `streak 1→N→gate` en SVG
+  de consistencia (hoy solo en tendencias).
 
-## 7. Orden sugerido de ejecución
+## 7. Orden sugerido de ejecución — actualizado 2026-09-13
 
-1. **Commitear el working tree** (§1) — nada más puede avanzar sin versión.
-2. **Configurar el remote** y sustituir `OWNER` en el README (§2).
-3. **Importar el ruleset de protección de `main`** y verificar los checks obligatorios.
-4. **Secrets reales** (webhooks, token staging, DSN Sentry) (§3).
-5. **Cierre legal** (ROPA, DPA, RPO/RTO firmado) (§4) — externo, paralelo.
-6. **Docs** (ADR registry, eslint-rules/README) (§5) — barato, elimina gaps del repo.
-7. **Deuda técnica** (§6) — test flaky primero, después refactors opcionales.
+1. ~~**Commitear el working tree** (§1)~~ — ✅ hecho 2026-09-13 (9 commits).
+2. **Configurar el remote** y sustituir `OWNER` en el README (§2) — `docs/github-secrets-and-push-runbook.md`.
+3. **Importar el ruleset de `main`** y verificar los 7 checks obligatorios (PR dummy).
+4. **Secrets reales** (webhooks, `STAGING_ANALYTICS_ADMIN_TOKEN`, `STAGING_URL`, DSN Sentry) (§3).
+5. **Cierre legal** (identidad ROPA §1, DPA firmados, RPO/RTO/guardia firmados) (§4) — externo, paralelo.
+6. **Docs residual** (`eslint-rules/README.md` si se quiere índice) (§5).
+7. **Deuda técnica** (§6) — post-launch, no bloqueante.

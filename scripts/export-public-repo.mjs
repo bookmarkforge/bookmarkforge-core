@@ -148,6 +148,14 @@ const EXCLUDED_FILES = new Set([
   "scripts/__tests__/legacy-schema-map.test.mjs", // needs private docs/legacy-schema-version-map.md
   "scripts/__tests__/validate-zap-context.test.mjs", // fixture is the excluded .zap/ context
   "scripts/__tests__/validate-zap-workflow.test.mjs", // gate replaced by the public workflow guard
+  // The exporter itself and its overlay templates are private-repo tooling:
+  // the public repo IS the output, it does not carry the export machinery.
+  "scripts/export-public-repo.mjs",
+  "scripts/public-export/LICENSE",
+  "scripts/public-export/README.md",
+  "scripts/public-export/SECURITY.md",
+  "scripts/public-export/NOTICE",
+  "scripts/public-export/TRADEMARKS.md",
 ]);
 
 /** Naive secret patterns; the shipped secret-scan gate is the real control. */

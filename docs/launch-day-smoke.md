@@ -52,6 +52,17 @@ La build se genera con `VITE_E2E_PREVIEW_DIAGNOSTICS=true` para exponer el diagn
 - **Fila no aparece tras restaurar:** la bóveda abre en Dashboard — navega explícitamente a Bookmarks antes de asertar.
 - **Timeout en recuperación tras un rechazo previo:** `RecoveryService` limita a un intento cada 2 s (`MIN_INTERVAL_MS = 2000`) — deja que el helper espere la ventana.
 
+## Segundo y tercer motor de navegador (firefox + webkit)
+
+Las mismas rutas críticas corren en los otros dos motores con:
+
+```bash
+npx playwright install firefox webkit   # una vez
+npm run e2e:engines                     # ambos motores (o -- --project=webkit)
+```
+
+Perfil: `playwright.engines.config.ts` (misma topología que esta batería, puertos propios). Los tests de licencia se saltan con marcador si no hay clave de firma (p. ej. CI). En CI: job `e2e-engines`. Nota ARM64 Windows: el WebKit de Playwright corre emulado — puede ser lento u OOM si hay procesos huérfanos; el CI en Linux x64 es la referencia.
+
 ## Relación con el checklist de lanzamiento
 
 Item 16 de [docs/launch-checklist.md](launch-checklist.md). Todo en verde aquí es una condición previa para marcar la release; un solo rojo = no lanzar.

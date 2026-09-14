@@ -39,6 +39,7 @@
     "e2e:visual": "playwright test tests/e2e/visual-testing.spec.ts",
     "e2e:visual:browsers": "playwright test --config=playwright.browsers.config.ts tests/e2e/visual-testing.spec.ts",
     "e2e:preview": "playwright test --config=playwright.preview.config.ts",
+    "e2e:engines": "playwright test --config=playwright.engines.config.ts",
     "e2e:sw-integrity": "npm run build:ci && playwright test --config=playwright.sw-integrity.config.ts",
     "e2e:headed": "playwright test --headed",
     "e2e:nightly": "playwright test --config=playwright.nightly.config.ts",

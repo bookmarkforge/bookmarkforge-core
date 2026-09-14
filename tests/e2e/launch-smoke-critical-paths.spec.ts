@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { expect, test, type Page } from "@playwright/test";
 import { dismissOverlays, expectUnlockedApp, lockVault, setupVault, unlockVault } from "./vault-helpers";
 import { assertDurableBackend } from "./storage-backend-guard";
@@ -28,6 +28,19 @@ import { assertDurableBackend } from "./storage-backend-guard";
 
 /** 15 chars — comfortably above SECURITY_CONFIG.MIN_PASSWORD_LENGTH (12). */
 const LAUNCH_PASSWORD = "launch-smoke-12";
+
+/**
+ * License tests activate against the REAL signing service, which needs the
+ * gitignored dev key (server/.license-signing-key.pkcs8). Without it the
+ * tests SKIP with an explicit marker instead of failing — CI runners have no
+ * signing key, and a missing key must be visible (skip), never silent-pass
+ * nor a red herring masking an actual regression. With a key present
+ * (developer machine, launch day) they always run.
+ */
+const HAS_SIGNING_KEY =
+  existsSync("server/.license-signing-key.pkcs8") ||
+  Boolean(process.env.LICENSE_SIGNING_PRIVATE_KEY_FILE) ||
+  Boolean(process.env.LICENSE_SIGNING_PRIVATE_KEY_PKCS8);
 
 /** Value the Whop-adapter mock accepts (scripts/license-mock.mjs). */
 const LICENSE_KEY =
@@ -246,6 +259,11 @@ test.describe("critical path: recovery", () => {
 });
 
 test.describe("critical path: license activation", () => {
+  test.skip(
+    !HAS_SIGNING_KEY,
+    "license signing key not available (CI) — activation tests skip with a marker, never fail nor silently pass",
+  );
+
   test("activate with a valid key through the real signing service", async ({
     page,
   }) => {

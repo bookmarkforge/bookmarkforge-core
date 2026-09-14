@@ -132,7 +132,7 @@ export const SUPPORT_KNOWLEDGE_ES = {
     PAYMENT_PROCESSOR:
       "Todos los pagos son procesados de forma segura por nuestro proveedor de pagos. Nunca vemos la información de tu tarjeta de crédito.",
     REFUND_POLICY:
-      "Ofrecemos una garantía de devolución de 14 días si la aplicación no cumple tus expectativas.",
+      "Ofrecemos una garantía de devolución de 30 días si la aplicación no cumple tus expectativas.",
     PRO_FEATURES:
       "Sincronización P2P, IA Local Ilimitada y Análisis Avanzados son funciones Pro.",
   },

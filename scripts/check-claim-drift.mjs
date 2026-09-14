@@ -1,0 +1,477 @@
+#!/usr/bin/env node
+/**
+ * scripts/check-claim-drift.mjs — factual claim-drift gate.
+ *
+ * Motivation: user-visible strings repeatedly drifted from real code behavior
+ * (a "12-word seed" vs the real 24-word phrase; "minimum 8 characters" vs the
+ * enforced 12; PBKDF2 advertised while the vault uses Argon2id V4 per
+ * ADR-019; a 14-day money-back line vs refundDays: 30). All were caught by
+ * manual audits. This gate makes the whole drift class detectable in CI: it
+ * extracts the truth from src/constants/config.ts + src/constants/pricing.ts
+ * and scans the user-visible surface for numbers that contradict it.
+ *
+ * Scanned surface:
+ *   public/locales/*.json            (i18n files)
+ *   public/*.html                    (landing, help, legal, localized pages)
+ *   src/data/SupportKnowledge*.ts    (support-chat knowledge base)
+ *
+ * Rules (each cites its truth source):
+ *   recovery-words    — word-count claims must equal RecoveryService's phrase
+ *                       length (24; bip39.generateMnemonic(256), 256/8 = 24).
+ *   password-min      — minimum-password claims must equal
+ *                       SECURITY_CONFIG.MIN_PASSWORD_LENGTH.
+ *   devices           — device-count claims must equal some tier's maxDevices
+ *                       in PRICING_CONFIG (tier-aware: "1 device" on Free and
+ *                       "3 devices" on Pro are both valid).
+ *   free-bookmarks    — bookmark-cap claims must equal some tier's maxBookmarks.
+ *   prohibited-kdf    — PBKDF2 must not appear in user-visible security copy
+ *                       (vault KDF is Argon2id V4; PBKDF2 is legacy read-only).
+ *   refund-window     — refund-window claims must equal
+ *                       PRICING_CONFIG.lifetimeVersioned.refundDays.
+ *   prices            — USD price tags on static pages must exist in
+ *                       PRICING_CONFIG tier prices.
+ *   upgrade-prices    — upgrade price tags must equal
+ *                       upgradePriceNew/upgradePriceOwner.
+ *
+ * Design constraints:
+ *   - Plain Node (no TS toolchain): truth extraction is regex-based and
+ *     FAIL-CLOSED — if a constant cannot be located (refactor renamed it),
+ *     every claim of that class is reported as drift with an explicit
+ *     "truth missing" message instead of the gate silently passing.
+ *   - Tier-aware verdicts: a numeric claim is valid if it matches ANY tier's
+ *     configured value, so adding a tier never breaks existing true claims.
+ *
+ * Exit codes: 0 = no drift, 1 = drift found, 2 = usage / IO error.
+ *
+ * Usage:
+ *   node scripts/check-claim-drift.mjs                 # gate mode
+ *   node scripts/check-claim-drift.mjs --root <dir>    # scan a different tree
+ *   node scripts/check-claim-drift.mjs --json          # machine-readable report
+ */
+import { readdirSync, readFileSync, existsSync } from "node:fs";
+import { join } from "node:path";
+import process from "node:process";
+
+const DEFAULT_ROOT = process.cwd();
+/** RecoveryService truth: bip39.generateMnemonic(256) → 24 words. */
+const RECOVERY_WORDS = 24;
+
+// ── CLI ──────────────────────────────────────────────────────────────────────
+let ROOT = DEFAULT_ROOT;
+let JSON_OUTPUT = false;
+for (let i = 2; i < process.argv.length; i++) {
+  if (process.argv[i] === "--root" && process.argv[i + 1]) {
+    ROOT = process.argv[++i];
+  } else if (process.argv[i] === "--json") {
+    JSON_OUTPUT = true;
+  } else if (process.argv[i] === "--help" || process.argv[i] === "-h") {
+    console.log("Usage: node scripts/check-claim-drift.mjs [--root <dir>] [--json]");
+    process.exit(0);
+  } else if (process.argv[i].startsWith("-")) {
+    console.error(`check-claim-drift: unknown flag ${process.argv[i]}`);
+    process.exit(2);
+  }
+}
+
+// ── Truth extraction ─────────────────────────────────────────────────────────
+/**
+ * Pull the enforced constants out of the source files. Every field ends up in
+ * one of two shapes:
+ *   - scalar (minPasswordLength, refundDays): null = NOT FOUND = fail-closed.
+ *   - set (deviceCounts, bookmarkCaps, prices, upgradePrices): a claim is
+ *     valid iff it is a member, so tier variety never breaks true claims.
+ */
+export function extractTruth(configSrc, pricingSrc) {
+  const truth = {
+    minPasswordLength: null,
+    recoveryWords: RECOVERY_WORDS,
+    deviceCounts: new Set(),
+    bookmarkCaps: new Set(),
+    refundDays: null,
+    prices: new Set(),
+    upgradePrices: new Set(),
+    b2bYearlyPrices: new Set(),
+  };
+
+  const minPw = configSrc.match(/MIN_PASSWORD_LENGTH:\s*(\d+)/);
+  if (minPw) truth.minPasswordLength = Number(minPw[1]);
+
+  for (const m of pricingSrc.matchAll(/maxDevices:\s*(\d+)/g)) {
+    truth.deviceCounts.add(Number(m[1]));
+  }
+  for (const m of pricingSrc.matchAll(/maxBookmarks:\s*(\d+)/g)) {
+    truth.bookmarkCaps.add(Number(m[1]));
+  }
+  const refund = pricingSrc.match(/refundDays:\s*(\d+)/);
+  if (refund) truth.refundDays = Number(refund[1]);
+  // Tier price lines are indented exactly 6 spaces ("      price: 79,") —
+  // anchors out unrelated "price" mentions elsewhere in the file.
+  for (const m of pricingSrc.matchAll(/^\s{6}price:\s*(\d+(?:\.\d+)?),\s*$/gm)) {
+    truth.prices.add(Number(m[1]));
+  }
+  // Early-bird display price ("earlyBirdPrice: 59") is advertised on the
+  // landing pages — a true claim, so it belongs in the valid set too.
+  for (const m of pricingSrc.matchAll(/earlyBirdPrice:\s*(\d+(?:\.\d+)?)/g)) {
+    truth.prices.add(Number(m[1]));
+  }
+  // B2B annual license prices ("pricePerYear: 2500") appear on the legal
+  // page as dollar amounts — true claims, accepted by the prices rule.
+  truth.b2bYearlyPrices = new Set();
+  for (const m of pricingSrc.matchAll(/pricePerYear:\s*(\d+(?:\.\d+)?)/g)) {
+    truth.b2bYearlyPrices.add(Number(m[1]));
+  }
+  for (const m of pricingSrc.matchAll(/upgradePrice(?:New|Owner):\s*(\d+(?:\.\d+)?)/g)) {
+    truth.upgradePrices.add(Number(m[1]));
+  }
+
+  return truth;
+}
+
+/** Serialize Sets for reports/tests. */
+export function truthSummary(t) {
+  return {
+    minPasswordLength: t.minPasswordLength,
+    recoveryWords: t.recoveryWords,
+    deviceCounts: [...t.deviceCounts].sort((a, b) => a - b),
+    bookmarkCaps: [...t.bookmarkCaps].sort((a, b) => a - b),
+    refundDays: t.refundDays,
+    prices: [...t.prices].sort((a, b) => a - b),
+    upgradePrices: [...t.upgradePrices].sort((a, b) => a - b),
+    b2bYearlyPrices: [...t.b2bYearlyPrices].sort((a, b) => a - b),
+  };
+}
+
+// ── Surface discovery ────────────────────────────────────────────────────────
+/** Collect the user-visible claim surface as { path, kind } entries. */
+export function discoverSurface(root) {
+  const files = [];
+
+  const localesDir = join(root, "public", "locales");
+  if (existsSync(localesDir)) {
+    for (const f of readdirSync(localesDir)) {
+      if (f.endsWith(".json")) files.push({ path: join(localesDir, f), kind: "locale" });
+    }
+  }
+
+  const publicDir = join(root, "public");
+  if (existsSync(publicDir)) {
+    for (const f of readdirSync(publicDir)) {
+      if (f.endsWith(".html")) files.push({ path: join(publicDir, f), kind: "html" });
+    }
+  }
+
+  const dataDir = join(root, "src", "data");
+  if (existsSync(dataDir)) {
+    for (const f of readdirSync(dataDir)) {
+      if (/^SupportKnowledge.*\.ts$/.test(f)) {
+        files.push({ path: join(dataDir, f), kind: "ts" });
+      }
+    }
+  }
+
+  return files;
+}
+
+// ── Claim patterns ───────────────────────────────────────────────────────────
+/**
+ * Multilingual unit nouns. Unicode escapes keep it readable; explicit
+ * alternatives cover the language-specific unit nouns. NOTE: CJK nouns are
+ * split deliberately — 文字/字符/字/자 are CHARACTER counters (password rule),
+ * while 単語/词/단어 are WORD counters (recovery rule). Mixing them would make
+ * a Japanese "12文字" password line trip the 24-word recovery rule.
+ */
+const CHAR_UNIT =
+  "characters?|caractères?|caracteres?|caratteri|Zeichen|Charaktere?|znak(?:ů|ova|ów|ov[ai])?|karakter(?:ler)?|tegn|tecken|teikn|merkkiä|文字|字符|글자|символ(?:ов|а|ів|ы)?|характер(?:а|и)?|χαρακτήρες|chars?\\b|अक्षर|ตัวอักษร|حرف|أحرف|תווים|자(?![가-힣])";
+const WORD_UNIT =
+  "words?|WORDS?|mots?|palabras?|palavras?|parole|Wörter|woorden|ord(?:ene)?|sanaa|sanat|słowa|słowo|単語|词|词语|單詞|단어|cuvinte|slova|slov(?:o|á)?|слов(?:а|о)?|слів|дум(?:и|ите)?|kelime|kata|كلمات|كلمة|מילים|शब्द|từ";
+const DEVICE_UNIT =
+  "devices?|Devices?|Geräte[ns]?|dispositiv\w*|dispositivos?|dispositius?|dispositifs?|设备(?:数量)?|デバイス|기기|устройств\w*|zařízení(?:ch)?|eszköz(?:ön)?|perangkat|enheter|appareils?";
+const BOOKMARK_UNIT =
+  "bookmarks?|Bookmarks?|marcadores?|marcadors?|Lesezeichen|ブックマーク|书签|즐겨찾기|закладок|záložky|könyvjelző|penanda";
+const MONEY_BACK =
+  "refund|money[- ]back|reembolso|devoluci|garant|guarantee|rückerstatt|remboursement|rimbors";
+
+/** Statically known-safe lines (never a factual security/pricing claim). */
+const BASELINE_ALLOWLIST = [
+  // AI model download sizes / hardware floors are factual about model files.
+  /modelGemma2b/i,
+  /app_size\d/i,
+  /ai_modelDownloadWarning/,
+  /WebLLM (is not available|cannot run)/,
+  /app_diagWebLLMBlockerRAM/,
+  // Time-window UI copy is backed by its own code constants, not pricing.
+  /ephemeral_\d+days/,
+  /app_backupStaleWarning|backup_bannerStaleDesc/,
+  /app_onboardingBackupDesc/,
+  /app_evictionRiskDesc/,
+  // "100% offline" is a capability claim, not a price.
+  /100\s*%\s*offline/i,
+];
+
+/**
+ * Rules fire per matched line. verdict(match, truth) returns null (ok) or a
+ * drift description string.
+ */
+export function buildRules(truth) {
+  return [
+    {
+      id: "recovery-words",
+      description: `recovery-phrase word count must equal ${truth.recoveryWords} (RecoveryService)`,
+      re: new RegExp(String.raw`(\d+)[\s\-]+(?:${WORD_UNIT})\b`, "u"),
+      verdict(m) {
+        const n = Number(m[1]);
+        if (n === truth.recoveryWords) return null;
+        return `claims ${n}-word phrase; RecoveryService enforces ${truth.recoveryWords} words`;
+      },
+    },
+    {
+      id: "password-min",
+      description:
+        "character-count claims in security copy must equal SECURITY_CONFIG.MIN_PASSWORD_LENGTH",
+      // Unqualified on purpose: a "<N> characters" shape in user-visible copy
+      // is virtually always the password policy (or a string we must allow
+      // explicitly). Qualifier-based matching missed half the 30 locales
+      // ("alespoň", "legalább", "vähintään", "поне", …).
+      re: new RegExp(String.raw`(\d+)\s*个?\s*(?:${CHAR_UNIT})`, "iu"),
+      verdict(m) {
+        if (truth.minPasswordLength == null) {
+          return "MIN_PASSWORD_LENGTH missing from src/constants/config.ts (refactor?) — fail-closed";
+        }
+        const n = Number(m[1]);
+        if (n === truth.minPasswordLength) return null;
+        return `claims ${n}-character minimum; code enforces ${truth.minPasswordLength}`;
+      },
+    },
+    {
+      id: "devices",
+      description: "device-count claims must equal some tier maxDevices in pricing.ts",
+      re: new RegExp(String.raw`(\d+)\s+(?:${DEVICE_UNIT})`, "iu"),
+      verdict(m) {
+        const n = Number(m[1]);
+        if (truth.deviceCounts.has(n)) return null;
+        return `claims ${n} device(s); pricing.ts maxDevices values: ${fmtSet(truth.deviceCounts)}`;
+      },
+    },
+    {
+      id: "free-bookmarks",
+      description: "bookmark-cap claims must equal some tier maxBookmarks in pricing.ts",
+      // Word boundary after the unit: "© 2026 BookmarkForge" must not read
+      // as "2026 bookmarks" (BookmarkForge starts with "Bookmark").
+      re: new RegExp(String.raw`(\d{1,3}(?:[.,\s]\d{3})+|\d{3,})\s+(?:${BOOKMARK_UNIT})\b`, "iu"),
+      verdict(m) {
+        const n = Number(m[1].replace(/[.,\s]/g, ""));
+        if (truth.bookmarkCaps.has(n)) return null;
+        return `claims ${m[1]} bookmarks; pricing.ts maxBookmarks values: ${fmtSet(truth.bookmarkCaps)}`;
+      },
+    },
+    {
+      id: "prohibited-kdf",
+      description: "PBKDF2 must not appear in user-visible security copy (vault = Argon2id V4)",
+      re: /PBKDF2/i,
+      verdict() {
+        return "PBKDF2 named in user-visible copy; the vault KDF is Argon2id V4 (ADR-019) — PBKDF2 is legacy read-only";
+      },
+    },
+    {
+      id: "refund-window",
+      description: `refund-window claims must equal PRICING_CONFIG refundDays (${truth.refundDays ?? "MISSING"})`,
+      re: new RegExp(
+        String.raw`(\d+)\s*[- ]?\s*(?:days?|días?|dias?|tage|jours?)[^.]{0,60}?(?:${MONEY_BACK})`,
+        "iu",
+      ),
+      re2: new RegExp(
+        String.raw`(?:${MONEY_BACK})[^.]{0,60}?(\d+)\s*[- ]?\s*(?:days?|días?|dias?|tage|jours?)`,
+        "iu",
+      ),
+      verdict(m) {
+        if (truth.refundDays == null) {
+          return "refundDays missing from src/constants/pricing.ts (refactor?) — fail-closed";
+        }
+        const n = Number(m[1]);
+        if (n === truth.refundDays) return null;
+        return `claims a ${n}-day refund window; pricing.ts sets refundDays: ${truth.refundDays}`;
+      },
+    },
+    {
+      id: "prices",
+      description: "USD price tags in user-visible copy must exist in PRICING_CONFIG",
+      re: /\$\s?([\d][\d.,]*)\b/,
+      verdict(m) {
+        const n = parseDollar(m[1]);
+        if (n == null) return null; // not a price-shaped number
+        // Upgrade ($35/$89) and B2B annual ($2,500…) amounts are legit
+        // dollar claims on the pages — accept the union of truth sets.
+        if (
+          truth.prices.has(n) ||
+          truth.upgradePrices.has(n) ||
+          truth.b2bYearlyPrices.has(n)
+        ) {
+          return null;
+        }
+        return `price $${n} not in PRICING_CONFIG prices: ${fmtSet(truth.prices)} (upgrade: ${fmtSet(truth.upgradePrices)}, b2b/year: ${fmtSet(truth.b2bYearlyPrices)})`;
+      },
+    },
+    {
+      id: "upgrade-prices",
+      description: "upgrade prices must equal upgradePriceNew/upgradePriceOwner",
+      re: /\$\s?(\d+)\s*(?:for|para|für|pour)\s+(?:v2|v3|new|existing|owners?|customers?|actuales?|Bestandskunden|neue)/i,
+      verdict(m) {
+        const n = Number(m[1]);
+        if (truth.upgradePrices.has(n)) return null;
+        return `upgrade price $${n} not in pricing.ts upgrade prices: ${fmtSet(truth.upgradePrices)}`;
+      },
+    },
+  ];
+}
+
+function fmtSet(set) {
+  return [...set].sort((a, b) => a - b).join(", ") || "(none)";
+}
+
+/**
+ * Parse a dollar amount with locale-aware separators:
+ *   "79" → 79   "59.99" → 59.99   "2,500" → 2500   "1,234.56" → 1234.56
+ * Returns null for shapes that are not a price (e.g. trailing separator).
+ */
+export function parseDollar(raw) {
+  const s = raw.replace(/\s/g, "");
+  if (!/^\d+([.,]\d+)*$/.test(s)) return null;
+  if (/^\d{1,3}(,\d{3})+([.]\d+)?$/.test(s)) return Number(s.replace(/,/g, ""));
+  if (/^\d{1,3}(\.\d{3})+([,]\d+)?$/.test(s)) return Number(s.replace(/\./g, "").replace(",", "."));
+  return Number(s.replace(",", "."));
+}
+
+// ── Allowlist ────────────────────────────────────────────────────────────────
+/**
+ * Competitor pricing comparison (help.html pricing FAQ): dollar amounts that
+ * describe OTHER products' subscriptions, not BookmarkForge's.
+ *
+ * These amounts are STRIPPED from the line rather than skipping the line:
+ * a sentence mixing a competitor price with our own ("Raindrop is $28/y but
+ * Pro is $49") must still be checked. Adding a competitor name is the
+ * documented extension point — the allowlist lives here, not in a skip-list
+ * that would let our own price hide behind a competitor's name.
+ */
+/**
+ * Diagnostic/example boxes quote runtime values ("Vault: 847 bookmarks,
+ * 12 docs") — samples of output, not product claims. Line-level skip is safe
+ * because the same line cannot contain a real product claim by construction.
+ */
+const DIAGNOSTIC_EXAMPLE_RE = /class="diag-box"|Vault:\s*\d+|diagnostic/i;
+
+/** Competitor-adjacent price tokens, e.g. "Raindrop Pro $28–38/y". */
+const COMPETITOR_PRICE_RE =
+  /\b(?:Raindrop(?:\.io)?|Instapaper|Readwise|Capacities|Pinboard|Pocket|Diigo)[^$]*?\$\s?[\d][\d.,]*/gi;
+
+function isAllowed(text) {
+  if (BASELINE_ALLOWLIST.some((re) => re.test(text))) return true;
+  if (DIAGNOSTIC_EXAMPLE_RE.test(text)) return true;
+  return false;
+}
+
+/** Pre-process a line: mask competitor prices so our own still get scanned. */
+function neutralizeCompetitorPrices(text) {
+  if (!/\$/.test(text)) return text;
+  return text.replace(COMPETITOR_PRICE_RE, (m) => "$".repeat(m.length));
+}
+
+// ── Scanning ─────────────────────────────────────────────────────────────────
+/** Scan one file; returns [{ rule, line, lineNo, match, drift }] hits. */
+export function scanFile(filePath, kind, rules) {
+  const src = readFileSync(filePath, "utf8");
+  const hits = [];
+  const lines = src.split("\n");
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    if (isAllowed(line)) continue;
+    line = neutralizeCompetitorPrices(line);
+    for (const rule of rules) {
+      if (rule.appliesTo && !rule.appliesTo.kinds.includes(kind)) continue;
+      const m = line.match(rule.re) || (rule.re2 ? line.match(rule.re2) : null);
+      if (!m) continue;
+      const drift = rule.verdict(m);
+      if (drift) {
+        hits.push({
+          rule: rule.id,
+          line: line.trim().slice(0, 200),
+          lineNo: i + 1,
+          match: m[0],
+          drift,
+        });
+      }
+    }
+  }
+  return hits;
+}
+
+/**
+ * Scan the whole surface. `sources` lets tests inject config/pricing sources;
+ * in gate mode they are read from src/constants/.
+ */
+export function scanSurface({ root = DEFAULT_ROOT, sources } = {}) {
+  const configPath = join(root, "src", "constants", "config.ts");
+  const pricingPath = join(root, "src", "constants", "pricing.ts");
+  const configSrc = sources?.configSrc ?? readFileSync(configPath, "utf8");
+  const pricingSrc = sources?.pricingSrc ?? readFileSync(pricingPath, "utf8");
+  const truth = extractTruth(configSrc, pricingSrc);
+
+  const rules = buildRules(truth);
+  const results = [];
+  for (const f of discoverSurface(root)) {
+    const hits = scanFile(f.path, f.kind, rules);
+    if (hits.length) results.push({ file: f.path, kind: f.kind, hits });
+  }
+  return { truth, results };
+}
+
+// ── CLI ──────────────────────────────────────────────────────────────────────
+const invokedDirectly =
+  process.argv[1] &&
+  (import.meta.url === new URL(`file://${process.argv[1].replace(/\\/g, "/")}`).href ||
+    import.meta.url.endsWith(process.argv[1].replace(/\\/g, "/")));
+
+if (invokedDirectly) {
+  let report;
+  try {
+    report = scanSurface({ root: ROOT });
+  } catch (err) {
+    console.error(`check-claim-drift: ${err.message}`);
+    process.exit(2);
+  }
+
+  const total = report.results.reduce((n, r) => n + r.hits.length, 0);
+  if (JSON_OUTPUT) {
+    console.log(JSON.stringify({ ...report, truth: truthSummary(report.truth), total }, replacerSets, 2));
+    process.exit(total ? 1 : 0);
+  }
+
+  if (total === 0) {
+    console.log(
+      `check-claim-drift: OK — ${discoverSurface(ROOT).length} files scanned, no factual drift ` +
+        `(minPassword=${report.truth.minPasswordLength}, recoveryWords=${report.truth.recoveryWords}, ` +
+        `devices={${fmtSet(report.truth.deviceCounts)}}, bookmarkCaps={${fmtSet(report.truth.bookmarkCaps)}}, ` +
+        `refundDays=${report.truth.refundDays}, prices={${fmtSet(report.truth.prices)}})`,
+    );
+    process.exit(0);
+  }
+
+  console.error(`check-claim-drift: ${total} drifted claim(s) in ${report.results.length} file(s):\n`);
+  for (const r of report.results) {
+    for (const h of r.hits) {
+      console.error(`  ${r.file}:${h.lineNo}  [${h.rule}]  ${h.drift}`);
+      console.error(`    > ${h.line}`);
+    }
+  }
+  console.error(
+    "\nFix the STRINGS (preferred) or, if the CODE changed, update the truth source",
+  );
+  console.error(
+    "(src/constants/config.ts / src/constants/pricing.ts) — never silence a true claim.",
+  );
+  process.exit(1);
+}
+
+function replacerSets(_key, value) {
+  if (value instanceof Set) return [...value].sort((a, b) => a - b);
+  return value;
+}

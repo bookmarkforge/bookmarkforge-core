@@ -130,7 +130,7 @@ const SUPPORT_KNOWLEDGE_EN = {
     PAYMENT_PROCESSOR:
       "Payments are handled securely by our selected payment provider. We never see your credit card information.",
     REFUND_POLICY:
-      "We offer a 14-day money-back guarantee if the app doesn't meet your needs.",
+      "We offer a 30-day money-back guarantee if the app doesn't meet your needs.",
     PRO_FEATURES:
       "P2P Sync and Unlimited Local AI are Pro features.",
   },

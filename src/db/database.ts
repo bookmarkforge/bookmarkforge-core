@@ -186,8 +186,7 @@ function publishStorageBackend(backend: ActiveStorageBackend): void {
     import.meta.env.VITE_E2E_PREVIEW_DIAGNOSTICS !== "true"
   ) {
     return;
-  }
-  try {
+  }  try {
     (globalThis as unknown as Record<string, unknown>)[E2E_STORAGE_BACKEND_KEY] =
       backend;
   } catch {

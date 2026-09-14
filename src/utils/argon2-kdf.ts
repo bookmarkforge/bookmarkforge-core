@@ -3,6 +3,11 @@ import { isProdBuild, isTestMode } from "./env";
 // Static import so Rolldown deduplicates @noble/hashes/argon2 across
 // all chunks that consume argon2-kdf (main thread + workers).
 import { argon2id } from "@noble/hashes/argon2.js";
+// Publishes the resolved KDF profile on window for E2E diagnostics (no-op
+// unless built with VITE_E2E_KDF_DIAGNOSTICS=true; never ships in prod).
+// LEAF module on purpose — importing anything heavier (e.g. the database
+// layer) would drag RxDB into every worker chunk that derives a key.
+import { publishKdfParams } from "./e2e-diagnostics";
 
 /**
  * S1/R3: Argon2id KDF (V4 — the ONLY supported KDF).
@@ -110,6 +115,14 @@ export async function deriveArgon2idKey(
   const dk = mod.argon2id(pwCopy, salt, ARGON2_PARAMS);
   // Zeroize the working copy immediately after deriving.
   pwCopy.fill(0);
+  // E2E diagnostics (gated in publishKdfParams; no-op in real production
+  // builds): expose the resolved profile so the mobile-device profile can
+  // assert the 64 MiB mobile parameters instead of inferring from timing.
+  void publishKdfParams({
+    m: ARGON2_PARAMS.m,
+    t: ARGON2_PARAMS.t,
+    p: ARGON2_PARAMS.p,
+  });
   return dk;
 }
 

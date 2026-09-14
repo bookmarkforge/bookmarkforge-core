@@ -123,6 +123,11 @@ export const ENV_REGISTRY = {
   // backend diagnostic hook so the Playwright preview run can assert the
   // durable backend. NEVER set in real production builds (no hook shipped).
   e2ePreviewDiagnostics:  { envVar: "VITE_E2E_PREVIEW_DIAGNOSTICS", parser: parseBool, default: false},
+  // E2E-preview build flag: publishes the resolved Argon2id parameters on
+  // window so the mobile-device profile can PROVE the 64 MiB mobile KDF ran
+  // (instead of inferring it from timing). Same contract as the flag above:
+  // never set in real production builds, so the diagnostic hook ships nowhere.
+  e2eKdfDiagnostics:      { envVar: "VITE_E2E_KDF_DIAGNOSTICS",     parser: parseBool, default: false},
   testBuild:              { envVar: "VITE_TEST_BUILD",              parser: parseBool, default: false},
   // Optional Sentry DSN for remote error reporting (opt-in, see
   // src/telemetry/remoteErrorReporter.ts). Empty by default: error reporting

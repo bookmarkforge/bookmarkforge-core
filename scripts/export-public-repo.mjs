@@ -16,6 +16,11 @@
  *
  * The manifest.json written next to the output records exactly what was
  * excluded and why, so the export is auditable and repeatable.
+ *
+ * Post-export verification: the docs-markdown baseline is regenerated for the
+ * reduced docs/ set, and the factual claim-drift gate (check-claim-drift) is
+ * executed inside the exported tree — the public repo must ship green and
+ * self-protecting, with the same gate wired into its CI.
  */
 import {
   cpSync,
@@ -28,7 +33,7 @@ import {
   symlinkSync,
   writeFileSync,
 } from "node:fs";
-import { basename, join, relative, resolve, sep } from "node:path";
+import { basename, join, resolve, sep } from "node:path";
 import { spawnSync } from "node:child_process";
 import process from "node:process";
 
@@ -324,6 +329,23 @@ try {
   );
   if (gate.status !== 0) {
     console.error("[export-public] FAIL: docs-markdown baseline regeneration failed");
+    process.exit(1);
+  }
+  // Claim-drift gate: the exported UI surface must agree with the exported
+  // code constants (password minimum, 24-word phrase, device limits, Argon2id
+  // MiB, backup intervals, prices). Truth is extracted from the shipped
+  // sources, so the gate needs no baseline and must pass as-is inside the
+  // export — the public repo's own CI runs the same step on every push; this
+  // run is the pre-push guarantee from this side. Fail here means the private
+  // tree drifted in a claim the gate class covers: fix the strings (or the
+  // constants) in the SOURCE repo, never in the export.
+  const claimGate = spawnSync(
+    process.execPath,
+    ["scripts/check-claim-drift.mjs"],
+    { cwd: outDir, stdio: "inherit" },
+  );
+  if (claimGate.status !== 0) {
+    console.error("[export-public] FAIL: factual claim drift inside the exported tree");
     process.exit(1);
   }
 } finally {

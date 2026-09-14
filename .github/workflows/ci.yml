@@ -63,6 +63,15 @@ jobs:
       # class the unit-side mock audit exposed.
       - name: Enforce E2E selector reality
         run: npm run check:e2e-selectors
+      # Its own named step so factual claim drift (a UI string or locale
+      # promising a different password minimum, recovery word count, device
+      # limit, KDF MiB parameter, backup interval or price than the code
+      # enforces) surfaces as a separate red check. This step ships to the
+      # public export unchanged: the open-source tree gets the same gate on
+      # its own CI (the exporter also runs it inside the exported tree before
+      # it can be pushed).
+      - name: Enforce factual claim consistency
+        run: npm run check:claim-drift
 
   slow-tests:
     name: Full unit suite (slow profile, timing enforced)

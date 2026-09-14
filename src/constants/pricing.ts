@@ -259,7 +259,7 @@ export const PRICING_CONFIG = {
       },
     },
     // Public commitment: where the line is drawn
-    note: "Vault is encrypted — we cannot see your data. Forgot password cannot be recovered without the 12-word seed phrase. Support never asks for your vault password or recovery phrase.",
+    note: "Vault is encrypted — we cannot see your data. Forgot password cannot be recovered without the 24-word recovery phrase. Support never asks for your vault password or recovery phrase.",
   },
 
   competitors: {

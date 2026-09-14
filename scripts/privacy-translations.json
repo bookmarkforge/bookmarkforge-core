@@ -169,13 +169,13 @@
       },
       {
         "title": "Support SLA",
-        "text": "Single maintainer. The vault is encrypted — we cannot see your data and we never ask for your vault password or 12-word phrase.",
+        "text": "Single maintainer. The vault is encrypted — we cannot see your data and we never ask for your vault password or 24-word recovery phrase.",
         "items": [
           "<strong>Free:</strong> community — Help Center (<a href=\"/help\">/help</a>) + GitHub Discussions, best effort. Search BF-E* code first + paste diagnostic.",
           "<strong>Pro:</strong> email <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (subject: Pro) — <strong>48h business days</strong> (Mon–Fri). Include diagnostic from Settings → Advanced → Copy diagnostic.",
           "<strong>Founder:</strong> priority email 24h business days + beta queue (subject: Founder #).",
           "Before contacting us, use <strong>Settings → Advanced → Copy diagnostic</strong> or <a href=\"/help#diagnostics\">Help → Diagnostics</a>. The diagnostic contains only counts/versions (bookmarks, storage %, build hash) — never vault content, URLs or prompts. See Help § BF-E* for error codes.",
-          "<strong>Forgot password (BF-E101):</strong> we cannot recover it. When you create a vault we show a 12-word seed phrase <strong>once</strong> — write it on paper. Without it the vault is unrecoverable, by design."
+          "<strong>Forgot password (BF-E101):</strong> we cannot recover it. When you create a vault we show a 24-word recovery phrase <strong>once</strong> — write it on paper. Without it the vault is unrecoverable, by design."
         ]
       },
       {
@@ -193,7 +193,7 @@
         "text": "You agree to:",
         "items": [
           "Maintain backups of your important data",
-          "Keep your vault password secure (we cannot recover it without the 12-word phrase)",
+          "Keep your vault password secure (we cannot recover it without the 24-word recovery phrase)",
           "Use the application in compliance with applicable laws",
           "Not use the application for illegal purposes"
         ]

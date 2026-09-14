@@ -408,7 +408,7 @@
       },
       {
         "question": "J’ai oublié le mot de passe de mon coffre ?",
-        "answer": "Nous ne pouvons pas le récupérer. À la création, une phrase de 12 mots s’affiche une seule fois — notez-la sur papier. Sans elle, personne (nous inclus) ne peut ouvrir le coffre. Voir <a href=\"/help#bf-e101\">BF-E101</a>."
+        "answer": "Nous ne pouvons pas le récupérer. À la création, une phrase de 24 mots s’affiche une seule fois — notez-la sur papier. Sans elle, personne (nous inclus) ne peut ouvrir le coffre. Voir <a href=\"/help#bf-e101\">BF-E101</a>."
       }
     ]
   },
@@ -534,7 +534,7 @@
       },
       {
         "question": "J’ai oublié le mot de passe de mon coffre ?",
-        "answer": "Nous ne pouvons pas le récupérer. À la création, une phrase de 12 mots s’affiche une seule fois — notez-la sur papier. Sans elle, personne (nous inclus) ne peut ouvrir le coffre. Voir BF-E101."
+        "answer": "Nous ne pouvons pas le récupérer. À la création, une phrase de 24 mots s’affiche une seule fois — notez-la sur papier. Sans elle, personne (nous inclus) ne peut ouvrir le coffre. Voir BF-E101."
       }
     ]
   }

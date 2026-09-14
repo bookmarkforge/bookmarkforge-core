@@ -47,7 +47,7 @@
       {"@type":"Question","name":"Is the Free tier really free forever?","acceptedAnswer":{"@type":"Answer","text":"Yes. No trial, no subscription. Free includes 1,000 bookmarks, full-text & semantic search, knowledge graph and AI with your own API key."}},
       {"@type":"Question","name":"What does Lifetime of v1 mean?","acceptedAnswer":{"@type":"Answer","text":"Pay once, own v1 forever. All v1.x bugfixes forever plus 12 months of feature updates from purchase. Security updates forever. After month 13 you keep v1 working. v2 and v3 are separate paid majors: $89 for new customers, $35 for v1 owners (60% off)."}},
       {"@type":"Question","name":"What is Founder Edition?","acceptedAnswer":{"@type":"Answer","text":"Same Pro v1 binary with a vanity Founder # badge, beta access to v2 and lifetime 60% off future majors. Limited 100. No extra paywall."}},
-      {"@type":"Question","name":"What if I forget my vault password?","acceptedAnswer":{"@type":"Answer","text":"We cannot recover it. When you create a vault we show a 12-word seed phrase once — write it on paper. Without it the vault is unrecoverable. See BF-E101."}}
+      {"@type":"Question","name":"What if I forget my vault password?","acceptedAnswer":{"@type":"Answer","text":"We cannot recover it. When you create a vault we show a 24-word recovery phrase once — write it on paper. Without it the vault is unrecoverable. See BF-E101."}}
     ]
   }
   </script>
@@ -101,7 +101,7 @@
     </div>
 
     <h2 id="sla">Support SLA — how fast we answer</h2>
-    <p>Single maintainer. The vault is encrypted — <strong>we never ask for your vault password or 12-word phrase</strong>. Support is best-effort for Free, committed for paid tiers.</p>
+    <p>Single maintainer. The vault is encrypted — <strong>we never ask for your vault password or 24-word recovery phrase</strong>. Support is best-effort for Free, committed for paid tiers.</p>
     <table class="sla">
       <thead><tr><th>Tier</th><th>Channel</th><th>Response</th><th>What to do first</th></tr></thead>
       <tbody>
@@ -114,7 +114,7 @@
 
     <h2 id="troubleshooting">Troubleshooting — most issues in 30 seconds</h2>
     <h3>Vault locked / wrong password</h3>
-    <p>Passwords are case- and whitespace-sensitive. If you changed layout (e.g. AZERTY→QWERTY) retype slowly. After 5 failed unlocks, wait 1 minute. If you lost the password, use the <strong>12-word seed phrase</strong> shown once at vault creation (<a href="#bf-e101">BF-E101</a>). Without it recovery is impossible by design — we have no backdoor.</p>
+    <p>Passwords are case- and whitespace-sensitive. If you changed layout (e.g. AZERTY→QWERTY) retype slowly. After 5 failed unlocks, wait 1 minute. If you lost the password, use the <strong>24-word recovery phrase</strong> shown once at vault creation (<a href="#bf-e101">BF-E101</a>). Without it recovery is impossible by design — we have no backdoor.</p>
 
     <h3>Browser storage full</h3>
     <p>IndexedDB quota is per-browser (typically 60–80% of disk). When full, saves fail with <a href="#bf-e103">BF-E103</a>. Fix: <code>Settings → Storage → Compact database</code> then <code>Clear AI cache</code>. Or <code>Export backup (.bmf)</code> → <code>Delete old vectors</code>. Check <a href="#diagnostics">storage % in diagnostic</a> — above 80% we show a banner.</p>
@@ -133,7 +133,7 @@
     <table class="sla">
       <thead><tr><th>Code</th><th>Meaning</th><th>Fix</th></tr></thead>
       <tbody>
-        <tr id="bf-e101"><td><strong>BF-E101</strong></td><td>Vault password forgotten / seed phrase required</td><td>We cannot recover passwords. At vault creation we show a <strong>12-word phrase once</strong> — write it on paper. Use it to reset. No phrase = vault unrecoverable. <a href="#diagnostics">No ticket will recover it</a>.</td></tr>
+        <tr id="bf-e101"><td><strong>BF-E101</strong></td><td>Vault password forgotten / seed phrase required</td><td>We cannot recover passwords. At vault creation we show a <strong>24-word phrase once</strong> — write it on paper. Use it to reset. No phrase = vault unrecoverable. <a href="#diagnostics">No ticket will recover it</a>.</td></tr>
         <tr id="bf-e102"><td><strong>BF-E102</strong></td><td>Vault locked / wrong password</td><td>Retype password exactly. After 5 failures wait 60s. If you rotated password recently, try the previous one — rotation keeps last salt for rollback.</td></tr>
         <tr id="bf-e103"><td><strong>BF-E103</strong></td><td>Storage quota exceeded</td><td>Go to <code>Settings → Storage</code>: Compact DB + Clear AI cache. Export .bmf backup if needed. See Troubleshooting §Storage.</td></tr>
         <tr id="bf-e104"><td><strong>BF-E104</strong></td><td>IndexedDB blocked / private browsing</td><td>IndexedDB is blocked in private/incognito or by storage policy. Use a normal window. Check <code>Help → Diagnostics → Storage</code>.</td></tr>

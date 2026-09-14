@@ -408,7 +408,7 @@
       },
       {
         "question": "¿Qué pasa si olvido la contraseña de mi bóveda?",
-        "answer": "No podemos recuperarla. Al crear la bóveda te mostramos una frase semilla de 12 palabras una sola vez — escríbela en papel. Sin ella nadie (ni nosotros) puede abrir la bóveda. Ver <a href=\"/help#bf-e101\">BF-E101</a>."
+        "answer": "No podemos recuperarla. Al crear la bóveda te mostramos una frase semilla de 24 palabras una sola vez — escríbela en papel. Sin ella nadie (ni nosotros) puede abrir la bóveda. Ver <a href=\"/help#bf-e101\">BF-E101</a>."
       }
     ]
   },
@@ -534,7 +534,7 @@
       },
       {
         "question": "¿Qué pasa si olvido la contraseña de mi bóveda?",
-        "answer": "No podemos recuperarla. Al crear la bóveda te mostramos una frase semilla de 12 palabras una sola vez — escríbela en papel. Sin ella nadie (ni nosotros) puede abrir la bóveda. Ver BF-E101."
+        "answer": "No podemos recuperarla. Al crear la bóveda te mostramos una frase semilla de 24 palabras una sola vez — escríbela en papel. Sin ella nadie (ni nosotros) puede abrir la bóveda. Ver BF-E101."
       }
     ]
   }

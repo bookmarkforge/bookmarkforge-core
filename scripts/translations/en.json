@@ -404,7 +404,7 @@
       },
       {
         "question": "What if I forget my vault password?",
-        "answer": "We cannot recover it. When you create a vault we show 12-word seed phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help#bf-e101\">BF-E101</a>."
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help#bf-e101\">BF-E101</a>."
       }
     ]
   },
@@ -532,7 +532,7 @@
       },
       {
         "question": "What if I forget my vault password?",
-        "answer": "We cannot recover it. When you create a vault we show 12-word seed phrase once — write it on paper. Without it, no one (including us) can open the vault. See BF-E101."
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See BF-E101."
       }
     ]
   }

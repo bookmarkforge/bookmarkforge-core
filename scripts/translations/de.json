@@ -408,7 +408,7 @@
       },
       {
         "question": "Was, wenn ich mein Vault-Passwort vergesse?",
-        "answer": "Wir können es nicht wiederherstellen. Beim Erstellen zeigen wir einmal eine 12-Wort-Seed-Phrase — auf Papier notieren. Ohne sie kann niemand (auch wir nicht) den Vault öffnen. Siehe <a href=\"/help#bf-e101\">BF-E101</a>."
+        "answer": "Wir können es nicht wiederherstellen. Beim Erstellen zeigen wir einmal eine 24-Wort-Seed-Phrase — auf Papier notieren. Ohne sie kann niemand (auch wir nicht) den Vault öffnen. Siehe <a href=\"/help#bf-e101\">BF-E101</a>."
       }
     ]
   },
@@ -534,7 +534,7 @@
       },
       {
         "question": "Was, wenn ich mein Vault-Passwort vergesse?",
-        "answer": "Wir können es nicht wiederherstellen. Beim Erstellen zeigen wir einmal eine 12-Wort-Seed-Phrase — auf Papier notieren. Ohne sie kann niemand (auch wir nicht) den Vault öffnen. Siehe BF-E101."
+        "answer": "Wir können es nicht wiederherstellen. Beim Erstellen zeigen wir einmal eine 24-Wort-Seed-Phrase — auf Papier notieren. Ohne sie kann niemand (auch wir nicht) den Vault öffnen. Siehe BF-E101."
       }
     ]
   }

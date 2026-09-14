@@ -86,7 +86,7 @@ hash salteado (ROPA §3/§6). El usuario lo pega en email/Discussions; cubre el 
 | Pro | `bookmarkforge@proton.me` (subject: Pro) + diagnóstico | **48h** |
 | Founder | Email priority (subject: Founder #) | **24h** + beta queue |
 
-Soporte nunca pide password del vault ni frase de 12 palabras. Sin frase = vault irrecuperable
+Soporte nunca pide password del vault ni frase de 24 palabras. Sin frase = vault irrecuperable
 por diseño (BF-E101). Ver `/help#sla` y `#bf-e`.
 
 ## Gate nocturno de KPIs de negocio (staging)

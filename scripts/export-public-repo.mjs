@@ -269,9 +269,12 @@ for (const rel of included) {
   }
 }
 
-// Public overlay: license, README, and a minimal public .github (issues/PRs only).
+// Public overlay: license, README, trademark notices, and a minimal public
+// .github (issues/PRs only).
 cpSync(join(repoRoot, "scripts", "public-export", "LICENSE"), join(outDir, "LICENSE"));
 cpSync(join(repoRoot, "scripts", "public-export", "README.md"), join(outDir, "README.md"));
+cpSync(join(repoRoot, "scripts", "public-export", "NOTICE"), join(outDir, "NOTICE"));
+cpSync(join(repoRoot, "scripts", "public-export", "TRADEMARKS.md"), join(outDir, "TRADEMARKS.md"));
 mkdirSync(join(outDir, ".github"), { recursive: true });
 writeFileSync(
   join(outDir, ".github", "SECURITY.md"),
@@ -337,5 +340,5 @@ if (leaked.length) {
   process.exit(1);
 }
 
-console.log(`[export-public] wrote ${included.length + 3} files to ${outDir}`);
+console.log(`[export-public] wrote ${included.length + 5} files to ${outDir}`);
 console.log("[export-public] next: cd into the export, npm ci, npm run build, npx vitest run src/tests/db — then push as the public repo.");

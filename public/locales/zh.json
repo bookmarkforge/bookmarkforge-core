@@ -617,7 +617,7 @@
   "app_skip_password": "跳过密码",
   "app_vault_security_note": "您的主密码永远不会保存在磁盘上。您每次启动应用程序时都必须输入它。",
   "app_vault_unlock_error": "密码无效。请重试。",
-  "app_password_too_short": "密码必须至少8个字符。",
+  "app_password_too_short": "密码必须至少12个字符。",
   "app_confirmRecovery": "我已安全保存恢复短语",
   "app_vault_setup_error": "设置保险库错误。",
   "app_invalidRecoveryPhrase": "恢复短语无效。请重试。",

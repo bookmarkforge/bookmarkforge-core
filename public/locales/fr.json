@@ -619,7 +619,7 @@
   "app_skip_password": "Passer le mot de passe",
   "app_vault_security_note": "Votre mot de passe maître n'est jamais sauvegardé sur disque. Vous devez le saisir chaque fois que vous démarrez l'application.",
   "app_vault_unlock_error": "Mot de passe invalide. Veuillez réessayer.",
-  "app_password_too_short": "Le mot de passe doit contenir au moins 8 caractères.",
+  "app_password_too_short": "Le mot de passe doit contenir au moins 12 caractères.",
   "app_confirmRecovery": "J'ai sauvegardé la phrase de récupération en toute sécurité",
   "app_vault_setup_error": "Erreur lors de la configuration du coffre-fort.",
   "app_invalidRecoveryPhrase": "Phrase de récupération invalide. Veuillez réessayer.",

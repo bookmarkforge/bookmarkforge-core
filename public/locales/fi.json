@@ -619,7 +619,7 @@
   "app_skip_password": "Ohita salasana",
   "app_vault_security_note": "Pääsalasanaasi ei koskaan tallenneta levylle. Sinun on syötettävä se joka kerta, kun käynnistät sovelluksen.",
   "app_vault_unlock_error": "Virheellinen salasana. Yritä uudelleen.",
-  "app_password_too_short": "Salasanan on oltava vähintään 8 merkkiä.",
+  "app_password_too_short": "Salasanan on oltava vähintään 12 merkkiä.",
   "app_confirmRecovery": "Olen tallentanut palautuslauseen turvallisesti",
   "app_vault_setup_error": "Virhe holvea asennuksessa.",
   "app_invalidRecoveryPhrase": "Virheellinen palautuslause. Yritä uudelleen.",

@@ -57,7 +57,7 @@ const SUPPORT_KNOWLEDGE_EN = {
 
   SECURITY_DEEP_DIVE: {
     MASTER_PASSWORD_POLICY:
-      "Minimum 8 characters. We recommend a passphrase. It is used to generate the AES-GCM key via PBKDF2 with 600,000 iterations.",
+      "Minimum 12 characters. We recommend a passphrase. The AES-GCM key is derived with Argon2id (version 4), our single mandatory KDF since the security audit (ADR-019).",
     ENCRYPTION_DETAILS:
       "We use the browser's native SubtleCrypto API. Keys are never stored in plain text; they are derived on-the-fly and only exist in memory (RAM).",
     DATA_RECOVERY:

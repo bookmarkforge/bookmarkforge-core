@@ -619,7 +619,7 @@
   "app_skip_password": "Pomiń hasło",
   "app_vault_security_note": "Twoje hasło główne nigdy nie jest zapisywane na dysku. Musisz je wprowadzać za każdym razem, gdy uruchamiasz aplikację.",
   "app_vault_unlock_error": "Nieprawidłowe hasło. Proszę spróbować ponownie.",
-  "app_password_too_short": "Hasło musi mieć co najmniej 8 znaków.",
+  "app_password_too_short": "Hasło musi mieć co najmniej 12 znaków.",
   "app_confirmRecovery": "Bezpiecznie zapisałem frazę odzyskiwania",
   "app_vault_setup_error": "Błąd podczas konfiguracji sejfu.",
   "app_invalidRecoveryPhrase": "Nieprawidłowa fraza odzyskiwania. Spróbuj ponownie.",

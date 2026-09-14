@@ -6,6 +6,7 @@ import { securityVault } from "../services/SecurityVault";
 import { safeGet } from "../store/safeStorage";
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { logger } from "../utils/logger";
+import { SECURITY_CONFIG } from "../constants/config";
 import { downloadBlob } from "../utils/download";
 import { useTranslation } from "react-i18next";
 import { formatDate } from "../utils/localization";
@@ -171,7 +172,7 @@ export const SecurityManager: React.FC<{ children: React.ReactNode }> = ({
    * "Create Vault" proceeds without it.
    */
   const handleSaveBmfKit = () => {
-    if (passwordInput.length < 8) {
+    if (passwordInput.length < SECURITY_CONFIG.MIN_PASSWORD_LENGTH) {
       setError(t("app_password_too_short"));
       return;
     }
@@ -247,7 +248,7 @@ Date Generated: ${formatDate(new Date(), {
   };
 
   const handleSetup = async () => {
-    if (passwordInput.length < 8) {
+    if (passwordInput.length < SECURITY_CONFIG.MIN_PASSWORD_LENGTH) {
       setError(t("app_password_too_short"));
       return;
     }

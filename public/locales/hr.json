@@ -619,7 +619,7 @@
   "app_skip_password": "Preskoči lozinku",
   "app_vault_security_note": "Vaša glavna lozinka nikada se ne pohranjuje na disku. Morate je unositi svaki put kada pokrenete aplikaciju.",
   "app_vault_unlock_error": "Neispravna lozinka. Molim vas da pokušate ponovo.",
-  "app_password_too_short": "Lozinka mora imati najmanje 8 znakova.",
+  "app_password_too_short": "Lozinka mora imati najmanje 12 znakova.",
   "app_confirmRecovery": "Sigurno sam spremio frazu za oporavak",
   "app_vault_setup_error": "Greška pri postavljanju sefa.",
   "app_invalidRecoveryPhrase": "Nevaljana fraza za oporavak. Pokušajte ponovno.",

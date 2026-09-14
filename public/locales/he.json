@@ -617,7 +617,7 @@
   "app_skip_password": "דלג על סיסמה",
   "app_vault_security_note": "הסיסמה הראשית שלך לעולם לא נשמרת בדיסק. עליך להזין אותה בכל פעם שאתה מפעיל את היישום.",
   "app_vault_unlock_error": "סיסמה שגויה. נסו שוב.",
-  "app_password_too_short": "הסיסמה חייבת להכיל לפחות 8 תווים.",
+  "app_password_too_short": "הסיסמה חייבת להכיל לפחות 12 תווים.",
   "app_confirmRecovery": "שמרתי את ביטוי השחזור בצורה בטוחה",
   "app_vault_setup_error": "שגיאה בהגדרת הכספת.",
   "app_invalidRecoveryPhrase": "ביטוי שחזור לא חוקי. נסה שוב.",

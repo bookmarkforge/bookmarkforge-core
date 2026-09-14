@@ -59,7 +59,7 @@ export const SUPPORT_KNOWLEDGE_ES = {
 
   SECURITY_DEEP_DIVE: {
     MASTER_PASSWORD_POLICY:
-      "Mínimo 8 caracteres. Recomendamos una frase de contraseña. La clave AES-GCM se deriva con Argon2id (versión 4), nuestro KDF único y obligatorio desde la auditoría de seguridad (ADR-019).",
+      "Mínimo 12 caracteres. Recomendamos una frase de contraseña. La clave AES-GCM se deriva con Argon2id (versión 4), nuestro KDF único y obligatorio desde la auditoría de seguridad (ADR-019).",
     ENCRYPTION_DETAILS:
       "Usamos la API SubtleCrypto nativa del navegador. Las claves nunca se almacenan en texto plano; se derivan sobre la marcha y solo existen en memoria (RAM).",
     DATA_RECOVERY:

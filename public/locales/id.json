@@ -619,7 +619,7 @@
   "app_skip_password": "Lewati kata sandi",
   "app_vault_security_note": "Kata sandi master Anda tidak pernah disimpan ke disk. Anda harus memasukkannya setiap kali memulai aplikasi.",
   "app_vault_unlock_error": "Kata sandi tidak valid. Silakan coba lagi.",
-  "app_password_too_short": "Kata sandi harus minimal 8 karakter.",
+  "app_password_too_short": "Kata sandi harus minimal 12 karakter.",
   "app_confirmRecovery": "Saya telah menyimpan frasa pemulihan dengan aman",
   "app_vault_setup_error": "Kesalahan saat mengatur brankas.",
   "app_invalidRecoveryPhrase": "Frasa pemulihan tidak valid. Silakan coba lagi.",

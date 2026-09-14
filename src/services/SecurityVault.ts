@@ -196,7 +196,7 @@ class SecurityVault {
   /**
    * Unlocks the vault with the master password. Rate-limited: after 5 failed
    * attempts the vault is locked for 5 minutes.
-   * @param password - The user's password (minimum 8 characters)
+   * @param password - The user's password (minimum 12 characters)
    * @returns `true` when unlocked successfully, `false` when rejected or rate limited
    */
   async unlock(password: string): Promise<boolean> {

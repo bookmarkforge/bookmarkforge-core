@@ -619,7 +619,7 @@
   "app_skip_password": "Salta la password",
   "app_vault_security_note": "La tua password master non viene mai salvata su disco. Devi inserirla ogni volta che avvii l'applicazione.",
   "app_vault_unlock_error": "Password non valida. Riprova.",
-  "app_password_too_short": "La password deve avere almeno 8 caratteri.",
+  "app_password_too_short": "La password deve avere almeno 12 caratteri.",
   "app_confirmRecovery": "Ho salvato la frase di recupero in modo sicuro",
   "app_vault_setup_error": "Errore durante la configurazione della cassaforte.",
   "app_invalidRecoveryPhrase": "Frase di recupero non valida. Riprova.",

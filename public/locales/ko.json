@@ -619,7 +619,7 @@
   "app_skip_password": "비밀번호 건너뛰기",
   "app_vault_security_note": "마스터 암호는 절대 디스크에 저장되지 않습니다. 앱을 시작할 때마다 입력해야 합니다.",
   "app_vault_unlock_error": "잘못된 비밀번호입니다. 다시 시도해주세요.",
-  "app_password_too_short": "비밀번호는 최소 8자 이상이어야 합니다.",
+  "app_password_too_short": "비밀번호는 최소 12자 이상이어야 합니다.",
   "app_confirmRecovery": "복구 문구를 안전하게 저장했습니다",
   "app_vault_setup_error": "금고 설정 오류.",
   "app_invalidRecoveryPhrase": "잘못된 복구 문구입니다. 다시 시도해주세요.",

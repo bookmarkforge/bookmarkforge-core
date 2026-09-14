@@ -619,7 +619,7 @@
   "app_skip_password": "Hoppa över lösenord",
   "app_vault_security_note": "Ditt masterlösenord sparas aldrig på disk. Du måste ange det varje gång du startar applikationen.",
   "app_vault_unlock_error": "Felaktig lösenord. Försök igen.",
-  "app_password_too_short": "Lösenordet måste vara minst 8 tecken.",
+  "app_password_too_short": "Lösenordet måste vara minst 12 tecken.",
   "app_confirmRecovery": "Jag har sparat återställningsfrasen säkert",
   "app_vault_setup_error": "Fel vid inställning av valv.",
   "app_invalidRecoveryPhrase": "Ogiltig återställningsfras. Försök igen.",

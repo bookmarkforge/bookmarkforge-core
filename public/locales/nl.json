@@ -619,7 +619,7 @@
   "app_skip_password": "Wachtwoord overslaan",
   "app_vault_security_note": "Je master wachtwoord wordt nooit op schijf opgeslagen. Je moet het invoeren elke keer dat je de applicatie start.",
   "app_vault_unlock_error": "Ongeldige wachtwoord. Probeer opnieuw.",
-  "app_password_too_short": "Wachtwoord moet minimaal 8 tekens lang zijn.",
+  "app_password_too_short": "Wachtwoord moet minimaal 12 tekens lang zijn.",
   "app_confirmRecovery": "Ik heb de herstelfrase veilig opgeslagen",
   "app_vault_setup_error": "Fout bij het instellen van de kluis.",
   "app_invalidRecoveryPhrase": "Ongeldige herstelzin. Probeer het opnieuw.",

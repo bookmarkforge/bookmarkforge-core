@@ -619,7 +619,7 @@
   "app_skip_password": "Omite parola",
   "app_vault_security_note": "Parola principală nu este niciodată salvată pe disc. Trebuie să o introduceți de fiecare dată când porniți aplicația.",
   "app_vault_unlock_error": "Parola invalidă. Vă rugăm să încercați din nou.",
-  "app_password_too_short": "Parola trebuie să aibă cel puțin 8 caractere.",
+  "app_password_too_short": "Parola trebuie să aibă cel puțin 12 caractere.",
   "app_confirmRecovery": "Am salvat în siguranță fraza de recuperare",
   "app_vault_setup_error": "Eroare la configurarea seifului.",
   "app_invalidRecoveryPhrase": "Frază de recuperare nevalidă. Vă rugăm să încercați din nou.",

@@ -130,7 +130,7 @@ describe("SecurityManager", () => {
       );
       // Shield is a decorative inline SVG — assert the rendered icon
       // container instead of a lucide-mocked testid.
-      expect(container.querySelector(".size-8.ds-text-accent")).toBeTruthy();
+      expect(container.querySelector(".size-7.ds-text-accent")).toBeTruthy();
     });
 
     it("renders vault locked title", () => {

@@ -619,7 +619,7 @@
   "app_skip_password": "Şifreyi atla",
   "app_vault_security_note": "Ana şifreniz asla diske kaydedilmez. Uygulamayı her başlattığınızda girmeniz gerekir.",
   "app_vault_unlock_error": "Geçersiz şifre. Lütfen tekrar deneyin.",
-  "app_password_too_short": "Şifre en az 8 karakter olmalıdır.",
+  "app_password_too_short": "Şifre en az 12 karakter olmalıdır.",
   "app_confirmRecovery": "Kurtarma ifadesini güvenli bir şekilde kaydettim",
   "app_vault_setup_error": "Kasa kurulum hatası.",
   "app_invalidRecoveryPhrase": "Geçersiz kurtarma ifadesi. Lütfen tekrar deneyin.",

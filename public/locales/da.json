@@ -619,7 +619,7 @@
   "app_skip_password": "Spring adgangskode over",
   "app_vault_security_note": "Din hovedadgangskode gemmes aldrig på disk. Du skal indtaste den hver gang, du starter applikationen.",
   "app_vault_unlock_error": "Ugyldigt password. Prøv igen.",
-  "app_password_too_short": "Adgangskoden skal være mindst 8 tegn.",
+  "app_password_too_short": "Adgangskoden skal være mindst 12 tegn.",
   "app_confirmRecovery": "Jeg har gemt gendannelsesfrasen sikkert",
   "app_vault_setup_error": "Fejl ved opsætning af boks.",
   "app_invalidRecoveryPhrase": "Ugyldig gendannelsesfrase. Prøv venligst igen.",

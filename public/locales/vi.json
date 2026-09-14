@@ -619,7 +619,7 @@
   "app_skip_password": "Bỏ qua mật khẩu",
   "app_vault_security_note": "Mật khẩu chính của bạn không bao giờ được lưu trên đĩa. Bạn phải nhập nó mỗi lần khởi động ứng dụng.",
   "app_vault_unlock_error": "Mật khẩu không đúng. Vui lòng thử lại.",
-  "app_password_too_short": "Mật khẩu phải có ít nhất 8 ký tự.",
+  "app_password_too_short": "Mật khẩu phải có ít nhất 12 ký tự.",
   "app_confirmRecovery": "Tôi đã lưu cụm từ khôi phục một cách an toàn",
   "app_vault_setup_error": "Lỗi thiết lập hầm.",
   "app_invalidRecoveryPhrase": "Cụm từ khôi phục không hợp lệ. Vui lòng thử lại.",

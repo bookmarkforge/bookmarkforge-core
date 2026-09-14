@@ -619,7 +619,7 @@
   "app_skip_password": "Přeskočit heslo",
   "app_vault_security_note": "Vaše hlavní heslo není nikdy uloženo na disku. Musíte ho zadat pokaždé, když spustíte aplikaci.",
   "app_vault_unlock_error": "Neplatný heslo. Zkuste to znovu.",
-  "app_password_too_short": "Heslo musí mít alespoň 8 znaků.",
+  "app_password_too_short": "Heslo musí mít alespoň 12 znaků.",
   "app_confirmRecovery": "Bezpečně jsem uložil frázi pro obnovu",
   "app_vault_setup_error": "Chyba při nastavení trezoru.",
   "app_invalidRecoveryPhrase": "Neplatná fráze pro obnovu. Zkuste to prosím znovu.",

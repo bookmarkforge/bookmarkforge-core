@@ -617,7 +617,7 @@
   "app_skip_password": "تخطي كلمة المرور",
   "app_vault_security_note": "Your master password is never saved to disk. You must enter it every time you start the application.",
   "app_vault_unlock_error": "كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى.",
-  "app_password_too_short": "يجب أن تتكون كلمة المرور من 8 أحرف على الأقل.",
+  "app_password_too_short": "يجب أن تتكون كلمة المرور من 12 أحرف على الأقل.",
   "app_confirmRecovery": "لقد حفظت عبارة الاسترداد بأمان",
   "app_vault_setup_error": "خطأ في إعداد الخزنة.",
   "app_invalidRecoveryPhrase": "عبارة استرداد غير صالحة. يرجى المحاولة مرة أخرى.",

@@ -619,7 +619,7 @@
   "app_skip_password": "Jelszó kihagyása",
   "app_vault_security_note": "A mester jelszavát sosem tárolják lemezen. Minden alkalommal meg kell adnia, amikor elindítja az alkalmazást.",
   "app_vault_unlock_error": "Érvénytelen jelszó. Kérjük, próbálja újra.",
-  "app_password_too_short": "A jelszónak legalább 8 karakter hosszúnak kell lennie.",
+  "app_password_too_short": "A jelszónak legalább 12 karakter hosszúnak kell lennie.",
   "app_confirmRecovery": "Biztonságosan elmentettem a helyreállítási kifejezést",
   "app_vault_setup_error": "Hiba a széf beállításakor.",
   "app_invalidRecoveryPhrase": "Érvénytelen helyreállítási kifejezés. Kérjük, próbálja újra.",

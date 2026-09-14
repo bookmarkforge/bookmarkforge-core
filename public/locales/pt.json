@@ -619,7 +619,7 @@
   "app_skip_password": "Pular senha",
   "app_vault_security_note": "Sua senha mestra nunca é salva no disco. Você deve digitá-la toda vez que iniciar o aplicativo.",
   "app_vault_unlock_error": "Senha inválida. Por favor, tente novamente.",
-  "app_password_too_short": "A senha deve ter pelo menos 8 caracteres.",
+  "app_password_too_short": "A senha deve ter pelo menos 12 caracteres.",
   "app_confirmRecovery": "Salvei a frase de recuperação com segurança",
   "app_vault_setup_error": "Erro ao configurar o cofre.",
   "app_invalidRecoveryPhrase": "Frase de recuperação inválida. Por favor tente novamente.",

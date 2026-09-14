@@ -617,7 +617,7 @@
   "app_skip_password": "パスワードをスキップ",
   "app_vault_security_note": "マスターパスワードはディスクに保存されません。アプリケーションを起動するたびに入力する必要があります。",
   "app_vault_unlock_error": "無効なパスワードです。再度試してみてください。",
-  "app_password_too_short": "パスワードは少なくとも8文字である必要があります。",
+  "app_password_too_short": "パスワードは少なくとも12文字である必要があります。",
   "app_confirmRecovery": "リカバリーフレーズを安全に保存しました",
   "app_vault_setup_error": "金庫の設定エラー。",
   "app_invalidRecoveryPhrase": "無効な回復フレーズです。もう一度お試しください。",

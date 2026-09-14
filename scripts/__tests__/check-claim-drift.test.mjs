@@ -3,7 +3,8 @@
  * scripts/__tests__/check-claim-drift.test.mjs
  *
  * Tests for the factual claim-drift gate (scripts/check-claim-drift.mjs):
- *   - truth extraction from src/constants/config.ts + pricing.ts shapes,
+ *   - truth extraction from src/constants/config.ts + pricing.ts shapes
+ *     plus argon2-kdf.ts / BackupService.ts / StorageStatus.tsx extras,
  *     including FAIL-CLOSED behavior when a constant cannot be located,
  *   - every rule's verdict in both directions (true claim passes, drifted
  *     number fails) across the multilingual unit nouns the scanner knows,
@@ -67,7 +68,32 @@ export const PRICING_CONFIG = {
 };
 `;
 
-const TRUTH = extractTruth(MINI_CONFIG, MINI_PRICING);
+// Mini-shapes of the three extra truth sources (argon2-kdf.ts, BackupService.ts,
+// StorageStatus.tsx) — the new rules read them through `extractTruth` extras.
+const MINI_KDF = `
+const ARGON2_PARAMS_DESKTOP = {
+  t: 3,
+  m: 131_072, // 128 MiB — OWASP recommended for sensitive data
+  p: 1,
+  dkLen: 32,
+} as const;
+const ARGON2_PARAMS_MOBILE = {
+  t: 3,
+  m: 65_536, // 64 MiB — above OWASP interactive minimum
+  p: 1,
+  dkLen: 32,
+} as const;
+`;
+const MINI_BACKUP = `const AUTO_BACKUP_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 hours`;
+const MINI_STORAGE = `export const BACKUP_STALE_MS = 48 * 60 * 60 * 1000;`;
+
+const EXTRAS = {
+  kdfSrc: MINI_KDF,
+  backupSrc: MINI_BACKUP,
+  storageStatusSrc: MINI_STORAGE,
+};
+
+const TRUTH = extractTruth(MINI_CONFIG, MINI_PRICING, EXTRAS);
 const RULES = buildRules(TRUTH);
 
 /** Run the rule set over one synthetic file; returns hits. */
@@ -104,6 +130,30 @@ describe("extractTruth", () => {
     expect([...TRUTH.prices].sort((a, b) => a - b)).toEqual([0, 59, 79]);
     expect([...TRUTH.upgradePrices].sort((a, b) => a - b)).toEqual([35, 89]);
     expect([...TRUTH.b2bYearlyPrices].sort((a, b) => a - b)).toEqual([2500, 5000, 7500]);
+    expect([...TRUTH.argonMiB].sort((a, b) => a - b)).toEqual([64, 128]);
+    expect(TRUTH.autoBackupHours).toBe(24);
+    expect(TRUTH.backupStaleHours).toBe(48);
+  });
+
+  it("is FAIL-CLOSED for the new sources when extras are omitted", () => {
+    const t = extractTruth(MINI_CONFIG, MINI_PRICING);
+    expect(t.argonMiB.size).toBe(0);
+    expect(t.autoBackupHours).toBeNull();
+    expect(t.backupStaleHours).toBeNull();
+  });
+
+  it("does not mistake a non-KiB argon2 memory value for MiB", () => {
+    const t = extractTruth(MINI_CONFIG, MINI_PRICING, {
+      kdfSrc: `const ARGON2_PARAMS_DESKTOP = { m: 12345 };`,
+    });
+    expect(t.argonMiB.size).toBe(0);
+  });
+
+  it("accepts a plain-millisecond interval that divides into whole hours", () => {
+    const t = extractTruth(MINI_CONFIG, MINI_PRICING, {
+      backupSrc: `const AUTO_BACKUP_INTERVAL_MS = 86400000;`,
+    });
+    expect(t.autoBackupHours).toBe(24);
   });
 
   it("is FAIL-CLOSED: missing MIN_PASSWORD_LENGTH yields null, not a guess", () => {
@@ -315,6 +365,128 @@ describe("rule: upgrade-prices", () => {
   });
 });
 
+// ── argon2-memory ────────────────────────────────────────────────────────
+describe("rule: argon2-memory", () => {
+  it.each([
+    "Vault keys are hardened with 128 MiB of memory.",
+    "El KDF de la bóveda usa 128 MiB de memoria.",
+    "Der Tresor nutzt 64 MiB Argon2id-Speicher (mobil).",
+  ])("accepts true MiB claims (desktop 128, mobile 64): %s", (line) => {
+    expectClaim(line, "argon2-memory", { expectDrift: false });
+  });
+
+  it("rejects a MiB value no Argon2 profile configures", () => {
+    const hit = expectClaim("Hardened with 256 MiB memory cost.", "argon2-memory");
+    expect(hit.drift).toMatch(/memory: \{64, 128\} MiB/);
+  });
+
+  it("is FAIL-CLOSED when argon2-kdf.ts cannot be located", () => {
+    const broken = buildRules(extractTruth(MINI_CONFIG, MINI_PRICING));
+    const dir = mkdtempSync(join(tmpdir(), "claim-drift-argon-fc-"));
+    const file = join(dir, "f.txt");
+    writeFileSync(file, "128 MiB of memory-hard KDF");
+    try {
+      const hits = scanFile(file, "ts", broken).filter((h) => h.rule === "argon2-memory");
+      expect(hits).toHaveLength(1);
+      expect(hits[0].drift).toMatch(/fail-closed/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+// ── auto-backup-hours ────────────────────────────────────────────────────
+describe("rule: auto-backup-hours", () => {
+  it.each([
+    "Export your data anytime as an encrypted backup. Auto-backups run every 24 hours.",
+    '"app_onboardingBackupDesc": "Las copias automáticas se ejecutan cada 24 horas para protegerte."',
+    '"app_onboardingBackupDesc": "Automatische Backups laufen alle 24 Stunden, um Datenverlust zu verhindern."',
+    '"app_onboardingBackupDesc": "Des sauvegardes automatiques s\'exécutent toutes les 24 heures."',
+    '"app_onboardingBackupDesc": "Автоматические резервные копии создаются каждые 24 часа."',
+    '"app_onboardingBackupDesc": "自动备份每 24 小时运行一次。"',
+    '"app_onboardingBackupDesc": "自動バックアップは24時間ごとに実行され、データ損失から保護します。"',
+  ])("accepts true 24-hour auto-backup claims: %s", (line) => {
+    expectClaim(line, "auto-backup-hours", { expectDrift: false });
+  });
+
+  it("rejects a drifted interval (every 12 hours)", () => {
+    const hit = expectClaim("Auto-backups run every 12 hours.", "auto-backup-hours");
+    expect(hit.drift).toMatch(/AUTO_BACKUP_INTERVAL_MS = 24 hours/);
+  });
+
+  it("does NOT fire on hour mentions without backup context", () => {
+    expectClaim("Session expires in 2 hours of inactivity.", "auto-backup-hours", {
+      expectDrift: false,
+    });
+    expectClaim("Session expires in 48 hours of inactivity.", "backup-stale-hours", {
+      expectDrift: false,
+    });
+  });
+
+  it("is FAIL-CLOSED when BackupService.ts cannot be located", () => {
+    const broken = buildRules(extractTruth(MINI_CONFIG, MINI_PRICING));
+    const dir = mkdtempSync(join(tmpdir(), "claim-drift-ab-fc-"));
+    const file = join(dir, "f.txt");
+    writeFileSync(file, '"app_x": "Auto-backups run every 24 hours."');
+    try {
+      const hits = scanFile(file, "ts", broken).filter((h) => h.rule === "auto-backup-hours");
+      expect(hits).toHaveLength(1);
+      expect(hits[0].drift).toMatch(/fail-closed/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+// ── backup-stale-hours ──────────────────────────────────────────────────
+describe("rule: backup-stale-hours", () => {
+  it.each([
+    '"app_backupStaleWarning": "No backup in over 48 hours — export one now."',
+    '"backup_bannerStaleDesc": "Your last backup is over 48 hours old. Export a fresh copy."',
+    '"app_backupStaleWarning": "Sin respaldo en más de 48 horas: exporta uno ahora."',
+    '"backup_bannerStaleDesc": "Tu último respaldo tiene más de 48 horas."',
+    '"app_backupStaleWarning": "Keine Sicherung seit über 48 Stunden — exportieren Sie jetzt eine."',
+    '"backup_bannerStaleDesc": "Ihre letzte Sicherung ist älter als 48 Stunden."',
+    '"app_backupStaleWarning": "Votre dernière sauvegarde date de plus de 48 heures."',
+    '"app_backupStaleWarning": "48時間以上バックアップがありません。今すぐエクスポートしてください。"',
+  ])("accepts true 48-hour stale claims: %s", (line) => {
+    expectClaim(line, "backup-stale-hours", { expectDrift: false });
+  });
+
+  it("rejects a drifted stale window (over 72 hours)", () => {
+    const hit = expectClaim("No backup in over 72 hours — export one now.", "backup-stale-hours");
+    expect(hit.drift).toMatch(/BACKUP_STALE_MS = 48 hours/);
+  });
+
+  it("is FAIL-CLOSED when StorageStatus.tsx cannot be located", () => {
+    const broken = buildRules(extractTruth(MINI_CONFIG, MINI_PRICING));
+    const dir = mkdtempSync(join(tmpdir(), "claim-drift-st-fc-"));
+    const file = join(dir, "f.txt");
+    writeFileSync(file, '"app_backupStaleWarning": "No backup in over 48 hours."');
+    try {
+      const hits = scanFile(file, "ts", broken).filter((h) => h.rule === "backup-stale-hours");
+      expect(hits).toHaveLength(1);
+      expect(hits[0].drift).toMatch(/fail-closed/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+// ── devices: hyphenated sync claims ─────────────────────────────────────
+describe("rule: devices (hyphenated sync claims)", () => {
+  it("accepts tier-valid hyphenated claims", () => {
+    expectClaim("P2P sync across 3 devices", "devices", { expectDrift: false });
+    expectClaim("3-device sync end-to-end", "devices", { expectDrift: false });
+    expectClaim("Sincronización de 3 dispositivos", "devices", { expectDrift: false });
+  });
+
+  it("rejects hyphenated counts no tier grants", () => {
+    const hit = expectClaim("5-device sync", "devices");
+    expect(hit.drift).toMatch(/maxDevices values: 1, 3/);
+  });
+});
+
 // ── allowlist extension points ───────────────────────────────────────────────
 describe("allowlist extension points", () => {
   it("skips competitor pricing rows (documented extension point)", () => {
@@ -398,6 +570,13 @@ describe("real repo freeze", () => {
     const report = scanSurface();
     const total = report.results.reduce((n, r) => n + r.hits.length, 0);
     expect(total, JSON.stringify(report.results, null, 2)).toBe(0);
+  });
+
+  it("the real backup/kdf constants still match the values this suite pins", () => {
+    const { truth } = scanSurface();
+    expect([...truth.argonMiB].sort((a, b) => a - b)).toEqual([64, 128]);
+    expect(truth.autoBackupHours).toBe(24);
+    expect(truth.backupStaleHours).toBe(48);
   });
 
   it("the real constants still match the values this suite pins", () => {

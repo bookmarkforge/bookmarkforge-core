@@ -151,10 +151,20 @@ export async function dismissOverlays(page: Page): Promise<void> {
  * Complete the first-time vault setup flow: confirmation → recovery kit →
  * confirm checkbox → master password → Create Vault. Ends unlocked with
  * onboarding dismissed.
+ *
+ * `password` overrides the shared VAULT_PASSWORD (launch-smoke uses a
+ * 12-character one to mirror SECURITY_CONFIG.MIN_PASSWORD_LENGTH through the
+ * real UI gate). `onRecoveryPhrase` receives the exact 24-word phrase the
+ * setup screen displayed — launch-smoke's round-trip recovery depends on it
+ * being the phrase the UI actually showed, not a side-channel value.
  */
 export async function setupVault(
   page: Page,
-  options: { dismissOnboarding?: boolean } = {},
+  options: {
+    dismissOnboarding?: boolean;
+    password?: string;
+    onRecoveryPhrase?: (phrase: string) => void;
+  } = {},
 ): Promise<void> {
   // Playwright does not auto-navigate; every spec must land on the app first.
   await page.goto("/");
@@ -204,7 +214,23 @@ export async function setupVault(
   await expect(confirmCheckbox).toBeEnabled({ timeout: scaled(10_000) });
   await human.check(confirmCheckbox);
 
-  await human.type(page.getByLabel("Master Password"), VAULT_PASSWORD);
+  if (options.onRecoveryPhrase) {
+    // The setup screen renders the live phrase in the font-mono paragraph
+    // under the recovery-phrase label. textContent() over innerText(): keeps
+    // words separated even when the box wraps/scrolls, and reads the same
+    // node the user would read or copy.
+    const phraseText =
+      (await page
+        .locator("p.font-mono.break-all")
+        .first()
+        .textContent()) ?? "";
+    options.onRecoveryPhrase(phraseText.trim());
+  }
+
+  await human.type(
+    page.getByLabel("Master Password"),
+    options.password ?? VAULT_PASSWORD,
+  );
   await human.click(page.getByRole("button", { name: "Create Vault" }));
 
   // The unlock happens right after DB init; MainApp + onboarding render.

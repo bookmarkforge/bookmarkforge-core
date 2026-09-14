@@ -50,6 +50,11 @@
 
 ---
 
+- [ ] **16. Smoke de rutas críticas en verde contra la build de producción**
+  Batería Playwright de 7 tests que ejercita las rutas que no pueden fallar el día 1: bóveda con contraseña de 12 caracteres, recuperación con la frase de 24 palabras, activación de licencia Pro con firma real (+ clave inválida fallando cerrado) y round-trip de backup cifrado .bmf tras pérdida total simulada.
+  - Evidencia: [docs/launch-day-smoke.md](launch-day-smoke.md) (runbook: topología, triage, relación con claves de firma).
+  - Gate: `npm run smoke:launch` — veredicto "ALL CRITICAL PATHS GREEN — cleared to release".
+
 ## 🟠 Validación externa — revisión independiente
 
 - [ ] **6. Pentest (prueba de ataque real)**

@@ -32,6 +32,14 @@
  *                       PRICING_CONFIG tier prices.
  *   upgrade-prices    — upgrade price tags must equal
  *                       upgradePriceNew/upgradePriceOwner.
+ *   argon2-memory     — MiB parameters claimed for the vault KDF must match
+ *                       ARGON2_PARAMS_{DESKTOP,MOBILE} in argon2-kdf.ts.
+ *   auto-backup-hours — auto-backup interval claims must equal
+ *                       AUTO_BACKUP_INTERVAL_MS in BackupService.ts.
+ *   backup-stale-hours— stale-backup banner claims must equal
+ *                       BACKUP_STALE_MS in StorageStatus.tsx.
+ *   sync-devices      — hyphenated sync claims ("3-device sync") are covered
+ *                       by the devices rule (3 is a tier maxDevices value).
  *
  * Design constraints:
  *   - Plain Node (no TS toolchain): truth extraction is regex-based and
@@ -55,7 +63,6 @@ import process from "node:process";
 const DEFAULT_ROOT = process.cwd();
 /** RecoveryService truth: bip39.generateMnemonic(256) → 24 words. */
 const RECOVERY_WORDS = 24;
-
 // ── CLI ──────────────────────────────────────────────────────────────────────
 let ROOT = DEFAULT_ROOT;
 let JSON_OUTPUT = false;
@@ -81,7 +88,7 @@ for (let i = 2; i < process.argv.length; i++) {
  *   - set (deviceCounts, bookmarkCaps, prices, upgradePrices): a claim is
  *     valid iff it is a member, so tier variety never breaks true claims.
  */
-export function extractTruth(configSrc, pricingSrc) {
+export function extractTruth(configSrc, pricingSrc, extras = {}) {
   const truth = {
     minPasswordLength: null,
     recoveryWords: RECOVERY_WORDS,
@@ -91,6 +98,9 @@ export function extractTruth(configSrc, pricingSrc) {
     prices: new Set(),
     upgradePrices: new Set(),
     b2bYearlyPrices: new Set(),
+    argonMiB: new Set(),
+    autoBackupHours: null,
+    backupStaleHours: null,
   };
 
   const minPw = configSrc.match(/MIN_PASSWORD_LENGTH:\s*(\d+)/);
@@ -124,7 +134,33 @@ export function extractTruth(configSrc, pricingSrc) {
     truth.upgradePrices.add(Number(m[1]));
   }
 
+  // Argon2id memory cost: KiB values (with digit separators) → MiB.
+  for (const m of (extras.kdfSrc ?? "").matchAll(
+    /ARGON2_PARAMS_(?:DESKTOP|MOBILE)\s*=\s*\{[^}]*?m:\s*([\d_]+)/g,
+  )) {
+    const kib = Number(m[1].replace(/_/g, ""));
+    if (Number.isFinite(kib) && kib % 1024 === 0) truth.argonMiB.add(kib / 1024);
+  }
+  truth.autoBackupHours = extractHoursFromMs(extras.backupSrc, "AUTO_BACKUP_INTERVAL_MS");
+  truth.backupStaleHours = extractHoursFromMs(extras.storageStatusSrc, "BACKUP_STALE_MS");
+
   return truth;
+}
+
+/**
+ * Hours from an "<NAME> = N * 60 * 60 * 1000" declaration (plain-millisecond
+ * form accepted as a fallback when it divides into whole hours).
+ * null = not located = fail-closed.
+ */
+function extractHoursFromMs(src, name) {
+  if (!src) return null;
+  const product = src.match(
+    new RegExp(String.raw`${name}\s*=\s*(\d+)\s*\*\s*60\s*\*\s*60\s*\*\s*1000`),
+  );
+  if (product) return Number(product[1]);
+  const plain = src.match(new RegExp(String.raw`${name}\s*=\s*(\d{7,})\b`));
+  if (plain && Number(plain[1]) % 3_600_000 === 0) return Number(plain[1]) / 3_600_000;
+  return null;
 }
 
 /** Serialize Sets for reports/tests. */
@@ -138,6 +174,9 @@ export function truthSummary(t) {
     prices: [...t.prices].sort((a, b) => a - b),
     upgradePrices: [...t.upgradePrices].sort((a, b) => a - b),
     b2bYearlyPrices: [...t.b2bYearlyPrices].sort((a, b) => a - b),
+    argonMiB: [...t.argonMiB].sort((a, b) => a - b),
+    autoBackupHours: t.autoBackupHours,
+    backupStaleHours: t.backupStaleHours,
   };
 }
 
@@ -191,6 +230,46 @@ const BOOKMARK_UNIT =
 const MONEY_BACK =
   "refund|money[- ]back|reembolso|devoluci|garant|guarantee|rückerstatt|remboursement|rimbors";
 
+/** Hour unit nouns across locales (backup interval + stale-age claims). */
+const HOUR_UNIT =
+  "hours?|hrs?|horas?|Stunden?|heures?|ore|godzin\\w*|hodin\\w*|óra|uur|tuntia|時間|小时|小時|시간|час\\w*|годин\\w*|ساعات?|ชั่วโมง|giờ";
+
+/**
+ * Backup context gate: the hour rules only fire on lines that talk about
+ * backups (the claim classes they police). In locale JSON the English key
+ * name (…Backup…) sits on the same line as the localized value, so the gate
+ * also works for the 30 languages.
+ */
+const BACKUP_CONTEXT_RE = new RegExp(
+  String.raw`backup|back-up|sicherung|sauvegard|cop[ií]a|respald\w*|kopie|kopi\w*|záloh\w*|копи\w*|архив|백업|バックアップ|备份|สำรอง|نسخ|sao lưu`,
+  "iu",
+);
+
+/**
+ * "<qualifier> N hours" — interval wording (every/cada/alle/toutes les/…).
+ * Boundaries are Unicode-letter lookarounds, NOT \b: \b is ASCII-\w based, so
+ * "über"/"älter" (non-ASCII first letter) could never match a \b…\b pair.
+ */
+const NB_L = String.raw`(?<![\p{L}\p{N}])`;
+const NB_R = String.raw`(?![\p{L}\p{N}])`;
+
+const INTERVAL_QUALIFIER =
+  NB_L +
+  String.raw`(?:every|cada|toutes?|tous|alle|ogni|elke|co)` +
+  NB_R +
+  String.raw`\s*(?:les\s+)?\s*` +
+  String.raw`|кажд\S*|кожн\S*|всеки|كل|ทุก|mỗi|每`;
+
+/** "<qualifier> N hours" — stale-age wording (over/more than/older than/…). */
+const STALE_QUALIFIER =
+  NB_L +
+  String.raw`(?:over|more than|older than|más de|über|älter als|plus de|più di|mais de|meer dan|více než|starší než|hơn)` +
+  NB_R +
+  String.raw`\s*` +
+  String.raw`|старше|более|больше(?:\s+ніж)?|більше(?:\s+ніж)?|повече от|超过|超過|أكثر من|มากกว่า`;
+/** CJK/Korean stale wording puts the qualifier AFTER the number (48時間以上). */
+const STALE_CJK_SUFFIX = String.raw`以上|超過|超过|이상`;
+
 /** Statically known-safe lines (never a factual security/pricing claim). */
 const BASELINE_ALLOWLIST = [
   // AI model download sizes / hardware floors are factual about model files.
@@ -201,8 +280,11 @@ const BASELINE_ALLOWLIST = [
   /app_diagWebLLMBlockerRAM/,
   // Time-window UI copy is backed by its own code constants, not pricing.
   /ephemeral_\d+days/,
-  /app_backupStaleWarning|backup_bannerStaleDesc/,
-  /app_onboardingBackupDesc/,
+  // Safari's IndexedDB eviction window is a browser fact, not our constant.
+  // NOTE: the backup hour claims (app_backupStaleWarning, backup_bannerStale
+  // Desc, app_onboardingBackupDesc) are deliberately NOT allowlisted — they
+  // are policed by the auto-backup-hours / backup-stale-hours rules against
+  // their own code constants.
   /app_evictionRiskDesc/,
   // "100% offline" is a capability claim, not a price.
   /100\s*%\s*offline/i,
@@ -245,7 +327,8 @@ export function buildRules(truth) {
     {
       id: "devices",
       description: "device-count claims must equal some tier maxDevices in pricing.ts",
-      re: new RegExp(String.raw`(\d+)\s+(?:${DEVICE_UNIT})`, "iu"),
+      // [-\s] separator: also catches hyphenated sync claims ("3-device sync").
+      re: new RegExp(String.raw`(\d+)[-\s]+(?:${DEVICE_UNIT})`, "iu"),
       verdict(m) {
         const n = Number(m[1]);
         if (truth.deviceCounts.has(n)) return null;
@@ -321,6 +404,58 @@ export function buildRules(truth) {
         return `upgrade price $${n} not in pricing.ts upgrade prices: ${fmtSet(truth.upgradePrices)}`;
       },
     },
+    {
+      id: "argon2-memory",
+      description:
+        "vault-KDF MiB claims must match ARGON2_PARAMS_{DESKTOP,MOBILE} in argon2-kdf.ts",
+      re: /(\d+)\s*MiB\b/i,
+      verdict(m) {
+        const n = Number(m[1]);
+        if (truth.argonMiB.has(n)) return null;
+        if (truth.argonMiB.size === 0) {
+          return `${n} MiB claimed but ARGON2_PARAMS_{DESKTOP,MOBILE} not found in src/utils/argon2-kdf.ts (refactor?) — fail-closed`;
+        }
+        return `claims ${n} MiB for the vault KDF; argon2-kdf.ts sets ARGON2_PARAMS memory: {${fmtSet(truth.argonMiB)}} MiB (desktop, mobile)`;
+      },
+    },
+    {
+      id: "auto-backup-hours",
+      description: `auto-backup interval claims must equal AUTO_BACKUP_INTERVAL_MS in BackupService.ts (${truth.autoBackupHours ?? "MISSING"} hours)`,
+      context: BACKUP_CONTEXT_RE,
+      re: new RegExp(
+        String.raw`(?:${INTERVAL_QUALIFIER})\s*(\d+)\s*(?:${HOUR_UNIT})|(\d+)\s*(?:${HOUR_UNIT})\s*(?:ごと|마다)`,
+        "iu",
+      ),
+      verdict(m) {
+        if (truth.autoBackupHours == null) {
+          return "AUTO_BACKUP_INTERVAL_MS missing from src/services/BackupService.ts (refactor?) — fail-closed";
+        }
+        const n = Number(m[1] || m[2]);
+        if (n === truth.autoBackupHours) return null;
+        return `claims auto-backups run every ${n} hours; BackupService.ts sets AUTO_BACKUP_INTERVAL_MS = ${truth.autoBackupHours} hours`;
+      },
+    },
+    {
+      id: "backup-stale-hours",
+      description: `stale-backup claims must equal BACKUP_STALE_MS in StorageStatus.tsx (${truth.backupStaleHours ?? "MISSING"} hours)`,
+      context: BACKUP_CONTEXT_RE,
+      re: new RegExp(
+        String.raw`(?:${STALE_QUALIFIER})\s*(\d+)\s*(?:${HOUR_UNIT})`,
+        "iu",
+      ),
+      re2: new RegExp(
+        String.raw`(\d+)\s*(?:${HOUR_UNIT})\s*(?:${STALE_CJK_SUFFIX})`,
+        "iu",
+      ),
+      verdict(m) {
+        if (truth.backupStaleHours == null) {
+          return "BACKUP_STALE_MS missing from src/components/StorageStatus.tsx (refactor?) — fail-closed";
+        }
+        const n = Number(m[1]);
+        if (n === truth.backupStaleHours) return null;
+        return `claims a backup goes stale after ${n} hours; StorageStatus.tsx sets BACKUP_STALE_MS = ${truth.backupStaleHours} hours`;
+      },
+    },
   ];
 }
 
@@ -387,6 +522,7 @@ export function scanFile(filePath, kind, rules) {
     line = neutralizeCompetitorPrices(line);
     for (const rule of rules) {
       if (rule.appliesTo && !rule.appliesTo.kinds.includes(kind)) continue;
+      if (rule.context && !rule.context.test(line)) continue;
       const m = line.match(rule.re) || (rule.re2 ? line.match(rule.re2) : null);
       if (!m) continue;
       const drift = rule.verdict(m);
@@ -413,7 +549,23 @@ export function scanSurface({ root = DEFAULT_ROOT, sources } = {}) {
   const pricingPath = join(root, "src", "constants", "pricing.ts");
   const configSrc = sources?.configSrc ?? readFileSync(configPath, "utf8");
   const pricingSrc = sources?.pricingSrc ?? readFileSync(pricingPath, "utf8");
-  const truth = extractTruth(configSrc, pricingSrc);
+  // Optional truth sources: a missing file yields undefined → the rules built
+  // on it are fail-closed (they only bite if matching claims exist).
+  const readOptional = (p) => {
+    try {
+      return readFileSync(p, "utf8");
+    } catch {
+      return undefined;
+    }
+  };
+  const truth = extractTruth(configSrc, pricingSrc, {
+    kdfSrc: sources?.kdfSrc ?? readOptional(join(root, "src", "utils", "argon2-kdf.ts")),
+    backupSrc:
+      sources?.backupSrc ?? readOptional(join(root, "src", "services", "BackupService.ts")),
+    storageStatusSrc:
+      sources?.storageStatusSrc ??
+      readOptional(join(root, "src", "components", "StorageStatus.tsx")),
+  });
 
   const rules = buildRules(truth);
   const results = [];
@@ -450,7 +602,9 @@ if (invokedDirectly) {
       `check-claim-drift: OK — ${discoverSurface(ROOT).length} files scanned, no factual drift ` +
         `(minPassword=${report.truth.minPasswordLength}, recoveryWords=${report.truth.recoveryWords}, ` +
         `devices={${fmtSet(report.truth.deviceCounts)}}, bookmarkCaps={${fmtSet(report.truth.bookmarkCaps)}}, ` +
-        `refundDays=${report.truth.refundDays}, prices={${fmtSet(report.truth.prices)}})`,
+        `refundDays=${report.truth.refundDays}, prices={${fmtSet(report.truth.prices)}}, ` +
+          `argon2MiB={${fmtSet(report.truth.argonMiB)}}, autoBackup=${report.truth.autoBackupHours}h, ` +
+          `staleAfter=${report.truth.backupStaleHours}h)`,
     );
     process.exit(0);
   }

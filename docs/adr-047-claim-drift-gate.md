@@ -47,13 +47,21 @@ Propiedades de diseño relevantes para este ADR:
 4. **Fail-closed del canal de verdad:** la extracción devuelve `null` cuando
    no puede leer una fuente; los tests congelan los valores reales (12, 24,
    30, {0,3}, free=0, {1000}, {64,128}, 24 h, 48 h).
-5. **Doble ancla por claim sensible (free-device-count):** la regla que
-   protege el posicionamiento any-device de Free usa veredicto por escalar
-   (`freeDeviceCap` = `maxDevices` del tier `free`, no un set) con contexto
-   multilingüe ("free/gratis/gratuit/kostenlos/…", claves `app_freeTier*`)
-   y anti-contexto ("pro/unlock/founder/…"): una línea que nombra Free PERO
-   depende de los tiers de pago ("Free forever. Pro unlocks 3-device sync")
-   no se trata como copy de Free. Así, volver a "1 device" en CUALQUIER
+5. **Doble ancla por claim sensible (free-device-count, free-bookmark-cap):**
+   las reglas que protegen el posicionamiento de Free usan veredicto por
+   escalar (`freeDeviceCap` = `maxDevices` del tier `free`, `freeBookmarkCap`
+   = `maxBookmarks` del tier `free`; no sets) con contexto multilingüe
+   ("free/gratis/gratuit/kostenlos/…", claves `app_freeTier*`) y
+   anti-contexto ("pro/unlock/founder/…"): una línea que nombra Free PERO
+   depende de los tiers de pago ("Free forever. Pro unlocks 3-device sync",
+   "Pro es ilimitado") no se trata como copy de Free — ni su clave (el
+   "Pro" de `app_freeWallProUnlimited` la excluye deliberadamente: es upsell
+   hacia Pro, y su "Unlimited saves" es legítimo). `free-bookmark-cap`
+   añade la rama "unlimited" multilingüe (unlimited/ilimitad/illimité/
+   unbegrenz/無制限/无限/무제한/безлимит/…): en copy Free, "unlimited
+   bookmarks" es drift SIEMPRE, con o sin número — el techo es 1000, nunca
+   Infinity. Así, volver a "1 device", a "500 bookmarks" o prometer
+   "ilimitados" en CUALQUIER
    superficie falla el gate con el mensaje del policy change — sin tocar las
    claims legítimas de Pro (3 dispositivos).
 

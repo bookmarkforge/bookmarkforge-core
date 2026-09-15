@@ -24,6 +24,12 @@
  *                       in PRICING_CONFIG (tier-aware: "1 device" on Free and
  *                       "3 devices" on Pro are both valid).
  *   free-bookmarks    — bookmark-cap claims must equal some tier's maxBookmarks.
+ *   free-bookmark-cap — FREE-tier bookmark claims must equal the free tier's
+ *                       maxBookmarks (scalar anchor, fail-closed) and must
+ *                       NOT use "unlimited" wording (that is Pro's promise):
+ *                       same scalar + free/pro disambiguator design as
+ *                       free-device-count, so the 1000 cap can't regress to
+ *                       Infinity in copy without a red build.
  *   prohibited-kdf    — PBKDF2 must not appear in user-visible security copy
  *                       (vault KDF is Argon2id V4; PBKDF2 is legacy read-only).
  *   refund-window     — refund-window claims must equal
@@ -95,6 +101,7 @@ export function extractTruth(configSrc, pricingSrc, extras = {}) {
     deviceCounts: new Set(),
     freeDeviceCap: null,
     bookmarkCaps: new Set(),
+    freeBookmarkCap: null,
     refundDays: null,
     prices: new Set(),
     upgradePrices: new Set(),
@@ -119,6 +126,12 @@ export function extractTruth(configSrc, pricingSrc, extras = {}) {
   for (const m of pricingSrc.matchAll(/maxBookmarks:\s*(\d+)/g)) {
     truth.bookmarkCaps.add(Number(m[1]));
   }
+  // Free tier's bookmark cap: maxBookmarks inside the tier object whose id is
+  // "free". SCALAR (not a set) so the free-bookmark-cap rule is fail-closed:
+  // Free copy may only claim this exact number, and "unlimited" wording (the
+  // Pro promise) never passes.
+  const freeBookmarkTier = pricingSrc.match(/id:\s*"free"[\s\S]*?maxBookmarks:\s*(\d+)/);
+  if (freeBookmarkTier) truth.freeBookmarkCap = Number(freeBookmarkTier[1]);
   const refund = pricingSrc.match(/refundDays:\s*(\d+)/);
   if (refund) truth.refundDays = Number(refund[1]);
   // Tier price lines are indented exactly 6 spaces ("      price: 79,") —
@@ -178,6 +191,7 @@ export function truthSummary(t) {
     deviceCounts: [...t.deviceCounts].sort((a, b) => a - b),
     freeDeviceCap: t.freeDeviceCap,
     bookmarkCaps: [...t.bookmarkCaps].sort((a, b) => a - b),
+    freeBookmarkCap: t.freeBookmarkCap,
     refundDays: t.refundDays,
     prices: [...t.prices].sort((a, b) => a - b),
     upgradePrices: [...t.upgradePrices].sort((a, b) => a - b),
@@ -246,6 +260,15 @@ const PRO_TIER_CONTEXT =
   "pro\b|pro\.|unlock|unlocks|desbloque|débloque|freischalt|premium\b|founder\b|app_pro|app_founder";
 const BOOKMARK_UNIT =
   "bookmarks?|Bookmarks?|marcadores?|marcadors?|Lesezeichen|ブックマーク|书签|즐겨찾기|закладок|záložky|könyvjelző|penanda";
+/**
+ * "Unlimited" wording in the bookmark domain (the PRO promise). The
+ * free-bookmark-cap rule treats any of these in Free-tier copy as drift
+ * regardless of numbers — the cap is 1000, never unlimited. Covers the 30
+ * locales' main families: unlimited/unlimited/unlimited/unlimited/unlimited/
+ * unlimited/unlimited/unlimited/no limit/sin límites.
+ */
+const UNLIMITED_CONTEXT =
+  "unlimited|ilimitad|illimitat|illimité|unbegrenz|onbeperkt|ogr?aniczen|neomezen|korlátlan|無制限|无限|無限|무제한|безлимит|неограничен|sınırsız|غير محدود|sin límite|no limit";
 const MONEY_BACK =
   "refund|money[- ]back|reembolso|devoluci|garant|guarantee|rückerstatt|remboursement|rimbors";
 
@@ -384,6 +407,36 @@ export function buildRules(truth) {
         const n = Number(m[1].replace(/[.,\s]/g, ""));
         if (truth.bookmarkCaps.has(n)) return null;
         return `claims ${m[1]} bookmarks; pricing.ts maxBookmarks values: ${fmtSet(truth.bookmarkCaps)}`;
+      },
+    },
+    {
+      id: "free-bookmark-cap",
+      description: `Free-tier bookmark claims must equal the free tier's maxBookmarks (${truth.freeBookmarkCap ?? "MISSING"}) and must not say "unlimited" — scalar anchor, any-device-era policy`,
+      // Same design as free-device-count: lines plausibly describing FREE
+      // (free/gratis/… or app_freeTier* key names) without a pro/unlock lean.
+      // Pro's mixed lines ("Free forever. Pro unlocks unlimited bookmarks")
+      // stay with the tier-aware free-bookmarks/devices rules.
+      context: new RegExp(String.raw`(?:${FREE_TIER_CONTEXT})`, "iu"),
+      antiContext: new RegExp(String.raw`(?:${PRO_TIER_CONTEXT})`, "iu"),
+      // Branch 1: "unlimited" wording in the bookmark/save domain — drift
+      // regardless of numbers (the cap is 1000, never unlimited).
+      re: new RegExp(
+        String.raw`(?:${UNLIMITED_CONTEXT})[^.\n]{0,80}?(?:${BOOKMARK_UNIT}|saves?|guardad\w*|speicher\w*)|(?:${BOOKMARK_UNIT}|saves?|guardad\w*|speicher\w*)[^.\n]{0,80}?(?:${UNLIMITED_CONTEXT})`,
+        "iu",
+      ),
+      // Branch 2: a concrete count that isn't the free scalar.
+      re2: new RegExp(String.raw`(\d{1,3}(?:[.,\s]\d{3})+|\d{3,})\s+(?:${BOOKMARK_UNIT})\b`, "iu"),
+      verdict(m) {
+        if (truth.freeBookmarkCap == null) {
+          return "free tier maxBookmarks missing from src/constants/pricing.ts (refactor?) — fail-closed";
+        }
+        // Branch 1 (no digits): unlimited wording is the drift itself.
+        if (!/\d/.test(m[0])) {
+          return `Free-tier copy claims unlimited bookmarks; the free tier sets maxBookmarks: ${truth.freeBookmarkCap} (unlimited is the Pro promise)`;
+        }
+        const n = Number(m[1].replace(/[.,\s]/g, ""));
+        if (n === truth.freeBookmarkCap) return null;
+        return `Free-tier copy claims ${m[1]} bookmarks; the free tier sets maxBookmarks: ${truth.freeBookmarkCap}`;
       },
     },
     {

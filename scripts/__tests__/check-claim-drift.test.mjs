@@ -126,6 +126,7 @@ describe("extractTruth", () => {
     expect(TRUTH.refundDays).toBe(30);
     expect(TRUTH.recoveryWords).toBe(24);
     expect(TRUTH.freeDeviceCap).toBe(0);
+    expect(TRUTH.freeBookmarkCap).toBe(1000);
     expect([...TRUTH.deviceCounts].sort((a, b) => a - b)).toEqual([0, 3]);
     expect([...TRUTH.bookmarkCaps]).toEqual([1000]);
     expect([...TRUTH.prices].sort((a, b) => a - b)).toEqual([0, 59, 79]);
@@ -184,6 +185,29 @@ describe("extractTruth", () => {
       ] };`,
     );
     expect(t.freeDeviceCap).toBe(0);
+  });
+
+  it("anchors freeBookmarkCap to the tier whose id is free, not the first tier", () => {
+    const t = extractTruth(
+      MINI_CONFIG,
+      `export const PRICING_CONFIG = { tiers: [
+        { id: "founder", limitations: { maxBookmarks: 5000 } },
+        { id: "free", limitations: { maxBookmarks: 1000 } },
+      ] };`,
+    );
+    expect(t.freeBookmarkCap).toBe(1000);
+  });
+
+  it("is FAIL-CLOSED: a free tier without maxBookmarks yields a null freeBookmarkCap", () => {
+    const t = extractTruth(
+      MINI_CONFIG,
+      `export const PRICING_CONFIG = { tiers: [{ id: "pro", limitations: { maxBookmarks: Infinity } }] };`,
+    );
+    expect(t.freeBookmarkCap).toBeNull();
+  });
+
+  it("does not mistake Infinity for the free bookmark cap either", () => {
+    expect(TRUTH.freeBookmarkCap).not.toBe(Infinity);
   });
 
   it("does not mistake Infinity for a bookmark cap", () => {
@@ -334,6 +358,86 @@ describe("rule: free-device-count (any-device policy)", () => {
     const rules = buildRules(t);
     const rule = rules.find((r) => r.id === "free-device-count");
     const drift = rule.verdict(["1"]);
+    expect(drift).toMatch(/fail-closed/);
+  });
+});
+
+describe("rule: free-bookmark-cap (free-cap policy)", () => {
+  it("accepts Free copy claiming exactly the free-tier cap", () => {
+    expectClaim(
+      'app_freeTierFeatures": "1,000 bookmarks, notes, documents",',
+      "free-bookmark-cap",
+      { expectDrift: false },
+    );
+    expectClaim(
+      "<li>Free — 1,000 bookmarks, smart search</li>",
+      "free-bookmark-cap",
+      { expectDrift: false, kind: "html" },
+    );
+    expectClaim(
+      "<li>Gratis — 1.000 marcadores y búsqueda</li>",
+      "free-bookmark-cap",
+      { expectDrift: false, kind: "html" },
+    );
+  });
+
+  it("rejects Free copy claiming a different cap in every surface kind", () => {
+    const hit = expectClaim(
+      "<li>Free — 500 bookmarks to start</li>",
+      "free-bookmark-cap",
+      { kind: "html" },
+    );
+    expect(hit.drift).toMatch(
+      /Free-tier copy claims 500 bookmarks.*maxBookmarks: 1000/,
+    );
+    expectClaim(
+      'app_freeTierFeatures": "2,000 bookmarks, full search",',
+      "free-bookmark-cap",
+    );
+  });
+
+  it.each([
+    "<li>Free — unlimited bookmarks forever</li>",
+    "<li>Gratis — marcadores ilimitados</li>",
+    "<li>Unbegrenzte Lesezeichen im Free-Plan</li>",
+  ])("rejects unlimited wording in Free copy: %s", (line) => {
+    const hit = expectClaim(line, "free-bookmark-cap", { kind: "html" });
+    expect(hit.drift).toMatch(/unlimited is the Pro promise/);
+  });
+
+  it("unlimited wording fires even when a count follows later", () => {
+    const hit = expectClaim(
+      "<li>Free — unlimited bookmarks (was 1,000)</li>",
+      "free-bookmark-cap",
+      { kind: "html" },
+    );
+    expect(hit.drift).toMatch(/unlimited bookmarks/);
+  });
+
+  it("does not treat Pro-leaning lines as Free copy (anti-context)", () => {
+    expectClaim(
+      'app_proUpgradeText": "Unlimited bookmarks, P2P sync across 3 devices…",',
+      "free-bookmark-cap",
+      { expectDrift: false },
+    );
+    expectClaim(
+      "<p>Free forever. Pro unlocks unlimited bookmarks.</p>",
+      "free-bookmark-cap",
+      { expectDrift: false, kind: "html" },
+    );
+    expectClaim(
+      "<li>Pro — unlimited bookmarks</li>",
+      "free-bookmark-cap",
+      { expectDrift: false, kind: "html" },
+    );
+  });
+
+  it("is FAIL-CLOSED: a missing free tier cap makes ANY Free bookmark claim fire", () => {
+    const t = extractTruth(MINI_CONFIG, MINI_PRICING, EXTRAS);
+    t.freeBookmarkCap = null;
+    const rules = buildRules(t);
+    const rule = rules.find((r) => r.id === "free-bookmark-cap");
+    const drift = rule.verdict(["1,000"]);
     expect(drift).toMatch(/fail-closed/);
   });
 });

@@ -125,6 +125,7 @@ describe("extractTruth", () => {
     expect(TRUTH.minPasswordLength).toBe(12);
     expect(TRUTH.refundDays).toBe(30);
     expect(TRUTH.recoveryWords).toBe(24);
+    expect(TRUTH.freeDeviceCap).toBe(0);
     expect([...TRUTH.deviceCounts].sort((a, b) => a - b)).toEqual([0, 3]);
     expect([...TRUTH.bookmarkCaps]).toEqual([1000]);
     expect([...TRUTH.prices].sort((a, b) => a - b)).toEqual([0, 59, 79]);
@@ -164,6 +165,25 @@ describe("extractTruth", () => {
   it("is FAIL-CLOSED: missing refundDays yields null", () => {
     const t = extractTruth(MINI_CONFIG, "export const X = 1;");
     expect(t.refundDays).toBeNull();
+  });
+
+  it("is FAIL-CLOSED: a free tier without maxDevices yields a null freeDeviceCap", () => {
+    const t = extractTruth(
+      MINI_CONFIG,
+      `export const PRICING_CONFIG = { tiers: [{ id: "pro", limitations: { maxDevices: 3 } }] };`,
+    );
+    expect(t.freeDeviceCap).toBeNull();
+  });
+
+  it("anchors freeDeviceCap to the tier whose id is free, not the first tier", () => {
+    const t = extractTruth(
+      MINI_CONFIG,
+      `export const PRICING_CONFIG = { tiers: [
+        { id: "founder", limitations: { maxDevices: 3 } },
+        { id: "free", limitations: { maxDevices: 0 } },
+      ] };`,
+    );
+    expect(t.freeDeviceCap).toBe(0);
   });
 
   it("does not mistake Infinity for a bookmark cap", () => {
@@ -258,6 +278,63 @@ describe("rule: devices", () => {
     expect(one.drift).toMatch(/claims 1 device/);
     const hit = expectClaim("sync across 5 devices", "devices");
     expect(hit.drift).toMatch(/maxDevices values: 0, 3/);
+  });
+});
+
+describe("rule: free-device-count (any-device policy)", () => {
+  it("rejects Free copy claiming 1 device in every surface kind", () => {
+    const hit = expectClaim(
+      'app_freeTierFeatures": "1,000 bookmarks, 1 device, full search",',
+      "free-device-count",
+    );
+    expect(hit.drift).toMatch(
+      /Free-tier copy claims 1 device.*maxDevices: 0 \(any-device policy\)/,
+    );
+    expectClaim(
+      "<li>Free — $0 forever: 1,000 bookmarks, 1 device, smart search</li>",
+      "free-device-count",
+      { kind: "html" },
+    );
+    expectClaim(
+      "<li>Gratis — 1.000 marcadores, 1 dispositivo, búsqueda inteligente</li>",
+      "free-device-count",
+      { kind: "html" },
+    );
+  });
+
+  it("accepts Free copy that states the any-device truth without a count", () => {
+    expectClaim(
+      "<li>Free — 1,000 bookmarks on any device (each keeps its own vault)</li>",
+      "free-device-count",
+      { expectDrift: false, kind: "html" },
+    );
+    expectClaim(
+      'app_freeTierFeatures": "1,000 bookmarks, 0 device caps, works everywhere",',
+      "free-device-count",
+      { expectDrift: false },
+    );
+  });
+
+  it("does not treat Pro-leaning mixed lines as Free copy (anti-context)", () => {
+    expectClaim(
+      "<p>Free forever. Pro unlocks P2P sync across 3 devices.</p>",
+      "free-device-count",
+      { expectDrift: false, kind: "html" },
+    );
+    expectClaim(
+      "Unlock everything: free to start, Pro adds 3-device sync",
+      "free-device-count",
+      { expectDrift: false },
+    );
+  });
+
+  it("is FAIL-CLOSED: a missing free tier cap makes ANY Free device claim fire", () => {
+    const t = extractTruth(MINI_CONFIG, MINI_PRICING, EXTRAS);
+    t.freeDeviceCap = null;
+    const rules = buildRules(t);
+    const rule = rules.find((r) => r.id === "free-device-count");
+    const drift = rule.verdict(["1"]);
+    expect(drift).toMatch(/fail-closed/);
   });
 });
 

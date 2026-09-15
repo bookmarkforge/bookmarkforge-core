@@ -46,7 +46,16 @@ Propiedades de diseño relevantes para este ADR:
    "über/älter").
 4. **Fail-closed del canal de verdad:** la extracción devuelve `null` cuando
    no puede leer una fuente; los tests congelan los valores reales (12, 24,
-   30, {1,3}, {64,128}, 24 h, 48 h).
+   30, {0,3}, free=0, {1000}, {64,128}, 24 h, 48 h).
+5. **Doble ancla por claim sensible (free-device-count):** la regla que
+   protege el posicionamiento any-device de Free usa veredicto por escalar
+   (`freeDeviceCap` = `maxDevices` del tier `free`, no un set) con contexto
+   multilingüe ("free/gratis/gratuit/kostenlos/…", claves `app_freeTier*`)
+   y anti-contexto ("pro/unlock/founder/…"): una línea que nombra Free PERO
+   depende de los tiers de pago ("Free forever. Pro unlocks 3-device sync")
+   no se trata como copy de Free. Así, volver a "1 device" en CUALQUIER
+   superficie falla el gate con el mensaje del policy change — sin tocar las
+   claims legítimas de Pro (3 dispositivos).
 
 ## Por qué es detectable por gate-drift-detection (ADR-028)
 
@@ -64,7 +73,10 @@ El gate cumple los dos criterios del mecanismo de ADR-028:
 
 - Cubre claims numéricos factuales (contraseñas, palabras de recuperación,
   dispositivos, bookmarks, MiB, horas, precios, reembolsos) y la mención
-  prohibida de PBKDF2 en copy de usuario.
+  prohibida de PBKDF2 en copy de usuario. Los claims de dispositivos en copy
+  de Free tienen además una regla dedicada anclada al escalar del tier free
+  (cualquier cifra distinta de la del tier falla), porque el posicionamiento
+  any-device es una decisión de producto congelada (2026-09-15).
 - No cubre claims cualitativos ("el más seguro"), ni copy que describe
   comportamiento no constante. Esos siguen siendo responsabilidad de
   revisión manual y de la auditoría de soporte.

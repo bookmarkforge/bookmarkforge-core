@@ -93,6 +93,7 @@ export function extractTruth(configSrc, pricingSrc, extras = {}) {
     minPasswordLength: null,
     recoveryWords: RECOVERY_WORDS,
     deviceCounts: new Set(),
+    freeDeviceCap: null,
     bookmarkCaps: new Set(),
     refundDays: null,
     prices: new Set(),
@@ -109,6 +110,12 @@ export function extractTruth(configSrc, pricingSrc, extras = {}) {
   for (const m of pricingSrc.matchAll(/maxDevices:\s*(\d+)/g)) {
     truth.deviceCounts.add(Number(m[1]));
   }
+  // Free tier's device cap: maxDevices inside the tier object whose id is
+  // "free". Under the any-device policy that number is 0 (unlimited installs,
+  // per-device vaults); it is a SCALAR (not a set) so the free-device-count
+  // rule below is fail-closed: Free copy may ONLY claim this exact number.
+  const freeTier = pricingSrc.match(/id:\s*"free"[\s\S]*?maxDevices:\s*(\d+)/);
+  if (freeTier) truth.freeDeviceCap = Number(freeTier[1]);
   for (const m of pricingSrc.matchAll(/maxBookmarks:\s*(\d+)/g)) {
     truth.bookmarkCaps.add(Number(m[1]));
   }
@@ -169,6 +176,7 @@ export function truthSummary(t) {
     minPasswordLength: t.minPasswordLength,
     recoveryWords: t.recoveryWords,
     deviceCounts: [...t.deviceCounts].sort((a, b) => a - b),
+    freeDeviceCap: t.freeDeviceCap,
     bookmarkCaps: [...t.bookmarkCaps].sort((a, b) => a - b),
     refundDays: t.refundDays,
     prices: [...t.prices].sort((a, b) => a - b),
@@ -225,6 +233,17 @@ const WORD_UNIT =
   "words?|WORDS?|mots?|palabras?|palavras?|parole|Wörter|woorden|ord(?:ene)?|sanaa|sanat|słowa|słowo|単語|词|词语|單詞|단어|cuvinte|slova|slov(?:o|á)?|слов(?:а|о)?|слів|дум(?:и|ите)?|kelime|kata|كلمات|كلمة|מילים|शब्द|từ";
 const DEVICE_UNIT =
   "devices?|Devices?|Geräte[ns]?|dispositiv\w*|dispositivos?|dispositius?|dispositifs?|设备(?:数量)?|デバイス|기기|устройств\w*|zařízení(?:ch)?|eszköz(?:ön)?|perangkat|enheter|appareils?";
+/**
+ * Free/pro disambiguators for the free-device rule: a line counts as FREE-tier
+ * copy if it names Free (any of the 30 locales' "free/gratis/gratuit/kostenlos/…"
+ * or a locale JSON key like app_freeTier*) and does NOT lean on the paid tiers
+ * (pro/unlock/founder) — "Free forever. Pro unlocks 3-device sync" must not be
+ * treated as Free copy.
+ */
+const FREE_TIER_CONTEXT =
+  "free|gratis|gratuit[oa]?|gratuit|kostenlos|免费|無料|무료|бесплатн|ücretsiz|مجانا?|grátis|app_freeTier|app_free";
+const PRO_TIER_CONTEXT =
+  "pro\b|pro\.|unlock|unlocks|desbloque|débloque|freischalt|premium\b|founder\b|app_pro|app_founder";
 const BOOKMARK_UNIT =
   "bookmarks?|Bookmarks?|marcadores?|marcadors?|Lesezeichen|ブックマーク|书签|즐겨찾기|закладок|záložky|könyvjelző|penanda";
 const MONEY_BACK =
@@ -333,6 +352,26 @@ export function buildRules(truth) {
         const n = Number(m[1]);
         if (truth.deviceCounts.has(n)) return null;
         return `claims ${n} device(s); pricing.ts maxDevices values: ${fmtSet(truth.deviceCounts)}`;
+      },
+    },
+    {
+      id: "free-device-count",
+      description: `Free-tier device-count claims must equal the free tier's maxDevices (${truth.freeDeviceCap ?? "MISSING"}) — any-device policy`,
+      // Scoped to lines that plausibly describe the FREE tier (see the
+      // FREE_TIER_CONTEXT / PRO_TIER_CONTEXT disambiguators above): "free"-named
+      // copy without a pro/unlock/founder lean. This is what makes the
+      // any-device positioning non-regressible — reverting Free to "1 device"
+      // in any marketing surface fails the gate here.
+      context: new RegExp(String.raw`(?:${FREE_TIER_CONTEXT})`, "iu"),
+      antiContext: new RegExp(String.raw`(?:${PRO_TIER_CONTEXT})`, "iu"),
+      re: new RegExp(String.raw`(\d+)[-\s]+(?:${DEVICE_UNIT})`, "iu"),
+      verdict(m) {
+        if (truth.freeDeviceCap == null) {
+          return "free tier maxDevices missing from src/constants/pricing.ts (refactor?) — fail-closed";
+        }
+        const n = Number(m[1]);
+        if (n === truth.freeDeviceCap) return null;
+        return `Free-tier copy claims ${n} device(s); the free tier sets maxDevices: ${truth.freeDeviceCap} (any-device policy)`;
       },
     },
     {
@@ -523,6 +562,7 @@ export function scanFile(filePath, kind, rules) {
     for (const rule of rules) {
       if (rule.appliesTo && !rule.appliesTo.kinds.includes(kind)) continue;
       if (rule.context && !rule.context.test(line)) continue;
+      if (rule.antiContext && rule.antiContext.test(line)) continue;
       const m = line.match(rule.re) || (rule.re2 ? line.match(rule.re2) : null);
       if (!m) continue;
       const drift = rule.verdict(m);

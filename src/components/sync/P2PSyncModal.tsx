@@ -10,6 +10,8 @@ import {
   Loader2,
   CheckCircle2,
   AlertCircle,
+  AlertTriangle,
+  Lightbulb,
 } from "lucide-react";
 import { motion } from "motion/react";
 import {
@@ -264,6 +266,42 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
                   "Sync your data between devices instantly by scanning a QR code. Data never goes through the internet.",
                 )}
               </p>
+
+              {/* Same-LAN requirement: pairing is LAN-only by design
+                  (iceServers: []), so devices on different networks — most
+                  commonly a phone on mobile data — can never connect. Say so
+                  up front, where the user picks a role, not only as an error
+                  after a failed attempt. */}
+              <div
+                role="note"
+                aria-label={t("app_p2pLanWarningTitle")}
+                className="flex items-start gap-3 p-4 ds-bg-warning-soft border ds-border-warning rounded-xl"
+              >
+                <AlertTriangle className="size-5 ds-text-warning shrink-0 mt-0.5" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-bold ds-text-warning leading-snug">
+                    {t(
+                      "app_p2pLanWarningTitle",
+                      "Both devices must be on the same Wi-Fi network",
+                    )}
+                  </p>
+                  <p className="text-sm ds-text-warning/80 mt-1 leading-relaxed">
+                    {t(
+                      "app_p2pLanWarningBody",
+                      "This sync works device-to-device over your local network, never through the internet. If the devices are on different networks (for example, one on mobile data), pairing and syncing will fail.",
+                    )}
+                  </p>
+                  <p className="text-xs ds-text-warning/70 mt-2 leading-relaxed flex items-start gap-1.5">
+                    <Lightbulb className="size-3.5 shrink-0 mt-0.5" />
+                    <span>
+                      {t(
+                        "app_p2pLanWarningHint",
+                        "Tip: turn off mobile data on your phone and connect it to the same Wi-Fi as your computer.",
+                      )}
+                    </span>
+                  </p>
+                </div>
+              </div>
 
               {webrtcUnsupported && (
                 <div className="flex items-start gap-3 p-4 bg-[var(--danger-soft)] dark:bg-[var(--color-danger)]/10 border border-[var(--danger-soft-border)] dark:border-[var(--danger-soft-border)]/20 rounded-xl">

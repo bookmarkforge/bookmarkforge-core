@@ -35,6 +35,8 @@ vi.mock("lucide-react", () => {
     Shield: mock("Shield"),
     Loader2: mock("Loader2"),
     CheckCircle2: mock("CheckCircle2"),
+    AlertTriangle: mock("AlertTriangle"),
+    Lightbulb: mock("Lightbulb"),
     AlertCircle: mock("AlertCircle"),
   };
 });

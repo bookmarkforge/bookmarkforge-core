@@ -15,6 +15,14 @@ import type { Page } from "@playwright/test";
 export type SyncStateSnapshot = {
   state: string;
   message?: string;
+  /** Latched: true once ANY callback observed "completed". The service
+   * schedules a post-completion disconnect ~2 s after success
+   * (maybeScheduleDisconnectAfterSync), so the live `state` only holds
+   * "completed" for that window — under parallel-worker main-thread
+   * starvation a poll can miss it and observe only the post-disconnect
+   * "disconnected". The latch lets assertions prove the sync DID complete.
+   */
+  everCompleted?: boolean;
 };
 
 export interface SyncWindow extends Window {
@@ -53,6 +61,9 @@ export async function installSyncStateProbe(page: Page): Promise<void> {
     webRTCSyncService.registerCallbacks((nextState, message) => {
       state.state = nextState;
       state.message = message;
+      if (nextState === "completed") {
+        state.everCompleted = true;
+      }
     }, () => undefined);
   });
 }

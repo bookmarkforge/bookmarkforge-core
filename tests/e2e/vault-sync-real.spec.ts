@@ -432,11 +432,18 @@ async function waitForCompleted(
     await expect
       .poll(
         async () =>
-          page.evaluate(
-            () =>
-              (window as SyncWindow).__bookmarkForgeSyncState?.state ??
-              "unknown",
-          ),
+          page.evaluate(() => {
+            const probe = (window as SyncWindow).__bookmarkForgeSyncState;
+            // The service schedules a post-completion disconnect ~2 s after
+            // "completed" (maybeScheduleDisconnectAfterSync), so under
+            // parallel main-thread starvation the poll can miss the brief
+            // "completed" window and observe only "disconnected". The
+            // probe's latch proves completion regardless of when the poll
+            // samples.
+            return probe?.everCompleted || probe?.state === "completed"
+              ? "completed"
+              : (probe?.state ?? "unknown");
+          }),
         { timeout: 30_000, intervals: [100, 250, 500] },
       )
       .toBe("completed");

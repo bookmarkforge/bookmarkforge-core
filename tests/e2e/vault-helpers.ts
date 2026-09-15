@@ -1,4 +1,4 @@
-import { expect, type ConsoleMessage, type Page } from "@playwright/test";
+import { expect, type ConsoleMessage, type Locator, type Page } from "@playwright/test";
 import { humanE2E } from "./human-behavior";
 import { assertDurableBackend } from "./storage-backend-guard";
 
@@ -73,6 +73,44 @@ export async function expectUnlockedApp(
   await assertDurableBackend(page, diagnostics);
 }
 
+/**
+ * Click an overlay-dismiss button, retrying when the page's main thread is
+ * too busy to complete Playwright's hit-target checks within one attempt.
+ *
+ * Observed flake (vault-sync-real, parallel workers): the "Skip onboarding"
+ * button resolved, was visible and stable, but the click still timed out —
+ * parallel browser contexts running Argon2id KDF starve the main thread, so
+ * a single 5 s unscaled attempt was a coin flip. Each retry re-checks
+ * visibility first (a prior attempt or the Escape below may have closed the
+ * overlay already) and presses Escape between attempts, which dismisses both
+ * the onboarding dialog and the WelcomeTour.
+ *
+ * noWaitAfter: these are soft UI dismissals, but Playwright's default
+ * post-click nav-wait can hang on "scheduled navigations" under load. The
+ * overlay's disappearance is asserted by callers / expectUnlockedApp.
+ */
+async function dismissWithRetry(
+  page: Page,
+  button: Locator,
+  attempts = 3,
+): Promise<void> {
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    if (!(await button.isVisible().catch(() => false))) {
+      return; // overlay already gone — nothing to dismiss
+    }
+    try {
+      await button.click({ timeout: scaled(10_000), noWaitAfter: true });
+      return;
+    } catch {
+      await page.keyboard.press("Escape").catch(() => {});
+      await page.waitForTimeout(300);
+    }
+  }
+  // Final unguarded attempt: if the overlay truly cannot be dismissed the
+  // test must fail here with the click's own error, not downstream.
+  await button.click({ timeout: scaled(10_000), noWaitAfter: true });
+}
+
 /** Dismiss the Onboarding wizard (and any WelcomeTour overlay) via Escape. */
 export async function dismissOverlays(page: Page): Promise<void> {
   const human = humanE2E(page);
@@ -101,15 +139,8 @@ export async function dismissOverlays(page: Page): Promise<void> {
   const skipOnboarding = page.getByRole("button", {
     name: "Skip onboarding",
   });
-  if (await skipOnboarding.isVisible().catch(() => false)) {
-    // noWaitAfter: the onboarding is a soft UI dismissal, but Playwright's
-    // default post-click nav-wait can hang on "scheduled navigations" under
-    // load. The overlay's disappearance is asserted by callers.
-    await skipOnboarding.click({ timeout: 5_000, noWaitAfter: true });
-  }
-  if (await skipTour.isVisible().catch(() => false)) {
-    await skipTour.click({ timeout: 5_000, noWaitAfter: true });
-  }
+  await dismissWithRetry(page, skipOnboarding);
+  await dismissWithRetry(page, skipTour);
 
   // These are dismissible dashboard notices rather than modal overlays. Clear
   // them explicitly so they cannot cover the first keyboard/click interaction

@@ -70,3 +70,6 @@ scripts/__tmp-sw-debug.mjs
 Thumbs.db
 .vscode/
 .idea/
+
+# Drill/session evidence (personal captures — never source, never export)
+evidence/

@@ -41,7 +41,7 @@
 
 | # | Acción | Captura esperada |
 |---|---|---|
-| 1.1 | Escritorio: Dashboard → "Secure P2P Sync" | Tarjeta de advertencia visible: *"Both devices must be on the same Wi-Fi network"* + cuerpo + consejo | `p2p-01-lan-warning-desk.png` |
+| 1.1 | Escritorio: Dashboard → "Secure P2P Sync" | Tarjeta de advertencia visible: *"Both devices must be on the same Wi-Fi network"* + cuerpo + consejo | `p2p-01-lan-warning-desk.png` **(ya pre-capturada** por `node scripts/capture-p2p-desk-drill.mjs`**)** |
 | 1.2 | iPhone: mismo modal | La tarjeta en el **idioma del iPhone** (los 30 idiomas están traducidos — si sale en inglés siendo otro el idioma del sistema, es hallazgo) | `p2p-02-lan-warning-phone.png` |
 
 ---
@@ -50,7 +50,7 @@
 
 | # | Momento | Captura |
 |---|---|---|
-| 2.1 | QR de oferta en el escritorio | `p2p-03-offer-qr-desk.png` |
+| 2.1 | QR de oferta en el escritorio | `p2p-03-offer-qr-desk.png` **(ya pre-capturada** por el script**; genera un QR nuevo en cada sesión** — el de la carpeta es de otra sesión y expiró) |
 | 2.2 | iPhone tras escanear: **su** QR de respuesta | `p2p-04-answer-qr-phone.png` |
 | 2.3 | Barra "Syncing vaults..." a mitad (cualquiera de los dos) | `p2p-05-syncing.png` |
 | 2.4 | "Sync Successful!" en **ambos** | `p2p-06-success-desk.png` + `p2p-07-success-phone.png` |

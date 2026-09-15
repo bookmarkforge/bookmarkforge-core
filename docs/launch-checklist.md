@@ -54,6 +54,7 @@
   Batería Playwright de 7 tests que ejercita las rutas que no pueden fallar el día 1: bóveda con contraseña de 12 caracteres, recuperación con la frase de 24 palabras, activación de licencia Pro con firma real (+ clave inválida fallando cerrado) y round-trip de backup cifrado .bmf tras pérdida total simulada.
   - Evidencia: [docs/launch-day-smoke.md](launch-day-smoke.md) (runbook: topología, triage, relación con claves de firma).
   - Gate: `npm run smoke:launch` — veredicto "ALL CRITICAL PATHS GREEN — cleared to release".
+  - Complemento de dispositivo real: certificar un iPhone con [docs/ios-manual-test-script.md](ios-manual-test-script.md) (creación de bóveda, frase de 24 palabras, backup .bmf fuera del dispositivo y la expulsión de IndexedDB de Safari a los 7 días) — Android emulado queda cubierto por `npm run e2e:mobile`.
 
 ## 🟠 Validación externa — revisión independiente
 

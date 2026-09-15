@@ -41,6 +41,7 @@
     "e2e:preview": "playwright test --config=playwright.preview.config.ts",
     "e2e:engines": "playwright test --config=playwright.engines.config.ts",
     "e2e:mobile": "node scripts/run-mobile-smoke.mjs",
+    "e2e:sync": "playwright test --project=chromium --workers=1 tests/e2e/vault-sync-real.spec.ts tests/e2e/vault-sync-signaling.spec.ts",
     "e2e:sw-integrity": "npm run build:ci && playwright test --config=playwright.sw-integrity.config.ts",
     "e2e:headed": "playwright test --headed",
     "e2e:nightly": "playwright test --config=playwright.nightly.config.ts",

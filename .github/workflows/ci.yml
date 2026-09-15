@@ -213,6 +213,47 @@ jobs:
             test-results/
             playwright-report/
 
+  e2e-sync:
+    # The WebRTC replication battery: real two-vault sync (LWW conflict
+    # resolution, privacy/tombstone invariants, interruption recovery) plus the
+    # signaling-server room-security spec. Workers are pinned to 1: each test
+    # drives two full browser contexts through Argon2id vault setup, and
+    # parallel contexts starve the main thread badly enough to flake the
+    # overlay-dismissal harness. Sequential is cheap (~2 min total) and turns
+    # the battery deterministic — the local 3-consecutive-parallel-runs proof
+    # (commit 7b88702) relies on the harness retries, CI keeps the simpler
+    # guarantee.
+    name: Playwright E2E (WebRTC sync battery)
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 20
+    env:
+      CI: true
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run WebRTC sync battery
+        run: npm run e2e:sync
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: playwright-sync-artifacts
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results/
+            playwright-report/
+
   e2e-public-relay:
     # A-3: the one deployment shape the main E2E config cannot exercise — the app
     # built WITHOUT VITE_P2P_SIGNALING_URL, i.e. public-relay mode, where the

@@ -172,6 +172,47 @@ jobs:
             test-results/
             playwright-report/
 
+  # Emulated Android (Pixel 7) on the PRODUCTION build — the only automated
+  # proof that the vault KDF resolves the 64 MiB mobile Argon2id profile (the
+  # dev/test server forces 8 MiB, so this can never run against a dev server)
+  # and that the PWA install surface (manifest, service worker, deferred
+  # install prompt) works on a phone-shaped viewport. The runner builds dist/
+  # itself with the two E2E-only diagnostic flags (VITE_E2E_KDF_DIAGNOSTICS /
+  # VITE_E2E_PREVIEW_DIAGNOSTICS); neither is ever set in real production
+  # builds, so the diagnostic hooks ship nowhere. Ships to the public export
+  # unchanged together with the rest of this workflow.
+  e2e-mobile:
+    name: Playwright E2E (emulated Android — 64 MiB KDF + PWA)
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 20
+    env:
+      CI: true
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright chromium (mobile Chrome IS chromium)
+        run: npx playwright install --with-deps chromium
+      - name: Run mobile battery (prod build + emulated Android)
+        run: npm run e2e:mobile
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: playwright-mobile-artifacts
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results/
+            playwright-report/
+
   e2e-public-relay:
     # A-3: the one deployment shape the main E2E config cannot exercise — the app
     # built WITHOUT VITE_P2P_SIGNALING_URL, i.e. public-relay mode, where the

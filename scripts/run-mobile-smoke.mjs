@@ -55,6 +55,14 @@ if (!NO_BUILD) {
     stdio: "inherit",
     env: {
       ...process.env,
+      // The prod-build contract of this runner is absolute: the 64 MiB KDF
+      // profile only exists where isProdBuild() && !isTestMode(), and a
+      // NODE_ENV=test inherited from CI (e.g. a workflow `env:` block) both
+      // empties the Workbox precache manifest and flips Vite's mode
+      // resolution — the build then fails the chunk-boundary gate with "0
+      // precache entries". Force the production NODE_ENV for the build
+      // regardless of what the calling environment sets.
+      NODE_ENV: "production",
       // Durable-backend guard + KDF profile proof channels.
       VITE_E2E_PREVIEW_DIAGNOSTICS: "true",
       VITE_E2E_KDF_DIAGNOSTICS: "true",

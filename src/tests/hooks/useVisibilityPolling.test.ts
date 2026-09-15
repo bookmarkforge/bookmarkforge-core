@@ -164,11 +164,12 @@ describe("useVisibilityPolling", () => {
       { initialProps: { cb: vi.fn() } },
     );
     expect(setIntervalSpy).toHaveBeenCalledTimes(1);
-    // A new callback reference triggers a clean restart via dependency.
     setIntervalSpy.mockClear();
     rerender({ cb: vi.fn() });
-    // New callback → new interval, old one cleared.
-    expect(setIntervalSpy).toHaveBeenCalledTimes(1);
+    // The hook stores the callback in a ref precisely so a new function
+    // reference does NOT re-create the interval (see callbackRef in the
+    // hook). Only option changes (intervalMs, flags) restart it.
+    expect(setIntervalSpy).not.toHaveBeenCalled();
     setIntervalSpy.mockRestore();
   });
 });

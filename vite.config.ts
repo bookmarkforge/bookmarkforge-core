@@ -44,6 +44,12 @@ import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import babel from "@rolldown/plugin-babel";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, type Plugin } from "vite";
+// Optional HTTPS for real-device drills (iOS Safari manual tests need a
+// secure context: WebCrypto/camera/clipboard/PWA install all gate on it).
+// Enabled ONLY via VITE_DEV_HTTPS=1 — never active for the e2e batteries,
+// CI, or normal dev. Uses a self-signed cert: the iPhone must trust it once
+// (see docs/ios-manual-test-script.md preparation).
+import basicSsl from "@vitejs/plugin-basic-ssl";
 import { VitePWA } from "vite-plugin-pwa";
 import { CSP_MODERATE, CSP_OPEN, CSP_STRICT } from "./scripts/csp-config.js";
 
@@ -241,6 +247,7 @@ export default defineConfig(({ mode, isPreview }) => ({
     __CSP_OPEN__: JSON.stringify(CSP_OPEN),
   },
   plugins: [
+    ...(process.env.VITE_DEV_HTTPS === "1" ? [basicSsl()] : []),
     babel({
       presets: [reactCompilerPreset()],
     }),

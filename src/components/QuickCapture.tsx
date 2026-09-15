@@ -6,12 +6,17 @@ import { metadataService } from "../services/MetadataService";
 import { generateId } from "../utils/id";
 import { hashString } from "../utils/crypto-core";
 import { toast } from "sonner";
+import { isFreeLimitError } from "../services/LicenseService";
+import { FREE_LIMITS } from "../constants/license";
+import { STORAGE_KEYS } from "../constants/storage-keys";
+import { safeSet } from "../store/safeStorage";
 import { motion, AnimatePresence } from "motion/react";
 import { logger } from "../utils/logger";
 import { safeGet } from "../store/safeStorage";
 import { useGuardedAction } from "../hooks/useGuardedAction";
 import { generateWithPrivacy } from "../services/ai/privacy";
 import { parseFencedJson } from "../utils/jsonFenceStripper";
+import { FreeTierSaveHint } from "./FreeTierSaveHint";
 
 const MAX_CAPTURE_TITLE_CHARS = 200;
 const MAX_CAPTURE_SUMMARY_CHARS = 4_000;
@@ -142,6 +147,36 @@ export const QuickCapture: React.FC = () => {
         return;
       }
       logger.error("Quick capture error:", error);
+      if (isFreeLimitError(error)) {
+        // The wall, made visible: this replaces the old generic
+        // "capture failed" toast that discarded completed AI work with a
+        // message that explains the pause and points to the one fix.
+        // Every blocked attempt surfaces it — it's error feedback, not
+        // marketing — but one line, single instance, ~4s, never stacking.
+        toast.error(
+          t(
+            "app_freeLimitToast",
+            "Free holds {{limit}} saves — your vault is safe; new saves pause.",
+            { limit: FREE_LIMITS.maxBookmarks },
+          ),
+          {
+            duration: 4000,
+            action: {
+              label: t("app_freeLimitToastAction"),
+              onClick: () =>
+                window.dispatchEvent(new CustomEvent("forge:open-settings")),
+            },
+          },
+        );
+        // Design doc: the wall banner's trigger is event-driven — the first
+        // blocked save while at the wall opens the one full pitch on the
+        // dashboard (30-day cooldown handled there via storage). The pending
+        // flag survives routing: a save blocked on /bookmarks still shows
+        // the banner when the user reaches the dashboard.
+        safeSet(STORAGE_KEYS.FREE_TIER_WALL_HIT_PENDING, "1");
+        window.dispatchEvent(new CustomEvent("bmf:free-wall-hit"));
+        return;
+      }
       toast.error(t("app_captureError"));
     },
   });
@@ -463,6 +498,7 @@ export const QuickCapture: React.FC = () => {
                   disabled={isProcessing}
                 />
               </div>
+              <FreeTierSaveHint />
               <button
                 onClick={handleCapture}
                 data-testid="save-bookmark-button"

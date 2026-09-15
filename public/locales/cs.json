@@ -1570,5 +1570,18 @@
   "app_maintenancePartial": "Údržba dokončena s {{count}} problémy",
   "app_helpDiagnostics": "Nápověda a diagnostika",
   "app_helpDiagnosticsDesc": "Zkopírujte anonymizovanou diagnostiku (pouze počty a verze — bez obsahu trezoru) pro vložení do podpory. Pokud existuje, zahrnuje kód BF-E.",
-  "app_diagCopyFailed": "Diagnostiku se nepodařilo zkopírovat. Viz Nápověda."
+  "app_diagCopyFailed": "Diagnostiku se nepodařilo zkopírovat. Viz Nápověda.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} uložených odkazů",
+  "app_freeMeterTooltip": "Free pojme {{limit}} odkazů. Nic se nikdy nemaže — čtení, vyhledávání a export pokračují; po dosažení limitu se pozastaví jen nové ukládání.",
+  "app_freeWallTitle": "Dosáhli jste 1 000 — limit Free",
+  "app_freeWallBody": "Nic se neztratilo a nic se nerozbilo. Čtení, vyhledávání i export fungují stejně jako dřív — pozastaví se jen nové ukládání.",
+  "app_freeWallProLifts": "Pro odstraní limit:",
+  "app_freeWallProUnlimited": "Neomezené ukládání — strop zmizí",
+  "app_freeWallProSync": "P2P synchronizace mezi vašimi zařízeními (až {{limit}})",
+  "app_freeWallProLocalAi": "AI běžící ve vašem počítači — bez API klíčů a bez odesílání dat",
+  "app_freeWallCta": "Zobrazit Pro — jednorázově {{price}}",
+  "app_freeWallKeepFree": "Zůstat u Free",
+  "app_freeWallTrust": "Jednorázová platba · navždy vaše · vrácení peněz do {{days}} dnů",
+  "app_freeLimitToast": "Free pojme {{limit}} uložených odkazů — vaše úložiště je v bezpečí; pozastaví se jen nové ukládání.",
+  "app_freeLimitToastAction": "Pro bez limitu →"
 }

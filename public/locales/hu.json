@@ -1540,5 +1540,18 @@
   "app_maintenancePartial_other": "Karbantartás {{count}} problémával befejeződött",
   "app_helpDiagnostics": "Súgó és diagnosztika",
   "app_helpDiagnosticsDesc": "Másoljon leanonimizált diagnosztikát (csak számok és verziók — széf tartalma nélkül) az ügyfélszolgálatnak. Ha van, tartalmazza a BF-E kódot.",
-  "app_diagCopyFailed": "A diagnosztika nem másolható. Lásd a Súgót."
+  "app_diagCopyFailed": "A diagnosztika nem másolható. Lásd a Súgót.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} mentett link",
+  "app_freeMeterTooltip": "A Free {{limit}} linket tárol. Semmi sem törlődik — az olvasás, a keresés és az export folytatódik; a limit elérésekor csak az új mentések szünetelnek.",
+  "app_freeWallTitle": "Elérted az 1 000-es Free-korlátot",
+  "app_freeWallBody": "Semmi sem veszett el, és semmi sem romlott el. Az olvasás, a keresés és az export ugyanúgy működik — csak az új mentések szünetelnek.",
+  "app_freeWallProLifts": "A Pro eltávolítja a korlátot:",
+  "app_freeWallProUnlimited": "Korlátlan mentés — eltűnik a plafon",
+  "app_freeWallProSync": "P2P-szinkronizálás az eszközeid között (legfeljebb {{limit}})",
+  "app_freeWallProLocalAi": "A számítógépeden futó AI — API-kulcsok és adatküldés nélkül",
+  "app_freeWallCta": "Pro megtekintése — egyszeri {{price}}",
+  "app_freeWallKeepFree": "Maradok a Freenél",
+  "app_freeWallTrust": "Egyszeri fizetés · örökre a tiéd · pénzvisszatérítés {{days}} napon belül",
+  "app_freeLimitToast": "A Free {{limit}} mentést enged — a tárolód biztonságban van; csak az új mentések szünetelnek.",
+  "app_freeLimitToastAction": "A Pro korlátlan →"
 }

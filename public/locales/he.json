@@ -1540,5 +1540,18 @@
   "app_maintenancePartial_other": "התחזוקה הסתיימה עם {{count}} בעיות",
   "app_helpDiagnostics": "עזרה ואבחון",
   "app_helpDiagnosticsDesc": "העתיקו אבחון מאולח (ספירות וגרסאות בלבד — ללא תוכן הכספת) להדבקה בתמיכה. כולל קוד BF-E אם קיים.",
-  "app_diagCopyFailed": "לא ניתן היה להעתיק את האבחון. ראו עזרה."
+  "app_diagCopyFailed": "לא ניתן היה להעתיק את האבחון. ראו עזרה.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} קישורים שמורים",
+  "app_freeMeterTooltip": "Free מאפשר לשמור {{limit}} קישורים. שום דבר לא נמחק — קריאה, חיפוש וייצוא ממשיכים; רק שמירות חדשות נעצרות בהגעה למגבלה.",
+  "app_freeWallTitle": "הגעת ל־1,000 — מגבלת Free",
+  "app_freeWallBody": "שום דבר לא אבד ושום דבר לא התקלקל. הקריאה, החיפוש והייצוא ממשיכים כרגיל — רק שמירות חדשות נעצרות.",
+  "app_freeWallProLifts": "Pro מסיר את המגבלה:",
+  "app_freeWallProUnlimited": "שמירות ללא הגבלה — התקרה נעלמת",
+  "app_freeWallProSync": "סנכרון P2P בין המכשירים שלך (עד {{limit}})",
+  "app_freeWallProLocalAi": "AI שפועל במחשב שלך — בלי מפתחות API ובלי שליחת נתונים",
+  "app_freeWallCta": "לצפייה ב־Pro — {{price}} בתשלום חד־פעמי",
+  "app_freeWallKeepFree": "להישאר עם Free",
+  "app_freeWallTrust": "תשלום חד־פעמי · שלך לתמיד · החזר כספי בתוך {{days}} ימים",
+  "app_freeLimitToast": "Free מאפשר {{limit}} שמירות — הכספת שלך בטוחה; רק שמירות חדשות נעצרות.",
+  "app_freeLimitToastAction": "Pro ללא הגבלה →"
 }

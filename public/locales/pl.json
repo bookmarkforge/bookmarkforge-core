@@ -1570,5 +1570,18 @@
   "app_maintenancePartial": "Konserwacja zakończona z {{count}} problemami",
   "app_helpDiagnostics": "Pomoc i diagnostyka",
   "app_helpDiagnosticsDesc": "Skopiuj zanonimizowaną diagnostykę (tylko liczniki i wersje — bez zawartości sejfu), aby wkleić ją do wsparcia. Zawiera kod BF-E, jeśli występuje.",
-  "app_diagCopyFailed": "Nie można skopiować diagnostyki. Zobacz Pomoc."
+  "app_diagCopyFailed": "Nie można skopiować diagnostyki. Zobacz Pomoc.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} zapisanych linków",
+  "app_freeMeterTooltip": "Free mieści {{limit}} linków. Nic nigdy nie jest usuwane — czytanie, wyszukiwanie i eksport działają dalej; po osiągnięciu limitu pauzują tylko nowe zapisy.",
+  "app_freeWallTitle": "Osiągnięto 1000 — limit Free",
+  "app_freeWallBody": "Nic nie zostało utracone ani uszkodzone. Czytanie, wyszukiwanie i eksport działają jak wcześniej — pauzują tylko nowe zapisy.",
+  "app_freeWallProLifts": "Pro usuwa limit:",
+  "app_freeWallProUnlimited": "Nielimitowane zapisy — sufit znika",
+  "app_freeWallProSync": "Synchronizacja P2P między Twoimi urządzeniami (do {{limit}})",
+  "app_freeWallProLocalAi": "AI działająca na Twoim komputerze — bez kluczy API i wysyłania danych",
+  "app_freeWallCta": "Zobacz Pro — jednorazowo {{price}}",
+  "app_freeWallKeepFree": "Zostań przy Free",
+  "app_freeWallTrust": "Jednorazowa płatność · na zawsze Twoje · zwrot w ciągu {{days}} dni",
+  "app_freeLimitToast": "Free mieści {{limit}} zapisów — Twój sejf jest bezpieczny; pauzują tylko nowe zapisy.",
+  "app_freeLimitToastAction": "Pro bez limitu →"
 }

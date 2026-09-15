@@ -1534,5 +1534,18 @@
   "app_maintenancePartial_other": "Bảo trì kết thúc với {{count}} vấn đề",
   "app_helpDiagnostics": "Trợ giúp & chẩn đoán",
   "app_helpDiagnosticsDesc": "Sao chép thông tin chẩn đoán đã ẩn danh (chỉ số đếm và phiên bản — không có nội dung két sắt) để dán vào phần hỗ trợ. Bao gồm mã BF-E nếu có.",
-  "app_diagCopyFailed": "Không thể sao chép thông tin chẩn đoán. Xem Trợ giúp."
+  "app_diagCopyFailed": "Không thể sao chép thông tin chẩn đoán. Xem Trợ giúp.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} liên kết đã lưu",
+  "app_freeMeterTooltip": "Free chứa được {{limit}} liên kết. Không có gì bị xóa — việc đọc, tìm kiếm và xuất dữ liệu vẫn hoạt động; chỉ việc lưu mới tạm dừng khi đạt giới hạn.",
+  "app_freeWallTitle": "Bạn đã đạt 1.000 — giới hạn của Free",
+  "app_freeWallBody": "Không có gì bị mất và không có gì hỏng. Việc đọc, tìm kiếm và xuất dữ liệu vẫn như trước — chỉ việc lưu mới tạm dừng.",
+  "app_freeWallProLifts": "Pro gỡ bỏ giới hạn:",
+  "app_freeWallProUnlimited": "Lưu không giới hạn — không còn mức trần",
+  "app_freeWallProSync": "Đồng bộ P2P giữa các thiết bị của bạn (tối đa {{limit}})",
+  "app_freeWallProLocalAi": "AI chạy trên máy tính của bạn — không cần API key, không gửi dữ liệu",
+  "app_freeWallCta": "Xem Pro — {{price}} một lần",
+  "app_freeWallKeepFree": "Tiếp tục dùng Free",
+  "app_freeWallTrust": "Thanh toán một lần · thuộc về bạn mãi mãi · hoàn tiền trong {{days}} ngày",
+  "app_freeLimitToast": "Free chứa {{limit}} lượt lưu — kho của bạn vẫn an toàn; chỉ lượt lưu mới tạm dừng.",
+  "app_freeLimitToastAction": "Pro không giới hạn →"
 }

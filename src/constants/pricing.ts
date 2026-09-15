@@ -20,8 +20,7 @@
  * - Post-traction / v1.5: Pro $89-99 — after 500+ reviews, A/B $79 vs $99
  * - Founder (100-200 limited): $99 — same Pro v1, badge Founder #042 + 60% off v2 lifetime + beta
  *
- * Individual tiers stay lifetime; B2B commercial licenses stay annual (D7).
- */
+*/
 
 export const PRICING_CONFIG = {
   /** Lifetime versioned contract — legal text pinned in landing + privacy-and-terms + JSON-LD. */
@@ -137,35 +136,6 @@ export const PRICING_CONFIG = {
       },
       cta: "Get Founder",
       popular: false,
-    },
-  ],
-
-  // ── Commercial (B2B) license anchors ──────────────────────────────────
-  // These are NOT individual tiers: they license companies that embed / redistribute / host the AGPL codebase.
-  commercialLicenses: [
-    {
-      id: "integration",
-      label: "Integration",
-      description: "Embed the vault in one product",
-      pricePerYear: 2500,
-      interval: "year",
-      decision: "D4",
-    },
-    {
-      id: "redistribution",
-      label: "Redistribution",
-      description: "Ship a modified build",
-      pricePerYear: 7500,
-      interval: "year",
-      decision: "D5",
-    },
-    {
-      id: "hosting",
-      label: "Service / hosting",
-      description: "Offer it as a service (AGPL §13 trigger)",
-      pricePerYear: 5000,
-      interval: "year",
-      decision: "D6",
     },
   ],
 
@@ -356,3 +326,36 @@ export const LICENSE_FEATURES = {
     support: "Priority 24h + Beta",
   },
 };
+
+/**
+ * The Pro price the CURRENT early-bird phase displays, formatted for in-app
+ * copy ("$59"). Single source of truth: derived from PRICING_CONFIG so the
+ * nudge's price can never drift from the pricing table or the landing.
+ */
+export function getActiveProPrice(): string {
+  const phase = PRICING_CONFIG.earlyBird.phase;
+  const pro = PRICING_CONFIG.tiers[1];
+  if (!pro) {
+    throw new Error("PRICING_CONFIG.tiers[1] (Pro) is missing — pricing table corrupted");
+  }
+  const price =
+    phase === "early"
+      ? pro.earlyBirdPrice
+      : phase === "regular"
+        ? pro.regularPrice
+        : pro.fullPrice;
+  return `$${price}`;
+}
+
+/**
+ * Pro's sync-device ceiling from PRICING_CONFIG (3). Single source of truth
+ * for in-app copy — the nudge's "sync between your devices (up to 3)" line
+ * can never drift from the pricing table.
+ */
+export function getProDeviceLimit(): number {
+  const pro = PRICING_CONFIG.tiers[1];
+  if (!pro) {
+    throw new Error("PRICING_CONFIG.tiers[1] (Pro) is missing — pricing table corrupted");
+  }
+  return pro.limitations.maxDevices;
+}

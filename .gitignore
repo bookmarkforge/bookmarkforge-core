@@ -73,3 +73,6 @@ Thumbs.db
 
 # Drill/session evidence (personal captures — never source, never export)
 evidence/
+
+# Private legal and provider-contract workspace (never versioned or exported)
+legal/

@@ -15,6 +15,11 @@ import { logger } from "../utils/logger";
 import { validateAndSanitizeUrl, sanitizeUserInput } from "../services/SanitizationService";
 import { safeGet } from "../store/safeStorage";
 import { useGuardedAction } from "../hooks/useGuardedAction";
+import { isFreeLimitError } from "../services/LicenseService";
+import { FREE_LIMITS } from "../constants/license";
+import { STORAGE_KEYS } from "../constants/storage-keys";
+import { safeSet } from "../store/safeStorage";
+import { FreeTierSaveHint } from "./FreeTierSaveHint";
 
 /**
  * Capture component for quick web clipping.
@@ -102,6 +107,29 @@ export const Capture: React.FC<{ masterPassword?: string }> = ({
             "No space left on this device. Free up storage to save.",
           ),
         );
+      } else if (isFreeLimitError(e)) {
+        // The wall, made visible (see QuickCapture): explains the pause
+        // and offers Pro instead of a generic "save failed".
+        toast.error(
+          t(
+            "app_freeLimitToast",
+            "Free holds {{limit}} saves — your vault is safe; new saves pause.",
+            { limit: FREE_LIMITS.maxBookmarks },
+          ),
+          {
+            id: "free-limit",
+            duration: 4000,
+            action: {
+              label: t("app_freeLimitToastAction"),
+              onClick: () =>
+                window.dispatchEvent(
+                  new CustomEvent("forge:open-settings"),
+                ),
+            },
+          },
+        );
+        safeSet(STORAGE_KEYS.FREE_TIER_WALL_HIT_PENDING, "1");
+        window.dispatchEvent(new CustomEvent("bmf:free-wall-hit"));
       } else {
         toast.error(t("saveError"));
       }
@@ -246,6 +274,7 @@ export const Capture: React.FC<{ masterPassword?: string }> = ({
         </div>
       </div>
 
+      <FreeTierSaveHint />
       <button
         onClick={handleSave}
         disabled={!url || isLoading}

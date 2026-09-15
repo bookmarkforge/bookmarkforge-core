@@ -124,6 +124,35 @@ vi.mock("../../components/dashboard/components/BackupReminderBanner", () => ({
     ) : null,
 }));
 
+// Free-tier wall nudge — mock the hook so the real one never touches RxDB
+// or LicenseService in this suite; FreeTierNudge is mocked like its banner
+// siblings.
+const { mockFreeTierUsage } = vi.hoisted(() => ({
+  mockFreeTierUsage: {
+    count: undefined as number | undefined,
+    limit: 1000,
+    atWall: false,
+    nearWall: false,
+    isFree: false,
+  },
+}));
+vi.mock("../../hooks/useFreeTierUsage", () => ({
+  useFreeTierUsage: () => mockFreeTierUsage,
+}));
+vi.mock("../../components/dashboard/components/FreeTierNudge", () => ({
+  FreeTierNudge: ({ show, onDismiss, onSeePro }: any) =>
+    show ? (
+      <div data-testid="free-tier-nudge">
+        <button onClick={onDismiss} data-testid="nudge-dismiss">
+          dismiss
+        </button>
+        <button onClick={onSeePro} data-testid="nudge-see-pro">
+          see pro
+        </button>
+      </div>
+    ) : null,
+}));
+
 vi.mock("../../components/dashboard/components/SRSReviewCard", () => ({
   SRSReviewCard: ({ dueCardsCount, onStartReview }: any) =>
     dueCardsCount > 0 ? (
@@ -236,6 +265,14 @@ describe("HomeDashboard", () => {
   beforeEach(async () => {
     vi.clearAllMocks();
     localStorage.clear();
+    // Default: Pro/quiet — the nudge must not appear in unrelated tests.
+    Object.assign(mockFreeTierUsage, {
+      count: undefined,
+      limit: 1000,
+      atWall: false,
+      nearWall: false,
+      isFree: false,
+    });
     // Default: no backup at all → the reminder shows (matches the pre-F0-3
     // "no manual backup date" behaviour). Individual branches override.
     mockGetLatestBackupAgeMs.mockResolvedValue(null);

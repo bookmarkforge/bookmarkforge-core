@@ -1540,5 +1540,18 @@
   "app_maintenancePartial_other": "Manutenção concluída com {{count}} problemas",
   "app_helpDiagnostics": "Ajuda e diagnóstico",
   "app_helpDiagnosticsDesc": "Copie um diagnóstico anonimizado (apenas contagens e versões — sem conteúdo do cofre) para colar no suporte. Inclui o código BF-E, se existir.",
-  "app_diagCopyFailed": "Não foi possível copiar o diagnóstico. Veja Ajuda."
+  "app_diagCopyFailed": "Não foi possível copiar o diagnóstico. Veja Ajuda.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} links guardados",
+  "app_freeMeterTooltip": "O Free comporta {{limit}} links. Nada é apagado — ler, pesquisar e exportar continuam a funcionar; apenas os novos guardados ficam em pausa ao atingir o limite.",
+  "app_freeWallTitle": "Atingiu 1.000 — o limite do Free",
+  "app_freeWallBody": "Nada se perdeu e nada ficou danificado. Ler, pesquisar e exportar continuam exatamente iguais — apenas os novos guardados ficam em pausa.",
+  "app_freeWallProLifts": "O Pro remove o limite:",
+  "app_freeWallProUnlimited": "Guardados ilimitados — o teto desaparece",
+  "app_freeWallProSync": "Sincronização P2P entre os seus dispositivos (até {{limit}})",
+  "app_freeWallProLocalAi": "IA a funcionar no seu computador — sem chaves API, nada é enviado",
+  "app_freeWallCta": "Ver Pro — {{price}} uma única vez",
+  "app_freeWallKeepFree": "Continuar no Free",
+  "app_freeWallTrust": "Pagamento único · seu para sempre · reembolso em {{days}} dias",
+  "app_freeLimitToast": "O Free comporta {{limit}} guardados — o seu cofre está seguro; apenas os novos guardados ficam em pausa.",
+  "app_freeLimitToastAction": "Pro é ilimitado →"
 }

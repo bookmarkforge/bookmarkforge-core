@@ -1540,5 +1540,18 @@
   "app_maintenancePartial_other": "Bakım {{count}} sorunla tamamlandı",
   "app_helpDiagnostics": "Yardım ve tanılama",
   "app_helpDiagnosticsDesc": "Destek ekibine yapıştırmak üzere anonimleştirilmiş bir tanılama kopyalayın (yalnızca sayaçlar ve sürümler — kasa içeriği yok). Varsa BF-E kodunu içerir.",
-  "app_diagCopyFailed": "Tanılama kopyalanamadı. Yardım'a bakın."
+  "app_diagCopyFailed": "Tanılama kopyalanamadı. Yardım'a bakın.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} kaydedilmiş bağlantı",
+  "app_freeMeterTooltip": "Free {{limit}} bağlantı saklar. Hiçbir şey silinmez — okuma, arama ve dışa aktarma devam eder; sınıra gelince yalnızca yeni kayıtlar duraklatılır.",
+  "app_freeWallTitle": "1.000'e ulaştınız — Free sınırı",
+  "app_freeWallBody": "Hiçbir şey kaybolmadı ve hiçbir şey bozulmadı. Okuma, arama ve dışa aktarma aynen devam eder — yalnızca yeni kayıtlar duraklatılır.",
+  "app_freeWallProLifts": "Pro sınırı kaldırır:",
+  "app_freeWallProUnlimited": "Sınırsız kayıt — tavan ortadan kalkar",
+  "app_freeWallProSync": "Cihazlarınız arasında P2P senkronizasyon ({{limit}} cihaza kadar)",
+  "app_freeWallProLocalAi": "Bilgisayarınızda çalışan yapay zekâ — API anahtarı yok, veri gönderilmez",
+  "app_freeWallCta": "Pro'yu gör — tek seferlik {{price}}",
+  "app_freeWallKeepFree": "Free ile devam et",
+  "app_freeWallTrust": "Tek seferlik ödeme · sonsuza kadar senin · {{days}} gün para iade garantisi",
+  "app_freeLimitToast": "Free {{limit}} kayıt tutar — kasanız güvende; yalnızca yeni kayıtlar duraklatılır.",
+  "app_freeLimitToastAction": "Pro sınırsız →"
 }

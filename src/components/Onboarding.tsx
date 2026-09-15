@@ -40,7 +40,7 @@ const STEPS = [
     titleDefault: "Welcome to BookmarkForge",
     descriptionKey: "app_onboardingWelcomeDesc",
     descriptionDefault:
-      "Your private, AI-powered knowledge vault. Everything runs locally on your device — your data never leaves your browser.",
+      "Smart search is included free — Raindrop charges yearly for it. Free works on any device with no device cap, while your private vault stays local and encrypted.",
   },
   {
     id: "privacy",

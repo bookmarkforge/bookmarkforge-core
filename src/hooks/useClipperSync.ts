@@ -6,6 +6,10 @@ import { initDB } from "../db/database";
 import type { BookmarkDocType } from "../db/schema";
 import { TabType } from "./useTabManager";
 import { logger } from "../utils/logger";
+import { isFreeLimitError } from "../services/LicenseService";
+import { FREE_LIMITS } from "../constants/license";
+import { STORAGE_KEYS } from "../constants/storage-keys";
+import { safeSet } from "../store/safeStorage";
 
 interface ClipperMessage {
   type: "clipper-add";
@@ -18,7 +22,9 @@ interface ClipperMessage {
 
 export const useClipperSync = (
   lastMessage: unknown | null,
-  t: (key: string) => string,
+  // Options-aware: the free-limit toast interpolates {{limit}} via
+  // t(key, options); the existing one-argument calls remain unchanged.
+  t: (key: string, options?: Record<string, unknown>) => string,
   _setCurrentDocId: (id: string) => void,
   _setActiveTab: (tab: TabType) => void,
 ) => {
@@ -67,7 +73,40 @@ export const useClipperSync = (
         if (!cancelled) {
           toast.success(t("app_bookmarksTitle") + ": " + data.title);
         }
-      }).catch(() => { /* INTENTIONAL SILENCE: clipper save failure is non-critical */ });
+      }).catch((error: unknown) => {
+        if (isFreeLimitError(error)) {
+          // The 1,000 wall, made visible: this was INTENTIONAL SILENCE
+          // before — the user clicked "save" in the extension and nothing
+          // ever happened. Now the one blocked save that matters reports
+          // itself with the same message as the in-app paths.
+          logger.info("[ClipperSync] save blocked by free-tier wall");
+          toast.error(
+            t("app_freeLimitToast", { limit: FREE_LIMITS.maxBookmarks }),
+            {
+              id: "free-limit",
+              duration: 4000,
+              action: {
+                label: t("app_freeLimitToastAction"),
+                onClick: () =>
+                  window.dispatchEvent(
+                    new CustomEvent("forge:open-settings"),
+                  ),
+              },
+            },
+          );
+          safeSet(STORAGE_KEYS.FREE_TIER_WALL_HIT_PENDING, "1");
+          window.dispatchEvent(new CustomEvent("bmf:free-wall-hit"));
+          return;
+        }
+        // A clipper save still needs feedback: the extension has no other
+        // visible error surface, so silence makes a failed save look like
+        // success. Keep the detailed error in logs, but show a short retry
+        // message for failures other than the free-tier wall.
+        logger.error("[ClipperSync] Failed to save clipped page", { error });
+        toast.error(
+          t("app_captureError"),
+        );
+      });
       return () => { cancelled = true; };
     }
   }, [lastMessage, t]);

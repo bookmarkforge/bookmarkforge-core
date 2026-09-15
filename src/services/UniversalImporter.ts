@@ -13,6 +13,7 @@ import {
   sanitizeUrl,
 } from "./SanitizationService";
 import { SanitizationService } from "./SanitizationService";
+import { isFreeLimitError } from "./LicenseService";
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import JSZip from "jszip";
 import { attachmentStore } from "./documentAttachments";
@@ -34,6 +35,8 @@ interface ImportResult {
   skippedCount: number;
   error?: string;
   rollbackIncomplete?: boolean;
+  /** True when the Free-tier wall stopped the import after a partial save. */
+  limitReached?: boolean;
 }
 
 interface RollbackResult {
@@ -58,7 +61,19 @@ export interface ImportOptions {
 type ImportExecutionOptions = ImportOptions & {
   journal: ImportJournal;
   recordsSeen: number;
+  importedCount: number;
 };
+
+/** Internal control-flow error: a limit is a partial, honest result, not a rollback. */
+class FreeTierImportLimitReached extends Error {
+  constructor(
+    readonly importedCount: number,
+    readonly skippedCount: number,
+  ) {
+    super("FREE_LIMIT_REACHED");
+    this.name = "FreeTierImportLimitReached";
+  }
+}
 
 function createImportExecutionOptions(
   options: ImportOptions,
@@ -67,6 +82,7 @@ function createImportExecutionOptions(
     ...options,
     journal: createImportJournal(),
     recordsSeen: 0,
+    importedCount: 0,
   };
 }
 
@@ -287,6 +303,28 @@ async function insertTrackedFolder(
 ): Promise<void> {
   await db.folders.insert(folder);
   journal?.folderIds.push(folder.id);
+}
+
+function getLimitResult(
+  error: unknown,
+  options: ImportExecutionOptions,
+): ImportResult | null {
+  if (!isFreeLimitError(error) && !(error instanceof FreeTierImportLimitReached)) {
+    return null;
+  }
+  const importedCount =
+    error instanceof FreeTierImportLimitReached
+      ? error.importedCount
+      : options.importedCount;
+  const skippedCount =
+    error instanceof FreeTierImportLimitReached ? error.skippedCount : 0;
+  return {
+    success: true,
+    importedCount,
+    skippedCount,
+    limitReached: true,
+    error: `Imported ${importedCount}; Free limit reached. New items were not imported.`,
+  };
 }
 
 function throwIfAborted(signal?: AbortSignal): void {
@@ -623,6 +661,13 @@ export class UniversalImporter {
       reportProgress(importOptions, 100);
       return result;
     } catch (error) {
+      const limitResult = getLimitResult(error, importOptions);
+      if (limitResult) {
+        logger.info("[UniversalImporter] Free-tier limit reached", {
+          importedCount: limitResult.importedCount,
+        });
+        return limitResult;
+      }
       const rollback = await rollbackImport(db, importOptions.journal);
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
       logger.error("[UniversalImporter] Import failed", {
@@ -754,6 +799,13 @@ export class UniversalImporter {
       reportProgress(importOptions, 100);
       return result;
     } catch (error) {
+      const limitResult = getLimitResult(error, importOptions);
+      if (limitResult) {
+        logger.info("[UniversalImporter] Free-tier limit reached", {
+          importedCount: limitResult.importedCount,
+        });
+        return limitResult;
+      }
       const rollback = await rollbackImport(db, importOptions.journal);
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
       logger.error("[UniversalImporter] Detection failed", {
@@ -838,10 +890,14 @@ export class UniversalImporter {
             visitCount: 0,
           } as BookmarkDocType, options.journal);
           importedCount++;
+          options.importedCount++;
         } else {
           skippedCount++;
         }
-      } catch (_err) {
+      } catch (error) {
+        if (isFreeLimitError(error)) {
+          throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+        }
         skippedCount++;
       }
     }
@@ -928,10 +984,14 @@ export class UniversalImporter {
             visitCount: 0,
           } as BookmarkDocType, options.journal);
           importedCount++;
+          options.importedCount++;
         } else {
           skippedCount++;
         }
-      } catch (_err) {
+      } catch (error) {
+        if (isFreeLimitError(error)) {
+          throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+        }
         skippedCount++;
       }
     }
@@ -1026,14 +1086,21 @@ export class UniversalImporter {
               visitCount: 0,
             } as BookmarkDocType, options.journal);
             importedCount++;
+            options.importedCount++;
           } else {
             skippedCount++;
           }
-        } catch (_err) {
+        } catch (error) {
+          if (isFreeLimitError(error)) {
+            throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+          }
           skippedCount++;
         }
       }
-    } catch (_err) {
+    } catch (error) {
+      if (error instanceof FreeTierImportLimitReached || isFreeLimitError(error)) {
+        throw error;
+      }
       return {
         success: false,
         importedCount: 0,
@@ -1164,6 +1231,7 @@ export class UniversalImporter {
         availableFolderIds.add(id);
         folderParentMap.set(id, parentId);
         importedCount++;
+        options.importedCount++;
       }
 
       // Import Bookmarks
@@ -1234,10 +1302,14 @@ export class UniversalImporter {
                 visitCount: normalizeImportedInteger(item.visitCount, 1_000_000),
               } as BookmarkDocType, options.journal);
               importedCount++;
+              options.importedCount++;
             } else {
               skippedCount++;
             }
           } catch (e) {
+            if (isFreeLimitError(e)) {
+              throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+            }
             logger.warn("[UniversalImporter] Failed to import bookmark", {
               error: e instanceof Error ? e.message : String(e),
             });
@@ -1315,7 +1387,11 @@ export class UniversalImporter {
               ),
             } as DocumentDocType, options.journal);
             importedCount++;
+            options.importedCount++;
           } catch (e) {
+            if (isFreeLimitError(e)) {
+              throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+            }
             logger.warn("[UniversalImporter] Failed to import document", {
               error: e instanceof Error ? e.message : String(e),
             });
@@ -1529,10 +1605,14 @@ export class UniversalImporter {
               visitCount: 0,
             } as BookmarkDocType, options.journal);
             importedCount++;
+            options.importedCount++;
           } else {
             skippedCount++;
           }
-        } catch (_err) {
+        } catch (error) {
+          if (isFreeLimitError(error)) {
+            throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+          }
           skippedCount++;
         }
       }
@@ -1820,6 +1900,7 @@ export class UniversalImporter {
             options.journal,
           );
           importedCount++;
+          options.importedCount++;
         } else {
           const textContent = await this.importNoteAttachments(
             db,
@@ -1847,8 +1928,12 @@ export class UniversalImporter {
             options.journal,
           );
           importedCount++;
+          options.importedCount++;
         }
       } catch (error) {
+        if (isFreeLimitError(error)) {
+          throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+        }
         logger.warn("[UniversalImporter] Failed to import markdown note", {
           error: error instanceof Error ? error.message : String(error),
           slug: note.slug,

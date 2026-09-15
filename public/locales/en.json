@@ -1294,7 +1294,7 @@
   "app_startupAiSetupHint": "Set up an API key in Settings or configure local AI to use the AI assistant.",
   "app_startupAiOpenHelp": "Open Help Center",
   "app_onboardingWelcome": "Welcome to BookmarkForge",
-  "app_onboardingWelcomeDesc": "Your private, AI-powered knowledge vault. Everything runs locally on your device — your data never leaves your browser.",
+  "app_onboardingWelcomeDesc": "Smart search is included free — Raindrop charges yearly for it. Free works on any device with no device cap, while your private vault stays local and encrypted.",
   "app_onboardingPrivacy": "100% Private by Default",
   "app_onboardingPrivacyDesc": "Your bookmarks, notes, and AI conversations are encrypted and stored locally. No cloud, no tracking, no data collection.",
   "app_onboardingAI": "AI That Runs on Your Device",
@@ -1715,5 +1715,18 @@
   "app_diagWebLLMBlockerRAM": "WebLLM cannot run: at least 4 GB of device memory is required.",
   "app_helpDiagnostics": "Help & diagnostics",
   "app_helpDiagnosticsDesc": "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.",
-  "app_diagCopyFailed": "Could not copy diagnostic. See Help."
+  "app_diagCopyFailed": "Could not copy diagnostic. See Help.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} saved links",
+  "app_freeMeterTooltip": "Free holds {{limit}}. Nothing is ever deleted — reading, search and export never stop; only new saves pause at the limit.",
+  "app_freeWallTitle": "You've reached 1,000 — Free's limit",
+  "app_freeWallBody": "Nothing is lost and nothing broke. Reading, search and export are exactly as they were — only new saves pause.",
+  "app_freeWallProLifts": "Pro lifts the cap:",
+  "app_freeWallProUnlimited": "Unlimited saves — the ceiling disappears",
+  "app_freeWallProSync": "P2P sync between your own devices (up to {{limit}})",
+  "app_freeWallProLocalAi": "AI that runs inside your computer — no API keys, nothing sent anywhere",
+  "app_freeWallCta": "See Pro — {{price}} once",
+  "app_freeWallKeepFree": "Keep Free",
+  "app_freeWallTrust": "One-time payment · yours forever · {{days}}-day money-back",
+  "app_freeLimitToast": "Free holds {{limit}} saves — your vault is safe; new saves pause.",
+  "app_freeLimitToastAction": "Pro is unlimited →"
 }

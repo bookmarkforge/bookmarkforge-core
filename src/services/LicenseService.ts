@@ -108,6 +108,17 @@ export class LicenseError extends Error {
   }
 }
 
+/**
+ * True when an error is the free-tier wall (the RxDB preInsert hook's
+ * FREE_LIMIT_REACHED LicenseError). UI surfaces use this to replace generic
+ * failure copy with the honest "Free holds 1,000 — new saves pause" message.
+ */
+export function isFreeLimitError(error: unknown): boolean {
+  return (
+    error instanceof LicenseError && error.code === "FREE_LIMIT_REACHED"
+  );
+}
+
 // ── Service ──────────────────────────────────────────────────────────
 
 const SECURE_LICENSE_KEY = "bf_license_key_secure";

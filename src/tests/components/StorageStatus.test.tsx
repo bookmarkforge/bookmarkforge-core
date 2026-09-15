@@ -38,6 +38,18 @@ vi.mock("../../hooks/useRxDB", () => ({
   useRxCollection: () => null,
   useRxQuery: mockUseRxQuery,
 }));
+// Free-tier meter state — mutated per test (mock-prefixed so the vi.mock
+// factory may close over it).
+const mockFreeTierUsage = {
+  count: undefined as number | undefined,
+  limit: 1000,
+  atWall: false,
+  nearWall: false,
+  isFree: false,
+};
+vi.mock("../../hooks/useFreeTierUsage", () => ({
+  useFreeTierUsage: () => mockFreeTierUsage,
+}));
 vi.mock("../../services/BackupService", () => ({
   BackupService: { getAutoBackupInfo: vi.fn() },
 }));
@@ -77,6 +89,13 @@ describe("StorageStatus", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockUseRxQuery.mockReturnValue({ result: 0 });
+    Object.assign(mockFreeTierUsage, {
+      count: undefined,
+      limit: 1000,
+      atWall: false,
+      nearWall: false,
+      isFree: false,
+    });
     (BackupService.getAutoBackupInfo as any).mockResolvedValue({
       available: false,
     });
@@ -269,5 +288,32 @@ describe("StorageStatus", () => {
 
   it("BACKUP_STALE_MS is 48 hours", () => {
     expect(BACKUP_STALE_MS).toBe(48 * 60 * 60 * 1000);
+  });
+
+  it("shows the free-tier meter only when Free and within 10% of the wall", () => {
+    // Below threshold: no meter segment.
+    Object.assign(mockFreeTierUsage, {
+      count: 500, limit: 1000, atWall: false, nearWall: false, isFree: true,
+    });
+    const below = render(<StorageStatus />);
+    expect(below.container.textContent).not.toContain("app_freeMeterLine");
+    below.unmount();
+
+    // ≥900: meter segment appears (interpolated count/limit text is
+    // covered in FreeTierNudge.test; this suite's t() has no dictionary).
+    Object.assign(mockFreeTierUsage, {
+      count: 950, limit: 1000, atWall: false, nearWall: true, isFree: true,
+    });
+    const near = render(<StorageStatus />);
+    expect(near.container.textContent).toContain("app_freeMeterLine");
+    near.unmount();
+  });
+
+  it("never shows the free-tier meter for Pro users", () => {
+    Object.assign(mockFreeTierUsage, {
+      count: 5000, limit: 1000, atWall: true, nearWall: true, isFree: false,
+    });
+    const { container } = render(<StorageStatus />);
+    expect(container.textContent).not.toContain("app_freeMeterLine");
   });
 });

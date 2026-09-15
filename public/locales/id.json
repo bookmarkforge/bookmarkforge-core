@@ -1539,5 +1539,18 @@
   "app_maintenancePartial_other": "Pemeliharaan selesai dengan {{count}} masalah",
   "app_helpDiagnostics": "Bantuan & diagnostik",
   "app_helpDiagnosticsDesc": "Salin diagnostik yang dianonimkan (hanya hitungan dan versi — tanpa isi brankas) untuk ditempel ke dukungan. Menyertakan kode BF-E jika ada.",
-  "app_diagCopyFailed": "Tidak dapat menyalin diagnostik. Lihat Bantuan."
+  "app_diagCopyFailed": "Tidak dapat menyalin diagnostik. Lihat Bantuan.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} tautan tersimpan",
+  "app_freeMeterTooltip": "Free menampung {{limit}} tautan. Tidak ada yang dihapus — membaca, mencari, dan mengekspor tetap berjalan; hanya penyimpanan baru yang berhenti saat batas tercapai.",
+  "app_freeWallTitle": "Anda mencapai 1.000 — batas Free",
+  "app_freeWallBody": "Tidak ada yang hilang dan tidak ada yang rusak. Membaca, mencari, dan mengekspor tetap seperti biasa — hanya penyimpanan baru yang berhenti.",
+  "app_freeWallProLifts": "Pro menghapus batasnya:",
+  "app_freeWallProUnlimited": "Penyimpanan tanpa batas — plafonnya hilang",
+  "app_freeWallProSync": "Sinkronisasi P2P antarperangkat Anda (hingga {{limit}})",
+  "app_freeWallProLocalAi": "AI yang berjalan di komputer Anda — tanpa kunci API dan tanpa mengirim data",
+  "app_freeWallCta": "Lihat Pro — {{price}} sekali bayar",
+  "app_freeWallKeepFree": "Tetap di Free",
+  "app_freeWallTrust": "Bayar sekali · milik Anda selamanya · pengembalian dana dalam {{days}} hari",
+  "app_freeLimitToast": "Free menampung {{limit}} penyimpanan — vault Anda aman; hanya penyimpanan baru yang berhenti.",
+  "app_freeLimitToastAction": "Pro tanpa batas →"
 }

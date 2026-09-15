@@ -29,8 +29,13 @@ describe("isRemoteErrorReportingConsented", () => {
     expect(isRemoteErrorReportingConsented()).toBe(false);
   });
 
-  it("honors the pre-banner broad telemetry key only when current consent is unset", () => {
+  it("never grants remote reporting from the pre-banner broad telemetry key (ADR-044)", () => {
+    // Legacy consent never authorizes modern purposes — fail-closed.
     localStorage.setItem("bmf_telemetry_optin", "true");
+    expect(isRemoteErrorReportingConsented()).toBe(false);
+    // An explicit current-scope decision stays authoritative, in both
+    // directions.
+    localStorage.setItem(CONSENT_KEY, "true");
     expect(isRemoteErrorReportingConsented()).toBe(true);
     localStorage.setItem(CONSENT_KEY, "false");
     expect(isRemoteErrorReportingConsented()).toBe(false);

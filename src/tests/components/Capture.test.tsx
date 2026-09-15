@@ -44,6 +44,19 @@ vi.mock("react-i18next", () => ({
     t: (key: string, fallback?: string) => fallback || key,
   }),
 }));
+
+// Capture now imports isFreeLimitError from LicenseService; mocking the
+// service keeps src/i18n.ts out of this suite's module graph (its bootstrap
+// fights the react-i18next mock) and lets tests control wall errors.
+const { mockIsFreeLimitError } = vi.hoisted(() => ({
+  mockIsFreeLimitError: vi.fn(() => false),
+}));
+vi.mock("../../services/LicenseService", () => ({
+  isFreeLimitError: mockIsFreeLimitError,
+}));
+vi.mock("../../components/FreeTierSaveHint", () => ({
+  FreeTierSaveHint: () => null,
+}));
 vi.mock("lucide-react", () => {
   const mock = (name: string) => {
     const Icon = (props: any) => (
@@ -69,6 +82,7 @@ describe("Capture", () => {
     window.close = vi.fn();
     mockValidateUrl.mockImplementation((u: string) => u);
     (initDBMock as any).setError(null);
+    mockIsFreeLimitError.mockReturnValue(false);
   });
 
   afterEach(() => {
@@ -296,6 +310,28 @@ describe("Capture", () => {
         "No space left on this device. Free up storage to save.",
       );
     });
+    (initDBMock as any).setError(null);
+  });
+
+  it("shows the free-limit wall toast (not the generic save error) when the save hits the 1,000 limit", async () => {
+    // The preInsert wall rejects the insert with LicenseError;
+    // isFreeLimitError is suite-mocked, so flip it for this test.
+    mockIsFreeLimitError.mockReturnValue(true);
+    (initDBMock as any).setError(new Error("Free plan is limited"));
+    render(<Capture />);
+    const urlInput = screen.getByLabelText("URL") as HTMLInputElement;
+    await userEvent.type(urlInput, "https://example.com");
+    const btn = screen.getByText("saveToForge").closest("button")!;
+    await userEvent.click(btn);
+    await waitFor(() => {
+      // Suite's t(key, fallback) returns the fallback copy uninterpolated;
+      // asserting on it validates the English fallback string too.
+      expect(mockToastError).toHaveBeenCalledWith(
+        expect.stringContaining("Free holds"),
+        expect.objectContaining({ id: "free-limit", duration: 4000 }),
+      );
+    });
+    mockIsFreeLimitError.mockReturnValue(false);
     (initDBMock as any).setError(null);
   });
 

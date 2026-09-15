@@ -26,6 +26,19 @@ vi.mock("../\.\./services/ai/TaggingService", () => ({
 const mockToast = vi.hoisted(() => ({ success: vi.fn(), error: vi.fn() }));
 vi.mock("sonner", () => ({ toast: mockToast }));
 
+// QuickCapture now imports isFreeLimitError from LicenseService; mocking
+// the service keeps src/i18n.ts out of this suite's module graph (its
+// bootstrap fights this suite's react-i18next mock).
+const { mockIsFreeLimitError } = vi.hoisted(() => ({
+  mockIsFreeLimitError: vi.fn(() => false),
+}));
+vi.mock("../../services/LicenseService", () => ({
+  isFreeLimitError: mockIsFreeLimitError,
+}));
+vi.mock("../../components/FreeTierSaveHint", () => ({
+  FreeTierSaveHint: () => null,
+}));
+
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string, fallback?: string) => fallback || key,
@@ -321,6 +334,33 @@ describe("QuickCapture", () => {
       expect(mockToast.error).toHaveBeenCalledWith("app_captureError");
     });
     expect(mockToast.success).not.toHaveBeenCalled();
+  });
+
+  it("shows the free-limit upgrade CTA instead of the generic capture error", async () => {
+    const { initDB } = await import("../../db/database");
+    const insert = vi.fn().mockRejectedValue(new Error("free wall"));
+    (initDB as ReturnType<typeof vi.fn>).mockResolvedValue({
+      bookmarks: { insert },
+      documents: { insert: vi.fn() },
+    });
+    mockIsFreeLimitError.mockReturnValue(true);
+
+    render(<QuickCapture />);
+    await userEvent.click(screen.getByTestId("add-bookmark-button"));
+    await userEvent.type(
+      screen.getByPlaceholderText("Enter URL..."),
+      "https://limit.example",
+    );
+    await userEvent.click(screen.getByTestId("save-bookmark-button"));
+
+    await waitFor(() => {
+      expect(mockToast.error).toHaveBeenCalledWith(
+        expect.stringContaining("Free holds"),
+        expect.objectContaining({ duration: 4000, action: expect.any(Object) }),
+      );
+    });
+    expect(mockToast.error).not.toHaveBeenCalledWith("app_captureError");
+    mockIsFreeLimitError.mockReturnValue(false);
   });
 
   it("shows spinner and disables send while processing", async () => {

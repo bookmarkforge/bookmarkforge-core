@@ -1539,5 +1539,18 @@
   "app_maintenancePartial_other": "Întreținere finalizată cu {{count}} probleme",
   "app_helpDiagnostics": "Ajutor și diagnostic",
   "app_helpDiagnosticsDesc": "Copiați un diagnostic anonimizat (doar contoare și versiuni — fără conținutul seifului) pentru a-l trimite la asistență. Include codul BF-E, dacă există.",
-  "app_diagCopyFailed": "Nu s-a putut copia diagnosticul. Consultați Ajutorul."
+  "app_diagCopyFailed": "Nu s-a putut copia diagnosticul. Consultați Ajutorul.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} linkuri salvate",
+  "app_freeMeterTooltip": "Free păstrează {{limit}} de linkuri. Nimic nu este șters — citirea, căutarea și exportul continuă; la limită se opresc doar salvările noi.",
+  "app_freeWallTitle": "Ai ajuns la 1.000 — limita Free",
+  "app_freeWallBody": "Nu s-a pierdut nimic și nimic nu s-a stricat. Citirea, căutarea și exportul funcționează ca înainte — se opresc doar salvările noi.",
+  "app_freeWallProLifts": "Pro elimină limita:",
+  "app_freeWallProUnlimited": "Salvări nelimitate — plafonul dispare",
+  "app_freeWallProSync": "Sincronizare P2P între dispozitivele tale (până la {{limit}})",
+  "app_freeWallProLocalAi": "AI care rulează pe computerul tău — fără chei API, fără date trimise",
+  "app_freeWallCta": "Vezi Pro — {{price}} o singură dată",
+  "app_freeWallKeepFree": "Rămâi la Free",
+  "app_freeWallTrust": "Plată unică · al tău pentru totdeauna · rambursare în {{days}} zile",
+  "app_freeLimitToast": "Free păstrează {{limit}} de salvări — seiful tău este în siguranță; se opresc doar salvările noi.",
+  "app_freeLimitToastAction": "Pro este nelimitat →"
 }

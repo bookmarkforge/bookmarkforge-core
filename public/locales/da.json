@@ -1540,5 +1540,18 @@
   "app_maintenancePartial_other": "Vedligeholdelse afsluttet med {{count}} problemer",
   "app_helpDiagnostics": "Hjælp og diagnostik",
   "app_helpDiagnosticsDesc": "Kopiér en anonymiseret diagnostik (kun antal og versioner — intet boksindhold) til at indsætte i supporten. Indeholder BF-E-kode, hvis den findes.",
-  "app_diagCopyFailed": "Kunne ikke kopiere diagnostikken. Se Hjælp."
+  "app_diagCopyFailed": "Kunne ikke kopiere diagnostikken. Se Hjælp.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} gemte links",
+  "app_freeMeterTooltip": "Free rummer {{limit}} links. Intet slettes — læsning, søgning og eksport fortsætter; kun nye gemte links sættes på pause ved grænsen.",
+  "app_freeWallTitle": "Du har nået 1.000 — Frees grænse",
+  "app_freeWallBody": "Intet er gået tabt, og intet er gået i stykker. Læsning, søgning og eksport fungerer som før — kun nye gemte links sættes på pause.",
+  "app_freeWallProLifts": "Pro fjerner grænsen:",
+  "app_freeWallProUnlimited": "Ubegrænset lagring — loftet forsvinder",
+  "app_freeWallProSync": "P2P-synkronisering mellem dine enheder (op til {{limit}})",
+  "app_freeWallProLocalAi": "AI, der kører på din computer — ingen API-nøgler, intet sendes væk",
+  "app_freeWallCta": "Se Pro — {{price}} én gang",
+  "app_freeWallKeepFree": "Fortsæt med Free",
+  "app_freeWallTrust": "Engangsbetaling · din for altid · {{days}} dages pengene-tilbage",
+  "app_freeLimitToast": "Free rummer {{limit}} gemte links — din hvælving er sikker; kun nye gemninger sættes på pause.",
+  "app_freeLimitToastAction": "Pro er ubegrænset →"
 }

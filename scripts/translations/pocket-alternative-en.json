@@ -34,7 +34,7 @@
   "hero": {
     "badge": "Pocket Alternative",
     "title": "BookmarkForge vs Pocket: <span class=\"accent-text\">The Full Comparison</span>",
-    "subtitle": "Pocket is going away. Your reading list deserves a home that keeps your data yours — every article, note and highlight encrypted on your device, searchable by AI, and available offline."
+    "subtitle": "Pocket is going away. Smart search is included free — Raindrop charges yearly for it. BookmarkForge works on any device with no device cap on Free, while your reading list stays encrypted and yours."
   },
   "whyMatters": {
     "id": "context",
@@ -58,7 +58,8 @@
       { "feature": "Highlights & annotations", "pocket": "✅ Yes", "pocketClass": "yes", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
       { "feature": "Notion-style block notes on any bookmark", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
       { "feature": "Full-text search", "pocket": "✅ Yes", "pocketClass": "yes", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
-      { "feature": "Semantic AI search (meaning, not just keywords)", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
+      { "feature": "Smart search (meaning, not just keywords)", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Included free — Raindrop charges yearly", "bookmarkforgeClass": "yes" },
+      { "feature": "Device limit on Free", "pocket": "⚠️ Service-dependent", "pocketClass": "partial", "bookmarkforge": "✅ No device cap", "bookmarkforgeClass": "yes" },
       { "feature": "AI chat over your saved content (RAG)", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes — local (WebLLM/Ollama) or cloud", "bookmarkforgeClass": "yes" },
       { "feature": "Knowledge graph of your notes & links", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
       { "feature": "Flashcards with spaced repetition", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
@@ -78,12 +79,12 @@
   "migration": {
     "id": "migration",
     "title": "Migrate from Pocket in 4 Steps",
-    "subtitle": "Your library — titles, tags and original save dates — moves to your device in minutes. No account, no upload.",
+    "subtitle": "Your library — titles, tags and original save dates — moves to your device in minutes. Smart search is included free (Raindrop charges yearly for it), and Free works on any device with no device cap. No account, no upload.",
     "steps": [
       { "title": "Export your Pocket library", "text": "If you still have access to Pocket, use its export feature to download the HTML file of your saved list. The file contains every link with its title, tags and original save date." },
       { "title": "Open the BookmarkForge importer", "text": "Open <a href=\"/app\">BookmarkForge</a> (no account needed) and click <strong>Open Importer</strong> on the dashboard. The importer accepts <code>.html</code>, <code>.json</code>, <code>.csv</code>, <code>.md</code> and <code>.zip</code> files." },
       { "title": "Drop in your Pocket file", "text": "BookmarkForge detects the Pocket HTML export format automatically and imports every link with its title, tags and original date. Items without tags are labeled <code>pocket-import</code> so you can find them instantly." },
-      { "title": "Make it yours", "text": "Add Notion-style notes and highlights, ask your vault questions with local AI, organize with folders, and sync peer-to-peer between your devices. Everything stays encrypted on your device." }
+      { "title": "Make it yours", "text": "Search by meaning for free — Raindrop charges yearly for that feature. Free has no device cap, so use BookmarkForge on any device, then add notes, folders and private peer-to-peer sync. Everything stays encrypted on your devices." }
     ]
   },
   "faq": {
@@ -100,7 +101,7 @@
   "cta": {
     "id": "cta",
     "title": "Own Your Reading List Again",
-    "text": "Free forever. No account. Your data never leaves your device.",
+    "text": "Smart search included free — Raindrop charges yearly for it. No device cap on Free. No account. Your data never leaves your device.",
     "ctaPrimary": "Start Saving Free",
     "ctaSecondary": "Explore Features"
   },

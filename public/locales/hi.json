@@ -1540,5 +1540,18 @@
   "app_maintenancePartial_other": "रखरखाव {{count}} समस्याओं के साथ समाप्त",
   "app_helpDiagnostics": "सहायता और निदान",
   "app_helpDiagnosticsDesc": "समर्थन में पेस्ट करने के लिए एक गुमनाम निदान कॉपी करें (केवल संख्याएँ और संस्करण — वॉल्ट सामग्री नहीं)। यदि उपलब्ध हो तो BF-E कोड शामिल है।",
-  "app_diagCopyFailed": "निदान कॉपी नहीं हो सका। सहायता देखें।"
+  "app_diagCopyFailed": "निदान कॉपी नहीं हो सका। सहायता देखें।",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} सहेजे गए लिंक",
+  "app_freeMeterTooltip": "Free में {{limit}} लिंक रखे जा सकते हैं। कुछ भी कभी मिटता नहीं — पढ़ना, खोज और एक्सपोर्ट जारी रहते हैं; सीमा पर केवल नई सेविंग रुकती है।",
+  "app_freeWallTitle": "1,000 पूरे हो गए — Free की सीमा",
+  "app_freeWallBody": "कुछ भी खोया नहीं है और कुछ भी खराब नहीं हुआ। पढ़ना, खोज और एक्सपोर्ट पहले जैसे जारी हैं — केवल नई सेविंग रुकती है।",
+  "app_freeWallProLifts": "Pro सीमा हटा देता है:",
+  "app_freeWallProUnlimited": "अनलिमिटेड सेविंग — सीमा खत्म",
+  "app_freeWallProSync": "आपके डिवाइसों के बीच P2P सिंक ({{limit}} तक)",
+  "app_freeWallProLocalAi": "आपके कंप्यूटर पर चलने वाली AI — API कुंजी नहीं, डेटा कहीं नहीं भेजा जाता",
+  "app_freeWallCta": "Pro देखें — एक बार {{price}}",
+  "app_freeWallKeepFree": "Free पर रहें",
+  "app_freeWallTrust": "एक बार भुगतान · हमेशा आपका · {{days}} दिनों में रिफंड",
+  "app_freeLimitToast": "Free में {{limit}} सेविंग रखी जा सकती हैं — आपकी वॉल्ट सुरक्षित है; केवल नई सेविंग रुकती है।",
+  "app_freeLimitToastAction": "Pro अनलिमिटेड है →"
 }

@@ -16,8 +16,52 @@ const MAX_LICENSE_KEY_LENGTH = 512;
 const MAX_INSTANCE_LENGTH = 256;
 const MAX_FORWARDED_IP_LENGTH = 128;
 const ACTIVE_STATUSES = new Set(["active", "paid", "trialing", "valid", "completed"]);
-const INACTIVE_STATUSES = new Set(["inactive", "expired", "revoked", "cancelled", "canceled", "disabled", "invalid"]);
-const DEACTIVATED_STATUSES = new Set(["deactivated", "inactive", "revoked", "cancelled", "canceled"]);
+// past_due/unpaid/pending/draft: Whop membership states that must never
+// grant an entitlement (fail closed on anything but explicit activation).
+const INACTIVE_STATUSES = new Set(["inactive", "expired", "revoked", "cancelled", "canceled", "disabled", "invalid", "past_due", "unpaid", "pending", "draft"]);
+const DEACTIVATED_STATUSES = new Set(["deactivated", "inactive", "revoked",
+  "cancelled", "canceled"]);
+
+/**
+ * Whop native mode: when WHOP_LICENSE_API_URL points at api.whop.com (the
+ * real Whop API, not a reseller-style adapter), the adapter translates our
+ * /activate /validate /deactivate contract onto Whop's license-key API:
+ *
+ *   POST https://api.whop.com/api/v2/memberships/{licenseKey}/validate_license
+ *     Authorization: Bearer <WHOP_API_KEY>   (Account API key — server-only)
+ *     { metadata: { instance_name, instance_id? } }
+ *   → 201 + membership JSON: { status: "active", ... }
+ *   → 400 when the stored metadata mismatches (different machine) — WHOP
+ *     REFUSES the call, so the slot can never be silently stolen.
+ *   Metadata is the ONLY binding mechanism: there is no instance allocation
+ *   endpoint, and Whop only documents single-device semantics (an unbound
+ *   key adopts instance_name; a bound key validates ONLY for the same
+ *   instance_name and is refused with 400 otherwise). Seats are therefore
+ *   enforced HERE (WHOP_NATIVE_SEATS, distinct bound devices in metadata);
+ *   raise it ONLY after the day-0 live test proves Whop merges additional
+ *   metadata pairs (multi-seat via "bm:<n>" keys) — otherwise a second
+ *   device would be refused by Whop with 400 (fail-closed: never a stolen
+ *   seat, but a blocked legitimate device).
+ *   Deactivate = POST validate_license with { metadata: {} } (resets the
+ *   binding — documented Whop behavior) only after verifying the caller's
+ *   deviceId currently OWNS the binding (anti-abuse, same ownership check
+ *   as every other path).
+ */
+const WHOP_NATIVE_HOST = "api.whop.com";
+const WHOP_MEMBERSHIPS_PATH = "/api/v2/memberships/";
+/** Seats enforced by this adapter in native mode (Whop binds 1 device/key). */
+const WHOP_NATIVE_SEATS = 1;
+
+const WHOP_NATIVE_BASE = `https://${WHOP_NATIVE_HOST}${WHOP_MEMBERSHIPS_PATH}`;
+
+/** True when WHOP_LICENSE_API_URL targets Whop's real API (native mode). */
+function whopIsWhopApiUrl(base: string): boolean {
+  try {
+    return new URL(base.trim()).hostname.toLowerCase() === WHOP_NATIVE_HOST;
+  } catch {
+    return false;
+  }
+}
 
 interface WhopLicenseServerOptions {
   /** PKCS#8 DER signing key. Defaults to the runtime environment. */
@@ -311,15 +355,173 @@ function normalizeActionUrl(base: string, action: string, allowInsecureHttp = fa
   }
 }
 
+/** Shape of Whop's membership object this adapter consumes. */
+interface WhopMembership {
+  metadata?: Record<string, unknown>;
+  status?: string;
+}
+
+/**
+ * GET /api/v2/memberships/{licenseKey} — current metadata + status. Returns
+ * null when the key does not exist (404) so callers fail with INVALID_KEY
+ * instead of a misleading upstream-availability error.
+ */
+async function whopGetMembership(
+  apiKey: string,
+  licenseKey: string,
+): Promise<WhopMembership | null> {
+  const response = await fetch(`${WHOP_NATIVE_BASE}${encodeURIComponent(licenseKey)}`, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${apiKey}`, Accept: "application/json" },
+    signal: AbortSignal.timeout(DEFAULT_WHOP_API_TIMEOUT_MS),
+  });
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error(`provider_http_${response.status}`);
+  const raw = await response.text();
+  if (raw.length > MAX_PROVIDER_RESPONSE_CHARS) throw new Error("provider_response_too_large");
+  try {
+    return JSON.parse(raw) as WhopMembership;
+  } catch {
+    throw new Error("provider_invalid_response");
+  }
+}
+
+/** Distinct bound devices in the membership metadata (seat accounting). */
+function whopBoundDevices(metadata: Record<string, unknown> | undefined): string[] {
+  const devices = new Set<string>();
+  for (const [key, value] of Object.entries(metadata ?? {})) {
+    if (
+      (key === "instance_name" || key.startsWith("bm:")) &&
+      typeof value === "string" && value.length > 0
+    ) {
+      devices.add(value);
+    }
+  }
+  return [...devices];
+}
+
+/**
+ * POST /api/v2/memberships/{licenseKey}/validate_license — bind-or-verify.
+ * Whop's documented SaaS model: an unbound key adopts the sent
+ * instance_name (201); a bound key validates ONLY for the SAME instance_name
+ * and is REFUSED (400) otherwise, so a seat can never be silently stolen.
+ * 400/404 are user-input outcomes and surface as an inactive entitlement
+ * (→ 400 INVALID_KEY downstream), never as an upstream-availability error.
+ */
+async function whopNativeValidateLicense(
+  apiKey: string,
+  licenseKey: string,
+  deviceId: string,
+): Promise<ProviderResponse> {
+  const response = await fetch(`${WHOP_NATIVE_BASE}${encodeURIComponent(licenseKey)}/validate_license`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ metadata: { instance_name: deviceId } }),
+    signal: AbortSignal.timeout(DEFAULT_WHOP_API_TIMEOUT_MS),
+  });
+  if (response.status === 400 || response.status === 404) {
+    await response.body?.cancel().catch(() => {});
+    return { ok: false, valid: false, activated: false, status: "invalid" };
+  }
+  if (!response.ok) throw new Error(`provider_http_${response.status}`);
+  const raw = await response.text();
+  if (raw.length > MAX_PROVIDER_RESPONSE_CHARS) throw new Error("provider_response_too_large");
+  let parsed: ProviderResponse;
+  try {
+    parsed = JSON.parse(raw) as ProviderResponse;
+  } catch {
+    throw new Error("provider_invalid_response");
+  }
+  const status = String(parsed.status ?? parsed.membership?.status ?? "active").toLowerCase();
+  return { ...parsed, ok: true, valid: true, activated: true, status };
+}
+
+/**
+ * Whop native activation. Seats are counted from the membership's own
+ * metadata (distinct bound devices); capacity is enforced HERE so a full key
+ * returns MAX_ACTIVATIONS instead of leaking Whop's raw refusal.
+ */
+async function whopNativeActivate(
+  apiKey: string,
+  licenseKey: string,
+  deviceId: string,
+): Promise<ProviderResponse> {
+  const membership = await whopGetMembership(apiKey, licenseKey);
+  if (!membership) return { ok: false, activated: false, status: "invalid" };
+  const bound = whopBoundDevices(membership.metadata);
+  if (!bound.includes(deviceId) && bound.length >= WHOP_NATIVE_SEATS) {
+    return {
+      ok: false,
+      activated: false,
+      error: "activation limit reached",
+      status: "invalid",
+      license: { status: "invalid", activations: bound.length, limit: WHOP_NATIVE_SEATS },
+    };
+  }
+  const response = await whopNativeValidateLicense(apiKey, licenseKey, deviceId);
+  if (response.ok === true) {
+    response.license = {
+      status: response.license?.status ?? response.status,
+      activations: bound.includes(deviceId) ? bound.length : bound.length + 1,
+      limit: WHOP_NATIVE_SEATS,
+    };
+  }
+  return response;
+}
+
+/**
+ * Whop native deactivation: releases the seat ONLY for the device that owns
+ * the binding (anti-abuse: one device cannot free another's seat). Whop
+ * documents validate_license with empty metadata as the metadata reset.
+ */
+async function whopNativeDeactivate(
+  apiKey: string,
+  licenseKey: string,
+  deviceId: string,
+): Promise<ProviderResponse> {
+  const membership = await whopGetMembership(apiKey, licenseKey);
+  if (!membership) return { ok: true, deactivated: true };
+  if (!whopBoundDevices(membership.metadata).includes(deviceId)) {
+    return { ok: false, deactivated: false, error: "deactivation denied for this device" };
+  }
+  const response = await fetch(`${WHOP_NATIVE_BASE}${encodeURIComponent(licenseKey)}/validate_license`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ metadata: {} }),
+    signal: AbortSignal.timeout(DEFAULT_WHOP_API_TIMEOUT_MS),
+  });
+  if (!response.ok) throw new Error(`provider_http_${response.status}`);
+  return { ok: true, deactivated: true };
+}
+
 async function callWhop(
   options: WhopLicenseServerOptions,
   action: "activate" | "validate" | "deactivate",
   body: Record<string, string>,
 ): Promise<ProviderResponse> {
   const base = options.whopApiUrl ?? process.env.WHOP_LICENSE_API_URL ?? "";
-  const endpoint = normalizeActionUrl(base, action, options.allowInsecureHttp === true);
   const apiKey = options.whopApiKey ?? process.env.WHOP_API_KEY ?? "";
-  if (!endpoint || !apiKey) throw new Error("whop_not_configured");
+  if (!base || !apiKey) throw new Error("whop_not_configured");
+  // Whop native mode: point WHOP_LICENSE_API_URL at https://api.whop.com and
+  // the adapter translates our contract directly onto Whop's license-key API
+  // (no reseller-style endpoint in between).
+  if (whopIsWhopApiUrl(base)) {
+    const deviceId = body.instance_name || body.instance_id || "";
+    if (!deviceId) throw new Error("provider_missing_instance");
+    if (action === "activate") return whopNativeActivate(apiKey, body.license_key, deviceId);
+    if (action === "deactivate") return whopNativeDeactivate(apiKey, body.license_key, deviceId);
+    return whopNativeValidateLicense(apiKey, body.license_key, deviceId);
+  }
+  const endpoint = normalizeActionUrl(base, action, options.allowInsecureHttp === true);
+  if (!endpoint) throw new Error("whop_not_configured");
   const fetchImpl = options.fetchImpl ?? fetch;
   const response = await fetchImpl(endpoint, {
     method: "POST",

@@ -125,9 +125,9 @@ describe("Whop license signing handler", () => {
       body: JSON.stringify({ license_key: "WHOP-CODE", instance_name: "device-1" }),
     });
 
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(400);
     expect(await response.json()).toEqual({
-      error: { code: "SERVER", message: "license provider rejected the request" },
+      error: { code: "INVALID_KEY", message: "license key is invalid" },
     });
   });
 
@@ -181,9 +181,9 @@ describe("Whop license signing handler", () => {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ license_key: "EXPIRED", instance_name: "device-1" }),
     });
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(400);
     const body = await response.json() as { error: { code: string } };
-    expect(body.error.code).toBe("SERVER");
+    expect(body.error.code).toBe("INVALID_KEY");
   });
 
   it("rejects a malformed expiry string from the adapter (no entitlement escalation)", async () => {
@@ -209,7 +209,7 @@ describe("Whop license signing handler", () => {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ license_key: "BAD-EXPIRY", instance_name: "device-1" }),
     });
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(400);
   });
 
   it("confirms deactivation when the provider acknowledges it", async () => {
@@ -379,6 +379,8 @@ describe("Whop license signing handler", () => {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ license_key: "K", instance_name: "d" }),
     });
+    // Upstream adapter auth failure (server→Whop) — 502-class, NOT part of
+    // the 400/INVALID_KEY anti-enumeration unification for client keys.
     expect(response.status).toBe(401);
   });
 

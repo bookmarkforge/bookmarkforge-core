@@ -96,7 +96,7 @@ describe("Onboarding", () => {
     render(<Onboarding onComplete={vi.fn()} />);
     expect(screen.getByText("Welcome to BookmarkForge")).toBeTruthy();
     expect(
-      screen.getByText(/Your private, AI-powered knowledge vault/),
+      screen.getByText(/Smart search is included free — Raindrop charges yearly for it/),
     ).toBeTruthy();
   });
 

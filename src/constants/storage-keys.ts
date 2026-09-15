@@ -35,6 +35,8 @@ export const STORAGE_KEYS = {
   // UI banners
   EVICTION_BANNER_DISMISSED: "forge_eviction_banner_dismissed",
   BACKUP_BANNER_DISMISSED_UNTIL: "forge_backup_banner_dismissed_until",
+  FREE_TIER_WALL_DISMISSED_AT: "forge_free_tier_wall_dismissed_at",
+  FREE_TIER_WALL_HIT_PENDING: "forge_free_tier_wall_hit_pending",
   LAST_MANUAL_BACKUP_DATE: "forge_last_manual_backup_date",
   LAST_DISK_BACKUP_RESULT: "forge_last_disk_backup_result",
   RESTORE_SUCCESS_PENDING: "forge_restore_success_pending",

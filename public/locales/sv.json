@@ -1540,5 +1540,18 @@
   "app_maintenancePartial_other": "Underhåll avslutat med {{count}} problem",
   "app_helpDiagnostics": "Hjälp och diagnostik",
   "app_helpDiagnosticsDesc": "Kopiera en anonymiserad diagnostik (endast räknare och versioner — inget valvinnehåll) att klistra in i supporten. Innehåller BF-E-kod om en finns.",
-  "app_diagCopyFailed": "Kunde inte kopiera diagnostiken. Se Hjälp."
+  "app_diagCopyFailed": "Kunde inte kopiera diagnostiken. Se Hjälp.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} sparade länkar",
+  "app_freeMeterTooltip": "Free rymmer {{limit}} länkar. Inget raderas — läsning, sökning och export fortsätter; bara nya sparningar pausas vid gränsen.",
+  "app_freeWallTitle": "Du har nått 1 000 — Frees gräns",
+  "app_freeWallBody": "Inget har gått förlorat och inget har gått sönder. Läsning, sökning och export fungerar som tidigare — bara nya sparningar pausas.",
+  "app_freeWallProLifts": "Pro tar bort gränsen:",
+  "app_freeWallProUnlimited": "Obegränsat antal sparningar — taket försvinner",
+  "app_freeWallProSync": "P2P-synkronisering mellan dina enheter (upp till {{limit}})",
+  "app_freeWallProLocalAi": "AI som körs på din dator — inga API-nycklar, inget skickas iväg",
+  "app_freeWallCta": "Se Pro — {{price}} en gång",
+  "app_freeWallKeepFree": "Fortsätt med Free",
+  "app_freeWallTrust": "Engångsbetalning · din för alltid · pengarna tillbaka inom {{days}} dagar",
+  "app_freeLimitToast": "Free rymmer {{limit}} sparningar — ditt valv är tryggt; bara nya sparningar pausas.",
+  "app_freeLimitToastAction": "Pro är obegränsat →"
 }

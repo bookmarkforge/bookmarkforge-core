@@ -1540,5 +1540,18 @@
   "app_maintenancePartial_other": "Onderhoud voltooid met {{count}} problemen",
   "app_helpDiagnostics": "Hulp & diagnostiek",
   "app_helpDiagnosticsDesc": "Kopieer een geanonimiseerde diagnose (alleen aantallen en versies — geen kluisinhoud) om te plakken in support. Bevat de BF-E-code indien aanwezig.",
-  "app_diagCopyFailed": "Kon de diagnose niet kopiëren. Zie Hulp."
+  "app_diagCopyFailed": "Kon de diagnose niet kopiëren. Zie Hulp.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} opgeslagen links",
+  "app_freeMeterTooltip": "Free biedt ruimte voor {{limit}} links. Er wordt niets verwijderd — lezen, zoeken en exporteren blijven werken; alleen nieuwe opslag wordt gepauzeerd bij de limiet.",
+  "app_freeWallTitle": "Je hebt 1.000 bereikt — de Free-limiet",
+  "app_freeWallBody": "Er is niets verloren en er is niets kapot. Lezen, zoeken en exporteren werken zoals altijd — alleen nieuwe opslag wordt gepauzeerd.",
+  "app_freeWallProLifts": "Pro verwijdert de limiet:",
+  "app_freeWallProUnlimited": "Onbeperkt opslaan — het plafond verdwijnt",
+  "app_freeWallProSync": "P2P-synchronisatie tussen je apparaten (tot {{limit}})",
+  "app_freeWallProLocalAi": "AI die op je computer draait — geen API-sleutels, niets wordt verstuurd",
+  "app_freeWallCta": "Bekijk Pro — eenmalig {{price}}",
+  "app_freeWallKeepFree": "Free blijven gebruiken",
+  "app_freeWallTrust": "Eenmalige betaling · voor altijd van jou · {{days}} dagen geld-terug",
+  "app_freeLimitToast": "Free biedt ruimte voor {{limit}} opgeslagen links — je kluis is veilig; alleen nieuwe opslag wordt gepauzeerd.",
+  "app_freeLimitToastAction": "Pro is onbeperkt →"
 }

@@ -1570,5 +1570,18 @@
   "app_maintenancePartial": "Održavanje završeno s {{count}} problema",
   "app_helpDiagnostics": "Pomoć i dijagnostika",
   "app_helpDiagnosticsDesc": "Kopirajte anonimiziranu dijagnostiku (samo brojevi i verzije — bez sadržaja sefa) za slanje podrci. Uključuje BF-E kod ako postoji.",
-  "app_diagCopyFailed": "Dijagnostiku nije moguće kopirati. Pogledajte Pomoć."
+  "app_diagCopyFailed": "Dijagnostiku nije moguće kopirati. Pogledajte Pomoć.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} spremljenih poveznica",
+  "app_freeMeterTooltip": "Free podržava {{limit}} poveznica. Ništa se ne briše — čitanje, pretraživanje i izvoz nastavljaju raditi; samo se nova spremanja pauziraju na granici.",
+  "app_freeWallTitle": "Dosegnuli ste 1.000 — ograničenje Freea",
+  "app_freeWallBody": "Ništa nije izgubljeno i ništa nije pokvareno. Čitanje, pretraživanje i izvoz rade kao i prije — samo se nova spremanja pauziraju.",
+  "app_freeWallProLifts": "Pro uklanja ograničenje:",
+  "app_freeWallProUnlimited": "Neograničeno spremanje — granica nestaje",
+  "app_freeWallProSync": "P2P sinkronizacija između vaših uređaja (do {{limit}})",
+  "app_freeWallProLocalAi": "AI koji radi na vašem računalu — bez API ključeva i slanja podataka",
+  "app_freeWallCta": "Pogledajte Pro — {{price}} jednokratno",
+  "app_freeWallKeepFree": "Ostanite na Freeu",
+  "app_freeWallTrust": "Jednokratno plaćanje · vaše zauvijek · povrat novca u {{days}} dana",
+  "app_freeLimitToast": "Free podržava {{limit}} spremanja — vaš je trezor siguran; samo se nova spremanja pauziraju.",
+  "app_freeLimitToastAction": "Pro je neograničen →"
 }

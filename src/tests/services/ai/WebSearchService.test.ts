@@ -102,12 +102,14 @@ describe("WebSearchService", () => {
 
     it("does not throw when the captured URL is invalid (audit #4)", () => {
       // "http://[invalid" is an unclosed IPv6 host: new URL() throws; the
-      // parse must keep the raw text without breaking the search.
+      // parse must not break. The hardened implementation DISCARDS the
+      // value rather than keeping raw text as a URL — a malformed URL
+      // could be dangerous if rendered as a link.
       const text = `* * "A"\nhttp://[invalid\nSnippet`;
       const results = parseResults(text);
       expect(results).toHaveLength(1);
       expect(results[0].title).toBe("A");
-      expect(results[0].url).toBe("http://[invalid");
+      expect(results[0].url).toBeUndefined();
       expect(results[0].source).toBeUndefined();
     });
 

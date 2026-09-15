@@ -1540,5 +1540,18 @@
   "app_maintenancePartial_other": "维护结束，存在 {{count}} 个问题",
   "app_helpDiagnostics": "帮助与诊断",
   "app_helpDiagnosticsDesc": "复制一份去标识化的诊断信息（仅计数和版本 — 不含保险库内容）粘贴给支持团队。如存在，将包含 BF-E 代码。",
-  "app_diagCopyFailed": "无法复制诊断信息。请参阅帮助。"
+  "app_diagCopyFailed": "无法复制诊断信息。请参阅帮助。",
+  "app_freeMeterLine": "Free：已保存 {{used}} / {{limit}} 个链接",
+  "app_freeMeterTooltip": "Free 最多保存 {{limit}} 个链接。不会删除任何内容 — 阅读、搜索和导出都不会停止；达到上限后只会暂停新增保存。",
+  "app_freeWallTitle": "已达到 1,000 个 — Free 的上限",
+  "app_freeWallBody": "没有丢失任何内容，也没有出错。阅读、搜索和导出都和以前一样 — 只有新增保存会暂停。",
+  "app_freeWallProLifts": "Pro 可移除上限：",
+  "app_freeWallProUnlimited": "无限保存 — 不再有上限",
+  "app_freeWallProSync": "在你的设备之间进行 P2P 同步（最多 {{limit}} 台）",
+  "app_freeWallProLocalAi": "在你的电脑上运行的 AI — 无需 API 密钥，不会发送数据",
+  "app_freeWallCta": "查看 Pro — 一次性支付 {{price}}",
+  "app_freeWallKeepFree": "继续使用 Free",
+  "app_freeWallTrust": "一次性付款 · 永久归你 · {{days}} 天退款保证",
+  "app_freeLimitToast": "Free 最多保存 {{limit}} 个链接 — 你的保险库安全无恙；只有新增保存会暂停。",
+  "app_freeLimitToastAction": "Pro 不限量 →"
 }

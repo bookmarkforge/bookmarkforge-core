@@ -1698,5 +1698,18 @@
   "app_maintenanceReason_memory_pressure": "Speicherdruck",
   "app_helpDiagnostics": "Hilfe & Diagnose",
   "app_helpDiagnosticsDesc": "Kopieren Sie einen anonymisierten Diagnosebericht (nur Zähler und Versionen — kein Tresorinhalt) zum Einfügen im Support. Enthält, falls vorhanden, den BF-E-Code.",
-  "app_diagCopyFailed": "Diagnose konnte nicht kopiert werden. Siehe Hilfe."
+  "app_diagCopyFailed": "Diagnose konnte nicht kopiert werden. Siehe Hilfe.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} gespeicherte Links",
+  "app_freeMeterTooltip": "Free fasst {{limit}} Links. Nichts wird gelöscht — Lesen, Suchen und Exportieren funktionieren weiter; nur neue Speicherungen pausieren am Limit.",
+  "app_freeWallTitle": "1.000 erreicht — das Free-Limit",
+  "app_freeWallBody": "Nichts ist verloren gegangen und nichts ist kaputt. Lesen, Suchen und Exportieren funktionieren wie zuvor — nur neue Speicherungen pausieren.",
+  "app_freeWallProLifts": "Pro hebt das Limit auf:",
+  "app_freeWallProUnlimited": "Unbegrenzt speichern — die Obergrenze verschwindet",
+  "app_freeWallProSync": "P2P-Synchronisierung zwischen deinen Geräten (bis zu {{limit}})",
+  "app_freeWallProLocalAi": "KI auf deinem Computer — ohne API-Schlüssel, ohne Datenübertragung",
+  "app_freeWallCta": "Pro ansehen — einmalig {{price}}",
+  "app_freeWallKeepFree": "Free behalten",
+  "app_freeWallTrust": "Einmalige Zahlung · für immer deins · {{days}} Tage Geld-zurück",
+  "app_freeLimitToast": "Free fasst {{limit}} Speicherungen — dein Tresor ist sicher; nur neue Speicherungen pausieren.",
+  "app_freeLimitToastAction": "Pro ist unbegrenzt →"
 }

@@ -1539,5 +1539,18 @@
   "app_maintenancePartial_other": "Manutenzione completata con {{count}} problemi",
   "app_helpDiagnostics": "Guida e diagnostica",
   "app_helpDiagnosticsDesc": "Copia una diagnostica anonimizzata (solo conteggi e versioni — nessun contenuto della cassaforte) da incollare nell'assistenza. Include il codice BF-E se presente.",
-  "app_diagCopyFailed": "Impossibile copiare la diagnostica. Vedi Guida."
+  "app_diagCopyFailed": "Impossibile copiare la diagnostica. Vedi Guida.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} link salvati",
+  "app_freeMeterTooltip": "Free contiene {{limit}} link. Nulla viene mai eliminato — lettura, ricerca ed esportazione continuano; al raggiungimento del limite si fermano solo i nuovi salvataggi.",
+  "app_freeWallTitle": "Hai raggiunto 1.000 — il limite di Free",
+  "app_freeWallBody": "Non hai perso nulla e nulla si è rotto. Lettura, ricerca ed esportazione continuano come prima — si fermano solo i nuovi salvataggi.",
+  "app_freeWallProLifts": "Pro rimuove il limite:",
+  "app_freeWallProUnlimited": "Salvataggi illimitati — il tetto scompare",
+  "app_freeWallProSync": "Sincronizzazione P2P tra i tuoi dispositivi (fino a {{limit}})",
+  "app_freeWallProLocalAi": "IA che gira sul tuo computer — niente chiavi API, nessun dato inviato",
+  "app_freeWallCta": "Scopri Pro — {{price}} una tantum",
+  "app_freeWallKeepFree": "Resta su Free",
+  "app_freeWallTrust": "Pagamento una tantum · tuo per sempre · rimborso entro {{days}} giorni",
+  "app_freeLimitToast": "Free contiene {{limit}} salvataggi — il tuo vault è al sicuro; si fermano solo i nuovi salvataggi.",
+  "app_freeLimitToastAction": "Pro è illimitato →"
 }

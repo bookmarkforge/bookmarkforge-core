@@ -43,6 +43,8 @@ import process from "node:process";
 
 /** Whole trees never shipped publicly (relative to repo root, no slashes). */
 const EXCLUDED_DIRS = new Set([
+  // Private legal/provider contracts — never ship in the public export.
+  "legal",
   // Business & strategy (private by design; see docs/pricing-decision.md)
   "docs", // docs/ is re-curated: technical subset re-added below
   ".zap", // internal pen-test scopes (staging hostnames, auth context)
@@ -364,7 +366,7 @@ writeFileSync(join(outDir, "manifest.json"), JSON.stringify(manifest, null, 2));
 
 // Self-check: exported tree must not reference excluded business docs.
 const exportedAll = readdirSync(outDir, { recursive: true });
-const leaked = exportedAll.filter((f) => /^docs[\\/](pricing-decision|launch-checklist|que-nos-falta|support-data-loss-runbook|github-secrets|b2b-license-agreement|b2b-license-templates)/i.test(f));
+const leaked = exportedAll.filter((f) => /^docs[\\/](pricing-decision|launch-checklist|que-nos-falta|support-data-loss-runbook|github-secrets)/i.test(f));
 if (leaked.length) {
   console.error("[export-public] FAIL: private docs leaked into export: " + leaked.join(", "));
   process.exit(1);

@@ -1540,5 +1540,18 @@
   "app_maintenancePartial_other": "Maintenance terminée avec {{count}} problèmes",
   "app_helpDiagnostics": "Aide & diagnostic",
   "app_helpDiagnosticsDesc": "Copiez un diagnostic anonymisé (compteurs et versions uniquement — aucun contenu du coffre) à coller dans le support. Inclut le code BF-E s'il existe.",
-  "app_diagCopyFailed": "Impossible de copier le diagnostic. Voir Aide."
+  "app_diagCopyFailed": "Impossible de copier le diagnostic. Voir Aide.",
+  "app_freeMeterLine": "Free : {{used}} / {{limit}} liens enregistrés",
+  "app_freeMeterTooltip": "Free accepte {{limit}} liens. Rien n’est supprimé — la lecture, la recherche et l’export continuent ; seuls les nouveaux enregistrements se mettent en pause à la limite.",
+  "app_freeWallTitle": "Vous avez atteint 1 000 — la limite de Free",
+  "app_freeWallBody": "Rien n’est perdu et rien n’est cassé. La lecture, la recherche et l’export continuent comme avant — seuls les nouveaux enregistrements se mettent en pause.",
+  "app_freeWallProLifts": "Pro supprime la limite :",
+  "app_freeWallProUnlimited": "Enregistrements illimités — le plafond disparaît",
+  "app_freeWallProSync": "Synchronisation P2P entre vos appareils (jusqu’à {{limit}})",
+  "app_freeWallProLocalAi": "Une IA qui fonctionne sur votre ordinateur — sans clé API, rien n’est envoyé",
+  "app_freeWallCta": "Voir Pro — {{price}} en une fois",
+  "app_freeWallKeepFree": "Rester avec Free",
+  "app_freeWallTrust": "Paiement unique · à vous pour toujours · remboursement sous {{days}} jours",
+  "app_freeLimitToast": "Free accepte {{limit}} enregistrements — votre coffre est en sécurité ; seuls les nouveaux enregistrements se mettent en pause.",
+  "app_freeLimitToastAction": "Pro est illimité →"
 }

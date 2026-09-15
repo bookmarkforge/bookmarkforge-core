@@ -86,12 +86,12 @@ describe("ConsentService", () => {
       expect(isPurposeConsented("clientEvents")).toBe(false);
     });
 
-    it("honors the broad legacy opt-in only before a complete modern decision", () => {
+    it("never lets the broad legacy opt-in authorize modern purposes (ADR-044, GDPR Art. 7)", () => {
       store.set(LEGACY_BROAD_CONSENT_KEY, "true");
-      expect(isPurposeConsented("analytics")).toBe(true);
-      expect(isPurposeConsented("clientEvents")).toBe(true);
-      // Before any complete decision the broad flag also covers sentry.
-      expect(isPurposeConsented("sentry")).toBe(true);
+      // Legacy consent never authorizes modern purposes — fail-closed.
+      expect(isPurposeConsented("analytics")).toBe(false);
+      expect(isPurposeConsented("clientEvents")).toBe(false);
+      expect(isPurposeConsented("sentry")).toBe(false);
     });
 
     it("honors the legacy error-reporting key for sentry without granting the other purposes", () => {

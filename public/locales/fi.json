@@ -1540,5 +1540,18 @@
   "app_maintenancePartial_other": "Ylläpito päättyi {{count}} ongelmaan",
   "app_helpDiagnostics": "Ohje ja diagnostiikka",
   "app_helpDiagnosticsDesc": "Kopioi anonymisoitu diagnostiikka (vain määrät ja versiot — ei holvin sisältöä) liitettäväksi tukeen. Sisältää BF-E-koodin, jos sellainen on.",
-  "app_diagCopyFailed": "Diagnostiikkaa ei voitu kopioida. Katso Ohje."
+  "app_diagCopyFailed": "Diagnostiikkaa ei voitu kopioida. Katso Ohje.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} tallennettua linkkiä",
+  "app_freeMeterTooltip": "Freeen mahtuu {{limit}} linkkiä. Mitään ei poisteta — lukeminen, haku ja vienti jatkuvat; vain uudet tallennukset pysähtyvät rajan kohdalla.",
+  "app_freeWallTitle": "1 000 täynnä — Freen raja",
+  "app_freeWallBody": "Mitään ei ole kadonnut eikä mikään mennyt rikki. Lukeminen, haku ja vienti toimivat kuten ennenkin — vain uudet tallennukset pysähtyvät.",
+  "app_freeWallProLifts": "Pro poistaa rajan:",
+  "app_freeWallProUnlimited": "Rajattomat tallennukset — katto katoaa",
+  "app_freeWallProSync": "P2P-synkronointi laitteidesi välillä (enintään {{limit}})",
+  "app_freeWallProLocalAi": "Tietokoneellasi toimiva tekoäly — ei API-avaimia eikä tietojen lähettämistä",
+  "app_freeWallCta": "Katso Pro — {{price}} kertamaksuna",
+  "app_freeWallKeepFree": "Jatka Freellä",
+  "app_freeWallTrust": "Kertamaksu · ikuisesti omasi · rahat takaisin {{days}} päivän ajan",
+  "app_freeLimitToast": "Freeen mahtuu {{limit}} tallennusta — holvisi on turvassa; vain uudet tallennukset pysähtyvät.",
+  "app_freeLimitToastAction": "Pro on rajaton →"
 }

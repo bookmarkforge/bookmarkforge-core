@@ -42,6 +42,7 @@ import {
   UniversalImporter,
   universalImporter,
 } from "../../services/UniversalImporter";
+import { LicenseError } from "../../services/LicenseService";
 
 describe("UniversalImporter", () => {
   let importer: UniversalImporter;
@@ -78,6 +79,110 @@ describe("UniversalImporter", () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+  });
+
+  describe("free-tier limit handling", () => {
+    it.each([
+      [
+        "Pocket HTML",
+        async () =>
+          new File(
+            [
+              '<a href="https://one.example">One</a><a href="https://two.example">Two</a><a href="https://three.example">Three</a>',
+            ],
+            "pocket.html",
+          ),
+      ],
+      [
+        "Raindrop CSV",
+        async () =>
+          new File(
+            [
+              "title,url\nOne,https://one.example\nTwo,https://two.example\nThree,https://three.example",
+            ],
+            "raindrop.csv",
+          ),
+      ],
+      [
+        "generic CSV",
+        async () =>
+          new File(
+            [
+              "title,url\nOne,https://one.example\nTwo,https://two.example\nThree,https://three.example",
+            ],
+            "bookmarks.csv",
+          ),
+      ],
+      [
+        "Omnivore JSON",
+        async () =>
+          new File(
+            [
+              JSON.stringify({
+                data: {
+                  articles: [
+                    { title: "One", url: "https://one.example" },
+                    { title: "Two", url: "https://two.example" },
+                    { title: "Three", url: "https://three.example" },
+                  ],
+                },
+              }),
+            ],
+            "omnivore.json",
+          ),
+      ],
+      [
+        "BookmarkForge JSON",
+        async () =>
+          new File(
+            [
+              JSON.stringify({
+                bookmarks: [
+                  { title: "One", url: "https://one.example" },
+                  { title: "Two", url: "https://two.example" },
+                  { title: "Three", url: "https://three.example" },
+                ],
+              }),
+            ],
+            "export.json",
+          ),
+      ],
+      [
+        "Markdown ZIP",
+        async () => {
+          const zip = new JSZip();
+          zip.file("one.md", "# One\n\nFirst note");
+          zip.file("two.md", "# Two\n\nSecond note");
+          zip.file("three.md", "# Three\n\nThird note");
+          return new File([await zip.generateAsync({ type: "arraybuffer" })], "vault.zip");
+        },
+      ],
+    ])("stops cleanly for %s with a partial limit result", async (_label, makeFile) => {
+      const limitError = new LicenseError(
+        "Free plan limit reached",
+        "FREE_LIMIT_REACHED",
+      );
+      const insert =
+        mockDb.bookmarks.insert.mockResolvedValueOnce({}).mockRejectedValue(limitError);
+      mockDb.documents.insert
+        .mockResolvedValueOnce({})
+        .mockRejectedValue(limitError);
+
+      const file = await (makeFile as () => Promise<File>)();
+      const result =
+        _label === "Omnivore JSON"
+          ? await importer.importDataWithDetection(mockDb, file)
+          : await importer.importData(mockDb, file);
+
+      expect(result).toMatchObject({
+        success: true,
+        importedCount: 1,
+        skippedCount: 0,
+        limitReached: true,
+      });
+      expect(result.error).toContain("Imported 1; Free limit reached");
+      expect(insert.mock.calls.length + mockDb.documents.insert.mock.calls.length).toBeLessThanOrEqual(2);
+    });
   });
 
   describe("importData", () => {

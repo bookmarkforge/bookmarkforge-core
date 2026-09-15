@@ -42,6 +42,8 @@ import { NavCard } from "./dashboard/components/NavCard";
 import { logger } from "../utils/logger";
 import { EvictionBanner } from "./dashboard/components/EvictionBanner";
 import { BackupReminderBanner } from "./dashboard/components/BackupReminderBanner";
+import { FreeTierNudge } from "./dashboard/components/FreeTierNudge";
+import { useFreeTierUsage } from "../hooks/useFreeTierUsage";
 import { SRSReviewCard } from "./dashboard/components/SRSReviewCard";
 import { TemplateModal } from "./dashboard/components/TemplateModal";
 import { QuickTips } from "./QuickTips";
@@ -316,6 +318,48 @@ const HomeDashboard = function HomeDashboard({
     );
   }, []);
 
+  // Free-tier wall nudge (design doc surface 2): the one full Pro pitch,
+  // shown once — the first time a Free user is AT the wall (count = 1,000).
+  // Dismissal = 30-day cooldown. Yields to data-loss banners: eviction >
+  // backup > this.
+  const { atWall: freeTierAtWall, isFree: freeTierIsFree } =
+    useFreeTierUsage();
+  const [showFreeWallNudge, setShowFreeWallNudge] = useState(false);
+
+  useEffect(() => {
+    if (!freeTierIsFree || !freeTierAtWall) {return;}
+    const raw = safeGet(STORAGE_KEYS.FREE_TIER_WALL_DISMISSED_AT);
+    const dismissedAt = raw ? parseInt(raw, 10) : NaN;
+    const cooldownOk =
+      !Number.isFinite(dismissedAt) ||
+      Date.now() - dismissedAt > 30 * 24 * 60 * 60 * 1000;
+    // Show only on a real wall event — either a blocked save since the last
+    // visit (flag persisted by the toast surfaces — works across routing),
+    // or one firing live while the dashboard is open. Not on every visit
+    // while at the wall.
+    const pending =
+      safeGet(STORAGE_KEYS.FREE_TIER_WALL_HIT_PENDING) === "1";
+    if (!cooldownOk) {return;}
+    if (pending) {
+      safeSet(STORAGE_KEYS.FREE_TIER_WALL_HIT_PENDING, "");
+      setShowFreeWallNudge(true);
+    }
+    const onWallHit = () => {
+      const dRaw = safeGet(STORAGE_KEYS.FREE_TIER_WALL_DISMISSED_AT);
+      const dAt = dRaw ? parseInt(dRaw, 10) : NaN;
+      if (
+        !Number.isFinite(dAt) ||
+        Date.now() - dAt > 30 * 24 * 60 * 60 * 1000
+      ) {
+        setShowFreeWallNudge(true);
+        safeSet(STORAGE_KEYS.FREE_TIER_WALL_HIT_PENDING, "");
+      }
+    };
+    window.addEventListener("bmf:free-wall-hit", onWallHit);
+    return () =>
+      window.removeEventListener("bmf:free-wall-hit", onWallHit);
+  }, [freeTierIsFree, freeTierAtWall]);
+
   // Language changes re-run the dashboard load (the original effect's deps
   // included i18n.language); the new load supersedes any in-flight one.
   useEffect(() => {
@@ -410,6 +454,33 @@ const HomeDashboard = function HomeDashboard({
           show={showBackupBanner}
           backupAgeMs={backupAgeMs}
           onDismiss={handleDismissBackupBanner}
+        />
+      </div>
+
+      <div style={{ minHeight: showFreeWallNudge ? undefined : 0, overflow: 'hidden' }}>
+        <FreeTierNudge
+          // Data-loss warnings take precedence; the Pro pitch reappears after
+          // the higher-priority banner is dismissed.
+          show={showFreeWallNudge && !showEvictionBanner && !showBackupBanner}
+          onDismiss={() => {
+            setShowFreeWallNudge(false);
+            safeSet(
+              STORAGE_KEYS.FREE_TIER_WALL_DISMISSED_AT,
+              Date.now().toString(),
+            );
+          }}
+          onSeePro={() => {
+            setShowFreeWallNudge(false);
+            safeSet(
+              STORAGE_KEYS.FREE_TIER_WALL_DISMISSED_AT,
+              Date.now().toString(),
+            );
+            // Existing navigation bridge (same pattern EvictionBanner uses
+            // for cloud-sync): Settings is a modal, not a routed section.
+            window.dispatchEvent(
+              new CustomEvent("forge:open-settings"),
+            );
+          }}
         />
       </div>
 

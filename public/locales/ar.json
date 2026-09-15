@@ -1540,5 +1540,18 @@
   "app_maintenancePartial_other": "انتهت الصيانة مع {{count}} من المشكلات",
   "app_helpDiagnostics": "المساعدة والتشخيص",
   "app_helpDiagnosticsDesc": "انسخ تشخيصًا مُجرّدًا (الأعداد والإصدارات فقط — بلا محتوى من الخزنة) لإلصاقه في الدعم. يتضمن رمز BF-E إن وُجد.",
-  "app_diagCopyFailed": "تعذّر نسخ التشخيص. راجع المساعدة."
+  "app_diagCopyFailed": "تعذّر نسخ التشخيص. راجع المساعدة.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} روابط محفوظة",
+  "app_freeMeterTooltip": "يستوعب Free عدد {{limit}}. لا يُحذف شيء أبداً — تستمر القراءة والبحث والتصدير؛ تتوقف عمليات الحفظ الجديدة فقط عند بلوغ الحد.",
+  "app_freeWallTitle": "وصلت إلى 1,000 — حد Free",
+  "app_freeWallBody": "لم يضع شيء ولم يحدث أي خلل. تبقى القراءة والبحث والتصدير كما هي — تتوقف عمليات الحفظ الجديدة فقط.",
+  "app_freeWallProLifts": "Pro يزيل السقف:",
+  "app_freeWallProUnlimited": "حفظ غير محدود — يختفي الحد الأقصى",
+  "app_freeWallProSync": "مزامنة P2P بين أجهزتك (حتى {{limit}})",
+  "app_freeWallProLocalAi": "ذكاء اصطناعي يعمل على جهازك — بلا مفاتيح API ولا إرسال للبيانات",
+  "app_freeWallCta": "شاهد Pro — {{price}} مرة واحدة",
+  "app_freeWallKeepFree": "متابعة استخدام Free",
+  "app_freeWallTrust": "دفعة واحدة · ملكك للأبد · استرداد خلال {{days}} يوماً",
+  "app_freeLimitToast": "يستوعب Free عدد {{limit}} من عمليات الحفظ — خزنتك آمنة؛ تتوقف عمليات الحفظ الجديدة فقط.",
+  "app_freeLimitToastAction": "Pro بلا حدود →"
 }

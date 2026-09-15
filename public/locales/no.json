@@ -1540,5 +1540,18 @@
   "app_maintenancePartial_other": "Vedlikehold avsluttet med {{count}} problemer",
   "app_helpDiagnostics": "Hjelp og diagnostikk",
   "app_helpDiagnosticsDesc": "Kopier en anonymisert diagnostikk (kun antall og versjoner — ingen innhold fra boksen) for å lime inn i supporten. Inkluderer BF-E-kode hvis den finnes.",
-  "app_diagCopyFailed": "Kunne ikke kopiere diagnostikken. Se Hjelp."
+  "app_diagCopyFailed": "Kunne ikke kopiere diagnostikken. Se Hjelp.",
+  "app_freeMeterLine": "Free: {{used}} / {{limit}} lagrede lenker",
+  "app_freeMeterTooltip": "Free har plass til {{limit}} lenker. Ingenting slettes — lesing, søk og eksport fortsetter; bare nye lagringer settes på pause ved grensen.",
+  "app_freeWallTitle": "Du har nådd 1 000 — Frees grense",
+  "app_freeWallBody": "Ingenting er tapt, og ingenting er ødelagt. Lesing, søk og eksport fungerer som før — bare nye lagringer settes på pause.",
+  "app_freeWallProLifts": "Pro fjerner grensen:",
+  "app_freeWallProUnlimited": "Ubegrenset lagring — taket forsvinner",
+  "app_freeWallProSync": "P2P-synkronisering mellom enhetene dine (opptil {{limit}})",
+  "app_freeWallProLocalAi": "AI som kjører på datamaskinen din — ingen API-nøkler, ingenting sendes",
+  "app_freeWallCta": "Se Pro — {{price}} én gang",
+  "app_freeWallKeepFree": "Fortsett med Free",
+  "app_freeWallTrust": "Engangsbetaling · din for alltid · pengene tilbake innen {{days}} dager",
+  "app_freeLimitToast": "Free har plass til {{limit}} lagringer — hvelvet ditt er trygt; bare nye lagringer settes på pause.",
+  "app_freeLimitToastAction": "Pro er ubegrenset →"
 }

@@ -83,18 +83,6 @@ describe("constants/pricing", () => {
     expect(LICENSE_FEATURES.founder.bookmarks).toBe("∞ UNLIMITED");
   });
 
-  it("mirrors the commercial license anchors (D4–D6)", async () => {
-    const { PRICING_CONFIG } = await import("../../constants/pricing");
-    expect(
-      PRICING_CONFIG.commercialLicenses.find((l) => l.id === "integration")?.pricePerYear,
-    ).toBe(2500);
-    expect(
-      PRICING_CONFIG.commercialLicenses.find((l) => l.id === "redistribution")?.pricePerYear,
-    ).toBe(7500);
-    expect(PRICING_CONFIG.commercialLicenses.find((l) => l.id === "hosting")?.pricePerYear).toBe(5000);
-    expect(PRICING_CONFIG.commercialLicenses.every((l) => l.interval === "year")).toBe(true);
-  });
-
   it("never promises out-of-plan features in tier copy (roadmap non-goals)", async () => {
     const { PRICING_CONFIG, LICENSE_FEATURES } = await import("../../constants/pricing");
     const strings: string[] = [];

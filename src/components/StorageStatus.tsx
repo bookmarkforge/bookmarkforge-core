@@ -7,6 +7,7 @@ import { BackupService } from "../services/BackupService";
 import { safeGet } from "../store/safeStorage";
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { logger } from "../utils/logger";
+import { useFreeTierUsage } from "../hooks/useFreeTierUsage";
 import { StorageCleanupDialog } from "./dashboard/components/StorageCleanupDialog";
 
 // F0-3: gradual storage-health thresholds. Crossing a threshold escalates
@@ -89,6 +90,13 @@ export function StorageStatus() {
   const { t } = useTranslation();
   const docsCollection = useRxCollection("documents");
   const bookmarksCollection = useRxCollection("bookmarks");
+  // Free-tier nudge meter (design doc surface 1): passive status, not
+  // marketing — appears only while a Free user is within 10% of the wall.
+  // The hook subscribes to the same { isDeleted: false } count the
+  // enforcement preInsert hook counts, so meter and wall never disagree.
+  const { count: freeCount, limit: freeLimit, nearWall, isFree } =
+    useFreeTierUsage();
+  const showFreeMeter = isFree && nearWall && freeCount !== undefined;
 
   const { result: docsCount = 0 } = useRxQuery(
     docsCollection?.count() as unknown as AnyRxQuery<unknown>,
@@ -186,6 +194,11 @@ export function StorageStatus() {
 
   // Detailed tooltip: items, quota, then internal + external copy status.
   const titleParts = [t("app_storageStatus", { count: total })];
+  if (showFreeMeter) {
+    titleParts.push(
+      t("app_freeMeterTooltip", { limit: freeLimit }),
+    );
+  }
   if (quota) {
     titleParts.push(
       t(
@@ -319,6 +332,17 @@ export function StorageStatus() {
           {t("app_storageQuotaShort", "{{used}}/{{total}}", {
             used: formatBytes(quota.usage),
             total: formatBytes(quota.total),
+          })}
+        </span>
+      )}
+      {showFreeMeter && (
+        <span
+          className="text-amber-500 dark:text-amber-400"
+          title={t("app_freeMeterTooltip", { limit: freeLimit })}
+        >
+          · {t("app_freeMeterLine", {
+            used: freeCount,
+            limit: freeLimit,
           })}
         </span>
       )}

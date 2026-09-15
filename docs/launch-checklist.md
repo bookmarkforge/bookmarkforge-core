@@ -55,7 +55,7 @@
   - Evidencia: [docs/launch-day-smoke.md](launch-day-smoke.md) (runbook: topología, triage, relación con claves de firma).
   - Gate: `npm run smoke:launch` — veredicto "ALL CRITICAL PATHS GREEN — cleared to release".
   - Complemento de dispositivo real: certificar un iPhone con [docs/ios-manual-test-script.md](ios-manual-test-script.md) (creación de bóveda, frase de 24 palabras, backup .bmf fuera del dispositivo y la expulsión de IndexedDB de Safari a los 7 días) — Android emulado queda cubierto por `npm run e2e:mobile`.
-  - Complemento de dispositivo real para sync: certificar el emparejamiento P2P iPhone ↔ escritorio con [docs/p2p-sync-manual-test-script.md](p2p-sync-manual-test-script.md) (doble QR con cámaras reales, sync en la LAN, conflictos LWW y verificación air-gapped) — la lógica ya está automatizada en `tests/e2e/vault-sync-real.spec.ts`.
+  - Complemento de dispositivo real para sync: certificar el emparejamiento P2P iPhone ↔ escritorio con [docs/p2p-sync-manual-test-script.md](p2p-sync-manual-test-script.md) (doble QR con cámaras reales, sync en la LAN, conflictos LWW y verificación air-gapped) — la lógica ya está automatizada en `tests/e2e/vault-sync-real.spec.ts` (y en CI con `e2e:sync`). Usa la hoja de sesión con capturas ordenadas: [docs/p2p-sync-session-prep.md](p2p-sync-session-prep.md).
 
 ## 🟠 Validación externa — revisión independiente
 

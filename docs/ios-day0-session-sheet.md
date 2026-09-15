@@ -20,24 +20,28 @@
 
 ---
 
-## 0. Servidor HTTPS de la sesión (2 min, en tu PC)
+## 0. Servidor de la sesión — producción + HTTPS (ya arrancado en tu PC)
 
-La app necesita **contexto seguro** (WebCrypto, cámara, PWA). Preparé un modo
-HTTPS opcional del dev server para drills:
+La app necesita **contexto seguro** (WebCrypto, cámara, PWA) y el drill usa la
+**build de producción real**: en dev el service worker es un passthrough y la
+sección 4 (PWA + modo avión) daría falsos negativos. Estado actual:
 
 ```powershell
-# En PowerShell, desde D:\bookmark6:
-$env:VITE_DEV_HTTPS = "1"; npm run dev -- --host 0.0.0.0 --port 4174 --mode test
+# En PowerShell, desde D:\bookmark6 (por si hay que rearrancarlo):
+$env:VITE_DEV_HTTPS = "1"
+node node_modules/vite/bin/vite.js preview --host 0.0.0.0 --port 4174 --strictPort
 ```
 
-- PC ya verificado: `https://192.168.0.22:4174/app` responde **200** con el
-  manifest (esa es TU IP Wi-Fi ahora; si cambia, usa la que imprima el server).
+- Build verificada hoy: `node scripts/build-ci.mjs` (presupuestos OK) —
+  **reconstruye si tocas código después de esto**.
+- PC ya verificado: `https://192.168.0.22:4174/app`, `/sw.js`,
+  `/manifest.webmanifest` responden **200** (esa es TU IP Wi-Fi ahora; si
+  cambia, usa la que imprima el server).
 - iPhone y PC deben estar en la **misma red** (el SSID anotado arriba).
+- Si Safari no conecta: permite Node.js en el **Firewall de Windows** para
+  redes privadas (o marca tu Wi-Fi doméstico como red *Privada*) y reintenta.
 - El certificado es **auto-firmado**: el iPhone pedirá aceptarlo UNA vez
-  (paso 1.2 abajo). Es el mismo certificado en cada reinicio del server.
-
-> Alternativa si prefieres producción: usa la URL de producción/staging real
-> y salta esta sección. Todo lo demás de esta hoja es idéntico.
+  (paso 1.2 abajo). En producción NO hará falta.
 
 ---
 
@@ -48,7 +52,7 @@ $env:VITE_DEV_HTTPS = "1"; npm run dev -- --host 0.0.0.0 --port 4174 --mode test
 | 1.1 | Safari → `https://192.168.0.22:4174/app` (o tu URL prod) | |
 | 1.2 | Safari avisa de certificado no confiable → **Visit Website** → **Visit Anyway** (solo para el drill en dev; en producción NO hará falta) | |
 | 1.3 | Capturas activas (botón lateral + volumen arriba) | |
-| 1.4 | Contraseña de prueba en papel: `prueba-iphone-2026` (12 chars) | |
+| 1.4 | Contraseña de prueba en papel: `prueba-iphone-2026` (18 chars) | |
 
 ---
 

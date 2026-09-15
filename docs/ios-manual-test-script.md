@@ -37,7 +37,7 @@
 1. [ ] Inicia la app por primera vez: debe aparecer el flujo de creación
        (SecurityConfirmation → crear bóveda).
 2. [ ] **Prueba negativa:** escribe una contraseña de **11 caracteres**
-       (p. ej. `prueba-11-abc`). El validador debe rechazarla ANTES de crear
+       (p. ej. `prueba-11-a`). El validador debe rechazarla ANTES de crear
        nada — busca el mensaje de mínimo de caracteres. _Captura._
 3. [ ] Escribe la contraseña de 12+ (`prueba-iphone-2026`) y confirma.
 4. [ ] La creación en iPhone puede tardar **20-60 s** (Argon2id móvil,

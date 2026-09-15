@@ -35,7 +35,7 @@ export interface RedactedDiagnostic {
 function getAppVersion(): string {
   // Vite injects __APP_VERSION__ in production builds; fallback to package version prefix
   try {
-    // @ts-ignore — injected by vite define
+    // @ts-expect-error — injected by vite define
     if (typeof __APP_VERSION__ === "string" && __APP_VERSION__) return String(__APP_VERSION__);
   } catch { /* ignore */ }
   return "1.0.0";

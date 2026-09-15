@@ -64,10 +64,10 @@ export const AdvancedSection: React.FC<AdvancedSectionProps> = ({ t }) => {
     </div>
     <div className="p-4 rounded-xl border ds-card flex flex-col sm:flex-row sm:items-center justify-between gap-3">
       <div className="min-w-0">
-        <h4 className="text-sm font-semibold flex items-center gap-2"><LifeBuoy className="size-4 ds-text-accent" /> {t("app_helpDiagnostics", "Help & diagnostics")}</h4>
+        <h4 className="text-sm font-semibold truncate"><LifeBuoy className="inline size-4 ds-text-accent align-[-2px] mr-1.5" />{t("app_helpDiagnostics", "Help & diagnostics")}</h4>
         <p className="text-xs ds-text-muted mt-1">{t("app_helpDiagnosticsDesc", "Copy a redacted diagnostic (counts & versions only — no vault content) to paste in support. Includes BF-E code if present.")} <a href="/help" className="underline" target="_blank" rel="noopener">/help</a></p>
       </div>
-      <button onClick={handleCopyDiagnostic} disabled={isCopying} className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold ds-bg-secondary ds-border shadow-sm disabled:opacity-50">
+      <button onClick={handleCopyDiagnostic} disabled={isCopying} className="min-w-0 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold ds-bg-secondary ds-border shadow-sm disabled:opacity-50 truncate">
         {copied ? <Check className="size-4 ds-text-success" /> : <Copy className="size-4" />}
         {copied ? t("app_diagCopyReportCopied", "Copied!") : t("app_diagCopyReport", "Copy diagnostic")}
       </button>

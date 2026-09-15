@@ -52,6 +52,8 @@
   --text-secondary: #b9d4ea;
   --text-accent: #38bdf8;
   --text-muted: #b9d4ea;
+  /* Text on accent-colored fills (warning badge/founder buttons) */
+  --text-on-accent: #111827;
 
   /* Accent / brand */
   --accent-primary: #00aeef;
@@ -131,6 +133,8 @@
   --text-secondary: #3d5673;
   --text-accent: #00609a;
   --text-muted: #4a6178;
+  /* Text on accent-colored fills (warning badge/founder buttons) */
+  --text-on-accent: #111827;
 
   --accent-primary: #0095d6;
   --accent-secondary: #0a6fa8;

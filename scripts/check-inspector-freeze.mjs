@@ -88,6 +88,11 @@ const KNOWN_GATES = {
   "check:baseline-drift": "meta",
   "check:baseline-gaps": "meta",
   "check:tailwind-drift": "meta",
+  // Factual claim-drift (ADR-047): user-visible numbers must match the code
+  // constants (password minimum, 24-word phrase, device limits, Argon2id MiB,
+  // backup intervals, prices). Documentation-format gate: ADR-047 names the
+  // concrete failure class and maps it onto ADR-028's drift-detection model.
+  "check:claim-drift": "docs",
   "check:rxdb17": "meta",
   "check:seo": "meta",
   "check:chunks": "meta",

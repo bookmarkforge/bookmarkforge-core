@@ -1172,12 +1172,16 @@ describe.skipIf(!serverEntryExists)("Signaling server — production HMAC opt-ou
   });
 
   it("rejects unsigned signals when production requests the opt-out", async () => {
-    const a = await open(url);
+    // The server's WS verifyClient rejects upgrades from origins outside
+    // AI_SESSION_ORIGINS (403). This allowlisted server therefore requires
+    // every test connection to present the allowed Origin header.
+    const allowedOrigin = { headers: { origin: "http://127.0.0.1" } };
+    const a = await open(url, allowedOrigin);
     const initA = await nextMessage(a);
     send(a, { type: "join", room: "production-optout-room", roomSecret: "s3cret" });
     await nextMessage(a);
 
-    const b = await open(url);
+    const b = await open(url, allowedOrigin);
     const initB = await nextMessage(b);
     send(b, { type: "join", room: "production-optout-room", roomSecret: "s3cret" });
     await nextMessage(b);

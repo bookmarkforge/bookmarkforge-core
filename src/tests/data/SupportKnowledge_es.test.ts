@@ -88,7 +88,7 @@ describe("SUPPORT_KNOWLEDGE_ES (Spanish version)", () => {
   it("SECURITY_DEEP_DIVE contains translated security policies", () => {
     expect(
       SUPPORT_KNOWLEDGE_ES.SECURITY_DEEP_DIVE.MASTER_PASSWORD_POLICY,
-    ).toContain("Mínimo 8 caracteres");
+    ).toContain("Mínimo 12 caracteres");
     expect(
       SUPPORT_KNOWLEDGE_ES.SECURITY_DEEP_DIVE.ENCRYPTION_DETAILS,
     ).toContain("SubtleCrypto");
@@ -169,7 +169,7 @@ describe("SUPPORT_KNOWLEDGE_ES (Spanish version)", () => {
       "proveedor de pagos",
     );
     expect(SUPPORT_KNOWLEDGE_ES.LICENSE_SUPPORT.REFUND_POLICY).toContain(
-      "14 días",
+      "30 días",
     );
     expect(SUPPORT_KNOWLEDGE_ES.LICENSE_SUPPORT.PRO_FEATURES).toContain("P2P");
   });

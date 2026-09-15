@@ -88,8 +88,15 @@ export const isCheckoutConfigured = (): boolean => {
   }
 };
 
-/** Free-tier limits enforced at runtime (mirror PRICING_CONFIG free tier). */
+/**
+ * Free-tier limits enforced at runtime (mirror PRICING_CONFIG free tier).
+ *
+ * maxDevices is 0 = unlimited: BookmarkForge has no accounts, so a per-device
+ * cap is unenforceable — Free simply installs anywhere, each device holding
+ * its own vault. Sync between devices is the Pro entitlement, and the Pro
+ * tier's maxDevices (3) is enforced there by the licensing backend.
+ */
 export const FREE_LIMITS = {
   maxBookmarks: 1000,
-  maxDevices: 1,
+  maxDevices: 0,
 } as const;

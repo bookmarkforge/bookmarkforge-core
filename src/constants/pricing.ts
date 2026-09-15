@@ -42,11 +42,11 @@ export const PRICING_CONFIG = {
       price: 0,
       currency: "USD",
       interval: "forever",
-      description: "Try BookmarkForge private and local-first. 1,000 bookmarks to start.",
+      description: "Free forever: 1,000 bookmarks plus the smart search competitors charge yearly for. At 1,000 the vault stays whole — reading, search and export never stop; only new saves pause.",
       features: [
+        { text: "Smart search (full-text + semantic) — included free; Raindrop charges yearly for this", included: true },
         { text: "1,000 bookmarks, notes, documents", included: true },
-        { text: "Full-text & semantic search", included: true },
-        { text: "1 device", included: true },
+        { text: "Works on any device — each keeps its own vault", included: true },
         { text: "AI with your own API key (you pay usage)", included: true },
         { text: "Knowledge graph", included: true },
         { text: "Basic templates", included: true },
@@ -59,7 +59,7 @@ export const PRICING_CONFIG = {
       ],
       limitations: {
         maxBookmarks: 1000,
-        maxDevices: 1,
+        maxDevices: 0,
         cloudSync: false,
         localAI: false,
         teamSharing: false,
@@ -327,7 +327,7 @@ export const PRICING_CONFIG = {
 export const LICENSE_FEATURES = {
   free: {
     bookmarks: "1,000 bookmarks",
-    devices: "1 device",
+    devices: "Any device (per-device vaults)",
     ai: "With your API key",
     sync: "No",
     graph: true,

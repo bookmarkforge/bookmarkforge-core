@@ -50,7 +50,7 @@ export const PRICING_CONFIG = {
       price: 0,
       limitations: {
         maxBookmarks: 1000,
-        maxDevices: 1,
+        maxDevices: 0,
       },
     },
     {
@@ -125,7 +125,7 @@ describe("extractTruth", () => {
     expect(TRUTH.minPasswordLength).toBe(12);
     expect(TRUTH.refundDays).toBe(30);
     expect(TRUTH.recoveryWords).toBe(24);
-    expect([...TRUTH.deviceCounts].sort((a, b) => a - b)).toEqual([1, 3]);
+    expect([...TRUTH.deviceCounts].sort((a, b) => a - b)).toEqual([0, 3]);
     expect([...TRUTH.bookmarkCaps]).toEqual([1000]);
     expect([...TRUTH.prices].sort((a, b) => a - b)).toEqual([0, 59, 79]);
     expect([...TRUTH.upgradePrices].sort((a, b) => a - b)).toEqual([35, 89]);
@@ -246,15 +246,18 @@ describe("rule: password-min", () => {
 
 // ── devices / free-bookmarks ─────────────────────────────────────────────────
 describe("rule: devices", () => {
-  it("accepts tier-aware true claims (1 device on Free, 3 on Pro)", () => {
+  it("accepts tier-valid true claims (3 on Pro; digitless copy never claims)", () => {
     expectClaim("P2P sync across 3 devices", "devices", { expectDrift: false });
-    expectClaim("1 device", "devices", { expectDrift: false });
     expectClaim("Synchronisierung auf 3 Geräten", "devices", { expectDrift: false });
   });
 
-  it("rejects device counts no tier grants", () => {
+  it("rejects the 1-device fiction and counts no tier grants", () => {
+    // Free maxDevices is 0 (no per-device cap) since the fiction fix —
+    // "1 device" copy must fail the gate, not pass.
+    const one = expectClaim("1 device", "devices");
+    expect(one.drift).toMatch(/claims 1 device/);
     const hit = expectClaim("sync across 5 devices", "devices");
-    expect(hit.drift).toMatch(/maxDevices values: 1, 3/);
+    expect(hit.drift).toMatch(/maxDevices values: 0, 3/);
   });
 });
 
@@ -483,7 +486,7 @@ describe("rule: devices (hyphenated sync claims)", () => {
 
   it("rejects hyphenated counts no tier grants", () => {
     const hit = expectClaim("5-device sync", "devices");
-    expect(hit.drift).toMatch(/maxDevices values: 1, 3/);
+    expect(hit.drift).toMatch(/maxDevices values: 0, 3/);
   });
 });
 
@@ -594,7 +597,7 @@ describe("real repo freeze", () => {
     expect(t.minPasswordLength).toBe(12);
     expect(t.recoveryWords).toBe(24);
     expect(t.refundDays).toBe(30);
-    expect([...t.deviceCounts].sort((a, b) => a - b)).toEqual([1, 3]);
+    expect([...t.deviceCounts].sort((a, b) => a - b)).toEqual([0, 3]);
     expect(t.prices.has(79)).toBe(true);
   });
 });

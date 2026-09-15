@@ -5,13 +5,13 @@
   "canonical": "https://bookmarkforge.com/pt/",
   "ogLocale": "pt_PT",
   "ogLocaleAlternate": "en_US",
-  "title": "BookmarkForge — Alternativa privada ao Pocket com IA (Marcadores e notas)",
-  "description": "Guarde artigos, notas e documentos num cofre privado, encriptado e 100% local. Pesquisa com IA, editor estilo Notion, sincronização P2P. Nível grátis: 1.000 marcadores.",
-  "ogTitle": "BookmarkForge — Alternativa privada ao Pocket com IA (Marcadores e notas)",
-  "ogDescription": "Guarde artigos, notas e documentos num cofre privado, encriptado e 100% local. Pesquisa com IA, editor estilo Notion, sincronização P2P. Nível grátis: 1.000 marcadores.",
+  "title": "BookmarkForge — Tudo fica no seu computador. Pague uma vez.",
+  "description": "O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 1.000 marcadores.",
+  "ogTitle": "BookmarkForge — Tudo fica no seu computador. Pague uma vez.",
+  "ogDescription": "O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 1.000 marcadores.",
   "ogImage": "https://bookmarkforge.com/og-image-pt.png",
-  "twitterTitle": "BookmarkForge — Alternativa privada ao Pocket com IA (Marcadores e notas)",
-  "twitterDescription": "Guarde artigos, notas e documentos num cofre privado, encriptado e 100% local. Pesquisa com IA, editor estilo Notion, sincronização P2P. Nível grátis: 1.000 marcadores.",
+  "twitterTitle": "BookmarkForge — Tudo fica no seu computador. Pague uma vez.",
+  "twitterDescription": "O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 1.000 marcadores.",
   "twitterImage": "https://bookmarkforge.com/og-image-pt.png",
   "skipLink": "Saltar para o conteúdo principal",
   "navBrandAria": "BookmarkForge início",
@@ -23,7 +23,8 @@
     "ai": "IA",
     "privacy": "Privacidade",
     "pricing": "Preços",
-    "help": "Ajuda"
+    "help": "Ajuda",
+    "raindropCompare": "Comparação com o Raindrop"
   },
   "langLink": {
     "href": "/?lang=en",
@@ -34,27 +35,27 @@
   "navCta": "Abrir a App",
   "themeToggleAria": "Mudar tema",
   "hero": {
-    "badge": "Versão 1.0",
-    "title": "A Sua Cápsula de Conhecimento <span class=\"accent-text\">Privada com IA</span>",
-    "subtitle": "A alternativa privada ao Pocket para guardar artigos e ler mais tarde: marcadores, notas e documentos — encriptados no seu dispositivo, pesquisáveis com IA e sincronizados ponto a ponto. Zero nuvem. Zero rastreamento. 100% seu.",
+    "badge": "Pagamento único · Sem subscrição",
+    "title": "Tudo o que guarda fica no seu computador. <span class=\"accent-text\">Tudo.</span>",
+    "subtitle": "O Raindrop guarda os seus marcadores nos servidores dele — e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados com uma chave que só você tem. Sem contas. Sem mensalidades. E sem ninguém a ler por cima do seu ombro.",
     "ctaPrimary": "Abrir a App Grátis",
     "ctaSecondary": "Ver Preços",
     "pillars": [
       {
-        "strong": "100% Local",
-        "text": "os seus dados nunca saem do seu dispositivo"
+        "strong": "Privado",
+        "text": "as suas páginas guardadas nunca saem do seu computador"
       },
       {
-        "strong": "Encriptado",
-        "text": "AES-256-GCM + Argon2id"
+        "strong": "Fechado",
+        "text": "nem nós as conseguimos ler"
       },
       {
         "strong": "Offline",
-        "text": "funciona sem internet"
+        "text": "funciona num avião, num túnel, onde for"
       },
       {
-        "strong": "Privado",
-        "text": "zero telemetria por predefinição"
+        "strong": "Pague uma vez",
+        "text": "59 dólares uma vez, não 28 dólares todos os anos"
       }
     ]
   },
@@ -81,46 +82,91 @@
     "ctaSecondary": "Comparação completa e guia de migração",
     "ctaSecondaryHref": "/pocket-alternative"
   },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "Em palavras simples, sem marketing",
+    "title": "BookmarkForge contra o Raindrop, sem letras pequenas",
+    "subtitle": "O Raindrop é uma boa aplicação. A grande diferença está em onde vivem as suas coisas.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Onde vive a sua lista",
+        "us": "No seu computador",
+        "them": "Nos servidores deles"
+      },
+      {
+        "topic": "Quem pode ler o que guarda",
+        "us": "Ninguém — fechado com a sua chave, nem nós",
+        "them": "A empresa, e quem lho exigir"
+      },
+      {
+        "topic": "Sem internet",
+        "us": "Tudo continua a funcionar",
+        "them": "Só o básico"
+      },
+      {
+        "topic": "Quanto paga",
+        "us": "59 dólares uma vez. Já está.",
+        "them": "28 dólares todos os anos, para sempre"
+      },
+      {
+        "topic": "Se a empresa desaparecer (RIP Pocket)",
+        "us": "Nada muda — já está nas suas mãos",
+        "them": "Exporta e recomeça do zero"
+      },
+      {
+        "topic": "O assistente de IA",
+        "us": "Trabalha dentro do seu computador no modo privado — nada é enviado para lado nenhum",
+        "them": "As suas leituras vão pensar para a nuvem"
+      }
+    ],
+    "ctaPrimary": "Experimente grátis em 2 minutos — sem conta",
+    "ctaSecondary": "Comparação completa com o Pocket",
+    "close": "O Raindrop é mais simples e grátis — se lhe chega, use-o com gosto. Mas se prefere ter a sua vida de leitura nas suas próprias mãos, o BookmarkForge foi feito exactamente para isso."
+  },
   "features": {
     "id": "funcionalidades",
     "tag": "Tudo o que Precisa",
-    "title": "Funcionalidades poderosas para gerir o seu conhecimento, tudo a correr em local",
+    "title": "Tudo o que precisa, dito de forma simples",
     "items": [
       {
-        "title": "Marcadores e Documentos",
-        "text": "Guarde qualquer página com um clique. Editor de blocos enriquecido (estilo Notion) para notas. Listas virtualizadas que lidam com mais de 100.000 itens com fluidez."
+        "title": "Marcadores e documentos",
+        "text": "Guarde qualquer página com um clique. Escreva notas ao lado, num editor limpo e simples. Continua rápido mesmo com 100.000 itens guardados."
       },
       {
-        "title": "Pesquisa de texto completo e semântica",
-        "text": "Pesquise por palavra-chave ou por significado. Os vetores semânticos (HNSW) encontram conteúdo relacionado mesmo sem correspondências exatas."
+        "title": "Pesquisa inteligente",
+        "text": "Encontre por palavra ou por significado, mesmo sem se lembrar das palavras exatas. O Raindrop cobra 28 dólares por ano por isto; aqui vem incluído grátis."
       },
       {
-        "title": "IA local (WebLLM / Ollama) — Só Pro",
-        "text": "Execute Llama 3.2, Phi-3, TinyLlama diretamente no seu navegador com WebGPU. Zero dados fora do seu dispositivo. Requer Pro (79 $ vitalício)."
+        "title": "Uma IA que lê a sua biblioteca, dentro do seu computador",
+        "text": "Pergunte sobre o que guardou e receba respostas com as fontes à vista. Nada é enviado para a nuvem e funciona offline. Requer Pro."
       },
       {
-        "title": "Chat RAG sobre os seus dados — Só Pro",
-        "text": "Faça perguntas e obtenha respostas baseadas nos SEUS marcadores e notas. Com citações incluídas. Modo privado = 100% local. Requer Pro."
+        "title": "Converse com a sua própria biblioteca",
+        "text": "Pergunte o que quiser sobre os seus marcadores e notas, com respostas citadas. O modo privado funciona 100% na sua máquina. Requer Pro."
       },
       {
-        "title": "Sincronização P2P (WebRTC) — Só Pro",
-        "text": "Sincronize o seu cofre entre dispositivos diretamente. Sem servidor central. Encriptação de ponta a ponta. Emparelhamento por QR em segundos. Até 3 dispositivos com Pro."
+        "title": "Sincronize os seus próprios dispositivos",
+        "text": "Os seus dispositivos falam diretamente entre si — sem servidor no meio e com tudo encriptado. Emparelhe-os ao ler um código QR. Até 3 dispositivos. Requer Pro."
       },
       {
-        "title": "Cópias de segurança encriptadas",
-        "text": "Cópias automáticas diárias em .bmf. Exportação manual para Markdown, JSON, CSV, PDF. Restauro em segundos. As chaves são suas."
+        "title": "Cópias de segurança que são suas",
+        "text": "Cópias automáticas que pode guardar onde quiser: um disco externo, uma pasta na nuvem, tanto faz. Exporte tudo para Markdown, JSON, CSV ou PDF quando quiser. As chaves são suas."
       },
       {
-        "title": "Grafo de conhecimento",
-        "text": "Visualize as ligações entre as suas notas e marcadores. Filtre por etiquetas, datas e semelhança. Zoom e navegação em tela infinita."
+        "title": "O mapa do seu conhecimento",
+        "text": "Veja como as suas notas e marcadores se ligam. Filtre por etiquetas, datas e semelhança, e navegue numa tela infinita."
       },
       {
-        "title": "Cartões de estudo (repetição espaçada) — Só Pro",
-        "text": "Gere cartões a partir de qualquer documento. Algoritmo estilo Anki que agenda as revisões em intervalos ideais. Ótimo para aprender. Requer Pro."
+        "title": "Cartões de estudo que vencem o esquecimento",
+        "text": "Transforme qualquer documento guardado em cartões de perguntas que reaparecem mesmo antes de se esquecer — a mesma ideia de revisão do Anki. Requer Pro."
       },
       {
-        "title": "Privacidade por predefinição",
-        "text": "Sem análises, sem rastreamento, sem contas. Telemetria opcional apenas se ativar. Conformidade com o RGPD. O controlo é seu."
+        "title": "Privado por defeito",
+        "text": "Sem contas, sem rastreio, sem anúncios. É o cliente, não o produto. Partilhar estatísticas existe, é facultativo e está desligado até você o ligar."
       }
     ]
   },
@@ -128,37 +174,37 @@
     "id": "ia",
     "tag": "IA que respeita você",
     "title": "O Seu Conhecimento, Amplificado",
-    "subtitle": "O BookmarkForge dá-lhe a escolha: execute modelos 100% em local no seu navegador (WebLLM, WebGPU) com Pro, conecte as suas próprias chaves API para fornecedores na nuvem, ou use Ollama local. As suas instruções, os seus dados, as suas regras.",
+    "subtitle": "Execute o assistente dentro do seu computador — nada sai dele e funciona offline. Prefere um modelo grande na nuvem? Ligue a sua própria chave: as suas perguntas e as páginas necessárias para responder vão para esse fornecedor, à sua custa. As suas perguntas, os seus dados, as suas regras.",
     "providers": {
       "title": "Fornecedores suportados",
       "list": [
         {
           "type": "local",
-          "name": "WebLLM local (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Só Pro"
+          "name": "Dentro do seu computador — modelos WebLLM (TinyLlama, Llama 3.2, Phi-3.5-mini) — Só Pro"
         },
         {
           "type": "local",
-          "name": "Ollama local (qualquer modelo que execute)"
+          "name": "Na sua própria máquina — Ollama (qualquer modelo que execute)"
         },
         {
           "type": "cloud",
-          "name": "Google Gemini nuvem (sua chave API)"
+          "name": "Na nuvem — Google Gemini (chave gerida por nós)"
         },
         {
           "type": "cloud",
-          "name": "OpenAI nuvem / GPT-4o (sua chave API)"
+          "name": "Na nuvem — OpenAI / GPT-4o (com a sua própria chave)"
         },
         {
           "type": "cloud",
-          "name": "Anthropic Claude nuvem (sua chave API)"
+          "name": "Na nuvem — Anthropic Claude (com a sua própria chave)"
         },
         {
           "type": "cloud",
-          "name": "Groq nuvem (sua chave API)"
+          "name": "Na nuvem — Groq (com a sua própria chave)"
         },
         {
           "type": "cloud",
-          "name": "Personalizado / OpenRouter via provider custom (sua chave API)"
+          "name": "Na nuvem — OpenRouter ou outro fornecedor personalizado (com a sua própria chave)"
         }
       ]
     },
@@ -167,15 +213,15 @@
       "items": [
         {
           "title": "Modo privado",
-          "text": "Apenas IA local (WebLLM/Ollama). Zero dados fora do dispositivo. Funciona offline. Requer Pro para WebLLM."
+          "text": "O assistente funciona por inteiro dentro do seu computador. Nada sai dele e não precisa de internet. Requer Pro."
         },
         {
           "title": "Modo pesquisa web",
-          "text": "Combina o seu cofre com resultados de pesquisa em direto (fornecedores na nuvem)."
+          "text": "Combina a sua biblioteca com resultados em direto da web (fornecedores na nuvem)."
         },
         {
-          "title": "Agentes especialistas",
-          "text": "Personas especializadas: Programador, Escritor, Analista, Investigador. Requer Pro para IA local."
+          "title": "Agentes expertos",
+          "text": "Ajudantes especializados: Programador, Escritor, Analista e Investigador. Requer Pro."
         }
       ]
     }
@@ -186,28 +232,28 @@
     "subtitle": "Cada decisão de arquitetura coloca-o no controlo",
     "items": [
       {
-        "title": "Encriptação de ponta a ponta",
-        "text": "AES-256-GCM com chaves derivadas da sua palavra-passe mestra via Argon2id. Nunca vemos a sua palavra-passe nem as suas chaves."
+        "title": "Fechado para que ninguém o leia — nem nós",
+        "text": "A sua biblioteca é encriptada com uma chave derivada da sua palavra-passe mestra. Nunca vemos a sua palavra-passe nem o seu conteúdo."
       },
       {
-        "title": "Arquitetura 100% local",
-        "text": "O seu cofre vive no IndexedDB do seu dispositivo. O servidor complementar só trata do proxy de IA, licenças e sinalização — nunca do seu conteúdo."
+        "title": "Guardado no seu próprio dispositivo",
+        "text": "Tudo vive no seu computador. O servidor companheiro só trata de licenças, do emparelhamento de dispositivos e de retransmitir as suas perguntas de IA no modo nuvem — nunca do seu conteúdo."
       },
       {
-        "title": "Zero telemetria por predefinição",
-        "text": "Sem análises, sem relatórios de erros, sem rastreamento. Estatísticas de uso e relatórios de erros opcionais, cada um controlado de forma independente."
+        "title": "Sem rastreio por defeito",
+        "text": "Sem análises, sem relatórios de erros, sem rastreio. Partilhar estatísticas de utilização ou relatórios de erros é uma opção à parte, desligada por defeito."
       },
       {
         "title": "As chaves são suas",
-        "text": "Separação de chaves por dispositivo: JWK no localStorage + textos encriptados no IndexedDB. Ambos são necessários. Sem palavra-passe mestra = sem acesso. Sem porta traseira de \"palavra-passe esquecida\"."
+        "text": "Sem palavra-passe mestra não há acesso — não existe a porta dos fundos de «esqueci-me da palavra-passe». A sua frase de recuperação de 24 palavras é a única chave; guarde-a bem."
       },
       {
-        "title": "Conformidade com o RGPD",
-        "text": "Consentimento granular (análises, relatórios de erros, eventos de cliente). Direito de acesso, retificação, eliminação e portabilidade — tudo realizável em local."
+        "title": "Os seus direitos, respeitados",
+        "text": "Consultar, corrigir, apagar ou levar os seus dados — tudo em local, quando quiser."
       },
       {
-        "title": "Sem dependência de um fornecedor",
-        "text": "Exporte os seus dados a qualquer momento em formatos abertos (JSON, Markdown, CSV, PDF). O seu conhecimento mantém-se portátil."
+        "title": "Sem amarras",
+        "text": "Exporte os seus dados quando quiser em formatos abertos (JSON, Markdown, CSV, PDF). O seu conhecimento continua seu e portátil."
       }
     ]
   },
@@ -220,19 +266,19 @@
         "name": "Grátis",
         "price": "$ 0",
         "period": "/para sempre",
-        "description": "Para a gestão pessoal de conhecimento (1.000 marcadores, 1 dispositivo)",
+        "description": "Grátis para sempre: 1.000 marcadores e a pesquisa inteligente pela qual outros cobram todos os anos. Ao chegar a 1.000, a sua biblioteca continua intacta — ler, pesquisar e exportar nunca param; só as novas gravações ficam em pausa.",
         "features": [
+          {
+            "included": true,
+            "text": "Pesquisa inteligente (texto integral + semântica) — incluída grátis; o Raindrop cobra todos os anos por isto"
+          },
           {
             "included": true,
             "text": "1.000 marcadores, notas e documentos"
           },
           {
             "included": true,
-            "text": "Pesquisa de texto completo e semântica"
-          },
-          {
-            "included": true,
-            "text": "IA com a sua própria chave API (paga ao fornecedor)"
+            "text": "Funciona em qualquer dispositivo — cada um com a sua própria biblioteca"
           },
           {
             "included": true,

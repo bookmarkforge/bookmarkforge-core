@@ -48,33 +48,33 @@ const SLOGAN_Y = 470;
 const LOCALES = [
   {
     lang: 'es',
-    tagline: 'Tu cerebro digital local y privado',
+    tagline: 'Tus marcadores, cerrados en tu ordenador',
     ogDescription:
-      'Guarda artículos, notas y documentos en una bóveda privada, cifrada y 100% local. Búsqueda con IA, editor estilo Notion y sincronización P2P. La alternativa privada a Pocket — gratis.',
+      'Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. 59 dólares una vez. Gratis: 1.000 marcadores.',
   },
   {
     lang: 'fr',
-    tagline: 'Ton cerveau numérique local et privé',
+    tagline: 'Vos favoris, verrouillés sur votre ordinateur',
     ogDescription:
-      "Enregistrez des articles, notes et documents dans un coffre privé, chiffré et 100% local. Recherche par IA, éditeur style Notion, synchronisation P2P. L'alternative privée à Pocket — gratuite.",
+      'Raindrop garde vos favoris sur ses serveurs et vous facture chaque année. BookmarkForge les garde sur votre ordinateur, verrouillés pour que même pas nous puissions les lire. 59 dollars une fois. Gratuit : 1 000 favoris.',
   },
   {
     lang: 'de',
-    tagline: 'Dein lokaler und privater digitaler Geist',
+    tagline: 'Deine Lesezeichen, gesperrt auf deinem Computer',
     ogDescription:
-      'Speichere Artikel, Notizen und Dokumente in einem privaten, verschlüsselten, 100% lokalen Tresor. KI-Suche, Notion-Editor, P2P-Sync. Die private Pocket-Alternative — kostenlos.',
+      'Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. 59 Dollar einmalig. Kostenlos: 1.000 Lesezeichen.',
   },
   {
     lang: 'pt',
-    tagline: 'Seu cérebro digital local e privado',
+    tagline: 'Os seus marcadores, fechados no seu computador',
     ogDescription:
-      'Guarde artigos, notas e documentos num cofre privado, encriptado e 100% local. Pesquisa com IA, editor estilo Notion, sincronização P2P. A alternativa privada ao Pocket — grátis.',
+      'O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 1.000 marcadores.',
   },
   {
     lang: 'it',
-    tagline: 'Il tuo cervello digitale locale e privato',
+    tagline: 'I tuoi segnalibri, bloccati sul tuo computer',
     ogDescription:
-      "Salva articoli, note e documenti in una cassaforte privata, crittografata e 100% locale. Ricerca con IA, editor stile Notion, sincronizzazione P2P. L'alternativa privata a Pocket — gratis.",
+      'Raindrop tiene i tuoi segnalibri sui suoi server e ti fa pagare ogni anno. BookmarkForge li tiene sul tuo computer, bloccati così nemmeno noi possiamo leggerli. 59 dollari una volta. Gratis: 1.000 segnalibri.',
   },
 ];
 

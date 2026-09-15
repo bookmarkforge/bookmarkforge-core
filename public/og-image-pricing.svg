@@ -19,7 +19,7 @@
   <!-- FREE tier -->
   <rect x="105" y="268" width="470" height="320" rx="18" fill="#16283f" stroke="#2a3b52" stroke-width="1.5"/>
   <text x="340" y="308" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700" fill="#a1a1aa" text-anchor="middle" letter-spacing="4">FREE</text>
-  <text x="340" y="338" font-family="system-ui, -apple-system, sans-serif" font-size="17" fill="#8b95a5" text-anchor="middle">For personal knowledge management</text>
+  <text x="340" y="338" font-family="system-ui, -apple-system, sans-serif" font-size="17" fill="#8b95a5" text-anchor="middle">Free forever · smart search included</text>
   <text x="300" y="392" font-family="system-ui, -apple-system, sans-serif" font-size="42" font-weight="700" fill="#ffffff" text-anchor="end">$</text>
   <text x="312" y="392" font-family="system-ui, -apple-system, sans-serif" font-size="56" font-weight="700" fill="#ffffff" text-anchor="start">0</text>
   <text x="348" y="392" font-family="system-ui, -apple-system, sans-serif" font-size="18" fill="#a1a1aa" text-anchor="start">/forever</text>

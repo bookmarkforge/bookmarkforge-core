@@ -497,7 +497,7 @@ describe("LicenseService", () => {
 
     test("FREE_LIMITS mirrors the expected values", () => {
       expect(FREE_LIMITS.maxBookmarks).toBe(1000);
-      expect(FREE_LIMITS.maxDevices).toBe(1);
+      expect(FREE_LIMITS.maxDevices).toBe(0);
     });
   });
 

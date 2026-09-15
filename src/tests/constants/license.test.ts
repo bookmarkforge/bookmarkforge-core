@@ -18,7 +18,7 @@ describe("constants/license", () => {
     expect(LICENSE_CONFIG.maxActivationsPerLicense).toBe(5);
     expect(LICENSE_CONFIG.trialDays).toBe(7);
     expect(LICENSE_CONFIG.storageKeys.licenseKey).toBe("bf_license_key");
-    expect(FREE_LIMITS).toEqual({ maxBookmarks: 1000, maxDevices: 1 });
+    expect(FREE_LIMITS).toEqual({ maxBookmarks: 1000, maxDevices: 0 });
   });
 
   it.each([

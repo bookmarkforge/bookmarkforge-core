@@ -50,13 +50,13 @@ Decisión: **esta fase solo retira documentos con estado `retirable` y referenci
 | `docs/launch-checklist.md` | vivo | Checklist de lanzamiento; fuente de varios gates automatizados. |
 | `docs/legacy-compatibility-plan.md` | vivo | Plan de compatibilidad/migración de formatos old. |
 | `docs/legacy-schema-version-map.md` | vivo | Registro versionado de esquemas RxDB activos; se genera desde src/db/schema.ts para diagnóstico de compatibilidad sin acceso al vault. |
+| `docs/legal-closing-package.md` | vivo | Paquete de cierre legal: relleno del ROPA, DPAs por proveedor, orden de firma y plantillas. Evidencia del punto 5 del launch-checklist. |
 | `docs/openapi.yaml` | vivo | Especificación OpenAPI 3.1.0 del servidor acompañante. |
 | `docs/operations.md` | vivo | Operaciones, SLOs de referencia, drills, gates nocturnos, evidencia. |
 | `docs/ops-nightly.md` | vivo | Operaciones nocturnas, anclas de auditoría, gates. |
 | `docs/que-nos-falta.md` | vivo | Resumen de deudas pendientes. |
 | `docs/release-note-r3-4.md` | vivo | Notas de release. |
 | `docs/sast-triage.md` | vivo | Guía de triaje SAST. |
-| `docs/support-data-loss-runbook.md` | vivo | Runbook de soporte para pérdida de datos: 3 caminos de recuperación, plantillas y prevención. |
 | `docs/security.md` | vivo | Controles de seguridad, RGPD, configuración obligatoria de producción. |
 | `docs/server-api-index.md` | vivo | Índice detallado de endpoints del servidor. |
 | `docs/staging-smoke.md` | vivo | Notas de smoke de staging. |

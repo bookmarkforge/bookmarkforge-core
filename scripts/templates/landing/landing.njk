@@ -117,6 +117,7 @@
 
       <nav class="nav-links" aria-label="{{ t.navAriaLabel }}">
         <a href="#{{ t.pocketAlternative.id }}">{{ t.pocketAlternative.tag }}</a>
+        <a href="#{{ t.raindropCompare.id }}">{{ t.navLinks.raindropCompare }}</a>
         <a href="#{{ t.features.id }}">{{ t.navLinks.features }}</a>
         <a href="#{{ t.ai.id }}">{{ t.navLinks.ai }}</a>
         <a href="#{{ t.privacy.id }}">{{ t.navLinks.privacy }}</a>
@@ -178,6 +179,36 @@
         <div class="center-cta">
           <a href="/app" class="btn-primary">{{ t.pocketAlternative.ctaPrimary }}</a>
           <a href="{{ t.pocketAlternative.ctaSecondaryHref }}" class="btn-link">{{ t.pocketAlternative.ctaSecondary }}</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Raindrop Comparison Section -->
+    <section id="{{ t.raindropCompare.id }}" class="raindrop-section" aria-labelledby="{{ t.raindropCompare.id }}-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">{{ t.raindropCompare.tag }}</span>
+          <h2 id="{{ t.raindropCompare.id }}-title">{{ t.raindropCompare.title }}</h2>
+          <p class="section-subtitle">{{ t.raindropCompare.subtitle }}</p>
+        </div>
+        <div class="rc-table" role="table" aria-label="{{ t.raindropCompare.title }}">
+          <div class="rc-row rc-head" role="row">
+            <div class="rc-topic" role="columnheader"></div>
+            <div class="rc-us" role="columnheader">{{ t.raindropCompare.columns.us }}</div>
+            <div class="rc-them" role="columnheader">{{ t.raindropCompare.columns.them }}</div>
+          </div>
+          {% for row in t.raindropCompare.rows %}
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">{{ row.topic }}</div>
+            <div class="rc-us" role="cell">{{ row.us }}</div>
+            <div class="rc-them" role="cell">{{ row.them }}</div>
+          </div>
+          {% endfor %}
+        </div>
+        <p class="rc-close">{{ t.raindropCompare.close }}</p>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">{{ t.raindropCompare.ctaPrimary }}</a>
+          <a href="{{ t.pocketAlternative.ctaSecondaryHref }}" class="btn-link">{{ t.raindropCompare.ctaSecondary }}</a>
         </div>
       </div>
     </section>

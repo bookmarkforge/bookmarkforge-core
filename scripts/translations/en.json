@@ -5,13 +5,13 @@
   "canonical": "https://bookmarkforge.com/",
   "ogLocale": "en_US",
   "ogLocaleAlternate": "es_ES",
-  "title": "BookmarkForge — Private AI Bookmark & Notes App (Pocket Alternative)",
-  "description": "The private Pocket alternative. Save articles, notes and documents in an encrypted, local-first vault. AI search, Notion-style editor, P2P sync. Free tier: 1,000 bookmarks.",
-  "ogTitle": "BookmarkForge — Private AI Bookmark & Notes App (Pocket Alternative)",
-  "ogDescription": "The private Pocket alternative. Save articles, notes and documents in an encrypted, local-first vault. AI search, Notion-style editor, P2P sync. Free tier: 1,000 bookmarks.",
+  "title": "BookmarkForge — Everything stays on your computer. Pay once.",
+  "description": "Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 1,000 bookmarks.",
+  "ogTitle": "BookmarkForge — Everything stays on your computer. Pay once.",
+  "ogDescription": "Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 1,000 bookmarks.",
   "ogImage": "https://bookmarkforge.com/og-image.png",
-  "twitterTitle": "BookmarkForge — Private AI Bookmark & Notes App (Pocket Alternative)",
-  "twitterDescription": "The private Pocket alternative. Save articles, notes and documents in an encrypted, local-first vault. AI search, Notion-style editor, P2P sync. Free tier: 1,000 bookmarks.",
+  "twitterTitle": "BookmarkForge — Everything stays on your computer. Pay once.",
+  "twitterDescription": "Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 1,000 bookmarks.",
   "twitterImage": "https://bookmarkforge.com/og-image.png",
   "skipLink": "Skip to main content",
   "navBrandAria": "BookmarkForge home",
@@ -23,7 +23,8 @@
     "ai": "AI",
     "privacy": "Privacy",
     "pricing": "Pricing",
-    "help": "Help"
+    "help": "Help",
+    "raindropCompare": "Raindrop Comparison"
   },
   "langLink": {
     "href": "/es/",
@@ -34,27 +35,27 @@
   "navCta": "Open App",
   "themeToggleAria": "Toggle theme",
   "hero": {
-    "badge": "Version 1.0",
-    "title": "Your Private <span class=\"accent-text\">AI Knowledge Vault</span>",
-    "subtitle": "The private Pocket alternative for read-it-later: bookmarks, notes and documents — encrypted locally, searchable by AI, synced peer-to-peer. Zero cloud. Zero tracking. 100% yours.",
+    "badge": "One-time payment · No subscription",
+    "title": "Everything you save stays on your computer. <span class=\"accent-text\">Everything.</span>",
+    "subtitle": "Raindrop keeps your bookmarks on its servers — and charges you every year. BookmarkForge keeps them on your computer, locked with a key only you have. No accounts. No monthly fees. No one reading over your shoulder.",
     "ctaPrimary": "Launch App Free",
     "ctaSecondary": "View Pricing",
     "pillars": [
       {
-        "strong": "Local-First",
-        "text": "data never leaves your device"
+        "strong": "Private",
+        "text": "your saved pages never leave your computer"
       },
       {
-        "strong": "Encrypted",
-        "text": "AES-256-GCM + Argon2id"
+        "strong": "Locked",
+        "text": "not even we can read them"
       },
       {
         "strong": "Offline",
-        "text": "works without internet"
+        "text": "works on a plane, in a tunnel, wherever"
       },
       {
-        "strong": "Private",
-        "text": "zero telemetry by default"
+        "strong": "Pay once",
+        "text": "59 dollars once, not 28 dollars every year"
       }
     ]
   },
@@ -81,46 +82,91 @@
     "ctaSecondary": "Full Comparison & Migration Guide",
     "ctaSecondaryHref": "/pocket-alternative"
   },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "Plain words, no marketing",
+    "title": "BookmarkForge vs Raindrop, without the fine print",
+    "subtitle": "Raindrop is a good app. The big difference is where your stuff lives.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Where your list lives",
+        "us": "On your computer",
+        "them": "On their servers"
+      },
+      {
+        "topic": "Who can read what you save",
+        "us": "Nobody — locked with your key, not even us",
+        "them": "The company, and whoever demands it of them"
+      },
+      {
+        "topic": "Without internet",
+        "us": "Everything keeps working",
+        "them": "Only the basics"
+      },
+      {
+        "topic": "What you pay",
+        "us": "59 dollars once. Done.",
+        "them": "28 dollars every year, forever"
+      },
+      {
+        "topic": "If the company disappears (RIP Pocket)",
+        "us": "Nothing changes — it is already in your hands",
+        "them": "You export and start over"
+      },
+      {
+        "topic": "The AI assistant",
+        "us": "Runs inside your computer in private mode — nothing is sent anywhere",
+        "them": "Your reading goes off to the cloud to think"
+      }
+    ],
+    "ctaPrimary": "Try it free in 2 minutes — no account",
+    "ctaSecondary": "Full Pocket comparison",
+    "close": "Raindrop is simpler and free — if that is all you need, use it happily. But if you would rather keep your reading life in your own hands, BookmarkForge is built for exactly that."
+  },
   "features": {
     "id": "features",
     "tag": "Everything You Need",
-    "title": "Powerful features for knowledge management, all running locally",
+    "title": "Everything you need, in plain words",
     "items": [
       {
-        "title": "Bookmarks & Documents",
-        "text": "Save any page with one click. Rich block editor (Notion-style) for notes. Virtualized lists handle 100k+ items smoothly."
+        "title": "Bookmarks & documents",
+        "text": "Save any page with one click. Write notes right next to it, in a clean, simple editor. Stays fast even with 100,000 saved items."
       },
       {
-        "title": "Full-Text & Semantic Search",
-        "text": "Search by keyword or meaning. Vector embeddings (HNSW) find related content even without exact matches."
+        "title": "Smart search",
+        "text": "Find things by keyword or by meaning — even when you do not remember the exact words. Raindrop charges 28 dollars a year for this; here it is included free."
       },
       {
-        "title": "Local AI (WebLLM / Ollama) — Pro only",
-        "text": "Run Llama 3.2, Phi-3, TinyLlama entirely in your browser via WebGPU. Zero data leaves your device. Requires Pro ($79 lifetime)."
+        "title": "An AI that reads your library, inside your computer",
+        "text": "Ask questions about what you saved and get answers with the sources shown. Nothing is sent to the cloud, and it works without internet. Requires Pro."
       },
       {
-        "title": "RAG Chat Over Your Data — Pro only",
-        "text": "Ask questions and get answers grounded in YOUR bookmarks and notes. Citations included. Private mode = 100% local. Requires Pro."
+        "title": "Chat with your own library",
+        "text": "Ask anything about your bookmarks and notes and get cited answers. The private mode runs 100% on your machine. Requires Pro."
       },
       {
-        "title": "P2P Sync (WebRTC) — Pro only",
-        "text": "Sync vaults between your devices directly. No central server. Encrypted end-to-end. QR pairing in seconds. Up to 3 devices with Pro."
+        "title": "Sync between your own devices",
+        "text": "Your devices talk to each other directly — no server in the middle, and everything stays encrypted. Pair them by scanning a QR code. Up to 3 devices. Requires Pro."
       },
       {
-        "title": "Encrypted Backups",
-        "text": "Daily automatic .bmf backups. Manual export to Markdown, JSON, CSV, PDF. Restore in seconds. You hold the keys."
+        "title": "Backups you own",
+        "text": "Automatic backups you can keep wherever you like — an external drive, a cloud folder, anywhere. Export everything to Markdown, JSON, CSV or PDF whenever you want. You hold the keys."
       },
       {
-        "title": "Knowledge Graph",
-        "text": "Visualize connections between your notes and bookmarks. Filter by tags, dates, similarity. Zoom and pan infinite canvas."
+        "title": "A map of your knowledge",
+        "text": "See how your notes and bookmarks connect. Filter by tags, dates and similarity, and zoom around an endless canvas."
       },
       {
-        "title": "Flashcards (Spaced Repetition) — Pro only",
-        "text": "Generate cards from any document. Anki-style SR algorithm schedules reviews at optimal intervals. Great for learning. Requires Pro."
+        "title": "Study cards that beat forgetting",
+        "text": "Turn any saved document into question cards that resurface right before you would forget them — the same scheduling idea as Anki. Requires Pro."
       },
       {
-        "title": "Privacy by Default",
-        "text": "No analytics, no tracking, no accounts. Optional opt-in telemetry only. GDPR compliant. You are the controller."
+        "title": "Private by default",
+        "text": "No accounts, no tracking, no ads. You are the customer, not the product. Usage sharing exists, it is optional and stays off until you turn it on."
       }
     ]
   },
@@ -128,37 +174,37 @@
     "id": "ai",
     "tag": "AI That Respects You",
     "title": "Your Knowledge, Amplified",
-    "subtitle": "BookmarkForge gives you options: run models 100% locally in your browser (WebLLM, WebGPU) with Pro, connect your own API keys for cloud providers, or use local Ollama. Your prompts, your data, your rules.",
+    "subtitle": "Run the assistant inside your computer — nothing leaves it, and it works offline. Prefer a big cloud model? Connect your own key: your questions and the pages needed to answer them go to that provider, at your cost. Your prompts, your data, your rules.",
     "providers": {
       "title": "Supported Providers",
       "list": [
         {
           "type": "local",
-          "name": "Local WebLLM (TinyLlama, Llama-3.2-1B/3B, Phi-3.5-mini) — Pro only"
+          "name": "Inside your computer — WebLLM models (TinyLlama, Llama 3.2, Phi-3.5-mini) — Pro only"
         },
         {
           "type": "local",
-          "name": "Local Ollama (any model you run)"
+          "name": "On your own machine — Ollama (any model you run)"
         },
         {
           "type": "cloud",
-          "name": "Cloud Google Gemini (your API key)"
+          "name": "Cloud — Google Gemini (key managed by us)"
         },
         {
           "type": "cloud",
-          "name": "Cloud OpenAI / GPT-4o (your API key)"
+          "name": "Cloud — OpenAI / GPT-4o (with your own key)"
         },
         {
           "type": "cloud",
-          "name": "Cloud Anthropic Claude (your API key)"
+          "name": "Cloud — Anthropic Claude (with your own key)"
         },
         {
           "type": "cloud",
-          "name": "Cloud Groq (your API key)"
+          "name": "Cloud — Groq (with your own key)"
         },
         {
           "type": "cloud",
-          "name": "Custom / OpenRouter via custom provider (your API key)"
+          "name": "Cloud — OpenRouter or another custom provider (with your own key)"
         }
       ]
     },
@@ -167,15 +213,15 @@
       "items": [
         {
           "title": "Private Mode",
-          "text": "Local AI only (WebLLM/Ollama). Zero data leaves device. Works offline. Requires Pro for WebLLM."
+          "text": "The assistant runs entirely inside your computer. Nothing leaves it, and it needs no internet. Requires Pro."
         },
         {
           "title": "Web Search Mode",
-          "text": "Combines your vault with live search results (cloud providers)."
+          "text": "Combines your library with live results from the web (cloud providers)."
         },
         {
           "title": "Expert Agents",
-          "text": "Specialized personas: Coder, Writer, Analyst, Researcher. Requires Pro for local AI."
+          "text": "Specialized helpers: Coder, Writer, Analyst and Researcher. Requires Pro."
         }
       ]
     }
@@ -186,28 +232,28 @@
     "subtitle": "Every architectural decision puts you in control",
     "items": [
       {
-        "title": "End-to-End Encryption",
-        "text": "AES-256-GCM with keys derived from your master password via Argon2id. We never see your password or keys."
+        "title": "Locked so nobody can read it — not even us",
+        "text": "Your library is encrypted with a key derived from your master password. We never see your password or your content."
       },
       {
-        "title": "Local-First Architecture",
-        "text": "Your vault lives in IndexedDB on your device. The companion server only handles AI proxy, licensing, and signaling — never your content."
+        "title": "Stored on your own device",
+        "text": "Everything lives on your computer. The companion server only handles licensing, device pairing and relaying your cloud-mode AI questions — never your content."
       },
       {
-        "title": "Zero Telemetry by Default",
-        "text": "No analytics, no crash reports, no tracking. Optional opt-in for aggregated usage stats and error reporting — each independently controlled."
+        "title": "No tracking by default",
+        "text": "No analytics, no crash reports, no tracking. Sharing usage stats or error reports is a separate choice, off by default."
       },
       {
-        "title": "You Hold the Keys",
-        "text": "Device key separation: JWK in localStorage + ciphertexts in IndexedDB. Both required. No master password = no access. No \"forgot password\" backdoor."
+        "title": "You hold the keys",
+        "text": "No master password means no access — there is no \"forgot password\" backdoor. Your 24-word recovery phrase is the only way in; keep it safe."
       },
       {
-        "title": "GDPR Compliant",
-        "text": "Granular consent (analytics, error reporting, client events). Right to access, rectify, erase, port — all doable locally. ROPA documented."
+        "title": "Your rights, respected",
+        "text": "Access, correct, erase or take your data with you — all doable locally, whenever you want."
       },
       {
-        "title": "No Vendor Lock-in",
-        "text": "Export your data anytime in open formats (JSON, Markdown, CSV, PDF). Your knowledge stays portable."
+        "title": "No lock-in",
+        "text": "Export your data anytime in open formats (JSON, Markdown, CSV, PDF). Your knowledge stays yours and portable."
       }
     ]
   },
@@ -220,19 +266,19 @@
         "name": "Free",
         "price": "$ 0",
         "period": "/forever",
-        "description": "For personal knowledge management (1,000 bookmarks, 1 device)",
+        "description": "Free forever: 1,000 bookmarks plus the smart search others charge yearly for. At 1,000 your vault stays whole — reading, search and export never stop; only new saves pause.",
         "features": [
+          {
+            "included": true,
+            "text": "Smart search (full-text + semantic) — included free; Raindrop charges yearly for this"
+          },
           {
             "included": true,
             "text": "1,000 bookmarks, notes, documents"
           },
           {
             "included": true,
-            "text": "Full-text & semantic search"
-          },
-          {
-            "included": true,
-            "text": "AI with your own API key (you pay usage)"
+            "text": "Works on any device — each keeps its own vault"
           },
           {
             "included": true,

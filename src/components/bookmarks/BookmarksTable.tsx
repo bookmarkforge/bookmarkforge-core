@@ -310,8 +310,16 @@ export default function BookmarksTable() {
     } catch (err) {
       if (!controller.signal.aborted) {
         if (err instanceof ProUnavailableError) {
+          // Toast with an action — not a dead info line: the action opens
+          // the Pro section, the same bridge the shared Pro state uses.
           const { toast } = await import("sonner");
-          toast.info(t("app_flashcardsProRequired"));
+          toast.info(t("app_flashcardsProRequired"), {
+            action: {
+              label: t("app_proStateToastAction", "See Pro"),
+              onClick: () =>
+                window.dispatchEvent(new CustomEvent("forge:open-settings")),
+            },
+          });
         } else {
           logger.error("[BookmarksTable] Flashcard generation failed", { err });
         }

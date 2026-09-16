@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import { QuantizationPanel } from "../QuantizationPanel";
 import { logger } from "../../utils/logger";
 import { useGuardedAction } from "../../hooks/useGuardedAction";
+import { ProRequiredState } from "../ProRequiredState";
+import { useLicenseStore } from "../../store/useLicenseStore";
 
 interface AIConfigSectionProps {
   apiKey: string;
@@ -23,7 +25,13 @@ export const AIConfigSection: React.FC<AIConfigSectionProps> = ({
   webLlmProgress,
   onShowDiagnostics,
   t,
-}) => (
+}) => {
+  // Reactive entitlement: flipping to Pro inside this same modal must swap
+  // the upgrade banner for the device warning (or nothing) without a remount.
+  const hasPro = useLicenseStore((s) => s.entitlements.plan === "pro");
+  const webLlmProRequired = !hasPro;
+
+  return (
   <section data-testid="settings-ai-config" className="space-y-4">
     <h3 className="ds-label-section flex items-center gap-2">
       <Sparkles className="size-4" /> {t("app_aiProvider")}
@@ -62,7 +70,16 @@ export const AIConfigSection: React.FC<AIConfigSectionProps> = ({
           </option>
         </select>
 
-        {!canRunWebLLM && (
+        {!canRunWebLLM && webLlmProRequired && (
+          // Pro gate takes precedence: the device may be capable, but the
+          // local-model runtime itself is Pro — show the shared upgrade
+          // state instead of the device-capability warning.
+          <div className="mt-3">
+            <ProRequiredState feature="Local AI (WebLLM)" reason="license" variant="banner" />
+          </div>
+        )}
+
+        {!canRunWebLLM && !webLlmProRequired && (
           <div className="mt-3 p-4 ds-badge-warning-soft rounded-lg">
             <p className="text-xs leading-relaxed font-bold ds-text-warning">
               {t(
@@ -95,7 +112,8 @@ export const AIConfigSection: React.FC<AIConfigSectionProps> = ({
       <QuantizationPanel />
     </div>
   </section>
-);
+  );
+};
 
 const OllamaForm: React.FC<{ t: TFunction }> = ({ t }) => {
   const initialConfig = aiManager.getOllamaSettings();

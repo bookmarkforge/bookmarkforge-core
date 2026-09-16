@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import Markdown from "react-markdown";
+import { ProRequiredState } from "../ProRequiredState";
 import {
   agentsConfig,
   categories,
@@ -35,6 +36,10 @@ const ExpertAgentsPanel: React.FC<ExpertAgentsPanelProps> = ({
   const { t, i18n } = useTranslation();
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<string | null>(null);
+  // Set when the Pro registry is rejected (Free plan / Open Core build): the
+  // results area then renders the shared "requires Pro" state instead of the
+  // analysis card.
+  const [proRequired, setProRequired] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<
     "all" | AgentConfig["category"]
@@ -52,17 +57,16 @@ const ExpertAgentsPanel: React.FC<ExpertAgentsPanelProps> = ({
     onStart: () => {
       setSelectedAgent(agentIdRef.current);
       setAnalysis(null);
+      setProRequired(false);
     },
     onSuccess: (result) => setAnalysis(result),
     onError: (error) => {
       const agentId = agentIdRef.current ?? "unknown";
       // A Pro-gated registry (Free plan, or an Open Core export) surfaces as
-      // the upgrade message, not as a generic failure. The message is
-      // formatted here (with the component's `t`) because the config module
-      // must stay free of i18n runtime imports — it is shared by tests that
-      // partially mock react-i18next.
+      // the reusable "requires Pro" state instead of a generic failure: the
+      // panel renders the upgrade block with the real price.
       if (error instanceof ProUnavailableError) {
-        setAnalysis(t("app_agentsProRequired"));
+        setProRequired(true);
         return;
       }
       logger.error(
@@ -79,6 +83,7 @@ const ExpertAgentsPanel: React.FC<ExpertAgentsPanelProps> = ({
     cancel();
     setSelectedAgent(null);
     setAnalysis(null);
+    setProRequired(false);
   }, [content, isPrivate, cancel]);
 
   const filteredAgents = useMemo(() => {
@@ -222,7 +227,26 @@ const ExpertAgentsPanel: React.FC<ExpertAgentsPanelProps> = ({
       )}
 
       <AnimatePresence mode="wait">
-        {analysis && (
+        {proRequired && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="mt-6"
+          >
+            <ProRequiredState
+              feature="Expert agents"
+              reason="license"
+              variant="card"
+              onSeePro={() => {
+                setProRequired(false);
+                window.dispatchEvent(new CustomEvent("forge:open-settings"));
+              }}
+            />
+          </motion.div>
+        )}
+
+        {!proRequired && analysis && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

@@ -1596,6 +1596,8 @@
   "app_proRequiredGetLicense": "Get a license once — no subscription",
   "app_proRequiredRefund": "{{refundDays}}-day money-back guarantee",
   "app_proRequiredDismiss": "Close",
+  "app_proStateBodyLicense": "Unlock it with a one-time Pro license. Everything you have already saved stays untouched.",
+  "app_proStateToastAction": "See Pro",
   "app_p2pLanWarningTitle": "Both devices must be on the same Wi-Fi network",
   "app_p2pLanWarningBody": "This sync works device-to-device over your local network, never through the internet. If the devices are on different networks (for example, one on mobile data), pairing and syncing will fail.",
   "app_p2pLanWarningHint": "Tip: turn off mobile data on your phone and connect it to the same Wi-Fi as your computer.",

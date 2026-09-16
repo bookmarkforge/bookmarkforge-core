@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import type { SyncState } from "../../services/WebRTCSyncService";
-import { getActiveProPrice } from "../../constants/pricing";
+import { ProRequiredState } from "../ProRequiredState";
 import {
   loadWebRTCSyncService,
   type WebRTCSyncServiceType,
@@ -39,9 +39,6 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
   onClose,
 }) => {
   const { t } = useTranslation();
-  // Same source the Free-tier wall uses, so the modal's CTA can never
-  // quote a price that drifted from the pricing table.
-  const price = getActiveProPrice();
   // Graceful fallback for engines without the WebRTC API (e.g. some WebKit
   // builds): the role chooser is replaced by an explanatory banner instead of
   // letting the flows throw a raw ReferenceError.
@@ -345,38 +342,24 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
                 </div>
               </div>
 
-              {(webrtcUnsupported || proRequired) && (
+              {webrtcUnsupported && (
                 <div className="flex items-start gap-3 p-4 bg-[var(--danger-soft)] dark:bg-[var(--color-danger)]/10 border border-[var(--danger-soft-border)] dark:border-[var(--danger-soft-border)]/20 rounded-xl">
                   <AlertCircle className="size-5 ds-text-danger shrink-0 mt-0.5" />
                   <div className="text-sm ds-text-danger dark:ds-text-danger font-medium leading-relaxed">
-                    {webrtcUnsupported ? (
-                      t(
-                        "app_p2pUnsupported",
-                        "WebRTC is not supported by this browser, so P2P sync is unavailable.",
-                      )
-                    ) : (
-                      <span className="flex flex-col gap-2">
-                        {t(
-                          "app_p2pProRequired",
-                          "P2P sync is a Pro feature. Upgrade to link your devices.",
-                        )}
-                        {/* Same navigation bridge the Free-tier wall uses:
-                            Settings is a modal, not a routed section. */}
-                        <button
-                          type="button"
-                          onClick={() =>
-                            window.dispatchEvent(
-                              new CustomEvent("forge:open-settings"),
-                            )
-                          }
-                          className="underline font-bold ds-text-danger hover:opacity-80 text-left truncate max-w-full"
-                        >
-                          {t("app_freeWallCta", "See Pro — {{price}} once", { price })}
-                        </button>
-                      </span>
+                    {t(
+                      "app_p2pUnsupported",
+                      "WebRTC is not supported by this browser, so P2P sync is unavailable.",
                     )}
                   </div>
                 </div>
+              )}
+
+              {proRequired && (
+                <ProRequiredState
+                  feature="P2P sync"
+                  reason="license"
+                  variant="banner"
+                />
               )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

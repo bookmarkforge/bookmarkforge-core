@@ -26,6 +26,9 @@ vi.mock("lucide-react", () => {
     BrainCircuit: mock("BrainCircuit"),
     SearchIcon: mock("SearchIcon"),
     Search: mock("Search"),
+    // ProRequiredState icons (rendered inside the panel's results area)
+    ShieldCheck: mock("ShieldCheck"),
+    ArrowRight: mock("ArrowRight"),
   };
 });
 
@@ -51,6 +54,18 @@ vi.mock("react-markdown", () => ({
   default: ({ children }: any) => <div data-testid="markdown">{children}</div>,
 }));
 
+const mockAgent1Action = vi.fn().mockResolvedValue("Analysis result");
+const mockAgent2Action = vi.fn().mockResolvedValue("Writing result");
+const mockResolveAgentAction = vi.fn((agent: { id: string }) => {
+  const byId: Record<string, unknown> = {
+    agent1: mockAgent1Action,
+    agent2: mockAgent2Action,
+  };
+  return Promise.resolve(byId[agent.id]);
+});
+
+class MockProUnavailableError extends Error {}
+
 const mockAgentsConfig = [
   {
     id: "agent1",
@@ -59,7 +74,7 @@ const mockAgentsConfig = [
     category: "analysis",
     icon: () => <svg data-testid="agent-icon" />,
     color: "bg-violet-500",
-    action: vi.fn().mockResolvedValue("Analysis result"),
+    actionId: "realityCheck",
   },
   {
     id: "agent2",
@@ -68,7 +83,7 @@ const mockAgentsConfig = [
     category: "writing",
     icon: () => <svg data-testid="agent-icon" />,
     color: "bg-blue-500",
-    action: vi.fn().mockResolvedValue("Writing result"),
+    actionId: "copywriting",
   },
 ];
 const mockCategories = [
@@ -79,6 +94,8 @@ const mockCategories = [
 vi.mock("../../components/ai/agentsConfig", () => ({
   agentsConfig: mockAgentsConfig,
   categories: mockCategories,
+  resolveAgentAction: mockResolveAgentAction,
+  ProUnavailableError: MockProUnavailableError,
 }));
 
 describe("ExpertAgentsPanel", () => {
@@ -112,8 +129,8 @@ describe("ExpertAgentsPanel", () => {
     expect(screen.getByText("app_noAgentsFound")).toBeTruthy();
   });
 
-  it("calls agent.action when clicked", async () => {
-    mockAgentsConfig[0]!.action.mockResolvedValue("Analysis result");
+  it("resolves the Pro action and renders the result when clicked", async () => {
+    mockAgent1Action.mockResolvedValue("Analysis result");
     render(<ExpertAgentsPanel content="analyze this" />);
     const agents = screen.getAllByText("app_agent1");
     await userEvent.click(agents[0]!);
@@ -121,16 +138,28 @@ describe("ExpertAgentsPanel", () => {
     expect(screen.getByText("Analysis result")).toBeTruthy();
   });
 
-  it("shows error if agent.action fails", async () => {
-    mockAgentsConfig[0]!.action.mockRejectedValue(new Error("fail"));
+  it("shows the generic error if the resolved action fails", async () => {
+    mockAgent1Action.mockRejectedValue(new Error("fail"));
     render(<ExpertAgentsPanel content="test" />);
     await userEvent.click(screen.getByText("app_agent1"));
     expect(await screen.findByText("app_somethingWentWrong")).toBeTruthy();
   });
 
+  it("shows the reusable Pro-required state when the gate rejects", async () => {
+    mockResolveAgentAction.mockImplementationOnce(() =>
+      Promise.reject(new MockProUnavailableError("no-license")),
+    );
+    render(<ExpertAgentsPanel content="test" />);
+    await userEvent.click(screen.getByText("app_agent1"));
+    const state = await screen.findByTestId("pro-required-state");
+    expect(state).toBeTruthy();
+    // The copy names the feature; the generic failure text must not appear.
+    expect(screen.queryByText("app_somethingWentWrong")).toBeNull();
+  });
+
   it("propagates signal and discards analysis when the content changes", async () => {
     let resolveAnalysis!: (result: string) => void;
-    mockAgentsConfig[0]!.action.mockReturnValue(
+    mockAgent1Action.mockReturnValue(
       new Promise((resolve) => {
         resolveAnalysis = resolve;
       }),
@@ -141,9 +170,9 @@ describe("ExpertAgentsPanel", () => {
 
     await userEvent.click(screen.getByText("app_agent1"));
     await waitFor(() => {
-      expect(mockAgentsConfig[0]!.action).toHaveBeenCalled();
+      expect(mockAgent1Action).toHaveBeenCalled();
     });
-    const signal = mockAgentsConfig[0]!.action.mock.calls[0]?.[3];
+    const signal = mockAgent1Action.mock.calls[0]?.[3];
     expect(signal).toBeInstanceOf(AbortSignal);
 
     rerender(<ExpertAgentsPanel content="new content" />);
@@ -160,6 +189,7 @@ describe("ExpertAgentsPanel", () => {
     render(<ExpertAgentsPanel content="" />);
     const agents = screen.getAllByText("app_agent1");
     await userEvent.click(agents[0]!);
-    expect(mockAgentsConfig[0]!.action).not.toHaveBeenCalled();
+    expect(mockAgent1Action).not.toHaveBeenCalled();
+    expect(mockResolveAgentAction).not.toHaveBeenCalled();
   });
 });

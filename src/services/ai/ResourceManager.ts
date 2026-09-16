@@ -1,6 +1,7 @@
 import { getDB } from "../../db/database";
 import { logRateLimited } from "../../utils/boundedLog";
 import { logger } from "../../utils/logger";
+import { loadWebLLMService } from "../pro-access";
 
 // Experimental API declarations
 interface MemoryPressureRecord {
@@ -333,9 +334,12 @@ class ResourceManager {
       logger.info(
         "[ResourceManager] Critical pressure: Unloading all AI engines and clearing RxDB cache",
       );
-      const { webLLMService } = await import("./WebLLMService");
+      // Gated: without Pro there is no local engine to unload — the promise
+      // rejects and cleanup continues with the (Core) embedding engine.
+      await loadWebLLMService()
+        .then((s) => s.unload())
+        .catch(() => undefined);
       const { ragEngine } = await import("./RAGEngine");
-      await webLLMService.unload();
       await ragEngine.unload();
 
       // Cleanup RxDB
@@ -377,8 +381,9 @@ class ResourceManager {
         const { ragEngine } = await import("./RAGEngine");
         await ragEngine.unload();
       } else if (this.activeComponent === "rag") {
-        const { webLLMService } = await import("./WebLLMService");
-        await webLLMService.unload();
+        await loadWebLLMService()
+          .then((s) => s.unload())
+          .catch(() => undefined);
       }
     }
   }
@@ -450,8 +455,10 @@ class ResourceManager {
       logger.info(
         "[ResourceManager] Enforcing strict mutual exclusion. Unloading WebLLM engine...",
       );
-      const { webLLMService } = await import("./WebLLMService");
-      await webLLMService.unload();
+      // Gated: without Pro there is no local engine to unload.
+      await loadWebLLMService()
+        .then((s) => s.unload())
+        .catch(() => undefined);
 
       // Cooldown timer to allow Garbage Collector to clean up VRAM
       logger.info("[ResourceManager] Waiting for GC cooldown (2000ms)...");

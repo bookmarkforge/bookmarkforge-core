@@ -69,19 +69,26 @@ byte del chunk Pro:
   botón muerto silencioso;
 - un usuario Pro con licencia válida carga la implementación real bajo demanda,
   en su propio chunk;
-- la superficie de IA mantiene todavía el enlace estático del árbol privado y
-  resuelve a los pares inertes descritos arriba; moverla detrás del cargador es
-  trabajo pendiente, y el par placeholder queda como red de seguridad para todo
-  lo que aún no pase por el cargador.
+- el árbol de IA sigue la misma regla con matiz de producto: la decisión de
+  licencia (lista exacta en `scripts/pro-boundary.mjs`) declara Pro solo las
+  superficies propietarias reales — el runtime local (WebLLMService), la
+  orquestación RAG (GlobalRAGService), el registro de agentes expertos y la
+  generación de flashcards — mientras que el resto del árbol (la nube BYOK vía
+  ProviderManager, el motor de embeddings RAGEngine que alimenta la búsqueda
+  semántica del plan Free, TTS) es Core MIT y sigue importable directamente.
+  Los consumidores Core de los cuatro módulos Pro IA los resuelven a través
+  del cargador; la degradación es honesta: la sonda de capacidad resuelve
+  false, los diagnósticos informan «no inicializado» y el panel de agentes
+  muestra el aviso de mejora.
 - cuando una superficie placeholder se toca de verdad, el helper emite el
   evento `open-core:pro-reached` y el cargador rechaza con `ProUnavailableError`
   en lugar de entregar el módulo inerte; `ProRequiredBoundary` (montado en
   MainApp) convierte cualquiera de las dos señales en el panel «Disponible en
   Pro», de modo que una build Core explica la ausencia en lugar de fingir.
 - `check:pro-imports` impide que esta situación se erosione: falla si cualquier
-  archivo del Core vuelve a importar estáticamente un módulo Pro no-IA fuera
-  del seam; los enlaces IA pendientes se toleran pero se cuentan en cada
-  ejecución, de modo que su reducción (y cualquier crecimiento) sea visible.
+  archivo del Core — árbol IA incluido — vuelve a enlazar estáticamente un
+  módulo Pro fuera del seam. No hay zona tolerada: toda referencia o va por el
+  cargador o es parte del propio lado Pro.
 
 ## Core MIT
 

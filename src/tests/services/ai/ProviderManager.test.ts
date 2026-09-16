@@ -171,20 +171,24 @@ vi.mock("../../\.\./services/ai/utils", () => ({
   getUserFriendlyErrorMessage: vi.fn((msg: string) => msg),
 }));
 
-vi.mock("../../\.\./services/ai/WebLLMService", () => ({
-  webLLMService: {
-    canRunLocalLLM: vi.fn().mockResolvedValue(true),
-    generateText: vi.fn().mockResolvedValue("webllm response"),
-    init: vi.fn().mockResolvedValue(undefined),
-    unload: vi.fn().mockResolvedValue(undefined),
-    // Capable-device default; tests override the rejection to simulate
-    // GPU-less or f16-less profiles.
-    assertCanRunLocalLLM: vi.fn().mockResolvedValue(undefined),
-    getHealthStatus: vi.fn().mockResolvedValue({
-      webGPUSupported: true,
-      f16Supported: true,
-    }),
-  },
+// WebLLMService is Pro: the double is installed at the pro-access loader
+// instead of at the Pro module (ProviderManager resolves the engine through
+// the gate). Capable-device defaults; tests override the fns to simulate
+// GPU-less or f16-less profiles.
+const webLLMServiceDouble = {
+  canRunLocalLLM: vi.fn().mockResolvedValue(true),
+  generateText: vi.fn().mockResolvedValue("webllm response"),
+  init: vi.fn().mockResolvedValue(undefined),
+  unload: vi.fn().mockResolvedValue(undefined),
+  assertCanRunLocalLLM: vi.fn().mockResolvedValue(undefined),
+  getHealthStatus: vi.fn().mockResolvedValue({
+    webGPUSupported: true,
+    f16Supported: true,
+  }),
+};
+vi.mock("../../../services/pro-access", () => ({
+  loadWebLLMService: () => Promise.resolve(webLLMServiceDouble),
+  ProUnavailableError: class ProUnavailableError extends Error {},
 }));
 
 vi.mock("../../\.\./services/ai/adapters/RoutingOptimizer", () => ({
@@ -448,8 +452,7 @@ describe("ProviderManager", () => {
     });
 
     it("captura error de warmup en logger.info", async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.init).mockRejectedValue(
+      vi.mocked(webLLMServiceDouble.init).mockRejectedValue(
         new Error("WebGPU not supported"),
       );
 
@@ -488,8 +491,7 @@ describe("ProviderManager", () => {
 
       // 3) The WebLLM preload keeps running with the correct model
       //    (getWebLlmModel() del config mockeado).
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      expect(webLLM.webLLMService.init).toHaveBeenCalledWith(
+      expect(webLLMServiceDouble.init).toHaveBeenCalledWith(
         "Llama-3.2-1B-Instruct-q4f16_1-MLC",
       );
     });
@@ -499,14 +501,13 @@ describe("ProviderManager", () => {
       // GPU-less or low-RAM device would otherwise attempt a wasted WebLLM
       // init() that fast-fails (acquiring GPU resources + bumping error
       // metrics) on EVERY unlock.
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
-      vi.mocked(webLLM.webLLMService.init).mockClear();
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.init).mockClear();
 
       await expect(manager.warmup()).resolves.not.toThrow();
 
-      expect(webLLM.webLLMService.canRunLocalLLM).toHaveBeenCalled();
-      expect(webLLM.webLLMService.init).not.toHaveBeenCalled();
+      expect(webLLMServiceDouble.canRunLocalLLM).toHaveBeenCalled();
+      expect(webLLMServiceDouble.init).not.toHaveBeenCalled();
     });
 
     it("skips WebLLM init when webllm is the EXPLICITLY selected provider but the device cannot run it", async () => {
@@ -518,15 +519,14 @@ describe("ProviderManager", () => {
       // the single choke point regardless of why warmup entered.
       mockGetSelectedProvider.mockReturnValue("webllm");
       mockGetApiKey.mockReturnValue("sk-explicit-webllm-selection");
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
-      vi.mocked(webLLM.webLLMService.init).mockClear();
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.init).mockClear();
 
       await expect(manager.warmup()).resolves.not.toThrow();
 
       // The guard ran exactly once and blocked the preload.
-      expect(webLLM.webLLMService.canRunLocalLLM).toHaveBeenCalledTimes(1);
-      expect(webLLM.webLLMService.init).not.toHaveBeenCalled();
+      expect(webLLMServiceDouble.canRunLocalLLM).toHaveBeenCalledTimes(1);
+      expect(webLLMServiceDouble.init).not.toHaveBeenCalled();
       // Confirms the skip branch was hit (not an early exit elsewhere).
       const logger = await import("../../../utils/logger");
       expect(logger.logger.info).toHaveBeenCalledWith(
@@ -543,13 +543,12 @@ describe("ProviderManager", () => {
       // adapter precision is the blocker (vs a no-WebGPU browser or a
       // low-RAM device). The legacy message stays as the prefix; the cause is
       // appended after the dash.
-      const webLLM = await import("../../../services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       // Full health object (the real shape, not a partial): webGPUSupported
       // true and f16Supported false isolates the f16 gate as the ONLY failed
       // check — proving the log derives the cause from the actual failed
       // gate, not from the canRunLocalLLM verdict alone.
-      vi.mocked(webLLM.webLLMService.getHealthStatus).mockResolvedValue({
+      vi.mocked(webLLMServiceDouble.getHealthStatus).mockResolvedValue({
         healthy: false,
         webGPUSupported: true,
         f16Supported: false,
@@ -562,13 +561,13 @@ describe("ProviderManager", () => {
         canRunLocalLLM: false,
         timestamp: 0,
       });
-      vi.mocked(webLLM.webLLMService.init).mockClear();
+      vi.mocked(webLLMServiceDouble.init).mockClear();
 
       await expect(manager.warmup()).resolves.not.toThrow();
 
       // The guard ran exactly once and blocked the preload.
-      expect(webLLM.webLLMService.canRunLocalLLM).toHaveBeenCalledTimes(1);
-      expect(webLLM.webLLMService.init).not.toHaveBeenCalled();
+      expect(webLLMServiceDouble.canRunLocalLLM).toHaveBeenCalledTimes(1);
+      expect(webLLMServiceDouble.init).not.toHaveBeenCalled();
       // The skip log keeps the legacy prefix AND names the precise cause.
       const logger = await import("../../../utils/logger");
       expect(logger.logger.info).toHaveBeenCalledWith(
@@ -589,9 +588,8 @@ describe("ProviderManager", () => {
       // check — the remedy is a WebGPU-capable browser, not more RAM or a
       // different GPU feature set. The log must derive that from the health
       // object, not from the canRunLocalLLM verdict alone.
-      const webLLM = await import("../../../services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
-      vi.mocked(webLLM.webLLMService.getHealthStatus).mockResolvedValue({
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.getHealthStatus).mockResolvedValue({
         healthy: false,
         webGPUSupported: false,
         f16Supported: false,
@@ -604,12 +602,12 @@ describe("ProviderManager", () => {
         canRunLocalLLM: false,
         timestamp: 0,
       });
-      vi.mocked(webLLM.webLLMService.init).mockClear();
+      vi.mocked(webLLMServiceDouble.init).mockClear();
 
       await expect(manager.warmup()).resolves.not.toThrow();
-
-      expect(webLLM.webLLMService.canRunLocalLLM).toHaveBeenCalledTimes(1);
-      expect(webLLM.webLLMService.init).not.toHaveBeenCalled();
+
+      expect(webLLMServiceDouble.canRunLocalLLM).toHaveBeenCalledTimes(1);
+      expect(webLLMServiceDouble.init).not.toHaveBeenCalled();
       const logger = await import("../../../utils/logger");
       // Legacy prefix + the surface-specific cause.
       expect(logger.logger.info).toHaveBeenCalledWith(
@@ -637,9 +635,8 @@ describe("ProviderManager", () => {
       // f16Supported both true with deviceMemoryGB 3 isolates the >= 4 GB
       // memory floor as the ONLY failed check — the GPU is fully capable,
       // the device just cannot fit the model. The log must say so.
-      const webLLM = await import("../../../services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
-      vi.mocked(webLLM.webLLMService.getHealthStatus).mockResolvedValue({
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.getHealthStatus).mockResolvedValue({
         healthy: false,
         webGPUSupported: true,
         f16Supported: true,
@@ -652,12 +649,12 @@ describe("ProviderManager", () => {
         canRunLocalLLM: false,
         timestamp: 0,
       });
-      vi.mocked(webLLM.webLLMService.init).mockClear();
+      vi.mocked(webLLMServiceDouble.init).mockClear();
 
       await expect(manager.warmup()).resolves.not.toThrow();
-
-      expect(webLLM.webLLMService.canRunLocalLLM).toHaveBeenCalledTimes(1);
-      expect(webLLM.webLLMService.init).not.toHaveBeenCalled();
+
+      expect(webLLMServiceDouble.canRunLocalLLM).toHaveBeenCalledTimes(1);
+      expect(webLLMServiceDouble.init).not.toHaveBeenCalled();
       const logger = await import("../../../utils/logger");
       // Legacy prefix + the memory-specific cause (with the measured value).
       expect(logger.logger.info).toHaveBeenCalledWith(
@@ -683,15 +680,14 @@ describe("ProviderManager", () => {
     it("skips WebLLM init when the capability probe itself throws", async () => {
       // Fail-closed: a probe failure (e.g. adapter request throws) is treated
       // like "cannot run" — skip the init, log a warn, never abort warmup.
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockRejectedValue(
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockRejectedValue(
         new Error("adapter probe failed"),
       );
-      vi.mocked(webLLM.webLLMService.init).mockClear();
+      vi.mocked(webLLMServiceDouble.init).mockClear();
 
       await expect(manager.warmup()).resolves.not.toThrow();
 
-      expect(webLLM.webLLMService.init).not.toHaveBeenCalled();
+      expect(webLLMServiceDouble.init).not.toHaveBeenCalled();
       const logger = await import("../../../utils/logger");
       expect(logger.logger.warn).toHaveBeenCalledWith(
         expect.stringContaining(
@@ -704,14 +700,13 @@ describe("ProviderManager", () => {
     it("still preloads WebLLM when the device CAN run local LLM", async () => {
       // Positive path: the guard must not over-skip — a capable device keeps
       // the opportunistic model preload with the hardware-aware model.
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(true);
-      vi.mocked(webLLM.webLLMService.init).mockClear();
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
+      vi.mocked(webLLMServiceDouble.init).mockClear();
 
       await manager.warmup();
 
-      expect(webLLM.webLLMService.canRunLocalLLM).toHaveBeenCalled();
-      expect(webLLM.webLLMService.init).toHaveBeenCalledWith(
+      expect(webLLMServiceDouble.canRunLocalLLM).toHaveBeenCalled();
+      expect(webLLMServiceDouble.init).toHaveBeenCalledWith(
         "Llama-3.2-1B-Instruct-q4f16_1-MLC",
       );
     });
@@ -725,19 +720,18 @@ describe("ProviderManager", () => {
       // precise error so operators can see the preload did not happen.
       mockGetSelectedProvider.mockReturnValue("webllm");
       mockGetApiKey.mockReturnValue("sk-explicit-webllm-selection");
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(true);
-      vi.mocked(webLLM.webLLMService.init).mockRejectedValueOnce(
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
+      vi.mocked(webLLMServiceDouble.init).mockRejectedValueOnce(
         new Error("WebGPU context lost during engine creation"),
       );
-      vi.mocked(webLLM.webLLMService.init).mockClear();
+      vi.mocked(webLLMServiceDouble.init).mockClear();
 
       // warmup resolves — the rejection is contained inside the
       // fire-and-forget init chain, never propagated to the caller.
       await expect(manager.warmup()).resolves.not.toThrow();
 
       // The preload WAS attempted with the configured model.
-      expect(webLLM.webLLMService.init).toHaveBeenCalledWith(
+      expect(webLLMServiceDouble.init).toHaveBeenCalledWith(
         "Llama-3.2-1B-Instruct-q4f16_1-MLC",
       );
       // ...and its failure is logged, not swallowed silently.
@@ -799,17 +793,16 @@ describe("ProviderManager", () => {
       expect(securityVaultUnlockListeners.length).toBeGreaterThan(0);
       mockGetSelectedProvider.mockReturnValue("webllm");
       mockGetApiKey.mockReturnValue(null);
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(true);
-      vi.mocked(webLLM.webLLMService.init).mockClear();
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
+      vi.mocked(webLLMServiceDouble.init).mockClear();
 
       for (const listener of securityVaultUnlockListeners) {listener();}
 
       // Fire-and-forget: settle the detached warmup chain.
       await vi.waitFor(() => {
-        expect(webLLM.webLLMService.init).toHaveBeenCalled();
+        expect(webLLMServiceDouble.init).toHaveBeenCalled();
       });
-      expect(webLLM.webLLMService.init).toHaveBeenCalledWith(
+      expect(webLLMServiceDouble.init).toHaveBeenCalledWith(
         "Llama-3.2-1B-Instruct-q4f16_1-MLC",
       );
     });
@@ -820,8 +813,7 @@ describe("ProviderManager", () => {
       // class regression the .catch wrapper must prevent.
       mockGetSelectedProvider.mockReturnValue("webllm");
       mockGetApiKey.mockReturnValue(null);
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockRejectedValue(
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockRejectedValue(
         new Error("capability probe exploded"),
       );
       const logger = await import("../../../utils/logger");
@@ -857,9 +849,8 @@ describe("ProviderManager", () => {
       // refusal that every post-idle focus will now produce).
       mockGetSelectedProvider.mockReturnValue("webllm");
       mockGetApiKey.mockReturnValue(null);
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(true);
-      vi.mocked(webLLM.webLLMService.init).mockRejectedValue(
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
+      vi.mocked(webLLMServiceDouble.init).mockRejectedValue(
         new Error(
           "Local AI model was unloaded after 30 minutes of inactivity. " +
             "Reload it explicitly from the AI settings.",
@@ -933,8 +924,7 @@ describe("ProviderManager", () => {
           model: "llama3.2",
         }),
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
 
       await expect(manager.generateText("test", undefined, { isPrivate: false })).rejects.toThrow(
         /vault is locked/i,
@@ -961,8 +951,7 @@ describe("ProviderManager", () => {
           model: "llama3.2",
         }),
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
 
       await expect(manager.streamGenerateText("test", undefined, { isPrivate: false })).rejects.toThrow(
         /vault is locked/i,
@@ -978,8 +967,7 @@ describe("ProviderManager", () => {
         name: "Ollama",
         isConfigured: true,
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
 
       const result = await manager.generateText("test", undefined, { isPrivate: false });
       expect(result.provider).toBe("ollama");
@@ -987,8 +975,7 @@ describe("ProviderManager", () => {
 
     it("allows local WebLLM when the vault is locked", async () => {
       mockIsVaultLocked.mockResolvedValue(true);
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(true);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
       const resource = await import("../../\.\./services/ai/ResourceManager");
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(
         true,
@@ -1015,8 +1002,7 @@ describe("ProviderManager", () => {
           model: "llama3.2",
         }),
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
 
       await expect(
         manager.generateText("test", undefined, { isPrivate: false }),
@@ -1045,9 +1031,8 @@ describe("ProviderManager", () => {
       vi.mocked(semantic.semanticCache.findSimilar).mockResolvedValue(null);
       vi.mocked(semantic.semanticCache.add).mockReset();
       vi.mocked(semantic.semanticCache.add).mockResolvedValue(undefined);
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockReset();
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(true);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockReset();
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
       const resource = await import("../../\.\./services/ai/ResourceManager");
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReset();
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(
@@ -1064,8 +1049,7 @@ describe("ProviderManager", () => {
     });
 
     it("resolveProvider with isPrivate returns ollama when webllm is unavailable", async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       const info = await (manager as any).resolveProvider({
         isPrivate: true,
       });
@@ -1086,8 +1070,7 @@ describe("ProviderManager", () => {
     it("con key cloud y sin local, isPrivate lanza fail-closed", async () => {
       mockGetApiKey.mockReturnValue("sk-cloud-key-12345");
       mockGetSelectedProvider.mockReturnValue("openai");
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       mockGetOllamaProvider.mockReturnValue({
         generateText: vi.fn(),
         isAvailable: vi.fn().mockResolvedValue(false),
@@ -1113,8 +1096,7 @@ describe("ProviderManager", () => {
     });
 
     it("generateText con isPrivate sin AI local lanza error (fail-closed)", async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       mockGetOllamaProvider.mockReturnValue({
         generateText: vi.fn(),
         isAvailable: vi.fn().mockResolvedValue(false),
@@ -1206,23 +1188,20 @@ describe("ProviderManager", () => {
   describe("setProvider", () => {
     it("does not call unload when not transitioning from webllm", async () => {
       mockGetSelectedProvider.mockReturnValue("gemini");
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
       await manager.setProvider("openai");
-      expect(webLLM.webLLMService.unload).not.toHaveBeenCalled();
+      expect(webLLMServiceDouble.unload).not.toHaveBeenCalled();
     });
 
     it("calls unload when switching from webllm to another", async () => {
       mockGetSelectedProvider.mockReturnValue("webllm");
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
       await manager.setProvider("gemini");
-      expect(webLLM.webLLMService.unload).toHaveBeenCalled();
+      expect(webLLMServiceDouble.unload).toHaveBeenCalled();
     });
 
     it("does not call unload when switching from webllm to webllm", async () => {
       mockGetSelectedProvider.mockReturnValue("webllm");
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
       await manager.setProvider("webllm");
-      expect(webLLM.webLLMService.unload).not.toHaveBeenCalled();
+      expect(webLLMServiceDouble.unload).not.toHaveBeenCalled();
     });
   });
 
@@ -1238,9 +1217,8 @@ describe("ProviderManager", () => {
         resetAt: Date.now() + 60000,
         exhausted: false,
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockReset();
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(true);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockReset();
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
       const semantic =
         await import("../../\.\./services/ai/SemanticCacheService");
       vi.mocked(semantic.semanticCache.findSimilar).mockReset();
@@ -1268,8 +1246,7 @@ describe("ProviderManager", () => {
         isConfigured: false,
       });
       // Forzar que resolveProvider retorne gemini
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       mockGetOllamaProvider.mockReturnValue({
         generateText: vi.fn(),
         isAvailable: vi.fn().mockResolvedValue(false), // disable ollama to avoid simple task path
@@ -1293,18 +1270,17 @@ describe("ProviderManager", () => {
         name: "WebLLM (Browser)",
         isConfigured: true,
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.assertCanRunLocalLLM).mockRejectedValue(
+      vi.mocked(webLLMServiceDouble.assertCanRunLocalLLM).mockRejectedValue(
         new Error("WebGPU is not supported in this browser"),
       );
-      vi.mocked(webLLM.webLLMService.generateText).mockClear();
+      vi.mocked(webLLMServiceDouble.generateText).mockClear();
 
       await expect(
         manager.generateText("test", undefined, { isPrivate: false }),
       ).rejects.toThrow(/WebGPU is not supported/i);
       // The capability error must fire before the engine is touched: no
       // generation attempt may be recorded on an unsupported device.
-      expect(webLLM.webLLMService.generateText).not.toHaveBeenCalled();
+      expect(webLLMServiceDouble.generateText).not.toHaveBeenCalled();
     });
 
     it("fails with the shader-f16 error when webllm is forced on an f16-less GPU", async () => {
@@ -1316,18 +1292,17 @@ describe("ProviderManager", () => {
         name: "WebLLM (Browser)",
         isConfigured: true,
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.assertCanRunLocalLLM).mockRejectedValue(
+      vi.mocked(webLLMServiceDouble.assertCanRunLocalLLM).mockRejectedValue(
         new Error(
           "WebGPU adapter does not support shader-f16 (half-precision).",
         ),
       );
-      vi.mocked(webLLM.webLLMService.generateText).mockClear();
+      vi.mocked(webLLMServiceDouble.generateText).mockClear();
 
       await expect(
         manager.generateText("test", undefined, { isPrivate: false }),
       ).rejects.toThrow(/shader-f16/i);
-      expect(webLLM.webLLMService.generateText).not.toHaveBeenCalled();
+      expect(webLLMServiceDouble.generateText).not.toHaveBeenCalled();
     });
 
     it("streamGenerateText: onProvider never fires when the forced webllm fails closed on a blocked device", async () => {
@@ -1344,13 +1319,12 @@ describe("ProviderManager", () => {
         name: "WebLLM (Browser)",
         isConfigured: true,
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.assertCanRunLocalLLM).mockRejectedValue(
+      vi.mocked(webLLMServiceDouble.assertCanRunLocalLLM).mockRejectedValue(
         new Error("WebGPU is not supported in this browser"),
       );
       const onProvider = vi.fn();
       const onChunk = vi.fn();
-      vi.mocked(webLLM.webLLMService.generateText).mockClear();
+      vi.mocked(webLLMServiceDouble.generateText).mockClear();
 
       await expect(
         manager.streamGenerateText(
@@ -1364,7 +1338,7 @@ describe("ProviderManager", () => {
 
       expect(onProvider).not.toHaveBeenCalled();
       expect(onChunk).not.toHaveBeenCalled();
-      expect(webLLM.webLLMService.generateText).not.toHaveBeenCalled();
+      expect(webLLMServiceDouble.generateText).not.toHaveBeenCalled();
     });
 
     it("fails with the low-RAM error when webllm is forced on a device below the 4 GB floor", async () => {
@@ -1382,14 +1356,13 @@ describe("ProviderManager", () => {
         name: "WebLLM (Browser)",
         isConfigured: true,
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.assertCanRunLocalLLM).mockRejectedValue(
+      vi.mocked(webLLMServiceDouble.assertCanRunLocalLLM).mockRejectedValue(
         new Error(
           "Insufficient device memory for local AI models: 3 GB available, 4 GB required. " +
             "Use a cloud provider (Gemini, OpenAI, etc.) instead.",
         ),
       );
-      vi.mocked(webLLM.webLLMService.generateText).mockClear();
+      vi.mocked(webLLMServiceDouble.generateText).mockClear();
 
       await expect(
         manager.generateText("test", undefined, { isPrivate: false }),
@@ -1403,7 +1376,7 @@ describe("ProviderManager", () => {
           undefined,
         ),
       ).rejects.toThrow(/Insufficient device memory/);
-      expect(webLLM.webLLMService.generateText).not.toHaveBeenCalled();
+      expect(webLLMServiceDouble.generateText).not.toHaveBeenCalled();
     });
 
     it("still routes to the engine when webllm is forced on a capable device", async () => {
@@ -1415,17 +1388,16 @@ describe("ProviderManager", () => {
         name: "WebLLM (Browser)",
         isConfigured: true,
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.assertCanRunLocalLLM).mockResolvedValue(
+      vi.mocked(webLLMServiceDouble.assertCanRunLocalLLM).mockResolvedValue(
         undefined,
       );
-      vi.mocked(webLLM.webLLMService.generateText).mockClear();
+      vi.mocked(webLLMServiceDouble.generateText).mockClear();
 
       const result = await manager.generateText("test", undefined, {
         isPrivate: false,
       });
       expect(result.provider).toBe("webllm");
-      expect(webLLM.webLLMService.generateText).toHaveBeenCalledTimes(1);
+      expect(webLLMServiceDouble.generateText).toHaveBeenCalledTimes(1);
     });
 
     it("rate limit exhausted lanza error", async () => {
@@ -1443,8 +1415,7 @@ describe("ProviderManager", () => {
         name: "OpenAI",
         isConfigured: true,
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       mockGetOllamaProvider.mockReturnValue({
         generateText: vi.fn(),
         isAvailable: vi.fn().mockResolvedValue(false),
@@ -1511,8 +1482,7 @@ describe("ProviderManager", () => {
           model: "llama3.2",
         }),
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
 
       await expect(manager.generateText("test", undefined, { isPrivate: false })).rejects.toThrow();
     });
@@ -1536,8 +1506,7 @@ describe("ProviderManager", () => {
           model: "llama3.2",
         }),
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
 
       await expect(manager.generateText("test", undefined, { isPrivate: false })).rejects.toThrow();
     });
@@ -1561,8 +1530,7 @@ describe("ProviderManager", () => {
           model: "llama3.2",
         }),
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
 
       await expect(
         manager.generateText("test", undefined, { isPrivate: true }),
@@ -1590,8 +1558,7 @@ describe("ProviderManager", () => {
           model: "llama3.2",
         }),
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       const rateLimit = await import("../../../services/RateLimitService");
 
       const result = await manager.generateText("test", undefined, { isPrivate: false });
@@ -1617,14 +1584,12 @@ describe("ProviderManager", () => {
         resetAt: Date.now() + 60000,
         exhausted: false,
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockReset();
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(true);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockReset();
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
     });
 
     it("calls error toast when WebGPU fails in the browser", async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.generateText).mockRejectedValue(
+      vi.mocked(webLLMServiceDouble.generateText).mockRejectedValue(
         new Error("WEBGPU_CONTEXT_LOST"),
       );
       const sonner = await import("sonner");
@@ -1634,8 +1599,7 @@ describe("ProviderManager", () => {
       await expect(manager.generateText("test", undefined, { isPrivate: false })).rejects.toThrow();
     });
     it("WebGPU context loss no hace fallback automatico a gemini", async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.generateText).mockRejectedValue(
+      vi.mocked(webLLMServiceDouble.generateText).mockRejectedValue(
         new Error("WEBGPU_CONTEXT_LOST"),
       );
 
@@ -1643,8 +1607,7 @@ describe("ProviderManager", () => {
     });
 
     it("WebGPU context loss con isPrivate lanza error", async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.generateText).mockRejectedValue(
+      vi.mocked(webLLMServiceDouble.generateText).mockRejectedValue(
         new Error("WEBGPU_CONTEXT_LOST"),
       );
 
@@ -1654,8 +1617,7 @@ describe("ProviderManager", () => {
     });
 
     it("WebLLM timeout no hace fallback automatico a gemini", async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.generateText).mockRejectedValue(
+      vi.mocked(webLLMServiceDouble.generateText).mockRejectedValue(
         new Error("WebLLM_TIMEOUT"),
       );
 
@@ -1665,9 +1627,8 @@ describe("ProviderManager", () => {
 
   describe("resolveProvider", () => {
     beforeEach(async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockReset();
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(true);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockReset();
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
       const resource = await import("../../\.\./services/ai/ResourceManager");
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReset();
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(
@@ -1695,16 +1656,14 @@ describe("ProviderManager", () => {
 
     it("returns ollama when offline and webllm is unavailable but ollama is", async () => {
       mockNavigator({ onLine: false });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       const info = await (manager as any).resolveProvider({ isPrivate: false });
       expect(info.provider).toBe("ollama");
     });
 
     it("throws error when offline/private without local AI", async () => {
       mockNavigator({ onLine: false });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       mockGetOllamaProvider.mockReturnValue({
         generateText: vi.fn(),
         isAvailable: vi.fn().mockResolvedValue(false),
@@ -1732,8 +1691,7 @@ describe("ProviderManager", () => {
         name: "Google Gemini",
         isConfigured: true,
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       const info = await (manager as any).resolveProvider({ isPrivate: false });
       expect(info.provider).toBe("gemini");
     });
@@ -1748,8 +1706,7 @@ describe("ProviderManager", () => {
         name: "Google Gemini",
         isConfigured: true,
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       const info = await (manager as any).resolveProvider({ isPrivate: false });
       expect(info.provider).toBe("gemini");
     });
@@ -1770,8 +1727,7 @@ describe("ProviderManager", () => {
     });
 
     it("returns ollama for simple tasks if webllm unavailable", async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       const info = await (manager as any).resolveProvider({
         complexity: "simple",
         isPrivate: false,
@@ -1789,9 +1745,8 @@ describe("ProviderManager", () => {
     // alone — the exact conflation the naming audit and the 4 GB/8 GB E2E
     // boundary profiles guard against.
     it("DEFENSIVE: GPU-less device (hasWebLLM=false, tier=true) never routes to webllm on the offline branch", async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
       const resource = await import("../../\.\./services/ai/ResourceManager");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       // The DECEPTIVE half of the setup: the tier check says high-end.
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(true);
       mockNavigator({ onLine: false });
@@ -1807,9 +1762,8 @@ describe("ProviderManager", () => {
     });
 
     it("DEFENSIVE: GPU-less device (hasWebLLM=false, tier=true) never routes to webllm on the unconfigured-fallback branch", async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
       const resource = await import("../../\.\./services/ai/ResourceManager");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(true);
       mockNavigator({ onLine: true });
       mockGetSelectedProvider.mockReturnValue("");
@@ -1832,9 +1786,8 @@ describe("ProviderManager", () => {
     });
 
     it("DEFENSIVE: GPU-less device (hasWebLLM=false, tier=true) never routes to webllm on the simple-task branch", async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
       const resource = await import("../../\.\./services/ai/ResourceManager");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(true);
       mockNavigator({ onLine: true });
       mockGetSelectedProvider.mockReturnValue("");
@@ -1868,11 +1821,10 @@ describe("ProviderManager", () => {
     // fails because the router pre-filters the selection, the E2E forced-
     // provider profiles would silently degrade to a generic router error    // instead of the precise capability message.
     it("RAM-floor profile: webllm stays reachable with deviceMemory below the floor when explicitly selected (resolveProvider ignores deviceMemory)", async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
       const resource = await import("../../\.\./services/ai/ResourceManager");
       // The RAM-floor reality: 3 GB < the 4 GB capability floor.
       mockNavigator({ onLine: true, deviceMemory: 3 });
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       // At 3 GB the 8 GB tier is false too — and must be IRRELEVANT here:
       // the explicit selection bypasses the entire dual-gate evaluation.
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(
@@ -1955,8 +1907,7 @@ describe("ProviderManager", () => {
         isConfigured: true,
       });
 
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       const info = await (manager as any).resolveProvider({ isPrivate: false });
       expect(info.provider).toBe("openai");
     });
@@ -1970,8 +1921,7 @@ describe("ProviderManager", () => {
           model: "llama3.2",
         }),
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       const resource = await import("../../\.\./services/ai/ResourceManager");
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(
         false,
@@ -1998,8 +1948,7 @@ describe("ProviderManager", () => {
         onLine: true,
         getBattery: vi.fn().mockRejectedValue(new Error("Battery API error")),
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       const logger = await import("../../../utils/logger");
       await (manager as any).resolveProvider({ isPrivate: false });
       expect(logger.logger.warn).toHaveBeenCalled();
@@ -2092,10 +2041,9 @@ describe("ProviderManager", () => {
       });
       // The selected local provider must be exercised directly; this avoids
       // requiring the optional WebLLM runtime in this unit test.
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       mockGetSelectedProvider.mockReturnValue("webllm");
-      vi.mocked(webLLM.webLLMService.generateText).mockResolvedValue("test response");
+      vi.mocked(webLLMServiceDouble.generateText).mockResolvedValue("test response");
       const result = await manager.generateText("test", undefined, { isPrivate: false });
       expect(result).toBeDefined();
     });
@@ -2113,9 +2061,8 @@ describe("ProviderManager", () => {
         resetAt: Date.now() + 60000,
         exhausted: false,
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockReset();
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(true);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockReset();
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
     });
 
     it("throws error if the prompt exceeds 100k characters", async () => {
@@ -2135,9 +2082,8 @@ describe("ProviderManager", () => {
       // re-check — previously this re-check existed only on generateText,
       // so streaming continued into rate limiting and budget checks.
       const controller = new AbortController();
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
       const resource = await import("../../\.\./services/ai/ResourceManager");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockImplementation(
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockImplementation(
         async () => {
           controller.abort();
           return true;
@@ -2155,8 +2101,8 @@ describe("ProviderManager", () => {
       // Restore the shared routing mocks (this describe's beforeEach resets
       // canRunLocalLLM but NOT isHighEndDevice — leaving the implementation
       // mocks would pollute every later test's routing decisions).
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockReset();
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(true);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockReset();
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReset();
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(true);
     });
@@ -2172,9 +2118,8 @@ describe("ProviderManager", () => {
     });
 
     it("CONSOLIDATION: the private local-only refusal no longer carries a streaming-only suffix", async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
       const resource = await import("../../\.\./services/ai/ResourceManager");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(
         false,
       );
@@ -2192,8 +2137,8 @@ describe("ProviderManager", () => {
         manager.streamGenerateText("test", undefined, { isPrivate: true }),
       ).rejects.toThrow(/no Local AI is available(?! for streaming)/);
       // Restore shared routing mocks (see the abort-recheck test above).
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockReset();
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(true);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockReset();
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReset();
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(true);
     });
@@ -2220,8 +2165,7 @@ describe("ProviderManager", () => {
           model: "llama3.2",
         }),
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       const result = await manager.streamGenerateText(
         "test",
         undefined,
@@ -2257,8 +2201,7 @@ describe("ProviderManager", () => {
           model: "llama3.2",
         }),
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
 
       const result = await manager.streamGenerateText(
         "test",
@@ -2274,8 +2217,7 @@ describe("ProviderManager", () => {
 
     it("onProvider reporta webllm para el stream local (routing isPrivate)", async () => {
       const onProvider = vi.fn();
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.generateText).mockResolvedValue(
+      vi.mocked(webLLMServiceDouble.generateText).mockResolvedValue(
         "webllm stream text",
       );
       const result = await manager.streamGenerateText(
@@ -2297,8 +2239,7 @@ describe("ProviderManager", () => {
         name: "Google Gemini",
         isConfigured: false,
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       const result = await manager.streamGenerateText(
         "test",
         undefined,
@@ -2340,8 +2281,7 @@ describe("ProviderManager", () => {
         isConfigured: false,
       });
       mockGetOpenAIProvider.mockReturnValue(null);
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       mockGetOllamaProvider.mockReturnValue({
         streamGenerateText: vi.fn(),
         isAvailable: vi.fn().mockResolvedValue(false),
@@ -2356,8 +2296,7 @@ describe("ProviderManager", () => {
     });
 
     it("isPrivate sin AI local disponible lanza error", async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       mockGetOllamaProvider.mockReturnValue({
         streamGenerateText: vi.fn(),
         isAvailable: vi.fn().mockResolvedValue(false),
@@ -2372,8 +2311,7 @@ describe("ProviderManager", () => {
     });
 
     it("isPrivate con AI local disponible no lanza error", async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.generateText).mockResolvedValue(
+      vi.mocked(webLLMServiceDouble.generateText).mockResolvedValue(
         "webllm stream text",
       );
       const result = await manager.streamGenerateText(
@@ -2391,8 +2329,7 @@ describe("ProviderManager", () => {
       // Regression: the streamGenerateText switch MUST handle webllm
       // explicit form — if it fell back to default→Gemini, local data (and
       // possibly private data) would be sent to the cloud (S5/R1).
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.generateText).mockResolvedValue(
+      vi.mocked(webLLMServiceDouble.generateText).mockResolvedValue(
         "webllm full response",
       );
       mockGetProviderInfo.mockReturnValue({
@@ -2420,7 +2357,7 @@ describe("ProviderManager", () => {
 
       expect(result.provider).toBe("webllm");
       expect(result.text).toBe("webllm full response");
-      expect(webLLM.webLLMService.generateText).toHaveBeenCalledWith(
+      expect(webLLMServiceDouble.generateText).toHaveBeenCalledWith(
         "test",
         undefined,
         { isPrivate: false },
@@ -2467,8 +2404,7 @@ describe("ProviderManager", () => {
           .fn()
           .mockRejectedValue(new Error("stream API error")),
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       mockGetOllamaProvider.mockReturnValue({
         streamGenerateText: vi.fn(),
         isAvailable: vi.fn().mockResolvedValue(false),
@@ -2544,9 +2480,8 @@ describe("ProviderManager", () => {
         resetAt: Date.now() + 60000,
         exhausted: false,
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockReset();
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(true);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockReset();
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
       const semantic =
         await import("../../\.\./services/ai/SemanticCacheService");
       vi.mocked(semantic.semanticCache.findSimilar).mockReset();
@@ -2572,8 +2507,7 @@ describe("ProviderManager", () => {
           model: "llama3.2",
         }),
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       await expect(
         manager.generateText("test", undefined, { isPrivate: false }),
       ).rejects.toThrow(/No AI provider is configured/i);
@@ -2595,8 +2529,7 @@ describe("ProviderManager", () => {
           model: "llama3.2",
         }),
       });
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       await expect(
         manager.generateText("test", undefined, { isPrivate: false }),
       ).rejects.toThrow(/No AI provider is configured/i);
@@ -2609,8 +2542,7 @@ describe("ProviderManager", () => {
         text: "cloud cached secret",
         provider: "gemini",
       } as any);
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.generateText).mockResolvedValue(
+      vi.mocked(webLLMServiceDouble.generateText).mockResolvedValue(
         "webllm local result",
       );
       const result = await manager.generateText("test", undefined, {
@@ -2632,9 +2564,8 @@ describe("ProviderManager", () => {
 
   describe("resolveProvider - RoutingOptimizer branches", () => {
     beforeEach(async () => {
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockReset();
-      vi.mocked(webLLM.webLLMService.canRunLocalLLM).mockResolvedValue(false);
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockReset();
+      vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       const resource = await import("../../\.\./services/ai/ResourceManager");
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReset();
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(
@@ -2696,8 +2627,7 @@ describe("ProviderManager", () => {
       // localStorage (ProviderManager reads it via safeGet).
       localStorage.setItem("forge_test_mode", "true");
       await manager.warmup();
-      const webLLM = await import("../../\.\./services/ai/WebLLMService");
-      expect(webLLM.webLLMService.init).not.toHaveBeenCalled();
+      expect(webLLMServiceDouble.init).not.toHaveBeenCalled();
     });
   });
 

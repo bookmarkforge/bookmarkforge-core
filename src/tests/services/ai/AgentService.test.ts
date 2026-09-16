@@ -32,8 +32,11 @@ const mockGlobalRAGService = {
   formatContext: vi.fn(),
 };
 
-vi.mock("../../\.\./services/ai/GlobalRAGService", () => ({
-  globalRAGService: mockGlobalRAGService,
+// GlobalRAGService is Pro: the double is installed at the pro-access loader
+// instead of at the Pro module (AgentService resolves it through the gate).
+vi.mock("../../../services/pro-access", () => ({
+  loadGlobalRAGService: () => Promise.resolve(mockGlobalRAGService),
+  ProUnavailableError: class ProUnavailableError extends Error {},
 }));
 
 const { agentService } = await import("../../\.\./services/ai/AgentService");

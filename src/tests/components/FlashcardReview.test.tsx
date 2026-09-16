@@ -16,15 +16,15 @@ vi.mock("../../utils/logger", () => ({
   logger: { error: mockLoggerError, warn: vi.fn(), info: vi.fn(), debug: vi.fn() },
 }));
 
-vi.mock("../\.\./services/ai/FlashcardService", () => ({
-  flashcardService: {
-    calculateNextReview: vi.fn((quality: number) => ({
-      nextReview: new Date().toISOString(),
-      interval: 1,
-      easeFactor: 2.5,
-      repetition: 1,
-    })),
-  },
+// FlashcardService is Pro, but review uses the extracted Core SM-2 math
+// (spaced-repetition) directly — no loader mock needed for scheduling.
+vi.mock("../../services/ai/spaced-repetition", () => ({
+  calculateNextReview: vi.fn((quality: number) => ({
+    nextReview: new Date().toISOString(),
+    interval: 1,
+    easeFactor: 2.5,
+    repetition: 1,
+  })),
 }));
 
 vi.mock("lucide-react", () => {

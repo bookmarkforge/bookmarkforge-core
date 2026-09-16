@@ -9,8 +9,8 @@ import { initDB } from "../db/database";
 import { aiManager } from "../services/ai/ProviderManager";
 import { ragEngine } from "../services/ai/RAGEngine";
 import { ttsService } from "../services/ai/TTSService";
-import { flashcardService } from "../services/ai/FlashcardService";
 import { contentFetchService } from "../services/ContentFetchService";
+import { loadFlashcardService, ProUnavailableError } from "../services/pro-access";
 
 export function useBookmarkFacade() {
   const getDB = useCallback(() => initDB(), []);
@@ -23,8 +23,20 @@ export function useBookmarkFacade() {
     getAIManager: useCallback(() => aiManager, []),
     getRAGEngine: useCallback(() => ragEngine, []),
     getTTS: useCallback(() => ttsService, []),
-    getFlashcards: useCallback(() => flashcardService, []),
     getContentFetch: useCallback(() => contentFetchService, []),
+    // Flashcard generation is Pro: the facade exposes the *promise* so the
+    // caller can decide between the engine (Pro) and the upgrade message
+    // (Free / Open Core export), instead of silently holding a dead ref.
+    getFlashcards: useCallback(
+      () =>
+        loadFlashcardService().catch((err: unknown) => {
+          if (!(err instanceof ProUnavailableError)) {
+            throw err;
+          }
+          return null as unknown as never;
+        }),
+      [],
+    ),
   };
 }
 

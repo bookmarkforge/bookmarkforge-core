@@ -10,8 +10,11 @@ const mockWebLLM = vi.hoisted(() => ({
   isWebGPUSupported: vi.fn(),
 }));
 
-vi.mock("../../services/ai/WebLLMService", () => ({
-  webLLMService: mockWebLLM,
+// WebLLMService is Pro: the double is installed at the pro-access loader
+// instead of at the Pro module (the card subscribes to progress via the gate).
+vi.mock("../../services/pro-access", () => ({
+  loadWebLLMService: () => Promise.resolve(mockWebLLM),
+  ProUnavailableError: class ProUnavailableError extends Error {},
 }));
 
 vi.mock("react-i18next", () => ({

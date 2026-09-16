@@ -45,11 +45,15 @@ vi.mock("../../store/safeStorage", () => ({
 vi.mock("sonner", () => ({
   toast: { success: vi.fn(), error: vi.fn() },
 }));
-vi.mock("../../services/ai/WebLLMService", () => ({
-  webLLMService: {
-    canRunLocalLLM: vi.fn().mockResolvedValue(false),
-    progressCallback: undefined,
-  },
+// WebLLMService is Pro: the double is installed at the pro-access loader
+// instead of at the Pro module (the hook probes capability via the gate).
+vi.mock("../../services/pro-access", () => ({
+  loadWebLLMService: () =>
+    Promise.resolve({
+      canRunLocalLLM: vi.fn().mockResolvedValue(false),
+      progressCallback: undefined,
+    }),
+  ProUnavailableError: class ProUnavailableError extends Error {},
 }));
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({

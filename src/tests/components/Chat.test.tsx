@@ -81,10 +81,14 @@ vi.mock("../../hooks/useRxDB", () => ({
 
 const mockOnProgress = vi.hoisted(() => vi.fn());
 const mockWebLLMUnsubscribe = vi.hoisted(() => vi.fn());
-vi.mock("../\.\./services/ai/WebLLMService", () => ({
-  webLLMService: {
-    onProgress: mockOnProgress.mockReturnValue(mockWebLLMUnsubscribe),
-  },
+// WebLLMService is Pro: the double is installed at the pro-access loader
+// instead of at the Pro module (Chat subscribes to progress via the gate).
+vi.mock("../../services/pro-access", () => ({
+  loadWebLLMService: () =>
+    Promise.resolve({
+      onProgress: mockOnProgress.mockReturnValue(mockWebLLMUnsubscribe),
+    }),
+  ProUnavailableError: class ProUnavailableError extends Error {},
 }));
 
 vi.mock("react-i18next", () => ({

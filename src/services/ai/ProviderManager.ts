@@ -14,6 +14,7 @@ import {
   getUserFriendlyErrorMessage,
 } from "./utils";
 import { resourceManager } from "./ResourceManager";
+import { loadWebLLMService } from "../pro-access";
 import { rateLimitService } from "../RateLimitService";
 import { getNavigatorExtensions } from "../../utils/browser-types";
 import { logger } from "../../utils/logger";
@@ -171,10 +172,12 @@ export class ProviderManager {
     const apiKey = this.vault.getApiKey();
     await this.config.setProvider(provider, apiKey);
 
-    // Unload WebLLM if switching away
+    // Unload WebLLM if switching away. Gated: without Pro there is no local
+    // engine to unload, so the rejection is the expected, quiet path.
     if (oldProvider === "webllm" && provider !== "webllm") {
-      const { webLLMService } = await import("./WebLLMService");
-      await webLLMService.unload();
+      await loadWebLLMService()
+        .then((s) => s.unload())
+        .catch(() => undefined);
     }
   }
 
@@ -633,7 +636,9 @@ export class ProviderManager {
     // (exactly what the contract on the next line forbids). Same cached
     // probes, so this is ~free on capable devices.
     if (provider === "webllm") {
-      const { webLLMService } = await import("./WebLLMService");
+      // The webllm provider IS Pro: without the license this throws
+      // ProUnavailableError, which the routing error path already reports.
+      const webLLMService = await loadWebLLMService();
       await webLLMService.assertCanRunLocalLLM();
     }
     // Report the resolved provider only once every guard has passed, so the
@@ -772,7 +777,7 @@ export class ProviderManager {
     _model?: string,
     _options?: AIRequestOptions,
   ): Promise<AIResponse> {
-    const { webLLMService } = await import("./WebLLMService");
+    const webLLMService = await loadWebLLMService();
 
     // Fail closed BEFORE arming the 45s timeout or touching the engine: when
     // the device cannot run WebLLM (no WebGPU, or an adapter without
@@ -861,7 +866,7 @@ export class ProviderManager {
   private async resolveProvider(
     options?: AIRequestOptions,
   ): Promise<ProviderInfo> {
-    const { webLLMService } = await import("./WebLLMService");
+    const webLLMService = await loadWebLLMService();
 
     const isOffline = !navigator.onLine;
     // hasWebLLM = the device-capability verdict ONLY (WebGPU surface +
@@ -1183,7 +1188,15 @@ export class ProviderManager {
     }
 
     if (selectedProvider === "webllm" || !externalApiKey) {
-      const { webLLMService } = await import("./WebLLMService");
+      // Gated: warmup only touches the engine when the session has a Pro
+      // license; otherwise it is a no-op (there is nothing to warm).
+      const webLLMService = await loadWebLLMService().catch(() => null);
+      if (!webLLMService) {
+        logger.info(
+          "[ProviderManager] WebLLM warmup skipped: Pro unavailable",
+        );
+        return;
+      }
       // Device capability guard (webLLMService.canRunLocalLLM() below): only
       // preload the model when the device can actually run WebLLM
       // (WebGPU + shader-f16 + >=4GB RAM). A GPU-less or

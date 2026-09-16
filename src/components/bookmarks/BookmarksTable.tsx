@@ -4,7 +4,10 @@ import { initDB } from "../../container/database";
 import { aiManager } from "../../services/ai/ProviderManager";
 import { ragEngine } from "../../services/ai/RAGEngine";
 import { ttsService } from "../../services/ai/TTSService";
-import { flashcardService } from "../../services/ai/FlashcardService";
+import {
+  loadFlashcardService,
+  ProUnavailableError,
+} from "../../services/pro-access";
 import { contentFetchService } from "../../services/ContentFetchService";
 import { useTranslation } from "react-i18next";
 import {
@@ -280,6 +283,10 @@ export default function BookmarksTable() {
     flashcardAbortRef.current = controller;
     setIsGeneratingFlashcards(bookmark.id);
     try {
+      // Gated Pro resolution: under Free (or an Open Core export) the loader
+      // rejects and the catch below reports the upgrade message instead of
+      // failing with an import error.
+      const flashcardService = await loadFlashcardService();
       const count = await flashcardService.generateFromBookmark(
         bookmark.id,
         bookmark.title,
@@ -302,7 +309,12 @@ export default function BookmarksTable() {
       }
     } catch (err) {
       if (!controller.signal.aborted) {
-        logger.error("[BookmarksTable] Flashcard generation failed", { err });
+        if (err instanceof ProUnavailableError) {
+          const { toast } = await import("sonner");
+          toast.info(t("app_flashcardsProRequired"));
+        } else {
+          logger.error("[BookmarksTable] Flashcard generation failed", { err });
+        }
       }
     } finally {
       if (flashcardAbortRef.current === controller) {

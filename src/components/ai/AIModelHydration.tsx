@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useWebLLMStore } from "../../store/webllmStore";
+import { loadWebLLMService } from "../../services/pro-access";
 import { motion, AnimatePresence } from "motion/react";
 import { EASE_OUT, DURATION_MENU } from "../../constants/motion";
 import { Brain, CheckCircle, AlertCircle, Info } from "lucide-react";
@@ -17,8 +18,11 @@ export const AIModelHydration: React.FC = () => {
   useEffect(() => {
     let active = true;
     let unsubscribe: (() => void) | null = null;
-    import("../../services/ai/WebLLMService")
-      .then(({ webLLMService }) => {
+    // Pro resolution through the loader: the hydration card stays hidden
+    // for Free users and Open Core exports alike — the load rejection is
+    // the "unavailable" case this effect already tolerated.
+    loadWebLLMService()
+      .then((webLLMService) => {
         if (!active) {return;}
         unsubscribe = webLLMService.onProgress((progress) => {
           if (!active) {return;}

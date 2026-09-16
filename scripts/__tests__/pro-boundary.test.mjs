@@ -25,7 +25,6 @@ import { dirname, join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   PLACEHOLDER_MARKER,
-  PRO_MODULE_DIRS,
   PRO_MODULE_PATHS,
   applyFileRewrites,
   candidatesFor,
@@ -41,7 +40,9 @@ import {
 /** Build a repo-relative path without ever spelling a Pro path out in source. */
 const pathOf = (...parts) => parts.join("/");
 
-const AI_DIR = PRO_MODULE_DIRS[0];
+// The AI directory itself is Core now (policy: exact Pro file list); build the
+// path so fixtures reference sibling files without spelling Pro paths out.
+const AI_DIR = pathOf("src", "services", "ai") + "/";
 const PRO_MODULE = pathOf("src", "services", "ai", "WebLLMService");
 const PRO_BACKUP = PRO_MODULE_PATHS.find((proPath) => proPath.endsWith("BackupService.ts"));
 if (!PRO_BACKUP) throw new Error("PRO_MODULE_PATHS no longer declares BackupService.ts — update this test.");
@@ -57,10 +58,14 @@ describe("isProModulePath", () => {
     }
   });
 
-  it("matches whole proprietary trees", () => {
+  it("matches exact Pro files but keeps AI-tree siblings Core", () => {
+    // The local-model runtime is Pro…
     expect(isProModulePath(`${AI_DIR}WebLLMService.ts`)).toBe(true);
-    expect(isProModulePath(`${AI_DIR}providers/OllamaProvider.ts`)).toBe(true);
     expect(isProModulePath(`${AI_DIR}WebLLMService.d.ts`)).toBe(true);
+    // …while the rest of the AI tree (BYOK cloud, semantic search, the
+    // embedding engine) is Core MIT — only the exact list is Pro.
+    expect(isProModulePath(`${AI_DIR}RAGEngine.ts`)).toBe(false);
+    expect(isProModulePath(`${AI_DIR}providers/OllamaProvider.ts`)).toBe(false);
   });
 
   it("keeps near-misses out", () => {

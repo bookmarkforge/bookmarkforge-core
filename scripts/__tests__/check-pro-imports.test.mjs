@@ -87,16 +87,36 @@ describe("check-pro-imports", () => {
     }
   });
 
-  it("allows Pro-to-Pro imports and AI-tree internals", () => {
+  it("allows Pro-to-Pro imports and AI-tree Core internals", () => {
     const root = fakeRepoSafe({
       "src/services/BackupService.ts": PRO_STUB,
       "src/services/DiskBackupService.ts": "export const disk = 1;\n",
       "src/services/ai/ProviderManager.ts": AI_STUB,
-      "src/services/ai/RAGEngine.ts": `import { providerManager } from "./ProviderManager";\nimport { BackupService } from "../BackupService";\nexport const engine = { providerManager, BackupService };\n`,
+      // AI-tree modules that stay Core may import each other freely…
+      "src/services/ai/RAGEngine.ts": `import { providerManager } from "./ProviderManager";\nexport const engine = { providerManager };\n`,
+      // …and a genuine Pro AI module may import Pro services directly.
+      "src/services/ai/WebLLMService.ts": `import { BackupService } from "../BackupService";\nexport const svc = { BackupService };\n`,
     });
     try {
       const result = checkProImports(root);
       expect(result.violations).toHaveLength(0);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects an AI-tree Core module statically importing a Pro service", () => {
+    // Regression pin for the exact-list policy: RAGEngine is Core, so its
+    // static link to BackupService is precisely the erosion the gate exists
+    // for — the AI directory no longer grants blanket Pro-to-Pro status.
+    const root = fakeRepoSafe({
+      "src/services/BackupService.ts": PRO_STUB,
+      "src/services/ai/RAGEngine.ts": `import { BackupService } from "../BackupService";\nexport const engine = { BackupService };\n`,
+    });
+    try {
+      const result = checkProImports(root);
+      expect(result.violations).toHaveLength(1);
+      expect(result.violations[0].specifier).toBe("../BackupService");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -154,7 +174,10 @@ describe("check-pro-imports", () => {
     }
   });
 
-  it("counts Core imports of AI modules as pending, not violations", () => {
+  it("treats AI-tree Core imports as plain allowed — there is no pending zone", () => {
+    // Under the exact Pro list, the AI modules that are Core (BYOK cloud,
+    // embedding engine, semantic search) import like any other Core module:
+    // no tolerance, no counting, just allowed.
     const root = fakeRepoSafe({
       "src/services/ai/ProviderManager.ts": AI_STUB,
       "src/components/Chat.tsx": `import { providerManager } from "../services/ai/ProviderManager";\nexport const chat = providerManager;\n`,
@@ -162,7 +185,11 @@ describe("check-pro-imports", () => {
     try {
       const result = checkProImports(root);
       expect(result.violations).toHaveLength(0);
-      expect(result.pendingAi).toBe(1);
+      expect(result.pendingAi).toBe(0);
+      // A Core→Core import is not a Pro reference at all, so it consumes no
+      // allowance (the counter only tracks seam/Pro→Pro/server/test/type-only
+      // references).
+      expect(result.allowed).toBe(0);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

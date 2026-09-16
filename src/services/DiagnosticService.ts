@@ -14,7 +14,7 @@ import {
 import { cloudSyncService } from "./integrations/cloudSync";
 import { getBuildHash } from "../utils/bundleIntegrity";
 import { vectorIndexService } from "./ai/VectorIndexService";
-import { webLLMService } from "./ai/WebLLMService";
+import { loadWebLLMService } from "./pro-access";
 
 export interface SystemDiagnostics {
   db: {
@@ -226,6 +226,9 @@ class DiagnosticService {
     // run local AI), and a probe failure reports "Unknown" — never a lie.
     let webLlmStatus = "Not initialized";
     try {
+      // Gated resolution: without Pro the service never loads and the
+      // diagnostics honestly report the engine as not initialized.
+      const webLLMService = await loadWebLLMService();
       const webLlmHealth = await webLLMService.getHealthStatus();
       webLlmStatus = webLlmHealth.isInitializing
         ? "Initializing"
@@ -306,7 +309,9 @@ class DiagnosticService {
         ollamaAvailable,
         webLlmStatus,
         webLlmFirstSummaryLatencyMs:
-          webLLMService.getMetrics().firstSummaryLatencyMs,
+          (await loadWebLLMService()
+            .then((s) => s.getMetrics().firstSummaryLatencyMs)
+            .catch(() => null)) ?? null,
         webGpuSupported,
         webGpuAdapter,
       },

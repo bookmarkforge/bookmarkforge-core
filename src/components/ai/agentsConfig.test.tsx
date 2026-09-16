@@ -160,7 +160,7 @@ describe("agentsConfig", () => {
       expect(agent).toHaveProperty("icon");
       expect(agent).toHaveProperty("color", expect.any(String));
       expect(agent).toHaveProperty("category");
-      expect(agent).toHaveProperty("action");
+      expect(agent).toHaveProperty("actionId");
     }
   });
 
@@ -169,9 +169,10 @@ describe("agentsConfig", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it("each agent's action is a function", () => {
+  it("each agent names a known Pro action key", () => {
     for (const agent of agentsConfig) {
-      expect(typeof agent.action).toBe("function");
+      expect(typeof agent.actionId).toBe("string");
+      expect(agent.actionId.length).toBeGreaterThan(0);
     }
   });
 

@@ -10,7 +10,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { initDB } from "../container/database";
-import { flashcardService } from "../services/ai/FlashcardService";
+import { calculateNextReview } from "../services/ai/spaced-repetition";
 import { useTranslation } from "react-i18next";
 import type { FlashcardDocument } from "../db/types";
 import { logger } from "../utils/logger";
@@ -115,7 +115,7 @@ const FlashcardReview = ({ onClose }: FlashcardReviewProps) => {
         if (!isCurrent(request.generation)) {return;}
         const cardToReview = persistedCard ?? card;
         const { nextReview, interval, easeFactor, repetition } =
-          flashcardService.calculateNextReview(
+          calculateNextReview(
             quality,
             cardToReview.interval,
             cardToReview.easeFactor,

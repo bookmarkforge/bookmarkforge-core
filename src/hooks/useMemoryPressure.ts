@@ -4,6 +4,7 @@ import { garbageCollectionService } from "../services/GarbageCollectionService";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { logger } from "../utils/logger";
+import { loadWebLLMService } from "../services/pro-access";
 
 export const useMemoryPressure = () => {
   const { t } = useTranslation();
@@ -38,11 +39,14 @@ export const useMemoryPressure = () => {
         );
 
         try {
-          const { webLLMService } =
-            await import("../services/ai/WebLLMService");
+          // Pro engines unload through the gated loader: under Free (or in
+          // an Open Core export) the promise rejects and there is simply
+          // nothing to unload — the local engines were never running.
+          await loadWebLLMService()
+            .then((s) => s.unload())
+            .catch(() => undefined);
           const { ragEngine } = await import("../services/ai/RAGEngine");
 
-          await webLLMService.unload();
           await ragEngine.unload();
 
           garbageCollectionService

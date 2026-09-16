@@ -210,8 +210,48 @@ registerLoader<ExtractTextFromPdfType>("pdfService", async () => {
   return mod.extractTextFromPdf;
 });
 
+// --- Pro AI surfaces (exact list in scripts/pro-boundary.mjs) -------------
+//
+// Core still needs to *reach* these singletons: the settings screen shows
+// the device-capability verdict, diagnostics report engine health, memory
+// pressure unloads engines, and the chat UI subscribes to progress. Those
+// callers now go through the loader, so a Free session (or an Open Core
+// export) never downloads the local-model runtime — the capability probe
+// resolves false and optional features degrade quietly instead of shipping
+// WebLLM bytes inside Core chunks.
+import type { WebLLMService as WebLLMServiceClass } from "./ai/WebLLMService";
+type GlobalRAGServiceClass = typeof import("./ai/GlobalRAGService")["globalRAGService"];
+type SpecializedAgentsRegistry = typeof import("./ai/SpecializedAgentsService")["specializedAgentsService"];
+type FlashcardServiceType = typeof import("./ai/FlashcardService")["flashcardService"];
+
+registerLoader<WebLLMServiceClass>("WebLLMService", async () => {
+  const mod = await import("./ai/WebLLMService");
+  return mod.webLLMService;
+});
+registerLoader<GlobalRAGServiceClass>("GlobalRAGService", async () => {
+  const mod = await import("./ai/GlobalRAGService");
+  return mod.globalRAGService;
+});
+registerLoader<SpecializedAgentsRegistry>("SpecializedAgentsService", async () => {
+  const mod = await import("./ai/SpecializedAgentsService");
+  return mod.specializedAgentsService;
+});
+registerLoader<FlashcardServiceType>("FlashcardService", async () => {
+  const mod = await import("./ai/FlashcardService");
+  return mod.flashcardService;
+});
+
 /** Type-level exports so Core call sites keep full type safety. */
-export type { BackupServiceClass, DiskBackupServiceType, WebRTCSyncServiceType, ExtractTextFromPdfType };
+export type {
+  BackupServiceClass,
+  DiskBackupServiceType,
+  WebRTCSyncServiceType,
+  ExtractTextFromPdfType,
+  WebLLMServiceClass,
+  GlobalRAGServiceClass,
+  SpecializedAgentsRegistry,
+  FlashcardServiceType,
+};
 /** Typed helpers — the public surface Core code should call. */
 export function loadBackupService(): Promise<BackupServiceFacade> {
   return loadProService<BackupServiceFacade>("BackupService");
@@ -227,6 +267,22 @@ export function loadWebRTCSyncService(): Promise<WebRTCSyncServiceType> {
 
 export function loadPdfExtractor(): Promise<ExtractTextFromPdfType> {
   return loadProService<ExtractTextFromPdfType>("pdfService");
+}
+
+export function loadWebLLMService(): Promise<WebLLMServiceClass> {
+  return loadProService<WebLLMServiceClass>("WebLLMService");
+}
+
+export function loadGlobalRAGService(): Promise<GlobalRAGServiceClass> {
+  return loadProService<GlobalRAGServiceClass>("GlobalRAGService");
+}
+
+export function loadSpecializedAgents(): Promise<SpecializedAgentsRegistry> {
+  return loadProService<SpecializedAgentsRegistry>("SpecializedAgentsService");
+}
+
+export function loadFlashcardService(): Promise<FlashcardServiceType> {
+  return loadProService<FlashcardServiceType>("FlashcardService");
 }
 /** Test hook: reset caches between tests. */
 export function resetProAccessForTests(): void {

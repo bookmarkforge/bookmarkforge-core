@@ -46,10 +46,20 @@ export const PRO_MODULE_PATHS = [
   "src/services/pdfService.ts",
   "src/services/BackupService.ts",
   "src/services/DiskBackupService.ts",
+  // The genuinely proprietary AI surfaces: the local model runtime (the
+  // "AI inside your computer" Pro hook), the RAG generation orchestration,
+  // the expert-agent registry and flashcard generation. RAGEngine stays Core:
+  // it contains no LLM calls — it is the embedding+similarity engine that
+  // powers the FREE semantic search (README: "Smart search ✅ included"), and
+  // the BYOK cloud path via ProviderManager is Free too (user's own API key).
+  "src/services/ai/WebLLMService.ts",
+  "src/services/ai/GlobalRAGService.ts",
+  "src/services/ai/SpecializedAgentsService.ts",
+  "src/services/ai/FlashcardService.ts",
 ];
 
-/** Whole trees that are proprietary. */
-export const PRO_MODULE_DIRS = ["src/services/ai/"];
+/** Whole trees that are proprietary (none — Pro AI is an exact file list). */
+export const PRO_MODULE_DIRS = [];
 
 /** Extensionless bases of the exact proprietary paths. */
 const PRO_MODULE_BASES = PRO_MODULE_PATHS.map((proPath) => proPath.replace(/\.tsx?$/, ""));
@@ -94,6 +104,17 @@ export const PRO_SUBJECT_ANCHOR_GLOBS = [
   "src/services/DiskBackupService.ts",
   "src/tests/services/DiskBackupService.test.ts",
   "src/tests/services/BackupService.test.ts",
+  // Proprietary AI engines: implementations and their behaviour tests ship
+  // only in the private distribution.
+  "src/services/ai/WebLLMService.ts",
+  "src/services/ai/GlobalRAGService.ts",
+  "src/services/ai/SpecializedAgentsService.ts",
+  "src/services/ai/FlashcardService.ts",
+  "src/tests/services/ai/WebLLMService.test.ts",
+  "src/tests/services/ai/WebLLMService.*.test.ts",
+  "src/tests/services/ai/GlobalRAGService*.test.ts",
+  "src/tests/services/ai/FlashcardService*.test.ts",
+  "src/tests/services/ai/SpecializedAgentsService*.test.ts",
 ];
 
 /**

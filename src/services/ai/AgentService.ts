@@ -7,8 +7,9 @@ import { logger } from "../../utils/logger";
 import { safeErrorForLog } from "../../utils/safeErrorForLog";
 import { memoryEngine } from "../../memory/MemoryEngine";
 import { securityVault } from "../SecurityVault";
+import { loadGlobalRAGService } from "../pro-access";
 import type { GroundingMetadata, AIProvider } from "./types";
-import type { RAGResult } from "./GlobalRAGService";
+import type { RAGResult } from "../ai-types";
 
 // Simple LRU cache for AI operations
 const agentCache = new Map<string, unknown>();
@@ -268,7 +269,9 @@ Respond in the language: ${normalizedLang}.`;
     sources: RAGResult[];
     groundingMetadata?: GroundingMetadata;
   }> {
-    const { globalRAGService } = await import("./GlobalRAGService");
+    // Gated: the RAG orchestration is Pro. Without it the chat answers from
+    // the provider directly (grounding sources stay empty).
+    const globalRAGService = await loadGlobalRAGService().catch(() => null);
     const normalizedLang = getNormalizedLang(lang);
 
     let memoryContext = "";
@@ -331,15 +334,20 @@ Respond in the language: ${normalizedLang}.`;
     // 1. Search for context — excluding the document currently being
     // viewed ONLY when its full text is actually injected below. Excluding
     // without injecting would silently remove the document from the model's
-    // context entirely (footgun: a caller passing { id } alone).
-    const topSources = await globalRAGService.searchContext(
-      question,
-      5,
-      docText ? documentContext?.id : undefined,
-      signal,
-      isPrivate,
-    );
-    const contextText = globalRAGService.formatContext(topSources);
+    // context entirely (footgun: a caller passing { id } alone). Without the
+    // Pro RAG service the answer proceeds with empty grounding sources.
+    const topSources = globalRAGService
+      ? await globalRAGService.searchContext(
+          question,
+          5,
+          docText ? documentContext?.id : undefined,
+          signal,
+          isPrivate,
+        )
+      : [];
+    const contextText = globalRAGService
+      ? globalRAGService.formatContext(topSources)
+      : "";
 
     // 2. Prepare system prompt with memory
     const memorySection = memoryContext

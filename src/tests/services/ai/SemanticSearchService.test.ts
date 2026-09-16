@@ -8,10 +8,14 @@ vi.mock("../../\.\./services/ai/ProviderManager", () => ({
   },
 }));
 
-vi.mock("../../\.\./services/ai/WebLLMService", () => ({
-  webLLMService: {
-    canRunLocalLLM: vi.fn().mockResolvedValue(false),
-  },
+// WebLLMService is Pro: the double is installed at the pro-access loader
+// instead of at the Pro module (SemanticSearchService probes through the gate).
+vi.mock("../../services/pro-access", () => ({
+  loadWebLLMService: () =>
+    Promise.resolve({
+      canRunLocalLLM: vi.fn().mockResolvedValue(false),
+    }),
+  ProUnavailableError: class ProUnavailableError extends Error {},
 }));
 
 vi.mock("../../../utils/logger", () => ({

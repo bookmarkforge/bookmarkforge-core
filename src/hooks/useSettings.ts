@@ -7,6 +7,7 @@ import { logger } from "../utils/logger";
 import { safeGet, safeSet } from "../store/safeStorage";
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { securityVault } from "../services/SecurityVault";
+import { loadWebLLMService, ProUnavailableError } from "../services/pro-access";
 
 interface CustomPrompts {
   summarize: string;
@@ -150,30 +151,36 @@ export function useSettings() {
 
   useEffect(() => {
     let disposed = false;
-    let webLLM: { webLLMService: { progressCallback?: unknown } } | null = null;
-    import("../services/ai/WebLLMService")
-      .then((mod) => {
-        if (disposed) return;
-        webLLM = mod;
+    let unsubscribed = false;
+    let webLLM: { progressCallback?: unknown } | null = null;
+    // Pro resolution through the loader: a Free session (or an Open Core
+    // export) never downloads the WebLLM chunk — the capability <option>
+    // simply stays disabled and the progress card stays hidden.
+    loadWebLLMService()
+      .then((service) => {
+        if (disposed || unsubscribed) return;
+        webLLM = service;
         // canRunWebLLM is the device-capability verdict ONLY
         // (canRunLocalLLM(): WebGPU surface + shader-f16 + >= 4 GB RAM).
         // It drives whether the Settings <option> is enabled — never an
         // engine/model state. See AIConfigSection's {canRunWebLLM && ...}
         // render and the E2E capability profiles.
-        mod.webLLMService.canRunLocalLLM().then((result) => {
+        service.canRunLocalLLM().then((result) => {
           if (!disposed) setCanRunWebLLM(result);
         });
-        mod.webLLMService.progressCallback = (progress: WebLLMProgress) => {
+        service.progressCallback = (progress: WebLLMProgress) => {
           if (!disposed) setWebLlmProgress(progress);
         };
       })
-      .catch(() => {
-        if (!disposed) logger.warn("[Settings] WebLLM not available");
+      .catch((err: unknown) => {
+        if (disposed || err instanceof ProUnavailableError) return;
+        logger.warn("[Settings] WebLLM not available");
       });
     return () => {
       disposed = true;
+      unsubscribed = true;
       if (webLLM) {
-        webLLM.webLLMService.progressCallback = undefined;
+        webLLM.progressCallback = undefined;
       }
     };
   }, []);

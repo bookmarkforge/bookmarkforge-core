@@ -42,17 +42,21 @@ vi.mock("../../services/integrations/cloudSync", () => ({
   },
 }));
 
-vi.mock("../../services/ai/WebLLMService", () => ({
-  webLLMService: {
-    getMetrics: vi.fn().mockReturnValue({ firstSummaryLatencyMs: 1234 }),
-    getHealthStatus: vi.fn().mockResolvedValue({
-      engineReady: false,
-      isInitializing: false,
-      canRunLocalLLM: true,
-      lastError: null,
-    }),
-    init: vi.fn(),
-  },
+// WebLLMService is Pro: the double is installed at the pro-access loader
+// instead of at the Pro module (DiagnosticService reads health via the gate).
+const webLLMServiceDouble = {
+  getMetrics: vi.fn().mockReturnValue({ firstSummaryLatencyMs: 1234 }),
+  getHealthStatus: vi.fn().mockResolvedValue({
+    engineReady: false,
+    isInitializing: false,
+    canRunLocalLLM: true,
+    lastError: null,
+  }),
+  init: vi.fn(),
+};
+vi.mock("../../services/pro-access", () => ({
+  loadWebLLMService: () => Promise.resolve(webLLMServiceDouble),
+  ProUnavailableError: class ProUnavailableError extends Error {},
 }));
 
 const { isDBInitialized, getDB } = await import("../../db/database");
@@ -174,10 +178,8 @@ describe("DiagnosticService", () => {
       // Regression: webLlmStatus used to be hardcoded "Ready", promising
       // more than the diagnostics data verified. Every state must come
       // from webLLMService.getHealthStatus().
-      const { webLLMService } = await import(
-        "../../services/ai/WebLLMService"
-      );
-      const health = vi.mocked(webLLMService.getHealthStatus);
+      const { loadWebLLMService } = await import("../../services/pro-access");
+      const health = vi.mocked((await loadWebLLMService()).getHealthStatus);
       // Full WebLLMHealthStatus baseline (capable device, nothing loaded);
       // each scenario below overrides only the fields under test.
       const baseHealth = {
@@ -418,10 +420,10 @@ describe("DiagnosticService", () => {
       });
       const diag = await diagnosticService.getDiagnostics();
       expect(diag.ai.webGpuSupported).toBe(true);
-      const { webLLMService } = await import(
-        "../../services/ai/WebLLMService"
-      );
-      expect(webLLMService.init).not.toHaveBeenCalled();
+      // init lives on the loader double now (the Pro module is never loaded
+      // through the real path in tests).
+      const { loadWebLLMService } = await import("../../services/pro-access");
+      expect(vi.mocked((await loadWebLLMService()).init)).not.toHaveBeenCalled();
     });
 
     it("webGpuSupported false when adapter is null", async () => {

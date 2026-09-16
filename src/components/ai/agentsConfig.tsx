@@ -38,7 +38,20 @@ import {
   GitBranch,
   Filter,
 } from "lucide-react";
-import { specializedAgentsService } from "../../services/ai/SpecializedAgentsService";
+import {
+  loadSpecializedAgents,
+  ProUnavailableError,
+} from "../../services/pro-access";
+
+/**
+ * Why the actions are resolved lazily: `specializedAgentsService` is a Pro
+ * module, so importing it statically would drag the whole 30+ agent registry
+ * into Core chunks. Instead each entry names its agent (`actionId`) and the
+ * panel resolves the real function through the gated loader the first time
+ * it runs an analysis. Without Pro the run rejects with `ProUnavailableError`
+ * and the panel shows the upgrade message — the registry itself is never
+ * downloaded.
+ */
 
 type AgentId =
   | "reality"
@@ -85,13 +98,77 @@ export interface AgentConfig {
   icon: React.ElementType;
   color: string;
   category: "dev" | "design" | "business" | "analysis" | "ops";
-  action: (
-    text: string,
-    lang?: string,
-    isPrivate?: boolean,
-    signal?: AbortSignal,
-  ) => Promise<string>;
+  /**
+   * The Pro registry key for this agent's action. The real function is
+   * resolved (behind the entitlement gate) by `resolveAgentAction` when a
+   * run starts — never at import time.
+   */
+  actionId: AgentIdKey;
 }
+
+/** Union of every action key in the Pro registry (mirrors its table). */
+export type AgentIdKey =
+  | "realityCheck"
+  | "suggestTests"
+  | "optimizeUI"
+  | "optimizeSEO"
+  | "academicResearch"
+  | "codeReview"
+  | "copywriting"
+  | "dataAnalysis"
+  | "uxDesign"
+  | "securityAudit"
+  | "contentStrategy"
+  | "creativeDirection"
+  | "architectureReview"
+  | "complianceAudit"
+  | "marketingOptimization"
+  | "productManagement"
+  | "businessConsulting"
+  | "accessibilityAudit"
+  | "performanceOptimization"
+  | "technicalWriting"
+  | "localizationReview"
+  | "growthHacking"
+  | "codeRefactor"
+  | "bugHunter"
+  | "devOpsEngineering"
+  | "databaseArchitecture"
+  | "apiDesign"
+  | "cloudArchitecture"
+  | "dataScience"
+  | "automationEngineering"
+  | "promptEngineering"
+  | "brandStrategy"
+  | "codeqlSpecialist"
+  | "copilotOptimizer"
+  | "legacyModernizer"
+  | "repoManagementExpert";
+
+/** Signature of every agent action, mirrored from the Pro registry. */
+export type AgentAction = (
+  text: string,
+  lang?: string,
+  isPrivate?: boolean,
+  signal?: AbortSignal,
+) => Promise<string>;
+
+/** Resolves an agent's real action through the gated Pro loader. */
+export async function resolveAgentAction(
+  agent: AgentConfig,
+): Promise<AgentAction> {
+  const registry = await loadSpecializedAgents();
+  const action = (registry as Record<string, AgentAction | undefined>)[
+    agent.actionId
+  ];
+  if (typeof action !== "function") {
+    throw new Error(`Unknown agent action: ${agent.actionId}`);
+  }
+  return action;
+}
+
+/** Re-exported so consumers can filter rejections without importing pro-access. */
+export { ProUnavailableError };
 
 export const agentsConfig: AgentConfig[] = [
   {
@@ -101,7 +178,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: ShieldAlert,
     color: "text-rose-500 bg-rose-500/10",
     category: "business",
-    action: specializedAgentsService.realityCheck,
+    actionId: "realityCheck",
   },
   {
     id: "qa",
@@ -110,7 +187,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Bug,
     color: "ds-text-warning bg-[var(--color-warning)]/10",
     category: "dev",
-    action: specializedAgentsService.suggestTests,
+    actionId: "suggestTests",
   },
   {
     id: "frontend",
@@ -119,7 +196,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Wand2,
     color: "text-cyan-500 bg-cyan-500/10",
     category: "design",
-    action: specializedAgentsService.optimizeUI,
+    actionId: "optimizeUI",
   },
   {
     id: "seo",
@@ -128,7 +205,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Globe,
     color: "ds-text-success ds-bg-success/10",
     category: "business",
-    action: specializedAgentsService.optimizeSEO,
+    actionId: "optimizeSEO",
   },
   {
     id: "academic",
@@ -137,7 +214,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: BookOpen,
     color: "text-blue-500 bg-blue-500/10",
     category: "analysis",
-    action: specializedAgentsService.academicResearch,
+    actionId: "academicResearch",
   },
   {
     id: "code",
@@ -146,7 +223,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Code2,
     color: "text-[var(--text-muted)] bg-[var(--bg-secondary)]/10",
     category: "dev",
-    action: specializedAgentsService.codeReview,
+    actionId: "codeReview",
   },
   {
     id: "copy",
@@ -155,7 +232,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: PenTool,
     color: "text-orange-500 bg-orange-500/10",
     category: "design",
-    action: specializedAgentsService.copywriting,
+    actionId: "copywriting",
   },
   {
     id: "data",
@@ -164,7 +241,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: BarChart3,
     color: "text-cyan-500 bg-cyan-500/10",
     category: "analysis",
-    action: specializedAgentsService.dataAnalysis,
+    actionId: "dataAnalysis",
   },
   {
     id: "ux",
@@ -173,7 +250,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Layout,
     color: "text-fuchsia-500 bg-fuchsia-500/10",
     category: "design",
-    action: specializedAgentsService.uxDesign,
+    actionId: "uxDesign",
   },
   {
     id: "security",
@@ -182,7 +259,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: ShieldCheck,
     color: "ds-text-danger bg-[var(--color-danger)]/10",
     category: "ops",
-    action: specializedAgentsService.securityAudit,
+    actionId: "securityAudit",
   },
   {
     id: "strategy",
@@ -191,7 +268,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Target,
     color: "text-yellow-500 bg-yellow-500/10",
     category: "business",
-    action: specializedAgentsService.contentStrategy,
+    actionId: "contentStrategy",
   },
   {
     id: "creative",
@@ -200,7 +277,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Palette,
     color: "text-fuchsia-500 bg-fuchsia-500/10",
     category: "design",
-    action: specializedAgentsService.creativeDirection,
+    actionId: "creativeDirection",
   },
   {
     id: "architecture",
@@ -209,7 +286,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Layers,
     color: "text-[var(--text-muted)] bg-[var(--bg-secondary)]/10",
     category: "dev",
-    action: specializedAgentsService.architectureReview,
+    actionId: "architectureReview",
   },
   {
     id: "compliance",
@@ -218,7 +295,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: FileCheck,
     color: "text-indigo-500 bg-indigo-500/10",
     category: "ops",
-    action: specializedAgentsService.complianceAudit,
+    actionId: "complianceAudit",
   },
   {
     id: "marketing",
@@ -227,7 +304,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Megaphone,
     color: "text-pink-500 bg-pink-500/10",
     category: "business",
-    action: specializedAgentsService.marketingOptimization,
+    actionId: "marketingOptimization",
   },
   {
     id: "product",
@@ -236,7 +313,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Box,
     color: "text-sky-500 bg-sky-500/10",
     category: "business",
-    action: specializedAgentsService.productManagement,
+    actionId: "productManagement",
   },
   {
     id: "business",
@@ -245,7 +322,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Briefcase,
     color: "ds-text-success ds-bg-success/10",
     category: "business",
-    action: specializedAgentsService.businessConsulting,
+    actionId: "businessConsulting",
   },
   {
     id: "accessibility",
@@ -254,7 +331,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Accessibility,
     color: "text-blue-600 bg-blue-600/10",
     category: "design",
-    action: specializedAgentsService.accessibilityAudit,
+    actionId: "accessibilityAudit",
   },
   {
     id: "performance",
@@ -263,7 +340,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Zap,
     color: "text-yellow-600 bg-yellow-600/10",
     category: "ops",
-    action: specializedAgentsService.performanceOptimization,
+    actionId: "performanceOptimization",
   },
   {
     id: "techWriter",
@@ -272,7 +349,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: FileText,
     color: "text-[var(--text-secondary)] bg-[var(--bg-secondary)]/10",
     category: "ops",
-    action: specializedAgentsService.technicalWriting,
+    actionId: "technicalWriting",
   },
   {
     id: "localization",
@@ -281,7 +358,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Languages,
     color: "text-indigo-600 bg-indigo-600/10",
     category: "ops",
-    action: specializedAgentsService.localizationReview,
+    actionId: "localizationReview",
   },
   {
     id: "growth",
@@ -290,7 +367,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Rocket,
     color: "text-orange-600 bg-orange-600/10",
     category: "business",
-    action: specializedAgentsService.growthHacking,
+    actionId: "growthHacking",
   },
   {
     id: "refactor",
@@ -299,7 +376,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Wrench,
     color: "text-sky-600 bg-sky-600/10",
     category: "dev",
-    action: specializedAgentsService.codeRefactor,
+    actionId: "codeRefactor",
   },
   {
     id: "bugHunter",
@@ -308,7 +385,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Search,
     color: "ds-text-danger bg-[var(--color-danger)]/10",
     category: "dev",
-    action: specializedAgentsService.bugHunter,
+    actionId: "bugHunter",
   },
   {
     id: "devops",
@@ -317,7 +394,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Cloud,
     color: "text-sky-600 bg-sky-600/10",
     category: "ops",
-    action: specializedAgentsService.devOpsEngineering,
+    actionId: "devOpsEngineering",
   },
   {
     id: "database",
@@ -326,7 +403,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Database,
     color: "ds-text-success ds-bg-success/10",
     category: "dev",
-    action: specializedAgentsService.databaseArchitecture,
+    actionId: "databaseArchitecture",
   },
   {
     id: "api",
@@ -335,7 +412,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Webhook,
     color: "text-cyan-600 bg-cyan-600/10",
     category: "dev",
-    action: specializedAgentsService.apiDesign,
+    actionId: "apiDesign",
   },
   {
     id: "cloud",
@@ -344,7 +421,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: CloudLightning,
     color: "text-blue-600 bg-blue-600/10",
     category: "ops",
-    action: specializedAgentsService.cloudArchitecture,
+    actionId: "cloudArchitecture",
   },
   {
     id: "dataScience",
@@ -353,7 +430,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Microscope,
     color: "text-cyan-600 bg-cyan-600/10",
     category: "analysis",
-    action: specializedAgentsService.dataScience,
+    actionId: "dataScience",
   },
   {
     id: "automation",
@@ -362,7 +439,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Workflow,
     color: "text-orange-600 bg-orange-600/10",
     category: "ops",
-    action: specializedAgentsService.automationEngineering,
+    actionId: "automationEngineering",
   },
   {
     id: "prompt",
@@ -371,7 +448,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: MessageSquareQuote,
     color: "text-yellow-600 bg-yellow-600/10",
     category: "analysis",
-    action: specializedAgentsService.promptEngineering,
+    actionId: "promptEngineering",
   },
   {
     id: "brand",
@@ -380,7 +457,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Stamp,
     color: "text-rose-600 bg-rose-600/10",
     category: "business",
-    action: specializedAgentsService.brandStrategy,
+    actionId: "brandStrategy",
   },
   {
     id: "codeql",
@@ -389,7 +466,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: ScanSearch,
     color: "text-blue-600 bg-blue-600/10",
     category: "dev",
-    action: specializedAgentsService.codeqlSpecialist,
+    actionId: "codeqlSpecialist",
   },
   {
     id: "copilot",
@@ -398,7 +475,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: Bot,
     color: "text-fuchsia-600 bg-fuchsia-600/10",
     category: "dev",
-    action: specializedAgentsService.copilotOptimizer,
+    actionId: "copilotOptimizer",
   },
   {
     id: "legacy",
@@ -407,7 +484,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: RefreshCw,
     color: "text-orange-600 bg-orange-600/10",
     category: "dev",
-    action: specializedAgentsService.legacyModernizer,
+    actionId: "legacyModernizer",
   },
   {
     id: "repo",
@@ -416,7 +493,7 @@ export const agentsConfig: AgentConfig[] = [
     icon: GitBranch,
     color: "ds-text-success ds-bg-success/10",
     category: "dev",
-    action: specializedAgentsService.repoManagementExpert,
+    actionId: "repoManagementExpert",
   },
 ];
 

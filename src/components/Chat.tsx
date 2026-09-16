@@ -4,7 +4,8 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { agentService } from "../services/ai/AgentService";
 import type { AIProvider } from "../services/ai/types";
-import { RAGResult } from "../services/ai/GlobalRAGService";
+import type { RAGResult } from "../services/ai-types";
+import { loadWebLLMService, ProUnavailableError } from "../services/pro-access";
 import { useRxCollection, useRxQuery } from "../hooks/useRxDB";
 import {
   Send,
@@ -229,8 +230,10 @@ export default function Chat({ onSelectSource }: ChatProps) {
   useEffect(() => {
     let cancelled = false;
     let unsubscribe: (() => void) | null = null;
-    import("../services/ai/WebLLMService")
-      .then(({ webLLMService }) => {
+    // Pro resolution through the loader: without Pro (or in an Open Core
+    // export) the download-progress card simply never appears.
+    loadWebLLMService()
+      .then((webLLMService) => {
         if (cancelled) {return;}
         unsubscribe = webLLMService.onProgress((progress) => {
           if (cancelled || !mountedRef.current) {return;}
@@ -242,9 +245,8 @@ export default function Chat({ onSelectSource }: ChatProps) {
         });
       })
       .catch((err) => {
-        if (!cancelled) {
-          logger.debug("[Chat] WebLLM not available", { error: err });
-        }
+        if (cancelled || err instanceof ProUnavailableError) {return;}
+        logger.debug("[Chat] WebLLM not available", { error: err });
       });
     return () => {
       cancelled = true;

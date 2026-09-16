@@ -11,7 +11,8 @@
  */
 
 import { getNavigatorExtensions } from "../utils/browser-types";
-import type { WebLLMCapabilityBlocker } from "./ai/WebLLMService";
+import type { WebLLMCapabilityBlocker } from "./ai-types";
+import { loadWebLLMService } from "./pro-access";
 
 export interface StorageEstimate {
   usageBytes: number;
@@ -289,7 +290,9 @@ export async function checkOllama(): Promise<OllamaStatus> {
  */
 export async function checkWebLLM(): Promise<WebLLMStatus> {
   try {
-    const { webLLMService } = await import("./ai/WebLLMService");
+    // Gated resolution: without Pro (or in an Open Core export) this rejects
+    // and the catch below reports the honest "not capable / not loaded" pair.
+    const webLLMService = await loadWebLLMService();
     const blocker = await webLLMService.getCapabilityBlocker();
     const canRun = blocker === null;
     const modelLoaded = webLLMService.isModelLoaded();

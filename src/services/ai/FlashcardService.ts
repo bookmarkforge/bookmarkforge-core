@@ -1,5 +1,6 @@
 import { initDB } from "../../db/database";
 import { aiManager } from "./ProviderManager";
+import { calculateNextReview } from "./spaced-repetition";
 import { logger } from "../../utils/logger";
 import { parseFencedJson } from "../../utils/jsonFenceStripper";
 import { fnv1aHash } from "../../utils/hash";
@@ -408,45 +409,16 @@ export class FlashcardService {
     }
   }
 
-  // SM-2 Algorithm for spaced repetition
+  // SM-2 Algorithm for spaced repetition — the pure math lives in Core
+  // (./spaced-repetition) so reviewing already-generated cards keeps working
+  // without the Pro generation engine.
   calculateNextReview(
     quality: number,
     interval: number,
     easeFactor: number,
     repetition: number,
   ) {
-    let nextInterval: number;
-    let nextEaseFactor: number;
-    let nextRepetition: number;
-
-    if (quality >= 3) {
-      if (repetition === 0) {
-        nextInterval = 1;
-      } else if (repetition === 1) {
-        nextInterval = 6;
-      } else {
-        nextInterval = Math.round(interval * easeFactor);
-      }
-      nextRepetition = repetition + 1;
-      nextEaseFactor =
-        easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
-    } else {
-      nextInterval = 1;
-      nextRepetition = 0;
-      nextEaseFactor = easeFactor;
-    }
-
-    if (nextEaseFactor < 1.3) {nextEaseFactor = 1.3;}
-
-    const nextReviewDate = new Date();
-    nextReviewDate.setDate(nextReviewDate.getDate() + nextInterval);
-
-    return {
-      nextReview: nextReviewDate.toISOString(),
-      interval: nextInterval,
-      easeFactor: nextEaseFactor,
-      repetition: nextRepetition,
-    };
+    return calculateNextReview(quality, interval, easeFactor, repetition);
   }
 
   async generateFromBookmark(

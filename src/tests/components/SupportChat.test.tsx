@@ -35,6 +35,17 @@ const mockWebLLMService = {
   isModelLoaded: vi.fn().mockReturnValue(true),
   getCurrentModel: vi.fn().mockReturnValue("llama3.2"),
 };
+// AgentService resolves the Pro RAG service through the pro-access loader;
+// mocking it here also keeps the real loader (and its transitive graph:
+// LicenseService → ai/utils → src/i18n.ts) out of this suite, whose partial
+// react-i18next mock cannot survive the real i18n module.
+vi.mock("../../services/pro-access", () => ({
+  loadGlobalRAGService: () => Promise.resolve(null),
+  // The diagnostics tab probes WebLLM through the loader too; the same
+  // double backs it so the ready/blocked rows render deterministically.
+  loadWebLLMService: () => Promise.resolve(mockWebLLMService),
+  ProUnavailableError: class ProUnavailableError extends Error {},
+}));
 vi.mock("../../services/ai/WebLLMService", () => ({
   webLLMService: mockWebLLMService,
 }));

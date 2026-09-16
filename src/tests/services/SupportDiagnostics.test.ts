@@ -25,8 +25,11 @@ const mockWebLLMService = {
   getCurrentModel: vi.fn(),
   init: vi.fn(),
 };
-vi.mock("../../services/ai/WebLLMService", () => ({
-  webLLMService: mockWebLLMService,
+vi.mock("../../services/pro-access", () => ({
+  // WebLLMService is Pro: the double is installed at the pro-access loader
+  // instead of at the Pro module (checkWebLLM probes through the gate).
+  loadWebLLMService: () => Promise.resolve(mockWebLLMService),
+  ProUnavailableError: class ProUnavailableError extends Error {},
 }));
 
 describe("SupportDiagnostics", () => {

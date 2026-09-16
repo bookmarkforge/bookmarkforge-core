@@ -1,4 +1,5 @@
 import { aiManager } from "./ProviderManager";
+import { loadWebLLMService } from "../pro-access";
 import { logger } from "../../utils/logger";
 import { safeErrorForLog } from "../../utils/safeErrorForLog";
 
@@ -84,8 +85,10 @@ class SemanticSearchService {
     }
 
     // Probe local providers first — they work regardless of online status.
+    // Gated resolution: without Pro the loader rejects and the probe falls
+    // through to the Ollama path below (query expansion is best-effort).
     try {
-      const { webLLMService } = await import("./WebLLMService");
+      const webLLMService = await loadWebLLMService();
       // canRunLocalLLM() is the device-capability verdict (WebGPU surface +
       // shader-f16 + >= 4 GB RAM), cached after the first probe — the right
       // filter for deciding whether a local LLM may run the query

@@ -9,10 +9,14 @@ vi.mock("../../../utils/logger", () => ({
   logger: { error: vi.fn(), info: vi.fn(), warn: vi.fn(), debug: vi.fn() },
 }));
 
-vi.mock("../../\.\./services/ai/WebLLMService", () => ({
-  webLLMService: {
-    unload: vi.fn().mockResolvedValue(undefined),
-  },
+// WebLLMService is Pro: the double is installed at the pro-access loader
+// instead of at the Pro module (ResourceManager unloads through the gate).
+vi.mock("../../../services/pro-access", () => ({
+  loadWebLLMService: () =>
+    Promise.resolve({
+      unload: vi.fn().mockResolvedValue(undefined),
+    }),
+  ProUnavailableError: class ProUnavailableError extends Error {},
 }));
 
 vi.mock("../../\.\./services/ai/RAGEngine", () => ({

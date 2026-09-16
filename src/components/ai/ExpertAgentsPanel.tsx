@@ -11,7 +11,13 @@ import {
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import Markdown from "react-markdown";
-import { agentsConfig, categories, AgentConfig } from "./agentsConfig";
+import {
+  agentsConfig,
+  categories,
+  resolveAgentAction,
+  ProUnavailableError,
+  AgentConfig,
+} from "./agentsConfig";
 import { logger } from "../../utils/logger";
 import { useGuardedAction } from "../../hooks/useGuardedAction";
 import { useRef } from "react";
@@ -50,6 +56,15 @@ const ExpertAgentsPanel: React.FC<ExpertAgentsPanelProps> = ({
     onSuccess: (result) => setAnalysis(result),
     onError: (error) => {
       const agentId = agentIdRef.current ?? "unknown";
+      // A Pro-gated registry (Free plan, or an Open Core export) surfaces as
+      // the upgrade message, not as a generic failure. The message is
+      // formatted here (with the component's `t`) because the config module
+      // must stay free of i18n runtime imports — it is shared by tests that
+      // partially mock react-i18next.
+      if (error instanceof ProUnavailableError) {
+        setAnalysis(t("app_agentsProRequired"));
+        return;
+      }
       logger.error(
         `[ExpertAgentsPanel] Analysis failed for ${agentId}:`,
         error,
@@ -85,13 +100,11 @@ const ExpertAgentsPanel: React.FC<ExpertAgentsPanelProps> = ({
     }
     agentIdRef.current = agent.id;
     void runWithSignal(async (signal) => {
-      const result = await agent.action(
-        content,
-        i18n.language,
-        isPrivate,
-        signal,
-      );
-      return result;
+      // Resolve the Pro action behind the gate right before running: the
+      // registry chunk is only fetched when the user actually runs an
+      // analysis with an active license.
+      const action = await resolveAgentAction(agent);
+      return action(content, i18n.language, isPrivate, signal);
     });
   };
 

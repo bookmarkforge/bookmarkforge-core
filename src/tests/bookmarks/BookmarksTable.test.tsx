@@ -66,8 +66,12 @@ vi.mock(import("../../services/ai/RAGEngine"), (() => ({
 vi.mock(import("../../services/ai/TTSService"), (() => mockedPartial({
   ttsService: { generateAudio: mockGenerateAudio },
 })) as any);
-vi.mock(import("../../services/ai/FlashcardService"), (() => mockedPartial({
-  flashcardService: { generateFromBookmark: mockFlashcardGenerate },
+vi.mock(import("../../services/pro-access"), (() => mockedPartial({
+  loadFlashcardService: () =>
+    Promise.resolve({
+      generateFromBookmark: mockFlashcardGenerate,
+    }),
+  ProUnavailableError: class ProUnavailableError extends Error {},
 })) as any);
 vi.mock(import("../../services/ContentFetchService"), (() => mockedPartial({
   contentFetchService: { fetchAndExtract: mockFetchAndExtract },

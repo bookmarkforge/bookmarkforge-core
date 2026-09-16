@@ -15,22 +15,26 @@ vi.mock("../../services/ai/RAGEngine", () => ({
 vi.mock("../../services/ai/TTSService", () => ({
   ttsService: { id: "ttsService-mock" },
 }));
-vi.mock("../../services/ai/FlashcardService", () => ({
-  flashcardService: { id: "flashcardService-mock" },
+// Flashcard generation is Pro: the facade hands out the loader promise, so
+// the double is installed at the pro-access loader instead of the Pro module.
+vi.mock("../../services/pro-access", () => ({
+  loadFlashcardService: () =>
+    Promise.resolve({ id: "flashcardService-mock" }),
+  ProUnavailableError: class ProUnavailableError extends Error {},
 }));
 vi.mock("../../services/ContentFetchService", () => ({
   contentFetchService: { id: "contentFetchService-mock" },
 }));
 
 describe("useBookmarkFacade", () => {
-  it("exposes the production singletons through a single seam", () => {
+  it("exposes the production singletons through a single seam", async () => {
     const { result } = renderHook(() => useBookmarkFacade());
 
     expect(result.current.getDB).toBeTypeOf("function");
     expect(result.current.getAIManager()).toMatchObject({ id: "aiManager-mock" });
     expect(result.current.getRAGEngine()).toMatchObject({ id: "ragEngine-mock" });
     expect(result.current.getTTS()).toMatchObject({ id: "ttsService-mock" });
-    expect(result.current.getFlashcards()).toMatchObject({
+    expect(await result.current.getFlashcards()).toMatchObject({
       id: "flashcardService-mock",
     });
     expect(result.current.getContentFetch()).toMatchObject({

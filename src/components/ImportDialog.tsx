@@ -7,7 +7,10 @@ import {
   AlertCircle,
   Loader2,
 } from "lucide-react";
-import { universalImporter } from "../services/UniversalImporter";
+import {
+  universalImporter,
+  type PocketImportPreview,
+} from "../services/UniversalImporter";
 import { initDB } from "../container/database";
 import { logger } from "../utils/logger";
 import { useTranslation } from "react-i18next";
@@ -31,6 +34,10 @@ export default function ImportDialog({ isOpen, onClose }: ImportDialogProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [importProgress, setImportProgress] = useState(0);
   const [importResult, setImportResult] = useState<ImportOutcome | null>(null);
+  const [pocketFile, setPocketFile] = useState<File | null>(null);
+  const [pocketPreview, setPocketPreview] =
+    useState<PocketImportPreview | null>(null);
+  const [isPreviewingPocket, setIsPreviewingPocket] = useState(false);
 
   const {
     runWithSignal: runImport,
@@ -142,7 +149,36 @@ export default function ImportDialog({ isOpen, onClose }: ImportDialogProps) {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) {return;}
-    processFile(file);
+    setIsPreviewingPocket(true);
+    void universalImporter.previewPocketFile(file)
+      .then((preview) => {
+        if (preview) {
+          setPocketFile(file);
+          setPocketPreview(preview);
+          setImportResult(null);
+          return;
+        }
+        processFile(file);
+      })
+      .catch((error) => {
+        logger.warn("[ImportDialog] Pocket preview unavailable; importing normally", {
+          error: error instanceof Error ? error.message : String(error),
+        });
+        processFile(file);
+      })
+      .finally(() => setIsPreviewingPocket(false));
+  };
+
+  const commitPocketImport = () => {
+    if (!pocketFile) {return;}
+    setPocketPreview(null);
+    processFile(pocketFile);
+  };
+
+  const chooseAnotherFile = () => {
+    setPocketFile(null);
+    setPocketPreview(null);
+    if (fileInputRef.current) {fileInputRef.current.value = "";}
   };
 
   return (
@@ -186,7 +222,62 @@ export default function ImportDialog({ isOpen, onClose }: ImportDialogProps) {
 
             {/* Content */}
             <div className="p-6">
-              {!importResult && !isImporting && (
+              {isPreviewingPocket && !importResult && !isImporting && (
+                <div className="py-8 text-center" role="status" aria-live="polite">
+                  <Loader2 className="size-8 animate-spin mx-auto mb-4 ds-text-accent" />
+                  <p className="text-sm text-[var(--text-secondary)]">
+                    {t("app_importPreviewing", "Checking your export...")}
+                  </p>
+                </div>
+              )}
+
+              {pocketPreview && !importResult && !isImporting && !isPreviewingPocket && (
+                <div className="space-y-4" data-testid="pocket-import-preview">
+                  <div className="p-4 rounded-xl border border-cyan-500/30 bg-cyan-500/5">
+                    <p className="text-xs font-bold uppercase tracking-widest ds-text-accent mb-1">
+                      {t("app_pocketImportLabel", "Coming from Pocket")}
+                    </p>
+                    <h3 className="text-lg font-semibold text-[var(--text-primary)] line-clamp-2">
+                      {t("app_pocketImportTitle", "Here’s what will transfer")}
+                    </h3>
+                    <p className="text-sm text-[var(--text-secondary)] mt-1 break-all">
+                      {pocketPreview.filename}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2" aria-label={t("app_pocketImportPreviewSummary", "Pocket import preview")}>
+                    <div className="p-3 rounded-lg bg-[var(--bg-secondary)]">
+                      <div className="text-xl font-bold">{pocketPreview.linkCount}</div>
+                      <div className="text-xs text-[var(--text-muted)]">{t("app_pocketLinks", "Links")}</div>
+                    </div>
+                    <div className="p-3 rounded-lg bg-[var(--bg-secondary)]">
+                      <div className="text-xl font-bold">{pocketPreview.datedCount}</div>
+                      <div className="text-xs text-[var(--text-muted)]">{t("app_pocketDates", "Dates")}</div>
+                    </div>
+                    <div className="p-3 rounded-lg bg-[var(--bg-secondary)]">
+                      <div className="text-xl font-bold">{pocketPreview.uniqueTagCount}</div>
+                      <div className="text-xs text-[var(--text-muted)]">{t("app_pocketTags", "Tags")}</div>
+                    </div>
+                  </div>
+                  <p className="text-xs text-[var(--text-secondary)]">
+                    {t("app_pocketImportStatusSummary", "Read status and Archive labels will be kept where Pocket provides them.")}
+                  </p>
+                  {pocketPreview.sampleTitles.length > 0 && (
+                    <ul className="text-sm text-[var(--text-secondary)] list-disc ps-5 space-y-1">
+                      {pocketPreview.sampleTitles.map((title) => <li key={title} className="truncate">{title}</li>)}
+                    </ul>
+                  )}
+                  <div className="flex gap-2">
+                    <button type="button" onClick={commitPocketImport} className="truncate flex-1 py-2 bg-[var(--accent-primary)] text-white rounded-lg text-sm font-bold">
+                      {t("app_pocketImportConfirm", "Import these links")}
+                    </button>
+                    <button type="button" onClick={chooseAnotherFile} className="truncate px-3 py-2 border border-[var(--divider)] rounded-lg text-sm">
+                      {t("app_pocketImportChooseAnother", "Choose another")}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {!pocketPreview && !isPreviewingPocket && !importResult && !isImporting && (
                 <div className="border-2 border-dashed border-[var(--divider)] dark:border-[var(--divider)] rounded-xl p-8 text-center transition-all">
                   <div
                     onClick={() => fileInputRef.current?.click()}

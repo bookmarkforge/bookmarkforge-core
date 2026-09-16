@@ -1,5 +1,16 @@
 # Arquitectura
 
+## Modelo Open Core
+
+El repositorio privado combina un Core MIT con componentes Pro propietarios.
+La separación de distribución no se basa únicamente en carpetas: el
+exportador mantiene una lista explícita de archivos Pro y el gate
+`check:open-core` comprueba el resultado materializado. El Core incluye vault,
+CRUD, notas, importación/exportación básica, búsqueda, seguridad e interfaz.
+Pro incluye IA avanzada, RAG, agentes, sincronización P2P, flashcards, PDF/OCR,
+exportaciones avanzadas y backups avanzados. La clasificación normativa vive
+en `OPEN-CORE.md` y `scripts/export-public-repo.mjs`.
+
 ## Componentes
 
 - **Frontend:** React + TypeScript + Vite. Las rutas y funcionalidades pesadas se cargan de forma diferida.

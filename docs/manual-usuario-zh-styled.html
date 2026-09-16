@@ -1,0 +1,93 @@
+<!doctype html><html lang="zh"><head><meta charset="UTF-8"><title>BookmarkForge v1 — 用户手册</title><style>@page{size:A4;margin:2cm}body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.8;color:#1a1a2e;font-size:13px}h1{color:#16213e;border-bottom:3px solid #0f3460;padding-bottom:10px}h2{color:#0f3460;border-bottom:1px solid #e0e0e0;padding-bottom:6px;margin-top:30px}code{background:#f4f4f4;padding:2px 6px;border-radius:3px}pre{background:#1a1a2e;color:#e0e0e0;padding:15px;border-radius:8px}table{border-collapse:collapse;width:100%;margin:15px 0}th,td{border:1px solid #ddd;padding:8px}th{background:#0f3460;color:white}footer{margin-top:50px;border-top:1px solid #ddd;padding-top:10px;color:#666;font-size:.8em;text-align:center}</style></head><body><h1>用户手册 — BookmarkForge v1</h1>
+<p><strong>版本：</strong> 1.0.0 · <strong>最后更新：</strong> 2026年9月 · <strong>许可证：</strong> AGPL-3.0</p>
+<h2>1. 概览</h2>
+<p>BookmarkForge用于保存书签、笔记和文档，帮助你整理个人知识。保险库内容保存在浏览器的本地存储中，不会发送给BookmarkForge。如果使用外部AI服务，只有你明确发送给该功能的数据才会传给对应提供商。</p>
+<p>保险库在设备本地使用AES-GCM加密，密钥由Argon2id根据主密码派生。主密码无法由支持人员重置，请妥善保管。</p>
+<h2>2. 开始使用</h2>
+<ol>
+<li>打开 <a href="https://bookmarkforge.com">bookmarkforge.com</a>。</li>
+<li>浏览器支持时，可以安装为PWA，也可以直接使用网页应用。</li>
+<li>创建至少12个字符的主密码。</li>
+<li>将24个恢复词保存在安全位置。</li>
+<li>定期导出加密的<code>.bmf</code>备份。</li>
+</ol>
+<p>首次加载后可以离线使用。通过书签工具或浏览器扩展，可以快速保存当前页面。</p>
+<h2>3. 书签与搜索</h2>
+<ul>
+<li>保存网页的URL、标题、日期和标签。</li>
+<li>Free包含智能搜索，可以按关键词或含义查找内容。</li>
+<li>Free支持<strong>1,000个书签</strong>，没有设备数量上限。但在没有Pro同步时，每台设备拥有独立的保险库。</li>
+<li>达到1,000个后不会删除任何内容：阅读、搜索和导出仍然可用，只有新保存会暂停。</li>
+<li>Pro取消数量上限，并支持最多三台设备进行P2P同步。</li>
+</ul>
+<h2>4. 从Pocket导入</h2>
+<p>打开<strong>设置 → 导入</strong>，选择<code>ril_export.html</code>或从Pocket导出的CSV。应用会自动识别格式，并在写入前显示链接数量、日期和标签的预览。</p>
+<p>已读、未读和归档状态都会保留。如果导入达到Free上限，结果会明确显示已导入的数量以及已达到上限，不会把剩余内容错误地统计为跳过。</p>
+<h2>5. 笔记、AI和同步</h2>
+<p>编辑器支持结构化笔记、表格和文档之间的链接。使用自己的API密钥调用AI时，适用对应服务商的条款和隐私政策，费用也直接支付给服务商。</p>
+<p>WebLLM/Ollama本地AI、基于个人数据的RAG聊天、抽认卡和P2P同步属于Pro功能。P2P同步可能需要连接同一个Wi-Fi网络，或配置可用的信令服务。</p>
+<h2>6. 备份与恢复</h2>
+<ul>
+<li>在迁移或重要操作前创建<code>.bmf</code>备份。</li>
+<li>将多份备份保存到不同位置。</li>
+<li>恢复需要主密码。</li>
+<li>如果同时丢失主密码、恢复词和可用备份，支持人员也无法恢复保险库。</li>
+</ul>
+<h2>7. Free与Pro</h2>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>Free</th>
+<th>Pro</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>书签</td>
+<td>1,000个</td>
+<td>无限</td>
+</tr>
+<tr>
+<td>设备</td>
+<td>无数量上限，保险库分开</td>
+<td>最多3台，支持P2P</td>
+</tr>
+<tr>
+<td>智能搜索</td>
+<td>包含</td>
+<td>包含</td>
+</tr>
+<tr>
+<td>使用自己的密钥调用AI</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>本地AI和RAG聊天</td>
+<td>不支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>JSON/HTML和<code>.bmf</code>导出</td>
+<td>支持</td>
+<td>支持</td>
+</tr>
+<tr>
+<td>费用</td>
+<td>免费</td>
+<td>v1买断式许可证</td>
+</tr>
+</tbody></table>
+<p>前往<strong>设置 → Pro</strong>，通过Whop结账并激活。激活会联系许可证服务，但不会上传你的保险库。</p>
+<h2>8. 故障排查</h2>
+<ul>
+<li><strong>应用无法打开：</strong> 更新浏览器，检查磁盘空间，并暂时停用可能冲突的扩展。</li>
+<li><strong>无法保存：</strong> 查看Free计数器；达到1,000后先导出、删除项目或激活Pro。</li>
+<li><strong>同步失败：</strong> 检查网络、防火墙和两台设备的同步ID。</li>
+<li><strong>许可证无法激活：</strong> 检查网络，并只向支持人员提供错误代码，不要提供密码或恢复词。</li>
+</ul>
+<h2>9. 隐私与支持</h2>
+<p>默认情况下，保险库内容保留在设备本地。支付、许可证、远程AI、P2P信令以及经过同意的错误报告等可选服务，只会处理各自所需的技术数据。</p>
+<p>支持邮箱：<code>bookmarkforge@proton.me</code>。支持人员不会索要你的密码或恢复词。</p>
+<p><em>最后更新：2026年9月 · 版本1.0.0</em></p>
+<footer>最后更新：2026年9月 · BookmarkForge v1.0.0 · MIT Core / Pro propietario</footer></body></html>

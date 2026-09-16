@@ -1728,5 +1728,15 @@
   "app_freeWallKeepFree": "Keep Free",
   "app_freeWallTrust": "One-time payment · yours forever · {{days}}-day money-back",
   "app_freeLimitToast": "Free holds {{limit}} saves — your vault is safe; new saves pause.",
-  "app_freeLimitToastAction": "Pro is unlimited →"
+  "app_freeLimitToastAction": "Pro is unlimited →",
+  "app_importPreviewing": "Checking your export...",
+  "app_pocketImportLabel": "Coming from Pocket",
+  "app_pocketImportTitle": "Here’s what will transfer",
+  "app_pocketImportPreviewSummary": "Pocket import preview",
+  "app_pocketLinks": "Links",
+  "app_pocketDates": "Dates",
+  "app_pocketTags": "Tags",
+  "app_pocketImportStatusSummary": "Read and archive status will be preserved.",
+  "app_pocketImportConfirm": "Import these links",
+  "app_pocketImportChooseAnother": "Choose another"
 }

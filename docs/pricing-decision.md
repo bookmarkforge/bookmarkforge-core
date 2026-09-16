@@ -18,8 +18,6 @@ Estos son los precios finales y oficiales del lanzamiento:
 | **v2.0 (futuro, 12-18 meses)** | **$89 nuevos / $35 owners v1** | 60% off grabado en los términos legales. Así nace la recurrencia sin suscripción. |
 | **v3.0 (futuro)** | **$99 nuevos / $39 owners** | Mismo patrón. |
 
-**Fuera de tabla:** licencias comerciales B2B anuales (Integration $2.500 / Redistribution $7.500 / Hosting $5.000) — no son tiers individuales, licencian a empresas que embeden/redistribuyen/hospedan el código AGPL.
-
 ## 2. Por qué estos números (el razonamiento que se congeló con ellos)
 
 - **$59 early bird:** lo bastante bajo para impulso de lanzamiento, lo bastante alto para no devaluar el cifrado + local AI. FOMO real con 200 unidades.
@@ -49,25 +47,27 @@ Estos son los precios finales y oficiales del lanzamiento:
 | Fecha | Cambio | Motivo |
 |---|---|---|
 | 2026-09-14 | Decisión inicial congelada: Free $0 / Pro $59→$79 / Founder $99 / v2 $89/$35 | Lanzamiento v1 |
-| 2026-09-14 | Licencia del repo público fijada: AGPL-3.0. Sin cambios de precio | Decisión de licencia cerrada (ver §6) |
+| 2026-09-16 | El Core público pasa a MIT; los componentes Pro permanecen propietarios | Decisión Open Core (ver §6) |
 
 ## 6. Decisión de licencia del repo público — CERRADA
 
 **Estado: APROBADA Y CONGELADA** · Fecha: 2026-09-14 · Revisable solo junto con una revisión completa de precios (regla de las 50 ventas, §4).
 
-**Decisión:** el repositorio público open-core se publica bajo **AGPL-3.0-or-later**, texto verbatim, sin excepciones adicionales. La marca (nombre, logo, dominios) queda expresamente **fuera** de la concesión AGPL vía `NOTICE` + `TRADEMARKS.md` en la exportación pública.
+**Decisión:** el repositorio público Open Core se publica bajo **MIT**. El checkout privado puede contener componentes Pro propietarios, pero el exportador los elimina y escribe un manifiesto con `license: "MIT"`. La marca (nombre, logo y dominios) queda fuera de la concesión MIT mediante `NOTICE` + `TRADEMARKS.md` en la exportación pública.
 
-**Por qué AGPL y no una licencia más restrictiva (ELv2/SSPL/custom):**
+**Por qué MIT para el Core y licencia propietaria para Pro:**
 
-- **Coste de mantenimiento cero** para un mantenedor solo: texto legal probado, conocido por los departamentos legales, infracciones objetivas (¿publica su fuente o no?).
-- **El modelo de ingresos ya respira AGPL:** las licencias B2B (§1, fuera de tabla) son exactamente las válvulas de escape del AGPL — Hosting $5k/año (§13 servicio en red), Integration $2.5k/año (§5c obra combinada propietaria), Redistribution $7.5k/año (convey cerrado). Cambiar a ELv2 mataría el SKU de Integration y dejaría sin fundamento al de Hosting.
-- **Protección práctica equivalente:** el hueco que el AGPL deja (parchear el check de licencia para uso propio, legal) carece de valor económico — el pirata se queda un clon congelado sin actualizaciones, sin licencias Whop, sin soporte y sin sync firmado. La única capa que ninguna licencia de código cubre (el fork limpio que compite) se cubre con marca registrada, no con otra licencia.
+- **Adopción del Core:** MIT reduce fricción para usuarios, forks y contribuciones al núcleo.
+- **Separación comercial explícita:** las funciones Pro se distribuyen fuera de la exportación pública bajo `PRO-LICENSE.md`.
+- **Protección de marca:** el nombre y el logo se reservan mediante `TRADEMARKS.md`; una licencia de software no sustituye el registro de marca.
+- **Control operativo:** el exportador y `check:open-core` fallan si vuelve a aparecer un archivo Pro en el árbol público.
 
 **Artefactos de esta decisión (vía `scripts/export-public-repo.mjs`):**
 
-- `LICENSE` — AGPL-3.0 verbatim (el propio §7 de la AGPL prohíbe modificar el texto).
-- `NOTICE` — copyright + reserva expresa de la marca fuera de la concesión AGPL.
-- `TRADEMARKS.md` — política de marca: uso nominativo permitido, forks con nombre y logo propios, permisos vía legal@bookmarkforge.com.
+- `LICENSE` — texto MIT del Core.
+- `NOTICE` — copyright, alcance del Core y reserva expresa de la marca.
+- `TRADEMARKS.md` — política de marca: uso nominativo permitido y forks con nombre y logo propios.
+- `manifest.json` — licencia y lista de componentes Pro excluidos.
 
 **Pendiente del propietario (fuera del repo):** registro de la marca en OEPM (~150€, España) y EUIPO cuando haya ventas europeas — es el único bloqueo absoluto frente a forks que compitan usando nombre/logo.
 

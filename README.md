@@ -1,5 +1,9 @@
 # BookmarkForge
 
+> Modelo de distribución: **Open Core**. El Core público se licencia bajo MIT;
+> las funciones Pro identificadas en `OPEN-CORE.md` son propietarias y no están
+> cubiertas por esa licencia.
+
 Aplicación local-first de conocimiento personal, con almacenamiento cifrado, funcionamiento offline, sincronización P2P opcional y servicios de IA con proxy server-side.
 
 ## Estado del proyecto
@@ -102,6 +106,17 @@ El cifrado y las medidas técnicas no constituyen por sí solos una declaración
 - Define y registra RPO/RTO antes del lanzamiento público.
 - Ejecuta un restore de backup al menos mensualmente y un simulacro de desastre trimestral.
 
+## Licencias y modelo Open Core
+
+- [Modelo Open Core](OPEN-CORE.md)
+- [Licencia MIT del Core](LICENSE)
+- [Licencia propietaria Pro](PRO-LICENSE.md)
+- [Política de marca](TRADEMARKS.md)
+
+El checkout privado contiene el Core y componentes Pro. Para obtener el
+repositorio público reproducible usa `node scripts/export-public-repo.mjs`; no
+publiques el checkout completo como si todo estuviera bajo MIT.
+
 ## Documentación adicional
 
 - [Arquitectura](docs/architecture.md)
@@ -112,3 +127,31 @@ El cifrado y las medidas técnicas no constituyen por sí solos una declaración
 - [Auditoría](docs/audit.md)
 - [ROPA (RGPD)](docs/ROPA.md)
 - [Checklist de lanzamiento](docs/launch-checklist.md)
+- [Manual de Usuario](docs/manual-usuario.md)
+- [User Manual (EN)](docs/manual-usuario-en.md)
+- [Manual de Usuario (PDF)](docs/manual-usuario.pdf)
+- [User Manual (PDF EN)](docs/manual-usuario-en.pdf)
+
+## Documentation
+
+Documentation structure:
+
+| Language | Markdown | PDF |
+|---|---|---|
+| **Spanish** | [manual-usuario.md](docs/manual-usuario.md) | [manual-usuario.pdf](docs/manual-usuario.pdf) |
+| **English** | [manual-usuario-en.md](docs/manual-usuario-en.md) | [manual-usuario-en.pdf](docs/manual-usuario-en.pdf) |
+
+## Documentación visual
+
+GIFs y capturas de las features principales:
+
+- **Ctrl+K Omnibar** — demo del sistema de comandos
+- **Marcadores** — cómo guardar y organizar marcadores
+- **Grafo 3D** — navegación visual del grafo de conocimiento
+- **Flashcards** — flujo de repetición espaciada
+- **Editor de bloques** — creación de notas con LaTeX y Mermaid
+- **Comando de voz** — "Oye BMF, encuentra mis notas"
+
+## Video de inicio rápido
+
+Tutorial "Hola mundo" — Configuración inicial, primer marcador, primera nota: [enlace al video]

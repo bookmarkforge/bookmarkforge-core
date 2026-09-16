@@ -147,6 +147,7 @@ declare module "lucide-react" {
   export const WifiOff: LucideComponent;
   export const Smartphone: LucideComponent;
   export const Monitor: LucideComponent;
+  export const MonitorSmartphone: LucideComponent;
   export const Tablet: LucideComponent;
   export const Palette: LucideComponent;
   export const Type: LucideComponent;

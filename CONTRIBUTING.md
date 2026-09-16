@@ -1,5 +1,10 @@
 # Contributing to BookmarkForge
 
+BookmarkForge follows an **Open Core** model. Contributions to the public Core
+are accepted under MIT; Pro components in the private checkout are proprietary
+and must not be copied into the public export. Read `OPEN-CORE.md` and
+`PRO-LICENSE.md` before changing a boundary.
+
 > BookmarkForge is a **local-first, privacy-preserving** AI knowledge vault
 > (React 19 / Vite 8 / RxDB 17 / IndexedDB / WebCrypto AES-GCM + Argon2id).
 > It stores personal data: **default to fail-closed, zeroize, least privilege**.

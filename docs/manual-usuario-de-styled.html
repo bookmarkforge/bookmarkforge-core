@@ -1,0 +1,93 @@
+<!doctype html><html lang="de"><head><meta charset="UTF-8"><title>BookmarkForge v1 — Benutzerhandbuch</title><style>@page{size:A4;margin:2cm}body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.8;color:#1a1a2e;font-size:13px}h1{color:#16213e;border-bottom:3px solid #0f3460;padding-bottom:10px}h2{color:#0f3460;border-bottom:1px solid #e0e0e0;padding-bottom:6px;margin-top:30px}code{background:#f4f4f4;padding:2px 6px;border-radius:3px}pre{background:#1a1a2e;color:#e0e0e0;padding:15px;border-radius:8px}table{border-collapse:collapse;width:100%;margin:15px 0}th,td{border:1px solid #ddd;padding:8px}th{background:#0f3460;color:white}footer{margin-top:50px;border-top:1px solid #ddd;padding-top:10px;color:#666;font-size:.8em;text-align:center}</style></head><body><h1>Benutzerhandbuch — BookmarkForge v1</h1>
+<p><strong>Version:</strong> 1.0.0 · <strong>Letzte Aktualisierung:</strong> September 2026 · <strong>Lizenz:</strong> AGPL-3.0</p>
+<h2>1. Überblick</h2>
+<p>BookmarkForge speichert Lesezeichen, Notizen und Dokumente in einer persönlichen Wissenssammlung. Die Inhalte deines Tresors bleiben im lokalen Browser-Speicher. Der Tresorinhalt wird nicht an BookmarkForge gesendet. Wenn du einen externen KI-Anbieter nutzt, erhält dieser nur Daten, die du ausdrücklich an diese Funktion sendest.</p>
+<p>Der Tresor wird lokal mit AES-GCM verschlüsselt; Argon2id leitet den Schlüssel aus deinem Passwort ab. Das Hauptpasswort ist unverzichtbar und kann von uns nicht zurückgesetzt werden.</p>
+<h2>2. Erste Schritte</h2>
+<ol>
+<li>Öffne <a href="https://bookmarkforge.com">bookmarkforge.com</a>.</li>
+<li>Installiere die PWA, falls dein Browser dies anbietet, oder nutze die Web-App direkt.</li>
+<li>Erstelle ein Hauptpasswort mit mindestens 12 Zeichen.</li>
+<li>Bewahre die 24 Wörter der Wiederherstellung sicher auf.</li>
+<li>Exportiere regelmäßig eine verschlüsselte <code>.bmf</code>-Sicherung.</li>
+</ol>
+<p>Nach dem ersten Laden kann BookmarkForge offline verwendet werden. Bookmarklet und Browser-Erweiterungen speichern die aktuell geöffnete Seite.</p>
+<h2>3. Lesezeichen und Suche</h2>
+<ul>
+<li>Speichere URL, Titel, Datum und Tags einer Seite.</li>
+<li>Die intelligente Suche nach Begriffen und Bedeutung ist in Free enthalten.</li>
+<li>Free erlaubt <strong>1.000 Lesezeichen</strong> und hat keine Gerätebegrenzung. Ohne Pro-Synchronisierung besitzt jedes Gerät jedoch seinen eigenen Tresor.</li>
+<li>Bei 1.000 Einträgen wird nichts gelöscht: Lesen, Suchen und Exportieren bleiben möglich. Nur neue Speicherungen werden angehalten.</li>
+<li>Pro hebt die Grenze auf und synchronisiert bis zu drei Geräte per P2P.</li>
+</ul>
+<h2>4. Von Pocket importieren</h2>
+<p>Öffne <strong>Einstellungen → Import</strong> und wähle <code>ril_export.html</code> oder eine Pocket-CSV-Datei. Das Format wird erkannt. Vor dem Speichern zeigt die App eine Vorschau mit Linkanzahl, vorhandenen Datumsangaben und Tags.</p>
+<p>Gelesen-, ungelesen- und archiviert-Status bleiben erhalten. Wenn beim Import die Free-Grenze erreicht wird, meldet das Ergebnis ehrlich, wie viele Elemente importiert wurden und dass die Grenze erreicht ist. Die übrigen Elemente werden nicht als übersprungen gezählt.</p>
+<h2>5. Notizen, KI und Synchronisierung</h2>
+<p>Der Editor unterstützt strukturierte Notizen, Tabellen und Verknüpfungen zwischen Dokumenten. Bei einer KI mit deinem eigenen API-Schlüssel gelten die Bedingungen des jeweiligen Anbieters; du bezahlst ihn direkt.</p>
+<p>Lokale KI mit WebLLM/Ollama, Chat über deine Daten, Lernkarten und P2P-Synchronisierung sind Pro-Funktionen. P2P kann dasselbe WLAN oder einen konfigurierten Signalisierungsdienst benötigen.</p>
+<h2>6. Sicherungen und Wiederherstellung</h2>
+<ul>
+<li>Erstelle vor einer Migration eine <code>.bmf</code>-Sicherung.</li>
+<li>Bewahre mehrere Kopien an unterschiedlichen Orten auf.</li>
+<li>Für die Wiederherstellung wird dein Hauptpasswort benötigt.</li>
+<li>Ein verlorenes Passwort kann ohne Wiederherstellungsphrase oder brauchbare Sicherung nicht vom Support ersetzt werden.</li>
+</ul>
+<h2>7. Free und Pro</h2>
+<table>
+<thead>
+<tr>
+<th>Funktion</th>
+<th>Free</th>
+<th>Pro</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Lesezeichen</td>
+<td>1.000</td>
+<td>Unbegrenzt</td>
+</tr>
+<tr>
+<td>Geräte</td>
+<td>Keine Begrenzung, getrennte Tresore</td>
+<td>Bis zu 3 mit P2P</td>
+</tr>
+<tr>
+<td>Intelligente Suche</td>
+<td>Enthalten</td>
+<td>Enthalten</td>
+</tr>
+<tr>
+<td>KI mit eigenem Schlüssel</td>
+<td>Ja</td>
+<td>Ja</td>
+</tr>
+<tr>
+<td>Lokale KI und RAG-Chat</td>
+<td>Nein</td>
+<td>Ja</td>
+</tr>
+<tr>
+<td>JSON/HTML- und <code>.bmf</code>-Export</td>
+<td>Ja</td>
+<td>Ja</td>
+</tr>
+<tr>
+<td>Zahlung</td>
+<td>Kostenlos</td>
+<td>Einmalige v1-Lizenz</td>
+</tr>
+</tbody></table>
+<p>Aktiviere Pro über <strong>Einstellungen → Pro</strong> und den Whop-Checkout. Für die Aktivierung wird der Lizenzdienst kontaktiert; dein Tresor wird nicht übertragen.</p>
+<h2>8. Fehlerbehebung</h2>
+<ul>
+<li><strong>App lädt nicht:</strong> Browser aktualisieren, Speicherplatz prüfen und störende Erweiterungen testweise deaktivieren.</li>
+<li><strong>Speichern abgelehnt:</strong> Free-Zähler prüfen; bei 1.000 exportieren, einen Eintrag löschen oder Pro aktivieren.</li>
+<li><strong>Synchronisierung scheitert:</strong> Netzwerk, Firewall und Geräte-IDs prüfen.</li>
+<li><strong>Lizenz lässt sich nicht aktivieren:</strong> Verbindung prüfen und den Fehlercode an den Support senden, niemals Passwort oder Wiederherstellungsphrase.</li>
+</ul>
+<h2>9. Datenschutz und Support</h2>
+<p>Der Tresorinhalt bleibt standardmäßig lokal. Optionale Dienste wie Zahlung, Lizenzprüfung, entfernte KI, Signalisierung oder Fehlerberichte verarbeiten nur ihre jeweils erforderlichen technischen Daten und benötigen gegebenenfalls deine Einwilligung.</p>
+<p>Support: <code>bookmarkforge@proton.me</code>. Der Support fragt niemals nach Passwort oder Wiederherstellungsphrase.</p>
+<p><em>Letzte Aktualisierung: September 2026 · Version 1.0.0</em></p>
+<footer>Letzte Aktualisierung: September 2026 · BookmarkForge v1.0.0 · MIT Core / Pro propietario</footer></body></html>

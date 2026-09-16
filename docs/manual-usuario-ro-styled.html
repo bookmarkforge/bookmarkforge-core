@@ -1,0 +1,22 @@
+<!doctype html><html lang="ro"><head><meta charset="UTF-8"><title>BookmarkForge v1 — Manual de utilizare</title><style>@page{size:A4;margin:2cm}body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.8;color:#1a1a2e;font-size:13px}h1{color:#16213e;border-bottom:3px solid #0f3460;padding-bottom:10px}h2{color:#0f3460;border-bottom:1px solid #e0e0e0;padding-bottom:6px;margin-top:30px}code{background:#f4f4f4;padding:2px 6px;border-radius:3px}pre{background:#1a1a2e;color:#e0e0e0;padding:15px;border-radius:8px}table{border-collapse:collapse;width:100%;margin:15px 0}th,td{border:1px solid #ddd;padding:8px}th{background:#0f3460;color:white}footer{margin-top:50px;border-top:1px solid #ddd;padding-top:10px;color:#666;font-size:.8em;text-align:center}</style></head><body><h1>Manual de utilizare — BookmarkForge v1</h1>
+<p><strong>Versiune:</strong> 1.0.0 · <strong>Actualizat:</strong> septembrie 2026 · <strong>Licență:</strong> AGPL-3.0</p>
+<h2>Noțiuni de bază</h2>
+<p>BookmarkForge salvează marcaje, note și documente și te ajută să-ți organizezi cunoștințele. Conținutul seifului rămâne în stocarea locală a browserului și nu este trimis către BookmarkForge. Un furnizor AI extern primește doar datele pe care le trimiți explicit funcției respective.</p>
+<p>Seiful este criptat local cu AES-GCM, iar Argon2id derivă cheia din parola principală. Suportul nu poate recupera o parolă pierdută.</p>
+<ol>
+<li>Deschide <a href="https://bookmarkforge.com">bookmarkforge.com</a>.</li>
+<li>Creează o parolă principală de cel puțin 12 caractere.</li>
+<li>Păstrează în siguranță cele 24 de cuvinte de recuperare.</li>
+<li>Exportă regulat o copie <code>.bmf</code> criptată.</li>
+</ol>
+<h2>Marcaje și căutare</h2>
+<p>Free include căutare inteligentă după cuvinte și sens. Free permite <strong>1.000 de marcaje</strong> și nu are limită de dispozitive; fără sincronizarea Pro, fiecare dispozitiv are propriul seif. La 1.000 nu se șterge nimic: citirea, căutarea și exportul continuă, iar doar salvările noi sunt puse pe pauză. Pro elimină limita și sincronizează până la trei dispozitive prin P2P.</p>
+<h2>Import din Pocket</h2>
+<p>În <strong>Setări → Import</strong> selectează <code>ril_export.html</code> sau un CSV exportat din Pocket. Înainte de salvare apare o previzualizare cu linkuri, date și etichete. Stările citit, necitit și arhivat sunt păstrate. Dacă limita Free este atinsă, rezultatul arată câte elemente au fost importate și că limita a fost atinsă; restul nu este numărat ca omis.</p>
+<h2>Note, AI și sincronizare</h2>
+<p>Editorul acceptă note structurate, tabele și legături între documente. AI local cu WebLLM/Ollama, chat RAG, carduri de învățare și sincronizarea P2P sunt funcții Pro. Pentru propria cheie API se aplică termenii furnizorului.</p>
+<h2>Backup și ajutor</h2>
+<p>Păstrează mai multe copii <code>.bmf</code> în locuri diferite. Restaurarea necesită parola principală. Dacă salvarea este refuzată, verifică numărătoarea Free; dacă sincronizarea eșuează, verifică rețeaua, firewallul și identificatorii dispozitivelor. Nu trimite niciodată parole sau cuvinte de recuperare către suport.</p>
+<p>Asistență: <code>bookmarkforge@proton.me</code>.</p>
+<p><em>Actualizat: septembrie 2026 · Versiunea 1.0.0</em></p>
+<footer>Ultima actualizare: septembrie 2026 · BookmarkForge v1.0.0 · MIT Core / Pro propietario</footer></body></html>

@@ -21,7 +21,7 @@ import { estimateExistingRows, type EstimateCollectionRef } from "../../db/estim
 // Mirrors the real vault shape (bookmarks at v7, etc.). The estimator only
 // uses name + version, so a representative subset is enough.
 const COLLECTIONS: EstimateCollectionRef[] = [
-  { name: "bookmarks", version: 7 },
+  { name: "bookmarks", version: 8 },
   { name: "documents", version: 2 },
   { name: "templates", version: 3 },
   { name: "folders", version: 4 },
@@ -109,20 +109,20 @@ describe("estimateExistingRows", () => {
     await createStore("rxdb-dexie-testdb--1--documents", 5);
     // A store at the CURRENT version (already migrated) is still counted
     // by the enumeration path — the budget stays generous either way.
-    await createStore("rxdb-dexie-testdb--7--bookmarks", 2);
+    await createStore("rxdb-dexie-testdb--8--bookmarks", 2);
     await expect(estimateExistingRows("testdb", COLLECTIONS)).resolves.toBe(10);
   });
 
   it("Safari path counts the stores a pending migration would rewrite", async () => {
     shadowDatabases();
-    // bookmarks v7 → probe v6 and v5 (v6 exists, 3 rows)
+    // bookmarks v8 → probe v6 and v5 (v6 exists, 3 rows)
     await createStore("rxdb-dexie-testdb--6--bookmarks", 3);
     // templates v3 → probe v2 and v1 (v2 exists, 4 rows)
     await createStore("rxdb-dexie-testdb--2--templates", 4);
     // documents v2 → probe v1 (does not exist → 0)
-    // Current-version stores are NOT rewritten by a migration: v7 is not
+    // Current-version stores are NOT rewritten by a migration: v8 is not
     // probed and must not inflate the estimate.
-    await createStore("rxdb-dexie-testdb--7--bookmarks", 99);
+    await createStore("rxdb-dexie-testdb--8--bookmarks", 99);
     await expect(estimateExistingRows("testdb", COLLECTIONS)).resolves.toBe(7);
   });
 

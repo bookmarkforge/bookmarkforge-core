@@ -9,7 +9,7 @@ Most bookmark managers store your library in someone else's cloud in plain text.
 - **Local-first** — the app lives in your browser; your vault works fully offline.
 - **Zero-knowledge vault** — 24-word recovery phrase, tampering detection, fail-closed storage.
 - **P2P sync** — optional device-to-device sync over WebRTC; servers relay encrypted traffic, never content.
-- **Open core, AGPL-3.0** — audit every line of the crypto and the sync protocol.
+- **Open Core, MIT** — audit and adapt the public Core; Pro components are not included in this export.
 
 ## Quick start (self-host / local run)
 
@@ -23,8 +23,9 @@ topology: web + signaling server + optional AI proxy companion).
 
 ## Free vs Pro
 
-The full source is here — Free and Pro ship in the same codebase. Pro is
-unlocked at runtime by a **signed license** purchased from the official store:
+The public repository contains the MIT-licensed Core. The private distribution
+adds proprietary Pro components, unlocked at runtime by a **signed license**
+purchased from the official store:
 
 | | Free | Pro |
 |---|---|---|
@@ -36,25 +37,23 @@ unlocked at runtime by a **signed license** purchased from the official store:
 **Buy a Pro license:** [bookmarkforge.com](https://bookmarkforge.com) —
 $59 Early Bird (first 200 licenses) → $79 regular.
 
-## Self-hosting & commercial use (AGPL-3.0)
+## User Manual
 
-This program is free software: you can run, study, share and modify it under
-the **GNU Affero General Public License v3.0**. If you offer BookmarkForge as a
-network service (modified or not), AGPL §13 requires you to offer your users
-the corresponding source of your version.
+- [Español](manual-usuario.md)
+- [English](manual-usuario-en.md)
+- [PDF Español](manual-usuario.pdf)
+- [PDF English](manual-usuario-en.pdf)
 
-Running the unmodified software for yourself or your team is exactly what the
-license grants — no payment to us needed. A **commercial license** is only
-required when you want to escape AGPL obligations, e.g. to:
+## Self-hosting & MIT Core
 
-- offer a hosted/managed BookmarkForge service **without** releasing your
-  modifications' source,
-- redistribute a modified, closed-source build,
-- integrate BookmarkForge into a proprietary product.
+The code in this public repository is the MIT-licensed Core. You may run, study,
+modify and redistribute it under the terms in `LICENSE`. Proprietary Pro
+features and private infrastructure are intentionally excluded. The
+BookmarkForge name and logo remain protected by `TRADEMARKS.md`.
 
-Commercial licensing, support and updates: **sales@bookmarkforge.com**.
+Running the Core for yourself or your team is permitted without payment.
 
-## Security
+## Documentation
 
 Found a vulnerability? Please report it privately — see
 [SECURITY.md](.github/SECURITY.md). Please do not open public issues for
@@ -64,14 +63,9 @@ security reports.
 
 Copyright © 2026 BookmarkForge
 
-This program is free software: you can redistribute it and/or modify it under
-the terms of the GNU Affero General Public License as published by the Free
-Software Foundation, either version 3 of the License, or (at your option) any
-later version.
+This Core is free software: you can redistribute and/or modify it under the
+terms of the MIT License in `LICENSE`.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
-
-You should have received a copy of the GNU Affero General Public License along
-with this program. If not, see <https://www.gnu.org/licenses/>.
+PARTICULAR PURPOSE.

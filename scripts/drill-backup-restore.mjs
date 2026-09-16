@@ -101,19 +101,13 @@ const IS_CLI = Boolean(
 if (IS_CLI) {
 
 (async () => {
-// Windows expone npx como npx.cmd; spawnSync con shell resuelve .cmd sin
-// pasar args separados (evita el warning DEP0190 de concatenación). En
-// Windows el path del spec se pasa entre comillas para escaparlo.
-const quotedSpec = `"${SPEC}"`;
-const cmd =
-  process.platform === "win32"
-    ? `npx playwright test ${quotedSpec} --config "${E2E_CONFIG}"`
-    : `npx playwright test ${SPEC} --config "${E2E_CONFIG}"`;
-const out = spawnSync(cmd, {
+// Windows expone npx como npx.cmd. Resolver el shim explícitamente y pasar
+// cada argumento por separado evita shell injection y el warning DEP0190.
+const executable = process.platform === "win32" ? "npx.cmd" : "npx";
+const out = spawnSync(executable, ["playwright", "test", SPEC, "--config", E2E_CONFIG], {
   cwd: ROOT,
   env: { ...process.env, CI: "1" },
   encoding: "utf8",
-  shell: true,
   timeout: DRILL_TIMEOUT_MS,
 });
 

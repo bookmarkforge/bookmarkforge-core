@@ -489,6 +489,118 @@ function normalizeImportedTags(value: unknown, maximum = 100): string[] {
   return sanitizeTags(candidates).slice(0, maximum);
 }
 
+type PocketReadStateFields = {
+  isRead?: boolean;
+  archiveTag?: string;
+};
+
+/**
+ * Pocket exports use `Unread`, `Read`, and `Archive` as human-facing status
+ * values. Read state belongs in the bookmark schema so it remains queryable
+ * and survives exports; archive is kept as a tag because BookmarkForge has no
+ * separate archive lifecycle yet (and must never turn it into isDeleted).
+ */
+function pocketReadStateFields(value: unknown): PocketReadStateFields {
+  if (typeof value !== "string") {return {};}
+  const normalized = value.trim().toLowerCase().replace(/[._-]+/g, " ");
+  if (!normalized) {return {};}
+  if (/^unread$|^not read$/.test(normalized)) {
+    return { isRead: false };
+  }
+  if (/^read$/.test(normalized)) {
+    return { isRead: true };
+  }
+  if (/^archive$|^archived$/.test(normalized)) {
+    return { isRead: true, archiveTag: "pocket-archive" };
+  }
+  return {};
+}
+
+function pocketReadStateTags(tags: string[], fields: PocketReadStateFields): string[] {
+  return fields.archiveTag && !tags.includes(fields.archiveTag)
+    ? [...tags, fields.archiveTag]
+    : tags;
+}
+
+function pocketHtmlStatus(link: Element, headings: readonly Element[]): string | undefined {
+  let latestHeading: Element | undefined;
+  for (const heading of headings) {
+    // DOCUMENT_POSITION_FOLLOWING = 4. The last heading before this anchor
+    // is the Pocket section that contains it (Unread, Read, or Archive).
+    if ((heading.compareDocumentPosition(link) & 4) !== 0) {
+      latestHeading = heading;
+    }
+  }
+  return latestHeading?.textContent?.trim();
+}
+
+function pocketCsvStatus(getColumn: (name: string) => string): string {
+  return (
+    getColumn("status") ||
+    getColumn("state") ||
+    getColumn("read_status") ||
+    getColumn("readstate") ||
+    getColumn("read_state") ||
+    getColumn("archive") ||
+    getColumn("archived") ||
+    ""
+  );
+}
+
+function normalizePocketHeader(value: string): string {
+  return value
+    .replace(/^\\uFEFF/, "")
+    .trim()
+    .toLowerCase()
+    .replace(/[\\s-]+/g, "_");
+}
+
+export interface PocketImportPreview {
+  source: "pocket";
+  filename: string;
+  linkCount: number;
+  datedCount: number;
+  uniqueTagCount: number;
+  unreadCount: number;
+  archivedCount: number;
+  sampleTitles: string[];
+}
+
+function pocketPreviewFromRows(
+  filename: string,
+  rows: Array<{ title: string; url: string; date?: string; tags?: string; status?: string }>,
+): PocketImportPreview | null {
+  const links = rows.filter((row) => sanitizeUrl(row.url).startsWith("http"));
+  if (links.length === 0) {return null;}
+  const uniqueTags = new Set<string>();
+  let datedCount = 0;
+  let unreadCount = 0;
+  let archivedCount = 0;
+  for (const row of links) {
+    if (normalizeOptionalImportDate(row.date)) {datedCount++;}
+    for (const tag of (row.tags || "").split(/[,;|]/)) {
+      const normalized = tag.trim().toLowerCase();
+      if (normalized) {uniqueTags.add(normalized);}
+    }
+    const state = pocketReadStateFields(row.status);
+    if (state.isRead === false) {unreadCount++;}
+    if (state.archiveTag) {archivedCount++;}
+  }
+  return {
+    source: "pocket",
+    filename,
+    linkCount: links.length,
+    datedCount,
+    uniqueTagCount: uniqueTags.size,
+    unreadCount,
+    archivedCount,
+    sampleTitles: links
+      .map((row) => row.title.trim())
+      .filter(Boolean)
+      .slice(0, 3),
+  };
+}
+
 function normalizeImportedRelatedLinks(value: unknown): string[] {
   if (!Array.isArray(value)) {return [];}
   const links: string[] = [];
@@ -550,6 +662,77 @@ export class UniversalImporter {
   private static readonly MAX_ZIP_ENTRY_BYTES = 50 * 1024 * 1024;
   private pendingRollback: ImportJournal | null = loadPendingRollback();
   private pendingRollbackPromise: Promise<boolean> | null = null;
+
+  /** Inspect a Pocket export without touching the database. */
+  async previewPocketFile(file: File): Promise<PocketImportPreview | null> {
+    return UniversalImporter.previewPocketFile(file);
+  }
+
+  static async previewPocketFile(file: File): Promise<PocketImportPreview | null> {
+    const filename = file.name;
+    const lowerFilename = filename.toLowerCase();
+    const content = await file.text();
+
+    if (lowerFilename.endsWith(".html") || lowerFilename.endsWith(".htm")) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(content, "text/html");
+      const anchors = Array.from(doc.querySelectorAll("a"));
+      const pocketShape =
+        lowerFilename === "ril_export.html" ||
+        content.includes("<!DOCTYPE NETSCAPE-Bookmark-file-1") ||
+        anchors.some((anchor) =>
+          anchor.hasAttribute("add_date") ||
+          anchor.hasAttribute("tags") ||
+          anchor.hasAttribute("data-status"),
+        );
+      if (!pocketShape) {return null;}
+      return pocketPreviewFromRows(
+        filename,
+        anchors.map((anchor) => ({
+          title: anchor.textContent || "",
+          url: anchor.getAttribute("href") || "",
+          date: anchor.getAttribute("add_date") || undefined,
+          tags: anchor.getAttribute("tags") || "",
+          status:
+            anchor.getAttribute("status") ||
+            anchor.getAttribute("data-status") ||
+            anchor.getAttribute("data-read") ||
+            pocketHtmlStatus(anchor, Array.from(doc.querySelectorAll("h3"))),
+        })),
+      );
+    }
+
+    if (lowerFilename.endsWith(".csv")) {
+      const records = Array.from(this.iterateCSVRecords(content));
+      const headerRecord = records.shift();
+      if (!headerRecord) {return null;}
+      const headers = this.parseCSVLine(headerRecord).map(normalizePocketHeader);
+      const hasUrl = headers.includes("url") || headers.includes("link");
+      const hasPocketField = headers.some((header) =>
+        [
+          "tags", "tag", "status", "state", "read_status", "read_state",
+          "time_added", "time_read", "add_date", "date_added", "created", "created_at",
+        ].includes(header),
+      );
+      if (!hasUrl || !hasPocketField) {return null;}
+      const rows = records.map((record) => {
+        const parts = this.parseCSVLine(record);
+        const getByHeader = (names: string[]) => {
+          const index = names.map(normalizePocketHeader).map((name) => headers.indexOf(name)).find((value) => value >= 0) ?? -1;
+          return index >= 0 ? parts[index] || "" : "";
+        };
+        return {
+          title: getByHeader(["title", "name"]),
+          url: getByHeader(["url", "link"]),
+          date: getByHeader(["time_added", "add_date", "created", "created_at", "date_added"]),
+          tags: getByHeader(["tags", "tag"]),
+          status: getByHeader(["status", "state", "read_status", "read_state", "archive", "archived"]),
+        };
+      });
+      return pocketPreviewFromRows(filename, rows);
+    }
+    return null;
+  }
 
   private static getSizeError(file: File): ImportResult | null {
     if (file.size <= UniversalImporter.MAX_IMPORT_BYTES) return null;
@@ -846,6 +1029,7 @@ export class UniversalImporter {
     const parser = new DOMParser();
     const doc = parser.parseFromString(content, "text/html");
     const links = doc.querySelectorAll("a");
+    const headings = Array.from(doc.querySelectorAll("h3"));
     enforceImportRecordLimit(links.length);
 
     for (let index = 0; index < links.length; index++) {
@@ -857,6 +1041,12 @@ export class UniversalImporter {
         const addDateAttr = link.getAttribute("add_date");
         const tagsAttr = link.getAttribute("tags");
         const rawTitle = (link.textContent || "").trim();
+        const statusValue =
+          link.getAttribute("status") ||
+          link.getAttribute("data-status") ||
+          link.getAttribute("data-read") ||
+          pocketHtmlStatus(link, headings);
+        const readState = pocketReadStateFields(statusValue);
 
         const url = sanitizeUrl(href || "");
         if (!url || !url.startsWith("http")) {
@@ -880,7 +1070,11 @@ export class UniversalImporter {
             title,
             content: "",
             summary: "",
-            tags: tags.length ? tags : ["pocket-import"],
+            tags: pocketReadStateTags(
+              tags.length ? tags : ["pocket-import"],
+              readState,
+            ),
+            ...(readState.isRead === undefined ? {} : { isRead: readState.isRead }),
             createdAt,
             updatedAt: new Date().toISOString(),
             isDeleted: false,
@@ -942,6 +1136,7 @@ export class UniversalImporter {
         const idx = headers.indexOf(name);
         return idx >= 0 ? parts[idx] || "" : "";
       };
+      const readState = pocketReadStateFields(pocketCsvStatus(getCol));
 
       try {
         const url = sanitizeUrl(getCol("url") || parts[1] || "");
@@ -974,7 +1169,11 @@ export class UniversalImporter {
               ),
               true,
             ),
-            tags: tags.length ? tags : ["raindrop-import"],
+            tags: pocketReadStateTags(
+              tags.length ? tags : ["raindrop-import"],
+              readState,
+            ),
+            ...(readState.isRead === undefined ? {} : { isRead: readState.isRead }),
             createdAt: normalizeImportDate(getCol("created")),
             updatedAt: new Date().toISOString(),
             isDeleted: false,
@@ -1555,6 +1754,7 @@ export class UniversalImporter {
     let importedCount = 0;
     let skippedCount = 0;
     let recordIndex = 0;
+    let headers: string[] = [];
     const records =
       typeof content === "string"
         ? UniversalImporter.iterateCSVRecords(content)
@@ -1565,8 +1765,11 @@ export class UniversalImporter {
       enforceImportRecordLimit(recordIndex);
       await yieldImportWork(index, MAX_IMPORT_RECORDS, options);
       throwIfAborted(options.signal);
-      // Skip header
-      if (index === 0) {continue;}
+      // Skip header, but retain names so Pocket-style status columns are mapped.
+      if (index === 0) {
+        headers = UniversalImporter.parseCSVLine(record).map((h) => h.toLowerCase());
+        continue;
+      }
       const line = record.trim();
       if (!line) {continue;}
 
@@ -1578,6 +1781,11 @@ export class UniversalImporter {
       // Sanitize against XSS and prototype pollution
       const title = normalizeImportedTitle(rawTitle, "");
       const url = sanitizeUrl(rawUrl);
+      const getCol = (name: string): string => {
+        const idx = headers.indexOf(name);
+        return idx >= 0 ? parts[idx] || "" : "";
+      };
+      const readState = pocketReadStateFields(pocketCsvStatus(getCol));
 
       if (url && url.startsWith("http")) {
         try {
@@ -1595,7 +1803,8 @@ export class UniversalImporter {
               title: title || url,
               content: "",
               summary: "",
-              tags: ["imported-csv"],
+              tags: pocketReadStateTags(["imported-csv"], readState),
+              ...(readState.isRead === undefined ? {} : { isRead: readState.isRead }),
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
               processed: false,

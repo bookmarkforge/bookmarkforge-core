@@ -1730,5 +1730,15 @@
   "app_freeWallProLocalAi": "IA que funciona dentro de tu ordenador — sin claves API, nada sale de tu equipo",
   "app_freeWallCta": "Ver Pro — {{price}} una sola vez",
   "app_freeWallKeepFree": "Seguir con Free",
-  "app_freeWallTrust": "Pago único · tuyo para siempre · devolución en {{days}} días"
+  "app_freeWallTrust": "Pago único · tuyo para siempre · devolución en {{days}} días",
+  "app_importPreviewing": "Comprobando tu exportación...",
+  "app_pocketImportLabel": "Vienes de Pocket",
+  "app_pocketImportTitle": "Esto es lo que se transferirá",
+  "app_pocketImportPreviewSummary": "Vista previa de la importación de Pocket",
+  "app_pocketLinks": "Enlaces",
+  "app_pocketDates": "Fechas",
+  "app_pocketTags": "Etiquetas",
+  "app_pocketImportStatusSummary": "Se conservarán los estados de leído y archivado.",
+  "app_pocketImportConfirm": "Importar estos enlaces",
+  "app_pocketImportChooseAnother": "Elegir otro archivo"
 }

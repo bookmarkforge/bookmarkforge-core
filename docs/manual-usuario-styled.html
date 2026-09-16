@@ -1,0 +1,440 @@
+<!doctype html><html lang="es"><head><meta charset="UTF-8"><title>BookmarkForge v1 — Manual de usuario</title><style>@page{size:A4;margin:2cm}body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.8;color:#1a1a2e;font-size:13px}h1{color:#16213e;border-bottom:3px solid #0f3460;padding-bottom:10px}h2{color:#0f3460;border-bottom:1px solid #e0e0e0;padding-bottom:6px;margin-top:30px}code{background:#f4f4f4;padding:2px 6px;border-radius:3px}pre{background:#1a1a2e;color:#e0e0e0;padding:15px;border-radius:8px}table{border-collapse:collapse;width:100%;margin:15px 0}th,td{border:1px solid #ddd;padding:8px}th{background:#0f3460;color:white}footer{margin-top:50px;border-top:1px solid #ddd;padding-top:10px;color:#666;font-size:.8em;text-align:center}</style></head><body><h1>Manual de Usuario — BookmarkForge v1</h1>
+<p><strong>Versión:</strong> 1.0.0 · <strong>Última actualización:</strong> Septiembre 2026 · <strong>Licencia:</strong> AGPL-3.0</p>
+<hr>
+<h2>1. Introducción</h2>
+<p>BookmarkForge es una aplicación de conocimiento personal <strong>local-first</strong> que te permite guardar marcadores, tomar notas, organizar tu conocimiento con grafos interactivos, usar IA directamente en tu navegador, y sincronizar entre dispositivos sin depender de servidores centrales.</p>
+<p><strong>Lo que hace único a BookmarkForge:</strong></p>
+<ul>
+<li><strong>Tus marcadores, notas y documentos viven en tu navegador</strong> (IndexedDB/RxDB). El contenido de la bóveda no se envía a BookmarkForge; si usas un proveedor de IA externo, solo recibe lo que tú le envías desde la función correspondiente.</li>
+<li><strong>Cifrado extremo a extremo</strong> con AES-GCM y Argon2id. Ni siquiera los desarrolladores pueden leer tu vault.</li>
+<li><strong>IA local</strong> que funciona sin conexión y sin enviar tus datos a terceros.</li>
+<li><strong>Sincronización P2P</strong> entre tus dispositivos sin servidores centrales.</li>
+<li><strong>Sin suscripción.</strong> Pagas una vez y es tuyo para siempre.</li>
+</ul>
+<hr>
+<h2>2. Primeros pasos</h2>
+<h3>2.1 Requisitos</h3>
+<ul>
+<li>Navegador moderno: Chrome, Edge, Firefox, Safari (16+)</li>
+<li>8 GB de RAM recomendados</li>
+<li>GPU básica para IA local (WebGPU)</li>
+<li>Conexión a internet (para la instalación inicial y la sincronización; opcional para uso offline)</li>
+</ul>
+<h3>2.2 Instalación</h3>
+<ol>
+<li>Abre <a href="https://bookmarkforge.com">bookmarkforge.com</a></li>
+<li>Haz clic en <strong>&quot;Install App&quot;</strong> o <strong>&quot;Add to Home Screen&quot;</strong></li>
+<li>La app se instala como PWA (Progressive Web App)</li>
+<li>También puedes usarla como extensión de navegador</li>
+</ol>
+<h3>2.3 Configuración inicial</h3>
+<ol>
+<li><strong>Contraseña maestra:</strong> Mínimo 12 caracteres. Se recomienda una frase de contraseña.<ul>
+<li>Deriva tu clave AES-GCM con Argon2id (KDF obligatorio desde ADR-019)</li>
+<li><strong>Tu contraseña es la ÚNICA clave.</strong> Si la pierdes, no hay recuperación.</li>
+</ul>
+</li>
+<li><strong>Frase de recuperación:</strong> Guarda las 24 palabras en un lugar seguro.</li>
+<li><strong>Device ID:</strong> Se genera automáticamente. Se usa para activar licencias Pro.</li>
+</ol>
+<h3>2.4 El bookmarklet</h3>
+<p>Arrastra el botón <strong>&quot;Guardar en Forge&quot;</strong> a la barra de marcadores de tu navegador. Cada vez que estés en una página web, haz clic en él para guardarla como marcador.</p>
+<hr>
+<h2>3. Funciones principales</h2>
+<h3>3.1 Marcadores</h3>
+<ul>
+<li><strong>Lista virtualizada</strong> que maneja 100,000+ elementos sin retraso</li>
+<li><strong>Búsqueda Profunda:</strong> busca en el texto completo de páginas guardadas</li>
+<li><strong>Colecciones Inteligentes:</strong> se auto-organizan por etiqueta</li>
+<li><strong>Importar/Exportar:</strong> desde Notion, Evernote, Chrome, o exportar como .bmf, Markdown, PDF</li>
+<li><strong>Free:</strong> 1.000 marcadores, búsqueda inteligente incluida y sin límite de dispositivos. Al llegar a 1.000, tus datos siguen disponibles para leer, buscar y exportar; solo se pausan los nuevos guardados. <strong>Pro:</strong> marcadores ilimitados.</li>
+</ul>
+<h3>3.2 Editor de notas</h3>
+<p>Editor basado en bloques con:</p>
+<ul>
+<li>Comandos <code>/</code> para insertar bloques rápidamente</li>
+<li>Arrastrar y soltar</li>
+<li>LaTeX para matemáticas</li>
+<li>Diagramas Mermaid para gráficos</li>
+<li>Resaltado de código para 50+ lenguajes</li>
+<li><strong>AI Copilot</strong> para ayuda en tiempo real</li>
+</ul>
+<h3>3.3 Grafo de conocimiento</h3>
+<p>Visualización interactiva 3D/2D de tus notas:</p>
+<ul>
+<li>Filtra por etiqueta, fecha, o &quot;Fuerza de Conexión&quot;</li>
+<li>Visualiza similitudes semánticas entre notas no relacionadas</li>
+<li>Explora cómo tus ideas se conectan a lo largo del tiempo</li>
+</ul>
+<h3>3.4 Flashcards</h3>
+<ul>
+<li>Algoritmo modificado tipo Anki de <strong>Repetición Espaciada (SRK)</strong></li>
+<li>Rastrea tu &quot;curva de olvido&quot; para mostrar tarjetas en el momento perfecto</li>
+<li>Soporta oclusión de imágenes y eliminación de texto</li>
+<li><strong>Solo disponible en Pro</strong></li>
+</ul>
+<h3>3.5 Comandos de voz</h3>
+<p>Motor de Voz a Acción:</p>
+<ul>
+<li>Dile &quot;Oye BMF, encuentra mis notas de Biología&quot;</li>
+<li>Dile &quot;Guarda esta página&quot;</li>
+<li>Funciona 100% sin conexión mediante la Web Speech API</li>
+</ul>
+<h3>3.6 Omnibar (Ctrl+K)</h3>
+<p>El cerebro de la aplicación:</p>
+<ul>
+<li>Matemáticas, conversión de unidades</li>
+<li>Búsqueda de marcadores y notas simultáneamente</li>
+<li>Escribe <code>&gt;</code> para comandos del sistema</li>
+</ul>
+<hr>
+<h2>4. IA en BookmarkForge</h2>
+<h3>4.1 IA con tu propia API key (Free)</h3>
+<ul>
+<li>Usa Gemini, OpenAI, Anthropic, o cualquier proveedor compatible</li>
+<li>Pagas el coste de tokens directamente a tu proveedor</li>
+<li>La app enruta dinámicamente las solicitudes al modelo óptimo</li>
+<li><strong>Caché Semántico Local:</strong> si haces preguntas similares, usa 0 tokens de API</li>
+</ul>
+<h3>4.2 IA Local — WebLLM/Ollama (Pro)</h3>
+<ul>
+<li>Ejecuta modelos completos de IA (como Llama 3.2, Qwen 2.5) directamente en tu navegador</li>
+<li>Usa tu tarjeta gráfica (WebGPU)</li>
+<li><strong>Sin conexión a internet</strong> necesaria para funcionar</li>
+<li>Cuantización de 4 bits (q4f16) para ejecutar en hardware modesto</li>
+<li><strong>Sin coste de tokens</strong> ni envío de datos a terceros</li>
+</ul>
+<h3>4.3 RAG chat sobre tus datos (Pro)</h3>
+<ul>
+<li>La IA &quot;lee&quot; tus notas locales antes de responder</li>
+<li>Te responde basándose en tu conocimiento específico</li>
+<li>Arquitectura híbrida con caché semántico local</li>
+<li>Si haces preguntas similares, la app usa 0 tokens y 0 llamadas API</li>
+</ul>
+<h3>4.4 Expert agents (Pro)</h3>
+<ul>
+<li>Agentes especializados en diferentes dominios</li>
+<li>Automatizan tareas complejas de análisis</li>
+</ul>
+<hr>
+<h2>5. Sincronización P2P</h2>
+<h3>5.1 Requisitos</h3>
+<ul>
+<li>Ambos dispositivos en la misma red Wi-Fi</li>
+<li>Firewall debe permitir WebRTC</li>
+<li>IDs de sincronización coincidentes</li>
+</ul>
+<h3>5.2 Configuración</h3>
+<ol>
+<li>Ve a <strong>Configuración &gt; Sincronización</strong></li>
+<li>Activa &quot;Habilitar sincronización P2P&quot;</li>
+<li>Asegúrate de que ambos dispositivos estén en la misma red</li>
+<li>Confirma los IDs de sincronización coinciden</li>
+</ol>
+<h3>5.3 Solución de problemas</h3>
+<table>
+<thead>
+<tr>
+<th>Problema</th>
+<th>Solución</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sync fallando</td>
+<td>Verifica que ambos dispositivos estén en la misma red Wi-Fi</td>
+</tr>
+<tr>
+<td>Firewall bloqueando WebRTC</td>
+<td>Configura el Firewall para permitir WebRTC</td>
+</tr>
+<tr>
+<td>IDs de sincronización no coinciden</td>
+<td>Reinicia la Sala de Sincronización</td>
+</tr>
+<tr>
+<td>Conexión lenta</td>
+<td>Verifica la latencia de la red</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>6. Seguridad y privacidad</h2>
+<h3>6.1 Cifrado</h3>
+<ul>
+<li><strong>AES-GCM</strong> con claves derivadas por <strong>Argon2id</strong> (versión 4)</li>
+<li>Las claves nunca se almacenan en texto plano</li>
+<li>Se derivan sobre la marcha y solo existen en memoria (RAM)</li>
+<li>Usa la API SubtleCrypto nativa del navegador</li>
+</ul>
+<h3>6.2 Contraseña maestra</h3>
+<ul>
+<li>Mínimo 12 caracteres</li>
+<li>No existe &quot;Olvidé mi contraseña&quot;</li>
+<li>Tu contraseña es la ÚNICA clave</li>
+<li>Si la pierdes, <strong>no podemos ayudarte</strong></li>
+<li>Siempre guarda una copia de seguridad .bmf en un lugar seguro</li>
+</ul>
+<h3>6.3 Recuperación</h3>
+<ul>
+<li>Exporta tu vault como archivo <code>.bmf</code> en cualquier momento</li>
+<li>Formato: JSON cifrado con tu clave maestra</li>
+<li>Guárdalo en un lugar seguro (USB, disco externo, nube cifrada)</li>
+</ul>
+<h3>6.4 Política de privacidad</h3>
+<ul>
+<li><strong>Zero-knowledge:</strong> los desarrolladores tienen conocimiento cero de tus claves o datos</li>
+<li>Sin Google Analytics, sin telemetría, sin píxeles de rastreo</li>
+<li>Sin servidores centrales guardando tus datos</li>
+<li>RGPD por diseño</li>
+<li>El servidor de licencias valida tu licencia sin acceder a tu vault</li>
+</ul>
+<h3>6.5 Validación de licencias</h3>
+<ul>
+<li>La licencia Pro se valida localmente después de un handshake inicial</li>
+<li>Sin rastreo constante</li>
+<li>Prueba de licencia firmada con RSA-PSS (SHA-256, salt 32)</li>
+<li>Re-validación cada 48 horas cuando hay conexión</li>
+<li>Pruebas antiguas (&gt;30 días) son rechazadas por el servidor de entitlement</li>
+</ul>
+<hr>
+<h2>7. Versiones Free vs Pro</h2>
+<h3>7.1 Tabla comparativa</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Free</th>
+<th>Pro</th>
+<th>Founder</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Precio</td>
+<td>$0</td>
+<td>$79 (lifetime)</td>
+<td>$99 (lifetime)</td>
+</tr>
+<tr>
+<td>Marcadores</td>
+<td>1,000</td>
+<td>Ilimitados</td>
+<td>Ilimitados</td>
+</tr>
+<tr>
+<td>Dispositivos</td>
+<td>Sin límite (cada dispositivo tiene su bóveda)</td>
+<td>Hasta 3 + sincronización P2P</td>
+<td>Hasta 3 + sincronización P2P</td>
+</tr>
+<tr>
+<td>IA con API propia</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>IA Local (WebLLM/Ollama)</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>RAG chat sobre tus datos</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Flashcards + PDF/OCR</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Exportación avanzada (10+ formatos)</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Cifrado local de la bóveda (AES-GCM)</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Soporte</td>
+<td>Comunidad</td>
+<td>Email 48h</td>
+<td>Email 24h + Beta</td>
+</tr>
+<tr>
+<td>Descubrimiento v2/v3</td>
+<td>❌</td>
+<td>60% off</td>
+<td>60% off</td>
+</tr>
+<tr>
+<td>Badge Founder</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Beta v2</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<h3>7.2 Cómo actualizar a Pro</h3>
+<ol>
+<li>Ve a <strong>Configuración &gt; Suscripción</strong></li>
+<li>Haz clic en <strong>&quot;Get Pro Lifetime&quot;</strong></li>
+<li>Serás redirigido a Whop para el pago</li>
+<li>Después de la compra, la app se activa automáticamente</li>
+<li>La licencia se valida con el servidor y se firma localmente</li>
+</ol>
+<p><strong>Early Bird:</strong> los primeros 200 compradores pagan $59 (agotado o hasta 2026-12-31). Después el precio regular es $79.</p>
+<h3>7.3 Cómo actualizar a Founder</h3>
+<p>Limitado a <strong>100 unidades</strong>. Incluye todo lo de Pro + badge, beta v2, y descuento perpetuo en futuras versiones mayores.</p>
+<h3>7.4 Actualizaciones futuras (v2, v3)</h3>
+<ul>
+<li>Los dueños de v1 pagan un <strong>60% de descuento</strong> en versiones mayores futuras</li>
+<li>v2 para nuevos: $89. v2 para v1 owners: $35</li>
+<li>v3 para nuevos: $99. v3 para v1 owners: $39</li>
+<li>Los dueños de v1 <strong>mantienen v1 funcional para siempre</strong></li>
+</ul>
+<hr>
+<h2>8. Importar y exportar</h2>
+<h3>Nota sobre Pocket</h3>
+<p>La importación reconoce exportaciones HTML (<code>ril_export.html</code>) y CSV de Pocket. Antes de guardar nada muestra una vista previa con enlaces, fechas y etiquetas. El estado leído/archivado se conserva; si el límite Free se alcanza, el resultado indica cuántos elementos se importaron y que el límite se alcanzó, sin contar el resto como omitidos.</p>
+<h3>8.1 Importar</h3>
+<p>Ve a <strong>Configuración &gt; Importar</strong>:</p>
+<ul>
+<li><strong>HTML/JSON desde Notion o Evernote</strong></li>
+<li><strong>Exportación de marcadores de Chrome</strong></li>
+<li><strong>Copia de seguridad .bmf</strong></li>
+</ul>
+<h3>8.2 Exportar</h3>
+<ul>
+<li><strong>.bmf:</strong> Backup completo cifrado</li>
+<li><strong>Markdown:</strong> Notas en formato legible</li>
+<li><strong>PDF:</strong> Exporta notas como documentos PDF</li>
+<li><strong>JSON:</strong> Datos estructurados</li>
+</ul>
+<h3>8.3 Backup y restauración</h3>
+<ul>
+<li>Exporta regularmente tu vault como .bmf</li>
+<li>Guárdalo en un lugar seguro</li>
+<li>Para restaurar: ve a <strong>Configuración &gt; Restaurar</strong> y selecciona tu archivo .bmf</li>
+<li>La restauración requiere tu contraseña maestra</li>
+</ul>
+<hr>
+<h2>9. Solución de problemas</h2>
+<h3>9.1 App no carga</h3>
+<ol>
+<li>Limpia la caché del navegador</li>
+<li>Actualiza Chrome/Edge a la última versión</li>
+<li>Verifica si tu disco está lleno</li>
+<li>Desactiva extensiones conflictivas (los bloqueadores de anuncios a veces bloquean IndexedDB)</li>
+</ol>
+<h3>9.2 Sincronización fallando</h3>
+<ol>
+<li>Asegúrate de que ambos dispositivos estén en la misma red Wi-Fi</li>
+<li>Verifica que el Firewall no esté bloqueando WebRTC</li>
+<li>Confirma que los IDs de sincronización coincidan</li>
+<li>Reinicia la Sala de Sincronización si es necesario</li>
+</ol>
+<h3>9.3 IA alucina o responde incorrectamente</h3>
+<ol>
+<li>La IA puede equivocarse — usa los enlaces de &quot;Fuentes&quot; en el Chat para verificar</li>
+<li>Ajusta la &quot;Temperatura&quot; en Configuración de IA</li>
+<li>Si usas IA local, verifica que el modelo esté cargado correctamente</li>
+</ol>
+<h3>9.4 Extensiones no guardan</h3>
+<ol>
+<li>Actualiza la página que intentas guardar</li>
+<li>Asegúrate de haber iniciado sesión en BookmarkForge en otra pestaña</li>
+<li>Reinstala el bookmarklet</li>
+</ol>
+<h3>9.5 Rendimiento lento</h3>
+<ol>
+<li>Ve a Configuración &gt; Avanzado y ejecuta &quot;Optimización de Base de Datos&quot;</li>
+<li>Revisa Diagnóstico del Sistema para uso de CPU</li>
+<li>La virtualización maneja listas grandes, pero notas pesadas pueden afectar la RAM</li>
+</ol>
+<h3>9.6 Base de datos corrupta</h3>
+<ol>
+<li>Usa &quot;Diagnóstico del Sistema&quot; para verificar la integridad</li>
+<li>Si está corrupta, restaura desde tu última copia de seguridad .bmf</li>
+</ol>
+<h3>9.7 Licencia Pro no funciona</h3>
+<ol>
+<li>Verifica que tu conexión a internet funcione (se requiere validación periódica)</li>
+<li>Intenta re-validar en <strong>Configuración &gt; Licencia &gt; Re-validar</strong></li>
+<li>Si el problema persiste, contacta a <strong><a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></strong></li>
+<li>Una licencia reembolsable en 30 días vía Whop</li>
+</ol>
+<h3>9.8 Error de licencia: SIGNING_KEY_INVALID</h3>
+<p>Este error indica que el servidor no está configurado correctamente. No es un problema del usuario. Contacta al soporte.</p>
+<hr>
+<h2>10. Configuración avanzada</h2>
+<p>Para configuraciones avanzadas de despliegue, autogestión y API del servidor,
+consulte la documentación interna o contacte soporte.</p>
+<blockquote>
+<p>La validación de licencias se realiza exclusivamente en el servidor.
+BookmarkForge requiere una licencia válida para acceder a funcionalidades Pro.</p>
+</blockquote>
+<hr>
+<h2>11. FAQ</h2>
+<p><strong>¿Es gratis?</strong>
+La aplicación principal es local-first y gratuita. Las funciones avanzadas de IA y sincronización P2P requieren una Licencia Pro.</p>
+<p><strong>¿Puedo usarlo en el móvil?</strong>
+Sí. Instálalo como PWA mediante Chrome (Android) o Safari (iOS). Soporta acceso sin conexión y notificaciones push.</p>
+<p><strong>¿Dónde están mis archivos?</strong>
+Dentro del almacenamiento interno del navegador (IndexedDB). Puedes exportarlos como .bmf, Markdown o PDF en cualquier momento.</p>
+<p><strong>¿Funciona sin internet?</strong>
+100%. Todas las funciones (Editor, Marcadores, Grafo, IA Local, Búsqueda) funcionan sin conexión a internet.</p>
+<p><strong>¿Consume muchos tokens de API?</strong>
+No. La app usa un algoritmo de Caché Semántico Local. Si haces variaciones de la misma pregunta, usa 0 tokens de API.</p>
+<p><strong>¿Consumo de batería?</strong>
+IA local usa WebGPU. En laptops, puede consumir batería más rápido. Desactiva IA local en configuración para conservar batería.</p>
+<hr>
+<h2>12. Soporte</h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Canal</th>
+<th>Tiempo de respuesta</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Free</strong></td>
+<td>Comunidad — Docs + /help + GitHub Discussions</td>
+<td>Best effort</td>
+</tr>
+<tr>
+<td><strong>Pro</strong></td>
+<td>Email — <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></td>
+<td>48h (días laborables)</td>
+</tr>
+<tr>
+<td><strong>Founder</strong></td>
+<td>Email prioridad — <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></td>
+<td>24h (días laborables)</td>
+</tr>
+</tbody></table>
+<p><strong>Nota de seguridad:</strong> Vault está cifrado. No podemos ver tus datos. Contraseña perdida = datos perdidos. Soporte nunca te pedirá tu contraseña o frase de recuperación.</p>
+<hr>
+<h2>13. Legal</h2>
+<ul>
+<li><strong>Licencia del código:</strong> AGPL-3.0-or-later</li>
+<li><strong>Marca:</strong> BookmarkForge y sus marcas están protegidas (ver <code>TRADEMARKS.md</code>)</li>
+<li><strong>Precios:</strong> Congelados en <code>docs/pricing-decision.md</code>. Todos los precios son lifetime versión 1.</li>
+<li><strong>Reembolsos:</strong> 30 días vía Whop. Política de devolución completa.</li>
+<li><strong>Privacidad:</strong> Ver <code>docs/ROPA.md</code> para el registro de tratamiento de datos personales bajo GDPR.</li>
+</ul>
+<hr>
+<p><em>Última actualización de este manual: Septiembre 2026 · Versión 1.0.0</em></p>
+<footer>Última actualización: septiembre de 2026 · BookmarkForge v1.0.0 · MIT Core / Pro propietario</footer></body></html>

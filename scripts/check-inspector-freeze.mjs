@@ -69,11 +69,16 @@ const KNOWN_GATES = {
   "check:http-config": "security",
   "check:compose-config": "security",
   "check:runtime-config": "security",
+  // Open Core export boundary: prevents proprietary Pro source from entering
+  // the MIT public tree and validates the exported license metadata.
+  "check:open-core": "security",
 
   // Protected core — language (may grow without an ADR).
   "check:i18n": "language",
   "check:english-only": "language",
   "check:no-unbounded-text": "language",
+  "check:landing-free-plan": "language",
+  "check:pocket-onboarding-copy": "language",
 
   // Frozen documentation-format inspectors (grandfathered; O-1).
   // NOTE: the three original Markdown gates were fused into

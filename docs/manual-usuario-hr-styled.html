@@ -1,0 +1,22 @@
+<!doctype html><html lang="hr"><head><meta charset="UTF-8"><title>BookmarkForge v1 — Korisnički priručnik</title><style>@page{size:A4;margin:2cm}body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.8;color:#1a1a2e;font-size:13px}h1{color:#16213e;border-bottom:3px solid #0f3460;padding-bottom:10px}h2{color:#0f3460;border-bottom:1px solid #e0e0e0;padding-bottom:6px;margin-top:30px}code{background:#f4f4f4;padding:2px 6px;border-radius:3px}pre{background:#1a1a2e;color:#e0e0e0;padding:15px;border-radius:8px}table{border-collapse:collapse;width:100%;margin:15px 0}th,td{border:1px solid #ddd;padding:8px}th{background:#0f3460;color:white}footer{margin-top:50px;border-top:1px solid #ddd;padding-top:10px;color:#666;font-size:.8em;text-align:center}</style></head><body><h1>Korisnički priručnik — BookmarkForge v1</h1>
+<p><strong>Verzija:</strong> 1.0.0 · <strong>Zadnje ažuriranje:</strong> rujan 2026. · <strong>Licenca:</strong> AGPL-3.0</p>
+<h2>Početak</h2>
+<p>BookmarkForge sprema oznake, bilješke i dokumente te pomaže organizirati osobno znanje. Sadržaj trezora ostaje u lokalnoj pohrani preglednika i ne šalje se BookmarkForgeu. Vanjski AI pružatelj dobiva samo podatke koje mu izričito pošaljete.</p>
+<p>Trezor se lokalno šifrira pomoću AES-GCM-a, a ključ se izvodi iz glavne lozinke pomoću Argon2ida. Podrška ne može vratiti izgubljenu lozinku.</p>
+<ol>
+<li>Otvorite <a href="https://bookmarkforge.com">bookmarkforge.com</a>.</li>
+<li>Stvorite glavnu lozinku od najmanje 12 znakova.</li>
+<li>Sigurno spremite 24 riječi za oporavak.</li>
+<li>Redovito izvezite šifriranu <code>.bmf</code> sigurnosnu kopiju.</li>
+</ol>
+<h2>Oznake i pretraživanje</h2>
+<p>Free uključuje pametno pretraživanje po riječima i značenju. Free dopušta <strong>1.000 oznaka</strong> i nema ograničenje broja uređaja; bez Pro sinkronizacije svaki uređaj ima vlastiti trezor. Kada dosegnete 1.000, ništa se ne briše: čitanje, pretraživanje i izvoz nastavljaju raditi, a pauziraju se samo nova spremanja. Pro uklanja granicu i sinkronizira do tri uređaja putem P2P-a.</p>
+<h2>Uvoz iz Pocketa</h2>
+<p>U <strong>Postavke → Uvoz</strong> odaberite <code>ril_export.html</code> ili CSV izvezen iz Pocketa. Prije spremanja prikazuje se pregled poveznica, datuma i oznaka. Čuva se status pročitano, nepročitano i arhivirano. Ako se dosegne Free granica, rezultat navodi broj uvezenih stavki i da je granica dosegnuta; ostatak se ne broji kao preskočen.</p>
+<h2>Bilješke, AI i sinkronizacija</h2>
+<p>Uređivač podržava strukturirane bilješke, tablice i poveznice među dokumentima. Lokalni AI WebLLM/Ollama, RAG razgovor, kartice i P2P sinkronizacija Pro su značajke. Kod vlastitog API ključa vrijede uvjeti odgovarajućeg pružatelja.</p>
+<h2>Sigurnosne kopije i pomoć</h2>
+<p>Čuvajte više <code>.bmf</code> kopija na različitim mjestima. Oporavak zahtijeva glavnu lozinku. Kod odbijenog spremanja provjerite Free brojač; kod problema sa sinkronizacijom provjerite mrežu, vatrozid i ID uređaja. Podršci nikad ne šaljite lozinku ni riječi za oporavak.</p>
+<p>Podrška: <code>bookmarkforge@proton.me</code>.</p>
+<p><em>Zadnje ažuriranje: rujan 2026. · Verzija 1.0.0</em></p>
+<footer>Zadnje ažuriranje: rujan 2026 · BookmarkForge v1.0.0 · MIT Core / Pro propietario</footer></body></html>

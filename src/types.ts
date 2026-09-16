@@ -15,6 +15,7 @@ export interface Bookmark {
   lastChecked?: string;
   visitCount: number;
   lastVisitedAt?: string;
+  isRead?: boolean;
   createdAt: string;
   updatedAt: string;
 }

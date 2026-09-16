@@ -130,7 +130,7 @@ describe('legacy-schema-map', () => {
     const entries = parseSchemaSource(source);
     const byName = Object.fromEntries(entries.map((e) => [e.collection, e.version]));
 
-    assert.strictEqual(byName['bookmarkSchema'], 7);
+    assert.strictEqual(byName['bookmarkSchema'], 8);
     assert.strictEqual(byName['chunkSchema'], 3);
     assert.strictEqual(byName['folderSchema'], 4);
     assert.strictEqual(byName['messageSchema'], 4);

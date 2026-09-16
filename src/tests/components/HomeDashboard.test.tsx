@@ -20,7 +20,7 @@ vi.mock("react-i18next", () => {
   const t = (key: string, fb?: string) => fb || key;
   return {
     useTranslation: () => ({ t, i18n: { language: "en" } }),
-    initReactI18next: {},
+    initReactI18next: { type: "3rdParty", init: vi.fn() },
   };
 });
 

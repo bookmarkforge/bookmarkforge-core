@@ -22,8 +22,8 @@ describe("bookmarkSchema", () => {
     expect(bookmarkSchema.title).toBe("bookmark schema");
   });
 
-  it("should have version 7 (v6 urlHash + v7 F-06 authenticated envelope)", () => {
-    expect(bookmarkSchema.version).toBe(7);
+  it("should have version 8 (v6 urlHash + v7 envelope + v8 read state)", () => {
+    expect(bookmarkSchema.version).toBe(8);
   });
 
   it("should have primaryKey id", () => {

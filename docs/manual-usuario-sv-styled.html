@@ -1,0 +1,22 @@
+<!doctype html><html lang="sv"><head><meta charset="UTF-8"><title>BookmarkForge v1 — Användarhandbok</title><style>@page{size:A4;margin:2cm}body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.8;color:#1a1a2e;font-size:13px}h1{color:#16213e;border-bottom:3px solid #0f3460;padding-bottom:10px}h2{color:#0f3460;border-bottom:1px solid #e0e0e0;padding-bottom:6px;margin-top:30px}code{background:#f4f4f4;padding:2px 6px;border-radius:3px}pre{background:#1a1a2e;color:#e0e0e0;padding:15px;border-radius:8px}table{border-collapse:collapse;width:100%;margin:15px 0}th,td{border:1px solid #ddd;padding:8px}th{background:#0f3460;color:white}footer{margin-top:50px;border-top:1px solid #ddd;padding-top:10px;color:#666;font-size:.8em;text-align:center}</style></head><body><h1>Användarhandbok — BookmarkForge v1</h1>
+<p><strong>Version:</strong> 1.0.0 · <strong>Senast uppdaterad:</strong> september 2026 · <strong>Licens:</strong> AGPL-3.0</p>
+<h2>Kom igång</h2>
+<p>BookmarkForge sparar bokmärken, anteckningar och dokument och hjälper dig att organisera personlig kunskap. Innehållet i valvet stannar i webbläsarens lokala lagring och skickas inte till BookmarkForge. En extern AI-leverantör får bara data som du uttryckligen skickar till funktionen.</p>
+<p>Valvet krypteras lokalt med AES-GCM och Argon2id härleder nyckeln från huvudlösenordet. Supporten kan inte återställa ett förlorat lösenord.</p>
+<ol>
+<li>Öppna <a href="https://bookmarkforge.com">bookmarkforge.com</a>.</li>
+<li>Skapa ett huvudlösenord på minst 12 tecken.</li>
+<li>Förvara de 24 återställningsorden säkert.</li>
+<li>Exportera regelbundet en krypterad <code>.bmf</code>-säkerhetskopia.</li>
+</ol>
+<h2>Bokmärken och sökning</h2>
+<p>Free innehåller smart sökning efter ord och betydelse. Free tillåter <strong>1 000 bokmärken</strong> och har ingen gräns för antal enheter; utan Pro-synkronisering har varje enhet ett eget valv. När 1 000 nås raderas inget: läsning, sökning och export fortsätter, medan nya sparningar pausas. Pro tar bort gränsen och synkroniserar upp till tre enheter via P2P.</p>
+<h2>Import från Pocket</h2>
+<p>Välj <code>ril_export.html</code> eller en Pocket-CSV under <strong>Inställningar → Importera</strong>. Före sparandet visas en förhandsgranskning av länkar, datum och taggar. Status för läst, oläst och arkiverad bevaras. När Free-gränsen nås anger resultatet hur många objekt som importerades och att gränsen nåddes; resten räknas inte som överhoppade.</p>
+<h2>Anteckningar, AI och synkronisering</h2>
+<p>Redigeraren stöder strukturerade anteckningar, tabeller och länkar mellan dokument. Lokal AI med WebLLM/Ollama, RAG-chatt, flashcards och P2P-synkronisering är Pro-funktioner. Om du använder egen API-nyckel gäller leverantörens villkor.</p>
+<h2>Säkerhetskopior och hjälp</h2>
+<p>Spara flera <code>.bmf</code>-kopior på olika platser. Återställning kräver huvudlösenordet. Kontrollera Free-räknaren om en sparning nekas; kontrollera nätverk, brandvägg och enhets-ID vid synkroniseringsproblem. Skicka aldrig lösenord eller återställningsord till supporten.</p>
+<p>Support: <code>bookmarkforge@proton.me</code>.</p>
+<p><em>Senast uppdaterad: september 2026 · Version 1.0.0</em></p>
+<footer>Senast uppdaterad: september 2026 · BookmarkForge v1.0.0 · MIT Core / Pro propietario</footer></body></html>

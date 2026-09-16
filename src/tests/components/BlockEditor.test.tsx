@@ -13,7 +13,7 @@ const mockT = (key: string, options?: any) => options?.defaultValue || key;
 
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({ t: mockT, i18n: { language: "en" } }),
-  initReactI18next: {},
+  initReactI18next: { type: "3rdParty", init: vi.fn() },
 }));
 
 const mockPatch = vi.fn().mockResolvedValue({});

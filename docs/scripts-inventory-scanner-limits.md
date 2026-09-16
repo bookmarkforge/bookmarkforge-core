@@ -122,10 +122,17 @@ falla. Esto asegura que la lista de candidatos se mantenga sincronizada con la
 realidad del repositorio, pero **no reemplaza la revisión manual** de los límites
 descritos en este documento.
 
-El snapshot debe regenerarse (con `node scripts/__tests__/audit-script-inventory.test.mjs`
-o el comando equivalente documentado en `docs/launch-checklist.md`) después de cualquier
+El snapshot debe regenerarse con
+`node scripts/__tests__/audit-script-inventory.test.mjs --update` después de cualquier
 cambio en la estructura de `scripts/` que afecte las referencias, y el resultado debe
-ser revisado manualmente antes de commitear.
+ser revisado manualmente antes de commitear:
+
+```bash
+node scripts/__tests__/audit-script-inventory.test.mjs --update
+node scripts/__tests__/check-audit-script-snapshot.mjs   # verifica el contrato
+```
+
+Sin `--update` el script solo verifica el contrato contra el snapshot existente.
 
 ## Véase también
 

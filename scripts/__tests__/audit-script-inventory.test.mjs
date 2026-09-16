@@ -22,6 +22,13 @@
  * runtime (e.g. build-ci.mjs joins "scripts", "rollup-wasm-loader.cjs").
  * Per docs/legacy-compatibility-plan.md, candidates are a review queue —
  * NOT a deletion list; removal requires separate evidence and review.
+ *
+ * Regenerating the snapshot (documented in
+ * docs/scripts-inventory-scanner-limits.md) is `node
+ * scripts/__tests__/audit-script-inventory.test.mjs --update`. The flag was
+ * documented but missing: without it the only way to refresh the snapshot was
+ * to hand-copy the diff out of a failing assertion, which is exactly how a
+ * snapshot drifts from the scanner it is supposed to mirror.
  */
 import assert from 'node:assert';
 import fs from 'node:fs';
@@ -195,6 +202,12 @@ if (process.env.VITEST) {
       await runSnapshotContract();
     });
   });
+} else if (process.argv.includes("--update")) {
+  const { candidates } = computeUnreferencedCandidates();
+  fs.writeFileSync(CANDIDATES_FILE, candidates.join("\n") + "\n");
+  console.log(
+    `[audit-script-inventory] snapshot regenerated: ${candidates.length} unreferenced candidate(s) → ${CANDIDATES_FILE}`,
+  );
 } else {
   await runSnapshotContract();
 }

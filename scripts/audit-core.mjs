@@ -87,7 +87,7 @@ const loanwordsByLocale = {
     "Source", "Contradictions", // cognados franceses: "la source", "les contradictions"
     // batch-12: palabras francesas nativas idénticas al inglés (selfRef FPs)
     "Actions", "Documents", "Date", "Suggestions", "Questions",
-    "Diagnostics", "Image", "Question", "Public", // "public" es francés nativo
+    "Diagnostics", "Image", "Question", "Public", "Dates", // cognados franceses nativos
   ]),
   hr: new Set(["Partner", "📊 Profiler (Ctrl+Shift+P)", "Copywriter"]),
   hu: new Set(["Offline", "Partner", "📊 Profiler (Ctrl+Shift+P)"]),

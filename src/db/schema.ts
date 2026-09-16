@@ -26,6 +26,8 @@ export interface BookmarkDocType {
   lastChecked?: string;
   visitCount: number;
   lastVisitedAt?: string;
+  /** Read state imported from Pocket or set by the user; omitted means legacy/unknown. */
+  isRead?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -149,7 +151,11 @@ export const bookmarkSchema: RxJsonSchema<BookmarkDocType> = {
   // unchanged; the bump forces RxDB to rewrite every row through the
   // authenticatedEncryptionStorage layer, upgrading legacy rows to the
   // tamper-evident format.
-  version: 7,
+  //
+  // v8: preserve an explicit read state for imports (Pocket Unread/Read).
+  // Archive is not overloaded into deletion; Pocket archive is retained as
+  // the `pocket-archive` tag until a first-class archive lifecycle exists.
+  version: 8,
   primaryKey: "id",
   type: "object",
   properties: {
@@ -169,6 +175,7 @@ export const bookmarkSchema: RxJsonSchema<BookmarkDocType> = {
     lastChecked: { type: "string", format: "date-time", maxLength: 100 },
     lastVisitedAt: { type: "string", format: "date-time", maxLength: 100 },
     visitCount: { type: "number", multipleOf: 1, minimum: 0, maximum: 1000000 },
+    isRead: { type: "boolean" },
     createdAt: { type: "string", format: "date-time", maxLength: 100 },
     updatedAt: { type: "string", format: "date-time", maxLength: 100 },
   },

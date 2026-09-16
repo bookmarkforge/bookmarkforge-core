@@ -7,9 +7,9 @@
  *   node scripts/export-public-repo.mjs --out ../bf-public # materialize the tree
  *   npm run ci -- export-repo --dry-run                    # via the CI gate runner
  *
- * The public repo is the SAME codebase (open core, AGPL-3.0). Exclusions
- * remove business/ops/private content only — never crypto, never licensing,
- * never self-hosting. CI must stay green inside the exported tree: the test
+ * The public repo is the MIT-licensed Core. Exclusions remove proprietary Pro
+ * components and private business/ops content — never Core crypto, licensing,
+ * or self-hosting. CI must stay green inside the exported tree: the test
  * suite (2000+ tests) and every repo-root / src/ / server/ / tests/ gate are
  * shipped unmodified; this script deletes only standalone nightly/ops scripts
  * that have no package.json entry and no test importing them.
@@ -77,6 +77,70 @@ const PUBLIC_DOCS = new Set([
   "adr-044-og-image-policy.md",
   "adr-045-check-brand-logo-gate.md",
   "adr-046-vault-kdf-salt-rotation.md",
+  "manual-usuario.md",
+  "manual-usuario-en.md",
+  "index.md",
+  // The full localized user-manual set (30 languages, Markdown + PDF) is user
+  // documentation, not business content: docs/index.md links every one of them,
+  // so they ship together to keep the exported index resolvable.
+  "manual-usuario-ar.md",
+  "manual-usuario-bg.md",
+  "manual-usuario-cs.md",
+  "manual-usuario-da.md",
+  "manual-usuario-de.md",
+  "manual-usuario-el.md",
+  "manual-usuario-fi.md",
+  "manual-usuario-fr.md",
+  "manual-usuario-he.md",
+  "manual-usuario-hi.md",
+  "manual-usuario-hr.md",
+  "manual-usuario-hu.md",
+  "manual-usuario-id.md",
+  "manual-usuario-it.md",
+  "manual-usuario-ja.md",
+  "manual-usuario-ko.md",
+  "manual-usuario-nl.md",
+  "manual-usuario-no.md",
+  "manual-usuario-pl.md",
+  "manual-usuario-pt.md",
+  "manual-usuario-ro.md",
+  "manual-usuario-ru.md",
+  "manual-usuario-sv.md",
+  "manual-usuario-th.md",
+  "manual-usuario-tr.md",
+  "manual-usuario-uk.md",
+  "manual-usuario-vi.md",
+  "manual-usuario-zh.md",
+  "manual-usuario.pdf",
+  "manual-usuario-en.pdf",
+  "manual-usuario-ar.pdf",
+  "manual-usuario-bg.pdf",
+  "manual-usuario-cs.pdf",
+  "manual-usuario-da.pdf",
+  "manual-usuario-de.pdf",
+  "manual-usuario-el.pdf",
+  "manual-usuario-fi.pdf",
+  "manual-usuario-fr.pdf",
+  "manual-usuario-he.pdf",
+  "manual-usuario-hi.pdf",
+  "manual-usuario-hr.pdf",
+  "manual-usuario-hu.pdf",
+  "manual-usuario-id.pdf",
+  "manual-usuario-it.pdf",
+  "manual-usuario-ja.pdf",
+  "manual-usuario-ko.pdf",
+  "manual-usuario-nl.pdf",
+  "manual-usuario-no.pdf",
+  "manual-usuario-pl.pdf",
+  "manual-usuario-pt.pdf",
+  "manual-usuario-ro.pdf",
+  "manual-usuario-ru.pdf",
+  "manual-usuario-sv.pdf",
+  "manual-usuario-th.pdf",
+  "manual-usuario-tr.pdf",
+  "manual-usuario-uk.pdf",
+  "manual-usuario-vi.pdf",
+  "manual-usuario-zh.pdf",
 ]);
 
 /**
@@ -131,6 +195,20 @@ const EXCLUDED_FILES = new Set([
   "scripts/nightly-alert.mjs",
   // License key generation (business logic around key issuance)
   "scripts/generate-license-keys.mjs",
+  // Proprietary Pro feature implementations. Keep this list explicit and
+  // mirrored by scripts/check-open-core-export.mjs.
+  "server/src/ai-proxy.ts",
+  "server/src/ai-media.ts",
+  "src/services/WebRTCSyncService.ts",
+  "src/services/pdfService.ts",
+  "src/services/BackupService.ts",
+  "src/services/DiskBackupService.ts",
+  "src/services/exporter.formatters.ts",
+  "src/services/ai/WebLLMService.ts",
+  "src/services/ai/RAGEngine.ts",
+  "src/services/ai/GlobalRAGService.ts",
+  "src/services/ai/SpecializedAgentsService.ts",
+  "src/services/ai/FlashcardService.ts",
   // Orphaned tests for excluded/replaced private-infra scripts
   "scripts/__tests__/deploy-prod.test.mjs",
   "scripts/__tests__/deploy-prod-push.test.mjs",
@@ -163,6 +241,25 @@ const EXCLUDED_FILES = new Set([
   "scripts/public-export/SECURITY.md",
   "scripts/public-export/NOTICE",
   "scripts/public-export/TRADEMARKS.md",
+  "scripts/public-export/manual-usuario.md",
+  "scripts/public-export/manual-usuario-en.md",
+  "scripts/public-export/manual-usuario.pdf",
+  "scripts/public-export/manual-usuario-en.pdf",
+  // Pro tests must not be copied into the public Core tree.
+  "src/tests/services/WebRTCSyncService.test.ts",
+  "src/tests/services/BackupService.test.ts",
+  "src/tests/services/DiskBackupService.test.ts",
+  "src/tests/services/exporter.formatters.test.ts",
+  "src/tests/services/pdfService.test.ts",
+  "src/tests/server/ai-proxy.test.ts",
+  "src/tests/server/ai-media.test.ts",
+  "src/tests/services/ai/WebLLMService.test.ts",
+  "src/tests/services/ai/WebLLMService.gpu.test.ts",
+  "src/tests/services/ai/RAGEngine.test.ts",
+  "src/tests/services/ai/RAGEngine.worker-path.test.ts",
+  "src/tests/services/ai/GlobalRAGService.test.ts",
+  "src/tests/services/ai/SpecializedAgentsService.test.ts",
+  "src/tests/services/ai/FlashcardService.test.ts",
 ]);
 
 /** Naive secret patterns; the shipped secret-scan gate is the real control. */
@@ -206,6 +303,8 @@ function exclusionReason(relPath) {
     return null;
   }
   if (EXCLUDED_DIRS.has(top) || EXCLUDED_DIRS.has(norm)) return "excluded dir";
+  if (norm.startsWith("src/services/ai/")) return "pro feature implementation";
+  if (norm.startsWith("src/tests/services/ai/") || norm.startsWith("src/tests/ai/")) return "pro feature tests";
   if (EXCLUDED_FILES.has(norm)) return "private ops/business script";
   return null;
 }
@@ -290,6 +389,10 @@ cpSync(join(repoRoot, "scripts", "public-export", "LICENSE"), join(outDir, "LICE
 cpSync(join(repoRoot, "scripts", "public-export", "README.md"), join(outDir, "README.md"));
 cpSync(join(repoRoot, "scripts", "public-export", "NOTICE"), join(outDir, "NOTICE"));
 cpSync(join(repoRoot, "scripts", "public-export", "TRADEMARKS.md"), join(outDir, "TRADEMARKS.md"));
+cpSync(join(repoRoot, "scripts", "public-export", "manual-usuario.md"), join(outDir, "manual-usuario.md"));
+cpSync(join(repoRoot, "scripts", "public-export", "manual-usuario-en.md"), join(outDir, "manual-usuario-en.md"));
+cpSync(join(repoRoot, "scripts", "public-export", "manual-usuario.pdf"), join(outDir, "manual-usuario.pdf"));
+cpSync(join(repoRoot, "scripts", "public-export", "manual-usuario-en.pdf"), join(outDir, "manual-usuario-en.pdf"));
 mkdirSync(join(outDir, ".github"), { recursive: true });
 writeFileSync(
   join(outDir, ".github", "SECURITY.md"),
@@ -333,18 +436,13 @@ try {
     console.error("[export-public] FAIL: docs-markdown baseline regeneration failed");
     process.exit(1);
   }
-  // Claim-drift gate: the exported UI surface must agree with the exported
-  // code constants (password minimum, 24-word phrase, device limits, Argon2id
-  // MiB, backup intervals, prices). Truth is extracted from the shipped
-  // sources, so the gate needs no baseline and must pass as-is inside the
-  // export — the public repo's own CI runs the same step on every push; this
-  // run is the pre-push guarantee from this side. Fail here means the private
-  // tree drifted in a claim the gate class covers: fix the strings (or the
-  // constants) in the SOURCE repo, never in the export.
+  // Claim-drift gate: validate the source tree before export. The exported
+  // Core intentionally omits Pro truth sources such as BackupService, so
+  // running this gate inside the reduced tree would create false positives.
   const claimGate = spawnSync(
     process.execPath,
     ["scripts/check-claim-drift.mjs"],
-    { cwd: outDir, stdio: "inherit" },
+    { cwd: repoRoot, stdio: "inherit" },
   );
   if (claimGate.status !== 0) {
     console.error("[export-public] FAIL: factual claim drift inside the exported tree");
@@ -358,7 +456,19 @@ try {
 const manifest = {
   generatedAt: new Date().toISOString(),
   source: "private repository (this checkout)",
-  license: "AGPL-3.0-or-later",
+  license: "MIT",
+  model: "open-core",
+  proExcluded: [...EXCLUDED_FILES].filter((file) =>
+    [
+      "server/src/ai-proxy.ts",
+      "server/src/ai-media.ts",
+      "src/services/WebRTCSyncService.ts",
+      "src/services/pdfService.ts",
+      "src/services/BackupService.ts",
+      "src/services/DiskBackupService.ts",
+      "src/services/exporter.formatters.ts",
+    ].includes(file) || file.startsWith("src/services/ai/"),
+  ),
   includedCount: included.length,
   excluded: excluded,
 };
@@ -369,6 +479,12 @@ const exportedAll = readdirSync(outDir, { recursive: true });
 const leaked = exportedAll.filter((f) => /^docs[\\/](pricing-decision|launch-checklist|que-nos-falta|support-data-loss-runbook|github-secrets)/i.test(f));
 if (leaked.length) {
   console.error("[export-public] FAIL: private docs leaked into export: " + leaked.join(", "));
+  process.exit(1);
+}
+
+const publicGate = spawnSync(process.execPath, [join(repoRoot, "scripts", "check-open-core-export.mjs"), outDir], { stdio: "inherit" });
+if (publicGate.status !== 0) {
+  console.error("[export-public] FAIL: Open Core boundary verification failed");
   process.exit(1);
 }
 

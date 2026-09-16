@@ -468,15 +468,13 @@ describe("database.core", () => {
       }
     });
 
-    it("bookmarks has 7 migration strategies", () => {
-      // bookmarkSchema is at v7 (v6 urlHash dedup + v7 F-06 authenticated
-      // envelope); the bookmarks collection's migration map must cover
-      // strategies 1..7 — any shorter chain makes addCollections throw
-      // COL12 in Dexie (caught by the migration-regression tests and the
-      // e2e unlock specs).
+    it("bookmarks has 8 migration strategies", () => {
+      // bookmarkSchema is at v8 (v6 urlHash dedup + v7 F-06 authenticated
+      // envelope + v8 read-state normalization); the migration map must
+      // cover strategies 1..8 so existing vaults open safely.
       expect(
         Object.keys(mod.COLLECTIONS.bookmarks!.migrationStrategies),
-      ).toHaveLength(7);
+      ).toHaveLength(8);
     });
 
     it("migrateToV4 defaults isPrivate to false", () => {
@@ -489,6 +487,14 @@ describe("database.core", () => {
       const result = mod.migrationStrategies[5](doc);
       expect(result).toEqual(doc);
       expect(result).not.toBe(doc);
+    });
+
+    it("migrateToV8 defaults legacy bookmarks to read", () => {
+      const result = mod.COLLECTIONS.bookmarks!.migrationStrategies[8]!({
+        id: "b1",
+        title: "t",
+      });
+      expect(result.isRead).toBe(true);
     });
   });
 });

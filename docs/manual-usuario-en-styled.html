@@ -1,0 +1,442 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><title>BookmarkForge v1 — User manual</title><style>@page{size:A4;margin:2cm}body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.8;color:#1a1a2e;font-size:13px}h1{color:#16213e;border-bottom:3px solid #0f3460;padding-bottom:10px}h2{color:#0f3460;border-bottom:1px solid #e0e0e0;padding-bottom:6px;margin-top:30px}code{background:#f4f4f4;padding:2px 6px;border-radius:3px}pre{background:#1a1a2e;color:#e0e0e0;padding:15px;border-radius:8px}table{border-collapse:collapse;width:100%;margin:15px 0}th,td{border:1px solid #ddd;padding:8px}th{background:#0f3460;color:white}footer{margin-top:50px;border-top:1px solid #ddd;padding-top:10px;color:#666;font-size:.8em;text-align:center}</style></head><body><h1>User Manual — BookmarkForge v1</h1>
+<p><strong>Version:</strong> 1.0.0 · <strong>Last updated:</strong> September 2026 · <strong>License:</strong> AGPL-3.0</p>
+<hr>
+<h2>1. Introduction</h2>
+<p>BookmarkForge is a <strong>local-first</strong> personal knowledge application that lets you save bookmarks, take notes, organize your knowledge with interactive graphs, use AI directly in your browser, and sync between devices without relying on central servers.</p>
+<p><strong>What makes BookmarkForge unique:</strong></p>
+<ul>
+<li><strong>Your bookmarks, notes, and documents live in your browser</strong> (IndexedDB/RxDB). Vault content is not sent to BookmarkForge; if you use an external AI provider, it receives only what you explicitly send through that feature.</li>
+<li><strong>End-to-end encryption</strong> with AES-GCM and Argon2id. Not even developers can read your vault.</li>
+<li><strong>Local AI</strong> that works offline and without sending your data to third parties.</li>
+<li><strong>P2P sync</strong> between your devices without central servers.</li>
+<li><strong>No subscription.</strong> Pay once and it&#39;s yours forever.</li>
+</ul>
+<hr>
+<h2>2. Getting Started</h2>
+<h3>2.1 Requirements</h3>
+<ul>
+<li>Modern browser: Chrome, Edge, Firefox, Safari (16+)</li>
+<li>8 GB RAM recommended</li>
+<li>Basic GPU for local AI (WebGPU)</li>
+<li>Internet connection (for initial setup and sync; optional for offline use)</li>
+</ul>
+<h3>2.2 Installation</h3>
+<ol>
+<li>Open <a href="https://bookmarkforge.com">bookmarkforge.com</a></li>
+<li>Click <strong>&quot;Install App&quot;</strong> or <strong>&quot;Add to Home Screen&quot;</strong></li>
+<li>The app installs as a PWA (Progressive Web App)</li>
+<li>You can also use it as a browser extension</li>
+</ol>
+<h3>2.3 Initial Setup</h3>
+<ol>
+<li><strong>Master password:</strong> Minimum 12 characters. A passphrase is recommended.<ul>
+<li>Derives your AES-GCM key with Argon2id (KDF mandatory since ADR-019)</li>
+<li><strong>Your password is the ONLY key.</strong> If you lose it, there is no recovery.</li>
+</ul>
+</li>
+<li><strong>Recovery phrase:</strong> Save the 24 words in a secure place.</li>
+<li><strong>Device ID:</strong> Generated automatically. Used to activate Pro licenses.</li>
+</ol>
+<h3>2.4 The Bookmarklet</h3>
+<p>Drag the <strong>&quot;Save to Forge&quot;</strong> button to your browser&#39;s bookmark bar. Whenever you&#39;re on a web page, click it to save it as a bookmark.</p>
+<hr>
+<h2>3. Core Features</h2>
+<h3>3.1 Bookmarks</h3>
+<ul>
+<li><strong>Virtualized list</strong> handling 100,000+ items without lag</li>
+<li><strong>Deep Search:</strong> searches the full text of saved pages</li>
+<li><strong>Smart Collections:</strong> auto-organize by tag</li>
+<li><strong>Import/Export:</strong> from Notion, Evernote, Chrome, or export as .bmf, Markdown, PDF</li>
+<li><strong>Free:</strong> 1,000 bookmarks, smart search included, and no device cap. At 1,000 your vault remains available for reading, search, and export; only new saves pause. <strong>Pro:</strong> Unlimited bookmarks.</li>
+</ul>
+<h3>3.2 Note Editor</h3>
+<p>Block-based editor with:</p>
+<ul>
+<li><code>/</code> commands for quick block insertion</li>
+<li>Drag and drop</li>
+<li>LaTeX for math</li>
+<li>Mermaid diagrams for charts</li>
+<li>Syntax highlighting for 50+ languages</li>
+<li><strong>AI Copilot</strong> for real-time assistance</li>
+</ul>
+<h3>3.3 Knowledge Graph</h3>
+<p>Interactive 3D/2D visualization of your notes:</p>
+<ul>
+<li>Filter by tag, date, or &quot;Connection Strength&quot;</li>
+<li>Visualize semantic similarities between unrelated notes</li>
+<li>Explore how your ideas connect over time</li>
+</ul>
+<h3>3.4 Flashcards</h3>
+<ul>
+<li>Modified Anki-style <strong>Spaced Repetition (SRK)</strong> algorithm</li>
+<li>Tracks your &quot;forgetting curve&quot; to show cards at the perfect moment</li>
+<li>Supports image occlusion and text deletion</li>
+<li><strong>Pro only</strong></li>
+</ul>
+<h3>3.5 Voice Commands</h3>
+<p>Voice-to-Action engine:</p>
+<ul>
+<li>Say &quot;Hey BMF, find my Biology notes&quot;</li>
+<li>Say &quot;Save this page&quot;</li>
+<li>Works 100% offline via the Web Speech API</li>
+</ul>
+<h3>3.6 Omnibar (Ctrl+K)</h3>
+<p>The brain of the application:</p>
+<ul>
+<li>Math, unit conversion</li>
+<li>Simultaneous bookmark and note search</li>
+<li>Type <code>&gt;</code> for system commands</li>
+</ul>
+<hr>
+<h2>4. AI in BookmarkForge</h2>
+<h3>4.1 AI with Your Own API Key (Free)</h3>
+<ul>
+<li>Uses Gemini, OpenAI, Anthropic, or any compatible provider</li>
+<li>You pay for tokens directly to your provider</li>
+<li>The app dynamically routes requests to the optimal model</li>
+<li><strong>Semantic Local Cache:</strong> similar questions use 0 API tokens</li>
+</ul>
+<h3>4.2 Local AI — WebLLM/Ollama (Pro)</h3>
+<ul>
+<li>Runs complete AI models (like Llama 3.2, Qwen 2.5) directly in your browser</li>
+<li>Uses your GPU (WebGPU)</li>
+<li><strong>No internet connection</strong> required</li>
+<li>4-bit quantization (q4f16) runs on modest hardware</li>
+<li><strong>No token costs</strong> and no data sent to third parties</li>
+</ul>
+<h3>4.3 RAG Chat Over Your Data (Pro)</h3>
+<ul>
+<li>The AI &quot;reads&quot; your local notes before responding</li>
+<li>Answers based on your specific knowledge</li>
+<li>Hybrid architecture with local semantic cache</li>
+<li>Similar questions use 0 tokens and 0 API calls</li>
+</ul>
+<h3>4.4 Expert Agents (Pro)</h3>
+<ul>
+<li>Specialized agents for different domains</li>
+<li>Automate complex analysis tasks</li>
+</ul>
+<hr>
+<h2>5. P2P Sync</h2>
+<h3>5.1 Requirements</h3>
+<ul>
+<li>Both devices on the same Wi-Fi network</li>
+<li>Firewall must allow WebRTC</li>
+<li>Matching sync IDs</li>
+</ul>
+<h3>5.2 Setup</h3>
+<ol>
+<li>Go to <strong>Settings &gt; Sync</strong></li>
+<li>Enable &quot;Enable P2P Sync&quot;</li>
+<li>Make sure both devices are on the same network</li>
+<li>Confirm sync IDs match</li>
+</ol>
+<h3>5.3 Troubleshooting</h3>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sync failing</td>
+<td>Verify both devices are on the same Wi-Fi</td>
+</tr>
+<tr>
+<td>Firewall blocking WebRTC</td>
+<td>Configure firewall to allow WebRTC</td>
+</tr>
+<tr>
+<td>Sync IDs don&#39;t match</td>
+<td>Restart the Sync Room</td>
+</tr>
+<tr>
+<td>Slow connection</td>
+<td>Check network latency</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>6. Security and Privacy</h2>
+<h3>6.1 Encryption</h3>
+<ul>
+<li><strong>AES-GCM</strong> with keys derived by <strong>Argon2id</strong> (version 4)</li>
+<li>Keys are never stored in plain text</li>
+<li>Derived on-the-fly and exist only in memory (RAM)</li>
+<li>Uses the native SubtleCrypto API of the browser</li>
+</ul>
+<h3>6.2 Master Password</h3>
+<ul>
+<li>Minimum 12 characters</li>
+<li>No &quot;Forgot password&quot; feature exists</li>
+<li>Your password is the ONLY key</li>
+<li>If you lose it, <strong>we cannot help you</strong></li>
+<li>Always save a .bmf backup in a secure location</li>
+</ul>
+<h3>6.3 Recovery</h3>
+<ul>
+<li>Export your vault as a <code>.bmf</code> file at any time</li>
+<li>Format: Encrypted JSON with your master key</li>
+<li>Store it securely (USB, external drive, encrypted cloud)</li>
+<li>To restore: go to <strong>Settings &gt; Restore</strong> and select your .bmf file</li>
+<li>Restoration requires your master password</li>
+</ul>
+<h3>6.4 Privacy Policy</h3>
+<ul>
+<li><strong>Zero-knowledge:</strong> developers have zero knowledge of your keys or data</li>
+<li>No Google Analytics, no telemetry, no tracking pixels</li>
+<li>No central servers storing your data</li>
+<li>GDPR by design</li>
+<li>The license server validates your license without accessing your vault</li>
+</ul>
+<h3>6.5 License Validation</h3>
+<ul>
+<li>Pro license is validated locally after an initial handshake</li>
+<li>No constant tracking</li>
+<li>License proof signed with RSA-PSS (SHA-256, salt 32)</li>
+<li>Re-validation every 48 hours when connected</li>
+<li>Proofs older than 30 days are rejected by the entitlement server</li>
+</ul>
+<hr>
+<h2>7. Free vs Pro</h2>
+<h3>7.1 Feature Comparison</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Free</th>
+<th>Pro</th>
+<th>Founder</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Price</td>
+<td>$0</td>
+<td>$79 (lifetime)</td>
+<td>$99 (lifetime)</td>
+</tr>
+<tr>
+<td>Bookmarks</td>
+<td>1,000</td>
+<td>Unlimited</td>
+<td>Unlimited</td>
+</tr>
+<tr>
+<td>Devices</td>
+<td>No cap (each device has its own vault)</td>
+<td>Up to 3 + P2P sync</td>
+<td>Up to 3 + P2P sync</td>
+</tr>
+<tr>
+<td>AI with own API key</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Local AI (WebLLM/Ollama)</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>RAG chat over your data</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Flashcards + PDF/OCR</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Advanced export (10+ formats)</td>
+<td>❌</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Local vault encryption (AES-GCM)</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Support</td>
+<td>Community</td>
+<td>Email 48h</td>
+<td>Email 24h + Beta</td>
+</tr>
+<tr>
+<td>v2/v3 discounts</td>
+<td>❌</td>
+<td>60% off</td>
+<td>60% off</td>
+</tr>
+<tr>
+<td>Founder badge</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Beta v2</td>
+<td>❌</td>
+<td>❌</td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<h3>7.2 How to Upgrade to Pro</h3>
+<ol>
+<li>Go to <strong>Settings &gt; Subscription</strong></li>
+<li>Click <strong>&quot;Get Pro Lifetime&quot;</strong></li>
+<li>You&#39;ll be redirected to Whop for payment</li>
+<li>After purchase, the app activates automatically</li>
+<li>The license is validated by the server and signed locally</li>
+</ol>
+<p><strong>Early Bird:</strong> First 200 buyers pay $59 (sold out or until 2026-12-31). Regular price is $79.</p>
+<h3>7.3 How to Upgrade to Founder</h3>
+<p>Limited to <strong>100 units</strong>. Includes everything in Pro + badge, beta v2, and perpetual 60% discount on future major versions.</p>
+<h3>7.4 Future Updates (v2, v3)</h3>
+<ul>
+<li>v1 owners pay a <strong>60% discount</strong> on future major versions</li>
+<li>v2 for new customers: $89. v2 for v1 owners: $35</li>
+<li>v3 for new customers: $99. v3 for v1 owners: $39</li>
+<li>v1 owners <strong>keep v1 functional forever</strong></li>
+</ul>
+<hr>
+<h2>8. Import and Export</h2>
+<h3>Pocket migration</h3>
+<p>Pocket HTML exports (<code>ril_export.html</code>) and Pocket-shaped CSV files are detected automatically. Before committing, the app previews links, dates, and tags. Read/archive status is preserved; if Free reaches its limit, the result reports how many items were imported and that the limit was reached instead of counting the remainder as skipped.</p>
+<h3>8.1 Import</h3>
+<p>Go to <strong>Settings &gt; Import</strong>:</p>
+<ul>
+<li><strong>HTML/JSON from Notion or Evernote</strong></li>
+<li><strong>Chrome bookmark export</strong></li>
+<li><strong>.bmf backup</strong></li>
+</ul>
+<h3>8.2 Export</h3>
+<ul>
+<li><strong>.bmf:</strong> Complete encrypted backup</li>
+<li><strong>Markdown:</strong> Notes in readable format</li>
+<li><strong>PDF:</strong> Export notes as PDF documents</li>
+<li><strong>JSON:</strong> Structured data</li>
+</ul>
+<h3>8.3 Backup and Restore</h3>
+<ul>
+<li>Regularly export your vault as .bmf</li>
+<li>Store it in a secure location</li>
+<li>To restore: go to <strong>Settings &gt; Restore</strong> and select your .bmf file</li>
+<li>Restoration requires your master password</li>
+</ul>
+<hr>
+<h2>9. Troubleshooting</h2>
+<h3>9.1 App Won&#39;t Load</h3>
+<ol>
+<li>Clear browser cache</li>
+<li>Update Chrome/Edge to the latest version</li>
+<li>Check if your disk is full</li>
+<li>Disable conflicting extensions (ad blockers sometimes block IndexedDB)</li>
+</ol>
+<h3>9.2 Sync Failing</h3>
+<ol>
+<li>Verify both devices are on the same Wi-Fi</li>
+<li>Check that the firewall allows WebRTC</li>
+<li>Confirm sync IDs match</li>
+<li>Restart the Sync Room if needed</li>
+</ol>
+<h3>9.3 AI Hallucinates</h3>
+<ol>
+<li>AI can make mistakes — use the &quot;Sources&quot; links in Chat to verify</li>
+<li>Adjust &quot;Temperature&quot; in AI Settings</li>
+<li>If using local AI, verify the model is loaded correctly</li>
+</ol>
+<h3>9.4 Extensions Not Saving</h3>
+<ol>
+<li>Update the page you&#39;re trying to save</li>
+<li>Make sure you&#39;re logged into BookmarkForge in another tab</li>
+<li>Reinstall the bookmarklet</li>
+</ol>
+<h3>9.5 Slow Performance</h3>
+<ol>
+<li>Go to Settings &gt; Advanced and run &quot;Database Optimization&quot;</li>
+<li>Check System Diagnostics for CPU usage</li>
+<li>Virtualization handles large lists, but heavy notes can affect RAM</li>
+</ol>
+<h3>9.6 Database Corrupted</h3>
+<ol>
+<li>Use &quot;System Diagnostics&quot; to check integrity</li>
+<li>If corrupted, restore from your last .bmf backup</li>
+</ol>
+<h3>9.7 Pro License Not Working</h3>
+<ol>
+<li>Verify your internet connection works (periodic validation needed)</li>
+<li>Try re-validating in <strong>Settings &gt; License &gt; Re-validate</strong></li>
+<li>If the problem persists, contact <strong><a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></strong></li>
+<li>Refundable within 30 days via Whop</li>
+</ol>
+<h3>9.8 License Error: SIGNING_KEY_INVALID</h3>
+<p>This indicates the server is not properly configured. It&#39;s not a user issue. Contact support.</p>
+<hr>
+<h2>10. Advanced Configuration</h2>
+<p>For advanced deployment, self-hosting, and server API configuration,
+refer to internal documentation or contact support.</p>
+<blockquote>
+<p>License validation is performed exclusively on the server.
+BookmarkForge requires a valid license to access Pro features.</p>
+</blockquote>
+<hr>
+<h2>11. FAQ</h2>
+<p><strong>Is it free?</strong>
+The main application is local-first and free. Advanced AI features and P2P sync require a Pro license.</p>
+<p><strong>Can I use it on mobile?</strong>
+Yes. Install it as a PWA via Chrome (Android) or Safari (iOS). Supports offline access and push notifications.</p>
+<p><strong>Where are my files?</strong>
+Inside browser storage (IndexedDB). You can export them as .bmf, Markdown, or PDF at any time.</p>
+<p><strong>Does it work offline?</strong>
+100%. All features (Editor, Bookmarks, Graph, Local AI, Search) work without internet.</p>
+<p><strong>Does it consume many API tokens?</strong>
+No. The app uses a Semantic Local Cache. If you ask variations of the same question, it uses 0 API tokens.</p>
+<p><strong>Battery consumption?</strong>
+Local AI uses WebGPU. On laptops, it may consume battery faster. Disable local AI in settings to conserve battery.</p>
+<hr>
+<h2>12. Support</h2>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Channel</th>
+<th>Response Time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Free</strong></td>
+<td>Community — Docs + /help + GitHub Discussions</td>
+<td>Best effort</td>
+</tr>
+<tr>
+<td><strong>Pro</strong></td>
+<td>Email — <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></td>
+<td>48h (business days)</td>
+</tr>
+<tr>
+<td><strong>Founder</strong></td>
+<td>Priority Email — <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></td>
+<td>24h (business days)</td>
+</tr>
+</tbody></table>
+<p><strong>Security note:</strong> Your vault is encrypted. We cannot see your data. Lost password = lost data. Support will never ask for your password or recovery phrase.</p>
+<hr>
+<h2>13. Legal</h2>
+<ul>
+<li><strong>Code license:</strong> AGPL-3.0-or-later</li>
+<li><strong>Trademark:</strong> BookmarkForge and its marks are protected (see <code>TRADEMARKS.md</code>)</li>
+<li><strong>Pricing:</strong> Frozen in <code>docs/pricing-decision.md</code>. All prices are lifetime version 1.</li>
+<li><strong>Refunds:</strong> 30 days via Whop. Full refund policy.</li>
+<li><strong>Privacy:</strong> See <code>docs/ROPA.md</code> for the personal data processing record under GDPR.</li>
+</ul>
+<hr>
+<p><em>Last updated: September 2026 · Version 1.0.0</em></p>
+<footer>Last updated: September 2026 · BookmarkForge v1.0.0 · MIT Core / Pro propietario</footer></body></html>

@@ -1,0 +1,93 @@
+<!doctype html><html lang="it"><head><meta charset="UTF-8"><title>BookmarkForge v1 — Manuale utente</title><style>@page{size:A4;margin:2cm}body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.8;color:#1a1a2e;font-size:13px}h1{color:#16213e;border-bottom:3px solid #0f3460;padding-bottom:10px}h2{color:#0f3460;border-bottom:1px solid #e0e0e0;padding-bottom:6px;margin-top:30px}code{background:#f4f4f4;padding:2px 6px;border-radius:3px}pre{background:#1a1a2e;color:#e0e0e0;padding:15px;border-radius:8px}table{border-collapse:collapse;width:100%;margin:15px 0}th,td{border:1px solid #ddd;padding:8px}th{background:#0f3460;color:white}footer{margin-top:50px;border-top:1px solid #ddd;padding-top:10px;color:#666;font-size:.8em;text-align:center}</style></head><body><h1>Manuale utente — BookmarkForge v1</h1>
+<p><strong>Versione:</strong> 1.0.0 · <strong>Ultimo aggiornamento:</strong> settembre 2026 · <strong>Licenza:</strong> AGPL-3.0</p>
+<h2>1. Panoramica</h2>
+<p>BookmarkForge salva segnalibri, note e documenti in una raccolta personale della conoscenza. Il contenuto del tuo archivio resta nello spazio locale del browser e non viene inviato a BookmarkForge. Se usi un provider AI esterno, riceve solo i dati che invii esplicitamente a quella funzione.</p>
+<p>L’archivio è cifrato localmente con AES-GCM; Argon2id deriva la chiave dalla password principale. La password è indispensabile e non può essere recuperata dal supporto.</p>
+<h2>2. Per iniziare</h2>
+<ol>
+<li>Apri <a href="https://bookmarkforge.com">bookmarkforge.com</a>.</li>
+<li>Installa la PWA quando il browser lo propone, oppure usa direttamente l’app web.</li>
+<li>Crea una password principale di almeno 12 caratteri.</li>
+<li>Conserva in sicurezza le 24 parole di recupero.</li>
+<li>Esporta periodicamente un backup <code>.bmf</code> cifrato.</li>
+</ol>
+<p>Dopo il primo caricamento puoi usare BookmarkForge offline. Il bookmarklet e le estensioni salvano rapidamente la pagina aperta.</p>
+<h2>3. Segnalibri e ricerca</h2>
+<ul>
+<li>Salva URL, titolo, data ed etichette della pagina.</li>
+<li>La ricerca intelligente per parole e significato è inclusa nel piano Free.</li>
+<li>Free consente <strong>1.000 segnalibri</strong> e non impone un limite di dispositivi. Senza la sincronizzazione Pro, però, ogni dispositivo mantiene il proprio archivio.</li>
+<li>A 1.000 elementi non viene eliminato nulla: lettura, ricerca ed esportazione continuano a funzionare. Vengono solo sospesi i nuovi salvataggi.</li>
+<li>Pro rimuove il limite e sincronizza fino a tre dispositivi tramite P2P.</li>
+</ul>
+<h2>4. Importare da Pocket</h2>
+<p>Apri <strong>Impostazioni → Importa</strong> e scegli <code>ril_export.html</code> oppure un CSV esportato da Pocket. Il formato viene riconosciuto e, prima del salvataggio, viene mostrata un’anteprima con numero di link, date disponibili ed etichette.</p>
+<p>Gli stati letto, non letto e archiviato vengono conservati. Se l’importazione raggiunge il limite Free, il risultato indica quanti elementi sono stati importati e che il limite è stato raggiunto; gli elementi rimanenti non vengono conteggiati come saltati.</p>
+<h2>5. Note, AI e sincronizzazione</h2>
+<p>L’editor supporta note strutturate, tabelle e collegamenti tra documenti. Per l’AI con una tua chiave API valgono le condizioni del provider e paghi direttamente quel servizio.</p>
+<p>AI locale con WebLLM/Ollama, chat sui tuoi dati, flashcard e sincronizzazione P2P sono funzioni Pro. La sincronizzazione P2P può richiedere la stessa rete Wi-Fi o un servizio di segnalazione configurato.</p>
+<h2>6. Backup e recupero</h2>
+<ul>
+<li>Crea un backup <code>.bmf</code> prima di una migrazione o di un’operazione importante.</li>
+<li>Conserva più copie in luoghi diversi.</li>
+<li>Il ripristino richiede la password principale.</li>
+<li>Una password persa non può essere sostituita dal supporto senza frase di recupero o backup valido.</li>
+</ul>
+<h2>7. Free e Pro</h2>
+<table>
+<thead>
+<tr>
+<th>Funzione</th>
+<th>Free</th>
+<th>Pro</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Segnalibri</td>
+<td>1.000</td>
+<td>Illimitati</td>
+</tr>
+<tr>
+<td>Dispositivi</td>
+<td>Nessun limite, archivi separati</td>
+<td>Fino a 3 con P2P</td>
+</tr>
+<tr>
+<td>Ricerca intelligente</td>
+<td>Inclusa</td>
+<td>Inclusa</td>
+</tr>
+<tr>
+<td>AI con chiave propria</td>
+<td>Sì</td>
+<td>Sì</td>
+</tr>
+<tr>
+<td>AI locale e chat RAG</td>
+<td>No</td>
+<td>Sì</td>
+</tr>
+<tr>
+<td>Export JSON/HTML e <code>.bmf</code></td>
+<td>Sì</td>
+<td>Sì</td>
+</tr>
+<tr>
+<td>Pagamento</td>
+<td>Gratuito</td>
+<td>Licenza v1 una tantum</td>
+</tr>
+</tbody></table>
+<p>Attiva Pro da <strong>Impostazioni → Pro</strong> usando il checkout Whop. L’attivazione contatta il servizio licenze; l’archivio non viene trasferito.</p>
+<h2>8. Risoluzione dei problemi</h2>
+<ul>
+<li><strong>L’app non si carica:</strong> aggiorna il browser, controlla lo spazio disponibile e disattiva temporaneamente le estensioni problematiche.</li>
+<li><strong>Salvataggio rifiutato:</strong> controlla il contatore Free; a 1.000 esporta, elimina un elemento oppure attiva Pro.</li>
+<li><strong>Sincronizzazione fallita:</strong> controlla rete, firewall e ID dei dispositivi.</li>
+<li><strong>Licenza non attivata:</strong> verifica la connessione e invia al supporto il codice di errore, mai password o frase di recupero.</li>
+</ul>
+<h2>9. Privacy e supporto</h2>
+<p>Il contenuto dell’archivio resta locale per impostazione predefinita. Pagamenti, licenze, AI remota, segnalazione P2P ed eventuali report di errore trattano solo i dati tecnici necessari secondo i relativi consensi e condizioni.</p>
+<p>Supporto: <code>bookmarkforge@proton.me</code>. Il supporto non chiederà mai password o frase di recupero.</p>
+<p><em>Ultimo aggiornamento: settembre 2026 · Versione 1.0.0</em></p>
+<footer>Ultimo aggiornamento: settembre 2026 · BookmarkForge v1.0.0 · MIT Core / Pro propietario</footer></body></html>

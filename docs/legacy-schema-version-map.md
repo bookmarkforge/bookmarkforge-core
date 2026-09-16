@@ -7,7 +7,7 @@ Su función es ofrecer un diagnóstico estable de compatibilidad/migración sin 
 
 | Colección | Versión | Campos cifrados |
 |---|---|---|
-| `bookmarkSchema` | 7 | `` |
+| `bookmarkSchema` | 8 | `` |
 | `chunkSchema` | 3 | `` |
 | `documentAttachmentSchema` | 2 | `` |
 | `documentSchema` | 2 | `` |

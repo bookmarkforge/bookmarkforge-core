@@ -1,7 +1,8 @@
 # BookmarkForge Trademark & Brand Policy
 
-The source code of BookmarkForge is free software under the GNU Affero General
-Public License v3.0 (see [LICENSE](LICENSE)). **The brand is not.** This
+The Core source code of BookmarkForge is free software under the MIT License
+(see [LICENSE](LICENSE)). **The brand is not.** Pro components are proprietary
+and are not included in this public export. This
 policy explains how the name, logo and other brand assets may and may not be
 used. It applies to everyone, including forks and derivatives.
 
@@ -13,7 +14,7 @@ used. It applies to everyone, including forks and derivatives.
   `bookmarkforge.com` and any official social handles
 
 These are either registered trademarks or are claimed as such, and they are
-**not** covered by the AGPL grant (see [NOTICE](NOTICE)).
+**not** covered by the MIT grant (see [NOTICE](NOTICE)).
 
 ## What is allowed without permission
 
@@ -38,7 +39,7 @@ You may use the Marks to refer to the software truthfully and neutrally
 
 ## Forks and derivatives
 
-You are free to fork BookmarkForge under the AGPL. A fork must:
+You are free to fork the MIT-licensed Core under the MIT terms. A fork must:
 
 1. Use its **own name and own logo** — never the Marks, never
    "BookmarkForge" plus a modifier ("BookmarkForge X", "BF Forge" for a

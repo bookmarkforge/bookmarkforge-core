@@ -1,14 +1,13 @@
 BookmarkForge
 Copyright 2026 BookmarkForge
 
-This program is free software: you can redistribute it and/or modify it under
-the terms of the GNU Affero General Public License as published by the Free
-Software Foundation, either version 3 of the License, or (at your option) any
-later version. See the LICENSE file for the full license text.
+The Core in this repository is MIT-licensed. See the LICENSE file for the full
+license text. Pro components are proprietary and are intentionally excluded
+from this public export; see OPEN-CORE.md in the source distribution.
 
 The name "BookmarkForge", the BookmarkForge logo, wordmark, domain names and
 other brand assets (collectively, the "Marks") are NOT licensed under the
-AGPL and are NOT part of the rights granted by the license. Use of the Marks
+MIT and are NOT part of the rights granted by the license. Use of the Marks
 without prior written permission is prohibited. See TRADEMARKS.md for what is
 and is not allowed.
 

@@ -514,11 +514,13 @@ async function callWhop(
   // the adapter translates our contract directly onto Whop's license-key API
   // (no reseller-style endpoint in between).
   if (whopIsWhopApiUrl(base)) {
+    const licenseKey = body.license_key;
+    if (!licenseKey) throw new Error("provider_missing_license_key");
     const deviceId = body.instance_name || body.instance_id || "";
     if (!deviceId) throw new Error("provider_missing_instance");
-    if (action === "activate") return whopNativeActivate(apiKey, body.license_key, deviceId);
-    if (action === "deactivate") return whopNativeDeactivate(apiKey, body.license_key, deviceId);
-    return whopNativeValidateLicense(apiKey, body.license_key, deviceId);
+    if (action === "activate") return whopNativeActivate(apiKey, licenseKey, deviceId);
+    if (action === "deactivate") return whopNativeDeactivate(apiKey, licenseKey, deviceId);
+    return whopNativeValidateLicense(apiKey, licenseKey, deviceId);
   }
   const endpoint = normalizeActionUrl(base, action, options.allowInsecureHttp === true);
   if (!endpoint) throw new Error("whop_not_configured");

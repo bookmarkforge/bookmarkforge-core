@@ -503,6 +503,38 @@ describe("UniversalImporter", () => {
     });
   });
 
+  describe("Pocket preview detection", () => {
+    it("detects ril_export.html by Pocket shape and previews links, dates, and tags", async () => {
+      const file = new File(
+        ["<H3>Unread</H3><DL><p><DT><A HREF=\"https://one.example\" ADD_DATE=\"1700000000\" TAGS=\"work,read\">One</A></DL>"],
+        "ril_export.html",
+        { type: "text/html" },
+      );
+      await expect(UniversalImporter.previewPocketFile(file)).resolves.toMatchObject({
+        source: "pocket",
+        linkCount: 1,
+        datedCount: 1,
+        uniqueTagCount: 2,
+        unreadCount: 1,
+      });
+    });
+
+    it("detects Pocket CSV by headers and previews dates and tags", async () => {
+      const file = new File(
+        ["title,url,status,time_added,tags\nOne,https://one.example,Unread,1700000000,work|read"],
+        "pocket-export.csv",
+        { type: "text/csv" },
+      );
+      await expect(UniversalImporter.previewPocketFile(file)).resolves.toMatchObject({
+        source: "pocket",
+        linkCount: 1,
+        datedCount: 1,
+        uniqueTagCount: 2,
+        unreadCount: 1,
+      });
+    });
+  });
+
   describe("importFromPocketHTML", () => {
     it("should import bookmarks from a Pocket HTML export", async () => {
       const html =
@@ -517,6 +549,32 @@ describe("UniversalImporter", () => {
           url: "https://example.com",
           title: "Test Title",
           tags: expect.arrayContaining(["tag1", "tag2"]),
+        }),
+      );
+    });
+
+    it("maps Pocket Unread, Read, and Archive sections without deleting archived items", async () => {
+      const html = `<!DOCTYPE NETSCAPE-Bookmark-file-1>
+        <H3>Unread</H3><DL><p><DT><A HREF="https://unread.example">Unread</A></DL>
+        <H3>Read</H3><DL><p><DT><A HREF="https://read.example">Read</A></DL>
+        <H3>Archive</H3><DL><p><DT><A HREF="https://archive.example">Archive</A></DL>`;
+      const file = new File([html], "pocket.html", { type: "text/html" });
+      await importer.importData(mockDb, file);
+
+      expect(mockDb.bookmarks.insert).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({ isRead: false }),
+      );
+      expect(mockDb.bookmarks.insert).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({ isRead: true }),
+      );
+      expect(mockDb.bookmarks.insert).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({
+          isRead: true,
+          tags: expect.arrayContaining(["pocket-archive"]),
+          isDeleted: false,
         }),
       );
     });
@@ -570,6 +628,30 @@ describe("UniversalImporter", () => {
       const file = new File([csv], "raindrop.csv", { type: "text/csv" });
       const result = await importer.importData(mockDb, file);
       expect(result.success).toBe(true);
+    });
+
+    it("maps Pocket-style status columns in CSV without treating Archive as deletion", async () => {
+      const csv =
+        "title,url,status\nUnread,https://unread.example,Unread\nRead,https://read.example,Read\nArchive,https://archive.example,Archive";
+      const file = new File([csv], "pocket.csv", { type: "text/csv" });
+      await importer.importData(mockDb, file);
+
+      expect(mockDb.bookmarks.insert).toHaveBeenNthCalledWith(
+        1,
+        expect.objectContaining({ isRead: false }),
+      );
+      expect(mockDb.bookmarks.insert).toHaveBeenNthCalledWith(
+        2,
+        expect.objectContaining({ isRead: true }),
+      );
+      expect(mockDb.bookmarks.insert).toHaveBeenNthCalledWith(
+        3,
+        expect.objectContaining({
+          isRead: true,
+          tags: expect.arrayContaining(["pocket-archive"]),
+          isDeleted: false,
+        }),
+      );
     });
 
     it("should detect Raindrop by file name", async () => {

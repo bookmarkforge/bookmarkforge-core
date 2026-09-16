@@ -46,7 +46,7 @@
  * artifact that is already on disk, so a summary failure is logged, not fatal.
  */
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { spawnSync } from "node:child_process";
 import {
@@ -69,23 +69,28 @@ const DEFAULT_REPORT_PATH = join(ROOT, "dependency-cve-report.md");
 /**
  * Run `npm audit --json` for the requested profile (throws on failure).
  *
- * The command is a fixed string with `shell: true` rather than an arg array:
- * npm is a `.cmd` shim on Windows (an arg array there needs a shell anyway, and
- * Node flags that combination as DEP0190). Nothing user-supplied reaches the
- * string — the profile is one of two literals — so there is no injection path.
+ * Use an argument array rather than a shell command string. On Windows the
+ * executable is the npm.cmd shim, so resolving that explicitly avoids both
+ * command injection risk and Node's DEP0190 shell warning.
  */
 export function runNpmAudit({ includeDev = false } = {}) {
-  const args = "audit --json" + (includeDev ? "" : " --omit=dev");
-  const result = spawnSync(`npm ${args}`, {
+  const useWindowsShim = process.platform === "win32";
+  const executable = useWindowsShim
+    ? process.execPath
+    : "npm";
+  const args = useWindowsShim
+    ? [join(dirname(process.execPath), "node_modules", "npm", "bin", "npm-cli.js"), "audit", "--json"]
+    : ["audit", "--json"];
+  if (!includeDev) args.push("--omit=dev");
+  const result = spawnSync(executable, args, {
     cwd: ROOT,
     encoding: "utf8",
     maxBuffer: 64 * 1024 * 1024,
-    shell: true,
   });
   const stdout = result.stdout ?? "";
   if (!stdout.trim()) {
     throw new Error(
-      `npm ${args} produced no JSON (exit ${result.status ?? "?"}) — ` +
+      `npm ${args.join(" ")} produced no JSON (exit ${result.status ?? "?"}) — ` +
         `${(result.stderr ?? "").trim().split("\n").slice(-3).join(" ").trim() || "is npm installed and is the network reachable?"}`,
     );
   }

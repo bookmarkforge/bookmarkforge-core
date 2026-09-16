@@ -341,6 +341,13 @@ function syncUrlHash(url: string): string {
   return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
+// Legacy bookmarks had no read-state field. Treat them as read/unknown rather
+// than silently making the entire existing vault appear unread after upgrade.
+const migrateToV8Bookmark = (doc: Record<string, unknown>) => ({
+  ...doc,
+  isRead: typeof doc.isRead === "boolean" ? doc.isRead : true,
+});
+
 const migrateToV2Folder = (doc: Record<string, unknown>) => {
   const migrated = { ...doc };
   if (migrated.parentId === undefined || migrated.parentId === null) {
@@ -381,7 +388,7 @@ const migrateChunkToV2 = (doc: Record<string, unknown>) => ({
 // exactly like the earlier `encrypted`-array bumps (v2 templates, v3
 // folders). This keeps the storage layer in charge of re-encrypting the
 // fields on the migration write.
-const v7BookmarkMigrationStrategies = {
+const v8BookmarkMigrationStrategies = {
   1: migrateToV1,
   2: migrateToV2,
   3: migrateToV3,
@@ -389,6 +396,7 @@ const v7BookmarkMigrationStrategies = {
   5: migrateToV5,
   6: migrateToV6,
   7: migrateNoop,
+  8: migrateToV8Bookmark,
 } as const;
 const v2AttachmentMigrationStrategies = {
   1: migrateNoop,
@@ -465,7 +473,7 @@ export const COLLECTIONS: Record<string, CollectionConfig> = {
   bookmarks: {
     schema: bookmarkSchema,
     ...baseCollection,
-    migrationStrategies: v7BookmarkMigrationStrategies,
+    migrationStrategies: v8BookmarkMigrationStrategies,
   },
   documents: {
     schema: documentSchema,

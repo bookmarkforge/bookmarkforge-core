@@ -1,7 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-const universalImporterMock = vi.hoisted(() => ({ importData: vi.fn() }));
+const universalImporterMock = vi.hoisted(() => ({
+  importData: vi.fn(),
+  previewPocketFile: vi.fn().mockResolvedValue(null),
+}));
 vi.mock("../../services/UniversalImporter", () => ({
   universalImporter: universalImporterMock,
 }));
@@ -29,6 +32,12 @@ function createFile(name: string, type: string): File {
 describe("ImportDialog", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    universalImporterMock.previewPocketFile.mockResolvedValue(null);
+    universalImporterMock.importData.mockResolvedValue({
+      success: true,
+      importedCount: 0,
+      skippedCount: 0,
+    });
   });
 
   it("does not render when isOpen is false", () => {
@@ -211,6 +220,66 @@ describe("ImportDialog", () => {
     await userEvent.click(btn);
     expect(screen.queryByText(/Import Complete/i)).toBeNull();
     expect(screen.getByText(/Click to upload file/i)).toBeTruthy();
+  });
+
+  it("previews a Pocket export before committing it", async () => {
+    universalImporterMock.previewPocketFile.mockResolvedValue({
+      source: "pocket",
+      filename: "ril_export.html",
+      linkCount: 42,
+      datedCount: 40,
+      uniqueTagCount: 7,
+      unreadCount: 12,
+      archivedCount: 5,
+      sampleTitles: ["A saved idea", "Another link"],
+    });
+    universalImporterMock.importData.mockResolvedValue({
+      success: true,
+      importedCount: 42,
+      skippedCount: 0,
+    });
+    const mockFile = new File(["pocket export"], "ril_export.html", {
+      type: "text/html",
+    });
+    render(<ImportDialog isOpen={true} onClose={vi.fn()} />);
+    const input = screen.getByLabelText(
+      /Click to upload file/i,
+    ) as HTMLInputElement;
+    Object.defineProperty(input, "files", { value: [mockFile] });
+    fireEvent.change(input);
+
+    await waitFor(() =>
+      expect(screen.getByTestId("pocket-import-preview")).toBeTruthy(),
+    );
+    expect(screen.getByText("42")).toBeTruthy();
+    expect(screen.getByText("Here’s what will transfer")).toBeTruthy();
+    expect(universalImporterMock.importData).not.toHaveBeenCalled();
+
+    await userEvent.click(screen.getByRole("button", { name: /Import these links/i }));
+    await waitFor(() =>
+      expect(universalImporterMock.importData).toHaveBeenCalledWith(
+        expect.anything(),
+        mockFile,
+        expect.anything(),
+      ),
+    );
+  });
+
+  it("falls through to direct import for non-Pocket files", async () => {
+    universalImporterMock.previewPocketFile.mockResolvedValue(null);
+    universalImporterMock.importData.mockResolvedValue({
+      success: true,
+      importedCount: 1,
+      skippedCount: 0,
+    });
+    const mockFile = createFile("test.json", "application/json");
+    render(<ImportDialog isOpen={true} onClose={vi.fn()} />);
+    const input = screen.getByLabelText(
+      /Click to upload file/i,
+    ) as HTMLInputElement;
+    Object.defineProperty(input, "files", { value: [mockFile] });
+    fireEvent.change(input);
+    await waitFor(() => expect(universalImporterMock.importData).toHaveBeenCalled());
   });
 
   it("closes the dialog when clicking the overlay", () => {

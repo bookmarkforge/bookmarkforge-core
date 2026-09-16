@@ -1,5 +1,9 @@
 # AGENTS.md — BookmarkForge engineering conventions
 
+BookmarkForge is an **Open Core** project: the public Core is MIT-licensed,
+while explicitly identified Pro components remain proprietary. Do not assume
+that the root `package.json` license covers every file in the private checkout.
+
 BookmarkForge is a **local-first, privacy-preserving** AI knowledge vault
 (React 19 / Vite 8 / RxDB 17 / IndexedDB / WebCrypto AES-GCM + Argon2id).
 It stores personal data: **default to fail-closed, zeroize, least privilege**.
@@ -8,7 +12,16 @@ security-adjacent code.
 
 ---
 
-## 1. Password buffer ownership & zeroization (MANDATORY)
+## 1. Open Core boundary (MANDATORY)
+
+- Keep the Core/Pro classification synchronized with `OPEN-CORE.md` and
+  `scripts/export-public-repo.mjs`.
+- Pro code must never enter the public export. Run `npm run check:open-core` after
+  changing export rules or feature boundaries.
+- New files that implement paid features must be classified before merge; do
+  not rely on naming alone as a license boundary.
+
+## 2. Password buffer ownership & zeroization (MANDATORY)
 
 The codebase has an explicit ownership contract for secrets-as-bytes:
 
@@ -41,7 +54,7 @@ The codebase has an explicit ownership contract for secrets-as-bytes:
   ciphertexts in IndexedDB — **both** surfaces are needed to decrypt. With a
   master password the JWK is wrapped (H5); never persist a plaintext copy.
 
-## 2. Header anchor convention (ADR / audit references)
+## 3. Header anchor convention (ADR / audit references)
 
 - Security-significant changes carry a header anchor mapping to the decision
   record: `// ADR-019: …`, or audit round codes such as `// S1/R3: …`,
@@ -57,7 +70,7 @@ The codebase has an explicit ownership contract for secrets-as-bytes:
   Removing or renaming an anchored test is an ADR-level change;
   `npm run check:audit-drift` fails on drift.
 
-## 3. Error handling: `INTENTIONAL SILENCE`
+## 4. Error handling: `INTENTIONAL SILENCE`
 
 - **Never swallow errors silently.** A deliberately empty `catch` must say so:
   `catch { /* INTENTIONAL SILENCE: <precise reason> */ }`.
@@ -67,7 +80,7 @@ The codebase has an explicit ownership contract for secrets-as-bytes:
   leak raw `SyntaxError.message`, stack frames, or secret material
   (`src/telemetry/sanitize.ts` applies to the error pipeline).
 
-## 4. Layer rules (enforced by `npm run check:boundaries`)
+## 5. Layer rules (enforced by `npm run check:boundaries`)
 
 - `components` must NOT import `workers`, `memory`, or `db` directly.
   - Bootstrap (`initDB`/`destroyDB`) goes through

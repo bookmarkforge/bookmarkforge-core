@@ -1,0 +1,93 @@
+<!doctype html><html lang="fr"><head><meta charset="UTF-8"><title>BookmarkForge v1 — Manuel utilisateur</title><style>@page{size:A4;margin:2cm}body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;line-height:1.8;color:#1a1a2e;font-size:13px}h1{color:#16213e;border-bottom:3px solid #0f3460;padding-bottom:10px}h2{color:#0f3460;border-bottom:1px solid #e0e0e0;padding-bottom:6px;margin-top:30px}code{background:#f4f4f4;padding:2px 6px;border-radius:3px}pre{background:#1a1a2e;color:#e0e0e0;padding:15px;border-radius:8px}table{border-collapse:collapse;width:100%;margin:15px 0}th,td{border:1px solid #ddd;padding:8px}th{background:#0f3460;color:white}footer{margin-top:50px;border-top:1px solid #ddd;padding-top:10px;color:#666;font-size:.8em;text-align:center}</style></head><body><h1>Manuel utilisateur — BookmarkForge v1</h1>
+<p><strong>Version :</strong> 1.0.0 · <strong>Dernière mise à jour :</strong> septembre 2026 · <strong>Licence :</strong> AGPL-3.0</p>
+<h2>1. Présentation</h2>
+<p>BookmarkForge est une application personnelle pour enregistrer des liens, prendre des notes et organiser ses connaissances. Vos marque-pages, notes et documents restent dans le stockage local de votre navigateur. Le contenu de votre coffre n’est pas envoyé à BookmarkForge. Si vous utilisez un fournisseur d’IA externe, seules les données que vous envoyez explicitement à cette fonction lui sont transmises.</p>
+<p>Le coffre est chiffré localement avec AES-GCM et une clé dérivée avec Argon2id. Votre mot de passe est indispensable : nous ne pouvons pas le récupérer.</p>
+<h2>2. Commencer</h2>
+<ol>
+<li>Ouvrez <a href="https://bookmarkforge.com">bookmarkforge.com</a>.</li>
+<li>Installez l’application si votre navigateur propose l’installation PWA, ou utilisez-la directement.</li>
+<li>Créez un mot de passe maître d’au moins 12 caractères.</li>
+<li>Conservez les 24 mots de récupération dans un endroit sûr.</li>
+<li>Exportez régulièrement une sauvegarde <code>.bmf</code> chiffrée.</li>
+</ol>
+<p>Vous pouvez utiliser BookmarkForge hors connexion après le premier chargement. Le bookmarklet et les extensions servent à enregistrer rapidement la page ouverte.</p>
+<h2>3. Marque-pages et recherche</h2>
+<ul>
+<li>Enregistrez une page, son titre, sa date et ses étiquettes.</li>
+<li>Utilisez la recherche par mots-clés ou par sens : la recherche intelligente est incluse dans Free.</li>
+<li>Free autorise <strong>1 000 marque-pages</strong> et ne limite pas le nombre d’appareils. Chaque appareil possède toutefois son propre coffre tant que vous n’utilisez pas la synchronisation P2P de Pro.</li>
+<li>À 1 000 éléments, rien n’est supprimé : la lecture, la recherche et l’export restent disponibles. Seuls les nouveaux enregistrements sont mis en pause.</li>
+<li>Pro supprime cette limite et ajoute la synchronisation P2P entre trois appareils.</li>
+</ul>
+<h2>4. Importer depuis Pocket</h2>
+<p>Ouvrez <strong>Paramètres → Importer</strong> et sélectionnez <code>ril_export.html</code> ou un CSV exporté depuis Pocket. L’application détecte le format et affiche une prévisualisation avant toute écriture : nombre de liens, dates disponibles et étiquettes détectées.</p>
+<p>Les états lu, non lu et archivé sont conservés. Si l’import atteint la limite Free, le résultat indique clairement le nombre importé et que la limite est atteinte ; les éléments restants ne sont pas comptés comme ignorés.</p>
+<h2>5. Notes, IA et synchronisation</h2>
+<p>L’éditeur permet de créer des notes structurées, des tableaux et des liens entre documents. L’IA avec votre propre clé est séparée de BookmarkForge : vous payez directement le fournisseur et ses règles de confidentialité s’appliquent.</p>
+<p>L’IA locale WebLLM/Ollama, le chat sur vos données, les flashcards et la synchronisation P2P sont des fonctions Pro. La synchronisation P2P peut nécessiter le même réseau Wi-Fi ou un serveur de signalisation configuré.</p>
+<h2>6. Sauvegarde et récupération</h2>
+<ul>
+<li>Exportez un <code>.bmf</code> avant une migration ou une opération importante.</li>
+<li>Gardez plusieurs copies dans des endroits différents.</li>
+<li>La restauration demande le mot de passe du coffre.</li>
+<li>Un mot de passe perdu sans phrase de récupération ni sauvegarde exploitable ne peut pas être réinitialisé par le support.</li>
+</ul>
+<h2>7. Free et Pro</h2>
+<table>
+<thead>
+<tr>
+<th>Fonction</th>
+<th>Free</th>
+<th>Pro</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Marque-pages</td>
+<td>1 000</td>
+<td>Illimités</td>
+</tr>
+<tr>
+<td>Appareils</td>
+<td>Sans limite, coffres séparés</td>
+<td>Jusqu’à 3 avec P2P</td>
+</tr>
+<tr>
+<td>Recherche intelligente</td>
+<td>Incluse</td>
+<td>Incluse</td>
+</tr>
+<tr>
+<td>IA avec votre clé</td>
+<td>Oui</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>IA locale et chat RAG</td>
+<td>Non</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>Export JSON/HTML et <code>.bmf</code></td>
+<td>Oui</td>
+<td>Oui</td>
+</tr>
+<tr>
+<td>Paiement</td>
+<td>Gratuit</td>
+<td>Achat unique, licence v1</td>
+</tr>
+</tbody></table>
+<p>Pour acheter Pro, ouvrez <strong>Paramètres → Pro</strong> et utilisez le checkout Whop. L’activation nécessite une connexion au service de licence ; votre coffre n’est pas envoyé au service.</p>
+<h2>8. Dépannage</h2>
+<ul>
+<li><strong>L’application ne se charge pas :</strong> actualisez le navigateur, vérifiez l’espace disponible et essayez sans extension bloquante.</li>
+<li><strong>Un enregistrement est refusé :</strong> vérifiez le compteur Free ; à 1 000, exportez, supprimez un élément ou activez Pro.</li>
+<li><strong>La synchronisation échoue :</strong> vérifiez le réseau, le pare-feu et les identifiants des deux appareils.</li>
+<li><strong>Une licence ne s’active pas :</strong> vérifiez la connexion et contactez le support avec le code d’erreur, jamais avec votre mot de passe ou votre phrase de récupération.</li>
+</ul>
+<h2>9. Confidentialité et support</h2>
+<p>Le contenu du coffre reste local par défaut. Les services facultatifs — paiement, licence, IA distante, signalisation ou suivi d’erreurs si vous y consentez — ont leurs propres données techniques et conditions.</p>
+<p>Support : <code>bookmarkforge@proton.me</code>. Le support ne demandera jamais votre mot de passe ni vos 24 mots.</p>
+<p><em>Dernière mise à jour : septembre 2026 · Version 1.0.0</em></p>
+<footer>Dernière mise à jour : septembre 2026 · BookmarkForge v1.0.0 · MIT Core / Pro propietario</footer></body></html>

@@ -30,12 +30,11 @@
  *      are satisfied in the export by the generated .d.ts pairs — they carry
  *      no code into Core chunks.
  *
- * Anything whose target is inside a Pro *directory* (today: src/services/ai/)
- * is the declared pending zone: the AI tree is still statically linked and is
- * scheduled to migrate behind the loader (see OPEN-CORE.md). Those references
- * are tolerated but counted and reported, so their shrinkage is visible.
- *
- * Anything else fails with the file, line and specifier to fix.
+ * There is NO tolerated zone: the AI tree used to be one while it migrated
+ * behind the loader, but that migration is complete (pending count held at 0
+ * and the tolerance branch was removed). Pro is an exact file list in
+ * scripts/pro-boundary.mjs — anything else fails with the file, line and
+ * specifier to fix.
  *
  * Policy is imported from scripts/pro-boundary.mjs so the exporter, the
  * boundary generator, the open-core gate and this gate can never disagree
@@ -44,11 +43,7 @@
 import { readFileSync } from "node:fs";
 import { dirname, join, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import {
-  isProModulePath,
-  PRO_MODULE_DIRS,
-  scanProReferences,
-} from "./pro-boundary.mjs";
+import { isProModulePath, scanProReferences } from "./pro-boundary.mjs";
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_ROOT = join(SCRIPT_DIR, "..");
@@ -98,13 +93,12 @@ function lineOf(source, specifier) {
  *
  * @param {string} root repo root to scan
  * @param {string[]=} files optional file list override (tests)
- * @returns {{violations: Array<{file: string, line: number, specifier: string, modulePath: string}>, pendingAi: number, referencingFiles: number, allowed: number}}
+ * @returns {{violations: Array<{file: string, line: number, specifier: string, modulePath: string}>, referencingFiles: number, allowed: number}}
  */
 export function checkProImports(root = DEFAULT_ROOT, files) {
   const { perFile } = scanProReferences(root, files ?? undefined);
   const violations = [];
   let allowed = 0;
-  let pendingAi = 0;
 
   for (const [file, refs] of perFile) {
     let source;
@@ -131,12 +125,6 @@ export function checkProImports(root = DEFAULT_ROOT, files) {
         allowed += 1;
         continue;
       }
-      if (PRO_MODULE_DIRS.some((dir) => info.modulePath.startsWith(dir))) {
-        // Declared pending zone: AI coupling migrates behind the loader as
-        // its own task; tolerated, counted, never silently grown.
-        pendingAi += 1;
-        continue;
-      }
       violations.push({
         file,
         line: lineOf(source, specifier),
@@ -148,7 +136,6 @@ export function checkProImports(root = DEFAULT_ROOT, files) {
 
   return {
     violations,
-    pendingAi,
     referencingFiles: perFile.size,
     allowed,
   };
@@ -171,7 +158,7 @@ function main() {
     process.exit(1);
   }
   console.log(
-    `[check-pro-imports] OK: no Core file statically imports a non-AI Pro module outside the declared allowances (${result.referencingFiles} referencing file(s), ${result.allowed} allowed, ${result.pendingAi} pending AI reference(s) — scheduled migration, see OPEN-CORE.md)`,
+    `[check-pro-imports] OK: no Core file statically imports a Pro module outside the sanctioned seam (${result.referencingFiles} referencing file(s), ${result.allowed} allowed)`,
   );
 }
 

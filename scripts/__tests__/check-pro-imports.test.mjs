@@ -13,7 +13,8 @@
  *   - test files → allowed;
  *   - type-only imports → allowed, but a specifier that also has a value
  *     usage in the same file → violation;
- *   - imports of AI modules from Core → tolerated as pending, never violations.
+ *   - imports of AI modules from Core → plain Core imports, no special zone
+ *       (the old pending-AI tolerance was removed when the migration landed).
  */
 import { describe, it, expect } from "vitest";
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
@@ -185,11 +186,11 @@ describe("check-pro-imports", () => {
     try {
       const result = checkProImports(root);
       expect(result.violations).toHaveLength(0);
-      expect(result.pendingAi).toBe(0);
       // A Core→Core import is not a Pro reference at all, so it consumes no
       // allowance (the counter only tracks seam/Pro→Pro/server/test/type-only
-      // references).
+      // references), and there is no pending counter left to bump.
       expect(result.allowed).toBe(0);
+      expect(result).not.toHaveProperty("pendingAi");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

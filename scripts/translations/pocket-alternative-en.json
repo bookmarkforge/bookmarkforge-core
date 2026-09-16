@@ -5,12 +5,12 @@
   "canonical": "https://bookmarkforge.com/pocket-alternative",
   "ogLocale": "en_US",
   "ogLocaleAlternate": "",
-  "title": "BookmarkForge vs Pocket — Full Comparison & Migration Guide",
-  "description": "Pocket is going away. See the full feature comparison between Pocket and BookmarkForge, plus a step-by-step guide to migrate your Pocket library — tags, dates and all — to a private, local-first vault.",
-  "ogTitle": "BookmarkForge vs Pocket — Full Comparison & Migration Guide",
-  "ogDescription": "Pocket is going away. Compare every feature — offline, notes, AI search, encryption, sync — and migrate your Pocket library to a private, local-first vault in minutes.",
+  "title": "BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide",
+  "description": "Pocket is going away. Smart search is included free — Raindrop charges yearly for it. BookmarkForge Free works on any device with no device cap. Migrate your library locally.",
+  "ogTitle": "BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide",
+  "ogDescription": "Smart search is included free — Raindrop charges yearly for it. Free has no device cap. Compare Pocket and BookmarkForge, then migrate your library locally.",
   "ogImage": "https://bookmarkforge.com/og-image-pricing.png",
-  "twitterTitle": "BookmarkForge vs Pocket — Full Comparison & Migration Guide",
+  "twitterTitle": "BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide",
   "twitterDescription": "Compare every feature and migrate your Pocket library to a private, local-first vault in minutes.",
   "twitterImage": "https://bookmarkforge.com/og-image-pricing.png",
   "skipLink": "Skip to main content",
@@ -47,30 +47,30 @@
     ]
   },
   "comparison": {
-    "id": "comparison",
+    "id": "table",
     "title": "Feature by Feature",
     "subtitle": "Everything Pocket could do — and everything it couldn't — compared honestly.",
     "headers": ["Feature", "Pocket", "BookmarkForge"],
     "rows": [
-      { "feature": "Save articles, videos & PDFs to read later", "pocket": "✅ Yes", "pocketClass": "yes", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
+      { "feature": "Save articles, videos &amp; PDFs to read later", "pocket": "✅ Yes", "pocketClass": "yes", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
       { "feature": "Read offline", "pocket": "⚠️ Cached app only", "pocketClass": "partial", "bookmarkforge": "✅ Full vault offline", "bookmarkforgeClass": "yes" },
-      { "feature": "Tags & folders", "pocket": "⚠️ Tags only", "pocketClass": "partial", "bookmarkforge": "✅ Tags + folders", "bookmarkforgeClass": "yes" },
-      { "feature": "Highlights & annotations", "pocket": "✅ Yes", "pocketClass": "yes", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
+      { "feature": "Tags &amp; folders", "pocket": "⚠️ Tags only", "pocketClass": "partial", "bookmarkforge": "✅ Tags + folders", "bookmarkforgeClass": "yes" },
+      { "feature": "Highlights &amp; annotations", "pocket": "✅ Yes", "pocketClass": "yes", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
       { "feature": "Notion-style block notes on any bookmark", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
       { "feature": "Full-text search", "pocket": "✅ Yes", "pocketClass": "yes", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
       { "feature": "Smart search (meaning, not just keywords)", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Included free — Raindrop charges yearly", "bookmarkforgeClass": "yes" },
       { "feature": "Device limit on Free", "pocket": "⚠️ Service-dependent", "pocketClass": "partial", "bookmarkforge": "✅ No device cap", "bookmarkforgeClass": "yes" },
       { "feature": "AI chat over your saved content (RAG)", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes — local (WebLLM/Ollama) or cloud", "bookmarkforgeClass": "yes" },
-      { "feature": "Knowledge graph of your notes & links", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
+      { "feature": "Knowledge graph of your notes &amp; links", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
       { "feature": "Flashcards with spaced repetition", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
       { "feature": "Runs 100% on your device (local-first)", "pocket": "❌ No — cloud storage", "pocketClass": "no", "bookmarkforge": "✅ Yes — IndexedDB, no server", "bookmarkforgeClass": "yes" },
       { "feature": "Works without an account", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
       { "feature": "End-to-end encryption", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ AES-256-GCM + Argon2id", "bookmarkforgeClass": "yes" },
       { "feature": "Sync between devices without a cloud server", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ P2P via WebRTC, E2E encrypted", "bookmarkforgeClass": "yes" },
-      { "feature": "Zero ads & tracking by default", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes — no analytics by default", "bookmarkforgeClass": "yes" },
+      { "feature": "Zero ads &amp; tracking by default", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes — no analytics by default", "bookmarkforgeClass": "yes" },
       { "feature": "Import from Pocket's HTML export", "pocket": "⚠️ Export only", "pocketClass": "partial", "bookmarkforge": "✅ Built-in importer", "bookmarkforgeClass": "yes" },
       { "feature": "Data export", "pocket": "⚠️ HTML export", "pocketClass": "partial", "bookmarkforge": "✅ JSON, Markdown, CSV, PDF, .bmf", "bookmarkforgeClass": "yes" },
-      { "feature": "Open source & self-hostable", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ MIT (open core)", "bookmarkforgeClass": "yes" },
+      { "feature": "Open source &amp; self-hostable", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ MIT (open core)", "bookmarkforgeClass": "yes" },
       { "feature": "Price", "pocket": "⚠️ Free tier + Premium", "pocketClass": "partial", "bookmarkforge": "✅ Free forever + one-time $79 Pro", "bookmarkforgeClass": "yes" },
       { "feature": "Status", "pocket": "❌ Shutting down", "pocketClass": "no", "bookmarkforge": "✅ Active", "bookmarkforgeClass": "yes" }
     ],
@@ -107,10 +107,28 @@
   },
   "footer": {
     "brand": "Your private, AI-powered knowledge vault. 100% Local-First.",
-    "product": { "title": "Product", "links": ["Features", "AI Capabilities", "Privacy", "Pricing", "Launch App"] },
-    "resources": { "title": "Resources", "links": ["Pocket Comparison", "Privacy & Terms"] },
-    "languages": { "title": "Languages", "links": ["English", "Español", "Français", "Deutsch", "Português", "Italiano"] },
-    "support": { "title": "Support", "links": ["Contact"] },
+    "product": { "title": "Product", "links": [
+      { "label": "Features", "href": "/#features" },
+      { "label": "AI Capabilities", "href": "/#ai" },
+      { "label": "Privacy", "href": "/#privacy" },
+      { "label": "Pricing", "href": "/#pricing" },
+      { "label": "Launch App", "href": "/app" }
+    ] },
+    "resources": { "title": "Resources", "links": [
+      { "label": "Pocket Comparison", "href": "/pocket-alternative" },
+      { "label": "Privacy &amp; Terms", "href": "/privacy-and-terms.html" }
+    ] },
+    "languages": { "title": "Languages", "links": [
+      { "label": "English", "href": "/", "hreflang": "en" },
+      { "label": "Español", "href": "/es/", "hreflang": "es" },
+      { "label": "Français", "href": "/fr/", "hreflang": "fr" },
+      { "label": "Deutsch", "href": "/de/", "hreflang": "de" },
+      { "label": "Português", "href": "/pt/", "hreflang": "pt" },
+      { "label": "Italiano", "href": "/it/", "hreflang": "it" }
+    ] },
+    "support": { "title": "Support", "links": [
+      { "label": "Contact", "href": "mailto:bookmarkforge@proton.me" }
+    ] },
     "copyright": "© 2026 BookmarkForge. All rights reserved.",
     "legal": ["Privacy Policy", "Terms of Service", "bookmarkforge@proton.me"]
   },
@@ -131,7 +149,7 @@
     },
     "software": {
       "name": "BookmarkForge",
-      "description": "Local-first personal knowledge vault for your bookmarks and reading: encrypted in your browser, works offline, syncs peer-to-peer.",
+      "description": "Save articles, notes and documents in a private, encrypted, local-first vault. AI search, Notion-style editor, P2P sync. The private Pocket alternative.",
       "category": "ProductivityApplication",
       "os": "Web",
       "url": "https://bookmarkforge.com/",

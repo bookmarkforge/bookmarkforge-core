@@ -9,10 +9,10 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/manifest.json">
-  <!-- SEO: canonical + hreflang -->
+  <!-- SEO: this page is currently English-only; x-default points at the EN landing -->
   <link rel="canonical" href="{{ t.canonical }}">
   <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
-  <!-- Open Graph -->
+  <!-- Open Graph (og-image.png is 1200x630) -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="BookmarkForge">
   <meta property="og:title" content="{{ t.ogTitle }}">
@@ -33,7 +33,7 @@
   <link rel="stylesheet" href="/brand-tokens.css">
   <link rel="stylesheet" href="/landing.css">
   <link rel="stylesheet" href="/pocket-alternative.css">
-  <!-- Structured data -->
+  <!-- Structured data: WebPage / WebSite / Organization / SoftwareApplication / FAQPage -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -83,27 +83,27 @@
         "image": "https://bookmarkforge.com/og-image.png",
         "description": "{{ t.structuredData.software.description | escapejs }}",
         "offers": [
-          {% for offer in t.structuredData.software.offers %}
+          {%- for offer in t.structuredData.software.offers %}
           { "@type": "Offer", "name": "{{ offer.name }}", "price": "{{ offer.price }}", "priceCurrency": "{{ offer.currency }}" }{% if not loop.last %},{% endif %}
-          {% endfor %}
+          {%- endfor %}
         ],
         "featureList": [
-          {% for feature in t.structuredData.software.featureList %}
+          {%- for feature in t.structuredData.software.featureList %}
           "{{ feature }}"{% if not loop.last %},{% endif %}
-          {% endfor %}
+          {%- endfor %}
         ]
       },
       {
         "@type": "FAQPage",
         "@id": "{{ t.canonical }}#faq",
         "mainEntity": [
-          {% for faq in t.structuredData.faq %}
+          {%- for faq in t.structuredData.faq %}
           {
             "@type": "Question",
             "name": "{{ faq.question | escapejs }}",
             "acceptedAnswer": { "@type": "Answer", "text": "{{ faq.answer | escapejs }}" }
           }{% if not loop.last %},{% endif %}
-          {% endfor %}
+          {%- endfor %}
         ]
       }
     ]
@@ -259,7 +259,7 @@
           <h4>{{ t.footer.product.title }}</h4>
           <ul>
             {% for link in t.footer.product.links %}
-            <li><a href="{{ t.homeHref }}#{{ link | lower | replace(' ', '-') }}">{{ link }}</a></li>
+            <li><a href="{{ link.href }}">{{ link.label }}</a></li>
             {% endfor %}
           </ul>
         </nav>
@@ -268,7 +268,7 @@
           <h4>{{ t.footer.resources.title }}</h4>
           <ul>
             {% for link in t.footer.resources.links %}
-            <li><a href="{{ t.homeHref }}{{ link | lower | replace(' ', '-') }}">{{ link }}</a></li>
+            <li><a href="{{ link.href }}">{{ link.label }}</a></li>
             {% endfor %}
           </ul>
         </nav>
@@ -277,7 +277,7 @@
           <h4>{{ t.footer.languages.title }}</h4>
           <ul>
             {% for link in t.footer.languages.links %}
-            <li><a href="{{ '/' if link == 'English' else '/' + (link | lower) + '/' }}" hreflang="{{ 'en' if link == 'English' else (link | lower) }}" lang="{{ 'en' if link == 'English' else (link | lower) }}">{{ link }}</a></li>
+            <li><a href="{{ link.href }}" hreflang="{{ link.hreflang }}" lang="{{ link.hreflang }}">{{ link.label }}</a></li>
             {% endfor %}
           </ul>
         </nav>
@@ -286,7 +286,7 @@
           <h4>{{ t.footer.support.title }}</h4>
           <ul>
             {% for link in t.footer.support.links %}
-            <li><a href="mailto:bookmarkforge@proton.me">{{ link }}</a></li>
+            <li><a href="{{ link.href }}">{{ link.label }}</a></li>
             {% endfor %}
           </ul>
         </nav>

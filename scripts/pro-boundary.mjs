@@ -70,6 +70,69 @@ export function isProModulePath(relPath) {
   return PRO_MODULE_BASES.includes(base);
 }
 
+/**
+ * Anchor globs whose subject lives entirely on the Pro side of the boundary.
+ *
+ * These name either a proprietary implementation or a test whose subject is
+ * one (reading it from disk and asserting on its text). In the public export
+ * such a subject cannot exist, so gates that anchor files by glob (the
+ * regression-anchor catalog) need to know: the anchor's absence there is a
+ * consequence of the declared policy, not a lost regression test.
+ *
+ * Declared here, next to the module paths themselves, so adding a Pro module
+ * and declaring its anchors is one edit in one file; a glob naming any Core
+ * path must not be listed.
+ */
+export const PRO_SUBJECT_ANCHOR_GLOBS = [
+  // WebRTCSyncService implementation and the tests asserting on its source.
+  "src/services/WebRTCSyncService.ts",
+  "src/tests/services/WebRTCSyncService.test.ts",
+  "src/tests/security/p0-ice-whitelist*.regression.test.*",
+  "src/tests/security/p1-private-sync*.regression.test.*",
+  // DiskBackupService: implementation excluded, its contract test ships only
+  // in the private tree.
+  "src/services/DiskBackupService.ts",
+  "src/tests/services/DiskBackupService.test.ts",
+  "src/tests/services/BackupService.test.ts",
+];
+
+/**
+ * True when a glob's subject is entirely Pro: every file the glob could name
+ * is a proprietary implementation, a placeholder artefact, or an anchored Pro
+ * test. Conservative by construction — a glob that could match anything Core
+ * must answer false, so a Core test disappearing from an export still fails.
+ */
+export function isProSubjectGlob(glob, _kind = "test") {
+  if (PRO_SUBJECT_ANCHOR_GLOBS.includes(glob)) return true;
+  // A kind:"source" glob that reduces to a Pro module base is covered by the
+  // declared paths; translate glob wildcards onto those bases.
+  const re = globToRegexShim(glob);
+  return PRO_SUBJECT_ANCHOR_GLOBS.some((subject) => re.test(subject));
+}
+
+/** Tiny glob→regex translation matching the anchor gate's own dialect. */
+function globToRegexShim(glob) {
+  let pattern = "";
+  for (let i = 0; i < glob.length; i++) {
+    const ch = glob[i];
+    if (ch === "*") {
+      if (glob[i + 1] === "*") {
+        pattern += ".*";
+        i++;
+      } else {
+        pattern += "[^/]*";
+      }
+    } else if (ch === "?") {
+      pattern += "[^/]";
+    } else if ("\\^$.|+()[]{}".includes(ch)) {
+      pattern += `\\${ch}`;
+    } else {
+      pattern += ch;
+    }
+  }
+  return new RegExp(`^${pattern}$`);
+}
+
 export const PLACEHOLDER_MARKER = "Open Core placeholder";
 
 /** Name of the shared runtime helper shipped at the root of the export. */
@@ -482,6 +545,36 @@ export function applyFileRewrites(source, specifiers, importerFile) {
 }
 
 /**
+ * Non-exported runtime constants whose user-visible claims gates verify.
+ *
+ * When a proprietary module is replaced by a placeholder, the exported tree
+ * loses not only the implementation but also the *enforced constants* that
+ * factual claim gates (check-claim-drift) read as truth. The generated
+ * declaration banner re-pins those constants, extracted from the real source
+ * at export time, so an exported tree stays verifiable against the same truth
+ * the private tree enforces — and a placeholder without a pinned constant
+ * keeps failing closed.
+ *
+ * Constants are embedded only as bare numbers next to their identifier. No
+ * implementation, no logic, no Pro prose travels.
+ */
+const PINNED_TRUTH_CONSTANTS = [
+  { modulePath: "src/services/BackupService.ts", name: "AUTO_BACKUP_INTERVAL_MS" },
+];
+
+/** Extract `const NAME = N * 60 * 60 * 1000` style products (milliseconds). */
+function extractPinnedMs(source, name) {
+  const product = source.match(
+    new RegExp(String.raw`(?:const|let|var)\s+${name}\s*=\s*([\d_\s*]+);`),
+  );
+  if (!product) return null;
+  const expression = product[1].replace(/_/g, "").replace(/\s+/g, "");
+  if (!/^\d+(\*\d+)*$/.test(expression)) return null;
+  const value = expression.split("*").reduce((acc, factor) => acc * Number(factor), 1);
+  return Number.isFinite(value) && value > 0 ? value : null;
+}
+
+/**
  * Materialize the boundary inside an exported tree: emit declarations, write the
  * placeholder pairs and drop explicit `.ts` extensions from Pro specifiers.
  *
@@ -509,10 +602,27 @@ export function applyProBoundary({ root, outDir, tscPath, dtsDir }) {
     const exports = declarationExports(declarations, emitted);
     const target = join(outDir, modulePath.split("/").join(sep));
     mkdirSync(dirname(target), { recursive: true });
+    // Truth re-pinning: extract the enforced constants this module owns from
+    // the real source and pin their numeric value in the declaration banner.
+    const pinnedLines = PINNED_TRUTH_CONSTANTS.filter(
+      (pin) => pin.modulePath === modulePath,
+    ).map((pin) => {
+      let real;
+      try {
+        real = readFileSync(join(root, modulePath.split("/").join(sep)), "utf8");
+      } catch {
+        return null;
+      }
+      const ms = extractPinnedMs(real, pin.name);
+      return ms == null ? null : `   ${pin.name} = ${ms};`;
+    });
+    const truthBlock = pinnedLines.some(Boolean)
+      ? `\n * Enforced constants pinned from the private source at export time\n * (claim gates verify against these numbers):\n${pinnedLines.filter(Boolean).join("\n")}\n`
+      : "";
     writeFileSync(
       target.replace(/\.tsx?$/, ".d.ts"),
       `/* ${PLACEHOLDER_MARKER}: generated type surface of the proprietary module\n` +
-        `   \`${modulePath}\`. No implementation is present in this repository. */\n${declarations}`,
+        `   \`${modulePath}\`. No implementation is present in this repository.${truthBlock} */\n${declarations}`,
     );
     writeFileSync(target.replace(/\.tsx?$/, ".js"), placeholderSource(modulePath, exports));
     placeholders.push(modulePath);

@@ -6,8 +6,9 @@
  * the runnable tree, and the vitest-excluded files must never be scheduled.
  */
 import { describe, expect, it } from "vitest";
-import { existsSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
+import { isProSubjectGlob } from "../pro-boundary.mjs";
 import {
   FAST_SELECTORS,
   FAST_THRESHOLD_MS,
@@ -58,9 +59,26 @@ function expandSelectors(selectors) {
 
 describe("FAST_SELECTORS", () => {
   it("every selector resolves to at least one existing test file", () => {
+    // An Open Core export tree (manifest.json with model "open-core" exists
+    // only there) deliberately omits proprietary Pro tests; the private repo's
+    // fast profile still names them so nothing silently shrinks HERE. In the
+    // export those selectors are expected absences, not staleness — but any
+    // other missing selector is stale in either tree.
+    const isExportTree = (() => {
+      try {
+        return JSON.parse(readFileSync(join(ROOT, "manifest.json"), "utf8")).model === "open-core";
+      } catch {
+        return false;
+      }
+    })();
+    const proMissing = isExportTree
+      ? new Set(
+          FAST_SELECTORS.filter((selector) => isProSubjectGlob(selector.replace(/^src\/tests\//, "src/tests/"))),
+        )
+      : new Set();
     const stale = FAST_SELECTORS.filter((selector) => {
       const absolute = resolve(ROOT, selector);
-      if (!existsSync(absolute)) return true;
+      if (!existsSync(absolute)) return !proMissing.has(selector);
       return statSync(absolute).isDirectory()
         ? expandSelectors([selector]).length === 0
         : !TEST_FILE_PATTERN.test(absolute);

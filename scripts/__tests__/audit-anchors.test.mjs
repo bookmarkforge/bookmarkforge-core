@@ -485,6 +485,20 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
     for (const anchor of sourceAnchors) {
       const resolved = result.present.find((entry) => entry.id === anchor.id);
       expect(resolved, `${anchor.id} did not resolve at gate time`).toBeDefined();
+      // In an Open Core export tree a source anchor whose subject is a
+      // proprietary module resolves as an explicit Pro-boundary skip (zero
+      // matches); anywhere else it must have resolved to real files.
+      const isExportTree = (() => {
+        try {
+          return JSON.parse(readFileSync(join(REPO_ROOT, "manifest.json"), "utf8")).model === "open-core";
+        } catch {
+          return false;
+        }
+      })();
+      if (isExportTree && resolved.proBoundarySkip) {
+        expect(resolved.matches).toEqual([]);
+        continue;
+      }
       expect(resolved.matches.length).toBeGreaterThan(0);
       expect(resolved.matches).toContain(anchor.glob);
     }

@@ -38,6 +38,7 @@
  */
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
+import { isProSubjectGlob } from "./pro-boundary.mjs";
 
 const ROOT = process.cwd();
 const BASELINE_PATH = join(ROOT, "scripts", "audit-anchors-baseline.json");
@@ -380,10 +381,52 @@ export function runAuditAnchors({
     });
   }
 
+  // Open Core export: an anchor's subject may be a proprietary module the
+  // export replaces with a placeholder pair, or a Pro-behaviour test the
+  // export deliberately does not ship. The subject decision is delegated to
+  // the shared Pro policy (scripts/pro-boundary.mjs) — the same policy the
+  // exporter and the placeholder generator read — so the gate cannot drift
+  // from what the export actually does.
+  //
+  // The skip only arms in a tree that declares itself an Open Core export
+  // (manifest.json with model "open-core" exists only there), so synthetic
+  // fake-repo fixtures of this very test file — and the private tree — keep
+  // the strict semantics: an anchored file missing from any non-export tree
+  // fails exactly as before. A marker guard still backs the policy up inside
+  // an export: whatever the glob resolves to there must be a marked
+  // placeholder, so an unmarked leftover fails even if the policy names it.
+  const isExportTree = (() => {
+    try {
+      return JSON.parse(readFileSync(join(ROOT, "manifest.json"), "utf8")).model === "open-core";
+    } catch {
+      return false;
+    }
+  })();
+  const proSkipFor = (anchor) => {
+    if (!isExportTree) return null;
+    if (!isProSubjectGlob(anchor.glob, anchor.kind)) return null;
+    for (const path of resolveGlob(anchor.glob, anchor.kind)) {
+      try {
+        if (!readFileSync(join(ROOT, path.split("/").join(sep)), "utf8").includes("Open Core placeholder")) {
+          return null;
+        }
+      } catch {
+        return null;
+      }
+    }
+    return true;
+  };
+
   for (const anchor of anchors) {
     if (malformedIds.has(anchor.id)) continue;
     const matches = resolveGlob(anchor.glob, anchor.kind);
     if (matches.length === 0) {
+      if (proSkipFor(anchor)) {
+        // The anchor's subject is replaced by the Pro boundary in this tree.
+        // Report as an explicit skip, not a silent pass.
+        present.push({ id: anchor.id, matches: [], proBoundarySkip: true });
+        continue;
+      }
       failures.push({
         id: anchor.id,
         adr: anchor.adr,

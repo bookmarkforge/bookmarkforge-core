@@ -99,6 +99,15 @@ const anchorReport = runAuditAnchors({
   strictDiscovery,
 });
 for (const present of anchorReport.present) {
+  // Open Core export: an anchor whose subject is entirely replaced by the Pro
+  // boundary resolves to nothing. That is an explicit skip — visible, counted
+  // separately, and never mistaken for a real resolution.
+  if (present.proBoundarySkip) {
+    console.log(
+      `[check-audit-drift] anchor SKIP ${present.id} — subject replaced by the Open Core Pro boundary in this tree`,
+    );
+    continue;
+  }
   const matchLabel =
     present.matches.length === 1
       ? present.matches[0]
@@ -142,9 +151,14 @@ for (const d of anchorReport.discovered ?? []) {
 const missingAnchorCount = anchorReport.failures.filter(
   (failure) => !failure.type,
 ).length;
+const proBoundarySkips = anchorReport.present.filter(
+  (present) => present.proBoundarySkip,
+).length;
 const discoveryPolicy = strictDiscovery ? "strict" : "advisory";
 console.log(
-  `[check-audit-drift] anchor totals: ${anchorReport.present.length}/${anchorReport.total} present, ${missingAnchorCount} missing, ${anchorReport.discovered?.length ?? 0} discovered (${discoveryPolicy})`,
+  `[check-audit-drift] anchor totals: ${anchorReport.present.length}/${anchorReport.total} present ` +
+    `(${proBoundarySkips} skipped by the Open Core Pro boundary), ${missingAnchorCount} missing, ` +
+    `${anchorReport.discovered?.length ?? 0} discovered (${discoveryPolicy})`,
 );
 
 if (process.argv.includes("--fix")) {

@@ -660,6 +660,19 @@ export function scanSurface({ root = DEFAULT_ROOT, sources } = {}) {
       readOptional(join(root, "src", "components", "StorageStatus.tsx")),
   });
 
+  // Open Core export: BackupService is a proprietary module the export replaces
+  // with a placeholder pair, so its AUTO_BACKUP_INTERVAL_MS truth physically
+  // cannot be in this tree. The export embeds the enforced constants in the
+  // generated declaration's banner (see pro-boundary.mjs), so the truth source
+  // here is the placeholder — the gate stays fail-closed (a placeholder with no
+  // pinned constant still fails any matching claim) and no rule is weakened.
+  if (truth.autoBackupHours == null) {
+    const placeholderDecl = readOptional(join(root, "src", "services", "BackupService.d.ts"));
+    if (placeholderDecl?.includes("Open Core placeholder")) {
+      truth.autoBackupHours = extractHoursFromMs(placeholderDecl, "AUTO_BACKUP_INTERVAL_MS");
+    }
+  }
+
   const rules = buildRules(truth);
   const results = [];
   for (const f of discoverSurface(root)) {

@@ -26,6 +26,13 @@ vi.mock("../../../services/SettingsService", () => ({
   },
 }));
 
+vi.mock("../../../services/pro-access", async () => ({
+  // The service under test resolves BackupService through the pro-access
+  // loader; hand it the real implementation so the backup path stays
+  // end-to-end (the gate itself is covered by pro-access's own tests).
+  loadBackupService: async () =>
+    (await import("../../../services/BackupService")).BackupService,
+}));
 vi.mock("../../../services/SecurityVault", () => ({
   securityVault: {
     registerCaller: vi.fn(),

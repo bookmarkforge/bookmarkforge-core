@@ -17,6 +17,7 @@ import {
   VERIFICATION_INTEGRITY_KEY,
 } from "./security-vault/constants";
 import { constantTimeCompare } from "./security-vault/compare";
+import { loadBackupService } from "./pro-access";
 import {
   createVerificationToken,
   validateVerificationIntegrity,
@@ -1442,8 +1443,11 @@ class SecurityVault {
       // metadata forces the next sync to re-upload with the new password.
       // Both are best-effort: a failure must not abort the committed rotation.
       try {
-        const { BackupService } = await import("./BackupService");
-        await BackupService.clearAutoBackup();
+        // BackupService is Pro: resolved behind the hasProAccess gate. A
+        // rejection (Free user, or placeholder build) is best-effort too —
+        // the catch below only warns.
+        const backup = await loadBackupService();
+        await backup.clearAutoBackup();
       } catch (err) {
         logger.warn(
           "[SecurityVault] Failed to clear stale auto-backup after rotation",

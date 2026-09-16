@@ -72,6 +72,9 @@ const KNOWN_GATES = {
   // Open Core export boundary: prevents proprietary Pro source from entering
   // the MIT public tree and validates the exported license metadata.
   "check:open-core": "security",
+  // Runtime Pro boundary: Core code must resolve Pro modules through the
+  // pro-access seam; blocks erosion by new static Pro imports.
+  "check:pro-imports": "security",
 
   // Protected core — language (may grow without an ADR).
   "check:i18n": "language",

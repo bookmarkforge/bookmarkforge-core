@@ -79,6 +79,13 @@ jobs:
         working-directory: ${{ env.EXPORT_DIR }}
         run: npm ci
 
+      # Same runtime-boundary audit the public repo's CI runs on itself:
+      # a new static Pro import in Core (outside the pro-access seam) fails
+      # here before it can reach the public tree.
+      - name: Verify the runtime Pro boundary inside the export
+        working-directory: ${{ env.EXPORT_DIR }}
+        run: node scripts/check-pro-imports.mjs
+
       - name: Typecheck the exported Core
         working-directory: ${{ env.EXPORT_DIR }}
         run: npm run typecheck

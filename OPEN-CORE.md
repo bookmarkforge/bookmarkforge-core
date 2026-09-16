@@ -73,6 +73,10 @@ byte del chunk Pro:
   resuelve a los pares inertes descritos arriba; moverla detrás del cargador es
   trabajo pendiente, y el par placeholder queda como red de seguridad para todo
   lo que aún no pase por el cargador.
+- `check:pro-imports` impide que esta situación se erosione: falla si cualquier
+  archivo del Core vuelve a importar estáticamente un módulo Pro no-IA fuera
+  del seam; los enlaces IA pendientes se toleran pero se cuentan en cada
+  ejecución, de modo que su reducción (y cualquier crecimiento) sea visible.
 
 ## Core MIT
 

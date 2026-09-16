@@ -43,6 +43,16 @@ jobs:
           npm run check:security-internal
           npm run check:server-log-ip-privacy
           npm run check:blindeo
+      # Its own named step so boundary erosion (a Core file statically
+      # importing a Pro module outside the pro-access seam, or the export
+      # policy disagreeing with the generators) surfaces as a separate red
+      # check in this fast job instead of being buried in the production
+      # build job's full `npm run check`. The export CI re-runs the import
+      # gate inside the materialized tree; these two run against the source.
+      - name: Enforce the Open Core Pro import boundary
+        run: |
+          npm run check:open-core
+          npm run check:pro-imports
       # Its own named step so a brand drift (icon or share card deviating
       # from the canonical logo-512.png artwork) surfaces as a separate red
       # check in the Actions UI instead of being buried in `npm run check`.

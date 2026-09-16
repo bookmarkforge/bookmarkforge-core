@@ -39,10 +39,9 @@ $59 Early Bird (first 200 licenses) → $79 regular.
 
 ## User Manual
 
-- [Español](manual-usuario.md)
-- [English](manual-usuario-en.md)
-- [PDF Español](manual-usuario.pdf)
-- [PDF English](manual-usuario-en.pdf)
+- [Español](manual-usuario.md) · [English](manual-usuario-en.md)
+- [PDF Español](manual-usuario.pdf) · [PDF English](manual-usuario-en.pdf)
+- The full set ships in **30 languages** under `docs/`: see [docs/index.md](docs/index.md).
 
 ## Self-hosting & MIT Core
 
@@ -52,6 +51,20 @@ features and private infrastructure are intentionally excluded. The
 BookmarkForge name and logo remain protected by `TRADEMARKS.md`.
 
 Running the Core for yourself or your team is permitted without payment.
+
+### Where the Pro code went
+
+The Core refers to Pro modules (local AI, RAG, P2P sync, PDF/OCR, encrypted
+backups, the AI proxy). Those implementations are not in this repository; in
+their place you will find a generated pair at the same path: a `.d.ts` with the
+real type surface and a `.js` that is inert — it never throws, so the Core still
+starts, and it logs `[open-core] <module>.<name> is a Pro feature and is not
+included in this build` the first time a Pro surface is actually reached rather
+than pretending to work.
+
+So a Pro button in this build does nothing useful by design. If you reach one,
+the console line above is the exact call site that needs the private
+distribution. `npm run check:open-core` verifies this boundary and runs in CI.
 
 ## Documentation
 

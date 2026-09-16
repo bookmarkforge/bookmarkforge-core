@@ -36,6 +36,11 @@ import {
 import { basename, join, resolve, sep } from "node:path";
 import { spawnSync } from "node:child_process";
 import process from "node:process";
+import {
+  applyProBoundary,
+  isProModulePath,
+  verifyProBoundary,
+} from "./pro-boundary.mjs";
 
 // ---------------------------------------------------------------------------
 // Exclusion policy
@@ -195,20 +200,10 @@ const EXCLUDED_FILES = new Set([
   "scripts/nightly-alert.mjs",
   // License key generation (business logic around key issuance)
   "scripts/generate-license-keys.mjs",
-  // Proprietary Pro feature implementations. Keep this list explicit and
-  // mirrored by scripts/check-open-core-export.mjs.
-  "server/src/ai-proxy.ts",
-  "server/src/ai-media.ts",
-  "src/services/WebRTCSyncService.ts",
-  "src/services/pdfService.ts",
-  "src/services/BackupService.ts",
-  "src/services/DiskBackupService.ts",
-  "src/services/exporter.formatters.ts",
-  "src/services/ai/WebLLMService.ts",
-  "src/services/ai/RAGEngine.ts",
-  "src/services/ai/GlobalRAGService.ts",
-  "src/services/ai/SpecializedAgentsService.ts",
-  "src/services/ai/FlashcardService.ts",
+  // Proprietary Pro feature implementations are excluded by the shared policy
+  // in scripts/pro-boundary.mjs (PRO_MODULE_PATHS + PRO_MODULE_DIRS), which the
+  // placeholder generator and scripts/check-open-core-export.mjs read too, so
+  // the three cannot drift apart.
   // Orphaned tests for excluded/replaced private-infra scripts
   "scripts/__tests__/deploy-prod.test.mjs",
   "scripts/__tests__/deploy-prod-push.test.mjs",
@@ -249,7 +244,6 @@ const EXCLUDED_FILES = new Set([
   "src/tests/services/WebRTCSyncService.test.ts",
   "src/tests/services/BackupService.test.ts",
   "src/tests/services/DiskBackupService.test.ts",
-  "src/tests/services/exporter.formatters.test.ts",
   "src/tests/services/pdfService.test.ts",
   "src/tests/server/ai-proxy.test.ts",
   "src/tests/server/ai-media.test.ts",
@@ -260,6 +254,14 @@ const EXCLUDED_FILES = new Set([
   "src/tests/services/ai/GlobalRAGService.test.ts",
   "src/tests/services/ai/SpecializedAgentsService.test.ts",
   "src/tests/services/ai/FlashcardService.test.ts",
+  // Security regressions that read a proprietary implementation *from disk* by
+  // path (fs.readFileSync on src/services/WebRTCSyncService.ts) and assert on
+  // its text. They are Pro-behaviour tests, not Core tests: in this repository
+  // the implementation they scan does not exist, so they belong to the private
+  // tree. The boundary gate fails closed if any other file keeps such a
+  // reference, so this list cannot silently drift.
+  "src/tests/security/p0-ice-whitelist.regression.test.ts",
+  "src/tests/security/p1-private-sync.regression.test.ts",
 ]);
 
 /** Naive secret patterns; the shipped secret-scan gate is the real control. */
@@ -303,7 +305,10 @@ function exclusionReason(relPath) {
     return null;
   }
   if (EXCLUDED_DIRS.has(top) || EXCLUDED_DIRS.has(norm)) return "excluded dir";
-  if (norm.startsWith("src/services/ai/")) return "pro feature implementation";
+  // One policy for distribution, placeholder generation and the gate: the Pro
+  // paths declared in scripts/pro-boundary.mjs, so a new Pro module cannot be
+  // excluded in one place and forgotten in another.
+  if (isProModulePath(norm)) return "pro feature implementation";
   if (norm.startsWith("src/tests/services/ai/") || norm.startsWith("src/tests/ai/")) return "pro feature tests";
   if (EXCLUDED_FILES.has(norm)) return "private ops/business script";
   return null;
@@ -414,6 +419,34 @@ if (existsSync(workflowDir)) {
   }
 }
 
+// Compile-time Pro boundary: each proprietary module the Core imports becomes a
+// generated type surface (`.d.ts`) plus an inert runtime placeholder (`.js`) at
+// its original path, so the public tree resolves and typechecks without any Pro
+// implementation. Without this the export materialized but was unbuildable
+// (327 unresolved-module errors).
+const boundary = applyProBoundary({
+  root: repoRoot,
+  outDir,
+  tscPath: join(repoRoot, "node_modules", "typescript", "bin", "tsc"),
+  dtsDir: join(repoRoot, ".d", "tmp", "pro-dts"),
+});
+if (boundary.missingDeclarations.length) {
+  console.error("[export-public] FAIL: no generated declaration for Pro module(s):");
+  for (const modulePath of boundary.missingDeclarations) console.error(`  - ${modulePath}`);
+  process.exit(1);
+}
+console.log(
+  `[export-public] pro boundary: ${boundary.placeholders.length} placeholder pair(s), ` +
+    `${boundary.rewrittenSpecifiers} explicit-extension specifier(s) rewritten ` +
+    `(tsc declaration emit ${boundary.tscOk ? "clean" : "reported unrelated errors"})`,
+);
+const boundaryCheck = verifyProBoundary(outDir);
+if (boundaryCheck.violations.length) {
+  console.error("[export-public] FAIL: Pro boundary verification failed:");
+  for (const violation of boundaryCheck.violations) console.error(`  - ${violation}`);
+  process.exit(1);
+}
+
 // Regenerate the docs-markdown drift baseline for the reduced public docs/
 // set, so the gate passes while still failing closed on future doc drift.
 // The gate imports eslint, so it needs node_modules: if the fresh export does
@@ -458,17 +491,9 @@ const manifest = {
   source: "private repository (this checkout)",
   license: "MIT",
   model: "open-core",
-  proExcluded: [...EXCLUDED_FILES].filter((file) =>
-    [
-      "server/src/ai-proxy.ts",
-      "server/src/ai-media.ts",
-      "src/services/WebRTCSyncService.ts",
-      "src/services/pdfService.ts",
-      "src/services/BackupService.ts",
-      "src/services/DiskBackupService.ts",
-      "src/services/exporter.formatters.ts",
-    ].includes(file) || file.startsWith("src/services/ai/"),
-  ),
+  proExcluded: [...EXCLUDED_FILES].filter((file) => isProModulePath(file)),
+  proPlaceholders: boundary.placeholders,
+  proSpecifiersRewritten: boundary.rewrittenSpecifiers,
   includedCount: included.length,
   excluded: excluded,
 };

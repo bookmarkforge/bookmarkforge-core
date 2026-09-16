@@ -19,6 +19,41 @@ propietarios y se distribuyen mediante una licencia Pro.
   política de marca de `TRADEMARKS.md`; la licencia MIT no concede derechos de
   marca.
 
+## Frontera de compilación
+
+Excluir archivos Pro no basta: el Core los **importa**. Sin nada en su lugar, la
+exportación materializaba pero no compilaba (327 errores de módulo no
+encontrado). `scripts/pro-boundary.mjs` cierra esa frontera en el momento de la
+exportación, sin tocar ni una línea del código de producto:
+
+- por cada módulo propietario referenciado, el árbol público publica en la ruta
+  original un par formado por
+  - `<ruta>.d.ts`, la superficie de tipos generada desde el código real (solo
+    declaraciones, sin comentarios ni implementación), que es lo que mantiene
+    limpio el `tsc` del Core exportado;
+  - `<ruta>.js`, un módulo inerte que expone los mismos nombres. Sus valores se
+    pueden llamar, construir y encadenar sin lanzar nunca una excepción (una
+    compilación Open Core no debe romper su arranque por una llamada Pro) y
+    avisa una vez por propiedad, de modo que una superficie Pro alcanzada se
+    identifica en lugar de fingir que funciona;
+- los especificadores que escriben la extensión `.ts` (URLs de worker de Vite,
+  imports por URL de desarrollo en las pruebas de extremo a extremo) pierden la
+  extensión para que resuelvan al par generado;
+- las entradas de configuración que solo **nombran** un archivo Pro (exclusiones
+  de cobertura, listas de dependencias) se eliminan, porque en la exportación no
+  existe nada a lo que apunten.
+
+Las pruebas que leen desde el disco la implementación propietaria y verifican su
+texto son pruebas de comportamiento Pro, así que no se copian: viven en el
+repositorio privado.
+
+`check:open-core` verifica esa frontera. En el repositorio privado solo registra
+la política (ahí las implementaciones Pro deben estar); en un árbol exportado
+comprueba el conjunto completo: ninguna implementación Pro presente, cada
+referencia cubierta por un par marcado y sin extensión explícita, y metadatos
+MIT coherentes. Como el repositorio público **es** una exportación, su CI vuelve
+a auditar su propia frontera en cada ejecución.
+
 ## Core MIT
 
 Incluye el vault local, CRUD de marcadores, notas, búsqueda básica, importación
@@ -29,9 +64,11 @@ i18n y las vistas de organización que no estén identificadas como Pro.
 
 Incluye, entre otros, IA local y proxy de IA, RAG y agentes especializados,
 sincronización P2P, flashcards, PDF/OCR, exportaciones avanzadas, backups
-avanzados y los servicios comerciales asociados. La lista exacta y sus rutas
-se mantiene en `scripts/export-public-repo.mjs`; si existe una discrepancia,
-la exclusión automatizada prevalece hasta que el mantenedor la revise.
+avanzados y los servicios comerciales asociados. La lista exacta y sus rutas se
+mantiene en `scripts/pro-boundary.mjs` y la consumen por igual el exportador, el
+generador de la frontera de compilación y el gate `check:open-core`; si existe
+una discrepancia, la exclusión automatizada prevalece hasta que el mantenedor la
+revise.
 
 ## Contribuciones
 

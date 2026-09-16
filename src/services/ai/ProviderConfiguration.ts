@@ -97,10 +97,34 @@ export class ProviderConfiguration {
   }
 
   /**
+   * Whether the stored provider selection is an OpenAI-compatible surface.
+   * The user's SELECTION is authoritative for "custom" — the mock/serving
+   * endpoint may hand out any key shape (e.g. `sk-mock-...` for a local
+   * OpenAI-compatible server), and detectProvider would misclassify that as
+   * "unknown" and silently discard it. Gemini keys must still NOT feed the
+   * OpenAI-compatible provider (they speak the Gemini protocol).
+   */
+  private isCustomSelection(): boolean {
+    return this.selectedProvider === "custom";
+  }
+
+  /**
    * Build an OpenAI-compatible provider from the vault's key WITHOUT hitting
    * the network (no model fetch) — used to rehydrate after an unlock.
    */
   private rebuildOpenAIProvider(key: string): void {
+    if (this.isCustomSelection()) {
+      // Custom provider: the selection decides the endpoint family; the key
+      // format is irrelevant (local OpenAI-compatible servers accept any
+      // non-empty value). Reuses the OpenAI-compatible wire protocol.
+      this.openAIProvider = new OpenAICompatibleProvider({
+        apiKey: key,
+        provider: "custom",
+        model: this.providerInfo.model || "custom-model",
+        baseUrl: this.customBaseUrl,
+      });
+      return;
+    }
     if (!this.isOpenAICompatibleKey(key)) {return;}
     const detected = detectProvider(key);
     this.openAIProvider = new OpenAICompatibleProvider({
@@ -260,7 +284,11 @@ export class ProviderConfiguration {
       externalApiKey &&
       provider !== "ollama" &&
       provider !== "webllm" &&
-      provider !== "gemini"
+      provider !== "gemini" &&
+      // The CUSTOM selection labels itself: key-prefix sniffing (detectProvider)
+      // would mislabel a local OpenAI-compatible server's key (e.g. "sk-mock")
+      // as "OpenAI" and hide the Custom form in the settings UI.
+      provider !== "custom"
     ) {
       const detected = detectProvider(externalApiKey);
       return { ...detected, isConfigured: true };
@@ -301,9 +329,38 @@ export class ProviderConfiguration {
   }
 
   /**
-   * Set API key and update provider configuration
+   * Set API key and update provider configuration.
+   * The CUSTOM selection is special: the key format is not sniffed (any
+   * non-empty value is accepted — local OpenAI-compatible servers do not use
+   * vendor prefixes) and the stored base URL decides the endpoint.
    */
   async setApiKey(key: string): Promise<ProviderInfo> {
+    if (this.isCustomSelection()) {
+      // SECURITY (S9): switching away from Gemini must purge the previous
+      // in-memory gemini copy immediately (same as the detected path below).
+      this.geminiProvider.setApiKey(null);
+      const customBaseUrl =
+        (await secureStorage.getSecret(`${LS_PREFIX}custom_ai_base_url`)) ||
+        safeGet("custom_ai_base_url") ||
+        undefined;
+      this.customBaseUrl = customBaseUrl;
+      this.openAIProvider = new OpenAICompatibleProvider({
+        apiKey: key,
+        provider: "custom",
+        model: this.providerInfo.model || "custom-model",
+        baseUrl: customBaseUrl,
+      });
+      // No vendor model listing is assumed: expose the manually-set model.
+      this.providerInfo = {
+        provider: "custom",
+        model: this.providerInfo.model || "custom-model",
+        fullSupport: true,
+        name: "Custom AI (OpenAI Format)",
+        isConfigured: true,
+      };
+      return this.providerInfo;
+    }
+
     const detected = detectProvider(key);
 
     // Update provider info

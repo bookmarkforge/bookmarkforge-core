@@ -539,4 +539,98 @@ describe("ProviderConfiguration", () => {
       );
     });
   });
+
+  describe("custom provider selection (OpenAI-compatible mock)", () => {
+    /** Register the custom selection the way the Settings UI does:
+     * setProvider("custom") followed by setApiKey(anyKey). */
+    async function selectCustom(): Promise<void> {
+      await config.setProvider("custom");
+      await config.setApiKey("sk-mock-local-key");
+    }
+
+    it("accepts a non-vendor key and keeps the provider as custom", async () => {
+      await selectCustom();
+      const provider = config.getOpenAIProvider();
+      expect(provider).not.toBeNull();
+      expect(config.getProviderInfo().provider).toBe("custom");
+      expect(config.getProviderInfo().isConfigured).toBe(true);
+    });
+
+    it("builds the OpenAICompatibleProvider with provider='custom' (endpoint source of truth)", async () => {
+      await selectCustom();
+      const { OpenAICompatibleProvider } = await import(
+        "../../../services/ai/providers/OpenAICompatibleProvider"
+      );
+      const lastCall = (
+        OpenAICompatibleProvider as unknown as ReturnType<typeof vi.fn>
+      ).mock.calls.at(-1)?.[0];
+      expect(lastCall).toMatchObject({
+        apiKey: "sk-mock-local-key",
+        provider: "custom",
+        baseUrl: undefined, // no base URL set yet in this fresh config
+      });
+    });
+
+    it("passes the stored custom base URL into the provider", async () => {
+      await config.setCustomBaseUrl("http://localhost:8789/v1");
+      await selectCustom();
+      const { OpenAICompatibleProvider } = await import(
+        "../../../services/ai/providers/OpenAICompatibleProvider"
+      );
+      const lastCall = (
+        OpenAICompatibleProvider as unknown as ReturnType<typeof vi.fn>
+      ).mock.calls.at(-1)?.[0];
+      expect(lastCall).toMatchObject({
+        provider: "custom",
+        baseUrl: "http://localhost:8789/v1",
+      });
+    });
+
+    it("keeps the manually-set model id through setApiKey", async () => {
+      await config.setProvider("custom");
+      config.setModel("bmforge-mock");
+      await config.setApiKey("sk-mock-local-key");
+      expect(config.getProviderInfo().model).toBe("bmforge-mock");
+    });
+
+    it("rehydrates the custom provider on unlock (key change rebuilds with provider='custom')", async () => {
+      await selectCustom();
+      const before = config.getOpenAIProvider()!;
+
+      // Vault lock purges the in-memory copy...
+      apiKeyChangeCb?.(null);
+      expect(before.clearApiKey).toHaveBeenCalled();
+
+      // ...and the unlock rehydrates as CUSTOM, not as a sniffed vendor.
+      apiKeyChangeCb?.("sk-mock-local-key");
+      const after = config.getOpenAIProvider()!;
+      expect(after).not.toBeNull();
+      const { OpenAICompatibleProvider } = await import(
+        "../../../services/ai/providers/OpenAICompatibleProvider"
+      );
+      const lastCall = (
+        OpenAICompatibleProvider as unknown as ReturnType<typeof vi.fn>
+      ).mock.calls.at(-1)?.[0];
+      expect(lastCall).toMatchObject({ provider: "custom" });
+    });
+
+    it("still labels vendor keys by prefix when the selection is NOT custom", async () => {
+      (detectProvider as ReturnType<typeof vi.fn>).mockReturnValue({
+        provider: "openai",
+        model: "gpt-4o-mini",
+        fullSupport: true,
+        name: "OpenAI",
+        isConfigured: true,
+      });
+      await config.setApiKey("sk-vendor-key");
+      const { OpenAICompatibleProvider } = await import(
+        "../../../services/ai/providers/OpenAICompatibleProvider"
+      );
+      const lastCall = (
+        OpenAICompatibleProvider as unknown as ReturnType<typeof vi.fn>
+      ).mock.calls.at(-1)?.[0];
+      // The sniffed path is unchanged: provider openai, custom untouched.
+      expect(lastCall).toMatchObject({ provider: "openai" });
+    });
+  });
 });

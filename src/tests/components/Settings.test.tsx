@@ -48,9 +48,15 @@ vi.mock("../../services/SecureStorage", () => ({
   },
 }));
 
-vi.mock("../../services/BackupService", () => ({
-  BackupService: { importBackup: vi.fn(), exportBackup: vi.fn() },
+vi.mock("../../services/pro-access", () => ({
+  // BackupService is resolved through the pro-access loader, so the double
+  // is installed at the loader instead of at the Pro module.
+  loadBackupService: () => Promise.resolve(BackupServiceDouble),
 }));
+const BackupServiceDouble = {
+  importBackup: vi.fn().mockResolvedValue(undefined),
+  exportBackup: vi.fn().mockResolvedValue(undefined),
+};
 
 vi.mock("../../services/SettingsService", () => ({
   settingsService: {
@@ -263,14 +269,16 @@ describe("Settings", () => {
     });
     const input = screen.getByLabelText("app_importData");
     fireEvent.change(input, { target: { files: [file] } });
-    const { BackupService } = await import("../../services/BackupService");
+    const { loadBackupService } = await import("../../services/pro-access");
+    const BackupService = await loadBackupService();
     await waitFor(() => {
       expect(BackupService.importBackup).toHaveBeenCalledWith(file, undefined);
     });
   });
 
   it("ignores a second restore while the first backup is still in progress", async () => {
-    const { BackupService } = await import("../../services/BackupService");
+    const { loadBackupService } = await import("../../services/pro-access");
+    const BackupService = await loadBackupService();
     let resolveImport: (() => void) | undefined;
     (BackupService.importBackup as ReturnType<typeof vi.fn>).mockImplementation(
       () => new Promise<void>((resolve) => {
@@ -285,7 +293,11 @@ describe("Settings", () => {
     fireEvent.change(input, { target: { files: [file] } });
     fireEvent.change(input, { target: { files: [file] } });
 
-    expect(BackupService.importBackup).toHaveBeenCalledTimes(1);
+    // The import now resolves BackupService through the pro-access loader,
+    // so the guarded call lands after a microtask, not synchronously.
+    await waitFor(() =>
+      expect(BackupService.importBackup).toHaveBeenCalledTimes(1),
+    );
     resolveImport?.();
     const { toast } = await import("sonner");
     await waitFor(() => {
@@ -324,7 +336,8 @@ describe("Settings", () => {
     await userEvent.type(passwordInput, "secret123");
     await userEvent.click(screen.getByText("app_unlock"));
 
-    const { BackupService } = await import("../../services/BackupService");
+    const { loadBackupService } = await import("../../services/pro-access");
+    const BackupService = await loadBackupService();
     await waitFor(() => {
       expect(BackupService.importBackup).toHaveBeenCalledWith(
         file,
@@ -350,7 +363,8 @@ describe("Settings", () => {
     passwordInput.focus();
     await userEvent.keyboard("{Enter}");
 
-    const { BackupService } = await import("../../services/BackupService");
+    const { loadBackupService } = await import("../../services/pro-access");
+    const BackupService = await loadBackupService();
     await waitFor(() => {
       expect(BackupService.importBackup).toHaveBeenCalledWith(file, "myPass");
     });
@@ -371,7 +385,8 @@ describe("Settings", () => {
     // Submit with empty password
     await userEvent.click(screen.getByText("app_unlock"));
 
-    const { BackupService } = await import("../../services/BackupService");
+    const { loadBackupService } = await import("../../services/pro-access");
+    const BackupService = await loadBackupService();
     const { toast } = await import("sonner");
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith("app_passwordEmpty");
@@ -412,7 +427,8 @@ describe("Settings", () => {
 
     await userEvent.click(screen.getByText("app_cancel"));
 
-    const { BackupService } = await import("../../services/BackupService");
+    const { loadBackupService } = await import("../../services/pro-access");
+    const BackupService = await loadBackupService();
     await waitFor(() => {
       expect(screen.queryByLabelText("app_enterPasswordDecrypt")).toBeNull();
       expect(BackupService.importBackup).not.toHaveBeenCalled();
@@ -420,7 +436,8 @@ describe("Settings", () => {
   });
 
   it("importBackup error shows error toast", async () => {
-    const { BackupService } = await import("../../services/BackupService");
+    const { loadBackupService } = await import("../../services/pro-access");
+    const BackupService = await loadBackupService();
     (
       BackupService.importBackup as ReturnType<typeof vi.fn>
     ).mockRejectedValueOnce(new Error("import failed"));
@@ -538,7 +555,8 @@ describe("Settings", () => {
   });
 
   it("ignores an importBackup that resolves after unmount (no toast)", async () => {
-    const { BackupService } = await import("../../services/BackupService");
+    const { loadBackupService } = await import("../../services/pro-access");
+    const BackupService = await loadBackupService();
     (BackupService.importBackup as ReturnType<typeof vi.fn>).mockReset();
     let resolveImport: (() => void) | undefined;
     (BackupService.importBackup as ReturnType<typeof vi.fn>).mockImplementation(

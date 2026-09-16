@@ -12,7 +12,7 @@ import {
 import ExportDialog from "./ExportDialog";
 import { useSecurityStore } from "../hooks/useSecurityStore";
 import { useRxDB } from "../hooks/useRxDB";
-import { BackupService } from "../services/BackupService";
+import { loadBackupService } from "../services/pro-access";
 import { logger } from "../utils/logger";
 import { toast } from "sonner";
 import { settingsService } from "../services/SettingsService";
@@ -148,7 +148,9 @@ export const Settings = ({ onClose }: SettingsProps) => {
     // while the backup is being decrypted/imported (onSuccess/onError only
     // run if the invocation is still current).
     void runImportBackup(async () => {
-      await BackupService.importBackup(file, password);
+      // BackupService is Pro: resolved behind the hasProAccess gate.
+      const backup = await loadBackupService();
+      await backup.importBackup(file, password);
       if (fileInputRef.current) {fileInputRef.current.value = "";}
     });
   };

@@ -42,12 +42,22 @@ vi.mock("../../../services/GarbageCollectionService", () => ({
 
 const mockExportBackup = vi.fn();
 const mockImportBackup = vi.fn();
-vi.mock("../../../services/BackupService", () => ({
-  BackupService: {
-    exportBackup: mockExportBackup,
-    importBackup: mockImportBackup,
-  },
+vi.mock("../../../services/pro-access", () => ({
+  // Both Pro services are resolved through the pro-access loader, so the
+  // doubles are installed at the loader instead of at the Pro modules.
+  loadBackupService: () =>
+    Promise.resolve({
+      exportBackup: mockExportBackup,
+      importBackup: mockImportBackup,
+    }),
+  loadDiskBackupService: () =>
+    Promise.resolve({
+      getBackupFolderInfo: vi.fn().mockResolvedValue(null),
+      pickBackupFolder: mockPickBackupFolder,
+      clearBackupFolder: vi.fn().mockResolvedValue(undefined),
+    }),
 }));
+const mockPickBackupFolder = vi.fn();
 
 const mockToast = { success: vi.fn(), error: vi.fn() };
 vi.mock("sonner", () => ({ toast: mockToast }));

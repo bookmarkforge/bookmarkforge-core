@@ -3,7 +3,7 @@ import { Database, AlertTriangle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useRxCollection, useRxQuery } from "../hooks/useRxDB";
 import type { RxQuery as AnyRxQuery } from "rxdb";
-import { BackupService } from "../services/BackupService";
+import { loadBackupService } from "../services/pro-access";
 import { safeGet } from "../store/safeStorage";
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { logger } from "../utils/logger";
@@ -68,6 +68,7 @@ export function compactAge(ms: number): string {
  */
 export async function getLatestBackupAgeMs(): Promise<number | null> {
   try {
+    const BackupService = await loadBackupService();
     const autoInfo = await BackupService.getAutoBackupInfo();
     const manualRaw = safeGet(STORAGE_KEYS.LAST_MANUAL_BACKUP_DATE);
     const manualTs = manualRaw ? parseInt(manualRaw, 10) : NaN;
@@ -157,6 +158,7 @@ export function StorageStatus() {
       }
       // Disk backup result (method + error) for the tooltip.
       try {
+        const BackupService = await loadBackupService();
         const diskInfo = BackupService.getDiskBackupInfo();
         if (!cancelled) {setDiskBackupInfo(diskInfo);}
       } catch {

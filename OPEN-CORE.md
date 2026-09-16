@@ -54,6 +54,26 @@ referencia cubierta por un par marcado y sin extensión explícita, y metadatos
 MIT coherentes. Como el repositorio público **es** una exportación, su CI vuelve
 a auditar su propia frontera en cada ejecución.
 
+## Carga Pro en tiempo de ejecución
+
+La frontera de compilación evita que la exportación se rompa; el gate de
+entitlement decide qué se ejecuta. Los componentes del Core ya no importan
+estáticamente los módulos Pro no-IA (backups, extracción de PDF,
+sincronización P2P): los resuelven a través de `src/services/pro-access.ts`
+(MIT), que consulta `licenseService.hasProAccess()` antes de pedir el primer
+byte del chunk Pro:
+
+- un usuario Free no descarga el código Pro — la petición misma está detrás del
+  gate — y la llamada rechaza con `ProUnavailableError`, un error tipado que la
+  interfaz presenta como estado «requiere Pro» o aviso de mejora, nunca como un
+  botón muerto silencioso;
+- un usuario Pro con licencia válida carga la implementación real bajo demanda,
+  en su propio chunk;
+- la superficie de IA mantiene todavía el enlace estático del árbol privado y
+  resuelve a los pares inertes descritos arriba; moverla detrás del cargador es
+  trabajo pendiente, y el par placeholder queda como red de seguridad para todo
+  lo que aún no pase por el cargador.
+
 ## Core MIT
 
 Incluye el vault local, CRUD de marcadores, notas, búsqueda básica, importación

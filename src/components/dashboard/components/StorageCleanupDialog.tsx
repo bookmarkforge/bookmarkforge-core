@@ -2,7 +2,7 @@ import React from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Download, Trash2, Loader2, HardDrive, Database } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { BackupService } from "../../../services/BackupService";
+import { loadBackupService } from "../../../services/pro-access";
 import { securityVault } from "../../../services/SecurityVault";
 import { clearAICache, type ClearAICacheResult } from "../../../services/StorageMaintenanceService";
 import { garbageCollectionService } from "../../../services/GarbageCollectionService";
@@ -105,7 +105,9 @@ export const StorageCleanupDialog: React.FC<StorageCleanupDialogProps> = ({
       securityVault.withMasterPasswordBytes(
         cleanupDialogCaller,
         async (masterPasswordBytes) => {
-          await BackupService.exportBackup(masterPasswordBytes ?? undefined);
+          // BackupService is Pro: resolved behind the hasProAccess gate.
+          const backup = await loadBackupService();
+          await backup.exportBackup(masterPasswordBytes ?? undefined);
         },
       ),
     );

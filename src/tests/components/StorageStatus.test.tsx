@@ -50,9 +50,15 @@ const mockFreeTierUsage = {
 vi.mock("../../hooks/useFreeTierUsage", () => ({
   useFreeTierUsage: () => mockFreeTierUsage,
 }));
-vi.mock("../../services/BackupService", () => ({
-  BackupService: { getAutoBackupInfo: vi.fn() },
+vi.mock("../../services/pro-access", () => ({
+  // The component resolves BackupService through the pro-access loader, so
+  // the double is installed at the loader instead of at the Pro module.
+  loadBackupService: () => Promise.resolve(BackupServiceDouble),
 }));
+const BackupServiceDouble = {
+  getAutoBackupInfo: vi.fn(),
+  getDiskBackupInfo: () => ({ method: null, timestamp: null, error: null }),
+};
 vi.mock("../../store/safeStorage", () => ({
   safeGet: vi.fn(() => null),
   safeSet: vi.fn(),
@@ -69,7 +75,8 @@ vi.mock("../../components/dashboard/components/StorageCleanupDialog", () => ({
     ) : null,
 }));
 
-const { BackupService } = await import("../../services/BackupService");
+const { loadBackupService } = await import("../../services/pro-access");
+const BackupService = await loadBackupService();
 const { safeGet } = await import("../../store/safeStorage");
 const { StorageStatus, getStorageHealthLevel, compactAge, BACKUP_REFRESH_INTERVAL_MS, BACKUP_STALE_MS } = await import(
   "../../components/StorageStatus"

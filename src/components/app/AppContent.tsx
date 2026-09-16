@@ -18,6 +18,7 @@ import { useDatabaseInit } from "../../hooks/useDatabaseInit";
 import { useMigrationProgress } from "../../hooks/useMigrationProgress";
 import type { DbErrorClass } from "../../db/database";
 import { safeGet } from "../../store/safeStorage";
+import { loadBackupService } from "../../services/pro-access";
 
 /**
  * Pure mapping from a classified DB error to the production message.
@@ -384,8 +385,9 @@ export function AppContent() {
       // stale/corrupt storage on the same adapter.
       const { destroyDB } = await import("../../container/database");
       await destroyDB();
-      const { BackupService } = await import("../../services/BackupService");
-      await BackupService.importBackup(file, password);
+      // BackupService is Pro: resolved behind the hasProAccess gate.
+      const backup = await loadBackupService();
+      await backup.importBackup(file, password);
       toast.success(
         t("onboarding_restoreSuccess", "Vault restored successfully."),
       );

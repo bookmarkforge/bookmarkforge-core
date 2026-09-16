@@ -14,11 +14,12 @@ import {
   Lightbulb,
 } from "lucide-react";
 import { motion } from "motion/react";
+import type { SyncState } from "../../services/WebRTCSyncService";
+import { getActiveProPrice } from "../../constants/pricing";
 import {
-  webRTCSyncService,
-  SyncState,
-  isWebRTCSupported,
-} from "../../services/WebRTCSyncService";
+  loadWebRTCSyncService,
+  type WebRTCSyncServiceType,
+} from "../../services/pro-access";
 import type { IScannerControls } from "@zxing/browser";
 
 import { useFocusTrap } from "../../hooks/useFocusTrap";
@@ -38,12 +39,46 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
   onClose,
 }) => {
   const { t } = useTranslation();
+  // Same source the Free-tier wall uses, so the modal's CTA can never
+  // quote a price that drifted from the pricing table.
+  const price = getActiveProPrice();
   // Graceful fallback for engines without the WebRTC API (e.g. some WebKit
   // builds): the role chooser is replaced by an explanatory banner instead of
   // letting the flows throw a raw ReferenceError.
-  const webrtcUnsupported = useMemo(() => !isWebRTCSupported(), []);
+  // P2P sync is a Pro feature: the implementation is resolved behind the
+  // hasProAccess gate when the modal opens. `webrtcUnsupported` keeps its
+  // free-engine meaning (browser without the WebRTC API); a Free user gets
+  // the same graceful degradation through `proRequired` — an explanation
+  // banner plus the upgrade CTA instead of a dead modal.
+  const webrtcUnsupported = useMemo(
+    () => typeof globalThis.RTCPeerConnection === "undefined",
+    [],
+  );
   const [role, setRole] = useState<Role>("none");
   const [syncState, setSyncState] = useState<SyncState>("disconnected");
+  const [proState, setProState] = useState<
+    "probing" | "unavailable" | "ready"
+  >("probing");
+  const serviceRef = useRef<WebRTCSyncServiceType | null>(null);
+  const proRequired = !webrtcUnsupported && proState === "unavailable";
+
+  useEffect(() => {
+    if (!isOpen || webrtcUnsupported) {return;}
+    let cancelled = false;
+    loadWebRTCSyncService()
+      .then((service) => {
+        if (cancelled) {return;}
+        serviceRef.current = service;
+        setProState("ready");
+      })
+      .catch(() => {
+        if (cancelled) {return;}
+        setProState("unavailable");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, webrtcUnsupported]);
   const [errorMessage, setErrorMessage] = useState("");
   const [progress, setProgress] = useState(0);
   const [encodedSDP, setEncodedSDP] = useState(""); // Host Offer or Client Answer
@@ -75,7 +110,7 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
     },
     scanAnswer: {
       blockReentry: false,
-      onSuccess: (result) => webRTCSyncService.processClientAnswer(result),
+      onSuccess: (result) => serviceRef.current?.processClientAnswer(result),
       onError: (err) =>
         setErrorMessage(err instanceof Error ? err.message : String(err)),
     },
@@ -91,10 +126,13 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
   });
 
   useEffect(() => {
+    if (proState !== "ready") {return;}
+    const service = serviceRef.current;
+    if (!service) {return;}
     // The service is a singleton: after unmount its callbacks would keep
     // firing on a component that is gone, so swallow them via `cancelled`.
     let cancelled = false;
-    webRTCSyncService.registerCallbacks(
+    service.registerCallbacks(
       (state, msg) => {
         if (cancelled) {return;}
         setSyncState(state);
@@ -110,14 +148,14 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
       cancelled = true;
       stopScanner();
       cancelFlow();
-      webRTCSyncService.disconnect();
+      service.disconnect();
     };
-  }, []);
+  }, [proState]);
 
   const handleClose = () => {
     stopScanner();
     cancelFlow();
-    webRTCSyncService.disconnect();
+    serviceRef.current?.disconnect();
     setRole("none");
     setSyncState("disconnected");
     setProgress(0);
@@ -168,7 +206,7 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
 
   // --- HOST FLOW ---
   const startHostFlow = () => {
-    if (!isWebRTCSupported()) {
+    if (webrtcUnsupported) {
       setErrorMessage(
         t(
           "app_p2pUnsupported",
@@ -177,9 +215,11 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
       );
       return;
     }
+    const service = serviceRef.current;
+    if (!service) {return;} // gated state; the entry buttons are disabled
     setRole("host");
     setErrorMessage("");
-    void hostAction.run(async () => webRTCSyncService.startHost());
+    void hostAction.run(async () => service.startHost());
   };
 
   const hostScanAnswer = () => {
@@ -195,7 +235,7 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
 
   // --- CLIENT FLOW ---
   const startClientFlow = () => {
-    if (!isWebRTCSupported()) {
+    if (webrtcUnsupported) {
       setErrorMessage(
         t(
           "app_p2pUnsupported",
@@ -204,6 +244,8 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
       );
       return;
     }
+    const service = serviceRef.current;
+    if (!service) {return;} // gated state; the entry buttons are disabled
     setRole("client");
     setErrorMessage("");
     setSyncState("connecting"); // Update UI to show scanner
@@ -212,7 +254,7 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
       if (signal.aborted) {
         throw new DOMException("Aborted", "AbortError");
       }
-      return webRTCSyncService.startClient(result);
+      return service.startClient(result);
     });
   };
 
@@ -303,13 +345,35 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
                 </div>
               </div>
 
-              {webrtcUnsupported && (
+              {(webrtcUnsupported || proRequired) && (
                 <div className="flex items-start gap-3 p-4 bg-[var(--danger-soft)] dark:bg-[var(--color-danger)]/10 border border-[var(--danger-soft-border)] dark:border-[var(--danger-soft-border)]/20 rounded-xl">
                   <AlertCircle className="size-5 ds-text-danger shrink-0 mt-0.5" />
                   <div className="text-sm ds-text-danger dark:ds-text-danger font-medium leading-relaxed">
-                    {t(
-                      "app_p2pUnsupported",
-                      "WebRTC is not supported by this browser, so P2P sync is unavailable.",
+                    {webrtcUnsupported ? (
+                      t(
+                        "app_p2pUnsupported",
+                        "WebRTC is not supported by this browser, so P2P sync is unavailable.",
+                      )
+                    ) : (
+                      <span className="flex flex-col gap-2">
+                        {t(
+                          "app_p2pProRequired",
+                          "P2P sync is a Pro feature. Upgrade to link your devices.",
+                        )}
+                        {/* Same navigation bridge the Free-tier wall uses:
+                            Settings is a modal, not a routed section. */}
+                        <button
+                          type="button"
+                          onClick={() =>
+                            window.dispatchEvent(
+                              new CustomEvent("forge:open-settings"),
+                            )
+                          }
+                          className="underline font-bold ds-text-danger hover:opacity-80 text-left truncate max-w-full"
+                        >
+                          {t("app_freeWallCta", "See Pro — {{price}} once", { price })}
+                        </button>
+                      </span>
                     )}
                   </div>
                 </div>
@@ -318,8 +382,8 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <button
                   onClick={startHostFlow}
-                  disabled={webrtcUnsupported}
-                  aria-disabled={webrtcUnsupported}
+                  disabled={webrtcUnsupported || proState !== "ready"}
+                  aria-disabled={webrtcUnsupported || proState !== "ready"}
                   className="truncate flex flex-col items-center justify-center p-6 rounded-2xl transition-all group card-inactive disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <div className="size-14 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform ds-icon-tint-cyan">
@@ -338,8 +402,8 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
 
                 <button
                   onClick={startClientFlow}
-                  disabled={webrtcUnsupported}
-                  aria-disabled={webrtcUnsupported}
+                  disabled={webrtcUnsupported || proState !== "ready"}
+                  aria-disabled={webrtcUnsupported || proState !== "ready"}
                   className="truncate flex flex-col items-center justify-center p-6 rounded-2xl transition-all group card-inactive disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <div className="size-14 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform ds-icon-tint-cyan">

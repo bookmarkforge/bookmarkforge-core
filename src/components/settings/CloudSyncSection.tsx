@@ -9,7 +9,7 @@ import {
   CloudSyncConfig,
 } from "../../services/integrations/cloudSync";
 import { securityVault } from "../../services/SecurityVault";
-import { BackupService } from "../../services/BackupService";
+import { loadBackupService } from "../../services/pro-access";
 import { AuthTokenFields } from "./ProviderForm/AuthTokenFields";
 import { WebDAVFields } from "./ProviderForm/WebDAVFields";
 import { RestoreList } from "./ProviderForm/RestoreList";
@@ -418,8 +418,9 @@ export const CloudSyncSection: React.FC = () => {
           if (!passwordBytes) {
             throw new Error("Vault is locked. Enter your password first.");
           }
-          // 6. Import Backup
-          await BackupService.importBackup(tempFile, passwordBytes);
+          // 6. Import Backup (Pro service, resolved behind the gate)
+          const backup = await loadBackupService();
+          await backup.importBackup(tempFile, passwordBytes);
         },
       );
     });

@@ -65,11 +65,24 @@ const mockWebRTC = {
   startHost: vi.fn().mockResolvedValue("offer-sdp"),
   processClientAnswer: vi.fn(),
   startClient: vi.fn().mockResolvedValue("answer-sdp"),
-  isWebRTCSupported: vi.fn(() => true),
 };
-vi.mock("../../services/WebRTCSyncService", () => ({
-  webRTCSyncService: mockWebRTC,
-  isWebRTCSupported: mockWebRTC.isWebRTCSupported,
+// WebRTC feature detection reads globalThis directly (the Pro module is no
+// longer imported by the component), so tests steer it by (un)defining
+// RTCPeerConnection.
+const stubRTCPeerConnection = (supported: boolean) => {
+  const g = globalThis as { RTCPeerConnection?: unknown };
+  if (supported) {
+    g.RTCPeerConnection = class {};
+  } else {
+    delete g.RTCPeerConnection;
+  }
+};
+stubRTCPeerConnection(true);
+
+vi.mock("../../services/pro-access", () => ({
+  // The modal resolves the Pro service through the pro-access loader, so
+  // the double is installed at the loader instead of at the Pro module.
+  loadWebRTCSyncService: () => Promise.resolve(mockWebRTC),
 }));
 
 vi.mock("../../hooks/useFocusTrap", () => ({ useFocusTrap: () => null }));
@@ -110,7 +123,7 @@ describe("P2PSyncModal", () => {
   });
 
   it("shows the fallback banner and disables flows when WebRTC is unavailable", async () => {
-    mockWebRTC.isWebRTCSupported.mockReturnValue(false);
+    stubRTCPeerConnection(false);
     try {
       render(<P2PSyncModal isOpen={true} onClose={vi.fn()} />);
       expect(
@@ -131,7 +144,7 @@ describe("P2PSyncModal", () => {
         .catch(() => undefined);
       expect(mockWebRTC.startHost).not.toHaveBeenCalled();
     } finally {
-      mockWebRTC.isWebRTCSupported.mockReturnValue(true);
+      stubRTCPeerConnection(true);
     }
   });
 
@@ -168,9 +181,12 @@ describe("P2PSyncModal", () => {
 
   // ── Fusionado de src/tests/security/P2PSyncModal.test.tsx (branch coverage) ──
 
-  it("disconnects and closes via the close button", () => {
+  it("disconnects and closes via the close button", async () => {
     const onClose = vi.fn();
     render(<P2PSyncModal isOpen={true} onClose={onClose} />);
+    // The Pro service resolves asynchronously after mount; flush so the
+    // close path has a service to disconnect.
+    await act(async () => {});
     fireEvent.click(screen.getByLabelText("Close"));
     expect(mockWebRTC.disconnect).toHaveBeenCalled();
     expect(onClose).toHaveBeenCalled();
@@ -266,6 +282,9 @@ describe("P2PSyncModal", () => {
     const { unmount } = render(
       <P2PSyncModal isOpen={true} onClose={vi.fn()} />,
     );
+    // Flush the async Pro-service load so callbacks register before
+    // unmounting (the component can only disconnect what it loaded).
+    await act(async () => {});
     unmount();
     expect(mockWebRTC.disconnect).toHaveBeenCalled();
     // A stale service emission after unmount must be swallowed.

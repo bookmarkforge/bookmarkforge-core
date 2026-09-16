@@ -8,6 +8,7 @@ import { STORAGE_KEYS } from "../constants/storage-keys";
 import { logger } from "../utils/logger";
 import { SECURITY_CONFIG } from "../constants/config";
 import { downloadBlob } from "../utils/download";
+import { loadBackupService } from "../services/pro-access";
 import { useTranslation } from "react-i18next";
 import { formatDate } from "../utils/localization";
 import {
@@ -299,8 +300,9 @@ Date Generated: ${formatDate(new Date(), {
         pendingBmfKitRef.current = false;
         setIsExportingKit(true);
         try {
-          const { BackupService } = await import("../services/BackupService");
-          await BackupService.exportBackup(passwordInput);
+          // BackupService is Pro: resolved behind the hasProAccess gate.
+          const backup = await loadBackupService();
+          await backup.exportBackup(passwordInput);
         } catch (kitError) {
           logger.error("[SecurityManager] Recovery kit export failed", {
             error: kitError,

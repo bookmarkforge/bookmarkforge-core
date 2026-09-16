@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { extractTextFromPdf } from "../services/pdfService";
+import { loadPdfExtractor } from "../services/pro-access";
 import { FileUp, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -58,10 +58,10 @@ export const PdfUploader = ({
     if (!file) {
       return;
     }
-    // The guard's signal reaches the extraction: an unmount aborts the
-    // pdf.js worker work between pages instead of continuing in the
-    // background up to 500 pages.
-    void runExtract((signal) => extractTextFromPdf(file, signal));
+    // pdfService is Pro: resolved behind the hasProAccess gate. The guard's
+    // signal still reaches the extraction: an unmount aborts the pdf.js
+    // worker work between pages instead of continuing in the background.
+    void runExtract(async (signal) => (await loadPdfExtractor())(file, signal));
   };
 
   return (

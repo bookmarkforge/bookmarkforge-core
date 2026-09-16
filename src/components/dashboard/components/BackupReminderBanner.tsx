@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "motion/react";
 import { ShieldCheck, HardDriveDownload, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { BackupService } from "../../../services/BackupService";
+import { loadBackupService } from "../../../services/pro-access";
 import { securityVault } from "../../../services/SecurityVault";
 import { toast } from "sonner";
 import { logger } from "../../../utils/logger";
@@ -63,7 +63,9 @@ export const BackupReminderBanner: React.FC<BackupReminderBannerProps> = ({
       securityVault.withMasterPasswordBytes(
         backupBannerCaller,
         async (masterPasswordBytes) => {
-          await BackupService.exportBackup(masterPasswordBytes ?? undefined);
+          // BackupService is Pro: resolved behind the hasProAccess gate.
+          const backup = await loadBackupService();
+          await backup.exportBackup(masterPasswordBytes ?? undefined);
         },
       ),
     );

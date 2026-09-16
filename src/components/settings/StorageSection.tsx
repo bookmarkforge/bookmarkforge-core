@@ -8,12 +8,9 @@ import {
   Upload,
   FolderOpen,
 } from "lucide-react";
-import { BackupService } from "../../services/BackupService";
+import { loadBackupService, loadDiskBackupService } from "../../services/pro-access";
 import { clearAICache } from "../../services/StorageMaintenanceService";
-import {
-  diskBackupService,
-  type BackupFolderInfo,
-} from "../../services/DiskBackupService";
+import type { BackupFolderInfo } from "../../services/DiskBackupService";
 import { useTranslation } from "react-i18next";
 import { initDB } from "../../container/database";
 import { garbageCollectionService } from "../../services/GarbageCollectionService";
@@ -294,7 +291,8 @@ export const StorageSection: React.FC = () => {
         return;
       }
     }
-    void runExport(() => BackupService.exportBackup(password));
+    // BackupService is Pro: resolved behind the hasProAccess gate.
+    void runExport(async () => (await loadBackupService()).exportBackup(password));
   };
 
   const handleImportBackup = (
@@ -323,7 +321,7 @@ export const StorageSection: React.FC = () => {
         return;
       }
     }
-    void runImport(() => BackupService.importBackup(file, password)).finally(
+    void runImport(async () => (await loadBackupService()).importBackup(file, password)).finally(
       () => {
         if (fileInputRef.current) {fileInputRef.current.value = "";}
       },
@@ -335,7 +333,7 @@ export const StorageSection: React.FC = () => {
   // fall back to Downloads automatically).
   const [folderInfo, setFolderInfo] = useState<BackupFolderInfo | null>(null);
   const { load: loadFolderInfo } = useGuardedDataLoad(
-    async () => diskBackupService.getBackupFolderInfo(),
+    async () => (await loadDiskBackupService()).getBackupFolderInfo(),
     {
       onSuccess: setFolderInfo,
       onError: () => {
@@ -388,10 +386,10 @@ export const StorageSection: React.FC = () => {
     });
 
   const handlePickBackupFolder = () => {
-    void runPickFolder(() => diskBackupService.pickBackupFolder());
+    void runPickFolder(async () => (await loadDiskBackupService()).pickBackupFolder());
   };
   const handleClearBackupFolder = () => {
-    void runClearFolder(() => diskBackupService.clearBackupFolder());
+    void runClearFolder(async () => (await loadDiskBackupService()).clearBackupFolder());
   };
 
   const docsPercentage = stats.totalBytes

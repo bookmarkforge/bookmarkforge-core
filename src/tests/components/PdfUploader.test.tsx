@@ -10,11 +10,12 @@ import userEvent from "@testing-library/user-event";
 import React from "react";
 import { PdfUploader } from "../../components/PdfUploader";
 
-// Mock del servicio PDF
+// Mock the Pro loader: the component resolves the extractor through
+// pro-access (pdfService is Pro), so the double is installed at the loader.
 const mockExtractText = vi.hoisted(() => vi.fn());
 
-vi.mock("../../services/pdfService", () => ({
-  extractTextFromPdf: mockExtractText,
+vi.mock("../../services/pro-access", () => ({
+  loadPdfExtractor: () => Promise.resolve(mockExtractText),
 }));
 
 // Mock de sonner

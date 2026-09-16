@@ -30,8 +30,10 @@ purchased from the official store:
 | | Free | Pro |
 |---|---|---|
 | Bookmarks | 1,000 | Unlimited |
+| Smart search (Fuse.js + semantic) | ✅ included | ✅ |
+| Encrypted backups & PDF/OCR | — | ✅ |
 | Flashcards from bookmarks | — | ✅ |
-| Advanced export formats | — | ✅ |
+| P2P device sync | — | ✅ |
 | Priority support | Community | Direct |
 
 **Buy a Pro license:** [bookmarkforge.com](https://bookmarkforge.com) —
@@ -54,17 +56,24 @@ Running the Core for yourself or your team is permitted without payment.
 
 ### Where the Pro code went
 
-The Core refers to Pro modules (local AI, RAG, P2P sync, PDF/OCR, encrypted
-backups, the AI proxy). Those implementations are not in this repository; in
-their place you will find a generated pair at the same path: a `.d.ts` with the
-real type surface and a `.js` that is inert — it never throws, so the Core still
-starts, and it logs `[open-core] <module>.<name> is a Pro feature and is not
-included in this build` the first time a Pro surface is actually reached rather
-than pretending to work.
+Pro code is resolved two ways in this build, both enforced in CI by
+`npm run check:open-core`:
 
-So a Pro button in this build does nothing useful by design. If you reach one,
-the console line above is the exact call site that needs the private
-distribution. `npm run check:open-core` verifies this boundary and runs in CI.
+1. **Behind the entitlement gate.** Core components resolve the non-AI Pro
+   services (encrypted backups, PDF/OCR extraction, P2P sync) through
+   `src/services/pro-access.ts` (MIT), which calls `hasProAccess()` *before*
+   fetching the Pro chunk. A Free user never downloads that code; the call
+   rejects with a typed `ProUnavailableError` that the UI presents as a
+   "requires Pro" state or upgrade prompt, never a silent dead button.
+2. **As declared placeholders.** The AI surface (local AI, RAG, agents, and the
+   server AI proxy) still resolves to a generated pair at its original path: a
+   `.d.ts` with the real type surface and a `.js` that is inert — it never
+   throws, so the Core still starts, and it logs `[open-core] <module>.<name> is
+   a Pro feature and is not included in this build` the first time a Pro
+   surface is reached.
+
+If you reach a Pro surface, that console line (or the in-app upgrade state) is
+the exact call site that needs the private distribution.
 
 ## Documentation
 

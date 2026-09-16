@@ -15,7 +15,7 @@ import { safeGet, safeRemove, safeSet } from "../store/safeStorage";
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { useReducedMotion } from "../hooks/useReducedMotion";
 import { toast } from "sonner";
-import { BackupService } from "../services/BackupService";
+import { loadBackupService } from "../services/pro-access";
 import { compactAge } from "./StorageStatus";
 import { logger } from "../utils/logger";
 
@@ -127,7 +127,8 @@ export const Onboarding: React.FC<OnboardingProps> = ({
   useEffect(() => {
     if (!showRecovery) {return;}
     let cancelled = false;
-    BackupService.getAutoBackupInfo()
+    loadBackupService()
+      .then((BackupService) => BackupService.getAutoBackupInfo())
       .then((info) => {
         if (!cancelled) {
           setAutoBackupAvailable(info.available);
@@ -208,7 +209,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
 
     setImporting("file");
     try {
-      await BackupService.importBackup(file, password);
+      await (await loadBackupService()).importBackup(file, password);
       logger.info("[Onboarding] Restore import completed", {
         fileName: file.name,
         fileSize: file.size,
@@ -238,7 +239,7 @@ export const Onboarding: React.FC<OnboardingProps> = ({
   const handleRestoreAuto = async () => {
     setImporting("auto");
     try {
-      const restored = await BackupService.restoreFromAutoBackup();
+      const restored = await (await loadBackupService()).restoreFromAutoBackup();
       if (restored) {
         toast.success(t("onboarding_restoreSuccess", "Vault restored successfully."));
         finish();

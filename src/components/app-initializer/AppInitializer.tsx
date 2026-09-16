@@ -23,6 +23,7 @@ import { auditLog } from "../../services/AuditLogService";
 import { toast } from "sonner";
 import i18n from "../../i18n";
 import { logger } from "../../utils/logger";
+import { loadBackupService } from "../../services/pro-access";
 import { useSecurityStore } from "../../hooks/useSecurityStore";
 import { safeGet, safeSet } from "../../store/safeStorage";
 import { STORAGE_KEYS } from "../../constants/storage-keys";
@@ -264,9 +265,11 @@ export function AppInitializer() {
     const syncController = new AbortController();
     const runPostUnlock = async () => {
       try {
-        const { BackupService } = await import("../../services/BackupService");
+        // BackupService is Pro: resolved behind the hasProAccess gate. A
+        // Free user skips the auto-backup attempt entirely (no chunk fetch).
+        const backup = await loadBackupService();
         if (cancelled) {return;}
-        await BackupService.runAutoBackup();
+        await backup.runAutoBackup();
         if (cancelled) {return;}
         logger.info("[AppInitializer] Auto-backup completed on unlock");
       } catch (err) {

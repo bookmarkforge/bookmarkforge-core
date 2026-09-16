@@ -11,7 +11,7 @@ Estos son los precios finales y oficiales del lanzamiento:
 
 | Tier | Precio | Nota |
 |---|---|---|
-| **Free** | **$0** | Para siempre. 1.000 bookmarks, 1 dispositivo. Sin caducidad. |
+| **Free** | **$0** | Para siempre. 1.000 bookmarks, sin límite de dispositivos (cada dispositivo tiene su propia bóveda). Sin caducidad. |
 | **Pro Early Bird** | **$59** | Solo los primeros **200** compradores. `priceValidUntil: 2026-12-31`. |
 | **Pro Regular v1** | **$79** | El precio oficial de v1 tras agotar Early Bird (6-12 meses). |
 | **Founder** | **$99** | Limitado a **100**. Idéntico a Pro en código + badge + beta v2 + 60% off de por vida en futuras majors. |

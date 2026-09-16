@@ -101,6 +101,16 @@ const KNOWN_GATES = {
   // backup intervals, prices). Documentation-format gate: ADR-047 names the
   // concrete failure class and maps it onto ADR-028's drift-detection model.
   "check:claim-drift": "docs",
+  // License claim-drift (ADR-048): the user-visible corpus (manuals, PDFs,
+  // landings, legal pages, API metadata) must never mention a non-MIT
+  // license, and the root MIT contract must stay intact. Documentation-format
+  // gate: ADR-048 names the failure class and maps it onto ADR-028's
+  // drift-detection model, like ADR-047 does for numeric claims.
+  "check:license-claims": "docs",
+  // gate: ADR-049 names the failure class (numeric figure drift between the
+  // localized manuals and the pricing/license code) and maps it onto
+  // ADR-028's drift-detection model, like ADR-048 does for license claims.
+  "check:manual-figures": "docs",
   "check:rxdb17": "meta",
   "check:seo": "meta",
   "check:chunks": "meta",

@@ -277,7 +277,7 @@
           <h4>{{ t.footer.languages.title }}</h4>
           <ul>
             {% for link in t.footer.languages.links %}
-            <li><a href="{{ link == 'English' ? '/' : '/' + link | lower + '/' }}" hreflang="{{ link == 'English' ? 'en' : link | lower }}" lang="{{ link == 'English' ? 'en' : link | lower }}">{{ link }}</a></li>
+            <li><a href="{{ '/' if link == 'English' else '/' + (link | lower) + '/' }}" hreflang="{{ 'en' if link == 'English' else (link | lower) }}" lang="{{ 'en' if link == 'English' else (link | lower) }}">{{ link }}</a></li>
             {% endfor %}
           </ul>
         </nav>

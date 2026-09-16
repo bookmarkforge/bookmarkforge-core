@@ -131,6 +131,7 @@
     },
     "software": {
       "name": "BookmarkForge",
+      "description": "Local-first personal knowledge vault for your bookmarks and reading: encrypted in your browser, works offline, syncs peer-to-peer.",
       "category": "ProductivityApplication",
       "os": "Web",
       "url": "https://bookmarkforge.com/",

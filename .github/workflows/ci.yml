@@ -72,6 +72,23 @@ jobs:
       # it can be pushed).
       - name: Enforce factual claim consistency
         run: npm run check:claim-drift
+      # Its own named step so license drift (a manual, PDF, landing or legal
+      # page mentioning AGPL/GPL/Apache or any other non-MIT license, or a
+      # broken MIT claim in package.json / LICENSE / OpenAPI) surfaces as a
+      # separate red check instead of being buried in `npm run check`. This
+      # step ships to the public export unchanged: the corpus it scans
+      # (localized manuals, landings, legal pages, API metadata) is included
+      # in the exported tree, so the open-source repo runs the identical gate
+      # on its own CI.
+      - name: Enforce MIT license claims
+        run: npm run check:license-claims
+
+      # Numeric figure claims in the 30 localized manuals must agree with
+      # pricing.ts / license.ts / config.ts / RecoveryService.ts. Same story
+      # as the license gate: parses truth from code, so the exported tree
+      # runs the identical gate on its own CI.
+      - name: Enforce manual figure claims
+        run: npm run check:manual-figures
 
   slow-tests:
     name: Full unit suite (slow profile, timing enforced)

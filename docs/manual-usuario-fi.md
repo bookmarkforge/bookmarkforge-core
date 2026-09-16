@@ -1,6 +1,6 @@
 # Käyttöopas — BookmarkForge v1
 
-**Versio:** 1.0.0 · **Päivitetty:** syyskuu 2026 · **Lisenssi:** AGPL-3.0
+**Versio:** 1.0.0 · **Päivitetty:** syyskuu 2026 · **Lisenssi:** MIT
 
 ## Aloittaminen
 

@@ -1,6 +1,6 @@
 # Kullanıcı kılavuzu — BookmarkForge v1
 
-**Sürüm:** 1.0.0 · **Son güncelleme:** Eylül 2026 · **Lisans:** AGPL-3.0
+**Sürüm:** 1.0.0 · **Son güncelleme:** Eylül 2026 · **Lisans:** MIT
 
 ## Başlarken
 

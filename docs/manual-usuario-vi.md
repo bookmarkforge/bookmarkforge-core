@@ -1,6 +1,6 @@
 # Hướng dẫn sử dụng — BookmarkForge v1
 
-**Phiên bản:** 1.0.0 · **Cập nhật:** tháng 9 năm 2026 · **Giấy phép:** AGPL-3.0
+**Phiên bản:** 1.0.0 · **Cập nhật:** tháng 9 năm 2026 · **Giấy phép:** MIT
 
 ## Bắt đầu
 

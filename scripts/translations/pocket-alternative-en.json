@@ -70,7 +70,7 @@
       { "feature": "Zero ads & tracking by default", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes — no analytics by default", "bookmarkforgeClass": "yes" },
       { "feature": "Import from Pocket's HTML export", "pocket": "⚠️ Export only", "pocketClass": "partial", "bookmarkforge": "✅ Built-in importer", "bookmarkforgeClass": "yes" },
       { "feature": "Data export", "pocket": "⚠️ HTML export", "pocketClass": "partial", "bookmarkforge": "✅ JSON, Markdown, CSV, PDF, .bmf", "bookmarkforgeClass": "yes" },
-      { "feature": "Open source & self-hostable", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ AGPL-3.0", "bookmarkforgeClass": "yes" },
+      { "feature": "Open source & self-hostable", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ MIT (open core)", "bookmarkforgeClass": "yes" },
       { "feature": "Price", "pocket": "⚠️ Free tier + Premium", "pocketClass": "partial", "bookmarkforge": "✅ Free forever + one-time $79 Pro", "bookmarkforgeClass": "yes" },
       { "feature": "Status", "pocket": "❌ Shutting down", "pocketClass": "no", "bookmarkforge": "✅ Active", "bookmarkforgeClass": "yes" }
     ],

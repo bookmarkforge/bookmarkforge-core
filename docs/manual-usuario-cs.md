@@ -1,6 +1,6 @@
 # Uživatelská příručka — BookmarkForge v1
 
-**Verze:** 1.0.0 · **Poslední aktualizace:** září 2026 · **Licence:** AGPL-3.0
+**Verze:** 1.0.0 · **Poslední aktualizace:** září 2026 · **Licence:** MIT
 
 ## Začínáme
 

@@ -1,6 +1,6 @@
 # Podręcznik użytkownika — BookmarkForge v1
 
-**Wersja:** 1.0.0 · **Ostatnia aktualizacja:** wrzesień 2026 · **Licencja:** AGPL-3.0
+**Wersja:** 1.0.0 · **Ostatnia aktualizacja:** wrzesień 2026 · **Licencja:** MIT
 
 ## Rozpoczęcie pracy
 

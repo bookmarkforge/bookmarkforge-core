@@ -1,6 +1,6 @@
 # Brukerhåndbok — BookmarkForge v1
 
-**Versjon:** 1.0.0 · **Sist oppdatert:** september 2026 · **Lisens:** AGPL-3.0
+**Versjon:** 1.0.0 · **Sist oppdatert:** september 2026 · **Lisens:** MIT
 
 ## Kom i gang
 

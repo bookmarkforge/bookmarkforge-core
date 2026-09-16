@@ -164,7 +164,7 @@
           "<strong>Upgrade without subscription:</strong> future majors (v2, v3) are separate products: <strong>$89 for new customers, $35 for v1 owners (60% off)</strong>. Skip the major and v1 keeps working. That's recurring revenue without forcing a subscription — same model as Affinity/Sketch/Sublime.",
           "<strong>Founder Edition — $99 lifetime v1 (limited 100):</strong> same Pro v1 binary + Founder # badge in app + beta access to v2 + 60% off future majors forever for this account. Vanity, not a paywall.",
           "<strong>Legal line:</strong> <em>Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop.</em>",
-          "<strong>Commercial licenses</strong> for companies that embed/redistribute/host the AGPL codebase are separate annual licenses: Integration $2,500/y, Service/hosting $5,000/y, Redistribution $7,500/y."
+          "<strong>Commercial licenses</strong> for companies that embed/redistribute/host the MIT-licensed Core are separate annual licenses: Integration $2,500/y, Service/hosting $5,000/y, Redistribution $7,500/y."
         ]
       },
       {

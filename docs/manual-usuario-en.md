@@ -1,6 +1,6 @@
 # User Manual — BookmarkForge v1
 
-**Version:** 1.0.0 · **Last updated:** September 2026 · **License:** AGPL-3.0
+**Version:** 1.0.0 · **Last updated:** September 2026 · **License:** MIT
 
 ---
 
@@ -369,7 +369,7 @@ Local AI uses WebGPU. On laptops, it may consume battery faster. Disable local A
 
 ## 13. Legal
 
-- **Code license:** AGPL-3.0-or-later
+- **Code license:** MIT-or-later
 - **Trademark:** BookmarkForge and its marks are protected (see `TRADEMARKS.md`)
 - **Pricing:** Frozen in `docs/pricing-decision.md`. All prices are lifetime version 1.
 - **Refunds:** 30 days via Whop. Full refund policy.

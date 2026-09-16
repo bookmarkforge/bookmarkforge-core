@@ -1,6 +1,6 @@
 # Felhasználói kézikönyv — BookmarkForge v1
 
-**Verzió:** 1.0.0 · **Utolsó frissítés:** 2026. szeptember · **Licenc:** AGPL-3.0
+**Verzió:** 1.0.0 · **Utolsó frissítés:** 2026. szeptember · **Licenc:** MIT
 
 ## Kezdés
 

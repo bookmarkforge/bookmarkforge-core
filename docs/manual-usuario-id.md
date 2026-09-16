@@ -1,6 +1,6 @@
 # Panduan Pengguna — BookmarkForge v1
 
-**Versi:** 1.0.0 · **Pembaruan terakhir:** September 2026 · **Lisensi:** AGPL-3.0
+**Versi:** 1.0.0 · **Pembaruan terakhir:** September 2026 · **Lisensi:** MIT
 
 ## Memulai
 

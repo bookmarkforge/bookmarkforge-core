@@ -1,7 +1,7 @@
 # Auditoría técnica — BookmarkForge
 
 - **Fecha:** 2026-08-30
-- **Alcance:** release v1.0.0 (AGPL-3.0)
+- **Alcance:** release v1.0.0 (MIT Core / Pro propietario)
 - **Metodología:** revisión de código, configuración, workflows CI/CD y documentación. Auditoría estática; no incluye pentest ni revisión legal formal.
 
 ## Resumen ejecutivo

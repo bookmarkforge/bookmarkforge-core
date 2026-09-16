@@ -1,6 +1,6 @@
 # Gebruikershandleiding — BookmarkForge v1
 
-**Versie:** 1.0.0 · **Laatst bijgewerkt:** september 2026 · **Licentie:** AGPL-3.0
+**Versie:** 1.0.0 · **Laatst bijgewerkt:** september 2026 · **Licentie:** MIT
 
 ## Aan de slag
 

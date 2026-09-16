@@ -1,6 +1,6 @@
 # Korisnički priručnik — BookmarkForge v1
 
-**Verzija:** 1.0.0 · **Zadnje ažuriranje:** rujan 2026. · **Licenca:** AGPL-3.0
+**Verzija:** 1.0.0 · **Zadnje ažuriranje:** rujan 2026. · **Licenca:** MIT
 
 ## Početak
 

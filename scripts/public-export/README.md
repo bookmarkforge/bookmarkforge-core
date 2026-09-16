@@ -72,8 +72,12 @@ Pro code is resolved two ways in this build, both enforced in CI by
    a Pro feature and is not included in this build` the first time a Pro
    surface is reached.
 
-If you reach a Pro surface, that console line (or the in-app upgrade state) is
-the exact call site that needs the private distribution.
+Reaching a Pro surface is never silent: the placeholder helper also dispatches
+`open-core:pro-reached`, and the loader refuses to hand out a placeholder as if
+it were real. Either signal opens the in-app **"Available in Pro"** panel
+(`ProRequiredBoundary`), which explains what happened and links to the Pro
+section with the current license price. The console line remains as the exact
+call-site pointer for developers.
 
 ## Documentation
 

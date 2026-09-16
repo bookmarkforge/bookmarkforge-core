@@ -30,6 +30,7 @@ import {
   BackgroundProgress,
   ReloadPrompt,
 } from "./lazyComponents";
+import { ProRequiredBoundary } from "../ProRequiredBoundary";
 import { AppRoutes } from "./AppRoutes";
 import { BottomNav } from "../BottomNav";
 import { RouteErrorBoundary } from "../errors/RouteErrorBoundary";
@@ -485,6 +486,11 @@ export function MainApp() {
           </Suspense>
         </RouteErrorBoundary>
       )}
+
+      {/* "Available in Pro" overlay for Open Core builds: the placeholder
+          helper signals when an inert Pro surface is reached and this
+          boundary explains it instead of staying silent. */}
+      <ProRequiredBoundary />
 
       <AutoLockManager />
       <KeyboardShortcuts />

@@ -73,6 +73,11 @@ byte del chunk Pro:
   resuelve a los pares inertes descritos arriba; moverla detrás del cargador es
   trabajo pendiente, y el par placeholder queda como red de seguridad para todo
   lo que aún no pase por el cargador.
+- cuando una superficie placeholder se toca de verdad, el helper emite el
+  evento `open-core:pro-reached` y el cargador rechaza con `ProUnavailableError`
+  en lugar de entregar el módulo inerte; `ProRequiredBoundary` (montado en
+  MainApp) convierte cualquiera de las dos señales en el panel «Disponible en
+  Pro», de modo que una build Core explica la ausencia en lugar de fingir.
 - `check:pro-imports` impide que esta situación se erosione: falla si cualquier
   archivo del Core vuelve a importar estáticamente un módulo Pro no-IA fuera
   del seam; los enlaces IA pendientes se toleran pero se cuentan en cada

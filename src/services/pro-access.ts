@@ -103,8 +103,19 @@ export function loadProService<T>(service: string): Promise<T> {
       throw new ProUnavailableError(service, "load-failed");
     }
     try {
-      return (await loader()) as T;
+      const resolved = await loader();
+      // Defense in depth: a build that replaced the implementation with an
+      // inert Open Core placeholder must NOT be handed out as success — the
+      // caller would then silently no-op. Reject honestly instead.
+      const maybe = resolved as { __isProPlaceholder?: unknown } | null;
+      if (maybe && (maybe.__isProPlaceholder === true || (maybe as unknown as { constructor?: { __isProPlaceholder?: unknown } }).constructor?.__isProPlaceholder === true)) {
+        throw new ProUnavailableError(service, "load-failed");
+      }
+      return resolved as T;
     } catch (error) {
+      if (error instanceof ProUnavailableError) {
+        throw error;
+      }
       logger.warn(`[pro-access] failed to load Pro service "${service}"`, {
         error: error instanceof Error ? error.message : String(error),
       });

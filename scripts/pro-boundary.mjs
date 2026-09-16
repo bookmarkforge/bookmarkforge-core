@@ -440,6 +440,18 @@ function warnOnce(moduleName, property) {
   if (typeof console !== "undefined" && typeof console.warn === "function") {
     console.warn("[open-core] " + key + " is a Pro feature and is not included in this build.");
   }
+  // A placeholder surface was actually reached: give the host application a
+  // machine-readable signal so it can present an upgrade experience instead
+  // of relying on the console line alone.
+  if (typeof globalThis !== "undefined" && typeof globalThis.dispatchEvent === "function") {
+    try {
+      globalThis.dispatchEvent(
+        new CustomEvent("open-core:pro-reached", { detail: { module: moduleName, property: property } })
+      );
+    } catch {
+      // Non-DOM runtimes (workers, tests): the console line above is enough.
+    }
+  }
 }
 
 /** Inert value: callable, constructable and property-accessible to any depth. */
@@ -450,6 +462,9 @@ function inert(moduleName) {
   const proxy = new Proxy(target, {
     get(_target, property) {
       if (property === "then" || property === "toJSON") return undefined;
+      // Detectability: the loader (pro-access) probes this exact key to
+      // refuse handing a placeholder out as if it were the implementation.
+      if (property === "__isProPlaceholder") return true;
       if (property === "toString" || property === "valueOf" || property === Symbol.toPrimitive) {
         return () => "[open-core] Pro feature not included";
       }

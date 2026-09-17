@@ -63,6 +63,7 @@ scripts/__tmp-sw-debug.mjs
 .merge_file_*
 
 # Local scratch / experiments (never source)
+.d/
 .d/tmp/
 
 # OS/editor

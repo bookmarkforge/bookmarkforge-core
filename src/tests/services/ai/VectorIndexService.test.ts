@@ -20,6 +20,15 @@ vi.mock("../../../services/SecurityVault", () => ({
   securityVault: securityVaultMock,
 }));
 
+// ADR-046 parity (voy index): SET_KEY carries the per-vault KDF salt read
+// from the crypto layer. The mock defaults to a provisioned salt so the
+// lifecycle tests exercise the key-installation path; tests that need the
+// "no salt" degradation override this via cryptoCoreMock.
+const cryptoCoreMock = vi.hoisted(() => ({
+  getVaultKdfSaltHex: vi.fn(() => "ab".repeat(16)),
+}));
+vi.mock("../../../utils/crypto-core", () => cryptoCoreMock);
+
 interface PostedMessage {
   id: number;
   type: string;
@@ -134,8 +143,13 @@ describe("VectorIndexService worker lifecycle", () => {
     const worker = MockWorker.instances[0]!;
     expect(worker.posted[0]!.type).toBe("SET_KEY");
     expect(worker.posted[0]!.payload).toMatchObject({
-      userId: "bookmarkforge-voy-index-v1",
+      vaultSalt: "ab".repeat(16),
     });
+    // The retired bundle-wide constant must not reach the worker: SET_KEY is
+    // keyed to the vault's own salt now (ADR-046 parity).
+    expect(JSON.stringify(worker.posted[0]!.payload)).not.toContain(
+      "bookmarkforge-voy-index-v1",
+    );
 
     const setKey = worker.posted[0]!;
     worker.onmessage!({

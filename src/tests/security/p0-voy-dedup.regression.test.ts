@@ -30,6 +30,14 @@ vi.mock("../../utils", () => ({
 
 const postMessages: any[] = [];
 
+/**
+ * Valid per-vault KDF salt (32 lowercase hex) — ADR-046 parity: SET_KEY now
+ * carries the vault's own salt instead of the retired bundle-wide constant.
+ * The roundtrip test below depends on both SET_KEY calls using the SAME salt
+ * so the re-derived key after restart still opens the persisted envelope.
+ */
+const VOY_TEST_VAULT_SALT = "ab".repeat(16);
+
 beforeEach(() => {
   postMessages.length = 0;
   mockSearchResult = [];
@@ -290,7 +298,7 @@ describe("P0 regression — Voyage index dedup-by-id", () => {
       type: "SET_KEY",
       payload: {
         passwordBytes: password,
-        userId: "bookmarkforge-voy-index-v1",
+        vaultSalt: VOY_TEST_VAULT_SALT,
         keyId: "session-1",
       },
     });
@@ -328,7 +336,7 @@ describe("P0 regression — Voyage index dedup-by-id", () => {
       type: "SET_KEY",
       payload: {
         passwordBytes: new Uint8Array([11, 22, 33, 44, 55, 66, 77, 88]),
-        userId: "bookmarkforge-voy-index-v1",
+        vaultSalt: VOY_TEST_VAULT_SALT,
         keyId: "session-2",
       },
     });

@@ -6,6 +6,13 @@ let mockSearchResult: any = [];
 let mockIndexedDocuments: any[] = [];
 const mockDeriveKey = vi.fn();
 
+/**
+ * Valid per-vault KDF salt (32 lowercase hex) for SET_KEY payloads —
+ * ADR-046 parity: the Voy index key derives under the vault's own salt,
+ * never the retired bundle-wide constant.
+ */
+const VOY_TEST_VAULT_SALT = "ab".repeat(16);
+
 vi.mock("voy-search", () => {
   const Voy = function (this: any, options: any) {
     mockIndexedDocuments = options?.embeddings ?? [];
@@ -415,6 +422,7 @@ describe("voy.worker", () => {
           passwordBytes: new Uint8Array(32),
           keyId: "test-key",
           userId: "user-1",
+          vaultSalt: VOY_TEST_VAULT_SALT,
         },
       });
       expect(getLastMessage().type).toBe("SUCCESS");
@@ -431,6 +439,7 @@ describe("voy.worker", () => {
           passwordBytes,
           keyId: "test-key",
           userId: "user-1",
+          vaultSalt: VOY_TEST_VAULT_SALT,
         },
       });
 
@@ -456,6 +465,8 @@ describe("voy.worker", () => {
     it("zeroizes password bytes when SET_KEY validation rejects the payload", async () => {
       await loadWorker();
       const passwordBytes = new Uint8Array([5, 6, 7, 8]);
+      // Missing vaultSalt: the ADR-046-parity validator rejects the payload
+      // before any derivation runs.
       await sendMessage({
         id: "1",
         type: "SET_KEY",
@@ -463,6 +474,27 @@ describe("voy.worker", () => {
       });
 
       expect(getLastMessage().type).toBe("ERROR");
+      expect(getLastMessage().error).toContain("vaultSalt");
+      expect(passwordBytes.every((byte) => byte === 0)).toBe(true);
+    });
+
+    it("rejects a malformed vaultSalt instead of deriving under it", async () => {
+      await loadWorker();
+      const passwordBytes = new Uint8Array([13, 14, 15, 16]);
+      await sendMessage({
+        id: "1",
+        type: "SET_KEY",
+        payload: {
+          passwordBytes,
+          keyId: "test-key",
+          userId: "user-1",
+          vaultSalt: "NOT-HEX-SALT-VALUE!",
+        },
+      });
+
+      expect(getLastMessage().type).toBe("ERROR");
+      expect(getLastMessage().error).toContain("vaultSalt");
+      expect(mockDeriveKey).not.toHaveBeenCalled();
       expect(passwordBytes.every((byte) => byte === 0)).toBe(true);
     });
     it("refuses when uncommitted documents exist", async () => {
@@ -482,6 +514,7 @@ describe("voy.worker", () => {
           passwordBytes,
           keyId: "k",
           userId: "user-1",
+          vaultSalt: VOY_TEST_VAULT_SALT,
         },
       });
       expect(getLastMessage().type).toBe("ERROR");
@@ -510,6 +543,7 @@ describe("voy.worker", () => {
           passwordBytes: new Uint8Array(32),
           keyId: "k",
           userId: "user-1",
+          vaultSalt: VOY_TEST_VAULT_SALT,
         },
       });
       await sendMessage({ id: "4", type: "GET_STATS" });
@@ -596,6 +630,7 @@ describe("voy.worker", () => {
           passwordBytes: new Uint8Array(32),
           keyId: "k1",
           userId: "user-1",
+          vaultSalt: VOY_TEST_VAULT_SALT,
         },
       });
       clearMessages();
@@ -616,6 +651,7 @@ describe("voy.worker", () => {
           passwordBytes: new Uint8Array(32),
           keyId: "k1",
           userId: "user-1",
+          vaultSalt: VOY_TEST_VAULT_SALT,
         },
       });
       await sendMessage({
@@ -646,6 +682,7 @@ describe("voy.worker", () => {
           passwordBytes: new Uint8Array(32),
           keyId: "k1",
           userId: "user-1",
+          vaultSalt: VOY_TEST_VAULT_SALT,
         },
       });
       await sendMessage({
@@ -705,6 +742,7 @@ describe("voy.worker", () => {
           passwordBytes: new Uint8Array(32),
           keyId: "legacy-k",
           userId: "user-1",
+          vaultSalt: VOY_TEST_VAULT_SALT,
         },
       });
       await sendMessage({
@@ -761,6 +799,7 @@ describe("voy.worker", () => {
           passwordBytes: new Uint8Array(32),
           keyId: "malformed-k",
           userId: "user-1",
+          vaultSalt: VOY_TEST_VAULT_SALT,
         },
       });
       await sendMessage({
@@ -806,6 +845,7 @@ describe("voy.worker", () => {
           passwordBytes: new Uint8Array(32),
           keyId: "k1",
           userId: "user-1",
+          vaultSalt: VOY_TEST_VAULT_SALT,
         },
       });
       clearMessages();
@@ -832,6 +872,7 @@ describe("voy.worker", () => {
           passwordBytes: new Uint8Array(32),
           keyId: "k1",
           userId: "user-1",
+          vaultSalt: VOY_TEST_VAULT_SALT,
         },
       });
       await sendMessage({ id: "3", type: "SAVE_INDEX" });

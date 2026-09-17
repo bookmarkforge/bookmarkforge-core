@@ -461,8 +461,8 @@ function validatePayload(
       ) {
         return "SET_KEY requires passwordBytes Uint8Array";
       }
-      if (!payload.userId || typeof payload.userId !== "string") {
-        return "SET_KEY requires userId string";
+      if (typeof payload.vaultSalt !== "string") {
+        return "SET_KEY requires vaultSalt string";
       }
       break;
   }
@@ -493,18 +493,24 @@ async function withTimeout<T>(
 // S2/R2 + S1/R3: derive an AES-GCM key from master password bytes
 // using Argon2id (V4 — the ONLY supported KDF).
 // The key is ephemeral (lifetime = vault unlock).
-// Salt is derived from userId to prevent rainbow table attacks.
+// ADR-046 parity (voy index): the salt is the vault's OWN 16-byte per-vault
+// KDF salt, sent by the main thread and validated hex — never a bundle-wide
+// constant. A shared salt would let one Argon2id pass over a candidate
+// password attack every vault's persisted index at once (RFC 9106 requires a
+// unique salt per password). The salt is public metadata; only its
+// uniqueness matters, exactly like the master-key corpus.
+
+/** 16 random bytes, lowercase hex — same shape as crypto-core's salt. */
+const VOY_VAULT_SALT_HEX_RE = /^[0-9a-f]{32}$/;
 
 async function deriveIndexKey(
   passwordBytes: Uint8Array,
-  userId: string,
+  vaultSaltHex: string,
 ): Promise<CryptoKey> {
-  const userIdHash = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(userId),
-  );
   const salt = new Uint8Array(16);
-  salt.set(new Uint8Array(userIdHash).slice(0, 16), 0);
+  for (let i = 0; i < 16; i++) {
+    salt[i] = parseInt(vaultSaltHex.slice(i * 2, i * 2 + 2), 16)!;
+  }
   const key = await deriveArgon2idAesKey(passwordBytes, salt);
   if (!key)
     {throw new Error("Argon2id unavailable for Voy index key derivation");}
@@ -610,8 +616,8 @@ async function handleWorkerMessage(e: MessageEvent): Promise<void> {
         const bytes = payload.passwordBytes as Uint8Array;
         try {
           // HIGH-severity fix (post-review): refuse SET_KEY if there are
-        // uncommitted documents — wiping in-memory state would lose data
-        // that the caller has not yet persisted.
+          // uncommitted documents — wiping in-memory state would lose data
+          // that the caller has not yet persisted.
         if (uncommittedDocuments.length > 0) {
           self.postMessage({
             id,
@@ -648,16 +654,17 @@ async function handleWorkerMessage(e: MessageEvent): Promise<void> {
           });
           return;
         }
-        const userId = payload.userId as string;
-        if (!userId) {
+        const vaultSaltHex = payload.vaultSalt as string;
+        if (!VOY_VAULT_SALT_HEX_RE.test(vaultSaltHex)) {
           self.postMessage({
             id,
             type: "ERROR",
-            error: "SET_KEY requires userId",
+            error:
+              "SET_KEY requires vaultSalt: 32 lowercase hex chars (the vault's per-vault KDF salt, ADR-046).",
           });
           return;
         }
-        derivedAesKey = await deriveIndexKey(bytes, userId);
+        derivedAesKey = await deriveIndexKey(bytes, vaultSaltHex);
         currentKeyId = (payload.keyId as string) ?? null;
         // After a successful key set, the in-memory Voy state must be wiped
         // so the next LOAD_INDEX inside this vault session rehydrates fresh.

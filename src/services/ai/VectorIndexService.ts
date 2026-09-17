@@ -1,13 +1,15 @@
 import { initDB } from "../../db/database";
 import type { QuantizationMode } from "./QuantizationService";
 import { securityVault } from "../SecurityVault";
+// ADR-046 parity (voy index): the Voy index key derivation must NOT reuse a
+// bundle-wide Argon2id salt — that is the exact RFC 9106 violation A-1 fixed
+// for the master-key corpus (one harvested dictionary usable against every
+// vault). The index key is instead derived under the SAME per-vault KDF salt
+// the master key uses, read from the crypto layer.
+import { getVaultKdfSaltHex } from "../../utils/crypto-core";
 import { logger } from "../../utils/logger";
 import { safeErrorForLog } from "../../utils/safeErrorForLog";
 
-// This is a public KDF context, not a secret or a user identifier. The vault
-// password supplies the secret entropy; keeping the context stable lets an
-// encrypted Voy index be reopened after a browser restart or password unlock.
-const VOY_KEY_DERIVATION_ID = "bookmarkforge-voy-index-v1";
 const MAX_INDEXED_EMBEDDINGS = 50_000;
 
 interface WorkerMessage {
@@ -133,6 +135,20 @@ class VectorIndexService {
   private async setVaultKey(): Promise<void> {
     if (!this.worker || securityVault.isLocked()) {return;}
 
+    // ADR-046 parity (voy index): derive the index key under the per-vault
+    // Argon2id salt, never the retired bundle-wide constant. The unlock path
+    // installs the salt before onUnlock listeners fire, so it is available
+    // here; failing closed (skip SET_KEY) keeps in-memory search working
+    // (ensureVaultKey degrades) while at-rest persistence stays disabled —
+    // an index written under a wrong salt would be unreadable after reload.
+    const vaultSalt = getVaultKdfSaltHex();
+    if (!vaultSalt) {
+      logger.warn(
+        "[VectorIndex] Encrypted persistence unavailable: no per-vault KDF salt installed (vault locked or legacy salt pending provisioning)",
+      );
+      return;
+    }
+
     const passwordBytes = securityVault.withMasterPasswordBytes(
       this,
       (bytes) => bytes,
@@ -142,7 +158,7 @@ class VectorIndexService {
     try {
       await this.sendMessage("SET_KEY", {
         passwordBytes,
-        userId: VOY_KEY_DERIVATION_ID,
+        vaultSalt,
         keyId: crypto.randomUUID(),
       });
       this.vaultKeyConfigured = true;

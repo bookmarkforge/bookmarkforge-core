@@ -165,6 +165,45 @@ Restricciones que dan forma a la decisión:
   una pestaña sin `BroadcastChannel` (modo privado, navegador antiguo): esa
   sigue con el salt anterior hasta recargar, que es el comportamiento previo,
   no peor.
+
+### Extensión de alcance (2026-09-17): el índice Voy deriva bajo el mismo salt por-vault
+
+El índice de búsqueda vectorial persistido (envelope AES-GCM del worker
+`voy.worker.ts`) mantenía un corpus cifrado paralelo cuyo KDF **no** estaba
+cubierto por este ADR: `deriveIndexKey` estiraba la contraseña con Argon2id
+contra `SHA-256("bookmarkforge-voy-index-v1")[0..16]`, una constante del
+bundle idéntica para toda bóveda — exactamente la clase de fallo de A-1 que
+este ADR corrigió para el corpus maestro. Un diccionario construido contra el
+índice cosechado de IndexedDB valía contra el de cualquier bóveda.
+
+Alineación con este ADR (2026-09-17):
+
+- **Contrato `SET_KEY` actualizado:** `VectorIndexService.setVaultKey` lee el
+  salt por-vault instalado (`getVaultKdfSaltHex`) y lo envía explícitamente
+  (`{ passwordBytes, vaultSalt, keyId }`). El campo `userId` constante queda
+  retirado. El orden ya garantizado por este ADR hace seguro el cambio: el
+  unlock instala el salt **antes** de disparar los listeners `onUnlock` desde
+  donde se instala la clave del índice.
+- **Fail-closed en ambos extremos:** el worker valida `vaultSalt` como 32 hex
+  y rechaza el `SET_KEY` antes de derivar (los `passwordBytes` se zeroizan
+  igualmente); sin salt instalado, el servicio no envía `SET_KEY` y degrada al
+  carril existente de `ensureVaultKey` — búsqueda en memoria sí, persistencia
+  cifrada no. Nunca se escribe un índice bajo un salt equivocado.
+- **Rotación de contraseña incluida gratis:** como el salt del índice es el
+  mismo que rota este ADR, la re-derivación tras una rotación re-clava el
+  corpus del índice sin código adicional.
+- **Compatibilidad de envelopes:** los índices ya persistidos bajo el salt
+  constante retirado **no** se migran; en el siguiente unlock la clave
+  re-derivada (salt nuevo) falla la autenticación AES-GCM y el path
+  fail-closed existente de `LOAD_INDEX` purga el registro y reconstruye el
+  índice desde las colecciones fuente de RxDB. Sin exposición de plaintext:
+  el coste es un re-indexado único por bóveda.
+- **Anclas de regresión:** `p0-voy-dedup.regression.test.ts` (roundtrip:
+  el envelope re-abierto exige el mismo salt en ambos `SET_KEY`),
+  `voy.worker.test.ts` (`vaultSalt` malformado rechazado sin derivar, con
+  ceroización) y `VectorIndexService.test.ts` (el `SET_KEY` lleva el salt
+  por-vault; la constante retirada jamás llega al worker). Archivos:
+  `src/services/ai/VectorIndexService.ts`, `src/workers/voy.worker.ts`.
 - **La pestaña que adopta queda con credencial obsoleta.** Su contraseña en
   memoria es la **antigua**: el salt adoptado la hace escribir `v6:` bajo el
   salt nuevo pero clavados a la contraseña anterior, que la contraseña nueva

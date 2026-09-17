@@ -87,6 +87,8 @@ const PUBLIC_DOCS = new Set([
    "ADR-049-manual-figures-gate.md",
    "ADR-050-page-figures-gate-and-planner.md",
    "ADR-051-landings-fresh-gate.md",
+   "ADR-052-v5-format-sunset.md",
+   "ADR-053-vault-salt-registry.md",
   "manual-usuario.md",
   "manual-usuario-en.md",
   "index.md",

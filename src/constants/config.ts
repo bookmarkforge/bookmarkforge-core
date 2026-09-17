@@ -126,7 +126,7 @@ export function validateEnvVars(): EnvValidationResult {
     errors: [],
   };
 
-  const geminiApiKey = env.geminiApiKey;
+  const _geminiApiKey = env.geminiApiKey;
   const geminiProxyUrl = env.geminiProxyUrl?.trim();
   if (geminiProxyUrl && !isSafePublicHttpsUrl(geminiProxyUrl)) {
     const message = "VITE_GEMINI_PROXY_URL must be an HTTPS URL without embedded credentials.";
@@ -141,7 +141,6 @@ export function validateEnvVars(): EnvValidationResult {
   const huggingfaceKey = env.huggingfaceApiKey;
   if (env.isProd) {
     for (const [name, value] of [
-      ["VITE_GEMINI_API_KEY", geminiApiKey],
       ["VITE_OPENAI_API_KEY", openaiKey],
       ["VITE_ANTHROPIC_API_KEY", anthropicKey],
       ["VITE_GROQ_API_KEY", groqKey],

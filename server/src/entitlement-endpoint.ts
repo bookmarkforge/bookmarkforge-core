@@ -29,8 +29,8 @@ import {
   createRateLimiter,
   readBody,
   sendJson,
-} from "./ai-proxy";
-import { hasValidOrigin } from "./ai-session";
+  hasValidOrigin,
+} from "./proxy-utils";
 import { createEntitlementGuard, type EntitlementGuard } from "./entitlement-guard";
 
 const MAX_BODY_BYTES = 32 * 1024;

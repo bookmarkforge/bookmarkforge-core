@@ -123,20 +123,20 @@ describe("check-pro-imports", () => {
     }
   });
 
-  it("allows server-internal Pro imports but rejects Core importing server Pro", () => {
-    const root = fakeRepoSafe({
-      "server/src/ai-proxy.ts": "export const proxy = 1;\n",
-      "server/src/index.ts": `import { proxy } from "./ai-proxy";\nexport const s = proxy;\n`,
-      "src/leak.ts": `import { proxy } from "../server/src/ai-proxy";\nexport const leak = proxy;\n`,
-    });
-    try {
-      const result = checkProImports(root);
-      expect(result.violations).toHaveLength(1);
-      expect(result.violations[0].file).toBe("src/leak.ts");
-    } finally {
-      rmSync(root, { recursive: true, force: true });
-    }
-  });
+it("allows server-internal Pro imports but rejects Core importing server Pro", () => {
+     const root = fakeRepoSafe({
+       "server/src/proxy-utils.ts": "export const proxy = 1;\n",
+       "server/src/index.ts": `import { proxy } from "./proxy-utils";\nexport const s = proxy;\n`,
+       "src/leak.ts": `import { proxy } from "../server/src/proxy-utils";\nexport const leak = proxy;\n`,
+     });
+     try {
+       const result = checkProImports(root);
+       expect(result.violations).toHaveLength(1);
+       expect(result.violations[0].file).toBe("src/leak.ts");
+     } finally {
+       rmSync(root, { recursive: true, force: true });
+     }
+   });
 
   it("allows test files to reference Pro modules", () => {
     const root = fakeRepoSafe({

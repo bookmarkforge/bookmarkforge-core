@@ -9,8 +9,8 @@
  * cookie/bearer they had already been authenticated by.
  *
  * It is a leaf module on purpose. `entitlement-guard.ts` (the policy that fills
- * the context) and `ai-proxy.ts` / `ai-media.ts` (the handlers that consume it)
- * all import this file, and none of them import each other for it, so the
+ * the context) and `proxy-utils.ts` (the shared utilities) all import this file,
+ * and none of them import each other for it, so the
  * server's module graph stays acyclic. The guard re-exports this surface, so
  * callers that already import from there keep working.
  *

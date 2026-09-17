@@ -40,7 +40,7 @@ import {
   readBearerToken,
   readBody,
   sendJson,
-} from "./ai-proxy";
+} from "./proxy-utils";
 import {
   attachEntitlementContext,
   readEntitlementContext,

@@ -292,7 +292,7 @@ describe("placeholderSource", () => {
   });
 
   it("imports the helper relatively, from any depth", () => {
-    const root = placeholderSource(`${pathOf("server", "src", "ai-proxy")}.ts`, {
+    const root = placeholderSource(`${pathOf("server", "src", "proxy-utils")}.ts`, {
       values: new Set(["default"]),
       reexports: [],
     });

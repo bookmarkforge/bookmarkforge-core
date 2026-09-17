@@ -16,7 +16,7 @@
           "locations": [
             {
               "physicalLocation": {
-                "artifactLocation": { "uri": "server/src/ai-proxy.ts" },
+                "artifactLocation": { "uri": "server/src/proxy-utils.ts" },
                 "region": { "startLine": 42 }
               }
             }

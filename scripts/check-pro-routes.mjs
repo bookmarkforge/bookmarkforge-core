@@ -244,17 +244,16 @@ export function checkDispatcherWiring(source) {
       ),
     );
   }
-  // The dispatcher must be wired to the guard the deployment owns (the session
-  // manager's, which carries the license policy and the session/bearer
-  // resolvers). An inline look-alike — a permissive stub, a second guard built
-  // with different options — would satisfy the length checks above while
-  // enforcing nothing, so the wiring is asserted by shape here.
+  // The dispatcher must be wired to the guard the deployment owns.
+// An inline look-alike — a permissive stub, a second guard built
+// with different options — would satisfy the length checks above while
+// enforcing nothing, so the wiring is asserted by shape here.
   if (!/guard:\s*[A-Za-z_$][\w$]*\.entitlementGuard\b/.test(source)) {
     violations.push(
       violation(
         "guard-not-shared",
         `${GUARDED_DISPATCHER} guard`,
-        "the dispatcher is not wired to the deployment's entitlement guard (`guard: <sessionManager>.entitlementGuard`) — a local replacement could enforce a different policy, or none",
+        "the dispatcher is not wired to the deployment's entitlement guard (`guard: <entitlementGuard>.entitlementGuard`) — a local replacement could enforce a different policy, or none",
       ),
     );
   }

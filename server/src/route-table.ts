@@ -29,8 +29,11 @@ import type { EntitlementGuard, GuardMode } from "./entitlement-guard";
  * under one of these is entitlement-gated unless it records a `paidException`
  * (an audited "this is not what Pro means here" reason, e.g. an
  * operator-token-gated admin surface).
+ *
+ * All AI proxy routes have been removed; the server now serves only
+ * license, health, admin, CSP, analytics and P2P signaling routes.
  */
-export const PAID_PATH_PREFIXES: readonly string[] = ["/api/services/ai/"];
+export const PAID_PATH_PREFIXES: readonly string[] = [];
 
 export type RouteAccess = "public" | "entitlement";
 /** `"prefix"` matches the path itself and every subpath under it. */
@@ -59,60 +62,6 @@ export interface RoutePolicy {
 }
 
 export const ROUTE_POLICIES: readonly RoutePolicy[] = [
-  {
-    path: "/api/services/ai/session",
-    methods: ["POST"],
-    access: "entitlement",
-    guard: { mode: "proof", proofLabel: "session proof" },
-    auth: "signed license proof, verified against the committed public key",
-    note:
-      "The only proof-consuming route: it mints the AI session that every other AI route inherits. " +
-      "Its identity and entitlement expiry become the session's.",
-  },
-  {
-    path: "/api/services/ai/generate",
-    methods: ["POST"],
-    access: "entitlement",
-    guard: { mode: "session-or-bearer" },
-    auth: "AI session minted from a verified proof (legacy bearer tokens accepted)",
-    note: "Text generation through the operator's Gemini key — the primary paid surface.",
-  },
-  {
-    path: "/api/services/ai/generate-tts",
-    methods: ["POST"],
-    access: "entitlement",
-    guard: { mode: "session-or-bearer" },
-    auth: "AI session minted from a verified proof (legacy bearer tokens accepted)",
-    note: "Speech synthesis: billed per character, so it is as paid as text generation.",
-  },
-  {
-    path: "/api/services/ai/generate-image",
-    methods: ["POST"],
-    access: "entitlement",
-    guard: { mode: "session-or-bearer" },
-    auth: "AI session minted from a verified proof (legacy bearer tokens accepted)",
-    note: "Image generation: the most expensive per call of the three modalities.",
-  },
-  {
-    path: "/api/services/ai/admin",
-    methods: ["*"],
-    access: "public",
-    auth: "AI_PROXY_ADMIN_TOKEN (verified inside the proxy handler)",
-    paidException:
-      "operator diagnostics over the proxy's own counters — no upstream AI call, and the handler " +
-      "requires the admin token before answering",
-    note: "Proxy diagnostics are operational, not a customer capability.",
-  },
-  {
-    path: "/api/services/ai/metrics",
-    methods: ["*"],
-    access: "public",
-    auth: "metrics/admin token (verified inside the proxy handler)",
-    paidException:
-      "serves the proxy's own metrics and answers 503/405 without a configured collector — it " +
-      "never reaches the upstream AI provider",
-    note: "Same story as /admin: operator surface, no customer capability.",
-  },
   {
     path: "/api/license/health",
     methods: ["*"],

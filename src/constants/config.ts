@@ -76,6 +76,8 @@ export const AI_CONFIG = {
   WEBLLM_CHUNK_DELAY_MS: 30,
 } as const;
 
+export const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
+
 // Sync Configuration
 export const SYNC_CONFIG = {
   DEDUPE_WINDOW_MS: 5000,
@@ -124,13 +126,7 @@ export function validateEnvVars(): EnvValidationResult {
     errors: [],
   };
 
-  // ---- P0: never ship a Gemini key in the browser bundle ----
-  // VITE_GEMINI_API_KEY is NOT registered in ENV_REGISTRY (env.config.ts),
-  // so env.geminiApiKey is always undefined.  This is defense-in-depth:
-  //   Layer 1: ENV_REGISTRY omission → frontend code cannot read the key
-  //   Layer 2: build-ci.mjs secret-scan → blocks deploy if Vite inlines it
-  //   Layer 3: server-side only → GEMINI_API_KEY (no VITE_ prefix)
-
+  const geminiApiKey = env.geminiApiKey;
   const geminiProxyUrl = env.geminiProxyUrl?.trim();
   if (geminiProxyUrl && !isSafePublicHttpsUrl(geminiProxyUrl)) {
     const message = "VITE_GEMINI_PROXY_URL must be an HTTPS URL without embedded credentials.";
@@ -138,13 +134,14 @@ export function validateEnvVars(): EnvValidationResult {
     else result.warnings.push(message);
   }
 
-  // ---- Same hardening for other AI provider keys ----
+  // ---- Same hardening for all AI provider keys ----
   const openaiKey = env.openaiApiKey;
   const anthropicKey = env.anthropicApiKey;
   const groqKey = env.groqApiKey;
   const huggingfaceKey = env.huggingfaceApiKey;
   if (env.isProd) {
     for (const [name, value] of [
+      ["VITE_GEMINI_API_KEY", geminiApiKey],
       ["VITE_OPENAI_API_KEY", openaiKey],
       ["VITE_ANTHROPIC_API_KEY", anthropicKey],
       ["VITE_GROQ_API_KEY", groqKey],
@@ -210,7 +207,7 @@ export function getEnvironmentInfo(): Record<string, string | boolean> {
     isDev: env.isDev,
     isProd: env.isProd,
     mode: env.mode ?? "unknown",
-    hasGeminiKey: false,  // VITE_GEMINI_API_KEY removed from ENV_REGISTRY (DCE)
+    hasGeminiKey: !!env.geminiApiKey,
     baseUrl: env.baseUrl ?? "/",
   };
 }

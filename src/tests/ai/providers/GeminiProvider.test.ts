@@ -1,19 +1,5 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
-
-// Mock @google/genai — should NEVER be called since SDK was removed.
-const mockGoogleGenAI = vi.fn();
-vi.mock("@google/genai", () => ({
-  GoogleGenAI: mockGoogleGenAI.mockImplementation(() => ({
-    models: { generateContent: vi.fn(), generateContentStream: vi.fn() },
-  })),
-}));
-
-vi.mock("../../../services/ai/aiSession", () => ({
-  fetchWithAiSession: async (
-    request: (options: RequestInit) => Promise<Response>,
-    options: RequestInit,
-  ) => request(options),
-}));
+import { fetchWithTimeout, readSSEStream } from "../../../services/ai/utils";
 
 vi.mock("../../../services/ai/utils", () => ({
   fetchWithTimeout: vi.fn(),
@@ -53,33 +39,28 @@ describe("GeminiProvider", () => {
     });
   });
 
-  describe("generateText — always routes through backend (SDK removed)", () => {
-    // Security: the SDK was removed in audit fix #10. All requests MUST go
-    // through callBackend which uses firewalledFetch with SSRF protection.
-    // Even with a valid API key, the backend proxies the request.
-
-    test("should call backend endpoint even with valid API key", async () => {
+  describe("generateText", () => {
+    test("should call Gemini API endpoint with the API key", async () => {
       provider = new GeminiProvider({ apiKey: "AIzaSyTest123456789" });
       const mockResponse = {
         ok: true,
-        json: async () => ({ text: "Backend reply" }),
+        json: async () => ({ text: "Reply" }),
       };
       mockFetchWithTimeout.mockResolvedValue(mockResponse as never);
 
       const result = await provider.generateText("Hello", "System");
 
       expect(mockFetchWithTimeout).toHaveBeenCalledWith(
-        "/api/services/ai/generate",
+        expect.stringContaining("generateContent"),
         expect.objectContaining({
           method: "POST",
-          body: expect.stringContaining("Hello"),
+          headers: expect.objectContaining({ "x-goog-api-key": "AIzaSyTest123456789" }),
         }),
       );
-      expect(mockGoogleGenAI).not.toHaveBeenCalled();
-      expect(result).toEqual({ text: "Backend reply", provider: "gemini" });
+      expect(result).toEqual({ text: "Reply", provider: "gemini" });
     });
 
-    test("should wrap prompt with buildSafeUserContent in non-streaming body", async () => {
+    test("should wrap prompt with buildSafeUserContent", async () => {
       provider = new GeminiProvider({ apiKey: "AIzaSyTest123456789" });
       mockFetchWithTimeout.mockResolvedValue({
         ok: true,
@@ -96,57 +77,22 @@ describe("GeminiProvider", () => {
       );
     });
 
-    test("should never call GoogleGenAI SDK", async () => {
+    test("should pass model to Gemini API", async () => {
       provider = new GeminiProvider({ apiKey: "AIzaSyTest123456789" });
       mockFetchWithTimeout.mockResolvedValue({
         ok: true,
         json: async () => ({ text: "ok" }),
       } as never);
 
-      await provider.generateText("Hello");
-      expect(mockGoogleGenAI).not.toHaveBeenCalled();
-    });
-
-    test("should call backend when no API key", async () => {
-      provider = new GeminiProvider({ apiKey: null });
-      const mockResponse = {
-        ok: true,
-        json: async () => ({ text: "Backend reply" }),
-      };
-      mockFetchWithTimeout.mockResolvedValue(mockResponse as never);
-
-      const result = await provider.generateText("Hello", "System");
+      await provider.generateText("Hello", undefined, { model: "gemini-2.0-flash" });
 
       expect(mockFetchWithTimeout).toHaveBeenCalledWith(
-        "/api/services/ai/generate",
-        expect.objectContaining({
-          method: "POST",
-          body: expect.stringContaining("Hello"),
-        }),
-      );
-      expect(result).toEqual({ text: "Backend reply", provider: "gemini" });
-    });
-
-    test("should pass model from options to backend", async () => {
-      provider = new GeminiProvider({ apiKey: "AIzaSyTest123456789" });
-      mockFetchWithTimeout.mockResolvedValue({
-        ok: true,
-        json: async () => ({ text: "ok" }),
-      } as never);
-
-      await provider.generateText("Hello", undefined, {
-        model: "gemini-2.0-flash",
-      });
-
-      expect(mockFetchWithTimeout).toHaveBeenCalledWith(
-        "/api/services/ai/generate",
-        expect.objectContaining({
-          body: expect.stringContaining("gemini-2.0-flash"),
-        }),
+        expect.stringContaining("gemini-2.0-flash"),
+        expect.anything(),
       );
     });
 
-    test("should pass responseMimeType and responseSchema to backend", async () => {
+    test("should pass responseMimeType and responseSchema", async () => {
       provider = new GeminiProvider({ apiKey: "AIzaSyTest123456789" });
       mockFetchWithTimeout.mockResolvedValue({
         ok: true,
@@ -154,10 +100,7 @@ describe("GeminiProvider", () => {
       } as never);
 
       const schema = { type: "object", properties: { name: { type: "string" } } };
-      await provider.generateText("Hello", undefined, {
-        responseMimeType: "application/json",
-        responseSchema: schema,
-      });
+      await provider.generateText("Hello", undefined, { responseMimeType: "application/json", responseSchema: schema });
 
       const callBody = JSON.parse(
         (mockFetchWithTimeout.mock.calls[0]?.[1] as Record<string, unknown>)?.body as string,
@@ -166,7 +109,7 @@ describe("GeminiProvider", () => {
       expect(callBody.responseSchema).toEqual(schema);
     });
 
-    test("should pass tools to backend", async () => {
+    test("should pass tools to Gemini API", async () => {
       provider = new GeminiProvider({ apiKey: "AIzaSyTest123456789" });
       mockFetchWithTimeout.mockResolvedValue({
         ok: true,
@@ -182,24 +125,6 @@ describe("GeminiProvider", () => {
       expect(callBody.tools).toEqual(tools);
     });
 
-    test("should return grounding metadata from backend response", async () => {
-      provider = new GeminiProvider({ apiKey: null });
-      mockFetchWithTimeout.mockResolvedValue({
-        ok: true,
-        json: async () => ({
-          text: "Cited result",
-          groundingMetadata: {
-            sources: [{ uri: "https://example.com", title: "Example" }],
-          },
-        }),
-      } as never);
-
-      const result = await provider.generateText("Query");
-      expect(result.groundingMetadata).toEqual({
-        sources: [{ uri: "https://example.com", title: "Example" }],
-      });
-    });
-
     test("should throw on backend HTTP error", async () => {
       provider = new GeminiProvider({ apiKey: null });
       const mockResponse = {
@@ -210,7 +135,7 @@ describe("GeminiProvider", () => {
       mockFetchWithTimeout.mockResolvedValue(mockResponse as never);
 
       await expect(provider.generateText("Hello")).rejects.toThrow(
-        "Backend AI error 500: Internal Server Error",
+        "Gemini API error 500: Internal Server Error",
       );
     });
 
@@ -228,8 +153,8 @@ describe("GeminiProvider", () => {
     });
   });
 
-  describe("streamGenerateText — always routes through backend", () => {
-    test("should stream from backend even with valid API key", async () => {
+  describe("streamGenerateText", () => {
+    test("should stream from Gemini API", async () => {
       provider = new GeminiProvider({ apiKey: "AIzaSyTest123456789" });
       const mockResponse = { ok: true };
       mockFetchWithTimeout.mockResolvedValue(mockResponse as never);
@@ -237,35 +162,7 @@ describe("GeminiProvider", () => {
 
       const result = await provider.streamGenerateText("Hello");
       expect(mockFetchWithTimeout).toHaveBeenCalledWith(
-        "/api/services/ai/generate",
-        expect.objectContaining({
-          body: expect.stringContaining('"stream":true'),
-        }),
-      );
-      expect(mockGoogleGenAI).not.toHaveBeenCalled();
-      expect(result).toEqual({ text: "Streamed text", provider: "gemini" });
-    });
-
-    test("should never call SDK for streaming", async () => {
-      provider = new GeminiProvider({ apiKey: "AIzaSyTest123456789" });
-      mockFetchWithTimeout.mockResolvedValue({
-        ok: true,
-        json: async () => ({ text: "ok" }),
-      } as never);
-
-      await provider.streamGenerateText("Hello");
-      expect(mockGoogleGenAI).not.toHaveBeenCalled();
-    });
-
-    test("should stream from backend when no API key", async () => {
-      provider = new GeminiProvider({ apiKey: null });
-      const mockResponse = { ok: true };
-      mockFetchWithTimeout.mockResolvedValue(mockResponse as never);
-      mockReadSSEStream.mockResolvedValue("Streamed text");
-
-      const result = await provider.streamGenerateText("Hello");
-      expect(mockFetchWithTimeout).toHaveBeenCalledWith(
-        "/api/services/ai/generate",
+        expect.stringContaining("streamGenerateContent"),
         expect.objectContaining({
           body: expect.stringContaining('"stream":true'),
         }),
@@ -283,7 +180,7 @@ describe("GeminiProvider", () => {
       mockFetchWithTimeout.mockResolvedValue(mockResponse as never);
 
       await expect(provider.streamGenerateText("Hello")).rejects.toThrow(
-        "Backend AI error 503: Service Unavailable",
+        "Gemini API error 503: Service Unavailable",
       );
     });
   });

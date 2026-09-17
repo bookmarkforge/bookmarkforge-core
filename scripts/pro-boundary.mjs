@@ -40,9 +40,7 @@ import ts from "typescript";
 
 /** Exact proprietary implementation paths (repo-relative, forward slashes). */
 export const PRO_MODULE_PATHS = [
-  "server/src/ai-proxy.ts",
-  "server/src/ai-media.ts",
-  "src/services/WebRTCSyncService.ts",
+   "src/services/WebRTCSyncService.ts",
   "src/services/pdfService.ts",
   "src/services/BackupService.ts",
   "src/services/DiskBackupService.ts",

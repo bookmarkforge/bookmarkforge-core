@@ -341,7 +341,7 @@ describe("CLI", () => {
         JSON.stringify([
           {
             ruleId: "js/command-line-injection",
-            file: "server/src/ai-proxy.ts",
+            file: "server/src/proxy-utils.ts",
             tool: "CodeQL",
             line: 42,
             approved: true,

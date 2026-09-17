@@ -43,14 +43,12 @@ import {
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { performance } from "node:perf_hooks";
-import { createGeminiProxyHandler } from "./ai-proxy";
-import { createGeminiMediaHandler } from "./ai-media";
-import { createAiSessionManager } from "./ai-session";
 import { createLicenseHandler } from "./license-server";
 import { createEntitlementHandler } from "./entitlement-endpoint";
 import { createGuardedDispatcher } from "./route-table";
 import { createClientEventsHandler } from "./client-events";
 import { createAnalyticsHandler } from "./business-analytics";
+import { createEntitlementGuard } from "./entitlement-guard";
 
 const PORT = Number(process.env.PORT ?? 8787);
 const HOST = process.env.HOST ?? "0.0.0.0";
@@ -345,8 +343,7 @@ function isValidRoomId(id: string): boolean {
 
 // Cap the forwarded-IP length so an oversized X-Forwarded-For cannot grow
 // the rate-window Map keys or the CSP ip-hash input beyond a bounded size.
-// Node already caps total header size, but ai-proxy.ts and license-server.ts
-// apply the same 128-char bound; keep all three implementations consistent.
+// Node already caps total header size; keep all implementations consistent.
 const MAX_FORWARDED_IP_LENGTH = 128;
 
 function clientIp(req: IncomingMessage): string {
@@ -1049,27 +1046,8 @@ void loadPersistedCspReports();
 // Prune stale CSP rate-limit windows periodically.
 setInterval(() => pruneCspRateWindows(), Math.max(CSP_REPORT_WINDOW_MS, 60_000)).unref();
 
-const aiSessionManager = createAiSessionManager({
-  allowedOrigins: (process.env.AI_SESSION_ORIGINS ?? "").split(",").map((origin) => origin.trim()).filter(Boolean),
-  redisUrl: process.env.AI_PROXY_REDIS_URL || undefined,
-  trustProxy: process.env.TRUST_PROXY === "1" || process.env.TRUST_PROXY === "true",
-});
+const entitlementGuard = createEntitlementGuard();
 
-// WebSocket origin allowlist: prevents unauthenticated pages from opening
-// WebSocket connections and exhausting MAX_CONNECTIONS (512). When empty,
-// all origins are allowed (backward-compatible for local development).
-const WS_ALLOWED_ORIGINS = new Set(
-  (process.env.AI_SESSION_ORIGINS ?? "")
-    .split(",")
-    .map((o) => o.trim())
-    .filter(Boolean),
-);
-
-const geminiProxyHandler = createGeminiProxyHandler({ sessionManager: aiSessionManager });
-const geminiMediaHandler = createGeminiMediaHandler({
-  sessionManager: aiSessionManager,
-  accessPolicy: geminiProxyHandler.accessPolicy,
-});
 const licenseHandler = createLicenseHandler();
 // Server-authoritative entitlement answer. Unlike the signing service it needs
 // no private key and no license key from the caller — just the signed proof the
@@ -1099,30 +1077,6 @@ const analyticsHandler = createAnalyticsHandler({
  * policy table. Call it directly and a paid route becomes reachable by anyone.
  */
 const dispatchUnGuardedRequest = (req: IncomingMessage, res: ServerResponse): void => {
-  if (req.url === "/api/services/ai/session") {
-    void aiSessionManager.createSessionHandler()(req, res);
-    return;
-  }
-  if (req.url === "/api/services/ai/generate") {
-    void geminiProxyHandler(req, res);
-    return;
-  }
-  // AI media (TTS + image) and the proxy diagnostics are handled by the
-  // same proxy layer; the router only decides which handler owns the path.
-  if (
-    req.url === "/api/services/ai/generate-tts" ||
-    req.url === "/api/services/ai/generate-image"
-  ) {
-    void geminiMediaHandler(req, res);
-    return;
-  }
-  if (
-    req.url === "/api/services/ai/admin" ||
-    req.url === "/api/services/ai/metrics"
-  ) {
-    void geminiProxyHandler(req, res);
-    return;
-  }
   if (
     req.url === "/api/license/health" ||
     req.url === "/api/license/activate" ||
@@ -1179,7 +1133,7 @@ const dispatchUnGuardedRequest = (req: IncomingMessage, res: ServerResponse): vo
 // table does not declare fall through unchanged, so the 426 catch-all above and
 // the handlers' own 405s keep their exact behaviour.
 const settleHttpRequest = createGuardedDispatcher({
-  guard: aiSessionManager.entitlementGuard,
+  guard: entitlementGuard,
   dispatch: dispatchUnGuardedRequest,
 });
 
@@ -1198,17 +1152,10 @@ httpServer.listen(PORT, HOST, () => {
   wss = new WebSocketServer({
     server: httpServer,
     maxPayload: MAX_PAYLOAD_BYTES,
-    verifyClient: (info, cb) => {
+    verifyClient: (_info, cb) => {
       // When an origin allowlist is configured, reject WebSocket upgrades
       // from unknown origins to prevent unauthenticated DoS via connection
       // exhaustion. Skip verification when the list is empty (local dev).
-      if (WS_ALLOWED_ORIGINS.size > 0) {
-        const origin = info.origin ?? "";
-        if (!WS_ALLOWED_ORIGINS.has(origin)) {
-          cb(false, 403, "Forbidden");
-          return;
-        }
-      }
       cb(true);
     },
   });

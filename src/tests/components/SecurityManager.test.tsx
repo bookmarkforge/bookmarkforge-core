@@ -787,4 +787,42 @@ describe("SecurityManager", () => {
       });
     });
   });
+
+  describe("ADR-052 Fase 2 — v5 residue notice", () => {
+    it("hidden when the residue streak has not reached the threshold", () => {
+      localStorage.setItem("forge_has_master_password", "true");
+      render(
+        <SecurityManager>
+          <span>content</span>
+        </SecurityManager>,
+      );
+      expect(screen.queryByTestId("v5-residue-notice")).toBeNull();
+    });
+
+    it("shown when the streak reached the threshold", () => {
+      localStorage.setItem("forge_has_master_password", "true");
+      localStorage.setItem("v5_residue_unlock_streak", "2");
+      render(
+        <SecurityManager>
+          <span>content</span>
+        </SecurityManager>,
+      );
+      const notice = screen.getByTestId("v5-residue-notice");
+      expect(notice).toBeTruthy();
+      expect(notice.textContent).toContain("legacy encryption format");
+    });
+
+    it("dismiss is non-blocking: the banner hides but the locked screen stays", () => {
+      localStorage.setItem("forge_has_master_password", "true");
+      localStorage.setItem("v5_residue_unlock_streak", "2");
+      render(
+        <SecurityManager>
+          <span>content</span>
+        </SecurityManager>,
+      );
+      fireEvent.click(screen.getByText("Dismiss"));
+      expect(screen.queryByTestId("v5-residue-notice")).toBeNull();
+      expect(screen.getByPlaceholderText("app_master_password")).toBeTruthy();
+    });
+  });
 });

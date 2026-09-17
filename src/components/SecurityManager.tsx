@@ -3,6 +3,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSecurityStore } from "../hooks/useSecurityStore";
 import { securityVault } from "../services/SecurityVault";
+import {
+  shouldShowV5ResidueNotice,
+  sampleV5ResidueAfterUnlock,
+} from "../services/security-vault/v5-residue-notice";
 import { safeGet } from "../store/safeStorage";
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { logger } from "../utils/logger";
@@ -89,6 +93,10 @@ export const SecurityManager: React.FC<{ children: React.ReactNode }> = ({
   // exists").
   const pendingBmfKitRef = useRef(false);
   const [isExportingKit, setIsExportingKit] = useState(false);
+  // ADR-052 Fase 2 — non-blocking v5 residue notice. The decision reads the
+  // locally persisted streak (a bare integer) — never sensitive storage.
+  const [showV5ResidueNotice] = useState(() => shouldShowV5ResidueNotice());
+  const [v5ResidueDismissed, setV5ResidueDismissed] = useState(false);
   const regenerateInFlightRef = useRef(false);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const clearClipboardTimerRef =
@@ -237,6 +245,9 @@ Date Generated: ${formatDate(new Date(), {
       await initDB(passwordInput);
       unlock();
       setError("");
+      // ADR-052 Fase 2: post-unlock exposure sample. Fire-and-forget —
+      // every failure mode is silent; never gates the unlocked state.
+      void sampleV5ResidueAfterUnlock();
     } catch (err) {
       // Branch on classified DB error names so the user sees the right
       // message: wrong-password vs storage-inaccessible vs generic.
@@ -325,6 +336,8 @@ Date Generated: ${formatDate(new Date(), {
         });
       }
       unlock();
+      // ADR-052 Fase 2: post-unlock exposure sample (fire-and-forget).
+      void sampleV5ResidueAfterUnlock();
       // `forceSetup` is a separate store flag from `isLocked`. Clear it
       // after first-time setup so AppContent can mount the authenticated
       // shell instead of leaving the setup boundary in place.
@@ -369,6 +382,8 @@ Date Generated: ${formatDate(new Date(), {
       await initDB(recoveredPassword);
 
       unlock();
+      // ADR-052 Fase 2: post-unlock exposure sample (fire-and-forget).
+      void sampleV5ResidueAfterUnlock();
       setIsRecovering(false);
       setError("");
     } catch (err) {
@@ -557,6 +572,40 @@ Date Generated: ${formatDate(new Date(), {
           <div className="security-error-in flex items-center gap-2 p-3 bg-[var(--color-danger)]/10 border border-[var(--danger-soft-border)]/20 rounded-2xl ds-text-danger text-xs mt-3">
             <IconAlertCircle className="size-3 shrink-0" />
             <p>{error}</p>
+          </div>
+        )}
+
+        {showV5ResidueNotice && !v5ResidueDismissed && (
+          <div
+            data-testid="v5-residue-notice"
+            className="security-error-in flex items-start gap-2 p-3 rounded-2xl text-xs mt-3"
+            style={{
+              backgroundColor: "rgba(245, 158, 11, 0.1)",
+              border: "1px solid rgba(245, 158, 11, 0.35)",
+            }}
+          >
+            <IconAlertCircle className="size-3 shrink-0 ds-text-warning" />
+            <div className="min-w-0">
+              <p className="ds-text-warning font-medium">
+                {t(
+                  "app_v5ResidueNoticeTitle",
+                  "Some vault data still uses the legacy encryption format",
+                )}
+              </p>
+              <p className="ds-text-secondary mt-1">
+                {t(
+                  "app_v5ResidueNoticeBody",
+                  "A global dictionary attack still applies to these items. Unlock once more with your password to re-encrypt them, or restore them from a backup made with the current version.",
+                )}
+              </p>
+              <button
+                type="button"
+                onClick={() => setV5ResidueDismissed(true)}
+                className="mt-1 inline-block max-w-full truncate text-[10px] underline ds-text-muted"
+              >
+                {t("app_v5ResidueNoticeDismiss", "Dismiss")}
+                </button>
+            </div>
           </div>
         )}
 

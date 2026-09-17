@@ -579,7 +579,7 @@ export class TTSService {
               speechConfig: {
                 languageCode: lang,
                 voiceConfig: {
-                  voice: { preset: "en-US-Standard-A" },
+                  voice: { name: "en-US-Standard-A" },
                 },
               },
             },
@@ -592,7 +592,7 @@ export class TTSService {
         return null;
       }
       const data = await readBoundedResponseJson<{
-        candidates?: Array<{ content?: { parts?: Array<{ text?: string; audioData?: string }> } }>;
+        candidates?: Array<{ content?: { parts?: Array<{ inlineData?: { data?: string } }> } }>;
         error?: unknown;
       }>(response);
       if (data.error) {
@@ -603,7 +603,7 @@ export class TTSService {
       if (!candidates || candidates.length === 0) {return null;}
       const parts = candidates[0]?.content?.parts;
       if (!parts || parts.length === 0) {return null;}
-      const audioBase64 = parts[0]?.audioData ?? parts[0]?.text;
+      const audioBase64 = parts[0]?.inlineData?.data;
       if (typeof audioBase64 !== "string" || !audioBase64) {return null;}
       return audioBase64;
     } catch (e) {

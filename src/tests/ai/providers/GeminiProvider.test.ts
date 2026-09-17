@@ -44,7 +44,7 @@ describe("GeminiProvider", () => {
       provider = new GeminiProvider({ apiKey: "AIzaSyTest123456789" });
       const mockResponse = {
         ok: true,
-        json: async () => ({ text: "Reply" }),
+        json: async () => ({ candidates: [{ content: { parts: [{ text: "Reply" }] } }] }),
       };
       mockFetchWithTimeout.mockResolvedValue(mockResponse as never);
 
@@ -64,7 +64,7 @@ describe("GeminiProvider", () => {
       provider = new GeminiProvider({ apiKey: "AIzaSyTest123456789" });
       mockFetchWithTimeout.mockResolvedValue({
         ok: true,
-        json: async () => ({ text: "ok" }),
+        json: async () => ({ candidates: [{ content: { parts: [{ text: "ok" }] } }] }),
       } as never);
 
       await provider.generateText("Hello");
@@ -81,7 +81,7 @@ describe("GeminiProvider", () => {
       provider = new GeminiProvider({ apiKey: "AIzaSyTest123456789" });
       mockFetchWithTimeout.mockResolvedValue({
         ok: true,
-        json: async () => ({ text: "ok" }),
+        json: async () => ({ candidates: [{ content: { parts: [{ text: "ok" }] } }] }),
       } as never);
 
       await provider.generateText("Hello", undefined, { model: "gemini-2.0-flash" });
@@ -96,7 +96,7 @@ describe("GeminiProvider", () => {
       provider = new GeminiProvider({ apiKey: "AIzaSyTest123456789" });
       mockFetchWithTimeout.mockResolvedValue({
         ok: true,
-        json: async () => ({ text: "ok" }),
+        json: async () => ({ candidates: [{ content: { parts: [{ text: "ok" }] } }] }),
       } as never);
 
       const schema = { type: "object", properties: { name: { type: "string" } } };
@@ -113,7 +113,7 @@ describe("GeminiProvider", () => {
       provider = new GeminiProvider({ apiKey: "AIzaSyTest123456789" });
       mockFetchWithTimeout.mockResolvedValue({
         ok: true,
-        json: async () => ({ text: "ok" }),
+        json: async () => ({ candidates: [{ content: { parts: [{ text: "ok" }] } }] }),
       } as never);
 
       const tools = [{ functionDeclarations: [{ name: "test" }] }];

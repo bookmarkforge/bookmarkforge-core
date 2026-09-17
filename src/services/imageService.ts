@@ -1,5 +1,4 @@
 import { GEMINI_API_BASE, AI_MODELS } from "../constants/config";
-import { firewalledFetch } from "../utils/networkFirewall";
 import { logger } from "../utils/logger";
 import {
   cancelResponseBody,

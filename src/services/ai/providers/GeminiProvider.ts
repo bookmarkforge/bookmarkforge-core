@@ -24,6 +24,16 @@ function getGeminiApiHeaders(apiKey: string | null): Record<string, string> {
   };
 }
 
+interface GeminiContentResponse {
+  candidates?: Array<{
+    content?: {
+      parts?: Array<{ text?: string }>;
+    };
+  }>;
+  groundingMetadata?: AIResponse["groundingMetadata"];
+  error?: unknown;
+}
+
 export interface GeminiProviderConfig {
   apiKey: string | null;
   model?: string;
@@ -86,15 +96,12 @@ export class GeminiProvider {
       );
     }
 
-    const data = await readBoundedResponseJson<{
-      error?: unknown;
-      text?: unknown;
-      groundingMetadata?: AIResponse["groundingMetadata"];
-    }>(response);
+    const data: GeminiContentResponse = await readBoundedResponseJson(response);
     if (data.error) {throw new Error(sanitizeErrorMessage(String(data.error)));}
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
 
     return {
-      text: typeof data.text === "string" ? data.text : "",
+      text,
       provider: "gemini",
       groundingMetadata: data.groundingMetadata,
     };

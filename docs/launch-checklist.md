@@ -33,7 +33,7 @@
 
 - [ ] **3. RPO/RTO y SLOs registrados y confirmados**
   Los valores de referencia ya existen en `docs/operations.md`; falta **confirmarlos oficialmente** (aprobación del responsable) y fijar revisión trimestral.
-  - Evidencia: [docs/operations.md](operations.md) → "SLOs y objetivos": disponibilidad 99,9% (30 días), p95 proxy IA < 3 s, p95 señalización < 500 ms, 5xx < 0,5%, saturación WS < 70%, error-spike 0; **RPO 24 h**, **RTO 24 h** (vault) / **4 h** (topología servidor).
+  - Evidencia: [docs/operations.md](operations.md) → "SLOs y objetivos": disponibilidad 99,9% (30 días), p95 señalización < 500 ms, 5xx < 0,5%, saturación WS < 70%, error-spike 0; **RPO 24 h**, **RTO 24 h** (vault) / **4 h** (topología servidor).
   - Deuda conocida: [docs/architecture.md](architecture.md) → "Decisiones pendientes" (SLO/RPO/RTO sin fijar formalmente).
 
 - [ ] **4. Responsable y canal de alertas antes del lanzamiento**
@@ -60,7 +60,7 @@
 ## 🟠 Validación externa — revisión independiente
 
 - [ ] **6. Pentest (prueba de ataque real)**
-   Probar el proxy de IA, sesiones, integraciones, WebSocket y flujos de backup. Documentado como pendiente.
+   Probar el endpoint de entitlement y el flujo de licencias, la telemetría, el WebSocket y los flujos de backup. (El proxy de IA se retiró: ya no forma parte del alcance de ataque.) Documentado como pendiente.
    - Evidencia: [docs/audit.md](audit.md) §2 ("Pentest documentado como pendiente"), [docs/security.md](security.md) → "Validación externa requerida", [docs/internal-security-checklist.md](internal-security-checklist.md) → "No se puede verificar localmente".
    - **Progreso:** `scripts/penetration-test.mjs` — runner de pentest con 7 fases (reconocimiento, escaneo de vulnerabilidades, pruebas de autenticación, revisión criptográfica, OWASP Top 10, lógica de negocio, generación de informe). Flujo CI en `.github/workflows/pen-test.yml` (mensual + pre-producción).
    - Gate: `node scripts/penetration-test.mjs --target <url> --scope full` genera informes JSON/MD en `pen-test-reports/`. Todos los hallazgos CRITICAL y HIGH deben remediarse antes del despliegue a producción.
@@ -91,7 +91,7 @@
   - Gate: tests unitarios `src/tests/server/business-analytics.test.ts` y `src/tests/services/analyticsForwarder.test.ts`; smoke end-to-end verificado (POST 204, KPIs 200, 401 sin token, 400 inválido). La vigilancia automatizada del canal es el ítem 19 (Gate nocturno de KPIs).
 
 - [x] **11. Prueba de carga del companion server**
-  Validar los límites actuales (conexiones WS, rate limits, proxy IA) con carga real. Implementado en [scripts/load-test-server.mjs](../scripts/load-test-server.mjs) (`npm run test:load`): arranca el servidor aislado contra un mock upstream de IA y valida los presupuestos alineados con los SLO de [docs/operations.md](operations.md) — p95 join y relay de señalización < 500 ms, p95 del proxy IA < 3 s, éxito ≥ 99 %, saturación (rechazo 1013 por encima de `MAX_CONNECTIONS`) y `/health` vivo bajo carga.
+  Validar los límites actuales (conexiones WS, rate limits) con carga real. Implementado en [scripts/load-test-server.mjs](../scripts/load-test-server.mjs) (`npm run test:load`): arranca el servidor aislado y valida los presupuestos alineados con los SLO de [docs/operations.md](operations.md) — p95 join y relay de señalización < 500 ms, saturación (rechazo 1013 por encima de `MAX_CONNECTIONS`) y `/health` vivo bajo carga. (El proxy de IA se retiró en 2026-09 y con él su mock de upstream: el servidor no proxya proveedores.)
   - Evidencia: [scripts/load-test-server.mjs](../scripts/load-test-server.mjs), `npm run test:load`, `--json` para CI. Pendiente operativo: primer run contra staging con carga real.
 
 - [ ] **12. Contratos versionados con integraciones externas**
@@ -126,7 +126,7 @@
   - Evidencia: [docs/internal-security-checklist.md](internal-security-checklist.md) → "No se puede verificar localmente" (configuración de environments y permisos).
 
 - [ ] **16. Seguridad real de staging y producción**
-  Revisar la infraestructura desplegada: TLS, usuario no-root, Redis sin puerto público, puertos de staging ligados a loopback, etc. (el código fuerza casi todo; falta inspeccionar el despliegue).
+  Revisar la infraestructura desplegada: TLS, usuario no-root, puertos de staging ligados a loopback, ausencia de servicios internos publicados, etc. (el código fuerza casi todo; falta inspeccionar el despliegue). No hay Redis ni base de datos que revisar: la topología son dos servicios stateless.
   - Evidencia: [docs/security.md](security.md) → "Configuración obligatoria de producción"; [docs/internal-security-checklist.md](internal-security-checklist.md) → "No se puede verificar localmente".
   - Gates: `npm run check:http-config`, `npm run check:compose-config`, `npm run check:runtime-config`, `npm run check:docker-context`.
 
@@ -136,7 +136,7 @@
   - Gates: `npm run check:zap-baseline`, `npm run check:zap-context`, `npm run check:zap-workflow`, `npm run check:workflows`.
 
 - [ ] **18. Configuración obligatoria de producción verificada**
-  `NODE_ENV=production`, `AI_SESSION_REQUIRE_LICENSE=1`, `AI_SESSION_ORIGINS` exactos, `ENFORCE_SIGNAL_HMAC=1`, `TRUST_PROXY` solo si procede, claves solo por secret manager.
+  `NODE_ENV=production`, `AI_SESSION_ORIGINS` exactos (allow-list de `/api/license/entitlement`), `ENFORCE_SIGNAL_HMAC=1`, `TRUST_PROXY` solo si procede, claves solo por secret manager. No hay ninguna credencial de IA que configurar.
   - Evidencia: [docs/security.md](security.md) → "Configuración obligatoria de producción".
   - Gate: `npm run check:env`, `npm run check:secrets-in-commit`.
 

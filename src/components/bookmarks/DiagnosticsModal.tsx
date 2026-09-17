@@ -456,6 +456,49 @@ export const DiagnosticsModal: React.FC<DiagnosticsModalProps> = ({
                   </section>
                 )}
 
+                {/* ADR-052 Phase 1: residual legacy-v5 corpus, local-only.
+                    Rendered only when the report is present (newer service
+                    payloads keep the modal resilient to older mocks). */}
+                {data.vaultCrypto && (
+                  <section className="space-y-4">
+                    <h4 className="text-xs font-semibold uppercase tracking-widest flex items-center gap-2 ds-text-muted line-clamp-2">
+                      <ShieldCheck className="size-4" />{" "}
+                      {t("app_vaultCrypto", "Vault Crypto")}
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <MetricCard
+                        icon={ShieldCheck}
+                        label="Legacy v5 secrets"
+                        value={
+                          data.vaultCrypto.status === "ok"
+                            ? String(data.vaultCrypto.legacyV5)
+                            : t("app_notAvailable", "n/a")
+                        }
+                        color={
+                          data.vaultCrypto.status === "ok" &&
+                          data.vaultCrypto.legacyV5 === 0
+                            ? "ds-bg-success/10 ds-text-success"
+                            : "bg-[var(--color-danger)]/10 ds-text-danger"
+                        }
+                      />
+                      <MetricCard
+                        icon={ShieldCheck}
+                        label="Salted v6 secrets"
+                        value={
+                          data.vaultCrypto.status === "ok"
+                            ? String(data.vaultCrypto.saltedV6)
+                            : t("app_notAvailable", "n/a")
+                        }
+                        color={
+                          data.vaultCrypto.status === "ok"
+                            ? "ds-bg-success/10 ds-text-success"
+                            : "bg-[var(--bg-secondary)] ds-text-muted"
+                        }
+                      />
+                    </div>
+                  </section>
+                )}
+
                 {/* Analytics KPIs */}
                 <AnalyticsDiagnostics t={t} />
               </>

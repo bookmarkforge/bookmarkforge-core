@@ -46,9 +46,13 @@
  * artifact that is already on disk, so a summary failure is logged, not fatal.
  */
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { spawnSync } from "node:child_process";
+import { getAuditPayload } from "./npm-audit-payload.mjs";
+
+// Shared single-acquisition audit (see npm-audit-payload.mjs). The alias
+// keeps the historical export name for tests and consumers.
+export { getAuditPayload as runNpmAudit };
 import {
   SEVERITIES,
   buildReport,
@@ -66,36 +70,7 @@ const TAG = "[check-direct-cve]";
 const BASELINE_PATH = join(ROOT, "scripts", "direct-cve-baseline.json");
 const DEFAULT_REPORT_PATH = join(ROOT, "dependency-cve-report.md");
 
-/**
- * Run `npm audit --json` for the requested profile (throws on failure).
- *
- * Use an argument array rather than a shell command string. On Windows the
- * executable is the npm.cmd shim, so resolving that explicitly avoids both
- * command injection risk and Node's DEP0190 shell warning.
- */
-export function runNpmAudit({ includeDev = false } = {}) {
-  const useWindowsShim = process.platform === "win32";
-  const executable = useWindowsShim
-    ? process.execPath
-    : "npm";
-  const args = useWindowsShim
-    ? [join(dirname(process.execPath), "node_modules", "npm", "bin", "npm-cli.js"), "audit", "--json"]
-    : ["audit", "--json"];
-  if (!includeDev) args.push("--omit=dev");
-  const result = spawnSync(executable, args, {
-    cwd: ROOT,
-    encoding: "utf8",
-    maxBuffer: 64 * 1024 * 1024,
-  });
-  const stdout = result.stdout ?? "";
-  if (!stdout.trim()) {
-    throw new Error(
-      `npm ${args.join(" ")} produced no JSON (exit ${result.status ?? "?"}) — ` +
-        `${(result.stderr ?? "").trim().split("\n").slice(-3).join(" ").trim() || "is npm installed and is the network reachable?"}`,
-    );
-  }
-  return JSON.parse(stdout);
-}
+
 
 function readJson(path, label) {
   if (!existsSync(path)) throw new Error(`${label} not found at ${path}`);
@@ -220,7 +195,7 @@ async function main() {
     }
     audit = JSON.parse(readFileSync(options.auditJsonPath, "utf8"));
   } else {
-    audit = runNpmAudit({ includeDev: options.includeDev });
+    audit = getAuditPayload({ includeDev: options.includeDev });
   }
   if (!audit || typeof audit.vulnerabilities !== "object" || audit.vulnerabilities === null) {
     console.error(

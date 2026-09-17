@@ -11,11 +11,14 @@ vi.mock("../../../utils/logger", () => ({
 
 // WebLLMService is Pro: the double is installed at the pro-access loader
 // instead of at the Pro module (ResourceManager unloads through the gate).
+// The double is hoisted so the loader and the assertions observe the SAME
+// object — returning a fresh `{ unload: vi.fn() }` per call would leave every
+// `expect(...).toHaveBeenCalled()` looking at a spy nothing ever touched.
+const mockWebLLMService = vi.hoisted(() => ({
+  unload: vi.fn().mockResolvedValue(undefined),
+}));
 vi.mock("../../../services/pro-access", () => ({
-  loadWebLLMService: () =>
-    Promise.resolve({
-      unload: vi.fn().mockResolvedValue(undefined),
-    }),
+  loadWebLLMService: async () => mockWebLLMService,
   ProUnavailableError: class ProUnavailableError extends Error {},
 }));
 
@@ -27,7 +30,6 @@ vi.mock("../../\.\./services/ai/RAGEngine", () => ({
 
 import { getDB } from "../../../db/database";
 import { logger } from "../../../utils/logger";
-import { webLLMService } from "../../\.\./services/ai/WebLLMService";
 import { ragEngine } from "../../\.\./services/ai/RAGEngine";
 
 const mockNavigator = (overrides: Record<string, unknown> = {}) => {
@@ -418,7 +420,7 @@ describe("ResourceManager", () => {
         },
       } as any);
       await (resourceManager as any).handleMemoryPressure("critical");
-      expect(webLLMService.unload).toHaveBeenCalled();
+      expect(mockWebLLMService.unload).toHaveBeenCalled();
       expect(ragEngine.unload).toHaveBeenCalled();
       expect(mockCleanup).toHaveBeenCalledTimes(2);
       expect(logger.info).toHaveBeenCalledWith(
@@ -459,7 +461,7 @@ describe("ResourceManager", () => {
     it("critical level skips RxDB cleanup when getDB returns undefined", async () => {
       vi.mocked(getDB).mockResolvedValue(undefined as any);
       await (resourceManager as any).handleMemoryPressure("critical");
-      expect(webLLMService.unload).toHaveBeenCalled();
+      expect(mockWebLLMService.unload).toHaveBeenCalled();
       expect(ragEngine.unload).toHaveBeenCalled();
       expect((resourceManager as any).activeComponent).toBeNull();
     });
@@ -511,20 +513,20 @@ describe("ResourceManager", () => {
       (resourceManager as any).activeComponent = "webllm";
       await (resourceManager as any).handleMemoryPressure("moderate");
       expect(ragEngine.unload).toHaveBeenCalled();
-      expect(webLLMService.unload).not.toHaveBeenCalled();
+      expect(mockWebLLMService.unload).not.toHaveBeenCalled();
     });
 
     it("moderate level with active rag unloads WebLLM", async () => {
       (resourceManager as any).activeComponent = "rag";
       await (resourceManager as any).handleMemoryPressure("moderate");
-      expect(webLLMService.unload).toHaveBeenCalled();
+      expect(mockWebLLMService.unload).toHaveBeenCalled();
       expect(ragEngine.unload).not.toHaveBeenCalled();
     });
 
     it("moderate level with no active component does nothing", async () => {
       (resourceManager as any).activeComponent = null;
       await (resourceManager as any).handleMemoryPressure("moderate");
-      expect(webLLMService.unload).not.toHaveBeenCalled();
+      expect(mockWebLLMService.unload).not.toHaveBeenCalled();
       expect(ragEngine.unload).not.toHaveBeenCalled();
     });
   });
@@ -607,7 +609,7 @@ describe("ResourceManager", () => {
 
       await resourceManager.switchToRAG();
 
-      expect(webLLMService.unload).toHaveBeenCalled();
+      expect(mockWebLLMService.unload).toHaveBeenCalled();
       expect((resourceManager as any).activeComponent).toBe("rag");
     });
   });
@@ -635,7 +637,7 @@ describe("ResourceManager", () => {
       (resourceManager as any).activeComponent = "webllm";
       mockNavigator({ deviceMemory: 8 });
       await resourceManager.switchToRAG();
-      expect(webLLMService.unload).toHaveBeenCalled();
+      expect(mockWebLLMService.unload).toHaveBeenCalled();
       expect(logger.info).toHaveBeenCalledWith(
         "[ResourceManager] Enforcing strict mutual exclusion. Unloading WebLLM engine...",
       );
@@ -649,7 +651,7 @@ describe("ResourceManager", () => {
       (resourceManager as any).activeComponent = "webllm";
       mockNavigator({ deviceMemory: 12 });
       await resourceManager.switchToRAG();
-      expect(webLLMService.unload).not.toHaveBeenCalled();
+      expect(mockWebLLMService.unload).not.toHaveBeenCalled();
       expect((resourceManager as any).activeComponent).toBe("rag");
     });
 
@@ -657,7 +659,7 @@ describe("ResourceManager", () => {
       (resourceManager as any).activeComponent = null;
       mockNavigator({ deviceMemory: 8 });
       await resourceManager.switchToRAG();
-      expect(webLLMService.unload).toHaveBeenCalled();
+      expect(mockWebLLMService.unload).toHaveBeenCalled();
       expect((resourceManager as any).activeComponent).toBe("rag");
     });
   });
@@ -763,7 +765,7 @@ describe("ResourceManager", () => {
         // Expected - handleMemoryPressure propagates the error
       }
 
-      expect(webLLMService.unload).toHaveBeenCalled();
+      expect(mockWebLLMService.unload).toHaveBeenCalled();
       expect(ragEngine.unload).toHaveBeenCalled();
     });
   });

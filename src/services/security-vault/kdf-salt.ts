@@ -44,6 +44,7 @@ import { encryptionService } from "../EncryptionService";
 import { secureStorage } from "../SecureStorage";
 import { logger } from "../../utils/logger";
 import { SECURE_STORAGE_KEYS } from "./constants";
+import { KDF_SALT_DESCRIPTOR } from "./salt-registry";
 
 /** 16 random bytes, lowercase hex (crypto-core's VAULT_KDF_SALT_BYTES). */
 const VAULT_KDF_SALT_HEX_RE = /^[0-9a-f]{32}$/;
@@ -87,7 +88,7 @@ function generateVaultKdfSaltHex(): string {
 export async function ensureVaultKdfSalt(): Promise<string | null> {
   let stored: string | null;
   try {
-    stored = await secureStorage.getSecret(SECURE_STORAGE_KEYS.KDF_SALT);
+    stored = await secureStorage.getSecret(KDF_SALT_DESCRIPTOR.storageKey);
   } catch (error) {
     logger.warn(
       "[SecurityVault] Vault KDF salt unreadable — staying in legacy (fixed-salt) mode",
@@ -109,7 +110,7 @@ export async function ensureVaultKdfSalt(): Promise<string | null> {
 
   const fresh = generateVaultKdfSaltHex();
   try {
-    await secureStorage.setSecret(SECURE_STORAGE_KEYS.KDF_SALT, fresh);
+    await secureStorage.setSecret(KDF_SALT_DESCRIPTOR.storageKey, fresh);
   } catch (error) {
     logger.warn(
       "[SecurityVault] Failed to persist the vault KDF salt — using it for this session only",
@@ -230,6 +231,79 @@ export interface VaultKdfSaltSnapshot {
 }
 
 /**
+ * ADR-052 Phase 1 — local exposure counter for the v5 sunset.
+ *
+ * Reports how many of the vault's password-encrypted secrets persist in the
+ * LEGACY `v5:` format (derived under the retired bundle-wide static salt —
+ * the only remaining RFC 9106 violation in the tree). This is a diagnostic
+ * read: local-only, no telemetry, no writes, and it never mutates storage or
+ * the crypto layer. Phase 3 of ADR-052 (legacy read-path removal) is gated
+ * on this report reaching zero.
+ *
+ * Failure policy mirrors `snapshotVaultKdfSalt`: a storage that cannot be
+ * read (locked device key, IndexedDB hiccup) is reported as "unknown", never
+ * as a count, because "zero" would wrongly signal a fully migrated vault.
+ */
+export interface VaultSecretFormatExposure {
+  /** "ok" when every secret was read and classified. */
+  status: "ok" | "unknown";
+  /** Total password-encrypted secrets inspected. */
+  inspected: number;
+  /** Secrets still stored under the legacy `v5:` (static-salt) format. */
+  legacyV5: number;
+  /** Secrets already on the per-vault-salt `v6:` format. */
+  saltedV6: number;
+  /** Which storage keys are the residual v5 corpus (diagnostic only). */
+  legacyKeys: string[];
+}
+
+/** Keys inspected by the exposure report: the boot-path secret corpus
+ * (`MIGRATED_SECRET_KEYS`) plus the H5 verification token, which is the
+ * official unlock oracle and is re-minted as `v6:` on unlock. */
+const EXPOSURE_SECRET_KEYS = [...MIGRATED_SECRET_KEYS, SECURE_STORAGE_KEYS.VERIFICATION] as const;
+
+export async function reportVaultSecretFormatExposure(): Promise<VaultSecretFormatExposure> {
+  const report: VaultSecretFormatExposure = {
+    status: "ok",
+    inspected: 0,
+    legacyV5: 0,
+    saltedV6: 0,
+    legacyKeys: [],
+  };
+  try {
+    for (const key of EXPOSURE_SECRET_KEYS) {
+      let stored: string | null;
+      try {
+        stored = await secureStorage.getSecret(key);
+      } catch (error) {
+        // One unreadable secret makes the whole corpus unknown: the keys
+        // share the device-key protection, so "the others are readable" does
+        // not establish a zero count.
+        logger.warn("[SecurityVault] Exposure report could not read a secret", {
+          key,
+          error: error instanceof Error ? error.message : String(error),
+        });
+        return { ...report, status: "unknown" };
+      }
+      if (!stored) {continue;}
+      report.inspected += 1;
+      if (stored.startsWith("v5:")) {
+        report.legacyV5 += 1;
+        report.legacyKeys.push(key);
+      } else if (stored.startsWith("v6:")) {
+        report.saltedV6 += 1;
+      }
+    }
+  } catch (error) {
+    logger.warn("[SecurityVault] Exposure report failed", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    return { ...report, status: "unknown" };
+  }
+  return report;
+}
+
+/**
  * Reads the current KDF-salt state without mutating anything. Never throws:
  * it is the first step of a rotation, and a snapshot that cannot be taken is
  * better represented as "storage unknown" than as a failed rotation.
@@ -237,7 +311,7 @@ export interface VaultKdfSaltSnapshot {
 export async function snapshotVaultKdfSalt(): Promise<VaultKdfSaltSnapshot> {
   const installed = encryptionService.getVaultKdfSaltHex();
   try {
-    const stored = await secureStorage.getSecret(SECURE_STORAGE_KEYS.KDF_SALT);
+    const stored = await secureStorage.getSecret(KDF_SALT_DESCRIPTOR.storageKey);
     return { stored: stored?.trim().toLowerCase() ?? null, installed };
   } catch (error) {
     logger.warn("[SecurityVault] Vault KDF salt unreadable while snapshotting", {
@@ -291,7 +365,7 @@ export async function rotateVaultKdfSalt(
     throw new Error("Vault KDF salt rotation produced a repeated salt");
   }
 
-  await secureStorage.setSecret(SECURE_STORAGE_KEYS.KDF_SALT, fresh);
+  await secureStorage.setSecret(KDF_SALT_DESCRIPTOR.storageKey, fresh);
   await encryptionService.configureVaultKdfSalt(fresh);
   logger.info("[SecurityVault] Vault KDF salt rotated with the master password", {
     previousFingerprint: previous.installed?.slice(0, 8) ?? null,
@@ -322,9 +396,9 @@ export async function restoreVaultKdfSalt(
     } else if (snapshot.stored === null || !isVaultKdfSaltHex(snapshot.stored)) {
       // There was no usable salt stored (or it was malformed, in which case
       // `ensureVaultKdfSalt` would re-mint on the next unlock anyway).
-      await secureStorage.deleteSecret(SECURE_STORAGE_KEYS.KDF_SALT);
+      await secureStorage.deleteSecret(KDF_SALT_DESCRIPTOR.storageKey);
     } else {
-      await secureStorage.setSecret(SECURE_STORAGE_KEYS.KDF_SALT, snapshot.stored);
+      await secureStorage.setSecret(KDF_SALT_DESCRIPTOR.storageKey, snapshot.stored);
     }
   } catch (error) {
     logger.error("[SecurityVault] Failed to restore the stored vault KDF salt", {
@@ -390,7 +464,7 @@ export interface VaultKdfSaltAdoption {
 export async function adoptVaultKdfSaltFromStorage(): Promise<VaultKdfSaltAdoption> {
   let stored: string | null;
   try {
-    stored = await secureStorage.getSecret(SECURE_STORAGE_KEYS.KDF_SALT);
+    stored = await secureStorage.getSecret(KDF_SALT_DESCRIPTOR.storageKey);
   } catch (error) {
     logger.warn(
       "[SecurityVault] Cross-tab KDF salt adoption could not read storage",

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
@@ -10,8 +10,6 @@ import {
   parseRetryDegradedLog,
   checkRetryDegraded,
   checkApiDegradado,
-  parseAiProviderProbe,
-  checkAiProvider,
   shouldRunClientCriticalAction,
   integrityMatches,
   verifyBundleSri,
@@ -494,7 +492,8 @@ describe("API_DEGRADADO end-to-end", () => {
       expect(recovered.errorRate).toBe(0);
       expect(recovered.p95Ms).toBeLessThan(degraded.p95Ms);
       expect(recovered.detail).toContain("health+business");
-      expect(recovered.businessPath).toBe("/api/services/ai/session");
+      // The business probe must hit a route the companion server really serves.
+      expect(recovered.businessPath).toBe("/api/license/entitlement");
     } finally {
       await new Promise((resolve) => server.close(resolve));
       rmSync(dir, { recursive: true, force: true });
@@ -571,8 +570,8 @@ describe("process exit — Windows libuv crash regression", () => {
       // mid-suite (vitest treats a late process.exit as an unhandled error).
       mod.cancelShutdownFailsafe?.();
       // shutdownExit closes undici's GLOBAL dispatcher — restore a fresh one
-      // so later tests in this process can still fetch (AI_PROVIDER_DOWN
-      // probes an ephemeral HTTP server via fetch).
+      // so later tests in this process can still fetch (the API_DEGRADADO and
+      // SRI tests probe ephemeral HTTP servers via fetch).
       try {
         const { Agent, setGlobalDispatcher } = await import("undici");
         setGlobalDispatcher(new Agent());
@@ -611,66 +610,3 @@ describe("process exit — Windows libuv crash regression", () => {
   });
 });
 
-describe("AI_PROVIDER_DOWN", () => {
-  it("parseAiProviderProbe resets the streak on success", () => {
-    expect(parseAiProviderProbe(true, 2)).toEqual({ ok: true, consecutive: 0 });
-  });
-
-  it("parseAiProviderProbe counts consecutive failures and trips at threshold", () => {
-    expect(parseAiProviderProbe(false, 0)).toEqual({ ok: true, consecutive: 1 });
-    expect(parseAiProviderProbe(false, 1)).toEqual({ ok: true, consecutive: 2 });
-    expect(parseAiProviderProbe(false, 2)).toEqual({ ok: false, consecutive: 3 });
-    expect(parseAiProviderProbe(false, 5)).toEqual({ ok: false, consecutive: 6 });
-  });
-
-  it("checkAiProvider fails closed when the upstream never answers", async () => {
-    const { createServer } = await import("node:http");
-    const server = createServer(() => { /* never answer */ });
-    await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
-    const port = server.address().port;
-    const dir = mkdtempSync(join(tmpdir(), "bmf-ai-provider-"));
-    const stateFile = join(dir, "state.json");
-    try {
-      const result = await checkAiProvider({
-        healthUrl: `http://127.0.0.1:${port}`,
-        timeoutMs: 300,
-        threshold: 1,
-        stateFile,
-      });
-      expect(result.name).toBe("AI_PROVIDER_DOWN");
-      expect(result.ok).toBe(false);
-      expect(result.consecutive).toBe(1);
-      const persisted = JSON.parse(readFileSync(stateFile, "utf8"));
-      expect(persisted.aiProviderConsecutive).toBe(1);
-    } finally {
-      rmSync(dir, { recursive: true, force: true });
-      await new Promise((resolve) => server.close(resolve));
-    }
-  });
-
-  it("checkAiProvider resets the streak when the upstream answers", async () => {
-    const { createServer } = await import("node:http");
-    const server = createServer((_req, res) => {
-      res.writeHead(200, { "content-type": "application/json" });
-      res.end(JSON.stringify({ status: "ok" }));
-    });
-    await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
-    const port = server.address().port;
-    const dir = mkdtempSync(join(tmpdir(), "bmf-ai-provider-ok-"));
-    const stateFile = join(dir, "state.json");
-    try {
-      const result = await checkAiProvider({
-        healthUrl: `http://127.0.0.1:${port}`,
-        timeoutMs: 1_000,
-        threshold: 1,
-        stateFile,
-      });
-      expect(result.name).toBe("AI_PROVIDER_DOWN");
-      expect(result.ok).toBe(true);
-      expect(result.consecutive).toBe(0);
-    } finally {
-      rmSync(dir, { recursive: true, force: true });
-      await new Promise((resolve) => server.close(resolve));
-    }
-  });
-});

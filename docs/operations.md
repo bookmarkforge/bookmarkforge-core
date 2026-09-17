@@ -15,7 +15,7 @@ npm run check:secrets-in-commit
 npm run check:launch-checklist:strict  # falla si algún 🔴 bloqueante está sin completar
 ```
 
-El despliegue de producción debe ser aprobado, usar imágenes identificadas por SHA y conservar el artefacto y los resultados de los gates. El `check:launch-checklist:strict` se ejecuta además automáticamente: cada noche en `nightly.yml` (job `launch-readiness`) y como Punto 10 del gate pre-deploy `check-blindeo.mjs` (bloquea despliegues a producción con bloqueantes abiertos).
+El despliegue de producción debe ser aprobado, usar imágenes identificadas por SHA y conservar el artefacto y los resultados de los gates. La secuencia completa de preflight, probes públicas y cierre de A11-2 está en `docs/deployment-runbook.md`. El `check:launch-checklist:strict` se ejecuta además automáticamente: cada noche en `nightly.yml` (job `launch-readiness`) y como Punto 10 del gate pre-deploy `check-blindeo.mjs` (bloquea despliegues a producción con bloqueantes abiertos).
 
 ## Health y observabilidad
 
@@ -33,18 +33,17 @@ Valores de referencia definidos; revisar trimestralmente o al alcanzar 5× el tr
 | Métrica | Objetivo | Ventana | Medición |
 |---|---|---|---|
 | Disponibilidad de api + web | 99.9% | 30 días | healthchecks + uptime probe |
-| Latencia p95 del proxy de IA | < 3 s | 28 días | `GET /api/services/ai/metrics` |
 | Latencia p95 de señalización (join) | < 500 ms | 28 días | logs de señalización |
 | Tasa de errores 5xx | < 0.5% | 5 minutos | logs estructurados |
 | Saturación de conexiones WS | < 70% del límite | 5 minutos | diagnósticos admin |
 | Error-spike de clientes críticos | 0 eventos | 10 minutos | collector `/api/client-events` |
 
 **RPO:** 24 h — el cliente genera backups automáticos cifrados diarios (cliente + copia
-local). El servidor no aloja datos del vault; el RPO de estado operativo (Redis) es
-inmaterial y no se usa como backup del vault.
+local). El servidor no aloja datos del vault ni estado operativo persistente, así que no
+tiene RPO propio: no hay Redis ni base de datos que perder.
 
 **RTO:** 24 h para restauración completa de un vault; 4 h para recuperar la topología
-servidor (imágenes por SHA) + Redis si procede.
+servidor desde las imágenes por SHA.
 
 Guardia: responsables y canal de alertas deben registrarse antes del lanzamiento
 público; severidades según la plantilla de incidentes.
@@ -268,9 +267,10 @@ rollback: deploy actual `prod-20260831-1320-00b24d6`, target `prod-20260831-1315
 
 Hallazgos de la ejecución (corregidos durante el run):
 
-1. **El drill no levantaba `redis`** — el api es fail-closed sobre
-   `AI_PROXY_REDIS_URL` y BASELINE fallaba con `SESSION_STORE_UNAVAILABLE`;
-   fix aplicado: `up -d ... redis` en `scripts/drill-rollback.mjs`.
+1. **El drill no levantaba `redis`** (hallazgo histórico, ya irrelevante) — con la
+   retirada del proxy de IA (2026-09) el servicio `redis` y sus variables
+   desaparecieron del compose, y `scripts/drill-rollback.mjs` levanta ahora
+   `web api license-mock`.
 2. **`rollback.mjs` exige tags `prod-YYYYMMDD-HHMM-<sha>`** (formato de
    `deploy-prod.mjs`); los tags con sufijo (`prod-YYYYMMDD-NNNN-<sufijo>`) los
    rechaza con `Invalid target tag format` — crear los tags de release con
@@ -307,14 +307,18 @@ Evidencia JSON del run (fases y tiempos) registrada en el artifact de CI.
 
 ## Prueba de carga del companion server
 
-`npm run test:load` arranca un servidor aislado (límites propios + mock upstream
-de IA) y valida los presupuestos de los SLO de esta sección:
+`npm run test:load` arranca un servidor aislado (con sus propios límites, sin
+mocks) y valida los presupuestos de los SLO de esta sección:
 
 - **Señalización:** p95 join < 500 ms y p95 relay en sala < 500 ms con carga
   concurrente; saturación: rechazo 1013 por encima de `MAX_CONNECTIONS` y
   `/health` 200 tras la ráfaga.
-- **Proxy IA:** p95 de `/api/services/ai/generate` < 3 s contra el mock
-  (latencia simulada configurable), tasa de éxito ≥ 99 % y cero 5xx del proxy.
+
+La prueba ya no tiene fase de proxy de IA ni mock de upstream (retirados en
+2026-09): el servidor no proxya proveedores de IA, así que la única superficie
+que escala con los usuarios —y por tanto la única con presupuesto de capacidad—
+es la de conexiones WebSocket. Los endpoints HTTP que quedan (licencias,
+telemetría, analítica) los cubre el smoke de producción, no esta prueba.
 
 Los límites anti-abuso se elevan a propósito (se mide capacidad, no throttling);
 ese aspecto lo cubren los tests unitarios del servidor. Salida 0/1 (CI-ready),
@@ -341,9 +345,11 @@ No guardar contraseñas junto con backups. Las claves y los datos deben tener ci
 1. Declarar incidente y congelar despliegues.
 2. Confirmar alcance y última copia válida.
 3. Restaurar infraestructura desde imágenes por SHA.
-4. Restaurar Redis sólo si contiene estado necesario; no usarlo como backup del vault.
+4. No hay estado de servidor que restaurar: la topología son dos servicios stateless
+   (sin Redis ni base de datos). El vault se restaura desde los backups cifrados del
+   propio usuario.
 5. Ejecutar smoke tests y healthchecks.
-6. Verificar autenticación, licencias, IA y señalización.
+6. Verificar licencias y señalización.
 7. Comunicar estado y documentar causa raíz.
 8. Ejecutar postmortem y actualizar runbooks.
 

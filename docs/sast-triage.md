@@ -30,7 +30,7 @@ Salida del gate (el "contrato" que lees en CI):
 
 ```
 [check-sarif-severity] 3 finding(s) across 2 SARIF file(s):
-  - [high] js/command-line-injection (CodeQL) server/src/ai-proxy.ts:42 — Unsafe use of child_process exec.
+  - [high] js/command-line-injection (CodeQL) server/src/example-legacy.ts:42 — Unsafe use of child_process exec.
   - [medium] javascript.lang.security.audit.detect-eval-with-expression (Semgrep) src/utils/helpers.ts:10 — Found expression in eval.
 [check-sarif-severity] FAIL: 2 finding(s) at or above 'high'
 ```
@@ -61,9 +61,9 @@ Cada hallazgo termina en una de estas cuatro veredictos:
 
 - [ ] ¿El *source* es realmente controlable por un tercero? En BookmarkForge:
   - El vault, notas y marcadores **nunca salen del dispositivo**; un hallazgo XSS sobre contenido local suele ser *self-XSS* (el usuario se ataca a sí mismo) → riesgo bajo, no necesariamente FP.
-  - Lo que sí llega al servidor: peticiones del proxy de IA (sesión autenticada + CSRF + orígenes restringidos), señalización P2P (HMAC obligatorio en producción), validación de licencias (rate-limited).
+  - Lo que sí llega al servidor: señalización P2P (HMAC obligatorio en producción), validación de licencias y entitlement (origen restringido + rate-limited), telemetría opt-in sin contenido y analítica agregada. Las llamadas a proveedores de IA **no** pasan por el servidor: salen del navegador con la clave del usuario, así que un hallazgo sobre ese flujo se evalúa en el cliente.
 - [ ] ¿El *sink* ya está protegido por una mitigación existente? Revisa los controles de `docs/security.md` ("Controles activos"): DOMPurify centralizado, validación SSRF/IP, rate limits, CSP estricta.
-- [ ] ¿El código es alcanzable? Mocks de staging (`ai-mock`, `license-mock`), ramas muertas y código solo de build no corren en producción.
+- [ ] ¿El código es alcanzable? Mocks locales (`license-mock`, `mock-openai-server`), ramas muertas y código solo de build no corren en producción.
 - [ ] ¿El hallazgo está en tests o fixtures? Los tests pueden disparar patrones (p. ej. `eval` para evaluar expresiones de test) sin riesgo real; excluye por ruta (§4) en lugar de por regla.
 - [ ] ¿Semgrep marca algo que el mensaje contradice? Las reglas de patrón a veces aciertan el patrón pero no el contexto; léelas con el código delante.
 
@@ -112,7 +112,7 @@ Formato (`.github/sast-baseline.json`):
 [
   {
     "ruleId": "js/command-line-injection",
-    "file": "server/src/ai-proxy.ts",
+    "file": "server/src/example-legacy.ts",
     "tool": "CodeQL",
     "line": 42,
     "approved": true,
@@ -170,7 +170,7 @@ Recuerda: el ruleset de `main` exige ambos jobs como checks obligatorios. Si el 
 
 | # | Regla (herramienta) | Ubicación | Severidad (gate) | Veredicto | Justificación / acción | Responsable |
 |---|---|---|---|---|---|---|
-| 1 | `js/command-line-injection` (CodeQL) | `server/src/ai-proxy.ts:42` | high | TP | Corregir: validar entrada antes de `exec`; PR #… | @… |
+| 1 | `js/command-line-injection` (CodeQL) | `server/src/example-legacy.ts:42` | high | TP | Corregir: validar entrada antes de `exec`; PR #… | @… |
 | 2 | `…detect-eval-with-expression` (Semgrep) | `src/utils/helpers.ts:10` | medium | FP | Input interno de build; `nosemgrep` + justificación en el código | @… |
 
 **Decisiones de umbral** (una fila por cambio; también para `--min-severity-for`, cambios de formato y altas/limpiezas del baseline):

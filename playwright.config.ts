@@ -58,7 +58,6 @@ export default defineConfig({
         HOST: "127.0.0.1",
         PORT: String(signalingPort),
         TRUST_PROXY: "0",
-        AI_SESSION_REQUIRE_LICENSE: "0",
         GEMINI_API_KEY: "e2e-ai-key",
         GEMINI_API_BASE: "http://127.0.0.1:9/v1beta/models",
         WHOP_LICENSE_API_URL: "http://127.0.0.1:9/license",

@@ -47,7 +47,7 @@ Consecuencias para el ROPA:
 
 | # | Finalidad | Interesados | Categorías de datos | Base jurídica | Destinatarios / encargados | Retención | Transferencia internacional |
 |---|---|---|---|---|---|---|---|
-| T1 | Proxy de IA en la nube (OpenAI, Anthropic, Groq, Gemini, HuggingFace…) | Usuarios que activan IA en la nube | Prompts enviados al proveedor elegido | **Consentimiento** (Art. 6(1)(a)), opt-in por proveedor | Proveedor de IA elegido (ver §7) | No almacenado por BookmarkForge; aplican políticas del proveedor | Sí, según proveedor (§8) |
+| T1 | IA en la nube llamada **desde el navegador del usuario** (OpenAI, Anthropic, Groq, Gemini, Hugging Face, OpenRouter…) | Usuarios que activan IA en la nube | Prompts que el navegador del usuario envía al proveedor con la clave del propio usuario | **Consentimiento** (Art. 6(1)(a)), opt-in por proveedor | El proveedor de IA elegido por el usuario; **BookmarkForge no está en el camino de datos** (no existe proxy de IA desde 2026-09) | No pasa por BookmarkForge; aplican las políticas del proveedor | Sí, según proveedor (§8) |
 | T2 | Validación de licencia Pro (adaptador Whop) | Usuarios de pago | Clave de licencia, identificador de instancia/dispositivo, IP para rate limiting | **Contrato** (Art. 6(1)(b)) — necesario para prestar la función de pago | Whop (controlador independiente en pagos) | Estado de licencia mientras esté activa; ventanas de rate limit ≤ 1 h | Sí, según Whop (§8) |
 | T3 | Señalización P2P (WebRTC) | Usuarios que sincronizan entre dispositivos | Metadatos de conexión entre pares (SDP/ICE), secreto de room efímero | **Contrato** (Art. 6(1)(b)) — el usuario inicia la sincronización | Servidor de señalización (operador o auto-alojado) | Solo durante la conexión; sin persistencia al desconectar | No (metadatos técnicos, sesión efímera) |
 | T4 | Informes CSP (solo con opt-in) | Usuarios que lo activan | URL del recurso bloqueado, directiva vulnerada, URL de la página | **Consentimiento** (Art. 6(1)(a)) | Operador del servidor | Anillo acotado en memoria ≤ 200 informes o fichero JSONL que aloja el usuario | No |
@@ -108,8 +108,8 @@ Canal para peticiones que requieran intervención del operador: `bookmarkforge@p
 
 | Encargado | Rol | Datos | Contrato DPA | Sede / transferencia |
 |---|---|---|---|---|
-| Google (Gemini API) | Proveedor de IA en la nube | Prompts (T1) | ⚠ DATO PERSONAL (cláusulas del contrato del proveedor — conservar copia firmada) | Google Cloud, regiones globales; SCC de Google |
-| OpenAI / Anthropic / Groq / OpenRouter / Hugging Face | Proveedores alternativos de IA (solo si el usuario los configura) | Prompts (T1) | ⚠ DATO PERSONAL por proveedor (conservar copia del DPA aceptado en el momento de activación) | Según términos de cada proveedor (§8) |
+| Google (Gemini API) | Proveedor de IA del usuario (**BYO-key** desde el navegador) | Prompts (T1), enviados con la clave del usuario | Fuera del camino de datos de BookmarkForge; el usuario acepta los términos del proveedor | Google Cloud, regiones globales |
+| OpenAI / Anthropic / Groq / OpenRouter / Hugging Face | Proveedores alternativos de IA (**BYO-key** desde el navegador, solo si el usuario los configura) | Prompts (T1), enviados con la clave del usuario | Fuera del camino de datos de BookmarkForge; el usuario acepta los términos del proveedor | Según términos de cada proveedor (§8) |
 | Proveedor de hosting del servidor acompañante | Alojamiento | Logs, señalización, informes CSP/eventos (T3–T6) | ⚠ DATO PERSONAL (firmar DPA del hosting antes de desplegar) | ⚠ DATO PERSONAL (sede del datacenter + mecanismo de transferencia) |
 | Sentry (Functional Software) | Proveedor de error reporting (solo si el operador configura DSN y el usuario opta) | Errores técnicos redactados (T7) | ⚠ DATO PERSONAL (aceptar el DPA de Sentry en la consola antes de activar el DSN) | Sentry (Functional Software, Inc.), sede EE.UU.; EU-US DPF certificada + DPA con SCC (ver §8) |
 | Whop | **Controlador independiente** para pagos (no encargado) | Datos de pago, clave de licencia (T2) | N/A (relación controlador–controlador) | Según términos de Whop |
@@ -117,6 +117,7 @@ Canal para peticiones que requieran intervención del operador: `bookmarkforge@p
 Notas:
 
 - BookmarkForge **no vende, alquila ni comparte datos con fines publicitarios**; sin cookies de seguimiento ni scripts de analítica de terceros (política publicada §13).
+- ⚠ **Confirmación legal pendiente (T1):** al retirarse el proxy de IA (2026-09) BookmarkForge dejó de transmitir prompts a los proveedores — la llamada la hace el navegador del usuario con su propia clave. Los proveedores de IA pasan por tanto de subencargados del operador a terceros del usuario. La calificación de rol, la retención y la transferencia internacional de este tratamiento deben reconfirmarse con asesoramiento legal antes de publicar la próxima versión de la política.
 - Sentry ya está incorporado arriba (T7). Cualquier nuevo proveedor (TURN, analítica, hosting) debe añadirse a esta tabla antes de activarse.
 - ⚠ DATO PERSONAL: conservar copia de los DPA firmados y fechas de firma/renovación en el expediente del operador.
 
@@ -167,7 +168,7 @@ Medidas técnicas ya implementadas (detalle en `docs/security.md` → "Controles
 
 - Cifrado en tránsito (TLS, HSTS + preload) y en reposo (AES-GCM-256, Argon2id/HKDF, borrado de memoria WASM).
 - Minimización por diseño: el servidor nunca recibe el vault; logs sin PII ni contenido.
-- Sesiones IA efímeras: cookie `HttpOnly` + `Secure` + `SameSite=Strict` + doble CSRF; rate limiting.
+- Endpoints que reciben navegadores (licencias, entitlement): allow-list de orígenes (`CSRF_ORIGIN`) y rate limiting por IP. Las sesiones de IA con cookie + CSRF se retiraron junto con el proxy de IA (2026-09).
 - Sanitización XSS (DOMPurify), CSP estricto, SRI.
 - Backups cifrados, HMAC en señalización P2P en producción, validación SSRF/IP.
 - **RGPD por defecto:** analítica desactivada por defecto; telemetría y error reporting opt-in.

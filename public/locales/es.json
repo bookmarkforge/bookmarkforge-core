@@ -10,6 +10,7 @@
   "ai_error_modelNotFound": "Modelo \"{{model}}\" no encontrado para el proveedor \"{{provider}}\".",
   "ai_error_network": "Error de red. Comprueba tu conexión a internet o el estado de Ollama.",
   "ai_error_rateLimit": "Límite de velocidad superado o cuota insuficiente. Prueba con otro modelo o proveedor.",
+  "ai_error_serverError": "El proveedor de IA devolvió un error de servidor ({{status}}). Vuelve a intentarlo más tarde.",
   "ai_modelDownloadWarning": "Esta descarga inicial es de entre 1.5 GB y 4.5 GB según tu dispositivo. Tardará unos minutos, pero luego funcionará sin conexión.",
   "ai_processing_background": "Procesando IA...",
   "ai_prompts": {
@@ -1101,6 +1102,7 @@
   "app_uxDesigner": "Diseñador UX",
   "app_uxDesignerDesc": "Descripción de Diseñador UX",
   "app_variousTopics": "varios temas",
+  "app_vaultCrypto": "Criptografía de la Bóveda",
   "app_vaultImportedSuccessfully": "Bóveda importada exitosamente",
   "app_vaultLocked": "Bóveda bloqueada",
   "app_vaultLockedDesc": "Bloquea tu bóveda para proteger tus marcadores y datos",

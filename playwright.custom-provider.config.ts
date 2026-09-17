@@ -11,15 +11,16 @@ import { defineConfig, devices } from "@playwright/test";
 
  *   8789  OpenAI-compatible mock (SSE streaming; scenario models error-401…)
  *   8787  signaling server (same binary; /api on it stays unused)
- *   8791  companion server (AI_SESSION_REQUIRE_LICENSE=0 for anonymous E2E)
+ *   8791  companion server (licensing + telemetry)
  *   4274  Vite dev server with VITE_API_PROXY_TARGET → the companion
  *
  * The companion is in the chain because ProviderConfiguration's model fetch
- * and the AI-session bootstrap go through /api (Vite proxies /api to the
- * companion, matching production nginx). It never talks to the mock — the
- * mock is called DIRECTLY by the browser (firewalledFetch allows loopback).
+ * goes through /api (Vite proxies /api to the companion, matching production
+ * nginx). It never talks to the mock — the mock is called DIRECTLY by the
+ * browser (firewalledFetch allows loopback). Provider calls themselves never
+ * pass through the companion; providers are called directly by the browser.
  *
- * Why an isolated config (repo convention, cf. playwright.ai-upstream.config.ts):
+ * Why an isolated config (repo convention, cf. the other per-surface configs):
  * the shared config's Vite proxy sends /api to CRISIS_COMPANION_PORT (8799),
  * which crisis specs spawn per-suite on purpose; an always-on companion there
  * would change what those specs observe.
@@ -91,9 +92,6 @@ export default defineConfig({
         HOST: "127.0.0.1",
         PORT: String(signalingPort),
         TRUST_PROXY: "0",
-        AI_SESSION_REQUIRE_LICENSE: "0",
-        GEMINI_API_KEY: "e2e-ai-key",
-        GEMINI_API_BASE: "http://127.0.0.1:9/v1beta/models",
         WHOP_LICENSE_API_URL: "http://127.0.0.1:9/license",
         WHOP_API_KEY: "e2e-license-key",
         SIGNALING_ADMIN_TOKEN: process.env.SIGNALING_ADMIN_TOKEN ?? "e2e-admin-token",
@@ -112,9 +110,6 @@ export default defineConfig({
         HOST: "127.0.0.1",
         PORT: String(companionPort),
         TRUST_PROXY: "0",
-        AI_SESSION_REQUIRE_LICENSE: "0",
-        GEMINI_API_KEY: "e2e-ai-key",
-        GEMINI_API_BASE: "http://127.0.0.1:9/v1beta/models",
         WHOP_LICENSE_API_URL: "http://127.0.0.1:9/license",
         WHOP_API_KEY: "e2e-license-key",
       },

@@ -6,8 +6,9 @@
 - AES-GCM y derivación Argon2id/HKDF para datos del vault.
 - Sanitización centralizada con DOMPurify.
 - CSP, SRI y cabeceras de aislamiento/protección.
-- Sesiones de IA con cookies `HttpOnly`, `Secure` bajo HTTPS, `SameSite=Strict` y token CSRF.
-- Sesiones con expiración, límite de cardinalidad y rate limiting.
+- Claves de proveedores de IA cifradas en el vault del usuario y usadas sólo desde el navegador: el servidor no recibe, no almacena ni necesita credenciales de IA.
+- Verificación de origen en los endpoints que reciben navegadores (`CSRF_ORIGIN`) y rate limiting por IP con presupuesto acotado.
+- Pruebas de entitlement firmadas (RSA-PSS/Ed25519) verificadas con la clave pública comprometida en el repositorio.
 - HMAC obligatorio para señales P2P en producción.
 - Límites de payload, conexiones, rooms y peers.
 - Validación SSRF/IP para fetches controlados.
@@ -16,17 +17,18 @@
 ## Configuración obligatoria de producción
 
 - `NODE_ENV=production`.
-- `AI_SESSION_REQUIRE_LICENSE=1`.
-- `AI_SESSION_ORIGINS` con una lista exacta, separada por comas, de orígenes HTTPS.
+- `AI_SESSION_ORIGINS` con la allow-list exacta, separada por comas, de orígenes HTTPS autorizados a llamar `POST /api/license/entitlement`. El compose de producción **exige** la variable.
 - `ENFORCE_SIGNAL_HMAC=1`.
 - `TRUST_PROXY=1` sólo cuando el reverse proxy sobrescribe correctamente `X-Forwarded-For` y `X-Forwarded-Proto`.
 - `LICENSE_SIGNING_PRIVATE_KEY_FILE` montado como secreto, nunca incluido en la imagen.
-- `GEMINI_API_KEY`, `WHOP_API_KEY`, tokens administrativos y credenciales TURN sólo mediante secret manager.
-- Redis sin puerto publicado al host y con contraseña cuando la política de infraestructura lo requiera.
+- `WHOP_API_KEY`, tokens administrativos y credenciales TURN sólo mediante secret manager. No hay ninguna credencial de IA que configurar: el servidor no llama a proveedores.
+- Ningún puerto de servicio interno publicado al host; los compose publican sólo en loopback.
 
-## Gestión de sesiones
+## Identidad y sesiones
 
-Las sesiones de IA son efímeras y se autentican mediante cookie de sesión más CSRF doble (`Cookie` + `X-CSRF-Token`). La identidad de licencia no debe confundirse con una cuenta de usuario general. Si se añaden cuentas, implementar OIDC/OAuth2 con expiración corta, rotación de refresh tokens, revocación, MFA opcional y auditoría.
+No hay cuentas de usuario ni sesiones de servidor. La "sesión" del vault es local: la clave maestra descifra la base IndexedDB en el navegador y las claves derivadas viven en la memoria del cliente, no en una cookie. La licencia Pro es un atributo del dispositivo (una prueba firmada), no una identidad de autenticación, y `/api/license/entitlement` sólo responde el plan. El servidor de producción no emite cookies de sesión.
+
+Si en el futuro se añaden cuentas, implementar OIDC/OAuth2 con expiración corta, rotación de refresh tokens, revocación, MFA opcional y auditoría.
 
 ## Secretos
 
@@ -45,6 +47,6 @@ Estas medidas son controles técnicos, no una certificación legal. La plantilla
 ## Validación externa requerida
 
 - SAST independiente (CodeQL + Semgrep en CI con gate de severidad High/Critical; ver `.github/workflows/sast.yml`, `scripts/check-sarif-severity.mjs` y la [guía de triage del primer run](sast-triage.md)). Dependencias: `npm audit` + dependency-review; SBOM formal pendiente.
-- DAST de endpoints HTTP.
-- Pentest del proxy, sesiones, integraciones, WebSocket y flujos de backup.
+- DAST de endpoints HTTP (el proxy de IA ya no existe: el alcance del DAST es licencias, telemetría, diagnósticos y señalización).
+- Pentest de licencias, integraciones, WebSocket y flujos de backup.
 - Revisión manual WCAG y privacidad.

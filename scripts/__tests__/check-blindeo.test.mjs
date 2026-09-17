@@ -35,8 +35,8 @@ async function importGate(cacheBuster) {
 const HEALTHY_NGINX = `server {
     listen 8080;
 
-    location = /api/services/ai/session {
-        proxy_pass http://bookmarkforge_api:8787/api/services/ai/session;
+    location = /api/license/entitlement {
+        proxy_pass http://bookmarkforge_api:8787/api/license/entitlement;
     }
     location = /health {
         proxy_pass http://bookmarkforge_api:8787/health;
@@ -47,8 +47,8 @@ const HEALTHY_NGINX = `server {
 const BROKEN_NGINX = `server {
     listen 8080;
 
-    location = /api/services/ai/session {
-        proxy_pass http://bookmarkforge_api/api/services/ai/session;
+    location = /api/license/entitlement {
+        proxy_pass http://bookmarkforge_api/api/license/entitlement;
     }
 }`;
 
@@ -62,16 +62,16 @@ describe("check-blindeo Punto 8 — rollback target con web válida", () => {
     const mod = await importGate("b");
     const violations = mod.findProxyPassWithoutPort(BROKEN_NGINX);
     expect(violations).toHaveLength(1);
-    expect(violations[0]).toContain("http://bookmarkforge_api/api/services/ai/session");
+    expect(violations[0]).toContain("http://bookmarkforge_api/api/license/entitlement");
     expect(violations[0]).not.toMatch(/:\d+\/api/);
   });
 
   test("(c) múltiples líneas rotas → todas reportadas, ninguna omitida", async () => {
     const mod = await importGate("c");
     const mixed = [
-      "proxy_pass http://bookmarkforge_api/api/services/ai/session;",
-      "proxy_pass http://bookmarkforge_api:8787/api/services/ai/generate;", // sana
-      "proxy_pass http://bookmarkforge_api/api/services/ai/generate-tts;",
+      "proxy_pass http://bookmarkforge_api/api/license/entitlement;",
+      "proxy_pass http://bookmarkforge_api:8787/health;", // sana
+      "proxy_pass http://bookmarkforge_api/api/client-events;",
     ].join("\n");
     const violations = mod.findProxyPassWithoutPort(mixed);
     expect(violations).toHaveLength(2);

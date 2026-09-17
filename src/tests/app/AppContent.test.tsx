@@ -64,6 +64,17 @@ vi.mock("../../services/BackupService", () => ({
     getAutoBackupInfo: vi.fn(),
   },
 }));
+// AppContent resolves Pro services through the gated loader, not by importing
+// BackupService directly. Without this mock `loadBackupService()` rejects with
+// ProUnavailableError (no license in the test env) and the restore path fails
+// before `importBackup` is ever called — which is what this mock exists to
+// exercise. It re-imports the mocked module above so assertions on
+// `BackupService.importBackup` keep observing the same object.
+vi.mock("../../services/pro-access", () => ({
+  ProUnavailableError: class ProUnavailableError extends Error {},
+  loadBackupService: async () =>
+    (await import("../../services/BackupService")).BackupService,
+}));
 vi.mock("../../db/database", () => ({
   destroyDB: vi.fn().mockResolvedValue(undefined),
 }));

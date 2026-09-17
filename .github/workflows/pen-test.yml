@@ -128,10 +128,10 @@ jobs:
           HOST: 127.0.0.1
           NODE_ENV: production
           SIGNALING_ADMIN_TOKEN: ${{ secrets.SIGNALING_ADMIN_TOKEN }}
-          AI_SESSION_REQUIRE_LICENSE: true
+          # Origin allowlist for POST /api/license/entitlement (required in
+          # production); provider calls happen in the browser, so the server
+          # needs no AI key.
           AI_SESSION_ORIGINS: https://bookmarkforge.com
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_API_BASE: ${{ secrets.GEMINI_API_BASE }}
           WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
           WHOP_LICENSE_API_URL: ${{ secrets.WHOP_LICENSE_API_URL }}
           LICENSE_SIGNING_PRIVATE_KEY_FILE: ${{ secrets.LICENSE_SIGNING_PRIVATE_KEY_FILE }}

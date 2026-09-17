@@ -47,9 +47,13 @@ The codebase has an explicit ownership contract for secrets-as-bytes:
   unlocked must re-check the lifecycle (`deviceKeyLifecycle`, lock promise)
   before materializing keys back into memory after a lock. The session-key
   cache (`resetSessionKeyCache`) is cleared on lock — never resurrect it.
-- Wire formats (keep them stable): `v5:` = `hkdf_salt(16) || iv(12) ||
-  ciphertext`; `v4:` = `salt(16) || iv(12) || ciphertext`; `v2:` is legacy
-  read-only PBKDF2. New code writes `v5:`.
+- Wire formats (keep them stable): `v6:` =
+  base64(`vault_salt(16) || hkdf_salt(16) || iv(12) || ciphertext`) — the
+  per-vault KDF salt is embedded, so decryption never depends on local salt
+  state (ADR-046); `v5:` = `hkdf_salt(16) || iv(12) || ciphertext` is legacy
+  read-only, opportunistically re-wrapped on unlock (sunset proposal:
+  `docs/ADR-052-v5-format-sunset.md`); `v4:` = `salt(16) || iv(12) ||
+  ciphertext`; `v2:` is legacy read-only PBKDF2. New code writes `v6:`.
 - Device-key separation (S9): the device-key JWK lives in localStorage and
   ciphertexts in IndexedDB — **both** surfaces are needed to decrypt. With a
   master password the JWK is wrapped (H5); never persist a plaintext copy.
@@ -148,9 +152,16 @@ npm run check                   # the full gate chain (~37 check commands + lint
   key-complete with matching `{{placeholders}}`; add keys to every locale file
   (`npm run check:i18n:fix` scaffolds).
 - **Secrets:** `VITE_*` vars are **inlined into the bundle** by Vite — never
-  put real keys in `VITE_*`. Server-side `GEMINI_API_KEY` etc. stay on the
-  companion server. `build:ci` runs a literal-secret scan over `dist/` and
-  fails on leaks; `check:secrets-in-commit` scans the tree.
+  put real keys in `VITE_*`. There is no server-side AI key to keep anywhere:
+  provider keys live in the user's encrypted vault and are read by the browser
+  only. The companion server's only credential is the
+  license signing key, mounted as a Compose secret. `build:ci` runs a
+  literal-secret scan over `dist/` and fails on leaks;
+  `check:secrets-in-commit` scans the tree.
+- **Retired configuration stays blocked:** provider credentials, upstream bases
+  and other keys with no runtime reader are rejected in Compose by
+  `check:compose-config` / `check:runtime-config`, and `.env.example` must not
+  document them.
 
 ## 7. Testing conventions
 
@@ -168,36 +179,26 @@ npm run check                   # the full gate chain (~37 check commands + lint
   already-running servers, and the `--mode test` webServer keeps Argon2id
   on fast test params — never start the dev server for E2E without it
   (~28 s per vault setup otherwise).
-- **AI E2E topologies:** two isolated Playwright configs own the AI surfaces —
-  `npm run e2e:ai-upstream` and `npm run e2e:custom-provider`. Run them
-  sequentially: they share the 8787 signaling server. Each spins its own
-  4-server chain (fake upstream/mock → companion → Vite `--mode test`) on
-  dedicated ports, so the shared config's crisis topology (companion on 8799,
-  spawned per-suite by the crisis specs) is never disturbed; locally
-  `reuseExistingServer` adopts a healthy leftover instance — verify the
-  identity before reusing (`/health` for servers, `/__health` for the stub
-  and the mock, which also lists its scenario models).
-  - `e2e:ai-upstream` (`playwright.ai-upstream.config.ts`,
-    `tests/e2e/gemini-upstream-errors.spec.ts`): the full Gemini proxy chain —
-    browser → CSRF session → Vite `/api` proxy → companion entitlement guard
-    → `geminiProxyHandler` → fake upstream (`scripts/test-upstream-server.mjs`,
-    stateless scenarios keyed by model name). Use when touching the proxy
-    chain, session handling, upstream error mapping or the circuit breaker.
-  - `e2e:custom-provider` (`playwright.custom-provider.config.ts`,
-    `tests/e2e/custom-provider*.spec.ts`): the Custom (OpenAI-format) provider
-    driven through the app's real Settings path against the OpenAI-compatible
-    mock (`scripts/mock-openai-server.mjs`, SSE streaming; scenario models
-    surface provider errors 401/429/500/503). The browser calls the mock
-    directly (`firewalledFetch` allows loopback); the companion only owns the
-    `/api` session bootstrap and model-list proxying. Use when touching
-    provider wiring, the configuration flow, SSE parsing or error surfacing.
-  - Both run anonymous (`AI_SESSION_REQUIRE_LICENSE=0` on the companion): an
-    AI path that needs a Pro entitlement must degrade for Free users at
+- **Custom-provider E2E topology:** `npm run e2e:custom-provider`
+  (`playwright.custom-provider.config.ts`, `tests/e2e/custom-provider*.spec.ts`)
+  drives the Custom (OpenAI-format) provider through the app's real Settings
+  path against the OpenAI-compatible mock (`scripts/mock-openai-server.mjs`, SSE
+  streaming; scenario models surface provider errors 401/429/500/503).
+  - The browser calls the mock directly (`firewalledFetch` allows loopback).
+    Nothing proxies AI any more: the provider call is the browser's. Use this
+    suite when touching provider wiring, the configuration flow, SSE parsing or
+    error surfacing.
+  - It has no companion-side session bootstrap to exercise, so it does not need
+    a license policy. A Pro-only AI path must still degrade for Free users at
     ROUTING time — `resolveProvider` probes WebLLM best-effort
-    (`ProUnavailableError` → `hasWebLLM=false`); a Free request may never fail
-    on the entitlement before reaching the provider it selected.
-  - Neither replaces the shared suite: crisis specs, multiuser/relay and the
+    (`ProUnavailableError` → `hasWebLLM=false`); a Free request may never fail on
+    the entitlement before reaching the provider it selected.
+  - It does not replace the shared suite: crisis specs, multiuser/relay and the
     nightly matrix keep their own configs and topologies.
+  - **Removed:** `playwright.ai-upstream.config.ts`, its spec and
+    `scripts/test-upstream-server.mjs` covered the Gemini proxy chain
+    (browser → companion session → `geminiProxyHandler` → fake upstream). The
+    proxy is gone, so that topology has no subject left.
 - Test profiles: `scripts/test-profiles.mjs` owns the two bounded surfaces —
   `test:fast` (curated smoke + critical areas) and `test:slow` (every other
   file; `npm test` with no selectors runs the same surface). Both are driven
@@ -320,7 +321,7 @@ See `.github/SECURITY_CHAMPIONS.md` for the full program documentation.
   byte-stable across two runs).
 - Do not stage broadly (`git add -A`); stage exactly what a commit is about.
 - Known documentation gaps to close when you touch the area:
-  `AGENTS.md` consistency, `docs/ARCHITECTURE.md` coverage, and `eslint-rules/`
+  `AGENTS.md` consistency, `docs/architecture.md` coverage, and `eslint-rules/`
   rule coverage in `eslint-rules/README.md` (index exists; new rules must be
   added there). ADR registry: every ADR referenced by the anchor catalog now
   has a file on disk — ADR-001 (static brand), ADR-019 (Argon2id/V5 formats),
@@ -348,4 +349,17 @@ themes, decision D4) and ADR-043 (SEO contract gate — `check:seo`:
     `docs/ADR-045-check-brand-logo-gate.md`. ADR-047 (factual
     claim-drift gate), ADR-048 (license claims gate), ADR-049
     (manual figures gate), ADR-050 (page figures gate and planner)
-    and ADR-051 (landings freshness gate).
+    and ADR-051 (landings freshness gate) are formalized in
+    `docs/ADR-047-claim-drift-gate.md`, `docs/ADR-048-license-claims-gate.md`,
+    `docs/ADR-049-manual-figures-gate.md`,
+    `docs/ADR-050-page-figures-gate-and-planner.md` and
+    `docs/ADR-051-landings-fresh-gate.md`. ADR-046 (vault KDF salt rotation
+    with the master password — including the Voy index extension) is
+    formalized in `docs/ADR-046-vault-kdf-salt-rotation.md` and anchored by
+    the dedicated `p0-vault-kdf-salt` / `p0-vault-rotation-rollback-drill`
+    anchor entries in `scripts/audit-anchors.mjs`. ADR-052 (v5 format sunset —
+    conditional, measurable retirement of the legacy static-salt read path)
+    and ADR-053 (single per-vault salt registry consolidating `kdf_salt` and
+    the `deriveDbKey` salt) are proposed in
+    `docs/ADR-052-v5-format-sunset.md` and
+    `docs/ADR-053-vault-salt-registry.md`.

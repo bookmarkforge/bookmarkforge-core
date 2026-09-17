@@ -1,26 +1,42 @@
 /**
- * scripts/nginx-render.mjs — render every static file that carries the
- * deployment domain from the canonical CSP in csp-config.js:
- *   - public/nginx.conf (self-hosted nginx server block)
- *   - public/_headers  (Cloudflare Pages security headers)
- *   - netlify.toml     (Netlify CSP-derived header lines, surgical)
- *   - public/sitemap.xml
- *   - public/robots.txt
- *   - public/404.html, public/privacy-and-terms.html (canonical links, surgical)
- *   - public/manifest.json (related_applications url, surgical)
- *   - extension/PRIVACY.md (privacy policy domain refs, surgical)
- *   - extension/*.js, extension/*.html, extension/manifest*.json (surgical)
+ * scripts/nginx-render.mjs — propagate the deployment domain (and the
+ * canonical CSP from csp-config.js) to every static file that carries it.
  *
- * The rendered files must stay byte-identical to the committed copies
- * (the check-csp-sync.mjs gate validates them). A BOOKMARKFORGE_DOMAIN
- * change propagates to every deployment path with a single --write.
+ * OWNERSHIP (per file, one and only one kind):
+ *   - public/nginx.conf   GENERATED WHOLESALE from this script (self-hosted
+ *                         nginx server block). This script is its single owner.
+ *   - public/robots.txt   GENERATED WHOLESALE from this script. Single owner.
+ *   - public/_headers     HAND-MAINTAINED (A9-1). Cloudflare Pages applies only
+ *                         the most-specific rule, so every path block repeats
+ *                         the security headers. This script NEVER regenerates
+ *                         the file: it surgically rewrites only the three
+ *                         CSP-derived header values (Content-Security-Policy,
+ *                         Report-To, Reporting-Endpoints) so a
+ *                         BOOKMARKFORGE_DOMAIN change still propagates.
+ *   - public/sitemap.xml  HAND-MAINTAINED (A9-1). 61 URLs across 30 languages,
+ *                         pinned by scripts/check-seo.mjs. This script NEVER
+ *                         regenerates the file: it surgically rewrites the URL
+ *                         host inside <loc> elements and xhtml:link href
+ *                         attributes, preserving paths and structure.
+ *   - netlify.toml        HAND-MAINTAINED; only the three CSP-derived lines are
+ *                         surgically replaced (see renderNetlifyToml).
+ *   - Everything in TARGETS_SURGICAL (HTML pages, manifest, extension files):
+ *                         hand-maintained; only domain-bearing substrings are
+ *                         replaced.
+ *
+ * The rendered files must stay byte-identical (modulo trailing whitespace and
+ * CRLF) to the committed copies — the verify mode of this script and
+ * scripts/check-csp-sync.mjs validate them. `scripts/rollback.mjs` runs
+ * `--write` DURING INCIDENTS, so --write is all-or-nothing: if any target
+ * fails its safety checks, nothing is written.
  *
  * Usage:
  *   node scripts/nginx-render.mjs            # verify (fail on drift)
- *   node scripts/nginx-render.mjs --write    # rewrite all targets
+ *   node scripts/nginx-render.mjs --write    # rewrite all targets (all-or-nothing)
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import {
   APP_DOMAIN,
   CSP_MODERATE,
@@ -64,25 +80,13 @@ const CSP_COMMENT = [
 /** Landing languages (besides the default /). Kept in sync with the
  *  hreflang sets in scripts/check-seo.mjs LANDING_PAGES — a new language
  *  must be added in both places. */
-export const LANDING_LANGS = ["es", "fr", "de", "pt", "it"];
-
-/** Every landing language with its URL path, for the sitemap xhtml:link
- *  alternates (hreflang annotated at sitemap level, not only in HTML). */
-export const SITEMAP_LANGS = [
-  { hreflang: "en", path: "/" },
-  ...LANDING_LANGS.map((lang) => ({ hreflang: lang, path: `/${lang}/` })),
-];
-
-/** The six legal-document URLs (privacy + terms), one per language. They
- *  form their own hreflang cluster (x-default → the EN legal page), so
- *  every legal <url> block carries the same xhtml:link annotation set as
- *  the landings. */
-export const SITEMAP_LEGAL = [
-  { hreflang: "en", path: "/privacy-and-terms.html" },
-  ...LANDING_LANGS.map((lang) => ({
-    hreflang: lang,
-    path: `/${lang}/privacy-and-terms.html`,
-  })),
+/** All localized landing routes shipped in public/ and listed in the sitemap.
+ * Keep this registry aligned with generate-landing-pages.mjs / _redirects.
+ * English is the root landing and is intentionally omitted here. */
+export const LANDING_LANGS = [
+  "ar", "bg", "cs", "da", "de", "el", "es", "fi", "fr", "he",
+  "hi", "hr", "hu", "id", "it", "ja", "ko", "nl", "no", "pl",
+  "pt", "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh",
 ];
 
 /** The six preference languages (?lang= and bf_lang cookie values), en
@@ -155,22 +159,10 @@ ${cspHeader}
     error_page 404 /404.html;
 
     # ── Same-origin companion API ────────────────────────────────────
-    location = /api/services/ai/session {
-        proxy_pass http://bookmarkforge_api:8787/api/services/ai/session;
-        proxy_http_version 1.1;
-        proxy_connect_timeout 5s;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_read_timeout 10s;
-        proxy_send_timeout 10s;
-        proxy_buffering off;
-    }
-
-    # Keep AI/license/CSP traffic on the app origin so the browser CSP and
-    # firewall can remain connect-src self. Streaming AI must not be
-    # buffered by nginx.
+    # License, CSP-report and client-event traffic stays on the app origin so
+    # the browser CSP and firewall can remain connect-src self.
+    # Provider calls happen directly in the browser; nginx carries only
+    # the live companion endpoints.
     # X-Forwarded-For is OVERWRITTEN with $remote_addr (not appended): the
     # companion server trusts the header only when TRUST_PROXY=1, so an
     # attacker must never be able to inject their own value.
@@ -182,64 +174,6 @@ ${cspHeader}
     # proxy_connect_timeout 5s (vs nginx default 60s): with the api down,
     # nginx otherwise holds every request for a minute before 502, hanging
     # health checks, smoke and monitoring-alerts. Fail fast = detect fast.
-    location = /api/services/ai/generate {
-        proxy_pass http://bookmarkforge_api:8787/api/services/ai/generate;
-        proxy_http_version 1.1;
-        proxy_connect_timeout 5s;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_read_timeout 60s;
-        proxy_send_timeout 60s;
-        proxy_buffering off;
-    }
-
-    location = /api/services/ai/generate-tts {
-        proxy_pass http://bookmarkforge_api:8787/api/services/ai/generate-tts;
-        proxy_http_version 1.1;
-        proxy_connect_timeout 5s;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_read_timeout 90s;
-        proxy_send_timeout 90s;
-        proxy_buffering off;
-    }
-
-    location = /api/services/ai/generate-image {
-        proxy_pass http://bookmarkforge_api:8787/api/services/ai/generate-image;
-        proxy_http_version 1.1;
-        proxy_connect_timeout 5s;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_read_timeout 120s;
-        proxy_send_timeout 120s;
-        proxy_buffering off;
-    }
-
-    location = /api/services/ai/admin {
-        proxy_pass http://bookmarkforge_api:8787/api/services/ai/admin;
-        proxy_http_version 1.1;
-        proxy_connect_timeout 5s;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_read_timeout 30s;
-        proxy_send_timeout 30s;
-    }
-
-    location = /api/services/ai/metrics {
-        proxy_pass http://bookmarkforge_api:8787/api/services/ai/metrics;
-        proxy_http_version 1.1;
-        proxy_connect_timeout 5s;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_read_timeout 30s;
-        proxy_send_timeout 30s;
-    }
-
     location ^~ /api/license/ {
         proxy_pass http://bookmarkforge_api:8787;
         proxy_http_version 1.1;
@@ -366,7 +300,7 @@ ${repeat}
     # URL stays https://<domain>/ instead of the private SPA shell (which
     # is noindexed — see robots.txt). /es/ is the Spanish landing
     # (hreflang pair of the English one). Both files are plain .html, so
-    # the ~*\.html$ location below applies the security headers and the
+    # the ~*.html$ location below applies the security headers and the
     # no-cache Cache-Control automatically.
     # WebSocket upgrades to the root (same-origin signaling) must keep
     # routing to /_ws_ exactly as before — only plain HTTP goes to the
@@ -463,119 +397,99 @@ ${LANDING_LANGS.map(
 `;
 }
 
-/** Render the Cloudflare Pages _headers file (matches public/_headers). */
-export function renderHeaders(csp = CSP_MODERATE) {
-  return `# P49: Cache-Control strategy for static assets.
-# Content-hashed assets under /assets/ are immutable (fingerprinted by Vite).
-# HTML may change across deployments; validate with origin before serving.
-
-# Immutable content-hashed assets (JS, CSS, fonts, images, workers)
-/assets/*
-  Cache-Control: public, max-age=31536000, immutable
-
-# HTML entry points — always revalidate with origin
-/*.html
-  Cache-Control: no-cache, must-revalidate
-
-# Locale JSON and manifest — cache briefly, stale-while-revalidate for offline
-/*.json
-  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
-
-# Service worker — never cache (Workbox manages its own lifecycle)
-/sw.js
-  Cache-Control: no-cache, must-revalidate
-
-# SECURITY: Only the custom domain \`https://license.${APP_DOMAIN}\` is allowed.
-# No workers.dev wildcard — that would match attacker-controlled subdomains.
-/*
-  X-Content-Type-Options: nosniff
-  X-Frame-Options: DENY
-  Referrer-Policy: strict-origin-when-cross-origin
-  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
-  Cross-Origin-Embedder-Policy: ${COEP}
-  Cross-Origin-Opener-Policy: ${COOP}
-  Reporting-Endpoints: ${REPORTING_ENDPOINTS_HEADER}
-  Report-To: ${REPORT_TO_HEADER}
-  Content-Security-Policy: ${csp}
-
-/payment/*
-  X-Robots-Tag: noindex
-
-/pricing/*
-  X-Robots-Tag: noindex
-
-# Private app — local-first vault, SPA shell only, never indexable
-/app
-  X-Robots-Tag: noindex
-/app/*
-  X-Robots-Tag: noindex
-/capture
-  X-Robots-Tag: noindex
-/capture/*
-  X-Robots-Tag: noindex
-/offline*
-  X-Robots-Tag: noindex
-`;
+/**
+ * Surgical Cloudflare-Pages _headers localisation (A9-1).
+ *
+ * public/_headers is HAND-MAINTAINED: Cloudflare Pages applies only the
+ * most-specific rule's headers, so each path block repeats all security
+ * headers and the file carries per-path prose comments the renderer cannot
+ * reproduce. This function therefore rewrites ONLY the value of the three
+ * CSP-derived header keys, everywhere they occur, and never adds, moves or
+ * deletes lines. If any of the three keys is absent entirely, that is a
+ * security regression in the file — refuse loudly instead of "repairing"
+ * around it.
+ *
+ * The rewrite is idempotent and bounded by the key names: prose comments
+ * (e.g. the `https://license.<domain>` note) and non-CSP headers
+ * (X-Robots-Tag noindex blocks, Cache-Control) are never touched.
+ */
+export function rewriteHeadersCspValues(existing, csp = CSP_MODERATE) {
+  if (existing === null) return null;
+  const entries = [
+    ["Reporting-Endpoints", REPORTING_ENDPOINTS_HEADER],
+    ["Report-To", REPORT_TO_HEADER],
+    ["Content-Security-Policy", csp],
+  ];
+  // Guard: report EVERY missing CSP-derived key at once (an operator
+  // restoring the file wants the full list, not one failure per run).
+  const missing = entries.filter(([key]) => !new RegExp(`^[ \\t]*${key}:`, "m").test(existing));
+  if (missing.length > 0) {
+    throw new Error(
+      `public/_headers: no ${missing.map(([k]) => `"${k}:"`).join(", ")} header line(s) found — the file looks damaged or was restructured; refusing to rewrite (restore it from git and edit by hand)`,
+    );
+  }
+  let out = existing;
+  for (const [key, value] of entries) {
+    // The value may contain double quotes (Report-To is JSON), so capture
+    // the whole rest of the line. `([ \t]*\r?)$` preserves the line's EOL
+    // (and any trailing spaces) exactly as committed.
+    const re = new RegExp(`^([ \\t]*${key}: )(.*\\S)([ \\t]*\\r?)$`, "gm");
+    let hits = 0;
+    out = out.replace(re, (_m, prefix, oldValue, eol) => {
+      hits += 1;
+      // Already canonical → byte-identical no-op (keeps idempotency and the
+      // EOL/trailing-space tail untouched).
+      return oldValue === value ? `${prefix}${oldValue}${eol}` : `${prefix}${value}${eol}`;
+    });
+    if (hits === 0) {
+      throw new Error(
+        `public/_headers: no "${key}:" header line found — the file looks damaged or was restructured; refusing to rewrite (restore it from git and edit by hand)`,
+      );
+    }
+  }
+  return out;
 }
 
-/** Render public/sitemap.xml with the current deployment domain. */
-export function renderSitemap(domain = APP_DOMAIN) {
-  // lastmod is deliberately static: the gate compares the rendered output
-  // byte-identical to the committed copy, so a "today" date would drift
-  // every day. Bump the dates here when the pages change materially.
-  // Every landing URL and every legal URL annotates the full hreflang
-  // set (6 languages + x-default) via xhtml:link alternates, mirroring
-  // the HTML <head> of each cluster (legal x-default → the EN legal
-  // page).
-  const xhtmlLinks = [
-    ...SITEMAP_LANGS.map(
-      (l) => `    <xhtml:link rel="alternate" hreflang="${l.hreflang}" href="https://${domain}${l.path}" />`,
-    ),
-    `    <xhtml:link rel="alternate" hreflang="x-default" href="https://${domain}/" />`,
-  ].join("\n");
-  const legalXhtmlLinks = [
-    ...SITEMAP_LEGAL.map(
-      (l) => `    <xhtml:link rel="alternate" hreflang="${l.hreflang}" href="https://${domain}${l.path}" />`,
-    ),
-    `    <xhtml:link rel="alternate" hreflang="x-default" href="https://${domain}/privacy-and-terms.html" />`,
-  ].join("\n");
-  // Element order inside <url> follows the official sitemaps.org XSD
-  // sequence (loc, lastmod?, changefreq?, priority?, xs:any) with the
-  // xhtml:link alternates LAST: the 2008 schema validates strictly
-  // sequentially, so placing xhtml:link before lastmod fails XSD
-  // validation. Google/Bing parse any order — the XSD-compliant order
-  // keeps both worlds. (Verified with libxml2 + sitemap.js, 2026-09-09.)
-  const landingUrls = ["", ...LANDING_LANGS].map(
-    (lang) => `  <url>
-    <loc>https://${domain}/${lang}${lang ? "/" : ""}</loc>
-    <lastmod>2026-09-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>${lang ? "0.9" : "1.0"}</priority>
-${xhtmlLinks}
-  </url>`,
+/**
+ * Surgical sitemap.xml localisation (A9-1).
+ *
+ * public/sitemap.xml is HAND-MAINTAINED (61 <url> entries across 30
+ * languages, pinned by scripts/check-seo.mjs — the old renderSitemap()
+ * generator with its 13-URL/6-language template was deleted as obsolete and
+ * dangerous). This function rewrites ONLY the URL host inside <loc>…
+ * </loc> elements and inside xhtml:link href="…" attributes, preserving
+ * paths, lastmod, changefreq, priority and structure. Namespace URIs
+ * (xmlns="http://www.w3.org/…" and sitemaps.org) live in xmlns attributes,
+ * which this function never matches, so they survive untouched.
+ */
+export function replaceSitemapLocs(existing, domain = APP_DOMAIN) {
+  if (existing === null) return null;
+  if (!existing.includes("<urlset")) {
+    throw new Error(
+      "public/sitemap.xml: no <urlset> element — this does not look like the committed sitemap; refusing to rewrite",
+    );
+  }
+  let touched = 0;
+  let out = existing.replace(
+    /(<loc>)(https?:\/\/)([^/<\s]+)([^<]*)(<\/loc>)/g,
+    (_m, pre, _scheme, _host, path, close) => {
+      touched += 1;
+      return `${pre}https://${domain}${path}${close}`;
+    },
   );
-  const legalUrls = SITEMAP_LEGAL.map(
-    (l) => `  <url>
-    <loc>https://${domain}${l.path}</loc>
-    <lastmod>2026-09-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
-${legalXhtmlLinks}
-  </url>`,
+  out = out.replace(
+    /(<xhtml:link\b[^>]*\bhref=")(https?:\/\/)([^/<"\s]+)([^"]*)(")/g,
+    (_m, pre, _scheme, _host, path, close) => {
+      touched += 1;
+      return `${pre}https://${domain}${path}${close}`;
+    },
   );
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${landingUrls.join("\n")}
-  <url>
-    <loc>https://${domain}/pocket-alternative</loc>
-    <lastmod>2026-09-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-${legalUrls.join("\n")}
-</urlset>
-`;
+  if (touched === 0) {
+    throw new Error(
+      "public/sitemap.xml: no <loc> or xhtml:link URLs found — refusing to rewrite",
+    );
+  }
+  return out;
 }
 
 /** Render public/robots.txt with the current deployment domain. */
@@ -654,7 +568,7 @@ function replaceDomainInFile(existing, domain) {
   // The negative lookahead guards against false positives from SVG
   // and XHTML namespace declarations embedded in HTML5 files.
   return existing.replace(
-    /https?:\/\/(?!www\.w3\.org)([a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+(?:\.[a-z]{2,})?)(?=[\/"'\s<>)]|$)/gi,
+    /https?:\/\/(?!www\.w3\.org)([a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+(?:\.[a-z]{2,})?)(?=[\/"'\\s<>)]|$)/gi,
     `https://${domain}`,
   );
 }
@@ -725,42 +639,72 @@ function normalize(s) {
 
 const targets = [
   { label: "public/nginx.conf", render: () => renderNginxPolicy() },
-  { label: "public/_headers", render: () => renderHeaders() },
+  { label: "public/_headers", render: (existing) => rewriteHeadersCspValues(existing) },
   { label: "netlify.toml", render: (existing) => renderNetlifyToml(existing) },
-  { label: "public/sitemap.xml", render: () => renderSitemap() },
+  { label: "public/sitemap.xml", render: (existing) => replaceSitemapLocs(existing) },
   { label: "public/robots.txt", render: () => renderRobotsTxt() },
   ...TARGETS_SURGICAL,
 ];
 
-let drift = 0;
-for (const target of targets) {
-  const path = join(ROOT, target.label);
-  const existing = existsSync(path) ? readFileSync(path, "utf8") : null;
-  const rendered = target.render(existing);
-  if (existing === null) {
-    console.error(`[nginx-render] FAIL ${target.label}: file missing (run --write)`);
-    drift += 1;
-    continue;
+function main() {
+  const write = process.argv.includes("--write");
+  const plan = [];
+  let drift = 0;
+  for (const target of targets) {
+    const path = join(ROOT, target.label);
+    const existing = existsSync(path) ? readFileSync(path, "utf8") : null;
+    if (existing === null) {
+      console.error(`[nginx-render] FAIL ${target.label}: file missing (run --write)`);
+      drift += 1;
+      plan.push({ label: target.label, status: "missing" });
+      continue;
+    }
+    let rendered;
+    try {
+      rendered = target.render(existing);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error(`[nginx-render] FAIL ${target.label}: ${message}`);
+      drift += 1;
+      plan.push({ label: target.label, status: "error" });
+      continue;
+    }
+    if (normalize(existing) === normalize(rendered)) {
+      console.log(`[nginx-render] ok ${target.label}: rendered output matches committed copy`);
+      plan.push({ label: target.label, status: "ok", content: rendered });
+    } else {
+      console.error(`[nginx-render] DRIFT ${target.label}: rendered output differs (run --write)`);
+      drift += 1;
+      plan.push({ label: target.label, status: "drift", content: rendered });
+    }
   }
-  if (normalize(existing) === normalize(rendered)) {
-    console.log(`[nginx-render] ok ${target.label}: rendered output matches committed copy`);
-  } else {
-    console.error(`[nginx-render] DRIFT ${target.label}: rendered output differs (run --write)`);
-    drift += 1;
+
+  if (!write) {
+    if (drift > 0) process.exit(1);
+    return;
+  }
+
+  // All-or-nothing: a safety guard refused to render a target, so no file
+  // may be written. scripts/rollback.mjs runs --write during incidents —
+  // a half-repaired tree would be worse than the drift it started with.
+  const errors = plan.filter((p) => p.status === "error");
+  if (errors.length > 0) {
+    console.error(
+      `[nginx-render] ABORT --write: ${errors.length} target(s) failed their safety checks — nothing was written (all-or-nothing)`,
+    );
+    process.exit(1);
+  }
+
+  for (const item of plan) {
+    if (item.status === "missing") {
+      console.error(`[nginx-render] SKIP ${item.label}: file not found (repo-only target)`);
+      continue;
+    }
+    writeFileSync(join(ROOT, item.label), item.content);
+    console.log(`[nginx-render] wrote ${item.label}`);
   }
 }
 
-if (process.argv.includes("--write")) {
-  for (const target of targets) {
-    const path = join(ROOT, target.label);
-    if (!existsSync(path)) {
-      console.error(`[nginx-render] SKIP ${target.label}: file not found (repo-only target)`);
-      continue;
-    }
-    const existing = readFileSync(path, "utf8");
-    writeFileSync(path, target.render(existing));
-    console.log(`[nginx-render] wrote ${target.label}`);
-  }
-} else if (drift > 0) {
-  process.exit(1);
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main();
 }

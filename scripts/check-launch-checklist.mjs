@@ -108,16 +108,20 @@ export function verifyLoadTest(pkg, scriptExists, scriptText = "") {
   if (!hasScript || !scriptExists) {
     return { ok: false, note: "sin prueba de carga del companion server (pendiente)" };
   }
-  // La prueba debe cubrir ambos subsistemas y fijar presupuestos medibles.
+  // La prueba debe cubrir la superficie que escala con los usuarios y fijar
+  // presupuestos medibles. Ya no se exige cobertura de un proxy de IA: el
+  // servidor no proxya proveedores (el navegador llama al proveedor del
+  // usuario directamente), así que no hay endpoint de generación que medir.
   const text = scriptText ?? "";
   const coversSignaling = /\bjoin\b/i.test(text) && /relay|signal/i.test(text);
-  const coversAiProxy = /generate|proxy/i.test(text) && /api\/services\/ai/i.test(text);
   const hasBudgets = /p95|percentile/i.test(text) && /(BUDGETS|SLO)/i.test(text);
   const hasSaturation = /saturat/i.test(text);
-  const ok = coversSignaling && coversAiProxy && hasBudgets && hasSaturation;
+  // El servidor debe seguir vivo tras la ráfaga: es el presupuesto de liveness.
+  const hasLiveness = /\/health/i.test(text);
+  const ok = coversSignaling && hasBudgets && hasSaturation && hasLiveness;
   return ok
-    ? { ok: true, note: "prueba de carga (WS + proxy IA) con presupuestos detectada" }
-    : { ok: false, note: "prueba de carga incompleta: faltan señalización, proxy IA, presupuestos o saturación" };
+    ? { ok: true, note: "prueba de carga (señalización WS + saturación) con presupuestos detectada" }
+    : { ok: false, note: "prueba de carga incompleta: faltan señalización, presupuestos, saturación o liveness" };
 }
 
 export function verifyContracts(docs) {
@@ -166,7 +170,10 @@ export function verifyDastDisabled(text) {
 
 export function verifyProdConfig(text) {
   if (text == null) return { ok: false, note: "docs/security.md no existe" };
-  const ok = ["AI_SESSION_REQUIRE_LICENSE", "NODE_ENV=production", "AI_SESSION_ORIGINS"].every(
+  // Los tokens son la configuración que el servidor REALMENTE exige en
+  // producción hoy. Solo se comprueban variables que tienen lectores runtime;
+  // no se incluyen flags retirados de subsistemas antiguos.
+  const ok = ["NODE_ENV=production", "AI_SESSION_ORIGINS", "ENFORCE_SIGNAL_HMAC", "LICENSE_SIGNING_PRIVATE_KEY_FILE"].every(
     (needle) => text.includes(needle),
   );
   return ok

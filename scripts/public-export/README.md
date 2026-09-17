@@ -19,7 +19,7 @@ npm run dev        # http://localhost:5173
 ```
 
 Build for production: `npm run build` (see `docs/architecture.md` for the full
-topology: web + signaling server + optional AI proxy companion).
+topology: static web + signaling/licensing companion server).
 
 ## Free vs Pro
 
@@ -68,15 +68,13 @@ Pro code is resolved two ways in this build, both enforced in CI by
    that the UI presents as a "requires Pro" state or upgrade prompt, never a
    silent dead button. Degradation is honest: the capability probe resolves
    false, diagnostics report the engine as not initialized, and the expert
-   agents panel shows the upgrade message.
-2. **As declared placeholders.** The server-side AI proxy resolves to a
-   generated pair at its original path: a `.d.ts` with the real type surface
-   and a `.js` that is inert — it never throws, so the Core still starts, and
-   it logs `[open-core] <module>.<name> is a Pro feature and is not included in
-   this build` the first time a Pro surface is reached. (The AI *client* tree
-   is largely Core MIT: the BYOK cloud path and the embedding engine behind
-   the free smart search are open; see `OPEN-CORE.md` in the private tree for
-   the exact Pro list.)
+   agents panel shows the upgrade message.2. **Client-side AI boundary.** Cloud providers are called directly by the
+   browser with a user-supplied key; no server-side AI relay or placeholder is
+   shipped. (The AI client tree is largely Core MIT: the BYOK cloud path and
+   the embedding engine behind free smart search are open; see `OPEN-CORE.md`
+   in the private tree for the exact Pro list.)
+
+
 
 Reaching a Pro surface is never silent: the placeholder helper also dispatches
 `open-core:pro-reached`, and the loader refuses to hand out a placeholder as if

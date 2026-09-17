@@ -1,4 +1,6 @@
-import { resolve } from "node:path";
+import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { resolve, join } from "node:path";
+import { tmpdir } from "node:os";
 import { pathToFileURL } from "node:url";
 import { describe, it, expect } from "vitest";
 import {
@@ -8,6 +10,7 @@ import {
   shouldPullFromRegistry,
   validateRollbackTargetTag,
   validateRollbackBaseUrl,
+  runNginxRenderWrite,
 } from "../rollback.mjs";
 
 /**
@@ -52,6 +55,66 @@ describe("guard isMain (importación sin efectos de lado)", () => {
 async function sourceForRollback() {
   return import("node:fs/promises").then(({ readFile }) => readFile("scripts/rollback.mjs", "utf8"));
 }
+
+describe("rollback nginx recovery integration", () => {
+  it("invokes nginx-render --write without corrupting _headers or sitemap.xml", () => {
+    const root = mkdtempSync(join(tmpdir(), "bmf-rollback-nginx-"));
+    const targets = [
+      "public/nginx.conf",
+      "public/_headers",
+      "netlify.toml",
+      "public/sitemap.xml",
+      "public/robots.txt",
+      "public/404.html",
+      "public/privacy-and-terms.html",
+      ...["es", "fr", "de", "pt", "it"].map((lang) => `public/${lang}/privacy-and-terms.html`),
+      "public/manifest.json",
+      "extension/background.js",
+      "extension/popup.js",
+      "extension/popup.html",
+      "extension/manifest.json",
+      "extension/manifest-firefox.json",
+      "extension/PRIVACY.md",
+    ];
+    try {
+      mkdirSync(join(root, "scripts"), { recursive: true });
+      mkdirSync(join(root, "public"), { recursive: true });
+      mkdirSync(join(root, "extension"), { recursive: true });
+      for (const rel of targets) {
+        const destination = join(root, rel);
+        mkdirSync(resolve(destination, ".."), { recursive: true });
+        copyFileSync(join(process.cwd(), rel), destination);
+      }
+      copyFileSync("scripts/nginx-render.mjs", join(root, "scripts/nginx-render.mjs"));
+      copyFileSync("scripts/csp-config.js", join(root, "scripts/csp-config.js"));
+
+      const expectedHeaders = readFileSync(join(root, "public/_headers"), "utf8");
+      const expectedSitemap = readFileSync(join(root, "public/sitemap.xml"), "utf8");
+      // Simulate stale deployment-domain values before the rollback recovery
+      // path invokes the real renderer command.
+      writeFileSync(
+        join(root, "public/_headers"),
+        expectedHeaders
+          .replaceAll("https://bookmarkforge.com/csp-report", "https://stale.example/csp-report")
+          .replaceAll("wss://signal.bookmarkforge.com", "wss://signal.stale.example"),
+      );
+      writeFileSync(
+        join(root, "public/sitemap.xml"),
+        expectedSitemap.replaceAll("bookmarkforge.com", "stale.example"),
+      );
+
+      const result = runNginxRenderWrite({ cwd: root });
+      expect(result).toBeDefined();
+      // The surgical renderers must restore the canonical values without
+      // changing the hand-maintained structure or truncating the 61 URLs.
+      expect(readFileSync(join(root, "public/_headers"), "utf8")).toBe(expectedHeaders);
+      expect(readFileSync(join(root, "public/sitemap.xml"), "utf8")).toBe(expectedSitemap);
+      expect(expectedSitemap.match(/<loc>/g)).toHaveLength(61);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
 
 describe("rollback input validation", () => {
   it("uses argument arrays for tag inspection instead of shell interpolation", async () => {

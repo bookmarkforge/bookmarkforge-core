@@ -84,13 +84,13 @@ describe("entitlement guard", () => {
 
     let context: EntitlementContext | null = null;
     const base = await start((req, res) => {
-      void guard.middleware("proof", { proofLabel: "session proof" })(req, res, (resolved) => {
+      void guard.middleware("proof", { proofLabel: "license proof" })(req, res, (resolved) => {
         context = resolved;
         res.writeHead(200).end("ok");
       });
     });
 
-    const response = await fetch(`${base}/api/services/ai/session`, {
+    const response = await fetch(`${base}/api/removed-capability`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(proof),
@@ -107,12 +107,12 @@ describe("entitlement guard", () => {
     const foreign = licensedKeyPair();
     const guard = createEntitlementGuard({ publicKeySpki, now: () => NOW });
     const base = await start((req, res) => {
-      void guard.middleware("proof", { proofLabel: "session proof" })(req, res, () => {
+      void guard.middleware("proof", { proofLabel: "license proof" })(req, res, () => {
         res.writeHead(200).end("ok");
       });
     });
     const post = (body: unknown) =>
-      fetch(`${base}/api/services/ai/session`, {
+      fetch(`${base}/api/removed-capability`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(body),
@@ -223,12 +223,12 @@ describe("entitlement guard", () => {
   });
 
   it("still rejects a malformed proof body when the deployment opted out of licenses", async () => {
-    // Anonymous deployments must keep the body contract: the session route
-    // answered 400 for garbage long before the guard existed, and "we do not
+    // Anonymous deployments must keep the body contract: the guard
+    // answered 400 for garbage long before its existence, and "we do not
     // check proofs" is not a reason to mint a session for it.
     const guard = createEntitlementGuard({ requireEntitlement: false, now: () => NOW });
     const base = await start((req, res) => {
-      void guard.middleware("proof", { proofLabel: "session proof" })(req, res, () => {
+      void guard.middleware("proof", { proofLabel: "license proof" })(req, res, () => {
         res.writeHead(200).end("ok");
       });
     });
@@ -239,74 +239,8 @@ describe("entitlement guard", () => {
     });
     expect(response.status).toBe(400);
     expect(await response.json()).toEqual({
-      error: { code: "INVALID_REQUEST", message: "session proof is invalid" },
+      error: { code: "INVALID_REQUEST", message: "license proof is invalid" },
     });
-  });
-
-  it("requires a live session in session mode, with the proxy's exact denial", async () => {
-    let session: { identity: string } | null = null;
-    const guard = createEntitlementGuard({
-      authenticateSession: async () => session,
-      now: () => NOW,
-    });
-    const base = await start((req, res) => {
-      void guard.middleware("session")(req, res, () => {
-        res.writeHead(200).end("ok");
-      });
-    });
-
-    const denied = await fetch(`${base}/api/services/ai/generate`, { method: "POST" });
-    expect(denied.status).toBe(401);
-    expect(await denied.json()).toEqual({
-      error: { code: "UNAUTHORIZED", message: "AI proxy authentication required" },
-    });
-
-    session = { identity: "a".repeat(64) };
-    const allowed = await fetch(`${base}/api/services/ai/generate`, { method: "POST" });
-    expect(allowed.status).toBe(200);
-  });
-
-  it("accepts a session or a configured legacy bearer token in session-or-bearer mode", async () => {
-    let session: { identity: string } | null = null;
-    const guard = createEntitlementGuard({
-      authenticateSession: async () => session,
-      bearerTokens: new Set(["legacy-token"]),
-      now: () => NOW,
-    });
-    const base = await start((req, res) => {
-      void guard.middleware("session-or-bearer")(req, res, () => {
-        res.writeHead(200).end("ok");
-      });
-    });
-
-    const bearer = await fetch(`${base}/generate`, {
-      method: "POST",
-      headers: { authorization: "Bearer legacy-token" },
-    });
-    expect(bearer.status).toBe(200);
-
-    const unknownToken = await fetch(`${base}/generate`, {
-      method: "POST",
-      headers: { authorization: "Bearer some-other-token" },
-    });
-    expect(unknownToken.status).toBe(401);
-
-    // A live session wins and is reported as such, so identity-based quota
-    // buckets stay keyed on the session and not on a stray header.
-    session = { identity: "b".repeat(64) };
-    let via: string | null = null;
-    const sessionBase = await start((req, res) => {
-      void guard.middleware("session-or-bearer")(req, res, (context) => {
-        via = context.via;
-        res.writeHead(200).end("ok");
-      });
-    });
-    const sessionResponse = await fetch(`${sessionBase}/generate`, {
-      method: "POST",
-      headers: { authorization: "Bearer legacy-token" },
-    });
-    expect(sessionResponse.status).toBe(200);
-    expect(via).toBe("session");
   });
 
   it("resolves once per request: the context is attached and reused, never re-read", async () => {
@@ -318,7 +252,7 @@ describe("entitlement guard", () => {
     let secondAttach: EntitlementContext | null = null;
     const base = await start((req, res) => {
       void guard
-        .middleware("proof", { proofLabel: "session proof" })(req, res, async () => {
+        .middleware("proof", { proofLabel: "license proof" })(req, res, async () => {
           seenInsideHandler = readEntitlementContext(req);
           // The body has already been consumed; a second resolution must reuse
           // the attached context instead of reading a spent stream.

@@ -831,6 +831,7 @@
   "app_url": "URL",
   "app_usedOf": "used of",
   "app_variousTopics": "various topics",
+  "app_vaultCrypto": "Vault Crypto",
   "app_vaultImportedSuccessfully": "Vault imported successfully",
   "app_vaultLocked": "Vault locked",
   "app_vaultLockedDesc": "Lock your vault to protect your bookmarks and data",

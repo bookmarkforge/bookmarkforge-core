@@ -133,7 +133,7 @@ describe("verifyErrorReporting", () => {
 });
 
 describe("verifyLoadTest", () => {
-  const FULL = "join room relay signal api/services/ai/generate p95 percentile BUDGETS saturation";
+  const FULL = "join room relay signal p95 percentile BUDGETS saturation /health responde 200";
 
   it("passes with script file and full coverage", () => {
     expect(verifyLoadTest({ scripts: { "test:load": "node x" } }, true, FULL).ok).toBe(true);
@@ -147,7 +147,7 @@ describe("verifyLoadTest", () => {
     expect(verifyLoadTest({ scripts: { test: "vitest" } }, true, FULL).ok).toBe(false);
   });
 
-  it("fails on partial coverage (no AI proxy / no saturation)", () => {
+  it("fails on partial coverage (signaling + budgets but no saturation/liveness)", () => {
     expect(verifyLoadTest({ scripts: { "test:load": "node x" } }, true, "join relay signal p95 BUDGETS").ok).toBe(false);
   });
 
@@ -224,12 +224,24 @@ describe("verifyDastDisabled", () => {
 
 describe("verifyProdConfig", () => {
   it("passes when the required config is documented", () => {
-    const text = "NODE_ENV=production\nAI_SESSION_REQUIRE_LICENSE=1\nAI_SESSION_ORIGINS=https://a\n";
+    const text = [
+      "NODE_ENV=production",
+      "AI_SESSION_ORIGINS=https://a",
+      "ENFORCE_SIGNAL_HMAC=1",
+      "LICENSE_SIGNING_PRIVATE_KEY_FILE montado como secreto",
+    ].join("\n");
     expect(verifyProdConfig(text).ok).toBe(true);
   });
 
   it("fails on partial documentation", () => {
     expect(verifyProdConfig("NODE_ENV=production").ok).toBe(false);
+  });
+
+  it("no longer accepts retired subsystem variables as required config", () => {
+    // Retired flags have no reader: documenting them must not satisfy (or be
+    // needed for) this item.
+    const text = "NODE_ENV=production\nAI_SESSION_REQUIRE_LICENSE=1\nAI_SESSION_ORIGINS=https://a\nENFORCE_SIGNAL_HMAC=1\n";
+    expect(verifyProdConfig(text).ok).toBe(false);
   });
 });
 

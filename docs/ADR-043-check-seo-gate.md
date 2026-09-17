@@ -5,8 +5,8 @@
 
 ## Contexto
 
-La superficie indexable del sitio creció hasta seis landings localizadas
-(en/es/fr/de/pt/it), la página comparativa `/pocket-alternative`, el shell SPA
+La superficie indexable del sitio creció hasta 30 landings localizadas
+(en/es/fr/de/pt/it y 24 locales adicionales), la página comparativa `/pocket-alternative`, el shell SPA
 y la página 404 — cada una con canonical, hreflang, Open Graph, Twitter Cards
 y JSON-LD propios, más un contrato noindex que mantiene la app privada fuera
 del índice (`_headers`, `netlify.toml`, `robots.txt`, `offline.html` y
@@ -29,7 +29,8 @@ gobernanza con el resto de gates del repo.
 1. **Alcance del gate.** `node scripts/check-seo.mjs` valida:
    - **Landings** (`public/landing.html` + `es/fr/de/pt/it.html`): `<html
      lang>`, `<title>`, meta description, canonical exacto, hreflang completo
-     (6 idiomas + `x-default`), los 9 meta Open Graph (con `og:url` ==
+     (30 idiomas + `x-default` en los artefactos generados; la familia histórica
+     de seis landings sigue cubierta por el contrato primario), los 9 meta Open Graph (con `og:url` ==
      canonical y `og:image` apuntando a un asset existente en `public/`),
      Twitter Cards y JSON-LD parseable con los tipos `WebSite`,
      `Organization`, `SoftwareApplication` y `FAQPage` (con preguntas reales).
@@ -37,7 +38,8 @@ gobernanza con el resto de gates del repo.
      requisito de hreflang.
    - **Páginas legales** (`public/privacy-and-terms.html` + las cinco copias
      localizadas en `/es|fr|de|pt|it/privacy-and-terms.html`): canonical,
-     set hreflang completo (6 idiomas + `x-default`), OG y Twitter, sin
+     set hreflang completo del clúster legal (30 idiomas + `x-default` en los
+     artefactos generados), OG y Twitter, sin
      requisito de JSON-LD (un documento legal no declara FAQPage).
    - **Páginas auxiliares** (`index.html` y `public/404.html`): canonical +
      set OG/Twitter completo, y coherencia de identidad con la landing EN
@@ -47,7 +49,7 @@ gobernanza con el resto de gates del repo.
      meta noindex en `offline.html`; y que `sitemap.xml` no liste `/app` pero
      sí las seis landings, `/pocket-alternative` y las seis páginas
      legales, y anote el set completo de alternates `xhtml:link` hreflang
-     (6 idiomas + `x-default`) en cada landing (x-default → `/`) y en cada
+     (30 idiomas + `x-default`) en cada landing (x-default → `/`) y en cada
      página legal (x-default → la EN), con el namespace `xmlns:xhtml`
      declarado — hreflang a nivel de sitemap, espejo del `<head>` HTML de
      cada clúster.
@@ -65,7 +67,7 @@ gobernanza con el resto de gates del repo.
      y matchea contra la primera lengua del header, como las regex de nginx.
    - **Preferencia manual de idioma** (para que el redirect no moleste al
      usuario que elige): el parámetro `?lang=<code>` (en los links de
-     idioma de nav/footer de las 6 landings) es la señal más fuerte —
+     idioma de nav/footer de las landings) es la señal más fuerte —
      fija una cookie persistente (`bf_lang`, leída por nginx y el
      middleware; `nf_lang`, el override nativo de Netlify para sus
      condiciones Language) y redirige 302 a la URL limpia. La cookie, una
@@ -76,7 +78,7 @@ gobernanza con el resto de gates del repo.
      `landing.js` setea ambas cookies al pulsar un link de idioma o al
      cargar con `?lang=`. El gate exige el contrato en las tres fuentes.
    - **Links de idioma visibles**: los links de idioma de nav/footer de las
-     6 landings deben llevar `lang` y `hreflang` (con el mismo valor),
+     Las landings deben llevar `lang` y `hreflang` (con el mismo valor),
      apuntar a la landing correcta con `?lang=<código>`, cubrir los 6
      idiomas y enlazar la versión propia de cada página.
    - **Terminología legal consistente**: los 6 documentos de privacidad +
@@ -106,7 +108,9 @@ gobernanza con el resto de gates del repo.
   sitemap, CI falla con un mensaje accionable.
 - Añadir un séptimo idioma exige tocar `LANDING_LANGS`/`LANDING_LOCALES` en
   `check-seo.mjs` y `LANDING_LANGS` en `scripts/nginx-render.mjs` (más las
-  reglas de servidor) — el gate señala qué falta.
+  reglas de servidor) — el gate señala qué falta. La entrada del sitemap se
+  añade a mano en `public/sitemap.xml` (archivo manual desde A9-1; el
+  renderizador sólo reescribe hosts de URL, nunca regenera).
 - El contrato noindex es revocable de forma verificable: quitar un
   `Disallow` o un `X-Robots-Tag` sin tocar el gate rompe CI antes de que la
   app privada pueda aparecer en el índice.- El gate está implementado y en la cadena; este ADR registra la decisión y
@@ -115,13 +119,12 @@ gobernanza con el resto de gates del repo.
 ## Verificación del grafo hreflang (2026-09-09)
 
 `scripts/check-hreflang-graph.mjs` valida sobre HTTP real los mismos
-chequeos que un validador hreflang externo, para las 12 páginas
-localizadas (6 landings + 6 legales): sets completos (6 idiomas +
+chequeos que un validador hreflang externo, para las 60 páginas localizadas actuales (30 landings + 30 legales): sets completos (30 idiomas +
 `x-default`), ausencia de enlaces rotos, **bidireccionalidad** (si A
 declara `es → /es/`, /es/ debe declarar `en → A`), auto-referencia,
 `x-default` por clúster (landings → `/`, legales → la EN) y sin cruce
 entre clústeres; además cruza el set del HTML con el `xhtml:link` del
-sitemap para las 12 URLs. Verificado adversarial: quitar un alternate en
+sitemap para las 60 URLs. Verificado adversarial: quitar un alternate en
 `dist/` dispara los tres tipos de fallo y el exit code 1.
 
 ```bash
@@ -130,7 +133,7 @@ npm run preview -- --port 4173 --strictPort &
 node scripts/check-hreflang-graph.mjs http://localhost:4173 --files   # local (resuelve /fr/ → /fr.html)
 ```
 
-Resultado del 2026-09-09: **12 páginas, 84 alternates, grafos
+Resultado histórico del 2026-09-09: **12 páginas, 84 alternates, grafos
 bidireccionales intactos, exit 0.** Los validadores externos por URL no
 pueden usarse todavía: `bookmarkforge.com` sigue sirviendo el despliegue
 legacy (la página legal EN responde 404 — ver la sección anterior).
@@ -147,7 +150,7 @@ un hallazgo real que se corrigió:
 
 1. **sitemap.js** (la librería npm oficial de sitemaps, instalada en un
 directorio temporal): `XMLToSitemapItemStream` con `ErrorLevel.WARN` —
-**13/13 `<url>` válidos** (changefreq, priority, límites de loc).
+**61/61 `<url>` válidos** (changefreq, priority, límites de loc).
 2. **libxml2** (el motor detrás de `xmllint`, vía `libxmljs2` con binarios
 precompilados) contra el **esquema oficial de sitemaps.org**:
 `processContents="lax"` en el wildcard `xs:any` (la variante `strict` de

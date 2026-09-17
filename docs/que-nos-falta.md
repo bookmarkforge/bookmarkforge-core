@@ -1,22 +1,16 @@
 # Que nos falta — deuda pendiente del pre-lanzamiento
 
-> Estado del working tree: **2026-09-13 — migración Lifetime versionada en disco, pendiente de commit**. Este archivo documenta lo que falta
+> Estado del working tree: **2026-09-17 — revisión de deudas tras las rondas 10–11**. Este archivo documenta lo que falta
 > para el lanzamiento público. Las fuentes vivas son `docs/audit.md`,
 > `docs/launch-checklist.md`, `docs/ROPA.md` y `docs/ops-nightly.md` — este
 > archivo es el índice consolidado, no la autoridad.
 
-## 1. Working tree con migración Lifetime (bloqueo #1) — ⚠️ PENDIENTE DE COMMIT 2026-09-13
+## 1. Estado del working tree — cambios locales pendientes de commit
 
-- **2026-09-13: 80 ficheros en disco sin commitear** — migración lifetime versionada lista (pricing
-  `Free $0 / Pro $59→$79→$99 / Founder $99`, landings EN+5 + 24 locales regeneradas, `og-image-pricing.svg`,
-  `help.html` + `supportDiagnostics.ts` + `AdvancedSection.tsx`, `privacy-and-terms.html`,
-  `translations`/`landing-translations`/`locales`, `nginx.conf`+`netlify.toml`+`_redirects` routing `/help`).
-  `git status --porcelain` → 78 M + 2 `??`. Pendiente commit atómico antes del push.
-- Históricamente **2026-09-13 09:00: 0 pendientes** tras 9 commits `3dfa700→e50bfa8` sobre `8ce4867` (ver log).
-- Artefactos huérfanos de la auditoría anterior (`nightly-trends.svg`,
-  `nightly-consistency.svg`, `nightly-trends-summary.md`, `blob-report/`,
-  `.tmp-audit*`) **no existen en disco** — ya ignorados/eliminados; no hay baselines huérfanos que decidir.
-- Regla AGENTS.md respetada: ningún commit usó `git add -A`; cada commit lista sus ficheros explícitamente.
+- Las rondas de auditoría 6–11 y los hardenings de tests están aplicados en el checkout, pero siguen sin commit porque no se debe crear un commit sin autorización explícita.
+- El árbol contiene cambios relacionados y eliminaciones de artefactos obsoletos; no se ha descartado ni sobrescrito trabajo ajeno.
+- `npm run typecheck`, `npx vitest run` y `npm run check` son la evidencia actual de consistencia local.
+- Los artefactos de auditorías anteriores (`nightly-trends.svg`, `nightly-consistency.svg`, `blob-report/`, `.tmp-audit*`) no forman parte del checkout activo.
 
 ## 2. Infraestructura de GitHub sin configurar — ⚠️ BLOQUEANTE REMOTO (único)
 
@@ -55,7 +49,7 @@
   en local porque los campos operativos están completos — el resto es firma externa.
 - **Sentry**: `src/telemetry/remoteErrorReporter.ts` con `beforeSend` sancador + opt-in por evento,
   `VITE_SENTRY_DSN` vacío por defecto (correcto). Activarlo exige DSN real **y** DPA Sentry (ROPA §7).
-- **RPO/RTO y SLOs** — baselines registrados en `docs/operations.md` (99.9%/30d, p95 IA <3s,
+- **RPO/RTO y SLOs** — baselines registrados en `docs/operations.md` (99.9%/30d,
   p95 señalización <500ms, 5xx <0.5%, WS <70%; RPO 24h, RTO 24h vault/4h topología). Drills miden
   RTO empírico (rollback <60s verificado 9.6s, restore <120s verificado 6.6s); pendiente solo
   confirmación firmada del responsable (launch-checklist #3 PASS local).
@@ -74,8 +68,8 @@
   ver `docs/docs-state-index.md` + `AGENTS.md` §7). **ADR-040 ya implementado** (`scripts/check-docs-markdown.mjs`
   + `scripts/docs-markdown-baseline.json`, 44 files, 4 reglas, integrado en `npm run check` y aceptado por el
   freeze). **ADR-042** temas solo-CSS decidido (D4 `ThemeService.ts`). Números libres sin asignar: 031/035/036/041.
-- **`eslint-rules/README.md` no existe** (las reglas custom se auto-documentan
-  en headers, pero falta el índice).
+- **`eslint-rules/README.md` ya existe** y documenta las reglas custom; este gap
+  queda cerrado. Mantenerlo actualizado al añadir nuevas reglas.
 - **`docs/architecture.md` → "Decisiones pendientes"**: persistencia central
   multiusuario (abierta a propósito), política formal de migraciones RxDB
   (abierta a propósito), y SLO/RPO/RTO (arriba).

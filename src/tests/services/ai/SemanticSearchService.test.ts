@@ -10,11 +10,14 @@ vi.mock("../../\.\./services/ai/ProviderManager", () => ({
 
 // WebLLMService is Pro: the double is installed at the pro-access loader
 // instead of at the Pro module (SemanticSearchService probes through the gate).
+// Hoisted so the loader and the assertions share one object — a fresh double
+// per `loadWebLLMService()` call would make `vi.mocked(...)` in the tests target
+// the real module instead of the double.
+const mockWebLLMService = vi.hoisted(() => ({
+  canRunLocalLLM: vi.fn().mockResolvedValue(false),
+}));
 vi.mock("../../services/pro-access", () => ({
-  loadWebLLMService: () =>
-    Promise.resolve({
-      canRunLocalLLM: vi.fn().mockResolvedValue(false),
-    }),
+  loadWebLLMService: async () => mockWebLLMService,
   ProUnavailableError: class ProUnavailableError extends Error {},
 }));
 
@@ -210,8 +213,7 @@ describe("SemanticSearchService", () => {
     });
 
     it("expande query si offline pero webLLM disponible", async () => {
-      const { webLLMService } = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLMService.canRunLocalLLM).mockResolvedValue(true);
+            mockWebLLMService.canRunLocalLLM.mockResolvedValue(true);
       vi.mocked(aiManager.generateText).mockResolvedValue({ text: "webllm expansion" } as any);
       semanticSearchService.resetAvailability();
       const result = await semanticSearchService.expandQuery("computer vision");
@@ -230,8 +232,7 @@ describe("SemanticSearchService", () => {
   describe("checkLLMAvailability — proveedor no configurado", () => {
     it("NO expande si isConfigured false y no hay proveedores locales", async () => {
       // Ensure no local providers pollute the check
-      const { webLLMService } = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLMService.canRunLocalLLM).mockResolvedValue(false);
+            mockWebLLMService.canRunLocalLLM.mockResolvedValue(false);
       vi.mocked(aiManager.isOllamaAvailable).mockResolvedValue(false);
       vi.mocked(aiManager.getProviderInfo).mockReturnValue({ isConfigured: false } as any);
       vi.mocked(aiManager.generateText).mockResolvedValue({ text: "expanded" } as any);
@@ -253,8 +254,7 @@ describe("SemanticSearchService", () => {
     });
 
     it("offline sin WEBLLM ni Ollama no expande", async () => {
-      const { webLLMService } = await import("../../\.\./services/ai/WebLLMService");
-      vi.mocked(webLLMService.canRunLocalLLM).mockResolvedValue(false);
+            mockWebLLMService.canRunLocalLLM.mockResolvedValue(false);
       vi.mocked(aiManager.isOllamaAvailable).mockResolvedValue(false);
       vi.mocked(aiManager.generateText).mockReset();
       Object.defineProperty(navigator, "onLine", {

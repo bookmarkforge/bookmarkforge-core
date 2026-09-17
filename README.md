@@ -4,19 +4,20 @@
 > las funciones Pro identificadas en `OPEN-CORE.md` son propietarias y no están
 > cubiertas por esa licencia.
 
-Aplicación local-first de conocimiento personal, con almacenamiento cifrado, funcionamiento offline, sincronización P2P opcional y servicios de IA con proxy server-side.
+Aplicación local-first de conocimiento personal: almacenamiento cifrado, funcionamiento
+offline, sincronización P2P opcional y funciones de IA que llaman **directamente** al
+proveedor que el usuario configura.
 
 ## Estado del proyecto
 
-<!-- Estado 2026-09-13: repo versionado local (9 commits sobre 8ce4867, git status vacío) pero
-     aún sin 'git remote' — los badges usan placeholder OWNER/bookmarkforge hasta el primer push.
-     Al crear el remote (ver docs/github-secrets-and-push-runbook.md) sustituir OWNER por el slug real:
-     sed -i 's|OWNER/bookmarkforge|<OWNER>/<REPO>|g' README.md y docs. El badge CI refleja cada push;
-     el nightly las caídas human-like/multiuser/performance; 'runs fallidos' filtra conclusion=failure;
-     'último release' apunta al release publicado. Cobertura: codecov requiere CODECOV_TOKEN en nightly;
-     'cobertura del nightly' apunta a artifacts del último run exitoso sin servicio externo. -->
+<!-- Estado 2026-09-17: repositorio versionado local, sin 'git remote' todavía.
+     Los badges usan el placeholder OWNER/bookmarkforge hasta el primer push.
+     Al crear el remote (ver docs/github-secrets-and-push-runbook.md) sustituir OWNER
+     por el slug real: sed -i 's|OWNER/bookmarkforge|<OWNER>/<REPO>|g' README.md y docs/.
+     El CI nunca se ha ejecutado en GitHub (0 PRs/merges): el primer push es la primera
+     validación real de los workflows. Evidencia de auditoría local en docs/audit.md. -->
 
-[![CI](https://github.com/OWNER/bookmarkforge/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/bookmarkforge/actions/workflows/ci.yml) · [![Nightly validation](https://github.com/OWNER/bookmarkforge/actions/workflows/nightly.yml/badge.svg)](https://github.com/OWNER/bookmarkforge/actions/workflows/nightly.yml) · [![Cobertura](https://codecov.io/gh/OWNER/bookmarkforge/branch/main/graph/badge.svg)](https://codecov.io/gh/OWNER/bookmarkforge) · [runs fallidos](https://github.com/OWNER/bookmarkforge/actions/workflows/nightly.yml?query=conclusion%3Afailure) · [último release](https://github.com/OWNER/bookmarkforge/releases/latest) · [cobertura del nightly](https://github.com/OWNER/bookmarkforge/actions/workflows/nightly.yml?query=conclusion%3Asuccess) · [operación del nightly](docs/ops-nightly.md)
+[![CI](https://github.com/OWNER/bookmarkforge/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/bookmarkforge/actions/workflows/ci.yml) · [![Nightly validation](https://github.com/OWNER/bookmarkforge/actions/workflows/nightly.yml/badge.svg)](https://github.com/OWNER/bookmarkforge/actions/workflows/nightly.yml) · [runs fallidos](https://github.com/OWNER/bookmarkforge/actions/workflows/nightly.yml?query=conclusion%3Afailure) · [último release](https://github.com/OWNER/bookmarkforge/releases/latest) · [operación del nightly](docs/ops-nightly.md)
 
 ## Requisitos
 
@@ -35,7 +36,23 @@ npm run test:fast
 npm run dev
 ```
 
-El frontend se ejecuta con Vite. El servidor auxiliar se inicia con `npm run server` y expone señalización WebSocket, healthcheck, proxy de IA, licencias y eventos operativos.
+El frontend se ejecuta con Vite en modo PWA. El servidor acompañante se inicia con
+`npm run server` y expone **señalización WebSocket P2P**, `/health`, los endpoints de
+licencia (`/api/license/*`), informes CSP, telemetría opt-in de cliente y analítica
+agregada opt-in. El servidor no recibe contenido del vault.
+
+### Proveedores de IA
+
+No hay proxy de IA en el servidor. Cada llamada sale del navegador directamente al
+proveedor elegido, con una clave que el usuario guarda cifrada en su propio vault
+(`securityVault`) desde Ajustes:
+
+- En la nube: Gemini, OpenAI, Anthropic, Groq, Hugging Face, OpenRouter.
+- Locales: Ollama y modelos en el navegador con WebLLM.
+
+Consecuencia de seguridad: la clave del usuario nunca pasa por nuestros servidores, y el
+servidor no necesita (ni acepta) ninguna credencial de IA. Las llamadas cloud
+se realizan directamente desde el navegador con la clave del usuario.
 
 ## Verificación antes de fusionar
 
@@ -47,7 +64,9 @@ npm run build:ci
 npm run check
 ```
 
-No se deben introducir secretos reales en el repositorio. Usa un gestor de secretos o variables de entorno fuera del control de versiones. El chequeo `scripts/check-secrets-in-commit.mjs` debe ejecutarse como gate de CI.
+No se deben introducir secretos reales en el repositorio. Usa un gestor de secretos o
+variables de entorno fuera del control de versiones. `scripts/check-secrets-in-commit.mjs`
+se ejecuta como gate de CI.
 
 ## Arquitectura
 
@@ -58,23 +77,26 @@ Browser / PWA / Extension
           v
 Reverse proxy (TLS, CSP, static assets)
           |
-          +--> Web frontend (React/Vite)
+          +--> Web frontend (React/Vite)  ---> Proveedores de IA del usuario (BYO key)
           |
           +--> Companion server (Node/ws)
-                  +--> AI proxy y sesiones CSRF
-                  +--> licencias y eventos
-                  +--> señalización WebSocket
-                  +--> Redis opcional para estado compartido
+                  +--> señalización WebSocket P2P
+                  +--> licencias y entitlement (Ed25519/RSA-PSS)
+                  +--> health, informes CSP, telemetría opt-in
 
 Cliente: React + TypeScript + RxDB/IndexedDB + Web Workers + WebRTC
 Criptografía: AES-GCM, Argon2id/HKDF, claves gestionadas en workers
 ```
 
-El cliente es la fuente principal de los datos del vault. El servidor no debe recibir contenido del vault salvo que una funcionalidad concreta lo documente y el usuario lo autorice.
+El cliente es la fuente principal de los datos del vault. Los dos servicios de la
+topología de producción son **stateless**: no hay base de datos ni Redis compartido.
 
 ## Producción
 
-La topología de producción está en `docker-compose.prod.yml`. Requiere configurar secretos y endpoints mediante el entorno de despliegue. El despliegue debe usar imágenes identificadas por SHA, ejecutar todos los gates y conservar un procedimiento probado de rollback.
+La topología está en `docker-compose.prod.yml` (servicios `web` y `api`). Requiere
+configurar secretos y endpoints mediante el entorno de despliegue. El despliegue debe usar
+imágenes identificadas por SHA, ejecutar todos los gates y conservar un procedimiento
+probado de rollback.
 
 ```bash
 npm run check:env
@@ -88,21 +110,28 @@ No ejecutes scripts de despliegue contra producción sin aprobación operativa e
 ## Seguridad y privacidad
 
 - TLS debe terminar en el reverse proxy con redirección HTTPS y HSTS.
-- Configura `AI_SESSION_ORIGINS` con orígenes exactos; no dependas del fallback derivado de `Host`.
-- Deja `AI_SESSION_REQUIRE_LICENSE` sin definir (o en `1`): una sesión de IA exige un proof de licencia firmado en TODOS los entornos. `AI_SESSION_REQUIRE_LICENSE=0` emite sesiones anónimas — se rechaza en producción y solo vale para test/staging aislado, con aviso en el arranque.
-- La clave pública de licencias vive en dos copias (`src/services/licenseKeys.ts` y `server/src/license-public-key.ts`, la imagen de la API solo copia `server/`). `node scripts/generate-license-keys.mjs --sync-server-key` las alinea y `npm run check:license-keys` falla si divergen.
+- Configura `AI_SESSION_ORIGINS` con los orígenes exactos del navegador. Es la allow-list
+  de `POST /api/license/entitlement` y una variable **obligatoria** en producción: sin ella
+  el compose de producción no arranca. El nombre es histórico (el endpoint responde el
+  *plan* de licencia, no una sesión de IA).
+- La clave pública de licencias vive en dos copias (`src/services/licenseKeys.ts` y
+  `server/src/license-public-key.ts`). `node scripts/generate-license-keys.mjs
+  --sync-server-key` las alinea y `npm run check:license-keys` falla si divergen.
 - Mantén `ENFORCE_SIGNAL_HMAC=1` en producción.
-- No publiques Redis ni expongas sus puertos al host.
+- No expongas puertos de servicios internos al host; los compose publican en loopback.
 - No registres contraseñas, claves, prompts ni contenido del vault.
 - Los backups automáticos son cifrados; la restauración debe probarse periódicamente.
 
-El cifrado y las medidas técnicas no constituyen por sí solos una declaración de cumplimiento RGPD. El responsable debe mantener inventario de tratamientos, retención, derechos, proveedores y base jurídica.
+El cifrado y las medidas técnicas no constituyen por sí solos una declaración de
+cumplimiento RGPD. El responsable debe mantener inventario de tratamientos, retención,
+derechos, proveedores y base jurídica.
 
 ## Operación mínima
 
 - `/health` es un endpoint de liveness sin datos sensibles.
 - Configura `SIGNALING_ADMIN_TOKEN` y `CSP_REPORT_ADMIN_TOKEN` únicamente en el gestor de secretos.
-- Revisa eventos estructurados, errores críticos, saturación, conexiones, latencia y fallos del proxy de IA.
+- Revisa eventos estructurados, errores críticos, saturación, conexiones, latencia y
+  disponibilidad.
 - Define y registra RPO/RTO antes del lanzamiento público.
 - Ejecuta un restore de backup al menos mensualmente y un simulacro de desastre trimestral.
 
@@ -111,47 +140,35 @@ El cifrado y las medidas técnicas no constituyen por sí solos una declaración
 - [Modelo Open Core](OPEN-CORE.md)
 - [Licencia MIT del Core](LICENSE)
 - [Licencia propietaria Pro](PRO-LICENSE.md)
-- [Política de marca](TRADEMARKS.md)
+- [Política de marca](scripts/public-export/TRADEMARKS.md)
 
-El checkout privado contiene el Core y componentes Pro. Para obtener el
-repositorio público reproducible usa `node scripts/export-public-repo.mjs`; no
-publiques el checkout completo como si todo estuviera bajo MIT.
+El checkout privado contiene el Core y componentes Pro. Para obtener el repositorio
+público reproducible usa `node scripts/export-public-repo.mjs`; no publiques el checkout
+completo como si todo estuviera bajo MIT.
 
-## Documentación adicional
+## Documentación
 
+- [Índice de documentación](docs/index.md)
 - [Arquitectura](docs/architecture.md)
 - [Seguridad](docs/security.md)
 - [Operaciones](docs/operations.md)
-- [API](docs/api.md)
+- [API del servidor acompañante](docs/api.md)
 - [Especificación OpenAPI](docs/openapi.yaml)
 - [Auditoría](docs/audit.md)
 - [ROPA (RGPD)](docs/ROPA.md)
 - [Checklist de lanzamiento](docs/launch-checklist.md)
-- [Manual de Usuario](docs/manual-usuario.md)
-- [User Manual (EN)](docs/manual-usuario-en.md)
-- [Manual de Usuario (PDF)](docs/manual-usuario.pdf)
-- [User Manual (PDF EN)](docs/manual-usuario-en.pdf)
+- [Self-hosting](docs/SELF-HOSTING.md)
+- [Convenciones de ingeniería](AGENTS.md)
 
-## Documentation
+### Manuales de usuario
 
-Documentation structure:
+Cada idioma tiene versión Markdown (fuente) y PDF generado desde el mismo contenido.
 
-| Language | Markdown | PDF |
+| Idioma | Markdown | PDF |
 |---|---|---|
-| **Spanish** | [manual-usuario.md](docs/manual-usuario.md) | [manual-usuario.pdf](docs/manual-usuario.pdf) |
-| **English** | [manual-usuario-en.md](docs/manual-usuario-en.md) | [manual-usuario-en.pdf](docs/manual-usuario-en.pdf) |
+| Español | [manual-usuario.md](docs/manual-usuario.md) | [manual-usuario.pdf](docs/manual-usuario.pdf) |
+| English | [manual-usuario-en.md](docs/manual-usuario-en.md) | [manual-usuario-en.pdf](docs/manual-usuario-en.pdf) |
 
-## Documentación visual
-
-GIFs y capturas de las features principales:
-
-- **Ctrl+K Omnibar** — demo del sistema de comandos
-- **Marcadores** — cómo guardar y organizar marcadores
-- **Grafo 3D** — navegación visual del grafo de conocimiento
-- **Flashcards** — flujo de repetición espaciada
-- **Editor de bloques** — creación de notas con LaTeX y Mermaid
-- **Comando de voz** — "Oye BMF, encuentra mis notas"
-
-## Video de inicio rápido
-
-Tutorial "Hola mundo" — Configuración inicial, primer marcador, primera nota: [enlace al video]
+Las otras 28 locales viven en `docs/manual-usuario-<código>.md` (+ `.pdf`) y están
+listadas en [docs/index.md](docs/index.md). Los intermedios `*-styled.html` se generan
+con `npm run docs:pdf:localized` y no se versionan.

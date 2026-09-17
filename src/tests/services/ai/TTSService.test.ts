@@ -7,13 +7,6 @@ vi.mock("../../\.\./services/ai/ProviderManager", () => ({
   aiManager: { getProviderInfo: mockGetProviderInfo, getApiKey: mockGetApiKey },
 }));
 
-vi.mock("../../\.\./services/ai/aiSession", () => ({
-  fetchWithAiSession: async (
-    request: (options: RequestInit) => Promise<Response>,
-    options: RequestInit,
-  ) => request(options),
-}));
-
 // getApiKey falls back to securityVault/SecureStorage when aiManager has
 // no key. Both are mocked to exercise those paths without the real vault.
 const mockSecurityVault = vi.hoisted(() => ({
@@ -507,14 +500,33 @@ describe("TTSService", () => {
       consoleSpy.mockRestore();
     });
 
-    it("uses gemini when API key has AIza prefix (routes via backend)", async () => {
+    it("wraps the raw PCM Gemini returns in a playable WAV data URL", async () => {
       mockGetApiKey.mockReturnValue("AIzaTest123");
       mockGetProviderInfo.mockReturnValue({ provider: "gemini" });
 
+      // Gemini TTS answers with headerless 16-bit PCM — the mime type is the
+      // only place that says how to interpret the samples, and a browser
+      // <audio> element cannot decode the stream without a container.
       (globalThis.fetch as any).mockResolvedValue({
         ok: true,
+        // fetchWithTimeout reads content-type off the response, so the double
+        // has to expose headers; a real Response always does.
+        headers: { get: () => null },
         json: vi.fn().mockResolvedValue({
-          audioBase64: "data:audio/wav;base64,base64audio",
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    inlineData: {
+                      mimeType: "audio/L16;codec=pcm;rate=24000",
+                      data: "AQIDBA==", // PCM bytes 1, 2, 3, 4
+                    },
+                  },
+                ],
+              },
+            },
+          ],
         }),
       });
 
@@ -522,7 +534,60 @@ describe("TTSService", () => {
         isPrivate: false,
       });
       expect(result?.provider).toBe("gemini");
-      expect(result?.url).toBe("data:audio/wav;base64,base64audio");
+      expect(result?.url?.startsWith("data:audio/wav;base64,")).toBe(true);
+
+      // Read the produced container back with a reader of its own: the header
+      // fields, not just the data URL prefix, are what make the audio playable.
+      const payload = atob(result!.url!.slice("data:audio/wav;base64,".length));
+      const bytes = Uint8Array.from(payload, (c) => c.charCodeAt(0));
+      const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+      const ascii = (offset: number, length: number) =>
+        String.fromCharCode(...bytes.subarray(offset, offset + length));
+      expect(ascii(0, 4)).toBe("RIFF");
+      expect(view.getUint32(4, true)).toBe(36 + 4);
+      expect(ascii(8, 4)).toBe("WAVE");
+      expect(ascii(12, 4)).toBe("fmt ");
+      expect(view.getUint16(20, true)).toBe(1); // PCM, not a compressed codec
+      expect(view.getUint16(22, true)).toBe(1); // mono
+      expect(view.getUint32(24, true)).toBe(24000); // the rate from the mime type
+      expect(view.getUint32(28, true)).toBe(48000); // byteRate = 24000 × 1 × 2
+      expect(view.getUint16(32, true)).toBe(2); // blockAlign
+      expect(view.getUint16(34, true)).toBe(16); // bits per sample
+      expect(ascii(36, 4)).toBe("data");
+      expect(view.getUint32(40, true)).toBe(4);
+      expect(Array.from(bytes.subarray(44))).toEqual([1, 2, 3, 4]);
+    });
+
+    it("labels a Gemini payload that is already a container with its own mime type", async () => {
+      mockGetApiKey.mockReturnValue("AIzaTest123");
+      mockGetProviderInfo.mockReturnValue({ provider: "gemini" });
+
+      (globalThis.fetch as any).mockResolvedValue({
+        ok: true,
+        headers: { get: () => null },
+        json: vi.fn().mockResolvedValue({
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    inlineData: {
+                      mimeType: "audio/mpeg",
+                      data: "AQIDBA==",
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        }),
+      });
+
+      const result = await service.generateAudio("hello", "en", undefined, {
+        isPrivate: false,
+      });
+      // An mp3 payload must stay byte-identical — no fabricated WAV header.
+      expect(result?.url).toBe("data:audio/mpeg;base64,AQIDBA==");
     });
 
     it("returns webspeech when gemini backend returns no audio", async () => {
@@ -531,7 +596,8 @@ describe("TTSService", () => {
 
       (globalThis.fetch as any).mockResolvedValue({
         ok: true,
-        json: vi.fn().mockResolvedValue({}),
+        headers: { get: () => null },
+        json: vi.fn().mockResolvedValue({ candidates: [] }),
       });
 
       const result = await service.generateAudio("hello");

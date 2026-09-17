@@ -326,13 +326,12 @@ Este error indica que el servidor no está configurado correctamente. No es un p
 | `VITE_APP_VERSION` | Versión de la app | `1.0.0` |
 | `VITE_DB_NAME` | Nombre de la base de datos IndexedDB | `bookmarkforge_v5` |
 | `VITE_SENTRY_DSN` | DSN de Sentry para error reporting | *(opcional)* |
-| `AI_SESSION_REQUIRE_LICENSE` | Requiere licencia para IA (1=si, 0=no) | `1` |
 
 ### 10.2 Self-hosting
 
 BookmarkForge se puede auto-hospedar:
 - **Servidor de señalización:** Node.js + WebSocket (puerto 8787)
-- **Proxy de IA:** Node.js proxy para Gemini/OpenAI
+- **IA cloud BYOK:** llamadas navegador → proveedor con la clave del usuario
 - **Servidor de licencias:** Node.js con Whop adapter
 - **Docker Compose:** disponible para producción
 - Ver `docker-compose.prod.yml` para la topología completa
@@ -345,10 +344,8 @@ Endpoints principales:
 - `POST /api/license/validate` — Revalida licencia existente
 - `POST /api/license/deactivate` — Libera slot de activación
 - `POST /api/license/entitlement` — Verifica si usuario es Pro/Free
-- `POST /api/services/ai/session` — Crea sesión de IA con licencia
-- `POST /api/services/ai/generate` — Genera texto (Pro)
-- `POST /api/services/ai/generate-tts` — Texto a voz (Pro)
-- `POST /api/services/ai/generate-image` — Genera imagen (Pro)
+- Las funciones de IA cloud llaman directamente al proveedor desde el navegador
+  con la clave del usuario.
 - `POST /api/analytics/events` — Analytics opt-in
 - `GET /api/analytics/kpis` — KPIs de analytics (admin token)
 

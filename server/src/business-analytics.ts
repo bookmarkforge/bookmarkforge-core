@@ -52,7 +52,8 @@
  */
 
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { createHash, timingSafeEqual } from "node:crypto";
+import { createHash } from "node:crypto";
+import { applySecurityHeaders, constantTimeUtf8Equal, readBoundedInteger } from "./proxy-utils";
 import { existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 
 /** Fixed allow-list of product event types the collector will accept. */
@@ -546,7 +547,7 @@ export function createAnalyticsHandler(options: { serverInstanceId: string }) {
 
   // ── HTTP handler ─────────────────────────────────────────────────────
   return function analyticsHandler(req: IncomingMessage, res: ServerResponse): void {
-    applySecurityHeaders(res);
+    applySecurityHeaders(res, { includeInterestCohort: false });
 
     const pathname = req.url
       ? new URL(req.url, "http://localhost").pathname
@@ -673,28 +674,4 @@ export function createAnalyticsHandler(options: { serverInstanceId: string }) {
   };
 }
 
-function readBoundedInteger(raw: string | undefined, fallback: number, min: number, max: number): number {
-  const parsed = Number(raw ?? fallback);
-  if (!Number.isInteger(parsed) || parsed < min || parsed > max) return fallback;
-  return parsed;
-}
-
-function constantTimeUtf8Equal(expected: string, actual: string): boolean {
-  const expectedBytes = Buffer.from(expected, "utf8");
-  const actualBytes = Buffer.from(actual, "utf8");
-  if (expectedBytes.length !== actualBytes.length) return false;
-  return timingSafeEqual(expectedBytes, actualBytes);
-}
-
-function applySecurityHeaders(res: ServerResponse): void {
-  res.setHeader("Cache-Control", "no-store");
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("X-Frame-Options", "DENY");
-  res.setHeader("Referrer-Policy", "no-referrer");
-  res.setHeader("Permissions-Policy", "camera=(), geolocation=(), microphone=()");
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'none'; base-uri 'none'; frame-ancestors 'none'",
-  );
-}
 

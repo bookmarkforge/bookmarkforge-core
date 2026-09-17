@@ -53,7 +53,6 @@ describe("validateEnvVars", () => {
   // confirm the key is no longer readable from the browser bundle.
   it("no gemini key warnings (key removed from ENV_REGISTRY)", async () => {
     vi.stubEnv("VITE_GEMINI_API_KEY", "AIzaSyTest");
-    vi.stubEnv("VITE_GEMINI_PROXY_URL", "");
     const { validateEnvVars } = await reimport();
     const result = validateEnvVars();
     // Key is not registered → env.geminiApiKey is always undefined
@@ -85,7 +84,6 @@ describe("assertValidForBuild", () => {
     // VITE_GEMINI_API_KEY removed from ENV_REGISTRY — use a different
     // provider key to trigger a PROD error for this test.
     vi.stubEnv("VITE_OPENAI_API_KEY", "sk-test-leaky");
-    vi.stubEnv("VITE_GEMINI_PROXY_URL", "");
     const { assertValidForBuild } = await reimport();
     expect(() => assertValidForBuild()).toThrow("BUILD FATAL");
   });
@@ -96,7 +94,6 @@ describe("assertValidForBuild", () => {
   });
 
   it("does not throw when validation passes", async () => {
-    vi.stubEnv("VITE_GEMINI_PROXY_URL", "");
     const { assertValidForBuild } = await reimport();
     expect(() => assertValidForBuild()).not.toThrow();
   });
@@ -138,7 +135,6 @@ describe("validateEnvVars — PROD error paths", () => {
     // verifies the same hardening applies to other provider keys.
     vi.stubEnv("PROD", "true" as any);
     vi.stubEnv("VITE_OPENAI_API_KEY", "sk-test-leaky");
-    vi.stubEnv("VITE_GEMINI_PROXY_URL", "https://proxy.example.com");
     const { validateEnvVars } = await reimport();
     const result = validateEnvVars();
     expect(result.errors.some((e: string) => e.includes("VITE_OPENAI_API_KEY"))).toBe(
@@ -163,16 +159,6 @@ describe("validateEnvVars — PROD error paths", () => {
     expect(result.isValid).toBe(false);
   });
 
-  it("rejects a non-HTTPS embed-free gemini proxy URL in PROD", async () => {
-    vi.stubEnv("PROD", "true" as any);
-    vi.stubEnv("VITE_GEMINI_PROXY_URL", "http://insecure.example.com/v1");
-    const { validateEnvVars } = await reimport();
-    const result = validateEnvVars();
-    expect(
-      result.errors.some((e: string) => e.includes("VITE_GEMINI_PROXY_URL")),
-    ).toBe(true);
-    expect(result.isValid).toBe(false);
-  });
 });
 
 describe("getEnvironmentInfo", () => {
@@ -191,19 +177,10 @@ describe("getEnvironmentInfo", () => {
 
   it("falls back to defaults when optional env vars are missing", async () => {
     // MODE is a compile-time constant ("test" in Vitest), cannot be stubbed
-    vi.stubEnv("VITE_GEMINI_PROXY_URL", "");
     const { getEnvironmentInfo } = await reimport();
     const info = getEnvironmentInfo();
     expect(info.mode).toBe("test");
     expect(info.baseUrl).toBe("/");
   });
 
-  it("hasGeminiKey is always false (key removed from ENV_REGISTRY)", async () => {
-    // VITE_GEMINI_API_KEY removed from ENV_REGISTRY (DCE) — the frontend
-    // cannot read provider keys.  hasGeminiKey is hardcoded to false.
-    vi.stubEnv("VITE_GEMINI_API_KEY", "AIzaSyTest");
-    const { getEnvironmentInfo } = await reimport();
-    const info = getEnvironmentInfo();
-    expect(info.hasGeminiKey).toBe(false);
-  });
 });

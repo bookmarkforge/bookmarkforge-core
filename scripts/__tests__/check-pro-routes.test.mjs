@@ -1,20 +1,21 @@
 import { describe, expect, it } from "vitest";
 import {
   DISPATCH_FN,
+  ENTITLEMENT_GUARD_FACTORY,
   checkDispatcherWiring,
   evaluateRoutePolicies,
   extractDispatchedRoutePaths,
   formatViolations,
 } from "../check-pro-routes.mjs";
 
-const PAID = ["/api/services/ai/"];
+const PAID = ["/api/paid-fixture/"];
 
 function policy(overrides) {
   return {
-    path: "/api/services/ai/generate",
+    path: "/api/paid-fixture/generate",
     methods: ["POST"],
     access: "entitlement",
-    guard: { mode: "session-or-bearer" },
+    guard: { mode: "proof" },
     auth: "AI session",
     note: "fixture",
     ...overrides,
@@ -64,7 +65,7 @@ describe("pro-route gate", () => {
       policy({}),
       policy({ path: "/health", methods: ["GET"], access: "public", guard: undefined }),
       policy({
-        path: "/api/services/ai/admin",
+        path: "/api/paid-fixture/admin",
         methods: ["*"],
         access: "public",
         guard: undefined,
@@ -77,7 +78,7 @@ describe("pro-route gate", () => {
   it("fails when the router dispatches a paid route the table never classified", () => {
     const violations = evaluate({
       policies: [policy({})],
-      dispatched: ["/api/services/ai/generate", "/api/services/ai/generate-video"],
+      dispatched: ["/api/paid-fixture/generate", "/api/paid-fixture/generate-video"],
     });
     expect(rules(violations)).toContain("unclassified-route");
     expect(violations[0].detail).toMatch(/route table does not declare it/);
@@ -85,8 +86,8 @@ describe("pro-route gate", () => {
 
   it("fails on a policy that is never dispatched", () => {
     const violations = evaluate({
-      policies: [policy({}), policy({ path: "/api/services/ai/generate-image" })],
-      dispatched: ["/api/services/ai/generate"],
+      policies: [policy({}), policy({ path: "/api/paid-fixture/generate-image" })],
+      dispatched: ["/api/paid-fixture/generate"],
     });
     expect(rules(violations)).toContain("dead-policy");
   });
@@ -94,7 +95,7 @@ describe("pro-route gate", () => {
   it("fails when a paid route is declared public without an exemption", () => {
     const violations = evaluate({
       policies: [policy({ access: "public", guard: undefined, auth: "none" })],
-      dispatched: ["/api/services/ai/generate"],
+      dispatched: ["/api/paid-fixture/generate"],
     });
     expect(rules(violations)).toContain("paid-route-not-gated");
   });
@@ -102,7 +103,7 @@ describe("pro-route gate", () => {
   it("fails when an entitlement route has no guard mode", () => {
     const violations = evaluate({
       policies: [policy({ guard: undefined })],
-      dispatched: ["/api/services/ai/generate"],
+      dispatched: ["/api/paid-fixture/generate"],
     });
     expect(rules(violations)).toEqual(
       expect.arrayContaining(["entitlement-without-guard", "guard-plan-mismatch"]),
@@ -157,8 +158,9 @@ function healthHandler(req, res) { if (req.method === "GET" && req.url === "/sho
 describe("pro-route gate dispatcher wiring", () => {
   const good = `
 const ${DISPATCH_FN} = (req, res) => {};
+const entitlementGuard = createEntitlementGuard();
 const settleHttpRequest = createGuardedDispatcher({
-  guard: aiSessionManager.entitlementGuard,
+  guard: entitlementGuard,
   dispatch: ${DISPATCH_FN},
 });
 `;
@@ -189,9 +191,25 @@ const settleHttpRequest = createGuardedDispatcher({
 
   it("fails when the guard is replaced by an inline stub", () => {
     const mutated = good.replace(
-      "guard: aiSessionManager.entitlementGuard,",
+      "guard: entitlementGuard,",
       "guard: { middleware: () => async (req, res, next) => next(), },",
     );
     expect(rules(checkDispatcherWiring(mutated))).toContain("guard-not-shared");
+  });
+
+  it("fails when the guard identifier is not built by the shared factory", () => {
+    // A same-shaped variable that never went through createEntitlementGuard()
+    // is exactly the "a local replacement could enforce a different policy, or
+    // none" case the rule exists for.
+    const mutated = good.replace(
+      `const entitlementGuard = ${ENTITLEMENT_GUARD_FACTORY}();`,
+      "const entitlementGuard = { middleware: () => async (req, res, next) => next() };",
+    );
+    expect(rules(checkDispatcherWiring(mutated))).toContain("guard-not-shared");
+  });
+
+  it("ignores a `guard:` mention outside the dispatcher call", () => {
+    const annotated = `// TRUST_PROXY guard: when the server binds to 0.0.0.0\n${good}`;
+    expect(checkDispatcherWiring(annotated)).toEqual([]);
   });
 });

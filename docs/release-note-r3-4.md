@@ -26,7 +26,7 @@ evidencia de que la cadena funciona. Ningún gate se rompió.
 | Job `drill-backup-restore` en `nightly.yml` | Ensayo **mensual** de backup-restore (día 1 de mes 03:17 UTC + dispatch) con alerta de degradación de RTO (`drill_rto_degraded` → webhook HTTPS `DRILL_ALERT_WEBHOOK_URL`, sin fallar la run) |
 | Job `kpi-collector-local` en `drill-quarterly.yml` | Valida el collector de analítica contra un **servidor local** (sin staging/secretos): `createAnalyticsHandler` en 127.0.0.1 + POST `/api/analytics/events` en vivo + gate `kpi-report` con umbrales exactos |
 | Fix de build hermenéutico | `Dockerfile` stage `deps` con `--ignore-scripts` (husky roto con `--omit=dev` bloqueaba el rollback por imagen) + nginx no-root con `pid` sobre `/tmp` |
-| Fix de redis en el drill | `up -d ... redis` — el api es fail-closed sobre `AI_PROXY_REDIS_URL`; sin redis, BASELINE fallaba con `SESSION_STORE_UNAVAILABLE` |
+| Fix de redis en el drill | `up -d ... redis` — el api dependía de redis para su estado compartido; sin redis, BASELINE fallaba con `SESSION_STORE_UNAVAILABLE` |
 
 ### 2. Gate nocturno de KPIs — `feat(monitoring)`
 

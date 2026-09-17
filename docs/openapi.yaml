@@ -3,13 +3,16 @@ info:
   title: BookmarkForge Companion Server API
   version: 1.0.0
   description: |
-    Self-hosted companion server for BookmarkForge — P2P signaling, AI proxy,
-    license validation and client event collection.
+    Self-hosted companion server for BookmarkForge — P2P signaling, license
+    validation and opt-in client telemetry.
 
     Security model: local-first. The server never receives the user's vault.
-    All endpoints that touch AI, licensing or diagnostics require origin
-    allow-listing, CSRF tokens, rate limiting and (in production) a signed
-    license proof. See docs/security.md and docs/api.md for the full contract.
+    Provider calls happen in the browser with a key stored in the user's own
+    vault. Consequently this API carries no AI credentials and no AI endpoints.
+
+    The authoritative route table (path, methods, access level) lives in
+    `server/src/route-table.ts`; `npm run check:pro-routes` fails when the router
+    and that table disagree. See `docs/security.md` and `docs/api.md`.
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
@@ -28,607 +31,289 @@ servers:
       port:
         default: '8787'
 
-# ── Security schemes ──────────────────────────────────────────────
-security:
-  - sessionCookie: []
+tags:
+  - name: health
+  - name: licensing
+  - name: telemetry
+  - name: analytics
+  - name: diagnostics
 
-components:
-  securitySchemes:
-    sessionCookie:
-      type: apiKey
-      in: cookie
-      name: bf_ai_session
-      description: |
-        HttpOnly, Secure, SameSite=Strict session cookie set by POST
-        /api/services/ai/session. Paired with X-CSRF-Token header.
-    csrfToken:
-      type: apiKey
-      in: header
-      name: X-CSRF-Token
-      description: |
-        Non-HttpOnly CSRF token matching the bf_ai_csrf cookie value.
-        Required for all state-changing AI endpoints.
-    adminToken:
-      type: apiKey
-      in: header
-      name: X-Signaling-Admin-Token
-      description: Admin diagnostic token (disabled by default).
-    signalingAdminToken:
-      type: apiKey
-      in: header
-      name: X-Signaling-Admin-Token
-    analyticsAdminToken:
-      type: apiKey
-      in: header
-      name: X-Analytics-Admin-Token
-      description: |
-        Token for GET /api/analytics/kpis diagnostics. Fail-closed: when
-        ANALYTICS_ADMIN_TOKEN is unset the endpoint answers 503.
-    clientEventsAdminToken:
-      type: apiKey
-      in: header
-      name: X-Client-Events-Admin-Token
-      description: |
-        Token for the GET /api/client-events diagnostics dashboard.
-        Fail-closed: when CLIENT_EVENTS_ADMIN_TOKEN is unset it answers 503.
-    cspAdminToken:
-      type: apiKey
-      in: header
-      name: X-CSP-Admin-Token
-      description: Token for the GET /csp-report diagnostics endpoint.
-
-  schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
-      required: [error]
-
-    HealthResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          enum: [ok]
-      required: [status]
-
-    AiSessionRequest:
-      type: object
-      properties:
-        licenseProof:
-          type: object
-          properties:
-            payload:
-              type: object
-              description: License state object (instanceId, status, expiry)
-            signature:
-              type: string
-              description: Ed25519 signature of the payload (base64)
-      description: |
-        Required in production (AI_SESSION_REQUIRE_LICENSE=1).
-        Omitted in staging with AI_SESSION_REQUIRE_LICENSE=0.
-
-    AiSessionResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        sessionCreated:
-          type: boolean
-      required: [ok]
-
-    AiGenerateRequest:
-      type: object
-      properties:
-        model:
-          type: string
-          description: Provider model identifier (e.g. gemini-2.0-flash)
-        contents:
-          type: array
-          items:
-            type: object
-            properties:
-              role:
-                type: string
-                enum: [user, model]
-              parts:
-                type: array
-                items:
-                  type: object
-        generationConfig:
-          type: object
-      required: [model, contents]
-
-    ClientEvent:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-            - storage-pressure
-            - bundle-integrity-spike
-            - error-spike
-            - csp-violation-spike
-            - client-event-retry-stats
-        level:
-          type: string
-          description: storage-pressure only (ok | pressure | critical)
-        pct:
-          type: number
-          description: storage-pressure only
-        persisted:
-          type: boolean
-          description: storage-pressure only
-        count:
-          type: integer
-          description: spike events only
-        attempts:
-          type: integer
-          description: client-event-retry-stats only (cumulative per client)
-        coalesced:
-          type: integer
-          description: client-event-retry-stats only
-        dropped:
-          type: integer
-          description: client-event-retry-stats only
-
-    AnalyticsBatch:
-      type: object
-      description: |
-        Daily aggregated, non-PII counts for one install. batchId makes the
-        ingest additive and idempotent: partial batches add up and a retried
-        batch is accepted (204) without double counting. Payloads without
-        batchId keep legacy same-day replace semantics.
-      properties:
-        iid:
-          type: string
-          pattern: '^[0-9a-f]{64}$'
-          description: SHA-256 of a random per-install id; the raw id never leaves the device
-        batchId:
-          type: string
-          maxLength: 128
-          pattern: '^[A-Za-z0-9._-]+$'
-        counts:
-          type: object
-          description: Bounded allow-list of event types (vault_created, session_start, bookmark_created, ...)
-          additionalProperties:
-            type: integer
-            minimum: 1
-      required: [iid, counts]
-
-    AnalyticsKpis:
-      type: object
-      properties:
-        generatedAt:
-          type: string
-          format: date-time
-        activeInstalls:
-          type: integer
-        dau:
-          type: integer
-        wau:
-          type: integer
-        mau:
-          type: integer
-        cohorts:
-          type: object
-          description: firstDay -> { cohortSize, d1, d7, d30 }
-          additionalProperties:
-            type: object
-        funnel:
-          type: object
-          description: Total events per type across retained days
-          additionalProperties:
-            type: integer
-        daily:
-          type: object
-          description: UTC day -> event type -> count
-          additionalProperties:
-            type: object
-        counters:
-          type: object
-        serverInstanceId:
-          type: string
-      required: [generatedAt, activeInstalls, dau, wau, mau, funnel]
-
-  parameters:
-    csrfHeader:
-      name: X-CSRF-Token
-      in: header
-      required: true
-      schema:
-        type: string
-
-# ── Paths ─────────────────────────────────────────────────────────
 paths:
   /health:
     get:
-      summary: Liveness check
-      description: Minimal health endpoint for load balancers and monitoring.
+      tags: [health]
+      summary: Liveness probe
+      description: Minimal, non-sensitive liveness probe. No-store.
       security: []
       responses:
         '200':
-          description: Server is healthy
+          description: Process is up
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HealthResponse'
-        '503':
-          description: Server unhealthy
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /api/services/ai/session:
-    post:
-      summary: Create ephemeral AI session
-      description: |
-        Creates a short-lived session (30 min TTL) with HttpOnly cookie +
-        CSRF token. Rate limited per-IP and per-identity. Requires a signed
-        license proof in production.
-      security: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AiSessionRequest'
-      responses:
-        '200':
-          description: Session created
-          headers:
-            Set-Cookie:
-              schema:
-                type: string
-                description: |
-                  bf_ai_session=...; HttpOnly; Secure; SameSite=Strict; Path=/api/services/ai
-                  bf_ai_csrf=...; Secure; SameSite=Strict; Path=/api/services/ai
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AiSessionResponse'
-        '429':
-          description: Rate limited
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Origin not allowed or invalid license
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /api/services/ai/generate:
-    post:
-      summary: AI text generation proxy
-      description: |
-        Proxies generation requests to the configured AI provider (Gemini by
-        default). Requires valid session cookie + CSRF token. Rate limited
-        per-identity with daily quota.
-      security:
-        - sessionCookie: []
-      parameters:
-        - $ref: '#/components/parameters/csrfHeader'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AiGenerateRequest'
-      responses:
-        '200':
-          description: Generation result
-          content:
-            application/json:
-              schema:
-                type: object
-        '401':
-          description: Session expired or invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '429':
-          description: Rate limited or quota exceeded
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
-  /api/services/ai/generate-tts:
-    post:
-      summary: Text-to-speech proxy
-      security:
-        - sessionCookie: []
-      parameters:
-        - $ref: '#/components/parameters/csrfHeader'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                text:
-                  type: string
-                  maxLength: 4096
-      responses:
-        '200':
-          description: Audio data
-          content:
-            audio/mpeg:
-              schema:
-                type: string
-                format: binary
-
-  /api/services/ai/generate-image:
-    post:
-      summary: Image generation proxy
-      security:
-        - sessionCookie: []
-      parameters:
-        - $ref: '#/components/parameters/csrfHeader'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                prompt:
-                  type: string
-      responses:
-        '200':
-          description: Image data
-          content:
-            image/png:
-              schema:
-                type: string
-                format: binary
-
-  /api/services/ai/admin:
-    get:
-      summary: AI diagnostics
-      description: Returns session counts, rate limit state, quota usage.
-      security:
-        - adminToken: []
-      responses:
-        '200':
-          description: Diagnostic data
-          content:
-            application/json:
-              schema:
-                type: object
-        '403':
-          description: Invalid or missing admin token
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '503':
-          description: Diagnostics disabled
-
-  /api/services/ai/metrics:
-    get:
-      summary: AI metrics
-      description: Prometheus-format metrics for the AI proxy.
-      security: []
-      responses:
-        '200':
-          description: Metrics in text/plain
 
   /api/license/health:
     get:
-      summary: License server health
+      tags: [licensing]
+      summary: License provider health
+      description: Health of the configured license provider integration.
       security: []
       responses:
         '200':
-          description: License server operational
+          description: License provider reachable
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/LicenseHealth'
+        '503':
+          description: License signing service is not configured or not ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /api/license/activate:
     post:
-      summary: Activate a license
-      description: Validates a license key with Whop and returns a signed license state.
+      tags: [licensing]
+      summary: Exchange a purchased key for a signed proof
+      description: |
+        Binds the key to a device and returns a signed entitlement proof. The
+        caller has no proof yet, so this route cannot require one.
       security: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                licenseKey:
-                  type: string
-                instanceId:
-                  type: string
+              $ref: '#/components/schemas/LicenseKeyRequest'
       responses:
         '200':
-          description: License activated
+          description: Signed entitlement proof
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseProof'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/OriginDenied'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '502':
+          $ref: '#/components/responses/ProviderError'
+        '503':
+          $ref: '#/components/responses/NotConfigured'
+
+  /api/license/validate:
+    post:
+      tags: [licensing]
+      summary: Revalidate an existing key
+      description: Reached while the vault may still be locked, so it carries no proof.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LicenseKeyRequest'
+      responses:
+        '200':
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseValidation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/OriginDenied'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '502':
+          $ref: '#/components/responses/ProviderError'
+        '503':
+          $ref: '#/components/responses/NotConfigured'
+
+  /api/license/deactivate:
+    post:
+      tags: [licensing]
+      summary: Release an activation slot
+      description: Frees a device slot. Requiring a proof here would strand a lost device.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LicenseKeyRequest'
+      responses:
+        '200':
+          description: Slot released
           content:
             application/json:
               schema:
                 type: object
-        '429':
-          description: Rate limited
-
-  /api/license/validate:
-    post:
-      summary: Validate a license state
-      security: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                payload:
-                  type: object
-                signature:
-                  type: string
-      responses:
-        '200':
-          description: License valid
+                required: [ok]
+                properties:
+                  ok:
+                    type: boolean
+                    const: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '403':
-          description: License invalid or expired
+          $ref: '#/components/responses/OriginDenied'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '502':
+          $ref: '#/components/responses/ProviderError'
+        '503':
+          $ref: '#/components/responses/NotConfigured'
 
-  /api/license/deactivate:
+  /api/license/entitlement:
     post:
-      summary: Deactivate a license instance
+      tags: [licensing]
+      summary: Authoritative plan for a presented proof
+      description: |
+        Verifies the license proof the client already holds and answers the
+        resolved plan. This is an entitlement *answer*, not an entitlement gate:
+        it must be reachable by a free or expired client so it can be downgraded
+        explicitly. `free` is a definitive answer, not an error.
+
+        Browser origin must be in `AI_SESSION_ORIGINS` (the historical name for
+        this endpoint's allow-list; it is not an AI session).
       security: []
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                licenseKey:
-                  type: string
-                instanceId:
-                  type: string
+              $ref: '#/components/schemas/LicenseProof'
       responses:
         '200':
-          description: License deactivated
+          description: Definitive plan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntitlementResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/OriginDenied'
+        '405':
+          description: Method not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '413':
+          description: Proof is too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          description: |
+            SIGNING_KEY_INVALID — the deployment's public key is unusable. Not a
+            downgrade: the client keeps its verified offline state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 
   /admin:
     get:
-      summary: Signaling server diagnostics
+      tags: [diagnostics]
+      summary: Signaling diagnostics
+      description: Never carries customer data.
       security:
         - signalingAdminToken: []
       responses:
         '200':
-          description: Server state (connections, rooms, peers)
-          content:
-            application/json:
-              schema:
-                type: object
+          description: Diagnostic payload
         '403':
-          description: Invalid admin token
+          description: Invalid or missing `X-Signaling-Admin-Token`
 
   /csp-report:
-    post:
-      summary: CSP violation report endpoint
-      description: |
-        Collects Content-Security-Policy violation reports sent automatically
-        by the browser (report-uri / Reporting-Endpoints). The collector keeps
-        only origins and the violated directive — never paths, query strings,
-        IPs or vault content.
-      security: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                'csp-report':
-                  type: object
-      responses:
-        '204':
-          description: Report received
-        '400':
-          description: Missing or malformed csp-report key
-        '429':
-          description: Rate limited per IP
     get:
-      summary: CSP reports diagnostics
+      tags: [diagnostics]
+      summary: Read collected CSP violations
       security:
         - cspAdminToken: []
       responses:
         '200':
-          description: Recent redacted reports
-          content:
-            application/json:
-              schema:
-                type: object
-        '401':
-          description: Invalid admin token
+          description: Collected CSP reports
+    post:
+      tags: [diagnostics]
+      summary: Submit a CSP violation report
+      description: The browser posts these without credentials; origin filtered and rate limited.
+      security: []
+      responses:
+        '204':
+          description: Report accepted
+        '429':
+          $ref: '#/components/responses/RateLimited'
 
   /api/client-events:
     post:
-      summary: Client event collector
+      tags: [telemetry]
+      summary: Submit opt-in client degradation events
       description: |
-        Aggregates operational events (storage-pressure, error-spike,
-        csp-violation-spike, bundle-integrity-spike) from opt-in clients.
-        Alerts when ≥ CLIENT_EVENTS_CRITICAL_CLIENTS distinct clients report
-        a critical condition within the window. Unauthenticated (browsers
-        cannot attach an admin token to background fetches); the raw client
-        IP is never stored — only a salted one-way hash for distinct counting.
+        Storage-pressure and bundle-integrity signals. Pseudonymous, content-free
+        payload validation plus a per-IP rate limit. Only sent after the user's
+        explicit consent.
       security: []
       requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ClientEvent'
-      responses:
-        '204':
-          description: Event received
-        '400':
-          description: Invalid event or JSON
-        '429':
-          description: Rate limited (CLIENT_EVENTS_LIMIT/window)
-    get:
-      summary: Client events diagnostics
-      description: |
-        Collector dashboard (recent events, totals, alert/webhook counters).
-        Fail-closed: 503 when CLIENT_EVENTS_ADMIN_TOKEN is unset, 401 on a
-        wrong token.
-      security:
-        - clientEventsAdminToken: []
-      responses:
-        '200':
-          description: Diagnostics snapshot
-          content:
-            application/json:
-              schema:
-                type: object
-        '401':
-          description: Invalid admin token
-        '503':
-          description: Diagnostics disabled (no token configured)
-
-  /api/client-events/retry-stats:
-    post:
-      summary: Client event retry stats
-      description: |
-        Cumulative delivery counters (attempts/coalesced/dropped) from the
-        PWA reporter. Diagnostics channel: events are not stored; each new
-        increase in dropped emits the client_events_retry_degraded alert.
-      security: []
-      requestBody:
+        required: true
         content:
           application/json:
             schema:
               type: object
-              properties:
-                type:
-                  type: string
-                  const: client-event-retry-stats
-                attempts:
-                  type: integer
-                coalesced:
-                  type: integer
-                dropped:
-                  type: integer
+              additionalProperties: true
       responses:
         '204':
-          description: Stats received
+          description: Accepted
         '400':
-          description: Invalid payload
+          $ref: '#/components/responses/BadRequest'
         '429':
-          description: Rate limited
+          $ref: '#/components/responses/RateLimited'
+    get:
+      tags: [diagnostics]
+      summary: Collector diagnostics
+      security:
+        - clientEventsAdminToken: []
+      responses:
+        '200':
+          description: Collector state
+        '503':
+          $ref: '#/components/responses/NotConfigured'
+
+  /api/client-events/retry-stats:
+    get:
+      tags: [telemetry]
+      summary: Cumulative reporter retry counters
+      security: []
+      responses:
+        '200':
+          description: Retry counters
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '429':
+          $ref: '#/components/responses/RateLimited'
 
   /api/analytics/events:
     post:
-      summary: Opt-in analytics ingest
+      tags: [analytics]
+      summary: Submit an opt-in daily aggregate bucket
       description: |
-        Accepts one daily aggregated bucket from a consented install.
-        Additive + idempotent per (install, batchId); a retried batch returns
-        204 without double counting. Capacity exhaustion answers 503 with
-        Retry-After instead of silently dropping data.
+        Additive and idempotent per `batchId`: partial batches sum and a retry of
+        the same batch does not double count. Payloads without `batchId` keep the
+        replace-by-day semantics. IP is hashed with a salt; no PII, no content.
       security: []
       requestBody:
         required: true
@@ -638,36 +323,173 @@ paths:
               $ref: '#/components/schemas/AnalyticsBatch'
       responses:
         '204':
-          description: Bucket applied (or duplicate retry accepted)
+          description: Recorded (or already recorded for this batchId)
         '400':
-          description: Invalid bucket (unknown event type, bad iid, non-integer counts)
-        '413':
-          description: Payload too large
+          $ref: '#/components/responses/BadRequest'
         '429':
-          description: Rate limited per IP
+          $ref: '#/components/responses/RateLimited'
         '503':
-          description: Per-install batch capacity exhausted; retry later
-          headers:
-            Retry-After:
-              schema:
-                type: string
+          description: Per-install state is at capacity (fail-closed, with `Retry-After`)
 
   /api/analytics/kpis:
     get:
-      summary: Analytics KPI report
-      description: |
-        Aggregated product KPIs (DAU/WAU/MAU, cohort retention D1/D7/D30,
-        activation funnel, daily totals). Fail-closed behind the admin token.
+      tags: [analytics]
+      summary: Aggregate KPIs
+      description: DAU/WAU/MAU, cohort retention and funnel. Aggregate only.
       security:
         - analyticsAdminToken: []
       responses:
         '200':
-          description: KPI report
+          description: Aggregate buckets
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AnalyticsKpis'
-        '401':
-          description: Invalid admin token
+                type: object
+                additionalProperties: true
         '503':
-          description: Diagnostics disabled (ANALYTICS_ADMIN_TOKEN unset)
+          $ref: '#/components/responses/NotConfigured'
+
+components:
+  securitySchemes:
+    signalingAdminToken:
+      type: apiKey
+      in: header
+      name: X-Signaling-Admin-Token
+    cspAdminToken:
+      type: apiKey
+      in: header
+      name: X-CSP-Admin-Token
+    clientEventsAdminToken:
+      type: apiKey
+      in: header
+      name: X-Client-Events-Admin-Token
+    analyticsAdminToken:
+      type: apiKey
+      in: header
+      name: X-Analytics-Admin-Token
+
+  responses:
+    BadRequest:
+      description: Malformed request body
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    OriginDenied:
+      description: CSRF_ORIGIN — the browser origin is not in the allow-list
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ProviderError:
+      description: The upstream license provider failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotConfigured:
+      description: The required token or signing key is not configured
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              examples: [INVALID_REQUEST, CSRF_ORIGIN, RATE_LIMITED, SIGNING_KEY_INVALID]
+            message:
+              type: string
+            reason:
+              type: string
+
+    HealthResponse:
+      type: object
+      additionalProperties: true
+
+    LicenseHealth:
+      type: object
+      additionalProperties: true
+
+    LicenseKeyRequest:
+      type: object
+      description: The purchased license key plus the device it should bind to.
+      required: [licenseKey]
+      properties:
+        licenseKey:
+          type: string
+        deviceId:
+          type: string
+
+    LicenseProof:
+      type: object
+      description: Signed entitlement payload (base64) and its signature.
+      required: [payload, signature]
+      properties:
+        payload:
+          type: string
+        signature:
+          type: string
+
+    LicenseValidation:
+      type: object
+      description: Verdict for an existing key.
+      additionalProperties: true
+
+    EntitlementResponse:
+      type: object
+      required: [plan, source]
+      properties:
+        plan:
+          type: string
+          enum: [pro, free]
+        source:
+          type: string
+          enum: [license, none]
+        reason:
+          type: string
+          description: Present when plan is free.
+        message:
+          type: string
+        deviceId:
+          type: string
+        validatedAt:
+          type: integer
+          description: Unix epoch milliseconds.
+        expiresAt:
+          type: integer
+          description: Unix epoch milliseconds.
+        activationsLeft:
+          type: integer
+        instanceId:
+          type: string
+
+    AnalyticsBatch:
+      type: object
+      description: One opt-in daily aggregate bucket.
+      required: [iid, counts]
+      properties:
+        iid:
+          type: string
+          description: SHA-256 of a random per-installation id. Never a user identity.
+        batchId:
+          type: string
+          description: Makes the ingest additive and idempotent.
+        counts:
+          type: object
+          additionalProperties:
+            type: integer

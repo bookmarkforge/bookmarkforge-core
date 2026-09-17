@@ -1,9 +1,9 @@
 {
-  "totalAnchors": 20,
+  "totalAnchors": 23,
   "missingCount": 0,
-  "presentCount": 20,
+  "presentCount": 23,
   "discoveredCount": 0,
-  "updatedAt": "2026-09-02T00:00:00.000Z",
+  "updatedAt": "2026-09-17T21:29:25.196Z",
   "anchors": [
     {
       "id": "p0-ice-whitelist",
@@ -108,6 +108,21 @@
       "id": "manual-export-refreshes-backup-age",
       "adr": "ADR-034 D1 / ADR-032",
       "glob": "src/tests/components/settings/StorageSection.test.tsx"
+    },
+    {
+      "id": "p0-vault-kdf-salt",
+      "adr": "ADR-046",
+      "glob": "src/tests/security/p0-vault-kdf-salt*.regression.test.*"
+    },
+    {
+      "id": "p0-vault-rotation-rollback-drill",
+      "adr": "ADR-046 D4",
+      "glob": "src/tests/security/p0-vault-rotation-rollback-drill*.test.ts"
+    },
+    {
+      "id": "v5-sunset-exposure-counter",
+      "adr": "ADR-052",
+      "glob": "src/tests/services/security-vault/kdf-salt-exposure*.test.*"
     }
   ]
 }

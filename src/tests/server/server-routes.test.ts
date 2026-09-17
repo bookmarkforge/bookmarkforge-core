@@ -31,7 +31,6 @@ describe("companion server HTTP route composition", () => {
           PORT: String(port),
           HOST: "127.0.0.1",
           NODE_ENV: "test",
-          AI_SESSION_REQUIRE_LICENSE: "0",
           WHOP_LICENSE_API_URL: "http://127.0.0.1:1/license",
           WHOP_API_KEY: "license-key",
           LICENSE_PROVIDER_ALLOW_HTTP: "1",

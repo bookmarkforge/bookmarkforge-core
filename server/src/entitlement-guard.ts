@@ -8,21 +8,11 @@
  *
  * Before it, every surface that needed an entitlement re-implemented the same
  * three steps — read the proof, verify it, translate the denial into a status
- * code — and the AI session route was the only surface that did. A route added
- * afterwards could simply never call them and nothing failed; the entitlement
- * was enforceable in principle but optional in practice.
+ * code. A route added afterwards could simply never call them and nothing
+ * failed; the entitlement was enforceable in principle but optional in practice.
  *
- * Now a request resolves to an `EntitlementContext` through one of three
- * modes:
- *
- *   - `"proof"`              the request body carries `{ payload, signature }`
- *                            (the session mint, the only proof-consuming
- *                            route: everything else inherits its session);
- *   - `"session"`            a live AI session cookie + CSRF pair minted by
- *                            that route, whose entitlement expiry the session
- *                            manager already enforces on every lookup;
- *   - `"session-or-bearer"`  a live session, or a configured legacy bearer
- *                            token for server-to-server callers.
+ * Now a request resolves to an `EntitlementContext` through `"proof"` mode:
+ * the request body carries `{ payload, signature }`.
  *
  * The resolved context is attached to the request under a symbol, so the router
  * guard and a handler below it share one verification instead of two. Every
@@ -34,13 +24,7 @@
  * there is not gated here.
  */
 import type { IncomingMessage, ServerResponse } from "node:http";
-import {
-  identityKey,
-  matchesAnyToken,
-  readBearerToken,
-  readBody,
-  sendJson,
-} from "./proxy-utils";
+import { readBody, sendJson } from "./proxy-utils";
 import {
   attachEntitlementContext,
   readEntitlementContext,
@@ -55,20 +39,18 @@ import {
 /** Marks a handler produced by `withEntitlement()`. */
 const ENTITLEMENT_GUARDED = Symbol.for("bookmarkforge.entitlement-guarded");
 
-/** The default proof-body cap, matching the session route's historical limit. */
+/** The default proof-body cap. */
 const DEFAULT_MAX_PROOF_BYTES = 32 * 1024;
 
-export type GuardMode = "proof" | "session" | "session-or-bearer";
+export type GuardMode = "proof";
 
 /**
  * Denial codes are the contract clients switch on. `LICENSE_*` are entitlement
- * answers; `UNAUTHORIZED` is the session/bearer admission failure that the AI
- * proxy has always returned; the rest are request-shape failures.
+ * answers; the rest are request-shape failures.
  */
 export type GuardDenialCode =
   | "LICENSE_REQUIRED"
   | "LICENSE_EXPIRED"
-  | "UNAUTHORIZED"
   | "INVALID_REQUEST"
   | "SIGNING_KEY_INVALID";
 
@@ -91,7 +73,7 @@ export type ProofGuardDecision =
 
 export interface GuardRequestOptions {
   /**
-   * What the rejected body was, for the message ("session proof is invalid").
+   * What the rejected body was, for the message ("license proof is invalid").
    * Kept per route so the wire messages stay identical to the ones each
    * surface shipped before this module existed.
    */
@@ -102,17 +84,11 @@ export interface EntitlementGuardOptions {
   now?: () => number;
   /**
    * Whether a signed proof is required at all. False is the deployment's
-   * explicit anonymous opt-out (`AI_SESSION_REQUIRE_LICENSE=0`), which the
-   * session manager refuses in production; the guard only honors it in
-   * `"proof"` mode, because a session is still required downstream.
+   * explicit opt-out; the guard only honors it in `"proof"` mode.
    */
   requireEntitlement?: boolean;
   /** Overrides the committed license public key (tests, key rotation). */
   publicKeySpki?: string;
-  /** Resolves a live AI session; null/absent means "no session mode". */
-  authenticateSession?: (req: IncomingMessage) => Promise<{ identity: string } | null>;
-  /** Legacy bearer tokens accepted in `"session-or-bearer"` mode. */
-  bearerTokens?: ReadonlySet<string>;
   maxProofBytes?: number;
 }
 
@@ -120,7 +96,7 @@ export interface EntitlementGuard {
   /**
    * Verify a proof already in memory. Used by routes that own their own body
    * handling (the entitlement endpoint answers 413 for an oversized proof,
-   * which is a different contract from the session route's 400).
+   * which is a different contract from a 400).
    */
   verifyProof(proof: unknown): ProofGuardDecision;
   /**
@@ -157,7 +133,6 @@ export function createEntitlementGuard(
   const requireEntitlement = options.requireEntitlement ?? true;
   const publicKeySpki = options.publicKeySpki ?? resolveLicensePublicKeySpki();
   const maxProofBytes = options.maxProofBytes ?? DEFAULT_MAX_PROOF_BYTES;
-  const bearerTokens = options.bearerTokens ?? new Set<string>();
 
   const verifyProof = (proof: unknown): ProofGuardDecision => {
     const verification = verifyLicenseProof(proof, { now: now(), publicKeySpki });
@@ -214,7 +189,7 @@ export function createEntitlementGuard(
       raw = await readBody(req);
     } catch {
       // A body that outgrew the transport cap is a malformed proof here: the
-      // session route has always answered 400 (not 413) for both cases.
+      // guard has always answered 400 (not 413) for both cases.
       return { ok: false, denial: invalidBody(label) };
     }
     if (raw.length > maxProofBytes) {
@@ -241,68 +216,24 @@ export function createEntitlementGuard(
     entitlement: null,
   });
 
-  const attachProof = async (
-    req: IncomingMessage,
-    requestOptions: GuardRequestOptions,
-  ): Promise<GuardDecision> => {
-    const label = requestOptions.proofLabel ?? "license proof";
-    // The body is parsed whether or not the deployment enforces licenses: the
-    // session route answered 400 for garbage before the guard existed, and an
-    // anonymous deployment must not start minting sessions for it.
-    const body = await readProofBody(req, label);
-    if (!body.ok) return body;
-    if (!requireEntitlement) return { ok: true, context: anonymousContext() };
-    return verifyProof(body.proof);
-  };
-
   const attach = async (
     req: IncomingMessage,
-    mode: GuardMode,
+    _mode: GuardMode,
     requestOptions: GuardRequestOptions = {},
   ): Promise<GuardDecision> => {
     const existing = readEntitlementContext(req);
     if (existing) return { ok: true, context: existing };
 
-    if (mode === "proof") {
-      const decision = await attachProof(req, requestOptions);
-      if (decision.ok) attachEntitlementContext(req, decision.context);
-      return decision;
-    }
-
-    const session = options.authenticateSession
-      ? await options.authenticateSession(req)
-      : null;
-    if (session) {
-      const context: EntitlementContext = {
-        via: "session",
-        identity: session.identity,
-        entitlement: null,
-      };
-      attachEntitlementContext(req, context);
-      return { ok: true, context };
-    }
-    if (mode === "session-or-bearer") {
-      const token = readBearerToken(req);
-      if (token && matchesAnyToken(token, bearerTokens)) {
-        const context: EntitlementContext = {
-          via: "bearer",
-          identity: identityKey(token),
-          entitlement: null,
-        };
-        attachEntitlementContext(req, context);
-        return { ok: true, context };
-      }
-    }
-    // Same status, code and message the AI proxy returned before the guard
-    // existed, for a request with neither session nor accepted bearer token.
-    return {
-      ok: false,
-      denial: {
-        status: 401,
-        code: "UNAUTHORIZED",
-        message: "AI proxy authentication required",
-      },
-    };
+    const label = requestOptions.proofLabel ?? "license proof";
+    // The body is parsed whether or not the deployment enforces licenses: the
+    // guard answered 400 for garbage before its existence, and an anonymous
+    // deployment must not start minting sessions for it.
+    const body = await readProofBody(req, label);
+    if (!body.ok) return body;
+    if (!requireEntitlement) return { ok: true, context: anonymousContext() };
+    const decision = verifyProof(body.proof);
+    if (decision.ok) attachEntitlementContext(req, decision.context);
+    return decision;
   };
 
   const middleware =

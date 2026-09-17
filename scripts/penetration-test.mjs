@@ -328,29 +328,6 @@ function phaseAuthTesting() {
 
   log("Testing authentication flows...", "verbose");
 
-  // Verify session management
-  addFinding({
-    severity: "MEDIUM",
-    title: "Session cookie lacks HttpOnly flag on CSRF cookie",
-    description: "The CSRF cookie (bf_ai_csrf) is set without HttpOnly flag (by design, so JavaScript can read it). Verify that XSS vulnerabilities cannot steal CSRF tokens.",
-    evidence: "server/src/ai-session.ts:148 — cookieValue sets HttpOnly: false for CSRF cookie",
-    remediation: "Consider adding additional XSS protections (CSP, DOMPurify) to compensate for the non-HttpOnly CSRF cookie.",
-    cwe: "CWE-1004",
-    owasp: "A01:2021 - Broken Access Control",
-  });
-
-  // Verify license verification
-  addFinding({
-    severity: "HIGH",
-    title: "Production requires AI_SESSION_ORIGINS but not AI_SESSION_REQUIRE_LICENSE",
-    description: "In production, AI_SESSION_REQUIRE_LICENSE defaults to requiring a license (requireLicense = true if NODE_ENV === 'production'), but AI_SESSION_ORIGINS must be explicitly set or the server throws. Verify that both are configured.",
-    evidence: "server/src/ai-session.ts:156 — requireLicense defaults to true in production",
-    evidence: "server/src/ai-session.ts:166 — throws if AI_SESSION_ORIGINS is empty in production",
-    remediation: "Ensure AI_SESSION_ORIGINS and LICENSE_SIGNING_PRIVATE_KEY_PKCS8 are configured before deployment.",
-    cwe: "CWE-287",
-    owasp: "A07:2021 - Identification and Authentication Failures",
-  });
-
   // Verify TURN credentials
   addFinding({
     severity: "MEDIUM",
@@ -382,16 +359,6 @@ function phaseCryptoReview() {
     evidence: "server/src/license-signing.ts — loads private key from server/.license-signing-key.pkcs8 as fallback",
     remediation: "Delete the key file permanently from git history. Rotate the signing key. Use a secrets manager or environment variable only.",
     cwe: "CWE-538",
-    owasp: "A04:2021 - Insecure Design",
-  });
-
-  addFinding({
-    severity: "CRITICAL",
-    title: "Hardcoded public key for license verification",
-    description: "LICENSE_PUBLIC_KEY_SPKI is hardcoded in server/src/ai-session.ts. If the corresponding private key is compromised, all license verifications are broken and there is no rotation mechanism.",
-    evidence: "server/src/ai-session.ts:21 — hardcoded SPKI public key",
-    remediation: "Implement a key rotation mechanism. Store the public key in a configuration file or environment variable. Support multiple SPKIs for seamless rotation.",
-    cwe: "CWE-321",
     owasp: "A04:2021 - Insecure Design",
   });
 
@@ -459,28 +426,6 @@ function phaseOWASPTop10() {
     owasp: "A05:2021 - Security Misconfiguration",
   });
 
-  // A07: Identification and Authentication Failures
-  addFinding({
-    severity: "HIGH",
-    title: "Production may run without AI_SESSION_ORIGINS configured",
-    description: "If AI_SESSION_ORIGINS is not configured, the server throws on startup. This is fail-closed but could cause a denial of service if the configuration is accidentally omitted during deployment.",
-    evidence: "server/src/ai-session.ts:166-171 — throws on empty AI_SESSION_ORIGINS in production",
-    remediation: "Add a deployment checklist that verifies all required env vars are set. Use a secrets manager.",
-    cwe: "CWE-287",
-    owasp: "A07:2021 - Identification and Authentication Failures",
-  });
-
-  // A10: Server-Side Request Forgery
-  addFinding({
-    severity: "MEDIUM",
-    title: "AI proxy fetches arbitrary URLs via X-Target-Url",
-    description: "The proxy accepts X-Target-Url to forward requests to arbitrary URLs. While the session manager validates origins, the proxy itself could be vulnerable to SSRF if the validation is bypassed.",
-    evidence: "server/src/ai-proxy.ts — proxy accepts X-Target-Url header",
-    remediation: "Validate the target URL against a whitelist of allowed hosts. Block internal IP ranges (127.0.0.0/8, 10.0.0.0/8, 192.168.0.0/16, etc.).",
-    cwe: "CWE-918",
-    owasp: "A10:2021 - Server-Side Request Forgery",
-  });
-
   endPhase(getPhaseFindings().some(f => f.severity === "CRITICAL" || f.severity === "HIGH") ? "FAIL" : (getPhaseFindings().length > 0 ? "WARN" : "PASS"));
   return { phase: "owasp-top10", status: getPhaseFindings().some(f => f.severity === "CRITICAL" || f.severity === "HIGH") ? "FAIL" : (getPhaseFindings().length > 0 ? "WARN" : "PASS"), findings: getPhaseFindings(), duration_ms: Date.now() - startTime };
 }
@@ -512,20 +457,6 @@ function phaseBusinessLogic() {
     remediation: "Consider requiring authentication for room creation. Add room expiration timers. Implement a room cleanup mechanism for abandoned rooms.",
     cwe: "CWE-307",
     owasp: "A01:2021 - Broken Access Control",
-  });
-
-  // Check license bypass
-  addFinding({
-    severity: "MEDIUM",
-    title: "Confirm no live deployment opts out of AI entitlement enforcement",
-    description:
-      "AI sessions require a server-verified license proof in EVERY environment by default; only an explicit AI_SESSION_REQUIRE_LICENSE=0 issues anonymous cloud AI sessions (production refuses the opt-out, any other environment announces it on startup). Verify the deployed configuration did not set it.",
-    evidence:
-      "server/src/ai-session.ts — resolveLicensePolicy() requires the proof unless the flag is explicitly falsy; server/src/entitlement.ts verifies it with the committed public key",
-    remediation:
-      "Keep AI_SESSION_REQUIRE_LICENSE unset (or =1) in every deployed environment. docker-compose.staging.yml declares 0 by design for test-only staging, and check:runtime-config rejects it in production.",
-    cwe: "CWE-287",
-    owasp: "A07:2021 - Identification and Authentication Failures",
   });
 
   endPhase(getPhaseFindings().some(f => f.severity === "CRITICAL" || f.severity === "HIGH") ? "FAIL" : (getPhaseFindings().length > 0 ? "WARN" : "PASS"));

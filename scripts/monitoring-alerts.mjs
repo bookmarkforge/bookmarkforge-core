@@ -2,7 +2,8 @@
 /**
  * scripts/monitoring-alerts.mjs — 5 alertas exactas para producción
  *
- * 1. APP CAÍDA — production-smoke (index.html + CSP + COOP + /health + AI + WS).
+ * 1. APP CAÍDA — production-smoke (index.html + CSP + COOP + /health +
+ *    client-events + WS).
  *    Con APP_DOWN_AUTO_ROLLBACK=1, DOS fallos CONSECUTIVOS de este check
  *    (persistidos entre ticks del cron) disparan rollback.mjs --auto y luego
  *    rollback.mjs --verify que corrobora la recuperación ANTES de notificar
@@ -29,7 +30,8 @@
  *    entrega infra/red, no regresión de código).
  * 6. API_DEGRADADO — degradación (no outage): mide la latencia p95 y el
  *    error-rate de GET /health y de un endpoint real de negocio (por defecto
- *    POST /api/services/ai/session) sobre API_PROBE_SAMPLES muestras por tick y
+ *    POST /api/license/entitlement, el que la app consulta al arrancar para
+ *    resolver el plan) sobre API_PROBE_SAMPLES muestras por tick y
  *    persiste cada medición en un historial JSON acotado a 24h.
  *    falla si p95 > API_LATENCY_P95_MS o error-rate > API_ERROR_RATE. El p95
  *    sobre N muestras suaviza picos de una sola request. PAGINA (PAGE_CMD,
@@ -55,7 +57,7 @@
  *   API_PROBE_TIMEOUT_MS     timeout por muestra (default 5000 ms)
  *   API_LATENCY_P95_MS       umbral p95 de latencia (default 1000 ms)
  *   API_ERROR_RATE           umbral de error-rate (default 0.2 = 20 %)
- *   API_PROBE_BUSINESS_PATH  endpoint de negocio (default /api/services/ai/session)
+ *   API_PROBE_BUSINESS_PATH  endpoint de negocio (default /api/license/entitlement)
  *   MONITORING_NGINX_CONFIG  ruta del nginx generado (default public/nginx.conf)
  *   API_HISTORY_FILE         historial JSON de métricas (default .api-degradation-history.json)
  *
@@ -93,7 +95,12 @@ const API_PROBE_SAMPLES = Number(process.env.API_PROBE_SAMPLES ?? 10);
 const API_PROBE_TIMEOUT_MS = Number(process.env.API_PROBE_TIMEOUT_MS ?? 5_000);
 const API_LATENCY_P95_MS = Number(process.env.API_LATENCY_P95_MS ?? 1_000);
 const API_ERROR_RATE = Number(process.env.API_ERROR_RATE ?? 0.2);
-const API_PROBE_BUSINESS_PATH = process.env.API_PROBE_BUSINESS_PATH ?? "/api/services/ai/session";
+// The business probe must hit a route the companion server actually serves.
+// `POST /api/license/entitlement` is the real business path: the app calls it
+// on startup to resolve Pro vs free, it is public, it answers 200 for any
+// caller (an unverifiable proof is an authoritative "free", not an error) and
+// it never mutates state.
+const API_PROBE_BUSINESS_PATH = process.env.API_PROBE_BUSINESS_PATH ?? "/api/license/entitlement";
 const API_HISTORY_FILE = process.env.API_HISTORY_FILE ?? ".api-degradation-history.json";
 const API_HISTORY_WINDOW_MS = 24 * 60 * 60 * 1000;
 const API_HISTORY_MAX_ENTRIES = 1_440;
@@ -105,15 +112,6 @@ const API_HISTORY_MAX_ENTRIES = 1_440;
 const APP_DOWN_AUTO_ROLLBACK = process.env.APP_DOWN_AUTO_ROLLBACK === "1";
 // Consecutivos de APP_CAIDA que disparan rollback (2 = dos ticks seguidos).
 const APP_DOWN_THRESHOLD = Number(process.env.APP_DOWN_THRESHOLD ?? 2);
-
-// ── AI_PROVIDER_DOWN: salud del upstream de IA (mock Gemini u Ollama) ───
-// Sondea AI_PROVIDER_HEALTH_URL (default: {PROD_BASE_URL}/health) y cuenta
-// fallos consecutivos. NUNCA dispara rollback (la caída del proveedor de IA
-// no es una regresión de código): solo página al operador con cooldown.
-const AI_PROVIDER_HEALTH_URL = process.env.AI_PROVIDER_HEALTH_URL?.trim() ?? "";
-const AI_PROVIDER_TIMEOUT_MS = Number(process.env.AI_PROVIDER_TIMEOUT_MS ?? 5_000);
-const AI_PROVIDER_THRESHOLD = Number(process.env.AI_PROVIDER_THRESHOLD ?? 3);
-const AI_PROVIDER_COOLDOWN_MS = Number(process.env.AI_PROVIDER_COOLDOWN_MS ?? 600_000);
 
 // Kept as the single integration point for future API-surface checks.
 async function checkAppDown() {
@@ -128,7 +126,7 @@ async function checkAppDown() {
       timeout: 60_000,
     });
     const ok = r.status === 0;
-    return { name: "APP_CAIDA", ok, detail: ok ? "12/12 smoke PASS" : (r.stdout + r.stderr).slice(-500) };
+    return { name: "APP_CAIDA", ok, detail: ok ? "production-smoke PASS" : (r.stdout + r.stderr).slice(-500) };
   } catch (e) {
     return { name: "APP_CAIDA", ok: false, detail: String(e) };
   }
@@ -501,10 +499,10 @@ export async function checkApiDegradado({
         const res = await fetch(probe.url, { ...probe.init, signal: controller.signal, cache: "no-store" });
         latencies.push(Date.now() - started);
         if (!res.ok) {
-          // The business probe is deliberately unauthenticated: when the
-          // deployment enforces entitlements (server/src/ai-session.ts) the
-          // documented answer is 401 LICENSE_REQUIRED. That is policy, not
-          // degradation, and counting it as an error would page 24/7.
+          // The business probe is deliberately unauthenticated: a 4xx from
+          // /api/license/entitlement (missing/refused origin, rate limit) is
+          // policy, not degradation — counting it as an error would page 24/7.
+          // Only a 5xx (or a transport failure) is a real degradation.
           const policyResponse = probe.name === "business" && res.status < 500;
           if (!policyResponse) {
             errors += 1;
@@ -552,59 +550,6 @@ export async function checkApiDegradado({
     businessPath: API_PROBE_BUSINESS_PATH,
     trend,
   };
-}
-
-/**
- * checkAiProvider — sondea el upstream de IA (mock Gemini u Ollama).
- * Detecta caídas del proveedor que el smoke normal no cubre (el smoke pasa
- * mientras el api contesta /health aunque su upstream esté caído).
- * Fallos consecutivos >= AI_PROVIDER_THRESHOLD → alerta. NUNCA rollback.
- */
-export function parseAiProviderProbe(status, consecutiveBefore, threshold = AI_PROVIDER_THRESHOLD) {
-  const consecutive = status === true ? 0 : consecutiveBefore + 1;
-  return { ok: consecutive < threshold, consecutive };
-}
-
-export async function checkAiProvider({
-  healthUrl = AI_PROVIDER_HEALTH_URL || `${PROD_BASE_URL}/health`,
-  timeoutMs = AI_PROVIDER_TIMEOUT_MS,
-  threshold = AI_PROVIDER_THRESHOLD,
-  stateFile = MONITOR_STATE_FILE,
-} = {}) {
-  try {
-    let state = {};
-    try { state = JSON.parse(readFileSync(stateFile, "utf8")); } catch { /* INTENTIONAL SILENCE: state file missing/corrupt — start from empty state; monitoring continues. */ }
-    const before = state.aiProviderConsecutive ?? 0;
-
-    let alive = false;
-    let detail = "";
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-    try {
-      const res = await fetch(healthUrl, { signal: controller.signal, cache: "no-store" });
-      alive = res.ok;
-      detail = `HTTP ${res.status}`;
-    } catch (e) {
-      detail = e.name === "AbortError" ? `timeout >${timeoutMs}ms` : String(e.message || e);
-    } finally {
-      clearTimeout(timer);
-    }
-
-    const { ok, consecutive } = parseAiProviderProbe(alive, before, threshold);
-    state.aiProviderConsecutive = consecutive;
-    try { writeFileSync(stateFile, JSON.stringify(state)); } catch { /* INTENTIONAL SILENCE: state persistence is best-effort; the probe result still counts for this tick. */ }
-
-    return {
-      name: "AI_PROVIDER_DOWN",
-      ok,
-      detail: ok
-        ? `upstream AI OK (${detail}) — racha de fallos ${consecutive}/${threshold}`
-        : `upstream AI CAÍDO ×${consecutive} (umbral ${threshold}) — ${detail} @ ${healthUrl}`,
-      consecutive,
-    };
-  } catch (e) {
-    return { name: "AI_PROVIDER_DOWN", ok: false, detail: String(e) };
-  }
 }
 
 // API surface is exercised by production-smoke; this monitor only verifies
@@ -702,7 +647,6 @@ const results = [
   await checkClientCritical(),
   await checkRetryDegraded(),
   await checkApiDegradado(),
-  await checkAiProvider(),
 ];
 
 const allOk = results.every((r) => r.ok);
@@ -859,38 +803,6 @@ if (clientCritical && !clientCritical.ok) {
   }
 }
 
-// ── Escalation: AI_PROVIDER_DOWN → página (sin rollback) ────────────
-// El upstream de IA caído degrada el producto pero NO es una regresión de
-// código: página con cooldown, nunca rollback automático.
-const aiProvider = results.find((r) => r.name === "AI_PROVIDER_DOWN");
-if (aiProvider && !aiProvider.ok) {
-  let state = {};
-  try { state = JSON.parse(readFileSync(MONITOR_STATE_FILE, "utf8")); } catch { /* INTENTIONAL SILENCE: state file missing/corrupt — start from empty state; monitoring continues. */ }
-  const now = Date.now();
-  const lastAction = state.aiProviderActionAt ?? 0;
-
-  if (shouldRunClientCriticalAction(lastAction, now, AI_PROVIDER_COOLDOWN_MS)) {
-    state.aiProviderActionAt = now;
-    state.lastAiProviderDetail = aiProvider.detail;
-    try { writeFileSync(MONITOR_STATE_FILE, JSON.stringify(state)); } catch { /* INTENTIONAL SILENCE: state persistence is best-effort; the in-memory decision for this tick still stands. */ }
-
-    if (PAGE_CMD) {
-      try {
-        runCommandLine(PAGE_CMD, {
-          encoding: "utf8",
-          timeout: 30_000,
-          env: { ...process.env, CLUSTER_DETAIL: aiProvider.detail },
-        });
-        console.error(`[monitor] PAGE enviada por caída del upstream AI (${PAGE_CMD})`);
-      } catch { /* INTENTIONAL SILENCE: a failing page command must not abort escalation or the monitor tick. */ }
-    } else {
-      console.error(`[monitor] AI_PROVIDER_DOWN sin PAGE_CMD — define PAGE_CMD para paginar caída del proveedor IA`);
-    }
-  } else {
-    console.error(`[monitor] cooldown de upstream AI activo (${Math.round((now - lastAction) / 1000)}s) — sin nueva página`);
-  }
-}
-
 // ── Escalation: RETRY_DEGRADED → página (sin rollback) ───────────────
 // Clientes que abandonaron la entrega de eventos tras reintentos acotados:
 // la señal CLIENT_CRITICAL misma puede estar ciega. Es salud de entrega
@@ -982,7 +894,6 @@ if (isJson) {
     console.log("  MONITORING_ACTIVO FAIL → verifica que src/utils/storageMonitor.ts existe");
     console.log("  CLIENT_CRITICAL FAIL → cluster de clientes críticos: página + rollback automático (AUTO_ROLLBACK=1)");
     console.log("  RETRY_DEGRADED FAIL → clientes perdieron eventos: página (infra/red), revisa la entrega cliente→servidor");
-  console.log("  AI_PROVIDER_DOWN FAIL → upstream IA caído (mock/Ollama): página (no rollback); revisa GEMINI_API_BASE/Ollama");
     console.log("  API_DEGRADADO FAIL → p95/error-rate sobre umbral: página (no rollback); revisa trend24h y sube API_LATENCY_P95_MS si es falso positivo");
   }
 }

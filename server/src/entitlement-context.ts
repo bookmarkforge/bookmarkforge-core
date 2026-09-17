@@ -4,9 +4,7 @@
  *
  * The entitlement guard answers "what is this request allowed to do?" once, and
  * attaches the answer to the request. Everything downstream reads that same
- * object: the router's dispatcher, the AI session mint, and — since this module
- * exists — the paid handlers themselves, which used to re-authenticate the
- * cookie/bearer they had already been authenticated by.
+ * object: the router's dispatcher and the paid handlers themselves.
  *
  * It is a leaf module on purpose. `entitlement-guard.ts` (the policy that fills
  * the context) and `proxy-utils.ts` (the shared utilities) all import this file,
@@ -27,8 +25,7 @@ const ENTITLEMENT_CONTEXT = Symbol.for("bookmarkforge.entitlement-context");
 
 /**
  * The resolved answer for one request. `via` is the discriminator: a proof
- * always carries the entitlement it proved, while a session carries the
- * identity the mint bound (its entitlement expiry is enforced on lookup).
+ * always carries the entitlement it proved.
  */
 export type EntitlementContext =
   | {
@@ -38,12 +35,6 @@ export type EntitlementContext =
       entitlementExpiresAt?: number;
       /** The proof as presented, so a route can echo or re-sign it. */
       proof: unknown;
-    }
-  | {
-      via: "session" | "bearer";
-      identity: string;
-      entitlement: null;
-      entitlementExpiresAt?: number;
     }
   | {
       via: "anonymous";

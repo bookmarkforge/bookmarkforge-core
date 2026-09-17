@@ -66,6 +66,14 @@ vi.mock("motion/react", async () => {
 vi.mock("../../../../services/BackupService", () => ({
   BackupService: { exportBackup: vi.fn() },
 }));
+// StorageCleanupDialog resolves BackupService through the gated Pro loader.
+// Without this mock `loadBackupService()` rejects with ProUnavailableError (no
+// license in the test env) and `exportBackup` is never reached.
+vi.mock("../../../../services/pro-access", () => ({
+  ProUnavailableError: class ProUnavailableError extends Error {},
+  loadBackupService: async () =>
+    (await import("../../../../services/BackupService")).BackupService,
+}));
 
 const { mockWithMasterPasswordBytes } = vi.hoisted(() => ({
   mockWithMasterPasswordBytes: vi.fn(),

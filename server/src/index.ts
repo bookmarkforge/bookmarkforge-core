@@ -49,6 +49,7 @@ import { createGuardedDispatcher } from "./route-table";
 import { createClientEventsHandler } from "./client-events";
 import { createAnalyticsHandler } from "./business-analytics";
 import { createEntitlementGuard } from "./entitlement-guard";
+import { constantTimeUtf8Equal, readBoundedInteger } from "./proxy-utils";
 
 const PORT = Number(process.env.PORT ?? 8787);
 const HOST = process.env.HOST ?? "0.0.0.0";
@@ -162,6 +163,15 @@ const HEARTBEAT_INTERVAL_MS = (() => {
 // and bypass the JOIN_LIMIT rate limit entirely.
 const TRUST_PROXY = process.env.TRUST_PROXY === "1" || process.env.TRUST_PROXY === "true";
 
+// When WS_ALLOWED_ORIGINS is set, the WebSocket server rejects upgrades from
+// origins outside the list. Empty = no origin check (local dev). Comma-separated.
+const WS_ALLOWED_ORIGINS = new Set(
+  (process.env.WS_ALLOWED_ORIGINS ?? "")
+    .split(",")
+    .map((o) => o.trim())
+    .filter(Boolean),
+);
+
 // ── TURN REST relay (coturn `use-auth-secret` / Google TURN REST API) ────
 // When TURN_RELAY_HOST + TURN_STATIC_AUTH_SECRET are configured, the server
 // mints short-lived TURN credentials and ships them inside the `init`
@@ -173,19 +183,6 @@ const TRUST_PROXY = process.env.TRUST_PROXY === "1" || process.env.TRUST_PROXY =
 // Credential format (coturn REST): username = "<expiry-epoch>:turn",
 // credential = base64(HMAC-SHA1(staticAuthSecret, username)). The TURN
 // server validates them without any per-user state.
-function readBoundedInteger(
-  raw: string | undefined,
-  fallback: number,
-  min: number,
-  max: number,
-): number {
-  const parsed = Number(raw ?? fallback);
-  if (!Number.isInteger(parsed) || parsed < min || parsed > max) {
-    return fallback;
-  }
-  return parsed;
-}
-
 function sanitizeTurnHost(raw: string | undefined): string {
   const host = raw?.trim() ?? "";
   // The value is interpolated into ICE URLs. Reject whitespace, delimiters,
@@ -290,14 +287,6 @@ function verifySignalAuth(
   } catch {
     return false;
   }
-}
-
-/** Compare UTF-8 secrets without letting timingSafeEqual throw on byte-length mismatch. */
-function constantTimeUtf8Equal(expected: string, actual: string): boolean {
-  const expectedBytes = Buffer.from(expected, "utf8");
-  const actualBytes = Buffer.from(actual, "utf8");
-  if (expectedBytes.length !== actualBytes.length) return false;
-  return timingSafeEqual(expectedBytes, actualBytes);
 }
 
 // HMAC signal authentication is ON by default (defense-in-depth): any room
@@ -1054,7 +1043,6 @@ const licenseHandler = createLicenseHandler();
 // client already holds — so any deployment that serves the app can enforce or
 // confirm Pro.
 const entitlementHandler = createEntitlementHandler({
-  allowedOrigins: (process.env.AI_SESSION_ORIGINS ?? "").split(",").map((origin) => origin.trim()).filter(Boolean),
   trustProxy: process.env.TRUST_PROXY === "1" || process.env.TRUST_PROXY === "true",
 });
 // Client events collector (storage-pressure / bundle-integrity-spike) with
@@ -1152,11 +1140,13 @@ httpServer.listen(PORT, HOST, () => {
   wss = new WebSocketServer({
     server: httpServer,
     maxPayload: MAX_PAYLOAD_BYTES,
-    verifyClient: (_info, cb) => {
-      // When an origin allowlist is configured, reject WebSocket upgrades
+    verifyClient: ({ origin }, cb) => {
+      // When WS_ALLOWED_ORIGINS is configured, reject WebSocket upgrades
       // from unknown origins to prevent unauthenticated DoS via connection
       // exhaustion. Skip verification when the list is empty (local dev).
-      cb(true);
+      if (WS_ALLOWED_ORIGINS.size === 0) { cb(true); return; }
+      if (!origin || typeof origin !== "string") { cb(false, 403, "origin required"); return; }
+      cb(WS_ALLOWED_ORIGINS.has(origin));
     },
   });
   console.log(`Server running on ws://${HOST}:${PORT}`);

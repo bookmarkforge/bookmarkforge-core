@@ -16,7 +16,7 @@
  * Uso:
  *   node scripts/deploy-prod.mjs                  # gates + build + tag git
  *   node scripts/deploy-prod.mjs --deploy          # + docker compose up -d
- *   node scripts/deploy-prod.mjs --verify          # + production-smoke 12/12
+ *   node scripts/deploy-prod.mjs --verify          # + production-smoke (todos los checks)
  *   node scripts/deploy-prod.mjs --deploy --verify  # pipeline completo
  *   node scripts/deploy-prod.mjs --dry-run         # muestra sin ejecutar
  *   node scripts/deploy-prod.mjs --push-images     # docker push al registro remoto (requiere DOCKER_REGISTRY)
@@ -76,7 +76,7 @@ if (isMain && (argSet.has("--help") || argSet.has("-h"))) {
   console.log(`deploy-prod — Deploy a producción con tag + imágenes por SHA
 
   --deploy          docker compose up -d (usa las imágenes recién construidas)
-  --verify          production-smoke 12/12 al final
+  --verify          production-smoke (todos los checks) al final
   --dry-run         muestra todos los comandos sin ejecutarlos
   --push-images     docker push <registro>/bookmarkforge/{web,api}:<sha>
                     (requiere DOCKER_REGISTRY; se ejecuta DESPUÉS de --verify)
@@ -325,10 +325,10 @@ if (DO_DEPLOY) {
   log("--deploy no seteado: imágenes construidas y tag creado, sin levantar contenedores.");
 }
 
-// ── Fase F (solo --verify): production-smoke 12/12 ──────────────────────────
+// ── Fase F (solo --verify): production-smoke ────────────────────────────────
 if (DO_VERIFY) {
   if (NO_DOCKER) fail("--verify requiere contenedores corriendo; no se puede con --no-docker.");
-  console.log("\n✅ FASE F — Verify (production-smoke 12/12)\n");
+  console.log("\n✅ FASE F — Verify (production-smoke)\n");
 
   const baseUrl = process.env.PROD_BASE_URL ?? "http://127.0.0.1:8080";
   log(`production-smoke contra ${baseUrl}…`);
@@ -339,7 +339,7 @@ if (DO_VERIFY) {
     console.error("  node scripts/rollback.mjs --auto");
     fail("verify falló — ejecuta rollback.");
   }
-  log("production-smoke 12/12 PASS ✓");
+  log("production-smoke PASS ✓");
 }
 
 // ── Fase G (solo --push-images): docker push al registro remoto ────────────
@@ -348,7 +348,7 @@ if (PUSH_IMAGES) {
   console.log("\n📤 FASE G — Push de imágenes al registro remoto\n");
 
   // Retag con prefijo del registro + push. Corre DESPUÉS de --verify: solo
-  // sube al registro lo que pasó el smoke 12/12. Los refs remotos son
+  // sube al registro lo que pasó el smoke. Los refs remotos son
   // inmutables (<sha>), por lo que el rollback desde cualquier nodo del
   // clúster puede apuntar a esta imagen exacta. La mecánica (retag+push+
   // manifest-inspect) vive en push-images-lib.mjs (pushImages) — la misma

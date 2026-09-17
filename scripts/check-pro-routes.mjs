@@ -18,8 +18,9 @@
  *                   route table (a new route cannot be mounted unclassified),
  *                   and every declared route is dispatched (no dead policy
  *                   that makes the table look complete while it is not);
- *   2. CAPABILITY   any route under a paid namespace (`/api/services/ai/`) must
- *                   be `access: "entitlement"` unless it records an audited
+ *   2. CAPABILITY   any route under a paid namespace (`PAID_PATH_PREFIXES` in
+ *                   the route table; empty today) must be
+ *                   `access: "entitlement"` unless it records an audited
  *                   `paidException` reason — so a new paid route cannot be
  *                   classified as public by accident;
  *   3. WIRING       the guard plan the real module computes for each route must
@@ -56,6 +57,12 @@ const ROUTE_TABLE = join("server", "src", "route-table.ts");
 export const DISPATCH_FN = "dispatchUnGuardedRequest";
 /** The only function allowed to call `DISPATCH_FN`. */
 export const GUARDED_DISPATCHER = "createGuardedDispatcher";
+/**
+ * The factory that must build the guard the dispatcher is wired to. Asserting
+ * the factory, not a variable name, is what makes the rule survive a rename of
+ * the wiring without losing its guarantee.
+ */
+export const ENTITLEMENT_GUARD_FACTORY = "createEntitlementGuard";
 
 /**
  * `req.url === "/x"` and `req.url?.startsWith("/x?")`, i.e. both comparison
@@ -164,7 +171,7 @@ export function evaluateRoutePolicies({
         violation(
           "entitlement-without-guard",
           policy.path,
-          'access "entitlement" requires a guard mode ("proof", "session" or "session-or-bearer")',
+          'access "entitlement" requires a guard mode ("proof")',
         ),
       );
     }
@@ -244,16 +251,29 @@ export function checkDispatcherWiring(source) {
       ),
     );
   }
-  // The dispatcher must be wired to the guard the deployment owns.
-// An inline look-alike — a permissive stub, a second guard built
-// with different options — would satisfy the length checks above while
-// enforcing nothing, so the wiring is asserted by shape here.
-  if (!/guard:\s*[A-Za-z_$][\w$]*\.entitlementGuard\b/.test(source)) {
+  // The dispatcher must be wired to the guard the deployment owns, and that
+  // guard must be the `createEntitlementGuard(...)` instance built in this
+  // module. An inline look-alike — a permissive stub, a second guard built with
+  // weaker options — would satisfy the length checks above while enforcing
+  // nothing, so the wiring is asserted by shape here.
+  //
+  // Scoped to the dispatcher call: a bare `guard:` anywhere else in the file
+  // (a comment, an unrelated helper) must neither satisfy nor break the rule.
+  const callStart = source.indexOf(`${GUARDED_DISPATCHER}({`);
+  const call = callStart === -1 ? "" : source.slice(callStart, callStart + 400);
+  const guardReference = /\bguard:\s*([A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*)/.exec(call)?.[1];
+  const guardRoot = guardReference?.split(".")[0];
+  const builtByFactory =
+    guardRoot !== undefined &&
+    new RegExp(
+      `(?:const|let|var)\\s+${guardRoot}\\s*=\\s*${ENTITLEMENT_GUARD_FACTORY}\\s*\\(`,
+    ).test(source);
+  if (!builtByFactory) {
     violations.push(
       violation(
         "guard-not-shared",
         `${GUARDED_DISPATCHER} guard`,
-        "the dispatcher is not wired to the deployment's entitlement guard (`guard: <entitlementGuard>.entitlementGuard`) — a local replacement could enforce a different policy, or none",
+        `the dispatcher is not wired to a guard built by ${ENTITLEMENT_GUARD_FACTORY}() in ${SERVER_INDEX} — a local replacement could enforce a different policy, or none`,
       ),
     );
   }

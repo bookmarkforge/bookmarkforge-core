@@ -11,9 +11,17 @@ import React from "react";
 
 afterEach(cleanup);
 
-vi.mock("react-i18next", () => {
+// Partial mock: `src/i18n.ts` (imported through the component's dependency
+// chain) calls `i18n.use(initReactI18next)`, so the real module has to stay
+// reachable. Only `useTranslation` is overridden, to keep the key-or-fallback
+// behaviour the assertions rely on.
+vi.mock("react-i18next", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("react-i18next")>();
   const t = (key: string, fb?: string) => fb || key;
-  return { useTranslation: () => ({ t, i18n: { language: "en" } }) };
+  return {
+    ...actual,
+    useTranslation: () => ({ t, i18n: { language: "en" } }),
+  };
 });
 
 const mockUseSecurityStore = vi.fn();
@@ -36,6 +44,16 @@ vi.mock("../../services/RecoveryService", () => ({
 vi.mock("../../services/BackupService", () => ({
   BackupService: { exportBackup: vi.fn().mockResolvedValue(undefined) },
 }));
+// SecurityManager resolves Pro services through the gated loader
+// (`loadBackupService`), not by importing BackupService directly. Without this
+// mock the .bmf recovery-kit flow rejects with ProUnavailableError before
+// `exportBackup` is reached. It re-imports the mocked module above so the
+// existing assertions observe the same object.
+vi.mock("../../services/pro-access", () => ({
+  ProUnavailableError: class ProUnavailableError extends Error {},
+  loadBackupService: async () =>
+    (await import("../../services/BackupService")).BackupService,
+}));
 
 const mockHasMasterPassword = vi.fn();
 const mockIsVaultLockedError = vi.fn(() => false);
@@ -50,29 +68,39 @@ vi.mock("../../services/SecurityVault", () => ({
   },
 }));
 
-vi.mock("../../store/safeStorage", () => ({
-  safeGet: vi.fn((key: string) => {
-    try {
-      return localStorage.getItem(key);
-    } catch {
-      return null;
-    }
-  }),
-  safeSet: vi.fn((key: string, value: string) => {
-    try {
-      localStorage.setItem(key, value);
-    } catch {
-      /* INTENTIONAL SILENCE: the mock cleanup is best-effort. */
-    }
-  }),
-  safeRemove: vi.fn((key: string) => {
-    try {
-      localStorage.removeItem(key);
-    } catch {
-      /* INTENTIONAL SILENCE: the mock cleanup is best-effort. */
-    }
-  }),
-}));
+// Partial mock: the real module is spread in so the adapter factories
+// (`createStorageAdapter`, used by usePreferencesStore via src/i18n.ts) keep
+// working. Replacing the module wholesale broke every test in this file the
+// moment that dependency appeared — the three primitives are overridden only
+// because they need localStorage's real error behaviour here.
+vi.mock("../../store/safeStorage", async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import("../../store/safeStorage")>();
+  return {
+    ...actual,
+    safeGet: vi.fn((key: string) => {
+      try {
+        return localStorage.getItem(key);
+      } catch {
+        return null;
+      }
+    }),
+    safeSet: vi.fn((key: string, value: string) => {
+      try {
+        localStorage.setItem(key, value);
+      } catch {
+        /* INTENTIONAL SILENCE: the mock cleanup is best-effort. */
+      }
+    }),
+    safeRemove: vi.fn((key: string) => {
+      try {
+        localStorage.removeItem(key);
+      } catch {
+        /* INTENTIONAL SILENCE: the mock cleanup is best-effort. */
+      }
+    }),
+  };
+});
 
 vi.mock("../../db/database", () => ({
   initDB: vi.fn().mockResolvedValue(undefined),

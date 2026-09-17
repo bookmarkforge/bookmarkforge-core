@@ -15,6 +15,9 @@ import { cloudSyncService } from "./integrations/cloudSync";
 import { getBuildHash } from "../utils/bundleIntegrity";
 import { vectorIndexService } from "./ai/VectorIndexService";
 import { loadWebLLMService } from "./pro-access";
+// ADR-052 Phase 1: local-only exposure counter for the v5 sunset (ADR-053's
+// registry will extend it when that lands).
+import { reportVaultSecretFormatExposure } from "./security-vault/kdf-salt";
 
 export interface SystemDiagnostics {
   db: {
@@ -62,6 +65,14 @@ export interface SystemDiagnostics {
   };
   sync: {
     providers: Record<string, unknown>;
+  };
+  /** ADR-052 Phase 1: residual legacy-v5 secret corpus (local-only). */
+  vaultCrypto: {
+    /** "ok" = every secret was read and classified; "unknown" = storage unreadable. */
+    status: "ok" | "unknown";
+    inspected: number;
+    legacyV5: number;
+    saltedV6: number;
   };
 }
 
@@ -286,6 +297,18 @@ class DiagnosticService {
       }
     }
 
+    // ADR-052 Phase 1: local-only v5 exposure report. Fail-soft: an error
+    // here must never break diagnostics; "unknown" is honest (zero would
+    // falsely signal a fully migrated vault).
+    const vaultCrypto = await reportVaultSecretFormatExposure().catch(
+      (error: unknown): SystemDiagnostics["vaultCrypto"] => {
+        logger.warn("[DiagnosticService] Vault crypto exposure report failed", {
+          error: error instanceof Error ? error.message : String(error),
+        });
+        return { status: "unknown", inspected: 0, legacyV5: 0, saltedV6: 0 };
+      },
+    );
+
     return {
       db: {
         initialized: isDBInitialized(),
@@ -331,6 +354,12 @@ class DiagnosticService {
       },
       sync: {
         providers: cloudSyncService.getSyncMetrics(),
+      },
+      vaultCrypto: {
+        status: vaultCrypto.status,
+        inspected: vaultCrypto.inspected,
+        legacyV5: vaultCrypto.legacyV5,
+        saltedV6: vaultCrypto.saltedV6,
       },
     };
   }

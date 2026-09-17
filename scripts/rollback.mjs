@@ -53,6 +53,17 @@ function runOk(cmd, opts = {}) {
   }
 }
 
+/**
+ * Re-render deployment config after a failed post-rollback smoke.
+ *
+ * Kept as a tiny injectable boundary so the integration test can execute the
+ * real nginx-render --write command in an isolated fixture, without running
+ * git/docker or a production rollback.
+ */
+export function runNginxRenderWrite({ cwd = process.cwd(), runner = run } = {}) {
+  return runner("node scripts/nginx-render.mjs --write", { cwd });
+}
+
 function runCapture(cmd) {
   return execSync(cmd, { encoding: "utf8" }).trim();
 }
@@ -248,7 +259,7 @@ if (args.includes("--verify")) {
     console.error("\n[rollback] VERIFY FAIL — health check no pasó");
     process.exit(1);
   }
-  console.log("\n[rollback] VERIFY OK — 12/12 checks pasaron");
+  console.log("\n[rollback] VERIFY OK — el smoke de producción pasó (todos los checks)");
   process.exit(0);
 }
 
@@ -528,7 +539,7 @@ try {
   if (smoke.status !== 0) {
     console.log("[rollback] smoke FAIL — regenerando nginx.conf y reintentando");
     try {
-      run("node scripts/nginx-render.mjs --write");
+      runNginxRenderWrite();
       run(`${composeBase} restart web`);
       await new Promise((r) => setTimeout(r, 3000));
       const smoke2 = spawnSync(process.execPath, ["scripts/production-smoke.mjs"], {

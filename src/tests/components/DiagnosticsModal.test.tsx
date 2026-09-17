@@ -36,6 +36,12 @@ const mockGetDiagnostics = vi.hoisted(() =>
     sync: {
       providers: {},
     },
+    vaultCrypto: {
+      status: "ok",
+      inspected: 2,
+      legacyV5: 0,
+      saltedV6: 2,
+    },
   }),
 );
 vi.mock("../../services/DiagnosticService", () => ({

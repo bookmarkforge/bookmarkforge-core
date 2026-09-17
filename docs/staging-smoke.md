@@ -47,45 +47,18 @@ El rollback usa directamente el entrypoint versionado `scripts/staging-rollback.
 
 Los scripts versionados deben permanecer restringidos al entorno de staging y no deben usar `:latest`.
 
-## Proveedor AI local opcional (Ollama, profile `ai-local`)
+## Proveedor AI local opcional (Ollama)
 
-El compose de staging incluye dos servicios opt-in para CI determinista con un LLM real
-en lugar del mock de Gemini:
+Ollama es un proveedor **de cliente**: la app lo llama desde el navegador con la URL que
+el usuario configura en Ajustes. No forma parte del stack de staging. El perfil
+`ai-local` que vivía en `docker-compose.staging.yml` existía para alimentar el upstream
+del api, y ese upstream se retiró junto con el proxy de IA; ya no queda ningún consumidor
+en el stack.
 
-- `ollama` — API de Ollama dentro de la red staging (sin puerto al host), con healthcheck.
-- `ollama-pull` — one-shot: espera al healthcheck y descarga el modelo (default `llama3.2`,
-  el mismo default de la app; sobreescribir con `OLLAMA_MODEL=<name>`).
-
-### Activación
-
-```bash
-# levantar el stack con el proveedor local
-docker compose --profile ai-local -f docker-compose.staging.yml up -d
-
-# comprobar el modelo dentro de la red
-docker compose --profile ai-local -f docker-compose.staging.yml run --rm ollama-pull
-
-# prueba de contrato desde el host (reusa scripts/test-ollama-contract.mjs)
-npm run test:ollama-contract -- --url http://127.0.0.1:11434 --model llama3.2
-```
-
-Sin el flag `--profile ai-local` los servicios no se crean y el stack sigue usando el
-`ai-mock` de Gemini — el comportamiento por defecto no cambia.
-
-### Cómo apuntar el smoke al proveedor local
-
-El smoke del api (`runApiSurfaceChecks`) prueba el upstream configurado en el servicio
-`api` (env `GEMINI_API_BASE`). Para ejercitar Ollama en un run determinista:
-
-1. Levantar el stack con `--profile ai-local`.
-2. Sobreescribir el upstream del api en el run:
-   `GEMINI_API_BASE=http://ollama:11434/v1beta/models` (compatible a nivel HTTP con el
-   mock; los checks de 401/200/SSE se comportan igual).
-3. Ejecutar el smoke de staging normalmente; el api resuelve `ollama` por DNS de compose.
-
-Nota: Ollama no requiere `x-goog-api-key`; si el smoke valida 401-sin-auth contra el
-upstream, mantener ese check contra el `ai-mock` (que sí lo exige) y usar Ollama solo
-para los checks de generación.
+Para ejercitarlo, ejecuta Ollama donde el navegador pueda alcanzarlo (lo habitual es el
+host) y apunta el proveedor Ollama de la app a esa URL. Ojo con el contenido mixto: si
+sirves la app por HTTPS, una URL `http://` de Ollama se bloquea — usa `http://localhost`
+(exento) o sirve Ollama por HTTPS.
 
 ### Contrato probado
 

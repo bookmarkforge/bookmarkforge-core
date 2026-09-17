@@ -35,6 +35,7 @@ import { secureStorage } from "../services/SecureStorage";
 import { logger } from "../utils/logger";
 import { encryptionService } from "../services/EncryptionService";
 import { SECURE_STORAGE_KEYS } from "../services/SecurityVault";
+import { DB_SALT_DESCRIPTOR } from "../services/security-vault/salt-registry";
 import { DB_CONFIG } from "../constants/config";
 import { safeGet, safeRemove } from "../store/safeStorage";
 import { STORAGE_KEYS } from "../constants/storage-keys";
@@ -549,10 +550,12 @@ async function resolveDbPassword(pw?: string): Promise<string> {
   const legacySalt = safeGet(STORAGE_KEYS.VAULT_SALT);
   const legacyKey = safeGet(STORAGE_KEYS.VAULT_CRYPTO_KEY);
 
-  // Determine salt (migrate from localStorage if needed)
-  let salt = await secureStorage.getSecret("vault_salt");
+  // Determine salt (migrate from localStorage if needed). ADR-053: the key
+  // and its minting contract come from the salt registry — the db_salt is
+  // minted once per vault with CSPRNG and never rotates.
+  let salt = await secureStorage.getSecret(DB_SALT_DESCRIPTOR.storageKey);
   if (!salt && legacySalt) {
-    await secureStorage.setSecret("vault_salt", legacySalt);
+    await secureStorage.setSecret(DB_SALT_DESCRIPTOR.storageKey, legacySalt);
     safeRemove(STORAGE_KEYS.VAULT_SALT);
     salt = legacySalt;
   }
@@ -562,7 +565,7 @@ async function resolveDbPassword(pw?: string): Promise<string> {
     salt = Array.from(array, (byte) => byte.toString(16).padStart(2, "0")).join(
       "",
     );
-    await secureStorage.setSecret("vault_salt", salt);
+    await secureStorage.setSecret(DB_SALT_DESCRIPTOR.storageKey, salt);
   }
 
   // Determine DB key

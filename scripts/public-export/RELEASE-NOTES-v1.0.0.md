@@ -45,7 +45,7 @@ public export, enforced by CI:
 | P2P device sync | End-to-end encrypted sync between your devices |
 | PDF + OCR | Read, extract and index PDF documents |
 | Encrypted backups | Automatic, versioned, encrypted local backups |
-| Server AI proxy | Optional companion relay for AI sessions |
+| BYOK cloud AI | Provider calls originate in the browser with the user's key |
 
 **Pricing** — one-time purchase, no subscription: **$59 Early Bird** (first 200
 licenses) → **$79 regular**. A license covers the lifetime of v1: all v1.x
@@ -64,9 +64,8 @@ keep v1 working forever. Future major versions (v2, v3) are separate products,
 - Core components resolve Pro services through the entitlement gate
   `src/services/pro-access.ts` (MIT), which checks the license *before*
   fetching any Pro code — a Free user never downloads what they cannot use.
-- Server-side, the AI proxy resolves to a marked placeholder pair (`.d.ts`
-  type surface + inert `.js`) that never crashes your build and warns once:
-  `[open-core] <module> is a Pro feature and is not included in this build`.
+- Server-side, only signaling, licensing and telemetry endpoints are exposed;
+  cloud AI calls stay in the browser and use the user's provider key.
 - The exact list of proprietary modules is auditable in
   `scripts/pro-boundary.mjs`, and `npm run check:open-core` re-verifies this
   repository's boundary in CI on every push.

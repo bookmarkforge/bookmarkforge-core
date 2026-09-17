@@ -79,6 +79,16 @@ vi.mock("../../services/BroadcastBridgeService", () => ({
 vi.mock("../../services/BackupService", () => ({
   BackupService: { runAutoBackup: mocks.mockRunAutoBackup },
 }));
+// AppInitializer resolves Pro services through the gated loader, not by
+// importing BackupService directly. Without this mock `loadBackupService()`
+// rejects with ProUnavailableError (no license in the test env) and the
+// auto-backup path never reaches `runAutoBackup`. It re-imports the mocked
+// module above so assertions on `mockRunAutoBackup` observe the same object.
+vi.mock("../../services/pro-access", () => ({
+  ProUnavailableError: class ProUnavailableError extends Error {},
+  loadBackupService: async () =>
+    (await import("../../services/BackupService")).BackupService,
+}));
 vi.mock("../../services/ai/CrossPollinationService", () => ({
   crossPollinationService: { tryRunDigest: mocks.mockTryRunDigest },
 }));

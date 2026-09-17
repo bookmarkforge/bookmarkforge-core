@@ -11,19 +11,17 @@ vi.mock("../../utils/logger", () => ({
   logger: { warn: vi.fn() },
 }));
 
-vi.mock("../../services/ai/aiSession", () => ({
-  fetchWithAiSession: async (
-    request: (options: RequestInit) => Promise<Response>,
-    options: RequestInit,
-  ) => request(options),
-}));
-
 vi.mock("../../services/ai/utils", () => ({
   sanitizeErrorMessage: (msg: string) => msg,
   cancelResponseBody: vi.fn(),
   readBoundedResponseText: async (response: Response) => response.text(),
   readBoundedResponseJson: async <T>(response: Response) =>
     (await response.json()) as T,
+  // imageService talks to the Gemini API directly now that the server-side
+  // proxy is gone, so `fetchWithTimeout` is the transport the assertions must
+  // intercept. It delegates to the firewalled-fetch double so the
+  // "no network call" expectations below still observe the attempt.
+  fetchWithTimeout: (...args: unknown[]) => mockFirewalledFetch(...args),
 }));
 
 const { generateImage } = await import("../../services/imageService");
@@ -79,7 +77,9 @@ describe("imageService", () => {
 
   it("throws if imageBase64 is null", async () => {
     mockFirewalledFetch.mockResolvedValue(
-      mockResponse(200, { imageBase64: null }),
+      mockResponse(200, {
+        candidates: [{ content: { parts: [{ inlineData: { data: null } }] } }],
+      }),
     );
     await expect(generateImage("test")).rejects.toThrow("No image generated");
   });
@@ -91,10 +91,34 @@ describe("imageService", () => {
     );
   });
 
-  it("returns data:image/png;base64 when the backend responds OK", async () => {
+  it("wraps the raw Gemini base64 into a data URL", async () => {
     mockFirewalledFetch.mockResolvedValue(
       mockResponse(200, {
-        imageBase64: "data:image/png;base64,abc123",
+        candidates: [
+          {
+            content: {
+              parts: [
+                { inlineData: { data: "abc123", mimeType: "image/webp" } },
+              ],
+            },
+          },
+        ],
+      }),
+    );
+    const result = await generateImage("test");
+    expect(result).toBe("data:image/webp;base64,abc123");
+  });
+
+  it("defaults to image/png when Gemini omits a usable mimeType", async () => {
+    mockFirewalledFetch.mockResolvedValue(
+      mockResponse(200, {
+        candidates: [
+          {
+            content: {
+              parts: [{ inlineData: { data: "abc123", mimeType: "text/plain" } }],
+            },
+          },
+        ],
       }),
     );
     const result = await generateImage("test");

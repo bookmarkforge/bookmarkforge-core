@@ -30,8 +30,8 @@ import type { EntitlementGuard, GuardMode } from "./entitlement-guard";
  * (an audited "this is not what Pro means here" reason, e.g. an
  * operator-token-gated admin surface).
  *
- * All AI proxy routes have been removed; the server now serves only
- * license, health, admin, CSP, analytics and P2P signaling routes.
+ * The server serves only license, health, admin, CSP, analytics and P2P
+ * signaling routes.
  */
 export const PAID_PATH_PREFIXES: readonly string[] = [];
 
@@ -41,7 +41,7 @@ export type RouteMatch = "exact" | "prefix";
 
 export interface RouteGuardSpec {
   mode: GuardMode;
-  /** What the request body is, for denial messages ("session proof"). */
+  /** What the request body is, for denial messages ("license proof"). */
   proofLabel?: string;
 }
 

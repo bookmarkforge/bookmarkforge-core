@@ -127,7 +127,7 @@ export function validateEnvVars(): EnvValidationResult {
     ] as const) {
       if (value) {
         result.errors.push(
-          `[BUILD FATAL] ${name} is set in production. AI provider keys MUST NOT be bundled in the frontend. Use a server-side AI proxy.`,
+          `[BUILD FATAL] ${name} is set in production. AI provider keys MUST NOT be bundled in the frontend. Use a user-supplied key through the client integration.`,
         );
       }
     }

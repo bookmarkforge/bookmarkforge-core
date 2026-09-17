@@ -23,7 +23,7 @@ In scope:
 
 - The browser app (vault, crypto, sync client, importers, extension)
 - The signaling server (`server/src`)
-- The AI proxy companion and its license verification path
+- The signaling, licensing and telemetry companion server
 
 Out of scope:
 

@@ -42,7 +42,11 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { spawnSync } from "node:child_process";
+import { getAuditPayload } from "./npm-audit-payload.mjs";
+
+// Shared single-acquisition audit (see npm-audit-payload.mjs). The alias
+// keeps the historical export name for tests and consumers.
+export { getAuditPayload as runNpmAudit };
 
 // Deliberately process.cwd() (not import.meta.url): vitest rewrites module
 // URLs to a non-file scheme, so fileURLToPath(new URL("..", import.meta.url))
@@ -208,25 +212,7 @@ export function evaluateOverridePins({ pins, lock, audit }) {
   return failures;
 }
 
-/** Run `npm audit --json` and return the parsed payload (throws on failure). */
-export function runNpmAudit({ includeDev = false } = {}) {
-  const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
-  const args = ["audit", "--json", ...(includeDev ? [] : ["--omit=dev"])];
-  const result = spawnSync(npmCmd, args, {
-    cwd: ROOT,
-    encoding: "utf8",
-    maxBuffer: 64 * 1024 * 1024,
-    shell: process.platform === "win32",
-  });
-  const stdout = result.stdout ?? "";
-  if (!stdout.trim()) {
-    throw new Error(
-      `npm ${args.join(" ")} produced no JSON (exit ${result.status ?? "?"}) — ` +
-        `${(result.stderr ?? "").trim().split("\n").slice(-3).join(" ") || "is npm installed and is the network reachable?"}`,
-    );
-  }
-  return JSON.parse(stdout);
-}
+
 
 /** Run the gate against the repo. Returns the failure list (prints ok lines). */
 export function runCheck({ auditJsonPath = null, includeDev = false } = {}) {
@@ -251,7 +237,7 @@ export function runCheck({ auditJsonPath = null, includeDev = false } = {}) {
       audit = JSON.parse(readFileSync(auditJsonPath, "utf8"));
     }
   } else {
-    audit = runNpmAudit({ includeDev });
+    audit = getAuditPayload({ includeDev });
   }
 
   failures.push(...evaluateOverridePins({ pins, lock, audit }));

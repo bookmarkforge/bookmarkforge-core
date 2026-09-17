@@ -98,9 +98,11 @@ i18n y las vistas de organización que no estén identificadas como Pro.
 
 ## Pro propietario
 
-Incluye, entre otros, IA local y proxy de IA, RAG y agentes especializados,
-sincronización P2P, flashcards, PDF/OCR, exportaciones avanzadas, backups
-avanzados y los servicios comerciales asociados. La lista exacta y sus rutas se
+Incluye, entre otros, IA local (WebLLM/Ollama en el cliente), RAG y agentes
+especializados, sincronización P2P, flashcards, PDF/OCR, exportaciones avanzadas,
+backups avanzados y los servicios comerciales asociados. El proxy de IA del
+servidor ya no existe (se retiró en 2026-09): las funciones de IA son de cliente
+y llaman al proveedor con la clave del propio usuario. La lista exacta y sus rutas se
 mantiene en `scripts/pro-boundary.mjs` y la consumen por igual el exportador, el
 generador de la frontera de compilación y el gate `check:open-core`; si existe
 una discrepancia, la exclusión automatizada prevalece hasta que el mantenedor la

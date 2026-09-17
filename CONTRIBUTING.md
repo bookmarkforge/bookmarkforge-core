@@ -26,14 +26,16 @@ wins.
   with Argon2id/HKDF derivation.
 - **Domain services:** `src/services` for backup/restore, sync, licensing, AI,
   consent, analytics, sanitization.
-- **Companion server:** `server/src` is a minimal HTTP + WS server for AI proxy,
-  sessions, licensing, client events, analytics, and signaling.
+- **Companion server:** `server/src` is a minimal HTTP + WS server for
+  licensing/entitlement, client events, analytics, and P2P signaling. There is
+  **BYOK AI**: provider calls go from the browser straight to the provider
+  the user configured.
 - **Sync:** WebRTC transports data; WS is signaling only; TURN is optional with
   ephemeral credentials.
-- **Operations:** Docker Compose separates web, api, and optional Redis; the
-  reverse proxy terminates TLS and serves assets.
+- **Operations:** Docker Compose separates `web` and `api` (both stateless, no
+  Redis); the reverse proxy terminates TLS and serves assets.
 
-Trust boundaries are documented in `docs/ARCHITECTURE.md`. Layer rules are
+Trust boundaries are documented in `docs/architecture.md`. Layer rules are
 enforced by `npm run check:boundaries`.
 
 ---
@@ -151,12 +153,19 @@ Useful local commands:
 This checkout has no `.husky/pre-commit` hook file — CI is the enforcement
 point. Run the gates locally; never push without them green.
 
+For the save-edit loop there is a fast tier: `npm run check:quick` (~2.5 s)
+re-runs the sub-second security gates ordered by how often they fail first
+(boundaries, env, open-core, pro-imports, compose/runtime config, license-keys,
+log privacy) with per-gate timing, fail-fast on the first red. It is additive —
+not part of the `npm run check` chain, so the inspector freeze (O-1) does not
+apply — and it never replaces the full chain before pushing.
+
 ```bash
 npm run typecheck:prod          # tsc --noEmit (prod tsconfig)
 npm run lint                    # eslint . (custom rules in eslint-rules/)
 npm run test:fast               # bounded Vitest suites (security, db, services,
-                                #   key components — count deliberately unnumbered,
-                                #   see ADR-038)
+                                #   key components, quality-gate script tests —
+                                #   count deliberately unnumbered, see ADR-038)
 npm run test:slow               # every other test file (~480; CI's slow-tests job
                                 #   enforces timing on it; `npm test` is the same
                                 #   surface — run it before merging areas the fast
@@ -199,9 +208,24 @@ touching the surfaces they guard:
   key-complete with matching `{{placeholders}}`; add keys to every locale file
   (`npm run check:i18n:fix` scaffolds).
 - **Secrets:** `VITE_*` vars are **inlined into the bundle** by Vite — never
-  put real keys in `VITE_*`. Server-side `GEMINI_API_KEY` etc. stay on the
-  companion server. `build:ci` runs a literal-secret scan over `dist/` and
-  fails on leaks; `check:secrets-in-commit` scans the tree.
+  put real keys in `VITE_*`. There is no server-side AI key: AI provider keys
+  live in the user's encrypted vault and are read by the browser only. The
+  companion server's only credential is the license signing key. `build:ci`
+  runs a literal-secret scan over `dist/` and fails on leaks;
+  `check:secrets-in-commit` scans the tree.
+- **Dependency CVE gates:** `check:override-cve` and `check:direct-cve` share
+  ONE `npm audit --json` acquisition (`scripts/npm-audit-payload.mjs`): the
+  first gate runs the audit and the second reads the cached payload (~1.6 s
+  together vs ~3.3 s before; measured 2026-09-17). The cache lives under
+  `node_modules/.cache/bookmarkforge-npm-audit/` (gitignored, wiped by
+  `npm ci`) and a cached payload is valid ONLY while `package.json` and
+  `package-lock.json` have not changed since it was written (mtime+size
+  fingerprint stored inside the cache file) and its age is under 10 minutes —
+  anything else re-runs the audit, so the cache can never vouch for a tree it
+  does not describe. Fail-closed is unchanged: an audit that cannot run is
+  still a gate failure (exit 2). `BMF_AUDIT_FRESH=1` forces a fresh run and
+  `--audit-json <path>` bypasses the cache entirely (the nightly workflow
+  uses it).
 
 ---
 

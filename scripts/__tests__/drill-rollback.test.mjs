@@ -12,11 +12,11 @@ import { findProxyPassWithoutPort } from "../check-blindeo.mjs";
 describe("drill-rollback: rollback target web gate", () => {
   it("passes when all proxy_pass have explicit ports", () => {
     const nginx = `
-      location = /api/services/ai/session {
-          proxy_pass http://bookmarkforge_api:8787/api/services/ai/session;
+      location = /api/license/entitlement {
+          proxy_pass http://bookmarkforge_api:8787/api/license/entitlement;
       }
-      location = /api/services/ai/generate {
-          proxy_pass http://bookmarkforge_api:8787/api/services/ai/generate;
+      location = /health {
+          proxy_pass http://bookmarkforge_api:8787/health;
       }
       location = / {
           proxy_pass http://bookmarkforge_api:8787;
@@ -28,8 +28,8 @@ describe("drill-rollback: rollback target web gate", () => {
 
   it("fails when proxy_pass has no port", () => {
     const nginx = `
-      location = /api/services/ai/session {
-          proxy_pass http://bookmarkforge_api/api/services/ai/session;
+      location = /api/license/entitlement {
+          proxy_pass http://bookmarkforge_api/api/license/entitlement;
       }
     `;
     const violations = findProxyPassWithoutPort(nginx);

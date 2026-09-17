@@ -71,22 +71,6 @@ function getLicenseSigningPreset(): string[] {
   }
 }
 
-function getGeminiProxyPreset(): string[] {
-  // Gemini normally uses the same-origin companion server. If an operator
-  // deliberately chooses an external proxy, allow only its exact origin;
-  // the endpoint path remains controlled by GeminiProvider.
-  const url = getEnvValue("VITE_GEMINI_PROXY_URL")?.trim();
-  if (!url) {return [];}
-  try {
-    const parsed = new URL(url);
-    if (!["http:", "https:"].includes(parsed.protocol)) {return [];}
-    if (parsed.username || parsed.password) {return [];}
-    return [parsed.origin];
-  } catch {
-    return [];
-  }
-}
-
 function getTurnPreset(): string[] {
   // Live read (not the frozen registry snapshot) so tests / runtime config
   // overrides via vi.stubEnv take effect, mirroring getP2pSignalingPreset.
@@ -110,7 +94,6 @@ function getPresetOrigins(): Record<string, string[]> {
     // default; self-hosted overrides are preseeded from
     // VITE_LICENSE_SIGNING_URL.
     licenseSigning: getLicenseSigningPreset(),
-    geminiProxy: getGeminiProxyPreset(),
     // ICE servers used by WebRTC (STUN/TURN). Declared here so validateIceServers
     // recognizes them and the firewall whitelist stays consistent (M5).
     ice: [

@@ -72,14 +72,19 @@ export const generateImage = async (prompt: string): Promise<string> => {
   }
 
   const data = await readBoundedResponseJson<{
-    candidates?: Array<{ content?: { parts?: Array<{ inlineData?: { data?: string } }> } }>;
+    candidates?: Array<{
+      content?: {
+        parts?: Array<{ inlineData?: { data?: string; mimeType?: string } }>;
+      };
+    }>;
     error?: unknown;
   }>(response, MAX_IMAGE_RESPONSE_BYTES);
   if (data.error !== undefined) {
     throw new Error(sanitizeErrorMessage(String(data.error)));
   }
   const parts = data.candidates?.[0]?.content?.parts;
-  const imageBase64 = parts?.[0]?.inlineData?.data;
+  const inlineData = parts?.[0]?.inlineData;
+  const imageBase64 = inlineData?.data;
   if (typeof imageBase64 !== "string" || imageBase64.length === 0) {
     throw new Error("No image generated");
   }
@@ -87,5 +92,14 @@ export const generateImage = async (prompt: string): Promise<string> => {
     throw new Error("Generated image exceeds the 36 MB limit");
   }
 
-  return imageBase64;
+  // The Gemini API returns bare base64 in `inlineData`. Callers (the editor
+  // toolbar) feed this straight into an <img>/markdown URL, so the data-URL
+  // wrapper has to be built here — the documented contract of this function.
+  if (imageBase64.startsWith("data:")) {return imageBase64;}
+  const mimeType =
+    typeof inlineData?.mimeType === "string" &&
+    inlineData.mimeType.startsWith("image/")
+      ? inlineData.mimeType
+      : "image/png";
+  return `data:${mimeType};base64,${imageBase64}`;
 };

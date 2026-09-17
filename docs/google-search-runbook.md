@@ -11,16 +11,16 @@
 | Superficie | Contrato | Dónde está pinneado |
 |---|---|---|
 | `/` → landing EN | Rewrite 200 interno; canonical EN en `/` | `scripts/nginx-render.mjs` → `public/nginx.conf`, `public/_redirects`, `netlify.toml` |
-| `/fr/`, `/es/`, `/de/`, `/pt/`, `/it/` | Landings localizadas, canonical propio | ídem + `check:seo` (`LANDING_PAGES`) |
+| `/ar/` … `/zh/` (30 locales) | Landings localizadas, canonical propio; los artefactos son `public/<lang>.html` | `public/_redirects` (Cloudflare/Netlify), `public/nginx.conf` (self-hosted), `check:sitemap-coverage`; la lista SEO histórica de `check:seo` se mantiene como validación complementaria |
 | `/pocket-alternative` | Página comparativa EN, canonical propio | ídem + `check:seo` (`SINGLE_PAGES`) |
 | `/privacy-and-terms.html` + 5 localizadas | Documentos legales, canonical y hreflang ×7 | ídem + `check:seo` (`LEGAL_PAGES`) |
-| `/sitemap.xml` | 13 URLs (6 landings + pocket + 6 legales), `xhtml:link` hreflang en 2 clústeres, orden compatible con el XSD oficial | `renderSitemap()` + `check:seo` + validación externa (libxml2/sitemap.js, ADR-043) |
-| `/robots.txt` | `Disallow: /app`, `/capture`, `/offline`, `/api` | `renderRobotsTxt()` + `check:seo` |
+| `/sitemap.xml` | 61 URLs (landings de 30 idiomas + pocket-alternative + legales de 30 idiomas + la raíz), clústeres `xhtml:link` hreflang | **Archivo manual** (`public/sitemap.xml`), pinneado por `check:seo`; el renderizador NUNCA lo regenera (A9-1) |
+| `/robots.txt` | `Disallow: /app`, `/capture`, `/offline`, `/api` | Generado por `renderRobotsTxt()` (`nginx-render.mjs`) + `check:seo` |
 | `/app`, `/capture`, `/offline*` | `X-Robots-Tag: noindex` por header | `public/_headers` (Cloudflare), `netlify.toml` + `check:seo` |
 | Shell SPA (`index.html`) | Canonical y OG → `/` (la landing), nunca indexable | `check:seo` (`AUX_PAGES`) |
 | Negociación de idioma | 302 temporal (nunca 301) a la landing localizada; el canonical EN queda en `/` | `validateLanguageNegotiation` + ADR-043 |
 
-**Regla de oro:** todo lo que Google debe indexar son **13 URLs** estáticas; todo lo demás (`/app`, `/capture`, `/offline`, `/api`, el SPA shell) está contratado como noindex y **no** aparece en el sitemap (el gate falla si `/app` se cuela).
+**Regla de oro:** todo lo que Google debe indexar son **61 URLs** estáticas: raíz + 30 landings + pocket-alternative + 30 páginas legales. Todo lo demás (`/app`, `/capture`, `/offline`, `/api`, el SPA shell) está contratado como noindex y **no** aparece en el sitemap. `npm run check:sitemap-coverage` verifica que cada `<loc>` tenga artefacto y ruta en `_redirects` y nginx.
 
 ---
 
@@ -32,7 +32,11 @@ El repo ya tiene los validadores; úsalos contra el dominio público **después*
 # Contrato estático completo (canonical, hreflang, noindex, negociación…)
 npm run check
 
-# Grafo hreflang de las 12 páginas en modo live (enlaces rotos, bidireccionalidad)
+# Cobertura estática: cada URL del sitemap tiene HTML + ruta en hosting/nginx
+npm run check:sitemap-coverage
+
+# Grafo hreflang histórico de las 12 páginas principales en modo live
+# (la cobertura de las 30 rutas se comprueba estáticamente arriba)
 node scripts/check-hreflang-graph.mjs https://bookmarkforge.com
 
 # Sitemap y robots servidos
@@ -64,13 +68,15 @@ Si algo falla aquí, **no** sigas: corregir y re-desplegar antes de pedirle a Go
 
 1. Search Console → **Sitemaps**.
 2. URL: `https://bookmarkforge.com/sitemap.xml`.
-3. Estado esperado: **Success**. Google debe ver **13 URLs descubiertas**:
-   - 6 landings (`/`, `/es/`, `/fr/`, `/de/`, `/pt/`, `/it/`) — `weekly`, priority 1.0/0.9
+3. Estado esperado: **Success**. Google debe ver **61 URLs descubiertas**:
+   - raíz + 30 landings (`/`, `/ar/`, …, `/zh/`) — `weekly`, priority 1.0/0.9
    - `/pocket-alternative` — `monthly`, 0.8
-   - 6 legales (`/privacy-and-terms.html` + 5 localizadas) — `monthly`, 0.3
-4. En el informe de páginas (o vía URL Inspection) comprobar que aparecen las 13 y **ninguna** de `/app*`, `/capture*`, `/offline*`.
+   - 30 legales (`/privacy-and-terms.html` + 29 localizadas) — `monthly`, 0.3
+4. En el informe de páginas (o vía URL Inspection) comprobar que aparecen las 61 y **ninguna** de `/app*`, `/capture*`, `/offline*`.
 
-**Regenerar el sitemap** (cuando cambie contenido): la fuente de verdad es `scripts/nginx-render.mjs` — `node scripts/nginx-render.mjs --write` y luego `npm run check` (el `--check` del renderer y `check:seo` detectan drift). `lastmod` es estático a propósito (2026-09-09) para no romper la comparación byte-idéntica del gate; se actualiza manualmente en el renderer cuando las páginas cambian materialmente. Google re-rastrea el sitemap periódicamente — no hace falta re-enviarlo salvo cambios estructurales (nueva página).
+**Regenerar el sitemap** (cuando cambie contenido): `public/sitemap.xml` es un **archivo manual** — se edita a mano, añadiendo el `<url>` con su clúster `xhtml:link` completo, y `check:seo` valida el resultado (landings, legales, `/app` fuera, alternates correctos). `npm run nginx:render` **no** lo toca: desde la ronda 10 (A9-1) el renderizador sólo reescribe el host dentro de `<loc>`/`xhtml:link` para propagar un cambio de `BOOKMARKFORGE_DOMAIN`, con guardas que abortan si el archivo no parece el sitemap comprometido. `lastmod` es estático a propósito (2026-09-09); se actualiza manualmente cuando las páginas cambian materialmente. Google re-rastrea el sitemap periódicamente — no hace falta re-enviarlo salvo cambios estructurales (nueva página).
+
+> **Dueños por archivo (A9-1):** `nginx.conf` y `robots.txt` se generan wholesale desde `nginx-render.mjs`; `_headers`, `sitemap.xml` y `netlify.toml` son manuales y el renderizador sólo reescribe sus valores derivados de CSP / hosts de URL, preservando prosa y estructura. Un `--write` que encuentra un archivo dañado aborta sin escribir nada (all-or-nothing) — relevante porque `scripts/rollback.mjs` lo ejecuta durante un incidente.
 
 ---
 
@@ -97,8 +103,8 @@ Si `/app` apareciera indexado: ejecutar `npm run check` (detecta cuál de las tr
 
 ## 5. Verificar la superficie indexada y el hreflang
 
-1. **URL Inspection** de un puñado de URLs canónicas: `/`, `/es/`, `/fr/`, `/de/`, `/pt/`, `/it/`, `/pocket-alternative`, `/privacy-and-terms.html`, `/es/privacy-and-terms.html`. Cada una debe mostrar el canonical correcto y su set hreflang en el HTML renderizado.
-2. **Idiomas:** pedir indexación de una landing localizada y confirmar que su `<head>` declara los 7 hreflang (6 idiomas + `x-default`) apuntando entre sí; repetir con una legal. El grafo completo ya lo valida `scripts/check-hreflang-graph.mjs` (modo live) — GSC es la confirmación independiente de que Google parsea lo mismo.
+1. **URL Inspection** de una muestra representativa: `/`, `/ar/`, `/es/`, `/zh/`, `/pocket-alternative`, `/privacy-and-terms.html`, `/ar/privacy-and-terms.html`. Cada una debe mostrar el canonical correcto; las landings generadas por `generate-landing-pages.mjs` declaran el conjunto de 30 idiomas + `x-default`.
+2. **Idiomas:** pedir indexación de una landing localizada y confirmar que su `<head>` declara los 31 hreflang (30 idiomas + `x-default`) apuntando entre sí; repetir con una legal. `check:sitemap-coverage` valida las 30 rutas y artefactos; `scripts/check-hreflang-graph.mjs` sigue siendo el grafo live histórico de las 12 páginas principales — GSC es la confirmación independiente de que Google parsea lo mismo.
 3. **Negociación:** los 302 de idioma son intencionales y temporales (nunca 301) — el canonical EN debe quedar en `/`; si el informe de cobertura mostrara duplicados entre `/` y `/fr/`, el hreflang es el mecanismo de desambiguación, no el redirect.
 
 ---
@@ -112,7 +118,7 @@ npm run check                      # todos los gates, incluido check:seo
 node scripts/check-hreflang-graph.mjs https://bookmarkforge.com   # grafos vivos
 ```
 
-Y en GSC, cada 2–4 semanas: pestaña **Páginas** (errores de rastreo, "Excluida por noindex" estable) y **Sitemaps** (estado Success, 13 URLs).
+Y en GSC, cada 2–4 semanas: pestaña **Páginas** (errores de rastreo, "Excluida por noindex" estable) y **Sitemaps** (estado Success, 61 URLs).
 
 ---
 
@@ -120,5 +126,5 @@ Y en GSC, cada 2–4 semanas: pestaña **Páginas** (errores de rastreo, "Exclui
 
 - **Nunca** convertir la negociación de idioma a 301: rompe el canonical EN de `/` (contrato en ADR-043).
 - **No** añadir `/app` ni `/offline` al sitemap "para ver qué pasa": `check:seo` fallará en CI antes de llegar a producción.
-- Si Google muestra la 404 de producción (sitio legacy) en lugar de las 13 URLs: el despliegue no se completó — volver a §1.
+- Si Google muestra la 404 de producción (sitio legacy) en lugar de las 61 URLs: el despliegue no se completó — volver a §1 y mantener A11-2 abierto en `docs/audit.md`.
 - `x-default` de las landings → `/`; `x-default` de las legales → la legal EN. Cambiar uno sin el otro rompe el clúster (detectado por `check:seo` y el validador del grafo).

@@ -8,6 +8,7 @@ import { downloadBlob } from "../../utils/download";
 import { logRateLimited } from "../../utils/boundedLog";
 import { fnv1aHash } from "../../utils/hash";
 import { fetchWithTimeout } from "./utils";
+import { toPlayableAudioDataUrl } from "../../utils/audioFormat";
 import { GEMINI_API_BASE, AI_MODELS } from "../../constants/config";
 
 // Supported languages mapping
@@ -592,7 +593,11 @@ export class TTSService {
         return null;
       }
       const data = await readBoundedResponseJson<{
-        candidates?: Array<{ content?: { parts?: Array<{ inlineData?: { data?: string } }> } }>;
+        candidates?: Array<{
+          content?: {
+            parts?: Array<{ inlineData?: { data?: string; mimeType?: string } }>;
+          };
+        }>;
         error?: unknown;
       }>(response);
       if (data.error) {
@@ -603,9 +608,15 @@ export class TTSService {
       if (!candidates || candidates.length === 0) {return null;}
       const parts = candidates[0]?.content?.parts;
       if (!parts || parts.length === 0) {return null;}
-      const audioBase64 = parts[0]?.inlineData?.data;
+      const inlineData = parts[0]?.inlineData;
+      const audioBase64 = inlineData?.data;
       if (typeof audioBase64 !== "string" || !audioBase64) {return null;}
-      return audioBase64;
+      // Callers assign the result to an <audio> source and `generateOpenAIAudio`
+      // already returns a data URL, so the two providers have to be
+      // interchangeable. Gemini returns raw PCM (`audio/L16;codec=pcm;rate=…`),
+      // which `audioFormat` wraps in a WAV container — labelling that sample
+      // stream `audio/wav` was not enough, the browser needs the header.
+      return toPlayableAudioDataUrl(audioBase64, inlineData?.mimeType);
     } catch (e) {
       logger.error(
         "[TTS] Gemini TTS error:",

@@ -5,8 +5,8 @@
  * Automatiza la cadena completa detect → rollback → restaurar. Dos modos:
  *
  *   SIN Docker (default, topología de local-smoke.mjs):
- *     1. BASELINE   — levanta ai-mock + license-mock + companion server y
- *                     corre los checks de producción (runApiSurfaceChecks).
+ *     1. BASELINE   — levanta license-mock + companion server y corre los
+ *                     checks de producción (runApiSurfaceChecks).
  *     2. KILL       — mata SOLO el proceso del api (falla inducida).
  *     3. DETECT     — monitoring-alerts.mjs: APP_CAIDA debe fallar y
  *                     BUNDLE_CORRUPTO debe ejercitarse (probe SRI Docker-free).
@@ -46,7 +46,7 @@
  *   DRILL_DOCKER=1 node scripts/drill-rollback.mjs  # modo Docker (staging)
  *
  * Env (opcionales):
- *   API_PORT / AI_MOCK_PORT / LICENSE_MOCK_PORT  (default 8787 / 8081 / 8082)
+ *   API_PORT / LICENSE_MOCK_PORT                 (default 8787 / 8082)
  *   DRILL_ROLLBACK_TIMEOUT_MS                    (default 180000)
  *   LICENSE_SIGNING_PRIVATE_KEY_FILE             (checks de licencia)
  *   DRILL_DOCKER=1                               (modo Docker staging)
@@ -66,9 +66,7 @@ const isJson = process.argv.includes("--json");
 const NO_ROLLBACK = process.argv.includes("--no-rollback");
 
 const SERVER_PORT = Number(process.env.API_PORT ?? 8787);
-const AI_MOCK_PORT = Number(process.env.AI_MOCK_PORT ?? 8081);
 const LICENSE_MOCK_PORT = Number(process.env.LICENSE_MOCK_PORT ?? 8082);
-const AI_MOCK_KEY = process.env.AI_MOCK_KEY ?? "ai-mock-key";
 const LICENSE_MOCK_KEY = process.env.LICENSE_MOCK_KEY ?? "license-mock-key";
 const ROLLBACK_TIMEOUT_MS = Number(process.env.DRILL_ROLLBACK_TIMEOUT_MS ?? 180_000);
 
@@ -79,6 +77,12 @@ const COMPOSE_FILE = process.env.DRILL_COMPOSE_FILE?.trim() || "docker-compose.s
 const DRILL_ENV_FILE = process.env.DRILL_ENV_FILE?.trim() || "";
 const PRODUCTION_COMPOSE = COMPOSE_FILE === "docker-compose.prod.yml";
 const COMPOSE_ENV_ARGS = DRILL_ENV_FILE ? ["--env-file", DRILL_ENV_FILE] : [];
+/**
+ * Compose services that must stay up while the API is down. Production has no
+ * mock services at all; staging keeps the Whop license mock. The AI upstream
+ * mock and Redis are not part of the current companion topology.
+ */
+const COMPANION_SERVICES = PRODUCTION_COMPOSE ? [] : ["license-mock"];
 const WEB_PORT = Number(process.env.HTTP_PORT ?? (PRODUCTION_COMPOSE ? 18082 : 18080));
 const BASE_URL = DOCKER
   ? `http://127.0.0.1:${WEB_PORT}`
@@ -231,9 +235,6 @@ function serverEnv() {
     PORT: String(SERVER_PORT),
     HOST: "127.0.0.1",
     TRUST_PROXY: "0",
-    GEMINI_API_KEY: AI_MOCK_KEY,
-    GEMINI_API_BASE: `http://127.0.0.1:${AI_MOCK_PORT}/v1beta/models`,
-    AI_SESSION_REQUIRE_LICENSE: "0",
     WHOP_LICENSE_API_URL: `http://127.0.0.1:${LICENSE_MOCK_PORT}/license`,
     WHOP_API_KEY: LICENSE_MOCK_KEY,
     LICENSE_PROVIDER_ALLOW_HTTP: "1",
@@ -249,7 +250,7 @@ async function startStack() {
     const buildArgs = hasWeb && hasApi ? [] : ["--build"];
     const composeProject = process.env.COMPOSE_PROJECT_NAME ?? (PRODUCTION_COMPOSE ? "bookmarkforge-prod-drill" : "bookmarkforge-staging");
     const up = dockerOk(
-      ["compose", "-p", composeProject, ...COMPOSE_ENV_ARGS, "-f", COMPOSE_FILE, "up", "-d", ...buildArgs, "web", "api", "ai-mock", "redis"],
+      ["compose", "-p", composeProject, ...COMPOSE_ENV_ARGS, "-f", COMPOSE_FILE, "up", "-d", ...buildArgs, "web", "api", ...COMPANION_SERVICES],
       { IMAGE_TAG: sha, HTTP_PORT: String(WEB_PORT), AI_SESSION_ORIGINS: `http://127.0.0.1:${WEB_PORT},http://localhost:${WEB_PORT}` },
     );
     if (up.status !== 0) {
@@ -260,12 +261,6 @@ async function startStack() {
     }
     return null;
   }
-  spawnChild(
-    process.execPath,
-    [join(ROOT, "scripts", "ai-mock.mjs")],
-    { AI_MOCK_PORT: String(AI_MOCK_PORT), AI_MOCK_KEY },
-    "ai-mock",
-  );
   spawnChild(
     process.execPath,
     [join(ROOT, "scripts", "license-mock.mjs")],
@@ -279,7 +274,6 @@ async function startStack() {
     "api",
   );
   const targets = [
-    { label: "ai-mock", url: `http://127.0.0.1:${AI_MOCK_PORT}/health` },
     { label: "license-mock", url: `http://127.0.0.1:${LICENSE_MOCK_PORT}/health` },
     { label: "api", url: `${BASE_URL}/health` },
   ];
@@ -450,16 +444,19 @@ if (overallOk) {
   if (DOCKER) {
     const stop = dockerOk(["compose", "-p", composeProject(), ...COMPOSE_ENV_ARGS, "-f", COMPOSE_FILE, "stop", "api"]);
     down = stop.status === 0 && (await waitForNotOk(`${BASE_URL}/health`, 30, 300));
+    // The AI upstream mock and the shared Redis instance were removed with the
+    // current companion topology; the only companion service left is the license mock.
     const ps = dockerPs();
     mocksAlive =
-      ps.some((l) => l.startsWith("ai-mock") && l.includes("Up"));
+      COMPANION_SERVICES.length > 0 &&
+      COMPANION_SERVICES.every((service) =>
+        ps.some((l) => l.startsWith(service) && l.includes("Up")),
+      );
   } else {
     const apiEntry = children.find((e) => e.label === "api");
     killChild(apiEntry);
     down = await waitForDown(`${BASE_URL}/health`);
-    mocksAlive =
-      (await waitForReady(`http://127.0.0.1:${AI_MOCK_PORT}/health`, 5, 100)) &&
-      (await waitForReady(`http://127.0.0.1:${LICENSE_MOCK_PORT}/health`, 5, 100));
+    mocksAlive = await waitForReady(`http://127.0.0.1:${LICENSE_MOCK_PORT}/health`, 5, 100);
   }
   recordPhase(
     "KILL",

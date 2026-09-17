@@ -328,13 +328,12 @@ This indicates the server is not properly configured. It's not a user issue. Con
 | `VITE_APP_VERSION` | App version | `1.0.0` |
 | `VITE_DB_NAME` | IndexedDB database name | `bookmarkforge_v5` |
 | `VITE_SENTRY_DSN` | Sentry DSN for error reporting | *(optional)* |
-| `AI_SESSION_REQUIRE_LICENSE` | License required for AI (1=yes, 0=no) | `1` |
 
 ### 10.2 Self-Hosting
 
 BookmarkForge can be self-hosted:
 - **Signaling server:** Node.js + WebSocket (port 8787)
-- **AI proxy:** Node.js proxy for Gemini/OpenAI
+- **BYOK cloud AI:** browser-to-provider calls using the user's key
 - **License server:** Node.js with Whop adapter
 - **Docker Compose:** available for production
 - See `docker-compose.prod.yml` for the full topology
@@ -347,10 +346,7 @@ Main endpoints:
 - `POST /api/license/validate` — Revalidate existing license
 - `POST /api/license/deactivate` — Release activation slot
 - `POST /api/license/entitlement` — Verify Pro/Free status
-- `POST /api/services/ai/session` — Create AI session with license
-- `POST /api/services/ai/generate` — Text generation (Pro)
-- `POST /api/services/ai/generate-tts` — Text-to-speech (Pro)
-- `POST /api/services/ai/generate-image` — Image generation (Pro)
+- Cloud AI calls originate in the browser with the user's provider key.
 - `POST /api/analytics/events` — Opt-in analytics
 - `GET /api/analytics/kpis` — Analytics KPIs (admin token)
 

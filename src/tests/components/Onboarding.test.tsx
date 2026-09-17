@@ -56,20 +56,38 @@ const {
   mockRestoreFromAutoBackup,
   mockGetAutoBackupInfo,
   mockToast,
-} = vi.hoisted(() => ({
-  mockImportBackup: vi.fn(),
-  mockRestoreFromAutoBackup: vi.fn(),
-  mockGetAutoBackupInfo: vi.fn(),
-  mockToast: { success: vi.fn(), error: vi.fn() },
-}));
+  mockBackupService,
+} = vi.hoisted(() => {
+  const importBackup = vi.fn();
+  const restoreFromAutoBackup = vi.fn();
+  const getAutoBackupInfo = vi.fn();
+  return {
+    mockImportBackup: importBackup,
+    mockRestoreFromAutoBackup: restoreFromAutoBackup,
+    mockGetAutoBackupInfo: getAutoBackupInfo,
+    mockToast: { success: vi.fn(), error: vi.fn() },
+    // The same object is handed to both mocks below: the component reaches the
+    // service through the Pro loader, and the assertions reach the spies. If the
+    // loader returned a different object the spies would record nothing.
+    mockBackupService: {
+      importBackup: (...args: unknown[]) => importBackup(...args),
+      restoreFromAutoBackup: (...args: unknown[]) =>
+        restoreFromAutoBackup(...args),
+      getAutoBackupInfo: (...args: unknown[]) => getAutoBackupInfo(...args),
+    },
+  };
+});
 
 vi.mock("../../services/BackupService", () => ({
-  BackupService: {
-    importBackup: (...args: unknown[]) => mockImportBackup(...args),
-    restoreFromAutoBackup: (...args: unknown[]) =>
-      mockRestoreFromAutoBackup(...args),
-    getAutoBackupInfo: (...args: unknown[]) => mockGetAutoBackupInfo(...args),
-  },
+  BackupService: mockBackupService,
+}));
+// Onboarding resolves Pro services through the gated loader, not by importing
+// BackupService directly. Without this mock `loadBackupService()` rejects with
+// ProUnavailableError (no license in the test env) and the restore/import paths
+// fail before the mocked functions are ever called.
+vi.mock("../../services/pro-access", () => ({
+  ProUnavailableError: class ProUnavailableError extends Error {},
+  loadBackupService: async () => mockBackupService,
 }));
 
 vi.mock("sonner", () => ({ toast: mockToast }));

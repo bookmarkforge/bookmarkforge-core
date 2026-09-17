@@ -24,6 +24,22 @@ vi.mock("../../services/ai/ProviderManager", () => ({
   },
 }));
 
+// ADR-052 Phase 1: the v5 exposure report is a local-only diagnostic read;
+// the default double reports a fully migrated vault so existing assertions
+// are unaffected.
+const exposureMock = vi.hoisted(() =>
+  vi.fn().mockResolvedValue({
+    status: "ok",
+    inspected: 2,
+    legacyV5: 0,
+    saltedV6: 2,
+    legacyKeys: [],
+  }),
+);
+vi.mock("../../services/security-vault/kdf-salt", () => ({
+  reportVaultSecretFormatExposure: exposureMock,
+}));
+
 vi.mock("../../services/integrations/cloudSync", () => ({
   cloudSyncService: {
     getSyncMetrics: vi.fn().mockReturnValue({
@@ -100,6 +116,30 @@ describe("DiagnosticService", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+  });
+
+  describe("getDiagnostics — vaultCrypto (ADR-052 Phase 1)", () => {
+    it("surfaces the local v5 exposure report", async () => {
+      const diag = await diagnosticService.getDiagnostics();
+      expect(diag.vaultCrypto).toEqual({
+        status: "ok",
+        inspected: 2,
+        legacyV5: 0,
+        saltedV6: 2,
+      });
+      expect(exposureMock).toHaveBeenCalledTimes(1);
+    });
+
+    it("degrades to unknown instead of failing diagnostics when the report throws", async () => {
+      exposureMock.mockRejectedValueOnce(new Error("storage unavailable"));
+      const diag = await diagnosticService.getDiagnostics();
+      expect(diag.vaultCrypto).toEqual({
+        status: "unknown",
+        inspected: 0,
+        legacyV5: 0,
+        saltedV6: 0,
+        });
+    });
   });
 
   describe("getDiagnostics", () => {

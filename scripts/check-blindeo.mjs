@@ -157,7 +157,7 @@ try {
   else fail("MIN_PASSWORD_LENGTH no configurado");
 } catch (_e) { fail("No src/utils/crypto-core.ts o src/constants/config.ts"); }
 
-// Punto 8: Rollback target (penúltimo tag prod-*) con web válida — TODO
+// Punto 8: Rollback target (penúltimo tag prod-*) con web válida:
 // proxy_pass hacia el api con puerto explícito. Un rollback a un tag cuya
 // imagen web no pueda alcanzar el api (proxy_pass sin :puerto) deja la web
 // en 502 permanente: rollback.mjs --verify lo detecta, pero este gate lo

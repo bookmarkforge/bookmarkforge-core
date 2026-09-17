@@ -3,7 +3,7 @@
 - **Propósito:** cerrar el punto 5 del [launch-checklist](launch-checklist.md): rellenar los campos `⚠ DATO PERSONAL` del [ROPA](ROPA.md) y firmar/conservar los DPA de cada proveedor, en el orden correcto.
 - **Audiencia:** el operador (tú) o su asesor legal. Este documento es **operativo, no un dictamen jurídico**; la revisión final por un profesional sigue siendo el paso 3 del checklist.
 - **Convención de expediente:** crea una carpeta privada `legal/` (fuera del repo público) con subcarpetas `ropa/`, `dpa/<proveedor>/`, `whop/`, `incidents/`. El repo público guarda las plantillas; el expediente guarda las copias firmadas con fecha. Nunca publiques datos personales del operador en el repo.
-- **Última actualización:** 2026-09-15. Fuentes: ROPA §7/§8 (inventario), `server/src/ai-proxy.ts` (proveedores reales), `netlify.toml`/`functions/` (hosting estático), launch-checklist punto 5.
+- **Última actualización:** 2026-09-15. Fuentes: ROPA §7/§8 (inventario), `server/src/license-server.ts` y `server/src/entitlement-endpoint.ts` (superficies de licencias y entitlement actuales), `netlify.toml`/`functions/` (hosting estático), launch-checklist punto 5.
 
 ---
 
@@ -12,7 +12,7 @@
 | # | Proveedor | Rol según ROPA | Qué hay que hacer | Mecanismo | Bloquea |
 |---|---|---|---|---|---|
 | 1 | **Hosting del origen** (Netlify para el estático ya implícito en TOS; el **origen del servidor API/Node** queda por decidir) | Encargado (T3–T6) | DPA del host del servidor. ⚠ Decisión pendiente: si el origen se queda en Netlify Functions, aplica el DPA/CMR de Netlify; si es VPS (Hetzner, etc.), firmar su DPA (Hetzner lo ofrece bajo demanda) | Click-through / por solicitud | Despliegue a producción |
-| 2 | **Google (Gemini API)** | Encargado (T1 — modo nube, clave del servidor) | Aceptar el **Cloud Data Processing Addendum** (adjunto a los TOS de Google Cloud/API) y conservar la versión aceptada | Click-through en consola | Activar `GEMINI_API_KEY` en producción |
+| 2 | **Google (Gemini API)** | **BYO-key desde el navegador** (T1) — BookmarkForge no transmite prompts: no hay proxy de IA desde 2026-09 | Ya no hay credencial del operador que activar. Aceptar el **Cloud Data Processing Addendum** solo si en el futuro se reintroduce un proxy con clave del servidor | Click-through en consola | No bloquea (BYO-key) |
 | 3 | **Sentry (Functional Software, Inc.)** | Encargado (T7) | Aceptar el **DPA de Sentry** (incluye SCC 2021 módulo 3) — en la consola o por firmar la versión current | Click-through en sentry.io | Configurar el DSN del operador |
 | 4 | **OpenAI** | Encargado (T1 solo si usuario trae su clave; el operador no trata, pero la landing lo nombra) | Aceptar su **DPA** (portal: Settings → Legal → DPA; click-through con SCC) | Click-through | No bloquea (BYO-key). Recomendado antes de lanzar por la mención en la política |
 | 5 | **Anthropic (Claude)** | Ídem | Aceptar **Commercial Terms + DPA** (auto-aceptado al usar la API comercial; versión archivable) | Aceptación por uso | No bloquea |

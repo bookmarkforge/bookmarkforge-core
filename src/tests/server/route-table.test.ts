@@ -11,6 +11,7 @@ import {
   planRouteGuard,
   policyAllowsMethod,
   validateRoutePolicies,
+  type RoutePolicy,
 } from "../../../server/src/route-table";
 import type { EntitlementGuard } from "../../../server/src/entitlement-guard";
 import {
@@ -23,44 +24,55 @@ function fakeRequest(url: string, method = "POST"): IncomingMessage {
   return { url, method, headers: {} } as unknown as IncomingMessage;
 }
 
+/**
+ * A synthetic paid namespace. The real `PAID_PATH_PREFIXES` is empty because no
+ * paid route is active. The classification rules still have to hold, so they
+ * are exercised against fixtures rather than against a table without paid
+ * routes.
+ */
+const FIXTURE_PAID_PREFIXES: readonly string[] = ["/api/paid-fixture/"];
+
+function fixturePolicy(overrides: Partial<RoutePolicy> = {}): RoutePolicy {
+  return {
+    path: "/api/paid-fixture/generate",
+    methods: ["POST"],
+    access: "entitlement",
+    guard: { mode: "proof" },
+    auth: "fixture",
+    note: "fixture",
+    ...overrides,
+  } as RoutePolicy;
+}
+
 describe("route policy table", () => {
   it("is internally consistent", () => {
     expect(validateRoutePolicies()).toEqual([]);
-    expect(PAID_PATH_PREFIXES.length).toBeGreaterThan(0);
+    expect(ROUTE_POLICIES.length).toBeGreaterThan(0);
   });
 
-  it("gates every generative AI route through the guard", () => {
-    const expected: Record<string, string> = {
-      "/api/services/ai/session": "proof",
-      "/api/services/ai/generate": "session-or-bearer",
-      "/api/services/ai/generate-tts": "session-or-bearer",
-      "/api/services/ai/generate-image": "session-or-bearer",
-    };
-    for (const [path, mode] of Object.entries(expected)) {
-      const policy = matchRoutePolicy(path);
-      expect(policy?.path, path).toBe(path);
-      expect(policy?.access, path).toBe("entitlement");
-      expect(policy?.guard?.mode, path).toBe(mode);
-      expect(planRouteGuard(policy!, "POST")).toMatchObject({ guarded: true, mode });
+  /**
+   * Regression guard for the proxy removal. The server used to classify
+   * the historical paid fixture as paid and gate it with the entitlement guard. Those
+   * routes are gone; re-adding one must be a deliberate act that also re-adds
+   * the paid prefix, not a silent side effect of a new `req.url` comparison.
+   */
+  it("declares no paid route, because no paid route is active", () => {
+    expect(PAID_PATH_PREFIXES).toEqual([]);
+    for (const policy of ROUTE_POLICIES) {
+      expect(policy.access, policy.path).toBe("public");
+      expect(policy.guard, policy.path).toBeUndefined();
     }
-  });
-
-  it("records an audited exception for the operator-only AI surfaces", () => {
-    for (const path of ["/api/services/ai/admin", "/api/services/ai/metrics"]) {
-      const policy = matchRoutePolicy(path);
-      expect(policy?.access, path).toBe("public");
-      expect(policy?.paidException, path).toBeTruthy();
-      expect(planRouteGuard(policy!, "GET").guarded, path).toBe(false);
-    }
+    expect(matchRoutePolicy("/api/paid-fixture/generate")).toBeUndefined();
+    expect(matchRoutePolicy("/api/paid-fixture/session")).toBeUndefined();
   });
 
   it("leaves a method the route does not answer to the handler", () => {
-    const policy = matchRoutePolicy("/api/services/ai/generate")!;
-    expect(policyAllowsMethod(policy, "POST")).toBe(true);
-    expect(policyAllowsMethod(policy, "GET")).toBe(false);
-    // A wrong method keeps answering 405 from the handler instead of becoming
-    // an entitlement denial for a body the request does not carry.
-    expect(planRouteGuard(policy, "GET").guarded).toBe(false);
+    const policy = matchRoutePolicy("/health")!;
+    expect(policyAllowsMethod(policy, "GET")).toBe(true);
+    expect(policyAllowsMethod(policy, "POST")).toBe(false);
+    // A wrong method keeps answering 405/426 from the handler instead of
+    // becoming an entitlement denial for a body the request does not carry.
+    expect(planRouteGuard(policy, "POST").guarded).toBe(false);
   });
 
   it("matches query strings and subpaths by path identity", () => {
@@ -76,15 +88,49 @@ describe("route policy table", () => {
 
   it("refuses a table that contradicts itself", () => {
     expect(() =>
-      assertRoutePolicies([
-        { path: "/api/services/ai/x", methods: ["POST"], access: "public", auth: "none", note: "" },
-      ]),
+      assertRoutePolicies(
+        [fixturePolicy({ access: "public", guard: undefined, auth: "none", note: "" })],
+        FIXTURE_PAID_PREFIXES,
+      ),
     ).toThrow(/paid namespace/);
     expect(() =>
-      assertRoutePolicies([
-        { path: "/api/services/ai/x", methods: ["POST"], access: "entitlement", auth: "none", note: "" },
-      ]),
+      assertRoutePolicies(
+        [fixturePolicy({ guard: undefined, auth: "none", note: "" })],
+        FIXTURE_PAID_PREFIXES,
+      ),
     ).toThrow(/requires a guard mode/);
+    expect(() =>
+      assertRoutePolicies(
+        [fixturePolicy({ note: "" }), fixturePolicy({ note: "" })],
+        FIXTURE_PAID_PREFIXES,
+      ),
+    ).toThrow(/duplicate route policy/);
+  });
+});
+
+describe("paid-route classification", () => {
+  it("plans the guard mode a paid route declares", () => {
+    const policy = fixturePolicy();
+    expect(planRouteGuard(policy, "POST")).toMatchObject({
+      guarded: true,
+      mode: "proof",
+    });
+    expect(planRouteGuard(policy, "GET")).toEqual({ guarded: false });
+    expect(validateRoutePolicies([policy], FIXTURE_PAID_PREFIXES)).toEqual([]);
+  });
+
+  it("reports a paid route classified public without an audited exception", () => {
+    const policy = fixturePolicy({ access: "public", guard: undefined });
+    expect(validateRoutePolicies([policy], FIXTURE_PAID_PREFIXES)).toEqual([
+      expect.stringContaining("paid namespace"),
+    ]);
+    // The audited exception is what makes the classification legitimate.
+    expect(
+      validateRoutePolicies(
+        [{ ...policy, paidException: "operator-token gated" }],
+        FIXTURE_PAID_PREFIXES,
+      ),
+    ).toEqual([]);
   });
 });
 
@@ -105,7 +151,7 @@ describe("guarded HTTP dispatcher", () => {
           next: (context: unknown) => void | Promise<void>,
         ) => {
           calls.push({ mode, path: req.url });
-          await next({ via: "session", identity: "identity", entitlement: null });
+          await next({ via: "anonymous", identity: "anonymous", entitlement: null });
         },
       enforced: true,
       publicKeySpki: "spki",
@@ -115,7 +161,22 @@ describe("guarded HTTP dispatcher", () => {
 
   const res = {} as unknown as ServerResponse;
 
-  it("guards a paid route with the mode its policy declares, then dispatches", async () => {
+  it("does not consult the guard for public routes, unknown paths or unhandled methods", async () => {
+    const calls: Array<{ mode: string; path: string | undefined }> = [];
+    const dispatch = () => {};
+    const dispatcher = createGuardedDispatcher({ guard: stubGuard(calls), dispatch });
+
+    await dispatcher(fakeRequest("/health", "GET"), res);
+    await dispatcher(fakeRequest("/nope", "GET"), res);
+    await dispatcher(fakeRequest("/health", "POST"), res);
+    expect(calls).toEqual([]);
+  });
+
+  // With no entitlement route in the table, every declared route reaches the
+  // handler unguarded. This is the shape of the tree today; the previous
+  // "guards a paid route with the mode its policy declares" case lives on as
+  // fixture coverage in `scripts/__tests__/check-pro-routes.test.mjs`.
+  it("dispatches every declared route without asking the guard", async () => {
     const calls: Array<{ mode: string; path: string | undefined }> = [];
     const dispatched: string[] = [];
     const dispatcher = createGuardedDispatcher({
@@ -125,19 +186,9 @@ describe("guarded HTTP dispatcher", () => {
       },
     });
 
-    await dispatcher(fakeRequest("/api/services/ai/generate", "POST"), res);
-    expect(calls).toEqual([{ mode: "session-or-bearer", path: "/api/services/ai/generate" }]);
-    expect(dispatched).toEqual(["/api/services/ai/generate"]);
-  });
-
-  it("does not guard public routes, unknown paths or unhandled methods", async () => {
-    const calls: Array<{ mode: string; path: string | undefined }> = [];
-    const dispatch = () => {};
-    const dispatcher = createGuardedDispatcher({ guard: stubGuard(calls), dispatch });
-
     await dispatcher(fakeRequest("/health", "GET"), res);
-    await dispatcher(fakeRequest("/nope", "GET"), res);
-    await dispatcher(fakeRequest("/api/services/ai/generate", "GET"), res);
+    await dispatcher(fakeRequest("/api/analytics/kpis", "GET"), res);
+    expect(dispatched).toEqual(["/health", "/api/analytics/kpis"]);
     expect(calls).toEqual([]);
   });
 });
@@ -152,10 +203,11 @@ describe("router coverage of the route table", () => {
   const source = readFileSync(serverIndex, "utf8");
   const dispatchedPaths = extractDispatchedRoutePaths(source);
 
-  it("finds the router's routes (anti-vacuity)", () => {
+  it("finds the router's real routes (anti-vacuity)", () => {
     expect(dispatchedPaths.length).toBeGreaterThan(10);
-    expect(dispatchedPaths).toContain("/api/services/ai/session");
-    expect(dispatchedPaths).toContain("/api/services/ai/generate");
+    expect(dispatchedPaths).toContain("/health");
+    expect(dispatchedPaths).toContain("/api/license/entitlement");
+    expect(dispatchedPaths).toContain("/api/analytics/kpis");
   });
 
   it("classifies every dispatched route and gates every paid one", () => {

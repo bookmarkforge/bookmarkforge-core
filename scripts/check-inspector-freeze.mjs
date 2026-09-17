@@ -115,6 +115,8 @@ const KNOWN_GATES = {
   "check:landings-fresh": "meta",
   "plan:manual-figures": "docs",
   "check:rxdb17": "meta",
+  "check:nginx-render": "meta",
+  "check:sitemap-coverage": "meta",
   "check:seo": "meta",
   "check:chunks": "meta",
   "check:inspector-freeze": "meta",

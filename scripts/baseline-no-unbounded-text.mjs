@@ -3,8 +3,8 @@
  *
  * Counts `bmf/no-unbounded-text` + `bmf/no-unbounded-card-header` violations
  * reported by the project's own ESLint flat config across the same file
- * scope the rules are registered for (`src/**​/*.tsx`) and fails when the
- * count is GREATER than the committed baseline in
+ * scope the rules are registered for (every `.tsx` file under `src/`) and
+ * fails when the count is GREATER than the committed baseline in
  * scripts/no-unbounded-text-baseline.json.
  *
  * Rationale: both rules ship at `error` and the tree is clean today
@@ -18,6 +18,20 @@
  * Mirrors the pattern of scripts/check-i18n-quality.mjs:
  *   node scripts/baseline-no-unbounded-text.mjs            # gate
  *   node scripts/baseline-no-unbounded-text.mjs --fix      # rebaseline
+ *   node scripts/baseline-no-unbounded-text.mjs --no-cache # always fresh
+ *
+ * Performance: the ESLint run is the gate's entire cost (~13.4 s cold over
+ * the 350 `.tsx` files under `src/`; measured 2026-09-17), so it shares the EXACT
+ * cache that scripts/tooling/lint-bounded.mjs maintains
+ * (node_modules/.cache/bookmarkforge-eslint, same flat config → the same
+ * per-file cache entries are valid for both). `npm run lint` and the other
+ * gates keep that cache warm, which brings repeat runs to ~1-2 s. Cache
+ * correctness is ESLint's own contract: entries are keyed per file and
+ * invalidated on mtime/size change, and cached results include the rule
+ * messages, so the counted violations are identical cold or warm. The
+ * --no-cache flag (and any failure to READ or write the cache) falls back
+ * to the always-fresh behaviour — the verdict never depends on the cache
+ * being available.
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -36,15 +50,27 @@ const RULE_IDS = new Set([
 // non-source files and keeps the baseline stable across tooling changes.
 const LINT_PATTERNS = ["src/**/*.tsx"];
 
+// Same flat config, same cache file as lint-bounded → both tools reuse each
+// other's entries (see the header note).
+const SHARED_CACHE_LOCATION = join(ROOT, "node_modules", ".cache", "bookmarkforge-eslint");
+
+const isFix = process.argv.includes("--fix");
+const useCache = !process.argv.includes("--no-cache");
+
 /**
  * Run ESLint programmatically (same flat config as `npm run lint`, no
  * subprocess) and count only the project unbounded-text rule messages.
  * ESLint 9 reports error-severity rule messages in the result object; no
  * legacy `throwOnError`/`throwOnWarning` constructor options are needed.
+ * @param {boolean} withCache share the lint-bounded cache location
  * @returns {Promise<{count: number, byFile: Array<{file: string, count: number}>}>}
  */
-async function countViolations() {
-  const eslint = new ESLint();
+async function countViolations(withCache) {
+  const eslint = new ESLint(
+    withCache
+      ? { cache: true, cacheLocation: SHARED_CACHE_LOCATION }
+      : {},
+  );
   const results = await eslint.lintFiles(LINT_PATTERNS);
   let total = 0;
   const perFile = new Map();
@@ -63,11 +89,9 @@ async function countViolations() {
   return { count: total, byFile };
 }
 
-const isFix = process.argv.includes("--fix");
-
 let current;
 try {
-  current = await countViolations();
+  current = await countViolations(useCache);
 } catch (err) {
   console.error(`[baseline-no-unbounded-text] FAIL: could not run ESLint: ${err.message}`);
   process.exit(1);

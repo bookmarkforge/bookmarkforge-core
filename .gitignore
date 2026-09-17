@@ -47,6 +47,12 @@ dependency-cve-report-prod.json
 dependency-cve-report-dev.md
 dependency-cve-report-dev.json
 
+# Generated print twins of the localized user manuals. `npm run
+# docs:pdf:localized` writes docs/manual-usuario-*-styled.html as the
+# intermediate the PDF renderer consumes; only the .md sources and the .pdf
+# deliverables are versioned.
+docs/*-styled.html
+
 # Generated nightly reports (created by CI jobs, never source)
 nightly-trends.csv
 nightly-trends-summary.csv

@@ -8,13 +8,16 @@
  *   docker compose -f docker-compose.prod.yml up -d --build
  *   node scripts/production-smoke.mjs
  *
- * The API-surface checks (health, AI proxy, license, WebSocket signaling) are
- * exported as `runApiSurfaceChecks` and are also driven Docker-free by
+ * The API-surface checks (health, license, client-events, WebSocket signaling)
+ * are exported as `runApiSurfaceChecks` and are also driven Docker-free by
  * scripts/local-smoke.mjs, so both paths share the exact same assertions.
+ *
+ * There are no AI checks left: the server serves no AI route (the browser
+ * talks to the user's provider directly), so probing one here would assert
+ * that nginx still proxies a surface the companion api answers with 426.
  *
  * Env:
  *   PROD_BASE_URL          (default http://127.0.0.1:8080)
- *   AI_SESSION_PROOF       JSON object containing a signed license proof
  *   SMOKE_LICENSE_KEY      optional license key for activation checks
  */
 
@@ -68,23 +71,16 @@ function makeRequester(baseUrl) {
 }
 
 /**
- * Run the companion-server API checks (health, AI proxy, license, WebSocket
- * signaling) against `baseUrl`. Shared by the nginx production smoke and the
- * Docker-free local smoke. Returns `{ ok, checks }`.
+ * Run the companion-server API checks (health, license, client-events,
+ * WebSocket signaling) against `baseUrl`. Shared by the nginx production smoke
+ * and the Docker-free local smoke. Returns `{ ok, checks }`.
  *
  * @param {object} opts
  * @param {string} opts.baseUrl       scheme+host[:port] of the api origin
- * @param {object} [opts.sessionProof] signed license proof, required to
- *                                    exercise the licensed AI surface on a
- *                                    deployment that enforces entitlements
  * @param {boolean} [opts.skipLicense] skip the license checks entirely (no
  *                                    signing key present)
  */
-export async function runApiSurfaceChecks({
-  baseUrl,
-  skipLicense = false,
-  sessionProof = null,
-}) {
+export async function runApiSurfaceChecks({ baseUrl, skipLicense = false }) {
   const normalized = baseUrl.replace(/\/+$/, "");
   const { checks, check } = createCheckers();
   const request = makeRequester(normalized);
@@ -95,147 +91,6 @@ export async function runApiSurfaceChecks({
     "companion /health",
     health.response.status === 200 && health.body?.status === "ok",
     `HTTP ${health.response.status}`,
-  );
-
-  // ── AI session bootstrap ─────────────────────────────────────────
-  // Two postures are valid, and the smoke must not assume either:
-  //   - entitlement ENFORCED (production): an unlicensed caller gets 401
-  //     LICENSE_REQUIRED/LICENSE_EXPIRED and that IS the correct answer;
-  //   - anonymous sessions explicitly enabled (local/staging smoke): 200.
-  // The old check demanded a 200 unconditionally, so it was only ever green
-  // on deployments that had licensing disabled. A 200 for an unlicensed
-  // caller on an enforcing deployment is caught instead.
-  const session = await request("/api/services/ai/session", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      origin: normalized,
-    },
-    body: JSON.stringify(sessionProof ?? {}),
-  });
-  const sessionGranted =
-    session.response.status === 200 && typeof session.body?.csrfToken === "string";
-  const sessionDenied =
-    session.response.status === 401 &&
-    ["LICENSE_REQUIRED", "LICENSE_EXPIRED"].includes(session.body?.error?.code ?? "");
-  check(
-    "AI session bootstrap",
-    sessionProof ? sessionGranted : sessionGranted || sessionDenied,
-    `${sessionProof ? "" : "unlicensed: "}HTTP ${session.response.status}` +
-      (session.body?.error?.code ? ` ${session.body.error.code}` : ""),
-  );
-  if (sessionDenied) {
-    console.log(
-      "INFO entitlement enforced: anonymous AI sessions are refused — licensed AI surface checks are skipped",
-    );
-  }
-  const csrfToken = sessionGranted ? session.body?.csrfToken : undefined;
-  const setCookie = session.response.headers.get("set-cookie") ?? "";
-  const cookie = setCookie
-    .split(/,(?=[^;=]+=)/)
-    .map((part) => part.split(";")[0]?.trim())
-    .filter(Boolean)
-    .join("; ");
-  const sessionHeaders = {
-    "content-type": "application/json",
-    origin: normalized,
-    cookie,
-    "x-csrf-token": csrfToken ?? "",
-  };
-
-  // ── AI proxy (mock upstream) ─────────────────────────────────────
-  const unauthenticated = await request("/api/services/ai/generate", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ prompt: "dry-run" }),
-  });
-  check(
-    "AI proxy rejects missing auth",
-    unauthenticated.response.status === 401,
-    `HTTP ${unauthenticated.response.status}`,
-  );
-
-  const ai = await request("/api/services/ai/generate", {
-    method: "POST",
-    headers: sessionHeaders,
-    body: JSON.stringify({ prompt: "dry-run", model: "gemini-2.0-flash" }),
-  });
-  check(
-    "AI proxy returns a successful response",
-    !sessionGranted ||
-      (ai.response.status === 200 && typeof ai.body?.text === "string" && ai.body.text.length > 0),
-    sessionGranted
-      ? `HTTP ${ai.response.status}`
-      : "SKIPPED — no license proof supplied and the deployment enforces entitlements",
-  );
-
-  const stream = await request("/api/services/ai/generate", {
-    method: "POST",
-    headers: sessionHeaders,
-    body: JSON.stringify({ prompt: "dry-run", model: "gemini-2.0-flash", stream: true }),
-  });
-  check(
-    "AI proxy preserves SSE contract",
-    !sessionGranted ||
-      (stream.response.status === 200 && stream.text.includes("data: [DONE]")),
-    sessionGranted
-      ? `HTTP ${stream.response.status}`
-      : "SKIPPED — entitlement enforced, session not created",
-  );
-
-  // ── AI media proxy (TTS + image) ──────────────────────────────────
-  const ttsUnauth = await request("/api/services/ai/generate-tts", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ text: "dry-run" }),
-  });
-  check(
-    "TTS proxy rejects missing auth",
-    ttsUnauth.response.status === 401,
-    `HTTP ${ttsUnauth.response.status}`,
-  );
-
-  const tts = await request("/api/services/ai/generate-tts", {
-    method: "POST",
-    headers: sessionHeaders,
-    body: JSON.stringify({ text: "dry-run", lang: "es" }),
-  });
-  check(
-    "TTS proxy returns audio",
-    !sessionGranted ||
-      (tts.response.status === 200 &&
-        typeof tts.body?.audioBase64 === "string" &&
-        tts.body.audioBase64.length > 0),
-    sessionGranted
-      ? `HTTP ${tts.response.status}`
-      : "SKIPPED — entitlement enforced, session not created",
-  );
-
-  const imgUnauth = await request("/api/services/ai/generate-image", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ prompt: "dry-run" }),
-  });
-  check(
-    "image proxy rejects missing auth",
-    imgUnauth.response.status === 401,
-    `HTTP ${imgUnauth.response.status}`,
-  );
-
-  const img = await request("/api/services/ai/generate-image", {
-    method: "POST",
-    headers: sessionHeaders,
-    body: JSON.stringify({ prompt: "dry-run" }),
-  });
-  check(
-    "image proxy returns an image",
-    !sessionGranted ||
-      (img.response.status === 200 &&
-        typeof img.body?.imageBase64 === "string" &&
-        img.body.imageBase64.length > 0),
-    sessionGranted
-      ? `HTTP ${img.response.status}`
-      : "SKIPPED — entitlement enforced, session not created",
   );
 
   // ── License adapter ──────────────────────────────────────────────
@@ -333,16 +188,6 @@ export async function runApiSurfaceChecks({
 }
 
 // ── Main (nginx production path) ─────────────────────────────────────
-let configuredSessionProof = null;
-if (process.env.AI_SESSION_PROOF) {
-  try {
-    configuredSessionProof = JSON.parse(process.env.AI_SESSION_PROOF);
-  } catch {
-    console.error("AI_SESSION_PROOF must contain valid JSON");
-    process.exitCode = 1;
-  }
-}
-
 const isMain =
   process.argv[1] &&
   import.meta.url ===
@@ -372,7 +217,7 @@ if (isMain) {
   );
 
   // ── Companion server API surface (via nginx proxy) ───────────────
-  const api = await runApiSurfaceChecks({ baseUrl, sessionProof: configuredSessionProof });
+  const api = await runApiSurfaceChecks({ baseUrl });
 
   const all = [...checks, ...api.checks];
   if (all.some(({ condition }) => !condition)) {

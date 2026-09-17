@@ -2,20 +2,18 @@
 /**
  * scripts/local-smoke.mjs — Docker-free local verification.
  *
- * Starts the isolated AI + license mocks and the companion server as child
- * processes (wired with the same env docker-compose.prod.yml uses), waits for
- * them to become ready, then runs the production API-surface smoke checks
- * (shared with production-smoke.mjs) against the bare server — no Docker or
- * nginx required.
+ * Starts the isolated license mock and the companion server as child processes
+ * (wired with the same env docker-compose.prod.yml uses), waits for them to
+ * become ready, then runs the production API-surface smoke checks (shared with
+ * production-smoke.mjs) against the bare server — no Docker or nginx required.
  *
  * Usage:
  *   node scripts/local-smoke.mjs        # or: npm run local-smoke
  *
  * Env (optional overrides):
  *   API_PORT=8787             companion server port
- *   AI_MOCK_PORT=8081         AI mock port
  *   LICENSE_MOCK_PORT=8082    license mock port
- *   AI_MOCK_KEY / LICENSE_MOCK_KEY
+ *   LICENSE_MOCK_KEY
  *
  * The license activate/validate checks need the gitignored signing key:
  *   node scripts/generate-license-keys.mjs --write   # once
@@ -30,9 +28,7 @@ import { runApiSurfaceChecks } from "./production-smoke.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SERVER_PORT = Number(process.env.API_PORT ?? 8787);
-const AI_MOCK_PORT = Number(process.env.AI_MOCK_PORT ?? 8081);
 const LICENSE_MOCK_PORT = Number(process.env.LICENSE_MOCK_PORT ?? 8082);
-const AI_MOCK_KEY = process.env.AI_MOCK_KEY ?? "ai-mock-key";
 const LICENSE_MOCK_KEY = process.env.LICENSE_MOCK_KEY ?? "license-mock-key";
 const BASE_URL = `http://127.0.0.1:${SERVER_PORT}`;
 
@@ -90,12 +86,6 @@ async function main() {
     // ── Mock upstreams ──────────────────────────────────────────────
     spawnChild(
       process.execPath,
-      [join(ROOT, "scripts", "ai-mock.mjs")],
-      { AI_MOCK_PORT: String(AI_MOCK_PORT), AI_MOCK_KEY },
-      "ai-mock",
-    );
-    spawnChild(
-      process.execPath,
       [join(ROOT, "scripts", "license-mock.mjs")],
       { LICENSE_MOCK_PORT: String(LICENSE_MOCK_PORT), LICENSE_MOCK_KEY },
       "license-mock",
@@ -107,9 +97,6 @@ async function main() {
       PORT: String(SERVER_PORT),
       HOST: "127.0.0.1",
       TRUST_PROXY: "0",
-      GEMINI_API_KEY: AI_MOCK_KEY,
-      GEMINI_API_BASE: `http://127.0.0.1:${AI_MOCK_PORT}/v1beta/models`,
-      AI_SESSION_REQUIRE_LICENSE: "0",
       WHOP_LICENSE_API_URL: `http://127.0.0.1:${LICENSE_MOCK_PORT}/license`,
       WHOP_API_KEY: LICENSE_MOCK_KEY,
       LICENSE_PROVIDER_ALLOW_HTTP: "1",
@@ -124,9 +111,8 @@ async function main() {
       "api",
     );
 
-    // ── Readiness (all three processes) ─────────────────────────────
+    // ── Readiness (both processes) ──────────────────────────────────
     const targets = [
-      { label: "ai-mock", url: `http://127.0.0.1:${AI_MOCK_PORT}/health` },
       { label: "license-mock", url: `http://127.0.0.1:${LICENSE_MOCK_PORT}/health` },
       { label: "api", url: `${BASE_URL}/health` },
     ];

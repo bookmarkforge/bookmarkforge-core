@@ -33,8 +33,8 @@ planner, no al error de CI.
    escapes `u0026` fabricaban números) y neutraliza los precios hablados del
    competidor según la convención documentada de `patch-landing-copy.mjs`
    («28 dollars», sin `$`; nuestros precios siempre llevan `$`).
-3. **Contrato de 37 superficies.** Las 30 legales localizadas (EN en la raíz)
-   + 6 landings + pocket. Una página que falta se reporta como error — la
+3. **Contrato de 61 superficies.** Las 30 legales localizadas (EN en la raíz)
+   + 30 landings + pocket. Una página que falta se reporta como error — la
    cobertura nunca se encoge en silencio.
 4. **Planner por evaluación diferencial.** El plan no reimprime regex: corre
    el evaluador compartido con un valor centinela por constante y lista las

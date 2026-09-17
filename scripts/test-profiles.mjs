@@ -2,8 +2,9 @@
 // (scripts/test-bounded.mjs) and its curated wrapper (scripts/test-fast.mjs).
 //
 //   fast — smoke + critical areas (security, db, core services, key
-//          components). Must stay well under a couple of minutes; a NEW file
-//          at/over FAST_THRESHOLD_MS fails enforcement.
+//          components) + the quality-gate script tests. ~2 min on this
+//          checkout (2026-09-17: 144 files); a NEW file at/over
+//          FAST_THRESHOLD_MS fails enforcement.
 //   slow — every test file that is not in the fast profile (the complement).
 //          CI runs it (the slow-tests job) and enforces timing with the more
 //          forgiving SLOW_THRESHOLD_MS: this is a long tail of legitimately
@@ -27,6 +28,22 @@ const rel = (path) => `src/tests/${path}`;
 const securityRegressions = readdirSync(join(ROOT, "src/tests/security"))
   .filter((file) => /^p\d-.*\.regression\.test\.ts$/.test(file))
   .map((file) => rel(`security/${file}`));
+
+// Quality-gate script tests (scripts/__tests__) run on EVERY PR via the fast
+// profile — CI's first job must see gate drift, not the slow job hours later.
+// Files whose PINNED time in scripts/test-timing-baseline.json exceeds the
+// fast bar (5 s) stay slow-only via SLOW_GATE_TESTS: the timing guard would
+// fail the fast profile on them otherwise. A NEW gate test lands in fast
+// automatically (they are sub-second); if one ever grows past the bar, CI
+// names it and it moves into SLOW_GATE_TESTS — a deliberate, reviewed act.
+export const SLOW_GATE_TESTS = new Set([
+  "build-ci-secret-scan.test.mjs", // pinned 33.7 s
+  "monitoring-alerts.test.mjs", // pinned 9.4 s
+]);
+const gateTestFiles = readdirSync(join(ROOT, "scripts/__tests__"))
+  .filter((file) => /^.+\.test\.mjs$/.test(file))
+  .filter((file) => !SLOW_GATE_TESTS.has(file))
+  .map((file) => `scripts/__tests__/${file}`);
 
 export const FAST_SELECTORS = [
   // --- smoke: key shell/UX components ---
@@ -77,9 +94,10 @@ export const FAST_SELECTORS = [
   rel("components/settings/StorageSection.test.tsx"),
   // --- security regressions + firewall ---
   ...securityRegressions,
+  // --- quality-gate script tests (gate drift fails the FIRST CI job) ---
+  ...gateTestFiles,
   rel("security/real-crypto.integration.test.ts"),
   rel("security/networkFirewall.test.ts"),
-  rel("security/networkFirewall-proxy.test.ts"),
   rel("security/rxdb-cache.test.ts"),
   // NOTE: these two must keep their real extensions — a stale selector
   // silently drops tests from the profile (ADR-038). They are asserted in
@@ -102,7 +120,8 @@ export const VITEST_EXCLUDED_FILES = new Set([
 
 // Per-profile knobs applied by the bounded runner when --profile is given
 // (env overrides win). Batch sizes come from the 2026-09-04 measurement
-// matrix: batch 28 for the ~67-file fast profile (72 s at 2 workers),
+// matrix: batch 28 for the fast profile (72 s at 2 workers back then;
+// 125 s at 144 files after the gate-test tier joined in 2026-09-17),
 // batch 40 for the full suite (482 s -> 312 s at 3 workers).
 export const PROFILE_DEFAULTS = {
   fast: { thresholdMs: FAST_THRESHOLD_MS, batchSize: 28 },

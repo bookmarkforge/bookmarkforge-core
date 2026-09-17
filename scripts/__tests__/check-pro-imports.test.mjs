@@ -123,11 +123,16 @@ describe("check-pro-imports", () => {
     }
   });
 
-it("allows server-internal Pro imports but rejects Core importing server Pro", () => {
+it("allows server-internal imports but still rejects Core importing Pro", () => {
+     // Rule 3 allows an import when importer and target both live under
+     // `server/` (the server assembles its own handlers). That allowance must
+     // not leak into Core: the `src/leak.ts` reference is a violation whatever
+     // the server tree imports internally.
      const root = fakeRepoSafe({
        "server/src/proxy-utils.ts": "export const proxy = 1;\n",
        "server/src/index.ts": `import { proxy } from "./proxy-utils";\nexport const s = proxy;\n`,
-       "src/leak.ts": `import { proxy } from "../server/src/proxy-utils";\nexport const leak = proxy;\n`,
+       "src/services/BackupService.ts": PRO_STUB,
+       "src/leak.ts": `import { BackupService } from "./services/BackupService";\nexport const leak = BackupService;\n`,
      });
      try {
        const result = checkProImports(root);

@@ -49,7 +49,8 @@
  */
 
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { createHash, timingSafeEqual } from "node:crypto";
+import { createHash } from "node:crypto";
+import { applySecurityHeaders, constantTimeUtf8Equal, readBoundedInteger } from "./proxy-utils";
 
 const MAX_FORWARDED_IP_LENGTH = 128;
 const EVENT_TYPES = new Set(["storage-pressure", "bundle-integrity-spike", "error-spike", "csp-violation-spike", "client-event-retry-stats"]);
@@ -371,7 +372,7 @@ export function createClientEventsHandler(options: ClientEventsOptions) {
 
   // ── HTTP handler ─────────────────────────────────────────────────────
   return function clientEventsHandler(req: IncomingMessage, res: ServerResponse): void {
-    applySecurityHeaders(res);
+    applySecurityHeaders(res, { includeInterestCohort: false });
 
     if (req.method === "GET") {
       const token = req.headers["x-client-events-admin-token"];
@@ -554,34 +555,3 @@ export function createClientEventsHandler(options: ClientEventsOptions) {
   }
 }
 
-function readBoundedInteger(
-  raw: string | undefined,
-  fallback: number,
-  min: number,
-  max: number,
-): number {
-  const parsed = Number(raw ?? fallback);
-  if (!Number.isInteger(parsed) || parsed < min || parsed > max) {
-    return fallback;
-  }
-  return parsed;
-}
-
-function constantTimeUtf8Equal(expected: string, actual: string): boolean {
-  const expectedBytes = Buffer.from(expected, "utf8");
-  const actualBytes = Buffer.from(actual, "utf8");
-  if (expectedBytes.length !== actualBytes.length) return false;
-  return timingSafeEqual(expectedBytes, actualBytes);
-}
-
-function applySecurityHeaders(res: ServerResponse): void {
-  res.setHeader("Cache-Control", "no-store");
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("X-Frame-Options", "DENY");
-  res.setHeader("Referrer-Policy", "no-referrer");
-  res.setHeader("Permissions-Policy", "camera=(), geolocation=(), microphone=()");
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'none'; base-uri 'none'; frame-ancestors 'none'",
-  );
-}

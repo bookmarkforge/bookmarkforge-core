@@ -5,6 +5,7 @@ import {
   signLicensePayload,
   type LicensePayload,
 } from "./license-signing";
+import { clientIp } from "./proxy-utils";
 
 const DEFAULT_WHOP_API_TIMEOUT_MS = 15_000;
 const MAX_BODY_BYTES = 16 * 1024;
@@ -14,7 +15,6 @@ const RATE_LIMIT = 60;
 const MAX_RATE_ENTRIES = 10_000;
 const MAX_LICENSE_KEY_LENGTH = 512;
 const MAX_INSTANCE_LENGTH = 256;
-const MAX_FORWARDED_IP_LENGTH = 128;
 const ACTIVE_STATUSES = new Set(["active", "paid", "trialing", "valid", "completed"]);
 // past_due/unpaid/pending/draft: Whop membership states that must never
 // grant an entitlement (fail closed on anything but explicit activation).
@@ -111,21 +111,6 @@ interface LicenseRequest {
 interface RateWindow {
   count: number;
   windowStart: number;
-}
-
-function clientIp(req: IncomingMessage, trustProxy: boolean): string {
-  if (trustProxy) {
-    const forwarded = req.headers["x-forwarded-for"];
-    if (typeof forwarded === "string" && forwarded.length > 0) {
-      const first = forwarded.split(",")[0]?.trim();
-      if (first && first.length <= MAX_FORWARDED_IP_LENGTH) return first;
-    }
-    const realIp = req.headers["x-real-ip"];
-    if (typeof realIp === "string" && realIp.length > 0 && realIp.length <= MAX_FORWARDED_IP_LENGTH) {
-      return realIp.trim();
-    }
-  }
-  return req.socket.remoteAddress ?? "unknown";
 }
 
 function applySecurityHeaders(res: ServerResponse): void {

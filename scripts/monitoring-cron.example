@@ -5,7 +5,7 @@
 # Los checks ya están en el código: storageMonitor + productionMonitor + bundleIntegrity
 # + clientEventReporter + retry-stats + sondeo de degradación
 
-# ALERTA 1: APP CAÍDA — cada 60s verifica nginx + api + WS + AI proxy + CSP
+# ALERTA 1: APP CAÍDA — cada 60s verifica nginx + api + WS + CSP
 # Cada fallo aislado → alerta Slack. Con APP_DOWN_AUTO_ROLLBACK=1, DOS fallos
 # CONSECUTIVOS (contador persistido entre ticks del cron) disparan rollback
 # automático y luego rollback.mjs --verify corrobora la recuperación ANTES de

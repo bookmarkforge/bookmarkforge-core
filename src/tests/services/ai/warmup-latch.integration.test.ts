@@ -31,6 +31,24 @@ vi.mock("../../../services/ai/ResourceManager", () => ({
   },
 }));
 
+// ProviderManager resolves WebLLM through the Pro loader, and `pro-access`
+// refuses to hand the module out without a license — so without this the
+// warmup under test would short-circuit as "Pro unavailable" and never touch
+// an engine. Every other method keeps its real implementation: this test is
+// about the warmup × idle-TTL composition, not about entitlement plumbing.
+vi.mock("../../../services/LicenseService", async () => {
+  const actual = await vi.importActual<
+    typeof import("../../../services/LicenseService")
+  >("../../../services/LicenseService");
+  return {
+    ...actual,
+    licenseService: {
+      ...actual.licenseService,
+      hasProAccess: () => true,
+    },
+  };
+});
+
 vi.mock("@mlc-ai/web-llm", () => ({
   CreateMLCEngine: vi.fn(),
   hasModelInCache: vi.fn(),

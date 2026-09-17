@@ -195,6 +195,27 @@ export const ANCHORS = [
       "Manual export from Settings writes LAST_MANUAL_BACKUP_DATE so StorageStatus and the dashboard banner can read the fresh age without a page reload.",
     glob: "src/tests/components/settings/StorageSection.test.tsx",
   },
+  {
+    id: "p0-vault-kdf-salt",
+    adr: "ADR-046",
+    description:
+      "Per-vault Argon2id salt (A-1): v6 payloads embed their own salt, legacy v5 stays read-only, rotation persists the salt before installing it, and the cross-tab notification is a valueless trigger that re-reads storage.",
+    glob: "src/tests/security/p0-vault-kdf-salt*.regression.test.*",
+  },
+  {
+    id: "p0-vault-rotation-rollback-drill",
+    adr: "ADR-046 D4",
+    description:
+      "Rotation-rollback drill: a failure injected at every phase of rotateMasterPassword leaves the vault intact — the old password still unlocks, the KDF salt is restored last, and the rotation promise is cleared.",
+    glob: "src/tests/security/p0-vault-rotation-rollback-drill*.test.ts",
+  },
+  {
+    id: "v5-sunset-exposure-counter",
+    adr: "ADR-052",
+    description:
+      "v5 sunset exposure counter (Phase 1): the diagnostic report classifies every password-encrypted secret as legacy v5 or per-vault-salt v6, counts the residual static-salt corpus (the Phase 3 removal gate), and reports unknown — never zero — when storage cannot be read.",
+    glob: "src/tests/services/security-vault/kdf-salt-exposure*.test.*",
+  },
 ];
 
 /**

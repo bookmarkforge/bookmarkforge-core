@@ -42,6 +42,23 @@ vi.mock("../../../utils/logger", () => ({
   logger: { error: vi.fn(), info: vi.fn(), warn: vi.fn(), debug: vi.fn() },
 }));
 
+// The offsite upload path builds its payload through the Pro loader, which
+// refuses to resolve BackupService without a license. The encryption under
+// test is the real BackupService, so only the gate is relaxed — every other
+// LicenseService method keeps its real behaviour.
+vi.mock("../../../services/LicenseService", async () => {
+  const actual = await vi.importActual<
+    typeof import("../../../services/LicenseService")
+  >("../../../services/LicenseService");
+  return {
+    ...actual,
+    licenseService: {
+      ...actual.licenseService,
+      hasProAccess: () => true,
+    },
+  };
+});
+
 const mockFetch = vi.fn();
 vi.stubGlobal("fetch", mockFetch);
 

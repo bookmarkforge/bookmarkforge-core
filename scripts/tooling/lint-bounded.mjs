@@ -34,7 +34,6 @@ const ROOT_FILES = new Set([
   "vitest.extension.config.ts",
   "vitest.universal-coverage.config.ts",
   "playwright.config.ts",
-  "playwright.ai-upstream.config.ts",
   "playwright.custom-provider.config.ts",
   "playwright.browsers.config.ts",
   "playwright.engines.config.ts",

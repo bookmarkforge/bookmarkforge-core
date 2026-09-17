@@ -7,7 +7,8 @@ import { secureStorage } from "../SecureStorage";
 import { downloadBlob } from "../../utils/download";
 import { logRateLimited } from "../../utils/boundedLog";
 import { fnv1aHash } from "../../utils/hash";
-import { fetchWithAiSession } from "./aiSession";
+import { fetchWithTimeout } from "./utils";
+import { GEMINI_API_BASE, AI_MODELS } from "../../constants/config";
 
 // Supported languages mapping
 const LANGUAGE_CODES: Record<string, string> = {
@@ -253,11 +254,6 @@ const MAX_TTS_AUDIO_BYTES = 25 * 1024 * 1024;
 // Round the binary limit up to a complete Base64 quartet; multiplying first
 // and rounding can reject a valid payload by one or two characters.
 const MAX_TTS_BASE64_CHARS = Math.ceil(MAX_TTS_AUDIO_BYTES / 3) * 4;
-// The backend (ai-media.ts) serves base64 audio up to 16 MiB. The default
-// response cap in utils.ts is only 1 MiB, so a long clip would be rejected
-// mid-read and silently fall back to WebSpeech. Bound the JSON read by the
-// server contract + JSON-overhead margin instead.
-const MAX_TTS_RESPONSE_CHARS = Math.ceil((16 * 1024 * 1024) / 3) * 4 + 64 * 1024;
 
 function createAbortError(message: string): Error {
   if (typeof DOMException === "function") {
@@ -397,6 +393,13 @@ async function readBoundedAudioBlob(
   } finally {
     removeAbortListener?.();
   }
+}
+
+function getGeminiApiHeaders(apiKey: string | null): Record<string, string> {
+  return {
+    "Content-Type": "application/json",
+    "x-goog-api-key": apiKey ?? "",
+  };
 }
 
 export class TTSService {
@@ -553,9 +556,8 @@ export class TTSService {
 
   // --- GEMINI SUPPORT ---
   /**
-   * Security: Routes through backend (firewalledFetch) instead of using
-   * the Google GenAI SDK directly. The SDK's internal fetch bypasses the
-   * SSRF firewall and on-prem proxy.
+   * Security: Calls the Gemini API directly instead of routing through
+   * the eliminated proxy. The API key is passed via x-goog-api-key header.
    */
   private async generateGeminiAudio(
     text: string,
@@ -563,16 +565,25 @@ export class TTSService {
     signal?: AbortSignal,
   ): Promise<string | null> {
     try {
-      const response = await fetchWithAiSession(
-        (sessionOptions) => firewalledFetch(
-          "/api/services/ai/generate-tts",
-          sessionOptions,
-          "tts-gemini",
-        ),
+      let apiKey: string | null = null;
+      try { apiKey = aiManager.getApiKey(); } catch { /* best-effort */ }
+      const model = AI_MODELS.GEMINI_EXP;
+      const response = await fetchWithTimeout(
+        `${GEMINI_API_BASE}/${model}:generateContent`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text, lang }),
+          headers: getGeminiApiHeaders(apiKey),
+          body: JSON.stringify({
+            contents: [{ parts: [{ text }] }],
+            generationConfig: {
+              speechConfig: {
+                languageCode: lang,
+                voiceConfig: {
+                  voice: { preset: "en-US-Standard-A" },
+                },
+              },
+            },
+          }),
           signal,
         },
       );
@@ -580,15 +591,21 @@ export class TTSService {
         await cancelResponseBody(response);
         return null;
       }
-      const data = await readBoundedResponseJson<{ audioBase64?: unknown }>(response, MAX_TTS_RESPONSE_CHARS);
-      if (typeof data.audioBase64 !== "string") {return null;}
-      // Base64 is roughly 4/3 the binary size; cap the encoded payload before
-      // retaining it in memory or placing it in the local audio cache.
-      if (data.audioBase64.length > MAX_TTS_BASE64_CHARS) {
-        logger.warn("[TTS] Gemini audio response exceeds size limit");
+      const data = await readBoundedResponseJson<{
+        candidates?: Array<{ content?: { parts?: Array<{ text?: string; audioData?: string }> } }>;
+        error?: unknown;
+      }>(response);
+      if (data.error) {
+        logger.error("[TTS] Gemini TTS error:", data.error);
         return null;
       }
-      return data.audioBase64;
+      const candidates = data.candidates;
+      if (!candidates || candidates.length === 0) {return null;}
+      const parts = candidates[0]?.content?.parts;
+      if (!parts || parts.length === 0) {return null;}
+      const audioBase64 = parts[0]?.audioData ?? parts[0]?.text;
+      if (typeof audioBase64 !== "string" || !audioBase64) {return null;}
+      return audioBase64;
     } catch (e) {
       logger.error(
         "[TTS] Gemini TTS error:",

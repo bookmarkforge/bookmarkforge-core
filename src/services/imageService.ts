@@ -1,29 +1,33 @@
+import { GEMINI_API_BASE, AI_MODELS } from "../constants/config";
 import { firewalledFetch } from "../utils/networkFirewall";
-import { fetchWithAiSession } from "./ai/aiSession";
 import { logger } from "../utils/logger";
 import {
   cancelResponseBody,
   readBoundedResponseJson,
   readBoundedResponseText,
   sanitizeErrorMessage,
+  fetchWithTimeout,
 } from "./ai/utils";
+import { securityVault, SECURE_STORAGE_KEYS } from "./SecurityVault";
+
+function getGeminiApiHeaders(apiKey: string | null): Record<string, string> {
+  return {
+    "Content-Type": "application/json",
+    "x-goog-api-key": apiKey ?? "",
+  };
+}
 
 /**
  * Generates an image based on the provided prompt.
  *
- * Security: Always routes through our backend (firewalledFetch) instead of
- * using the Google GenAI SDK directly. The SDK's internal fetch bypasses the
- * SSRF firewall and on-prem proxy. The backend proxies the request with full
- * firewall protection.
+ * Security: Calls the Gemini API directly instead of routing through
+ * the eliminated proxy. The API key is read from the vault.
  *
  * @param prompt The text prompt to generate the image from.
  * @returns A promise resolving to a base64 encoded data URL of the generated image.
  * @throws Error if no image could be generated.
  */
 const MAX_IMAGE_PROMPT_LENGTH = 20_000;
-// Mirrors the server contract (ai-media.ts): a generated image up to 36 MiB
-// of base64 is accepted upstream, so the client must accept exactly the same
-// envelope instead of rejecting what the backend considers valid.
 const MAX_IMAGE_BASE64_LENGTH = 36 * 1024 * 1024;
 const MAX_IMAGE_RESPONSE_BYTES = MAX_IMAGE_BASE64_LENGTH + 64 * 1024;
 
@@ -35,27 +39,32 @@ export const generateImage = async (prompt: string): Promise<string> => {
     throw new Error("Image prompt too long (max 20k characters)");
   }
 
-  const response = await fetchWithAiSession(
-    (sessionOptions) => firewalledFetch(
-      "/api/services/ai/generate-image",
-      sessionOptions,
-      "image-generation",
-    ),
+  let apiKey: string | null = null;
+  try {
+    apiKey = await securityVault.decryptSecret(SECURE_STORAGE_KEYS.API_KEY);
+  } catch {
+    // best-effort; will result in a 401 from the API
+  }
+
+  const model = AI_MODELS.GEMINI_EXP;
+  const response = await fetchWithTimeout(
+    `${GEMINI_API_BASE}/${model}:generateContent`,
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt }),
+      headers: getGeminiApiHeaders(apiKey),
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { responseModalities: ["image"] },
+      }),
     },
   );
 
   if (!response.ok) {
     let errText = "";
-    try {
-      errText = await readBoundedResponseText(response, 64 * 1024);
-    } catch {
+    try { errText = await readBoundedResponseText(response, 64 * 1024); } catch {
       await cancelResponseBody(response);
     }
-    logger.warn("[ImageService] Backend image generation failed", {
+    logger.warn("[ImageService] Gemini image generation failed", {
       status: response.status,
     });
     throw new Error(
@@ -64,18 +73,20 @@ export const generateImage = async (prompt: string): Promise<string> => {
   }
 
   const data = await readBoundedResponseJson<{
+    candidates?: Array<{ content?: { parts?: Array<{ inlineData?: { data?: string } }> } }>;
     error?: unknown;
-    imageBase64?: unknown;
   }>(response, MAX_IMAGE_RESPONSE_BYTES);
   if (data.error !== undefined) {
     throw new Error(sanitizeErrorMessage(String(data.error)));
   }
-  if (typeof data.imageBase64 !== "string" || data.imageBase64.length === 0) {
+  const parts = data.candidates?.[0]?.content?.parts;
+  const imageBase64 = parts?.[0]?.inlineData?.data;
+  if (typeof imageBase64 !== "string" || imageBase64.length === 0) {
     throw new Error("No image generated");
   }
-  if (data.imageBase64.length > MAX_IMAGE_BASE64_LENGTH) {
+  if (imageBase64.length > MAX_IMAGE_BASE64_LENGTH) {
     throw new Error("Generated image exceeds the 36 MB limit");
   }
 
-  return data.imageBase64;
+  return imageBase64;
 };

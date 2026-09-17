@@ -98,12 +98,8 @@ async function callGemini(
 }
 
 async function warmUpSession(page: Page): Promise<void> {
-  // Mint the AI session cookie+CSRF once via the app's own module so the
-  // per-scenario diagnostics measure the proxy chain, not session setup.
-  await page.evaluate(async () => {
-    const { ensureAiSession } = await import("/src/services/ai/aiSession.ts");
-    await ensureAiSession();
-  });
+  // Session endpoint removed with the Gemini proxy. AI requests now
+  // go directly to provider APIs without CSRF/session cookies.
 }
 
 test.describe("Gemini proxy chain via local upstream stub", () => {
@@ -152,15 +148,6 @@ test.describe("Gemini proxy chain via local upstream stub", () => {
     // Baseline: a healthy call also caches the session promise.
     const before = await callGemini(page, "gemini-2.0-flash", "unary");
     expect(before.ok, `baseline should succeed: ${before.error}`).toBe(true);
-
-    // Drop the in-memory session promise inside the page. The cookies remain
-    // valid until the server TTL, so the renewed request reuses them; the
-    // failure branch (server-side revocation → 401/403 with a non-replayable
-    // stream body) is covered by the unit suite (src/tests/services/ai/aiSession.test.ts).
-    await page.evaluate(async () => {
-      const { invalidateAiSession } = await import("/src/services/ai/aiSession.ts");
-      invalidateAiSession();
-    });
 
     const after = await callGemini(page, "gemini-2.0-flash", "unary");
     expect(after.ok, `expected recovery, got: ${after.error}`).toBe(true);

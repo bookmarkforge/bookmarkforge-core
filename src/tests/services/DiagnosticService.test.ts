@@ -38,6 +38,21 @@ const exposureMock = vi.hoisted(() =>
 );
 vi.mock("../../services/security-vault/kdf-salt", () => ({
   reportVaultSecretFormatExposure: exposureMock,
+  reportVaultSaltInventory: vi.fn().mockResolvedValue([
+    {
+      purpose: "master-kdf",
+      governance: "ADR-046",
+      rotatesWithPassword: true,
+      provisioned: true,
+      corpus: { legacyV5: 0, saltedV6: 1, legacyKeys: [] },
+    },
+    {
+      purpose: "db-key-kdf",
+      governance: "ADR-053",
+      rotatesWithPassword: false,
+      provisioned: true,
+    },
+  ]),
 }));
 
 vi.mock("../../services/integrations/cloudSync", () => ({
@@ -128,6 +143,26 @@ describe("DiagnosticService", () => {
         saltedV6: 2,
       });
       expect(exposureMock).toHaveBeenCalledTimes(1);
+    });
+
+    it("reports the unified per-salt inventory (ADR-053 Phase B)", async () => {
+      const diag = await diagnosticService.getDiagnostics();
+      expect(diag.salts).toHaveLength(2);
+      expect(diag.salts?.[0]).toMatchObject({
+        purpose: "master-kdf",
+        governance: "ADR-046",
+        provisioned: true,
+      });
+      expect(diag.salts?.[1]).toMatchObject({
+        purpose: "db-key-kdf",
+        governance: "ADR-053",
+        rotatesWithPassword: false,
+      });
+      expect(diag.salts?.[0]?.corpus).toEqual({
+        legacyV5: 0,
+        saltedV6: 1,
+        legacyKeys: [],
+      });
     });
 
     it("degrades to unknown instead of failing diagnostics when the report throws", async () => {

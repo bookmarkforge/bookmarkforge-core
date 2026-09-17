@@ -17,7 +17,10 @@ import { vectorIndexService } from "./ai/VectorIndexService";
 import { loadWebLLMService } from "./pro-access";
 // ADR-052 Phase 1: local-only exposure counter for the v5 sunset (ADR-053's
 // registry will extend it when that lands).
-import { reportVaultSecretFormatExposure } from "./security-vault/kdf-salt";
+import {
+  reportVaultSaltInventory,
+  reportVaultSecretFormatExposure,
+} from "./security-vault/kdf-salt";
 
 export interface SystemDiagnostics {
   db: {
@@ -74,6 +77,14 @@ export interface SystemDiagnostics {
     legacyV5: number;
     saltedV6: number;
   };
+  /** ADR-053 Phase B — unified per-salt inventory (one entry per registry descriptor). */
+  salts?: Array<{
+    purpose: "master-kdf" | "db-key-kdf";
+    governance: string;
+    rotatesWithPassword: boolean;
+    provisioned: boolean;
+    corpus?: { legacyV5: number; saltedV6: number; legacyKeys: string[] };
+  }>;
 }
 
 class DiagnosticService {
@@ -309,6 +320,17 @@ class DiagnosticService {
       },
     );
 
+    // ADR-053 Phase B: unified per-salt inventory from the registry. Fail-
+    // soft like the exposure report — diagnostics never break on it.
+    const salts = await reportVaultSaltInventory().catch(
+      (error: unknown): SystemDiagnostics["salts"] => {
+        logger.warn("[DiagnosticService] Vault salt inventory failed", {
+          error: error instanceof Error ? error.message : String(error),
+        });
+        return undefined;
+      },
+    );
+
     return {
       db: {
         initialized: isDBInitialized(),
@@ -361,6 +383,7 @@ class DiagnosticService {
         legacyV5: vaultCrypto.legacyV5,
         saltedV6: vaultCrypto.saltedV6,
       },
+      ...(salts !== undefined ? { salts } : {}),
     };
   }
 }

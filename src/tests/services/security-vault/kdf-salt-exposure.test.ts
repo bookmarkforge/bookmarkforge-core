@@ -38,7 +38,10 @@ vi.mock("../../../services/EncryptionService", () => ({
 }));
 vi.mock("../../../utils/logger", () => ({ logger: mocks.logger }));
 
-import { reportVaultSecretFormatExposure } from "../../../services/security-vault/kdf-salt";
+import {
+  reportVaultSaltInventory,
+  reportVaultSecretFormatExposure,
+} from "../../../services/security-vault/kdf-salt";
 import { SECURE_STORAGE_KEYS } from "../../../services/security-vault/constants";
 
 describe("ADR-052 Phase 1 — vault secret format exposure", () => {
@@ -112,5 +115,85 @@ describe("ADR-052 Phase 1 — vault secret format exposure", () => {
     expect(mocks.encryptionService.configureVaultKdfSalt).not.toHaveBeenCalled();
     expect(mocks.encryptionService.decryptWithBytes).not.toHaveBeenCalled();
     expect(mocks.encryptionService.encryptWithBytes).not.toHaveBeenCalled();
+  });
+});
+
+describe("ADR-053 Phase B — unified per-salt inventory", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("emits one entry per registry descriptor with provision and governance", async () => {
+    mocks.secureStorage.getSecret.mockImplementation(async (key: string) => {
+      if (key === "kdf_salt") {return "a".repeat(32);}
+      if (key === "vault_salt") {return "b".repeat(32);}
+      return null;
+    });
+
+    const inventory = await reportVaultSaltInventory();
+    expect(inventory).toHaveLength(2);
+    expect(inventory.map((entry) => entry.purpose)).toEqual([
+      "master-kdf",
+      "db-key-kdf",
+    ]);
+    expect(inventory[0]).toMatchObject({
+      governance: "ADR-046",
+      rotatesWithPassword: true,
+      provisioned: true,
+    });
+    expect(inventory[1]).toMatchObject({
+      governance: "ADR-053",
+      rotatesWithPassword: false,
+      provisioned: true,
+    });
+  });
+
+  it("attaches the v5/v6 corpus classification to the master-kdf entry only", async () => {
+    mocks.secureStorage.getSecret.mockImplementation(async (key: string) => {
+      if (key === "kdf_salt") {return "a".repeat(32);}
+      if (key === "vault_salt") {return "b".repeat(32);}
+      if (key === SECURE_STORAGE_KEYS.VERIFICATION) {
+        return "v6:00000000000000000000000000000000:"
+          + "0".repeat(64);
+      }
+      return null;
+    });
+
+    const inventory = await reportVaultSaltInventory();
+    expect(inventory[0]?.corpus).toEqual({ legacyV5: 0, saltedV6: 1, legacyKeys: [] });
+    expect(inventory[1]?.corpus).toBeUndefined();
+  });
+
+  it("omits corpus when the exposure report is unknown (no fake zero)", async () => {
+    mocks.secureStorage.getSecret.mockRejectedValue(
+      new Error("device key wrapped"),
+    );
+
+    const inventory = await reportVaultSaltInventory();
+    expect(inventory).toHaveLength(2);
+    for (const entry of inventory) {
+      expect(entry.corpus).toBeUndefined();
+      expect(entry.provisioned).toBe(false);
+    }
+  });
+
+  it("degrades provisioned to false when a salt slot is unreadable", async () => {
+    mocks.secureStorage.getSecret.mockImplementation(async (key: string) => {
+      if (key === "kdf_salt") {throw new Error("read failed");}
+      if (key === "vault_salt") {return "b".repeat(32);}
+      return null;
+    });
+
+    const inventory = await reportVaultSaltInventory();
+    expect(inventory[0]?.provisioned).toBe(false);
+    expect(inventory[1]?.provisioned).toBe(true);
+  });
+
+  it("stays read-only (no writes, no crypto mutation)", async () => {
+    mocks.secureStorage.getSecret.mockResolvedValue(null);
+    await reportVaultSaltInventory();
+    expect(mocks.secureStorage.setSecret).not.toHaveBeenCalled();
+    expect(mocks.secureStorage.deleteSecret).not.toHaveBeenCalled();
+    expect(mocks.encryptionService.configureVaultKdfSalt).not.toHaveBeenCalled();
   });
 });

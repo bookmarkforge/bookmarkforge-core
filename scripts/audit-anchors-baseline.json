@@ -1,9 +1,9 @@
 {
-  "totalAnchors": 23,
+  "totalAnchors": 24,
   "missingCount": 0,
-  "presentCount": 23,
+  "presentCount": 24,
   "discoveredCount": 0,
-  "updatedAt": "2026-09-17T21:29:25.196Z",
+  "updatedAt": "2026-09-17T22:37:57.590Z",
   "anchors": [
     {
       "id": "p0-ice-whitelist",
@@ -82,6 +82,12 @@
       "id": "database-core-source",
       "adr": "ADR-029 D6 / security-critical source",
       "glob": "src/db/database.core.ts",
+      "kind": "source"
+    },
+    {
+      "id": "vault-salt-registry-source",
+      "adr": "ADR-053 / security-critical source",
+      "glob": "src/services/security-vault/salt-registry.ts",
       "kind": "source"
     },
     {

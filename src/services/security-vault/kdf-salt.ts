@@ -44,7 +44,11 @@ import { encryptionService } from "../EncryptionService";
 import { secureStorage } from "../SecureStorage";
 import { logger } from "../../utils/logger";
 import { SECURE_STORAGE_KEYS } from "./constants";
-import { KDF_SALT_DESCRIPTOR } from "./salt-registry";
+import {
+  KDF_SALT_DESCRIPTOR,
+  VAULT_SALT_REGISTRY,
+  type VaultSaltPurpose,
+} from "./salt-registry";
 
 /** 16 random bytes, lowercase hex (crypto-core's VAULT_KDF_SALT_BYTES). */
 const VAULT_KDF_SALT_HEX_RE = /^[0-9a-f]{32}$/;
@@ -228,6 +232,69 @@ export interface VaultKdfSaltSnapshot {
   stored: string | null | undefined;
   /** Salt installed in the crypto layer, or null in legacy (fixed-salt) mode. */
   installed: string | null;
+}
+
+/**
+ * ADR-053 Phase B — unified per-salt inventory entry (one per registry
+ * descriptor). `master-kdf` carries the ADR-052 v5/v6 corpus classification:
+ * those password-encrypted secrets are re-wrapped under the same
+ * password-derived master key that `kdf_salt` feeds, so their format state
+ * is the format state of the master-kdf lane. `db-key-kdf` reports its
+ * provisioning (random per-vault CSPRNG salt; its value is KDF *input*,
+ * never format-tagged, so it has no v5/v6 classification).
+ */
+export interface VaultSaltInventoryEntry {
+  purpose: VaultSaltPurpose;
+  governance: string;
+  rotatesWithPassword: boolean;
+  /** Whether the salt value is present in storage right now. */
+  provisioned: boolean;
+  /** v5/v6 corpus classification — populated only for master-kdf. */
+  corpus?: {
+    legacyV5: number;
+    saltedV6: number;
+    legacyKeys: string[];
+  };
+}
+
+/**
+ * ADR-053 Phase B: one inventory per registry entry, from a single storage
+ * pass. Never throws: any storage failure collapses into one honest
+ * "unknown" inventory (zero would falsely signal a fully salted vault).
+ */
+export async function reportVaultSaltInventory(): Promise<
+  VaultSaltInventoryEntry[]
+> {
+  const exposure = await reportVaultSecretFormatExposure();
+  const inventory: VaultSaltInventoryEntry[] = [];
+  for (const descriptor of VAULT_SALT_REGISTRY) {
+    const entry: VaultSaltInventoryEntry = {
+      purpose: descriptor.purpose,
+      governance: descriptor.governance,
+      rotatesWithPassword: descriptor.rotatesWithPassword,
+      provisioned: false,
+    };
+    try {
+      const stored = await secureStorage.getSecret(descriptor.storageKey);
+      entry.provisioned = typeof stored === "string" && stored.length > 0;
+    } catch (_error) {
+      // The whole inventory already carries the exposure status; an
+      // unreadable salt slot degrades that entry's provisioned to false.
+      entry.provisioned = false;
+    }
+    if (
+      descriptor.purpose === "master-kdf" &&
+      exposure.status === "ok"
+    ) {
+      entry.corpus = {
+        legacyV5: exposure.legacyV5,
+        saltedV6: exposure.saltedV6,
+        legacyKeys: [...exposure.legacyKeys],
+        };
+    }
+    inventory.push(entry);
+  }
+  return inventory;
 }
 
 /**

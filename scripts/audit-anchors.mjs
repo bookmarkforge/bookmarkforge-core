@@ -161,6 +161,14 @@ export const ANCHORS = [
     kind: "source",
   },
   {
+    id: "vault-salt-registry-source",
+    adr: "ADR-053 / security-critical source",
+    description:
+      "salt-registry.ts remains present so the code-level registry of per-vault salt keys (kdf_salt rotation contract, db_salt never-rotate contract, duplicate-slot guard) cannot disappear silently.",
+    glob: "src/services/security-vault/salt-registry.ts",
+    kind: "source",
+  },
+  {
     id: "secure-storage-device-key-lock",
     adr: "ADR-026 D2 / wave 2",
     description:

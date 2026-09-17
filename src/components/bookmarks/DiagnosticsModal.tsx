@@ -496,6 +496,30 @@ export const DiagnosticsModal: React.FC<DiagnosticsModalProps> = ({
                         }
                       />
                     </div>
+                    {data.salts && data.salts.length > 0 && (
+                      <div className="mt-2 grid grid-cols-1 gap-1">
+                        {data.salts.map((salt) => (
+                          <div
+                            key={salt.purpose}
+                            className="flex items-center justify-between gap-2 text-[10px] font-mono"
+                          >
+                            <span className="truncate ds-text-secondary">
+                              {salt.purpose} · {salt.governance} ·{" "}
+                              {salt.rotatesWithPassword ? "rotates" : "static"}
+                            </span>
+                            <span
+                              className={`shrink-0 ${
+                                salt.provisioned
+                                  ? "ds-text-success"
+                                  : "ds-text-warning"
+                              }`}
+                            >
+                              {salt.provisioned ? "provisioned" : "missing"}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </section>
                 )}
 

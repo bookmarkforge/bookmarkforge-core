@@ -136,11 +136,8 @@ export const ENV_REGISTRY = {
   sentryDsn:              { envVar: "VITE_SENTRY_DSN",               parser: parseString},
 
   // ─── AI provider keys (all optional — validated per-provider) ───
-  // VITE_GEMINI_API_KEY is registered since the server-side proxy
-  // has been removed; the Gemini API key is now used directly by
-  // GeminiProvider in the browser.
-  geminiApiKey:      { envVar: "VITE_GEMINI_API_KEY",     parser: parseString},
-  geminiProxyUrl:    { envVar: "VITE_GEMINI_PROXY_URL",   parser: parseString},
+  // VITE_GEMINI_API_KEY removed: GeminiProvider reads the API key
+  // from the user's vault (securityVault), not from env vars.
   openaiApiKey:       { envVar: "VITE_OPENAI_API_KEY",        parser: parseString},
   anthropicApiKey:    { envVar: "VITE_ANTHROPIC_API_KEY",     parser: parseString},
   groqApiKey:         { envVar: "VITE_GROQ_API_KEY",          parser: parseString},

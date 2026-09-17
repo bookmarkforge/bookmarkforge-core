@@ -105,36 +105,15 @@ interface EnvValidationResult {
   errors: string[];
 }
 
-function isSafePublicHttpsUrl(value: string | undefined): boolean {
-  if (!value || value.length > 2_048 || /[\u0000-\u001f\u007f-\u009f]/.test(value)) {
-    return false;
-  }
-  try {
-    const parsed = new URL(value);
-    return parsed.protocol === "https:" && Boolean(parsed.hostname) &&
-      !parsed.username && !parsed.password;
-  } catch {
-    return false;
-  }
-}
-
 export function validateEnvVars(): EnvValidationResult {
   const result: EnvValidationResult = {
     isValid: true,
     missing: [],
     warnings: [],
-    errors: [],
-  };
+  errors: [],
+};
 
-  const _geminiApiKey = env.geminiApiKey;
-  const geminiProxyUrl = env.geminiProxyUrl?.trim();
-  if (geminiProxyUrl && !isSafePublicHttpsUrl(geminiProxyUrl)) {
-    const message = "VITE_GEMINI_PROXY_URL must be an HTTPS URL without embedded credentials.";
-    if (env.isProd) result.errors.push(`[BUILD FATAL] ${message}`);
-    else result.warnings.push(message);
-  }
-
-  // ---- Same hardening for all AI provider keys ----
+// ---- Same hardening for all AI provider keys ----
   const openaiKey = env.openaiApiKey;
   const anthropicKey = env.anthropicApiKey;
   const groqKey = env.groqApiKey;
@@ -206,7 +185,6 @@ export function getEnvironmentInfo(): Record<string, string | boolean> {
     isDev: env.isDev,
     isProd: env.isProd,
     mode: env.mode ?? "unknown",
-    hasGeminiKey: !!env.geminiApiKey,
     baseUrl: env.baseUrl ?? "/",
   };
 }

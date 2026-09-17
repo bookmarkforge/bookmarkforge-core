@@ -358,8 +358,11 @@ themes, decision D4) and ADR-043 (SEO contract gate — `check:seo`:
     formalized in `docs/ADR-046-vault-kdf-salt-rotation.md` and anchored by
     the dedicated `p0-vault-kdf-salt` / `p0-vault-rotation-rollback-drill`
     anchor entries in `scripts/audit-anchors.mjs`. ADR-052 (v5 format sunset —
-    conditional, measurable retirement of the legacy static-salt read path)
-    and ADR-053 (single per-vault salt registry consolidating `kdf_salt` and
-    the `deriveDbKey` salt) are proposed in
-    `docs/ADR-052-v5-format-sunset.md` and
+    conditional, measurable retirement of the legacy static-salt read path;
+    Phases 0-2 implemented: exposure counter, diagnostics card and the
+    non-blocking unlock-screen notice) is proposed in
+    `docs/ADR-052-v5-format-sunset.md`, and ADR-053 (single per-vault salt
+    registry consolidating `kdf_salt` and the `deriveDbKey` salt) is
+    implemented in full — registry, per-salt diagnostics inventory and the
+    `vault-salt-registry-source` anchor — per
     `docs/ADR-053-vault-salt-registry.md`.

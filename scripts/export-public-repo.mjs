@@ -63,25 +63,30 @@ const PUBLIC_DOCS = new Set([
   "api.md",
   "openapi.yaml",
   "server-api-index.md",
-  "adr-001-check-static-brand.md",
-  "adr-019-argon2id-migration.md",
-  "adr-026-post-audit-hardening-wave-1.md",
-  "adr-027-post-audit-hardening-wave-2.md",
-  "adr-028-gate-drift-detection.md",
-  "adr-029-webrtc-sync-hardening.md",
-  "adr-030-security-tier-regression-umbrella.md",
-  "adr-032-disk-backup-pruning.md",
-  "adr-033-restore-surface-auth-errors.md",
-  "adr-034-backup-age-and-storage-quota.md",
-  "adr-037-backup-deletion-ownership.md",
-  "adr-038-constant-time-hmac-attestation.md",
-  "adr-039-sw-integrity-runtime.md",
-  "adr-040-docs-markdown-gate-fusion.md",
-  "adr-042-css-only-user-themes.md",
-  "adr-043-check-seo-gate.md",
-  "adr-044-og-image-policy.md",
-  "adr-045-check-brand-logo-gate.md",
-  "adr-046-vault-kdf-salt-rotation.md",
+   "ADR-001-check-static-brand.md",
+   "ADR-019-argon2id-migration.md",
+   "ADR-026-post-audit-hardening-wave-1.md",
+   "ADR-027-post-audit-hardening-wave-2.md",
+   "ADR-028-gate-drift-detection.md",
+   "ADR-029-webrtc-sync-hardening.md",
+   "ADR-030-security-tier-regression-umbrella.md",
+   "ADR-032-disk-backup-pruning.md",
+   "ADR-033-restore-surface-auth-errors.md",
+   "ADR-034-backup-age-and-storage-quota.md",
+   "ADR-037-backup-deletion-ownership.md",
+   "ADR-038-constant-time-hmac-attestation.md",
+   "ADR-039-sw-integrity-runtime.md",
+   "ADR-040-docs-markdown-gate-fusion.md",
+   "ADR-042-css-only-user-themes.md",
+   "ADR-043-check-seo-gate.md",
+   "ADR-044-og-image-policy.md",
+   "ADR-045-check-brand-logo-gate.md",
+   "ADR-046-vault-kdf-salt-rotation.md",
+   "ADR-047-claim-drift-gate.md",
+   "ADR-048-license-claims-gate.md",
+   "ADR-049-manual-figures-gate.md",
+   "ADR-050-page-figures-gate-and-planner.md",
+   "ADR-051-landings-fresh-gate.md",
   "manual-usuario.md",
   "manual-usuario-en.md",
   "index.md",
@@ -240,7 +245,9 @@ const EXCLUDED_FILES = new Set([
   "scripts/public-export/manual-usuario-en.md",
   "scripts/public-export/manual-usuario.pdf",
   "scripts/public-export/manual-usuario-en.pdf",
-  // Pro tests must not be copied into the public Core tree.
+   "scripts/public-export/RELEASE-NOTES-v1.0.0.md",
+   "scripts/public-export/RELEASE-NOTES-v1.0.0.es.md",
+   // Pro tests must not be copied into the public Core tree.
   "src/tests/services/WebRTCSyncService.test.ts",
   "src/tests/services/BackupService.test.ts",
   "src/tests/services/DiskBackupService.test.ts",
@@ -390,12 +397,32 @@ for (const rel of included) {
 
 // Public overlay: license, README, trademark notices, and a minimal public
 // .github (issues/PRs only).
+// Cross-platform line endings for the open-source repo: normalize text to
+// LF on checkin and checkout (the export tree is LF), keep binaries intact.
+writeFileSync(
+  join(outDir, ".gitattributes"),
+  [
+    "* text=auto eol=lf",
+    "*.png binary",
+    "*.jpg binary",
+    "*.jpeg binary",
+    "*.gif binary",
+    "*.ico binary",
+    "*.pdf binary",
+    "*.woff binary",
+    "*.woff2 binary",
+    "*.zip binary",
+    "",
+  ].join("\n"),
+);
 cpSync(join(repoRoot, "scripts", "public-export", "LICENSE"), join(outDir, "LICENSE"));
 cpSync(join(repoRoot, "scripts", "public-export", "README.md"), join(outDir, "README.md"));
 cpSync(join(repoRoot, "scripts", "public-export", "NOTICE"), join(outDir, "NOTICE"));
 cpSync(join(repoRoot, "scripts", "public-export", "TRADEMARKS.md"), join(outDir, "TRADEMARKS.md"));
 cpSync(join(repoRoot, "scripts", "public-export", "manual-usuario.md"), join(outDir, "manual-usuario.md"));
 cpSync(join(repoRoot, "scripts", "public-export", "manual-usuario-en.md"), join(outDir, "manual-usuario-en.md"));
+cpSync(join(repoRoot, "scripts", "public-export", "RELEASE-NOTES-v1.0.0.md"), join(outDir, "RELEASE-NOTES-v1.0.0.md"));
+cpSync(join(repoRoot, "scripts", "public-export", "RELEASE-NOTES-v1.0.0.es.md"), join(outDir, "RELEASE-NOTES-v1.0.0.es.md"));
 cpSync(join(repoRoot, "scripts", "public-export", "manual-usuario.pdf"), join(outDir, "manual-usuario.pdf"));
 cpSync(join(repoRoot, "scripts", "public-export", "manual-usuario-en.pdf"), join(outDir, "manual-usuario-en.pdf"));
 mkdirSync(join(outDir, ".github"), { recursive: true });
@@ -488,7 +515,8 @@ try {
 // Manifest: auditable record of what shipped and what did not.
 const manifest = {
   generatedAt: new Date().toISOString(),
-  source: "private repository (this checkout)",
+  version: JSON.parse(readFileSync(join(repoRoot, "package.json"), "utf8")).version,
+  source: "private repository (export checkout)",
   license: "MIT",
   model: "open-core",
   proExcluded: [...EXCLUDED_FILES].filter((file) => isProModulePath(file)),

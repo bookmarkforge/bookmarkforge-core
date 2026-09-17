@@ -621,18 +621,42 @@ describe("ai/utils", () => {
         await import("../../../services/ai/utils");
       expect(
         getUserFriendlyErrorMessage(
-          "Unknown error 500",
+          "Something went wrong",
           "openai",
           "gpt-4o-mini",
         ),
-      ).toBe("Unknown error 500");
+      ).toBe("Something went wrong");
+    });
+
+    it("returns server error message for 500", async () => {
+      const { getUserFriendlyErrorMessage } =
+        await import("../../../services/ai/utils");
+      expect(
+        getUserFriendlyErrorMessage(
+          "custom API error 500",
+          "custom",
+          "bmforge-mock",
+        ),
+      ).toContain("server error");
+    });
+
+    it("returns server error message for 503", async () => {
+      const { getUserFriendlyErrorMessage } =
+        await import("../../../services/ai/utils");
+      expect(
+        getUserFriendlyErrorMessage(
+          "custom API error 503",
+          "custom",
+          "bmforge-mock",
+        ),
+      ).toContain("server error");
     });
 
     it("redacts OpenAI API keys from the original message", async () => {
       const { getUserFriendlyErrorMessage } =
         await import("../../../services/ai/utils");
       const result = getUserFriendlyErrorMessage(
-        "Upstream 500 with sk-proj-abc123def456 secret",
+        "Upstream error with sk-proj-abc123def456 secret",
         "openai",
         "gpt-4o-mini",
       );

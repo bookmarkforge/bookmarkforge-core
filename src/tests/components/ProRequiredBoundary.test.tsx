@@ -4,10 +4,12 @@ import { act } from "react";
 import React from "react";
 
 const DICT: Record<string, string> = {
-  app_proRequiredTitle: "Available in Pro",
+  app_proRequiredTitle: "Available in Open Core",
   app_proRequiredFeatureTitle: "{{feature}} is part of Pro",
   app_proRequiredBody:
     "This build ships without the Pro implementation, so this feature stays quiet instead of pretending to work.",
+  app_proRequiredLicenseBody:
+    "That one feature is part of Pro and unlocks with a one-time license — your vault, search and export keep working exactly as they are.",
   app_proRequiredGetLicense: "Get a license once — no subscription",
   app_proRequiredRefund: "{{refundDays}}-day money-back guarantee",
   app_proRequiredDismiss: "Close",
@@ -91,6 +93,24 @@ describe("ProRequiredBoundary", () => {
     await waitFor(() =>
       expect(screen.getByText("P2P sync is part of Pro")).toBeTruthy(),
     );
+  });
+
+  it("uses license wording for a Free-session rejection and build wording for the Open Core absence", async () => {
+    render(<ProRequiredBoundary />);
+    act(() => {
+      window.dispatchEvent(
+        new CustomEvent("bmf:pro-unavailable", {
+          detail: { feature: "BackupService", reason: "license" },
+        }),
+      );
+    });
+    await waitFor(() =>
+      expect(
+        screen.getByText(
+          /unlocks with a one-time license/,        ),
+      ).toBeTruthy(),
+    );
+    expect(screen.queryByText(/ships without the Pro implementation/)).toBeNull();
   });
 
   it("closes via the dismiss button and the CTA opens Settings", async () => {

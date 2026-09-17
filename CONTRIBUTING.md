@@ -33,7 +33,7 @@ wins.
 - **Operations:** Docker Compose separates web, api, and optional Redis; the
   reverse proxy terminates TLS and serves assets.
 
-Trust boundaries are documented in `docs/architecture.md`. Layer rules are
+Trust boundaries are documented in `docs/ARCHITECTURE.md`. Layer rules are
 enforced by `npm run check:boundaries`.
 
 ---
@@ -163,15 +163,20 @@ npm run test:slow               # every other test file (~480; CI's slow-tests j
                                 #   profile does not cover)
 npm run build:ci                # vite build + secret-scan + SRI + integrity
                                 #   manifest + chunk-boundary + bundle-size gates
-npm run check                   # the 26-gate chain: env, workflows, http/config,
-                                #   compose/runtime config, boundaries,
-                                #   e2e-helpers, docs-markdown, baseline-drift,
-                                #   baseline-gaps, csp, extension-csp, i18n
-                                #   (completeness+quality+code), english-only,
-                                #   audit-drift, no-unbounded-text, tailwind-drift,
-                                #   rxdb17, static-brand, brand-logo, seo,
-                                #   license-keys, server-log-ip-privacy, lint,
-                                #   chunks, inspector-freeze
+npm run check                   # the full gate chain (~37 check commands + lint):
+                                 # open-core, pro-imports, env, workflows,
+                                 # http-config, compose-config, runtime-config,
+                                 # boundaries, e2e-helpers, docs-markdown,
+                                 # baseline-drift, baseline-gaps, csp,
+                                 # extension-csp, i18n, claim-drift,
+                                 # landing-free-plan, pocket-onboarding-copy,
+                                 # license-claims, manual-figures, page-figures,
+                                 # landings-fresh, english-only, audit-drift,
+                                 # override-cve, direct-cve, no-unbounded-text,
+                                 # tailwind-drift, rxdb17, static-brand,
+                                 # brand-logo, seo, license-keys,
+                                 # server-log-ip-privacy, pro-routes, lint,
+                                 # chunks, inspector-freeze
 ```
 
 Two contract gates have their own governing records — read them before
@@ -180,9 +185,7 @@ touching the surfaces they guard:
 - SEO surface (`check:seo`): `docs/ADR-043-check-seo-gate.md` — canonical /
   hreflang / OG / JSON-LD, noindex of the private app, language negotiation
   and the sitemap contract.
-- Brand mark (`check:brand-logo`): `docs/ADR-045-check-brand-logo-gate.md` —
-  every icon PNG and inline brand SVG must match the canonical artwork
-  (`public/icons/logo-512.png`).
+- Brand mark (`check:brand-logo`): `docs/ADR-045-check-brand-logo-gate.md` — every icon PNG and inline brand SVG must match the canonical artwork (`public/icons/logo-512.png`).
 
 - `npm run ci:local` aggregates the CI job (`typecheck:prod && lint &&
   test:fast && build:ci && check`).

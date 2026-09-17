@@ -10,6 +10,12 @@ import {
 export interface ProRequiredPanelProps {
   /** Short label of the feature that was reached, e.g. "P2P sync". */
   feature?: string;
+  /**
+   * Why the surface is unavailable — selects the body copy: "license" sells
+   * the upgrade (official build, Free session); "build" explains the Open
+   * Core absence. Defaults to "build", the boundary's historical trigger.
+   */
+  reason?: "license" | "build";
   onClose: () => void;
   /** Navigate to the Pro section (Settings modal opens via the bridge). */
   onSeePro: () => void;
@@ -28,6 +34,7 @@ export interface ProRequiredPanelProps {
  */
 export const ProRequiredPanel: React.FC<ProRequiredPanelProps> = ({
   feature,
+  reason = "build",
   onClose,
   onSeePro,
 }) => {
@@ -69,10 +76,15 @@ export const ProRequiredPanel: React.FC<ProRequiredPanelProps> = ({
                   : t("app_proRequiredTitle", "Available in Pro")}
               </h2>
               <p className="text-sm ds-text-secondary leading-relaxed mb-4 line-clamp-5">
-                {t(
-                  "app_proRequiredBody",
-                  "This build ships without the Pro implementation, so this feature stays quiet instead of pretending to work. Everything else — your vault, search and export — is unaffected.",
-                )}
+                {reason === "license"
+                  ? t(
+                      "app_proRequiredLicenseBody",
+                      "That one feature is part of Pro and unlocks with a one-time license — your vault, search and export keep working exactly as they are.",
+                    )
+                  : t(
+                      "app_proRequiredBody",
+                      "This build ships without the Pro implementation, so this feature stays quiet instead of pretending to work. Everything else — your vault, search and export — is unaffected.",
+                    )}
               </p>
 
               <ul className="space-y-1.5 mb-4">

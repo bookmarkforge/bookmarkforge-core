@@ -7,6 +7,10 @@ import { generateId } from "../utils/id";
 import { hashString } from "../utils/crypto-core";
 import { toast } from "sonner";
 import { isFreeLimitError } from "../services/LicenseService";
+import {
+  ProUnavailableError,
+  announceProUnavailable,
+} from "../services/pro-access";
 import { FREE_LIMITS } from "../constants/license";
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { safeSet } from "../store/safeStorage";
@@ -175,6 +179,12 @@ export const QuickCapture: React.FC = () => {
         // the banner when the user reaches the dashboard.
         safeSet(STORAGE_KEYS.FREE_TIER_WALL_HIT_PENDING, "1");
         window.dispatchEvent(new CustomEvent("bmf:free-wall-hit"));
+        return;
+      }
+      if (error instanceof ProUnavailableError) {
+        // A Pro surface was reached without access: open the shared
+        // "Available in Pro" panel instead of the generic capture-error toast.
+        announceProUnavailable(error);
         return;
       }
       toast.error(t("app_captureError"));

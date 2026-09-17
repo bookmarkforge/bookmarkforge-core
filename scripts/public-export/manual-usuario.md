@@ -322,7 +322,7 @@ Este error indica que el servidor no está configurado correctamente. No es un p
 
 | Variable | Descripción | Ejemplo |
 |---|---|---|
-| `VITE_WHOP_CHECKOUT_URL` | URL de checkout de Whop para Pro | `https://whop.com/checkout/xxx` |
+| `VITE_WHOP_CHECKOUT_URL` | URL de checkout de Whop para Pro | `https://whop.com/checkout/<your-product-id>` |
 | `VITE_APP_VERSION` | Versión de la app | `1.0.0` |
 | `VITE_DB_NAME` | Nombre de la base de datos IndexedDB | `bookmarkforge_v5` |
 | `VITE_SENTRY_DSN` | DSN de Sentry para error reporting | *(opcional)* |

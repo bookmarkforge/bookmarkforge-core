@@ -56,6 +56,27 @@ export class ProUnavailableError extends Error {
   }
 }
 
+/**
+ * The one UI signal for "a Pro surface was needed and is not available".
+ * Dispatched by the code paths that receive a `ProUnavailableError` and
+ * listened to by `ProRequiredBoundary` (mounted once in MainApp), which opens
+ * the "Available in Pro" panel instead of letting every surface invent its
+ * own generic error toast. Kept next to the error type so the error and its
+ * user-facing signal cannot diverge; `detail.feature` is the service name and
+ * `detail.reason` selects the panel's wording (license vs. Open Core build).
+ */
+export function announceProUnavailable(error: ProUnavailableError): void {
+  if (typeof window === "undefined") {return;}
+  window.dispatchEvent(
+    new CustomEvent("bmf:pro-unavailable", {
+      detail: {
+        feature: error.service,
+        reason: error.reason,
+      },
+    }),
+  );
+}
+
 /** Minimal shape the loader needs from the license gate. */
 type ProGate = {
   hasProAccess(): boolean;

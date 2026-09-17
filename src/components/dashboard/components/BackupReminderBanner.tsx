@@ -2,7 +2,11 @@ import React from "react";
 import { motion } from "motion/react";
 import { ShieldCheck, HardDriveDownload, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { loadBackupService } from "../../../services/pro-access";
+import {
+  loadBackupService,
+  ProUnavailableError,
+  announceProUnavailable,
+} from "../../../services/pro-access";
 import { securityVault } from "../../../services/SecurityVault";
 import { toast } from "sonner";
 import { logger } from "../../../utils/logger";
@@ -53,6 +57,12 @@ export const BackupReminderBanner: React.FC<BackupReminderBannerProps> = ({
     onError: (error) => {
       toast.dismiss();
       logger.error("Failed to export backup via banner:", error);
+      if (error instanceof ProUnavailableError) {
+        // Encrypted backups are Pro: explain instead of a bare "failed"
+        // — the shared panel names the feature and links to the license.
+        announceProUnavailable(error);
+        return;
+      }
       toast.error(t("backup_error", "Failed to export backup."));
     },
   });

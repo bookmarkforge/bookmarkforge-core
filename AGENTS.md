@@ -94,7 +94,7 @@ The codebase has an explicit ownership contract for secrets-as-bytes:
 - The allowlist (`scripts/context-boundaries.allowlist.json`) must stay
   **empty** — a new runtime edge must be refactored, not allowlisted.
 
-## 5. Mandatory gates before commit / push
+## 6. Mandatory gates before commit / push
 
 > Note: `lint-staged` is configured and `husky` is in `prepare`, but this
 > checkout has **no `.husky/pre-commit` hook file** — CI is the enforcement
@@ -113,12 +113,27 @@ npm run test:slow               # every other test file (~480; CI's slow-tests j
                                 #   profile does not cover)
 npm run build:ci                # vite build + secret-scan + SRI + integrity
                                 #   manifest + chunk-boundary + bundle-size gates
-npm run check                   # the 17-gate chain: env, workflows, http/compose/
-                                #   runtime config, boundaries, e2e-helpers, csp,
-                                #   extension-csp, i18n (completeness+quality+code),
-                                #   english-only, audit-drift, no-unbounded-text,
-                                #   tailwind-drift, rxdb17, static-brand,
-                                #   license-keys, lint, chunks, inspector-freeze
+npm run check                   # the full gate chain (~37 check commands + lint):
+                                 # open-core, pro-imports, env, workflows,
+                                 # http-config, compose-config, runtime-config,
+                                 # boundaries, e2e-helpers, docs-markdown,
+                                 # baseline-drift, baseline-gaps, csp,
+                                 # extension-csp, i18n, claim-drift,
+                                 # landing-free-plan, pocket-onboarding-copy,
+                                 # license-claims, manual-figures, page-figures,
+                                 # landings-fresh, english-only, audit-drift,
+                                 # override-cve, direct-cve, no-unbounded-text,
+                                 # tailwind-drift, rxdb17, static-brand,
+                                 # brand-logo, seo, license-keys,
+                                 # server-log-ip-privacy, pro-routes, lint,
+                                 # chunks, inspector-freeze
+
+> Gates run separately in CI (not part of `npm run check`):
+> `check:e2e-selectors`, `check:performance`, `check:direct-cve:dev`
+> (requires dev-dependency CVE scan), `check:zap-context`,
+> `check:audit-drift:strict`, `check:audit-drift:strict-discovery`.
+> The `build` CI job runs these alongside `npm run check`.
+
 ```
 
 - `npm run ci:local` aggregates the CI job (`typecheck:prod && lint &&
@@ -137,7 +152,7 @@ npm run check                   # the 17-gate chain: env, workflows, http/compos
   companion server. `build:ci` runs a literal-secret scan over `dist/` and
   fails on leaks; `check:secrets-in-commit` scans the tree.
 
-## 6. Testing conventions
+## 7. Testing conventions
 
 - Unit/integration: Vitest, mirrored under `src/tests/` per area
   (`security`, `db`, `services/ai`, `human-like`, `chaos`, `regression`…).
@@ -153,6 +168,36 @@ npm run check                   # the 17-gate chain: env, workflows, http/compos
   already-running servers, and the `--mode test` webServer keeps Argon2id
   on fast test params — never start the dev server for E2E without it
   (~28 s per vault setup otherwise).
+- **AI E2E topologies:** two isolated Playwright configs own the AI surfaces —
+  `npm run e2e:ai-upstream` and `npm run e2e:custom-provider`. Run them
+  sequentially: they share the 8787 signaling server. Each spins its own
+  4-server chain (fake upstream/mock → companion → Vite `--mode test`) on
+  dedicated ports, so the shared config's crisis topology (companion on 8799,
+  spawned per-suite by the crisis specs) is never disturbed; locally
+  `reuseExistingServer` adopts a healthy leftover instance — verify the
+  identity before reusing (`/health` for servers, `/__health` for the stub
+  and the mock, which also lists its scenario models).
+  - `e2e:ai-upstream` (`playwright.ai-upstream.config.ts`,
+    `tests/e2e/gemini-upstream-errors.spec.ts`): the full Gemini proxy chain —
+    browser → CSRF session → Vite `/api` proxy → companion entitlement guard
+    → `geminiProxyHandler` → fake upstream (`scripts/test-upstream-server.mjs`,
+    stateless scenarios keyed by model name). Use when touching the proxy
+    chain, session handling, upstream error mapping or the circuit breaker.
+  - `e2e:custom-provider` (`playwright.custom-provider.config.ts`,
+    `tests/e2e/custom-provider*.spec.ts`): the Custom (OpenAI-format) provider
+    driven through the app's real Settings path against the OpenAI-compatible
+    mock (`scripts/mock-openai-server.mjs`, SSE streaming; scenario models
+    surface provider errors 401/429/500/503). The browser calls the mock
+    directly (`firewalledFetch` allows loopback); the companion only owns the
+    `/api` session bootstrap and model-list proxying. Use when touching
+    provider wiring, the configuration flow, SSE parsing or error surfacing.
+  - Both run anonymous (`AI_SESSION_REQUIRE_LICENSE=0` on the companion): an
+    AI path that needs a Pro entitlement must degrade for Free users at
+    ROUTING time — `resolveProvider` probes WebLLM best-effort
+    (`ProUnavailableError` → `hasWebLLM=false`); a Free request may never fail
+    on the entitlement before reaching the provider it selected.
+  - Neither replaces the shared suite: crisis specs, multiuser/relay and the
+    nightly matrix keep their own configs and topologies.
 - Test profiles: `scripts/test-profiles.mjs` owns the two bounded surfaces —
   `test:fast` (curated smoke + critical areas) and `test:slow` (every other
   file; `npm test` with no selectors runs the same surface). Both are driven
@@ -176,7 +221,7 @@ npm run check                   # the 17-gate chain: env, workflows, http/compos
 - Mock crypto-carefully: `require-securityvault-mock-lock-unlock` demands
    lock/unlock lifecycle symmetry when mocking `SecurityVault`.
 
-## 7. Security Champions Program
+## 8. Security Champions Program
 
 BookmarkForge operates a **Security Champions program** for distributed
 security responsibility across the development team. Every PR must pass
@@ -185,21 +230,23 @@ mandatory security gates before merge.
 ### Mandatory Security Gates (every PR)
 
 1. **`Enforce mandatory security gates`** (CI step in `ci.yml`) — Runs:
-   - `npm run check:security-internal` — The full internal security pipeline (9 checks):
-     - `check:secrets-in-commit` — No secrets in git history
-     - `check:workflows` — CI/CD workflow validation
-     - `check:http-config` — HTTP configuration security
-     - `check:compose-config` — Docker Compose security
-     - `check:runtime-config` — Runtime configuration validation
-     - `check:docker-context` — Docker context security
-     - `check:image-pins` — Container image digest verification
-     - `check:repository-hygiene` — Repository security hygiene
-     - `check:zap-baseline` — OWASP ZAP baseline scan
-   - `npm run check:server-log-ip-privacy` — IP privacy in server logs
-   - `npm run check:blindeo` — Blindeo security scanner
-   - Blocks PR merge on any failure.
+    - `npm run check:security-internal` — The internal security pipeline (9 checks):
+      - `check:secrets-in-commit` — No secrets in git history
+      - `check:workflows` — CI/CD workflow validation
+      - `check:http-config` — HTTP configuration security
+      - `check:compose-config` — Docker Compose security
+      - `check:runtime-config` — Runtime configuration validation
+      - `check:docker-context` — Docker context security
+      - `check:image-pins` — Container image digest verification
+      - `check:repository-hygiene` — Repository security hygiene
+      - `check:zap-baseline` — OWASP ZAP baseline scan
+    - `npm run check:server-log-ip-privacy` — IP privacy in server logs
+    - `npm run check:blindeo` — Blindeo security scanner
+    - (The full security pipeline spans 11 commands above;
+      `check:security-internal` itself covers 9.)
+    - Blocks PR merge on any failure.
 
-2. **`npm run check`** — The 17-gate chain (includes CSP, i18n, audit-drift, etc.)
+2. **`npm run check`** — The full gate chain (~37 check commands + lint)
 
 3. **SAST** (CodeQL + Semgrep) — Blocked on High/Critical findings
 
@@ -244,7 +291,7 @@ See `.github/SECURITY_CHAMPIONS.md` for the full program documentation.
 - Checklist per change type (server/, CSP, headers, extension, dependencies)
 - Incident response scale (P0–P3 with SLAs)
 
-## 8. Repository hygiene
+## 9. Repository hygiene
 
 - Ignored (never commit): `dist/`, `coverage/`, `test-results*/`,
   `playwright-report*/`, `tests/e2e/__diffs__/`, `tests/e2e/__snapshots__/`,
@@ -291,9 +338,14 @@ See `.github/SECURITY_CHAMPIONS.md` for the full program documentation.
   `scripts/check-docs-markdown.mjs` with its drift baseline at
   `scripts/docs-markdown-baseline.json`, in the `npm run check` chain, and
   accepted by the freeze via the ADR token), ADR-042 (CSS-only user
-  themes, decision D4) and ADR-043 (SEO contract gate — `check:seo`:
-  canonical/hreflang/OG/Twitter/JSON-LD, noindex, negociación de idioma
-  y preferencia manual, sitemap con hreflang y terminología legal) are
-  formalized in `docs/ADR-040-docs-markdown-gate-fusion.md`,
-  `docs/ADR-042-css-only-user-themes.md` and
-  `docs/ADR-043-check-seo-gate.md`.
+themes, decision D4) and ADR-043 (SEO contract gate — `check:seo`:
+   canonical/hreflang/OG/Twitter/JSON-LD, noindex, negociación de idioma
+   y preferencia manual, sitemap con hreflang y terminología legal) are
+   formalized in `docs/ADR-040-docs-markdown-gate-fusion.md`,
+   `docs/ADR-042-css-only-user-themes.md` and
+    `docs/ADR-043-check-seo-gate.md`. ADR-045 (brand logo consistency
+    gate — `check:brand-logo`) is formalized in
+    `docs/ADR-045-check-brand-logo-gate.md`. ADR-047 (factual
+    claim-drift gate), ADR-048 (license claims gate), ADR-049
+    (manual figures gate), ADR-050 (page figures gate and planner)
+    and ADR-051 (landings freshness gate).

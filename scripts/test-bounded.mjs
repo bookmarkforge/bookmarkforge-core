@@ -18,7 +18,7 @@ import {
 
 const ROOT = process.cwd();
 // Cores-aware default concurrency (2026-09-04 measurement matrix on the full
-// 546-file suite, ConsentBanner excluded as it is broken in this checkout):
+// ~524-file suite in src/tests/):
 //   batch 80 + 2 workers = 482 s (worker B idled 56 s; straggler batch 201 s)
 //   batch 40 + 3 workers = 312 s (35% faster; 14 batches over 3 lanes,
 //   last batch 24 s). The default is deliberately capped at 2: some contract

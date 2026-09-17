@@ -111,7 +111,10 @@ describe("ProSection", () => {
       render(<ProSection />);
       expect(screen.getByText("Unlock BookmarkForge Pro")).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: "Get Pro — $79" }),
+        // Price is interpolated from PRICING_CONFIG (active phase: early → $59).
+        // Pinning it here guards the no-price-drift contract: if the phase or
+        // the table changes, this test updates together with the UI.
+        screen.getByRole("button", { name: "Get Pro — $59" }),
       ).toBeInTheDocument();
       expect(screen.queryByRole("button", { name: "Start 7-day free trial" })).toBeNull();
     });
@@ -119,7 +122,7 @@ describe("ProSection", () => {
     test("opens the checkout URL when configured", () => {
       const openSpy = vi.spyOn(window, "open").mockReturnValue(null);
       render(<ProSection />);
-      fireEvent.click(screen.getByRole("button", { name: "Get Pro — $79" }));
+      fireEvent.click(screen.getByRole("button", { name: "Get Pro — $59" }));
       expect(openSpy).toHaveBeenCalledWith(
         "https://checkout.example.com/pro",
         "_blank",
@@ -131,10 +134,12 @@ describe("ProSection", () => {
       mockIsCheckoutConfigured.mockReturnValue(false);
       render(<ProSection />);
       expect(
-        screen.getByRole("button", { name: "Get Pro — $79" }),
+        screen.getByRole("button", { name: "Get Pro — $59" }),
       ).toBeDisabled();
       expect(
-        screen.getByText(/Checkout is not configured for this deployment yet/),
+        screen.getByText(
+          /Checkout isn't connected yet — add your payment provider checkout URL/,
+        ),
       ).toBeInTheDocument();
     });
 

@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, waitFor, act, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
+import { ProUnavailableError } from "../../services/pro-access";
 
 const { mockBookmarksInsert, initDBMock, mockToastSuccess, mockToastError } =
   vi.hoisted(() => {
@@ -53,6 +54,9 @@ const { mockIsFreeLimitError } = vi.hoisted(() => ({
 }));
 vi.mock("../../services/LicenseService", () => ({
   isFreeLimitError: mockIsFreeLimitError,
+  // pro-access (real, imported for announceProUnavailable) binds this at
+  // module level; the double just has to exist and answer the gate.
+  licenseService: { hasProAccess: () => false },
 }));
 vi.mock("../../components/FreeTierSaveHint", () => ({
   FreeTierSaveHint: () => null,
@@ -196,6 +200,34 @@ describe("Capture", () => {
       expect(mockToastError).toHaveBeenCalled();
     });
     (initDBMock as any).setFail(false);
+  });
+
+  it("announces a Pro rejection instead of the generic save error", async () => {
+    (initDBMock as any).setError(new ProUnavailableError("BackupService", "no-license"));
+    const dispatched: CustomEvent[] = [];
+    const originalDispatch = window.dispatchEvent.bind(window);
+    const spy = vi
+      .spyOn(window, "dispatchEvent")
+      .mockImplementation((event: Event) => {
+        if (event.type === "bmf:pro-unavailable") {
+          dispatched.push(event as CustomEvent);
+        }
+        return originalDispatch(event);
+      });
+    render(<Capture />);
+    await userEvent.type(
+      screen.getByLabelText("URL") as HTMLInputElement,
+      "https://pro.example",
+    );
+    await userEvent.click(screen.getByText("saveToForge").closest("button")!);
+    await vi.waitFor(() => expect(dispatched.length).toBe(1));
+    expect(dispatched[0]!.detail).toEqual({
+      feature: "BackupService",
+      reason: "no-license",
+    });
+    expect(mockToastError).not.toHaveBeenCalled();
+    spy.mockRestore();
+    (initDBMock as any).setError(null);
   });
 
   it("pre-fills notes from the text param if it differs from the url", () => {

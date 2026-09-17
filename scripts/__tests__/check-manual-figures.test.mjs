@@ -173,6 +173,16 @@ describe("check-manual-figures: claim rules", () => {
     expect(bad.some((x) => x.includes("bookmark cap 2000"))).toBe(true);
   });
 
+  it("detects the EN hyphenated attributive form (24-word recovery phrase)", () => {
+    const fails = evaluateManual(
+      "we show a 30-word recovery phrase once.\n",
+      sets(makeRoot()),
+      "hyphen.md",
+    );
+    expect(fails).toHaveLength(1);
+    expect(fails[0]).toContain("recovery phrase claims 30 words");
+  });
+
   it("rejects a wrong recovery-phrase word count", () => {
     const allowed = s();
     const bad = evaluateManual("2. **Frase de recuperación:** Guarda las 12 palabras.", allowed, "m");

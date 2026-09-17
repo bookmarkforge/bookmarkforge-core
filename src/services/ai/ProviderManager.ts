@@ -14,7 +14,7 @@ import {
   getUserFriendlyErrorMessage,
 } from "./utils";
 import { resourceManager } from "./ResourceManager";
-import { loadWebLLMService } from "../pro-access";
+import { loadWebLLMService, ProUnavailableError } from "../pro-access";
 import { rateLimitService } from "../RateLimitService";
 import { getNavigatorExtensions } from "../../utils/browser-types";
 import { logger } from "../../utils/logger";
@@ -866,7 +866,21 @@ export class ProviderManager {
   private async resolveProvider(
     options?: AIRequestOptions,
   ): Promise<ProviderInfo> {
-    const webLLMService = await loadWebLLMService();
+    // WebLLM is a Pro-gated module (pro-access). For ROUTING that is exactly
+    // what hasWebLLM=false means: a Free or Open-Core user cannot route to
+    // the local LLM, but their cloud and Ollama routes must not depend on it.
+    // Best-effort probe: loadProService rejects with ProUnavailableError
+    // before any Pro bytes are fetched, and we degrade to hasWebLLM=false
+    // instead of failing the whole request resolution (surfaced by the E2E
+    // custom-provider suite: anonymous routing 500'd on the entitlement).
+    let webLLMService: Awaited<ReturnType<typeof loadWebLLMService>> | null = null;
+    try {
+      webLLMService = await loadWebLLMService();
+    } catch (error) {
+      if (!(error instanceof ProUnavailableError)) {
+        throw error;
+      }
+    }
 
     const isOffline = !navigator.onLine;
     // hasWebLLM = the device-capability verdict ONLY (WebGPU surface +
@@ -874,7 +888,7 @@ export class ProviderManager {
     // tier, engine/model state, or request success — every local-route
     // branch below pairs it with resourceManager.isHighEndDevice() as a
     // second, independent gate (see the DUAL GATE comment there).
-    const hasWebLLM = await webLLMService.canRunLocalLLM();
+    const hasWebLLM = webLLMService ? await webLLMService.canRunLocalLLM() : false;
     const hasOllama = await this.config.getOllamaProvider().isAvailable();
 
     const navigatorAny = getNavigatorExtensions();

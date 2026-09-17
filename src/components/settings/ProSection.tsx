@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useLicenseStore } from "../../store/useLicenseStore";
 import { licenseService } from "../../services/LicenseService";
 import { LICENSE_CONFIG, isCheckoutConfigured } from "../../constants/license";
+import { getActiveProPrice } from "../../constants/pricing";
 
 export const ProSection: React.FC = () => {
   const { t } = useTranslation();
@@ -128,14 +129,14 @@ export const ProSection: React.FC = () => {
                 disabled={!isCheckoutConfigured()}
                 className="truncate bg-amber-500 hover:bg-amber-400 text-black font-semibold px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
               >
-                {t("app_proBuy", "Get Pro — $79")}
+                {t("app_proBuy", "Get Pro — {{price}}", { price: getActiveProPrice() })}
               </button>
             </div>
             {!isCheckoutConfigured() && (
               <p className="text-xs text-[var(--text-muted)]">
                 {t(
                   "app_proCheckoutMissing",
-                  "Checkout is not configured for this deployment yet.",
+                  "Checkout isn't connected yet — add your payment provider checkout URL to complete the purchase.",
                 )}
               </p>
             )}

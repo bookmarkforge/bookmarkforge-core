@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
 const mockGate = vi.hoisted(() => ({ hasProAccess: vi.fn(() => true) }));
 
@@ -15,6 +15,36 @@ vi.mock("../../services/LicenseService", () => ({
 vi.mock("../../services/BackupService", () => ({
   BackupService: { __isProPlaceholder: true, exportBackup: () => undefined },
 }));
+
+describe("announceProUnavailable", () => {
+  let proAccess: typeof import("../../services/pro-access");
+
+  beforeEach(async () => {
+    vi.clearAllMocks();
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("maps the typed error onto the bmf:pro-unavailable event detail", async () => {
+    const dispatched: CustomEventInit[] = [];
+    const spy = vi
+      .spyOn(window, "dispatchEvent")
+      .mockImplementation((event: Event) => {
+        dispatched.push((event as CustomEvent).detail);
+        return true;
+      });
+    proAccess = await import("../../services/pro-access");
+    proAccess.announceProUnavailable(
+      new proAccess.ProUnavailableError("WebRTCSyncService", "no-license"),
+    );
+    expect(spy).toHaveBeenCalledOnce();
+    expect(dispatched[0]).toEqual({
+      feature: "WebRTCSyncService",
+      reason: "no-license",
+    });
+  });
+});
 
 describe("pro-access loader", () => {
   let proAccess: typeof import("../../services/pro-access");

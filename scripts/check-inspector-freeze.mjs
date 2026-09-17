@@ -111,6 +111,9 @@ const KNOWN_GATES = {
   // localized manuals and the pricing/license code) and maps it onto
   // ADR-028's drift-detection model, like ADR-048 does for license claims.
   "check:manual-figures": "docs",
+  "check:page-figures": "docs",
+  "check:landings-fresh": "meta",
+  "plan:manual-figures": "docs",
   "check:rxdb17": "meta",
   "check:seo": "meta",
   "check:chunks": "meta",

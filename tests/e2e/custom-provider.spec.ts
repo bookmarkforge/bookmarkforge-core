@@ -12,7 +12,8 @@ import {
  *
  * No page.route interception of the app's own provider calls: the browser
  * talks to http://127.0.0.1:8789/v1 over loopback (the SSRF firewall always
- * allows loopback), so everything below exercises production code paths:
+ * allows loopback without disabling it), so everything below exercises
+ * production code paths:
  *
  *   Settings UI (AIConfigSection) → aiManager.setCustomBaseUrl → config
  *     → aiManager.setApiKey → ProviderConfiguration (custom wiring: the user's
@@ -125,10 +126,6 @@ async function configureCustomProvider(
 ): Promise<void> {
   await page.evaluate(
     async ({ mockBase, key, model }) => {
-      const { setFirewallDisabled } = await import(
-        "/src/utils/networkFirewall.ts"
-      );
-      setFirewallDisabled(false); // production posture; loopback is allowed
       const { aiManager } = await import("/src/services/ai/ProviderManager.ts");
       const { routingOptimizer } = await import(
         "/src/services/ai/adapters/RoutingOptimizer.ts"
@@ -143,7 +140,7 @@ async function configureCustomProvider(
   );
 }
 
-test.describe("Custom provider via local OpenAI-compatible mock", () => {
+test.describe("@nightly Custom provider via local OpenAI-compatible mock", () => {
   test.describe.configure({ mode: "serial" });
 
   test.beforeEach(async ({ page }) => {
@@ -237,17 +234,25 @@ test.describe("Custom provider via local OpenAI-compatible mock", () => {
     expect(result.error).toBe(RATE_LIMIT_MSG);
   });
 
-  test("scenario model error-500 surfaces the raw provider error (documented 5xx gap)", async ({
+  test("scenario model error-500 surfaces a friendly server-error message", async ({
     page,
   }) => {
     await configureCustomProvider(page, "error-500");
 
     const result = await callCustom(page, "unary", "error-500");
     expect(result.ok).toBe(false);
-    // getUserFriendlyErrorMessage has NO mapping for 5xx today (agreed
-    // decision — see src/tests/services/ai/utils.test.ts): the provider's
-    // raw status string reaches the user. If this test starts failing
-    // because someone added a friendly 5xx message, update BOTH suites.
-    expect(result.error).toMatch(/custom API error 500/);
+    expect(result.error).toContain("server error");
+    expect(result.error).toContain("500");
+  });
+
+  test("scenario model error-503 surfaces a friendly server-error message", async ({
+    page,
+  }) => {
+    await configureCustomProvider(page, "error-503");
+
+    const result = await callCustom(page, "unary", "error-503");
+    expect(result.ok).toBe(false);
+    expect(result.error).toContain("server error");
+    expect(result.error).toContain("503");
   });
 });

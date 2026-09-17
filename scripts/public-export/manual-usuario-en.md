@@ -324,7 +324,7 @@ This indicates the server is not properly configured. It's not a user issue. Con
 
 | Variable | Description | Example |
 |---|---|---|
-| `VITE_WHOP_CHECKOUT_URL` | Whop checkout URL for Pro | `https://whop.com/checkout/xxx` |
+| `VITE_WHOP_CHECKOUT_URL` | Whop checkout URL for Pro | `https://whop.com/checkout/<your-product-id>` |
 | `VITE_APP_VERSION` | App version | `1.0.0` |
 | `VITE_DB_NAME` | IndexedDB database name | `bookmarkforge_v5` |
 | `VITE_SENTRY_DSN` | Sentry DSN for error reporting | *(optional)* |

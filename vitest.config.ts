@@ -9,7 +9,7 @@
  *    expects (canonical strings in scripts/csp-config.js).
  *  - resolve.alias: `virtual:pwa-register[/react]` modules (provided by
  *    vite-plugin-pwa at build time) are pointed at the test mocks so
- *    modules importing them (ReloadPrompt.tsx) transform cleanly.
+ *    modules importing them (the ReloadPrompt component inside MainApp) transform cleanly.
  *  - server.deps.inline: `voy-search` is ESM-only (no main/exports field)
  *    and cannot be externalized by vitest's node resolver; inlining makes
  *    vite resolve it via its own (module-field) resolution.

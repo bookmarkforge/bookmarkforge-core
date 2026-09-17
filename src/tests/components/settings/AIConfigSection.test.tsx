@@ -35,6 +35,23 @@ vi.mock("../../../components/QuantizationPanel", () => ({
   QuantizationPanel: () => null,
 }));
 
+// The gate reads the reactive license store; mocking it here both avoids the
+// store's real chain (licenseService → ai/utils → i18n.ts — which calls
+// .use(initReactI18next) against this file's partial react-i18next mock) and
+// lets each test pin the entitlement the gate should observe.
+const mockLicenseState = { entitlements: { plan: "free", source: "none" } };
+vi.mock("../../../store/useLicenseStore", () => ({
+  useLicenseStore: (sel?: (s: unknown) => unknown) =>
+    sel ? sel(mockLicenseState) : mockLicenseState,
+}));
+
+// ProRequiredState is a pure leaf: stub it and assert on the gate wiring.
+vi.mock("../../../components/ProRequiredState", () => ({
+  ProRequiredState: ({ feature }: { feature: string }) => (
+    <div data-testid="pro-required">{feature}</div>
+  ),
+}));
+
 vi.mock("lucide-react", () => {
   const mock = (name: string) => {
     const Icon = (props: Record<string, unknown>) => (
@@ -105,6 +122,33 @@ describe("AIConfigSection", () => {
     });
   });
 
+  it("hides WebLLM forms and shows the upgrade banner for Free on a capable device", async () => {
+    mockAiManager.getProviderInfo.mockReturnValue({
+      provider: "webllm",
+      name: "WebLLM",
+      model: "Llama-3.2-1B-Instruct-q4f16_1-MLC",
+      availableModels: undefined,
+    });
+    const mod = await import("../../../components/settings/AIConfigSection");
+    AIConfigSection = mod.AIConfigSection;
+
+    render(
+      <AIConfigSection
+        apiKey=""
+        setApiKey={vi.fn()}
+        canRunWebLLM={true}
+        webLlmProgress={null}
+        onShowDiagnostics={vi.fn()}
+        t={((key: string) => key) as Parameters<typeof AIConfigSection>[0]["t"]}
+      />,
+    );
+
+    // No local-model forms for a Free session...
+    expect(screen.queryByLabelText("app_webLlmModel")).toBeNull();
+    // ...just the shared upgrade state naming the gated feature.
+    expect(screen.getAllByTestId("pro-required")[0]).toHaveTextContent("WebLLM");
+  });
+
   it("shows and persists the configured Ollama URL", async () => {
     mockAiManager.getProviderInfo.mockReturnValue({
       provider: "ollama",
@@ -143,6 +187,7 @@ describe("AIConfigSection", () => {
       "llama3.2",
     );
   });
+
 
   it("does not show a toast if the save finishes after unmount", async () => {
     let resolveSave: (() => void) | undefined;

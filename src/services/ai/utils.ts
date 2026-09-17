@@ -593,6 +593,10 @@ export function getUserFriendlyErrorMessage(
     {userFriendlyMsg = i18n.t("ai_error_badRequest", 'Request error (400). The model "{{model}}" may be too basic or may not support the instructions sent.', { model });}
   if (msg.includes("fetch"))
     {userFriendlyMsg = i18n.t("ai_error_network", "Network error. Check your internet connection or Ollama's status.");}
+  // 5xx server errors: extract the status code and show a friendly message.
+  const serverMatch = msg.match(/\b(5\d{2})\b/);
+  if (serverMatch)
+    {userFriendlyMsg = i18n.t("ai_error_serverError", "The AI provider returned a server error ({{status}}). Please try again later.", { status: serverMatch[1] });}
   // Never surface raw secrets (API keys, tokens) to the user in the
   // friendly message, even if the upstream error leaked one.
   return sanitizeErrorMessage(userFriendlyMsg);

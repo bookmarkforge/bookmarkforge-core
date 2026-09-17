@@ -16,6 +16,10 @@ import { validateAndSanitizeUrl, sanitizeUserInput } from "../services/Sanitizat
 import { safeGet } from "../store/safeStorage";
 import { useGuardedAction } from "../hooks/useGuardedAction";
 import { isFreeLimitError } from "../services/LicenseService";
+import {
+  ProUnavailableError,
+  announceProUnavailable,
+} from "../services/pro-access";
 import { FREE_LIMITS } from "../constants/license";
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { safeSet } from "../store/safeStorage";
@@ -130,6 +134,10 @@ export const Capture: React.FC<{ masterPassword?: string }> = ({
         );
         safeSet(STORAGE_KEYS.FREE_TIER_WALL_HIT_PENDING, "1");
         window.dispatchEvent(new CustomEvent("bmf:free-wall-hit"));
+      } else if (e instanceof ProUnavailableError) {
+        // A Pro surface was reached without access: open the shared
+        // "Available in Pro" panel instead of the generic save-failed toast.
+        announceProUnavailable(e);
       } else {
         toast.error(t("saveError"));
       }

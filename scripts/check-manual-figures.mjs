@@ -185,13 +185,28 @@ function stripNoise(normalized) {
     .replace(/\d+\s?%/g, " "); // percent figures: dedicated pct rule
 }
 
-/** Price tokens: "$59", "59 dólares", "59 dollars", "59 USD". */
-const PRICE_WORD_RE =
-  /\$\s?(\d+(?:\.\d+)?)|(\d+(?:\.\d+)?)\s*(?:USD|US-?Dollar|d[óo]lar(?:es)?|dollars?|Dollar|dolares|dolari|долларов|ドル|美元|доларів)/gi;
+/** Price tokens: "$59"-shaped only. Spoken prices ("28 dollars every
+ * year") are the documented competitor convention on the public pages
+ * (patch-landing-copy.mjs): competitor prices are deliberately written
+ * without "$" so our own dollar claims stay the only price tags. Numbers
+ * parsed locale-aware: "1,234" → 1234, "1.234" → 1234. */
+const PRICE_DOLLAR_RE = /\$\s?(\d+(?:[.,]\d+)*)/gu;
+
+/** Locale-aware price parse (same shapes as claim-drift's parseDollar). */
+function parsePrice(raw) {
+  const s = raw.replace(/\s/g, "");
+  if (!/^\d+([.,]\d+)*$/.test(s)) return null;
+  if (/^\d{1,3}(,\d{3})+([.]\d+)?$/.test(s)) return Number(s.replace(/,/g, ""));
+  if (/^\d{1,3}(\.\d{3})+([,]\d+)?$/.test(s)) return Number(s.replace(/\./g, "").replace(",", "."));
+  return Number(s.replace(",", "."));
+}
 
 function priceTokens(normalized) {
   const out = [];
-  for (const m of normalized.matchAll(PRICE_WORD_RE)) out.push(Number(m[1] ?? m[2]));
+  for (const m of normalized.matchAll(PRICE_DOLLAR_RE)) {
+    const p = parsePrice(m[1]);
+    if (p != null) out.push(p);
+  }
   return out;
 }
 
@@ -215,6 +230,74 @@ const UNLIMITED_RE =
 const RECOVERY_WORD_RE =
   /(?:palabras?|words?|W[öo]rter?|parole|mots?|slov\w*|単語|个恢复词|恢复词|слова|слов|كلمات|מילים|शब्द|คำ|từ|kelime|słowa)/i;
 
+/** Offer-cap context: early-bird / founder supply claims ("Early Bird 200",
+ * "Founder Edition … Limited 100"). On such lines, any explicitly-unit-ed
+ * count must be a canonical supply cap (200 early birds / 100 founders). */
+const OFFER_LIMIT_RE = /early\s?bird|founder|pioneros?|gr[üu]nders?/i;
+
+// ── Number↔unit pairing ───────────────────────────────────────────────────
+/** The number and its unit noun must be ADJACENT (optional space/hyphen, or
+ * the Romance numeral clitic "de", or the CJK classifier 个) — the same
+ * precision model as check-claim-drift's number-anchored rules. "24 words"
+ * pairs 24↔words; "12 months of updates" never feeds the word/day/hour
+ * rules; "48h" without an hour noun pairs nothing. Two-sided so CJK
+ * noun-after-number ("3台") and English "3 devices" both pair. */
+function pairNumUnits(line, unitPattern) {
+  // One-sided pairing (number before noun — covers "24 words", "3台",
+  // "24个恢复词"), with Unicode boundaries on BOTH sides: no pairing inside
+  // longer words ("2026 BookmarkForge" must not pair 2026↔Bookmark) and no
+  // pairing of version-attached numbers ("v2 devices").
+  const re = new RegExp(
+    `(?<![\\p{L}\\p{N}])(\\d+(?:[.,]\\d+)*)\\s*(?:(?:de|个)\\s+)?(?:${unitPattern})(?![\\p{L}])` +
+      // hyphenated attributives: "24-word phrase", "3-device sync", "48-hour re-validation"
+      `|(?<![\\p{L}\\p{N}])(\\d+)-(?:${unitPattern})(?![\\p{L}])`,
+    "giu",
+  );
+  const out = [];
+  const seen = new Set();
+  for (const m of line.matchAll(re)) {
+    const rawNum = m[1] ?? m[2]; // "24 words" vs "24-word" (hyphenated EN attributive)
+    const n = parsePrice(rawNum); // locale-aware integer parse
+    if (n == null || !Number.isInteger(n)) continue; // "3.1" section refs never pair
+    if (n === 2026) continue; // standalone Early Bird deadline year
+    if (seen.has(n)) continue;
+    seen.add(n);
+    out.push({ n, unit: m[0] });
+  }
+  return out;
+}
+
+/** Spoken ONE-TIME price claims: number + currency word + once-marker in
+ * either order ("59 dollars once", "una vez 59 dólares"). Currency words
+ * (dollars/dólares/Dollar/dollari) without the marker are NOT ours —
+ * the competitor price is deliberately written that way on public pages
+ * (patch-landing-copy.mjs), and manuals never use spoken prices. */
+const ONCE_MARKERS = "once|una vez|une (?:seule )?fois|einmal|uma vez|una (?:sola )?volta|una volta";
+const SPOKEN_ONCE_PRICE_RE = new RegExp(
+  `(\\d+(?:[.,]\\d+)*)\\s*(?:dollars?|d[óo]lares?|Dollar|dollari)\\s+(?:${ONCE_MARKERS})|(?:${ONCE_MARKERS})\\s+(\\d+(?:[.,]\\d+)*)\\s*(?:dollars?|d[óo]lares?|Dollar|dollari)`,
+  "gi",
+);
+
+/** Device nouns (number-adjacent form). */
+const DEVICE_UNITS =
+  "dispositivos?|dispositiu|devices?|ger[äa]te|appareils?|デバイス|台|端末|设备|裝置|устройств\w*|пристрой|기기|대|cihazlar?|dispozitiv\w*|อุปกรณ์|thiết\s?bị|eszk[öo]z\w*|urz[ąa]dzen\w*|zař[íi]zen\w*|enheter|enheder|apparater|laitteet|perangkat(?:nya)?|peranti";
+
+/** Bookmark nouns (number-adjacent form). */
+const BOOKMARK_UNITS =
+  "marcadores?|marcaje|bookmarks?|Lesezeichen|marque-pages|segnalibri|ブックマーク|个书签|书签|즐겨찾기|заклад\w*|записей|oznak\w*|zakładk\w*|záložk\w*|könyvjelző\w*|penanda|dau-mark\w*|dấu\s?trang";
+
+/** Recovery word nouns (number-adjacent form). */
+const WORD_UNITS =
+  "palabras?|words?|W[öo]rter?|mots?|parole|slov\w*|słow\w*|単語|語|个恢复词|恢复词|단어|kelime|kurtarma|từ|คำ|كلمات|كلمة|מילים|शब्द|слов\w*|дум\w*";
+
+/** Hour nouns (number-adjacent form). */
+const HOUR_UNITS =
+  "hours?|horas?|Stunden?|heures?|ore|godzin\w*|hodin\w*|óra|uur|tuntia|時間|小时|小時|시간|час\w*|годин\w*|ساعات?|ชั่วโมง|giờ";
+
+/** Day nouns (number-adjacent form; CJK forms longest-first). */
+const DAY_UNITS =
+  "days?|días?|dias?|Tage|jours?|giorni|dn[íi]\w*|dage|päiv[äa]ä|gün|zile|дней|дня|днів|日間|日以内|日";
+
 /**
  * The claim rules. Each rule: which lines it applies to (a guard on the
  * line), what it extracts, and what it must equal.
@@ -228,9 +311,15 @@ export function evaluateManual(src, allowed, relLabel) {
     const where = `${relLabel}:${idx + 1}`;
 
     // Discount-percentage claims (need the % figures stripNoise would drop):
-    // only lines with discount context — "100% offline" is not a tier claim.
+    // only lines with discount context — "100% offline" / "100% Local-First"
+    // are completeness marketing, not tier claims (lands on the compacted
+    // JSON-LD line of the generated pages, which also carries offer copy).
     if (/descuento|discount|off\b|r[ée]duction|sconto|скидк|割引|折扣|indirim|kedvezm/i.test(normRaw)) {
-      for (const m of normRaw.matchAll(/(\d+)\s?%/g)) {
+      const discountLine = normRaw.replace(
+        /100\s?%\s*(?:of\s?f\s?line|local\w*|privat\w*|sin\s+conexi[óo]n|lokal\w*|オフライン|ローカル)/gi,
+        "",
+      );
+      for (const m of discountLine.matchAll(/(\d+)\s?%/g)) {
         const n = Number(m[1]);
         if (n !== allowed.upgradeDiscountPct) {
           failures.push(`${where}: discount claims ${n}%; pricing.ts says ${allowed.upgradeDiscountPct}%`);
@@ -251,6 +340,19 @@ export function evaluateManual(src, allowed, relLabel) {
       }
     }
 
+    // Spoken one-time price claims ("59 dollars once", "59 dólares una vez").
+    // The one-time marker is part of the claim pattern, so a competitor's
+    // RECURRING spoken price ("28 dollars every year") never matches: on
+    // competitor-named lines only ours carries the once-marker. The number
+    // must be ours; the spoken competitor price is neutralized upstream
+    // (check-page-figures) and does not exist on manual lines.
+    for (const m of normRaw.matchAll(SPOKEN_ONCE_PRICE_RE)) {
+      const p = parsePrice(m[1]);
+      if (p != null && !allowed.prices.has(p)) {
+        failures.push(`${where}: spoken one-time price ${m[1]} is not in the canonical ladder`);
+      }
+    }
+
     // Device-count claims: only on lines that talk about devices (but not
     // bookmarks — bookmark-cap lines may legitimately mention a device, e.g.
     // "1,000 bookmarks, no device limit") AND carry a count ("hasta 3",
@@ -258,7 +360,7 @@ export function evaluateManual(src, allowed, relLabel) {
     // exemption reads the RAW line: negations like "nu are limită de
     // dispozitive" lose the noun to word boundaries on the stripped line.
     if (hasDevice && !hasBookmark && !UNLIMITED_RE.test(normRaw)) {
-      for (const n of [...new Set(lineNumbers(line))]) {
+      for (const { n } of pairNumUnits(line, DEVICE_UNITS)) {
         if (!allowed.deviceCounts.has(n)) {
           failures.push(`${where}: device count ${n} is not canonical`);
         }
@@ -267,9 +369,22 @@ export function evaluateManual(src, allowed, relLabel) {
 
     // Bookmark-cap claims.
     if (hasBookmark) {
-      for (const n of lineNumbers(line)) {
-        if (n >= 100 && n % 100 === 0 && !allowed.bookmarkCaps.has(n) && n < 10000) {
+      for (const { n } of pairNumUnits(line, BOOKMARK_UNITS)) {
+        if (!allowed.bookmarkCaps.has(n)) {
           failures.push(`${where}: bookmark cap ${n} is not canonical`);
+        }
+      }
+    }
+
+    // Offer-cap claims: early-bird / founder supply lines. Supply counts are
+    // unit-less in practice ("primeros 200 compradores", "Early Bird 200"),
+    // and generic unit pairing poisons these lines with years, SLA hours and
+    // section refs — so only loose round hundreds are policed here. Prices on
+    // the same lines are already handled by the $-anchored price rule.
+    if (OFFER_LIMIT_RE.test(line) && !hasBookmark && !hasDevice) {
+      for (const n of [...new Set(lineNumbers(line))]) {
+        if (n !== 100 && n % 100 === 0 && !allowed.supplyCaps.has(n) && n < 10000) {
+          failures.push(`${where}: offer supply cap ${n} is not canonical`);
         }
       }
     }
@@ -280,7 +395,7 @@ export function evaluateManual(src, allowed, relLabel) {
       hasRecovery &&
       /recuperaci[óo]n|recupero|recovery|wiederherstellung|r[ée]cup[ée]ration|ripristino|odzyskiwan|восстановлен|復元|リカバリー|恢复|회복|kurtar|recuperare|กู้คืน|phục\s?hồi/i.test(normRaw)
     ) {
-      for (const n of lineNumbers(line)) {
+      for (const { n } of pairNumUnits(line, WORD_UNITS)) {
         if (n !== allowed.recoveryWords && n >= 8 && n <= 64) {
           failures.push(`${where}: recovery phrase claims ${n} words; RecoveryService enforces ${allowed.recoveryWords}`);
         }
@@ -289,8 +404,8 @@ export function evaluateManual(src, allowed, relLabel) {
 
     // Re-validation hours ("cada 48 horas", "Re-validation every 48 hours",
     // "48時間ごとに再検証").
-    if (/re-?\s?validaci[óo]n|re-?validation|再検証/i.test(line) && /hora|hours?|Stunden|heures|ore|時間/i.test(line)) {
-      for (const n of lineNumbers(line)) {
+    if (/re-?\s?validaci[óo]n|re-?validation|再検証/i.test(line)) {
+      for (const { n } of pairNumUnits(line, HOUR_UNITS)) {
         if (n !== allowed.revalidationHours) {
           failures.push(`${where}: license re-validation claims ${n} hours; code says ${allowed.revalidationHours}`);
         }
@@ -298,9 +413,9 @@ export function evaluateManual(src, allowed, relLabel) {
     }
 
     // Refund window ("30 días vía Whop", "30-day refund", "Rückerstattung 30 Tage").
-    if (/reembols\w*|refund|R[üu]ckerstattung|remboursement|rimbors|返金|退款|devoluci[óo]n/i.test(line) && /\d/.test(line)) {
-      for (const n of lineNumbers(line)) {
-        if (n !== allowed.refundDays && n <= 365) {
+    if (/reembols\w*|refund|R[üu]ckerstattung|remboursement|rimbors|返金|退款|devoluci[óo]n/i.test(line)) {
+      for (const { n } of pairNumUnits(line, DAY_UNITS)) {
+        if (n !== allowed.refundDays) {
           failures.push(`${where}: refund window claims ${n} days; pricing.ts says ${allowed.refundDays}`);
         }
       }

@@ -2,7 +2,8 @@ import { defineConfig, devices } from "@playwright/test";
 
 /**
  * playwright.custom-provider.config.ts — isolated topology for the Custom
- * (OpenAI Format) provider E2E (tests/e2e/custom-provider.spec.ts).
+ * (OpenAI Format) provider E2E (tests/e2e/custom-provider.spec.ts and
+ * tests/e2e/custom-provider-flow.spec.ts).
  *
  * The app is driven through its REAL settings UI against the local
  * OpenAI-compatible mock (scripts/mock-openai-server.mjs) — no API keys, no
@@ -34,7 +35,7 @@ const mockPort = Number(process.env.MOCK_AI_PORT ?? 8789);
 export default defineConfig({
   testDir: "./tests/e2e",
   // Only the custom-provider spec runs in this topology.
-  testMatch: /custom-provider\.spec\.ts/,
+  testMatch: /custom-provider.*\.spec\.ts/,
   timeout: 60_000,
   expect: { timeout: 15_000 },
   fullyParallel: false,

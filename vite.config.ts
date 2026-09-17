@@ -5,10 +5,11 @@
  * conventions. Key pieces:
  *
  *  - @vitejs/plugin-react for JSX/fast-refresh.
- *  - vite-plugin-pwa (Workbox) with `registerType: 'prompt'` — the app
- *    registers the SW itself via `virtual:pwa-register` (main.tsx /
- *    ReloadPrompt.tsx), and the PWA manifest is the static
- *    `public/manifest.json` (`manifest: false` disables the plugin's own).
+  *  - vite-plugin-pwa (Workbox) with `registerType: 'prompt'` — the app
+  *    registers the SW itself via `virtual:pwa-register` (main.tsx).
+  *    The update prompt UI lives inside `<MainApp />` via the
+  *    `ReloadPrompt` component. The PWA manifest is the static
+  *    `public/manifest.json` (`manifest: false` disables the plugin's own).
  *  - bookmarkforge:integrity-manifest — a custom plugin that recreates the
  *    build-time integrity pipeline observed in dist/:
  *      * Adds `integrity="sha256-…" crossorigin="anonymous"` to every
@@ -28,8 +29,10 @@
  *        eviction + bundle-integrity-failed notification). Its closeBundle
  *        is `order: "post"` so it runs after Workbox generated sw.js.
  *
- * Build-time env inlining: VITE_APP_VERSION is defined here so
- * `import.meta.env.VITE_APP_VERSION` resolves in the bundle without a .env.
+  * Build-time env inlining: Vite auto-inlines all `VITE_*` variables
+  * from `import.meta.env` into the bundle at build time (see
+  * `src/env.config.ts` `ENV_REGISTRY`). No manual `define` entry is
+  * needed — Vite handles `VITE_*` prefix vars automatically.
  */
 import { createHash } from "node:crypto";
 import {

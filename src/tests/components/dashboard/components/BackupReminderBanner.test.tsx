@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
+import { ProUnavailableError } from "../../../../services/pro-access";
 
 const mockExportBackup = vi.fn();
 const mockWithMasterPasswordBytes = vi.fn(
@@ -28,6 +29,31 @@ vi.mock("sonner", () => ({ toast: mockToast }));
 vi.mock("../../../../services/BackupService", () => ({
   BackupService: { exportBackup: mockExportBackup },
 }));
+
+// Mock the pro-access seam, not LicenseService: the real pro-access chains
+// LicenseService → ai/utils → src/i18n.ts, whose bootstrap fights the
+// react-i18next mock above. The error class lives INSIDE the factory (the
+// factory is hoisted above top-level consts), and the test imports it from
+// the mocked module, so the `instanceof` check inside the banner sees the
+// same class the test throws.
+const mockAnnounce = vi.hoisted(() => vi.fn());
+vi.mock("../../../../services/pro-access", () => {
+  class ProUnavailableError extends Error {
+    readonly service: string;
+    readonly reason: "no-license" | "load-failed";
+    constructor(service: string, reason: "no-license" | "load-failed") {
+      super(`Pro feature "${service}" requires a Pro license.`);
+      this.name = "ProUnavailableError";
+      this.service = service;
+      this.reason = reason;
+    }
+  }
+  return {
+    loadBackupService: vi.fn(async () => ({ exportBackup: mockExportBackup })),
+    ProUnavailableError,
+    announceProUnavailable: mockAnnounce,
+  };
+});
 
 vi.mock("../../../../services/SecurityVault", () => ({
   securityVault: {
@@ -152,6 +178,22 @@ describe("BackupReminderBanner", () => {
     expect(onDismiss).not.toHaveBeenCalled();
   });
 });
+
+  it("opens the Pro panel (bmf:pro-unavailable) instead of a bare failure toast when the backup service is gated", async () => {
+    mockWithMasterPasswordBytes.mockImplementation((_caller: any, fn: any) => fn(null));
+    mockExportBackup.mockRejectedValue(
+      new ProUnavailableError("BackupService", "no-license"),
+    );
+    const { getByText } = render(
+      <BackupReminderBanner show={true} backupAgeMs={null} onDismiss={vi.fn()} />,
+    );
+    await userEvent.click(getByText("Export Physical Backup File"));
+    await vi.waitFor(() => expect(mockAnnounce).toHaveBeenCalledOnce());
+    const announced = mockAnnounce.mock.calls[0]![0] as ProUnavailableError;
+    expect(announced.service).toBe("BackupService");
+    expect(announced.reason).toBe("no-license");
+    expect(mockToast.error).not.toHaveBeenCalled();
+  });
 
   it("shows stale backup message when backupAgeMs is set", () => {
     const { getByText } = render(

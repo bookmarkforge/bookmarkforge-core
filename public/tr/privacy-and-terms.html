@@ -99,114 +99,114 @@
 
     <h1>Privacy Policy</h1>
 
-    <h2>1. Data Controller</h2>
-    <p>The data controller for the processing described in this policy is BookmarkForge (contact in section 17). For the companion server and license infrastructure, the operator of that deployment acts as controller.</p>
+    <h2>1. Veri sorumlusu</h2>
+    <p>Bu politikada açıklanan işlemenin veri sorumlusu BookmarkForge'dur (iletişim: 17. bölüm). Companion sunucusu ve lisans altyapısı için, ilgili dağıtımın işletmecisi veri sorumlusu olarak hareket eder.</p>
 
-    <h2>2. Introduction & Scope</h2>
-    <p>BookmarkForge ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we handle your data when you use our application.</p>
+    <h2>2. Giriş ve kapsam</h2>
+    <p>BookmarkForge ("biz") gizliliğinizi korumaya kararlıdır. Bu Gizlilik Politikası, uygulamamızı kullanırken verilerinizi nasıl işlediğimizi açıklar.</p>
 
-    <h2>3. Data We Do NOT Collect</h2>
-    <p>We want to be clear about what we do <strong>not</strong> collect:</p>
+    <h2>3. Toplamadığımız veriler</h2>
+    <p>Neleri <strong>toplamadığımızı</strong> açıkça söyleyelim:</p>
     <ul>
-      <li><strong>No bookmarks or URLs</strong> are sent to our servers</li>
-      <li><strong>No notes or documents</strong> leave your device</li>
-      <li><strong>No AI prompts or responses</strong> are logged by us</li>
-      <li><strong>No browsing history</strong> is tracked</li>
-      <li><strong>No personal information</strong> is required to use the app</li>
-      <li><strong>No analytics</strong> are collected by default</li>
+      <li><strong>Yer imleri veya URL'ler</strong> sunucularımıza gönderilmez</li>
+      <li><strong>Notlar veya belgeler</strong> cihazınızdan çıkmaz</li>
+      <li><strong>Yapay zekâ istemleri veya yanıtları</strong> tarafımızca kaydedilmez</li>
+      <li><strong>Gözatma geçmişi</strong> izlenmez</li>
+      <li>Uygulamayı kullanmak için <strong>kişisel bilgi</strong> gerekmez</li>
+      <li>Varsayılan olarak <strong>analitik veri</strong> toplanmaz</li>
     </ul>
 
-    <h2>4. Where Your Data Lives</h2>
-    <p>All your data is stored locally in your browser using:</p>
+    <h2>4. Verileriniz nerede saklanır</h2>
+    <p>Tüm verileriniz tarayıcınızda yerel olarak saklanır:</p>
     <ul>
-      <li><strong>IndexedDB</strong> - for bookmarks, documents, and settings</li>
-      <li><strong>Secure Storage</strong> - for encrypted keys and passwords</li>
-      <li><strong>Service Worker Cache</strong> - for offline functionality</li>
+      <li><strong>IndexedDB</strong> - yer imleri, belgeler ve ayarlar için</li>
+      <li><strong>Güvenli depolama</strong> - şifreli anahtarlar ve parolalar için</li>
+      <li><strong>Service Worker önbelleği</strong> - çevrimdışı işlevsellik için</li>
     </ul>
 
-    <h2>5. Encryption</h2>
-    <p>Your data is encrypted using:</p>
+    <h2>5. Şifreleme</h2>
+    <p>Verileriniz şununla şifrelenir:</p>
     <ul>
-      <li><strong>AES-GCM-256</strong> encryption for all stored content</li>
-      <li><strong>Argon2id</strong> (memory-hard KDF) for password-derived keys</li>
-      <li>Keys are derived and stored locally in your browser</li>
+      <li>Tüm saklanan içerik için <strong>AES-GCM-256</strong> şifrelemesi</li>
+      <li>Parola türevli anahtarlar için <strong>Argon2id</strong> (bellek zorlayıcı KDF)</li>
+      <li>Anahtarlar tarayıcınızda yerel olarak türetilir ve saklanır</li>
     </ul>
 
-    <h2>6. Content Security Policy (CSP) Reports</h2>
-    <p>BookmarkForge uses Content Security Policy (CSP) headers to prevent cross-site scripting and data injection attacks. If your browser blocks a resource because of these headers, it automatically sends a brief technical violation report to the same origin that served the application (the <code>/csp-report</code> endpoint). The operator's collector keeps only:</p>
+    <h2>6. İçerik Güvenlik Politikası (CSP) raporları</h2>
+    <p>BookmarkForge, siteler arası betik çalıştırmayı (XSS) ve veri enjeksiyonunu önlemek için İçerik Güvenlik Politikası (CSP) başlıkları kullanır. Tarayıcınız bu başlıklar nedeniyle bir kaynağı engellerse, uygulamanın sunulduğu aynı kaynağa (origin) otomatik olarak kısa bir teknik ihlal raporu gönderir (<code>/csp-report</code> uç noktası). İşletmecinin toplayıcısı yalnızca şunları saklar:</p>
     <ul>
-      <li>The <strong>origin</strong> of the blocked resource (path, query and fragment are stripped; never your personal data)</li>
-      <li>The CSP directive that was violated</li>
-      <li>The origin of the page where the violation occurred</li>
-      <li>A one-way salted hash of your IP address, used solely for rate limiting -- your IP is never stored</li>
+      <li>Engellenen kaynağın <strong>origin'i</strong> (yol, sorgu ve fragman çıkarılır; asla kişisel verileriniz içerilmez)</li>
+      <li>İhlal edilen CSP yönergesi</li>
+      <li>İhlalin gerçekleştiği sayfanın origin'i</li>
+      <li>IP adresinizin tek yönlü tuzlanmış karması; yalnızca hız sınırlama için -- IP'niz asla saklanmaz</li>
     </ul>
 
-    <h2>7. AI Providers</h2>
-    <p>When you use AI features:</p>
+    <h2>7. Yapay zekâ sağlayıcıları</h2>
+    <p>Yapay zekâ özelliklerini kullandığınızda:</p>
     <ul>
-      <li><strong>Local AI (WebLLM):</strong> Runs entirely in your browser. No data leaves your device.</li>
-      <li><strong>Cloud AI (Gemini, OpenAI, Anthropic, etc.):</strong> Your prompts are sent directly to the provider. We do not intercept, store, or log these requests. Each provider has its own privacy policy.</li>
+      <li><strong>Yerel YZ (WebLLM):</strong> tamamen tarayıcınızda çalışır. Hiçbir veri cihazınızdan çıkmaz.</li>
+      <li><strong>Bulut YZ (Gemini, OpenAI, Anthropic vb.):</strong> istemler doğrudan sağlayıcıya gönderilir. Bu istekleri engellemiyor, saklamıyor veya günlüğe kaydetmiyoruz. Her sağlayıcının kendi gizlilik politikası vardır.</li>
     </ul>
 
-    <h2>8. Optional Error Reporting (Opt-In Only)</h2>
-    <p>You may choose to enable error reporting in Settings. If enabled:</p>
+    <h2>8. İsteğe bağlı hata raporlama (yalnızca opt-in)</h2>
+    <p>Ayarlar'dan hata raporlamayı etkinleştirebilirsiniz. Etkinleştirilirse:</p>
     <ul>
-      <li>We receive anonymous technical error logs when the app crashes</li>
-      <li><strong>We NEVER receive:</strong> your bookmarks, text, URLs, prompts, or any personal content</li>
-      <li>Only technical stack traces and device information are sent</li>
-      <li>You can disable this at any time</li>
+      <li>Uygulama çöktüğünde anonim teknik hata günlükleri alırız</li>
+      <li><strong>Asla almayız:</strong> yer imlerinizi, metinlerinizi, URL'lerinizi, istemlerinizi veya kişisel içeriğinizi</li>
+      <li>Yalnızca teknik yığın izleri ve cihaz bilgileri gönderilir</li>
+      <li>Bunu istediğiniz zaman kapatabilirsiniz</li>
     </ul>
 
-    <h2>9. PWA Bookmarklet & Share Target</h2>
-    <p>BookmarkForge offers two ways to save content from your browser:</p>
+    <h2>9. PWA bookmarklet'i ve Share Target</h2>
+    <p>BookmarkForge, tarayıcınızdan içerik kaydetmenin iki yolunu sunar:</p>
     <ul>
-      <li><strong>Bookmarklet:</strong> Drag the "Save to Forge" button to your bookmarks bar. Click it on any page to save instantly.</li>
-      <li><strong>PWA Share Target:</strong> On mobile, use your browser's native Share menu to send links to BookmarkForge.</li>
+      <li><strong>Bookmarklet:</strong> "Save to Forge" düğmesini yer imi çubuğunuza sürükleyin. Herhangi bir sayfada tıklayın; anında kaydeder.</li>
+      <li><strong>PWA Share Target:</strong> mobilde, tarayıcınızın yerel Paylaş menüsünü kullanarak BookmarkForge'a bağlantı gönderin.</li>
     </ul>
 
-    <h2>10. Third-Party Services</h2>
-    <p>We use the following third-party services:</p>
+    <h2>10. Üçüncü taraf hizmetler</h2>
+    <p>Aşağıdaki üçüncü taraf hizmetleri kullanıyoruz:</p>
     <ul>
-      <li><strong>Google Fonts</strong> - for typography (fonts are cached locally)</li>
-      <li><strong>AI Providers</strong> - Google, OpenAI, Anthropic, etc. (only if you configure them)</li>
+      <li><strong>Google Fonts</strong> - tipografi için (yazı tipleri yerelde önbelleklenir)</li>
+      <li><strong>YZ sağlayıcıları</strong> - Google, OpenAI, Anthropic vb. (yalnızca siz yapılandırırsanız)</li>
     </ul>
 
-    <h2>11. Your Rights (GDPR)</h2>
-    <p>BookmarkForge is designed so that <strong>we never receive your personal data</strong>, which means most GDPR obligations fall away by design. Under the General Data Protection Regulation (GDPR), you retain the following rights:</p>
+    <h2>11. Haklarınız (GDPR)</h2>
+    <p>BookmarkForge, <strong>kişisel verilerinizi hiçbir zaman bizim almamamız</strong> için tasarlanmıştır; bu sayede GDPR yükümlülüklerinin çoğu tasarımdan dolayı ortadan kalkar. Genel Veri Koruma Tüzüğü (GDPR) uyarınca şu haklara sahipsiniz:</p>
     <ul>
-      <li><strong>Right of access (Art. 15):</strong> All your data is on your device. Use the Export feature to obtain a complete, machine-readable copy at any time.</li>
-      <li><strong>Right to rectification (Art. 16):</strong> Edit your bookmarks, notes, and documents directly in the app.</li>
-      <li><strong>Right to erasure (Art. 17):</strong> Use the built-in data removal (Settings -> Danger Zone / Nuclear Forget). This permanently deletes all local data, including encrypted keys and recovery data. We hold no copy.</li>
-      <li><strong>Right to data portability (Art. 20):</strong> Exports are open formats (JSON, Markdown, HTML) usable in other applications.</li>
-      <li><strong>Right to object and restrict processing (Arts. 18/21):</strong> All optional processing (cloud AI, telemetry, error reporting) is strictly opt-in and can be disabled at any time in Settings.</li>
-      <li><strong>Right to withdraw consent (Art. 7):</strong> Disabling optional features in Settings withdraws consent immediately and stops all associated processing.</li>
+      <li><strong>Erişim hakkı (md. 15):</strong> tüm verileriniz cihazınızdadır. Dışa aktarma özelliğiyle her an eksiksiz, makine tarafından okunabilir bir kopya alabilirsiniz.</li>
+      <li><strong>Düzeltme hakkı (md. 16):</strong> yer imlerinizi, notlarınızı ve belgelerinizi doğrudan uygulama içinde düzenleyin.</li>
+      <li><strong>Silme hakkı (md. 17):</strong> yerleşik veri kaldırma özelliğini kullanın (Ayarlar → Tehlikeli Bölge / Nuclear Forget). Bu, şifreli anahtarlar ve kurtarma verileri dâhil tüm yerel verileri kalıcı olarak siler. Bizde hiçbir kopya tutulmaz.</li>
+      <li><strong>Veri taşınabilirliği (md. 20):</strong> dışa aktarımlar açık biçimlerdir (JSON, Markdown, HTML); başka uygulamalarda kullanılabilir.</li>
+      <li><strong>İtiraz ve kısıtlama hakkı (md. 18/21):</strong> tüm isteğe bağlı işleme (bulut YZ, telemetri, hata raporlama) sıkı biçimde opt-in'dir ve Ayarlar'dan her an kapatılabilir.</li>
+      <li><strong>Onayı geri çekme hakkı (md. 7):</strong> Ayarlar'dan isteğe bağlı özellikleri kapatmak onayı anında geri çeker ve ilgili tüm işlemeyi durdurur.</li>
     </ul>
 
-    <h2>12. Lawful Basis & Processing Register</h2>
-    <p>Under GDPR Article 6, we document the lawful basis for every processing activity that involves any data leaving your device:</p>
+    <h2>12. Hukuki dayanak ve işleme kaydı</h2>
+    <p>GDPR madde 6 uyarınca, verilerinizi cihazınızdan çıkaran her işleme faaliyetinin hukuki dayanağını belgeliyoruz:</p>
 
-    <h2>13. Third-Party Processors & Data Transfers</h2>
-    <p>When you use optional features, data may be processed by the following third parties (sub-processors). Each transfer happens only when you explicitly use the feature:</p>
+    <h2>13. Üçüncü taraf işleyiciler ve veri aktarımları</h2>
+    <p>İsteğe bağlı özellikleri kullandığınızda veriler, aşağıdaki üçüncü taraflar (alt işleyiciler) tarafından işlenebilir. Her aktarım yalnızca özelliği açıkça kullandığınızda gerçekleşir:</p>
     <ul>
-      <li><strong>Google (Gemini API)</strong> -- cloud AI prompts and generated media. Processes data in Google Cloud (global regions, data residency configurable by Google; see Google's Gemini API terms). Transfers outside the EU may occur under Google's Standard Contractual Clauses.</li>
-      <li><strong>OpenAI / Anthropic / Groq / OpenRouter / Hugging Face</strong> -- alternative cloud AI providers, only if you configure them. Their respective terms and SCCs apply.</li>
-      <li><strong>Whop</strong> -- Pro license payment and entitlement verification. Receives your license key and payment details when you purchase Pro. Whop acts as an independent controller for payment data.</li>
-      <li><strong>Sentry (Functional Software)</strong> -- optional error reporting, only if you enable it in Settings and the operator has configured a diagnostic endpoint. Receives redacted technical stack traces (URLs without query strings, secrets removed, no user identity). Sentry acts as a processor under its Data Processing Agreement; see Sentry's privacy policy for international transfers.</li>
+      <li><strong>Google (Gemini API)</strong> -- bulut YZ istemleri ve üretilen medya. Google Cloud'da işleme (küresel bölgeler, veri yerleşimi Google tarafından yapılandırılabilir; Google'ın Gemini API şartlarına bakın). AB dışına aktarımlar Google'ın Standart Sözleşme Maddeleri kapsamında olabilir.</li>
+      <li><strong>OpenAI / Anthropic / Groq / OpenRouter / Hugging Face</strong> -- alternatif bulut YZ sağlayıcıları, yalnızca siz yapılandırırsanız. Kendi şartları ve SCC'leri geçerlidir.</li>
+      <li><strong>Whop</strong> -- Pro lisansı ödemesi ve yetki doğrulaması. Pro satın aldığınızda lisans anahtarınızı ve ödeme bilgilerinizi alır. Whop, ödeme verileri için bağımsız veri sorumlusu olarak hareket eder.</li>
+      <li><strong>Sentry (Functional Software)</strong> -- isteğe bağlı hata raporlama; yalnızca Ayarlar'dan etkinleştirdiğinizde ve işletmecinin tanılama uç noktası varsa. Sansürlenmiş teknik yığın izleri alır (sorgu dizisi olmayan URL'ler, sırlar kaldırılmış, kullanıcı kimliği yok). Sentry, Veri İşleme Sözleşmesi uyarınca işleyicidir; uluslararası aktarımlar için Sentry gizlilik politikasına bakın.</li>
     </ul>
 
-    <h2>14. Record of Processing Activities (ROPA summary)</h2>
-    <p>A summarized record of processing activities (GDPR Art. 30) is maintained covering: purposes, categories of data subjects (app users, paying customers), categories of personal data (license keys, hashed IPs, opt-in technical reports), recipients (the processors above), retention limits, and security measures (client-side AES-256-GCM encryption, TLS 1.3 in transit, HMAC-signed signaling, rate limiting).</p>
+    <h2>14. İşleme faaliyetleri kaydı (ROPA özeti)</h2>
+    <p>Özet bir işleme faaliyetleri kaydı (GDPR md. 30) tutulur; kapsamı: amaçlar, veri sahibi kategorileri (uygulama kullanıcıları, ödeyen müşteriler), kişisel veri kategorileri (lisans anahtarları, karmalanmış IP'ler, isteğe bağlı teknik raporlar), alıcılar (yukarıdaki işleyiciler), saklama süreleri ve güvenlik önlemleri (istemci tarafında AES-256-GCM şifrelemesi, aktarımda TLS 1.3, HMAC imzalı sinyalleşme, hız sınırlama).</p>
 
-    <h2>15. Children's Privacy</h2>
-    <p>BookmarkForge is not designed for children under 13 (or the equivalent minimum age in your jurisdiction). We do not knowingly collect any personal information from anyone.</p>
+    <h2>15. Çocukların gizliliği</h2>
+    <p>BookmarkForge 13 yaşın altındaki çocuklar (veya yargı alanınızdaki eşdeğer asgari yaş) için tasarlanmamıştır. Kimden olursa olsun bilerek kişisel bilgi toplamıyoruz.</p>
 
-    <h2>16. Changes to This Policy</h2>
-    <p>We may update this Privacy Policy from time to time. Material changes will be reflected in the "Last Updated" date above and, for breaking changes affecting processing, announced in-app before they take effect.</p>
+    <h2>16. Bu politikadaki değişiklikler</h2>
+    <p>Bu Gizlilik Politikasını zaman zaman güncelleyebiliriz. Önemli değişiklikler yukarıdaki "Son Güncelleme" tarihine yansıtılır; işlemeyi etkileyen köklü değişiklikler ise yürürlüğe girmeden önce uygulama içinde duyurulur.</p>
 
-    <h2>17. Contact</h2>
-    <p>For privacy questions, data subject requests, or concerns:</p>
+    <h2>17. İletişim</h2>
+    <p>Gizlilik soruları, veri sahibi talepleri veya endişeler için:</p>
     <ul>
-      <li>Email: <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></li>
+      <li>E-posta: <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></li>
     </ul>
 
     <hr>
@@ -214,93 +214,93 @@
     <h1 id="terms">Terms of Service</h1>
     <p class="last-updated"><strong>Son Güncelleme:</strong> 23 Temmuz 2026</p>
 
-    <h2>1. Acceptance of Terms</h2>
-    <p>By using BookmarkForge, you agree to these Terms of Service. If you do not agree, do not use the application.</p>
+    <h2>1. Koşulların kabulü</h2>
+    <p>BookmarkForge'u kullanarak bu Hizmet Şartları'nı kabul etmiş olursunuz. Katılmıyorsanız uygulamayı kullanmayın.</p>
 
-    <h2>2. Description of Service</h2>
-    <p>BookmarkForge is a local-first knowledge management application that allows you to:</p>
+    <h2>2. Hizmetin tanımı</h2>
+    <p>BookmarkForge, yerel öncelikli (local-first) bir bilgi yönetimi uygulamasıdır ve şunları yapmanızı sağlar:</p>
     <ul>
-      <li>Save and organize bookmarks</li>
-      <li>Create and edit documents</li>
-      <li>Use AI-powered features (locally or via cloud providers)</li>
-      <li>Sync data between your devices using peer-to-peer connections</li>
+      <li>Yer imlerini kaydetmek ve düzenlemek</li>
+      <li>Belgeler oluşturmak ve düzenlemek</li>
+      <li>Yapay zekâ özelliklerini kullanmak (yerelde veya bulut sağlayıcılarla)</li>
+      <li>Eşler arası (peer-to-peer) bağlantılarla cihazlarınız arasında veri eşitlemek</li>
     </ul>
 
-    <h2>3. Pricing & Licenses — Lifetime of v1 (No Subscriptions)</h2>
-    <p>Individual licenses are sold as Lifetime for a major version — pay once, own v1 forever. No monthly billing. Refunds: 30 days via Whop. Payments handled by Whop (card, PayPal, crypto; we never see card data).</p>
+    <h2>3. Fiyatlandırma ve lisanslar — v1 ömür boyu (abonelik yok)</h2>
+    <p>Bireysel lisanslar büyük sürüm başına ömür boyu satılır — bir kez ödeyin, v1 sonsuza dek sizin olsun. Aylık faturalandırma yok. İade: Whop üzerinden 30 gün. Ödemeler Whop tarafından işlenir (kart, PayPal, kripto; kart verilerinizi asla görmeyiz).</p>
     <ul>
-      <li><strong>Free — $0 forever:</strong> 1,000 bookmarks on any device (each keeps its own vault), smart search — full-text + semantic, the feature Raindrop charges yearly for — knowledge graph, AI with your own API key, basic templates, JSON/HTML export, PWA + extensions. At 1,000, reading, search and export never stop; only new saves pause.</li>
-      <li><strong>Pro Lifetime v1:</strong> Early Bird <strong>$59</strong> (200 licenses), then <strong>$79</strong> regular, later <strong>$89–$99</strong> after traction. Includes: unlimited bookmarks, 3 devices + P2P sync, local AI (WebLLM/Ollama) + RAG + Expert agents, flashcards, PDF/OCR, 10+ export formats + encrypted backups, AES-GCM vault. <em>Lifetime of v1:</em> all v1.x bugfixes + minor features forever + 12 months of feature updates from purchase; security updates forever. After month 13 you keep v1 functional, only without new features.</li>
-      <li><strong>Upgrade without subscription:</strong> future majors (v2, v3) are separate products: <strong>$89 for new customers, $35 for v1 owners (60% off)</strong>. Skip the major and v1 keeps working. That's recurring revenue without forcing a subscription — same model as Affinity/Sketch/Sublime.</li>
-      <li><strong>Founder Edition — $99 lifetime v1 (limited 100):</strong> same Pro v1 binary + Founder # badge in app + beta access to v2 + 60% off future majors forever for this account. Vanity, not a paywall.</li>
-      <li><strong>Legal line:</strong> <em>Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop.</em></li>
+      <li><strong>Ücretsiz — sonsuza dek $0:</strong> herhangi bir cihazda 1.000 yer imi (her cihaz kendi kasasını tutar), akıllı arama — tam metin + anlamsal (Raindrop'un yıllık ücret tahakkuk ettiği özellik), bilgi grafiği, kendi API anahtarınızla YZ, temel şablonlar, JSON/HTML dışa aktarma, PWA + uzantılar. 1.000'de okuma, arama ve dışa aktarma asla durmaz; yalnızca yeni kayıtlar duraklar.</li>
+      <li><strong>Pro ömür boyu v1:</strong> Erken Kuş <strong>$59</strong> (200 lisans), sonra normal <strong>$79</strong>, ivme sonrası <strong>$89–$99</strong>. İçerir: sınırsız yer imi, 3 cihaz + P2P eşitleme, yerel YZ (WebLLM/Ollama) + RAG + Expert ajanları, bilgi kartları, PDF/OCR, 10+ dışa aktarma biçimi + şifreli yedekler, AES-GCM kasa. <em>v1 ömür boyu:</em> tüm v1.x hata düzeltmeleri + küçük özellikler sonsuza dek + satın alımdan itibaren 12 ay özellik güncellemesi; güvenlik güncellemeleri sonsuza dek. 13. aydan sonra v1 işlevsel kalır; yalnızca yeni özellik eklenmez.</li>
+      <li><strong>Abonelik olmadan yükseltme:</strong> gelecekteki büyük sürümler (v2, v3) ayrı ürünlardır: <strong>yeni müşterilere $89, v1 sahiplerine $35 (%60 indirim)</strong>. Büyük sürümü atlayın; v1 çalışmaya devam eder. Bu, aboneliği zorlamadan düzenli gelir — Affinity/Sketch/Sublime ile aynı model.</li>
+      <li><strong>Kurucu Sürümü — $99 ömür boyu v1 (sınırlı 100):</strong> aynı Pro v1 çalıştırılabilir dosyası + uygulama içi Founder # rozeti + v2 beta erişimi + bu hesap için gelecekteki büyük sürümlerde sonsuza dek %60 indirim. Paywall değil, prestij.</li>
+      <li><strong>Yasal satır:</strong> <em>BookmarkForge v1 için ömür boyu lisans. Tüm v1.x güncellemelerini ve 12 aylık özellik güncellemesini kapsar. Güvenlik güncellemeleri sonsuza dek. Gelecekteki büyük sürümler (v2, v3) mevcut sahiplere %60 indirimli. Whop üzerinden 30 gün iade.</em></li>
     </ul>
 
-    <h2>4. Support SLA</h2>
-    <p>Single maintainer. The vault is encrypted — we cannot see your data and we never ask for your vault password or 24-word recovery phrase.</p>
+    <h2>4. Destek SLA'sı</h2>
+    <p>Tek bir bakımcı vardır. Kasa şifrelidir — verilerinizi göremeyiz ve asla kasa parolanızı veya 24 kelimelik kurtarma ifadenizi sormayız.</p>
     <ul>
-      <li><strong>Free:</strong> community — Help Center (<a href="/help">/help</a>) + GitHub Discussions, best effort. Search BF-E* code first + paste diagnostic.</li>
-      <li><strong>Pro:</strong> email <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> (subject: Pro) — <strong>48h business days</strong> (Mon–Fri). Include diagnostic from Settings → Advanced → Copy diagnostic.</li>
-      <li><strong>Founder:</strong> priority email 24h business days + beta queue (subject: Founder #).</li>
-      <li>Before contacting us, use <strong>Settings → Advanced → Copy diagnostic</strong> or <a href="/help#diagnostics">Help → Diagnostics</a>. The diagnostic contains only counts/versions (bookmarks, storage %, build hash) — never vault content, URLs or prompts. See Help § BF-E* for error codes.</li>
-      <li><strong>Forgot password (BF-E101):</strong> we cannot recover it. When you create a vault we show a 24-word recovery phrase <strong>once</strong> — write it on paper. Without it the vault is unrecoverable, by design.</li>
+      <li><strong>Ücretsiz:</strong> topluluk — Yardım Merkezi (<a href="/help">/help</a>) + GitHub Discussions, elimizden gelen. Önce BF-E* kodunu arayın + tanılamayı yapıştırın.</li>
+      <li><strong>Pro:</strong> <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> adresine e-posta (konu: Pro) — <strong>iş günlerinde 48 saat</strong> (Pzt–Cum). Ayarlar → Gelişmiş → Tanılamayı kopyala çıktısını ekleyin.</li>
+      <li><strong>Founder:</strong> iş günlerinde 24 saat öncelikli e-posta + beta kuyruğu (konu: Founder #).</li>
+      <li>Bizimle iletişime geçmeden önce <strong>Ayarlar → Gelişmiş → Tanılamayı kopyala</strong> veya <a href="/help#diagnostics">Yardım → Tanılama</a>'yı kullanın. Tanılama yalnızca sayaç/sürüm içerir (yer imleri, depolama %, derleme karması) — asla kasa içeriği, URL veya istem içermez. Hata kodları için Yardım § BF-E*.</li>
+      <li><strong>Parola unutuldu (BF-E101):</strong> onu kurtaramayız. Kasayı oluşturduğunuzda 24 kelimelik kurtarma ifadesini <strong>bir kez</strong> gösteririz — kâğıda yazın. Onsuz kasa kurtarılamaz; bu bilinçli bir tasarımdır.</li>
     </ul>
 
-    <h2>5. Local-First Nature</h2>
-    <p>You understand and agree that:</p>
+    <h2>5. Yerel öncelikli doğa</h2>
+    <p>Şunları anladığınızı ve kabul ettiğinizi belirtirsiniz:</p>
     <ul>
-      <li>BookmarkForge runs entirely in your browser</li>
-      <li>All data is stored locally on your device</li>
-      <li>We do not host, store, or backup your data on our servers</li>
-      <li>You are responsible for backing up your data using the export feature</li>
+      <li>BookmarkForge tamamen tarayıcınızda çalışır</li>
+      <li>Tüm veriler cihazınızda yerel olarak saklanır</li>
+      <li>Verilerinizi sunucularımızda barındırmayız, saklamayız veya yedeklemeyiz</li>
+      <li>Dışa aktarma özelliğiyle verilerinizi yedeklemek sizin sorumluluğunuzdadır</li>
     </ul>
 
-    <h2>6. User Responsibilities</h2>
-    <p>You agree to:</p>
+    <h2>6. Kullanıcı sorumlulukları</h2>
+    <p>Şunları kabul edersiniz:</p>
     <ul>
-      <li>Maintain backups of your important data</li>
-      <li>Keep your vault password secure (we cannot recover it without the 24-word recovery phrase)</li>
-      <li>Use the application in compliance with applicable laws</li>
-      <li>Not use the application for illegal purposes</li>
+      <li>Önemli verilerinizin yedeklerini tutmak</li>
+      <li>Kasa parolanızı güvenli tutmak (24 kelimelik kurtarma ifadesi olmadan onu kurtaramayız)</li>
+      <li>Uygulamayı geçerli yasalara uygun kullanmak</li>
+      <li>Uygulamayı yasa dışı amaçlarla kullanmamak</li>
     </ul>
 
-    <h2>7. AI Features</h2>
-    <p>When using AI features:</p>
+    <h2>7. Yapay zekâ özellikleri</h2>
+    <p>YZ özelliklerini kullanırken:</p>
     <ul>
-      <li>You are responsible for the content of your prompts</li>
-      <li>Cloud AI providers have their own terms of service and privacy policies</li>
-      <li>We do not guarantee the accuracy of AI-generated content</li>
-      <li>Local AI models require compatible hardware (WebGPU support)</li>
+      <li>İstemlerinizin içeriğinden siz sorumlusunuz</li>
+      <li>Bulut YZ sağlayıcılarının kendi hizmet şartları ve gizlilik politikaları vardır</li>
+      <li>YZ tarafından üretilen içeriğin doğruluğunu garanti etmeyiz</li>
+      <li>Yerel YZ modelleri uyumlu donanım gerektirir (WebGPU desteği)</li>
     </ul>
 
-    <h2>8. Limitation of Liability</h2>
-    <p>BookmarkForge is provided "as is" without warranties of any kind. We are not liable for:</p>
+    <h2>8. Sorumluluğun sınırlandırılması</h2>
+    <p>BookmarkForge her türlü garanti olmaksızın "olduğu gibi" sunulur. Şunlardan sorumlu değiliz:</p>
     <ul>
-      <li>Data loss due to browser clearing storage</li>
-      <li>Hardware failures</li>
-      <li>Incompatibility with your device</li>
-      <li>Errors in AI-generated content</li>
+      <li>Tarayıcı depolamasının temizlenmesinden kaynaklanan veri kaybı</li>
+      <li>Donanım arızaları</li>
+      <li>Cihazınızla uyumsuzluk</li>
+      <li>YZ tarafından üretilen içerikteki hatalar</li>
     </ul>
 
-    <h2>9. Intellectual Property</h2>
+    <h2>9. Fikri mülkiyet</h2>
     <p></p>
     <ul>
-      <li>BookmarkForge's code and design are copyrighted</li>
-      <li>Your content (bookmarks, notes, documents) remains yours</li>
-      <li>We claim no ownership over your data</li>
+      <li>BookmarkForge'un kodu ve tasarımı telif hakkıyla korunur</li>
+      <li>İçeriğiniz (yer imleri, notlar, belgeler) size aittir</li>
+      <li>Verileriniz üzerinde mülkiyet talep etmeyiz</li>
     </ul>
 
-    <h2>10. Termination</h2>
-    <p>Since BookmarkForge runs locally, there is no account to terminate. You can stop using the application at any time by closing your browser.</p>
+    <h2>10. Sona erme</h2>
+    <p>BookmarkForge yerelde çalıştığı için sona erdirecek bir hesap yoktur. Tarayıcınızı kapatarak istediğiniz an kullanmayı bırakabilirsiniz.</p>
 
-    <h2>11. Governing Law</h2>
-    <p>These terms are governed by applicable laws. Any disputes shall be resolved in the appropriate courts.</p>
+    <h2>11. Uygulanacak hukuk</h2>
+    <p>Bu şartlar geçerli yasalara tabidir. Uyuşmazlıklar yetkili mahkemelerde çözülür.</p>
 
-    <h2>12. Contact</h2>
-    <p>For questions about these terms:</p>
+    <h2>12. İletişim</h2>
+    <p>Bu şartlarla ilgili sorularınız için:</p>
     <ul>
-      <li>Email: <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></li>
-      <li>Help: <a href="/help">Help Center</a> — FAQ, BF-E* codes, SLA & diagnostics</li>
+      <li>E-posta: <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></li>
+      <li>Yardım: <a href="/help">Yardım Merkezi</a> — SSS, BF-E* kodları, SLA ve tanılama</li>
     </ul>
   </main>
 

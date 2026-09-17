@@ -22,6 +22,10 @@ const ProRequiredPanel = lazy(() =>
  */
 export const ProRequiredBoundary: React.FC = () => {
   const [feature, setFeature] = useState<string | undefined>(undefined);
+  // "build" is the only honest copy for the placeholder event (it can only
+  // fire in an Open Core export); "license" is set by the loader-rejection
+  // event when the error reports a Free session on a full build.
+  const [reason, setReason] = useState<"license" | "build">("build");
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -33,11 +37,14 @@ export const ProRequiredBoundary: React.FC = () => {
           ? `${detail.module}.${detail.property ?? ""}`.replace(/\.$/, "")
           : undefined,
       );
+      setReason("build");
       setOpen(true);
     };
     const handleProUnavailable = (e: Event) => {
-      const detail = (e as CustomEvent<{ feature?: string }>).detail;
+      const detail = (e as CustomEvent<{ feature?: string; reason?: string }>)
+        .detail;
       setFeature(detail?.feature);
+      setReason(detail?.reason === "license" ? "license" : "build");
       setOpen(true);
     };
 
@@ -67,6 +74,7 @@ export const ProRequiredBoundary: React.FC = () => {
     <Suspense fallback={null}>
       <ProRequiredPanel
         feature={feature}
+        reason={reason}
         onClose={() => setOpen(false)}
         onSeePro={() => {
           setOpen(false);

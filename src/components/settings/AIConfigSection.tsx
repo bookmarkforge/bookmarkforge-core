@@ -30,6 +30,7 @@ export const AIConfigSection: React.FC<AIConfigSectionProps> = ({
   // the upgrade banner for the device warning (or nothing) without a remount.
   const hasPro = useLicenseStore((s) => s.entitlements.plan === "pro");
   const webLlmProRequired = !hasPro;
+  const provider = aiManager.getProviderInfo().provider;
 
   return (
   <section data-testid="settings-ai-config" className="space-y-4">
@@ -64,9 +65,10 @@ export const AIConfigSection: React.FC<AIConfigSectionProps> = ({
           <option value="ollama">
             {t("app_localAi")} {t("app_ollamaLabel", "(Ollama)")}
           </option>
-          <option value="webllm" disabled={!canRunWebLLM}>
+          <option value="webllm" disabled={!canRunWebLLM || !hasPro}>
             {t("app_webLlmBrowser")}{" "}
             {!canRunWebLLM && `(${t("app_unsupportedDevice")})`}
+            {canRunWebLLM && !hasPro && ` — ${t("app_proStateFeaturePro", "Pro")}`}
           </option>
         </select>
 
@@ -74,6 +76,15 @@ export const AIConfigSection: React.FC<AIConfigSectionProps> = ({
           // Pro gate takes precedence: the device may be capable, but the
           // local-model runtime itself is Pro — show the shared upgrade
           // state instead of the device-capability warning.
+          <div className="mt-3">
+            <ProRequiredState feature="Local AI (WebLLM)" reason="license" variant="banner" />
+          </div>
+        )}
+
+        {canRunWebLLM && webLlmProRequired && (
+          // Device-capable + no license: the local-model runtime is Pro, so
+          // the capability <option> is disabled and the shared upgrade state
+          // replaces the otherwise silent WebLLM forms.
           <div className="mt-3">
             <ProRequiredState feature="Local AI (WebLLM)" reason="license" variant="banner" />
           </div>
@@ -97,20 +108,38 @@ export const AIConfigSection: React.FC<AIConfigSectionProps> = ({
         )}
       </div>
 
-      {aiManager.getProviderInfo().provider === "ollama" ? (
+      {provider === "webllm" && !hasPro ? (
+        // The local-model runtime is Pro; for a Free session its forms stay
+        // hidden (the shared upgrade state above replaces them). BYOK
+        // providers (gemini/openai/anthropic/groq/ollama/custom) are Core.
+        null
+      ) : provider === "ollama" ? (
         <OllamaForm t={t} />
-      ) : aiManager.getProviderInfo().provider === "custom" ? (
+      ) : provider === "custom" ? (
         <CustomProviderForm apiKey={apiKey} setApiKey={setApiKey} t={t} />
-      ) : aiManager.getProviderInfo().provider === "webllm" ? (
+      ) : provider === "webllm" ? (
         <WebLLMForm webLlmProgress={webLlmProgress} t={t} />
       ) : (
         <DefaultProviderForm apiKey={apiKey} setApiKey={setApiKey} t={t} />
       )}
     </div>
 
-    <div className="mt-8">
-      <QuantizationPanel />
-    </div>
+    {!hasPro && (
+      // The quantization engine tunes the vector store used by the local
+      // models — meaningless without them, so it stays behind the gate too.
+      <div className="mt-8">
+        <ProRequiredState
+            feature="Local AI (WebLLM)"
+            reason="license"
+            variant="banner"
+        />
+      </div>
+    )}
+    {hasPro && (
+      <div className="mt-8">
+        <QuantizationPanel />
+      </div>
+    )}
   </section>
   );
 };

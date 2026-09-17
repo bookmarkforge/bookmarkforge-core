@@ -347,6 +347,56 @@ No guardar contraseñas junto con backups. Las claves y los datos deben tener ci
 7. Comunicar estado y documentar causa raíz.
 8. Ejecutar postmortem y actualizar runbooks.
 
+## Mock server de IA (OpenAI-compatible)
+
+`npm run mock:ai` levanta un servidor OpenAI-compatible local en
+`http://127.0.0.1:8789/v1` (node:http puro, sin dependencias). Útil para
+probar el proveedor Custom sin API keys reales.
+
+**Uso rápido:**
+
+```bash
+npm run mock:ai                          # default: puerto 8789
+npm run mock:ai -- --port 9000           # puerto custom
+npm run mock:ai -- --status 429          # todos los chat fallan con 429
+npm run mock:ai -- --slow-first          # 1.5s antes del primer token
+npm run mock:ai -- --abort-after 5       # corta el stream a mitad
+```
+
+**Configuración en la app:**
+
+| Campo | Valor |
+|---|---|
+| Proveedor | Custom (OpenAI Format) |
+| Base URL | `http://localhost:8789/v1` |
+| Modelo | `bmforge-mock` (o `bmforge-mock-mini`) |
+| API key | cualquier valor (ej. `sk-mock`) |
+
+**Modelos-escenario** (para tests de error): el mock acepta modelos con
+prefijo `error-NNN` que devuelven ese status HTTP:
+
+| Modelo | Status | Uso |
+|---|---|---|
+| `bmforge-mock` | 200 | Chat normal con streaming SSE |
+| `error-401` | 401 | Verificar mensaje "Invalid API key" |
+| `error-429` | 429 | Verificar mensaje "Rate limit exceeded" |
+| `error-500` | 500 | Verificar pass-through raw (gap documentado) |
+| `error-503` | 503 | Verificar pass-through raw (gap documentado) |
+
+**Endpoints:**
+
+- `GET /__health` — probe de disponibilidad
+- `GET /__stats` — ring buffer de peticiones recientes
+- `GET /v1/models` — lista los modelos disponibles
+- `POST /v1/chat/completions` — genera texto (streaming o unary)
+
+**Seguridad:** solo escucha en `127.0.0.1`; CORS `*` para el origen de la
+app; el firewall de la app permite loopback sin whitelist.
+
+**E2E:** las specs `custom-provider.spec.ts` y `custom-provider-flow.spec.ts`
+ejecutan contra este mock. El config `playwright.custom-provider.config.ts`
+levanta el mock automáticamente como `webServer`.
+
 ## Rollback
 
 El rollback debe apuntar a una imagen previamente validada, no reconstruir desde `latest`. No debe borrar IndexedDB ni datos locales del usuario. Probar el procedimiento en staging antes de habilitarlo para producción.

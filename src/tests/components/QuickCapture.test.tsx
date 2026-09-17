@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
+import { ProUnavailableError } from "../../services/pro-access";
 
 vi.mock("../../db/database", () => ({
   initDB: vi.fn().mockResolvedValue({
@@ -34,6 +35,9 @@ const { mockIsFreeLimitError } = vi.hoisted(() => ({
 }));
 vi.mock("../../services/LicenseService", () => ({
   isFreeLimitError: mockIsFreeLimitError,
+  // pro-access (real, imported for announceProUnavailable) binds this at
+  // module level; the double just has to exist and answer the gate.
+  licenseService: { hasProAccess: () => false },
 }));
 vi.mock("../../components/FreeTierSaveHint", () => ({
   FreeTierSaveHint: () => null,
@@ -361,6 +365,41 @@ describe("QuickCapture", () => {
     });
     expect(mockToast.error).not.toHaveBeenCalledWith("app_captureError");
     mockIsFreeLimitError.mockReturnValue(false);
+  });
+
+  it("announces a Pro rejection instead of the generic capture error", async () => {
+    const { initDB } = await import("../../db/database");
+    const insert = vi.fn().mockRejectedValue(
+      new ProUnavailableError("SpecializedAgentsService", "no-license"),
+    );
+    (initDB as ReturnType<typeof vi.fn>).mockResolvedValue({
+      bookmarks: { insert },
+      documents: { insert: vi.fn() },
+    });
+    const dispatched: CustomEvent[] = [];
+    const originalDispatch = window.dispatchEvent.bind(window);
+    const spy = vi
+      .spyOn(window, "dispatchEvent")
+      .mockImplementation((event: Event) => {
+        if (event.type === "bmf:pro-unavailable") {
+          dispatched.push(event as CustomEvent);
+        }
+        return originalDispatch(event);
+      });
+    render(<QuickCapture />);
+    await userEvent.click(screen.getByTestId("add-bookmark-button"));
+    await userEvent.type(
+      screen.getByPlaceholderText("Enter URL..."),
+      "https://pro.example",
+    );
+    await userEvent.click(screen.getByTestId("save-bookmark-button"));
+    await vi.waitFor(() => expect(dispatched.length).toBe(1));
+    expect(dispatched[0]!.detail).toEqual({
+      feature: "SpecializedAgentsService",
+      reason: "no-license",
+    });
+    expect(mockToast.error).not.toHaveBeenCalledWith("app_captureError");
+    spy.mockRestore();
   });
 
   it("shows spinner and disables send while processing", async () => {

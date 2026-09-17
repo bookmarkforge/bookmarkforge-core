@@ -99,114 +99,114 @@
 
     <h1>Privacy Policy</h1>
 
-    <h2>1. Data Controller</h2>
-    <p>The data controller for the processing described in this policy is BookmarkForge (contact in section 17). For the companion server and license infrastructure, the operator of that deployment acts as controller.</p>
+    <h2>1. 데이터 관리자</h2>
+    <p>본 정책에 기술된 처리의 데이터 관리자는 BookmarkForge입니다(연락처는 17절). 컴패니언 서버와 라이선스 인프라의 경우 해당 배포의 운영자가 관리자 역할을 합니다.</p>
 
-    <h2>2. Introduction & Scope</h2>
-    <p>BookmarkForge ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we handle your data when you use our application.</p>
+    <h2>2. 소개 및 적용 범위</h2>
+    <p>BookmarkForge("당사")는 사용자의 개인정보를 보호하기 위해 최선을 다합니다. 본 개인정보 처리방침은 애플리케이션 사용 시 당사가 사용자 데이터를 처리하는 방식을 설명합니다.</p>
 
-    <h2>3. Data We Do NOT Collect</h2>
-    <p>We want to be clear about what we do <strong>not</strong> collect:</p>
+    <h2>3. 수집하지 않는 데이터</h2>
+    <p>수집하지 않는 항목을 분명히 말씀드립니다:</p>
     <ul>
-      <li><strong>No bookmarks or URLs</strong> are sent to our servers</li>
-      <li><strong>No notes or documents</strong> leave your device</li>
-      <li><strong>No AI prompts or responses</strong> are logged by us</li>
-      <li><strong>No browsing history</strong> is tracked</li>
-      <li><strong>No personal information</strong> is required to use the app</li>
-      <li><strong>No analytics</strong> are collected by default</li>
+      <li><strong>북마크와 URL</strong>은 당사 서버로 전송되지 않습니다</li>
+      <li><strong>노트와 문서</strong>는 기기를 벗어나지 않습니다</li>
+      <li><strong>AI 프롬프트와 응답</strong>을 당사는 기록하지 않습니다</li>
+      <li><strong>방문 기록</strong>은 추적되지 않습니다</li>
+      <li>앱 사용에 <strong>개인정보</strong>가 필요하지 않습니다</li>
+      <li>기본적으로 <strong>분석 데이터</strong>를 수집하지 않습니다</li>
     </ul>
 
-    <h2>4. Where Your Data Lives</h2>
-    <p>All your data is stored locally in your browser using:</p>
+    <h2>4. 데이터가 저장되는 위치</h2>
+    <p>모든 데이터는 브라우저에 로컬로 저장됩니다:</p>
     <ul>
-      <li><strong>IndexedDB</strong> - for bookmarks, documents, and settings</li>
-      <li><strong>Secure Storage</strong> - for encrypted keys and passwords</li>
-      <li><strong>Service Worker Cache</strong> - for offline functionality</li>
+      <li><strong>IndexedDB</strong> - 북마크, 문서, 설정용</li>
+      <li><strong>보안 저장소</strong> - 암호화된 키와 비밀번호용</li>
+      <li><strong>서비스 워커 캐시</strong> - 오프라인 기능용</li>
     </ul>
 
-    <h2>5. Encryption</h2>
-    <p>Your data is encrypted using:</p>
+    <h2>5. 암호화</h2>
+    <p>데이터는 다음과 같이 암호화됩니다:</p>
     <ul>
-      <li><strong>AES-GCM-256</strong> encryption for all stored content</li>
-      <li><strong>Argon2id</strong> (memory-hard KDF) for password-derived keys</li>
-      <li>Keys are derived and stored locally in your browser</li>
+      <li>저장된 모든 콘텐츠에 <strong>AES-GCM-256</strong> 암호화</li>
+      <li>비밀번호 유도 키에 <strong>Argon2id</strong>(메모리 하드 KDF)</li>
+      <li>키는 브라우저 내에서 로컬로 파생·저장됩니다</li>
     </ul>
 
-    <h2>6. Content Security Policy (CSP) Reports</h2>
-    <p>BookmarkForge uses Content Security Policy (CSP) headers to prevent cross-site scripting and data injection attacks. If your browser blocks a resource because of these headers, it automatically sends a brief technical violation report to the same origin that served the application (the <code>/csp-report</code> endpoint). The operator's collector keeps only:</p>
+    <h2>6. 콘텐츠 보안 정책(CSP) 보고서</h2>
+    <p>BookmarkForge는 콘텐츠 보안 정책(CSP) 헤더를 사용해 교차 사이트 스크립팅과 데이터 주입 공격을 방지합니다. 브라우저가 이 헤더 때문에 리소스를 차단하면, 애플리케이션을 제공한 동일한 오리진(<code>/csp-report</code> 엔드포인트)으로 짧은 기술 위반 보고서를 자동 전송합니다. 운영자의 수집기가 보관하는 것:</p>
     <ul>
-      <li>The <strong>origin</strong> of the blocked resource (path, query and fragment are stripped; never your personal data)</li>
-      <li>The CSP directive that was violated</li>
-      <li>The origin of the page where the violation occurred</li>
-      <li>A one-way salted hash of your IP address, used solely for rate limiting -- your IP is never stored</li>
+      <li>차단된 리소스의 <strong>오리진</strong>(경로·쿼리·프래그먼트는 제거됩니다. 개인정보는 절대 포함되지 않습니다)</li>
+      <li>위반된 CSP 지시문</li>
+      <li>위반이 발생한 페이지의 오리진</li>
+      <li>IP 주소의 단방향 솔트 해시 — 레이트 리밋 전용이며 IP 자체는 절대 저장되지 않습니다</li>
     </ul>
 
-    <h2>7. AI Providers</h2>
-    <p>When you use AI features:</p>
+    <h2>7. AI 제공자</h2>
+    <p>AI 기능 사용 시:</p>
     <ul>
-      <li><strong>Local AI (WebLLM):</strong> Runs entirely in your browser. No data leaves your device.</li>
-      <li><strong>Cloud AI (Gemini, OpenAI, Anthropic, etc.):</strong> Your prompts are sent directly to the provider. We do not intercept, store, or log these requests. Each provider has its own privacy policy.</li>
+      <li><strong>로컬 AI(WebLLM):</strong> 전적으로 브라우저 안에서 실행됩니다. 어떤 데이터도 기기를 떠나지 않습니다.</li>
+      <li><strong>클라우드 AI(Gemini, OpenAI, Anthropic 등):</strong> 프롬프트는 제공자에게 직접 전송됩니다. 당사는 이 요청을 가로채거나 저장하거나 기록하지 않습니다. 각 제공자의 개인정보 처리방침이 적용됩니다.</li>
     </ul>
 
-    <h2>8. Optional Error Reporting (Opt-In Only)</h2>
-    <p>You may choose to enable error reporting in Settings. If enabled:</p>
+    <h2>8. 선택적 오류 보고(옵트인 전용)</h2>
+    <p>설정에서 오류 보고를 활성화할 수 있습니다. 활성화 시:</p>
     <ul>
-      <li>We receive anonymous technical error logs when the app crashes</li>
-      <li><strong>We NEVER receive:</strong> your bookmarks, text, URLs, prompts, or any personal content</li>
-      <li>Only technical stack traces and device information are sent</li>
-      <li>You can disable this at any time</li>
+      <li>앱이 크래시하면 익명의 기술 오류 로그를 받습니다</li>
+      <li><strong>절대 받지 않는 것:</strong> 북마크, 텍스트, URL, 프롬프트 등 개인 콘텐츠</li>
+      <li>전송되는 것은 기술 스택 트레이스와 기기 정보뿐입니다</li>
+      <li>언제든지 끌 수 있습니다</li>
     </ul>
 
-    <h2>9. PWA Bookmarklet & Share Target</h2>
-    <p>BookmarkForge offers two ways to save content from your browser:</p>
+    <h2>9. PWA 북마클릿과 공유 대상</h2>
+    <p>BookmarkForge는 브라우저에서 콘텐츠를 저장하는 두 가지 방법을 제공합니다:</p>
     <ul>
-      <li><strong>Bookmarklet:</strong> Drag the "Save to Forge" button to your bookmarks bar. Click it on any page to save instantly.</li>
-      <li><strong>PWA Share Target:</strong> On mobile, use your browser's native Share menu to send links to BookmarkForge.</li>
+      <li><strong>북마클릿:</strong> "Save to Forge" 버튼을 북마크 바로 드래그하세요. 아무 페이지에서나 클릭하면 즉시 저장됩니다.</li>
+      <li><strong>PWA 공유 대상:</strong> 모바일에서는 브라우저의 기본 공유 메뉴로 BookmarkForge에 링크를 보낼 수 있습니다.</li>
     </ul>
 
-    <h2>10. Third-Party Services</h2>
-    <p>We use the following third-party services:</p>
+    <h2>10. 제3자 서비스</h2>
+    <p>당사는 다음 제3자 서비스를 사용합니다:</p>
     <ul>
-      <li><strong>Google Fonts</strong> - for typography (fonts are cached locally)</li>
-      <li><strong>AI Providers</strong> - Google, OpenAI, Anthropic, etc. (only if you configure them)</li>
+      <li><strong>Google Fonts</strong> - 타이포그래피(폰트는 로컬에 캐시됩니다)</li>
+      <li><strong>AI 제공자</strong> - Google, OpenAI, Anthropic 등(직접 설정한 경우에만)</li>
     </ul>
 
-    <h2>11. Your Rights (GDPR)</h2>
-    <p>BookmarkForge is designed so that <strong>we never receive your personal data</strong>, which means most GDPR obligations fall away by design. Under the General Data Protection Regulation (GDPR), you retain the following rights:</p>
+    <h2>11. 귀하의 권리(GDPR)</h2>
+    <p>BookmarkForge는 <strong>당사가 개인정보를 전혀 받지 않도록</strong> 설계되어, GDPR 의무 대부분이 설계상 애초에 발생하지 않습니다. 일반 데이터 보호 규정(GDPR)에 따라 다음 권리가 유지됩니다:</p>
     <ul>
-      <li><strong>Right of access (Art. 15):</strong> All your data is on your device. Use the Export feature to obtain a complete, machine-readable copy at any time.</li>
-      <li><strong>Right to rectification (Art. 16):</strong> Edit your bookmarks, notes, and documents directly in the app.</li>
-      <li><strong>Right to erasure (Art. 17):</strong> Use the built-in data removal (Settings -> Danger Zone / Nuclear Forget). This permanently deletes all local data, including encrypted keys and recovery data. We hold no copy.</li>
-      <li><strong>Right to data portability (Art. 20):</strong> Exports are open formats (JSON, Markdown, HTML) usable in other applications.</li>
-      <li><strong>Right to object and restrict processing (Arts. 18/21):</strong> All optional processing (cloud AI, telemetry, error reporting) is strictly opt-in and can be disabled at any time in Settings.</li>
-      <li><strong>Right to withdraw consent (Art. 7):</strong> Disabling optional features in Settings withdraws consent immediately and stops all associated processing.</li>
+      <li><strong>열람권(15조):</strong> 모든 데이터는 기기에 있습니다. 내보내기 기능으로 언제든 완전한 기계 판독 가능 사본을 얻을 수 있습니다.</li>
+      <li><strong>정정권(16조):</strong> 북마크, 노트, 문서는 앱에서 직접 편집합니다.</li>
+      <li><strong>삭제권(17조):</strong> 내장 데이터 삭제(설정 → 위험 구역 / Nuclear Forget)를 이용하세요. 암호화된 키와 복구 데이터를 포함한 로컬 데이터가 영구 삭제됩니다. 당사는 사본을 보유하지 않습니다.</li>
+      <li><strong>데이터 이동권(20조):</strong> 내보내기는 개방형 형식(JSON, Markdown, HTML)으로 다른 애플리케이션에서 사용할 수 있습니다.</li>
+      <li><strong>거부·제한권(18/21조):</strong> 모든 선택적 처리(클라우드 AI, 텔레메트리, 오류 보고)는 철저히 옵트인이며 설정에서 언제든 끌 수 있습니다.</li>
+      <li><strong>동의 철회권(7조):</strong> 설정에서 선택적 기능을 끄면 동의가 즉시 철회되고 관련 처리가 모두 중단됩니다.</li>
     </ul>
 
-    <h2>12. Lawful Basis & Processing Register</h2>
-    <p>Under GDPR Article 6, we document the lawful basis for every processing activity that involves any data leaving your device:</p>
+    <h2>12. 처리의 법적 근거와 기록</h2>
+    <p>GDPR 6조에 따라 데이터가 기기를 떠나는 모든 처리 활동의 법적 근거를 문서화합니다:</p>
 
-    <h2>13. Third-Party Processors & Data Transfers</h2>
-    <p>When you use optional features, data may be processed by the following third parties (sub-processors). Each transfer happens only when you explicitly use the feature:</p>
+    <h2>13. 제3자 처리자와 데이터 이전</h2>
+    <p>선택적 기능 사용 시 데이터는 다음 제3자(하위 처리자)가 처리할 수 있습니다. 이전은 사용자가 기능을 명시적으로 사용할 때만 발생합니다:</p>
     <ul>
-      <li><strong>Google (Gemini API)</strong> -- cloud AI prompts and generated media. Processes data in Google Cloud (global regions, data residency configurable by Google; see Google's Gemini API terms). Transfers outside the EU may occur under Google's Standard Contractual Clauses.</li>
-      <li><strong>OpenAI / Anthropic / Groq / OpenRouter / Hugging Face</strong> -- alternative cloud AI providers, only if you configure them. Their respective terms and SCCs apply.</li>
-      <li><strong>Whop</strong> -- Pro license payment and entitlement verification. Receives your license key and payment details when you purchase Pro. Whop acts as an independent controller for payment data.</li>
-      <li><strong>Sentry (Functional Software)</strong> -- optional error reporting, only if you enable it in Settings and the operator has configured a diagnostic endpoint. Receives redacted technical stack traces (URLs without query strings, secrets removed, no user identity). Sentry acts as a processor under its Data Processing Agreement; see Sentry's privacy policy for international transfers.</li>
+      <li><strong>Google(Gemini API)</strong> -- 클라우드 AI 프롬프트와 생성 미디어. Google Cloud에서 처리(전역 리전, 데이터 상주는 Google이 구성; Google의 Gemini API 약관 참조). EU 외부 이전은 Google의 표준계약조항에 따를 수 있습니다.</li>
+      <li><strong>OpenAI / Anthropic / Groq / OpenRouter / Hugging Face</strong> -- 대체 클라우드 AI 제공자(직접 설정한 경우만). 각자의 약관과 SCC가 적용됩니다.</li>
+      <li><strong>Whop</strong> -- Pro 라이선스 결제와 권한 확인. Pro 구매 시 라이선스 키와 결제 정보를 받습니다. Whop는 결제 데이터에 대해 독립적인 관리자로 행동합니다.</li>
+      <li><strong>Sentry(Functional Software)</strong> -- 선택적 오류 보고(설정에서 활성화하고 운영자가 진단 엔드포인트를 구성한 경우만). 편집된 기술 스택 트레이스를 받습니다(쿼리 문자열 없는 URL, 시크릿 제거, 사용자 식별 정보 없음). Sentry는 데이터 처리 계약에 따른 처리자입니다. 국제 이전은 Sentry 개인정보 처리방침을 참조하세요.</li>
     </ul>
 
-    <h2>14. Record of Processing Activities (ROPA summary)</h2>
-    <p>A summarized record of processing activities (GDPR Art. 30) is maintained covering: purposes, categories of data subjects (app users, paying customers), categories of personal data (license keys, hashed IPs, opt-in technical reports), recipients (the processors above), retention limits, and security measures (client-side AES-256-GCM encryption, TLS 1.3 in transit, HMAC-signed signaling, rate limiting).</p>
+    <h2>14. 처리 활동 기록(ROPA 요약)</h2>
+    <p>처리 활동 요약 기록(GDPR 30조)을 유지합니다. 포함 항목: 목적, 데이터 주체 범주(앱 사용자, 유료 고객), 개인정보 범주(라이선스 키, 해시된 IP, 옵트인 기술 보고서), 수취인(위 처리자), 보존 기한, 보안 조치(클라이언트 측 AES-256-GCM 암호화, 전송 시 TLS 1.3, HMAC 서명 시그널링, 레이트 리밋).</p>
 
-    <h2>15. Children's Privacy</h2>
-    <p>BookmarkForge is not designed for children under 13 (or the equivalent minimum age in your jurisdiction). We do not knowingly collect any personal information from anyone.</p>
+    <h2>15. 아동의 개인정보</h2>
+    <p>BookmarkForge는 13세 미만 아동(또는 관할권의 동등한 최소 연령)을 대상으로 설계되지 않았습니다. 당사는 누구에게도 고의로 개인정보를 수집하지 않습니다.</p>
 
-    <h2>16. Changes to This Policy</h2>
-    <p>We may update this Privacy Policy from time to time. Material changes will be reflected in the "Last Updated" date above and, for breaking changes affecting processing, announced in-app before they take effect.</p>
+    <h2>16. 정책 변경</h2>
+    <p>본 개인정보 처리방침은 수시로 업데이트될 수 있습니다. 중대한 변경은 위의 "마지막 업데이트" 날짜에 반영되며, 처리에 영향을 주는 중대 변경은 시행 전에 앱에서 공지합니다.</p>
 
-    <h2>17. Contact</h2>
-    <p>For privacy questions, data subject requests, or concerns:</p>
+    <h2>17. 연락처</h2>
+    <p>개인정보 관련 문의, 데이터 주체 요청, 우려 사항:</p>
     <ul>
-      <li>Email: <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></li>
+      <li>이메일: <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></li>
     </ul>
 
     <hr>
@@ -214,93 +214,93 @@
     <h1 id="terms">Terms of Service</h1>
     <p class="last-updated"><strong>최종 업데이트:</strong> 2026년 7월 23일</p>
 
-    <h2>1. Acceptance of Terms</h2>
-    <p>By using BookmarkForge, you agree to these Terms of Service. If you do not agree, do not use the application.</p>
+    <h2>1. 약관의 수락</h2>
+    <p>BookmarkForge를 사용하면 본 서비스 약관에 동의하는 것으로 간주됩니다. 동의하지 않는다면 애플리케이션을 사용하지 마세요.</p>
 
-    <h2>2. Description of Service</h2>
-    <p>BookmarkForge is a local-first knowledge management application that allows you to:</p>
+    <h2>2. 서비스 설명</h2>
+    <p>BookmarkForge는 로컬 퍼스트 지식 관리 애플리케이션입니다. 다음을 할 수 있습니다:</p>
     <ul>
-      <li>Save and organize bookmarks</li>
-      <li>Create and edit documents</li>
-      <li>Use AI-powered features (locally or via cloud providers)</li>
-      <li>Sync data between your devices using peer-to-peer connections</li>
+      <li>북마크 저장 및 정리</li>
+      <li>문서 작성 및 편집</li>
+      <li>AI 기능 사용(로컬 또는 클라우드 제공자 통해)</li>
+      <li>P2P 연결로 기기 간 데이터 동기화</li>
     </ul>
 
-    <h2>3. Pricing & Licenses — Lifetime of v1 (No Subscriptions)</h2>
-    <p>Individual licenses are sold as Lifetime for a major version — pay once, own v1 forever. No monthly billing. Refunds: 30 days via Whop. Payments handled by Whop (card, PayPal, crypto; we never see card data).</p>
+    <h2>3. 가격 및 라이선스 — v1 평생(구독 없음)</h2>
+    <p>개인 라이선스는 메이저 버전당 평생 라이선스로 판매됩니다 — 한 번 지불하면 v1은 영원히 사용자의 것입니다. 월간 청구 없음. 환불: Whop 통해 30일. 결제는 Whop가 처리합니다(카드, PayPal, 암호화폐; 카드 데이터는 절대 보지 않습니다).</p>
     <ul>
-      <li><strong>Free — $0 forever:</strong> 1,000 bookmarks on any device (each keeps its own vault), smart search — full-text + semantic, the feature Raindrop charges yearly for — knowledge graph, AI with your own API key, basic templates, JSON/HTML export, PWA + extensions. At 1,000, reading, search and export never stop; only new saves pause.</li>
-      <li><strong>Pro Lifetime v1:</strong> Early Bird <strong>$59</strong> (200 licenses), then <strong>$79</strong> regular, later <strong>$89–$99</strong> after traction. Includes: unlimited bookmarks, 3 devices + P2P sync, local AI (WebLLM/Ollama) + RAG + Expert agents, flashcards, PDF/OCR, 10+ export formats + encrypted backups, AES-GCM vault. <em>Lifetime of v1:</em> all v1.x bugfixes + minor features forever + 12 months of feature updates from purchase; security updates forever. After month 13 you keep v1 functional, only without new features.</li>
-      <li><strong>Upgrade without subscription:</strong> future majors (v2, v3) are separate products: <strong>$89 for new customers, $35 for v1 owners (60% off)</strong>. Skip the major and v1 keeps working. That's recurring revenue without forcing a subscription — same model as Affinity/Sketch/Sublime.</li>
-      <li><strong>Founder Edition — $99 lifetime v1 (limited 100):</strong> same Pro v1 binary + Founder # badge in app + beta access to v2 + 60% off future majors forever for this account. Vanity, not a paywall.</li>
-      <li><strong>Legal line:</strong> <em>Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop.</em></li>
+      <li><strong>무료 — 영원히 $0:</strong> 어떤 기기에서든 1,000개 북마크(각 기기가 자체 볼트 보유), 스마트 검색 — 전문 + 시맨틱(Raindrop이 연간 요금을 받는 기능), 지식 그래프, 자체 API 키 AI, 기본 템플릿, JSON/HTML 내보내기, PWA + 확장. 1,000에 도달해도 읽기·검색·내보내기는 멈추지 않습니다. 새 저장만 일시 중지됩니다.</li>
+      <li><strong>Pro 평생 v1:</strong> 얼리버드 <strong>$59</strong>(200 라이선스), 이후 정가 <strong>$79</strong>, 성장 후 <strong>$89–$99</strong>. 포함: 무제한 북마크, 3대 기기 + P2P 동기화, 로컬 AI(WebLLM/Ollama) + RAG + Expert 에이전트, 플래시카드, PDF/OCR, 10종 이상 내보내기 형식 + 암호화 백업, AES-GCM 볼트. <em>v1 평생:</em> 모든 v1.x 버그 수정 + 마이너 기능 영구 + 구매일로부터 12개월 기능 업데이트. 보안 업데이트는 영구입니다. 13개월 후에도 v1은 작동하며 새 기능만 추가되지 않습니다.</li>
+      <li><strong>구독 없는 업그레이드:</strong> 향후 메이저(v2, v3)는 별도 제품입니다. <strong>신규 $89, v1 소유자 $35(60% 할인)</strong>. 메이저를 건너뛰어도 v1은 계속 작동합니다. 구독을 강요하지 않는 반복 매출 — Affinity/Sketch/Sublime과 같은 모델입니다.</li>
+      <li><strong>파운더 에디션 — $99 평생 v1(한정 100):</strong> 동일한 Pro v1 바이너리 + 앱 내 Founder # 배지 + v2 베타 접근 + 이 계정의 향후 메이저 영구 60% 할인. 페이월이 아니라 명예입니다.</li>
+      <li><strong>법적 문구:</strong> <em>BookmarkForge v1 평생 라이선스. 모든 v1.x 업데이트와 12개월 기능 업데이트 포함. 보안 업데이트 영구. 향후 메이저 버전(v2, v3)은 기존 소유자에게 60% 할인. Whop 통해 30일 환불.</em></li>
     </ul>
 
-    <h2>4. Support SLA</h2>
-    <p>Single maintainer. The vault is encrypted — we cannot see your data and we never ask for your vault password or 24-word recovery phrase.</p>
+    <h2>4. 지원 SLA</h2>
+    <p>단일 유지보수 담당자. 볼트는 암호화되어 있습니다 — 당사는 사용자의 데이터를 볼 수 없으며 볼트 비밀번호나 24단어 복구 구문을 절대 묻지 않습니다.</p>
     <ul>
-      <li><strong>Free:</strong> community — Help Center (<a href="/help">/help</a>) + GitHub Discussions, best effort. Search BF-E* code first + paste diagnostic.</li>
-      <li><strong>Pro:</strong> email <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> (subject: Pro) — <strong>48h business days</strong> (Mon–Fri). Include diagnostic from Settings → Advanced → Copy diagnostic.</li>
-      <li><strong>Founder:</strong> priority email 24h business days + beta queue (subject: Founder #).</li>
-      <li>Before contacting us, use <strong>Settings → Advanced → Copy diagnostic</strong> or <a href="/help#diagnostics">Help → Diagnostics</a>. The diagnostic contains only counts/versions (bookmarks, storage %, build hash) — never vault content, URLs or prompts. See Help § BF-E* for error codes.</li>
-      <li><strong>Forgot password (BF-E101):</strong> we cannot recover it. When you create a vault we show a 24-word recovery phrase <strong>once</strong> — write it on paper. Without it the vault is unrecoverable, by design.</li>
+      <li><strong>무료:</strong> 커뮤니티 — 도움말 센터(<a href="/help">/help</a>) + GitHub Discussions, 최선 노력. 먼저 BF-E* 코드를 검색 + 진단 정보를 붙여넣으세요.</li>
+      <li><strong>Pro:</strong> <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>로 이메일(제목: Pro) — <strong>영업일 기준 48시간</strong> (월–금). 설정 → 고급 → 진단 복사 결과를 첨부하세요.</li>
+      <li><strong>Founder:</strong> 영업일 24시간 우선 이메일 + 베타 대기열(제목: Founder #).</li>
+      <li>문의 전에 <strong>설정 → 고급 → 진단 복사</strong> 또는 <a href="/help#diagnostics">도움말 → 진단</a>을 이용하세요. 진단에는 개수/버전만 포함됩니다(북마크 수, 저장소 %, 빌드 해시) — 볼트 내용, URL, 프롬프트는 절대 포함되지 않습니다. 오류 코드는 도움말 § BF-E*를 참조하세요.</li>
+      <li><strong>비밀번호 분실(BF-E101):</strong> 복구할 수 없습니다. 볼트 생성 시 24단어 복구 구문을 <strong>한 번만</strong> 표시합니다 — 종이에 적어 두세요. 없으면 볼트는 설계상 복구 불가능합니다.</li>
     </ul>
 
-    <h2>5. Local-First Nature</h2>
-    <p>You understand and agree that:</p>
+    <h2>5. 로컬 퍼스트 특성</h2>
+    <p>사용자는 다음을 이해하고 동의합니다:</p>
     <ul>
-      <li>BookmarkForge runs entirely in your browser</li>
-      <li>All data is stored locally on your device</li>
-      <li>We do not host, store, or backup your data on our servers</li>
-      <li>You are responsible for backing up your data using the export feature</li>
+      <li>BookmarkForge는 전적으로 브라우저에서 실행됩니다</li>
+      <li>모든 데이터는 기기에 로컬로 저장됩니다</li>
+      <li>당사는 사용자의 데이터를 서버에서 호스팅·저장·백업하지 않습니다</li>
+      <li>내보내기 기능으로 데이터를 백업하는 것은 사용자의 책임입니다</li>
     </ul>
 
-    <h2>6. User Responsibilities</h2>
-    <p>You agree to:</p>
+    <h2>6. 사용자 책임</h2>
+    <p>사용자는 다음에 동의합니다:</p>
     <ul>
-      <li>Maintain backups of your important data</li>
-      <li>Keep your vault password secure (we cannot recover it without the 24-word recovery phrase)</li>
-      <li>Use the application in compliance with applicable laws</li>
-      <li>Not use the application for illegal purposes</li>
+      <li>중요 데이터의 백업 유지</li>
+      <li>볼트 비밀번호의 안전한 관리(24단어 복구 구문 없이는 복구할 수 없습니다)</li>
+      <li>적용 법령에 따라 애플리케이션 사용</li>
+      <li>불법 목적으로 애플리케이션을 사용하지 않기</li>
     </ul>
 
-    <h2>7. AI Features</h2>
-    <p>When using AI features:</p>
+    <h2>7. AI 기능</h2>
+    <p>AI 기능 사용 시:</p>
     <ul>
-      <li>You are responsible for the content of your prompts</li>
-      <li>Cloud AI providers have their own terms of service and privacy policies</li>
-      <li>We do not guarantee the accuracy of AI-generated content</li>
-      <li>Local AI models require compatible hardware (WebGPU support)</li>
+      <li>프롬프트 내용에 대한 책임은 사용자에게 있습니다</li>
+      <li>클라우드 AI 제공자는 각자의 서비스 약관과 개인정보 처리방침이 있습니다</li>
+      <li>AI 생성 콘텐츠의 정확성은 보장하지 않습니다</li>
+      <li>로컬 AI 모델은 호환 하드웨어(WebGPU 지원)가 필요합니다</li>
     </ul>
 
-    <h2>8. Limitation of Liability</h2>
-    <p>BookmarkForge is provided "as is" without warranties of any kind. We are not liable for:</p>
+    <h2>8. 책임 제한</h2>
+    <p>BookmarkForge는 어떠한 보증도 없이 "있는 그대로" 제공됩니다. 당사는 다음에 대해 책임지지 않습니다:</p>
     <ul>
-      <li>Data loss due to browser clearing storage</li>
-      <li>Hardware failures</li>
-      <li>Incompatibility with your device</li>
-      <li>Errors in AI-generated content</li>
+      <li>브라우저 저장소 삭제로 인한 데이터 손실</li>
+      <li>하드웨어 고장</li>
+      <li>사용자 기기와의 비호환성</li>
+      <li>AI 생성 콘텐츠의 오류</li>
     </ul>
 
-    <h2>9. Intellectual Property</h2>
+    <h2>9. 지식 재산권</h2>
     <p></p>
     <ul>
-      <li>BookmarkForge's code and design are copyrighted</li>
-      <li>Your content (bookmarks, notes, documents) remains yours</li>
-      <li>We claim no ownership over your data</li>
+      <li>BookmarkForge의 코드와 디자인은 저작권으로 보호됩니다</li>
+      <li>사용자의 콘텐츠(북마크, 노트, 문서)는 사용자에게 있습니다</li>
+      <li>당사는 사용자 데이터에 대한 소유권을 주장하지 않습니다</li>
     </ul>
 
-    <h2>10. Termination</h2>
-    <p>Since BookmarkForge runs locally, there is no account to terminate. You can stop using the application at any time by closing your browser.</p>
+    <h2>10. 해지</h2>
+    <p>BookmarkForge는 로컬에서 실행되므로 해지할 계정이 없습니다. 브라우저를 닫으면 언제든 사용을 중단할 수 있습니다.</p>
 
-    <h2>11. Governing Law</h2>
-    <p>These terms are governed by applicable laws. Any disputes shall be resolved in the appropriate courts.</p>
+    <h2>11. 준거법</h2>
+    <p>본 약관은 적용 법령에 따릅니다. 분쟁은 관할 법원에서 해결됩니다.</p>
 
-    <h2>12. Contact</h2>
-    <p>For questions about these terms:</p>
+    <h2>12. 연락처</h2>
+    <p>본 약관 관련 문의:</p>
     <ul>
-      <li>Email: <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></li>
-      <li>Help: <a href="/help">Help Center</a> — FAQ, BF-E* codes, SLA & diagnostics</li>
+      <li>이메일: <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></li>
+      <li>도움말: <a href="/help">도움말 센터</a> — FAQ, BF-E* 코드, SLA 및 진단</li>
     </ul>
   </main>
 

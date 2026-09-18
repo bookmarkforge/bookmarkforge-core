@@ -177,6 +177,9 @@ npm run check                   # the full gate chain (~40 check commands + lint
                                  # http-config, compose-config, runtime-config,
                                  # boundaries, e2e-helpers, docs-markdown,
                                  # documented-npm-commands,
+                                 # documented-doc-references,
+                                 # release-target:advisory (ADR-058; the blocking
+                                 #   check:release-target guards the release path),
                                  # baseline-drift, baseline-gaps, csp,
                                  # extension-csp, i18n, claim-drift,
                                  # landing-free-plan, pocket-onboarding-copy,

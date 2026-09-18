@@ -209,7 +209,7 @@ export class EncryptionService {
    */
   private zeroBytes(bytes: Uint8Array): Uint8Array {
     if (bytes.length > 0 && bytes.every((b) => b === 0)) {
-      console.warn(
+      logger.warn(
         "[EncryptionService.zeroBytes] Buffer is already zeroized — possible reuse of a consumed password.",
       );
     }

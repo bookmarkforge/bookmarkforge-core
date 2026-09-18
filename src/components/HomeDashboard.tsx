@@ -114,6 +114,51 @@ async function shouldShowBackupBanner(): Promise<boolean> {
   return ageMs === null || ageMs > BACKUP_STALE_MS;
 }
 
+/**
+ * The SAME decision as shouldShowBackupBanner, computed synchronously so the
+ * dashboard's FIRST PAINT can already be final (ADR-055): both timestamps the
+ * decision reads — the dismissal snooze and the last-backup markers (manual
+ * + auto, the very keys getLatestBackupAgeMs reads) — live in localStorage.
+ * The async round-trip only ever adds getAutoBackupInfo's `available` flag,
+ * which the decision never uses. One divergence is handled explicitly: on a
+ * Safari/iOS surface with the eviction banner undismissed, the async eviction
+ * check (vault secret, cannot be read synchronously) may win the slot, so the
+ * sync decision stays quiet there and lets the async pipeline resolve.
+ */
+function shouldShowBackupBannerSync(): boolean {
+  try {
+    const dismissedUntil = safeGet(STORAGE_KEYS.BACKUP_BANNER_DISMISSED_UNTIL);
+    if (dismissedUntil && Date.now() < parseInt(dismissedUntil, 10)) {
+      return false;
+    }
+    const ua = navigator.userAgent;
+    const isSafariIOS =
+      /iPad|iPhone|iPod/.test(ua) ||
+      (ua.includes("Mac") && "ontouchend" in document);
+    if (
+      isSafariIOS &&
+      safeGet(STORAGE_KEYS.EVICTION_BANNER_DISMISSED) !== "true"
+    ) {
+      return false;
+    }
+  } catch {
+    return false; // unreadable storage: let the async check decide
+  }
+  const timestamps: number[] = [];
+  const manualRaw = safeGet(STORAGE_KEYS.LAST_MANUAL_BACKUP_DATE);
+  if (manualRaw && Number.isFinite(parseInt(manualRaw, 10))) {
+    timestamps.push(parseInt(manualRaw, 10));
+  }
+  const autoRaw = safeGet(STORAGE_KEYS.AUTO_BACKUP_TIMESTAMP);
+  if (autoRaw && Number.isFinite(parseInt(autoRaw, 10))) {
+    timestamps.push(parseInt(autoRaw, 10));
+  }
+  if (timestamps.length === 0) {
+    return true; // never backed up
+  }
+  return Date.now() - Math.max(...timestamps) > BACKUP_STALE_MS;
+}
+
 const HomeDashboard = function HomeDashboard({
   onNavigate,
   onSelectDocument,
@@ -125,9 +170,19 @@ const HomeDashboard = function HomeDashboard({
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [templates, setTemplates] = useState<DocumentTemplate[]>([]);
   const [showEvictionBanner, setShowEvictionBanner] = useState(false);
-  // F0-3: the banner state now depends on the auto-backup metadata (async),
-  // so it starts hidden and the effect below flips it once the check settles.
-  const [showBackupBanner, setShowBackupBanner] = useState(false);
+  // ADR-055: the show decision is computed synchronously BEFORE first paint
+  // (both backup timestamps and the dismissal snooze live in localStorage),
+  // so the common cases render already-final. "held" = the sync decision
+  // says the banner WILL show: the surface holds its measured height with a
+  // shimmer until the async check below confirms, and the reveal is a
+  // visibility flip — zero layout shift. "hidden" = sync says no: the box
+  // collapses from the start, no reservation for a banner that is not
+  // coming. The async check re-validates once the backup service settles
+  // (it reads the same keys, so disagreement is a corner of a corner) and
+  // owns the state from then on, including the per-minute refresh (F0-3).
+  const [backupBannerState, setBackupBannerState] = useState<
+    "hidden" | "held" | "shown"
+  >(() => (shouldShowBackupBannerSync() ? "held" : "hidden"));
   /** null = never backed up; number = age in ms of the latest backup */
   const [backupAgeMs, setBackupAgeMs] = useState<number | null>(null);
   const [showResearch, setShowResearch] = useState(false);
@@ -285,14 +340,16 @@ const HomeDashboard = function HomeDashboard({
 
   useEffect(() => {
     if (showEvictionBanner) {
-      if (showBackupBanner) setShowBackupBanner(false);
+      // Eviction outranks the reminder (data-loss > backup nag). Resetting
+      // to "hidden" (not "held") also releases any pending hold.
+      if (backupBannerState !== "hidden") setBackupBannerState("hidden");
       return;
     }
     let cancelled = false;
     const refresh = async () => {
       const shouldShow = await shouldShowBackupBanner();
       if (!cancelled) {
-        setShowBackupBanner(shouldShow);
+        setBackupBannerState(shouldShow ? "shown" : "hidden");
         // Also capture the age so the banner can show a stale-specific message.
         const age = await getLatestBackupAgeMs();
         setBackupAgeMs(age);
@@ -307,10 +364,10 @@ const HomeDashboard = function HomeDashboard({
       cancelled = true;
       clearInterval(interval);
     };
-  }, [showEvictionBanner]);
+  }, [showEvictionBanner, backupBannerState]);
 
   const handleDismissBackupBanner = useCallback(() => {
-    setShowBackupBanner(false);
+    setBackupBannerState("hidden");
     // F0-3: align the dismissal window with the 48 h stale threshold so a
     // dismissed reminder does not stay silent for a full week while the
     // backup is still overdue.
@@ -468,7 +525,11 @@ const HomeDashboard = function HomeDashboard({
       />
 
       <BackupReminderBanner
-        show={showBackupBanner}
+        // ADR-055: "held" reserves the measured height through the async
+        // confirmation window, so the reveal is a visibility flip (no shift);
+        // the banner itself stays inert until state flips to "shown".
+        show={backupBannerState === "shown"}
+        pending={backupBannerState === "held"}
         backupAgeMs={backupAgeMs}
         onDismiss={handleDismissBackupBanner}
       />
@@ -476,7 +537,11 @@ const HomeDashboard = function HomeDashboard({
       <FreeTierNudge
         // Data-loss warnings take precedence; the Pro pitch reappears after
         // the higher-priority banner is dismissed.
-        show={showFreeWallNudge && !showEvictionBanner && !showBackupBanner}
+        show={
+          showFreeWallNudge &&
+          !showEvictionBanner &&
+          backupBannerState !== "shown"
+        }
         onDismiss={() => {
           setShowFreeWallNudge(false);
           safeSet(

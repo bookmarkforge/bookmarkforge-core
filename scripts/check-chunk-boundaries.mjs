@@ -47,12 +47,18 @@
  * `npm run check` (which runs after the production build in CI) and run
  * automatically by `build:ci`.
  *
- * When invoked WITHOUT `--require-dist` and no `dist/` exists (e.g. a
- * fresh checkout running `npm run check` before any build), it prints a
- * loud SKIP notice and exits 0 — the bundle simply isn't there to
- * analyze. With `--require-dist` (passed by `build:ci`) a missing
- * `dist/` is a hard failure, so the CI build job enforces the gate
- * unconditionally on every PR.
+ * FAILS CLOSED when `dist/` is missing: the invariants cannot be verified
+ * without a build, so the default is exit 1 with an actionable message —
+ * never a silent pass. `build:ci` reinforces the same rule with an
+ * explicit `--require-dist`.
+ *
+ * The one sanctioned skip is the explicit `--allow-missing-dist` flag,
+ * which the `check:chunks` script (called by the source-level `npm run
+ * check` aggregate) passes by name: that aggregate must stay runnable on a
+ * fresh checkout with no build. The skip is reported as `status=skip` in
+ * stdout, `--json` and the step summary, so it is always visible. The flag
+ * is REFUSED whenever `CI` is set — in CI a production build is always
+ * expected, so a missing `dist/` is a hard failure regardless of flags.
  *
  * Output modes:
  *   - Default (human): one line per check on stdout, FAIL/SKIP on stderr,
@@ -73,11 +79,14 @@ const ROOT = process.cwd();
 const ASSETS = join(ROOT, "dist", "assets");
 const SW = join(ROOT, "dist", "sw.js");
 
-// `build:ci` passes --require-dist: a missing dist/ is a hard failure
-// there, because a production build is expected. The plain `npm run
-// check:chunks` (inside `npm run check`) skips loudly instead, since that
-// aggregate may run before any build in a fresh checkout.
+// Fail closed by default: with no build there is nothing to verify, so a
+// missing dist/ is a hard failure. `build:ci` also passes --require-dist to
+// state that intent at the call site. --allow-missing-dist is the single,
+// auditable opt-out, used only by the source-level `npm run check` aggregate
+// (see the header); it is refused whenever CI is set.
 const REQUIRE_DIST = process.argv.includes("--require-dist");
+const ALLOW_MISSING_DIST = process.argv.includes("--allow-missing-dist");
+const CI_ENV = Boolean(process.env.CI);
 
 // ---------------------------------------------------------------------------
 // Budgets. Current build (Aug 2026): entry 0.51 MB, unlock 0.15 MB,
@@ -109,6 +118,8 @@ const report = {
   tool: "check-chunk-boundaries",
   status: "pass", // pass | fail | skip
   requireDist: REQUIRE_DIST,
+  allowMissingDist: ALLOW_MISSING_DIST,
+  ciEnv: CI_ENV,
   distPresent: existsDir(ASSETS),
   reason: null, // set when status === "skip"
   invariants: [],
@@ -201,15 +212,24 @@ function fail(message, inv, checks) {
 }
 
 if (!existsDir(ASSETS)) {
-  if (REQUIRE_DIST) {
-    fail(`dist/assets not found — run the production build first (npm run build)`);
+  // Fail closed: only the explicit --allow-missing-dist opt-out, outside CI,
+  // may turn a missing build into a reported skip.
+  const maySkip = ALLOW_MISSING_DIST && !CI_ENV && !REQUIRE_DIST;
+  if (!maySkip) {
+    fail(
+      "dist/assets not found — the chunk-boundary invariants cannot be verified without a " +
+        "build. Run `npm run build:ci` (or `npm run build`) first. " +
+        "`--allow-missing-dist` downgrades this to an explicit, exit-0 skip; it is refused in CI.",
+    );
   }
   report.status = "skip";
-  report.reason = "dist/assets not found — nothing to analyze";
+  report.reason =
+    "dist/assets not found — explicit --allow-missing-dist outside CI (no build to analyze)";
   console.warn(
     "[check-chunk-boundaries] SKIP: dist/assets not found — nothing to analyze. " +
-      "Run `npm run build` first to enforce the chunk boundaries. The CI build " +
-      "job enforces this gate unconditionally via `npm run build:ci`.",
+      "This skip is EXPLICIT (--allow-missing-dist, outside CI) and is reported as " +
+      "status=skip; the gate fails closed for every other caller. " +
+      "Run `npm run build:ci` first to actually enforce the chunk boundaries.",
   );
   emitReport(() => process.exit(0));
 }

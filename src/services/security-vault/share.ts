@@ -32,7 +32,7 @@ export async function deriveShareCredential(
         false,
         ["deriveBits"],
       );
-      const bits = await crypto.subtle.deriveBits(
+const bits = await crypto.subtle.deriveBits(
         {
           name: "HKDF",
           salt: salt as Uint8Array<ArrayBuffer>,
@@ -41,14 +41,14 @@ export async function deriveShareCredential(
         },
         baseKey,
         256,
-);
-       return new Uint8Array(bits);
-     } finally {
-       zeroPasswordBytes(argon2Key);
-     }
-   } finally {
-     zeroPasswordBytes(shareBytes);
-   }
+      );
+      return new Uint8Array(bits);
+    } finally {
+      zeroPasswordBytes(argon2Key);
+    }
+  } finally {
+    zeroPasswordBytes(shareBytes);
+  }
 }
 
 /**

@@ -2,7 +2,7 @@
 
 - **Date:** 2026-08-31
 - **Purpose:** Get `drill-quarterly.yml` (quarterly DR drill + KPI collector check) and `nightly.yml` (KPI gate vs staging, monthly drill) running for the first time on GitHub.
-- **Prerequisite:** The repo does not yet exist on GitHub (no `origin` remote is configured locally; `gh` CLI is not installed). Create the repo + set secrets in the GitHub web UI or with the `gh` CLI — both paths below.
+- **Prerequisite:** Nothing here has been exercised against a real remote yet: the checkout has no remote branches and no verified workflow runs, its `origin` still points at the provisional slug `bookmarkforge/core`, and `gh` is installed but not authenticated. **Run §1 first** — it confirms the destination, the credentials and that the workflows actually start. Create the repo + set secrets in the GitHub web UI or with the `gh` CLI — both paths below.
 
 ---
 
@@ -18,13 +18,130 @@ Verified against the workflow YAML:
 | `nightly.yml` → `drill-backup-restore` | `secrets.DRILL_ALERT_WEBHOOK_URL` | Optional (RTO degradation alerting only) |
 | `nightly.yml` → `kpi-staging` | `vars.KPI_MIN_DAU / WAU / MAU / D7_PCT / D30_PCT` | Optional (sensible defaults in the script) |
 | `nightly.yml` → `drill-backup-restore` | `vars.DRILL_RTO_MS`, `vars.DRILL_RTO_WARN_MS` | Optional (defaults 120000 / 90% of gate) |
-| `drill-quarterly.yml` | none | ✅ runs on push automatically (cron + workflow_dispatch) |
+| `drill-quarterly.yml` | none | ❌ does **not** run on push: cron `0 6 1 1,4,7,10 *` + `workflow_dispatch` — start it with `gh workflow run drill-quarterly.yml` |
 
 **Minimum for a meaningful nightly run:** 2 secrets + 1 var (`STAGING_ANALYTICS_ADMIN_TOKEN`, `ANALYTICS_ALERT_WEBHOOK_URL` optional, `STAGING_URL`).
 
 ---
 
-## 1. Create the repo + push (web UI path)
+## 1. Pre-push verification: destination, credentials, workflows
+
+The first `push` is also the first time any of this is exercised, so each check
+below is worth its minute. They fail in ways that look like something else: a
+wrong repository, an interactive credential prompt, or a workflow that silently
+never appears while the runbook claims it started.
+
+### 1.1 Confirm the real remote URL
+
+```bash
+git remote -v
+git remote get-url origin
+```
+
+Expected: `origin` naming the repository you just created. Two failure modes to
+rule out *before* pushing:
+
+- **Provisional slug.** If it resolves to `bookmarkforge/core`, the checkout is
+  pointing at the placeholder, not at your repository. Retarget it
+  (`git remote set-url origin <confirmed-url>`) and re-run
+  `npm run check:release-target`: the gate exits 1 while the declared target
+  (`package.json` → `repository.url`) and the remote disagree, and the release
+  path refuses to run — see `docs/ADR-058-release-target-confirmation-gate.md`.
+- **Transport vs. credentials.** An `https://` remote goes through the git
+  credential helper (Git Credential Manager on Windows, which opens an
+  interactive dialog); an `git@github.com:` remote needs an SSH key registered on
+  the account. Make the remote match the credential you actually have:
+  `git remote set-url origin git@github.com:<owner>/<repo>.git`.
+
+Rehearse the push. This is the check that catches missing credentials without
+pushing anything:
+
+```bash
+git ls-remote origin
+```
+
+Expected: it lists the remote's refs (an empty repository prints nothing) and
+exits 0. A `128` with these two lines means the credential helper has nothing
+stored — authenticate first (§1.2):
+
+```text
+fatal: User cancelled dialog.
+fatal: could not read Username for 'https://github.com': terminal prompts disabled
+```
+
+The first line comes from Git Credential Manager: with prompts disabled it cannot
+ask, so it reports a cancelled dialog. In a normal terminal it opens the dialog
+instead, and a push started here would block on it. Mind the blast radius too:
+the first push publishes the **entire local history**, not one commit.
+
+### 1.2 Authenticate to GitHub
+
+```bash
+gh auth status
+```
+
+Expected: the account that owns the repository. If it reports that you are not
+logged into any GitHub hosts:
+
+```bash
+gh auth login            # browser or token, interactive
+gh auth setup-git        # let git use gh's credential helper for https remotes
+```
+
+Then confirm that account can actually see the destination, because a remote you
+cannot push to fails with a 403 *after* the credential dialog:
+
+```bash
+gh api user --jq .login
+gh repo view <owner>/<repo> --json nameWithOwner,visibility
+```
+
+### 1.3 Confirm the local gates, then that the workflows start
+
+Local, before the push:
+
+```bash
+npm run check                        # full gate chain (release target included as an advisory line)
+npm run check:secrets-in-commit
+npm run check:workflow-pipeline
+npm run check:repository-hygiene
+```
+
+After `git push -u origin main`:
+
+```bash
+gh workflow list                 # workflows present on the default branch
+gh run list --limit 10           # runs triggered by the push
+gh run watch <run-id>            # follow one to completion
+```
+
+Expected: the workflows whose `on:` includes `push` appear, for a push to `main`
+that is `ci.yml`, `sast.yml` and `open-core-export.yml` (all three on
+`push: branches: [main, master, develop]`). `nightly.yml` and
+`drill-quarterly.yml` do **not** run on push — both are cron plus
+`workflow_dispatch`, so start them by hand: `gh workflow run nightly.yml` (§3
+lists the variables it needs) and `gh workflow run drill-quarterly.yml`.
+
+`open-core-export.yml` deserves one warning: it materializes the public export on
+every push, and that export now refuses to run while the release target is
+unconfirmed (ADR-058). Expect it to be **red** after the first push until
+`package.json` → `repository.url`, the README badges and the two
+`scripts/public-export/RELEASE-NOTES-*` files name the confirmed repository. That
+red is the gate working, not a broken workflow; `ci.yml` and `sast.yml` are
+unaffected by it.
+
+A workflow that never appears is a silent no-op, not a pass. Check, in order:
+the file is on the pushed branch (`git ls-tree origin/main .github/workflows`),
+its `on:` includes `push`, and Actions is enabled for the repository.
+
+**Done when:** `git remote get-url origin` names the confirmed repository,
+`npm run check:release-target` exits 0, `gh auth status` shows the owning
+account, `git ls-remote origin` exits 0 without prompting, and `gh run list`
+shows `ci.yml` running against `main`.
+
+---
+
+## 2. Create the repo + push (web UI path)
 
 1. Create an empty **private** repo on GitHub (no README / .gitignore / license).
 2. From the repo root:
@@ -34,11 +151,20 @@ git remote add origin git@github.com:TU_USUARIO/bookmarkforge.git
 git push -u origin main
 ```
 
-`drill-quarterly.yml` will run on push. `nightly.yml` runs daily at 02:17/03:17 UTC (and monthly KPI gate at 03:17 on the 1st) — the KPI job needs §2 to pass.
+> **Destino sin confirmar.** Mientras el checkout siga apuntando al slug
+> provisional `bookmarkforge/core` —en `package.json` → `repository.url`, en el
+> remoto, en los badges del README o en las `RELEASE-NOTES` del export—,
+> `npm run check:release-target` falla (exit 1) y con él la ruta de release: el
+> export público y `npm run launch:smoke` se niegan a preparar nada. El aviso
+> aparece igualmente en cada `npm run check`. Confirmar el destino (fijar
+> `repository.url`, `git remote set-url origin <url>` y actualizar README y
+> RELEASE-NOTES) apaga el gate. Ver ADR-058.
+
+The push itself starts `ci.yml`, `sast.yml` and `open-core-export.yml` (the only workflows with a `push:` trigger). `nightly.yml` runs daily at 02:17/03:17 UTC (and monthly KPI gate at 03:17 on the 1st) — the KPI job needs §3 to pass — and `drill-quarterly.yml` only starts on its quarterly cron or by hand.
 
 ---
 
-## 2. Secrets + vars (GitHub → Settings → Secrets and variables → Actions)
+## 3. Secrets + vars (GitHub → Settings → Secrets and variables → Actions)
 
 | Name | Type | Value |
 |---|---|---|
@@ -56,9 +182,9 @@ git push -u origin main
 
 ---
 
-## 3. `gh` CLI path (alternative to web UI)
+## 4. `gh` CLI path (alternative to web UI)
 
-After `gh auth login`, from the repo root:
+After `gh auth login` (§1.2), from the repo root:
 
 ```bash
 # Repo creation + push in one shot
@@ -88,9 +214,9 @@ Watch: `gh run watch` or the Actions tab.
 
 ---
 
-## 4. Verify first runs + close checklist items
+## 5. Verify first runs + close checklist items
 
-- Actions tab → `drill-quarterly.yml` green (no secrets needed) and `nightly.yml` KPI job green (needs §2).
+- Actions tab → `drill-quarterly.yml` green once dispatched (no secrets needed) and `nightly.yml` KPI job green (needs §3).
 - Register the run links as evidence and mark:
   - `docs/launch-checklist.md` item **13** (drill first CI run — needs ≥ 2 tags `prod-*` on the remote too)
   - `docs/launch-checklist.md` item **19** (KPI gate external setup)

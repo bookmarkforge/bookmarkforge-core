@@ -83,6 +83,56 @@ describe("BackupReminderBanner", () => {
     expect(banner.style.height).toBe("0px");
   });
 
+  it("holds its measured height behind a shimmer while pending (ADR-055)", () => {
+    const { container } = render(
+      <BackupReminderBanner
+        show={false}
+        pending
+        backupAgeMs={null}
+        onDismiss={vi.fn()}
+      />,
+    );
+    const banner = container.querySelector(".mb-6") as HTMLElement;
+    // jsdom cannot measure, so the hold reserves the estimate — the point is
+    // that it is NOT 0: the eventual reveal happens in an already-sized box.
+    expect(banner.style.height).not.toBe("0px");
+    expect(banner.style.visibility).toBe("visible");
+    // The real content stays out of reach while the decision is pending…
+    expect(
+      screen.getByText(/Protect Your Knowledge Vault/),
+    ).not.toBeVisible();
+    // …and the shimmer stands in for it, never announced.
+    expect(
+      document.querySelector("[data-testid=collapsible-surface-placeholder]"),
+    ).not.toBeNull();
+  });
+
+  it("reveals in place when pending settles to shown — no height jump", () => {
+    const { container, rerender } = render(
+      <BackupReminderBanner
+        show={false}
+        pending
+        backupAgeMs={null}
+        onDismiss={vi.fn()}
+      />,
+    );
+    rerender(
+      <BackupReminderBanner
+        show
+        backupAgeMs={null}
+        onDismiss={vi.fn()}
+      />,
+    );
+    const banner = container.querySelector(".mb-6") as HTMLElement;
+    expect(banner.style.visibility).toBe("visible");
+    expect(
+      screen.getByText(/Protect Your Knowledge Vault/),
+    ).toBeVisible();
+    expect(
+      document.querySelector("[data-testid=collapsible-surface-placeholder]"),
+    ).toBeNull();
+  });
+
   it("hides the whole subtree from assistive tech while off (not just opacity)", () => {
     const { container } = render(
       <BackupReminderBanner

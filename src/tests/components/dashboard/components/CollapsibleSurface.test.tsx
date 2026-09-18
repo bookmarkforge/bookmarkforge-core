@@ -142,4 +142,84 @@ describe("CollapsibleSurface", () => {
     expect(surfaceEl(container).style.height).toBe("auto");
     expect(screen.getByText("Banner body")).toBeVisible();
   });
+
+  // ── ADR-055 hold: pending decisions reserve the measured height ────────
+
+  it("holds the measured height behind a shimmer while the decision is pending", () => {
+    installMeasuredHeight(320);
+    const { container } = renderSurface({ show: false, pending: true });
+
+    const surface = surfaceEl(container);
+    // The box is already exactly the size the reveal needs: flipping
+    // `show` later is a visibility flip, not a height animation.
+    expect(surface.style.height).toBe("320px");
+    expect(surface.style.visibility).toBe("visible");
+    // Immediate visibility flip while holding (reveal must not be delayed).
+    expect(surface.style.transition).toContain("visibility 0s linear 0ms");
+    // The real content never flashes before the decision settles…
+    expect(screen.getByText("Banner body")).not.toBeVisible();
+    // …and the shimmer stands in for it, decoratively.
+    expect(
+      document.querySelector("[data-testid=collapsible-surface-placeholder]"),
+    ).not.toBeNull();
+  });
+
+  it("reveals in place from the hold, without a height animation", () => {
+    installMeasuredHeight(320);
+    const { container, rerender } = renderSurface({
+      show: false,
+      pending: true,
+    });
+    rerender(
+      <CollapsibleSurface show className="mb-6">
+        <p>Banner body</p>
+      </CollapsibleSurface>,
+    );
+
+    const surface = surfaceEl(container);
+    expect(surface.style.height).toBe("320px"); // unchanged: no shift
+    expect(screen.getByText("Banner body")).toBeVisible();
+    expect(
+      document.querySelector("[data-testid=collapsible-surface-placeholder]"),
+    ).toBeNull();
+  });
+
+  it("collapses when a pending decision settles to no", () => {
+    installMeasuredHeight(320);
+    const { container, rerender } = renderSurface({
+      show: false,
+      pending: true,
+    });
+    rerender(
+      <CollapsibleSurface show={false} className="mb-6">
+        <p>Banner body</p>
+      </CollapsibleSurface>,
+    );
+
+    const surface = surfaceEl(container);
+    expect(surface.style.height).toBe("0px");
+    expect(surface.style.visibility).toBe("hidden");
+    expect(
+      document.querySelector("[data-testid=collapsible-surface-placeholder]"),
+    ).toBeNull();
+  });
+
+  it("uses the estimated placeholder height only when nothing can be measured", () => {
+    // No scrollHeight stub: jsdom's layout-free path. The hold must still
+    // reserve SOMETHING (the estimate), never 0, so the placeholder is the
+    // worst case rather than a vanished banner.
+    const { container } = renderSurface({
+      show: false,
+      pending: true,
+      placeholderHeight: 111,
+    });
+
+    const surface = surfaceEl(container);
+    expect(surface.style.height).toBe("111px");
+    expect(
+      document.querySelector("[data-testid=collapsible-surface-placeholder]"),
+    ).not.toBeNull();
+    // Hidden content is inert: it must not grab focus or be announced.
+    expect(screen.getByText("Banner body")).not.toBeVisible();
+  });
 });

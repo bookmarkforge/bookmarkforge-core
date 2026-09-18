@@ -133,15 +133,15 @@ export async function createVerificationToken(password: string): Promise<void> {
       passwordBytes,
       nonce,
     );
-    const hmacSig = await crypto.subtle.sign(
+const hmacSig = await crypto.subtle.sign(
       "HMAC",
       hmacKey,
       new TextEncoder().encode(ciphertext),
-);
-     // Zeroize passwordBytes immediately after HMAC derivation — no further
-     // use. This shrinks the exposure window: the bytes no longer survive
-     // during the IDB write below.
-     zeroPasswordBytes(passwordBytes);
+    );
+    // Zeroize passwordBytes immediately after HMAC derivation — no further
+    // use. This shrinks the exposure window: the bytes no longer survive
+    // during the IDB write below.
+    zeroPasswordBytes(passwordBytes);
     const nonceHex = Array.from(nonce, (b) =>
       b.toString(16).padStart(2, "0"),
     ).join("");
@@ -151,12 +151,12 @@ export async function createVerificationToken(password: string): Promise<void> {
     // Token + HMAC go in ONE transaction: verifyPassword() rejects an unlock
     // whose stored token does not match the record, so a crash between two
     // separate writes would leave a vault no password can open.
-    await secureStorage.storeVerificationTokenWithIntegrity(
+await secureStorage.storeVerificationTokenWithIntegrity(
       ciphertext,
       `${nonceHex}:${hmacHex}`,
     );
-} finally {
-     // Defense-in-depth: zeroize even if the early fill(0) already ran.
-     zeroPasswordBytes(passwordBytes);
-   }
+  } finally {
+    // Defense-in-depth: zeroize even if the early fill(0) already ran.
+    zeroPasswordBytes(passwordBytes);
+  }
  }

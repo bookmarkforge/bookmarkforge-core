@@ -47,6 +47,7 @@ Decisión: **esta fase solo retira documentos con estado `retirable` y referenci
 | `docs/ADR-055-collapsible-surfaces.md` | vivo | ADR oficial del proyecto. |
 | `docs/ADR-056-documented-npm-commands-gate.md` | vivo | ADR oficial del proyecto. |
 | `docs/ADR-057-documented-reference-integrity-gate.md` | vivo | ADR oficial del proyecto. |
+| `docs/ADR-058-release-target-confirmation-gate.md` | vivo | ADR oficial del proyecto. |
 | `docs/ROPA.md` | vivo | Inventario RGPD; contiene campos operativos/legales por completar. |
 | `docs/SELF-HOSTING.md` | vivo | Guía interna de self-hosting; no entra en el export público. |
 | `docs/api.md` | vivo | Vista general de la API del servidor acompañante. |
@@ -71,6 +72,7 @@ Decisión: **esta fase solo retira documentos con estado `retirable` y referenci
 | `docs/legacy-schema-version-map.md` | vivo | Registro versionado de esquemas RxDB activos; se genera desde src/db/schema.ts para diagnóstico de compatibilidad sin acceso al vault. |
 | `docs/legal-closing-package.md` | vivo | Paquete de cierre legal: relleno del ROPA, DPAs por proveedor, orden de firma y plantillas. Evidencia del punto 5 del launch-checklist. |
 | `docs/onboarding-emails.md` | vivo | Secuencia de emails de onboarding. |
+| `docs/ONBOARDING.md` | vivo | Guía de onboarding para nuevos contribuyentes. |
 | `docs/openapi.yaml` | vivo | Especificación OpenAPI 3.1.0 del servidor acompañante. |
 | `docs/operations.md` | vivo | Operaciones, SLOs de referencia, drills, gates nocturnos, evidencia. |
 | `docs/ops-nightly.md` | vivo | Operaciones nocturnas, anclas de auditoría, gates. |

@@ -209,10 +209,10 @@ export async function migrateVaultSecretsToVaultSalt(
       }
     }
 } finally {
-     zeroPasswordBytes(passwordBytes);
-   }
+    zeroPasswordBytes(passwordBytes);
+  }
 
-   if (result.migrated.length > 0) {
+  if (result.migrated.length > 0) {
     logger.info("[SecurityVault] Legacy secrets re-wrapped under the vault salt", {
       migrated: result.migrated,
     });

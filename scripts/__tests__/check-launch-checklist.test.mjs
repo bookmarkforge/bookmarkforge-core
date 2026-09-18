@@ -257,9 +257,33 @@ describe("verifyPreflightScripts", () => {
         "check:security-internal": "x",
         "check:secrets-in-commit": "x",
         "check:audit": "x",
+        // ADR-058: the release preflight must own the gate that refuses to
+        // prepare a release against an unconfirmed repository target.
+        "check:release-target": "x",
       },
     };
     expect(verifyPreflightScripts(pkg).ok).toBe(true);
+  });
+
+  it("requires the release-target gate in the release preflight", () => {
+    // Every other preflight script present, the gate absent: the release
+    // preflight must still fail and name it.
+    const withoutGate = {
+      scripts: {
+        "typecheck:prod": "x",
+        lint: "x",
+        test: "x",
+        "build:ci": "x",
+        check: "x",
+        "check:security-internal": "x",
+        "check:secrets-in-commit": "x",
+        "check:audit": "x",
+      },
+    };
+    const result = verifyPreflightScripts(withoutGate);
+
+    expect(result.ok).toBe(false);
+    expect(result.note).toContain("check:release-target");
   });
 
   it("fails when a script is missing", () => {

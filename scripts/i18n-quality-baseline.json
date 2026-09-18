@@ -1,92 +1,92 @@
 {
   "locales": {
     "ar": {
-      "issues": 9
+      "issues": 6
     },
     "bg": {
-      "issues": 7
-    },
-    "cs": {
-      "issues": 10
-    },
-    "da": {
-      "issues": 11
-    },
-    "de": {
-      "issues": 11
-    },
-    "el": {
-      "issues": 8
-    },
-    "es": {
-      "issues": 62
-    },
-    "fi": {
-      "issues": 8
-    },
-    "fr": {
-      "issues": 7
-    },
-    "he": {
-      "issues": 5
-    },
-    "hi": {
       "issues": 4
     },
+    "cs": {
+      "issues": 7
+    },
+    "da": {
+      "issues": 8
+    },
+    "de": {
+      "issues": 8
+    },
+    "el": {
+      "issues": 5
+    },
+    "es": {
+      "issues": 78
+    },
+    "fi": {
+      "issues": 5
+    },
+    "fr": {
+      "issues": 4
+    },
+    "he": {
+      "issues": 2
+    },
+    "hi": {
+      "issues": 1
+    },
     "hr": {
-      "issues": 9
+      "issues": 6
     },
     "hu": {
-      "issues": 8
+      "issues": 5
     },
     "id": {
-      "issues": 8
+      "issues": 5
     },
     "it": {
-      "issues": 9
+      "issues": 6
     },
     "ja": {
-      "issues": 12
+      "issues": 11
     },
     "ko": {
-      "issues": 7
+      "issues": 6
     },
     "nl": {
-      "issues": 13
+      "issues": 10
     },
     "no": {
-      "issues": 10
+      "issues": 7
     },
     "pl": {
-      "issues": 7
+      "issues": 4
     },
     "pt": {
-      "issues": 8
+      "issues": 5
     },
     "ro": {
-      "issues": 8
+      "issues": 5
     },
     "ru": {
-      "issues": 6
+      "issues": 3
     },
     "sv": {
-      "issues": 9
-    },
-    "th": {
-      "issues": 7
-    },
-    "tr": {
-      "issues": 8
-    },
-    "uk": {
       "issues": 6
     },
+    "th": {
+      "issues": 4
+    },
+    "tr": {
+      "issues": 5
+    },
+    "uk": {
+      "issues": 3
+    },
     "vi": {
-      "issues": 7
+      "issues": 4
     },
     "zh": {
-      "issues": 10
+      "issues": 9
     }
   },
-  "updatedAt": "2026-09-13T22:04:08.226Z"
+  "updatedAt": "2026-09-18T20:04:49.436Z"
 }

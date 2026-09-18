@@ -21,6 +21,11 @@ securityVault.registerCaller(backupBannerCaller);
 
 interface BackupReminderBannerProps {
   show: boolean;
+  /**
+   * The show decision is pending (ADR-055 hold): the surface reserves its
+   * measured height behind a shimmer; content stays hidden until `show`.
+   */
+  pending?: boolean;
   /** null = never backed up; number = age in ms of the latest backup */
   backupAgeMs: number | null;
   onDismiss: () => void;
@@ -28,6 +33,7 @@ interface BackupReminderBannerProps {
 
 export const BackupReminderBanner: React.FC<BackupReminderBannerProps> = ({
   show,
+  pending = false,
   backupAgeMs,
   onDismiss,
 }) => {
@@ -84,7 +90,12 @@ export const BackupReminderBanner: React.FC<BackupReminderBannerProps> = ({
   };
 
   return (
-    <CollapsibleSurface show={show} className="mb-6" testId="backup-reminder-surface">
+    <CollapsibleSurface
+      show={show}
+      pending={pending}
+      className="mb-6"
+      testId="backup-reminder-surface"
+    >
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: show ? 1 : 0, y: show ? 0 : -10 }}

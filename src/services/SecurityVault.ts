@@ -1534,17 +1534,17 @@ return result;
       });
       return false;
 } finally {
-       if (oldPwBytes) {
-         for (let i = 0; i < oldPwBytes.length; i++) { oldPwBytes[i] = oldPwBytes[i]! ^ 0xAA; }
-         oldPwBytes.fill(0);
-         oldPwBytes = null;
-       }
-       if (newPwBytes) {
-         zeroPasswordBytes(newPwBytes);
-         newPwBytes = null;
-       }
-     }
-   }
+      if (oldPwBytes) {
+        for (let i = 0; i < oldPwBytes.length; i++) { oldPwBytes[i] = oldPwBytes[i]! ^ 0xAA; }
+        oldPwBytes.fill(0);
+        oldPwBytes = null;
+      }
+      if (newPwBytes) {
+        zeroPasswordBytes(newPwBytes);
+        newPwBytes = null;
+      }
+    }
+  }
 
    /**
     * Deletes a secret from IndexedDB.

@@ -27,6 +27,7 @@ import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import process from "node:process";
+import { checkReleaseTarget, remediesFor } from "./check-release-target.mjs";
 
 const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const PROD = process.argv.includes("--prod");
@@ -46,6 +47,25 @@ function fail(message, hint) {
 }
 
 // ── Prerequisites ──────────────────────────────────────────────────────────
+
+// Release target first (ADR-058): a launch-day battery whose outcome is a
+// yes/no release decision must not run against an unconfirmed repository
+// target — a green battery would certify a release whose clone URL points at a
+// repository nobody confirmed.
+const targetResult = checkReleaseTarget({ root: ROOT });
+if (!targetResult.ok) {
+  fail(
+    `release target is not confirmed (${targetResult.findings.length} finding(s))`,
+    [
+      ...targetResult.findings.map(
+        (finding) => `${finding.location} → ${finding.value ?? "—"}: ${finding.reason}`,
+      ),
+      ...remediesFor(targetResult.findings),
+    ].join(" | "),
+  );
+}
+step(`release target confirmed: ${targetResult.declaredTarget}`);
+
 if (!existsSync(join(ROOT, "node_modules", "@playwright", "test"))) {
   fail("Playwright is not installed", "run: npm ci");
 }

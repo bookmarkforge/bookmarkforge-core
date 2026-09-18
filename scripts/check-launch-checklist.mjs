@@ -196,6 +196,9 @@ export function verifyPreflightScripts(pkg) {
     "check:security-internal",
     "check:secrets-in-commit",
     "check:audit",
+    // ADR-058: the release preflight must own the gate that refuses to prepare
+    // a release against an unconfirmed repository target.
+    "check:release-target",
   ];
   const missing = scripts.filter((script) => !pkg?.scripts?.[script]);
   return missing.length === 0

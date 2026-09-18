@@ -41,6 +41,7 @@ import {
   isProModulePath,
   verifyProBoundary,
 } from "./pro-boundary.mjs";
+import { checkReleaseTarget, remediesFor } from "./check-release-target.mjs";
 
 // ---------------------------------------------------------------------------
 // Exclusion policy
@@ -377,6 +378,28 @@ if (secretHits.length) {
   for (const hit of secretHits) console.error(`  !! ${hit.file} matches /${hit.pattern}/`);
   process.exit(1);
 }
+
+// ---------------------------------------------------------------------------
+// Release-target guard (ADR-058)
+// ---------------------------------------------------------------------------
+// The export IS the public release: it writes the tree that gets pushed and
+// ships the RELEASE-NOTES whose clone URL readers copy. Preparing it while the
+// repository target is still provisional would publish instructions pointing
+// at a repository nobody confirmed, so the export fails closed on that —
+// before the dry-run, so a rehearsal cannot report success either.
+
+const targetResult = checkReleaseTarget({ root: repoRoot });
+if (!targetResult.ok) {
+  console.error("[export-public] FAIL: release target is not confirmed — refusing to prepare an export:");
+  for (const finding of targetResult.findings) {
+    console.error(`  - ${finding.location} → ${finding.value ?? "—"}: ${finding.reason}`);
+  }
+  for (const remedy of remediesFor(targetResult.findings)) {
+    console.error(`  remedy: ${remedy}`);
+  }
+  process.exit(1);
+}
+console.log(`[export-public] release target confirmed: ${targetResult.declaredTarget}`);
 
 if (dryRun) {
   console.log("[export-public] dry-run OK — no files written.");

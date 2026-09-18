@@ -41,6 +41,11 @@ export const STORAGE_KEYS = {
   BACKUP_BANNER_DISMISSED_UNTIL: "forge_backup_banner_dismissed_until",
   FREE_TIER_WALL_DISMISSED_AT: "forge_free_tier_wall_dismissed_at",
   FREE_TIER_WALL_HIT_PENDING: "forge_free_tier_wall_hit_pending",
+  // Written by BackupService (its local const AUTO_BACKUP_KEY uses this
+  // exact literal) and read synchronously by HomeDashboard's pre-paint
+  // banner decision (ADR-055). Single source of truth is BackupService;
+  // keep the two in lockstep.
+  AUTO_BACKUP_TIMESTAMP: "bmf_last_auto_backup",
   LAST_MANUAL_BACKUP_DATE: "forge_last_manual_backup_date",
   LAST_DISK_BACKUP_RESULT: "forge_last_disk_backup_result",
   RESTORE_SUCCESS_PENDING: "forge_restore_success_pending",

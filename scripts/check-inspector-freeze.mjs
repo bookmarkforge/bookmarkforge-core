@@ -122,6 +122,14 @@ const KNOWN_GATES = {
   "check:nginx-render": "meta",
   "check:sitemap-coverage": "meta",
   "check:seo": "meta",
+  // Release-target confirmation (ADR-058): a release must not be prepared
+  // against an unconfirmed repository target (provisional/placeholder slug,
+  // no remote, or declared≠actual drift). The blocking variant guards the
+  // release path (public export, launch smoke); the chain runs the advisory
+  // variant so the signal stays visible in every check without turning the
+  // whole chain red while the target is still being decided.
+  "check:release-target": "meta",
+  "check:release-target:advisory": "meta",
   "check:chunks": "meta",
   "check:inspector-freeze": "meta",
   lint: "meta",

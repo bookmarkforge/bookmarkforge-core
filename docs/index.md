@@ -49,6 +49,7 @@ Cada idioma tiene una versión Markdown y una versión PDF generada desde el mis
 | [Licencia Core](../LICENSE) | Licencia MIT del núcleo |
 | [Licencia Pro](../PRO-LICENSE.md) | Condiciones de las funciones Pro |
 | [Marcas](../scripts/public-export/TRADEMARKS.md) | Política de marca |
+| [Onboarding de Contribuyentes](ONBOARDING.md) | Guía de inicio para nuevos contribuyentes |
 
 ---
 

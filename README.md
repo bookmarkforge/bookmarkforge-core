@@ -16,6 +16,10 @@ proveedor que el usuario configura.
      contra el repositorio remoto; ver docs/github-secrets-and-push-runbook.md y
      docs/audit.md. -->
 
+> **Nota**: Los badges de CI apuntan al slug provisional `bookmarkforge/core`.
+> Al publicar el repositorio oficial, reemplazar con el slug definitivo.
+> Ejecutar `npm run check:ci` localmente para verificar que todo pase antes de push.
+
 [![CI](https://github.com/bookmarkforge/core/actions/workflows/ci.yml/badge.svg)](https://github.com/bookmarkforge/core/actions/workflows/ci.yml) · [![Nightly validation](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml/badge.svg)](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml) · [runs fallidos](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml?query=conclusion%3Afailure) · [último release](https://github.com/bookmarkforge/core/releases/latest) · [operación del nightly](docs/ops-nightly.md)
 
 ## Requisitos
@@ -158,6 +162,7 @@ completo como si todo estuviera bajo MIT.
 - [Checklist de lanzamiento](docs/launch-checklist.md)
 - [Self-hosting](docs/SELF-HOSTING.md)
 - [Convenciones de ingeniería](AGENTS.md)
+- [Onboarding de contribuyentes](docs/ONBOARDING.md)
 
 ### Manuales de usuario
 
@@ -171,3 +176,26 @@ Cada idioma tiene versión Markdown (fuente) y PDF generado desde el mismo conte
 Las otras 28 locales viven en `docs/manual-usuario-<código>.md` (+ `.pdf`) y están
 listadas en [docs/index.md](docs/index.md). Los intermedios `*-styled.html` se generan
 con `npm run docs:pdf:localized` y no se versionan.
+
+### Scripts y herramientas
+
+168 scripts de build, verificación y operaciones en `scripts/README.md`.
+Los checks se organizan en 8 grupos para iterar más rápido:
+
+| Grupo | Tiempo | Uso |
+|---|---|---|
+| `core-integrity` | ~3s | `npm run check:core-integrity` |
+| `security-environment` | ~4s | `npm run check:security-environment` |
+| `quality-code` | ~25s | `npm run check:quality-code` |
+| `content-integrity` | ~12s | `npm run check:content-integrity` |
+| `brand-visual` | ~5s | `npm run check:brand-visual` |
+| `security-depth` | ~8s | `npm run check:security-depth` |
+| `build-verification` | ~60s | `npm run check:build-verification` |
+| `workflow-pipeline` | ~5s | `npm run check:workflow-pipeline` |
+
+Para iterar rápido: `npm run ci:fast` (~7s) o `npm run check:ci-groups --fast`.
+Ver `scripts/README.md` para el catálogo completo de herramientas.
+
+---
+
+*BookmarkForge v1.0.0 — Open Core: MIT Core + Pro propietario.*

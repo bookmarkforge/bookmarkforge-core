@@ -19,9 +19,10 @@ npm run launch:smoke         # modo dev (rápido, para iterar)
 
 ## Qué hace el runner
 
-1. Verifica prerequisitos (Playwright instalado).
-2. **Libera los puertos del perfil** (4173 preview, 5173 dev, 8790 mock, 8787 companion) matando listeners huérfanos de ejecuciones anteriores — sin esto, `reuseExistingServer` puede reciclar un servidor viejo con un proxy roto.
-3. Ejecuta los 7 tests y traduce el resultado a un veredicto de lanzamiento claro.
+1. Verifica el destino de release (ADR-058): si el checkout sigue apuntando al slug provisional, la batería se niega a arrancar — un veredicto verde no puede certificar una release cuyo clonado apunta a un repositorio sin confirmar.
+2. Verifica prerequisitos (Playwright instalado).
+3. **Libera los puertos del perfil** (4173 preview, 5173 dev, 8790 mock, 8787 companion) matando listeners huérfanos de ejecuciones anteriores — sin esto, `reuseExistingServer` puede reciclar un servidor viejo con un proxy roto.
+4. Ejecuta los 7 tests y traduce el resultado a un veredicto de lanzamiento claro.
 
 ## Topología (modo producción)
 

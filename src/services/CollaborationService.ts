@@ -3,6 +3,7 @@ import { RxDatabase } from "rxdb";
 import { securityVault } from "./SecurityVault";
 import { useSecurityStore } from "../hooks/useSecurityStore";
 import { logger } from "../utils/logger";
+import { zeroPasswordBytes } from "../utils/crypto-core";
 import { syncService } from "./SyncService";
 
 const SHARE_PAYLOAD_VERSION = 2;
@@ -113,40 +114,42 @@ class CollaborationService {
           256,
         ),
       );
-      throwIfAborted(signal);
-      try {
-        const shareSecret = Array.from(derivedBits, (b) =>
-          b.toString(16).padStart(2, "0"),
-        ).join("");
+throwIfAborted(signal);
+       try {
+         const shareSecret = Array.from(derivedBits, (b) =>
+           b.toString(16).padStart(2, "0"),
+         ).join("");
 
-        // Authenticate the secret and its KDF salt together. The destination
-        // can then derive a fresh in-memory credential without the source
-        // master password, while an attacker cannot alter the public salt
-        // without failing AES-GCM authentication.
-        const encryptedKey = await encryptionService.encrypt(
-          JSON.stringify({ shareSecret, salt: Array.from(salt) }),
-          sharePassword,
-        );
-        throwIfAborted(signal);
+         // Authenticate the secret and its KCF salt together. The destination
+         // can then derive a fresh in-memory credential without the source
+         // master password, while an attacker cannot alter the public salt
+         // without failing AES-GCM authentication.
+         const encryptedKey = await encryptionService.encrypt(
+           JSON.stringify({ shareSecret, salt: Array.from(salt) }),
+           sharePassword,
+         );
+         throwIfAborted(signal);
 
-        // Do not export the source RxDB key. WebRTC sync transfers validated,
-        // decrypted records and encrypts them with the destination's local key;
-        // sharing the source key would couple devices and make a later local
-        // password change unsafe. The authenticated share secret is therefore
-        // session bootstrap material, not a replacement database password.
-        const payload: SharedVaultPayload = {
-          version: SHARE_PAYLOAD_VERSION,
-          encryptedKey,
-          salt: Array.from(salt),
-        };
-        return btoa(JSON.stringify(payload));
-      } finally {
-        derivedBits.fill(0);
-      }
-    } finally {
-      // withMasterPasswordBytes returns an ephemeral copy for callers. Do
+         // Do not export the source RxDB key. WebRTC sync transfers validated,
+         // decrypted records and encrypts them with the destination's local key;
+         // sharing the source key would couple devices and make a later local
+         // password change unsafe. The authenticated share secret is therefore
+         // session bootstrap material, not a replacement database password.
+         const payload: SharedVaultPayload = {
+           version: SHARE_PAYLOAD_VERSION,
+           encryptedKey,
+           salt: Array.from(salt),
+         };
+return btoa(JSON.stringify(payload));
+       } finally {
+         zeroPasswordBytes(derivedBits);
+       }
+     } finally {
+// withMasterPasswordBytes returns an ephemeral copy for callers. Do
       // not leave the source password copy alive after HKDF completes.
-      masterPw.fill(0);
+      if (masterPw) {
+        zeroPasswordBytes(masterPw);
+      }
     }
   }
 

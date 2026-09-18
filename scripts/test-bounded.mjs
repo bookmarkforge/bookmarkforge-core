@@ -15,6 +15,7 @@ import {
   PROFILE_DEFAULTS,
   VITEST_EXCLUDED_FILES,
 } from "./test-profiles.mjs";
+import { runPreflight } from "./drift-preflight.mjs";
 
 const ROOT = process.cwd();
 // Cores-aware default concurrency (2026-09-04 measurement matrix on the full
@@ -54,6 +55,16 @@ if (profileArgIndex !== -1) {
   cleanedArgs = [...PROFILE_ARGS];
   cleanedArgs.splice(profileArgIndex, 2);
 }
+
+// Drift preflight (AGENTS.md §9): warn at the top of the run when a drift
+// gate's script is newer than its generated baseline — a half-updated batch
+// (script edited, baseline pending) is indistinguishable from a real
+// regression once tests execute. Advisory: it never fails the run; the drift
+// gates themselves decide. See scripts/drift-preflight.mjs;
+// BMF_DRIFT_PREFLIGHT=off disables (gate:refresh sets it: it WRITES the
+// artifacts and would warn about itself).
+const preflightExit = runPreflight({ argv: [] });
+if (preflightExit !== 0) process.exit(preflightExit);
 
 const configuredBatchSize = Number.parseInt(
   process.env.BMF_TEST_BATCH_SIZE ??

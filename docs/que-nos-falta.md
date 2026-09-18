@@ -45,14 +45,15 @@
 - **ROPA** (`docs/ROPA.md` 2026-08-31, revisión trimestral §12 fijada): cierre operativo 100% (T1-T8,
   bases Art.6, retención, derechos, procedimiento 72h Arts.33-34). Quedan solo campos
   `⚠ DATO PERSONAL` no deducibles del repo: identidad legal/sede/autoridad de control (§1) y
-  **DPA firmados** por proveedor (§7 hosting/Sentry, §8 transferencias IA). `launch-checklist` #5 PASS
-  en local porque los campos operativos están completos — el resto es firma externa.
+  **DPA firmados** por proveedor (§7 hosting/Sentry, §8 transferencias IA). `launch-checklist` #5
+  permanece PENDIENTE: los campos operativos están completos, pero falta la firma externa y
+  la identidad legal del operador.
 - **Sentry**: `src/telemetry/remoteErrorReporter.ts` con `beforeSend` sancador + opt-in por evento,
   `VITE_SENTRY_DSN` vacío por defecto (correcto). Activarlo exige DSN real **y** DPA Sentry (ROPA §7).
 - **RPO/RTO y SLOs** — baselines registrados en `docs/operations.md` (99.9%/30d,
   p95 señalización <500ms, 5xx <0.5%, WS <70%; RPO 24h, RTO 24h vault/4h topología). Drills miden
   RTO empírico (rollback <60s verificado 9.6s, restore <120s verificado 6.6s); pendiente solo
-  confirmación firmada del responsable (launch-checklist #3 PASS local).
+  confirmación firmada del responsable (launch-checklist #3 permanece PENDIENTE hasta esa firma).
 - **Pentest real** documentado como pendiente (no hay evidencia de ataque externo) — launch-checklist #6 MANUAL.
 - **Revisión manual WCAG/privacidad** pendiente — axe-core WCAG A/AA automatizado existe (`tests/e2e/a11y.spec.ts`);
   pendiente la pasada humana (lector pantalla/teclado/contraste) — launch-checklist #7 MANUAL.

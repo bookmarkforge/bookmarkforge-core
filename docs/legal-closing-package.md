@@ -161,11 +161,11 @@ Gracias,
 | Hugging Face | Encargado (T1, BYO-key) | DPA | | click-through | | `legal/dpa/hf/` | |
 | Whop | **Controlador independiente** (T2) | Merchant Agreement | | contrato cuenta | | `legal/whop/` | |
 
-### Plantilla D — Fila de ROPA §7 ya rellenada (ejemplo de formato objetivo)
+### Plantilla D — Fila de ROPA §7 de ejemplo (NO es evidencia operativa)
 
 | Encargado | Rol | Datos | Contrato DPA | Sede / transferencia |
 |---|---|---|---|---|
-| Hetzner Online GmbH | Alojamiento del origen API (T3–T6) | Logs de conexión, señalización efímera | DPA firmado el 12/09/2026 (v. 2026-05), copia en expediente §dpa | Datacenter Nuremberg (DE); sin transferencia fuera del EEE |
+| EJEMPLO — Hetzner Online GmbH | Alojamiento del origen API (T3–T6) | Logs de conexión, señalización efímera | Sustituir por el DPA real y su fecha; esta fila no confirma una firma | Ejemplo: datacenter Nuremberg (DE); confirmar sede y transferencia reales |
 
 ---
 

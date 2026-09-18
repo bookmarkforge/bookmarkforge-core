@@ -1101,6 +1101,9 @@
   "app_usedOf": "usado de",
   "app_uxDesigner": "Diseñador UX",
   "app_uxDesignerDesc": "Descripción de Diseñador UX",
+  "app_v5ResidueNoticeTitle": "Algunos datos de la bóveda aún usan el formato de cifrado antiguo",
+  "app_v5ResidueNoticeBody": "Un ataque de diccionario global sigue aplicándose a estos elementos. Desbloquea una vez más con tu contraseña para volver a cifrarlos, o restáuralos desde una copia de seguridad hecha con la versión actual.",
+  "app_v5ResidueNoticeDismiss": "Descartar",
   "app_variousTopics": "varios temas",
   "app_vaultCrypto": "Criptografía de la Bóveda",
   "app_vaultImportedSuccessfully": "Bóveda importada exitosamente",
@@ -1752,5 +1755,17 @@
   "app_pocketTags": "Etiquetas",
   "app_pocketImportStatusSummary": "Se conservarán los estados de leído y archivado.",
   "app_pocketImportConfirm": "Importar estos enlaces",
-  "app_pocketImportChooseAnother": "Elegir otro archivo"
+  "app_pocketImportChooseAnother": "Elegir otro archivo",
+  "app_firstRunEyebrow": "Primeros pasos",
+  "app_firstRunTitle": "Tus primeros dos minutos",
+  "app_firstRunSubtitle": "Tres pasos y el espacio de trabajo empieza a trabajar para ti.",
+  "app_firstRunProgress": "{{done}} de {{total}} hechos",
+  "app_firstRunStep1Title": "Guarda tu primer marcador",
+  "app_firstRunStep1Desc": "Captura cualquier enlace. Se queda en este dispositivo.",
+  "app_firstRunStep2Title": "Escribe o importa una nota",
+  "app_firstRunStep2Desc": "En los documentos vive lo que piensas.",
+  "app_firstRunStep3Title": "Vuelve a encontrarlo",
+  "app_firstRunStep3Desc": "Busca en todo localmente: nada sale de tu dispositivo.",
+  "app_firstRunStepDone": "Hecho",
+  "app_firstRunDismiss": "Ocultar esta lista"
 }

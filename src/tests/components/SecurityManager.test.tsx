@@ -29,7 +29,7 @@ vi.mock("../../hooks/useSecurityStore", () => ({
   useSecurityStore: () => mockUseSecurityStore(),
 }));
 
-vi.mock("../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../services/ai/ProviderManager", () => ({
   aiManager: { unlockVault: vi.fn().mockResolvedValue(true) },
 }));
 
@@ -200,7 +200,7 @@ describe("SecurityManager", () => {
     });
 
     it("unlock success calls unlock and shows children", async () => {
-      const { aiManager } = await import("../\.\./services/ai/ProviderManager");
+      const { aiManager } = await import("../../services/ai/ProviderManager");
       const { initDB } = await import("../../db/database");
       (aiManager.unlockVault as any).mockResolvedValue(true);
       (initDB as any).mockResolvedValue(undefined);
@@ -225,7 +225,7 @@ describe("SecurityManager", () => {
     });
 
     it("unlock fails fast when unlockVault returns false", async () => {
-      const { aiManager } = await import("../\.\./services/ai/ProviderManager");
+      const { aiManager } = await import("../../services/ai/ProviderManager");
       const { initDB } = await import("../../db/database");
       // Vault verification returns false (does NOT throw) for a wrong
       // password — the flow must surface the error instead of falling
@@ -251,7 +251,7 @@ describe("SecurityManager", () => {
     });
 
     it("unlock error shows error message", async () => {
-      const { aiManager } = await import("../\.\./services/ai/ProviderManager");
+      const { aiManager } = await import("../../services/ai/ProviderManager");
       (aiManager.unlockVault as any).mockRejectedValue(
         new Error("Wrong password"),
       );
@@ -273,7 +273,7 @@ describe("SecurityManager", () => {
     });
 
     it("shows the locked-vault message for a VAULT_LOCKED database error", async () => {
-      const { aiManager } = await import("../\.\./services/ai/ProviderManager");
+      const { aiManager } = await import("../../services/ai/ProviderManager");
       const { initDB } = await import("../../db/database");
       (aiManager.unlockVault as any).mockResolvedValue(true);
       (initDB as any).mockRejectedValue(new Error("wrapped device key"));
@@ -296,7 +296,7 @@ describe("SecurityManager", () => {
     });
 
     it("unlock supports Enter key", async () => {
-      const { aiManager } = await import("../\.\./services/ai/ProviderManager");
+      const { aiManager } = await import("../../services/ai/ProviderManager");
       const { initDB } = await import("../../db/database");
       (aiManager.unlockVault as any).mockResolvedValue(true);
       (initDB as any).mockResolvedValue(undefined);
@@ -317,7 +317,7 @@ describe("SecurityManager", () => {
     });
 
     it("ignores a second unlock while the first is still in progress", async () => {
-      const { aiManager } = await import("../\.\./services/ai/ProviderManager");
+      const { aiManager } = await import("../../services/ai/ProviderManager");
       const { initDB } = await import("../../db/database");
       let resolveUnlock: ((value: boolean) => void) | undefined;
       (aiManager.unlockVault as any).mockImplementation(
@@ -433,7 +433,7 @@ describe("SecurityManager", () => {
 
     it("completes setup, sets the master password flag and unlocks the vault", async () => {
       const { securityVault } = await import("../../services/SecurityVault");
-      const { aiManager } = await import("../\.\./services/ai/ProviderManager");
+      const { aiManager } = await import("../../services/ai/ProviderManager");
       (aiManager.unlockVault as any).mockResolvedValue(true);
 
       render(
@@ -587,7 +587,7 @@ describe("SecurityManager", () => {
     });
 
     it("setup fails fast when unlockVault returns false", async () => {
-      const { aiManager } = await import("../\.\./services/ai/ProviderManager");
+      const { aiManager } = await import("../../services/ai/ProviderManager");
       const { securityVault } = await import("../../services/SecurityVault");
       (aiManager.unlockVault as any).mockResolvedValue(false);
 
@@ -655,7 +655,7 @@ describe("SecurityManager", () => {
       const { securityVault } = await import("../../services/SecurityVault");
       const { recoveryService } =
         await import("../../services/RecoveryService");
-      const { aiManager } = await import("../\.\./services/ai/ProviderManager");
+      const { aiManager } = await import("../../services/ai/ProviderManager");
       const { initDB } = await import("../../db/database");
 
       (securityVault.getRecoveryData as any).mockResolvedValue(
@@ -701,7 +701,7 @@ describe("SecurityManager", () => {
       const { securityVault } = await import("../../services/SecurityVault");
       const { recoveryService } =
         await import("../../services/RecoveryService");
-      const { aiManager } = await import("../\.\./services/ai/ProviderManager");
+      const { aiManager } = await import("../../services/ai/ProviderManager");
       const { initDB } = await import("../../db/database");
 
       (securityVault.getRecoveryData as any).mockResolvedValue(

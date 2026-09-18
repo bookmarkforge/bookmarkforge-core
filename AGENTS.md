@@ -111,16 +111,17 @@ npm run test:fast               # bounded Vitest suites (security, db, services,
                                 #   key components; successful-test logs are
                                 #   suppressed by default; use BMF_TEST_LOGS=full
                                 #   for diagnostic output)
-npm run test:slow               # every other test file (~480; CI's slow-tests job
+npm run test:slow               # every other test file (~460; CI's slow-tests job
                                 #   enforces timing on it; `npm test` is the same
                                 #   surface — run it before merging areas the fast
                                 #   profile does not cover)
 npm run build:ci                # vite build + secret-scan + SRI + integrity
                                 #   manifest + chunk-boundary + bundle-size gates
-npm run check                   # the full gate chain (~37 check commands + lint):
+npm run check                   # the full gate chain (~40 check commands + lint):
                                  # open-core, pro-imports, env, workflows,
                                  # http-config, compose-config, runtime-config,
                                  # boundaries, e2e-helpers, docs-markdown,
+                                 # documented-npm-commands,
                                  # baseline-drift, baseline-gaps, csp,
                                  # extension-csp, i18n, claim-drift,
                                  # landing-free-plan, pocket-onboarding-copy,
@@ -247,7 +248,7 @@ mandatory security gates before merge.
       `check:security-internal` itself covers 9.)
     - Blocks PR merge on any failure.
 
-2. **`npm run check`** — The full gate chain (~37 check commands + lint)
+2. **`npm run check`** — The full gate chain (~40 check commands + lint)
 
 3. **SAST** (CodeQL + Semgrep) — Blocked on High/Critical findings
 

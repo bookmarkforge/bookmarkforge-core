@@ -28,7 +28,7 @@ Aplicación *local-first* de conocimiento personal (React + RxDB/IndexedDB + Web
 |---|---|---|
 | Stack | Adecuado | React 19 + TypeScript estricto + Vite (web/PWA), Node ≥20 + `ws`/`tsx` (server), RxDB 17 + IndexedDB (datos), WebRTC (P2P) |
 | Backend | Mínimo por diseño | `server/src`: HTTP mínimo, licencias, entitlement, señalización WS y healthcheck. El proveedor de IA se llama desde el navegador con la clave del usuario; no existe proxy ni sesión de IA en el servidor. Sin framework pesado — correcto para su función |
-| Escalabilidad | Parcial | Redis opcional para estado compartido (`docker-compose.prod.yml`), límites de conexiones/rooms/peers/payloads, rate limits. **Pendiente:** pruebas de carga, SLO, escalado horizontal sin probar (`docs/architecture.md` → "Decisiones pendientes") |
+| Escalabilidad | Parcial | Redis eliminado de `docker-compose.prod.yml` (Ronda 6); límites de conexiones/rooms/peers/payloads, rate limits. **Pendiente:** pruebas de carga, SLO, escalado horizontal sin probar (`docs/architecture.md` → "Decisiones pendientes") |
 | Modularidad | Clara | `src/` (UI), `server/` (backend), `extension/`, `scripts/`, `docs/`. Límites de confianza documentados en `docs/architecture.md` |
 | Integraciones | Mixto | IA multi-proveedor llamada desde el cliente (OpenAI, Anthropic, Groq, Gemini, HuggingFace, Ollama local). Whop para licencias; el adaptador de licencias conserva su mock de staging. **Pendiente:** contratos versionados para integraciones externas |
 
@@ -59,7 +59,7 @@ Aplicación *local-first* de conocimiento personal (React + RxDB/IndexedDB + Web
 | Calidad de código | Excelente | TypeScript estricto, ESLint 9 + typescript-eslint + 5 reglas custom (`bmf/no-unbounded-text`, loops, vault mocks…), husky + lint-staged |
 | Control de versiones | Sólido | Ruleset exportable `main-protection.json`: PR obligatorio, checks obligatorios, `required_linear_history`, sin force-push y sin aprobación de equipos. **Pendiente:** importarlo en GitHub (documentado en `branch-protection.md`) |
 | Testing | Sobresaliente | Vitest unit + integración, Playwright E2E multi-config (browsers, multiuser, nightly, human-like), **axe-core WCAG AA en CI** (`tests/e2e/a11y.spec.ts`), fast-check (property-based), visual testing (pixelmatch), gráficos de cobertura por área con gates |
-| CI/CD | Sólido | `ci.yml` (typecheck, lint, tests, security gates, E2E), `nightly.yml` (perf/scale), `staging-deploy/rollback/smoke.yml`, imágenes por SHA, gates `check:*` (~30 checks automatizados) |
+| CI/CD | Sólido | `ci.yml` (typecheck, lint, tests, security gates, E2E), `nightly.yml` (perf/scale), `staging-deploy/rollback/smoke.yml`, imágenes por SHA, gates `check:*` (~40 checks automatizados) |
 
 **Hallazgo clave:** nivel de ingeniería de calidad poco común en esta fase. El volumen de scripts de chequeo (`package.json`: ~70 scripts) es a la vez fortaleza y riesgo de mantenimiento.
 
@@ -69,7 +69,7 @@ Aplicación *local-first* de conocimiento personal (React + RxDB/IndexedDB + Web
 
 | Aspecto | Veredicto | Evidencia |
 |---|---|---|
-| Usabilidad | Fuerte | Tour de bienvenida (`WelcomeTour`), onboarding, prefetching de rutas, i18n en 20+ idiomas con checks de completitud |
+| Usabilidad | Fuerte | Tour de bienvenida (`WelcomeTour`), onboarding, prefetching de rutas, i18n en 30 idiomas con checks de completitud |
 | Diseño | Sólido | Mantine + Tailwind 4, tokens de marca con `check:static-brand-tokens`, regla anti-texto-desbordado en tarjetas |
 | Accesibilidad | Fuerte | axe-core WCAG A/AA automatizado en E2E + ARIA en extension. Revisión manual WCAG documentada como pendiente |
 | Rendimiento percibido | Fuerte | Skelletons optimizados (`OptimizedSkeleton`, `SuspenseFallback`), lazy-loading de rutas, prefetcher, bundle report (`bundle-report.md`), benchmarks de almacenamiento y tests perf-scale con presupuestos |
@@ -97,7 +97,7 @@ Aplicación *local-first* de conocimiento personal (React + RxDB/IndexedDB + Web
 |---|---|---|
 | Monitoreo de errores | Parcial | **Sentry opcional** (opt-in + DSN; `beforeSend` sancador, import dinámico) + collector de eventos de cliente con webhook de alertas (umbral CRÍTICO), CSP reports, healthcheck. El trazado remoto solo ocurre con consentimiento explícito **y** DSN configurado |
 | Logs y trazabilidad | Sólido | Estructurados, sin PII/secretos, correlación con ID de trazabilidad, tokens admin para diagnósticos |
-| Documentación técnica | Sólido | README + `docs/`: architecture, security, operations, api (tabla de endpoints + protocolos WS). **Sin Swagger/OpenAPI**, compensado con pruebas de contrato |
+| Documentación técnica | Sólido | README + `docs/`: architecture, security, operations, api (tabla de endpoints + protocolos WS). `docs/openapi.yaml` (**OpenAPI 3.1.0**) con todos los endpoints HTTP, security schemes y schemas
 | Plan de contingencia | Parcial | Backups cifrados automáticos, procedimiento mensual de restore documentado, runbook de DR y rollback. **Pendiente:** RPO/RTO sin definir, simulacro trimestral sin ejecutar, SLOs sin fijar |
 
 **Hallazgo clave:** el mayor gap operativo era la **ausencia de observabilidad ex-post**: si un error solo ocurre en un dispositivo real, el webhook de client-events avisaba con agregados, pero no había forma de inspeccionar un stack trace individual — decisión coherente de no loguear contenido sensible. Implementado (punto 9 del launch-checklist): Sentry opt-in con `beforeSend` sancador y DSN opcional (`src/telemetry/remoteErrorReporter.ts`); queda pendiente configurar el DSN del operador y completar el DPA en el ROPA §7 antes de activarlo en producción.
@@ -136,7 +136,7 @@ Aplicación *local-first* de conocimiento personal (React + RxDB/IndexedDB + Web
 | 2026-08-30 | Imágenes Docker sin pin por digest (`node:20-alpine`, `nginx:1.27-alpine`, `redis:7-alpine`, `node:22-alpine`, `ollama/ollama:latest`) — tags mutables, riesgo de supply-chain | Media (supply-chain) | ✅ Corregido — todas pineadas por digest SHA verificado vía registry API; nuevo gate `check:image-pins` + 10 tests unitarios |
 | 2026-08-30 | `remoteErrorReporter.ts`: error de tipo TS por API cambiada en Sentry v10 (`autoSessionTracking` removido, tipos de `beforeSend` más estrictos) | Media | ✅ Corregido — opciones casteadas al tipo del SDK, `autoSessionTracking` removido (no existe en v10) |
 | 2026-08-30 | 10 dependencias con parches disponibles dentro del rango semver (`@mantine`, `@noble/hashes`, `ws`, `react-router`, `tsx`, `pdfjs-dist`, etc.) | Baja | ✅ Actualizado — `npm update` aplicado, 0 vulnerabilidades tras actualización |
-| 2026-08-30 | Prueba de carga del companion server inexistente (launch-checklist #11 FAIL) | Media | ✅ Corregido — `npm run load:companion` creado: levanta el servidor, conecta N clientes WS, mide join/signal p95, saturación y success rate con gates SLO. Ejecución real: 10/10 clientes, join p95=11ms, todos los SLOs pasan |
+| 2026-08-30 | Prueba de carga del companion server inexistente (launch-checklist #11 FAIL) | Media | ✅ Corregido históricamente — se creó el runner antiguo `load:companion`, que levantaba el servidor, conectaba N clientes WS y medía join/signal p95, saturación y success rate con gates SLO. La superficie actual es `npm run test:load` mediante `scripts/load-test-server.mjs` |
 | 2026-08-30 | **Bug RGPD complementario:** `SecuritySection.tsx` (toggle de telemetría en Settings) escribía en `bmf_local_error_storage` en vez de las keys de consentimiento del `ConsentBanner` (`forge_consent_*`). El toggle de Settings no sincronizaba con los servicios tras la corrección anterior | **Alta (RGPD)** | ✅ Corregido — ahora escribe en las 3 keys de consentimiento (`CONSENT_ERROR_REPORTING`, `CONSENT_ANALYTICS`, `CONSENT_CLIENT_EVENTS`) y limpia las keys legacy. Docstrings actualizados |
 | 2026-08-30 | `useRxDB.tsx`: catch silencioso en query de BD — errores de RxDB se ocultaban devolviendo `[]` sin loguear | Media | ✅ Corregido — añadido `logger.warn` con el error antes de devolver vacío |
 | 2026-08-30 | `useBlockEditorLogic.ts`: catch silencioso en smart-links — errores de BD al buscar sugerencias se ocultaban | Media | ✅ Corregido — añadido `logger.warn` con el error |
@@ -197,7 +197,6 @@ Auditoría fresca sobre el mismo estado de trabajo (`main`, working tree con la 
 
 - **Cripto (`src/services/EncryptionService.ts`, `crypto-core`)**: AES-256-GCM + Argon2id V5/HKDF, operaciones en Web Worker con doble cero-zado (verificación buffer ya cero), cola con timeout 15 s, fail-closed en error de worker. Correcto.
 - **Licencias (`server/src/license-signing.ts`)**: firma RSA-PSS/SHA-256 con canonicalización byte-idéntica al cliente; clave privada solo por env/archivo gitignored. Correcto.
-- **Sesiones IA (`server/src/ai-session.ts`)**: cookie `HttpOnly+Secure+SameSite=Strict`, doble CSRF en comparación de tiempo constante, proof de licencia verificado (v=1, ventanas de tiempo, `padding=6`), whitelist de orígenes obligatoria en producción (falla al arranque si falta), rate limit por IP. Correcto.
 - **CSP**: estricta y sincronizada (`default-src 'self'; ... upgrade-insecure-requests; frame-ancestors 'none'; object-src 'none'`) en `public/_headers`, `public/nginx.conf` y `netlify.toml`; gate `check:csp` valida la coherencia. Correcta.
 - **Sin secretos reales** en configs, workflows, `.zap/` ni `server/` (escaneo dirigido + gate). `server/.license-signing-key.pkcs8` y `.env.production` están gitignored/protegidos. Correcto.
 
@@ -212,7 +211,7 @@ Revisión fresca del working tree actual (incluyendo cambios sin commit: interpo
 | `typecheck`, `lint`, `test:fast` (633/633, 28 archivos), `build:ci` | ✅ |
 | `check:workflows`, `check:secrets-in-commit`, `check:audit-drift` (18/18) | ✅ |
 | `check:compose-config` (incl. la nueva regla de interpolación HTTP_PORT), `check:runtime-config`, `check:http-config`, `check:image-pins`, `check:env` | ✅ |
-| `check:csp`, `check:i18n` (29 locales), `check:boundaries`, `check:rxdb17`, `check:static-brand`, `npm audit --omit=dev` (0 vuln) | ✅ |
+| `check:csp`, `check:i18n` (30 locales), `check:boundaries`, `check:rxdb17`, `check:static-brand`, `npm audit --omit=dev` (0 vuln) | ✅ |
 | `check:launch-checklist` | ✅ 11/13 (2 externos pendientes) |
 | Protección de `main` | ✅ payload local sin equipos; activación remota manual |
 

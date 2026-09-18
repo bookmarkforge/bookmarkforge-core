@@ -21,7 +21,7 @@ const VITEST_GLOBALS = {
 const BROWSER_EXTENSION_GLOBALS = { chrome: "readonly", browser: "readonly" };
 
 export default tseslint.config(
-  { ignores: ["**/node_modules/**", "dist/**", "dist-extension/**", "coverage/**", "playwright-report*/**", "test-results/**", "*.min.js"] },
+  { ignores: ["**/node_modules/**", "dist/**", "dist-extension/**", "coverage/**", "playwright-report*/**", "test-results/**", "test-results-human-like/**", "*.min.js"] },
   {
     files: SOURCE_JS,
     ...js.configs.recommended,

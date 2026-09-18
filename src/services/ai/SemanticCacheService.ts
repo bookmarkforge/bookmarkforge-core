@@ -410,14 +410,16 @@ export class SemanticCacheService {
       (bytes) => bytes,
     );
     if (!passwordBytes) {return null;}
+    const pw = passwordBytes as Uint8Array;
     try {
-      return await operation(passwordBytes);
+      return await operation(pw);
     } finally {
-      passwordBytes.fill(0);
+      for (let i = 0; i < pw.length; i++) { pw[i] = pw[i]! ^ 0xAA; }
+      pw.fill(0);
     }
   }
 
-  private async persistEntry(
+   private async persistEntry(
     e: PersistedIntent,
     generation: number,
   ): Promise<void> {

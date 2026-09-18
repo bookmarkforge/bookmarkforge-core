@@ -16,3 +16,14 @@ export const DURATION_TOOLTIP = 0.18;
 /** Dropdowns, selects: 150–250ms. */
 export const DURATION_MENU = 0.2;
 
+/**
+ * Collapsible surfaces (banner collapse/expand): 200ms. The single source of
+ * truth for both halves of the motion — the CSS height transition that
+ * collapses the box and the opacity fade inside it — so the box and its
+ * contents can never finish at different times.
+ */
+export const DURATION_COLLAPSE = 0.2;
+
+/** `DURATION_COLLAPSE` in milliseconds, for CSS transitions (not motion). */
+export const COLLAPSE_MS = DURATION_COLLAPSE * 1000;
+

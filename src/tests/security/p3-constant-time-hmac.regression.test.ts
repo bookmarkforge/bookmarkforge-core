@@ -84,7 +84,7 @@ describe("P3 regression — ADR-038 constant-time HMAC comparison", () => {
 
   it("both services import the primitive from the shared module", () => {
     const importRe =
-      /import\s*\{\s*constantTimeCompare\s*\}\s*from\s*"\.\.\/security-vault\/compare"/;
+      /import\s*\{\s*constantTimeCompare\s*\}\s*from\s*"..\/security-vault\/compare"/;
     expect(mutationGuardCode).toMatch(importRe);
     expect(attestationChainCode).toMatch(importRe);
     // The primitive must keep existing and keep its exported name — both

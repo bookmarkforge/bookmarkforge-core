@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { ProUnavailableError } from "../../../../services/pro-access";
@@ -72,13 +72,32 @@ describe("BackupReminderBanner", () => {
     vi.clearAllMocks();
   });
 
-  it("renders but is hidden when show is false (CLS optimization)", () => {
+  it("renders collapsed and invisible when show is false", () => {
     const { container } = render(
       <BackupReminderBanner show={false} backupAgeMs={null} onDismiss={vi.fn()} />,
     );
-    // Banner always renders (reserves space for CLS) but is invisible
-    const banner = container.querySelector(".mb-6");
+    // Always mounted, but costing no layout space and no accessibility
+    // surface (ADR-055).
+    const banner = container.querySelector(".mb-6") as HTMLElement;
     expect(banner).toBeTruthy();
+    expect(banner.style.height).toBe("0px");
+  });
+
+  it("hides the whole subtree from assistive tech while off (not just opacity)", () => {
+    const { container } = render(
+      <BackupReminderBanner
+        show={false}
+        backupAgeMs={null}
+        onDismiss={vi.fn()}
+      />,
+    );
+    // The backup reminder is the loudest banner in the app; at opacity 0 it
+    // would still be announced and its export/dismiss buttons would still
+    // take focus while the user sees nothing.
+    const banner = container.querySelector(".mb-6") as HTMLElement;
+    expect(banner.style.visibility).toBe("hidden");
+    expect(screen.getByText("Export Physical Backup File")).not.toBeVisible();
+    expect(screen.getByText("Got it, remind me later")).not.toBeVisible();
   });
 
   it("renders banner when show is true", () => {

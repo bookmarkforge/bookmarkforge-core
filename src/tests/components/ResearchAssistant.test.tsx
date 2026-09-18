@@ -17,7 +17,7 @@ const mockWebSearchService = {
   })),
   clearCache: vi.fn(),
 };
-vi.mock("../\.\./services/ai/WebSearchService", () => ({
+vi.mock("../../services/ai/WebSearchService", () => ({
   webSearchService: mockWebSearchService,
 }));
 

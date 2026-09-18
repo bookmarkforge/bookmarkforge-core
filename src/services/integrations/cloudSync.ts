@@ -3,6 +3,7 @@ import { safeSet } from "../../store/safeStorage";
 import { STORAGE_KEYS } from "../../constants/storage-keys";
 import { loadBackupService } from "../pro-access";
 import { securityVault } from "../SecurityVault";
+import { zeroPasswordBytes } from "../../utils/crypto-core";
 import { createAdapter, getErrorMessage } from "./cloudSync.adapters";
 import type { CloudProviderAdapter } from "./cloudSync.adapters";
 export type { CloudProviderAdapter } from "./cloudSync.adapters";
@@ -691,19 +692,21 @@ export function registerLocalBackupProvider(
         if (!passwordBytes) {
           throw new Error("Vault is locked");
         }
-        try {
-          const { blob } = await (
-            await loadBackupService()
-          ).createBackupData(passwordBytes);
-          return {
-            encrypted: true,
-            data: await blobToBase64(blob),
-            timestamp: Date.now(),
-          };
-        } finally {
-          passwordBytes.fill(0);
-        }
-      },
-    ),
-  );
-}
+try {
+           const { blob } = await (
+             await loadBackupService()
+           ).createBackupData(passwordBytes);
+           return {
+             encrypted: true,
+             data: await blobToBase64(blob),
+             timestamp: Date.now(),
+           };
+} finally {
+             if (passwordBytes) {
+               zeroPasswordBytes(passwordBytes);
+             }
+           }
+         },
+       ),
+    );
+  }

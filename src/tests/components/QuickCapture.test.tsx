@@ -11,16 +11,16 @@ vi.mock("../../db/database", () => ({
   }),
 }));
 
-vi.mock("../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../services/ai/ProviderManager", () => ({
   aiManager: { generateText: vi.fn() },
 }));
 vi.mock("../../services/MetadataService", () => ({
   metadataService: { fetchMetadata: vi.fn() },
 }));
-vi.mock("../\.\./services/ai/RAGEngine", () => ({
+vi.mock("../../services/ai/RAGEngine", () => ({
   ragEngine: { generateEmbedding: vi.fn() },
 }));
-vi.mock("../\.\./services/ai/TaggingService", () => ({
+vi.mock("../../services/ai/TaggingService", () => ({
   taggingService: { suggestHierarchy: vi.fn() },
 }));
 

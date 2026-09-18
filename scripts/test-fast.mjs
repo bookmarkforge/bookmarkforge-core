@@ -12,9 +12,14 @@
 import { join } from "node:path";
 import { spawn } from "node:child_process";
 import { FAST_SELECTORS } from "./test-profiles.mjs";
+import { runPreflight } from "./drift-preflight.mjs";
 
 const ROOT = process.cwd();
 const WATCH = process.argv.slice(2).includes("--watch");
+
+// Drift preflight: advisory warning before tests start (see drift-preflight.mjs;
+// in watch mode there is no bounded-runner hook to do it for us).
+runPreflight({ argv: [] });
 
 const env = {
   ...process.env,

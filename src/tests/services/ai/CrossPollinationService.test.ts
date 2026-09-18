@@ -7,7 +7,7 @@ const mockVaultCallbacks = vi.hoisted(() => ({
   unlock: [] as Array<() => void>,
 }));
 
-vi.mock("../../\.\./services/SecurityVault", () => ({
+vi.mock("../../../services/SecurityVault", () => ({
   securityVault: {
     onLock: (listener: () => void) => {
       mockVaultCallbacks.lock.push(listener);
@@ -20,7 +20,7 @@ vi.mock("../../\.\./services/SecurityVault", () => ({
   },
 }));
 
-vi.mock("../../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../../services/ai/ProviderManager", () => ({
   aiManager: {
     get generateText() {
       return mockGenerateText;
@@ -28,7 +28,7 @@ vi.mock("../../\.\./services/ai/ProviderManager", () => ({
   },
 }));
 
-vi.mock("../../\.\./services/ai/RAGEngine", () => ({
+vi.mock("../../../services/ai/RAGEngine", () => ({
   ragEngine: {
     searchSimilar: vi.fn(),
   },
@@ -51,9 +51,9 @@ vi.mock("../../../store/safeStorage", () => ({
 }));
 
 const { initDB } = await import("../../../db/database");
-const { ragEngine } = await import("../../\.\./services/ai/RAGEngine");
+const { ragEngine } = await import("../../../services/ai/RAGEngine");
 const { crossPollinationService } =
-  await import("../../\.\./services/ai/CrossPollinationService");
+  await import("../../../services/ai/CrossPollinationService");
 
 describe("CrossPollinationService", () => {
   let mockDb: any;

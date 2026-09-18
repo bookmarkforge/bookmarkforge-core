@@ -472,7 +472,10 @@ const DocumentManager = ({ onSelectDocument }: { onSelectDocument: (id: string) 
                   />
                 </div>
                 <button
+                  type="button"
                   onClick={() => setIsSemanticSearch(!isSemanticSearch)}
+                  aria-label={t("app_aiSearch", "AI Search")}
+                  aria-pressed={isSemanticSearch}
                   className={`truncate flex items-center gap-2 px-4 py-3.5 text-xs font-bold transition-all shadow-sm hover:scale-105 active:scale-95 rounded-xl ${
                     isSemanticSearch
                       ? "bg-blue-500 text-white shadow-blue-500/20"

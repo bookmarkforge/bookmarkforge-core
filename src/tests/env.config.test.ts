@@ -138,9 +138,8 @@ describe("ENV_REGISTRY", () => {
   });
 
   it("contains app-specific VITE_* entries", () => {
-    // geminiApiKey intentionally removed from ENV_REGISTRY (DCE — provider
-    // keys must not be readable from the browser bundle).
-    expect(ENV_REGISTRY.openaiApiKey).toBeDefined();
+    // Provider keys intentionally removed from ENV_REGISTRY (DCE —
+    // provider keys must not be readable from the browser bundle).
     expect(ENV_REGISTRY.p2pSignalingUrl).toBeDefined();
     expect(ENV_REGISTRY.bootStrict).toBeDefined();
     expect(ENV_REGISTRY.prefixStrict).toBeDefined();
@@ -218,7 +217,6 @@ describe("env accessor", () => {
   it("provides undefined for optional entries without defaults", async () => {
     const { env } = await import("../env.config");
     // These have no default → undefined when unset
-    expect(env.openaiApiKey).toBeUndefined();
     expect(env.buildHash).toBeUndefined();
     expect(env.dbName).toBeUndefined();
   });

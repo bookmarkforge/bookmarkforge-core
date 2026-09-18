@@ -44,6 +44,9 @@ Decisión: **esta fase solo retira documentos con estado `retirable` y referenci
 | `docs/ADR-052-v5-format-sunset.md` | vivo | ADR oficial del proyecto. |
 | `docs/ADR-053-vault-salt-registry.md` | vivo | ADR oficial del proyecto. |
 | `docs/ADR-054-check-quick-tier.md` | vivo | ADR oficial del proyecto. |
+| `docs/ADR-055-collapsible-surfaces.md` | vivo | ADR oficial del proyecto. |
+| `docs/ADR-056-documented-npm-commands-gate.md` | vivo | ADR oficial del proyecto. |
+| `docs/ADR-057-documented-reference-integrity-gate.md` | vivo | ADR oficial del proyecto. |
 | `docs/ROPA.md` | vivo | Inventario RGPD; contiene campos operativos/legales por completar. |
 | `docs/SELF-HOSTING.md` | vivo | Guía interna de self-hosting; no entra en el export público. |
 | `docs/api.md` | vivo | Vista general de la API del servidor acompañante. |

@@ -13,7 +13,7 @@ vi.mock("react-i18next", () => {
 
 vi.mock("../../hooks/useSecurityStore", () => ({ useSecurityStore: vi.fn() }));
 vi.mock("../../hooks/useDatabaseInit", () => ({ useDatabaseInit: vi.fn() }));
-vi.mock("../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../services/ai/ProviderManager", () => ({
   aiManager: { warmup: vi.fn(), unlockVault: vi.fn() },
 }));
 vi.mock("../../services/RecoveryService", () => ({

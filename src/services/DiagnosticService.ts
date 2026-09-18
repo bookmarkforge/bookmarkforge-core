@@ -207,10 +207,15 @@ class DiagnosticService {
         bookmarkCount = db.bookmarks ? await db.bookmarks.count().exec() : 0;
         bookmarkCountMs = Math.round(performance.now() - queryStartedAt);
 
+        // Vectors are owned by VectorIndexService (an in-memory WebWorker),
+        // not by an RxDB collection named "vectorIndex". vectorCount is
+        // reported as 0 because no such collection exists in the schema; the
+        // real index state is reported by vectorIndexService.getLoadStatus()
+        // below.
+        queryStartedAt = performance.now();
         const vectorIndex = getCollection(db, "vectorIndex") as
           | { count: () => { exec: () => Promise<number> } }
           | undefined;
-        queryStartedAt = performance.now();
         vectorCount = vectorIndex
           ? await vectorIndex.count().exec()
           : 0;

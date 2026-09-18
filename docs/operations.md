@@ -248,7 +248,7 @@ Registro del drill: cada run del workflow es la evidencia (RPO/RTO y resultado
 PASS/FAIL); anotar el enlace de la run en el checklist operativo trimestral y
 revisar los SLOs de la sección anterior en la misma ventana.
 
-### Evidencia de ejecución local — 2026-08-31 (rollback Docker)
+### HISTÓRICO — evidencia de ejecución local — 2026-08-31 (rollback Docker; topología anterior)
 
 Run completa con `DRILL_DOCKER=1` desde un worktree aislado en `8f44a84` (los
 tags `prod-*` de release en formato `prod-YYYYMMDD-HHMM-<sha>` creados para el
@@ -285,7 +285,7 @@ Hallazgos de la ejecución (corregidos durante el run):
 
 Evidencia JSON del run (fases y tiempos) registrada en el artifact de CI.
 
-### Evidencia de ejecución local (re-run) — 2026-08-31 (rollback Docker)
+### HISTÓRICO — evidencia de ejecución local (re-run) — 2026-08-31 (rollback Docker; topología anterior)
 
 Re-ejecución completa con `DRILL_DOCKER=1` desde un worktree aislado en HEAD 
 `949f6b7` (post fix de build hermenéutico + redis), sobre los mismos tags de 

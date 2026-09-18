@@ -26,7 +26,7 @@ vi.mock("lucide-react", () => {
 
 const mockGetHFModelStatus = vi.fn().mockResolvedValue([]);
 const mockDeleteHFModel = vi.fn().mockResolvedValue(true);
-vi.mock("../../\.\./services/ai/ResourceManager", () => ({
+vi.mock("../../../services/ai/ResourceManager", () => ({
   resourceManager: {
     getHFModelStatus: mockGetHFModelStatus,
     deleteHFModel: mockDeleteHFModel,

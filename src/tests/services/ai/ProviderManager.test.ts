@@ -13,13 +13,13 @@ let mockSetApiKeyVault: ReturnType<typeof vi.fn>;
 let mockUnlockVault: ReturnType<typeof vi.fn>;
 let mockIsVaultLocked: ReturnType<typeof vi.fn>;
 
-vi.mock("../../\.\./services/ai/AIRequestCache", () => ({
+vi.mock("../../../services/ai/AIRequestCache", () => ({
   AIRequestCache: vi.fn().mockImplementation(function () {
     return mockCache;
   }),
 }));
 
-vi.mock("../../\.\./services/ai/VaultIntegration", () => ({
+vi.mock("../../../services/ai/VaultIntegration", () => ({
   VaultIntegration: vi.fn().mockImplementation(function () {
     mockGetApiKey = vi.fn().mockReturnValue(null);
     mockSetApiKeyVault = vi.fn();
@@ -50,7 +50,7 @@ let mockConfigSetModel: ReturnType<typeof vi.fn>;
 let mockConfigSetOllamaSettings: ReturnType<typeof vi.fn>;
 let mockConfigSetWebLlmModel: ReturnType<typeof vi.fn>;
 
-vi.mock("../../\.\./services/ai/ProviderConfiguration", () => ({
+vi.mock("../../../services/ai/ProviderConfiguration", () => ({
   ProviderConfiguration: vi.fn().mockImplementation(function () {
     mockGetSelectedProvider = vi.fn().mockReturnValue("gemini");
     mockSetProvider = vi.fn();
@@ -123,7 +123,7 @@ vi.mock("../../\.\./services/ai/ProviderConfiguration", () => ({
   }),
 }));
 
-vi.mock("../../\.\./services/ai/ResourceManager", () => ({
+vi.mock("../../../services/ai/ResourceManager", () => ({
   resourceManager: {
     isHighEndDevice: vi.fn().mockReturnValue(true),
   },
@@ -149,7 +149,7 @@ vi.mock("../../../utils/logger", () => ({
 // registers in its constructor so tests can fire the unlock event directly.
 const securityVaultUnlockListeners: Array<() => void> = [];
 const securityVaultLockListeners: Array<() => void> = [];
-vi.mock("../../\.\./services/SecurityVault", () => ({
+vi.mock("../../../services/SecurityVault", () => ({
   SECURE_STORAGE_KEYS: {},
   securityVault: {
     isLocked: vi.fn().mockReturnValue(false),
@@ -165,7 +165,7 @@ vi.mock("../../\.\./services/SecurityVault", () => ({
   },
 }));
 
-vi.mock("../../\.\./services/ai/utils", () => ({
+vi.mock("../../../services/ai/utils", () => ({
   detectProvider: vi.fn(),
   sanitizeErrorMessage: vi.fn((msg: string) => msg),
   getUserFriendlyErrorMessage: vi.fn((msg: string) => msg),
@@ -191,7 +191,7 @@ vi.mock("../../../services/pro-access", () => ({
   ProUnavailableError: class ProUnavailableError extends Error {},
 }));
 
-vi.mock("../../\.\./services/ai/adapters/RoutingOptimizer", () => ({
+vi.mock("../../../services/ai/adapters/RoutingOptimizer", () => ({
   routingOptimizer: {
     selectProvider: vi.fn(
       (_taskType, _context, defaultProvider) => defaultProvider,
@@ -202,7 +202,7 @@ vi.mock("../../\.\./services/ai/adapters/RoutingOptimizer", () => ({
   },
 }));
 
-vi.mock("../../\.\./services/ai/SemanticCacheService", () => ({
+vi.mock("../../../services/ai/SemanticCacheService", () => ({
   semanticCache: {
     findSimilar: vi.fn().mockResolvedValue(null),
     add: vi.fn().mockResolvedValue(undefined),
@@ -238,9 +238,9 @@ const mockNavigator = (overrides: Record<string, unknown> = {}) => {
 };
 
 const { ProviderManager } =
-  await import("../../\.\./services/ai/ProviderManager");
+  await import("../../../services/ai/ProviderManager");
 const { ProviderConfiguration } =
-  await import("../../\.\./services/ai/ProviderConfiguration");
+  await import("../../../services/ai/ProviderConfiguration");
 
 describe("ProviderManager", () => {
   let manager: InstanceType<typeof ProviderManager>;
@@ -286,7 +286,7 @@ describe("ProviderManager", () => {
   describe("Vault delegation", () => {
     it("setApiKey delega a vault y config", async () => {
       await manager.setApiKey("sk-test-key");
-      const vault = (await import("../../\.\./services/ai/VaultIntegration"))
+      const vault = (await import("../../../services/ai/VaultIntegration"))
         .VaultIntegration;
       expect(vault).toHaveBeenCalled();
     });
@@ -377,7 +377,7 @@ describe("ProviderManager", () => {
 
     it("does not check rate limit for ollama", async () => {
       const config = (
-        await import("../../\.\./services/ai/ProviderConfiguration")
+        await import("../../../services/ai/ProviderConfiguration")
       ).ProviderConfiguration;
       const mockConfig = vi.mocked(config).mock.results[0]!.value;
       (mockConfig.getProviderInfo as ReturnType<typeof vi.fn>).mockReturnValue({
@@ -897,7 +897,7 @@ describe("ProviderManager", () => {
         exhausted: false,
       });
       const semantic =
-        await import("../../\.\./services/ai/SemanticCacheService");
+        await import("../../../services/ai/SemanticCacheService");
       vi.mocked(semantic.semanticCache.findSimilar).mockReset();
       vi.mocked(semantic.semanticCache.findSimilar).mockResolvedValue(null);
       vi.mocked(semantic.semanticCache.add).mockReset();
@@ -976,7 +976,7 @@ describe("ProviderManager", () => {
     it("allows local WebLLM when the vault is locked", async () => {
       mockIsVaultLocked.mockResolvedValue(true);
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
-      const resource = await import("../../\.\./services/ai/ResourceManager");
+      const resource = await import("../../../services/ai/ResourceManager");
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(
         true,
       );
@@ -1026,14 +1026,14 @@ describe("ProviderManager", () => {
         exhausted: false,
       });
       const semantic =
-        await import("../../\.\./services/ai/SemanticCacheService");
+        await import("../../../services/ai/SemanticCacheService");
       vi.mocked(semantic.semanticCache.findSimilar).mockReset();
       vi.mocked(semantic.semanticCache.findSimilar).mockResolvedValue(null);
       vi.mocked(semantic.semanticCache.add).mockReset();
       vi.mocked(semantic.semanticCache.add).mockResolvedValue(undefined);
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockReset();
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
-      const resource = await import("../../\.\./services/ai/ResourceManager");
+      const resource = await import("../../../services/ai/ResourceManager");
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReset();
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(
         true,
@@ -1091,7 +1091,7 @@ describe("ProviderManager", () => {
       expect(result.provider).toBe("webllm");
       expect(mockCache.set).not.toHaveBeenCalled();
       const semantic =
-        await import("../../\.\./services/ai/SemanticCacheService");
+        await import("../../../services/ai/SemanticCacheService");
       expect(semantic.semanticCache.add).not.toHaveBeenCalled();
     });
 
@@ -1118,7 +1118,7 @@ describe("ProviderManager", () => {
       expect(result).toBeDefined();
       expect(mockCache.set).toHaveBeenCalled();
       const semantic =
-        await import("../../\.\./services/ai/SemanticCacheService");
+        await import("../../../services/ai/SemanticCacheService");
       expect(semantic.semanticCache.add).toHaveBeenCalled();
     });
 
@@ -1152,7 +1152,7 @@ describe("ProviderManager", () => {
         isAvailable: vi.fn().mockResolvedValue(false),
         getConfig: vi.fn(),
       });
-      const routing = await import("../../\.\./services/ai/adapters/RoutingOptimizer");
+      const routing = await import("../../../services/ai/adapters/RoutingOptimizer");
       vi.mocked(routing.routingOptimizer.selectProvider).mockResolvedValue("openai");
       vi.mocked(routing.routingOptimizer.selectProvider).mockImplementation(
         async () => "openai",
@@ -1220,7 +1220,7 @@ describe("ProviderManager", () => {
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockReset();
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
       const semantic =
-        await import("../../\.\./services/ai/SemanticCacheService");
+        await import("../../../services/ai/SemanticCacheService");
       vi.mocked(semantic.semanticCache.findSimilar).mockReset();
       vi.mocked(semantic.semanticCache.findSimilar).mockResolvedValue(null);
       vi.mocked(semantic.semanticCache.add).mockReset();
@@ -1228,7 +1228,7 @@ describe("ProviderManager", () => {
     });
     it("semantic cache hit returns result without calling provider", async () => {
       const semantic =
-        await import("../../\.\./services/ai/SemanticCacheService");
+        await import("../../../services/ai/SemanticCacheService");
       vi.mocked(semantic.semanticCache.findSimilar).mockResolvedValue({
         text: "semantic match",
         provider: "cache",
@@ -1568,7 +1568,7 @@ describe("ProviderManager", () => {
 
     it("adds to semantic cache when there are no tools", async () => {
       const semantic =
-        await import("../../\.\./services/ai/SemanticCacheService");
+        await import("../../../services/ai/SemanticCacheService");
       const result = await manager.generateText("test", undefined, { isPrivate: false });
       expect(semantic.semanticCache.add).toHaveBeenCalled();
     });
@@ -1629,7 +1629,7 @@ describe("ProviderManager", () => {
     beforeEach(async () => {
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockReset();
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
-      const resource = await import("../../\.\./services/ai/ResourceManager");
+      const resource = await import("../../../services/ai/ResourceManager");
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReset();
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(
         true,
@@ -1745,7 +1745,7 @@ describe("ProviderManager", () => {
     // alone — the exact conflation the naming audit and the 4 GB/8 GB E2E
     // boundary profiles guard against.
     it("DEFENSIVE: GPU-less device (hasWebLLM=false, tier=true) never routes to webllm on the offline branch", async () => {
-      const resource = await import("../../\.\./services/ai/ResourceManager");
+      const resource = await import("../../../services/ai/ResourceManager");
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       // The DECEPTIVE half of the setup: the tier check says high-end.
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(true);
@@ -1762,7 +1762,7 @@ describe("ProviderManager", () => {
     });
 
     it("DEFENSIVE: GPU-less device (hasWebLLM=false, tier=true) never routes to webllm on the unconfigured-fallback branch", async () => {
-      const resource = await import("../../\.\./services/ai/ResourceManager");
+      const resource = await import("../../../services/ai/ResourceManager");
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(true);
       mockNavigator({ onLine: true });
@@ -1786,7 +1786,7 @@ describe("ProviderManager", () => {
     });
 
     it("DEFENSIVE: GPU-less device (hasWebLLM=false, tier=true) never routes to webllm on the simple-task branch", async () => {
-      const resource = await import("../../\.\./services/ai/ResourceManager");
+      const resource = await import("../../../services/ai/ResourceManager");
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(true);
       mockNavigator({ onLine: true });
@@ -1821,7 +1821,7 @@ describe("ProviderManager", () => {
     // fails because the router pre-filters the selection, the E2E forced-
     // provider profiles would silently degrade to a generic router error    // instead of the precise capability message.
     it("RAM-floor profile: webllm stays reachable with deviceMemory below the floor when explicitly selected (resolveProvider ignores deviceMemory)", async () => {
-      const resource = await import("../../\.\./services/ai/ResourceManager");
+      const resource = await import("../../../services/ai/ResourceManager");
       // The RAM-floor reality: 3 GB < the 4 GB capability floor.
       mockNavigator({ onLine: true, deviceMemory: 3 });
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
@@ -1898,7 +1898,7 @@ describe("ProviderManager", () => {
           model: "llama3.2",
         }),
       });
-      const utils = await import("../../\.\./services/ai/utils");
+      const utils = await import("../../../services/ai/utils");
       vi.mocked(utils.detectProvider).mockReturnValue({
         provider: "openai",
         model: "gpt-4",
@@ -1922,7 +1922,7 @@ describe("ProviderManager", () => {
         }),
       });
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
-      const resource = await import("../../\.\./services/ai/ResourceManager");
+      const resource = await import("../../../services/ai/ResourceManager");
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(
         false,
       );
@@ -1935,7 +1935,7 @@ describe("ProviderManager", () => {
         isConfigured: true,
       });
 
-      const routing = await import("../../\.\./services/ai/adapters/RoutingOptimizer");
+      const routing = await import("../../../services/ai/adapters/RoutingOptimizer");
       vi.mocked(routing.routingOptimizer.selectProvider).mockImplementation(
         async (_task, _state, defaultProvider) => defaultProvider,
       );
@@ -2082,7 +2082,7 @@ describe("ProviderManager", () => {
       // re-check — previously this re-check existed only on generateText,
       // so streaming continued into rate limiting and budget checks.
       const controller = new AbortController();
-      const resource = await import("../../\.\./services/ai/ResourceManager");
+      const resource = await import("../../../services/ai/ResourceManager");
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockImplementation(
         async () => {
           controller.abort();
@@ -2118,7 +2118,7 @@ describe("ProviderManager", () => {
     });
 
     it("CONSOLIDATION: the private local-only refusal no longer carries a streaming-only suffix", async () => {
-      const resource = await import("../../\.\./services/ai/ResourceManager");
+      const resource = await import("../../../services/ai/ResourceManager");
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(
         false,
@@ -2483,7 +2483,7 @@ describe("ProviderManager", () => {
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockReset();
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(true);
       const semantic =
-        await import("../../\.\./services/ai/SemanticCacheService");
+        await import("../../../services/ai/SemanticCacheService");
       vi.mocked(semantic.semanticCache.findSimilar).mockReset();
       vi.mocked(semantic.semanticCache.findSimilar).mockResolvedValue(null);
       vi.mocked(semantic.semanticCache.add).mockReset();
@@ -2537,7 +2537,7 @@ describe("ProviderManager", () => {
 
     it("discards a semantic cache hit if isPrivate and the match is cloud", async () => {
       const semantic =
-        await import("../../\.\./services/ai/SemanticCacheService");
+        await import("../../../services/ai/SemanticCacheService");
       vi.mocked(semantic.semanticCache.findSimilar).mockResolvedValue({
         text: "cloud cached secret",
         provider: "gemini",
@@ -2554,7 +2554,7 @@ describe("ProviderManager", () => {
 
     it("does not consult the semantic cache when options.tools is present", async () => {
       const semantic =
-        await import("../../\.\./services/ai/SemanticCacheService");
+        await import("../../../services/ai/SemanticCacheService");
       await manager.generateText("test", undefined, {
         tools: [{ name: "x" }],
       } as any);
@@ -2566,7 +2566,7 @@ describe("ProviderManager", () => {
     beforeEach(async () => {
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockReset();
       vi.mocked(webLLMServiceDouble.canRunLocalLLM).mockResolvedValue(false);
-      const resource = await import("../../\.\./services/ai/ResourceManager");
+      const resource = await import("../../../services/ai/ResourceManager");
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReset();
       vi.mocked(resource.resourceManager.isHighEndDevice).mockReturnValue(
         false,
@@ -2591,13 +2591,13 @@ describe("ProviderManager", () => {
         isConfigured: true,
       });
       const routing =
-        await import("../../\.\./services/ai/adapters/RoutingOptimizer");
+        await import("../../../services/ai/adapters/RoutingOptimizer");
       vi.mocked(routing.routingOptimizer.selectProvider).mockReset();
     });
 
     it("uses the provider learned by RoutingOptimizer", async () => {
       const routing =
-        await import("../../\.\./services/ai/adapters/RoutingOptimizer");
+        await import("../../../services/ai/adapters/RoutingOptimizer");
       vi.mocked(routing.routingOptimizer.selectProvider).mockResolvedValue(
         "groq" as any,
       );
@@ -2612,7 +2612,7 @@ describe("ProviderManager", () => {
 
     it("falls back to the default provider if RoutingOptimizer fails", async () => {
       const routing =
-        await import("../../\.\./services/ai/adapters/RoutingOptimizer");
+        await import("../../../services/ai/adapters/RoutingOptimizer");
       vi.mocked(routing.routingOptimizer.selectProvider).mockRejectedValue(
         new Error("optimizer down"),
       );

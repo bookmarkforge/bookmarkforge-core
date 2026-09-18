@@ -83,3 +83,6 @@ evidence/
 
 # Private legal and provider-contract workspace (never versioned or exported)
 legal/
+
+# CLS measurement artifact from tests/e2e/dashboard-banner-cls.spec.ts (BMF_CLS_REPORT)
+docs/cls-report.json

@@ -3,6 +3,7 @@ import { logRateLimited } from "../utils/boundedLog";
 import { logger } from "../utils/logger";
 import { getIndexedDB } from "../utils/indexedDB";
 import { safeGet, safeRemove } from "../store/safeStorage";
+import { zeroPasswordBytes } from "../utils/crypto-core";
 // Audit H5: the wrapped device key uses the vault's own Argon2id KDF
 // (crypto-core encrypt/decrypt — the "v4:" format) so the master password
 // protects it with the same memory-hard derivation as every other secret.
@@ -473,29 +474,33 @@ export class SecureStorage {
     }
     const oldPasswordCopy = oldPasswordBytes.slice();
     let plaintext: string;
-    try {
-      try {
-        plaintext = await kdfDecrypt(blob, oldPasswordCopy);
-      } catch (_err) {
-        throw new Error(
-          "[SecureStorage] Failed to re-wrap device key (old password mismatch)",
-        );
+try {
+       try {
+         plaintext = await kdfDecrypt(blob, oldPasswordCopy);
+       } catch (_err) {
+         throw new Error(
+           "[SecureStorage] Failed to re-wrap device key (old password mismatch)",
+         );
+       }
+} finally {
+        // crypto-core normally consumes the copy itself; this also covers
+        // derivation/authentication failures before it reaches zeroization.
+        if (oldPasswordCopy) {
+          zeroPasswordBytes(oldPasswordCopy);
+        }
       }
-    } finally {
-      // crypto-core normally consumes the copy itself; this also covers
-      // derivation/authentication failures before it reaches zeroization.
-      oldPasswordCopy.fill(0);
-    }
 
-    const newPasswordCopy = newPasswordBytes.slice();
-    try {
-      const ciphertext = await kdfEncrypt(plaintext, newPasswordCopy);
-      await this.rawPut(SecureStorage.IDB_KEY_WRAPPED, ciphertext);
-    } finally {
-      // Keep the caller-owned buffer available to SecurityVault's outer
-      // rotation finally block while ensuring this private copy never leaks.
-      newPasswordCopy.fill(0);
-    }
+      const newPasswordCopy = newPasswordBytes.slice();
+      try {
+        const ciphertext = await kdfEncrypt(plaintext, newPasswordCopy);
+        await this.rawPut(SecureStorage.IDB_KEY_WRAPPED, ciphertext);
+      } finally {
+        // Keep the caller-owned buffer available to SecurityVault's outer
+        // rotation finally block while ensuring this private copy never leaks.
+        if (newPasswordCopy) {
+          zeroPasswordBytes(newPasswordCopy);
+        }
+      }
 
     // Keep rotation usable in the current unlocked session. The caller has
     // already verified the old password and may have a live device key; the

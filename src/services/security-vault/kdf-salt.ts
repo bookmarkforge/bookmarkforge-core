@@ -49,6 +49,7 @@ import {
   VAULT_SALT_REGISTRY,
   type VaultSaltPurpose,
 } from "./salt-registry";
+import { zeroPasswordBytes } from "../../utils/crypto-core";
 
 /** 16 random bytes, lowercase hex (crypto-core's VAULT_KDF_SALT_BYTES). */
 const VAULT_KDF_SALT_HEX_RE = /^[0-9a-f]{32}$/;
@@ -207,11 +208,11 @@ export async function migrateVaultSecretsToVaultSalt(
         );
       }
     }
-  } finally {
-    passwordBytes.fill(0);
-  }
+} finally {
+     zeroPasswordBytes(passwordBytes);
+   }
 
-  if (result.migrated.length > 0) {
+   if (result.migrated.length > 0) {
     logger.info("[SecurityVault] Legacy secrets re-wrapped under the vault salt", {
       migrated: result.migrated,
     });

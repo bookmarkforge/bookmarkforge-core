@@ -47,6 +47,8 @@ import { useFreeTierUsage } from "../hooks/useFreeTierUsage";
 import { SRSReviewCard } from "./dashboard/components/SRSReviewCard";
 import { TemplateModal } from "./dashboard/components/TemplateModal";
 import { QuickTips } from "./QuickTips";
+import { FirstRunChecklist } from "./dashboard/components/FirstRunChecklist";
+import { useFirstRunChecklist } from "../hooks/useFirstRunChecklist";
 import {
   StorageStatus,
   getLatestBackupAgeMs,
@@ -326,6 +328,23 @@ const HomeDashboard = function HomeDashboard({
     useFreeTierUsage();
   const [showFreeWallNudge, setShowFreeWallNudge] = useState(false);
 
+  // First-run path: while the user has produced nothing yet, the three-step
+  // checklist IS the dashboard's answer to "what do I do now?". Once every
+  // step is done (or the user dismisses it) the checklist disappears for
+  // good and the feature grid returns to being the dashboard.
+  const firstRun = useFirstRunChecklist();
+  const firstRunComplete =
+    (firstRun.bookmarkCount ?? 0) > 0 &&
+    (firstRun.documentCount ?? 0) > 0 &&
+    firstRun.searchTried;
+  const showFirstRun = !firstRun.dismissed && !firstRunComplete;
+
+  const handleTrySearch = useCallback(() => {
+    // Routed through the shell: the Omnibar lives in MainApp, and the same
+    // event also serves any other surface that wants to open search.
+    window.dispatchEvent(new Event("forge:open-search"));
+  }, []);
+
   useEffect(() => {
     if (!freeTierIsFree || !freeTierAtWall) {return;}
     const raw = safeGet(STORAGE_KEYS.FREE_TIER_WALL_DISMISSED_AT);
@@ -430,63 +449,71 @@ const HomeDashboard = function HomeDashboard({
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10 space-y-8 md:space-y-12 overflow-x-hidden font-sans">
-      {/* Banner containers always render to reserve space and prevent CLS.
-          opacity + max-height transition hides them without layout shift. */}
-      <div style={{ minHeight: showEvictionBanner ? undefined : 0, overflow: 'hidden' }}>
-        <EvictionBanner
-          show={showEvictionBanner}
-          onDismiss={() => {
-            setShowEvictionBanner(false);
-            safeSet(STORAGE_KEYS.EVICTION_BANNER_DISMISSED, "true");
-          }}
-          onConfigureSync={() => {
-            window.dispatchEvent(
-              new CustomEvent("forge:open-settings", {
-                detail: { section: "cloud-sync" },
-              }),
-            );
-          }}
-        />
-      </div>
+      {/* Each banner owns its own collapse: one animated height box, hidden
+          with `visibility` while it is off (ADR-055). No spacer wrapper here
+          — a banner that should not be on screen must cost no layout space. */}
+      <EvictionBanner
+        show={showEvictionBanner}
+        onDismiss={() => {
+          setShowEvictionBanner(false);
+          safeSet(STORAGE_KEYS.EVICTION_BANNER_DISMISSED, "true");
+        }}
+        onConfigureSync={() => {
+          window.dispatchEvent(
+            new CustomEvent("forge:open-settings", {
+              detail: { section: "cloud-sync" },
+            }),
+          );
+        }}
+      />
 
-      <div style={{ minHeight: showBackupBanner ? undefined : 0, overflow: 'hidden' }}>
-        <BackupReminderBanner
-          show={showBackupBanner}
-          backupAgeMs={backupAgeMs}
-          onDismiss={handleDismissBackupBanner}
-        />
-      </div>
+      <BackupReminderBanner
+        show={showBackupBanner}
+        backupAgeMs={backupAgeMs}
+        onDismiss={handleDismissBackupBanner}
+      />
 
-      <div style={{ minHeight: showFreeWallNudge ? undefined : 0, overflow: 'hidden' }}>
-        <FreeTierNudge
-          // Data-loss warnings take precedence; the Pro pitch reappears after
-          // the higher-priority banner is dismissed.
-          show={showFreeWallNudge && !showEvictionBanner && !showBackupBanner}
-          onDismiss={() => {
-            setShowFreeWallNudge(false);
-            safeSet(
-              STORAGE_KEYS.FREE_TIER_WALL_DISMISSED_AT,
-              Date.now().toString(),
-            );
-          }}
-          onSeePro={() => {
-            setShowFreeWallNudge(false);
-            safeSet(
-              STORAGE_KEYS.FREE_TIER_WALL_DISMISSED_AT,
-              Date.now().toString(),
-            );
-            // Existing navigation bridge (same pattern EvictionBanner uses
-            // for cloud-sync): Settings is a modal, not a routed section.
-            window.dispatchEvent(
-              new CustomEvent("forge:open-settings"),
-            );
-          }}
+      <FreeTierNudge
+        // Data-loss warnings take precedence; the Pro pitch reappears after
+        // the higher-priority banner is dismissed.
+        show={showFreeWallNudge && !showEvictionBanner && !showBackupBanner}
+        onDismiss={() => {
+          setShowFreeWallNudge(false);
+          safeSet(
+            STORAGE_KEYS.FREE_TIER_WALL_DISMISSED_AT,
+            Date.now().toString(),
+          );
+        }}
+        onSeePro={() => {
+          setShowFreeWallNudge(false);
+          safeSet(
+            STORAGE_KEYS.FREE_TIER_WALL_DISMISSED_AT,
+            Date.now().toString(),
+          );
+          // Existing navigation bridge (same pattern EvictionBanner uses
+          // for cloud-sync): Settings is a modal, not a routed section.
+          window.dispatchEvent(new CustomEvent("forge:open-settings"));
+        }}
+      />
+
+      {/* First-run checklist — replaces the daily tip while the user has not
+          yet captured anything, so the two onboarding surfaces never
+          compete for the same glance. */}
+      {showFirstRun && (
+        <FirstRunChecklist
+          bookmarkCount={firstRun.bookmarkCount}
+          documentCount={firstRun.documentCount}
+          searchTried={firstRun.searchTried}
+          onCaptureBookmark={() => onNavigate("bookmarks")}
+          onCreateDocument={() => onNavigate("documents")}
+          onTrySearch={handleTrySearch}
+          onDismiss={firstRun.dismiss}
         />
-      </div>
+      )}
 
       {/* Quick Tips — daily onboarding tip, dismissible. Audit-endorsed
           ("Buen feedback") but was never wired into any screen. */}
-      <QuickTips />
+      {!showFirstRun && <QuickTips />}
 
       {/* Welcome Section */}
       <motion.div

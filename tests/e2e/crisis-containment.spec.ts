@@ -56,7 +56,7 @@ function startCompanion(): Promise<void> {
     const rejectStartup = (error: Error) => { if (!settled) { settled = true; reject(error); } };
     const child = spawn(process.execPath, ["--import", "tsx", join(ROOT, "server", "src", "index.ts")], {
       cwd: ROOT,
-      env: { ...process.env, NODE_ENV: "test", PORT: String(companionPort), CLIENT_EVENTS_ADMIN_TOKEN: adminToken, CLIENT_EVENTS_WEBHOOK_URL: `http://127.0.0.1:${webhookPort}/client-events-hook`, CLIENT_EVENTS_WEBHOOK_ALLOW_HTTP: "1", HOST: "127.0.0.1", TRUST_PROXY: "1", GEMINI_API_KEY: "e2e-ai-key", GEMINI_API_BASE: "http://127.0.0.1:9/v1beta/models", WHOP_LICENSE_API_URL: "http://127.0.0.1:9/license", WHOP_API_KEY: "e2e-license-key", LICENSE_PROVIDER_ALLOW_HTTP: "1", ...(existsSync(SIGNING_KEY) ? { LICENSE_SIGNING_PRIVATE_KEY_FILE: SIGNING_KEY } : {}) },
+      env: { ...process.env, NODE_ENV: "test", PORT: String(companionPort), CLIENT_EVENTS_ADMIN_TOKEN: adminToken, CLIENT_EVENTS_WEBHOOK_URL: `http://127.0.0.1:${webhookPort}/client-events-hook`, CLIENT_EVENTS_WEBHOOK_ALLOW_HTTP: "1", HOST: "127.0.0.1", TRUST_PROXY: "1", WHOP_LICENSE_API_URL: "http://127.0.0.1:9/license", WHOP_API_KEY: "e2e-license-key", LICENSE_PROVIDER_ALLOW_HTTP: "1", ...(existsSync(SIGNING_KEY) ? { LICENSE_SIGNING_PRIVATE_KEY_FILE: SIGNING_KEY } : {}) },
       stdio: ["ignore", "pipe", "pipe"],
     });
     companion = child;

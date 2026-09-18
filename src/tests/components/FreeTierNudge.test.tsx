@@ -117,14 +117,45 @@ describe("FreeTierNudge", () => {
     expect(onSeePro).toHaveBeenCalledTimes(1);
   });
 
-  it("hidden state keeps the CLS-reserving wrapper and disables pointer events", () => {
+  it("collapses its box while hidden so it costs no vertical space", () => {
     const { container } = render(
       <FreeTierNudge show={false} onDismiss={vi.fn()} onSeePro={vi.fn()} />,
     );
-    // Same CLS contract as EvictionBanner: wrapper always mounted with
-    // overflow hidden (no layout shift), motion layer fades content.
+    // Same collapse contract as EvictionBanner: the surface animates its own
+    // height to 0 instead of reserving a few hundred pixels of emptiness.
     const wrapper = container.querySelector(".mb-6") as HTMLElement | null;
     expect(wrapper).not.toBeNull();
     expect(wrapper?.getAttribute("style")).toContain("overflow");
+    expect(wrapper?.style.height).toBe("0px");
+  });
+
+  it("keeps the hidden upsell out of the accessibility tree and the tab order", () => {
+    const { container } = render(
+      <FreeTierNudge show={false} onDismiss={vi.fn()} onSeePro={vi.fn()} />,
+    );
+    // A Pro pitch at opacity 0 is still announced and its CTAs are still
+    // focusable — a keyboard user could land on an invisible $59 button.
+    const wrapper = container.querySelector(".mb-6") as HTMLElement;
+    expect(wrapper.style.visibility).toBe("hidden");
+    expect(screen.getByText("See Pro — $59 once")).not.toBeVisible();
+    expect(screen.getByText("Keep Free")).not.toBeVisible();
+  });
+
+  it("reveals the upsell immediately when show flips to true", () => {
+    const { rerender, container } = render(
+      <FreeTierNudge show={false} onDismiss={vi.fn()} onSeePro={vi.fn()} />,
+    );
+    expect(screen.getByText("Keep Free")).not.toBeVisible();
+
+    rerender(<FreeTierNudge show={true} onDismiss={vi.fn()} onSeePro={vi.fn()} />);
+    // Asserted on the wrapper's inline style rather than toBeVisible(): the
+    // body's opacity is driven by motion's fade-in, which jsdom does not run,
+    // so this checks the part that must be synchronous — if the reveal were
+    // deferred behind the collapse delay, the banner would animate inside a
+    // hidden subtree and never appear at all.
+    const wrapper = container.querySelector(".mb-6") as HTMLElement;
+    expect(wrapper.style.visibility).toBe("visible");
+    expect(wrapper.style.transition).toContain("visibility 0s linear 0ms");
+    expect(wrapper.style.height).not.toBe("0px");
   });
 });

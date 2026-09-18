@@ -18,7 +18,7 @@ vi.mock("lucide-react", (() => ({
 const mockGenerateText = vi
   .fn()
   .mockResolvedValue({ text: "ai-tag-1,ai-tag-2" });
-vi.mock(import("../\.\./services/ai/ProviderManager"), (() => ({
+vi.mock(import("../../services/ai/ProviderManager"), (() => ({
   aiManager: { generateText: mockGenerateText },
 })) as any);
 

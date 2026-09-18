@@ -138,13 +138,18 @@ class SecurityVault {
           error: err,
         },
       );
+      // Max-effort fallback (ADR): use zeroPasswordBytes
+      zeroPasswordBytes(bytes);
     }
-    bytes.fill(0);
+    if (!this.zeroMemoryProcessor) {
+      zeroPasswordBytes(bytes);
+    }
     this.masterPasswordBytes = null;
   }
 
   private clearShareCredential(): void {
     if (this.shareCredentialBytes) {
+      for (let i = 0; i < this.shareCredentialBytes.length; i++) { this.shareCredentialBytes[i] = this.shareCredentialBytes[i]! ^ 0xAA; }
       this.shareCredentialBytes.fill(0);
       this.shareCredentialBytes = null;
     }
@@ -645,13 +650,13 @@ class SecurityVault {
     } catch (error) {
       logger.warn("[SecurityVault] Password verification failed", { error });
       return false;
-    } finally {
-      passwordBytes.fill(0);
-    }
-  }
+} finally {
+       zeroPasswordBytes(passwordBytes);
+     }
+   }
 
-  /**
-   * Rate-limited password verification (RL-1).
+   /**
+    * Rate-limited password verification (RL-1).
    *
    * `verifyPassword` is deliberately private: the only way to verify a
    * password from outside the vault is through this method, which applies
@@ -1142,9 +1147,9 @@ class SecurityVault {
 
       return encrypted;
     } finally {
-      pwCopy.fill(0);
-    }
-  }
+zeroPasswordBytes(pwCopy);
+     }
+   }
 
   async decryptSecret(key: string = this.API_KEY_KEY): Promise<string> {
     this.assertUnlocked(key, "decrypt");
@@ -1173,11 +1178,11 @@ class SecurityVault {
         origin: "SecurityVault",
       });
 
-      return result;
-    } finally {
-      pwCopy.fill(0);
-    }
-  }
+return result;
+     } finally {
+       zeroPasswordBytes(pwCopy);
+     }
+   }
 
   /** Stores encrypted recovery data (phrase-encrypted, readable while locked). */
   async setRecoveryData(encryptedData: string): Promise<void> {
@@ -1387,6 +1392,7 @@ class SecurityVault {
         assertRotationActive();
       } finally {
         if (oldPwBytes) {
+          for (let i = 0; i < oldPwBytes.length; i++) { oldPwBytes[i] = oldPwBytes[i]! ^ 0xAA; }
           oldPwBytes.fill(0);
           oldPwBytes = null;
         }
@@ -1527,20 +1533,21 @@ class SecurityVault {
         },
       });
       return false;
-    } finally {
-      if (oldPwBytes) {
-        oldPwBytes.fill(0);
-        oldPwBytes = null;
-      }
-      if (newPwBytes) {
-        zeroPasswordBytes(newPwBytes);
-        newPwBytes = null;
-      }
-    }
-  }
+} finally {
+       if (oldPwBytes) {
+         for (let i = 0; i < oldPwBytes.length; i++) { oldPwBytes[i] = oldPwBytes[i]! ^ 0xAA; }
+         oldPwBytes.fill(0);
+         oldPwBytes = null;
+       }
+       if (newPwBytes) {
+         zeroPasswordBytes(newPwBytes);
+         newPwBytes = null;
+       }
+     }
+   }
 
-  /**
-   * Deletes a secret from IndexedDB.
+   /**
+    * Deletes a secret from IndexedDB.
    * @param key - Storage key identifier (defaults to `encrypted_api_key`)
    */
   async deleteSecret(key: string = this.API_KEY_KEY): Promise<void> {

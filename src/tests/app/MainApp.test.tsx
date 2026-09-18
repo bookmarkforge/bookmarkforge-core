@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 // ── Barrel mock: all 21 mock factories live in a single file so the test
@@ -97,6 +97,28 @@ describe("MainApp", () => {
     expect(queryByTestId("omnibar")).toBeNull();
     await userEvent.click(getByTestId("btn-search"));
     expect(queryByTestId("omnibar")).toBeTruthy();
+  });
+
+  it("opens the Omnibar when a surface asks for search by event", async () => {
+    const { queryByTestId } = render(<MainApp />);
+    expect(queryByTestId("omnibar")).toBeNull();
+    // The dashboard's first-run checklist hands the user off to search this
+    // way, because the Omnibar's state lives here in the shell.
+    await act(async () => {
+      window.dispatchEvent(new Event("forge:open-search"));
+    });
+    expect(queryByTestId("omnibar")).toBeTruthy();
+  });
+
+  it("records the first-run search step whenever search opens", async () => {
+    const { getByTestId } = render(<MainApp />);
+    expect(localStorage.getItem("forge_first_run_search_tried")).toBeNull();
+
+    await userEvent.click(getByTestId("btn-search"));
+
+    // Any route into search — Ctrl+K, the sidebar, voice, the checklist —
+    // counts as the user having tried to retrieve something.
+    expect(localStorage.getItem("forge_first_run_search_tried")).toBe("1");
   });
 
   it("renders Settings when settings button clicked", async () => {

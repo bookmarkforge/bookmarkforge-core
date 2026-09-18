@@ -11,6 +11,7 @@ import { useClipperSync } from "../../hooks/useClipperSync";
 import { useAppLifecycle } from "../../hooks/useAppLifecycle";
 import { useRoutePrefetch } from "../../hooks/useRoutePrefetch";
 import { useRouteTransitionTiming } from "../../hooks/useRouteTransitionTiming";
+import { markFirstRunSearchTried } from "../../hooks/useFirstRunChecklist";
 import { AutoLockManager } from "../../hooks/AutoLockManager";
 import { useTheme } from "../../contexts/ThemeContext";
 import { isRTLanguage } from "../../utils/localization";
@@ -257,6 +258,25 @@ export function MainApp() {
     return () =>
       window.removeEventListener("forge:open-settings", handleOpenSettings);
   }, []);
+
+  // Search is owned by the shell, so surfaces that want to hand the user off
+  // to it (the dashboard's first-run checklist) ask for it by event instead
+  // of reaching into the Omnibar's state.
+  useEffect(() => {
+    const handleOpenSearch = () => setShowOmnibar(true);
+    window.addEventListener("forge:open-search", handleOpenSearch);
+    return () =>
+      window.removeEventListener("forge:open-search", handleOpenSearch);
+  }, []);
+
+  // Whatever opened it — Ctrl+K, the sidebar, voice, the checklist — opening
+  // search means the user has tried to retrieve something. That is the last
+  // first-run step, so record it here, at the single place search opens.
+  useEffect(() => {
+    if (showOmnibar) {
+      markFirstRunSearchTried();
+    }
+  }, [showOmnibar]);
 
   useClipperSync(null, t, setCurrentDocId, setActiveTab);
   useKeyboardShortcuts(

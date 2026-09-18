@@ -670,19 +670,19 @@ function main() {
     for (const failure of failures) {
       if (failure.type === "malformed-catalog") {
         console.error(
-          `[audit-anchors] FAIL malformed catalog ${failure.id} — ${failure.description}: ${failure.glob}`,
+          `[audit-anchors] FAIL malformed catalog ${failure.id} — ${failure.description}: ${failure.glob} (fix: correct the ANCHORS[] entry in scripts/audit-anchors.mjs — the baseline is not the problem)`,
         );
       } else if (failure.type === "catalog-inflation") {
         console.error(
-          `[audit-anchors] FAIL catalog inflation ${failure.id} — ${failure.description}`,
+          `[audit-anchors] FAIL catalog inflation ${failure.id} — ${failure.description} (fix: once the anchored file(s) exist on disk, regenerate the catalog with node scripts/audit-anchors.mjs --fix)`,
         );
       } else if (failure.type === "strict-discovery") {
         console.error(
-          `[audit-anchors] FAIL strict discovery — ${failure.description}: ${failure.matches.join(", ")}`,
+          `[audit-anchors] FAIL strict discovery — ${failure.description}: ${failure.matches.join(", ")} (fix: add the anchor to ANCHORS[] in scripts/audit-anchors.mjs and regenerate with node scripts/audit-anchors.mjs --fix)`,
         );
       } else {
         console.error(
-          `[audit-anchors] FAIL ${failure.id} (${failure.adr}) — no file matches ${failure.glob} (${failure.description})`,
+          `[audit-anchors] FAIL ${failure.id} (${failure.adr}) — no file matches ${failure.glob} (${failure.description}) (fix: restore the anchored file or correct the glob — removing/renaming an anchored test is an ADR-level change; afterwards regenerate with node scripts/audit-anchors.mjs --fix)`,
         );
       }
     }

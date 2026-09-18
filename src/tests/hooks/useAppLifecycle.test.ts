@@ -12,10 +12,10 @@ vi.mock("../../db/database", () => ({ initDB: mockInitDB }));
 vi.mock("../../services/NotificationService", () => ({
   notificationService: mockNotificationService,
 }));
-vi.mock("../\.\./services/ai/AgentService", () => ({
+vi.mock("../../services/ai/AgentService", () => ({
   agentService: mockAgentService,
 }));
-vi.mock("../\.\./services/ai/AutoProcessorService", () => ({
+vi.mock("../../services/ai/AutoProcessorService", () => ({
   autoProcessorService: mockAutoProcessor,
 }));
 vi.mock("../../utils/logger", () => ({

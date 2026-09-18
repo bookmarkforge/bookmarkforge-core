@@ -268,7 +268,7 @@ const envFileArg = existsSync(".env.production") ? "--env-file .env.production" 
 if (envFileArg) {
   log(".env.production presente ✓");
 } else {
-  log("⚠️  no .env.production — las vars VITE_*/GEMINI_* deben venir del entorno o .env");
+log("⚠️ no .env.production — las vars VITE_* deben venir del entorno o .env");
 }
 const composeBase = `docker compose -f ${COMPOSE_FILE} ${envFileArg}`.trim();
 

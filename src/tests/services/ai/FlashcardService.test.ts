@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 
 const mockGenerateText = vi.fn();
 
-vi.mock("../../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../../services/ai/ProviderManager", () => ({
   aiManager: {
     get generateText() {
       return mockGenerateText;
@@ -20,7 +20,7 @@ vi.mock("../../../utils/logger", () => ({
 
 const { initDB } = await import("../../../db/database");
 const { FlashcardService } =
-  await import("../../\.\./services/ai/FlashcardService");
+  await import("../../../services/ai/FlashcardService");
 
 function freshService(): InstanceType<typeof FlashcardService> {
   return new FlashcardService();

@@ -12,7 +12,7 @@ const mockService = {
   status$: mockStatus$.asObservable(),
 };
 
-vi.mock("../\.\./services/ai/AutoProcessorService", () => ({
+vi.mock("../../services/ai/AutoProcessorService", () => ({
   autoProcessorService: mockService,
   AutoProcessorStatus: {},
 }));

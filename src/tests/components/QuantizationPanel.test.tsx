@@ -27,7 +27,7 @@ afterEach(() => {
   }
 });
 
-vi.mock("../\.\./services/ai/VectorIndexService", () => ({
+vi.mock("../../services/ai/VectorIndexService", () => ({
   vectorIndexService: {
     getStats: vi.fn().mockResolvedValue({
       count: 100,

@@ -32,7 +32,7 @@ vi.mock("../../memory/MemoryRecall", () => ({
 vi.mock("../../store/useMemoryStore", () => ({
   useMemoryStore: { getState: () => mockStoreState },
 }));
-vi.mock("../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../services/ai/ProviderManager", () => ({
   aiManager: { generateText: vi.fn() },
 }));
 

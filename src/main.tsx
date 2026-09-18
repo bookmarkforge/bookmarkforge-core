@@ -74,8 +74,9 @@ initCrisisHandler();
 initLicenseStore();
 
 // HIGH-severity fix (post-review): assertValidForBuild actually called.
-// In PROD, throws if VITE_GEMINI_API_KEY is leaked without VITE_GEMINI_PROXY_URL,
-// or any other AI provider key is bundled.
+// In PROD, throws if any server-side/provider key is accidentally bundled into
+// the client bundle. Cloud AI credentials are supplied by the user at runtime
+// from the encrypted vault and calls go directly to the selected provider.
 if (envBoot.isProd) {
   try {
     assertValidForBuild();

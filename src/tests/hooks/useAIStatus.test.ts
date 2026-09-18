@@ -4,7 +4,7 @@ import { act } from "react";
 import { logger } from "../../utils/logger";
 
 const mockGetProviderInfo = vi.fn();
-vi.mock("../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../services/ai/ProviderManager", () => ({
   aiManager: { getProviderInfo: mockGetProviderInfo },
 }));
 vi.mock("../../utils/logger", () => ({ logger: { warn: vi.fn() } }));

@@ -41,22 +41,28 @@ import ts from "typescript";
 /** Exact proprietary implementation paths (repo-relative, forward slashes). */
 export const PRO_MODULE_PATHS = [
    "src/services/WebRTCSyncService.ts",
-  "src/services/pdfService.ts",
-  "src/services/BackupService.ts",
-  "src/services/DiskBackupService.ts",
-  // The genuinely proprietary AI surfaces: the local model runtime (the
-  // "AI inside your computer" Pro hook), the RAG generation orchestration,
-  // the expert-agent registry and flashcard generation. RAGEngine stays Core:
-  // it contains no LLM calls — it is the embedding+similarity engine that
-  // powers the FREE semantic search (README: "Smart search ✅ included"), and
-  // the BYOK cloud path via ProviderManager is Free too (user's own API key).
-  "src/services/ai/WebLLMService.ts",
-  "src/services/ai/GlobalRAGService.ts",
-  "src/services/ai/SpecializedAgentsService.ts",
-  "src/services/ai/FlashcardService.ts",
+   "src/services/pdfService.ts",
+   "src/services/BackupService.ts",
+   "src/services/DiskBackupService.ts",
+   // The genuinely proprietary AI surfaces: the local model runtime (the
+   // "AI inside your computer" Pro hook), the RAG generation orchestration,
+   // the expert-agent registry and flashcard generation. RAGEngine stays Core:
+   // it contains no LLM calls — it is the embedding+similarity engine that
+   // powers the FREE semantic search (README: "Smart search ✅ included"), and
+   // the BYOK cloud path via ProviderManager is Free too (user's own API key).
+   "src/services/ai/WebLLMService.ts",
+   "src/services/ai/GlobalRAGService.ts",
+   "src/services/ai/SpecializedAgentsService.ts",
+   "src/services/ai/FlashcardService.ts",
 ];
 
-/** Whole trees that are proprietary (none — Pro AI is an exact file list). */
+/** Whole trees that are proprietary (none — Pro AI is an exact file list).
+ *
+ * The AI tree in src/services/ai/ contains both Core modules
+ * (RAGEngine, ProviderManager, VectorIndexService, etc.) and Pro modules
+ * (WebLLMService, GlobalRAGService, SpecializedAgentsService, FlashcardService).
+ * Because of this mixed ownership, Pro status is declared per-file via
+ * PRO_MODULE_PATHS, not per-directory via PRO_MODULE_DIRS. */
 export const PRO_MODULE_DIRS = [];
 
 /** Extensionless bases of the exact proprietary paths. */
@@ -232,7 +238,7 @@ export function resolveProReference(importerRel, specifier, exists) {
 // Source scan
 // ---------------------------------------------------------------------------
 
-const SKIP_DIRS = new Set([
+export const SKIP_DIRS = new Set([
   "node_modules",
   ".git",
   "dist",
@@ -243,7 +249,7 @@ const SKIP_DIRS = new Set([
   "legal",
   "evidence",
 ]);
-const SCAN_EXTENSIONS = new Set([".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs"]);
+export const SCAN_EXTENSIONS = new Set([".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs"]);
 
 /** Every scannable source file below `root`, repo-relative with forward slashes. */
 export function sourceFiles(root) {

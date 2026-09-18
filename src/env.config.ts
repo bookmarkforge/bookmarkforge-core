@@ -119,6 +119,13 @@ export const ENV_REGISTRY = {
   disableNetworkFirewall: { envVar: "VITE_DISABLE_NETWORK_FIREWALL", parser: parseBool, default: false},
   forceMemoryStorage:     { envVar: "VITE_FORCE_MEMORY_STORAGE",     parser: parseBool, default: false},
   forceDexieStorage:      { envVar: "VITE_FORCE_DEXIE_STORAGE",      parser: parseBool, default: false},
+  // ADR-052 Fase 3 — bridge flag for the v5 legacy read-path cutoff.
+  // UNSET (today's default) = cutoff NOT activated: `v5:` payloads keep
+  // decrypting under the legacy static salt, exactly as before. An
+  // explicit VITE_ALLOW_V5_LEGACY_READ=false is the Phase 3 cutoff
+  // itself: every `v5:` read then fails closed with the typed
+  // LegacyV5FormatRemovedError. Only cutoff builds set false.
+  allowV5LegacyRead:      { envVar: "VITE_ALLOW_V5_LEGACY_READ",     parser: parseBool},
   // E2E-preview build flag: lets the production build publish the storage
   // backend diagnostic hook so the Playwright preview run can assert the
   // durable backend. NEVER set in real production builds (no hook shipped).
@@ -134,14 +141,6 @@ export const ENV_REGISTRY = {
   // stays strictly local unless the operator configures a DSN AND the user
   // consents via the banner.
   sentryDsn:              { envVar: "VITE_SENTRY_DSN",               parser: parseString},
-
-  // ─── AI provider keys (all optional — validated per-provider) ───
-  // VITE_GEMINI_API_KEY removed: GeminiProvider reads the API key
-  // from the user's vault (securityVault), not from env vars.
-  openaiApiKey:       { envVar: "VITE_OPENAI_API_KEY",        parser: parseString},
-  anthropicApiKey:    { envVar: "VITE_ANTHROPIC_API_KEY",     parser: parseString},
-  groqApiKey:         { envVar: "VITE_GROQ_API_KEY",          parser: parseString},
-  huggingfaceApiKey:  { envVar: "VITE_HUGGINGFACE_API_KEY",   parser: parseString},
 
   // ─── Network firewall / P2P overrides ───
   p2pSignalingUrl:    { envVar: "VITE_P2P_SIGNALING_URL",     parser: parseString},
@@ -246,7 +245,7 @@ function readEnvVar(envVar: string): string | undefined {
  *   5. **VITE_* prefix guard** (`VITE_ENV_PREFIX_STRICT=1`): if a
  *      registry entry is `VITE_`-prefixed and the live env chain has
  *      the non-prefixed counterpart set (e.g. operator set
- *      `GEMINI_API_KEY` instead of `VITE_GEMINI_API_KEY`), warn.
+ *      `OPENAI_API_KEY` instead of `VITE_OPENAI_API_KEY`), warn.
  *      Vite silently strips non-prefixed vars from the client bundle
  *      → runtime returns `undefined` → API calls fail mysteriously.
  *      Off by default; toggle in production deployments. The flag

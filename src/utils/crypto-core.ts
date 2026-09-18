@@ -18,8 +18,17 @@ import {
   deriveArgon2idHkdfBaseKey,
   deriveArgon2idKey,
 } from "./argon2-kdf";
+import { env } from "../env.config";
 
 export const CRYPTO_ALGORITHM = "AES-GCM";
+
+/** Error thrown when a v5 legacy format read is blocked by the cutoff. */
+export class LegacyV5FormatRemovedError extends Error {
+  constructor() {
+    super("[crypto-core] v5 legacy format read is disabled by VITE_ALLOW_V5_LEGACY_READ");
+    this.name = "LegacyV5FormatRemovedError";
+  }
+}
 
 // ─── Session-key master-key cache ───────────────────────────────────
 //
@@ -407,6 +416,10 @@ export function zeroPasswordBytes(bytes: Uint8Array): Uint8Array {
         "Callers must pass a fresh copy if the bytes are needed after a crypto operation.",
     );
   }
+  // Max-effort zeroization (ADR): fill(0) → XOR 0xAA → fill(0) defeats
+  // compiler elision, matching EncryptionService.zeroBytes.
+  bytes.fill(0);
+  for (let i = 0; i < bytes.length; i++) { bytes[i] = bytes[i]! ^ 0xAA; }
   bytes.fill(0);
   return bytes;
 }
@@ -547,6 +560,15 @@ export async function decrypt(
   }
 
   if (encryptedBase64.startsWith("v5:")) {
+    // ADR-052 Fase 3 — cutoff switch. Default (flag unset/false) keeps
+    // the legacy read path open: v5 payloads decrypt under the retired
+    // bundle-wide static salt while the sunset criterion (zero residual
+    // v5 across two consecutive unlocks) has not been met. When
+    // VITE_ALLOW_V5_LEGACY_READ=true the cutoff is activated and v5
+    // reads fail closed with LegacyV5FormatRemovedError.
+    if (env.allowV5LegacyRead === true) {
+      throw new LegacyV5FormatRemovedError();
+    }
     // V5 (Argon2id-once + HKDF, legacy fixed salt) — still read for every
     // payload written before the per-vault salt existed, and for new writes
     // on code paths that run without a provisioned vault salt.

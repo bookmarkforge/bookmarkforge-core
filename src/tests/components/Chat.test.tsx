@@ -7,7 +7,7 @@ Element.prototype.scrollIntoView = vi.fn();
 
 const mockWebSearch = vi.hoisted(() => vi.fn());
 const mockGlobalChat = vi.hoisted(() => vi.fn());
-vi.mock("../\.\./services/ai/AgentService", () => ({
+vi.mock("../../services/ai/AgentService", () => ({
   agentService: { webSearch: mockWebSearch, globalChat: mockGlobalChat },
 }));
 
@@ -48,7 +48,7 @@ const mockStreamGenerateText = vi.hoisted(() =>
     },
   ),
 );
-vi.mock("../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../services/ai/ProviderManager", () => ({
   aiManager: {
     streamGenerateText: mockStreamGenerateText,
     generateText: vi.fn(),

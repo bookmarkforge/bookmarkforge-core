@@ -14,7 +14,7 @@ vi.mock("../../db/database", () => ({
   getDB: vi.fn(),
   destroyDB: vi.fn(),
 }));
-vi.mock("../\.\./services/ai/ProviderManager", () => ({ aiManager: {} }));
+vi.mock("../../services/ai/ProviderManager", () => ({ aiManager: {} }));
 vi.mock("../../services/SecurityVault", () => ({
   securityVault: mockSecurityVault,
 }));

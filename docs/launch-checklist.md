@@ -42,7 +42,7 @@
 
 - [ ] **5. Cierre legal RGPD**
   Documentar: responsable del tratamiento, finalidades, base jurídica, minimización, retención, derechos, encargados/subencargados, transferencias internacionales, consentimiento y procedimiento de incidentes.
-  - Evidencia: [docs/ROPA.md](ROPA.md) — **campos operativos rellenados (2026-08-31)**: bases jurídicas y retención por tratamiento (§3/§5), registro de consentimiento y plazos de respuesta (§9), procedimiento de incidentes (§10), revisión trimestral fijada (§12). Quedan solo campos `⚠ DATO PERSONAL`: identidad legal del operador (§1), autoridad de control (§1), DPA firmados por proveedor (§7/§8). [docs/security.md](security.md) → "RGPD" (controles técnicos ≠ certificación legal); reconocido como deuda en [docs/audit.md](audit.md) §2 y §5.
+  - Evidencia: [docs/ROPA.md](ROPA.md) — **campos operativos rellenados (2026-08-31)**: bases jurídicas y retención por tratamiento (§3/§5), registro de consentimiento y plazos de respuesta (§9), procedimiento de incidentes (§10), revisión trimestral fijada (§12). El cierre legal sigue **pendiente**: quedan campos `⚠ DATO PERSONAL` sobre identidad legal del operador (§1), autoridad de control (§1) y DPA firmados por proveedor (§7/§8). [docs/security.md](security.md) → "RGPD" (controles técnicos ≠ certificación legal); reconocido como deuda en [docs/audit.md](audit.md) §2 y §5.
   - **Pasos restantes (externos, del operador):** guía completa en [docs/legal-closing-package.md](legal-closing-package.md) — inventario de DPAs por proveedor, orden de firma con dependencias, plantillas y registro de firmas.
     1. Rellenar §1: nombre legal, sede y autoridad de control competente.
     2. Firmar/conservar los DPA por proveedor (§7/§8): hosting, Sentry, proveedores de IA.
@@ -53,7 +53,7 @@
 - [ ] **16. Smoke de rutas críticas en verde contra la build de producción**
   Batería Playwright de 7 tests que ejercita las rutas que no pueden fallar el día 1: bóveda con contraseña de 12 caracteres, recuperación con la frase de 24 palabras, activación de licencia Pro con firma real (+ clave inválida fallando cerrado) y round-trip de backup cifrado .bmf tras pérdida total simulada.
   - Evidencia: [docs/launch-day-smoke.md](launch-day-smoke.md) (runbook: topología, triage, relación con claves de firma).
-  - Gate: `npm run smoke:launch` — veredicto "ALL CRITICAL PATHS GREEN — cleared to release".
+  - Gate: `npm run launch:smoke` — veredicto "ALL CRITICAL PATHS GREEN — cleared to release".
   - Complemento de dispositivo real: certificar un iPhone con [docs/ios-manual-test-script.md](ios-manual-test-script.md) (creación de bóveda, frase de 24 palabras, backup .bmf fuera del dispositivo y la expulsión de IndexedDB de Safari a los 7 días) — Android emulado queda cubierto por `npm run e2e:mobile`. Hoja ejecutiva del día 0: [docs/ios-day0-session-sheet.md](ios-day0-session-sheet.md) (incluye el modo HTTPS de drill `VITE_DEV_HTTPS=1` para contexto seguro en el iPhone).
   - Complemento de dispositivo real para sync: certificar el emparejamiento P2P iPhone ↔ escritorio con [docs/p2p-sync-manual-test-script.md](p2p-sync-manual-test-script.md) (doble QR con cámaras reales, sync en la LAN, conflictos LWW y verificación air-gapped) — la lógica ya está automatizada en `tests/e2e/vault-sync-real.spec.ts` (y en CI con `e2e:sync`). Usa la hoja de sesión con capturas ordenadas: [docs/p2p-sync-session-prep.md](p2p-sync-session-prep.md).
 

@@ -13,7 +13,8 @@ import { pathToFileURL } from "node:url";
 // Security Champions Program integration:
 // - `check:security-internal` is a mandatory gate on every PR
 // - Penetration tests are run monthly and before production launch
-// - The `Enforce mandatory security gates` check must pass before merge
+// - The security gates above run as steps inside the `Typecheck, lint, tests
+// and security gates` job, which must pass before merge
 
 const ROOT = process.cwd();
 const read = (path) =>
@@ -30,7 +31,11 @@ const readJson = (path) => {
 };
 
 export const REQUIRED_RULESET_CHECKS = [
-  "Enforce mandatory security gates",
+  // Contextos de required checks = NOMBRES DE JOB de ci.yml/sast.yml.
+  // "Enforce mandatory security gates" era un nombre de STEP dentro del job
+  // quality: un contexto así nunca aparecería y bloquearía todos los merges.
+  // Esos gates (check:security-internal, check:server-log-ip-privacy,
+  // check:blindeo) corren dentro del job quality, ya requerido aquí.
   "Typecheck, lint, tests and security gates",
   "Playwright E2E",
   "Production build and repository checks",

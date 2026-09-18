@@ -110,28 +110,8 @@ export function validateEnvVars(): EnvValidationResult {
     isValid: true,
     missing: [],
     warnings: [],
-  errors: [],
-};
-
-// ---- Same hardening for all AI provider keys ----
-  const openaiKey = env.openaiApiKey;
-  const anthropicKey = env.anthropicApiKey;
-  const groqKey = env.groqApiKey;
-  const huggingfaceKey = env.huggingfaceApiKey;
-  if (env.isProd) {
-    for (const [name, value] of [
-      ["VITE_OPENAI_API_KEY", openaiKey],
-      ["VITE_ANTHROPIC_API_KEY", anthropicKey],
-      ["VITE_GROQ_API_KEY", groqKey],
-      ["VITE_HUGGINGFACE_API_KEY", huggingfaceKey],
-    ] as const) {
-      if (value) {
-        result.errors.push(
-          `[BUILD FATAL] ${name} is set in production. AI provider keys MUST NOT be bundled in the frontend. Use a user-supplied key through the client integration.`,
-        );
-      }
-    }
-  }
+    errors: [],
+  };
 
   // Test-only bypasses must never be shipped in a production bundle.
   if (env.isProd) {

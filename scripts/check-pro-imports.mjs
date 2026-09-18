@@ -15,8 +15,7 @@
  * discovered at runtime):
  *
  *   1. The importing file is itself a Pro module (isProModulePath). Pro code
- *      — the whole src/services/ai/ tree included — may import Pro freely;
- *      its internals are not Core's business.
+ *      may import Pro freely;
  *   2. The importing file is src/services/pro-access.ts, the seam itself.
  *   3. The import is server-internal (importer and target both under
  *      server/). The server assembles its own Pro handlers behind its own
@@ -30,11 +29,9 @@
  *      are satisfied in the export by the generated .d.ts pairs — they carry
  *      no code into Core chunks.
  *
- * There is NO tolerated zone: the AI tree used to be one while it migrated
- * behind the loader, but that migration is complete (pending count held at 0
- * and the tolerance branch was removed). Pro is an exact file list in
- * scripts/pro-boundary.mjs — anything else fails with the file, line and
- * specifier to fix.
+ * There is NO tolerated zone: the AI tree migration behind the loader is
+ * complete. Pro is an exact file list in scripts/pro-boundary.mjs —
+ * anything else fails with the file, line and specifier to fix.
  *
  * Policy is imported from scripts/pro-boundary.mjs so the exporter, the
  * boundary generator, the open-core gate and this gate can never disagree
@@ -43,7 +40,10 @@
 import { readFileSync } from "node:fs";
 import { dirname, join, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { isProModulePath, scanProReferences } from "./pro-boundary.mjs";
+import { isProModulePath, scanProReferences, SKIP_DIRS as PRO_SCAN_SKIP_DIRS, SCAN_EXTENSIONS } from "./pro-boundary.mjs";
+import { getCachedVerdict, putCachedVerdict, treeFingerprint } from "./gate-cache.mjs";
+
+const GATE_CACHE_NAME = "check-pro-imports";
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_ROOT = join(SCRIPT_DIR, "..");
@@ -142,6 +142,22 @@ export function checkProImports(root = DEFAULT_ROOT, files) {
 }
 
 function main() {
+  // Verdict cache (scripts/gate-cache.mjs): the scan is deterministic in the
+  // source tree, so a fingerprint match over the scanner's exact universe
+  // (pro-boundary's SKIP_DIRS + SCAN_EXTENSIONS) proves the PASS verdict
+  // still holds. Only PASS is cached; BMF_GATE_CACHE_OFF=1 bypasses.
+  const fingerprint = treeFingerprint({
+    root: DEFAULT_ROOT,
+    extensions: SCAN_EXTENSIONS,
+    skipDirs: PRO_SCAN_SKIP_DIRS,
+    hash: true,
+  });
+  if (getCachedVerdict({ gateName: GATE_CACHE_NAME, fingerprint })) {
+    console.log(
+      `[check-pro-imports] OK (cached): source tree unchanged since the last pass — no Core file statically imports a Pro module outside the sanctioned seam`,
+    );
+    return;
+  }
   const result = checkProImports(DEFAULT_ROOT);
   if (result.violations.length > 0) {
     console.error(
@@ -160,6 +176,7 @@ function main() {
   console.log(
     `[check-pro-imports] OK: no Core file statically imports a Pro module outside the sanctioned seam (${result.referencingFiles} referencing file(s), ${result.allowed} allowed)`,
   );
+  putCachedVerdict({ gateName: GATE_CACHE_NAME, fingerprint });
 }
 
 const isMain =

@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 
 const mockGenerateText = vi.fn();
 
-vi.mock("../../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../../services/ai/ProviderManager", () => ({
   aiManager: {
     get generateText() {
       return mockGenerateText;
@@ -49,7 +49,7 @@ const mockLocalStorage = (() => {
 Object.defineProperty(globalThis, "localStorage", { value: mockLocalStorage });
 
 const { TaggingService } =
-  await import("../../\.\./services/ai/TaggingService");
+  await import("../../../services/ai/TaggingService");
 
 /** Generates unique text to avoid cache collisions */
 function uniqueText(base: string, seed: number): string {

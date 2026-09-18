@@ -1,0 +1,29 @@
+{
+  "schema": "bmf.dashboard-cls/1",
+  "adr": "docs/ADR-055-collapsible-surfaces.md",
+  "battery": "mobile",
+  "totalCls": 0.13333669330599676,
+  "bannerPhaseCls": 0.13333669330599676,
+  "bannerPhaseShifts": [
+    {
+      "value": 0.013976651179881117,
+      "startTime": 33334.09999999963,
+      "sourceTag": "div",
+      "sourceCls": "grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-4 md:gap-5"
+    },
+    {
+      "value": 0.07410357054204901,
+      "startTime": 33442,
+      "sourceTag": "section",
+      "sourceCls": "rounded-2xl border border-[var(--divider)] ds-bg-secondary p-5 md:p-6"
+    },
+    {
+      "value": 0.045256471584066635,
+      "startTime": 33473.699999999255,
+      "sourceTag": "section",
+      "sourceCls": "rounded-2xl border border-[var(--divider)] ds-bg-secondary p-5 md:p-6"
+    }
+  ],
+  "revealHappened": true,
+  "measuredAt": "2026-09-18T18:41:58.816Z"
+}

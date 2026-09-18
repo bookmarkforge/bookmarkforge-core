@@ -2,11 +2,11 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
 
 const mockPrefetch = vi.hoisted(() => vi.fn().mockResolvedValue(undefined));
-vi.mock("../../\.\./services/ai/RAGEngine", () => ({
+vi.mock("../../../services/ai/RAGEngine", () => ({
   ragEngine: { searchSimilar: vi.fn(), prefetch: mockPrefetch },
 }));
 
-vi.mock("../../\.\./services/ai/SemanticSearchService", () => ({
+vi.mock("../../../services/ai/SemanticSearchService", () => ({
   semanticSearchService: { expandQuery: vi.fn() },
   runWithTimeout: (
     operation: (signal: AbortSignal) => Promise<unknown>,
@@ -205,9 +205,9 @@ describe("useBookmarkSearch", () => {
   });
 
   it("should do semantic search when enabled and query > 2 chars", async () => {
-    const { ragEngine } = await import("../../\.\./services/ai/RAGEngine");
+    const { ragEngine } = await import("../../../services/ai/RAGEngine");
     const { semanticSearchService } =
-      await import("../../\.\./services/ai/SemanticSearchService");
+      await import("../../../services/ai/SemanticSearchService");
     (semanticSearchService.expandQuery as any).mockResolvedValue(
       "expanded react",
     );
@@ -233,9 +233,9 @@ describe("useBookmarkSearch", () => {
   });
 
   it("should ignore an older semantic search after a newer query starts", async () => {
-    const { ragEngine } = await import("../../\.\./services/ai/RAGEngine");
+    const { ragEngine } = await import("../../../services/ai/RAGEngine");
     const { semanticSearchService } =
-      await import("../../\.\./services/ai/SemanticSearchService");
+      await import("../../../services/ai/SemanticSearchService");
     let resolveFirst!: (value: string) => void;
     let resolveSecond!: (value: string) => void;
     const firstExpansion = new Promise<string>((resolve) => {
@@ -290,7 +290,7 @@ describe("useBookmarkSearch", () => {
 
   it("should prefetch when semantic mode opens but defer search for short queries", async () => {
     const { semanticSearchService } =
-      await import("../../\.\./services/ai/SemanticSearchService");
+      await import("../../../services/ai/SemanticSearchService");
     const { result } = renderHook(() =>
       useBookmarkSearch({ bookmarks: mockBookmarks }),
     );
@@ -305,7 +305,7 @@ describe("useBookmarkSearch", () => {
 
   it("should not do semantic search when disabled", async () => {
     const { semanticSearchService } =
-      await import("../../\.\./services/ai/SemanticSearchService");
+      await import("../../../services/ai/SemanticSearchService");
     const { result } = renderHook(() =>
       useBookmarkSearch({ bookmarks: mockBookmarks }),
     );
@@ -351,7 +351,7 @@ describe("useBookmarkSearch", () => {
 
   it("should handle semantic search error gracefully", async () => {
     const { semanticSearchService } =
-      await import("../../\.\./services/ai/SemanticSearchService");
+      await import("../../../services/ai/SemanticSearchService");
     const { logger } = await import("../../../utils/logger");
     (semanticSearchService.expandQuery as any).mockRejectedValue(
       new Error("API error"),

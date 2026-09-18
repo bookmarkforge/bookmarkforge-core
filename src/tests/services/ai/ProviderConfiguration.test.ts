@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
-vi.mock("../../\.\./services/ai/providers/OllamaProvider", () => ({
+vi.mock("../../../services/ai/providers/OllamaProvider", () => ({
   OllamaProvider: vi.fn().mockImplementation(function () {
     return {
       updateConfig: vi.fn(),
@@ -14,7 +14,7 @@ vi.mock("../../\.\./services/ai/providers/OllamaProvider", () => ({
   }),
 }));
 
-vi.mock("../../\.\./services/ai/providers/GeminiProvider", () => ({
+vi.mock("../../../services/ai/providers/GeminiProvider", () => ({
   GeminiProvider: vi.fn().mockImplementation(function () {
     return {
       generateText: vi.fn(),
@@ -26,7 +26,7 @@ vi.mock("../../\.\./services/ai/providers/GeminiProvider", () => ({
 
 let apiKeyChangeCb: ((key: string | null) => void) | null = null;
 
-vi.mock("../../\.\./services/ai/providers/OpenAICompatibleProvider", () => ({
+vi.mock("../../../services/ai/providers/OpenAICompatibleProvider", () => ({
   OpenAICompatibleProvider: vi.fn().mockImplementation(function () {
     return {
       generateText: vi.fn(),
@@ -37,7 +37,7 @@ vi.mock("../../\.\./services/ai/providers/OpenAICompatibleProvider", () => ({
   }),
 }));
 
-vi.mock("../../\.\./services/ai/VaultIntegration", () => ({
+vi.mock("../../../services/ai/VaultIntegration", () => ({
   VaultIntegration: vi.fn().mockImplementation(function () {
     return {
       getApiKey: vi.fn().mockReturnValue(null),
@@ -54,7 +54,7 @@ vi.mock("../../\.\./services/ai/VaultIntegration", () => ({
   }),
 }));
 
-vi.mock("../../\.\./services/ai/utils", () => ({
+vi.mock("../../../services/ai/utils", () => ({
   detectProvider: vi.fn(),
 }));
 
@@ -62,7 +62,7 @@ vi.mock("../../../utils/logger", () => ({
   logger: { error: vi.fn(), info: vi.fn(), warn: vi.fn(), debug: vi.fn() },
 }));
 
-vi.mock("../../\.\./services/SecureStorage", () => ({
+vi.mock("../../../services/SecureStorage", () => ({
   secureStorage: {
     getSecret: vi.fn().mockResolvedValue(null),
     setSecret: vi.fn().mockResolvedValue(undefined),
@@ -86,13 +86,13 @@ const mockLocalStorage = (() => {
 })();
 Object.defineProperty(globalThis, "localStorage", { value: mockLocalStorage });
 
-const { detectProvider } = await import("../../\.\./services/ai/utils");
+const { detectProvider } = await import("../../../services/ai/utils");
 const { VaultIntegration } =
-  await import("../../\.\./services/ai/VaultIntegration");
+  await import("../../../services/ai/VaultIntegration");
 const { OllamaProvider } =
-  await import("../../\.\./services/ai/providers/OllamaProvider");
+  await import("../../../services/ai/providers/OllamaProvider");
 const { ProviderConfiguration } =
-  await import("../../\.\./services/ai/ProviderConfiguration");
+  await import("../../../services/ai/ProviderConfiguration");
 
 describe("ProviderConfiguration", () => {
   let config: InstanceType<typeof ProviderConfiguration>;
@@ -272,7 +272,7 @@ describe("ProviderConfiguration", () => {
   describe("init (SecureStorage)", () => {
     it("loads persisted values from SecureStorage", async () => {
       const secureStorage = (
-        await import("../../\.\./services/SecureStorage")
+        await import("../../../services/SecureStorage")
       ).secureStorage as any;
       secureStorage.getSecret.mockImplementation((key: string) => {
         const map: Record<string, string> = {
@@ -301,7 +301,7 @@ describe("ProviderConfiguration", () => {
 
     it("is idempotent (concurrent calls deduplicated)", async () => {
       const secureStorage = (
-        await import("../../\.\./services/SecureStorage")
+        await import("../../../services/SecureStorage")
       ).secureStorage as any;
       secureStorage.getSecret.mockResolvedValue(null);
       await Promise.all([config.init(), config.init()]);
@@ -312,7 +312,7 @@ describe("ProviderConfiguration", () => {
   describe("custom base URL", () => {
     it("persists the custom base URL", async () => {
       const secureStorage = (
-        await import("../../\.\./services/SecureStorage")
+        await import("../../../services/SecureStorage")
       ).secureStorage as any;
       secureStorage.setSecret.mockResolvedValue(undefined);
       await config.setCustomBaseUrl("https://my-api.com/v1");
@@ -346,7 +346,7 @@ describe("ProviderConfiguration", () => {
 
     it("accepts http on loopback", async () => {
       const secureStorage = (
-        await import("../../\.\./services/SecureStorage")
+        await import("../../../services/SecureStorage")
       ).secureStorage as any;
       secureStorage.setSecret.mockResolvedValue(undefined);
       await expect(

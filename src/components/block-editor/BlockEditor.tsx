@@ -3,6 +3,7 @@ import { useBlockEditorState } from "./useBlockEditorState";
 import { useBlockEditorLogic } from "./useBlockEditorLogic";
 import { BlockNoteView } from "@blocknote/mantine";
 import { useCreateBlockNote, SuggestionMenuController } from "@blocknote/react";
+import { en, es } from "@blocknote/core/locales";
 import { schema } from "./blocknoteSchema";
 import Markdown from "react-markdown";
 import { Sparkles, Undo, Link } from "lucide-react";
@@ -64,6 +65,7 @@ export default function BlockEditor({
 
   const {
     t,
+    lang,
     isConnected,
     activeUsers,
     slashMenuItems,
@@ -101,6 +103,7 @@ export default function BlockEditor({
     // `t.length === 0`). Normalized defensively: if blocks are already loaded
     // before mount (instead of via replaceBlocks), template shorthand types
     // must be converted to valid BlockNote specs.
+    dictionary: lang.startsWith("es") ? es : en,
     initialContent:
       Array.isArray(initialContent) && initialContent.length > 0
         ? (normalizeTemplateBlocksToBlockNote(initialContent) as PartialBlock[])

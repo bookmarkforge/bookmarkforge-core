@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 
 const { ChunkingService } =
-  await import("../../\.\./services/ai/ChunkingService");
+  await import("../../../services/ai/ChunkingService");
 
 describe("ChunkingService", () => {
   describe("splitText", () => {

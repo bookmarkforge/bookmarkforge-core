@@ -7,6 +7,7 @@
  */
 
 import { deriveArgon2idKey } from "../../utils/argon2-kdf";
+import { zeroPasswordBytes } from "../../utils/crypto-core";
 
 /**
  * Derive the ephemeral, in-memory device credential used to unlock a session
@@ -40,14 +41,14 @@ export async function deriveShareCredential(
         },
         baseKey,
         256,
-      );
-      return new Uint8Array(bits);
-    } finally {
-      argon2Key.fill(0);
-    }
-  } finally {
-    shareBytes.fill(0);
-  }
+);
+       return new Uint8Array(bits);
+     } finally {
+       zeroPasswordBytes(argon2Key);
+     }
+   } finally {
+     zeroPasswordBytes(shareBytes);
+   }
 }
 
 /**

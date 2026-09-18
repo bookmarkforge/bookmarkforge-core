@@ -10,14 +10,13 @@ proveedor que el usuario configura.
 
 ## Estado del proyecto
 
-<!-- Estado 2026-09-17: repositorio versionado local, sin 'git remote' todavía.
-     Los badges usan el placeholder OWNER/bookmarkforge hasta el primer push.
-     Al crear el remote (ver docs/github-secrets-and-push-runbook.md) sustituir OWNER
-     por el slug real: sed -i 's|OWNER/bookmarkforge|<OWNER>/<REPO>|g' README.md y docs/.
-     El CI nunca se ha ejecutado en GitHub (0 PRs/merges): el primer push es la primera
-     validación real de los workflows. Evidencia de auditoría local en docs/audit.md. -->
+<!-- Estado 2026-09-18: el checkout tiene configurado origin, pero los badges
+     siguen usando el slug provisional bookmarkforge/core y no hay evidencia de PRs o
+     ejecuciones de CI verificadas en GitHub. Antes de publicar, ejecutar los workflows
+     contra el repositorio remoto; ver docs/github-secrets-and-push-runbook.md y
+     docs/audit.md. -->
 
-[![CI](https://github.com/OWNER/bookmarkforge/actions/workflows/ci.yml/badge.svg)](https://github.com/OWNER/bookmarkforge/actions/workflows/ci.yml) · [![Nightly validation](https://github.com/OWNER/bookmarkforge/actions/workflows/nightly.yml/badge.svg)](https://github.com/OWNER/bookmarkforge/actions/workflows/nightly.yml) · [runs fallidos](https://github.com/OWNER/bookmarkforge/actions/workflows/nightly.yml?query=conclusion%3Afailure) · [último release](https://github.com/OWNER/bookmarkforge/releases/latest) · [operación del nightly](docs/ops-nightly.md)
+[![CI](https://github.com/bookmarkforge/core/actions/workflows/ci.yml/badge.svg)](https://github.com/bookmarkforge/core/actions/workflows/ci.yml) · [![Nightly validation](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml/badge.svg)](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml) · [runs fallidos](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml?query=conclusion%3Afailure) · [último release](https://github.com/bookmarkforge/core/releases/latest) · [operación del nightly](docs/ops-nightly.md)
 
 ## Requisitos
 
@@ -57,9 +56,9 @@ se realizan directamente desde el navegador con la clave del usuario.
 ## Verificación antes de fusionar
 
 ```bash
-npm run typecheck
+npm run typecheck:prod
 npm run lint
-npm run test
+npm run test:fast
 npm run build:ci
 npm run check
 ```

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const mockGenerateText = vi.fn();
-vi.mock("../../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../../services/ai/ProviderManager", () => ({
   aiManager: { generateText: mockGenerateText },
 }));
 
@@ -9,7 +9,7 @@ const mockLogger = { warn: vi.fn(), error: vi.fn(), info: vi.fn() };
 vi.mock("../../../utils/logger", () => ({ logger: mockLogger }));
 
 const { specializedAgentsService } =
-  await import("../../\.\./services/ai/SpecializedAgentsService");
+  await import("../../../services/ai/SpecializedAgentsService");
 
 describe("SpecializedAgentsService", () => {
   beforeEach(() => {

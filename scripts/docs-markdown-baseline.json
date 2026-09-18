@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "fileCount": 41,
-  "adrFileCount": 18,
+  "fileCount": 94,
+  "adrFileCount": 27,
   "findings": [],
   "ruleCounts": {
     "docs-markdown/heading-hierarchy": 0,

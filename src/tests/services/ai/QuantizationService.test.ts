@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { QuantizationService } from "../../\.\./services/ai/QuantizationService";
-import type { QuantizationMode } from "../../\.\./services/ai/QuantizationService";
+import { QuantizationService } from "../../../services/ai/QuantizationService";
+import type { QuantizationMode } from "../../../services/ai/QuantizationService";
 
 describe("QuantizationService", () => {
   describe("generateRotationMatrix", () => {

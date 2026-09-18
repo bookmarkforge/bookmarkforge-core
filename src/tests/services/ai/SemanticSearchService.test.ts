@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("../../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../../services/ai/ProviderManager", () => ({
   aiManager: {
     generateText: vi.fn(),
     getProviderInfo: vi.fn().mockReturnValue({ isConfigured: true }),
@@ -26,8 +26,8 @@ vi.mock("../../../utils/logger", () => ({
 }));
 
 const { semanticSearchService, runWithTimeout } =
-  await import("../../\.\./services/ai/SemanticSearchService");
-const { aiManager } = await import("../../\.\./services/ai/ProviderManager");
+  await import("../../../services/ai/SemanticSearchService");
+const { aiManager } = await import("../../../services/ai/ProviderManager");
 
 describe("SemanticSearchService", () => {
   beforeEach(() => {

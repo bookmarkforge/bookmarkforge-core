@@ -134,10 +134,10 @@ checks. `AGENTS.md` notes that this checkout currently has **no
 - Install with the project's package manager as defined in `package.json`.
 - Copy `.env.example` to `.env` and adjust locally. `VITE_*` variables are
   inlined into the client bundle by Vite — never put real keys there.
-- The app refuses to boot in production if an AI provider key is bundled without
-  a proxy (`assertValidForBuild`). For production AI access use
-  `VITE_*_PROXY_URL` (your own server-side proxy) instead of shipping keys to
-  the browser.
+- Cloud AI calls are made directly by the browser to the provider selected by
+  the user, using credentials stored in the encrypted vault. Do not configure
+  server-side AI keys or proxy URLs; `assertValidForBuild` rejects provider keys
+  accidentally bundled into the client.
 
 Useful local commands:
 - `npm run dev`
@@ -162,20 +162,21 @@ apply — and it never replaces the full chain before pushing.
 
 ```bash
 npm run typecheck:prod          # tsc --noEmit (prod tsconfig)
-npm run lint                    # eslint . (custom rules in eslint-rules/)
+npm run lint                    # node scripts/tooling/lint-bounded.mjs (acotado por dominios)
 npm run test:fast               # bounded Vitest suites (security, db, services,
                                 #   key components, quality-gate script tests —
                                 #   count deliberately unnumbered, see ADR-038)
-npm run test:slow               # every other test file (~480; CI's slow-tests job
+npm run test:slow               # every other test file (~460; CI's slow-tests job
                                 #   enforces timing on it; `npm test` is the same
                                 #   surface — run it before merging areas the fast
                                 #   profile does not cover)
 npm run build:ci                # vite build + secret-scan + SRI + integrity
                                 #   manifest + chunk-boundary + bundle-size gates
-npm run check                   # the full gate chain (~37 check commands + lint):
+npm run check                   # the full gate chain (~40 check commands + lint):
                                  # open-core, pro-imports, env, workflows,
                                  # http-config, compose-config, runtime-config,
                                  # boundaries, e2e-helpers, docs-markdown,
+                                 # documented-npm-commands,
                                  # baseline-drift, baseline-gaps, csp,
                                  # extension-csp, i18n, claim-drift,
                                  # landing-free-plan, pocket-onboarding-copy,

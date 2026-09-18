@@ -25,7 +25,7 @@ const mockAiManager = {
   setModel: mockSetModel,
 };
 
-vi.mock("../../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../../services/ai/ProviderManager", () => ({
   ProviderManager: vi.fn(),
   AIProvider: {},
   aiManager: mockAiManager,

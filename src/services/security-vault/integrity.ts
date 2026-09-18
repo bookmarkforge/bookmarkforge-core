@@ -9,6 +9,7 @@ import { encryptionService } from "../EncryptionService";
 import { secureStorage } from "../SecureStorage";
 import { logger } from "../../utils/logger";
 import { VERIFICATION_PLAINTEXT } from "./constants";
+import { zeroPasswordBytes } from "../../utils/crypto-core";
 
 /**
  * Derives an HMAC key from a password and integrity nonce via HKDF-SHA256.
@@ -136,11 +137,11 @@ export async function createVerificationToken(password: string): Promise<void> {
       "HMAC",
       hmacKey,
       new TextEncoder().encode(ciphertext),
-    );
-    // Zeroize passwordBytes immediately after HMAC derivation — no further
-    // use. This shrinks the exposure window: the bytes no longer survive
-    // during the IDB write below.
-    passwordBytes.fill(0);
+);
+     // Zeroize passwordBytes immediately after HMAC derivation — no further
+     // use. This shrinks the exposure window: the bytes no longer survive
+     // during the IDB write below.
+     zeroPasswordBytes(passwordBytes);
     const nonceHex = Array.from(nonce, (b) =>
       b.toString(16).padStart(2, "0"),
     ).join("");
@@ -154,8 +155,8 @@ export async function createVerificationToken(password: string): Promise<void> {
       ciphertext,
       `${nonceHex}:${hmacHex}`,
     );
-  } finally {
-    // Defense-in-depth: zeroize even if the early fill(0) already ran.
-    passwordBytes.fill(0);
-  }
-}
+} finally {
+     // Defense-in-depth: zeroize even if the early fill(0) already ran.
+     zeroPasswordBytes(passwordBytes);
+   }
+ }

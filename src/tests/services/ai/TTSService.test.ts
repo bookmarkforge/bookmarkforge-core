@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import type { TTSService as TTSClass } from "../../\.\./services/ai/TTSService";
+import type { TTSService as TTSClass } from "../../../services/ai/TTSService";
 
 const mockGetProviderInfo = vi.hoisted(() => vi.fn());
 const mockGetApiKey = vi.hoisted(() => vi.fn().mockReturnValue(null));
-vi.mock("../../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../../services/ai/ProviderManager", () => ({
   aiManager: { getProviderInfo: mockGetProviderInfo, getApiKey: mockGetApiKey },
 }));
 
@@ -16,7 +16,7 @@ const mockSecurityVault = vi.hoisted(() => ({
   decryptSecret: vi.fn().mockResolvedValue(null),
   encryptSecret: vi.fn().mockResolvedValue(undefined),
 }));
-vi.mock("../../\.\./services/SecurityVault", () => ({
+vi.mock("../../../services/SecurityVault", () => ({
   securityVault: mockSecurityVault,
   SECURE_STORAGE_KEYS: { API_KEY: "encrypted_api_key" },
 }));
@@ -25,7 +25,7 @@ const mockSecureStorage = vi.hoisted(() => ({
   getSecret: vi.fn().mockResolvedValue(null),
   deleteSecret: vi.fn().mockResolvedValue(undefined),
 }));
-vi.mock("../../\.\./services/SecureStorage", () => ({
+vi.mock("../../../services/SecureStorage", () => ({
   secureStorage: mockSecureStorage,
 }));
 
@@ -40,7 +40,7 @@ vi.mock("../../../i18n", () => ({
   },
 }));
 
-const { TTSService } = await import("../../\.\./services/ai/TTSService");
+const { TTSService } = await import("../../../services/ai/TTSService");
 
 // Captured at module level: beforeEach stubs the global URL with a plain
 // object (no constructor), but the freshly re-imported module graph

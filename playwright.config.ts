@@ -46,6 +46,20 @@ export default defineConfig({
   },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    {
+      // dashboard-banner-cls (ADR-055) measures the banner-collapse trade-off
+      // on a phone-shaped viewport too: 390x844 with touch + mobile Chrome
+      // emulation (Pixel 7 device base — same engine/family as the mobile
+      // smoke battery in playwright.mobile.config.ts). testMatch narrows this
+      // project to that one spec so `npm run e2e` keeps every other spec
+      // running exactly once, on the desktop project.
+      name: "mobile",
+      testMatch: /dashboard-banner-cls\.spec\.ts$/,
+      use: {
+        ...devices["Pixel 7"],
+        viewport: { width: 390, height: 844 },
+      },
+    },
   ],
   webServer: [
     {
@@ -58,8 +72,6 @@ export default defineConfig({
         HOST: "127.0.0.1",
         PORT: String(signalingPort),
         TRUST_PROXY: "0",
-        GEMINI_API_KEY: "e2e-ai-key",
-        GEMINI_API_BASE: "http://127.0.0.1:9/v1beta/models",
         WHOP_LICENSE_API_URL: "http://127.0.0.1:9/license",
         WHOP_API_KEY: "e2e-license-key",
         SIGNALING_ADMIN_TOKEN: process.env.SIGNALING_ADMIN_TOKEN ?? "e2e-admin-token",

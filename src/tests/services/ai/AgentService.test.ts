@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const mockGenerateText = vi.fn();
 const mockStreamGenerateText = vi.fn();
-vi.mock("../../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../../services/ai/ProviderManager", () => ({
   aiManager: {
     generateText: mockGenerateText,
     streamGenerateText: mockStreamGenerateText,
@@ -39,7 +39,7 @@ vi.mock("../../../services/pro-access", () => ({
   ProUnavailableError: class ProUnavailableError extends Error {},
 }));
 
-const { agentService } = await import("../../\.\./services/ai/AgentService");
+const { agentService } = await import("../../../services/ai/AgentService");
 
 describe("AgentService", () => {
   beforeEach(() => {

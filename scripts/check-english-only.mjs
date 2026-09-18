@@ -35,10 +35,13 @@
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
+import { getCachedVerdict, putCachedVerdict, treeFingerprint } from "./gate-cache.mjs";
 
 export const SRC_DIR = "src";
 export const SKIP_DIRS = new Set(["node_modules", "dist", ".git", "coverage", "dist-extension"]);
 export const PRAGMA = "i18n-allow";
+
+const GATE_CACHE_NAME = "check-english-only";
 
 // Letters that never appear in English prose. Ranges deliberately skip the
 // two Latin-1 punctuation marks (× \u00D7 and ÷ \u00F7).
@@ -527,7 +530,24 @@ const isMain =
     new URL(`file://${process.argv[1].replace(/\\/g, "/")}`).href;
 
 if (isMain) {
-  const findings = collectFindings(walkFiles());
+  // Verdict cache (scripts/gate-cache.mjs): the scan is deterministic in the
+  // src/ tree, so a fingerprint match on the whole directory (every file the
+  // scan could read, any extension) proves the PASS verdict still holds.
+  // Only PASS is cached; BMF_GATE_CACHE_OFF=1 bypasses.
+  const files = walkFiles();
+  const fingerprint = treeFingerprint({
+    root: join(process.cwd(), SRC_DIR),
+    extensions: null,
+    skipDirs: SKIP_DIRS,
+    hash: true,
+  });
+  if (getCachedVerdict({ gateName: GATE_CACHE_NAME, fingerprint })) {
+    console.log(
+      `[check-english-only] ok (cached): src/ unchanged since the last pass — no non-English text in t() fallbacks, logs, comments or UI strings`,
+    );
+    process.exit(0);
+  }
+  const findings = collectFindings(files);
   for (const f of findings) {
     console.error(
       `[check-english-only] FAIL: ${f.file}:${f.line} ${f.scope} — "${f.text}" (${f.signal})`,
@@ -540,6 +560,7 @@ if (isMain) {
     process.exit(1);
   }
   console.log(
-    `[check-english-only] ok: ${walkFiles().length} files scanned — no non-English text in t() fallbacks, logs, comments or UI strings`,
+    `[check-english-only] ok: ${files.length} files scanned — no non-English text in t() fallbacks, logs, comments or UI strings`,
   );
+  putCachedVerdict({ gateName: GATE_CACHE_NAME, fingerprint });
 }

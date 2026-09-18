@@ -26,7 +26,7 @@ const mockDownloadAudio = vi.fn().mockResolvedValue(undefined);
 const mockIsWebSpeechAvailable = vi.fn().mockReturnValue(false);
 const mockGetVoicesForLanguage = vi.fn().mockReturnValue([]);
 
-vi.mock("../\.\./services/ai/TTSService", () => ({
+vi.mock("../../services/ai/TTSService", () => ({
   ttsService: {
     isWebSpeechAvailable: mockIsWebSpeechAvailable,
     getVoicesForLanguage: mockGetVoicesForLanguage,

@@ -18,6 +18,7 @@ export const SyncStatus: React.FC = () => {
     isSyncing: false,
     health: "disconnected" as SyncHealth,
     lastSync: undefined as Date | undefined,
+    roomId: null as string | null,
   });
   const [isRestarting, setIsRestarting] = useState(false);
   // Deliberate leave: the mountedRef guards a live sync-service subscription
@@ -42,10 +43,19 @@ export const SyncStatus: React.FC = () => {
           lastSync: number | null,
         ) => {
           if (!mountedRef.current) {return;}
+          // A transient service bootstrap must not look like an active
+          // network connection when the user has not configured a sync room.
+          // Local-first use is healthy and should read as inactive, not
+          // "connecting forever".
+          const normalizedHealth =
+            !_roomId && health === "connecting"
+              ? "disconnected"
+              : (health as SyncHealth);
           setSyncState({
             isSyncing: syncing,
-            health: health as SyncHealth,
+            health: normalizedHealth,
             lastSync: lastSync ? new Date(lastSync) : undefined,
+            roomId: _roomId,
           });
         };
 

@@ -7,15 +7,15 @@ import type {
   MemoryRecallResult,
 } from "../../memory/MemoryTypes";
 import { DEFAULT_PIPELINE_CONFIG } from "../../memory/MemoryTypes";
-import { vectorIndexService } from "../\.\./services/ai/VectorIndexService";
+import { vectorIndexService } from "../../services/ai/VectorIndexService";
 
 vi.mock("../../db/database", () => ({ initDB: vi.fn() }));
 
 vi.mock("../../db/database", () => ({ initDB: vi.fn() }));
-vi.mock("../\.\./services/ai/RAGEngine", () => ({
+vi.mock("../../services/ai/RAGEngine", () => ({
   ragEngine: { generateEmbedding: vi.fn(), cosineSimilarity: vi.fn() },
 }));
-vi.mock("../\.\./services/ai/VectorIndexService", () => ({
+vi.mock("../../services/ai/VectorIndexService", () => ({
   vectorIndexService: { search: vi.fn() },
 }));
 vi.mock("../../utils/logger", () => ({
@@ -23,7 +23,7 @@ vi.mock("../../utils/logger", () => ({
 }));
 
 import { initDB } from "../../db/database";
-import { ragEngine } from "../\.\./services/ai/RAGEngine";
+import { ragEngine } from "../../services/ai/RAGEngine";
 import { memoryRecall } from "../../memory/MemoryRecall";
 
 /** findOne returns a document with toJSON or null */

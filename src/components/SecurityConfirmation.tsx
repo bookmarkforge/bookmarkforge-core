@@ -27,6 +27,7 @@ export const SecurityConfirmation: React.FC<SecurityConfirmationProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="security-confirmation-title"
+        aria-describedby="security-confirmation-description"
         aria-label={t("app_security_title") || "Secure your vault"}
       >
         {/* Language selector — top-right corner */}
@@ -50,7 +51,7 @@ export const SecurityConfirmation: React.FC<SecurityConfirmationProps> = ({
           >
             {t("app_security_title") || "Secure your vault"}
           </h1>
-          <p className="text-sm ds-text-secondary">
+          <p id="security-confirmation-description" className="text-sm ds-text-secondary">
             {t("app_security_desc") ||
               "Protect your bookmarks and documents with a master password."}
           </p>
@@ -69,7 +70,7 @@ export const SecurityConfirmation: React.FC<SecurityConfirmationProps> = ({
           <button
             onClick={onConfirm}
             aria-label={t("app_skip_password") || "Skip password"}
-            className="truncate w-full py-4 font-semibold transition-all flex items-center justify-center gap-2 ds-radius-card ds-bg-card ds-border ds-text-secondary hover:ds-bg-secondary"
+            className="truncate w-full py-3 text-sm font-medium transition-all flex items-center justify-center gap-2 ds-radius-card ds-bg-card ds-border ds-text-secondary hover:ds-bg-secondary"
           >
             <IconSkipForward className="size-5" />
             {t("app_skip_password") || "Skip password"}

@@ -10,10 +10,10 @@ const mockVectorIndexService = {
   search: vi.fn(),
 };
 
-vi.mock("../../\.\./services/ai/RAGEngine", () => ({
+vi.mock("../../../services/ai/RAGEngine", () => ({
   ragEngine: mockRagEngine,
 }));
-vi.mock("../../\.\./services/ai/VectorIndexService", () => ({
+vi.mock("../../../services/ai/VectorIndexService", () => ({
   vectorIndexService: mockVectorIndexService,
 }));
 
@@ -26,7 +26,7 @@ const mockInitDB = vi.fn().mockResolvedValue(mockDb);
 vi.mock("../../../db/database", () => ({ initDB: mockInitDB }));
 
 const { globalRAGService } =
-  await import("../../\.\./services/ai/GlobalRAGService");
+  await import("../../../services/ai/GlobalRAGService");
 
 describe("GlobalRAGService", () => {
   beforeEach(() => {

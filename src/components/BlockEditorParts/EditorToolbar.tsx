@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import type { BlockNoteEditor } from "@blocknote/core";
 import type { PartialBlock } from "@blocknote/core";
 import {
@@ -103,6 +103,8 @@ export function EditorToolbar({
   autoTag,
 }: EditorToolbarProps) {
   const { t } = useTranslation();
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const toolbarLabel = t("app_actions");
 
   const handleImageInsert = (url: string) => {
     if (editor?.document[0]) {
@@ -156,6 +158,23 @@ export function EditorToolbar({
       >
         <Eye className="size-4" aria-hidden="true" />
       </button>
+      <button
+        type="button"
+        onClick={() => setShowAdvanced((open) => !open)}
+        aria-expanded={showAdvanced}
+        aria-controls="editor-advanced-tools"
+        className="truncate flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium ds-ghost-bg text-[var(--text-secondary)] dark:text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
+        title={toolbarLabel}
+        aria-label={toolbarLabel}
+      >
+        {t("app_actions")}
+        <span aria-hidden="true" className={`text-[10px] transition-transform ${showAdvanced ? "rotate-180" : ""}`}>⌄</span>
+      </button>
+      <div
+        id="editor-advanced-tools"
+        hidden={!showAdvanced}
+        className="contents"
+      >
       <button
         onClick={() => setShowSuggestions(!showSuggestions)}
         className={`p-2 rounded-lg transition-all hover:scale-105 active:scale-95 ${showSuggestions ? "bg-cyan-500 ds-text-on-accent shadow-md shadow-cyan-500/20" : "ds-ghost-bg text-[var(--text-secondary)] dark:text-[var(--text-muted)]"}`}
@@ -281,6 +300,7 @@ export function EditorToolbar({
         <ImageGenerator onImageGenerated={handleImageInsert} />
         <TemplateManager onApply={handleTemplateApply as unknown as (blocks: unknown[]) => void} />
       </Suspense>
+      </div>
     </div>
   );
 }

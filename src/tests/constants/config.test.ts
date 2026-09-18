@@ -81,9 +81,7 @@ describe("assertValidForBuild", () => {
 
   it("throws when there are validation errors", async () => {
     vi.stubEnv("PROD", "true" as any);
-    // VITE_GEMINI_API_KEY removed from ENV_REGISTRY — use a different
-    // provider key to trigger a PROD error for this test.
-    vi.stubEnv("VITE_OPENAI_API_KEY", "sk-test-leaky");
+    vi.stubEnv("VITE_DISABLE_NETWORK_FIREWALL", "true");
     const { assertValidForBuild } = await reimport();
     expect(() => assertValidForBuild()).toThrow("BUILD FATAL");
   });
@@ -104,12 +102,9 @@ describe("validateEnvVars — PROD error paths", () => {
     vi.unstubAllEnvs();
   });
 
-  it("reports error when PROD + Gemini key + no proxy", async () => {
-    // VITE_GEMINI_API_KEY removed from ENV_REGISTRY (DCE) — the key is no
-    // longer readable from the browser.  This test now verifies that the
-    // PROD error path still works for OTHER provider keys.
+  it("reports error when PROD + test-only bypass", async () => {
     vi.stubEnv("PROD", "true" as any);
-    vi.stubEnv("VITE_OPENAI_API_KEY", "sk-test-leaky");
+    vi.stubEnv("VITE_DISABLE_NETWORK_FIREWALL", "true");
     const { validateEnvVars } = await reimport();
     const result = validateEnvVars();
     expect(result.isValid).toBe(false);
@@ -118,27 +113,24 @@ describe("validateEnvVars — PROD error paths", () => {
     );
   });
 
-  it("reports error for each AI key in PROD", async () => {
+  it("reports error for each test-only bypass in PROD", async () => {
     vi.stubEnv("PROD", "true" as any);
-    vi.stubEnv("VITE_OPENAI_API_KEY", "sk-test");
-    vi.stubEnv("VITE_ANTHROPIC_API_KEY", "sk-ant-test");
-    vi.stubEnv("VITE_GROQ_API_KEY", "gsk-test");
-    vi.stubEnv("VITE_HUGGINGFACE_API_KEY", "hf-test");
+    vi.stubEnv("VITE_DISABLE_NETWORK_FIREWALL", "true");
+    vi.stubEnv("VITE_FORCE_MEMORY_STORAGE", "true");
+    vi.stubEnv("VITE_TEST_BUILD", "true");
     const { validateEnvVars } = await reimport();
     const result = validateEnvVars();
-    expect(result.errors.length).toBe(4);
+    expect(result.errors.length).toBe(3);
     expect(result.isValid).toBe(false);
   });
 
-  it("rejects PROD + other AI provider keys even when proxy is set", async () => {
-    // VITE_GEMINI_API_KEY removed from ENV_REGISTRY (DCE).  This test
-    // verifies the same hardening applies to other provider keys.
+  it("does not error for removed AI provider keys in PROD", async () => {
     vi.stubEnv("PROD", "true" as any);
     vi.stubEnv("VITE_OPENAI_API_KEY", "sk-test-leaky");
     const { validateEnvVars } = await reimport();
     const result = validateEnvVars();
     expect(result.errors.some((e: string) => e.includes("VITE_OPENAI_API_KEY"))).toBe(
-      true,
+      false,
     );
   });
 

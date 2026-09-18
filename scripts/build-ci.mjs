@@ -37,7 +37,8 @@ if (run.status !== 0) process.exit(run.status ?? 1);
 // the frontend never reads a key, the literal value ends up in dist/*.js as
 // a string constant.  This gate scans every JS asset for the literal
 // assignment pattern (e.g. `VITE_GEMINI_API_KEY:"AIza..."`) and blocks
-// deployment when a secret is found.  Use server-side GEMINI_API_KEY instead.
+// deployment when a secret is found.  Use the user's encrypted vault
+// (securityVault) or a user-configured proxy instead.
 {
   const SENSITIVE_KEYS = [
     "VITE_GEMINI_API_KEY",

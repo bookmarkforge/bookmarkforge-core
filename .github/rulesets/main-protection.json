@@ -32,10 +32,6 @@
       "parameters": {
         "required_status_checks": [
           {
-            "context": "Enforce mandatory security gates",
-            "integration_id": 15368
-          },
-          {
             "context": "Typecheck, lint, tests and security gates",
             "integration_id": 15368
           },

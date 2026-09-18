@@ -166,7 +166,7 @@ const _mockWebLLM = vi.hoisted(() => ({
 const _mockEditorDocument = [
   { type: "paragraph", content: [{ type: "text", text: "initial" }] },
 ];
-vi.mock("../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../services/ai/ProviderManager", () => ({
   aiManager: _mockAiManager,
 }));
 

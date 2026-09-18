@@ -22,7 +22,7 @@ vi.mock("../../../services/pro-access", () => ({
   ProUnavailableError: class ProUnavailableError extends Error {},
 }));
 
-vi.mock("../../\.\./services/ai/RAGEngine", () => ({
+vi.mock("../../../services/ai/RAGEngine", () => ({
   ragEngine: {
     unload: vi.fn().mockResolvedValue(undefined),
   },
@@ -30,7 +30,7 @@ vi.mock("../../\.\./services/ai/RAGEngine", () => ({
 
 import { getDB } from "../../../db/database";
 import { logger } from "../../../utils/logger";
-import { ragEngine } from "../../\.\./services/ai/RAGEngine";
+import { ragEngine } from "../../../services/ai/RAGEngine";
 
 const mockNavigator = (overrides: Record<string, unknown> = {}) => {
   const base = {
@@ -60,7 +60,7 @@ const mockPerformance = (memory?: {
 
 const createResourceManager = async () => {
   vi.resetModules();
-  const mod = await import("../../\.\./services/ai/ResourceManager");
+  const mod = await import("../../../services/ai/ResourceManager");
   return mod.resourceManager;
 };
 
@@ -694,7 +694,7 @@ describe("ResourceManager", () => {
       vi.resetModules();
 
       const spy = vi.spyOn(globalThis, "setInterval");
-      await import("../../\.\./services/ai/ResourceManager");
+      await import("../../../services/ai/ResourceManager");
       expect(spy).toHaveBeenCalled();
 
       (globalThis as any).MemoryPressureObserver = undefined;

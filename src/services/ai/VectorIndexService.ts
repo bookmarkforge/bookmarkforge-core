@@ -149,30 +149,31 @@ class VectorIndexService {
       return;
     }
 
-    const passwordBytes = securityVault.withMasterPasswordBytes(
-      this,
-      (bytes) => bytes,
-    );
-    if (!passwordBytes) {return;}
-
-    try {
-      await this.sendMessage("SET_KEY", {
-        passwordBytes,
-        vaultSalt,
-        keyId: crypto.randomUUID(),
-      });
-      this.vaultKeyConfigured = true;
-      // SET_KEY intentionally wipes the worker's in-memory index. If a key is
-      // installed into an already-running worker, force a clean reinitialize
-      // rather than allowing SEARCH to run against a null Voy instance.
-      if (this.isInitialized) {
-        this.isInitialized = false;
-        this.terminateWorker("Voy key installed; reinitializing index");
-      }
-    } finally {
-      passwordBytes.fill(0);
-    }
-  }
+const passwordBytes = securityVault.withMasterPasswordBytes(
+       this,
+       (bytes) => bytes,
+     );
+     if (!passwordBytes) {return;}
+     const pw = passwordBytes as Uint8Array;
+     try {
+       await this.sendMessage("SET_KEY", {
+         passwordBytes: pw,
+         vaultSalt,
+         keyId: crypto.randomUUID(),
+       });
+       this.vaultKeyConfigured = true;
+       // SET_KEY intentionally wipes the worker's in-memory index. If a key is
+       // installed into an already-running worker, force a clean reinitialize
+       // rather than allowing SEARCH to run against a null Voy instance.
+       if (this.isInitialized) {
+         this.isInitialized = false;
+         this.terminateWorker("Voy key installed; reinitializing index");
+       }
+     } finally {
+       for (let i = 0; i < pw.length; i++) { pw[i] = pw[i]! ^ 0xAA; }
+       pw.fill(0);
+     }
+   }
 
   private async ensureVaultKey(): Promise<void> {
     try {

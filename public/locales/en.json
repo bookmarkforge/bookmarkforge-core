@@ -1756,5 +1756,17 @@
   "app_pocketTags": "Tags",
   "app_pocketImportStatusSummary": "Read and archive status will be preserved.",
   "app_pocketImportConfirm": "Import these links",
-  "app_pocketImportChooseAnother": "Choose another"
+  "app_pocketImportChooseAnother": "Choose another",
+  "app_firstRunEyebrow": "Getting started",
+  "app_firstRunTitle": "Your first two minutes",
+  "app_firstRunSubtitle": "Three steps, and the workspace starts working for you.",
+  "app_firstRunProgress": "{{done}} of {{total}} done",
+  "app_firstRunStep1Title": "Save your first bookmark",
+  "app_firstRunStep1Desc": "Capture any link. It stays on this device.",
+  "app_firstRunStep2Title": "Write or import a note",
+  "app_firstRunStep2Desc": "Documents are where your thinking lives.",
+  "app_firstRunStep3Title": "Find it again",
+  "app_firstRunStep3Desc": "Search everything locally — nothing leaves your device.",
+  "app_firstRunStepDone": "Done",
+  "app_firstRunDismiss": "Hide this checklist"
 }

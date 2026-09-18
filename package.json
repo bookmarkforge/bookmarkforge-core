@@ -2,13 +2,13 @@
   "name": "bookmarkforge",
   "version": "1.0.0",
   "private": true,
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE AND PRO-LICENSE.md",
   "repository": {
     "type": "git",
     "url": "https://github.com/bookmarkforge/core.git"
   },
   "type": "module",
-  "description": "Your private, AI-powered knowledge vault. 100% Local-First.",
+  "description": "Your private, AI-powered knowledge vault. 100% Local-First. Open Core: MIT Core + proprietary Pro features.",
   "engines": {
     "node": ">=20.19.0"
   },
@@ -113,6 +113,8 @@
     "check:boundaries": "node scripts/check-context-boundaries.cjs",
     "check:e2e-helpers": "node scripts/check-e2e-duplicate-helpers.mjs",
     "check:docs-markdown": "node scripts/check-docs-markdown.mjs",
+    "check:documented-npm-commands": "node scripts/check-documented-npm-commands.mjs",
+    "check:documented-doc-references": "node scripts/check-documented-doc-references.mjs",
     "check:baseline-drift": "node scripts/check-baseline-drift.mjs",
     "check:baseline-gaps": "node scripts/check-baseline-gaps.mjs",
     "check:csp": "node scripts/check-csp-sync.mjs",
@@ -160,10 +162,11 @@
     "drill:backup-restore": "node scripts/drill-backup-restore.mjs",
     "prepare": "husky",
     "nginx:render": "node scripts/nginx-render.mjs --write",
-    "check": "npm run check:open-core && npm run check:pro-imports && npm run check:env && npm run check:workflows && npm run check:http-config && npm run check:compose-config && npm run check:runtime-config && npm run check:boundaries && npm run check:e2e-helpers && npm run check:docs-markdown && npm run check:baseline-drift && npm run check:baseline-gaps && npm run check:csp && npm run check:extension-csp && npm run check:i18n && npm run check:claim-drift && npm run check:landing-free-plan && npm run check:pocket-onboarding-copy && npm run check:license-claims && npm run check:manual-figures && npm run check:page-figures && npm run check:landings-fresh && npm run check:english-only && npm run check:audit-drift && npm run check:override-cve && npm run check:direct-cve && npm run check:no-unbounded-text && npm run check:tailwind-drift && npm run check:rxdb17 && npm run check:static-brand && npm run check:brand-logo && npm run check:nginx-render && npm run check:sitemap-coverage && npm run check:seo && npm run check:license-keys && npm run check:server-log-ip-privacy && npm run check:pro-routes && npm run lint && npm run check:chunks && npm run check:inspector-freeze",
+    "check": "npm run check:open-core && npm run check:pro-imports && npm run check:env && npm run check:workflows && npm run check:http-config && npm run check:compose-config && npm run check:runtime-config && npm run check:boundaries && npm run check:e2e-helpers && npm run check:docs-markdown && npm run check:documented-npm-commands && npm run check:documented-doc-references && npm run check:baseline-drift && npm run check:baseline-gaps && npm run check:csp && npm run check:extension-csp && npm run check:i18n && npm run check:claim-drift && npm run check:landing-free-plan && npm run check:pocket-onboarding-copy && npm run check:license-claims && npm run check:manual-figures && npm run check:page-figures && npm run check:landings-fresh && npm run check:english-only && npm run check:audit-drift && npm run check:override-cve && npm run check:direct-cve && npm run check:no-unbounded-text && npm run check:tailwind-drift && npm run check:rxdb17 && npm run check:static-brand && npm run check:brand-logo && npm run check:nginx-render && npm run check:sitemap-coverage && npm run check:seo && npm run check:license-keys && npm run check:server-log-ip-privacy && npm run check:pro-routes && npm run lint && npm run check:chunks && npm run check:inspector-freeze",
     "check:inspector-freeze": "node scripts/check-inspector-freeze.mjs",
     "health:dashboard": "node scripts/health-dashboard.mjs",
     "check:quick": "node scripts/check-quick.mjs",
+    "gate:refresh": "node scripts/gate-refresh.mjs",
     "verify:fast": "npm run typecheck && npm run lint && npm run check:quick",
     "ci:local": "npm run typecheck:prod && npm run lint && npm run test:fast && npm run build:ci && npm run check",
     "lint:all": "eslint .",

@@ -249,19 +249,25 @@ const EXCLUDED_FILES = new Set([
   "scripts/public-export/manual-usuario-en.pdf",
    "scripts/public-export/RELEASE-NOTES-v1.0.0.md",
    "scripts/public-export/RELEASE-NOTES-v1.0.0.es.md",
-   // Pro tests must not be copied into the public Core tree.
-"src/tests/services/WebRTCSyncService.test.ts",
-   "src/tests/services/BackupService.test.ts",
-   "src/tests/services/DiskBackupService.test.ts",
-   "src/tests/services/pdfService.test.ts",
-   "src/tests/services/ai/WebLLMService.test.ts",
-  "src/tests/services/ai/WebLLMService.gpu.test.ts",
-  "src/tests/services/ai/RAGEngine.test.ts",
-  "src/tests/services/ai/RAGEngine.worker-path.test.ts",
-  "src/tests/services/ai/GlobalRAGService.test.ts",
-  "src/tests/services/ai/SpecializedAgentsService.test.ts",
-  "src/tests/services/ai/FlashcardService.test.ts",
-  // Security regressions that read a proprietary implementation *from disk* by
+// Pro tests must not be copied into the public Core tree.
+    "src/tests/services/WebRTCSyncService.test.ts",
+    "src/tests/services/BackupService.test.ts",
+    "src/tests/services/DiskBackupService.test.ts",
+    "src/tests/services/pdfService.test.ts",
+    // Tests that directly import Pro modules but must be excluded
+    // from the public export (their Pro imports resolve to placeholders).
+    "src/tests/services/BackupRestore.test.ts",
+    "src/tests/services/integrations/cloudSync.f2c-backup.test.ts",
+    "src/tests/services/integrations/cloudSync.offsite-backup.test.ts",
+    // Pro AI tests must not be copied into the public Core tree.
+    "src/tests/services/ai/WebLLMService.test.ts",
+    "src/tests/services/ai/WebLLMService.gpu.test.ts",
+    "src/tests/services/ai/RAGEngine.test.ts",
+    "src/tests/services/ai/RAGEngine.worker-path.test.ts",
+    "src/tests/services/ai/GlobalRAGService.test.ts",
+    "src/tests/services/ai/SpecializedAgentsService.test.ts",
+    "src/tests/services/ai/FlashcardService.test.ts",
+    // Security regressions that read a proprietary implementation *from disk* by
   // path (fs.readFileSync on src/services/WebRTCSyncService.ts) and assert on
   // its text. They are Pro-behaviour tests, not Core tests: in this repository
   // the implementation they scan does not exist, so they belong to the private

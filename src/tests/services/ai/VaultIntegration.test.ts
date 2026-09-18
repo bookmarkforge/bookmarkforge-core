@@ -44,7 +44,7 @@ vi.mock("../../../utils/logger", () => ({
 }));
 
 const { VaultIntegration } =
-  await import("../../\.\./services/ai/VaultIntegration");
+  await import("../../../services/ai/VaultIntegration");
 
 describe("VaultIntegration", () => {
   let vault: InstanceType<typeof VaultIntegration>;

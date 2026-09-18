@@ -12,7 +12,7 @@ vi.mock("../../../utils/WorkerPool", () => ({
 }));
 
 const mockSwitchToRAG = vi.fn();
-vi.mock("../../\.\./services/ai/ResourceManager", () => ({
+vi.mock("../../../services/ai/ResourceManager", () => ({
   resourceManager: { switchToRAG: mockSwitchToRAG },
 }));
 
@@ -20,7 +20,7 @@ const mockLogger = { warn: vi.fn(), error: vi.fn() };
 vi.mock("../../../utils/logger", () => ({ logger: mockLogger }));
 
 const { ragEngine, onEmbeddingProgress } = await import(
-  "../../\.\./services/ai/RAGEngine",
+  "../../../services/ai/RAGEngine",
 );
 
 describe("RAGEngine", () => {

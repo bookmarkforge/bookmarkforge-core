@@ -10,7 +10,7 @@ import {
 import React from "react";
 import { initDB } from "../../db/database";
 import { fileSystemService } from "../../services/FileSystemService";
-import { crossPollinationService } from "../\.\./services/ai/CrossPollinationService";
+import { crossPollinationService } from "../../services/ai/CrossPollinationService";
 import { notificationService } from "../../services/NotificationService";
 import { documentTemplateService } from "../../services/DocumentTemplateService";
 import { securityVault } from "../../services/SecurityVault";
@@ -41,7 +41,7 @@ vi.mock("../../services/FileSystemService", () => ({
   },
 }));
 
-vi.mock("../\.\./services/ai/CrossPollinationService", () => ({
+vi.mock("../../services/ai/CrossPollinationService", () => ({
   crossPollinationService: {
     generateInsights: vi.fn().mockResolvedValue([]),
     generateWeeklyCuration: vi.fn().mockResolvedValue(null),
@@ -194,6 +194,47 @@ vi.mock("../../components/QuickTips", () => ({
   QuickTips: () => <div data-testid="quick-tips" />,
 }));
 
+// First-run checklist — the hook is mocked so the real one never counts rows
+// in RxDB here, and the component is mocked into labelled buttons so this
+// suite can assert the wiring without depending on the checklist's internals
+// (covered by its own test file).
+const { mockFirstRun } = vi.hoisted(() => ({
+  mockFirstRun: {
+    bookmarkCount: undefined as number | undefined,
+    documentCount: undefined as number | undefined,
+    searchTried: false,
+    dismissed: true,
+    dismiss: vi.fn(),
+  },
+}));
+vi.mock("../../hooks/useFirstRunChecklist", () => ({
+  useFirstRunChecklist: () => mockFirstRun,
+  markFirstRunSearchTried: vi.fn(),
+}));
+vi.mock("../../components/dashboard/components/FirstRunChecklist", () => ({
+  FirstRunChecklist: ({
+    onCaptureBookmark,
+    onCreateDocument,
+    onTrySearch,
+    onDismiss,
+  }: any) => (
+    <div data-testid="first-run-checklist">
+      <button onClick={onCaptureBookmark} data-testid="first-run-capture">
+        capture
+      </button>
+      <button onClick={onCreateDocument} data-testid="first-run-create">
+        create
+      </button>
+      <button onClick={onTrySearch} data-testid="first-run-search">
+        search
+      </button>
+      <button onClick={onDismiss} data-testid="first-run-dismiss">
+        dismiss
+      </button>
+    </div>
+  ),
+}));
+
 const { mockGetLatestBackupAgeMs } = vi.hoisted(() => ({
   mockGetLatestBackupAgeMs: vi.fn(),
 }));
@@ -272,6 +313,16 @@ describe("HomeDashboard", () => {
       atWall: false,
       nearWall: false,
       isFree: false,
+    });
+    // Default: the checklist is already dismissed, so every pre-existing
+    // assertion in this suite sees the same dashboard it always saw. The
+    // first-run branches opt in explicitly.
+    Object.assign(mockFirstRun, {
+      bookmarkCount: undefined,
+      documentCount: undefined,
+      searchTried: false,
+      dismissed: true,
+      dismiss: vi.fn(),
     });
     // Default: no backup at all → the reminder shows (matches the pre-F0-3
     // "no manual backup date" behaviour). Individual branches override.
@@ -373,6 +424,73 @@ describe("HomeDashboard", () => {
     await renderDashboard()
     expect(screen.getByTestId("quick-tips")).toBeTruthy();
     expect(screen.getByTestId("storage-status")).toBeTruthy();
+  });
+
+  // ── First-run checklist ────────────────────────────────────────────
+
+  it("shows the checklist and hides the daily tip while it is pending", async () => {
+    Object.assign(mockFirstRun, { dismissed: false, searchTried: false });
+
+    await renderDashboard();
+
+    expect(screen.getByTestId("first-run-checklist")).toBeTruthy();
+    expect(screen.queryByTestId("quick-tips")).toBeNull();
+  });
+
+  it("hides the checklist once all three steps are complete", async () => {
+    Object.assign(mockFirstRun, {
+      dismissed: false,
+      bookmarkCount: 2,
+      documentCount: 1,
+      searchTried: true,
+    });
+
+    await renderDashboard();
+
+    expect(screen.queryByTestId("first-run-checklist")).toBeNull();
+    expect(screen.getByTestId("quick-tips")).toBeTruthy();
+  });
+
+  it("keeps the checklist while the search step is still missing", async () => {
+    Object.assign(mockFirstRun, {
+      dismissed: false,
+      bookmarkCount: 2,
+      documentCount: 1,
+      searchTried: false,
+    });
+
+    await renderDashboard();
+
+    expect(screen.getByTestId("first-run-checklist")).toBeTruthy();
+  });
+
+  it("stays hidden when the checklist was dismissed", async () => {
+    Object.assign(mockFirstRun, { dismissed: true, bookmarkCount: 0 });
+
+    await renderDashboard();
+
+    expect(screen.queryByTestId("first-run-checklist")).toBeNull();
+  });
+
+  it("wires checklist steps to navigation, search and dismissal", async () => {
+    Object.assign(mockFirstRun, { dismissed: false });
+
+    await renderDashboard();
+
+    fireEvent.click(screen.getByTestId("first-run-capture"));
+    expect(onNavigate).toHaveBeenCalledWith("bookmarks");
+
+    fireEvent.click(screen.getByTestId("first-run-create"));
+    expect(onNavigate).toHaveBeenCalledWith("documents");
+
+    const searchSpy = vi.fn();
+    window.addEventListener("forge:open-search", searchSpy);
+    fireEvent.click(screen.getByTestId("first-run-search"));
+    expect(searchSpy).toHaveBeenCalledTimes(1);
+    window.removeEventListener("forge:open-search", searchSpy);
+
+    fireEvent.click(screen.getByTestId("first-run-dismiss"));
+    expect(mockFirstRun.dismiss).toHaveBeenCalledTimes(1);
   });
 
   it("opens ResearchAssistant via the Web Research NavCard", async () => {

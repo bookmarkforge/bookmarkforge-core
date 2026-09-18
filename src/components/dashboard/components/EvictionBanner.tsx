@@ -2,6 +2,8 @@ import React from "react";
 import { motion } from "motion/react";
 import { AlertTriangle, CloudOff, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { DURATION_COLLAPSE } from "../../../constants/motion";
+import { CollapsibleSurface } from "./CollapsibleSurface";
 
 interface EvictionBannerProps {
   show: boolean;
@@ -17,14 +19,11 @@ export const EvictionBanner: React.FC<EvictionBannerProps> = ({
   const { t } = useTranslation();
 
   return (
-    <div
-      className="mb-6"
-      style={{ minHeight: show ? undefined : 0, overflow: 'hidden' }}
-    >
+    <CollapsibleSurface show={show} className="mb-6" testId="eviction-surface">
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: show ? 1 : 0, y: show ? 0 : -10 }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: DURATION_COLLAPSE }}
         style={{ pointerEvents: show ? 'auto' : 'none' }}
       >
           <div className="relative overflow-hidden rounded-2xl border border-[var(--warning-soft-border)]/20 ds-bg-warning-soft">
@@ -63,6 +62,6 @@ export const EvictionBanner: React.FC<EvictionBannerProps> = ({
             </div>
           </div>
       </motion.div>
-    </div>
+    </CollapsibleSurface>
   );
 };

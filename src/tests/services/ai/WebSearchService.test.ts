@@ -7,7 +7,7 @@ const mockRateLimitService = {
   recordRequest: vi.fn(),
 };
 
-vi.mock("../../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../../services/ai/ProviderManager", () => ({
   aiManager: mockAiManager,
 }));
 vi.mock("../../../services/RateLimitService", () => ({
@@ -18,7 +18,7 @@ vi.mock("../../../utils/logger", () => ({
 }));
 
 const { WebSearchService } =
-  await import("../../\.\./services/ai/WebSearchService");
+  await import("../../../services/ai/WebSearchService");
 
 describe("WebSearchService", () => {
   let service: ReturnType<typeof WebSearchService.getInstance>;

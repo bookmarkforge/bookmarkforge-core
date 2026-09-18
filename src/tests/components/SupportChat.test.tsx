@@ -2,14 +2,14 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, act, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { agentService } from "../\.\./services/ai/AgentService";
+import { agentService } from "../../services/ai/AgentService";
 
 vi.mock("react-i18next", () => {
   const t = (key: string, fb?: string) => fb || key;
   return { useTranslation: () => ({ t, i18n: { language: "en" } }) };
 });
 
-vi.mock("../\.\./services/ai/AgentService", () => ({
+vi.mock("../../services/ai/AgentService", () => ({
   agentService: {
     supportChat: vi.fn().mockResolvedValue("Respuesta mock"),
   },

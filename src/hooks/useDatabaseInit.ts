@@ -110,7 +110,7 @@ export function useDatabaseInit() {
 
           if (!isLockedRef.current && !forceSetupRef.current) {
             // RxDB is loaded only when the unlocked app actually needs it.
-            const { initDB, getDB } = await import("../db/database");
+            const { initDB, getDB } = await import("../container/database");
             const dbInstance = await initDB(masterPassword || undefined);
             if (cancelled) {return;}
             dbInitializedRef.current = true;

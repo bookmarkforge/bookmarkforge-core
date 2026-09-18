@@ -141,7 +141,7 @@ describe("SyncStatus", () => {
   });
 
   it("shows connecting state with Cloud icon", async () => {
-    setMock({ syncHealth: "connecting" });
+    setMock({ syncHealth: "connecting", currentRoomId: "room-abc-123" });
     await renderSyncStatus();
     await waitFor(() => {
       expect(screen.getByTestId("icon-Cloud")).toBeTruthy();

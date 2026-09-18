@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { EvictionBanner } from "../../../components/dashboard/components/EvictionBanner";
 
@@ -19,7 +19,7 @@ describe("EvictionBanner", () => {
     expect(getByText("app_evictionRiskTitle")).toBeTruthy();
   });
 
-  it("renders but is hidden when show is false (CLS optimization)", () => {
+  it("renders collapsed and invisible when show is false", () => {
     const { container } = render(
       <EvictionBanner
         show={false}
@@ -27,9 +27,56 @@ describe("EvictionBanner", () => {
         onConfigureSync={vi.fn()}
       />,
     );
-    // Banner always renders (reserves space for CLS) but is invisible
-    const banner = container.querySelector(".mb-6");
+    // Always mounted, but costing no layout space and no accessibility
+    // surface (ADR-055).
+    const banner = container.querySelector(".mb-6") as HTMLElement;
     expect(banner).toBeTruthy();
+    expect(banner.style.height).toBe("0px");
+  });
+
+  it("hides the whole subtree from assistive tech while off (not just opacity)", () => {
+    const { container } = render(
+      <EvictionBanner
+        show={false}
+        onDismiss={vi.fn()}
+        onConfigureSync={vi.fn()}
+      />,
+    );
+    // A safari-risk warning rendered at opacity 0 would still be announced —
+    // and its buttons would still take focus — on a platform that has no
+    // eviction risk at all. `visibility: hidden` keeps the reserved box while
+    // taking the subtree out of the a11y tree and the tab order.
+    const banner = container.querySelector(".mb-6") as HTMLElement;
+    expect(banner.style.visibility).toBe("hidden");
+    expect(screen.getByText("app_evictionRiskTitle")).not.toBeVisible();
+    expect(screen.getByText("app_configureCloudSync")).not.toBeVisible();
+  });
+
+  it("exposes the banner again as soon as show flips to true", () => {
+    const { rerender, container } = render(
+      <EvictionBanner
+        show={false}
+        onDismiss={vi.fn()}
+        onConfigureSync={vi.fn()}
+      />,
+    );
+    expect(screen.getByText("app_evictionRiskTitle")).not.toBeVisible();
+
+    rerender(
+      <EvictionBanner
+        show={true}
+        onDismiss={vi.fn()}
+        onConfigureSync={vi.fn()}
+      />,
+    );
+    // Asserted on the wrapper's inline style rather than toBeVisible(): the
+    // body's opacity is driven by motion's fade-in, which jsdom does not run.
+    // Visibility must flip without waiting for the fade, otherwise the banner
+    // would animate inside an already-hidden subtree and never appear.
+    const banner = container.querySelector(".mb-6") as HTMLElement;
+    expect(banner.style.visibility).toBe("visible");
+    expect(banner.style.transition).toContain("visibility 0s linear 0ms");
+    expect(banner.style.height).not.toBe("0px");
   });
 
   it("calls onConfigureSync when clicking configure", async () => {

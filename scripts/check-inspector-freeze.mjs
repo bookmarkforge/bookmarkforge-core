@@ -84,6 +84,10 @@ const KNOWN_GATES = {
   "check:pocket-onboarding-copy": "language",
 
   // Frozen documentation-format inspectors (grandfathered; O-1).
+  // The command cross-reference gate is governed by ADR-056: it prevents
+  // release runbooks from teaching npm scripts that do not exist.
+  "check:documented-doc-references": "docs",
+  "check:documented-npm-commands": "docs",
   // NOTE: the three original Markdown gates were fused into
   // check:docs-markdown (ADR-040). The new gate is intentionally NOT
   // registered here — the freeze requires the ADR that names it to be

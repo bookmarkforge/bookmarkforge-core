@@ -133,7 +133,7 @@ describe("runComposeEnvContract (unit)", () => {
     "        VITE_APP_VERSION: ${VITE_APP_VERSION:?VITE_APP_VERSION is required}",
     "  api:",
     "    environment:",
-    "      GEMINI_API_KEY: ${GEMINI_API_KEY:?GEMINI_API_KEY is required}",
+    "      CLIENT_EVENTS_CRITICAL_CLIENTS: ${CLIENT_EVENTS_CRITICAL_CLIENTS:?CLIENT_EVENTS_CRITICAL_CLIENTS is required}",
     "      CLIENT_EVENTS_WEBHOOK_URL: ${CLIENT_EVENTS_WEBHOOK_URL:-}",
     "      CLIENT_EVENTS_ADMIN_TOKEN: ${CLIENT_EVENTS_ADMIN_TOKEN:-}",
     "  redis:",
@@ -152,7 +152,7 @@ describe("runComposeEnvContract (unit)", () => {
     expect(r.ok).toBe(false);
     const all = r.violations.join("\n");
     expect(all).toContain("VITE_APP_VERSION");
-    expect(all).toContain("GEMINI_API_KEY");
+    expect(all).toContain("CLIENT_EVENTS_CRITICAL_CLIENTS");
   });
 
   it("passes when all required vars are present and the webhook is https", () => {
@@ -160,7 +160,7 @@ describe("runComposeEnvContract (unit)", () => {
       composeSource: COMPOSE,
       envProdSource: [
         "VITE_APP_VERSION=1.0.0",
-        "GEMINI_API_KEY=sk-test",
+        "CLIENT_EVENTS_CRITICAL_CLIENTS=3",
         "CLIENT_EVENTS_ADMIN_TOKEN=super-secret-token",
         "CLIENT_EVENTS_WEBHOOK_URL=https://hooks.example.com/hook",
       ].join("\n"),
@@ -174,7 +174,7 @@ describe("runComposeEnvContract (unit)", () => {
       composeSource: COMPOSE,
       envProdSource: [
         "VITE_APP_VERSION=1",
-        "GEMINI_API_KEY=k",
+        "CLIENT_EVENTS_CRITICAL_CLIENTS=k",
         "CLIENT_EVENTS_WEBHOOK_URL=http://hooks.example.com/hook",
       ].join("\n"),
     });
@@ -202,8 +202,8 @@ describe("runComposeEnvContract (unit)", () => {
     // injects IMAGE_TAG=<sha> per deploy; it must NOT live in .env.production
     // or every deploy would silently pin to one tag.
     const r = runComposeEnvContract({
-      composeSource: "services:\n  web:\n    image: app:${IMAGE_TAG:?IMAGE_TAG is required}\n  api:\n    environment:\n      GEMINI_API_KEY: ${GEMINI_API_KEY:?required}\n",
-      envProdSource: "GEMINI_API_KEY=sk-test\n",
+      composeSource: "services:\n  web:\n    image: app:${IMAGE_TAG:?IMAGE_TAG is required}\n  api:\n    environment:\n      CLIENT_EVENTS_CRITICAL_CLIENTS: ${CLIENT_EVENTS_CRITICAL_CLIENTS:?required}\n",
+      envProdSource: "CLIENT_EVENTS_CRITICAL_CLIENTS=3\n",
     });
     expect(r.ok).toBe(true);
     expect(r.violations).toEqual([]);
@@ -211,11 +211,11 @@ describe("runComposeEnvContract (unit)", () => {
 
   it("still flags other required vars while exempting deploy-injected ones", () => {
     const r = runComposeEnvContract({
-      composeSource: "services:\n  web:\n    image: app:${IMAGE_TAG:?required}\n  api:\n    environment:\n      GEMINI_API_KEY: ${GEMINI_API_KEY:?required}\n",
+      composeSource: "services:\n  web:\n    image: app:${IMAGE_TAG:?required}\n  api:\n    environment:\n      CLIENT_EVENTS_CRITICAL_CLIENTS: ${CLIENT_EVENTS_CRITICAL_CLIENTS:?required}\n",
       envProdSource: "",
     });
     expect(r.ok).toBe(false);
-    expect(r.violations.join("\n")).toContain("GEMINI_API_KEY");
+    expect(r.violations.join("\n")).toContain("CLIENT_EVENTS_CRITICAL_CLIENTS");
     expect(r.violations.join("\n")).not.toContain("IMAGE_TAG");
   });
 });

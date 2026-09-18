@@ -5,7 +5,7 @@ vi.mock("../../../utils/logger", () => ({
 }));
 
 const { AIRequestCache } =
-  await import("../../\.\./services/ai/AIRequestCache");
+  await import("../../../services/ai/AIRequestCache");
 const { logger } = await import("../../../utils/logger");
 
 describe("AIRequestCache", () => {

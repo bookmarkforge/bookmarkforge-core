@@ -17,7 +17,7 @@ vi.mock("../../db/database", () => ({
 }));
 
 const mockGenerateEmbedding = vi.hoisted(() => vi.fn());
-vi.mock("../\.\./services/ai/RAGEngine", () => ({
+vi.mock("../../services/ai/RAGEngine", () => ({
   ragEngine: {
     generateEmbedding: mockGenerateEmbedding,
   },

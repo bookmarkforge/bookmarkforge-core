@@ -4,6 +4,7 @@ import { securityVault } from "../SecurityVault";
 import { secureStorage } from "../SecureStorage";
 import { logRateLimited } from "../../utils/boundedLog";
 import { constantTimeCompare } from "../security-vault/compare";
+import { zeroPasswordBytes } from "../../utils/crypto-core";
 
 interface AttestedEntry {
   index: number;
@@ -182,16 +183,16 @@ class AttestationChain {
             { name: "HMAC", hash: "SHA-256" },
             false,
             ["sign"],
-          );
-        } finally {
-          // withMasterPasswordBytes returns a caller-owned copy. Clear both
-          // the domain-separated key material and the original password copy
-          // even when importKey rejects before copying it.
-          combined.fill(0);
-          passwordBytes.fill(0);
-        }
-      },
-    );
+);
+     } finally {
+       // withMasterPasswordBytes returns a caller-owned copy. Clear both
+       // the domain-separated key material and the original password copy
+       // even when importKey rejects before copying it.
+       zeroPasswordBytes(combined);
+       zeroPasswordBytes(passwordBytes);
+     }
+   },
+     );
     if (!key) {throw new Error("AttestationChain: vault locked");}
     const sig = await crypto.subtle.sign(
       "HMAC",

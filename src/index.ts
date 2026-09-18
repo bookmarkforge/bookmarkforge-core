@@ -25,7 +25,7 @@ export { useMainAppState, useAppInit } from "./hooks/useMainAppState";
 export { securityVault } from "./services/SecurityVault";
 export { aiManager } from "./services/ai/ProviderManager";
 
-export { initDB, getDB, destroyDB } from "./db/database";
+export { initDB, getDB, destroyDB } from "./container/database";
 
 export { useSecurityStore } from "./hooks/useSecurityStore";
 export { useTabManager } from "./hooks/useTabManager";

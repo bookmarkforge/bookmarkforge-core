@@ -7,6 +7,8 @@ import {
   getProDeviceLimit,
   PRICING_CONFIG,
 } from "../../../constants/pricing";
+import { DURATION_COLLAPSE } from "../../../constants/motion";
+import { CollapsibleSurface } from "./CollapsibleSurface";
 
 interface FreeTierNudgeProps {
   show: boolean;
@@ -33,14 +35,11 @@ export const FreeTierNudge: React.FC<FreeTierNudgeProps> = ({
   const refundDays = PRICING_CONFIG.lifetimeVersioned.refundDays;
 
   return (
-    <div
-      className="mb-6"
-      style={{ minHeight: show ? undefined : 0, overflow: "hidden" }}
-    >
+    <CollapsibleSurface show={show} className="mb-6" testId="free-tier-nudge-surface">
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: show ? 1 : 0, y: show ? 0 : -10 }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: DURATION_COLLAPSE }}
         style={{ pointerEvents: show ? "auto" : "none" }}
       >
         <div className="relative overflow-hidden rounded-2xl border border-[var(--divider)] ds-bg-secondary">
@@ -123,6 +122,6 @@ export const FreeTierNudge: React.FC<FreeTierNudgeProps> = ({
           </div>
         </div>
       </motion.div>
-    </div>
+    </CollapsibleSurface>
   );
 };

@@ -4,6 +4,7 @@
 import { securityVault } from "../SecurityVault";
 import { constantTimeCompare } from "../security-vault/compare";
 import { logger } from "../../utils/logger";
+import { zeroPasswordBytes } from "../../utils/crypto-core";
 
 interface SignedMutation<T> {
   key: string;
@@ -109,16 +110,16 @@ class MutationGuard {
                 { name: "HMAC", hash: "SHA-256" },
                 false,
                 ["sign"],
-              );
-              resolved = keyMaterial;
-            } finally {
-              // Clear both the derived input and the ephemeral password copy
-              // returned by withMasterPasswordBytes, including import errors.
-              combined.fill(0);
-              passwordBytes.fill(0);
-            }
-          },
-        );
+);
+               resolved = keyMaterial;
+     } finally {
+       // Clear both the derived input and the ephemeral password copy
+       // returned by withMasterPasswordBytes, including import errors.
+       zeroPasswordBytes(combined);
+       zeroPasswordBytes(passwordBytes);
+     }
+   },
+     );
       } catch (err) {
         this.keyCache.clear();
         logger.warn(

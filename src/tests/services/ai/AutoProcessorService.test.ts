@@ -5,7 +5,7 @@ vi.mock("../../../db/database", () => ({
   initDB: vi.fn(),
 }));
 
-vi.mock("../../\.\./services/ai/TaggingService", () => ({
+vi.mock("../../../services/ai/TaggingService", () => ({
   taggingService: {
     generateSummary: vi.fn(),
     suggestTags: vi.fn(),
@@ -13,13 +13,13 @@ vi.mock("../../\.\./services/ai/TaggingService", () => ({
   },
 }));
 
-vi.mock("../../\.\./services/ai/RAGEngine", () => ({
+vi.mock("../../../services/ai/RAGEngine", () => ({
   ragEngine: {
     generateEmbedding: vi.fn(),
   },
 }));
 
-vi.mock("../../\.\./services/ai/VectorIndexService", () => ({
+vi.mock("../../../services/ai/VectorIndexService", () => ({
   vectorIndexService: {
     search: vi.fn(),
     batchAdd: vi.fn(),
@@ -28,13 +28,13 @@ vi.mock("../../\.\./services/ai/VectorIndexService", () => ({
   },
 }));
 
-vi.mock("../../\.\./services/ai/ChunkingService", () => ({
+vi.mock("../../../services/ai/ChunkingService", () => ({
   ChunkingService: {
     splitText: vi.fn(),
   },
 }));
 
-vi.mock("../../\.\./services/ai/ProviderManager", () => ({
+vi.mock("../../../services/ai/ProviderManager", () => ({
   aiManager: {
     getApiKey: vi.fn().mockReturnValue("sk-test-key"),
     getProviderInfo: vi.fn().mockReturnValue({
@@ -81,15 +81,15 @@ Object.defineProperty(globalThis, "localStorage", { value: mockLocalStorage });
 
 const { initDB } = await import("../../../db/database");
 const { taggingService } =
-  await import("../../\.\./services/ai/TaggingService");
-const { ragEngine } = await import("../../\.\./services/ai/RAGEngine");
+  await import("../../../services/ai/TaggingService");
+const { ragEngine } = await import("../../../services/ai/RAGEngine");
 const { ChunkingService } =
-  await import("../../\.\./services/ai/ChunkingService");
+  await import("../../../services/ai/ChunkingService");
 const { vectorIndexService } =
-  await import("../../\.\./services/ai/VectorIndexService");
-const { aiManager } = await import("../../\.\./services/ai/ProviderManager");
+  await import("../../../services/ai/VectorIndexService");
+const { aiManager } = await import("../../../services/ai/ProviderManager");
 const { autoProcessorService } =
-  await import("../../\.\./services/ai/AutoProcessorService");
+  await import("../../../services/ai/AutoProcessorService");
 const { logger } = await import("../../../utils/logger");
 
 type MockDb = {

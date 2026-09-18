@@ -14,6 +14,7 @@
 export {
   initDB,
   destroyDB,
+  getDB,
   // Classified-error guards used by UI error mapping. They are runtime
   // functions (not types), so they cross the layer boundary through the
   // same sanctioned gate as bootstrap.

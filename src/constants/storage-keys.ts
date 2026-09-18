@@ -9,6 +9,10 @@ export const STORAGE_KEYS = {
   ONBOARDING_COMPLETE: "forge_onboarding_complete",
   WELCOME_TOUR_COMPLETE: "forge_welcome_tour_complete",
   DISMISSED_TIPS: "forge_dismissed_tips",
+  /** First-run checklist: hidden for good once dismissed. */
+  FIRST_RUN_CHECKLIST_DISMISSED: "forge_first_run_checklist_dismissed",
+  /** First-run checklist: set once the user opened search at least once. */
+  FIRST_RUN_SEARCH_TRIED: "forge_first_run_search_tried",
 
   // Demo mode
   DEMO_ACTIVE: "forge_demo_active",

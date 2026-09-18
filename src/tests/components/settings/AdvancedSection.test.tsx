@@ -15,7 +15,7 @@ vi.mock("lucide-react", () => {
 });
 
 const mockForceReprocessAll = vi.fn().mockResolvedValue(undefined);
-vi.mock("../../\.\./services/ai/AutoProcessorService", () => ({
+vi.mock("../../../services/ai/AutoProcessorService", () => ({
   autoProcessorService: { forceReprocessAll: mockForceReprocessAll },
 }));
 

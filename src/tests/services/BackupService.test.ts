@@ -72,6 +72,13 @@ vi.mock("../../services/DiskBackupService", () => ({
   diskBackupService: mockDiskBackup,
 }));
 
+// BackupService reaches DiskBackupService through the Pro access loader.
+// Install the double at that seam so these tests exercise the real
+// auto-backup orchestration without loading the proprietary implementation.
+vi.mock("../../services/pro-access", () => ({
+  loadDiskBackupService: vi.fn().mockResolvedValue(mockDiskBackup),
+}));
+
 const { auditLog } = await import("../../services/AuditLogService");
 const { logger } = await import("../../utils/logger");
 

@@ -3,6 +3,7 @@ import { encryptionService } from "./EncryptionService";
 import { securityVault } from "./SecurityVault";
 import { secureStorage } from "./SecureStorage";
 import { getCollection } from "../utils/browser-types";
+import { zeroPasswordBytes } from "../utils/crypto-core";
 import { logger } from "../utils/logger";
 import { settingsService } from "./SettingsService";
 import { initDB } from "../db/database";
@@ -11,7 +12,7 @@ import { auditLog } from "./AuditLogService";
 import { safeGet, safeSet, safeRemove } from "../store/safeStorage";
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { downloadBlob } from "../utils/download";
-import { diskBackupService } from "./DiskBackupService";
+import { loadDiskBackupService } from "./pro-access";
 
 const AUTO_BACKUP_KEY = "bmf_last_auto_backup";
 const AUTO_BACKUP_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 hours
@@ -295,7 +296,7 @@ export class BackupService {
     // call a fresh buffer it alone owns, so zeroing it is safe and keeps the
     // zero-memory policy from being silently defeated by the backup flow.
     const pw = normalizePassword(password);
-    if (password instanceof Uint8Array) {password.fill(0);}
+    if (password instanceof Uint8Array) { zeroPasswordBytes(password); }
     // Pass the password through to initDB: the vault DB is encrypted with
     // the master-password-derived key. Opening with no password uses the
     // auto-key, which collides with the encrypted adapter (DB1) and yields
@@ -367,7 +368,7 @@ export class BackupService {
 
   static async exportBackup(password?: string | Uint8Array): Promise<void> {
     if (this.exportInFlight) {
-      if (password instanceof Uint8Array) {password.fill(0);}
+      if (password instanceof Uint8Array) { zeroPasswordBytes(password); }
       throw new Error("Backup export already in progress");
     }
     this.exportInFlight = true;
@@ -721,7 +722,7 @@ export class BackupService {
 
   static async importBackup(file: File, password?: string | Uint8Array): Promise<void> {
     if (this.importInFlight) {
-      if (password instanceof Uint8Array) {password.fill(0);}
+      if (password instanceof Uint8Array) { zeroPasswordBytes(password); }
       throw new Error("Backup import already in progress");
     }
     this.importInFlight = true;
@@ -738,12 +739,10 @@ export class BackupService {
   ): Promise<void> {
     let buffer: ArrayBuffer | null = null;
     try {
-      const pw = normalizePassword(password);
-      if (password instanceof Uint8Array) {
-        // This API consumes caller-owned password buffers just like
-        // createBackupData/withMasterPasswordBytes.
-        password.fill(0);
-      }
+const pw = normalizePassword(password);
+       if (password instanceof Uint8Array) {
+         zeroPasswordBytes(password);
+       }
       const MAX_BACKUP_BYTES = 100 * 1024 * 1024; // 100 MB guardrail
       if (file.size > MAX_BACKUP_BYTES) {
         throw new Error(
@@ -926,12 +925,16 @@ export class BackupService {
         }
       }
 
-      logger.info("[AutoBackup] Creating automatic backup...");
       const result = await securityVault.withMasterPasswordBytes(
         BackupService,
         async (passwordBytes) => {
-          if (!passwordBytes) {return null;}
-          return this.createBackupData(passwordBytes);
+          try {
+            if (!passwordBytes) {return null;}
+            logger.info("[AutoBackup] Creating automatic backup...");
+            return this.createBackupData(passwordBytes);
+          } finally {
+            if (passwordBytes) {zeroPasswordBytes(passwordBytes);}
+          }
         },
       );
       if (!result) {
@@ -971,6 +974,7 @@ export class BackupService {
       // Best-effort: a disk failure must never fail the auto-backup — the
       // in-browser copy above is kept and the next daily run retries.
       try {
+        const diskBackupService = await loadDiskBackupService();
         const diskFileName = diskBackupService.buildBackupFileName();
         const diskResult = await diskBackupService.writeBackupToDisk(
           blob,

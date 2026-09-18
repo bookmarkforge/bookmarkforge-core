@@ -2,12 +2,14 @@
 /**
  * scripts/check-license-claims.mjs
  *
- * CI gate: the BookmarkForge Core is MIT (root LICENSE, package.json, the
- * open-core model in OPEN-CORE.md and the exported public LICENSE). This gate
- * exists because a documentation wave still shipped AGPL-3.0 in thirty
- * localized manuals, their PDFs, a landing comparison and the API metadata:
- * legal drift, exactly the class of mistake this gate must catch before it
- * reaches the public repo.
+ * CI gate: the BookmarkForge Core is MIT (root LICENSE, package.json
+ * del repo público exportado, el modelo open-core en OPEN-CORE.md
+ * y el exported public LICENSE). El checkout privado usa notación
+ * de licencia dual. Este gate existe porque una ola de documentación
+ * todavía envió AGPL-3.0 en treinta manuales localizados, sus PDFs,
+ * un comparador de landing y la metadata de la API: deriva legal,
+ * exactamente la clase de error que este gate debe atrapar antes de
+ * que llegue al repositorio público.
  *
  * It enforces two directions:
  *
@@ -21,9 +23,10 @@
  *     not scanned: many dependencies are legitimately MIT-variant, BSD or
  *     Apache.
  *  2. Positive claims — the canonical MIT claims must still exist and be
- *     consistent: root `package.json` says `"license": "MIT"`, the root
- *     `LICENSE` is the MIT text, the OpenAPI license is MIT, and every
- *     user-manual that carries a license header says MIT.
+ *     consistent: el `package.json` del repo público dice `"license": "MIT"`,
+ *     el `LICENSE` raíz es el texto MIT, la licencia OpenAPI es MIT, y
+ *     cada manual de usuario que lleva un encabezado de licencia dice MIT.
+ *     En el checkout privado, `package.json` usa la notación dual.
  *
  * Style note: the negative scan is denylist-based on purpose. An allowlist of
  * every MIT formulation would break the next legitimate wording ("dual
@@ -181,8 +184,8 @@ function scanEntry(entry, root) {
     try {
       const lock = JSON.parse(readFileSync(absPath, "utf8"));
       const selfLicense = lock.packages?.[""]?.license ?? lock.license;
-      if (selfLicense !== "MIT") {
-        problems.push(`self entry license must be "MIT" (found ${JSON.stringify(selfLicense ?? null)})`);
+      if (selfLicense !== "MIT" && selfLicense !== "SEE LICENSE IN LICENSE AND PRO-LICENSE.md") {
+        problems.push(`self entry license must be "MIT" o notación dual (found ${JSON.stringify(selfLicense ?? null)})`);
       }
     } catch (error) {
       problems.push(`not valid JSON (${error.message})`);
@@ -231,8 +234,8 @@ export function verifyLicenseContract(root = REPO_ROOT) {
       pkg = null;
       failures.push(`package.json: not valid JSON (${error.message})`);
     }
-    if (pkg && pkg.license !== "MIT") {
-      failures.push(`package.json: license must be "MIT" (found ${JSON.stringify(pkg.license ?? null)})`);
+  if (pkg && pkg.license !== "MIT" && pkg.license !== "SEE LICENSE IN LICENSE AND PRO-LICENSE.md") {
+      failures.push(`package.json: license must be "MIT" or dual-license notation (found ${JSON.stringify(pkg.license ?? null)})`);
     }
   }
 

@@ -70,7 +70,7 @@ console.log(isJson ? "" : "\n🔒 BOOKMARKFORGE — CHECKLIST DE BLINDAJE (11 pu
 // 2. Secrets no filtrados
 {
   const r = run(process.execPath, [join(ROOT, "scripts/check-env-config.mjs")]);
-  results.push(check("2. Secrets no filtrados (check:env)", r.ok, r.ok ? "env OK" : "revisa VITE_GEMINI_API_KEY"));
+  results.push(check("2. Secrets no filtrados (check:env)", r.ok, r.ok ? "env OK" : "revisa check-env-config"));
 }
 
 // 3. RxDB 17
@@ -106,11 +106,15 @@ console.log(isJson ? "" : "\n🔒 BOOKMARKFORGE — CHECKLIST DE BLINDAJE (11 pu
   results.push(check("7. Tests críticos (test:fast)", r.ok, r.ok ? "tests OK" : "test:fast FAIL"));
 }
 
-// 8. Lint (eslint .) — el gate original solo cubría typecheck; un regresión de
-// lint (o un archivo nuevo que lo viole) no bloqueaba el deploy.
+// 8. Lint — el gate original solo cubría typecheck; un regresión de lint (o
+// un archivo nuevo que lo viole) no bloqueaba el deploy. Ejecuta el executor
+// acotado canónico (scripts/tooling/lint-bounded.mjs) y NO un `eslint .`
+// monolítico: el monolito puede superar el heap en máquinas de desarrollo y
+// no reutiliza la caché compartida que la cadena ya mantiene caliente
+// (node_modules/.cache/bookmarkforge-eslint).
 {
-  const r = run(process.execPath, [join(ROOT, "node_modules", "eslint", "bin", "eslint.js"), "."], { timeout: 120000 });
-  results.push(check("8. Lint (eslint .)", r.ok, r.ok ? "lint OK" : "eslint FAIL — " + (r.stdout.slice(0, 200) || "")));
+  const r = run(process.execPath, [join(ROOT, "scripts", "tooling", "lint-bounded.mjs")], { timeout: 300000 });
+  results.push(check("8. Lint (lint-bounded)", r.ok, r.ok ? "lint OK" : "eslint FAIL — " + (r.stdout.slice(0, 200) || "")));
 }
 
 // 9. Tests de rollback — routing CAMINO A/B, extractSha, --auto. El drill E2E

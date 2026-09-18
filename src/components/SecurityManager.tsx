@@ -539,6 +539,8 @@ Date Generated: ${formatDate(new Date(), {
               value={passwordInput}
               onChange={(e) => setPasswordInput(e.target.value)}
               placeholder={t("app_master_password")}
+              autoComplete="new-password"
+              minLength={SECURITY_CONFIG.MIN_PASSWORD_LENGTH}
               className="w-full px-3 py-3 transition-all outline-none ds-radius-card ds-bg-input ds-border-inactive ds-text-primary"
             />
           </div>        ) : isRecovering ? (

@@ -100,7 +100,7 @@
 
 - [x] **13. Simulacro de desastre trimestral (automatizado y ejecutado 2026-08-31)**
   El ensayo completo trimestral está formalizado en CI: `.github/workflows/drill-quarterly.yml` (primer día de cada trimestre + dispatch manual) ejecuta el drill de backup-restore (RTO < 120 s) **y** el drill de rollback Docker (CAMINO A por imagen < 60 s, imágenes reales del tag `prod-*` previo). Requiere ≥ 2 tags `prod-*` en el repo.
-  - Evidencia: [.github/workflows/drill-quarterly.yml](../.github/workflows/drill-quarterly.yml), [docs/operations.md](operations.md) → "Simulacro trimestral de recuperación ante desastre" y "Evidencia de ejecución local (re-run) — rollback Docker"; [docs/drill-run-2026-08-31-rollback-docker.md](drill-run-2026-08-31-rollback-docker.md).
+  - Evidencia: [.github/workflows/drill-quarterly.yml](../.github/workflows/drill-quarterly.yml), [docs/operations.md](operations.md) → "Simulacro trimestral de recuperación ante desastre" y "Evidencia de ejecución local (re-run) — rollback Docker".
   - **Ejecutado (2026-08-31)** contra el stack local y tags `prod-*` reales (`prod-20260831-1320-00b24d6` → `prod-20260831-1315-8f44a84`):
     - **Rollback Docker** (`DRILL_DOCKER=1`): 6 fases, exit 0 — CAMINO A por imagen **9.6 s < 60 s (gate)** · BASELINE/RE-VERIFY 11/11 (re-run 224.6 s; primera run 167.4 s, CAMINO A 12.2 s).
     - **Backup-restore** (`npm run drill:backup-restore`): restore BMF 6.6 s / plaintext 6.5 s, gate RTO < 120 s, `degraded: []` (sin alerta).

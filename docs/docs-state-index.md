@@ -47,14 +47,15 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/ADR-057-documented-reference-integrity-gate.md` | vivo | Registro de decisión arquitectónica. |
 | `docs/ADR-058-release-target-confirmation-gate.md` | vivo | Registro de decisión arquitectónica. |
 | `docs/ADR-059-documentation-retirement.md` | vivo | Registro de decisión arquitectónica. |
+| `docs/ADR-060-legal-consolidation-gate.md` | vivo | Registro de decisión arquitectónica. |
+| `docs/ADR-061-controlled-retirement-2026-09-19.md` | vivo | Registro de decisión arquitectónica. |
 | `docs/api.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/architecture.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/audit-report-2026-09-02.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/audit-report-2026-09-04.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/audit.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/CHANGELOG.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/deployment-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/docs-state-index.md` | vivo | Inventario canónico generado por scripts/doctor-docs-index.mjs. |
-| `docs/drill-run-2026-08-31-rollback-docker.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/edge-case-hardening-vault-audit.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/github-secrets-and-push-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/google-search-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
@@ -108,7 +109,6 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/PENDIENTES.md` | transitorio | Registro de trabajo pendiente y deuda conocida. |
 | `docs/pricing-decision.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/que-nos-falta.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/release-note-r3-4.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/RELEASE-STATUS.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/ROPA.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/sast-triage.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |

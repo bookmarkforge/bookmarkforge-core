@@ -98,6 +98,15 @@ function main() {
 
   const indexPath = INDEX_PATH_BY_ROOT(root);
 
+  // The open-core export re-curates docs/ (export-public-repo.mjs) and the
+  // private index therefore does not ship. There the gate skips explicitly
+  // instead of failing: retirement consent is enforced in the private source
+  // repo. A missing index WITHOUT the export manifest stays fail-closed.
+  if (!fs.existsSync(indexPath) && fs.existsSync(path.resolve(root, "manifest.json"))) {
+    console.log("docs-retire gate: public export (private docs index absent) — nothing to enforce.");
+    process.exit(0);
+  }
+
   if (!fs.existsSync(indexPath)) {
     console.error(`Error: missing docs/docs-state-index.md at ${indexPath}`);
     process.exit(2);

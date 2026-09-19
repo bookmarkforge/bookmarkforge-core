@@ -47,6 +47,7 @@ vi.mock("lucide-react", () => ({
   ArrowRight: () => <svg data-testid="icon-arrow" />,
   Check: () => <svg data-testid="icon-check" />,
   Loader2: () => <svg data-testid="icon-loader" />,
+  HardDriveDownload: () => <svg data-testid="icon-manual-export" />,
 }));
 
 // vi.mock factories are hoisted above any const declarations, so the mock
@@ -65,7 +66,15 @@ const {
     mockImportBackup: importBackup,
     mockRestoreFromAutoBackup: restoreFromAutoBackup,
     mockGetAutoBackupInfo: getAutoBackupInfo,
-    mockToast: { success: vi.fn(), error: vi.fn() },
+    // `dismiss` is part of the real sonner surface and the component calls
+    // it before rebooting after a successful restore; a mock without it made
+    // the restore path throw where production never would.
+    mockToast: {
+      success: vi.fn(),
+      error: vi.fn(),
+      dismiss: vi.fn(),
+      loading: vi.fn(),
+    },
     // The same object is handed to both mocks below: the component reaches the
     // service through the Pro loader, and the assertions reach the spies. If the
     // loader returned a different object the spies would record nothing.
@@ -252,6 +261,38 @@ describe("Onboarding", () => {
       "true",
     );
     expect(safeSetMock).not.toHaveBeenCalledWith("bmf_onboarding_complete", "true");
+    expect(onComplete).not.toHaveBeenCalled();
+  });
+
+  it("reboots after a successful restore even if the toast cleanup fails", async () => {
+    // The dismiss is cosmetic (clear a stale pre-restore toast). It must not
+    // be able to turn a COMMITTED restore into a reported failure: before the
+    // guard, a throwing dismiss skipped the reboot and surfaced "Could not
+    // restore the backup" while the pending-restore flag was already written.
+    const onComplete = vi.fn();
+    mockImportBackup.mockResolvedValue(undefined);
+    mockToast.dismiss.mockImplementationOnce(() => {
+      throw new Error("sonner unavailable");
+    });
+    const { container } = render(
+      <Onboarding onComplete={onComplete} vaultIsEmpty />,
+    );
+
+    const file = new File(["{ \"bookmarks\": [] }"], "backup.json", {
+      type: "application/json",
+    });
+    fireEvent.change(container.querySelector('input[type="file"]') as HTMLInputElement, {
+      target: { files: [file] },
+    });
+
+    await waitFor(() => {
+      expect(reloadMock).toHaveBeenCalledOnce();
+    });
+    expect(safeSetMock).toHaveBeenCalledWith(
+      "forge_restore_success_pending",
+      "true",
+    );
+    expect(mockToast.error).not.toHaveBeenCalled();
     expect(onComplete).not.toHaveBeenCalled();
   });
 

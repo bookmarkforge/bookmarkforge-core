@@ -219,7 +219,21 @@ export const Onboarding: React.FC<OnboardingProps> = ({
       // otherwise Sonner can briefly preserve an old error node while the
       // restored app is booting, making a successful restore look failed to
       // assistive tech and end-to-end observers.
-      toast.dismiss();
+      //
+      // COSMETIC, so it must never be able to abort the reboot: by this point
+      // the import has committed (records in the DB, pending-restore flag
+      // written). A throw here used to fall into the catch below and report
+      // "Could not restore the backup" about a restore that had SUCCEEDED,
+      // skipping the reload while leaving the flag armed — so the next boot
+      // claimed success. Guarded on purpose; the regression test is
+      // "reboots after a successful restore even if the toast cleanup fails".
+      try {
+        toast.dismiss();
+      } catch (error) {
+        logger.warn("[Onboarding] Toast cleanup before restore reload failed", {
+          error,
+        });
+      }
       // importBackup writes through a fresh RxDB instance. Reboot the app so
       // the live database/query subscriptions are recreated and display the
       // restored records instead of retaining the pre-restore empty snapshot.

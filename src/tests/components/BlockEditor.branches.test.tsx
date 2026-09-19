@@ -23,6 +23,10 @@ let _showCopilot = false;
 let _showChat = false;
 let _showExpertAgents = false;
 let _theme: "light" | "dark" = "dark";
+// The editor picks its BlockNote dictionary from the hook's `lang`. The mock
+// must expose it: without `lang`, `lang.startsWith("es")` throws on undefined
+// during render, and the dictionary branch is never observable.
+let _lang = "en";
 
 vi.mock("../../components/block-editor/useBlockEditorState", () => ({
   useBlockEditorState: () => {
@@ -83,6 +87,7 @@ vi.mock("../../components/block-editor/useBlockEditorLogic", () => ({
     isTagging: false,
     isGeneratingCards: false,
     isSpeaking: false,
+    lang: _lang,
     isSuggestingFolder: false,
     isCopilotThinking: false,
     EditorToolbar: () => null,
@@ -211,6 +216,7 @@ describe("BlockEditor - uncovered branches", () => {
     _showChat = false;
     _showExpertAgents = false;
     _theme = "dark";
+    _lang = "en";
     _mentionGetItems = null;
     _editorObj = {
       document: [
@@ -269,6 +275,29 @@ describe("BlockEditor - uncovered branches", () => {
     const { container } = render(<BlockEditor documentId="doc-1" />);
     const root = container.querySelector(".rounded-2xl")!;
     expect(root.className).toContain("max-w-7xl");
+  });
+
+  it("passes the English dictionary for a non-Spanish locale", async () => {
+    _lang = "en";
+    render(<BlockEditor documentId="doc-1" />);
+    const { useCreateBlockNote } = await import("@blocknote/react");
+    const { en } = await import("@blocknote/core/locales");
+    const calls = (useCreateBlockNote as unknown as { mock: { calls: any[][] } })
+      .mock.calls;
+    expect(calls.at(-1)![0].dictionary).toBe(en);
+  });
+
+  it("passes the Spanish dictionary for any Spanish locale (es-MX), not only `es`", async () => {
+    _lang = "es-MX";
+    render(<BlockEditor documentId="doc-1" />);
+    const { useCreateBlockNote } = await import("@blocknote/react");
+    const { en, es } = await import("@blocknote/core/locales");
+    const calls = (useCreateBlockNote as unknown as { mock: { calls: any[][] } })
+      .mock.calls;
+    // `startsWith` (not `===`) is what makes every es-* locale Spanish; an
+    // equality check would silently fall back to English for es-MX, es-AR, …
+    expect(calls.at(-1)![0].dictionary).toBe(es);
+    expect(calls.at(-1)![0].dictionary).not.toBe(en);
   });
 
   it("suggests documents by @-mention excluding the current document", async () => {

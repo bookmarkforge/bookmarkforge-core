@@ -176,17 +176,32 @@ describe("F1-F zero-knowledge offsite backup (WebDAV/Nextcloud)", () => {
     const service = new CloudSyncService(WEBDAV_CONFIG);
     registerLocalBackupProvider(service);
 
+    // Capture the payload PUT explicitly: the integrity sidecar is now also
+    // uploaded (HMAC tag JSON), and it must never contain plaintext either.
     let uploadedBody = "";
+    let sidecarBody = "";
     mockFetch.mockImplementation(async (_input: unknown, init?: RequestInit) => {
       if (init?.method === "PUT") {
-        uploadedBody = String(init.body ?? "");
+        const body = String(init.body ?? "");
+        try {
+          const parsed = JSON.parse(body) as { encrypted?: unknown };
+          if (parsed && typeof parsed === "object" && "encrypted" in parsed) {
+            uploadedBody = body;
+          } else if (typeof (parsed as { hmac?: unknown })?.hmac === "string") {
+            sidecarBody = body;
+          }
+        } catch {
+          /* not JSON — ignore */
+        }
       }
       return okResponse();
     });
 
     const result = await service.sync();
     expect(result.success).toBe(true);
+
     expect(uploadedBody).not.toBe("");
+    expect(sidecarBody).not.toBe("");
 
     const payload = JSON.parse(uploadedBody) as {
       encrypted: boolean;
@@ -255,6 +270,43 @@ describe("F1-F zero-knowledge offsite backup (WebDAV/Nextcloud)", () => {
     expect(
       localStorage.getItem(STORAGE_KEYS.BOOKMARKFORGE_CLOUD_LASTBACKUP),
     ).toBeNull();
+  });
+
+  it("retains only the newest configured remote backup versions", async () => {
+    const db = makeFakeDb(SOURCE_BOOKMARKS);
+    (initDB as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(db);
+
+    const service = new CloudSyncService({
+      ...WEBDAV_CONFIG,
+      remoteRetentionCount: 2,
+    });
+    registerLocalBackupProvider(service);
+    const deleted: string[] = [];
+    mockFetch.mockImplementation(async (_input: unknown, init?: RequestInit) => {
+      if (init?.method === "PROPFIND") {
+        return {
+          ok: true,
+          status: 207,
+          text: async () =>
+            [
+              "<href>/bookmarkforge_sync_webdav_1700000000000.json</href><displayname>bookmarkforge_sync_webdav_1700000000000.json</displayname>",
+              "<href>/bookmarkforge_sync_webdav_1800000000000.json</href><displayname>bookmarkforge_sync_webdav_1800000000000.json</displayname>",
+              "<href>/bookmarkforge_sync_webdav_1900000000000.json</href><displayname>bookmarkforge_sync_webdav_1900000000000.json</displayname>",
+            ].join(""),
+          headers: new Headers(),
+        } as unknown as Response;
+      }
+      if (init?.method === "DELETE") {
+        deleted.push(String(_input));
+      }
+      return okResponse();
+    });
+
+    const result = await service.sync();
+
+    expect(result.success).toBe(true);
+    expect(deleted).toHaveLength(1);
+    expect(deleted[0]).toContain("1700000000000");
   });
 
   it("wipe → restore drill reproduces bookmark count and tags (criterion 3)", async () => {

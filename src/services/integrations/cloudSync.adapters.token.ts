@@ -171,6 +171,17 @@ class DriveAdapter implements CloudProviderAdapter {
     const arrayBuf = await readBoundedCloudResponse(res);
     return Buffer.from(arrayBuf);
   }
+
+  async deleteFile(id: string, signal?: AbortSignal): Promise<void> {
+    const token = await this.authenticate(signal);
+    const res = await cloudFetch(
+      `https://www.googleapis.com/drive/v3/files/${encodeURIComponent(id)}`,
+      { method: "DELETE", headers: { Authorization: `Bearer ${token}` } },
+      "cloud-sync",
+      signal,
+    );
+    if (!res.ok) {throw new Error(`Drive delete failed: ${res.status}`);}
+  }
 }
 
 class DropboxAdapter implements CloudProviderAdapter {
@@ -260,6 +271,24 @@ class DropboxAdapter implements CloudProviderAdapter {
     const data = await readBoundedCloudResponse(res);
     return Buffer.from(data);
   }
+
+  async deleteFile(id: string, signal?: AbortSignal): Promise<void> {
+    const token = await this.authenticate(signal);
+    const res = await cloudFetch(
+      "https://api.dropboxapi.com/2/files/delete_v2",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ path: id }),
+      },
+      "cloud-sync",
+      signal,
+    );
+    if (!res.ok) {throw new Error(`Dropbox delete failed: ${res.status}`);}
+  }
 }
 
 class OneDriveAdapter implements CloudProviderAdapter {
@@ -331,6 +360,17 @@ class OneDriveAdapter implements CloudProviderAdapter {
     if (!res.ok) {throw new Error(`OneDrive download failed: ${res.status}`);}
     const data = await readBoundedCloudResponse(res);
     return Buffer.from(data);
+  }
+
+  async deleteFile(id: string, signal?: AbortSignal): Promise<void> {
+    const token = await this.authenticate(signal);
+    const res = await cloudFetch(
+      `${this.getBaseUrl()}/items/${encodeURIComponent(id)}`,
+      { method: "DELETE", headers: { Authorization: `Bearer ${token}` } },
+      "cloud-sync",
+      signal,
+    );
+    if (!res.ok) {throw new Error(`OneDrive delete failed: ${res.status}`);}
   }
 }
 
@@ -416,6 +456,17 @@ class BoxAdapter implements CloudProviderAdapter {
     if (!res.ok) {throw new Error(`Box download failed: ${res.status}`);}
     const data = await readBoundedCloudResponse(res);
     return Buffer.from(data);
+  }
+
+  async deleteFile(id: string, signal?: AbortSignal): Promise<void> {
+    const token = await this.authenticate(signal);
+    const res = await cloudFetch(
+      `https://api.box.com/2.0/files/${encodeURIComponent(id)}`,
+      { method: "DELETE", headers: { Authorization: `Bearer ${token}` } },
+      "cloud-sync",
+      signal,
+    );
+    if (!res.ok) {throw new Error(`Box delete failed: ${res.status}`);}
   }
 }
 
@@ -523,6 +574,25 @@ class PCloudAdapter implements CloudProviderAdapter {
     if (!res.ok) {throw new Error(`pCloud download failed: ${res.status}`);}
     const data = await readBoundedCloudResponse(res);
     return Buffer.from(data);
+  }
+
+  async deleteFile(id: string, signal?: AbortSignal): Promise<void> {
+    const token = await this.authenticate(signal);
+    const res = await cloudFetch(
+      "https://api.pcloud.com/deletefile",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ auth: token, fileid: id }).toString(),
+      },
+      "cloud-sync",
+      signal,
+    );
+    if (!res.ok) {throw new Error(`pCloud delete failed: ${res.status}`);}
+    const data = await readBoundedJson<{ result?: number; error?: string }>(res);
+    if (data.result !== 0) {
+      throw new Error(`pCloud delete failed: ${data.error || data.result}`);
+    }
   }
 }
 

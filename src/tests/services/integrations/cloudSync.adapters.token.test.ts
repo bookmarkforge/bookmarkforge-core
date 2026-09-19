@@ -413,3 +413,34 @@ describe("PCloudAdapter", () => {
     ).rejects.toThrow("malformed");
   });
 });
+
+describe("token adapter remote deletion", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockFetch.mockReset();
+  });
+
+  it("deletes retention candidates through every token provider", async () => {
+    const adapters = [
+      new DriveAdapter("token"),
+      new DropboxAdapter("token"),
+      new OneDriveAdapter("token"),
+      new BoxAdapter("token"),
+      new PCloudAdapter("token"),
+    ];
+    mockFetch.mockResolvedValue(
+      mockResponse({ json: async () => ({ result: 0 }) }),
+    );
+
+    for (const adapter of adapters) {
+      await adapter.deleteFile!("remote-file-id");
+    }
+
+    expect(mockFetch).toHaveBeenCalledTimes(adapters.length);
+    expect(String(mockFetch.mock.calls[0]![0])).toContain("googleapis.com");
+    expect(String(mockFetch.mock.calls[1]![0])).toContain("dropboxapi.com");
+    expect(String(mockFetch.mock.calls[2]![0])).toContain("graph.microsoft.com");
+    expect(String(mockFetch.mock.calls[3]![0])).toContain("api.box.com");
+    expect(String(mockFetch.mock.calls[4]![0])).toContain("api.pcloud.com");
+  });
+});

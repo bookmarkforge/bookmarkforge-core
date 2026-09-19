@@ -140,6 +140,19 @@ class WebDAVAdapter implements CloudProviderAdapter {
     const data = await readBoundedCloudResponse(res);
     return Buffer.from(data);
   }
+
+  async deleteFile(id: string, signal?: AbortSignal): Promise<void> {
+    const auth = await this.authenticate(signal);
+    const safeId = safeWebDavSegment(id);
+    if (!safeId) {throw new Error("WebDAVAdapter: invalid file id");}
+    const res = await cloudFetch(
+      `${this.config!.url.replace(/\/$/, "")}/${encodeURIComponent(safeId)}`,
+      { method: "DELETE", headers: { Authorization: auth } },
+      "cloud-sync",
+      signal,
+    );
+    if (!res.ok) {throw new Error(`WebDAV delete failed: ${res.status}`);}
+  }
 }
 
 export { WebDAVAdapter };

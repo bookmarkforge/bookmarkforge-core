@@ -18,9 +18,42 @@ import { safeGet, safeSet } from "../../store/safeStorage";
 import { STORAGE_KEYS } from "../../constants/storage-keys";
 import { useGuardedAction } from "../../hooks/useGuardedAction";
 import { useGuardedActions } from "../../hooks/useGuardedActions";
+import {
+  DefensiveBase64Error,
+  decodeDefensiveBase64,
+} from "../../utils/defensive-base64";
 
 const cloudSyncCaller = {};
 securityVault.registerCaller(cloudSyncCaller);
+
+const REMOTE_RETENTION_OPTIONS = [3, 7, 10, 30, 100] as const;
+const DEFAULT_REMOTE_RETENTION = 10;
+const MAX_REMOTE_BACKUP_BYTES = 100 * 1024 * 1024;
+
+function normalizeRemoteRetention(value: unknown): number {
+  return typeof value === "number" &&
+    Number.isInteger(value) &&
+    REMOTE_RETENTION_OPTIONS.includes(value as (typeof REMOTE_RETENTION_OPTIONS)[number])
+    ? value
+    : DEFAULT_REMOTE_RETENTION;
+}
+
+/**
+ * Decodes a remote backup envelope through the shared defensive decoder so
+ * malformed Base64 or an oversized allocation can never reach the browser's
+ * memory unchecked. Kept as a thin adapter so the UI keeps its localized
+ * error mapping while validation lives in one place.
+ */
+export function decodeRemoteBackupBase64(data: string): Uint8Array {
+  try {
+    return decodeDefensiveBase64(data, MAX_REMOTE_BACKUP_BYTES, 4 * 1024 * 1024);
+  } catch (error) {
+    if (error instanceof DefensiveBase64Error && error.reason === "too-large") {
+      throw new Error("Remote backup exceeds the 100 MB limit");
+    }
+    throw new Error("Invalid remote backup encoding");
+  }
+}
 
 export const CloudSyncSection: React.FC = () => {
   const { t } = useTranslation();
@@ -152,6 +185,9 @@ export const CloudSyncSection: React.FC = () => {
 
   // General states
   const [autoSyncEnabled, setAutoSyncEnabled] = useState(false);
+  const [remoteRetentionCount, setRemoteRetentionCount] = useState(
+    DEFAULT_REMOTE_RETENTION,
+  );
   const [isLoading] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const [remoteFiles, setRemoteFiles] = useState<
@@ -232,6 +268,9 @@ export const CloudSyncSection: React.FC = () => {
 
           setProvider(config.provider);
           setAuthToken(config.authToken || "");
+          setRemoteRetentionCount(
+            normalizeRemoteRetention(config.remoteRetentionCount),
+          );
 
           if (config.webdavConfig) {
             setWebdavUrl(config.webdavConfig.url);
@@ -273,7 +312,10 @@ export const CloudSyncSection: React.FC = () => {
   };
 
   const getFormConfig = (): CloudSyncConfig => {
-    const config: CloudSyncConfig = { provider };
+    const config: CloudSyncConfig = {
+      provider,
+      remoteRetentionCount: normalizeRemoteRetention(remoteRetentionCount),
+    };
 
     if (["drive", "dropbox", "onedrive", "box", "pcloud"].includes(provider)) {
       config.authToken = authToken.trim();
@@ -347,7 +389,7 @@ export const CloudSyncSection: React.FC = () => {
     );
   };
 
-  const handleRestoreFromCloud = async (fileId: string, _fileName: string) => {
+  const handleRestoreFromCloud = async (fileId: string, fileName: string) => {
     if (
       !confirm(
         t(
@@ -399,26 +441,50 @@ export const CloudSyncSection: React.FC = () => {
         );
       }
 
-      // 3. Convert base64 data to ArrayBuffer
-      const binaryString = atob(syncObj.data);
-      const bytes = new Uint8Array(binaryString.length);
-      for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
+      // 3. Verify the remote version's HMAC sidecar BEFORE decoding or
+      // decrypting: truncation/tampering is detected on the raw downloaded
+      // bytes at the cheapest possible point. Legacy backups without a
+      // sidecar proceed (status "missing"); a present-but-invalid tag aborts
+      // the restore before any database access.
+      const integrity = await cloudSyncService.verifyRemoteBackup(
+        buffer,
+        fileName,
+      );
+      if (integrity.status === "mismatch") {
+        throw new Error(
+          t(
+            "cloud_restoreIntegrityFailed",
+            "Integrity check failed: this remote backup was truncated or modified. Restore aborted.",
+          ),
+        );
       }
 
-      // 4. Create local temporary File for import
-      const tempFile = new File([bytes.buffer], "temp_backup.bmf", {
+      // 4. Validate and decode Base64 before allocating the temporary file.
+      let bytes: Uint8Array;
+      try {
+        bytes = decodeRemoteBackupBase64(syncObj.data);
+      } catch {
+        throw new Error(
+          t(
+            "cloud_restoreInvalidFormat",
+            "The remote backup does not have a valid encrypted format.",
+          ),
+        );
+      }
+
+      // 5. Create local temporary File for import
+      const tempFile = new File([bytes.buffer as ArrayBuffer], "temp_backup.bmf", {
         type: "application/octet-stream",
       });
 
-      // 5. Get current master password to decrypt (scoped to this call only)
+      // 6. Get current master password to decrypt (scoped to this call only)
       await securityVault.withMasterPasswordBytes(
         cloudSyncCaller,
         async (passwordBytes) => {
           if (!passwordBytes) {
             throw new Error("Vault is locked. Enter your password first.");
           }
-          // 6. Import Backup (Pro service, resolved behind the gate)
+          // 7. Import Backup (Pro service, resolved behind the gate)
           const backup = await loadBackupService();
           await backup.importBackup(tempFile, passwordBytes);
         },
@@ -515,6 +581,45 @@ export const CloudSyncSection: React.FC = () => {
             {configError}
           </p>
         )}
+
+        {/* Remote retention */}
+        <div className="space-y-2 pt-2">
+          <label
+            htmlFor="cloud-remote-retention"
+            className="text-xs font-bold text-[var(--text-secondary)] dark:text-[var(--text-secondary)]"
+          >
+            {t("cloudRemoteRetention", "Remote backup retention")}
+          </label>
+          <select
+            id="cloud-remote-retention"
+            aria-label={t(
+              "cloudRemoteRetentionLabel",
+              "Remote backup retention",
+            )}
+            value={remoteRetentionCount}
+            onChange={(e) =>
+              setRemoteRetentionCount(normalizeRemoteRetention(Number(e.target.value)))
+            }
+            className="w-full bg-[var(--bg-secondary)] dark:bg-[var(--bg-primary)] border border-[var(--divider)] dark:border-[var(--divider)] rounded-xl px-4 py-3 text-sm text-[var(--text-primary)] dark:text-white outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 font-semibold shadow-inner"
+          >
+            {REMOTE_RETENTION_OPTIONS.map((count) => (
+              <option key={count} value={count}>
+                {count === 100
+                  ? t("cloudRemoteRetentionMany", "100 backups (maximum)")
+                  : t("cloudRemoteRetentionCount", {
+                      count,
+                      defaultValue: `${count} backups`,
+                    })}
+              </option>
+            ))}
+          </select>
+          <p className="text-[11px] text-[var(--text-muted)]">
+            {t(
+              "cloudRemoteRetentionDescription",
+              "Older timestamped backups are removed when the provider supports safe deletion.",
+            )}
+          </p>
+        </div>
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 pt-2">

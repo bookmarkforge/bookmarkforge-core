@@ -24,6 +24,8 @@ export interface CloudSyncConfig {
   };
   refreshToken?: string;
   endpoint?: string;
+  /** Number of timestamped remote backups to retain per provider. */
+  remoteRetentionCount?: number;
 }
 
 export interface SyncResult {

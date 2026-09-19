@@ -13,4 +13,6 @@ export interface CloudProviderAdapter {
     signal?: AbortSignal,
   ): Promise<string>;
   downloadFile(id: string, signal?: AbortSignal): Promise<Buffer>;
+  /** Optional provider-side deletion used by remote retention. */
+  deleteFile?(id: string, signal?: AbortSignal): Promise<void>;
 }

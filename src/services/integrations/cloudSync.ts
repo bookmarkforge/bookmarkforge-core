@@ -5,6 +5,12 @@ import { loadBackupService } from "../pro-access";
 import { securityVault } from "../SecurityVault";
 import { zeroPasswordBytes } from "../../utils/crypto-core";
 import { createAdapter, getErrorMessage } from "./cloudSync.adapters";
+import {
+  createRemoteIntegritySidecar,
+  getSidecarFileName,
+  verifyRemoteBackupIntegrity,
+  type RemoteIntegrityResult,
+} from "./cloudSync.integrity";
 import type { CloudProviderAdapter } from "./cloudSync.adapters";
 export type { CloudProviderAdapter } from "./cloudSync.adapters";
 export { createAdapter } from "./cloudSync.adapters";
@@ -387,6 +393,78 @@ export class CloudSyncService {
     return Math.abs(hash).toString(36);
   }
 
+  /**
+   * Keeps a bounded set of timestamped backups when the provider supports
+   * deletion. Providers without a delete API still retain immutable,
+   * timestamped versions and are never overwritten by this client.
+   */
+  private async pruneRemoteBackups(
+    adapter: CloudProviderAdapter,
+    signal?: AbortSignal,
+  ): Promise<void> {
+    const deleteFile = adapter.deleteFile;
+    // Only opt in when the setting is present. This preserves the behavior of
+    // legacy encrypted configurations while the UI writes the default (10)
+    // for newly saved configurations.
+    if (!deleteFile || this.config?.remoteRetentionCount === undefined) {
+      return;
+    }
+    const configured = this.config.remoteRetentionCount;
+    const retention = Math.max(1, Math.min(100, Math.floor(configured)));
+    try {
+      const files = await adapter.listFiles(signal);
+      // Retention matches only payload backups; `.integrity.json` sidecars
+      // are pruned separately below so a payload and its tag always share
+      // the same lifetime on the provider.
+      const backups = files
+        .filter((file) =>
+          /^bookmarkforge_sync_[a-z]+_\d{13}(?:_net\d+)?\.json$/.test(
+            file.name,
+          ) &&
+          !file.name.endsWith(".integrity.json"),
+        )
+        .sort((a, b) => {
+          const aTime = a.modifiedTime
+            ? Date.parse(a.modifiedTime)
+            : Number(a.name.match(/_(\d{13})(?:_net\d+)?\.json$/)?.[1] ?? 0);
+          const bTime = b.modifiedTime
+            ? Date.parse(b.modifiedTime)
+            : Number(b.name.match(/_(\d{13})(?:_net\d+)?\.json$/)?.[1] ?? 0);
+          return bTime - aTime;
+        });
+      const stale = new Set(
+        backups.slice(retention).map((file) => file.name),
+      );
+      for (const file of files) {
+        if (
+          file.name.endsWith(".integrity.json") &&
+          stale.has(file.name.slice(0, -".integrity.json".length))
+        ) {
+          stale.add(file.name);
+        }
+      }
+      for (const name of stale) {
+        const file = files.find((f) => f.name === name);
+        if (!file) {continue;}
+        try {
+          await deleteFile.call(adapter, file.id, signal);
+        } catch (error) {
+          // Retention is best-effort; never report a successful upload as failed.
+          logger.warn("cloudSync.pruneRemoteBackups", {
+            provider: adapter.providerName,
+            file: file.name,
+            error: getErrorMessage(error, "delete failed"),
+          });
+        }
+      }
+    } catch (error) {
+      logger.warn("cloudSync.pruneRemoteBackups", {
+        provider: adapter.providerName,
+        error: getErrorMessage(error, "listing failed"),
+      });
+    }
+  }
+
   private async syncWithAdapter(
     adapter: CloudProviderAdapter,
     options: SyncOptions = {},
@@ -438,7 +516,18 @@ export class CloudSyncService {
       const payload = JSON.stringify(local);
       const filename = `bookmarkforge_sync_${adapter.providerName}_${Date.now()}.json`;
       await adapter.uploadFile(filename, payload, "application/json", signal);
+      // Publish the per-version HMAC sidecar AFTER the payload so a crash
+      // between the two uploads leaves an untagged (but intact) backup, never
+      // a dangling tag without data. Best-effort: a sidecar failure never
+      // invalidates a successful upload.
+      await this.uploadIntegritySidecar(
+        adapter,
+        filename,
+        payload,
+        signal,
+      );
       this.throwIfAborted(signal);
+      await this.pruneRemoteBackups(adapter, signal);
       const end =
         typeof performance !== "undefined" &&
         typeof performance.now === "function"
@@ -525,7 +614,14 @@ export class CloudSyncService {
               "application/json",
               signal,
             );
+            await this.uploadIntegritySidecar(
+              adapter,
+              retryFilename,
+              retryPayload,
+              signal,
+            );
             this.throwIfAborted(signal);
+            await this.pruneRemoteBackups(adapter, signal);
             const retryEnd =
               typeof performance !== "undefined" &&
               typeof performance.now === "function"
@@ -567,6 +663,101 @@ export class CloudSyncService {
         errors: [getErrorMessage(e, "Unknown error during sync")],
       };
     }
+  }
+
+  /**
+   * Computes and uploads the HMAC integrity sidecar for a remote backup
+   * version. Best-effort by design: a sidecar failure is logged but never
+   * invalidates the payload upload that already succeeded.
+   */
+  private async uploadIntegritySidecar(
+    adapter: CloudProviderAdapter,
+    payloadFileName: string,
+    payload: string,
+    signal?: AbortSignal,
+  ): Promise<void> {
+    try {
+      const payloadBytes = new TextEncoder().encode(payload);
+      await securityVault.withMasterPasswordBytes(
+        integrityCaller,
+        async (passwordBytes) => {
+          if (!passwordBytes) {return;}
+          const sidecar = await createRemoteIntegritySidecar(
+            payloadBytes,
+            payloadFileName,
+            passwordBytes,
+          );
+          await adapter.uploadFile(
+            getSidecarFileName(payloadFileName),
+            sidecar,
+            "application/json",
+            signal,
+          );
+        },
+      );
+    } catch (error) {
+      logger.warn("cloudSync.uploadIntegritySidecar", {
+        provider: adapter.providerName,
+        file: getSidecarFileName(payloadFileName),
+        error: getErrorMessage(error, "sidecar upload failed"),
+      });
+    }
+  }
+
+  /**
+   * Verifies a downloaded backup against its integrity sidecar BEFORE the
+   * payload is decoded or decrypted. Missing sidecars (legacy backups, or
+   * uploads whose sidecar crashed) return `status: "missing"` so callers
+   * decide whether to proceed; a present-but-invalid tag is a hard failure.
+   *
+   * @param payloadBytes Exact downloaded bytes.
+   * @param remoteFileName Remote filename the payload was downloaded from.
+   */
+  async verifyRemoteBackup(
+    payloadBytes: Uint8Array,
+    remoteFileName: string,
+    options: SyncOptions = {},
+  ): Promise<RemoteIntegrityResult> {
+    this.throwIfAborted(options.signal);
+    // A provider-modified or attacker-chosen fileName must never make us
+    // read a sidecar for a different version: reject anything that does not
+    // look exactly like one of our payload backups.
+    if (!/^bookmarkforge_sync_[a-z]+_\d{13}(?:_net\d+)?\.json$/.test(remoteFileName)) {
+      return { status: "missing" };
+    }
+    const adapter = this.ensureAdapter();
+    let sidecarJson: string | null = null;
+    try {
+      // Sidecars are resolved through listFiles → provider id, because
+      // tokenized adapters (Drive/Dropbox/OneDrive/Box/pCloud) download by
+      // opaque id, not by name. One extra list per restore is acceptable:
+      // restore is user-initiated and rare.
+      const files = await adapter.listFiles(options.signal);
+      const sidecarEntry = files.find(
+        (file) => file.name === getSidecarFileName(remoteFileName),
+      );
+      if (sidecarEntry) {
+        const data = await adapter.downloadFile(sidecarEntry.id, options.signal);
+        sidecarJson = new TextDecoder().decode(data);
+      }
+    } catch {
+      sidecarJson = null; // listing/download failed → treat as untagged
+    }
+    this.throwIfAborted(options.signal);
+    return securityVault.withMasterPasswordBytes(
+      integrityCaller,
+      async (passwordBytes) => {
+        if (!passwordBytes) {
+          return { status: "missing" } as RemoteIntegrityResult;
+        }
+        return verifyRemoteBackupIntegrity(
+          payloadBytes,
+          sidecarJson,
+          passwordBytes,
+          remoteFileName,
+        );
+      },
+    );
   }
 
   /**
@@ -640,6 +831,9 @@ export const cloudSyncService = new CloudSyncService();
 
 const localBackupCaller = {};
 securityVault.registerCaller(localBackupCaller);
+
+const integrityCaller = {};
+securityVault.registerCaller(integrityCaller);
 
 function blobToBase64(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {

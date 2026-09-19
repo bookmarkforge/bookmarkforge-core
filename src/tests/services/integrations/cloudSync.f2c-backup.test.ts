@@ -206,10 +206,14 @@ describe("F2-C zero-knowledge offsite backup (S3)", () => {
     const service = new CloudSyncService(S3_CONFIG);
     registerLocalBackupProvider(service);
 
+    // Capture the payload PUT explicitly: the HMAC sidecar is uploaded too.
     let uploadedBody = "";
     mockFetch.mockImplementation(async (_input: unknown, init?: RequestInit) => {
       if (init?.method === "PUT") {
-        uploadedBody = String(init.body ?? "");
+        const body = String(init.body ?? "");
+        if (!body.includes('"hmac"')) {
+          uploadedBody = body;
+        }
       }
       return okResponse();
     });
@@ -267,7 +271,12 @@ describe("F2-C zero-knowledge offsite backup (S3)", () => {
     let remotePayload = "";
     mockFetch.mockImplementation(async (_input: unknown, init?: RequestInit) => {
       if (init?.method === "PUT") {
-        remotePayload = String(init.body ?? "");
+        // The HMAC sidecar is uploaded after the payload; only the backup
+        // envelope is the restorable remote copy.
+        const body = String(init.body ?? "");
+        if (!body.includes('"hmac"')) {
+          remotePayload = body;
+        }
       }
       return okResponse();
     });
@@ -387,8 +396,12 @@ describe("F2-C zero-knowledge offsite backup (Dropbox)", () => {
     let uploadedBody = "";
     mockFetch.mockImplementation(async (_input: unknown, init?: RequestInit) => {
       if (init?.method === "POST") {
-        uploadedBody = String(init.body ?? "");
-        return jsonResponse({ id: "dbx-1" });
+        const body = String(init.body ?? "");
+        // Dropbox uploads the payload via POST; skip the HMAC sidecar body.
+        if (!body.includes('"hmac"')) {
+          uploadedBody = body;
+          return jsonResponse({ id: "dbx-1" });
+        }
       }
       return okResponse();
     });

@@ -35,6 +35,11 @@ vi.mock("../../../services/integrations/cloudSync", () => ({
     listFiles: vi.fn().mockResolvedValue([]),
     sync: vi.fn().mockResolvedValue({ success: true }),
     downloadFile: vi.fn(),
+    // Default to the legacy (no sidecar) path; integrity-specific tests
+    // override this per-case.
+    verifyRemoteBackup: vi
+      .fn()
+      .mockResolvedValue({ status: "missing" }),
     setLocalDataProvider: vi.fn(),
   },
   registerLocalBackupProvider: vi.fn(),

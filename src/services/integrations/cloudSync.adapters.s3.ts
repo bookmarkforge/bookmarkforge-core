@@ -59,7 +59,7 @@ async function hmacSha256(
   return new Uint8Array(signature);
 }
 
-export interface S3SignedRequest {
+interface S3SignedRequest {
   url: string;
   headers: Record<string, string>;
   body: string | null;
@@ -231,6 +231,20 @@ class S3Adapter implements CloudProviderAdapter {
     }
     const data = await readBoundedCloudResponse(res);
     return Buffer.from(data);
+  }
+
+  async deleteFile(id: string, signal?: AbortSignal): Promise<void> {
+    const config = await this.ensureConfig();
+    const req = await signS3Request(config, "DELETE", id, "", undefined);
+    const res = await cloudFetch(
+      req.url,
+      { method: "DELETE", headers: req.headers },
+      "cloud-sync",
+      signal,
+    );
+    if (!res.ok) {
+      throw new Error(`S3 delete failed: ${res.status}`);
+    }
   }
 }
 

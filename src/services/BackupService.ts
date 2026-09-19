@@ -4,6 +4,7 @@ import { securityVault } from "./SecurityVault";
 import { secureStorage } from "./SecureStorage";
 import { getCollection } from "../utils/browser-types";
 import { zeroPasswordBytes } from "../utils/crypto-core";
+import { decodeDefensiveBase64Async } from "../utils/defensive-base64";
 import { logger } from "../utils/logger";
 import { settingsService } from "./SettingsService";
 import { initDB } from "../db/database";
@@ -203,13 +204,13 @@ export class BackupService {
     data: string,
     password?: string | Uint8Array,
   ): Promise<Blob> {
-    const pw = normalizePassword(password);
-    if (!pw || !pw.trim()) {
+    const rawPassword = normalizePassword(password);
+    const pw = rawPassword?.trim();
+    if (!pw) {
       // Plain JSON backup: keep it valid, parseable JSON (no magic prefix).
-      // Empty/whitespace-only password → treat as no password (export plaintext
-      // with a warning rather than silently producing an "encrypted" .bmf that
-      // cannot be decrypted).
-      if (pw && !pw.trim()) {
+      // Empty/whitespace-only password → treat as no password, but make the
+      // downgrade visible to callers and users.
+      if (rawPassword !== undefined) {
         logger.warn(
           "[Backup] Empty password provided — exporting as plaintext (.json). Provide a non-empty password for encrypted (.bmf) export.",
         );
@@ -295,7 +296,7 @@ export class BackupService {
     // the ephemeral byte copy right away. withMasterPasswordBytes hands this
     // call a fresh buffer it alone owns, so zeroing it is safe and keeps the
     // zero-memory policy from being silently defeated by the backup flow.
-    const pw = normalizePassword(password);
+    const pw = normalizePassword(password)?.trim();
     if (password instanceof Uint8Array) { zeroPasswordBytes(password); }
     // Pass the password through to initDB: the vault DB is encrypted with
     // the master-password-derived key. Opening with no password uses the
@@ -349,7 +350,7 @@ export class BackupService {
     const metadata: BackupMetadata = {
       date: new Date().toISOString(),
       size: blob.size,
-      encrypted: !!pw,
+      encrypted: Boolean(pw?.trim()),
       collections,
       docCount: totalDocs,
     };
@@ -383,7 +384,9 @@ export class BackupService {
     password?: string | Uint8Array,
   ): Promise<void> {
     try {
-      if (!password) {
+      const normalizedPassword = normalizePassword(password);
+      const encrypted = Boolean(normalizedPassword?.trim());
+      if (!encrypted) {
         logger.warn(
           "[Backup] Exporting UNENCRYPTED plaintext backup — sensitive data (API keys, tokens) will be readable.",
         );
@@ -407,7 +410,7 @@ export class BackupService {
       const { blob } = await this.createBackupData(password);
 
       const dateStr = new Date().toISOString().split("T")[0];
-      const extension = password ? "bmf" : "json";
+      const extension = encrypted ? "bmf" : "json";
       const fileName = `bookmarkforge-backup-${dateStr}.${extension}`;
 
       auditLog
@@ -415,7 +418,8 @@ export class BackupService {
           action: "backup_exported",
           result: "success",
           origin: "BackupService",
-          context: { encrypted: String(!!password), fileName },
+          context: {                  encrypted: String(encrypted), fileName },
+
         })
         .catch((err) =>
           logger.warn("[Backup] auditLog failed", {
@@ -454,10 +458,10 @@ export class BackupService {
             suggestedName: fileName,
             types: [
               {
-                description: password
+                description: encrypted
                   ? "BookmarkForge Encrypted Backup"
                   : "JSON File",
-                accept: password
+                accept: encrypted
                   ? { "application/octet-stream": [".bmf"] }
                   : { "application/json": [".json"] },
               },
@@ -739,7 +743,8 @@ export class BackupService {
   ): Promise<void> {
     let buffer: ArrayBuffer | null = null;
     try {
-const pw = normalizePassword(password);
+const rawPassword = normalizePassword(password);
+      const pw = rawPassword?.trim();
        if (password instanceof Uint8Array) {
          zeroPasswordBytes(password);
        }
@@ -753,6 +758,9 @@ const pw = normalizePassword(password);
       buffer = await file.arrayBuffer();
 
       const isEncrypted = file.name.endsWith(".bmf");
+      if (isEncrypted && rawPassword && !pw) {
+        throw new Error("Backup password cannot be empty");
+      }
       if (isEncrypted && !pw) {
         throw new Error("Password required for encrypted backup.");
       }
@@ -1269,48 +1277,23 @@ const pw = normalizePassword(password);
     }
   }
 
-  /** Decode base64 in bounded chunks, yielding between chunks to keep the UI responsive. */
+  /**
+   * Decode base64 in bounded chunks through the shared defensive decoder,
+   * yielding between chunks to keep the UI responsive. Validation happens
+   * before any allocation so corrupted or attacker-controlled storage cannot
+   * trigger an unbounded decode or make `atob` accept ambiguous data.
+   */
   private static async base64ToBuffer(base64: string): Promise<ArrayBuffer> {
-    // Validate before allocation so corrupted or attacker-controlled storage
-    // cannot trigger an unbounded decode or make `atob` accept ambiguous data.
-    const maxBase64Length = 4 * Math.ceil(MAX_AUTO_BACKUP_BYTES / 3);
-    if (
-      !base64 ||
-      base64.length > maxBase64Length ||
-      base64.length % 4 !== 0 ||
-      !/^[A-Za-z0-9+/]*={0,2}$/.test(base64)
-    ) {
+    try {
+      const bytes = await decodeDefensiveBase64Async(
+        base64,
+        MAX_AUTO_BACKUP_BYTES,
+        BASE64_CHUNK_SIZE,
+      );
+      return bytes.buffer as ArrayBuffer;
+    } catch {
       throw new Error("Auto-backup data is invalid or exceeds the size limit");
     }
-
-    // Decode aligned base64 slices so atob never creates one binary string for
-    // the whole backup. The allocation is an upper bound; trailing `=` padding
-    // is trimmed by the final slice.
-    const padding = base64.endsWith("==") ? 2 : base64.endsWith("=") ? 1 : 0;
-    const maxBytes = (base64.length / 4) * 3 - padding;
-    const bytes = new Uint8Array(maxBytes);
-    let written = 0;
-    const chunkChars = BASE64_CHUNK_SIZE - (BASE64_CHUNK_SIZE % 4);
-
-    for (let offset = 0; offset < base64.length; offset += chunkChars) {
-      const end = Math.min(offset + chunkChars, base64.length);
-      const binaryChunk = atob(base64.slice(offset, end));
-      for (let i = 0; i < binaryChunk.length; i++) {
-        bytes[written++] = binaryChunk.charCodeAt(i);
-      }
-      if (end < base64.length) {
-        await new Promise<void>((resolve) => setTimeout(resolve, 0));
-      }
-    }
-    // In the normal case no second full-size allocation is needed. A short
-    // final buffer is copied only for malformed/padded input, then the source
-    // is wiped before it becomes unreachable.
-    if (written === bytes.length) {
-      return bytes.buffer;
-    }
-    const result = bytes.slice(0, written).buffer;
-    bytes.fill(0);
-    return result;
   }
 
   /** Converts a Blob to base64 asynchronously using FileReader (no main thread blocking). */

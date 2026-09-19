@@ -4,6 +4,7 @@ import { formatDate } from "../utils/localization";
 import i18n from "../i18n";
 import { ExportData, ExportOptions, ExportResult } from "./exporter.types";
 import { sanitizeHtml, SanitizationService } from "./SanitizationService";
+import { decodeDataUrlToBytes } from "../utils/defensive-base64";
 
 /**
  * Formats a doc timestamp for export meta lines. Empty timestamps (common in
@@ -16,6 +17,8 @@ function formatExportDate(value: string | undefined): string {
 }
 
 export const MAX_EXPORT_TEXT_BYTES = 100 * 1024 * 1024;
+/** Upper bound for a single decoded inline attachment during export. */
+export const MAX_EXPORT_ATTACHMENT_BYTES = 15 * 1024 * 1024;
 
 function throwIfAborted(signal?: AbortSignal): void {
   if (!signal?.aborted) {return;}
@@ -157,9 +160,11 @@ function uniqueNoteName(base: string, id: string, usedNames: Set<string>): strin
 }
 
 /**
- * Decode a `data:` URL into bytes and a file extension. Returns null when the
- * payload is not valid base64/data, so the caller leaves the reference
- * untouched instead of guessing.
+ * Decode a `data:` URL into bytes and a file extension. Base64 payloads go
+ * through the shared defensive decoder; percent-encoded payloads keep the
+ * bounded `decodeURIComponent` path. Returns null when the payload is not
+ * valid base64/data or exceeds the size bound, so the caller leaves the
+ * reference untouched instead of guessing.
  */
 function dataUrlToBytes(dataUrl: string): { bytes: Uint8Array; ext: string } | null {
   if (!dataUrl.startsWith("data:")) {return null;}
@@ -168,20 +173,16 @@ function dataUrlToBytes(dataUrl: string): { bytes: Uint8Array; ext: string } | n
   const header = dataUrl.slice(5, comma);
   const semi = header.indexOf(";");
   const mime = (semi === -1 ? header : header.slice(0, semi)).toLowerCase();
-  const isBase64 = header.toLowerCase().endsWith(";base64");
-  const payload = dataUrl.slice(comma + 1);
   let bytes: Uint8Array;
-  if (isBase64) {
-    try {
-      const binary = atob(payload);
-      bytes = new Uint8Array(binary.length);
-      for (let index = 0; index < binary.length; index++) {
-        bytes[index] = binary.charCodeAt(index);
-      }
-    } catch {
-      return null;
-    }
+  if (header.toLowerCase().endsWith(";base64")) {
+    const decoded = decodeDataUrlToBytes(dataUrl, MAX_EXPORT_ATTACHMENT_BYTES);
+    if (!decoded) {return null;}
+    bytes = decoded.bytes;
   } else {
+    const payload = dataUrl.slice(comma + 1);
+    // Percent-encoding can expand input by up to 3x. Reject oversized
+    // encoded payloads before `decodeURIComponent` allocates a large string.
+    if (payload.length > MAX_EXPORT_ATTACHMENT_BYTES * 3) {return null;}
     try {
       bytes = new TextEncoder().encode(decodeURIComponent(payload));
     } catch {

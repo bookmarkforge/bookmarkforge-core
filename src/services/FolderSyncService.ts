@@ -45,6 +45,10 @@ import { logger } from "../utils/logger";
 import { generateId } from "../utils/id";
 import { hashString } from "../utils/crypto-core";
 import { fnv1aHash } from "../utils/hash";
+import { decodeDataUrlToBytes } from "../utils/defensive-base64";
+
+/** Upper bound for a single decoded inline attachment during folder sync. */
+export const MAX_SYNC_ATTACHMENT_BYTES = 15 * 1024 * 1024;
 
 type NoteKind = "bookmark" | "document";
 
@@ -57,7 +61,7 @@ interface SyncStateEntry {
 
 type SyncState = Record<string, SyncStateEntry>;
 
-export interface FolderSyncResult {
+interface FolderSyncResult {
   inserted: number;
   updatedDocs: number;
   writtenFiles: number;
@@ -207,7 +211,12 @@ function attachmentNameHash(value: string): string {
   return hash.toString(16).padStart(8, "0");
 }
 
-/** Decode a `data:` URL into bytes + extension (mirrors the exporter). */
+/**
+ * Decode a `data:` URL into bytes + extension (mirrors the exporter). Base64
+ * payloads go through the shared defensive decoder; percent-encoded payloads
+ * keep the bounded `decodeURIComponent` path. Malformed input returns `null`
+ * so the caller leaves the reference untouched.
+ */
 function dataUrlToBytes(dataUrl: string): {
   bytes: Uint8Array;
   ext: string;
@@ -218,20 +227,16 @@ function dataUrlToBytes(dataUrl: string): {
   const header = dataUrl.slice(5, comma);
   const semi = header.indexOf(";");
   const mime = (semi === -1 ? header : header.slice(0, semi)).toLowerCase();
-  const isBase64 = header.toLowerCase().endsWith(";base64");
-  const payload = dataUrl.slice(comma + 1);
   let bytes: Uint8Array;
-  if (isBase64) {
-    try {
-      const binary = atob(payload);
-      bytes = new Uint8Array(binary.length);
-      for (let index = 0; index < binary.length; index++) {
-        bytes[index] = binary.charCodeAt(index);
-      }
-    } catch {
-      return null;
-    }
+  if (header.toLowerCase().endsWith(";base64")) {
+    const decoded = decodeDataUrlToBytes(dataUrl, MAX_SYNC_ATTACHMENT_BYTES);
+    if (!decoded) {return null;}
+    bytes = decoded.bytes;
   } else {
+    const payload = dataUrl.slice(comma + 1);
+    // Percent-encoding can expand input by up to 3x. Reject oversized
+    // encoded payloads before `decodeURIComponent` allocates a large string.
+    if (payload.length > MAX_SYNC_ATTACHMENT_BYTES * 3) {return null;}
     try {
       bytes = new TextEncoder().encode(decodeURIComponent(payload));
     } catch {
@@ -772,4 +777,3 @@ export class FolderSyncService {
   }
 }
 
-export const folderSyncService = new FolderSyncService();

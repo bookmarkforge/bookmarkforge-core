@@ -1297,8 +1297,10 @@ describe("TTSService", () => {
     });
 
     it("downloads and creates a blob URL when the result is valid", async () => {
+      // "YWJj" is valid strict Base64 for "abc"; the defensive decoder
+      // rejects lenient fixtures like "abc" (length not a multiple of 4).
       vi.spyOn(service, "generateAudio").mockResolvedValue({
-        url: "data:audio/mp3;base64,abc",
+        url: "data:audio/mp3;base64,YWJj",
         provider: "openai",
       });
 

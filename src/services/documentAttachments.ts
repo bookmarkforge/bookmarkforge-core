@@ -28,6 +28,7 @@ import { initDB } from "../db/database";
 import type { BookmarkForgeDB } from "../db/types";
 import type { DocumentAttachmentDocType } from "../db/schema";
 import { hashString } from "../utils/crypto-core";
+import { decodeDataUrlToBytes } from "../utils/defensive-base64";
 import { logger } from "../utils/logger";
 
 /** Stable URL scheme stored inside blocks / textContent for one attachment. */
@@ -110,29 +111,17 @@ function readFileAsDataUrl(file: Blob): Promise<string> {
   });
 }
 
-/** Decode a `data:` URL into bytes + MIME type (null when malformed). */
+/**
+ * Decode a stored attachment `data:` URL into raw bytes + MIME type. Malformed
+ * or oversized payloads return `null` (the caller leaves the reference
+ * untouched); the decode is delegated to the shared defensive Base64
+ * decoder (`decodeDataUrlToBytes` in utils/defensive-base64).
+ */
 function dataUrlToBlobParts(dataUrl: string): {
   bytes: Uint8Array;
   mimeType: string;
 } | null {
-  if (!dataUrl.startsWith("data:")) {return null;}
-  const comma = dataUrl.indexOf(",");
-  if (comma === -1) {return null;}
-  const header = dataUrl.slice(5, comma);
-  const semi = header.indexOf(";");
-  const mimeType = (semi === -1 ? header : header.slice(0, semi)).toLowerCase();
-  if (!header.toLowerCase().endsWith(";base64")) {return null;}
-  const payload = dataUrl.slice(comma + 1);
-  try {
-    const binary = atob(payload);
-    const bytes = new Uint8Array(binary.length);
-    for (let index = 0; index < binary.length; index++) {
-      bytes[index] = binary.charCodeAt(index);
-    }
-    return { bytes, mimeType };
-  } catch {
-    return null;
-  }
+  return decodeDataUrlToBytes(dataUrl, MAX_ATTACHMENT_BYTES);
 }
 
 /** Deep-walk a block tree, mapping every string via `rewrite`. */

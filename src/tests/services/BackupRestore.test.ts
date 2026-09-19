@@ -246,6 +246,68 @@ describe("BackupRestore", () => {
       await expect(
         BackupService.importBackup(file, "wrong-password"),
       ).rejects.toThrow(/senha inválida|Invalid password/i);
+    });    test("rejects a truncated encrypted payload before touching the database", async () => {
+      const truncated = new TextEncoder().encode("BMF1:{\"bookmarks\":[");
+      (encryptionService.decryptBinary as any).mockResolvedValue(truncated);
+      const file = new File([new Uint8Array([1, 2, 3])], "truncated.bmf", {
+        type: "application/octet-stream",
+      });
+      Object.defineProperty(file, "arrayBuffer", {
+        value: vi.fn().mockResolvedValue(new ArrayBuffer(3)),
+      });
+
+      await expect(BackupService.importBackup(file, "password")).rejects.toThrow(
+        "not valid JSON",
+      );
+      expect(initDB).not.toHaveBeenCalled();
+    });
+
+    test("rejects an oversized backup before reading its contents", async () => {
+      const file = new File(["small"], "oversized.json", {
+        type: "application/json",
+      });
+      Object.defineProperty(file, "size", { value: 100 * 1024 * 1024 + 1 });
+      const arrayBuffer = vi.fn();
+      Object.defineProperty(file, "arrayBuffer", { value: arrayBuffer });
+
+      await expect(BackupService.importBackup(file)).rejects.toThrow(
+        "Backup file too large",
+      );
+      expect(arrayBuffer).not.toHaveBeenCalled();
+      expect(initDB).not.toHaveBeenCalled();
+    });
+
+    test("rejects a backup containing a non-allowlisted collection", async () => {
+      const json = JSON.stringify({
+        bookmarks: [{ id: "b1" }],
+        unexpected_collection: [{ id: "evil" }],
+      });
+      const file = new File([json], "unknown.json", { type: "application/json" });
+      Object.defineProperty(file, "arrayBuffer", {
+        value: vi.fn().mockResolvedValue(new TextEncoder().encode(json).buffer),
+      });
+
+      await expect(BackupService.importBackup(file)).rejects.toThrow(
+        "Unsupported backup collection: unexpected_collection",
+      );
+      expect(initDB).not.toHaveBeenCalled();
+    });
+
+    test("rejects altered ciphertext and does not attempt a restore", async () => {
+      (encryptionService.decryptBinary as any).mockRejectedValue(
+        new Error("authentication tag mismatch"),
+      );
+      const file = new File([new Uint8Array([9, 8, 7, 6])], "altered.bmf", {
+        type: "application/octet-stream",
+      });
+      Object.defineProperty(file, "arrayBuffer", {
+        value: vi.fn().mockResolvedValue(new ArrayBuffer(4)),
+      });
+
+      await expect(BackupService.importBackup(file, "password")).rejects.toThrow(
+        "Invalid password or corrupted backup file",
+      );
+      expect(initDB).not.toHaveBeenCalled();
     });
 
     test("throws error on corrupt file", async () => {
@@ -261,6 +323,7 @@ describe("BackupRestore", () => {
       await expect(BackupService.importBackup(file)).rejects.toThrow();
     });
   });
+
 
   describe("auto backup lifecycle", () => {
     test("runAutoBackup saves to secureStorage", async () => {

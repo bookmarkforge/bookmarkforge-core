@@ -227,6 +227,30 @@ describe("BackupService", () => {
         }),
       );
     });
+
+    test("normalizes padded passwords consistently for DB and backup encryption", async () => {
+      await BackupService.createBackupData("  padded-password  ");
+
+      expect(initDB).toHaveBeenCalledWith("padded-password");
+      expect(encryptionService.encryptBinary).toHaveBeenCalledWith(
+        expect.anything(),
+        "padded-password",
+      );
+    });
+
+    test("treats a whitespace-only password as plaintext JSON, not a .bmf", async () => {
+      await BackupService.exportBackup("   ");
+
+      expect(encryptionService.encryptBinary).not.toHaveBeenCalled();
+      expect(mockAnchor.download).toContain(".json");
+      expect(mockAnchor.download).not.toContain(".bmf");
+      expect(auditLog.record).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: "backup_exported",
+          context: expect.objectContaining({ encrypted: "false" }),
+        }),
+      );
+    });
   });
 
   describe("createBackupData settings sanitization (L-02/L-03)", () => {

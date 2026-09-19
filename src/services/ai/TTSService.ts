@@ -9,6 +9,7 @@ import { logRateLimited } from "../../utils/boundedLog";
 import { fnv1aHash } from "../../utils/hash";
 import { fetchWithTimeout } from "./utils";
 import { toPlayableAudioDataUrl } from "../../utils/audioFormat";
+import { decodeDataUrlToBytes } from "../../utils/defensive-base64";
 import { GEMINI_API_BASE, AI_MODELS } from "../../constants/config";
 
 // Supported languages mapping
@@ -252,9 +253,6 @@ class AudioCache {
 
 const audioCache = new AudioCache();
 const MAX_TTS_AUDIO_BYTES = 25 * 1024 * 1024;
-// Round the binary limit up to a complete Base64 quartet; multiplying first
-// and rounding can reject a valid payload by one or two characters.
-const MAX_TTS_BASE64_CHARS = Math.ceil(MAX_TTS_AUDIO_BYTES / 3) * 4;
 
 function createAbortError(message: string): Error {
   if (typeof DOMException === "function") {
@@ -911,32 +909,15 @@ export class TTSService {
       const payload = result.url.slice(comma + 1);
       const mime = header.split(";")[0] || "application/octet-stream";
       if (header.endsWith(";base64")) {
-        const maxBase64Length = MAX_TTS_BASE64_CHARS;
-        if (
-          payload.length > maxBase64Length ||
-          payload.length % 4 === 1 ||
-          !/^[A-Za-z0-9+/]*={0,2}$/.test(payload) ||
-          (payload.includes("=") && !payload.endsWith("=") && !payload.endsWith("=="))
-        ) {
+        // Shared defensive decoder: validates charset/padding/size before any
+        // allocation and decodes in bounded chunks (no full-payload binary
+        // string). Oversized or malformed cached URLs are rejected.
+        const decoded = decodeDataUrlToBytes(result.url, MAX_TTS_AUDIO_BYTES);
+        if (!decoded) {
           logger.warn("[TTS] Cached data URL is not valid Base64");
           return;
         }
-        let binary: string;
-        try {
-          binary = atob(payload);
-        } catch {
-          logger.warn("[TTS] Cached data URL is not valid Base64");
-          return;
-        }
-        if (binary.length > MAX_TTS_AUDIO_BYTES) {
-          logger.warn("[TTS] Cached data URL exceeds size limit");
-          return;
-        }
-        const bytes = new Uint8Array(binary.length);
-        for (let index = 0; index < binary.length; index++) {
-          bytes[index] = binary.charCodeAt(index);
-        }
-        blob = new Blob([bytes], { type: mime });
+        blob = new Blob([decoded.bytes.buffer as ArrayBuffer], { type: mime });
       } else {
         // Percent-encoding can expand input by up to 3x. Reject oversized
         // encoded payloads before decodeURIComponent allocates a large string.

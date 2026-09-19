@@ -1,36 +1,9 @@
-# BookmarkForge Browser Extension — Privacy Policy
+# BookmarkForge Extension — Privacy
 
-_Effective date: 2026-08-31_
+The extension only reads the active tab after the user invokes a capture action. It sends the selected page metadata to the BookmarkForge vault endpoint configured by the user.
 
-This privacy policy describes how the BookmarkForge browser extension
-("the Extension") handles your data. BookmarkForge is a **local-first**
-knowledge vault: your bookmarks, notes and content stay encrypted on your
-device and are never sold or shared.
+The extension does not sell data, inject advertising, collect browsing history, or transmit vault contents to BookmarkForge. The configured server URL is stored in browser extension storage. Users can inspect, change, or remove that URL from the extension settings.
 
-## What the Extension collects
+Page titles, URLs, and selected capture metadata are transmitted only when the user explicitly activates capture. No provider API keys are bundled in the extension.
 
-- The page title and URL of content you choose to save.
-- Only what you explicitly supply (for example, tags or notes you add when
-  saving a bookmark).
-
-## Where your data lives
-
-Your saved content is stored locally with BookmarkForge and encrypted with
-your own credentials. It is never uploaded to a third party unless you opt in
-to a cloud provider through the app's own sync settings.
-
-## Permissions
-
-The Extension asks for the minimum permissions needed to capture the current
-page's title and URL. It does not read unrelated browsing activity.
-
-## Changes
-
-If this policy changes, the updated version will be posted on this page and
-take effect immediately. Your continued use of the Extension after a change
-constitutes acceptance of the revised policy.
-
-## Contact
-
-Questions about this policy can be addressed through the project's public
-support channel at <https://bookmarkforge.com/support>.
+For self-hosted deployments, the operator controls the server and its retention policy. Report security issues through the project’s documented security channel.

@@ -1,4 +1,4 @@
-# ADR-026 — Retiro controlado de documentación
+# ADR-059 — Retiro controlado de documentación
 
 ## Estado
 
@@ -18,4 +18,4 @@ Los documentos retirados se eliminan de forma explícita y se registra el cambio
 
 ## Consecuencias
 
-El inventario deja de ser una lista histórica de archivos borrados y pasa a ser un catálogo verificable del checkout. Las retiradas masivas requieren revisar scripts, workflows, tests y referencias documentales antes de regenerar baselines. Esta decisión supera las mil palabras de contexto acumulado en las auditorías previas y mantiene la trazabilidad necesaria para futuros retiros.
+El inventario deja de ser una lista histórica de archivos borrados y pasa a ser un catálogo verificable del checkout. Las retiradas masivas requieren revisar scripts, workflows, tests y referencias documentales antes de regenerar baselines. Esta decisión (que entró en conflicto de numeración con el ADR-026 original y por eso se renumeró) supera las mil palabras de contexto acumulado en las auditorías previas y mantiene la trazabilidad necesaria para futuros retiros.

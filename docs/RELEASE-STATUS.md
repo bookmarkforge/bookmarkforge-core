@@ -20,7 +20,7 @@ Este informe consolida la verificación completa de regresión ejecutada el 19-s
 
 | Área | Cambio | Verificación |
 |---|---|---|
-| Documentación | Retirada formal con ADRs y documentación operativa mínima | Gates documentales en verde |
+| Documentación | Retiro masivo no conforme (ADRs, legal, runbooks) revertido conforme a ADR-026; ADR-059 registra la política de retiro controlado | Gates documentales en verde con corpus completo |
 | SecurityVault | La clave del dispositivo se bloquea si falla la tokenización durante `unlock()` | 117/117 + regresión específica |
 | KDF salt sync | Cola secuencial anti-carrera entre pestañas y generación de ciclo de vida | 45/45 |
 | SecureStorage | Comprobación de ciclo de vida antes de persistir wrappers tras lock/close | 86/86 |
@@ -34,11 +34,11 @@ Ninguno verificable de forma automatizada en el repositorio. Quedan:
 
 1. **Pentest manual** y revisión WCAG de accesibilidad: externos, no automatizables.
 2. **Operaciones**: responsable y canal de alertas, secretos y permisos reales de despliegue, confirmación del entorno del proveedor.
-3. **Git**: sin remote configurado (advisory) y cambios de la sesión sin confirmar en commits; el árbol mezcla cambios propios con heredados de otros trabajos.
+3. **Git**: sin remote configurado (advisory). La sesión está commiteada por áreas (7 commits). Quedan sin commit: el renumerado ADR-026→ADR-059 con su retirada revertida (a ejecutar archivo a archivo vía `check:docs-retire`, no cableado en `check`), baselines documentales regenerados y ediciones ajenas (package.json/lock, navigation.ts, importer.markdown.ts).
 
 ## Riesgos menores conocidos (no bloqueantes)
 
-- Aviso de build `INEFFECTIVE_DYNAMIC_IMPORT` en `src/services/security-vault/integrity.ts`: cosmético, no afecta al artefacto.
+- Aviso de build `INEFFECTIVE_DYNAMIC_IMPORT` en `src/services/security-vault/integrity.ts`: resuelto — importaciones unificadas a estáticas sin impacto en presupuestos.
 - Los backups remotos anteriores a la versión del sidecar HMAC no llevan tag de integridad; siguen autenticados por AES-GCM.
 - Los avisos `zeroPasswordBytes` durante los tests son diagnósticos de doble zeroización; no implican fuga.
 

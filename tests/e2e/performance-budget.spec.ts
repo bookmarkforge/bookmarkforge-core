@@ -8,6 +8,20 @@ const REPORT_PATH = resolve(
 const SCHEMA = "bmf.performance-budget/1";
 const runs = Number.parseInt(process.env.BMF_PERFORMANCE_RUNS ?? "3", 10);
 
+/**
+ * Regression threshold: 40 % of the hard gate (2 500 ms).
+ * Failing here catches degradations months before they actually
+ * break the CI gate — a 1 100 ms regression ships invisible for
+ * 9 months if it has to grow all the way to 2 500 ms first.
+ */
+const WARN_BUDGET_MS = 1_000;
+
+/**
+ * Hard gate budget, matching scripts/performance-budget.json.
+ * Exported so the spec can reference the same number the gate uses.
+ */
+const HARD_GATE_MS = 2_500;
+
 if (!Number.isInteger(runs) || runs < 1 || runs > 5) {
   throw new Error(`BMF_PERFORMANCE_RUNS must be 1..5 (got ${runs})`);
 }
@@ -137,7 +151,26 @@ test("@performance performance budget: first actionable interaction", async ({ b
   const samples = measurements.map((measurement) => measurement.firstInteractionMs);
   const slowest = Math.max(...samples);
   if (!Number.isFinite(slowest)) throw new Error("no performance measurements were recorded");
-  expect(slowest).toBeGreaterThan(0);
+
+  // ── Regression floor ────────────────────────────────────────────────
+  // 40 % of the hard gate.  Fails the spec early so a slow crawl is
+  // caught months before it would actually break the CI budget.
+  expect(
+    slowest,
+    `
+[performance-budget] SLOW DETECTION — first interaction ${Math.round(slowest)}ms exceeds the regression floor (40 % of budget = ${WARN_BUDGET_MS}ms).
+This will eventually break the CI gate when it reaches the hard budget of ${HARD_GATE_MS}ms.
+
+Run:
+  node scripts/performance-budget.js --report performance-budget-report.json
+
+for the full budget breakdown.
+`.trim(),
+  ).toBeLessThanOrEqual(WARN_BUDGET_MS);
+
+  // ── Hard budget (also checked by check-performance-budget gate) ────
+  expect(slowest).toBeLessThanOrEqual(HARD_GATE_MS);
+
   console.log(
     `[performance-budget] first interaction samples=${samples
       .map((sample) => Math.round(sample))

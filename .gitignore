@@ -81,7 +81,10 @@ Thumbs.db
 # Drill/session evidence (personal captures — never source, never export)
 evidence/
 
-# Private legal and provider-contract workspace (never versioned or exported)
+# Private legal and provider-contract workspace: excluded from the public
+# export and unversioned by default. The legal material the ADR-060 gate
+# requires in CI (legal/README.md, legal/REGISTRO.md, legal/plantillas/*.md)
+# is force-added deliberately — signed contracts and provider evidence are not.
 legal/
 
 # CLS measurement artifact from tests/e2e/dashboard-banner-cls.spec.ts (BMF_CLS_REPORT)

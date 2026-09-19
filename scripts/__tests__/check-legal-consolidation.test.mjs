@@ -17,6 +17,10 @@ import {
 const T33 = "legal/plantillas/notificacion-art-33-autoridad.md";
 const T34 = "legal/plantillas/notificacion-art-34-interesados.md";
 const CHECK = "legal/plantillas/checklist-violacion-seguridad.md";
+const DPA = "legal/plantillas/DPA-proveedor.md";
+const SCC = "legal/plantillas/SCC-transferencia-internacional.md";
+const WHOP = "legal/plantillas/confirmacion-Whop.md";
+const PROV = "legal/plantillas/revision-privacidad-proveedor.md";
 
 /** A consolidated security doc that satisfies every requirement. */
 function completeSecurityDoc() {
@@ -32,7 +36,12 @@ function completeSecurityDoc() {
   ].join("\n");
 }
 
-/** Template fixtures carrying their required anchors, over 1 KiB each. */
+/**
+ * Template fixtures carrying their required anchors, over 1 KiB each. The
+ * workspace fixtures deliberately capitalize their anchors ("Subprocesadores",
+ * "Minimización") so the base corpus also exercises the case-insensitive
+ * anchor comparison the gate applies to legal prose.
+ */
 function completeTemplates() {
   // Word-spaced filler: a solid alphanumeric run would trip the gate's own
   // opaque-blob secret detector, which these fixtures must NOT trigger.
@@ -41,6 +50,10 @@ function completeTemplates() {
     [T33]: `# Plantilla art. 33\n\n> 72 horas desde el conocimiento\n\nIdentificador BMF-INC-2026-001\n${pad}`,
     [T34]: `# Plantilla art. 34\n\nReferencia BMF-INC-2026-001\n\nno pediremos tu frase de recuperación\n${pad}`,
     [CHECK]: `# Checklist\n\n## Reloj de 72 horas\n\n- No incluir secretos, credenciales ni frases.\n- Actualizar legal/REGISTRO.md solo con la referencia.\n${pad}`,
+    [DPA]: `# Encargo de tratamiento\n\nChecklist del Art. 28 RGPD: Subprocesadores y Medidas de seguridad.\n${pad}`,
+    [SCC]: `# Transferencias\n\nFuera del EEE, con Cláusulas Contractuales Tipo y Evaluación de transferencia.\n${pad}`,
+    [WHOP]: `# Confirmación con el vendedor\n\nmerchant of record, IVA, reembolsos y payouts.\n${pad}`,
+    [PROV]: `# Ficha de privacidad\n\nMinimización, Retención y Subprocesadores.\n${pad}`,
   };
 }
 
@@ -80,7 +93,7 @@ describe("check-legal-consolidation", () => {
       templates: { ...completeTemplates(), [T34]: "" },
     });
     expect(missing.ok).toBe(false);
-    expect(missing.findings.join(" ")).toMatch(/missing — protected compliance material/);
+    expect(missing.findings.join(" ")).toMatch(/missing — protected legal material/);
 
     const gutted = runLegalConsolidationChecks({
       ...base,
@@ -100,6 +113,31 @@ describe("check-legal-consolidation", () => {
     });
     expect(ok).toBe(false);
     expect(findings.join(" ")).toMatch(/legal anchor/);
+  });
+
+  it("matches legal anchors regardless of capitalization", () => {
+    const templates = completeTemplates();
+    templates[DPA] = templates[DPA]
+      .replace("Art. 28 RGPD", "ART. 28 rgpd")
+      .replace("Subprocesadores", "SUBPROCESADORES");
+    const { ok, findings } = runLegalConsolidationChecks({ ...base, templates });
+    expect(ok, findings.join("\n")).toBe(true);
+  });
+
+  it("fails when a workspace template is missing or gutted", () => {
+    const missing = runLegalConsolidationChecks({
+      ...base,
+      templates: { ...completeTemplates(), [SCC]: "" },
+    });
+    expect(missing.ok).toBe(false);
+    expect(missing.findings.join(" ")).toMatch(/SCC-transferencia-internacional\.md is missing/);
+
+    const gutted = runLegalConsolidationChecks({
+      ...base,
+      templates: { ...completeTemplates(), [DPA]: "# Encargo de tratamiento\n" },
+    });
+    expect(gutted.ok).toBe(false);
+    expect(gutted.findings.join(" ")).toMatch(/gutted/);
   });
 
   it("rejects draft templates that carry apparent credentials", () => {

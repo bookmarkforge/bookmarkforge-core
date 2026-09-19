@@ -10,10 +10,15 @@
  *
  *   1. docs/security.md keeps the consolidated GDPR procedure section
  *      (72-hour clock, both template paths, vault/credentials rules).
- *   2. The three legal/plantillas/ templates still exist with real content.
+ *   2. The legal/plantillas/ templates still exist with real content: the
+ *      three breach-notification templates the consolidated procedure refers
+ *      to, plus the workspace templates legal/plantillas/README.md promises
+ *      and the vendor rows of legal/REGISTRO.md depend on.
  *   3. The templates keep their load-bearing legal anchors: the 72-hour
  *      rule, the BMF-INC incident identifier, and the never-ask-for-secrets
- *      rule. Losing any of them would silently gut the procedure.
+ *      rule among them. Anchors are matched case-insensitively — Spanish
+ *      prose capitalizes them freely at headings and sentence starts, and
+ *      what must survive is their presence, not their casing.
  *   4. legal/REGISTRO.md (incident registry) still exists.
  *   5. No template carries an obvious credential (JWT / long secret token)
  *      — the templates are drafts and must never hold real secrets.
@@ -44,12 +49,34 @@ export const SECURITY_DOC_REQUIREMENTS = [
   "frase de recuperación",
 ];
 
-/** Templates that must exist and stay non-trivial. */
-export const REQUIRED_TEMPLATES = [
+/**
+ * Breach-notification templates whose procedure docs/security.md consolidates.
+ * Losing one of these is exactly the ADR-026 failure this gate exists for:
+ * protected compliance material gone without an equivalent replacement.
+ */
+export const BREACH_TEMPLATES = [
   "legal/plantillas/notificacion-art-33-autoridad.md",
   "legal/plantillas/notificacion-art-34-interesados.md",
   "legal/plantillas/checklist-violacion-seguridad.md",
 ];
+
+/**
+ * Legal-workspace templates promised by legal/plantillas/README.md and relied
+ * on by the vendor rows of legal/REGISTRO.md (encargo de tratamiento,
+ * transferencias internacionales, confirmación con Whop, ficha de privacidad
+ * por proveedor). They guard the same failure mode one step earlier: a
+ * template announced but never written, or silently gutted, leaves the
+ * register pointing at nothing.
+ */
+export const WORKSPACE_TEMPLATES = [
+  "legal/plantillas/DPA-proveedor.md",
+  "legal/plantillas/SCC-transferencia-internacional.md",
+  "legal/plantillas/confirmacion-Whop.md",
+  "legal/plantillas/revision-privacidad-proveedor.md",
+];
+
+/** Templates that must exist and stay non-trivial. */
+export const REQUIRED_TEMPLATES = [...BREACH_TEMPLATES, ...WORKSPACE_TEMPLATES];
 
 /** Minimum template size in bytes: a gutted stub must fail this gate. */
 export const MIN_TEMPLATE_BYTES = 1024;
@@ -62,6 +89,22 @@ export const TEMPLATE_REQUIREMENTS = {
     "72 horas",
     "No incluir secretos",
     "legal/REGISTRO.md",
+  ],
+  "legal/plantillas/DPA-proveedor.md": [
+    "Art. 28 RGPD",
+    "subprocesadores",
+    "medidas de seguridad",
+  ],
+  "legal/plantillas/SCC-transferencia-internacional.md": [
+    "Cláusulas Contractuales Tipo",
+    "EEE",
+    "evaluación de transferencia",
+  ],
+  "legal/plantillas/confirmacion-Whop.md": ["merchant of record", "IVA", "payouts"],
+  "legal/plantillas/revision-privacidad-proveedor.md": [
+    "minimización",
+    "retención",
+    "subprocesadores",
   ],
 };
 
@@ -113,7 +156,9 @@ export function runLegalConsolidationChecks({
   for (const templatePath of REQUIRED_TEMPLATES) {
     const content = templates[templatePath] ?? "";
     if (!content) {
-      findings.push(`${templatePath} is missing — protected compliance material (ADR-026).`);
+      findings.push(
+        `${templatePath} is missing — protected legal material without a replacement (ADR-026/ADR-060).`,
+      );
       continue;
     }
     if (Buffer.byteLength(content, "utf8") < MIN_TEMPLATE_BYTES) {
@@ -121,8 +166,9 @@ export function runLegalConsolidationChecks({
         `${templatePath} shrank below ${MIN_TEMPLATE_BYTES} bytes — the template appears gutted.`,
       );
     }
+    const normalized = content.toLowerCase();
     for (const anchor of TEMPLATE_REQUIREMENTS[templatePath] ?? []) {
-      if (!content.includes(anchor)) {
+      if (!normalized.includes(anchor.toLowerCase())) {
         findings.push(`${templatePath} lost its legal anchor: "${anchor}"`);
       }
     }
@@ -182,9 +228,8 @@ function main() {
     registryExists,
   });
 
-  const templateCount = REQUIRED_TEMPLATES.filter(
-    (p) => (templates[p] ?? "").length > 0,
-  ).length;
+  const countIntact = (paths) =>
+    paths.filter((p) => (templates[p] ?? "").length > 0).length;
 
   if (!ok) {
     for (const finding of findings) {
@@ -195,7 +240,9 @@ function main() {
 
   console.log(
     `[check:legal-consolidation] ok: procedure consolidated in docs/security.md, ` +
-      `${templateCount}/${REQUIRED_TEMPLATES.length} templates intact, registry present.`,
+      `${countIntact(BREACH_TEMPLATES)}/${BREACH_TEMPLATES.length} breach templates, ` +
+      `${countIntact(WORKSPACE_TEMPLATES)}/${WORKSPACE_TEMPLATES.length} workspace templates, ` +
+      `registry present.`,
   );
 }
 

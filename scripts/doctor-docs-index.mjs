@@ -90,6 +90,19 @@ export function generateCanonicalIndex() {
 
 function main() {
   const update = process.argv.includes("--update");
+  // The open-core export re-curates docs/ and does not ship the canonical
+  // state index (export-public-repo.mjs EXCLUDED_DIRS + PUBLIC_DOCS whitelist),
+  // so the gate skips there explicitly instead of failing: the inventory is
+  // enforced upstream, in this repository. A missing index WITHOUT the export
+  // manifest is still a hard failure — that is a real regression.
+  const isPublicExport =
+    !fs.existsSync(INDEX_PATH) && fs.existsSync(path.join(ROOT, "manifest.json"));
+  if (isPublicExport && !update) {
+    console.log(
+      "[check:docs-index] skip: public export re-curates docs/ and excludes the canonical state index; the inventory is enforced upstream.",
+    );
+    return;
+  }
   if (!fs.existsSync(INDEX_PATH)) {
     if (!update) {
       console.error(`Missing ${INDEX_PATH}; run node scripts/doctor-docs-index.mjs --update`);

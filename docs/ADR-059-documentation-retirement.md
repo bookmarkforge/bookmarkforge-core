@@ -14,7 +14,7 @@ La documentación histórica creció junto con el producto y algunas guías deja
 
 ## Decisión
 
-Los documentos retirados se eliminan de forma explícita y se registra el cambio en `docs/PENDIENTES.md` o en un ADR. `docs/docs-state-index.md` refleja solamente documentos presentes. El gate `check:docs-retire` impide retirar un documento que no tenga una razón y una revisión de referencias. RPO/RTO/SLO, seguridad, cumplimiento y contratos de API no pueden desaparecer sin un reemplazo equivalente.
+Los documentos retirados se eliminan de forma explícita y se registra el cambio en `docs/PENDIENTES.md` o en un ADR. `docs/docs-state-index.md` refleja solamente documentos presentes. El gate `check:docs-retire` impide retirar un documento que no tenga una razón y una revisión de referencias, y `check:docs-index` impide que el estado intermedio `retirable` sobreviva a un commit: el inventario canónico se deriva del disco y solo emite `vivo` o `transitorio`, así que una fila marcada para retiro que no complete el flujo (consentimiento → borrado → regeneración) rompe la cadena `npm run check` en lugar de quedar como una marca pendiente. RPO/RTO/SLO, seguridad, cumplimiento y contratos de API no pueden desaparecer sin un reemplazo equivalente.
 
 ## Consecuencias
 

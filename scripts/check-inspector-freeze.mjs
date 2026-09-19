@@ -86,6 +86,11 @@ const KNOWN_GATES = {
   // Frozen documentation-format inspectors (grandfathered; O-1).
   // The command cross-reference gate is governed by ADR-056: it prevents
   // release runbooks from teaching npm scripts that do not exist.
+  // Canonical docs inventory (ADR-059): the generated index only ever emits
+  // `vivo` / `transitorio`, so a `retirable` row that did not complete the
+  // retirement flow (consent → deletion → regeneration) fails the chain
+  // instead of surviving as a committed marker.
+  "check:docs-index": "docs",
   "check:documented-doc-references": "docs",
   "check:documented-npm-commands": "docs",
   // NOTE: the three original Markdown gates were fused into

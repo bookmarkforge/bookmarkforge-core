@@ -2,23 +2,23 @@ import type { FeatureExtractionPipeline } from "@huggingface/transformers";
 import { configureModelIntegrity } from "../../utils/modelIntegrity";
 import { EMBEDDING_MODEL_ID } from "./embeddingModel";
 
-export interface EmbeddingBenchmarkDocument {
+interface EmbeddingBenchmarkDocument {
   id: string;
   text: string;
 }
 
-export interface EmbeddingBenchmarkQuery {
+interface EmbeddingBenchmarkQuery {
   id: string;
   text: string;
   relevantIds: readonly string[];
 }
 
-export interface EmbeddingBenchmarkCorpus {
+interface EmbeddingBenchmarkCorpus {
   documents: readonly EmbeddingBenchmarkDocument[];
   queries: readonly EmbeddingBenchmarkQuery[];
 }
 
-export interface EmbeddingQualityMetrics {
+interface EmbeddingQualityMetrics {
   dtype: "q8" | "uint8";
   dimensions: number;
   recallAt3: number;
@@ -28,7 +28,7 @@ export interface EmbeddingQualityMetrics {
   elapsedMs: number;
 }
 
-export interface EmbeddingQualityComparison {
+interface EmbeddingQualityComparison {
   recallDelta: number;
   meanReciprocalRankDelta: number;
   sizeReductionRatio: number;

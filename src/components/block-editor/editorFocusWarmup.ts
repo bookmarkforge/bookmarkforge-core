@@ -5,7 +5,7 @@ import { logger } from "../../utils/logger";
  * Dependencies of the editor-focus warmup handler, kept injectable so unit
  * tests can exercise the REAL handler with only a mocked aiManager.
  */
-export interface EditorFocusWarmupDeps {
+interface EditorFocusWarmupDeps {
   /** Clears the transient AI error banner (the hook's `setAiError`). */
   setAiError: (v: string | null) => void;
   /**

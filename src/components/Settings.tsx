@@ -34,6 +34,7 @@ import {
   ProSection,
 } from "./settings/components";
 import { SecuritySection } from "./settings/SecuritySection";
+import { SecurityDashboard } from "./SecurityDashboard";
 import { DiagnosticsModal } from "./bookmarks/DiagnosticsModal";
 import { RouteErrorBoundary } from "./errors/RouteErrorBoundary";
 
@@ -334,6 +335,11 @@ export const Settings = ({ onClose }: SettingsProps) => {
               setIsDistractionFree={setIsDistractionFree}
               t={t}
             />
+
+            {/* Security health overview (read-only). Rendered ahead of the
+                actionable vault controls below so the dashboard's "Security
+                Settings" action scrolls down to them. */}
+            <SecurityDashboard />
 
             {/* Security & Vault — master password + auto-lock + danger zone
                 (Nuclear Forget GDPR wipe, E2E-tested) + telemetry opt-in. */}

@@ -12,15 +12,15 @@ import { StorageCleanupDialog } from "./dashboard/components/StorageCleanupDialo
 
 // F0-3: gradual storage-health thresholds. Crossing a threshold escalates
 // the indicator's color/icon and adds a targeted warning to the tooltip.
-export const QUOTA_THRESHOLD_CAUTION = 70;
-export const QUOTA_THRESHOLD_WARNING = 85;
-export const QUOTA_THRESHOLD_CRITICAL = 95;
+const QUOTA_THRESHOLD_CAUTION = 70;
+const QUOTA_THRESHOLD_WARNING = 85;
+const QUOTA_THRESHOLD_CRITICAL = 95;
 /** A backup older than this (48 h) counts as stale. */
 export const BACKUP_STALE_MS = 48 * 60 * 60 * 1000;
 /** How often the backup-age and storage quota are re-polled (1 min). */
 export const BACKUP_REFRESH_INTERVAL_MS = 60_000;
 
-export type StorageHealthLevel =
+type StorageHealthLevel =
   | "normal"
   | "caution"
   | "warning"

@@ -25,6 +25,7 @@ import {
   Grid3X3,
   History,
   Copy,
+  ShieldCheck,
 } from "lucide-react";
 import { Modal } from "@mantine/core";
 import { safeGet, safeSet } from "../store/safeStorage";
@@ -93,6 +94,8 @@ const SIDEBAR_ITEM_META: Record<
   voiceLocal: { labelKey: "app_voiceLocal", icon: Mic },
   collaboration: { labelKey: "app_collaborationTitle", icon: Users },
   analytics: { labelKey: "app_analytics", icon: Activity },
+  // Reuses the key the dashboard itself already ships in all 30 locales.
+  security: { labelKey: "app_securityDashboard", icon: ShieldCheck },
   chat: {
     labelKey: "app_supportChat",
     defaultValue: "Support",

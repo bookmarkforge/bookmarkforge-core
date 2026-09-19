@@ -3,7 +3,7 @@ import { ShieldCheck, ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { getActiveProPrice, PRICING_CONFIG } from "../constants/pricing";
 
-export interface ProRequiredStateProps {
+interface ProRequiredStateProps {
   /**
    * Short, user-facing name of the feature that requires Pro, e.g.
    * "Expert agents" or "P2P sync". It names WHAT is gated — never a module.

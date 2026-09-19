@@ -12,7 +12,7 @@ import { logger } from "../utils/logger";
  */
 export const FIRST_RUN_PROGRESS_EVENT = "forge:first-run-progress";
 
-export interface FirstRunChecklistState {
+interface FirstRunChecklistState {
   /** Non-deleted bookmarks; undefined while the count is still loading. */
   bookmarkCount: number | undefined;
   /** Non-deleted documents; undefined while the count is still loading. */

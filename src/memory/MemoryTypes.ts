@@ -1,12 +1,6 @@
 export type MemoryCategory =
   "preference" | "fact" | "goal" | "project" | "workflow";
 
-/**
- * Discriminator for the unified `memory` collection. Every memory doc carries
- * one of these literals; select by it to scope queries to a sub-entity type.
- */
-export type MemoryRecordKind = "atom" | "profile" | "session" | "message";
-
 export interface MemoryAtom {
   type: "atom";
   id: string;
@@ -45,7 +39,7 @@ export interface MemoryPersona {
  * Uses a `type` discriminator field to distinguish scenarios from personas.
  * Scenarios have type="scenario"; the single persona has type="persona".
  */
-export interface MemoryProfileScenario {
+interface MemoryProfileScenario {
   type: "scenario";
   id: string;
   title: string;

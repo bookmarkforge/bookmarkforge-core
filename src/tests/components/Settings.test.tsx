@@ -25,7 +25,15 @@ vi.mock("../../hooks/useSecurityStore", () => ({
   useSecurityStore: () => ({ isLocked: false }),
 }));
 
-vi.mock("../../hooks/useRxDB", () => ({ useRxDB: vi.fn(() => ({})) }));
+vi.mock("../../hooks/useRxDB", () => ({
+  useRxDB: vi.fn(() => ({})),
+  // SecurityDashboard (rendered inside the Security settings area) reads the
+  // vault item counts. The real hooks require an RxDB provider this suite
+  // does not mount, so the double reports an absent collection and a
+  // zero-valued count (a count() query resolves to a number, not an array).
+  useRxCollection: vi.fn(() => undefined),
+  useRxQuery: vi.fn(() => ({ result: 0, loading: false })),
+}));
 
 const mockSafeGet = vi.hoisted(() => vi.fn((_key: string) => null));
 const mockSafeSet = vi.hoisted(() => vi.fn());
@@ -163,6 +171,7 @@ vi.mock("lucide-react", () => ({
   ConfigIcon: () => <div data-testid="icon-Settings" />,
   RefreshCw: () => <div data-testid="icon-RefreshCw" />,
   Shield: () => <div data-testid="icon-Shield" />,
+  ShieldCheck: () => <div data-testid="icon-ShieldCheck" />,
   Clock: () => <div data-testid="icon-Clock" />,
   Unlock: () => <div data-testid="icon-Unlock" />,
   Eye: () => <div data-testid="icon-Eye" />,
@@ -191,7 +200,11 @@ describe("Settings", () => {
   it("calls onClose when clicking X", async () => {
     const onClose = vi.fn();
     render(<Settings onClose={onClose} />);
-    await userEvent.click(screen.getByTestId("icon-X"));
+    // Target the header close button by its accessible label: the
+    // SecurityDashboard rendered in this view also draws an X icon for its
+    // "fail" status, so the icon test-id is no longer unique inside the
+    // dialog.
+    await userEvent.click(screen.getByLabelText("app_close"));
     expect(onClose).toHaveBeenCalled();
   });
 

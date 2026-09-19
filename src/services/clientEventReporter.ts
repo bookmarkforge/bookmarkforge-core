@@ -378,7 +378,7 @@ export function isClientEventReporterActive(): boolean {
 }
 
 /** Snapshot retry telemetry for the server diagnostics bridge. */
-export function getClientEventRetryStats(): {
+function getClientEventRetryStats(): {
   attempts: number;
   coalesced: number;
   dropped: number;

@@ -7,18 +7,17 @@ import type {
 import { vectorIndexService } from "./VectorIndexService";
 import { securityVault } from "../SecurityVault";
 import { logger } from "../../utils/logger";
-import { safeErrorForLog } from "../../utils/safeErrorForLog";
 
 const MAX_SCAN_ITEMS = 50_000;
 const MAX_REPORTED_IDS = 100;
 
-export type VaultHealthIssueKind =
+type VaultHealthIssueKind =
   | "pending-processing"
   | "missing-embedding"
   | "orphan-chunk"
   | "index-rebuild-recommended";
 
-export interface VaultHealthIssue {
+interface VaultHealthIssue {
   kind: VaultHealthIssueKind;
   count: number;
   sampleIds: string[];
@@ -160,16 +159,4 @@ export async function scanVaultHealth(signal?: AbortSignal): Promise<VaultHealth
     vectorIndexStatus: indexStatus,
     vectorIndexLoadDurationMs: vectorIndexService.getLoadDurationMs(),
   };
-}
-
-/** Converts unexpected scanner failures to a sanitized diagnostic message. */
-export function getHealthScanErrorMessage(error: unknown): string {
-  if (error instanceof Error && error.name === "VAULT_LOCKED") {
-    return "Vault is locked";
-  }
-  if (error instanceof Error && error.name === "AbortError") {
-    return "Scan cancelled";
-  }
-  logger.warn("[VaultHealthScanner] Scan failed", { error: safeErrorForLog(error) });
-  return "Vault health scan failed";
 }

@@ -24,6 +24,7 @@ vi.mock("react-i18next", () => {
     app_database: "Database",
     app_kanban: "Kanban",
     app_calendar: "Calendar",
+    app_securityDashboard: "Security",
   };
   return {
     useTranslation: () => ({
@@ -59,6 +60,7 @@ vi.mock("lucide-react", () => ({
   Grid3X3: () => <svg data-testid="icon-gallery" />,
   History: () => <svg data-testid="icon-timeline" />,
   Copy: () => <svg data-testid="icon-copy" />,
+  ShieldCheck: () => <svg data-testid="icon-security" />,
 }));
 
 const mockCollaborationStart = vi.fn().mockResolvedValue(undefined);

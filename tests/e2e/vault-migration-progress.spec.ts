@@ -74,12 +74,8 @@ function makeLegacyRows(count: number): Record<string, unknown>[] {
  */
 async function resolveDbPassword(page: Page): Promise<string> {
   return page.evaluate(async (masterPassword) => {
-    const { initDB } = await import("/src/db/database.ts");
-    const db = (await initDB()) as unknown as { password?: string };
-    if (typeof db.password === "string") {
-      return db.password;
-    }
-    // Fallback: derive it through the same code path the DB init uses.
+    // Use the canonical encrypted DB key rather than RxDatabase.password,
+    // which is an implementation detail and can be a normalized/hash value.
     const { secureStorage } = await import("/src/services/SecureStorage.ts");
     const { SECURE_STORAGE_KEYS } = await import(
       "/src/services/SecurityVault.ts"
@@ -123,9 +119,10 @@ test("legacy vault migration shows a live percent progress overlay and keeps all
   const bookmarks = makeLegacyRows(SEED_ROWS);
   const seedResult = await page.evaluate(
     async ({ password, rows }) => {
-      const { seedLegacyVault } = await import(
+      const { seedLegacyVault, wipeVaultDatabases } = await import(
         "/tests/e2e/legacy-vault-seeder.ts"
       );
+      await wipeVaultDatabases();
       return seedLegacyVault({ password, bookmark: rows });
     },
     { password: resolvedPassword, rows: bookmarks },

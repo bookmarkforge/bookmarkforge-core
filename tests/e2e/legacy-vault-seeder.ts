@@ -172,6 +172,7 @@ async function openCurrentStackDb(password: string) {
     name: "bookmarkforge_v5",
     storage,
     password,
+    closeDuplicates: true,
     ignoreDuplicate: true,
   });
 }
@@ -187,6 +188,7 @@ async function openLegacyDb(password: string) {
     name: "bookmarkforge_v5",
     storage,
     password,
+    closeDuplicates: true,
     ignoreDuplicate: true,
   });
 }

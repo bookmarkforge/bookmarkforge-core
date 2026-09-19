@@ -11,7 +11,7 @@
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { safeGet, safeRemove, safeSet } from "../store/safeStorage";
 
-export type ConsentPurpose = "analytics" | "sentry" | "clientEvents";
+type ConsentPurpose = "analytics" | "sentry" | "clientEvents";
 
 export interface ConsentToggles {
   analytics: boolean;

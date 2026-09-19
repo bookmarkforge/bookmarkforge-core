@@ -7,7 +7,7 @@ import {
   PRICING_CONFIG,
 } from "../constants/pricing";
 
-export interface ProRequiredPanelProps {
+interface ProRequiredPanelProps {
   /** Short label of the feature that was reached, e.g. "P2P sync". */
   feature?: string;
   /**

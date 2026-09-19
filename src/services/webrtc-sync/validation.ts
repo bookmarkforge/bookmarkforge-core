@@ -54,7 +54,7 @@ export function isSha256Hex(value: unknown): value is string {
 // timestamp from a malicious peer would win every conflict forever and
 // permanently poison the vault. The bounded tolerance absorbs legitimate
 // clock skew between devices without admitting that attack.
-export const MAX_SYNC_TIMESTAMP_FUTURE_MS = 5 * 60 * 1000;
+const MAX_SYNC_TIMESTAMP_FUTURE_MS = 5 * 60 * 1000;
 
 /** A sync timestamp that is parseable and not more than the bounded clock
  * tolerance ahead of the local clock. Empty strings are deliberately excluded

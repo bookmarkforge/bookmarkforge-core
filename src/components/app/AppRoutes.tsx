@@ -19,6 +19,7 @@ import {
   CanvasView,
   SharedDocumentView,
   KnowledgeDashboard,
+  SecurityDashboard,
   Collaboration,
   VoiceCommandCenterWrapper,
   Settings,
@@ -179,6 +180,22 @@ export function AppRoutes({
                 <RouteErrorBoundary showReset>
                   <div className="max-w-4xl mx-auto p-4 md:p-8 h-full">
                     <KnowledgeDashboard />
+                  </div>
+                </RouteErrorBoundary>
+              }
+            />
+            {/* Vault security health. Its own destination (sidebar tab +
+                /security) so it is reachable without opening Settings; the
+                "Security Settings" action navigates to the settings route
+                instead of scrolling. */}
+            <Route
+              path="/security"
+              element={
+                <RouteErrorBoundary showReset>
+                  <div className="max-w-4xl mx-auto p-4 md:p-8 h-full">
+                    <SecurityDashboard
+                      onOpenSettings={() => onNavigate("settings")}
+                    />
                   </div>
                 </RouteErrorBoundary>
               }

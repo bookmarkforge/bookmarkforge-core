@@ -18,7 +18,18 @@ import { X, Shield, ShieldCheck } from "lucide-react";
 import { getLatestBackupAgeMs } from "./StorageStatus";
 import { useRateLimitStore } from "../store/rateLimitStore";
 
-export const SecurityDashboard: React.FC = () => {
+interface SecurityDashboardProps {
+  /**
+   * Invoked by the "Security Settings" action. Omitted when the dashboard is
+   * rendered inside the Settings security area, where the action scrolls to
+   * the vault controls on the same page instead.
+   */
+  onOpenSettings?: () => void;
+}
+
+export const SecurityDashboard: React.FC<SecurityDashboardProps> = ({
+  onOpenSettings,
+}) => {
   const { t } = useTranslation();
   const { isLocked: _isLocked } = useSecurityStore();
   const [vaultState, setVaultState] = useState<{
@@ -38,11 +49,19 @@ export const SecurityDashboard: React.FC = () => {
 
   const docsCollection = useRxCollection("documents");
   const bookmarksCollection = useRxCollection("bookmarks");
-  const docsQuery = docsCollection ? docsCollection.count() : undefined;
-  const bookmarksQuery = bookmarksCollection ? bookmarksCollection.count() : undefined;
-  const docsCount = (useRxQuery(docsQuery as unknown as AnyRxQuery<unknown>).result ?? []).length;
-  const bookmarksCount = (useRxQuery(bookmarksQuery as unknown as AnyRxQuery<unknown>).result ?? []).length;
-  const totalItems = docsCount + bookmarksCount;
+  // A count() query resolves to a NUMBER, not a document array — `result` is
+  // only typed as an array because the hook is shared with find() queries
+  // (same shape StorageStatus reads). Narrow before adding, otherwise
+  // `result.length` is undefined and the total becomes NaN.
+  const { result: docsCount = 0 } = useRxQuery(
+    docsCollection?.count() as unknown as AnyRxQuery<unknown>,
+  );
+  const { result: bookmarksCount = 0 } = useRxQuery(
+    bookmarksCollection?.count() as unknown as AnyRxQuery<unknown>,
+  );
+  const totalItems =
+    (typeof docsCount === "number" ? docsCount : 0) +
+    (typeof bookmarksCount === "number" ? bookmarksCount : 0);
   const refreshSecurityData = useCallback(async () => {
     try {
       const hasMP = await securityVault.hasMasterPassword();
@@ -298,13 +317,29 @@ export const SecurityDashboard: React.FC = () => {
           <IconRefreshCw className="size-4" />
           {t("app_secRefresh", "Refresh")}
         </button>
-        <a
-          href="#settings/security"
+        {/* The old `#settings/security` href was dead (the app routes with
+            BrowserRouter, so a hash is not a route). On the standalone
+            /security route `onOpenSettings` navigates to Settings; when the
+            dashboard is rendered INSIDE the Settings security area there is
+            nothing to navigate to, so the action scrolls to the vault
+            controls below (no router dependency: Settings is also mounted
+            from tests without a Router). */}
+        <button
+          type="button"
+          onClick={() => {
+            if (onOpenSettings) {
+              onOpenSettings();
+              return;
+            }
+            document
+              .querySelector('[data-testid="settings-security"]')
+              ?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }}
           className="truncate flex items-center justify-center gap-2 px-4 py-3 ds-radius-card ds-bg-accent-primary text-[var(--text-on-accent)] hover:opacity-90 transition-colors"
         >
           <Shield className="size-4 text-cyan-500" />
           {t("app_secSettings", "Security Settings")}
-        </a>
+        </button>
       </div>
     </section>
   );

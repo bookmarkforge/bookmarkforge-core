@@ -41,7 +41,7 @@ const DB_VERSION = 1;
 const STORE_NAME = "events";
 const MAX_EVENTS = 10_000;
 /** Runtime cap: a blocked IndexedDB write must not grow memory without bound. */
-export const MAX_BUFFER_EVENTS = 512;
+const MAX_BUFFER_EVENTS = 512;
 const MAX_META_KEYS = 16;
 const MAX_META_KEY_LENGTH = 32;
 const MAX_META_STRING_LENGTH = 128;

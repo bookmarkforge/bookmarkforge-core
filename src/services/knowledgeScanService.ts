@@ -64,7 +64,7 @@ function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   });
 }
 
-export interface ScanCancellation {
+interface ScanCancellation {
   /** Aborts the worker task (retired) or the inline scan at the next
    *  phase checkpoint. The scan rejects with an AbortError. */
   signal?: AbortSignal;

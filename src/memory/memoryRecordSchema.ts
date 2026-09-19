@@ -25,18 +25,8 @@
  */
 import { RxJsonSchema } from "rxdb";
 import {
-  MemoryAtom,
-  MemoryProfile,
-  MemorySession,
-  MemoryChatMessage,
   MemoryRecord,
 } from "./MemoryTypes";
-
-export type MemoryRecordType =
-  | MemoryAtom
-  | MemoryProfile
-  | MemorySession
-  | MemoryChatMessage;
 
 /**
  * Field-level encryption: every personally identifying or private field is

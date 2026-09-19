@@ -17,14 +17,14 @@ const BATTERY_THRESHOLD = 0.15;
 const MEMORY_PRESSURE_THRESHOLD = 0.85;
 const ACTIVITY_EVENTS = ["pointerdown", "keydown", "input", "scroll"] as const;
 
-export type MaintenanceSkipReason =
+type MaintenanceSkipReason =
   | "vault-locked"
   | "disabled"
   | "page-hidden"
   | "battery-low"
   | "memory-pressure";
 
-export interface IntelligentMaintenanceStatus extends SafeRepairStatus {
+interface IntelligentMaintenanceStatus extends SafeRepairStatus {
   enabled: boolean;
   waitingForIdle: boolean;
   lastSkippedReason: MaintenanceSkipReason | null;

@@ -67,7 +67,7 @@ function isBoundedSignalFrame(value: unknown): value is string {
  * Exported for the unit tests.
  */
 /** Options for {@link createSignalingSocketFactory}. */
-export interface SignalingSocketFactoryOptions {
+interface SignalingSocketFactoryOptions {
   /** WebSocket constructor to instantiate. Injectable for tests. */
   webSocketImpl?: typeof WebSocket;
   /**

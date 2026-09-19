@@ -39,6 +39,11 @@ const BATCH_ID_RE = /^[A-Za-z0-9._-]{1,128}$/;
 export const MAX_FORWARDED_EVENTS = 512;
 /** Prevent a forged local batch from overflowing aggregate counters. */
 const MAX_FORWARDED_COUNT = 1_000_000;
+/** Prevent a down companion from causing a request on every local flush. */
+export const ANALYTICS_CIRCUIT_FAILURE_THRESHOLD = 3;
+export const ANALYTICS_CIRCUIT_COOLDOWN_MS = 30_000;
+let consecutiveNetworkFailures = 0;
+let circuitOpenUntil = 0;
 
 /** Allow-list mirrored on the server — only these types leave the device. */
 const FORWARDED_TYPES = new Set<AnalyticsEventType>([
@@ -72,6 +77,12 @@ export function isAnalyticsForwardingEnabled(): boolean {
   } catch {
     return false;
   }
+}
+
+/** Reset only the in-memory outage breaker; intended for deterministic unit tests. */
+export function __resetAnalyticsForwarderForTests(): void {
+  consecutiveNetworkFailures = 0;
+  circuitOpenUntil = 0;
 }
 
 /** Read (or create) the per-install random id, persisted locally. */
@@ -151,6 +162,7 @@ export async function forwardAnalytics(
   events: Array<Pick<AnalyticsEvent, "type">>,
   batchId: string = crypto.randomUUID(),
 ): Promise<boolean> {
+  if (Date.now() < circuitOpenUntil) return false;
   const payload = await buildAnalyticsPayload(events, batchId);
   if (!payload || !isAnalyticsForwardingEnabled()) return false;
   try {
@@ -160,8 +172,23 @@ export async function forwardAnalytics(
       body: JSON.stringify(payload),
       keepalive: true,
     });
-    return response.ok;
+    if (response.ok) {
+      consecutiveNetworkFailures = 0;
+      circuitOpenUntil = 0;
+      return true;
+    }
+    // HTTP failures are also operational failures for this best-effort path;
+    // open the circuit after repeated outages, while allowing a later probe.
+    consecutiveNetworkFailures += 1;
+    if (consecutiveNetworkFailures >= ANALYTICS_CIRCUIT_FAILURE_THRESHOLD) {
+      circuitOpenUntil = Date.now() + ANALYTICS_CIRCUIT_COOLDOWN_MS;
+    }
+    return false;
   } catch {
+    consecutiveNetworkFailures += 1;
+    if (consecutiveNetworkFailures >= ANALYTICS_CIRCUIT_FAILURE_THRESHOLD) {
+      circuitOpenUntil = Date.now() + ANALYTICS_CIRCUIT_COOLDOWN_MS;
+    }
     // Contained: analytics must never break the app or surface errors.
     return false;
   }

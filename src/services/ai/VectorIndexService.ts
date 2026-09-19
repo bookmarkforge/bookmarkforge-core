@@ -55,7 +55,7 @@ interface LoadIndexResult {
   legacyPurged?: boolean;
 }
 
-export type VectorIndexLoadStatus =
+type VectorIndexLoadStatus =
   | "unknown"
   | "initializing"
   | "locked"

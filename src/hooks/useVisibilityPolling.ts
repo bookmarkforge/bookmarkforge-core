@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 /**
  * Options for {@link useVisibilityPolling}.
  */
-export interface UseVisibilityPollingOptions {
+interface UseVisibilityPollingOptions {
   /** Polling cadence in milliseconds. */
   intervalMs: number;
   /**

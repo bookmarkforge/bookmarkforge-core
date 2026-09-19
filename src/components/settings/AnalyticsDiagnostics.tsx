@@ -105,7 +105,7 @@ FunnelStep.displayName = "FunnelStep";
 
 // ── Main component ─────────────────────────────────────────────────
 
-export interface AnalyticsDiagnosticsProps {
+interface AnalyticsDiagnosticsProps {
   /** Pass translation function from parent modal */
   t: (key: string, options?: Record<string, unknown> | string) => string;
 }

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 
-export interface RequestGuardHandle {
+interface RequestGuardHandle {
   generation: number;
   signal: AbortSignal;
 }

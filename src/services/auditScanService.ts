@@ -80,7 +80,7 @@ function isAuditResult(value: unknown): value is AuditScanResult {
  * fall back inline; an AbortSignal cancellation propagates as AbortError and
  * never restarts the scan on the main thread.
  */
-export interface AuditScanCancellation {
+interface AuditScanCancellation {
   /** Aborts the worker task or the inline scan at its next checkpoint. */
   signal?: AbortSignal;
   /** Receives coarse phase updates with a fraction in the 0..1 range. */

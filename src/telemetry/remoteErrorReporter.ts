@@ -41,7 +41,7 @@ const IGNORED_ERRORS = [
   "net::ERR_ABORTED",
 ];
 
-export function getSentryDsn(): string {
+function getSentryDsn(): string {
   return env.sentryDsn ?? "";
 }
 

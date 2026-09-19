@@ -107,7 +107,7 @@ export interface AgentConfig {
 }
 
 /** Union of every action key in the Pro registry (mirrors its table). */
-export type AgentIdKey =
+type AgentIdKey =
   | "realityCheck"
   | "suggestTests"
   | "optimizeUI"
@@ -146,7 +146,7 @@ export type AgentIdKey =
   | "repoManagementExpert";
 
 /** Signature of every agent action, mirrored from the Pro registry. */
-export type AgentAction = (
+type AgentAction = (
   text: string,
   lang?: string,
   isPrivate?: boolean,

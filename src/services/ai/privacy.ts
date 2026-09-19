@@ -1,18 +1,18 @@
 import type { AIRequestOptions } from "./types";
 
 /** Any vault-derived source that carries its persisted privacy decision. */
-export interface AIPrivacySource {
+interface AIPrivacySource {
   readonly isPrivate: boolean;
 }
 
 /** AI response shape shared by ProviderManager and lightweight test doubles. */
-export interface ScopedAIResponse {
+interface ScopedAIResponse {
   text: string;
   provider: string;
   groundingMetadata?: unknown;
 }
 
-export interface ScopedAITextGenerator {
+interface ScopedAITextGenerator {
   generateText: (
     prompt: string,
     systemPrompt?: string,

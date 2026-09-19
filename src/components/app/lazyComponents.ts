@@ -14,6 +14,9 @@ export const FlashcardReview = lazy(() => import("../FlashcardReview"));
 export const Omnibar = lazy(() => import("../Omnibar"));
 export const DocumentManager = lazy(() => import("../DocumentManager"));
 export const KnowledgeDashboard = lazy(() => import("../KnowledgeDashboard"));
+export const SecurityDashboard = lazy(
+  () => import("../SecurityDashboard").then((m) => ({ default: m.SecurityDashboard })),
+);
 export const SupportChat = lazy(() => import("../SupportChat"));
 export const BlockEditor = lazy(() => import("../block-editor/BlockEditor"));
 export const Chat = lazy(() => import("../Chat"));

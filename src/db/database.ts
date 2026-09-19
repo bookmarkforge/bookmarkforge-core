@@ -175,7 +175,7 @@ function getDbState(): DbSingletonState {
  */
 const E2E_STORAGE_BACKEND_KEY = "__bmf_active_storage_backend__";
 
-export type ActiveStorageBackend = "Dexie" | "Memory" | null;
+type ActiveStorageBackend = "Dexie" | "Memory" | null;
 
 function publishStorageBackend(backend: ActiveStorageBackend): void {
   // Dev/test builds always publish (E2E storage-backend guard). Production

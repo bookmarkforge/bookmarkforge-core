@@ -15,12 +15,12 @@ const MAX_ITEMS_PER_CYCLE = 5;
 const MAX_ORPHAN_REMOVALS_PER_CYCLE = 25;
 const MAX_REPAIR_FAILURES_BEFORE_PAUSE = 3;
 
-export type SafeRepairKind =
+type SafeRepairKind =
   | "pending-processing"
   | "missing-embedding"
   | "index-rebuild";
 
-export type SafeRepairResultStatus = "completed" | "partial" | "failed" | "skipped";
+type SafeRepairResultStatus = "completed" | "partial" | "failed" | "skipped";
 
 export interface SafeRepairResult {
   status: SafeRepairResultStatus;
@@ -31,7 +31,7 @@ export interface SafeRepairResult {
   report: VaultHealthReport | null;
 }
 
-export interface SafeRepairOptions {
+interface SafeRepairOptions {
   signal?: AbortSignal;
   maxItems?: number;
 }

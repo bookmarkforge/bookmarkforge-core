@@ -10,7 +10,7 @@ import { STORAGE_KEYS } from "../constants/storage-keys";
 const THEME_STYLE_ID = "bookmarkforge-user-theme";
 const MAX_THEME_CSS_BYTES = 64 * 1024;
 
-export interface SanitizeResult {
+interface SanitizeResult {
   ok: boolean;
   css?: string;
   reason?: string;

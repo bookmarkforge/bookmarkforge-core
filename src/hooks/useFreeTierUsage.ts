@@ -13,7 +13,7 @@ import { logger } from "../utils/logger";
  * disagree. Everything is a no-op for Pro users — the nudge must not exist
  * for them.
  */
-export interface FreeTierUsage {
+interface FreeTierUsage {
   /** Non-deleted bookmark count (undefined while loading). */
   count: number | undefined;
   /** Free ceiling (FREE_LIMITS.maxBookmarks). */

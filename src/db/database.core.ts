@@ -255,7 +255,7 @@ export const defaultConflictHandler = (
 // RxDB's own default conflict handler is typed RxConflictHandler<any>; the
 // document shape here is a union of all collection schemas.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const rxdb17ConflictHandler: RxConflictHandler<any> = {
+const rxdb17ConflictHandler: RxConflictHandler<any> = {
   isEqual(a, b) {
     return stableSerialize(a) === stableSerialize(b);
   },

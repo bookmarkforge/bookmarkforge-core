@@ -17,6 +17,7 @@ import {
   forwardAnalyticsBeacon,
   getOrCreateInstallId,
   isAnalyticsForwardingEnabled,
+  __resetAnalyticsForwarderForTests,
 } from "../../services/analyticsForwarder";
 
 const CONSENT_KEY = STORAGE_KEYS.CONSENT_ANALYTICS;
@@ -24,6 +25,7 @@ const IID_KEY = "bmf_analytics_install_id";
 
 beforeEach(() => {
   localStorage.clear();
+  __resetAnalyticsForwarderForTests();
   vi.restoreAllMocks();
 });
 
@@ -104,6 +106,20 @@ describe("analyticsForwarder payload", () => {
     localStorage.setItem(CONSENT_KEY, "true");
     vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("network down"));
     await expect(forwardAnalytics([{ type: "session_start" }])).resolves.toBe(false);
+  });
+
+  it("opens a bounded circuit after repeated companion failures", async () => {
+    localStorage.setItem(CONSENT_KEY, "true");
+    const fetchSpy = vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("offline"));
+
+    await forwardAnalytics([{ type: "session_start" }]);
+    await forwardAnalytics([{ type: "session_start" }]);
+    await forwardAnalytics([{ type: "session_start" }]);
+    await forwardAnalytics([{ type: "session_start" }]);
+
+    // The fourth call is suppressed locally instead of creating another
+    // request while the companion is known to be unavailable.
+    expect(fetchSpy).toHaveBeenCalledTimes(3);
   });
 });
 

@@ -215,6 +215,11 @@ export const Onboarding: React.FC<OnboardingProps> = ({
         fileSize: file.size,
       });
       safeSet(RESTORE_SUCCESS_PENDING_KEY, "true");
+      // Remove any stale toast from the pre-restore screen before the reload;
+      // otherwise Sonner can briefly preserve an old error node while the
+      // restored app is booting, making a successful restore look failed to
+      // assistive tech and end-to-end observers.
+      toast.dismiss();
       // importBackup writes through a fresh RxDB instance. Reboot the app so
       // the live database/query subscriptions are recreated and display the
       // restored records instead of retaining the pre-restore empty snapshot.

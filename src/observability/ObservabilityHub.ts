@@ -113,7 +113,10 @@ class ObservabilityHub {
     tokensIn: number,
     tokensOut: number,
   ): void {
-    const labels = { provider, model };
+    const labels = {
+      provider: ObservabilityHub.normalizeLabel(provider),
+      model: ObservabilityHub.normalizeLabel(model),
+    };
     metricsAggregator.incrementCounter("ai.calls", labels);
     metricsAggregator.recordHistogram("ai.duration_ms", durationMs, labels);
     metricsAggregator.recordHistogram(
@@ -129,21 +132,26 @@ class ObservabilityHub {
   }
 
   recordSync(operation: string, durationMs: number, success: boolean): void {
+    const normalizedOperation = ObservabilityHub.normalizeLabel(operation);
     metricsAggregator.incrementCounter("sync.operations", {
-      operation,
+      operation: normalizedOperation,
       status: success ? "ok" : "error",
     });
     metricsAggregator.recordHistogram("sync.duration_ms", durationMs, {
-      operation,
+      operation: normalizedOperation,
     });
   }
 
   recordCacheHit(cacheName: string): void {
-    metricsAggregator.incrementCounter("cache.hits", { cache: cacheName });
+    metricsAggregator.incrementCounter("cache.hits", {
+      cache: ObservabilityHub.normalizeLabel(cacheName),
+    });
   }
 
   recordCacheMiss(cacheName: string): void {
-    metricsAggregator.incrementCounter("cache.misses", { cache: cacheName });
+    metricsAggregator.incrementCounter("cache.misses", {
+      cache: ObservabilityHub.normalizeLabel(cacheName),
+    });
   }
 
   getDashboard(): DashboardSnapshot {

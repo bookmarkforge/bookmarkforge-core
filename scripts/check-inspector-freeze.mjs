@@ -129,12 +129,16 @@ const KNOWN_GATES = {
   "check:seo": "meta",
   // Release-target confirmation (ADR-058): a release must not be prepared
   // against an unconfirmed repository target (provisional/placeholder slug,
-  // no remote, or declared≠actual drift). The blocking variant guards the
-  // release path (public export, launch smoke); the chain runs the advisory
-  // variant so the signal stays visible in every check without turning the
-  // whole chain red while the target is still being decided.
+  // no remote, or declared≠actual drift). The gate has a single blocking mode
+  // and runs both in the release path (public export, launch smoke) and in
+  // this chain, since the target was confirmed on 2026-09-19 and the advisory
+  // variant that kept the chain green while undecided was retired.
   "check:release-target": "meta",
-  "check:release-target:advisory": "meta",
+  // Pruned dependencies (md-to-pdf, puppeteer, markdown-it) must not be
+  // re-imported into src/: they were dropped because nothing loaded them, and
+  // the failure mode is silent (the import only breaks where the bundler
+  // resolves it, or gets "fixed" by re-declaring the dependency).
+  "check:removed-deps": "meta",
   "check:chunks": "meta",
   "check:inspector-freeze": "meta",
   lint: "meta",

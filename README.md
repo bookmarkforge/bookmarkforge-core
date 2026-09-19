@@ -10,14 +10,14 @@ proveedor que el usuario configura.
 
 ## Estado del proyecto
 
-<!-- Estado 2026-09-18: el checkout tiene configurado origin, pero los badges
-     siguen usando el slug provisional bookmarkforge/core y no hay evidencia de PRs o
-     ejecuciones de CI verificadas en GitHub. Antes de publicar, ejecutar los workflows
-     contra el repositorio remoto; ver docs/github-secrets-and-push-runbook.md y
-     docs/audit.md. -->
+<!-- Estado 2026-09-19: `bookmarkforge/core` es el destino confirmado —el remoto,
+     package.json, los badges y las RELEASE-NOTES del export coinciden—, pero aún
+     no hay evidencia de PRs o ejecuciones de CI verificadas en GitHub. Antes de
+     publicar, ejecutar los workflows contra el repositorio remoto; ver
+     docs/github-secrets-and-push-runbook.md y docs/audit.md. -->
 
-> **Nota**: Los badges de CI apuntan al slug provisional `bookmarkforge/core`.
-> Al publicar el repositorio oficial, reemplazar con el slug definitivo.
+> **Nota**: Los badges apuntan al destino confirmado `bookmarkforge/core`; el gate
+> `check:release-target` sale 0 mientras las cuatro superficies coincidan.
 > Ejecutar `npm run check:ci` localmente para verificar que todo pase antes de push.
 
 [![CI](https://github.com/bookmarkforge/core/actions/workflows/ci.yml/badge.svg)](https://github.com/bookmarkforge/core/actions/workflows/ci.yml) · [![Nightly validation](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml/badge.svg)](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml) · [runs fallidos](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml?query=conclusion%3Afailure) · [último release](https://github.com/bookmarkforge/core/releases/latest) · [operación del nightly](docs/ops-nightly.md)
@@ -104,6 +104,7 @@ probado de rollback.
 ```bash
 npm run check:env
 npm run check:secrets-in-commit
+npm run check:marketing
 npm run build:ci
 npm run production-smoke
 ```
@@ -160,6 +161,8 @@ completo como si todo estuviera bajo MIT.
 - [Auditoría](docs/audit.md)
 - [ROPA (RGPD)](docs/ROPA.md)
 - [Checklist de lanzamiento](docs/launch-checklist.md)
+- [Posicionamiento comercial](docs/positioning.md)
+- [Plan de validación comercial de 30 días](docs/market-validation-plan.md)
 - [Self-hosting](docs/SELF-HOSTING.md)
 - [Convenciones de ingeniería](AGENTS.md)
 - [Onboarding de contribuyentes](docs/ONBOARDING.md)

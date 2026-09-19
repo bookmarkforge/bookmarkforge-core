@@ -173,13 +173,14 @@ npm run test:slow               # every other test file (~460; CI's slow-tests j
 npm run build:ci                # vite build + secret-scan + SRI + integrity
                                 #   manifest + chunk-boundary + bundle-size gates
 npm run check                   # the full gate chain (~40 check commands + lint):
-                                 # open-core, pro-imports, env, workflows,
+                                 # open-core, pro-imports, removed-deps, env,
+                                 # workflows,
                                  # http-config, compose-config, runtime-config,
                                  # boundaries, e2e-helpers, docs-markdown,
-                                 # documented-npm-commands,
+                                 # docs-index, documented-npm-commands,
                                  # documented-doc-references,
-                                 # release-target:advisory (ADR-058; the blocking
-                                 #   check:release-target guards the release path),
+                                 # release-target (ADR-058; blocking here and on
+                                 #   the release path),
                                  # baseline-drift, baseline-gaps, csp,
                                  # extension-csp, i18n, claim-drift,
                                  # landing-free-plan, pocket-onboarding-copy,

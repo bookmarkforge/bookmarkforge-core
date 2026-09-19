@@ -3,9 +3,9 @@
  * scripts/check-release-target.mjs — release-target confirmation gate.
  *
  * A release must not be prepared against a repository target that nobody has
- * confirmed. This repository ships with the *provisional* slug
- * `bookmarkforge/core` in three places that would all publish to the wrong
- * place if the release ran today:
+ * confirmed. This repository shipped with the *provisional* slug
+ * `bookmarkforge/core` written into three surfaces that would all have
+ * published to the wrong place today:
  *
  *   1. `package.json` → `repository.url` (the declared target: what npm
  *      metadata, badges and the public export would advertise);
@@ -21,28 +21,28 @@
  *   - the declared target exists (a `repository.url` that resolves to
  *     `owner/repo`), and the git remote exists too — absence is unconfirmed,
  *     not "fine";
- *   - neither is a provisional/placeholder target (`bookmarkforge/core`, or a
- *     placeholder owner such as `tu_usuario` / `your-org`);
+ *   - neither is a provisional/placeholder target: a slug listed in
+ *     `PROVISIONAL_TARGETS` (empty since `bookmarkforge/core` was confirmed as
+ *     the real destination on 2026-09-19 — see the amendment in
+ *     docs/ADR-058-release-target-confirmation-gate.md) or a placeholder owner
+ *     such as `tu_usuario` / `your-org`;
  *   - declared and actual agree, so a release cannot be published from a
  *     different place than the one it advertises.
  *
  * Modes:
- *   - default: BLOCKING. Any finding makes the gate exit 1. This is what the
- *     release path uses — `scripts/export-public-repo.mjs` and
- *     `scripts/run-launch-smoke.mjs` both call this module before doing any
- *     work, so a public export or a launch-day battery cannot run against an
- *     unconfirmed target.
- *   - `--advisory`: same findings, exit 0, no failure. The source-level
- *     `npm run check` aggregate calls this variant (`check:release-target:advisory`)
- *     so the signal is visible in every check run without turning the whole
- *     development/CI chain red while the target is still being decided.
+ *   - default: BLOCKING, and the only mode. Any finding makes the gate exit 1.
+ *     The release path calls this module before doing any work —
+ *     `scripts/export-public-repo.mjs` and `scripts/run-launch-smoke.mjs`, so a
+ *     public export or a launch-day battery cannot run against an unconfirmed
+ *     target — and `npm run check` runs this same gate, so an unconfirmed
+ *     target cannot reach a commit either.
  *   - `--json`: emit the structured report on stdout (human lines move to
  *     stderr, as in the other gates).
  *   - `GITHUB_STEP_SUMMARY` (set on every GitHub Actions step): append a
  *     markdown summary, so the finding is visible in the run UI.
  *   - `BMF_RELEASE_TARGET_ROOT`: check another checkout (tests, fixtures).
  *
- * Exit codes: 0 = confirmed (or advisory), 1 = unconfirmed target.
+ * Exit codes: 0 = confirmed, 1 = unconfirmed target.
  */
 import { appendFileSync, existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -52,8 +52,19 @@ import process from "node:process";
 
 export const ROOT = fileURLToPath(new URL("..", import.meta.url));
 
-/** Slugs that are known placeholders: releasing to one is always a mistake. */
-export const PROVISIONAL_TARGETS = ["bookmarkforge/core"];
+/**
+ * Slugs that are known placeholders: releasing to one is always a mistake.
+ *
+ * Empty since 2026-09-19. Its only entry, `bookmarkforge/core`, was confirmed
+ * as the real destination by the repository owner, so the four surfaces that
+ * name it — package.json → `repository.url`, the git remote, the README badges
+ * and the export release notes — now agree on a target nobody has to guess.
+ * Re-arming this list requires the mirror-image evidence: the slug must not
+ * exist, or the confirmation must be retracted (ADR-058 amendment). The
+ * mechanism stays live for the next unconfirmed target, and the placeholder
+ * owner patterns below keep covering unedited template URLs.
+ */
+export const PROVISIONAL_TARGETS = [];
 
 /**
  * Owner/repo segments that mark a clone URL as a template rather than a real
@@ -114,9 +125,9 @@ export function normalizeTarget(raw) {
 }
 
 /** Why this target is not releasable, or `null` when it looks confirmed. */
-export function provisionalReason(target) {
+export function provisionalReason(target, provisionalTargets = PROVISIONAL_TARGETS) {
   if (!target) return null;
-  if (PROVISIONAL_TARGETS.includes(target)) {
+  if (provisionalTargets.includes(target)) {
     return `provisional slug "${target}" — the repository target is still undecided`;
   }
   for (const segment of target.split("/")) {
@@ -174,9 +185,19 @@ export function declaredTargets(root) {
   }));
 }
 
-/** Every configured git remote, as reported by `git remote -v`. */
+/**
+ * Every configured git remote, as reported by `git remote -v`.
+ *
+ * `safe.directory` is passed explicitly, as check-docs-markdown does when it
+ * hashes a file: a checkout owned by another user (shared workstations, CI
+ * containers, bind mounts) otherwise makes git refuse with "detected dubious
+ * ownership" and the gate would report a confirmed remote as missing.
+ */
 export function readRemotes(root) {
-  const result = spawnSync("git", ["remote", "-v"], { cwd: root, encoding: "utf8" });
+  const result = spawnSync("git", ["-c", `safe.directory=${root}`, "remote", "-v"], {
+    cwd: root,
+    encoding: "utf8",
+  });
   if (result.status !== 0 || !result.stdout || !result.stdout.trim()) {
     return {
       remotes: [],
@@ -223,7 +244,12 @@ export function artifactTargets(root) {
  * Evaluate the release target. Pure over its inputs so tests can inject
  * remotes/artifacts instead of needing a real git checkout.
  */
-export function checkReleaseTarget({ root = ROOT, remotes, artifacts } = {}) {
+export function checkReleaseTarget({
+  root = ROOT,
+  remotes,
+  artifacts,
+  provisionalTargets = PROVISIONAL_TARGETS,
+} = {}) {
   const findings = [];
   const declared = declaredTargets(root);
   const githubDeclared = declared.filter((entry) => entry.target);
@@ -241,7 +267,7 @@ export function checkReleaseTarget({ root = ROOT, remotes, artifacts } = {}) {
     );
   }
   for (const entry of githubDeclared) {
-    const reason = provisionalReason(entry.target);
+    const reason = provisionalReason(entry.target, provisionalTargets);
     if (reason) {
       add("declared-provisional", `${entry.file}:${entry.line ?? "?"}`, entry.field, reason);
     }
@@ -257,7 +283,7 @@ export function checkReleaseTarget({ root = ROOT, remotes, artifacts } = {}) {
     );
   }
   for (const remote of remoteList) {
-    const reason = provisionalReason(remote.target);
+    const reason = provisionalReason(remote.target, provisionalTargets);
     if (reason) {
       add(
         "remote-provisional",
@@ -285,7 +311,7 @@ export function checkReleaseTarget({ root = ROOT, remotes, artifacts } = {}) {
   // 4. Release-shipping artifacts: URLs a reader of the release will copy.
   for (const artifact of artifactsFound) {
     for (const { target, line } of artifact.targets) {
-      const reason = provisionalReason(target);
+      const reason = provisionalReason(target, provisionalTargets);
       if (!reason) continue;
       add("artifact-provisional", `${artifact.file}:${line ?? "?"}`, target, reason);
     }
@@ -362,12 +388,12 @@ function writeSummaryIfCi(report) {
 }
 
 /** Render a check result as the human/CI output shared by every entry point. */
-export function reportResult(result, { advisory = false, json = false, stream = process } = {}) {
+export function reportResult(result, { json = false, stream = process } = {}) {
   const status = result.ok ? "pass" : "fail";
   const report = {
     tool: "check-release-target",
     status,
-    mode: advisory ? "advisory" : "blocking",
+    mode: "blocking",
     declaredTarget: result.declaredTarget,
     remoteTargets: result.remoteTargets,
     findings: result.findings,
@@ -385,20 +411,14 @@ export function reportResult(result, { advisory = false, json = false, stream = 
     );
   } else {
     const headline =
-      `[check-release-target] ${advisory ? "ADVISORY" : "FAIL"}: release target is not ` +
+      `[check-release-target] FAIL: release target is not ` +
       `confirmed (${result.findings.length} finding${result.findings.length === 1 ? "" : "s"})`;
-    emit(headline, !advisory);
+    emit(headline, true);
     for (const finding of result.findings) {
       emit(`[check-release-target]   - ${finding.location} → ${finding.value ?? "—"}: ${finding.reason}`);
     }
     for (const remedy of report.remedies) {
       emit(`[check-release-target] remedy: ${remedy}`);
-    }
-    if (advisory) {
-      emit(
-        "[check-release-target] advisory only: this does NOT block `npm run check`; the " +
-          "release path (public export, launch smoke) fails on the same findings",
-      );
     }
   }
 
@@ -411,12 +431,11 @@ export function reportResult(result, { advisory = false, json = false, stream = 
 }
 
 function main() {
-  const advisory = process.argv.includes("--advisory");
   const json = process.argv.includes("--json");
   const root = resolve(process.env.BMF_RELEASE_TARGET_ROOT ?? ROOT);
   const result = checkReleaseTarget({ root });
-  reportResult(result, { advisory, json });
-  process.exitCode = result.ok || advisory ? 0 : 1;
+  reportResult(result, { json });
+  process.exitCode = result.ok ? 0 : 1;
 }
 
 if (process.argv[1] && pathToFileURL(process.argv[1]).href === import.meta.url) {

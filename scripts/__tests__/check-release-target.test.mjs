@@ -67,11 +67,16 @@ describe("check-release-target target parsing", () => {
     ]);
   });
 
-  it("recognizes the provisional slug and placeholder owners", () => {
-    expect(provisionalReason("bookmarkforge/core")).toContain("provisional slug");
+  it("treats the confirmed shipped slug as real and still catches placeholders", () => {
+    // `bookmarkforge/core` was confirmed as the real destination (ADR-058
+    // amendment). Reporting it as provisional would keep the release path
+    // closed forever, so this is the assertion that pins the confirmation.
+    expect(provisionalReason("bookmarkforge/core")).toBeNull();
     expect(provisionalReason("tu_usuario/bookmarkforge")).toContain("placeholder");
     expect(provisionalReason("your-org/forge")).toContain("placeholder");
     expect(provisionalReason("acme/forge")).toBeNull();
+    // The mechanism stays live for the next unconfirmed target.
+    expect(provisionalReason("acme/forge", ["acme/forge"])).toContain("provisional slug");
   });
 });
 
@@ -88,7 +93,7 @@ describe("check-release-target findings", () => {
     rmSync(root, { recursive: true, force: true });
   });
 
-  it("flags the provisional slug in package.json and in the remote", () => {
+  it("accepts the confirmed destination when the declared and actual targets agree", () => {
     const root = fixture({ repository: "https://github.com/bookmarkforge/core.git" });
     const result = checkReleaseTarget(
       withRemotes(root, [
@@ -100,6 +105,27 @@ describe("check-release-target findings", () => {
         },
       ]),
     );
+
+    expect(result.ok, JSON.stringify(result.findings)).toBe(true);
+    expect(result.findings).toEqual([]);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  it("flags a re-armed provisional slug in package.json and in the remote", () => {
+    const root = fixture({ repository: "https://github.com/bookmarkforge/core.git" });
+    const result = checkReleaseTarget({
+      ...withRemotes(root, [
+        {
+          name: "origin",
+          url: "https://github.com/bookmarkforge/core.git",
+          kind: "fetch",
+          target: "bookmarkforge/core",
+        },
+      ]),
+      // The shipped slug is confirmed, so the real corpus cannot reach this
+      // path; injecting it keeps the mechanism and its findings covered.
+      provisionalTargets: ["bookmarkforge/core"],
+    });
 
     expect(result.ok).toBe(false);
     expect(kindsOf(result)).toContain("declared-provisional");
@@ -146,9 +172,10 @@ describe("check-release-target findings", () => {
           "# Notes\n\ngit clone https://github.com/bookmarkforge/core.git\n",
       },
     });
-    const result = checkReleaseTarget(
-      withRemotes(root, [{ name: "origin", url: CONFIRMED, kind: "fetch", target: "acme/forge" }]),
-    );
+    const result = checkReleaseTarget({
+      ...withRemotes(root, [{ name: "origin", url: CONFIRMED, kind: "fetch", target: "acme/forge" }]),
+      provisionalTargets: ["bookmarkforge/core"],
+    });
 
     expect(kindsOf(result)).toEqual(["artifact-provisional", "artifact-provisional"]);
     expect(result.findings.map((finding) => finding.location)).toEqual([
@@ -157,21 +184,35 @@ describe("check-release-target findings", () => {
     ]);
     rmSync(root, { recursive: true, force: true });
   });
+
+  it("keeps every real repository surface confirmed", () => {
+    // Regression guard for the ADR-058 amendment: reintroducing a provisional
+    // slug, a template owner or a declared/actual mismatch into the shipped
+    // surfaces must fail here, against the real checkout.
+    const result = checkReleaseTarget({ root: ROOT });
+
+    expect(
+      result.ok,
+      result.findings.map((finding) => `${finding.kind} ${finding.location}`).join("\n"),
+    ).toBe(true);
+    expect(result.declaredTarget).toBe("bookmarkforge/core");
+    expect(result.remoteTargets.map((remote) => remote.target)).toContain("bookmarkforge/core");
+  });
 });
 
 describe("check-release-target modes", () => {
-  it("keeps the advisory mode green while still reporting every finding", () => {
+  it("has no non-blocking variant: every finding is rendered as a failure", () => {
     const root = fixture({ repository: "https://github.com/bookmarkforge/core.git" });
     const result = checkReleaseTarget(withRemotes(root, []));
 
     const lines = [];
     const stream = { stdout: { write: (l) => lines.push(l) }, stderr: { write: (l) => lines.push(l) } };
-    const report = reportResult(result, { advisory: true, stream });
+    const report = reportResult(result, { stream });
 
     expect(report.status).toBe("fail");
-    expect(report.mode).toBe("advisory");
-    expect(lines.join("")).toContain("ADVISORY");
-    expect(lines.join("")).toContain("does NOT block");
+    expect(report.mode).toBe("blocking");
+    expect(lines.join("")).toContain("FAIL");
+    expect(lines.join("")).not.toContain("does NOT block");
     expect(report.remedies.length).toBeGreaterThan(0);
     rmSync(root, { recursive: true, force: true });
   });
@@ -186,7 +227,7 @@ describe("check-release-target modes", () => {
       stderr: { write: (l) => stderr.push(l) },
     };
 
-    reportResult(result, { advisory: false, json: true, stream });
+    reportResult(result, { json: true, stream });
 
     expect(() => JSON.parse(stdout.join(""))).not.toThrow();
     expect(JSON.parse(stdout.join("")).status).toBe("fail");
@@ -194,20 +235,39 @@ describe("check-release-target modes", () => {
     rmSync(root, { recursive: true, force: true });
   });
 
-  it("fails in blocking mode and passes in advisory mode from the CLI", () => {
+  it("fails on an unconfirmed checkout and passes on a confirmed one, from the CLI", () => {
     const root = fixture({ repository: "https://github.com/bookmarkforge/core.git" });
     const env = { ...process.env, BMF_RELEASE_TARGET_ROOT: root, GITHUB_STEP_SUMMARY: "" };
 
     const blocking = spawnSync(process.execPath, [SCRIPT], { encoding: "utf8", env });
-    const advisory = spawnSync(process.execPath, [SCRIPT, "--advisory"], { encoding: "utf8", env });
     const json = spawnSync(process.execPath, [SCRIPT, "--json"], { encoding: "utf8", env });
+    // `--advisory` used to clamp the exit code to 0; it is no longer a mode,
+    // so the findings keep failing the run.
+    const retiredFlag = spawnSync(process.execPath, [SCRIPT, "--advisory"], { encoding: "utf8", env });
 
     expect(blocking.status).toBe(1);
-    expect(advisory.status).toBe(0);
+    // The failure headline travels on stderr, as in the other gates.
+    expect(blocking.stderr).toContain("FAIL");
     expect(json.status).toBe(1);
     // stdout stays machine-parseable even on the failing path.
     expect(JSON.parse(json.stdout).status).toBe("fail");
+    expect(retiredFlag.status).toBe(1);
+
+    // Green path from the CLI: a checkout whose declared target and remote
+    // agree. Needs a real git repo, so it degrades to a no-op without git.
+    const confirmed = fixture();
+    const git = spawnSync("git", ["init", "-q"], { cwd: confirmed, encoding: "utf8" });
+    if (git.status === 0) {
+      spawnSync("git", ["remote", "add", "origin", CONFIRMED], { cwd: confirmed, encoding: "utf8" });
+      const ok = spawnSync(process.execPath, [SCRIPT], {
+        encoding: "utf8",
+        env: { ...env, BMF_RELEASE_TARGET_ROOT: confirmed },
+      });
+      expect(ok.status).toBe(0);
+      expect(ok.stdout).toContain("ok: release target confirmed");
+    }
     rmSync(root, { recursive: true, force: true });
+    rmSync(confirmed, { recursive: true, force: true });
   });
 });
 

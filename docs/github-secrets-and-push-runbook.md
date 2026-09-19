@@ -2,7 +2,7 @@
 
 - **Date:** 2026-08-31
 - **Purpose:** Get `drill-quarterly.yml` (quarterly DR drill + KPI collector check) and `nightly.yml` (KPI gate vs staging, monthly drill) running for the first time on GitHub.
-- **Prerequisite:** Nothing here has been exercised against a real remote yet: the checkout has no remote branches and no verified workflow runs, its `origin` still points at the provisional slug `bookmarkforge/core`, and `gh` is installed but not authenticated. **Run §1 first** — it confirms the destination, the credentials and that the workflows actually start. Create the repo + set secrets in the GitHub web UI or with the `gh` CLI — both paths below.
+- **Prerequisite:** Nothing here has been exercised against a real remote yet: the checkout has no remote branches and no verified workflow runs, its `origin` and every release surface name the confirmed target `bookmarkforge/core`, and `gh` is installed but not authenticated. **Run §1 first** — it confirms the destination, the credentials and that the workflows actually start. Create the repo + set secrets in the GitHub web UI or with the `gh` CLI — both paths below.
 
 ---
 
@@ -41,12 +41,13 @@ git remote get-url origin
 Expected: `origin` naming the repository you just created. Two failure modes to
 rule out *before* pushing:
 
-- **Provisional slug.** If it resolves to `bookmarkforge/core`, the checkout is
-  pointing at the placeholder, not at your repository. Retarget it
-  (`git remote set-url origin <confirmed-url>`) and re-run
-  `npm run check:release-target`: the gate exits 1 while the declared target
-  (`package.json` → `repository.url`) and the remote disagree, and the release
-  path refuses to run — see `docs/ADR-058-release-target-confirmation-gate.md`.
+- **Confirmed target.** `bookmarkforge/core` is the real repository, confirmed by
+  the project owner on 2026-09-19, and every release surface names it identically,
+  so `npm run check:release-target` exits 0 and the release path runs. If you ever
+  retarget the release somewhere else, re-run the gate: it exits 1 while the
+  declared target (`package.json` → `repository.url`) and the remote disagree, and
+  the release path refuses to run — see
+  `docs/ADR-058-release-target-confirmation-gate.md`.
 - **Transport vs. credentials.** An `https://` remote goes through the git
   credential helper (Git Credential Manager on Windows, which opens an
   interactive dialog); an `git@github.com:` remote needs an SSH key registered on
@@ -101,7 +102,7 @@ gh repo view <owner>/<repo> --json nameWithOwner,visibility
 Local, before the push:
 
 ```bash
-npm run check                        # full gate chain (release target included as an advisory line)
+npm run check                        # full gate chain (release target blocks the run)
 npm run check:secrets-in-commit
 npm run check:workflow-pipeline
 npm run check:repository-hygiene
@@ -151,14 +152,14 @@ git remote add origin git@github.com:TU_USUARIO/bookmarkforge.git
 git push -u origin main
 ```
 
-> **Destino sin confirmar.** Mientras el checkout siga apuntando al slug
-> provisional `bookmarkforge/core` —en `package.json` → `repository.url`, en el
-> remoto, en los badges del README o en las `RELEASE-NOTES` del export—,
-> `npm run check:release-target` falla (exit 1) y con él la ruta de release: el
-> export público y `npm run launch:smoke` se niegan a preparar nada. El aviso
-> aparece igualmente en cada `npm run check`. Confirmar el destino (fijar
-> `repository.url`, `git remote set-url origin <url>` y actualizar README y
-> RELEASE-NOTES) apaga el gate. Ver ADR-058.
+> **Destino confirmado (2026-09-19).** `bookmarkforge/core` es el repositorio
+> real y las cuatro superficies lo nombran igual: `package.json` →
+> `repository.url`, el remoto, los badges del README y las `RELEASE-NOTES` del
+> export. `npm run check:release-target` sale 0 y la ruta de release (export
+> público y `npm run launch:smoke`) puede prepararse. Lo que falta para publicar
+> no es un destino: son las credenciales y la primera ejecución real de los
+> workflows. Reintroducir un slug provisional, un propietario plantilla o una
+> discrepancia declarado/real vuelve a bloquear la ruta. Ver ADR-058.
 
 The push itself starts `ci.yml`, `sast.yml` and `open-core-export.yml` (the only workflows with a `push:` trigger). `nightly.yml` runs daily at 02:17/03:17 UTC (and monthly KPI gate at 03:17 on the 1st) — the KPI job needs §3 to pass — and `drill-quarterly.yml` only starts on its quarterly cron or by hand.
 

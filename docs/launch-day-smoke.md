@@ -19,7 +19,7 @@ npm run launch:smoke         # modo dev (rápido, para iterar)
 
 ## Qué hace el runner
 
-1. Verifica el destino de release (ADR-058): si el checkout sigue apuntando al slug provisional, la batería se niega a arrancar — un veredicto verde no puede certificar una release cuyo clonado apunta a un repositorio sin confirmar.
+1. Verifica el destino de release (ADR-058): `bookmarkforge/core` está confirmado, las cuatro superficies coinciden, así que la batería arranca. Si el checkout volviera a apuntar a un slug provisional, a un propietario plantilla o declarara un destino distinto del remoto, se negaría a arrancar — un veredicto verde no puede certificar una release cuyo clonado apunta a un repositorio sin confirmar.
 2. Verifica prerequisitos (Playwright instalado).
 3. **Libera los puertos del perfil** (4173 preview, 5173 dev, 8790 mock, 8787 companion) matando listeners huérfanos de ejecuciones anteriores — sin esto, `reuseExistingServer` puede reciclar un servidor viejo con un proxy roto.
 4. Ejecuta los 7 tests y traduce el resultado a un veredicto de lanzamiento claro.

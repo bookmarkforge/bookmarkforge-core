@@ -299,7 +299,14 @@ const outDir = resolve(outIdx >= 0 ? args[outIdx + 1] : "../bookmarkforge-public
 const repoRoot = resolve(import.meta.dirname, "..");
 
 function gitFiles() {
-  const res = spawnSync("git", ["ls-files", "-z"], { cwd: repoRoot, maxBuffer: 64e6 });
+  // `safe.directory` is passed explicitly (as check-docs-markdown does when it
+  // hashes a file): a checkout owned by another user — shared workstations, CI
+  // containers, bind mounts — otherwise makes git refuse with "detected dubious
+  // ownership" and the export dies before it can plan anything.
+  const res = spawnSync("git", ["-c", `safe.directory=${repoRoot}`, "ls-files", "-z"], {
+    cwd: repoRoot,
+    maxBuffer: 64e6,
+  });
   if (res.status !== 0) throw new Error("git ls-files failed: " + res.stderr);
   return res.stdout
     .toString()

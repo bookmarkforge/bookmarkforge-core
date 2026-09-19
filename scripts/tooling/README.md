@@ -20,6 +20,45 @@ El lint acotado falla en el primer lote con errores; no convierte errores en
 warnings ni omite archivos. `lint:all` se conserva como control de paridad y
 para diagnosticar diferencias entre lotes y la ejecución monolítica.
 
+## Auditoría de contratos de mocks
+
+`mock-contract-audit.mjs` compara, para cada `vi.mock(spec, factory)` de
+`src/tests`, la forma que devuelve la factoría con lo que los módulos que el
+test carga de verdad importan y usan en posición de valor. Detecta mocks que
+sustituyen parcialmente a su módulo y solo pasan porque la rama que toca el
+miembro ausente nunca se ejercita. Los hallazgos `[dir]` (módulo importado
+directamente por el test) son los candidatos reales; el resto suele ser ruido
+de módulos alcanzables solo por import transitivo.
+
+```bash
+node scripts/tooling/mock-contract-audit.mjs
+MOCK_AUDIT_VERBOSE=1 node scripts/tooling/mock-contract-audit.mjs
+MOCK_AUDIT_STRICT=1 node scripts/tooling/mock-contract-audit.mjs  # sale 1 si hay hallazgos [dir]
+```
+
+Es un informe, no un gate: no está cableado en `npm run check`.
+
+## Informe unificado de presupuestos
+
+`build-budget-report.mjs` genera un JSON unificado que combina los tres
+perspectivas de presupuesto del proyecto:
+
+- **Estático** (performance-budget): entry static closure, precache total, bundles totales, chunks count
+- **Chunks** (check-chunk-boundaries): entry, unlock (SecurityManager + SecurityConfirmation), mainApp, precache, ort-wasm
+- **Navegador** (performance-budget): firstInteractionMs
+
+```bash
+node scripts/build-budget-report.mjs           # tabla humana
+node scripts/build-budget-report.mjs --json    # JSON a stdout
+node scripts/build-budget-report.mjs --write   # escribe dist/reports/budget-report.json
+npm run build:budget-report                    # alias en package.json
+```
+
+El JSON tiene la forma `{ generated, status, static, chunks, browser }` donde
+cada campo de presupuesto es `{ budget, actual, unit }`. El status es `pass`
+si todos los valores actuales ≤ presupuesto, `fail` si alguno excede, y
+`skip` si dist/ no existe.
+
 ## Ruido de logs en tests
 
 El runner acotado usa `--silent=passed-only` por defecto: conserva los

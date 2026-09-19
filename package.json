@@ -129,6 +129,7 @@
     "check:bundle-size": "node scripts/check-bundle-size.mjs",
     "check:performance:static": "node scripts/check-performance-budget.mjs --static-only",
     "check:performance": "node scripts/check-performance-budget.mjs --report performance-budget-report.json",
+    "build:budget-report": "node scripts/build-budget-report.mjs --write",
     "test:performance": "playwright test --config=playwright.performance.config.ts",
     "check:i18n": "node scripts/i18n-completeness.mjs && node scripts/check-i18n-quality.mjs && node scripts/check-code-i18n.mjs",
     "check:i18n:fix": "node scripts/i18n-completeness.mjs --fix && node scripts/check-i18n-quality.mjs --fix",

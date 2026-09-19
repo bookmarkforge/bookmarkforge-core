@@ -1,196 +1,105 @@
 # Pendientes
 
-## Resumen
+Registro vivo de la deuda abierta. Actualizado el 2026-09-19 (rama `release/v1.0.0`, `D:/bookmark7`, Node 24.17.0). La auditoría que originó esta lista (rama `main`, 01:55 UTC) quedó superada en varios frentes: lo ya cerrado se conserva al final, en «Resueltas», con su evidencia, para no perder la trazabilidad.
 
-Auditoria del 2026-09-19, 01:55 UTC (rama `main`, `D:/bookmark7`, Node 24.17.0).
+## Estado actual
 
-* Gates del tier rapido: **8/8 PASS**.
-* Gates del tier completo: **6 fallos nuevos**, todos por el estado del working tree (ver abajo).
-* Tests rapidos: **540 passed / 3 failed** en el lote 1, **326 passed / 6 failed** en el lote 2 — 9 fallos en `scripts/__tests__/docs-*.test.mjs`, mismos 6 preexistentes no vistos antes por el paralelismo del runner.
-* `src/tests/components`: **2046 passed / 9 failed** en `BlockEditor.branches.test.tsx` (8) y `Onboarding.test.tsx` (1) — preexistentes/ajenos, se deja trazabilidad.
-* 90 archivos borrados sin stagear, 61 modificados, 4 sin rastrear. `dist/` y `dist-extension/` borrados (regenerables).
+- `npm run check`: verde, cadena completa con el freeze intacto.
+- `npx vitest run scripts/__tests__/`: 1246 tests, 0 fallos.
+- Componentes: **0 fallos**. `src/tests/components` + `src/tests/security`: 194 archivos, 2609 tests verdes. Los 9 fallos de la auditoría están cerrados (y apareció un décimo, `lazyComponents`).
+- `npm run check:chunks`: pasa con `dist/` regenerado.
+- `npm run check:release-target`: **confirmado** (`bookmarkforge/core`) — la ruta de release vuelve a estar disponible.
+- Árbol de trabajo: 25 modificados y 4 añadidos sin commitear (las plantillas legales). El retiro controlado y la consolidación GDPR ya están commiteados (`32b4b6a`, `2ce321b`).
 
-## El working tree ya trae trabajo ajeno
+## P0 — Entorno git y husky
 
-Estos cambios **no son mios**; estaban aqui al empezar. Siguiendo las reglas de la sesion, no los resto ni los asumo. Si quieres terminarlos o revertirlos, es una decision tuya.
+Reconfinado hoy, sin cambios respecto de la auditoría:
 
-* Modificados (heredados)
-  * `src/components/Onboarding.tsx`
-  * `src/components/app-initializer/AppInitializer.tsx`
-  * `src/observability/ObservabilityHub.ts`
-  * `src/services/SecurityVault.ts` (313 lineas)
-  * `src/services/analyticsForwarder.ts` y `src/tests/services/analyticsForwarder.test.ts`
-  * `src/services/security-vault/kdf-salt-sync.ts`
-  * `scripts/audit-drift-baseline.json`
-  * `scripts/i18n-backlog-baseline.json`
-  * `scripts/i18n-quality-baseline.json`
-  * `tests/e2e/legacy-vault-seeder.ts`
-  * `tests/e2e/vault-auth-encryption-migration.spec.ts`
-  * `tests/e2e/vault-migration-progress.spec.ts`
-* Sin rastrear (heredados)
-  * `src/services/security-vault/auth.ts`
-  * `src/services/security-vault/rotation.ts`
-  * `src/services/security-vault/secrets.ts`
-* Observabilidad/privacidad: el `SecurityVault` modificado es critico — toca cifrado/salt de KDF. El `AppInitializer` nuevo introdujo `t("securityVaultChangedInAnotherTab")` sin registrarla en locales, y por eso rompe `check:i18n` (ver pendiente 2).
-* Esos tres archivos nuevos sin rastrear (`auth.ts`, `rotation.ts`, `secrets.ts`) contienen los exports `installVaultKdfSaltAndMigrate`, `performLock` y `performUnlock` marcados como sin uso: es integracion pendiente, no codigo muerto.
+- El checkout vive en `D:/bookmark7` y pertenece a otro SID de Windows, así que cada comando de git necesita `git -c safe.directory=D:/bookmark7 ...`; la alternativa es la excepción global `git config --global --add safe.directory D:/bookmark7`. Sin ella, cualquier operación responde `detected dubious ownership`.
+- La consecuencia práctica: `npm run prepare` (husky) falla con `fatal: not in a git directory` y **no instala los hooks**. `.husky/` está en `.gitignore`, así que cada checkout debe recrearlos.
+- `npm run check:repository-hygiene` pasa igualmente, pero el efecto real es un repo local corriendo sin hooks.
 
-## Pendientes por prioridad
+## P1 — Contratos de mocks incompletos en tests
 
-### P0 — Restauran los gates de docs y 9 tests
+Barrido hecho hoy con `node scripts/tooling/mock-contract-audit.mjs` (auditoría AST
+de `vi.mock`): 59 archivos con algún mock que no cubre el contrato de su módulo,
+613 hallazgos, de los que **22 son sobre un módulo que el test importa
+directamente** (`[dir]`, el resto es ruido de módulos alcanzables solo por
+import transitivo). Los tests de componentes ya están cerrados; quedan los de
+servicios/seguridad, todos de la misma forma: el test pasa porque la rama que
+usa ese miembro nunca se ejercita.
 
-* **90 archivos trackeados borrados**, todos de documentacion. El `git status` compara el working tree con `main`:
+- `src/tests/security/p0-legacy-share-mismatch.regression.test.ts` → 10 miembros
+  de `secureStorage` que `SecurityVault` y `security-vault/integrity.ts` usan
+  (`getVerificationIntegrity`, `storeVerificationTokenWithIntegrity`,
+  `restoreWrappedDeviceKeyBlob`, `purgeExpiredPendingKeys`, …).
+- `src/tests/services/SecurityVault.test.ts` y
+  `p0-vault-rotation-rollback-drill.test.ts` → `auditLog.verifyIntegrity`
+  (`SecurityVault`), y `AuditLogService.test.ts` → `secureStorage.isDeviceKeyMaterialized`
+  / `isDeviceKeyWrapped` (`AuditLogService`).
+- `src/tests/services/verifyBridgeMessage.test.ts` → `SECURE_STORAGE_KEYS`
+  (`BroadcastBridgeService`, `db/database`, `VaultIntegration`).
+- `src/tests/services/AnalyticsService.test.ts` → `safeRemove` de `safeStorage`
+  (`AnalyticsService`, `ConsentService`).
+- `src/tests/services/ai/warmup-latch.integration.test.ts` →
+  `resourceManager.isHighEndDevice` (`ProviderManager`) y `buildSafeUserContent`
+  de `ai/utils` (`WebLLMService`).
+- `src/tests/services/integrations/cloudSync.*.test.ts` → `loadDiskBackupService`
+  de `pro-access` (`BackupService`).
+- `src/tests/memory/MemoryEngine.lifecycle.test.ts` → `memoryPipeline.onNewMessage`.
+- `src/tests/services/SemanticCacheService.test.ts` → `redactSecrets` del logger
+  (`EncryptionService`).
 
-  * `README.md`, `AGENTS.md`, `CONTRIBUTING.md`
-  * `docs/` casi completo: todos los `ADR-*.md`, `ONBOARDING.md`, `ROPA.md`, `SELF-HOSTING.md`, `api.md`, `architecture.md`, `audit*.md`, `deployment-runbook.md`, `docs-state-index.md`, `github-secrets-and-push-runbook.md`, `que-nos-falta.md`, `support-data-loss-runbook.md` y demas
-  * `extension/PRIVACY.md`, `legal/` entero, `scripts/README.md`, `scripts/tooling/README.md`, `server/README.md`
+Aparte queda el ruido de `lucide-react` (93 iconos en 9 tests de componentes):
+son stubs explícitos con `data-testid`, así que completarlos añadiría iconos para
+ramas que nunca se montan; se deja como decisión de estilo, no como deuda.
 
-  No los toque por tu primera instruccion ("no tocar los docs ya borrados"). La consecuencia es:
+## P2 — Podas deliberadas que siguen sin hacer
 
-  * **Antes de mis cambios**, 62 archivos ya dejaban de ser escaneados por `check:docs-markdown` (baseline 94, scan 32). Con este documento el scan es 33.
-  * Hoy **`check:docs-markdown`** reporta cobertura drift (preexistente).
-  * **`check:documented-doc-references`** — `FAIL missing docs/docs-state-index.md`.
-  * **`scripts/__tests__/**`** — 9 tests fallan porque leen el corpus de ADRs y el indice:
-    * `check-docs-markdown.test.mjs` (2), `check-inspector-freeze.test.mjs` (1), `docs-retire-policy.test.mjs` (3), `docs-state-index.test.mjs` (2), `legacy-schema-map.test.mjs` (1).
+- `src/services/pro-access.ts`: sus exports siguen sin consumidores internos (verificado hoy), pero es la superficie frontera Open Core / export público; quitarlos arriesga el placeholder del export.
+- `src/utils/crypto-core.ts` → `resetSessionSalt`: definido y sin llamadas en `src/` (verificado). Se mantiene porque es adyacente al trabajo de rotación de sal.
+- `scripts/__tests__/monitoring-alerts.test.mjs` → test `API_DEGRADADO end-to-end` flaky en run completo (latencia real con timers), PASS aislado. No afecta nightly; ruido en `test:fast`. Inyectar reloj/mocks de timers o marcar `retry` cuando se toque ese área.
 
-  **Opciones**:
+## P3 — Pulido del Security Dashboard
 
-  * Restaurar los docs (`git checkout -- docs/ README.md AGENTS.md CONTRIBUTING.md` y lo que falte) y pasar por `scripts/check-docs-retire.mjs` para retirar lo que sea retirable con consentimiento (`retirable` en el estado mas rationale, gate debe pasar antes de borrar).
-  * O consolidar el retiro: recrear `docs/docs-state-index.md`, marcar como `retirable` con nota a lo retirado, hacer pasar el gate y commitear.
+Verificado hoy: los tres puntos siguen abiertos.
 
-  `docs/legacy-schema-version-map.md` se autogenera desde `src/db/schema.ts`; el runner de tests lo regenero identico a `HEAD` (por eso el conteo paso de 91 a 90). No bloquea nada.
+- El item de sidebar usa `app_securityDashboard`, largo para una rail de 220 px, y se trunca. Acortarlo exige una clave nueva (`app_security` no existe hoy en los locales) y actualizar los 30 idiomas sin romper el delta de `npm run check:i18n`.
+- Valores aproximados en la UI de `src/components/SecurityDashboard.tsx`: `encryptionFormat` fijo `AES-256-GCM` y `KDF` fijo `Argon2id (v4/v5)`, con `vaultKdfSalt` recortado. `src/services/security-vault/salt-registry.ts` tiene el inventario real y no está cableado al componente.
+- El refresco automático es un `setInterval` de 30 s sin pausa por visibilidad, así que despierta la pestaña en background; moverlo a un hook con visibilidad o al store lo reduciría.
 
-### P0 — i18n roto por el trabajo en curso ajeno
+## Cambios pendientes de commit
 
-* `t("securityVaultChangedInAnotherTab")` usada en `src/components/app-initializer/AppInitializer.tsx` (del diff ajeno) no existe en `public/locales/en.json`. Resultado:
+- Documentación de esta sesión: los tres borrados del retiro controlado, `docs/audit.md`, `docs/launch-checklist.md`, `docs/security.md`, `docs/operations.md`, `docs/docs-state-index.md`, `docs/CHANGELOG.md`, los ADR nuevos (`docs/ADR-060-legal-consolidation-gate.md` y `docs/ADR-061-controlled-retirement-2026-09-19.md`) y el gate de consolidación legal con su test (`scripts/check-legal-consolidation.mjs`, `scripts/__tests__/check-legal-consolidation.test.mjs`).
+- Dependencias: `package.json` y `package-lock.json` sin `md-to-pdf`, `puppeteer` ni `markdown-it` (el lock baja 1403 líneas). Ahora además `check:removed-deps` (`scripts/check-removed-deps.mjs` + su test) bloquea que vuelvan a `src/`: escáner sintáctico sobre las formas que cargan un módulo (`import`, `export … from`, `import = require`, `import()`/`require()`/`require.resolve`, `vi.mock`/`jest.requireActual`), sin falsos positivos por menciones en comentarios ni por `userAgent.includes("puppeteer")` en `src/utils/environmentDetection.ts`. Validado con `npm run typecheck`, `npm run lint`, `npm run test:fast` y `npm run check`.
+- Ajenos a este trabajo, presentes en el árbol y sin tocar: `src/constants/navigation.ts` y `src/services/importer.markdown.ts`.
+- Los documentos y sus artefactos van juntos: el índice y el baseline codifican también el retiro, así que commitear el changelog sin los borrados deja el CI en rojo.
 
-  * `check:i18n` — `FAIL 1 t() key(s) missing from en.json` (i18n-completeness, estado 1). `es.json` tampoco la tiene.
-  * Hay 30 locales, asi que cada delta cuenta: anadir la clave solo en `en.json` no basta, habria que actualizar `public/locales/*.json` y los baselines.
+## Resueltas desde la auditoría
 
-  **Opciones**: anadir la clave a todas las locales (con traducciones o fallback en ingles) o revertir la linea del `AppInitializer` hasta que el feature se termine.
+| Deuda auditada | Evidencia del cierre |
+|---|---|
+| 90 documentos borrados y gates de docs en rojo | Corpus restaurado y renumerado a `ADR-059` (`384bdea`); retiro controlado de 3 documentos con consentimiento de `npm run check:docs-retire` y rationale en `ADR-061`. Índice en 103 documentos. |
+| 62 archivos fuera del escaneo de `check:docs-markdown` | Baseline regenerado: 102 archivos, 34 ADR, 0 hallazgos. |
+| `check:documented-doc-references` sin índice | 82 documentos vivos, 256 referencias locales resueltas. |
+| 9 fallos de `scripts/__tests__` por corpus e índice ausentes | Suite completa: 1246 tests, 0 fallos. |
+| Clave `securityVaultChangedInAnotherTab` ausente en locales y `check:i18n` en rojo | Integrada con el delta de nube en `24ba20c`; `npm run check:i18n` pasa. |
+| 8 vars y secrets de workflows sin documentar | `npm run check:workflows` pasa. |
+| `check:inspector-freeze`: `check:docs-markdown` sin ADR en la cadena | El gate queda registrado en `ADR-040`; el freeze pasa con el gate cableado. |
+| `check:pocket-onboarding-copy` con `docs/onboarding-emails.md` ausente | Documento restaurado; el gate pasa. |
+| `dist/` ausente y `check:chunks` en SKIP | `npm run build:ci` regeneró `dist/`; `npm run check:chunks` valida los invariantes de chunks y el tamaño de entrada. |
+| `security-vault/auth.ts`, `rotation.ts` y `secrets.ts` sin rastrear, con «integración pendiente» | Integrados y trackeados (`c9f5804`). |
+| `check:release-target` en rojo por el slug provisional | `bookmarkforge/core` confirmado como destino real; la lista de slugs provisionales queda vacía y el guardián de regresión exige que las cuatro superficies sigan coincidiendo (ADR-058 enmendado). |
+| Git ilegible en un checkout propiedad de otro usuario | `readRemotes` y el `ls-files` del export invocan git con `safe.directory`, así que el remoto confirmado ya no se reporta como ausente. El arreglo global de `safe.directory` en la máquina sigue en la deuda de git/husky de arriba. |
+| 9 fallos de componentes (8 en `BlockEditor.branches`, 1 en `Onboarding`) | **Harness en los 8 primeros**: el mock de `useBlockEditorLogic` no aportaba `lang`, que el hook real siempre devuelve (`i18n.language`), así que el editor hacía `undefined.startsWith("es")`; añadido, con dos tests nuevos que fijan el diccionario (`en` y `es-MX`, el caso regional por el que existe el `startsWith`). **Harness + producto en el noveno**: el mock de `sonner` no tenía `dismiss`; y el flujo real quedó blindado porque un `dismiss` que fallaba abortaba el reboot y reportaba como fallida una restauración ya commiteada. 31/31 verdes en ambos archivos. |
+| 10.º fallo de componentes: `lazyComponents.test.ts` (no listado en la auditoría) | `SecurityDashboard` entró al barrel de `src/components/app/lazyComponents.ts` en `59644c6` sin actualizar la lista congelada de la expectativa. Actualizada (export deliberado: ruteado en `AppRoutes.tsx` y usado por `Settings.tsx`) y añadido su mock, que el propio archivo exige a todos los targets de `lazy()`. |
 
-### P0 — Entorno git / husky
+## Qué hacer ahora
 
-* El repo esta en `D:/bookmark7` propiedad de otro SID, asi que `git` pide `git config --global --add safe.directory D:/bookmark7` o usar `-c safe.directory=...`. Sin esa excepcion, `npm run prepare` (husky) falla con `fatal: not in a git directory` y **no instala hooks** (y `.husky/` esta en `.gitignore`, asi que cada checkout debe recrearlos).
-* `check:repository-hygiene` pasa hoy, pero `husky` no corre localmente.
-
-### P1 — Lotes de tests fallidos no tocados
-
-* `src/tests/components/BlockEditor.branches.test.tsx` (8 tests): `BlockEditor.tsx:106` hace `dictionary: lang.startsWith("es") ? es : en`. El mock `logic` del test no aporta `lang` (`undefined`). `BlockEditor.tsx` esta **intacto** en git (sin modificar), asi que es fallo preexistente del harness. Reproducible sin mis cambios.
-* `src/tests/components/Onboarding.test.tsx` (1 test): `Onboarding.tsx` ya venia modificado por el otro agente (ver diff). El restore de `.json` no dispara `reloadMock`.
-
-### P1 — Workflows con vars/secrets no documentados
-
-* `check:workflows` → `check:workflow-vars-documented` FAIL:
-
-  * `secrets.STAGING_DAST_CONTEXT_B64`, `secrets.STAGING_DAST_CONTEXT_PASSWORD` (dast-nightly.yml)
-  * `vars.STAGING_URL` (dast-nightly.yml, nightly.yml, staging-deploy.yml)
-  * `secrets.CODECOV_TOKEN`, `secrets.STAGING_ANALYTICS_ADMIN_TOKEN`, `vars.CONSISTENCY_MIN_CONSECUTIVE_PHANTOM` (nightly.yml)
-  * `secrets.STAGING_SMOKE_ADMIN_TOKEN`, `secrets.STAGING_SMOKE_TOKEN` (staging-deploy.yml, staging-smoke.yml)
-
-  **Deudas**: documentarlos en `.env.example` o `docs/` (ojo, `docs/` esta retirado).
-
-### P1 — Contenido que referencia docs retirados
-
-* `check:inspector-freeze` — `FAIL new gate "check:docs-markdown" in the check chain has no ADR`. La cadena `npm run check` anadio `check:docs-markdown` sin registrarlo en `KNOWN_GATES` ni darle un ADR (`ADR-028` cubre drift, pero este inspeccion no `security`/`language`). O se escribe el ADR (p. ej. `ADR-040`, que ademas esta borrada) o se anade la categoria explicita en `check-inspector-freeze.mjs`.
-* `check:pocket-onboarding-copy` — 5 violaciones: lee `docs/onboarding-emails.md`, borrado. Mensajes que faltan: smart-search, Raindrop yearly comparison, no-device-cap, any-device wording (y `ENOENT` sobre el archivo).
-
-### P2 — Estado regenerable
-
-* `dist/` y `dist-extension/` borrados (artefactos gitignored, 50 MB). `check:chunks` hoy hace `SKIP: dist/assets not found` con `--allow-missing-dist`; en CI falla cerrado sin `--allow-missing-dist`. Para validar chunk boundaries y bundle size hay que regenerar: `npm run build:ci`.
-
-### P2 — Mis cambios no commiteados (si los quieres commitear)
-
-* `package.json` y `package-lock.json`: `md-to-pdf`, `puppeteer`, `markdown-it` quitados (−119 paquetes transitivos). Verificado con `typecheck` y `lint`; `test:fast` descarta transitos `chokidar`, `chromium-bidi`, etc.
-* 43 archivos de `src/` tocados por el barrido de codigo muerto (9 declaraciones muertas borradas, `export` retirado en ~60 simbolos de uso interno). 2 simbolos fueron revertidos tras cazar 2 regresiones `TS4053` en `declaration --emitDeclarationOnly`: `NextReviewState` y `MaintenanceHistoryEntry` son tipos inferidos de `FlashcardService` (Pro) y `IntelligentMaintenanceService`; dejarlos sin export rompe el `.d.ts`.
-* `src/components/Settings.tsx` + `src/components/SecurityDashboard.tsx` (integracion).
-* `src/tests/components/Settings.test.tsx` (mocks de `useRxDB` y selector de cierre precisado) + **nuevo** `src/tests/components/SecurityDashboard.test.tsx` (3 tests, guarda de regresion del conteo NaN y del scroll vs callback).
-* `src/constants/navigation.ts` (id `security`), `src/components/Sidebar.tsx` (meta `security` con `ShieldCheck`), `src/components/app/lazyComponents.ts` y `src/components/app/AppRoutes.tsx` (ruta `/security`). Este documento.
-* `src/memory/memoryRecordSchema.ts` requirio limpiar 4 importaciones huerfanas (`MemoryAtom` y demas).
-
-### P2 — Poda que quedo sin hacer a proposito
-
-* `src/services/pro-access.ts` (10 exports `BackupServiceClass`, `requireProService`, `setSyncFacade` y demas): la deteccion los vio huerfanos pero es la superficie frontera Open Core / export publico. Quitarlos arriesga el placeholder del export.
-* `src/utils/crypto-core.ts` `resetSessionSalt`: sin referencia textual (ocurrencia 1), pero es adyacente al trabajo de rotacion de salt y lo deje.
-* `src/services/security-vault/auth.ts`, `rotation.ts`, `secrets.ts`: sin rastrear y no podables.
-
-### P3 — Pulido del Security Dashboard
-
-* El item de sidebar usa `app_securityDashboard` ("Security Dashboard") en las 30 locales. Es largo para una rail de 220 px y acaba truncado. Un label corto (`app_security` = "Security") exigiria una clave nueva y actualizar las 30 locales sin que el delta de `check:i18n` se vaya a rojo.
-* Valores aproximados en la UI: `encryptionFormat` fijo `"AES-256-GCM"`, `kdfStatus` heuristico, `KDF` fijo `"Argon2id (v4/v5)"` y `vaultKdfSalt` recortado. `src/services/security-vault/salt-registry.ts` tiene el inventario real; cablearlo daria el estado v6/v5 verdadero y el kdf real.
-* El auto-refresh cada 30 s no se pausa cuando la pestaña esta oculta; un `useVisibilityPolling` o hacerlo en el store reduciria wakeups de background.
-
-## Estado fino de gates a 2026-09-19
-
-### PASS (tier rapido, 8/8)
-
-* `check:boundaries`
-* `check:env`
-* `check:open-core`
-* `check:pro-imports`
-* `check:compose-config`
-* `check:runtime-config`
-* `check:license-keys`
-* `check:server-log-ip-privacy`
-
-### PASS (otros, muestra)
-
-* `check:documented-npm-commands`
-* `check:audit-drift` (24/24 anclas presentes)
-* `check:claim-drift`
-* `check:english-only` (1029 archivos de `src/` segun el gate)
-* `check:repository-hygiene`
-* `check:e2e-helpers`
-* `check:secrets-in-commit`
-* `check:http-config`
-* `check:docker-context`
-* `check:image-pins`
-* `check:pro-routes`
-* `check:workflow-security`
-* `check:static-brand`
-* `check:brand-logo`
-* `check:tailwind-drift`
-* `check:seo`
-* `check:sitemap-coverage`
-* `check:csp`
-* `check:extension-csp`
-* `check:license-claims`
-* `check:landing-free-plan`
-* `check:manual-figures`
-* `check:page-figures`
-* `check:landings-fresh`
-* `check:no-unbounded-text`
-* `check:override-cve`
-* `check:direct-cve`
-* `typecheck`, `typecheck:prod`
-* `lint` (1400 archivos)
-* `check:e2e-selectors`
-* `check:boundaries`
-
-### FAIL (estado actual del working tree, no de esta tarea)
-
-* `check:docs-markdown` — cobertura drift (62 borrados)
-* `check:documented-doc-references` — `docs/docs-state-index.md` ausente
-* `check:i18n` — clave `securityVaultChangedInAnotherTab` de otro agente
-* `check:inspector-freeze` — `check:docs-markdown` sin ADR registrado
-* `check:workflows` → `check:workflow-vars-documented` — 8 vars/secrets sin documentar
-* `check:pocket-onboarding-copy` — `docs/onboarding-emails.md` ausente y 4 mensajes
-
-### SKIP (necesita rebuild)
-
-* `check:chunks` — `SKIP: dist/assets not found --allow-missing-dist`
-* `performance-budget` / `bundle-size` — requieren `dist/` y cobertura
-
-## Que hacer ahora
-
-* Cerrar el retiro de docs o restaurarlos. Mientras el estado este a medias, `docs-state-index`, `docs-retire-policy`, `docs-markdown` y `legacy-schema-map` seguiran fallando y `check:i18n` arrastrara esa clave nueva.
-* Dar de alta `securityVaultChangedInAnotherTab` en `public/locales/*.json` y actualizar los baselines `i18n-*.json`.
-* Registrar `check:docs-markdown` en `KNOWN_GATES` (o escribir el ADR) y documentar las 8 variables de workflows.
-* Recrear `docs/onboarding-emails.md` o retirar su politica.
-* Arreglar el harness de `BlockEditor.branches.test.tsx` (mock `logic` debe aportar `lang`) y el flow de restore de `Onboarding.test.tsx`. La otra rama de `SecurityVault` (`observability/ObservabilityHub.ts` y demas) debe cerrar su ciclo antes de mergear.
-* Reconstruir `dist/` (`npm run build:ci`) para revalidar `check:chunks` y el presupuesto de bundle.
-* `git config --global --add safe.directory D:/bookmark7` para que `git` y `husky` funcionen bajo este SID.
-* Construir mis cambios pendientes: los tests ya blindan el arreglo del conteo y la ruta `/security` heredara su `onOpenSettings`→`onNavigate("settings")`. Si quieres una etiqueta corta en el sidebar, toca anadir `app_security` en las 30 locales.
+1. Excepción de `safe.directory` para que git y husky funcionen en este checkout.
+2. Commitear el área de documentación completa, incluidos el changelog y los artefactos derivados.
+3. Decidir si se acorta el label del dashboard pagando el costo en 30 idiomas.
 
 ## Fuentes
 
-* `G="git -c safe.directory=D:/bookmark7"`, `G status --porcelain`, `npm run check:quick`, `npm run test:fast` (152 filas, 2 lotes), `npm run check:docs-markdown` y los demas gates con `npm run ... 2>&1 | tail`. Tiempos: `lint` ~20 s, `test:fast` ~34 s, tier rapido ~2,6 s. Grafo de imports construido sobre 1756 archivos (1024 alcanzables en `src/`).
+Verificación de esta actualización: `npm run check` (verde, freeze intacto), `npm run check:i18n`, `npm run check:workflows`, `npm run check:pocket-onboarding-copy`, `npm run check:inspector-freeze`, `npm run check:chunks`, `npm run check:release-target`, `npx tsc --noEmit`, `npm run test:fast` (152 archivos, presupuestos de timing intactos), `npx vitest run src/tests/components src/tests/security` (194 archivos, 2609 tests, 0 fallos) y `git -c safe.directory=D:/bookmark7 status --porcelain`.

@@ -33,7 +33,7 @@ En el export público el índice es privado y no viaja: el gate hace un *skip* e
 | Archivo | Motivo de conservación |
 |---|---|
 | `docs/audit-report-2026-09-02.md` | Es la **provenance** de los hallazgos M-1 y B-1, citados por ADR-038, ADR-039, `scripts/sw-integrity-runtime.js` y un test de regresión de seguridad. Retirarlo exigiría reescribir citas en ADRs de seguridad y en código. |
-| `docs/que-nos-falta.md` | Consolidado pre-lanzamiento con contenido operativo (bloqueantes de infraestructura GitHub, secretos, cierre legal, orden de ejecución) que no puede verificarse como duplicado sin una auditoría exhaustiva de sus cuatro fuentes vivas. |
+| `docs/que-nos-falta.md` | ~~Retirado~~ (2026-09-19, este commit). Las 4 deudas únicas (bucket S3 lifecycle, action compuesta de sign/rewrite, paridad de rampa streak en SVG de consistencia, test flaky monitoring-alerts) se migraron a `docs/ops-nightly.md` §8 y `docs/PENDIENTES.md` P2. Contenido operativo restante (bloqueantes de infraestructura, cierre legal, orden de ejecución) verificado como cubierto por las 4 fuentes vivas. |
 | `docs/legacy-compatibility-plan.md` | **Activo** (política de retirada de compatibilidad con propietario y criterios de retirada por superficie). |
 | `docs/scripts-inventory-scanner-limits.md` | **Activo** (documentación operativa del gate `check:audit-script-snapshot`). |
 | `docs/ios-day0-session-sheet.md`, `docs/p2p-sync-session-prep.md` | Material operativo vivo: referenciados por `docs/launch-checklist.md` y por `scripts/capture-p2p-desk-drill.mjs`. |
@@ -43,6 +43,7 @@ En el export público el índice es privado y no viaja: el gate hace un *skip* e
 ## Consecuencias
 
 - El inventario canónico baja a 101 documentos y el baseline de `check:docs-markdown` a 100 archivos; ambos regenerados en el mismo cambio.
+- **Posteriormente** (2026-09-19, mismo día): `docs/que-nos-falta.md` se retiró tras migrar sus 4 deudas únicas a `ops-nightly.md` §8 y `PENDIENTES.md` P2; el inventario queda en **102 documentos** (101 − 1 + `CHANGELOG.md`).
 - El retiro queda trazado aquí (ADR-026 acepta PENDIENTES.md o un ADR como registro) y las referencias vivas apuntan ahora a las fuentes vigentes, no a artefactos superados.
 - Los retiros futuros repiten el flujo: marcar `retirable` con nota, pasar el gate, borrar, actualizar referencias, regenerar índice y baseline, y registrar el rationale. El estado intermedio `retirable` nunca se commitea.
 - El gate en CI impide que una marca de retiro con razón insuficiente o referencias sin revisar llegue a `main`.

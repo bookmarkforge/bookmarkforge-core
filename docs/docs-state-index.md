@@ -108,7 +108,6 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/p2p-sync-session-prep.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/PENDIENTES.md` | transitorio | Registro de trabajo pendiente y deuda conocida. |
 | `docs/pricing-decision.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/que-nos-falta.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/RELEASE-STATUS.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/ROPA.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/sast-triage.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |

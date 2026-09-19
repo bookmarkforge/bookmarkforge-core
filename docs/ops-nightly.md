@@ -149,3 +149,30 @@ El job **no debe convertirse en un gate**. Lo único que puede ponerlo rojo es q
 - `scripts/check-direct-cve.mjs` + `scripts/dependency-cve-core.mjs` + tests — gate e informe de CVEs del árbol declarado (clasificación `own` / `inherited` y bump mínimo)
 - `.github/workflows/nightly.yml` — definición de jobs, vars y secrets
 - `docs/audit.md` — anclas `ADR-019`, `P92`, `H5` y ledger de gaps conocidos
+
+## 8. Deudas conocidas y mejoras pendientes
+
+Estas mejoras quedan registradas aquí como referencia operativa. No bloquean el
+lanzamiento, pero son candidatas a ejecutar en el primer sprint post-launch.
+
+- **Cleanup del bucket S3 presigned.** Los SVGs de tendencias y consistencia se
+  suben a buckets S3 privados con URLs presigned de vida corta (`TRENDS_SVG_PRESIGN_EXPIRES`,
+  default 3600 s). Los objetos caducan por URL pero no se borran del bucket;
+  acumular objetos caducados sin lifecycle policy es una deuda de almacenamiento
+  creciente. Decidir: (a) lifecycle rule que borre objetos > 7 días, (b) borrado
+  explícito post-run en el propio script, o (c) aceptar la acumulación si el
+  costo es despreciable. Verificar primero el costo real con un inventario del
+  bucket antes de implementar.
+- **Extraer `Sign SVG URL` / `Rewrite summary` a action compuesta.** Los pasos
+  de sign y rewrite están duplicados entre `nightly-trends` y `nightly-consistency`
+  (mismo patrón de dos fases: DEFER_SUMMARY → Sign → SUMMARY_ONLY). Extraerlos
+  a una composite action reduce la duplicación y el riesgo de que un cambio en
+  uno no llegue al otro.
+- **Paridad de la rampa `streak 1→N→gate` en el SVG de consistencia.** El SVG
+  de tendencias (`nightly-trends.svg`) muestra la rampa de racha como gradiente
+  continuo en la leyenda. El SVG de consistencia (`nightly-consistency.svg`) usa
+  colores por severidad (high/medium/low) pero no incluye la rampa de streak;
+  un observador que solo mira el SVG de consistencia no ve a qué distancia está
+  cada suite del gate. Añadir la rampa de streak al SVG de consistencia (o al
+  menos un indicador numérico de streak por barra) cerraría esa brecha de
+  legibilidad.

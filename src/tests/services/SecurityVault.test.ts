@@ -276,6 +276,18 @@ describe("SecurityVault", () => {
       expect(token).toMatch(/^[0-9a-f]{64}$/);
     });
 
+    it("cleans up the device key when verification-token creation fails", async () => {
+      (crypto.subtle.sign as any).mockRejectedValueOnce(
+        new Error("Integrity signing unavailable"),
+      );
+
+      await expect(securityVault.unlock("password123456")).resolves.toBe(false);
+      expect(securityVault.isLocked()).toBe(true);
+      expect(securityVault.getSessionToken()).toBeNull();
+      expect(secureStorageMock.lockDeviceKey).toHaveBeenCalled();
+      expect(secureStorageMock.isDeviceKeyMaterialized()).toBe(false);
+    });
+
     it("starts session rotation on unlock", async () => {
       await securityVault.unlock("password123456");
       expect((securityVault as any).rotationTimer).not.toBeNull();

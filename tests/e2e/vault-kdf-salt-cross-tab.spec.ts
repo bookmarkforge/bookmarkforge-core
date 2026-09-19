@@ -98,7 +98,17 @@ test("a tab that is already open adopts the KDF salt rotated in a sibling tab", 
     ),
   ).toBe("alive");
 
-  // ── …and its next write is keyed with the NEW salt: the retired one stops
+  // ── …and the adoption locks the tab (ADR-046 fail-closed contract): the
+  //    rotation changed BOTH the password and the salt, so keeping the old
+  //    session alive would let this tab write ciphertext the new password
+  //    cannot decrypt. The unlock screen returns; no reload happened (the
+  //    marker above proves the same document).
+  await expect(
+    secondTab.getByLabel("Master Password"),
+  ).toBeVisible({ timeout: 30_000 });
+  await unlockVault(secondTab, NEW_PASSWORD);
+
+  // ── Its next write is keyed with the NEW salt: the retired one stops
   //    accumulating ciphertext from this tab. The payload still round-trips
   //    through this tab's own read path — the master-key cache is keyed by
   //    salt, so adopting one never returns a key derived under the other.

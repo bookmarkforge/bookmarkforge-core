@@ -53,6 +53,13 @@ export const KDF_SALT_CHANGED_MESSAGE = "VAULT_KDF_SALT_CHANGED";
 
 let channel: BroadcastChannel | null = null;
 let listening = false;
+let adoptionHandler: ((result: Awaited<ReturnType<typeof adoptVaultKdfSaltFromStorage>>) => void | Promise<void>) | null = null;
+// BroadcastChannel can deliver duplicate notifications while a rotation is
+// followed immediately by another one. Serialize storage reads and crypto
+// installs so a slower, older read cannot finish after a newer one and
+// re-install a retired salt.
+let adoptionQueue: Promise<void> = Promise.resolve();
+let syncGeneration = 0;
 
 function ensureChannel(): BroadcastChannel | null {
   if (channel) {
@@ -84,11 +91,19 @@ function onMessage(event: MessageEvent): void {
   if ((data as { type?: unknown }).type !== KDF_SALT_CHANGED_MESSAGE) {
     return;
   }
-  void adoptVaultKdfSaltFromStorage()
-    .then((result) => {
+  const messageGeneration = syncGeneration;
+  adoptionQueue = adoptionQueue
+    .then(async () => {
+      if (!listening || messageGeneration !== syncGeneration) {
+        return;
+      }
+      const result = await adoptVaultKdfSaltFromStorage();
       logger.info("[SecurityVault] Cross-tab KDF salt notification handled", {
         status: result.status,
       });
+      if (result.status === "adopted") {
+        await adoptionHandler?.(result);
+      }
     })
     .catch((error: unknown) => {
       // The adoption path returns statuses instead of throwing; this is the
@@ -125,10 +140,14 @@ export function announceVaultKdfSaltChange(): void {
 }
 
 /** Starts listening for salt changes from sibling tabs. Idempotent. */
-export function startVaultKdfSaltSync(): void {
+export function startVaultKdfSaltSync(
+  onAdopted?: (result: Awaited<ReturnType<typeof adoptVaultKdfSaltFromStorage>>) => void | Promise<void>,
+): void {
   if (listening) {
+    adoptionHandler = onAdopted ?? adoptionHandler;
     return;
   }
+  adoptionHandler = onAdopted ?? null;
   const target = ensureChannel();
   if (!target) {
     logger.warn(
@@ -137,6 +156,7 @@ export function startVaultKdfSaltSync(): void {
     return;
   }
   listening = true;
+  syncGeneration += 1;
   target.onmessage = onMessage;
   logger.info(
     "[SecurityVault] Listening for KDF salt changes from other tabs (A-1)",
@@ -146,6 +166,8 @@ export function startVaultKdfSaltSync(): void {
 /** Stops listening and releases the channel. Idempotent. */
 export function stopVaultKdfSaltSync(): void {
   listening = false;
+  syncGeneration += 1;
+  adoptionHandler = null;
   if (!channel) {
     return;
   }

@@ -13,16 +13,18 @@ import { logRateLimited } from "../utils/boundedLog";
 import type { ZeroMemoryProcessor } from "../utils/wasm-zero-memory";
 import {
   SECURE_STORAGE_KEYS,
-  VERIFICATION_PLAINTEXT,
   VERIFICATION_INTEGRITY_KEY,
 } from "./security-vault/constants";
 import { constantTimeCompare } from "./security-vault/compare";
 import { loadBackupService } from "./pro-access";
-import {
-  createVerificationToken,
-  validateVerificationIntegrity,
-} from "./security-vault/integrity";
+import { createVerificationToken } from "./security-vault/integrity";
 import { deriveShareCredential, parseShareSalt } from "./security-vault/share";
+import {
+  encryptSecret as encryptSecretWithContext,
+  decryptSecret as decryptSecretWithContext,
+} from "./security-vault/secrets";
+import { verifyPassword as verifyPasswordWithContext } from "./security-vault/auth";
+import { rotateMasterPassword as rotateMasterPasswordWithContext } from "./security-vault/rotation";
 import { announceVaultKdfSaltChange } from "./security-vault/kdf-salt-sync";
 import {
   ensureVaultKdfSalt,
@@ -32,6 +34,7 @@ import {
   snapshotVaultKdfSalt,
   type VaultKdfSaltSnapshot,
 } from "./security-vault/kdf-salt";
+
 
 // Re-exported for backward compatibility — the canonical definition lives in
 // security-vault/constants.ts (refactor, no behavior change).
@@ -115,7 +118,30 @@ class SecurityVault {
   // Incremented on every lock so an in-flight password rotation cannot
   // re-unlock the vault after the user explicitly locked it.
   private vaultGeneration = 0;
+  // Session rotation tracking.
+  private sessionRotationActive = false;
   private static readonly INTERNAL_MARKER = {};
+
+  // Secret storage map (for SecretsContext delegation).
+  private secrets = new Map<string, string>();
+  // Recovery data (encrypted, from IndexedDB).
+  private recoveryData: string | null = null;
+  // Wrapped device key blob (from Phase 9 device-key separation).
+  private wrappedDeviceKeyBlob: string | null = null;
+  // Whether the device key is currently wrapped with the master password.
+  private isDeviceKeyWrapped = false;
+  // Whether the device key is materialized in memory.
+  private isDeviceKeyMaterialized = false;
+  // Verification token ciphertext (IndexedDB).
+  private verificationToken: string | null = null;
+  // Verification integrity HMAC (IndexedDB).
+  private verificationIntegrity: string | null = null;
+  // Per-vault KDF salt snapshot.
+  private vaultKdfSaltSnapshot: VaultKdfSaltSnapshot | null = null;
+  // True when the vault has been successfully unlocked.
+  private isUnlocked = false;
+  // Backup service instance (lazy-loaded).
+  private backupService: { clearAutoBackup: () => Promise<void> } | null = null;
 
   // State listeners: subsystems (e.g. the AI VaultIntegration) subscribe so
   // they can purge/restore in-memory secrets in lockstep with the vault.
@@ -311,12 +337,17 @@ class SecurityVault {
     // session state. If the process dies between setting masterPasswordBytes
     // and persisting the token, the vault would be left unverifiable on
     // reload — accepting any new password (tampering risk).
-    const hasToken = await secureStorage.hasSecret(this.VERIFICATION_KEY);
-    if (!hasToken) {
-      await createVerificationToken(trimmedPassword);
-    }
-
+    // Keep token creation inside the guarded activation block. If crypto or
+    // IndexedDB fails here, the device key must be torn down just like any
+    // later activation failure; otherwise unlock() rejects while a locked
+    // vault retains a materialized key in memory.
+    let hasToken: boolean;
     try {
+      hasToken = await secureStorage.hasSecret(this.VERIFICATION_KEY);
+      if (!hasToken) {
+        await createVerificationToken(trimmedPassword);
+      }
+
       // A successful unlock without a pre-existing verification token is the
       // first-run registration path: verifyPassword() rejects tokenless
       // populated vaults, so it is safe to materialize and wrap the device
@@ -336,6 +367,7 @@ class SecurityVault {
 
       this.clearShareCredential();
       this.masterPasswordBytes = new TextEncoder().encode(trimmedPassword);
+      this.isUnlocked = true;
       this.initZeroMemoryProcessor().catch((err) =>
         logger.warn("[SecurityVault] Zero-memory init failed post-unlock", {
           error: err,
@@ -358,6 +390,15 @@ class SecurityVault {
       return true;
     } catch (error) {
       this.zeroBytes();
+      this.isUnlocked = false;
+      this.sessionToken = null;
+      this.sessionExpiry = 0;
+      this.stopSessionRotation();
+      // The password was verified and the device key may already have been
+      // materialized. Tear it down on every activation failure, including
+      // token creation, wrapping, and session-token failures.
+      secureStorage.lockDeviceKey();
+      this.isDeviceKeyMaterialized = false;
 
       this.recordFailedAttempt();
 
@@ -427,7 +468,7 @@ class SecurityVault {
    * a fresh installation. Used to detect tampering when the verification
    * token is missing but other vault artifacts remain.
    */
-  private async hasAnyVaultState(): Promise<boolean> {
+  private async hasAnyVaultState(_emptyLocalDatabase = false): Promise<boolean> {
     if (await this.hasMasterPassword()) {return true;}
     const results = await Promise.all([
       secureStorage.hasSecret(SECURE_STORAGE_KEYS.DB_KEY),
@@ -601,59 +642,8 @@ class SecurityVault {
   }
 
   private async verifyPassword(password: string): Promise<boolean> {
-    const stored = await secureStorage.getVerificationToken();
-    if (!stored) {
-      // S1: when the token is missing, check for ANY vault state before
-      // allowing the first-run flow. An attacker who deleted the token
-      // would need to also delete every other vault artifact.
-      const hasState = await this.hasAnyVaultState();
-      if (hasState) {
-        logger.error(
-          "[SecurityVault] Verification token missing but vault state exists — rejecting (possible tampering)",
-        );
-        this.recordAudit({
-          action: "vault_unlock_failed",
-          result: "failure",
-          origin: "SecurityVault",
-          context: {
-            reason:
-              "Verification token missing while vault state exists (tampering detected)",
-          },
-        });
-        return false;
-      }
-      // Truly empty vault: first-run setup. No token and no state.
-      return true;
-    }
-
-    const passwordBytes = new TextEncoder().encode(password);
-    try {
-      // S1: validate HMAC integrity BEFORE attempting decryption.
-      // An attacker who swapped the ciphertext cannot produce a valid HMAC
-      // without the real password, so this catches tampering immediately.
-      const integrityOk = await validateVerificationIntegrity(
-        stored,
-        passwordBytes,
-      );
-      if (!integrityOk) {
-        logger.warn(
-          "[SecurityVault] Verification integrity check failed — rejecting",
-        );
-        return false;
-      }
-
-      const decrypted = await encryptionService.decryptWithBytes(
-        stored,
-        passwordBytes,
-      );
-      return constantTimeCompare(decrypted, VERIFICATION_PLAINTEXT);
-    } catch (error) {
-      logger.warn("[SecurityVault] Password verification failed", { error });
-      return false;
-} finally {
-       zeroPasswordBytes(passwordBytes);
-     }
-   }
+    return verifyPasswordWithContext(password, this.buildAuthContext());
+  }
 
    /**
     * Rate-limited password verification (RL-1).
@@ -906,6 +896,7 @@ class SecurityVault {
       // secret. The share secret is known to the remote peer that generated it;
       // reusing it as the session token would give the sharing peer a valid
       // credential for this vault session (cross-session linkability + access).
+      this.isUnlocked = true;
       await this.generateSessionToken();
       this.startSessionRotation();
       this.notifyUnlockListeners();
@@ -956,6 +947,7 @@ class SecurityVault {
     });
 
     this.zeroBytes();
+    this.isUnlocked = false;
     this.clearShareCredential();
     this.sessionToken = null;
     this.sessionExpiry = 0;
@@ -1132,57 +1124,12 @@ class SecurityVault {
     secret: string,
     key: string = this.API_KEY_KEY,
   ): Promise<string> {
-    this.assertUnlocked(key, "encrypt");
-    const pwCopy = new Uint8Array(this.masterPasswordBytes!);
-    try {
-      const encrypted = await encryptionService.encryptWithBytes(secret, pwCopy);
-      await secureStorage.setSecret(key, encrypted);
-
-      this.recordAudit({
-        action: "secret_encrypt",
-        target: key,
-        result: "success",
-        origin: "SecurityVault",
-      });
-
-      return encrypted;
-    } finally {
-zeroPasswordBytes(pwCopy);
-     }
-   }
+    return encryptSecretWithContext(secret, key, this.buildSecretsContext());
+  }
 
   async decryptSecret(key: string = this.API_KEY_KEY): Promise<string> {
-    this.assertUnlocked(key, "decrypt");
-    const encryptedSecret = await secureStorage.getSecret(key);
-    if (!encryptedSecret) {
-      this.recordAudit({
-        action: "secret_decrypt",
-        target: key,
-        result: "failure",
-        origin: "SecurityVault",
-        context: { reason: "Secret not found" },
-      });
-      throw new Error("Secret not found");
-    }
-    const pwCopy = new Uint8Array(this.masterPasswordBytes!);
-    try {
-      const result = await encryptionService.decryptWithBytes(
-        encryptedSecret,
-        pwCopy,
-      );
-
-      this.recordAudit({
-        action: "secret_decrypt",
-        target: key,
-        result: "success",
-        origin: "SecurityVault",
-      });
-
-return result;
-     } finally {
-       zeroPasswordBytes(pwCopy);
-     }
-   }
+    return decryptSecretWithContext(key, this.buildSecretsContext());
+  }
 
   /** Stores encrypted recovery data (phrase-encrypted, readable while locked). */
   async setRecoveryData(encryptedData: string): Promise<void> {
@@ -1248,7 +1195,7 @@ return result;
     if (this.rotationPromise) {
       return this.rotationPromise;
     }
-    const operation = this.rotateMasterPasswordInternal(newPassword, oldPassword);
+    const operation = this.rotateMasterPasswordWithContext(newPassword, oldPassword);
     this.rotationPromise = operation;
     try {
       return await operation;
@@ -1259,6 +1206,19 @@ return result;
     }
   }
 
+  private async rotateMasterPasswordWithContext(
+    newPassword: string,
+    oldPassword?: string,
+  ): Promise<boolean> {
+    return rotateMasterPasswordWithContext(
+      newPassword,
+      oldPassword ?? null,
+      this.buildRotationContext(this.vaultGeneration),
+    );
+  }
+
+  /** Legacy implementation retained temporarily while the extracted rotation
+   * path is proven by the rollback drill; it is no longer called. */
   private async rotateMasterPasswordInternal(
     newPassword: string,
     oldPassword?: string,
@@ -1590,6 +1550,155 @@ return result;
     } catch (_err) {
       logger.warn("[SecurityVault] Failed to persist master password flag", { error: _err });
     }
+  }
+
+  /** Verify the audit chain without changing the unlock outcome. */
+  private verifyAuditIntegrity(): void {
+    this.verifyAuditIntegrityAfterUnlock();
+  }
+
+  /** Wrap the materialized device key using the real secure-storage path. */
+  private async wrapDeviceKeyWithPassword(password: string): Promise<void> {
+    await secureStorage.wrapDeviceKeyWithPassword(password);
+    this.isDeviceKeyWrapped = true;
+  }
+
+  // ── Delegation modules (refactor: split from SecurityVault.ts) ──
+
+  private buildAuthContext() {
+    return {
+      getMasterPasswordBytes: () => this.masterPasswordBytes,
+      clearShareCredential: () => this.clearShareCredential(),
+      setMasterPasswordBytes: (pw: string) => {
+        this.masterPasswordBytes = new TextEncoder().encode(pw);
+        this.isUnlocked = true;
+      },
+      zeroBytes: () => {
+        this.zeroBytes();
+        this.isUnlocked = false;
+      },
+      recordFailedAttempt: () => { this.recordFailedAttempt(); },
+      recordAudit: (params: Record<string, unknown>) => { this.recordAudit(params as unknown as Parameters<typeof auditLog.record>[0]); },
+      generateSessionToken: async () => { this.sessionToken = await generateSecureToken(); },
+      startSessionRotation: () => { this.sessionRotationActive = true; },
+      stopSessionRotation: () => { this.sessionRotationActive = false; },
+      notifyLockListeners: () => { this.notifyLockListeners(); },
+      notifyUnlockListeners: () => { this.notifyUnlockListeners(); },
+      installVaultKdfSalt: async () => { return await ensureVaultKdfSalt(); },
+      migrateVaultToPerVaultSalt: async (password: string) => { await migrateVaultSecretsToVaultSalt(password); },
+      verifyAuditIntegrityAfterUnlock: () => { this.verifyAuditIntegrity(); },
+      unlockDeviceKeyStep: async (password: string) => {
+        const ctx = this.buildAuthContext();
+        return await (await import("./security-vault/auth")).unlockDeviceKeyStep(ctx, password);
+      },
+      hasAnyVaultState: async (emptyLocalDatabase?: boolean) => await this.hasAnyVaultState(emptyLocalDatabase),
+      hasMasterPassword: async () => await this.hasMasterPassword(),
+      wrapDeviceKeyWithPassword: async (password: string) => await this.wrapDeviceKeyWithPassword(password),
+      setMasterPasswordConfiguredFlag: async () => await this.setMasterPasswordFlag(),
+      getSessionToken: () => this.sessionToken,
+      clearSession: () => { this.sessionToken = null; },
+      getRateLimitState: () => this.rl,
+      flushPendingAudit: async () => {
+        if (typeof auditLog.flushPending === "function") await auditLog.flushPending();
+      },
+      clearEncryptionSession: async () => { await encryptionService.clear(); },
+      getWrappedDeviceKeyBlob: async () => await secureStorage.getWrappedDeviceKeyBlob(),
+      unwrapDeviceKeyWithPassword: async (password: string) => {
+        await secureStorage.unwrapDeviceKeyWithPassword(password);
+        this.isDeviceKeyWrapped = true;
+        this.isDeviceKeyMaterialized = secureStorage.isDeviceKeyMaterialized();
+      },
+      ensureDeviceKeyMaterialized: async () => {
+        await secureStorage.ensureDeviceKeyMaterialized();
+        this.isDeviceKeyMaterialized = secureStorage.isDeviceKeyMaterialized();
+      },
+      isDeviceKeyMaterialized: async () => secureStorage.isDeviceKeyMaterialized(),
+      lockDeviceKey: () => {
+        secureStorage.lockDeviceKey();
+        this.isDeviceKeyMaterialized = false;
+      },
+    };
+  }
+
+  private buildSecretsContext() {
+    return {
+      getMasterPasswordBytes: () => this.masterPasswordBytes,
+      assertUnlocked: (key: string, action: "encrypt" | "decrypt") => {
+        this.assertUnlocked(key, action);
+      },
+      recordAudit: (params: Record<string, unknown>) => { this.recordAudit(params as unknown as Parameters<typeof auditLog.record>[0]); },
+      hasMasterPassword: async () => await this.hasMasterPassword(),
+      setMasterPasswordConfiguredFlag: async () => await this.setMasterPasswordFlag(),
+      getSecret: async (key: string) => await secureStorage.getSecret(key),
+      setSecret: async (key: string, value: string) => { await secureStorage.setSecret(key, value); },
+      deleteSecret: async (key: string) => { await secureStorage.deleteSecret(key); },
+      getRecoveryData: async () => await this.getRecoveryData(),
+      setRecoveryData: async (data: string) => await this.setRecoveryData(data),
+      clearRecoveryData: async () => await this.clearRecoveryData(),
+      hasRecoveryData: async () => await this.hasRecoveryData(),
+      migrateFromLocalStorage: async () => { await this.migrateFromLocalStorage(); },
+    };
+  }
+
+  private buildRotationContext(rotationGeneration = this.vaultGeneration) {
+    return {
+      getMasterPasswordBytes: () => this.masterPasswordBytes,
+      hasMasterPassword: async () => await this.hasMasterPassword(),
+      getWrappedDeviceKeyBlob: async () => await secureStorage.getWrappedDeviceKeyBlob(),
+      isDeviceKeyWrapped: async () => await secureStorage.isDeviceKeyWrapped(),
+      isDeviceKeyMaterialized: async () => secureStorage.isDeviceKeyMaterialized(),
+      getSecret: async (key: string) => await secureStorage.getSecret(key),
+      setSecret: async (key: string, value: string) => { await secureStorage.setSecret(key, value); },
+      getVerificationToken: async () => await secureStorage.getVerificationToken(),
+      getVerificationIntegrity: async () => await secureStorage.getVerificationIntegrity(),
+      storeVerificationTokenWithIntegrity: async (ciphertext: string, integrity: string) => {
+        await secureStorage.storeVerificationTokenWithIntegrity(ciphertext, integrity);
+      },
+      getVaultKdfSaltSnapshot: async () => await snapshotVaultKdfSalt(),
+      rotateVaultKdfSalt: async (previous: VaultKdfSaltSnapshot) => await rotateVaultKdfSalt(previous),
+      restoreVaultKdfSalt: async (snapshot: VaultKdfSaltSnapshot) => { await restoreVaultKdfSalt(snapshot); },
+      encryptWithBytes: async (data: string, key: Uint8Array) => await encryptionService.encryptWithBytes(data, key),
+      decryptWithBytes: async (encrypted: string, key: Uint8Array) => await encryptionService.decryptWithBytes(encrypted, key),
+      createVerificationToken: async (password: string) => await createVerificationToken(password),
+      recordAudit: (params: Record<string, unknown>) => { this.recordAudit(params as unknown as Parameters<typeof auditLog.record>[0]); },
+      clearRecoveryData: async () => { await this.clearRecoveryData(); },
+      loadBackupService: async () => await loadBackupService(),
+      setMasterPasswordBytes: (pw: string) => {
+        this.masterPasswordBytes = new TextEncoder().encode(pw);
+        this.isUnlocked = true;
+      },
+      zeroBytes: () => {
+        this.zeroBytes();
+        this.isUnlocked = false;
+      },
+      generateSessionToken: async () => { this.sessionToken = await generateSecureToken(); },
+      lockDeviceKey: () => {
+        secureStorage.lockDeviceKey();
+        this.isDeviceKeyMaterialized = false;
+      },
+      assertActive: () => {
+        if (this.vaultGeneration !== rotationGeneration || this.isLocked()) {
+          throw new Error("Vault locked during password rotation");
+        }
+      },
+      deleteSecret: async (key: string) => { await secureStorage.deleteSecret(key); },
+      announceSaltChange: () => { announceVaultKdfSaltChange(); },
+      rewrapDeviceKey: async (oldPassword: Uint8Array, newPassword: Uint8Array) => {
+        await secureStorage.rewrapDeviceKeyWithPasswordBytes(oldPassword, newPassword);
+      },
+      restoreWrappedDeviceKey: async (blob: string) => {
+        await secureStorage.restoreWrappedDeviceKeyBlob(blob);
+      },
+      restoreVerificationToken: async (ciphertext: string) => {
+        await secureStorage.restoreVerificationToken(ciphertext);
+      },
+      storeVerificationIntegrity: async (integrity: string) => {
+        await secureStorage.storeVerificationIntegrity(integrity);
+      },
+      deleteVerificationIntegrity: async () => {
+        await secureStorage.deleteSecret(VERIFICATION_INTEGRITY_KEY);
+      },
+    };
   }
 }
 

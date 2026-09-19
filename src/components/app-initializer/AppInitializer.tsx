@@ -385,7 +385,27 @@ export function AppInitializer() {
     // the current salt anyway. Both calls are idempotent, so StrictMode's
     // mount/unmount/mount cycle is harmless.
     if (isResetting || isLocked) {return;}
-    startVaultKdfSaltSync();
+    startVaultKdfSaltSync(async (result) => {
+      // A sibling rotation changes both the password and the salt. Adopting
+      // only the salt would leave this tab able to write ciphertext that the
+      // new password cannot decrypt. Fail closed and require an explicit
+      // unlock with the current password instead.
+      if (result.status === "adopted" && !securityVault.isLocked()) {
+        await securityVault.lock();
+        // SECURITY: the crypto lock alone leaves the React shell rendered
+        // behind a dead vault (useSecurityStore has no lock listener) — the
+        // user sees a fully interactive UI whose every write throws. Drive
+        // the UI lock transition explicitly so the unlock screen returns.
+        useSecurityStore.getState().lock();
+        toast.info(
+          i18n.t(
+            "securityVaultChangedInAnotherTab",
+          "The vault changed in another tab. Unlock again to continue.",
+          ),
+          { id: "vault-changed-in-another-tab" },
+        );
+      }
+    });
     return () => stopVaultKdfSaltSync();
   }, [isLocked, isResetting]);
 

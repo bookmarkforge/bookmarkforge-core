@@ -7,6 +7,9 @@ interface SecurityState {
   isLocked: boolean;
   forceSetup: boolean;
   unlock: () => void;
+  /** UI-only lock transition: flips the shell to the unlock screen.
+   *  The crypto layer must be locked separately (securityVault.lock()). */
+  lock: () => void;
   setForceSetup: (force: boolean) => void;
 }
 
@@ -14,6 +17,7 @@ export const useSecurityStore = create<SecurityState>((set) => ({
   isLocked: true,
   forceSetup: false,
   unlock: () => set({ isLocked: false, forceSetup: false }),
+  lock: () => set({ isLocked: true }),
   setForceSetup: (force) => {
     if (force) {
       encryptionService.destroy().catch((err) => {

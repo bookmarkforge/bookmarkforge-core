@@ -340,6 +340,12 @@ export class SecureStorage {
     }
 
     const ciphertext = await kdfEncrypt(rawJwk, password);
+    // close()/lockDeviceKey() may have crossed the async KDF boundary. Do not
+    // persist a new wrapper after that lifecycle boundary; otherwise a close
+    // racing this operation can write sensitive state after teardown.
+    if (this.deviceKeyLifecycle !== lifecycle) {
+      throw new Error("[SecureStorage] Device key was locked during wrapping");
+    }
     await this.rawPut(SecureStorage.IDB_KEY_WRAPPED, ciphertext);
 
     // Remove every plaintext copy of the JWK (localStorage + legacy IDB).
@@ -493,6 +499,11 @@ try {
       const newPasswordCopy = newPasswordBytes.slice();
       try {
         const ciphertext = await kdfEncrypt(plaintext, newPasswordCopy);
+        // A lock/close can happen while Argon2id derives the replacement.
+        // Refuse to write the new wrapper after that lifecycle boundary.
+        if (this.deviceKeyLifecycle !== lifecycle) {
+          throw new Error("[SecureStorage] Device key was locked during re-wrapping");
+        }
         await this.rawPut(SecureStorage.IDB_KEY_WRAPPED, ciphertext);
       } finally {
         // Keep the caller-owned buffer available to SecurityVault's outer

@@ -804,6 +804,38 @@ describe("P0 — per-vault Argon2id salt (A-1)", () => {
       );
     });
 
+    it("serializes overlapping notifications so a slower old read cannot win", async () => {
+      let releaseFirstRead!: (salt: string) => void;
+      const firstRead = new Promise<string>((resolve) => {
+        releaseFirstRead = resolve;
+      });
+      mocks.secureStorage.getSecret
+        .mockImplementationOnce(() => firstRead)
+        .mockResolvedValue(SALT_C);
+      mocks.encryptionService.getVaultKdfSaltHex.mockReturnValue(SALT_A);
+
+      const sibling = siblingTab();
+      sibling.postMessage({ type: KDF_SALT_CHANGED_MESSAGE });
+      sibling.postMessage({ type: KDF_SALT_CHANGED_MESSAGE });
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      // The second notification must wait for the first storage read instead
+      // of installing SALT_C and then being overwritten by the stale SALT_B.
+      releaseFirstRead(SALT_B);
+      await flush();
+
+      expect(mocks.encryptionService.configureVaultKdfSalt).toHaveBeenNthCalledWith(
+        1,
+        SALT_B,
+      );
+      expect(mocks.encryptionService.configureVaultKdfSalt).toHaveBeenNthCalledWith(
+        2,
+        SALT_C,
+      );
+
+      sibling.close();
+    });
+
     it("ignores any salt the message carries — storage is the authority", async () => {
       mocks.secureStorage.getSecret.mockResolvedValue(SALT_B);
       mocks.encryptionService.getVaultKdfSaltHex.mockReturnValue(SALT_A);

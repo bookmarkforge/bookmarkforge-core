@@ -4,6 +4,12 @@ const port = Number(process.env.PLAYWRIGHT_PORT ?? 4173);
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`;
 const companionPort = Number(process.env.CRISIS_COMPANION_PORT ?? 8799);
 const signalingPort = Number(process.env.SIGNALING_PORT ?? 8787);
+// Ephemeral Whop-compatible license adapter (scripts/license-mock.mjs), same
+// pattern scripts/drill-rollback.mjs uses: the companion's WHOP adapter points
+// at it, so /api/license/activate issues REAL signed license payloads with the
+// gitignored dev key. Pro-gated E2E specs (backup/restore) seed their
+// entitlement through this stack via tests/e2e/pro-entitlement-helpers.ts.
+const licenseMockPort = Number(process.env.LICENSE_MOCK_PORT ?? 8082);
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -72,8 +78,13 @@ export default defineConfig({
         HOST: "127.0.0.1",
         PORT: String(signalingPort),
         TRUST_PROXY: "0",
-        WHOP_LICENSE_API_URL: "http://127.0.0.1:9/license",
+        // Real ephemeral Whop adapter (dead-port in earlier stacks made every
+        // Pro activation fail, so Pro-gated specs could never run).
+        WHOP_LICENSE_API_URL: `http://127.0.0.1:${licenseMockPort}/license`,
         WHOP_API_KEY: "e2e-license-key",
+        // The mock speaks plain HTTP on loopback; the signing service is
+        // HTTPS-only unless this explicit non-production opt-out is set.
+        LICENSE_PROVIDER_ALLOW_HTTP: "1",
         SIGNALING_ADMIN_TOKEN: process.env.SIGNALING_ADMIN_TOKEN ?? "e2e-admin-token",
       },
     },
@@ -94,6 +105,21 @@ export default defineConfig({
         VITE_P2P_SIGNALING_URL: `ws://127.0.0.1:${signalingPort}`,
         CRISIS_COMPANION_PORT: String(companionPort),
         SIGNALING_ADMIN_TOKEN: process.env.SIGNALING_ADMIN_TOKEN ?? "e2e-admin-token",
+        // vite.config.ts proxies /api/license to the REAL companion/signing
+        // server (8787) instead of the crisis companion that owns /api.
+        VITE_LICENSE_PROXY_TARGET: `http://127.0.0.1:${signalingPort}`,
+      },
+    },
+    {
+      command: "node scripts/license-mock.mjs",
+      url: `http://127.0.0.1:${licenseMockPort}/health`,
+      reuseExistingServer: !process.env.CI,
+      timeout: 30_000,
+      env: {
+        LICENSE_MOCK_PORT: String(licenseMockPort),
+        // Must match the companion's WHOP_API_KEY above: the adapter
+        // authenticates the companion's bearer token.
+        LICENSE_MOCK_KEY: "e2e-license-key",
       },
     },
   ],

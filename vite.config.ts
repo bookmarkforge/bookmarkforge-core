@@ -419,6 +419,17 @@ export default defineConfig(({ mode, isPreview }) => ({
     mode === "test"
       ? {
           proxy: {
+            // E2E: license routes live on the companion/signing server (8787),
+            // NOT on the crisis companion that owns the generic /api space.
+            // Without this, Pro activation from the browser hits the crisis
+            // companion and fails; Vite preserves the Host header, so the
+            // signing service's Origin/Host checks still match the app origin.
+            // MUST be declared BEFORE the generic "/api" rule below: Vite
+            // matches proxy keys in insertion order and the first prefix
+            // match wins.
+            "/api/license": {
+              target: process.env.VITE_LICENSE_PROXY_TARGET || `http://127.0.0.1:${process.env.SIGNALING_PORT || "8787"}`,
+            },
             "/api": {
               target: process.env.VITE_API_PROXY_TARGET || `http://127.0.0.1:${process.env.CRISIS_COMPANION_PORT || "8799"}`,
             },

@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { expect, test, type Page } from "@playwright/test";
 import { dismissOverlays, expectUnlockedApp, lockVault, setupVault, unlockVault } from "./vault-helpers";
 import { assertDurableBackend } from "./storage-backend-guard";
+import { seedProEntitlement } from "./pro-entitlement-helpers";
 
 /**
  * launch-smoke-critical-paths — the paths whose failure costs the product its
@@ -320,7 +321,10 @@ test.describe("critical path: encrypted backup round-trip", () => {
     });
 
     // 1. BASELINE — real vault + one bookmark captured through the UI.
+    //    Pro-gated surface: seed the entitlement through the real signing
+    //    stack (license-mock) so the export is not stopped by the gate.
     await setupVault(page, { password: LAUNCH_PASSWORD });
+    await seedProEntitlement(page);
     await dismissOverlays(page);
     await addBookmarkViaUi(page, SMOKE_URL, SMOKE_TITLE);
 
@@ -357,6 +361,8 @@ test.describe("critical path: encrypted backup round-trip", () => {
     //    encrypted with the master password, so the restored vault must be
     //    opened with it — exactly what the kit warning tells users).
     //    dismissOnboarding:false keeps the F0-2 restore-first wizard open.
+    //    totalDisaster wiped localStorage, so the entitlement must be
+    //    re-seeded for the restore-side import path.
     await setupVault(page, {
       password: LAUNCH_PASSWORD,
       dismissOnboarding: false,
@@ -364,6 +370,7 @@ test.describe("critical path: encrypted backup round-trip", () => {
     await expect(
       page.getByRole("heading", { name: "Your vault is empty" }),
     ).toBeVisible({ timeout: 30_000 });
+    await seedProEntitlement(page); // second seed after totalDisaster
 
     // 5. RESTORE — through the real wizard file input (accepts .bmf and
     //    prompts for the password itself). The handler reloads the app when

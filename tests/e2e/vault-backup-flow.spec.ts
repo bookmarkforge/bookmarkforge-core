@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { setupVault, unlockAfterReload, VAULT_PASSWORD } from "./vault-helpers";
+import { seedProEntitlement } from "./pro-entitlement-helpers";
 
 /**
  * vault-backup-flow: after first-time setup, the Home dashboard shows the
@@ -9,6 +10,9 @@ import { setupVault, unlockAfterReload, VAULT_PASSWORD } from "./vault-helpers";
  */
 test("export backup from dashboard banner completes", async ({ page }) => {
   await setupVault(page);
+  // Export goes through BackupService (Pro-gated): seed the entitlement
+  // through the real signing stack before exercising the banner flow.
+  await seedProEntitlement(page);
 
   // setupVault dismisses transient dashboard notices for the other vault
   // specs. Reset only the reminder state and reload so this test explicitly

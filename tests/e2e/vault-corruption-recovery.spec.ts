@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { skipPassword } from "./vault-helpers";
+import { seedProEntitlement } from "./pro-entitlement-helpers";
 
 /**
  * vault-corruption-recovery — F0-2 end to end (corrupted vault).
@@ -148,6 +149,11 @@ test("corrupted vault → recovery screen → restore from file → data visible
   // 1. Create a real vault on disk (skip-password path keeps the
   //    corruption-recovery screen directly reachable without the lock gate).
   await skipPassword(page);
+
+  // Restore goes through BackupService (Pro-gated): seed the entitlement on
+  // the already-loaded page. The license survives the later reload because
+  // the corruption step only damages IndexedDB, never localStorage.
+  await seedProEntitlement(page);
 
   // 2. Damage the RxDB storage on purpose.
   const corruptedNames = await corruptVaultIndexedDB(page);

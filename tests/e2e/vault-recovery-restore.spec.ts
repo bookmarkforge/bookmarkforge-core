@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { hash } from "node:crypto";
 import { setupVault, unlockVault } from "./vault-helpers";
+import { seedProEntitlement } from "./pro-entitlement-helpers";
 
 /**
  * vault-recovery-restore — F0-2 end to end.
@@ -28,6 +29,10 @@ test("empty vault → recovery screen → restore from file → data visible", a
   // Keep the onboarding wizard open so the recovery screen is what we assert
   // against (setupVault otherwise auto-dismisses it).
   await setupVault(page, { dismissOnboarding: false });
+
+  // Restore goes through BackupService (Pro-gated): seed the entitlement on
+  // the already-loaded page — no navigation, the wizard must stay open.
+  await seedProEntitlement(page);
 
   // F0-2: the empty vault opens the wizard on the restore-first screen.
   await expect(

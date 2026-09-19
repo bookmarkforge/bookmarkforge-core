@@ -25,7 +25,7 @@ export interface AuditBookmark {
   updatedAt: string;
 }
 
-export interface AuditCoverageEntry {
+interface AuditCoverageEntry {
   tag: string;
   count: number;
   lastVisitDays: number;
@@ -41,7 +41,7 @@ export interface AuditScanResult {
 /** Coarse phases reported by the audit scan worker and inline fallback. */
 export type AuditScanPhase = "scanning" | "aggregating" | "done";
 
-export type AuditScanProgressCallback = (
+type AuditScanProgressCallback = (
   phase: AuditScanPhase,
   fraction: number,
 ) => void;

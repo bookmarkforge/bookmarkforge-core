@@ -1,4 +1,4 @@
-export type DownloadResult = { ok: boolean; blocked: boolean };
+type DownloadResult = { ok: boolean; blocked: boolean };
 
 /**
  * Detect whether the current execution is inside a user-gesture event

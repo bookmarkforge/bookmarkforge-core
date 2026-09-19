@@ -23,7 +23,7 @@
  */
 
 /** Parameters of a raw PCM stream, as declared by an audio mime type. */
-export interface PcmStreamParams {
+interface PcmStreamParams {
   sampleRate: number;
   /** Interleaved channel count. */
   channels: number;

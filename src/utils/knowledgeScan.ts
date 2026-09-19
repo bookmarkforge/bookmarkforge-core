@@ -33,7 +33,7 @@ export interface ScanBookmark {
   visitCount?: number;
 }
 
-export interface LanguagePair {
+interface LanguagePair {
   lang: string;
   title: string;
 }
@@ -57,7 +57,7 @@ export type ScanPhase = "sampling" | "comparing" | "done";
  * invocation, so it must never be called per-item on large inputs — it is
  * called once per language-group pass, at most a few dozen times.
  */
-export type ScanProgressCallback = (phase: ScanPhase, fraction: number) => void;
+type ScanProgressCallback = (phase: ScanPhase, fraction: number) => void;
 
 export const MAX_ITEMS_PER_LANG = 200;
 export const MAX_SCAN_ITEMS = 1200;

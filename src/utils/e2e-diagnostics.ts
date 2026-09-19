@@ -17,7 +17,7 @@
 /** Window key the mobile-device E2E profile reads (playwright.mobile.config.ts). */
 const E2E_KDF_PARAMS_KEY = "__bmf_active_kdf_params__";
 
-export type E2eKdfParams = { m: number; t: number; p: number };
+type E2eKdfParams = { m: number; t: number; p: number };
 
 export function publishKdfParams(params: E2eKdfParams): void {
   if (

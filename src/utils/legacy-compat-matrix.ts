@@ -48,7 +48,7 @@ export interface LegacyCompatRow {
   recommendedAction: string | null;
 }
 
-export interface LegacyCompatMatrix {
+interface LegacyCompatMatrix {
   generatedFrom: {
     appVersion: string;
     generatorFile: string;

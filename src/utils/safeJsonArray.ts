@@ -21,7 +21,7 @@
  * iteration logic at the call site where the field-level validation lives.
  */
 
-export interface LoadedJsonArray<T> {
+interface LoadedJsonArray<T> {
   /** Entries that are non-null, non-array objects. */
   entries: T[];
   /** True iff the raw blob was present but not a valid array of objects. */
@@ -52,7 +52,7 @@ export function safeParseJsonArray<T extends object = Record<string, unknown>>(
   return { entries, parseFailed: false };
 }
 
-export interface LoadedJsonObject<T> {
+interface LoadedJsonObject<T> {
   /** The parsed object if valid; `null` if missing/invalid. */
   value: T | null;
   /** True iff the raw blob was present but not a valid plain object. */

@@ -27,7 +27,7 @@
  *   });
  */
 
-export interface LoggableError {
+interface LoggableError {
   name: string;
   message: string;
 }

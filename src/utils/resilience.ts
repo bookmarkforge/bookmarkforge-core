@@ -10,7 +10,7 @@ import { logger } from "./logger";
 // Types
 // ============================================================================
 
-export interface RetryOptions {
+interface RetryOptions {
   maxRetries?: number;
   baseDelay?: number;
   maxDelay?: number;
@@ -18,13 +18,13 @@ export interface RetryOptions {
   onRetry?: (attempt: number, error: Error) => void;
 }
 
-export interface CircuitBreakerOptions {
+interface CircuitBreakerOptions {
   failureThreshold?: number;
   recoveryTimeout?: number;
   onStateChange?: (state: 'closed' | 'open' | 'half-open') => void;
 }
 
-export interface FallbackOptions<T> {
+interface FallbackOptions<T> {
   fallback: () => Promise<T> | T;
   onError?: (error: Error) => void;
 }
@@ -329,39 +329,3 @@ export class StateManager<T extends Record<string, unknown>> {
   }
 }
 
-// ============================================================================
-// Export instances for common use cases
-// ============================================================================
-
-/**
- * Circuit breaker for encryption operations
- */
-export const encryptionCircuitBreaker = new CircuitBreaker({
-  failureThreshold: 3,
-  recoveryTimeout: 30000,
-  onStateChange: (state) => {
-    logger.info("[CircuitBreaker] Encryption circuit state changed", { state });
-  },
-});
-
-/**
- * Circuit breaker for sync operations
- */
-export const syncCircuitBreaker = new CircuitBreaker({
-  failureThreshold: 5,
-  recoveryTimeout: 60000,
-  onStateChange: (state) => {
-    logger.info("[CircuitBreaker] Sync circuit state changed", { state });
-  },
-});
-
-/**
- * Circuit breaker for network operations
- */
-export const networkCircuitBreaker = new CircuitBreaker({
-  failureThreshold: 3,
-  recoveryTimeout: 30000,
-  onStateChange: (state) => {
-    logger.info("[CircuitBreaker] Network circuit state changed", { state });
-  },
-});

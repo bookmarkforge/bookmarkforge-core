@@ -16,7 +16,7 @@ function isIndexedDbAvailable(): boolean {
   return typeof indexedDB !== "undefined";
 }
 
-export interface RxStorageConfig {
+interface RxStorageConfig {
   /** Enable key compression (zlib) for stored documents */
   keyCompression?: boolean;
   /** Maximum database size in bytes (backend specific; advisory only) */
@@ -50,9 +50,3 @@ export function createRxStorage(
   return storage;
 }
 
-/**
- * Quick helper to create storage with default optimizations.
- */
-export function createDefaultRxStorage(): RxStorage<any, any> {
-  return createRxStorage({ keyCompression: true });
-}

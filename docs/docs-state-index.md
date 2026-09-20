@@ -51,6 +51,7 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/ADR-061-controlled-retirement-2026-09-19.md` | vivo | Registro de decisión arquitectónica. |
 | `docs/ADR-062-landing-smoke-gate.md` | vivo | Registro de decisión arquitectónica. |
 | `docs/ADR-063-feature-budgets-gate.md` | vivo | Registro de decisión arquitectónica. |
+| `docs/ai-performance-local-device-report-2026-09-21.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/api.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/architecture.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/audit-report-2026-09-02.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |

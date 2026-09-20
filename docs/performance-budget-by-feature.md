@@ -106,3 +106,16 @@ firstSummaryLatencyMs <= 3.000 ms
 
 La prueba genera `ai-first-inference-metrics.json` como artefacto. La validación del rendimiento real del modelo continúa en `ai-startup.nightly.spec.ts`, que requiere un dispositivo con WebGPU y red/model cache controlados. No se debe interpretar el test móvil emulado como sustituto de esa medición física.
 
+## Histórico de métricas WebLLM
+
+Los resultados nightly pueden registrarse sin persistir prompts, URLs, user agents ni identificadores de dispositivo:
+
+```bash
+node scripts/ai-performance-history.mjs \
+  --metrics playwright-report-nightly/ai-startup-metrics.json \
+  --history .nightly-history/ai-performance.jsonl \
+  --source nightly
+```
+
+El histórico usa un contrato versionado y aplica dos controles: presupuesto absoluto y regresión frente a la mediana de al menos dos muestras previas (`1,25x`). La primera muestra establece baseline; una línea corrupta o un histórico ausente no bloquea la medición, pero una métrica que exceda el límite duro sí bloquea el comando.
+

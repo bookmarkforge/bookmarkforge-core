@@ -309,6 +309,17 @@ if (bundleSize.status !== 0) {
   process.exit(bundleSize.status ?? 1);
 }
 
+// Per-feature budgets: reject a newly large or unclassified lazy feature even
+// when the aggregate bundle remains under its global cap.
+const featureBudgets = spawnSync(
+  process.execPath,
+  [join(ROOT, "scripts", "check-feature-budgets.mjs")],
+  { stdio: "inherit" },
+);
+if (featureBudgets.status !== 0) {
+  process.exit(featureBudgets.status ?? 1);
+}
+
 // Performance budget: static metrics are deterministic build artifacts and
 // must fail in the same job as the production build. First interaction is
 // measured separately with Chromium against this exact dist/ preview.

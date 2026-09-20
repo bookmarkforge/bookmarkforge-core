@@ -1,0 +1,19 @@
+{
+  "schema": "bmf.feature-budgets/1",
+  "description": "Hard budgets for emitted feature chunks. Patterns are matched against dist/assets filenames without hashes.",
+  "unclassifiedThresholdBytes": 204800,
+  "features": [
+    { "id": "shell", "label": "post-unlock shell", "patterns": ["^MainApp-"], "budgetBytes": 204800 },
+    { "id": "database", "label": "database/RxDB", "patterns": ["^database-", "^rx-database-"], "budgetBytes": 563200 },
+    { "id": "bookmarks", "label": "bookmarks table", "patterns": ["^BookmarksTable-"], "budgetBytes": 460800 },
+    { "id": "editor", "label": "BlockNote editor", "patterns": ["^blocknote-mantine-"], "budgetBytes": 909312 },
+    { "id": "pdf", "label": "PDF and HTML-to-PDF", "patterns": ["^pdf-", "^pdf\\.worker", "^html2pdf-"], "budgetBytes": 2883584 },
+    { "id": "ai-local", "label": "local AI runtime", "patterns": ["^transformers\\.web-", "^ort-wasm-", "^WebLLMService-"], "budgetBytes": 26214400 },
+    { "id": "charts", "label": "dashboard charts", "patterns": ["^CategoricalChart-"], "budgetBytes": 345088 },
+    { "id": "runtime-vendors", "label": "large runtime vendors", "patterns": ["^native-", "^prod-", "^esm-"], "budgetBytes": 1572864 },
+    { "id": "mlc-runtime", "label": "WebLLM/MLC runtime vendor", "patterns": ["^lib-"], "budgetBytes": 7340032 },
+    { "id": "styles", "label": "feature styles", "patterns": ["^style-"], "budgetBytes": 307200 },
+    { "id": "recovery", "label": "recovery flow", "patterns": ["^RecoveryService-"], "budgetBytes": 307200 },
+    { "id": "import-export", "label": "import/export helpers", "patterns": ["^ImportDialog-", "^exporter\\.formatters-", "^jszip"], "budgetBytes": 409600 }
+  ]
+}

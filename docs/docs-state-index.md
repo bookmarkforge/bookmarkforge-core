@@ -50,6 +50,7 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/ADR-060-legal-consolidation-gate.md` | vivo | Registro de decisión arquitectónica. |
 | `docs/ADR-061-controlled-retirement-2026-09-19.md` | vivo | Registro de decisión arquitectónica. |
 | `docs/ADR-062-landing-smoke-gate.md` | vivo | Registro de decisión arquitectónica. |
+| `docs/ADR-063-feature-budgets-gate.md` | vivo | Registro de decisión arquitectónica. |
 | `docs/api.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/architecture.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/audit-report-2026-09-02.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
@@ -110,6 +111,7 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/p2p-sync-manual-test-script.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/p2p-sync-session-prep.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/PENDIENTES.md` | transitorio | Registro de trabajo pendiente y deuda conocida. |
+| `docs/performance-budget-by-feature.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/plan-super-optimizacion.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/pricing-decision.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/production-license-launch-checklist.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |

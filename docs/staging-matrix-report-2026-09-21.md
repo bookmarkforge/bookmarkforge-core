@@ -27,6 +27,7 @@ Se ejecutó la matriz local aislada de staging sin tocar producción:
 | Backup cifrado `.bmf` | PASS | restore y verificación de datos; RTO 4.242 s |
 | Backup JSON | PASS | restore y verificación de datos; RTO 4.110 s |
 | WebRTC certificado | PASS | Chromium, Firefox y WebKit: 3/3 contratos pasados |
+| Prueba de carga local | PASS | 5/5 presupuestos; join p95 20 ms, relay p95 1 ms, saturación 1013 |
 | Typecheck/lint | PASS | `npm run typecheck:prod` y `npm run lint` |
 | Policy tests | PASS | 3/3 tests de staging |
 
@@ -55,3 +56,17 @@ LICENSE_SMOKE_BASE_URL=https://staging.example.com \
 ```
 
 También debe repetirse el drill de WebRTC desde al menos dos redes externas y conservar el informe como artefacto de release.
+
+## Validación interna adicional
+
+El bloque no externo también pasó:
+
+```text
+npm run check:launch-checklist:strict  ✅ 12/12 verificables; 5 manuales
+npm run check:security-internal       ✅
+npm run test:fast                     ✅ 156 archivos, 3.099 tests ejecutados, 1 skip documentado
+npm run check                         ✅
+npm run test:load                     ✅ 5/5 presupuestos
+```
+
+Las cinco comprobaciones manuales del checklist son responsabilidades de operación o validaciones externas, no defectos detectables desde el repositorio.

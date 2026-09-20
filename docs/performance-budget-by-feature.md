@@ -104,7 +104,7 @@ Presupuesto actual del boundary móvil:
 firstSummaryLatencyMs <= 3.000 ms
 ```
 
-La prueba genera `ai-first-inference-metrics.json` como artefacto. La validación del rendimiento real del modelo continúa en `ai-startup.nightly.spec.ts`, que requiere un dispositivo con WebGPU y red/model cache controlados. No se debe interpretar el test móvil emulado como sustituto de esa medición física.
+La prueba genera `ai-first-inference-metrics.json` como artefacto y se ejecuta en el job `e2e-ai-performance` de CI. La validación del rendimiento real del modelo continúa en `ai-startup.nightly.spec.ts`, que requiere un dispositivo con WebGPU y red/model cache controlados. No se debe interpretar el test móvil emulado como sustituto de esa medición física.
 
 ## Histórico de métricas WebLLM
 

@@ -136,6 +136,7 @@
     "test:performance": "playwright test --config=playwright.performance.config.ts",
     "test:ai-performance:mobile": "playwright test --config=playwright.ai-performance.config.ts",
     "record:ai-performance-history": "node scripts/ai-performance-history.mjs",
+    "check:ai-reference-metrics": "node scripts/check-ai-reference-metrics.mjs",
     "check:i18n": "node scripts/i18n-completeness.mjs && node scripts/check-i18n-quality.mjs && node scripts/check-code-i18n.mjs",
     "check:i18n:fix": "node scripts/i18n-completeness.mjs --fix && node scripts/check-i18n-quality.mjs --fix",
     "check:claim-drift": "node scripts/check-claim-drift.mjs",

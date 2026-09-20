@@ -117,5 +117,15 @@ BMF_FIRST_SUMMARY_HISTORY_FILE=.nightly-history/ai-performance.jsonl \
 
 El calibrador conserva el sidecar completo y, cuando se define `BMF_FIRST_SUMMARY_HISTORY_FILE`, registra únicamente el máximo agregado de primera inferencia mediante el mismo gate histórico. Para importar un JSON independiente también está disponible `npm run record:ai-performance-history -- --metrics metrics.json --history .nightly-history/ai-performance.jsonl`.
 
+La primera evidencia física se puede clasificar contra la matriz de perfiles sin modificar el presupuesto a mano:
+
+```bash
+npm run check:ai-reference-metrics -- \
+  --metrics playwright-report-nightly/first-summary-calibration.json \
+  --profile desktop-reference
+```
+
+Perfiles definidos: `desktop-reference`, `mobile-reference` y `unsupported-mobile`. El último solo documenta skips esperados en dispositivos por debajo del suelo de IA; nunca convierte un resultado real lento en un falso PASS.
+
 El histórico usa un contrato versionado y aplica dos controles: presupuesto absoluto y regresión frente a la mediana de al menos dos muestras previas (`1,25x`). La primera muestra establece baseline; una línea corrupta o un histórico ausente no bloquea la medición, pero una métrica que exceda el límite duro sí bloquea el comando.
 

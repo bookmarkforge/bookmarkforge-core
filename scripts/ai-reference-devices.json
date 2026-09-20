@@ -1,0 +1,24 @@
+{
+  "schema": "bmf.ai-reference-devices/1",
+  "profiles": {
+    "desktop-reference": {
+      "label": "Reference laptop/desktop",
+      "minDeviceMemoryGB": 8,
+      "requireHardwareWebGPU": true,
+      "firstSummaryLatencyMs": 30000
+    },
+    "mobile-reference": {
+      "label": "High-end mobile",
+      "minDeviceMemoryGB": 8,
+      "requireHardwareWebGPU": true,
+      "firstSummaryLatencyMs": 45000
+    },
+    "unsupported-mobile": {
+      "label": "Mobile below local-AI floor",
+      "minDeviceMemoryGB": 0,
+      "requireHardwareWebGPU": false,
+      "firstSummaryLatencyMs": null,
+      "skipExpected": true
+    }
+  }
+}

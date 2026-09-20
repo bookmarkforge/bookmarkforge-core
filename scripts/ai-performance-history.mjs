@@ -30,7 +30,8 @@ export function numericMetrics(input) {
   const pass1 = input?.pass1 ?? {};
   const pass2 = input?.pass2 ?? {};
   const values = {
-    firstSummaryLatencyMs: input?.firstSummaryLatencyMs,
+    firstSummaryLatencyMs:
+      input?.firstSummaryLatencyMs ?? input?.aggregate?.maxMs,
     coldInitMs: source.coldInitMs ?? pass1.coldInitMs,
     warmFirstMs: source.warmFirstMs ?? pass1.warmFirstMs,
     warmCacheReinitMs: source.warmCacheReinitMs ?? pass2.warmCacheReinitMs,

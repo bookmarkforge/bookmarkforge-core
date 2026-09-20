@@ -36,6 +36,7 @@
 import { spawnSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { appendHistoryFile } from "./ai-performance-history.mjs";
 
 const RUNS = Number.parseInt(process.env.BMF_CALIB_RUNS ?? "3", 10);
 const BUDGET_MS = Number.parseInt(
@@ -230,6 +231,30 @@ writeFileSync(
 );
 console.log("");
 console.log(`[calibrate-first-summary] sidecar written: ${SIDECAR}`);
+
+// Optional durable history integration. The sidecar remains the full evidence
+// artifact; history stores only the aggregate numeric metrics and is enabled
+// explicitly by the nightly job/reference-device runner.
+const historyFile = process.env.BMF_FIRST_SUMMARY_HISTORY_FILE?.trim();
+if (historyFile && latencies.length > 0) {
+  const historyResult = appendHistoryFile({
+    metrics: {
+      aggregate: {
+        maxMs: latencies[latencies.length - 1],
+      },
+    },
+    historyFile: resolve(historyFile),
+    source: "calibrate-first-summary",
+    commit: process.env.GITHUB_SHA ?? null,
+  });
+  console.log(
+    `[calibrate-first-summary] history ${historyResult.evaluation.ok ? "pass" : "fail"}: ` +
+      `${resolve(historyFile)}`,
+  );
+  if (!historyResult.evaluation.ok) {
+    process.exitCode = 1;
+  }
+}
 
 if (latencies.length === 0) {
   console.error(

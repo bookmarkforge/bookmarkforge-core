@@ -111,11 +111,11 @@ La prueba genera `ai-first-inference-metrics.json` como artefacto. La validació
 Los resultados nightly pueden registrarse sin persistir prompts, URLs, user agents ni identificadores de dispositivo:
 
 ```bash
-node scripts/ai-performance-history.mjs \
-  --metrics playwright-report-nightly/ai-startup-metrics.json \
-  --history .nightly-history/ai-performance.jsonl \
-  --source nightly
+BMF_FIRST_SUMMARY_HISTORY_FILE=.nightly-history/ai-performance.jsonl \
+  npm run calibrate:first-summary
 ```
+
+El calibrador conserva el sidecar completo y, cuando se define `BMF_FIRST_SUMMARY_HISTORY_FILE`, registra únicamente el máximo agregado de primera inferencia mediante el mismo gate histórico. Para importar un JSON independiente también está disponible `npm run record:ai-performance-history -- --metrics metrics.json --history .nightly-history/ai-performance.jsonl`.
 
 El histórico usa un contrato versionado y aplica dos controles: presupuesto absoluto y regresión frente a la mediana de al menos dos muestras previas (`1,25x`). La primera muestra establece baseline; una línea corrupta o un histórico ausente no bloquea la medición, pero una métrica que exceda el límite duro sí bloquea el comando.
 

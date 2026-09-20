@@ -43,6 +43,12 @@ describe("ai-performance-history", () => {
     expect(result.checks.warmFirstMs.regressed).toBe(true);
   });
 
+  it("normalizes the calibration sidecar aggregate", () => {
+    expect(numericMetrics({ aggregate: { maxMs: 2_400 } })).toEqual({
+      firstSummaryLatencyMs: 2_400,
+    });
+  });
+
   it("does not apply a regression baseline until two samples exist", () => {
     const result = evaluateMetrics(
       { firstSummaryLatencyMs: 2_000 },

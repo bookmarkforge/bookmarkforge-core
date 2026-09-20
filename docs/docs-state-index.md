@@ -49,6 +49,7 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/ADR-059-documentation-retirement.md` | vivo | Registro de decisión arquitectónica. |
 | `docs/ADR-060-legal-consolidation-gate.md` | vivo | Registro de decisión arquitectónica. |
 | `docs/ADR-061-controlled-retirement-2026-09-19.md` | vivo | Registro de decisión arquitectónica. |
+| `docs/ADR-062-landing-smoke-gate.md` | vivo | Registro de decisión arquitectónica. |
 | `docs/api.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/architecture.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/audit-report-2026-09-02.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
@@ -57,6 +58,7 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/deployment-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/docs-state-index.md` | vivo | Inventario canónico generado por scripts/doctor-docs-index.mjs. |
 | `docs/edge-case-hardening-vault-audit.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/fix-findings-plan.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/github-secrets-and-push-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/google-search-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/history-attribution.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
@@ -103,11 +105,14 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/ONBOARDING.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/openapi.yaml` | vivo | Contrato OpenAPI versionado del servidor companion. |
 | `docs/operations.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/operator-quick-reference.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/ops-nightly.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/p2p-sync-manual-test-script.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/p2p-sync-session-prep.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/PENDIENTES.md` | transitorio | Registro de trabajo pendiente y deuda conocida. |
+| `docs/plan-super-optimizacion.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/pricing-decision.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/production-license-launch-checklist.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/RELEASE-STATUS.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/ROPA.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/sast-triage.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
@@ -115,8 +120,14 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/security.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/SELF-HOSTING.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/server-api-index.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/staging-matrix-report-2026-09-21.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/staging-smoke.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/support-chargebacks-log.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/support-data-loss-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/support-license-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/support-refunds-log.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/WEBRTC-COMPATIBILITY.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/whop-setup-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 
 ## Política de retiro
 

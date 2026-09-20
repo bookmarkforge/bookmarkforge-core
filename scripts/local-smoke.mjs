@@ -49,7 +49,7 @@ function spawnChild(command, args, env, label) {
     env: { ...process.env, ...env },
     stdio: ["ignore", "pipe", "pipe"],
   });
-  children.push(child);
+  children.push({ child, label });
   child.stdout.on("data", (chunk) => process.stdout.write(`[${label}] ${chunk}`));
   child.stderr.on("data", (chunk) => process.stderr.write(`[${label}] ${chunk}`));
   return child;
@@ -68,15 +68,30 @@ async function waitForReady(url, attempts = 60, intervalMs = 250) {
   return false;
 }
 
-function teardown() {
-  for (const child of children) {
-    if (child.exitCode === null) child.kill();
+async function teardown() {
+  // Let the WebSocket close frame flush before asking the companion to shut
+  // down; immediately killing it on Windows can trigger a libuv assertion.
+  await new Promise((resolve) => setTimeout(resolve, 100));
+  const pending = children.filter(({ child }) => child.exitCode === null);
+  for (const { child, label } of pending) {
+    child.kill(label === "api" ? "SIGINT" : "SIGTERM");
   }
+  await Promise.all(pending.map(({ child }) => new Promise((resolve) => {
+    if (child.exitCode !== null) return resolve();
+    const timer = setTimeout(() => {
+      if (child.exitCode === null) child.kill();
+      resolve();
+    }, 5_000);
+    child.once("exit", () => {
+      clearTimeout(timer);
+      resolve();
+    });
+  })));
 }
 
 async function main() {
-  const onSignal = (code) => () => {
-    teardown();
+  const onSignal = (code) => async () => {
+    await teardown();
     process.exit(code);
   };
   process.on("SIGINT", onSignal(130));
@@ -130,7 +145,7 @@ async function main() {
       skipLicense: !signingConfigured,
     });
 
-    teardown();
+    await teardown();
     if (result.ok) {
       console.log(`All ${result.checks.length} local smoke checks passed.`);
       process.exit(0);
@@ -138,7 +153,7 @@ async function main() {
     console.error("[local-smoke] some checks failed.");
     process.exit(1);
   } catch (error) {
-    teardown();
+    await teardown();
     console.error("[local-smoke] failed:", error);
     process.exit(1);
   }

@@ -276,9 +276,12 @@ test.describe("critical path: license activation", () => {
     await pro.getByRole("button", { name: "Activate" }).click();
 
     // Pro state renders after the signed entitlement is verified locally.
-    await expect(pro.getByText("Activations left:")).toBeVisible({
-      timeout: 60_000,
-    });
+    // Current entitlements expose the canonical device status; legacy signing
+    // responses may only expose activationsLeft, so keep this smoke contract
+    // compatible with both payload shapes during migration.
+    await expect(
+      pro.getByText(/^(Devices:|Activations left:)/),
+    ).toBeVisible({ timeout: 60_000 });
     await expect(pro.getByRole("button", { name: "Deactivate" })).toBeVisible();
   });
 

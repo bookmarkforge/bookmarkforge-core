@@ -101,10 +101,10 @@ const IS_CLI = Boolean(
 if (IS_CLI) {
 
 (async () => {
-// Windows expone npx como npx.cmd. Resolver el shim explícitamente y pasar
-// cada argumento por separado evita shell injection y el warning DEP0190.
-const executable = process.platform === "win32" ? "npx.cmd" : "npx";
-const out = spawnSync(executable, ["playwright", "test", SPEC, "--config", E2E_CONFIG], {
+// Invocar el CLI de Playwright directamente evita que el shim npx.cmd
+// falle con EINVAL en Windows y mantiene los argumentos sin shell injection.
+const playwrightCli = join(ROOT, "node_modules", "@playwright", "test", "cli.js");
+const out = spawnSync(process.execPath, [playwrightCli, "test", SPEC, "--config", E2E_CONFIG], {
   cwd: ROOT,
   env: { ...process.env, CI: "1" },
   encoding: "utf8",

@@ -27,7 +27,7 @@ import { expect, type Page } from "@playwright/test";
  */
 
 /** Value scripts/license-mock.mjs accepts (matches LICENSE_MOCK_KEY in playwright.config.ts). */
-const E2E_LICENSE_KEY = process.env.BMF_E2E_LICENSE_KEY ?? "license-mock-key";
+const E2E_LICENSE_KEY = process.env.BMF_E2E_LICENSE_KEY ?? "e2e-license-key";
 
 /** Persisted state key — mirrors LICENSE_CONFIG.storageKeys.licenseState. */
 const LICENSE_STATE_KEY = "bf_license_state";

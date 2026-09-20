@@ -40,6 +40,7 @@
  */
 import { test, expect, type ConsoleMessage, type Page } from "@playwright/test";
 import { setupVault } from "./vault-helpers";
+import { seedProEntitlement } from "./pro-entitlement-helpers";
 
 const MOCK_SUMMARY = "Mock local AI first summary from WebLLM.";
 
@@ -100,6 +101,9 @@ test.describe("first boot with local AI active (F1-D)", () => {
 
     // ── 1. First boot ────────────────────────────────────────────────────
     await setupVault(page);
+    // Local AI is a Pro surface; exercise the real signed entitlement path so
+    // the performance result cannot accidentally measure a Free-tier rejection.
+    await seedProEntitlement(page);
 
     // Capture app-side errors so a hung/failed generation reports the root
     // cause instead of a bare timeout on the summary locator.
@@ -216,6 +220,30 @@ test.describe("first boot with local AI active (F1-D)", () => {
       "firstSummaryLatencyMs must be recorded on the first summary",
     ).not.toBeNull();
     expect(firstSummaryLatencyMs).toBeGreaterThanOrEqual(0);
+
+    // This spec runs with a deterministic WebLLM boundary, so the assertion
+    // protects the production orchestration (lazy import, warmup, routing,
+    // queue and first-generation path) without downloading a multi-GB model.
+    // The real GPU/model budget remains in the nightly device-only suite.
+    const MOBILE_FIRST_INFERENCE_BUDGET_MS = 3_000;
+    expect(
+      firstSummaryLatencyMs,
+      "mobile first inference orchestration budget (stubbed model boundary)",
+    ).toBeLessThanOrEqual(MOBILE_FIRST_INFERENCE_BUDGET_MS);
+    await test.info().attach("ai-first-inference-metrics.json", {
+      body: JSON.stringify(
+        {
+          schema: "bmf.ai-first-inference/1",
+          boundary: "webllm-engine-stub",
+          firstSummaryLatencyMs,
+          budgetMs: MOBILE_FIRST_INFERENCE_BUDGET_MS,
+          viewport: page.viewportSize(),
+        },
+        null,
+        2,
+      ),
+      contentType: "application/json",
+    });
   });
 });
 

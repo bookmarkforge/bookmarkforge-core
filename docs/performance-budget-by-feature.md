@@ -88,3 +88,21 @@ El chunk dominante es `lib-B2_7fcn7.js` con aproximadamente **5,75 MiB**. La ins
 
 Conclusión: no es un vendor genérico que deba dividirse sin más. Es el runtime local de IA y ya está correctamente fuera del precache por `globIgnores` de `vite.config.ts`. La optimización segura prioritaria es conservar la carga bajo demanda y medir una futura separación del runtime MLC del código de configuración/modelos; no moverlo al bootstrap ni duplicar sus dependencias.
 
+## Gate de primera inferencia móvil
+
+La prueba reproducible se ejecuta con:
+
+```bash
+npm run test:ai-performance:mobile
+```
+
+Emula un **Pixel 7** (`390x844`) y ejecuta el flujo real de la aplicación hasta la primera respuesta local, pero sustituye únicamente el motor WebLLM/WebGPU por un boundary determinista. Así detecta regresiones en lazy loading, entitlement, warmup, cola, routing y primera generación sin depender de una GPU concreta ni descargar gigabytes durante CI.
+
+Presupuesto actual del boundary móvil:
+
+```text
+firstSummaryLatencyMs <= 3.000 ms
+```
+
+La prueba genera `ai-first-inference-metrics.json` como artefacto. La validación del rendimiento real del modelo continúa en `ai-startup.nightly.spec.ts`, que requiere un dispositivo con WebGPU y red/model cache controlados. No se debe interpretar el test móvil emulado como sustituto de esa medición física.
+

@@ -41,6 +41,7 @@ export const SIDEBAR_TAB_IDS = [
   "voiceLocal",
   "collaboration",
   "analytics",
+  "security",
   "chat",
 ] as const;
 
@@ -94,7 +95,7 @@ export const BOTTOM_NAV_TAB_ID_VALUES: ReadonlyArray<BottomNavTabId> =
 // must use the arrays above.
 
 export const DATA_TAB_ID_VALUES_CSV =
-  "dashboard,documents,bookmarks,graph,canvas,database,kanban,calendar,list,gallery,timeline,chatLocal,voiceLocal,collaboration,analytics,chat,chat,faq,diagnostics";
+  "dashboard,documents,bookmarks,graph,canvas,database,kanban,calendar,list,gallery,timeline,chatLocal,voiceLocal,collaboration,analytics,security,chat,chat,faq,diagnostics";
 // NOTE: "chat" appears twice by design — the sidebar's Support tab and the
 // support center's AI Assistant tab share the id; the CSV is the exact join
 // of DATA_TAB_ID_VALUES and the gate collects it into a Set.

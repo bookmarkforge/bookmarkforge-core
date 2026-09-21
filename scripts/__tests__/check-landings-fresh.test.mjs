@@ -147,6 +147,33 @@ describe("check-landings-fresh: checkout realities", () => {
     expect(checkLandingsFresh({ publicDir: pub }).failures).toEqual([]);
   });
 
+  it("passes with lone CR line endings (classic Mac / misconfigured editor)", () => {
+    const pub = makePublicDir();
+    const p = join(pub, "fr.html");
+    // Strip ALL CRs first so we end up with pure LF, then convert LF→CR.
+    // This avoids the double-CR artifact when the builder already emits CRLF
+    // on Windows (the builder writes templates through Nunjucks which may
+    // produce CRLF depending on the OS and template line endings).
+    const lf = readFileSync(p, "utf8").replace(/\r/g, "");
+    writeFileSync(p, lf.replace(/\n/g, "\r"));
+    expect(checkLandingsFresh({ publicDir: pub }).failures).toEqual([]);
+  });
+
+  it("passes when git autocrlf produces double-CR before LF (regression: extra \r left by old normalizeEol)", () => {
+    // Simulates the exact Windows scenario that broke the gate:
+    // 1. git autocrlf converts LF→CRLF (file now has \r\n)
+    // 2. a test or tool does replace(/\n/g, "\r\n") on the CRLF content
+    // 3. result contains \r\r\n (extra \r before each existing \r\n)
+    const pub = makePublicDir();
+    const p = join(pub, "fr.html");
+    const alreadyCrlf = readFileSync(p, "utf8").replace(/\n/g, "\r\n");
+    const doubleCr = alreadyCrlf.replace(/\n/g, "\r\n");
+    // Verify the double-CR is actually present (the regression的前提条件)
+    expect(doubleCr).toContain("\r\r\n");
+    writeFileSync(p, doubleCr);
+    expect(checkLandingsFresh({ publicDir: pub }).failures).toEqual([]);
+  });
+
   it("still detects a real content change inside a CRLF file", () => {
     const pub = makePublicDir();
     const p = join(pub, "fr.html");
@@ -157,5 +184,18 @@ describe("check-landings-fresh: checkout realities", () => {
     const r = checkLandingsFresh({ publicDir: pub });
     expect(r.failures).toHaveLength(1);
     expect(r.failures[0].file).toBe("public/fr.html");
+  });
+
+  it("still detects a real content change inside a double-CR file", () => {
+    const pub = makePublicDir();
+    const p = join(pub, "fr.html");
+    const alreadyCrlf = readFileSync(p, "utf8").replace(/\n/g, "\r\n");
+    const doubleCr = alreadyCrlf.replace(/\n/g, "\r\n")
+      .replace("BookmarkForge", "BookmarkForgeX");
+    writeFileSync(p, doubleCr);
+    const r = checkLandingsFresh({ publicDir: pub });
+    expect(r.failures).toHaveLength(1);
+    expect(r.failures[0].file).toBe("public/fr.html");
+    expect(r.failures[0].reason).toMatch(/^stale: /);
   });
 });

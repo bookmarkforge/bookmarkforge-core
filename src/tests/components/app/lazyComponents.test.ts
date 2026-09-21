@@ -18,6 +18,7 @@ vi.mock("../../../components/FlashcardReview", () => ({ default: stubComponent }
 vi.mock("../../../components/Omnibar", () => ({ default: stubComponent }));
 vi.mock("../../../components/DocumentManager", () => ({ default: stubComponent }));
 vi.mock("../../../components/KnowledgeDashboard", () => ({ default: stubComponent }));
+vi.mock("../../../components/SecurityDashboard", () => ({ SecurityDashboard: stubComponent }));
 vi.mock("../../../components/SupportChat", () => ({ default: stubComponent }));
 vi.mock("../../../components/BlockEditor", () => ({ BlockEditor: stubComponent }));
 vi.mock("../../../components/Chat", () => ({ default: stubComponent }));
@@ -73,6 +74,7 @@ const EXPECTED_LAZY_EXPORTS = [
   "PrivacyPage",
   "DocumentManager",
   "KnowledgeDashboard",
+  "SecurityDashboard",
   "SupportChat",
   "BlockEditor",
   "Chat",

@@ -57,6 +57,7 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/audit-report-2026-09-02.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/audit.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/CHANGELOG.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/demo-media.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/deployment-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/docs-state-index.md` | vivo | Inventario canónico generado por scripts/doctor-docs-index.mjs. |
 | `docs/edge-case-hardening-vault-audit.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
@@ -103,6 +104,7 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/manual-usuario-vi.md` | vivo | Manual localizado de usuario. |
 | `docs/manual-usuario-zh.md` | vivo | Manual localizado de usuario. |
 | `docs/manual-usuario.md` | vivo | Manual localizado de usuario. |
+| `docs/market-validation-plan.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/onboarding-emails.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/ONBOARDING.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/openapi.yaml` | vivo | Contrato OpenAPI versionado del servidor companion. |
@@ -114,6 +116,7 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/PENDIENTES.md` | transitorio | Registro de trabajo pendiente y deuda conocida. |
 | `docs/performance-budget-by-feature.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/plan-super-optimizacion.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/positioning.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/pricing-decision.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/production-license-launch-checklist.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/release-candidate-package-2026-09-21.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |

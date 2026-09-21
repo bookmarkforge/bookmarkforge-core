@@ -13,6 +13,10 @@ const DOCS_DIR = path.join(ROOT, "docs");
 const INDEX_PATH = path.join(DOCS_DIR, "docs-state-index.md");
 const ALLOWED_STATES = new Set(["vivo", "transitorio", "archivo", "retirable"]);
 
+function normalizeEol(text) {
+  return text.replace(/\r\n?/g, "\n");
+}
+
 function docsFiles() {
   if (!fs.existsSync(DOCS_DIR)) return [];
   return fs.readdirSync(DOCS_DIR)
@@ -117,7 +121,7 @@ function main() {
     console.log(`docs index updated: ${docsFiles().length} files`);
     return;
   }
-  if (current !== canonical) {
+  if (normalizeEol(current) !== normalizeEol(canonical)) {
     console.error("docs/docs-state-index.md has drift; run node scripts/doctor-docs-index.mjs --update");
     process.exit(2);
   }

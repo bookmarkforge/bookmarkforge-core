@@ -48,6 +48,7 @@ import { createEntitlementHandler } from "./entitlement-endpoint";
 import { createGuardedDispatcher } from "./route-table";
 import { createClientEventsHandler } from "./client-events";
 import { createAnalyticsHandler } from "./business-analytics";
+import { applySecurityHeaders, cspCorsHeaders } from "./middleware/security";
 import { createEntitlementGuard } from "./entitlement-guard";
 import { constantTimeUtf8Equal, readBoundedInteger } from "./proxy-utils";
 
@@ -391,20 +392,6 @@ pruneTimer.unref();
 // Nginx reverse-proxies GET /health to verify the signaling server is
 // alive (not just the reverse proxy itself). The WebSocket upgrade
 // path is handled by ws on the same HTTP server.
-const HTTP_SECURITY_HEADERS: Readonly<Record<string, string>> = {
-  "X-Content-Type-Options": "nosniff",
-  "X-Frame-Options": "DENY",
-  "Referrer-Policy": "no-referrer",
-  "Permissions-Policy": "camera=(), geolocation=(), microphone=()",
-  "Content-Security-Policy": "default-src 'none'; base-uri 'none'; frame-ancestors 'none'",
-};
-
-function applyHttpSecurityHeaders(res: ServerResponse): void {
-  for (const [name, value] of Object.entries(HTTP_SECURITY_HEADERS)) {
-    res.setHeader(name, value);
-  }
-}
-
 function healthHandler(_req: IncomingMessage, res: ServerResponse): void {
   // no-store: a proxy/CDN that caches the 200 would keep reporting "ok"
   // after the signaling server has died, masking the outage from the
@@ -495,12 +482,6 @@ const CSP_REPORT_FILE = process.env.CSP_REPORT_FILE ?? "";
 // configured token it is unavailable rather than publicly exposing report
 // metadata.
 const CSP_REPORT_ADMIN_TOKEN = process.env.CSP_REPORT_ADMIN_TOKEN ?? "";
-const CSP_REPORT_ALLOWED_ORIGINS = new Set(
-  (process.env.CSP_REPORT_ALLOWED_ORIGIN ?? "")
-    .split(",")
-    .map((origin) => origin.trim())
-    .filter(Boolean),
-);
 const CSP_REPORT_IP_HASH_SALT =
   process.env.CSP_REPORT_IP_HASH_SALT || SERVER_INSTANCE_ID;
 const CSP_REPORT_BODY_MAX_BYTES = readBoundedInteger(
@@ -634,20 +615,6 @@ function redactCspOrigin(value: unknown): string | undefined {
   } catch {
     return "opaque";
   }
-}
-
-function cspCorsHeaders(req: IncomingMessage): Record<string, string> {
-  const origin = req.headers.origin;
-  if (
-    typeof origin !== "string" ||
-    !CSP_REPORT_ALLOWED_ORIGINS.has(origin)
-  ) {
-    return {};
-  }
-  return {
-    "Access-Control-Allow-Origin": origin,
-    Vary: "Origin",
-  };
 }
 
 function pruneCspRateWindows(now = monotonicNow()): void {
@@ -1128,7 +1095,7 @@ const settleHttpRequest = createGuardedDispatcher({
 const httpServer = createServer((req, res) => {
   // Apply the same non-sensitive response hardening to health, admin, CSP reports,
   // and unsupported routes before any handler can finish the response.
-  applyHttpSecurityHeaders(res);
+  applySecurityHeaders(res);
   void settleHttpRequest(req, res);
 });
 

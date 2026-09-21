@@ -42,6 +42,7 @@ vi.mock("../../components/app/lazyComponents", () => ({
   CanvasView: () => <div data-testid="canvas-view" />,
   SharedDocumentView: () => <div data-testid="shared-document-view" />,
   KnowledgeDashboard: () => <div data-testid="knowledge-dashboard" />,
+  SecurityDashboard: () => <div data-testid="security-dashboard" />,
   Collaboration: () => <div data-testid="collaboration" />,
   VoiceCommandCenterWrapper: () => <div data-testid="voice-command-center" />,
   Settings: () => <div data-testid="settings" />,

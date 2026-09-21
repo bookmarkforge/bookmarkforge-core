@@ -29,7 +29,6 @@ function makeContext(overrides: Partial<Context> = {}): Context {
     deleteSecret: vi.fn().mockResolvedValue(undefined),
     getRecoveryData: vi.fn().mockResolvedValue(null),
     setRecoveryData: vi.fn().mockResolvedValue(undefined),
-    deleteRecoveryData: vi.fn().mockResolvedValue(undefined),
     clearRecoveryData: vi.fn().mockResolvedValue(undefined),
     hasRecoveryData: vi.fn().mockResolvedValue(false),
     migrateFromLocalStorage: vi.fn().mockResolvedValue(undefined),

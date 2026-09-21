@@ -95,7 +95,7 @@ const SIDEBAR_ITEM_META: Record<
   collaboration: { labelKey: "app_collaborationTitle", icon: Users },
   analytics: { labelKey: "app_analytics", icon: Activity },
   // Reuses the key the dashboard itself already ships in all 30 locales.
-  security: { labelKey: "app_securityDashboard", icon: ShieldCheck },
+  security: { labelKey: "app_security", icon: ShieldCheck },
   chat: {
     labelKey: "app_supportChat",
     defaultValue: "Support",

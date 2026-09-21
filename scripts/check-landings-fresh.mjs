@@ -47,7 +47,11 @@ const GENERATED_NAME_RE =
  * LF. Compare after normalizing line endings so a fresh clone cannot
  * false-fail. */
 function normalizeEol(text) {
-  return text.replace(/\r\n/g, "\n");
+  // Normalize CRLF, lone CR (classic Mac), and double-CR before LF
+  // (Windows regression when a tool converts an already-CRLF fixture).
+  // The \r+ before \n collapses any run of CRs; standalone \r mid-line
+  // is also replaced to avoid false diffs from misconfigured editors.
+  return text.replace(/\r+\n/g, "\n").replace(/\r/g, "\n");
 }
 
 /** First differing line between two LF-normalized texts, 1-indexed. */

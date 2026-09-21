@@ -43,6 +43,7 @@ const ROOT_FILES = new Set([
   "playwright.multiuser.config.ts",
   "playwright.nightly.config.ts",
   "playwright.performance.config.ts",
+  "playwright.ai-performance.config.ts",
   "playwright.preview.config.ts",
   "playwright.public-relay.config.ts",
   "playwright.smoke.config.ts",

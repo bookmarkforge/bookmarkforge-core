@@ -116,6 +116,7 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/plan-super-optimizacion.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/pricing-decision.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/production-license-launch-checklist.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/release-candidate-package-2026-09-21.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/RELEASE-STATUS.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/ROPA.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/sast-triage.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |

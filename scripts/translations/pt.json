@@ -59,6 +59,33 @@
       }
     ]
   },
+  "demo": {
+    "id": "demo",
+    "tag": "Veja a funcionar",
+    "title": "A aplicação real, não uma maqueta",
+    "subtitle": "Sem registo prévio, sem vídeo de arquivo e sem cursor falso. Este ciclo é a versão publicada num computador comum: desbloquear o cofre, guardar uma página, procurar na biblioteca e voltar a bloqueá-lo.",
+    "imageAlt": "Ciclo animado do BookmarkForge: desbloquear o cofre, guardar um marcador, procurar na biblioteca e voltar a bloqueá-lo",
+    "caption": "Gravado a partir da aplicação de ambiente de trabalho com dados de demonstração. O percurso completo acompanha o projeto.",
+    "steps": [
+      {
+        "title": "Desbloquear",
+        "text": "O cofre abre com uma palavra-passe que escolhe; a chave fica no seu dispositivo."
+      },
+      {
+        "title": "Guardar",
+        "text": "Guarde uma página a partir da aplicação, sem conta e sem extensão."
+      },
+      {
+        "title": "Encontrar",
+        "text": "Procure por palavra-chave ou por significado, com as fontes de cada resposta."
+      },
+      {
+        "title": "Bloquear",
+        "text": "Feche o cofre e a chave de decifragem desaparece da memória."
+      }
+    ],
+    "ctaPrimary": "Abrir a aplicação"
+  },
   "pocketAlternative": {
     "id": "alternativa-pocket",
     "tag": "Ler mais tarde, sem abrir mão da privacidade",

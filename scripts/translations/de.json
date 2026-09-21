@@ -59,6 +59,33 @@
       }
     ]
   },
+  "demo": {
+    "id": "demo",
+    "tag": "Sieh es in Aktion",
+    "title": "Die echte App, kein Modell",
+    "subtitle": "Keine Anmeldung, kein Stockvideo und kein falscher Cursor. Diese Schleife zeigt die veröffentlichte Version auf einem normalen Rechner: Tresor aufschließen, Seite speichern, Bibliothek durchsuchen und wieder abschließen.",
+    "imageAlt": "Animierte Schleife von BookmarkForge: Tresor aufschließen, Lesezeichen speichern, Bibliothek durchsuchen und wieder abschließen",
+    "caption": "Aufgenommen aus der Desktop-App mit Demodaten. Die vollständige Tour liegt dem Projekt bei.",
+    "steps": [
+      {
+        "title": "Aufschließen",
+        "text": "Der Tresor öffnet sich mit einem Passwort, das du wählst; der Schlüssel bleibt auf deinem Gerät."
+      },
+      {
+        "title": "Speichern",
+        "text": "Speichere eine Seite direkt aus der App, ohne Konto und ohne Erweiterung."
+      },
+      {
+        "title": "Finden",
+        "text": "Suche nach Stichwort oder Bedeutung, mit den Quellen jeder Antwort."
+      },
+      {
+        "title": "Abschließen",
+        "text": "Schließe den Tresor und der Entschlüsselungsschlüssel verschwindet aus dem Speicher."
+      }
+    ],
+    "ctaPrimary": "App öffnen"
+  },
   "pocketAlternative": {
     "id": "pocket-alternative",
     "tag": "Später lesen, ohne deine Privatsphäre aufzugeben",

@@ -59,6 +59,33 @@
       }
     ]
   },
+  "demo": {
+    "id": "demo",
+    "tag": "See It Working",
+    "title": "The real app, not a mock-up",
+    "subtitle": "No sign-up wall, no stock footage and no fake cursor. This loop is the released build on an ordinary desktop: unlock the vault, save a page, search the library and lock it again.",
+    "imageAlt": "Animated loop of BookmarkForge: unlocking the vault, capturing a bookmark, searching the library and locking it again",
+    "caption": "Recorded from the desktop app with demo data. The full walkthrough ships with the project.",
+    "steps": [
+      {
+        "title": "Unlock",
+        "text": "The vault opens with a password you choose; the key stays on your device."
+      },
+      {
+        "title": "Capture",
+        "text": "Save a page straight from the app — no account and no extension required."
+      },
+      {
+        "title": "Find",
+        "text": "Search by keyword or by meaning, with the sources of every answer shown."
+      },
+      {
+        "title": "Lock",
+        "text": "Close the vault and the decryption key is gone from memory."
+      }
+    ],
+    "ctaPrimary": "Launch the app"
+  },
   "pocketAlternative": {
     "id": "pocket-alternative",
     "tag": "Read-It-Later Reborn",

@@ -59,6 +59,33 @@
       }
     ]
   },
+  "demo": {
+    "id": "demo",
+    "tag": "Guardalo in azione",
+    "title": "L'app vera, non un modello",
+    "subtitle": "Nessuna registrazione, nessun video di repertorio e nessun cursore finto. Questo ciclo mostra la versione pubblicata su un computer normale: sblocca la cassaforte, salva una pagina, cerca nella libreria e richiudila.",
+    "imageAlt": "Ciclo animato di BookmarkForge: sblocco della cassaforte, salvataggio di un segnalibro, ricerca nella libreria e nuova chiusura",
+    "caption": "Registrato dall'app desktop con dati dimostrativi. Il percorso completo accompagna il progetto.",
+    "steps": [
+      {
+        "title": "Sblocca",
+        "text": "La cassaforte si apre con una password che scegli tu; la chiave resta sul tuo dispositivo."
+      },
+      {
+        "title": "Salva",
+        "text": "Salva una pagina direttamente dall'app, senza account e senza estensione."
+      },
+      {
+        "title": "Trova",
+        "text": "Cerca per parola chiave o per significato, con le fonti di ogni risposta."
+      },
+      {
+        "title": "Richiudi",
+        "text": "Chiudi la cassaforte e la chiave di decifratura sparisce dalla memoria."
+      }
+    ],
+    "ctaPrimary": "Apri l'app"
+  },
   "pocketAlternative": {
     "id": "alternativa-pocket",
     "tag": "Leggi dopo, senza rinunciare alla privacy",

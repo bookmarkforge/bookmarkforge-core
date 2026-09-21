@@ -59,6 +59,33 @@
       }
     ]
   },
+  "demo": {
+    "id": "demo",
+    "tag": "Voyez-le fonctionner",
+    "title": "La vraie application, pas une maquette",
+    "subtitle": "Pas d'inscription, pas de vidéo d'illustration et pas de faux curseur. Cette boucle montre la version publiée sur un ordinateur ordinaire : déverrouiller le coffre, enregistrer une page, chercher dans votre bibliothèque et le verrouiller à nouveau.",
+    "imageAlt": "Boucle animée de BookmarkForge : déverrouillage du coffre, enregistrement d'un favori, recherche dans la bibliothèque et verrouillage",
+    "caption": "Enregistré depuis l'application de bureau avec des données de démonstration. Le parcours complet accompagne le projet.",
+    "steps": [
+      {
+        "title": "Déverrouiller",
+        "text": "Le coffre s'ouvre avec un mot de passe que vous choisissez ; la clé reste sur votre appareil."
+      },
+      {
+        "title": "Enregistrer",
+        "text": "Enregistrez une page depuis l'application, sans compte ni extension."
+      },
+      {
+        "title": "Retrouver",
+        "text": "Cherchez par mot-clé ou par sens, avec les sources de chaque réponse."
+      },
+      {
+        "title": "Verrouiller",
+        "text": "Fermez le coffre et la clé de déchiffrement disparaît de la mémoire."
+      }
+    ],
+    "ctaPrimary": "Ouvrir l'application"
+  },
   "pocketAlternative": {
     "id": "alternative-pocket",
     "tag": "Lire plus tard, sans renoncer à votre vie privée",

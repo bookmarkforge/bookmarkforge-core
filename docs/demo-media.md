@@ -95,9 +95,11 @@ medio real:
   falta. El presupuesto de bytes y la estructura del GIF se aplican a la copia
   igual que al original.
 
-La sección de producto que lo muestra vive en el template de la landing y entra
-con su propio cambio de página; esta guía cubre el medio y la copia que sirve el
-sitio.
+La sección vive en `scripts/templates/landing/landing.njk` (bloque
+`<!-- Product Demo Section -->`) y su copy en la clave `demo` de
+`scripts/translations/{en,es,fr,de,pt,it}.json`. Sus estilos
+(`.demo-tour…`) están en `public/landing.css`, todos con tokens de marca: no
+hay hexadecimales propios, como exige `check:static-brand`.
 
 Después de cambiar el template, la copy o los medios hay que regenerar las
 páginas y confirmarlas:

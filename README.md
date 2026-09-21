@@ -41,6 +41,10 @@ detalles del flujo, la verificación y los presupuestos están en
 
 ![Recorrido de BookmarkForge: bóveda local, captura, búsqueda y bloqueo](docs/bookmarkforge-demo-tour.gif)
 
+El mismo GIF es la sección de producto de la landing (`/landing.html` y sus
+cinco traducciones): `npm run demo:publish` mantiene la copia que sirve el sitio
+y `npm run check:demo-media` falla si esa copia se separa de este archivo.
+
 <picture>
   <source media="(max-width: 700px)" srcset="docs/bookmarkforge-demo-app-mobile.png">
   <img src="docs/bookmarkforge-demo-app.png" alt="BookmarkForge app: private local-first vault with a saved research bookmark" width="1200">

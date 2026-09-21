@@ -321,3 +321,51 @@ body {
   .rc-us::before { content: "✓ "; color: var(--color-success-text); }
   .rc-them::before { content: "— "; }
 }
+/* ── Product demo (tour GIF) ─────────────────────────────────────── */
+.demo-tour { padding: 88px 0; background: var(--bg-secondary); }
+.demo-tour-header { max-width: 780px; margin: 0 auto 40px; text-align: center; }
+.demo-tour-tag {
+  display: inline-block; padding: 4px 12px; margin-bottom: 16px;
+  border-radius: var(--radius-toggle); background: var(--accent-soft);
+  color: var(--accent-primary); font-size: 0.75rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.demo-tour-title { font-size: clamp(1.75rem, 3.4vw, 2.5rem); font-weight: 700; line-height: 1.2; margin-bottom: 16px; }
+.demo-tour-subtitle { font-size: 1.0625rem; color: var(--text-muted); line-height: 1.7; }
+.demo-tour-figure {
+  max-width: 880px; margin: 0 auto; padding: 16px;
+  border: 1px solid var(--divider); border-radius: var(--radius-card);
+  background: var(--bg-card); box-shadow: 0 24px 60px rgba(15, 28, 46, 0.16);
+}
+.demo-tour-media { display: block; width: 100%; height: auto; border-radius: var(--radius-input); background: var(--bg-primary); }
+.demo-tour-caption { margin-top: 12px; text-align: center; font-size: 0.8125rem; color: var(--text-muted); }
+.demo-tour-steps {
+  counter-reset: demo-step; list-style: none;
+  max-width: 1040px; margin: 40px auto 0; padding: 0;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+}
+.demo-tour-step {
+  position: relative; padding: 18px 18px 18px 48px;
+  border: 1px solid var(--divider); border-radius: var(--radius-item);
+  background: var(--bg-card);
+}
+.demo-tour-step::before {
+  counter-increment: demo-step; content: counter(demo-step);
+  position: absolute; left: 16px; top: 18px;
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent-soft); color: var(--accent-primary);
+  font-size: 0.6875rem; font-weight: 700;
+}
+.demo-tour-step-title { display: block; margin-bottom: 6px; font-size: 0.9375rem; color: var(--text-primary); }
+.demo-tour-step-text { font-size: 0.875rem; color: var(--text-muted); line-height: 1.6; }
+.demo-tour-cta { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-top: 40px; }
+
+@media (max-width: 1024px) {
+  .demo-tour-steps { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .demo-tour { padding: 56px 0; }
+  .demo-tour-figure { padding: 10px; }
+  .demo-tour-steps { grid-template-columns: 1fr; }
+}

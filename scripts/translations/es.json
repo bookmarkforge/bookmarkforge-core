@@ -59,6 +59,33 @@
       }
     ]
   },
+  "demo": {
+    "id": "demo",
+    "tag": "Míralo funcionando",
+    "title": "La aplicación real, no una maqueta",
+    "subtitle": "Sin registro previo, sin vídeo de archivo y sin cursor falso. Este bucle es la versión publicada en un equipo normal: desbloquea la bóveda, guarda una página, busca en tu biblioteca y vuelve a bloquearla.",
+    "imageAlt": "Bucle animado de BookmarkForge: desbloquear la bóveda, capturar un marcador, buscar en la biblioteca y volver a bloquearla",
+    "caption": "Grabado desde la aplicación de escritorio con datos de demostración. El recorrido completo acompaña al proyecto.",
+    "steps": [
+      {
+        "title": "Desbloquea",
+        "text": "La bóveda se abre con una contraseña que eliges tú; la clave se queda en tu dispositivo."
+      },
+      {
+        "title": "Captura",
+        "text": "Guarda una página desde la propia aplicación, sin cuenta y sin extensión."
+      },
+      {
+        "title": "Encuentra",
+        "text": "Busca por palabra clave o por significado y ve las fuentes de cada respuesta."
+      },
+      {
+        "title": "Bloquea",
+        "text": "Cierra la bóveda y la clave de descifrado desaparece de la memoria."
+      }
+    ],
+    "ctaPrimary": "Abrir la app"
+  },
   "pocketAlternative": {
     "id": "alternativa-pocket",
     "tag": "Leer después, sin renunciar a tu privacidad",

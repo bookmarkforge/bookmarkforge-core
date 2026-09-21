@@ -22,6 +22,17 @@ proveedor que el usuario configura.
 
 [![CI](https://github.com/bookmarkforge/core/actions/workflows/ci.yml/badge.svg)](https://github.com/bookmarkforge/core/actions/workflows/ci.yml) · [![Nightly validation](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml/badge.svg)](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml) · [runs fallidos](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml?query=conclusion%3Afailure) · [último release](https://github.com/bookmarkforge/core/releases/latest) · [operación del nightly](docs/ops-nightly.md)
 
+## Demo visual
+
+> La demo principal muestra la aplicación real: bóveda local, captura de un bookmark y flujo de trabajo privado. La landing se conserva como material de marketing separado. La evidencia completa de release está en el [paquete de Release Candidate](docs/release-candidate-package-2026-09-21.md).
+
+<picture>
+  <source media="(max-width: 700px)" srcset="docs/bookmarkforge-demo-app-mobile.png">
+  <img src="docs/bookmarkforge-demo-app.png" alt="BookmarkForge app: private local-first vault with a saved research bookmark" width="1200">
+</picture>
+
+[Ver hero de la landing](docs/bookmarkforge-demo-landing-hero.png)
+
 ## Requisitos
 
 - Node.js `>=20.19.0`

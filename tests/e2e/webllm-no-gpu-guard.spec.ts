@@ -139,6 +139,7 @@
  * resolver cannot produce a cloud provider here).
  */
 import { test, expect, type Page } from "@playwright/test";
+import { seedProEntitlement } from "./pro-entitlement-helpers";
 import {
   skipPassword,
   setupVault,
@@ -2039,6 +2040,7 @@ test.describe("forced webllm across the S9 vault-lock boundary (capable device)"
       // the empty-engine init is the same stubbed boundary ai-first-boot
       // pins; abort-routes keep any real fetch from escaping). ---
       await setupVault(page);
+      await seedProEntitlement(page);
 
       // --- 2. Install the local-AI stub in the live session (same boundary
       // as ai-first-boot): init() simulates the progressive install and

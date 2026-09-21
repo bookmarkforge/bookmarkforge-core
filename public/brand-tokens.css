@@ -41,19 +41,19 @@
 :root,
 [data-theme="dark"] {
   /* Backgrounds */
-  --bg-primary: #0f1c2e;
-  --bg-secondary: #162235;
-  --bg-card: #1a2a40;
-  --bg-topbar: #111e30;
-  --bg-sidebar: #0f1c2e;
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #334155;
+  --bg-topbar: #1e293b;
+  --bg-sidebar: #0f172a;
 
   /* Text */
-  --text-primary: #e8f0f8;
-  --text-secondary: #b9d4ea;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
   --text-accent: #38bdf8;
-  --text-muted: #b9d4ea;
-  /* Text on accent-colored fills (warning badge/founder buttons) */
-  --text-on-accent: #111827;
+  --text-muted: #94a3b8;
+  /* Text on accent-colored fills */
+  --text-on-accent: #0f172a;
 
   /* Accent / brand */
   --accent-primary: #00aeef;
@@ -92,18 +92,18 @@
   --toggle-off: #2e4560;
 
   /* Utilities */
-  --divider: #1e3352;
-  --input-bg: #162235;
+  --divider: #334155;
+  --input-bg: #1e293b;
 
   /* Overlays */
   --modal-overlay: rgba(0, 0, 0, 0.60);
   --scrim-on-accent: rgba(0, 0, 0, 0.25);
 
   /* Accent soft variants */
-  --accent-soft: rgba(0, 174, 239, 0.10);
-  --accent-faint: rgba(0, 174, 239, 0.05);
-  --accent-glow-soft: rgba(0, 174, 239, 0.20);
-  --accent-primary-glow-strong: rgba(0, 174, 239, 0.40);
+  --accent-soft: rgba(0, 174, 239, 0.15);
+  --accent-faint: rgba(0, 174, 239, 0.08);
+  --accent-glow-soft: rgba(0, 174, 239, 0.25);
+  --accent-primary-glow-strong: rgba(0, 174, 239, 0.50);
 
   /* Border radius */
   --radius-card: 12px;
@@ -123,18 +123,18 @@
 
 /* ── Light theme (matches app) ────────────────────────────────── */
 [data-theme="light"] {
-  --bg-primary: #f4f7fb;
-  --bg-secondary: #e8edf4;
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
   --bg-card: #ffffff;
   --bg-topbar: #ffffff;
-  --bg-sidebar: #f4f7fb;
+  --bg-sidebar: #f8fafc;
 
-  --text-primary: #1a2a3e;
-  --text-secondary: #3d5673;
-  --text-accent: #00609a;
-  --text-muted: #4a6178;
-  /* Text on accent-colored fills (warning badge/founder buttons) */
-  --text-on-accent: #111827;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-accent: #0369a1;
+  --text-muted: #64748b;
+  /* Text on accent-colored fills */
+  --text-on-accent: #ffffff;
 
   --accent-primary: #0095d6;
   --accent-secondary: #0a6fa8;

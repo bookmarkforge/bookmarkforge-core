@@ -437,15 +437,15 @@ política).
 | # | Severidad | Hallazgo |
 |---|---|---|
 | A8-1 | **Alta** (operaciones) | `scripts/production-smoke.mjs` hace 8 peticiones a endpoints eliminados (`/api/services/ai/session`, `/generate`, `/generate-tts`, `/generate-image`) y afirma sobre sus códigos de estado. Con las rutas fuera del servidor, esas comprobaciones reciben 404 y el smoke **no puede pasar** — arrastra también las fases BASELINE y RE-VERIFY del drill de rollback (`scripts/drill-rollback.mjs` importa `runApiSurfaceChecks` de ese archivo). |
-| A8-2 | **Alta** (config de producción) | `scripts/nginx-render.mjs` sigue generando el bloque "companion API" con 5 `location` hacia `bookmarkforge_api:8787` (`/api/services/ai/session`, `/generate`, `/generate-tts`, `/generate-image`, `/admin`), y `public/nginx.conf` —config desplegada— los contiene. nginx proxya a rutas que devuelven 404 y la configuración anuncia una superficie que ya no existe. |
+| A8-2 | **Alta** (config de producción) | `scripts/nginx-render.mjs` sigue generando el bloque "companion API" con 5 `location` hacia `bookmarkforge_api:8787` (`/api/services/ai/session`, `/generate`, `/generate-tts`, `/generate-image`, `/admin`), y `public/nginx.conf` —config desplegada— los contiene. nginx proxya a rutas que devuelven 404 y la configuración anuncia una superficie que ya no existe. **CORREGIDO en Ronda 9**: eliminadas las 5 location del bloque "companion API" hacia `/api/services/ai/*`; `public/nginx.conf` regenerado desde la plantilla. |
 | A8-3 | Media (observabilidad) | `scripts/monitoring-alerts.mjs` usa `/api/services/ai/session` como `API_PROBE_BUSINESS_PATH` por defecto: la sonda de negocio de producción mide un 404 permanente, con lo que la alerta o es ruido constante o es un verde sin significado. |
-| A8-4 | Media (SLO) | `scripts/load-test-server.mjs` (job nocturno de CI y `npm run test:load`) mide el presupuesto del proxy de IA y hace handshake contra `/api/services/ai/session`; el presupuesto también aparece en `docs/architecture.md` y `docs/launch-checklist.md`. |
+| A8-4 | Media (SLO) | `scripts/load-test-server.mjs` (job nocturno de CI y `npm run test:load`) mide el presupuesto del proxy de IA y hace handshake contra `/api/services/ai/session`; el presupuesto también aparece en `docs/architecture.md` y `docs/launch-checklist.md`. **CORREGIDO en Ronda 9**: eliminadas la fase de proxy de IA, su mock upstream, los presupuestos `generateP95Ms`/`generateSuccessPct` y las env del proxy. La prueba mide ahora la superficie que escala (señalización). |
 | A8-5 | Baja (limpieza) | `scripts/ai-mock.mjs` y `scripts/ai-mock-https.mjs` siguen sirviendo los contratos de los endpoints eliminados (`/generate-image`, `/generate-tts`), sin consumidor tras la retirada del mock del compose de staging. |Corregir A8-1..A8-5 exige tocar el renderizador (con su comparación byte a byte en
 `check:seo`), el smoke y el drill a la vez: es un cambio con su propia verificación, no un
 remate de esta ronda. `public/nginx.conf` no debe editarse a mano — se regenera con
-`npm run nginx:render`.
+`npm run nginx:render`. **CORREGIDO en Ronda 9**: todos los ítems A8-1..A8-5 fueron cerrados.
 
-## Ronda 9 — 2026-09-17 (retirada de la superficie muerta del proxy de IA en la capa operativa)
+## Ronda 9 — 2026-09-17 (retirada de la superficie muerta del proxy de IA en la capa operativa) - CORREGIDO
 
 ### A8-1..A8-5 cerrados
 

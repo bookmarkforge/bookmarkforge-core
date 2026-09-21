@@ -45,7 +45,7 @@ public export, enforced by CI:
 | P2P device sync | End-to-end encrypted sync between your devices |
 | PDF + OCR | Read, extract and index PDF documents |
 | Encrypted backups | Automatic, versioned, encrypted local backups |
-| BYOK cloud AI | Provider calls originate in the browser with the user's key |
+| BYOK cloud AI | Provider calls originate in the browser with the user's key (no server-side proxy) |
 
 **Pricing** — one-time purchase, no subscription: **$59 Early Bird** (first 200
 licenses) → **$79 regular**. A license covers the lifetime of v1: all v1.x
@@ -96,7 +96,7 @@ npm run server     # listens on :8787
 
 **Bring your own key:** cloud AI providers (OpenAI, Gemini, …) are configured
 in Settings; your key stays inside your vault and calls go directly from your
-browser to the provider. Server-side AI relaying is a Pro feature.
+browser to the provider. The server no longer proxies AI calls.
 
 Environment variables and the server API surface are documented in
 [docs/architecture.md](docs/architecture.md) and

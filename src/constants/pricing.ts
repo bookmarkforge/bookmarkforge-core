@@ -7,7 +7,7 @@
  * — Includes 12 months of feature updates from purchase date.
  * — After month 13 you keep v1 functional forever, only without new features.
  * — v2.0 (paid major) is a new product: $89 for new customers, $35 for v1 owners (60% off).
- * — Founder Edition: same Pro v1 binary, vanity badge + lifetime 60% off future majors.
+
  *
  * Why this beats subscription:
  * - User local-first hates recurring billing (same persona as Obsidian $0+Sync $48/y).
@@ -18,7 +18,7 @@
  * - Early Bird (200 licenses): Pro $59 — FOMO real
  * - Regular v1 (next 6-12mo): Pro $79 — anchor < $100 psychological
  * - Post-traction / v1.5: Pro $89-99 — after 500+ reviews, A/B $79 vs $99
- * - Founder (100-200 limited): $99 — same Pro v1, badge Founder #042 + 60% off v2 lifetime + beta
+
  *
 */
 
@@ -108,35 +108,7 @@ export const PRICING_CONFIG = {
       cta: "Get Pro Lifetime",
       popular: true,
     },
-    {
-      id: "founder",
-      name: "Founder",
-      price: 99,
-      currency: "USD",
-      interval: "lifetime",
-      lifetimeLine: "Lifetime of v1 · Founder # · Beta access · v2 60% off lifetime",
-      description: "Same Pro v1, vanity + priority. Founder badge in app + beta access. 100 limited.",
-      badge: "Founder — 100 limited",
-      vanity: true,
-      limitedSupply: 100,
-      features: [
-        { text: "Everything in Pro", included: true },
-        { text: "Founder badge #042 in app", included: true },
-        { text: "Beta access to v2 early builds", included: true },
-        { text: "60% off v2 (and v3) forever for this account", included: true },
-        { text: "Lifetime of v1 · Security forever", included: true },
-        { text: "30-day refund via Whop", included: true },
-      ],
-      limitations: {
-        maxBookmarks: Infinity,
-        maxDevices: 3,
-        cloudSync: true,
-        localAI: true,
-        teamSharing: false,
-      },
-      cta: "Get Founder",
-      popular: false,
-    },
+
   ],
 
   trial: {
@@ -152,7 +124,6 @@ export const PRICING_CONFIG = {
     phase: "early" as "early" | "regular" | "full",
     caps: {
       early: 200,
-      founder: 100,
     },
     phases: {
       early: {
@@ -160,20 +131,17 @@ export const PRICING_CONFIG = {
         tagline: "Launch price — 200 licenses",
         validUntilWeeks: 2,
         pro: 59,
-        founder: 99,
       },
       regular: {
         label: "Regular v1",
         tagline: "Lifetime of v1",
         validUntilWeeks: 26,
         pro: 79,
-        founder: 99,
       },
       full: {
         label: "Full Price",
         tagline: "After traction",
         pro: 99,
-        founder: 129,
       },
     },
   },

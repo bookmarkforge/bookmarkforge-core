@@ -7,6 +7,11 @@
  * gate in build-ci.mjs scans for the literal assignment pattern and blocks
  * deployment when a provider key leaks into the bundle.
  *
+ * Note: Provider keys should be stored in the user's encrypted vault and used
+ * directly from the browser; the server no longer proxies AI calls. This gate
+ * protects against accidental configuration errors where VITE_*_API_KEY vars
+ * might be set despite being removed from .env.example.
+ *
  * Strategy:
  *   1. Run `node scripts/build-ci.mjs` as a child process with
  *      VITE_GEMINI_API_KEY=sk-test-fake-key-for-scan-gate set.

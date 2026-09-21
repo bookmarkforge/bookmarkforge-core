@@ -21,11 +21,11 @@ function collectStrings(value: unknown, out: string[]): void {
 }
 
 describe("constants/pricing", () => {
-  it("should export PRICING_CONFIG with Free/Pro/Founder (lifetime versioned)", async () => {
+  it("should export PRICING_CONFIG with Free/Pro (lifetime versioned)", async () => {
     const { PRICING_CONFIG } = await import("../../constants/pricing");
-    expect(PRICING_CONFIG.tiers).toHaveLength(3);
+    expect(PRICING_CONFIG.tiers).toHaveLength(2);
     const ids = PRICING_CONFIG.tiers.map((t) => t.id);
-    expect(ids).toEqual(["free", "pro", "founder"]);
+    expect(ids).toEqual(["free", "pro"]);
   });
 
   it("should have correct pricing for each tier (lifetime versioned)", async () => {
@@ -39,10 +39,6 @@ describe("constants/pricing", () => {
     expect(pro.price).toBe(79);
     expect(pro.limitations.maxBookmarks).toBe(Infinity);
     expect(pro.popular).toBe(true);
-
-    const founder = PRICING_CONFIG.tiers.find((t) => t.id === "founder")!;
-    expect(founder.price).toBe(99);
-    expect(founder.limitations.maxBookmarks).toBe(Infinity);
   });
 
   it("should keep the legacy trial disabled and preserve lifetime versioned early bird", async () => {

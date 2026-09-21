@@ -407,48 +407,7 @@
         "priceSub": "then $79 regular · Founder $99",
         "sla": "Support: Email 48h (Mon–Fri)"
       },
-      {
-        "name": "Founder",
-        "badge": "Founder — 100 limited",
-        "price": "$ 99",
-        "period": "lifetime v1",
-        "priceSub": "Same Pro v1 + Founder badge + beta",
-        "description": "Founder badge #042 in app · Beta access · v2 60% off lifetime",
-        "features": [
-          {
-            "included": true,
-            "text": "Everything in Pro Lifetime v1"
-          },
-          {
-            "included": true,
-            "text": "Founder badge #042 in app"
-          },
-          {
-            "included": true,
-            "text": "Beta access to v2 early builds"
-          },
-          {
-            "included": true,
-            "text": "60% off v2 (and v3) forever for this account"
-          },
-          {
-            "included": true,
-            "text": "Lifetime of v1 · Security forever"
-          },
-          {
-            "included": true,
-            "text": "Priority email support (24h) + early access"
-          },
-          {
-            "included": true,
-            "text": "30-day refund via Whop"
-          }
-        ],
-        "cta": "Get Founder $99",
-        "ctaHref": "/buy-founder",
-        "ctaClass": "btn-primary btn-founder",
-        "sla": "Support: Priority 24h · Founder queue"
-      }
+
     ],
     "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help#pricing\">Learn more</a>"
   },
@@ -463,17 +422,14 @@
         "question": "What does \"Lifetime of v1\" mean for Pro?",
         "answer": "Pay once, own v1 forever. Includes all v1.x updates (bugfixes + minor features) forever and 12 months of feature updates from purchase. Security updates forever. After month 13 you keep v1 functional, just without new features. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off)."
       },
-      {
-        "question": "What about Founder Edition?",
-        "answer": "Same Pro v1 binary — not a feature tier. Founder gives you a Founder # badge in the app, beta access to v2, and 60% off future majors forever for this account. Limited 100. Vanity, not paywall."
-      },
+
       {
         "question": "What payment methods & refunds?",
         "answer": "Via Whop: credit card, PayPal, crypto. We never see your payment details. 30-day refund — contact <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
       },
       {
         "question": "Support — how fast do you answer?",
-        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Founder: priority 24h + beta queue. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help#sla\">Support SLA</a>."
+        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help#sla\">Support SLA</a>."
       },
       {
         "question": "What if I forget my vault password?",
@@ -591,10 +547,7 @@
         "question": "What does \"Lifetime of v1\" mean for Pro?",
         "answer": "Pay once, own v1 forever. Includes all v1.x updates (bugfixes + minor features) forever and 12 months of feature updates from purchase. Security updates forever. After month 13 you keep v1 functional, just without new features. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off)."
       },
-      {
-        "question": "What about Founder Edition?",
-        "answer": "Same Pro v1 binary — not a feature tier. Founder gives you a Founder # badge in the app, beta access to v2, and 60% off future majors forever for this account. Limited 100. Vanity, not paywall."
-      },
+
       {
         "question": "What payment methods & refunds?",
         "answer": "Via Whop: credit card, PayPal, crypto. We never see your payment details. 30-day refund — contact bookmarkforge@proton.me."

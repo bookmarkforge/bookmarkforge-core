@@ -49,7 +49,6 @@ de la exportación pública, y esa exclusión la verifica la CI:
 | Sincronización P2P | Sincronización cifrada de extremo a extremo entre tus dispositivos |
 | PDF + OCR | Leer, extraer e indexar documentos PDF |
 | Backups cifrados | Copias locales automáticas, versionadas y cifradas |
-| Proxy de IA en servidor | Relay opcional para sesiones de IA |
 
 **Precio** — pago único, sin suscripción: **$59 Early Bird** (primeras 200
 licencias) → **$79 precio regular**. La licencia cubre la vida útil de la
@@ -70,9 +69,9 @@ preguntas. Compra en [bookmarkforge.com](https://bookmarkforge.com).
   entitlement `src/services/pro-access.ts` (MIT), que comprueba la licencia
   *antes* de pedir código Pro: un usuario Free nunca descarga lo que no puede
   usar.
-- En el servidor, el proxy de IA resuelve a un par marcado como placeholder
-  (`.d.ts` con la superficie de tipos + `.js` inerte) que nunca rompe tu build
-  y avisa una sola vez:
+- En el servidor, los servicios Pro resuelven a pares marcados como placeholder
+  (`.d.ts` con la superficie de tipos + `.js` inerte) que nunca rompen tu build
+  y avisan una sola vez:
   `[open-core] <module> is a Pro feature and is not included in this build`.
 - La lista exacta de módulos propietarios es auditable en
   `scripts/pro-boundary.mjs`, y `npm run check:open-core` re-verifica la

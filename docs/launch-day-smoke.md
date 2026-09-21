@@ -32,7 +32,7 @@ npm run launch:smoke         # modo dev (rápido, para iterar)
 | companion server (señalización + licencias) | 8787 | atiende `/api/license/*` con firma RSA-PSS real |
 | `scripts/license-mock.mjs` | 8790 | proveedor Whop simulado (activación + revocación) |
 
-La build se genera con `VITE_E2E_PREVIEW_DIAGNOSTICS=true` para exponer el diagnóstico de backend que usan los tests. `vite.config.ts` enruta el tráfico local de `/api` → `VITE_API_PROXY_TARGET` (8787 en este perfil; el 8799 de `crisis-containment` es un servidor companion efímero de ese spec, no el global).
+La build se genera con `VITE_E2E_PREVIEW_DIAGNOSTICS=true` para exponer el diagnóstico de backend que usan los tests. `vite.config.ts` enruta el tráfico local de `/api` → `VITE_API_PROXY_TARGET` (8787 en este perfil; el 8799 de `crisis-containment` es un servidor companion efímero de ese spec, no el global). Nota: este es el proxy local de Vite para desarrollo, no el proxy de IA del servidor (que fue retirado en 2026-09).
 
 ## Los 7 tests y qué garantizan
 

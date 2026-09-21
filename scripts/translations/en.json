@@ -404,10 +404,9 @@
         "ctaHref": "/buy-pro",
         "ctaClass": "btn-primary",
         "priceWas": "$79",
-        "priceSub": "then $79 regular · Founder $99",
+        "priceSub": "then $79 regular",
         "sla": "Support: Email 48h (Mon–Fri)"
-      },
-
+      }
     ],
     "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help#pricing\">Learn more</a>"
   },

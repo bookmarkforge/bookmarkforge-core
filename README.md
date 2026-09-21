@@ -26,6 +26,21 @@ proveedor que el usuario configura.
 
 > La demo principal muestra la aplicación real: bóveda local, captura de un bookmark y flujo de trabajo privado. La landing se conserva como material de marketing separado. La evidencia completa de release está en el [paquete de Release Candidate](docs/release-candidate-package-2026-09-21.md).
 
+### Recorrido en vídeo
+
+[![Recorrido de BookmarkForge: desbloqueo de la bóveda, captura de un bookmark, búsqueda y bloqueo](docs/bookmarkforge-demo-tour-poster.png)](docs/bookmarkforge-demo-tour.webm)
+
+Vídeo WebM de 47 s y 1,0 MB en 1280×720, grabado con la aplicación real y datos
+de demostración. GitHub no reproduce dentro del README un vídeo alojado en el
+propio repositorio, así que el póster enlaza al archivo; para reproducción en
+línea puedes adjuntar el `.webm` en un comentario y usar la URL resultante. Los
+detalles del flujo, la verificación y los presupuestos están en
+[docs/demo-media.md](docs/demo-media.md).
+
+### Resumen en bucle (GIF)
+
+![Recorrido de BookmarkForge: bóveda local, captura, búsqueda y bloqueo](docs/bookmarkforge-demo-tour.gif)
+
 <picture>
   <source media="(max-width: 700px)" srcset="docs/bookmarkforge-demo-app-mobile.png">
   <img src="docs/bookmarkforge-demo-app.png" alt="BookmarkForge app: private local-first vault with a saved research bookmark" width="1200">

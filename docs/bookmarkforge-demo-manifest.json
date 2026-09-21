@@ -1,0 +1,28 @@
+{
+  "generatedBy": "scripts/capture-demo-screens.mjs",
+  "demoDataOnly": true,
+  "realCredentials": false,
+  "platform": "win32",
+  "arch": "arm64",
+  "runs": {
+    "desktop": {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "deviceScaleFactor": 1
+    },
+    "mobile": {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "deviceScaleFactor": 2
+    }
+  },
+  "bookmarks": [
+    "WebGPU API — MDN",
+    "Dependency injection — web.dev",
+    "Vite SSR guide"
+  ]
+}

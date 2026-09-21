@@ -1,0 +1,63 @@
+name: Nightly demo media
+
+# The README ships binary artifacts (stills, GIF, poster) built from the UI.
+# Nothing in a pull request reviews them, so when the interface changes the
+# README keeps advertising an interface that no longer exists and no diff
+# reveals it. This job regenerates the media from the current UI every night and
+# answers two questions:
+#
+#   budget — does the regenerated GIF still fit the README budget?
+#   drift  — do the captures still match the committed images?
+#   copy   — does the GIF the landing serves still match the one the pipeline
+#            produces? (public/landing-demo-tour.gif is a derived copy)
+#
+# It never commits anything: the fresh media is uploaded as an artifact so a
+# human reviews it and commits the change deliberately.
+
+on:
+  schedule:
+    # 04:41 UTC, deliberately off the hour: the nightly validation workflow
+    # already occupies 02:17 and 03:17 and this job needs a browser.
+    - cron: '41 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: demo-media-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  CI: true
+
+jobs:
+  regenerate:
+    name: Regenerate README demo media
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '20.19.0'
+          cache: npm
+      - run: npm ci
+      - name: Verify the landing copy matches its source
+        run: npm run demo:publish:check
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Regenerate captures, GIF and drift report
+        run: node scripts/run-demo-media-nightly.mjs --report artifacts/demo-media-nightly-report.json
+      - name: Upload regenerated demo media
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: demo-media-nightly
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            artifacts/
+            node_modules/.cache/demo-media/

@@ -3,11 +3,13 @@
  * scripts/__tests__/check-page-figures.test.mjs
  *
  * Adversarial suite for the page-figures gate: the generated public pages
- * (30 localized privacy-and-terms.html + 6 landings + pocket-alternative)
+ * (30 localized privacy-and-terms.html + 30 landings + pocket-alternative)
  * must agree with the code truth, reusing check-manual-figures' evaluator.
  * Tests pin:
  *
- *   - the 37-surface contract (missing page → reported, not skipped);
+ *   - the 61-surface contract (missing page → reported, not skipped),
+ *     including a NEW-locale landing so the 24 expansion pages can never
+ *     silently fall out of coverage again;
  *   - HTML tag stripping with 1:1 line attribution (file:line of the RAW file);
  *   - JSON-LD compaction ("100% Local-First" marketing + offer prices on one
  *     synthetic line must not fabricate failures — the probe's original FP);
@@ -54,9 +56,11 @@ const LOCALES = [
   "hr", "hu", "id", "it", "ja", "ko", "nl", "no", "pl", "pt", "ro", "ru",
   "sv", "th", "tr", "uk", "vi", "zh",
 ];
-const LANDING_FILES = ["landing.html", "es.html", "fr.html", "de.html", "pt.html", "it.html"];
+// Landing surfaces for the SAME locale set as the privacy pages (EN is the
+// root landing.html): mirrors check-page-figures.mjs's own derivation.
+const LANDING_FILES = LOCALES.map((l) => (l === "en" ? "landing.html" : `${l}.html`));
 
-/** Build a root whose 37 page surfaces all exist. Per-locale bodies default
+/** Build a root whose 61 page surfaces all exist. Per-locale bodies default
  * to a figure-free page; `pages` maps "es/privacy-and-terms.html" → body. */
 function makePageRoot(pages = {}) {
   tmpRoot = mkdtempSync(join(tmpdir(), "page-figures-gate-"));
@@ -87,10 +91,10 @@ function writePage(rel, body) {
 }
 
 describe("check-page-figures: surface contract", () => {
-  it("scans all 37 surfaces on a green synthetic tree", () => {
+  it("scans all 61 surfaces on a green synthetic tree", () => {
     const root = makePageRoot();
     const r = scanPages(root);
-    expect(r.scanned).toBe(37);
+    expect(r.scanned).toBe(61);
     expect(r.missing).toEqual([]);
     expect(r.failures).toEqual([]);
   });
@@ -106,6 +110,18 @@ describe("check-page-figures: surface contract", () => {
     const root = makePageRoot();
     rmSync(join(root, "public", "pocket-alternative.html"));
     expect(scanPages(root).missing).toContain("public/pocket-alternative.html");
+  });
+
+  it("requires a NEW-locale landing, not just the original six", () => {
+    // The regression this pins: LANDING_FILES was a hand-written list of the
+    // six original landings, so ja.html and the other 23 expansion pages
+    // shipped priced copy no figures gate ever read. A locale that exists on
+    // the privacy side must exist on the landing side too.
+    const root = makePageRoot();
+    rmSync(join(root, "public", "ja.html"));
+    const r = scanPages(root);
+    expect(r.missing).toContain("public/ja.html");
+    expect(r.scanned).toBe(60);
   });
 });
 
@@ -160,6 +176,17 @@ describe("check-page-figures: surface adaptation", () => {
     });
     const r = scanPages(root);
     expect(r.failures.some((f) => f.includes("price 28"))).toBe(true);
+  });
+
+  it("polices drift on a NEW-locale landing the old six-file list never read", () => {
+    // Presence is not coverage: the expansion landings were scanned by no
+    // figures gate at all, so a drifted price there was invisible. One claim
+    // on ja.html must now fail with file+line attribution.
+    const root = makePageRoot({
+      "ja.html": "<p>Pro is $28 forever.</p>\n",
+    });
+    const r = scanPages(root);
+    expect(r.failures.some((f) => f.includes("public/ja.html:1") && f.includes("price 28"))).toBe(true);
   });
 
   it("extracts semantic meta content so JSON-borne claims are policed", () => {

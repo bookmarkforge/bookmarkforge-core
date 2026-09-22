@@ -31,8 +31,15 @@
  *   Language negotiation: the bare root must 302-redirect browsers whose
  *   primary Accept-Language is one of the localized landings (public/
  *   nginx.conf for the Docker path, functions/_middleware.js for Cloudflare
- *   Pages). 302, not 301 — negotiation must stay temporary so the en
- *   canonical at / is preserved.
+ *   Pages, netlify.toml Language conditions for Netlify). 302, not 301 —
+ *   negotiation must stay temporary so the en canonical at / is preserved.
+ *   The same 30-language list also backs the MANUAL preference (?lang= +
+ *   bf_lang cookie), which is why one list exists and not two: on Netlify
+ *   the preference has no mechanism of its own (the platform matches the
+ *   nf_lang cookie against those same Language rules), so a locale that is
+ *   choosable from the dropdown but absent from a layer is a locale whose
+ *   choice gets silently ignored. The gate loops over LANDING_LANG_CODES,
+ *   so it fails on the layer that lags.
  *
  *   The private app must never be indexed:
  *     - X-Robots-Tag: noindex for /app, /app/*, /capture, /capture/* and
@@ -57,7 +64,15 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { APP_DOMAIN } from "./csp-config.js";
+import {
+  LANG_LINK_HREFS as REGISTRY_LINK_HREFS,
+  LANDING_CODES as REGISTRY_ALL_CODES,
+  LOCALIZED_LANDING_CODES as REGISTRY_LOCALIZED_CODES,
+  LANDING_LANGS as REGISTRY_LANGS,
+  LANDING_LOCALES as REGISTRY_LOCALES,
+  LANDING_PAGES as REGISTRY_PAGES,
+  SITE_URL as REGISTRY_SITE_URL,
+} from "./landing-registry.mjs";
 
 // Repo root. Deliberately process.cwd() (not import.meta.url): vitest
 // transforms module URLs to a non-file scheme, so fileURLToPath(new
@@ -66,99 +81,33 @@ import { APP_DOMAIN } from "./csp-config.js";
 // vitest always run from the repo root, so cwd() is equivalent.
 const ROOT = process.cwd();
 const TAG = "[check-seo]";
-const SITE_URL = `https://${APP_DOMAIN}`;
+const SITE_URL = REGISTRY_SITE_URL;
 
 /**
- * Every landing language and its canonical URL (all pages link all of them).
- *
- * 30 locales as of 2026-09-22 (the locale expansion landed 24 new pages);
- * the hrefs match the <head> alternates and the sitemap xhtml:link set, and
- * the code list matches check-sitemap-coverage's LANDING_LANGS. Adding a
- * locale means adding its row here, its page identity to LANDING_LOCALES, its
- * visible-link href to LANG_LINK_HREFS and the pages themselves — the gate
- * fails loudly on a page the registry does not know (and on a registry entry
- * the pages do not carry), which is exactly how the 6→30 lag was found.
+ * Every landing language and its canonical URL — the 30-locale registry
+ * is OWNED by scripts/landing-registry.mjs now; this module re-exports it
+ * under the historical names so its importers (tests, the other gates)
+ * keep working. A new locale is ONE edit in the registry, never here.
  */
-export const LANDING_LANGS = [
-  { hreflang: "en", href: `${SITE_URL}/` },
-  { hreflang: "ar", href: `${SITE_URL}/ar/` },
-  { hreflang: "bg", href: `${SITE_URL}/bg/` },
-  { hreflang: "cs", href: `${SITE_URL}/cs/` },
-  { hreflang: "da", href: `${SITE_URL}/da/` },
-  { hreflang: "de", href: `${SITE_URL}/de/` },
-  { hreflang: "el", href: `${SITE_URL}/el/` },
-  { hreflang: "es", href: `${SITE_URL}/es/` },
-  { hreflang: "fi", href: `${SITE_URL}/fi/` },
-  { hreflang: "fr", href: `${SITE_URL}/fr/` },
-  { hreflang: "he", href: `${SITE_URL}/he/` },
-  { hreflang: "hi", href: `${SITE_URL}/hi/` },
-  { hreflang: "hr", href: `${SITE_URL}/hr/` },
-  { hreflang: "hu", href: `${SITE_URL}/hu/` },
-  { hreflang: "id", href: `${SITE_URL}/id/` },
-  { hreflang: "it", href: `${SITE_URL}/it/` },
-  { hreflang: "ja", href: `${SITE_URL}/ja/` },
-  { hreflang: "ko", href: `${SITE_URL}/ko/` },
-  { hreflang: "nl", href: `${SITE_URL}/nl/` },
-  { hreflang: "no", href: `${SITE_URL}/no/` },
-  { hreflang: "pl", href: `${SITE_URL}/pl/` },
-  { hreflang: "pt", href: `${SITE_URL}/pt/` },
-  { hreflang: "ro", href: `${SITE_URL}/ro/` },
-  { hreflang: "ru", href: `${SITE_URL}/ru/` },
-  { hreflang: "sv", href: `${SITE_URL}/sv/` },
-  { hreflang: "th", href: `${SITE_URL}/th/` },
-  { hreflang: "tr", href: `${SITE_URL}/tr/` },
-  { hreflang: "uk", href: `${SITE_URL}/uk/` },
-  { hreflang: "vi", href: `${SITE_URL}/vi/` },
-  { hreflang: "zh", href: `${SITE_URL}/zh/` },
-];
+export const LANDING_LANGS = REGISTRY_LANGS;
 
 /**
- * Per-page identity: file, language, OG locales and canonical path. Kept in
- * step with LANDING_LANGS (one entry per locale, same set) — the OG locales
- * are the values the live pages carry, verified by the gate on every run.
+ * The 29 localized landing codes (registry-derived, EN excluded) — the
+ * language contract: the negotiation/preference gate loops over THIS list,
+ * so a locale missing from nginx.conf, the Cloudflare middleware or
+ * netlify.toml fails the build instead of shipping a half-wired language.
  */
-export const LANDING_LOCALES = [
-  { file: "public/landing.html", lang: "en", locale: "en_US", alternateLocale: "es_ES", path: "/" },
-  { file: "public/ar.html", lang: "ar", locale: "ar_AR", alternateLocale: "en_US", path: "/ar/" },
-  { file: "public/bg.html", lang: "bg", locale: "bg_BG", alternateLocale: "en_US", path: "/bg/" },
-  { file: "public/cs.html", lang: "cs", locale: "cs_CZ", alternateLocale: "en_US", path: "/cs/" },
-  { file: "public/da.html", lang: "da", locale: "da_DK", alternateLocale: "en_US", path: "/da/" },
-  { file: "public/de.html", lang: "de", locale: "de_DE", alternateLocale: "en_US", path: "/de/" },
-  { file: "public/el.html", lang: "el", locale: "el_GR", alternateLocale: "en_US", path: "/el/" },
-  { file: "public/es.html", lang: "es", locale: "es_ES", alternateLocale: "en_US", path: "/es/" },
-  { file: "public/fi.html", lang: "fi", locale: "fi_FI", alternateLocale: "en_US", path: "/fi/" },
-  { file: "public/fr.html", lang: "fr", locale: "fr_FR", alternateLocale: "en_US", path: "/fr/" },
-  { file: "public/he.html", lang: "he", locale: "he_IL", alternateLocale: "en_US", path: "/he/" },
-  { file: "public/hi.html", lang: "hi", locale: "hi_IN", alternateLocale: "en_US", path: "/hi/" },
-  { file: "public/hr.html", lang: "hr", locale: "hr_HR", alternateLocale: "en_US", path: "/hr/" },
-  { file: "public/hu.html", lang: "hu", locale: "hu_HU", alternateLocale: "en_US", path: "/hu/" },
-  { file: "public/id.html", lang: "id", locale: "id_ID", alternateLocale: "en_US", path: "/id/" },
-  { file: "public/it.html", lang: "it", locale: "it_IT", alternateLocale: "en_US", path: "/it/" },
-  { file: "public/ja.html", lang: "ja", locale: "ja_JP", alternateLocale: "en_US", path: "/ja/" },
-  { file: "public/ko.html", lang: "ko", locale: "ko_KR", alternateLocale: "en_US", path: "/ko/" },
-  { file: "public/nl.html", lang: "nl", locale: "nl_NL", alternateLocale: "en_US", path: "/nl/" },
-  { file: "public/no.html", lang: "no", locale: "no_NO", alternateLocale: "en_US", path: "/no/" },
-  { file: "public/pl.html", lang: "pl", locale: "pl_PL", alternateLocale: "en_US", path: "/pl/" },
-  { file: "public/pt.html", lang: "pt", locale: "pt_PT", alternateLocale: "en_US", path: "/pt/" },
-  { file: "public/ro.html", lang: "ro", locale: "ro_RO", alternateLocale: "en_US", path: "/ro/" },
-  { file: "public/ru.html", lang: "ru", locale: "ru_RU", alternateLocale: "en_US", path: "/ru/" },
-  { file: "public/sv.html", lang: "sv", locale: "sv_SE", alternateLocale: "en_US", path: "/sv/" },
-  { file: "public/th.html", lang: "th", locale: "th_TH", alternateLocale: "en_US", path: "/th/" },
-  { file: "public/tr.html", lang: "tr", locale: "tr_TR", alternateLocale: "en_US", path: "/tr/" },
-  { file: "public/uk.html", lang: "uk", locale: "uk_UA", alternateLocale: "en_US", path: "/uk/" },
-  { file: "public/vi.html", lang: "vi", locale: "vi_VN", alternateLocale: "en_US", path: "/vi/" },
-  { file: "public/zh.html", lang: "zh", locale: "zh_CN", alternateLocale: "en_US", path: "/zh/" },
-];
+export const LANDING_LANG_CODES = REGISTRY_LOCALIZED_CODES;
+
+
+/**
+ * Per-page identity (file, language, OG locales, canonical path) —
+ * registry-derived; re-exported under the historical name.
+ */
+export const LANDING_LOCALES = REGISTRY_LOCALES;
 
 /** Landing pages and their expected SEO identity (derived from the domain). */
-export const LANDING_PAGES = LANDING_LOCALES.map((l) => ({
-  file: l.file,
-  lang: l.lang,
-  locale: l.locale,
-  alternateLocale: l.alternateLocale,
-  canonical: `${SITE_URL}${l.path}`,
-  alternates: [...LANDING_LANGS, { hreflang: "x-default", href: `${SITE_URL}/` }],
-}));
+export const LANDING_PAGES = REGISTRY_PAGES;
 
 /**
  * Single-language pages (no hreflang alternates yet). Same head contract
@@ -297,39 +246,8 @@ export function validateLegalTerms({ pages }) {
 
 /** The expected visible language-link href per language (nav/footer of
  *  the landings): the target landing URL carrying the ?lang= preference
- *  parameter (the manual language choice). */
-export const LANG_LINK_HREFS = {
-  en: "/?lang=en",
-  ar: "/ar/?lang=ar",
-  bg: "/bg/?lang=bg",
-  cs: "/cs/?lang=cs",
-  da: "/da/?lang=da",
-  de: "/de/?lang=de",
-  el: "/el/?lang=el",
-  es: "/es/?lang=es",
-  fi: "/fi/?lang=fi",
-  fr: "/fr/?lang=fr",
-  he: "/he/?lang=he",
-  hi: "/hi/?lang=hi",
-  hr: "/hr/?lang=hr",
-  hu: "/hu/?lang=hu",
-  id: "/id/?lang=id",
-  it: "/it/?lang=it",
-  ja: "/ja/?lang=ja",
-  ko: "/ko/?lang=ko",
-  nl: "/nl/?lang=nl",
-  no: "/no/?lang=no",
-  pl: "/pl/?lang=pl",
-  pt: "/pt/?lang=pt",
-  ro: "/ro/?lang=ro",
-  ru: "/ru/?lang=ru",
-  sv: "/sv/?lang=sv",
-  th: "/th/?lang=th",
-  tr: "/tr/?lang=tr",
-  uk: "/uk/?lang=uk",
-  vi: "/vi/?lang=vi",
-  zh: "/zh/?lang=zh",
-};
+ *  parameter. Registry-derived; re-exported under the historical name. */
+export const LANG_LINK_HREFS = REGISTRY_LINK_HREFS;
 
 /**
  * Validate the visible language links (nav + footer) of the 30 landings:
@@ -691,7 +609,8 @@ export function validateAuxHtml(html, cfg) {
 
 /**
  * Validate the Accept-Language negotiation contract across the three hosts
- * plus the manual language preference (cookie + ?lang=):
+ * plus the manual language preference (cookie + ?lang=). Both axes cover
+ * every locale in `langs` (default: all 29 localized landings):
  *   - nginx must redirect the bare root to each localized landing (302),
  *     with ?lang= (param wins) and the bf_lang cookie (overrides
  *     Accept-Language) handled before negotiation, which only runs without
@@ -700,9 +619,10 @@ export function validateAuxHtml(html, cfg) {
  *   - the Cloudflare Pages middleware must carry the same mapping and
  *     preference logic (pickPreferenceCookie / landingForLang).
  *   - netlify.toml must hold conditional 302 rules (Language conditions)
- *     for the same five languages, listed BEFORE the 200 rewrite fallback
+ *     for the same 29 languages, listed BEFORE the 200 rewrite fallback
  *     (Netlify applies the first matching rule; its native nf_lang cookie
- *     overrides the Language conditions).
+ *     is matched against these same rules, so this list is also what makes
+ *     a manual choice stick on that host).
  *   - landing.js must set both preference cookies and handle ?lang=.
  * All arguments are raw file contents (pure function — testable without
  * touching the repo). Returns an array of failure strings.
@@ -712,7 +632,7 @@ export function validateLanguageNegotiation({
   middleware,
   netlifyToml,
   landingJs,
-  langs = ["es", "fr", "de", "pt", "it"],
+  langs = LANDING_LANG_CODES,
 }) {
   const failures = [];
   if (!nginxConf.includes("$http_accept_language")) {
@@ -726,14 +646,28 @@ export function validateLanguageNegotiation({
     if (!nginxConf.includes(`rewrite ^ /${lang}/ redirect;`)) {
       failures.push(`public/nginx.conf: missing 302 redirect to /${lang}/`);
     }
-    if (!middleware.includes(`${lang}: "/${lang}/"`)) {
-      failures.push(`functions/_middleware.js: missing landing mapping for ${lang}`);
-    }
+
     // Manual preference: cookie rules in nginx (one per localized lang).
+    // `en` is intentionally not in `langs`: the bf_lang=en cookie means
+    // "stop negotiating, serve the EN landing" and short-circuits below
+    // instead of redirecting (its ?lang=en / /_lang/en half still exists).
     if (!nginxConf.includes(`if ($cookie_bf_lang ~* "^${lang}$")`)) {
       failures.push(`public/nginx.conf: missing bf_lang cookie rule for ^${lang}$`);
     }
   }
+  // The middleware must DERIVE its map from the registry (a hand-written
+  // copy is the 6-vs-30 bug shape that started this).
+  if (!middleware.includes('from "../scripts/landing-registry.mjs"')) {
+    failures.push(
+      "functions/_middleware.js: missing landing registry import (must derive its map from scripts/landing-registry.mjs)",
+    );
+  }
+  if (!middleware.includes("Object.fromEntries")) {
+    failures.push(
+      "functions/_middleware.js: landing mapping must be derived (Object.fromEntries over LOCALIZED_LANDING_CODES)",
+    );
+  }
+
   if (!middleware.includes("export function pickLandingLang")) {
     failures.push("functions/_middleware.js: missing pickLandingLang export");
   }
@@ -793,6 +727,30 @@ export function validateLanguageNegotiation({
     }
     if (!landingJs.includes("URLSearchParams")) {
       failures.push("public/landing.js: missing ?lang= handling (URLSearchParams)");
+    }
+    // The dropdown's language SET must equal the registry: a stale literal is
+    // the 6-vs-30 drift shape (landing.js was ahead of the edge once; the
+    // inverse would strand locales from the dropdown). Set-based, order-free.
+    const codesMatch = landingJs.match(/LANG_CODES\s*=\s*\[([^\]]*)\]/);
+    if (!codesMatch) {
+      failures.push("public/landing.js: LANG_CODES list missing");
+    } else {
+      const codes = codesMatch[1]
+        .split(",")
+        .map((c) => c.trim().replace(/^['"]|['"]$/g, ""))
+        .filter(Boolean);
+      for (const c of REGISTRY_ALL_CODES) {
+        if (!codes.includes(c)) {
+          failures.push(
+            `public/landing.js: LANG_CODES missing "${c}" (registry has ${REGISTRY_ALL_CODES.length} locales)`,
+          );
+        }
+      }
+      for (const c of codes) {
+        if (!REGISTRY_ALL_CODES.includes(c)) {
+          failures.push(`public/landing.js: LANG_CODES has unknown "${c}"`);
+        }
+      }
     }
   }
 
@@ -1071,7 +1029,7 @@ export function runCheck() {
     failures.push(...languageFailures);
   } else {
     console.log(
-      `${TAG} ok  language negotiation + manual preference (nginx.conf + functions/_middleware.js + netlify.toml + landing.js, 302 to the 5 localized landings)`,
+      `${TAG} ok  language negotiation + manual preference (nginx.conf + functions/_middleware.js + netlify.toml + landing.js, 302 to all ${LANDING_LANG_CODES.length} localized landings)`,
     );
   }
 

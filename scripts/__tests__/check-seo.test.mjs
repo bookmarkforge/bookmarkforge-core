@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   AUX_PAGES,
   DEFAULT_OG_IMAGE,
+  LANDING_LANG_CODES,
   LANDING_PAGES,
   LANG_LINK_HREFS,
   LEGAL_PAGES,
@@ -130,23 +131,30 @@ const CFG = LANDING_PAGES[0];
 const SITE_URL = new URL(DEFAULT_OG_IMAGE).origin;
 
 function validLanguageNegotiation(overrides = {}) {
+  // Every locale is derived from the gate's own registry instead of a
+  // hand-written five: a new locale must never be able to invalidate these
+  // drift tests (it did — every one of them went red on the 30-locale
+  // expansion), and the fixture can no longer pass while the real nginx /
+  // middleware / netlify lists stay behind. The literal, full 30-locale
+  // contract is pinned exactly once, by "passes against the real repo".
+  const langs = LANDING_LANG_CODES;
+  const prefLangs = ["en", ...langs];
+  const cookieAttrs = "Path=/; Max-Age=31536000; SameSite=Lax; Secure";
+  const langLocation = (lang) =>
+    `    location = /_lang/${lang} {\n` +
+    `        internal;\n` +
+    `        add_header Set-Cookie "bf_lang=${lang}; ${cookieAttrs}" always;\n` +
+    `        add_header Set-Cookie "nf_lang=${lang}; ${cookieAttrs}" always;\n` +
+    `        return 302 ${lang === "en" ? "/" : `/${lang}/`};\n` +
+    `    }`;
   return {
     nginxConf: `
     location = / {
         if ($http_upgrade != "") {
             rewrite ^ /_ws_ last;
         }
-        if ($arg_lang ~* "^en$") { rewrite ^ /_lang/en last; }
-        if ($arg_lang ~* "^fr$") { rewrite ^ /_lang/fr last; }
-        if ($arg_lang ~* "^de$") { rewrite ^ /_lang/de last; }
-        if ($arg_lang ~* "^it$") { rewrite ^ /_lang/it last; }
-        if ($arg_lang ~* "^pt$") { rewrite ^ /_lang/pt last; }
-        if ($arg_lang ~* "^es$") { rewrite ^ /_lang/es last; }
-        if ($cookie_bf_lang ~* "^fr$") { rewrite ^ /fr/ redirect; }
-        if ($cookie_bf_lang ~* "^de$") { rewrite ^ /de/ redirect; }
-        if ($cookie_bf_lang ~* "^it$") { rewrite ^ /it/ redirect; }
-        if ($cookie_bf_lang ~* "^pt$") { rewrite ^ /pt/ redirect; }
-        if ($cookie_bf_lang ~* "^es$") { rewrite ^ /es/ redirect; }
+${prefLangs.map((lang) => `        if ($arg_lang ~* "^${lang}$") { rewrite ^ /_lang/${lang} last; }`).join("\n")}
+${langs.map((lang) => `        if ($cookie_bf_lang ~* "^${lang}$") { rewrite ^ /${lang}/ redirect; }`).join("\n")}
         if ($cookie_bf_lang = "") {
             rewrite ^ /_negotiate last;
         }
@@ -155,65 +163,20 @@ function validLanguageNegotiation(overrides = {}) {
 
     location = /_negotiate {
         internal;
-        if ($http_accept_language ~* "^fr") { rewrite ^ /fr/ redirect; }
-        if ($http_accept_language ~* "^de") { rewrite ^ /de/ redirect; }
-        if ($http_accept_language ~* "^it") { rewrite ^ /it/ redirect; }
-        if ($http_accept_language ~* "^pt") { rewrite ^ /pt/ redirect; }
-        if ($http_accept_language ~* "^es") { rewrite ^ /es/ redirect; }
+${langs.map((lang) => `        if ($http_accept_language ~* "^${lang}") { rewrite ^ /${lang}/ redirect; }`).join("\n")}
         rewrite ^ /landing.html last;
     }
 
-    location = /_lang/en {
-        internal;
-        add_header Set-Cookie "bf_lang=en; Path=/; Max-Age=31536000; SameSite=Lax; Secure" always;
-        add_header Set-Cookie "nf_lang=en; Path=/; Max-Age=31536000; SameSite=Lax; Secure" always;
-        return 302 /;
-    }
-
-    location = /_lang/fr {
-        internal;
-        add_header Set-Cookie "bf_lang=fr; Path=/; Max-Age=31536000; SameSite=Lax; Secure" always;
-        add_header Set-Cookie "nf_lang=fr; Path=/; Max-Age=31536000; SameSite=Lax; Secure" always;
-        return 302 /fr/;
-    }
-
-    location = /_lang/de {
-        internal;
-        add_header Set-Cookie "bf_lang=de; Path=/; Max-Age=31536000; SameSite=Lax; Secure" always;
-        add_header Set-Cookie "nf_lang=de; Path=/; Max-Age=31536000; SameSite=Lax; Secure" always;
-        return 302 /de/;
-    }
-
-    location = /_lang/it {
-        internal;
-        add_header Set-Cookie "bf_lang=it; Path=/; Max-Age=31536000; SameSite=Lax; Secure" always;
-        add_header Set-Cookie "nf_lang=it; Path=/; Max-Age=31536000; SameSite=Lax; Secure" always;
-        return 302 /it/;
-    }
-
-    location = /_lang/pt {
-        internal;
-        add_header Set-Cookie "bf_lang=pt; Path=/; Max-Age=31536000; SameSite=Lax; Secure" always;
-        add_header Set-Cookie "nf_lang=pt; Path=/; Max-Age=31536000; SameSite=Lax; Secure" always;
-        return 302 /pt/;
-    }
-
-    location = /_lang/es {
-        internal;
-        add_header Set-Cookie "bf_lang=es; Path=/; Max-Age=31536000; SameSite=Lax; Secure" always;
-        add_header Set-Cookie "nf_lang=es; Path=/; Max-Age=31536000; SameSite=Lax; Secure" always;
-        return 302 /es/;
-    }
+${prefLangs.map(langLocation).join("\n\n")}
 `,
     middleware: `
-const LANDING_BY_LANG = {
-  es: "/es/",
-  fr: "/fr/",
-  de: "/de/",
-  pt: "/pt/",
-  it: "/it/",
-};
-const PREF_LANGS = ["en", "es", "fr", "de", "pt", "it"];
+import {
+  LOCALIZED_LANDING_CODES,
+  PREF_LANGS,
+} from "../scripts/landing-registry.mjs";
+const LANDING_BY_LANG = Object.fromEntries(
+  LOCALIZED_LANDING_CODES.map((code) => [code, "/" + code + "/"]),
+);
 export function pickLandingLang(acceptLanguage) {
   return null;
 }
@@ -238,35 +201,7 @@ function setLangPreference(lang) {
 const params = new URLSearchParams(window.location.search);
 `,
     netlifyToml: `
-[[redirects]]
-  from = "/"
-  to = "/es/"
-  status = 302
-  conditions = { Language = ["es"] }
-
-[[redirects]]
-  from = "/"
-  to = "/fr/"
-  status = 302
-  conditions = { Language = ["fr"] }
-
-[[redirects]]
-  from = "/"
-  to = "/de/"
-  status = 302
-  conditions = { Language = ["de"] }
-
-[[redirects]]
-  from = "/"
-  to = "/pt/"
-  status = 302
-  conditions = { Language = ["pt"] }
-
-[[redirects]]
-  from = "/"
-  to = "/it/"
-  status = 302
-  conditions = { Language = ["it"] }
+${langs.map((lang) => `[[redirects]]\n  from = "/"\n  to = "/${lang}/"\n  status = 302\n  conditions = { Language = ["${lang}"] }`).join("\n\n")}
 
 [[redirects]]
   from = "/"
@@ -405,9 +340,10 @@ describe("check-seo gate", () => {
     expect(pickLandingLang("ES")).toBe("/es/");
     expect(pickLandingLang("pt-PT")).toBe("/pt/");
     expect(pickLandingLang("it-IT,it;q=0.9")).toBe("/it/");
+    expect(pickLandingLang("ja;q=0.9")).toBe("/ja/");
     // English and unknown languages stay on the EN landing at /.
     expect(pickLandingLang("en-US,en;q=0.9,fr;q=0.8")).toBeNull();
-    expect(pickLandingLang("ja;q=0.9")).toBeNull();
+    expect(pickLandingLang("xx;q=0.9")).toBeNull();
     expect(pickLandingLang(null)).toBeNull();
     expect(pickLandingLang("")).toBeNull();
     // q-value sorting: the FIRST listed language is the primary one.
@@ -419,6 +355,8 @@ describe("check-seo gate", () => {
     expect(pickPreferenceCookie("theme=dark; bf_lang=en")).toBe("en");
     expect(pickPreferenceCookie("bf_lang=FR; theme=dark")).toBe("fr");
     expect(pickPreferenceCookie("bf_lang = de ")).toBe("de");
+    expect(pickPreferenceCookie("bf_lang=ja")).toBe("ja");
+    expect(pickPreferenceCookie("bf_lang=ZH")).toBe("zh");
     expect(pickPreferenceCookie("bf_lang=xx")).toBeNull();
     expect(pickPreferenceCookie("theme=dark")).toBeNull();
     expect(pickPreferenceCookie("")).toBeNull();
@@ -432,7 +370,29 @@ describe("check-seo gate", () => {
     expect(landingForLang("de")).toBe("/de/");
     expect(landingForLang("pt")).toBe("/pt/");
     expect(landingForLang("it")).toBe("/it/");
+    expect(landingForLang("ja")).toBe("/ja/");
     expect(landingForLang("xx")).toBeNull();
+  });
+
+  it("honours the preference and the negotiation for every shipped locale", () => {
+    // The whole bug class in one assertion. The 30-language dropdown wrote a
+    // bf_lang cookie that the middleware only knew for 6 locales, so picking
+    // 日本語 or 中文 worked until the next visit to "/", where the choice was
+    // silently dropped. Every locale the site ships must round-trip through
+    // all three helpers — no subset, no "choosable but unnegotiable".
+    for (const lang of LANDING_LANG_CODES) {
+      expect(pickLandingLang(`${lang}-XX,${lang};q=0.9`)).toBe(`/${lang}/`);
+      expect(landingForLang(lang)).toBe(`/${lang}/`);
+      expect(pickPreferenceCookie(`theme=dark; bf_lang=${lang}`)).toBe(lang);
+    }
+    // EN is the root landing, not a redirect target: it never negotiates,
+    // but a preference for it is valid and means "stop negotiating".
+    expect(pickLandingLang("en-US,en;q=0.9")).toBeNull();
+    expect(landingForLang("en")).toBe("/");
+    expect(pickPreferenceCookie("bf_lang=en")).toBe("en");
+    // The registry the helpers are written against: 29 localized landings,
+    // 30 with EN — a locale added to one side only turns this red.
+    expect(LANDING_LANG_CODES.length + 1).toBe(LANDING_PAGES.length);
   });
 
   it("accepts a fully-compliant synthetic landing page", () => {
@@ -808,14 +768,16 @@ describe("check-seo gate", () => {
     // and the Netlify override cookie removed.
     const middlewareDrift = validLanguageNegotiation({
       middleware: base.middleware
-        .replace('fr: "/fr/",', "")
+        .replace('} from "../scripts/landing-registry.mjs";', '} from "../scripts/nowhere.mjs";')
+        .replace("Object.fromEntries", "Object_fromEntries")
         .replace("export async function onRequest", "async function onRequest")
         .replace("export function pickPreferenceCookie", "function pickPreferenceCookie")
         .replace("export function landingForLang", "function landingForLang")
         .replace('res.headers.append("Set-Cookie", "nf_lang=en");', ""),
     });
     const middlewareFails = validateLanguageNegotiation(middlewareDrift);
-    expect(middlewareFails.some((f) => f.includes("mapping for fr"))).toBe(true);
+    expect(middlewareFails.some((f) => f.includes("landing registry import"))).toBe(true);
+    expect(middlewareFails.some((f) => f.includes("must be derived"))).toBe(true);
     expect(middlewareFails.some((f) => f.includes("onRequest export"))).toBe(true);
     expect(middlewareFails.some((f) => f.includes("pickPreferenceCookie export"))).toBe(true);
     expect(middlewareFails.some((f) => f.includes("landingForLang export"))).toBe(true);

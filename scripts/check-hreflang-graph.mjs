@@ -17,7 +17,7 @@ import { pathToFileURL } from "node:url";
  *   5. No cluster crossover: landing alternates only point at landings,
  *      legal alternates only at legal pages.
  *   6. Cross-source: the xhtml:link sets in sitemap.xml agree with the
- *      HTML <head> sets for every one of the 12 URLs.
+ *      HTML <head> sets for every one of the 36 URLs (30 landing + 6 legal).
  *
  * Usage:
  *   node scripts/check-hreflang-graph.mjs http://127.0.0.1:4173 --files
@@ -32,29 +32,32 @@ import { pathToFileURL } from "node:url";
  * Exit code 0 when every check passes; 1 with a per-page failure list.
  */
 
+import { LANDING_CODES } from "./landing-registry.mjs";
+
 const BASE = (process.argv[2] ?? "http://127.0.0.1:4173").replace(/\/+$/, "");
 const FILES_MODE = process.argv.includes("--files");
+
+/** Languages of each hreflang cluster. The landing set derives from the
+ * locale registry (30) so it can never lag the generated pages; the legal
+ * set is a content decision (six languages, mirroring
+ * scripts/privacy-translations.json), so it stays an explicit list. */
+const LEGAL_LANGS = ["en", "es", "fr", "de", "pt", "it"];
+/** Expected hreflang set per cluster — the completeness check is per-cluster. */
+const EXPECTED_LANGS = { landing: LANDING_CODES, legal: LEGAL_LANGS };
 
 /** The two hreflang clusters: paths + the canonical x-default target. */
 export const CLUSTERS = {
   landing: {
-    paths: ["/", "/es/", "/fr/", "/de/", "/pt/", "/it/"],
+    paths: LANDING_CODES.map((c) => (c === "en" ? "/" : `/${c}/`)),
     xDefault: "/",
   },
   legal: {
-    paths: [
-      "/privacy-and-terms.html",
-      "/es/privacy-and-terms.html",
-      "/fr/privacy-and-terms.html",
-      "/de/privacy-and-terms.html",
-      "/pt/privacy-and-terms.html",
-      "/it/privacy-and-terms.html",
-    ],
+    paths: LEGAL_LANGS.map((c) =>
+      c === "en" ? "/privacy-and-terms.html" : `/${c}/privacy-and-terms.html`,
+    ),
     xDefault: "/privacy-and-terms.html",
   },
 };
-
-const LANG_CODES = ["en", "es", "fr", "de", "pt", "it"];
 
 /** Language code of a cluster path ("/" → en, "/fr/" → fr, legal likewise). */
 export function langOfPath(path) {
@@ -137,8 +140,8 @@ async function main() {
       }
       const alts = page.alternates;
 
-      // 1. Full alternate set: 6 languages + x-default.
-      const missing = LANG_CODES.filter((l) => !alts.has(l));
+      // 1. Full alternate set: every cluster language + x-default.
+      const missing = EXPECTED_LANGS[clusterKey].filter((l) => !alts.has(l));
       if (missing.length > 0 || !alts.has("x-default")) {
         failures.push(
           `${label}: incomplete alternate set (missing ${[...missing, !alts.has("x-default") ? "x-default" : ""].filter(Boolean).join(", ")})`,

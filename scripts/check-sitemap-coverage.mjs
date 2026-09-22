@@ -21,17 +21,15 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { APP_DOMAIN } from "./csp-config.js";
+import { LANDING_CODES as REGISTRY_ALL_CODES, SITE_URL as REGISTRY_SITE_URL } from "./landing-registry.mjs";
 
 const ROOT = process.cwd();
 const TAG = "[check-sitemap-coverage]";
-const SITE_URL = `https://${APP_DOMAIN}`;
+const SITE_URL = REGISTRY_SITE_URL;
 
-export const LANDING_LANGS = [
-  "ar", "bg", "cs", "da", "de", "el", "en", "es", "fi", "fr", "he",
-  "hi", "hr", "hu", "id", "it", "ja", "ko", "nl", "no", "pl",
-  "pt", "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh",
-];
+// The 30 landing languages (EN included, root "/") — registry-derived;
+// this module re-exports the historical name for its own loops and tests.
+export const LANDING_LANGS = REGISTRY_ALL_CODES;
 
 function read(root, rel) {
   try {

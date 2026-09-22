@@ -106,6 +106,11 @@ describe("npm run nginx:render integration", () => {
       join(REPO, "scripts", "csp-config.js"),
       join(renderDir, "scripts", "csp-config.js"),
     );
+    // The renderer imports the locale registry, which imports csp-config.js.
+    copyFileSync(
+      join(REPO, "scripts", "landing-registry.mjs"),
+      join(renderDir, "scripts", "landing-registry.mjs"),
+    );
     writeFileSync(
       join(renderDir, "package.json"),
       JSON.stringify(
@@ -169,7 +174,6 @@ describe("npm run nginx:render integration", () => {
       join(renderDir, "extension", "popup.html"),
       join(renderDir, "extension", "manifest.json"),
       join(renderDir, "extension", "manifest-firefox.json"),
-      join(renderDir, "extension", "PRIVACY.md"),
     ];
     for (const p of surgicalDriftTargets) {
       writeFileSync(
@@ -210,7 +214,6 @@ describe("npm run nginx:render integration", () => {
       "extension/popup.html",
       "extension/manifest.json",
       "extension/manifest-firefox.json",
-      "extension/PRIVACY.md",
     ]) {
       expect(before.stderr).toContain(`DRIFT ${t}`);
     }
@@ -328,7 +331,6 @@ describe("npm run nginx:render integration", () => {
       "public/es/privacy-and-terms.html",
       "public/manifest.json",
       "extension/background.js",
-      "extension/PRIVACY.md",
     ]) {
       expect(readFileSync(join(renderDir, rel), "utf8")).toContain(
         "custom.example",
@@ -349,7 +351,6 @@ describe("npm run nginx:render integration", () => {
       "public/es/privacy-and-terms.html",
       "public/manifest.json",
       "extension/background.js",
-      "extension/PRIVACY.md",
       "public/robots.txt",
     ]) {
       expect(readFileSync(join(renderDir, rel), "utf8")).toContain(

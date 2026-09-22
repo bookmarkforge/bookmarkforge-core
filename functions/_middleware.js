@@ -3,10 +3,11 @@
  *
  * Accept-Language negotiation for the bare root: a browser whose PRIMARY
  * language is one of the localized landings gets a 302 redirect to its
- * landing (/fr/, /es/, /de/, /pt/, /it/). Everything else passes through
- * untouched — the `_redirects` rules and the static-assets pipeline serve
- * the request as usual (English users and crawlers without a language
- * preference stay on the EN landing at /).
+ * landing (/fr/, /es/, ... — every locale in LANDING_BY_LANG, 29 of them
+ * since the 30-locale expansion; EN is the root landing itself). Everything
+ * else passes through untouched — the `_redirects` rules and the
+ * static-assets pipeline serve the request as usual (English users and
+ * crawlers without a language preference stay on the EN landing at /).
  *
  * Manual preference override (same contract as nginx + Netlify, pinned by
  * scripts/check-seo.mjs):
@@ -28,27 +29,51 @@
  * native nf_lang cookie overrides its Language conditions). All three are
  * pinned by scripts/check-seo.mjs.
  *
+ * The three layers carry ONE list, not two: the explicit preference
+ * (`?lang=` / bf_lang) and the implicit negotiation (Accept-Language) cover
+ * exactly the same 29 languages. Netlify is why — its preference mechanism
+ * IS its Language condition (the platform matches the nf_lang cookie
+ * against those same rules), so a language the middleware knew but Netlify
+ * did not would honour the choice on two hosts out of three. When this list
+ * was 6, picking 日本語 from the 30-language dropdown set the cookie and then
+ * silently served English on the next visit to /.
+ *
  * Pages Functions run before the static-asset pipeline on Cloudflare's
  * edge; `context.next()` continues to `_redirects` + assets.
  */
-const LANDING_BY_LANG = {
-  es: "/es/",
-  fr: "/fr/",
-  de: "/de/",
-  pt: "/pt/",
-  it: "/it/",
-};
+/**
+ * Landing URLs and preference languages come from
+ * scripts/landing-registry.mjs — the single source of truth for the
+ * 30-locale set (29 localized routes + EN at the root). Deriving here
+ * closes the bug class this file once shipped: the hand-written copy
+ * stayed at 6 while the dropdown offered 30, so landing.js wrote a
+ * bf_lang cookie this middleware then silently dropped.
+ *
+ * NOTE FOR THE EDGE: Pages Functions bundle relative imports at deploy
+ * (esbuild), so "../scripts/landing-registry.mjs" ships inside the
+ * worker bundle. If the pipeline ever stops bundling, re-inline the two
+ * constants — the contract tests (check-seo.test.mjs +
+ * middleware-language-preference.test.mjs) fail loudly on any drift.
+ */
+import {
+  LOCALIZED_LANDING_CODES,
+  PREF_LANGS,
+} from "../scripts/landing-registry.mjs";
 
-/** Every preference language, including en ("en" = stop negotiating). */
-const PREF_LANGS = ["en", "es", "fr", "de", "pt", "it"];
+/** Landing URL per localized code ("en" is the root landing, not a target). */
+const LANDING_BY_LANG = Object.fromEntries(
+  LOCALIZED_LANDING_CODES.map((code) => [code, `/${code}/`]),
+);
 
 const COOKIE_MAX_AGE = 31536000; // 1 year
 const COOKIE_ATTRS = `Path=/; Max-Age=${COOKIE_MAX_AGE}; SameSite=Lax; Secure`;
 
 /**
  * Pick the localized landing for an Accept-Language header, or null when
- * the primary language is not one of ours (EN stays at /). Pure function,
- * unit-tested in scripts/__tests__/check-seo.test.mjs.
+ * the primary language is not one of ours (EN stays at /). Covers every
+ * locale in LANDING_BY_LANG — same set as the manual preference, so a
+ * language can never be choosable from the dropdown but unnegotiable at the
+ * edge. Pure function, unit-tested in scripts/__tests__/check-seo.test.mjs.
  */
 export function pickLandingLang(acceptLanguage) {
   if (!acceptLanguage) {
@@ -110,7 +135,16 @@ export async function onRequest(context) {
     if (target === "/" && !validParam) {
       return context.next();
     }
-    const res = Response.redirect(new URL(target, url), 302);
+    // Deliberately NOT Response.redirect(): the fetch spec gives a redirect
+    // response an IMMUTABLE header guard, so appending to it throws
+    // "TypeError: immutable" (cloudflare/workers-sdk#5378). That turned this
+    // preference path into a 500 on the edge — the 302 was never sent, and
+    // with it went the cookies. Build the redirect explicitly; these headers
+    // are ours to write.
+    const res = new Response(null, {
+      status: 302,
+      headers: { Location: new URL(target, url).toString() },
+    });
     res.headers.append("Set-Cookie", preferenceCookie("bf_lang", chosen));
     res.headers.append("Set-Cookie", preferenceCookie("nf_lang", chosen));
     return res;

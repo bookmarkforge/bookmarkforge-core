@@ -87,6 +87,7 @@ describe("rollback nginx recovery integration", () => {
       }
       copyFileSync("scripts/nginx-render.mjs", join(root, "scripts/nginx-render.mjs"));
       copyFileSync("scripts/csp-config.js", join(root, "scripts/csp-config.js"));
+      copyFileSync("scripts/landing-registry.mjs", join(root, "scripts/landing-registry.mjs"));
 
       const expectedHeaders = readFileSync(join(root, "public/_headers"), "utf8");
       const expectedSitemap = readFileSync(join(root, "public/sitemap.xml"), "utf8");

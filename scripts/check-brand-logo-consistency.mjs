@@ -444,19 +444,14 @@ export function collectInlineBrandSvgViolations(root = REPO_ROOT) {
 // ---------------------------------------------------------------------------
 
 /**
- * Landing locales (mirror of scripts/check-seo.mjs's LANDING_LOCALES) so the
- * brand gate can locate each localized landing's og:description without importing
- * from check-seo (avoids a circular dep between the two gates).
+ * Landing locales — derived from scripts/landing-registry.mjs (the single
+ * source of truth). The old hand-maintained 6-row mirror stayed at 6 while
+ * the site moved to 30 locales; a localized share card added tomorrow would
+ * have failed here with "unknown lang" against a correct SEO registry.
  */
 import { metaContent } from "./check-seo.mjs";
-export const LANDING_LOCALES = [
-  { file: "public/landing.html", lang: "en", locale: "en_US", alternateLocale: "es_ES", path: "/" },
-  { file: "public/es.html", lang: "es", locale: "es_ES", alternateLocale: "en_US", path: "/es/" },
-  { file: "public/fr.html", lang: "fr", locale: "fr_FR", alternateLocale: "en_US", path: "/fr/" },
-  { file: "public/de.html", lang: "de", locale: "de_DE", alternateLocale: "en_US", path: "/de/" },
-  { file: "public/pt.html", lang: "pt", locale: "pt_PT", alternateLocale: "en_US", path: "/pt/" },
-  { file: "public/it.html", lang: "it", locale: "it_IT", alternateLocale: "en_US", path: "/it/" },
-];
+import { LANDING_LOCALES as REGISTRY_LOCALES } from "./landing-registry.mjs";
+export const LANDING_LOCALES = REGISTRY_LOCALES;
 export const LANDING_FILE = "public/landing.html";
 
 /** The canonical share cards guarded for copy sync.
@@ -582,7 +577,7 @@ export function evaluateCardCopySync({ landingHtml, cards, root }) {
       const langPage = LANDING_LOCALES.find((l) => l.lang === lang);
       if (!langPage) {
         failures.push(
-          `${file}: localized card for unknown lang "${lang}" — add it to LANDING_LOCALES in scripts/check-seo.mjs`,
+          `${file}: localized card for unknown lang "${lang}" — add it to LANDING_LOCALES in scripts/landing-registry.mjs`,
         );
         continue;
       }

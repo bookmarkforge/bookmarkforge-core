@@ -64,26 +64,43 @@
 # Landing pages (SEO) — static HTML at clean URLs (200 rewrite keeps the
 # canonical at / and /es/)
 #
-# Accept-Language negotiation (mirrors public/nginx.conf and
-# functions/_middleware.js): a browser whose PRIMARY language is one of the
-# localized landings gets a 302 to it. Netlify matches Language conditions
-# against the first language in the Accept-Language header (quality values
-# ignored) and serves these redirects from the CDN edge via alternate
-# headers — same semantics as the `if ($http_accept_language ~* "^<lang>")`
-# rules. 302 (not 301) on purpose: negotiation must stay temporary so search
-# engines keep the EN canonical at /. Rules must precede the 200 fallback
-# below — Netlify applies the first matching rule. Pinned by check:seo.
+# Accept-Language negotiation + manual preference (mirrors public/nginx.conf
+# and functions/_middleware.js): a browser whose PRIMARY language is one of
+# the localized landings gets a 302 to it. Netlify matches Language
+# conditions against the first language in the Accept-Language header
+# (quality values ignored) and against the nf_lang cookie when the visitor
+# picked a language by hand — same semantics as the
+# `if ($http_accept_language ~* "^<lang>")` rules. That coupling is why this
+# list covers EVERY locale: on Netlify the preference has no mechanism of
+# its own, so a language missing here cannot honour the choice at all (a
+# split list is what left the 24 new locales choosing a language that was
+# then silently ignored). 302 (not 301) on purpose: negotiation must stay
+# temporary so search engines keep the EN canonical at /. Rules must precede
+# the 200 fallback below — Netlify applies the first matching rule. Pinned by
+# check:seo: one rule per locale in scripts/nginx-render.mjs LANDING_LANGS.
 [[redirects]]
   from = "/"
-  to = "/es/"
+  to = "/ar/"
   status = 302
-  conditions = { Language = ["es"] }
+  conditions = { Language = ["ar"] }
 
 [[redirects]]
   from = "/"
-  to = "/fr/"
+  to = "/bg/"
   status = 302
-  conditions = { Language = ["fr"] }
+  conditions = { Language = ["bg"] }
+
+[[redirects]]
+  from = "/"
+  to = "/cs/"
+  status = 302
+  conditions = { Language = ["cs"] }
+
+[[redirects]]
+  from = "/"
+  to = "/da/"
+  status = 302
+  conditions = { Language = ["da"] }
 
 [[redirects]]
   from = "/"
@@ -93,15 +110,147 @@
 
 [[redirects]]
   from = "/"
-  to = "/pt/"
+  to = "/el/"
   status = 302
-  conditions = { Language = ["pt"] }
+  conditions = { Language = ["el"] }
+
+[[redirects]]
+  from = "/"
+  to = "/es/"
+  status = 302
+  conditions = { Language = ["es"] }
+
+[[redirects]]
+  from = "/"
+  to = "/fi/"
+  status = 302
+  conditions = { Language = ["fi"] }
+
+[[redirects]]
+  from = "/"
+  to = "/fr/"
+  status = 302
+  conditions = { Language = ["fr"] }
+
+[[redirects]]
+  from = "/"
+  to = "/he/"
+  status = 302
+  conditions = { Language = ["he"] }
+
+[[redirects]]
+  from = "/"
+  to = "/hi/"
+  status = 302
+  conditions = { Language = ["hi"] }
+
+[[redirects]]
+  from = "/"
+  to = "/hr/"
+  status = 302
+  conditions = { Language = ["hr"] }
+
+[[redirects]]
+  from = "/"
+  to = "/hu/"
+  status = 302
+  conditions = { Language = ["hu"] }
+
+[[redirects]]
+  from = "/"
+  to = "/id/"
+  status = 302
+  conditions = { Language = ["id"] }
 
 [[redirects]]
   from = "/"
   to = "/it/"
   status = 302
   conditions = { Language = ["it"] }
+
+[[redirects]]
+  from = "/"
+  to = "/ja/"
+  status = 302
+  conditions = { Language = ["ja"] }
+
+[[redirects]]
+  from = "/"
+  to = "/ko/"
+  status = 302
+  conditions = { Language = ["ko"] }
+
+[[redirects]]
+  from = "/"
+  to = "/nl/"
+  status = 302
+  conditions = { Language = ["nl"] }
+
+[[redirects]]
+  from = "/"
+  to = "/no/"
+  status = 302
+  conditions = { Language = ["no"] }
+
+[[redirects]]
+  from = "/"
+  to = "/pl/"
+  status = 302
+  conditions = { Language = ["pl"] }
+
+[[redirects]]
+  from = "/"
+  to = "/pt/"
+  status = 302
+  conditions = { Language = ["pt"] }
+
+[[redirects]]
+  from = "/"
+  to = "/ro/"
+  status = 302
+  conditions = { Language = ["ro"] }
+
+[[redirects]]
+  from = "/"
+  to = "/ru/"
+  status = 302
+  conditions = { Language = ["ru"] }
+
+[[redirects]]
+  from = "/"
+  to = "/sv/"
+  status = 302
+  conditions = { Language = ["sv"] }
+
+[[redirects]]
+  from = "/"
+  to = "/th/"
+  status = 302
+  conditions = { Language = ["th"] }
+
+[[redirects]]
+  from = "/"
+  to = "/tr/"
+  status = 302
+  conditions = { Language = ["tr"] }
+
+[[redirects]]
+  from = "/"
+  to = "/uk/"
+  status = 302
+  conditions = { Language = ["uk"] }
+
+[[redirects]]
+  from = "/"
+  to = "/vi/"
+  status = 302
+  conditions = { Language = ["vi"] }
+
+[[redirects]]
+  from = "/"
+  to = "/zh/"
+  status = 302
+  conditions = { Language = ["zh"] }
 
 [[redirects]]
   from = "/"

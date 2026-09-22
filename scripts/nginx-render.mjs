@@ -45,6 +45,10 @@ import {
   REPORT_TO_HEADER,
   REPORTING_ENDPOINTS_HEADER,
 } from "./csp-config.js";
+import {
+  LOCALIZED_LANDING_CODES as REGISTRY_LOCALIZED,
+  PREF_LANGS as REGISTRY_PREF,
+} from "./landing-registry.mjs";
 
 const ROOT = process.cwd();
 
@@ -83,15 +87,16 @@ const CSP_COMMENT = [
 /** All localized landing routes shipped in public/ and listed in the sitemap.
  * Keep this registry aligned with generate-landing-pages.mjs / _redirects.
  * English is the root landing and is intentionally omitted here. */
-export const LANDING_LANGS = [
-  "ar", "bg", "cs", "da", "de", "el", "es", "fi", "fr", "he",
-  "hi", "hr", "hu", "id", "it", "ja", "ko", "nl", "no", "pl",
-  "pt", "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh",
-];
+/** The 29 localized landing routes shipped in public/<code>.html —
+ *  registry-derived (EN is the root landing, intentionally absent here).
+ *  Kept aligned with generate-landing-pages.mjs / _redirects. */
+export const LANDING_LANGS = REGISTRY_LOCALIZED;
 
-/** The six preference languages (?lang= and bf_lang cookie values), en
- *  included ("en" means "stop negotiating, serve the EN landing"). */
-export const PREF_LANGS = ["en", ...LANDING_LANGS];
+/** Every preference language (?lang= and bf_lang cookie values), en
+ *  included ("en" means "stop negotiating, serve the EN landing").
+ *  Registry-derived: the preference set IS the negotiation set by design
+ *  (Netlify has no separate preference mechanism — see the middleware). */
+export const PREF_LANGS = REGISTRY_PREF;
 
 /** Preference cookie, shared by every host. nf_lang is Netlify's native
  *  override for its Language conditions; bf_lang is read by this nginx
@@ -323,21 +328,17 @@ ${repeat}
         if ($http_upgrade != "") {
             rewrite ^ /_ws_ last;
         }
-        if ($arg_lang ~* "^en$") { rewrite ^ /_lang/en last; }
-        if ($arg_lang ~* "^fr$") { rewrite ^ /_lang/fr last; }
-        if ($arg_lang ~* "^de$") { rewrite ^ /_lang/de last; }
-        if ($arg_lang ~* "^it$") { rewrite ^ /_lang/it last; }
-        if ($arg_lang ~* "^pt$") { rewrite ^ /_lang/pt last; }
-        if ($arg_lang ~* "^es$") { rewrite ^ /_lang/es last; }
-        if ($cookie_bf_lang ~* "^fr$") { rewrite ^ /fr/ redirect; }
-        if ($cookie_bf_lang ~* "^de$") { rewrite ^ /de/ redirect; }
-        if ($cookie_bf_lang ~* "^it$") { rewrite ^ /it/ redirect; }
-        if ($cookie_bf_lang ~* "^pt$") { rewrite ^ /pt/ redirect; }
-        if ($cookie_bf_lang ~* "^es$") { rewrite ^ /es/ redirect; }
+${PREF_LANGS.map(
+      (lang) => `        if ($arg_lang ~* "^${lang}$") { rewrite ^ /_lang/${lang} last; }`,
+    ).join("\n")}
+${LANDING_LANGS.map(
+      (lang) => `        if ($cookie_bf_lang ~* "^${lang}$") { rewrite ^ /${lang}/ redirect; }`,
+    ).join("\n")}
         if ($cookie_bf_lang = "") {
             rewrite ^ /_negotiate last;
         }
-        # Cookie present with a non-localized value (e.g. en): EN landing.
+        # Cookie present with no redirect of its own (en, or a stale value):
+        # EN landing, no negotiation (a manual choice never bounces).
         rewrite ^ /landing.html last;
     }
 
@@ -346,11 +347,9 @@ ${repeat}
     # a cookie=en choice short-circuit negotiation entirely.
     location = /_negotiate {
         internal;
-        if ($http_accept_language ~* "^fr") { rewrite ^ /fr/ redirect; }
-        if ($http_accept_language ~* "^de") { rewrite ^ /de/ redirect; }
-        if ($http_accept_language ~* "^it") { rewrite ^ /it/ redirect; }
-        if ($http_accept_language ~* "^pt") { rewrite ^ /pt/ redirect; }
-        if ($http_accept_language ~* "^es") { rewrite ^ /es/ redirect; }
+${LANDING_LANGS.map(
+      (lang) => `        if ($http_accept_language ~* "^${lang}") { rewrite ^ /${lang}/ redirect; }`,
+    ).join("\n")}
         rewrite ^ /landing.html last;
     }
 

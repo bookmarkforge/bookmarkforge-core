@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ t.lang }}">
+<html lang="{{ t.lang }}"
+  dir="{{ t.dir }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -147,12 +148,26 @@
         <a href="#{{ t.privacy.id }}">{{ t.navLinks.privacy }}</a>
         <a href="#{{ t.pricing.id }}">{{ t.navLinks.pricing }}</a>
         <a href="/help">{{ t.navLinks.help | default('Help') }}</a>
-        <a href="/?lang=en" hreflang="en" lang="en">English</a>
-        <a href="/es/?lang=es" hreflang="es" lang="es">Español</a>
-        <a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a>
-        <a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a>
-        <a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a>
-        <a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a>
+        
+        <!-- Language Dropdown -->
+        <div class="language-dropdown">
+          <button class="language-toggle" aria-label="Select language" aria-expanded="false">
+            <span class="current-lang">{{ t.langName }}</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 4 L6 8 L10 4"/>
+            </svg>
+          </button>
+          <ul class="language-menu" role="menu">
+            {% for lang in languageLinks %}
+            <li role="none">
+              <a href="{{ lang.href }}" hreflang="{{ lang.hreflang }}" lang="{{ lang.lang }}" role="menuitem"{% if lang.code == t.lang %} class="current"{% endif %}>
+                {{ lang.name }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        
         <a href="/app" class="btn-primary nav-cta">{{ t.navCta }}</a>
       </nav>
 
@@ -343,9 +358,9 @@
         </div>
         <div class="pricing-cards{% if t.pricing.plans.length == 3 %} three-col{% endif %}">
           {% for plan in t.pricing.plans %}
-          <div class="price-card {% if plan.badge %}popular{% endif %}{% if plan.name == 'Founder' or plan.name == 'Founder Edition' %} founder{% endif %}">
+          <div class="price-card {% if plan.badge %}popular{% endif %}">
             {% if plan.badge %}
-            <span class="badge{% if plan.name == 'Founder' or plan.name == 'Founder Edition' %} badge-founder{% endif %}">{{ plan.badge }}</span>
+            <span class="badge">{{ plan.badge }}</span>
             {% endif %}
             {% if plan.badgeEarly %}
             <span class="badge badge-early">{{ plan.badgeEarly }}</span>
@@ -432,8 +447,8 @@
       <div class="footer-links">
         <h4>{{ t.footer.languages.title }}</h4>
         <ul>
-          {% for link in t.footer.languages.links %}
-          <li><a href="#">{{ link }}</a></li>
+          {% for lang in languageLinks %}
+          <li><a href="{{ lang.href }}" hreflang="{{ lang.hreflang }}" lang="{{ lang.lang }}">{{ lang.name }}</a></li>
           {% endfor %}
         </ul>
       </div>

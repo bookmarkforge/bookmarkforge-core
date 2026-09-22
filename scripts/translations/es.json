@@ -408,51 +408,10 @@
         "ctaHref": "/buy-pro",
         "ctaClass": "btn-primary",
         "priceWas": "$79",
-        "priceSub": "luego $79 regular · Founder $99",
+        "priceSub": "luego $79 regular",
         "sla": "Soporte: Email 48h (lun–vie)"
-      },
-      {
-        "name": "Founder",
-        "badge": "Founder — 100 limitadas",
-        "price": "$ 99",
-        "period": "lifetime v1",
-        "priceSub": "Mismo Pro v1 + insignia Founder + beta",
-        "description": "Founder badge #042 in app · Beta access · v2 60% off lifetime",
-        "features": [
-          {
-            "included": true,
-            "text": "Everything in Pro Lifetime v1"
-          },
-          {
-            "included": true,
-            "text": "Founder badge #042 in app"
-          },
-          {
-            "included": true,
-            "text": "Beta access to v2 early builds"
-          },
-          {
-            "included": true,
-            "text": "60% off v2 (and v3) forever for this account"
-          },
-          {
-            "included": true,
-            "text": "Lifetime of v1 · Security forever"
-          },
-          {
-            "included": true,
-            "text": "Priority email support (24h) + early access"
-          },
-          {
-            "included": true,
-            "text": "30-day refund via Whop"
-          }
-        ],
-        "cta": "Get Founder $99",
-        "ctaHref": "/buy-founder",
-        "ctaClass": "btn-primary btn-founder",
-        "sla": "Soporte: Prioritario 24h · Cola Founder"
       }
+
     ],
     "legal": "Licencia Lifetime para BookmarkForge v1. Incluye todas las v1.x y 12 meses de novedades. Seguridad para siempre. Futuras majors (v2, v3) 60% dto para propietarios. Reembolso 30 días vía Whop. <a href=\"/es/privacy-and-terms.html#terms\">Términos</a> · <a href=\"/help#pricing\">Más info</a>"
   },
@@ -468,8 +427,8 @@
         "answer": "Paga una vez, tuya para siempre. Incluye todas las v1.x para siempre y 12 meses de novedades desde la compra. Seguridad para siempre. Tras el mes 13 sigues con v1 funcional, solo sin novedades. Futuras majors (v2, v3) son productos aparte: 89 $ para nuevos, 35 $ para propietarios v1 (60% dto)."
       },
       {
-        "question": "¿Qué es Founder Edition?",
-        "answer": "Mismo binario Pro v1 — no es un nivel distinto. Te da insignia Founder # en la app, acceso beta a v2 y 60% dto en futuras majors para siempre. Limitado a 100. Distinción, no muro de pago."
+        "question": "¿Qué es  Edition?",
+        "answer": "Mismo binario Pro v1 — no es un nivel distinto. Te da insignia  # en la app, acceso beta a v2 y 60% dto en futuras majors para siempre. Limitado a 100. Distinción, no muro de pago."
       },
       {
         "question": "¿Qué métodos de pago y reembolsos?",
@@ -477,7 +436,7 @@
       },
       {
         "question": "Soporte — ¿qué tan rápido responden?",
-        "answer": "Gratis: ayuda comunitaria vía <a href=\"/help\">Centro de Ayuda</a> + GitHub Discussions (mejor esfuerzo). Pro: 48h laborables por email. Founder: 24h prioritario + cola beta. La bóveda está cifrada — nunca te pedimos contraseña ni frase. Ver <a href=\"/help#sla\">SLA</a>."
+        "answer": "Gratis: ayuda comunitaria vía <a href=\"/help\">Centro de Ayuda</a> + GitHub Discussions (mejor esfuerzo). Pro: 48h laborables por email. : 24h prioritario + cola beta. La bóveda está cifrada — nunca te pedimos contraseña ni frase. Ver <a href=\"/help#sla\">SLA</a>."
       },
       {
         "question": "¿Qué pasa si olvido la contraseña de mi bóveda?",
@@ -569,10 +528,10 @@
         "description": "Regular. Lifetime of v1."
       },
       {
-        "name": "Founder Edition",
+        "name": " Edition",
         "price": "99",
         "currency": "USD",
-        "description": "Same Pro v1 + Founder badge + beta. Limited 100.",
+        "description": "Same Pro v1 +  badge + beta. Limited 100.",
         "availability": "https://schema.org/LimitedAvailability"
       }
     ],
@@ -594,8 +553,8 @@
         "answer": "Paga una vez, tuya para siempre. Incluye todas las v1.x para siempre y 12 meses de novedades desde la compra. Seguridad para siempre. Tras el mes 13 sigues con v1 funcional, solo sin novedades. Futuras majors (v2, v3) son productos aparte: 89 $ para nuevos, 35 $ para propietarios v1 (60% dto)."
       },
       {
-        "question": "¿Qué es Founder Edition?",
-        "answer": "Mismo binario Pro v1 — no es un nivel distinto. Te da insignia Founder # en la app, acceso beta a v2 y 60% dto en futuras majors para siempre. Limitado a 100. Distinción, no muro de pago."
+        "question": "¿Qué es  Edition?",
+        "answer": "Mismo binario Pro v1 — no es un nivel distinto. Te da insignia  # en la app, acceso beta a v2 y 60% dto en futuras majors para siempre. Limitado a 100. Distinción, no muro de pago."
       },
       {
         "question": "¿Qué métodos de pago y reembolsos?",
@@ -603,7 +562,7 @@
       },
       {
         "question": "Soporte — ¿qué tan rápido responden?",
-        "answer": "Gratis: ayuda comunitaria vía Centro de Ayuda + GitHub Discussions (mejor esfuerzo). Pro: 48h laborables por email. Founder: 24h prioritario + cola beta. La bóveda está cifrada — nunca te pedimos contraseña ni frase. Ver SLA."
+        "answer": "Gratis: ayuda comunitaria vía Centro de Ayuda + GitHub Discussions (mejor esfuerzo). Pro: 48h laborables por email. : 24h prioritario + cola beta. La bóveda está cifrada — nunca te pedimos contraseña ni frase. Ver SLA."
       },
       {
         "question": "¿Qué pasa si olvido la contraseña de mi bóveda?",

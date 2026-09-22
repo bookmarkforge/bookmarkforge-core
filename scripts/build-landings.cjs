@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const nunjucks = require('nunjucks');
+const { buildLanguageLinks } = require('./generate-language-links.cjs');
 
 const TEMPLATES_DIR = path.join(__dirname, 'templates');
 const TRANSLATIONS_DIR = path.join(__dirname, 'translations');
@@ -53,7 +54,50 @@ function loadTranslations() {
   return translations;
 }
 
-const LANDING_LANGS = ['en', 'es', 'fr', 'de', 'pt', 'it'];
+/**
+ * The switcher's data comes from generate-language-links.cjs, derived from
+ * scripts/translations/*.json. Rendering uses that derivation directly rather
+ * than a copy on disk: the old read-the-file-with-`return []`-fallback meant a
+ * clean clone (or a stale copy) silently emitted every landing page with an
+ * empty language switcher and exited 0 — the same silent-degradation shape
+ * that let the pre-30-locale builder ship 7 pages without complaint.
+ */
+function languageLinks() {
+  return buildLanguageLinks();
+}
+
+/**
+ * The versioned copy of that derivation (templates/landing/language-links.json)
+ * is an OUTPUT, so the write path keeps it in step: `npm run build:landings`
+ * (and scripts/gate-refresh.mjs, which runs this file) regenerates it instead
+ * of leaving a stale or missing copy behind. No-op when it already matches.
+ */
+function syncLanguageLinksFile() {
+  const file = path.join(__dirname, 'templates', 'landing', 'language-links.json');
+  const links = buildLanguageLinks();
+  const generated = JSON.stringify(links, null, 2);
+  let onDisk = null;
+  try {
+    onDisk = fs.readFileSync(file, 'utf-8');
+  } catch {
+    // Missing is the interesting case: regenerate below.
+  }
+  // Compared with line endings normalized: an autocrlf checkout materializes
+  // this file as CRLF, and treating that as drift would "regenerate" it (and
+  // report it) on every build while changing nothing.
+  if (onDisk !== null && onDisk.replace(/\r\n/g, '\n') === generated) return links;
+  // Keep the working copy's line endings so a rewrite stays a no-op on disk.
+  const eol = onDisk !== null && onDisk.includes('\r\n') ? '\r\n' : '\n';
+  fs.writeFileSync(file, eol === '\n' ? generated : generated.replace(/\n/g, eol), 'utf-8');
+  console.log(
+    `\n${onDisk === null ? 'Created' : 'Regenerated'} templates/landing/language-links.json ` +
+      `(${links.length} locales) — it is generated from scripts/translations/*.json\n`,
+  );
+  return links;
+}
+
+// All languages with translation files will be used for landing pages
+// The script will dynamically detect all available translation files
 
 /** Output path for a (pageType, translationKey) pair. Shared by the builder
  * and the freshness check so the two can never disagree on destinations. */
@@ -77,13 +121,22 @@ function outputPathFor(pageType, key) {
   throw new Error(`unknown page type: ${pageType}`);
 }
 
+/** Get all landing language keys from translation files (excluding pocket-alternative) */
+function getLandingLangs(translations) {
+  return Object.keys(translations).filter(key => 
+    !key.startsWith('pocket-alternative') && translations[key]?.hero?.badge
+  );
+}
+
 /** Pages a translation key contributes, given the page types the build
  * actually generates (404 stays a static file — see the TODO in main). */
 function expectedOutputs(translations) {
   const outputs = [];
+  const landingLangs = getLandingLangs(translations);
+  
   for (const key of Object.keys(translations)) {
     const t = translations[key];
-    if (t.hero?.badge && LANDING_LANGS.includes(key)) {
+    if (t.hero?.badge && landingLangs.includes(key)) {
       outputs.push(outputPathFor('landing', key));
     }
     if (key.startsWith('pocket-alternative')) {
@@ -97,20 +150,23 @@ function expectedOutputs(translations) {
  * html }]; the builder writes them, the freshness check diffs them. */
 function renderAll() {
   const translations = loadTranslations();
+  const landingLangs = getLandingLangs(translations);
+  const links = languageLinks();
   const rendered = [];
+  
   for (const pageType of ['landing', 'pocket-alternative']) {
     const template = env.getTemplate(`landing/${pageType}.njk`);
     for (const [key, translation] of Object.entries(translations)) {
       if (pageType === 'landing') {
         if (!translation.hero?.badge) continue;
-        if (!LANDING_LANGS.includes(key)) continue;
+        if (!landingLangs.includes(key)) continue;
       }
       // pocket-alternative translations live in their own files
       // (pocket-alternative-<lang>.json); the main landing translation files
       // share the hero.badge shape but must not render the Pocket page.
       if (pageType === 'pocket-alternative' && !key.startsWith('pocket-alternative')) continue;
 
-      const html = template.render({ t: translation });
+      const html = template.render({ t: translation, languageLinks: links });
       rendered.push({ key, pageType, path: outputPathFor(pageType, key), html });
     }
   }
@@ -118,6 +174,7 @@ function renderAll() {
 }
 
 function buildLandings() {
+  syncLanguageLinksFile();
   const rendered = renderAll();
   for (const { path: outputPath, html } of rendered) {
     fs.writeFileSync(outputPath, html);
@@ -144,7 +201,8 @@ if (require.main === module) {
 }
 
 module.exports = {
-  LANDING_LANGS,
+  getLandingLangs,
+  languageLinks,
   buildLandings,
   expectedOutputs,
   loadTranslations,

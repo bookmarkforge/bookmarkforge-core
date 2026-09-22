@@ -408,50 +408,8 @@
         "ctaHref": "/buy-pro",
         "ctaClass": "btn-primary",
         "priceWas": "$79",
-        "priceSub": "danach $79 regulär · Founder $99",
+        "priceSub": "danach $79 regulär",
         "sla": "Support: E-Mail 48h (Mo–Fr)"
-      },
-      {
-        "name": "Founder",
-        "badge": "Founder — 100 limitiert",
-        "price": "$ 99",
-        "period": "lifetime v1",
-        "priceSub": "Gleiches Pro v1 + Founder-Badge + Beta",
-        "description": "Founder badge #042 in app · Beta access · v2 60% off lifetime",
-        "features": [
-          {
-            "included": true,
-            "text": "Everything in Pro Lifetime v1"
-          },
-          {
-            "included": true,
-            "text": "Founder badge #042 in app"
-          },
-          {
-            "included": true,
-            "text": "Beta access to v2 early builds"
-          },
-          {
-            "included": true,
-            "text": "60% off v2 (and v3) forever for this account"
-          },
-          {
-            "included": true,
-            "text": "Lifetime of v1 · Security forever"
-          },
-          {
-            "included": true,
-            "text": "Priority email support (24h) + early access"
-          },
-          {
-            "included": true,
-            "text": "30-day refund via Whop"
-          }
-        ],
-        "cta": "Get Founder $99",
-        "ctaHref": "/buy-founder",
-        "ctaClass": "btn-primary btn-founder",
-        "sla": "Support: Priorität 24h · Founder-Warteschlange"
       }
     ],
     "legal": "Lifetime-Lizenz für BookmarkForge v1. Enthält alle v1.x und 12 Monate Feature-Updates. Sicherheits-Updates für immer. Künftige Majors (v2, v3) 60% Rabatt für Besitzer. 30-Tage-Erstattung via Whop. <a href=\"/de/privacy-and-terms.html#terms\">AGB</a> · <a href=\"/help#pricing\">Mehr erfahren</a>"
@@ -467,17 +425,14 @@
         "question": "Was bedeutet \"Lifetime von v1\" bei Pro?",
         "answer": "Einmal zahlen, für immer besitzen. Enthält alle v1.x für immer und 12 Monate Feature-Updates ab Kauf. Sicherheit für immer. Nach Monat 13 bleibt v1 voll funktionsfähig, nur ohne neue Features. Künftige Majors (v2, v3): 89 $ für Neukunden, 35 $ für v1-Besitzer (60% Rabatt)."
       },
-      {
-        "question": "Was ist die Founder Edition?",
-        "answer": "Gleiches Pro v1-Binary — kein anderes Feature-Level. Founder gibt dir Founder-# Badge in der App, Beta-Zugang zu v2 und lebenslang 60% auf künftige Majors. Limitiert auf 100. Status, keine Paywall."
-      },
+
       {
         "question": "Zahlungsarten & Erstattung?",
         "answer": "Via Whop: Karte, PayPal, Krypto. Wir sehen nie deine Zahlungsdaten. 30-Tage-Erstattung: <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
       },
       {
         "question": "Support — wie schnell antwortet ihr?",
-        "answer": "Gratis: Community via <a href=\"/help\">Hilfe-Center</a> + GitHub Discussions (Best Effort). Pro: 48h werktags per E-Mail. Founder: 24h Priorität + Beta-Queue. Vault ist verschlüsselt — wir fragen nie nach Passwort oder Seed. Siehe <a href=\"/help#sla\">SLA</a>."
+        "answer": "Gratis: Community via <a href=\"/help\">Hilfe-Center</a> + GitHub Discussions (Best Effort). Pro: 48h werktags per E-Mail. Vault ist verschlüsselt — wir fragen nie nach Passwort oder Seed. Siehe <a href=\"/help#sla\">SLA</a>."
       },
       {
         "question": "Was, wenn ich mein Vault-Passwort vergesse?",
@@ -593,10 +548,7 @@
         "question": "Was bedeutet \"Lifetime von v1\" bei Pro?",
         "answer": "Einmal zahlen, für immer besitzen. Enthält alle v1.x für immer und 12 Monate Feature-Updates ab Kauf. Sicherheit für immer. Nach Monat 13 bleibt v1 voll funktionsfähig, nur ohne neue Features. Künftige Majors (v2, v3): 89 $ für Neukunden, 35 $ für v1-Besitzer (60% Rabatt)."
       },
-      {
-        "question": "Was ist die Founder Edition?",
-        "answer": "Gleiches Pro v1-Binary — kein anderes Feature-Level. Founder gibt dir Founder-# Badge in der App, Beta-Zugang zu v2 und lebenslang 60% auf künftige Majors. Limitiert auf 100. Status, keine Paywall."
-      },
+
       {
         "question": "Zahlungsarten & Erstattung?",
         "answer": "Via Whop: Karte, PayPal, Krypto. Wir sehen nie deine Zahlungsdaten. 30-Tage-Erstattung: bookmarkforge@proton.me."

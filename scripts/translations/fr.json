@@ -408,51 +408,10 @@
         "ctaHref": "/buy-pro",
         "ctaClass": "btn-primary",
         "priceWas": "$79",
-        "priceSub": "puis $79 régulier · Founder $99",
+        "priceSub": "puis $79 régulier",
         "sla": "Support : Email 48h (lun–ven)"
-      },
-      {
-        "name": "Founder",
-        "badge": "Founder — 100 limitées",
-        "price": "$ 99",
-        "period": "lifetime v1",
-        "priceSub": "Même Pro v1 + badge Founder + bêta",
-        "description": "Founder badge #042 in app · Beta access · v2 60% off lifetime",
-        "features": [
-          {
-            "included": true,
-            "text": "Everything in Pro Lifetime v1"
-          },
-          {
-            "included": true,
-            "text": "Founder badge #042 in app"
-          },
-          {
-            "included": true,
-            "text": "Beta access to v2 early builds"
-          },
-          {
-            "included": true,
-            "text": "60% off v2 (and v3) forever for this account"
-          },
-          {
-            "included": true,
-            "text": "Lifetime of v1 · Security forever"
-          },
-          {
-            "included": true,
-            "text": "Priority email support (24h) + early access"
-          },
-          {
-            "included": true,
-            "text": "30-day refund via Whop"
-          }
-        ],
-        "cta": "Get Founder $99",
-        "ctaHref": "/buy-founder",
-        "ctaClass": "btn-primary btn-founder",
-        "sla": "Support : Prioritaire 24h · File Founder"
       }
+
     ],
     "legal": "Licence Lifetime pour BookmarkForge v1. Inclut toutes les v1.x et 12 mois de nouveautés. Sécurité à vie. Futures majeures (v2, v3) -60% pour les propriétaires. Remboursement 30 jours via Whop. <a href=\"/fr/privacy-and-terms.html#terms\">Conditions</a> · <a href=\"/help#pricing\">En savoir plus</a>"
   },
@@ -468,8 +427,8 @@
         "answer": "Payez une fois, à vous pour toujours. Inclut toutes les v1.x à vie et 12 mois de nouveautés dès l’achat. Sécurité à vie. Après le mois 13, v1 reste fonctionnel sans les nouveautés. Futures majeures (v2, v3) : 89 $ nouveaux, 35 $ propriétaires v1 (-60%)."
       },
       {
-        "question": "Qu’est-ce que Founder Edition ?",
-        "answer": "Même binaire Pro v1 — pas un palier différent. Badge Founder # dans l’app, accès bêta v2 et -60% à vie sur les futures majeures. Limité à 100. Prestige, pas paywall."
+        "question": "Qu’est-ce que  Edition ?",
+        "answer": "Même binaire Pro v1 — pas un palier différent. Badge  # dans l’app, accès bêta v2 et -60% à vie sur les futures majeures. Limité à 100. Prestige, pas paywall."
       },
       {
         "question": "Moyens de paiement & remboursements ?",
@@ -477,7 +436,7 @@
       },
       {
         "question": "Support — délai de réponse ?",
-        "answer": "Gratuit : entraide via <a href=\"/help\">Centre d’aide</a> + GitHub Discussions (meilleur effort). Pro : 48h ouvrées par email. Founder : 24h prioritaire + file bêta. Coffre chiffré — on ne demande jamais mot de passe ni phrase. Voir <a href=\"/help#sla\">SLA</a>."
+        "answer": "Gratuit : entraide via <a href=\"/help\">Centre d’aide</a> + GitHub Discussions (meilleur effort). Pro : 48h ouvrées par email.  : 24h prioritaire + file bêta. Coffre chiffré — on ne demande jamais mot de passe ni phrase. Voir <a href=\"/help#sla\">SLA</a>."
       },
       {
         "question": "J’ai oublié le mot de passe de mon coffre ?",
@@ -569,10 +528,10 @@
         "description": "Regular. Lifetime of v1."
       },
       {
-        "name": "Founder Edition",
+        "name": " Edition",
         "price": "99",
         "currency": "USD",
-        "description": "Same Pro v1 + Founder badge + beta. Limited 100.",
+        "description": "Same Pro v1 +  badge + beta. Limited 100.",
         "availability": "https://schema.org/LimitedAvailability"
       }
     ],
@@ -594,8 +553,8 @@
         "answer": "Payez une fois, à vous pour toujours. Inclut toutes les v1.x à vie et 12 mois de nouveautés dès l’achat. Sécurité à vie. Après le mois 13, v1 reste fonctionnel sans les nouveautés. Futures majeures (v2, v3) : 89 $ nouveaux, 35 $ propriétaires v1 (-60%)."
       },
       {
-        "question": "Qu’est-ce que Founder Edition ?",
-        "answer": "Même binaire Pro v1 — pas un palier différent. Badge Founder # dans l’app, accès bêta v2 et -60% à vie sur les futures majeures. Limité à 100. Prestige, pas paywall."
+        "question": "Qu’est-ce que  Edition ?",
+        "answer": "Même binaire Pro v1 — pas un palier différent. Badge  # dans l’app, accès bêta v2 et -60% à vie sur les futures majeures. Limité à 100. Prestige, pas paywall."
       },
       {
         "question": "Moyens de paiement & remboursements ?",
@@ -603,7 +562,7 @@
       },
       {
         "question": "Support — délai de réponse ?",
-        "answer": "Gratuit : entraide via Centre d’aide + GitHub Discussions (meilleur effort). Pro : 48h ouvrées par email. Founder : 24h prioritaire + file bêta. Coffre chiffré — on ne demande jamais mot de passe ni phrase. Voir SLA."
+        "answer": "Gratuit : entraide via Centre d’aide + GitHub Discussions (meilleur effort). Pro : 48h ouvrées par email.  : 24h prioritaire + file bêta. Coffre chiffré — on ne demande jamais mot de passe ni phrase. Voir SLA."
       },
       {
         "question": "J’ai oublié le mot de passe de mon coffre ?",

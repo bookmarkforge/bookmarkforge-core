@@ -4,6 +4,7 @@ import {
   AUX_PAGES,
   DEFAULT_OG_IMAGE,
   LANDING_PAGES,
+  LANG_LINK_HREFS,
   LEGAL_PAGES,
   OG_IMAGE_POLICY,
   SINGLE_PAGES,
@@ -25,6 +26,45 @@ import {
 } from "../../functions/_middleware.js";
 
 /**
+ * The landing cluster is 30 locales + x-default, so the fixture derives its
+ * alternate set from the gate's own registry instead of hand-listing it: a
+ * locale joining LANDING_PAGES must not be able to invalidate every fixture
+ * test at once. The literal 30-locale set is pinned once, in "declares the
+ * full 30-language hreflang set" below — that is where the contract belongs.
+ */
+const LANDING_ALTERNATES = LANDING_PAGES[0].alternates;
+
+/**
+ * Fixture alternates: the page's own hreflang points at `canonical`, es at
+ * `esHref` (the mutation target), and every other locale at its registry href.
+ */
+function fixtureAlternates(lang, canonical, esHref) {
+  return LANDING_ALTERNATES.map((a) => {
+    if (a.hreflang === lang) return { ...a, href: canonical };
+    if (a.hreflang === "es") return { ...a, href: esHref };
+    return a;
+  });
+}
+
+/**
+ * A locale has its own share card only once that card is actually localized:
+ * the 30-locale expansion pre-staged public/og-image-<lang>.png for 24 locales
+ * as byte-identical copies of the general card, and those pages must keep the
+ * general card — a copy under a localized filename would advertise a
+ * localization that does not exist. Localizing a card therefore also means
+ * adding the locale to OG_IMAGE_POLICY; the loop below enforces the pair.
+ */
+function hasLocalizedCard(lang) {
+  try {
+    return !readFileSync(`public/og-image-${lang}.png`).equals(
+      readFileSync("public/og-image.png"),
+    );
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Minimal-but-complete landing page matching the gate's contract, so each
  * test can mutate exactly one piece and assert the gate catches it.
  */
@@ -35,15 +75,7 @@ function buildValidPage(overrides = {}) {
   const alternateLocale = overrides.alternateLocale ?? "es_ES";
   const esHref = overrides.esHref ?? "https://bookmarkforge.com/es/";
   const ogImage = overrides.ogImage ?? "https://bookmarkforge.com/og-image.png";
-  const alternates = overrides.alternates ?? [
-    { hreflang: "en", href: canonical },
-    { hreflang: "es", href: esHref },
-    { hreflang: "fr", href: "https://bookmarkforge.com/fr/" },
-    { hreflang: "de", href: "https://bookmarkforge.com/de/" },
-    { hreflang: "pt", href: "https://bookmarkforge.com/pt/" },
-    { hreflang: "it", href: "https://bookmarkforge.com/it/" },
-    { hreflang: "x-default", href: canonical },
-  ];
+  const alternates = overrides.alternates ?? fixtureAlternates(lang, canonical, esHref);
   const alternateTags = alternates
     .map((a) => `<link rel="alternate" hreflang="${a.hreflang}" href="${a.href}">`)
     .join("\n");    const jsonLd = overrides.jsonLd ?? `
@@ -548,8 +580,16 @@ describe("check-seo gate", () => {
     expect(fails.some((f) => f.includes("twitter:card"))).toBe(true);
   });
 
-  it("declares the full 6-language hreflang set on every landing page", () => {
-    const expected = new Set(["en", "es", "fr", "de", "pt", "it", "x-default"]);
+  it("declares the full 30-language hreflang set on every landing page", () => {
+    // Kept literal on purpose (not derived from LANDING_PAGES): this is the
+    // one place the cluster's membership is pinned, so a locale joining or
+    // leaving it has to be acknowledged here.
+    const expected = new Set([
+      "en", "ar", "bg", "cs", "da", "de", "el", "es", "fi", "fr",
+      "he", "hi", "hr", "hu", "id", "it", "ja", "ko", "nl", "no",
+      "pl", "pt", "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh",
+      "x-default",
+    ]);
     for (const cfg of LANDING_PAGES) {
       const langs = new Set(cfg.alternates.map((a) => a.hreflang));
       expect(langs, cfg.file).toEqual(expected);
@@ -718,23 +758,16 @@ describe("check-seo gate", () => {
   });
 
   it("flags the ES page locale contract", () => {
+    // Found by lang, not by index: the registry is alphabetical now, so
+    // LANDING_PAGES[1] is ar, not es.
+    const esCfg = LANDING_PAGES.find((p) => p.lang === "es");
     const es = buildValidPage({
       lang: "es",
       locale: "es_ES",
       alternateLocale: "en_US",
       canonical: "https://bookmarkforge.com/es/",
       ogImage: ogImageForFile("public/es.html"),
-      alternates: [
-        { hreflang: "es", href: "https://bookmarkforge.com/es/" },
-        { hreflang: "en", href: "https://bookmarkforge.com/" },
-        { hreflang: "fr", href: "https://bookmarkforge.com/fr/" },
-        { hreflang: "de", href: "https://bookmarkforge.com/de/" },
-        { hreflang: "pt", href: "https://bookmarkforge.com/pt/" },
-        { hreflang: "it", href: "https://bookmarkforge.com/it/" },
-        { hreflang: "x-default", href: "https://bookmarkforge.com/" },
-      ],
     });
-    const esCfg = LANDING_PAGES[1];
     expect(validateLandingHtml(es, esCfg)).toEqual([]);
     expect(validateLandingHtml(es, CFG).length).toBeGreaterThan(0);
   });
@@ -870,14 +903,9 @@ describe("check-seo gate", () => {
 
   it("validates the landing language links (lang + hreflang + ?lang=)", () => {
     const buildPage = (lang) => {
-      const all = [
-        ["en", "/?lang=en"],
-        ["es", "/es/?lang=es"],
-        ["fr", "/fr/?lang=fr"],
-        ["de", "/de/?lang=de"],
-        ["pt", "/pt/?lang=pt"],
-        ["it", "/it/?lang=it"],
-      ];
+      // The visible nav/footer links mirror LANG_LINK_HREFS for all 30
+      // locales, so the fixture is built from that registry.
+      const all = Object.entries(LANG_LINK_HREFS);
       const links = all
         .map(
           ([l, href]) =>
@@ -1072,9 +1100,9 @@ describe("og:image policy (card → page mapping)", () => {
     }
     for (const page of LANDING_PAGES) {
       expect(ogImageForFile(page.file)).toBe(
-        page.lang === "en"
-          ? DEFAULT_OG_IMAGE
-          : `${SITE_URL}/og-image-${page.lang}.png`,
+        hasLocalizedCard(page.lang)
+          ? `${SITE_URL}/og-image-${page.lang}.png`
+          : DEFAULT_OG_IMAGE,
       );
     }
     for (const entry of OG_IMAGE_POLICY) {

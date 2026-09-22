@@ -1,0 +1,242 @@
+[
+  {
+    "code": "id",
+    "name": "Bahasa Indonesia",
+    "dir": "ltr",
+    "href": "/id/?lang=id",
+    "hreflang": "id",
+    "lang": "id"
+  },
+  {
+    "code": "cs",
+    "name": "Čeština",
+    "dir": "ltr",
+    "href": "/cs/?lang=cs",
+    "hreflang": "cs",
+    "lang": "cs"
+  },
+  {
+    "code": "da",
+    "name": "Dansk",
+    "dir": "ltr",
+    "href": "/da/?lang=da",
+    "hreflang": "da",
+    "lang": "da"
+  },
+  {
+    "code": "de",
+    "name": "Deutsch",
+    "dir": "ltr",
+    "href": "/de/?lang=de",
+    "hreflang": "de",
+    "lang": "de"
+  },
+  {
+    "code": "en",
+    "name": "English",
+    "dir": "ltr",
+    "href": "/?lang=en",
+    "hreflang": "en",
+    "lang": "en"
+  },
+  {
+    "code": "es",
+    "name": "Español",
+    "dir": "ltr",
+    "href": "/es/?lang=es",
+    "hreflang": "es",
+    "lang": "es"
+  },
+  {
+    "code": "fr",
+    "name": "Français",
+    "dir": "ltr",
+    "href": "/fr/?lang=fr",
+    "hreflang": "fr",
+    "lang": "fr"
+  },
+  {
+    "code": "hr",
+    "name": "Hrvatski",
+    "dir": "ltr",
+    "href": "/hr/?lang=hr",
+    "hreflang": "hr",
+    "lang": "hr"
+  },
+  {
+    "code": "it",
+    "name": "Italiano",
+    "dir": "ltr",
+    "href": "/it/?lang=it",
+    "hreflang": "it",
+    "lang": "it"
+  },
+  {
+    "code": "hu",
+    "name": "Magyar",
+    "dir": "ltr",
+    "href": "/hu/?lang=hu",
+    "hreflang": "hu",
+    "lang": "hu"
+  },
+  {
+    "code": "nl",
+    "name": "Nederlands",
+    "dir": "ltr",
+    "href": "/nl/?lang=nl",
+    "hreflang": "nl",
+    "lang": "nl"
+  },
+  {
+    "code": "no",
+    "name": "Norsk",
+    "dir": "ltr",
+    "href": "/no/?lang=no",
+    "hreflang": "no",
+    "lang": "no"
+  },
+  {
+    "code": "pl",
+    "name": "Polski",
+    "dir": "ltr",
+    "href": "/pl/?lang=pl",
+    "hreflang": "pl",
+    "lang": "pl"
+  },
+  {
+    "code": "pt",
+    "name": "Português",
+    "dir": "ltr",
+    "href": "/pt/?lang=pt",
+    "hreflang": "pt",
+    "lang": "pt"
+  },
+  {
+    "code": "ro",
+    "name": "Română",
+    "dir": "ltr",
+    "href": "/ro/?lang=ro",
+    "hreflang": "ro",
+    "lang": "ro"
+  },
+  {
+    "code": "fi",
+    "name": "Suomi",
+    "dir": "ltr",
+    "href": "/fi/?lang=fi",
+    "hreflang": "fi",
+    "lang": "fi"
+  },
+  {
+    "code": "sv",
+    "name": "Svenska",
+    "dir": "ltr",
+    "href": "/sv/?lang=sv",
+    "hreflang": "sv",
+    "lang": "sv"
+  },
+  {
+    "code": "vi",
+    "name": "Tiếng Việt",
+    "dir": "ltr",
+    "href": "/vi/?lang=vi",
+    "hreflang": "vi",
+    "lang": "vi"
+  },
+  {
+    "code": "tr",
+    "name": "Türkçe",
+    "dir": "ltr",
+    "href": "/tr/?lang=tr",
+    "hreflang": "tr",
+    "lang": "tr"
+  },
+  {
+    "code": "el",
+    "name": "Ελληνικά",
+    "dir": "ltr",
+    "href": "/el/?lang=el",
+    "hreflang": "el",
+    "lang": "el"
+  },
+  {
+    "code": "bg",
+    "name": "Български",
+    "dir": "ltr",
+    "href": "/bg/?lang=bg",
+    "hreflang": "bg",
+    "lang": "bg"
+  },
+  {
+    "code": "ru",
+    "name": "Русский",
+    "dir": "ltr",
+    "href": "/ru/?lang=ru",
+    "hreflang": "ru",
+    "lang": "ru"
+  },
+  {
+    "code": "uk",
+    "name": "Українська",
+    "dir": "ltr",
+    "href": "/uk/?lang=uk",
+    "hreflang": "uk",
+    "lang": "uk"
+  },
+  {
+    "code": "he",
+    "name": "עברית",
+    "dir": "rtl",
+    "href": "/he/?lang=he",
+    "hreflang": "he",
+    "lang": "he"
+  },
+  {
+    "code": "ar",
+    "name": "العربية",
+    "dir": "rtl",
+    "href": "/ar/?lang=ar",
+    "hreflang": "ar",
+    "lang": "ar"
+  },
+  {
+    "code": "hi",
+    "name": "हिन्दी",
+    "dir": "ltr",
+    "href": "/hi/?lang=hi",
+    "hreflang": "hi",
+    "lang": "hi"
+  },
+  {
+    "code": "th",
+    "name": "ไทย",
+    "dir": "ltr",
+    "href": "/th/?lang=th",
+    "hreflang": "th",
+    "lang": "th"
+  },
+  {
+    "code": "ko",
+    "name": "한국어",
+    "dir": "ltr",
+    "href": "/ko/?lang=ko",
+    "hreflang": "ko",
+    "lang": "ko"
+  },
+  {
+    "code": "zh",
+    "name": "中文",
+    "dir": "ltr",
+    "href": "/zh/?lang=zh",
+    "hreflang": "zh",
+    "lang": "zh"
+  },
+  {
+    "code": "ja",
+    "name": "日本語",
+    "dir": "ltr",
+    "href": "/ja/?lang=ja",
+    "hreflang": "ja",
+    "lang": "ja"
+  }
+]

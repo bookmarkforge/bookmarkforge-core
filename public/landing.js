@@ -47,6 +47,33 @@
 
   initTheme();
 
+  // ── Language Dropdown ─────────────────────────────────────────────
+  const languageToggle = document.querySelector('.language-toggle');
+  const languageMenu = document.querySelector('.language-menu');
+
+  if (languageToggle && languageMenu) {
+    languageToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isExpanded = languageToggle.getAttribute('aria-expanded') === 'true';
+      languageToggle.setAttribute('aria-expanded', !isExpanded);
+      languageMenu.setAttribute('aria-hidden', isExpanded);
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', () => {
+      languageToggle.setAttribute('aria-expanded', 'false');
+      languageMenu.setAttribute('aria-hidden', 'true');
+    });
+
+    // Close dropdown when clicking on a language link
+    languageMenu.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') {
+        languageToggle.setAttribute('aria-expanded', 'false');
+        languageMenu.setAttribute('aria-hidden', 'true');
+      }
+    });
+  }
+
   // ── Smooth Scroll for anchor links ───────────────────────────────
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
@@ -112,7 +139,7 @@
   // nginx + the Cloudflare middleware, nf_lang is Netlify's native override
   // for its Language conditions. Same contract in scripts/nginx-render.mjs
   // and functions/_middleware.js, pinned by scripts/check-seo.mjs.
-  const LANG_CODES = ['en', 'es', 'fr', 'de', 'pt', 'it'];
+  const LANG_CODES = ['en', 'es', 'fr', 'de', 'pt', 'it', 'ar', 'bg', 'cs', 'da', 'el', 'fi', 'he', 'hi', 'hr', 'hu', 'id', 'ja', 'ko', 'nl', 'no', 'pl', 'ro', 'ru', 'sv', 'th', 'tr', 'uk', 'vi', 'zh'];
 
   function setLangPreference(lang) {
     const secure = window.location.protocol === 'https:' ? '; Secure' : '';

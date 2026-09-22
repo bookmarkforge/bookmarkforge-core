@@ -4,9 +4,10 @@
  * Guards the only indexable surface of the site and the noindex contract
  * that keeps the private app out of the index:
  *
- *   Landing pages (public/landing.html EN + public/<lang>.html for es, fr,
- *   de, pt, it) and the single-language comparison page
- *   (public/pocket-alternative.html) must carry:
+ *   Landing pages (public/landing.html EN + public/<lang>.html for the other
+ *   29 locales — the registry is LANDING_LOCALES below) and the
+ *   single-language comparison page (public/pocket-alternative.html) must
+ *   carry:
  *     - <html lang>, <title> and meta description
  *     - canonical + hreflang alternates (self, other language, x-default)
  *     - Open Graph meta (og:url must match canonical; og:image must point
@@ -39,9 +40,9 @@
  *     - robots.txt Disallow for /app, /capture, /offline and /api
  *     - <meta name="robots" content="noindex"> in public/offline.html
  *     - public/sitemap.xml must not list /app and must list every landing
- *       locale (/ through /it/) plus /pocket-alternative, and each landing
+ *       locale (/ through /zh/) plus /pocket-alternative, and each landing
  *       <url> block must carry the full xhtml:link hreflang annotation set
- *       (6 languages + x-default) so the alternates survive at sitemap
+ *       (30 languages + x-default) so the alternates survive at sitemap
  *       level even when a crawler skips the HTML <head>
  *
  * The landing identity (canonical, hreflang pairs, locales) is declared in
@@ -67,24 +68,86 @@ const ROOT = process.cwd();
 const TAG = "[check-seo]";
 const SITE_URL = `https://${APP_DOMAIN}`;
 
-/** Every landing language and its canonical URL (all pages link all of them). */
+/**
+ * Every landing language and its canonical URL (all pages link all of them).
+ *
+ * 30 locales as of 2026-09-22 (the locale expansion landed 24 new pages);
+ * the hrefs match the <head> alternates and the sitemap xhtml:link set, and
+ * the code list matches check-sitemap-coverage's LANDING_LANGS. Adding a
+ * locale means adding its row here, its page identity to LANDING_LOCALES, its
+ * visible-link href to LANG_LINK_HREFS and the pages themselves — the gate
+ * fails loudly on a page the registry does not know (and on a registry entry
+ * the pages do not carry), which is exactly how the 6→30 lag was found.
+ */
 export const LANDING_LANGS = [
   { hreflang: "en", href: `${SITE_URL}/` },
-  { hreflang: "es", href: `${SITE_URL}/es/` },
-  { hreflang: "fr", href: `${SITE_URL}/fr/` },
+  { hreflang: "ar", href: `${SITE_URL}/ar/` },
+  { hreflang: "bg", href: `${SITE_URL}/bg/` },
+  { hreflang: "cs", href: `${SITE_URL}/cs/` },
+  { hreflang: "da", href: `${SITE_URL}/da/` },
   { hreflang: "de", href: `${SITE_URL}/de/` },
-  { hreflang: "pt", href: `${SITE_URL}/pt/` },
+  { hreflang: "el", href: `${SITE_URL}/el/` },
+  { hreflang: "es", href: `${SITE_URL}/es/` },
+  { hreflang: "fi", href: `${SITE_URL}/fi/` },
+  { hreflang: "fr", href: `${SITE_URL}/fr/` },
+  { hreflang: "he", href: `${SITE_URL}/he/` },
+  { hreflang: "hi", href: `${SITE_URL}/hi/` },
+  { hreflang: "hr", href: `${SITE_URL}/hr/` },
+  { hreflang: "hu", href: `${SITE_URL}/hu/` },
+  { hreflang: "id", href: `${SITE_URL}/id/` },
   { hreflang: "it", href: `${SITE_URL}/it/` },
+  { hreflang: "ja", href: `${SITE_URL}/ja/` },
+  { hreflang: "ko", href: `${SITE_URL}/ko/` },
+  { hreflang: "nl", href: `${SITE_URL}/nl/` },
+  { hreflang: "no", href: `${SITE_URL}/no/` },
+  { hreflang: "pl", href: `${SITE_URL}/pl/` },
+  { hreflang: "pt", href: `${SITE_URL}/pt/` },
+  { hreflang: "ro", href: `${SITE_URL}/ro/` },
+  { hreflang: "ru", href: `${SITE_URL}/ru/` },
+  { hreflang: "sv", href: `${SITE_URL}/sv/` },
+  { hreflang: "th", href: `${SITE_URL}/th/` },
+  { hreflang: "tr", href: `${SITE_URL}/tr/` },
+  { hreflang: "uk", href: `${SITE_URL}/uk/` },
+  { hreflang: "vi", href: `${SITE_URL}/vi/` },
+  { hreflang: "zh", href: `${SITE_URL}/zh/` },
 ];
 
-/** Per-page identity: file, language, OG locales and canonical path. */
+/**
+ * Per-page identity: file, language, OG locales and canonical path. Kept in
+ * step with LANDING_LANGS (one entry per locale, same set) — the OG locales
+ * are the values the live pages carry, verified by the gate on every run.
+ */
 export const LANDING_LOCALES = [
   { file: "public/landing.html", lang: "en", locale: "en_US", alternateLocale: "es_ES", path: "/" },
-  { file: "public/es.html", lang: "es", locale: "es_ES", alternateLocale: "en_US", path: "/es/" },
-  { file: "public/fr.html", lang: "fr", locale: "fr_FR", alternateLocale: "en_US", path: "/fr/" },
+  { file: "public/ar.html", lang: "ar", locale: "ar_AR", alternateLocale: "en_US", path: "/ar/" },
+  { file: "public/bg.html", lang: "bg", locale: "bg_BG", alternateLocale: "en_US", path: "/bg/" },
+  { file: "public/cs.html", lang: "cs", locale: "cs_CZ", alternateLocale: "en_US", path: "/cs/" },
+  { file: "public/da.html", lang: "da", locale: "da_DK", alternateLocale: "en_US", path: "/da/" },
   { file: "public/de.html", lang: "de", locale: "de_DE", alternateLocale: "en_US", path: "/de/" },
-  { file: "public/pt.html", lang: "pt", locale: "pt_PT", alternateLocale: "en_US", path: "/pt/" },
+  { file: "public/el.html", lang: "el", locale: "el_GR", alternateLocale: "en_US", path: "/el/" },
+  { file: "public/es.html", lang: "es", locale: "es_ES", alternateLocale: "en_US", path: "/es/" },
+  { file: "public/fi.html", lang: "fi", locale: "fi_FI", alternateLocale: "en_US", path: "/fi/" },
+  { file: "public/fr.html", lang: "fr", locale: "fr_FR", alternateLocale: "en_US", path: "/fr/" },
+  { file: "public/he.html", lang: "he", locale: "he_IL", alternateLocale: "en_US", path: "/he/" },
+  { file: "public/hi.html", lang: "hi", locale: "hi_IN", alternateLocale: "en_US", path: "/hi/" },
+  { file: "public/hr.html", lang: "hr", locale: "hr_HR", alternateLocale: "en_US", path: "/hr/" },
+  { file: "public/hu.html", lang: "hu", locale: "hu_HU", alternateLocale: "en_US", path: "/hu/" },
+  { file: "public/id.html", lang: "id", locale: "id_ID", alternateLocale: "en_US", path: "/id/" },
   { file: "public/it.html", lang: "it", locale: "it_IT", alternateLocale: "en_US", path: "/it/" },
+  { file: "public/ja.html", lang: "ja", locale: "ja_JP", alternateLocale: "en_US", path: "/ja/" },
+  { file: "public/ko.html", lang: "ko", locale: "ko_KR", alternateLocale: "en_US", path: "/ko/" },
+  { file: "public/nl.html", lang: "nl", locale: "nl_NL", alternateLocale: "en_US", path: "/nl/" },
+  { file: "public/no.html", lang: "no", locale: "no_NO", alternateLocale: "en_US", path: "/no/" },
+  { file: "public/pl.html", lang: "pl", locale: "pl_PL", alternateLocale: "en_US", path: "/pl/" },
+  { file: "public/pt.html", lang: "pt", locale: "pt_PT", alternateLocale: "en_US", path: "/pt/" },
+  { file: "public/ro.html", lang: "ro", locale: "ro_RO", alternateLocale: "en_US", path: "/ro/" },
+  { file: "public/ru.html", lang: "ru", locale: "ru_RU", alternateLocale: "en_US", path: "/ru/" },
+  { file: "public/sv.html", lang: "sv", locale: "sv_SE", alternateLocale: "en_US", path: "/sv/" },
+  { file: "public/th.html", lang: "th", locale: "th_TH", alternateLocale: "en_US", path: "/th/" },
+  { file: "public/tr.html", lang: "tr", locale: "tr_TR", alternateLocale: "en_US", path: "/tr/" },
+  { file: "public/uk.html", lang: "uk", locale: "uk_UA", alternateLocale: "en_US", path: "/uk/" },
+  { file: "public/vi.html", lang: "vi", locale: "vi_VN", alternateLocale: "en_US", path: "/vi/" },
+  { file: "public/zh.html", lang: "zh", locale: "zh_CN", alternateLocale: "en_US", path: "/zh/" },
 ];
 
 /** Landing pages and their expected SEO identity (derived from the domain). */
@@ -237,16 +300,40 @@ export function validateLegalTerms({ pages }) {
  *  parameter (the manual language choice). */
 export const LANG_LINK_HREFS = {
   en: "/?lang=en",
-  es: "/es/?lang=es",
-  fr: "/fr/?lang=fr",
+  ar: "/ar/?lang=ar",
+  bg: "/bg/?lang=bg",
+  cs: "/cs/?lang=cs",
+  da: "/da/?lang=da",
   de: "/de/?lang=de",
-  pt: "/pt/?lang=pt",
+  el: "/el/?lang=el",
+  es: "/es/?lang=es",
+  fi: "/fi/?lang=fi",
+  fr: "/fr/?lang=fr",
+  he: "/he/?lang=he",
+  hi: "/hi/?lang=hi",
+  hr: "/hr/?lang=hr",
+  hu: "/hu/?lang=hu",
+  id: "/id/?lang=id",
   it: "/it/?lang=it",
+  ja: "/ja/?lang=ja",
+  ko: "/ko/?lang=ko",
+  nl: "/nl/?lang=nl",
+  no: "/no/?lang=no",
+  pl: "/pl/?lang=pl",
+  pt: "/pt/?lang=pt",
+  ro: "/ro/?lang=ro",
+  ru: "/ru/?lang=ru",
+  sv: "/sv/?lang=sv",
+  th: "/th/?lang=th",
+  tr: "/tr/?lang=tr",
+  uk: "/uk/?lang=uk",
+  vi: "/vi/?lang=vi",
+  zh: "/zh/?lang=zh",
 };
 
 /**
- * Validate the visible language links (nav + footer) of the six landings:
- * every one of the 6 languages must be linked, each link must carry BOTH
+ * Validate the visible language links (nav + footer) of the 30 landings:
+ * every one of the languages must be linked, each link must carry BOTH
  * lang and hreflang attributes with the same value, must point at the
  * right landing URL with ?lang= (the preference mechanism), and each page
  * must link its OWN version correctly. `pages` maps a language code to
@@ -806,10 +893,10 @@ export function validateNoindexContent({
       failures.push(`public/sitemap.xml: missing legal ${p.path}`);
     }
   }
-  // Sitemap-level hreflang (xhtml:link): every landing <url> block AND
-  // every legal <url> block must annotate the same alternate set as the
-  // HTML <head> of its cluster (6 languages + x-default), and the urlset
-  // must declare the xhtml namespace.
+  // Sitemap-level hreflang (xhtml:link): every landing <url> block must
+  // annotate the same alternate set as the HTML <head> of its cluster
+  // (30 languages + x-default), every legal <url> block its own 6-language
+  // set, and the urlset must declare the xhtml namespace.
   if (!/xmlns:xhtml="http:\/\/www\.w3\.org\/1999\/xhtml"/.test(sitemapXml)) {
     failures.push("public/sitemap.xml: xmlns:xhtml missing from <urlset>");
   }

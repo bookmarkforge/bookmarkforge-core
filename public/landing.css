@@ -49,6 +49,62 @@ body {
 .nav-links a:hover { color: var(--text-primary); background: var(--accent-soft); }
 .nav-cta { margin-left: 8px; padding: 8px 20px !important; }
 
+/* Language Dropdown */
+.language-dropdown {
+  position: relative;
+  margin-left: 8px;
+}
+.language-toggle {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg-topbar); border: 1px solid var(--divider);
+  border-radius: var(--radius-item); padding: 8px 16px;
+  color: var(--text-secondary); font-size: 0.875rem; font-weight: 500;
+  cursor: pointer; transition: all 0.15s;
+}
+.language-toggle:hover {
+  color: var(--text-primary); background: var(--accent-soft);
+}
+.language-toggle svg {
+  transition: transform 0.2s;
+}
+.language-toggle[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+.language-menu {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  background: var(--bg-primary); border: 1px solid var(--divider);
+  border-radius: var(--radius-item); min-width: 200px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  max-height: 400px; overflow-y: auto;
+  opacity: 0; visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.2s ease;
+  z-index: 100;
+}
+.language-menu[aria-hidden="false"] {
+  opacity: 1; visibility: visible;
+  transform: translateY(0);
+}
+.language-menu li {
+  list-style: none;
+}
+.language-menu a {
+  display: block; padding: 10px 16px;
+  color: var(--text-secondary); text-decoration: none;
+  font-size: 0.875rem; transition: all 0.15s;
+  border-bottom: 1px solid var(--divider);
+}
+.language-menu a:last-child {
+  border-bottom: none;
+}
+.language-menu a:hover {
+  color: var(--text-primary); background: var(--accent-soft);
+}
+.language-menu a.current {
+  color: var(--accent-primary); font-weight: 600;
+  background: var(--accent-soft);
+}
+
 .theme-toggle {
   width: 40px; height: 40px; border-radius: var(--radius-item);
   border: 1px solid var(--divider); background: var(--bg-topbar);
@@ -222,8 +278,6 @@ body {
 .price-sub { text-align: center; font-size: 0.82rem; color: var(--text-muted); margin-top: 4px; }
 .pricing-legal { max-width: 860px; margin: 28px auto 0; text-align: center; font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
 .sla-note { margin-top: 12px; text-align: center; font-size: 0.78rem; color: var(--text-muted); }
-.btn-founder { background: var(--color-warning); color: var(--text-on-accent); }
-.btn-founder:hover { background: var(--color-warning-text); }
 .pricing-card { position: relative; background: var(--bg-card); border: 1px solid var(--divider); border-radius: var(--radius-card); padding: 32px; display: flex; flex-direction: column; transition: all 0.2s; }
 .pricing-card:hover { border-color: var(--accent-glow); }
 .pricing-card.pro { border-color: var(--accent-primary); box-shadow: 0 0 0 1px var(--accent-primary), 0 20px 60px rgba(0,174,239,0.15); }

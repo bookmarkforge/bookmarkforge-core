@@ -58,23 +58,38 @@ import process from "node:process";
 const DEFAULT_ROOT = process.cwd();
 
 // ── CLI ──────────────────────────────────────────────────────────────────────
-let ROOT = DEFAULT_ROOT;
-let JSON_OUTPUT = false;
-for (let i = 2; i < process.argv.length; i++) {
-  if (process.argv[i] === "--root" && process.argv[i + 1]) {
-    ROOT = process.argv[++i];
-  } else if (process.argv[i] === "--json") {
-    JSON_OUTPUT = true;
-  } else if (process.argv[i] === "--help" || process.argv[i] === "-h") {
-    console.log(
-      "Usage: node scripts/check-landing-free-plan.mjs [--root <dir>] [--json]",
-    );
-    process.exit(0);
-  } else if (process.argv[i].startsWith("-")) {
-    console.error(`check-landing-free-plan: unknown flag ${process.argv[i]}`);
-    process.exit(2);
+/**
+ * Parsed from inside the main-module guard, not at import time: this module is
+ * imported by its test file and by scripts/patch-free-plan-copy.mjs, and
+ * scanning argv while being imported makes the IMPORTER's own flags fatal
+ * ("unknown flag --check" — the migration script died on exactly this).
+ */
+function parseCliArgs(argv) {
+  let root = DEFAULT_ROOT;
+  let jsonOutput = false;
+  for (let i = 2; i < argv.length; i++) {
+    if (argv[i] === "--root" && argv[i + 1]) {
+      root = argv[++i];
+    } else if (argv[i] === "--json") {
+      jsonOutput = true;
+    } else if (argv[i] === "--help" || argv[i] === "-h") {
+      console.log(
+        "Usage: node scripts/check-landing-free-plan.mjs [--root <dir>] [--json]",
+      );
+      process.exit(0);
+    } else if (argv[i].startsWith("-")) {
+      console.error(`check-landing-free-plan: unknown flag ${argv[i]}`);
+      process.exit(2);
+    }
   }
+  return { root, jsonOutput };
 }
+
+const IS_MAIN = Boolean(
+  process.argv[1] &&
+  (import.meta.url === new URL(`file://${process.argv[1].replace(/\\/g, "/")}`).href ||
+    import.meta.url.endsWith(process.argv[1].replace(/\\/g, "/"))),
+);
 
 // ── Number normalization (rule A helper) ─────────────────────────────────────
 const AR_DIGITS = /[\u0660-\u0669\u06F0-\u06F9]/g;
@@ -349,11 +364,8 @@ function localeOfFileStem(stem) {
   return stem === "landing" ? "en" : stem;
 }
 
-if (
-  process.argv[1] &&
-  (import.meta.url === new URL(`file://${process.argv[1].replace(/\\/g, "/")}`).href ||
-    import.meta.url.endsWith(process.argv[1].replace(/\\/g, "/")))
-) {
+if (IS_MAIN) {
+  const { root: ROOT, jsonOutput: JSON_OUTPUT } = parseCliArgs(process.argv);
   const violations = [];
 
   // 1. Rendered pages.

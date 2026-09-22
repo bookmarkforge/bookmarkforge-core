@@ -520,13 +520,6 @@
         "price": "79",
         "currency": "USD",
         "description": "Regular. Lifetime of v1."
-      },
-      {
-        "name": "Founder Edition",
-        "price": "99",
-        "currency": "USD",
-        "description": "Same Pro v1 + Founder badge + beta. Limited 100.",
-        "availability": "https://schema.org/LimitedAvailability"
       }
     ],
     "featureList": [
@@ -553,7 +546,7 @@
       },
       {
         "question": "Support — how fast do you answer?",
-        "answer": "Free: Community help via Help Center + GitHub Discussions (best effort). Pro: email 48h business days. Founder: priority 24h + beta queue. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See Support SLA."
+        "answer": "Free: Community help via Help Center + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See Support SLA."
       },
       {
         "question": "What if I forget my vault password?",

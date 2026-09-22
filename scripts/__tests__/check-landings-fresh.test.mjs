@@ -6,7 +6,9 @@
  * renders the real templates/translations in memory (via build-landings'
  * renderAll) and diffs against the committed public/ files. Tests pin:
  *
- *   - a tree matching the render passes, with the full 7-page contract;
+ *   - a tree matching the render passes, with the full 31-page contract
+ *     (30 locale landings + pocket-alternative; the locale expansion added
+ *     24 of them, so a stale count here is a stale contract, not a bug);
  *   - a one-line hand edit fails naming the file and the diff line;
  *   - a missing generated page fails (coverage never shrinks silently);
  *   - orphan detection (generator output names the build no longer produces)
@@ -62,14 +64,21 @@ function makePublicDir(overrides = {}, { includeRender = true } = {}) {
 }
 
 describe("check-landings-fresh: contract", () => {
-  it("passes on a fresh tree and checks the full 7-page contract", () => {
+  it("passes on a fresh tree and checks the full 31-page contract", () => {
     const pub = makePublicDir();
     const r = checkLandingsFresh({ publicDir: pub });
     expect(r.failures).toEqual([]);
-    expect(r.checked).toBe(7);
+    expect(r.checked).toBe(31);
+    // The generator's complete output, pinned: a page that disappears (or a
+    // locale that joins) must show up as a diff here instead of silently
+    // shrinking what check:landings-fresh covers.
     expect(PAGE_NAMES).toEqual([
-      "de.html", "es.html", "fr.html", "it.html",
-      "landing.html", "pocket-alternative.html", "pt.html",
+      "ar.html", "bg.html", "cs.html", "da.html", "de.html", "el.html",
+      "es.html", "fi.html", "fr.html", "he.html", "hi.html", "hr.html",
+      "hu.html", "id.html", "it.html", "ja.html", "ko.html", "landing.html",
+      "nl.html", "no.html", "pl.html", "pocket-alternative.html", "pt.html",
+      "ro.html", "ru.html", "sv.html", "th.html", "tr.html", "uk.html",
+      "vi.html", "zh.html",
     ]);
   });
 

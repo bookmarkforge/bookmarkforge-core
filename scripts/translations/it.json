@@ -408,51 +408,10 @@
         "ctaHref": "/buy-pro",
         "ctaClass": "btn-primary",
         "priceWas": "$79",
-        "priceSub": "poi $79 regolare · Founder $99",
+        "priceSub": "poi $79 regolare",
         "sla": "Supporto: Email 48h (lun–ven)"
-      },
-      {
-        "name": "Founder",
-        "badge": "Founder — 100 limitati",
-        "price": "$ 99",
-        "period": "lifetime v1",
-        "priceSub": "Stesso Pro v1 + badge Founder + beta",
-        "description": "Founder badge #042 in app · Beta access · v2 60% off lifetime",
-        "features": [
-          {
-            "included": true,
-            "text": "Everything in Pro Lifetime v1"
-          },
-          {
-            "included": true,
-            "text": "Founder badge #042 in app"
-          },
-          {
-            "included": true,
-            "text": "Beta access to v2 early builds"
-          },
-          {
-            "included": true,
-            "text": "60% off v2 (and v3) forever for this account"
-          },
-          {
-            "included": true,
-            "text": "Lifetime of v1 · Security forever"
-          },
-          {
-            "included": true,
-            "text": "Priority email support (24h) + early access"
-          },
-          {
-            "included": true,
-            "text": "30-day refund via Whop"
-          }
-        ],
-        "cta": "Get Founder $99",
-        "ctaHref": "/buy-founder",
-        "ctaClass": "btn-primary btn-founder",
-        "sla": "Supporto: Prioritario 24h · Coda Founder"
       }
+
     ],
     "legal": "Licenza Lifetime per BookmarkForge v1. Include tutte le v1.x e 12 mesi di novità. Sicurezza per sempre. Future major (v2, v3) 60% sconto per possessori. Rimborso 30 giorni via Whop. <a href=\"/it/privacy-and-terms.html#terms\">Termini</a> · <a href=\"/help#pricing\">Scopri di più</a>"
   },
@@ -468,8 +427,8 @@
         "answer": "Paghi una volta, tuo per sempre. Include tutte le v1.x per sempre e 12 mesi di novità dall’acquisto. Sicurezza per sempre. Dopo il mese 13, v1 resta funzionale senza novità. Future major (v2, v3): $89 nuovi, $35 possessori v1 (60% sconto)."
       },
       {
-        "question": "Cos’è la Founder Edition?",
-        "answer": "Stesso binario Pro v1 — non è un altro livello. Dà badge Founder # nell’app, accesso beta a v2 e 60% a vita sulle future major. Limitato a 100. Vanità, non paywall."
+        "question": "Cos’è la  Edition?",
+        "answer": "Stesso binario Pro v1 — non è un altro livello. Dà badge  # nell’app, accesso beta a v2 e 60% a vita sulle future major. Limitato a 100. Vanità, non paywall."
       },
       {
         "question": "Metodi di pagamento e rimborsi?",
@@ -477,7 +436,7 @@
       },
       {
         "question": "Supporto — quanto rispondete in fretta?",
-        "answer": "Gratis: community via <a href=\"/help\">Centro Assistenza</a> + GitHub Discussions (best effort). Pro: 48h lavorative via email. Founder: 24h prioritario + coda beta. Vault cifrato — non chiediamo mai password o frase. Vedi <a href=\"/help#sla\">SLA</a>."
+        "answer": "Gratis: community via <a href=\"/help\">Centro Assistenza</a> + GitHub Discussions (best effort). Pro: 48h lavorative via email. : 24h prioritario + coda beta. Vault cifrato — non chiediamo mai password o frase. Vedi <a href=\"/help#sla\">SLA</a>."
       },
       {
         "question": "Cosa succede se dimentico la password del vault?",
@@ -569,10 +528,10 @@
         "description": "Regular. Lifetime of v1."
       },
       {
-        "name": "Founder Edition",
+        "name": " Edition",
         "price": "99",
         "currency": "USD",
-        "description": "Same Pro v1 + Founder badge + beta. Limited 100.",
+        "description": "Same Pro v1 +  badge + beta. Limited 100.",
         "availability": "https://schema.org/LimitedAvailability"
       }
     ],
@@ -594,8 +553,8 @@
         "answer": "Paghi una volta, tuo per sempre. Include tutte le v1.x per sempre e 12 mesi di novità dall’acquisto. Sicurezza per sempre. Dopo il mese 13, v1 resta funzionale senza novità. Future major (v2, v3): $89 nuovi, $35 possessori v1 (60% sconto)."
       },
       {
-        "question": "Cos’è la Founder Edition?",
-        "answer": "Stesso binario Pro v1 — non è un altro livello. Dà badge Founder # nell’app, accesso beta a v2 e 60% a vita sulle future major. Limitato a 100. Vanità, non paywall."
+        "question": "Cos’è la  Edition?",
+        "answer": "Stesso binario Pro v1 — non è un altro livello. Dà badge  # nell’app, accesso beta a v2 e 60% a vita sulle future major. Limitato a 100. Vanità, non paywall."
       },
       {
         "question": "Metodi di pagamento e rimborsi?",
@@ -603,7 +562,7 @@
       },
       {
         "question": "Supporto — quanto rispondete in fretta?",
-        "answer": "Gratis: community via Centro Assistenza + GitHub Discussions (best effort). Pro: 48h lavorative via email. Founder: 24h prioritario + coda beta. Vault cifrato — non chiediamo mai password o frase. Vedi SLA."
+        "answer": "Gratis: community via Centro Assistenza + GitHub Discussions (best effort). Pro: 48h lavorative via email. : 24h prioritario + coda beta. Vault cifrato — non chiediamo mai password o frase. Vedi SLA."
       },
       {
         "question": "Cosa succede se dimentico la password del vault?",

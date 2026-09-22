@@ -1,34 +1,34 @@
 # BookmarkForge
 
-> Modelo de distribución: **Open Core**. El Core público se licencia bajo MIT;
-> las funciones Pro identificadas en `OPEN-CORE.md` son propietarias y no están
-> cubiertas por esa licencia.
+> Distribution model: **Open Core**. The public Core is licensed under MIT;
+> Pro features identified in `OPEN-CORE.md` are proprietary and not covered
+> by that license.
 
-Aplicación local-first de conocimiento personal: almacenamiento cifrado, funcionamiento
-offline, sincronización P2P opcional y funciones de IA que llaman **directamente** al
-proveedor que el usuario configura.
+Local-first personal knowledge application: encrypted storage, offline
+operation, optional P2P sync, and AI features that call **directly** to the
+provider the user configures.
 
-## Estado del proyecto
+## Project status
 
-<!-- Estado 2026-09-19: `bookmarkforge/core` es el destino confirmado —el remoto,
-     package.json, los badges y las RELEASE-NOTES del export coinciden—, pero aún
-     no hay evidencia de PRs o ejecuciones de CI verificadas en GitHub. Antes de
-     publicar, ejecutar los workflows contra el repositorio remoto; ver
-     docs/github-secrets-and-push-runbook.md y docs/audit.md. -->
+<!-- Status 2026-09-19: `bookmarkforge/core` is the confirmed destination —the remote,
+     package.json, badges, and exported RELEASE-NOTES match—, but there is no
+     evidence yet of verified PRs or CI runs on GitHub. Before publishing, run
+     workflows against the remote repository; see docs/github-secrets-and-push-runbook.md
+     and docs/audit.md. -->
 
-> **Nota**: Los badges apuntan al destino confirmado `bookmarkforge/core`; el gate
-> `check:release-target` sale 0 mientras las cuatro superficies coincidan.
-> Ejecutar `npm run check:ci` localmente para verificar que todo pase antes de push.
+> **Note**: Badges point to the confirmed destination `bookmarkforge/core`; the
+> `check:release-target` gate returns 0 while the four surfaces match.
+> Run `npm run check:ci` locally to verify everything passes before push.
 
-[![CI](https://github.com/bookmarkforge/core/actions/workflows/ci.yml/badge.svg)](https://github.com/bookmarkforge/core/actions/workflows/ci.yml) · [![Nightly validation](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml/badge.svg)](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml) · [runs fallidos](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml?query=conclusion%3Afailure) · [último release](https://github.com/bookmarkforge/core/releases/latest) · [operación del nightly](docs/ops-nightly.md)
+[![CI](https://github.com/bookmarkforge/core/actions/workflows/ci.yml/badge.svg)](https://github.com/bookmarkforge/core/actions/workflows/ci.yml) · [![Nightly validation](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml/badge.svg)](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml) · [failed runs](https://github.com/bookmarkforge/core/actions/workflows/nightly.yml?query=conclusion%3Afailure) · [latest release](https://github.com/bookmarkforge/core/releases/latest) · [nightly operation](docs/ops-nightly.md)
 
-## Requisitos
+## Requirements
 
 - Node.js `>=20.19.0`
 - npm
-- Docker Compose para los entornos containerizados
+- Docker Compose for containerized environments
 
-## Desarrollo local
+## Local development
 
 ```bash
 npm ci
@@ -39,25 +39,25 @@ npm run test:fast
 npm run dev
 ```
 
-El frontend se ejecuta con Vite en modo PWA. El servidor acompañante se inicia con
-`npm run server` y expone **señalización WebSocket P2P**, `/health`, los endpoints de
-licencia (`/api/license/*`), informes CSP, telemetría opt-in de cliente y analítica
-agregada opt-in. El servidor no recibe contenido del vault.
+The frontend runs with Vite in PWA mode. The companion server starts with
+`npm run server` and exposes **P2P WebSocket signaling**, `/health`, license
+endpoints (`/api/license/*`), CSP reports, opt-in client telemetry, and
+opt-in aggregated analytics. The server does not receive vault content.
 
-### Proveedores de IA
+### AI providers
 
-No hay proxy de IA en el servidor. Cada llamada sale del navegador directamente al
-proveedor elegido, con una clave que el usuario guarda cifrada en su propio vault
-(`securityVault`) desde Ajustes:
+There is no AI proxy on the server. Each call goes directly from the browser
+to the chosen provider, with a key the user saves encrypted in their own vault
+(`securityVault`) from Settings:
 
-- En la nube: Gemini, OpenAI, Anthropic, Groq, Hugging Face, OpenRouter.
-- Locales: Ollama y modelos en el navegador con WebLLM.
+- Cloud: Gemini, OpenAI, Anthropic, Groq, Hugging Face, OpenRouter.
+- Local: Ollama and in-browser models with WebLLM.
 
-Consecuencia de seguridad: la clave del usuario nunca pasa por nuestros servidores, y el
-servidor no necesita (ni acepta) ninguna credencial de IA. Las llamadas cloud
-se realizan directamente desde el navegador con la clave del usuario.
+Security consequence: the user's key never passes through our servers, and the
+server does not need (nor accept) any AI credentials. Cloud calls are made
+directly from the browser with the user's key.
 
-## Verificación antes de fusionar
+## Verification before merging
 
 ```bash
 npm run typecheck:prod
@@ -67,11 +67,11 @@ npm run build:ci
 npm run check
 ```
 
-No se deben introducir secretos reales en el repositorio. Usa un gestor de secretos o
-variables de entorno fuera del control de versiones. `scripts/check-secrets-in-commit.mjs`
-se ejecuta como gate de CI.
+Real secrets must not be introduced into the repository. Use a secret manager
+or environment variables outside version control. `scripts/check-secrets-in-commit.mjs`
+runs as a CI gate.
 
-## Arquitectura
+## Architecture
 
 ```text
 Browser / PWA / Extension
@@ -80,26 +80,26 @@ Browser / PWA / Extension
           v
 Reverse proxy (TLS, CSP, static assets)
           |
-          +--> Web frontend (React/Vite)  ---> Proveedores de IA del usuario (BYO key)
+          +--> Web frontend (React/Vite)  ---> User's AI providers (BYO key)
           |
           +--> Companion server (Node/ws)
-                  +--> señalización WebSocket P2P
-                  +--> licencias y entitlement (Ed25519/RSA-PSS)
-                  +--> health, informes CSP, telemetría opt-in
+                  +--> P2P WebSocket signaling
+                  +--> licenses and entitlement (Ed25519/RSA-PSS)
+                  +--> health, CSP reports, opt-in telemetry
 
-Cliente: React + TypeScript + RxDB/IndexedDB + Web Workers + WebRTC
-Criptografía: AES-GCM, Argon2id/HKDF, claves gestionadas en workers
+Client: React + TypeScript + RxDB/IndexedDB + Web Workers + WebRTC
+Cryptography: AES-GCM, Argon2id/HKDF, keys managed in workers
 ```
 
-El cliente es la fuente principal de los datos del vault. Los dos servicios de la
-topología de producción son **stateless**: no hay base de datos ni Redis compartido.
+The client is the primary source of vault data. The two services in the
+production topology are **stateless**: there is no shared database or Redis.
 
-## Producción
+## Production
 
-La topología está en `docker-compose.prod.yml` (servicios `web` y `api`). Requiere
-configurar secretos y endpoints mediante el entorno de despliegue. El despliegue debe usar
-imágenes identificadas por SHA, ejecutar todos los gates y conservar un procedimiento
-probado de rollback.
+The topology is in `docker-compose.prod.yml` (services `web` and `api`).
+Requires configuring secrets and endpoints via the deployment environment.
+Deployment must use SHA-identified images, run all gates, and maintain a
+tested rollback procedure.
 
 ```bash
 npm run check:env
@@ -109,83 +109,87 @@ npm run build:ci
 npm run production-smoke
 ```
 
-No ejecutes scripts de despliegue contra producción sin aprobación operativa explícita.
+Do not run deployment scripts against production without explicit operational
+approval.
 
-## Seguridad y privacidad
+## Security and privacy
 
-- TLS debe terminar en el reverse proxy con redirección HTTPS y HSTS.
-- Configura `AI_SESSION_ORIGINS` con los orígenes exactos del navegador. Es la allow-list
-  de `POST /api/license/entitlement` y una variable **obligatoria** en producción: sin ella
-  el compose de producción no arranca. El nombre es histórico (el endpoint responde el
-  *plan* de licencia, no una sesión de IA).
-- La clave pública de licencias vive en dos copias (`src/services/licenseKeys.ts` y
+- TLS must terminate at the reverse proxy with HTTPS redirect and HSTS.
+- Configure `AI_SESSION_ORIGINS` with the exact browser origins. It is the
+  allow-list for `POST /api/license/entitlement` and a **mandatory** variable
+  in production: without it the production compose will not start. The name is
+  historical (the endpoint responds to the license *plan*, not an AI session).
+- The license public key lives in two copies (`src/services/licenseKeys.ts` and
   `server/src/license-public-key.ts`). `node scripts/generate-license-keys.mjs
-  --sync-server-key` las alinea y `npm run check:license-keys` falla si divergen.
-- Mantén `ENFORCE_SIGNAL_HMAC=1` en producción.
-- No expongas puertos de servicios internos al host; los compose publican en loopback.
-- No registres contraseñas, claves, prompts ni contenido del vault.
-- Los backups automáticos son cifrados; la restauración debe probarse periódicamente.
+  --sync-server-key` aligns them and `npm run check:license-keys` fails if they
+  diverge.
+- Keep `ENFORCE_SIGNAL_HMAC=1` in production.
+- Do not expose internal service ports to the host; compose publishes on loopback.
+- Do not log passwords, keys, prompts, or vault content.
+- Automatic backups are encrypted; restoration must be tested periodically.
 
-El cifrado y las medidas técnicas no constituyen por sí solos una declaración de
-cumplimiento RGPD. El responsable debe mantener inventario de tratamientos, retención,
-derechos, proveedores y base jurídica.
+Encryption and technical measures alone do not constitute a GDPR compliance
+statement. The controller must maintain records of processing, retention,
+rights, providers, and legal basis.
 
-## Operación mínima
+## Minimal operation
 
-- `/health` es un endpoint de liveness sin datos sensibles.
-- Configura `SIGNALING_ADMIN_TOKEN` y `CSP_REPORT_ADMIN_TOKEN` únicamente en el gestor de secretos.
-- Revisa eventos estructurados, errores críticos, saturación, conexiones, latencia y
-  disponibilidad.
-- Define y registra RPO/RTO antes del lanzamiento público.
-- Ejecuta un restore de backup al menos mensualmente y un simulacro de desastre trimestral.
+- `/health` is a liveness endpoint with no sensitive data.
+- Configure `SIGNALING_ADMIN_TOKEN` and `CSP_REPORT_ADMIN_TOKEN` only in the
+  secret manager.
+- Review structured events, critical errors, saturation, connections, latency,
+  and availability.
+- Define and record RPO/RTO before public launch.
+- Run a backup restore at least monthly and a disaster simulation quarterly.
 
-## Licencias y modelo Open Core
+## Licenses and Open Core model
 
-- [Modelo Open Core](OPEN-CORE.md)
-- [Licencia MIT del Core](LICENSE)
-- [Licencia propietaria Pro](PRO-LICENSE.md)
-- [Política de marca](scripts/public-export/TRADEMARKS.md)
+- [Open Core model](OPEN-CORE.md)
+- [Core MIT license](LICENSE)
+- [Pro proprietary license](PRO-LICENSE.md)
+- [Trademark policy](scripts/public-export/TRADEMARKS.md)
 
-El checkout privado contiene el Core y componentes Pro. Para obtener el repositorio
-público reproducible usa `node scripts/export-public-repo.mjs`; no publiques el checkout
-completo como si todo estuviera bajo MIT.
+The private checkout contains the Core and Pro components. To obtain the
+reproducible public repository use `node scripts/export-public-repo.mjs`; do
+not publish the complete checkout as if everything were under MIT.
 
-## Documentación
+## Documentation
 
-- [Índice de documentación](docs/index.md)
-- [Arquitectura](docs/architecture.md)
-- [Seguridad](docs/security.md)
-- [Operaciones](docs/operations.md)
-- [API del servidor acompañante](docs/api.md)
-- [Especificación OpenAPI](docs/openapi.yaml)
-- [Auditoría](docs/audit.md)
-- [ROPA (RGPD)](docs/ROPA.md)
-- [Checklist de lanzamiento](docs/launch-checklist.md)
-- [Posicionamiento comercial](docs/positioning.md)
-- [Plan de validación comercial de 30 días](docs/market-validation-plan.md)
+- [Documentation index](docs/index.md)
+- [Architecture](docs/architecture.md)
+- [Security](docs/security.md)
+- [Operations](docs/operations.md)
+- [Companion server API](docs/api.md)
+- [OpenAPI specification](docs/openapi.yaml)
+- [Audit](docs/audit.md)
+- [ROPA (GDPR)](docs/ROPA.md)
+- [Launch checklist](docs/launch-checklist.md)
+- [Commercial positioning](docs/positioning.md)
+- [30-day commercial validation plan](docs/market-validation-plan.md)
 - [Self-hosting](docs/SELF-HOSTING.md)
-- [Convenciones de ingeniería](AGENTS.md)
-- [Onboarding de contribuyentes](docs/ONBOARDING.md)
+- [Engineering conventions](AGENTS.md)
+- [Contributor onboarding](docs/ONBOARDING.md)
 
-### Manuales de usuario
+### User manuals
 
-Cada idioma tiene versión Markdown (fuente) y PDF generado desde el mismo contenido.
+Each language has a Markdown version (source) and a PDF generated from the same
+content.
 
-| Idioma | Markdown | PDF |
+| Language | Markdown | PDF |
 |---|---|---|
-| Español | [manual-usuario.md](docs/manual-usuario.md) | [manual-usuario.pdf](docs/manual-usuario.pdf) |
+| Spanish | [manual-usuario.md](docs/manual-usuario.md) | [manual-usuario.pdf](docs/manual-usuario.pdf) |
 | English | [manual-usuario-en.md](docs/manual-usuario-en.md) | [manual-usuario-en.pdf](docs/manual-usuario-en.pdf) |
 
-Las otras 28 locales viven en `docs/manual-usuario-<código>.md` (+ `.pdf`) y están
-listadas en [docs/index.md](docs/index.md). Los intermedios `*-styled.html` se generan
-con `npm run docs:pdf:localized` y no se versionan.
+The other 28 locales live in `docs/manual-usuario-<code>.md` (+ `.pdf`) and are
+listed in [docs/index.md](docs/index.md). The intermediate `*-styled.html` files
+are generated with `npm run docs:pdf:localized` and are not versioned.
 
-### Scripts y herramientas
+### Scripts and tools
 
-168 scripts de build, verificación y operaciones en `scripts/README.md`.
-Los checks se organizan en 8 grupos para iterar más rápido:
+168 build, verification, and operations scripts in `scripts/README.md`.
+Checks are organized into 8 groups for faster iteration:
 
-| Grupo | Tiempo | Uso |
+| Group | Time | Usage |
 |---|---|---|
 | `core-integrity` | ~3s | `npm run check:core-integrity` |
 | `security-environment` | ~4s | `npm run check:security-environment` |
@@ -196,9 +200,9 @@ Los checks se organizan en 8 grupos para iterar más rápido:
 | `build-verification` | ~60s | `npm run check:build-verification` |
 | `workflow-pipeline` | ~5s | `npm run check:workflow-pipeline` |
 
-Para iterar rápido: `npm run ci:fast` (~7s) o `npm run check:ci-groups --fast`.
-Ver `scripts/README.md` para el catálogo completo de herramientas.
+For fast iteration: `npm run ci:fast` (~7s) or `npm run check:ci-groups --fast`.
+See `scripts/README.md` for the complete tool catalog.
 
 ---
 
-*BookmarkForge v1.0.0 — Open Core: MIT Core + Pro propietario.*
+*BookmarkForge v1.0.0 — Open Core: MIT Core + proprietary Pro.*

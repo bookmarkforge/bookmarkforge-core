@@ -1,56 +1,56 @@
-# Arquitectura
+# Architecture
 
-## Modelo Open Core
+## Open Core model
 
-El repositorio privado combina un Core MIT con componentes Pro propietarios.
-La separación de distribución no se basa únicamente en carpetas: el
-exportador mantiene una lista explícita de archivos Pro y el gate
-`check:open-core` comprueba el resultado materializado. El Core incluye vault,
-CRUD, notas, importación/exportación básica, búsqueda, seguridad e interfaz.
-Pro incluye IA avanzada, RAG, agentes, sincronización P2P, flashcards, PDF/OCR,
-exportaciones avanzadas y backups avanzados. La clasificación normativa vive
-en `OPEN-CORE.md` y `scripts/export-public-repo.mjs`.
+The private repository combines an MIT Core with proprietary Pro components.
+The distribution separation is not based solely on folders: the exporter
+maintains an explicit list of Pro files and the `check:open-core` gate checks
+the materialized result. The Core includes vault, CRUD, notes, basic
+import/export, search, security, and interface. Pro includes advanced AI, RAG,
+agents, P2P sync, flashcards, PDF/OCR, advanced exports, and advanced backups.
+The normative classification lives in `OPEN-CORE.md` and
+`scripts/export-public-repo.mjs`.
 
-## Componentes
+## Components
 
-- **Frontend:** React + TypeScript + Vite. Las rutas y funcionalidades pesadas se cargan de forma diferida.
-- **Persistencia local:** RxDB sobre IndexedDB. Los esquemas viven en `src/db`.
-- **Criptografía:** `EncryptionService` delega en `crypto.worker.ts`; el formato actual usa AES-GCM con derivación Argon2id/HKDF.
-- **Servicios de dominio:** `src/services` encapsula backup, recuperación, sincronización, licencias, IA y sanitización.
-- **Companion server:** `server/src` implementa HTTP mínimo, licencias/entitlement, eventos de cliente, analítica agregada, healthcheck y señalización WebSocket. **No hay proxy de IA**: las llamadas salen del navegador directamente al proveedor que el usuario configuró.
-- **Sincronización:** WebRTC transporta los datos entre clientes; WebSocket sólo realiza señalización. TURN es opcional y usa credenciales efímeras.
-- **Operación:** Docker Compose separa `web` y `api`, ambos stateless. El reverse proxy termina TLS y sirve los assets.
+- **Frontend:** React + TypeScript + Vite. Heavy routes and features are lazy-loaded.
+- **Local persistence:** RxDB over IndexedDB. Schemas live in `src/db`.
+- **Cryptography:** `EncryptionService` delegates to `crypto.worker.ts`; the current format uses AES-GCM with Argon2id/HKDF derivation.
+- **Domain services:** `src/services` encapsulates backup, recovery, sync, licensing, AI, and sanitization.
+- **Companion server:** `server/src` implements minimal HTTP, licenses/entitlement, client events, aggregated analytics, healthcheck, and WebSocket signaling. **No AI proxy**: calls go directly from the browser to the provider the user configured.
+- **Sync:** WebRTC transports data between clients; WebSocket only performs signaling. TURN is optional and uses ephemeral credentials.
+- **Operations:** Docker Compose separates `web` and `api`, both stateless. The reverse proxy terminates TLS and serves assets.
 
-## Límites de confianza
+## Trust boundaries
 
-1. El navegador contiene el vault desbloqueado sólo mientras la sesión lo necesita.
-2. El servidor de señalización no debe considerarse confiable para la confidencialidad del vault.
-3. Las credenciales de proveedores de IA viven cifradas en el vault del usuario y se usan desde el navegador. El servidor no las recibe, no las almacena y no las necesita; la clave de firma de licencias es la única credencial del servidor y vive en un gestor de secretos.
-4. El servidor no mantiene estado compartido entre instancias: no hay Redis, base de datos ni caché de sesiones.
-5. Las integraciones cloud se consideran terceros y requieren consentimiento, scopes mínimos y manejo de revocación.
+1. The browser contains the unlocked vault only while the session needs it.
+2. The signaling server must not be considered trusted for vault confidentiality.
+3. AI provider credentials live encrypted in the user's vault and are used from the browser. The server does not receive, store, or need them; the license signing key is the only server credential and lives in a secret manager.
+4. The server maintains no shared state between instances: no Redis, database, or session cache.
+5. Cloud integrations are considered third parties and require consent, minimal scopes, and revocation handling.
 
-## Escalabilidad
+## Scalability
 
-El servidor tiene límites de conexiones, rooms, peers, payloads y rate limits. Los endpoints HTTP son stateless y escalan en horizontal sólo con un balanceador. La **señalización WebSocket no**: el estado de rooms y peers vive en memoria del proceso, así que escalarla requiere un adaptador compartido o enrutamiento por afinidad (sin uno de los dos, las rooms se dividen entre réplicas y las señales dejan de entregarse).
+The server has connection, room, peer, payload, and rate limits. HTTP endpoints are stateless and scale horizontally only with a load balancer. **WebSocket signaling does not**: room and peer state lives in process memory, so scaling it requires a shared adapter or affinity routing (without one of the two, rooms are split between replicas and signals stop being delivered).
 
-Para crecer hace falta además:
+To grow, you also need:
 
-- Balanceador con soporte WebSocket y política de afinidad.
-- Métricas de conexiones, rooms, memoria, latencia y errores.
-- Pruebas de carga antes de aumentar límites.
+- Load balancer with WebSocket support and affinity policy.
+- Metrics for connections, rooms, memory, latency, and errors.
+- Load tests before increasing limits.
 
-La capacidad del cliente está limitada por memoria IndexedDB, coste de indexación, tamaño del vault y potencia del dispositivo. No se debe prometer capacidad ilimitada.
+Client capacity is limited by IndexedDB memory, indexing cost, vault size, and device power. Unlimited capacity must not be promised.
 
-## Decisiones registradas (baseline 2026-08-31)
+## Recorded decisions (baseline 2026-08-31)
 
-- **Retirada del proxy de IA (2026-09):** el servidor ya no proxya llamadas a proveedores de IA. La clave del usuario vive cifrada en su vault y las llamadas salen del navegador directamente, así que el servidor dejó de necesitar `GEMINI_API_KEY`, la sesión CSRF de IA, los cupos por identidad, el circuit breaker y el Redis que compartía ese estado entre réplicas. Se eliminaron también del compose, de los validadores y de `openapi.yaml`; `check:compose-config` y `check:runtime-config` ahora fallan si reaparece configuración de IA sin lector.
-- **SLO/RPO/RTO:** valores de referencia registrados en `docs/operations.md` → "SLOs y objetivos" (disponibilidad 99,9 %/30 días, p95 señalización < 500 ms, 5xx < 0,5 %, saturación WS < 70 %; **RPO 24 h**, **RTO 24 h** vault / **4 h** topología). Pendiente solo la confirmación oficial del responsable y su revisión trimestral (punto 3 del launch-checklist).
-- **Contratos versionados:** `docs/openapi.yaml` (OpenAPI 3.1.0) cubre los endpoints HTTP del companion server; el contrato con el proveedor de licencias (Whop) queda documentado como deuda P2.
-- **Prueba de carga del companion server:** implementada y validada (`scripts/load-test-server.mjs`, `npm run test:load`) con presupuestos de señalización (join/relay/saturación) alineados a los SLO; el cron nocturno la ejecuta con 50 conexiones. Ya no mide el proxy de IA: el servidor no proxya proveedores y su mock de upstream se retiró con él (2026-09).
-- **Analítica de negocio opt-in:** `server/src/business-analytics.ts` + `src/services/analyticsForwarder.ts` (ver `docs/audit.md` §5 y ROPA §3 T8).
+- **AI proxy removal (2026-09):** the server no longer proxies AI provider calls. The user's key lives encrypted in their vault and calls go directly from the browser, so the server stopped needing `GEMINI_API_KEY`, the AI CSRF session, per-identity quotas, the circuit breaker, and the Redis that shared that state between replicas. These were also removed from compose, validators, and `openapi.yaml`; `check:compose-config` and `check:runtime-config` now fail if AI configuration reappears without a reader.
+- **SLO/RPO/RTO:** reference values recorded in `docs/operations.md` → "SLOs and objectives" (availability 99.9%/30 days, p95 signaling < 500 ms, 5xx < 0.5%, WS saturation < 70%; **RPO 24 h**, **RTO 24 h** vault / **4 h** topology). Pending only the responsible party's official confirmation and their quarterly review (launch-checklist item 3).
+- **Versioned contracts:** `docs/openapi.yaml` (OpenAPI 3.1.0) covers the companion server's HTTP endpoints; the contract with the license provider (Whop) is documented as P2 debt.
+- **Companion server load test:** implemented and validated (`scripts/load-test-server.mjs`, `npm run test:load`) with signaling budgets (join/relay/saturation) aligned to SLOs; the nightly cron runs it with 50 connections. It no longer measures the AI proxy: the server does not proxy providers and its upstream mock was removed with it (2026-09).
+- **Opt-in business analytics:** `server/src/business-analytics.ts` + `src/services/analyticsForwarder.ts` (see `docs/audit.md` §5 and ROPA §3 T8).
 
-## Decisiones pendientes
+## Pending decisions
 
-- Persistencia central multiusuario si el producto deja de ser exclusivamente local-first (mantenido abierto a propósito).
-- Política formal de migraciones RxDB (mantenido abierto a propósito).
-- Confirmación oficial (firma del responsable) de SLO/RPO/RTO y simulacro de desastre trimestral ejecutado.
+- Multiuser central persistence if the product ceases to be exclusively local-first (kept open on purpose).
+- Formal RxDB migration policy (kept open on purpose).
+- Official confirmation (responsible party's signature) of SLO/RPO/RTO and executed quarterly disaster simulation.

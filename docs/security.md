@@ -1,45 +1,45 @@
-# Seguridad de producción
+# Production security
 
-## Configuración obligatoria
+## Mandatory configuration
 
-La API companion se ejecuta con:
+The companion API runs with:
 
 ```text
 NODE_ENV=production
-AI_SESSION_ORIGINS=https://<dominio-publico>
+AI_SESSION_ORIGINS=https://<public-domain>
 ENFORCE_SIGNAL_HMAC=1
 LICENSE_SIGNING_PRIVATE_KEY_FILE=/run/secrets/license_signing_key
-WHOP_LICENSE_API_URL=https://<adaptador-verificado>
-WHOP_API_KEY=<secreto-del-gestor-de-secretos>
+WHOP_LICENSE_API_URL=https://<verified-adapter>
+WHOP_API_KEY=<secret-from-secret-manager>
 ```
 
-`TRUST_PROXY=1` solo se permite detrás de un reverse proxy administrado que sobrescriba `X-Forwarded-For`. `WS_ALLOWED_ORIGINS` debe configurarse con los orígenes públicos autorizados. Los secretos no se almacenan en el repositorio ni en variables `VITE_*`.
+`TRUST_PROXY=1` is only allowed behind a managed reverse proxy that overrides `X-Forwarded-For`. `WS_ALLOWED_ORIGINS` must be configured with authorized public origins. Secrets are not stored in the repository or in `VITE_*` variables.
 
-## Controles
+## Controls
 
-- CSP, HSTS, COEP, COOP, `nosniff` y `frame-ancestors` se validan mediante los gates HTTP/CSP.
-- Las imágenes Docker se fijan por digest y el servidor web se ejecuta sin root.
-- Los endpoints administrativos requieren token y están deshabilitados si no hay token configurado.
-- Los endpoints sensibles aplican validación de origen, límites de cuerpo y rate limiting.
-- La señalización P2P usa room secrets, HMAC y límites de conexiones, rooms y payloads.
-- Los eventos y errores deben estar redactados; nunca registrar passwords, claves ni contenido del vault.
+- CSP, HSTS, COEP, COOP, `nosniff`, and `frame-ancestors` are validated via HTTP/CSP gates.
+- Docker images are pinned by digest and the web server runs without root.
+- Admin endpoints require a token and are disabled if no token is configured.
+- Sensitive endpoints apply origin validation, body limits, and rate limiting.
+- P2P signaling uses room secrets, HMAC, and connection, room, and payload limits.
+- Events and errors must be redacted; never log passwords, keys, or vault content.
 
-## Validación previa al despliegue
+## Pre-deployment validation
 
-Ejecutar `npm run check:security-internal`, `npm audit --omit=dev --audit-level=high`, `npm run check:runtime-config`, `npm run check:http-config`, `npm run check:compose-config` y el smoke de producción. Cualquier fallo de configuración bloquea el release.
+Run `npm run check:security-internal`, `npm audit --omit=dev --audit-level=high`, `npm run check:runtime-config`, `npm run check:http-config`, `npm run check:compose-config`, and the production smoke. Any configuration failure blocks the release.
 
-## Incidentes de seguridad
+## Security incidents
 
-Contener el servicio, rotar las credenciales afectadas, preservar evidencia sin datos de usuario, invalidar imágenes comprometidas y documentar la causa raíz. No solicitar nunca passwords ni frases de recuperación a usuarios.
+Contain the service, rotate affected credentials, preserve evidence without user data, invalidate compromised images, and document the root cause. Never request passwords or recovery phrases from users.
 
-### Procedimiento de violación de datos personales (RGPD)
+### Personal data breach procedure (GDPR)
 
-Toda violación de datos personales se gestiona con las plantillas de `legal/plantillas/` y la checklist `legal/plantillas/checklist-violacion-seguridad.md`. Cada incidente abre un identificador `BMF-INC-[AAAA]-[NNN]` y se anota únicamente su referencia en `legal/REGISTRO.md`, nunca datos personales completos.
+All personal data breaches are managed with the templates in `legal/plantillas/` and the checklist `legal/plantillas/checklist-violacion-seguridad.md`. Each incident opens a `BMF-INC-[YYYY]-[NNN]` identifier and only its reference is noted in `legal/REGISTRO.md`, never complete personal data.
 
-**Reloj de 72 horas (art. 33).** La notificación a la autoridad de control (AEPD u otra competente) se hace sin dilación indebida y, cuando sea posible, dentro de las 72 horas desde que el responsable tuvo conocimiento razonable; los retrasos se documentan con su motivo. La plantilla operativa es `legal/plantillas/notificacion-art-33-autoridad.md`: control del plazo, responsable del tratamiento, naturaleza de la violación, categorías y volumen aproximado de datos, consecuencias probables y medidas adoptadas.
+**72-hour clock (art. 33).** Notification to the supervisory authority (AEPD or other competent authority) is made without undue delay and, where possible, within 72 hours from when the controller had reasonable knowledge; delays are documented with their reason. The operational template is `legal/plantillas/notificacion-art-33-autoridad.md`: deadline control, data controller, nature of breach, categories and approximate volume of data, likely consequences, and measures taken.
 
-**Comunicación a interesados (art. 34).** Cuando la violación sea probable que entrañe un alto riesgo, se comunica a los afectados en lenguaje claro con `legal/plantillas/notificacion-art-34-interesados.md`: qué ocurrió, qué datos pueden estar afectados, qué significa para el usuario, medidas adoptadas y recomendaciones. Si la comunicación individual no es posible, se usa una medida pública equivalente. Nunca se incluyen secretos, credenciales ni detalles que faciliten un ataque en curso.
+**Communication to data subjects (art. 34).** When the breach is likely to entail a high risk, it is communicated to affected parties in clear language with `legal/plantillas/notificacion-art-34-interesados.md`: what happened, what data may be affected, what it means for the user, measures taken, and recommendations. If individual communication is not possible, an equivalent public measure is used. Secrets, credentials, or details that facilitate an ongoing attack are never included.
 
-**Bóveda y credenciales.** Las plantillas exigen diferenciar entre datos locales, cifrados y metadatos, y solo afirmar que la bóveda no estuvo afectada si la investigación técnica lo confirma. BookmarkForge no solicita por email, chat ni teléfono la contraseña del vault, la clave de licencia ni la frase de recuperación.
+**Vault and credentials.** Templates require distinguishing between local, encrypted, and metadata data, and only affirming that the vault was not affected if the technical investigation confirms it. BookmarkForge never requests by email, chat, or phone the vault password, license key, or recovery phrase.
 
-**Evidencia y cierre.** Preservar logs, configuraciones, mensajes del proveedor y hashes sin datos de usuario; guardar copia final, acuses y fecha de envío en el repositorio cifrado; completar causa raíz, medidas correctoras y revisión de DPAs del proveedor implicado.
+**Evidence and closure.** Preserve logs, configurations, provider messages, and hashes without user data; save final copy, acknowledgments, and sending date in the encrypted repository; complete root cause, corrective measures, and review of the implicated provider's DPAs.

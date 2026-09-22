@@ -1,249 +1,247 @@
-# API del Companion Server — BookmarkForge
+# Companion Server API — BookmarkForge
 
-El companion server es el backend mínimo de BookmarkForge. Reside en `server/src` y se ejecuta con:
+The companion server is BookmarkForge's minimal backend. It resides in `server/src` and runs with:
 
 ```bash
 npx tsx server/src/index.ts
 ```
 
-Por defecto escucha en `ws://0.0.0.0:8787`. En producción debe ir detrás de un
-reverse proxy que termine TLS; el servidor mismo habla HTTP para los endpoints
-documentados abajo y WebSocket para la señalización P2P.
+By default it listens on `ws://0.0.0.0:8787`. In production it must sit behind a
+reverse proxy that terminates TLS; the server itself speaks HTTP for the endpoints
+documented below and WebSocket for P2P signaling.
 
-Este documento está alineado con los handlers reales del servidor
-(`server/src/index.ts` y los módulos que monta). No es una especificación aparte:
-si el código cambia, este índice debe actualizarse.
+This document is aligned with the server's actual handlers
+(`server/src/index.ts` and the modules it mounts). It is not a separate
+specification: if the code changes, this index must be updated.
 
 ---
 
-## 1. Diseño general
+## 1. General design
 
-- **HTTP mínimo:** el servidor es un `http.createServer` manual, no usa framework.
-- **Sin proxy de IA:** el servidor no habla con proveedores de IA ni guarda
-  credenciales de IA. Las llamadas salen del navegador directamente, con la
-  clave que el usuario guardó en su propio vault.
-- **Sin contenido del vault:** ninguno de los endpoints recibe ni almacena
-  marcadores, notas, documentos ni prompts.
-- **Fail-closed:** los handlers validan cuerpo, orígenes, tokens y límites de
-  forma explícita; ante una configuración ausente responden `503` antes que
-  degradar la seguridad.
-- **Respuestas no cacheables:** la mayoría de handlers fijan `Cache-Control:
-  no-store`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`,
-  `Referrer-Policy: no-referrer` y `Content-Security-Policy:
+- **Minimal HTTP:** the server is a manual `http.createServer`, no framework.
+- **No AI proxy:** the server does not talk to AI providers nor store AI
+  credentials. Calls go directly from the browser, with the key the user saved
+  in their own vault.
+- **No vault content:** none of the endpoints receive or store bookmarks, notes,
+  documents, or prompts.
+- **Fail-closed:** handlers validate body, origins, tokens, and limits explicitly;
+  given a missing configuration they respond `503` rather than degrading security.
+- **Non-cacheable responses:** most handlers set `Cache-Control: no-store`,
+  `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`,
+  `Referrer-Policy: no-referrer` and `Content-Security-Policy:
   default-src 'none'; base-uri 'none'; frame-ancestors 'none'`.
-- **Cualquier otra petición HTTP:** devuelve `426 Upgrade Required`. El servidor
-  solo habla HTTP para los paths documentados; todo lo demás es WebSocket.
-- **Sin estado compartido:** la topología de producción son dos servicios
-  stateless. No hay Redis ni base de datos del servidor.
+- **Any other HTTP request:** returns `426 Upgrade Required`. The server only
+  speaks HTTP for the documented paths; everything else is WebSocket.
+- **No shared state:** the production topology is two stateless services. No Redis
+  or server database.
 
 ---
 
-## 2. Endpoints HTTP
+## 2. HTTP endpoints
 
-La tabla autoritativa de rutas y su nivel de acceso vive en
-`server/src/route-table.ts`. `npm run check:pro-routes` falla si el router
-despacha una ruta no declarada, si una ruta declarada nunca se despacha, o si el
-dispatcher deja de estar conectado al guard de entitlement.
+The authoritative table of routes and their access level lives in
+`server/src/route-table.ts`. `npm run check:pro-routes` fails if the router
+dispatches an undeclared route, if a declared route is never dispatched, or if
+the dispatcher ceases to be connected to the entitlement guard.
 
 ### 2.1 `GET /health`
 
-- **Propósito:** liveness mínimo para healthchecks y uptime probes.
-- **Autenticación:** ninguna.
-- **Respuesta:** texto plano breve, sin contadores operativos ni identificadores.
-- **Caché:** no-store.
+- **Purpose:** minimal liveness for healthchecks and uptime probes.
+- **Authentication:** none.
+- **Response:** brief plain text, no operational counters or identifiers.
+- **Cache:** no-store.
 
 ---
 
 ### 2.2 `GET /api/license/health`
 
-- **Propósito:** salud de la integración con el proveedor de licencias.
-- **Autenticación:** ninguna; origin allow-list + rate limit por IP.
-- **Respuesta:** `200` si el proveedor responde, `503` si el servicio de firma no
-  está configurado.
+- **Purpose:** health of the license provider integration.
+- **Authentication:** none; origin allow-list + rate limit by IP.
+- **Response:** `200` if the provider responds, `503` if the signing service is
+  not configured.
 
 ---
 
 ### 2.3 `POST /api/license/activate`
 
-- **Propósito:** canjear una clave comprada por una prueba de entitlement firmada.
-  Es pública por diseño: el llamante todavía no tiene prueba que presentar.
-- **Cuerpo:** JSON con la identidad de licencia (`licenseKey`, `deviceId`).
-- **Respuesta:** `200 { payload, signature }` con la prueba firmada.
-- **Errores:** `400` cuerpo inválido · `403` origen · `429` rate limit ·
-  `502` fallo del proveedor · `503` servicio de firma no configurado.
+- **Purpose:** exchange a purchased key for a signed entitlement proof.
+  Public by design: the caller does not yet have a proof to present.
+- **Body:** JSON with license identity (`licenseKey`, `deviceId`).
+- **Response:** `200 { payload, signature }` with the signed proof.
+- **Errors:** `400` invalid body · `403` origin · `429` rate limit ·
+  `502` provider failure · `503` signing service not configured.
 
 ---
 
 ### 2.4 `POST /api/license/validate`
 
-- **Propósito:** revalidar una clave existente. Se alcanza mientras el vault
-  puede seguir bloqueado, así que no lleva prueba.
-- **Errores:** mismos códigos que `activate`.
+- **Purpose:** revalidate an existing key. Reached while the vault can still be
+  locked, so it carries no proof.
+- **Errors:** same codes as `activate`.
 
 ---
 
 ### 2.5 `POST /api/license/deactivate`
 
-- **Propósito:** liberar una activación (equipo perdido). Exigir una prueba aquí
-  dejaría varado a un dispositivo perdido.
-- **Respuesta:** `200 { ok: true }`.
+- **Purpose:** release an activation (lost device). Requiring a proof here would
+  strand a lost device.
+- **Response:** `200 { ok: true }`.
 
 ---
 
 ### 2.6 `POST /api/license/entitlement`
 
-- **Propósito:** respuesta autoritativa del **plan** verificando la prueba que el
-  cliente ya posee.
-- **Cuerpo:** `{ payload, signature }`.
-- **Respuesta `200`:**
+- **Purpose:** authoritative response of the **plan** by verifying the proof the
+  client already possesses.
+- **Body:** `{ payload, signature }`.
+- **Response `200`:**
   - `{ plan: "pro", source: "license", deviceId, validatedAt, … }`
-  - `{ plan: "free", source: "none", reason, message }` — una respuesta
-    definitiva, no un error: permite degradar explícitamente a Free en vez de
-    quedarse en la ventana de gracia offline.
-- **`503 SIGNING_KEY_INVALID`:** la clave pública del despliegue es inutilizable.
-  No es una degradación; el cliente conserva su estado verificado offline.
-- **Otros:** `400` cuerpo inválido · `403` origen · `405` método · `413` prueba
-  demasiado grande · `429` rate limit.
-- **Orígenes:** allow-list `AI_SESSION_ORIGINS` (nombre histórico: el endpoint
-  responde el plan de licencia, no una sesión de IA). Vacío solo se tolera fuera
-  de producción.
+  - `{ plan: "free", source: "none", reason, message }` — a definitive
+    response, not an error: allows explicitly degrading to Free instead of
+    staying in the offline grace window.
+- **`503 SIGNING_KEY_INVALID`:** the deployment's public key is unusable.
+  Not a degradation; the client retains its verified offline state.
+- **Others:** `400` invalid body · `403` origin · `405` method · `413` proof
+  too large · `429` rate limit.
+- **Origins:** allow-list `AI_SESSION_ORIGINS` (historical name: the endpoint
+  responds to the license plan, not an AI session). Empty is only tolerated
+  outside production.
 
 ---
 
 ### 2.7 `GET /admin`
 
-- **Propósito:** diagnóstico del servidor de señalización.
-- **Autenticación:** `X-Signaling-Admin-Token`.
-- **Notas:** nunca transporta datos de cliente.
+- **Purpose:** signaling server diagnostics.
+- **Authentication:** `X-Signaling-Admin-Token`.
+- **Notes:** never transports client data.
 
 ---
 
-### 2.8 `POST /csp-report` y `GET /csp-report`
+### 2.8 `POST /csp-report` and `GET /csp-report`
 
-- **Propósito:** recibir informes de violación CSP y leer los recogidos.
-- **`POST`:** pública; el navegador no adjunta credenciales. Se filtra por origen
-  y se limita por IP. Responde `204`.
-- **`GET`:** requiere `X-CSP-Admin-Token`.
-- **Retención:** anillo en memoria acotado; persistencia JSONL opcional.
+- **Purpose:** receive CSP violation reports and read collected ones.
+- **`POST`:** public; the browser does not attach credentials. Filtered by origin
+  and rate-limited by IP. Responds `204`.
+- **`GET`:** requires `X-CSP-Admin-Token`.
+- **Retention:** bounded in-memory ring; optional JSONL persistence.
 
 ---
 
-### 2.9 `POST /api/client-events` y `GET /api/client-events`
+### 2.9 `POST /api/client-events` and `GET /api/client-events`
 
-- **Propósito:** telemetría de degradación del cliente (presión de
-  almacenamiento, picos de integridad del bundle).
-- **`POST`:** se envía **solo** tras consentimiento explícito del usuario.
-  Payload pseudónimo y sin contenido; validación de forma + rate limit por IP.
-- **`GET`:** diagnóstico del collector con `X-Client-Events-Admin-Token`;
-  responde `503` si no está configurado.
-- **Umbral CRÍTICO:** puede disparar un webhook HTTPS si está configurado.
-- **Retención:** anillo en memoria acotado; no persiste por defecto.
+- **Purpose:** client degradation telemetry (storage pressure, bundle integrity
+  spikes).
+- **`POST`:** sent **only** after explicit user consent.
+  Pseudonymous payload with no content; shape validation + rate limit by IP.
+- **`GET`:** collector diagnostics with `X-Client-Events-Admin-Token`;
+  responds `503` if not configured.
+- **CRITICAL threshold:** can trigger an HTTPS webhook if configured.
+- **Retention:** bounded in-memory ring; does not persist by default.
 
 ---
 
 ### 2.10 `GET /api/client-events/retry-stats`
 
-- **Propósito:** contadores acumulados de reintentos del reporter del cliente.
-- **Autenticación:** ninguna; rate limit por IP.
+- **Purpose:** accumulated retry counters from the client reporter.
+- **Authentication:** none; rate limit by IP.
 
 ---
 
 ### 2.11 `POST /api/analytics/events`
 
-- **Propósito:** ingesta de un bucket diario agregado opt-in.
-- **Cuerpo:** `{ iid, batchId, counts }`. `iid` es el SHA-256 de un id aleatorio
-  por instalación (nunca una identidad de usuario); `counts` son totales diarios
-  de una lista cerrada de tipos de evento.
-- **Idempotencia:** `batchId` hace la ingesta aditiva; un reintento del mismo
-  lote no duplica. Sin `batchId` se conserva la semántica de reemplazo por día.
-- **Respuesta:** `204`. `503` con `Retry-After` si el estado por instalación
-  alcanza su tope (fail-closed, sin descartar datos en silencio).
-- **Privacidad:** la IP se hashea con sal; sin PII y sin contenido.
+- **Purpose:** ingest an aggregated opt-in daily bucket.
+- **Body:** `{ iid, batchId, counts }`. `iid` is the SHA-256 of a random id per
+  installation (never a user identity); `counts` are daily totals of a closed
+  list of event types.
+- **Idempotency:** `batchId` makes ingestion additive; a retry of the same batch
+  does not duplicate. Without `batchId` the per-day replacement semantics is
+  preserved.
+- **Response:** `204`. `503` with `Retry-After` if the per-installation state
+  reaches its cap (fail-closed, without silently discarding data).
+- **Privacy:** IP is hashed with salt; no PII and no content.
 
 ---
 
 ### 2.12 `GET /api/analytics/kpis`
 
-- **Propósito:** KPIs agregados (DAU/WAU/MAU, retención por cohorte, funnel).
-- **Autenticación:** `X-Analytics-Admin-Token`; `503` si no está configurado.
-- **Privacidad:** solo agregados.
+- **Purpose:** aggregated KPIs (DAU/WAU/MAU, cohort retention, funnel).
+- **Authentication:** `X-Analytics-Admin-Token`; `503` if not configured.
+- **Privacy:** only aggregates.
 
 ---
 
-## 3. Ruteo y seguridad HTTP general
+## 3. HTTP routing and general security
 
-- **Orígenes:** `hasValidOrigin()` compara el `Origin` recibido con una
-  allow-list explícita y, en su defecto, con el origen derivado de `Host` (más
-  `X-Forwarded-Proto` cuando `TRUST_PROXY` está activo). Los endpoints que
-  reciben navegadores —licencias y entitlement— la aplican.
-- **Una sola admisión por request:** el guard de entitlement resuelve el contexto
-  una vez por request y lo adjunta bajo un símbolo no escribible; los handlers
-  posteriores leen ese contexto y **no vuelven a verificar**.
-- **Tokens:** los tokens de administración se comparan en tiempo constante. Los
-  tokens de identidad se hashean antes de usarse como clave de política.
-- **Cuerpo:** todos los endpoints con body validan tamaño máximo. JSON malformado
-  o no-objeto produce `400`.
-- **Códigos de error comunes:**
-  - `400`: request inválido o JSON malformado.
-  - `403`: origen no permitido (`CSRF_ORIGIN`) o token inválido.
-  - `405`: método no permitido.
-  - `413`: body demasiado grande.
-  - `426`: ruta HTTP no soportada (WebSocket esperado).
+- **Origins:** `hasValidOrigin()` compares the received `Origin` with an explicit
+  allow-list and, failing that, with the origin derived from `Host` (plus
+  `X-Forwarded-Proto` when `TRUST_PROXY` is active). Endpoints that receive
+  browsers — licenses and entitlement — apply it.
+- **Single admission per request:** the entitlement guard resolves the context
+  once per request and attaches it under a non-writable symbol; subsequent
+  handlers read that context and **do not re-verify**.
+- **Tokens:** admin tokens are compared in constant time. Identity tokens are
+  hashed before use as a policy key.
+- **Body:** all endpoints with body validate maximum size. Malformed JSON or
+  non-object produces `400`.
+- **Common error codes:**
+  - `400`: invalid request or malformed JSON.
+  - `403`: disallowed origin (`CSRF_ORIGIN`) or invalid token.
+  - `405`: method not allowed.
+  - `413`: body too large.
+  - `426`: unsupported HTTP route (WebSocket expected).
   - `429`: rate limit.
-  - `502`: error del proveedor upstream.
-  - `503`: servicio no configurado o no disponible.
+  - `502`: upstream provider error.
+  - `503`: service not configured or unavailable.
 
 ---
 
-## 4. WebSockets (señalización P2P)
+## 4. WebSockets (P2P signaling)
 
-El servidor también es un servidor de señalización WebSocket. No es un API REST,
-pero es parte de su contrato.
+The server is also a WebSocket signaling server. It is not a REST API, but it
+is part of its contract.
 
-- **Upgrade:** cualquier conexión que no coincida con los paths HTTP anteriores
-  recibe `426`; el cliente debe usar WebSocket para el resto.
-- **Orígenes:** si `WS_ALLOWED_ORIGINS` está definido, los upgrades desde otros
-  orígenes se rechazan con `403`. Vacío = sin comprobación (desarrollo local).
-- **Mensajes principales:**
-  - `init`: servidor → cliente con `yourPeerId` y opcionalmente `iceServers`
-    (credenciales TURN efímeras cuando el relay está configurado).
-  - `join`: cliente → servidor con `room` y opcional `roomSecret`. El cliente
-    solo lo envía a su servidor autoalojado configurado
-    (`VITE_P2P_SIGNALING_URL`); los relays públicos nunca lo reciben (A-3),
-    así que en modo relay la sala no tiene secreto que validar.
-  - `joined`: servidor → todos los miembros de la sala con los peer IDs.
-  - `signal`: cliente ↔ servidor para relayar señales entre peers.
-- **Protección:** las salas con secreto exigen HMAC en cada señal
-  (`ENFORCE_SIGNAL_HMAC=1` en producción); el servidor valida emisor, sala, peer
-  destinatario, tamaño del payload, rate limits y ventana anti-replay.
-- **Límites:** conexiones, rooms, peers por room, tamaño de payload y tasa de
-  `join` están acotados y son configurables por entorno.
-
----
-
-## 5. Estado y persistencia
-
-- **Analítica:** memoria + archivo opcional `ANALYTICS_STATE_FILE` con escritura
-  atómica.
-- **Client events:** anillo en memoria acotado; no persiste por defecto.
-- **CSP reports:** anillo en memoria acotado; persistencia JSONL opcional.
-- **Licencias:** sin estado propio; depende del proveedor externo y de la clave
-  de firma.
-- **Señalización:** estado en memoria del proceso; no persiste entre reinicios.
+- **Upgrade:** any connection that does not match the preceding HTTP paths receives
+  `426`; the client must use WebSocket for the rest.
+- **Origins:** if `WS_ALLOWED_ORIGINS` is defined, upgrades from other origins are
+  rejected with `403`. Empty = no check (local development).
+- **Main messages:**
+  - `init`: server → client with `yourPeerId` and optionally `iceServers`
+    (ephemeral TURN credentials when relay is configured).
+  - `join`: client → server with `room` and optional `roomSecret`. The client
+    only sends this to its configured self-hosted server
+    (`VITE_P2P_SIGNALING_URL`); public relays never receive it (A-3),
+    so in relay mode the room has no secret to validate.
+  - `joined`: server → all room members with the peer IDs.
+  - `signal`: client ↔ server to relay signals between peers.
+- **Protection:** rooms with secrets require HMAC on every signal
+  (`ENFORCE_SIGNAL_HMAC=1` in production); the server validates sender, room,
+  target peer, payload size, rate limits, and anti-replay window.
+- **Limits:** connections, rooms, peers per room, payload size, and `join` rate are
+  bounded and configurable by environment.
 
 ---
 
-## 6. Configuración mínima relevante para la API
+## 5. State and persistence
 
-Los valores por defecto están documentados en los handlers. Estas son las
-variables de entorno que afectan directamente a los endpoints:
+- **Analytics:** memory + optional `ANALYTICS_STATE_FILE` with atomic write.
+- **Client events:** bounded in-memory ring; does not persist by default.
+- **CSP reports:** bounded in-memory ring; optional JSONL persistence.
+- **Licenses:** no own state; depends on external provider and signing key.
+- **Signaling:** in-process memory state; does not persist across restarts.
+
+---
+
+## 6. Minimal API-relevant configuration
+
+Defaults are documented in the handlers. These are the environment variables
+that directly affect the endpoints:
 
 - `PORT`, `HOST`
 - `NODE_ENV`
 - `TRUST_PROXY`
 - `WS_ALLOWED_ORIGINS`
-- `AI_SESSION_ORIGINS` — allow-list de `POST /api/license/entitlement`
-  (obligatoria en producción)
+- `AI_SESSION_ORIGINS` — allow-list for `POST /api/license/entitlement`
+  (mandatory in production)
 - `LICENSE_SIGNING_PRIVATE_KEY_FILE` / `LICENSE_SIGNING_PRIVATE_KEY_PKCS8`
 - `WHOP_LICENSE_API_URL`, `WHOP_API_KEY`, `LICENSE_PROVIDER_ALLOW_HTTP`
 - `SIGNALING_ADMIN_TOKEN`
@@ -253,19 +251,19 @@ variables de entorno que afectan directamente a los endpoints:
 - `TURN_RELAY_HOST`, `TURN_STATIC_AUTH_SECRET`, `TURN_*`
 - `ENFORCE_SIGNAL_HMAC`
 
-Los defaults están en el código; valores malformados caen al default documentado.
+Defaults are in the code; malformed values fall back to the documented default.
 
 ---
 
-## 7. Relación con la documentación existente
+## 7. Relationship with existing documentation
 
-- `docs/api.md` es la vista general del protocolo y los endpoints.
-- `docs/openapi.yaml` es la especificación OpenAPI 3.1 de esta misma superficie.
-- Este índice es la referencia de endpoints alineada con los handlers reales.
+- `docs/api.md` is the high-level view of the protocol and endpoints.
+- `docs/openapi.yaml` is the OpenAPI 3.1 specification of this same surface.
+- This index is the endpoint reference aligned with the actual handlers.
 
 ---
 
-## 8. Próximos pasos opcionales
+## 8. Optional next steps
 
-- Añadir ejemplos de request/response por endpoint extraídos de los tests.
-- Generar el spec OpenAPI desde la tabla de rutas para que no pueda derivar.
+- Add request/response examples per endpoint extracted from tests.
+- Generate the OpenAPI spec from the route table so it cannot drift.

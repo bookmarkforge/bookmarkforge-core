@@ -15,6 +15,14 @@
  *   public/*.html                    (landing, help, legal, localized pages)
  *   src/data/SupportKnowledge*.ts    (support-chat knowledge base)
  *
+ * That surface is a glob, so all 30 landings are scanned — but a glob is a
+ * property of the discovery code, not a contract. `landingCoverageFailures`
+ * pins it against the locale registry: a landing the registry declares and
+ * that exists under the scanned root must be inside the surface, so a
+ * discovery that narrowed to a literal list (the shape these gates used to
+ * have, five of them left behind at 6 languages) fails loudly instead of
+ * reporting "no drift" over a shrinking corpus.
+ *
  * Rules (each cites its truth source):
  *   recovery-words    — word-count claims must equal RecoveryService's phrase
  *                       length (24; bip39.generateMnemonic(256), 256/8 = 24).
@@ -63,7 +71,8 @@
  *   node scripts/check-claim-drift.mjs --json          # machine-readable report
  */
 import { readdirSync, readFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
+import { join, sep } from "node:path";
+import { pathToFileURL } from "node:url";
 import process from "node:process";
 
 const DEFAULT_ROOT = process.cwd();
@@ -231,6 +240,58 @@ export function discoverSurface(root) {
   }
 
   return files;
+}
+
+/** OS-independent form of a path: discovery builds with join(), synthetic
+ * tests build with forward slashes, and both must compare equal. */
+function posixPath(value) {
+  return String(value).split(sep).join("/");
+}
+
+/**
+ * Landing coverage pin — is every registered landing inside the scanned
+ * surface? Returns failure strings (empty = covered).
+ *
+ * Derived from the locale registry rather than from a second hand-kept list:
+ * the registry is the single source for what a landing page IS (file, path,
+ * locale), so the pin cannot drift from the pages it is supposed to cover.
+ *
+ * A page that does not exist under `root` is skipped on purpose: page
+ * existence is check:page-figures / check:landings-fresh's business, and a
+ * synthetic fixture tree legitimately holds a subset. What is asserted here is
+ * COVERAGE — an existing landing page that the scanner would not read.
+ *
+ * Pure and parameterised so the suite can drive it with synthetic surfaces;
+ * `registryLandingFiles` supplies the real list.
+ */
+export function landingCoverageFailures(surface, landingFiles, root) {
+  const scanned = new Set(surface.map((f) => posixPath(f.path)));
+  const failures = [];
+  for (const rel of landingFiles) {
+    const abs = join(root, rel);
+    if (!existsSync(abs)) continue;
+    if (!scanned.has(posixPath(abs))) {
+      failures.push(
+        `${rel}: landing page declared by the locale registry exists but is outside ` +
+          "the scanned surface — discoverSurface() must cover every locale",
+      );
+    }
+  }
+  return failures;
+}
+
+/**
+ * Landing files declared by `<root>/scripts/landing-registry.mjs`, or null
+ * when that tree has no registry (synthetic fixtures in the suite): the pin
+ * then does not apply — the same convention as the optional corpus entries in
+ * check-license-claims. Null is not a pass: it means "nothing to pin here",
+ * and the repo tree always has the registry.
+ */
+export async function registryLandingFiles(root) {
+  const registry = join(root, "scripts", "landing-registry.mjs");
+  if (!existsSync(registry)) return null;
+  const mod = await import(pathToFileURL(registry).href);
+  return mod.LANDING_LOCALES.map((l) => l.file);
 }
 
 // ── Claim patterns ───────────────────────────────────────────────────────────
@@ -697,9 +758,21 @@ if (invokedDirectly) {
     process.exit(2);
   }
 
-  const total = report.results.reduce((n, r) => n + r.hits.length, 0);
+  // Coverage pin (top-level await: the registry is ESM and belongs to `--root`).
+  const declaredLandings = await registryLandingFiles(ROOT);
+  const coverage = declaredLandings
+    ? landingCoverageFailures(discoverSurface(ROOT), declaredLandings, ROOT)
+    : [];
+  const claims = report.results.reduce((n, r) => n + r.hits.length, 0);
+  const total = claims + coverage.length;
   if (JSON_OUTPUT) {
-    console.log(JSON.stringify({ ...report, truth: truthSummary(report.truth), total }, replacerSets, 2));
+    console.log(
+      JSON.stringify(
+        { ...report, coverage, truth: truthSummary(report.truth), total },
+        replacerSets,
+        2,
+      ),
+    );
     process.exit(total ? 1 : 0);
   }
 
@@ -715,19 +788,26 @@ if (invokedDirectly) {
     process.exit(0);
   }
 
-  console.error(`check-claim-drift: ${total} drifted claim(s) in ${report.results.length} file(s):\n`);
-  for (const r of report.results) {
-    for (const h of r.hits) {
-      console.error(`  ${r.file}:${h.lineNo}  [${h.rule}]  ${h.drift}`);
-      console.error(`    > ${h.line}`);
-    }
+  if (coverage.length) {
+    console.error(`check-claim-drift: ${coverage.length} landing coverage gap(s):\n`);
+    for (const gap of coverage) console.error(`  - ${gap}`);
+    console.error("");
   }
-  console.error(
-    "\nFix the STRINGS (preferred) or, if the CODE changed, update the truth source",
-  );
-  console.error(
-    "(src/constants/config.ts / src/constants/pricing.ts) — never silence a true claim.",
-  );
+  if (claims) {
+    console.error(`check-claim-drift: ${claims} drifted claim(s) in ${report.results.length} file(s):\n`);
+    for (const r of report.results) {
+      for (const h of r.hits) {
+        console.error(`  ${r.file}:${h.lineNo}  [${h.rule}]  ${h.drift}`);
+        console.error(`    > ${h.line}`);
+      }
+    }
+    console.error(
+      "\nFix the STRINGS (preferred) or, if the CODE changed, update the truth source",
+    );
+    console.error(
+      "(src/constants/config.ts / src/constants/pricing.ts) — never silence a true claim.",
+    );
+  }
   process.exit(1);
 }
 

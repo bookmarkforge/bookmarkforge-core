@@ -17,12 +17,14 @@
  *   - src/services/RecoveryService.ts — the 24-word recovery phrase.
  *   - src/constants/config.ts    — MIN_PASSWORD_LENGTH.
  *
- * Surfaces scanned: the 30 docs/manual-usuario*.md sources (the PDFs and the
- * -styled.html twins are generated FROM these by docs:pdf:localized, so the
- * Markdown set is the truth for the whole manual family; the public export
- * includes all of them). docs/manual-usuario.md is the Spanish master: the
- * only one carrying the full pricing chapter, so tier-table-only claims are
- * validated there; condensed manuals carry §3.1/§6/§7-shaped prose lines.
+ * Surfaces scanned: the docs/manual-usuario*.md sources, one per locale of
+ * scripts/landing-registry.mjs (MANUAL_LANGS is derived from that registry,
+ * not a hand-kept list — see its comment). The PDFs and the -styled.html twins
+ * are generated FROM these by docs:pdf:localized, so the Markdown set is the
+ * truth for the whole manual family; the public export includes all of them.
+ * docs/manual-usuario.md is the Spanish master: the only one carrying the full
+ * pricing chapter, so tier-table-only claims are validated there; condensed
+ * manuals carry §3.1/§6/§7-shaped prose lines.
  *
  * Validation is directional: every figure-bearing line found in a manual must
  * agree with the code. Absence is not an error here (claim presence is
@@ -33,14 +35,29 @@
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { LANDING_CODES } from "./landing-registry.mjs";
 
 const THIS_DIR = fileURLToPath(new URL(".", import.meta.url));
 const REPO_ROOT = join(THIS_DIR, "..");
 
+/**
+ * Manual file suffixes, DERIVED from the landing locale registry (the same
+ * single source the pages use) — the mapping is positional, not a copy:
+ *
+ *   - "es" is the Spanish master (docs/manual-usuario.md), the only manual
+ *     carrying the full pricing chapter, so it has no suffix;
+ *   - every other locale is docs/manual-usuario-<code>.md.
+ *
+ * Deriving it is what keeps a new locale honest: the hand-written list this
+ * replaced would have silently kept validating 30 manuals while the registry
+ * moved on, exactly the drift that left five consumers behind at 6 languages
+ * during the 6→30 expansion. Now a locale added to the registry fails THIS
+ * gate until its manual exists (scanManuals reports the missing file) instead
+ * of going unpoliced.
+ */
 export const MANUAL_LANGS = [
-  "", "-en", "-ar", "-bg", "-cs", "-da", "-de", "-el", "-fi", "-fr", "-he",
-  "-hi", "-hr", "-hu", "-id", "-it", "-ja", "-ko", "-nl", "-no", "-pl", "-pt",
-  "-ro", "-ru", "-sv", "-th", "-tr", "-uk", "-vi", "-zh",
+  "", // es: docs/manual-usuario.md (the Spanish master)
+  ...LANDING_CODES.filter((code) => code !== "es").map((code) => `-${code}`),
 ];
 
 // ---------------------------------------------------------------------------

@@ -26,6 +26,7 @@ import {
   MANUAL_LANGS,
   runManualFiguresGate,
 } from "../check-manual-figures.mjs";
+import { LANDING_CODES } from "../landing-registry.mjs";
 
 let tmpRoot;
 
@@ -255,5 +256,37 @@ describe("check-manual-figures: fire drill on the real flow", () => {
     const { missing } = runManualFiguresGate(root);
     expect(missing).toHaveLength(2);
     expect(missing.join(" ")).toContain("manual-usuario-zh.md");
+  });
+});
+
+describe("check-manual-figures: coverage comes from the locale registry", () => {
+  it("derives MANUAL_LANGS from the registry (es is the master, others are suffixed)", () => {
+    // The mapping is positional, not a copy: "es" owns docs/manual-usuario.md
+    // (the only manual with the full pricing chapter), every other locale owns
+    // docs/manual-usuario-<code>.md. Pinning the derivation means the list can
+    // never fall behind the locale set again — the failure mode that left this
+    // gate validating a shrinking corpus while the pages grew.
+    expect(MANUAL_LANGS).toEqual([
+      "",
+      ...LANDING_CODES.filter((code) => code !== "es").map((code) => `-${code}`),
+    ]);
+    // 1:1 with the registry: no locale unpoliced, no manual demanded twice.
+    expect(MANUAL_LANGS).toHaveLength(LANDING_CODES.length);
+    expect(new Set(MANUAL_LANGS).size).toBe(LANDING_CODES.length);
+  });
+
+  it("demands the manual of every registry locale (a new locale cannot go unpoliced)", () => {
+    // Master present, no localized manual: the gate must ask for exactly the
+    // registry's remaining locales — not for a hardcoded subset that happens to
+    // match today (and would silently stay at 6 if the registry moved).
+    const root = makeRoot({});
+    const { missing } = runManualFiguresGate(root);
+    expect(missing).toHaveLength(LANDING_CODES.length - 1);
+    for (const code of LANDING_CODES) {
+      if (code === "es") continue;
+      expect(missing.join("\n"), `missing manual for ${code}`).toContain(
+        `manual-usuario-${code}.md`,
+      );
+    }
   });
 });

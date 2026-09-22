@@ -26,7 +26,9 @@ import {
   buildRules,
   discoverSurface,
   extractTruth,
+  landingCoverageFailures,
   parseDollar,
+  registryLandingFiles,
   scanFile,
   scanSurface,
 } from "../check-claim-drift.mjs";
@@ -748,6 +750,56 @@ describe("scanSurface", () => {
   });
 });
 
+// ── landing coverage pin (derived from the locale registry) ──────────────────
+describe("landing coverage pin", () => {
+  const ROOT = process.cwd();
+
+  it("covers every landing the registry declares, on the real tree", async () => {
+    // The pin's input is the registry itself, so this also proves the two
+    // agree: a landing page the registry names is a page this gate must read.
+    const declared = await registryLandingFiles(ROOT);
+    expect(declared).not.toBeNull();
+    expect(declared).toContain("public/landing.html");
+    expect(declared.length).toBeGreaterThan(20);
+    expect(landingCoverageFailures(discoverSurface(ROOT), declared, ROOT)).toEqual([]);
+  });
+
+  it("fires when existing landing pages fall outside the scanned surface", async () => {
+    // Simulates the regression the pin exists for: discovery covering fewer
+    // files than the locale set — the "still pinned at 6" shape that every
+    // consumer of the registry used to have. The pages exist, so this is a
+    // coverage gap, not a missing-page report.
+    const declared = await registryLandingFiles(ROOT);
+    const narrow = discoverSurface(ROOT).filter(
+      (f) => !/public[\\/](ar|ja|zh)\.html$/.test(f.path),
+    );
+    const failures = landingCoverageFailures(narrow, declared, ROOT);
+    expect(failures).toHaveLength(3);
+    const joined = failures.join("\n");
+    expect(joined).toContain("public/ar.html");
+    expect(joined).toContain("public/ja.html");
+    expect(joined).toContain("must cover every locale");
+  });
+
+  it("skips a declared landing that does not exist (page existence is another gate)", () => {
+    const root = mkdtempSync(join(tmpdir(), "claim-drift-cov-"));
+    try {
+      expect(landingCoverageFailures([], ["public/nope.html"], root)).toEqual([]);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("does not apply to a tree with no registry (synthetic fixtures)", async () => {
+    const root = mkdtempSync(join(tmpdir(), "claim-drift-noreg-"));
+    try {
+      expect(await registryLandingFiles(root)).toBeNull();
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
+
 // ── freeze test on the REAL repo (what CI actually runs) ─────────────────────
 describe("real repo freeze", () => {
   it("the shipped surface has ZERO factual drift against the shipped constants", () => {
@@ -833,5 +885,31 @@ describe("CLI", () => {
   it("exit 2 on an unknown flag", () => {
     const res = spawnSync(process.execPath, [SCRIPT, "--bogus"], { encoding: "utf8" });
     expect(res.status).toBe(2);
+  });
+
+  it("exit 1 when a registry landing exists outside the scanned surface", () => {
+    const root = mkdtempSync(join(tmpdir(), "claim-drift-clicov-"));
+    try {
+      mkdirSync(join(root, "src", "constants"), { recursive: true });
+      mkdirSync(join(root, "public", "nested"), { recursive: true });
+      mkdirSync(join(root, "scripts"), { recursive: true });
+      writeFileSync(join(root, "src", "constants", "config.ts"), MINI_CONFIG);
+      writeFileSync(join(root, "src", "constants", "pricing.ts"), MINI_PRICING);
+      // Declared landing under a nested path: it EXISTS (so this is not
+      // another gate's missing-page problem) but the non-recursive
+      // public/*.html discovery cannot reach it — the gap the pin reports.
+      writeFileSync(join(root, "public", "nested", "xx.html"), "<p>no figures here</p>");
+      writeFileSync(
+        join(root, "scripts", "landing-registry.mjs"),
+        'export const LANDING_LOCALES = [{ file: "public/nested/xx.html" }];\n',
+      );
+
+      const res = spawnSync(process.execPath, [SCRIPT, "--root", root], { encoding: "utf8" });
+      expect(res.status).toBe(1);
+      expect(res.stderr).toMatch(/landing coverage gap/);
+      expect(res.stderr).toContain("public/nested/xx.html");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });

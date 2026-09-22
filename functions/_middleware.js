@@ -50,10 +50,15 @@
  * bf_lang cookie this middleware then silently dropped.
  *
  * NOTE FOR THE EDGE: Pages Functions bundle relative imports at deploy
- * (esbuild), so "../scripts/landing-registry.mjs" ships inside the
- * worker bundle. If the pipeline ever stops bundling, re-inline the two
- * constants — the contract tests (check-seo.test.mjs +
- * middleware-language-preference.test.mjs) fail loudly on any drift.
+ * (esbuild, `wrangler pages functions build`), so
+ * "../scripts/landing-registry.mjs" ships inside the worker bundle. That
+ * step is itself under test: scripts/__tests__/middleware-bundle.test.mjs
+ * compiles this file the way the runtime does and drives the BUILT module,
+ * so a pipeline that stops inlining the registry (or leaves the import
+ * external) fails there with the edge's own load error. No need to re-inline
+ * the constants by hand — the other contract tests (check-seo.test.mjs +
+ * middleware-language-preference.test.mjs) only pin the SOURCE, so they stay
+ * green while the deployed worker is the thing that breaks.
  */
 import {
   LOCALIZED_LANDING_CODES,

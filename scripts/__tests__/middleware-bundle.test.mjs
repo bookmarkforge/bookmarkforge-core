@@ -115,9 +115,6 @@ describe("Cloudflare Functions bundle — negotiation survives the build", () =>
   beforeAll(async () => {
     dir = mkdtempSync(join(tmpdir(), "bmf-functions-bundle-"));
     code = await compileRuntimeBundle();
-    const bundlePath = join(dir, "worker.mjs");
-    writeFileSync(bundlePath, code, "utf8");
-    worker = await import(pathToFileURL(bundlePath).href);
   });
 
   afterAll(() => {
@@ -125,6 +122,32 @@ describe("Cloudflare Functions bundle — negotiation survives the build", () =>
       rmSync(dir, { recursive: true, force: true });
     }
   });
+
+  /**
+   * Load the built module once, translating a load failure into the diagnosis
+   * a maintainer needs. This is the production symptom — the edge loads the
+   * deployed script as-is, so a surviving specifier is a hard load error, not
+   * a downgrade — reported against the assertion that owns it instead of
+   * collapsing the whole suite in beforeAll.
+   */
+  async function getWorker() {
+    if (worker) {
+      return worker;
+    }
+    const bundlePath = join(dir, "worker.mjs");
+    writeFileSync(bundlePath, code, "utf8");
+    try {
+      worker = await import(pathToFileURL(bundlePath).href);
+    } catch (error) {
+      throw new Error(
+        `the built bundle does not load (${error.message}). Surviving ` +
+          `specifiers: [${unresolvedSpecifiers(code).join(", ") || "none"}] — ` +
+          "the deployment pipeline must inline them (wrangler pages " +
+          "functions build), otherwise the edge fails on every request.",
+      );
+    }
+    return worker;
+  }
 
   it("compiles functions/ into ONE self-contained ES module", () => {
     // Self-contained: nothing left for the edge to resolve at load time. This
@@ -147,17 +170,19 @@ describe("Cloudflare Functions bundle — negotiation survives the build", () =>
     }
   });
 
-  it("exposes the Pages handler contract", () => {
-    expect(typeof worker.onRequest).toBe("function");
+  it("exposes the Pages handler contract", async () => {
+    const built = await getWorker();
+    expect(typeof built.onRequest).toBe("function");
   });
 
   it("negotiates every registry locale from the built worker", async () => {
     // The built artifact, not the source: same sweep as the source-level
     // middleware test, asserted against what production actually runs.
+    const built = await getWorker();
     for (const locale of PREF_LANGS) {
       const expected = landingFor(locale);
 
-      const byCookie = await worker.onRequest({
+      const byCookie = await built.onRequest({
         request: new Request(`${SITE}/`, {
           headers: { cookie: `bf_lang=${locale}` },
         }),
@@ -171,7 +196,7 @@ describe("Cloudflare Functions bundle — negotiation survives the build", () =>
         expect(redirectPath(byCookie)).toBe(expected);
       }
 
-      const byHeader = await worker.onRequest({
+      const byHeader = await built.onRequest({
         request: new Request(`${SITE}/`, {
           headers: { "accept-language": `${locale}-XX,${locale};q=0.9,en;q=0.8` },
         }),
@@ -190,9 +215,10 @@ describe("Cloudflare Functions bundle — negotiation survives the build", () =>
     // Codes chosen to be plausible neighbours the registry does NOT carry, so
     // a bundle with a hand-extended list fails here instead of silently
     // redirecting visitors to a landing that does not exist.
+    const built = await getWorker();
     for (const locale of ["et", "la", "mk", "sq", "sr", "xx", "zz"]) {
       expect(PREF_LANGS).not.toContain(locale);
-      const res = await worker.onRequest({
+      const res = await built.onRequest({
         request: new Request(`${SITE}/`, {
           headers: { cookie: `bf_lang=${locale}` },
         }),
@@ -208,7 +234,8 @@ describe("Cloudflare Functions bundle — negotiation survives the build", () =>
     // redirect headers, cloudflare/workers-sdk#5378): it builds its Response
     // by hand and appends two separate Set-Cookie headers, so it is worth
     // pinning on the artifact rather than only on the source.
-    const res = await worker.onRequest({
+    const built = await getWorker();
+    const res = await built.onRequest({
       request: new Request(`${SITE}/?lang=ja`),
       next: () => new Response("next"),
     });

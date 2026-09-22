@@ -35,10 +35,12 @@ test.describe('1. Data Sovereignty - No External Data Transmission', () => {
       // Allow localhost, local resources and the documented local-AI model
       // host: the embedding pipeline downloads its ONNX model from
       // huggingface.co on first use (a user-visible local-AI feature, not
-      // telemetry). Everything else must stay local.
+      // telemetry). Also allow onnxruntime-web from jsdelivr CDN
+      // (local AI inference library, not telemetry).
       const isLocalAiModel = url.includes('huggingface.co') || url.includes('.hf.co');
+      const isLocalAiLibrary = url.includes('onnxruntime-web') && url.includes('jsdelivr');
       if (!url.includes('localhost') && !url.includes('127.0.0.1') && 
-          !url.startsWith('blob:') && !url.startsWith('data:') && !isLocalAiModel) {
+          !url.startsWith('blob:') && !url.startsWith('data:') && !isLocalAiModel && !isLocalAiLibrary) {
         externalRequests.push(url);
       }
     });

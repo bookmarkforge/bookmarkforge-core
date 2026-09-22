@@ -286,16 +286,23 @@ test.describe('Deep feature coverage', () => {
     const editor = page.getByTestId('block-editor');
     await expect(editor).toBeVisible({ timeout: 15_000 });
 
+    // Add text to the document so TtsPlayer has content to work with
+    await editor.click();
+    await page.keyboard.type('This is test content for TTS player');
+
+    // Open the advanced tools menu to expose TtsPlayer (lazy-loaded)
+    const actionsButton = page.getByRole('button', { name: /actions/i });
+    await actionsButton.click();
+
     // TtsPlayer renders in the editor toolbar (lazy-loaded); the play button
-    // is the "Listen" control and its Settings gear sits beside it.
-    const ttsContainer = page
-      .getByRole('button', { name: 'Listen' })
-      .first()
-      .locator('xpath=ancestor::div[1]');
-    await expect(ttsContainer).toBeVisible({ timeout: 20_000 });
+    // is the "Listen" control. Look for it with case-insensitive matching.
+    const listenButton = page.getByRole('button', { name: /listen/i });
+    await expect(listenButton).toBeVisible({ timeout: 20_000 });
 
     // Settings gear toggles the Voice Settings panel with the 3 sliders.
-    await ttsContainer.getByRole('button', { name: 'Settings' }).click();
+    // Use the editor context to select the TTS player settings button specifically
+    const settingsButton = editor.getByRole('button', { name: 'Settings' });
+    await settingsButton.click();
 
     await expect(
       page.getByRole('heading', { name: 'Voice Settings' }),
@@ -305,7 +312,7 @@ test.describe('Deep feature coverage', () => {
     }
 
     // Close the settings panel again.
-    await ttsContainer.getByRole('button', { name: 'Settings' }).click();
+    await settingsButton.click();
     await expect(
       page.getByRole('heading', { name: 'Voice Settings' }),
     ).toBeHidden();

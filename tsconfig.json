@@ -27,6 +27,8 @@
     "isolatedModules": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
+    // Habilita compilación incremental para iteraciones más rápidas en desarrollo
+    "incremental": true,
     "types": ["vite/client", "vitest/globals", "node"],
     // e2e specs import app modules from inside page.evaluate() with the
     // Vite dev-server URL convention (/src/...), e.g.

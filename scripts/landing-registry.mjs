@@ -75,6 +75,36 @@ export const LOCALIZED_LANDING_CODES = LANDING_CODES.filter((c) => c !== "en");
  * preference set and the negotiation set must never diverge. */
 export const PREF_LANGS = LANDING_CODES;
 
+/**
+ * The six locales the product launched with — the "primary" set, in launch
+ * order (EN first). This is a CONTENT distinction, not a stale copy of the
+ * 30, and two things key off it:
+ *
+ *   - the landing wedge: check-landing-free-plan expects the Free card in
+ *     slot 0 on primaries and slot 1 everywhere else, and validates the
+ *     primaries from their full translation sources (scripts/translations/
+ *     <code>.json) while the other 24 come from scripts/landing-translations
+ *     .json — that gate also pins the split against that artifact;
+ *   - the legal world (see LEGAL_LOCALE_CODES below).
+ *
+ * Everything in LANDING_CODES that is not listed here is a translation of this
+ * set: 24 newer landings and 24 newer legal pages.
+ */
+export const PRIMARY_LOCALE_CODES = ["en", "es", "fr", "de", "pt", "it"];
+
+/**
+ * The legal world's reviewed languages — the same six primaries. The legal
+ * PAGES exist for every landing locale (public/<code>/privacy-and-terms.html,
+ * pinned by check-sitemap-coverage), but only these six are reviewed by hand:
+ * they are the legal hreflang cluster (check-hreflang-graph) and the set whose
+ * head contract check-seo validates. The other 24 are generated from
+ * scripts/privacy-translations.json — one entry per locale outside the five
+ * localized primaries, coverage check-seo pins — so a locale added without a
+ * translation entry fails the build instead of shipping English inside a
+ * translated page.
+ */
+export const LEGAL_LOCALE_CODES = PRIMARY_LOCALE_CODES;
+
 /** og:url-canonical region per language (the values the live pages carry;
  * verified on every gate run). Only EN differs from its own code. */
 const LOCALE_REGION = {

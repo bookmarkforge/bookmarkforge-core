@@ -200,21 +200,21 @@ El cerebro de la aplicación:
 
 ### 7.1 Tabla comparativa
 
-| Feature | Free | Pro | Founder |
-|---|---|---|---|
-| Precio | $0 | $79 (lifetime) | $99 (lifetime) |
-| Marcadores | 1,000 | Ilimitados | Ilimitados |
-| Dispositivos | Ilimitados | 3 + P2P sync | 3 + P2P sync |
-| IA con API propia | ✅ | ✅ | ✅ |
-| IA Local (WebLLM/Ollama) | ❌ | ✅ | ✅ |
-| RAG chat sobre tus datos | ❌ | ✅ | ✅ |
-| Flashcards + PDF/OCR | ❌ | ✅ | ✅ |
-| Exportación avanzada (10+ formatos) | ❌ | ✅ | ✅ |
-| Cofre de seguridad (AES-GCM) | ❌ | ✅ | ✅ |
-| Soporte | Comunidad | Email 48h | Email 24h + Beta |
-| Descubrimiento v2/v3 | ❌ | 60% off | 60% off |
-| Badge Founder | ❌ | ❌ | ✅ |
-| Beta v2 | ❌ | ❌ | ✅ |
+| Feature | Free | Pro |
+|---|---|---|
+| Precio | $0 | $79 (lifetime) |
+| Marcadores | 1,000 | Ilimitados |
+| Dispositivos | Ilimitados | 3 + P2P sync |
+| IA con API propia | ✅ | ✅ |
+| IA Local (WebLLM/Ollama) | ❌ | ✅ |
+| RAG chat sobre tus datos | ❌ | ✅ |
+| Flashcards + PDF/OCR | ❌ | ✅ |
+| Exportación avanzada (10+ formatos) | ❌ | ✅ |
+| Cofre de seguridad (AES-GCM) | ❌ | ✅ |
+| Soporte | Comunidad | Email 48h |
+| Descubrimiento v2/v3 | ❌ | 60% off |
+
+
 
 ### 7.2 Cómo actualizar a Pro
 
@@ -226,9 +226,7 @@ El cerebro de la aplicación:
 
 **Early Bird:** los primeros 200 compradores pagan $59 (agotado o hasta 2026-12-31). Después el precio regular es $79.
 
-### 7.3 Cómo actualizar a Founder
 
-Limitado a **100 unidades**. Incluye todo lo de Pro + badge, beta v2, y descuento perpetuo en futuras versiones mayores.
 
 ### 7.4 Actualizaciones futuras (v2, v3)
 
@@ -379,7 +377,7 @@ IA local usa WebGPU. En laptops, puede consumir batería más rápido. Desactiva
 |---|---|---|
 | **Free** | Comunidad — Docs + /help + GitHub Discussions | Best effort |
 | **Pro** | Email — bookmarkforge@proton.me | 48h (días laborables) |
-| **Founder** | Email prioridad — bookmarkforge@proton.me | 24h (días laborables) |
+| **** | Email prioridad — bookmarkforge@proton.me | 24h (días laborables) |
 
 **Nota de seguridad:** Vault está cifrado. No podemos ver tus datos. Contraseña perdida = datos perdidos. Soporte nunca te pedirá tu contraseña o frase de recuperación.
 

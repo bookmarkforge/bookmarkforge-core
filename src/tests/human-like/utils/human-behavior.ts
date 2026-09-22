@@ -29,6 +29,12 @@ export interface HumanBehaviorOptions {
   naturalScrolling?: boolean;
   /** Enable accidental clicks/mistakes */
   simulateMistakes?: boolean;
+  /** Simulate user fatigue (slower over time) */
+  simulateFatigue?: boolean;
+  /** Fatigue rate (delay increase per action) */
+  fatigueRate?: number;
+  /** Simulate reading patterns (F-shape scanning) */
+  readingPatterns?: boolean;
 }
 
 export interface MousePath {
@@ -123,6 +129,8 @@ export class HumanBehavior {
   private page: Page;
   private options: Required<HumanBehaviorOptions>;
   private lastMousePosition = { x: 0, y: 0 };
+  private actionCount = 0;
+  private fatigueMultiplier = 1.0;
 
   constructor(page: Page, options: HumanBehaviorOptions = {}) {
     this.page = page;
@@ -132,15 +140,24 @@ export class HumanBehavior {
       mouseSpeed: options.mouseSpeed ?? 'normal',
       naturalScrolling: options.naturalScrolling ?? true,
       simulateMistakes: options.simulateMistakes ?? false,
+      simulateFatigue: options.simulateFatigue ?? false,
+      fatigueRate: options.fatigueRate ?? 5,
+      readingPatterns: options.readingPatterns ?? true,
     };
   }
 
   /**
-   * Get random delay between actions
+   * Get random delay between actions (with fatigue simulation)
    */
   private getDelay(): number {
+    // Apply fatigue if enabled
+    if (this.options.simulateFatigue) {
+      this.fatigueMultiplier = 1 + (this.actionCount * this.options.fatigueRate / 1000);
+    }
+    
     const variation = Math.random() * this.options.delayVariation * 2 - this.options.delayVariation;
-    return Math.max(50, this.options.baseDelay + variation);
+    const baseDelay = this.options.baseDelay * this.fatigueMultiplier;
+    return Math.max(50, baseDelay + variation);
   }
 
   /**
@@ -208,6 +225,9 @@ export class HumanBehavior {
 
     // Wait for element to be visible
     await element.waitFor({ state: 'visible' });
+
+    // Increment action count for fatigue tracking
+    this.actionCount++;
 
     // Bounded retry: the raw coordinate click has no actionability retry,
     // so under parallel load the target can shift between the box read and
@@ -523,16 +543,58 @@ export class HumanBehavior {
   }
 
   /**
-   * Wait for user to "read" content
+   * Wait for user to "read" content with F-shape scanning pattern
    */
   async readContent(duration: number = 1000): Promise<void> {
-    // Simulate reading with occasional scrolling
+    if (!this.options.readingPatterns) {
+      // Simple reading simulation
+      await this.page.waitForTimeout(duration);
+      return;
+    }
+
+    // F-shape scanning pattern: users scan content in an F pattern
+    // - Read top line fully
+    // - Scan second line partially
+    // - Vertical scan down left side
+    const initialDelay = duration * 0.3;
+    await this.page.waitForTimeout(initialDelay);
+
+    // Simulate reading with occasional scrolling (F-shape)
     const scrollCount = Math.floor(duration / 500);
     
     for (let i = 0; i < scrollCount; i++) {
+      // Horizontal scan (reading)
+      if (i % 2 === 0) {
+        await this.scroll('right', 1);
+        await this.page.waitForTimeout(200 + Math.random() * 100);
+      }
+      
+      // Vertical scan (skimming)
       await this.scroll('down', 1);
       await this.page.waitForTimeout(300 + Math.random() * 200);
+      
+      // Move mouse slightly while reading (simulating eye tracking)
+      const mouseX = this.lastMousePosition.x + (Math.random() - 0.5) * 100;
+      const mouseY = this.lastMousePosition.y + 50;
+      await this.moveMouse(mouseX, mouseY);
     }
+  }
+
+  /**
+   * Simulate user pausing/thinking time
+   */
+  async think(duration: number = 500): Promise<void> {
+    // Users pause before making decisions
+    const thinkingTime = duration * (0.8 + Math.random() * 0.4);
+    await this.page.waitForTimeout(thinkingTime);
+  }
+
+  /**
+   * Reset fatigue counter (for test isolation)
+   */
+  resetFatigue(): void {
+    this.actionCount = 0;
+    this.fatigueMultiplier = 1.0;
   }
 }
 

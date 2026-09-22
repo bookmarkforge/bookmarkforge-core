@@ -111,8 +111,21 @@ async function dismissWithRetry(
   await button.click({ timeout: scaled(10_000), noWaitAfter: true });
 }
 
-/** Dismiss the Onboarding wizard (and any WelcomeTour overlay) via Escape. */
-export async function dismissOverlays(page: Page): Promise<void> {
+/**
+ * Dismiss the Onboarding wizard (and any WelcomeTour overlay) via Escape.
+ *
+ * Every surface this function clears is REGISTERED in
+ * scripts/check-e2e-fixture-neutralization.mjs. A spec whose subject is one of
+ * them (onboarding wizard, WelcomeTour, backup reminder banner, QuickTips) must
+ * preserve it through the documenting option below, or declare a reasoned
+ * `// fixture-neutralization-waiver:` — `npm run check` fails otherwise. Adding
+ * a dismissal here without registering the surface fails that same gate, so the
+ * neutralized set cannot grow behind the specs' backs.
+ */
+export async function dismissOverlays(
+  page: Page,
+  options: { keepBackupNotice?: boolean } = {},
+): Promise<void> {
   const human = humanE2E(page);
   // Most callers invoke this immediately after the shell is visible. The
   // settings button can also be visible *behind* an onboarding overlay, so
@@ -125,10 +138,18 @@ export async function dismissOverlays(page: Page): Promise<void> {
     name: "Got it, remind me later",
   });
   const tipDismiss = page.getByRole("button", { name: "Dismiss tip" });
+  // `keepBackupNotice` is for specs whose SUBJECT is the backup banner
+  // (dashboard-banner-cls measures its reveal): clicking "Got it, remind me
+  // later" is not clearing an overlay, it is a state change on the thing being
+  // measured — it writes the 48 h snooze (BACKUP_BANNER_DISMISSED_UNTIL) that
+  // makes shouldShowBackupBanner() false, so the banner never reveals again and
+  // the measurement collapses to zero. With the flag, the banner is neither
+  // counted as a blocking overlay nor dismissed.
   const overlayVisible =
     (await onboarding.isVisible().catch(() => false)) ||
     (await skipTour.isVisible().catch(() => false)) ||
-    (await backupDismiss.isVisible().catch(() => false)) ||
+    (!options.keepBackupNotice &&
+      (await backupDismiss.isVisible().catch(() => false))) ||
     (await tipDismiss.isVisible().catch(() => false));
   if (!overlayVisible) {
     return;
@@ -150,7 +171,10 @@ export async function dismissOverlays(page: Page): Promise<void> {
   // .evaluate(click()) carried a 30s default timeout, so a toast that vanished
   // after isVisible() hung the whole suite on a bounded 3s instead. A
   // transient disappearance is non-fatal — these are just dismissible notices.
-  for (const notice of [backupDismiss, tipDismiss]) {
+  const dashboardNotices = options.keepBackupNotice
+    ? [tipDismiss]
+    : [backupDismiss, tipDismiss];
+  for (const notice of dashboardNotices) {
     if (await notice.isVisible().catch(() => false)) {
       await notice
         .evaluate(
@@ -193,6 +217,14 @@ export async function setupVault(
   page: Page,
   options: {
     dismissOnboarding?: boolean;
+    /**
+     * Keep the dashboard's backup reminder banner up (see
+     * `dismissOverlays`): the specs that MEASURE the banner — its reveal CLS
+     * cost (dashboard-banner-cls, ADR-055) — must not have the setup path
+     * snooze it for 48 h before their first assertion. Every other caller
+     * wants the notices cleared so they cannot cover later interactions.
+     */
+    keepBackupNotice?: boolean;
     password?: string;
     onRecoveryPhrase?: (phrase: string) => void;
   } = {},
@@ -303,7 +335,9 @@ export async function setupVault(
   // vault; callers that want to exercise that restore-first screen keep the
   // overlay instead of auto-dismissing it.
   if (options.dismissOnboarding !== false) {
-    await dismissOverlays(page);
+    await dismissOverlays(page, {
+      keepBackupNotice: options.keepBackupNotice,
+    });
   }
   } finally {
     page.off("console", onConsole);

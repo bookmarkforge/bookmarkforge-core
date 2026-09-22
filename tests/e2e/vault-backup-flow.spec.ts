@@ -9,17 +9,19 @@ import { seedProEntitlement } from "./pro-entitlement-helpers";
  * blob downloads are flaky, but the completion toast is the UI contract.
  */
 test("export backup from dashboard banner completes", async ({ page }) => {
-  await setupVault(page);
+  // keepBackupNotice: the banner IS this test's subject. Without the opt-out,
+  // the fixture's generic "Got it, remind me later" click writes the 48 h
+  // snooze (BACKUP_BANNER_DISMISSED_UNTIL) and the banner this test exercises
+  // can never appear — the spec would pass while measuring nothing. Guarded
+  // against future regressions by scripts/check-e2e-fixture-neutralization.mjs.
+  await setupVault(page, { keepBackupNotice: true });
   // Export goes through BackupService (Pro-gated): seed the entitlement
   // through the real signing stack before exercising the banner flow.
   await seedProEntitlement(page);
 
-  // setupVault dismisses transient dashboard notices for the other vault
-  // specs. Reset only the reminder state and reload so this test explicitly
-  // exercises the banner's real post-unlock flow.
+  // Reload so the banner is exercised from a fresh boot (the tour stays out of
+  // the way); the banner survives it because nothing snoozed it above.
   await page.evaluate(() => {
-    localStorage.removeItem("forge_backup_banner_dismissed_until");
-    localStorage.removeItem("forge_last_manual_backup_date");
     localStorage.setItem("forge_welcome_tour_complete", "true");
   });
   await page.reload();

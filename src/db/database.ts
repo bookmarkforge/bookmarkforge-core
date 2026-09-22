@@ -654,7 +654,7 @@ function wireMigrationProgress(createdDb: unknown): () => void {
     };
   };
   if (typeof db.migrationStates !== "function") {
-    console.error("[PROGRESS] migrationStates unavailable on createdDb");
+    logger.error("[PROGRESS] migrationStates unavailable on createdDb");
     return () => resetMigrationProgress();
   }
 

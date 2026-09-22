@@ -49,9 +49,8 @@ export const PRICING_CONFIG = {
       regularPrice: 79, fullPrice: 99, upgradePriceNew: 89,
       upgradePriceOwner: 35,
       limitations: { maxBookmarks: Infinity, maxDevices: 3 } },
-    { id: "founder", price: 99, limitedSupply: 100 },
   ],
-  earlyBird: { caps: { early: 200, founder: 100 } },
+  earlyBird: { caps: { early: 200 } },
 };
 `;
 
@@ -96,8 +95,6 @@ describe("check-manual-figures: truth parsing", () => {
     expect(t.proFullPrice).toBe(99);
     expect(t.upgradePriceNew).toBe(89);
     expect(t.upgradePriceOwner).toBe(35);
-    expect(t.founderPrice).toBe(99);
-    expect(t.founderLimitedSupply).toBe(100);
     expect(t.earlyBirdCapEarly).toBe(200);
     expect(t.refundDays).toBe(30);
     expect(t.upgradeDiscountPct).toBe(60);

@@ -143,19 +143,21 @@ describe("CollapsibleSurface", () => {
     expect(screen.getByText("Banner body")).toBeVisible();
   });
 
-  // ── ADR-055 hold: pending decisions reserve the measured height ────────
+  // ── ADR-055 hold: pending decisions reserve the natural height ────────
 
-  it("holds the measured height behind a shimmer while the decision is pending", () => {
+  it("holds its natural height (auto) behind a shimmer while the decision is pending", () => {
     installMeasuredHeight(320);
     const { container } = renderSurface({ show: false, pending: true });
 
     const surface = surfaceEl(container);
-    // The box is already exactly the size the reveal needs: flipping
-    // `show` later is a visibility flip, not a height animation.
-    expect(surface.style.height).toBe("320px");
+    // The box holds its NATURAL height (`auto`): the content is mounted and
+    // hidden, and layout — not a measurement — sizes the box. There is no
+    // height value to race against first paint, so the first layout is
+    // already final and flipping `show` later is a visibility flip.
+    expect(surface.style.height).toBe("auto");
     expect(surface.style.visibility).toBe("visible");
-    // Immediate visibility flip while holding (reveal must not be delayed).
-    expect(surface.style.transition).toContain("visibility 0s linear 0ms");
+    // Transitions are OFF while holding: layout-stable is the hold's job.
+    expect(surface.style.transition).toBe("none");
     // The real content never flashes before the decision settles…
     expect(screen.getByText("Banner body")).not.toBeVisible();
     // …and the shimmer stands in for it, decoratively.
@@ -177,7 +179,11 @@ describe("CollapsibleSurface", () => {
     );
 
     const surface = surfaceEl(container);
-    expect(surface.style.height).toBe("320px"); // unchanged: no shift
+    // `show` picks up the measured height for the steady state. The hold was
+    // `auto` — the same layout size — so the flip changes no geometry (the
+    // E2E battery proves the geometry in a real browser; this pins the
+    // state machine: hold=auto → show=measured, placeholder gone).
+    expect(surface.style.height).toBe("320px");
     expect(screen.getByText("Banner body")).toBeVisible();
     expect(
       document.querySelector("[data-testid=collapsible-surface-placeholder]"),
@@ -204,18 +210,14 @@ describe("CollapsibleSurface", () => {
     ).toBeNull();
   });
 
-  it("uses the estimated placeholder height only when nothing can be measured", () => {
-    // No scrollHeight stub: jsdom's layout-free path. The hold must still
-    // reserve SOMETHING (the estimate), never 0, so the placeholder is the
-    // worst case rather than a vanished banner.
-    const { container } = renderSurface({
-      show: false,
-      pending: true,
-      placeholderHeight: 111,
-    });
+  it("holds natural height even when nothing can be measured", () => {
+    // No scrollHeight stub: jsdom's layout-free path. The hold never needed
+    // a measurement — `auto` reads the height out of the layout itself, so
+    // there is no estimate, no fallback and nothing to correct later.
+    const { container } = renderSurface({ show: false, pending: true });
 
     const surface = surfaceEl(container);
-    expect(surface.style.height).toBe("111px");
+    expect(surface.style.height).toBe("auto");
     expect(
       document.querySelector("[data-testid=collapsible-surface-placeholder]"),
     ).not.toBeNull();

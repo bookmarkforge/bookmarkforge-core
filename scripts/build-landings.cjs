@@ -71,9 +71,14 @@ function languageLinks() {
  * is an OUTPUT, so the write path keeps it in step: `npm run build:landings`
  * (and scripts/gate-refresh.mjs, which runs this file) regenerates it instead
  * of leaving a stale or missing copy behind. No-op when it already matches.
+ *
+ * `file` is injectable so the contract tests
+ * (scripts/__tests__/build-landings-sync.test.mjs) can drive it against a
+ * temp tree; production callers use the default (the repo artifact).
  */
-function syncLanguageLinksFile() {
-  const file = path.join(__dirname, 'templates', 'landing', 'language-links.json');
+function syncLanguageLinksFile(
+  file = path.join(__dirname, 'templates', 'landing', 'language-links.json'),
+) {
   const links = buildLanguageLinks();
   const generated = JSON.stringify(links, null, 2);
   let onDisk = null;
@@ -208,4 +213,5 @@ module.exports = {
   loadTranslations,
   outputPathFor,
   renderAll,
+  syncLanguageLinksFile,
 };

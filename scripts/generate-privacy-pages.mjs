@@ -10,6 +10,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { LANDING_CODES, PRIMARY_LOCALE_CODES } from "./landing-registry.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -19,14 +20,15 @@ const PUBLIC = resolve(ROOT, "public");
 const T = JSON.parse(readFileSync(resolve(__dirname, "privacy-translations.json"), "utf-8"));
 
 // ── Locales that already have a privacy page (skip these) ──────────
-const EXISTING = new Set(["en", "es", "fr", "de", "pt", "it"]);
+// The six primaries (registry-owned): the generator only ever produces the
+// translations of that reviewed set.
+const EXISTING = new Set(PRIMARY_LOCALE_CODES);
 
 // ── All 30 supported locales ───────────────────────────────────────
-const ALL_LOCALES = [
-  "ar","bg","cs","da","de","el","en","es","fi","fr",
-  "he","hi","hr","hu","id","it","ja","ko","nl","no",
-  "pl","pt","ro","ru","sv","th","tr","uk","vi","zh"
-];
+// Sorted rather than launch-ordered on purpose: the committed pages were
+// generated alphabetically, and the hreflang block depends on that order, so
+// regenerating through this script stays byte-for-byte identical.
+const ALL_LOCALES = [...LANDING_CODES].sort();
 
 // ── og:locale values ───────────────────────────────────────────────
 const OG_LOCALE = {

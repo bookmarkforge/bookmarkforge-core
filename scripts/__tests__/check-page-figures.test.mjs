@@ -42,9 +42,8 @@ export const PRICING_CONFIG = {
       regularPrice: 79, fullPrice: 99, upgradePriceNew: 89,
       upgradePriceOwner: 35,
       limitations: { maxBookmarks: Infinity, maxDevices: 3 } },
-    { id: "founder", price: 99, limitedSupply: 100 },
   ],
-  earlyBird: { caps: { early: 200, founder: 100 } },
+  earlyBird: { caps: { early: 200 } },
 };
 `;
 const LICENSE_TS = `cacheTtlMs: 48 * 60 * 60 * 1000,`;

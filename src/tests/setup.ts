@@ -165,6 +165,58 @@ if (typeof window !== "undefined") {
   window.scrollTo = vi.fn() as any;
   Element.prototype.scrollIntoView = vi.fn() as any;
 
+  // ─── Blob object URLs (jsdom 30 × vitest 4.1) ───────────────────────
+  // vitest's jsdom environment unwraps a jsdom Blob through the "impl"
+  // symbol it captured from `new window.Blob()` when the environment was
+  // created. jsdom 30 no longer stores blob bytes on an own symbol
+  // property at all (a Blob has ZERO own symbols — verified with a probe),
+  // so that captured symbol is `undefined` and the compat shim dereferences
+  // `blob[undefined]._buffer`, throwing
+  // `TypeError: Cannot read properties of undefined (reading '_buffer')`
+  // on EVERY `URL.createObjectURL(new Blob(...))` call.
+  //
+  // Every download-by-blob flow calls createObjectURL before window.open, so
+  // the crash landed ahead of the assertion those specs exist for: they
+  // failed with "expected window.open to be called" and — worse — reported it
+  // as an unhandled error, so the flow was not exercised at all. Owning both
+  // functions here keeps specs independent of jsdom/vitest internals and
+  // makes the contract observable: URLs are distinct per call, and the
+  // registry lets a test read back the blob a URL points at
+  // (`(globalThis as any).__bmfBlobUrls`).
+  //
+  // KNOWN REMAINING LANDMINE (same shim, other entry point): constructing
+  // `new Request(url, { body: <Blob> })` in this environment throws the same
+  // `_buffer` TypeError (`makeCompatFormData` hits it too for a Blob inside a
+  // FormData). No spec reaches it today — production only builds a Request
+  // inside `firewalledFetch`, and every test there mocks `fetch` — so it is
+  // left alone rather than shimmed speculatively. If a spec ever needs a blob
+  // upload body, patch `Request` here the same way `URL` is patched below.
+  const blobUrls = new Map<string, Blob | MediaSource>();
+  let blobUrlSeq = 0;
+  // `writable`/`configurable` keep `vi.spyOn(URL, "createObjectURL")` workable
+  // (specs that assert a specific sequence of URLs mock it themselves).
+  Object.defineProperty(URL, "createObjectURL", {
+    writable: true,
+    configurable: true,
+    // Mirrors the DOM signature (`Blob | MediaSource`) — ObjectUrlRegistry
+    // accepts a MediaSource too, so the stub must not narrow it.
+    value: (value: Blob | MediaSource): string => {
+      const url = `blob:bmf-test-${++blobUrlSeq}`;
+      blobUrls.set(url, value);
+      return url;
+    },
+  });
+  Object.defineProperty(URL, "revokeObjectURL", {
+    writable: true,
+    configurable: true,
+    value: (url: string): void => {
+      blobUrls.delete(url);
+    },
+  });
+  (
+    globalThis as { __bmfBlobUrls?: Map<string, Blob | MediaSource> }
+  ).__bmfBlobUrls = blobUrls;
+
   // Mock requestAnimationFrame
   window.requestAnimationFrame = vi.fn((cb: FrameRequestCallback) => {
     return setTimeout(() => cb(performance.now()), 0) as unknown as number;

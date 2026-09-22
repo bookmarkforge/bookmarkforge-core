@@ -65,18 +65,17 @@ describe("constants/pricing", () => {
     expect(competitors).toContain("raindrop");
   });
 
-  it("should have projections with Founder cap", async () => {
+  it("should have projections", async () => {
     const { PRICING_CONFIG } = await import("../../constants/pricing");
     expect(PRICING_CONFIG.projections.year1Target).toBe(5000);
     expect(PRICING_CONFIG.projections.earlyBirdTarget).toBe(200);
   });
 
-  it("should export LICENSE_FEATURES for free/pro/founder", async () => {
+  it("should export LICENSE_FEATURES for free/pro", async () => {
     const { LICENSE_FEATURES } = await import("../../constants/pricing");
-    expect(Object.keys(LICENSE_FEATURES)).toEqual(["free", "pro", "founder"]);
+    expect(Object.keys(LICENSE_FEATURES)).toEqual(["free", "pro"]);
     expect(LICENSE_FEATURES.free.bookmarks).toBe("1,000 bookmarks");
     expect(LICENSE_FEATURES.pro.bookmarks).toBe("∞ UNLIMITED");
-    expect(LICENSE_FEATURES.founder.bookmarks).toBe("∞ UNLIMITED");
   });
 
   it("never promises out-of-plan features in tier copy (roadmap non-goals)", async () => {
@@ -101,7 +100,6 @@ describe("constants/pricing", () => {
     const { PRICING_CONFIG } = await import("../../constants/pricing");
     expect(PRICING_CONFIG.support.tiers.free.response).toMatch(/best effort/i);
     expect(PRICING_CONFIG.support.tiers.pro.response).toMatch(/48h/i);
-    expect(PRICING_CONFIG.support.tiers.founder.response).toMatch(/24h/i);
     expect(PRICING_CONFIG.support.note).toMatch(/cannot see your data/i);
   });
 });

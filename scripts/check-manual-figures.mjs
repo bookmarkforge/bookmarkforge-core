@@ -9,8 +9,8 @@
  * code says any-device), so the one-off auditor is promoted to a gate.
  *
  * Sources of truth (parsed, not duplicated):
- *   - src/constants/pricing.ts   — Free/Pro/Founder tiers: bookmark caps,
- *     device counts, prices (early-bird ladder, upgrades), founder supply,
+ *   - src/constants/pricing.ts   — Free/Pro tiers: bookmark caps,
+ *     device counts, prices (early-bird ladder, upgrades),
  *     early-bird caps, refund days, upgrade discount percent.
  *   - src/constants/license.ts   — cacheTtlMs → Pro license re-validation
  *     window in hours.
@@ -73,8 +73,6 @@ export function loadTruth(root = REPO_ROOT) {
     proFullPrice: num(/fullPrice:\s*(\d+)/),
     upgradePriceNew: num(/upgradePriceNew:\s*(\d+)/),
     upgradePriceOwner: num(/upgradePriceOwner:\s*(\d+)/),
-    founderPrice: num(/id:\s*"founder",[\s\S]{0,200}?price:\s*(\d+)/),
-    founderLimitedSupply: num(/limitedSupply:\s*(\d+)/),
     earlyBirdCapEarly: num(/caps:\s*{\s*early:\s*(\d+)/),
     refundDays: num(/refundDays:\s*(\d+)/),
     upgradeDiscountPct: num(/upgradeDiscountPct:\s*(\d+)/),
@@ -120,7 +118,7 @@ export function allowedValueSets(truth) {
     Math.floor((newPrice * (100 - truth.upgradeDiscountPct)) / 100);
 
   return {
-    // Prices a manual may quote (free, ladder, upgrades, founder, derived owners)
+    // Prices a manual may quote (free, ladder, upgrades, derived owners)
     prices: new Set([
       0,
       truth.proPrice,
@@ -131,14 +129,13 @@ export function allowedValueSets(truth) {
       truth.upgradePriceOwner,
       ownerPrice(truth.upgradePriceNew),
       ownerPrice(truth.proFullPrice),
-      truth.founderPrice,
     ]),
     // Device counts a manual may quote (Free "no limit" reads as 0-cap)
     deviceCounts: new Set([truth.freeMaxDevices, truth.proMaxDevices]),
     // Bookmark caps: Free cap only (Pro is unlimited — the word, not a number)
     bookmarkCaps: new Set([truth.freeMaxBookmarks]),
-    // Supply caps: early-bird units + founder units
-    supplyCaps: new Set([truth.earlyBirdCapEarly, truth.founderLimitedSupply]),
+    // Supply caps: early-bird units
+    supplyCaps: new Set([truth.earlyBirdCapEarly]),
     refundDays: truth.refundDays,
     revalidationHours: truth.revalidationHours,
     recoveryWords: truth.recoveryWords,
@@ -230,10 +227,10 @@ const UNLIMITED_RE =
 const RECOVERY_WORD_RE =
   /(?:palabras?|words?|W[öo]rter?|parole|mots?|slov\w*|単語|个恢复词|恢复词|слова|слов|كلمات|מילים|शब्द|คำ|từ|kelime|słowa)/i;
 
-/** Offer-cap context: early-bird / founder supply claims ("Early Bird 200",
- * "Founder Edition … Limited 100"). On such lines, any explicitly-unit-ed
- * count must be a canonical supply cap (200 early birds / 100 founders). */
-const OFFER_LIMIT_RE = /early\s?bird|founder|pioneros?|gr[üu]nders?/i;
+/** Offer-cap context: early-bird supply claims ("Early Bird 200").
+ * On such lines, any explicitly-unit-ed count must be a canonical supply cap
+ * (200 early birds). */
+const OFFER_LIMIT_RE = /early\s?bird|pioneros?|gr[üu]nders?/i;
 
 // ── Number↔unit pairing ───────────────────────────────────────────────────
 /** The number and its unit noun must be ADJACENT (optional space/hyphen, or
@@ -376,7 +373,7 @@ export function evaluateManual(src, allowed, relLabel) {
       }
     }
 
-    // Offer-cap claims: early-bird / founder supply lines. Supply counts are
+    // Offer-cap claims: early-bird supply lines. Supply counts are
     // unit-less in practice ("primeros 200 compradores", "Early Bird 200"),
     // and generic unit pairing poisons these lines with years, SLA hours and
     // section refs — so only loose round hundreds are policed here. Prices on
@@ -475,7 +472,7 @@ function main() {
   console.log(
     `[check-manual-figures] ok: 30 manuals agree with code (freeCap=${result.truth.freeMaxBookmarks}, ` +
       `devices={${result.truth.freeMaxDevices},${result.truth.proMaxDevices}}, ` +
-      `prices=${result.truth.proEarlyBirdPrice}/${result.truth.proRegularPrice}/${result.truth.founderPrice}, ` +
+      `prices=${result.truth.proEarlyBirdPrice}/${result.truth.proRegularPrice}, ` +
       `refund=${result.truth.refundDays}d, revalidation=${result.truth.revalidationHours}h, ` +
       `recovery=${result.truth.recoveryWords}w, minPassword=${result.truth.minPasswordLength})`,
   );

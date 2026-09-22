@@ -180,7 +180,7 @@ describe("extractTruth", () => {
     const t = extractTruth(
       MINI_CONFIG,
       `export const PRICING_CONFIG = { tiers: [
-        { id: "founder", limitations: { maxDevices: 3 } },
+        { id: "pro", limitations: { maxDevices: 3 } },
         { id: "free", limitations: { maxDevices: 0 } },
       ] };`,
     );
@@ -191,7 +191,7 @@ describe("extractTruth", () => {
     const t = extractTruth(
       MINI_CONFIG,
       `export const PRICING_CONFIG = { tiers: [
-        { id: "founder", limitations: { maxBookmarks: 5000 } },
+        { id: "pro", limitations: { maxBookmarks: 5000 } },
         { id: "free", limitations: { maxBookmarks: 1000 } },
       ] };`,
     );

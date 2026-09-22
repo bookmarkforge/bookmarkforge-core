@@ -54,6 +54,10 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import process from "node:process";
+import {
+  LANDING_CODES,
+  PRIMARY_LOCALE_CODES,
+} from "./landing-registry.mjs";
 
 const DEFAULT_ROOT = process.cwd();
 
@@ -358,7 +362,61 @@ export function checkLandingHtml(html, lang, expectedWedgeSlot) {
 }
 
 // ── Gate mode ────────────────────────────────────────────────────────────────
-const PRIMARY_LANGS = ["en", "es", "fr", "de", "pt", "it"];
+/**
+ * The six launch locales — owned by scripts/landing-registry.mjs, never a
+ * second copy here. They decide the Free-card wedge slot (primary → slot 0)
+ * and which locales are validated from their full translation sources.
+ */
+const PRIMARY_LANGS = PRIMARY_LOCALE_CODES;
+
+/**
+ * The primary/secondary split has to stay honest against its OWN artifacts:
+ * the primaries are read from scripts/translations/<code>.json, and every
+ * other landing locale must carry an entry in scripts/landing-translations
+ * .json. Without this pin, adding a locale to the registry would silently drop
+ * it from this gate (no violation either way) instead of failing it.
+ *
+ * @returns violations in the gate's shape ({ file, where, rule, detail }).
+ */
+export function validateSecondaryCoverage({
+  landingTranslations,
+  langs = LANDING_CODES,
+  primaryLangs = PRIMARY_LANGS,
+}) {
+  const violations = [];
+  const present = new Set(Object.keys(landingTranslations ?? {}));
+  const expected = new Set(langs.filter((lang) => !primaryLangs.includes(lang)));
+  const file = "scripts/landing-translations.json";
+
+  for (const lang of expected) {
+    if (!present.has(lang)) {
+      violations.push({
+        file,
+        where: `locale ${lang}`,
+        rule: "secondary-coverage",
+        detail:
+          `no translation entry for "${lang}" — every landing locale outside ` +
+          `the ${primaryLangs.length} primaries (${primaryLangs.join(", ")}) ` +
+          "needs one, or this gate never reads its copy",
+      });
+    }
+  }
+  for (const lang of present) {
+    if (!expected.has(lang)) {
+      violations.push({
+        file,
+        where: `locale ${lang}`,
+        rule: "secondary-coverage",
+        detail: primaryLangs.includes(lang)
+          ? `"${lang}" is a primary locale — it is validated from ` +
+            `scripts/translations/${lang}.json, not from this file`
+          : `"${lang}" is not a landing locale (registry has ` +
+            `${langs.length})`,
+      });
+    }
+  }
+  return violations;
+}
 /** File stem → locale for the rendered pages (landing.html is en). */
 function localeOfFileStem(stem) {
   return stem === "landing" ? "en" : stem;
@@ -415,6 +473,9 @@ if (IS_MAIN) {
         violations.push({ file: "scripts/landing-translations.json", ...p });
       }
     }
+    // The split itself: the 24 secondary locales are the registry minus the
+    // six primaries — a new locale cannot slip past this gate unnoticed.
+    violations.push(...validateSecondaryCoverage({ landingTranslations: T }));
   } catch (e) {
     violations.push({ file: "scripts/landing-translations.json", where: "file", rule: "io", detail: e.message });
   }

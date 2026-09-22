@@ -22,12 +22,33 @@ import { defineConfig } from "@playwright/test";
 // (8 MiB, t=1); a dev server without it spends ~28 s per vault setup.
 // reuseExistingServer stays true from the base config: this profile is a
 // local loop; nightly/CI run the full configs instead.
-export default defineConfig(baseConfig, {
+//
+// PROJECT SELECTION IS PART OF THE CONTRACT (fixed 2026-09-22): a
+// project-level `testMatch` OVERRIDES the top-level one, so the base config's
+// `mobile` project — narrowed to dashboard-banner-cls for the ADR-055
+// measurement battery — leaked into this gate and the run executed two extra
+// tests it can never satisfy: the desktop battery self-skips outside the
+// chromium project, and the mobile battery needs setup/measurement timing a
+// <60 s vault gate does not control. The gate then reported a red that had
+// nothing to do with the vault path. Pinning the project list here keeps the
+// gate exactly the three pillar specs, and keeps any future project from
+// silently joining this budget (same rule as the file list above).
+// NOTE — why this profile does NOT use `defineConfig(baseConfig, { … })` like
+// its siblings: that form MERGES `projects` by name instead of replacing the
+// array. Verified with `--list`: an explicit chromium-only list still left the
+// base config's `mobile` project selected, which is the leak this file exists
+// to close. A single object argument is used verbatim, so the spread below is
+// load-bearing, not style.
+export default defineConfig({
+  ...baseConfig,
   testMatch: [
     "tests/e2e/vault-init.spec.ts",
     "tests/e2e/vault-lock-button.spec.ts",
     "tests/e2e/vault-wrong-password.spec.ts",
   ],
+  projects: (baseConfig.projects ?? []).filter(
+    (project) => project.name === "chromium",
+  ),
   fullyParallel: true,
   retries: 0,
   reporter: "line",

@@ -74,6 +74,7 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/legacy-compatibility-plan.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/legacy-schema-version-map.md` | vivo | Mapa de compatibilidad de esquemas generado desde src/db/schema.ts. |
 | `docs/legal-closing-package.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/locale-addition-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/manual-usuario-ar.md` | vivo | Manual localizado de usuario. |
 | `docs/manual-usuario-bg.md` | vivo | Manual localizado de usuario. |
 | `docs/manual-usuario-cs.md` | vivo | Manual localizado de usuario. |

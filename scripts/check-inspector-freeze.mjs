@@ -102,6 +102,11 @@ const KNOWN_GATES = {
   "check:brand-logo": "meta",
   "check:boundaries": "meta",
   "check:e2e-helpers": "meta",
+  // e2e fidelity: the vault fixtures (setupVault/dismissOverlays/skipPassword)
+  // must not silently neutralize the surface a spec is about
+  // (dashboard-banner-cls / ADR-055 is the canonical case). Like
+  // check:e2e-helpers it polices the test suite, not the documentation format.
+  "check:e2e-fixture-neutralization": "meta",
   "check:baseline-drift": "meta",
   "check:baseline-gaps": "meta",
   "check:tailwind-drift": "meta",

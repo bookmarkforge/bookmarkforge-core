@@ -32,16 +32,22 @@ import { pathToFileURL } from "node:url";
  * Exit code 0 when every check passes; 1 with a per-page failure list.
  */
 
-import { LANDING_CODES } from "./landing-registry.mjs";
+import {
+  LANDING_CODES,
+  LEGAL_LOCALE_CODES,
+} from "./landing-registry.mjs";
 
 const BASE = (process.argv[2] ?? "http://127.0.0.1:4173").replace(/\/+$/, "");
 const FILES_MODE = process.argv.includes("--files");
 
-/** Languages of each hreflang cluster. The landing set derives from the
- * locale registry (30) so it can never lag the generated pages; the legal
- * set is a content decision (six languages, mirroring
- * scripts/privacy-translations.json), so it stays an explicit list. */
-const LEGAL_LANGS = ["en", "es", "fr", "de", "pt", "it"];
+/** Languages of each hreflang cluster — both owned by the locale registry:
+ * the landing set (30) so it can never lag the generated pages, and the legal
+ * set (the six reviewed primaries, see LEGAL_LOCALE_CODES there) so the
+ * cluster cannot be widened or narrowed without the legal surfaces following.
+ * The legal PAGES exist for every locale (check-sitemap-coverage); only these
+ * six are reviewed by hand, which is why the completeness check below is
+ * per-cluster rather than one shared list. */
+const LEGAL_LANGS = LEGAL_LOCALE_CODES;
 /** Expected hreflang set per cluster — the completeness check is per-cluster. */
 const EXPECTED_LANGS = { landing: LANDING_CODES, legal: LEGAL_LANGS };
 

@@ -14,7 +14,7 @@ Estos son los precios finales y oficiales del lanzamiento:
 | **Free** | **$0** | Para siempre. 1.000 bookmarks, sin límite de dispositivos (cada dispositivo tiene su propia bóveda). Sin caducidad. |
 | **Pro Early Bird** | **$59** | Solo los primeros **200** compradores. `priceValidUntil: 2026-12-31`. |
 | **Pro Regular v1** | **$79** | El precio oficial de v1 tras agotar Early Bird (6-12 meses). |
-| **Founder** | **$99** | Limitado a **100**. Idéntico a Pro en código + badge + beta v2 + 60% off de por vida en futuras majors. |
+| **** 
 | **v2.0 (futuro, 12-18 meses)** | **$89 nuevos / $35 owners v1** | 60% off grabado en los términos legales. Así nace la recurrencia sin suscripción. |
 | **v3.0 (futuro)** | **$99 nuevos / $39 owners** | Mismo patrón. |
 
@@ -22,13 +22,13 @@ Estos son los precios finales y oficiales del lanzamiento:
 
 - **$59 early bird:** lo bastante bajo para impulso de lanzamiento, lo bastante alto para no devaluar el cifrado + local AI. FOMO real con 200 unidades.
 - **$79 regular:** ancla por debajo del psicológico $100. Equivale a 2 años de Raindrop o 1,3 años de Instapaper — "paga una vez vs $96-120/año" es el mensaje. Es el precio que se defiende ante la competencia verificada en 2026.
-- **$99 Founder:** misma cosa por más dinero = margen 100% del extra; el badge y la beta son gratis de producir. Cap 100 = escasez honesta.
+
 - **v2 a 60% off:** recurrencia sin suscripción. 1.000 compradores de v1 a $79 → $79k año 1; si el 30% actualiza a v2 a $35 → +$10.5k sin adquirir un solo cliente nuevo.
 - **Se descartó:** $49 (devalúa el producto), suscripción mensual (traiciona a la audiencia local-first, compite contra Raindrop $3/mes y pierde), Starter/Team tiers (parálisis de elección con 0 datos de segmentación).
 
 ## 3. Fases de precio y sus gatillos
 
-| Fase | Pro | Founder | Cuándo se activa |
+| Fase | Pro |  | Cuándo se activa |
 |---|---|---|---|
 | **Early** (activa) | $59 | $99 | Lanzamiento → agotar 200 unidades o 2026-12-31 |
 | **Regular** (siguiente) | $79 | $99 | Al agotar Early Bird. Cambiar `earlyBird.phase: "regular"` en `src/constants/pricing.ts` |
@@ -46,7 +46,7 @@ Estos son los precios finales y oficiales del lanzamiento:
 
 | Fecha | Cambio | Motivo |
 |---|---|---|
-| 2026-09-14 | Decisión inicial congelada: Free $0 / Pro $59→$79 / Founder $99 / v2 $89/$35 | Lanzamiento v1 |
+| 2026-09-14 | Decisión inicial congelada: Free $0 / Pro $59→$79 /  $99 / v2 $89/$35 | Lanzamiento v1 |
 | 2026-09-16 | El Core público pasa a MIT; los componentes Pro permanecen propietarios | Decisión Open Core (ver §6) |
 
 ## 6. Decisión de licencia del repo público — CERRADA

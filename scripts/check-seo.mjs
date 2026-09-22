@@ -23,7 +23,9 @@
  *   coherent with the EN landing's brand identity (og:site_name, og:image).
  *
  *   The legal pages (public/privacy-and-terms.html + the five localized
- *   copies at /<lang>/privacy-and-terms.html) must carry canonical + the
+ *   copies at /<lang>/privacy-and-terms.html — the reviewed set is
+ *   registry-owned, see LEGAL_LOCALE_CODES; the other 24 locales' legal pages
+ *   are generated and their translations pinned below) must carry canonical + the
  *   full 6-language hreflang set + OG/Twitter, like the landings, but are
  *   NOT required to declare the schema.org JSON-LD blocks (no FAQPage,
  *   SoftwareApplication etc. on a legal document).
@@ -67,6 +69,7 @@ import { pathToFileURL } from "node:url";
 import {
   LANG_LINK_HREFS as REGISTRY_LINK_HREFS,
   LANDING_CODES as REGISTRY_ALL_CODES,
+  LEGAL_LOCALE_CODES as REGISTRY_LEGAL_CODES,
   LOCALIZED_LANDING_CODES as REGISTRY_LOCALIZED_CODES,
   LANDING_LANGS as REGISTRY_LANGS,
   LANDING_LOCALES as REGISTRY_LOCALES,
@@ -168,15 +171,16 @@ export function ogImageForFile(file) {
   return entry ? entry.ogImage : DEFAULT_OG_IMAGE;
 }
 
-/** Every legal-page language: hreflang token and canonical path. */
-const LEGAL_LANG_PATHS = {
-  en: "/privacy-and-terms.html",
-  es: "/es/privacy-and-terms.html",
-  fr: "/fr/privacy-and-terms.html",
-  de: "/de/privacy-and-terms.html",
-  pt: "/pt/privacy-and-terms.html",
-  it: "/it/privacy-and-terms.html",
-};
+/** Every legal-page language: hreflang token and canonical path. The SET is
+ * registry-owned (the six reviewed primaries), so the legal world is one edit
+ * in scripts/landing-registry.mjs instead of six (this gate, the hreflang
+ * graph, nginx-render's legal targets and the page generator). */
+const LEGAL_LANG_PATHS = Object.fromEntries(
+  REGISTRY_LEGAL_CODES.map((lang) => [
+    lang,
+    lang === "en" ? "/privacy-and-terms.html" : `/${lang}/privacy-and-terms.html`,
+  ]),
+);
 
 /**
  * Legal pages (privacy + terms) in every landing language. Same head
@@ -185,12 +189,15 @@ const LEGAL_LANG_PATHS = {
  * (no 200 rewrite), so each canonical is its own URL.
  */
 export const LEGAL_PAGES = Object.entries(LEGAL_LANG_PATHS).map(
-  ([lang, path], i) => ({
+  ([lang, path]) => ({
     file: path === "/privacy-and-terms.html" ? "public/privacy-and-terms.html" : `public${path}`,
     lang,
-    locale:
-      { es: "es_ES", fr: "fr_FR", de: "de_DE", pt: "pt_PT", it: "it_IT" }[lang] ?? "en_US",
-    alternateLocale: i === 0 ? "es_ES" : "en_US",
+    // OG locales come from the registry, i.e. the same values the landing for
+    // that language carries: a legal page can no longer advertise a region its
+    // own landing disagrees with.
+    locale: REGISTRY_LOCALES.find((l) => l.lang === lang)?.locale ?? "en_US",
+    alternateLocale:
+      REGISTRY_LOCALES.find((l) => l.lang === lang)?.alternateLocale ?? "en_US",
     canonical: `${SITE_URL}${path}`,
     path,
     alternates: [
@@ -202,6 +209,57 @@ export const LEGAL_PAGES = Object.entries(LEGAL_LANG_PATHS).map(
     ],
   }),
 );
+
+/**
+ * The legal-translation artifact must cover exactly the locales the legal
+ * pages are GENERATED for: every landing locale except the five localized
+ * primaries (EN is included as the source language). The six reviewed legal
+ * pages are hand-written, so an entry for one of them would be a stale
+ * machine translation waiting to overwrite reviewed copy, while a missing
+ * entry for a new locale means its legal page can never be produced in its own
+ * language — the two failure modes this pin exists to catch.
+ *
+ * All arguments are raw file contents (pure function — testable without
+ * touching the repo). Returns an array of failure strings.
+ */
+export function validateLegalTranslationCoverage({
+  translationsJson,
+  langs = REGISTRY_ALL_CODES,
+  primaryLangs = REGISTRY_LEGAL_CODES,
+}) {
+  let parsed;
+  try {
+    parsed = JSON.parse(translationsJson);
+  } catch (error) {
+    return [
+      `scripts/privacy-translations.json: not valid JSON (${error.message})`,
+    ];
+  }
+  const failures = [];
+  const present = new Set(Object.keys(parsed));
+  // The five localized primaries are reviewed by hand; EN carries the source
+  // text the generator adapts from, so it keeps its entry.
+  const expected = new Set(
+    langs.filter((lang) => !(primaryLangs.includes(lang) && lang !== "en")),
+  );
+  for (const lang of expected) {
+    if (!present.has(lang)) {
+      failures.push(
+        `scripts/privacy-translations.json: no translation entry for ` +
+          `"${lang}" — every generated legal page needs one`,
+      );
+    }
+  }
+  for (const lang of present) {
+    if (!expected.has(lang)) {
+      failures.push(
+        `scripts/privacy-translations.json: unexpected entry "${lang}" — the ` +
+          `reviewed legal pages are hand-written (${primaryLangs.join(", ")})`,
+      );
+    }
+  }
+  return failures;
+}
 
 /**
  * Key legal terminology that MUST stay translated consistently across the
@@ -1030,6 +1088,18 @@ export function runCheck() {
   } else {
     console.log(
       `${TAG} ok  language negotiation + manual preference (nginx.conf + functions/_middleware.js + netlify.toml + landing.js, 302 to all ${LANDING_LANG_CODES.length} localized landings)`,
+    );
+  }
+
+  const legalTranslationFailures = validateLegalTranslationCoverage({
+    translationsJson: readOrFail("scripts/privacy-translations.json", failures),
+  });
+  if (legalTranslationFailures.length > 0) {
+    failures.push(...legalTranslationFailures);
+  } else {
+    console.log(
+      `${TAG} ok  legal translations cover every generated legal page ` +
+        `(${REGISTRY_LEGAL_CODES.length} reviewed by hand)`,
     );
   }
 

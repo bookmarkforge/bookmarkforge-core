@@ -46,6 +46,7 @@ import {
   REPORTING_ENDPOINTS_HEADER,
 } from "./csp-config.js";
 import {
+  LEGAL_LOCALE_CODES as REGISTRY_LEGAL,
   LOCALIZED_LANDING_CODES as REGISTRY_LOCALIZED,
   PREF_LANGS as REGISTRY_PREF,
 } from "./landing-registry.mjs";
@@ -593,7 +594,10 @@ const TARGETS_SURGICAL = [
     render: (existing) => replaceDomainInFile(existing, APP_DOMAIN),
   },
   // Localized legal pages (canonical/hreflang/OG links carry the domain).
-  ...["es", "fr", "de", "pt", "it"].map((lang) => ({
+  // EN's root page is handled explicitly above; the rest come from the
+  // registry's reviewed legal set — the same six check-seo and the hreflang
+  // graph use, so a legal locale cannot be added to one and missed here.
+  ...REGISTRY_LEGAL.filter((lang) => lang !== "en").map((lang) => ({
     label: `public/${lang}/privacy-and-terms.html`,
     render: (existing) => replaceDomainInFile(existing, APP_DOMAIN),
   })),

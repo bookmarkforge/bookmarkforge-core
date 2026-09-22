@@ -46,7 +46,6 @@ export const PROBES = {
   proFullPrice: 12,
   upgradePriceNew: 13,
   upgradePriceOwner: 14,
-  founderPrice: 15,
   freeMaxBookmarks: 444,
   freeMaxDevices: 5,
   proMaxDevices: 7,
@@ -56,7 +55,6 @@ export const PROBES = {
   minPasswordLength: 16,
   upgradeDiscountPct: 55,
   earlyBirdCapEarly: 250,
-  founderLimitedSupply: 150,
 };
 
 /** Group failure strings (they embed "label:line") by doc file label. */

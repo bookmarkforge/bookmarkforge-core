@@ -16,7 +16,7 @@ sin que nadie lo note hasta que un lector lo sufre.
 
 Los manuales son la superficie con más cifras por palabra del proyecto:
 precios ($0/$59/$79/$89/$35/$99/$39), límites (1.000 marcadores Free,
-dispositivos, 200 early birds, 100 founders), plazos (reembolso 30 días,
+dispositivos, 200 early birds), plazos (reembolso 30 días,
 revalidación de licencia cada 48 horas) y política (frase de recuperación de
 24 palabras, contraseña mínima de 12 caracteres). Hoy ninguna barrera evita
 que una edición manual —o una traducción nueva— introduzca una cifra que el

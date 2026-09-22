@@ -194,7 +194,7 @@ function main() {
   console.log(
     `[check-page-figures] ok: ${result.scanned} pages agree with code (freeCap=${result.truth.freeMaxBookmarks}, ` +
       `devices={${result.truth.freeMaxDevices},${result.truth.proMaxDevices}}, ` +
-      `prices=${result.truth.proEarlyBirdPrice}/${result.truth.proRegularPrice}/${result.truth.founderPrice}, ` +
+      `prices=${result.truth.proEarlyBirdPrice}/${result.truth.proRegularPrice}, ` +
       `refund=${result.truth.refundDays}d, revalidation=${result.truth.revalidationHours}h, ` +
       `recovery=${result.truth.recoveryWords}w)`,
   );

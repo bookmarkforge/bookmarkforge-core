@@ -16,6 +16,7 @@ import {
   validateLandingHtml,
   validateLandingLangLinks,
   validateLanguageNegotiation,
+  validateLegalTranslationCoverage,
   validateLegalTerms,
   validateNoindexContent,
   validateSearchAction,
@@ -1091,5 +1092,53 @@ describe("og:image policy (card → page mapping)", () => {
       const html = readFileSync(page.file, "utf8");
       expect(metaContent(html, "og:image")).toBe(ogImageForFile(page.file));
     }
+  });
+});
+
+// ── The legal world's translation artifact ──────────────────────────────────
+describe("validateLegalTranslationCoverage", () => {
+  /** Every locale the legal pages are GENERATED for: the registry minus the
+   *  five localized reviewed primaries (EN keeps its entry, as the source). */
+  const generatedLocales = () => [
+    "en",
+    ...LANDING_LANG_CODES.filter(
+      (lang) => !["es", "fr", "de", "pt", "it"].includes(lang),
+    ),
+  ];
+
+  it("reports invalid JSON instead of throwing", () => {
+    expect(validateLegalTranslationCoverage({ translationsJson: "not json" })).toEqual([
+      expect.stringContaining("not valid JSON"),
+    ]);
+  });
+
+  it("names a missing locale and rejects a reviewed one", () => {
+    const complete = Object.fromEntries(
+      generatedLocales().map((lang) => [lang, {}]),
+    );
+    expect(
+      validateLegalTranslationCoverage({
+        translationsJson: JSON.stringify(complete),
+      }),
+    ).toEqual([]);
+
+    const missing = { ...complete };
+    delete missing.ja;
+    expect(
+      validateLegalTranslationCoverage({ translationsJson: JSON.stringify(missing) }),
+    ).toEqual([expect.stringContaining('"ja"')]);
+
+    expect(
+      validateLegalTranslationCoverage({
+        translationsJson: JSON.stringify({ ...complete, es: {} }),
+      }),
+    ).toEqual([expect.stringContaining("hand-written")]);
+  });
+
+  it("the real artifact covers the 25 generated locales", () => {
+    const json = readFileSync("scripts/privacy-translations.json", "utf8");
+    expect(generatedLocales()).toContain("en");
+    expect(Object.keys(JSON.parse(json))).toHaveLength(generatedLocales().length);
+    expect(validateLegalTranslationCoverage({ translationsJson: json })).toEqual([]);
   });
 });

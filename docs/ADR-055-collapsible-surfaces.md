@@ -1,7 +1,8 @@
 # ADR-055: Las superficies colapsables se colapsan y se ocultan con `visibility`
 
 - **Estado:** aceptado (`CollapsibleSurface` implementado y usado por los tres
-  banners del dashboard)
+  banners del dashboard). **Enmendado 2026-09-22:** el hold pasa de altura
+  *medida* a altura *natural* — ver "Enmienda 2026-09-22" al final.
 - **Fecha:** 2026-09-18
 
 ## Contexto
@@ -90,6 +91,25 @@ escritorio, Windows, bóveda recién creada con cero marcadores):
   | Escritorio | **0.068–0.085** (3 runs) | «good» (< 0.1) |
   | Móvil | **0.133–0.318** (2 runs, varianza alta) | fuera de «good» |
 
+  **Enmienda 2026-09-22 — la deuda móvil queda cerrada con el hold natural.**
+  La sonda de la batería (`tests/e2e/dashboard-banner-cls.spec.ts`) destapó
+  que el hold de altura *medida* perdía la carrera contra el primer pintado:
+  la caja pintaba con el estimado por defecto (160 px) antes de que llegara la
+  medición, y la corrección 160→531 px **se animaba** (curva de transición
+  visible: 160→312→516→531 en siete frames; CLS móvil 0.152 en la run de
+  2026-09-22). El hold usa ahora la **altura natural** (`height: auto`,
+  transiciones desactivadas mientras dura el hold): el contenido permanece
+  montado bajo `visibility: hidden`, que no afecta al layout, así que la caja
+  es exactamente tan alta como su contenido desde el primer layout — sin
+  medición que perder la carrera, sin estimado que corregir, sin nada que
+  animar. Medido tras la enmienda (misma batería): móvil `path=held`,
+  `heldAtBaseline=531px`, `total=0.0000`; el hold es la altura real desde el
+  primer layout. Ambos presupuestos de la batería se endurecen a la banda
+  «good» de CWV (< 0.1) en ambas baterías — de tripwire de regresión bruta a
+  exigencia de la banda buena. La reserva inicial no provoca shift cuando
+  ocurre antes del primer pintado (el layout inicial del usuario ya la
+  incluye); el spec lo verifica con el hold ya en sitio en la línea base.
+
   Fuentes atribuidas al propio banner (el bloque que crece) y al contenido que
   empuja (rejilla de funcionalidades, cabecera). El colapso tras descartar
   registra 0 (los shifts activados por interacción los excluye el navegador) y
@@ -104,6 +124,9 @@ escritorio, Windows, bóveda recién creada con cero marcadores):
   su arreglo designado (revelar desde un placeholder de altura medida, que
   elimina el shift sin reintroducir el vacío permanente) antes de instrumentar
   CLS real de usuarios móviles.
+  *(Deuda cerrada el 2026-09-22 por la enmienda anterior: el hold natural es
+  el «placeholder de altura medida» sin su defecto — la medición ya no corre
+  contra el primer pintado.)*
 - El residuo de espaciado no es cero: el `space-y-*` del contenedor del
   dashboard sigue aplicando su `margin-top` al hermano siguiente, así que una
   superficie colapsada deja a lo sumo el hueco de un párrafo. Llevarlo a cero

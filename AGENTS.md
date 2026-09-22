@@ -121,7 +121,8 @@ npm run check                   # the full gate chain (~40 check commands + lint
                                  # open-core, pro-imports, removed-deps, env,
                                  # workflows,
                                  # http-config, compose-config, runtime-config,
-                                 # boundaries, e2e-helpers, docs-markdown,
+                                 # boundaries, e2e-helpers,
+                                 # e2e-fixture-neutralization, docs-markdown,
                                  # docs-index, documented-npm-commands,
                                  # documented-doc-references,
                                  # release-target (ADR-058; blocking here and on
@@ -175,6 +176,16 @@ npm run check                   # the full gate chain (~40 check commands + lint
 - E2E: Playwright specs in `tests/e2e/` (browsers/multiuser/nightly/human-like
   configs); vault setup runs Argon2id, so on slow runners raise timeouts via
   `E2E_TIMEOUT_MULTIPLIER` instead of deleting waits.
+- **E2E fixture fidelity (MANDATORY):** the vault fixtures
+  (`setupVault`, `dismissOverlays`, `skipPassword`) reach the surface a spec
+  tests by CLICKING controls and WRITING state, so a spec whose subject is one
+  of those surfaces can be neutralized before its first assertion and still
+  pass (dashboard-banner-cls / ADR-055). A spec that touches a registered
+  surface's UI or storage must preserve it through the documenting option
+  (`{ keepBackupNotice: true }`, `{ dismissOnboarding: false }`) or declare a
+  reasoned `// fixture-neutralization-waiver: <surfaceIds> — <reason>`.
+  `npm run check:e2e-fixture-neutralization` enforces it, and rejects a new
+  dismissal added to the fixture without registering its surface.
 - Live test loop (local): `npm run test:fast:watch` re-runs only the
   fast-profile tests affected by the file you save. For browser-level
   feedback run `npm run e2e:ui` (Playwright UI mode over the full suite,

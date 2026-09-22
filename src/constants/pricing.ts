@@ -190,11 +190,6 @@ export const PRICING_CONFIG = {
         response: "48h (business days)",
         availability: "Mon–Fri, email + early access",
       },
-      founder: {
-        channel: "Email priority — bookmarkforge@proton.me (Founder)",
-        response: "24h (business days)",
-        availability: "Priority queue + beta access",
-      },
     },
     // Public commitment: where the line is drawn
     note: "Vault is encrypted — we cannot see your data. Forgot password cannot be recovered without the 24-word recovery phrase. Support never asks for your vault password or recovery phrase.",
@@ -249,7 +244,7 @@ export const PRICING_CONFIG = {
     anchoring: true,
     bundleEffect: true,
     lifetimePremium: "One-time payment vs $96-120/year from competitors. At 2 years you've already paid more with any other tool. BookmarkForge: pay once, own v1 forever.",
-    fomo: "Early Bird $59 (200 licenses) → Regular $79 → Full $99. Founder $99 limited 100.",
+    fomo: "Early Bird $59 (200 licenses) → Regular $79 → Full $99.",
     trial: "No trial paywall — Free 1,000 bookmarks forever to evaluate. Pro is lifetime of v1.",
   },
 
@@ -258,7 +253,6 @@ export const PRICING_CONFIG = {
     month1Target: 500,
     month6Target: 2000,
     year1Target: 5000,
-    // Founder cap 100 × $99 = $9.9k vanity revenue at no extra feature cost
   },
 };
 
@@ -282,16 +276,6 @@ export const LICENSE_FEATURES = {
     flashcards: true,
     pdf: true,
     support: "Email 48h",
-  },
-  founder: {
-    bookmarks: "∞ UNLIMITED",
-    devices: "3 devices",
-    ai: "Local AI (no API key)",
-    sync: "P2P (3 devices)",
-    graph: true,
-    flashcards: true,
-    pdf: true,
-    support: "Priority 24h + Beta",
   },
 };
 

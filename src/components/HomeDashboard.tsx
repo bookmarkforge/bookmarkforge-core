@@ -173,7 +173,7 @@ const HomeDashboard = function HomeDashboard({
   // ADR-055: the show decision is computed synchronously BEFORE first paint
   // (both backup timestamps and the dismissal snooze live in localStorage),
   // so the common cases render already-final. "held" = the sync decision
-  // says the banner WILL show: the surface holds its measured height with a
+  // says the banner WILL show: the surface holds its natural height with a
   // shimmer until the async check below confirms, and the reveal is a
   // visibility flip — zero layout shift. "hidden" = sync says no: the box
   // collapses from the start, no reservation for a banner that is not

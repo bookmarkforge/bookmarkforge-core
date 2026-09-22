@@ -109,8 +109,7 @@ function generatePage(code, t) {
         "offers": [
           { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD", "description": "1,000 bookmarks. Forever free." },
           { "@type": "Offer", "name": "Pro Lifetime v1 — Early Bird", "price": "59", "priceCurrency": "USD", "description": "Early Bird 200. Lifetime of v1, 12 months features, security forever, v2 60% off.", "priceValidUntil": "2026-12-31" },
-          { "@type": "Offer", "name": "Pro Lifetime v1", "price": "79", "priceCurrency": "USD", "description": "Regular. Lifetime of v1." },
-          { "@type": "Offer", "name": "Founder Edition", "price": "99", "priceCurrency": "USD", "description": "Same Pro v1 + Founder badge + beta. Limited 100." }
+          { "@type": "Offer", "name": "Pro Lifetime v1", "price": "79", "priceCurrency": "USD", "description": "Regular. Lifetime of v1." }
         ],
         "featureList": [
           "100% local storage", "End-to-end encryption", "Offline-first", "AI search", "Notion-style editor", "P2P sync"
@@ -134,11 +133,6 @@ function generatePage(code, t) {
             "@type": "Question",
             "name": t.faq3Q || "Payment & refund?",
             "acceptedAnswer": { "@type": "Answer", "text": t.faq3A || "30-day refund via Whop." }
-          },
-          {
-            "@type": "Question",
-            "name": t.faq4Q || "What about Founder?",
-            "acceptedAnswer": { "@type": "Answer", "text": t.faq4A || "Same Pro v1 + badge + beta. Limited 100." }
           },
           ...(t.faq5Q ? [{ "@type": "Question", "name": t.faq5Q, "acceptedAnswer": { "@type": "Answer", "text": t.faq5A } }] : []),
           ...(t.faq6Q ? [{ "@type": "Question", "name": t.faq6Q, "acceptedAnswer": { "@type": "Answer", "text": t.faq6A } }] : [])
@@ -393,16 +387,6 @@ ${priceFreeItems}
 ${priceProItems}
             </ul>
             <a href="https://whop.com/bookmarkforge" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">${t.priceProCta}</a>
-          </div>
-          <div class="price-card founder">
-            <span class="badge badge-founder">Founder — 100</span>
-            <h3>${t.priceFounderName || 'Founder'}</h3>
-            <div class="price">${t.priceFounderPrice || '$99'}<span>${t.priceFounderInterval || 'lifetime v1'}</span></div>
-            <p>${t.priceFounderDesc || 'Same Pro v1 + Founder badge + beta'}</p>
-            <ul>
-${(t.priceFounderItems || []).map(item => `              <li><span aria-hidden='true'>✅</span> ${item}</li>`).join("\n")}
-            </ul>
-            <a href="https://whop.com/bookmarkforge" class="btn-primary btn-block btn-founder" target="_blank" rel="noopener noreferrer">${t.priceFounderCta || 'Get Founder — $99'}</a>
           </div>
         </div>
         <p class="pricing-legal">${t.priceLegal || 'Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.'}</p>

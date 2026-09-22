@@ -202,21 +202,21 @@ The brain of the application:
 
 ### 7.1 Feature Comparison
 
-| Feature | Free | Pro | Founder |
-|---|---|---|---|
-| Price | $0 | $79 (lifetime) | $99 (lifetime) |
-| Bookmarks | 1,000 | Unlimited | Unlimited |
-| Devices | Unlimited | 3 + P2P sync | 3 + P2P sync |
-| AI with own API key | ✅ | ✅ | ✅ |
-| Local AI (WebLLM/Ollama) | ❌ | ✅ | ✅ |
-| RAG chat over your data | ❌ | ✅ | ✅ |
-| Flashcards + PDF/OCR | ❌ | ✅ | ✅ |
-| Advanced export (10+ formats) | ❌ | ✅ | ✅ |
-| Security vault (AES-GCM) | ❌ | ✅ | ✅ |
-| Support | Community | Email 48h | Email 24h + Beta |
-| v2/v3 discounts | ❌ | 60% off | 60% off |
-| Founder badge | ❌ | ❌ | ✅ |
-| Beta v2 | ❌ | ❌ | ✅ |
+| Feature | Free | Pro |
+|---|---|---|
+| Price | $0 | $79 (lifetime) |
+| Bookmarks | 1,000 | Unlimited |
+| Devices | Unlimited | 3 + P2P sync |
+| AI with own API key | ✅ | ✅ |
+| Local AI (WebLLM/Ollama) | ❌ | ✅ |
+| RAG chat over your data | ❌ | ✅ |
+| Flashcards + PDF/OCR | ❌ | ✅ |
+| Advanced export (10+ formats) | ❌ | ✅ |
+| Security vault (AES-GCM) | ❌ | ✅ |
+| Support | Community | Email 48h |
+| v2/v3 discounts | ❌ | 60% off |
+
+
 
 ### 7.2 How to Upgrade to Pro
 
@@ -228,9 +228,7 @@ The brain of the application:
 
 **Early Bird:** First 200 buyers pay $59 (sold out or until 2026-12-31). Regular price is $79.
 
-### 7.3 How to Upgrade to Founder
 
-Limited to **100 units**. Includes everything in Pro + badge, beta v2, and perpetual 60% discount on future major versions.
 
 ### 7.4 Future Updates (v2, v3)
 
@@ -380,7 +378,7 @@ Local AI uses WebGPU. On laptops, it may consume battery faster. Disable local A
 |---|---|---|
 | **Free** | Community — Docs + /help + GitHub Discussions | Best effort |
 | **Pro** | Email — bookmarkforge@proton.me | 48h (business days) |
-| **Founder** | Priority Email — bookmarkforge@proton.me | 24h (business days) |
+| **** | Priority Email — bookmarkforge@proton.me | 24h (business days) |
 
 **Security note:** Your vault is encrypted. We cannot see your data. Lost password = lost data. Support will never ask for your password or recovery phrase.
 

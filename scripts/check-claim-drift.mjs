@@ -251,13 +251,13 @@ const DEVICE_UNIT =
  * Free/pro disambiguators for the free-device rule: a line counts as FREE-tier
  * copy if it names Free (any of the 30 locales' "free/gratis/gratuit/kostenlos/…"
  * or a locale JSON key like app_freeTier*) and does NOT lean on the paid tiers
- * (pro/unlock/founder) — "Free forever. Pro unlocks 3-device sync" must not be
+ * (pro/unlock) — "Free forever. Pro unlocks 3-device sync" must not be
  * treated as Free copy.
  */
 const FREE_TIER_CONTEXT =
   "free|gratis|gratuit[oa]?|gratuit|kostenlos|免费|無料|무료|бесплатн|ücretsiz|مجانا?|grátis|app_freeTier|app_free";
 const PRO_TIER_CONTEXT =
-  "pro\b|pro\.|unlock|unlocks|desbloque|débloque|freischalt|premium\b|founder\b|app_pro|app_founder";
+  "pro\b|pro\.|unlock|unlocks|desbloque|débloque|freischalt|premium\b|app_pro";
 const BOOKMARK_UNIT =
   "bookmarks?|Bookmarks?|marcadores?|marcadors?|Lesezeichen|ブックマーク|书签|즐겨찾기|закладок|záložky|könyvjelző|penanda";
 /**
@@ -382,7 +382,7 @@ export function buildRules(truth) {
       description: `Free-tier device-count claims must equal the free tier's maxDevices (${truth.freeDeviceCap ?? "MISSING"}) — any-device policy`,
       // Scoped to lines that plausibly describe the FREE tier (see the
       // FREE_TIER_CONTEXT / PRO_TIER_CONTEXT disambiguators above): "free"-named
-      // copy without a pro/unlock/founder lean. This is what makes the
+      // copy without a pro/unlock lean. This is what makes the
       // any-device positioning non-regressible — reverting Free to "1 device"
       // in any marketing surface fails the gate here.
       context: new RegExp(String.raw`(?:${FREE_TIER_CONTEXT})`, "iu"),

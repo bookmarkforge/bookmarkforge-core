@@ -198,6 +198,13 @@ export const TtsPlayer = ({
                 : t("app_pause")
               : t("app_listen")
           }
+          aria-label={
+            isPlaying
+              ? isPaused
+                ? t("app_resume")
+                : t("app_pause")
+              : t("app_listen")
+          }
         >
           {loading ? (
             <Loader2 className="size-4 animate-spin" />

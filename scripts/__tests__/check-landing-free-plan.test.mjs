@@ -21,8 +21,10 @@ import {
   findDeviceCountClaim,
   isWedgeLine,
   normalizeCapNumbers,
+  validateSecondaryCoverage,
   WEDGE_TABLE,
 } from "../check-landing-free-plan.mjs";
+import { LANDING_CODES, PRIMARY_LOCALE_CODES } from "../landing-registry.mjs";
 
 // ── Rule A: cap normalization ────────────────────────────────────────────────
 describe("normalizeCapNumbers", () => {
@@ -333,5 +335,57 @@ describe("freeze on the real repo tree", () => {
     for (const [lang, t] of Object.entries(T)) {
       expect(checkSecondarySource(lang, t), lang).toEqual([]);
     }
+  });
+});
+
+// ── The primary/secondary split vs its artifact ──────────────────────────────
+describe("validateSecondaryCoverage", () => {
+  /** A file covering exactly the registry's non-primary locales. */
+  const secondaries = Object.fromEntries(
+    LANDING_CODES.filter((lang) => !PRIMARY_LOCALE_CODES.includes(lang)).map(
+      (lang) => [lang, {}],
+    ),
+  );
+
+  it("accepts the registry's secondary set", () => {
+    expect(validateSecondaryCoverage({ landingTranslations: secondaries })).toEqual(
+      [],
+    );
+  });
+
+  it("fails a locale the registry knows but the artifact does not", () => {
+    const incomplete = { ...secondaries };
+    delete incomplete.ja;
+    const violations = validateSecondaryCoverage({ landingTranslations: incomplete });
+    expect(violations).toHaveLength(1);
+    expect(violations[0].detail).toContain('"ja"');
+    expect(violations[0].rule).toBe("secondary-coverage");
+  });
+
+  it("fails an entry for a primary locale (its source is the full file)", () => {
+    const violations = validateSecondaryCoverage({
+      landingTranslations: { ...secondaries, es: {} },
+    });
+    expect(violations).toHaveLength(1);
+    expect(violations[0].detail).toContain("primary locale");
+  });
+
+  it("fails an entry for a locale the registry does not know", () => {
+    const violations = validateSecondaryCoverage({
+      landingTranslations: { ...secondaries, xx: {} },
+    });
+    expect(violations).toHaveLength(1);
+    expect(violations[0].detail).toContain("not a landing locale");
+  });
+
+  it("the real artifact covers exactly the 24 secondaries", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { join } = await import("node:path");
+    const root = join(import.meta.dirname, "..", "..");
+    const T = JSON.parse(
+      readFileSync(join(root, "scripts", "landing-translations.json"), "utf8"),
+    );
+    expect(Object.keys(T)).toHaveLength(LANDING_CODES.length - PRIMARY_LOCALE_CODES.length);
+    expect(validateSecondaryCoverage({ landingTranslations: T })).toEqual([]);
   });
 });

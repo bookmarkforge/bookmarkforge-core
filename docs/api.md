@@ -1,17 +1,17 @@
-# API del servidor companion
+# Companion server API
 
-BookmarkForge expone un servidor companion para señalización P2P, salud, licencias, eventos de cliente, analytics y diagnósticos administrativos.
+BookmarkForge exposes a companion server for P2P signaling, health, licenses, client events, analytics, and administrative diagnostics.
 
-El contrato normativo está en [`docs/openapi.yaml`](./openapi.yaml). Los endpoints protegidos aplican validación de origen, rate limiting, límites de cuerpo y tokens administrativos cuando corresponde.
+The normative contract is in [`docs/openapi.yaml`](./openapi.yaml). Protected endpoints apply origin validation, rate limiting, body limits, and admin tokens where appropriate.
 
-## Endpoints principales
+## Main endpoints
 
-- `GET /health`: healthcheck mínimo.
-- `POST /api/license/activate`: activación de licencia.
-- `POST /api/license/validate`: validación de licencia.
-- `POST /api/license/entitlement`: resolución server-authoritative del plan.
-- `POST /api/client-events`: eventos técnicos redactados.
-- `POST /api/analytics/events`: analytics agregados y opt-in.
-- `GET /admin`: diagnósticos de señalización, protegido por token.
+- `GET /health`: minimal healthcheck.
+- `POST /api/license/activate`: license activation.
+- `POST /api/license/validate`: license validation.
+- `POST /api/license/entitlement`: server-authoritative plan resolution.
+- `POST /api/client-events`: redacted technical events.
+- `POST /api/analytics/events`: aggregated opt-in analytics.
+- `GET /admin`: signaling diagnostics, protected by token.
 
-El servidor no recibe el contenido del vault ni actúa como proxy general de proveedores AI.
+The server does not receive vault content and does not act as a general proxy for AI providers.

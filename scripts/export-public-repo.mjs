@@ -64,6 +64,7 @@ const PUBLIC_DOCS = new Set([
   "api.md",
   "openapi.yaml",
   "server-api-index.md",
+  "index.md",
    "ADR-001-check-static-brand.md",
    "ADR-019-argon2id-migration.md",
    "ADR-026-post-audit-hardening-wave-1.md",

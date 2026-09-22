@@ -1,43 +1,43 @@
 # Changelog
 
-Cambios por versión, del más reciente al más antiguo. Cada entrada cita los commits que la componen, para poder auditarla contra el historial.
+Changes by version, from most recent to oldest. Each entry cites the commits that compose it, so it can be audited against the history.
 
-## [1.0.0] — 2026-09-19 · rama `release/v1.0.0`
+## [1.0.0] — 2026-09-19 · branch `release/v1.0.0`
 
-**Sin publicar:** el primer push a `origin` sigue pendiente, así que esta versión todavía no existe en el remoto.
+**Unpublished:** the first push to `origin` is still pending, so this version does not yet exist on the remote.
 
-Base de la rama: `121d13f` (padre) → `bd259ea` (punta). Son 10 commits y cubren tres frentes: cierre de fugas y carreras en la bóveda, integridad verificable de los backups remotos, y gobernanza documental vigilada por gates de CI.
+Branch base: `121d13f` (parent) → `bd259ea` (tip). These are 10 commits covering three fronts: vault leak and race closure, verifiable remote backup integrity, and document governance guarded by CI gates.
 
-### Seguridad y bóveda
+### Security and vault
 
-- **Fuga de clave en el desbloqueo** (`c9f5804`): si falla la creación del token de verificación durante el desbloqueo, la clave de dispositivo se zeroiza y el vault queda bloqueado. La regresión cubre el fallo de `crypto.subtle.sign`.
-- **Carrera de sales KDF entre pestañas** (`c9f5804`): las adopciones se serializan, de modo que una lectura lenta y obsoleta ya no puede reinstalar una sal retirada después de que aterrizara una adopción más nueva; la generación de ciclo de vida descarta el trabajo pendiente al parar o reiniciar.
-- **Derivación en vuelo vs. ciclo de vida** (`c9f5804`): la persistencia del wrapper se aborta cuando la clave de dispositivo cambió durante una derivación Argon2id en curso (bloqueo o cierre a mitad de rewrap).
-- **Contrato de bloqueo en la UI** (`c9f5804`): cuando una rotación hermana fuerza el bloqueo fail-closed, el shell de React se bloquea mediante `useSecurityStore.lock()`. El bloqueo criptográfico por sí solo dejaba un vault muerto detrás de una interfaz viva (ADR-046).
+- **Key leak on unlock** (`c9f5804`): if verification token creation fails during unlock, the device key is zeroized and the vault becomes locked. The regression covers the failure of `crypto.subtle.sign`.
+- **KDF salt race between tabs** (`c9f5804`): adoptions are serialized, so a slow stale read can no longer reinstall a retired salt after a newer adoption lands; lifecycle generation discards pending work on stop or restart.
+- **In-flight derivation vs. lifecycle** (`c9f5804`): wrapper persistence is aborted when the device key changed during an in-flight Argon2id derivation (lock or close mid-rewrap).
+- **Lock contract in UI** (`c9f5804`): when a sibling rotation forces fail-closed lock, the React shell locks via `useSecurityStore.lock()`. Cryptographic lock alone left a dead vault behind a live interface (ADR-046).
 
-### Decodificación defensiva
+### Defensive decoding
 
-- **Decodificador compartido** (`239e922`): `decodeDataUrlToBytes` se suma a `decodeDefensiveBase64(Async)` en el módulo de Base64 defensivo. La validación estricta de charset y padding y la cota de tamaño decodificado se aplican antes de cualquier reserva de memoria; la decodificación escribe por bloques en un único búfer pre-dimensionado y la entrada malformada devuelve `null` en lugar de lanzar una excepción en el camino feliz del llamador.
-- **Refuerzos heredados** (`239e922`): ajustes pendientes en `utils/` (almacenamiento RxDB, resiliencia, serialización segura de errores y JSON, descargas, diagnóstico E2E, escaneos de auditoría y conocimiento, matriz de compatibilidad heredada, formato de audio).
-- **Duplicados eliminados** (`6d4e73a`): los tres parsers `dataUrlToBytes` repetidos (adjuntos de documentos, `FolderSyncService`, `exporter.formatters`) y el decodificador cacheado de TTS delegan ahora en el decodificador compartido, con cotas de tamaño por contexto. Los payloads percent-encoded mantienen una ruta acotada de `decodeURIComponent` que antes no tenía límite.
-- **Contraseñas de backup** (`6d4e73a`): export e import normalizan la contraseña (trim) de la misma forma. Antes discrepaban, así que una contraseña compuesta solo de espacios podía producir un `.json` en claro que igualmente declaraba la extensión cifrada `.bmf`.
+- **Shared decoder** (`239e922`): `decodeDataUrlToBytes` joins `decodeDefensiveBase64(Async)` in the defensive Base64 module. Strict charset and padding validation and decoded size quota are applied before any memory reservation; decoding writes in blocks to a single pre-sized buffer and malformed input returns `null` instead of throwing an exception in the caller's happy path.
+- **Inherited hardenings** (`239e922`): pending adjustments in `utils/` (RxDB storage, resilience, safe error and JSON serialization, downloads, E2E diagnostics, audit and knowledge scans, legacy compatibility matrix, audio format).
+- **Duplicates removed** (`6d4e73a`): the three repeated `dataUrlToBytes` parsers (document attachments, `FolderSyncService`, `exporter.formatters`) and the cached TTS decoder now delegate to the shared decoder, with size quotas per context. Percent-encoded payloads maintain a bounded `decodeURIComponent` path that previously had no limit.
+- **Backup passwords** (`6d4e73a`): export and import normalize the password (trim) the same way. Before they differed, so a password composed only of spaces could produce a clear `.json` that still declared the encrypted `.bmf` extension.
 
-### Backups y sincronización remota
+### Backups and remote sync
 
-- **Retención remota configurable** (`e6ff2c0`): `remoteRetentionCount` (por defecto 10, acotado entre 1 y 100) con selector en ajustes. La retención poda payload y sidecar como una sola unidad mediante borrado best-effort en WebDAV, S3 y los cinco proveedores por token.
-- **Sidecar HMAC por versión** (`e6ff2c0`): cada subida publica un sidecar que liga una etiqueta HMAC-SHA256 (derivada de la contraseña maestra mediante HKDF con etiqueta dedicada) a los bytes exactos del payload y al nombre remoto. La restauración verifica la descarga cruda antes de cualquier decodificación Base64, trabajo Argon2id o acceso a la base de datos: sidecar ausente significa camino heredado, y una etiqueta presente pero inválida aborta la restauración.
-- **Restauración hostil** (`e6ff2c0`): regresiones para ciphertext truncado, backup excesivamente grande, colección no permitida y ciphertext alterado. La restauración remota valida estrictamente a través del decodificador defensivo compartido (charset, padding y cota de 100 MB) antes de reservar el archivo temporal.
+- **Configurable remote retention** (`e6ff2c0`): `remoteRetentionCount` (default 10, bounded between 1 and 100) with selector in settings. Retention prunes payload and sidecar as a single unit via best-effort deletion in WebDAV, S3, and the five token-based providers.
+- **Per-version sidecar HMAC** (`e6ff2c0`): each upload publishes a sidecar that links an HMAC-SHA256 tag (derived from the master password via HKDF with dedicated label) to the exact payload bytes and remote name. Restoration verifies the raw download before any Base64 decoding, Argon2id work, or database access: missing sidecar means legacy path, and a present but invalid tag aborts restoration.
+- **Hostile restoration** (`e6ff2c0`): regressions for truncated ciphertext, excessively large backup, disallowed collection, and altered ciphertext. Remote restoration validates strictly via the shared defensive decoder (charset, padding, and 100 MB quota) before reserving the temporary file.
 
-### Documentación y gobernanza
+### Documentation and governance
 
-- **Inventario canónico** (`f03ca1a`): el índice documental se deriva de los archivos que existen en disco, así que el retiro de un documento pasa a ser explícito en lugar de una deriva permanente en CI. La brecha de 61 documentos se colapsa en un inventario vivo más ADRs de retiro.
-- **Política y gates de documentación** (`f03ca1a`): ADR-026 (retiro documentado), ADR-040 (fusión del gate de Markdown), documentación operativa mínima (operaciones, seguridad, ROPA, API, correos de onboarding), la página de privacidad de la extensión que exige la prueba de rollback, y el baseline de deriva de auditoría.
-- **Reversión del retiro masivo** (`384bdea`): el borrado en bloque (más de 30 ADRs, plantillas legales de notificación de violaciones RGPD y runbooks) había esquivado el mecanismo de consentimiento de ADR-026 y dejaba material protegido sin reemplazo equivalente. Se restauran los 79 archivos y se renumera el ADR de política de retiro a ADR-059 para liberar el número en colisión.
-- **Estado de release** (`f03ca1a`): el informe de estado registra la matriz de regresión completa, las remediaciones de la sesión y los bloqueos externos que quedan.
-- **Baselines regenerados** (`fb35bc0`): el índice documental lista 103 documentos y el baseline de Markdown cubre 102 archivos y 32 ADRs sin hallazgos.
+- **Canonical inventory** (`f03ca1a`): the document index is derived from files that exist on disk, so document retirement becomes explicit instead of permanent drift in CI. The 61-document gap collapses into a living inventory plus retirement ADRs.
+- **Documentation policy and gates** (`f03ca1a`): ADR-026 (documented retirement), ADR-040 (Markdown gate fusion), minimal operational documentation (operations, security, ROPA, API, onboarding emails), the extension privacy page that demands rollback proof, and the audit drift baseline.
+- **Mass retirement reversal** (`384bdea`): the block deletion (over 30 ADRs, GDPR breach notification legal templates, and runbooks) had bypassed the ADR-026 consent mechanism and left protected material without equivalent replacement. The 79 files are restored and the retirement policy ADR is renumbered to ADR-059 to free the colliding number.
+- **Release status** (`f03ca1a`): the status report records the complete regression matrix, session remediations, and remaining external blocks.
+- **Regenerated baselines** (`fb35bc0`): the document index lists 103 documents and the Markdown baseline covers 102 files and 32 ADRs with no findings.
 
-### Calidad interna y E2E
+### Internal quality and E2E
 
-- **Hardening de servicios y composición** (`59644c6`): cambios pendientes en base de datos, hooks, memoria, observabilidad, telemetría, analítica, servicios de IA, validación de sincronización y la unificación de imports del vault de seguridad. El import dinámico de `auth.ts` pasa a estático: vivía en un módulo ya presente en la cadena estática y solo producía avisos de import dinámico inefectivo.
-- **Cadenas i18n faltantes** (`24ba20c`): la clave del aviso de cambio de bóveda en otra pestaña que `AppInitializer` referenciaba sin existir en el catálogo inglés, más las cadenas de restauración e integridad y de retención remota. Los catálogos de los 29 locales quedan completos.
-- **Entitlements Pro en E2E** (`bd259ea`): el adaptador Whop del companion apuntaba a un puerto muerto, así que toda activación Pro fallaba y los specs de backup y restauración chocaban con el muro Pro. El mock de licencias pasa a ser un servidor de Playwright, la ruta de licencia se enruta al servidor de firma por delante de la regla genérica del proxy, y `seedProEntitlement` ejecuta la activación real dentro de la página (sin forja en el cliente; la firma la hace el servidor de firma con la clave de desarrollo ignorada por git, y sin ella falla de forma ruidosa en lugar de conceder Pro en silencio).
+- **Services and composition hardening** (`59644c6`): pending changes in database, hooks, memory, observability, telemetry, analytics, AI services, sync validation, and security vault import unification. The dynamic import of `auth.ts` becomes static: it lived in a module already present in the static chain and only produced ineffective dynamic import warnings.
+- **Missing i18n strings** (`24ba20c`): the vault change in another tab warning key that `AppInitializer` referenced without existing in the English catalog, plus the restoration and integrity strings and remote retention strings. The 29 locale catalogs are complete.
+- **Pro entitlements in E2E** (`bd259ea`): the companion's Whop adapter pointed to a dead port, so all Pro activation failed and backup and restore specs hit the Pro wall. The license mock becomes a Playwright server, the license route is routed to the signing server ahead of the generic proxy rule, and `seedProEntitlement` executes real activation within the page (no client-side forgery; signing is done by the signing server with the development key ignored by git, and without it it fails noisily instead of silently granting Pro).

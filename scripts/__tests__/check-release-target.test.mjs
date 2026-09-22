@@ -195,8 +195,8 @@ describe("check-release-target findings", () => {
       result.ok,
       result.findings.map((finding) => `${finding.kind} ${finding.location}`).join("\n"),
     ).toBe(true);
-    expect(result.declaredTarget).toBe("bookmarkforge/core");
-    expect(result.remoteTargets.map((remote) => remote.target)).toContain("bookmarkforge/core");
+    expect(result.declaredTarget).toBe("bookmarkforge/bookmarkforge");
+    expect(result.remoteTargets.map((remote) => remote.target)).toContain("bookmarkforge/bookmarkforge");
   });
 });
 

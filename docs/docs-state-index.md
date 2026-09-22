@@ -57,7 +57,6 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/audit-report-2026-09-02.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/audit.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/CHANGELOG.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/demo-media.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/deployment-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/docs-state-index.md` | vivo | Inventario canónico generado por scripts/doctor-docs-index.mjs. |
 | `docs/edge-case-hardening-vault-audit.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |

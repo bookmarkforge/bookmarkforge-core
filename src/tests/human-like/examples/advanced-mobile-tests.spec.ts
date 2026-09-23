@@ -511,7 +511,7 @@ test.describe("Advanced Mobile", () => {
     }
   });
 
-  test("should handle mobile-specific sharing", async ({ page }) {
+  test("should handle mobile-specific sharing", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/");
     await page.waitForLoadState("networkidle");
@@ -608,7 +608,7 @@ test.describe("Advanced Mobile", () => {
   });
 
   test("should handle mobile-specific background sync", async ({ page }) => {
-    await page.setViewportSize({ page.setViewportSize({ width: 375, height: 667 });
+    await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
@@ -703,7 +703,7 @@ test.describe("Advanced Mobile", () => {
   });
 
   test("should handle mobile-specific app shortcuts", async ({ page }) => {
-    await page.setViewportSize({ page.setViewportSize({ width: 375, height: 667 });
+    await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 

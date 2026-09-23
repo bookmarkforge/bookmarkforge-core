@@ -59,7 +59,7 @@ test.describe('Advanced Truncations Coverage', () => {
       
       const lineClamp = await truncated.evaluate(el => {
         const styles = window.getComputedStyle(el);
-        return styles.webkitLineClamp || styles.lineClamp;
+        return styles.webkitLineClamp || (styles as CSSStyleDeclaration & { lineClamp?: string }).lineClamp;
       });
       if (lineClamp) {
         await expect(lineClamp).toBeTruthy();

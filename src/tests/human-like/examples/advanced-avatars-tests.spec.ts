@@ -132,7 +132,7 @@ test.describe('Advanced Avatars Coverage', () => {
     
     const avatar = page.locator('[data-testid="avatar"] img').first();
     if (await avatar.isVisible({ timeout: 5000 }).catch(() => false)) {
-      const complete = await avatar.evaluate(img => img.complete);
+      const complete = await avatar.evaluate((img) => (img as HTMLImageElement).complete);
       await expect(complete).toBeTruthy();
     }
   });

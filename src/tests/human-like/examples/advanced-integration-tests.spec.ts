@@ -13,7 +13,7 @@ test.describe("Advanced Integration", () => {
 
     // Test extension availability
     const extensionAvailable = await page.evaluate(() => {
-      return typeof chrome !== "undefined" || typeof browser !== "undefined";
+      return typeof chrome !== "undefined" || "browser" in globalThis;
     });
 
     if (extensionAvailable) {
@@ -54,7 +54,7 @@ test.describe("Advanced Integration", () => {
     const oauthButton = page.locator('[data-testid="oauth-button"]').first();
     if (await oauthButton.count() > 0) {
       const [popup] = await Promise.all([
-        context.waitForEvent("page"),
+        page.context().waitForEvent("page"),
         oauthButton.click(),
       ]);
 
@@ -250,8 +250,8 @@ test.describe("Advanced Integration", () => {
         });
       });
 
-      expect(location.latitude).toBeDefined();
-      expect(location.longitude).toBeDefined();
+      expect((location as { latitude?: number }).latitude).toBeDefined();
+      expect((location as { longitude?: number }).longitude).toBeDefined();
     }
   });
 
@@ -352,8 +352,8 @@ test.describe("Advanced Integration", () => {
 
     // Track analytics event
     const eventTracked = await page.evaluate(() => {
-      if (typeof gtag !== "undefined") {
-        gtag("event", "test_event", {
+      if (typeof (window as { gtag?: unknown }).gtag !== "undefined") {
+        (window as unknown as { gtag: (name: string, action?: unknown, params?: unknown) => void }).gtag("event", "test_event", {
           event_category: "test",
           event_label: "integration",
         });
@@ -365,7 +365,7 @@ test.describe("Advanced Integration", () => {
     if (eventTracked) {
       // Verify event tracking
       const analyticsData = await page.evaluate(() => {
-        return window.dataLayer || [];
+        return (window as { dataLayer?: unknown[] }).dataLayer || [];
       });
 
       expect(analyticsData.length).toBeGreaterThan(0);

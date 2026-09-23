@@ -26,7 +26,7 @@ test.describe("Advanced Data Persistence", () => {
     });
 
     expect(storedData).toBeTruthy();
-    expect(JSON.parse(storedData).items.length).toBe(1000);
+    expect(JSON.parse(storedData as string).items.length).toBe(1000);
 
     // Cleanup
     await page.evaluate(() => {
@@ -209,7 +209,7 @@ test.describe("Advanced Data Persistence", () => {
 
     // Verify storage
     const storedSize = await page.evaluate(() => {
-      return localStorage.getItem("compress-test").length;
+      return (localStorage.getItem("compress-test") ?? "").length;
     });
 
     expect(storedSize).toBe(10000);
@@ -259,7 +259,7 @@ test.describe("Advanced Data Persistence", () => {
     const isValid = await page.evaluate(() => {
       const data = localStorage.getItem("valid-data");
       try {
-        const parsed = JSON.parse(data);
+        const parsed = JSON.parse(data as string);
         return parsed.valid === true;
       } catch {
         return false;
@@ -291,8 +291,8 @@ test.describe("Advanced Data Persistence", () => {
 
     // Deduplicate
     const deduplicated = await page.evaluate(() => {
-      const data = JSON.parse(localStorage.getItem("duplicate-data"));
-      const unique = new Map(data.map(item => [item.id, item]));
+      const data = JSON.parse(localStorage.getItem("duplicate-data") as string);
+      const unique = new Map((data as Array<{ id: string }>).map((item) => [item.id, item]));
       return Array.from(unique.values());
     });
 
@@ -322,7 +322,7 @@ test.describe("Advanced Data Persistence", () => {
 
     // Verify pagination
     const firstPage = await page.evaluate(() => {
-      const data = JSON.parse(localStorage.getItem("paginated-data"));
+      const data = JSON.parse(localStorage.getItem("paginated-data") as string);
       return data.items.slice(0, data.pageSize);
     });
 
@@ -351,7 +351,7 @@ test.describe("Advanced Data Persistence", () => {
 
     // Verify cache is valid
     const isCacheValid = await page.evaluate(() => {
-      const cache = JSON.parse(localStorage.getItem("cache-data"));
+      const cache = JSON.parse(localStorage.getItem("cache-data") as string);
       return Date.now() - cache.timestamp < cache.ttl;
     });
 
@@ -374,7 +374,7 @@ test.describe("Advanced Data Persistence", () => {
 
     // Update to conflicting version
     const conflictResolved = await page.evaluate(() => {
-      const current = JSON.parse(localStorage.getItem("conflict-data"));
+      const current = JSON.parse(localStorage.getItem("conflict-data") as string);
       const incoming = { version: 2, value: "updated" };
       
       // Simple conflict resolution: use latest version
@@ -409,9 +409,9 @@ test.describe("Advanced Data Persistence", () => {
 
     // Rollback to snapshot
     const rolledBack = await page.evaluate(() => {
-      const snapshot = JSON.parse(localStorage.getItem("snapshot-1"));
+      const snapshot = JSON.parse(localStorage.getItem("snapshot-1") as string);
       localStorage.setItem("current-data", JSON.stringify(snapshot));
-      return JSON.parse(localStorage.getItem("current-data"));
+      return JSON.parse(localStorage.getItem("current-data") as string);
     });
 
     expect(rolledBack.items.length).toBe(3);
@@ -440,7 +440,7 @@ test.describe("Advanced Data Persistence", () => {
 
     // Verify audit log
     const auditLogs = await page.evaluate(() => {
-      return JSON.parse(localStorage.getItem("audit-logs"));
+      return JSON.parse(localStorage.getItem("audit-logs") as string);
     });
 
     expect(auditLogs.length).toBeGreaterThan(0);
@@ -469,7 +469,7 @@ test.describe("Advanced Data Persistence", () => {
 
     // Anonymize data
     const anonymized = await page.evaluate(() => {
-      const data = JSON.parse(localStorage.getItem("personal-data"));
+      const data = JSON.parse(localStorage.getItem("personal-data") as string);
       const anonymized = {
         ...data,
         name: "Anonymous",
@@ -507,7 +507,7 @@ test.describe("Advanced Data Persistence", () => {
 
     // Check if data should be expired
     const isExpired = await page.evaluate(() => {
-      const data = JSON.parse(localStorage.getItem("retained-data"));
+      const data = JSON.parse(localStorage.getItem("retained-data") as string);
       const age = Date.now() - data.created;
       return age > data.retention;
     });

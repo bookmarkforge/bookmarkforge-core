@@ -181,7 +181,7 @@ test.describe("Advanced Network", () => {
       await priorityButton.click();
 
       // Verify priority order
-      expect(requestOrder[0]).toBeGreaterThan(requestOrder[1]);
+      expect(requestOrder[0]!).toBeGreaterThan(requestOrder[1]!);
     }
   });
 
@@ -350,19 +350,13 @@ test.describe("Advanced Network", () => {
 
   test("should handle request streaming", async ({ page }) => {
     await page.route("**/api/stream-test", async (route) => {
-      const stream = new ReadableStream({
-        async start(controller) {
-          for (let i = 0; i < 5; i++) {
-            controller.enqueue(`chunk ${i}\n`);
-            await new Promise((resolve) => setTimeout(resolve, 100));
-          }
-          controller.close();
-        },
-      });
+      // Playwright's route.fulfill() takes a string/Buffer body, not a
+      // ReadableStream: send the same bytes the stream would have produced.
+      const body = Array.from({ length: 5 }, (_unused, i) => `chunk ${i}\n`).join("");
 
       route.fulfill({
         status: 200,
-        body: stream,
+        body,
       });
     });
 
@@ -385,7 +379,7 @@ test.describe("Advanced Network", () => {
     const queue: string[] = [];
     await page.route("**/api/queue-test", async (route) => {
       const id = route.request().headers()["x-request-id"];
-      queue.push(id);
+      queue.push(id ?? "");
       await new Promise((resolve) => setTimeout(resolve, 100));
       route.fulfill({
         status: 200,
@@ -410,7 +404,7 @@ test.describe("Advanced Network", () => {
 
   test("should handle request batching", async ({ page }) => {
     await page.route("**/api/batch-test", async (route) => {
-      const body = await route.request().postJSON();
+      const body = await route.request().postDataJSON();
       const requests = body.requests || [];
       route.fulfill({
         status: 200,
@@ -518,7 +512,7 @@ test.describe("Advanced Network", () => {
       await backoffButton.click();
 
       // Verify exponential backoff
-      expect(delays[1] - delays[0]).toBeLessThan(delays[2] - delays[1]);
+      expect(delays[1]! - delays[0]!).toBeLessThan(delays[2]! - delays[1]!);
     }
   });
 
@@ -557,19 +551,14 @@ test.describe("Advanced Network", () => {
 
   test("should handle request progress tracking", async ({ page }) => {
     await page.route("**/api/progress-test", async (route) => {
-      const stream = new ReadableStream({
-        async start(controller) {
-          for (let i = 0; i <= 100; i += 10) {
-            controller.enqueue(JSON.stringify({ progress: i }) + "\n");
-            await new Promise((resolve) => setTimeout(resolve, 50));
-          }
-          controller.close();
-        },
-      });
+      // route.fulfill() takes a string/Buffer body, not a ReadableStream.
+      const body = Array.from({ length: 11 }, (_unused, step) =>
+        JSON.stringify({ progress: step * 10 }) + "\n",
+      ).join("");
 
       route.fulfill({
         status: 200,
-        body: stream,
+        body,
       });
     });
 
@@ -625,7 +614,7 @@ test.describe("Advanced Network", () => {
 
   test("should handle request validation", async ({ page }) => {
     await page.route("**/api/validation-test", async (route) => {
-      const body = await route.request().postJSON();
+      const body = await route.request().postDataJSON();
       if (!body.id || !body.data) {
         route.fulfill({
           status: 400,
@@ -656,7 +645,7 @@ test.describe("Advanced Network", () => {
 
   test("should handle request transformation", async ({ page }) => {
     await page.route("**/api/transform-test", async (route) => {
-      const body = await route.request().postJSON();
+      const body = await route.request().postDataJSON();
       const transformed = {
         ...body,
         timestamp: Date.now(),
@@ -757,21 +746,16 @@ test.describe("Advanced Network", () => {
 
   test("should handle request response streaming", async ({ page }) => {
     await page.route("**/api/response-stream-test", async (route) => {
-      const stream = new ReadableStream({
-        async start(controller) {
-          const data = { streaming: true, chunks: [] };
-          for (let i = 0; i < 5; i++) {
-            data.chunks.push(`chunk-${i}`);
-            controller.enqueue(JSON.stringify(data) + "\n");
-            await new Promise((resolve) => setTimeout(resolve, 100));
-          }
-          controller.close();
-        },
-      });
+      // route.fulfill() takes a string/Buffer body, not a ReadableStream.
+      const chunks: string[] = [];
+      const body = Array.from({ length: 5 }, (_unused, i) => {
+        chunks.push(`chunk-${i}`);
+        return JSON.stringify({ streaming: true, chunks }) + "\n";
+      }).join("");
 
       route.fulfill({
         status: 200,
-        body: stream,
+        body,
       });
     });
 

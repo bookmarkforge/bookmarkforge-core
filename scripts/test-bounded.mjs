@@ -1,6 +1,6 @@
-import { existsSync, readdirSync, statSync } from "node:fs";
+import { existsSync } from "node:fs";
 import os from "node:os";
-import { join, relative, resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import {
   evaluateTimings,
@@ -10,11 +10,18 @@ import {
   resolveTimingMode,
   saveBaseline,
 } from "./check-test-timing.mjs";
+import { PROFILE_DEFAULTS } from "./test-profiles.mjs";
+// Which files a profile schedules is owned by scripts/test-files.mjs (shared
+// with scripts/check-audit-freshness.mjs, which re-derives the fast-profile
+// count docs/audit.md publishes); this runner must not grow a second walk.
 import {
-  FAST_SELECTORS,
-  PROFILE_DEFAULTS,
-  VITEST_EXCLUDED_FILES,
-} from "./test-profiles.mjs";
+  allTestFiles as collectAllTestFiles,
+  collectRequestedTestFiles,
+  fastProfileFiles as collectFastProfileFiles,
+  isProjectPathArg,
+  normalizeProjectPath,
+  slowSurfaceFiles as collectSlowSurfaceFiles,
+} from "./test-files.mjs";
 import { runPreflight } from "./drift-preflight.mjs";
 
 const ROOT = process.cwd();
@@ -91,73 +98,8 @@ const CONCURRENCY =
 const SHRINK_AT = 0.8;
 const WARN_AT = 0.9;
 const MIN_BATCH_SIZE = 10;
-const TEST_FILE_PATTERN = /\.test\.(?:ts|tsx|mjs)$/;
 
-function collectTests(directory) {
-  const files = [];
-  for (const entry of readdirSync(directory, { withFileTypes: true })) {
-    const path = join(directory, entry.name);
-    if (entry.isDirectory()) {
-      if (entry.name !== "node_modules" && entry.name !== "dist") {
-        files.push(...collectTests(path));
-      }
-      continue;
-    }
-    if (TEST_FILE_PATTERN.test(entry.name)) {
-      files.push(relative(ROOT, path));
-    }
-  }
-  return files;
-}
-
-function normalizeProjectPath(arg) {
-  return arg.replace(/\\/g, "/").replace(/^\.\//, "");
-}
-
-function isProjectPathArg(arg) {
-  const normalized = normalizeProjectPath(arg);
-  return (
-    normalized.startsWith("src/") ||
-    normalized.startsWith("eslint-rules/") ||
-    // Quality-gate script tests (scripts/__tests__/check-*.test.mjs) are
-    // first-class unit tests: selectable like any other project path. Accept
-    // both the bare dir and a nested path (the src/ prefixes above share the
-    // same shape: `src` alone is not a selector).
-    normalized === "scripts/__tests__" ||
-    normalized.startsWith("scripts/__tests__/")
-  );
-}
-
-function collectRequestedTests(args) {
-  const requested = [];
-  for (const arg of args) {
-    // Only treat existing project paths as selectors. This avoids mistaking a
-    // value belonging to an option such as `--reporter dot` for a file.
-    if (!isProjectPathArg(arg)) {
-      continue;
-    }
-    const normalized = normalizeProjectPath(arg);
-    const absolute = resolve(ROOT, normalized);
-    if (!existsSync(absolute)) {
-      continue;
-    }
-    if (statSync(absolute).isDirectory()) {
-      requested.push(...collectTests(absolute));
-    } else if (TEST_FILE_PATTERN.test(absolute)) {
-      requested.push(relative(ROOT, absolute));
-    }
-  }
-  return [...new Set(requested)].sort();
-}
-
-const allTestFiles = [
-  ...collectTests(join(ROOT, "src")),
-  ...collectTests(join(ROOT, "eslint-rules")),
-  // Quality-gate script tests live under scripts/__tests__/ (vitest include
-  // glob in vitest.config.ts matches them); collect them here so the bounded
-  // suite — not just ad-hoc `npx vitest run scripts/__tests__` — runs them.
-  ...collectTests(join(ROOT, "scripts", "__tests__")),
-].sort();
+const allTestFiles = collectAllTestFiles(ROOT);
 
 if (allTestFiles.length === 0) {
   console.error("[test-bounded] no test files found");
@@ -193,7 +135,7 @@ for (let i = 0; i < cleanedArgs.length; i += 1) {
   }
   passthrough.push(arg);
 }
-const requestedFiles = collectRequestedTests([...selectorArgs]);
+const requestedFiles = collectRequestedTestFiles([...selectorArgs], ROOT);
 if (profile !== null && selectorArgs.size > 0) {
   console.error(
     "[test-bounded] --profile cannot be combined with explicit test selectors " +
@@ -263,24 +205,12 @@ function orderSlowFilesFirst(files) {
 // vitest excludes (see vitest.config.ts test.exclude) — scheduled ==
 // executed must hold so the runner's "all N passed" is truthful. `npm test`
 // with no selectors runs the same surface with the same semantics.
-const toPosixPath = (file) => file.replaceAll("\\", "/");
-const fastProfileFiles = new Set(
-  collectRequestedTests(FAST_SELECTORS)
-    .map(toPosixPath)
-    .filter((file) => !VITEST_EXCLUDED_FILES.has(file)),
-);
-const slowSurfaceFiles = allTestFiles.filter(
-  (file) =>
-    !fastProfileFiles.has(toPosixPath(file)) &&
-    !VITEST_EXCLUDED_FILES.has(toPosixPath(file)),
-);
+const slowSurfaceFiles = collectSlowSurfaceFiles(ROOT);
 const isSlowSurface =
   profile === "slow" || (profile === null && requestedFiles.length === 0);
 let filesToRun;
 if (profile === "fast") {
-  filesToRun = collectRequestedTests(FAST_SELECTORS).filter(
-    (file) => !VITEST_EXCLUDED_FILES.has(toPosixPath(file)),
-  );
+  filesToRun = collectFastProfileFiles(ROOT);
 } else if (isSlowSurface) {
   filesToRun = slowSurfaceFiles;
 } else {

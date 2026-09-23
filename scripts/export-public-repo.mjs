@@ -91,6 +91,13 @@ const PUBLIC_DOCS = new Set([
    "ADR-051-landings-fresh-gate.md",
    "ADR-052-v5-format-sunset.md",
    "ADR-053-vault-salt-registry.md",
+   // The audit-freshness ADR ships even though its subject ledger
+   // (docs/audit.md) does not: check-inspector-freeze requires a `docs`-category
+   // gate to be named by an ADR that is present in the tree, so without this
+   // entry the exported tree's own freeze would fail. The gate itself
+   // recognises the export (see check-audit-freshness.mjs) and reports "not
+   // shipped" instead of failing.
+   "ADR-064-audit-freshness-gate.md",
   "manual-usuario.md",
   "manual-usuario-en.md",
   "index.md",

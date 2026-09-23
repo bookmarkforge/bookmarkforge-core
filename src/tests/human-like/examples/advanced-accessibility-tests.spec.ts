@@ -199,7 +199,7 @@ test.describe("Advanced Accessibility", () => {
       let issues = 0;
 
       headings.forEach(heading => {
-        const level = parseInt(heading.tagName[1]);
+        const level = parseInt(heading.tagName.charAt(1), 10);
         if (level > previousLevel + 1) {
           issues++;
         }
@@ -607,7 +607,7 @@ test.describe("Advanced Accessibility", () => {
     // Check checkbox accessibility
     const checkbox = page.locator('input[type="checkbox"]').first();
     if (await checkbox.count() > 0) {
-      const hasLabel = await page.evaluate((cb) => {
+      const hasLabel = await checkbox.evaluate((cb) => {
         const label = document.querySelector(`label[for="${cb.id}"]`);
         return label !== null;
       });
@@ -623,7 +623,7 @@ test.describe("Advanced Accessibility", () => {
     // Check radio button accessibility
     const radio = page.locator('input[type="radio"]').first();
     if (await radio.count() > 0) {
-      const hasLabel = await page.evaluate((rb) => {
+      const hasLabel = await radio.evaluate((rb) => {
         const label = document.querySelector(`label[for="${rb.id}"]`);
         return label !== null;
       });
@@ -639,7 +639,7 @@ test.describe("Advanced Accessibility", () => {
     // Check select accessibility
     const select = page.locator("select").first();
     if (await select.count() > 0) {
-      const hasLabel = await page.evaluate((sel) => {
+      const hasLabel = await select.evaluate((sel) => {
         const label = document.querySelector(`label[for="${sel.id}"]`);
         return label !== null;
       });

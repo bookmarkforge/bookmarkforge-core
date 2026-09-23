@@ -36,17 +36,33 @@ const ROOT = process.cwd();
 
 // ── Contract constants ────────────────────────────────────────────────
 
-/** Heading that must anchor the consolidated procedure in docs/security.md. */
-export const PROCEDURE_HEADING =
-  "### Procedimiento de violación de datos personales (RGPD)";
+/**
+ * Headings that anchor the consolidated procedure in docs/security.md. The
+ * gate demands the SECTION, not a language: docs/ was translated to English
+ * (2026-09-22) while the legal templates and their Spanish anchors stayed put,
+ * so either spelling satisfies it.
+ */
+export const PROCEDURE_HEADINGS = [
+  "### Procedimiento de violación de datos personales (RGPD)", // legacy ES
+  "### Personal data breach procedure (GDPR)", // EN (current docs language)
+];
 
-/** Substrings the consolidated section must carry (art. 33 / art. 34 / vault). */
+/** Legacy single-heading alias (the original constant name). */
+export const PROCEDURE_HEADING = PROCEDURE_HEADINGS[0];
+
+/**
+ * Substrings the consolidated section must carry (art. 33 / art. 34 / vault).
+ * Each entry is a GROUP of accepted spellings: the requirement is met when any
+ * one of them is present, so a translated document is enforced on substance
+ * (the 72-hour clock, both template paths, the never-ask-for-secrets rule)
+ * instead of on the language it is written in.
+ */
 export const SECURITY_DOC_REQUIREMENTS = [
-  "72 horas",
-  "legal/plantillas/notificacion-art-33-autoridad.md",
-  "legal/plantillas/notificacion-art-34-interesados.md",
-  "legal/plantillas/checklist-violacion-seguridad.md",
-  "frase de recuperación",
+  ["72 horas", "72 hours"],
+  ["legal/plantillas/notificacion-art-33-autoridad.md"],
+  ["legal/plantillas/notificacion-art-34-interesados.md"],
+  ["legal/plantillas/checklist-violacion-seguridad.md"],
+  ["frase de recuperación", "recovery phrase"],
 ];
 
 /**
@@ -141,13 +157,16 @@ export function runLegalConsolidationChecks({
   if (!securityDoc) {
     findings.push("docs/security.md is missing — consolidated GDPR procedure lost.");
   } else {
-    if (!securityDoc.includes(PROCEDURE_HEADING)) {
-      findings.push(`docs/security.md lost the consolidated section: "${PROCEDURE_HEADING}"`);
+    if (!PROCEDURE_HEADINGS.some((heading) => securityDoc.includes(heading))) {
+      findings.push(
+        `docs/security.md lost the consolidated section: "${PROCEDURE_HEADINGS.join(" / ")}"`,
+      );
     }
     for (const requirement of SECURITY_DOC_REQUIREMENTS) {
-      if (!securityDoc.includes(requirement)) {
+      const alternatives = Array.isArray(requirement) ? requirement : [requirement];
+      if (!alternatives.some((spelling) => securityDoc.includes(spelling))) {
         findings.push(
-          `docs/security.md consolidation is incomplete: missing "${requirement}"`,
+          `docs/security.md consolidation is incomplete: missing "${alternatives.join(" / ")}"`,
         );
       }
     }

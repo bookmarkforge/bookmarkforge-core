@@ -66,6 +66,32 @@ describe("check-legal-consolidation", () => {
     expect(findings).toHaveLength(0);
   });
 
+  it("accepts the consolidated section in English (docs/ language) as well as Spanish", () => {
+    // The section is required; the language it is written in is not. This is
+    // the state docs/security.md is actually in since the 2026-09-22 docs
+    // translation, while the legal templates stay Spanish.
+    const english = [
+      "# Production security",
+      "## Security incidents",
+      "### Personal data breach procedure (GDPR)",
+      "The authority is notified within 72 hours.",
+      "Template: legal/plantillas/notificacion-art-33-autoridad.md",
+      "Template: legal/plantillas/notificacion-art-34-interesados.md",
+      "Checklist: legal/plantillas/checklist-violacion-seguridad.md",
+      "Never request passwords or recovery phrases from users.",
+    ].join("\n");
+    const { ok, findings } = runLegalConsolidationChecks({ ...base, securityDoc: english });
+    expect(ok, findings.join("\n")).toBe(true);
+
+    const withoutSpellings = english
+      .replace("72 hours", "promptly")
+      .replace("recovery phrases", "credentials");
+    const missing = runLegalConsolidationChecks({ ...base, securityDoc: withoutSpellings });
+    expect(missing.ok).toBe(false);
+    expect(missing.findings.join(" ")).toContain("72 horas / 72 hours");
+    expect(missing.findings.join(" ")).toContain("frase de recuperación / recovery phrase");
+  });
+
   it("fails when docs/security.md loses the consolidated section or its anchors", () => {
     for (const mutation of [
       (doc) => doc.replace(PROCEDURE_HEADING, "### Incidentes (RGPD)"),

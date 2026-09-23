@@ -131,8 +131,8 @@ test.describe("Advanced Performance", () => {
       const images = document.querySelectorAll('img[data-optimized="true"]');
       await Promise.all(Array.from(images).map(img => {
         return new Promise((resolve) => {
-          if (img.complete) resolve(true);
-          img.onload = () => resolve(true);
+          if ((img as HTMLImageElement).complete) resolve(true);
+          (img as HTMLImageElement).onload = () => resolve(true);
         });
       }));
       return Date.now() - startTime;
@@ -152,7 +152,7 @@ test.describe("Advanced Performance", () => {
       return {
         count: stylesheets.length,
         totalSize: Array.from(stylesheets).reduce((sum, sheet) => {
-          return sum + (sheet as HTMLLinkElement).sheet?.cssRules.length || 0;
+          return sum + ((sheet as HTMLLinkElement).sheet?.cssRules.length ?? 0);
         }, 0),
       };
     });
@@ -406,10 +406,12 @@ test.describe("Advanced Performance", () => {
       });
     });
 
+    const metrics = vitals as { cls?: number; fid?: number; lcp?: number };
+
     // Verify Core Web Vitals are good
-    if (vitals.cls) expect(vitals.cls).toBeLessThan(0.1); // CLS < 0.1
-    if (vitals.fid) expect(vitals.fid).toBeLessThan(100); // FID < 100ms
-    if (vitals.lcp) expect(vitals.lcp).toBeLessThan(2500); // LCP < 2.5s
+    if (metrics.cls) expect(metrics.cls).toBeLessThan(0.1); // CLS < 0.1
+    if (metrics.fid) expect(metrics.fid).toBeLessThan(100); // FID < 100ms
+    if (metrics.lcp) expect(metrics.lcp).toBeLessThan(2500); // LCP < 2.5s
   });
 
   test("should handle memory leak prevention", async ({ page }) => {
@@ -604,9 +606,11 @@ test.describe("Advanced Performance", () => {
     expect(hasEnhancedFunctionality).toBeTruthy();
   });
 
-  test("should handle graceful degradation", async ({ page, context }) => {
-    // Disable JavaScript
-    await context.setJavaScriptEnabled(false);
+  test("should handle graceful degradation", async ({ browser }) => {
+    // Playwright has no setJavaScriptEnabled(): a JS-disabled run needs its
+    // own context, so this test builds one instead of toggling the fixture.
+    const jsDisabledContext = await browser.newContext({ javaScriptEnabled: false });
+    const page = await jsDisabledContext.newPage();
     
     await page.goto("/");
     await page.waitForLoadState("networkidle");
@@ -617,7 +621,7 @@ test.describe("Advanced Performance", () => {
     });
 
     // Re-enable JavaScript
-    await context.setJavaScriptEnabled(true);
+    await jsDisabledContext.close();
 
     // Verify content is available without JS
     expect(hasBasicContent).toBeGreaterThan(0);

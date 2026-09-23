@@ -159,7 +159,7 @@ test.describe("Advanced Security", () => {
     });
 
     expect(csrfToken).toBeTruthy();
-    expect(csrfToken.length).toBeGreaterThan(20);
+    expect(csrfToken?.length ?? 0).toBeGreaterThan(20);
   });
 
   test("should handle XSS protection", async ({ page }) => {

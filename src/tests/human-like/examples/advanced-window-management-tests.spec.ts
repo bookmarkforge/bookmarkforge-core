@@ -12,7 +12,7 @@ test.describe("Advanced Window Management", () => {
     await page.waitForLoadState("networkidle");
 
     // Simulate human-like window resizing
-    const initialWidth = await page.viewportSize().width;
+    const initialWidth = page.viewportSize()?.width ?? 0;
     const newWidth = Math.floor(initialWidth * 0.7);
     await page.setViewportSize({ width: newWidth, height: 800 });
 
@@ -197,8 +197,8 @@ test.describe("Advanced Window Management", () => {
       const selection = window.getSelection();
       const range = document.createRange();
       range.selectNodeContents(document.body);
-      selection.removeAllRanges();
-      selection.addRange(range);
+      selection?.removeAllRanges();
+      selection?.addRange(range);
     });
 
     // Copy selection

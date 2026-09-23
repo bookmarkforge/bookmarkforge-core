@@ -155,7 +155,7 @@ test.describe("Advanced Recovery", () => {
     const dataRead = await page.evaluate(() => {
       try {
         const data = localStorage.getItem("corrupted-data");
-        JSON.parse(data);
+        JSON.parse(data as string);
         return true;
       } catch {
         return false;
@@ -310,8 +310,8 @@ test.describe("Advanced Recovery", () => {
       // Verify exponential backoff
       expect(attemptCount).toBe(3);
       if (attemptTimes.length >= 2) {
-        const delay1 = attemptTimes[1] - attemptTimes[0];
-        const delay2 = attemptTimes[2] - attemptTimes[1];
+        const delay1 = attemptTimes[1]! - attemptTimes[0]!;
+        const delay2 = attemptTimes[2]! - attemptTimes[1]!;
         expect(delay2).toBeGreaterThan(delay1); // Backoff increases
       }
     }
@@ -680,9 +680,11 @@ test.describe("Advanced Recovery", () => {
     expect(compatibilityCheck.hasES7).toBeTruthy();
   });
 
-  test("should handle graceful degradation", async ({ page, context }) => {
-    // Disable JavaScript
-    await context.setJavaScriptEnabled(false);
+  test("should handle graceful degradation", async ({ browser }) => {
+    // Playwright has no setJavaScriptEnabled(): a JS-disabled run needs its
+    // own context, so this test builds one instead of toggling the fixture.
+    const jsDisabledContext = await browser.newContext({ javaScriptEnabled: false });
+    const page = await jsDisabledContext.newPage();
 
     await page.goto("/");
     await page.waitForLoadState("networkidle");
@@ -690,10 +692,10 @@ test.describe("Advanced Recovery", () => {
     // Check basic functionality without JS
     const basicContent = page.locator("body").first();
     const hasContent = await basicContent.textContent();
-    expect(hasContent.length).toBeGreaterThan(0);
+    expect((hasContent ?? "").length).toBeGreaterThan(0);
 
     // Re-enable JavaScript
-    await context.setJavaScriptEnabled(true);
+    await jsDisabledContext.close();
   });
 
   test("should handle progressive enhancement", async ({ page }) => {

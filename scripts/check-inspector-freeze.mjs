@@ -110,6 +110,14 @@ const KNOWN_GATES = {
   "check:baseline-drift": "meta",
   "check:baseline-gaps": "meta",
   "check:tailwind-drift": "meta",
+  // Ledger freshness (ADR-064): the status table of docs/audit.md is a
+  // contract of "command → observable" that nothing re-ran — the typecheck row
+  // described a different error census and the chain-size claim counted the
+  // scripts declared in package.json instead of the gates the chain runs. The
+  // gate re-executes the table (chain/exec/self in the chain, deep/network in
+  // CI's named step). Documentation-format gate: ADR-064 names the failure
+  // class and maps it onto ADR-028's drift-detection model, like ADR-047.
+  "check:audit-freshness": "docs",
   // Factual claim-drift (ADR-047): user-visible numbers must match the code
   // constants (password minimum, 24-word phrase, device limits, Argon2id MiB,
   // backup intervals, prices). Documentation-format gate: ADR-047 names the

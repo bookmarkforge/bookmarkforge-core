@@ -1,20 +1,29 @@
 # Auditoría técnica — BookmarkForge (ledger verificable)
 
-- **Última verificación ejecutada:** 2026-09-22, sobre el working tree en la rama `release/v1.0.0`.
+- **Última verificación ejecutada:** 2026-09-23, sobre el working tree en la rama `release/v1.0.0`.
 - **Alcance:** auditoría estática de código, configuración, CI y documentación. No incluye pentest, prueba de carga en producción ni revisión legal formal.
 - **Regla del documento:** cada afirmación lleva el comando que la respalda y el observable esperado. Si una afirmación no puede reproducirse desde este checkout, se declara explícitamente como ejecución histórica o deuda externa — no se afirma. No hay puntuaciones: un número de 0 a 10 no es reproducible y las rondas 6–7 de este mismo ledger demostraron que un "9.2 global" se llegó a calcular sobre un árbol que no compilaba.
 
-## Estado verificado (2026-09-22)
+## Estado verificado (2026-09-23)
 
-| Comando | Observable en esta fecha |
-|---|---|
-| `npm run check` | exit 0 (cadena completa de ~97 gates `check:*`) |
-| `npm run test:fast` | exit 0 · 163 archivos de test |
-| `npm run lint` | exit 0 |
-| `npm run typecheck` | **exit 2** — 3 errores, todos en specs sin trackear de `src/tests/human-like/examples/` (WIP ajeno a este árbol entregable; ver "Deudas abiertas") |
-| `npm audit --omit=dev` | `found 0 vulnerabilities` |
-| `node scripts/check-page-figures.mjs` | `ok: 61 pages agree with code (freeCap=1000, devices={0,3}, prices=59/79, refund=30d, revalidation=48h, recovery=24w)` |
-| `npm run check:launch-checklist` | `Resumen: 12/12 verificables completados · 0 pendientes · 5 manuales` |
+Esta tabla ya no depende de una re-lectura manual: `npm run check:audit-freshness` la re-ejecuta (ADR-064) y falla si el documento dejó de describir el árbol. La columna `Modo` declara cómo se verifica cada fila:
+
+- `chain` — el comando es un gate de la cadena `npm run check`; el gate comprueba que sigue estando.
+- `exec` — se ejecuta aquí y se comparan el exit code y cada fragmento entre backticks contra la salida real.
+- `deep` / `network` — solo bajo `--deep` / `--allow-network`, porque son pesados o tienen red; CI los ejecuta con `npm run check:audit-freshness:deep`.
+- `self` — el comando contiene a este gate (o es la suite que corre su test), así que el número que publica se **deriva** del árbol (tamaño de la cadena, ficheros del perfil rápido) en vez de confiarse.
+
+Una fila sin `Modo`, un modo desconocido, un script que no existe, un `self` sin derivación registrada o un número derivado que no cuadra **fallan el gate**: se omiten cero filas.
+
+| Comando | Modo | Observable en esta fecha |
+|---|---|---|
+| `npm run check` | `self` | exit 0 · cadena de 50 gates |
+| `npm run test:fast` | `self` | exit 0 · all 165 test files passed |
+| `npm run lint` | `chain` | exit 0 (dentro de la cadena) |
+| `node scripts/check-page-figures.mjs` | `exec` | `ok: 61 pages agree with code (freeCap=1000, devices={0,3}, prices=59/79, refund=30d, revalidation=48h, recovery=24w)` |
+| `npm run typecheck` | `deep` | exit 0 (tsc sale 0 solo sin errores) — el antiguo locus WIP src/tests/human-like/examples/ vuelve a compilar |
+| `npm run check:launch-checklist` | `deep` | `Resumen: 12/12 verificables completados · 0 pendientes · 5 manuales` |
+| `npm audit --omit=dev` | `network` | `found 0 vulnerabilities` |
 
 > **Nota:** `check:launch-checklist` solo examina el checkout. La producción puede servir un artefacto más antiguo que este árbol (ver A11-2). Este es el motivo por el que `scripts/check-sitemap-coverage.mjs` es un gate de repositorio y no una sonda HTTP.
 
@@ -22,7 +31,7 @@
 
 | Afirmación | Verificación (comando → observable) |
 |---|---|
-| Stack: React 19 + TS estricto + Vite; RxDB 17 + IndexedDB; Node ≥20 + `ws`; Mantine 9 | `node -e "const p=require('./package.json'); console.log(p.dependencies.react, p.dependencies.rxdb, p.dependencies['@mantine/core'], p.devDependencies.typescript)"` → `^19.2.8 ^17.4.0 ^9.5.1 ^5.9.3`. `197` scripts npm en total |
+| Stack: React 19 + TS estricto + Vite; RxDB 17 + IndexedDB; Node ≥20 + `ws`; Mantine 9 | `node -e "const p=require('./package.json'); console.log(p.dependencies.react, p.dependencies.rxdb, p.dependencies['@mantine/core'], p.devDependencies.typescript)"` → `^19.2.8 ^17.4.0 ^9.5.1 ^5.9.3`. `200` scripts npm en total |
 | Cripto: AES-256-GCM + Argon2id/HKDF en Web Worker; borrado de memoria WASM | `ls src/utils/crypto-core.ts src/utils/argon2-kdf.ts src/services/EncryptionService.ts src/utils/wasm-zero-memory.ts` → los 4 existen |
 | Sanitización centralizada | `grep -rln "DOMPurify" src/services/SanitizationService.ts` → 1 match |
 | HSTS presente en `_headers` (incluidos los bloques por-path) | `grep -c "Strict-Transport-Security" public/_headers` → `5` |
@@ -30,7 +39,7 @@
 | Superficie muerta del proxy de IA retirada del servidor y de la API doc | `grep -rn "services/ai" server/src/*.ts \| wc -l` → `0` · `grep -c "services/ai" docs/openapi.yaml` → `0` · `grep -m1 "openapi:" docs/openapi.yaml` → `openapi: 3.1.0` |
 | Server sin `ai-proxy.ts`; helpers compartidos en `proxy-utils.ts` | `ls server/src/ai-proxy.ts` → no existe · `ls server/src/proxy-utils.ts` → existe |
 | Mocks de IA eliminados | `ls scripts/ai-mock.mjs scripts/ai-mock-https.mjs` → ambos inexistentes |
-| 11 workflows, todas las actions externas pineadas por SHA-256 de 40 chars | `ls .github/workflows/*.yml \| wc -l` → `11` · `grep -rcE "uses: [^@]+@[0-9a-f]{40}" .github/workflows/*.yml` → cada fichero ≥1 y `grep -rnE "uses: [^@]+@v[0-9]" .github/workflows` → sin resultados |
+| 10 workflows, todas las actions externas pineadas por SHA-256 de 40 chars | `ls .github/workflows/*.yml \| wc -l` → `10` · `grep -rcE "uses: [^@]+@[0-9a-f]{40}" .github/workflows/*.yml` → cada fichero ≥1 y `grep -rnE "uses: [^@]+@v[0-9]" .github/workflows` → sin resultados |
 | ZAP pineado por SHA | `grep -n "zaproxy/action-baseline" .github/workflows/dast-nightly.yml` → `@de8ad967d3548d44ef623df22cf95c3b0baf8b25` |
 | Compose prod: imágenes por `IMAGE_TAG` (no hay tags mutables de base que pinear en ese fichero) | `grep -c "@sha256" docker-compose.prod.yml` → `0`; las líneas `image:` son `bookmarkforge/web:${IMAGE_TAG:?…}` / `bookmarkforge/api:…`. `grep -c "@sha256" docker-compose.staging.yml` → `1`. Gate: `npm run check:image-pins` → exit 0 |
 | Dockerfile: el stage `deps` elimina el hook `prepare` antes de `npm ci --omit=dev` | `sed -n '9,15p' Dockerfile` → `npm pkg delete scripts.prepare && npm ci --omit=dev` |
@@ -97,7 +106,7 @@ La lección estructural de este ledger: el código evolucionó (retirada del pro
 | D1 | Test que colgaba E2E en el webServer (ver B9) | `sed -n '92,97p' playwright.config.ts` |
 | D2 | OpenAPI documentando 6 endpoints inexistentes; docs describiendo un proxy eliminado; `docs/audit.md` citando `server/src/ai-session.ts` (archivo borrado) | `grep -c "services/ai" docs/openapi.yaml` → `0` · `ls server/src/ai-proxy.ts server/src/ai-session.ts` → inexistentes |
 | D3 | Compose y validadores **exigiendo** infraestructura muerta (redis en prod, `ai-mock` en staging) | `grep -c "AI_PROXY_REDIS_URL" docker-compose.prod.yml` → `0` · `ls scripts/ai-mock.mjs` → no existe · `npm run check:compose-config && npm run check:runtime-config` → exit 0 (con guarda que falla si reaparece config de IA sin lector) |
-| D4 | Tests doblando el módulo Pro en vez del loader (`loadBackupService`/`loadWebLLMService`); respuesta simulada del proxy eliminado | `npm run test:fast` → exit 0 (163 archivos) |
+| D4 | Tests doblando el módulo Pro en vez del loader (`loadBackupService`/`loadWebLLMService`); respuesta simulada del proxy eliminado | `npm run test:fast` → exit 0 (165 archivos) |
 | D5 | Dos commits con el mismo asunto (higiene de historia) | `git log --format=%s \| sort \| uniq -d` → `Remove Gemini proxy: route directly to Gemini API` (registrado, no corregible sin reescritura) |
 
 ### Deuda de mantenibilidad declarada (no corregida, medible)
@@ -112,9 +121,8 @@ La lección estructural de este ledger: el código evolucionó (retirada del pro
 
 Verificables desde el repo:
 
-1. **`npm run typecheck` en rojo** (3 errores) por specs sin trackear de `src/tests/human-like/examples/` (`advanced-avatars-tests.spec.ts`, `aria-texts-tests.spec.ts`). Son WIP de otro frente, no parte del árbol entregable; el estado se re-evalúa cuando esos ficheros entren o desaparezcan. Comando: `npm run typecheck`.
-2. **A11-2 — producción no corresponde al checkout.** Sondas del 2026-09-22: `curl -s -o /dev/null -w "%{http_code}" https://bookmarkforge.com/…` → `/` = 200; `/ar/`, `/es/`, `/sitemap.xml`, `/privacy-and-terms.html` = **404**. No es válido afirmar que el sitemap de este checkout está publicado ni enviar sus 61 URLs a Search Console. Cierre: desplegar este checkout, repetir las sondas y correr `node scripts/check-hreflang-graph.mjs https://bookmarkforge.com`.
-3. **M1/M2** (tabla anterior): duplicación de helpers declarada y rutas Pro sin declarar — ambas con comando de medición.
+1. **A11-2 — producción no corresponde al checkout.** Sondas del 2026-09-22: `curl -s -o /dev/null -w "%{http_code}" https://bookmarkforge.com/…` → `/` = 200; `/ar/`, `/es/`, `/sitemap.xml`, `/privacy-and-terms.html` = **404**. No es válido afirmar que el sitemap de este checkout está publicado ni enviar sus 61 URLs a Search Console. Cierre: desplegar este checkout, repetir las sondas y correr `node scripts/check-hreflang-graph.mjs https://bookmarkforge.com`.
+2. **M1/M2** (tabla anterior): duplicación de helpers declarada y rutas Pro sin declarar — ambas con comando de medición.
 
 Deudas declaradas **no verificables desde el repo** (se listan para que existan; ninguna puede cerrarse con código):
 
@@ -145,4 +153,4 @@ Retirado por no sostenible desde el repositorio:
 1. Toda fila del ledger se re-verificó contra el working tree antes de conservarse; las que ya no se sostenían se corrigieron hacia el observable real (A3, O5, O6, B5) o se retiraron.
 2. Los comandos se ejecutaron el 2026-09-22 en Windows (Git Bash); los observables son texto de salida o códigos de exit, no interpretaciones.
 3. La clasificación vive en este fichero; los gates viven en `scripts/check-*.mjs`. Cuando una afirmación depende de un gate, el gate manda sobre este documento.
-4. Próxima actualización: re-ejecutar la tabla de estado y las sondas de A11-2 tras el próximo despliegue; cualquier fila nueva de hallazgo entra con su comando o no entra.
+4. Próxima actualización: la tabla de estado se re-ejecuta sola (`npm run check:audit-freshness` dentro de `npm run check`; CI con `--deep --allow-network`) y solo las sondas de A11-2 siguen siendo manuales; cualquier fila nueva de hallazgo entra con su comando o no entra.

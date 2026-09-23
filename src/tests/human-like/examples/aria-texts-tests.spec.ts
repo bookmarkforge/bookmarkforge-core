@@ -128,7 +128,7 @@ test.describe('ARIA Texts Coverage', () => {
     const count = await buttons.count();
     
     if (count > 1) {
-      const labels = [];
+      const labels: string[] = [];
       for (let i = 0; i < Math.min(count, 10); i++) {
         const button = buttons.nth(i);
         const label = await button.getAttribute('aria-label');

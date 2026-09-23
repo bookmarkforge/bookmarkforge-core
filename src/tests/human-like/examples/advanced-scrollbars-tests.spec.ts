@@ -103,7 +103,7 @@ test.describe('Advanced Scrollbars Coverage', () => {
       
       const trackStyle = await scrollable.evaluate(el => {
         const styles = window.getComputedStyle(el);
-        return styles.scrollbarTrackColor || styles.scrollbarColor;
+        return (styles as CSSStyleDeclaration & { scrollbarTrackColor?: string }).scrollbarTrackColor || styles.scrollbarColor;
       });
       if (trackStyle) {
         await expect(trackStyle).toBeTruthy();
@@ -120,7 +120,7 @@ test.describe('Advanced Scrollbars Coverage', () => {
       
       const thumbStyle = await scrollable.evaluate(el => {
         const styles = window.getComputedStyle(el);
-        return styles.scrollbarThumbColor || styles.scrollbarColor;
+        return (styles as CSSStyleDeclaration & { scrollbarThumbColor?: string }).scrollbarThumbColor || styles.scrollbarColor;
       });
       if (thumbStyle) {
         await expect(thumbStyle).toBeTruthy();

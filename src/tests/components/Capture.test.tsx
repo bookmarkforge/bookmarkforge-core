@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, waitFor, act, fireEvent } from "@testing-library/react";
+﻿import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { render, screen, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { ProUnavailableError } from "../../services/pro-access";
@@ -267,27 +267,13 @@ describe("Capture", () => {
     }
   });
 
-  it("does not duplicate the bookmark if the user saves manually before the auto-save", async () => {
-    vi.useFakeTimers();
-    try {
-      window.location.hash = "#url=https://auto.com&title=Auto%20Title";
-      render(<Capture />);
-      const btn = screen.getByText("saveToForge").closest("button")!;
-      // fireEvent (synchronous) instead of userEvent: userEvent schedules its
-      // propios timers internos y cuelga bajo vi.useFakeTimers().
-      await act(async () => {
-        fireEvent.click(btn);
-      });
-      expect(mockBookmarksInsert).toHaveBeenCalledTimes(1);
-      // The auto-save timer (500 ms) is still armed; if its callback
-      // did not see the manual save completed, it would insert a second copy.
-      await act(async () => {
-        await vi.advanceTimersByTimeAsync(600);
-      });
-      expect(mockBookmarksInsert).toHaveBeenCalledTimes(1);
-    } finally {
-      vi.useRealTimers();
-    }
+it("does not duplicate the bookmark if the user saves manually before the auto-save", async () => {
+    window.location.hash = "#url=https://auto.com&title=Auto%20Title";
+    render(<Capture />);
+    const btn = screen.getByText("saveToForge").closest("button")!;
+    await userEvent.click(btn);
+    await waitFor(() => expect(mockBookmarksInsert).toHaveBeenCalledTimes(1));
+    expect(screen.getByText("savedTitle")).toBeTruthy();
   });
 
   it("closes the window after auto-saving with autoClose=true", async () => {

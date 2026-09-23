@@ -9,7 +9,7 @@ import {
 import { usePreferencesStore } from "../store/usePreferencesStore";
 import { analyticsService } from "../services/AnalyticsService";
 
-type Theme = "light" | "dark" | "system";
+export type Theme = "light" | "dark" | "system";
 
 interface ThemeContextType {
   theme: Theme;

@@ -54,10 +54,12 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/ADR-064-audit-freshness-gate.md` | vivo | Registro de decisión arquitectónica. |
 | `docs/ai-performance-local-device-report-2026-09-21.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/api.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/ARCHITECTURE-TUTORIAL.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/architecture.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/audit-report-2026-09-02.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/audit.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/CHANGELOG.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/CRYPTO-PATTERNS.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/deployment-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/docs-state-index.md` | vivo | Inventario canónico generado por scripts/doctor-docs-index.mjs. |
 | `docs/edge-case-hardening-vault-audit.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
@@ -116,6 +118,7 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/p2p-sync-session-prep.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/PENDIENTES.md` | transitorio | Registro de trabajo pendiente y deuda conocida. |
 | `docs/performance-budget-by-feature.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/PLAN-FIRST-USER-2-SEMANAS.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/plan-super-optimizacion.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/positioning.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/pricing-decision.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
@@ -125,6 +128,7 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/ROPA.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/sast-triage.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/scripts-inventory-scanner-limits.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/SECURITY-INCIDENT-ghp-2026-09-23.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/security.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/SELF-HOSTING.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/server-api-index.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
@@ -134,6 +138,8 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/support-data-loss-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/support-license-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/support-refunds-log.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/TESTING-PATTERNS.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/TROUBLESHOOTING.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/WEBRTC-COMPATIBILITY.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/whop-setup-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 

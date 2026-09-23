@@ -140,6 +140,7 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/support-refunds-log.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/TESTING-PATTERNS.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/TROUBLESHOOTING.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/VERCEL-LOCAL-SETUP.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/WEBRTC-COMPATIBILITY.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/whop-setup-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 

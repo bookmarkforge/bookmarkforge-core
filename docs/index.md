@@ -46,6 +46,7 @@ Each language has a Markdown version and a PDF version generated from the same s
 | [Crypto Patterns](CRYPTO-PATTERNS.md) | Cryptographic maintenance guide |
 | [Testing Patterns](TESTING-PATTERNS.md) | Testing conventions and patterns |
 | [Troubleshooting](TROUBLESHOOTING.md) | Common problems and solutions |
+| [Vercel Local Setup](VERCEL-LOCAL-SETUP.md) | Vercel local development configuration |
 | [Security](security.md) | Security model and threats |
 | [API](api.md) | API specification |
 | [OpenAPI](openapi.yaml) | OpenAPI 3.0 specification |

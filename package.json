@@ -18,6 +18,8 @@
     "build": "vite build",
     "build:ci": "node scripts/build-ci.mjs",
     "build:extension:custom": "node scripts/build-extension.cjs",
+    "build:extension:dev": "node scripts/build-extension.cjs --dev",
+    "dev:extension": "node scripts/dev-extension.mjs",
     "build:landings": "node scripts/build-landings.cjs",
     "demo:capture-screens": "node scripts/capture-demo-screens.mjs",
     "demo:capture-tour": "node scripts/capture-demo-tour.mjs",

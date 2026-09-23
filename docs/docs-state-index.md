@@ -63,6 +63,7 @@ Este índice se genera desde los documentos presentes en el checkout. Un documen
 | `docs/deployment-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/docs-state-index.md` | vivo | Inventario canónico generado por scripts/doctor-docs-index.mjs. |
 | `docs/edge-case-hardening-vault-audit.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/EXTENSION-LOCAL-SETUP.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/fix-findings-plan.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/github-secrets-and-push-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
 | `docs/google-search-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |

@@ -134,7 +134,7 @@ const LICENSE_TOKENS = [
 ];
 
 const MIT_WORD = /\bMIT\b/;
-const MIT_URL = /opensource\.org\/licenses\/MIT/;
+const MIT_URL = /(?:^|https?:\/\/)opensource\.org\/licenses\/MIT(?:[\/?#\s]|$)/i;
 
 // ---------------------------------------------------------------------------
 // Scanning

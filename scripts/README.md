@@ -105,7 +105,6 @@ invoked from `package.json`.
 | `check-quick.mjs` | Quick pre-commit tier |
 | `validate-input-contracts.mjs` | Input contracts |
 | `validate-input-contracts.mjs` | Input contract checks |
-| `staging-http-checks.mjs` | Staging HTTP |
 | `doctor-docs-index.mjs` | Docs index doctor |
 | `doctor-legacy-schema-map.mjs` | Legacy schema doctor |
 | `env-direct-reads.baseline.json` | Direct reads baseline |

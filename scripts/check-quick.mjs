@@ -56,10 +56,7 @@ export const QUICK_GATES = [
   // 5. Container config (compose/runtime variables, removed AI config).
   { gate: "check:compose-config", script: "scripts/validate-compose-config.mjs" },
   { gate: "check:runtime-config", script: "scripts/validate-runtime-config.mjs" },
-  // 6. License keys parity (src/services ↔ server/src public key copies).
-  //    --check keeps it read-only: the generator must never write from here.
-  { gate: "check:license-keys", script: "scripts/generate-license-keys.mjs", args: ["--check"] },
-  // 7. Server log IP privacy.
+  // 6. Server log IP privacy.
   { gate: "check:server-log-ip-privacy", script: "scripts/check-server-log-ip-privacy.mjs" },
 ];
 

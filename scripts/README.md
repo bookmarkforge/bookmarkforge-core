@@ -139,14 +139,6 @@ invoked from `package.json`.
 | `generate-legacy-schema-map.mjs` | Generates legacy schema map |
 | `build-legacy-schema-map.mjs` | Builds legacy schema map |
 
-### 🗑️ Retired / Obsolete (4 scripts)
-
-| Script | Status | Reason |
-|--------|--------|--------|
-| `ai-upstream/` | Retired | AI proxy no longer exists |
-| `check-webrtc-certification.mjs` | Active | Only used in specific CI |
-| `penetration-test.mjs` | Active | Penetration test |
-
 ## Naming Conventions
 
 - `check-*`: Verification scripts (fail fast)

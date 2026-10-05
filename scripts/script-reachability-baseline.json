@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-25",
+  "updatedAt": "2026-10-06",
   "knownUnreachable": {
     "build:extension:dev": "By-hand dev-flag extension bundle. The documented entry point (dev:extension) builds the `custom` variant itself, so this alias exists for inspecting a dev build without the reload loop.",
     "test:coverage:history": "By-hand coverage trend report over coverage-history.json. No gate reads it: the nightly coverage job uploads coverage/ as its own artifact.",
@@ -17,7 +17,6 @@
     "check:audit-drift:strict-discovery": "By-hand strict-discovery mode of check-audit-drift.mjs. The chain runs the default mode as check:audit-drift.",
     "check:audit-drift:fix": "By-hand fixer mode of check-audit-drift.mjs (it rewrites anchors and baselines); a gate must never run it.",
     "check:coverage-areas": "By-hand per-directory coverage budget gate. It needs coverage/lcov.info from test:coverage first, so it cannot live in the offline chain.",
-    "check:no-unbounded-text:fix": "By-hand baseline refresher for check:no-unbounded-text. The chain runs the verify mode, never the fix mode.",
-    "deploy:prod": "By-hand production deploy: the runbooks and ADR-043 invoke (node scripts/deploy-prod.mjs --deploy --verify) directly. No workflow runs the alias."
+    "check:no-unbounded-text:fix": "By-hand baseline refresher for check:no-unbounded-text. The chain runs the verify mode, never the fix mode."
   }
 }

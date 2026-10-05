@@ -327,7 +327,7 @@ export function buildConsistencyReport(summaryRows, alertEntries, historyEntries
 }
 
 export function mdCell(value) {
-  return String(value ?? "").replace(/\|/g, "\\|").replace(/\n/g, " ");
+  return String(value ?? "").replaceAll("|", "\\|").replaceAll("\n", " ");
 }
 
 // Markdown for the GitHub job summary — the findings (missed/phantom alerts)

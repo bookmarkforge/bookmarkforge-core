@@ -90,12 +90,20 @@ function exportToCSV(lang) {
   
   const outputPath = path.join(__dirname, 'translations', `${lang}.json`);
   
-  if (!fs.existsSync(outputPath)) {
+  let translation;
+  try {
+    translation = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error;
     console.log(`⚠️  ${lang}.json does not exist, creating from template...`);
-    fs.writeFileSync(outputPath, JSON.stringify(enTemplate, null, 2), 'utf-8');
+    try {
+      fs.writeFileSync(outputPath, JSON.stringify(enTemplate, null, 2), { encoding: 'utf-8', flag: 'wx' });
+      translation = enTemplate;
+    } catch (createError) {
+      if (createError?.code !== 'EEXIST') throw createError;
+      translation = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
+    }
   }
-  
-  const translation = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
   const fields = extractTranslatableFields(translation, lang);
   
   // Crear CSV
@@ -121,12 +129,16 @@ function importFromCSV(lang) {
   
   const csvPath = path.join(__dirname, 'translations', `${lang}-translation.csv`);
   
-  if (!fs.existsSync(csvPath)) {
-    console.error(`❌ CSV file not found: ${csvPath}`);
-    return;
+  let csvContent;
+  try {
+    csvContent = fs.readFileSync(csvPath, 'utf-8');
+  } catch (error) {
+    if (error?.code === 'ENOENT') {
+      console.error(`❌ CSV file not found: ${csvPath}`);
+      return;
+    }
+    throw error;
   }
-  
-  const csvContent = fs.readFileSync(csvPath, 'utf-8');
   const lines = csvContent.split('\n').slice(1); // Skip header
   
   const outputPath = path.join(__dirname, 'translations', `${lang}.json`);
@@ -162,12 +174,16 @@ function generateReport() {
   LANGUAGES_TO_TRANSLATE.forEach(lang => {
     const outputPath = path.join(__dirname, 'translations', `${lang}.json`);
     
-    if (!fs.existsSync(outputPath)) {
-      report.push({ lang, status: 'missing', translated: 0, total: 0 });
-      return;
+    let translation;
+    try {
+      translation = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
+    } catch (error) {
+      if (error?.code === 'ENOENT') {
+        report.push({ lang, status: 'missing', translated: 0, total: 0 });
+        return;
+      }
+      throw error;
     }
-    
-    const translation = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
     const enFields = extractTranslatableFields(enTemplate, lang);
     const translatedFields = extractTranslatableFields(translation, lang);
     
@@ -210,12 +226,16 @@ function validateTranslation(lang) {
   
   const outputPath = path.join(__dirname, 'translations', `${lang}.json`);
   
-  if (!fs.existsSync(outputPath)) {
-    console.error(`❌ ${lang}.json does not exist`);
-    return;
+  let translation;
+  try {
+    translation = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
+  } catch (error) {
+    if (error?.code === 'ENOENT') {
+      console.error(`❌ ${lang}.json does not exist`);
+      return;
+    }
+    throw error;
   }
-  
-  const translation = JSON.parse(fs.readFileSync(outputPath, 'utf-8'));
   const enFields = extractTranslatableFields(enTemplate, lang);
   const translatedFields = extractTranslatableFields(translation, lang);
   
@@ -262,9 +282,16 @@ function generateTemplate(lang) {
   
   const outputPath = path.join(__dirname, 'translations', `${lang}.json`);
   
-  if (!fs.existsSync(outputPath)) {
+  try {
+    fs.readFileSync(outputPath, 'utf-8');
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error;
     console.log(`⚠️  ${lang}.json does not exist, creating from template...`);
-    fs.writeFileSync(outputPath, JSON.stringify(enTemplate, null, 2), 'utf-8');
+    try {
+      fs.writeFileSync(outputPath, JSON.stringify(enTemplate, null, 2), { encoding: 'utf-8', flag: 'wx' });
+    } catch (createError) {
+      if (createError?.code !== 'EEXIST') throw createError;
+    }
   }
   
   const fields = extractTranslatableFields(enTemplate, lang);

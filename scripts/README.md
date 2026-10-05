@@ -28,9 +28,6 @@ invoked from `package.json`.
 | `check-override-cve.mjs` | CVE override gate |
 | `check-direct-cve.mjs` | Direct CVE scan |
 | `check-sarif-severity.mjs` | SARIF result severity |
-| `generate-license-keys.mjs` | Generates license keys |
-| `sync-server-key.mjs` | Syncs server public key |
-| `check-license-keys.mjs` | Verifies license key parity |
 | `pro-boundary.mjs` | Core/Pro build boundary |
 | `check-pro-imports.mjs` | Detects static Pro imports in Core |
 | `check-open-core-export.mjs` | Verifies the Open Core export |
@@ -51,15 +48,12 @@ invoked from `package.json`.
 | `check-i18n-quality.mjs` | i18n quality |
 | `check-code-i18n.mjs` | Code i18n |
 | `check-english-only.mjs` | Verifies exclusive English |
-| `check-no-unbounded-text.mjs` | Unbounded text |
 | `check-claim-drift.mjs` | Claim drift |
-| `check-licensing.mjs` | Verifies licenses |
 
 ### 📦 Build and Generation (24 scripts)
 
 | Script | Purpose |
 |--------|---------|
-| `export-public-repo.mjs` | Exports the MIT public repository |
 | `build-ci.mjs` | CI build with additional gates |
 | `build-extension.cjs` | Browser extension build |
 | `build-landings.cjs` | Generates landing pages |
@@ -69,13 +63,9 @@ invoked from `package.json`.
 | `nginx-render.mjs` | Renders nginx configuration |
 | `ci-local-parallel.mjs` | Local CI in parallel |
 | `command-runner.mjs` | Command runner |
-| `deploy-prod.mjs` | Deploy to production |
-| `staging-deploy.mjs` | Deploy to staging |
-| `staging-rollback.mjs` | Staging rollback |
-| `staging-smoke.mjs` | Staging smoke test |
 | `production-smoke.mjs` | Production smoke test |
 | `local-smoke.mjs` | Local smoke test |
-| `launch-smoke.mjs` | Launch smoke test |
+| `run-launch-smoke.mjs` | Launch smoke test |
 | `extension-smoke.mjs` | Extension smoke test |
 | `mock-openai-server.mjs` | OpenAI mock server |
 | `webrtc-recovery-history.mjs` | WebRTC recovery history |
@@ -100,14 +90,9 @@ invoked from `package.json`.
 | `run-launch-smoke.mjs` | Launch smoke test |
 | `run-mobile-smoke.mjs` | Mobile smoke test |
 | `test-ollama-contract.mjs` | Ollama contract |
-| `load-test-server.mjs` | Server load test |
 | `benchmark-storage.mjs` | Storage benchmark |
 | `benchmark-import-csv.mjs` | CSV import benchmark |
 | `calibrate-first-summary.mjs` | First summary calibration |
-| `kpi-report.mjs` | KPI report |
-| `health-dashboard.mjs` | Health dashboard |
-| `drill-backup-restore.mjs` | Backup/restore drill |
-| `drill-rollback.mjs` | Rollback drill |
 | `rollback.mjs` | Rollback |
 | `gate-refresh.mjs` | Refreshes gates |
 
@@ -119,9 +104,8 @@ invoked from `package.json`.
 | `check-quick.mjs` | Quick gate tier (~2.5s) |
 | `check-quick.mjs` | Quick pre-commit tier |
 | `validate-input-contracts.mjs` | Input contracts |
-| `check-input-contracts.mjs` | Input contract checks |
-| `check-staging-http.mjs` | Staging HTTP |
-| `staging-target-policy.mjs` | Target policy |
+| `validate-input-contracts.mjs` | Input contract checks |
+| `staging-http-checks.mjs` | Staging HTTP |
 | `doctor-docs-index.mjs` | Docs index doctor |
 | `doctor-legacy-schema-map.mjs` | Legacy schema doctor |
 | `env-direct-reads.baseline.json` | Direct reads baseline |
@@ -129,8 +113,6 @@ invoked from `package.json`.
 | `push-images-lib.mjs` | Image push library |
 | `registry-policy.mjs` | Registry policy |
 | `monitoring-alerts.mjs` | Monitoring alerts |
-| `monitoring-cron.example` | Monitoring cron |
-| `nightly-alert.mjs` | Nightly alerts |
 | `nightly-consistency.mjs` | Nightly consistency |
 | `nightly-trends.mjs` | Nightly trends |
 | `merge-nightly-blobs.mjs` | Merge nightly blobs |
@@ -148,14 +130,12 @@ invoked from `package.json`.
 | `tooling/` | Auxiliary tooling |
 | `templates/` | Templates |
 | `structured-data/` | Structured data |
-| `sitemap-coverage.mjs` | Sitemap coverage |
+| `check-sitemap-coverage.mjs` | Sitemap coverage |
 | `check-sitemap-coverage.mjs` | Sitemap coverage check |
 | `check-hreflang-graph.mjs` | Hreflang graph |
-| `check-privacy-pages.mjs` | Privacy pages |
 | `generate-privacy-pages.mjs` | Generates privacy pages |
 | `privacy-translations.json` | Privacy translations |
 | `landing-translations.json` | Landing translations |
-| `patch-landing-copy.mjs` | Patches landing copy |
 | `og-image-locale-gen.mjs` | Generates OG images per locale |
 | `generate-legacy-schema-map.mjs` | Generates legacy schema map |
 | `build-legacy-schema-map.mjs` | Builds legacy schema map |
@@ -164,7 +144,6 @@ invoked from `package.json`.
 
 | Script | Status | Reason |
 |--------|--------|--------|
-| `test-upstream-server.mjs` | Retired | Gemini proxy removed |
 | `ai-upstream/` | Retired | AI proxy no longer exists |
 | `check-webrtc-certification.mjs` | Active | Only used in specific CI |
 | `penetration-test.mjs` | Active | Penetration test |
@@ -225,5 +204,4 @@ npm run build:ci
 
 - Scripts that touch secrets are in `check-secrets-in-commit.mjs`
 - Deploy scripts require explicit tokens
-- Export scripts (`export-public-repo.mjs`) never expose Pro code
 - Build scripts (`build-ci.mjs`) scan for secrets in the resulting bundle

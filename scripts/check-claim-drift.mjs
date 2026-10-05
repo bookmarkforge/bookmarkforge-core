@@ -195,7 +195,8 @@ function extractHoursFromMs(src, name) {
 /** Serialize Sets for reports/tests. */
 export function truthSummary(t) {
   return {
-    minPasswordLength: t.minPasswordLength,
+    // Do not emit the password policy through the JSON/console diagnostic path.
+    // The policy remains enforced and is still surfaced in drift errors.
     recoveryWords: t.recoveryWords,
     deviceCounts: [...t.deviceCounts].sort((a, b) => a - b),
     freeDeviceCap: t.freeDeviceCap,
@@ -778,7 +779,7 @@ if (invokedDirectly) {
   if (total === 0) {
     console.log(
       `check-claim-drift: OK — ${discoverSurface(ROOT).length} files scanned, no factual drift ` +
-        `(minPassword=${report.truth.minPasswordLength}, recoveryWords=${report.truth.recoveryWords}, ` +
+        `(` +
         `devices={${fmtSet(report.truth.deviceCounts)}}, bookmarkCaps={${fmtSet(report.truth.bookmarkCaps)}}, ` +
         `refundDays=${report.truth.refundDays}, prices={${fmtSet(report.truth.prices)}}, ` +
           `argon2MiB={${fmtSet(report.truth.argonMiB)}}, autoBackup=${report.truth.autoBackupHours}h, ` +

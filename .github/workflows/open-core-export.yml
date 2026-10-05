@@ -43,6 +43,7 @@ env:
 
 jobs:
   export-and-verify:
+    if: ${{ hashFiles('scripts/export-public-repo.mjs') != '' }}
     name: Materialize export, typecheck, build and test inside it
     runs-on: ubuntu-latest
     timeout-minutes: 30

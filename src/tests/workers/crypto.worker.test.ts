@@ -283,6 +283,14 @@ describe("CryptoWorker", () => {
     });
   });
 
+  describe("payload sanitization", () => {
+    it("does not allow attacker-controlled keys to pollute Object.prototype", async () => {
+      const payload = JSON.parse('{"text":"hello","__proto__":{"polluted":"yes"},"constructor":{"prototype":{"polluted":"yes"}}}');
+      await fireMessage({ id: "proto", type: "encrypt", payload });
+      expect((Object.prototype as { polluted?: string }).polluted).toBeUndefined();
+    });
+  });
+
   describe("timeout cleanup", () => {
     it("releases sanitized plaintext references when encryption times out", async () => {
       vi.useFakeTimers();

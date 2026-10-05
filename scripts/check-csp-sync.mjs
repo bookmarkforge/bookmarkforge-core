@@ -36,6 +36,10 @@ import {
 
 const ROOT = process.cwd();
 
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\const ROOT = process.cwd();");
+}
+
 // Hosts that were deliberately removed for privacy/security must never
 // be re-added to any CSP copy. This gate catches accidental re-introduction.
 export const FORBIDDEN_HOSTS = [
@@ -149,10 +153,10 @@ export function runCspSyncChecks({
     if (copy.content === null) continue;
     const content = copy.content;
     const coepRE = new RegExp(
-      `Cross-Origin-Embedder-Policy\\s*[:=]?\\s*"?${coep.replace(/[-]/g, "\\-")}"?`,
+      `Cross-Origin-Embedder-Policy\\s*[:=]?\\s*"?${escapeRegExp(coep)}"?`,
     );
     const coopRE = new RegExp(
-      `Cross-Origin-Opener-Policy\\s*[:=]?\\s*"?${coop.replace(/[-]/g, "\\-")}"?`,
+      `Cross-Origin-Opener-Policy\\s*[:=]?\\s*"?${escapeRegExp(coop)}"?`,
     );
     if (!coepRE.test(content)) fail(`${copy.label}: COEP not found`);
     if (!coopRE.test(content)) fail(`${copy.label}: COOP not found`);

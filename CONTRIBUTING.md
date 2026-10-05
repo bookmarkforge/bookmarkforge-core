@@ -157,7 +157,6 @@ here still exists.
 |---|---|
 | `npm run test:watch` | Vitest in watch mode for the file you are editing. |
 | `npm run test:rollback` | Unit tests for the pure decision logic of `scripts/rollback.mjs`. |
-| `npm run test:staging-policy` | Staging target policy and HTTP checks, run by hand against staging. |
 | `npm run test:timing` | Slowest test files, for the timing budget (diagnostic, not a gate). |
 | `npm run e2e:headed` | E2E with a visible browser, for debugging one spec. |
 | `npm run e2e:browsers` | Cross-browser E2E config (Chromium, Firefox, WebKit). |
@@ -167,7 +166,6 @@ here still exists.
 | `npm run e2e:visual:browsers` | The same visual spec across the browser configs. |
 | `npm run dev:extension` | Loads the extension build for manual iteration. |
 | `npm run server:watch` | Signaling server with restart-on-change. |
-| `npm run health:dashboard` | Real-time terminal health dashboard (local probing, not a gate). |
 | `npm run check:nightly` | The nightly surface locally: pre-deploy gates + audit + the slow suite. |
 | `npm run ci:local:parallel` | Dependency-aware scheduler for the local CI gates. |
 | `npm run ci:local:e2e` | `ci:local` plus the browser suites. |

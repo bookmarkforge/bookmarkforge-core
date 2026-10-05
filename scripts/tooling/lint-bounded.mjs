@@ -18,7 +18,7 @@
  *   BMF_LINT_VERBOSE=1 node scripts/tooling/lint-bounded.mjs
  *   node scripts/tooling/lint-bounded.mjs --no-cache
  */
-import { existsSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 import { spawnSync } from "node:child_process";
 
@@ -49,6 +49,7 @@ const ROOT_FILES = new Set([
   "playwright.public-relay.config.ts",
   "playwright.smoke.config.ts",
   "playwright.sw-integrity.config.ts",
+  "_open-core-placeholder.js",
 ]);
 const EXCLUDED_DIRS = new Set([
   ".git",
@@ -81,8 +82,14 @@ function parsePositiveInt(raw, fallback) {
 
 function collectFiles(root) {
   const result = [];
-  if (!existsSync(root)) return result;
-  for (const entry of readdirSync(root, { withFileTypes: true })) {
+  let entries;
+  try {
+    entries = readdirSync(root, { withFileTypes: true });
+  } catch (error) {
+    if (error?.code === "ENOENT") return result;
+    throw error;
+  }
+  for (const entry of entries) {
     if (EXCLUDED_DIRS.has(entry.name)) continue;
     const absolute = join(root, entry.name);
     if (entry.isDirectory()) {
@@ -135,9 +142,14 @@ function appendNodeOption(existing, option) {
   return [existing, option].filter(Boolean).join(" ");
 }
 
-if (!existsSync(ESLINT_BIN)) {
-  console.error(`[lint-bounded] falta el ejecutable de ESLint: ${ESLINT_BIN}`);
-  process.exit(1);
+try {
+  readFileSync(ESLINT_BIN, "utf8");
+} catch (error) {
+  if (error?.code === "ENOENT") {
+    console.error(`[lint-bounded] falta el ejecutable de ESLint: ${ESLINT_BIN}`);
+    process.exit(1);
+  }
+  throw error;
 }
 
 const allBatches = [];
@@ -168,12 +180,15 @@ for (const batch of batches(rootFiles)) allBatches.push({ label: "root-config", 
 // Markdown ADRs are intentionally explicit because ESLint's CLI does not
 // discover .md files from `eslint .` on every supported ESLint minor, while
 // the flat config contains a parser/rule contract for them.
-const adrFiles = existsSync(join(ROOT, "docs"))
-  ? readdirSync(join(ROOT, "docs"))
-      .filter((file) => /^ADR-.*\.md$/.test(file))
-      .map((file) => `docs/${file}`)
-      .sort()
-  : [];
+let adrFiles = [];
+try {
+  adrFiles = readdirSync(join(ROOT, "docs"))
+    .filter((file) => /^ADR-.*\.md$/.test(file))
+    .map((file) => `docs/${file}`)
+    .sort();
+} catch (error) {
+  if (error?.code !== "ENOENT") throw error;
+}
 for (const batch of batches(adrFiles)) allBatches.push({ label: "adr-docs", files: batch });
 
 const totalFiles = allBatches.reduce((sum, batch) => sum + batch.files.length, 0);

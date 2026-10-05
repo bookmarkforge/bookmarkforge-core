@@ -116,7 +116,13 @@ export class TagColorService {
    * Get a random color from the palette
    */
   public getRandomColor(): string {
-    const idx = crypto.getRandomValues(new Uint32Array(1))[0]! % this.COLOR_PALETTE.length;
+    const paletteLength = this.COLOR_PALETTE.length;
+    const cutoff = Math.floor(0x100000000 / paletteLength) * paletteLength;
+    let randomValue: number;
+    do {
+      randomValue = crypto.getRandomValues(new Uint32Array(1))[0]!;
+    } while (randomValue >= cutoff);
+    const idx = randomValue % paletteLength;
     return this.COLOR_PALETTE[idx]!;
   }
 

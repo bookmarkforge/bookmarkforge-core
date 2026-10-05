@@ -52,6 +52,34 @@ describe("classifySeverity", () => {
     expect(classifySeverity(resultWith({ properties: { "security-severity": "Critical" } }))).toBe("critical");
   });
 
+  it("maps numeric CodeQL security-severity scores", () => {
+    expect(classifySeverity(resultWith({ properties: { "security-severity": "9.1" } }))).toBe("critical");
+    expect(classifySeverity(resultWith({ properties: { "security-severity": 7.0 } }))).toBe("high");
+    expect(classifySeverity(resultWith({ properties: { "security-severity": "4.0" } }))).toBe("medium");
+    expect(classifySeverity(resultWith({ properties: { "security-severity": "0.1" } }))).toBe("low");
+  });
+
+  it("falls back to CodeQL rule metadata when the result omits severity", () => {
+    const sarif = {
+      version: "2.1.0",
+      runs: [
+        {
+          tool: {
+            driver: {
+              name: "CodeQL",
+              rules: [
+                { id: "js/test-rule", properties: { "security-severity": "7.5" } },
+              ],
+            },
+          },
+          results: [resultWith({ ruleId: "js/test-rule", properties: undefined })],
+        },
+      ],
+    };
+    expect(analyzeSarif(sarif, "high").blocking).toHaveLength(1);
+    expect(analyzeSarif(sarif, "high").findings[0].severity).toBe("high");
+  });
+
   it("maps SARIF levels (Semgrep style)", () => {
     expect(classifySeverity(resultWith({ level: "error" }))).toBe("high");
     expect(classifySeverity(resultWith({ level: "warning" }))).toBe("medium");

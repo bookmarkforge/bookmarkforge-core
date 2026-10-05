@@ -506,14 +506,11 @@ export function normalizeCopy(s) {
 
 /** Decode the HTML entities an SVG/HTML text run can carry. */
 function decodeEntities(s) {
-  return s
-    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
-    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(parseInt(d, 10)))
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&apos;/g, "'");
+  return s.replace(/&(?:#x([0-9a-f]+)|#(\d+)|(amp|lt|gt|quot|apos));/gi, (match, hex, dec, named) => {
+    if (hex !== undefined) return String.fromCodePoint(parseInt(hex, 16));
+    if (dec !== undefined) return String.fromCodePoint(parseInt(dec, 10));
+    return { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'" }[named.toLowerCase()] ?? match;
+  });
 }
 
 /** Content of every <text> element in an SVG (entities decoded). */

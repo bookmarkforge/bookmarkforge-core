@@ -96,7 +96,15 @@ function convertPillars(pillars) {
       if (match) {
         return { strong: match[1], text: match[2] };
       }
-      return { strong: '', text: pillar.replace(/<[^>]*>/g, '') };
+      let text = pillar;
+      for (;;) {
+        const open = text.indexOf('<');
+        if (open === -1) break;
+        const close = text.indexOf('>', open + 1);
+        if (close === -1) { text = text.slice(0, open); break; }
+        text = text.slice(0, open) + text.slice(close + 1);
+      }
+      return { strong: '', text };
     }
     return pillar;
   });

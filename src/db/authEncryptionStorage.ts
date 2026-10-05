@@ -77,6 +77,13 @@ const OUTER_MARKER_RE = /^v[456]:/;
  * read back as a string.
  */
 const JSON_BLOB_PREFIX = "__BF_json__:";
+const UNSAFE_PATH_SEGMENTS = new Set(["__proto__", "prototype", "constructor"]);
+
+function assertSafePath(path: string): void {
+  if (path.split(".").some((segment) => UNSAFE_PATH_SEGMENTS.has(segment))) {
+    throw new Error(`[auth-encryption] unsafe encrypted path: ${path}`);
+  }
+}
 
 interface AuthStorageParams {
   /** The inner storage (typically wrappedKeyEncryptionCryptoJsStorage). */
@@ -130,6 +137,7 @@ export function authenticatedEncryptionStorage(
 
       // ── field walkers ───────────────────────────────────────────────
       function getByPath(obj: AnyDoc, path: string): unknown {
+        assertSafePath(path);
         let cur: unknown = obj;
         for (const part of path.split(".")) {
           if (
@@ -145,6 +153,7 @@ export function authenticatedEncryptionStorage(
       }
 
       function setByPath(obj: AnyDoc, path: string, value: unknown): void {
+        assertSafePath(path);
         const parts = path.split(".");
         let cur = obj;
         for (let i = 0; i < parts.length - 1; i++) {

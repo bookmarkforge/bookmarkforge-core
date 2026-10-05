@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -28,12 +28,27 @@ export const SEVERITY_RANK = {
   none: 4,
 };
 
-export function classifySeverity(result) {
-  const property = result?.properties?.["security-severity"];
-  if (typeof property === "string") {
-    const severity = property.toLowerCase();
-    if (severity in SEVERITY_RANK) return severity;
+function classifySecuritySeverity(value) {
+  if (typeof value === "string") {
+    const normalized = value.trim().toLowerCase();
+    if (normalized in SEVERITY_RANK) return normalized;
   }
+  const score = typeof value === "number" ? value : Number(value);
+  if (Number.isFinite(score)) {
+    if (score >= 9) return "critical";
+    if (score >= 7) return "high";
+    if (score >= 4) return "medium";
+    if (score > 0) return "low";
+    return "none";
+  }
+  return null;
+}
+
+export function classifySeverity(result, rule = null) {
+  const direct = classifySecuritySeverity(result?.properties?.["security-severity"]);
+  if (direct) return direct;
+  const fromRule = classifySecuritySeverity(rule?.properties?.["security-severity"]);
+  if (fromRule) return fromRule;
   switch (result?.level) {
     case "error":
       return "high";
@@ -55,11 +70,14 @@ export function isBlocking(severity, minSeverity) {
 export function collectFindings(sarif) {
   const findings = [];
   for (const run of sarif?.runs ?? []) {
-    const toolName = run?.tool?.driver?.name ?? "unknown tool";
+    const driver = run?.tool?.driver ?? {};
+    const toolName = driver?.name ?? "unknown tool";
+    const rules = Array.isArray(driver?.rules) ? driver.rules : [];
     for (const result of run?.results ?? []) {
+      const rule = rules.find((candidate) => candidate?.id === result?.ruleId);
       const location = result?.locations?.[0]?.physicalLocation ?? {};
       findings.push({
-        severity: classifySeverity(result),
+        severity: classifySeverity(result, rule),
         ruleId: result?.ruleId ?? "(unknown rule)",
         file: location?.artifactLocation?.uri ?? "(unknown file)",
         line: location?.region?.startLine ?? null,
@@ -98,14 +116,16 @@ export function analyzeSarif(sarif, minSeverity) {
 }
 
 export function loadSarifFiles(target) {
-  if (!existsSync(target)) {
-    throw new Error(`SARIF path does not exist: ${target}`);
+  try {
+    return readdirSync(target)
+      .filter((name) => name.toLowerCase().endsWith(".sarif"))
+      .map((name) => join(target, name))
+      .sort();
+  } catch (error) {
+    if (error?.code === "ENOTDIR") return [target];
+    if (error?.code === "ENOENT") throw new Error(`SARIF path does not exist: ${target}`);
+    throw error;
   }
-  if (!statSync(target).isDirectory()) return [target];
-  return readdirSync(target)
-    .filter((name) => name.toLowerCase().endsWith(".sarif"))
-    .map((name) => join(target, name))
-    .sort();
 }
 
 export function parseBaseline(text) {
@@ -234,7 +254,6 @@ if (isMain) {
 
   let baselineEntries = null;
   if (baselinePath) {
-    if (!existsSync(baselinePath)) fail(`baseline no existe: ${baselinePath}`);
     let text;
     try {
       text = readFileSync(baselinePath, "utf8");

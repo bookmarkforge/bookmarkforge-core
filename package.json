@@ -58,7 +58,6 @@
     "e2e:relay": "playwright test --config=playwright.public-relay.config.ts",
     "e2e:custom-provider": "playwright test --config=playwright.custom-provider.config.ts",
     "mock:ai": "node scripts/mock-openai-server.mjs",
-    "export-public-repo": "node scripts/export-public-repo.mjs",
     "e2e:multiuser:shard": "playwright test --config=playwright.multiuser.config.ts",
     "calibrate:first-summary": "node scripts/calibrate-first-summary.mjs",
     "report:webrtc-nightly": "node scripts/summarize-webrtc-e2e.mjs",

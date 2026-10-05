@@ -53,15 +53,22 @@ const ENTITIES = {
 
 /** Flatten anchors/markup to the plain text FAQPage wants. */
 function stripMarkup(s) {
-  return String(s)
-    .replace(/<[^>]+>/g, "")
-    .replace(/&(#\d+|#x[0-9a-f]+|[a-z]+);/gi, (m, g) => {
-      if (g[0] === "#") {
-        const code = g[1].toLowerCase() === "x" ? parseInt(g.slice(2), 16) : parseInt(g.slice(1), 10);
-        return String.fromCodePoint(code);
-      }
-      return ENTITIES[g.toLowerCase()] ?? m;
-    });
+  let current = String(s);
+  for (;;) {
+    const open = current.indexOf("<");
+    if (open === -1) {
+      return current.replace(/&(#\d+|#x[0-9a-f]+|[a-z]+);/gi, (m, g) => {
+        if (g[0] === "#") {
+          const code = g[1].toLowerCase() === "x" ? parseInt(g.slice(2), 16) : parseInt(g.slice(1), 10);
+          return String.fromCodePoint(code);
+        }
+        return ENTITIES[g.toLowerCase()] ?? m;
+      });
+    }
+    const close = current.indexOf(">", open + 1);
+    if (close === -1) return current.slice(0, open);
+    current = current.slice(0, open) + current.slice(close + 1);
+  }
 }
 
 const derive = (t) =>

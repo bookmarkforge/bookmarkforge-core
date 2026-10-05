@@ -93,8 +93,18 @@ class WebDAVAdapter implements CloudProviderAdapter {
       const nameMatch = nameMatches[i];
       const hrefMatch = hrefMatches[i];
       if (nameMatch && hrefMatch) {
-        const name = nameMatch.replace(/<[^>]+>/g, "");
-        const id = hrefMatch.replace(/<[^>]+>/g, "");
+        const stripTags = (value: string): string => {
+          let current = value;
+          for (;;) {
+            const open = current.indexOf("<");
+            if (open === -1) return current;
+            const close = current.indexOf(">", open + 1);
+            if (close === -1) return current.slice(0, open);
+            current = current.slice(0, open) + current.slice(close + 1);
+          }
+        };
+        const name = stripTags(nameMatch);
+        const id = stripTags(hrefMatch);
         const safeId = safeWebDavSegment(id);
         const safeName = safeWebDavName(name);
         if (safeName && !safeName.startsWith(".") && safeId)

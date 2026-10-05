@@ -49,7 +49,7 @@ describe("check:quick tier", () => {
     runQuickChecks({ gates: TWO_GATES, spawn });
 
     expect(calls[0].argv).toEqual(["scripts/alpha.mjs"]);
-    // e.g. check:license-keys must stay read-only via --check.
+    // Gate arguments are passed through unchanged.
     expect(calls[1].argv).toEqual(["scripts/beta.mjs", "--flag"]);
     logSpy.mockRestore();
   });

@@ -143,6 +143,17 @@ describe("authenticatedEncryptionStorage — instance creation", () => {
     expect(calls.createParams.schema.encrypted).toEqual(["secret", "meta.payload"]);
   });
 
+  it("rejects prototype-pollution path segments", async () => {
+    const badSchema = { ...ENC_SCHEMA, encrypted: ["__proto__.polluted"] };
+    const wrapped = await makeWrapped(badSchema, PASSWORD);
+    await expect(
+      wrapped.inst.bulkWrite(
+        [{ previous: null, document: { id: "bad", meta: { payload: "x" } } }],
+        "unit",
+      ),
+    ).rejects.toThrow(/unsafe encrypted path/);
+  });
+
   it("refuses to create an encrypted instance without a password (fail closed)", async () => {
     await expect(makeWrapped(ENC_SCHEMA, undefined)).rejects.toThrow(/non-empty database password/);
     await expect(makeWrapped(ENC_SCHEMA, "")).rejects.toThrow(/non-empty database password/);

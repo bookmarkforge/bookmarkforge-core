@@ -52,7 +52,6 @@ const KNOWN_GATES = {
   "check:csp": "security",
   "check:extension-csp": "security",
   "check:extension-dist": "security",
-  "check:license-keys": "security",
   "check:server-log-ip-privacy": "security",
   "check:static-brand": "meta",
   "check:audit-drift": "security",

@@ -76,7 +76,14 @@ function parsePillar(raw) {
   if (m) return { strong: m[1], text: m[2] };
   const strongOnly = String(raw).match(/<strong>(.*?)<\/strong>\s*(.*)/s);
   if (strongOnly) return { strong: strongOnly[1], text: strongOnly[2] };
-  return { strong: "", text: String(raw).replace(/<[^>]*>/g, "") };
+  let current = String(raw);
+  for (;;) {
+    const open = current.indexOf("<");
+    if (open === -1) return { strong: "", text: current };
+    const close = current.indexOf(">", open + 1);
+    if (close === -1) return { strong: "", text: current.slice(0, open) };
+    current = current.slice(0, open) + current.slice(close + 1);
+  }
 }
 
 function fail(lang, message) {

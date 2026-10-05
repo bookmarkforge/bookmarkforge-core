@@ -115,24 +115,21 @@ function sanitizePayload(
 ): Record<string, unknown> {
   const MAX_INPUT_STRING = 50 * 1024 * 1024;
   const safe: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(payload)) {
-    if (typeof value === "string") {
-      // Cap every string input, not just `text`: `encryptedBase64`
-      // (decrypt) runs base64ToU8a, which allocates ~3/4 of the string
-      // length — a corrupted/oversized vault blob in IndexedDB (user-
-      // local data) could otherwise force a multi-hundred-MB allocation
-      // in the worker with no bound. Legitimate encrypted values in
-      // SecureStorage (tokens, chains, quotas) are all far below 50 MB;
-      // binary paths (backup exports) travel via `data`, which is NOT
-      // capped by design so large exports keep working.
-      safe[key] =
-        value.length > MAX_INPUT_STRING
-          ? value.slice(0, MAX_INPUT_STRING)
-          : value;
-    } else {
-      safe[key] = value;
-    }
-  }
+  const copyString = (
+    key: "text" | "encryptedBase64" | "input" | "password" | "salt",
+  ) => {
+    const value = payload[key];
+    if (typeof value !== "string") return;
+    safe[key] =
+      value.length > MAX_INPUT_STRING ? value.slice(0, MAX_INPUT_STRING) : value;
+  };
+  copyString("text");
+  copyString("encryptedBase64");
+  copyString("input");
+  copyString("password");
+  copyString("salt");
+  if (payload.passwordBytes instanceof Uint8Array) safe.passwordBytes = payload.passwordBytes;
+  if (payload.data instanceof Uint8Array) safe.data = payload.data;
   return safe;
 }
 

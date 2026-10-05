@@ -19,7 +19,17 @@ vi.mock("../../../services/api/HttpClient", () => ({
   HttpError: class {},
 }));
 
-const mockSanitizeHtml = vi.hoisted(() => vi.fn((html: string) => html.replace(/<script[^>]*>.*?<\/script>/gi, "")));
+const mockSanitizeHtml = vi.hoisted(() => vi.fn((html: string) => {
+  let current = html;
+  for (;;) {
+    const lower = current.toLowerCase();
+    const open = lower.indexOf("<script");
+    if (open === -1) return current;
+    const close = lower.indexOf("</script>", open + 7);
+    if (close === -1) return current.slice(0, open);
+    current = current.slice(0, open) + current.slice(close + 9);
+  }
+}));
 vi.mock("../../../services/SanitizationService", () => ({
   SanitizationService: {
     sanitizeObject: vi.fn(),

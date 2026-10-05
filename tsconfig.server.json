@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["server/src"],
+  "exclude": [
+    "node_modules",
+    "server/src/__tests__",
+    "server/**/*.test.ts",
+    "server/**/*.test.tsx",
+    "server/**/*.spec.ts",
+    "server/**/*.spec.tsx"
+  ]
+}

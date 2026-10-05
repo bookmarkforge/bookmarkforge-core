@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="fi"
+  dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Tallenna artikkeleita, muistiinpanoja ja asiakirjoja yksityisessä, salatussa ja 100 % paikallisessa vaultissa. AI-haku, Notion-tyylinen editori ja P2P-synkronointi. Ilmainen suunnitelma: 2 500 kirjanmerkkiä.">
+  <title>BookmarkForge — Yksityinen Pocket-vaihtoehto tekoälyllä (Kirjanmerkit ja muistiinpanot)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforge.com/fi/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforgeapp.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforgeapp.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforgeapp.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforgeapp.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforgeapp.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforgeapp.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforgeapp.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforgeapp.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforgeapp.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforgeapp.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforgeapp.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforgeapp.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforgeapp.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforgeapp.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforgeapp.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforgeapp.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforgeapp.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforgeapp.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforgeapp.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforgeapp.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforgeapp.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforgeapp.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforgeapp.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforgeapp.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforgeapp.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforgeapp.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforgeapp.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforgeapp.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforgeapp.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforgeapp.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — Yksityinen Pocket-vaihtoehto tekoälyllä (Kirjanmerkit ja muistiinpanot)">
+  <meta property="og:description" content="Tallenna artikkeleita, muistiinpanoja ja asiakirjoja yksityisessä, salatussa ja 100 % paikallisessa vaultissa. AI-haku, Notion-tyylinen editori ja P2P-synkronointi. Ilmainen suunnitelma: 2 500 kirjanmerkkiä.">
+  <meta property="og:url" content="https://bookmarkforge.com/fi/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="fi_FI">
+  <meta property="og:locale:alternate" content="en_US">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — Yksityinen Pocket-vaihtoehto tekoälyllä (Kirjanmerkit ja muistiinpanot)">
+  <meta name="twitter:description" content="Tallenna artikkeleita, muistiinpanoja ja asiakirjoja yksityisessä, salatussa ja 100 % paikallisessa vaultissa. AI-haku, Notion-tyylinen editori ja P2P-synkronointi. Ilmainen suunnitelma: 2 500 kirjanmerkkiä.">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://bookmarkforge.com/fi/#website",
+        "url": "https://bookmarkforge.com/fi/",
+        "name": "BookmarkForge",
+        "description": "Tallenna artikkeleita, muistiinpanoja ja asiakirjoja yksityisessä, salatussa ja 100 % paikallisessa vaultissa. AI-haku, Notion-tyylinen editori ja P2P-synkronointi. Ilmainen suunnitelma: 2 500 kirjanmerkkiä.",
+        "inLanguage": "fi",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://bookmarkforge.com/fi/?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": { "@id": "https://bookmarkforgeapp.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://bookmarkforgeapp.com/#organization",
+        "name": "BookmarkForge",
+        "url": "https://bookmarkforge.com/",
+        "logo": { "@type": "ImageObject", "url": "https://bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
+        "email": "bookmarkforge@proton.me"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://bookmarkforge.com/fi/#software",
+        "name": "BookmarkForge",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "url": "https://bookmarkforge.com/",
+        "image": "https://bookmarkforge.com/og-image.png",
+        "description": "Tallenna artikkeleita, muistiinpanoja ja asiakirjoja yksityisessä, salatussa ja 100 % paikallisessa vaultissa. AI-haku, Notion-tyylinen editori ja P2P-synkronointi. Ilmainen suunnitelma: 2 500 kirjanmerkkiä.",
+        "offers": [
+          { "@type": "Offer", "name": "Ilmainen", "price": "0", "priceCurrency": "USD", "description": "Henkilökohtaiseen arkistoon (2 500 kirjanmerkkiä, toimii millä tahansa laitteella — jokaisella on oma holvinsa)" },          { "@type": "Offer", "name": "Pro", "price": "59", "priceCurrency": "USD", "description": "Elinikäinen v1 · 12 kuukautta ominaisuuspäivityksiä · Turvallisuus ikuisesti · v2 60% alennuksella" }        ],
+        "featureList": [
+          "Paikallinen tallennus",          "Päästä päähän -salaus",          "Toimii offline-tilassa",          "AI-haku",          "Notion-tyylinen editori",          "P2P-synkronointi"        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://bookmarkforge.com/fi/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Onko ilmainen suunnitelma todella ilmainen ikuisesti?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Kyllä. Ei rajoitettua kokeilua tai tilausta. Ilmainen suunnitelma sisältää 2 500 kirjanmerkkiä, täysteksti- ja semanttisen haun, tietoverkon ja AI:n omalla API-avaimellasi (maksat palveluntarjoajaa)." }
+          },          {
+            "@type": "Question",
+            "name": "Mitä \u0027kertamaksu\u0027 Pro:ssa tarkoittaa?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Maksat kerran (79 $), ja lisenssi on sinun ikuisesti. Sisältää kaikki päivitykset 12 kuukautta. Ei toistuvia maksuja. Lisenssiavain toimitetaan heti Whopin kautta." }
+          },          {
+            "@type": "Question",
+            "name": "Mitä maksutapoja hyväksytte?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Whopin kautta: luottokortti, PayPal ja kryptovaluutat. Emme näe maksutietojasi koskaan." }
+          },          {
+            "@type": "Question",
+            "name": "Tuki — kuinka nopeasti vastaatte?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yhteisö: yhteisön apu \u003ca href=\"/help\"\u003eOhjekeskuksen\u003c/a\u003e kautta + GitHub Discussions (parhaiden kykyjen mukaan). Pro: sähköpostiin vastaus 48 tunnissa arkipäivisin. Holvi on salattu — emme näe tietojasi, joten emme koskaan pyydä salasanaasi tai palautuslausetta. Katso \u003ca href=\"/help#sla\"\u003eTuen SLA\u003c/a\u003e." }
+          },          {
+            "@type": "Question",
+            "name": "Entä jos unohdan holvin salasanani?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Emme voi palauttaa sitä. Kun luot holvin, näytämme 24-sanan palautuslauseen kerran — kirjoita se paperille. Ilman sitä kukaan (emmekä mekään) ei voi avata holvia. Katso \u003ca href=\"/help#bf-e101\"\u003eBF-E101\u003c/a\u003e." }
+          }        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Siirry pääsisältöön</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/fi/" class="nav-brand" aria-label="BookmarkForge etusivu">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Päänavigaatio">
+        <a href="#pocket-alternative">Lue myöhemmin uhraamatta yksityisyyttä</a>
+        <a href="#features">Ominaisuudet</a>
+        <a href="#ai">AI</a>
+        <a href="#privacy">Yksityisyys</a>
+        <a href="#pricing">Hinnat</a>
+        <a href="/help">Ohjeet</a>
+        
+        <!-- Language Dropdown -->
+        <div class="language-dropdown">
+          <button class="language-toggle" aria-label="Select language" aria-expanded="false">
+            <span class="current-lang">Suomi</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 4 L6 8 L10 4"/>
+            </svg>
+          </button>
+          <ul class="language-menu" role="menu">
+            <li role="none">
+              <a href="/id/?lang=id" hreflang="id" lang="id" role="menuitem">
+                Bahasa Indonesia
+              </a>
+            </li>
+            <li role="none">
+              <a href="/cs/?lang=cs" hreflang="cs" lang="cs" role="menuitem">
+                Čeština
+              </a>
+            </li>
+            <li role="none">
+              <a href="/da/?lang=da" hreflang="da" lang="da" role="menuitem">
+                Dansk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/de/?lang=de" hreflang="de" lang="de" role="menuitem">
+                Deutsch
+              </a>
+            </li>
+            <li role="none">
+              <a href="/?lang=en" hreflang="en" lang="en" role="menuitem">
+                English
+              </a>
+            </li>
+            <li role="none">
+              <a href="/es/?lang=es" hreflang="es" lang="es" role="menuitem">
+                Español
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fr/?lang=fr" hreflang="fr" lang="fr" role="menuitem">
+                Français
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hr/?lang=hr" hreflang="hr" lang="hr" role="menuitem">
+                Hrvatski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/it/?lang=it" hreflang="it" lang="it" role="menuitem">
+                Italiano
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hu/?lang=hu" hreflang="hu" lang="hu" role="menuitem">
+                Magyar
+              </a>
+            </li>
+            <li role="none">
+              <a href="/nl/?lang=nl" hreflang="nl" lang="nl" role="menuitem">
+                Nederlands
+              </a>
+            </li>
+            <li role="none">
+              <a href="/no/?lang=no" hreflang="no" lang="no" role="menuitem">
+                Norsk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pl/?lang=pl" hreflang="pl" lang="pl" role="menuitem">
+                Polski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pt/?lang=pt" hreflang="pt" lang="pt" role="menuitem">
+                Português
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ro/?lang=ro" hreflang="ro" lang="ro" role="menuitem">
+                Română
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fi/?lang=fi" hreflang="fi" lang="fi" role="menuitem" class="current">
+                Suomi
+              </a>
+            </li>
+            <li role="none">
+              <a href="/sv/?lang=sv" hreflang="sv" lang="sv" role="menuitem">
+                Svenska
+              </a>
+            </li>
+            <li role="none">
+              <a href="/vi/?lang=vi" hreflang="vi" lang="vi" role="menuitem">
+                Tiếng Việt
+              </a>
+            </li>
+            <li role="none">
+              <a href="/tr/?lang=tr" hreflang="tr" lang="tr" role="menuitem">
+                Türkçe
+              </a>
+            </li>
+            <li role="none">
+              <a href="/el/?lang=el" hreflang="el" lang="el" role="menuitem">
+                Ελληνικά
+              </a>
+            </li>
+            <li role="none">
+              <a href="/bg/?lang=bg" hreflang="bg" lang="bg" role="menuitem">
+                Български
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ru/?lang=ru" hreflang="ru" lang="ru" role="menuitem">
+                Русский
+              </a>
+            </li>
+            <li role="none">
+              <a href="/uk/?lang=uk" hreflang="uk" lang="uk" role="menuitem">
+                Українська
+              </a>
+            </li>
+            <li role="none">
+              <a href="/he/?lang=he" hreflang="he" lang="he" role="menuitem">
+                עברית
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ar/?lang=ar" hreflang="ar" lang="ar" role="menuitem">
+                العربية
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hi/?lang=hi" hreflang="hi" lang="hi" role="menuitem">
+                हिन्दी
+              </a>
+            </li>
+            <li role="none">
+              <a href="/th/?lang=th" hreflang="th" lang="th" role="menuitem">
+                ไทย
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ko/?lang=ko" hreflang="ko" lang="ko" role="menuitem">
+                한국어
+              </a>
+            </li>
+            <li role="none">
+              <a href="/zh/?lang=zh" hreflang="zh" lang="zh" role="menuitem">
+                中文
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ja/?lang=ja" hreflang="ja" lang="ja" role="menuitem">
+                日本語
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <a href="/app" class="btn-primary nav-cta">Avaa sovellus</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Vaihda teemaa" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">Versio 1.0</span>
+          <h1 id="hero-title">Sinun <span class='accent-text'>Yksityinen AI Vault</span></h1>
+          <p class="hero-subtitle">Yksityinen Pocket-vaihtoehto artikkelien tallentamiseen ja myöhemmin lukemiseen: kirjanmerkit, muistiinpanot ja asiakirjat — laitteellasi salattuna, tekoälyllä haettavissa ja vertaisverkon synkronoimana. Pilveä ei ole. Seurantaa ei ole. 100 % sinun.</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">Avaa Ilmaiseksi</a>
+            <a href="#pricing" class="btn-secondary">Katso Hinnat</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>100 % Paikallinen</strong> — tietosi eivät poistu laitteeltasi</span>
+            <span><strong>Salattu</strong> — AES-256-GCM + Argon2id</span>
+            <span><strong>Offline</strong> — toimii ilman internetiä</span>
+            <span><strong>Yksityinen</strong> — nollatelemetria oletuksena</span>
+          </div>
+          <div class="hero-affiliate">
+            <span class="hero-affiliate-badge">Ansaitse rahaa</span>
+            <h3 class="hero-affiliate-title">Kumppaniohjelma</h3>
+            <p class="hero-affiliate-subtitle">Jaa BookmarkForge ja ansaitse 30% provision jokaisesta suositellusta ostopa. Aloita ansaitseminen tänään!</p>
+            <a href="https://whop.com/affiliates" class="btn-small">Liity kumppaniohjelmaan</a>
+            <ul class="hero-affiliate-details">
+              <li>30% provision jokaisesta myynnistä</li>
+              <li>Rajoittamattomat tulot</li>
+              <li>Automaattiset maksut Whopin kautta</li>
+              <li>Reaaliaikainen seuranta</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Demo Section — steps and CTA only. The tour GIF this section
+         used to show was retired with the demo-media pipeline; the template kept
+         a dead <img> pointing at it until the ADR-062 smoke gate reported the 404
+         on all 30 landings. The demo.* copy still describes the loop: rewriting it
+         has to come with the translations, not from the template.
+         Secondary locales carry demo: null until that copy is translated —
+         the section is hidden rather than rendering English inside a
+         localized page (same for raindropCompare below). -->
+
+    <!-- Pocket Alternative Section -->
+    <section id="pocket-alternative" class="comparison-section" aria-labelledby="pocket-alternative-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Lue myöhemmin uhraamatta yksityisyyttä</span>
+          <h2 id="pocket-alternative-title">Yksityinen Pocket-vaihtoehto</h2>
+          <p class="section-subtitle">Pocket katoaa. BookmarkForge pitää lukutottumuksen hengissä — jokainen artikkeli, muistiinpano ja merkintä salattuna laitteellasi.</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>Tallenna artikkeleita myöhemmäksi, omasi ikuisesti</h3>
+            <p>Tallenna artikkeleita, videoita ja PDF yhden napsautuksella — PWA-sovelluksesta, selainlaajennuksesta tai jaostavalikosta. Toisin kuin Pocket, lukulistasi elää laitteellasi, salattuna, ja toimii offline-tilassa.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Notion-tyyppiset muistiinpanot jokaisessa artikkelissa</h3>
+            <p>Korosta, tiivistä ja kirjoita muistiinpanoja mihin tahansa kirjanmerkkiin. Muunna tallennettu artikkeli omaksi tietokannaksesi — ei pelkästään linkkilista.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Nollaseuranta, nollamainokset</h3>
+            <p>BookmarkForge ei käytä tilejä, analytiikkaa tai mainoksia oletuksena. Lukutottumukset ovat vain sinun vastuullasi.</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Aloita Tallentaminen Ilmaiseksi</a>
+          <a href="/pocket-alternative" class="btn-link">Täydellinen vertailu ja siirto-opas</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Raindrop Comparison Section (hidden while raindropCompare is null) -->
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Kaikki mitä tarvitset</span>
+          <h2 id="features-title">Tehokkaat ominaisuudet tietosi hallintaan, kaikki paikallisesti</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Kirjanmerkit ja asiakirjat</h3>
+            <p>Tallenna mikä tahansa sivu yhdellä napsautuksella. Kirjoita muistiinpanoja heti viereen siistissä, yksinkertaisessa editorissa. Pysyy nopeana jopa 100 000 tallennetulla kohteella.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Täysteksti- ja semanttinen haku</h3>
+            <p>Löydä asiat avainsanan tai merkityksen perusteella — vaikka et muistaisi tarkkoja sanoja. Raindrop veloittaa tästä 28 dollaria vuodessa; täällä se on ilmaista.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Paikallinen AI (WebLLM / Ollama) — Vain Pro</h3>
+            <p>Kysy tallentamistasi asioista ja saat vastaukset lähteineen. Mitään ei lähetetä pilveen, ja toimii ilman internettiä. Vaatii Pro:n.</p>
+          </div>
+          <div class="feature-item">
+            <h3>RAG-chat tietojesi yli — Vain Pro</h3>
+            <p>Kysy mitä tahansa kirjanmerkeistäsi ja muistiinpanoistasi ja saat vastaukset lähteineen. Yksityinen tila toimii 100 % omalla koneellasi. Vaatii Pro:n.</p>
+          </div>
+          <div class="feature-item">
+            <h3>P2P-synkronointi (WebRTC) — Vain Pro</h3>
+            <p>Laitteesi keskustelevat suoraan keskenään — ilman palvelinta välissä, ja kaikki pysyy salattuna. Yhdistä ne skannaamalla QR-koodi. Jopa 5 laitetta. Vaatii Pro:n.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Salatut varmuuskopiot</h3>
+            <p>Automaattiset varmuuskopiot, jotka säilytät missä haluat — ulkoinen levy, pilvikansio, mikä tahansa. Vie kaikki Markdown-, JSON-, CSV- tai PDF-muotoon milloin tahansa. Avaimet ovat sinulla.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Tietoverkko</h3>
+            <p>Näe, miten muistiinpanosi ja kirjanmerkkisi liittyvät toisiinsa. Suodata tunnisteiden, päivämäärien ja samankaltaisuuden perusteella ja zoomaile äärettömällä kankaalla.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Flashcards (Spaced Repetition) — Vain Pro</h3>
+            <p>Muuta mikä tahansa tallennettu asiakirja kysymyskorteiksi, jotka nousevat esiin juuri ennen kuin unohtaisit ne — sama ajoitusajatus kuin Ankissa. Vaatii Pro:n.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Yksityisyys oletuksena</h3>
+            <p>Ei tilejä, ei seurantaa, ei mainoksia. Sinä olet asiakas, et tuote. Käytön jakaminen on olemassa, se on vapaaehtoista ja pysyy pois päältä, kunnes käynnistät sen.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">AI joka kunnioittaa sinua</span>
+          <h2 id="ai-title">Tietosi, Tehostettu</h2>
+          <p class="section-subtitle">BookmarkForge antaa sinulle valinnan: suorita 100 % paikallisia malleja selaimessasi (WebLLM, WebGPU) Pro:lla, liitä omat API-avaimet pilvipalveluihin tai käytä paikallista Ollamaa. Ohjeesi, tietosi, sääntösi.</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>Tuetut palveluntarjoajat</h3>
+            <ul class="providers-list">
+              <li>Koneesi sisällä — WebLLM-mallit (TinyLlama, Llama 3.2, Phi-3.5-mini) — vain Pro</li>
+              <li>Omalla koneellasi — Ollama (mikä tahansa malli, jota ajat)</li>
+              <li>Pilvi — Google Gemini (avainta hallitsemme me)</li>
+              <li>Pilvi — OpenAI / GPT-4o (omalla avaimellasi)</li>
+              <li>Pilvi — Anthropic Claude (omalla avaimellasi)</li>
+              <li>Pilvi — Groq (omalla avaimellasi)</li>
+              <li>Pilvi — OpenRouter tai muu räätälöity palveluntarjoaja (omalla avaimellasi)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>Chat-tilat</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>Yksityinen Tila</h4>
+                <p>Vain paikallinen AI (WebLLM/Ollama). Nollatietoa poistuu laitteesta. Toimii offline. Vaatii Pro:ta WebLLM:lle.</p>
+              </div>
+              <div class="mode-item">
+                <h4>Web-Hakutila</h4>
+                <p>Yhdistää vaulttisi reaaliaikaisiin hakutuloksiin (pilvipalvelut).</p>
+              </div>
+              <div class="mode-item">
+                <h4>Asiantuntijaagentit</h4>
+                <p>Erikoistuneet hahmot: Ohjelmoija, Kirjailija, Analyytikko, Tutkija. Vaatii Pro:ta paikalliselle AI:lle.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">Yksityisyys ei ole ominaisuus — se on perusta</h2>
+          <p class="section-subtitle">Jokinen arkkitehtoninen päätös antaa sinulle kontrollin</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Päästä päähän -salaus</h3>
+            <p>Kirjastosi on salattu pääsalasanastasi johdetulla avaimella. Emme näe salasanaasi tai sisältöäsi koskaan.</p>
+          </div>
+          <div class="feature-item">
+            <h3>100 % paikallinen arkkitehtuuri</h3>
+            <p>Kaikki asuu tietokoneellasi. Seurantapalvelin hoitaa vain lisensoinnin, laitteiden parituksen ja pilvitilan AI-kysymystesi välityksen — ei koskaan sisältöäsi.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Nollatelemetria oletuksena</h3>
+            <p>Ei analytiikkaa, ei kaatumisraportteja, ei seurantaa. Käyttötilastojen tai virheraporttien jakaminen on erillinen valinta, oletuksena pois päältä.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Avaimet ovat sinun</h3>
+            <p>Ei pääsalasanaa ei tarkoita pääsyä — "salasana unohtui" -takaovea ei ole. 24-sanan palautuslauseesi on ainoa tie sisään; pidä se turvassa.</p>
+          </div>
+          <div class="feature-item">
+            <h3>GDPR-noudattaminen</h3>
+            <p>Tarkista, korjaa, poista tai ota tietosi mukaasi — kaikki paikallisesti, milloin tahansa.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Palveluntarjoajasta riippumaton</h3>
+            <p>Vie tietosi milloin tahansa avoimissa muodoissa (JSON, Markdown, CSV, PDF). Tietämyksesi pysyy sinun ja kannettavana.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">Yksinkertaiset, Oikeudenmukaiset Hinnat</h2>
+          <p class="section-subtitle">Ilmainen suunnitelma: 2 500 kirjanmerkkiä. Pro on kertamaksu 79 $ — ei tilauksia.</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Ilmainen</h3>
+            <div class="price">$ 0<span>/ ikuisesti</span></div>
+            <p>Henkilökohtaiseen arkistoon (2 500 kirjanmerkkiä, toimii millä tahansa laitteella — jokaisella on oma holvinsa)</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> 2 500 kirjanmerkkiä, muistiinpanoja ja asiakirjoja</li>
+              <li><span aria-hidden="true">✅</span> Älykäs haku (kokoteksti + semanttinen) — sisältyy ilmaiseksi; Raindrop perii siitä vuosimaksun</li>
+              <li><span aria-hidden="true">✅</span> AI omalla API-avaimellasi (maksat palveluntarjoajaa)</li>
+              <li><span aria-hidden="true">✅</span> Tietoverkko</li>
+              <li><span aria-hidden="true">✅</span> Peruspohjat</li>
+              <li><span aria-hidden="true">✅</span> JSON/HTML-vienti</li>
+              <li><span aria-hidden="true">✅</span> PWA + selainlaajennukset</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> P2P-synkronointi laitteiden välillä</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> Paikallinen AI (WebLLM/Ollama)</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> RAG-chat tietojesi yli</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> Flashcards spaced repetitionilla</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> Edistynyt vienti (10+ muotoa)</li>
+            </ul>
+            <a href="/app" class="btn-secondary " >Aloita Ilmaiseksi</a>
+          </div>
+          <div class="price-card popular">
+            <span class="badge">Suosituin — Early Bird 200</span>
+            <h3>Pro</h3>
+            <div class="price"><span class="price-now">$ 59</span> <span class="price-was">$79</span><span>Early Bird (sitten $79)</span></div>
+            <div class="price-sub">sitten $79 normaalihinta</div>
+            <p>Elinikäinen v1 · 12 kuukautta ominaisuuspäivityksiä · Turvallisuus ikuisesti · v2 60% alennuksella</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Kaikki Ilmaisessa</li>
+              <li><span aria-hidden="true">✅</span> Rajoittamattomat kirjanmerkit</li>
+              <li><span aria-hidden="true">✅</span> 5 laitetta</li>
+              <li><span aria-hidden="true">✅</span> P2P-synkronointi 5 laitteella</li>
+              <li><span aria-hidden="true">✅</span> Paikallinen AI (WebLLM, ei API-avainta)</li>
+              <li><span aria-hidden="true">✅</span> RAG-chat tietojesi yli</li>
+              <li><span aria-hidden="true">✅</span> Asiantuntijaagentit (Ohjelmoija, Kirjailija, Analyytikko, Tutkija)</li>
+              <li><span aria-hidden="true">✅</span> Flashcards spaced repetitionilla</li>
+              <li><span aria-hidden="true">✅</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> Edistynyt vienti (10+ muotoa)</li>
+              <li><span aria-hidden="true">✅</span> Turvallisuus-vault (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> Päivitykset 12 kuukautta</li>
+              <li><span aria-hidden="true">✅</span> Sähköpostituki</li>
+            </ul>
+            <a href="https://whop.com/checkout/plan_XU1GaWhoYhoDh" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Hanki Pro Ikuiseksi</a>
+            <p class="sla-note">Tuki: sähköposti 48 h (ma–pe) · <a href="/help#sla">SLA</a></p>
+          </div>
+        </div>
+        <p class="pricing-legal">Elinikäinen lisenssi BookmarkForge v1:een. Sisältää kaikki v1.x-päivitykset ja 12 kuukautta ominaisuuspäivityksiä. Turvallisuuspäivitykset ikuisesti. Tulevat pääversiot (v2, v3) 60% alennuksella nykyisille omistajille. 30 päivän palautus Whopin kautta. <a href="/privacy-and-terms.html#terms">Ehdot</a> · <a href="/help#pricing">Lue lisää</a></p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">Usein Kysytyt Kysymykset</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Onko ilmainen suunnitelma todella ilmainen ikuisesti?</h3>
+            <p>Kyllä. Ei rajoitettua kokeilua tai tilausta. Ilmainen suunnitelma sisältää 2 500 kirjanmerkkiä, täysteksti- ja semanttisen haun, tietoverkon ja AI:n omalla API-avaimellasi (maksat palveluntarjoajaa).</p>
+          </div>
+          <div class="faq-item">
+            <h3>Mitä 'kertamaksu' Pro:ssa tarkoittaa?</h3>
+            <p>Maksat kerran (79 $), ja lisenssi on sinun ikuisesti. Sisältää kaikki päivitykset 12 kuukautta. Ei toistuvia maksuja. Lisenssiavain toimitetaan heti Whopin kautta.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Mitä maksutapoja hyväksytte?</h3>
+            <p>Whopin kautta: luottokortti, PayPal ja kryptovaluutat. Emme näe maksutietojasi koskaan.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Tuki — kuinka nopeasti vastaatte?</h3>
+            <p>Yhteisö: yhteisön apu <a href="/help">Ohjekeskuksen</a> kautta + GitHub Discussions (parhaiden kykyjen mukaan). Pro: sähköpostiin vastaus 48 tunnissa arkipäivisin. Holvi on salattu — emme näe tietojasi, joten emme koskaan pyydä salasanaasi tai palautuslausetta. Katso <a href="/help#sla">Tuen SLA</a>.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Entä jos unohdan holvin salasanani?</h3>
+            <p>Emme voi palauttaa sitä. Kun luot holvin, näytämme 24-sanan palautuslauseen kerran — kirjoita se paperille. Ilman sitä kukaan (emmekä mekään) ei voi avata holvia. Katso <a href="/help#bf-e101">BF-E101</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>Valmis Ottamaan Tietosi Hallintaan?</h2>
+        <p>Liity tuhansille tutkijoille, kehittäjille ja opiskelijoille, jotka luottavat BookmarkForgeen toisena aivoinaan.</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">Avaa Ilmaiseksi</a>
+          <a href="#pricing" class="btn-secondary">Päivitä Pro:ksi</a>
+        </div>
+        <p class="note">Tiliä ei tarvita. Toimii heti selaimessasi. Ilmainen suunnitelma: 2 500 kirjanmerkkiä.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>Yksityinen AI-vault tietoillesi. 100 % paikallinen.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Tuote</h4>
+        <ul>
+          <li><a href="#features">Ominaisuudet</a></li>
+          <li><a href="#ai">AI-mahdollisuudet</a></li>
+          <li><a href="#privacy">Yksityisyys</a></li>
+          <li><a href="#pricing">Hinnat</a></li>
+          <li><a href="/app">Avaa Sovellus</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Resurssit</h4>
+        <ul>
+          <li><a href="/pocket-alternative">Pocket-vertailu</a></li>
+          <li><a href="/privacy-and-terms.html">Yksityisyys ja ehdot</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Kielet</h4>
+        <ul>
+          <li><a href="/id/?lang=id" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+          <li><a href="/cs/?lang=cs" hreflang="cs" lang="cs">Čeština</a></li>
+          <li><a href="/da/?lang=da" hreflang="da" lang="da">Dansk</a></li>
+          <li><a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a></li>
+          <li><a href="/?lang=en" hreflang="en" lang="en">English</a></li>
+          <li><a href="/es/?lang=es" hreflang="es" lang="es">Español</a></li>
+          <li><a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a></li>
+          <li><a href="/hr/?lang=hr" hreflang="hr" lang="hr">Hrvatski</a></li>
+          <li><a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a></li>
+          <li><a href="/hu/?lang=hu" hreflang="hu" lang="hu">Magyar</a></li>
+          <li><a href="/nl/?lang=nl" hreflang="nl" lang="nl">Nederlands</a></li>
+          <li><a href="/no/?lang=no" hreflang="no" lang="no">Norsk</a></li>
+          <li><a href="/pl/?lang=pl" hreflang="pl" lang="pl">Polski</a></li>
+          <li><a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a></li>
+          <li><a href="/ro/?lang=ro" hreflang="ro" lang="ro">Română</a></li>
+          <li><a href="/fi/?lang=fi" hreflang="fi" lang="fi">Suomi</a></li>
+          <li><a href="/sv/?lang=sv" hreflang="sv" lang="sv">Svenska</a></li>
+          <li><a href="/vi/?lang=vi" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+          <li><a href="/tr/?lang=tr" hreflang="tr" lang="tr">Türkçe</a></li>
+          <li><a href="/el/?lang=el" hreflang="el" lang="el">Ελληνικά</a></li>
+          <li><a href="/bg/?lang=bg" hreflang="bg" lang="bg">Български</a></li>
+          <li><a href="/ru/?lang=ru" hreflang="ru" lang="ru">Русский</a></li>
+          <li><a href="/uk/?lang=uk" hreflang="uk" lang="uk">Українська</a></li>
+          <li><a href="/he/?lang=he" hreflang="he" lang="he">עברית</a></li>
+          <li><a href="/ar/?lang=ar" hreflang="ar" lang="ar">العربية</a></li>
+          <li><a href="/hi/?lang=hi" hreflang="hi" lang="hi">हिन्दी</a></li>
+          <li><a href="/th/?lang=th" hreflang="th" lang="th">ไทย</a></li>
+          <li><a href="/ko/?lang=ko" hreflang="ko" lang="ko">한국어</a></li>
+          <li><a href="/zh/?lang=zh" hreflang="zh" lang="zh">中文</a></li>
+          <li><a href="/ja/?lang=ja" hreflang="ja" lang="ja">日本語</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Tuki</h4>
+        <ul>
+          <li><a href="/help">Ohjekeskus</a></li>
+          <li><a href="/help#sla">SLA</a></li>
+          <li><a href="/help#bf-e">Virhekoodit</a></li>
+          <li><a href="mailto:bookmarkforge@proton.me">Ota yhteyttä</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+         Every other locale has its own directory. The rule has one owner —
+         scripts/landing-registry.mjs (LEGAL_LOCALE_CODES), already encoded by
+         check-seo, check-sitemap-coverage, check-hreflang-graph and
+         check-page-figures. Emitting "/fi/…" unconditionally shipped a
+         404 footer link on every EN landing until the ADR-062 smoke gate opened it. -->
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. Kaikki oikeudet pidätetään.</p>
+      <a href="/fi/privacy-and-terms.html">Yksityisyyskäytäntö</a> · <a href="/fi/privacy-and-terms.html#terms">Käyttöehdot</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

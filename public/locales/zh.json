@@ -1,0 +1,482 @@
+{
+  "lang": "zh",
+  "langName": "中文",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/zh/",
+  "ogLocale": "zh_CN",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — 带AI的私密Pocket替代品（书签和笔记）",
+  "description": "保存文章、笔记和文档到一个私密、加密且100%本地的保险库。AI搜索、Notion风格编辑器和P2P同步。免费计划：2,500个书签。",
+  "ogTitle": "BookmarkForge — 带AI的私密Pocket替代品（书签和笔记）",
+  "ogDescription": "保存文章、笔记和文档到一个私密、加密且100%本地的保险库。AI搜索、Notion风格编辑器和P2P同步。免费计划：2,500个书签。",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — 带AI的私密Pocket替代品（书签和笔记）",
+  "twitterDescription": "保存文章、笔记和文档到一个私密、加密且100%本地的保险库。AI搜索、Notion风格编辑器和P2P同步。免费计划：2,500个书签。",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "跳转到主要内容",
+  "navBrandAria": "BookmarkForge 首页",
+  "navAriaLabel": "主导航",
+  "homeHref": "/zh/",
+  "navLinks": {
+    "pocketAlternative": "Pocket 替代品",
+    "features": "功能",
+    "ai": "AI",
+    "privacy": "隐私",
+    "pricing": "定价",
+    "help": "帮助",
+    "raindropCompare": "Raindrop Comparison"
+  },
+  "langLink": {
+    "href": "/?lang=en",
+    "hreflang": "en",
+    "lang": "en",
+    "text": "English"
+  },
+  "navCta": "打开应用",
+  "themeToggleAria": "切换主题",
+  "hero": {
+    "badge": "版本 1.0",
+    "title": "您的<span class='accent-text'>私密AI保险库</span>",
+    "subtitle": "Pocket的私密替代品，用于保存文章和稍后阅读：书签、笔记和文档——在您的设备上加密，可通过AI搜索，并通过点对点同步。无云端。无追踪。100%属于您。",
+    "ctaPrimary": "免费使用",
+    "ctaSecondary": "查看价格",
+    "pillars": [
+      {
+        "strong": "100% 本地",
+        "text": "您的数据不会离开您的设备"
+      },
+      {
+        "strong": "加密",
+        "text": "AES-256-GCM + Argon2id"
+      },
+      {
+        "strong": "离线",
+        "text": "无需互联网即可工作"
+      },
+      {
+        "strong": "私密",
+        "text": "默认零遥测"
+      }
+    ]
+  },
+  "demo": null,
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "在不牺牲隐私的情况下稍后阅读",
+    "title": "私密的Pocket替代品",
+    "subtitle": "Pocket正在消失。BookmarkForge保持阅读习惯——每篇文章、笔记和标注都加密存储在您的设备上。",
+    "features": [
+      {
+        "title": "保存文章供稍后阅读，永远属于您",
+        "text": "从PWA应用、浏览器扩展或分享菜单一键保存文章、视频和PDF。与Pocket不同，您的阅读列表存在于您的设备上，加密存储，并可离线使用。"
+      },
+      {
+        "title": "每篇文章中的Notion风格笔记",
+        "text": "在每个书签中高亮、总结和撰写笔记。将保存的文章转变为您的知识库——而不仅仅是链接列表。"
+      },
+      {
+        "title": "零追踪，零广告",
+        "text": "BookmarkForge默认不使用账户、分析或广告。您的阅读习惯仅由您负责。"
+      }
+    ],
+    "ctaPrimary": "开始免费保存",
+    "ctaSecondary": "完整比较和迁移指南",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": null,
+  "features": {
+    "id": "features",
+    "tag": "您需要的一切",
+    "title": "管理知识的强大功能，全部本地运行",
+    "items": [
+      {
+        "title": "书签和文档",
+        "text": "一键保存任何网页。在旁边直接写笔记，编辑器干净简洁。即使保存 100,000 个项目也保持流畅。"
+      },
+      {
+        "title": "全文和语义搜索",
+        "text": "按关键词或按含义搜索 — 即使你记不住确切的词语。Raindrop 对此每年收费 28 美元；这里免费包含。"
+      },
+      {
+        "title": "本地AI (WebLLM / Ollama) — 仅Pro",
+        "text": "就你保存的内容提问，并获得附带来源的答案。不会发送到云端，离线也能使用。需要 Pro。"
+      },
+      {
+        "title": "数据上的RAG聊天 — 仅Pro",
+        "text": "就你的书签和笔记提问任何问题，获得带引用的答案。私密模式 100% 在你自己的机器上运行。需要 Pro。"
+      },
+      {
+        "title": "P2P同步 (WebRTC) — 仅Pro",
+        "text": "你的设备直接通信 — 中间没有服务器，一切保持加密。扫描二维码即可配对。最多 5 台设备。需要 Pro。"
+      },
+      {
+        "title": "加密备份",
+        "text": "自动备份，你想存在哪里就存在哪里 — 移动硬盘、云端文件夹，随处皆可。随时将所有内容导出为 Markdown、JSON、CSV 或 PDF。密钥掌握在你手中。"
+      },
+      {
+        "title": "知识图谱",
+        "text": "查看笔记和书签之间的关联。按标签、日期和相似度筛选，在无限画布上自由探索。"
+      },
+      {
+        "title": "闪卡 (间隔重复) — 仅Pro",
+        "text": "把任何保存的文档变成问答卡片，在你即将遗忘之际恰好浮现 — 与 Anki 相同的调度理念。需要 Pro。"
+      },
+      {
+        "title": "默认隐私",
+        "text": "无账户、无追踪、无广告。你是客户，不是产品。使用情况共享确实存在，但它是可选的，在你开启之前保持关闭。"
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "尊重您的AI",
+    "title": "您的知识，得到增强",
+    "subtitle": "BookmarkForge给您选择：在浏览器中运行100%本地模型（WebLLM、WebGPU，Pro），将您的API密钥连接到云提供商，或使用本地Ollama。您的指令、您的数据、您的规则。",
+    "providers": {
+      "title": "支持的提供商",
+      "list": [
+        {
+          "type": "local",
+          "name": "你的电脑内部 — WebLLM 模型（TinyLlama、Llama 3.2、Phi-3.5-mini）— 仅限 Pro"
+        },
+        {
+          "type": "local",
+          "name": "在你自己的机器上 — Ollama（你运行的任何模型）"
+        },{
+          "type": "cloud",
+          "name": "云端 — OpenAI / GPT-4o（使用你自己的密钥）"
+        },
+        {
+          "type": "cloud",
+          "name": "云端 — Anthropic Claude（使用你自己的密钥）"
+        },
+        {
+          "type": "cloud",
+          "name": "云端 — Groq（使用你自己的密钥）"
+        },
+        {
+          "type": "cloud",
+          "name": "云端 — OpenRouter 或其他自定义提供商（使用你自己的密钥）"
+        }
+      ]
+    },
+    "modes": {
+      "title": "聊天模式",
+      "items": [
+        {
+          "title": "私密模式",
+          "text": "仅本地AI（WebLLM/Ollama）。零数据离开设备。离线工作。WebLLM需要Pro。"
+        },
+        {
+          "title": "网络搜索模式",
+          "text": "将您的保险库与实时搜索结果（云提供商）结合。"
+        },
+        {
+          "title": "专家代理",
+          "text": "专业角色：程序员、作家、分析师、研究员。本地AI需要Pro。"
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "隐私不是功能——而是基础",
+    "subtitle": "每个架构决策都给您控制权",
+    "items": [
+      {
+        "title": "端到端加密",
+        "text": "你的库使用从主密码派生的密钥加密。我们永远不会看到你的密码或内容。"
+      },
+      {
+        "title": "100%本地架构",
+        "text": "一切都在你自己的电脑上。配套服务器只处理授权、设备配对和转发你的云端 AI 问题 — 绝不处理你的内容。"
+      },
+      {
+        "title": "默认零遥测",
+        "text": "无分析、无崩溃报告、无追踪。共享使用统计或错误报告是单独的选择，默认关闭。"
+      },
+      {
+        "title": "密钥属于您",
+        "text": "没有主密码就意味着无法访问 — 不存在\"忘记密码\"后门。24 个词的恢复短语是唯一的入口；请妥善保管。"
+      },
+      {
+        "title": "GDPR合规",
+        "text": "访问、更正、删除或带走你的数据 — 全部可在本地完成，随时随地。"
+      },
+      {
+        "title": "独立于提供商",
+        "text": "随时以开放格式（JSON、Markdown、CSV、PDF）导出你的数据。你的知识始终属于你，且可移植。"
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "简单、公平的价格",
+    "subtitle": "免费计划：2,500个书签。Pro是一次性购买$59 早鸟价（之后 $79）——无订阅。",
+    "plans": [
+      {
+        "name": "免费",
+        "price": "$ 0",
+        "period": "/ 永久",
+        "description": "个人知识库（2,500个书签，可在任何设备上使用 — 每台设备拥有独立保险库）",
+        "features": [
+          {
+            "included": true,
+            "text": "2,500个书签、笔记和文档"
+          },
+          {
+            "included": true,
+            "text": "智能搜索（全文 + 语义）— 免费包含；Raindrop 对此功能每年收费"
+          },
+          {
+            "included": true,
+            "text": "使用您自己的API密钥的AI（您支付提供商）"
+          },
+          {
+            "included": true,
+            "text": "知识图谱"
+          },
+          {
+            "included": true,
+            "text": "基础模板"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML导出"
+          },
+          {
+            "included": true,
+            "text": "PWA + 浏览器扩展"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> 设备间的P2P同步"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> 本地AI (WebLLM/Ollama)"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> 数据上的RAG聊天"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> 间隔重复的闪卡"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> 高级导出 (10+格式)"
+          }
+        ],
+        "cta": "免费开始",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro",
+        "badge": "最受欢迎 — 早鸟价 200",
+        "price": "$ 59",
+        "period": "早鸟价（之后 $79）",
+        "description": "v1 终身享用 · 12 个月功能更新 · 安全更新永久 · v2 享 60% 折扣",
+        "features": [
+          {
+            "included": true,
+            "text": "免费版的所有功能"
+          },
+          {
+            "included": true,
+            "text": "无限书签"
+          },
+          {
+            "included": true,
+            "text": "5台设备"
+          },
+          {
+            "included": true,
+            "text": "5台设备的P2P同步"
+          },
+          {
+            "included": true,
+            "text": "本地AI (WebLLM，无需API密钥)"
+          },
+          {
+            "included": true,
+            "text": "数据上的RAG聊天"
+          },
+          {
+            "included": true,
+            "text": "专家代理 (程序员、作家、分析师、研究员)"
+          },
+          {
+            "included": true,
+            "text": "间隔重复的闪卡"
+          },
+          {
+            "included": true,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "高级导出 (10+格式)"
+          },
+          {
+            "included": true,
+            "text": "安全保险库 (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "12个月更新"
+          },
+          {
+            "included": true,
+            "text": "邮件支持"
+          }
+        ],
+        "cta": "永久获取Pro",
+        "ctaHref": "/buy-pro",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "之后恢复原价 $79",
+        "sla": "支持：邮件 48 小时（周一至周五）"
+      }
+    ],
+    "legal": "BookmarkForge v1 的终身许可证。包含所有 v1.x 更新和 12 个月的功能更新。安全更新永久提供。未来的主要版本（v2、v3）对现有用户六折优惠。通过 Whop 提供 30 天退款保证。<a href=\"/privacy-and-terms.html#terms\">条款</a> · <a href=\"/help#pricing\">了解更多</a>"
+  },
+  "faq": {
+    "title": "常见问题",
+    "items": [
+      {
+        "question": "免费计划真的永久免费吗？",
+        "answer": "是的。没有受限试用期或订阅。免费计划包括2,500个书签、全文和语义搜索、知识图谱以及使用您自己的API密钥的AI（您支付提供商）。"
+      },
+      {
+        "question": "Pro中的'一次性购买'是什么意思？",
+        "answer": "您支付一次（$79），许可证永久属于您。包含12个月的所有更新。无重复费用。许可证密钥通过Whop即时交付。"
+      },
+      {
+        "question": "您接受哪些支付方式？",
+        "answer": "通过Whop：信用卡、PayPal和加密货币。我们从不查看您的支付信息。"
+      },
+      {
+        "question": "支持 — 你们多快回复？",
+        "answer": "社区：通过 <a href=\"/help\">帮助中心</a> 和 GitHub Discussions 提供社区互助（尽力而为）。Pro：工作日 48 小时内邮件回复。保险库已加密 — 我们看不到您的数据，因此从不索取您的密码或恢复短语。参见 <a href=\"/help#sla\">支持 SLA</a>。"
+      },
+      {
+        "question": "如果我忘记了保险库密码怎么办？",
+        "answer": "我们无法恢复。创建保险库时，我们会一次性显示 24 个词的恢复短语 — 请写在纸上。没有它，任何人（包括我们）都无法打开保险库。参见 <a href=\"/help#bf-e101\">BF-E101</a>。"
+      }
+    ]
+  },
+  "cta": {
+    "title": "准备好掌控您的知识了吗？",
+    "text": "加入数千名研究者、开发者和学生，他们信任BookmarkForge作为他们的第二大脑。",
+    "ctaPrimary": "免费使用",
+    "ctaSecondary": "升级到Pro",
+    "note": "无需账户。在浏览器中立即可用。免费计划：2,500个书签。"
+  },
+  "footer": {
+    "brand": "您的私密AI知识保险库。100%本地。",
+    "product": {
+      "title": "产品",
+      "links": [
+        "功能",
+        "AI能力",
+        "隐私",
+        "价格",
+        "打开应用"
+      ]
+    },
+    "resources": {
+      "title": "资源",
+      "links": [
+        "与Pocket比较",
+        "隐私和条款"
+      ]
+    },
+    "languages": {
+      "title": "语言",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "支持",
+      "links": [
+        "联系我们"
+      ],
+      "helpCenter": "帮助中心",
+      "errorCodes": "错误代码"
+    },
+    "copyright": "© 2026 BookmarkForge. 保留所有权利。",
+    "legal": [
+      "隐私政策",
+      "服务条款",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "保存文章、笔记和文档到一个私密、加密且100%本地的保险库。AI搜索、Notion风格编辑器和P2P同步。免费计划：2,500个书签。",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "免费",
+        "price": "0",
+        "currency": "USD",
+        "description": "个人知识库（2,500个书签，可在任何设备上使用 — 每台设备拥有独立保险库）"
+      },
+      {
+        "name": "Pro",
+        "price": "59",
+        "currency": "USD",
+        "description": "v1 终身享用 · 12 个月功能更新 · 安全更新永久 · v2 享 60% 折扣"
+      }
+    ],
+    "featureList": [
+      "本地优先存储",
+      "端到端加密",
+      "离线可用",
+      "AI 搜索",
+      "Notion 风格编辑器",
+      "P2P 同步"
+    ],
+    "faq": [
+      {
+        "question": "免费计划真的永久免费吗？",
+        "answer": "是的。没有受限试用期或订阅。免费计划包括2,500个书签、全文和语义搜索、知识图谱以及使用您自己的API密钥的AI（您支付提供商）。"
+      },
+      {
+        "question": "Pro中的'一次性购买'是什么意思？",
+        "answer": "您支付一次（$79），许可证永久属于您。包含12个月的所有更新。无重复费用。许可证密钥通过Whop即时交付。"
+      },
+      {
+        "question": "您接受哪些支付方式？",
+        "answer": "通过Whop：信用卡、PayPal和加密货币。我们从不查看您的支付信息。"
+      },
+      {
+        "question": "支持 — 你们多快回复？",
+        "answer": "社区：通过 <a href=\"/help\">帮助中心</a> 和 GitHub Discussions 提供社区互助（尽力而为）。Pro：工作日 48 小时内邮件回复。保险库已加密 — 我们看不到您的数据，因此从不索取您的密码或恢复短语。参见 <a href=\"/help#sla\">支持 SLA</a>。"
+      },
+      {
+        "question": "如果我忘记了保险库密码怎么办？",
+        "answer": "我们无法恢复。创建保险库时，我们会一次性显示 24 个词的恢复短语 — 请写在纸上。没有它，任何人（包括我们）都无法打开保险库。参见 <a href=\"/help#bf-e101\">BF-E101</a>。"
+      }
+    ]
+  }
+}

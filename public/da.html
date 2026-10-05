@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="da"
+  dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Gem artikler, notater og dokumenter i en privat, krypteret og 100% lokal vault. AI-søgning, Notion-lignende editor og P2P-synkronisering. Gratis plan: 2.500 bogmærker.">
+  <title>BookmarkForge — Privat Pocket-alternativ med AI (Bogmærker og notater)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforge.com/da/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforgeapp.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforgeapp.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforgeapp.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforgeapp.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforgeapp.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforgeapp.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforgeapp.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforgeapp.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforgeapp.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforgeapp.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforgeapp.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforgeapp.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforgeapp.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforgeapp.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforgeapp.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforgeapp.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforgeapp.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforgeapp.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforgeapp.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforgeapp.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforgeapp.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforgeapp.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforgeapp.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforgeapp.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforgeapp.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforgeapp.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforgeapp.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforgeapp.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforgeapp.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforgeapp.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — Privat Pocket-alternativ med AI (Bogmærker og notater)">
+  <meta property="og:description" content="Gem artikler, notater og dokumenter i en privat, krypteret og 100% lokal vault. AI-søgning, Notion-lignende editor og P2P-synkronisering. Gratis plan: 2.500 bogmærker.">
+  <meta property="og:url" content="https://bookmarkforge.com/da/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="da_DK">
+  <meta property="og:locale:alternate" content="en_US">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — Privat Pocket-alternativ med AI (Bogmærker og notater)">
+  <meta name="twitter:description" content="Gem artikler, notater og dokumenter i en privat, krypteret og 100% lokal vault. AI-søgning, Notion-lignende editor og P2P-synkronisering. Gratis plan: 2.500 bogmærker.">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://bookmarkforge.com/da/#website",
+        "url": "https://bookmarkforge.com/da/",
+        "name": "BookmarkForge",
+        "description": "Gem artikler, notater og dokumenter i en privat, krypteret og 100% lokal vault. AI-søgning, Notion-lignende editor og P2P-synkronisering. Gratis plan: 2.500 bogmærker.",
+        "inLanguage": "da",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://bookmarkforge.com/da/?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": { "@id": "https://bookmarkforgeapp.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://bookmarkforgeapp.com/#organization",
+        "name": "BookmarkForge",
+        "url": "https://bookmarkforge.com/",
+        "logo": { "@type": "ImageObject", "url": "https://bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
+        "email": "bookmarkforge@proton.me"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://bookmarkforge.com/da/#software",
+        "name": "BookmarkForge",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "url": "https://bookmarkforge.com/",
+        "image": "https://bookmarkforge.com/og-image.png",
+        "description": "Gem artikler, notater og dokumenter i en privat, krypteret og 100% lokal vault. AI-søgning, Notion-lignende editor og P2P-synkronisering. Gratis plan: 2.500 bogmærker.",
+        "offers": [
+          { "@type": "Offer", "name": "Gratis", "price": "0", "priceCurrency": "USD", "description": "Til personligt arkiv (2.500 bogmærker, virker på enhver enhed — hver har sit eget valv)" },          { "@type": "Offer", "name": "Pro", "price": "59", "priceCurrency": "USD", "description": "Livstid for v1 · 12 måneders funktionsopdateringer · Sikkerhed for altid · v2 med 60% rabat" }        ],
+        "featureList": [
+          "Lokal lagring",          "End-to-end-kryptering",          "Virker offline",          "AI-søgning",          "Notion-lignende editor",          "P2P-synkronisering"        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://bookmarkforge.com/da/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Er Gratis-planen virkelig gratis for altid?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Ja. Ingen begrænset prøveperiode eller abonnement. Gratis-planen inkluderer 2.500 bogmærker, fuldtekst- og semantisk søgning, vidensgraf og AI med din egen API-nøgle (du betaler udbyderen)." }
+          },          {
+            "@type": "Question",
+            "name": "Hvad betyder \u0027engangskøb\u0027 i Pro?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Du betaler én gang ($79), og licensen er din for altid. Inkluderer alle opdateringer i 12 måneder. Ingen tilbagevendende gebyrer. Licensnøglen leveres øjeblikkeligt via Whop." }
+          },          {
+            "@type": "Question",
+            "name": "Hvilke betalingsmetoder accepterer I?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Via Whop: kreditkort, PayPal og kryptovaluta. Vi ser aldrig dine betalingsoplysninger." }
+          },          {
+            "@type": "Question",
+            "name": "Support — hvor hurtigt svarer I?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Community: hjælp fra fællesskabet via \u003ca href=\"/help\"\u003eHjælpecenteret\u003c/a\u003e + GitHub Discussions (efter bedste evne). Pro: e-mail inden for 48 timer på hverdage. Boksen er krypteret — vi kan ikke se dine data, så vi beder aldrig om dit kodeord eller din gendannelsessætning. Se \u003ca href=\"/help#sla\"\u003eSupport-SLA\u003c/a\u003e." }
+          },          {
+            "@type": "Question",
+            "name": "Hvad hvis jeg glemmer mit kodeord til boksen?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Vi kan ikke gendanne det. Når du opretter en boks, viser vi en gendannelsessætning på 24 ord én gang — skriv den ned på papir. Uden den kan ingen (heller ikke vi) åbne boksen. Se \u003ca href=\"/help#bf-e101\"\u003eBF-E101\u003c/a\u003e." }
+          }        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Gå til hovedindhold</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/da/" class="nav-brand" aria-label="BookmarkForge forside">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Hovednavigation">
+        <a href="#pocket-alternative">Læs senere uden at gå på kompromis med dit privatliv</a>
+        <a href="#features">Funktioner</a>
+        <a href="#ai">AI</a>
+        <a href="#privacy">Privatliv</a>
+        <a href="#pricing">Priser</a>
+        <a href="/help">Hjælp</a>
+        
+        <!-- Language Dropdown -->
+        <div class="language-dropdown">
+          <button class="language-toggle" aria-label="Select language" aria-expanded="false">
+            <span class="current-lang">Dansk</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 4 L6 8 L10 4"/>
+            </svg>
+          </button>
+          <ul class="language-menu" role="menu">
+            <li role="none">
+              <a href="/id/?lang=id" hreflang="id" lang="id" role="menuitem">
+                Bahasa Indonesia
+              </a>
+            </li>
+            <li role="none">
+              <a href="/cs/?lang=cs" hreflang="cs" lang="cs" role="menuitem">
+                Čeština
+              </a>
+            </li>
+            <li role="none">
+              <a href="/da/?lang=da" hreflang="da" lang="da" role="menuitem" class="current">
+                Dansk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/de/?lang=de" hreflang="de" lang="de" role="menuitem">
+                Deutsch
+              </a>
+            </li>
+            <li role="none">
+              <a href="/?lang=en" hreflang="en" lang="en" role="menuitem">
+                English
+              </a>
+            </li>
+            <li role="none">
+              <a href="/es/?lang=es" hreflang="es" lang="es" role="menuitem">
+                Español
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fr/?lang=fr" hreflang="fr" lang="fr" role="menuitem">
+                Français
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hr/?lang=hr" hreflang="hr" lang="hr" role="menuitem">
+                Hrvatski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/it/?lang=it" hreflang="it" lang="it" role="menuitem">
+                Italiano
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hu/?lang=hu" hreflang="hu" lang="hu" role="menuitem">
+                Magyar
+              </a>
+            </li>
+            <li role="none">
+              <a href="/nl/?lang=nl" hreflang="nl" lang="nl" role="menuitem">
+                Nederlands
+              </a>
+            </li>
+            <li role="none">
+              <a href="/no/?lang=no" hreflang="no" lang="no" role="menuitem">
+                Norsk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pl/?lang=pl" hreflang="pl" lang="pl" role="menuitem">
+                Polski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pt/?lang=pt" hreflang="pt" lang="pt" role="menuitem">
+                Português
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ro/?lang=ro" hreflang="ro" lang="ro" role="menuitem">
+                Română
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fi/?lang=fi" hreflang="fi" lang="fi" role="menuitem">
+                Suomi
+              </a>
+            </li>
+            <li role="none">
+              <a href="/sv/?lang=sv" hreflang="sv" lang="sv" role="menuitem">
+                Svenska
+              </a>
+            </li>
+            <li role="none">
+              <a href="/vi/?lang=vi" hreflang="vi" lang="vi" role="menuitem">
+                Tiếng Việt
+              </a>
+            </li>
+            <li role="none">
+              <a href="/tr/?lang=tr" hreflang="tr" lang="tr" role="menuitem">
+                Türkçe
+              </a>
+            </li>
+            <li role="none">
+              <a href="/el/?lang=el" hreflang="el" lang="el" role="menuitem">
+                Ελληνικά
+              </a>
+            </li>
+            <li role="none">
+              <a href="/bg/?lang=bg" hreflang="bg" lang="bg" role="menuitem">
+                Български
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ru/?lang=ru" hreflang="ru" lang="ru" role="menuitem">
+                Русский
+              </a>
+            </li>
+            <li role="none">
+              <a href="/uk/?lang=uk" hreflang="uk" lang="uk" role="menuitem">
+                Українська
+              </a>
+            </li>
+            <li role="none">
+              <a href="/he/?lang=he" hreflang="he" lang="he" role="menuitem">
+                עברית
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ar/?lang=ar" hreflang="ar" lang="ar" role="menuitem">
+                العربية
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hi/?lang=hi" hreflang="hi" lang="hi" role="menuitem">
+                हिन्दी
+              </a>
+            </li>
+            <li role="none">
+              <a href="/th/?lang=th" hreflang="th" lang="th" role="menuitem">
+                ไทย
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ko/?lang=ko" hreflang="ko" lang="ko" role="menuitem">
+                한국어
+              </a>
+            </li>
+            <li role="none">
+              <a href="/zh/?lang=zh" hreflang="zh" lang="zh" role="menuitem">
+                中文
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ja/?lang=ja" hreflang="ja" lang="ja" role="menuitem">
+                日本語
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <a href="/app" class="btn-primary nav-cta">Åbn appen</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Skift tema" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">Version 1.0</span>
+          <h1 id="hero-title">Din <span class='accent-text'>Private AI Vault</span></h1>
+          <p class="hero-subtitle">Det private alternativ til Pocket til at gemme artikler og læse senere: bogmærker, notater og dokumenter — krypteret på din enhed, søgbare med AI og synkroniseret peer-to-peer. Ingen sky. Ingen sporing. 100% dit.</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">Åbn Gratis</a>
+            <a href="#pricing" class="btn-secondary">Se Priser</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>100% Lokalt</strong> — dine data forlader ikke din enhed</span>
+            <span><strong>Krypteret</strong> — AES-256-GCM + Argon2id</span>
+            <span><strong>Offline</strong> — virker uden internet</span>
+            <span><strong>Privat</strong> — nul telemetri som standard</span>
+          </div>
+          <div class="hero-affiliate">
+            <span class="hero-affiliate-badge">Tjen penge</span>
+            <h3 class="hero-affiliate-title">Affiliate program</h3>
+            <p class="hero-affiliate-subtitle">Del BookmarkForge og tjen 30% provision på hvert henvisende køb. Begynd at tjene i dag!</p>
+            <a href="https://whop.com/affiliates" class="btn-small">Deltag i affiliate programmet</a>
+            <ul class="hero-affiliate-details">
+              <li>30% provision på hvert salg</li>
+              <li>Ubegrænsede indtægter</li>
+              <li>Automatiske betalinger via Whop</li>
+              <li>Realtidssporing</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Demo Section — steps and CTA only. The tour GIF this section
+         used to show was retired with the demo-media pipeline; the template kept
+         a dead <img> pointing at it until the ADR-062 smoke gate reported the 404
+         on all 30 landings. The demo.* copy still describes the loop: rewriting it
+         has to come with the translations, not from the template.
+         Secondary locales carry demo: null until that copy is translated —
+         the section is hidden rather than rendering English inside a
+         localized page (same for raindropCompare below). -->
+
+    <!-- Pocket Alternative Section -->
+    <section id="pocket-alternative" class="comparison-section" aria-labelledby="pocket-alternative-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Læs senere uden at gå på kompromis med dit privatliv</span>
+          <h2 id="pocket-alternative-title">Det Private Pocket-alternativ</h2>
+          <p class="section-subtitle">Pocket forsvinder. BookmarkForge holder læsevanen i live — med hver artikel, note og markering krypteret på din enhed.</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>Gem artikler til senere, dine for altid</h3>
+            <p>Gem artikler, videoer og PDF med ét klik — fra PWA-appen, browserudvidelsen eller delingsmenuen. I modsætning til Pocket lever din læseliste på din enhed, krypteret, og virker offline.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Notion-lignende notater i hver artikel</h3>
+            <p>Fremhæv, opsummer og skriv bloknoter i ethvert bogmærke. Omdan en gemt artikel til din egen vidensbase — ikke bare en linkliste.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Nul sporing, nul annoncer</h3>
+            <p>BookmarkForge har ingen konti, analyseværktøjer eller annoncer som standard. Dine læsevaner er kun dit ansvar.</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Begynd at Gemme Gratis</a>
+          <a href="/pocket-alternative" class="btn-link">Sammenligning og migreringsguide</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Raindrop Comparison Section (hidden while raindropCompare is null) -->
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Alt hvad du har brug for</span>
+          <h2 id="features-title">Kraftfulde funktioner til at administrere din viden, alt kører lokalt</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Bogmærker og dokumenter</h3>
+            <p>Gem enhver side med ét klik. Skriv noter lige ved siden af i en ren, enkel editor. Forbliver hurtig selv med 100.000 gemte elementer.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Fuldtekst- og semantisk søgning</h3>
+            <p>Find ting efter nøgleord eller efter mening — også når du ikke husker de præcise ord. Raindrop tager 28 dollars om året for dette; her er det gratis.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Lokal AI (WebLLM / Ollama) — Kun Pro</h3>
+            <p>Stil spørgsmål om det, du har gemt, og få svar med kilderne vist. Intet sendes til skyen, og det virker uden internet. Kræver Pro.</p>
+          </div>
+          <div class="feature-item">
+            <h3>RAG-chat over dine data — Kun Pro</h3>
+            <p>Spørg om alt mellem dine bogmærker og noter, og få svar med citater. Den private tilstand kører 100% på din egen maskine. Kræver Pro.</p>
+          </div>
+          <div class="feature-item">
+            <h3>P2P-synkronisering (WebRTC) — Kun Pro</h3>
+            <p>Dine enheder taler direkte med hinanden — ingen server i midten, og alt forbliver krypteret. Parrings dem ved at scanne en QR-kode. Op til 5 enheder. Kræver Pro.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Krypterede backups</h3>
+            <p>Automatiske backups, du kan opbevare, hvor du vil — en ekstern disk, en mappe i skyen, hvor som helst. Eksporter alt til Markdown, JSON, CSV eller PDF, når du vil. Nøglerne er dine.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Vidensgraf</h3>
+            <p>Se, hvordan dine noter og bogmærker hænger sammen. Filtrér efter tags, datoer og lighed, og zoom rundt på et uendeligt lærred.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Flashcards (Spaced Repetition) — Kun Pro</h3>
+            <p>Gør ethvert gemt dokument til spørgsmålskort, der dukker op lige før, du ville glemme dem — samme planlægningsidé som Anki. Kræver Pro.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Privatliv som standard</h3>
+            <p>Ingen konti, ingen sporing, ingen reklamer. Du er kunden, ikke produktet. Deling af brugsdata findes, er valgfrit og forbliver slået fra, indtil du tænder det.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">AI der respekterer dig</span>
+          <h2 id="ai-title">Din Viden, Forstærket</h2>
+          <p class="section-subtitle">BookmarkForge giver dig valget: kør 100% lokale modeller i din browser (WebLLM, WebGPU) med Pro, tilslut dine egne API-nøgler til cloud-udbydere, eller brug lokal Ollama. Dine instruktioner, dine data, dine regler.</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>Understøttede udbydere</h3>
+            <ul class="providers-list">
+              <li>Inde i din computer — WebLLM-modeller (TinyLlama, Llama 3.2, Phi-3.5-mini) — kun Pro</li>
+              <li>På din egen maskine — Ollama (enhver model, du kører)</li>
+              <li>Sky — Google Gemini (nøglen administrerer vi)</li>
+              <li>Sky — OpenAI / GPT-4o (med din egen nøgle)</li>
+              <li>Sky — Anthropic Claude (med din egen nøgle)</li>
+              <li>Sky — Groq (med din egen nøgle)</li>
+              <li>Sky — OpenRouter eller en anden tilpasset udbyder (med din egen nøgle)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>Chat-tilstande</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>Privat Tilstand</h4>
+                <p>Kun lokal AI (WebLLM/Ollama). Nul data forlader enheden. Virker offline. Kræver Pro for WebLLM.</p>
+              </div>
+              <div class="mode-item">
+                <h4>Web Søge-tilstand</h4>
+                <p>Kombinerer din vault med live søgeresultater (cloud-udbydere).</p>
+              </div>
+              <div class="mode-item">
+                <h4>Ekspertagenter</h4>
+                <p>Specialiserede personer: Programmør, Forfatter, Analytiker, Forsker. Kræver Pro for lokal AI.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">Privatliv er ikke en funktion — det er fundamentet</h2>
+          <p class="section-subtitle">Hvert arkitekturbesætning sætter dig i kontrol</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>End-to-end-kryptering</h3>
+            <p>Dit bibliotek er krypteret med en nøgle udledt af dit hovedkodeord. Vi ser aldrig dit kodeord eller dit indhold.</p>
+          </div>
+          <div class="feature-item">
+            <h3>100% lokal arkitektur</h3>
+            <p>Alting bor på din computer. Følgeserveren håndterer kun licensering, enhedssammenkobling og videresendelse af dine cloud-tilstand AI-spørgsmål — aldrig dit indhold.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Nul telemetri som standard</h3>
+            <p>Ingen analyse, ingen fejlrapporter, ingen sporing. Deling af brugsstatistik eller fejlrapporter er et separat valg, slået fra som standard.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Nøglerne er dine</h3>
+            <p>Intet hovedkodeord betyder ingen adgang — der er ingen "glemt kodeord"-bagdør. Din gendannelsessætning på 24 ord er den eneste vej ind; gem den godt.</p>
+          </div>
+          <div class="feature-item">
+            <h3>GDPR-overholdelse</h3>
+            <p>Få adgang til, ret, slet eller tag dine data med dig — alt kan gøres lokalt, når du vil.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Uafhængighed af udbyder</h3>
+            <p>Eksporter dine data når som helst i åbne formater (JSON, Markdown, CSV, PDF). Din viden forbliver din og portabel.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">Enkle, Retfærdige Priser</h2>
+          <p class="section-subtitle">Gratis plan: 2.500 bogmærker. Pro er et engangskøb på $59 Early Bird (derefter $79) — ingen abonnementer.</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Gratis</h3>
+            <div class="price">$ 0<span>/ for altid</span></div>
+            <p>Til personligt arkiv (2.500 bogmærker, virker på enhver enhed — hver har sit eget valv)</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> 2.500 bogmærker, notater og dokumenter</li>
+              <li><span aria-hidden="true">✅</span> Smart søgning (fuldtekst + semantisk) — inkluderet gratis; Raindrop opkræver årligt betaling for dette</li>
+              <li><span aria-hidden="true">✅</span> AI med din egen API-nøgle (du betaler udbyderen)</li>
+              <li><span aria-hidden="true">✅</span> Vidensgraf</li>
+              <li><span aria-hidden="true">✅</span> Grundlæggende skabeloner</li>
+              <li><span aria-hidden="true">✅</span> JSON/HTML-eksport</li>
+              <li><span aria-hidden="true">✅</span> PWA + browserudvidelser</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> P2P-synkronisering mellem enheder</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> Lokal AI (WebLLM/Ollama)</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> RAG-chat over dine data</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> Flashcards med spaced repetition</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> Avanceret eksport (10+ formater)</li>
+            </ul>
+            <a href="/app" class="btn-secondary " >Begynd Gratis</a>
+          </div>
+          <div class="price-card popular">
+            <span class="badge">Mest populær — Early Bird 200</span>
+            <h3>Pro</h3>
+            <div class="price"><span class="price-now">$ 59</span> <span class="price-was">$79</span><span>Early Bird (derefter $79)</span></div>
+            <div class="price-sub">derefter $79 normalpris</div>
+            <p>Livstid for v1 · 12 måneders funktionsopdateringer · Sikkerhed for altid · v2 med 60% rabat</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Alt i Gratis</li>
+              <li><span aria-hidden="true">✅</span> Ubegrænsede bogmærker</li>
+              <li><span aria-hidden="true">✅</span> 5 enheder</li>
+              <li><span aria-hidden="true">✅</span> P2P-synkronisering på 5 enheder</li>
+              <li><span aria-hidden="true">✅</span> Lokal AI (WebLLM, ingen API-nøgle)</li>
+              <li><span aria-hidden="true">✅</span> RAG-chat over dine data</li>
+              <li><span aria-hidden="true">✅</span> Ekspertagenter (Programmør, Forfatter, Analytiker, Forsker)</li>
+              <li><span aria-hidden="true">✅</span> Flashcards med spaced repetition</li>
+              <li><span aria-hidden="true">✅</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> Avanceret eksport (10+ formater)</li>
+              <li><span aria-hidden="true">✅</span> Sikkerheds-vault (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> Opdateringer i 12 måneder</li>
+              <li><span aria-hidden="true">✅</span> E-mail-support</li>
+            </ul>
+            <a href="https://whop.com/checkout/plan_XU1GaWhoYhoDh" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Få Pro For Altid</a>
+            <p class="sla-note">Support: e-mail 48 t (man–fre) · <a href="/help#sla">SLA</a></p>
+          </div>
+        </div>
+        <p class="pricing-legal">Livstidslicens til BookmarkForge v1. Inkluderer alle v1.x-opdateringer og 12 måneders funktionsopdateringer. Sikkerhedsopdateringer for altid. Fremtidige hovedversioner (v2, v3) med 60% rabat til eksisterende ejere. 30 dages refusion via Whop. <a href="/privacy-and-terms.html#terms">Vilkår</a> · <a href="/help#pricing">Læs mere</a></p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">Ofte Stillede Spørgsmål</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Er Gratis-planen virkelig gratis for altid?</h3>
+            <p>Ja. Ingen begrænset prøveperiode eller abonnement. Gratis-planen inkluderer 2.500 bogmærker, fuldtekst- og semantisk søgning, vidensgraf og AI med din egen API-nøgle (du betaler udbyderen).</p>
+          </div>
+          <div class="faq-item">
+            <h3>Hvad betyder 'engangskøb' i Pro?</h3>
+            <p>Du betaler én gang ($79), og licensen er din for altid. Inkluderer alle opdateringer i 12 måneder. Ingen tilbagevendende gebyrer. Licensnøglen leveres øjeblikkeligt via Whop.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Hvilke betalingsmetoder accepterer I?</h3>
+            <p>Via Whop: kreditkort, PayPal og kryptovaluta. Vi ser aldrig dine betalingsoplysninger.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Support — hvor hurtigt svarer I?</h3>
+            <p>Community: hjælp fra fællesskabet via <a href="/help">Hjælpecenteret</a> + GitHub Discussions (efter bedste evne). Pro: e-mail inden for 48 timer på hverdage. Boksen er krypteret — vi kan ikke se dine data, så vi beder aldrig om dit kodeord eller din gendannelsessætning. Se <a href="/help#sla">Support-SLA</a>.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Hvad hvis jeg glemmer mit kodeord til boksen?</h3>
+            <p>Vi kan ikke gendanne det. Når du opretter en boks, viser vi en gendannelsessætning på 24 ord én gang — skriv den ned på papir. Uden den kan ingen (heller ikke vi) åbne boksen. Se <a href="/help#bf-e101">BF-E101</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>Klar til at Blive Herre over din Viden?</h2>
+        <p>Bliv en af tusindvis af forskere, udviklere og studerende, der stoler på BookmarkForge som deres anden hjerne.</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">Åbn Gratis</a>
+          <a href="#pricing" class="btn-secondary">Opgrader til Pro</a>
+        </div>
+        <p class="note">Ingen konto nødvendig. Virker øjeblikkeligt i din browser. Gratis plan: 2.500 bogmærker.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>Din private AI-vault til viden. 100% lokal.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Produkt</h4>
+        <ul>
+          <li><a href="#features">Funktioner</a></li>
+          <li><a href="#ai">AI-muligheder</a></li>
+          <li><a href="#privacy">Privatliv</a></li>
+          <li><a href="#pricing">Priser</a></li>
+          <li><a href="/app">Åbn Appen</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Ressourcer</h4>
+        <ul>
+          <li><a href="/pocket-alternative">Pocket-sammenligning</a></li>
+          <li><a href="/privacy-and-terms.html">Privatliv og vilkår</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Sprog</h4>
+        <ul>
+          <li><a href="/id/?lang=id" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+          <li><a href="/cs/?lang=cs" hreflang="cs" lang="cs">Čeština</a></li>
+          <li><a href="/da/?lang=da" hreflang="da" lang="da">Dansk</a></li>
+          <li><a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a></li>
+          <li><a href="/?lang=en" hreflang="en" lang="en">English</a></li>
+          <li><a href="/es/?lang=es" hreflang="es" lang="es">Español</a></li>
+          <li><a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a></li>
+          <li><a href="/hr/?lang=hr" hreflang="hr" lang="hr">Hrvatski</a></li>
+          <li><a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a></li>
+          <li><a href="/hu/?lang=hu" hreflang="hu" lang="hu">Magyar</a></li>
+          <li><a href="/nl/?lang=nl" hreflang="nl" lang="nl">Nederlands</a></li>
+          <li><a href="/no/?lang=no" hreflang="no" lang="no">Norsk</a></li>
+          <li><a href="/pl/?lang=pl" hreflang="pl" lang="pl">Polski</a></li>
+          <li><a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a></li>
+          <li><a href="/ro/?lang=ro" hreflang="ro" lang="ro">Română</a></li>
+          <li><a href="/fi/?lang=fi" hreflang="fi" lang="fi">Suomi</a></li>
+          <li><a href="/sv/?lang=sv" hreflang="sv" lang="sv">Svenska</a></li>
+          <li><a href="/vi/?lang=vi" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+          <li><a href="/tr/?lang=tr" hreflang="tr" lang="tr">Türkçe</a></li>
+          <li><a href="/el/?lang=el" hreflang="el" lang="el">Ελληνικά</a></li>
+          <li><a href="/bg/?lang=bg" hreflang="bg" lang="bg">Български</a></li>
+          <li><a href="/ru/?lang=ru" hreflang="ru" lang="ru">Русский</a></li>
+          <li><a href="/uk/?lang=uk" hreflang="uk" lang="uk">Українська</a></li>
+          <li><a href="/he/?lang=he" hreflang="he" lang="he">עברית</a></li>
+          <li><a href="/ar/?lang=ar" hreflang="ar" lang="ar">العربية</a></li>
+          <li><a href="/hi/?lang=hi" hreflang="hi" lang="hi">हिन्दी</a></li>
+          <li><a href="/th/?lang=th" hreflang="th" lang="th">ไทย</a></li>
+          <li><a href="/ko/?lang=ko" hreflang="ko" lang="ko">한국어</a></li>
+          <li><a href="/zh/?lang=zh" hreflang="zh" lang="zh">中文</a></li>
+          <li><a href="/ja/?lang=ja" hreflang="ja" lang="ja">日本語</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="/help">Hjælpecenter</a></li>
+          <li><a href="/help#sla">SLA</a></li>
+          <li><a href="/help#bf-e">Fejlkoder</a></li>
+          <li><a href="mailto:bookmarkforge@proton.me">Kontakt os</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+         Every other locale has its own directory. The rule has one owner —
+         scripts/landing-registry.mjs (LEGAL_LOCALE_CODES), already encoded by
+         check-seo, check-sitemap-coverage, check-hreflang-graph and
+         check-page-figures. Emitting "/da/…" unconditionally shipped a
+         404 footer link on every EN landing until the ADR-062 smoke gate opened it. -->
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. Alle rettigheder forbeholdes.</p>
+      <a href="/da/privacy-and-terms.html">Privatlivspolitik</a> · <a href="/da/privacy-and-terms.html#terms">Servicevilkår</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

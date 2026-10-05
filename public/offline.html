@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offline - BookmarkForge</title>
+<meta name="robots" content="noindex, follow">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+<!-- CSS/JS are EXTERNAL (offline.css / offline.js): the strict CSP
+     (style-src 'self', script-src 'self') blocks inline style and script
+     tags. Workbox precaches all of them (globPatterns **/*.{css,js,html}),
+     so the offline page stays styled and functional with no network. -->
+<link rel="stylesheet" href="/brand-tokens.css">
+<link rel="stylesheet" href="/offline.css">
+</head>
+<body>
+<div class="container">
+  <img class="logo" src="/logo-64.png" alt="" width="64" height="64" />
+  <h1>BookmarkForge</h1>
+  <p>You're offline. Your local data is still accessible, but some features may be unavailable until you reconnect.</p>
+  <button id="retry-btn">Reconnect</button>
+  <div id="status" class="status" role="status"></div>
+</div>
+<script src="/offline.js" defer></script>
+</body>
+</html>

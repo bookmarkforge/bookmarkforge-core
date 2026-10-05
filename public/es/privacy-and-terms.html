@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Política de Privacidad y Términos de Servicio | BookmarkForge</title>
+  <meta name="description" content="Política de Privacidad y Términos de Servicio de BookmarkForge. Tus datos se quedan en tu dispositivo. Local-first, cifrado, zero-knowledge.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://bookmarkforgeapp.com/es/privacy-and-terms.html">
+  <!-- SEO: the full hreflang set (6 languages + x-default) mirrors the
+       landing pages — this document is translated into all of them. -->
+  <link rel="alternate" hreflang="en" href="https://bookmarkforgeapp.com/privacy-and-terms.html">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforgeapp.com/es/privacy-and-terms.html">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforgeapp.com/fr/privacy-and-terms.html">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforgeapp.com/de/privacy-and-terms.html">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforgeapp.com/pt/privacy-and-terms.html">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforgeapp.com/it/privacy-and-terms.html">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/privacy-and-terms.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="Política de Privacidad y Términos de Servicio | BookmarkForge">
+  <meta property="og:description" content="Política de Privacidad y Términos de Servicio de BookmarkForge. Tus datos se quedan en tu dispositivo. Local-first, cifrado, zero-knowledge.">
+  <meta property="og:url" content="https://bookmarkforgeapp.com/es/privacy-and-terms.html">
+  <meta property="og:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="es_ES">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Política de Privacidad y Términos de Servicio | BookmarkForge">
+  <meta name="twitter:description" content="Política de Privacidad y Términos de Servicio de BookmarkForge. Tus datos se quedan en tu dispositivo. Local-first, cifrado, zero-knowledge.">
+  <meta name="twitter:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/privacy-and-terms.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="/es/" class="brand" aria-label="BookmarkForge inicio">
+        <img src="/logo-64.png" alt="" width="28" height="28" />
+        BookmarkForge
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <p class="last-updated"><strong>Última actualización:</strong> 9 de septiembre de 2026</p>
+
+    <h1>Política de Privacidad</h1>
+
+    <h2>1. Responsable del tratamiento</h2>
+    <p>El responsable del tratamiento de los datos descrito en esta política es BookmarkForge (contacto en la sección 17). Para el servidor complementario y la infraestructura de licencias, el operador de ese despliegue actúa como responsable.</p>
+
+    <h2>2. Introducción y alcance</h2>
+    <p>BookmarkForge ("nosotros", "nuestro" o "nos") está comprometido con la protección de tu privacidad. Esta Política de Privacidad explica cómo tratamos tus datos cuando utilizas nuestra aplicación.</p>
+    <p><strong>Principio clave:</strong> BookmarkForge se ejecuta 100 % en local en tu dispositivo. Tus marcadores, notas, documentos y conversaciones de IA se almacenan en la base de datos local de tu navegador y nunca se transmiten a nuestros servidores.</p>
+
+    <h2>3. Datos que NO recopilamos</h2>
+    <p>Queremos ser claros sobre lo que <strong>no</strong> recopilamos:</p>
+    <ul>
+      <li><strong>Sin marcadores ni URLs</strong> enviados a nuestros servidores</li>
+      <li><strong>Sin notas ni documentos</strong> que salgan de tu dispositivo</li>
+      <li><strong>Sin indicaciones ni respuestas de IA</strong> registradas por nosotros</li>
+      <li><strong>Sin historial de navegación</strong> rastreado</li>
+      <li><strong>Sin información personal</strong> requerida para usar la aplicación</li>
+      <li><strong>Sin analíticas</strong> recopiladas por defecto</li>
+    </ul>
+
+    <h2>4. Dónde viven tus datos</h2>
+    <p>Todos tus datos se almacenan localmente en tu navegador mediante:</p>
+    <ul>
+      <li><strong>IndexedDB</strong> — para marcadores, documentos y configuración</li>
+      <li><strong>Almacenamiento seguro</strong> — para claves cifradas y contraseñas</li>
+      <li><strong>Caché del Service Worker</strong> — para el funcionamiento sin conexión</li>
+    </ul>
+    <p>Tus datos nunca salen de tu dispositivo salvo que explícitamente:</p>
+    <ul>
+      <li>Exportes un archivo de copia de seguridad</li>
+      <li>Compartas tu vault con otro dispositivo</li>
+      <li>Utilices un proveedor de IA en la nube (tus indicaciones van directamente al proveedor de IA, no a través de nosotros)</li>
+    </ul>
+
+    <h2>5. Cifrado</h2>
+    <p>Tus datos se cifran mediante:</p>
+    <ul>
+      <li>Cifrado <strong>AES-GCM-256</strong> para todo el contenido almacenado</li>
+      <li><strong>Argon2id</strong> (KDF resistente a memoria) para claves derivadas de contraseñas</li>
+      <li>Las claves se derivan y se almacenan localmente en tu navegador</li>
+    </ul>
+    <p>No tenemos acceso a tus claves de cifrado ni a tus contraseñas.</p>
+
+    <h2>6. Informes de Content Security Policy (CSP)</h2>
+    <p>BookmarkForge utiliza cabeceras de Content Security Policy (CSP) para prevenir ataques de cross-site scripting e inyección de datos. Si tu navegador bloquea un recurso por estas cabeceras, envía automáticamente un breve informe técnico de violación al mismo origen que sirvió la aplicación (el endpoint <code>/csp-report</code>). El recopilador del operador conserva únicamente:</p>
+    <ul>
+      <li>El <strong>origen</strong> del recurso bloqueado (la ruta, la consulta y el fragmento se eliminan; nunca tus datos personales)</li>
+      <li>La directiva CSP que se violó</li>
+      <li>El origen de la página donde se produjo la violación</li>
+      <li>Un hash salado unidireccional de tu dirección IP, usado únicamente para limitación de frecuencia — tu IP nunca se almacena</li>
+    </ul>
+    <p>Este es el comportamiento estándar del navegador exigido por la especificación CSP (las cabeceras <code>report-uri</code> / <code>Reporting-Endpoints</code>): el navegador envía estos informes por sí mismo, sin opt-in por usuario, porque forman parte del mecanismo de seguridad que te protege. No se adjuntan cookies, identificadores ni historial de navegación, y nunca se incluye contenido del vault.</p>
+
+    <h2>7. Proveedores de IA</h2>
+    <p>Cuando utilizas las funciones de IA:</p>
+    <ul>
+      <li><strong>IA local (WebLLM):</strong> se ejecuta íntegramente en tu navegador. Ningún dato sale de tu dispositivo.</li>
+      <li><strong>IA en la nube (Gemini, OpenAI, Anthropic, etc.):</strong> tus indicaciones se envían directamente al proveedor. No interceptamos, almacenamos ni registramos estas solicitudes. Cada proveedor tiene su propia política de privacidad.</li>
+    </ul>
+
+    <h2>8. Informes de errores opcionales (solo con opt-in)</h2>
+    <p>Puedes elegir activar los informes de errores en Ajustes. Si se activan:</p>
+    <ul>
+      <li>Recibimos registros técnicos anónimos de errores cuando la aplicación falla</li>
+      <li><strong>NUNCA recibimos:</strong> tus marcadores, textos, URLs, indicaciones ni ningún contenido personal</li>
+      <li>Solo se envían trazas de pila técnicas e información del dispositivo</li>
+      <li>Puedes desactivarlo en cualquier momento</li>
+    </ul>
+
+    <h2>9. Bookmarklet PWA y destino de compartir</h2>
+    <p>BookmarkForge ofrece dos formas de guardar contenido desde tu navegador:</p>
+    <ul>
+      <li><strong>Bookmarklet:</strong> arrastra el botón "Guardar en Forge" a la barra de marcadores. Haz clic en él en cualquier página para guardar al instante.</li>
+      <li><strong>Destino de compartir PWA:</strong> en el móvil, usa el menú nativo de compartir de tu navegador para enviar enlaces a BookmarkForge.</li>
+    </ul>
+    <p>Ambos métodos solo envían la URL y el título de la página a la aplicación cuando tú los activas explícitamente. No se rastrea ninguna actividad de navegación.</p>
+
+    <h2>10. Servicios de terceros</h2>
+    <p>Utilizamos los siguientes servicios de terceros:</p>
+    <ul>
+      <li><strong>Google Fonts</strong> — para la tipografía (las fuentes se cachean localmente)</li>
+      <li><strong>Proveedores de IA</strong> — Google, OpenAI, Anthropic, etc. (solo si los configuras)</li>
+    </ul>
+
+    <h2>11. Tus derechos (GDPR / RGPD)</h2>
+    <p>BookmarkForge está diseñado para que <strong>nunca recibamos tus datos personales</strong>, lo que significa que la mayoría de las obligaciones del RGPD desaparecen por diseño. En virtud del Reglamento General de Protección de Datos (RGPD), conservas los siguientes derechos:</p>
+    <ul>
+      <li><strong>Derecho de acceso (art. 15):</strong> todos tus datos están en tu dispositivo. Usa la función de exportación para obtener una copia completa y legible por máquina en cualquier momento.</li>
+      <li><strong>Derecho de rectificación (art. 16):</strong> edita tus marcadores, notas y documentos directamente en la aplicación.</li>
+      <li><strong>Derecho de supresión (art. 17):</strong> usa la eliminación de datos integrada (Ajustes → Zona de peligro / Nuclear Forget). Esto elimina permanentemente todos los datos locales, incluidas las claves cifradas y los datos de recuperación. No conservamos ninguna copia.</li>
+      <li><strong>Derecho a la portabilidad de datos (art. 20):</strong> las exportaciones utilizan formatos abiertos (JSON, Markdown, HTML) utilizables en otras aplicaciones.</li>
+      <li><strong>Derecho de oposición y limitación del tratamiento (arts. 18/21):</strong> todo el tratamiento opcional (IA en la nube, telemetría, informes de errores) es estrictamente opt-in y puede desactivarse en cualquier momento en Ajustes.</li>
+      <li><strong>Derecho a retirar el consentimiento (art. 7):</strong> desactivar las funciones opcionales en Ajustes retira el consentimiento de inmediato y detiene todo el tratamiento asociado.</li>
+    </ul>
+    <p>Para ejercer cualquier derecho que requiera nuestra intervención (por ejemplo, una reclamación sobre el tratamiento en el servidor), contáctanos en el correo de la sección 17. También tienes derecho a presentar una reclamación ante tu autoridad nacional de protección de datos.</p>
+
+    <h2>12. Base jurídica y registro de tratamientos</h2>
+    <p>Conforme al artículo 6 del RGPD, documentamos la base jurídica de cada actividad de tratamiento que implique que algún dato salga de tu dispositivo:</p>
+    <table>
+      <thead>
+        <tr><th>Actividad de tratamiento</th><th>Datos implicados</th><th>Base jurídica</th><th>Conservación</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>IA en la nube (directamente del navegador al proveedor)</td>
+          <td>Tus indicaciones, enviadas al proveedor que elegiste</td>
+          <td><strong>Consentimiento</strong> (art. 6.1.a) — opt-in por proveedor en Ajustes</td>
+          <td>No las almacenamos; se aplican las políticas del proveedor</td>
+        </tr>
+        <tr>
+          <td>Validación de licencia Pro (adaptador Whop)</td>
+          <td>Clave de licencia, identificador de instancia/dispositivo, IP para limitación de frecuencia</td>
+          <td><strong>Contrato</strong> (art. 6.1.b) — necesario para prestar la función de pago</td>
+          <td>Estado del derecho de uso mientras la licencia esté activa; ventanas de limitación de frecuencia &lt;= 1 hora</td>
+        </tr>
+        <tr>
+          <td>Informes de violación CSP</td>
+          <td>Origen del recurso bloqueado, directiva violada, origen de la página, hash IP salado unidireccional para limitación de frecuencia</td>
+          <td><strong>Interés legítimo</strong> (art. 6.1.f) — informes de seguridad exigidos por el navegador; ver sección 6</td>
+          <td>Anillo en memoria acotado (&lt;= 200 informes) o archivo JSONL que tú alojas</td>
+        </tr>
+        <tr>
+          <td>Analíticas de negocio opt-in (solo si las aceptas en el banner de consentimiento)</td>
+          <td>Recuentos agregados diarios de una lista fija de tipos de evento, más un hash SHA-256 de un id aleatorio por instalación; sin contenido, URLs, títulos ni marcas de tiempo</td>
+          <td><strong>Consentimiento</strong> (art. 6.1.a) — desactivado por defecto</td>
+          <td>&lt;= 180 días de totales diarios; &lt;= 200 000 instalaciones de estado acotado por instalación</td>
+        </tr>
+        <tr>
+          <td>Eventos de degradación del cliente (solo con opt-in)</td>
+          <td>Clase de error técnico anonimizada, IP con hash con sal por despliegue</td>
+          <td><strong>Consentimiento</strong> (art. 6.1.a)</td>
+          <td>Anillo acotado (&lt;= 200 eventos), ventana de agregación &lt;= 10 minutos</td>
+        </tr>
+        <tr>
+          <td>Señalización de sincronización P2P</td>
+          <td>Metadatos de conexión entre pares (SDP/ICE), secreto efímero de sala</td>
+          <td><strong>Contrato</strong> (art. 6.1.b) — tú iniciaste la sincronización</td>
+          <td>Solo durante la vida de la conexión; sin persistencia tras la desconexión</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Todo lo demás — tus marcadores, notas, documentos, contraseñas, claves de cifrado, eventos de analítica — se trata <strong>exclusivamente en tu dispositivo bajo tu control</strong> y, por tanto, queda fuera del alcance del tratamiento RGPD por nuestra parte.</p>
+
+    <h2>13. Encargados de tratamiento y transferencias de datos</h2>
+    <p>Cuando utilizas funciones opcionales, los datos pueden ser tratados por los siguientes terceros (subencargados). Cada transferencia se produce solo cuando usas explícitamente la función:</p>
+    <ul>
+      <li><strong>Google (API Gemini)</strong> — indicaciones de IA en la nube y medios generados. Procesa datos en Google Cloud (regiones globales, residencia de datos configurable por Google; ver los términos de la API Gemini de Google). Las transferencias fuera de la UE pueden producirse bajo las Cláusulas Contractuales Tipo de Google.</li>
+      <li><strong>OpenAI / Anthropic / Groq / OpenRouter / Hugging Face</strong> — proveedores alternativos de IA en la nube, solo si los configuras. Se aplican sus respectivos términos y CCT.</li>
+      <li><strong>Whop</strong> — pago de la licencia Pro y verificación del derecho. Recibe tu clave de licencia y tus datos de pago cuando compras Pro. Whop actúa como responsable independiente de los datos de pago.</li>
+      <li><strong>Sentry (Functional Software)</strong> — informes de errores opcionales, solo si los activas en Ajustes y el operador ha configurado un endpoint de diagnóstico. Recibe trazas de pila técnicas redactadas (URLs sin cadenas de consulta, secretos eliminados, sin identidad de usuario). Sentry actúa como encargado en virtud de su acuerdo de tratamiento de datos; consulta la política de privacidad de Sentry para las transferencias internacionales.</li>
+    </ul>
+    <p><strong>No</strong> vendemos, alquilamos ni compartimos tus datos con fines publicitarios. No utilizamos cookies de seguimiento ni scripts de analítica de terceros. Los proveedores en la nube están sujetos a sus propios acuerdos de tratamiento de datos conformes con el RGPD; recomendamos revisarlos antes de activar la IA en la nube.</p>
+    <p><strong>Transferencias internacionales:</strong> cuando un proveedor trata datos fuera del EEE, las transferencias se basan en la decisión de adecuación de la UE o en las Cláusulas Contractuales Tipo del proveedor. El uso exclusivamente local de BookmarkForge no implica ninguna transferencia internacional.</p>
+
+    <h2>14. Registro de actividades de tratamiento (resumen ROPA)</h2>
+    <p>Se mantiene un registro resumido de las actividades de tratamiento (art. 30 del RGPD) que cubre: finalidades, categorías de interesados (usuarios de la aplicación, clientes de pago), categorías de datos personales (claves de licencia, IPs con hash, informes técnicos opt-in), destinatarios (los encargados anteriores), límites de conservación y medidas de seguridad (cifrado AES-256-GCM en el cliente, TLS 1.3 en tránsito, señalización firmada con HMAC, limitación de frecuencia).</p>
+
+    <h2>15. Privacidad de los menores</h2>
+    <p>BookmarkForge no está diseñado para menores de 13 años (o la edad mínima equivalente en tu jurisdicción). No recopilamos a sabiendas información personal de nadie.</p>
+
+    <h2>16. Cambios en esta política</h2>
+    <p>Podemos actualizar esta Política de Privacidad periódicamente. Los cambios importantes se reflejarán en la fecha de "Última actualización" de arriba y, para los cambios que afecten al tratamiento, se anunciarán dentro de la aplicación antes de que entren en vigor.</p>
+
+    <h2>17. Contacto</h2>
+    <p>Para preguntas de privacidad, solicitudes de interesados o inquietudes:</p>
+    <ul>
+      <li>Correo: <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></li>
+    </ul>
+
+    <hr>
+
+    <h1 id="terms">Términos de Servicio</h1>
+    <p class="last-updated"><strong>Última actualización:</strong> 23 de julio de 2026</p>
+
+    <h2>1. Aceptación de los términos</h2>
+    <p>Al usar BookmarkForge, aceptas estos Términos de Servicio. Si no estás de acuerdo, no utilices la aplicación.</p>
+
+    <h2>2. Descripción del servicio</h2>
+    <p>BookmarkForge es una aplicación de gestión del conocimiento local-first que te permite:</p>
+    <ul>
+      <li>Guardar y organizar marcadores</li>
+      <li>Crear y editar documentos</li>
+      <li>Usar funciones impulsadas por IA (en local o mediante proveedores en la nube)</li>
+      <li>Sincronizar datos entre tus dispositivos mediante conexiones peer-to-peer</li>
+    </ul>
+
+    <h2>3. Naturaleza local-first</h2>
+    <p>Entiendes y aceptas que:</p>
+    <ul>
+      <li>BookmarkForge se ejecuta íntegramente en tu navegador</li>
+      <li>Todos los datos se almacenan localmente en tu dispositivo</li>
+      <li>No alojamos, almacenamos ni respaldamos tus datos en nuestros servidores</li>
+      <li>Eres responsable de respaldar tus datos con la función de exportación</li>
+    </ul>
+
+    <h2>4. Responsabilidades del usuario</h2>
+    <p>Aceptas:</p>
+    <ul>
+      <li>Mantener copias de seguridad de tus datos importantes</li>
+      <li>Mantener segura la contraseña de tu vault (no podemos recuperarla)</li>
+      <li>Usar la aplicación conforme a las leyes aplicables</li>
+      <li>No usar la aplicación con fines ilegales</li>
+    </ul>
+
+    <h2>5. Funciones de IA</h2>
+    <p>Al usar funciones de IA:</p>
+    <ul>
+      <li>Eres responsable del contenido de tus indicaciones</li>
+      <li>Los proveedores de IA en la nube tienen sus propios términos de servicio y políticas de privacidad</li>
+      <li>No garantizamos la exactitud del contenido generado por IA</li>
+      <li>Los modelos de IA locales requieren hardware compatible (soporte WebGPU)</li>
+    </ul>
+
+    <h2>6. Limitación de responsabilidad</h2>
+    <p>BookmarkForge se proporciona "tal cual" sin garantías de ningún tipo. No somos responsables de:</p>
+    <ul>
+      <li>La pérdida de datos por la limpieza del almacenamiento del navegador</li>
+      <li>Fallas de hardware</li>
+      <li>La incompatibilidad con tu dispositivo</li>
+      <li>Errores en el contenido generado por IA</li>
+    </ul>
+
+    <h2>7. Propiedad intelectual</h2>
+    <ul>
+      <li>El código y el diseño de BookmarkForge están protegidos por derechos de autor</li>
+      <li>Tu contenido (marcadores, notas, documentos) sigue siendo tuyo</li>
+      <li>No reclamamos propiedad sobre tus datos</li>
+    </ul>
+
+    <h2>8. Terminación</h2>
+    <p>Como BookmarkForge se ejecuta en local, no hay ninguna cuenta que cancelar. Puedes dejar de usar la aplicación en cualquier momento cerrando tu navegador.</p>
+
+    <h2>9. Legislación aplicable</h2>
+    <p>Estos términos se rigen por la legislación aplicable. Cualquier disputa se resolverá en los tribunales competentes.</p>
+
+    <h2>10. Contacto</h2>
+    <p>Para preguntas sobre estos términos:</p>
+    <ul>
+      <li>Correo: <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></li>
+    </ul>
+  </main>
+
+  <footer>
+    <div class="container">
+      &copy; 2026 BookmarkForge. Todos los derechos reservados.
+    </div>
+  </footer>
+</body>
+</html>

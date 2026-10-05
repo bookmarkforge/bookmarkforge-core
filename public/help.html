@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help Center — FAQ, Troubleshooting & Support SLA | BookmarkForge</title>
+  <meta name="description" content="BookmarkForge Help Center: pricing lifetime v1, troubleshooting, error codes BF-E*, support SLA and how to copy a redacted diagnostic report.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://bookmarkforgeapp.com/help">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/help">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="Help Center — BookmarkForge">
+  <meta property="og:description" content="FAQ, troubleshooting, error codes and support SLA. Learn how lifetime v1 works and how to copy a diagnostic report.">
+  <meta property="og:url" content="https://bookmarkforgeapp.com/help">
+  <meta property="og:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Help Center — BookmarkForge">
+  <meta name="twitter:description" content="FAQ, troubleshooting, error codes and support SLA.">
+  <meta name="twitter:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/privacy-and-terms.css">
+  <style>
+    .help-toc { background: var(--bg-card); border: 1px solid var(--divider); border-radius: 12px; padding: 16px 20px; margin: 24px 0; }
+    .help-toc ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 12px 20px; }
+    .help-toc a { font-size: 0.92em; }
+    .badge { display:inline-block; padding:2px 8px; border-radius: 999px; font-size:0.72em; font-weight:700; background: var(--accent-soft); color: var(--accent-primary); border:1px solid var(--accent-primary); }
+    table.sla { width:100%; border-collapse: collapse; margin: 12px 0; }
+    table.sla th, table.sla td { border:1px solid var(--divider); padding:10px 12px; text-align:left; vertical-align:top; }
+    table.sla thead th { background: var(--bg-card); color: var(--accent-primary); }
+    code { background: var(--bg-card); padding:2px 6px; border-radius:6px; border:1px solid var(--divider); font-size:0.92em; }
+    .callout { background: var(--accent-soft); border:1px solid var(--divider); border-left:4px solid var(--accent-primary); padding:14px 16px; border-radius:10px; margin:16px 0; }
+    .callout-warn { background:#fef3c7; border-left-color:#f59e0b; }
+    .diag-box { background: var(--bg-card); border:1px solid var(--divider); border-radius:10px; padding:14px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:0.85em; white-space:pre-wrap; word-break:break-word; }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "@id":"https://bookmarkforgeapp.com/help#faq",
+    "mainEntity":[
+      {"@type":"Question","name":"Is the Free tier really free forever?","acceptedAnswer":{"@type":"Answer","text":"Yes. No trial, no subscription. Free includes 2,500 bookmarks, full-text & semantic search, knowledge graph and AI with your own API key."}},
+      {"@type":"Question","name":"What does Lifetime of v1 mean?","acceptedAnswer":{"@type":"Answer","text":"Pay once, own v1 forever. All v1.x bugfixes forever plus 12 months of feature updates from purchase. Security updates forever. After month 13 you keep v1 working. v2 and v3 are separate paid majors: $89 for new customers, $35 for v1 owners (60% off)."}},
+
+      {"@type":"Question","name":"What if I forget my vault password?","acceptedAnswer":{"@type":"Answer","text":"We cannot recover it. When you create a vault we show a 24-word recovery phrase once — write it on paper. Without it the vault is unrecoverable. See BF-E101."}}
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="/" class="brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" alt="" width="28" height="28" />
+        BookmarkForge
+      </a>
+    </div>
+  </header>
+
+  <main class="container">
+    <p class="last-updated"><strong>Last Updated:</strong> September 13, 2026 · <a href="/">← Back to home</a></p>
+
+    <h1>Help Center</h1>
+    <p>Answers before you need to email. BookmarkForge is <strong>local-first and encrypted</strong> — we cannot see your vault. 90% of issues are solved here with a diagnostic you can copy-paste.</p>
+
+    <nav class="help-toc" aria-label="On this page">
+      <ul>
+        <li><a href="#pricing">Pricing & Lifetime v1</a></li>
+        <li><a href="#sla">Support SLA</a></li>
+        <li><a href="#troubleshooting">Troubleshooting</a></li>
+        <li><a href="#bf-e">Error codes BF-E*</a></li>
+        <li><a href="#diagnostics">Copy diagnostic report</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <h2 id="pricing">Pricing — Lifetime of v1, no subscriptions</h2>
+    <p><strong>Model:</strong> you pay once for <em>BookmarkForge v1</em>. No monthly billing. Compare: Raindrop Pro $28–38/y, Instapaper $60/y, Readwise $120/y, Capacities $120/y. A $79 lifetime is ~2× Raindrop annual — justified by lifetime + privacy.</p>
+
+    <table class="sla">
+      <thead><tr><th>Tier</th><th>Price</th><th>What you get</th><th>Supply</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Free</strong></td><td>$0 forever</td><td>2,500 bookmarks on any device (each keeps its own vault), smart search — full-text + semantic, the feature Raindrop charges yearly for — knowledge graph, AI with your own API key, PWA + extensions. At 2,500 your vault stays whole: reading, search and export never stop; only new saves pause.</td><td>Unlimited</td></tr>
+        <tr><td><strong>Pro Lifetime v1</strong> <span class="badge">Early Bird</span></td><td><strong>$59</strong> <span style="text-decoration:line-through;color:var(--text-muted)">$79</span> → $79 regular → $99 after traction</td><td>Unlimited bookmarks, 5 devices + P2P sync, Local AI (WebLLM/Ollama) + RAG + Expert agents, Flashcards, PDF/OCR, 10+ export formats, vault. <em>Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off</em></td><td>200 Early Bird</td></tr>
+
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>Lifetime of v1 — legal line:</strong> <em>Lifetime license for BookmarkForge v1. Includes all v1.x updates (bugfixes + minor features) forever and 12 months of feature updates from purchase. Security updates forever. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off). If you don't upgrade you keep v1 functional forever. 30-day refund via Whop.</em>
+      <br>Refunds: 30 days via Whop. Payments: card, PayPal, crypto (Whop — we never see card data). <a href="/privacy-and-terms.html#terms">Terms § Licensing</a>
+    </div>
+
+    <div class="callout callout-warn">
+      <strong>Upgrade without subscription:</strong> every 12–18 months we ship a paid major (v2.0 at $89 / $35 for owners). Skip it and v1 keeps working. That's the recurring revenue without forcing a subscription — same model as Affinity/Sketch/Sublime.
+    </div>
+
+    <h2 id="sla">Support SLA — how fast we answer</h2>
+    <p>Single maintainer. The vault is encrypted — <strong>we never ask for your vault password or 24-word recovery phrase</strong>. Support is best-effort for Free, committed for paid tiers.</p>
+    <table class="sla">
+      <thead><tr><th>Tier</th><th>Channel</th><th>Response</th><th>What to do first</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Free</strong></td><td>Self-service: this Help Center + <a href="https://github.com/bookmarkforge/bookmarkforge-2026/discussions">GitHub Discussions</a></td><td>Best effort (community)</td><td>Search BF-E* code below + copy diagnostic (<a href="#diagnostics">§Diagnostics</a>) before posting</td></tr>
+        <tr><td><strong>Pro</strong></td><td>Email <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> (subject: Pro)</td><td><strong>48h</strong> business days (Mon–Fri)</td><td>Include diagnostic text from <code>Settings → Help → Copy diagnostic</code></td></tr>
+
+      </tbody>
+    </table>
+    <p style="color:var(--text-muted);font-size:0.92em;">We cannot see your bookmarks, notes, URLs or prompts. Include only the diagnostic below — it contains counts and versions, never vault content.</p>
+
+    <h2 id="troubleshooting">Troubleshooting — most issues in 30 seconds</h2>
+    <h3>Vault locked / wrong password</h3>
+    <p>Passwords are case- and whitespace-sensitive. If you changed layout (e.g. AZERTY→QWERTY) retype slowly. After 5 failed unlocks, wait 1 minute. If you lost the password, use the <strong>24-word recovery phrase</strong> shown once at vault creation (<a href="#bf-e101">BF-E101</a>). Without it recovery is impossible by design — we have no backdoor.</p>
+
+    <h3>Browser storage full</h3>
+    <p>IndexedDB quota is per-browser (typically 60–80% of disk). When full, saves fail with <a href="#bf-e103">BF-E103</a>. Fix: <code>Settings → Storage → Compact database</code> then <code>Clear AI cache</code>. Or <code>Export backup (.bmf)</code> → <code>Delete old vectors</code>. Check <a href="#diagnostics">storage % in diagnostic</a> — above 80% we show a banner.</p>
+
+    <h3>P2P sync not connecting</h3>
+    <p>Both devices must be <strong>online and unlocked</strong> at the same time (WebRTC). No TURN relay by default — some corporate networks block P2P. Try: both on same Wi-Fi → QR pair → keep app open. If <a href="#bf-e105">BF-E105</a>, test <code>Help → Diagnostics → P2P (WebRTC)</code> — if it says unavailable, your browser/network blocks WebRTC.</p>
+
+    <h3>Local AI (WebLLM) not running</h3>
+    <p>Requires WebGPU + ~4 GB free RAM + Pro license. Check <code>Help → Diagnostics → WebGPU/WebLLM</code>. If <a href="#bf-e106">BF-E106</a>: update Chrome/Edge to latest, enable <code>chrome://flags/#enable-unsafe-webgpu</code>, or switch to Ollama (any model you run locally — no API key needed either).</p>
+
+    <h3>Slow search or import</h3>
+    <p>First import builds HNSW vectors — CPU heavy. Keep tab open. For 10k+ bookmarks use <code>Settings → Advanced → Force reprocess</code>. If persists, <code>Copy diagnostic</code> shows <code>vectorIndexLoad</code> and query latency.</p>
+
+    <h2 id="bf-e">Error codes BF-E* — copy the code, jump to the fix</h2>
+    <p>Every critical error shows a code like <code>BF-E101</code>. Click the code in the app or search it here.</p>
+    <table class="sla">
+      <thead><tr><th>Code</th><th>Meaning</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr id="bf-e101"><td><strong>BF-E101</strong></td><td>Vault password forgotten / seed phrase required</td><td>We cannot recover passwords. At vault creation we show a <strong>24-word phrase once</strong> — write it on paper. Use it to reset. No phrase = vault unrecoverable. <a href="#diagnostics">No ticket will recover it</a>.</td></tr>
+        <tr id="bf-e102"><td><strong>BF-E102</strong></td><td>Vault locked / wrong password</td><td>Retype password exactly. After 5 failures wait 60s. If you rotated password recently, try the previous one — rotation keeps last salt for rollback.</td></tr>
+        <tr id="bf-e103"><td><strong>BF-E103</strong></td><td>Storage quota exceeded</td><td>Go to <code>Settings → Storage</code>: Compact DB + Clear AI cache. Export .bmf backup if needed. See Troubleshooting §Storage.</td></tr>
+        <tr id="bf-e104"><td><strong>BF-E104</strong></td><td>IndexedDB blocked / private browsing</td><td>IndexedDB is blocked in private/incognito or by storage policy. Use a normal window. Check <code>Help → Diagnostics → Storage</code>.</td></tr>
+        <tr id="bf-e105"><td><strong>BF-E105</strong></td><td>P2P / WebRTC unavailable</td><td>Browser or network blocks WebRTC. Try another browser/network, disable strict firewall, or use Export/Import instead of live sync.</td></tr>
+        <tr id="bf-e106"><td><strong>BF-E106</strong></td><td>Local AI (WebLLM) cannot run on this device</td><td>Needs WebGPU + shader-f16 + 4 GB RAM + Pro. Update browser, or use Ollama / cloud provider with your own key.</td></tr>
+        <tr id="bf-e107"><td><strong>BF-E107</strong></td><td>Backup import failed (wrong password / corrupt file)</td><td>For <code>.bmf</code> (encrypted) you need the export password, not the vault password. For JSON, ensure file wasn't truncated.</td></tr>
+        <tr id="bf-e201"><td><strong>BF-E201</strong></td><td>Pro license invalid / expired check</td><td>Check <code>Settings → Pro</code>: re-enter key. Offline checks cache; reconnect once to re-validate via Whop.</td></tr>
+        <tr id="bf-e202"><td><strong>BF-E202</strong></td><td>Free limit reached (2,500 bookmarks)</td><td>Free is 2,500. Delete or upgrade to Pro Lifetime v1 for unlimited. Export is always available.</td></tr>
+      </tbody>
+    </table>
+    <p>Support tip: clicking the error's <code>Copy diagnostic</code> copies code + context in one click — paste it in your GitHub Discussion or email.</p>
+
+    <h2 id="diagnostics">Copy a redacted diagnostic — what you paste to support</h2>
+    <p>In the app: <code>Settings → Advanced</code> (or <code>Help → Diagnostics</code>) → <strong>Copy diagnostic</strong>. It looks like this — no vault content, no URLs, no prompts:</p>
+    <div class="diag-box">BookmarkForge v1.0.0 | Chrome 126 | Vault: 847 bookmarks, 12 docs
+Storage: 42% (IndexedDB OK) | Last backup: 2 days ago (.bmf encrypted)
+P2P: not connected | Sync: never | Local AI: WebLLM not loaded
+Errors: 0 last 7d | BF-E: none | Build: a1b2c3d</div>
+    <p>What it contains: app version, browser, counts (bookmarks/docs/vectors), storage % + quota, P2P status, AI status, error counts & last BF-E code, build hash. Uses a salted hash of IP — we never store IP. See <a href="/privacy-and-terms.html">Privacy §3/§6</a>.</p>
+    <p>If you cannot open the app: include browser + OS + steps to reproduce + the <code>BF-E*</code> code on screen. That's enough for 90% of tickets.</p>
+
+    <h2 id="contact">Contact</h2>
+    <ul>
+      <li><strong>Paid support:</strong> <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> — include diagnostic + BF-E code. Pro 48h (Mon–Fri).</li>
+      <li><strong>Community (Free):</strong> <a href="https://github.com/bookmarkforge/bookmarkforge-2026/discussions">GitHub Discussions</a> — search <code>BF-E*</code> before posting. Read <a href="/help#bf-e">Error codes</a> + paste diagnostic.</li>
+      <li><strong>Security issues:</strong> email with subject <code>[SECURITY]</code> — do not open a public discussion.</li>
+    </ul>
+    <p style="color:var(--text-muted);font-size:0.92em;">BookmarkForge is local-first — vault content never leaves your device. Support never asks for your vault password or recovery phrase.</p>
+
+    <hr>
+    <p style="color:var(--text-muted);font-size:0.92em;">Also see: <a href="/">Home</a> · <a href="/privacy-and-terms.html">Privacy & Terms</a> · <a href="/privacy-and-terms.html#terms">Licensing (Lifetime v1)</a> · <a href="/#pricing">Pricing</a></p>
+  </main>
+
+  <footer>
+    <div class="container">
+      &copy; 2026 BookmarkForge. All rights reserved. · <a href="/privacy-and-terms.html">Privacy</a> · <a href="/">Home</a>
+    </div>
+  </footer>
+</body>
+</html>

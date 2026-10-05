@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="hi"
+  dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="लेख, नोट्स और दस्तावेज़ों को एक निजी, एन्क्रिप्टेड और 100% स्थानीय वॉल्ट में सहेजें। AI खोज, Notion-जैसा एडिटर और P2P सिंक। मुफ़्त प्लान: 2,500 बुकमार्क।">
+  <title>BookmarkForge — AI के साथ निजी Pocket विकल्प (बुकमार्क और नोट्स)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforge.com/hi/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforgeapp.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforgeapp.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforgeapp.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforgeapp.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforgeapp.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforgeapp.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforgeapp.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforgeapp.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforgeapp.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforgeapp.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforgeapp.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforgeapp.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforgeapp.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforgeapp.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforgeapp.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforgeapp.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforgeapp.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforgeapp.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforgeapp.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforgeapp.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforgeapp.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforgeapp.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforgeapp.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforgeapp.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforgeapp.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforgeapp.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforgeapp.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforgeapp.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforgeapp.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforgeapp.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — AI के साथ निजी Pocket विकल्प (बुकमार्क और नोट्स)">
+  <meta property="og:description" content="लेख, नोट्स और दस्तावेज़ों को एक निजी, एन्क्रिप्टेड और 100% स्थानीय वॉल्ट में सहेजें। AI खोज, Notion-जैसा एडिटर और P2P सिंक। मुफ़्त प्लान: 2,500 बुकमार्क।">
+  <meta property="og:url" content="https://bookmarkforge.com/hi/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="hi_IN">
+  <meta property="og:locale:alternate" content="en_US">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — AI के साथ निजी Pocket विकल्प (बुकमार्क और नोट्स)">
+  <meta name="twitter:description" content="लेख, नोट्स और दस्तावेज़ों को एक निजी, एन्क्रिप्टेड और 100% स्थानीय वॉल्ट में सहेजें। AI खोज, Notion-जैसा एडिटर और P2P सिंक। मुफ़्त प्लान: 2,500 बुकमार्क।">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://bookmarkforge.com/hi/#website",
+        "url": "https://bookmarkforge.com/hi/",
+        "name": "BookmarkForge",
+        "description": "लेख, नोट्स और दस्तावेज़ों को एक निजी, एन्क्रिप्टेड और 100% स्थानीय वॉल्ट में सहेजें। AI खोज, Notion-जैसा एडिटर और P2P सिंक। मुफ़्त प्लान: 2,500 बुकमार्क।",
+        "inLanguage": "hi",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://bookmarkforge.com/hi/?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": { "@id": "https://bookmarkforgeapp.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://bookmarkforgeapp.com/#organization",
+        "name": "BookmarkForge",
+        "url": "https://bookmarkforge.com/",
+        "logo": { "@type": "ImageObject", "url": "https://bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
+        "email": "bookmarkforge@proton.me"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://bookmarkforge.com/hi/#software",
+        "name": "BookmarkForge",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "url": "https://bookmarkforge.com/",
+        "image": "https://bookmarkforge.com/og-image.png",
+        "description": "लेख, नोट्स और दस्तावेज़ों को एक निजी, एन्क्रिप्टेड और 100% स्थानीय वॉल्ट में सहेजें। AI खोज, Notion-जैसा एडिटर और P2P सिंक। मुफ़्त प्लान: 2,500 बुकमार्क।",
+        "offers": [
+          { "@type": "Offer", "name": "मुफ़्त", "price": "0", "priceCurrency": "USD", "description": "व्यक्तिगत आर्काइव के लिए (2,500 बुकमार्क, किसी भी डिवाइस पर काम करता है — हर डिवाइस का अपना वॉल्ट)" },          { "@type": "Offer", "name": "Pro", "price": "59", "priceCurrency": "USD", "description": "v1 के लिए आजीवन · 12 महीने के फ़ीचर अपडेट · हमेशा के लिए सुरक्षा · v2 पर 60% छूट" }        ],
+        "featureList": [
+          "लोकल-फर्स्ट स्टोरेज",          "एंड-टू-एंड एन्क्रिप्शन",          "ऑफ़लाइन काम करता है",          "AI खोज",          "Notion-शैली एडिटर",          "P2P सिंक"        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://bookmarkforge.com/hi/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "क्या मुफ़्त प्लान वास्तव में हमेशा के लिए मुफ़्त है?",
+            "acceptedAnswer": { "@type": "Answer", "text": "हाँ। कोई सीमित परीक्षण या सदस्यता नहीं। मुफ़्त प्लान में 2,500 बुकमार्क, फ़ुल-टेक्स्ट और सिमांटिक खोज, ज्ञान ग्राफ और आपकी API कुंजी के साथ AI शामिल है (आप प्रदाता को भुगतान करते हैं)।" }
+          },          {
+            "@type": "Question",
+            "name": "Pro में \u0027एक बार की खरीद\u0027 का क्या अर्थ है?",
+            "acceptedAnswer": { "@type": "Answer", "text": "आप एक बार भुगतान करते हैं ($79), और लाइसेंस हमेशा आपका है। 12 महीने के सभी अपडेट शामिल। कोई आवर्ती शुल्क नहीं। लाइसेंस कुंजी Whop के माध्यम से तुरंत दी जाती है।" }
+          },          {
+            "@type": "Question",
+            "name": "आप कौन से भुगतान विधियाँ स्वीकार करते हैं?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Whop के माध्यम से: क्रेडिट कार्ड, PayPal और क्रिप्टोकरेंसी। हम कभी भी आपकी भुगतान जानकारी नहीं देखते।" }
+          },          {
+            "@type": "Question",
+            "name": "सपोर्ट — आप कितनी जल्दी उत्तर देते हैं?",
+            "acceptedAnswer": { "@type": "Answer", "text": "समुदाय: \u003ca href=\"/help\"\u003eसहायता केंद्र\u003c/a\u003e + GitHub Discussions के माध्यम से समुदाय की मदद (सर्वश्रेष्ठ प्रयास). Pro: कार्यदिवसों में 48 घंटे के भीतर ईमेल. वॉल्ट एन्क्रिप्टेड है — हम आपका डेटा नहीं देख सकते, इसलिए हम कभी आपका पासवर्ड या रिकवरी वाक्यांश नहीं माँगते. देखें \u003ca href=\"/help#sla\"\u003eसपोर्ट SLA\u003c/a\u003e." }
+          },          {
+            "@type": "Question",
+            "name": "अगर मैं अपना वॉल्ट पासवर्ड भूल जाऊँ तो?",
+            "acceptedAnswer": { "@type": "Answer", "text": "हम इसे पुनर्प्राप्त नहीं कर सकते. वॉल्ट बनाते समय हम 24-शब्दों का रिकवरी वाक्यांश एक बार दिखाते हैं — उसे कागज़ पर लिख लें. इसके बिना, कोई भी (हम भी नहीं) वॉल्ट नहीं खोल सकता. देखें \u003ca href=\"/help#bf-e101\"\u003eBF-E101\u003c/a\u003e." }
+          }        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">मुख्य सामग्री पर जाएँ</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/hi/" class="nav-brand" aria-label="BookmarkForge होम">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="मुख्य नेविगेशन">
+        <a href="#pocket-alternative">गोपनीयता से समझौता किए बिना बाद में पढ़ें</a>
+        <a href="#features">विशेषताएँ</a>
+        <a href="#ai">AI</a>
+        <a href="#privacy">गोपनीयता</a>
+        <a href="#pricing">मूल्य</a>
+        <a href="/help">सहायता</a>
+        
+        <!-- Language Dropdown -->
+        <div class="language-dropdown">
+          <button class="language-toggle" aria-label="Select language" aria-expanded="false">
+            <span class="current-lang">हिन्दी</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 4 L6 8 L10 4"/>
+            </svg>
+          </button>
+          <ul class="language-menu" role="menu">
+            <li role="none">
+              <a href="/id/?lang=id" hreflang="id" lang="id" role="menuitem">
+                Bahasa Indonesia
+              </a>
+            </li>
+            <li role="none">
+              <a href="/cs/?lang=cs" hreflang="cs" lang="cs" role="menuitem">
+                Čeština
+              </a>
+            </li>
+            <li role="none">
+              <a href="/da/?lang=da" hreflang="da" lang="da" role="menuitem">
+                Dansk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/de/?lang=de" hreflang="de" lang="de" role="menuitem">
+                Deutsch
+              </a>
+            </li>
+            <li role="none">
+              <a href="/?lang=en" hreflang="en" lang="en" role="menuitem">
+                English
+              </a>
+            </li>
+            <li role="none">
+              <a href="/es/?lang=es" hreflang="es" lang="es" role="menuitem">
+                Español
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fr/?lang=fr" hreflang="fr" lang="fr" role="menuitem">
+                Français
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hr/?lang=hr" hreflang="hr" lang="hr" role="menuitem">
+                Hrvatski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/it/?lang=it" hreflang="it" lang="it" role="menuitem">
+                Italiano
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hu/?lang=hu" hreflang="hu" lang="hu" role="menuitem">
+                Magyar
+              </a>
+            </li>
+            <li role="none">
+              <a href="/nl/?lang=nl" hreflang="nl" lang="nl" role="menuitem">
+                Nederlands
+              </a>
+            </li>
+            <li role="none">
+              <a href="/no/?lang=no" hreflang="no" lang="no" role="menuitem">
+                Norsk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pl/?lang=pl" hreflang="pl" lang="pl" role="menuitem">
+                Polski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pt/?lang=pt" hreflang="pt" lang="pt" role="menuitem">
+                Português
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ro/?lang=ro" hreflang="ro" lang="ro" role="menuitem">
+                Română
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fi/?lang=fi" hreflang="fi" lang="fi" role="menuitem">
+                Suomi
+              </a>
+            </li>
+            <li role="none">
+              <a href="/sv/?lang=sv" hreflang="sv" lang="sv" role="menuitem">
+                Svenska
+              </a>
+            </li>
+            <li role="none">
+              <a href="/vi/?lang=vi" hreflang="vi" lang="vi" role="menuitem">
+                Tiếng Việt
+              </a>
+            </li>
+            <li role="none">
+              <a href="/tr/?lang=tr" hreflang="tr" lang="tr" role="menuitem">
+                Türkçe
+              </a>
+            </li>
+            <li role="none">
+              <a href="/el/?lang=el" hreflang="el" lang="el" role="menuitem">
+                Ελληνικά
+              </a>
+            </li>
+            <li role="none">
+              <a href="/bg/?lang=bg" hreflang="bg" lang="bg" role="menuitem">
+                Български
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ru/?lang=ru" hreflang="ru" lang="ru" role="menuitem">
+                Русский
+              </a>
+            </li>
+            <li role="none">
+              <a href="/uk/?lang=uk" hreflang="uk" lang="uk" role="menuitem">
+                Українська
+              </a>
+            </li>
+            <li role="none">
+              <a href="/he/?lang=he" hreflang="he" lang="he" role="menuitem">
+                עברית
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ar/?lang=ar" hreflang="ar" lang="ar" role="menuitem">
+                العربية
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hi/?lang=hi" hreflang="hi" lang="hi" role="menuitem" class="current">
+                हिन्दी
+              </a>
+            </li>
+            <li role="none">
+              <a href="/th/?lang=th" hreflang="th" lang="th" role="menuitem">
+                ไทย
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ko/?lang=ko" hreflang="ko" lang="ko" role="menuitem">
+                한국어
+              </a>
+            </li>
+            <li role="none">
+              <a href="/zh/?lang=zh" hreflang="zh" lang="zh" role="menuitem">
+                中文
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ja/?lang=ja" hreflang="ja" lang="ja" role="menuitem">
+                日本語
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <a href="/app" class="btn-primary nav-cta">ऐप खोलें</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="थीम बदलें" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">संस्करण 1.0</span>
+          <h1 id="hero-title">आपका <span class='accent-text'>निजी AI वॉल्ट</span></h1>
+          <p class="hero-subtitle">लेख सहेजने और बाद में पढ़ने के लिए Pocket का निजी विकल्प: बुकमार्क, नोट्स और दस्तावेज़ — आपके डिवाइस पर एन्क्रिप्टेड, AI से खोजने योग्य और पीयर-टू-पीयर सिंक किए गए। कोई क्लाउड नहीं। कोई ट्रैकिंग नहीं। 100% आपका।</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">मुफ़्त में खोलें</a>
+            <a href="#pricing" class="btn-secondary">मूल्य देखें</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>100% स्थानीय</strong> — आपका डेटा आपके डिवाइस से बाहर नहीं जाता</span>
+            <span><strong>एन्क्रिप्टेड</strong> — AES-256-GCM + Argon2id</span>
+            <span><strong>ऑफ़लाइन</strong> — बिना इंटरनेट के काम करता है</span>
+            <span><strong>निजी</strong> — डिफ़ॉल्ट पर शून्य टेलीमेट्री</span>
+          </div>
+          <div class="hero-affiliate">
+            <span class="hero-affiliate-badge">पैसे कमाएं</span>
+            <h3 class="hero-affiliate-title">एफिलिएट प्रोग्राम</h3>
+            <p class="hero-affiliate-subtitle">BookmarkForge साझा करें और हर रेफर किए गए खरीद पर 30% कमीशन कमाएं। आज ही कमाना शुरू करें!</p>
+            <a href="https://whop.com/affiliates" class="btn-small">एफिलिएट प्रोग्राम में शामिल हों</a>
+            <ul class="hero-affiliate-details">
+              <li>हर बिक्री पर 30% कमीशन</li>
+              <li>असीमित कमाई</li>
+              <li>Whop के माध्यम से स्वचालित भुगतान</li>
+              <li>रीयल-टाइम ट्रैकिंग</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Demo Section — steps and CTA only. The tour GIF this section
+         used to show was retired with the demo-media pipeline; the template kept
+         a dead <img> pointing at it until the ADR-062 smoke gate reported the 404
+         on all 30 landings. The demo.* copy still describes the loop: rewriting it
+         has to come with the translations, not from the template.
+         Secondary locales carry demo: null until that copy is translated —
+         the section is hidden rather than rendering English inside a
+         localized page (same for raindropCompare below). -->
+
+    <!-- Pocket Alternative Section -->
+    <section id="pocket-alternative" class="comparison-section" aria-labelledby="pocket-alternative-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">गोपनीयता से समझौता किए बिना बाद में पढ़ें</span>
+          <h2 id="pocket-alternative-title">निजी Pocket विकल्प</h2>
+          <p class="section-subtitle">Pocket गायब हो रहा है। BookmarkForge पढ़ने की आदत को जीवित रखता है — हर लेख, नोट और मार्कर आपके डिवाइस पर एन्क्रिप्टेड।</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>लेख बाद के लिए सहेजें, हमेशा आपके</h3>
+            <p>PWA ऐप, ब्राउज़र एक्स्टेंशन या शेयर मेन्यू से एक क्लिक में लेख, वीडियो और PDF सहेजें। Pocket के विपरीत, आपकी पढ़ने की सूची आपके डिवाइस पर रहती है, एन्क्रिप्टेड, और ऑफ़लाइन काम करती है।</p>
+          </div>
+          <div class="feat-card">
+            <h3>हर लेख में Notion-जैसे नोट्स</h3>
+            <p>हर बुकमार्क में हाइलाइट करें, संक्षेप करें और नोट्स लिखें। सहेजे गए लेख को अपना ज्ञान आधार बनाएं — सिर्फ एक लिंक सूची नहीं।</p>
+          </div>
+          <div class="feat-card">
+            <h3>शून्य ट्रैकिंग, शून्य विज्ञापन</h3>
+            <p>BookmarkForge में डिफ़ॉल्ट पर कोई खाता, एनालिटिक्स या विज्ञापन नहीं है। आपकी पढ़ने की आदतें केवल आपकी ज़िम्मेदारी हैं।</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">मुफ़्त में सहेजना शुरू करें</a>
+          <a href="/pocket-alternative" class="btn-link">तुलना और माइग्रेशन गाइड</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Raindrop Comparison Section (hidden while raindropCompare is null) -->
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">सब कुछ जो आपको चाहिए</span>
+          <h2 id="features-title">अपने ज्ञान के प्रबंधन के लिए शक्तिशाली सुविधाएँ, सब स्थानीय रूप से चलता है</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>बुकमार्क और दस्तावेज़</h3>
+            <p>एक क्लिक में कोई भी पेज सहेजें. उसके ठीक बगल में, एक साफ़-सुथरे सरल एडिटर में नोट्स लिखें. 1,00,000 सहेजी गई वस्तुओं के साथ भी तेज़ रहता है.</p>
+          </div>
+          <div class="feature-item">
+            <h3>फ़ुल-टेक्स्ट और सिमांटिक खोज</h3>
+            <p>कीवर्ड या अर्थ से चीज़ें खोजें — तब भी जब आपको सटीक शब्द याद न हों. Raindrop इसके लिए साल में 28 डॉलर लेता है; यहाँ यह मुफ़्त शामिल है.</p>
+          </div>
+          <div class="feature-item">
+            <h3>स्थानीय AI (WebLLM / Ollama) — केवल Pro</h3>
+            <p>जो आपने सहेजा है उसके बारे में प्रश्न पूछें और स्रोतों सहित उत्तर पाएँ. कुछ भी क्लाउड पर नहीं भेजा जाता, और बिना इंटरनेट के काम करता है. Pro आवश्यक.</p>
+          </div>
+          <div class="feature-item">
+            <h3>आपके डेटा पर RAG चैट — केवल Pro</h3>
+            <p>अपने बुकमार्क और नोट्स के बारे में कुछ भी पूछें और उद्धरणों सहित उत्तर पाएँ. निजी मोड 100% आपकी मशीन पर चलता है. Pro आवश्यक.</p>
+          </div>
+          <div class="feature-item">
+            <h3>P2P सिंक (WebRTC) — केवल Pro</h3>
+            <p>आपके डिवाइस सीधे एक-दूसरे से बात करते हैं — बीच में कोई सर्वर नहीं, और सब कुछ एन्क्रिप्टेड रहता है. QR कोड स्कैन करके उन्हें जोड़ें. 5 डिवाइस तक. Pro आवश्यक.</p>
+          </div>
+          <div class="feature-item">
+            <h3>एन्क्रिप्टेड बैकअप</h3>
+            <p>स्वचालित बैकअप जिन्हें आप जहाँ चाहें रख सकते हैं — बाहरी ड्राइव, क्लाउड फ़ोल्डर, कहीं भी. जब चाहें सब कुछ Markdown, JSON, CSV या PDF में निर्यात करें. चाबियाँ आपके पास हैं.</p>
+          </div>
+          <div class="feature-item">
+            <h3>ज्ञान ग्राफ</h3>
+            <p>देखें कि आपके नोट्स और बुकमार्क कैसे जुड़ते हैं. टैग, तिथियों और समानता से फ़िल्टर करें, और एक अनंत कैनवास पर घूमें.</p>
+          </div>
+          <div class="feature-item">
+            <h3>फ़्लैशकार्ड (Spaced Repetition) — केवल Pro</h3>
+            <p>किसी भी सहेजे गए दस्तावेज़ को प्रश्न-कार्ड में बदलें जो ठीक भूलने से पहले सामने आते हैं — Anki जैसी ही शेड्यूलिंग सोच. Pro आवश्यक.</p>
+          </div>
+          <div class="feature-item">
+            <h3>डिफ़ॉल्ट पर गोपनीयता</h3>
+            <p>कोई खाते नहीं, कोई ट्रैकिंग नहीं, कोई विज्ञापन नहीं. आप ग्राहक हैं, उत्पाद नहीं. उपयोग साझाकरण मौजूद है, यह वैकल्पिक है और आपके चालू करने तक बंद रहता है.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">AI जो आपका सम्मान करता है</span>
+          <h2 id="ai-title">आपका ज्ञान, सशक्त</h2>
+          <p class="section-subtitle">BookmarkForge आपको विकल्प देता है: अपने ब्राउज़र में 100% स्थानीय मॉडल चलाएँ (WebLLM, WebGPU) Pro के साथ, अपनी API कुंजियाँ क्लाउड प्रदाताओं से जोड़ें, या स्थानीय Ollama का उपयोग करें। आपके निर्देश, आपका डेटा, आपके नियम।</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>समर्थित प्रदाता</h3>
+            <ul class="providers-list">
+              <li>आपके कंप्यूटर के अंदर — WebLLM मॉडल (TinyLlama, Llama 3.2, Phi-3.5-mini) — केवल Pro</li>
+              <li>आपकी अपनी मशीन पर — Ollama (कोई भी मॉडल जो आप चलाते हैं)</li>
+              <li>क्लाउड — Google Gemini (कुंजी हम प्रबंधित करते हैं)</li>
+              <li>क्लाउड — OpenAI / GPT-4o (अपनी कुंजी के साथ)</li>
+              <li>क्लाउड — Anthropic Claude (अपनी कुंजी के साथ)</li>
+              <li>क्लाउड — Groq (अपनी कुंजी के साथ)</li>
+              <li>क्लाउड — OpenRouter या कोई अन्य कस्टम प्रदाता (अपनी कुंजी के साथ)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>चैट मोड</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>निजी मोड</h4>
+                <p>केवल स्थानीय AI (WebLLM/Ollama)। शून्य डेटा डिवाइस से बाहर जाता है। ऑफ़लाइन काम करता है। WebLLM के लिए Pro आवश्यक।</p>
+              </div>
+              <div class="mode-item">
+                <h4>वेब खोज मोड</h4>
+                <p>आपके वॉल्ट को रीयल-टाइम खोज परिणामों (क्लाउड प्रदाता) के साथ जोड़ता है।</p>
+              </div>
+              <div class="mode-item">
+                <h4>विशेषज्ञ एजेंट</h4>
+                <p>विशेषज्ञ पात्र: प्रोग्रामर, लेखक, विश्लेषक, शोधकर्ता। स्थानीय AI के लिए Pro आवश्यक।</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">गोपनीयता एक सुविधा नहीं है — यह आधार है</h2>
+          <p class="section-subtitle">हर वास्तुशिल्प निर्णय आपको नियंत्रण देता है</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>एंड-टू-एंड एन्क्रिप्शन</h3>
+            <p>आपकी लाइब्रेरी आपके मास्टर पासवर्ड से व्युत्पन्न कुंजी से एन्क्रिप्टेड है. हम आपका पासवर्ड या सामग्री कभी नहीं देखते.</p>
+          </div>
+          <div class="feature-item">
+            <h3>100% स्थानीय वास्तुशिल्प</h3>
+            <p>सब कुछ आपके कंप्यूटर पर रहता है. साथी सर्वर केवल लाइसेंसिंग, डिवाइस पेयरिंग और क्लाउड-मोड AI प्रश्नों को अग्रेषित करने का काम करता है — कभी आपकी सामग्री नहीं.</p>
+          </div>
+          <div class="feature-item">
+            <h3>डिफ़ॉल्ट पर शून्य टेलीमेट्री</h3>
+            <p>कोई एनालिटिक्स नहीं, कोई क्रैश रिपोर्ट नहीं, कोई ट्रैकिंग नहीं. उपयोग आँकड़े या त्रुटि रिपोर्ट साझा करना एक अलग विकल्प है, डिफ़ॉल्ट रूप से बंद.</p>
+          </div>
+          <div class="feature-item">
+            <h3>कुंजियाँ आपकी हैं</h3>
+            <p>मास्टर पासवर्ड नहीं तो पहुँच नहीं — कोई "पासवर्ड भूल गए" बैकडोर नहीं है. 24-शब्दों का रिकवरी वाक्यांश ही अंदर जाने का एकमात्र रास्ता है; इसे सुरक्षित रखें.</p>
+          </div>
+          <div class="feature-item">
+            <h3>GDPR अनुपालन</h3>
+            <p>अपने डेटा तक पहुँचें, उसे ठीक करें, मिटाएँ या अपने साथ ले जाएँ — सब कुछ स्थानीय रूप से, जब चाहें.</p>
+          </div>
+          <div class="feature-item">
+            <h3>प्रदाता से स्वतंत्र</h3>
+            <p>अपना डेटा कभी भी खुले प्रारूपों (JSON, Markdown, CSV, PDF) में निर्यात करें. आपका ज्ञान आपका ही रहता है और पोर्टेबल रहता है.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">सरल, उचित मूल्य</h2>
+          <p class="section-subtitle">मुफ़्त प्लान: 2,500 बुकमार्क। Pro एक बार की खरीद है $59 अर्ली बर्ड (फिर $79) — कोई सदस्यता नहीं।</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>मुफ़्त</h3>
+            <div class="price">$ 0<span>/ हमेशा के लिए</span></div>
+            <p>व्यक्तिगत आर्काइव के लिए (2,500 बुकमार्क, किसी भी डिवाइस पर काम करता है — हर डिवाइस का अपना वॉल्ट)</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> 2,500 बुकमार्क, नोट्स और दस्तावेज़</li>
+              <li><span aria-hidden="true">✅</span> स्मार्ट खोज (पूर्ण पाठ + सिमेंटिक) — मुफ़्त शामिल; Raindrop इसके लिए सालाना पैसे लेता है</li>
+              <li><span aria-hidden="true">✅</span> अपनी API कुंजी के साथ AI (आप प्रदाता को भुगतान करते हैं)</li>
+              <li><span aria-hidden="true">✅</span> ज्ञान ग्राफ</li>
+              <li><span aria-hidden="true">✅</span> बुनियादी टेम्पलेट</li>
+              <li><span aria-hidden="true">✅</span> JSON/HTML निर्यात</li>
+              <li><span aria-hidden="true">✅</span> PWA + ब्राउज़र एक्स्टेंशन</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> डिवाइसों के बीच P2P सिंक</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> स्थानीय AI (WebLLM/Ollama)</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> आपके डेटा पर RAG चैट</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> Spaced Repetition के साथ फ़्लैशकार्ड</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> उन्नत निर्यात (10+ प्रारूप)</li>
+            </ul>
+            <a href="/app" class="btn-secondary " >मुफ़्त में शुरू करें</a>
+          </div>
+          <div class="price-card popular">
+            <span class="badge">सबसे लोकप्रिय — अर्ली बर्ड 200</span>
+            <h3>Pro</h3>
+            <div class="price"><span class="price-now">$ 59</span> <span class="price-was">$79</span><span>अर्ली बर्ड (फिर $79)</span></div>
+            <div class="price-sub">फिर $79 नियमित मूल्य</div>
+            <p>v1 के लिए आजीवन · 12 महीने के फ़ीचर अपडेट · हमेशा के लिए सुरक्षा · v2 पर 60% छूट</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> मुफ़्त की सब कुछ</li>
+              <li><span aria-hidden="true">✅</span> असीमित बुकमार्क</li>
+              <li><span aria-hidden="true">✅</span> 5 डिवाइस</li>
+              <li><span aria-hidden="true">✅</span> 5 डिवाइस पर P2P सिंक</li>
+              <li><span aria-hidden="true">✅</span> स्थानीय AI (WebLLM, बिना API कुंजी)</li>
+              <li><span aria-hidden="true">✅</span> आपके डेटा पर RAG चैट</li>
+              <li><span aria-hidden="true">✅</span> विशेषज्ञ एजेंट (प्रोग्रामर, लेखक, विश्लेषक, शोधकर्ता)</li>
+              <li><span aria-hidden="true">✅</span> Spaced Repetition के साथ फ़्लैशकार्ड</li>
+              <li><span aria-hidden="true">✅</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> उन्नत निर्यात (10+ प्रारूप)</li>
+              <li><span aria-hidden="true">✅</span> सुरक्षा वॉल्ट (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> 12 महीने के अपडेट</li>
+              <li><span aria-hidden="true">✅</span> ईमेल सपोर्ट</li>
+            </ul>
+            <a href="https://whop.com/checkout/plan_XU1GaWhoYhoDh" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Pro हमेशा के लिए पाएँ</a>
+            <p class="sla-note">सहायता: ईमेल 48 घंटे (सोम–शुक्र) · <a href="/help#sla">SLA</a></p>
+          </div>
+        </div>
+        <p class="pricing-legal">BookmarkForge v1 के लिए लाइफटाइम लाइसेंस. सभी v1.x अपडेट और 12 महीने के फ़ीचर अपडेट शामिल. हमेशा के लिए सुरक्षा अपडेट. भविष्य के प्रमुख संस्करणों (v2, v3) पर मौजूदा मालिकों को 60% छूट. Whop के माध्यम से 30-दिन का रिफंड. <a href="/privacy-and-terms.html#terms">शर्तें</a> · <a href="/help#pricing">और जानें</a></p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">अक्सर पूछे जाने वाले प्रश्न</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>क्या मुफ़्त प्लान वास्तव में हमेशा के लिए मुफ़्त है?</h3>
+            <p>हाँ। कोई सीमित परीक्षण या सदस्यता नहीं। मुफ़्त प्लान में 2,500 बुकमार्क, फ़ुल-टेक्स्ट और सिमांटिक खोज, ज्ञान ग्राफ और आपकी API कुंजी के साथ AI शामिल है (आप प्रदाता को भुगतान करते हैं)।</p>
+          </div>
+          <div class="faq-item">
+            <h3>Pro में 'एक बार की खरीद' का क्या अर्थ है?</h3>
+            <p>आप एक बार भुगतान करते हैं ($79), और लाइसेंस हमेशा आपका है। 12 महीने के सभी अपडेट शामिल। कोई आवर्ती शुल्क नहीं। लाइसेंस कुंजी Whop के माध्यम से तुरंत दी जाती है।</p>
+          </div>
+          <div class="faq-item">
+            <h3>आप कौन से भुगतान विधियाँ स्वीकार करते हैं?</h3>
+            <p>Whop के माध्यम से: क्रेडिट कार्ड, PayPal और क्रिप्टोकरेंसी। हम कभी भी आपकी भुगतान जानकारी नहीं देखते।</p>
+          </div>
+          <div class="faq-item">
+            <h3>सपोर्ट — आप कितनी जल्दी उत्तर देते हैं?</h3>
+            <p>समुदाय: <a href="/help">सहायता केंद्र</a> + GitHub Discussions के माध्यम से समुदाय की मदद (सर्वश्रेष्ठ प्रयास). Pro: कार्यदिवसों में 48 घंटे के भीतर ईमेल. वॉल्ट एन्क्रिप्टेड है — हम आपका डेटा नहीं देख सकते, इसलिए हम कभी आपका पासवर्ड या रिकवरी वाक्यांश नहीं माँगते. देखें <a href="/help#sla">सपोर्ट SLA</a>.</p>
+          </div>
+          <div class="faq-item">
+            <h3>अगर मैं अपना वॉल्ट पासवर्ड भूल जाऊँ तो?</h3>
+            <p>हम इसे पुनर्प्राप्त नहीं कर सकते. वॉल्ट बनाते समय हम 24-शब्दों का रिकवरी वाक्यांश एक बार दिखाते हैं — उसे कागज़ पर लिख लें. इसके बिना, कोई भी (हम भी नहीं) वॉल्ट नहीं खोल सकता. देखें <a href="/help#bf-e101">BF-E101</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>अपने ज्ञान पर नियंत्रण लेने के लिए तैयार?</h2>
+        <p>हज़ारों शोधकर्ताओं, डेवलपर्स और छात्रों से जुड़ें जो BookmarkForge पर अपने दूसरे दिमाग के रूप में भरोसा करते हैं।</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">मुफ़्त में खोलें</a>
+          <a href="#pricing" class="btn-secondary">Pro में अपग्रेड करें</a>
+        </div>
+        <p class="note">कोई खाता आवश्यक नहीं। आपके ब्राउज़र में तुरंत काम करता है। मुफ़्त प्लान: 2,500 बुकमार्क।</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>ज्ञान के लिए आपका निजी AI वॉल्ट। 100% स्थानीय।</p>
+      </div>
+      <div class="footer-links">
+        <h4>उत्पाद</h4>
+        <ul>
+          <li><a href="#features">सुविधाएँ</a></li>
+          <li><a href="#ai">AI क्षमताएँ</a></li>
+          <li><a href="#privacy">गोपनीयता</a></li>
+          <li><a href="#pricing">मूल्य</a></li>
+          <li><a href="/app">ऐप खोलें</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>संसाधन</h4>
+        <ul>
+          <li><a href="/pocket-alternative">Pocket तुलना</a></li>
+          <li><a href="/privacy-and-terms.html">गोपनीयता और शर्तें</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>भाषाएँ</h4>
+        <ul>
+          <li><a href="/id/?lang=id" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+          <li><a href="/cs/?lang=cs" hreflang="cs" lang="cs">Čeština</a></li>
+          <li><a href="/da/?lang=da" hreflang="da" lang="da">Dansk</a></li>
+          <li><a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a></li>
+          <li><a href="/?lang=en" hreflang="en" lang="en">English</a></li>
+          <li><a href="/es/?lang=es" hreflang="es" lang="es">Español</a></li>
+          <li><a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a></li>
+          <li><a href="/hr/?lang=hr" hreflang="hr" lang="hr">Hrvatski</a></li>
+          <li><a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a></li>
+          <li><a href="/hu/?lang=hu" hreflang="hu" lang="hu">Magyar</a></li>
+          <li><a href="/nl/?lang=nl" hreflang="nl" lang="nl">Nederlands</a></li>
+          <li><a href="/no/?lang=no" hreflang="no" lang="no">Norsk</a></li>
+          <li><a href="/pl/?lang=pl" hreflang="pl" lang="pl">Polski</a></li>
+          <li><a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a></li>
+          <li><a href="/ro/?lang=ro" hreflang="ro" lang="ro">Română</a></li>
+          <li><a href="/fi/?lang=fi" hreflang="fi" lang="fi">Suomi</a></li>
+          <li><a href="/sv/?lang=sv" hreflang="sv" lang="sv">Svenska</a></li>
+          <li><a href="/vi/?lang=vi" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+          <li><a href="/tr/?lang=tr" hreflang="tr" lang="tr">Türkçe</a></li>
+          <li><a href="/el/?lang=el" hreflang="el" lang="el">Ελληνικά</a></li>
+          <li><a href="/bg/?lang=bg" hreflang="bg" lang="bg">Български</a></li>
+          <li><a href="/ru/?lang=ru" hreflang="ru" lang="ru">Русский</a></li>
+          <li><a href="/uk/?lang=uk" hreflang="uk" lang="uk">Українська</a></li>
+          <li><a href="/he/?lang=he" hreflang="he" lang="he">עברית</a></li>
+          <li><a href="/ar/?lang=ar" hreflang="ar" lang="ar">العربية</a></li>
+          <li><a href="/hi/?lang=hi" hreflang="hi" lang="hi">हिन्दी</a></li>
+          <li><a href="/th/?lang=th" hreflang="th" lang="th">ไทย</a></li>
+          <li><a href="/ko/?lang=ko" hreflang="ko" lang="ko">한국어</a></li>
+          <li><a href="/zh/?lang=zh" hreflang="zh" lang="zh">中文</a></li>
+          <li><a href="/ja/?lang=ja" hreflang="ja" lang="ja">日本語</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>सपोर्ट</h4>
+        <ul>
+          <li><a href="/help">सहायता केंद्र</a></li>
+          <li><a href="/help#sla">SLA</a></li>
+          <li><a href="/help#bf-e">त्रुटि कोड</a></li>
+          <li><a href="mailto:bookmarkforge@proton.me">संपर्क करें</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+         Every other locale has its own directory. The rule has one owner —
+         scripts/landing-registry.mjs (LEGAL_LOCALE_CODES), already encoded by
+         check-seo, check-sitemap-coverage, check-hreflang-graph and
+         check-page-figures. Emitting "/hi/…" unconditionally shipped a
+         404 footer link on every EN landing until the ADR-062 smoke gate opened it. -->
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge। सर्वाधिकार सुरक्षित।</p>
+      <a href="/hi/privacy-and-terms.html">गोपनीयता नीति</a> · <a href="/hi/privacy-and-terms.html#terms">सेवा की शर्तें</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

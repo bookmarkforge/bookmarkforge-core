@@ -1,0 +1,482 @@
+{
+  "lang": "ko",
+  "langName": "한국어",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/ko/",
+  "ogLocale": "ko_KR",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — AI가 포함된 비공개 Pocket 대안 (북마크와 메모)",
+  "description": "기사, 메모, 문서를 비공개 암호화된 100% 로컬 볼트에 저장. AI 검색, Notion 스타일 편집기, P2P 동기화. 무료 플랜: 2,500개 북마크.",
+  "ogTitle": "BookmarkForge — AI가 포함된 비공개 Pocket 대안 (북마크와 메모)",
+  "ogDescription": "기사, 메모, 문서를 비공개 암호화된 100% 로컬 볼트에 저장. AI 검색, Notion 스타일 편집기, P2P 동기화. 무료 플랜: 2,500개 북마크.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — AI가 포함된 비공개 Pocket 대안 (북마크와 메모)",
+  "twitterDescription": "기사, 메모, 문서를 비공개 암호화된 100% 로컬 볼트에 저장. AI 검색, Notion 스타일 편집기, P2P 동기화. 무료 플랜: 2,500개 북마크.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "본문으로 건너뛰기",
+  "navBrandAria": "BookmarkForge 홈",
+  "navAriaLabel": "주 내비게이션",
+  "homeHref": "/ko/",
+  "navLinks": {
+    "pocketAlternative": "Pocket 대안",
+    "features": "기능",
+    "ai": "AI",
+    "privacy": "프라이버시",
+    "pricing": "요금",
+    "help": "도움말",
+    "raindropCompare": "Raindrop Comparison"
+  },
+  "langLink": {
+    "href": "/?lang=en",
+    "hreflang": "en",
+    "lang": "en",
+    "text": "English"
+  },
+  "navCta": "앱 열기",
+  "themeToggleAria": "테마 전환",
+  "hero": {
+    "badge": "버전 1.0",
+    "title": "당신의 <span class='accent-text'>비공개 AI 볼트</span>",
+    "subtitle": "기사를 저장하고 나중에 읽기 위한 비공개 Pocket 대안: 북마크, 메모, 문서 — 기기에 암호화되어 AI로 검색 가능하고 P2P로 동기화. 클라우드 없음. 추적 없음. 100% 당신의 것.",
+    "ctaPrimary": "무료로 시작",
+    "ctaSecondary": "요금 보기",
+    "pillars": [
+      {
+        "strong": "100% 로컬",
+        "text": "데이터가 기기를 벗어나지 않음"
+      },
+      {
+        "strong": "암호화",
+        "text": "AES-256-GCM + Argon2id"
+      },
+      {
+        "strong": "오프라인",
+        "text": "인터넷 없이 작동"
+      },
+      {
+        "strong": "비공개",
+        "text": "기본값 제로 텔레메트리"
+      }
+    ]
+  },
+  "demo": null,
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "프라이버시를 희생하지 않고 나중에 읽기",
+    "title": "비공개 Pocket 대안",
+    "subtitle": "Pocket이 사라집니다. BookmarkForge는 읽기 습관을 유지합니다 — 모든 기사, 메모, 강조표시가 기기에 암호화됩니다.",
+    "features": [
+      {
+        "title": "기사를 나중에 저장, 영원히 당신의 것",
+        "text": "PWA 앱, 브라우저 확장 또는 공유 메뉴에서 한 번의 클릭으로 기사, 동영상, PDF를 저장. Pocket과 달리 읽기 목록은 기기에 암호화되어 살아 있고 오프라인으로 작동합니다."
+      },
+      {
+        "title": "모든 기사에 Notion 스타일 메모",
+        "text": "모든 북마크에서 강조, 요약, 메모를 작성하세요. 저장된 기사를 자신의 지식 베이스로 변환 — 단순한 링크 목록이 아닙니다."
+      },
+      {
+        "title": "제로 추적, 제로 광고",
+        "text": "BookmarkForge는 기본적으로 계정, 분석, 광고를 사용하지 않습니다. 읽기 습관은 오직 당신의 책임입니다."
+      }
+    ],
+    "ctaPrimary": "무료로 저장 시작",
+    "ctaSecondary": "완전한 비교 및 마이그레이션 가이드",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": null,
+  "features": {
+    "id": "features",
+    "tag": "필요한 모든 것",
+    "title": "지식 관리를 위한 강력한 기능, 모두 로컬에서 실행",
+    "items": [
+      {
+        "title": "북마크와 문서",
+        "text": "원클릭으로 어떤 페이지든 저장하세요. 바로 옆에서 깔끔하고 간단한 에디터로 메모를 작성하세요. 100,000개의 항목에서도 빠릅니다."
+      },
+      {
+        "title": "풀텍스트 및 시맨틱 검색",
+        "text": "키워드나 의미로 검색 — 정확한 단어를 기억하지 못해도 찾을 수 있습니다. Raindrop은 이 기능에 연 28달러를 받습니다. 여기서는 무료로 포함됩니다."
+      },
+      {
+        "title": "로컬 AI (WebLLM / Ollama) — Pro만",
+        "text": "저장한 내용에 대해 질문하면 출처와 함께 답변을 받습니다. 클라우드로 전송되는 것은 없으며, 인터넷 없이도 작동합니다. Pro 필요."
+      },
+      {
+        "title": "데이터 위 RAG 채팅 — Pro만",
+        "text": "북마크와 메모에 대해 무엇이든 물어보고 인용이 포함된 답변을 받으세요. 프라이빗 모드는 내 기기에서 100% 실행됩니다. Pro 필요."
+      },
+      {
+        "title": "P2P 동기화 (WebRTC) — Pro만",
+        "text": "기기끼리 직접 통신 — 중간에 서버가 없고 모든 것이 암호화된 채로 유지됩니다. QR 코드를 스캔하여 페어링하세요. 최대 5대의 기기. Pro 필요."
+      },
+      {
+        "title": "암호화된 백업",
+        "text": "원하는 곳에 보관할 수 있는 자동 백업 — 외장 드라이브, 클라우드 폴더, 어디든요. Markdown, JSON, CSV, PDF로 언제든지 내보내세요. 키는 회원님이 가지고 있습니다."
+      },
+      {
+        "title": "지식 그래프",
+        "text": "메모와 북마크가 어떻게 연결되는지 확인하세요. 태그, 날짜, 유사도로 필터링하고 무한한 캔버스를 탐색하세요."
+      },
+      {
+        "title": "플래시카드 (간격 반복) — Pro만",
+        "text": "저장된 문서를 잊어버리기 직전에 떠오르는 질문 카드로 바꾸세요 — Anki와 같은 스케줄링 방식입니다. Pro 필요."
+      },
+      {
+        "title": "기본 프라이버시",
+        "text": "계정 없음, 추적 없음, 광고 없음. 회원님은 고객이지 제품이 아닙니다. 사용량 공유는 존재하지만 선택 사항이며, 켜기 전까지 꺼져 있습니다."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "당신을 존중하는 AI",
+    "title": "당신의 지식, 강화",
+    "subtitle": "BookmarkForge는 선택권을 제공합니다: 브라우저에서 100% 로컬 모델 실행 (WebLLM, WebGPU, Pro), 자체 API 키를 클라우드 제공업체에 연결, 또는 로컬 Ollama 사용. 당신의 지시, 당신의 데이터, 당신의 규칙.",
+    "providers": {
+      "title": "지원되는 제공업체",
+      "list": [
+        {
+          "type": "local",
+          "name": "내 컴퓨터 안에서 — WebLLM 모델 (TinyLlama, Llama 3.2, Phi-3.5-mini) — Pro 전용"
+        },
+        {
+          "type": "local",
+          "name": "내 기기에서 — Ollama (실행하는 모든 모델)"
+        },{
+          "type": "cloud",
+          "name": "클라우드 — OpenAI / GPT-4o (본인의 키로)"
+        },
+        {
+          "type": "cloud",
+          "name": "클라우드 — Anthropic Claude (본인의 키로)"
+        },
+        {
+          "type": "cloud",
+          "name": "클라우드 — Groq (본인의 키로)"
+        },
+        {
+          "type": "cloud",
+          "name": "클라우드 — OpenRouter 또는 기타 맞춤 프로바이더 (본인의 키로)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "채팅 모드",
+      "items": [
+        {
+          "title": "비공개 모드",
+          "text": "로컬 AI만 (WebLLM/Ollama). 데이터가 기기를 벗어나지 않음. 오프라인 작동. WebLLM에는 Pro 필요."
+        },
+        {
+          "title": "웹 검색 모드",
+          "text": "볼트와 실시간 검색 결과 (클라우드 제공업체)를 결합합니다."
+        },
+        {
+          "title": "전문 에이전트",
+          "text": "전문 캐릭터: 프로그래머, 작가, 분석가, 연구원. 로컬 AI에는 Pro 필요."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "프라이버시는 기능이 아닙니다 — 기반입니다",
+    "subtitle": "모든 아키텍처 결정이 당신에게 통제권을 줍니다",
+    "items": [
+      {
+        "title": "엔드투엔드 암호화",
+        "text": "라이브러리는 마스터 비밀번호에서 파생된 키로 암호화됩니다. 저희는 회원님의 비밀번호나 콘텐츠를 절대 보지 않습니다."
+      },
+      {
+        "title": "100% 로컬 아키텍처",
+        "text": "모든 것이 내 컴퓨터에 있습니다. 보조 서버는 라이선싱, 기기 페어링, 클라우드 모드 AI 질문 중계만 처리합니다 — 회원님의 콘텐츠는 절대 아닙니다."
+      },
+      {
+        "title": "기본 제로 텔레메트리",
+        "text": "분석 없음, 충돌 보고서 없음, 추적 없음. 사용 통계나 오류 보고서 공유는 별도의 선택 사항이며 기본적으로 꺼져 있습니다."
+      },
+      {
+        "title": "키는 당신의 것",
+        "text": "마스터 비밀번호가 없으면 접근도 없습니다 — \"비밀번호 분실\" 백도어는 없습니다. 24단어 복구 문구가 유일한 통로입니다. 안전하게 보관하세요."
+      },
+      {
+        "title": "GDPR 준수",
+        "text": "데이터에 접근, 수정, 삭제 또는 휴대 — 모두 로컬에서 언제든지 가능합니다."
+      },
+      {
+        "title": "공급업체 독립적",
+        "text": "데이터를 언제든지 개방형 형식(JSON, Markdown, CSV, PDF)으로 내보내세요. 회원님의 지식은 회원님의 것이며 휴대 가능합니다."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "간단하고 공정한 가격",
+    "subtitle": "무료 플랜: 2,500개 북마크. Pro는 일회성 구매 $59 얼리 버드 (이후 $79) — 구독 없음.",
+    "plans": [
+      {
+        "name": "무료",
+        "price": "$ 0",
+        "period": "/ 영원히",
+        "description": "개인 아카이브용 (북마크 2,500개, 어떤 기기에서든 작동 — 기기마다 자체 볼트 보유)",
+        "features": [
+          {
+            "included": true,
+            "text": "2,500개 북마크, 메모, 문서"
+          },
+          {
+            "included": true,
+            "text": "스마트 검색(전문 + 시맨틱) — 무료 포함. Raindrop은 이 기능에 연간 요금을 받습니다"
+          },
+          {
+            "included": true,
+            "text": "자체 API 키로 AI (공급업체에 지불)"
+          },
+          {
+            "included": true,
+            "text": "지식 그래프"
+          },
+          {
+            "included": true,
+            "text": "기본 템플릿"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML 내보내기"
+          },
+          {
+            "included": true,
+            "text": "PWA + 브라우저 확장"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> 기기 간 P2P 동기화"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> 로컬 AI (WebLLM/Ollama)"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> 데이터 위 RAG 채팅"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> 간격 반복 플래시카드"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> 고급 내보내기 (10+ 형식)"
+          }
+        ],
+        "cta": "무료로 시작",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro",
+        "badge": "가장 인기 — 얼리 버드 200",
+        "price": "$ 59",
+        "period": "얼리 버드 (이후 $79)",
+        "description": "v1 평생 · 12개월간 기능 업데이트 · 보안 업데이트 영원히 · v2 60% 할인",
+        "features": [
+          {
+            "included": true,
+            "text": "무료의 모든 것"
+          },
+          {
+            "included": true,
+            "text": "무제한 북마크"
+          },
+          {
+            "included": true,
+            "text": "5개 기기"
+          },
+          {
+            "included": true,
+            "text": "5개 기기의 P2P 동기화"
+          },
+          {
+            "included": true,
+            "text": "로컬 AI (WebLLM, API 키 불필요)"
+          },
+          {
+            "included": true,
+            "text": "데이터 위 RAG 채팅"
+          },
+          {
+            "included": true,
+            "text": "전문 에이전트 (프로그래머, 작가, 분석가, 연구원)"
+          },
+          {
+            "included": true,
+            "text": "간격 반복 플래시카드"
+          },
+          {
+            "included": true,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "고급 내보내기 (10+ 형식)"
+          },
+          {
+            "included": true,
+            "text": "보안 볼트 (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "12개월 업데이트"
+          },
+          {
+            "included": true,
+            "text": "이메일 지원"
+          }
+        ],
+        "cta": "Pro를 영원히 받기",
+        "ctaHref": "/buy-pro",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "이후 정가 $79",
+        "sla": "지원: 이메일 48시간 (월–금)"
+      }
+    ],
+    "legal": "BookmarkForge v1 평생 라이선스. 모든 v1.x 업데이트와 12개월간의 기능 업데이트 포함. 보안 업데이트는 영원히. 향후 메이저 버전(v2, v3)은 기존 소유자에게 60% 할인. Whop을 통한 30일 환불 보장. <a href=\"/privacy-and-terms.html#terms\">약관</a> · <a href=\"/help#pricing\">자세히 보기</a>"
+  },
+  "faq": {
+    "title": "자주 묻는 질문",
+    "items": [
+      {
+        "question": "무료 플랜은 정말 영원히 무료인가요?",
+        "answer": "네. 제한된 체험판이나 구독이 없습니다. 무료 플랜에는 2,500개 북마크, 풀텍스트 및 시맨틱 검색, 지식 그래프, 자체 API 키로 AI (공급업체에 지불)가 포함됩니다."
+      },
+      {
+        "question": "Pro의 '일회성 구매'는 무엇인가요?",
+        "answer": "한 번만 지불 ($79), 라이선스는 영원히 yours 입니다. 12개월간의 모든 업데이트가 포함됩니다. 반복 요금 없음. 라이선스 키는 Whop을 통해 즉시 제공됩니다."
+      },
+      {
+        "question": "어떤 결제 방법을 받으시나요?",
+        "answer": "Whop을 통해: 신용카드, PayPal, 암호화폐. 결제 정보를 절대 보지 않습니다."
+      },
+      {
+        "question": "지원 — 얼마나 빨리 응답하나요?",
+        "answer": "커뮤니티: <a href=\"/help\">도움말 센터</a>와 GitHub Discussions를 통한 커뮤니티 지원 (가능한 범위에서). Pro: 영업일 기준 48시간 내 이메일 응답. 볼트는 암호화되어 있습니다 — 저희는 회원님의 데이터를 볼 수 없으므로 비밀번호나 복구 문구를 절대 요청하지 않습니다. <a href=\"/help#sla\">지원 SLA</a>를 참조하세요."
+      },
+      {
+        "question": "볼트 비밀번호를 잊어버리면 어떻게 되나요?",
+        "answer": "복구할 수 없습니다. 볼트를 만들 때 24단어 복구 문구를 한 번만 표시합니다 — 종이에 적어 두세요. 이것 없이는 누구도(저희 포함) 볼트를 열 수 없습니다. <a href=\"/help#bf-e101\">BF-E101</a>을 참조하세요."
+      }
+    ]
+  },
+  "cta": {
+    "title": "지식을 통제할 준비가 되셨나요?",
+    "text": "수천 명의 연구자, 개발자, 학생이 BookmarkForge를 두 번째 뇌로 신뢰합니다. 그들과 함께하세요.",
+    "ctaPrimary": "무료로 시작",
+    "ctaSecondary": "Pro로 업그레이드",
+    "note": "계정 불필요. 브라우저에서 즉시 작동. 무료 플랜: 2,500개 북마크."
+  },
+  "footer": {
+    "brand": "지식을 위한 비공개 AI 볼트. 100% 로컬.",
+    "product": {
+      "title": "제품",
+      "links": [
+        "기능",
+        "AI 기능",
+        "프라이버시",
+        "요금",
+        "앱 열기"
+      ]
+    },
+    "resources": {
+      "title": "리소스",
+      "links": [
+        "Pocket 비교",
+        "프라이버시 및 약관"
+      ]
+    },
+    "languages": {
+      "title": "언어",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "지원",
+      "links": [
+        "문의하기"
+      ],
+      "helpCenter": "도움말 센터",
+      "errorCodes": "오류 코드"
+    },
+    "copyright": "© 2026 BookmarkForge. 모든 권리 보유.",
+    "legal": [
+      "개인정보 처리방침",
+      "이용약관",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "기사, 메모, 문서를 비공개 암호화된 100% 로컬 볼트에 저장. AI 검색, Notion 스타일 편집기, P2P 동기화. 무료 플랜: 2,500개 북마크.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "무료",
+        "price": "0",
+        "currency": "USD",
+        "description": "개인 아카이브용 (북마크 2,500개, 어떤 기기에서든 작동 — 기기마다 자체 볼트 보유)"
+      },
+      {
+        "name": "Pro",
+        "price": "59",
+        "currency": "USD",
+        "description": "v1 평생 · 12개월간 기능 업데이트 · 보안 업데이트 영원히 · v2 60% 할인"
+      }
+    ],
+    "featureList": [
+      "로컬 우선 스토리지",
+      "엔드투엔드 암호화",
+      "오프라인 작동",
+      "AI 검색",
+      "Notion 스타일 에디터",
+      "P2P 동기화"
+    ],
+    "faq": [
+      {
+        "question": "무료 플랜은 정말 영원히 무료인가요?",
+        "answer": "네. 제한된 체험판이나 구독이 없습니다. 무료 플랜에는 2,500개 북마크, 풀텍스트 및 시맨틱 검색, 지식 그래프, 자체 API 키로 AI (공급업체에 지불)가 포함됩니다."
+      },
+      {
+        "question": "Pro의 '일회성 구매'는 무엇인가요?",
+        "answer": "한 번만 지불 ($79), 라이선스는 영원히 yours 입니다. 12개월간의 모든 업데이트가 포함됩니다. 반복 요금 없음. 라이선스 키는 Whop을 통해 즉시 제공됩니다."
+      },
+      {
+        "question": "어떤 결제 방법을 받으시나요?",
+        "answer": "Whop을 통해: 신용카드, PayPal, 암호화폐. 결제 정보를 절대 보지 않습니다."
+      },
+      {
+        "question": "지원 — 얼마나 빨리 응답하나요?",
+        "answer": "커뮤니티: <a href=\"/help\">도움말 센터</a>와 GitHub Discussions를 통한 커뮤니티 지원 (가능한 범위에서). Pro: 영업일 기준 48시간 내 이메일 응답. 볼트는 암호화되어 있습니다 — 저희는 회원님의 데이터를 볼 수 없으므로 비밀번호나 복구 문구를 절대 요청하지 않습니다. <a href=\"/help#sla\">지원 SLA</a>를 참조하세요."
+      },
+      {
+        "question": "볼트 비밀번호를 잊어버리면 어떻게 되나요?",
+        "answer": "복구할 수 없습니다. 볼트를 만들 때 24단어 복구 문구를 한 번만 표시합니다 — 종이에 적어 두세요. 이것 없이는 누구도(저희 포함) 볼트를 열 수 없습니다. <a href=\"/help#bf-e101\">BF-E101</a>을 참조하세요."
+      }
+    ]
+  }
+}

@@ -1,0 +1,482 @@
+{
+  "lang": "id",
+  "langName": "Bahasa Indonesia",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/id/",
+  "ogLocale": "id_ID",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Alternatif Privat Pocket dengan AI (Bookmark dan Catatan)",
+  "description": "Simpan artikel, catatan, dan dokumen di vault privat, terenkripsi, dan 100% lokal. Pencarian AI, editor ala Notion, dan sinkronisasi P2P. Paket gratis: 2.500 bookmark.",
+  "ogTitle": "BookmarkForge — Alternatif Privat Pocket dengan AI (Bookmark dan Catatan)",
+  "ogDescription": "Simpan artikel, catatan, dan dokumen di vault privat, terenkripsi, dan 100% lokal. Pencarian AI, editor ala Notion, dan sinkronisasi P2P. Paket gratis: 2.500 bookmark.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Alternatif Privat Pocket dengan AI (Bookmark dan Catatan)",
+  "twitterDescription": "Simpan artikel, catatan, dan dokumen di vault privat, terenkripsi, dan 100% lokal. Pencarian AI, editor ala Notion, dan sinkronisasi P2P. Paket gratis: 2.500 bookmark.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Lewati ke konten utama",
+  "navBrandAria": "Beranda BookmarkForge",
+  "navAriaLabel": "Navigasi utama",
+  "homeHref": "/id/",
+  "navLinks": {
+    "pocketAlternative": "Alternatif Pocket",
+    "features": "Fitur",
+    "ai": "AI",
+    "privacy": "Privasi",
+    "pricing": "Harga",
+    "help": "Bantuan",
+    "raindropCompare": "Raindrop Comparison"
+  },
+  "langLink": {
+    "href": "/?lang=en",
+    "hreflang": "en",
+    "lang": "en",
+    "text": "English"
+  },
+  "navCta": "Buka Aplikasi",
+  "themeToggleAria": "Ganti tema",
+  "hero": {
+    "badge": "Versi 1.0",
+    "title": "<span class='accent-text'>Vault AI Privat</span> Anda",
+    "subtitle": "Alternatif privat Pocket untuk menyimpan artikel dan membaca nanti: bookmark, catatan, dan dokumen — terenkripsi di perangkat Anda, bisa dicari dengan AI, dan disinkronkan peer-to-peer. Tanpa cloud. Tanpa pelacakan. 100% milik Anda.",
+    "ctaPrimary": "Buka Gratis",
+    "ctaSecondary": "Lihat Harga",
+    "pillars": [
+      {
+        "strong": "100% Lokal",
+        "text": "data Anda tidak meninggalkan perangkat"
+      },
+      {
+        "strong": "Terenkripsi",
+        "text": "AES-256-GCM + Argon2id"
+      },
+      {
+        "strong": "Offline",
+        "text": "berfungsi tanpa internet"
+      },
+      {
+        "strong": "Privat",
+        "text": "nol telemetry secara default"
+      }
+    ]
+  },
+  "demo": null,
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Baca nanti tanpa mengorbankan privasi",
+    "title": "Alternatif Privat Pocket",
+    "subtitle": "Pocket menghilang. BookmarkForge menjaga kebiasaan membaca tetap hidup — setiap artikel, catatan, dan penanda terenkripsi di perangkat Anda.",
+    "features": [
+      {
+        "title": "Simpan artikel untuk nanti, milik Anda selamanya",
+        "text": "Simpan artikel, video, dan PDF dengan satu klik — dari aplikasi PWA, ekstensi browser, atau menu berbagi. Berbeda dengan Pocket, daftar baca Anda hidup di perangkat Anda, terenkripsi, dan berfungsi offline."
+      },
+      {
+        "title": "Catatan ala Notion di setiap artikel",
+        "text": "Soroti, ringkas, dan tulis catatan di setiap bookmark. Ubah artikel yang tersimpan menjadi basis pengetahuan Anda sendiri — bukan sekadar daftar tautan."
+      },
+      {
+        "title": "Nol pelacakan, nol iklan",
+        "text": "BookmarkForge tidak menggunakan akun, analitik, atau iklan secara default. Kebiasaan membaca Anda menjadi tanggung jawab Anda sendiri."
+      }
+    ],
+    "ctaPrimary": "Mulai Menyimpan Gratis",
+    "ctaSecondary": "Perbandingan lengkap dan panduan migrasi",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": null,
+  "features": {
+    "id": "features",
+    "tag": "Semua yang Anda butuhkan",
+    "title": "Fitur kuat untuk mengelola pengetahuan Anda, semuanya berjalan lokal",
+    "items": [
+      {
+        "title": "Bookmark dan dokumen",
+        "text": "Simpan halaman apa pun dengan satu klik. Tulis catatan tepat di sebelahnya, di editor yang bersih dan sederhana. Tetap cepat bahkan dengan 100.000 item tersimpan."
+      },
+      {
+        "title": "Pencarian full-text dan semantik",
+        "text": "Temukan sesuatu berdasarkan kata kunci atau makna — bahkan saat Anda tidak ingat kata-kata persisnya. Raindrop mengenakan biaya 28 dolar setahun untuk ini; di sini disertakan gratis."
+      },
+      {
+        "title": "AI lokal (WebLLM / Ollama) — Hanya Pro",
+        "text": "Ajukan pertanyaan tentang apa yang Anda simpan dan dapatkan jawaban dengan sumber yang ditampilkan. Tidak ada yang dikirim ke cloud, dan berfungsi tanpa internet. Butuh Pro."
+      },
+      {
+        "title": "RAG chat atas data Anda — Hanya Pro",
+        "text": "Tanyakan apa pun tentang penanda dan catatan Anda dan dapatkan jawaban berikut kutipannya. Mode privat berjalan 100% di mesin Anda sendiri. Butuh Pro."
+      },
+      {
+        "title": "Sinkronisasi P2P (WebRTC) — Hanya Pro",
+        "text": "Perangkat Anda berbicara satu sama lain secara langsung — tanpa server di tengah, dan semuanya tetap terenkripsi. Pindangkan dengan memindai kode QR. Hingga 5 perangkat. Butuh Pro."
+      },
+      {
+        "title": "Cadangan terenkripsi",
+        "text": "Pencadangan otomatis yang bisa Anda simpan di mana saja — drive eksternal, folder cloud, di mana pun. Ekspor semuanya ke Markdown, JSON, CSV, atau PDF kapan pun Anda mau. Kuncinya di tangan Anda."
+      },
+      {
+        "title": "Graf pengetahuan",
+        "text": "Lihat bagaimana catatan dan penanda Anda terhubung. Saring berdasarkan tag, tanggal, dan kemiripan, dan jelajahi kanvas tanpa batas."
+      },
+      {
+        "title": "Flashcards (Spaced Repetition) — Hanya Pro",
+        "text": "Ubah dokumen tersimpan apa pun menjadi kartu pertanyaan yang muncul tepat sebelum Anda melupakannya — ide penjadwalan yang sama seperti Anki. Butuh Pro."
+      },
+      {
+        "title": "Privasi secara default",
+        "text": "Tanpa akun, tanpa pelacakan, tanpa iklan. Anda adalah pelanggan, bukan produk. Berbagi penggunaan itu ada, bersifat opsional, dan tetap mati sampai Anda menyalakannya."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI yang menghargai Anda",
+    "title": "Pengetahuan Anda, Diperkuat",
+    "subtitle": "BookmarkForge memberi Anda pilihan: jalankan model 100% lokal di browser Anda (WebLLM, WebGPU) dengan Pro, hubungkan kunci API Anda sendiri ke penyedia cloud, atau gunakan Ollama lokal. Instruksi Anda, data Anda, aturan Anda.",
+    "providers": {
+      "title": "Penyedia yang didukung",
+      "list": [
+        {
+          "type": "local",
+          "name": "Di dalam komputer Anda — model WebLLM (TinyLlama, Llama 3.2, Phi-3.5-mini) — hanya Pro"
+        },
+        {
+          "type": "local",
+          "name": "Di mesin Anda sendiri — Ollama (model apa pun yang Anda jalankan)"
+        },{
+          "type": "cloud",
+          "name": "Cloud — OpenAI / GPT-4o (dengan kunci Anda sendiri)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Anthropic Claude (dengan kunci Anda sendiri)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Groq (dengan kunci Anda sendiri)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — OpenRouter atau penyedia kustom lain (dengan kunci Anda sendiri)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Mode chat",
+      "items": [
+        {
+          "title": "Mode Privat",
+          "text": "Hanya AI lokal (WebLLM/Ollama). Nol data meninggalkan perangkat. Berfungsi offline. Membutuhkan Pro untuk WebLLM."
+        },
+        {
+          "title": "Mode Pencarian Web",
+          "text": "Menggabungkan vault Anda dengan hasil pencarian real-time (penyedia cloud)."
+        },
+        {
+          "title": "Agen Ahli",
+          "text": "Karakter spesialis: Programmer, Penulis, Analis, Peneliti. Membutuhkan Pro untuk AI lokal."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Privasi bukan fitur — itu fondasi",
+    "subtitle": "Setiap keputusan arsitektural memberi Anda kendali",
+    "items": [
+      {
+        "title": "Enkripsi end-to-end",
+        "text": "Pustaka Anda dienkripsi dengan kunci yang diturunkan dari kata sandi utama Anda. Kami tidak pernah melihat kata sandi atau konten Anda."
+      },
+      {
+        "title": "Arsitektur 100% lokal",
+        "text": "Semuanya hidup di komputer Anda. Server pendamping hanya menangani lisensi, penyatuan perangkat, dan meneruskan pertanyaan AI mode cloud Anda — tidak pernah konten Anda."
+      },
+      {
+        "title": "Nol telemetry secara default",
+        "text": "Tanpa analitik, tanpa laporan kerusakan, tanpa pelacakan. Berbagi statistik penggunaan atau laporan kesalahan adalah pilihan terpisah, mati secara bawaan."
+      },
+      {
+        "title": "Kunci milik Anda",
+        "text": "Tanpa kata sandi utama berarti tanpa akses — tidak ada pintu belakang \"lupa kata sandi\". Frasa pemulihan 24 kata adalah satu-satunya jalan masuk; simpanlah dengan aman."
+      },
+      {
+        "title": "Kepatuhan GDPR",
+        "text": "Akses, perbaiki, hapus, atau bawa data Anda — semuanya bisa dilakukan secara lokal, kapan pun Anda mau."
+      },
+      {
+        "title": "Independen dari penyedia",
+        "text": "Ekspor data Anda kapan pun dalam format terbuka (JSON, Markdown, CSV, PDF). Pengetahuan Anda tetap milik Anda dan portabel."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Harga Sederhana dan Adil",
+    "subtitle": "Paket gratis: 2.500 bookmark. Pro adalah pembelian satu kali seharga $59 Early Bird (lalu $79) — tanpa langganan.",
+    "plans": [
+      {
+        "name": "Gratis",
+        "price": "$ 0",
+        "period": "/ selamanya",
+        "description": "Untuk arsip pribadi (2.500 bookmark, berfungsi di perangkat apa pun — masing-masing punya vault sendiri)",
+        "features": [
+          {
+            "included": true,
+            "text": "2.500 bookmark, catatan, dan dokumen"
+          },
+          {
+            "included": true,
+            "text": "Pencarian pintar (teks penuh + semantik) — termasuk gratis; Raindrop menagihnya tiap tahun"
+          },
+          {
+            "included": true,
+            "text": "AI dengan kunci API sendiri (Anda membayar penyedia)"
+          },
+          {
+            "included": true,
+            "text": "Graf pengetahuan"
+          },
+          {
+            "included": true,
+            "text": "Template dasar"
+          },
+          {
+            "included": true,
+            "text": "Ekspor JSON/HTML"
+          },
+          {
+            "included": true,
+            "text": "PWA + ekstensi browser"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Sinkronisasi P2P antar perangkat"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> AI lokal (WebLLM/Ollama)"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> RAG chat atas data Anda"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Flashcards dengan spaced repetition"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Ekspor lanjutan (10+ format)"
+          }
+        ],
+        "cta": "Mulai Gratis",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro",
+        "badge": "Paling populer — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (lalu $79)",
+        "description": "Seumur hidup untuk v1 · 12 bulan pembaruan fitur · Keamanan selamanya · v2 diskon 60%",
+        "features": [
+          {
+            "included": true,
+            "text": "Semua di Gratis"
+          },
+          {
+            "included": true,
+            "text": "Bookmark tanpa batas"
+          },
+          {
+            "included": true,
+            "text": "5 perangkat"
+          },
+          {
+            "included": true,
+            "text": "Sinkronisasi P2P di 5 perangkat"
+          },
+          {
+            "included": true,
+            "text": "AI lokal (WebLLM, tanpa kunci API)"
+          },
+          {
+            "included": true,
+            "text": "RAG chat atas data Anda"
+          },
+          {
+            "included": true,
+            "text": "Agen ahli (Programmer, Penulis, Analis, Peneliti)"
+          },
+          {
+            "included": true,
+            "text": "Flashcards dengan spaced repetition"
+          },
+          {
+            "included": true,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Ekspor lanjutan (10+ format)"
+          },
+          {
+            "included": true,
+            "text": "Vault keamanan (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Pembaruan selama 12 bulan"
+          },
+          {
+            "included": true,
+            "text": "Dukungan email"
+          }
+        ],
+        "cta": "Dapatkan Pro Selamanya",
+        "ctaHref": "/buy-pro",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "lalu $79 harga reguler",
+        "sla": "Dukungan: email 48 jam (Sen–Jum)"
+      }
+    ],
+    "legal": "Lisensi seumur hidup untuk BookmarkForge v1. Termasuk semua pembaruan v1.x dan 12 bulan pembaruan fitur. Pembaruan keamanan selamanya. Versi mayor mendatang (v2, v3) diskon 60% untuk pemilik yang ada. Pengembalian dana 30 hari melalui Whop. <a href=\"/privacy-and-terms.html#terms\">Ketentuan</a> · <a href=\"/help#pricing\">Pelajari lebih lanjut</a>"
+  },
+  "faq": {
+    "title": "Pertanyaan yang Sering Diajukan",
+    "items": [
+      {
+        "question": "Apakah paket gratis benar-benar gratis selamanya?",
+        "answer": "Ya. Tanpa masa uji coba terbatas atau langganan. Paket gratis mencakup 2.500 bookmark, pencarian full-text dan semantik, graf pengetahuan, dan AI dengan kunci API sendiri (Anda membayar penyedia)."
+      },
+      {
+        "question": "Apa arti 'pembelian satu kali' di Pro?",
+        "answer": "Anda membayar sekali ($79), dan lisensi adalah milik Anda selamanya. Termasuk semua pembaruan selama 12 bulan. Tanpa biaya berulang. Kunci lisensi dikirim instan melalui Whop."
+      },
+      {
+        "question": "Metode pembayaran apa yang Anda terima?",
+        "answer": "Melalui Whop: kartu kredit, PayPal, dan cryptocurrency. Kami tidak pernah melihat informasi pembayaran Anda."
+      },
+      {
+        "question": "Dukungan — seberapa cepat Anda menjawab?",
+        "answer": "Komunitas: bantuan komunitas melalui <a href=\"/help\">Pusat Bantuan</a> + GitHub Discussions (semampunya). Pro: email dalam 48 jam pada hari kerja. Brankas terenkripsi — kami tidak dapat melihat data Anda, jadi kami tidak pernah meminta kata sandi atau frasa pemulihan Anda. Lihat <a href=\"/help#sla\">SLA Dukungan</a>."
+      },
+      {
+        "question": "Bagaimana jika saya lupa kata sandi brankas?",
+        "answer": "Kami tidak dapat memulihkannya. Saat membuat brankas, kami menampilkan frasa pemulihan 24 kata satu kali — tulis di kertas. Tanpanya, tidak ada seorang pun (termasuk kami) yang bisa membuka brankas. Lihat <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Siap Mengambil Kendali Atas Pengetahuan Anda?",
+    "text": "Bergabunglah dengan ribuan peneliti, pengembang, dan mahasiswa yang mempercayai BookmarkForge sebagai otak kedua mereka.",
+    "ctaPrimary": "Buka Gratis",
+    "ctaSecondary": "Tingkatkan ke Pro",
+    "note": "Tidak perlu akun. Berfungsi langsung di browser Anda. Paket gratis: 2.500 bookmark."
+  },
+  "footer": {
+    "brand": "Vault AI privat Anda untuk pengetahuan. 100% lokal.",
+    "product": {
+      "title": "Produk",
+      "links": [
+        "Fitur",
+        "Kemampuan AI",
+        "Privasi",
+        "Harga",
+        "Buka Aplikasi"
+      ]
+    },
+    "resources": {
+      "title": "Sumber Daya",
+      "links": [
+        "Perbandingan Pocket",
+        "Privasi dan Ketentuan"
+      ]
+    },
+    "languages": {
+      "title": "Bahasa",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Dukungan",
+      "links": [
+        "Hubungi Kami"
+      ],
+      "helpCenter": "Pusat Bantuan",
+      "errorCodes": "Kode kesalahan"
+    },
+    "copyright": "© 2026 BookmarkForge. Hak cipta dilindungi.",
+    "legal": [
+      "Kebijakan Privasi",
+      "Syarat Layanan",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Simpan artikel, catatan, dan dokumen di vault privat, terenkripsi, dan 100% lokal. Pencarian AI, editor ala Notion, dan sinkronisasi P2P. Paket gratis: 2.500 bookmark.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "Gratis",
+        "price": "0",
+        "currency": "USD",
+        "description": "Untuk arsip pribadi (2.500 bookmark, berfungsi di perangkat apa pun — masing-masing punya vault sendiri)"
+      },
+      {
+        "name": "Pro",
+        "price": "59",
+        "currency": "USD",
+        "description": "Seumur hidup untuk v1 · 12 bulan pembaruan fitur · Keamanan selamanya · v2 diskon 60%"
+      }
+    ],
+    "featureList": [
+      "Penyimpanan lokal",
+      "Enkripsi end-to-end",
+      "Bekerja offline",
+      "Pencarian AI",
+      "Editor gaya Notion",
+      "Sinkronisasi P2P"
+    ],
+    "faq": [
+      {
+        "question": "Apakah paket gratis benar-benar gratis selamanya?",
+        "answer": "Ya. Tanpa masa uji coba terbatas atau langganan. Paket gratis mencakup 2.500 bookmark, pencarian full-text dan semantik, graf pengetahuan, dan AI dengan kunci API sendiri (Anda membayar penyedia)."
+      },
+      {
+        "question": "Apa arti 'pembelian satu kali' di Pro?",
+        "answer": "Anda membayar sekali ($79), dan lisensi adalah milik Anda selamanya. Termasuk semua pembaruan selama 12 bulan. Tanpa biaya berulang. Kunci lisensi dikirim instan melalui Whop."
+      },
+      {
+        "question": "Metode pembayaran apa yang Anda terima?",
+        "answer": "Melalui Whop: kartu kredit, PayPal, dan cryptocurrency. Kami tidak pernah melihat informasi pembayaran Anda."
+      },
+      {
+        "question": "Dukungan — seberapa cepat Anda menjawab?",
+        "answer": "Komunitas: bantuan komunitas melalui <a href=\"/help\">Pusat Bantuan</a> + GitHub Discussions (semampunya). Pro: email dalam 48 jam pada hari kerja. Brankas terenkripsi — kami tidak dapat melihat data Anda, jadi kami tidak pernah meminta kata sandi atau frasa pemulihan Anda. Lihat <a href=\"/help#sla\">SLA Dukungan</a>."
+      },
+      {
+        "question": "Bagaimana jika saya lupa kata sandi brankas?",
+        "answer": "Kami tidak dapat memulihkannya. Saat membuat brankas, kami menampilkan frasa pemulihan 24 kata satu kali — tulis di kertas. Tanpanya, tidak ada seorang pun (termasuk kami) yang bisa membuka brankas. Lihat <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  }
+}

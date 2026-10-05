@@ -1,0 +1,135 @@
+# SPA Routing — client-side routes are served by index.html.
+
+# Landing pages (SEO) — the static marketing HTML is the indexable
+# content, served at clean URLs with a 200 rewrite so the canonical
+# stays https://bookmarkforgeapp.com/ and /es/. Must precede the SPA
+# catch-all below.
+/       /landing.html  200
+/es     /es.html       200
+/es/    /es.html       200
+/fr     /fr.html       200
+/fr/    /fr.html       200
+/de     /de.html       200
+/de/    /de.html       200
+/pt     /pt.html       200
+/pt/    /pt.html       200
+/it     /it.html       200
+/it/    /it.html       200
+/ar     /ar.html       200
+/ar/    /ar.html       200
+/bg     /bg.html       200
+/bg/    /bg.html       200
+/cs     /cs.html       200
+/cs/    /cs.html       200
+/da     /da.html       200
+/da/    /da.html       200
+/el     /el.html       200
+/el/    /el.html       200
+/fi     /fi.html       200
+/fi/    /fi.html       200
+/he     /he.html       200
+/he/    /he.html       200
+/hi     /hi.html       200
+/hi/    /hi.html       200
+/hr     /hr.html       200
+/hr/    /hr.html       200
+/hu     /hu.html       200
+/hu/    /hu.html       200
+/id     /id.html       200
+/id/    /id.html       200
+/ja     /ja.html       200
+/ja/    /ja.html       200
+/ko     /ko.html       200
+/ko/    /ko.html       200
+/nl     /nl.html       200
+/nl/    /nl.html       200
+/no     /no.html       200
+/no/    /no.html       200
+/pl     /pl.html       200
+/pl/    /pl.html       200
+/ro     /ro.html       200
+/ro/    /ro.html       200
+/ru     /ru.html       200
+/ru/    /ru.html       200
+/sv     /sv.html       200
+/sv/    /sv.html       200
+/th     /th.html       200
+/th/    /th.html       200
+/tr     /tr.html       200
+/tr/    /tr.html       200
+/uk     /uk.html       200
+/uk/    /uk.html       200
+/vi     /vi.html       200
+/vi/    /vi.html       200
+/zh     /zh.html       200
+/zh/    /zh.html       200
+
+# Pocket comparison page (SEO)
+/pocket-alternative  /pocket-alternative.html  200
+
+# Help Center — static HTML with same headers as landing/legal
+/help  /help.html  200
+/help/  /help.html  200
+
+# Legacy markdown privacy policy -> HTML
+/privacy-and-terms.md  /privacy-and-terms.html  301
+
+# Legal pages — serve the static HTML directly before SPA catch-all
+/privacy  /privacy-and-terms.html  200
+/terms    /privacy-and-terms.html  200
+
+# Localized legal pages
+/ar/privacy-and-terms.html  /ar/privacy-and-terms.html  200
+/bg/privacy-and-terms.html  /bg/privacy-and-terms.html  200
+/cs/privacy-and-terms.html  /cs/privacy-and-terms.html  200
+/da/privacy-and-terms.html  /da/privacy-and-terms.html  200
+/de/privacy-and-terms.html  /de/privacy-and-terms.html  200
+/el/privacy-and-terms.html  /el/privacy-and-terms.html  200
+/es/privacy-and-terms.html  /es/privacy-and-terms.html  200
+/fi/privacy-and-terms.html  /fi/privacy-and-terms.html  200
+/fr/privacy-and-terms.html  /fr/privacy-and-terms.html  200
+/he/privacy-and-terms.html  /he/privacy-and-terms.html  200
+/hi/privacy-and-terms.html  /hi/privacy-and-terms.html  200
+/hr/privacy-and-terms.html  /hr/privacy-and-terms.html  200
+/hu/privacy-and-terms.html  /hu/privacy-and-terms.html  200
+/id/privacy-and-terms.html  /id/privacy-and-terms.html  200
+/it/privacy-and-terms.html  /it/privacy-and-terms.html  200
+/ja/privacy-and-terms.html  /ja/privacy-and-terms.html  200
+/ko/privacy-and-terms.html  /ko/privacy-and-terms.html  200
+/nl/privacy-and-terms.html  /nl/privacy-and-terms.html  200
+/no/privacy-and-terms.html  /no/privacy-and-terms.html  200
+/pl/privacy-and-terms.html  /pl/privacy-and-terms.html  200
+/pt/privacy-and-terms.html  /pt/privacy-and-terms.html  200
+/ro/privacy-and-terms.html  /ro/privacy-and-terms.html  200
+/ru/privacy-and-terms.html  /ru/privacy-and-terms.html  200
+/sv/privacy-and-terms.html  /sv/privacy-and-terms.html  200
+/th/privacy-and-terms.html  /th/privacy-and-terms.html  200
+/tr/privacy-and-terms.html  /tr/privacy-and-terms.html  200
+/uk/privacy-and-terms.html  /uk/privacy-and-terms.html  200
+/vi/privacy-and-terms.html  /vi/privacy-and-terms.html  200
+/zh/privacy-and-terms.html  /zh/privacy-and-terms.html  200
+
+# App entry (PWA start_url / share_target point here)
+/app  /index.html  200
+
+# App routes (SPA fallback)
+/*
+  !/index.html
+  !/*.js
+  !/*.css
+  !/*.ico
+  !/*.png
+  !/*.svg
+  !/*.json
+  !/*.woff2
+  !/*.woff
+  !/*.ttf
+  !/*.eot
+  !/*.webp
+  !/*.avif
+  !/*.webmanifest
+  !/*.xml
+  !/*.txt
+  !/*.html
+  !/*.bmf
+  /index.html 200

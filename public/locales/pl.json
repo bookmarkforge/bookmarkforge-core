@@ -1,0 +1,482 @@
+{
+  "lang": "pl",
+  "langName": "Polski",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/pl/",
+  "ogLocale": "pl_PL",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Prywatna alternatywa dla Pocket z AI (Zakładki i notatki)",
+  "description": "Zapisuj artykuły, notatki i dokumenty w prywatnym, zaszyfrowanym i w 100% lokalnym sejfie. Wyszukiwanie AI, edytor w stylu Notion i synchronizacja P2P. Darmowy plan: 2 500 zakładek.",
+  "ogTitle": "BookmarkForge — Prywatna alternatywa dla Pocket z AI (Zakładki i notatki)",
+  "ogDescription": "Zapisuj artykuły, notatki i dokumenty w prywatnym, zaszyfrowanym i w 100% lokalnym sejfie. Wyszukiwanie AI, edytor w stylu Notion i synchronizacja P2P. Darmowy plan: 2 500 zakładek.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Prywatna alternatywa dla Pocket z AI (Zakładki i notatki)",
+  "twitterDescription": "Zapisuj artykuły, notatki i dokumenty w prywatnym, zaszyfrowanym i w 100% lokalnym sejfie. Wyszukiwanie AI, edytor w stylu Notion i synchronizacja P2P. Darmowy plan: 2 500 zakładek.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Przejdź do głównej treści",
+  "navBrandAria": "Strona główna BookmarkForge",
+  "navAriaLabel": "Główna nawigacja",
+  "homeHref": "/pl/",
+  "navLinks": {
+    "pocketAlternative": "Alternatywa dla Pocket",
+    "features": "Funkcje",
+    "ai": "AI",
+    "privacy": "Prywatność",
+    "pricing": "Cennik",
+    "help": "Pomoc",
+    "raindropCompare": "Raindrop Comparison"
+  },
+  "langLink": {
+    "href": "/?lang=en",
+    "hreflang": "en",
+    "lang": "en",
+    "text": "English"
+  },
+  "navCta": "Otwórz aplikację",
+  "themeToggleAria": "Zmień motyw",
+  "hero": {
+    "badge": "Wersja 1.0",
+    "title": "Twój <span class='accent-text'>Prywatny AI Vault</span>",
+    "subtitle": "Prywatna alternatywa dla Pocket do zapisywania artykułów i czytania później: zakładki, notatki i dokumenty — zaszyfrowane na Twoim urządzeniu, przeszukiwalne za pomocą AI i synchronizowane peer-to-peer. Bez chmury. Bez śledzenia. 100% Twoje.",
+    "ctaPrimary": "Otwórz za darmo",
+    "ctaSecondary": "Zobacz ceny",
+    "pillars": [
+      {
+        "strong": "100% Lokalne",
+        "text": "Twoje dane nie opuszczają urządzenia"
+      },
+      {
+        "strong": "Zaszyfrowane",
+        "text": "AES-256-GCM + Argon2id"
+      },
+      {
+        "strong": "Offline",
+        "text": "działa bez internetu"
+      },
+      {
+        "strong": "Prywatne",
+        "text": "zerowa telemetria domyślnie"
+      }
+    ]
+  },
+  "demo": null,
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Czytaj później bez poświęcania prywatności",
+    "title": "Prywatna alternatywa dla Pocket",
+    "subtitle": "Pocket znika. BookmarkForge utrzymuje nawyk czytania — każdy artykuł, notatka i zaznaczenie zaszyfrowane na Twoim urządzeniu.",
+    "features": [
+      {
+        "title": "Zapisuj artykuły na później, Twoje na zawsze",
+        "text": "Zapisuj artykuły, filmy i PDF jednym kliknięciem — z aplikacji PWA, rozszerzenia przeglądarki lub menu udostępniania. W przeciwieństwie do Pocket, lista czytań żyje na Twoim urządzeniu, zaszyfrowana i działa offline."
+      },
+      {
+        "title": "Notatki w stylu Notion w każdym artykule",
+        "text": "Podkreślaj, podsumowuj i pisz notatki w każdej zakładce. Przekształć zapisany artykuł w własną bazę wiedzy — nie tylko listę linków."
+      },
+      {
+        "title": "Zero śledzenia, zero reklam",
+        "text": "BookmarkForge domyślnie nie używa kont, narzędzi analitycznych ani reklam. Twoje nawyki czytania to tylko Twoja odpowiedzialność."
+      }
+    ],
+    "ctaPrimary": "Zacznij zapisywać za darmo",
+    "ctaSecondary": "Pełne porównanie i przewodnik migracji",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": null,
+  "features": {
+    "id": "features",
+    "tag": "Wszystko, czego potrzebujesz",
+    "title": "Potężne funkcje do zarządzania wiedzą, wszystko działa lokalnie",
+    "items": [
+      {
+        "title": "Zakładki i dokumenty",
+        "text": "Zapisz dowolną stronę jednym kliknięciem. Pisz notatki tuż obok, w czystym, prostym edytorze. Pozostaje szybki nawet przy 100 000 zapisanych elementów."
+      },
+      {
+        "title": "Wyszukiwanie pełnotekstowe i semantyczne",
+        "text": "Znajdź rzeczy po słowie kluczowym lub znaczeniu — nawet gdy nie pamiętasz dokładnych słów. Raindrop pobiera za to 28 dolarów rocznie; tutaj jest to wliczone za darmo."
+      },
+      {
+        "title": "AI lokalne (WebLLM / Ollama) — Tylko Pro",
+        "text": "Zadawaj pytania dotyczące tego, co zapisałeś, i otrzymuj odpowiedzi z podanymi źródłami. Nic nie jest wysyłane do chmury i działa bez internetu. Wymaga Pro."
+      },
+      {
+        "title": "Czat RAG nad Twoimi danymi — Tylko Pro",
+        "text": "Pytaj o cokolwiek dotyczące swoich zakładek i notatek i otrzymuj odpowiedzi z cytatami. Tryb prywatny działa w 100% na Twojej maszynie. Wymaga Pro."
+      },
+      {
+        "title": "Synchronizacja P2P (WebRTC) — Tylko Pro",
+        "text": "Twoje urządzenia rozmawiają ze sobą bezpośrednio — bez serwera pomiędzy nimi, a wszystko pozostaje szyfrowane. Sparuj je, skanując kod QR. Do 5 urządzeń. Wymaga Pro."
+      },
+      {
+        "title": "Zaszyfrowane kopie zapasowe",
+        "text": "Automatyczne kopie zapasowe, które przechowujesz gdzie chcesz — dysk zewnętrzny, folder w chmurze, gdziekolwiek. Eksportuj wszystko do Markdown, JSON, CSV lub PDF kiedy chcesz. Klucze są Twoje."
+      },
+      {
+        "title": "Graf wiedzy",
+        "text": "Zobacz, jak łączą się Twoje notatki i zakładki. Filtruj po tagach, datach i podobieństwie i przemieszczaj się po nieskończonym płótnie."
+      },
+      {
+        "title": "Fiszki (Spaced Repetition) — Tylko Pro",
+        "text": "Zamień dowolny zapisany dokument w karty z pytaniami, które wypływają tuż przed tym, jak byś je zapomniał — ta sama idea planowania co w Anki. Wymaga Pro."
+      },
+      {
+        "title": "Prywatność domyślnie",
+        "text": "Bez kont, bez śledzenia, bez reklam. Jesteś klientem, nie produktem. Udostępnianie użycia istnieje, jest opcjonalne i pozostaje wyłączone, dopóki go nie włączysz."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI, które Cię szanuje",
+    "title": "Twoja Wiedza, Wzmocniona",
+    "subtitle": "BookmarkForge daje wybór: uruchom 100% lokalne modele w przeglądarce (WebLLM, WebGPU) z Pro, podłącz własne klucze API do dostawców chmurowych lub użyj lokalnego Ollama. Twoje instrukcje, Twoje dane, Twoje zasady.",
+    "providers": {
+      "title": "Obsługiwani dostawcy",
+      "list": [
+        {
+          "type": "local",
+          "name": "Wewnątrz Twojego komputera — modele WebLLM (TinyLlama, Llama 3.2, Phi-3.5-mini) — tylko Pro"
+        },
+        {
+          "type": "local",
+          "name": "Na Twojej własnej maszynie — Ollama (dowolny model, który uruchomisz)"
+        },{
+          "type": "cloud",
+          "name": "Chmura — OpenAI / GPT-4o (z własnym kluczem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Chmura — Anthropic Claude (z własnym kluczem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Chmura — Groq (z własnym kluczem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Chmura — OpenRouter lub inny niestandardowy dostawca (z własnym kluczem)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Tryby czatu",
+      "items": [
+        {
+          "title": "Tryb Prywatny",
+          "text": "Tylko AI lokalne (WebLLM/Ollama). Zero danych opuszcza urządzenie. Działa offline. Wymaga Pro dla WebLLM."
+        },
+        {
+          "title": "Tryb Wyszukiwania Web",
+          "text": "Łączy Twój sejf z wynikami wyszukiwania w czasie rzeczywistym (dostawcy chmury)."
+        },
+        {
+          "title": "Eksperci",
+          "text": "Specjalistyczne postacie: Programista, Pisarz, Analityk, Badacz. Wymaga Pro dla AI lokalnego."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Prywatność to nie funkcja — to fundament",
+    "subtitle": "Każda decyzja architektoniczna daje Ci kontrolę",
+    "items": [
+      {
+        "title": "Szyfrowanie end-to-end",
+        "text": "Twoja biblioteka jest szyfrowana kluczem wyprowadzonym z hasła głównego. Nigdy nie widzimy Twojego hasła ani treści."
+      },
+      {
+        "title": "100% lokalna architektura",
+        "text": "Wszystko żyje na Twoim komputerze. Serwer towarzyszący obsługuje tylko licencjonowanie, parowanie urządzeń i przekazywanie pytań AI w trybie chmurowym — nigdy Twoich treści."
+      },
+      {
+        "title": "Zero telemetrii domyślnie",
+        "text": "Bez analityki, bez raportów o awariach, bez śledzenia. Udostępnianie statystyk użycia lub raportów o błędach to osobny wybór, domyślnie wyłączony."
+      },
+      {
+        "title": "Klucze są Twoje",
+        "text": "Bez hasła głównego nie ma dostępu — nie ma tylnych drzwi typu \"zapomniane hasło\". Fraza odzyskiwania z 24 słów to jedyna droga do środka; przechowuj ją bezpiecznie."
+      },
+      {
+        "title": "Zgodność z GDPR",
+        "text": "Uzyskaj dostęp do swoich danych, popraw je, usuń lub zabierz ze sobą — wszystko lokalnie, kiedy chcesz."
+      },
+      {
+        "title": "Niezależność od dostawcy",
+        "text": "Eksportuj swoje dane w dowolnym momencie w otwartych formatach (JSON, Markdown, CSV, PDF). Twoja wiedza pozostaje Twoja i przenośna."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Proste, Uczciwe Ceny",
+    "subtitle": "Darmowy plan: 2 500 zakładek. Pro to jednorazowy zakup za $59 Wczesny dostęp (potem $79) — bez subskrypcji.",
+    "plans": [
+      {
+        "name": "Darmowy",
+        "price": "$ 0",
+        "period": "/ na zawsze",
+        "description": "Do osobistego archiwum (2 500 zakładek, działa na dowolnym urządzeniu — każde ma własny sejf)",
+        "features": [
+          {
+            "included": true,
+            "text": "2 500 zakładek, notatek i dokumentów"
+          },
+          {
+            "included": true,
+            "text": "Inteligentne wyszukiwanie (pełnotekstowe + semantyczne) — wliczone bezpłatnie; Raindrop pobiera za to opłatę roczną"
+          },
+          {
+            "included": true,
+            "text": "AI z własnym kluczem API (Ty płacisz dostawcy)"
+          },
+          {
+            "included": true,
+            "text": "Graf wiedzy"
+          },
+          {
+            "included": true,
+            "text": "Podstawowe szablony"
+          },
+          {
+            "included": true,
+            "text": "Eksport JSON/HTML"
+          },
+          {
+            "included": true,
+            "text": "PWA + rozszerzenia przeglądarki"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Synchronizacja P2P między urządzeniami"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> AI lokalne (WebLLM/Ollama)"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Czat RAG nad Twoimi danymi"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Fiszki ze spaced repetition"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Zaawansowany eksport (10+ formatów)"
+          }
+        ],
+        "cta": "Zacznij za darmo",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro",
+        "badge": "Najpopularniejsze — Wczesny dostęp 200",
+        "price": "$ 59",
+        "period": "Wczesny dostęp (potem $79)",
+        "description": "Dożywotnio dla v1 · 12 miesięcy aktualizacji funkcji · Bezpieczeństwo na zawsze · v2 z 60% zniżki",
+        "features": [
+          {
+            "included": true,
+            "text": "Wszystko z Darmowego"
+          },
+          {
+            "included": true,
+            "text": "Nieograniczone zakładki"
+          },
+          {
+            "included": true,
+            "text": "5 urządzenia"
+          },
+          {
+            "included": true,
+            "text": "Synchronizacja P2P na 5 urządzeniach"
+          },
+          {
+            "included": true,
+            "text": "AI lokalne (WebLLM, bez klucza API)"
+          },
+          {
+            "included": true,
+            "text": "Czat RAG nad Twoimi danymi"
+          },
+          {
+            "included": true,
+            "text": "Eksperci (Programista, Pisarz, Analityk, Badacz)"
+          },
+          {
+            "included": true,
+            "text": "Fiszki ze spaced repetition"
+          },
+          {
+            "included": true,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Zaawansowany eksport (10+ formatów)"
+          },
+          {
+            "included": true,
+            "text": "Sejf bezpieczeństwa (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Aktualizacje przez 12 miesięcy"
+          },
+          {
+            "included": true,
+            "text": "Wsparcie e-mail"
+          }
+        ],
+        "cta": "Pobierz Pro na zawsze",
+        "ctaHref": "/buy-pro",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "potem $79 cena regularna",
+        "sla": "Wsparcie: e-mail 48 h (pon–pt)"
+      }
+    ],
+    "legal": "Licencja dożywotnia dla BookmarkForge v1. Obejmuje wszystkie aktualizacje v1.x oraz 12 miesięcy aktualizacji funkcji. Aktualizacje bezpieczeństwa na zawsze. Przyszłe główne wersje (v2, v3) z 60% zniżki dla obecnych właścicieli. Zwrot pieniędzy w ciągu 30 dni przez Whop. <a href=\"/privacy-and-terms.html#terms\">Warunki</a> · <a href=\"/help#pricing\">Dowiedz się więcej</a>"
+  },
+  "faq": {
+    "title": "Najczęściej zadawane pytania",
+    "items": [
+      {
+        "question": "Czy darmowy plan jest naprawdę darmowy na zawsze?",
+        "answer": "Tak. Bez ograniczonego okresu próbnego ani subskrypcji. Darmowy plan obejmuje 2 500 zakładek, wyszukiwanie pełnotekstowe i semantyczne, graf wiedzy i AI z własnym kluczem API (Ty płacisz dostawcy)."
+      },
+      {
+        "question": "Co oznacza 'jednorazowy zakup' w Pro?",
+        "answer": "Płacisz jednorazowo ($79), a licencja jest Twoja na zawsze. Obejmuje wszystkie aktualizacje przez 12 miesięcy. Bez powtarzających się opłat. Klucz licencyjny dostarczany natychmiast przez Whop."
+      },
+      {
+        "question": "Jakie metody płatności akceptujecie?",
+        "answer": "Przez Whop: karta kredytowa, PayPal i kryptowaluty. Nigdy nie widzimy Twoich danych płatności."
+      },
+      {
+        "question": "Wsparcie — jak szybko odpowiadacie?",
+        "answer": "Społeczność: pomoc społeczności przez <a href=\"/help\">Centrum pomocy</a> + GitHub Discussions (w miarę możliwości). Pro: e-mail w ciągu 48 h w dni robocze. Skarbiec jest szyfrowany — nie widzimy Twoich danych, więc nigdy nie prosimy o hasło ani frazę odzyskiwania. Zobacz <a href=\"/help#sla\">SLA wsparcia</a>."
+      },
+      {
+        "question": "Co jeśli zapomnę hasła do skarbca?",
+        "answer": "Nie możemy go odzyskać. Przy tworzeniu skarbca pokazujemy jednorazowo frazę odzyskiwania złożoną z 24 słów — zapisz ją na papierze. Bez niej nikt (my też) nie otworzy skarbca. Zobacz <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Gotowy, aby Przejąć Kontrolę nad Wiedzą?",
+    "text": "Dołącz do tysięcy badaczy, programistów i studentów, którzy ufają BookmarkForge jako swojemu drugiemu mózgowi.",
+    "ctaPrimary": "Otwórz za darmo",
+    "ctaSecondary": "Uaktualnij do Pro",
+    "note": "Konto nie jest potrzebne. Działa natychmiast w przeglądarce. Darmowy plan: 2 500 zakładek."
+  },
+  "footer": {
+    "brand": "Twój prywatny AI vault na wiedzę. 100% lokalny.",
+    "product": {
+      "title": "Produkt",
+      "links": [
+        "Funkcje",
+        "Możliwości AI",
+        "Prywatność",
+        "Ceny",
+        "Otwórz aplikację"
+      ]
+    },
+    "resources": {
+      "title": "Zasoby",
+      "links": [
+        "Porównanie z Pocket",
+        "Prywatność i warunki"
+      ]
+    },
+    "languages": {
+      "title": "Języki",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Wsparcie",
+      "links": [
+        "Skontaktuj się z nami"
+      ],
+      "helpCenter": "Centrum pomocy",
+      "errorCodes": "Kody błędów"
+    },
+    "copyright": "© 2026 BookmarkForge. Wszelkie prawa zastrzeżone.",
+    "legal": [
+      "Polityka prywatności",
+      "Regulamin",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Zapisuj artykuły, notatki i dokumenty w prywatnym, zaszyfrowanym i w 100% lokalnym sejfie. Wyszukiwanie AI, edytor w stylu Notion i synchronizacja P2P. Darmowy plan: 2 500 zakładek.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "Darmowy",
+        "price": "0",
+        "currency": "USD",
+        "description": "Do osobistego archiwum (2 500 zakładek, działa na dowolnym urządzeniu — każde ma własny sejf)"
+      },
+      {
+        "name": "Pro",
+        "price": "59",
+        "currency": "USD",
+        "description": "Dożywotnio dla v1 · 12 miesięcy aktualizacji funkcji · Bezpieczeństwo na zawsze · v2 z 60% zniżki"
+      }
+    ],
+    "featureList": [
+      "Przechowywanie lokalne",
+      "Szyfrowanie end-to-end",
+      "Działa offline",
+      "Wyszukiwanie AI",
+      "Edytor w stylu Notion",
+      "Synchronizacja P2P"
+    ],
+    "faq": [
+      {
+        "question": "Czy darmowy plan jest naprawdę darmowy na zawsze?",
+        "answer": "Tak. Bez ograniczonego okresu próbnego ani subskrypcji. Darmowy plan obejmuje 2 500 zakładek, wyszukiwanie pełnotekstowe i semantyczne, graf wiedzy i AI z własnym kluczem API (Ty płacisz dostawcy)."
+      },
+      {
+        "question": "Co oznacza 'jednorazowy zakup' w Pro?",
+        "answer": "Płacisz jednorazowo ($79), a licencja jest Twoja na zawsze. Obejmuje wszystkie aktualizacje przez 12 miesięcy. Bez powtarzających się opłat. Klucz licencyjny dostarczany natychmiast przez Whop."
+      },
+      {
+        "question": "Jakie metody płatności akceptujecie?",
+        "answer": "Przez Whop: karta kredytowa, PayPal i kryptowaluty. Nigdy nie widzimy Twoich danych płatności."
+      },
+      {
+        "question": "Wsparcie — jak szybko odpowiadacie?",
+        "answer": "Społeczność: pomoc społeczności przez <a href=\"/help\">Centrum pomocy</a> + GitHub Discussions (w miarę możliwości). Pro: e-mail w ciągu 48 h w dni robocze. Skarbiec jest szyfrowany — nie widzimy Twoich danych, więc nigdy nie prosimy o hasło ani frazę odzyskiwania. Zobacz <a href=\"/help#sla\">SLA wsparcia</a>."
+      },
+      {
+        "question": "Co jeśli zapomnę hasła do skarbca?",
+        "answer": "Nie możemy go odzyskać. Przy tworzeniu skarbca pokazujemy jednorazowo frazę odzyskiwania złożoną z 24 słów — zapisz ją na papierze. Bez niej nikt (my też) nie otworzy skarbca. Zobacz <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  }
+}

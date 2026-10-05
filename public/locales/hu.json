@@ -1,0 +1,482 @@
+{
+  "lang": "hu",
+  "langName": "Magyar",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/hu/",
+  "ogLocale": "hu_HU",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Privát Pocket-alternatíva AI-vel (Könyvjelzők és jegyzetek)",
+  "description": "Cikkek, jegyzetek és dokumentumok mentése privát, titkosított és 100%-ban helyi tárhelyre. AI keresés, Notion-szerkesztő és P2P szinkronizálás. Ingyenes terv: 2 500 könyvjelző.",
+  "ogTitle": "BookmarkForge — Privát Pocket-alternatíva AI-vel (Könyvjelzők és jegyzetek)",
+  "ogDescription": "Cikkek, jegyzetek és dokumentumok mentése privát, titkosított és 100%-ban helyi tárhelyre. AI keresés, Notion-szerkesztő és P2P szinkronizálás. Ingyenes terv: 2 500 könyvjelző.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Privát Pocket-alternatíva AI-vel (Könyvjelzők és jegyzetek)",
+  "twitterDescription": "Cikkek, jegyzetek és dokumentumok mentése privát, titkosított és 100%-ban helyi tárhelyre. AI keresés, Notion-szerkesztő és P2P szinkronizálás. Ingyenes terv: 2 500 könyvjelző.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Ugrás a fő tartalomhoz",
+  "navBrandAria": "BookmarkForge kezdőlap",
+  "navAriaLabel": "Fő navigáció",
+  "homeHref": "/hu/",
+  "navLinks": {
+    "pocketAlternative": "Pocket alternatíva",
+    "features": "Funkciók",
+    "ai": "AI",
+    "privacy": "Adatvédelem",
+    "pricing": "Árak",
+    "help": "Súgó",
+    "raindropCompare": "Raindrop Comparison"
+  },
+  "langLink": {
+    "href": "/?lang=en",
+    "hreflang": "en",
+    "lang": "en",
+    "text": "English"
+  },
+  "navCta": "Alkalmazás megnyitása",
+  "themeToggleAria": "Téma váltása",
+  "hero": {
+    "badge": "1.0 verzió",
+    "title": "Az Ön <span class='accent-text'>Privát AI Tárhelye</span>",
+    "subtitle": "Privát alternatíva a Pocket helyett cikkek mentéséhez és későbbi olvasáshoz: könyvjelzők, jegyzetek és dokumentumok — titkosítva az eszközén, AI-vel kereshető és peer-to-peer szinkronizálva. Felhő nélkül. Nyomkövetés nélkül. 100%-ban az Öné.",
+    "ctaPrimary": "Megnyitás Ingyenesen",
+    "ctaSecondary": "Árak Megtekintése",
+    "pillars": [
+      {
+        "strong": "100% Helyi",
+        "text": "adatai nem hagyják el az eszközét"
+      },
+      {
+        "strong": "Titkosított",
+        "text": "AES-256-GCM + Argon2id"
+      },
+      {
+        "strong": "Offline",
+        "text": "internet nélkül működik"
+      },
+      {
+        "strong": "Privát",
+        "text": "nulla telemetria alapértelmezetten"
+      }
+    ]
+  },
+  "demo": null,
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Olvasson később kompromisszum nélkül",
+    "title": "A Privát Pocket-alternatíva",
+    "subtitle": "A Pocket eltűnik. A BookmarkForge életben tartja az olvasási szokást — minden cikk, jegyzet és kiemelés titkosítva az eszközén.",
+    "features": [
+      {
+        "title": "Mentse el a cikkeket későbbre, Övé Örökre",
+        "text": "Cikkeket, videókat és PDF-eket menthet egyetlen kattintással — a PWA alkalmazásból, böngészőbővítésből vagy megosztási menüből. A Pocket-tel ellentétben az olvasólistája az eszközén él, titkosítva, és offline működik."
+      },
+      {
+        "title": "Notion-szerű jegyzetek minden cikkben",
+        "text": "Emeljen ki, foglaljon össze és írjon jegyzeteket bármely könyvjelzőben. Alakítson át egy mentett cikket saját tudásbázisává — ne csak egy linklistává."
+      },
+      {
+        "title": "Nulla nyomkövetés, nulla hirdetés",
+        "text": "A BookmarkForge alapértelmezetten nem használ fiókokat, analitikát vagy hirdetéseket. Az olvasási szokásai kizárólag az Ön felelőssége."
+      }
+    ],
+    "ctaPrimary": "Kezdjen El Ingyenesen",
+    "ctaSecondary": "Teljes összehasonlítás és migrációs útmutató",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": null,
+  "features": {
+    "id": "features",
+    "tag": "Minden, amire szüksége van",
+    "title": "Erőteljes funkciók a tudás kezeléséhez, minden helyben fut",
+    "items": [
+      {
+        "title": "Könyvjelzők és dokumentumok",
+        "text": "Ments el bármilyen oldalt egy kattintással. Írj jegyzeteket közvetlenül mellé, egy letisztult, egyszerű szerkesztőben. 100 000 mentett elem mellett is gyors marad."
+      },
+      {
+        "title": "Teljes szöveges és szemantikus keresés",
+        "text": "Keress kulcsszó vagy jelentés alapján — akkor is, ha nem emlékszel a pontos szavakra. A Raindrop évi 28 dollárt kér ezért; itt ez ingyen jár."
+      },
+      {
+        "title": "Helyi AI (WebLLM / Ollama) — Csak Pro",
+        "text": "Kérdezz arról, amit elmentettél, és kapj válaszokat forrásokkal együtt. Semmi sem megy a felhőbe, és internet nélkül is működik. Pro szükséges."
+      },
+      {
+        "title": "RAG chat az adatai felett — Csak Pro",
+        "text": "Kérdezz bármit a könyvjelzőidről és jegyzeteidről, és kapj idézett válaszokat. A privát mód 100%-ban a saját gépeden fut. Pro szükséges."
+      },
+      {
+        "title": "P2P szinkronizálás (WebRTC) — Csak Pro",
+        "text": "Az eszközeid közvetlenül beszélnek egymással — szerver nélkül, és minden titkosítva marad. Párosítsd őket QR-kód beolvasásával. Legfeljebb 5 eszköz. Pro szükséges."
+      },
+      {
+        "title": "Titkosított biztonsági mentések",
+        "text": "Automatikus biztonsági mentések, amiket ott tárolsz, ahol akarsz — külső meghajtó, felhős mappa, bárhol. Exportálj mindent Markdown, JSON, CSV vagy PDF formátumba, amikor akarsz. A kulcsok nálad vannak."
+      },
+      {
+        "title": "Tudásgráf",
+        "text": "Lásd, hogyan kapcsolódnak a jegyzeteid és könyvjelzőid. Szűrj címkék, dátumok és hasonlóság alapján, és navigálj egy végtelen vásznon."
+      },
+      {
+        "title": "Flashcards (Spaced Repetition) — Csak Pro",
+        "text": "Alakíts bármilyen mentett dokumentumot kérdéskártyákká, amik épp mielőtt elfelejtenéd, felbukkannak — ugyanaz az ütemezési elv, mint az Ankiban. Pro szükséges."
+      },
+      {
+        "title": "Adatvédelem alapértelmezetten",
+        "text": "Nincs fiók, nincs követés, nincs reklám. Te vagy az ügyfél, nem a termék. A használatmegosztás létezik, opcionális, és addig marad kikapcsolva, amíg be nem kapcsolod."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI, amely tiszteletben tartja Önt",
+    "title": "Az Ön Tudása, Erősítve",
+    "subtitle": "A BookmarkForge választási lehetőséget ad: futtasson 100%-ban helyi modelleket a böngészőjében (WebLLM, WebGPU) Pro-val, csatlakoztassa saját API-kulcsait felhőszolgáltatókhoz, vagy használjon helyi Ollama-t. Az utasításai, az adatai, a szabályai.",
+    "providers": {
+      "title": "Támogatott szolgáltatók",
+      "list": [
+        {
+          "type": "local",
+          "name": "A számítógépeden belül — WebLLM modellek (TinyLlama, Llama 3.2, Phi-3.5-mini) — csak Pro"
+        },
+        {
+          "type": "local",
+          "name": "A saját gépeden — Ollama (bármilyen modell, amit futtatsz)"
+        },{
+          "type": "cloud",
+          "name": "Felhő — OpenAI / GPT-4o (a saját kulcsoddal)"
+        },
+        {
+          "type": "cloud",
+          "name": "Felhő — Anthropic Claude (a saját kulcsoddal)"
+        },
+        {
+          "type": "cloud",
+          "name": "Felhő — Groq (a saját kulcsoddal)"
+        },
+        {
+          "type": "cloud",
+          "name": "Felhő — OpenRouter vagy más egyéni szolgáltató (a saját kulcsoddal)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Chat módok",
+      "items": [
+        {
+          "title": "Privát Mód",
+          "text": "Csak helyi AI (WebLLM/Ollama). Nulla adat hagyja el az eszközt. Offline működik. Pro szükséges a WebLLM-hez."
+        },
+        {
+          "title": "Web Kereső Mód",
+          "text": "Összekapcsolja a tárhelyét valós idejű keresési eredményekkel (felhőszolgáltatók)."
+        },
+        {
+          "title": "Szakértő Ügynökök",
+          "text": "Specializált szereplők: Programozó, Író, Elemző, Kutató. Pro szükséges a helyi AI-hoz."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Az adatvédelem nem funkció — az alap",
+    "subtitle": "Minden architektúradöntés Önt helyezi irányításba",
+    "items": [
+      {
+        "title": "Végpontok közötti titkosítás",
+        "text": "A könyvtárad a mesterjelszavadból származó kulccsal van titkosítva. Soha nem látjuk a jelszavadat vagy a tartalmadat."
+      },
+      {
+        "title": "100% helyi architektúra",
+        "text": "Minden a te számítógépeden él. A kísérő szerver csak a licencelést, az eszközpárosítást és a felhős AI-kérdéseid továbbítását kezeli — soha nem a tartalmadat."
+      },
+      {
+        "title": "Nulla telemetria alapértelmezetten",
+        "text": "Nincs analitika, nincs hibajelentés, nincs követés. A használati statisztikák vagy hibajelentések megosztása külön választás, alapértelmezés szerint kikapcsolva."
+      },
+      {
+        "title": "A kulcsok az Önék",
+        "text": "Mesterjelszó nélkül nincs hozzáférés — nincs \"elfelejtett jelszó\" hátsó ajtó. A 24 szavas helyreállítási kifejezés az egyetlen út befelé; őrizd meg."
+      },
+      {
+        "title": "GDPR megfelelés",
+        "text": "Férj hozzá az adataidhoz, javítsd, töröld vagy vidd magaddal őket — minden helyben, bármikor."
+      },
+      {
+        "title": "Szolgáltató-függetlenség",
+        "text": "Exportáld az adataidat bármikor nyílt formátumokban (JSON, Markdown, CSV, PDF). A tudásod a tiéd marad és hordozható."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Egyszerű, Igazságos Árak",
+    "subtitle": "Ingyenes terv: 2 500 könyvjelző. Pro egyszeri vásárlás 79 $ — előfizetés nélkül.",
+    "plans": [
+      {
+        "name": "Ingyenes",
+        "price": "$ 0",
+        "period": "/ örök",
+        "description": "Személyes archívumhoz (2 500 könyvjelző, bármely eszközön működik — mindegyiknek saját széfje van)",
+        "features": [
+          {
+            "included": true,
+            "text": "2 500 könyvjelző, jegyzet és dokumentum"
+          },
+          {
+            "included": true,
+            "text": "Okos keresés (teljes szöveges + szemantikus) — ingyenesen tartalmazza; a Raindrop évente fizetést kér érte"
+          },
+          {
+            "included": true,
+            "text": "AI saját API-kulcsával (Ön fizeti a szolgáltatót)"
+          },
+          {
+            "included": true,
+            "text": "Tudásgráf"
+          },
+          {
+            "included": true,
+            "text": "Alap sablonok"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML exportálás"
+          },
+          {
+            "included": true,
+            "text": "PWA + böngészőbővítések"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> P2P szinkronizálás eszközök között"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Helyi AI (WebLLM/Ollama)"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> RAG chat az adatai felett"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Flashcards spaced repetitionnal"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Haladó exportálás (10+ formátum)"
+          }
+        ],
+        "cta": "Kezdjen El Ingyenesen",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro",
+        "badge": "Legnépszerűbb — Korai madár 200",
+        "price": "$ 59",
+        "period": "Korai madár (utána $79)",
+        "description": "Élethosszig v1-hez · 12 hónap funkciófrissítés · Biztonság örökre · v2 60% kedvezménnyel",
+        "features": [
+          {
+            "included": true,
+            "text": "Minden az Ingyenesben"
+          },
+          {
+            "included": true,
+            "text": "Korlátlan könyvjelzők"
+          },
+          {
+            "included": true,
+            "text": "5 eszköz"
+          },
+          {
+            "included": true,
+            "text": "P2P szinkronizálás 5 eszközön"
+          },
+          {
+            "included": true,
+            "text": "Helyi AI (WebLLM, API-kulcs nélkül)"
+          },
+          {
+            "included": true,
+            "text": "RAG chat az adatai felett"
+          },
+          {
+            "included": true,
+            "text": "Szakértő ügynökök (Programozó, Író, Elemző, Kutató)"
+          },
+          {
+            "included": true,
+            "text": "Flashcards spaced repetitionnal"
+          },
+          {
+            "included": true,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Haladó exportálás (10+ formátum)"
+          },
+          {
+            "included": true,
+            "text": "Biztonsági tárhely (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Frissítések 12 hónapig"
+          },
+          {
+            "included": true,
+            "text": "E-mail támogatás"
+          }
+        ],
+        "cta": "Szerezze be a Pro-t Örökre",
+        "ctaHref": "/buy-pro",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "utána $79 normál ár",
+        "sla": "Támogatás: e-mail 48 óra (H–P)"
+      }
+    ],
+    "legal": "Élethosszig tartó licenc a BookmarkForge v1-hez. Tartalmazza az összes v1.x frissítést és 12 hónap funkciófrissítést. Biztonsági frissítések örökre. Jövőbeli főverziók (v2, v3) 60% kedvezménnyel a meglévő tulajdonosoknak. 30 napos visszatérítés Whopon keresztül. <a href=\"/privacy-and-terms.html#terms\">Feltételek</a> · <a href=\"/help#pricing\">Továbbiak</a>"
+  },
+  "faq": {
+    "title": "Gyakran Ismételt Kérdések",
+    "items": [
+      {
+        "question": "Az ingyenes terv valóban ingyenes örökre?",
+        "answer": "Igen. Korlátozott próbaidőszak vagy előfizetés nélkül. Az ingyenes terv tartalmaz 2 500 könyvjelzőt, teljes szöveges és szemantikus keresést, tudásgrafot és AI-t saját API-kulcsával (Ön fizeti a szolgáltatót)."
+      },
+      {
+        "question": "Mit jelent az 'egyszeri vásárlás' a Pro-ban?",
+        "answer": "Egyszer fizet (79 $), és a licenc Öré örökre. Tartalmazza az összes frissítést 12 hónapig. Ismétlődő díjak nélkül. A licenckulcs azonnal megérkezik a Whopon keresztül."
+      },
+      {
+        "question": "Milyen fizetési módokat fogadnak el?",
+        "answer": "Whopon keresztül: hitelkártya, PayPal és kriptovaluta. Soha nem látjuk a fizetési adatait."
+      },
+      {
+        "question": "Támogatás — milyen gyorsan válaszoltok?",
+        "answer": "Közösség: közösségi segítség a <a href=\"/help\">Súgóközponton</a> keresztül + GitHub Discussions (lehetőségekhez képest). Pro: e-mail 48 órán belül munkanapokon. A széf titkosított — nem látjuk az adataidat, ezért soha nem kérjük a jelszavadat vagy a helyreállítási kifejezésedet. Lásd: <a href=\"/help#sla\">Támogatási SLA</a>."
+      },
+      {
+        "question": "Mi történik, ha elfelejtem a széf jelszavát?",
+        "answer": "Nem tudjuk helyreállítani. Széf létrehozásakor egyszer megmutatjuk a 24 szavas helyreállítási kifejezést — írd fel papírra. Nélküle senki (mi sem) nem tudja kinyitni a széfet. Lásd: <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Készen Áll a Tudása Feletti Irányításra?",
+    "text": "Csatlakozzon több ezer kutatóhoz, fejlesztőhöz és hallgatóhoz, akik a BookmarkForge-ban bíznak mint második agyukban.",
+    "ctaPrimary": "Megnyitás Ingyenesen",
+    "ctaSecondary": "Frissítés Pro-ra",
+    "note": "Fiók nem szükséges. Azonnal működik a böngészőjében. Ingyenes terv: 2 500 könyvjelző."
+  },
+  "footer": {
+    "brand": "Az Ön privát AI tárhelye a tudáshoz. 100% helyi.",
+    "product": {
+      "title": "Termék",
+      "links": [
+        "Funkciók",
+        "AI lehetőségek",
+        "Adatvédelem",
+        "Árak",
+        "Alkalmazás Megnyitása"
+      ]
+    },
+    "resources": {
+      "title": "Erőforrások",
+      "links": [
+        "Pocket összehasonlítás",
+        "Adatvédelem és feltételek"
+      ]
+    },
+    "languages": {
+      "title": "Nyelvek",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Támogatás",
+      "links": [
+        "Kapcsolatfelvétel"
+      ],
+      "helpCenter": "Súgóközpont",
+      "errorCodes": "Hibakódok"
+    },
+    "copyright": "© 2026 BookmarkForge. Minden jog fenntartva.",
+    "legal": [
+      "Adatvédelmi Irányelvek",
+      "Szolgáltatási Feltételek",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Cikkek, jegyzetek és dokumentumok mentése privát, titkosított és 100%-ban helyi tárhelyre. AI keresés, Notion-szerkesztő és P2P szinkronizálás. Ingyenes terv: 2 500 könyvjelző.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "Ingyenes",
+        "price": "0",
+        "currency": "USD",
+        "description": "Személyes archívumhoz (2 500 könyvjelző, bármely eszközön működik — mindegyiknek saját széfje van)"
+      },
+      {
+        "name": "Pro",
+        "price": "59",
+        "currency": "USD",
+        "description": "Élethosszig v1-hez · 12 hónap funkciófrissítés · Biztonság örökre · v2 60% kedvezménnyel"
+      }
+    ],
+    "featureList": [
+      "Helyi tárolás",
+      "Végponttól végpontig titkosítás",
+      "Offline is működik",
+      "AI-keresés",
+      "Notion-stílusú szerkesztő",
+      "P2P szinkronizálás"
+    ],
+    "faq": [
+      {
+        "question": "Az ingyenes terv valóban ingyenes örökre?",
+        "answer": "Igen. Korlátozott próbaidőszak vagy előfizetés nélkül. Az ingyenes terv tartalmaz 2 500 könyvjelzőt, teljes szöveges és szemantikus keresést, tudásgrafot és AI-t saját API-kulcsával (Ön fizeti a szolgáltatót)."
+      },
+      {
+        "question": "Mit jelent az 'egyszeri vásárlás' a Pro-ban?",
+        "answer": "Egyszer fizet (79 $), és a licenc Öré örökre. Tartalmazza az összes frissítést 12 hónapig. Ismétlődő díjak nélkül. A licenckulcs azonnal megérkezik a Whopon keresztül."
+      },
+      {
+        "question": "Milyen fizetési módokat fogadnak el?",
+        "answer": "Whopon keresztül: hitelkártya, PayPal és kriptovaluta. Soha nem látjuk a fizetési adatait."
+      },
+      {
+        "question": "Támogatás — milyen gyorsan válaszoltok?",
+        "answer": "Közösség: közösségi segítség a <a href=\"/help\">Súgóközponton</a> keresztül + GitHub Discussions (lehetőségekhez képest). Pro: e-mail 48 órán belül munkanapokon. A széf titkosított — nem látjuk az adataidat, ezért soha nem kérjük a jelszavadat vagy a helyreállítási kifejezésedet. Lásd: <a href=\"/help#sla\">Támogatási SLA</a>."
+      },
+      {
+        "question": "Mi történik, ha elfelejtem a széf jelszavát?",
+        "answer": "Nem tudjuk helyreállítani. Széf létrehozásakor egyszer megmutatjuk a 24 szavas helyreállítási kifejezést — írd fel papírra. Nélküle senki (mi sem) nem tudja kinyitni a széfet. Lásd: <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  }
+}

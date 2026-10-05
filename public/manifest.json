@@ -1,0 +1,88 @@
+{
+  "name": "BookmarkForge",
+  "short_name": "BForge",
+  "description": "Your private, AI-powered knowledge vault. 100% Local-First.",
+  "id": "/",
+  "start_url": "/app",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#09090b",
+  "theme_color": "#00aeef",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["productivity", "utilities"],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop-main.png",
+      "sizes": "1280x800",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "BookmarkForge main interface showing bookmark management"
+    },
+    {
+      "src": "/screenshots/mobile-main.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "BookmarkForge mobile interface"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/icons/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/logo-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/logo-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    { "name": "Quick Save", "short_name": "Save", "url": "/capture", "icons": [{ "src": "/icons/logo-192.png", "sizes": "192x192" }] },
+    { "name": "Search", "short_name": "Search", "url": "/app?search=true", "icons": [{ "src": "/icons/logo-192.png", "sizes": "192x192" }] },
+    { "name": "My Vault", "short_name": "Vault", "url": "/bookmarks", "icons": [{ "src": "/icons/logo-192.png", "sizes": "192x192" }] }
+  ],
+  "related_applications": [
+    {
+      "platform": "web",
+      "url": "https://bookmarkforgeapp.com"
+    }
+  ],
+  "prefer_related_applications": false,
+  "share_target": {
+    "action": "/app",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "url": "url",
+      "title": "title",
+      "text": "text"
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+bookmark",
+      "url": "/app?add=%s"
+    }
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}

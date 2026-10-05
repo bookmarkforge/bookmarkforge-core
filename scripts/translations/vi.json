@@ -1,0 +1,499 @@
+{
+  "lang": "vi",
+  "langName": "Tiếng Việt",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforge.com/vi/",
+  "ogLocale": "vi_VN",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Giải pháp thay thế Private cho Pocket với AI (Bookmark và ghi chú)",
+  "description": "Lưu bài viết, ghi chú và tài liệu trong một vault riêng tư, mã hóa và 100% cục bộ. Tìm kiếm AI, trình soạn thảo kiểu Notion và đồng bộ P2P. Kế hoạch miễn phí: 2.500 bookmark.",
+  "ogTitle": "BookmarkForge — Giải pháp thay thế Private cho Pocket với AI (Bookmark và ghi chú)",
+  "ogDescription": "Lưu bài viết, ghi chú và tài liệu trong một vault riêng tư, mã hóa và 100% cục bộ. Tìm kiếm AI, trình soạn thảo kiểu Notion và đồng bộ P2P. Kế hoạch miễn phí: 2.500 bookmark.",
+  "ogImage": "https://bookmarkforge.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Giải pháp thay thế Private cho Pocket với AI (Bookmark và ghi chú)",
+  "twitterDescription": "Lưu bài viết, ghi chú và tài liệu trong một vault riêng tư, mã hóa và 100% cục bộ. Tìm kiếm AI, trình soạn thảo kiểu Notion và đồng bộ P2P. Kế hoạch miễn phí: 2.500 bookmark.",
+  "twitterImage": "https://bookmarkforge.com/og-image.png",
+  "skipLink": "Chuyển đến nội dung chính",
+  "navBrandAria": "Trang chủ BookmarkForge",
+  "navAriaLabel": "Điều hướng chính",
+  "homeHref": "/vi/",
+  "navLinks": {
+    "pocketAlternative": "Thay thế Pocket",
+    "features": "Tính năng",
+    "ai": "AI",
+    "privacy": "Quyền riêng tư",
+    "pricing": "Bảng giá",
+    "help": "Trợ giúp",
+    "raindropCompare": "Raindrop Comparison"
+  },
+  "langLink": {
+    "href": "/?lang=en",
+    "hreflang": "en",
+    "lang": "en",
+    "text": "English"
+  },
+  "navCta": "Mở ứng dụng",
+  "themeToggleAria": "Đổi giao diện",
+  "hero": {
+    "badge": "Phiên bản 1.0",
+    "title": "<span class='accent-text'>AI Vault Riêng Tư</span> Của Bạn",
+    "subtitle": "Giải pháp thay thế private cho Pocket để lưu bài viết và đọc sau: bookmark, ghi chú và tài liệu — mã hóa trên thiết bị của bạn, tìm kiếm được bằng AI và đồng bộ peer-to-peer. Không có cloud. Không theo dõi. 100% của bạn.",
+    "ctaPrimary": "Mở Miễn Phí",
+    "ctaSecondary": "Xem Giá",
+    "pillars": [
+      {
+        "strong": "100% Cục Bộ",
+        "text": "dữ liệu của bạn không rời khỏi thiết bị"
+      },
+      {
+        "strong": "Mã Hóa",
+        "text": "AES-256-GCM + Argon2id"
+      },
+      {
+        "strong": "Offline",
+        "text": "hoạt động không cần internet"
+      },
+      {
+        "strong": "Riêng Tư",
+        "text": "zero telemetri theo mặc định"
+      }
+    ],
+    "affiliate": {
+      "badge": "Kiếm tiền",
+      "title": "Chương trình Affiliate",
+      "subtitle": "Chia sẻ BookmarkForge và kiếm 30% hoa hồng cho mỗi lượt mua được giới thiệu. Bắt đầu kiếm tiền ngay hôm nay!",
+      "cta": "Tham gia chương trình Affiliate",
+      "details": [
+        "30% hoa hồng cho mỗi đơn hàng",
+        "Thu nhập không giới hạn",
+        "Thanh toán tự động qua Whop",
+        "Theo dõi thời gian thực"
+      ]
+    }
+  },
+  "demo": null,
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Đọc sau mà không hy sinh quyền riêng tư",
+    "title": "Giải Pháp Thay Thế Private Cho Pocket",
+    "subtitle": "Pocket biến mất. BookmarkForge giữ thói quen đọc sống — mỗi bài viết, ghi chú và đánh dấu đều được mã hóa trên thiết bị của bạn.",
+    "features": [
+      {
+        "title": "Lưu bài viết để đọc sau, mãi là của bạn",
+        "text": "Lưu bài viết, video và PDF bằng một cú nhấp — từ ứng dụng PWA, tiện ích trình duyệt hoặc menu chia sẻ. Không giống Pocket, danh sách đọc của bạn sống trên thiết bị, được mã hóa và hoạt động offline."
+      },
+      {
+        "title": "Ghi chú kiểu Notion trong mỗi bài viết",
+        "text": "Đánh dấu, tóm tắt và viết ghi chú trong mỗi bookmark. Biến một bài viết đã lưu thành cơ sở tri thức của riêng bạn — không chỉ là danh sách liên kết."
+      },
+      {
+        "title": "Zero theo dõi, zero quảng cáo",
+        "text": "BookmarkForge theo mặc định không sử dụng tài khoản, phân tích hay quảng cáo. Thói quen đọc của bạn chỉ là trách nhiệm của bạn."
+      }
+    ],
+    "ctaPrimary": "Bắt Đầu Lưu Miễn Phí",
+    "ctaSecondary": "So sánh đầy đủ và hướng dẫn di chuyển",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": null,
+  "features": {
+    "id": "features",
+    "tag": "Tất cả những gì bạn cần",
+    "title": "Các tính năng mạnh mẽ để quản lý tri thức, tất cả chạy cục bộ",
+    "items": [
+      {
+        "title": "Bookmark và tài liệu",
+        "text": "Lưu bất kỳ trang nào chỉ với một cú nhấp. Ghi chú ngay bên cạnh, trong trình soạn thảo sạch sẽ, đơn giản. Vẫn nhanh ngay cả với 100.000 mục đã lưu."
+      },
+      {
+        "title": "Tìm kiếm đầy đủ văn bản và ngữ nghĩa",
+        "text": "Tìm mọi thứ theo từ khóa hoặc theo ý nghĩa — ngay cả khi bạn không nhớ chính xác từ ngữ. Raindrop tính 28 đô la mỗi năm cho việc này; ở đây được bao gồm miễn phí."
+      },
+      {
+        "title": "AI cục bộ (WebLLM / Ollama) — Chỉ Pro",
+        "text": "Đặt câu hỏi về những gì bạn đã lưu và nhận câu trả lời kèm nguồn được hiển thị. Không có gì được gửi lên đám mây và hoạt động không cần internet. Cần Pro."
+      },
+      {
+        "title": "Chat RAG trên dữ liệu — Chỉ Pro",
+        "text": "Hỏi bất cứ điều gì về dấu trang và ghi chú của bạn và nhận câu trả lời kèm trích dẫn. Chế độ riêng tư chạy 100% trên máy của bạn. Cần Pro."
+      },
+      {
+        "title": "Đồng bộ P2P (WebRTC) — Chỉ Pro",
+        "text": "Các thiết bị của bạn giao tiếp trực tiếp với nhau — không có server ở giữa và mọi thứ vẫn được mã hóa. Ghép đôi bằng cách quét mã QR. Tối đa 5 thiết bị. Cần Pro."
+      },
+      {
+        "title": "Sao lưu được mã hóa",
+        "text": "Sao lưu tự động mà bạn cất giữ ở bất cứ đâu — ổ cứng ngoài, thư mục đám mây, bất kỳ đâu. Xuất mọi thứ sang Markdown, JSON, CSV hoặc PDF bất cứ khi nào bạn muốn. Chìa khóa nằm trong tay bạn."
+      },
+      {
+        "title": "Đồ thị tri thức",
+        "text": "Xem cách các ghi chú và dấu trang của bạn kết nối. Lọc theo thẻ, ngày tháng và độ tương tự, và khám phá trên một tấm canvas vô tận."
+      },
+      {
+        "title": "Flashcards (Spaced Repetition) — Chỉ Pro",
+        "text": "Biến bất kỳ tài liệu đã lưu nào thành thẻ câu hỏi nổi lên đúng trước khi bạn quên chúng — cùng ý tưởng lên lịch như Anki. Cần Pro."
+      },
+      {
+        "title": "Quyền riêng tư theo mặc định",
+        "text": "Không tài khoản, không theo dõi, không quảng cáo. Bạn là khách hàng, không phải sản phẩm. Chia sẻ dữ liệu sử dụng có tồn tại, là tùy chọn và vẫn tắt cho đến khi bạn bật."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI tôn trọng bạn",
+    "title": "Tri Thức Được Tăng Cường",
+    "subtitle": "BookmarkForge đưa ra lựa chọn: chạy mô hình 100% cục bộ trong trình duyệt (WebLLM, WebGPU) với Pro, kết nối API keys của bạn với nhà cung cấp cloud hoặc sử dụng Ollama cục bộ. Chỉ dẫn của bạn, dữ liệu của bạn, quy tắc của bạn.",
+    "providers": {
+      "title": "Nhà cung cấp được hỗ trợ",
+      "list": [
+        {
+          "type": "local",
+          "name": "Bên trong máy tính của bạn — các mô hình WebLLM (TinyLlama, Llama 3.2, Phi-3.5-mini) — chỉ Pro"
+        },
+        {
+          "type": "local",
+          "name": "Trên máy của riêng bạn — Ollama (bất kỳ mô hình nào bạn chạy)"
+        },
+        {
+          "type": "cloud",
+          "name": "Đám mây — Google Gemini (khóa do chúng tôi quản lý)"
+        },
+        {
+          "type": "cloud",
+          "name": "Đám mây — OpenAI / GPT-4o (với khóa của riêng bạn)"
+        },
+        {
+          "type": "cloud",
+          "name": "Đám mây — Anthropic Claude (với khóa của riêng bạn)"
+        },
+        {
+          "type": "cloud",
+          "name": "Đám mây — Groq (với khóa của riêng bạn)"
+        },
+        {
+          "type": "cloud",
+          "name": "Đám mây — OpenRouter hoặc nhà cung cấp tùy chỉnh khác (với khóa của riêng bạn)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Chế độ chat",
+      "items": [
+        {
+          "title": "Chế Độ Private",
+          "text": "Chỉ AI cục bộ (WebLLM/Ollama). Zero dữ liệu rời khỏi thiết bị. Hoạt động offline. Yêu cầu Pro cho WebLLM."
+        },
+        {
+          "title": "Chế Độ Tìm Kiếm Web",
+          "text": "Kết hợp vault của bạn với kết quả tìm kiếm thời gian thực (nhà cung cấp cloud)."
+        },
+        {
+          "title": "Chuyên Gia",
+          "text": "Nhân vật chuyên biệt: Lập trình viên, Nhà văn, Phân tích viên, Nghiên cứu viên. Yêu cầu Pro cho AI cục bộ."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Quyền riêng tư không phải tính năng — đó là nền tảng",
+    "subtitle": "Mỗi quyết định kiến trúc mang lại cho bạn sự kiểm soát",
+    "items": [
+      {
+        "title": "Mã hóa đầu cuối",
+        "text": "Thư viện của bạn được mã hóa bằng khóa dẫn xuất từ mật khẩu chính. Chúng tôi không bao giờ thấy mật khẩu hay nội dung của bạn."
+      },
+      {
+        "title": "Kiến trúc 100% cục bộ",
+        "text": "Mọi thứ sống trên máy tính của bạn. Server đồng hành chỉ xử lý cấp phép, ghép đôi thiết bị và chuyển tiếp câu hỏi AI chế độ đám mây của bạn — không bao giờ nội dung của bạn."
+      },
+      {
+        "title": "Zero telemetri theo mặc định",
+        "text": "Không phân tích, không báo cáo sự cố, không theo dõi. Chia sẻ thống kê sử dụng hoặc báo cáo lỗi là một lựa chọn riêng, tắt theo mặc định."
+      },
+      {
+        "title": "Chìa khóa là của bạn",
+        "text": "Không mật khẩu chính nghĩa là không có quyền truy cập — không có cửa hậu \"quên mật khẩu\". Cụm từ khôi phục 24 từ là con đường duy nhất vào trong; hãy cất giữ cẩn thận."
+      },
+      {
+        "title": "Tuân thủ GDPR",
+        "text": "Truy cập, chỉnh sửa, xóa hoặc mang dữ liệu của bạn đi — tất cả đều thực hiện được tại chỗ, bất cứ khi nào bạn muốn."
+      },
+      {
+        "title": "Độc lập với nhà cung cấp",
+        "text": "Xuất dữ liệu của bạn bất cứ khi nào ở các định dạng mở (JSON, Markdown, CSV, PDF). Kiến thức của bạn vẫn thuộc về bạn và dễ dàng mang theo."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Giá Đơn Giản, Công Bằng",
+    "subtitle": "Kế hoạch miễn phí: 2.500 bookmark. Pro là mua một lần $59 Early Bird (sau đó $79) — không có subscription.",
+    "plans": [
+      {
+        "name": "Miễn Phí",
+        "price": "$ 0",
+        "period": "/ mãi mãi",
+        "description": "Cho kho lưu trữ cá nhân (2.500 bookmark, hoạt động trên mọi thiết bị — mỗi thiết bị có kho riêng)",
+        "features": [
+          {
+            "included": true,
+            "text": "2.500 bookmark, ghi chú và tài liệu"
+          },
+          {
+            "included": true,
+            "text": "Tìm kiếm thông minh (toàn văn + ngữ nghĩa) — miễn phí; Raindrop thu phí hàng năm cho tính năng này"
+          },
+          {
+            "included": true,
+            "text": "AI với API key của bạn (bạn trả cho nhà cung cấp)"
+          },
+          {
+            "included": true,
+            "text": "Đồ thị tri thức"
+          },
+          {
+            "included": true,
+            "text": "Mẫu cơ bản"
+          },
+          {
+            "included": true,
+            "text": "Xuất JSON/HTML"
+          },
+          {
+            "included": true,
+            "text": "PWA + tiện ích trình duyệt"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Đồng bộ P2P giữa các thiết bị"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> AI cục bộ (WebLLM/Ollama)"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Chat RAG trên dữ liệu"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Flashcards với spaced repetition"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Xuất nâng cao (10+ định dạng)"
+          }
+        ],
+        "cta": "Bắt Đầu Miễn Phí",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro",
+        "badge": "Phổ biến nhất — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (sau đó $79)",
+        "description": "Trọn đời cho v1 · 12 tháng cập nhật tính năng · Cập nhật bảo mật mãi mãi · v2 giảm 60%",
+        "features": [
+          {
+            "included": true,
+            "text": "Tất cả trong Miễn Phí"
+          },
+          {
+            "included": true,
+            "text": "Bookmark không giới hạn"
+          },
+          {
+            "included": true,
+            "text": "5 thiết bị"
+          },
+          {
+            "included": true,
+            "text": "Đồng bộ P2P trên 5 thiết bị"
+          },
+          {
+            "included": true,
+            "text": "AI cục bộ (WebLLM, không cần API key)"
+          },
+          {
+            "included": true,
+            "text": "Chat RAG trên dữ liệu"
+          },
+          {
+            "included": true,
+            "text": "Chuyên gia (Lập trình viên, Nhà văn, Phân tích viên, Nghiên cứu viên)"
+          },
+          {
+            "included": true,
+            "text": "Flashcards với spaced repetition"
+          },
+          {
+            "included": true,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Xuất nâng cao (10+ định dạng)"
+          },
+          {
+            "included": true,
+            "text": "Vault bảo mật (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Cập nhật 12 tháng"
+          },
+          {
+            "included": true,
+            "text": "Hỗ trợ email"
+          }
+        ],
+        "cta": "Nhận Pro Mãi Mãi",
+        "ctaHref": "https://whop.com/checkout/plan_XU1GaWhoYhoDh",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "sau đó $79 giá thông thường",
+        "sla": "Hỗ trợ: email 48 giờ (Thứ 2–Thứ 6)"
+      }
+    ],
+    "legal": "Giấy phép trọn đời cho BookmarkForge v1. Bao gồm mọi bản cập nhật v1.x và 12 tháng cập nhật tính năng. Cập nhật bảo mật mãi mãi. Các phiên bản chính tương lai (v2, v3) giảm 60% cho chủ sở hữu hiện tại. Hoàn tiền trong 30 ngày qua Whop. <a href=\"/privacy-and-terms.html#terms\">Điều khoản</a> · <a href=\"/help#pricing\">Tìm hiểu thêm</a>"
+  },
+  "faq": {
+    "title": "Câu Hỏi Thường Gặp",
+    "items": [
+      {
+        "question": "Kế hoạch miễn phí có thực sự miễn phí mãi mãi không?",
+        "answer": "Có. Không có thời gian dùng thử giới hạn hay subscription. Kế hoạch miễn phí bao gồm 2.500 bookmark, tìm kiếm đầy đủ văn bản và ngữ nghĩa, đồ thị tri thức và AI với API key của bạn (bạn trả cho nhà cung cấp)."
+      },
+      {
+        "question": "'Mua một lần' trong Pro có nghĩa là gì?",
+        "answer": "Bạn trả một lần ($79), và giấy phép là của bạn mãi mãi. Bao gồm tất cả cập nhật trong 12 tháng. Không có phí lặp lại. Chìa khóa giấy phép được giao ngay lập tức qua Whop."
+      },
+      {
+        "question": "Bạn chấp nhận phương thức thanh toán nào?",
+        "answer": "Qua Whop: thẻ tín dụng, PayPal và tiền điện tử. Chúng tôi không bao giờ thấy thông tin thanh toán của bạn."
+      },
+      {
+        "question": "Hỗ trợ — bạn phản hồi nhanh đến mức nào?",
+        "answer": "Cộng đồng: trợ giúp từ cộng đồng qua <a href=\"/help\">Trung tâm trợ giúp</a> + GitHub Discussions (trong khả năng). Pro: email trong 48 giờ vào ngày làm việc. Két sắt được mã hóa — chúng tôi không thể thấy dữ liệu của bạn, nên không bao giờ hỏi mật khẩu hoặc cụm từ khôi phục của bạn. Xem <a href=\"/help#sla\">SLA hỗ trợ</a>."
+      },
+      {
+        "question": "Nếu tôi quên mật khẩu két sắt thì sao?",
+        "answer": "Chúng tôi không thể khôi phục nó. Khi tạo két sắt, chúng tôi hiển thị cụm từ khôi phục 24 từ một lần duy nhất — hãy ghi ra giấy. Không có nó, không ai (kể cả chúng tôi) mở được két sắt. Xem <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Sẵn Sàng Lấy Lại Quyền Kiểm Soát Tri Thức?",
+    "text": "Tham gia cùng hàng ngàn nghiên cứu viên, lập trình viên và sinh viên tin tưởng BookmarkForge như bộ não thứ hai.",
+    "ctaPrimary": "Mở Miễn Phí",
+    "ctaSecondary": "Nâng Cấp Lên Pro",
+    "note": "Không cần tài khoản. Hoạt động ngay lập tức trong trình duyệt. Kế hoạch miễn phí: 2.500 bookmark."
+  },
+  "footer": {
+    "brand": "Vault AI riêng tư cho tri thức. 100% cục bộ.",
+    "product": {
+      "title": "Sản Phẩm",
+      "links": [
+        "Tính Năng",
+        "Khả Năng AI",
+        "Quyền Riêng Tư",
+        "Giá",
+        "Mở Ứng Dụng"
+      ]
+    },
+    "resources": {
+      "title": "Tài Nguyên",
+      "links": [
+        "So Sánh Pocket",
+        "Quyền Riêng Tư và Điều Khoản"
+      ]
+    },
+    "languages": {
+      "title": "Ngôn Ngữ",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Hỗ Trợ",
+      "links": [
+        "Liên Hệ"
+      ],
+      "helpCenter": "Trung tâm trợ giúp",
+      "errorCodes": "Mã lỗi"
+    },
+    "copyright": "© 2026 BookmarkForge. Bảo lưu mọi quyền.",
+    "legal": [
+      "Chính Sách Quyền Riêng Tư",
+      "Điều Khoản Dịch Vụ",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Lưu bài viết, ghi chú và tài liệu trong một vault riêng tư, mã hóa và 100% cục bộ. Tìm kiếm AI, trình soạn thảo kiểu Notion và đồng bộ P2P. Kế hoạch miễn phí: 2.500 bookmark.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforge.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforge.com/",
+    "offers": [
+      {
+        "name": "Miễn Phí",
+        "price": "0",
+        "currency": "USD",
+        "description": "Cho kho lưu trữ cá nhân (2.500 bookmark, hoạt động trên mọi thiết bị — mỗi thiết bị có kho riêng)"
+      },
+      {
+        "name": "Pro",
+        "price": "59",
+        "currency": "USD",
+        "description": "Trọn đời cho v1 · 12 tháng cập nhật tính năng · Cập nhật bảo mật mãi mãi · v2 giảm 60%"
+      }
+    ],
+    "featureList": [
+      "Lưu trữ ưu tiên cục bộ",
+      "Mã hóa đầu-cuối",
+      "Hoạt động ngoại tuyến",
+      "Tìm kiếm AI",
+      "Trình soạn thảo kiểu Notion",
+      "Đồng bộ P2P"
+    ],
+    "faq": [
+      {
+        "question": "Kế hoạch miễn phí có thực sự miễn phí mãi mãi không?",
+        "answer": "Có. Không có thời gian dùng thử giới hạn hay subscription. Kế hoạch miễn phí bao gồm 2.500 bookmark, tìm kiếm đầy đủ văn bản và ngữ nghĩa, đồ thị tri thức và AI với API key của bạn (bạn trả cho nhà cung cấp)."
+      },
+      {
+        "question": "'Mua một lần' trong Pro có nghĩa là gì?",
+        "answer": "Bạn trả một lần ($79), và giấy phép là của bạn mãi mãi. Bao gồm tất cả cập nhật trong 12 tháng. Không có phí lặp lại. Chìa khóa giấy phép được giao ngay lập tức qua Whop."
+      },
+      {
+        "question": "Bạn chấp nhận phương thức thanh toán nào?",
+        "answer": "Qua Whop: thẻ tín dụng, PayPal và tiền điện tử. Chúng tôi không bao giờ thấy thông tin thanh toán của bạn."
+      },
+      {
+        "question": "Hỗ trợ — bạn phản hồi nhanh đến mức nào?",
+        "answer": "Cộng đồng: trợ giúp từ cộng đồng qua <a href=\"/help\">Trung tâm trợ giúp</a> + GitHub Discussions (trong khả năng). Pro: email trong 48 giờ vào ngày làm việc. Két sắt được mã hóa — chúng tôi không thể thấy dữ liệu của bạn, nên không bao giờ hỏi mật khẩu hoặc cụm từ khôi phục của bạn. Xem <a href=\"/help#sla\">SLA hỗ trợ</a>."
+      },
+      {
+        "question": "Nếu tôi quên mật khẩu két sắt thì sao?",
+        "answer": "Chúng tôi không thể khôi phục nó. Khi tạo két sắt, chúng tôi hiển thị cụm từ khôi phục 24 từ một lần duy nhất — hãy ghi ra giấy. Không có nó, không ai (kể cả chúng tôi) mở được két sắt. Xem <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  }
+}

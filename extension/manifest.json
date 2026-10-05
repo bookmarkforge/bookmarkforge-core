@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "BookmarkForge — Save to Bookmarks",
+  "version": "1.0.0",
+  "description": "Save any page to your BookmarkForge vault. Your bookmarks, your server, your rules.",
+  "author": "BookmarkForge <bookmarkforge@proton.me>",
+  "homepage_url": "https://bookmarkforge.com",
+  "permissions": ["activeTab", "contextMenus", "storage"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon-16.png",
+      "48": "icon-48.png",
+      "128": "icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "icon-16.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src 'self'; frame-src 'none'; base-uri 'none'; form-action 'none'; style-src 'self'"
+  },
+  "minimum_chrome_version": "109",
+  "incognito": "split"
+}
+

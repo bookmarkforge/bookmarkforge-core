@@ -1,0 +1,499 @@
+{
+  "lang": "hr",
+  "langName": "Hrvatski",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforge.com/hr/",
+  "ogLocale": "hr_HR",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Privatna alternativa Pocketu s AI-om (Oznake i bilješke)",
+  "description": "Spremajte članke, bilješke i dokumente u privatnom, šifriranom i 100% lokalnom trezoru. AI pretraživanje, urednik poput Notiona i P2P sinkronizacija. Besplatni plan: 2.500 oznaka.",
+  "ogTitle": "BookmarkForge — Privatna alternativa Pocketu s AI-om (Oznake i bilješke)",
+  "ogDescription": "Spremajte članke, bilješke i dokumente u privatnom, šifriranom i 100% lokalnom trezoru. AI pretraživanje, urednik poput Notiona i P2P sinkronizacija. Besplatni plan: 2.500 oznaka.",
+  "ogImage": "https://bookmarkforge.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Privatna alternativa Pocketu s AI-om (Oznake i bilješke)",
+  "twitterDescription": "Spremajte članke, bilješke i dokumente u privatnom, šifriranom i 100% lokalnom trezoru. AI pretraživanje, urednik poput Notiona i P2P sinkronizacija. Besplatni plan: 2.500 oznaka.",
+  "twitterImage": "https://bookmarkforge.com/og-image.png",
+  "skipLink": "Preskoči na glavni sadržaj",
+  "navBrandAria": "BookmarkForge naslovnica",
+  "navAriaLabel": "Glavna navigacija",
+  "homeHref": "/hr/",
+  "navLinks": {
+    "pocketAlternative": "Pocket alternativa",
+    "features": "Funkcije",
+    "ai": "AI",
+    "privacy": "Privatnost",
+    "pricing": "Cjenik",
+    "help": "Pomoć",
+    "raindropCompare": "Raindrop Comparison"
+  },
+  "langLink": {
+    "href": "/?lang=en",
+    "hreflang": "en",
+    "lang": "en",
+    "text": "English"
+  },
+  "navCta": "Otvori aplikaciju",
+  "themeToggleAria": "Promijeni temu",
+  "hero": {
+    "badge": "Verzija 1.0",
+    "title": "Vaš <span class='accent-text'>Privatni AI Trezor</span>",
+    "subtitle": "Privatna alternativa Pocketu za spremanje članaka i čitanje kasnije: oznake, bilješke i dokumenti — šifrirani na vašem uređaju, pretraživi AI-jem i sinkronizirani peer-to-peer. Bez oblaka. Bez praćenja. 100% vaše.",
+    "ctaPrimary": "Otvori Besplatno",
+    "ctaSecondary": "Pogledaj Cijene",
+    "pillars": [
+      {
+        "strong": "100% Lokalno",
+        "text": "vaši podaci ne napuštaju uređaj"
+      },
+      {
+        "strong": "Šifrirano",
+        "text": "AES-256-GCM + Argon2id"
+      },
+      {
+        "strong": "Izvan mreže",
+        "text": "radi bez interneta"
+      },
+      {
+        "strong": "Privatno",
+        "text": "nula telemetrije prema zadanim postavkama"
+      }
+    ],
+    "affiliate": {
+      "badge": "Zaradite novac",
+      "title": "Partner program",
+      "subtitle": "Podijelite BookmarkForge i zaradite 30% provizije na svaku preporučenu kupnju. Počnite zaraditi već danas!",
+      "cta": "Pridružite se partner programu",
+      "details": [
+        "30% provizije na svaku prodaju",
+        "Neograničene zarade",
+        "Automatska plaćanja putem Whop",
+        "Praćenje u stvarnom vremenu"
+      ]
+    }
+  },
+  "demo": null,
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Čitajte kasnije bez žrtvovanja privatnosti",
+    "title": "Privatna alternativa Pocketu",
+    "subtitle": "Pocket nestaje. BookmarkForge održava naviku čitanja — sa svakim člankom, bilješkom i označenjem šifriranim na vašem uređaju.",
+    "features": [
+      {
+        "title": "Spremajte članke za kasnije, zauvijek vaše",
+        "text": "Spremajte članke, videozapise i PDF jednim klikom — iz PWA aplikacije, proširenja preglednika ili izbornika dijeljenja. Za razliku od Pocketa, vaša lista za čitanje živi na vašem uređaju, šifrirana, i radi izvan mreže."
+      },
+      {
+        "title": "Bilješke poput Notiona u svakom članku",
+        "text": "Istaknite, sažmite i pišite bilješke u svakoj oznaci. Pretvorite spremljeni članak u vlastitu bazu znanja — ne samo popis veza."
+      },
+      {
+        "title": "Nula praćenja, nula oglasa",
+        "text": "BookmarkForge nema račune, analitiku niti oglase prema zadanim postavkama. Vaše navike čitanja su samo vaša odgovornost."
+      }
+    ],
+    "ctaPrimary": "Počnite Spremati Besplatno",
+    "ctaSecondary": "Potpuna usporedba i vodič za migraciju",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": null,
+  "features": {
+    "id": "features",
+    "tag": "Sve što vam treba",
+    "title": "Snažne značajke za upravljanje znanjem, sve radi lokalno",
+    "items": [
+      {
+        "title": "Oznake i dokumenti",
+        "text": "Spremite bilo koju stranicu jednim klikom. Pišite bilješke odmah do nje, u urednom, jednostavnom uređivaču. Ostaje brz i sa 100.000 spremljenih stavki."
+      },
+      {
+        "title": "Puno i semantičko pretraživanje",
+        "text": "Pronađite stvari po ključnoj riječi ili po značenju — čak i kad se ne sjećate točnih riječi. Raindrop za to naplaćuje 28 dolara godišnje; ovdje je uključeno besplatno."
+      },
+      {
+        "title": "Lokalni AI (WebLLM / Ollama) — Samo Pro",
+        "text": "Pitajte o onome što ste spremili i dobijte odgovore s prikazanim izvorima. Ništa se ne šalje u oblak i radi bez interneta. Zahtijeva Pro."
+      },
+      {
+        "title": "RAG chat nad vašim podacima — Samo Pro",
+        "text": "Pitajte bilo što o svojim knjižnim oznakama i bilješkama i dobijte odgovore s citatima. Privatni način rada radi 100% na vašem računalu. Zahtijeva Pro."
+      },
+      {
+        "title": "P2P sinkronizacija (WebRTC) — Samo Pro",
+        "text": "Vaši uređaji razgovaraju izravno — bez poslužitelja između, a sve ostaje šifrirano. Uparite ih skeniranjem QR koda. Do 5 uređaja. Zahtijeva Pro."
+      },
+      {
+        "title": "Šifrirane sigurnosne kopije",
+        "text": "Automatske sigurnosne kopije koje čuvate gdje želite — vanjski disk, mapa u oblaku, bilo gdje. Izvezite sve u Markdown, JSON, CSV ili PDF kad god želite. Ključevi su kod vas."
+      },
+      {
+        "title": "Graf znanja",
+        "text": "Pogledajte kako se vaše bilješke i knjižne oznake povezuju. Filtrirajte po oznakama, datumima i sličnosti i istražujte beskonačno platno."
+      },
+      {
+        "title": "Flashcards (Spaced Repetition) — Samo Pro",
+        "text": "Pretvorite bilo koji spremljeni dokument u kartice s pitanjima koja isplivaju baš prije nego što biste ih zaboravili — ista ideja rasporeda kao u Ankiju. Zahtijeva Pro."
+      },
+      {
+        "title": "Privatnost prema zadanim postavkama",
+        "text": "Bez računa, bez praćenja, bez oglasa. Vi ste kupac, ne proizvod. Dijeljenje korištenja postoji, opcionalno je i ostaje isključeno dok ga ne uključite."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI koji vas poštuje",
+    "title": "Vaše Znanje, Ojačano",
+    "subtitle": "BookmarkForge vam daje izbor: pokrenite 100% lokalne modele u pregledniku (WebLLM, WebGPU) s Pro-om, povežite vlastite API ključeve s cloud pružateljima ili koristite lokalni Ollama. Vaše upute, vaši podaci, vaša pravila.",
+    "providers": {
+      "title": "Podržani pružatelji",
+      "list": [
+        {
+          "type": "local",
+          "name": "Unutar vašeg računala — WebLLM modeli (TinyLlama, Llama 3.2, Phi-3.5-mini) — samo Pro"
+        },
+        {
+          "type": "local",
+          "name": "Na vašoj vlastitoj mašini — Ollama (bilo koji model koji pokrenete)"
+        },
+        {
+          "type": "cloud",
+          "name": "Oblak — Google Gemini (ključ upravljamo mi)"
+        },
+        {
+          "type": "cloud",
+          "name": "Oblak — OpenAI / GPT-4o (s vlastitim ključem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Oblak — Anthropic Claude (s vlastitim ključem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Oblak — Groq (s vlastitim ključem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Oblak — OpenRouter ili drugi prilagođeni pružatelj (s vlastitim ključem)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Načini chata",
+      "items": [
+        {
+          "title": "Privatni Način",
+          "text": "Samo lokalni AI (WebLLM/Ollama). Nula podataka napušta uređaj. Radi izvan mreže. Zahtijeva Pro za WebLLM."
+        },
+        {
+          "title": "Način Web Pretraživanja",
+          "text": "Kombinira vaš trezor s rezultatima pretraživanja u stvarnom vremenu (cloud pružatelji)."
+        },
+        {
+          "title": "Stručni Agenti",
+          "text": "Stručni likovi: Programer, Pisac, Analitičar, Istraživač. Zahtijeva Pro za lokalni AI."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Privatnost nije značajka — to je temelj",
+    "subtitle": "Svaka arhitektonska odluka vam daje kontrolu",
+    "items": [
+      {
+        "title": "Šifriranje od kraja do kraja",
+        "text": "Vaša je biblioteka šifrirana ključem izvedenim iz vaše glavne lozinke. Nikada ne vidimo vašu lozinku ni vaš sadržaj."
+      },
+      {
+        "title": "100% lokalna arhitektura",
+        "text": "Sve živi na vašem računalu. Pomoćni poslužitelj obrađuje samo licenciranje, uparivanje uređaja i prosljeđivanje vaših AI pitanja u oblaku — nikada vaš sadržaj."
+      },
+      {
+        "title": "Nula telemetrije prema zadanim postavkama",
+        "text": "Bez analitike, bez izvješća o rušenjima, bez praćenja. Dijeljenje statistika korištenja ili izvješća o pogreškama zaseban je izbor, isključen prema zadanim postavkama."
+      },
+      {
+        "title": "Ključevi su vaši",
+        "text": "Bez glavne lozinke nema pristupa — ne postoji stražnja vrata \"zaboravljena lozinka\". Fraza za oporavak od 24 riječi jedini je put unutra; čuvajte je."
+      },
+      {
+        "title": "Usklađenost s GDPR-om",
+        "text": "Pristupite svojim podacima, ispravite ih, izbrišite ili ponesite sa sobom — sve lokalno, kad god želite."
+      },
+      {
+        "title": "Neovisnost o pružatelju",
+        "text": "Izvezite svoje podatke kad god u otvorenim formatima (JSON, Markdown, CSV, PDF). Vaše znanje ostaje vaše i prenosivo."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Jednostavne, Pravične Cijene",
+    "subtitle": "Besplatni plan: 2.500 oznaka. Pro je jednokratna kupnja od 79 $ — bez pretplata.",
+    "plans": [
+      {
+        "name": "Besplatno",
+        "price": "$ 0",
+        "period": "/ zauvijek",
+        "description": "Za osobni arhiv (2.500 oznaka, radi na bilo kojem uređaju — svaki ima svoj sef)",
+        "features": [
+          {
+            "included": true,
+            "text": "2.500 oznaka, bilješki i dokumenata"
+          },
+          {
+            "included": true,
+            "text": "Pametno pretraživanje (cjelovit tekst + semantičko) — uključeno besplatno; Raindrop za to naplaćuje godišnje"
+          },
+          {
+            "included": true,
+            "text": "AI s vašim API ključem (vi plaćate pružatelja)"
+          },
+          {
+            "included": true,
+            "text": "Graf znanja"
+          },
+          {
+            "included": true,
+            "text": "Osnovni predlošci"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML izvoz"
+          },
+          {
+            "included": true,
+            "text": "PWA + proširenja preglednika"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> P2P sinkronizacija između uređaja"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Lokalni AI (WebLLM/Ollama)"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> RAG chat nad vašim podacima"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Flashcards s spaced repetitionom"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Napredni izvoz (10+ formata)"
+          }
+        ],
+        "cta": "Počnite Besplatno",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro",
+        "badge": "Najpopularnije — Rana ptica 200",
+        "price": "$ 59",
+        "period": "Rana ptica (poslije $79)",
+        "description": "Doživotno za v1 · 12 mjeseci ažuriranja značajki · Sigurnost zauvijek · v2 s 60% popusta",
+        "features": [
+          {
+            "included": true,
+            "text": "Sve iz Besplatnog"
+          },
+          {
+            "included": true,
+            "text": "Neograničene oznake"
+          },
+          {
+            "included": true,
+            "text": "5 uređaja"
+          },
+          {
+            "included": true,
+            "text": "P2P sinkronizacija na 5 uređaja"
+          },
+          {
+            "included": true,
+            "text": "Lokalni AI (WebLLM, bez API ključa)"
+          },
+          {
+            "included": true,
+            "text": "RAG chat nad vašim podacima"
+          },
+          {
+            "included": true,
+            "text": "Stručni agenti (Programer, Pisac, Analitičar, Istraživač)"
+          },
+          {
+            "included": true,
+            "text": "Flashcards s spaced repetitionom"
+          },
+          {
+            "included": true,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Napredni izvoz (10+ formata)"
+          },
+          {
+            "included": true,
+            "text": "Trezor sigurnosti (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Nadogradnje 12 mjeseci"
+          },
+          {
+            "included": true,
+            "text": "E-mail podrška"
+          }
+        ],
+        "cta": "Nabavite Pro Zauvijek",
+        "ctaHref": "https://whop.com/checkout/plan_XU1GaWhoYhoDh",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "poslije $79 redovna cijena",
+        "sla": "Podrška: e-pošta 48 h (pon–pet)"
+      }
+    ],
+    "legal": "Doživotna licenca za BookmarkForge v1. Uključuje sva v1.x ažuriranja i 12 mjeseci ažuriranja značajki. Sigurnosna ažuriranja zauvijek. Buduće glavne verzije (v2, v3) s 60% popusta za postojeće vlasnike. Povrat novca unutar 30 dana putem Whopa. <a href=\"/privacy-and-terms.html#terms\">Uvjeti</a> · <a href=\"/help#pricing\">Saznajte više</a>"
+  },
+  "faq": {
+    "title": "Često Postavljana Pitanja",
+    "items": [
+      {
+        "question": "Je li besplatni plan zaista besplatan zauvijek?",
+        "answer": "Da. Bez ograničenog probnog razdoblja ili pretplate. Besplatni plan uključuje 2.500 oznaka, puno i semantičko pretraživanje, graf znanja i AI s vašim API ključem (vi plaćate pružatelja)."
+      },
+      {
+        "question": "Što znači 'jednokratna kupnja' u Pro-u?",
+        "answer": "Platite jednom (79 $) i licenca je vaša zauvijek. Uključuje sve nadogradnje 12 mjeseci. Bez ponavljajućih naknada. Licenčni ključ se odmah isporučuje putem Whopa."
+      },
+      {
+        "question": "Koje načine plaćanja prihvaćate?",
+        "answer": "Putem Whopa: kreditna kartica, PayPal i kriptovalute. Nikad ne vidimo vaše podatke o plaćanju."
+      },
+      {
+        "question": "Podrška — koliko brzo odgovarate?",
+        "answer": "Zajednica: pomoć zajednice putem <a href=\"/help\">Centra za pomoć</a> + GitHub Discussions (prema mogućnostima). Pro: e-mail unutar 48 sati radnim danima. Trezor je šifriran — ne vidimo vaše podatke pa nikada ne tražimo vašu lozinku ni frazu za oporavak. Pogledajte <a href=\"/help#sla\">SLA podrške</a>."
+      },
+      {
+        "question": "Što ako zaboravim lozinku trezora?",
+        "answer": "Ne možemo je vratiti. Pri stvaranju trezora prikazujemo frazu za oporavak od 24 riječi jednom — zapišite je na papir. Bez nje nitko (ni mi) ne može otvoriti trezor. Pogledajte <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Spremni Preuzeti Kontrolu nad Znanjem?",
+    "text": "Pridružite se tisućama istraživača, programera i studenata koji vjeruju BookmarkForgeu kao svom drugom mozgu.",
+    "ctaPrimary": "Otvori Besplatno",
+    "ctaSecondary": "Nadogradi na Pro",
+    "note": "Račun nije potreban. Radi odmah u vašem pregledniku. Besplatni plan: 2.500 oznaka."
+  },
+  "footer": {
+    "brand": "Vaš privatni AI trezor za znanje. 100% lokalno.",
+    "product": {
+      "title": "Proizvod",
+      "links": [
+        "Značajke",
+        "AI mogućnosti",
+        "Privatnost",
+        "Cijene",
+        "Otvori Aplikaciju"
+      ]
+    },
+    "resources": {
+      "title": "Resursi",
+      "links": [
+        "Usporedba s Pocketom",
+        "Privatnost i uvjeti"
+      ]
+    },
+    "languages": {
+      "title": "Jezici",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Podrška",
+      "links": [
+        "Kontaktirajte nas"
+      ],
+      "helpCenter": "Centar za pomoć",
+      "errorCodes": "Kodovi pogrešaka"
+    },
+    "copyright": "© 2026 BookmarkForge. Sva prava pridržana.",
+    "legal": [
+      "Pravila privatnosti",
+      "Uvjeti korištenja",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Spremajte članke, bilješke i dokumente u privatnom, šifriranom i 100% lokalnom trezoru. AI pretraživanje, urednik poput Notiona i P2P sinkronizacija. Besplatni plan: 2.500 oznaka.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforge.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforge.com/",
+    "offers": [
+      {
+        "name": "Besplatno",
+        "price": "0",
+        "currency": "USD",
+        "description": "Za osobni arhiv (2.500 oznaka, radi na bilo kojem uređaju — svaki ima svoj sef)"
+      },
+      {
+        "name": "Pro",
+        "price": "59",
+        "currency": "USD",
+        "description": "Doživotno za v1 · 12 mjeseci ažuriranja značajki · Sigurnost zauvijek · v2 s 60% popusta"
+      }
+    ],
+    "featureList": [
+      "Lokalna pohrana",
+      "Šifriranje end-to-end",
+      "Radi izvan mreže",
+      "AI pretraživanje",
+      "Uređivač u stilu Notiona",
+      "P2P sinkronizacija"
+    ],
+    "faq": [
+      {
+        "question": "Je li besplatni plan zaista besplatan zauvijek?",
+        "answer": "Da. Bez ograničenog probnog razdoblja ili pretplate. Besplatni plan uključuje 2.500 oznaka, puno i semantičko pretraživanje, graf znanja i AI s vašim API ključem (vi plaćate pružatelja)."
+      },
+      {
+        "question": "Što znači 'jednokratna kupnja' u Pro-u?",
+        "answer": "Platite jednom (79 $) i licenca je vaša zauvijek. Uključuje sve nadogradnje 12 mjeseci. Bez ponavljajućih naknada. Licenčni ključ se odmah isporučuje putem Whopa."
+      },
+      {
+        "question": "Koje načine plaćanja prihvaćate?",
+        "answer": "Putem Whopa: kreditna kartica, PayPal i kriptovalute. Nikad ne vidimo vaše podatke o plaćanju."
+      },
+      {
+        "question": "Podrška — koliko brzo odgovarate?",
+        "answer": "Zajednica: pomoć zajednice putem <a href=\"/help\">Centra za pomoć</a> + GitHub Discussions (prema mogućnostima). Pro: e-mail unutar 48 sati radnim danima. Trezor je šifriran — ne vidimo vaše podatke pa nikada ne tražimo vašu lozinku ni frazu za oporavak. Pogledajte <a href=\"/help#sla\">SLA podrške</a>."
+      },
+      {
+        "question": "Što ako zaboravim lozinku trezora?",
+        "answer": "Ne možemo je vratiti. Pri stvaranju trezora prikazujemo frazu za oporavak od 24 riječi jednom — zapišite je na papir. Bez nje nitko (ni mi) ne može otvoriti trezor. Pogledajte <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  }
+}

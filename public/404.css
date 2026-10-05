@@ -1,0 +1,76 @@
+/* 404 page styles — extracted from the inline <style> of public/404.html.
+   External file so it renders under the strict CSP (style-src 'self'
+   blocks inline <style> blocks). Keep in sync with public/404.html.
+
+   Consumes the shared brand tokens + Inter Variable from
+   /brand-tokens.css (loaded first). The core palette (navy dark default +
+   light theme) comes from those tokens; only theme-specific accent-text
+   and surface tints are defined locally. */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Theme-specific component tokens (not shared brand hexes).
+   brand-tokens.css already resolves :root → dark. */
+[data-theme="light"] {
+  --accent-text: var(--text-accent);
+  --accent-hover-fill: var(--state-hover-bg);
+  --accent-strong-fill: var(--accent-soft);
+  --card-fill: rgba(255, 255, 255, 0.7);
+  --card-border: rgba(208, 218, 232, 0.6);
+  --card-hover-border: rgba(0, 149, 214, 0.35);
+}
+[data-theme="dark"] {
+  --accent-text: var(--text-accent);
+  --accent-hover-fill: var(--state-hover-bg);
+  --accent-strong-fill: var(--accent-soft);
+  --card-fill: var(--bg-card);
+  --card-border: var(--divider);
+  --card-hover-border: var(--accent-glow);
+}
+
+body { font-family: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif; background: var(--bg-primary); color: var(--text-primary); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.skip-link { position: absolute; top: -40px; left: 0; background: var(--accent-primary); color: var(--text-on-accent); padding: 8px 16px; z-index: 100; transition: top 0.2s; }
+.skip-link:focus { top: 0; }
+nav { position: sticky; top: 0; z-index: 40; background: var(--bg-topbar); border-bottom: 1px solid var(--divider); }
+nav .inner { max-width: 56rem; margin: 0 auto; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; }
+nav .brand { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; font-weight: 700; color: var(--accent-primary); }
+nav .brand svg { width: 24px; height: 24px; }
+nav .links { display: flex; align-items: center; gap: 16px; }
+nav .links a { text-decoration: none; padding: 6px 16px; border-radius: var(--radius-item); font-size: 14px; font-weight: 500; transition: all 0.15s; }
+.btn-outline { border: 1px solid var(--accent-primary); color: var(--accent-text); background: transparent; }
+.btn-outline:hover { background: var(--accent-hover-fill); }
+.btn-primary { background: var(--accent-primary); color: var(--text-on-accent); border: none; box-shadow: 0 4px 14px var(--accent-primary-glow-strong); }
+.btn-primary:hover { background: var(--accent-secondary); color: var(--text-on-accent); box-shadow: 0 6px 18px var(--accent-primary-glow-strong); }
+main { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 64px 24px; }
+.container { max-width: 56rem; width: 100%; }
+.hero { text-align: center; margin-bottom: 48px; }
+.display-404 { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 32px; color: var(--accent-primary); text-shadow: 0 0 24px var(--accent-glow); }
+h1 { font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: 700; line-height: 1.2; margin-bottom: 24px; }
+.subtitle { font-size: 1.125rem; color: var(--text-muted); margin-bottom: 32px; max-width: 42rem; margin-left: auto; margin-right: auto; }
+.actions { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-bottom: 48px; }
+.grid-3 { display: grid; grid-template-columns: repeat(1, 1fr); gap: 24px; margin-bottom: 48px; }
+@media (min-width: 768px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
+.card { background: var(--card-fill); border: 1px solid var(--card-border); border-radius: var(--radius-card); padding: 24px; text-align: center; transition: border-color 0.15s; }
+.card:hover { border-color: var(--card-hover-border); }
+.card .icon { width: 48px; height: 48px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; background: var(--accent-strong-fill); border-radius: 10px; }
+.card .icon svg { width: 32px; height: 32px; color: var(--accent-text); }
+.card h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 8px; }
+.card p { font-size: 0.875rem; color: var(--text-muted); }
+.links-card { background: var(--card-fill); border: 1px solid var(--card-border); border-radius: var(--radius-card); padding: 24px; }
+.links-card h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 24px; text-align: center; }
+.links-grid { display: grid; grid-template-columns: repeat(1, 1fr); gap: 16px; }
+@media (min-width: 768px) { .links-grid { grid-template-columns: repeat(2, 1fr); } }
+.links-grid a { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: var(--radius-item); text-decoration: none; color: inherit; transition: background 0.15s; }
+.links-grid a:hover { background: var(--accent-hover-fill); }
+.links-grid a svg { width: 20px; height: 20px; flex-shrink: 0; }
+.links-grid a span { font-weight: 500; }
+footer { border-top: 1px solid var(--divider); padding: 32px 0; }
+footer .inner { max-width: 56rem; margin: 0 auto; padding: 0 24px; text-align: center; }
+footer .brand { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; font-size: 1.25rem; font-weight: 700; color: var(--accent-primary); }
+footer .brand svg { width: 24px; height: 24px; }
+footer .desc { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 24px; }
+footer .footer-links { display: flex; justify-content: center; gap: 24px; font-size: 0.875rem; }
+footer .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
+footer .footer-links a:hover { color: var(--text-primary); }
+.theme-toggle { position: fixed; top: 24px; right: 24px; z-index: 50; width: 40px; height: 40px; border-radius: var(--radius-item); border: 1px solid var(--divider); background: var(--bg-topbar); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.theme-toggle:hover { background: var(--accent-hover-fill); }
+.theme-toggle svg { width: 20px; height: 20px; color: var(--accent-text); }

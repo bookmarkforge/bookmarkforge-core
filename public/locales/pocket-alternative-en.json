@@ -1,0 +1,178 @@
+{
+  "lang": "en",
+  "langName": "English",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/pocket-alternative",
+  "ogLocale": "en_US",
+  "ogLocaleAlternate": "",
+  "title": "BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide",
+  "description": "Pocket is going away. Smart search is included free — Raindrop charges yearly for it. BookmarkForge Free works on any device with no device cap. Migrate your library locally.",
+  "ogTitle": "BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide",
+  "ogDescription": "Smart search is included free — Raindrop charges yearly for it. Free has no device cap. Compare Pocket and BookmarkForge, then migrate your library locally.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image-pricing.png",
+  "twitterTitle": "BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide",
+  "twitterDescription": "Compare every feature and migrate your Pocket library to a private, local-first vault in minutes.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image-pricing.png",
+  "skipLink": "Skip to main content",
+  "navBrandAria": "BookmarkForge home",
+  "navAriaLabel": "Main navigation",
+  "homeHref": "/",
+  "navLinks": {
+    "features": "Features",
+    "ai": "AI",
+    "privacy": "Privacy",
+    "pricing": "Pricing"
+  },
+  "langLink": {
+    "href": "/es/",
+    "hreflang": "es",
+    "lang": "es",
+    "text": "Español"
+  },
+  "navCta": "Open App",
+  "themeToggleAria": "Toggle theme",
+  "hero": {
+    "badge": "Pocket Alternative",
+    "title": "BookmarkForge vs Pocket: <span class=\"accent-text\">The Full Comparison</span>",
+    "subtitle": "Pocket is going away. Smart search is included free — Raindrop charges yearly for it. BookmarkForge works on any device with no device cap on Free, while your reading list stays encrypted and yours."
+  },
+  "whyMatters": {
+    "id": "context",
+    "title": "Why the Shutdown Changes Everything",
+    "subtitle": "Pocket closing is not just a missing app — it is a reminder that a read-it-later service holding your list on someone else's servers can disappear overnight.",
+    "cards": [
+      { "title": "Your list is gone with it", "text": "Years of saved articles, tags and reading history lived on Pocket's servers. When the service goes away, so does that data — unless you export it first." },
+      { "title": "Local-first is the only guarantee", "text": "BookmarkForge stores your vault in your browser's local database. No server, no shutdown can take it away. Offline, encrypted, and always yours." },
+      { "title": "You keep the keys", "text": "Your data is encrypted with keys derived from your master password (AES-256-GCM + Argon2id). No account, no backdoor, no \"forgot password\" reset — just your keys." }
+    ]
+  },
+  "comparison": {
+    "id": "table",
+    "title": "Feature by Feature",
+    "subtitle": "Everything Pocket could do — and everything it couldn't — compared honestly.",
+    "headers": ["Feature", "Pocket", "BookmarkForge"],
+    "rows": [
+      { "feature": "Save articles, videos &amp; PDFs to read later", "pocket": "✅ Yes", "pocketClass": "yes", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
+      { "feature": "Read offline", "pocket": "⚠️ Cached app only", "pocketClass": "partial", "bookmarkforge": "✅ Full vault offline", "bookmarkforgeClass": "yes" },
+      { "feature": "Tags &amp; folders", "pocket": "⚠️ Tags only", "pocketClass": "partial", "bookmarkforge": "✅ Tags + folders", "bookmarkforgeClass": "yes" },
+      { "feature": "Highlights &amp; annotations", "pocket": "✅ Yes", "pocketClass": "yes", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
+      { "feature": "Notion-style block notes on any bookmark", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
+      { "feature": "Full-text search", "pocket": "✅ Yes", "pocketClass": "yes", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
+      { "feature": "Smart search (meaning, not just keywords)", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Included free — Raindrop charges yearly", "bookmarkforgeClass": "yes" },
+      { "feature": "Device limit on Free", "pocket": "⚠️ Service-dependent", "pocketClass": "partial", "bookmarkforge": "✅ No device cap", "bookmarkforgeClass": "yes" },
+      { "feature": "AI chat over your saved content (RAG)", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes — local (WebLLM/Ollama) or cloud", "bookmarkforgeClass": "yes" },
+      { "feature": "Knowledge graph of your notes &amp; links", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
+      { "feature": "Flashcards with spaced repetition", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
+      { "feature": "Runs 100% on your device (local-first)", "pocket": "❌ No — cloud storage", "pocketClass": "no", "bookmarkforge": "✅ Yes — IndexedDB, no server", "bookmarkforgeClass": "yes" },
+      { "feature": "Works without an account", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes", "bookmarkforgeClass": "yes" },
+      { "feature": "End-to-end encryption", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ AES-256-GCM + Argon2id", "bookmarkforgeClass": "yes" },
+      { "feature": "Sync between devices without a cloud server", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ P2P via WebRTC, E2E encrypted", "bookmarkforgeClass": "yes" },
+      { "feature": "Zero ads &amp; tracking by default", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ Yes — no analytics by default", "bookmarkforgeClass": "yes" },
+      { "feature": "Import from Pocket's HTML export", "pocket": "⚠️ Export only", "pocketClass": "partial", "bookmarkforge": "✅ Built-in importer", "bookmarkforgeClass": "yes" },
+      { "feature": "Data export", "pocket": "⚠️ HTML export", "pocketClass": "partial", "bookmarkforge": "✅ JSON, Markdown, CSV, PDF, .bmf", "bookmarkforgeClass": "yes" },
+      { "feature": "Open source &amp; self-hostable", "pocket": "❌ No", "pocketClass": "no", "bookmarkforge": "✅ MIT (open core)", "bookmarkforgeClass": "yes" },
+      { "feature": "Price", "pocket": "⚠️ Free tier + Premium", "pocketClass": "partial", "bookmarkforge": "✅ Free forever + one-time $79 Pro", "bookmarkforgeClass": "yes" },
+      { "feature": "Status", "pocket": "❌ Shutting down", "pocketClass": "no", "bookmarkforge": "✅ Active", "bookmarkforgeClass": "yes" }
+    ],
+    "note": "Feature set reflects Pocket's capabilities before the shutdown announcement. BookmarkForge's side runs locally, so it stays accurate regardless of what happens to any cloud service."
+  },
+  "migration": {
+    "id": "migration",
+    "title": "Migrate from Pocket in 4 Steps",
+    "subtitle": "Your library — titles, tags and original save dates — moves to your device in minutes. Smart search is included free (Raindrop charges yearly for it), and Free works on any device with no device cap. No account, no upload.",
+    "steps": [
+      { "title": "Export your Pocket library", "text": "If you still have access to Pocket, use its export feature to download the HTML file of your saved list. The file contains every link with its title, tags and original save date." },
+      { "title": "Open the BookmarkForge importer", "text": "Open <a href=\"/app\">BookmarkForge</a> (no account needed) and click <strong>Open Importer</strong> on the dashboard. The importer accepts <code>.html</code>, <code>.json</code>, <code>.csv</code>, <code>.md</code> and <code>.zip</code> files." },
+      { "title": "Drop in your Pocket file", "text": "BookmarkForge detects the Pocket HTML export format automatically and imports every link with its title, tags and original date. Items without tags are labeled <code>pocket-import</code> so you can find them instantly." },
+      { "title": "Make it yours", "text": "Search by meaning for free — Raindrop charges yearly for that feature. Free has no device cap, so use BookmarkForge on any device, then add notes, folders and private peer-to-peer sync. Everything stays encrypted on your devices." }
+    ]
+  },
+  "faq": {
+    "id": "faq",
+    "title": "Frequently Asked Questions",
+    "items": [
+      { "question": "Can I import my Pocket library into BookmarkForge?", "answer": "Yes. Export your list from Pocket as an HTML file, then open BookmarkForge's importer and drop the file in. BookmarkForge detects the Pocket HTML export format automatically and imports every link with its title, tags and original save date. Untagged items are labeled \"pocket-import\" so you can find them instantly." },
+      { "question": "Does migrating from Pocket require an account?", "answer": "No. BookmarkForge has no accounts. The import runs entirely on your device — nothing is uploaded anywhere." },
+      { "question": "Will my imported bookmarks be sent to a server?", "answer": "No. BookmarkForge is local-first: your bookmarks, notes and documents are stored in your browser's local database and never leave your device unless you explicitly export, share or sync them." },
+      { "question": "What import formats does BookmarkForge support?", "answer": "The importer accepts .html (including Pocket and Netscape bookmark exports), .json, .csv, .md and .zip (Markdown/Obsidian vault) files." },
+      { "question": "Is the comparison table still valid after Pocket closes?", "answer": "The table reflects Pocket's feature set as it existed before the shutdown announcement. Once the service is fully retired, any Pocket-specific rows (export, offline app) become unavailable by definition — BookmarkForge's side of the table is unaffected because it runs locally." }
+    ]
+  },
+  "cta": {
+    "id": "cta",
+    "title": "Own Your Reading List Again",
+    "text": "Smart search included free — Raindrop charges yearly for it. No device cap on Free. No account. Your data never leaves your device.",
+    "ctaPrimary": "Start Saving Free",
+    "ctaSecondary": "Explore Features"
+  },
+  "footer": {
+    "brand": "Your private, AI-powered knowledge vault. 100% Local-First.",
+    "product": { "title": "Product", "links": [
+      { "label": "Features", "href": "/#features" },
+      { "label": "AI Capabilities", "href": "/#ai" },
+      { "label": "Privacy", "href": "/#privacy" },
+      { "label": "Pricing", "href": "/#pricing" },
+      { "label": "Launch App", "href": "/app" }
+    ] },
+    "resources": { "title": "Resources", "links": [
+      { "label": "Pocket Comparison", "href": "/pocket-alternative" },
+      { "label": "Privacy &amp; Terms", "href": "/privacy-and-terms.html" }
+    ] },
+    "languages": { "title": "Languages", "links": [
+      { "label": "English", "href": "/", "hreflang": "en" },
+      { "label": "Español", "href": "/es/", "hreflang": "es" },
+      { "label": "Français", "href": "/fr/", "hreflang": "fr" },
+      { "label": "Deutsch", "href": "/de/", "hreflang": "de" },
+      { "label": "Português", "href": "/pt/", "hreflang": "pt" },
+      { "label": "Italiano", "href": "/it/", "hreflang": "it" }
+    ] },
+    "support": { "title": "Support", "links": [
+      { "label": "Contact", "href": "mailto:bookmarkforge@proton.me" }
+    ] },
+    "copyright": "© 2026 BookmarkForge. All rights reserved.",
+    "legal": ["Privacy Policy", "Terms of Service", "bookmarkforge@proton.me"]
+  },
+  "structuredData": {
+    "webpage": {
+      "url": "https://bookmarkforgeapp.com/pocket-alternative",
+      "name": "BookmarkForge vs Pocket — Full Comparison & Migration Guide",
+      "description": "Feature-by-feature comparison between Pocket and BookmarkForge, plus a step-by-step guide to migrate your Pocket library."
+    },
+    "website": {
+      "name": "BookmarkForge",
+      "description": "Your private, AI-powered knowledge vault. 100% Local-First. The private Pocket alternative."
+    },
+    "organization": {
+      "name": "BookmarkForge",
+      "url": "https://bookmarkforgeapp.com/",
+      "email": "bookmarkforge@proton.me"
+    },
+    "software": {
+      "name": "BookmarkForge",
+      "description": "Save articles, notes and documents in a private, encrypted, local-first vault. AI search, Notion-style editor, P2P sync. The private Pocket alternative.",
+      "category": "ProductivityApplication",
+      "os": "Web",
+      "url": "https://bookmarkforgeapp.com/",
+      "offers": [
+        { "name": "Free", "price": "0", "currency": "USD" },
+        { "name": "Pro Lifetime", "price": "79", "currency": "USD" }
+      ],
+      "featureList": [
+        "Local-first storage",
+        "End-to-end encryption",
+        "Works offline",
+        "AI search",
+        "Notion-style editor",
+        "P2P sync",
+        "Pocket import"
+      ]
+    },
+    "faq": [
+      { "question": "Can I import my Pocket library into BookmarkForge?", "answer": "Yes. Export your list from Pocket as an HTML file, then open BookmarkForge's importer and drop the file in. BookmarkForge detects the Pocket HTML export format automatically and imports every link with its title, tags and original save date. Untagged items are labeled \"pocket-import\" so you can find them instantly." },
+      { "question": "Does migrating from Pocket require an account?", "answer": "No. BookmarkForge has no accounts. The import runs entirely on your device — nothing is uploaded anywhere." },
+      { "question": "Will my imported bookmarks be sent to a server?", "answer": "No. BookmarkForge is local-first: your bookmarks, notes and documents are stored in your browser's local database and never leave your device unless you explicitly export, share or sync them." },
+      { "question": "What import formats does BookmarkForge support?", "answer": "The importer accepts .html (including Pocket and Netscape bookmark exports), .json, .csv, .md and .zip (Markdown/Obsidian vault) files." },
+      { "question": "Is the comparison table still valid after Pocket closes?", "answer": "The table reflects Pocket's feature set as it existed before the shutdown announcement. Once the service is fully retired, any Pocket-specific rows (export, offline app) become unavailable by definition — BookmarkForge's side of the table is unaffected because it runs locally." }
+    ]
+  }
+}

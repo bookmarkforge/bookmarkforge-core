@@ -1,0 +1,499 @@
+{
+  "lang": "fi",
+  "langName": "Suomi",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforge.com/fi/",
+  "ogLocale": "fi_FI",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Yksityinen Pocket-vaihtoehto tekoälyllä (Kirjanmerkit ja muistiinpanot)",
+  "description": "Tallenna artikkeleita, muistiinpanoja ja asiakirjoja yksityisessä, salatussa ja 100 % paikallisessa vaultissa. AI-haku, Notion-tyylinen editori ja P2P-synkronointi. Ilmainen suunnitelma: 2 500 kirjanmerkkiä.",
+  "ogTitle": "BookmarkForge — Yksityinen Pocket-vaihtoehto tekoälyllä (Kirjanmerkit ja muistiinpanot)",
+  "ogDescription": "Tallenna artikkeleita, muistiinpanoja ja asiakirjoja yksityisessä, salatussa ja 100 % paikallisessa vaultissa. AI-haku, Notion-tyylinen editori ja P2P-synkronointi. Ilmainen suunnitelma: 2 500 kirjanmerkkiä.",
+  "ogImage": "https://bookmarkforge.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Yksityinen Pocket-vaihtoehto tekoälyllä (Kirjanmerkit ja muistiinpanot)",
+  "twitterDescription": "Tallenna artikkeleita, muistiinpanoja ja asiakirjoja yksityisessä, salatussa ja 100 % paikallisessa vaultissa. AI-haku, Notion-tyylinen editori ja P2P-synkronointi. Ilmainen suunnitelma: 2 500 kirjanmerkkiä.",
+  "twitterImage": "https://bookmarkforge.com/og-image.png",
+  "skipLink": "Siirry pääsisältöön",
+  "navBrandAria": "BookmarkForge etusivu",
+  "navAriaLabel": "Päänavigaatio",
+  "homeHref": "/fi/",
+  "navLinks": {
+    "pocketAlternative": "Pocket-vaihtoehto",
+    "features": "Ominaisuudet",
+    "ai": "AI",
+    "privacy": "Yksityisyys",
+    "pricing": "Hinnat",
+    "help": "Ohjeet",
+    "raindropCompare": "Raindrop Comparison"
+  },
+  "langLink": {
+    "href": "/?lang=en",
+    "hreflang": "en",
+    "lang": "en",
+    "text": "English"
+  },
+  "navCta": "Avaa sovellus",
+  "themeToggleAria": "Vaihda teemaa",
+  "hero": {
+    "badge": "Versio 1.0",
+    "title": "Sinun <span class='accent-text'>Yksityinen AI Vault</span>",
+    "subtitle": "Yksityinen Pocket-vaihtoehto artikkelien tallentamiseen ja myöhemmin lukemiseen: kirjanmerkit, muistiinpanot ja asiakirjat — laitteellasi salattuna, tekoälyllä haettavissa ja vertaisverkon synkronoimana. Pilveä ei ole. Seurantaa ei ole. 100 % sinun.",
+    "ctaPrimary": "Avaa Ilmaiseksi",
+    "ctaSecondary": "Katso Hinnat",
+    "pillars": [
+      {
+        "strong": "100 % Paikallinen",
+        "text": "tietosi eivät poistu laitteeltasi"
+      },
+      {
+        "strong": "Salattu",
+        "text": "AES-256-GCM + Argon2id"
+      },
+      {
+        "strong": "Offline",
+        "text": "toimii ilman internetiä"
+      },
+      {
+        "strong": "Yksityinen",
+        "text": "nollatelemetria oletuksena"
+      }
+    ],
+    "affiliate": {
+      "badge": "Ansaitse rahaa",
+      "title": "Kumppaniohjelma",
+      "subtitle": "Jaa BookmarkForge ja ansaitse 30% provision jokaisesta suositellusta ostopa. Aloita ansaitseminen tänään!",
+      "cta": "Liity kumppaniohjelmaan",
+      "details": [
+        "30% provision jokaisesta myynnistä",
+        "Rajoittamattomat tulot",
+        "Automaattiset maksut Whopin kautta",
+        "Reaaliaikainen seuranta"
+      ]
+    }
+  },
+  "demo": null,
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Lue myöhemmin uhraamatta yksityisyyttä",
+    "title": "Yksityinen Pocket-vaihtoehto",
+    "subtitle": "Pocket katoaa. BookmarkForge pitää lukutottumuksen hengissä — jokainen artikkeli, muistiinpano ja merkintä salattuna laitteellasi.",
+    "features": [
+      {
+        "title": "Tallenna artikkeleita myöhemmäksi, omasi ikuisesti",
+        "text": "Tallenna artikkeleita, videoita ja PDF yhden napsautuksella — PWA-sovelluksesta, selainlaajennuksesta tai jaostavalikosta. Toisin kuin Pocket, lukulistasi elää laitteellasi, salattuna, ja toimii offline-tilassa."
+      },
+      {
+        "title": "Notion-tyyppiset muistiinpanot jokaisessa artikkelissa",
+        "text": "Korosta, tiivistä ja kirjoita muistiinpanoja mihin tahansa kirjanmerkkiin. Muunna tallennettu artikkeli omaksi tietokannaksesi — ei pelkästään linkkilista."
+      },
+      {
+        "title": "Nollaseuranta, nollamainokset",
+        "text": "BookmarkForge ei käytä tilejä, analytiikkaa tai mainoksia oletuksena. Lukutottumukset ovat vain sinun vastuullasi."
+      }
+    ],
+    "ctaPrimary": "Aloita Tallentaminen Ilmaiseksi",
+    "ctaSecondary": "Täydellinen vertailu ja siirto-opas",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": null,
+  "features": {
+    "id": "features",
+    "tag": "Kaikki mitä tarvitset",
+    "title": "Tehokkaat ominaisuudet tietosi hallintaan, kaikki paikallisesti",
+    "items": [
+      {
+        "title": "Kirjanmerkit ja asiakirjat",
+        "text": "Tallenna mikä tahansa sivu yhdellä napsautuksella. Kirjoita muistiinpanoja heti viereen siistissä, yksinkertaisessa editorissa. Pysyy nopeana jopa 100 000 tallennetulla kohteella."
+      },
+      {
+        "title": "Täysteksti- ja semanttinen haku",
+        "text": "Löydä asiat avainsanan tai merkityksen perusteella — vaikka et muistaisi tarkkoja sanoja. Raindrop veloittaa tästä 28 dollaria vuodessa; täällä se on ilmaista."
+      },
+      {
+        "title": "Paikallinen AI (WebLLM / Ollama) — Vain Pro",
+        "text": "Kysy tallentamistasi asioista ja saat vastaukset lähteineen. Mitään ei lähetetä pilveen, ja toimii ilman internettiä. Vaatii Pro:n."
+      },
+      {
+        "title": "RAG-chat tietojesi yli — Vain Pro",
+        "text": "Kysy mitä tahansa kirjanmerkeistäsi ja muistiinpanoistasi ja saat vastaukset lähteineen. Yksityinen tila toimii 100 % omalla koneellasi. Vaatii Pro:n."
+      },
+      {
+        "title": "P2P-synkronointi (WebRTC) — Vain Pro",
+        "text": "Laitteesi keskustelevat suoraan keskenään — ilman palvelinta välissä, ja kaikki pysyy salattuna. Yhdistä ne skannaamalla QR-koodi. Jopa 5 laitetta. Vaatii Pro:n."
+      },
+      {
+        "title": "Salatut varmuuskopiot",
+        "text": "Automaattiset varmuuskopiot, jotka säilytät missä haluat — ulkoinen levy, pilvikansio, mikä tahansa. Vie kaikki Markdown-, JSON-, CSV- tai PDF-muotoon milloin tahansa. Avaimet ovat sinulla."
+      },
+      {
+        "title": "Tietoverkko",
+        "text": "Näe, miten muistiinpanosi ja kirjanmerkkisi liittyvät toisiinsa. Suodata tunnisteiden, päivämäärien ja samankaltaisuuden perusteella ja zoomaile äärettömällä kankaalla."
+      },
+      {
+        "title": "Flashcards (Spaced Repetition) — Vain Pro",
+        "text": "Muuta mikä tahansa tallennettu asiakirja kysymyskorteiksi, jotka nousevat esiin juuri ennen kuin unohtaisit ne — sama ajoitusajatus kuin Ankissa. Vaatii Pro:n."
+      },
+      {
+        "title": "Yksityisyys oletuksena",
+        "text": "Ei tilejä, ei seurantaa, ei mainoksia. Sinä olet asiakas, et tuote. Käytön jakaminen on olemassa, se on vapaaehtoista ja pysyy pois päältä, kunnes käynnistät sen."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI joka kunnioittaa sinua",
+    "title": "Tietosi, Tehostettu",
+    "subtitle": "BookmarkForge antaa sinulle valinnan: suorita 100 % paikallisia malleja selaimessasi (WebLLM, WebGPU) Pro:lla, liitä omat API-avaimet pilvipalveluihin tai käytä paikallista Ollamaa. Ohjeesi, tietosi, sääntösi.",
+    "providers": {
+      "title": "Tuetut palveluntarjoajat",
+      "list": [
+        {
+          "type": "local",
+          "name": "Koneesi sisällä — WebLLM-mallit (TinyLlama, Llama 3.2, Phi-3.5-mini) — vain Pro"
+        },
+        {
+          "type": "local",
+          "name": "Omalla koneellasi — Ollama (mikä tahansa malli, jota ajat)"
+        },
+        {
+          "type": "cloud",
+          "name": "Pilvi — Google Gemini (avainta hallitsemme me)"
+        },
+        {
+          "type": "cloud",
+          "name": "Pilvi — OpenAI / GPT-4o (omalla avaimellasi)"
+        },
+        {
+          "type": "cloud",
+          "name": "Pilvi — Anthropic Claude (omalla avaimellasi)"
+        },
+        {
+          "type": "cloud",
+          "name": "Pilvi — Groq (omalla avaimellasi)"
+        },
+        {
+          "type": "cloud",
+          "name": "Pilvi — OpenRouter tai muu räätälöity palveluntarjoaja (omalla avaimellasi)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Chat-tilat",
+      "items": [
+        {
+          "title": "Yksityinen Tila",
+          "text": "Vain paikallinen AI (WebLLM/Ollama). Nollatietoa poistuu laitteesta. Toimii offline. Vaatii Pro:ta WebLLM:lle."
+        },
+        {
+          "title": "Web-Hakutila",
+          "text": "Yhdistää vaulttisi reaaliaikaisiin hakutuloksiin (pilvipalvelut)."
+        },
+        {
+          "title": "Asiantuntijaagentit",
+          "text": "Erikoistuneet hahmot: Ohjelmoija, Kirjailija, Analyytikko, Tutkija. Vaatii Pro:ta paikalliselle AI:lle."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Yksityisyys ei ole ominaisuus — se on perusta",
+    "subtitle": "Jokinen arkkitehtoninen päätös antaa sinulle kontrollin",
+    "items": [
+      {
+        "title": "Päästä päähän -salaus",
+        "text": "Kirjastosi on salattu pääsalasanastasi johdetulla avaimella. Emme näe salasanaasi tai sisältöäsi koskaan."
+      },
+      {
+        "title": "100 % paikallinen arkkitehtuuri",
+        "text": "Kaikki asuu tietokoneellasi. Seurantapalvelin hoitaa vain lisensoinnin, laitteiden parituksen ja pilvitilan AI-kysymystesi välityksen — ei koskaan sisältöäsi."
+      },
+      {
+        "title": "Nollatelemetria oletuksena",
+        "text": "Ei analytiikkaa, ei kaatumisraportteja, ei seurantaa. Käyttötilastojen tai virheraporttien jakaminen on erillinen valinta, oletuksena pois päältä."
+      },
+      {
+        "title": "Avaimet ovat sinun",
+        "text": "Ei pääsalasanaa ei tarkoita pääsyä — \"salasana unohtui\" -takaovea ei ole. 24-sanan palautuslauseesi on ainoa tie sisään; pidä se turvassa."
+      },
+      {
+        "title": "GDPR-noudattaminen",
+        "text": "Tarkista, korjaa, poista tai ota tietosi mukaasi — kaikki paikallisesti, milloin tahansa."
+      },
+      {
+        "title": "Palveluntarjoajasta riippumaton",
+        "text": "Vie tietosi milloin tahansa avoimissa muodoissa (JSON, Markdown, CSV, PDF). Tietämyksesi pysyy sinun ja kannettavana."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Yksinkertaiset, Oikeudenmukaiset Hinnat",
+    "subtitle": "Ilmainen suunnitelma: 2 500 kirjanmerkkiä. Pro on kertamaksu 79 $ — ei tilauksia.",
+    "plans": [
+      {
+        "name": "Ilmainen",
+        "price": "$ 0",
+        "period": "/ ikuisesti",
+        "description": "Henkilökohtaiseen arkistoon (2 500 kirjanmerkkiä, toimii millä tahansa laitteella — jokaisella on oma holvinsa)",
+        "features": [
+          {
+            "included": true,
+            "text": "2 500 kirjanmerkkiä, muistiinpanoja ja asiakirjoja"
+          },
+          {
+            "included": true,
+            "text": "Älykäs haku (kokoteksti + semanttinen) — sisältyy ilmaiseksi; Raindrop perii siitä vuosimaksun"
+          },
+          {
+            "included": true,
+            "text": "AI omalla API-avaimellasi (maksat palveluntarjoajaa)"
+          },
+          {
+            "included": true,
+            "text": "Tietoverkko"
+          },
+          {
+            "included": true,
+            "text": "Peruspohjat"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML-vienti"
+          },
+          {
+            "included": true,
+            "text": "PWA + selainlaajennukset"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> P2P-synkronointi laitteiden välillä"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Paikallinen AI (WebLLM/Ollama)"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> RAG-chat tietojesi yli"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Flashcards spaced repetitionilla"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Edistynyt vienti (10+ muotoa)"
+          }
+        ],
+        "cta": "Aloita Ilmaiseksi",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro",
+        "badge": "Suosituin — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (sitten $79)",
+        "description": "Elinikäinen v1 · 12 kuukautta ominaisuuspäivityksiä · Turvallisuus ikuisesti · v2 60% alennuksella",
+        "features": [
+          {
+            "included": true,
+            "text": "Kaikki Ilmaisessa"
+          },
+          {
+            "included": true,
+            "text": "Rajoittamattomat kirjanmerkit"
+          },
+          {
+            "included": true,
+            "text": "5 laitetta"
+          },
+          {
+            "included": true,
+            "text": "P2P-synkronointi 5 laitteella"
+          },
+          {
+            "included": true,
+            "text": "Paikallinen AI (WebLLM, ei API-avainta)"
+          },
+          {
+            "included": true,
+            "text": "RAG-chat tietojesi yli"
+          },
+          {
+            "included": true,
+            "text": "Asiantuntijaagentit (Ohjelmoija, Kirjailija, Analyytikko, Tutkija)"
+          },
+          {
+            "included": true,
+            "text": "Flashcards spaced repetitionilla"
+          },
+          {
+            "included": true,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Edistynyt vienti (10+ muotoa)"
+          },
+          {
+            "included": true,
+            "text": "Turvallisuus-vault (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Päivitykset 12 kuukautta"
+          },
+          {
+            "included": true,
+            "text": "Sähköpostituki"
+          }
+        ],
+        "cta": "Hanki Pro Ikuiseksi",
+        "ctaHref": "https://whop.com/checkout/plan_XU1GaWhoYhoDh",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "sitten $79 normaalihinta",
+        "sla": "Tuki: sähköposti 48 h (ma–pe)"
+      }
+    ],
+    "legal": "Elinikäinen lisenssi BookmarkForge v1:een. Sisältää kaikki v1.x-päivitykset ja 12 kuukautta ominaisuuspäivityksiä. Turvallisuuspäivitykset ikuisesti. Tulevat pääversiot (v2, v3) 60% alennuksella nykyisille omistajille. 30 päivän palautus Whopin kautta. <a href=\"/privacy-and-terms.html#terms\">Ehdot</a> · <a href=\"/help#pricing\">Lue lisää</a>"
+  },
+  "faq": {
+    "title": "Usein Kysytyt Kysymykset",
+    "items": [
+      {
+        "question": "Onko ilmainen suunnitelma todella ilmainen ikuisesti?",
+        "answer": "Kyllä. Ei rajoitettua kokeilua tai tilausta. Ilmainen suunnitelma sisältää 2 500 kirjanmerkkiä, täysteksti- ja semanttisen haun, tietoverkon ja AI:n omalla API-avaimellasi (maksat palveluntarjoajaa)."
+      },
+      {
+        "question": "Mitä 'kertamaksu' Pro:ssa tarkoittaa?",
+        "answer": "Maksat kerran (79 $), ja lisenssi on sinun ikuisesti. Sisältää kaikki päivitykset 12 kuukautta. Ei toistuvia maksuja. Lisenssiavain toimitetaan heti Whopin kautta."
+      },
+      {
+        "question": "Mitä maksutapoja hyväksytte?",
+        "answer": "Whopin kautta: luottokortti, PayPal ja kryptovaluutat. Emme näe maksutietojasi koskaan."
+      },
+      {
+        "question": "Tuki — kuinka nopeasti vastaatte?",
+        "answer": "Yhteisö: yhteisön apu <a href=\"/help\">Ohjekeskuksen</a> kautta + GitHub Discussions (parhaiden kykyjen mukaan). Pro: sähköpostiin vastaus 48 tunnissa arkipäivisin. Holvi on salattu — emme näe tietojasi, joten emme koskaan pyydä salasanaasi tai palautuslausetta. Katso <a href=\"/help#sla\">Tuen SLA</a>."
+      },
+      {
+        "question": "Entä jos unohdan holvin salasanani?",
+        "answer": "Emme voi palauttaa sitä. Kun luot holvin, näytämme 24-sanan palautuslauseen kerran — kirjoita se paperille. Ilman sitä kukaan (emmekä mekään) ei voi avata holvia. Katso <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Valmis Ottamaan Tietosi Hallintaan?",
+    "text": "Liity tuhansille tutkijoille, kehittäjille ja opiskelijoille, jotka luottavat BookmarkForgeen toisena aivoinaan.",
+    "ctaPrimary": "Avaa Ilmaiseksi",
+    "ctaSecondary": "Päivitä Pro:ksi",
+    "note": "Tiliä ei tarvita. Toimii heti selaimessasi. Ilmainen suunnitelma: 2 500 kirjanmerkkiä."
+  },
+  "footer": {
+    "brand": "Yksityinen AI-vault tietoillesi. 100 % paikallinen.",
+    "product": {
+      "title": "Tuote",
+      "links": [
+        "Ominaisuudet",
+        "AI-mahdollisuudet",
+        "Yksityisyys",
+        "Hinnat",
+        "Avaa Sovellus"
+      ]
+    },
+    "resources": {
+      "title": "Resurssit",
+      "links": [
+        "Pocket-vertailu",
+        "Yksityisyys ja ehdot"
+      ]
+    },
+    "languages": {
+      "title": "Kielet",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Tuki",
+      "links": [
+        "Ota yhteyttä"
+      ],
+      "helpCenter": "Ohjekeskus",
+      "errorCodes": "Virhekoodit"
+    },
+    "copyright": "© 2026 BookmarkForge. Kaikki oikeudet pidätetään.",
+    "legal": [
+      "Yksityisyyskäytäntö",
+      "Käyttöehdot",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Tallenna artikkeleita, muistiinpanoja ja asiakirjoja yksityisessä, salatussa ja 100 % paikallisessa vaultissa. AI-haku, Notion-tyylinen editori ja P2P-synkronointi. Ilmainen suunnitelma: 2 500 kirjanmerkkiä.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforge.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforge.com/",
+    "offers": [
+      {
+        "name": "Ilmainen",
+        "price": "0",
+        "currency": "USD",
+        "description": "Henkilökohtaiseen arkistoon (2 500 kirjanmerkkiä, toimii millä tahansa laitteella — jokaisella on oma holvinsa)"
+      },
+      {
+        "name": "Pro",
+        "price": "59",
+        "currency": "USD",
+        "description": "Elinikäinen v1 · 12 kuukautta ominaisuuspäivityksiä · Turvallisuus ikuisesti · v2 60% alennuksella"
+      }
+    ],
+    "featureList": [
+      "Paikallinen tallennus",
+      "Päästä päähän -salaus",
+      "Toimii offline-tilassa",
+      "AI-haku",
+      "Notion-tyylinen editori",
+      "P2P-synkronointi"
+    ],
+    "faq": [
+      {
+        "question": "Onko ilmainen suunnitelma todella ilmainen ikuisesti?",
+        "answer": "Kyllä. Ei rajoitettua kokeilua tai tilausta. Ilmainen suunnitelma sisältää 2 500 kirjanmerkkiä, täysteksti- ja semanttisen haun, tietoverkon ja AI:n omalla API-avaimellasi (maksat palveluntarjoajaa)."
+      },
+      {
+        "question": "Mitä 'kertamaksu' Pro:ssa tarkoittaa?",
+        "answer": "Maksat kerran (79 $), ja lisenssi on sinun ikuisesti. Sisältää kaikki päivitykset 12 kuukautta. Ei toistuvia maksuja. Lisenssiavain toimitetaan heti Whopin kautta."
+      },
+      {
+        "question": "Mitä maksutapoja hyväksytte?",
+        "answer": "Whopin kautta: luottokortti, PayPal ja kryptovaluutat. Emme näe maksutietojasi koskaan."
+      },
+      {
+        "question": "Tuki — kuinka nopeasti vastaatte?",
+        "answer": "Yhteisö: yhteisön apu <a href=\"/help\">Ohjekeskuksen</a> kautta + GitHub Discussions (parhaiden kykyjen mukaan). Pro: sähköpostiin vastaus 48 tunnissa arkipäivisin. Holvi on salattu — emme näe tietojasi, joten emme koskaan pyydä salasanaasi tai palautuslausetta. Katso <a href=\"/help#sla\">Tuen SLA</a>."
+      },
+      {
+        "question": "Entä jos unohdan holvin salasanani?",
+        "answer": "Emme voi palauttaa sitä. Kun luot holvin, näytämme 24-sanan palautuslauseen kerran — kirjoita se paperille. Ilman sitä kukaan (emmekä mekään) ei voi avata holvia. Katso <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  }
+}

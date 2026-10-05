@@ -1,0 +1,482 @@
+{
+  "lang": "no",
+  "langName": "Norsk",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/no/",
+  "ogLocale": "no_NO",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Privat Pocket-alternativ med AI (Bokmerker og notater)",
+  "description": "Lagre artikler, notater og dokumenter i et privat, kryptert og 100% lokalt vault. AI-søk, Notion-lignende editor og P2P-synkronisering. Gratis plan: 2.500 bokmerker.",
+  "ogTitle": "BookmarkForge — Privat Pocket-alternativ med AI (Bokmerker og notater)",
+  "ogDescription": "Lagre artikler, notater og dokumenter i et privat, kryptert og 100% lokalt vault. AI-søk, Notion-lignende editor og P2P-synkronisering. Gratis plan: 2.500 bokmerker.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Privat Pocket-alternativ med AI (Bokmerker og notater)",
+  "twitterDescription": "Lagre artikler, notater og dokumenter i et privat, kryptert og 100% lokalt vault. AI-søk, Notion-lignende editor og P2P-synkronisering. Gratis plan: 2.500 bokmerker.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Gå til hovedinnhold",
+  "navBrandAria": "BookmarkForge forside",
+  "navAriaLabel": "Hovednavigasjon",
+  "homeHref": "/no/",
+  "navLinks": {
+    "pocketAlternative": "Pocket-alternativ",
+    "features": "Funksjoner",
+    "ai": "AI",
+    "privacy": "Personvern",
+    "pricing": "Priser",
+    "help": "Hjelp",
+    "raindropCompare": "Raindrop Comparison"
+  },
+  "langLink": {
+    "href": "/?lang=en",
+    "hreflang": "en",
+    "lang": "en",
+    "text": "English"
+  },
+  "navCta": "Åpne appen",
+  "themeToggleAria": "Bytt tema",
+  "hero": {
+    "badge": "Versjon 1.0",
+    "title": "Ditt <span class='accent-text'>Private AI Vault</span>",
+    "subtitle": "Det private alternativet til Pocket for å lagre artikler og lese senere: bokmerker, notater og dokumenter — kryptert på enheten din, søkbart med AI og synkronisert peer-to-peer. Ingen sky. Ingen sporing. 100% ditt.",
+    "ctaPrimary": "Åpne Gratis",
+    "ctaSecondary": "Se Priser",
+    "pillars": [
+      {
+        "strong": "100% Lokalt",
+        "text": "dataene dine forlater ikke enheten"
+      },
+      {
+        "strong": "Kryptert",
+        "text": "AES-256-GCM + Argon2id"
+      },
+      {
+        "strong": "Offline",
+        "text": "fungerer uten internett"
+      },
+      {
+        "strong": "Privat",
+        "text": "null telemetri som standard"
+      }
+    ]
+  },
+  "demo": null,
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Les senere uten å kompromittere personvernet",
+    "title": "Det Private Pocket-alternativet",
+    "subtitle": "Pocket forsvinner. BookmarkForge holder lesevanen i live — med hver artikkel, notat og markering kryptert på enheten din.",
+    "features": [
+      {
+        "title": "Lagre artikler for senere, dine for alltid",
+        "text": "Lagre artikler, videoer og PDF med ett klikk — fra PWA-appen, nettleserutvidelsen eller dele-menyen. I motsetning til Pocket lever lese-listen din på enheten din, kryptert, og fungerer offline."
+      },
+      {
+        "title": "Notion-lignende notater i hver artikkel",
+        "text": "Fremhev, oppsummer og skriv notater i ethvert bokmerke. Gjør en lagret artikkel til din egen kunnskapsbase — ikke bare en lenkeliste."
+      },
+      {
+        "title": "Null sporing, null annonser",
+        "text": "BookmarkForge har ingen kontoer, analyseverktøy eller annonser som standard. Lesevanene dine er kun ditt ansvar."
+      }
+    ],
+    "ctaPrimary": "Begynn å Lagre Gratis",
+    "ctaSecondary": "Fullstendig sammenligning og migreringsguide",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": null,
+  "features": {
+    "id": "features",
+    "tag": "Alt du trenger",
+    "title": "Kraftige funksjoner for å administrere kunnskapen din, alt kjøres lokalt",
+    "items": [
+      {
+        "title": "Bokmerker og dokumenter",
+        "text": "Lagre enhver side med ett klikk. Skriv notater rett ved siden av, i en ren, enkel editor. Holder seg rask selv med 100 000 lagrede elementer."
+      },
+      {
+        "title": "Fulltekst- og semantisk søk",
+        "text": "Finn ting etter nøkkelord eller etter mening — også når du ikke husker de nøyaktige ordene. Raindrop tar 28 dollar i året for dette; her er det inkludert gratis."
+      },
+      {
+        "title": "Lokal AI (WebLLM / Ollama) — Kun Pro",
+        "text": "Still spørsmål om det du har lagret, og få svar med kildene vist. Ingenting sendes til skyen, og det fungerer uten internett. Krever Pro."
+      },
+      {
+        "title": "RAG-chat over dataene dine — Kun Pro",
+        "text": "Spør om hva som helst mellom bokmerkene og notatene dine, og få svar med sitater. Den private modusen kjører 100 % på din egen maskin. Krever Pro."
+      },
+      {
+        "title": "P2P-synkronisering (WebRTC) — Kun Pro",
+        "text": "Enhetene dine snakker direkte med hverandre — ingen server i midten, og alt forblir kryptert. Koble dem ved å skanne en QR-kode. Opptil 5 enheter. Krever Pro."
+      },
+      {
+        "title": "Krypterte sikkerhetskopier",
+        "text": "Automatiske sikkerhetskopier du kan oppbevare hvor du vil — en ekstern disk, en mappe i skyen, hvor som helst. Eksporter alt til Markdown, JSON, CSV eller PDF når du vil. Nøklene er dine."
+      },
+      {
+        "title": "Kunnskapsgraf",
+        "text": "Se hvordan notatene og bokmerkene henger sammen. Filtrer etter etiketter, datoer og likhet, og zoom rundt på et uendelig lerret."
+      },
+      {
+        "title": "Flashcards (Spaced Repetition) — Kun Pro",
+        "text": "Gjør ethvert lagret dokument til spørsmålskort som dukker opp akkurat før du ville glemt dem — samme planleggingsidé som Anki. Krever Pro."
+      },
+      {
+        "title": "Personvern som standard",
+        "text": "Ingen kontoer, ingen sporing, ingen annonser. Du er kunden, ikke produktet. Deling av bruksdata finnes, er valgfritt og forblir avslått til du slår det på."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI som respekterer deg",
+    "title": "Din Kunnskap, Forsterket",
+    "subtitle": "BookmarkForge gir deg valget: kjør 100% lokale modeller i nettleseren din (WebLLM, WebGPU) med Pro, koble dine egne API-nøkler til skyleverandører, eller bruk lokal Ollama. Instruksjonene dine, dataene dine, reglene dine.",
+    "providers": {
+      "title": "Støttede leverandører",
+      "list": [
+        {
+          "type": "local",
+          "name": "Inne i datamaskinen din — WebLLM-modeller (TinyLlama, Llama 3.2, Phi-3.5-mini) — kun Pro"
+        },
+        {
+          "type": "local",
+          "name": "På din egen maskin — Ollama (enhver modell du kjører)"
+        },{
+          "type": "cloud",
+          "name": "Sky — OpenAI / GPT-4o (med din egen nøkkel)"
+        },
+        {
+          "type": "cloud",
+          "name": "Sky — Anthropic Claude (med din egen nøkkel)"
+        },
+        {
+          "type": "cloud",
+          "name": "Sky — Groq (med din egen nøkkel)"
+        },
+        {
+          "type": "cloud",
+          "name": "Sky — OpenRouter eller en annen tilpasset leverandør (med din egen nøkkel)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Chat-moduser",
+      "items": [
+        {
+          "title": "Privat Modus",
+          "text": "Kun lokal AI (WebLLM/Ollama). Null data forlater enheten. Fungerer offline. Krever Pro for WebLLM."
+        },
+        {
+          "title": "Web Søkemodus",
+          "text": "Kombinerer vaultet ditt med sanntids søkeresultater (skyleverandører)."
+        },
+        {
+          "title": "Eksperter",
+          "text": "Spesialiserte personer: Utvikler, Forfatter, Analytiker, Forsker. Krever Pro for lokal AI."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Personvern er ikke en funksjon — det er grunnlaget",
+    "subtitle": "Hvert arkitekturvalg gir deg kontroll",
+    "items": [
+      {
+        "title": "End-to-end-kryptering",
+        "text": "Biblioteket ditt er kryptert med en nøkkel utledet fra hovedpassordet ditt. Vi ser aldri passordet ditt eller innholdet ditt."
+      },
+      {
+        "title": "100% lokal arkitektur",
+        "text": "Alt bor på datamaskinen din. Følgeserveren håndterer kun lisensiering, enhetsparing og videresending av sky-modus AI-spørsmålene dine — aldri innholdet ditt."
+      },
+      {
+        "title": "Null telemetri som standard",
+        "text": "Ingen analyse, ingen feilrapporter, ingen sporing. Deling av bruksstatistikk eller feilrapporter er et separat valg, avslått som standard."
+      },
+      {
+        "title": "Nøklene er dine",
+        "text": "Uten hovedpassord er det ingen tilgang — det er ingen \"glemt passord\"-bakdør. Gjenopprettingsfrasen på 24 ord er den eneste veien inn; oppbevar den trygt."
+      },
+      {
+        "title": "GDPR-overholdelse",
+        "text": "Få tilgang til, rett, slett eller ta med deg dataene dine — alt kan gjøres lokalt, når du vil."
+      },
+      {
+        "title": "Uavhengig av leverandør",
+        "text": "Eksporter dataene dine når som helst i åpne formater (JSON, Markdown, CSV, PDF). Kunnskapen din forblir din og bærbar."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Enkle, Rettferdige Priser",
+    "subtitle": "Gratis plan: 2.500 bokmerker. Pro er engangskjøp på $59 Early Bird (deretter $79) — ingen abonnementer.",
+    "plans": [
+      {
+        "name": "Gratis",
+        "price": "$ 0",
+        "period": "/ for alltid",
+        "description": "Til personlig arkiv (2 500 bokmerker, fungerer på enhver enhet — hver med sitt eget hvelv)",
+        "features": [
+          {
+            "included": true,
+            "text": "2.500 bokmerker, notater og dokumenter"
+          },
+          {
+            "included": true,
+            "text": "Smart søk (fulltekst + semantisk) — inkludert gratis; Raindrop krever årlig betaling for dette"
+          },
+          {
+            "included": true,
+            "text": "AI med din egen API-nøkkel (du betaler leverandøren)"
+          },
+          {
+            "included": true,
+            "text": "Kunnskapsgraf"
+          },
+          {
+            "included": true,
+            "text": "Grunnleggende maler"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML-eksport"
+          },
+          {
+            "included": true,
+            "text": "PWA + nettleserutvidelser"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> P2P-synkronisering mellom enheter"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Lokal AI (WebLLM/Ollama)"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> RAG-chat over dataene dine"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Flashcards med spaced repetition"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Avansert eksport (10+ formater)"
+          }
+        ],
+        "cta": "Begynn Gratis",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro",
+        "badge": "Mest populær — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (deretter $79)",
+        "description": "Livstid for v1 · 12 måneders funksjonsoppdateringer · Sikkerhet for alltid · v2 med 60% rabatt",
+        "features": [
+          {
+            "included": true,
+            "text": "Alt i Gratis"
+          },
+          {
+            "included": true,
+            "text": "Ubegrensede bokmerker"
+          },
+          {
+            "included": true,
+            "text": "5 enheter"
+          },
+          {
+            "included": true,
+            "text": "P2P-synkronisering på 5 enheter"
+          },
+          {
+            "included": true,
+            "text": "Lokal AI (WebLLM, ingen API-nøkkel)"
+          },
+          {
+            "included": true,
+            "text": "RAG-chat over dataene dine"
+          },
+          {
+            "included": true,
+            "text": "Eksperter (Utvikler, Forfatter, Analytiker, Forsker)"
+          },
+          {
+            "included": true,
+            "text": "Flashcards med spaced repetition"
+          },
+          {
+            "included": true,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Avansert eksport (10+ formater)"
+          },
+          {
+            "included": true,
+            "text": "Sikkerhets-vault (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Oppdateringer i 12 måneder"
+          },
+          {
+            "included": true,
+            "text": "E-poststøtte"
+          }
+        ],
+        "cta": "Få Pro For Alltid",
+        "ctaHref": "/buy-pro",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "deretter $79 ordinær pris",
+        "sla": "Støtte: e-post 48 t (man–fre)"
+      }
+    ],
+    "legal": "Livstidslisens for BookmarkForge v1. Inkluderer alle v1.x-oppdateringer og 12 måneder med funksjonsoppdateringer. Sikkerhetsoppdateringer for alltid. Fremtidige hovedversjoner (v2, v3) med 60 % rabatt for eksisterende eiere. 30 dagers refusjon via Whop. <a href=\"/privacy-and-terms.html#terms\">Vilkår</a> · <a href=\"/help#pricing\">Les mer</a>"
+  },
+  "faq": {
+    "title": "Ofte Stilte Spørsmål",
+    "items": [
+      {
+        "question": "Er gratisplanen virkelig gratis for alltid?",
+        "answer": "Ja. Ingen begrenset prøveperiode eller abonnement. Gratisplanen inkluderer 2.500 bokmerker, fulltekst- og semantisk søk, kunnskapsgraf og AI med din egen API-nøkkel (du betaler leverandøren)."
+      },
+      {
+        "question": "Hva betyr 'engangskjøp' i Pro?",
+        "answer": "Du betaler én gang ($79), og lisensen er din for alltid. Inkluderer alle oppdateringer i 12 måneder. Ingen tilbakevendende gebyrer. Lisensnøkkelen leveres øyeblikkelig via Whop."
+      },
+      {
+        "question": "Hvilke betalingsmetoder aksepterer dere?",
+        "answer": "Via Whop: kredittkort, PayPal og kryptovaluta. Vi ser aldri betalingsinformasjonen din."
+      },
+      {
+        "question": "Support — hvor raskt svarer dere?",
+        "answer": "Fellesskap: hjelp fra fellesskapet via <a href=\"/help\">Hjelpesenteret</a> + GitHub Discussions (etter beste evne). Pro: e-post innen 48 timer på virkedager. Hvelvet er kryptert — vi kan ikke se dataene dine, så vi ber aldri om passordet eller gjenopprettingsfrasen din. Se <a href=\"/help#sla\">Support-SLA</a>."
+      },
+      {
+        "question": "Hva om jeg glemmer passordet til hvelvet?",
+        "answer": "Vi kan ikke gjenopprette det. Når du oppretter et hvelv, viser vi en gjenopprettingsfrase på 24 ord én gang — skriv den ned på papir. Uten den kan ingen (heller ikke vi) åpne hvelvet. Se <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Klar til å Ta Kontroll over Kunnskapen Din?",
+    "text": "Bli med blant tusenvis av forskere, utviklere og studenter som stoler på BookmarkForge som sin andre hjerne.",
+    "ctaPrimary": "Åpne Gratis",
+    "ctaSecondary": "Oppgrader til Pro",
+    "note": "Ingen konto nødvendig. Fungerer øyeblikkelig i nettleseren din. Gratis plan: 2.500 bokmerker."
+  },
+  "footer": {
+    "brand": "Ditt private AI-vault for kunnskap. 100% lokalt.",
+    "product": {
+      "title": "Produkt",
+      "links": [
+        "Funksjoner",
+        "AI-muligheter",
+        "Personvern",
+        "Priser",
+        "Åpne Appen"
+      ]
+    },
+    "resources": {
+      "title": "Ressurser",
+      "links": [
+        "Pocket-sammenligning",
+        "Personvern og vilkår"
+      ]
+    },
+    "languages": {
+      "title": "Språk",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Støtte",
+      "links": [
+        "Kontakt oss"
+      ],
+      "helpCenter": "Hjelpesenter",
+      "errorCodes": "Feilkoder"
+    },
+    "copyright": "© 2026 BookmarkForge. Alle rettigheter forbeholdt.",
+    "legal": [
+      "Personvernpolicy",
+      "Vilkår for tjenesten",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Lagre artikler, notater og dokumenter i et privat, kryptert og 100% lokalt vault. AI-søk, Notion-lignende editor og P2P-synkronisering. Gratis plan: 2.500 bokmerker.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "Gratis",
+        "price": "0",
+        "currency": "USD",
+        "description": "Til personlig arkiv (2 500 bokmerker, fungerer på enhver enhet — hver med sitt eget hvelv)"
+      },
+      {
+        "name": "Pro",
+        "price": "59",
+        "currency": "USD",
+        "description": "Livstid for v1 · 12 måneders funksjonsoppdateringer · Sikkerhet for alltid · v2 med 60% rabatt"
+      }
+    ],
+    "featureList": [
+      "Lokal lagring",
+      "End-to-end-kryptering",
+      "Fungerer offline",
+      "AI-søk",
+      "Notion-lignende editor",
+      "P2P-synkronisering"
+    ],
+    "faq": [
+      {
+        "question": "Er gratisplanen virkelig gratis for alltid?",
+        "answer": "Ja. Ingen begrenset prøveperiode eller abonnement. Gratisplanen inkluderer 2.500 bokmerker, fulltekst- og semantisk søk, kunnskapsgraf og AI med din egen API-nøkkel (du betaler leverandøren)."
+      },
+      {
+        "question": "Hva betyr 'engangskjøp' i Pro?",
+        "answer": "Du betaler én gang ($79), og lisensen er din for alltid. Inkluderer alle oppdateringer i 12 måneder. Ingen tilbakevendende gebyrer. Lisensnøkkelen leveres øyeblikkelig via Whop."
+      },
+      {
+        "question": "Hvilke betalingsmetoder aksepterer dere?",
+        "answer": "Via Whop: kredittkort, PayPal og kryptovaluta. Vi ser aldri betalingsinformasjonen din."
+      },
+      {
+        "question": "Support — hvor raskt svarer dere?",
+        "answer": "Fellesskap: hjelp fra fellesskapet via <a href=\"/help\">Hjelpesenteret</a> + GitHub Discussions (etter beste evne). Pro: e-post innen 48 timer på virkedager. Hvelvet er kryptert — vi kan ikke se dataene dine, så vi ber aldri om passordet eller gjenopprettingsfrasen din. Se <a href=\"/help#sla\">Support-SLA</a>."
+      },
+      {
+        "question": "Hva om jeg glemmer passordet til hvelvet?",
+        "answer": "Vi kan ikke gjenopprette det. Når du oppretter et hvelv, viser vi en gjenopprettingsfrase på 24 ord én gang — skriv den ned på papir. Uten den kan ingen (heller ikke vi) åpne hvelvet. Se <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  }
+}

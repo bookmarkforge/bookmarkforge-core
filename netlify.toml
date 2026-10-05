@@ -1,0 +1,323 @@
+# BookmarkForge — Netlify deployment configuration.
+#
+# The three CSP-derived header values below (Reporting-Endpoints, Report-To
+# and Content-Security-Policy) are rendered from scripts/csp-config.js by
+# `npm run nginx:render` (surgical, non-wholesale — only those three lines
+# are rewritten). Every other section, per-path header block and comment is
+# static and must be edited by hand. The `check:csp` gate validates that
+# this copy carries the canonical CSP verbatim.
+#
+# NOTE: keep this file free of the deployment domain outside the three
+# rendered lines — a BOOKMARKFORGE_DOMAIN change propagates through those
+# lines and `nginx:render` verify treats any stray domain reference as drift.
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    Cross-Origin-Embedder-Policy = "require-corp"
+    Cross-Origin-Opener-Policy = "same-origin"
+    Reporting-Endpoints = 'csp-endpoint="/csp-report"'
+    Report-To = '{"group":"csp-endpoint","max_age":86400,"endpoints":[{"url":"https://bookmarkforgeapp.com/csp-report"}]}'
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data:; connect-src 'self' https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri https://bookmarkforgeapp.com/csp-report; report-to csp-endpoint"
+
+[[headers]]
+  for = "/payment/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/pricing/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+# Private app — local-first vault, SPA shell only, never indexable
+[[headers]]
+  for = "/app"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/app/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/capture"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/capture/*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/offline*"
+  [headers.values]
+    X-Robots-Tag = "noindex"
+
+# Landing pages (SEO) — static HTML at clean URLs (200 rewrite keeps the
+# canonical at / and /es/)
+#
+# Accept-Language negotiation + manual preference (mirrors public/nginx.conf
+# and functions/_middleware.js): a browser whose PRIMARY language is one of
+# the localized landings gets a 302 to it. Netlify matches Language
+# conditions against the first language in the Accept-Language header
+# (quality values ignored) and against the nf_lang cookie when the visitor
+# picked a language by hand — same semantics as the
+# `if ($http_accept_language ~* "^<lang>")` rules. That coupling is why this
+# list covers EVERY locale: on Netlify the preference has no mechanism of
+# its own, so a language missing here cannot honour the choice at all (a
+# split list is what left the 24 new locales choosing a language that was
+# then silently ignored). 302 (not 301) on purpose: negotiation must stay
+# temporary so search engines keep the EN canonical at /. Rules must precede
+# the 200 fallback below — Netlify applies the first matching rule. Pinned by
+# check:seo: one rule per locale in scripts/nginx-render.mjs LANDING_LANGS.
+[[redirects]]
+  from = "/"
+  to = "/ar/"
+  status = 302
+  conditions = { Language = ["ar"] }
+
+[[redirects]]
+  from = "/"
+  to = "/bg/"
+  status = 302
+  conditions = { Language = ["bg"] }
+
+[[redirects]]
+  from = "/"
+  to = "/cs/"
+  status = 302
+  conditions = { Language = ["cs"] }
+
+[[redirects]]
+  from = "/"
+  to = "/da/"
+  status = 302
+  conditions = { Language = ["da"] }
+
+[[redirects]]
+  from = "/"
+  to = "/de/"
+  status = 302
+  conditions = { Language = ["de"] }
+
+[[redirects]]
+  from = "/"
+  to = "/el/"
+  status = 302
+  conditions = { Language = ["el"] }
+
+[[redirects]]
+  from = "/"
+  to = "/es/"
+  status = 302
+  conditions = { Language = ["es"] }
+
+[[redirects]]
+  from = "/"
+  to = "/fi/"
+  status = 302
+  conditions = { Language = ["fi"] }
+
+[[redirects]]
+  from = "/"
+  to = "/fr/"
+  status = 302
+  conditions = { Language = ["fr"] }
+
+[[redirects]]
+  from = "/"
+  to = "/he/"
+  status = 302
+  conditions = { Language = ["he"] }
+
+[[redirects]]
+  from = "/"
+  to = "/hi/"
+  status = 302
+  conditions = { Language = ["hi"] }
+
+[[redirects]]
+  from = "/"
+  to = "/hr/"
+  status = 302
+  conditions = { Language = ["hr"] }
+
+[[redirects]]
+  from = "/"
+  to = "/hu/"
+  status = 302
+  conditions = { Language = ["hu"] }
+
+[[redirects]]
+  from = "/"
+  to = "/id/"
+  status = 302
+  conditions = { Language = ["id"] }
+
+[[redirects]]
+  from = "/"
+  to = "/it/"
+  status = 302
+  conditions = { Language = ["it"] }
+
+[[redirects]]
+  from = "/"
+  to = "/ja/"
+  status = 302
+  conditions = { Language = ["ja"] }
+
+[[redirects]]
+  from = "/"
+  to = "/ko/"
+  status = 302
+  conditions = { Language = ["ko"] }
+
+[[redirects]]
+  from = "/"
+  to = "/nl/"
+  status = 302
+  conditions = { Language = ["nl"] }
+
+[[redirects]]
+  from = "/"
+  to = "/no/"
+  status = 302
+  conditions = { Language = ["no"] }
+
+[[redirects]]
+  from = "/"
+  to = "/pl/"
+  status = 302
+  conditions = { Language = ["pl"] }
+
+[[redirects]]
+  from = "/"
+  to = "/pt/"
+  status = 302
+  conditions = { Language = ["pt"] }
+
+[[redirects]]
+  from = "/"
+  to = "/ro/"
+  status = 302
+  conditions = { Language = ["ro"] }
+
+[[redirects]]
+  from = "/"
+  to = "/ru/"
+  status = 302
+  conditions = { Language = ["ru"] }
+
+[[redirects]]
+  from = "/"
+  to = "/sv/"
+  status = 302
+  conditions = { Language = ["sv"] }
+
+[[redirects]]
+  from = "/"
+  to = "/th/"
+  status = 302
+  conditions = { Language = ["th"] }
+
+[[redirects]]
+  from = "/"
+  to = "/tr/"
+  status = 302
+  conditions = { Language = ["tr"] }
+
+[[redirects]]
+  from = "/"
+  to = "/uk/"
+  status = 302
+  conditions = { Language = ["uk"] }
+
+[[redirects]]
+  from = "/"
+  to = "/vi/"
+  status = 302
+  conditions = { Language = ["vi"] }
+
+[[redirects]]
+  from = "/"
+  to = "/zh/"
+  status = 302
+  conditions = { Language = ["zh"] }
+
+[[redirects]]
+  from = "/"
+  to = "/landing.html"
+  status = 200
+
+[[redirects]]
+  from = "/es"
+  to = "/es.html"
+  status = 200
+
+[[redirects]]
+  from = "/es/"
+  to = "/es.html"
+  status = 200
+
+[[redirects]]
+  from = "/fr"
+  to = "/fr.html"
+  status = 200
+
+[[redirects]]
+  from = "/fr/"
+  to = "/fr.html"
+  status = 200
+
+[[redirects]]
+  from = "/de"
+  to = "/de.html"
+  status = 200
+
+[[redirects]]
+  from = "/de/"
+  to = "/de.html"
+  status = 200
+
+[[redirects]]
+  from = "/pt"
+  to = "/pt.html"
+  status = 200
+
+[[redirects]]
+  from = "/pt/"
+  to = "/pt.html"
+  status = 200
+
+[[redirects]]
+  from = "/it"
+  to = "/it.html"
+  status = 200
+
+[[redirects]]
+  from = "/it/"
+  to = "/it.html"
+  status = 200
+
+[[redirects]]
+  from = "/help"
+  to = "/help.html"
+  status = 200
+
+[[redirects]]
+  from = "/help/"
+  to = "/help.html"
+  status = 200
+
+[[redirects]]
+  from = "/pocket-alternative"
+  to = "/pocket-alternative.html"
+  status = 200

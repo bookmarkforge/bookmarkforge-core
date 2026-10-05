@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="bg"
+  dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Запазвайте статии, бележки и документи в частно, криптирано и 100% локално хранилище. AI търсене, редактор в стил Notion и P2P синхронизация. Безплатен план: 2 500 отметки.">
+  <title>BookmarkForge — Частна алтернатива на Pocket с AI (Отметки и бележки)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforge.com/bg/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforgeapp.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforgeapp.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforgeapp.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforgeapp.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforgeapp.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforgeapp.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforgeapp.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforgeapp.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforgeapp.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforgeapp.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforgeapp.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforgeapp.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforgeapp.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforgeapp.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforgeapp.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforgeapp.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforgeapp.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforgeapp.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforgeapp.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforgeapp.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforgeapp.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforgeapp.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforgeapp.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforgeapp.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforgeapp.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforgeapp.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforgeapp.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforgeapp.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforgeapp.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforgeapp.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — Частна алтернатива на Pocket с AI (Отметки и бележки)">
+  <meta property="og:description" content="Запазвайте статии, бележки и документи в частно, криптирано и 100% локално хранилище. AI търсене, редактор в стил Notion и P2P синхронизация. Безплатен план: 2 500 отметки.">
+  <meta property="og:url" content="https://bookmarkforge.com/bg/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="bg_BG">
+  <meta property="og:locale:alternate" content="en_US">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — Частна алтернатива на Pocket с AI (Отметки и бележки)">
+  <meta name="twitter:description" content="Запазвайте статии, бележки и документи в частно, криптирано и 100% локално хранилище. AI търсене, редактор в стил Notion и P2P синхронизация. Безплатен план: 2 500 отметки.">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://bookmarkforge.com/bg/#website",
+        "url": "https://bookmarkforge.com/bg/",
+        "name": "BookmarkForge",
+        "description": "Запазвайте статии, бележки и документи в частно, криптирано и 100% локално хранилище. AI търсене, редактор в стил Notion и P2P синхронизация. Безплатен план: 2 500 отметки.",
+        "inLanguage": "bg",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://bookmarkforge.com/bg/?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": { "@id": "https://bookmarkforgeapp.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://bookmarkforgeapp.com/#organization",
+        "name": "BookmarkForge",
+        "url": "https://bookmarkforge.com/",
+        "logo": { "@type": "ImageObject", "url": "https://bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
+        "email": "bookmarkforge@proton.me"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://bookmarkforge.com/bg/#software",
+        "name": "BookmarkForge",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "url": "https://bookmarkforge.com/",
+        "image": "https://bookmarkforge.com/og-image.png",
+        "description": "Запазвайте статии, бележки и документи в частно, криптирано и 100% локално хранилище. AI търсене, редактор в стил Notion и P2P синхронизация. Безплатен план: 2 500 отметки.",
+        "offers": [
+          { "@type": "Offer", "name": "Безплатно", "price": "0", "priceCurrency": "USD", "description": "За лична библиотека (2 500 отметки, работи на всяко устройство — всяко със собствен трезор)" },          { "@type": "Offer", "name": "Pro", "price": "59", "priceCurrency": "USD", "description": "Доживотно за v1 · 12 месеца актуализации на функции · Сигурност завинаги · v2 с 60% отстъпка" }        ],
+        "featureList": [
+          "Локално съхранение",          "Криптиране от край до край",          "Работи офлайн",          "AI търсене",          "Редактор в стил Notion",          "P2P синхронизация"        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://bookmarkforge.com/bg/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Наистина ли безплатният план е безплатен завинаги?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Да. Без ограничен пробен период или абонамент. Безплатният план включва 2 500 отметки, пълнотекстово и семантично търсене, граф на знанието и AI с вашия API ключ (вие плащате на доставчика)." }
+          },          {
+            "@type": "Question",
+            "name": "Какво означава \u0027еднократно закупуване\u0027 в Pro?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Плащате веднъж ($79), и лицензът е ваш завинаги. Включва всички обновления за 12 месеца. Без повтарящи се такси. Лицензният ключ се доставя незабавно чрез Whop." }
+          },          {
+            "@type": "Question",
+            "name": "Какви методи на плащане приемате?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Чрез Whop: кредитна карта, PayPal и криптовалути. Никога не виждаме вашите данни за плащане." }
+          },          {
+            "@type": "Question",
+            "name": "Поддръжка — колко бързо отговаряте?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Общност: помощ от общността чрез \u003ca href=\"/help\"\u003eПомощния център\u003c/a\u003e + GitHub Discussions (доколкото е възможно). Pro: имейл до 48 часа в работни дни. Трезорът е криптиран — не виждаме данните ви, затова никога не искаме паролата или фразата ви за възстановяване. Вижте \u003ca href=\"/help#sla\"\u003eSLA за поддръжка\u003c/a\u003e." }
+          },          {
+            "@type": "Question",
+            "name": "Какво, ако забравя паролата на трезора?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Не можем да я възстановим. При създаване на трезор показваме 24-думната фраза за възстановяване веднъж — запишете я на хартия. Без нея никой (включително ние) не може да отвори трезора. Вижте \u003ca href=\"/help#bf-e101\"\u003eBF-E101\u003c/a\u003e." }
+          }        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Към основното съдържание</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/bg/" class="nav-brand" aria-label="Начална страница на BookmarkForge">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Основна навигация">
+        <a href="#pocket-alternative">Четете по-късно без да компрометирате поверителността</a>
+        <a href="#features">Функции</a>
+        <a href="#ai">AI</a>
+        <a href="#privacy">Поверителност</a>
+        <a href="#pricing">Цени</a>
+        <a href="/help">Помощ</a>
+        
+        <!-- Language Dropdown -->
+        <div class="language-dropdown">
+          <button class="language-toggle" aria-label="Select language" aria-expanded="false">
+            <span class="current-lang">Български</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 4 L6 8 L10 4"/>
+            </svg>
+          </button>
+          <ul class="language-menu" role="menu">
+            <li role="none">
+              <a href="/id/?lang=id" hreflang="id" lang="id" role="menuitem">
+                Bahasa Indonesia
+              </a>
+            </li>
+            <li role="none">
+              <a href="/cs/?lang=cs" hreflang="cs" lang="cs" role="menuitem">
+                Čeština
+              </a>
+            </li>
+            <li role="none">
+              <a href="/da/?lang=da" hreflang="da" lang="da" role="menuitem">
+                Dansk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/de/?lang=de" hreflang="de" lang="de" role="menuitem">
+                Deutsch
+              </a>
+            </li>
+            <li role="none">
+              <a href="/?lang=en" hreflang="en" lang="en" role="menuitem">
+                English
+              </a>
+            </li>
+            <li role="none">
+              <a href="/es/?lang=es" hreflang="es" lang="es" role="menuitem">
+                Español
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fr/?lang=fr" hreflang="fr" lang="fr" role="menuitem">
+                Français
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hr/?lang=hr" hreflang="hr" lang="hr" role="menuitem">
+                Hrvatski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/it/?lang=it" hreflang="it" lang="it" role="menuitem">
+                Italiano
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hu/?lang=hu" hreflang="hu" lang="hu" role="menuitem">
+                Magyar
+              </a>
+            </li>
+            <li role="none">
+              <a href="/nl/?lang=nl" hreflang="nl" lang="nl" role="menuitem">
+                Nederlands
+              </a>
+            </li>
+            <li role="none">
+              <a href="/no/?lang=no" hreflang="no" lang="no" role="menuitem">
+                Norsk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pl/?lang=pl" hreflang="pl" lang="pl" role="menuitem">
+                Polski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pt/?lang=pt" hreflang="pt" lang="pt" role="menuitem">
+                Português
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ro/?lang=ro" hreflang="ro" lang="ro" role="menuitem">
+                Română
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fi/?lang=fi" hreflang="fi" lang="fi" role="menuitem">
+                Suomi
+              </a>
+            </li>
+            <li role="none">
+              <a href="/sv/?lang=sv" hreflang="sv" lang="sv" role="menuitem">
+                Svenska
+              </a>
+            </li>
+            <li role="none">
+              <a href="/vi/?lang=vi" hreflang="vi" lang="vi" role="menuitem">
+                Tiếng Việt
+              </a>
+            </li>
+            <li role="none">
+              <a href="/tr/?lang=tr" hreflang="tr" lang="tr" role="menuitem">
+                Türkçe
+              </a>
+            </li>
+            <li role="none">
+              <a href="/el/?lang=el" hreflang="el" lang="el" role="menuitem">
+                Ελληνικά
+              </a>
+            </li>
+            <li role="none">
+              <a href="/bg/?lang=bg" hreflang="bg" lang="bg" role="menuitem" class="current">
+                Български
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ru/?lang=ru" hreflang="ru" lang="ru" role="menuitem">
+                Русский
+              </a>
+            </li>
+            <li role="none">
+              <a href="/uk/?lang=uk" hreflang="uk" lang="uk" role="menuitem">
+                Українська
+              </a>
+            </li>
+            <li role="none">
+              <a href="/he/?lang=he" hreflang="he" lang="he" role="menuitem">
+                עברית
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ar/?lang=ar" hreflang="ar" lang="ar" role="menuitem">
+                العربية
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hi/?lang=hi" hreflang="hi" lang="hi" role="menuitem">
+                हिन्दी
+              </a>
+            </li>
+            <li role="none">
+              <a href="/th/?lang=th" hreflang="th" lang="th" role="menuitem">
+                ไทย
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ko/?lang=ko" hreflang="ko" lang="ko" role="menuitem">
+                한국어
+              </a>
+            </li>
+            <li role="none">
+              <a href="/zh/?lang=zh" hreflang="zh" lang="zh" role="menuitem">
+                中文
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ja/?lang=ja" hreflang="ja" lang="ja" role="menuitem">
+                日本語
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <a href="/app" class="btn-primary nav-cta">Отвори приложението</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Смени темата" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">Версия 1.0</span>
+          <h1 id="hero-title">Вашето <span class='accent-text'>Частно AI Хранилище</span></h1>
+          <p class="hero-subtitle">Частна алтернатива на Pocket за запазване на статии и четене по-късно: отметки, бележки и документи — криптирани на вашето устройство, търсими с AI и синхронизирани peer-to-peer. Без облак. Без проследяване. 100% ваши.</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">Отвори Безплатно</a>
+            <a href="#pricing" class="btn-secondary">Виж Цените</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>100% Локално</strong> — данните ви не напускат устройството</span>
+            <span><strong>Криптирано</strong> — AES-256-GCM + Argon2id</span>
+            <span><strong>Офлайн</strong> — работи без интернет</span>
+            <span><strong>Частно</strong> — нулева телеметрия по подразбиране</span>
+          </div>
+          <div class="hero-affiliate">
+            <span class="hero-affiliate-badge">Спечелете пари</span>
+            <h3 class="hero-affiliate-title">Партньорска програма</h3>
+            <p class="hero-affiliate-subtitle">Споделете BookmarkForge и спечелете 30% комисионна от всяка препоръчана покупка. Започнете да печелите днес!</p>
+            <a href="https://whop.com/affiliates" class="btn-small">Присъединете се към партньорската програма</a>
+            <ul class="hero-affiliate-details">
+              <li>30% комисионна от всяка продажба</li>
+              <li>Неограничени печалби</li>
+              <li>Автоматични плащания чрез Whop</li>
+              <li>Проследяване в реално време</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Demo Section — steps and CTA only. The tour GIF this section
+         used to show was retired with the demo-media pipeline; the template kept
+         a dead <img> pointing at it until the ADR-062 smoke gate reported the 404
+         on all 30 landings. The demo.* copy still describes the loop: rewriting it
+         has to come with the translations, not from the template.
+         Secondary locales carry demo: null until that copy is translated —
+         the section is hidden rather than rendering English inside a
+         localized page (same for raindropCompare below). -->
+
+    <!-- Pocket Alternative Section -->
+    <section id="pocket-alternative" class="comparison-section" aria-labelledby="pocket-alternative-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Четете по-късно без да компрометирате поверителността</span>
+          <h2 id="pocket-alternative-title">Частната Алтернатива на Pocket</h2>
+          <p class="section-subtitle">Pocket изчезва. BookmarkForge поддържа навика за четене — всяка статия, бележка и отбелязване криптирани на вашето устройство.</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>Запазвайте статии за по-късно, ваши завинаги</h3>
+            <p>Запазвайте статии, видеа и PDF с едно кликване — от PWA приложението, браузър разширението или менюто за споделяне. За разлика от Pocket, списъкът ви за четене живее на вашето устройство, криптиран и работи офлайн.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Бележки в стил Notion във всяка статия</h3>
+            <p>Отбелязвайте, обобщавайте и пишете бележки във всяка отметка. Превърнете запазена статия в собствена база от знания — не просто списък с връзки.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Нулево проследяване, нулева реклама</h3>
+            <p>BookmarkForge по подразбиране не използва акаунти, анализи или реклама. Навиците ви за четене са само ваша отговорност.</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Започнете да Запазвате Безплатно</a>
+          <a href="/pocket-alternative" class="btn-link">Пълно сравнение и ръководство за миграция</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Raindrop Comparison Section (hidden while raindropCompare is null) -->
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Всичко, от което се нуждаете</span>
+          <h2 id="features-title">Мощни функции за управление на знанието ви, всичко работи локално</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Отметки и документи</h3>
+            <p>Запазете всяка страница с едно кликване. Пишете бележки точно до нея в чист, прост редактор. Остава бърз дори със 100 000 запазени елемента.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Пълнотекстово и семантично търсене</h3>
+            <p>Намерете нещата по ключова дума или по значение — дори когато не помните точните думи. Raindrop взема 28 долара годишно за това; тук е безплатно.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Локален AI (WebLLM / Ollama) — Само Pro</h3>
+            <p>Задавайте въпроси за това, което сте запазили, и получавайте отговори с посочени източници. Нищо не се изпраща в облака и работи без интернет. Изисква Pro.</p>
+          </div>
+          <div class="feature-item">
+            <h3>RAG чат над вашите данни — Само Pro</h3>
+            <p>Питайте всичко за отметките и бележките си и получавайте отговори с цитати. Частният режим работи 100% на вашата машина. Изисква Pro.</p>
+          </div>
+          <div class="feature-item">
+            <h3>P2P синхронизация (WebRTC) — Само Pro</h3>
+            <p>Устройствата ви говорят помежду си директно — без сървър по средата, а всичко остава криптирано. Сдвояват се чрез сканиране на QR код. До 5 устройства. Изисква Pro.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Криптирани резервни копия</h3>
+            <p>Автоматични резервни копия, които пазите където искате — външен диск, папка в облака, навсякъде. Експортирайте всичко в Markdown, JSON, CSV или PDF когато пожелаете. Ключовете са у вас.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Граф на знанието</h3>
+            <p>Вижте как се свързват бележките и отметките ви. Филтрирайте по етикети, дати и сходство и се движете по безкрайно платно.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Флашкарти (Spaced Repetition) — Само Pro</h3>
+            <p>Превърнете всеки запазен документ във въпросни карти, които изплуват точно преди да ги забравите — същата идея за планиране като Anki. Изисква Pro.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Поверителност по подразбиране</h3>
+            <p>Без акаунти, без проследяване, без реклами. Вие сте клиентът, не продуктът. Споделянето на употреба съществува, то е по избор и остава изключено, докато го включите.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">AI, който ви уважава</span>
+          <h2 id="ai-title">Вашето Знание, Укрепено</h2>
+          <p class="section-subtitle">BookmarkForge ви дава избора: стартирайте 100% локални модели в браузъра си (WebLLM, WebGPU) с Pro, свържете собствените си API ключове към облачни доставчици или използвайте локален Ollama. Вашите инструкции, вашите данни, вашите правила.</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>Поддържани доставчици</h3>
+            <ul class="providers-list">
+              <li>Във вашия компютър — WebLLM модели (TinyLlama, Llama 3.2, Phi-3.5-mini) — само Pro</li>
+              <li>На вашата собствена машина — Ollama (всеки модел, който пуснете)</li>
+              <li>Облак — Google Gemini (ключът се управлява от нас)</li>
+              <li>Облак — OpenAI / GPT-4o (със собствен ключ)</li>
+              <li>Облак — Anthropic Claude (със собствен ключ)</li>
+              <li>Облак — Groq (със собствен ключ)</li>
+              <li>Облак — OpenRouter или друг персонализиран доставчик (със собствен ключ)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>Режими на чат</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>Частен Режим</h4>
+                <p>Само локален AI (WebLLM/Ollama). Нулеви данни напускат устройството. Работи офлайн. Изисква Pro за WebLLM.</p>
+              </div>
+              <div class="mode-item">
+                <h4>Режим на Уеб Търсене</h4>
+                <p>Комбинира вашето хранилище с резултати от търсене в реално време (облачни доставчици).</p>
+              </div>
+              <div class="mode-item">
+                <h4>Експертни Агенти</h4>
+                <p>Специализирани герои: Програмист, Писател, Аналитик, Изследовател. Изисква Pro за локален AI.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">Поверителността не е функция — тя е основата</h2>
+          <p class="section-subtitle">Всяко архитектурно решение ви дава контрол</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Криптиране от край до край</h3>
+            <p>Вашата библиотека е криптирана с ключ, изведен от главната ви парола. Никога не виждаме паролата или съдържанието ви.</p>
+          </div>
+          <div class="feature-item">
+            <h3>100% локална архитектура</h3>
+            <p>Всичко живее на вашия компютър. Придружаващият сървър обработва само лицензирането, сдвояването на устройства и предаването на въпросите ви към AI в облачен режим — никога съдържанието ви.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Нулева телеметрия по подразбиране</h3>
+            <p>Без анализи, без отчети за сривове, без проследяване. Споделянето на статистика или отчети за грешки е отделен избор, изключен по подразбиране.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Ключовете са ваши</h3>
+            <p>Без главна парола означава без достъп — няма задна врата "забравена парола". 24-думната фраза за възстановяване е единственият път навътре; пазете я.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Съвместимост с GDPR</h3>
+            <p>Достъпвайте, коригирайте, изтривайте или вземайте данните си със себе си — всичко локално, когато пожелаете.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Независимост от доставчик</h3>
+            <p>Експортирайте данните си по всяко време в отворени формати (JSON, Markdown, CSV, PDF). Познанието ви остава ваше и преносимо.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">Прости, Справедливи Цени</h2>
+          <p class="section-subtitle">Безплатен план: 2 500 отметки. Pro е еднократно закупуване за $59 Ранна птица (после $79) — без абонаменти.</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Безплатно</h3>
+            <div class="price">$ 0<span>/ завинаги</span></div>
+            <p>За лична библиотека (2 500 отметки, работи на всяко устройство — всяко със собствен трезор)</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> 2 500 отметки, бележки и документи</li>
+              <li><span aria-hidden="true">✅</span> Интелигентно търсене (пълнотекстово + семантично) — включено безплатно; Raindrop го таксува годишно</li>
+              <li><span aria-hidden="true">✅</span> AI с вашия API ключ (вие плащате на доставчика)</li>
+              <li><span aria-hidden="true">✅</span> Граф на знанието</li>
+              <li><span aria-hidden="true">✅</span> Основни шаблони</li>
+              <li><span aria-hidden="true">✅</span> JSON/HTML експорт</li>
+              <li><span aria-hidden="true">✅</span> PWA + браузър разширения</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> P2P синхронизация между устройства</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> Локален AI (WebLLM/Ollama)</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> RAG чат над вашите данни</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> Флашкарти с spaced repetition</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> <span aria-hidden='true'>❌</span> Разширен експорт (10+ формата)</li>
+            </ul>
+            <a href="/app" class="btn-secondary " >Започнете Безплатно</a>
+          </div>
+          <div class="price-card popular">
+            <span class="badge">Най-популярен — Ранна птица 200</span>
+            <h3>Pro</h3>
+            <div class="price"><span class="price-now">$ 59</span> <span class="price-was">$79</span><span>Ранна птица (после $79)</span></div>
+            <div class="price-sub">после това $79 редовна цена</div>
+            <p>Доживотно за v1 · 12 месеца актуализации на функции · Сигурност завинаги · v2 с 60% отстъпка</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Всичко от Безплатния</li>
+              <li><span aria-hidden="true">✅</span> Неограничени отметки</li>
+              <li><span aria-hidden="true">✅</span> 5 устройства</li>
+              <li><span aria-hidden="true">✅</span> P2P синхронизация на 5 устройства</li>
+              <li><span aria-hidden="true">✅</span> Локален AI (WebLLM, без API ключ)</li>
+              <li><span aria-hidden="true">✅</span> RAG чат над вашите данни</li>
+              <li><span aria-hidden="true">✅</span> Експертни агенти (Програмист, Писател, Аналитик, Изследовател)</li>
+              <li><span aria-hidden="true">✅</span> Флашкарти с spaced repetition</li>
+              <li><span aria-hidden="true">✅</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> Разширен експорт (10+ формата)</li>
+              <li><span aria-hidden="true">✅</span> Сигурност хранилище (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> Обновления за 12 месеца</li>
+              <li><span aria-hidden="true">✅</span> Имейл поддръжка</li>
+            </ul>
+            <a href="https://whop.com/checkout/plan_XU1GaWhoYhoDh" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Вземете Pro Завинаги</a>
+            <p class="sla-note">Поддръжка: имейл 48 ч. (пон–пет) · <a href="/help#sla">SLA</a></p>
+          </div>
+        </div>
+        <p class="pricing-legal">Доживотен лиценз за BookmarkForge v1. Включва всички v1.x актуализации и 12 месеца актуализации на функции. Сигурност завинаги. Бъдещи мажорни версии (v2, v3) с 60% отстъпка за настоящите собственици. 30-дневно връщане на парите чрез Whop. <a href="/privacy-and-terms.html#terms">Условия</a> · <a href="/help#pricing">Научете повече</a></p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">Често Задавани Въпроси</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Наистина ли безплатният план е безплатен завинаги?</h3>
+            <p>Да. Без ограничен пробен период или абонамент. Безплатният план включва 2 500 отметки, пълнотекстово и семантично търсене, граф на знанието и AI с вашия API ключ (вие плащате на доставчика).</p>
+          </div>
+          <div class="faq-item">
+            <h3>Какво означава 'еднократно закупуване' в Pro?</h3>
+            <p>Плащате веднъж ($79), и лицензът е ваш завинаги. Включва всички обновления за 12 месеца. Без повтарящи се такси. Лицензният ключ се доставя незабавно чрез Whop.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Какви методи на плащане приемате?</h3>
+            <p>Чрез Whop: кредитна карта, PayPal и криптовалути. Никога не виждаме вашите данни за плащане.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Поддръжка — колко бързо отговаряте?</h3>
+            <p>Общност: помощ от общността чрез <a href="/help">Помощния център</a> + GitHub Discussions (доколкото е възможно). Pro: имейл до 48 часа в работни дни. Трезорът е криптиран — не виждаме данните ви, затова никога не искаме паролата или фразата ви за възстановяване. Вижте <a href="/help#sla">SLA за поддръжка</a>.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Какво, ако забравя паролата на трезора?</h3>
+            <p>Не можем да я възстановим. При създаване на трезор показваме 24-думната фраза за възстановяване веднъж — запишете я на хартия. Без нея никой (включително ние) не може да отвори трезора. Вижте <a href="/help#bf-e101">BF-E101</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>Готови ли сте да Поемете Контрол над Знанието Си?</h2>
+        <p>Присъединете се към хиляди изследователи, разработчици и студенти, които се доверяват на BookmarkForge като втория си мозък.</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">Отвори Безплатно</a>
+          <a href="#pricing" class="btn-secondary">Надстройте до Pro</a>
+        </div>
+        <p class="note">Не се изисква акаунт. Работи незабавно в браузъра ви. Безплатен план: 2 500 отметки.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>Вашето частно AI хранилище за знания. 100% локално.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Продукт</h4>
+        <ul>
+          <li><a href="#features">Функции</a></li>
+          <li><a href="#ai">AI Възможности</a></li>
+          <li><a href="#privacy">Поверителност</a></li>
+          <li><a href="#pricing">Цени</a></li>
+          <li><a href="/app">Отвори Приложението</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Ресурси</h4>
+        <ul>
+          <li><a href="/pocket-alternative">Сравнение с Pocket</a></li>
+          <li><a href="/privacy-and-terms.html">Поверителност и Условия</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Езици</h4>
+        <ul>
+          <li><a href="/id/?lang=id" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+          <li><a href="/cs/?lang=cs" hreflang="cs" lang="cs">Čeština</a></li>
+          <li><a href="/da/?lang=da" hreflang="da" lang="da">Dansk</a></li>
+          <li><a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a></li>
+          <li><a href="/?lang=en" hreflang="en" lang="en">English</a></li>
+          <li><a href="/es/?lang=es" hreflang="es" lang="es">Español</a></li>
+          <li><a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a></li>
+          <li><a href="/hr/?lang=hr" hreflang="hr" lang="hr">Hrvatski</a></li>
+          <li><a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a></li>
+          <li><a href="/hu/?lang=hu" hreflang="hu" lang="hu">Magyar</a></li>
+          <li><a href="/nl/?lang=nl" hreflang="nl" lang="nl">Nederlands</a></li>
+          <li><a href="/no/?lang=no" hreflang="no" lang="no">Norsk</a></li>
+          <li><a href="/pl/?lang=pl" hreflang="pl" lang="pl">Polski</a></li>
+          <li><a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a></li>
+          <li><a href="/ro/?lang=ro" hreflang="ro" lang="ro">Română</a></li>
+          <li><a href="/fi/?lang=fi" hreflang="fi" lang="fi">Suomi</a></li>
+          <li><a href="/sv/?lang=sv" hreflang="sv" lang="sv">Svenska</a></li>
+          <li><a href="/vi/?lang=vi" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+          <li><a href="/tr/?lang=tr" hreflang="tr" lang="tr">Türkçe</a></li>
+          <li><a href="/el/?lang=el" hreflang="el" lang="el">Ελληνικά</a></li>
+          <li><a href="/bg/?lang=bg" hreflang="bg" lang="bg">Български</a></li>
+          <li><a href="/ru/?lang=ru" hreflang="ru" lang="ru">Русский</a></li>
+          <li><a href="/uk/?lang=uk" hreflang="uk" lang="uk">Українська</a></li>
+          <li><a href="/he/?lang=he" hreflang="he" lang="he">עברית</a></li>
+          <li><a href="/ar/?lang=ar" hreflang="ar" lang="ar">العربية</a></li>
+          <li><a href="/hi/?lang=hi" hreflang="hi" lang="hi">हिन्दी</a></li>
+          <li><a href="/th/?lang=th" hreflang="th" lang="th">ไทย</a></li>
+          <li><a href="/ko/?lang=ko" hreflang="ko" lang="ko">한국어</a></li>
+          <li><a href="/zh/?lang=zh" hreflang="zh" lang="zh">中文</a></li>
+          <li><a href="/ja/?lang=ja" hreflang="ja" lang="ja">日本語</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Поддръжка</h4>
+        <ul>
+          <li><a href="/help">Помощен център</a></li>
+          <li><a href="/help#sla">SLA</a></li>
+          <li><a href="/help#bf-e">Кодове за грешки</a></li>
+          <li><a href="mailto:bookmarkforge@proton.me">Свържете се с нас</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+         Every other locale has its own directory. The rule has one owner —
+         scripts/landing-registry.mjs (LEGAL_LOCALE_CODES), already encoded by
+         check-seo, check-sitemap-coverage, check-hreflang-graph and
+         check-page-figures. Emitting "/bg/…" unconditionally shipped a
+         404 footer link on every EN landing until the ADR-062 smoke gate opened it. -->
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. Всички права запазени.</p>
+      <a href="/bg/privacy-and-terms.html">Политика за Поверителност</a> · <a href="/bg/privacy-and-terms.html#terms">Условия за Ползване</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

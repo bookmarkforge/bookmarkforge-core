@@ -1,0 +1,482 @@
+{
+  "lang": "nl",
+  "langName": "Nederlands",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/nl/",
+  "ogLocale": "nl_NL",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Privé Pocket-alternatief met AI (Bladwijzers en notities)",
+  "description": "Sla artikelen, notities en documenten op in een privé, versleutelde en 100% lokale kluis. AI-zoekfunctie, Notion-achtige editor en P2P-synchronisatie. Gratis plan: 2.500 bladwijzers.",
+  "ogTitle": "BookmarkForge — Privé Pocket-alternatief met AI (Bladwijzers en notities)",
+  "ogDescription": "Sla artikelen, notities en documenten op in een privé, versleutelde en 100% lokale kluis. AI-zoekfunctie, Notion-achtige editor en P2P-synchronisatie. Gratis plan: 2.500 bladwijzers.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Privé Pocket-alternatief met AI (Bladwijzers en notities)",
+  "twitterDescription": "Sla artikelen, notities en documenten op in een privé, versleutelde en 100% lokale kluis. AI-zoekfunctie, Notion-achtige editor en P2P-synchronisatie. Gratis plan: 2.500 bladwijzers.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Ga naar hoofdinhoud",
+  "navBrandAria": "BookmarkForge startpagina",
+  "navAriaLabel": "Hoofdnavigatie",
+  "homeHref": "/nl/",
+  "navLinks": {
+    "pocketAlternative": "Pocket-alternatief",
+    "features": "Functies",
+    "ai": "AI",
+    "privacy": "Privacy",
+    "pricing": "Prijzen",
+    "help": "Hulp",
+    "raindropCompare": "Raindrop Comparison"
+  },
+  "langLink": {
+    "href": "/?lang=en",
+    "hreflang": "en",
+    "lang": "en",
+    "text": "English"
+  },
+  "navCta": "App openen",
+  "themeToggleAria": "Thema wisselen",
+  "hero": {
+    "badge": "Versie 1.0",
+    "title": "Uw <span class='accent-text'>Privé AI Vault</span>",
+    "subtitle": "Het privé alternatief voor Pocket om artikelen op te slaan en later te lezen: bladwijzers, notities en documenten — versleuteld op uw apparaat, doorzoekbaar met AI en peer-to-peer gesynchroniseerd. Geen cloud. Geen tracking. 100% van u.",
+    "ctaPrimary": "Open Gratis",
+    "ctaSecondary": "Bekijk Prijzen",
+    "pillars": [
+      {
+        "strong": "100% Lokaal",
+        "text": "uw gegevens verlaten uw apparaat niet"
+      },
+      {
+        "strong": "Versleuteld",
+        "text": "AES-256-GCM + Argon2id"
+      },
+      {
+        "strong": "Offline",
+        "text": "werkt zonder internet"
+      },
+      {
+        "strong": "Privé",
+        "text": "nul telemetrie standaard"
+      }
+    ]
+  },
+  "demo": null,
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Lees later zonder uw privacy op te offeren",
+    "title": "Het Privé Pocket-alternatief",
+    "subtitle": "Pocket verdwijnt. BookmarkForge houdt de leesgewoonte levend — met elk artikel, notitie en markering versleuteld op uw apparaat.",
+    "features": [
+      {
+        "title": "Sla artikelen op voor later, voorgoed van u",
+        "text": "Sla artikelen, video's en PDF op met één klik — vanuit de PWA-app, browserextensie of deelmenu. In tegenstelling tot Pocket leeft uw leeslijst op uw apparaat, versleuteld, en werkt offline."
+      },
+      {
+        "title": "Notion-achtige notities in elk artikel",
+        "text": "Markeer, vat samen en schrijf notities in elke bladwijzer. Verander een opgeslagen artikel in uw eigen kennisbank — niet zomaar een lijst met links."
+      },
+      {
+        "title": "Nul tracking, nul advertenties",
+        "text": "BookmarkForge heeft standaard geen accounts, analyses of advertenties. Uw leesgewoonten zijn alleen uw verantwoordelijkheid."
+      }
+    ],
+    "ctaPrimary": "Begin met Opslaan Gratis",
+    "ctaSecondary": "Volledige vergelijking en migratiegids",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": null,
+  "features": {
+    "id": "features",
+    "tag": "Alles wat u nodig heeft",
+    "title": "Krachtige functies voor het beheren van uw kennis, alles draait lokaal",
+    "items": [
+      {
+        "title": "Bladwijzers en documenten",
+        "text": "Sla elke pagina op met één klik. Schrijf notities er direct naast, in een opgeruimde, eenvoudige editor. Blijft snel, zelfs met 100.000 opgeslagen items."
+      },
+      {
+        "title": "Volledige tekst en semantisch zoeken",
+        "text": "Vind dingen op trefwoord of op betekenis — ook wanneer je de exacte woorden niet meer weet. Raindrop rekent hier 28 dollar per jaar voor; hier is het gratis inbegrepen."
+      },
+      {
+        "title": "Lokaal AI (WebLLM / Ollama) — Alleen Pro",
+        "text": "Stel vragen over wat je hebt opgeslagen en krijg antwoorden met de bronnen erbij. Er wordt niets naar de cloud gestuurd en het werkt zonder internet. Vereist Pro."
+      },
+      {
+        "title": "RAG-chat over uw gegevens — Alleen Pro",
+        "text": "Vraag alles over je bladwijzers en notities en krijg antwoorden met citaten. De privémodus draait 100% op je eigen machine. Vereist Pro."
+      },
+      {
+        "title": "P2P-synchronisatie (WebRTC) — Alleen Pro",
+        "text": "Je apparaten praten rechtstreeks met elkaar — geen server ertussenin en alles blijft versleuteld. Koppel ze door een QR-code te scannen. Tot 5 apparaten. Vereist Pro."
+      },
+      {
+        "title": "Versleutelde back-ups",
+        "text": "Automatische back-ups die je overal bewaart — een externe schijf, een cloudmap, waar dan ook. Exporteer alles naar Markdown, JSON, CSV of PDF wanneer je maar wilt. De sleutels zijn van jou."
+      },
+      {
+        "title": "Kennisgraf",
+        "text": "Zie hoe je notities en bladwijzers samenhangen. Filter op tags, datums en overeenkomsten en navigeer over een oneindig canvas."
+      },
+      {
+        "title": "Flashcards (Spaced Repetition) — Alleen Pro",
+        "text": "Zet elk opgeslagen document om in vragenkaartjes die precies opduiken voordat je ze zou vergeten — hetzelfde planningsidee als Anki. Vereist Pro."
+      },
+      {
+        "title": "Privacy standaard",
+        "text": "Geen accounts, geen tracking, geen advertenties. Jij bent de klant, niet het product. Het delen van gebruiksgegevens bestaat, is optioneel en blijft uit totdat je het aanzet."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI die u respecteert",
+    "title": "Uw Kennis, Versterkt",
+    "subtitle": "BookmarkForge geeft u de keuze: voer 100% lokale modellen uit in uw browser (WebLLM, WebGPU) met Pro, verbind uw eigen API-sleutels met cloudproviders of gebruik lokale Ollama. Uw instructies, uw gegevens, uw regels.",
+    "providers": {
+      "title": "Ondersteunde providers",
+      "list": [
+        {
+          "type": "local",
+          "name": "Binnenin je computer — WebLLM-modellen (TinyLlama, Llama 3.2, Phi-3.5-mini) — alleen Pro"
+        },
+        {
+          "type": "local",
+          "name": "Op je eigen machine — Ollama (elk model dat je draait)"
+        },{
+          "type": "cloud",
+          "name": "Cloud — OpenAI / GPT-4o (met je eigen sleutel)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Anthropic Claude (met je eigen sleutel)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Groq (met je eigen sleutel)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — OpenRouter of een andere aangepaste provider (met je eigen sleutel)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Chat-modi",
+      "items": [
+        {
+          "title": "Privé Modus",
+          "text": "Alleen lokaal AI (WebLLM/Ollama). Nul gegevens verlaten het apparaat. Werkt offline. Vereist Pro voor WebLLM."
+        },
+        {
+          "title": "Web Zoekmodus",
+          "text": "Combineert uw kluis met live zoekresultaten (cloudproviders)."
+        },
+        {
+          "title": "Expert Agents",
+          "text": "Gespecialiseerde personages: Programmeur, Schrijver, Analist, Onderzoeker. Vereist Pro voor lokaal AI."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Privacy is geen functie — het is de basis",
+    "subtitle": "Elke architectuurkeuze geeft u controle",
+    "items": [
+      {
+        "title": "End-to-end versleuteling",
+        "text": "Je bibliotheek is versleuteld met een sleutel afgeleid van je hoofdwachtwoord. We zien nooit je wachtwoord of je inhoud."
+      },
+      {
+        "title": "100% lokale architectuur",
+        "text": "Alles staat op je eigen computer. De begeleidende server regelt alleen licenties, apparaatkoppeling en het doorgeven van je cloudmodus-AI-vragen — nooit je inhoud."
+      },
+      {
+        "title": "Nul telemetrie standaard",
+        "text": "Geen analytics, geen crashrapporten, geen tracking. Het delen van gebruiksstatistieken of foutmeldingen is een aparte keuze, standaard uitgeschakeld."
+      },
+      {
+        "title": "De sleutels zijn van u",
+        "text": "Geen hoofdwachtwoord betekent geen toegang — er is geen \"wachtwoord vergeten\"-achterdeur. Je herstelzin van 24 woorden is de enige weg naar binnen; bewaar die goed."
+      },
+      {
+        "title": "GDPR-naleving",
+        "text": "Bekijk, corrigeer, verwijder of neem je gegevens mee — alles lokaal, wanneer je maar wilt."
+      },
+      {
+        "title": "Onafhankelijk van provider",
+        "text": "Exporteer je gegevens altijd in open formaten (JSON, Markdown, CSV, PDF). Je kennis blijft van jou en overdraagbaar."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Eenvoudige, Eerlijke Prijzen",
+    "subtitle": "Gratis plan: 2.500 bladwijzers. Pro is een eenmalige aankoop van $59 Early Bird (daarna $79) — geen abonnementen.",
+    "plans": [
+      {
+        "name": "Gratis",
+        "price": "$ 0",
+        "period": "/ voor altijd",
+        "description": "Voor persoonlijk archief (2.500 bladwijzers, werkt op elk apparaat — elk met zijn eigen kluis)",
+        "features": [
+          {
+            "included": true,
+            "text": "2.500 bladwijzers, notities en documenten"
+          },
+          {
+            "included": true,
+            "text": "Slim zoeken (volledige tekst + semantisch) — gratis inbegrepen; Raindrop rekent hiervoor jaarlijks"
+          },
+          {
+            "included": true,
+            "text": "AI met uw eigen API-sleutel (u betaalt de provider)"
+          },
+          {
+            "included": true,
+            "text": "Kennisgraf"
+          },
+          {
+            "included": true,
+            "text": "Basis templates"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML-export"
+          },
+          {
+            "included": true,
+            "text": "PWA + browserextensies"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> P2P-synchronisatie tussen apparaten"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Lokaal AI (WebLLM/Ollama)"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> RAG-chat over uw gegevens"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Flashcards met spaced repetition"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "<span aria-hidden='true'>❌</span> Geavanceerde export (10+ formaten)"
+          }
+        ],
+        "cta": "Begin Gratis",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro",
+        "badge": "Meest populair — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (daarna $79)",
+        "description": "Levenslang voor v1 · 12 maanden functie-updates · Beveiliging voor altijd · v2 60% korting",
+        "features": [
+          {
+            "included": true,
+            "text": "Alles in Gratis"
+          },
+          {
+            "included": true,
+            "text": "Onbeperkte bladwijzers"
+          },
+          {
+            "included": true,
+            "text": "5 apparaten"
+          },
+          {
+            "included": true,
+            "text": "P2P-synchronisatie op 5 apparaten"
+          },
+          {
+            "included": true,
+            "text": "Lokaal AI (WebLLM, geen API-sleutel)"
+          },
+          {
+            "included": true,
+            "text": "RAG-chat over uw gegevens"
+          },
+          {
+            "included": true,
+            "text": "Expert agents (Programmeur, Schrijver, Analist, Onderzoeker)"
+          },
+          {
+            "included": true,
+            "text": "Flashcards met spaced repetition"
+          },
+          {
+            "included": true,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Geavanceerde export (10+ formaten)"
+          },
+          {
+            "included": true,
+            "text": "Veiligheidskluis (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Updates gedurende 12 maanden"
+          },
+          {
+            "included": true,
+            "text": "E-mailondersteuning"
+          }
+        ],
+        "cta": "Krijg Pro Voor Altijd",
+        "ctaHref": "/buy-pro",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "daarna $79 normale prijs",
+        "sla": "Ondersteuning: e-mail 48 uur (ma–vr)"
+      }
+    ],
+    "legal": "Levenslange licentie voor BookmarkForge v1. Omvat alle v1.x-updates en 12 maanden functie-updates. Beveiligingsupdates voor altijd. Toekomstige hoofdversies (v2, v3) 60% korting voor bestaande eigenaren. 30 dagen geld-terug-garantie via Whop. <a href=\"/privacy-and-terms.html#terms\">Voorwaarden</a> · <a href=\"/help#pricing\">Meer informatie</a>"
+  },
+  "faq": {
+    "title": "Veelgestelde Vragen",
+    "items": [
+      {
+        "question": "Is het gratis plan echt gratis voor altijd?",
+        "answer": "Ja. Geen beperkte proefperiode of abonnement. Het gratis plan bevat 2.500 bladwijzers, volledige tekst- en semantisch zoeken, kennisgraf en AI met uw eigen API-sleutel (u betaalt de provider)."
+      },
+      {
+        "question": "Wat betekent 'eenmalige aankoop' bij Pro?",
+        "answer": "U betaalt eenmalig ($79) en de licentie is voor altijd van u. Bevat alle updates gedurende 12 maanden. Geen terugkerende kosten. De licentiesleutel wordt onmiddellijk geleverd via Whop."
+      },
+      {
+        "question": "Welke betaalmethoden accepteert u?",
+        "answer": "Via Whop: creditcard, PayPal en cryptocurrency. Wij zien uw betalingsgegevens nooit."
+      },
+      {
+        "question": "Support — hoe snel antwoorden jullie?",
+        "answer": "Community: hulp van de community via <a href=\"/help\">het Hulpcentrum</a> + GitHub Discussions (naar beste vermogen). Pro: e-mail binnen 48 uur op werkdagen. De kluis is versleuteld — wij kunnen je gegevens niet zien, dus we vragen nooit om je wachtwoord of herstelzin. Zie <a href=\"/help#sla\">Support-SLA</a>."
+      },
+      {
+        "question": "Wat als ik het wachtwoord van mijn kluis vergeet?",
+        "answer": "We kunnen het niet herstellen. Bij het aanmaken van een kluis tonen we eenmaal een herstelzin van 24 woorden — schrijf die op papier. Zonder die zin kan niemand (wij ook niet) de kluis openen. Zie <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Klaar om Uw Kennis in Handen te Nemen?",
+    "text": "Sluit u aan bij duizenden onderzoekers, ontwikkelaars en studenten die vertrouwen op BookmarkForge als hun tweede brein.",
+    "ctaPrimary": "Open Gratis",
+    "ctaSecondary": "Upgrade naar Pro",
+    "note": "Geen account nodig. Werkt direct in uw browser. Gratis plan: 2.500 bladwijzers."
+  },
+  "footer": {
+    "brand": "Uw privé AI-kluis voor kennis. 100% lokaal.",
+    "product": {
+      "title": "Product",
+      "links": [
+        "Functies",
+        "AI-mogelijkheden",
+        "Privacy",
+        "Prijzen",
+        "Open App"
+      ]
+    },
+    "resources": {
+      "title": "Bronnen",
+      "links": [
+        "Pocket-vergelijking",
+        "Privacy en voorwaarden"
+      ]
+    },
+    "languages": {
+      "title": "Talen",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Ondersteuning",
+      "links": [
+        "Neem contact op"
+      ],
+      "helpCenter": "Hulpcentrum",
+      "errorCodes": "Foutcodes"
+    },
+    "copyright": "© 2026 BookmarkForge. Alle rechten voorbehouden.",
+    "legal": [
+      "Privacybeleid",
+      "Servicevoorwaarden",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Sla artikelen, notities en documenten op in een privé, versleutelde en 100% lokale kluis. AI-zoekfunctie, Notion-achtige editor en P2P-synchronisatie. Gratis plan: 2.500 bladwijzers.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "Gratis",
+        "price": "0",
+        "currency": "USD",
+        "description": "Voor persoonlijk archief (2.500 bladwijzers, werkt op elk apparaat — elk met zijn eigen kluis)"
+      },
+      {
+        "name": "Pro",
+        "price": "59",
+        "currency": "USD",
+        "description": "Levenslang voor v1 · 12 maanden functie-updates · Beveiliging voor altijd · v2 60% korting"
+      }
+    ],
+    "featureList": [
+      "Lokale opslag",
+      "End-to-end-versleuteling",
+      "Werkt offline",
+      "AI-zoeken",
+      "Notion-achtige editor",
+      "P2P-synchronisatie"
+    ],
+    "faq": [
+      {
+        "question": "Is het gratis plan echt gratis voor altijd?",
+        "answer": "Ja. Geen beperkte proefperiode of abonnement. Het gratis plan bevat 2.500 bladwijzers, volledige tekst- en semantisch zoeken, kennisgraf en AI met uw eigen API-sleutel (u betaalt de provider)."
+      },
+      {
+        "question": "Wat betekent 'eenmalige aankoop' bij Pro?",
+        "answer": "U betaalt eenmalig ($79) en de licentie is voor altijd van u. Bevat alle updates gedurende 12 maanden. Geen terugkerende kosten. De licentiesleutel wordt onmiddellijk geleverd via Whop."
+      },
+      {
+        "question": "Welke betaalmethoden accepteert u?",
+        "answer": "Via Whop: creditcard, PayPal en cryptocurrency. Wij zien uw betalingsgegevens nooit."
+      },
+      {
+        "question": "Support — hoe snel antwoorden jullie?",
+        "answer": "Community: hulp van de community via <a href=\"/help\">het Hulpcentrum</a> + GitHub Discussions (naar beste vermogen). Pro: e-mail binnen 48 uur op werkdagen. De kluis is versleuteld — wij kunnen je gegevens niet zien, dus we vragen nooit om je wachtwoord of herstelzin. Zie <a href=\"/help#sla\">Support-SLA</a>."
+      },
+      {
+        "question": "Wat als ik het wachtwoord van mijn kluis vergeet?",
+        "answer": "We kunnen het niet herstellen. Bij het aanmaken van een kluis tonen we eenmaal een herstelzin van 24 woorden — schrijf die op papier. Zonder die zin kan niemand (wij ook niet) de kluis openen. Zie <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  }
+}

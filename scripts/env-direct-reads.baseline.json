@@ -1,0 +1,8 @@
+{
+  "CI": "test-only CI-mode fuzz budget reduction (src/tests/utils/crypto-core.fuzz.test.ts)",
+  "FUZZ_RUNS": "optional test-only property-test budget (src/tests/utils/crypto-core.fuzz.test.ts)",
+  "NODE_ENV": "runtime/test detection in src/env.config.ts validateEnv() skip logic (process.env.NODE_ENV)",
+  "VITE_DRIVE_TEST_TOKEN": "optional Google Drive e2e credential (src/tests/integrations/cloudSync.real.test.ts)",
+  "VITE_DROPBOX_TEST_TOKEN": "optional Dropbox e2e credential (src/tests/integrations/cloudSync.real.test.ts)",
+  "VITE_ONEDRIVE_TEST_TOKEN": "optional OneDrive e2e credential (src/tests/integrations/cloudSync.real.test.ts)"
+}

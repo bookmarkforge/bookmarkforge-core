@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="pt"
+  dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 2.500 marcadores.">
+  <title>BookmarkForge — Tudo fica no seu computador. Pague uma vez.</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforge.com/pt/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforgeapp.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforgeapp.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforgeapp.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforgeapp.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforgeapp.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforgeapp.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforgeapp.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforgeapp.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforgeapp.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforgeapp.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforgeapp.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforgeapp.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforgeapp.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforgeapp.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforgeapp.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforgeapp.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforgeapp.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforgeapp.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforgeapp.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforgeapp.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforgeapp.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforgeapp.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforgeapp.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforgeapp.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforgeapp.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforgeapp.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforgeapp.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforgeapp.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforgeapp.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforgeapp.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — Tudo fica no seu computador. Pague uma vez.">
+  <meta property="og:description" content="O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 2.500 marcadores.">
+  <meta property="og:url" content="https://bookmarkforge.com/pt/">
+  <meta property="og:image" content="https://bookmarkforge.com/og-image-pt.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="pt_PT">
+  <meta property="og:locale:alternate" content="en_US">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — Tudo fica no seu computador. Pague uma vez.">
+  <meta name="twitter:description" content="O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 2.500 marcadores.">
+  <meta name="twitter:image" content="https://bookmarkforge.com/og-image-pt.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://bookmarkforge.com/pt/#website",
+        "url": "https://bookmarkforge.com/pt/",
+        "name": "BookmarkForge",
+        "description": "A sua cápsula de conhecimento privada com IA. 100% local. A alternativa privada ao Pocket. Grátis: 2.500 marcadores.",
+        "inLanguage": "pt",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://bookmarkforge.com/pt/?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": { "@id": "https://bookmarkforgeapp.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://bookmarkforgeapp.com/#organization",
+        "name": "BookmarkForge",
+        "url": "https://bookmarkforge.com/",
+        "logo": { "@type": "ImageObject", "url": "https://bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
+        "email": "bookmarkforge@proton.me"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://bookmarkforge.com/pt/#software",
+        "name": "BookmarkForge",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "url": "https://bookmarkforge.com/pt/",
+        "image": "https://bookmarkforge.com/og-image-pt.png",
+        "description": "O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 2.500 marcadores.",
+        "offers": [
+          { "@type": "Offer", "name": "Grátis", "price": "0", "priceCurrency": "USD", "description": "2,500 bookmarks. Forever free." },          { "@type": "Offer", "name": "Pro Lifetime v1 — Early Bird", "price": "59", "priceCurrency": "USD", "description": "Early Bird 200. Lifetime of v1, 12 months features, security forever, v2 60% off.", "priceValidUntil": "2026-12-31", "availability": "https://schema.org/InStock" },          { "@type": "Offer", "name": "Pro Lifetime v1", "price": "79", "priceCurrency": "USD", "description": "Regular. Lifetime of v1." }        ],
+        "featureList": [
+          "Armazenamento 100% local",          "Encriptação de ponta a ponta",          "Funciona offline",          "Pesquisa com IA",          "Editor estilo Notion",          "Sincronização P2P"        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://bookmarkforge.com/pt/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "O plano Grátis é realmente grátis para sempre?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Sim. Sem teste nem assinatura. Inclui 2.500 favoritos, busca completa e semântica, grafo de conhecimento e IA com sua própria chave API (você paga o provedor)." }
+          },          {
+            "@type": "Question",
+            "name": "O que significa \"Lifetime de v1\" no Pro?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Pague uma vez, seu para sempre. Inclui todas as v1.x para sempre e 12 meses de novidades a partir da compra. Segurança para sempre. Após o mês 13, v1 continua funcional, só sem novidades. Futuras majors (v2, v3): $89 novos, $35 donos v1 (60% off)." }
+          },          {
+            "@type": "Question",
+            "name": "Formas de pagamento e reembolso?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Via Whop: cartão, PayPal, cripto. Nunca vemos seus dados de pagamento. Reembolso 30 dias: bookmarkforge@proton.me." }
+          },          {
+            "@type": "Question",
+            "name": "Suporte — quão rápido respondem?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Grátis: comunidade via Central de Ajuda + GitHub Discussions (melhor esforço). Pro: 48h úteis por email. Cofre criptografado — nunca pedimos senha ou frase. Ver SLA." }
+          },          {
+            "@type": "Question",
+            "name": "E se eu esquecer a senha do cofre?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Não podemos recuperar. Ao criar, mostramos frase semente de 24 palavras uma única vez — anote em papel. Sem ela, ninguém (nem nós) abre o cofre. Ver BF-E101." }
+          }        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Saltar para o conteúdo principal</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/pt/" class="nav-brand" aria-label="BookmarkForge início">
+        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Navegação principal">
+        <a href="#alternativa-pocket">Ler mais tarde, sem abrir mão da privacidade</a>
+<a href="#raindrop-compare">Comparação com o Raindrop</a>        <a href="#funcionalidades">Funcionalidades</a>
+        <a href="#ia">IA</a>
+        <a href="#privacidade">Privacidade</a>
+        <a href="#precos">Preços</a>
+        <a href="/help">Ajuda</a>
+        
+        <!-- Language Dropdown -->
+        <div class="language-dropdown">
+          <button class="language-toggle" aria-label="Select language" aria-expanded="false">
+            <span class="current-lang">Português</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 4 L6 8 L10 4"/>
+            </svg>
+          </button>
+          <ul class="language-menu" role="menu">
+            <li role="none">
+              <a href="/id/?lang=id" hreflang="id" lang="id" role="menuitem">
+                Bahasa Indonesia
+              </a>
+            </li>
+            <li role="none">
+              <a href="/cs/?lang=cs" hreflang="cs" lang="cs" role="menuitem">
+                Čeština
+              </a>
+            </li>
+            <li role="none">
+              <a href="/da/?lang=da" hreflang="da" lang="da" role="menuitem">
+                Dansk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/de/?lang=de" hreflang="de" lang="de" role="menuitem">
+                Deutsch
+              </a>
+            </li>
+            <li role="none">
+              <a href="/?lang=en" hreflang="en" lang="en" role="menuitem">
+                English
+              </a>
+            </li>
+            <li role="none">
+              <a href="/es/?lang=es" hreflang="es" lang="es" role="menuitem">
+                Español
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fr/?lang=fr" hreflang="fr" lang="fr" role="menuitem">
+                Français
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hr/?lang=hr" hreflang="hr" lang="hr" role="menuitem">
+                Hrvatski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/it/?lang=it" hreflang="it" lang="it" role="menuitem">
+                Italiano
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hu/?lang=hu" hreflang="hu" lang="hu" role="menuitem">
+                Magyar
+              </a>
+            </li>
+            <li role="none">
+              <a href="/nl/?lang=nl" hreflang="nl" lang="nl" role="menuitem">
+                Nederlands
+              </a>
+            </li>
+            <li role="none">
+              <a href="/no/?lang=no" hreflang="no" lang="no" role="menuitem">
+                Norsk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pl/?lang=pl" hreflang="pl" lang="pl" role="menuitem">
+                Polski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pt/?lang=pt" hreflang="pt" lang="pt" role="menuitem" class="current">
+                Português
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ro/?lang=ro" hreflang="ro" lang="ro" role="menuitem">
+                Română
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fi/?lang=fi" hreflang="fi" lang="fi" role="menuitem">
+                Suomi
+              </a>
+            </li>
+            <li role="none">
+              <a href="/sv/?lang=sv" hreflang="sv" lang="sv" role="menuitem">
+                Svenska
+              </a>
+            </li>
+            <li role="none">
+              <a href="/vi/?lang=vi" hreflang="vi" lang="vi" role="menuitem">
+                Tiếng Việt
+              </a>
+            </li>
+            <li role="none">
+              <a href="/tr/?lang=tr" hreflang="tr" lang="tr" role="menuitem">
+                Türkçe
+              </a>
+            </li>
+            <li role="none">
+              <a href="/el/?lang=el" hreflang="el" lang="el" role="menuitem">
+                Ελληνικά
+              </a>
+            </li>
+            <li role="none">
+              <a href="/bg/?lang=bg" hreflang="bg" lang="bg" role="menuitem">
+                Български
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ru/?lang=ru" hreflang="ru" lang="ru" role="menuitem">
+                Русский
+              </a>
+            </li>
+            <li role="none">
+              <a href="/uk/?lang=uk" hreflang="uk" lang="uk" role="menuitem">
+                Українська
+              </a>
+            </li>
+            <li role="none">
+              <a href="/he/?lang=he" hreflang="he" lang="he" role="menuitem">
+                עברית
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ar/?lang=ar" hreflang="ar" lang="ar" role="menuitem">
+                العربية
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hi/?lang=hi" hreflang="hi" lang="hi" role="menuitem">
+                हिन्दी
+              </a>
+            </li>
+            <li role="none">
+              <a href="/th/?lang=th" hreflang="th" lang="th" role="menuitem">
+                ไทย
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ko/?lang=ko" hreflang="ko" lang="ko" role="menuitem">
+                한국어
+              </a>
+            </li>
+            <li role="none">
+              <a href="/zh/?lang=zh" hreflang="zh" lang="zh" role="menuitem">
+                中文
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ja/?lang=ja" hreflang="ja" lang="ja" role="menuitem">
+                日本語
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <a href="/app" class="btn-primary nav-cta">Abrir a App</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Mudar tema" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">Pagamento único · Sem subscrição</span>
+          <h1 id="hero-title">Tudo o que guarda fica no seu computador. <span class="accent-text">Tudo.</span></h1>
+          <p class="hero-subtitle">O Raindrop guarda os seus marcadores nos servidores dele — e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados com uma chave que só você tem. Sem contas. Sem mensalidades. E sem ninguém a ler por cima do seu ombro.</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">Abrir a App Grátis</a>
+            <a href="#precos" class="btn-secondary">Ver Preços</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>Privado</strong> — as suas páginas guardadas nunca saem do seu computador</span>
+            <span><strong>Fechado</strong> — nem nós as conseguimos ler</span>
+            <span><strong>Offline</strong> — funciona num avião, num túnel, onde for</span>
+            <span><strong>Pague uma vez</strong> — 59 dólares uma vez, não 28 dólares todos os anos</span>
+          </div>
+          <div class="hero-affiliate">
+            <span class="hero-affiliate-badge">Ganhe dinheiro</span>
+            <h3 class="hero-affiliate-title">Programa de Afiliados</h3>
+            <p class="hero-affiliate-subtitle">Compartilhe BookmarkForge e ganhe 30% de comissão em cada compra referenciada. Comece a ganhar hoje!</p>
+            <a href="https://whop.com/affiliates" class="btn-small">Participar do programa de afiliados</a>
+            <ul class="hero-affiliate-details">
+              <li>30% de comissão em cada venda</li>
+              <li>Ganhos ilimitados</li>
+              <li>Pagamentos automáticos via Whop</li>
+              <li>Rastreamento em tempo real</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Demo Section — steps and CTA only. The tour GIF this section
+         used to show was retired with the demo-media pipeline; the template kept
+         a dead <img> pointing at it until the ADR-062 smoke gate reported the 404
+         on all 30 landings. The demo.* copy still describes the loop: rewriting it
+         has to come with the translations, not from the template.
+         Secondary locales carry demo: null until that copy is translated —
+         the section is hidden rather than rendering English inside a
+         localized page (same for raindropCompare below). -->
+    <section id="demo" class="demo-tour" aria-labelledby="demo-title">
+      <div class="container">
+        <div class="demo-tour-header">
+          <span class="demo-tour-tag">Veja a funcionar</span>
+          <h2 id="demo-title" class="demo-tour-title">A aplicação real, não uma maqueta</h2>
+          <p class="demo-tour-subtitle">Sem registo prévio, sem vídeo de arquivo e sem cursor falso. Este ciclo é a versão publicada num computador comum: desbloquear o cofre, guardar uma página, procurar na biblioteca e voltar a bloqueá-lo.</p>
+        </div>
+        <ol class="demo-tour-steps">
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">Desbloquear</strong>
+            <span class="demo-tour-step-text">O cofre abre com uma palavra-passe que escolhe; a chave fica no seu dispositivo.</span>
+          </li>
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">Guardar</strong>
+            <span class="demo-tour-step-text">Guarde uma página a partir da aplicação, sem conta e sem extensão.</span>
+          </li>
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">Encontrar</strong>
+            <span class="demo-tour-step-text">Procure por palavra-chave ou por significado, com as fontes de cada resposta.</span>
+          </li>
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">Bloquear</strong>
+            <span class="demo-tour-step-text">Feche o cofre e a chave de decifragem desaparece da memória.</span>
+          </li>
+        </ol>
+        <div class="demo-tour-cta">
+          <a href="/app" class="btn-primary">Abrir a aplicação</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="alternativa-pocket" class="comparison-section" aria-labelledby="alternativa-pocket-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Ler mais tarde, sem abrir mão da privacidade</span>
+          <h2 id="alternativa-pocket-title">A Alternativa Privada ao Pocket</h2>
+          <p class="section-subtitle">O Pocket está a acabar. O BookmarkForge mantém vivo o hábito de ler mais tarde — com cada artigo, nota e sublinhado encriptado no seu dispositivo.</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>Leia mais tarde, seu para sempre</h3>
+            <p>Guarde artigos, vídeos e PDFs com um clique — a partir da PWA, da extensão do navegador ou do menu partilhar. Ao contrário do Pocket, a sua lista de leitura vive no seu dispositivo, encriptada, e funciona offline.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Notas estilo Notion em cada artigo</h3>
+            <p>Sublinhe, resuma e tome notas em blocos em qualquer marcador. Transforme um artigo guardado na sua própria base de conhecimento — não apenas numa lista de links.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Zero rastreamento, zero anúncios</h3>
+            <p>O BookmarkForge não tem contas, nem análises, nem anúncios por predefinição. Os seus hábitos de leitura não são assunto de mais ninguém.</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Começar a Guardar Grátis</a>
+          <a href="/pocket-alternative" class="btn-link">Comparação completa e guia de migração</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Raindrop Comparison Section (hidden while raindropCompare is null) -->
+    <section id="raindrop-compare" class="raindrop-section" aria-labelledby="raindrop-compare-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Em palavras simples, sem marketing</span>
+          <h2 id="raindrop-compare-title">BookmarkForge contra o Raindrop, sem letras pequenas</h2>
+          <p class="section-subtitle">O Raindrop é uma boa aplicação. A grande diferença está em onde vivem as suas coisas.</p>
+        </div>
+        <div class="rc-table" role="table" aria-label="BookmarkForge contra o Raindrop, sem letras pequenas">
+          <div class="rc-row rc-head" role="row">
+            <div class="rc-topic" role="columnheader"></div>
+            <div class="rc-us" role="columnheader">BookmarkForge</div>
+            <div class="rc-them" role="columnheader">Raindrop</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Onde vive a sua lista</div>
+            <div class="rc-us" role="cell">No seu computador</div>
+            <div class="rc-them" role="cell">Nos servidores deles</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Quem pode ler o que guarda</div>
+            <div class="rc-us" role="cell">Ninguém — fechado com a sua chave, nem nós</div>
+            <div class="rc-them" role="cell">A empresa, e quem lho exigir</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Sem internet</div>
+            <div class="rc-us" role="cell">Tudo continua a funcionar</div>
+            <div class="rc-them" role="cell">Só o básico</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Quanto paga</div>
+            <div class="rc-us" role="cell">59 dólares uma vez. Já está.</div>
+            <div class="rc-them" role="cell">28 dólares todos os anos, para sempre</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Se a empresa desaparecer (RIP Pocket)</div>
+            <div class="rc-us" role="cell">Nada muda — já está nas suas mãos</div>
+            <div class="rc-them" role="cell">Exporta e recomeça do zero</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">O assistente de IA</div>
+            <div class="rc-us" role="cell">Trabalha dentro do seu computador no modo privado — nada é enviado para lado nenhum</div>
+            <div class="rc-them" role="cell">As suas leituras vão pensar para a nuvem</div>
+          </div>
+        </div>
+        <p class="rc-close">O Raindrop é mais simples e grátis — se lhe chega, use-o com gosto. Mas se prefere ter a sua vida de leitura nas suas próprias mãos, o BookmarkForge foi feito exactamente para isso.</p>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Experimente grátis em 2 minutos — sem conta</a>
+          <a href="/pocket-alternative" class="btn-link">Comparação completa com o Pocket</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="funcionalidades" class="features-section" aria-labelledby="funcionalidades-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Tudo o que Precisa</span>
+          <h2 id="funcionalidades-title">Tudo o que precisa, dito de forma simples</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Marcadores e documentos</h3>
+            <p>Guarde qualquer página com um clique. Escreva notas ao lado, num editor limpo e simples. Continua rápido mesmo com 100.000 itens guardados.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Pesquisa inteligente</h3>
+            <p>Encontre por palavra ou por significado, mesmo sem se lembrar das palavras exatas. O Raindrop cobra 28 dólares por ano por isto; aqui vem incluído grátis.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Uma IA que lê a sua biblioteca, dentro do seu computador</h3>
+            <p>Pergunte sobre o que guardou e receba respostas com as fontes à vista. Nada é enviado para a nuvem e funciona offline. Requer Pro.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Converse com a sua própria biblioteca</h3>
+            <p>Pergunte o que quiser sobre os seus marcadores e notas, com respostas citadas. O modo privado funciona 100% na sua máquina. Requer Pro.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Sincronize os seus próprios dispositivos</h3>
+            <p>Os seus dispositivos falam diretamente entre si — sem servidor no meio e com tudo encriptado. Emparelhe-os ao ler um código QR. Até 5 dispositivos. Requer Pro.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Cópias de segurança que são suas</h3>
+            <p>Cópias automáticas que pode guardar onde quiser: um disco externo, uma pasta na nuvem, tanto faz. Exporte tudo para Markdown, JSON, CSV ou PDF quando quiser. As chaves são suas.</p>
+          </div>
+          <div class="feature-item">
+            <h3>O mapa do seu conhecimento</h3>
+            <p>Veja como as suas notas e marcadores se ligam. Filtre por etiquetas, datas e semelhança, e navegue numa tela infinita.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Cartões de estudo que vencem o esquecimento</h3>
+            <p>Transforme qualquer documento guardado em cartões de perguntas que reaparecem mesmo antes de se esquecer — a mesma ideia de revisão do Anki. Requer Pro.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Privado por defeito</h3>
+            <p>Sem contas, sem rastreio, sem anúncios. É o cliente, não o produto. Partilhar estatísticas existe, é facultativo e está desligado até você o ligar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ia" class="ai-section" aria-labelledby="ia-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">IA que respeita você</span>
+          <h2 id="ia-title">O Seu Conhecimento, Amplificado</h2>
+          <p class="section-subtitle">Execute o assistente dentro do seu computador — nada sai dele e funciona offline. Prefere um modelo grande na nuvem? Ligue a sua própria chave: as suas perguntas e as páginas necessárias para responder vão para esse fornecedor, à sua custa. As suas perguntas, os seus dados, as suas regras.</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>Fornecedores suportados</h3>
+            <ul class="providers-list">
+              <li>Dentro do seu computador — modelos WebLLM (TinyLlama, Llama 3.2, Phi-3.5-mini) — Só Pro</li>
+              <li>Na sua própria máquina — Ollama (qualquer modelo que execute)</li>
+              <li>Na nuvem — Google Gemini (chave gerida por nós)</li>
+              <li>Na nuvem — OpenAI / GPT-4o (com a sua própria chave)</li>
+              <li>Na nuvem — Anthropic Claude (com a sua própria chave)</li>
+              <li>Na nuvem — Groq (com a sua própria chave)</li>
+              <li>Na nuvem — OpenRouter ou outro fornecedor personalizado (com a sua própria chave)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>Modos de chat</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>Modo privado</h4>
+                <p>O assistente funciona por inteiro dentro do seu computador. Nada sai dele e não precisa de internet. Requer Pro.</p>
+              </div>
+              <div class="mode-item">
+                <h4>Modo pesquisa web</h4>
+                <p>Combina a sua biblioteca com resultados em direto da web (fornecedores na nuvem).</p>
+              </div>
+              <div class="mode-item">
+                <h4>Agentes expertos</h4>
+                <p>Ajudantes especializados: Programador, Escritor, Analista e Investigador. Requer Pro.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacidade" class="privacy-section" aria-labelledby="privacidade-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacidade-title">A Privacidade Não É Uma Funcionalidade — É a Base</h2>
+          <p class="section-subtitle">Cada decisão de arquitetura coloca-o no controlo</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Fechado para que ninguém o leia — nem nós</h3>
+            <p>A sua biblioteca é encriptada com uma chave derivada da sua palavra-passe mestra. Nunca vemos a sua palavra-passe nem o seu conteúdo.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Guardado no seu próprio dispositivo</h3>
+            <p>Tudo vive no seu computador. O servidor companheiro só trata de licenças, do emparelhamento de dispositivos e de retransmitir as suas perguntas de IA no modo nuvem — nunca do seu conteúdo.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Sem rastreio por defeito</h3>
+            <p>Sem análises, sem relatórios de erros, sem rastreio. Partilhar estatísticas de utilização ou relatórios de erros é uma opção à parte, desligada por defeito.</p>
+          </div>
+          <div class="feature-item">
+            <h3>As chaves são suas</h3>
+            <p>Sem palavra-passe mestra não há acesso — não existe a porta dos fundos de «esqueci-me da palavra-passe». A sua frase de recuperação de 24 palavras é a única chave; guarde-a bem.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Os seus direitos, respeitados</h3>
+            <p>Consultar, corrigir, apagar ou levar os seus dados — tudo em local, quando quiser.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Sem amarras</h3>
+            <p>Exporte os seus dados quando quiser em formatos abertos (JSON, Markdown, CSV, PDF). O seu conhecimento continua seu e portátil.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="precos" class="pricing-section" aria-labelledby="precos-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="precos-title">Preços simples e justos — Sem assinatura</h2>
+          <p class="section-subtitle">2.500 favoritos grátis para sempre. Pro é licença Lifetime v1 — pague uma vez, use v1 para sempre. Inclui todas as v1.x e 12 meses de novidades. Segurança para sempre. Sem mensalidade.</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Grátis</h3>
+            <div class="price">$ 0<span>/para sempre</span></div>
+            <p>Grátis para sempre: 2.500 marcadores e a pesquisa inteligente pela qual outros cobram todos os anos. Ao chegar a 2.500, a sua biblioteca continua intacta — ler, pesquisar e exportar nunca param; só as novas gravações ficam em pausa.</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Pesquisa inteligente (texto integral + semântica) — incluída grátis; o Raindrop cobra todos os anos por isto</li>
+              <li><span aria-hidden="true">✅</span> 2.500 marcadores, notas e documentos</li>
+              <li><span aria-hidden="true">✅</span> Funciona em qualquer dispositivo — cada um com a sua própria biblioteca</li>
+              <li><span aria-hidden="true">✅</span> Grafo de conhecimento</li>
+              <li><span aria-hidden="true">✅</span> Modelos base</li>
+              <li><span aria-hidden="true">✅</span> Exportação JSON/HTML</li>
+              <li><span aria-hidden="true">✅</span> PWA + extensões de navegador</li>
+              <li><span aria-hidden="true">❌</span> Sincronização P2P entre dispositivos</li>
+              <li><span aria-hidden="true">❌</span> IA local (WebLLM/Ollama)</li>
+              <li><span aria-hidden="true">❌</span> Chat RAG sobre os seus dados</li>
+              <li><span aria-hidden="true">❌</span> Cartões de estudo (repetição espaçada)</li>
+              <li><span aria-hidden="true">❌</span> PDF + OCR</li>
+              <li><span aria-hidden="true">❌</span> Exportação avançada (10+ formatos)</li>
+            </ul>
+            <a href="/app" class="btn-outline " >Começar Grátis</a>
+          </div>
+          <div class="price-card popular">
+            <span class="badge">Mais Popular — Early Bird 200</span>
+            <h3>Pro Lifetime v1</h3>
+            <div class="price"><span class="price-now">$ 59</span> <span class="price-was">$79</span><span>Early Bird (depois $79)</span></div>
+            <div class="price-sub">depois $79 regular</div>
+            <p>Lifetime de v1 · 12 meses de atualizações · Segurança para sempre · v2 com 60% de desconto</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Tudo da versão Gratuita</li>
+              <li><span aria-hidden="true">✅</span> Marcadores ilimitados</li>
+              <li><span aria-hidden="true">✅</span> 5 dispositivos · Sincronização P2P entre 5 dispositivos</li>
+              <li><span aria-hidden="true">✅</span> Modelos de IA local (WebLLM, sem chave API) · Chat RAG</li>
+              <li><span aria-hidden="true">✅</span> Agentes especialistas (Coder, Writer, Analyst, Researcher)</li>
+              <li><span aria-hidden="true">✅</span> Cartões de estudo com repetição espaçada · PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> Exportação avançada (10+ formatos) · Backups criptografados</li>
+              <li><span aria-hidden="true">✅</span> Cofre de segurança (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> Lifetime de v1 · 12 meses de atualizações</li>
+              <li><span aria-hidden="true">✅</span> Atualizações de segurança para sempre</li>
+              <li><span aria-hidden="true">✅</span> Suporte por email (48h) + acesso antecipado</li>
+            </ul>
+            <a href="https://whop.com/checkout/plan_XU1GaWhoYhoDh" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Obter Pro $59 Early Bird</a>
+            <p class="sla-note">Suporte: Email 48h (seg–sex) · <a href="/help#sla">SLA</a></p>
+          </div>
+        </div>
+        <p class="pricing-legal">Licença Lifetime para BookmarkForge v1. Inclui todas as v1.x e 12 meses de novidades. Segurança para sempre. Futuras majors (v2, v3) 60% off para proprietários. Reembolso 30 dias via Whop. <a href="/pt/privacy-and-terms.html#terms">Termos</a> · <a href="/help#pricing">Saiba mais</a></p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">Perguntas Frequentes</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>O plano Grátis é realmente grátis para sempre?</h3>
+            <p>Sim. Sem teste nem assinatura. Inclui 2.500 favoritos, busca completa e semântica, grafo de conhecimento e IA com sua própria chave API (você paga o provedor).</p>
+          </div>
+          <div class="faq-item">
+            <h3>O que significa "Lifetime de v1" no Pro?</h3>
+            <p>Pague uma vez, seu para sempre. Inclui todas as v1.x para sempre e 12 meses de novidades a partir da compra. Segurança para sempre. Após o mês 13, v1 continua funcional, só sem novidades. Futuras majors (v2, v3): $89 novos, $35 donos v1 (60% off).</p>
+          </div>
+          <div class="faq-item">
+            <h3>Formas de pagamento e reembolso?</h3>
+            <p>Via Whop: cartão, PayPal, cripto. Nunca vemos seus dados de pagamento. Reembolso 30 dias: <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Suporte — quão rápido respondem?</h3>
+            <p>Grátis: comunidade via <a href="/help">Central de Ajuda</a> + GitHub Discussions (melhor esforço). Pro: 48h úteis por email. Cofre criptografado — nunca pedimos senha ou frase. Ver <a href="/help#sla">SLA</a>.</p>
+          </div>
+          <div class="faq-item">
+            <h3>E se eu esquecer a senha do cofre?</h3>
+            <p>Não podemos recuperar. Ao criar, mostramos frase semente de 24 palavras uma única vez — anote em papel. Sem ela, ninguém (nem nós) abre o cofre. Ver <a href="/help#bf-e101">BF-E101</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>Pronto para Ser Dono do Seu Conhecimento?</h2>
+        <p>Junte-se a milhares de investigadores, programadores e estudantes que confiam no BookmarkForge como o seu segundo cérebro.</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">Abrir a App Grátis</a>
+          <a href="#precos" class="btn-secondary">Passar para Pro</a>
+        </div>
+        <p class="note">Sem necessidade de conta. Funciona instantaneamente no seu navegador. Nível grátis: 2.500 marcadores.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>A sua cápsula de conhecimento privada com IA. 100% local.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Produto</h4>
+        <ul>
+          <li><a href="#funcionalidades">Funcionalidades</a></li>
+          <li><a href="#ia">Capacidades de IA</a></li>
+          <li><a href="#privacidade">Privacidade</a></li>
+          <li><a href="#precos">Preços</a></li>
+          <li><a href="/app">Abrir a App</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Recursos</h4>
+        <ul>
+          <li><a href="/pocket-alternative">Comparação com o Pocket</a></li>
+          <li><a href="/privacy-and-terms.html">Privacidade e Termos</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Idiomas</h4>
+        <ul>
+          <li><a href="/id/?lang=id" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+          <li><a href="/cs/?lang=cs" hreflang="cs" lang="cs">Čeština</a></li>
+          <li><a href="/da/?lang=da" hreflang="da" lang="da">Dansk</a></li>
+          <li><a href="/de/?lang=de" hreflang="de" lang="de">Deutsch</a></li>
+          <li><a href="/?lang=en" hreflang="en" lang="en">English</a></li>
+          <li><a href="/es/?lang=es" hreflang="es" lang="es">Español</a></li>
+          <li><a href="/fr/?lang=fr" hreflang="fr" lang="fr">Français</a></li>
+          <li><a href="/hr/?lang=hr" hreflang="hr" lang="hr">Hrvatski</a></li>
+          <li><a href="/it/?lang=it" hreflang="it" lang="it">Italiano</a></li>
+          <li><a href="/hu/?lang=hu" hreflang="hu" lang="hu">Magyar</a></li>
+          <li><a href="/nl/?lang=nl" hreflang="nl" lang="nl">Nederlands</a></li>
+          <li><a href="/no/?lang=no" hreflang="no" lang="no">Norsk</a></li>
+          <li><a href="/pl/?lang=pl" hreflang="pl" lang="pl">Polski</a></li>
+          <li><a href="/pt/?lang=pt" hreflang="pt" lang="pt">Português</a></li>
+          <li><a href="/ro/?lang=ro" hreflang="ro" lang="ro">Română</a></li>
+          <li><a href="/fi/?lang=fi" hreflang="fi" lang="fi">Suomi</a></li>
+          <li><a href="/sv/?lang=sv" hreflang="sv" lang="sv">Svenska</a></li>
+          <li><a href="/vi/?lang=vi" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+          <li><a href="/tr/?lang=tr" hreflang="tr" lang="tr">Türkçe</a></li>
+          <li><a href="/el/?lang=el" hreflang="el" lang="el">Ελληνικά</a></li>
+          <li><a href="/bg/?lang=bg" hreflang="bg" lang="bg">Български</a></li>
+          <li><a href="/ru/?lang=ru" hreflang="ru" lang="ru">Русский</a></li>
+          <li><a href="/uk/?lang=uk" hreflang="uk" lang="uk">Українська</a></li>
+          <li><a href="/he/?lang=he" hreflang="he" lang="he">עברית</a></li>
+          <li><a href="/ar/?lang=ar" hreflang="ar" lang="ar">العربية</a></li>
+          <li><a href="/hi/?lang=hi" hreflang="hi" lang="hi">हिन्दी</a></li>
+          <li><a href="/th/?lang=th" hreflang="th" lang="th">ไทย</a></li>
+          <li><a href="/ko/?lang=ko" hreflang="ko" lang="ko">한국어</a></li>
+          <li><a href="/zh/?lang=zh" hreflang="zh" lang="zh">中文</a></li>
+          <li><a href="/ja/?lang=ja" hreflang="ja" lang="ja">日本語</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Suporte</h4>
+        <ul>
+          <li><a href="/help">Central de Ajuda</a></li>
+          <li><a href="/help#sla">SLA</a></li>
+          <li><a href="/help#bf-e">Códigos de erro</a></li>
+          <li><a href="mailto:bookmarkforge@proton.me">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+         Every other locale has its own directory. The rule has one owner —
+         scripts/landing-registry.mjs (LEGAL_LOCALE_CODES), already encoded by
+         check-seo, check-sitemap-coverage, check-hreflang-graph and
+         check-page-figures. Emitting "/pt/…" unconditionally shipped a
+         404 footer link on every EN landing until the ADR-062 smoke gate opened it. -->
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. Todos os direitos reservados.</p>
+      <a href="/pt/privacy-and-terms.html">Política de Privacidade</a> · <a href="/pt/privacy-and-terms.html#terms">Termos de Serviço</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

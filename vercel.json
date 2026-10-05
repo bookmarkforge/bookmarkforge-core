@@ -1,0 +1,490 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "installCommand": "npm install",
+  "devCommand": "npm run dev",
+  "regions": [
+    "iad1"
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains; preload"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+        },
+        {
+          "key": "Cross-Origin-Embedder-Policy",
+          "value": "require-corp"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Reporting-Endpoints",
+          "value": "csp-endpoint=\"/csp-report\""
+        },
+        {
+          "key": "Report-To",
+          "value": "{\"group\":\"csp-endpoint\",\"max_age\":86400,\"endpoints\":[{\"url\":\"https://bookmarkforgeapp.com/csp-report\"}]}"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data:; connect-src 'self' https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri https://bookmarkforgeapp.com/csp-report; report-to csp-endpoint"
+        }
+      ]
+    },
+    {
+      "source": "/(.*).html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/(.*).json",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, must-revalidate"
+        },
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/"
+        }
+      ]
+    },
+    {
+      "source": "/payment/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/pricing/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/app",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/app/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/capture",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/capture/:path*",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    },
+    {
+      "source": "/offline(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/landing.html"
+    },
+    {
+      "source": "/help",
+      "destination": "/help.html"
+    },
+    {
+      "source": "/help/",
+      "destination": "/help.html"
+    },
+    {
+      "source": "/pocket-alternative",
+      "destination": "/pocket-alternative.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy-and-terms.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/privacy-and-terms.html"
+    },
+    {
+      "source": "/ar",
+      "destination": "/ar.html"
+    },
+    {
+      "source": "/ar/",
+      "destination": "/ar.html"
+    },
+    {
+      "source": "/bg",
+      "destination": "/bg.html"
+    },
+    {
+      "source": "/bg/",
+      "destination": "/bg.html"
+    },
+    {
+      "source": "/cs",
+      "destination": "/cs.html"
+    },
+    {
+      "source": "/cs/",
+      "destination": "/cs.html"
+    },
+    {
+      "source": "/da",
+      "destination": "/da.html"
+    },
+    {
+      "source": "/da/",
+      "destination": "/da.html"
+    },
+    {
+      "source": "/de",
+      "destination": "/de.html"
+    },
+    {
+      "source": "/de/",
+      "destination": "/de.html"
+    },
+    {
+      "source": "/el",
+      "destination": "/el.html"
+    },
+    {
+      "source": "/el/",
+      "destination": "/el.html"
+    },
+    {
+      "source": "/es",
+      "destination": "/es.html"
+    },
+    {
+      "source": "/es/",
+      "destination": "/es.html"
+    },
+    {
+      "source": "/fi",
+      "destination": "/fi.html"
+    },
+    {
+      "source": "/fi/",
+      "destination": "/fi.html"
+    },
+    {
+      "source": "/fr",
+      "destination": "/fr.html"
+    },
+    {
+      "source": "/fr/",
+      "destination": "/fr.html"
+    },
+    {
+      "source": "/he",
+      "destination": "/he.html"
+    },
+    {
+      "source": "/he/",
+      "destination": "/he.html"
+    },
+    {
+      "source": "/hi",
+      "destination": "/hi.html"
+    },
+    {
+      "source": "/hi/",
+      "destination": "/hi.html"
+    },
+    {
+      "source": "/hr",
+      "destination": "/hr.html"
+    },
+    {
+      "source": "/hr/",
+      "destination": "/hr.html"
+    },
+    {
+      "source": "/hu",
+      "destination": "/hu.html"
+    },
+    {
+      "source": "/hu/",
+      "destination": "/hu.html"
+    },
+    {
+      "source": "/id",
+      "destination": "/id.html"
+    },
+    {
+      "source": "/id/",
+      "destination": "/id.html"
+    },
+    {
+      "source": "/it",
+      "destination": "/it.html"
+    },
+    {
+      "source": "/it/",
+      "destination": "/it.html"
+    },
+    {
+      "source": "/ja",
+      "destination": "/ja.html"
+    },
+    {
+      "source": "/ja/",
+      "destination": "/ja.html"
+    },
+    {
+      "source": "/ko",
+      "destination": "/ko.html"
+    },
+    {
+      "source": "/ko/",
+      "destination": "/ko.html"
+    },
+    {
+      "source": "/nl",
+      "destination": "/nl.html"
+    },
+    {
+      "source": "/nl/",
+      "destination": "/nl.html"
+    },
+    {
+      "source": "/no",
+      "destination": "/no.html"
+    },
+    {
+      "source": "/no/",
+      "destination": "/no.html"
+    },
+    {
+      "source": "/pl",
+      "destination": "/pl.html"
+    },
+    {
+      "source": "/pl/",
+      "destination": "/pl.html"
+    },
+    {
+      "source": "/pt",
+      "destination": "/pt.html"
+    },
+    {
+      "source": "/pt/",
+      "destination": "/pt.html"
+    },
+    {
+      "source": "/ro",
+      "destination": "/ro.html"
+    },
+    {
+      "source": "/ro/",
+      "destination": "/ro.html"
+    },
+    {
+      "source": "/ru",
+      "destination": "/ru.html"
+    },
+    {
+      "source": "/ru/",
+      "destination": "/ru.html"
+    },
+    {
+      "source": "/sv",
+      "destination": "/sv.html"
+    },
+    {
+      "source": "/sv/",
+      "destination": "/sv.html"
+    },
+    {
+      "source": "/th",
+      "destination": "/th.html"
+    },
+    {
+      "source": "/th/",
+      "destination": "/th.html"
+    },
+    {
+      "source": "/tr",
+      "destination": "/tr.html"
+    },
+    {
+      "source": "/tr/",
+      "destination": "/tr.html"
+    },
+    {
+      "source": "/uk",
+      "destination": "/uk.html"
+    },
+    {
+      "source": "/uk/",
+      "destination": "/uk.html"
+    },
+    {
+      "source": "/vi",
+      "destination": "/vi.html"
+    },
+    {
+      "source": "/vi/",
+      "destination": "/vi.html"
+    },
+    {
+      "source": "/zh",
+      "destination": "/zh.html"
+    },
+    {
+      "source": "/zh/",
+      "destination": "/zh.html"
+    },
+    {
+      "source": "/app",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/app/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/capture",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/capture/:path*",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/buy-pro",
+      "destination": "https://whop.com/checkout/plan_XU1GaWhoYhoDh",
+      "statusCode": 302
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "cookie",
+          "key": "bf_lang",
+          "value": "^(?<lang>ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)$"
+        }
+      ],
+      "missing": [
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "^(en|ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)$"
+        }
+      ],
+      "destination": "/:lang/",
+      "statusCode": 302
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "header",
+          "key": "accept-language",
+          "value": "^(?<lang>ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)([-,;].*)?$"
+        }
+      ],
+      "missing": [
+        {
+          "type": "cookie",
+          "key": "bf_lang"
+        },
+        {
+          "type": "query",
+          "key": "lang",
+          "value": "^(en|ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)$"
+        }
+      ],
+      "destination": "/:lang/",
+      "statusCode": 302
+    }
+  ],
+  "env": {
+    "VITE_BUILD_ENV": "production"
+  }
+}

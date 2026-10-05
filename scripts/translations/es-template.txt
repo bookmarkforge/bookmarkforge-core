@@ -1,0 +1,1114 @@
+Translation Template for ES
+===================================================
+
+Instructions:
+- Translate each field below
+- Keep the JSON structure intact
+- Do not change field names or structure
+- For RTL languages (ar, he): ensure dir is "rtl"
+
+Fields to translate (276):
+
+1. es.lang
+   English: en
+   Translation: [TO FILL]
+
+2. es.langName
+   English: English
+   Translation: [TO FILL]
+
+3. es.dir
+   English: ltr
+   Translation: [TO FILL]
+
+4. es.ogLocale
+   English: en_US
+   Translation: [TO FILL]
+
+5. es.ogLocaleAlternate
+   English: es_ES
+   Translation: [TO FILL]
+
+6. es.title
+   English: BookmarkForge — Everything stays on your computer. Pay once.
+   Translation: [TO FILL]
+
+7. es.description
+   English: Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 2,500 bookmarks.
+   Translation: [TO FILL]
+
+8. es.ogTitle
+   English: BookmarkForge — Everything stays on your computer. Pay once.
+   Translation: [TO FILL]
+
+9. es.ogDescription
+   English: Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 2,500 bookmarks.
+   Translation: [TO FILL]
+
+10. es.twitterTitle
+   English: BookmarkForge — Everything stays on your computer. Pay once.
+   Translation: [TO FILL]
+
+11. es.twitterDescription
+   English: Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 2,500 bookmarks.
+   Translation: [TO FILL]
+
+12. es.skipLink
+   English: Skip to main content
+   Translation: [TO FILL]
+
+13. es.navBrandAria
+   English: BookmarkForge home
+   Translation: [TO FILL]
+
+14. es.navAriaLabel
+   English: Main navigation
+   Translation: [TO FILL]
+
+15. es.navLinks.pocketAlternative
+   English: Pocket Alternative
+   Translation: [TO FILL]
+
+16. es.navLinks.features
+   English: Features
+   Translation: [TO FILL]
+
+17. es.navLinks.ai
+   English: AI
+   Translation: [TO FILL]
+
+18. es.navLinks.privacy
+   English: Privacy
+   Translation: [TO FILL]
+
+19. es.navLinks.pricing
+   English: Pricing
+   Translation: [TO FILL]
+
+20. es.navLinks.help
+   English: Help
+   Translation: [TO FILL]
+
+21. es.navLinks.raindropCompare
+   English: Raindrop Comparison
+   Translation: [TO FILL]
+
+22. es.langLink.hreflang
+   English: es
+   Translation: [TO FILL]
+
+23. es.langLink.lang
+   English: es
+   Translation: [TO FILL]
+
+24. es.langLink.text
+   English: Español
+   Translation: [TO FILL]
+
+25. es.navCta
+   English: Open App
+   Translation: [TO FILL]
+
+26. es.themeToggleAria
+   English: Toggle theme
+   Translation: [TO FILL]
+
+27. es.hero.badge
+   English: One-time payment · No subscription
+   Translation: [TO FILL]
+
+28. es.hero.title
+   English: Everything you save stays on your computer. <span class="accent-text">Everything.</span>
+   Translation: [TO FILL]
+
+29. es.hero.subtitle
+   English: Raindrop keeps your bookmarks on its servers — and charges you every year. BookmarkForge keeps them on your computer, locked with a key only you have. No accounts. No monthly fees. No one reading over your shoulder.
+   Translation: [TO FILL]
+
+30. es.hero.ctaPrimary
+   English: Launch App Free
+   Translation: [TO FILL]
+
+31. es.hero.ctaSecondary
+   English: View Pricing
+   Translation: [TO FILL]
+
+32. es.hero.pillars[0].strong
+   English: Private
+   Translation: [TO FILL]
+
+33. es.hero.pillars[0].text
+   English: your saved pages never leave your computer
+   Translation: [TO FILL]
+
+34. es.hero.pillars[1].strong
+   English: Locked
+   Translation: [TO FILL]
+
+35. es.hero.pillars[1].text
+   English: not even we can read them
+   Translation: [TO FILL]
+
+36. es.hero.pillars[2].strong
+   English: Offline
+   Translation: [TO FILL]
+
+37. es.hero.pillars[2].text
+   English: works on a plane, in a tunnel, wherever
+   Translation: [TO FILL]
+
+38. es.hero.pillars[3].strong
+   English: Pay once
+   Translation: [TO FILL]
+
+39. es.hero.pillars[3].text
+   English: 59 dollars once, not 28 dollars every year
+   Translation: [TO FILL]
+
+40. es.demo.id
+   English: demo
+   Translation: [TO FILL]
+
+41. es.demo.tag
+   English: See It Working
+   Translation: [TO FILL]
+
+42. es.demo.title
+   English: The real app, not a mock-up
+   Translation: [TO FILL]
+
+43. es.demo.subtitle
+   English: No sign-up wall, no stock footage and no fake cursor. This loop is the released build on an ordinary desktop: unlock the vault, save a page, search the library and lock it again.
+   Translation: [TO FILL]
+
+44. es.demo.imageAlt
+   English: Animated loop of BookmarkForge: unlocking the vault, capturing a bookmark, searching the library and locking it again
+   Translation: [TO FILL]
+
+45. es.demo.caption
+   English: Recorded from the desktop app with demo data. The full walkthrough ships with the project.
+   Translation: [TO FILL]
+
+46. es.demo.steps[0].title
+   English: Unlock
+   Translation: [TO FILL]
+
+47. es.demo.steps[0].text
+   English: The vault opens with a password you choose; the key stays on your device.
+   Translation: [TO FILL]
+
+48. es.demo.steps[1].title
+   English: Capture
+   Translation: [TO FILL]
+
+49. es.demo.steps[1].text
+   English: Save a page straight from the app — no account and no extension required.
+   Translation: [TO FILL]
+
+50. es.demo.steps[2].title
+   English: Find
+   Translation: [TO FILL]
+
+51. es.demo.steps[2].text
+   English: Search by keyword or by meaning, with the sources of every answer shown.
+   Translation: [TO FILL]
+
+52. es.demo.steps[3].title
+   English: Lock
+   Translation: [TO FILL]
+
+53. es.demo.steps[3].text
+   English: Close the vault and the decryption key is gone from memory.
+   Translation: [TO FILL]
+
+54. es.demo.ctaPrimary
+   English: Launch the app
+   Translation: [TO FILL]
+
+55. es.pocketAlternative.id
+   English: pocket-alternative
+   Translation: [TO FILL]
+
+56. es.pocketAlternative.tag
+   English: Read-It-Later Reborn
+   Translation: [TO FILL]
+
+57. es.pocketAlternative.title
+   English: The Private Pocket Alternative
+   Translation: [TO FILL]
+
+58. es.pocketAlternative.subtitle
+   English: Pocket is going away. BookmarkForge keeps the read-it-later habit alive — with every article, note and highlight stored encrypted on your device.
+   Translation: [TO FILL]
+
+59. es.pocketAlternative.features[0].title
+   English: Read It Later, Yours Forever
+   Translation: [TO FILL]
+
+60. es.pocketAlternative.features[0].text
+   English: Save articles, videos and PDFs with one click — from the PWA, browser extension or share menu. Unlike Pocket, your reading list lives on your device, encrypted, and still works offline.
+   Translation: [TO FILL]
+
+61. es.pocketAlternative.features[1].title
+   English: Notion-Style Notes on Every Article
+   Translation: [TO FILL]
+
+62. es.pocketAlternative.features[1].text
+   English: Highlight, summarize and take block-based notes attached to any bookmark. Turn a saved article into your own knowledge base — not just a link list.
+   Translation: [TO FILL]
+
+63. es.pocketAlternative.features[2].title
+   English: Zero Tracking, Zero Ads
+   Translation: [TO FILL]
+
+64. es.pocketAlternative.features[2].text
+   English: BookmarkForge has no accounts, no analytics and no ads by default. Your reading habits are nobody's business but yours.
+   Translation: [TO FILL]
+
+65. es.pocketAlternative.ctaPrimary
+   English: Start Saving Free
+   Translation: [TO FILL]
+
+66. es.pocketAlternative.ctaSecondary
+   English: Full Comparison & Migration Guide
+   Translation: [TO FILL]
+
+67. es.raindropCompare.id
+   English: raindrop-compare
+   Translation: [TO FILL]
+
+68. es.raindropCompare.tag
+   English: Plain words, no marketing
+   Translation: [TO FILL]
+
+69. es.raindropCompare.title
+   English: BookmarkForge vs Raindrop, without the fine print
+   Translation: [TO FILL]
+
+70. es.raindropCompare.subtitle
+   English: Raindrop is a good app. The big difference is where your stuff lives.
+   Translation: [TO FILL]
+
+71. es.raindropCompare.columns.us
+   English: BookmarkForge
+   Translation: [TO FILL]
+
+72. es.raindropCompare.columns.them
+   English: Raindrop
+   Translation: [TO FILL]
+
+73. es.raindropCompare.rows[0].topic
+   English: Where your list lives
+   Translation: [TO FILL]
+
+74. es.raindropCompare.rows[0].us
+   English: On your computer
+   Translation: [TO FILL]
+
+75. es.raindropCompare.rows[0].them
+   English: On their servers
+   Translation: [TO FILL]
+
+76. es.raindropCompare.rows[1].topic
+   English: Who can read what you save
+   Translation: [TO FILL]
+
+77. es.raindropCompare.rows[1].us
+   English: Nobody — locked with your key, not even us
+   Translation: [TO FILL]
+
+78. es.raindropCompare.rows[1].them
+   English: The company, and whoever demands it of them
+   Translation: [TO FILL]
+
+79. es.raindropCompare.rows[2].topic
+   English: Without internet
+   Translation: [TO FILL]
+
+80. es.raindropCompare.rows[2].us
+   English: Everything keeps working
+   Translation: [TO FILL]
+
+81. es.raindropCompare.rows[2].them
+   English: Only the basics
+   Translation: [TO FILL]
+
+82. es.raindropCompare.rows[3].topic
+   English: What you pay
+   Translation: [TO FILL]
+
+83. es.raindropCompare.rows[3].us
+   English: 59 dollars once. Done.
+   Translation: [TO FILL]
+
+84. es.raindropCompare.rows[3].them
+   English: 28 dollars every year, forever
+   Translation: [TO FILL]
+
+85. es.raindropCompare.rows[4].topic
+   English: If the company disappears (RIP Pocket)
+   Translation: [TO FILL]
+
+86. es.raindropCompare.rows[4].us
+   English: Nothing changes — it is already in your hands
+   Translation: [TO FILL]
+
+87. es.raindropCompare.rows[4].them
+   English: You export and start over
+   Translation: [TO FILL]
+
+88. es.raindropCompare.rows[5].topic
+   English: The AI assistant
+   Translation: [TO FILL]
+
+89. es.raindropCompare.rows[5].us
+   English: Runs inside your computer in private mode — nothing is sent anywhere
+   Translation: [TO FILL]
+
+90. es.raindropCompare.rows[5].them
+   English: Your reading goes off to the cloud to think
+   Translation: [TO FILL]
+
+91. es.raindropCompare.ctaPrimary
+   English: Try it free in 2 minutes — no account
+   Translation: [TO FILL]
+
+92. es.raindropCompare.ctaSecondary
+   English: Full Pocket comparison
+   Translation: [TO FILL]
+
+93. es.raindropCompare.close
+   English: Raindrop is simpler and free — if that is all you need, use it happily. But if you would rather keep your reading life in your own hands, BookmarkForge is built for exactly that.
+   Translation: [TO FILL]
+
+94. es.features.id
+   English: features
+   Translation: [TO FILL]
+
+95. es.features.tag
+   English: Everything You Need
+   Translation: [TO FILL]
+
+96. es.features.title
+   English: Everything you need, in plain words
+   Translation: [TO FILL]
+
+97. es.features.items[0].title
+   English: Bookmarks & documents
+   Translation: [TO FILL]
+
+98. es.features.items[0].text
+   English: Save any page with one click. Write notes right next to it, in a clean, simple editor. Stays fast even with 100,000 saved items.
+   Translation: [TO FILL]
+
+99. es.features.items[1].title
+   English: Smart search
+   Translation: [TO FILL]
+
+100. es.features.items[1].text
+   English: Find things by keyword or by meaning — even when you do not remember the exact words. Raindrop charges 28 dollars a year for this; here it is included free.
+   Translation: [TO FILL]
+
+101. es.features.items[2].title
+   English: An AI that reads your library, inside your computer
+   Translation: [TO FILL]
+
+102. es.features.items[2].text
+   English: Ask questions about what you saved and get answers with the sources shown. Nothing is sent to the cloud, and it works without internet. Requires Pro.
+   Translation: [TO FILL]
+
+103. es.features.items[3].title
+   English: Chat with your own library
+   Translation: [TO FILL]
+
+104. es.features.items[3].text
+   English: Ask anything about your bookmarks and notes and get cited answers. The private mode runs 100% on your machine. Requires Pro.
+   Translation: [TO FILL]
+
+105. es.features.items[4].title
+   English: Sync between your own devices
+   Translation: [TO FILL]
+
+106. es.features.items[4].text
+   English: Your devices talk to each other directly — no server in the middle, and everything stays encrypted. Pair them by scanning a QR code. Up to 5 devices. Requires Pro.
+   Translation: [TO FILL]
+
+107. es.features.items[5].title
+   English: Backups you own
+   Translation: [TO FILL]
+
+108. es.features.items[5].text
+   English: Automatic backups you can keep wherever you like — an external drive, a cloud folder, anywhere. Export everything to Markdown, JSON, CSV or PDF whenever you want. You hold the keys.
+   Translation: [TO FILL]
+
+109. es.features.items[6].title
+   English: A map of your knowledge
+   Translation: [TO FILL]
+
+110. es.features.items[6].text
+   English: See how your notes and bookmarks connect. Filter by tags, dates and similarity, and zoom around an endless canvas.
+   Translation: [TO FILL]
+
+111. es.features.items[7].title
+   English: Study cards that beat forgetting
+   Translation: [TO FILL]
+
+112. es.features.items[7].text
+   English: Turn any saved document into question cards that resurface right before you would forget them — the same scheduling idea as Anki. Requires Pro.
+   Translation: [TO FILL]
+
+113. es.features.items[8].title
+   English: Private by default
+   Translation: [TO FILL]
+
+114. es.features.items[8].text
+   English: No accounts, no tracking, no ads. You are the customer, not the product. Usage sharing exists, it is optional and stays off until you turn it on.
+   Translation: [TO FILL]
+
+115. es.ai.id
+   English: ai
+   Translation: [TO FILL]
+
+116. es.ai.tag
+   English: AI That Respects You
+   Translation: [TO FILL]
+
+117. es.ai.title
+   English: Your Knowledge, Amplified
+   Translation: [TO FILL]
+
+118. es.ai.subtitle
+   English: Run the assistant inside your computer — nothing leaves it, and it works offline. Prefer a big cloud model? Connect your own key: your questions and the pages needed to answer them go to that provider, at your cost. Your prompts, your data, your rules.
+   Translation: [TO FILL]
+
+119. es.ai.providers.title
+   English: Supported Providers
+   Translation: [TO FILL]
+
+120. es.ai.providers.list[0].type
+   English: local
+   Translation: [TO FILL]
+
+121. es.ai.providers.list[0].name
+   English: Inside your computer — WebLLM models (TinyLlama, Llama 3.2, Phi-3.5-mini) — Pro only
+   Translation: [TO FILL]
+
+122. es.ai.providers.list[1].type
+   English: local
+   Translation: [TO FILL]
+
+123. es.ai.providers.list[1].name
+   English: On your own machine — Ollama (any model you run)
+   Translation: [TO FILL]
+
+124. es.ai.providers.list[2].type
+   English: cloud
+   Translation: [TO FILL]
+
+125. es.ai.providers.list[2].name
+   English: REMOVED
+   Translation: [TO FILL]
+
+126. es.ai.providers.list[3].type
+   English: cloud
+   Translation: [TO FILL]
+
+127. es.ai.providers.list[3].name
+   English: Cloud — OpenAI / GPT-4o (with your own key)
+   Translation: [TO FILL]
+
+128. es.ai.providers.list[4].type
+   English: cloud
+   Translation: [TO FILL]
+
+129. es.ai.providers.list[4].name
+   English: Cloud — Anthropic Claude (with your own key)
+   Translation: [TO FILL]
+
+130. es.ai.providers.list[5].type
+   English: cloud
+   Translation: [TO FILL]
+
+131. es.ai.providers.list[5].name
+   English: Cloud — Groq (with your own key)
+   Translation: [TO FILL]
+
+132. es.ai.providers.list[6].type
+   English: cloud
+   Translation: [TO FILL]
+
+133. es.ai.providers.list[6].name
+   English: Cloud — OpenRouter or another custom provider (with your own key)
+   Translation: [TO FILL]
+
+134. es.ai.modes.title
+   English: Chat Modes
+   Translation: [TO FILL]
+
+135. es.ai.modes.items[0].title
+   English: Private Mode
+   Translation: [TO FILL]
+
+136. es.ai.modes.items[0].text
+   English: The assistant runs entirely inside your computer. Nothing leaves it, and it needs no internet. Requires Pro.
+   Translation: [TO FILL]
+
+137. es.ai.modes.items[1].title
+   English: Web Search Mode
+   Translation: [TO FILL]
+
+138. es.ai.modes.items[1].text
+   English: Combines your library with live results from the web (cloud providers).
+   Translation: [TO FILL]
+
+139. es.ai.modes.items[2].title
+   English: Expert Agents
+   Translation: [TO FILL]
+
+140. es.ai.modes.items[2].text
+   English: Specialized helpers: Coder, Writer, Analyst and Researcher. Requires Pro.
+   Translation: [TO FILL]
+
+141. es.privacy.id
+   English: privacy
+   Translation: [TO FILL]
+
+142. es.privacy.title
+   English: Privacy Isn't a Feature — It's the Foundation
+   Translation: [TO FILL]
+
+143. es.privacy.subtitle
+   English: Every architectural decision puts you in control
+   Translation: [TO FILL]
+
+144. es.privacy.items[0].title
+   English: Locked so nobody can read it — not even us
+   Translation: [TO FILL]
+
+145. es.privacy.items[0].text
+   English: Your library is encrypted with a key derived from your master password. We never see your password or your content.
+   Translation: [TO FILL]
+
+146. es.privacy.items[1].title
+   English: Stored on your own device
+   Translation: [TO FILL]
+
+147. es.privacy.items[1].text
+   English: Everything lives on your computer. The companion server only handles licensing, device pairing and relaying your cloud-mode AI questions — never your content.
+   Translation: [TO FILL]
+
+148. es.privacy.items[2].title
+   English: No tracking by default
+   Translation: [TO FILL]
+
+149. es.privacy.items[2].text
+   English: No analytics, no crash reports, no tracking. Sharing usage stats or error reports is a separate choice, off by default.
+   Translation: [TO FILL]
+
+150. es.privacy.items[3].title
+   English: You hold the keys
+   Translation: [TO FILL]
+
+151. es.privacy.items[3].text
+   English: No master password means no access — there is no "forgot password" backdoor. Your 24-word recovery phrase is the only way in; keep it safe.
+   Translation: [TO FILL]
+
+152. es.privacy.items[4].title
+   English: Your rights, respected
+   Translation: [TO FILL]
+
+153. es.privacy.items[4].text
+   English: Access, correct, erase or take your data with you — all doable locally, whenever you want.
+   Translation: [TO FILL]
+
+154. es.privacy.items[5].title
+   English: No lock-in
+   Translation: [TO FILL]
+
+155. es.privacy.items[5].text
+   English: Export your data anytime in open formats (JSON, Markdown, CSV, PDF). Your knowledge stays yours and portable.
+   Translation: [TO FILL]
+
+156. es.pricing.id
+   English: pricing
+   Translation: [TO FILL]
+
+157. es.pricing.title
+   English: Simple, Fair Pricing — No Subscriptions
+   Translation: [TO FILL]
+
+158. es.pricing.subtitle
+   English: Free 2,500 bookmarks forever. Pro is a Lifetime license for v1 — pay once, own v1 forever. Includes all v1.x updates and 12 months of feature updates. Security updates forever. No monthly billing.
+   Translation: [TO FILL]
+
+159. es.pricing.plans[0].name
+   English: Free
+   Translation: [TO FILL]
+
+160. es.pricing.plans[0].price
+   English: $ 0
+   Translation: [TO FILL]
+
+161. es.pricing.plans[0].description
+   English: Free forever: 2,500 bookmarks plus the smart search others charge yearly for. At 2,500 your vault stays whole — reading, search and export never stop; only new saves pause.
+   Translation: [TO FILL]
+
+162. es.pricing.plans[0].features[0].text
+   English: Smart search (full-text + semantic) — included free; Raindrop charges yearly for this
+   Translation: [TO FILL]
+
+163. es.pricing.plans[0].features[1].text
+   English: 2,500 bookmarks, notes, documents
+   Translation: [TO FILL]
+
+164. es.pricing.plans[0].features[2].text
+   English: Works on any device — each keeps its own vault
+   Translation: [TO FILL]
+
+165. es.pricing.plans[0].features[3].text
+   English: Knowledge graph
+   Translation: [TO FILL]
+
+166. es.pricing.plans[0].features[4].text
+   English: Basic templates
+   Translation: [TO FILL]
+
+167. es.pricing.plans[0].features[5].text
+   English: JSON/HTML export
+   Translation: [TO FILL]
+
+168. es.pricing.plans[0].features[6].text
+   English: PWA + browser extensions
+   Translation: [TO FILL]
+
+169. es.pricing.plans[0].features[7].text
+   English: P2P sync across devices
+   Translation: [TO FILL]
+
+170. es.pricing.plans[0].features[8].text
+   English: Local AI (WebLLM/Ollama) & RAG chat
+   Translation: [TO FILL]
+
+171. es.pricing.plans[0].features[9].text
+   English: Flashcards with spaced repetition
+   Translation: [TO FILL]
+
+172. es.pricing.plans[0].features[10].text
+   English: PDF + OCR
+   Translation: [TO FILL]
+
+173. es.pricing.plans[0].features[11].text
+   English: Advanced export (10+ formats)
+   Translation: [TO FILL]
+
+174. es.pricing.plans[0].cta
+   English: Start Free
+   Translation: [TO FILL]
+
+175. es.pricing.plans[0].ctaClass
+   English: btn-secondary
+   Translation: [TO FILL]
+
+176. es.pricing.plans[1].name
+   English: Pro Lifetime v1
+   Translation: [TO FILL]
+
+177. es.pricing.plans[1].badge
+   English: Most Popular — Early Bird 200
+   Translation: [TO FILL]
+
+178. es.pricing.plans[1].price
+   English: $ 59
+   Translation: [TO FILL]
+
+179. es.pricing.plans[1].period
+   English: Early Bird (then $79)
+   Translation: [TO FILL]
+
+180. es.pricing.plans[1].description
+   English: Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off
+   Translation: [TO FILL]
+
+181. es.pricing.plans[1].features[0].text
+   English: Everything in Free
+   Translation: [TO FILL]
+
+182. es.pricing.plans[1].features[1].text
+   English: Unlimited bookmarks
+   Translation: [TO FILL]
+
+183. es.pricing.plans[1].features[2].text
+   English: 5 devices · P2P sync across 5 devices
+   Translation: [TO FILL]
+
+184. es.pricing.plans[1].features[3].text
+   English: Local AI models (WebLLM, no API key) · RAG chat
+   Translation: [TO FILL]
+
+185. es.pricing.plans[1].features[4].text
+   English: Expert agents (Coder, Writer, Analyst, Researcher)
+   Translation: [TO FILL]
+
+186. es.pricing.plans[1].features[5].text
+   English: Flashcards with spaced repetition · PDF + OCR
+   Translation: [TO FILL]
+
+187. es.pricing.plans[1].features[6].text
+   English: Advanced export (10+ formats) · Encrypted backups
+   Translation: [TO FILL]
+
+188. es.pricing.plans[1].features[7].text
+   English: Security vault (AES-GCM)
+   Translation: [TO FILL]
+
+189. es.pricing.plans[1].features[8].text
+   English: Lifetime of v1 · 12 months feature updates
+   Translation: [TO FILL]
+
+190. es.pricing.plans[1].features[9].text
+   English: Security updates forever
+   Translation: [TO FILL]
+
+191. es.pricing.plans[1].features[10].text
+   English: Email support (48h) + early access
+   Translation: [TO FILL]
+
+192. es.pricing.plans[1].cta
+   English: Get Pro $59 Early Bird
+   Translation: [TO FILL]
+
+193. es.pricing.plans[1].ctaClass
+   English: btn-primary
+   Translation: [TO FILL]
+
+194. es.pricing.plans[1].priceWas
+   English: $79
+   Translation: [TO FILL]
+
+195. es.pricing.plans[1].priceSub
+   English: then $79 regular
+   Translation: [TO FILL]
+
+196. es.pricing.plans[1].sla
+   English: Support: Email 48h (Mon–Fri)
+   Translation: [TO FILL]
+
+197. es.pricing.legal
+   English: Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href="/privacy-and-terms.html#terms">Terms</a> · <a href="/help#pricing">Learn more</a>
+   Translation: [TO FILL]
+
+198. es.faq.title
+   English: Common Questions
+   Translation: [TO FILL]
+
+199. es.faq.items[0].question
+   English: Is the Free tier really free forever?
+   Translation: [TO FILL]
+
+200. es.faq.items[0].answer
+   English: Yes. No trial, no subscription. The free tier includes 2,500 bookmarks, full-text & semantic search, knowledge graph, and AI with your own API key (you pay the provider).
+   Translation: [TO FILL]
+
+201. es.faq.items[1].question
+   English: What does "Lifetime of v1" mean for Pro?
+   Translation: [TO FILL]
+
+202. es.faq.items[1].answer
+   English: Pay once, own v1 forever. Includes all v1.x updates (bugfixes + minor features) forever and 12 months of feature updates from purchase. Security updates forever. After month 13 you keep v1 functional, just without new features. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off).
+   Translation: [TO FILL]
+
+203. es.faq.items[2].question
+   English: What payment methods & refunds?
+   Translation: [TO FILL]
+
+204. es.faq.items[2].answer
+   English: Via Whop: credit card, PayPal, crypto. We never see your payment details. 30-day refund — contact <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>.
+   Translation: [TO FILL]
+
+205. es.faq.items[3].question
+   English: Support — how fast do you answer?
+   Translation: [TO FILL]
+
+206. es.faq.items[3].answer
+   English: Free: Community help via <a href="/help">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href="/help#sla">Support SLA</a>.
+   Translation: [TO FILL]
+
+207. es.faq.items[4].question
+   English: What if I forget my vault password?
+   Translation: [TO FILL]
+
+208. es.faq.items[4].answer
+   English: We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href="/help#bf-e101">BF-E101</a>.
+   Translation: [TO FILL]
+
+209. es.cta.title
+   English: Ready to Own Your Knowledge?
+   Translation: [TO FILL]
+
+210. es.cta.text
+   English: Join thousands of researchers, developers, and learners who trust BookmarkForge with their second brain.
+   Translation: [TO FILL]
+
+211. es.cta.ctaPrimary
+   English: Launch Free App
+   Translation: [TO FILL]
+
+212. es.cta.ctaSecondary
+   English: Upgrade to Pro
+   Translation: [TO FILL]
+
+213. es.cta.note
+   English: No account required. Works instantly in your browser. Free tier: 2,500 bookmarks.
+   Translation: [TO FILL]
+
+214. es.footer.brand
+   English: Your private, AI-powered knowledge vault. 100% Local-First.
+   Translation: [TO FILL]
+
+215. es.footer.product.title
+   English: Product
+   Translation: [TO FILL]
+
+216. es.footer.product.links[0]
+   English: Features
+   Translation: [TO FILL]
+
+217. es.footer.product.links[1]
+   English: AI Capabilities
+   Translation: [TO FILL]
+
+218. es.footer.product.links[2]
+   English: Privacy
+   Translation: [TO FILL]
+
+219. es.footer.product.links[3]
+   English: Pricing
+   Translation: [TO FILL]
+
+220. es.footer.product.links[4]
+   English: Launch App
+   Translation: [TO FILL]
+
+221. es.footer.resources.title
+   English: Resources
+   Translation: [TO FILL]
+
+222. es.footer.resources.links[0]
+   English: Pocket Comparison
+   Translation: [TO FILL]
+
+223. es.footer.resources.links[1]
+   English: Privacy & Terms
+   Translation: [TO FILL]
+
+224. es.footer.resources.links[2]
+   English: Security
+   Translation: [TO FILL]
+
+225. es.footer.resources.links[3]
+   English: Operations
+   Translation: [TO FILL]
+
+226. es.footer.languages.title
+   English: Languages
+   Translation: [TO FILL]
+
+227. es.footer.languages.links[0]
+   English: English
+   Translation: [TO FILL]
+
+228. es.footer.languages.links[1]
+   English: Español
+   Translation: [TO FILL]
+
+229. es.footer.languages.links[2]
+   English: Français
+   Translation: [TO FILL]
+
+230. es.footer.languages.links[3]
+   English: Deutsch
+   Translation: [TO FILL]
+
+231. es.footer.languages.links[4]
+   English: Português
+   Translation: [TO FILL]
+
+232. es.footer.languages.links[5]
+   English: Italiano
+   Translation: [TO FILL]
+
+233. es.footer.support.title
+   English: Support
+   Translation: [TO FILL]
+
+234. es.footer.support.links[0]
+   English: Contact
+   Translation: [TO FILL]
+
+235. es.footer.support.helpCenter
+   English: Help Center
+   Translation: [TO FILL]
+
+236. es.footer.support.errorCodes
+   English: Error Codes
+   Translation: [TO FILL]
+
+237. es.footer.copyright
+   English: © 2026 BookmarkForge. All rights reserved.
+   Translation: [TO FILL]
+
+238. es.footer.legal[0]
+   English: Privacy Policy
+   Translation: [TO FILL]
+
+239. es.footer.legal[1]
+   English: Terms of Service
+   Translation: [TO FILL]
+
+240. es.footer.legal[2]
+   English: bookmarkforge@proton.me
+   Translation: [TO FILL]
+
+241. es.structuredData.websiteName
+   English: BookmarkForge
+   Translation: [TO FILL]
+
+242. es.structuredData.websiteDescription
+   English: Your private, AI-powered knowledge vault. 100% Local-First. The private Pocket alternative. Free: 2,500 bookmarks.
+   Translation: [TO FILL]
+
+243. es.structuredData.organizationName
+   English: BookmarkForge
+   Translation: [TO FILL]
+
+244. es.structuredData.organizationEmail
+   English: bookmarkforge@proton.me
+   Translation: [TO FILL]
+
+245. es.structuredData.softwareName
+   English: BookmarkForge
+   Translation: [TO FILL]
+
+246. es.structuredData.softwareCategory
+   English: ProductivityApplication
+   Translation: [TO FILL]
+
+247. es.structuredData.softwareOs
+   English: Web
+   Translation: [TO FILL]
+
+248. es.structuredData.offers[0].name
+   English: Free
+   Translation: [TO FILL]
+
+249. es.structuredData.offers[0].price
+   English: 0
+   Translation: [TO FILL]
+
+250. es.structuredData.offers[0].currency
+   English: USD
+   Translation: [TO FILL]
+
+251. es.structuredData.offers[0].description
+   English: 2,500 bookmarks. Forever free.
+   Translation: [TO FILL]
+
+252. es.structuredData.offers[1].name
+   English: Pro Lifetime v1 — Early Bird
+   Translation: [TO FILL]
+
+253. es.structuredData.offers[1].price
+   English: 59
+   Translation: [TO FILL]
+
+254. es.structuredData.offers[1].currency
+   English: USD
+   Translation: [TO FILL]
+
+255. es.structuredData.offers[1].description
+   English: Early Bird 200. Lifetime of v1, 12 months features, security forever, v2 60% off.
+   Translation: [TO FILL]
+
+256. es.structuredData.offers[1].priceValidUntil
+   English: 2026-12-31
+   Translation: [TO FILL]
+
+257. es.structuredData.offers[2].name
+   English: Pro Lifetime v1
+   Translation: [TO FILL]
+
+258. es.structuredData.offers[2].price
+   English: 79
+   Translation: [TO FILL]
+
+259. es.structuredData.offers[2].currency
+   English: USD
+   Translation: [TO FILL]
+
+260. es.structuredData.offers[2].description
+   English: Regular. Lifetime of v1.
+   Translation: [TO FILL]
+
+261. es.structuredData.featureList[0]
+   English: Local-first storage
+   Translation: [TO FILL]
+
+262. es.structuredData.featureList[1]
+   English: End-to-end encryption
+   Translation: [TO FILL]
+
+263. es.structuredData.featureList[2]
+   English: Works offline
+   Translation: [TO FILL]
+
+264. es.structuredData.featureList[3]
+   English: AI search
+   Translation: [TO FILL]
+
+265. es.structuredData.featureList[4]
+   English: Notion-style editor
+   Translation: [TO FILL]
+
+266. es.structuredData.featureList[5]
+   English: P2P sync
+   Translation: [TO FILL]
+
+267. es.structuredData.faq[0].question
+   English: Is the Free tier really free forever?
+   Translation: [TO FILL]
+
+268. es.structuredData.faq[0].answer
+   English: Yes. No trial, no subscription. The free tier includes 2,500 bookmarks, full-text & semantic search, knowledge graph, and AI with your own API key (you pay the provider).
+   Translation: [TO FILL]
+
+269. es.structuredData.faq[1].question
+   English: What does "Lifetime of v1" mean for Pro?
+   Translation: [TO FILL]
+
+270. es.structuredData.faq[1].answer
+   English: Pay once, own v1 forever. Includes all v1.x updates (bugfixes + minor features) forever and 12 months of feature updates from purchase. Security updates forever. After month 13 you keep v1 functional, just without new features. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off).
+   Translation: [TO FILL]
+
+271. es.structuredData.faq[2].question
+   English: What payment methods & refunds?
+   Translation: [TO FILL]
+
+272. es.structuredData.faq[2].answer
+   English: Via Whop: credit card, PayPal, crypto. We never see your payment details. 30-day refund — contact bookmarkforge@proton.me.
+   Translation: [TO FILL]
+
+273. es.structuredData.faq[3].question
+   English: Support — how fast do you answer?
+   Translation: [TO FILL]
+
+274. es.structuredData.faq[3].answer
+   English: Free: Community help via Help Center + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See Support SLA.
+   Translation: [TO FILL]
+
+275. es.structuredData.faq[4].question
+   English: What if I forget my vault password?
+   Translation: [TO FILL]
+
+276. es.structuredData.faq[4].answer
+   English: We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See BF-E101.
+   Translation: [TO FILL]

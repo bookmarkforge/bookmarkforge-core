@@ -2,7 +2,7 @@ name: SAST security analysis
 
 on:
   push:
-    branches: [main, master, develop]
+    branches: [main]
   pull_request:
   schedule:
     - cron: '17 4 * * 1'

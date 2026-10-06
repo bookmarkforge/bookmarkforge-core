@@ -150,7 +150,6 @@
     "check:audit-drift:strict-discovery": "node scripts/check-audit-drift.mjs --strict-discovery",
     "check:model-digests": "node scripts/pin-model-digests.mjs --check",
     "check:audit-drift:fix": "node scripts/check-audit-drift.mjs --fix",
-    "check:audit-script-snapshot": "node scripts/__tests__/check-audit-script-snapshot.mjs",
     "check:coverage-areas": "node scripts/check-coverage-by-area.mjs",
     "check:no-unbounded-text": "node scripts/baseline-no-unbounded-text.mjs",
     "check:no-unbounded-text:fix": "node scripts/baseline-no-unbounded-text.mjs --fix",

@@ -193,7 +193,7 @@ jobs:
         run: npm run e2e -- --config=playwright.config.ts --grep-invert "@nightly|@multiuser|@visual|@performance"
       - name: Upload Playwright artifacts
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: playwright-artifacts
           if-no-files-found: ignore
@@ -236,7 +236,7 @@ jobs:
         run: npm run e2e:engines
       - name: Upload Playwright artifacts
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: playwright-engines-artifacts
           if-no-files-found: ignore
@@ -277,7 +277,7 @@ jobs:
         run: npm run e2e:mobile
       - name: Upload Playwright artifacts
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: playwright-mobile-artifacts
           if-no-files-found: ignore
@@ -316,7 +316,7 @@ jobs:
         run: npm run test:ai-performance:mobile
       - name: Upload mobile AI performance evidence
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: playwright-ai-performance-artifacts
           if-no-files-found: ignore
@@ -357,7 +357,7 @@ jobs:
         run: npm run e2e:sync
       - name: Upload Playwright artifacts
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: playwright-sync-artifacts
           if-no-files-found: ignore
@@ -402,7 +402,7 @@ jobs:
         run: npm run e2e:relay
       - name: Upload Playwright artifacts
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: playwright-public-relay-artifacts
           if-no-files-found: ignore
@@ -487,7 +487,7 @@ jobs:
       - run: npm audit --omit=dev --audit-level=high
       - name: Upload build diagnostics
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: build-diagnostics
           if-no-files-found: ignore

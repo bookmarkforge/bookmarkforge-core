@@ -42,14 +42,6 @@ Each language has a Markdown version and a PDF version generated from the same s
 | Document | Description |
 |---|---|
 | [Architecture](architecture.md) | Architecture overview |
-| [Integral audit — 2026-10-05](auditoria-integral-2026-10-05.md) | Evidence-based audit of repository, configuration, flows and public routes |
-| [Architecture Tutorial](ARCHITECTURE-TUTORIAL.md) | Developer onboarding guide |
-| [Crypto Patterns](CRYPTO-PATTERNS.md) | Cryptographic maintenance guide |
-| [Testing Patterns](TESTING-PATTERNS.md) | Testing conventions and patterns |
-| [Troubleshooting](TROUBLESHOOTING.md) | Common problems and solutions |
-| [Vercel Local Setup](VERCEL-LOCAL-SETUP.md) | Vercel local development configuration |
-| [Extension Local Setup](EXTENSION-LOCAL-SETUP.md) | Browser extension local development |
-| [Whop Integration](WHOP-INTEGRATION.md) | Whop.com license and payment integration |
 | [Security](security.md) | Security model and threats |
 | [API](api.md) | API specification |
 | [OpenAPI](openapi.yaml) | OpenAPI 3.0 specification |

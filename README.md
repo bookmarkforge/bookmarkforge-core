@@ -76,11 +76,11 @@ Most bookmark managers store your library in someone else's cloud in plain text.
 
 ```bash
 # Clone the public Core
-git clone https://github.com/bookmarkforge/bookmarkforge.git
-cd bookmarkforge
+git clone https://github.com/bookmarkforge/bookmarkforge-core.git
+cd bookmarkforge-core
 
 # Install dependencies
-npm install
+npm ci
 
 # Start the development server
 npm run dev        # http://localhost:5173
@@ -134,8 +134,6 @@ This repository contains the MIT-licensed **Core**. The private distribution add
 ### Core Documentation
 
 - [**Architecture**](docs/architecture.md) — System architecture and design decisions
-- [**Security**](docs/security.md) — Security model and best practices
-- [**API Reference**](docs/api.md) — Companion server API documentation
 - [**OpenAPI Spec**](docs/openapi.yaml) — OpenAPI 3.0 specification
 - [**Documentation Index**](docs/index.md) — Full documentation catalog
 - [**Open Core Model**](OPEN-CORE.md) — Licensing and feature boundaries
@@ -146,7 +144,6 @@ This repository contains the MIT-licensed **Core**. The private distribution add
 - [**Engineering Conventions**](AGENTS.md) — Code style and architectural rules
 - [**Trademark Policy**](TRADEMARKS.md) — Brand usage guidelines
 - [**Core MIT License**](LICENSE) — Open source components
-- [**Pro License**](PRO-LICENSE.md) — Commercial features
 
 ### User Manual
 

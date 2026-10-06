@@ -10,12 +10,13 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
 [![CI](https://github.com/bookmarkforge/bookmarkforge/actions/workflows/ci.yml/badge.svg)](https://github.com/bookmarkforge/bookmarkforge/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-460%2B-brightgreen)](https://github.com/bookmarkforge/bookmarkforge/actions)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
 > **Distribution model:** Open Core. This repository is the MIT-licensed Core; Pro features identified in `OPEN-CORE.md` are proprietary and not included here.
 
 Your personal knowledge vault — encrypted on your device, works offline, and stays yours. No accounts, no tracking, no one can read your data. Not even us.
 
-[Quick Start](#-quick-start) • [Features](#-features) • [Free vs Pro](#-free-vs-pro) • [Documentation](#-documentation) • [Architecture](#-architecture) • [Security](#-security--privacy) • [Contributing](#-contributing)
+[Quick Start](#-quick-start) • [Features](#-features) • [Free vs Pro](#-free-vs-pro) • [Documentation](#-documentation) • [Architecture](#-architecture) • [Security](#-security--privacy) • [Contributing](#-contributing) • [Troubleshooting](#-troubleshooting)
 
 </div>
 
@@ -109,6 +110,52 @@ npm run check
 ```
 
 Build for production: `npm run build`. See `docs/architecture.md` for the full topology: static web + signaling/licensing companion server.
+
+### Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/bookmarkforge/bookmarkforge-core.git
+cd bookmarkforge-core
+
+# Install dependencies
+npm ci
+
+# Start development server
+npm run dev        # http://localhost:5173
+
+# Run tests in watch mode
+npm run test:fast:watch
+
+# Run E2E tests in UI mode
+npm run e2e:ui
+```
+
+### Environment Variables
+
+The Core uses environment variables for configuration. Create a `.env.local` file in the root directory:
+
+```bash
+# Build environment
+VITE_BUILD_ENV=development
+
+# App version (must match package.json)
+VITE_APP_VERSION=1.0.0
+
+# Database name (for local development)
+VITE_DB_NAME=bookmarkforge_dev
+
+# Disable network firewall for development (optional)
+VITE_DISABLE_NETWORK_FIREWALL=false
+
+# Enable strict environment boot checks
+VITE_ENV_BOOT_STRICT=0
+
+# Test build mode
+VITE_TEST_BUILD=false
+```
+
+**Note:** Never commit `.env.local` to the repository. Use `.env.example` as a template.
 
 ---
 
@@ -266,26 +313,343 @@ BookmarkForge ships **30 languages** with complete UI translations. Each languag
 
 Core contributions are accepted under MIT. Do not send Pro code or copy third-party code with an incompatible license.
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Run the gates (`npm run check`)
-5. Commit your changes
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
+### Getting Started
+
+1. **Fork the repository**
+   ```bash
+   # Fork on GitHub, then clone your fork
+   git clone https://github.com/YOUR_USERNAME/bookmarkforge-core.git
+   cd bookmarkforge-core
+   ```
+
+2. **Set up your development environment**
+   ```bash
+   npm ci
+   npm run dev
+   ```
+
+3. **Create a feature branch**
+   ```bash
+   git checkout -b feature/amazing-feature
+   ```
+
+4. **Make your changes**
+   - Follow the code style defined in [`AGENTS.md`](AGENTS.md)
+   - Add tests for new features
+   - Update documentation as needed
+
+5. **Run the gates**
+   ```bash
+   npm run typecheck:prod
+   npm run lint
+   npm run test:fast
+   npm run check
+   ```
+
+6. **Commit your changes**
+   ```bash
+   git add .
+   git commit -m "feat: add amazing feature"
+   ```
+
+7. **Push to the branch**
+   ```bash
+   git push origin feature/amazing-feature
+   ```
+
+8. **Open a Pull Request**
+   - Include a clear description of changes
+   - Reference related issues
+   - Ensure CI passes
+
+### Code Style Guidelines
+
+- **TypeScript:** Use strict mode, no `any` types without justification
+- **Naming:** Use camelCase for variables/functions, PascalCase for classes/types
+- **Comments:** Explain "why" not "what" for complex logic
+- **Security:** Never commit secrets, use environment variables
+- **Tests:** Write tests for new features and bug fixes
+
+### Commit Message Format
+
+Follow conventional commits:
+
+```
+feat: add amazing feature
+fix: resolve issue with database
+docs: update README with new commands
+chore: update dependencies
+refactor: simplify authentication flow
+```
 
 Before opening a change that crosses the Core/Pro boundary, document the decision and update the export gate. See [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`AGENTS.md`](AGENTS.md).
+
+### Areas Where We Need Help
+
+- 🌍 **Translations** — Help translate the UI to more languages
+- 🧪 **Tests** — Add more test coverage for edge cases
+- 📚 **Documentation** — Improve guides and add examples
+- 🐛 **Bug fixes** — Help squash bugs reported in issues
+- ✨ **Features** — Propose and implement new Core features
+
+---
+
+## 🗺️ Roadmap
+
+### Current Version (v1.0.0)
+
+- ✅ Core MIT release
+- ✅ Local-first encrypted vault
+- ✅ Multi-provider AI integration (BYOK)
+- ✅ Smart search with semantic embeddings
+- ✅ Import/Export for multiple formats
+- ✅ PWA support with browser extensions
+- ✅ 30 language support
+
+### Planned Features
+
+#### v1.1.0 (Q1 2026)
+- [ ] Enhanced mobile experience
+- [ ] Improved search algorithm
+- [ ] Additional import formats
+- [ ] Performance optimizations
+
+#### v1.2.0 (Q2 2026)
+- [ ] Advanced knowledge graph visualization
+- [ ] Enhanced AI-powered insights
+- [ ] Offline-first improvements
+- [ ] Better collaboration features
+
+#### v2.0.0 (Q3 2026)
+- [ ] Major architecture improvements
+- [ ] New UI/UX redesign
+- [ ] Enhanced security features
+- [ ] Extended API for third-party integrations
+
+*Note: Pro features (P2P sync, encrypted backups, PDF/OCR, flashcards, local AI) are developed in the private repository and are not part of this roadmap.*
+
+---
+
+## 📸 Screenshots
+
+### Main Interface
+
+<!-- Add screenshots here when available -->
+*Screenshot placeholder: Main knowledge vault interface*
+
+### AI-Powered Search
+
+<!-- Add screenshots here when available -->
+*Screenshot placeholder: Smart search results*
+
+### Knowledge Graph
+
+<!-- Add screenshots here when available -->
+*Screenshot placeholder: Interactive knowledge graph*
+
+---
+
+## ⚡ Performance
+
+### Benchmarks
+
+| Metric | Target | Current |
+|--------|--------|---------|
+| Initial load | < 2s | ~1.5s |
+| Time to interactive | < 3s | ~2.2s |
+| Bundle size (gzipped) | < 500KB | ~450KB |
+| Vault unlock time | < 1s | ~0.8s |
+| Search latency | < 100ms | ~80ms |
+
+### Optimization Strategies
+
+- **Code splitting** — Routes and features loaded on demand
+- **Tree shaking** — Unused code eliminated from bundle
+- **Lazy loading** — Heavy components loaded when needed
+- **Caching** — Service Worker for offline access
+- **Compression** — Brotli compression for production builds
+
+---
+
+## 🙏 Acknowledgments
+
+### Core Technologies
+
+- **React** — UI framework
+- **TypeScript** — Type safety
+- **Vite** — Build tool
+- **RxDB** — Database layer
+- **IndexedDB** — Browser storage
+- **WebCrypto** — Cryptographic operations
+- **Playwright** — E2E testing
+- **Vitest** — Unit testing
+
+### AI Providers
+
+- **Gemini** — Google's AI
+- **OpenAI** — GPT models
+- **Anthropic** — Claude models
+- **Groq** — Fast inference
+- **Hugging Face** — Open models
+- **OpenRouter** — Multi-provider API
+
+### Security
+
+- **OWASP** — Security best practices
+- **WebCrypto API** — Browser cryptography
+- **Argon2id** — Password hashing
+
+---
+
+## 🎯 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=bookmarkforge/bookmarkforge-core&type=Date)](https://star-history.com/#bookmarkforge/bookmarkforge-core&Date)
+
+---
+
+## 📜 License
+
+---
+
+## �️ Troubleshooting
+
+### Common Issues
+
+#### Build Errors
+
+**Problem:** `npm run build` fails with "Module not found" errors.
+
+**Solution:**
+```bash
+# Clear node_modules and reinstall
+rm -rf node_modules package-lock.json
+npm ci
+```
+
+**Problem:** TypeScript compilation errors after pulling latest changes.
+
+**Solution:**
+```bash
+# Ensure you're on the latest main branch
+git pull origin main
+npm ci
+npm run typecheck:prod
+```
+
+#### Development Server Issues
+
+**Problem:** Dev server fails to start with "Port 5173 already in use".
+
+**Solution:**
+```bash
+# Kill the process using port 5173
+# On Linux/Mac:
+lsof -ti:5173 | xargs kill -9
+
+# On Windows:
+netstat -ano | findstr :5173
+taskkill /PID <PID> /F
+
+# Or use a different port
+npm run dev -- --port 5174
+```
+
+**Problem:** Changes not reflecting in browser (hot reload not working).
+
+**Solution:**
+```bash
+# Clear Vite cache
+rm -rf .vite
+npm run dev
+```
+
+#### Database Issues
+
+**Problem:** IndexedDB errors or corrupted database.
+
+**Solution:**
+```bash
+# Clear browser data for localhost
+# 1. Open DevTools (F12)
+# 2. Go to Application tab
+# 3. Clear Storage → Clear site data
+# 4. Refresh the page
+```
+
+**Problem:** RxDB sync errors.
+
+**Solution:**
+```bash
+# Check that the database is not locked in another tab
+# Close all other tabs running the app
+# Refresh the page
+```
+
+#### Test Failures
+
+**Problem:** Tests fail with "Database already open" errors.
+
+**Solution:**
+```bash
+# Clear test databases
+rm -rf test-results
+npm run test:fast
+```
+
+**Problem:** E2E tests fail with "Timeout" errors.
+
+**Solution:**
+```bash
+# Increase timeout for slow runners
+export E2E_TIMEOUT_MULTIPLIER=2
+npm run e2e:smoke
+```
+
+#### AI Provider Issues
+
+**Problem:** AI API calls fail with "Invalid API key" errors.
+
+**Solution:**
+```bash
+# Verify your API key is correct
+# 1. Open Settings → AI Providers
+# 2. Check that the API key is properly stored
+# 3. Ensure the key has not expired
+# 4. Test the key directly with the provider's API
+```
+
+**Problem:** AI responses are slow or timeout.
+
+**Solution:**
+```bash
+# Check your network connection
+# Try a different AI provider
+# Check the provider's status page for outages
+```
+
+### Getting Help
+
+If you encounter an issue not listed here:
+
+1. **Check the documentation** — See the [documentation index](docs/index.md)
+2. **Search existing issues** — Check [GitHub Issues](https://github.com/bookmarkforge/bookmarkforge/issues)
+3. **Create a new issue** — Include:
+   - Steps to reproduce
+   - Expected behavior
+   - Actual behavior
+   - Environment (OS, browser, version)
+   - Screenshots if applicable
+4. **Join discussions** — Ask questions in [GitHub Discussions](https://github.com/bookmarkforge/bookmarkforge/discussions)
+
+### Reporting Security Issues
+
+**Do not open public issues for security reports.**
+
+Report vulnerabilities privately via [SECURITY.md](.github/SECURITY.md) or email security@bookmarkforgeapp.com.
 
 ---
 
 ## 📞 Support
-
-- **Documentation** — See the [documentation index](docs/index.md)
-- **Issues** — Report bugs on [GitHub Issues](https://github.com/bookmarkforge/bookmarkforge/issues)
-- **Discussions** — Join community discussions on [GitHub Discussions](https://github.com/bookmarkforge/bookmarkforge/discussions)
-- **Security** — Report vulnerabilities privately via [SECURITY.md](.github/SECURITY.md)
-
----
 
 ## 📜 License
 

@@ -4,7 +4,6 @@
  * helper, so the Core keeps resolving and running without the proprietary
  * implementation.
  */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 const warned = new Set();
 
 function warnOnce(moduleName, property) {

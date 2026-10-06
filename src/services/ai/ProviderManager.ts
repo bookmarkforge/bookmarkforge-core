@@ -592,11 +592,6 @@ export class ProviderManager {
     // — divergence #3 of the consolidation audit.
     const _mustResolve = options?.isPrivate !== false;
 
-    // Normalize isPrivate once with fail-closed semantics to ensure
-    // consistency across all layers. P1 audit fix: eliminate the
-    // undefined semantic gap between ProviderManager and cache layers.
-    const isPrivate = options?.isPrivate !== false;
-
     let provider = providerInfo.provider;
     let model = providerInfo.model;
     if (_mustResolve || !providerInfo.isConfigured) {

@@ -282,7 +282,7 @@
     "globals": "^14.0.0",
     "husky": "^9.1.7",
     "jsdom": "^30.0.1",
-    "lint-staged": "^15.2.10",
+    "lint-staged": "^17.6.0",
     "nunjucks": "^3.2.4",
     "pixelmatch": "^7.2.0",
     "playwright": "^1.62.1",

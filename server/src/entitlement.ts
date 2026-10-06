@@ -60,6 +60,10 @@ export interface Entitlement {
    * a bucket without the server storing the device id or the signature.
    */
   identity: string;
+  /** Epoch ms when the provider trial began (only for server-signed trials). */
+  trialStartedAt?: number;
+  /** Epoch ms when the provider trial ends; bounds the entitlement. */
+  trialExpiresAt?: number;
 }
 
 export type EntitlementResult =
@@ -181,6 +185,14 @@ export function verifyLicenseProof(
       return deny("EXPIRED", "the license has expired");
     }
   }
+  if (payload.trialExpiresAt !== undefined) {
+    if (typeof payload.trialExpiresAt !== "number" || !Number.isFinite(payload.trialExpiresAt)) {
+      return deny("MALFORMED_PROOF", "license proof carries an invalid trial expiry");
+    }
+    if (payload.trialExpiresAt <= now) {
+      return deny("EXPIRED", "the trial has expired");
+    }
+  }
   if (
     payload.activationsLeft !== undefined &&
     (typeof payload.activationsLeft !== "number" || !Number.isFinite(payload.activationsLeft))
@@ -193,6 +205,25 @@ export function verifyLicenseProof(
       payload.instanceId.length > MAX_INSTANCE_ID_LENGTH)
   ) {
     return deny("MALFORMED_PROOF", "license proof carries an invalid instance id");
+  }
+  if (
+    payload.trialStartedAt !== undefined &&
+    (typeof payload.trialStartedAt !== "number" || !Number.isFinite(payload.trialStartedAt))
+  ) {
+    return deny("MALFORMED_PROOF", "license proof carries an invalid trial start time");
+  }
+  if (
+    payload.trialExpiresAt !== undefined &&
+    (typeof payload.trialExpiresAt !== "number" || !Number.isFinite(payload.trialExpiresAt))
+  ) {
+    return deny("MALFORMED_PROOF", "license proof carries an invalid trial expiry time");
+  }
+  if (
+    payload.trialStartedAt !== undefined &&
+    payload.trialExpiresAt !== undefined &&
+    payload.trialStartedAt >= payload.trialExpiresAt
+  ) {
+    return deny("MALFORMED_PROOF", "trial window must have a positive duration");
   }
 
   let publicKey: ReturnType<typeof createPublicKey>;
@@ -232,5 +263,11 @@ export function verifyLicenseProof(
     entitlement.activationsLeft = payload.activationsLeft;
   }
   if (typeof payload.instanceId === "string") entitlement.instanceId = payload.instanceId;
+  if (typeof payload.trialStartedAt === "number") {
+    entitlement.trialStartedAt = payload.trialStartedAt;
+  }
+  if (typeof payload.trialExpiresAt === "number") {
+    entitlement.trialExpiresAt = payload.trialExpiresAt;
+  }
   return { ok: true, entitlement };
 }

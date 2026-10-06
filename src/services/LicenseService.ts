@@ -55,6 +55,10 @@ export interface Entitlements {
    * client-controlled timestamp.
    */
   trialDaysRemaining?: number;
+  /** Epoch ms when the provider trial began (only for server-signed trials). */
+  trialStartedAt?: number;
+  /** Epoch ms when the provider trial ends; bounds the entitlement. */
+  trialExpiresAt?: number;
 }
 
 interface LicenseState {

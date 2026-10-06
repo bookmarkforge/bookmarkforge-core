@@ -13,11 +13,11 @@ vi.mock("../../utils/logger", () => ({
 
 vi.mock("../../services/SanitizationService", () => ({
   SanitizationService: {
-    sanitizeHtml: vi.fn((s: string) => s.replace(/[<>]/gg, "")),
+    sanitizeHtml: vi.fn((s: string) => s.replace(/[<>]/g, "")),
   },
   sanitizeUrl: vi.fn((s: string) => s),
   sanitizeUserInput: vi.fn((s: string, maxLen?: number) => {
-    const cleaned = s.replace(/[<>]/gg, "");
+    const cleaned = s.replace(/[<>]/g, "");
     return maxLen ? cleaned.slice(0, maxLen) : cleaned;
   }),
   validateAndSanitizeUrl: vi.fn((s: string) => s),

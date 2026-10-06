@@ -21,7 +21,11 @@ vi.mock("../../../services/api/HttpClient", () => ({
 
 const mockSanitizeHtml = vi.hoisted(() => vi.fn((html: string) => {
   let current = html;
+  let iterations = 0;
+  const MAX_ITERATIONS = 1000; // Safety cap for test mock
   for (;;) {
+    if (iterations >= MAX_ITERATIONS) break;
+    iterations++;
     const lower = current.toLowerCase();
     const open = lower.indexOf("<script");
     if (open === -1) return current;
@@ -29,6 +33,7 @@ const mockSanitizeHtml = vi.hoisted(() => vi.fn((html: string) => {
     if (close === -1) return current.slice(0, open);
     current = current.slice(0, open) + current.slice(close + 9);
   }
+  return current;
 }));
 vi.mock("../../../services/SanitizationService", () => ({
   SanitizationService: {

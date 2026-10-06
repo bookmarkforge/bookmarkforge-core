@@ -47,7 +47,7 @@ vi.mock("../../services/SanitizationService", () => ({
   sanitizeUserInput: vi.fn((input: string, maxLength = 10000) => {
     if (typeof input !== "string") return "";
     return input
-      .replace(/[<>]/gg, "")
+      .replace(/[<>]/g, "")
       .trim()
       .substring(0, maxLength);
   }),
@@ -178,7 +178,7 @@ function resetMocks(): void {
     (input: string, maxLength = 10000) => {
       if (typeof input !== "string") return "";
       return input
-        .replace(/[<>]/gg, "")
+        .replace(/[<>]/g, "")
         .trim()
         .substring(0, maxLength);
     },

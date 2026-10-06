@@ -95,13 +95,18 @@ class WebDAVAdapter implements CloudProviderAdapter {
       if (nameMatch && hrefMatch) {
         const stripTags = (value: string): string => {
           let current = value;
+          let iterations = 0;
+          const MAX_ITERATIONS = 1000; // Safety cap: no HTML document has >1000 tags
           for (;;) {
+            if (iterations >= MAX_ITERATIONS) break;
+            iterations++;
             const open = current.indexOf("<");
             if (open === -1) return current;
             const close = current.indexOf(">", open + 1);
             if (close === -1) return current.slice(0, open);
             current = current.slice(0, open) + current.slice(close + 1);
           }
+          return current;
         };
         const name = stripTags(nameMatch);
         const id = stripTags(hrefMatch);

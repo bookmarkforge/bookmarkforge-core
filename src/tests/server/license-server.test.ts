@@ -299,9 +299,10 @@ describe("Whop license signing handler", () => {
   });
 
   it("rejects a trialing status without a valid provider trial window", async () => {
-    const { privateKey } = generateKeyPairSync("rsa", {
+    const { privateKey } = generateKeyPairSync("rsa" as any, {
       modulusLength: 2048,
       privateKeyEncoding: { type: "pkcs8", format: "der" },
+      publicKeyEncoding: { type: "spki", format: "der" },
     });
     const handler = createLicenseHandler({
       privateKey,
@@ -327,9 +328,10 @@ describe("Whop license signing handler", () => {
   });
 
   it("rejects an expired Whop trial even when status remains trialing", async () => {
-    const { privateKey } = generateKeyPairSync("rsa", {
+    const { privateKey } = generateKeyPairSync("rsa" as any, {
       modulusLength: 2048,
       privateKeyEncoding: { type: "pkcs8", format: "der" },
+      publicKeyEncoding: { type: "spki", format: "der" },
     });
     const handler = createLicenseHandler({
       privateKey,

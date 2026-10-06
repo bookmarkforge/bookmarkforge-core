@@ -101,9 +101,7 @@ invoked from `package.json`.
 | Script | Purpose |
 |--------|---------|
 | `check-env-config.mjs` | Environment configuration |
-| `check-quick.mjs` | Quick gate tier (~2.5s) |
-| `check-quick.mjs` | Quick pre-commit tier |
-| `validate-input-contracts.mjs` | Input contracts |
+| `check-quick.mjs` | Quick gate / pre-commit tier (~2.5s) |
 | `validate-input-contracts.mjs` | Input contract checks |
 | `doctor-docs-index.mjs` | Docs index doctor |
 | `doctor-legacy-schema-map.mjs` | Legacy schema doctor |
@@ -129,7 +127,6 @@ invoked from `package.json`.
 | `tooling/` | Auxiliary tooling |
 | `templates/` | Templates |
 | `structured-data/` | Structured data |
-| `check-sitemap-coverage.mjs` | Sitemap coverage |
 | `check-sitemap-coverage.mjs` | Sitemap coverage check |
 | `check-hreflang-graph.mjs` | Hreflang graph |
 | `generate-privacy-pages.mjs` | Generates privacy pages |

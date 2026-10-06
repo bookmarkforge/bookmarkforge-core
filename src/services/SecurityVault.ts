@@ -16,7 +16,7 @@ const auditLog = {
     // Intentional silence: audit log removed for Core export
   },
 };
-const rotateAuditSessionId = () => {
+const _rotateAuditSessionId = () => {
   // Intentional silence: audit log removed for Core export
 };
 import { STORAGE_KEYS } from "../constants/storage-keys";
@@ -447,7 +447,7 @@ class SecurityVault {
   /**
    * Stub for audit recording - removed in Core export
    */
-  private recordAudit(params: Record<string, unknown>): void {
+  private recordAudit(_params: Record<string, unknown>): void {
     // Intentional silence: audit log removed for Core export
   }
 

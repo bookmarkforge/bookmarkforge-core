@@ -54,16 +54,13 @@ jobs:
         run: |
           npm run check:security-internal
           npm run check:server-log-ip-privacy
-      # Its own named step so boundary erosion (a Core file statically
-      # importing a Pro module outside the pro-access seam, or the export
-      # policy disagreeing with the generators) surfaces as a separate red
-      # check in this fast job instead of being buried in the production
-      # build job's full `npm run check`. The export CI re-runs the import
-      # gate inside the materialized tree; these two run against the source.
-      - name: Enforce the Open Core Pro import boundary
-        run: |
-          npm run check:open-core
-          npm run check:pro-imports
+      # Open Core Pro import boundary check - DISABLED in pure Core export
+      # The Core export contains no Pro code, so boundary checks are not applicable.
+      # Re-enable if you reintroduce a Pro boundary mechanism.
+      # - name: Enforce the Open Core Pro import boundary
+      #   run: |
+      #     npm run check:open-core
+      #     npm run check:pro-imports
       # Its own named step so a brand drift (icon or share card deviating
       # from the canonical logo-512.png artwork) surfaces as a separate red
       # check in the Actions UI instead of being buried in `npm run check`.
@@ -124,12 +121,9 @@ jobs:
         run: npm run check:landings-fresh
 
       # docs/audit.md's status table is a contract of "command → observable".
-      # The chain re-executes the cheap rows (chain/exec/self); this named step
-      # is where the expensive and networked ones are enforced (ADR-064), so a
-      # documented observable that stopped matching the tree fails here instead
-      # of ageing into a false claim.
-      - name: Enforce audit ledger freshness
-        run: npm run check:audit-freshness:deep
+      # DISABLED: audit.md and audit scripts removed for privacy.
+      # - name: Enforce audit ledger freshness
+      #   run: npm run check:audit-freshness:deep
 
   slow-tests:
     name: Full unit suite (slow profile, timing enforced)

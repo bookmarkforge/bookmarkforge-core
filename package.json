@@ -5,7 +5,7 @@
   "license": "SEE LICENSE IN LICENSE AND PRO-LICENSE.md",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bookmarkforge/bookmarkforge-2026.git"
+    "url": "https://github.com/bookmarkforge/bookmarkforge-core.git"
   },
   "type": "module",
   "description": "Your private, AI-powered knowledge vault. 100% Local-First. Open Core: MIT Core + proprietary Pro features.",

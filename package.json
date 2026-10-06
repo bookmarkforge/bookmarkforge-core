@@ -278,7 +278,7 @@
     "eslint": "^9.39.5",
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "fake-indexeddb": "^6.2.5",
-    "fast-check": "^4.9.0",
+    "fast-check": "^4.10.2",
     "globals": "^14.0.0",
     "husky": "^9.1.7",
     "jsdom": "^30.0.1",

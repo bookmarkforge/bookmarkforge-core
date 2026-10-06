@@ -48,13 +48,12 @@ jobs:
       # check:security-internal runs the full internal security pipeline:
       # secrets scan, workflow validation, HTTP/Compose/runtime config,
       # Docker context, image pins, repository hygiene, and ZAP baseline.
-      # check:server-log-ip-privacy and check:blindeo are separate
-      # security checks not covered by check:security-internal.
+      # check:server-log-ip-privacy is a separate security check not covered by check:security-internal.
+      # Note: check:blindeo is a pre-deploy checklist (requires prod tags) and should only run in release workflows.
       - name: Enforce mandatory security gates
         run: |
           npm run check:security-internal
           npm run check:server-log-ip-privacy
-          npm run check:blindeo
       # Its own named step so boundary erosion (a Core file statically
       # importing a Pro module outside the pro-access seam, or the export
       # policy disagreeing with the generators) surfaces as a separate red

@@ -228,7 +228,7 @@
     "html2pdf.js": "^0.14.0",
     "i18next": "^26.3.6",
     "i18next-http-backend": "^4.0.1",
-    "jszip": "^3.10.1",
+    "jszip": "^3.10.2",
     "lucide-react": "^1.28.0",
     "lz-string": "^1.5.0",
     "marked": "^18.0.13",

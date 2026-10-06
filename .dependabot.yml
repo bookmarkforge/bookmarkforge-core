@@ -1,0 +1,64 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "bookmarkforge"
+    assignees:
+      - "bookmarkforge"
+    labels:
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "chore(deps):"
+      include: "scope"
+    groups:
+      # Group major and minor version updates together
+      react-dependencies:
+        patterns:
+          - "react"
+          - "react-dom"
+          - "@types/react"
+      vitest-dependencies:
+        patterns:
+          - "vitest"
+          - "@vitest"
+      playwright-dependencies:
+        patterns:
+          - "playwright"
+          - "@playwright"
+    ignore:
+      # Ignore updates that require manual review
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+    # Only allow security updates for production dependencies
+    # Allow all updates for devDependencies
+    allow:
+      - dependency-type: "all"
+      - update-type: "all"
+    # Reject downgrades
+    reject:
+      - dependency-name: "*"
+        update-type: "version-update:deprecation"
+    # Limit version updates to avoid breaking changes
+    versioning-strategy: increase
+
+  # Enable GitHub Actions updates
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    labels:
+      - "github-actions"
+      - "automated"
+    commit-message:
+      prefix: "chore(ci):"
+      include: "scope"

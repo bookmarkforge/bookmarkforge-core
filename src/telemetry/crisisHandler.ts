@@ -9,8 +9,15 @@
  */
 
 import { setupGlobalErrorHandler, errorReporter } from "./errorReporter";
-import { initProductionMonitor, stopProductionMonitor } from "./productionMonitor";
 import { startClientEventReporter } from "../services/clientEventReporter";
+
+// Production monitor removed for Core export
+const initProductionMonitor = () => {
+  // Intentional silence: production monitor removed for Core export
+};
+const stopProductionMonitor = () => {
+  // Intentional silence: production monitor removed for Core export
+};
 
 let crisisDisposed = false;
 

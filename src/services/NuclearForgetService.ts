@@ -28,8 +28,20 @@ import { securityVault } from "./SecurityVault";
 import { getRateLimitState } from "../store/rateLimitStore";
 import { secureStorage } from "./SecureStorage";
 import { destroyDB } from "../db/database";
-import { auditLog } from "./AuditLogService";
 import { safeRemove, safeSessionClear } from "../store/safeStorage";
+
+// Stub for audit log - removed in Core export
+const auditLog = {
+  record: async () => {
+    // Intentional silence: audit log removed for Core export
+  },
+  destroy: async () => {
+    // Intentional silence: audit log removed for Core export
+  },
+  suspend: async () => {
+    // Intentional silence: audit log removed for Core export
+  },
+};
 import { logRateLimited } from "../utils/boundedLog";
 
 function reason(e: unknown): string {

@@ -19,7 +19,6 @@ import {
   startVaultKdfSaltSync,
   stopVaultKdfSaltSync,
 } from "../../services/security-vault/kdf-salt-sync";
-import { auditLog } from "../../services/AuditLogService";
 import { toast } from "sonner";
 import i18n from "../../i18n";
 import { logger } from "../../utils/logger";
@@ -29,6 +28,13 @@ import { safeGet, safeSet } from "../../store/safeStorage";
 import { STORAGE_KEYS } from "../../constants/storage-keys";
 import { observabilityHub } from "../../observability/ObservabilityHub";
 import { logRateLimited } from "../../utils/boundedLog";
+
+// Stub for audit log - removed in Core export
+const auditLog = {
+  record: async (_params: Record<string, unknown>) => {
+    // Intentional silence: audit log removed for Core export
+  },
+};
 
 export function AppInitializer() {
   const unlock = useSecurityStore((state) => state.unlock);
@@ -204,7 +210,7 @@ export function AppInitializer() {
         logger.info(
           "[Security] Successfully migrated sensitive data to IndexedDB",
         );
-      } catch (error) {
+      } catch (error: unknown) {
         logger.error(
           "[Security] Failed to migrate sensitive data to IndexedDB",
           { error },
@@ -272,7 +278,7 @@ export function AppInitializer() {
         await backup.runAutoBackup();
         if (cancelled) {return;}
         logger.info("[AppInitializer] Auto-backup completed on unlock");
-      } catch (err) {
+      } catch (err: unknown) {
         if (!cancelled) {
           logger.warn("[AppInitializer] Auto-backup failed silently", {
             error: err instanceof Error ? err.message : String(err),
@@ -293,7 +299,7 @@ export function AppInitializer() {
             title: digest.title,
           });
         }
-      } catch (err) {
+      } catch (err: unknown) {
         if (!cancelled) {
           logger.warn("[AppInitializer] Weekly digest auto-generation failed", {
             error: err instanceof Error ? err.message : String(err),
@@ -335,7 +341,7 @@ export function AppInitializer() {
               }
             });
         }
-      } catch (err) {
+      } catch (err: unknown) {
         if (!cancelled) {
           logger.warn("[AppInitializer] Cloud sync init failed silently", {
             error: err instanceof Error ? err.message : String(err),

@@ -25,7 +25,6 @@ import {
   configureNetworkFirewall,
 } from "./utils/networkFirewall";
 import { secureStorage } from "./services/SecureStorage";
-import { auditLog } from "./services/AuditLogService";
 import { setupApiInterceptors } from "./services/api";
 import { securityVault } from "./services/SecurityVault";
 import { reportWebVitals } from "./utils/webVitals";
@@ -48,13 +47,18 @@ import i18n from "./i18n";
 // already ship MODERATE; STRICT is opt-in via Settings → Security.
 applyUserCspProfile();
 
-// Wire the network firewall to the REAL SecureStorage + AuditLogService.
+// Wire the network firewall to the REAL SecureStorage.
 // Without this DI, the module-level no-op defaults mean the user's
-// whitelist (Settings → Network Permissions) is never persisted and
-// blocked requests are never audited — the firewall only ever saw the
-// preset origins. Must run before any firewalledFetch/WebSocket call
-// (all external traffic goes through it) and before getWhitelistedOrigins()
-// below.
+// whitelist (Settings → Network Permissions) is never persisted —
+// the firewall only ever saw the preset origins. Must run before any
+// firewalledFetch/WebSocket call (all external traffic goes through it)
+// and before getWhitelistedOrigins() below.
+// AuditLogService removed for Core export
+const auditLog = {
+  record: async () => {
+    // Intentional silence: audit log removed for Core export
+  },
+};
 configureNetworkFirewall({ secureStorage, auditLog });
 
 // Setup API interceptors (auth, logging, error transformation, security)

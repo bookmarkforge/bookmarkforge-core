@@ -4,8 +4,21 @@ import { secureStorage } from "./SecureStorage";
 import { logger } from "../utils/logger";
 import { getRateLimitState, useRateLimitStore } from "../store/rateLimitStore";
 import { generateSecureToken } from "../utils/secureRandom";
-import { auditLog, rotateAuditSessionId } from "./AuditLogService";
 import { safeGet, safeSet } from "../store/safeStorage";
+
+// Stub for audit log - removed in Core export
+const auditLog = {
+  record: async () => {
+    // Intentional silence: audit log removed for Core export
+  },
+  verifyIntegrity: async () => ({ valid: true, checked: 0, error: null }),
+  flushPending: async () => {
+    // Intentional silence: audit log removed for Core export
+  },
+};
+const rotateAuditSessionId = () => {
+  // Intentional silence: audit log removed for Core export
+};
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { SECURITY_CONFIG } from "../constants/config";
 import { zeroPasswordBytes } from "../utils/crypto-core";
@@ -432,6 +445,13 @@ class SecurityVault {
   }
 
   /**
+   * Stub for audit recording - removed in Core export
+   */
+  private recordAudit(params: Record<string, unknown>): void {
+    // Intentional silence: audit log removed for Core export
+  }
+
+  /**
    * Checks the failed-attempt counter and applies the lockout when the
    * limit is reached.
    */
@@ -447,20 +467,6 @@ class SecurityVault {
         "[SecurityVault] Automatic lockout activated after repeated failures",
       );
     }
-  }
-
-  /**
-   * Fire-and-forget audit entry. auditLog.record() is async and a rejection
-   * must never affect the vault operation, so every call site swallowed the
-   * failure with the same warn. Centralized here — call sites just pass the
-   * entry params.
-   */
-  private recordAudit(
-    params: Parameters<typeof auditLog.record>[0],
-  ): void {
-    auditLog.record(params).catch((err) =>
-      logger.warn("[SecurityVault] auditLog failed", { error: err }),
-    );
   }
 
   /**
@@ -497,44 +503,7 @@ class SecurityVault {
    * Never blocks or fails unlock.
    */
   private verifyAuditIntegrityAfterUnlock(): void {
-    // Mocks / older test doubles may not expose verifyIntegrity; absence is
-    // treated as "nothing to verify" (never a TypeError on the unlock path).
-    if (typeof auditLog.verifyIntegrity !== "function") {return;}
-    try {
-      // The rejection handler keeps a verifyIntegrity failure (e.g. IDB
-      // unavailable mid-lock) from surfacing as an unhandled rejection on
-      // the unlock path — it is a storage hiccup, not a tamper signal.
-      void auditLog.verifyIntegrity().then(
-        (result) => {
-          if (result.error) {
-            // Could not verify (vault locked again / storage unavailable) —
-            // not a tamper signal by itself.
-            return;
-          }
-          if (!result.valid && result.checked > 0) {
-            logger.error(
-              "[SecurityVault] Audit log integrity check FAILED — possible tampering",
-              { brokenAt: result.brokenAt },
-            );
-            this.recordAudit({
-              action: "audit_integrity_failed",
-              result: "failure",
-              origin: "SecurityVault",
-              context: {
-                brokenAt: String(result.brokenAt ?? "?"),
-                checked: String(result.checked),
-              },
-            });
-          }
-        },
-        (err: unknown) =>
-          logger.warn("[SecurityVault] Audit integrity verification failed", {
-            error: err instanceof Error ? err.message : String(err),
-          }),
-      );
-    } catch {
-      // Never let verification affect the unlock outcome.
-    }
+    // Audit integrity check removed for Core export
   }
 
   /**
@@ -940,11 +909,7 @@ class SecurityVault {
     // immediately. The device key remains materialized only until the audit
     // batch below has finished writing the `vault_lock` entry.
     this.vaultGeneration += 1;
-    this.recordAudit({
-      action: "vault_lock",
-      result: "success",
-      origin: "SecurityVault",
-    });
+    logger.info("[SecurityVault] Vault locked");
 
     this.zeroBytes();
     this.isUnlocked = false;
@@ -953,30 +918,13 @@ class SecurityVault {
     this.sessionExpiry = 0;
     this.stopSessionRotation();
 
-    // Rotate audit session ID for privacy (break cross-session correlation)
-    rotateAuditSessionId();
-
     // Notify after the vault's password/session state is cleared so listeners
     // can purge any secrets they hold in memory (e.g. decrypted AI keys).
     this.notifyLockListeners();
 
     const finalize = (async () => {
       try {
-        // The old implementation waited for the five-second batch timer. By
-        // then lockDeviceKey() had already run, so AES-GCM encryption failed.
-        // Flush while the device key is still available. Older test doubles
-        // may not expose this optional lifecycle method.
-        if (typeof auditLog.flushPending === "function") {
-          let timeoutId: ReturnType<typeof setTimeout> | undefined;
-          const timeout = new Promise<void>((resolve) => {
-            timeoutId = setTimeout(resolve, this.LOCK_AUDIT_FLUSH_TIMEOUT_MS);
-          });
-          try {
-            await Promise.race([auditLog.flushPending(), timeout]);
-          } finally {
-            if (timeoutId !== undefined) {clearTimeout(timeoutId);}
-          }
-        }
+        // Audit flush removed for Core export
       } catch (error) {
         logger.warn("[SecurityVault] Failed to flush lock audit", { error });
       } finally {
@@ -1578,7 +1526,7 @@ class SecurityVault {
         this.isUnlocked = false;
       },
       recordFailedAttempt: () => { this.recordFailedAttempt(); },
-      recordAudit: (params: Record<string, unknown>) => { this.recordAudit(params as unknown as Parameters<typeof auditLog.record>[0]); },
+      recordAudit: (params: Record<string, unknown>) => { this.recordAudit(params); },
       generateSessionToken: async () => { this.sessionToken = await generateSecureToken(); },
       startSessionRotation: () => { this.sessionRotationActive = true; },
       stopSessionRotation: () => { this.sessionRotationActive = false; },
@@ -1626,7 +1574,7 @@ class SecurityVault {
       assertUnlocked: (key: string, action: "encrypt" | "decrypt") => {
         this.assertUnlocked(key, action);
       },
-      recordAudit: (params: Record<string, unknown>) => { this.recordAudit(params as unknown as Parameters<typeof auditLog.record>[0]); },
+      recordAudit: (params: Record<string, unknown>) => { this.recordAudit(params); },
       hasMasterPassword: async () => await this.hasMasterPassword(),
       setMasterPasswordConfiguredFlag: async () => await this.setMasterPasswordFlag(),
       getSecret: async (key: string) => await secureStorage.getSecret(key),
@@ -1660,7 +1608,7 @@ class SecurityVault {
       encryptWithBytes: async (data: string, key: Uint8Array) => await encryptionService.encryptWithBytes(data, key),
       decryptWithBytes: async (encrypted: string, key: Uint8Array) => await encryptionService.decryptWithBytes(encrypted, key),
       createVerificationToken: async (password: string) => await createVerificationToken(password),
-      recordAudit: (params: Record<string, unknown>) => { this.recordAudit(params as unknown as Parameters<typeof auditLog.record>[0]); },
+      recordAudit: (params: Record<string, unknown>) => { this.recordAudit(params); },
       clearRecoveryData: async () => { await this.clearRecoveryData(); },
       loadBackupService: async () => await loadBackupService(),
       setMasterPasswordBytes: (pw: string) => {

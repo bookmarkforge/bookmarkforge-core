@@ -26,7 +26,6 @@ import { LICENSE_CONFIG, FREE_LIMITS } from "../constants/license";
 import { env } from "../env.config";
 import { firewalledFetch } from "../utils/networkFirewall";
 import { logger } from "../utils/logger";
-import { auditLog } from "./AuditLogService";
 import { secureStorage } from "./SecureStorage";
 import { safeGet, safeSet, safeRemove } from "../store/safeStorage";
 import { cancelResponseBody, readBoundedResponseJson } from "./ai/utils";
@@ -216,14 +215,7 @@ class LicenseService {
   private rejectUntrustedCachedState(): void {
     this.clearState();
     this.signatureValid = false;
-    auditLog
-      .record({
-        action: "license_state_tampered",
-        target: "license",
-        result: "failure",
-        origin: "LicenseService",
-      })
-      .catch((err) => logger.warn("[License] audit failed", err));
+    logger.warn("[License] License state tampered - clearing cached state");
   }
 
   private isPayloadBoundToDevice(payload: LicensePayload): boolean {
@@ -275,14 +267,6 @@ class LicenseService {
     if (!valid || !this.isPayloadBoundToDevice(payload)) {
       logger.warn("[License] Rejected license state with an invalid signature or device binding");
       this.clearState();
-      auditLog
-        .record({
-          action: "license_signature_invalid",
-          target: "license",
-          result: "failure",
-          origin: "LicenseService",
-        })
-        .catch((err) => logger.warn("[License] audit failed", err));
       throw new LicenseError(
         "Signed license state failed verification",
         "SERVER",
@@ -436,15 +420,7 @@ class LicenseService {
     }
     if (parsed?.plan === "free") {
       this.clearState();
-      auditLog
-        .record({
-          action: "license_validated",
-          target: "license",
-          result: "failure",
-          origin: "LicenseService",
-          context: { status: parsed.reason ?? "server_reported_free" },
-        })
-        .catch((err) => logger.warn("[License] audit failed", err));
+      logger.warn("[License] Server reported free plan", { status: parsed.reason ?? "server_reported_free" });
       return this.getEntitlements();
     }
     throw new LicenseError("Malformed entitlement response", "SERVER");
@@ -654,18 +630,10 @@ class LicenseService {
         throw new LicenseError("Malformed license service response", "SERVER");
       }
       await this.persistVerified(res.payload, res.signature);
-      // The license key is kept in memory + SecureStorage only (never in the
-      // signed payload, never in the audit log).
+      // The license key is kept in memory + SecureStorage only.
       if (this.state) {this.state.key = key;}
       await this.migrateLegacyKey(key);
-      auditLog
-        .record({
-          action: "license_activated",
-          target: "license",
-          result: "success",
-          origin: "LicenseService",
-        })
-        .catch((err) => logger.warn("[License] audit failed", err));
+      logger.info("[License] License activated successfully");
       // persistVerified() just populated this.state, so it is non-null here.
       return this.state as LicenseState;
     })();
@@ -718,15 +686,7 @@ class LicenseService {
         if (res.error.code === "INVALID") {
           // Explicit invalid/expired/revoked → downgrade to Free.
           this.clearState();
-          auditLog
-            .record({
-              action: "license_validated",
-              target: "license",
-              result: "failure",
-              origin: "LicenseService",
-              context: { status: res.error.message },
-            })
-            .catch((err) => logger.warn("[License] audit failed", err));
+          logger.warn("[License] License validation failed", { status: res.error.message });
           return false;
         }
         throw this.mapSigningError(res.error.code, res.error.message);
@@ -735,14 +695,7 @@ class LicenseService {
         throw new LicenseError("Malformed license service response", "SERVER");
       }
       await this.persistVerified(res.payload, res.signature);
-      auditLog
-        .record({
-          action: "license_validated",
-          target: "license",
-          result: "success",
-          origin: "LicenseService",
-        })
-        .catch((err) => logger.warn("[License] audit failed", err));
+      logger.info("[License] License validated successfully");
       return true;
     })();
 
@@ -768,14 +721,7 @@ class LicenseService {
       }
     }
     this.clearState();
-    auditLog
-      .record({
-        action: "license_deactivated",
-        target: "license",
-        result: "success",
-        origin: "LicenseService",
-      })
-      .catch((err) => logger.warn("[License] audit failed", err));
+    logger.info("[License] License deactivated successfully");
   }
 
   /** Check whether a new bookmark insert would exceed the free-tier cap. */

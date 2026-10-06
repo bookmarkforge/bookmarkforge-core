@@ -73,7 +73,6 @@
     "test:human:core": "playwright test --config=playwright.human-like.config.ts src/tests/human-like/examples/full-coverage-tests.spec.ts src/tests/human-like/examples/advanced-human-tests.spec.ts src/tests/human-like/examples/edge-cases-tests.spec.ts src/tests/human-like/examples/regression-tests.spec.ts src/tests/human-like/examples/privacy-security-tests.spec.ts src/tests/human-like/examples/persistence-roundtrip-tests.spec.ts src/tests/human-like/examples/dsl-executestep-regression.spec.ts src/tests/human-like/examples/basic-human-behavior-tests.spec.ts",
     "test:human:depth": "playwright test --config=playwright.human-like.config.ts src/tests/human-like/examples/bookmark-app-tests.spec.ts src/tests/human-like/examples/deep-feature-tests.spec.ts src/tests/human-like/examples/human-like-tests.spec.ts src/tests/human-like/examples/mobile-import-settings-tests.spec.ts src/tests/human-like/examples/pwa-flow-tests.spec.ts src/tests/human-like/examples/additional-features-tests.spec.ts src/tests/human-like/examples/detailed-performance-tests.spec.ts",
     "test:human-regression": "playwright test --config=playwright.human-like.config.ts src/tests/human-like/examples/regression-tests.spec.ts",
-    "test:oculix": "cd C:\\bookmark6-oculix-tests && mvn compile exec:java -Dexec.mainClass=com.bookmarkforge.BookmarkForgeVisualTest",
     "server": "tsx server/src/index.ts",
     "server:watch": "tsx watch server/src/index.ts",
     "production-smoke": "node scripts/production-smoke.mjs",

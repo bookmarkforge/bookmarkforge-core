@@ -96,12 +96,12 @@ describe("rollback nginx recovery integration", () => {
       writeFileSync(
         join(root, "public/_headers"),
         expectedHeaders
-          .replaceAll("https://bookmarkforge.com/csp-report", "https://stale.example/csp-report")
-          .replaceAll("wss://signal.bookmarkforge.com", "wss://signal.stale.example"),
+          .replaceAll("https://bookmarkforgeapp.com/csp-report", "https://stale.example/csp-report")
+          .replaceAll("wss://signal.bookmarkforgeapp.com", "wss://signal.stale.example"),
       );
       writeFileSync(
         join(root, "public/sitemap.xml"),
-        expectedSitemap.replaceAll("bookmarkforge.com", "stale.example"),
+        expectedSitemap.replaceAll("bookmarkforgeapp.com", "stale.example"),
       );
 
       const result = runNginxRenderWrite({ cwd: root });
@@ -264,7 +264,7 @@ describe("decideImagePath (ruteo imagen-vs-rebuild)", () => {
   const web = (sha) => `bookmarkforge/web:${sha}`;
   const api = (sha) => `bookmarkforge/api:${sha}`;
 
-  it("rutea a CAMINO A (imagen) cuando ambas imágenes por SHA existen", () => {
+  it("routes to PATH A (image) cuando ambas imágenes por SHA existen", () => {
     const list = [web("a1b2c3d"), api("a1b2c3d"), "other/image:latest"];
     expect(decideImagePath("a1b2c3d", list)).toEqual({ route: "image" });
   });
@@ -334,7 +334,7 @@ describe("decideImagePath (ruteo imagen-vs-rebuild)", () => {
   });
 });
 
-describe("shouldPullFromRegistry (priming remoto de api para completar CAMINO A)", () => {
+describe("shouldPullFromRegistry (remote api priming to complete PATH A)", () => {
   const web = (sha) => `bookmarkforge/web:${sha}`;
   const api = (sha) => `bookmarkforge/api:${sha}`;
 

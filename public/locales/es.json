@@ -1,6 +1,7 @@
 {
   "accessTokenKey": "Token de acceso / Clave API",
   "active_filters": "Filtros activos",
+  "securityVaultChangedInAnotherTab": "La bóveda cambió en otra pestaña. Desbloquea de nuevo para continuar.",
   "add_card": "Añadir tarjeta a {{column}}",
   "add_column": "Agregar columna",
   "add_event": "Agregar evento",
@@ -782,7 +783,7 @@
   "app_proStartTrial": "Activar licencia Pro",
   "app_proTrialActive": "Prueba Pro activa",
   "app_proTrialUntil": "Válido hasta el {{date}}",
-  "app_proUpgradeText": "Marcadores ilimitados, sincronización P2P en 3 dispositivos e IA local. Pago único, tuyo para siempre.",
+  "app_proUpgradeText": "Marcadores ilimitados, sincronización P2P en 5 dispositivos e IA local. Pago único, tuyo para siempre.",
   "app_proUpgradeTitle": "Desbloquea BookmarkForge Pro",
   "app_processing": "Procesando...",
   "app_productManager": "Gerente de producto",
@@ -995,7 +996,7 @@
   "app_supportChatGraph": "🕸️ **Grafo de Conocimiento** — La Vista de Grafo visualiza conexiones entre tus notas y marcadores. Los nodos son tu contenido; las aristas representan etiquetas, enlaces y similitud semántica. Filtra por etiquetas, rango de fechas o fuerza de conexión. Haz zoom y panea para explorar tu red de conocimiento.",
   "app_supportChatHi": "¡Hola! 👋 ¿Cómo puedo ayudarte con BookmarkForge hoy? Puedes preguntarme sobre funciones, privacidad, configuración de IA, solución de problemas o cualquier otra cosa.",
   "app_supportChatKanban": "📋 **Tablero Kanban** — Organiza tus tareas y proyectos con un tablero Kanban de arrastrar y soltar. Crea columnas para diferentes etapas (Por hacer, En progreso, Hecho) y mueve tarjetas entre ellas. Cada tarjeta enlaza a un documento completo para notas detalladas.",
-  "app_supportChatLicense": "💎 **Licencia y Funciones Pro** — La app principal es gratuita para siempre. Pro desbloquea sincronización P2P en 3 dispositivos e IA local ilimitada. Es un pago único de $79, sin suscripción. Ve a Ajustes → Pro para activar tu clave de licencia.",
+  "app_supportChatLicense": "💎 **Licencia y Funciones Pro** — La app principal es gratuita para siempre. Pro desbloquea sincronización P2P en 5 dispositivos e IA local ilimitada. Es un pago único de $79, sin suscripción. Ve a Ajustes → Pro para activar tu clave de licencia.",
   "app_supportChatMigration": "📥 **Importación y Migración** — Puedes importar desde Notion, Evernote, Obsidian o marcadores de navegador estándar. Ve a Ajustes → Importar y selecciona tu archivo de exportación HTML, JSON o CSV. Tus datos importados se cifran localmente igual que todo lo demás.",
   "app_supportChatMobile": "📱 **Móvil y PWA** — Instala BookmarkForge como Aplicación Web Progresiva en tu teléfono o tablet. En Android (Chrome): toca el banner \"Instalar app\". En iOS (Safari): toca Compartir → Añadir a pantalla de inicio. Soporte offline completo: todas las funciones funcionan sin internet.",
   "app_supportChatOffline": "📡 **Modo Offline** — BookmarkForge funciona 100% offline. Todas las funciones: editor, marcadores, grafo, IA local (con Ollama), búsqueda y tarjetas de memoria funcionan sin internet. Las funciones de IA en la nube (Gemini, OpenAI) y la búsqueda web requieren conectividad, pero todo lo demás funciona perfectamente offline.",
@@ -1801,5 +1802,16 @@
   "app_secUnlocked": "Unlocked",
   "app_secNoBackup": "Never",
   "app_secConfigured": "Configured",
-  "app_secNotConfigured": "Not configured"
+  "app_secNotConfigured": "Not configured",
+  "landing_title": "BookmarkForge",
+  "landing_subtitle": "Tu bóveda de conocimiento con IA para la web moderna",
+  "landing_enter_app": "Entrar a la App",
+  "landing_get_pro": "Obtener Pro $59 Early Bird",
+  "landing_feature_1_title": "Potenciado por IA",
+  "landing_feature_1_desc": "Organiza y resume automáticamente tus marcadores con IA",
+  "landing_feature_2_title": "Privacidad Primero",
+  "landing_feature_2_desc": "Tus datos permanecen locales y encriptados - nada sale de tu dispositivo",
+  "landing_feature_3_title": "Acceso de por Vida",
+  "landing_feature_3_desc": "Pago único por acceso de por vida a todas las características Pro",
+  "landing_language_note": "Disponible en 30 idiomas"
 }

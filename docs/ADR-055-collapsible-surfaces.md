@@ -1,134 +1,132 @@
-# ADR-055: Las superficies colapsables se colapsan y se ocultan con `visibility`
+# ADR-055: Collapsible surfaces collapse and hide with `visibility`
 
-- **Estado:** aceptado (`CollapsibleSurface` implementado y usado por los tres
-  banners del dashboard). **Enmendado 2026-09-22:** el hold pasa de altura
-  *medida* a altura *natural* — ver "Enmienda 2026-09-22" al final.
+- **Estado:** accepted (`CollapsibleSurface` implemented and used by the three
+  dashboard banners). **Amended 2026-09-22:** the hold changes from measured
+  height to *natural* height — see "Amendment 2026-09-22" at the end.
 - **Fecha:** 2026-09-18
 
 ## Contexto
 
-Los banners del dashboard — riesgo de expulsión de Safari/iOS
-(`EvictionBanner`), recordatorio de respaldo (`BackupReminderBanner`) y muro de
-Free (`FreeTierNudge`) — se montaban siempre y se ocultaban con `opacity: 0`
-más `pointer-events: none`, dejando su caja entera en el layout «para no
-provocar layout shift». `HomeDashboard` añadía un contenedor con el mismo
-contrato por banner.
+The dashboard banners — Safari/iOS eviction risk
+(`EvictionBanner`), backup reminder (`BackupReminderBanner`) and Free tier
+nudge (`FreeTierNudge`) — always mounted and hid with `opacity: 0`
+plus `pointer-events: none`, leaving their entire box in the layout "to not
+cause layout shift". `HomeDashboard` added a container with the same
+contract per banner.
 
-Ese diseño tenía dos costes medidos en la app real (2026-09-18; webview de
-escritorio, Windows, bóveda recién creada con cero marcadores):
+That design had two measured costs in the real app (2026-09-18; desktop
+webview, Windows, newly created vault with zero bookmarks):
 
-1. **Ocupaba cientos de píxeles de nada.** Los contenedores ocultos medían
-   280 px y 496 px: unos 780 px de espacio en blanco bajo banners invisibles.
-   El espacio reservado es exactamente lo que el usuario percibe como
-   «dashboard vacío» en la primera visita.
-2. **No ocultaba de verdad.** `opacity: 0` no saca un subárbol del árbol de
-   accesibilidad ni del orden de tabulación: el upsell «Llegaste a 1.000 — el
-   límite de Free» se anunciaba por lector de pantalla con cero marcadores
-   guardados, y sus botones «Ver Pro — $59» y «Seguir con Free» recibían foco
-   con Tab estando invisibles (`document.activeElement === btn`, `tabIndex` 0)
-   sin indicación de foco → WCAG 2.4.7. La alerta de pérdida de datos de
-   Safari/iOS se anunciaba en una plataforma sin riesgo de expulsión.
-   axe-core no evalúa enfocables con opacidad 0, así que la accesibilidad
-   automatizada en CI no cubría esta clase de fallo.
+1. **Occupied hundreds of pixels of nothing.** The hidden containers measured
+   280 px and 496 px: about 780 px of white space under invisible banners.
+   The reserved space is exactly what the user perceives as "empty dashboard"
+   on the first visit.
+2. **Did not truly hide.** `opacity: 0` does not remove a subtree from the
+   accessibility tree or tab order: the upsell "You reached 1,000 — the Free
+   limit" was announced by screen reader with zero saved bookmarks, and its
+   buttons "View Pro — $59" and "Continue with Free" received focus with Tab
+   while invisible (`document.activeElement === btn`, `tabIndex` 0) without
+   focus indication → WCAG 2.4.7. The Safari/iOS data loss alert was announced
+   on a platform without eviction risk. axe-core does not evaluate focusable
+   with opacity 0, so automated accessibility in CI did not cover this class
+   of failure.
 
 ## Decisión
 
-1. **El box se colapsa; no se reserva.** `CollapsibleSurface`
-   (`src/components/dashboard/components/CollapsibleSurface.tsx`) anima su
-   propia altura entre `0` (oculto) y la altura medida de su contenido
-   (visible), junto con sus márgenes verticales. Un banner que no debe estar en
-   pantalla no cuesta espacio. `HomeDashboard` deja de montar contenedores
-   espaciadores: el ritmo vertical lo fija la superficie.
+1. **The box collapses; space is not reserved.** `CollapsibleSurface`
+   (`src/components/dashboard/components/CollapsibleSurface.tsx`) animates its
+   own height between `0` (hidden) and the measured height of its content
+   (visible), together with its vertical margins. A banner that should not be
+   on screen costs no space. `HomeDashboard` stops mounting spacer containers:
+   the vertical rhythm is fixed by the surface.
 
-2. **La medición es la única fuente de la altura.** La altura se mide con
-   `scrollHeight` y se re-mide con `ResizeObserver`, de modo que un banner cuyo
-   texto cambia estando colapsado (el recordatorio de respaldo cambiando a su
-   redacción de «atrasado») se expande a la altura correcta en el siguiente
-   revelado.
+2. **Measurement is the only source of height.** Height is measured with
+   `scrollHeight` and re-measured with `ResizeObserver`, so a banner whose
+   text changes while collapsed (the backup reminder changing to its "overdue"
+   wording) expands to the correct height on the next reveal.
 
-3. **Una medición fallida nunca oculta contenido.** Si la altura no se puede
-   medir (jsdom, embedders exóticos: `scrollHeight` siempre 0), la superficie
-   cae a `auto` cuando está visible. El peor caso es el comportamiento anterior
-   —espacio reservado—, nunca un banner en blanco.
+3. **A failed measurement never hides content.** If height cannot be measured
+   (jsdom, exotic embedders: `scrollHeight` always 0), the surface falls to
+   `auto` when visible. The worst case is the previous behavior —reserved
+   space—, never a blank banner.
 
-4. **`visibility: hidden` es obligatorio al ocultar.** `visibility` conserva el
-   box y a la vez retira el subárbol del árbol de accesibilidad y del orden de
-   tabulación; no hace falta `aria-hidden` ni `inert`.
+4. **`visibility: hidden` is mandatory when hiding.** `visibility` preserves
+   the box while removing the subtree from the accessibility tree and tab order;
+   no need for `aria-hidden` nor `inert`.
 
-5. **La transición es unidireccional.** Al ocultar, el cambio se difiere la
-   duración de la animación (`visibility 0s linear 200ms`) para que el colapso
-   se vea. Al mostrar, es inmediato: un revelado diferido animaría el contenido
-   dentro de un subárbol todavía oculto y no se vería nada.
+5. **The transition is unidirectional.** When hiding, the change is deferred
+   the animation duration (`visibility 0s linear 200ms`) so the collapse is
+   visible. When showing, it is immediate: a deferred reveal would animate the
+   content inside a still-hidden subtree and nothing would be seen.
 
-6. **Una sola duración.** `DURATION_COLLAPSE` / `COLLAPSE_MS`
-   (`src/constants/motion.ts`) es el origen único del tiempo de la animación,
-   compartido por la transición CSS de altura y por el fundido de motion del
-   contenido, para que el box y su contenido no terminen en momentos distintos.
+6. **A single duration.** `DURATION_COLLAPSE` / `COLLAPSE_MS`
+   (`src/constants/motion.ts`) is the single source of animation time,
+   shared by the CSS height transition and the motion fade of the content, so
+   the box and its content do not end at different times.
 
-7. **El contrato queda fijado por tests.** `CollapsibleSurface.test.tsx` cubre
-   colapso, expansión medida, re-medición tras un cambio de tamaño, el fallback
-   `auto`, la transición unidireccional y que el contenido oculto no es
-   alcanzable. Cada banner verifica además su propio estado oculto.
+7. **The contract is fixed by tests.** `CollapsibleSurface.test.tsx` covers
+   collapse, measured expansion, re-measurement after size change, the `auto`
+   fallback, the unidirectional transition and that hidden content is not
+   reachable. Each banner additionally verifies its own hidden state.
 
 ## Consecuencias
 
-- Una bóveda nueva deja de arrastrar ~780 px de espacio en blanco: los banners
-  ocultos ahora miden 0 px. Un usuario de teclado o de lector de pantalla ya no
-  puede aterrizar en contenido que no está en pantalla.
-- **Se acepta un layout shift al revelar — y está medido.** Reservar el
-  espacio era, precisamente, la técnica que lo evitaba. Ahora, un banner que
-  aparece tras su comprobación asíncrona (el de respaldo, el de expulsión)
-  desplaza hacia abajo el contenido siguiente, animadamente. La decisión
-  prioriza que el estado por defecto —todo oculto— no ocupe espacio sobre que
-  la aparición tardía no mueva nada.
+- A new vault no longer drags ~780 px of white space: hidden banners now
+  measure 0 px. A keyboard or screen reader user can no longer land on content
+  that is not on screen.
+- **A layout shift on reveal is accepted — and measured.** Reserving the
+  space was, precisely, the technique that avoided it. Now, a banner that
+  appears after its async check (the backup one, the eviction one) shifts
+  down the following content, animatedly. The decision prioritizes that the
+  default state —everything hidden— does not occupy space over that the late
+  appearance does not move anything.
 
-  Medición E2E con la Layout Shift API del navegador
-  (`tests/e2e/dashboard-banner-cls.spec.ts`, Chromium, 2026-09-18), con dos
-  baterías — escritorio 1200×720 y móvil 390×844 (emulación Pixel 7):
+  E2E measurement with the browser's Layout Shift API
+  (`tests/e2e/dashboard-banner-cls.spec.ts`, Chromium, 2026-09-18), with two
+  batteries — desktop 1200×720 and mobile 390×844 (Pixel 7 emulation):
 
-  | Batería | CLS del revelado | Bandas CWV |
+  | Battery | Reveal CLS | CWV bands |
   |---|---|---|
-  | Escritorio | **0.068–0.085** (3 runs) | «good» (< 0.1) |
-  | Móvil | **0.133–0.318** (2 runs, varianza alta) | fuera de «good» |
+  | Desktop | **0.068–0.085** (3 runs) | "good" (< 0.1) |
+  | Mobile | **0.133–0.318** (2 runs, high variance) | outside "good" |
 
-  **Enmienda 2026-09-22 — la deuda móvil queda cerrada con el hold natural.**
-  La sonda de la batería (`tests/e2e/dashboard-banner-cls.spec.ts`) destapó
-  que el hold de altura *medida* perdía la carrera contra el primer pintado:
-  la caja pintaba con el estimado por defecto (160 px) antes de que llegara la
-  medición, y la corrección 160→531 px **se animaba** (curva de transición
-  visible: 160→312→516→531 en siete frames; CLS móvil 0.152 en la run de
-  2026-09-22). El hold usa ahora la **altura natural** (`height: auto`,
-  transiciones desactivadas mientras dura el hold): el contenido permanece
-  montado bajo `visibility: hidden`, que no afecta al layout, así que la caja
-  es exactamente tan alta como su contenido desde el primer layout — sin
-  medición que perder la carrera, sin estimado que corregir, sin nada que
-  animar. Medido tras la enmienda (misma batería): móvil `path=held`,
-  `heldAtBaseline=531px`, `total=0.0000`; el hold es la altura real desde el
-  primer layout. Ambos presupuestos de la batería se endurecen a la banda
-  «good» de CWV (< 0.1) en ambas baterías — de tripwire de regresión bruta a
-  exigencia de la banda buena. La reserva inicial no provoca shift cuando
-  ocurre antes del primer pintado (el layout inicial del usuario ya la
-  incluye); el spec lo verifica con el hold ya en sitio en la línea base.
+  **Amendment 2026-09-22 — mobile debt closed with natural hold.**
+  The battery probe (`tests/e2e/dashboard-banner-cls.spec.ts`) uncovered
+  that the measured height hold lost the race against the first paint:
+  the box painted with the default estimate (160 px) before the measurement
+  arrived, and the correction 160→531 px **animated** (visible transition
+  curve: 160→312→516→531 in seven frames; mobile CLS 0.152 in the 2026-09-22
+  run). The hold now uses the **natural height** (`height: auto`,
+  transitions disabled while the hold lasts): the content remains mounted
+  under `visibility: hidden`, which does not affect layout, so the box is
+  exactly as tall as its content from the first layout — without measurement
+  losing the race, without estimate to correct, without anything to animate.
+  Measured after the amendment (same battery): mobile `path=held`,
+  `heldAtBaseline=531px`, `total=0.0000`; the hold is the real height from
+  the first layout. Both battery budgets harden to the CWV "good" band
+  (< 0.1) in both batteries — from a brute regression tripwire to a good band
+  requirement. The initial reservation does not cause shift when it occurs
+  before the first paint (the user's initial layout already includes it);
+  the spec verifies this with the hold already in place in the baseline.
 
-  Fuentes atribuidas al propio banner (el bloque que crece) y al contenido que
-  empuja (rejilla de funcionalidades, cabecera). El colapso tras descartar
-  registra 0 (los shifts activados por interacción los excluye el navegador) y
-  el arranque mide 0 en ambas baterías. El spec afirma los números con margen
-  como guardia de regresión (escritorio ~3x; móvil ~2x sobre el peor run por
-  su varianza) y escribe el artefacto JSON con `BMF_CLS_REPORT`.
+  Sources attributed to the banner itself (the block that grows) and the
+  content it pushes (feature grid, header). The collapse after dismiss registers
+  0 (browser excludes shifts activated by interaction) and startup measures 0
+  in both batteries. The spec asserts the numbers with margin as regression guard
+  (desktop ~3x; mobile ~2x over the worst run due to its variance) and writes
+  the JSON artifact with `BMF_CLS_REPORT`.
 
-  **Conclusión doble:** en escritorio, el colapso se mantiene sin reservar
-  espacio — un revert parcial no está justificado por los datos. En móvil, en
-  cambio, el mismo revelado sale del umbral «good»: el trade-off del colapso
-  **no se sostiene tal cual en teléfonos**, y queda registrado como deuda con
-  su arreglo designado (revelar desde un placeholder de altura medida, que
-  elimina el shift sin reintroducir el vacío permanente) antes de instrumentar
-  CLS real de usuarios móviles.
-  *(Deuda cerrada el 2026-09-22 por la enmienda anterior: el hold natural es
-  el «placeholder de altura medida» sin su defecto — la medición ya no corre
-  contra el primer pintado.)*
-- El residuo de espaciado no es cero: el `space-y-*` del contenedor del
-  dashboard sigue aplicando su `margin-top` al hermano siguiente, así que una
-  superficie colapsada deja a lo sumo el hueco de un párrafo. Llevarlo a cero
-  exigiría que el contenedor conociera el estado de cada banner; no merece la
-  complejidad acoplada.
+  **Double conclusion:** on desktop, the collapse remains without reserving
+  space — a partial revert is not justified by the data. On mobile, however,
+  the same reveal falls outside the "good" threshold: the collapse trade-off
+  **does not hold as-is on phones**, and is registered as debt with its
+  designated fix (reveal from a measured height placeholder, which eliminates
+  the shift without reintroducing the permanent void) before instrumenting
+  real mobile user CLS.
+  *(Debt closed on 2026-09-22 by the previous amendment: the natural hold is
+  the "measured height placeholder" without its defect — measurement no longer
+  races against the first paint.)*
+- The spacing residue is not zero: the dashboard container's `space-y-*`
+  still applies its `margin-top` to the next sibling, so a collapsed surface
+  leaves at most a paragraph gap. Bringing it to zero would require the
+  container to know each banner's state; not worth the coupled complexity.

@@ -9,7 +9,7 @@
  * Usage:
  *   node scripts/ai-performance-history.mjs --metrics metrics.json --history .nightly-history/ai-performance.jsonl
  */
-import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
+import { appendFileSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -112,9 +112,12 @@ export function appendHistoryFile({ metrics, historyFile, source = "unknown", co
   if (Object.keys(normalized).length === 0) {
     throw new Error("[ai-performance-history] no numeric AI metrics found");
   }
-  const existing = existsSync(historyFile)
-    ? parseHistory(readFileSync(historyFile, "utf8"))
-    : [];
+  let existing = [];
+  try {
+    existing = parseHistory(readFileSync(historyFile, "utf8"));
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+  }
   const evaluation = evaluateMetrics(normalized, existing);
   mkdirSync(dirname(historyFile), { recursive: true });
   appendFileSync(historyFile, `${JSON.stringify(createEntry(normalized, { measuredAt, source, commit }))}\n`);
@@ -129,10 +132,19 @@ function arg(name, fallback = undefined) {
 function main() {
   const metricsPath = arg("--metrics");
   const historyFile = resolve(arg("--history", ".nightly-history/ai-performance.jsonl"));
-  if (!metricsPath || !existsSync(metricsPath)) {
+  if (!metricsPath) {
     throw new Error("[ai-performance-history] --metrics must point to an existing JSON file");
   }
-  const metrics = JSON.parse(readFileSync(metricsPath, "utf8"));
+  let metricsRaw;
+  try {
+    metricsRaw = readFileSync(metricsPath, "utf8");
+  } catch (error) {
+    if (error?.code === "ENOENT") {
+      throw new Error("[ai-performance-history] --metrics must point to an existing JSON file");
+    }
+    throw error;
+  }
+  const metrics = JSON.parse(metricsRaw);
   const result = appendHistoryFile({
     metrics,
     historyFile,

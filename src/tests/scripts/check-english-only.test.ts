@@ -74,6 +74,12 @@ describe("CLI integration", () => {
       join(process.cwd(), "scripts", "check-english-only.mjs"),
       join(npmDir, "scripts", "check-english-only.mjs"),
     );
+    // The gate imports ./gate-cache.mjs for its verdict cache; the scaffold
+    // must ship it too or the subprocess dies with ERR_MODULE_NOT_FOUND.
+    copyFileSync(
+      join(process.cwd(), "scripts", "gate-cache.mjs"),
+      join(npmDir, "scripts", "gate-cache.mjs"),
+    );
     // Non-English in a comment — the position the gate guards.
     writeFileSync(join(npmDir, "src", "dirty.ts"), "// Configuraci\u00F3n de usuario\n");
   });

@@ -35,22 +35,22 @@ export function validateRuntimeConfig(composeProd, composeStaging, dockerfile) {
   if (!/USER\s+node\b/.test(dockerfile)) errors.push("API image must run as non-root node user");
   if (!/FROM\s+nginx:[^\s]+/.test(dockerfile) || !/USER\s+bookmarkforge\b/.test(dockerfile)) errors.push("web image must run as non-root bookmarkforge user");
 
-  // El patrón original `ports:\s*[\s\S]*?` podía saltarse a bloques
-  // `command:` de otros servicios (p. ej. un `docker compose run` con una URL
-  // entrecomillada), produciendo falsos positivos. Se validan SOLO las líneas
-  // bajo un bloque `ports:` real (dos espacios + clave de servicio + dos
-  // espacios + `ports:`), normalizando CRLF para que `/m` funcione en Windows.
-  // Validación por líneas (robusta a CRLF e indentación laxa).
+  // The original `ports:\s*[\s\S]*?` pattern could jump over `command:`
+  // blocks of other services (e.g. a `docker compose run` with a quoted URL),
+  // producing false positives. Only the lines under a real `ports:` block are
+  // validated (two spaces + service key + two spaces + `ports:`), normalizing
+  // CRLF so `/m` works on Windows. Line-based validation (robust to CRLF and
+  // lax indentation).
   const stagingFlat = composeStaging.replace(/\r\n/g, "\n").split("\n");
   const portsLineIdx = stagingFlat.findIndex((line) => /^\s*ports:\s*$/.test(line));
   if (portsLineIdx === -1) {
     errors.push("staging ports must bind loopback");
   } else {
     const indent = (stagingFlat[portsLineIdx].match(/^\s*/) ?? [""])[0].length;
-    // El bloque termina en la primera línea no vacía sin guion con indentación
-    // <= indent(ports). Los bindings (`- "..."`) quedan dentro del bloque
-    // aunque estén menos indentados (fixtures laxos); las claves hijas de otros
-    // servicios cortan el bloque y no generan falsos positivos.
+    // The block ends at the first non-empty, dash-less line with indentation
+    // <= indent(ports). Bindings (`- "..."`) stay inside the block even when
+    // less indented (lax fixtures); child keys of other services cut the
+    // block and do not produce false positives.
     const bindings = [];
     for (let i = portsLineIdx + 1; i < stagingFlat.length; i++) {
       const line = stagingFlat[i];

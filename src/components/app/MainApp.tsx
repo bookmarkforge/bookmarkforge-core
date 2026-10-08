@@ -6,6 +6,7 @@ import { useClipperSync } from "../../hooks/useClipperSync";
 import { useAppLifecycle } from "../../hooks/useAppLifecycle";
 import { useRoutePrefetch } from "../../hooks/useRoutePrefetch";
 import { useRouteTransitionTiming } from "../../hooks/useRouteTransitionTiming";
+import { markFirstRunSearchTried } from "../../hooks/useFirstRunChecklist";
 import { AutoLockManager } from "../../hooks/AutoLockManager";
 import { isRTLanguage } from "../../utils/localization";
 import { KeyboardShortcuts } from "../KeyboardShortcuts";
@@ -136,6 +137,13 @@ export function MainApp() {
   const isUnderPressure = useMemoryPressure();
   const isRTL = isRTLanguage(i18n.language);
   useRouteTransitionTiming();
+
+  // Opening search means the user has tried to retrieve something — the last
+  // first-run checklist step — recorded at the single place search opens (the
+  // shell owns the Omnibar's open state, per MainAppEventHandlers' contract).
+  React.useEffect(() => {
+    if (state.showOmnibar) markFirstRunSearchTried();
+  }, [state.showOmnibar]);
 
   // <html dir>/<html lang> are managed centrally by the i18n languageChanged
   // listener + boot-time applyLanguageDirection() in src/i18n.ts, so the

@@ -2,17 +2,17 @@
   "lang": "ja",
   "langName": "日本語",
   "dir": "ltr",
-  "canonical": "https://bookmarkforge.com/ja/",
+  "canonical": "https://bookmarkforgeapp.com/ja/",
   "ogLocale": "ja_JP",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge — すべてがあなたのコンピュータに残ります。一度だけ支払います。",
-  "description": "Raindropはブックマークをサーバーに保存します。BookmarkForgeはブックマークをあなたのコンピュータに保存します — 私たちでさえ読めないようにロックされています。59ドル一度だけ。無料：1,000件のブックマーク。",
+  "description": "Raindropはブックマークをサーバーに保存します。BookmarkForgeはブックマークをあなたのコンピュータに保存します — 私たちでさえ読めないようにロックされています。59ドル一度だけ。無料：2,500件のブックマーク。",
   "ogTitle": "BookmarkForge — すべてがあなたのコンピュータに残ります。一度だけ支払います。",
-  "ogDescription": "Raindropはブックマークをサーバーに保存します。BookmarkForgeはブックマークをあなたのコンピュータに保存します — 私たちでさえ読めないようにロックされています。59ドル一度だけ。無料：1,000件のブックマーク。",
-  "ogImage": "https://bookmarkforge.com/og-image.png",
+  "ogDescription": "Raindropはブックマークをサーバーに保存します。BookmarkForgeはブックマークをあなたのコンピュータに保存します — 私たちでさえ読めないようにロックされています。59ドル一度だけ。無料：2,500件のブックマーク。",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge — すべてがあなたのコンピュータに残ります。一度だけ支払います。",
-  "twitterDescription": "Raindropはブックマークをサーバーに保存します。BookmarkForgeはブックマークをあなたのコンピュータに保存します — 私たちでさえ読めないようにロックされています。59ドル一度だけ。無料：1,000件のブックマーク。",
-  "twitterImage": "https://bookmarkforge.com/og-image.png",
+  "twitterDescription": "Raindropはブックマークをサーバーに保存します。BookmarkForgeはブックマークをあなたのコンピュータに保存します — 私たちでさえ読めないようにロックされています。59ドル一度だけ。無料：2,500件のブックマーク。",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
   "skipLink": "メインコンテンツにスキップ",
   "navBrandAria": "BookmarkForge ホーム",
   "navAriaLabel": "メインナビゲーション",
@@ -177,7 +177,7 @@
       },
       {
         "title": "独自のデバイス間で同期",
-        "text": "デバイスが直接相互に通信 — サーバーは中間になく、すべてが暗号化されたまま。QRコードをスキャンしてペアリング。最大3台のデバイス。Proが必要。"
+        "text": "デバイスが直接相互に通信 — サーバーは中間になく、すべてが暗号化されたまま。QRコードをスキャンしてペアリング。最大5台のデバイス。Proが必要。"
       },
       {
         "title": "あなたが所有するバックアップ",
@@ -287,17 +287,17 @@
   "pricing": {
     "id": "pricing",
     "title": "シンプルで公平な料金 — サブスクリプションなし",
-    "subtitle": "無料で1,000件のブックマークを永遠に。Proはv1のライフタイムライセンス — 一度支払い、v1を永遠に所有。すべてのv1.x更新と12ヶ月の機能更新を含む。セキュリティ更新は永遠に。月額請求なし。",
+    "subtitle": "無料で2,500件のブックマークを永遠に。Proはv1のライフタイムライセンス — 一度支払い、v1を永遠に所有。すべてのv1.x更新と12ヶ月の機能更新を含む。セキュリティ更新は永遠に。月額請求なし。",
     "plans": [
       {
         "name": "Free",
         "price": "$ 0",
         "period": "/forever",
-        "description": "個人用アーカイブとして（1,000件のブックマーク、どのデバイスでも動作 — 各デバイスが独自のボルトを持つ）",
+        "description": "個人用アーカイブとして（2,500件のブックマーク、どのデバイスでも動作 — 各デバイスが独自のボルトを持つ）",
         "features": [
           {
             "included": true,
-            "text": "1,000件のブックマーク、メモ、ドキュメント"
+            "text": "2,500件のブックマーク、メモ、ドキュメント"
           },
           {
             "included": true,
@@ -369,7 +369,7 @@
           },
           {
             "included": true,
-            "text": "3台のデバイス · 3台のデバイス間でP2P同期"
+            "text": "5台のデバイス · 5台のデバイス間でP2P同期"
           },
           {
             "included": true,
@@ -405,7 +405,7 @@
           }
         ],
         "cta": "Pro $59 アーリーバードを取得",
-        "ctaHref": "/buy-pro",
+        "ctaHref": "https://whop.com/checkout/plan_XU1GaWhoYhoDh",
         "ctaClass": "btn-primary",
         "priceWas": "$79",
         "priceSub": "その後$79通常",
@@ -419,7 +419,7 @@
     "items": [
       {
         "question": "Freeティアは本当に永遠に無料ですか？",
-        "answer": "はい。トライアルなし、サブスクリプションなし。Freeティアには1,000件のブックマーク、全文と意味検索、ナレッジグラフ、独自のAPIキーでのAI（あなたがプロバイダーに支払う）が含まれています。"
+        "answer": "はい。トライアルなし、サブスクリプションなし。Freeティアには2,500件のブックマーク、全文と意味検索、ナレッジグラフ、独自のAPIキーでのAI（あなたがプロバイダーに支払う）が含まれています。"
       },
       {
         "question": "Proの「v1のライフタイム」はどういう意味ですか？",
@@ -444,7 +444,7 @@
     "text": "BookmarkForgeを第二の脳として信頼する数千人の研究者、開発者、学習者に参加してください。",
     "ctaPrimary": "無料アプリを起動",
     "ctaSecondary": "Proにアップグレード",
-    "note": "アカウント不要。ブラウザで即座に動作。Freeティア：1,000件のブックマーク。"
+    "note": "アカウント不要。ブラウザで即座に動作。Freeティア：2,500件のブックマーク。"
   },
   "footer": {
     "brand": "あなたのプライベートなAI搭載ナレッジボールト。100%ローカルファースト。",
@@ -495,20 +495,20 @@
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
-    "websiteDescription": "Your private, AI-powered knowledge vault. 100% Local-First. The private Pocket alternative. Free: 1,000 bookmarks.",
+    "websiteDescription": "Your private, AI-powered knowledge vault. 100% Local-First. The private Pocket alternative. Free: 2,500 bookmarks.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforge.com/",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforge.com/",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
         "price": "0",
         "currency": "USD",
-        "description": "1,000 bookmarks. Forever free."
+        "description": "2,500 bookmarks. Forever free."
       },
       {
         "name": "Pro Lifetime v1 — Early Bird",
@@ -535,7 +535,7 @@
     "faq": [
       {
         "question": "Freeティアは本当に永遠に無料ですか？",
-        "answer": "はい。トライアルなし、サブスクリプションなし。Freeティアには1,000件のブックマーク、全文と意味検索、ナレッジグラフ、独自のAPIキーでのAI（あなたがプロバイダーに支払う）が含まれています。"
+        "answer": "はい。トライアルなし、サブスクリプションなし。Freeティアには2,500件のブックマーク、全文と意味検索、ナレッジグラフ、独自のAPIキーでのAI（あなたがプロバイダーに支払う）が含まれています。"
       },
       {
         "question": "Proの「v1のライフタイム」はどういう意味ですか？",

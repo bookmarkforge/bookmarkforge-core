@@ -74,7 +74,7 @@ describe("isProModulePath", () => {
       expect(isProModulePath(PRO_BACKUP.replace(/\.ts$/, suffix)), suffix).toBe(false);
     }
     expect(isProModulePath(pathOf("server", "src", "entitlement-guard.ts"))).toBe(false);
-    expect(isProModulePath(pathOf("docs", "manual-usuario.md"))).toBe(false);
+    expect(isProModulePath(pathOf("docs", "manual-de-usuario-es.md"))).toBe(false);
   });
 
   it("normalizes Windows separators", () => {

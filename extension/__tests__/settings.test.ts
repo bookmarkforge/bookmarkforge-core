@@ -37,7 +37,7 @@ function mockStorage() {
   return store;
 }
 
-const DEFAULT_URL = "https://bookmarkforge.com";
+const DEFAULT_URL = "https://bookmarkforgeapp.com";
 
 describe("popup.js — settings panel", () => {
   let storageMap: Map<string, unknown>;
@@ -64,7 +64,7 @@ describe("popup.js — settings panel", () => {
         <div class="settings-current">
           Current: <span id="currentUrlDisplay">…</span>
         </div>
-        <input type="url" id="customUrlInput" class="settings-input" placeholder="https://bookmarkforge.com" autocomplete="off" spellcheck="false">
+        <input type="url" id="customUrlInput" class="settings-input" placeholder="https://bookmarkforgeapp.com" autocomplete="off" spellcheck="false">
         <button id="saveUrlBtn" class="settings-btn">Save</button>
         <button id="resetUrlBtn" class="settings-btn settings-btn-secondary">Reset</button>
         <div id="urlStatus" class="url-status" style="display:none" role="status" aria-live="polite"></div>

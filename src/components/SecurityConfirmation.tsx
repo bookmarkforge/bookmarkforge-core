@@ -70,7 +70,7 @@ export const SecurityConfirmation: React.FC<SecurityConfirmationProps> = ({
           <button
             onClick={onConfirm}
             aria-label={t("app_skip_password") || "Skip password"}
-            className="truncate w-full py-3 text-sm font-medium transition-all flex items-center justify-center gap-2 ds-radius-card ds-bg-card ds-border ds-text-secondary hover:ds-bg-secondary"
+            className="truncate w-full py-3 min-h-11 text-sm font-medium transition-all flex items-center justify-center gap-2 ds-radius-card ds-bg-card ds-border ds-text-secondary hover:ds-bg-secondary"
           >
             <IconSkipForward className="size-5" />
             {t("app_skip_password") || "Skip password"}

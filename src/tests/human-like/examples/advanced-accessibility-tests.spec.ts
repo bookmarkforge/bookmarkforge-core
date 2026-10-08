@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { skipPassword } from "../../../../tests/e2e/vault-helpers";
 
 /**
  * Advanced Accessibility Tests
@@ -11,6 +12,10 @@ test.describe("Advanced Accessibility", () => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
+    // A fresh headless load starts with focus outside the document, so the
+    // first Tab never reaches page content. Move focus inside first — the
+    // test's subject is Tab traversal, not initial focus placement.
+    await page.locator("body").click();
     // Test Tab navigation
     await page.keyboard.press("Tab");
     const firstFocusable = page.locator(":focus").first();
@@ -170,8 +175,9 @@ test.describe("Advanced Accessibility", () => {
   });
 
   test("should handle landmark regions", async ({ page }) => {
-    await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    // Landmarks (nav/main) only exist inside the unlocked app — the welcome
+    // dialog has none by design. Unlock first so the test checks the app.
+    await skipPassword(page);
 
     // Check for ARIA landmarks
     const landmarks = await page.evaluate(() => {

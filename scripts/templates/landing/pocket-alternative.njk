@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ t.lang }}">
+<html lang="{{ t.lang }}" dir="{{ t.dir }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,7 @@
   <link rel="manifest" href="/manifest.json">
   <!-- SEO: this page is currently English-only; x-default points at the EN landing -->
   <link rel="canonical" href="{{ t.canonical }}">
-  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/">
   <!-- Open Graph (og-image.png is 1200x630) -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="BookmarkForge">
@@ -45,13 +45,13 @@
         "name": "{{ t.structuredData.webpage.name }}",
         "description": "{{ t.structuredData.webpage.description }}",
         "inLanguage": "{{ t.lang }}",
-        "isPartOf": { "@id": "https://bookmarkforge.com/#website" },
-        "about": { "@id": "https://bookmarkforge.com/#software" }
+        "isPartOf": { "@id": "https://bookmarkforgeapp.com/#website" },
+        "about": { "@id": "https://bookmarkforgeapp.com/#software" }
       },
       {
         "@type": "WebSite",
-        "@id": "https://bookmarkforge.com/#website",
-        "url": "https://bookmarkforge.com/",
+        "@id": "https://bookmarkforgeapp.com/#website",
+        "url": "https://bookmarkforgeapp.com/",
         "name": "{{ t.structuredData.website.name }}",
         "description": "{{ t.structuredData.website.description }}",
         "inLanguage": "{{ t.lang }}",
@@ -59,28 +59,28 @@
           "@type": "SearchAction",
           "target": {
             "@type": "EntryPoint",
-            "urlTemplate": "https://bookmarkforge.com/?s={search_term_string}"
+            "urlTemplate": "https://bookmarkforgeapp.com/?s={search_term_string}"
           },
           "query-input": "required name=search_term_string"
         },
-        "publisher": { "@id": "https://bookmarkforge.com/#organization" }
+        "publisher": { "@id": "https://bookmarkforgeapp.com/#organization" }
       },
       {
         "@type": "Organization",
-        "@id": "https://bookmarkforge.com/#organization",
+        "@id": "https://bookmarkforgeapp.com/#organization",
         "name": "{{ t.structuredData.organization.name }}",
         "url": "{{ t.structuredData.organization.url }}",
-        "logo": { "@type": "ImageObject", "url": "https://bookmarkforge.com/logo.png", "width": 64, "height": 64 },
+        "logo": { "@type": "ImageObject", "url": "https://bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
         "email": "{{ t.structuredData.organization.email }}"
       },
       {
         "@type": "SoftwareApplication",
-        "@id": "https://bookmarkforge.com/#software",
+        "@id": "https://bookmarkforgeapp.com/#software",
         "name": "{{ t.structuredData.software.name }}",
         "applicationCategory": "{{ t.structuredData.software.category }}",
         "operatingSystem": "{{ t.structuredData.software.os }}",
         "url": "{{ t.structuredData.software.url }}",
-        "image": "https://bookmarkforge.com/og-image.png",
+        "image": "https://bookmarkforgeapp.com/og-image.png",
         "description": "{{ t.structuredData.software.description | escapejs }}",
         "offers": [
           {%- for offer in t.structuredData.software.offers %}
@@ -116,7 +116,7 @@
   <header class="nav" role="banner">
     <div class="nav-inner">
       <a href="{{ t.homeHref }}" class="nav-brand" aria-label="{{ t.navBrandAria }}">
-        <img src="/logo-64.png" width="32" height="32" alt="" />
+        <img src="/logo-64.png" width="32" height="32" alt="BookmarkForge logo" />
         <span>BookmarkForge</span>
       </a>
 
@@ -249,7 +249,7 @@
       <div class="footer-grid">
         <div class="footer-brand">
           <a href="{{ t.homeHref }}" class="footer-logo" aria-label="{{ t.navBrandAria }}">
-            <img src="/logo-64.png" width="24" height="24" alt="" />
+            <img src="/logo-64.png" width="24" height="24" alt="BookmarkForge logo" />
             <span>BookmarkForge</span>
           </a>
           <p>{{ t.footer.brand }}</p>

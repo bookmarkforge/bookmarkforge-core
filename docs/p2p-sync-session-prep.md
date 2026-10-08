@@ -1,153 +1,153 @@
-# Hoja de sesión — Drill P2P iPhone ↔ escritorio (capturas y orden)
+# Session sheet — P2P iPhone ↔ desktop drill (captures and order)
 
-> **Qué es:** la hoja de ejecución para tener al lado durante el drill.
-> El guion completo con criterios y explicaciones está en
-> [p2p-sync-manual-test-script.md](p2p-sync-manual-test-script.md); aquí solo
-> va el **orden de ejecución** y **qué capturar en cada momento** para que la
-> sesión produzca evidencia utilizable (soporte, marketing de privacidad y
-> diagnóstico post-mortem si algo falla).
+> **What it is:** the execution sheet to have at hand during the drill.
+> The complete script with criteria and explanations is in
+> [p2p-sync-manual-test-script.md](p2p-sync-manual-test-script.md); here only
+> the **execution order** and **what to capture at each moment** so the
+> session produces usable evidence (support, privacy marketing and
+> post-mortem diagnostic if something fails).
 >
-> - **Duración:** ~40 min. **Imprime o abre esta hoja en un tercer dispositivo.**
-> - Antes de empezar: lee el guion completo una vez. Durante la sesión, NO
->   improvises: si algo se desvía, captura y anota — no arregles y sigas.
+> - **Duration:** ~40 min. **Print or open this sheet on a third device.**
+> - Before starting: read the complete script once. During the session, DO NOT
+>   improvise: if something deviates, capture and note — do not fix and continue.
 
 ---
 
-## 0. Pre-sesión (antes de tocar la app)
+## 0. Pre-session (before touching the app)
 
-| # | Verificación | Hecho |
+| # | Verification | Done |
 |---|---|---|
-| 0.1 | iPhone y escritorio en la **misma Wi-Fi** (no red de invitados) | |
-| 0.2 | Ambos con la app en **HTTPS** y bóveda desbloqueada | |
-| 0.3 | Escritorio con **cámara web** operativa (pruébala en otra web) | |
-| 0.4 | iPhone con Safari con permiso de cámara pendiente de aceptar | |
-| 0.5 | Papel y bolígrafo para la lista de títulos de prueba | |
-| 0.6 | Carpeta de evidencia creada con convención de nombres: `p2p-<NN>-<qué>-<dispositivo>.png` (ej.: `p2p-05-sync-success-phone.png`) | |
-| 0.7 | Anota en papel: **versión de iOS**, modelo de iPhone, navegador/versión del escritorio, SSID de la red | |
+| 0.1 | iPhone and desktop on the **same Wi-Fi** (not guest network) | |
+| 0.2 | Both with the app in **HTTPS** and vault unlocked | |
+| 0.3 | Desktop with **webcam** operational (test it on another site) | |
+| 0.4 | iPhone with Safari with camera permission pending acceptance | |
+| 0.5 | Paper and pen for the test title list | |
+| 0.6 | Evidence folder created with naming convention: `p2p-<NN>-<what>-<device>.png` (e.g.: `p2p-05-sync-success-phone.png`) | |
+| 0.7 | Note on paper: **iOS version**, iPhone model, desktop browser/version, network SSID |
 
-**Datos de prueba (crea y anota los títulos exactos):**
-- Escritorio: 2 marcadores + 1 documento con **DESK**
-- iPhone: 2 marcadores + 1 documento con **PHONE**
-- (Se crean sobre la marcha en secciones posteriores: **SWAP**, **INC1**,
+**Test data (create and note exact titles):**
+- Desktop: 2 bookmarks + 1 document with **DESK**
+- iPhone: 2 bookmarks + 1 document with **PHONE**
+- (Created on the fly in later sections: **SWAP**, **INC1**,
   **INC2**, **WINS-DESK**, **WINS-PHONE**, **DUPTEST**)
 
 ---
 
-## 1. Aviso LAN (nuevo) — ANTES de emparejar (2 min)
+## 1. LAN warning (new) — BEFORE pairing (2 min)
 
-> La app ahora advierte del requisito de misma LAN en el selector de roles.
-> Verifícalo en ambos dispositivos: es la primera línea de defensa del
-> usuario contra el fallo de conectividad más común.
+> The app now warns of the same LAN requirement in the role selector.
+> Verify on both devices: it is the user's first line of defense against
+> the most common connectivity failure.
 
-| # | Acción | Captura esperada |
+| # | Action | Expected capture |
 |---|---|---|
-| 1.1 | Escritorio: Dashboard → "Secure P2P Sync" | Tarjeta de advertencia visible: *"Both devices must be on the same Wi-Fi network"* + cuerpo + consejo | `p2p-01-lan-warning-desk.png` **(ya pre-capturada** por `node scripts/capture-p2p-desk-drill.mjs`**)** |
-| 1.2 | iPhone: mismo modal | La tarjeta en el **idioma del iPhone** (los 30 idiomas están traducidos — si sale en inglés siendo otro el idioma del sistema, es hallazgo) | `p2p-02-lan-warning-phone.png` |
+| 1.1 | Desktop: Dashboard → "Secure P2P Sync" | Warning card visible: *"Both devices must be on the same Wi-Fi network"* + body + advice | `p2p-01-lan-warning-desk.png` **(already pre-captured** by `node scripts/capture-p2p-desk-drill.mjs`**)** |
+| 1.2 | iPhone: same modal | The card in the **iPhone's language** (all 30 languages are translated — if it comes out in English with another system language, it is a finding) | `p2p-02-lan-warning-phone.png` |
 
 ---
 
-## 2. Emparejamiento #1 — escritorio anfitrión (10 min)
+## 2. Pairing #1 — desktop host (10 min)
 
-| # | Momento | Captura |
+| # | Moment | Capture |
 |---|---|---|
-| 2.1 | QR de oferta en el escritorio | `p2p-03-offer-qr-desk.png` **(ya pre-capturada** por el script**; genera un QR nuevo en cada sesión** — el de la carpeta es de otra sesión y expiró) |
-| 2.2 | iPhone tras escanear: **su** QR de respuesta | `p2p-04-answer-qr-phone.png` |
-| 2.3 | Barra "Syncing vaults..." a mitad (cualquiera de los dos) | `p2p-05-syncing.png` |
-| 2.4 | "Sync Successful!" en **ambos** | `p2p-06-success-desk.png` + `p2p-07-success-phone.png` |
-| 2.5 | iPhone mostrando los títulos **DESK** (marcadores y documentos) | `p2p-08-desk-items-on-phone.png` |
-| 2.6 | Escritorio mostrando los títulos **PHONE** | `p2p-09-phone-items-on-desk.png` |
+| 2.1 | Offer QR on desktop | `p2p-03-offer-qr-desk.png` **(already pre-captured** by the script**; generates a new QR each session** — the one in the folder is from another session and expired) |
+| 2.2 | iPhone after scanning: **its** answer QR | `p2p-04-answer-qr-phone.png` |
+| 2.3 | "Syncing vaults..." bar halfway (either of the two) | `p2p-05-syncing.png` |
+| 2.4 | "Sync Successful!" on **both** | `p2p-06-success-desk.png` + `p2p-07-success-phone.png` |
+| 2.5 | iPhone showing **DESK** titles (bookmarks and documents) | `p2p-08-desk-items-on-phone.png` |
+| 2.6 | Desktop showing **PHONE** titles | `p2p-09-phone-items-on-desk.png` |
 
-**Anota:** tiempo total del emparejamiento (de QR a "Successful").
+**Note:** total pairing time (from QR to "Successful").
 
 ---
 
-## 3. Roles invertidos — iPhone anfitrión (5 min)
+## 3. Roles inverted — iPhone host (5 min)
 
-| # | Momento | Captura |
+| # | Moment | Capture |
 |---|---|---|
-| 3.1 | iPhone como host mostrando su QR | `p2p-10-offer-qr-phone.png` |
-| 3.2 | "Sync Successful!" en ambos | `p2p-11-success-swap.png` |
-| 3.3 | Marcadores **SWAP** presentes en el lado contrario | `p2p-12-swap-converged.png` |
+| 3.1 | iPhone as host showing its QR | `p2p-10-offer-qr-phone.png` |
+| 3.2 | "Sync Successful!" on both | `p2p-11-success-swap.png` |
+| 3.3 | **SWAP** bookmarks present on the opposite side | `p2p-12-swap-converged.png` |
 
 ---
 
-## 4. Sync incremental (5 min)
+## 4. Incremental sync (5 min)
 
-| # | Momento | Captura |
+| # | Moment | Capture |
 |---|---|---|
-| 4.1 | **INC1** (creado en iPhone) visible en escritorio | `p2p-13-inc1-on-desk.png` |
-| 4.2 | **INC2** (creado en escritorio) visible en iPhone | `p2p-14-inc2-on-phone.png` |
-| 4.3 | Edición de descripción de un **DESK** llegada al iPhone | `p2p-15-edit-propagated.png` |
+| 4.1 | **INC1** (created on iPhone) visible on desktop | `p2p-13-inc1-on-desk.png` |
+| 4.2 | **INC2** (created on desktop) visible on iPhone | `p2p-14-inc2-on-phone.png` |
+| 4.3 | Edit of a **DESK** description propagated to iPhone | `p2p-15-edit-propagated.png` |
 
-**Anota:** cualquier duplicado (mismo título 2 veces = FALLO de sección).
+**Note:** any duplicate (same title twice = FAIL of section).
 
 ---
 
-## 5. Conflictos LWW y deduplicación (8 min)
+## 5. LWW conflicts and deduplication (8 min)
 
-> Recuerda: 2-3 minutos entre las dos ediciones de WINS para timestamps
-> inequívocos. Anota el ORDEN de edición ANTES de emparejar.
+> Remember: 2-3 minutes between the two WINS edits for unambiguous
+> timestamps. Note the EDIT ORDER BEFORE pairing.
 
-| # | Momento | Captura |
+| # | Moment | Capture |
 |---|---|---|
-| 5.1 | Tu nota en papel: "edité WINS-DESK primero, WINS-PHONE después" | (papel) |
-| 5.2 | Tras sync: AMBOS dispositivos mostrando el ganador | `p2p-16-lww-winner-desk.png` + `p2p-17-lww-winner-phone.png` |
-| 5.3 | El marcador conflictivo aparece UNA sola vez por bóveda | (visible en 16/17) |
-| 5.4 | **DUPTEST** creado en ambos: una sola entrada tras el sync | `p2p-18-dedup.png` |
-| 5.5 | DESK/PHONE/INC intactos (sin daños colaterales) | (visible en 16/17) |
+| 5.1 | Your note on paper: "edited WINS-DESK first, WINS-PHONE after" | (paper) |
+| 5.2 | After sync: BOTH devices showing the winner | `p2p-16-lww-winner-desk.png` + `p2p-17-lww-winner-phone.png` |
+| 5.3 | The conflicting bookmark appears ONCE per vault | (visible in 16/17) |
+| 5.4 | **DUPTEST** created on both: single entry after sync | `p2p-18-dedup.png` |
+| 5.5 | DESK/PHONE/INC intact (no collateral damage) | (visible in 16/17) |
 
 ---
 
-## 6. Offline real y cortes (7 min)
+## 6. Real offline and cuts (7 min)
 
-| # | Momento | Captura |
+| # | Moment | Capture |
 |---|---|---|
-| 6.1 | Router sin internet: sync completo igual que en sección 2 | `p2p-19-offline-success.png` |
-| 6.2 | Corte a mitad de barra (cierra modal en el escritorio) → el error visible si lo hay | `p2p-20-midcut.png` |
-| 6.3 | Re-emparejamiento tras el corte: completa sin duplicados | `p2p-21-recovery-success.png` |
-| 6.4 | Safari 10 s en segundo plano a mitad de emparejamiento → error visible (nunca "completado" falso) | `p2p-22-bg-interrupt.png` |
-| 6.5 | Ambas bóvedas desbloqueables con datos intactos tras todo lo anterior | `p2p-23-vaults-intact.png` |
+| 6.1 | Router without internet: full sync same as section 2 | `p2p-19-offline-success.png` |
+| 6.2 | Cut halfway through bar (close modal on desktop) → visible error if any | `p2p-20-midcut.png` |
+| 6.3 | Re-pairing after cut: complete without duplicates | `p2p-21-recovery-success.png` |
+| 6.4 | Safari 10 s in background halfway through pairing → visible error (never false "completed") | `p2p-22-bg-interrupt.png` |
+| 6.5 | Both vaults unlockable with data intact after all above | `p2p-23-vaults-intact.png` |
 
 ---
 
-## 7. Límites de red — lo que NO debe conectar (5 min)
+## 7. Network limits — what MUST NOT connect (5 min)
 
-| # | Momento | Captura |
+| # | Moment | Capture |
 |---|---|---|
-| 7.1 | iPhone en **datos móviles**: intento de emparejamiento → error/timeout visible | `p2p-24-mobiledata-error.png` |
-| 7.2 | Vuelta a la LAN → sync funciona (sin estado roto) | `p2p-25-back-on-lan.png` |
+| 7.1 | iPhone on **mobile data**: pairing attempt → visible error/timeout | `p2p-24-mobiledata-error.png` |
+| 7.2 | Back to LAN → sync works (no broken state) | `p2p-25-back-on-lan.png` |
 
-**El valor de 7.1:** junto con `p2p-02`, demuestra que al usuario se le avisó
-ANTES (tarjeta LAN) y que el fallo fuera de la LAN es visible, no un cuelgue.
-
----
-
-## 8. Hallazgos iOS (captura SIEMPRE que ocurran)
-
-- [ ] Banner "WebRTC is not supported" en el iPhone → **BLOQUEANTE**, captura
-      `p2p-30-webrtc-unsupported.png` y anota la versión de iOS.
-- [ ] Cámara falla en la PWA instalada pero funciona en Safari → captura
-      `p2p-31-pwa-camera.png`; documentar "empareja desde Safari".
-- [ ] QR que la webcam del escritorio no lee (óptica): anótalo, no es código.
-- [ ] Cualquier error con texto vacío, en inglés en un sistema en otro idioma,
-      o un cuelgue sin mensaje → captura + descripción del paso exacto.
+**The value of 7.1:** together with `p2p-02`, demonstrates that the user is warned
+BEFORE (LAN card) and that failure outside LAN is visible, not a hang.
 
 ---
 
-## Al terminar la sesión (15 min)
+## 8. iOS findings (capture ALWAYS if they occur)
 
-1. Rellena la tabla de resultados del
-   [guion P2P](p2p-sync-manual-test-script.md) (6 filas).
-2. Sube las capturas a la carpeta de evidencia del proyecto (no las borres:
-   son tu material de soporte y de marketing de privacidad).
-3. Cada hallazgo de la sección 8 → issue o entrada en el registro de
-   lanzamiento con la captura enlazada.
-4. Si las 6 filas están en OK: marca el ítem 16 (parte P2P) del
-   [launch-checklist](launch-checklist.md) como verificado.
+- [ ] "WebRTC is not supported" banner on iPhone → **BLOCKING**, capture
+      `p2p-30-webrtc-unsupported.png` and note iOS version.
+- [ ] Camera fails in installed PWA but works in Safari → capture
+      `p2p-31-pwa-camera.png`; document "pair from Safari".
+- [ ] QR that desktop webcam cannot read (optics): note it, not code.
+- [ ] Any error with empty text, in English on a system in another language,
+      or a hang without message → capture + description of exact step.
 
-**Criterios de bloqueo (resumen del guion):**
-- Sección 1-2 (emparejamiento básico) falla → **bloqueante del anuncio de
-  sync**; el resto del lanzamiento puede seguir.
-- Sección 6 (offline) falla → **bloqueante de reputación**: no se anuncia
-  "air-gapped" hasta revisarlo.
-- Pérdida/duplicación de datos en 5 o 7 → **bloqueante absoluto**.
+---
+
+## After finishing the session (15 min)
+
+1. Fill the results table of the
+   [P2P script](p2p-sync-manual-test-script.md) (6 rows).
+2. Upload captures to the project's evidence folder (do not delete them:
+   they are your support and privacy marketing material).
+3. Each finding from section 8 → issue or entry in the launch
+   registry with the capture linked.
+4. If the 6 rows are OK: mark item 16 (P2P part) of
+   [launch-checklist](launch-checklist.md) as verified.
+
+**Blocking criteria (script summary):**
+- Section 1-2 (basic pairing) fails → **blocking of sync announcement**;
+  the rest of the launch can continue.
+- Section 6 (offline) fails → **reputation blocking**: do not announce
+  "air-gapped" until reviewed.
+- Data loss/duplication in 5 or 7 → **absolute blocking**.

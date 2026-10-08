@@ -25,6 +25,11 @@ const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 
 const INDEX_PATH_BY_ROOT = (root) => path.resolve(root, 'docs/docs-state-index.md');
 
 const RETIRABLE_STATE = 'retirable';
+/** Inventory table header. English is canonical since the generator stopped
+ * emitting Spanish notes (see doctor-docs-index.mjs); the Spanish form is
+ * still recognised so an index generated before that change parses instead of
+ * silently yielding zero rows. */
+const TABLE_HEADERS = ['| Document | State | Note |', '| Documento | Estado | Nota |']; // i18n-allow — legacy anchor
 const ALLOWED_STATES = new Set(['vivo', 'transitorio', 'archivo', 'retirable']);
 
 function parseStateIndex(markdownText) {
@@ -34,7 +39,7 @@ function parseStateIndex(markdownText) {
 
   for (const line of lines) {
     const trimmed = line.trim();
-    if (trimmed.startsWith('| Documento | Estado | Nota |')) {
+    if (TABLE_HEADERS.some((header) => trimmed.startsWith(header))) {
       inTable = true;
       continue;
     }

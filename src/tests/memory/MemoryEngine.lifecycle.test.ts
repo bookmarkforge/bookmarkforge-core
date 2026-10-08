@@ -50,6 +50,11 @@ vi.mock("../../memory/MemoryPipeline", () => ({
   memoryPipeline: {
     reset: vi.fn(),
     getStats: vi.fn().mockResolvedValue({ atoms: 0, scenarios: 0, hasPersona: false }),
+    // P1 contract member: MemoryEngine calls onNewMessage on the
+    // user-message path. Exercised in MemoryEngine.test ("calls pipeline
+    // .onNewMessage if the role is user"); this file's lifecycle subjects
+    // never add messages — see ledger Ruling P1.8.
+    onNewMessage: vi.fn().mockResolvedValue(undefined),
   },
 }));
 vi.mock("../../memory/MemoryRecall", () => ({

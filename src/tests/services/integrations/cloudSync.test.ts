@@ -368,7 +368,7 @@ describe("CloudSyncService", () => {
       mockDataProvider.mockResolvedValue({ key: "val" });
 
       // First call: network error, then success. uploadFile makes 2 fetch
-      // (metadata + blob upload) en el reintento.
+      // (metadata + blob upload) on retry.
       //
       // IMPORTANT: the mock is routed by URL instead of using a queue
       // global (mockRejectedValueOnce/mockResolvedValueOnce). Other modules

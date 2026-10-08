@@ -55,15 +55,30 @@ import { existsSync, readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { join, resolve } from "node:path";
 import process from "node:process";
-import { checkChain } from "./check-inspector-freeze.mjs";
+// `fileURLToPath` decodes the percent-encoding `import.meta.url` carries, so
+// the CLI guard below matches even when the checkout lives under a path with
+// spaces (D:\Nueva carpeta\...) — a bare string comparison silently skips
+// main() there and the gate exits 0 as a no-op.
+import { fileURLToPath } from "node:url";
+
+// The chain walk (transitive, leaves only) has a single owner: the freeze gate
+// that polices which gates the chain is allowed to run. Re-exported here
+// because this gate derives the chain size published in docs/audit.md.
+import { chainGateTokens } from "./check-inspector-freeze.mjs";
 import { fastProfileFiles } from "./test-files.mjs";
+
+export { chainGateTokens };
 
 export const AUDIT_DOC = "docs/audit.md";
 /** Private-only document: its presence means this tree is the private one. */
 const PRIVATE_TREE_MARKER = join("docs", "docs-state-index.md");
 const VALID_MODES = new Set(["chain", "exec", "deep", "network", "self"]);
-const SECTION_RE = /^##\s+Estado verificado/;
-const HEADER_RE = /^\|\s*Comando\s*\|\s*Modo\s*\|/;
+// The status table is published bilingually, like the ADR template: the
+// repository is being translated to English and this gate must keep finding
+// (and re-executing) the same table in either language rather than silently
+// reporting "no section found".
+const SECTION_RE = /^##\s+(Estado verificado|Verified status)\b/i;
+const HEADER_RE = /^\|\s*(Comando|Command)\s*\|\s*(Modo|Mode)\s*\|/i;
 /**
  * Derivations for `self` rows. A `self` command that is not registered here
  * fails the gate: there is no honest way to verify it from inside itself, and
@@ -86,29 +101,20 @@ export function selfDerivation(command, { packageJson, root }) {
 }
 
 /**
- * Gate tokens (check:* | lint) the `npm run check` chain actually runs. A tree
- * without a `check` script has no chain to verify against; that is reported by
- * `main` as a failure rather than thrown here, so every row still gets a
- * verdict and no crash can be mistaken for a red gate.
+ * What the `npm run check` row publishes: the gates the chain runs, derived
+ * from package.json — never the number written in the document (ADR-064).
  */
-export function chainGateTokens(packageJson) {
-  if (typeof packageJson?.scripts?.check !== "string") return [];
-  try {
-    return [...checkChain(packageJson)];
-  } catch {
-    return [];
-  }
-}
 
 /**
- * Parse the "Estado verificado" table. Returns rows plus structural errors;
+ * Parse the "Estado verificado" / "Verified status" table. Returns rows plus
+ * structural errors;
  * a document that cannot be parsed is a failure, never a silent no-op.
  */
 export function parseAuditStatusTable(markdown) {
   const lines = markdown.split(/\r?\n/);
   const start = lines.findIndex((line) => SECTION_RE.test(line.trim()));
   if (start === -1) {
-    return { rows: [], errors: ["no `## Estado verificado` section found"] };
+    return { rows: [], errors: ["no `## Estado verificado` / `## Verified status` section found"] };
   }
   const rows = [];
   const errors = [];
@@ -121,7 +127,7 @@ export function parseAuditStatusTable(markdown) {
         continue;
       }
       if (line.startsWith("## ")) {
-        errors.push("`## Estado verificado` has no `| Comando | Modo |` table");
+        errors.push("`## Estado verificado` / `## Verified status` has no `| Comando | Modo |` / `| Command | Mode |` table");
         return { rows: [], errors };
       }
       continue;
@@ -143,10 +149,10 @@ export function parseAuditStatusTable(markdown) {
     });
   }
   if (!inTable) {
-    errors.push("`## Estado verificado` has no `| Comando | Modo |` table");
+    errors.push("`## Estado verificado` / `## Verified status` has no `| Comando | Modo |` / `| Command | Mode |` table");
   }
   if (inTable && rows.length === 0) {
-    errors.push("the `## Estado verificado` table has no rows");
+    errors.push("the `## Estado verificado` / `## Verified status` table has no rows");
   }
   return { rows, errors };
 }
@@ -421,6 +427,6 @@ function main() {
   }
 }
 
-if (process.argv[1] && import.meta.url.endsWith(process.argv[1].replaceAll("\\", "/"))) {
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main();
 }

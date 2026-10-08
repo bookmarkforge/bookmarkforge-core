@@ -1,12 +1,6 @@
-// MV3 (Chrome service worker) must import the shared builder explicitly;
-// MV2 (Firefox) already loads capture-url.js first via background.scripts and
-// runs in a page/event-page context where importScripts does NOT exist — an
-// unconditional call would throw at startup and kill the whole background.
-// The guard also makes a duplicate load a no-op on MV2.
-if (
-  typeof importScripts === "function" &&
-  typeof globalThis.BookmarkForgeCaptureUrl === "undefined"
-) {
+// MV3 service worker must import the shared builder explicitly.
+// importScripts is available in service workers.
+if (typeof globalThis.BookmarkForgeCaptureUrl === "undefined") {
   importScripts("./capture-url.js");
 }
 
@@ -14,7 +8,7 @@ if (
 // Fragment hash is NEVER transmitted to the server, so URLs/titles never appear
 // in CDN logs, browser history, or Referer headers.
 
-const DEFAULT_BASE_URL = "https://bookmarkforge.com";
+const DEFAULT_BASE_URL = "https://bookmarkforgeapp.com";
 const STORAGE_KEY = "bookmarkforge_base_url";
 
 // Capture only web pages. Block chrome://, file://, ftp://, view-source:, etc.

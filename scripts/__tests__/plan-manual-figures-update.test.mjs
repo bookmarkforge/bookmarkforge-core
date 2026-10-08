@@ -19,7 +19,7 @@ import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { buildPlan, failuresByLabel, PROBES } from "../plan-manual-figures-update.mjs";
-import { MANUAL_LANGS } from "../check-manual-figures.mjs";
+import { LANDING_CODES, manualSourcePath } from "../landing-registry.mjs";
 
 let tmpRoot;
 
@@ -62,16 +62,16 @@ function makeRoot(files = {}) {
     writeFileSync(p, content);
   }
   // All 30 manuals must exist and be figure-free so the baseline is green.
-  for (const lang of MANUAL_LANGS) {
-    const p = join(tmpRoot, "docs", `manual-usuario${lang}.md`);
+  for (const code of LANDING_CODES) {
+    const p = join(tmpRoot, manualSourcePath(code));
     mkdirSync(join(p, ".."), { recursive: true });
     writeFileSync(p, "nada\n");
   }
   return tmpRoot;
 }
 
-function writeManual(root, lang, body) {
-  writeFileSync(join(root, "docs", `manual-usuario${lang}.md`), body);
+function writeManual(root, code, body) {
+  writeFileSync(join(root, manualSourcePath(code)), body);
 }
 
 describe("plan-manual-figures: spec validation", () => {
@@ -101,7 +101,7 @@ describe("plan-manual-figures: spec validation", () => {
 describe("plan-manual-figures: baseline and differential mechanism", () => {
   it("fails closed on a red baseline instead of misattributing lines", () => {
     const root = makeRoot();
-    writeManual(root, "", "Pro is $49 lifetime.\n");
+    writeManual(root, "es", "Pro is $49 lifetime.\n");
     expect(() => buildPlan(root, ["refundDays=45"])).toThrow(
       expect.objectContaining({ code: "baseline" }),
     );
@@ -111,36 +111,36 @@ describe("plan-manual-figures: baseline and differential mechanism", () => {
     const root = makeRoot({
       // Wait: makeRoot already wrote manuals; pass nothing and edit below.
     });
-    writeManual(root, "-en", "Store up to 1,000 bookmarks.\n");
-    writeManual(root, "-de", "Speichere bis zu 1.000 Lesezeichen.\n");
+    writeManual(root, "en", "Store up to 1,000 bookmarks.\n");
+    writeManual(root, "de", "Speichere bis zu 1.000 Lesezeichen.\n");
     const plan = buildPlan(root, ["freeMaxBookmarks=2000"]);
     expect(plan.changes).toEqual([{ key: "freeMaxBookmarks", from: 1000, to: 2000 }]);
     expect(plan.actionable).toHaveLength(2);
-    expect(plan.actionable[0]).toMatch(/^manual-usuario-de\.md:1: bookmark cap 1000 /);
-    expect(plan.actionable[1]).toMatch(/^manual-usuario-en\.md:1: bookmark cap 1000 /);
+    expect(plan.actionable[0]).toMatch(/^benutzerhandbuch-de\.md:1: bookmark cap 1000 /);
+    expect(plan.actionable[1]).toMatch(/^user-manual-en\.md:1: bookmark cap 1000 /);
     expect(plan.affectedFiles).toBe(2);
   });
 
   it("plans exact manual lines for a refundDays change", () => {
     const root = makeRoot();
-    writeManual(root, "", "Reembolso: 30 días vía Whop.\n");
+    writeManual(root, "es", "Reembolso: 30 días vía Whop.\n");
     const plan = buildPlan(root, ["refundDays=45"]);
-    expect(plan.actionable).toEqual(["manual-usuario.md:1: refund window claims 30 days; pricing.ts says 45"]);
+    expect(plan.actionable).toEqual(["manual-de-usuario-es.md:1: refund window claims 30 days; pricing.ts says 45"]);
   });
 
   it("does not flag manuals whose lines are unaffected", () => {
     const root = makeRoot();
-    writeManual(root, "-ja", "Pro is $79 lifetime; upgrade from v2 is $89.\n");
+    writeManual(root, "ja", "Pro is $79 lifetime; upgrade from v2 is $89.\n");
     const plan = buildPlan(root, ["refundDays=90"]);
     expect(plan.actionable).toEqual([]);
   });
 
   it("supports several --set specs in one plan", () => {
     const root = makeRoot();
-    writeManual(root, "", "Reembolso: 30 días vía Whop.\n");
+    writeManual(root, "es", "Reembolso: 30 días vía Whop.\n");
     const plan = buildPlan(root, ["refundDays=45", "revalidationHours=96"]);
     expect(plan.changes).toHaveLength(2);
-    expect(plan.actionable).toEqual(["manual-usuario.md:1: refund window claims 30 days; pricing.ts says 45"]);
+    expect(plan.actionable).toEqual(["manual-de-usuario-es.md:1: refund window claims 30 days; pricing.ts says 45"]);
   });
 });
 
@@ -182,11 +182,11 @@ describe("plan-manual-figures: pages and warnings", () => {
 
   it("emits machine-readable JSON for tooling", () => {
     const root = makeRoot();
-    writeManual(root, "-en", "Store up to 1,000 bookmarks.\n");
+    writeManual(root, "en", "Store up to 1,000 bookmarks.\n");
     const plan = buildPlan(root, ["freeMaxBookmarks=444"]);
     expect(plan.actionable).toHaveLength(1);
     expect(plan.affectedFiles).toBe(1);
     const grouped = failuresByLabel(plan.actionable);
-    expect(grouped.get("manual-usuario-en.md")).toHaveLength(1);
+    expect(grouped.get("user-manual-en.md")).toHaveLength(1);
   });
 });

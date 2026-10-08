@@ -3,6 +3,7 @@
 .env.*
 !.env.example
 !.env.production.example
+!.env.whop.example
 *.pem
 *.key
 *.crt
@@ -21,6 +22,9 @@ test-results/
 test-results-*/
 test-results-performance/
 .vite/
+# Caché incremental de TypeScript (tsconfig.json declara "incremental": true):
+# `npm run typecheck` la reescribe en cada ejecución y no es fuente.
+*.tsbuildinfo
 
 # Playwright generated comparison/artifact dirs (never versioned)
 tests/e2e/__diffs__/
@@ -48,7 +52,7 @@ dependency-cve-report-dev.md
 dependency-cve-report-dev.json
 
 # Generated print twins of the localized user manuals. `npm run
-# docs:pdf:localized` writes docs/manual-usuario-*-styled.html as the
+# docs:pdf:localized` writes docs/<manual-basename>-styled.html as the
 # intermediate the PDF renderer consumes; only the .md sources and the .pdf
 # deliverables are versioned.
 docs/*-styled.html
@@ -89,3 +93,5 @@ legal/
 
 # CLS measurement artifact from tests/e2e/dashboard-banner-cls.spec.ts (BMF_CLS_REPORT)
 docs/cls-report.json
+.vercel
+.env*

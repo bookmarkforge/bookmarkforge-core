@@ -407,8 +407,8 @@ describe("Chat", () => {
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
     await userEvent.type(input, "texto visible");
-    // No enviamos con click directo; usamos la referencia handleSendRef via pending_ai_query
-    // Este test verifica que el path de overrideInput existe en el handler
+    // We do not send with direct click; we use the handleSendRef reference via pending_ai_query
+    // This test verifies that the overrideInput path exists in the handler
     expect(input.value).toBe("texto visible");
   });
 
@@ -507,12 +507,12 @@ describe("Chat", () => {
     await userEvent.type(input, "   ");
     fireEvent.keyDown(input, { key: "Enter" });
     await userEvent.clear(input);
-    await userEvent.type(input, "consulta válida");
+    await userEvent.type(input, "valid query");
     fireEvent.keyDown(input, { key: "Enter" });
     await waitFor(() => {
       expect(mockGlobalChat).toHaveBeenCalledTimes(1);
       expect(mockGlobalChat).toHaveBeenCalledWith(
-        "consulta válida",
+        "valid query",
         "en",
         false,
         undefined,

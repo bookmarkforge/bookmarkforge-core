@@ -53,6 +53,7 @@
  */
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 import process from "node:process";
 import {
   LANDING_CODES,
@@ -90,9 +91,7 @@ function parseCliArgs(argv) {
 }
 
 const IS_MAIN = Boolean(
-  process.argv[1] &&
-  (import.meta.url === new URL(`file://${process.argv[1].replace(/\\/g, "/")}`).href ||
-    import.meta.url.endsWith(process.argv[1].replace(/\\/g, "/"))),
+  process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href,
 );
 
 // ── Number normalization (rule A helper) ─────────────────────────────────────

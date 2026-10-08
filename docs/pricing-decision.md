@@ -1,76 +1,102 @@
-# DECISIÓN DE PRECIOS — BookmarkForge v1
+# PRICING DECISION — BookmarkForge v1
 
-**Estado: APROBADO Y CONGELADO** · Fecha: 2026-09-14 · Autoridad: el propietario del producto
+**Status: APPROVED AND FROZEN** · Date: 2026-09-14 · Authority: the product owner
 
 ---
 
-## 1. La decisión
+## 1. The decision
 
-BookmarkForge se vende con **licencia lifetime versionada, sin suscripciones**.
-Estos son los precios finales y oficiales del lanzamiento:
+BookmarkForge is sold as a **versioned lifetime license, no subscriptions**.
+These are the final, official launch prices:
 
-| Tier | Precio | Nota |
+| Tier | Price | Note |
 |---|---|---|
-| **Free** | **$0** | Para siempre. 1.000 bookmarks, sin límite de dispositivos (cada dispositivo tiene su propia bóveda). Sin caducidad. |
-| **Pro Early Bird** | **$59** | Solo los primeros **200** compradores. `priceValidUntil: 2026-12-31`. |
-| **Pro Regular v1** | **$79** | El precio oficial de v1 tras agotar Early Bird (6-12 meses). |
-| **** 
-| **v2.0 (futuro, 12-18 meses)** | **$89 nuevos / $35 owners v1** | 60% off grabado en los términos legales. Así nace la recurrencia sin suscripción. |
-| **v3.0 (futuro)** | **$99 nuevos / $39 owners** | Mismo patrón. |
+| **Free** | **$0** | Forever. 2,500 bookmarks, no device limit (each device has its own vault). 7-day trial of Pro features. No expiry. |
+| **Pro Early Bird** | **$59** | Only the first **200** buyers. `priceValidUntil: 2026-12-31`. |
+| **Pro Regular v1** | **$79** | The official v1 price after Early Bird sells out (6-12 months). |
+| **v2.0 (future, 12-18 months)** | **$89 new / $35 v1 owners** | 60% off recorded in the legal terms. That is how recurring revenue arises without a subscription. |
+| **v3.0 (future)** | **$99 new / $39 owners** | Same pattern. |
 
-## 2. Por qué estos números (el razonamiento que se congeló con ellos)
+## 2. Why these numbers (the reasoning frozen with them)
 
-- **$59 early bird:** lo bastante bajo para impulso de lanzamiento, lo bastante alto para no devaluar el cifrado + local AI. FOMO real con 200 unidades.
-- **$79 regular:** ancla por debajo del psicológico $100. Equivale a 2 años de Raindrop o 1,3 años de Instapaper — "paga una vez vs $96-120/año" es el mensaje. Es el precio que se defiende ante la competencia verificada en 2026.
+- **$59 early bird:** low enough to drive launch momentum, high enough not to
+  devalue encryption + local AI. Real FOMO with 200 units.
+- **$79 regular:** anchors just below the psychological $100. It equals 2 years
+  of Raindrop or 1.3 years of Instapaper — "pay once vs $96-120/year" is the
+  message. It is the price defended against competitors verified in 2026.
 
-- **v2 a 60% off:** recurrencia sin suscripción. 1.000 compradores de v1 a $79 → $79k año 1; si el 30% actualiza a v2 a $35 → +$10.5k sin adquirir un solo cliente nuevo.
-- **Se descartó:** $49 (devalúa el producto), suscripción mensual (traiciona a la audiencia local-first, compite contra Raindrop $3/mes y pierde), Starter/Team tiers (parálisis de elección con 0 datos de segmentación).
+- **v2 at 60% off:** recurring revenue without a subscription. 1,000 v1 buyers
+  at $79 → $79k in year 1; if the current 30% upgrades to v2 at $35 → +$10.5k
+  without acquiring a single new customer.
+- **Rejected:** $49 (devalues the product), a monthly subscription (betrays the
+  local-first audience, competes against Raindrop at $3/month and loses),
+  Starter/Team tiers (choice paralysis with 0 segmentation data).
 
-## 3. Fases de precio y sus gatillos
+## 3. Price phases and their triggers
 
-| Fase | Pro |  | Cuándo se activa |
+| Phase | Pro |  | When it activates |
 |---|---|---|---|
-| **Early** (activa) | $59 | $99 | Lanzamiento → agotar 200 unidades o 2026-12-31 |
-| **Regular** (siguiente) | $79 | $99 | Al agotar Early Bird. Cambiar `earlyBird.phase: "regular"` en `src/constants/pricing.ts` |
-| **Full** (opcional) | $99 | $129 | Solo tras 500+ reviews positivas y datos; decisión manual, no automática |
+| **Early** (active) | $59 | $99 | Launch → sell out 200 units or 2026-12-31 |
+| **Regular** (next) | $79 | $99 | When Early Bird sells out. Change `earlyBird.phase: "regular"` in `src/constants/pricing.ts` |
+| **Full** (optional) | $99 | $129 | Only after 500+ positive reviews and data; a manual, not automatic, decision |
 
-**Procedimiento de cambio de fase** (10 min): editar `earlyBird.phase` en `src/constants/pricing.ts` → regenerar OG pricing (`og-image-pricing`) → actualizar las landings si el copy cambia → commit + deploy. El flag está diseñado para ser un one-line change.
+**Phase change procedure** (10 min): edit `earlyBird.phase` in
+`src/constants/pricing.ts` → regenerate the pricing OG image
+(`og-image-pricing`) → update the landings if the copy changes → commit +
+deploy. The flag is designed to be a one-line change.
 
-## 4. Lo que esto NO es (para no reabrir el debate)
+## 4. What this is NOT (so the debate is not reopened)
 
-- **No es una suscripción.** Nada caduca. La frase legal ancla está en la landing, en `privacy-and-terms` y en el JSON-LD.
-- **No es "lifetime del usuario".** Es **lifetime de la versión mayor** — texto legal: *"Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop."*
-- **No se añaden tiers** hasta 300-500 ventas con datos reales (Family, AI Plus, etc. — todo eso es post-tracción).
+- **It is not a subscription.** Nothing expires. The anchoring legal sentence
+  lives on the landing, in `privacy-and-terms` and in the JSON-LD.
+- **It is not "the user's lifetime".** It is **major-version lifetime** —
+  legal text: *"Lifetime license for BookmarkForge v1. Includes all v1.x updates
+  and 12 months of feature updates. Security updates forever. Future major
+  versions (v2, v3) 60% off for existing owners. 30-day refund via Whop."*
+- **No tiers are added** until 300-500 sales with real data (Family, AI Plus,
+  etc. — all of that is post-traction).
 
-## 5. Registro de cambios de precio
+## 5. Price change log
 
-| Fecha | Cambio | Motivo |
+| Date | Change | Reason |
 |---|---|---|
-| 2026-09-14 | Decisión inicial congelada: Free $0 / Pro $59→$79 /  $99 / v2 $89/$35 | Lanzamiento v1 |
-| 2026-09-16 | El Core público pasa a MIT; los componentes Pro permanecen propietarios | Decisión Open Core (ver §6) |
+| 2026-09-14 | Initial decision frozen: Free $0 / Pro $59→$79 /  $99 / v2 $89/$35 | v1 launch |
+| 2026-09-16 | The public Core becomes MIT; Pro components stay proprietary | Open Core decision (see §6) |
 
-## 6. Decisión de licencia del repo público — CERRADA
+## 6. Public repo license decision — CLOSED
 
-**Estado: APROBADA Y CONGELADA** · Fecha: 2026-09-14 · Revisable solo junto con una revisión completa de precios (regla de las 50 ventas, §4).
+**Status: APPROVED AND FROZEN** · Date: 2026-09-14 · Revisable only together
+with a full pricing review (the 50-sales rule, §4).
 
-**Decisión:** el repositorio público Open Core se publica bajo **MIT**. El checkout privado puede contener componentes Pro propietarios, pero el exportador los elimina y escribe un manifiesto con `license: "MIT"`. La marca (nombre, logo y dominios) queda fuera de la concesión MIT mediante `NOTICE` + `TRADEMARKS.md` en la exportación pública.
+**Decision:** the public Open Core repository is published under **MIT**. The
+private checkout may contain proprietary Pro components, but the exporter
+strips them and writes a manifest with `license: "MIT"`. The brand (name, logo
+and domains) stays outside the MIT grant via `NOTICE` + `TRADEMARKS.md` in the
+public export.
 
-**Por qué MIT para el Core y licencia propietaria para Pro:**
+**Why MIT for the Core and a proprietary license for Pro:**
 
-- **Adopción del Core:** MIT reduce fricción para usuarios, forks y contribuciones al núcleo.
-- **Separación comercial explícita:** las funciones Pro se distribuyen fuera de la exportación pública bajo `PRO-LICENSE.md`.
-- **Protección de marca:** el nombre y el logo se reservan mediante `TRADEMARKS.md`; una licencia de software no sustituye el registro de marca.
-- **Control operativo:** el exportador y `check:open-core` fallan si vuelve a aparecer un archivo Pro en el árbol público.
+- **Core adoption:** MIT lowers friction for users, forks and contributions to
+  the core.
+- **Explicit commercial separation:** Pro features ship outside the public
+  export under `PRO-LICENSE.md`.
+- **Trademark protection:** the name and logo are reserved via `TRADEMARKS.md`;
+  a software license does not substitute for trademark registration.
+- **Operational control:** the exporter and `check:open-core` fail if a Pro
+  file reappears in the public tree.
 
-**Artefactos de esta decisión (vía `scripts/export-public-repo.mjs`):**
+**Artifacts of this decision (via `scripts/export-public-repo.mjs`):**
 
-- `LICENSE` — texto MIT del Core.
-- `NOTICE` — copyright, alcance del Core y reserva expresa de la marca.
-- `TRADEMARKS.md` — política de marca: uso nominativo permitido y forks con nombre y logo propios.
-- `manifest.json` — licencia y lista de componentes Pro excluidos.
+- `LICENSE` — the Core's MIT text.
+- `NOTICE` — copyright, Core scope and an express reservation of the brand.
+- `TRADEMARKS.md` — trademark policy: nominative use allowed, forks with their
+  own name and logo allowed.
+- `manifest.json` — the license and the list of excluded Pro components.
 
-**Pendiente del propietario (fuera del repo):** registro de la marca en OEPM (~150€, España) y EUIPO cuando haya ventas europeas — es el único bloqueo absoluto frente a forks que compitan usando nombre/logo.
+**Owner pending (outside the repo):** trademark registration at OEPM (~€150,
+Spain) and EUIPO once there are European sales — it is the only absolute
+blocker against competing forks using the name/logo.
 
 ---
 
-*Cualquier cambio futuro de estos precios exige: (1) actualizar `src/constants/pricing.ts`, (2) regenerar landings + OG si aplica, (3) actualizar esta tabla de registro, (4) actualizar los términos legales si afecta al contrato lifetime.*
+*Any future change to these prices requires: (1) updating `src/constants/pricing.ts`, (2) regenerating the landings + OG if applicable, (3) updating this change log table, (4) updating the legal terms if it affects the lifetime contract.*

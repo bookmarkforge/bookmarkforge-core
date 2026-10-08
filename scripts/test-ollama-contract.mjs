@@ -2,14 +2,14 @@
 /**
  * scripts/test-ollama-contract.mjs — Prueba de contrato de Ollama local.
  *
- * Valida el contrato real de un servidor Ollama local sin depender de
- * respuestas literales del modelo (los LLM no garantizan literalidad):
+ * Validates the real contract of a local Ollama server without depending on
+ * literal model responses (LLMs do not guarantee literalness):
  *
- *   1. Disponibilidad: /api/tags responde 200 y contiene el modelo esperado
- *      (o al menos un modelo si el modelo configurado no está instalado).
- *   2. Estructura: /api/generate responde 200 con un campo `response`
- *      no vacío de tipo string.
- *   3. Timeout acotado: ninguna llamada puede colgar más de OLLAMA_TIMEOUT_MS.
+ *   1. Availability: /api/tags responds 200 and contains the expected model
+ *      (or at least one model when the configured one is not installed).
+ *   2. Structure: /api/generate responds 200 with a non-empty `response`
+ *      field of type string.
+ *   3. Bounded timeout: no call may hang longer than OLLAMA_TIMEOUT_MS.
  *
  * Uso:
  *   node scripts/test-ollama-contract.mjs [--url http://127.0.0.1:11434] [--model llama3.2] [--timeout 120000] [--json]
@@ -45,7 +45,7 @@ async function main() {
   try {
     // ── Check 1: disponibilidad (/api/tags) ──────────────────────────────
     const tagsRes = await fetchWithTimeout(`${BASE_URL}/api/tags`, { method: "GET" });
-    if (!tagsRes.ok) throw new Error(`/api/tags devolvió HTTP ${tagsRes.status}`);
+    if (!tagsRes.ok) throw new Error(`/api/tags returned HTTP ${tagsRes.status}`);
     const tagsBody = await tagsRes.json();
     const models = Array.isArray(tagsBody.models) ? tagsBody.models : [];
     const names = models.map((m) => (typeof m?.name === "string" ? m.name : ""));
@@ -58,7 +58,7 @@ async function main() {
     check(
       modelFound
         ? `modelo esperado presente (${MODEL})`
-        : "modelo esperado ausente — cualquier modelo sirve para el contrato",
+        : "expected model missing — any model suffices for the contract",
       true,
       modelFound ? MODEL : `instalados: ${names.join(", ") || "(ninguno)"}`,
     );
@@ -67,17 +67,17 @@ async function main() {
     const genRes = await fetchWithTimeout(`${BASE_URL}/api/generate`, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ model: MODEL, prompt: "Responde con una sola palabra: ok", stream: false }),
+      body: JSON.stringify({ model: MODEL, prompt: "Answer with a single word: ok", stream: false }),
     });
     if (!genRes.ok) {
-      throw new Error(`/api/generate devolvió HTTP ${genRes.status}: ${await genRes.text().catch(() => "")}`);
+      throw new Error(`/api/generate returned HTTP ${genRes.status}: ${await genRes.text().catch(() => "")}`);
     }
     const genBody = await genRes.json();
     const responseText = typeof genBody.response === "string" ? genBody.response.trim() : "";
     check(
-      "estructura /api/generate responde 200 con response no vacío",
+      "structure /api/generate responds 200 with a non-empty response",
       typeof genBody.response === "string" && responseText.length > 0,
-      responseText ? `muestra: ${responseText.slice(0, 60)}…` : "response vacío",
+      responseText ? `sample: ${responseText.slice(0, 60)}…` : "empty response",
     );
     check(
       "done=true en la respuesta final",

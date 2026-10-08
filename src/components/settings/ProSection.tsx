@@ -117,7 +117,7 @@ export const ProSection: React.FC = () => {
                 <p className="text-xs text-[var(--text-muted)] mt-1">
                   {t(
                     "app_proUpgradeText",
-                    "Unlimited bookmarks, P2P sync across 3 devices and local AI. One-time payment, yours forever.",
+                    "Unlimited bookmarks, P2P sync across 5 devices and local AI. One-time payment, yours forever.",
                   )}
                 </p>
               </div>

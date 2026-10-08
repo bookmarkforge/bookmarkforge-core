@@ -1,69 +1,68 @@
-# Runbook de lanzamiento — Smoke de rutas críticas (BookmarkForge)
+# Launch runbook — Critical routes smoke (BookmarkForge)
 
-> **Qué es:** batería Playwright que ejercita las tres rutas que NO pueden fallar
-> el día de lanzamiento: creación de bóveda con contraseña de 12 caracteres,
-> recuperación con la frase de 24 palabras, y activación de licencia Pro
-> (incluida la comprobación de clave inválida, que debe fallar cerrado).
-> Se ejecuta contra la build de producción (`vite preview`), no contra el dev server.
+> **What it is:** Playwright battery that exercises the three routes that CANNOT fail
+> on launch day: vault creation with 12-character password, recovery with 24-word
+> phrase, and Pro license activation (including invalid key check, which must fail
+> closed). It runs against the production build (`vite preview`), not the dev server.
 
-- **Autor:** script de uso único `node scripts/run-launch-smoke.mjs` (no llames a Playwright directamente: el runner limpia puertos huérfanos y verifica prerequisitos).
+- **Author:** single-use script `node scripts/run-launch-smoke.mjs` (do not call Playwright directly: the runner cleans orphan ports and verifies prerequisites).
 - **Spec:** `tests/e2e/launch-smoke-critical-paths.spec.ts` (7 tests, ~2 min).
-- **Perfil:** `playwright.launch-smoke.config.ts` — 3 servidores orquestados con `webServer` en forma de array (spread) para que **reemplace** el `webServer` de la config base en vez de concatenarse con él.
+- **Profile:** `playwright.launch-smoke.config.ts` — 3 servers orchestrated with `webServer` as array (spread) so it **replaces** the base config's `webServer` instead of concatenating with it.
 
-## Comando
+## Command
 
 ```bash
-npm run launch:smoke:prod    # modo producción (build + vite preview) — usar este el día del lanzamiento
-npm run launch:smoke         # modo dev (rápido, para iterar)
+npm run launch:smoke:prod    # production mode (build + vite preview) — use this on launch day
+npm run launch:smoke         # dev mode (fast, for iteration)
 ```
 
-## Qué hace el runner
+## What the runner does
 
-1. Verifica el destino de release (ADR-058): `bookmarkforge/core` está confirmado, las cuatro superficies coinciden, así que la batería arranca. Si el checkout volviera a apuntar a un slug provisional, a un propietario plantilla o declarara un destino distinto del remoto, se negaría a arrancar — un veredicto verde no puede certificar una release cuyo clonado apunta a un repositorio sin confirmar.
-2. Verifica prerequisitos (Playwright instalado).
-3. **Libera los puertos del perfil** (4173 preview, 5173 dev, 8790 mock, 8787 companion) matando listeners huérfanos de ejecuciones anteriores — sin esto, `reuseExistingServer` puede reciclar un servidor viejo con un proxy roto.
-4. Ejecuta los 7 tests y traduce el resultado a un veredicto de lanzamiento claro.
+1. Verifies release destination (ADR-058): `bookmarkforge/bookmarkforge` is confirmed, the four surfaces match, so the battery starts. If the checkout points again to a provisional slug, to a template owner or declares a destination different from the remote, it would refuse to start — a green verdict cannot certify a release whose cloning points to an unconfirmed repository.
+2. Verifies prerequisites (Playwright installed).
+3. **Frees the profile ports** (4173 preview, 5173 dev, 8790 mock, 8787 companion) by killing orphan listeners from previous runs — without this, `reuseExistingServer` can recycle an old server with a broken proxy.
+4. Executes the 7 tests and translates the result to a clear launch verdict.
 
-## Topología (modo producción)
+## Topology (production mode)
 
-| Proceso | Puerto | Papel |
+| Process | Port | Role |
 |---|---|---|
-| `vite preview` | 4173 | sirve `dist/` (build de producción) y proxifica `/api` |
-| companion server (señalización + licencias) | 8787 | atiende `/api/license/*` con firma RSA-PSS real |
-| `scripts/license-mock.mjs` | 8790 | proveedor Whop simulado (activación + revocación) |
+| `vite preview` | 4173 | serves `dist/` (production build) and proxies `/api` |
+| companion server (signaling + licenses) | 8787 | handles `/api/license/*` with real RSA-PSS signature |
+| `scripts/license-mock.mjs` | 8790 | simulated Whop provider (activation + revocation) |
 
-La build se genera con `VITE_E2E_PREVIEW_DIAGNOSTICS=true` para exponer el diagnóstico de backend que usan los tests. `vite.config.ts` enruta el tráfico local de `/api` → `VITE_API_PROXY_TARGET` (8787 en este perfil; el 8799 de `crisis-containment` es un servidor companion efímero de ese spec, no el global). Nota: este es el proxy local de Vite para desarrollo, no el proxy de IA del servidor (que fue retirado en 2026-09).
+The build is generated with `VITE_E2E_PREVIEW_DIAGNOSTICS=true` to expose the backend diagnostics used by tests. `vite.config.ts` routes local traffic from `/api` → `VITE_API_PROXY_TARGET` (8787 in this profile; the 8799 of `crisis-containment` is an ephemeral companion server for that spec, not the global one). Note: this is Vite's local proxy for development, not the server's AI proxy (which was retired in 2026-09).
 
-## Los 7 tests y qué garantizan
+## The 7 tests and what they guarantee
 
-1. **Contraseña de 12 caracteres crea bóveda funcional** — la puerta mínima real (11 se rechaza en el test 2 antes de crear nada).
-2. **11 caracteres rechazado en la UI** — fail-closed del validador.
-3. **Recuperación con las 24 palabras exactas mostradas en setup** — captura la frase de la pantalla de setup y desbloquea con ella.
-4. **23 palabras rechazadas** — no hay desbloqueo parcial.
-5. **Licencia válida activa vía el servicio de firma real** — cliente ↔ companion ↔ proveedor ↔ firma; el estado firmado pasa la verificación del cliente (exige que la clave privada local coincida con `src/services/licenseKeys.ts`; si no, ejecuta `node scripts/generate-license-keys.mjs --write`).
-6. **Clave inválida falla cerrado con error visible.**
-7. **Round-trip de backup cifrado .bmf** — exporta vía `BackupService` (el mismo código que llama la UI), destruye IndexedDB (pérdida total), recrea la bóveda con la misma contraseña y restaura desde el asistente F0-2 usando la contraseña del vault (los datos de seguridad del vault no viajan en el backup).
+1. **12-character password creates functional vault** — the real minimum gate (11 is rejected in test 2 before creating anything).
+2. **11 characters rejected in UI** — validator fail-closed.
+3. **Recovery with the exact 24 words shown in setup** — captures the phrase from setup screen and unlocks with it.
+4. **23 words rejected** — no partial unlock.
+5. **Valid license activates via real signing service** — client ↔ companion ↔ provider ↔ signature; the signed state passes client verification (requires that the local private key matches `src/services/licenseKeys.ts`; if not, run `node scripts/generate-license-keys.mjs --write`).
+6. **Invalid key fails closed with visible error.**
+7. **Encrypted .bmf backup round-trip** — exports via `BackupService` (same code UI calls), destroys IndexedDB (total loss), recreates vault with same password and restores from F0-2 wizard using vault password (vault security data does not travel in backup).
 
-## Triage de fallos
+## Failure triage
 
-- **Fallo transitorio `browser has been closed`:** flake de infraestructura — re-ejecuta aislado antes de investigar (`npx playwright test --config=playwright.launch-smoke.config.ts -g "nombre del test"`).
-- **`ECONNREFUSED 8787` o 502 en licencia:** proceso huérfano o mock muerto — re-ejecuta el runner (paso 2 del runner evita la mayoría); en última instancia cierra procesos node a mano y reintenta.
-- **`Signed license state failed verification`:** desincronización de claves — `node scripts/generate-license-keys.mjs --write` (regenera par privado + claves públicas commitadas como conjunto coherente) y reintenta.
-- **Export nunca descarga:** el stub de `showSaveFilePicker` debe registrarse con `addInitScript` **antes** del `goto` inicial (los init scripts solo aplican a navegaciones futuras).
-- **Fila no aparece tras restaurar:** la bóveda abre en Dashboard — navega explícitamente a Bookmarks antes de asertar.
-- **Timeout en recuperación tras un rechazo previo:** `RecoveryService` limita a un intento cada 2 s (`MIN_INTERVAL_MS = 2000`) — deja que el helper espere la ventana.
+- **Transient failure `browser has been closed`:** infrastructure flake — re-run isolated before investigating (`npx playwright test --config=playwright.launch-smoke.config.ts -g "test name"`).
+- **`ECONNREFUSED 8787` or 502 in license:** orphan process or dead mock — re-run the runner (runner step 2 avoids most); ultimately close node processes manually and retry.
+- **`Signed license state failed verification`:** key desynchronization — `node scripts/generate-license-keys.mjs --write` (regenerates private pair + committed public keys as coherent set) and retry.
+- **Export never downloads:** the `showSaveFilePicker` stub must be registered with `addInitScript` **before** the initial `goto` (init scripts only apply to future navigations).
+- **Row does not appear after restore:** vault opens in Dashboard — navigate explicitly to Bookmarks before asserting.
+- **Timeout in recovery after previous rejection:** `RecoveryService` limits to one attempt every 2 s (`MIN_INTERVAL_MS = 2000`) — let the helper wait the window.
 
-## Segundo y tercer motor de navegador (firefox + webkit)
+## Second and third browser engine (firefox + webkit)
 
-Las mismas rutas críticas corren en los otros dos motores con:
+The same critical routes run on the other two engines with:
 
 ```bash
-npx playwright install firefox webkit   # una vez
-npm run e2e:engines                     # ambos motores (o -- --project=webkit)
+npx playwright install firefox webkit   # once
+npm run e2e:engines                     # both engines (or -- --project=webkit)
 ```
 
-Perfil: `playwright.engines.config.ts` (misma topología que esta batería, puertos propios). Los tests de licencia se saltan con marcador si no hay clave de firma (p. ej. CI). En CI: job `e2e-engines`. Nota ARM64 Windows: el WebKit de Playwright corre emulado — puede ser lento u OOM si hay procesos huérfanos; el CI en Linux x64 es la referencia.
+Profile: `playwright.engines.config.ts` (same topology as this battery, own ports). License tests are skipped with marker if there is no signing key (e.g. CI). In CI: job `e2e-engines`. Note ARM64 Windows: Playwright's WebKit runs emulated — can be slow or OOM if there are orphan processes; CI on Linux x64 is the reference.
 
-## Relación con el checklist de lanzamiento
+## Relationship with launch checklist
 
-Item 16 de [docs/launch-checklist.md](launch-checklist.md). Todo en verde aquí es una condición previa para marcar la release; un solo rojo = no lanzar.
+Item 16 of [docs/launch-checklist.md](launch-checklist.md). Everything green here is a prerequisite to mark the release; a single red = do not launch.

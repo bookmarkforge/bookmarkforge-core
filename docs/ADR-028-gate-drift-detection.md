@@ -1,49 +1,49 @@
-# ADR-028: Gate-drift-detection — verificabilidad de los inspectores de documentación
+# ADR-028: Gate-drift-detection — verifiability of the documentation inspectors
 
-- **Estado:** aceptado (implementado; este registro formaliza la decisión existente)
-- **Fecha:** 2026-09-02 (retro-documentado desde `scripts/check-inspector-freeze.mjs`)
+- **Status:** accepted (implemented; this record formalizes the existing decision)
+- **Date:** 2026-09-02 (retro-documented from `scripts/check-inspector-freeze.mjs`)
 
-## Contexto
+## Context
 
-El proyecto gobierna sus gates por un "inspector freeze" (O-1) en
-`scripts/check-inspector-freeze.mjs`: los inspectores de formato de
-documentación —un gate `check:*` cuya única función es validar la forma,
-formato, volumen o higiene de docs— no pueden crecer libremente. Añadir uno
-nuevo exige un ADR que (a) nombre el fallo concreto que previene y (b) demuestre
-que es capturable por el job negativo de **gate-drift-detection**. Un gate cuyas
-reglas pueden desaparecer o degradarse sin que nadie lo note no es un gate: es
-una declaración de intenciones. La decisión ADR-028 fija el mecanismo que hace
-verificable ese requisito de capturabilidad.
+The project governs its gates through an "inspector freeze" (O-1) in
+`scripts/check-inspector-freeze.mjs`: documentation-format inspectors — a
+`check:*` gate whose only job is validating the shape,
+format, volume or hygiene of docs — cannot grow freely. Adding a new one
+requires an ADR that (a) names the concrete failure it prevents and (b) demonstrates
+that it is catchable by the **gate-drift-detection** negative job. A gate whose
+rules can disappear or degrade without anyone noticing is not a gate: it is
+a statement of intent. The ADR-028 decision sets the mechanism that makes
+that catchability requirement verifiable.
 
-## Decisión
+## Decision
 
-1. **Gate-drift-detection como contrato de admisión.** Todo nuevo inspector de
-   documentación en la cadena `npm run check` debe demostrar que su fallo está
-   atrapado por un camino negativo verificable: si el gate se debilita, elimina
-   o su baseline se infla, una prueba de detección de deriva lo detecta. El
-   requisito (b) del freeze —"catchable by the negative-path
-   gate-drift-detection job (ADR-028)"— se apoya en esta decisión.
-2. **El ADR del gate debe nombrar el gate concreto.** Para ser aceptado por el
-   freeze, el ADR debe contener `check:<nombre>` textualmente en su cuerpo
-   (`adrNamesGate`), de modo que la justificación quede mecanizable y auditable:
-   el propio freeze valida que el ADR nombre el gate antes de admitirlo.
-3. **Núcleo protegido exento.** Los inspectores de seguridad (`security`) y de
-   idioma (`language`) son el núcleo protegido y pueden crecer sin este gate de
-   ADR; la categoría `meta` (build/chunks/lint…) tampoco lo requiere. La
-   detección de deriva aplica a la categoría de documentación (y a cualquier
-   gate nuevo de categoría desconocida, que por defecto se trata como `docs`).
+1. **Gate-drift-detection as an admission contract.** Every new documentation inspector
+   in the `npm run check` chain must demonstrate that its failure is
+   caught by a verifiable negative path: if the gate is weakened, removed
+   or its baseline is inflated, a drift-detection test detects it. The
+   freeze's requirement (b) — "catchable by the negative-path
+   gate-drift-detection job (ADR-028)" — rests on this decision.
+2. **The gate's ADR must name the concrete gate.** To be accepted by the
+   freeze, the ADR must contain `check:<name>` textually in its body
+   (`adrNamesGate`), so the justification is mechanizable and auditable:
+   the freeze itself validates that the ADR names the gate before admitting it.
+3. **Protected core exempt.** Security (`security`) and
+   language (`language`) inspectors are the protected core and can grow without this ADR
+   gate; the `meta` category (build/chunks/lint…) does not require it either. Drift
+   detection applies to the documentation category (and to any
+   new gate of unknown category, which is treated as `docs` by default).
 
-## Consecuencias
+## Consequences
 
-- Un PR que añade un gate de documentación sin ADR que lo nombre y justifique
-  falla `check:inspector-freeze` con un mensaje que apunta exactamente a este
-  ADR (a) y (b).
-- La existencia de un baseline por gate (patrón común en el repo:
+- A PR adding a documentation gate without an ADR naming and justifying it
+  fails `check:inspector-freeze` with a message pointing exactly at this
+  ADR's (a) and (b).
+- The existence of a per-gate baseline (a common pattern in the repo:
   `check:audit-drift`, `check:no-unbounded-text`, `check:tailwind-drift`, …)
-  materializa el "camino negativo": el baseline es el ancla de deriva que el
-  gate-drift-detection vigila.
-- Este ADR no está en el catálogo de anclas de regresión
-  (`scripts/audit-anchors.mjs` — el catálogo cubre ADR-026/027/029+ de
-  hardening); ADR-028 es gobernanza de gates y se referencia solo en prosa
-  desde `check-inspector-freeze.mjs`. Su número queda ahora formalizado en el
-  registro, cerrando el hueco entre ADR-027 (wave 2) y ADR-029.
+  materializes the "negative path": the baseline is the drift anchor that
+  gate-drift-detection watches.
+- This ADR is not in the regression anchor catalog
+  (`scripts/audit-anchors.mjs` — the catalog covers hardening ADR-026/027/029+);
+  ADR-028 is gate governance and is referenced only in prose
+  from `check-inspector-freeze.mjs`. Its number is now formalized in the
+  registry, closing the gap between ADR-027 (wave 2) and ADR-029.

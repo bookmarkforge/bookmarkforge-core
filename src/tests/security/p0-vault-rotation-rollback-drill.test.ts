@@ -119,6 +119,13 @@ vi.mock("../../services/AuditLogService", () => ({
   auditLog: {
     record: vi.fn().mockResolvedValue(undefined),
     flushPending: vi.fn().mockResolvedValue(undefined),
+    // P1: the H2 post-unlock hook guards on this member — without it the
+    // audit-chain verification was silently skipped on every unlock.
+    verifyIntegrity: vi.fn().mockResolvedValue({
+      valid: true,
+      brokenAt: null,
+      checked: 0,
+    }),
   },
   rotateAuditSessionId: vi.fn(),
 }));
@@ -210,6 +217,11 @@ function resetMocks() {
   secureStorageMock.purgeExpiredPendingKeys.mockResolvedValue(undefined);
   (auditLog.record as any).mockResolvedValue(undefined);
   (auditLog.flushPending as any).mockResolvedValue(undefined);
+  (auditLog.verifyIntegrity as any).mockResolvedValue({
+    valid: true,
+    brokenAt: null,
+    checked: 0,
+  });
 }
 
 // ── tests ────────────────────────────────────────────────────────────────
@@ -484,5 +496,47 @@ describe("rotation-rollback drill (P0 — A-1 / ADR-046)", () => {
     const [r1, r2] = await Promise.all([first, second]);
     // Both return the same boolean (the inner rotation's result).
     expect(r1).toBe(r2);
+  });
+
+  // ── P1 mock-contract sweep ───────────────────────────────────────────────
+
+  it("drill 9: rollback restores NON-NULL device-key wrapper, verification token and integrity record", async () => {
+    setupSecretSnapshots();
+    // Prime non-null snapshots AFTER the beforeEach unlock (which needs a null token):
+    secureStorageMock.getWrappedDeviceKeyBlob.mockResolvedValue(
+      "wrapped-device-key-blob",
+    );
+    secureStorageMock.getVerificationToken.mockResolvedValue(
+      "encrypted_vault_verification",
+    );
+    // Failure AFTER the snapshot phase (same injection as drill 2):
+    decryptMockFn.mockRejectedValue(new Error("Crypto failure"));
+
+    const result = await securityVault.rotateMasterPassword(
+      NEW_PASSWORD,
+      OLD_PASSWORD,
+    );
+    expect(result).toBe(false);
+
+    // The restore branches (rotation.ts rollback) only run for non-null snapshots:
+    expect(
+      secureStorageMock.restoreWrappedDeviceKeyBlob,
+    ).toHaveBeenCalledWith("wrapped-device-key-blob");
+    expect(secureStorageMock.restoreVerificationToken).toHaveBeenCalledWith(
+      "encrypted_vault_verification",
+    );
+    expect(secureStorageMock.storeVerificationIntegrity).toHaveBeenCalledWith(
+      TEST_INTEGRITY_RECORD,
+    );
+
+    // Return to the tokenless state so post-condition E (re-unlock) is the
+    // same first-run path the other drills use.
+    secureStorageMock.getVerificationToken.mockResolvedValue(null);
+    await assertVaultIntactAfterFailure();
+  });
+
+  it("drill 10: a successful unlock verifies the audit chain (auditLog.verifyIntegrity)", async () => {
+    // The beforeEach unlock already ran the H2 hook:
+    expect(auditLog.verifyIntegrity).toHaveBeenCalled();
   });
 });

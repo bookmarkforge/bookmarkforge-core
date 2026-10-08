@@ -1,30 +1,30 @@
 #!/usr/bin/env node
 /**
- * scripts/test-push-images.mjs — Prueba de CI de --push-images contra un
- * registro Docker local (registry:2).
+ * scripts/test-push-images.mjs — CI test for --push-images against a local
+ * Docker registry (registry:2).
  *
- * Valida las tres cosas que pide el checklist de blindeo sobre el push de
- * imágenes por SHA, SIN tocar un registro real:
+ * Validates the three things the hardening checklist requires about pushing
+ * images by SHA, WITHOUT touching a real registry:
  *
- *   1. Mensaje de error fail-closed sin DOCKER_REGISTRY — resolveRegistry
- *      con push + sin dry-run debe dar { ok:false, reason:"missing" }, y
- *      deploy-prod.mjs debe abortar con "requiere DOCKER_REGISTRY".
- *   2. Retag real — `docker tag bookmarkforge/web:<sha> <reg>/...:<sha>`.
- *   3. Push real + verificación — `docker push` las imágenes a un `registry:2`
- *      desechable y `docker manifest inspect`/`pull` de vuelta para confirmar
- *      que el sha existe remoto y es alcanzable (lo que habilita el rollback
- *      imagen-por-SHA desde cualquier nodo del clúster).
+ *   1. Fail-closed error message without DOCKER_REGISTRY — resolveRegistry
+ *      with push + without dry-run must return { ok:false, reason:"missing" },
+ *      and deploy-prod.mjs must abort with "requires DOCKER_REGISTRY".
+ *   2. Real retag — `docker tag bookmarkforge/web:<sha> <reg>/...:<sha>`.
+ *   3. Real push + verification — `docker push` the images to a disposable
+ *      `registry:2` and `docker manifest inspect`/`pull` back to confirm the
+ *      sha exists remotely and is reachable (what enables image-by-SHA
+ *      rollback from any node in the cluster).
  *
- * También verifica la ruta --dry-run: los comandos se imprimen pero NO se
- * ejecutan (run devuelve 0), cubriendo la simulación sin efectos.
+ * Also verifies the --dry-run path: commands are printed but NOT executed
+ * (run returns 0), covering the effect-free simulation.
  *
- * La MISMA función (push-images-lib.mjs) es la que corre en deploy-prod.mjs
- * Fase G — este test la ejercita de verdad contra registry:2.
+ * The SAME function (push-images-lib.mjs) runs in deploy-prod.mjs Phase G —
+ * this test exercises it for real against registry:2.
  *
- * Uso:
+ * Usage:
  *   node scripts/test-push-images.mjs [--json] [--registry 127.0.0.1:5000] [--sha <7-12hex>]
  *
- * Exit: 0 = PASS, 1 = FAIL. --json imprime resumen JSON al final.
+ * Exit: 0 = PASS, 1 = FAIL. --json prints a JSON summary at the end.
  */
 
 import { execSync, spawnSync } from "node:child_process";
@@ -70,37 +70,37 @@ function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-// ── flujo ──────────────────────────────────────────────────────────────────
+// ── flow ──────────────────────────────────────────────────────────────────
 async function main() {
   const started = Date.now();
   let containerName = null;
 
   try {
-    console.log(`\n🧪 Push-images CI test — registro local ${REGISTRY}, sha ${SHA}\n`);
+    console.log(`\n🧪 Push-images CI test — local registry ${REGISTRY}, sha ${SHA}\n`);
 
-    // ── Check 1: fail-closed sin DOCKER_REGISTRY ─────────────────────────
-    console.log("[1/5] Mensaje de error sin DOCKER_REGISTRY (fail-closed)");
+    // ── Check 1: fail-closed without DOCKER_REGISTRY ─────────────────────
+    console.log("[1/5] Error message without DOCKER_REGISTRY (fail-closed)");
     const missing = resolveRegistry("", { push: true, dryRun: false });
     const bad = resolveRegistry("http://inválido", { push: true, dryRun: false });
     const dryRunSim = resolveRegistry("", { push: true, dryRun: true });
     check(
-      "fail-closed sin registro devuelve { ok:false, reason:'missing' }",
+      "fail-closed without registry returns { ok:false, reason:'missing' }",
       missing.ok === false && missing.reason === "missing",
       JSON.stringify(missing),
     );
     check(
-      "formato inválido → reason:'invalid'",
+      "invalid format → reason:'invalid'",
       bad.ok === false && bad.reason === "invalid",
       JSON.stringify(bad),
     );
     check(
-      "--dry-run sin registro simula registry.example.com (no falla)",
+      "--dry-run without registry simulates registry.example.com (does not fail)",
       dryRunSim.ok === true && dryRunSim.simulated === true && dryRunSim.registry === "registry.example.com",
       JSON.stringify(dryRunSim),
     );
 
-    // Verificación integrada: spawn real de deploy-prod exigiendo el mensaje.
-    console.log("\n   Spawning deploy-prod.mjs --push-images sin DOCKER_REGISTRY (fail-closed)...");
+    // Integrated check: real spawn of deploy-prod demanding the message.
+    console.log("\n   Spawning deploy-prod.mjs --push-images without DOCKER_REGISTRY (fail-closed)...");
     const p = spawnSync(process.execPath, [
       "scripts/deploy-prod.mjs",
       "--push-images",
@@ -110,16 +110,16 @@ async function main() {
     ], { env: { ...process.env, DOCKER_REGISTRY: "" }, encoding: "utf8", timeout: 60_000 });
     const msg = (p.stderr || "") + "\n" + (p.stdout || "");
     check(
-      "deploy-prod aborta (exit 1) exigiendo DOCKER_REGISTRY",
+      "deploy-prod aborts (exit 1) demanding DOCKER_REGISTRY",
       p.status !== 0 && /DOCKER_REGISTRY/i.test(msg),
-      `exit=${p.status} · msg=${/DOCKER_REGISTRY/i.test(msg) ? "contiene 'DOCKER_REGISTRY'" : "NO contiene"}`,
+      `exit=${p.status} · msg=${/DOCKER_REGISTRY/i.test(msg) ? "contains 'DOCKER_REGISTRY'" : "does NOT contain it"}`,
     );
 
-    // ── Check 2: plan de retag+push para web/api ──────────────────────────
-    console.log("\n[2/5] Plan de retag+push (web+api por sha)");
+    // ── Check 2: retag+push plan for web/api ──────────────────────────────
+    console.log("\n[2/5] Retag+push plan (web+api per sha)");
     const plan = planPushTargets(SHA, REGISTRY);
     check(
-      "plan genera web y api con remote correcto",
+      "plan generates web and api with the right remote",
       plan.length === 2 &&
         plan[0].local === `bookmarkforge/web:${SHA}` &&
         plan[0].remote === `${REGISTRY}/bookmarkforge/web:${SHA}` &&
@@ -127,45 +127,45 @@ async function main() {
       JSON.stringify(plan),
     );
 
-    // ── Check 3: real retag+push contra registry:2 local ─────────────────
-    console.log(`\n[3/5] Retag + push REAL contra registry:2 en ${REGISTRY}`);
-    // Levanta el registry local desechable (pull de registry:2; menor tamaño).
+    // ── Check 3: real retag+push against local registry:2 ────────────────
+    console.log(`\n[3/5] REAL retag + push against registry:2 at ${REGISTRY}`);
+    // Bring up the disposable local registry (pull registry:2; smaller size).
     if (!runOk(`docker pull registry:2`, { timeout: 180_000 })) {
-      fatal("no se pudo descargar registry:2 (¿daemon docker abajo o sin red?)");
+      fatal("could not pull registry:2 (docker daemon down or no network?)");
       return;
     }
     containerName = `bmf-test-registry-${Date.now()}`;
     const hostPort = REGISTRY.split(":").pop();
     if (!/^[0-9]+$/.test(hostPort) || Number(hostPort) < 1 || Number(hostPort) > 65535) {
-      fatal(`registro de prueba debe usar un puerto válido: ${REGISTRY}`);
+      fatal(`test registry must use a valid port: ${REGISTRY}`);
       return;
     }
     if (!runOk(`docker run -d --rm --name ${containerName} -p 127.0.0.1:${hostPort}:5000 registry:2`)) {
-      fatal("no se pudo levantar registry:2 (¿puerto 5000 en uso o daemon abajo?)");
+      fatal("could not start registry:2 (port 5000 in use or daemon down?)");
       return;
     }
     await sleep(1500);
 
-    // Crea imágenes base reales del sha (a partir de busybox, pequeñas).
+    // Create real base images for the sha (from busybox, small).
     if (
       !runOk(`docker pull busybox:1.36`, { timeout: 180_000 }) ||
       !runOk(`docker tag busybox:1.36 bookmarkforge/web:${SHA}`) ||
       !runOk(`docker tag busybox:1.36 bookmarkforge/api:${SHA}`)
     ) {
-      fatal("no se pudieron preparar las imágenes base del sha");
+      fatal("could not prepare the sha base images");
       return;
     }
 
-    // Retag + push con la MISMA función que usa deploy-prod.mjs Fase G.
+    // Retag + push with the SAME function deploy-prod.mjs Phase G uses.
     const pushRes = pushImages({ sha: SHA, registry: REGISTRY, run: (cmd, o) => (runOk(cmd, o) ? 0 : 1) });
     check(
-      "pushImages hace retag + push de web y api (exit 0)",
+      "pushImages retags + pushes web and api (exit 0)",
       pushRes.ok === true && pushRes.pushed.length === 2,
-      pushRes.ok ? `pusheadas: ${pushRes.pushed.join(", ")}` : `fail ${pushRes.step} en ${pushRes.remote}`,
+      pushRes.ok ? `pushed: ${pushRes.pushed.join(", ")}` : `fail ${pushRes.step} at ${pushRes.remote}`,
     );
 
-    // ── Check 4: verificación de que el sha existe en el registro ─────────
-    console.log("\n[4/5] Verificación remota (manifest inspect + pull de vuelta)");
+    // ── Check 4: verify the sha exists in the registry ────────────────────
+    console.log("\n[4/5] Remote verification (manifest inspect + pull back)");
     const inspect = (name, tag) =>
       runOk(`docker pull ${REGISTRY}/bookmarkforge/${name}:${tag}`, {
         timeout: 60_000,
@@ -173,26 +173,26 @@ async function main() {
     const webRemote = inspect("web", SHA);
     const apiRemote = inspect("api", SHA);
     check(
-      "web:<sha> inspeccionable en el registro local",
+      "web:<sha> inspectable in the local registry",
       webRemote,
-      webRemote ? `manifest_OK ${REGISTRY}/bookmarkforge/web:${SHA}` : "manifest NO disponible",
+      webRemote ? `manifest_OK ${REGISTRY}/bookmarkforge/web:${SHA}` : "manifest NOT available",
     );
     check(
-      "api:<sha> inspeccionable en el registro local",
+      "api:<sha> inspectable in the local registry",
       apiRemote,
-      apiRemote ? `manifest_OK ${REGISTRY}/bookmarkforge/api:${SHA}` : "manifest NO disponible",
+      apiRemote ? `manifest_OK ${REGISTRY}/bookmarkforge/api:${SHA}` : "manifest NOT available",
     );
 
-    // Pull de vuelta (a un tag de prueba) para confirmar el round-trip.
+    // Pull back (to a test tag) to confirm the round-trip.
     const round = runOk(`docker pull ${REGISTRY}/bookmarkforge/web:${SHA}`, { timeout: 120_000 });
     check(
-      "pull de vuelta confirma round-trip del registro",
+      "pulling back confirms the registry round-trip",
       round,
-      round ? `docker pull ${REGISTRY}/bookmarkforge/web:${SHA} OK` : "pull falló",
+      round ? `docker pull ${REGISTRY}/bookmarkforge/web:${SHA} OK` : "pull failed",
     );
 
-    // ── Check 5: gate not-visible con SHA inexistente ────────────────────
-    console.log("\n[5/6] Gate de visibilidad: SHA inexistente (not-visible)");
+    // ── Check 5: not-visible gate with a nonexistent SHA ─────────────────
+    console.log("\n[5/6] Visibility gate: nonexistent SHA (not-visible)");
     const missingSha = `${SHA.slice(0, 7)}dead`;
     const missingVisibility = pushImages({
       sha: missingSha,
@@ -200,43 +200,43 @@ async function main() {
       images: ["web"],
       run: () => 0,
       runVisible: (remote) => {
-        // El registro local no contiene esta referencia: simula exactamente
-        // el resultado de `docker manifest inspect` con exit no-cero.
+        // The local registry does not hold this reference: simulate exactly
+        // the result of `docker manifest inspect` with a non-zero exit.
         return !remote.endsWith(`:${missingSha}`);
       },
     });
     check(
-      "SHA inexistente bloquea el push como not-visible",
+      "nonexistent SHA blocks the push as not-visible",
       missingVisibility.ok === false && missingVisibility.step === "not-visible" && missingVisibility.remote.endsWith(`:${missingSha}`),
       JSON.stringify(missingVisibility),
     );
 
-    // ── Check 6: dry-run imprime comandos sin ejecutar ───────────────────
-    console.log("\n[6/6] Ruta --dry-run (imprime retag+push, sin efectos)");
+    // ── Check 6: dry-run prints commands without executing ───────────────
+    console.log("\n[6/6] --dry-run path (prints retag+push, no side effects)");
     let printed = 0;
     const dryRes = pushImages({
       sha: SHA,
       registry: REGISTRY,
       run: (cmd) => {
-        console.log(`$ ${cmd}`); // imprime
-        printed++; // no ejecuta nada real
+        console.log(`$ ${cmd}`); // prints
+        printed++; // executes nothing real
         return 0;
       },
-      runVisible: () => true, // dry-run: la visibilidad se simula (sin side effects)
+      runVisible: () => true, // dry-run: visibility is simulated (no side effects)
     });
     check(
-      "pushImages con run dry imprime 4 comandos y devuelve ok",
+      "pushImages with a dry run prints 4 commands and returns ok",
       dryRes.ok === true && printed === 4,
-      `imprimidos=${printed}`,
+      `printed=${printed}`,
     );
 
-    // ── Resumen ───────────────────────────────────────────────────────────
+    // ── Summary ───────────────────────────────────────────────────────────
     const ok = checks.every((c) => c.ok);
     const elapsed = ((Date.now() - started) / 1000).toFixed(1);
     if (JSON_OUT) {
       console.log(JSON.stringify({ ok, elapsed, checks, registry: REGISTRY, sha: SHA }, null, 2));
     }
-    console.log(`\n${ok ? "✅" : "❌"} push-images test ${ok ? "PASS" : "FAIL"} en ${elapsed}s (${checks.filter((c) => c.ok).length}/${checks.length})`);
+    console.log(`\n${ok ? "✅" : "❌"} push-images test ${ok ? "PASS" : "FAIL"} in ${elapsed}s (${checks.filter((c) => c.ok).length}/${checks.length})`);
     process.exit(ok ? 0 : 1);
   } catch (e) {
     recordFatal(e.message);
@@ -252,7 +252,7 @@ async function main() {
       try {
         execSync(`docker rm -f ${containerName}`, { stdio: "ignore", timeout: 30_000 });
       } catch {
-        // el container ya no existía (--rm) o se eliminó aparte
+        // the container was already gone (--rm) or removed separately
       }
     }
   }

@@ -1,210 +1,211 @@
-# ADR-043: Registro y documentación del gate SEO `check:seo`
+# ADR-043: Record and documentation for the `check:seo` gate
 
-- **Estado:** aceptado (implementado: `scripts/check-seo.mjs` está en la cadena `npm run check` con su suite adversarial en `scripts/__tests__/check-seo.test.mjs`)
-- **Fecha:** 2026-09-09
+- **Status:** accepted (implemented: `scripts/check-seo.mjs` is in the `npm run check` chain with its adversarial suite in `scripts/__tests__/check-seo.test.mjs`)
+- **Date:** 2026-09-09
 
-## Contexto
+## Context
 
-La superficie indexable del sitio creció hasta 30 landings localizadas
-(en/es/fr/de/pt/it y 24 locales adicionales), la página comparativa `/pocket-alternative`, el shell SPA
-y la página 404 — cada una con canonical, hreflang, Open Graph, Twitter Cards
-y JSON-LD propios, más un contrato noindex que mantiene la app privada fuera
-del índice (`_headers`, `netlify.toml`, `robots.txt`, `offline.html` y
-`sitemap.xml`). Toda esa identidad SEO dependía de convención sin verificación:
-un canonical roto, un `og:image` sin asset o una fuga de `/app` en el sitemap
-degradan silenciosamente el posicionamiento y la privacidad del índice, y solo
-se descubren semanas después en Search Console.
+The site's indexable surface grew to 30 localized landings
+(en/es/fr/de/pt/it plus 24 more locales), the comparison page `/pocket-alternative`, the SPA
+shell and the 404 page — each one with its own canonical, hreflang, Open Graph, Twitter Cards
+and JSON-LD, plus a noindex contract that keeps the private app out of
+the index (`_headers`, `netlify.toml`, `robots.txt`, `offline.html` and
+`sitemap.xml`). All of that SEO identity relied on convention without verification:
+a broken canonical, an `og:image` without an asset or a `/app` leak in the sitemap
+silently degrade ranking and index privacy, and they are only
+discovered weeks later in Search Console.
 
-El inspector freeze (O-1, `docs/ADR-028-gate-drift-detection.md`) exige que
-todo gate nuevo esté gobernado: o es núcleo protegido, o está registrado en
-`KNOWN_GATES` con categoría explícita, o lo justifica un ADR. `check:seo` no
-es un inspector de formato de documentación (no valida `docs/`): es un
-contrato de la superficie estática del producto, la misma familia que
-`check:static-brand` (tokens de marca en CSS/HTML). Esta decisión lo registra
-formalmente y documenta qué valida y cómo ejecutarlo, con paridad de
-gobernanza con el resto de gates del repo.
+The freeze inspector (O-1, `docs/ADR-028-gate-drift-detection.md`) requires that
+every new gate be governed: either it is protected core, or it is registered in
+`KNOWN_GATES` with an explicit category, or an ADR justifies it. `check:seo` is
+not a documentation-format inspector (it does not validate `docs/`): it is a
+contract for the product's static surface, the same family as
+`check:static-brand` (brand tokens in CSS/HTML). This decision records it
+formally and documents what it validates and how to run it, with governance
+parity with the rest of the repo's gates.
 
-## Decisión
+## Decision
 
-1. **Alcance del gate.** `node scripts/check-seo.mjs` valida:
+1. **Gate scope.** `node scripts/check-seo.mjs` validates:
    - **Landings** (`public/landing.html` + `es/fr/de/pt/it.html`): `<html
-     lang>`, `<title>`, meta description, canonical exacto, hreflang completo
-     (30 idiomas + `x-default` en los artefactos generados; la familia histórica
-     de seis landings sigue cubierta por el contrato primario), los 9 meta Open Graph (con `og:url` ==
-     canonical y `og:image` apuntando a un asset existente en `public/`),
-     Twitter Cards y JSON-LD parseable con los tipos `WebSite`,
-     `Organization`, `SoftwareApplication` y `FAQPage` (con preguntas reales).
-   - **Página única** (`public/pocket-alternative.html`): mismo contrato sin
-     requisito de hreflang.
-   - **Páginas legales** (`public/privacy-and-terms.html` + las cinco copias
-     localizadas en `/es|fr|de|pt|it/privacy-and-terms.html`): canonical,
-     set hreflang completo del clúster legal (30 idiomas + `x-default` en los
-     artefactos generados), OG y Twitter, sin
-     requisito de JSON-LD (un documento legal no declara FAQPage).
-   - **Páginas auxiliares** (`index.html` y `public/404.html`): canonical +
-     set OG/Twitter completo, y coherencia de identidad con la landing EN
-     (`og:site_name` y `og:image` idénticos).
-   - **Contratos noindex**: `X-Robots-Tag: noindex` para `/app`, `/capture` y
-     `/offline*` en `_headers` y `netlify.toml`; `Disallow` en `robots.txt`;
-     meta noindex en `offline.html`; y que `sitemap.xml` no liste `/app` pero
-     sí las seis landings, `/pocket-alternative` y las seis páginas
-     legales, y anote el set completo de alternates `xhtml:link` hreflang
-     (30 idiomas + `x-default`) en cada landing (x-default → `/`) y en cada
-     página legal (x-default → la EN), con el namespace `xmlns:xhtml`
-     declarado — hreflang a nivel de sitemap, espejo del `<head>` HTML de
-     cada clúster.
-   - La identidad SEO se deriva del dominio real (`csp-config.js`), de modo
-     que un cambio de `BOOKMARKFORGE_DOMAIN` no puede desincronizar el
-     contrato sin que CI falle.
-   - **Negociación de idioma**: la raíz `/` debe redirigir con 302 (nunca
-     301 — la negociación debe seguir siendo temporal para preservar el
-     canonical EN) a la landing localizada según el idioma primario de
-     `Accept-Language`, tanto en `public/nginx.conf` (ruta Docker) como en
-     `functions/_middleware.js` (Cloudflare Pages) y `netlify.toml`
-     (reglas condicionales `conditions = { Language = [...] }` con 302,
-     listadas antes del rewrite 200 de `/`), con el mismo mapa de idiomas
-     y la misma semántica de idioma primario — Netlify ignora los q-values
-     y matchea contra la primera lengua del header, como las regex de nginx.
-   - **Preferencia manual de idioma** (para que el redirect no moleste al
-     usuario que elige): el parámetro `?lang=<code>` (en los links de
-     idioma de nav/footer de las landings) es la señal más fuerte —
-     fija una cookie persistente (`bf_lang`, leída por nginx y el
-     middleware; `nf_lang`, el override nativo de Netlify para sus
-     condiciones Language) y redirige 302 a la URL limpia. La cookie, una
-     vez puesta, **anula** la negociación por `Accept-Language` (incluido
-     el valor `en`: "el usuario ya eligió, no re-negociar") — en nginx la
-     negociación vive en el location interno `/_negotiate`, que solo se
-     alcanza cuando NO hay cookie; el middleware replica la semántica; y
-     `landing.js` setea ambas cookies al pulsar un link de idioma o al
-     cargar con `?lang=`. El gate exige el contrato en las tres fuentes.
-   - **Links de idioma visibles**: los links de idioma de nav/footer de las
-     Las landings deben llevar `lang` y `hreflang` (con el mismo valor),
-     apuntar a la landing correcta con `?lang=<código>`, cubrir los 6
-     idiomas y enlazar la versión propia de cada página.
-   - **Terminología legal consistente**: los 6 documentos de privacidad +
-     términos deben mantener los términos jurídicos clave por jurisdicción
-     — acrónimo GDPR correcto (RGPD en es/fr/pt, DSGVO en de, GDPR en
-     en/it), ROPA, opt-in, el término de "responsable del tratamiento"
-     (Verantwortlicher/titolare/…) y la frase "entitlement state" de la
-     licencia (que una vez regresó como traducción literal de "rule of
-     law": Estado de derecho / État du droit / Stato del diritto — el gate
-     la fija en su forma inequívoca).
-2. **Cómo ejecutarlo.** `npm run check:seo` (o `node scripts/check-seo.mjs`
-   directamente; es un gate puro, sin `--fix` y sin dependencias fuera de
-   Node core). Corre en la cadena `npm run check` y en `check:ci`. Su suite
-   adversarial (`scripts/__tests__/check-seo.test.mjs`, perfil `test:slow`)
-   muta cada pieza del contrato y exige que el gate la detecte.
-3. **Registro en el freeze.** `check:seo` se registra en `KNOWN_GATES` de
-   `scripts/check-inspector-freeze.mjs` como `meta` — la misma categoría que
-   `check:static-brand` y `check:brand-logo`: no es un inspector de formato de
-   documentación, por lo que no requiere ADR por O-1; este ADR documenta la
-   decisión y su contrato igualmente.
+     lang>`, `<title>`, meta description, exact canonical, complete hreflang set
+     (30 languages + `x-default` in the generated artifacts; the historical family
+     of six landings remains covered by the primary contract), the 9 Open Graph meta tags (with `og:url` ==
+     canonical and `og:image` pointing at an existing asset in `public/`),
+     Twitter Cards and parseable JSON-LD with the `WebSite`,
+     `Organization`, `SoftwareApplication` and `FAQPage` types (with real questions).
+   - **Single page** (`public/pocket-alternative.html`): same contract without the
+     hreflang requirement.
+   - **Legal pages** (`public/privacy-and-terms.html` + the five localized
+     copies at `/es|fr|de|pt|it/privacy-and-terms.html`): canonical,
+     complete hreflang set for the legal cluster (30 languages + `x-default` in the
+     generated artifacts), OG and Twitter, with no
+     JSON-LD requirement (a legal document does not declare FAQPage).
+   - **Auxiliary pages** (`index.html` and `public/404.html`): canonical +
+     complete OG/Twitter set, and identity consistency with the EN landing
+     (`og:site_name` and `og:image` identical).
+   - **Noindex contracts**: `X-Robots-Tag: noindex` for `/app`, `/capture` and
+     `/offline*` in `_headers` and `netlify.toml`; `Disallow` in `robots.txt`;
+     noindex meta in `offline.html`; and that `sitemap.xml` does not list `/app` but
+     does list the six landings, `/pocket-alternative` and the six legal pages,
+     and annotates the complete set of `xhtml:link` hreflang alternates
+     (30 languages + `x-default`) on each landing (x-default → `/`) and on each
+     legal page (x-default → the EN one), with the `xmlns:xhtml` namespace
+     declared — sitemap-level hreflang, mirroring the HTML `<head>` of
+     each cluster.
+   - SEO identity is derived from the real domain (`csp-config.js`), so
+     a change to `BOOKMARKFORGE_DOMAIN` cannot desynchronize the
+     contract without CI failing.
+   - **Language negotiation**: the `/` root must redirect with 302 (never
+     301 — negotiation must remain temporary to preserve the
+     EN canonical) to the localized landing matching the primary language of
+     `Accept-Language`, both in `public/nginx.conf` (Docker path) and in
+     `functions/_middleware.js` (Cloudflare Pages) and `netlify.toml`
+     (conditional `conditions = { Language = [...] }` rules with 302,
+     listed before the 200 rewrite of `/`), with the same language map
+     and the same primary-language semantics — Netlify ignores q-values
+     and matches against the first language of the header, like the nginx regexes.
+   - **Manual language preference** (so the redirect does not bother a
+     user who has chosen): the `?lang=<code>` parameter (on the nav/footer
+     language links of the landings) is the strongest signal — it
+     sets a persistent cookie (`bf_lang`, read by nginx and the
+     middleware; `nf_lang`, Netlify's native override for its
+     Language conditions) and 302-redirects to the clean URL. Once set, the cookie
+     **overrides** `Accept-Language` negotiation (including the
+     `en` value: "the user already chose, do not re-negotiate") — in nginx the
+     negotiation lives in the internal `/_negotiate` location, which is only
+     reached when there is NO cookie; the middleware replicates the semantics; and
+     `landing.js` sets both cookies when a language link is clicked or when
+     loading with `?lang=`. The gate requires the contract in all three sources.
+   - **Visible language links**: the nav/footer language links of the
+     landings must carry `lang` and `hreflang` (with the same value),
+     point at the correct landing with `?lang=<code>`, cover the 6
+     languages and link each page's own version.
+   - **Consistent legal terminology**: the 6 privacy-and-terms documents must keep
+     the key legal terms per jurisdiction
+     — correct GDPR acronym (RGPD in es/fr/pt, DSGVO in de, GDPR in
+     en/it), ROPA, opt-in, the "data controller" term
+     (Verantwortlicher/titolare/…) and the license's "entitlement state"
+     phrase (which once came back as a literal translation of "rule of
+     law": Estado de derecho / État du droit / Stato del diritto — the gate <!-- i18n-allow -->
+     pins it in its unambiguous form).
+2. **How to run it.** `npm run check:seo` (or `node scripts/check-seo.mjs`
+   directly; it is a pure gate, with no `--fix` and no dependencies outside
+   Node core). It runs in the `npm run check` chain and in `check:ci`. Its
+   adversarial suite (`scripts/__tests__/check-seo.test.mjs`, `test:slow` profile)
+   mutates every piece of the contract and requires the gate to detect it.
+3. **Registration in the freeze.** `check:seo` is registered in `KNOWN_GATES` of
+   `scripts/check-inspector-freeze.mjs` as `meta` — the same category as
+   `check:static-brand` and `check:brand-logo`: it is not a documentation-format
+   inspector, so O-1 does not require an ADR for it; this ADR documents the
+   decision and its contract all the same.
 
-## Consecuencias
+## Consequences
 
-- Toda adición a la superficie SEO (nuevo idioma de landing, página nueva,
-  cambio de `og:image`) debe actualizar el gate a la vez: si una página
-  nueva no declara el set hreflang completo o una landing queda fuera del
-  sitemap, CI falla con un mensaje accionable.
-- Añadir un séptimo idioma exige tocar `LANDING_LANGS`/`LANDING_LOCALES` en
-  `check-seo.mjs` y `LANDING_LANGS` en `scripts/nginx-render.mjs` (más las
-  reglas de servidor) — el gate señala qué falta. La entrada del sitemap se
-  añade a mano en `public/sitemap.xml` (archivo manual desde A9-1; el
-  renderizador sólo reescribe hosts de URL, nunca regenera).
-- El contrato noindex es revocable de forma verificable: quitar un
-  `Disallow` o un `X-Robots-Tag` sin tocar el gate rompe CI antes de que la
-  app privada pueda aparecer en el índice.- El gate está implementado y en la cadena; este ADR registra la decisión y
-  sirve de referencia canónica de qué valida y cómo ejecutarlo.
+- Every addition to the SEO surface (a new landing language, a new page,
+  an `og:image` change) must update the gate at the same time: if a new page
+  does not declare the complete hreflang set, or a landing is left out of the
+  sitemap, CI fails with an actionable message.
+- Adding a seventh language requires touching `LANDING_LANGS`/`LANDING_LOCALES` in
+  `check-seo.mjs` and `LANDING_LANGS` in `scripts/nginx-render.mjs` (plus the
+  server rules) — the gate flags what is missing. The sitemap entry is
+  added by hand in `public/sitemap.xml` (a manual file since A9-1; the
+  renderer only rewrites URL hosts, it never regenerates).
+- The noindex contract is revocable in a verifiable way: removing a
+  `Disallow` or an `X-Robots-Tag` without touching the gate breaks CI before the
+  private app can appear in the index.
+- The gate is implemented and in the chain; this ADR records the decision and
+  serves as the canonical reference for what it validates and how to run it.
 
-## Verificación del grafo hreflang (2026-09-09)
+## hreflang graph verification (2026-09-09)
 
-`scripts/check-hreflang-graph.mjs` valida sobre HTTP real los mismos
-chequeos que un validador hreflang externo, para las 60 páginas localizadas actuales (30 landings + 30 legales): sets completos (30 idiomas +
-`x-default`), ausencia de enlaces rotos, **bidireccionalidad** (si A
-declara `es → /es/`, /es/ debe declarar `en → A`), auto-referencia,
-`x-default` por clúster (landings → `/`, legales → la EN) y sin cruce
-entre clústeres; además cruza el set del HTML con el `xhtml:link` del
-sitemap para las 60 URLs. Verificado adversarial: quitar un alternate en
-`dist/` dispara los tres tipos de fallo y el exit code 1.
+`scripts/check-hreflang-graph.mjs` validates over real HTTP the same
+checks an external hreflang validator would, for the 60 current localized pages (30 landings + 30 legal): complete sets (30 languages +
+`x-default`), absence of broken links, **bidirectionality** (if A
+declares `es → /es/`, /es/ must declare `en → A`), self-reference,
+`x-default` per cluster (landings → `/`, legal → the EN one) and no crossing
+between clusters; it also crosses the HTML set with the sitemap's
+`xhtml:link` for the 60 URLs. Verified adversarially: removing an alternate in
+`dist/` triggers all three failure kinds and exit code 1.
 
 ```bash
 npm run build
 npm run preview -- --port 4173 --strictPort &
-node scripts/check-hreflang-graph.mjs http://localhost:4173 --files   # local (resuelve /fr/ → /fr.html)
+node scripts/check-hreflang-graph.mjs http://localhost:4173 --files  # local (resolves /fr/ → /fr.html)
 ```
 
-Resultado histórico del 2026-09-09: **12 páginas, 84 alternates, grafos
-bidireccionales intactos, exit 0.** Los validadores externos por URL no
-pueden usarse todavía: `bookmarkforge.com` sigue sirviendo el despliegue
-legacy (la página legal EN responde 404 — ver la sección anterior).
-Tras desplegar, repetir en modo live contra el dominio público:
+Historical result from 2026-09-09: **12 pages, 84 alternates, bidirectional
+graphs intact, exit 0.** Per-URL external validators cannot be used yet:
+`bookmarkforgeapp.com` still serves the legacy deployment (the EN legal
+page returns 404 — see the previous section). After deploying, repeat in live
+mode against the public domain:
 
 ```bash
-node scripts/check-hreflang-graph.mjs https://bookmarkforge.com
+node scripts/check-hreflang-graph.mjs https://bookmarkforgeapp.com
 ```
 
-## Verificación externa del sitemap (2026-09-09)
+## External sitemap verification (2026-09-09)
 
-El sitemap se validó con dos validadores externos (ninguno del repo), tras
-un hallazgo real que se corrigió:
+The sitemap was validated with two external validators (neither from the repo),
+after a real finding that was fixed:
 
-1. **sitemap.js** (la librería npm oficial de sitemaps, instalada en un
-directorio temporal): `XMLToSitemapItemStream` con `ErrorLevel.WARN` —
-**61/61 `<url>` válidos** (changefreq, priority, límites de loc).
-2. **libxml2** (el motor detrás de `xmllint`, vía `libxmljs2` con binarios
-precompilados) contra el **esquema oficial de sitemaps.org**:
-`processContents="lax"` en el wildcard `xs:any` (la variante `strict` de
-2008 predata la extensión hreflang de Google y rechaza `xhtml:link` en
-cualquier sitemap con hreflang — verificado) — **well-formed y VALID**.
+1. **sitemap.js** (the official npm sitemap library, installed in a
+   temporary directory): `XMLToSitemapItemStream` with `ErrorLevel.WARN` —
+   **61/61 valid `<url>` entries** (changefreq, priority, loc limits).
+2. **libxml2** (the engine behind `xmllint`, via `libxmljs2` with precompiled
+   binaries) against the **official sitemaps.org schema**:
+   `processContents="lax"` in the `xs:any` wildcard (the 2008 `strict`
+   variant predates Google's hreflang extension and rejects `xhtml:link` in
+   any sitemap with hreflang — verified) — **well-formed and VALID**.
 
-**Hallazgo corregido**: el sitemap emitía `xhtml:link` entre `<loc>` y
-`<lastmod>`, pero el esquema de 2008 valida la secuencia en orden
-(`loc, lastmod?, changefreq?, priority?, xs:any`) y rechazaba `lastmod`.
-Se reordenó el renderer para emitir los alternates **al final** del
-bloque `<url>` — orden compatible con el esquema oficial y con Google/Bing
-(que parsean cualquier orden). El renderer, `check:seo`, el validador del
-grafo y los tests siguen verdes; el contrato del sitemap es
-orden-independiente.
+**Finding fixed**: the sitemap emitted `xhtml:link` between `<loc>` and
+`<lastmod>`, but the 2008 schema validates the sequence in order
+(`loc, lastmod?, changefreq?, priority?, xs:any`) and rejected `lastmod`.
+The renderer was reordered to emit the alternates **at the end** of the
+`<url>` block — an order compatible with the official schema and with Google/Bing
+(which parse any order). The renderer, `check:seo`, the graph validator
+and the tests remain green; the sitemap contract is
+order-independent.
 
-Los validadores web por URL (p. ej. xml-sitemaps.com, que solo acepta
-`sitemapurl`) no pueden usarse hasta desplegar: producción responde 404 en
-`/sitemap.xml` (sitio legacy, ver secciones anteriores).
+Per-URL web validators (e.g. xml-sitemaps.com, which only accepts
+`sitemapurl`) cannot be used until deployment: production returns 404 at
+`/sitemap.xml` (legacy site, see previous sections).
 
 ```bash
-# Reproducir (fuera del repo):
+# Reproduce (outside the repo):
 mkdir -p /tmp/smval && cd /tmp/smval && npm init -y && npm i sitemap libxmljs2
 curl -sO https://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
 sed 's/processContents="strict"/processContents="lax"/' sitemap.xsd > sitemap-lax.xsd
-node validate.mjs <ruta>/public/sitemap.xml sitemap-lax.xsd
+node validate.mjs <path>/public/sitemap.xml sitemap-lax.xsd
 ```
 
-## Verificación con curl contra producción (2026-09-09)
+## Verification with curl against production (2026-09-09)
 
-Comprobación real de la negociación en `https://bookmarkforge.com/` (IP
-`178.156.204.210`, sin CDN delante):
+Real check of negotiation on `https://bookmarkforgeapp.com/` (IP
+`178.156.204.210`, no CDN in front):
 
 ```bash
-curl -s -o /dev/null -w "%{http_code} -> %{redirect_url}\n" -H "Accept-Language: fr-FR,fr;q=0.9,en;q=0.8" https://bookmarkforge.com/
+curl -s -o /dev/null -w "%{http_code} -> %{redirect_url}\n" -H "Accept-Language: fr-FR,fr;q=0.9,en;q=0.8" https://bookmarkforgeapp.com/
 ```
 
-| Accept-Language (primario) | Esperado (contrato) | Observado |
+| Accept-Language (primary) | Expected (contract) | Observed |
 | --- | --- | --- |
-| `fr-FR,fr;q=0.9,en;q=0.8` | 302 → `/fr/` | 200 (sin redirect) |
-| `de-DE,de;q=0.9,en;q=0.8` | 302 → `/de/` | 200 (sin redirect) |
-| `it-IT,it;q=0.9,en;q=0.8` | 302 → `/it/` | 200 (sin redirect) |
-| `pt-PT,pt;q=0.9,en;q=0.8` | 302 → `/pt/` | 200 (sin redirect) |
-| `es-ES,es;q=0.9,en;q=0.8` | 302 → `/es/` | 200 (sin redirect) |
+| `fr-FR,fr;q=0.9,en;q=0.8` | 302 → `/fr/` | 200 (no redirect) |
+| `de-DE,de;q=0.9,en;q=0.8` | 302 → `/de/` | 200 (no redirect) |
+| `it-IT,it;q=0.9,en;q=0.8` | 302 → `/it/` | 200 (no redirect) |
+| `pt-PT,pt;q=0.9,en;q=0.8` | 302 → `/pt/` | 200 (no redirect) |
+| `es-ES,es;q=0.9,en;q=0.8` | 302 → `/es/` | 200 (no redirect) |
 | `en-US,en;q=0.9,fr;q=0.8` | 200 (EN) | 200 |
-| sin header | 200 (EN) | 200 |
+| no header | 200 (EN) | 200 |
 | `ja;q=0.9` | 200 (EN) | 200 |
-| `GET /fr/` (directo) | 200 | 404 |
+| `GET /fr/` (direct) | 200 | 404 |
 
-**Conclusión: producción NO sirve el build ni el `nginx.conf` actuales.**
-La página que responde `/` es legacy — título *"Bookmark Forge - Links to
-Bookmarks Converter"*, 47 329 bytes, frente a los 31 151 de `landing.html`
-actual — y las 5 rutas localizadas dan 404. La negociación de idioma
-(fr/de/it/pt/es → 302, EN → 200) es correcta en el artefacto del repo
-(`public/nginx.conf`, verificado por `check:seo` y su suite adversarial),
-pero está pendiente de despliegue: `scripts/deploy-prod.mjs --deploy
---verify` es el camino previsto. Hasta entonces, esta tabla documenta el
-estado real: el contrato de producción no está cumplido.
+**Conclusion: production does NOT serve the current build or `nginx.conf`.**
+The page answering `/` is legacy — title *"Bookmark Forge - Links to
+Bookmarks Converter"*, 47 329 bytes, versus the current `landing.html`'s
+31 151 — and the 5 localized routes return 404. Language negotiation
+(fr/de/it/pt/es → 302, EN → 200) is correct in the repo artifact
+(`public/nginx.conf`, verified by `check:seo` and its adversarial suite),
+but it awaits deployment: `scripts/deploy-prod.mjs --deploy
+--verify` is the intended path. Until then, this table documents the
+real state: the production contract is not met.

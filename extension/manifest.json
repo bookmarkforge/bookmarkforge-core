@@ -3,8 +3,10 @@
   "name": "BookmarkForge — Save to Bookmarks",
   "version": "1.0.0",
   "description": "Save any page to your BookmarkForge vault. Your bookmarks, your server, your rules.",
+  "short_description": "Save any page to your personal BookmarkForge vault",
   "author": "BookmarkForge <bookmarkforge@proton.me>",
-  "homepage_url": "https://bookmarkforge.com",
+  "homepage_url": "https://bookmarkforgeapp.com",
+  "license": "MIT",
   "permissions": ["activeTab", "contextMenus", "storage"],
   "action": {
     "default_popup": "popup.html",

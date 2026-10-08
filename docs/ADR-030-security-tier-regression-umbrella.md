@@ -1,49 +1,49 @@
-# ADR-030: Suite paraguas de regresiones de seguridad (security tier)
+# ADR-030: Security regression umbrella suite (security tier)
 
-- **Estado:** aceptado (implementado; este registro formaliza la decisión existente)
-- **Fecha:** 2026-09-02 (retro-documentado desde el catálogo de anclas y `scripts/audit-anchors.mjs`)
+- **Status:** accepted (implemented; this record formalizes the existing decision)
+- **Date:** 2026-09-02 (retro-documented from the anchor catalog and `scripts/audit-anchors.mjs`)
 
-## Contexto
+## Context
 
-El catálogo de anclas referencia un anchor "umbrella" que cubre **toda la
-familia** `p[0-9]-*.regression.test.ts` bajo `src/tests/security/`, en lugar de
-un archivo concreto: el anchor `security-tier-4-p-regression-suite` ("security
-tier 4" en la terminología del catálogo). Mientras que los anchors individuales
-protegen tests específicos (p0-ice-whitelist, p1-private-sync,
-p2-secure-storage-prod-guard, p3-verify-password-private), el umbrella garantiza
-que **ningún** test de regresión con severidad tipada pueda desaparecer del
-directorio canónico sin que el gate lo detecte — incluidos los niveles de
-severidad que aún no tienen anchor propio.
+The anchor catalog references an "umbrella" anchor covering the **whole**
+`p[0-9]-*.regression.test.ts` family under `src/tests/security/`, rather than a
+concrete file: the `security-tier-4-p-regression-suite` anchor ("security
+tier 4" in the catalog's terminology). While individual anchors
+protect specific tests (p0-ice-whitelist, p1-private-sync,
+p2-secure-storage-prod-guard, p3-verify-password-private), the umbrella guarantees
+that **no** severity-typed regression test can disappear from the
+canonical directory without the gate detecting it — including severity
+levels that do not yet have an anchor of their own.
 
-## Decisión
+## Decision
 
-1. **Anchor umbrella de severidad.** `src/tests/security/p[0-9]-*.regression.test.ts`
-   queda anclado como conjunto: si el glob no matchea ningún archivo, el gate
-   `check:audit-drift` falla (ancla `security-tier-4-p-regression-suite`). El glob
-   numérico `[0-9]` cubre cualquier severidad p0…p9, de modo que añadir una
-   severidad nueva no exige tocar el anchor.
-2. **Descubrimiento (advisory, no bloqueante por defecto).** Cualquier archivo con
-   la forma canónica `src/tests/security/p[0-9]+-*.regression.test.{ts,tsx,mjs}`
-   que **no** esté en el catálogo se reporta como `NEW … discovered — not yet
-   anchored` (y como `discovered` en `--json`). El mensaje es informativo: la
-   promoción de un archivo descubierto a anchor es un cambio a nivel ADR, no una
-   acción de baseline. Con `--strict-discovery` (alias `--strict`) cualquier
-   descubrimiento se vuelve un fallo duro.
-3. **Promoción a anchor = cambio ADR.** Añadir o quitar una entrada individual de
-   `ANCHORS[]` requiere actualizar `scripts/audit-anchors-baseline.json` (el gate
-   detecta *catalog inflation* si un anchor existe en el catálogo pero no en el
-   baseline, o con glob/kind distintos) y, por contrato de `AGENTS.md` §2, es un
-   cambio con ancla ADR.
+1. **Severity umbrella anchor.** `src/tests/security/p[0-9]-*.regression.test.ts`
+   is anchored as a set: if the glob matches no file, the
+   `check:audit-drift` gate fails (anchor `security-tier-4-p-regression-suite`). The numeric
+   `[0-9]` glob covers any severity p0…p9, so adding a new
+   severity does not require touching the anchor.
+2. **Discovery (advisory, non-blocking by default).** Any file with
+   the canonical shape `src/tests/security/p[0-9]+-*.regression.test.{ts,tsx,mjs}`
+   that is **not** in the catalog is reported as `NEW … discovered — not yet
+   anchored` (and as `discovered` in `--json`). The message is informative: promoting a
+   discovered file to an anchor is an ADR-level change, not a
+   baseline action. With `--strict-discovery` (alias `--strict`), any
+   discovery becomes a hard failure.
+3. **Promotion to anchor = ADR-level change.** Adding or removing an individual entry from
+   `ANCHORS[]` requires updating `scripts/audit-anchors-baseline.json` (the gate
+   detects *catalog inflation* if an anchor exists in the catalog but not in the
+   baseline, or with a different glob/kind) and, by `AGENTS.md` §3 contract, is an
+   ADR-anchored change.
 
-## Consecuencias
+## Consequences
 
-- La suite de regresiones de seguridad nunca puede reducirse a cero archivos por
-  un limpieza agresiva o un rename erróneo – el umbrella lo detecta aunque el
-  archivo concreto no tenga anchor individual.
-- Nuevos tests de seguridad sin anchor aparecen en los logs del gate
-  (`check:audit-drift`) como descubiertos; ignorarlos es viable a corto plazo
-  pero deja una señal visible en CI, y `--strict-discovery` eleva esa deuda a
-  fallo.
-- El nivel "tier 4" en el catálogo es una etiqueta de la suite umbrella; los
-  niveles 1–3 corresponden a los anchors individuales por severidad alta/media
-  (p0–p3) heredados de ADR-026/027 y formalizados en sus ADRs.
+- The security regression suite can never shrink to zero files through
+  overzealous cleanup or a mistaken rename — the umbrella detects it even when the
+  concrete file has no individual anchor.
+- New security tests without an anchor appear in the gate logs
+  (`check:audit-drift`) as discovered; ignoring them is viable short term
+  but leaves a visible signal in CI, and `--strict-discovery` elevates that debt to a
+  failure.
+- The "tier 4" level in the catalog is a label for the umbrella suite; levels
+  1–3 correspond to the individual anchors by high/medium severity
+  (p0–p3) inherited from ADR-026/027 and formalized in their ADRs.

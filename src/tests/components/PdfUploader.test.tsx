@@ -71,7 +71,7 @@ describe("PdfUploader", () => {
   });
 
   it("processes the PDF file correctly", async () => {
-    mockExtractText.mockResolvedValue("Texto extraído del PDF");
+    mockExtractText.mockResolvedValue("Text extracted from PDF");
 
     render(<PdfUploader onTextExtracted={onTextExtracted} />);
     const input = screen.getByLabelText("app_uploadPdf") as HTMLInputElement;
@@ -87,7 +87,7 @@ describe("PdfUploader", () => {
         file,
         expect.any(AbortSignal),
       );
-      expect(onTextExtracted).toHaveBeenCalledWith("Texto extraído del PDF");
+      expect(onTextExtracted).toHaveBeenCalledWith("Text extracted from PDF");
       expect(mockToastSuccess).toHaveBeenCalled();
     });
   });
@@ -166,7 +166,7 @@ describe("PdfUploader", () => {
     unmount();
 
     await act(async () => {
-      resolveExtract!("Texto tardío");
+      resolveExtract!("Late text");
     });
 
     expect(onTextExtracted).not.toHaveBeenCalled();

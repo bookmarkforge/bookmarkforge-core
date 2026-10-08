@@ -43,10 +43,10 @@ describe("useMemoryStore", () => {
   describe("setPersona", () => {
     const mockPersona: MemoryPersona = {
       id: "persona-1",
-      preferences: ["le gusta el código limpio"],
-      goals: ["mejorar rendimiento"],
-      tone: "profesional",
-      workflows: ["revisión de PR"],
+      preferences: ["likes clean code"],
+      goals: ["improve performance"],
+      tone: "professional",
+      workflows: ["PR review"],
       updatedAt: "2025-01-01T00:00:00.000Z",
       generatedFromScenarioIds: [],
     };

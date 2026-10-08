@@ -1,37 +1,44 @@
-# ADR-047: Gate de drift de claims factuales (`check:claim-drift`)
+# ADR-047: Factual claim drift gate (`check:claim-drift`)
 
-- **Estado:** Aceptada (2026-09-15)
-- **Fecha:** 2026-09-15
-- **Relacionadas:** [ADR-028 — gate drift detection](adr-028-gate-drift-detection.md), [ADR-019 — Argon2id](adr-019-argon2id-migration.md)
+- **Status:** Accepted (2026-09-15)
+- **Date:** 2026-09-15
+- **Related:** [ADR-028 — Gate drift detection](ADR-028-gate-drift-detection.md), [ADR-019 — Argon2id](ADR-019-argon2id-migration.md)
 
-## Contexto
+## Context
 
-Los strings visibles por el usuario derivaron repetidamente del comportamiento real del código, y cada caso se detectó solo por auditoría manual:
+User-visible strings repeatedly drifted away from the code's real behavior, and every case was detected only through manual audit:
 
-- copy que prometía una "frase seed de **12 palabras**" cuando `RecoveryService` genera frases de **24 palabras** (bip39, 256 bits);
-- "mínimo **8 caracteres**" cuando `SECURITY_CONFIG.MIN_PASSWORD_LENGTH` es **12**;
-- PBKDF2 anunciado en copy de usuario mientras la bóveda usa **Argon2id V4** (ADR-019);
-- garantía de devolución de **14 días** en la base de conocimiento de soporte cuando `PRICING_CONFIG.lifetimeVersioned.refundDays` es **30**.
+- copy promising a "**12-word** seed phrase" when `RecoveryService` generates **24-word** phrases (bip39, 256 bits);
+- "minimum **8 characters**" when `SECURITY_CONFIG.MIN_PASSWORD_LENGTH` is **12**;
+- PBKDF2 advertised in user copy while the vault uses **Argon2id V4** (ADR-019);
+- a **14-day** refund guarantee in the support knowledge base when `PRICING_CONFIG.lifetimeVersioned.refundDays` is **30**.
 
-Es exactamente la clase de fallo que ADR-028 define como *gate drift*: el producto promete algo que el código no cumple. El riesgo de negocio es directo — un usuario que pierde datos por seguir una instrucción falsa pide reembolso y publica reseña negativa.
+That is exactly the class of failure ADR-028 defines as *gate drift*: the product
+promises something the code does not deliver. The business risk is direct — a user
+who loses data by following a false instruction asks for a refund and posts a
+negative review.
 
-El gate `npm run check:claim-drift` (`scripts/check-claim-drift.mjs`, integrado en la cadena `check` después de `check:i18n` y como step propio de CI) extrae la verdad de las constantes reales del código — `src/constants/config.ts`, `src/constants/pricing.ts`, `src/utils/argon2-kdf.ts` (perfiles desktop/móvil), `src/services/BackupService.ts` (intervalo de auto-backup), `src/components/StorageStatus.tsx` (antigüedad de backup caducado) — y escanea la superficie visible por el usuario (30 locales, landings HTML, base de conocimiento de soporte) buscando números que la contradigan.
+The `npm run check:claim-drift` gate (`scripts/check-claim-drift.mjs`, integrated into the `check` chain after `check:i18n` and as its own CI step) extracts the truth from the code's real constants — `src/constants/config.ts`, `src/constants/pricing.ts`, `src/utils/argon2-kdf.ts` (desktop/mobile profiles), `src/services/BackupService.ts` (auto-backup interval), `src/components/StorageStatus.tsx` (expired backup age) — and scans the user-visible surface (30 locales, HTML landings, support knowledge base) for numbers that contradict it.
 
-## Decisión
+## Decision
 
-Se implementa un gate automatizado que:
+An automated gate is implemented that:
 
-1. **Fail-closed:** si una constante no se puede localizar (refactor que la renombró), el gate FALLA con mensaje explícito en vez de pasar en silencio.
-2. **Veredictos por tier:** un claim numérico es válido si coincide con CUALQUIER tier de `pricing.ts`, así añadir un tier no rompe claims verdaderos.
-3. **Multilingüe por construcción:** sustantivos de unidad en los 30 idiomas (word/word-count, devices, MiB, hours/hora/horas/Stunden…), con cualificadores Unicode (lookarounds, no `\b`, que no funciona con "über/älter").
-4. **Fail-closed del canal de verdad:** la extracción devuelve `null` cuando no puede leer una fuente; los tests congelan los valores reales (12, 24, 30, {0,3}, free=0, {1000}, {64,128}, 24 h, 48 h).
-5. **Doble ancla por claim sensible (free-device-count, free-bookmark-cap):** las reglas que protegen el posicionamiento de Free usan veredicto por escalar (`freeDeviceCap` = `maxDevices` del tier `free`, `freeBookmarkCap` = `maxBookmarks` del tier `free`; no sets) con contexto multilingüe ("free/gratis/gratuit/kostenlos/…", claves `app_freeTier*`) y anti-contexto ("pro/unlock/…"): una línea que nombra Free PERO depende de los tiers de pago no se trata como copy de Free. `free-bookmark-cap` añade la rama "unlimited" multilingüe: en copy Free, "unlimited bookmarks" es drift SIEMPRE, con o sin número.
+1. **Fail-closed:** if a constant cannot be located (a refactor renamed it), the gate FAILS with an explicit message instead of passing silently.
+2. **Per-tier verdicts:** a numeric claim is valid if it matches ANY tier in `pricing.ts`, so adding a tier does not break true claims.
+3. **Multilingual by construction:** unit nouns in the 30 languages (word/word-count, devices, MiB, hours/hora/horas/Stunden…), with Unicode qualifiers (lookarounds, not `\b`, which does not work with "über/älter").
+4. **Fail-closed truth channel:** extraction returns `null` when it cannot read a source; the tests freeze the real values (12, 24, 30, {0,3}, free=0, {1000}, {64,128}, 24 h, 48 h).
+5. **Double anchor per sensitive claim (free-device-count, free-bookmark-cap):** the rules protecting Free's positioning use per-scalar verdicts (`freeDeviceCap` = `maxDevices` of the `free` tier, `freeBookmarkCap` = `maxBookmarks` of the `free` tier; not sets) with multilingual context ("free/gratis/gratuit/kostenlos/…", `app_freeTier*` keys) and anti-context ("pro/unlock/…"): a line naming Free BUT depending on the paid tiers is not treated as Free copy. `free-bookmark-cap` adds a multilingual "unlimited" branch: in Free copy, "unlimited bookmarks" is ALWAYS drift, with or without a number.
 
-El gate cumple los dos criterios del mecanismo de ADR-028: el fallo concreto es una divergencia entre promesa y código, y la verdad tiene una única fuente versionada.
+The gate meets both criteria of ADR-028's mechanism: the concrete failure is a divergence between promise and code, and the truth has a single versioned source.
 
-## Consecuencias
+## Consequences
 
-- Cubre claims numéricos factuales (contraseñas, palabras de recuperación, dispositivos, bookmarks, MiB, horas, precios, reembolsos) y la mención prohibida de PBKDF2 en copy de usuario. Los claims de dispositivos en copy de Free tienen además una regla dedicada anclada al escalar del tier free.
-- No cubre claims cualitativos ("el más seguro"), ni copy que describe comportamiento no constante. Esos siguen siendo responsabilidad de revisión manual y de la auditoría de soporte.
-- Los archivos del export público ejecutan el mismo gate (el exporter lo corre dentro del árbol exportado y `ci.yml` lo lleva al repo público), de modo que el árbol open-source también queda protegido.
-- El test de congelación (`scripts/__tests__/check-claim-drift.test.mjs`) falla si alguien cambia una constante sin actualizar copy, o el copy sin actualizar constantes.
+- It covers factual numeric claims (passwords, recovery words, devices, bookmarks, MiB, hours, prices, refunds) and the forbidden mention of PBKDF2 in user copy. Device claims in Free copy additionally have a dedicated rule anchored to the free tier's scalar.
+- It does not cover qualitative claims ("the safest"), nor copy describing non-constant behavior. Those remain the responsibility of manual review and support
+  audit.
+- Public export files run the same gate (the exporter runs it inside the exported
+  tree and `ci.yml` carries it to the public repo), so the open-source tree is
+  protected too.
+- The freeze test (`scripts/__tests__/check-claim-drift.test.mjs`) fails if someone changes a constant without updating copy, or changes copy
+  without updating constants.

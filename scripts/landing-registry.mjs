@@ -140,11 +140,91 @@ export const LANDING_PAGES = LANDING_LOCALES.map((l) => ({
 
 /**
  * The visible language-link href per language (nav/footer of the landings):
- * the target landing URL carrying the ?lang= preference parameter.
+ * the target landing URL as a clean path (`/es/`, `/fr/`, `/` for en). The
+ * `?lang=` query form was deliberately dropped from visible links (f83eb3a,
+ * "clean paths instead of query strings"); it remains a supported direct-URL
+ * preference mechanism (middleware, nginx, landing.js), just no longer what
+ * the pages link to.
  */
 export const LANG_LINK_HREFS = Object.fromEntries(
-  LANDING_CODES.map((lang) => [
-    lang,
-    lang === "en" ? "/?lang=en" : `/${lang}/?lang=${lang}`,
-  ]),
+  LANDING_CODES.map((lang) => [lang, lang === "en" ? "/" : `/${lang}/`]),
 );
+
+/**
+ * The localized user manual per language, named in its OWN language (the
+ * endonym) plus the locale suffix: `docs/manual-de-usuario-es.md`,
+ * `docs/benutzerhandbuch-de.md`, `docs/user-manual-ja.md`. One basename per
+ * locale, extensionless — the Markdown source, the generated PDF and the
+ * styled-HTML twin all derive from it (`manualSourcePath`,
+ * `manualPdfPath`, `manualStyledHtmlPath`).
+ *
+ * Why the endonym rather than a `manual-usuario-<code>` family: the Spanish
+ * stem was the only part of the name every reader could not read, in 29 files
+ * whose whole purpose is to be readable to someone who does not speak English.
+ * The ASCII+locale convention is deliberate: a native-script filename
+ * (`ユーザーマニュアル-ja.md`) survives git and CI on Windows but encodes badly
+ * in URLs, Content-Disposition headers and the PDF download links, so scripts
+ * with no ASCII spelling fall back to `user-manual-<code>`. Every consumer
+ * derives from this table — the figures gate, the PDF generator, the exporter,
+ * the claim gate and the docs index — so a locale added here without a manual
+ * fails those gates instead of being silently skipped.
+ */
+export const MANUAL_FILES = {
+  ar: "user-manual-ar",
+  bg: "user-manual-bg",
+  cs: "uzivatelska-prirucka-cs",
+  da: "brugervejledning-da",
+  de: "benutzerhandbuch-de",
+  el: "egcheiridio-christi-el",
+  en: "user-manual-en",
+  es: "manual-de-usuario-es",
+  fi: "kayttoopas-fi",
+  fr: "manuel-utilisateur-fr",
+  he: "user-manual-he",
+  hi: "user-manual-hi",
+  hr: "korisnicki-prirucnik-hr",
+  hu: "felhasznaloi-kezikonyv-hu",
+  id: "panduan-pengguna-id",
+  it: "manuale-utente-it",
+  ja: "user-manual-ja",
+  ko: "user-manual-ko",
+  nl: "gebruikershandleiding-nl",
+  no: "brukerhandbok-no",
+  pl: "podrecznik-uzytkownika-pl",
+  pt: "manual-do-utilizador-pt",
+  ro: "manual-de-utilizare-ro",
+  ru: "user-manual-ru",
+  sv: "anvandhandbok-sv",
+  th: "user-manual-th",
+  tr: "kullanici-kilavuzu-tr",
+  uk: "user-manual-uk",
+  vi: "huong-dan-su-dung-vi",
+  zh: "user-manual-zh",
+};
+
+/** docs/<basename>.md — the source of truth for the whole manual family. */
+export function manualSourcePath(code) {
+  const base = MANUAL_FILES[code];
+  if (!base) throw new Error(`[landing-registry] no manual file for locale: ${code}`);
+  return `docs/${base}.md`;
+}
+
+/** docs/<basename>.pdf — generated from the Markdown by docs:pdf:localized. */
+export function manualPdfPath(code) {
+  return `docs/${MANUAL_FILES[code]}.pdf`;
+}
+
+/** docs/<basename>-styled.html — the printable twin the PDF is rendered from. */
+export function manualStyledHtmlPath(code) {
+  return `docs/${MANUAL_FILES[code]}-styled.html`;
+}
+
+/**
+ * Every manual file (Markdown + PDF) in LANDING_CODES order, repo-root
+ * relative. The exporter ships exactly this set, so the public tree's manual
+ * family can never lag the registry.
+ */
+export const MANUAL_PATHS = LANDING_CODES.flatMap((code) => [
+  manualSourcePath(code),
+  manualPdfPath(code),
+]);

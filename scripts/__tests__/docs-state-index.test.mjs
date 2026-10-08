@@ -35,7 +35,7 @@ describe('docs-state-index', () => {
 
       for (const line of lines) {
         const trimmed = line.trim();
-        if (trimmed.startsWith('| Documento | Estado | Nota |')) {
+        if (trimmed.startsWith('| Document | State | Note |') || trimmed.startsWith('| Documento | Estado | Nota |')) {
           inTable = true;
           continue;
         }
@@ -67,7 +67,19 @@ describe('docs-state-index', () => {
 
     assert.ok(
       rows.length > 0,
-      'docs/docs-state-index.md did not yield any parsed rows in the Documento/Estado/Nota table',
+      'docs/docs-state-index.md did not yield any parsed rows in the Document/State/Note table',
+    );
+
+    // The generator emits English: the note column is one line per document,
+    // so Spanish notes grew the check:no-spanish per-file baseline with every
+    // new document. Guard the emitted header so the prose cannot drift back.
+    assert.ok(
+      text.includes('| Document | State | Note |'),
+      'docs/docs-state-index.md must use the canonical English table header (| Document | State | Note |)',
+    );
+    assert.ok(
+      text.startsWith('# Documentation inventory'),
+      'docs/docs-state-index.md must start with the English inventory title',
     );
 
     const knownStates = new Set(rows.map((row) => row.state));

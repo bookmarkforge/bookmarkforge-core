@@ -1,172 +1,180 @@
-# Runbook: añadir una locale a las landings
+# Runbook: add a locale to landings
 
-Verificación de punta a punta (2026-09-22) del flujo que el comentario de
-`scripts/landing-registry.mjs` describe como *«A new locale now means ONE edit
+End-to-end verification (2026-09-22) of the flow that the comment in
+`scripts/landing-registry.mjs` describes as *"A new locale now means ONE edit
 here (plus its page, translations and share card); every layer above follows,
-and the gates fail if a layer's checked-in output lags»*.
+and the gates fail if a layer's checked-in output lags"*.
 
-Método: clon sandbox fiel del worktree (tar de todo menos `.git`, `node_modules`
-y artefactos de test) y locale 31 simulada (`sl`, esloveno), con su página,
-sus dos entradas de traducción, su página legal y su manual tomados de `sv` como
-sustituto de copy para poder ejecutar la cadena completa. La cadena se ejecutó
-hasta quedar verde, contando y atribuyendo cada edición obligatoria. Ningún
-fichero del repo se modificó para esta verificación.
+Method: faithful sandbox clone of the worktree (tar of everything except `.git`, `node_modules`
+and test artifacts) and simulated locale 31 (`sl`, Slovenian), with its page,
+its two translation entries, its legal page and its manual taken from `sv` as
+copy substitute to be able to execute the full chain. The chain was executed
+until green, counting and attributing each mandatory edit. No repo file
+was modified for this verification.
 
-**Re-verificado 2026-09-22, ya commiteado el refactor del registro**, y después
-de dos cambios que mueven las cifras de este documento:
+**Re-verified 2026-09-22, already committed the registry refactor**, and after
+two changes that move the figures in this document:
 
-1. `check-manual-figures.mjs` deriva su lista de manuales del registro, así que
-   **la traducción del manual pasa a ser una capa obligatoria** (antes era
-   invisible: la lista literal de 30 ignoraba la locale nueva).
-2. `check-claim-drift.mjs` añade un pin de cobertura derivado del registro:
-   ninguna landing declarada puede quedar fuera de su superficie de escaneo.
-   Ese pin NO vigila la existencia de la página — eso es de `check:page-figures`
-   y `check:landings-fresh`.
+1. `check-manual-figures.mjs` derives its manual list from the registry, so
+   **the manual translation becomes a mandatory layer** (previously it was
+   invisible: the literal list of 30 ignored the new locale).
+2. `check-claim-drift.mjs` adds a coverage pin derived from the registry:
+   no declared landing can remain outside its scan surface.
+   That pin does NOT watch the page existence — that is from `check:page-figures`
+   and `check:landings-fresh`.
 
-Los números de las secciones siguientes son los de la re-verificación.
+The numbers in the following sections are from the re-verification.
 
-## Veredicto
+## Verdict
 
-La afirmación «una edición en el registro» no se sostiene en la dirección que
-importa (añadir una locale). Medido: **12 ediciones en 9 ficheros, 2 ficheros
-nuevos (copy y manual), 3 regeneraciones y 12 tests pineados en 9 ficheros de
-test**. La mitad de esas ediciones existen porque hay capas que **no** se
-derivan del registro, y hay gates que fallan con mensajes que apuntan al sitio
-equivocado.
+The assertion "one edit in the registry" does not hold in the direction that
+matters (adding a locale). Measured: **12 edits in 9 files, 2 new files
+(copy and manual), 3 regenerations and 12 tests pinned in 9 test files**.
+Half of those edits exist because there are layers that **do not** derive
+from the registry, and there are gates that fail with messages pointing to the
+wrong place.
 
-Lo que sí se sostiene: la capa de routing/edge (nginx, middleware, switcher de
-las páginas, `netlify.toml`, `_redirects`) o bien se deriva del registro o es
-una edición mecánica de una línea, y **todos** los huecos están cubiertos por
-algún gate (ninguna locale a medias pasa la cadena en silencio), salvo los dos
-puntos ciegos del apartado de huecos.
+What does hold: the routing/edge layer (nginx, middleware, page switcher,
+`netlify.toml`, `_redirects`) either derives from the registry or is a
+mechanical one-line edit, and **all** gaps are covered by some gate (no
+half locale passes the chain silently), except the two blind spots in the
+gaps section.
 
-## Inventario medido
+## Measured inventory
 
-| # | Fichero | Edición | Qué la exige |
+| # | File | Edit | What requires it |
 |---|---|---|---|
-| L1 | `scripts/landing-registry.mjs` | +1 fila en `LANDING_LANGS` | el propio registro |
-| L2 | `scripts/landing-registry.mjs` | +1 fila en `LOCALE_REGION` | silencioso: sin ella la fila sale `sl_undefined` |
-| L3 | `scripts/templates/landing/landing.njk` | +1 línea literal de `<link rel="alternate" hreflang>` | `check:seo` (el `<head>` es una lista literal de 31 líneas; no hay bucle) |
-| L4 | la traducción del idioma nuevo (`scripts/translations/<locale>.json`) | fichero nuevo (34 bloques de copy) | el builder detecta idiomas por los ficheros de traducción |
-| L5 | `scripts/landing-translations.json` | +1 entrada | `check:landing-free-plan` (cobertura de secundarios) |
-| L6 | `scripts/privacy-translations.json` | +1 entrada | `check:seo` (cobertura legal) + `check-sitemap-coverage` (página legal) |
-| L7 | `scripts/check-landing-free-plan.mjs` | +1 fila en `WEDGE_TABLE` | el gate no conoce el idioma: `search="?"`, `smart="?"` |
-| L8 | `public/landing.js` | +1 código en el array literal `LANG_CODES` | `check:seo` («LANG_CODES missing "sl"») |
-| L9 | `public/sitemap.xml` | +1 línea de alternate en 60/61 bloques (62 ediciones) y +2 bloques nuevos (76 líneas) | `check:sitemap-coverage`. **No existe generador** |
-| L10 | `public/_redirects` | +3 reglas | `check:sitemap-coverage` |
-| L11 | `netlify.toml` | +1 regla `Language` (5 líneas) | `check:seo` |
-| L12 | Regenerar | `npm run build:landings` (31 páginas), `generate-privacy-pages` (26 páginas), `nginx-render --write` | los gates comparan con lo versionado |
-| L13 | 9 ficheros de test | 12 tests pineados con el mundo de 30 | tripwires deliberados (uno lo dice literalmente) |
-| L14 | `docs/manual-usuario-<locale>.md` | fichero nuevo | `check:manual-figures` **deriva ya su lista del registro**: sin el manual, falla |
+| L1 | `scripts/landing-registry.mjs` | +1 row in `LANDING_LANGS` | the registry itself |
+| L2 | `scripts/landing-registry.mjs` | +1 row in `LOCALE_REGION` | silent: without it the row comes out `sl_undefined` |
+| L3 | `scripts/templates/landing/landing.njk` | +1 literal line of `<link rel="alternate" hreflang>` | `check:seo` (the `<head>` is a literal list of 31 lines; no loop) |
+| L4 | the new locale translation (`scripts/translations/<locale>.json`) | new file (34 copy blocks) | the builder detects languages by translation files |
+| L5 | `scripts/landing-translations.json` | +1 entry | `check:landing-free-plan` (secondary coverage) |
+| L6 | `scripts/privacy-translations.json` | +1 entry | `check:seo` (legal coverage) + `check-sitemap-coverage` (legal page) |
+| L7 | `scripts/check-landing-free-plan.mjs` | +1 row in `WEDGE_TABLE` | the gate does not know the language: `search="?"`, `smart="?"` |
+| L8 | `public/landing.js` | +1 code in the literal array `LANG_CODES` | `check:seo` («LANG_CODES missing "sl"») |
+| L9 | `public/sitemap.xml` | +1 alternate line in 60/61 blocks (62 edits) and +2 new blocks (76 lines) | `check:sitemap-coverage`. **No generator exists** |
+| L10 | `public/_redirects` | +3 rules | `check:sitemap-coverage` |
+| L11 | `netlify.toml` | +1 `Language` rule (5 lines) | `check:seo` |
+| L12 | Regenerate | `npm run build:landings` (31 pages), `generate-privacy-pages` (26 pages), `nginx-render --write` | the gates compare with versioned |
+| L13 | 9 test files | 12 tests pinned with the 30 world | deliberate tripwires (one says it literally) |
+| L14 | `docs/<manual-endonym>-<locale>.md` (the `MANUAL_FILES` entry) | new file | `check:manual-figures` **now derives its list from the registry**: without the manual, it fails |
 
-Los tests que hay que tocar y por qué:
+The tests that must be touched and why:
 
-| Fichero | Aserción |
+| File | Assertion |
 |---|---|
-| `scripts/__tests__/landing-registry.test.mjs` | 5 conteos (30/29/30/31/32) |
-| `scripts/__tests__/build-landings-sync.test.mjs` | tripwire explícito: *«expected the 30-locale derivation, found 31 — update this contract when the locale set changes»* |
-| `scripts/__tests__/check-seo.test.mjs` | set exacto de 30 idiomas en el `<head>` |
-| `scripts/__tests__/check-landing-free-plan.test.mjs` | `WEDGE_TABLE` cubre exactamente 30 locales |
-| `scripts/__tests__/check-landings-fresh.test.mjs` | contrato de 31 páginas generadas |
-| `scripts/__tests__/check-page-figures.test.mjs` | árbol sintético de 61 superficies |
-| `scripts/__tests__/check-sitemap-coverage.test.mjs` | lista de fallos esperados con el sitemap sintético |
-| `scripts/__tests__/rollback.test.mjs` | 61 `<loc>` en el sitemap versionado |
+| `scripts/__tests__/landing-registry.test.mjs` | 5 counts (30/29/30/31/32) |
+| `scripts/__tests__/build-landings-sync.test.mjs` | explicit tripwire: *"expected the 30-locale derivation, found 31 — update this contract when the locale set changes"* |
+| `scripts/__tests__/check-seo.test.mjs` | exact set of 30 languages in the `<head>` |
+| `scripts/__tests__/check-landing-free-plan.test.mjs` | `WEDGE_TABLE` covers exactly 30 locales |
+| `scripts/__tests__/check-landings-fresh.test.mjs` | contract of 31 generated pages |
+| `scripts/__tests__/check-page-figures.test.mjs` | synthetic tree of 61 surfaces |
+| `scripts/__tests__/check-sitemap-coverage.test.mjs` | list of expected failures with the synthetic sitemap |
+| `scripts/__tests__/rollback.test.mjs` | 61 `<loc>` in the versioned sitemap |
 
-## Qué caza cada gate, por dirección
+## What each gate catches, by direction
 
-El sistema tiene dos fuentes que deben coincidir (filas del registro y
-ficheros de traducción) pero **ninguna manda sobre la otra**: el builder
-detecta idiomas por `scripts/translations/*.json`, y los gates de routing se
-guían por el registro. Las dos direcciones de desincronización fallan distinto.
+The system has two sources that must match (registry rows and
+translation files) but **neither commands the other**: the builder
+detects languages by `scripts/translations/*.json`, and the routing gates
+follow the registry. The two desynchronization directions fail differently.
 
-| Dirección | Registro | Traducciones | Veredicto (medido en la re-verificación) |
+| Direction | Registry | Translations | Verdict (measured in re-verification) |
 |---|---|---|---|
-| Solo registro (L1 sin L4) | 31 | 30 | **Fallan 6**: `check:seo`, `check:landing-free-plan`, `check:sitemap-coverage`, `check:page-figures`, `check:manual-figures` (capa nueva) y `nginx-render verify`. **Ciegos 4**: `check:landings-fresh`, `check:claim-drift`, `check:license-claims` y `check:brand-logo` |
-| Solo traducción (L4 sin L1) | 30 | 31 | **Fallan 2**: `check:seo` — con el mensaje opaco «must point to undefined (found /sl/?lang=sl)» — y `check:landing-free-plan`. **Ciegos 7**: `check:sitemap-coverage`, `check:page-figures`, `check:landings-fresh`, `check:claim-drift`, `check:manual-figures`, `check:license-claims` y `nginx-render verify`. La página existe y es servible sin sitemap, sin rewrite de nginx y sin regla `Language` en Netlify |
+| Registry only (L1 without L4) | 31 | 30 | **6 fail**: `check:seo`, `check:landing-free-plan`, `check:sitemap-coverage`, `check:page-figures`, `check:manual-figures` (new layer) and `nginx-render verify`. **4 blind**: `check:landings-fresh`, `check:claim-drift`, `check:license-claims` and `check:brand-logo` |
+| Translation only (L4 without L1) | 30 | 31 | **2 fail**: `check:seo` — with the opaque message «must point to undefined (found /sl/?lang=sl)» — and `check:landing-free-plan`. **7 blind**: `check:sitemap-coverage`, `check:page-figures`, `check:landings-fresh`, `check:claim-drift`, `check:manual-figures`, `check:license-claims` and `nginx-render verify`. The page exists and is servable without sitemap, without nginx rewrite and without `Language` rule in Netlify |
 
-Matiz medido en la segunda dirección: `check:claim-drift` no ve la
-inconsistencia de *routing*, pero **sí police los datos** de esa página huérfana
-(descubre `public/*.html` por glob): inyectándole un «5,000 bookmarks» reporta
-3 claims drifted y sale 1. Lo que queda sin cubrir ahí es el enrutado, no el
-contenido.
+Added after that re-verification: `check:landing-smoke` (ADR-062) opens
+the 31 routes **from the registry** in Chromium and requires 200 with the `<html lang>` of its
+locale. Therefore it is not blind in the first direction —a locale only in the
+registry is served by the SPA fallback with `lang="en"` and the gate fails by
+`lang`—, and it is in the second: an orphan page not in the
+registry does not enter its route list. It raises the server with the same
+routing contract (`public/_redirects`) as the edge.
 
-## Huecos encontrados
+Nuance measured in the second direction: `check:claim-drift` does not see
+the *routing* inconsistency, but **does police the data** of that orphan page
+(it discovers `public/*.html` by glob): injecting it with "5,000 bookmarks" reports
+3 claims drifted and exits 1. What remains uncovered there is the routing, not the
+content.
 
-### El sitemap es 100 % a mano
+## Gaps found
 
-Ningún script escribe `public/sitemap.xml` (solo lo leen validadores). Cada
-locale nueva exige insertar una línea de alternate en **todos** los bloques
-existentes más dos bloques nuevos, y el coste crece de forma cuadrática: cada
-`<url>` lleva el set completo de alternates (31 hoy, 32 con la nueva). Añadir
-la 32 exigirá ≈63 bloques modificados y ≈200 líneas.
+### The sitemap is 100 % manual
 
-### `check-landings-fresh` no consulta el registro
+No script writes `public/sitemap.xml` (only validators read it). Each
+new locale requires inserting an alternate line in **all** existing
+blocks plus two new blocks, and the cost grows quadratically: each
+`<url>` carries the complete set of alternates (31 today, 32 with the new). Adding
+the 32nd requires ≈63 modified blocks and ≈200 lines.
 
-Itera el disco (`readdirSync(publicDir)`) y los ficheros de traducción. Por eso
-queda verde en las **dos** direcciones de desincronización: no ve una locale
-declarada sin página, ni una página huérfana sin declarar. Es el gate cuyo
-trabajo es «¿está la salida versionada en sintonía con sus fuentes?» y nunca
-compara con la fuente de verdad del routing. Además su detección de huérfanos
-solo cubre `landing.html`, los cinco primarios y `pocket-alternative*`
-(`GENERATED_NAME_RE`), así que un `public/sv.html` huérfano tampoco se detecta.
+### `check-landings-fresh` does not consult the registry
 
-### `WEDGE_TABLE` falla culpando al copy
+It iterates the disk (`readdirSync(publicDir)`) and translation files. Therefore
+it stays green in the **two** desynchronization directions: it does not see a
+declared locale without page, nor an orphan page without declaration. It is the
+gate whose job is "is the versioned output in sync with its sources?" and never
+compares with the routing source of truth. Additionally its orphan detection
+only covers `landing.html`, the five primaries and `pocket-alternative*`
+(`GENERATED_NAME_RE`), so an orphan `public/sv.html` is also not detected.
 
-`check-landing-free-plan` mantiene su propio vocabulario por idioma (30 filas).
-Con un idioma que no está en la tabla, el gate falla (bien: falla cerrado) pero
-lo reporta como problema de copy y remata con *«Fix the COPY (preferred)»*,
-cuando el arreglo real es una fila en su tabla. La tabla no tiene gate de
-completitud contra el registro (a diferencia de los consumidores del registro).
+### `WEDGE_TABLE` fails blaming the copy
 
-### Región OG duplicada y silenciosa
+`check-landing-free-plan` maintains its own vocabulary per language (30 rows).
+With a language not in the table, the gate fails (correctly: fails closed) but
+reports it as a copy problem and ends with *"Fix the COPY (preferred)"*,
+when the real fix is a row in its table. The table has no completeness
+gate against the registry (unlike the registry consumers).
 
-`LOCALE_REGION` (registro) y `ogLocale` (fichero de traducción) declaran lo
-mismo por separado. Omitir la fila del registro no falla: la fila queda
-`sl_undefined` y nadie la valida contra `ogLocale`.
+### Duplicate and silent OG region
 
-### Dos mundos de 30 sin gate que los una
+`LOCALE_REGION` (registry) and `ogLocale` (translation file) declare the
+same thing separately. Omitting the registry row does not fail: the row comes
+out `sl_undefined` and nobody validates it against `ogLocale`.
 
-`src/constants/locales.ts` (`SUPPORTED_LANGUAGES`, con su bucket-routing,
-`CRITICAL_LOCALE_CODES` y `SMALL_FALLBACK_LOCALES`) tiene hoy exactamente los
-mismos 30 códigos que el registro de landings, pero son listas independientes.
-Añadir la locale 31 a las landings deja la UI de la app en 30: la landing
-ofrece un idioma cuya cookie de preferencia la app no reconoce, y **ningún gate
-lo detecta** (los gates de i18n y el test del middleware pasan con 31 locales
-de landing y 30 de app).
+### Two worlds of 30 without a gate to unite them
 
-### Affirmación obsoleta en el registro
+`src/constants/locales.ts` (`SUPPORTED_LANGUAGES`, with its bucket-routing,
+`CRITICAL_LOCALE_CODES` and `SMALL_FALLBACK_LOCALES`) has today exactly the
+same 30 codes as the landing registry, but they are independent lists.
+Adding locale 31 to landings leaves the app UI at 30: the landing
+offers a language whose preference cookie the app does not recognize, and **no gate
+detects it** (the i18n gates and the middleware test pass with 31 landing
+locales and 30 app locales).
 
-El comentario del registro dice que la lógica de preferencia del navegador
-(`public/landing.js`) deriva del registro «via the generated artifact». No es
-exacto: `landing.js` es un fichero mantenido a mano con un array literal de 30
-códigos. Lo salva que `check:seo` lo pinea contra el registro.
+### Obsolete assertion in the registry
 
-### La tercera lista literal de manuales
+The registry comment says that the browser preference logic
+(`public/landing.js`) derives from the registry "via the generated artifact". It is not
+exact: `landing.js` is a manually maintained file with a literal array of 30
+codes. What saves it is that `check:seo` pins it against the registry.
 
-`check-license-claims.mjs` mantiene su propia lista de idiomas de manual (29 +
-el master = 30), literal como la que tenía `check-manual-figures` antes de
-derivarla. Medido: con el registro en 31 y un manual nuevo presente, ese gate
-sigue validando 30 manuales y sale 0 — no exige el manual de la locale nueva.
-Es la misma clase que se cerró en `check-manual-figures`, y se cierra igual
-(una línea: `LANDING_CODES` filtrado del master).
+### The third literal list of manuals
 
-## Cómo reproducir
+`check-license-claims.mjs` maintains its own manual language list (29 +
+the master = 30), literal like the one `check-manual-figures` had before
+deriving it. Measured: with the registry at 31 and a new manual present, that gate
+still validates 30 manuals and exits 0 — it does not require the new locale's manual.
+It is the same class that was closed in `check-manual-figures`, and is closed the same
+way (one line: `LANDING_CODES` filtered from the master).
 
-1. Clon fiel: `tar -cf - --exclude=.git --exclude=node_modules . | (cd <sandbox> && tar -xf -)`.
-2. Línea base: los gates del apartado de inventario en exit 0.
-3. Aplicar L1 sin L4 y correr la batería (dirección «solo registro»).
-4. Aplicar L4 sin L1, correr `npm run build:landings` y la batería (dirección «solo traducción»).
-5. Aplicar L1-L8 + L14 (copiando la copy y el manual del idioma modelo), correr `build:landings`, `generate-privacy-pages` y `nginx-render --write`, y ver qué queda: solo el trío sin generador (L9-L11).
-6. Aplicar L9-L11 contando las ediciones, y comprobar la batería en verde.
-7. Correr las suites de `scripts/__tests__` en el clon de 31 locales: 12 tests pineados con el mundo de 30 repartidos en 9 ficheros, y ninguno en los tests derivados del registro (manuales y pin de cobertura sobreviven a la locale nueva).
+## How to reproduce
 
-## Recomendación
+1. Faithful clone: `tar -cf - --exclude=.git --exclude=node_modules . | (cd <sandbox> && tar -xf -)`.
+2. Baseline: the gates in the inventory section at exit 0.
+3. Apply L1 without L4 and run the battery (direction "registry only").
+4. Apply L4 without L1, run `npm run build:landings` and the battery (direction "translation only").
+5. Apply L1-L8 + L14 (copying the copy and manual from the model language), run `build:landings`, `generate-privacy-pages` and `nginx-render --write`, and see what remains: only the trio without generator (L9-L11).
+6. Apply L9-L11 counting the edits, and check the battery in green.
+7. Run the `scripts/__tests__` suites in the 31-locale clone: 12 tests pinned with the 30 world distributed in 9 files, and none in the tests derived from the registry (manuals and coverage pin survive the new locale).
 
-Derivar (o generar) las listas que hoy se copian a mano en tres lenguajes
-distintos: los alternates del `<head>` de la plantilla, `WEDGE_TABLE`,
-`LANDING_CODES` de `landing.js`, la lista de manuales de `check-license-claims`
-y —sobre todo— `public/sitemap.xml`, `_redirects` y `netlify.toml`, cuyo coste
-por locale es cuadrático. Un gate de completitud que exija fila en
-`WEDGE_TABLE`/`LOCALE_REGION` para cada locale del registro, y un gate que
-compare el mundo de landings con `SUPPORTED_LANGUAGES` (o documente que deben
-divergir), cerrarían el resto.
+## Recommendation
+
+Derive (or generate) the lists that today are copied by hand in three different
+languages: the alternates of the template's `<head>`, `WEDGE_TABLE`,
+`LANDING_CODES` of `landing.js`, the manual list of `check-license-claims`
+and —above all— `public/sitemap.xml`, `_redirects` and `netlify.toml`, whose cost
+per locale is quadratic. A completeness gate that requires a row in
+`WEDGE_TABLE`/`LOCALE_REGION` for each registry locale, and a gate that
+compares the landing world with `SUPPORTED_LANGUAGES` (or documents that they
+must diverge), would close the rest.

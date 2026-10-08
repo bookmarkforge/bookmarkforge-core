@@ -113,21 +113,21 @@ export function parseBaseline(text) {
   try {
     entries = JSON.parse(text);
   } catch (error) {
-    throw new Error(`baseline JSON inválido: ${error.message}`);
+    throw new Error(`invalid baseline JSON: ${error.message}`);
   }
-  if (!Array.isArray(entries)) throw new Error("baseline debe ser un array de entradas");
+  if (!Array.isArray(entries)) throw new Error("baseline must be an array of entries");
   for (const entry of entries) {
     if (typeof entry?.ruleId !== "string" || !entry.ruleId) {
-      throw new Error("baseline: cada entrada requiere ruleId (string)");
+      throw new Error("baseline: every entry requires ruleId (string)");
     }
     if (typeof entry?.file !== "string" || !entry.file) {
-      throw new Error(`baseline: entrada '${entry?.ruleId ?? "?"}' requiere file (string)`);
+      throw new Error(`baseline: entry '${entry?.ruleId ?? "?"}' requires file (string)`);
     }
     if (entry.approved !== true) {
-      throw new Error(`baseline: entrada '${entry.ruleId}' debe tener approved: true para surtir efecto`);
+      throw new Error(`baseline: entry '${entry.ruleId}' must have approved: true to take effect`);
     }
     if (typeof entry?.justification !== "string" || !entry.justification.trim()) {
-      throw new Error(`baseline: entrada '${entry.ruleId}' requiere justification no vacía`);
+      throw new Error(`baseline: entry '${entry.ruleId}' requires a non-empty justification`);
     }
   }
   return entries;
@@ -167,7 +167,7 @@ export function buildSummaryTable(stats) {
     String(blocking),
     blocking > 0 ? "FAIL" : "PASS",
   ]);
-  return renderRows(["Herramienta", "Umbral", "Hallazgos", "Bloqueantes", "Estado"], rows);
+  return renderRows(["Tool", "Threshold", "Findings", "Blocking", "Status"], rows);
 }
 
 export function buildFindingsTable(findings) {
@@ -176,7 +176,7 @@ export function buildFindingsTable(findings) {
     `${finding.ruleId} (${finding.toolName})`,
     finding.line != null ? `${finding.file}:${finding.line}` : finding.file,
   ]);
-  return renderRows(["Severidad", "Regla (herramienta)", "Ubicación"], rows);
+  return renderRows(["Severity", "Rule (tool)", "Location"], rows);
 }
 
 function formatFinding(finding) {
@@ -211,17 +211,17 @@ if (isMain) {
       const tool = spec.slice(0, eq).trim().toLowerCase();
       const severity = spec.slice(eq + 1).trim().toLowerCase();
       if (!tool || !(severity in SEVERITY_RANK)) {
-        fail(`--min-severity-for inválido: '${spec}' (severidad: critical|high|medium|low)`);
+        fail(`invalid --min-severity-for: '${spec}' (severity: critical|high|medium|low)`);
       }
       byTool[tool] = severity;
       i += 1;
     } else if (arg === "--format") {
       format = (args[i + 1] ?? "text").toLowerCase();
-      if (!["text", "table"].includes(format)) fail(`--format inválido: '${format}' (text|table)`);
+      if (!["text", "table"].includes(format)) fail(`invalid --format: '${format}' (text|table)`);
       i += 1;
     } else if (arg === "--baseline") {
       baselinePath = args[i + 1];
-      if (!baselinePath) fail("--baseline requiere una ruta");
+      if (!baselinePath) fail("--baseline requires a path");
       i += 1;
     } else if (!arg.startsWith("--")) {
       paths.push(arg);
@@ -239,7 +239,7 @@ if (isMain) {
     try {
       text = readFileSync(baselinePath, "utf8");
     } catch (error) {
-      fail(`no se pudo leer el baseline: ${error.message}`);
+      fail(`could not read the baseline: ${error.message}`);
     }
     try {
       baselineEntries = parseBaseline(text);
@@ -281,7 +281,7 @@ if (isMain) {
   const blocking = findings.filter((finding) => isBlockingFor(finding, thresholds));
 
   if (format === "table") {
-    console.log("[check-sarif-severity] Hallazgos (tras baseline):");
+    console.log("[check-sarif-severity] Findings (after baseline):");
     if (findings.length) console.log(buildFindingsTable(findings).join("\n"));
     else console.log("  (ninguno)");
     const tools = [...new Set(allFindings.map((finding) => finding.toolName))].sort();
@@ -291,7 +291,7 @@ if (isMain) {
       total: allFindings.filter((finding) => finding.toolName === tool).length,
       blocking: blocking.filter((finding) => finding.toolName === tool).length,
     }));
-    console.log("\n[check-sarif-severity] Resumen por herramienta:");
+    console.log("\n[check-sarif-severity] Summary per tool:");
     if (stats.length) console.log(buildSummaryTable(stats).join("\n"));
     else console.log("  (sin hallazgos)");
   } else if (findings.length) {
@@ -300,13 +300,13 @@ if (isMain) {
       console.log(`  ${formatFinding(finding)}`);
     }
   } else if (allFindings.length) {
-    console.log(`[check-sarif-severity] ${allFindings.length} finding(s), todos ignorados por baseline`);
+    console.log(`[check-sarif-severity] ${allFindings.length} finding(s), all ignored by baseline`);
   } else {
     console.log(`[check-sarif-severity] no findings across ${files.length} SARIF file(s)`);
   }
 
   if (ignored.length) {
-    console.log(`[check-sarif-severity] ${ignored.length} finding(s) ignorado(s) por baseline (aprobados)`);
+    console.log(`[check-sarif-severity] ${ignored.length} finding(s) ignored by baseline (approved)`);
   }
   if (stale.length) {
     console.warn(
@@ -319,11 +319,11 @@ if (isMain) {
 
   if (blocking.length) {
     console.error(
-      `[check-sarif-severity] FAIL: ${blocking.length} blocking finding(s) (${findings.length} tras baseline, umbral global '${globalSeverity}')`,
+      `[check-sarif-severity] FAIL: ${blocking.length} blocking finding(s) (${findings.length} after baseline, global threshold '${globalSeverity}')`,
     );
     process.exit(1);
   }
   console.log(
-    `[check-sarif-severity] passed — 0 blocking findings (${findings.length} tras baseline, umbral global '${globalSeverity}')`,
+    `[check-sarif-severity] passed — 0 blocking findings (${findings.length} after baseline, global threshold '${globalSeverity}')`,
   );
 }

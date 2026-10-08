@@ -340,9 +340,9 @@ export class WebSearchService {
     }
 
     const normalizedLang = lang || "en";
-    const systemPrompt = `Eres un asistente de investigación experto. Busca información relevante y presenta los resultados de manera clara y precisa.
-Responde en idioma: ${normalizedLang}.
-Incluye fuentes cuando sea posible.`;
+    const systemPrompt = `You are an expert research assistant. Search for relevant information and present results clearly and precisely.
+Respond in language: ${normalizedLang}.
+Include sources when possible.`;
 
     try {
       const response = await aiManager.generateText(normalizedQuery, systemPrompt, {

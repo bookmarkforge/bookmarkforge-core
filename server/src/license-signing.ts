@@ -81,7 +81,9 @@ export function loadSigningPrivateKey(env: NodeJS.ProcessEnv = process.env): Buf
   const b64 = env.LICENSE_SIGNING_PRIVATE_KEY_PKCS8?.trim();
   if (b64) {
     try {
-      return Buffer.from(b64, "base64");
+      const der = Buffer.from(b64, "base64");
+      createPrivateKey({ key: der, format: "der", type: "pkcs8" });
+      return der;
     } catch {
       return null;
     }
@@ -98,7 +100,9 @@ export function loadSigningPrivateKey(env: NodeJS.ProcessEnv = process.env): Buf
         // PEM — the caller expects DER PKCS#8; convert via createPrivateKey.
         return createPrivateKey(raw).export({ type: "pkcs8", format: "der" }) as Buffer;
       }
-      return Buffer.from(raw, "base64");
+      const der = Buffer.from(raw, "base64");
+      createPrivateKey({ key: der, format: "der", type: "pkcs8" });
+      return der;
     } catch {
       /* try the next candidate */
     }

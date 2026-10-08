@@ -109,10 +109,9 @@ describe("check-chunk-boundaries missing-dist policy", () => {
     const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
     const buildCi = readFileSync(join(ROOT, "scripts", "build-ci.mjs"), "utf8");
 
-    // `npm run check` may legitimately run before any build: it opts out by name.
-    expect(pkg.scripts.check).toContain("check:chunks");
+    // `npm run check` now uses tiered approach: check:quality includes check:chunks
+    expect(pkg.scripts["check:quality"]).toContain("check:chunks");
     expect(pkg.scripts["check:chunks"]).toContain("--allow-missing-dist");
-    expect(pkg.scripts["check:quality-code"]).toContain("check:chunks");
     // The build job verifies the real bundle and says so explicitly.
     expect(buildCi).toContain("check-chunk-boundaries.mjs");
     expect(buildCi).toContain("--require-dist");

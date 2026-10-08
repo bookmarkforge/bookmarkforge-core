@@ -1,46 +1,46 @@
-# Informe de rendimiento IA — dispositivo local — 2026-09-21
+# AI performance report — local device — 2026-09-21
 
-## Alcance
+## Scope
 
-Se ejecutaron las dos rutas disponibles en el dispositivo local:
+The two available routes on the local device were executed:
 
-1. **Gate móvil emulado**, que sustituye únicamente el motor WebLLM/WebGPU y mantiene el flujo real de la aplicación.
-2. **Benchmark WebLLM físico**, que exige un adaptador WebGPU de hardware y memoria suficiente.
+1. **Emulated mobile gate**, which only replaces the WebLLM/WebGPU engine and keeps the real application flow.
+2. **Physical WebLLM benchmark**, which requires a hardware WebGPU adapter and sufficient memory.
 
-## Resultados
+## Results
 
-### Gate móvil emulado
+### Emulated mobile gate
 
 ```text
-Comando:   npm run test:ai-performance:mobile
-Resultado: PASS
+Command:   npm run test:ai-performance:mobile
+Result:    PASS
 Tests:     1/1
-Duración:  25,6 s
-Perfil:    Pixel 7 — 390x844
+Duration:  25.6 s
+Profile:   Pixel 7 — 390x844
 ```
 
-Este resultado confirma que la orquestación de primera inferencia —entitlement, carga diferida, warmup, routing, cola y generación— sigue dentro del presupuesto CI de 3.000 ms en el boundary determinista.
+This result confirms that the first-inference orchestration —entitlement, lazy load, warmup, routing, queue and generation— remains within the CI budget of 3,000 ms on the deterministic boundary.
 
-### Benchmark físico WebLLM
+### Physical WebLLM benchmark
 
 ```text
-Comando:   npx playwright test --config=playwright.nightly.config.ts tests/e2e/ai-first-boot.nightly.spec.ts
-Resultado: SKIP esperado
-Tests:     0 ejecutados, 1 omitido
+Command:   npx playwright test --config=playwright.nightly.config.ts tests/e2e/ai-first-boot.nightly.spec.ts
+Result:    Expected SKIP
+Tests:     0 executed, 1 skipped
 ```
 
-El benchmark no obtuvo evidencia física porque este dispositivo no cumple el contrato de referencia del test. El entorno Node local es `win32/arm64`; la prueba real requiere que Chromium exponga un adaptador WebGPU de hardware y memoria de dispositivo suficiente. No se generó ni se aceptó un baseline histórico físico.
+The benchmark did not obtain physical evidence because this device does not meet the test's reference contract. The local Node environment is `win32/arm64`; the real test requires Chromium to expose a hardware WebGPU adapter and sufficient device memory. No historical physical baseline was generated or accepted.
 
-## Decisión
+## Decision
 
 ```text
-Orquestación CI:       GO
-WebLLM físico local:   no evaluable en este dispositivo
-Baseline físico:       pendiente
-Producción IA:         NO-GO hasta una ejecución en hardware WebGPU de referencia
+CI orchestration:       GO
+Local physical WebLLM:  not evaluable on this device
+Physical baseline:      pending
+AI production:          NO-GO until execution on reference WebGPU hardware
 ```
 
-El skip es correcto y preferible a convertir una ejecución software o sin GPU en una medición engañosa. Para cerrar este punto se necesita un dispositivo con WebGPU físico; el resultado debe clasificarse con:
+The skip is correct and preferable to converting a software or non-GPU execution into a misleading measurement. To close this point, a device with physical WebGPU is needed; the result must be classified with:
 
 ```bash
 npm run check:ai-reference-metrics -- \

@@ -9,13 +9,13 @@ Contact: mailto:bookmarkforge@proton.me
 Encryption: https://keys.openpgp.org/pks/lookup?op=get&search=security@proton.me
 
 # Acknowledgments
-Acknowledgments: https://bookmarkforge.com/security/acknowledgments
+Acknowledgments: https://bookmarkforgeapp.com/security/acknowledgments
 
 # Policy URL
-Policy: https://bookmarkforge.com/security/policy
+Policy: https://bookmarkforgeapp.com/security/policy
 
 # Preferred Languages
 Preferred-Languages: en, es, fr, de, pt
 
 # Canonical
-Canonical: https://bookmarkforge.com/.well-known/security.txt
+Canonical: https://bookmarkforgeapp.com/.well-known/security.txt

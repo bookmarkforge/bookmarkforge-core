@@ -4,7 +4,7 @@ This guide explains how to develop and test the BookmarkForge browser extension 
 
 ## Prerequisites
 
-- Node.js >= 20.19.0
+- Node.js >= 24.17.0
 - Chrome/Chromium browser (for Chrome extension development)
 - Firefox browser (for Firefox extension development)
 - BookmarkForge local dev server running (see Vercel setup)
@@ -156,7 +156,7 @@ Environment: development
 
 **Production:**
 ```
-URL: https://bookmarkforge.com
+URL: https://bookmarkforgeapp.com
 Environment: production
 ```
 
@@ -167,7 +167,7 @@ The extension reads configuration from browser storage:
 ```javascript
 // In popup.js
 const config = {
-  bookmarkForgeUrl: localStorage.getItem('bookmarkforge_url') || 'https://bookmarkforge.com',
+  bookmarkForgeUrl: localStorage.getItem('bookmarkforge_url') || 'https://bookmarkforgeapp.com',
   apiKey: localStorage.getItem('bookmarkforge_api_key') || null
 };
 ```

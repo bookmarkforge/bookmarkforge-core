@@ -1,89 +1,110 @@
-# eslint-rules — reglas custom de BookmarkForge
+# eslint-rules — BookmarkForge custom rules
 
-Reglas ESLint propias del proyecto (plugin `bmf` en `eslint.config.js`). Cada
-regla se auto-documenta en su cabecera JSDoc; este README es el índice. Cada
-regla tiene su suite unitaria junto a ella (`*.test.mjs`, RuleTester/Vitest).
+The project's own ESLint rules (plugin `bmf` in `eslint.config.js`). Each rule
+is self-documented in its JSDoc header; this README is the index. Each rule
+has its unit suite next to it (`*.test.mjs`, RuleTester/Vitest).
 
-## Reglas
+## Rules
 
 ### `bmf/no-silent-catch`
-**Ámbito:** código no-test (`src/**`, `scripts/**`, `server/src/**`, `extension/**`).
-Un `catch` vacío (sin statements, solo comentarios) debe declararlo
-explícitamente con `catch { /* INTENTIONAL SILENCE: <razón precisa> */ }`.
-Regla estructural que protege la convención de `AGENTS.md` §3: los errores no
-se tragan silenciosamente. Excluye los árboles de test, donde catch-and-fail
-es idiomático.
+**Scope:** non-test code (`src/**`, `scripts/**`, `server/src/**`, `extension/**`).
+An empty `catch` (no statements, only comments) must declare that intent
+explicitly with `catch { /* INTENTIONAL SILENCE: <precise reason> */ }`.
+A structural rule protecting the `AGENTS.md` §4 convention: errors are never
+swallowed silently. It excludes test trees, where catch-and-fail is idiomatic.
 → `no-silent-catch.mjs`
 
 ### `bmf/no-unbounded-text`
-**Ámbito:** `src/**/*.tsx`.
-Flaggea elementos JSX que renderizan texto dinámico dentro de un contenedor
-"ajustado" sin marcador defensivo (`truncate`, `line-clamp-N`, `max-w-*`).
-Previene desbordes de texto en la UI. El gate E2E asociado es
-`check:no-unbounded-text` (baseline en `scripts/no-unbounded-text-baseline.json`).
+**Scope:** `src/**/*.tsx`.
+Flags JSX elements that render dynamic text inside a "fitted" container without
+a defensive marker (`truncate`, `line-clamp-N`, `max-w-*`). Prevents text
+overflow in the UI. The associated E2E gate is `check:no-unbounded-text`
+(baseline in `scripts/no-unbounded-text-baseline.json`).
 → `no-unbounded-text.mjs`
 
 ### `bmf/no-unbounded-card-header`
-**Ámbito:** `src/**/*.tsx`.
-Compañera de `no-unbounded-text` con alcance deliberadamente más estrecho: solo
-`<h1>`–`<h4>` dentro de wrappers de tarjeta `<div>`. Es el piloto que corre
-antes de ensanchar la regla base.
+**Scope:** `src/**/*.tsx`.
+Companion to `no-unbounded-text` with a deliberately narrower scope: only
+`<h1>`–`<h4>` inside `<div>` card wrappers. It is the pilot that runs before the
+base rule is widened.
 → `no-unbounded-card-header.mjs`
 
 ### `bmf/no-securityvault-mock-without-lock`
-**Ámbito:** `src/tests/**`.
-Un `vi.mock("../../services/SecurityVault", …)` que no provea `onLock` y
-`onUnlock` en el objeto retornado rompe en tiempo de importación con
+**Scope:** `src/tests/**`.
+A `vi.mock("../../services/SecurityVault", …)` that does not provide `onLock`
+and `onUnlock` in the returned object breaks at import time with
 `TypeError: X.onLock is not a function` (ProviderManager, TTSService,
-SemanticCacheService, VaultIntegration, AgentService y TaggingService registran
-callbacks de lock en construcción). La regla exige simetría de ciclo de vida
-lock/unlock en cualquier mock del vault (`AGENTS.md` §6).
+SemanticCacheService, VaultIntegration, AgentService and TaggingService register
+lock callbacks at construction). The rule requires lock/unlock lifecycle
+symmetry in any vault mock (`AGENTS.md` §7).
 → `require-securityvault-mock-lock-unlock.mjs`
 
 ### `bmf/no-unexplained-test-skip`
-**Ámbito:** `tests/e2e/**`.
-`test.skip()` / `test.fixme()` / `test.todo()` debe llevar una razón explícita,
-para que un test silenciado no se pueda commitear y olvidar.
+**Scope:** `tests/e2e/**`.
+`test.skip()` / `test.fixme()` / `test.todo()` must carry an explicit reason,
+so a silenced test cannot be committed and forgotten.
 → `no-unexplained-test-skip.mjs`
 
 ### `bmf/no-unbounded-loop`
-**Ámbito:** `src/services/**`, `src/workers/**`, `src/utils/**`, `src/tests/**`.
-Flaggea bucles `for(;;)` / `while(true)` sin mecanismo garantizado de
-terminación. Motivación: un bucle sin salida llegó a producirse en
+**Scope:** `src/services/**`, `src/workers/**`, `src/utils/**`, `src/tests/**`.
+Flags `for(;;)` / `while(true)` loops without a guaranteed termination
+mechanism. Motivation: a loop with no exit once shipped in
 `GarbageCollectionService.pruneVersions()`.
 → `no-unbounded-loop.mjs`
 
 ### `bmf/require-adr-template`
-**Ámbito:** `docs/ADR-*.md`.
-Exige que todo ADR nuevo lleve las cinco secciones de la plantilla del repo
-(Estado / Fecha / Contexto / Decisión / Consecuencias, en formato bold-list o
-heading, insensible a mayúsculas y consciente de bloques de código), que los
-metadatos `Estado`/`Fecha` lleven valor y que el primer heading sea
-`# ADR-###: <título>` con el número coincidente con el nombre del archivo.
-ESLint no trae parser de Markdown: la regla corre sobre un parser trivial de
-líneas (`lib/markdown-parser.mjs`) enchufado como `languageOptions.parser` en
-el bloque `docs/ADR-*.md` de `eslint.config.js`. La regla se auto-limita por
-nombre de archivo, así que el resto del Markdown del repo queda fuera de
-alcance. Corpus verificado limpio (15 ADRs) — cualquier ADR nuevo sin plantilla
-rompe `npm run lint`.
+**Scope:** `docs/ADR-*.md`.
+Requires every new ADR to carry the five sections of the repo template, that
+the `Status`/`Date` metadata carry a value, and that the first heading be
+`# ADR-###: <title>` with the number matching the filename.
+
+**Bilingual labels.** Each section accepts its Spanish label **or** its English
+equivalent:
+
+| Canonical (diagnostics) | Accepted spellings |
+|---|---|
+| `Estado` | `Estado`, `Status` |
+| `Fecha` | `Fecha`, `Date` |
+| `Contexto` | `Contexto`, `Context` |
+| `Decisión` | `Decisión`, `Decision` |
+| `Consecuencias` | `Consecuencias`, `Consequences` |
+
+Matching is accent-insensitive on **both** sides — the accepted spellings and
+the scanned line — so `## Decisión` and `## Decision` resolve to the same
+section. A file may mix both languages across sections. The canonical Spanish
+labels stay the ones named in diagnostics so failure messages remain stable.
+Rationale: the repository is being translated to English, and the template must
+keep enforcing the same five sections in either language rather than letting
+English ADRs escape the guard.
+
+Both forms are accepted: `**Estado:** aceptado` / `- **Status:** accepted`
+(bold list item — also `**Estado** : value` and `**Estado: value**`) or a
+heading from `## Contexto` up to `###### Context` (the section must not be
+empty below the heading).
+
+ESLint ships no Markdown parser: the rule runs on a trivial line-based parser
+(`lib/markdown-parser.mjs`) plugged in as `languageOptions.parser` in the
+`docs/ADR-*.md` block of `eslint.config.js`. The rule self-gates on the
+filename, so the rest of the repo's Markdown is out of scope. The corpus
+verifies clean — any new ADR missing the template breaks `npm run lint`.
 → `require-adr-template.mjs`
 
-## Wiring en `eslint.config.js`
+## Wiring in `eslint.config.js`
 
-- El plugin se registra como `bmf` en el bloque de archivos
+- The plugin is registered as `bmf` in the file blocks
   `src/**`, `tests/e2e/**`, `scripts/**`, `server/src/**`, `extension/**`.
-- Cada regla se activa con ámbito propio (ver tabla anterior). Las exclusiones
-  van en `ignores`, nunca como globs `!`-prefijados en `files` (ver la nota
-  dentro de `eslint.config.js` sobre la negación de minimatch).
+- Each rule is enabled with its own scope (see the table above). Exclusions go
+  in `ignores`, never as `!`-prefixed globs in `files` (see the note inside
+  `eslint.config.js` about minimatch negation).
 
 ## Tests
 
-Cada regla tiene su suite en el mismo directorio (`npm run test:fast` las
-ejecuta junto al resto). Para añadir una regla nueva:
+Each rule has its suite in the same directory (`npm run test:fast` runs them
+along with the rest). To add a new rule:
 
-1. Crea `eslint-rules/<regla>.mjs` con cabecera JSDoc auto-documentada.
-2. Crea `eslint-rules/<regla>.test.mjs` con RuleTester cubriendo casos válidos
-   e inválidos, incluyendo el ángulo que motivó la regla.
-3. Regístrala en `eslint.config.js` (plugin + bloque de activación con ámbito).
-4. Si la regla requiere baseline (como `no-unbounded-text`), añade el script
-   `check:*` correspondiente a `package.json` y su baseline en `scripts/`.
+1. Create `eslint-rules/<rule>.mjs` with a self-documenting JSDoc header.
+2. Create `eslint-rules/<rule>.test.mjs` with RuleTester covering valid and
+   invalid cases, including the angle that motivated the rule.
+3. Register it in `eslint.config.js` (plugin + activation block with scope).
+4. If the rule needs a baseline (like `no-unbounded-text`), add the matching
+   `check:*` script to `package.json` and its baseline in `scripts/`.

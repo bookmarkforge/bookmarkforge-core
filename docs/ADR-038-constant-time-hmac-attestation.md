@@ -1,73 +1,73 @@
-# ADR-038: Comparación en tiempo constante de firmas HMAC en las cadenas de atestación
+# ADR-038: Constant-time comparison of HMAC signatures in the attestation chains
 
-- **Estado:** aceptado (implementado; ancla `p3-constant-time-hmac`)
-- **Fecha:** 2026-09-02
+- **Status:** accepted (implemented; anchor `p3-constant-time-hmac`)
+- **Date:** 2026-09-02
 
-## Contexto
+## Context
 
-La auditoría del 2026-09-02 (`docs/audit-report-2026-09-02.md`, hallazgo M-1)
-detectó una inconsistencia interna: la base de código dispone de una primitiva
-de comparación en tiempo constante (`constantTimeCompare`,
-`src/services/security-vault/compare.ts`) y la usa correctamente en
-`SecurityVault` (verificación del plaintext y del share secret) y, del lado del
-servidor Node, `timingSafeEqual` protege todos los secrets de signaling. Pero
-las dos cadenas de atestación del cliente comparaban hex firmado con `===` /
+The 2026-09-02 audit (`docs/audit-report-2026-09-02.md`, finding M-1)
+found an internal inconsistency: the codebase has a constant-time
+comparison primitive (`constantTimeCompare`,
+`src/services/security-vault/compare.ts`) and uses it correctly in
+`SecurityVault` (plaintext and share-secret verification) and, on the Node
+server side, `timingSafeEqual` protects all signaling secrets. But
+the client's two attestation chains compared signed hex with `===` /
 `!==`:
 
-1. `MutationGuard.verify` y `MutationGuard.detectTampering`
+1. `MutationGuard.verify` and `MutationGuard.detectTampering`
    (`src/services/security/MutationGuard.ts`).
-2. `AttestationChain.verifyChain` — tanto la firma como el `prevHash`, que
-   transporta el HMAC del entry anterior
+2. `AttestationChain.verifyChain` — both the signature and the `prevHash`, which
+   carries the previous entry's HMAC
    (`src/services/security/AttestationChain.ts`).
 
-Una comparación de strings con cortocircuito filtra la longitud del prefijo
-que coincide a cualquier atacante capaz de insertar firmas elegidas en el
-almacenamiento (localStorage / SecureStorage cifrado) y observar el resultado
-booleano de `verify` / `verifyChain` — el clásico oráculo de timing de
-comparación de strings. El coste de la mitigación es despreciable frente al
-coste de derivar la clave HMAC (Argon2id + importKey), y el código ya tenía la
-primitiva exportada: era pura inconsistencia, no una limitación técnica.
+A short-circuiting string comparison leaks the matching prefix length
+to any attacker able to insert chosen signatures into
+storage (localStorage / encrypted SecureStorage) and observe the boolean
+result of `verify` / `verifyChain` — the classic string-comparison timing
+oracle. The mitigation cost is negligible compared to the cost of
+deriving the HMAC key (Argon2id + importKey), and the code already had the
+primitive exported: it was pure inconsistency, not a technical limitation.
 
-## Decisión
+## Decision
 
-1. **Toda comparación de digests secretos usa `constantTimeCompare`.** Se
-   sustituyeron los 3 puntos de comparación (`MutationGuard.verify`,
-   `MutationGuard.detectTampering`, `AttestationChain.verifyChain` — este
-   último incluye el `prevHash` por transportar un HMAC secreto) por la
-   primitiva compartida de `src/services/security-vault/compare.ts`. Nada
-   cambia semánticamente para entradas legítimas: la primitiva es fail-closed
-   para longitudes distintas (XOR de longitudes incluido en el acumulador).
-2. **Regresión anclada:** `src/tests/security/p3-constant-time-hmac.regression.test.ts`
-   combina (a) escaneo del código fuente sin comentarios (mismo método que
-   `p2-secure-storage-prod-guard.regression.test.ts`) que rechaza cualquier
-   `===`/`!==` sobre `.signature`/`.prevHash` y exige la llamada explícita a
-   `constantTimeCompare` en los 3 puntos, con (b) un pin comportamental de la
-   primitiva (igualdad, desigualdad en el último byte, desigualdad de
-   longitud en ambos sentidos, vacíos). El ancla `p3-constant-time-hmac` está
-   catalogada en `scripts/audit-anchors.mjs` + baseline: borrar el test es un
-   cambio de nivel ADR y rompe `npm run check:audit-drift`.
-3. **Perfil rápido honesto:** `scripts/test-fast.mjs` listaba
-   `security/MutationGuard.test.ts` (extensión `.ts`) cuando el archivo real es
-   `.tsx`; el `.filter(has)` lo descartaba en silencio y sus 12 tests nunca
-   corrían en `test:fast`. Se corrigió el selector y se añadió
-   `AttestationChain.test.tsx`, que no estaba en el perfil.
-4. **AGENTS.md sin cifras frágiles:** la mención "bounded Vitest suites
-   (62 files)" se vuelve descriptiva — el conteo real ya había derivado (63
-   archivos en la ejecución de la auditoría; +1 con el nuevo test de
-   regresión y +2 selectores corregidos) y ningún gate lo respalda.
+1. **Every comparison of secret digests uses `constantTimeCompare`.** The
+   3 comparison points (`MutationGuard.verify`,
+   `MutationGuard.detectTampering`, `AttestationChain.verifyChain` — the latter
+   including `prevHash` because it carries a secret HMAC) were replaced by the
+   shared primitive from `src/services/security-vault/compare.ts`. Nothing
+   changes semantically for legitimate inputs: the primitive is fail-closed
+   for differing lengths (length XOR included in the accumulator).
+2. **Anchored regression:** `src/tests/security/p3-constant-time-hmac.regression.test.ts`
+   combines (a) a comment-stripped source scan (same method as
+   `p2-secure-storage-prod-guard.regression.test.ts`) that rejects any
+   `===`/`!==` over `.signature`/`.prevHash` and requires the explicit
+   `constantTimeCompare` call at the 3 points, with (b) a behavioral pin of the
+   primitive (equality, inequality in the last byte, length inequality in both
+   directions, empties). The `p3-constant-time-hmac` anchor is
+   catalogued in `scripts/audit-anchors.mjs` + baseline: deleting the test is an
+   ADR-level change and breaks `npm run check:audit-drift`.
+3. **Honest fast profile:** `scripts/test-fast.mjs` listed
+   `security/MutationGuard.test.ts` (`.ts` extension) when the real file is
+   `.tsx`; the `.filter(has)` silently dropped it and its 12 tests never
+   ran in `test:fast`. The selector was fixed and
+   `AttestationChain.test.tsx`, which was not in the profile, was added.
+4. **AGENTS.md without fragile figures:** the mention "bounded Vitest suites
+   (62 files)" becomes descriptive — the real count had already drifted (63
+   files in the audit run; +1 with the new regression test
+   and +2 fixed selectors) and no gate backs it.
 
-## Consecuencias
+## Consequences
 
-- Los oráculos de timing en las dos cadenas de atestación del cliente quedan
-  cerrados y protegidos por regresión anclada; el surface de comparación de
-  la app ahora es uniforme (SecurityVault, MutationGuard, AttestationChain,
-  servidor Node).
-- `test:fast` ejecuta los suites de MutationGuard y AttestationChain de
-  verdad; su conteo de archivos sube y deja de estar documentado como número
-  que puede derivar sin que nadie lo detecte.
-- Cualquier compare futuro de material secreto debe añadirse al escaneo del
-  test de regresión o crear un ancla propia; usar `===` sobre un digest vuelve
-  a ser un fallo de CI, no una opinión de revisión.
-- Queda pendiente (fuera de alcance aquí, registrado en el informe de
-  auditoría): los 24 locales restantes con `syst_perfMismatchDesc` en inglés
-  y el verificador de contraseña sin salt del caché de sesión (M-2).
+- The timing oracles in the client's two attestation chains are
+  closed and protected by an anchored regression; the app's comparison
+  surface is now uniform (SecurityVault, MutationGuard, AttestationChain,
+  Node server).
+- `test:fast` genuinely runs the MutationGuard and AttestationChain suites;
+  its file count goes up and is no longer documented as a number
+  that can drift with nobody noticing.
+- Any future comparison of secret material must be added to the regression test's
+  scan or get its own anchor; using `===` over a digest again becomes
+  a CI failure, not a review opinion.
+- Still pending (out of scope here, recorded in the
+  audit report): the 24 remaining locales with `syst_perfMismatchDesc` in English
+  and the unsalted password verifier in the session cache (M-2).

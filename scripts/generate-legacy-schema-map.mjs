@@ -1,4 +1,7 @@
 /** @license SPDX-License-Identifier: MIT */
+// Template text is English on purpose: this generator must reproduce the
+// committed docs/legacy-schema-version-map.md byte for byte (translated in
+// c57bf01). Keep it byte-identical to build-legacy-schema-map.mjs.
 import { writeFile } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -64,18 +67,18 @@ if (rows.length === 0) {
 rows.sort((a, b) => a.collection.localeCompare(b.collection));
 
 const table = [
-  '# Mapa de versiones de esquema — BookmarkForge',
+  '# Schema version map — BookmarkForge',
   '',
-  'Este archivo registra el mapa de versiones del esquema RxDB activo para la codebase actual.',
+  'This file records the RxDB schema version map active for the current codebase.',
   '',
-  'Se genera automáticamente desde `src/db/schema.ts`. No se edita a mano.',
-  'Su función es ofrecer un diagnóstico estable de compatibilidad/migración sin tocar datos reales del vault.',
+  'It is automatically generated from `src/db/schema.ts`. Do not edit manually.',
+  'Its function is to offer a stable compatibility/migration diagnosis without touching real vault data.',
   '',
-  '| Colección | Versión | Campos cifrados |',
+  '| Collection | Version | Encrypted fields |',
   '|---|---|---|',
   ...rows.map((r) => `| \`${r.collection}\` | ${r.version} | \`${r.encrypted.join('`, `')}\` |`),
   '',
-  'Nota: la versión se lee desde la propiedad `version` declarada en el esquema RxDB correspondiente.',
+  'Note: the version is read from the `version` property declared in the corresponding RxDB schema.',
   '',
 ].join('\n');
 

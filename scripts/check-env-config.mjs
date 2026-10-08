@@ -202,7 +202,7 @@ export function runComposeEnvContract({ composeSource, envProdSource, deployInje
   const webhook = envProdVars.get("CLIENT_EVENTS_WEBHOOK_URL")?.trim() ?? "";
   if (webhook && !/^https:\/\//i.test(webhook)) {
     violations.push(
-      "CLIENT_EVENTS_WEBHOOK_URL debe ser https:// en producción (el servidor rechaza webhooks http fail-closed)",
+      "CLIENT_EVENTS_WEBHOOK_URL must be https in production (the server rejects http webhooks fail-closed)",
     );
   }
 

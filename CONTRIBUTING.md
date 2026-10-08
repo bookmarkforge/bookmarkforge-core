@@ -130,7 +130,7 @@ checks. `AGENTS.md` notes that this checkout currently has **no
 
 ## 5. Development environment
 
-- Node ≥ 20.19.0 (see `engines` in `package.json`).
+- Node ≥ 24.17.0 (see `engines` in `package.json`).
 - Install with the project's package manager as defined in `package.json`.
 - Copy `.env.example` to `.env` and adjust locally. `VITE_*` variables are
   inlined into the client bundle by Vite — never put real keys there.
@@ -142,9 +142,61 @@ checks. `AGENTS.md` notes that this checkout currently has **no
 Useful local commands:
 - `npm run dev`
 - `npm run typecheck:prod`
-- `npm run lint` (ESLint acotado por dominios; para diagnóstico monolítico queda `npm run lint:all`)
-- `npm run test:fast` (los logs de tests exitosos se suprimen por defecto; usa `BMF_TEST_LOGS=full` para diagnóstico)
+- `npm run lint` (domain-scoped ESLint; for full monolithic diagnostics use `npm run lint:all`)
+- `npm run test:fast` (successful test logs are suppressed by default; use `BMF_TEST_LOGS=full` for diagnostics)
 - `npm run ci:local` = `typecheck:prod && lint && test:fast && build:ci && check`
+
+### Manual command surface (not part of `npm run check`)
+
+`scripts/check-script-reachability.mjs` fails when a declared script has no
+entry point, and this table is the entry point for the commands below: they are
+run by hand on purpose, and `check:documented-npm-commands` verifies every name
+here still exists.
+
+| Command | What it is for |
+|---|---|
+| `npm run test:watch` | Vitest in watch mode for the file you are editing. |
+| `npm run test:rollback` | Unit tests for the pure decision logic of `scripts/rollback.mjs`. |
+| `npm run test:staging-policy` | Staging target policy and HTTP checks, run by hand against staging. |
+| `npm run test:timing` | Slowest test files, for the timing budget (diagnostic, not a gate). |
+| `npm run whop:test` | Whop service unit tests. |
+| `npm run whop:validate` | Runs the Whop integration service against the configured sandbox. |
+| `npm run e2e:headed` | E2E with a visible browser, for debugging one spec. |
+| `npm run e2e:browsers` | Cross-browser E2E config (Chromium, Firefox, WebKit). |
+| `npm run e2e:human-like:browsers` | The human-like example suite across Chromium, Firefox and WebKit (`playwright.human-like.browsers.config.ts`); needs `npx playwright install firefox webkit`. |
+| `npm run e2e:batched` | Memory-bounded runner that walks the whole E2E suite in batches. |
+| `npm run e2e:visual` | Visual-regression spec (`tests/e2e/visual-testing.spec.ts`). |
+| `npm run e2e:visual:browsers` | The same visual spec across the browser configs. |
+| `npm run dev:extension` | Loads the extension build for manual iteration. |
+| `npm run server:watch` | Signaling server with restart-on-change. |
+| `npm run health:dashboard` | Real-time terminal health dashboard (local probing, not a gate). |
+| `npm run check:nightly` | The nightly surface locally: pre-deploy gates + audit + the slow suite. |
+| `npm run ci:local:parallel` | Dependency-aware scheduler for the local CI gates. |
+| `npm run ci:local:e2e` | `ci:local` plus the browser suites. |
+| `npm run gate:refresh` | One ordered regeneration pass for the drift-sensitive artifacts. |
+| `npm run check:landing-smoke` | Opens the 31 landing routes in Chromium: navigation, critical resources, links and console errors (ADR-062). Needs `npx playwright install chromium`. |
+| `npm run benchmark:import-csv` | Importer benchmark over a large CSV. |
+| `npm run benchmark:storage` | Storage benchmark (Dexie vs the RxDB SQLite trial). |
+| `npm run charts:webrtc-recovery` | Renders `webrtc-recovery-history.json` as a self-contained HTML trend page. |
+| `npm run check:vacuous-tests` | Assertion-integrity ratchet for the E2E suites: fails if a test that passes when its feature is absent is added without a baseline entry, and verifies the declared suite sizes in `docs/ops-nightly.md` match the tree. The current debt (1589 of 2050 tests in the human-like suite) is baselined on purpose — see `docs/PENDIENTES.md`. |
+| `npm run history:webrtc-recovery` | Appends one WebRTC recovery summary to the nightly history file. |
+| `npm run report:webrtc-handshake` | Per-browser handshake diagnostics from a saved Playwright report. |
+| `npm run report:webrtc-nightly` | Renders the convergence summary as a Markdown table for PR comments. |
+
+Five rows are gates rather than dev loops: `npm run check:extension-dist` and
+`npm run check:model-digests` run on demand. `npm run check:landing-smoke` is
+also absent from `npm run check`, but for a different reason — it needs a
+Chromium binary and the chain is offline by contract — so it runs in the release
+chain (`check:deploy`) and in its own CI step. `npm run
+check:audit-script-snapshot` (script-inventory scanner,
+`docs/scripts-inventory-scanner-limits.md`) stays out of the chain for a third
+reason: its snapshot is gitignored local audit state, so a fresh clone must
+regenerate it first (`node scripts/__tests__/audit-script-inventory.test.mjs
+--update`). `npm run check:vacuous-tests` is the fourth reason: it is a
+nightly-quality report (assertion integrity of the E2E suites + declared-surface
+drift in `docs/ops-nightly.md`), not a release blocker, so it runs in the
+nightly's `coverage` job and by hand. If any of them moves into `npm run
+check`, wire it into the chain and delete its row here.
 
 ---
 
@@ -162,7 +214,7 @@ apply — and it never replaces the full chain before pushing.
 
 ```bash
 npm run typecheck:prod          # tsc --noEmit (prod tsconfig)
-npm run lint                    # node scripts/tooling/lint-bounded.mjs (acotado por dominios)
+npm run lint                    # node scripts/tooling/lint-bounded.mjs (domain-scoped)
 npm run test:fast               # bounded Vitest suites (security, db, services,
                                 #   key components, quality-gate script tests —
                                 #   count deliberately unnumbered, see ADR-038)
@@ -284,7 +336,7 @@ ADR-level change.
 ## 8. Documentation and decision records
 
 - Documented decisions use ADR files under `docs/ADR-###-slug.md` — template:
-  `Estado / Fecha` then `Contexto / Decisión / Consecuencias`
+  `Status / Date` then `Context / Decision / Consequences`
   (see `docs/ADR-001-check-static-brand.md`).
 - Post-audit security regressions live at
   `src/tests/security/p<severity>-<slug>.regression.test.ts` and are **pinned
@@ -331,7 +383,7 @@ ADR-level change.
 
 - Release preflight runs the same gates as CI plus the stricter launch checklist.
 - The launch checklist is in `docs/launch-checklist.md`. It separates
-  🔴 bloqueante, 🟠 external validation, 🟡 early-post-launch, and 🟢
+  🔴 blocking, 🟠 external validation, 🟡 early-post-launch, and 🟢
   environment-only (not verifiable from the repository) items.
 - Before a release: `npm run check:launch-checklist:strict` (Sentry DSN/DPA,
   RPO/RTO sign-off and manual WCAG are tracked as open operational items in

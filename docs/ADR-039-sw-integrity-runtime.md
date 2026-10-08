@@ -1,90 +1,90 @@
-# ADR-039: Verificación de integridad de assets dentro del Service Worker (chunks lazy incluidos)
+# ADR-039: Asset integrity verification inside the Service Worker (lazy chunks included)
 
-- **Estado:** aceptado (implementado; ancla `p3-sw-integrity-runtime`)
-- **Fecha:** 2026-09-02
+- **Status:** accepted (implemented; anchor `p3-sw-integrity-runtime`)
+- **Date:** 2026-09-02
 
-## Contexto
+## Context
 
-La auditoría del 2026-09-02 (`docs/audit-report-2026-09-02.md`, hallazgo B-1,
-primera de las "mejoras de alto impacto") demostró que la verificación de
-integridad en runtime solo cubría el DOM inicial:
+The 2026-09-02 audit (`docs/audit-report-2026-09-02.md`, finding B-1,
+the first of the "high-impact improvements") showed that runtime integrity
+verification only covered the initial DOM:
 
-1. `checkBundleIntegrity` (`src/utils/bundleIntegrity.ts`) hashea los
-   `script[src]` / `link[stylesheet]` / `link[modulepreload]` presentes al
-   arrancar. Los chunks lazy (blocknote, pdf, WebLLM, locales — los mismos
-   que el SW sirve vía CacheFirst/StaleWhileRevalidate) se cargan después y
-   nunca se re-hashean.
-2. El MutationObserver (`startScriptInjectionGuard`) solo ve elementos
-   `<script>`; un chunk entregado a un `import()` dinámico no pasa por ahí.
+1. `checkBundleIntegrity` (`src/utils/bundleIntegrity.ts`) hashes the
+   `script[src]` / `link[stylesheet]` / `link[modulepreload]` present at
+   startup. Lazy chunks (blocknote, pdf, WebLLM, locales — the same ones
+   the SW serves via CacheFirst/StaleWhileRevalidate) load afterwards and
+   are never re-hashed.
+2. The MutationObserver (`startScriptInjectionGuard`) only sees `<script>`
+   elements; a chunk delivered to a dynamic `import()` never goes through it.
 
-Un atacante con escritura en el origen (deploy comprometido, CDN envenenada,
-cache poisoning) podía servir un chunk modificado tras el boot sin disparar
+An attacker with write access to the origin (compromised deploy, poisoned CDN,
+cache poisoning) could serve a modified chunk after boot without triggering
 `bundle-integrity-failed`.
 
-## Decisión
+## Decision
 
-1. **El punto de verificación es el Service Worker** — el cuello de botella
-   por el que pasa CADA asset servido. Dos plugins de `vite.config.ts`
-   colaboran:
-   - `bookmarkforge:integrity-manifest` escribe `dist/integrity-manifest.json`
-     (copia de la superficie verificada, fuente única de verdad para el
-     embed y para tooling/diagnóstico);
-   - `bookmarkforge:sw-integrity-embed` — un plugin DEDICADO con
-     `closeBundle: { order: "post" }` — incrusta ese manifest JSON y el
-     runtime `scripts/sw-integrity-runtime.js` al INICIO del `sw.js`
-     generado por Workbox (byte 0). El `order: "post"` es obligatorio:
-     vite-plugin-pwa escribe `sw.js` en su PROPIO closeBundle y los hooks
-     sin `order` corren en orden de array (verificado empíricamente — una
-     suposición de "orden inverso" hacía que el embed saltara en silencio
-     porque `sw.js` aún no existía). El embed es idempotente (marcadores
-     `__BMF_SW_INTEGRITY_EMBED_START__/END__`); la asignación del manifest
-     termina en `;` para evitar el join ASI con la IIFE del runtime (bug
-     real detectado por la verificación de artefacto: el SW completo
-     lanzaba TypeError al evaluar). El runtime envuelve
-     `FetchEvent.prototype.respondWith`, por lo que su cobertura no depende
-     del orden de registro de las rutas de Workbox.
-   - `sw.js` e `index.html` quedan excluidos del manifest
-     (auto-referenciales).
-2. **Runtime fail-closed** (`scripts/sw-integrity-runtime.js`, cuerpo de
-   script puro, sin imports/exports): envuelve `FetchEvent.prototype.
-   respondWith`; para GET same-origin cuyo pathname está en el manifest,
-   hashea el body (SHA-256 WebCrypto) y en mismatch responde **504** (el
-   chunk NUNCA ejecuta), borra la entrada envenenada de todas las caches
-   (`ignoreSearch` para las URLs de precache con revisión) y notifica a los
-   clients con `postMessage({type:"bundle-integrity-failed", reason:
-   "sw-cache-handler", …})`. Sin manifest (dev/test) no se parchea nada.
-3. **Puente hacia el contrato existente:** `initSwIntegrityBridge`
-   (`src/utils/swIntegrityBridge.ts`, cableado en `main.tsx`) reproduce el
-   mensaje del SW como `window` CustomEvent `bundle-integrity-failed`, así
-   AppInitializer (pantalla de recuperación) y `telemetry/productionMonitor`
-   reaccionan sin cambios.
-4. **Gate de build (scripts/build-ci.mjs):** `build:ci` verifica que el
-   embed existe exactamente una vez en el byte 0 del `sw.js`, extrae el
-   manifest embebido (sin auto-referencias), EJECUTA los bytes embebidos
-   contra un entorno SW sintético y prueba los veredictos: runtime activo,
-   `respondWith` envuelto, asset genuino verificado y byte alterado
-   rechazado — sobre un asset REAL de `dist/`. Esto convierte en fallo de
-   CI las dos clases de fallo encontradas durante el desarrollo (salto
-   silencioso del embed por orden de hooks; TypeError ASI al evaluar).
-5. **Regresión anclada:** `src/tests/security/p3-sw-integrity-runtime.
-   regression.test.ts` (ancla `p3-sw-integrity-runtime` en
-   `scripts/audit-anchors.mjs` + baseline) fija las tres costuras; el
-   comportamiento del runtime se prueba ejecutando los bytes reales contra
-   un SW sintético (`scripts/__tests__/sw-integrity-runtime.test.mjs`).
+1. **The verification point is the Service Worker** — the bottleneck
+   through which EVERY served asset passes. Two `vite.config.ts` plugins
+   collaborate:
+   - `bookmarkforge:integrity-manifest` writes `dist/integrity-manifest.json`
+     (a copy of the verified surface, single source of truth for the
+     embed and for tooling/diagnostics);
+   - `bookmarkforge:sw-integrity-embed` — a DEDICATED plugin with
+     `closeBundle: { order: "post" }` — embeds that manifest JSON and the
+     runtime `scripts/sw-integrity-runtime.js` at the START of the Workbox-generated
+     `sw.js` (byte 0). The `order: "post"` is mandatory:
+     vite-plugin-pwa writes `sw.js` in its OWN closeBundle and hooks
+     without `order` run in array order (verified empirically — a
+     "reverse order" assumption made the embed silently skip
+     because `sw.js` did not exist yet). The embed is idempotent (markers
+     `__BMF_SW_INTEGRITY_EMBED_START__/END__`); the manifest assignment
+     ends in `;` to avoid the ASI join with the runtime IIFE (real
+     bug caught by artifact verification: the full SW
+     threw a TypeError when evaluated). The runtime wraps
+     `FetchEvent.prototype.respondWith`, so its coverage does not depend
+     on the registration order of the Workbox routes.
+   - `sw.js` and `index.html` are excluded from the manifest
+     (self-referential).
+2. **Fail-closed runtime** (`scripts/sw-integrity-runtime.js`, pure script
+   body, no imports/exports): it wraps `FetchEvent.prototype.
+   respondWith`; for a same-origin GET whose pathname is in the manifest it
+   hashes the body (SHA-256 WebCrypto) and on mismatch responds **504** (the
+   chunk NEVER executes), deletes the poisoned entry from all caches
+   (`ignoreSearch` for revisioned precache URLs) and notifies
+   clients with `postMessage({type:"bundle-integrity-failed", reason:
+   "sw-cache-handler", …})`. Without a manifest (dev/test) nothing is patched.
+3. **Bridge to the existing contract:** `initSwIntegrityBridge`
+   (`src/utils/swIntegrityBridge.ts`, wired in `main.tsx`) replays the SW
+   message as a `window` CustomEvent `bundle-integrity-failed`, so
+   AppInitializer (recovery screen) and `telemetry/productionMonitor`
+   react with no changes.
+4. **Build gate (scripts/build-ci.mjs):** `build:ci` verifies that the
+   embed exists exactly once at byte 0 of `sw.js`, extracts the
+   embedded manifest (without self-references), EXECUTES the embedded bytes
+   against a synthetic SW environment and tests the verdicts: runtime active,
+   `respondWith` wrapped, genuine asset verified and altered byte
+   rejected — on a REAL asset from `dist/`. This turns the two classes of failure found during
+   development into a CI
+   failure (silent embed skip due to hook order; ASI TypeError on evaluation).
+5. **Anchored regression:** `src/tests/security/p3-sw-integrity-runtime.
+   regression.test.ts` (anchor `p3-sw-integrity-runtime` in
+   `scripts/audit-anchors.mjs` + baseline) pins the three seams; the runtime's
+   behavior is tested by executing the real bytes against
+   a synthetic SW (`scripts/__tests__/sw-integrity-runtime.test.mjs`).
 
-## Consecuencias
+## Consequences
 
-- La integridad pasa de "DOM inicial" a "todo el runtime": cada respuesta de
-  asset servida por el SW — precache y chunks lazy — se verifica contra el
-  manifest antes de llegar a la página; un chunk modificado se convierte en
-  un 504 + evento de auditoría, no en código en ejecución.
-- Coste acotado y asumido: SHA-256 por respuesta servida (sin memo, porque
-  una entrada de cache puede reescribirse tras un primer hit verificado); el
-  mayor asset custodiado es el chunk WebLLM (~6.5 MB ≈ 10 ms una vez por
-  carga). Requests no-GET, cross-origin, no-listados y no-ok pasan intactos.
-- `sw.js` e `index.html` quedan fuera del hash por auto-referencia; su
-  protección es el transporte del servidor + SRI para el HTML, y el
-  byte-diff del navegador en los update checks del SW.
-- La notificación entra por el mismo contrato `bundle-integrity-failed`, de
-  modo que la alerta de spike de monitoreo (`bundle-integrity-spike`, 3
-  fallos/5 min) y el registro en AuditLog aplican sin duplicar canales.
+- Integrity moves from "initial DOM" to "the whole runtime": every asset response
+  served by the SW — precache and lazy chunks alike — is verified against the
+  manifest before it reaches the page; a modified chunk becomes
+  a 504 + audit event, not code in execution.
+- Bounded and accepted cost: SHA-256 per served response (no memo, because
+  a cache entry can be rewritten after a first verified hit); the
+  largest custodied asset is the WebLLM chunk (~6.5 MB ≈ 10 ms once per
+  load). Non-GET, cross-origin, unlisted and non-ok requests pass through untouched.
+- `sw.js` and `index.html` are outside the hash for self-reference; their
+  protection is the server transport + SRI for the HTML, and the
+  browser's byte-diff in the SW update checks.
+- The notification enters through the same `bundle-integrity-failed` contract, so
+  the monitoring spike alert (`bundle-integrity-spike`, 3
+  failures/5 min) and the AuditLog entry apply without duplicating channels.

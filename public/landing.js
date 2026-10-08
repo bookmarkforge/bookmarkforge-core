@@ -47,6 +47,17 @@
 
   initTheme();
 
+  // ── Force Service Worker Update Check ─────────────────────
+  // Force service worker to check for updates on page load
+  // This ensures users get the latest version with language fixes
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').then(registration => {
+      registration.update();
+    }).catch(() => {
+      // Silent fail if SW registration fails
+    });
+  }
+
   // ── Language Dropdown ─────────────────────────────────────────────
   const languageToggle = document.querySelector('.language-toggle');
   const languageMenu = document.querySelector('.language-menu');
@@ -180,5 +191,80 @@
   } else {
     handleLangParam();
   }
+
+  // ── Whop Early Bird stock ───────────────────────────────────────
+  // The API key stays server-side in Vercel. If the 200 Early Bird
+  // licenses are exhausted, switch the pricing card to the $79 plan.
+  async function refreshEarlyBirdStatus() {
+    const earlyLink = document.querySelector('a[href="https://whop.com/checkout/plan_9oP0DrBuqFEb7"]');
+    const regularLink = document.querySelector('a[href="https://whop.com/checkout/plan_FTmrDjPDKqQVC"]');
+    const card = earlyLink ? earlyLink.closest('.price-card') : null;
+
+    if (!card) return;
+
+    try {
+      const response = await fetch('/api/early-bird-status', {
+        method: 'GET',
+        cache: 'no-store',
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (!response.ok) return;
+
+      const status = await response.json();
+      if (status.available !== false) return;
+
+      // If a Regular CTA is not present on an older localized landing,
+      // create one so the sold-out state still has a working purchase path.
+      let proLink = regularLink;
+      if (!proLink && earlyLink) {
+        proLink = document.createElement('a');
+        proLink.href = 'https://whop.com/checkout/plan_FTmrDjPDKqQVC';
+        proLink.target = '_blank';
+        proLink.rel = 'noopener noreferrer';
+        proLink.className = earlyLink.className.replace('btn-primary', 'btn-secondary');
+        proLink.textContent = 'Get Pro $79 Regular';
+        earlyLink.insertAdjacentElement('afterend', proLink);
+      }
+
+      if (earlyLink) {
+        earlyLink.hidden = true;
+        earlyLink.setAttribute('aria-hidden', 'true');
+      }
+
+      if (proLink) {
+        proLink.hidden = false;
+        proLink.removeAttribute('aria-hidden');
+        proLink.textContent = 'Get Pro $79 Regular';
+      }
+
+      // Update the visible pricing copy inside the Pro card.
+      card.querySelectorAll('*').forEach((el) => {
+        if (el.children.length !== 0) return;
+        const text = el.textContent || '';
+        if (/Early Bird/i.test(text)) {
+          if (el.classList.contains('badge') || el.classList.contains('badge-early')) {
+            el.textContent = 'Pro Lifetime v1 — $79';
+          } else {
+            el.textContent = text
+              .replace(/Early Bird\s*\(then\s*\$?79\)/gi, 'Regular')
+              .replace(/Early Bird\s*—\s*200/gi, 'Regular')
+              .replace(/Early Bird/gi, 'Regular');
+          }
+        }
+        if (/\$\s*59\b/.test(text)) {
+          el.textContent = text.replace(/\$\s*59\b/g, '$ 79');
+        }
+      });
+
+      card.classList.add('regular-price');
+    } catch {
+      // Fail closed to the current static Early Bird presentation.
+      // Whop remains the source of truth for checkout availability.
+    }
+  }
+
+  refreshEarlyBirdStatus();
+  window.setInterval(refreshEarlyBirdStatus, 5 * 60 * 1000);
 
 })();

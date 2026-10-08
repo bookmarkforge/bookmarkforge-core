@@ -11,7 +11,7 @@
  *   node scripts/test-coverage-history.mjs
  *   node scripts/test-coverage-history.mjs --coverage-file coverage/coverage-final.json --history-file coverage-history.json
  */
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { evaluateAreaCoverage } from "./check-coverage-by-area.mjs";
 
@@ -101,23 +101,34 @@ export function appendCoverageHistoryFile({
   historyFile = DEFAULT_HISTORY_FILE,
   now = new Date(),
 } = {}) {
-  if (!existsSync(coverageFile)) {
-    throw new Error(`[coverage-history] ${coverageFile} missing — run coverage first`);
+  let coverageRaw;
+  let budgetsRaw;
+  try {
+    coverageRaw = readFileSync(coverageFile, "utf8");
+  } catch (error) {
+    if (error?.code === "ENOENT") throw new Error(`[coverage-history] ${coverageFile} missing — run coverage first`);
+    throw error;
   }
-  if (!existsSync(budgetsFile)) {
-    throw new Error(`[coverage-history] ${budgetsFile} missing`);
+  try {
+    budgetsRaw = readFileSync(budgetsFile, "utf8");
+  } catch (error) {
+    if (error?.code === "ENOENT") throw new Error(`[coverage-history] ${budgetsFile} missing`);
+    throw error;
   }
 
-  const coverageMap = JSON.parse(readFileSync(coverageFile, "utf8"));
-  const budgets = JSON.parse(readFileSync(budgetsFile, "utf8"));
+  const coverageMap = JSON.parse(coverageRaw);
+  const budgets = JSON.parse(budgetsRaw);
   const areas = Object.keys(budgets.areas ?? {});
   if (areas.length !== 15) {
     throw new Error(`[coverage-history] expected 15 configured areas, found ${areas.length}`);
   }
 
-  const existing = existsSync(historyFile)
-    ? JSON.parse(readFileSync(historyFile, "utf8"))
-    : undefined;
+  let existing;
+  try {
+    existing = JSON.parse(readFileSync(historyFile, "utf8"));
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+  }
   const history = createOrValidateHistory(existing, areas);
   const values = calculateAreaLineCoverage(coverageMap, budgets);
   const next = appendCoverageHistory(history, values, now);

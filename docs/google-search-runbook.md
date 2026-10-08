@@ -1,7 +1,7 @@
 # Google Search Runbook — Search Console, sitemap y cobertura noindex de /app
 
 - **Date:** 2026-09-09
-- **Purpose:** Registrar `bookmarkforge.com` en Google Search Console, enviar el sitemap y verificar que la app privada (`/app`) queda fuera del índice con las tres capas de noindex que el repo ya contrata.
+- **Purpose:** Registrar `bookmarkforgeapp.com` en Google Search Console, enviar el sitemap y verificar que la app privada (`/app`) queda fuera del índice con las tres capas de noindex que el repo ya contrata.
 - **Prerequisite:** El despliegue actual en producción es legacy y **no** sirve el build del repo (ver "Verificación con curl contra producción" en `docs/ADR-043-check-seo-gate.md`): `/sitemap.xml`, `/robots.txt` y `/app` responden 404 hoy. Este runbook asume que primero se desplegó el build actual (`node scripts/deploy-prod.mjs --deploy --verify`).
 
 ---
@@ -37,17 +37,17 @@ npm run check:sitemap-coverage
 
 # Grafo hreflang histórico de las 12 páginas principales en modo live
 # (la cobertura de las 30 rutas se comprueba estáticamente arriba)
-node scripts/check-hreflang-graph.mjs https://bookmarkforge.com
+node scripts/check-hreflang-graph.mjs https://bookmarkforgeapp.com
 
 # Sitemap y robots servidos
-curl -s -o /dev/null -w "sitemap: %{http_code}\n" https://bookmarkforge.com/sitemap.xml
-curl -s -o /dev/null -w "robots: %{http_code}\n" https://bookmarkforge.com/robots.txt
+curl -s -o /dev/null -w "sitemap: %{http_code}\n" https://bookmarkforgeapp.com/sitemap.xml
+curl -s -o /dev/null -w "robots: %{http_code}\n" https://bookmarkforgeapp.com/robots.txt
 
 # Noindex por header en /app (debe decir noindex)
-curl -sI https://bookmarkforge.com/app | grep -i x-robots-tag
+curl -sI https://bookmarkforgeapp.com/app | grep -i x-robots-tag
 
 # Negociación: fr → 302 a /fr/, en → 200
-curl -s -o /dev/null -w "fr: %{http_code} -> %{redirect_url}\n" -H "Accept-Language: fr-FR,fr;q=0.9" https://bookmarkforge.com/
+curl -s -o /dev/null -w "fr: %{http_code} -> %{redirect_url}\n" -H "Accept-Language: fr-FR,fr;q=0.9" https://bookmarkforgeapp.com/
 ```
 
 Si algo falla aquí, **no** sigas: corregir y re-desplegar antes de pedirle a Google que indexe.
@@ -56,8 +56,8 @@ Si algo falla aquí, **no** sigas: corregir y re-desplegar antes de pedirle a Go
 
 ## 2. Registrar el dominio en Search Console
 
-1. Ir a <https://search.google.com/search-console> → **Add property** → **Domain property** (recomendado: cubre `bookmarkforge.com` y todos sus subdominios; la propiedad de dominio no admite verificación por HTML, solo DNS).
-2. Copiar el registro TXT `google-site-verification=…` que ofrece GSC y añadirlo a la zona DNS del dominio (donde vive `bookmarkforge.com` → `178.156.204.210`).
+1. Ir a <https://search.google.com/search-console> → **Add property** → **Domain property** (recomendado: cubre `bookmarkforgeapp.com` y todos sus subdominios; la propiedad de dominio no admite verificación por HTML, solo DNS).
+2. Copiar el registro TXT `google-site-verification=…` que ofrece GSC y añadirlo a la zona DNS del dominio (donde vive `bookmarkforgeapp.com` → `178.156.204.210`).
 3. Verificar. El TTL típico propaga en minutos; la verificación puede tardar hasta una hora.
 
 > El repo **no** debe versionar la etiqueta de verificación HTML: la propiedad de dominio usa DNS, así que no hay archivo que desplegar.
@@ -67,7 +67,7 @@ Si algo falla aquí, **no** sigas: corregir y re-desplegar antes de pedirle a Go
 ## 3. Enviar el sitemap
 
 1. Search Console → **Sitemaps**.
-2. URL: `https://bookmarkforge.com/sitemap.xml`.
+2. URL: `https://bookmarkforgeapp.com/sitemap.xml`.
 3. Estado esperado: **Success**. Google debe ver **61 URLs descubiertas**:
    - raíz + 30 landings (`/`, `/ar/`, …, `/zh/`) — `weekly`, priority 1.0/0.9
    - `/pocket-alternative` — `monthly`, 0.8
@@ -86,15 +86,15 @@ La app privada tiene **tres capas** (todas pinneadas por `check:seo`); verifica 
 
 | Capa | Dónde | Verificación |
 |---|---|---|
-| 1. `robots.txt` | `Disallow: /app` (+ `/capture`, `/offline`, `/api`) | `curl https://bookmarkforge.com/robots.txt` |
-| 2. Header HTTP | `X-Robots-Tag: noindex` en `/app`, `/app/*`, `/capture*`, `/offline*` | `curl -sI https://bookmarkforge.com/app` → header presente |
+| 1. `robots.txt` | `Disallow: /app` (+ `/capture`, `/offline`, `/api`) | `curl https://bookmarkforgeapp.com/robots.txt` |
+| 2. Header HTTP | `X-Robots-Tag: noindex` en `/app`, `/app/*`, `/capture*`, `/offline*` | `curl -sI https://bookmarkforgeapp.com/app` → header presente |
 | 3. Sitemap | `/app` ausente (el gate falla si aparece) | informe de sitemap de GSC |
 
 Además, el shell SPA (`/index.html`) apunta su canonical y OG a la landing `/`, de modo que incluso un acceso directo a `/index.html` señala a la página indexable.
 
 **En Search Console:**
-- **URL Inspection** de `https://bookmarkforge.com/app` → debe indicar que la URL **no está indexada** (noindex).
-- Búsqueda `site:bookmarkforge.com/app` → sin resultados.
+- **URL Inspection** de `https://bookmarkforgeapp.com/app` → debe indicar que la URL **no está indexada** (noindex).
+- Búsqueda `site:bookmarkforgeapp.com/app` → sin resultados.
 - Informe **Páginas (cobertura)** → la URL debe aparecer bajo **"Excluida por la directiva noindex"**, nunca en "Indexada".
 
 Si `/app` apareciera indexado: ejecutar `npm run check` (detecta cuál de las tres capas se perdió), corregir, re-desplegar y usar **Validación de corrección** en GSC.
@@ -115,7 +115,7 @@ Después de cualquier cambio de contenido SEO (landing, legales, sitemap):
 
 ```bash
 npm run check                      # todos los gates, incluido check:seo
-node scripts/check-hreflang-graph.mjs https://bookmarkforge.com   # grafos vivos
+node scripts/check-hreflang-graph.mjs https://bookmarkforgeapp.com   # grafos vivos
 ```
 
 Y en GSC, cada 2–4 semanas: pestaña **Páginas** (errores de rastreo, "Excluida por noindex" estable) y **Sitemaps** (estado Success, 61 URLs).

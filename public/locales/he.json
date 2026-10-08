@@ -1438,7 +1438,7 @@
   "app_proActivationsLeft": "הפעלות נותרו: {{count}}",
   "app_proDeactivate": "בטל הפעלה",
   "app_proUpgradeTitle": "פתח את BookmarkForge Pro",
-  "app_proUpgradeText": "סימניות ללא הגבלה, סנכרון P2P ב-3 מכשירים ו-AI מקומי. תשלום אחד, שלך לנצח.",
+  "app_proUpgradeText": "סימניות ללא הגבלה, סנכרון P2P ב-5 מכשירים ו-AI מקומי. תשלום אחד, שלך לנצח.",
   "app_proBuy": "השג את Pro — {{price}}",
 "app_proStateFeaturePro": "Pro",
 "app_proStateBodyLicense": "פתחו את זה עם רישיון Pro בתשלום אחד. כל מה שכבר שמרתם נשאר כמו שהוא.",

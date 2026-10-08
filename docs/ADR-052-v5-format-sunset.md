@@ -1,132 +1,133 @@
-# ADR-052: Sunset del formato v5 — retirada del path legacy de salt Argon2id estático
+# ADR-052: v5 format sunset — retirement of the legacy static Argon2id salt path
 
-- **Estado:** propuesto
-- **Fecha:** 2026-09-17
+- **Status:** proposed
+- **Date:** 2026-09-17
 
-## Contexto
+## Context
 
-A-1 (provisionamiento y migración, ver `docs/ADR-046-vault-kdf-salt-rotation.md`)
-sustituyó el salt Argon2id **constante y compartido por todo el bundle** por un
-salt aleatorio por bóveda: los payloads nuevos son `v6:` y **llevan su propio
-salt incrustado**. Los `v5:` escritos antes de la migración siguen leyéndose
-con el salt fijo legacy — es la decisión deliberada de read-compat que evitó
-perder datos en la ola A-1 — y hoy ese es el único lugar del árbol donde
-sobrevive la violación de RFC 9106 (un salt para todas las bóvedas):
+A-1 (provisioning and migration, see `docs/ADR-046-vault-kdf-salt-rotation.md`)
+replaced the **constant, bundle-wide shared** Argon2id salt with a
+random per-vault salt: new payloads are `v6:` and **carry their own
+embedded salt**. `v5:` payloads written before the migration are still read
+with the legacy fixed salt — this is the deliberate read-compat decision that
+avoided losing data in the A-1 wave — and today that is the only place in the
+tree where the RFC 9106 violation survives (one salt for all vaults):
 
-- `crypto-core.deriveContextSalt(context, null)` deriva el salt legacy como
-  `SHA-256(context)`, con contextos `bookmarkforge-v5-master-key` y
-  `bookmarkforge-session-master-key-v6`. Una sola pasada de Argon2id sobre una
-  contraseña candidata sirve contra **todo** blob `v5:` de **toda** bóveda del
-  mundo, para siempre que ese blob exista.
-- El re-envoltorio oportunista (`migrateVaultSecretsToVaultSalt`, en cada
-  unlock, con la contraseña recién verificada) y la re-acuñación del token de
-  verificación mueven el corpus de `SecureStorage` a `v6:` de forma incremental.
-  Toda **escritura** nueva ya es `v6:` (invariante anclada en
+- `crypto-core.deriveContextSalt(context, null)` derives the legacy salt as
+  `SHA-256(context)`, with contexts `bookmarkforge-v5-master-key` and
+  `bookmarkforge-session-master-key-v6`. A single Argon2id pass over a
+  candidate password serves against **every** `v5:` blob of **every** vault in
+  the world, for as long as that blob exists.
+- Opportunistic re-wrapping (`migrateVaultSecretsToVaultSalt`, on every
+  unlock, with the freshly verified password) and verification-token re-minting
+  move the `SecureStorage` corpus to `v6:` incrementally. Every new
+  **write** is already `v6:` (an invariant anchored in
   `p0-vault-kdf-salt.regression.test.ts`).
-- El parque residual que se resiste a la migración es, por construcción, el que
-  **nunca se re-abre** con una build reciente: dispositivos abandonados, secretos
-  en rutas que ningún unlock recorre, y **backups en disco escritos pre-A-1**
-  (los backups se re-clavan solo cuando el usuario los restaura con la
-  contraseña de su creación).
+- The residual stock that resists migration is, by construction, the one that
+  **is never re-opened** with a recent build: abandoned devices, secrets in
+  paths no unlock walks, and **on-disk backups written pre-A-1**
+  (backups are only re-keyed when the user restores them with the
+  password they were created with).
 
-El sunset, por tanto, no puede ser una fecha: es una condición sobre el parque
-real de blobs. Retirar el parser v5 mientras exista data real en v5 es una
-decisión de pérdida de datos, no de seguridad; mantenerlo indefinidamente es
-mantener un diccionario global válido. Este ADR fija el mecanismo para pasar de
-uno a otro de forma medible, reversible y fail-closed.
+The sunset, therefore, cannot be a date: it is a condition over the real
+stock of blobs. Retiring the v5 parser while real data still exists in v5 is a
+data-loss decision, not a security one; keeping it indefinitely is keeping a
+valid global dictionary. This ADR sets the mechanism for moving from one to the
+other in a measurable, reversible and fail-closed way.
 
-## Decisión
+## Decision
 
-1. **Sunset condicionado, no calendarizado.** La retirada procede cuando el
-   parque esté migrado, medido — no cuando pase el tiempo. El criterio objetivo
-   de "parque migrado" es: **cero secretos en formato v5 reportados por la
-   instrumentación de exposición durante dos unlocks consecutivos** en una
-   bóveda dada, más la expiración natural de los backups antiguos por edad
-   (ya acotada por ADR-032/ADR-034: poda de backups en disco y cuota de
-   almacenamiento).
-2. **Fases:**
-   - **Fase 0 — hoy (ya implementada).** `v5:` read-only + re-envoltorio
-     oportunista en unlock + escritura siempre `v6:`. La matriz ejecutable
-     (`src/utils/legacy-compat-matrix.ts`) documenta el estado
-     `legacy-read-only` de cada formato.
-   - **Fase 1 — instrumentación de exposición.** Un contador persistido y
-     consultable (DiagnosticService → panel de diagnósticos) que reporte
-     cuántos secretos de `SecureStorage` persisten en formato `v5:` por
-     bóveda, y cuántos se re-envolvieron en el último unlock. Sin telemetría:
-     el dato es local; este repositorio lo consume el propio usuario/mantenedor.
-   - **Fase 2 — aviso de residuo.** Si tras N unlocks consecutivos el contador
-     no llega a cero, la UI de seguridad muestra un aviso no bloqueante que
-     explica qué significa (diccionario global sigue aplicando a esos blobs) y
-     cómo forzar el re-envoltorio (unlock con la contraseña correcta /
-     restauración del backup con build actual). Nunca bloquea la lectura.
-   - **Fase 3 — corte tras el criterio.** Retirar la rama legacy de derivación
-     (`salt = null` en `deriveContextSalt`) y el parseo `v5:` en decrypt,
-     tras un **flag de build de reversibilidad**
-     (`VITE_ALLOW_V5_LEGACY_READ`, default OFF). Sin el flag, un blob `v5:`
-     produce un error **tipado y accionable** ("formato legacy retirado;
-     actualice desde una build anterior o restaure desde el backup convertido"),
-     nunca un fallo críptico. Con el flag, una build de puente mantiene la
-     lectura un ciclo de releases para los casos de soporte.
-   - **Fase 4 — eliminación.** Borrar flag y código muerto, pasar la fila de la
-     matriz de compatibilidad a `removed`, y retirar los tests de read-compat
-     v5 (los que hoy anclan la compatibilidad en
-     `p0-vault-kdf-salt.regression.test.ts`, `real-crypto.integration.test.ts` y
-     el seeder `tests/e2e/legacy-vault-seeder.ts`), dejando el ADR como
-     referencia histórica del formato.
-3. **Invariantes durante todo el sunset:**
-   - Ninguna escritura nueva en `v5:` desde la Fase 0 (hoy).
-   - La retirada del parser no puede romper un `v6:`: los formatos se
-     autodescriben por prefijo (`v6:`/`v5:`) y por marker byte en el layout de
-     session-key, así que el corte es seguro por construcción.
-   - Cada salto de fase es un cambio de código revisable en PR; el flag de la
-     Fase 3 es la válvula de reversibilidad operativa.
-   - El salt por-vault (`kdf_salt`, ADR-046) y el `vault_salt` de `deriveDbKey`
-     no se tocan: este ADR solo retira el path `salt = null` (constante).
-4. **Lo que este ADR no hace:**
-   - No migra backups antiguos: no se puede sin la contraseña con la que se
-     escribieron. Siguen leyéndose mientras exista el read path; después de la
-     Fase 3 requieren la build de puente (flag) o la conversión manual
-     (restaurar con build antigua → unlock → re-exportar, ya en `v6:`).
-   - No unifica `kdf_salt` y `vault_salt` en un registro único (mejora de
-     higiene independiente, no de seguridad).
+1. **Conditional sunset, not calendar-based.** Retirement proceeds when the
+   stock has been migrated, measured — not when time passes. The objective
+   criterion for "migrated stock" is: **zero secrets in v5 format reported by
+   the exposure instrumentation for two consecutive unlocks** on a
+   given vault, plus the natural expiry of old backups by age
+   (already bounded by ADR-032/ADR-034: on-disk backup pruning and
+   storage quota).
+2. **Phases:**
+   - **Phase 0 — today (already implemented).** `v5:` read-only + opportunistic
+     re-wrapping on unlock + writes always `v6:`. The executable
+     matrix (`src/utils/legacy-compat-matrix.ts`) documents the
+     `legacy-read-only` state of each format.
+   - **Phase 1 — exposure instrumentation.** A persisted, queryable counter
+     (DiagnosticService → diagnostics panel) that reports how many `SecureStorage`
+     secrets persist in `v5:` format per vault, and how many were re-wrapped on
+     the last unlock. No telemetry: the data is local, and this repository's
+     consumer is the user/maintainer themselves.
+   - **Phase 2 — residual notice.** If after N consecutive unlocks the counter
+     does not reach zero, the security UI shows a non-blocking notice that
+     explains what it means (the global dictionary still applies to those blobs) and
+     how to force the re-wrap (an unlock with the correct password /
+     restoration of the backup with a current build). It never blocks reading.
+   - **Phase 3 — cutover after the criterion.** Retire the legacy derivation
+     branch (`salt = null` in `deriveContextSalt`) and `v5:` parsing in decrypt,
+     behind a **reversibility build flag**
+     (`VITE_ALLOW_V5_LEGACY_READ`, default OFF). Without the flag, a `v5:` blob
+     produces a **typed and actionable** error ("legacy format retired;
+     update from an earlier build or restore from the converted backup"),
+     never a cryptic failure. With the flag, a bridge build keeps
+     reading alive for one release cycle for support cases.
+   - **Phase 4 — removal.** Delete the flag and the dead code, move the
+     compatibility-matrix row to `removed`, and retire the v5 read-compat
+     tests (the ones that today anchor compatibility in
+     `p0-vault-kdf-salt.regression.test.ts`, `real-crypto.integration.test.ts` and
+     the `tests/e2e/legacy-vault-seeder.ts` seeder), leaving the ADR as the
+     historical reference for the format.
+3. **Invariants throughout the sunset:**
+   - No new `v5:` writes since Phase 0 (today).
+   - Retiring the parser cannot break a `v6:`: the formats are
+     self-describing by prefix (`v6:`/`v5:`) and by a marker byte in the
+     session-key layout, so the cutover is safe by construction.
+   - Each phase hop is a reviewable code change in a PR; the Phase 3
+     flag is the operational reversibility valve.
+   - The per-vault salt (`kdf_salt`, ADR-046) and `deriveDbKey`'s `vault_salt`
+     are untouched: this ADR only retires the `salt = null` (constant)
+     path.
+4. **What this ADR does not do:**
+   - It does not migrate old backups: that is impossible without the password they
+     were written with. They remain readable while the read path exists; after
+     Phase 3 they require the bridge build (flag) or manual conversion
+     (restore with an old build → unlock → re-export, already in `v6:`).
+   - It does not unify `kdf_salt` and `vault_salt` into a single registry (a
+     hygiene improvement independent of security).
 
-## Consecuencias
+## Consequences
 
-- **+** El diccionario global deja de servir en cuanto el último blob `v5:`
-  desaparece, y el deadline deja de ser una promesa: es un contador medible por
-  bóveda. RFC 9106 vuelve a cumplirse para el 100% del parque una vez cerrada
-  la Fase 3.
-- **+** Reversibilidad: cualquier fase puede detenerse; el flag de la Fase 3
-  permite dar soporte a casos límite sin reabrir el formato por defecto.
-- **−** Hasta la Fase 3, la exposición bundle-wide persiste para blobs que
-  nunca se re-abren (dispositivos abandonados es el caso dominante). Es el
-  compromiso explícito: read-compat primero, cierre medible después.
-- **−** Coste de soporte en la Fase 3: usuarios que actualicen saltándose la
-  build de puente no podrán leer bóvedas/respaldos `v5:`. Mitigación: el aviso
-  de la Fase 2 y mantener el flag disponible un ciclo de releases.
-- **Superficie de tests afectada por fase:** los tests que hoy anclan la
-  read-compat v5 se retiran en la Fase 4 con el mismo PR que elimina el código
-  (la retirada de un test anclado por el paraguas
-  `security-tier-4-p-regression-suite` exige actualización del catálogo
-  `audit-anchors` — cambio de nivel ADR, coherente con este documento).
+- **+** The global dictionary stops serving as soon as the last `v5:` blob
+  disappears, and the deadline stops being a promise: it is a counter measurable
+  per vault. RFC 9106 is met again for 100% of the stock once
+  Phase 3 closes.
+- **+** Reversibility: any phase can be stopped; the Phase 3 flag
+  allows supporting edge cases without reopening the format by default.
+- **−** Until Phase 3, bundle-wide exposure persists for blobs that
+  are never re-opened (abandoned devices is the dominant case). It is the
+  explicit trade-off: read-compat first, measurable closure afterwards.
+- **−** Support cost at Phase 3: users who update while skipping the
+  bridge build will not be able to read `v5:` vaults/backups. Mitigation: the
+  Phase 2 notice and keeping the flag available for one release cycle.
+- **Test surface affected per phase:** the tests that today anchor
+  v5 read-compat are retired in Phase 4 in the same PR that removes the code
+  (retiring a test anchored by the `security-tier-4-p-regression-suite`
+  umbrella requires a `audit-anchors` catalog update — an ADR-level change,
+  consistent with this document).
 
-## Alternativas descartadas
+## Rejected alternatives
 
-- **A-1. Sunset calendarizado (fecha fija de corte).** No mide el parque real:
-  o rompe datos de usuarios que aún tienen blobs `v5:`, o se pospone
-  indefinidamente en cuanto aparece un caso de soporte. La condición medible
-  hace el corte honesto.
-- **A-2. Migración forzada (re-key sin interacción del usuario).** Imposible
-  criptográficamente: re-envolver requiere la contraseña, que solo existe en
-  un unlock. Forzar reset de bóveda es pérdida de datos, no migración.
-- **A-3. Mantener v5 para siempre.** Mantiene un diccionario global válido
-  contra todo blob legacy del mundo y contradice RFC 9106 de forma permanente;
-  contradice también la dirección ya tomada por ADR-046.
-- **A-4. Doble escritura v5+v6 durante la transición** para "garantizar"
-  compatibilidad hacia atrás con builds antiguas. Duplica el corpus cosechable
-  en lugar de reducirlo y re-introduce escritura v5, que la Fase 0 ya cerró.
-- **A-5. Re-encryptar backups del usuario en background.** Los backups solo
-  pueden re-clavarse cuando el usuario los abre o restaura con la contraseña de
-  su creación; una re-encryptación "en background" sin ese material no existe.
-  La expiración por edad (ADR-032/034) es el mecanismo correcto para acotar su
-  vida.
+- **A-1. Calendar sunset (fixed cutover date).** It does not measure the real stock:
+  it either breaks data for users who still have `v5:` blobs, or it gets postponed
+  indefinitely as soon as a support case appears. The measurable condition
+  makes the cutover honest.
+- **A-2. Forced migration (re-keying without user interaction).** Cryptographically
+  impossible: re-wrapping requires the password, which only exists during
+  an unlock. Forcing a vault reset is data loss, not migration.
+- **A-3. Keep v5 forever.** It keeps a valid global dictionary
+  against every legacy blob in the world and contradicts RFC 9106 permanently;
+  it also contradicts the direction already taken by ADR-046.
+- **A-4. Double-writing v5+v6 during the transition** to "guarantee"
+  backward compatibility with old builds. It duplicates the harvestable corpus
+  instead of reducing it and re-introduces v5 writes, which Phase 0 already closed.
+- **A-5. Re-encrypting user backups in the background.** Backups can only
+  be re-keyed when the user opens or restores them with the password they
+  were created with; a "background" re-encryption without that material does not exist.
+  Expiry by age (ADR-032/034) is the right mechanism to bound their
+  lifetime.

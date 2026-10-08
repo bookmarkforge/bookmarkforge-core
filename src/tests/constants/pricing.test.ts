@@ -32,7 +32,7 @@ describe("constants/pricing", () => {
     const { PRICING_CONFIG } = await import("../../constants/pricing");
     const free = PRICING_CONFIG.tiers.find((t) => t.id === "free")!;
     expect(free.price).toBe(0);
-    expect(free.limitations.maxBookmarks).toBe(1000);
+    expect(free.limitations.maxBookmarks).toBe(2500);
 
     const pro = PRICING_CONFIG.tiers.find((t) => t.id === "pro")!;
     // Regular anchor is $79; early bird $59 is in earlyBird.phases.early.pro
@@ -41,9 +41,9 @@ describe("constants/pricing", () => {
     expect(pro.popular).toBe(true);
   });
 
-  it("should keep the legacy trial disabled and preserve lifetime versioned early bird", async () => {
+  it("should keep the trial enabled and preserve lifetime versioned early bird", async () => {
     const { PRICING_CONFIG } = await import("../../constants/pricing");
-    expect(PRICING_CONFIG.trial.enabled).toBe(false);
+    expect(PRICING_CONFIG.trial.enabled).toBe(true);
     expect(PRICING_CONFIG.trial.days).toBe(7);
     expect(PRICING_CONFIG.earlyBird.enabled).toBe(true);
     // Early bird $59, regular $79 — the $59 ladder is what creates FOMO
@@ -74,7 +74,7 @@ describe("constants/pricing", () => {
   it("should export LICENSE_FEATURES for free/pro", async () => {
     const { LICENSE_FEATURES } = await import("../../constants/pricing");
     expect(Object.keys(LICENSE_FEATURES)).toEqual(["free", "pro"]);
-    expect(LICENSE_FEATURES.free.bookmarks).toBe("1,000 bookmarks");
+    expect(LICENSE_FEATURES.free.bookmarks).toBe("2,500 bookmarks");
     expect(LICENSE_FEATURES.pro.bookmarks).toBe("∞ UNLIMITED");
   });
 

@@ -24,7 +24,7 @@
  * Drives the CSP report-uri endpoint and the self-hosted P2P signaling host.
  */
 export const APP_DOMAIN = (
-  process.env.BOOKMARKFORGE_DOMAIN ?? "bookmarkforge.com"
+  process.env.BOOKMARKFORGE_DOMAIN ?? "bookmarkforgeapp.com"
 ).replace(/\/+$/, "");
 const SIGNALING_WS = `wss://signal.${APP_DOMAIN}`;
 

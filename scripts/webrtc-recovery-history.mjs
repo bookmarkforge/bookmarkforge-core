@@ -12,7 +12,7 @@
  *   node scripts/webrtc-recovery-history.mjs
  *   node scripts/webrtc-recovery-history.mjs --summary playwright-report-nightly/webrtc-convergence-summary.json --history webrtc-recovery-history.json
  */
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const ROOT = process.cwd();
@@ -95,15 +95,24 @@ export function appendRecoveryHistoryFile({
   summaryFile = DEFAULT_SUMMARY_FILE,
   historyFile = DEFAULT_HISTORY_FILE,
 } = {}) {
-  if (!existsSync(summaryFile)) {
-    throw new Error(
-      `[webrtc-recovery-history] ${summaryFile} missing — run the nightly WebRTC suite and the summary step first`,
-    );
+  let summaryRaw;
+  try {
+    summaryRaw = readFileSync(summaryFile, "utf8");
+  } catch (error) {
+    if (error?.code === "ENOENT") {
+      throw new Error(
+        `[webrtc-recovery-history] ${summaryFile} missing — run the nightly WebRTC suite and the summary step first`,
+      );
+    }
+    throw error;
   }
-  const summary = JSON.parse(readFileSync(summaryFile, "utf8"));
-  const existing = existsSync(historyFile)
-    ? JSON.parse(readFileSync(historyFile, "utf8"))
-    : undefined;
+  const summary = JSON.parse(summaryRaw);
+  let existing;
+  try {
+    existing = JSON.parse(readFileSync(historyFile, "utf8"));
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+  }
   const history = createOrValidateHistory(existing);
   const run = summarizeRun(summary);
   const next = appendRecoveryHistory(history, run);

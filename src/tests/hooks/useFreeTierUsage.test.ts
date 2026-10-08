@@ -3,7 +3,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 
 const mockInitDB = vi.fn();
 const mockHasProAccess = vi.fn(() => false);
-const mockCanAddBookmarks = vi.fn(async (count: number) => count < 1000);
+const mockCanAddBookmarks = vi.fn(async (count: number) => count < 2500);
 const mockSecurityState = { isLocked: false };
 
 vi.mock("../../db/database", () => ({ initDB: mockInitDB }));
@@ -43,7 +43,11 @@ describe("useFreeTierUsage", () => {
     vi.clearAllMocks();
     mockSecurityState.isLocked = false;
     mockHasProAccess.mockReturnValue(false);
-    mockCanAddBookmarks.mockImplementation(async (count: number) => count < 1000);
+    // Keep the wall relative to the live limit so a FREE_LIMITS change
+    // cannot silently invalidate these expectations again.
+    mockCanAddBookmarks.mockImplementation(
+      async (count: number) => count < FREE_LIMITS.maxBookmarks,
+    );
   });
 
   it("subscribes with the same { isDeleted: false } selector the wall counts", async () => {
@@ -59,20 +63,21 @@ describe("useFreeTierUsage", () => {
   });
 
   it("flags nearWall at ≥90% and atWall at the limit", async () => {
-    const q = makeCountQuery(899);
+    const belowWall = Math.floor(FREE_LIMITS.maxBookmarks * 0.9) - 1;
+    const q = makeCountQuery(belowWall);
     mockInitDB.mockResolvedValue({ bookmarks: q });
     const { result } = renderHook(() => useFreeTierUsage());
-    await waitFor(() => expect(result.current.count).toBe(899));
+    await waitFor(() => expect(result.current.count).toBe(belowWall));
     expect(result.current.nearWall).toBe(false);
 
-    q.emit(900);
+    q.emit(Math.floor(FREE_LIMITS.maxBookmarks * 0.9));
     await waitFor(() => expect(result.current.nearWall).toBe(true));
     expect(result.current.atWall).toBe(false);
 
-    q.emit(1000);
+    q.emit(FREE_LIMITS.maxBookmarks);
     await waitFor(() => expect(result.current.atWall).toBe(true));
     expect(result.current.canAddBookmark).toBe(false);
-    expect(mockCanAddBookmarks).toHaveBeenLastCalledWith(1000);
+    expect(mockCanAddBookmarks).toHaveBeenLastCalledWith(FREE_LIMITS.maxBookmarks);
   });
 
   it("is a no-op for Pro users — the nudge must not exist for them", async () => {

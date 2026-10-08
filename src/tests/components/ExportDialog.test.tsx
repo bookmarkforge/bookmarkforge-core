@@ -162,7 +162,7 @@ describe("ExportDialog", () => {
       success: false,
       blob: null,
       filename: "",
-      error: "Error de exportación",
+      error: "Export error",
     });
 
     render(<ExportDialog isOpen={true} onClose={vi.fn()} />);

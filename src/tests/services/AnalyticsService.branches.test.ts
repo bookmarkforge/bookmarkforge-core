@@ -200,7 +200,7 @@ describe("AnalyticsService — ramas no cubiertas", () => {
 
   // ── 6. computeRetention con eventos (usa IDB mock) ────────────
 
-  it("computeRetention cuenta días activos y streaks con eventos multisolar", async () => {
+  it("computeRetention counts active days and streaks with multi-solar events", async () => {
     const { analyticsService } = await import("../../services/AnalyticsService");
     analyticsService.start();
 
@@ -233,7 +233,7 @@ describe("AnalyticsService — ramas no cubiertas", () => {
 
   // ── 7. computeEngagement con eventos (usa IDB mock) ──────────
 
-  it("computeEngagement cuenta todas las métricas con eventos variados", async () => {
+  it("computeEngagement counts all metrics with varied events", async () => {
     const { analyticsService } = await import("../../services/AnalyticsService");
     analyticsService.start();
 

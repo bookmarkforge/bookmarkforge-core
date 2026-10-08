@@ -277,7 +277,7 @@ This runs:
 - Linting
 - Fast tests
 - Build verification
-- Full check suite (~40 checks)
+- Full check suite (~50 checks)
 
 ### Branch Protection
 
@@ -391,7 +391,7 @@ npm run test:coverage
 - Check for race conditions
 
 **Build fails**:
-- Check Node.js version (>=20.19.0)
+- Check Node.js version (>=24.17.0)
 - Verify dependencies are installed
 - Check environment variables
 - Run `npm run check` for specific issues

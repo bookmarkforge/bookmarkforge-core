@@ -2,8 +2,18 @@ import { copyFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import PDFDocument from "pdfkit";
 import { marked } from "marked";
+import {
+  LANDING_CODES,
+  MANUAL_FILES,
+  manualPdfPath,
+  manualSourcePath,
+  manualStyledHtmlPath,
+} from "./landing-registry.mjs";
 
-const codes = ["es", "en", "ar", "bg", "cs", "da", "de", "el", "fi", "fr", "he", "hi", "hr", "hu", "id", "it", "ja", "ko", "nl", "no", "pl", "pt", "ro", "ru", "sv", "th", "tr", "uk", "vi", "zh"];
+// DERIVED from the landing locale registry (single source of truth), Spanish
+// first as the master manual the PDF set leads with. The hand-kept `codes`
+// list this replaced could drift from the registry silently.
+const codes = ["es", ...LANDING_CODES.filter((code) => code !== "es")];
 const titles = {
   es: ["Manual de usuario", "Última actualización: septiembre de 2026"], en: ["User manual", "Last updated: September 2026"],
   ar: ["دليل المستخدم", "آخر تحديث: سبتمبر 2026"], bg: ["Ръководство за потребителя", "Последна актуализация: септември 2026"], cs: ["Uživatelská příručka", "Poslední aktualizace: září 2026"],
@@ -19,9 +29,9 @@ const titles = {
 const rtl = new Set(["ar", "he"]);
 const documents = codes.map((code) => ({
   code,
-  source: code === "es" ? "docs/manual-usuario.md" : `docs/manual-usuario-${code}.md`,
-  pdf: code === "es" ? "docs/manual-usuario.pdf" : `docs/manual-usuario-${code}.pdf`,
-  html: code === "es" ? "docs/manual-usuario-styled.html" : `docs/manual-usuario-${code}-styled.html`,
+  source: manualSourcePath(code),
+  pdf: manualPdfPath(code),
+  html: manualStyledHtmlPath(code),
   title: titles[code][0],
   footer: titles[code][1],
 }));
@@ -94,6 +104,6 @@ for (const document of documents) {
   console.log(`Generado ${document.pdf}`);
 }
 
-copyFileSync("docs/manual-usuario.pdf", "scripts/public-export/manual-usuario.pdf");
-copyFileSync("docs/manual-usuario-en.pdf", "scripts/public-export/manual-usuario-en.pdf");
-console.log("Generados 30 PDFs y actualizados los dos PDFs del overlay público");
+copyFileSync(manualPdfPath("es"), `scripts/public-export/${MANUAL_FILES.es}.pdf`);
+copyFileSync(manualPdfPath("en"), `scripts/public-export/${MANUAL_FILES.en}.pdf`);
+console.log("Generated 30 PDFs and updated the two public-overlay PDFs");

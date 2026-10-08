@@ -360,32 +360,55 @@ describe("HumanBehavior (fixed-bug regression tests)", () => {
   });
 
   describe("readContent()", () => {
-    it("scrolls one tick per 500ms and pauses to read (simple mode)", async () => {
+    it("scans in an F pattern per 500ms tick (simple mode)", async () => {
       const { page } = createHarness();
       const human = makeHuman(page);
 
       await human.readContent(1000);
 
-      // scrollCount = floor(1000/500) = 2; each tick is one plain wheel
-      // (delta 1 down) followed by a 300 + 0.5*200 = 400ms read pause.
-      expect(page.mouse.wheel).toHaveBeenCalledTimes(2);
-      expect(page.mouse.wheel.mock.calls.map((c) => c[1])).toEqual([1, 1]);
-      expect(page.waitForTimeout.mock.calls.map((c) => c[0] as number)).toEqual([400, 400]);
+      // scrollCount = floor(1000/500) = 2 F-scan ticks after the initial
+      // duration*0.3 = 300ms scan delay. Tick 1 (even) wheels a horizontal
+      // right scan (delta 1 on X) with its 200 + 0.5*100 = 250ms pause,
+      // then every tick wheels the vertical down scan (delta 1 on Y) with
+      // the 300 + 0.5*200 = 400ms read pause. One eye-tracking mouse move
+      // per tick.
+      expect(page.mouse.wheel.mock.calls).toEqual([
+        [1, 0], // tick 1: right scan
+        [0, 1], // tick 1: down scan
+        [0, 1], // tick 2: down scan
+      ]);
+      // Real read pauses; the eye-tracking moves interleave their own
+      // per-bezier-point waits (10ms * fast multiplier = 5ms), filtered out
+      // here so the assertion pins pacing, not the mouse-path granularity.
+      const pauses = page.waitForTimeout.mock.calls.map((c) => c[0] as number);
+      expect(pauses.filter((t) => t >= 50)).toEqual([300, 250, 400, 400]);
+      // One eye-tracking path per tick; each path issues one move per
+      // bezier point, so only its presence (not its point count) is pinned.
+      expect(page.mouse.move.mock.calls.length).toBeGreaterThanOrEqual(2);
     });
 
-    it("composes natural scrolling into each read tick", async () => {
+    it("composes natural scrolling into each F-scan tick", async () => {
       const { page } = createHarness();
       const human = makeHuman(page, { naturalScrolling: true });
 
       await human.readContent(1000);
 
-      // Per tick: one natural wheel (20 + 0.5*30 = 35) with its 75ms
-      // pacing delay, followed by the 400ms read pause — interleaved per
-      // iteration: tick, read; tick, read.
-      expect(page.mouse.wheel).toHaveBeenCalledTimes(2);
-      expect(page.mouse.wheel.mock.calls.map((c) => c[1])).toEqual([35, 35]);
-      expect(page.waitForTimeout.mock.calls.map((c) => c[0] as number)).toEqual([
-        75, 400, 75, 400,
+      // Natural wheels are (20 + 0.5*30) = 35 on the scan axis, each
+      // followed by its 50 + 0.5*50 = 75ms pacing delay; the read pause is
+      // 400ms. Tick 1 = right scan + down scan, tick 2 = down scan only.
+      expect(page.mouse.wheel.mock.calls.map((c) => [c[0], c[1]])).toEqual([
+        [35, 0], // tick 1: natural right scan (X)
+        [0, 35], // tick 1: natural down scan (Y)
+        [0, 35], // tick 2: natural down scan (Y)
+      ]);
+      // Per tick: pacing (75ms) after each natural wheel, the horizontal
+      // read pause (250ms) after the right scan, and the 400ms read pause
+      // after each down scan — mouse-path waits (5ms) filtered out.
+      const pauses = page.waitForTimeout.mock.calls.map((c) => c[0] as number);
+      expect(pauses.filter((t) => t >= 50)).toEqual([
+        300, // initial F-scan delay
+        75, 250, 75, 400, // tick 1: right pacing+pause, down pacing+pause
+        75, 400, // tick 2: down pacing+pause
       ]);
     });
   });

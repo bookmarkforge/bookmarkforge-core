@@ -547,11 +547,11 @@ body,
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* TARJETA ACTIVA — borde 2px cyan + glow ring exterior */
+/* ACTIVE CARD — 2px cyan border + outer glow ring */
 
 
 @layer utilities {
-  /* Estado activo sutil — sólo glow sin ring exterior */
+  /* Subtle active state — glow only without outer ring */
   .ds-active-soft {
     border: 1px solid var(--accent-primary);
     box-shadow: 0 0 20px var(--accent-glow-soft);
@@ -564,7 +564,7 @@ body,
   cursor: pointer;
 }
 
-/* BOTÓN PRIMARIO filled (flat, prominent CTA) */
+/* PRIMARY BUTTON filled (flat, prominent CTA) */
 .btn-primary {
   background: var(--accent-primary);
   border: 1px solid var(--accent-primary);
@@ -583,7 +583,7 @@ body,
   color: var(--text-on-accent);
 }
 
-/* BOTÓN PRIMARIO outline estilo (subtle secondary CTA) */
+/* PRIMARY BUTTON outline style (subtle secondary CTA) */
 .btn-primary-outline {
   background: transparent;
   border: 1px solid var(--accent-primary);
@@ -1363,7 +1363,7 @@ img {
 }
 
 /* =============================================
-   Utility classes - Patrones de estilos en línea migrados
+   Utility classes - Migrated inline style patterns
    ============================================= */
 
 /* Chat bubble styles */

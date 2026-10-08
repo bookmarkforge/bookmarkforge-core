@@ -1,66 +1,66 @@
-# Edge-case hardening para el vault y la auditoría operativa
+# Edge-case hardening for the vault and operational audit
 
-Estado: borrador de experto, pendiente de validación humana.
-Alcance: reducir la superficie de comportamiento ambiguo en
+Status: expert draft, pending human validation.
+Scope: reduce the surface of ambiguous behavior in
 `src/services/SecurityVault.ts`, `src/services/security/AttestationChain.ts`
-y el registro de auditoría asociado.
+and the associated audit log.
 
-## 1. Qué está bien y no tocar sin motivo
+## 1. What is good and should not be touched without reason
 
-- Verificación de password con capa HMAC de integridad separada.
-- Comparaciones sensibles en tiempo constante en los puntos críticos.
-- Rate-limit con lockout explícito en unlock, verifyRateLimited y decryptShare.
-- Materialización/desmaterialización de device key con decisión basada en el blob envuelto, no solo en un booleano.
-- Re-firma de la cadena de attestación tras rotación de password.
-- Comportamiento fail-closed en los puntos donde la clave no está disponible.
+- Password verification with separate HMAC integrity layer.
+- Constant-time comparisons at critical points.
+- Rate-limit with explicit lockout in unlock, verifyRateLimited and decryptShare.
+- Device key materialization/dematerialization with decision based on wrapped blob, not just a boolean.
+- Re-signing of attestation chain after password rotation.
+- Fail-closed behavior at points where the key is not available.
 
-Esto es maduro en superficie. No es “reescribir desde cero”; es reducir bordes difusos.
+This is mature on the surface. It is not "rewrite from scratch"; it is reducing fuzzy edges.
 
-## 2. Comportamientos que un experto marcaría como operativamente ambiguos
+## 2. Behaviors an expert would mark as operationally ambiguous
 
-### 2.1 Auditoría fire-and-forget
-Hay entradas de auditoría que se registran sin garantizar que el registro se haya resuelto. Esto está bien como propuesta de bajo impacto, pero convierte a la auditoría en un mecanismo cuya ausencia no es necesariamente observable ni correlacionable en prod.
+### 2.1 Fire-and-forget audit
+There are audit entries that are logged without guaranteeing that the log has resolved. This is fine as a low-impact proposal, but it turns the audit into a mechanism whose absence is not necessarily observable or correlatable in prod.
 
-Acción recomendada: dejar claro qué eventos son “auditoría de operación” y cuáles son “auditoría de seguridad”. Los de seguridad crítica deberían tener un path observable explícito (no confiar solo en que “algún día se escriban”).
+Recommended action: make clear which events are "operation audit" and which are "security audit". Critical security events should have an explicit observable detection path (not rely only on "they will be written someday").
 
-### 2.2 Persistencia best-effort de la cadena de attestación
-Tanto la re-firma como la persistencia de la cadena tienen degradaciones silenciosas/limitadas cuando IndexedDB falla. Eso tiene sentido para no bloquear la operación del usuario, pero también significa que la cadena puede quedar desfasada entre memoria y disco en condiciones de error.
+### 2.2 Best-effort persistence of attestation chain
+Both re-signing and chain persistence have silent/limited degradations when IndexedDB fails. This makes sense to not block user operation, but it also means the chain can be out of sync between memory and disk under error conditions.
 
-Acción recomendada: documentar los estados de degradación aceptables y qué significa “la cadena es válida para la sesión pero no persistida”. Dejar una huella de diagnóstico explícita, no solo un warn.
+Recommended action: document acceptable degradation states and what "chain is valid for session but not persisted" means. Leave an explicit diagnostic trace, not just a warn.
 
-### 2.3 Comportamiento heredado de trim de password
-`unlock()` usa `password.trim()` y hay notas sobre compatibilidad heredada. `rotateMasterPassword()` rechaza passwords con espacios. Esto crea un efecto práctico real: un usuario puede seguir desbloqueando con algo que técnicamente no debería poder rotar sin ajuste.
+### 2.3 Legacy password trim behavior
+`unlock()` uses `password.trim()` and there are notes about legacy compatibility. `rotateMasterPassword()` rejects passwords with spaces. This creates a real practical effect: a user can continue unlocking with something that technically should not be rotatable without adjustment.
 
-Acción recomendada: documentar explícitamente la relación entre la forma de entrada del unlock y la forma canónica del password rotado. Si se quiere limpieza futura, conviene que sea una decisión consciente y no una diferencia implícita entre rutas.
+Recommended action: explicitly document the relationship between unlock input form and the canonical rotated password form. If future cleanup is desired, it should be a conscious decision, not an implicit difference between paths.
 
-### 2.4 Recuperación y rotación
-El vault tiene comportamiento deliberado respecto al blob de device key, al token de verificación y a recovery. Eso está bien, pero también significa que la rotación, el borrrado y la recuperación tocan varios almacenes distintos y una falla parcial puede dejar artefactos huérfanos si no se hace un rollback ordenado.
+### 2.4 Recovery and rotation
+The vault has deliberate behavior regarding the device key blob, verification token and recovery. This is fine, but it also means rotation, deletion and recovery touch several different stores and a partial failure can leave orphan artifacts without an ordered rollback.
 
-Acción recomendada: asegurar que haya un modo de diagnóstico que permita ver qué registros están presentes tras un intento fallido de rotación o de recuperación, sin exponer secretos.
+Recommended action: ensure there is a diagnostic mode that allows seeing which records are present after a failed rotation or recovery attempt, without exposing secrets.
 
-### 2.5 Observabilidad en prod sin secrets
-Lo correcto desde el experto es que los logs y la auditoría no expongan material sensible. Esto debe ser explícito, no accidental. Hay que verificar que los mensajes, los contextos y los reportes externos estén diseñados para no filtar derived state, salt, nonce, tokens de sesión o fragmentos de ciphertext.
+### 2.5 Observability in prod without secrets
+The expert's correct stance is that logs and audit should not expose sensitive material. This must be explicit, not accidental. Must verify that messages, contexts and external reports are designed not to leak derived state, salt, nonce, session tokens or ciphertext fragments.
 
-## 3. Plan concreto que propongo
+## 3. Concrete plan I propose
 
-1. Dejar una lista de eventos de auditoría “críticos” y otra de “operativos”.
-2. Asegurar que los críticos tengan una forma de detección explícita de pérdida de registro.
-3. Unificar la política de fallback en la cadena de attestación y documentar qué significa cada nivel de degradación.
-4. Dejar documentada la semántica heredada de trim/espacios y el efecto sobre rotación.
-5. Añadir una regla interna de revisión de logs: todo logging relacionado con criptografía o vault debe pasar por un revisor humano o regla automática que rechace outputs estructurados riesgosos.
-6. Poner una puerta de validación antes de cualquier cambio en rotación, wrap/unrap y recovery, con casos de prueba que simulen fallos de persistencia, no solo caminos felices.
+1. Leave a list of "critical" audit events and another of "operational" ones.
+2. Ensure critical ones have an explicit detection form for log loss.
+3. Unify the fallback policy in the attestation chain and document what each degradation level means.
+4. Document the legacy trim/space semantics and the effect on rotation.
+5. Add an internal log review rule: all logging related to cryptography or vault must pass through a human reviewer or automatic rule that rejects risky structured outputs.
+6. Put a validation gate before any change in rotation, wrap/unrap and recovery, with test cases simulating persistence failures, not just happy paths.
 
-## 4. Qué no haría sin más contexto
+## 4. What I would not do without more context
 
-- No eliminaría ni alteraría la cadena de attestación actual sin ver los casos de prueba y los flujos de rollback.
-- No tocaría la política de rate-limit ni el comportamiento del vault sin un análisis de qué usuarios y flujos dependen de cada ruta.
-- No movería logic de vault a la servidor sin definir bien la relación trust boundary ya existente.
+- I would not delete or alter the current attestation chain without seeing test cases and rollback flows.
+- I would not touch the rate-limit policy or vault behavior without an analysis of which users and flows depend on each path.
+- I would not move vault logic to the server without clearly defining the existing trust boundary relationship.
 
-## 5. Forma de validarlo
+## 5. How to validate it
 
-Lo razonable es:
-- revisión humana de los puntos anteriores;
-- runs de verificación estática y de tests rápidos antes de tocar el vault;
-- y, si se modifica algo de persistencia o rotación, un drill con fallo simulado, no solo éxito.
+The reasonable approach is:
+- human review of the points above;
+- static verification and fast test runs before touching the vault;
+- and, if anything in persistence or rotation is modified, a drill with simulated failure, not just success.
 
 EOF

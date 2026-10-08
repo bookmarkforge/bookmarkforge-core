@@ -345,6 +345,12 @@ let cryptoMessageQueue: Promise<void> = Promise.resolve();
 let cryptoQueueLength = 0;
 const MAX_CRYPTO_QUEUE = 100;
 self.onmessage = (e: MessageEvent) => {
+  if (e.origin && e.origin !== self.location.origin) {
+    const rejectedPayload = (e.data as { payload?: unknown } | undefined)?.payload;
+    clearPayloadPassword(rejectedPayload);
+    releasePayloadStrings(rejectedPayload);
+    return Promise.resolve();
+  }
   const id = (e.data as { id?: unknown } | undefined)?.id ?? "unknown";
   if (cryptoQueueLength >= MAX_CRYPTO_QUEUE) {
     const payload = (e.data as { payload?: unknown } | undefined)?.payload;

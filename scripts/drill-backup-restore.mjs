@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /**
- * scripts/drill-backup-restore.mjs — simulacro de restauración de backups.
+ * scripts/drill-backup-restore.mjs — backup restore drill.
  *
- * Automatiza el drill mensual documentado en docs/operations.md ejecutando
- * tests/e2e/drill-backup-restore.spec.ts contra el stack de staging local
- * (mismos prereqs que `npm run e2e`). El spec mide cada fase y el tiempo del
- * camino de restauración (RTO de referencia < 120 s); este script orquesta,
- * parsea las métricas [DRILL-BACKUP] y reporta una tabla PASS/FAIL con salida
- * 0/1 para CI.
+ * Automates the monthly drill documented in docs/operations.md by running
+ * tests/e2e/drill-backup-restore.spec.ts against the local staging stack
+ * (same prereqs as `npm run e2e`). The spec measures each phase and the
+ * restore-path time (reference RTO < 120 s); this script orchestrates it,
+ * parses the [DRILL-BACKUP] metrics and reports a PASS/FAIL table with exit
+ * 0/1 for CI.
  *
- * Uso:
+ * Usage:
  *   node scripts/drill-backup-restore.mjs
  *   node scripts/drill-backup-restore.mjs --json
  *
@@ -18,11 +18,12 @@
  *   DRILL_BACKUP_TIMEOUT_MS timeout total (default 600_000)
  *   E2E_CONFIG              playwright config (default playwright.config.ts)
  *   DRILL_RTO_MS            gate RTO duro (default 120_000 ms)
- *   DRILL_RTO_WARN_MS       umbral de degradación (default 90% del gate). Usar
- *                           0 para desactivar la alerta de degradación.
- *   DRILL_ALERT_WEBHOOK_URL webhook HTTPS opcional (rechaza http, como el resto
- *                           de canales de alerta). Se dispara si una restauración
- *                           pasa el gate RTO pero supera el umbral de degradación.
+ *   DRILL_RTO_WARN_MS       degradation threshold (default 90% of the gate).
+ *                           Use 0 to disable the degradation alert.
+ *   DRILL_ALERT_WEBHOOK_URL optional HTTPS webhook (rejects http, like the
+ *                           rest of the alert channels). Fires when a restore
+ *                           passes the RTO gate but exceeds the degradation
+ *                           threshold.
  */
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -91,8 +92,8 @@ async function fireDrillAlertWebhook(url, payload) {
   }
 }
 
-// ── Ejecución ───────────────────────────────────────────────────────
-// Solo corre cuando se invoca como CLI; importar el módulo (tests) es
+// ── Execution ───────────────────────────────────────────────────────
+// Only runs when invoked as a CLI; importing the module (tests) is
 // side-effect free.
 const IS_CLI = Boolean(
   process.argv[1] &&
@@ -101,8 +102,8 @@ const IS_CLI = Boolean(
 if (IS_CLI) {
 
 (async () => {
-// Invocar el CLI de Playwright directamente evita que el shim npx.cmd
-// falle con EINVAL en Windows y mantiene los argumentos sin shell injection.
+// Invoking the Playwright CLI directly avoids the npx.cmd shim failing
+// with EINVAL on Windows and keeps the arguments free of shell injection.
 const playwrightCli = join(ROOT, "node_modules", "@playwright", "test", "cli.js");
 const out = spawnSync(process.execPath, [playwrightCli, "test", SPEC, "--config", E2E_CONFIG], {
   cwd: ROOT,
@@ -164,7 +165,7 @@ recordPhase(
 
 const degradedMs = degraded.map((m) => ({ name: m.name, ms: m.ms, gate_ms: GATE_RTO_MS, warn_ms: WARN_RTO_MS }));
 
-// Alerta de degradación: pasa el gate RTO pero supera el umbral de advertencia.
+// Degradation alert: passes the RTO gate but exceeds the warning threshold.
 const webhookUrl = resolveWebhook(process.env.DRILL_ALERT_WEBHOOK_URL ?? "");
 if ((degraded.length > 0) && webhookUrl) {
   await fireDrillAlertWebhook(webhookUrl, {

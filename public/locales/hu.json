@@ -1438,7 +1438,7 @@
   "app_proActivationsLeft": "Hátralévő aktiválások: {{count}}",
   "app_proDeactivate": "Deaktiválás",
   "app_proUpgradeTitle": "BookmarkForge Pro feloldása",
-  "app_proUpgradeText": "Korlátlan könyvjelzők, P2P szinkron 3 eszközön és helyi AI. Egyetlen fizetés, örökre a tiéd.",
+  "app_proUpgradeText": "Korlátlan könyvjelzők, P2P szinkron 5 eszközön és helyi AI. Egyetlen fizetés, örökre a tiéd.",
   "app_proBuy": "Pro beszerzése — {{price}}",
 "app_proStateFeaturePro": "Pro",
 "app_proStateBodyLicense": "Oldd fel egy egyszeri fizetésű Pro licenccel. Amit eddig mentettél, az érintetlen marad.",

@@ -1,31 +1,31 @@
-# Production deployment runbook — cierre de A11-2
+# Production deployment runbook — A11-2 closure
 
-Este runbook es la lista operativa para sustituir el despliegue legacy de
-`bookmarkforge.com` por el checkout actual. No ejecuta DNS, `git push`, Docker
-ni cambios remotos por sí mismo.
+This runbook is the operational list to replace the legacy deployment of
+`bookmarkforgeapp.com` with the current checkout. It does not execute DNS, `git push`,
+Docker or remote changes by itself.
 
-## 0. Criterio de salida
+## 0. Exit criterion
 
-El despliegue solo se considera cerrado cuando todas estas probes devuelven el
-resultado indicado desde el dominio público:
+Deployment is only considered closed when all these probes return the indicated
+result from the public domain:
 
-| URL | Resultado esperado |
+| URL | Expected result |
 |---|---|
-| `/` | `200`, landing EN, canonical `https://bookmarkforge.com/` |
-| `/ar/`, `/bg/`, `/zh/` | `200`, landing localizada, canonical propio |
-| `/ar.html`, `/es.html` | No deben ser la URL canónica; pueden servir el artefacto interno |
-| `/privacy-and-terms.html`, `/ar/privacy-and-terms.html` | `200`, legal con canonical/hreflang |
-| `/sitemap.xml` | `200`, exactamente 61 URLs |
-| `/robots.txt` | `200`, incluye el sitemap y `Disallow` de superficies privadas |
-| `/app` | `200` o fallback de aplicación, pero `noindex` |
-| `/health` | `200` desde la API, sin secretos en la respuesta |
+| `/` | `200`, EN landing, canonical `https://bookmarkforgeapp.com/` |
+| `/ar/`, `/bg/`, `/zh/` | `200`, localized landing, own canonical |
+| `/ar.html`, `/es.html` | Must not be canonical URL; may serve internal artifact |
+| `/privacy-and-terms.html`, `/ar/privacy-and-terms.html` | `200`, legal with canonical/hreflang |
+| `/sitemap.xml` | `200`, exactly 61 URLs |
+| `/robots.txt` | `200`, includes sitemap and `Disallow` of private surfaces |
+| `/app` | `200` or application fallback, but `noindex` |
+| `/health` | `200` from API, no secrets in response |
 
-Mientras cualquiera de las probes devuelve el conversor legacy o `404`, A11-2
-permanece abierto y no se envía el sitemap a Search Console.
+While any probe returns legacy converter or `404`, A11-2 remains open and sitemap
+is not sent to Search Console.
 
-## 1. Preflight local (obligatorio)
+## 1. Local preflight (mandatory)
 
-Desde el checkout que se va a desplegar:
+From the checkout to be deployed:
 
 ```bash
 npm ci
@@ -36,86 +36,24 @@ npm run check:sitemap-coverage
 npm run check:nginx-render
 ```
 
-Conservar los logs y el SHA exacto. El comando de despliegue debe ejecutarse
-con un árbol limpio y desde el mismo SHA que se etiqueta:
+Preserve logs and exact SHA. Deployment command must be executed with a clean
+tree and from the same SHA that is tagged:
 
 ```bash
 git status --short
 git rev-parse HEAD
 ```
 
-## 2. Variables y secretos
+## 2. Variables and secrets
 
-Configurar en el entorno de producción, nunca en el repositorio:
+Configure in production environment, never in repository:
 
 - `NODE_ENV=production`.
-- `AI_SESSION_ORIGINS=https://bookmarkforge.com` — nombre histórico de la
-  allow-list de `/api/license/entitlement`.
+- `AI_SESSION_ORIGINS=https://bookmarkforgeapp.com` — historical name of the
+  allow-list of `/api/license/entitlement`.
 - `ENFORCE_SIGNAL_HMAC=1`.
-- `LICENSE_SIGNING_PRIVATE_KEY_FILE` mediante secret manager o volumen de solo
-  lectura.
-- `LICENSE_PUBLIC_KEY_SPKI` coherente con la clave pública comprometida.
-- `TRUST_PROXY` solo si el proxy situado delante es controlado por el operador.
-- `WHOP_LICENSE_API_URL` y `WHOP_API_KEY`, si se habilitan licencias.
-- `CLIENT_EVENTS_IP_HASH_SALT` y cualquier webhook operativo real.
-
-Verificar que no se publiquen puertos internos, claves, `.env`, backups ni el
-estado de analytics en las respuestas HTTP.
-
-## 3. Despliegue
-
-El pipeline canónico es:
-
-```bash
-node scripts/deploy-prod.mjs --deploy --verify
-```
-
-Para publicar imágenes en un registro, configurar explícitamente
-`DOCKER_REGISTRY` y ejecutar el paso de push autorizado por el operador. El
-script debe producir un tag `prod-YYYYMMDD-HHMM-<sha>` y mostrar el comando de
-rollback correspondiente. No reutilizar `latest` como referencia de rollback.
-
-Si el hosting es Cloudflare/Netlify, publicar el contenido de `public/` y
-comprobar que `_redirects` se aplica. Si es self-hosted, desplegar la imagen
-que contiene `public/nginx.conf` y comprobar que el nginx efectivo no usa una
-configuración legacy anterior.
-
-## 4. Smoke público posterior
-
-Ejecutar desde una red externa al host:
-
-```bash
-PROD_BASE_URL=https://bookmarkforge.com node scripts/production-smoke.mjs
-node scripts/check-hreflang-graph.mjs https://bookmarkforge.com
-```
-
-Además, comprobar manualmente el cuerpo de `/`, `/ar/` y `/sitemap.xml`; un
-HTTP 200 del servidor legacy no es evidencia de que se haya desplegado este
-checkout. Registrar status, `Location`, `Content-Type`, canonical, `lang`,
-`x-robots-tag` y el conteo de `<loc>`.
-
-## 5. Search Console y cierre
-
-Solo después de las probes verdes:
-
-1. Confirmar que `/sitemap.xml` contiene 61 URLs del checkout.
-2. Confirmar que `/robots.txt` apunta al sitemap público.
-3. Enviar el sitemap en Search Console.
-4. Registrar fecha, SHA, tag, proveedor de hosting y resultados de las probes en
-   `docs/audit.md`.
-5. Cerrar A11-2 únicamente con evidencia del dominio público; los gates locales
-   no sustituyen la verificación del despliegue.
-
-## 6. Rollback
-
-Ante una regresión:
-
-```bash
-node scripts/rollback.mjs --target prod-YYYYMMDD-HHMM-<sha>
-```
-
-Después del rollback repetir el smoke público y verificar byte a byte que el
-procedimiento no haya alterado manualmente `public/_headers` ni
-`public/sitemap.xml`. El test de integración de `scripts/rollback.mjs` cubre
-esta propiedad en un fixture temporal; la confirmación pública sigue siendo
-responsabilidad del operador.
+- `LICENSE_SIGNING_PRIVATE_KEY_FILE` via secret manager or read-only volume.
+- `LICENSE_PUBLIC_KEY_SPKI` consistent with committed public key.
+- `TRUST_PROXY` only if proxy in front is controlled by operator.
+- `WHOP_LICENSE_API_URL` and `WHOP_API_KEY`, if licenses are enabled.
+- `CLIENT_EVENTS_IP_HASH_SALT` and any real operational webhook.

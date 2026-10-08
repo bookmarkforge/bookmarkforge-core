@@ -35,8 +35,8 @@ export const LICENSE_CONFIG = {
 
   /**
    * Max device activations per license. Mirrors the activations limit set
-   * on the license product; each install consumes one slot. 5 leaves room
-   * for reinstalls on the 3 allowed devices (Pro tier, PRICING_CONFIG).
+   * on the license product; each install consumes one slot. 5 devices
+   * (Pro tier, PRICING_CONFIG).
    */
   maxActivationsPerLicense: 5,
 
@@ -94,9 +94,9 @@ export const isCheckoutConfigured = (): boolean => {
  * maxDevices is 0 = unlimited: BookmarkForge has no accounts, so a per-device
  * cap is unenforceable — Free simply installs anywhere, each device holding
  * its own vault. Sync between devices is the Pro entitlement, and the Pro
- * tier's maxDevices (3) is enforced there by the licensing backend.
+ * tier's maxDevices (5) is enforced there by the licensing backend.
  */
 export const FREE_LIMITS = {
-  maxBookmarks: 1000,
+  maxBookmarks: 2500,
   maxDevices: 0,
 } as const;

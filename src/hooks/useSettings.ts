@@ -8,6 +8,10 @@ import { safeGet, safeSet } from "../store/safeStorage";
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { securityVault } from "../services/SecurityVault";
 import { loadWebLLMService, ProUnavailableError } from "../services/pro-access";
+import {
+  getNavigatorExtensions,
+  getNavigatorGPU,
+} from "../utils/browser-types";
 
 interface CustomPrompts {
   summarize: string;
@@ -18,6 +22,32 @@ interface CustomPrompts {
 interface WebLLMProgress {
   text: string;
   progress: number;
+}
+
+/**
+ * Device-capability verdict for the Settings WebLLM option, usable without
+ * the Pro chunk. Mirrors WebLLMService.canRunLocalLLM()'s three hard gates
+ * (WebGPU surface + shader-f16 + 4 GB RAM floor), fail-closed: any probe
+ * failure means "cannot run". Uses only navigator APIs — no Pro imports,
+ * so it is safe for Free sessions and the Open Core export.
+ */
+async function probeDeviceCanRunLocalLLM(): Promise<boolean> {
+  try {
+    const gpu = getNavigatorGPU();
+    if (!gpu) return false;
+    const adapter =
+      (await gpu.requestAdapter({ powerPreference: "high-performance" })) ||
+      (await gpu.requestAdapter({ powerPreference: "low-power" }));
+    if (!adapter) return false;
+    const features = (
+      adapter as unknown as { features?: { has: (name: string) => boolean } }
+    ).features;
+    if (!features?.has("shader-f16")) return false;
+    const { deviceMemory } = getNavigatorExtensions();
+    return (deviceMemory || 4) >= 4;
+  } catch {
+    return false;
+  }
 }
 
 export function useSettings() {
@@ -173,8 +203,17 @@ export function useSettings() {
         };
       })
       .catch((err: unknown) => {
-        if (disposed || err instanceof ProUnavailableError) return;
-        logger.warn("[Settings] WebLLM not available");
+        if (disposed) return;
+        if (!(err instanceof ProUnavailableError)) {
+          logger.warn("[Settings] WebLLM not available");
+        }
+        // The device verdict must stay honest even when the Pro chunk never
+        // loads (Free session) or the loader fails: probe the device
+        // directly so an incapable device shows "(Unsupported Device)"
+        // instead of a misleading "— Pro" that a purchase could never fix.
+        void probeDeviceCanRunLocalLLM().then((verdict) => {
+          if (!disposed) setCanRunWebLLM(verdict);
+        });
       });
     return () => {
       disposed = true;

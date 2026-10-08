@@ -1,40 +1,40 @@
-# Atribución de contenido en el historial
+# Content attribution in history
 
-> Registro de decisión (2026-08-31). Se decidió **no reescribir el historial** para separar
-> contenido de la primera ronda de auditoría que quedó absorbido en los commits de la
-> segunda ronda. Este documento registra la atribución real para no perder el contexto.
+> Decision record (2026-08-31). It was decided **not to rewrite history** to separate
+> content from the first audit round that got absorbed in the commits of the
+> second round. This document records the real attribution to not lose context.
 
-## Contexto
+## Context
 
-Durante la segunda ronda de la auditoría se commitearon los cambios con `git commit --only`
-sobre archivos que **también había editado la sesión previa** (primera ronda). Como no se
-separaron hunks, parte del contenido de la primera ronda quedó absorbido en los commits de
-la segunda. La intersección de archivos con el baseline `00b24d6` quedó vacía.
+During the second audit round, changes were committed with `git commit --only`
+on files that **the previous session had also edited** (first round). Since hunks
+were not separated, part of the first round content got absorbed in the second
+round commits. The intersection with the `00b24d6` baseline was empty.
 
-El contenido existe y funciona y está verificado en verde; la mezcla es **atribucional**,
-no funcional.
+The content exists and works and is verified green; the mix is **attributable**,
+not functional.
 
-## Contenido previo (ronda 1) absorbido en commits de ronda 2
+## Previous content (round 1) absorbed in round 2 commits
 
-| Commit (ronda 2) | Archivo compartido | Contenido previo absorbido |
+| Commit (round 2) | Shared file | Previous content absorbed |
 |---|---|---|
-| `572c910` (pins SHA) | `sast.yml` | Archivo entero (94 líneas, creado por ronda 1) |
-| | `staging-deploy.yml`, `staging-rollback.yml` | 68 + 102 líneas (archivos de staging creados por ronda 1) |
-| | `ci.yml`, `dast-nightly.yml`, `staging-smoke.yml` | ~160 líneas previas vs ~26 de pins |
-| | `validate-workflows.mjs`, `validate-gates.test.mjs` | ~86 líneas previas vs ~19 del gate |
-| `9dd011b` (E2E) | `nightly.yml` | ~52 líneas previas vs ~6 (pins + load-test) |
-| `62afb96` (analítica) | `.env.example`, `package.json`, `AnalyticsService.ts` | ~52 líneas previas vs ~23 |
-| `a0f1525` (docs) | `audit.md`, `ROPA.md`, `launch-checklist.md` | ~450 líneas previas vs ~81 |
+| `572c910` (SHA pins) | `sast.yml` | Entire file (94 lines, created by round 1) |
+| | `staging-deploy.yml`, `staging-rollback.yml` | 68 + 102 lines (staging files created by round 1) |
+| | `ci.yml`, `dast-nightly.yml`, `staging-smoke.yml` | ~160 previous lines vs ~26 pins |
+| | `validate-workflows.mjs`, `validate-gates.test.mjs` | ~86 previous lines vs ~19 of the gate |
+| `9dd011b` (E2E) | `nightly.yml` | ~52 previous lines vs ~6 (pins + load-test) |
+| `62afb96` (analytics) | `.env.example`, `package.json`, `AnalyticsService.ts` | ~52 previous lines vs ~23 |
+| `a0f1525` (docs) | `audit.md`, `ROPA.md`, `launch-checklist.md` | ~450 previous lines vs ~81 |
 
-## Consecuencia
+## Consequence
 
-El baseline `00b24d6` (primera ronda, 312 archivos) quedó **incompleto**: le faltan ~500+
-líneas de gates y documentación de la primera ronda, atribuidas hoy a los commits de la
-segunda. A efectos funcionales no hay pérdida; a efectos de auditoría de historial, la
-autoría del contenido previo debe entenderse como parte de la primera ronda.
+The `00b24d6` baseline (first round, 312 files) remained **incomplete**: it lacks ~500+
+lines of gates and documentation from the first round, attributed today to the second
+round commits. Functionally there is no loss; for history audit purposes, the
+authorship of previous content must be understood as part of the first round.
 
-## Motivo de la decisión
+## Reason for the decision
 
-- Reescritura de historial destructiva que toca `00b24d6` (commiteado por otro proceso).
-- Trabajo de rondas 3/4 sin commitear en el árbol en el momento de la decisión.
-- El estado funcional es correcto; el coste de la cirugía superaba el beneficio atribucional.
+- Destructive history rewrite that touches `00b24d6` (committed by another process).
+- Work of rounds 3/4 without committing in the tree at decision time.
+- The functional state is correct; the cost of surgery exceeded the attribution benefit.

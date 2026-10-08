@@ -1,49 +1,51 @@
-# ADR-061: Retiro controlado de documentación — primer lote (2026-09-19)
+# ADR-061: Controlled documentation retirement — first batch (2026-09-19)
 
-- **Estado:** Aceptada (2026-09-19)
-- **Fecha:** 2026-09-19
-- **Relacionadas:** [ADR-026 — retiro controlado de documentación](ADR-059-documentation-retirement.md), [ADR-028 — gate drift detection](ADR-028-gate-drift-detection.md), [ADR-040 — fusión del gate de markdown](ADR-040-docs-markdown-gate-fusion.md)
+- **Status:** Accepted (2026-09-19)
+- **Date:** 2026-09-19
+- **Related:** [ADR-059 — Controlled documentation retirement](ADR-059-documentation-retirement.md), [ADR-028 — Gate drift detection](ADR-028-gate-drift-detection.md), [ADR-040 — Markdown gate fusion](ADR-040-docs-markdown-gate-fusion.md)
 
-## Contexto
+## Context
 
-El retiro masivo de documentación de septiembre de 2026 se ejecutó **sin pasar por el mecanismo de consentimiento** de ADR-026: el gate `check:docs-retire` consiente únicamente filas marcadas `retirable` cuyos archivos **siguen existiendo**, y no estaba cableado en `npm run check`, así que nada impidió que 79 documentos desaparecieran de golpe — incluido material de cumplimiento sin reemplazo equivalente. La restauración del corpus dejó el mecanismo intacto pero inerte: el gate existía, tenía contrato probado, y nadie lo ejecutaba.
+The September 2026 mass documentation retirement was carried out **without going through the consent mechanism** of ADR-059: the `check:docs-retire` gate only consents to rows marked `retirable` whose files **still exist**, and it was not wired into `npm run check`, so nothing stopped 79 documents from vanishing at once — including compliance material with no equivalent replacement. Restoring the corpus left the mechanism intact but inert: the gate existed, it had a proven contract, and nobody ran it.
 
-Este ADR registra el **primer retiro controlado real** ejecutado a través de ese mecanismo, archivo a archivo, con el rationale exigido por ADR-026.
+This ADR records the **first real controlled retirement** executed through that
+mechanism, file by file, with the rationale required by ADR-059.
 
-## Decisión
+## Decision
 
-El retiro se ejecuta con el mecanismo de ADR-026 completo: consentimiento previo del gate sobre filas `retirable`, borrado, revisión de referencias vivas, regeneración de índice y baseline, y registro durable del rationale archivo a archivo.
+The retirement is executed with ADR-059's full mechanism: prior gate consent on `retirable` rows, deletion, live-reference review, index and baseline
+regeneration, and a durable file-by-file record of the rationale.
 
-### 1. El gate pasa a ser obligatorio
+### 1. The gate becomes mandatory
 
-`check:docs-retire` (`scripts/check-docs-retire.mjs`) se integra en la cadena `npm run check`, inmediatamente después de `check:docs-markdown`. Desde ahora, cualquier fila `retirable` que no cumpla las condiciones de consentimiento (nota vacía, archivo ausente, ruta fuera de `docs/`) rompe CI, y el estado transitorio `retirable` no puede sobrevivir a un commit (el índice canónico no lo expresa y `doctor-docs-index` lo rechaza).
+`check:docs-retire` (`scripts/check-docs-retire.mjs`) is integrated into the `npm run check` chain, immediately after `check:docs-markdown`. From now on, any `retirable` row that does not meet the consent conditions (empty note, missing file, path outside `docs/`) breaks CI, and the transitional `retirable` state cannot survive a commit (the canonical index does not express it and `doctor-docs-index` rejects it).
 
-En el export público el índice es privado y no viaja: el gate hace un *skip* explícito cuando detecta la ausencia del índice junto al `manifest.json` del export. Sin manifest, la ausencia del índice sigue siendo fallo (exit 2).
+In the public export the index is private and does not travel: the gate explicitly *skips* when it detects the index's absence alongside the export's `manifest.json`. Without a manifest, the missing index is still a failure (exit 2).
 
-### 2. Archivos retirados (consentimiento obtenido: 3/3 filas `retirable`)
+### 2. Retired files (consent obtained: 3/3 `retirable` rows)
 
-| Archivo retirado | Por qué es prescindible | Referencias actualizadas |
+| Retired file | Why it is dispensable | Updated references |
 |---|---|---|
-| `docs/audit-report-2026-09-04.md` | Delta de auditoría sobre el informe del 2026-09-02, declarado **superado por el ledger** `docs/audit.md` en su propio hallazgo A6-6. Su contenido vive en el ledger y en el informe primario. | Fila A6-6 de `docs/audit.md` reescrita para reflejar el retiro y explicar por qué se conserva el informe primario. |
-| `docs/drill-run-2026-08-31-rollback-docker.md` | Registro de una ejecución **FAIL** del drill de rollback Docker (falló en PREP). La evidencia vigente es la re-ejecución **PASS** documentada en `docs/operations.md` y en el ledger; el registro fallido describía un estado ya corregido. | Enlace eliminado de `docs/launch-checklist.md` (evidencia 13) y cita retirada de la fila del ledger `docs/audit.md`. |
-| `docs/release-note-r3-4.md` | Nota de release puntual (2026-08-31, rondas 3/4) con **cero referencias vivas** en el repositorio; su alcance está cubierto por `docs/RELEASE-STATUS.md`, el ledger `docs/audit.md` y los runbooks de operaciones. | Ninguna (no tenía referencias). |
+| `docs/audit-report-2026-09-04.md` | Audit delta over the 2026-09-02 report, declared **superseded by the ledger** `docs/audit.md` in its own finding A6-6. Its content lives in the ledger and in the primary report. | A6-6 row of `docs/audit.md` rewritten to reflect the retirement and explain why the primary report is kept. |
+| `docs/drill-run-2026-08-31-rollback-docker.md` | Record of a **FAIL** run of the Docker rollback drill (it failed at PREP). The current evidence is the **PASS** re-run documented in `docs/operations.md` and in the ledger; the failed record described an already-corrected state. | Link removed from `docs/launch-checklist.md` (evidence 13) and citation dropped from the `docs/audit.md` ledger row. |
+| `docs/release-note-r3-4.md` | Point-in-time release note (2026-08-31, rounds 3/4) with **zero live references** in the repository; its scope is covered by `docs/RELEASE-STATUS.md`, the `docs/audit.md` ledger and the operations runbooks. | None (it had no references). |
 
-### 3. Archivos evaluados y **rechazados** (se conservan)
+### 3. Files evaluated and **rejected** (kept)
 
-| Archivo | Motivo de conservación |
+| File | Reason for keeping |
 |---|---|
-| `docs/audit-report-2026-09-02.md` | Es la **provenance** de los hallazgos M-1 y B-1, citados por ADR-038, ADR-039, `scripts/sw-integrity-runtime.js` y un test de regresión de seguridad. Retirarlo exigiría reescribir citas en ADRs de seguridad y en código. |
-| `docs/que-nos-falta.md` | ~~Retirado~~ (2026-09-19, este commit). Las 4 deudas únicas (bucket S3 lifecycle, action compuesta de sign/rewrite, paridad de rampa streak en SVG de consistencia, test flaky monitoring-alerts) se migraron a `docs/ops-nightly.md` §8 y `docs/PENDIENTES.md` P2. Contenido operativo restante (bloqueantes de infraestructura, cierre legal, orden de ejecución) verificado como cubierto por las 4 fuentes vivas. |
-| `docs/legacy-compatibility-plan.md` | **Activo** (política de retirada de compatibilidad con propietario y criterios de retirada por superficie). |
-| `docs/scripts-inventory-scanner-limits.md` | **Activo** (documentación operativa del gate `check:audit-script-snapshot`). |
-| `docs/ios-day0-session-sheet.md`, `docs/p2p-sync-session-prep.md` | Material operativo vivo: referenciados por `docs/launch-checklist.md` y por `scripts/capture-p2p-desk-drill.mjs`. |
-| `docs/history-attribution.md` | Registro de decisión único (por qué no se reescribió el historial); no existe fuente alternativa. |
-| Resto del corpus (seguridad, cumplimiento, RPO/RTO, contratos de API, ADRs, manuales) | Categorías protegidas por ADR-026 o documentación de producto viva. |
+| `docs/audit-report-2026-09-02.md` | It is the **provenance** of findings M-1 and B-1, cited by ADR-038, ADR-039, `scripts/sw-integrity-runtime.js` and a security regression test. Retiring it would mean rewriting citations in security ADRs and in code. |
+| `docs/que-nos-falta.md` | ~~Retired~~ (2026-09-19, this commit). Its 4 unique debts (S3 lifecycle bucket, composite sign/rewrite action, streak-ramp parity in the consistency SVG, flaky monitoring-alerts test) were migrated to `docs/ops-nightly.md` §8 and `docs/PENDIENTES.md` P2. Remaining operational content (infrastructure blockers, legal closure, execution order) verified as covered by the 4 live sources. |
+| `docs/legacy-compatibility-plan.md` | **Active** (compatibility retirement policy with owner and per-surface retirement criteria). |
+| `docs/scripts-inventory-scanner-limits.md` | **Active** (operational documentation of the `check:audit-script-snapshot` gate). |
+| `docs/ios-day0-session-sheet.md`, `docs/p2p-sync-session-prep.md` | Live operational material: referenced by `docs/launch-checklist.md` and by `scripts/capture-p2p-desk-drill.mjs`. |
+| `docs/history-attribution.md` | Single decision record (why history was not rewritten); no alternative source exists. |
+| Rest of the corpus (security, compliance, RPO/RTO, API contracts, ADRs, manuals) | Categories protected by ADR-059 or live product documentation. |
 
-## Consecuencias
+## Consequences
 
-- El inventario canónico baja a 101 documentos y el baseline de `check:docs-markdown` a 100 archivos; ambos regenerados en el mismo cambio.
-- **Posteriormente** (2026-09-19, mismo día): `docs/que-nos-falta.md` se retiró tras migrar sus 4 deudas únicas a `ops-nightly.md` §8 y `PENDIENTES.md` P2; el inventario queda en **102 documentos** (101 − 1 + `CHANGELOG.md`).
-- El retiro queda trazado aquí (ADR-026 acepta PENDIENTES.md o un ADR como registro) y las referencias vivas apuntan ahora a las fuentes vigentes, no a artefactos superados.
-- Los retiros futuros repiten el flujo: marcar `retirable` con nota, pasar el gate, borrar, actualizar referencias, regenerar índice y baseline, y registrar el rationale. El estado intermedio `retirable` nunca se commitea.
-- El gate en CI impide que una marca de retiro con razón insuficiente o referencias sin revisar llegue a `main`.
+- The canonical inventory drops to 101 documents and the `check:docs-markdown` baseline to 100 files; both regenerated in the same change.
+- **Later** (2026-09-19, same day): `docs/que-nos-falta.md` was retired after migrating its 4 unique debts to `ops-nightly.md` §8 and `PENDIENTES.md` P2; the inventory ends at **102 documents** (101 − 1 + `CHANGELOG.md`).
+- The retirement is traced here (ADR-059 accepts PENDIENTES.md or an ADR as the record) and live references now point to the current sources, not to superseded artifacts.
+- Future retirements repeat the flow: mark `retirable` with a note, pass the gate, delete, update references, regenerate index and baseline, and record the rationale. The intermediate `retirable` state is never committed.
+- The gate in CI prevents a retirement mark with insufficient reason or unreviewed references from reaching `main`.

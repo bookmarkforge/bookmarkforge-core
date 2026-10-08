@@ -2,17 +2,17 @@
   "lang": "th",
   "langName": "ไทย",
   "dir": "ltr",
-  "canonical": "https://bookmarkforge.com/th/",
+  "canonical": "https://bookmarkforgeapp.com/th/",
   "ogLocale": "th_TH",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge — Everything stays on your computer. Pay once.",
-  "description": "Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 1,000 bookmarks.",
+  "description": "Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 2,500 bookmarks.",
   "ogTitle": "BookmarkForge — Everything stays on your computer. Pay once.",
-  "ogDescription": "Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 1,000 bookmarks.",
-  "ogImage": "https://bookmarkforge.com/og-image.png",
+  "ogDescription": "Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 2,500 bookmarks.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge — Everything stays on your computer. Pay once.",
-  "twitterDescription": "Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 1,000 bookmarks.",
-  "twitterImage": "https://bookmarkforge.com/og-image.png",
+  "twitterDescription": "Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 2,500 bookmarks.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
   "skipLink": "Skip to main content",
   "navBrandAria": "BookmarkForge home",
   "navAriaLabel": "Main navigation",
@@ -177,7 +177,7 @@
       },
       {
         "title": "Sync between your own devices",
-        "text": "Your devices talk to each other directly — no server in the middle, and everything stays encrypted. Pair them by scanning a QR code. Up to 3 devices. Requires Pro."
+        "text": "Your devices talk to each other directly — no server in the middle, and everything stays encrypted. Pair them by scanning a QR code. Up to 5 devices. Requires Pro."
       },
       {
         "title": "Backups you own",
@@ -287,17 +287,17 @@
   "pricing": {
     "id": "pricing",
     "title": "Simple, Fair Pricing — No Subscriptions",
-    "subtitle": "Free 1,000 bookmarks forever. Pro is a Lifetime license for v1 — pay once, own v1 forever. Includes all v1.x updates and 12 months of feature updates. Security updates forever. No monthly billing.",
+    "subtitle": "Free 2,500 bookmarks forever. Pro is a Lifetime license for v1 — pay once, own v1 forever. Includes all v1.x updates and 12 months of feature updates. Security updates forever. No monthly billing.",
     "plans": [
       {
         "name": "Free",
         "price": "$ 0",
         "period": "/forever",
-        "description": "สำหรับคลังส่วนตัว (บุ๊กมาร์ก 1,000 รายการ ใช้ได้บนอุปกรณ์ใดก็ได้ — แต่ละเครื่องมีห้องนิรภัยของตัวเอง)",
+        "description": "สำหรับคลังส่วนตัว (บุ๊กมาร์ก 2,500 รายการ ใช้ได้บนอุปกรณ์ใดก็ได้ — แต่ละเครื่องมีห้องนิรภัยของตัวเอง)",
         "features": [
           {
             "included": true,
-            "text": "1,000 บุ๊กมาร์ก บันทึก และเอกสาร"
+            "text": "2,500 บุ๊กมาร์ก บันทึก และเอกสาร"
           },
           {
             "included": true,
@@ -369,7 +369,7 @@
           },
           {
             "included": true,
-            "text": "3 devices · P2P sync across 3 devices"
+            "text": "5 devices · P2P sync across 5 devices"
           },
           {
             "included": true,
@@ -405,7 +405,7 @@
           }
         ],
         "cta": "Get Pro $59 Early Bird",
-        "ctaHref": "/buy-pro",
+        "ctaHref": "https://whop.com/checkout/plan_XU1GaWhoYhoDh",
         "ctaClass": "btn-primary",
         "priceWas": "$79",
         "priceSub": "then $79 regular",
@@ -419,7 +419,7 @@
     "items": [
       {
         "question": "Is the Free tier really free forever?",
-        "answer": "Yes. No trial, no subscription. The free tier includes 1,000 bookmarks, full-text & semantic search, knowledge graph, and AI with your own API key (you pay the provider)."
+        "answer": "Yes. No trial, no subscription. The free tier includes 2,500 bookmarks, full-text & semantic search, knowledge graph, and AI with your own API key (you pay the provider)."
       },
       {
         "question": "What does \"Lifetime of v1\" mean for Pro?",
@@ -444,7 +444,7 @@
     "text": "Join thousands of researchers, developers, and learners who trust BookmarkForge with their second brain.",
     "ctaPrimary": "Launch Free App",
     "ctaSecondary": "Upgrade to Pro",
-    "note": "No account required. Works instantly in your browser. Free tier: 1,000 bookmarks."
+    "note": "No account required. Works instantly in your browser. Free tier: 2,500 bookmarks."
   },
   "footer": {
     "brand": "Your private, AI-powered knowledge vault. 100% Local-First.",
@@ -495,20 +495,20 @@
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
-    "websiteDescription": "Your private, AI-powered knowledge vault. 100% Local-First. The private Pocket alternative. Free: 1,000 bookmarks.",
+    "websiteDescription": "Your private, AI-powered knowledge vault. 100% Local-First. The private Pocket alternative. Free: 2,500 bookmarks.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforge.com/",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforge.com/",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
         "price": "0",
         "currency": "USD",
-        "description": "1,000 bookmarks. Forever free."
+        "description": "2,500 bookmarks. Forever free."
       },
       {
         "name": "Pro Lifetime v1 — Early Bird",
@@ -536,7 +536,7 @@
     "faq": [
       {
         "question": "Is the Free tier really free forever?",
-        "answer": "Yes. No trial, no subscription. The free tier includes 1,000 bookmarks, full-text & semantic search, knowledge graph, and AI with your own API key (you pay the provider)."
+        "answer": "Yes. No trial, no subscription. The free tier includes 2,500 bookmarks, full-text & semantic search, knowledge graph, and AI with your own API key (you pay the provider)."
       },
       {
         "question": "What does \"Lifetime of v1\" mean for Pro?",

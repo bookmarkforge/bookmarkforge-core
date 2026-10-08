@@ -27,7 +27,7 @@ import { spawnSync } from "node:child_process";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const EXTENSION_DIR = path.resolve(__dirname, "../../extension");
-const DEFAULT_BASE_URL = "https://bookmarkforge.com";
+const DEFAULT_BASE_URL = "https://bookmarkforgeapp.com";
 const CUSTOM_BASE_URL = "https://forge.example.com";
 
 // ── Pre-flight: running browser session ────────────────────────────

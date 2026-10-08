@@ -1,4 +1,4 @@
-import { test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { setupVault, VAULT_PASSWORD, expectUnlockedApp } from "./vault-helpers";
 
 const dump = async (page: Page, label: string) => {
@@ -96,4 +96,17 @@ test("diag integrity records", async ({ page }) => {
           `${k}\n  after-setup : ${String(afterSetup[k]).slice(0, 120)}\n  after-reload: ${String(afterReload[k]).slice(0, 120)}\n  identical   : ${afterSetup[k] === afterReload[k]}`,
       ).join("\n"),
   );
+
+  // Assertion-first conversion (2026-09-24). Until this line the spec was a
+  // diagnostic, not a test: it computed exactly the property it exists for —
+  // the critical vault records surviving a page reload byte-identical — and
+  // then only PRINTED it ("identical: true/false"), so a regression that
+  // re-wrapped or re-salted the records on unlock passed nightly. The dump
+  // stays for triage; the property is now enforced.
+  for (const key of CRITICAL_KEYS) {
+    expect(
+      afterReload[key],
+      `${key} must survive the reload byte-identical (after-setup ${afterSetup[key]})`,
+    ).toBe(afterSetup[key]);
+  }
 });

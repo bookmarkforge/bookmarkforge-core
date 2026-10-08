@@ -696,7 +696,7 @@ describe("bundleIntegrity", () => {
       vi.resetModules();
       const mod = await import("../../utils/bundleIntegrity");
       mod.clearManifestCache();
-      // NO forzar el check: el branch PROD sin manifest requiere !forceIntegrityCheck
+      // NO force the check: the PROD branch without manifest requires !forceIntegrityCheck
       const result = await mod.checkBundleIntegrity();
       expect(result.passed).toBe(false);
       expect(result.missingFiles).toContain("__BMF_INTEGRITY_MANIFEST__");

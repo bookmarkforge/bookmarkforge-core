@@ -43,7 +43,7 @@ describe("validateRuntimeConfig", () => {
     const result = validateRuntimeConfig(
       PROD.replace(
         "AI_SESSION_ORIGINS: ${AI_SESSION_ORIGINS:?AI_SESSION_ORIGINS is required}",
-        "AI_SESSION_ORIGINS: https://bookmarkforge.com",
+        "AI_SESSION_ORIGINS: https://bookmarkforgeapp.com",
       ),
       STAGING,
       DOCKERFILE,

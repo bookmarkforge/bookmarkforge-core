@@ -341,8 +341,10 @@ describe("the real ledger", () => {
   });
 
   it("fails when a single number in the real table is stale", () => {
-    const mutated = realDoc.replace(/cadena de (\d+) gates/, (_match, value) =>
-      `cadena de ${Number(value) + 1} gates`,
+    // The `self` row publishes a derived count (the `check` chain gates). The
+    // mutation bumps that number so the gate must detect the drift.
+    const mutated = realDoc.replace(/(\d+)-gate chain/, (_match, value) =>
+      `${Number(value) + 1}-gate chain`,
     );
     expect(mutated).not.toBe(realDoc);
     const root = makeRoot({ doc: mutated });

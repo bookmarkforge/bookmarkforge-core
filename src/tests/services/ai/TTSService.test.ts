@@ -44,7 +44,7 @@ const { TTSService } = await import("../../../services/ai/TTSService");
 
 // Captured at module level: beforeEach stubs the global URL with a plain
 // object (no constructor), but the freshly re-imported module graph
-// por los tests de resiliencia usa `new URL(...)` tanto en import como en
+// for resilience tests uses `new URL(...)` both in import and
 // runtime (firewalledFetch). We keep the real constructor to restore it.
 const RealURL = globalThis.URL;
 
@@ -1352,9 +1352,9 @@ describe("TTSService", () => {
     // load a FRESH MODULE (audioCache with db=null).
     async function loadFreshService(): Promise<TTSClass> {
       vi.resetModules();
-      // beforeEach stubea el global URL como objeto plano (sin constructor);
-      // el grafo fresco lo necesita con constructor al evaluarse (networkFirewall
-      // /SecurityVault) y en runtime (firewalledFetch) → restauramos el real
+      // beforeEach stubs the global URL as a plain object (no constructor);
+      // the fresh graph needs it with constructor when evaluating (networkFirewall
+      // /SecurityVault) and in runtime (firewalledFetch) → we restore the real
       // during the test (afterEach undoes it via unstubAllGlobals).
       vi.stubGlobal("URL", RealURL);
       // The setup beforeAll only disabled the firewall in the original
@@ -1384,11 +1384,11 @@ describe("TTSService", () => {
         mockGetApiKey.mockReturnValue(null);
         mockGetProviderInfo.mockReturnValue({ provider: "unknown" });
 
-        // generateAudio: cache miss + webspeech fallback, sin throw
+        // generateAudio: cache miss + webspeech fallback, without throw
         const result = await fresh.generateAudio("resilient text");
         expect(result).toEqual({ url: "", provider: "webspeech" });
 
-        // clearCache tampoco lanza
+        // clearCache also does not throw
         await expect(fresh.clearCache()).resolves.not.toThrow();
       } finally {
         openSpy.mockRestore();
@@ -1400,7 +1400,7 @@ describe("TTSService", () => {
       // synchronously → both get() and set() fall into their try/catch
       // defenses, and generateAudio keeps returning the generated audio.
       // (onupgradeneeded never fires with this fake, so it only
-      // falta `transaction`; `objectStoreNames` no se toca.)
+      // lacks `transaction`; `objectStoreNames` is not touched.)
       const openSpy = vi
         .spyOn(indexedDB, "open")
         .mockImplementation(() => {

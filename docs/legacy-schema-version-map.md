@@ -1,11 +1,11 @@
-# Mapa de versiones de esquema — BookmarkForge
+# Schema version map — BookmarkForge
 
-Este archivo registra el mapa de versiones del esquema RxDB activo para la codebase actual.
+This file records the RxDB schema version map active for the current codebase.
 
-Se genera automáticamente desde `src/db/schema.ts`. No se edita a mano.
-Su función es ofrecer un diagnóstico estable de compatibilidad/migración sin tocar datos reales del vault.
+It is automatically generated from `src/db/schema.ts`. Do not edit manually.
+Its function is to offer a stable compatibility/migration diagnosis without touching real vault data.
 
-| Colección | Versión | Campos cifrados |
+| Collection | Version | Encrypted fields |
 |---|---|---|
 | `bookmarkSchema` | 8 | `` |
 | `chunkSchema` | 3 | `` |
@@ -19,4 +19,4 @@ Su función es ofrecer un diagnóstico estable de compatibilidad/migración sin 
 | `templateSchema` | 3 | `` |
 | `versionSchema` | 2 | `` |
 
-Nota: la versión se lee desde la propiedad `version` declarada en el esquema RxDB correspondiente.
+Note: the version is read from the `version` property declared in the corresponding RxDB schema.

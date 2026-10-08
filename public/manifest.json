@@ -3,7 +3,7 @@
   "short_name": "BForge",
   "description": "Your private, AI-powered knowledge vault. 100% Local-First.",
   "id": "/",
-  "start_url": "/app",
+  "start_url": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "orientation": "portrait-primary",
@@ -62,7 +62,7 @@
   "related_applications": [
     {
       "platform": "web",
-      "url": "https://bookmarkforge.com"
+      "url": "https://bookmarkforgeapp.com"
     }
   ],
   "prefer_related_applications": false,

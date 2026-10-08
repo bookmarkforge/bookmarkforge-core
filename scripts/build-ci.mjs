@@ -15,20 +15,40 @@
  * Exit code is non-zero on any failure. Use via `npm run build:ci`.
  */
 import { spawnSync } from "node:child_process";
-import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+
+import { quoteNodeOptionPath } from "./tooling/node-options.mjs";
 
 const ROOT = process.cwd();
 const VITE_BIN = join(ROOT, "node_modules", "vite", "bin", "vite.js");
 
 const rollupWasmLoader = join(ROOT, "scripts", "rollup-wasm-loader.cjs");
 const useRollupWasm = process.platform === "win32" && process.arch === "arm64";
-const nodeOptions = [process.env.NODE_OPTIONS, useRollupWasm ? `--require=${rollupWasmLoader}` : ""]
+
+function readTextIfExists(filePath) {
+  try { return readFileSync(filePath, "utf8"); }
+  catch (error) { if (error?.code === "ENOENT") return null; throw error; }
+}
+// The loader path is quoted (and its separators normalized) because
+// NODE_OPTIONS is parsed as a command line: unquoted, a checkout under
+// `D:\Nueva carpeta\…` splits the option at the space and the wasm loader is
+// silently never preloaded — the failure only appears on win32/arm64.
+const nodeOptions = [
+  process.env.NODE_OPTIONS,
+  useRollupWasm ? `--require=${quoteNodeOptionPath(rollupWasmLoader)}` : "",
+]
   .filter(Boolean)
   .join(" ");
+// A production build must not inherit an ambient NODE_ENV: Vite takes its mode
+// from that variable, and mode "test" switches the PWA plugin off, so the
+// emitted sw.js carries no precache entries and the bundle-integrity and
+// chunk-boundary gates fail on an artifact the code never produced. Pin the
+// mode here — the same knob CI's build job sets — instead of trusting the
+// environment a caller happens to export.
 const run = spawnSync(process.execPath, [VITE_BIN, "build"], {
   stdio: "inherit",
-  env: { ...process.env, NODE_OPTIONS: nodeOptions },
+  env: { ...process.env, NODE_ENV: "production", NODE_OPTIONS: nodeOptions },
 });
 if (run.status !== 0) process.exit(run.status ?? 1);
 
@@ -57,8 +77,11 @@ if (run.status !== 0) process.exit(run.status ?? 1);
     "g",
   );
   const assetsDir = join(ROOT, "dist", "assets");
-  if (existsSync(assetsDir)) {
-    const jsFiles = readdirSync(assetsDir).filter((f) => f.endsWith(".js"));
+  let assetEntries;
+  try { assetEntries = readdirSync(assetsDir, { withFileTypes: true }); }
+  catch (error) { if (error?.code === "ENOENT") assetEntries = null; else throw error; }
+  if (assetEntries) {
+    const jsFiles = assetEntries.filter((entry) => entry.isFile() && entry.name.endsWith(".js")).map((entry) => entry.name);
     const leaks = [];
     for (const file of jsFiles) {
       const content = readFileSync(join(assetsDir, file), "utf8");
@@ -91,18 +114,36 @@ if (run.status !== 0) process.exit(run.status ?? 1);
 const failures = [];
 const indexHtmlPath = join(ROOT, "dist", "index.html");
 
-if (!existsSync(indexHtmlPath)) {
+const html = readTextIfExists(indexHtmlPath);
+
+if (html === null) {
   failures.push("dist/index.html missing");
-} else {
-  const html = readFileSync(indexHtmlPath, "utf8");
-  if (!html.includes("__BMF_INTEGRITY_MANIFEST__")) {
-    failures.push("__BMF_INTEGRITY_MANIFEST__ not injected into dist/index.html");
-  }
-  if (!html.includes(' integrity="sha256-')) {
-    failures.push("no SRI integrity= attributes found on /assets/ tags");
+} else if (!html.includes("__BMF_INTEGRITY_MANIFEST__")) {
+  failures.push("__BMF_INTEGRITY_MANIFEST__ not injected into dist/index.html");
+}
+// ADR-039: SRI lives on the pages that reference /assets/ tags — the SPA
+// (app.html) since the marketing/SPA split. index.html is the marketing page
+// and carries no /assets/ tags at all, so checking it alone both missed the
+// real bundle and demanded integrity where there is nothing to protect.
+// Every /assets/ script/link tag in any emitted HTML must carry SRI.
+const appHtml = readTextIfExists(join(ROOT, "dist", "app.html"));
+const assetTagRe = /<(?:script|link)\b[^>]*\b(?:src|href)="(\/assets\/[^"]+)"[^>]*>/g;
+let assetTags = 0;
+let sriMissing = 0;
+for (const page of [html ?? "", appHtml ?? ""]) {
+  for (const match of page.matchAll(assetTagRe)) {
+    assetTags += 1;
+    if (!/integrity="sha256-/.test(match[0])) sriMissing += 1;
   }
 }
-if (!existsSync(join(ROOT, "dist", "sw.js"))) {
+if (assetTags === 0) {
+  failures.push("no /assets/ tags found in dist/*.html — nothing to SRI-verify");
+}
+if (sriMissing > 0) {
+  failures.push(`${sriMissing} /assets/ tag(s) without SRI integrity="sha256-"`);
+}
+const swPath = join(ROOT, "dist", "sw.js");
+if (readTextIfExists(swPath) === null) {
   failures.push("dist/sw.js (service worker) missing");
 }
 

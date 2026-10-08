@@ -17,14 +17,15 @@
  *   - src/services/RecoveryService.ts — the 24-word recovery phrase.
  *   - src/constants/config.ts    — MIN_PASSWORD_LENGTH.
  *
- * Surfaces scanned: the docs/manual-usuario*.md sources, one per locale of
- * scripts/landing-registry.mjs (MANUAL_LANGS is derived from that registry,
- * not a hand-kept list — see its comment). The PDFs and the -styled.html twins
- * are generated FROM these by docs:pdf:localized, so the Markdown set is the
- * truth for the whole manual family; the public export includes all of them.
- * docs/manual-usuario.md is the Spanish master: the only one carrying the full
- * pricing chapter, so tier-table-only claims are validated there; condensed
- * manuals carry §3.1/§6/§7-shaped prose lines.
+ * Surfaces scanned: the localized manual sources in docs/, one per locale of
+ * scripts/landing-registry.mjs (MANUAL_SOURCE_PATHS is derived from that
+ * registry's MANUAL_FILES table, not a hand-kept list — see its comment). The
+ * PDFs and the -styled.html twins are generated FROM these by
+ * docs:pdf:localized, so the Markdown set is the truth for the whole manual
+ * family; the public export includes all of them. docs/manual-de-usuario-es.md
+ * is the Spanish master: the only one carrying the full pricing chapter, so
+ * tier-table-only claims are validated there; condensed manuals carry
+ * §3.1/§6/§7-shaped prose lines.
  *
  * Validation is directional: every figure-bearing line found in a manual must
  * agree with the code. Absence is not an error here (claim presence is
@@ -35,18 +36,19 @@
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { LANDING_CODES } from "./landing-registry.mjs";
+import { LANDING_CODES, manualSourcePath } from "./landing-registry.mjs";
 
 const THIS_DIR = fileURLToPath(new URL(".", import.meta.url));
 const REPO_ROOT = join(THIS_DIR, "..");
 
 /**
- * Manual file suffixes, DERIVED from the landing locale registry (the same
- * single source the pages use) — the mapping is positional, not a copy:
- *
- *   - "es" is the Spanish master (docs/manual-usuario.md), the only manual
- *     carrying the full pricing chapter, so it has no suffix;
- *   - every other locale is docs/manual-usuario-<code>.md.
+ * Manual source paths (docs-relative), DERIVED from the MANUAL_FILES table in
+ * the landing locale registry (the same single source the pages, the PDF
+ * generator, the exporter and the claim gate use) — the mapping is a lookup
+ * through `manualSourcePath`, not a copy. Since the endonym rename each locale
+ * owns its own basename: "es" is docs/manual-de-usuario-es.md (the Spanish
+ * master, the only manual carrying the full pricing chapter), "de" is
+ * docs/benutzerhandbuch-de.md, "ja" is docs/user-manual-ja.md.
  *
  * Deriving it is what keeps a new locale honest: the hand-written list this
  * replaced would have silently kept validating 30 manuals while the registry
@@ -55,10 +57,9 @@ const REPO_ROOT = join(THIS_DIR, "..");
  * gate until its manual exists (scanManuals reports the missing file) instead
  * of going unpoliced.
  */
-export const MANUAL_LANGS = [
-  "", // es: docs/manual-usuario.md (the Spanish master)
-  ...LANDING_CODES.filter((code) => code !== "es").map((code) => `-${code}`),
-];
+export const MANUAL_SOURCE_PATHS = LANDING_CODES.map((code) =>
+  manualSourcePath(code),
+);
 
 // ---------------------------------------------------------------------------
 // Truth extraction (regex-parsed constants; no imports of app code)
@@ -449,8 +450,7 @@ export function scanManuals(root = REPO_ROOT) {
   const failures = [];
   const missing = [];
 
-  for (const lang of MANUAL_LANGS) {
-    const rel = join("docs", `manual-usuario${lang}.md`);
+  for (const rel of MANUAL_SOURCE_PATHS) {
     const abs = join(root, rel);
     if (!existsSync(abs)) {
       missing.push(rel);

@@ -1,32 +1,32 @@
-# Guía de triage — Primer run de CodeQL y Semgrep (SAST)
+# Triage guide — First CodeQL and Semgrep run (SAST)
 
-- **Última revisión:** 2026-08-30
-- **Alcance:** primer run de `.github/workflows/sast.yml` (jobs "CodeQL analysis" y "Semgrep analysis") y el gate `scripts/check-sarif-severity.mjs`.
-- **Documentos relacionados:** [launch-checklist.md](launch-checklist.md) punto 8, [security.md](security.md) → "Validación externa requerida", [internal-security-checklist.md](internal-security-checklist.md).
-- **Mantenimiento:** mantenedor único del repositorio; el gate y esta guía se validan mediante CI.
+- **Last review:** 2026-08-30
+- **Scope:** first run of `.github/workflows/sast.yml` (jobs "CodeQL analysis" and "Semgrep analysis") and the gate `scripts/check-sarif-severity.mjs`.
+- **Related documents:** [launch-checklist.md](launch-checklist.md) point 8, [security.md](security.md) → "External validation required", [internal-security-checklist.md](internal-security-checklist.md).
+- **Maintenance:** single repository maintainer; the gate and this guide are validated via CI.
 
 ---
 
-## 1. Cómo funciona el gate (lectura rápida)
+## 1. How the gate works (quick read)
 
-| Escáner | Reglas | Salida | Umbral por defecto |
+| Scanner | Rules | Output | Default threshold |
 |---|---|---|---|
-| CodeQL | `security-extended`, `build-mode: none` | SARIF en `../codeql-results/` (directorio) | `--min-severity high` |
-| Semgrep | `p/security-audit` (modo abierto, `--metrics off`) | `semgrep.sarif` (archivo) | `--min-severity high` |
+| CodeQL | `security-extended`, `build-mode: none` | SARIF in `../codeql-results/` (directory) | `--min-severity high` |
+| Semgrep | `p/security-audit` (open mode, `--metrics off`) | `semgrep.sarif` (file) | `--min-severity high` |
 
-El umbral puede afinarse **por herramienta** (`--min-severity-for <tool>=<severity>`) y los hallazgos ya **aprobados** pueden ignorarse con `--baseline <archivo>` (ver §4). El resumen puede emitirse en formato tabla con `--format table`.
+The threshold can be tuned **per tool** (`--min-severity-for <tool>=<severity>`) and already **approved** findings can be ignored with `--baseline <file>` (see §4). The summary can be emitted in table format with `--format table`.
 
-Clasificación que aplica el gate (`check-sarif-severity.mjs`):
+Classification applied by the gate (`check-sarif-severity.mjs`):
 
-1. Si el resultado trae `properties["security-severity"]` y su valor es un rango conocido (`critical|high|medium|low|none`), se usa ese rango.
-2. Si no, se mapea `level`: `error` → **high**, `warning` → **medium**, `note` → **low**.
-3. Sin ninguna información de severidad → **`unknown` → BLOQUEA** (fail-closed: un escáner que no clasifica no puede pasar en silencio).
+1. If the result brings `properties["security-severity"]` and its value is a known range (`critical|high|medium|low|none`), that range is used.
+2. If not, map `level`: `error` → **high**, `warning` → **medium**, `note` → **low**.
+3. Without any severity information → **`unknown` → BLOCKS** (fail-closed: a scanner that does not classify cannot pass silently).
 
-Bloqueo = severidad con rango ≤ rango de `--min-severity`. Con `high` (default) bloquean **critical + high + unknown**; `medium` y `low` informan pero no rompen el CI.
+Block = severity with range ≤ range of `--min-severity`. With `high` (default) **critical + high + unknown** block; `medium` and `low` report but do not break CI.
 
-> **Detalle práctico de CodeQL:** sus SARIF traen `security-severity` como **puntuación numérica** (p. ej. `"7.5"`), que el gate no interpreta como rango; por tanto, en la práctica los hallazgos de CodeQL se clasifican por `level` (`error` → high → bloquea). Resultado: casi todo hallazgo de `security-extended` bloquea el merge. Es un diseño deliberado (fail-closed); si el ruido se vuelve un problema, no se arregla subiendo el umbral global sino con exclusiones justificadas (§4) — o bajándolo solo tras un baseline limpio (§5).
+> **CodeQL practical detail:** its SARIFs bring `security-severity` as **numeric score** (e.g. `"7.5"`), which the gate does not interpret as range; therefore, in practice CodeQL findings are classified by `level` (`error` → high → blocks). Result: almost every `security-extended` finding blocks merge. This is deliberate design (fail-closed); if noise becomes a problem, fix not by raising global threshold but with justified exclusions (§4) — or lowering it only after a clean baseline (§5).
 
-Salida del gate (el "contrato" que lees en CI):
+Gate output (the "contract" you read in CI):
 
 ```
 [check-sarif-severity] 3 finding(s) across 2 SARIF file(s):
@@ -35,58 +35,58 @@ Salida del gate (el "contrato" que lees en CI):
 [check-sarif-severity] FAIL: 2 finding(s) at or above 'high'
 ```
 
-Formato de cada línea: `[severidad] id-de-regla (herramienta) archivo:línea — mensaje`.
+Format of each line: `[severity] rule-id (tool) file:line — message`.
 
-## 2. Cómo leer un hallazgo
+## 2. How to read a finding
 
-1. **Regla:** busca la referencia oficial de la regla:
-   - Semgrep: `https://semgrep.dev/r/<rule-id>` (descripción, patrón, falsos positivos conocidos).
-   - CodeQL: la descripción de la consulta en el repositorio `github/codeql` (`javascript/ql/src/...`) o la ficha de la alerta en **Security → Code scanning** de GitHub.
-2. **Ubicación:** `archivo:línea` es el *sink* (el punto donde ocurre el daño). El *source* (origen del dato) suele estar más arriba en el flujo; en code scanning puedes ver el flujo de datos completo.
-3. **Mensaje:** explica el patrón detectado, no la gravedad real en tu contexto. La gravedad la decides tú tras el triage.
-4. **Herramienta:** CodeQL usa análisis de flujo de datos (menos falsos positivos, más esfuerzo de lectura); Semgrep usa patrones (más cobertura, más ruido).
+1. **Rule:** look up the official rule reference:
+   - Semgrep: `https://semgrep.dev/r/<rule-id>` (description, pattern, known false positives).
+   - CodeQL: the query description in the `github/codeql` repository (`javascript/ql/src/...`) or the alert card in GitHub **Security → Code scanning**.
+2. **Location:** `file:line` is the *sink* (the point where damage occurs). The *source* (data origin) is usually higher in the flow; in code scanning you can see the complete data flow.
+3. **Message:** explains the detected pattern, not the real severity in your context. Severity is decided by you after triage.
+4. **Tool:** CodeQL uses data flow analysis (fewer false positives, more reading effort); Semgrep uses patterns (more coverage, more noise).
 
-## 3. Clasificación de triage
+## 3. Triage classification
 
-Cada hallazgo termina en una de estas cuatro veredictos:
+Each finding ends in one of these four verdicts:
 
-| Veredicto | Cuándo | Acción |
+| Verdict | When | Action |
 |---|---|---|
-| **TP — verdadero positivo** | El flujo es alcanzable y el dato es controlable por un actor no confiable | Corregir en un PR de seguimiento; añadir un test que ejercite el caso |
-| **FP — falso positivo** | El flujo no es alcanzable, el dato es interno o ya hay mitigación anterior | Excluir con justificación (§4) |
-| **Riesgo aceptado** | Es real pero el coste/beneficio de corregirlo ahora no compensa (p. ej. self-XSS en contenido local) | Documentar con owner y fecha de revisión en el registro de triage |
-| **Pendiente** | No puedes decidirlo sin más contexto | No tocar nada; dejar bloqueando hasta resolverlo |
+| **TP — true positive** | The flow is reachable and data is controllable by an untrusted actor | Fix in a follow-up PR; add a test that exercises the case |
+| **FP — false positive** | The flow is not reachable, data is internal or previous mitigation exists | Exclude with justification (§4) |
+| **Accepted risk** | It is real but cost/benefit of fixing now does not compensate (e.g. self-XSS in local content) | Document with owner and review date in triage log |
+| **Pending** | You cannot decide without more context | Do not touch anything; leave blocking until resolved |
 
-**Lista de comprobación para distinguir falsos positivos (en este proyecto):**
+**Checklist to distinguish false positives (in this project):**
 
-- [ ] ¿El *source* es realmente controlable por un tercero? En BookmarkForge:
-  - El vault, notas y marcadores **nunca salen del dispositivo**; un hallazgo XSS sobre contenido local suele ser *self-XSS* (el usuario se ataca a sí mismo) → riesgo bajo, no necesariamente FP.
-  - Lo que sí llega al servidor: señalización P2P (HMAC obligatorio en producción), validación de licencias y entitlement (origen restringido + rate-limited), telemetría opt-in sin contenido y analítica agregada. Las llamadas a proveedores de IA **no** pasan por el servidor: salen del navegador con la clave del usuario, así que un hallazgo sobre ese flujo se evalúa en el cliente.
-- [ ] ¿El *sink* ya está protegido por una mitigación existente? Revisa los controles de `docs/security.md` ("Controles activos"): DOMPurify centralizado, validación SSRF/IP, rate limits, CSP estricta.
-- [ ] ¿El código es alcanzable? Mocks locales (`license-mock`, `mock-openai-server`), ramas muertas y código solo de build no corren en producción.
-- [ ] ¿El hallazgo está en tests o fixtures? Los tests pueden disparar patrones (p. ej. `eval` para evaluar expresiones de test) sin riesgo real; excluye por ruta (§4) en lugar de por regla.
-- [ ] ¿Semgrep marca algo que el mensaje contradice? Las reglas de patrón a veces aciertan el patrón pero no el contexto; léelas con el código delante.
+- [ ] Is the *source* really controllable by a third party? In BookmarkForge:
+  - The vault, notes and bookmarks **never leave the device**; an XSS finding on local content is usually *self-XSS* (user attacks themselves) → low risk, not necessarily FP.
+  - What does reach the server: P2P signaling (HMAC mandatory in production), license and entitlement validation (restricted origin + rate-limited), opt-in telemetry without content and aggregated analytics. AI provider calls **do not** pass through the server: they leave the browser with the user's key, so a finding on that flow is evaluated on the client.
+- [ ] Is the *sink* already protected by an existing mitigation? Review controls in `docs/security.md` ("Active controls"): centralized DOMPurify, SSRF/IP validation, rate limits, strict CSP.
+- [ ] Is the code reachable? Local mocks (`license-mock`, `mock-openai-server`), dead branches and build-only code do not run in production.
+- [ ] Is the finding in tests or fixtures? Tests can trigger patterns (e.g. `eval` to evaluate test expressions) without real risk; exclude by path (§4) instead of by rule.
+- [ ] Does Semgrep flag something the message contradicts? Pattern rules sometimes hit the pattern but not the context; read them with the code in front.
 
-**Regla de oro:** ante la duda, **no excluyas**. Un hallazgo dudoso que bloquea obliga a mirarlo; un hallazgo excluido nadie lo vuelve a ver.
+**Golden rule:** when in doubt, **do not exclude**. A doubtful finding that blocks forces looking at it; an excluded finding nobody sees again.
 
-## 4. Supresión con justificación
+## 4. Suppression with justification
 
-La exclusión es una decisión de seguridad, no una comodidad. Toda exclusión necesita: la regla concreta, un comentario con el porqué y revisión explícita del mantenedor único.
+Exclusion is a security decision, not a convenience. Every exclusion needs: the specific rule, a comment with why and explicit review by the single maintainer.
 
-### Semgrep — `nosemgrep` (inline, en el código)
+### Semgrep — `nosemgrep` (inline, in code)
 
 ```ts
 // nosemgrep: javascript.lang.security.audit.detect-eval-with-expression
-// Justificación: la entrada es un literal interno de build, nunca datos de usuario.
+// Justification: input is an internal build literal, never user data.
 const value = eval(code);
 ```
 
-- Siempre con el **id de regla** y un comentario de justificación. Un `# nosemgrep` pelado (sin id) silencia todas las reglas en esa línea: prohibido.
-- El hallazgo se elimina **en tiempo de escaneo**, así que ni siquiera llega al SARIF ni al gate. Es la vía rápida y auditable.
+- Always with the **rule id** and a justification comment. A bare `# nosemgrep` (without id) silences all rules on that line: prohibited.
+- The finding is removed **at scan time**, so it does not even reach SARIF or the gate. It is the fast and auditable path.
 
-### CodeQL — exclusión por ruta (config-file)
+### CodeQL — exclusion by path (config-file)
 
-CodeQL no tiene equivalente inline. El mecanismo soportado por la action es un archivo de configuración con `paths-ignore`:
+CodeQL has no inline equivalent. The mechanism supported by the action is a configuration file with `paths-ignore`:
 
 ```yaml
 # .github/codeql/codeql-config.yml
@@ -97,16 +97,16 @@ paths-ignore:
   - "scripts/**/mocks/**"
 ```
 
-Referéncialo en `sast.yml` (init de CodeQL): `config-file: .github/codeql/codeql-config.yml`.
+Reference it in `sast.yml` (CodeQL init): `config-file: .github/codeql/codeql-config.yml`.
 
-- Sirve para **rutas** (tests, mocks, generados), no para **reglas individuales**: la exclusión por consulta no está soportada limpiamente por la action. Si una regla concreta genera ruido real, la vía correcta es arreglar el código o reducir el conjunto de consultas, no filtrar por regla.
-- Dismiss en la UI de code scanning limpia la lista de alertas pero **no afecta al gate de CI**, que lee un SARIF nuevo en cada ejecución.
+- Serves for **paths** (tests, mocks, generated), not for **individual rules**: exclusion by query is not cleanly supported by the action. If a specific rule generates real noise, the correct path is to fix the code or reduce the query set, not filter by rule.
+- Dismiss in code scanning UI cleans the alert list but **does not affect the CI gate**, which reads a new SARIF on each execution.
 
-### Baseline: hallazgos conocidos y aprobados (`--baseline`)
+### Baseline: known and approved findings (`--baseline`)
 
-El modo `--baseline` ignora hallazgos que ya fueron **triageados y aprobados explícitamente** — FP documentados o riesgos aceptados con fecha de revisión. Es complementario a `nosemgrep`: el inline silencia en el código; el baseline centraliza la aprobación y deja el código intacto.
+The `--baseline` mode ignores findings that were already **triaged and explicitly approved** — documented FPs or accepted risks with review date. It is complementary to `nosemgrep`: inline silences in code; baseline centralizes approval and leaves code intact.
 
-Formato (`.github/sast-baseline.json`):
+Format (`.github/sast-baseline.json`):
 
 ```json
 [
@@ -116,95 +116,95 @@ Formato (`.github/sast-baseline.json`):
     "tool": "CodeQL",
     "line": 42,
     "approved": true,
-    "justification": "FP: entrada limitada a orígenes autenticados; ticket #123"
+    "justification": "FP: input limited to authenticated origins; ticket #123"
   }
 ]
 ```
 
-- **Coincidencia:** `tool` (opcional, insensible a mayúsculas), `ruleId`, `file` (normalizado: separadores y `./`) y `line` (opcional; si se omite, coincide con cualquier línea de ese archivo+regla).
-- **Fail-closed:** toda entrada requiere `approved: true` y `justification` no vacía; si falta alguna, el gate falla. Un hallazgo sin aprobar jamás se ignora.
-- **Stale:** si una entrada ya no coincide con ningún hallazgo (el código se arregló), el gate avisa para que se limpie el baseline.
-- **Cuándo usar baseline en vez de `nosemgrep`:** FP con referencia externa (ticket, decisión), riesgos aceptados con fecha de revisión, o silenciar rutas/reglas que CodeQL no permite excluir inline. Prefiere `nosemgrep` para FPs triviales y evidentes en el propio código.
-- El archivo vive en `.github/sast-baseline.json`; cada alta en el baseline es un cambio de seguridad revisable en el PR y debe quedar justificada.
+- **Matching:** `tool` (optional, case-insensitive), `ruleId`, `file` (normalized: separators and `./`) and `line` (optional; if omitted, matches any line of that file+rule).
+- **Fail-closed:** every entry requires `approved: true` and non-empty `justification`; if missing, the gate fails. A finding never approved is never ignored.
+- **Stale:** if an entry no longer matches any finding (code was fixed), the gate warns to clean the baseline.
+- **When to use baseline instead of `nosemgrep`:** FPs with external reference (ticket, decision), accepted risks with review date, or silencing paths/rules CodeQL does not allow to exclude inline. Prefer `nosemgrep` for trivial and obvious FPs in the code itself.
+- The file lives in `.github/sast-baseline.json`; each addition to the baseline is a reviewable security change in the PR and must be justified.
 
-### Reglas de oro de la exclusión
+### Golden rules of exclusion
 
-1. Exclusión ≠ arreglo: primero intenta corregir el código.
-2. Justificación obligatoria en el propio artefacto (comentario o `paths-ignore` con explicación en el PR).
-3. Revisión por el mantenedor único y validación de los checks del PR.
-4. Nunca excluir clases enteras ("todo lo que marque regla X") sin justificar cada ocurrencia.
-5. Revisar la lista de exclusiones en cada revisión trimestral: el código cambia y un FP de ayer puede ser un TP de hoy.
+1. Exclusion ≠ fix: first try to fix the code.
+2. Mandatory justification in the artifact itself (comment or `paths-ignore` with explanation in the PR).
+3. Review by the single maintainer and validation of PR checks.
+4. Never exclude entire classes ("everything rule X flags") without justifying each occurrence.
+5. Review the exclusion list in each quarterly review: code changes and yesterday's FP may be today's TP.
 
-## 5. Cuándo subir o bajar el umbral
+## 5. When to raise or lower the threshold
 
-El umbral vive en los dos pasos "Enforce severity policy (block High/Critical)" de `sast.yml` (`--min-severity`). Cambiarlo exige tocar ambos y una revisión explícita del mantenedor único.
+The threshold lives in the two "Enforce severity policy (block High/Critical)" steps of `sast.yml` (`--min-severity`). Changing it requires touching both and explicit review by the single maintainer.
 
-| Cambio | Efecto | Cuándo |
+| Change | Effect | When |
 |---|---|---|
-| Subir a `critical` | Solo bloquean critical (y unknown) | **Solo después** de: (1) un baseline triageado sin TPs high sin corregir, (2) riesgos aceptados documentados con owner y fecha, (3) fecha de re-revisión fijada. Riesgo: los hallazgos **nuevos** high también dejan de bloquear |
-| Bajar a `medium` | Bloquean critical + high + medium | Endurecimiento posterior, cuando el baseline esté limpio y el triage de medium sea sostenible |
-| Afinar por herramienta (`--min-severity-for semgrep=medium`) | Solo esa herramienta cambia de umbral | Preferible a tocar el umbral global: aísla el ruido de un escáner sin debilitar el otro |
-| Mantener `high` | Default actual | Lo correcto para el primer run y mientras haya ruido gestionable |
+| Raise to `critical` | Only critical (and unknown) block | **Only after:** (1) a triaged baseline without uncorrected high TPs, (2) documented accepted risks with owner and date, (3) fixed re-review date. Risk: **new** high findings also stop blocking |
+| Lower to `medium` | Block critical + high + medium | Subsequent hardening, when baseline is clean and medium triage is sustainable |
+| Tune per tool (`--min-severity-for semgrep=medium`) | Only that tool changes threshold | Preferable to touching global threshold: isolates noise of one scanner without weakening the other |
+| Keep `high` | Current default | Correct for first run and while noise is manageable |
 
-**Nunca:**
-- Tocar el comportamiento fail-closed (`unknown` → bloquea). Quitar eso desactiva la red de seguridad del propio gate.
-- Relajar el umbral para "pasar el CI" con hallazgos sin tratar.
-- Cambiar el umbral sin entrada en el registro de triage (quién, cuándo, por qué, fecha de revisión).
+**Never:**
+- Touch fail-closed behavior (`unknown` → blocks). Removing that disables the gate's own safety net.
+- Relax threshold to "pass CI" with untreated findings.
+- Change threshold without entry in triage log (who, when, why, review date).
 
-Recuerda: el ruleset de `main` exige ambos jobs como checks obligatorios. Si el gate falla, el merge queda bloqueado por diseño — no hay atajo.
+Remember: the `main` ruleset requires both jobs as mandatory checks. If the gate fails, merge is blocked by design — no shortcut.
 
-## 6. Procedimiento del primer run
+## 6. First run procedure
 
-1. **Lanzar** el workflow: Actions → *SAST security analysis* → Run workflow (rama `main` o una rama dedicada `chore/sast-first-run`).
-2. **Esperar** ambos jobs; leer los pasos "Enforce severity policy". El job falla si hay blocking findings — es el comportamiento esperado del primer run.
-3. **Recopilar hallazgos:** salida del gate en los logs + alertas en **Security → Code scanning** (filtra por `category: codeql` y `category: semgrep`).
-4. **Reproducir localmente** para iterar rápido (comandos en el anexo).
-5. **Triagear cada hallazgo** con la tabla de §7: veredicto + acción.
-6. **Corregir los TPs** en PRs de seguimiento (con tests). **Excluir los FPs** con justificación (§4) y revisión de security.
-7. **Registrar** el resultado en `docs/sast-triage-log.md` (crear el archivo con la tabla rellena): fecha, nº de hallazgos por herramienta, veredictos y decisiones de umbral.
-8. **Documentar riesgos aceptados** con owner y fecha de revisión; revisarlos en la siguiente iteración trimestral.
+1. **Launch** the workflow: Actions → *SAST security analysis* → Run workflow (branch `main` or a dedicated branch `chore/sast-first-run`).
+2. **Wait** for both jobs; read the "Enforce severity policy" steps. The job fails if there are blocking findings — this is the expected behavior of the first run.
+3. **Collect findings:** gate output in logs + alerts in **Security → Code scanning** (filter by `category: codeql` and `category: semgrep`).
+4. **Reproduce locally** to iterate quickly (commands in appendix).
+5. **Triage each finding** with the table from §7: verdict + action.
+6. **Fix the TPs** in follow-up PRs (with tests). **Exclude the FPs** with justification (§4) and security review.
+7. **Register** the result in `docs/sast-triage-log.md` (create the file with the filled table): date, number of findings per tool, verdicts and threshold decisions.
+8. **Document accepted risks** with owner and review date; review them in the next quarterly iteration.
 
-## 7. Plantilla de registro de triage
+## 7. Triage log template
 
-**Hallazgos del run** (una fila por hallazgo):
+**Run findings** (one row per finding):
 
-| # | Regla (herramienta) | Ubicación | Severidad (gate) | Veredicto | Justificación / acción | Responsable |
+| # | Rule (tool) | Location | Severity (gate) | Verdict | Justification / action | Responsible |
 |---|---|---|---|---|---|---|
-| 1 | `js/command-line-injection` (CodeQL) | `server/src/example-legacy.ts:42` | high | TP | Corregir: validar entrada antes de `exec`; PR #… | @… |
-| 2 | `…detect-eval-with-expression` (Semgrep) | `src/utils/helpers.ts:10` | medium | FP | Input interno de build; `nosemgrep` + justificación en el código | @… |
+| 1 | `js/command-line-injection` (CodeQL) | `server/src/example-legacy.ts:42` | high | TP | Fix: validate input before `exec`; PR #… | @… |
+| 2 | `…detect-eval-with-expression` (Semgrep) | `src/utils/helpers.ts:10` | medium | FP | Internal build input; `nosemgrep` + justification in code | @… |
 
-**Decisiones de umbral** (una fila por cambio; también para `--min-severity-for`, cambios de formato y altas/limpiezas del baseline):
+**Threshold decisions** (one row per change; also for `--min-severity-for`, format changes and baseline additions/cleanups):
 
-| Fecha | Cambio | Motivo | Aprobado por | Fecha de revisión |
+| Date | Change | Reason | Approved by | Review date |
 |---|---|---|---|---|
-| — | `--min-severity high` (default) | Baseline inicial | — | — |
+| — | `--min-severity high` (default) | Initial baseline | — | — |
 
 ---
 
-## Anexo: reproducción local
+## Appendix: local reproduction
 
 ```bash
-# Semgrep (misma versión y reglas que CI)
+# Semgrep (same version and rules as CI)
 pipx run semgrep==1.174.0 scan --config p/security-audit --metrics off \
   --sarif --output semgrep.sarif
 node scripts/check-sarif-severity.mjs --min-severity high semgrep.sarif
 
-# Gate sobre un directorio de SARIF (caso CodeQL)
+# Gate over a SARIF directory (CodeQL case)
 node scripts/check-sarif-severity.mjs --min-severity high ../codeql-results
 
-# Umbral por herramienta (p. ej. solo Semgrep a medium)
+# Threshold per tool (e.g. only Semgrep to medium)
 node scripts/check-sarif-severity.mjs --min-severity high \
   --min-severity-for semgrep=medium semgrep.sarif
 
-# Resumen en formato tabla
+# Summary in table format
 node scripts/check-sarif-severity.mjs --format table ../codeql-results
 
-# Ignorar hallazgos aprobados (baseline) y reportar en tabla
+# Ignore approved findings (baseline) and report in table
 node scripts/check-sarif-severity.mjs --baseline .github/sast-baseline.json \
   --format table ../codeql-results
 
-# Ver la lista de reglas de Semgrep sin escanear
+# View Semgrep rule list without scanning
 pipx run semgrep==1.174.0 --validate-config --config p/security-audit
 ```
 
-CodeQL local requiere el CLI de CodeQL (`codeql database create` + `codeql database analyze`); la vía principal para triage es CI + code scanning, no la reproducción local.
+CodeQL local requires the CodeQL CLI (`codeql database create` + `codeql database analyze`); the main path for triage is CI + code scanning, not local reproduction.

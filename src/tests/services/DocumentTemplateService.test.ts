@@ -111,7 +111,7 @@ describe("DocumentTemplateService", () => {
 
     it("persists to localStorage", () => {
       service.createTemplate({
-        name: "Persistente",
+        name: "Persistent",
         description: "",
         category: "Test",
         content: [],
@@ -122,14 +122,14 @@ describe("DocumentTemplateService", () => {
       expect(stored).toBeDefined();
       const parsed = JSON.parse(stored!);
       expect(parsed).toHaveLength(1);
-      expect(parsed[0].name).toBe("Persistente");
+      expect(parsed[0].name).toBe("Persistent");
     });
   });
 
   describe("updateTemplate", () => {
     it("updates existing template", () => {
-      service.updateTemplate("article", { name: "Artículo Modificado" });
-      expect(service.getTemplate("article").name).toBe("Artículo Modificado");
+      service.updateTemplate("article", { name: "Modified Article" });
+      expect(service.getTemplate("article").name).toBe("Modified Article");
     });
 
     it("partially updates without losing other fields", () => {

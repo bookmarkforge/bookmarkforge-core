@@ -1,53 +1,53 @@
-# ADR-019: Migración a Argon2id y formatos de cifrado V4/V5
+# ADR-019: Argon2id migration and V4/V5 encryption formats
 
-- **Estado:** aceptado (implementado; este registro formaliza la decisión existente)
-- **Fecha:** 2026-09-02 (retro-documentado desde el código y `docs/audit.md`)
+- **Status:** accepted (implemented; this record formalizes the existing decision)
+- **Date:** 2026-09-02 (retro-documented from the code and `docs/audit.md`)
 
-## Contexto
+## Context
 
-El vault local-first necesita cifrado en reposo resistente a ataques offline.
-El formato heredado `v2:` usaba PBKDF2, un KDF sin resistencia a GPU/ASIC y con
-parámetros que quedaron cortos frente al hardware actual. Además, las
-operaciones criptográficas corrían en el hilo principal del renderer, lo que
-permitía que el KDF bloqueara la UI y complicaba la puesta a cero de memoria.
+The local-first vault needs encryption at rest that resists offline attacks.
+The legacy `v2:` format used PBKDF2, a KDF with no GPU/ASIC resistance and with
+parameters that fell short against current hardware. In addition, the
+cryptographic operations ran on the renderer's main thread, which
+let the KDF block the UI and complicated memory zeroization.
 
-## Decisión
+## Decision
 
-1. **Argon2id es el único KDF hacia adelante.** La derivación de clave de base
-   de datos usa Argon2id con parámetros de memoria elevados; las claves de
-   dominio se separan con HKDF (`crypto-core.ts`). El formato heredado `v2:`
-   (PBKDF2) queda como **solo lectura** para permitir la migración de vaults
-   existentes; el código nuevo nunca escribe `v2:`.
-2. **Formatos de wire estables** (contrato documentado en `AGENTS.md` §1):
-   - `v5:` = `hkdf_salt(16) || iv(12) || ciphertext` — formato de escritura actual.
-   - `v4:` = `salt(16) || iv(12) || ciphertext` — Argon2id por operación (legacy de la propia migración).
-   - `v2:` = PBKDF2 — solo lectura.
-3. **Criptografía fuera del hilo principal.** La derivación y el cifrado de
-   fondo viven en `src/workers/crypto.worker.ts`, de modo que el KDF pesado
-   nunca bloquea la UI y el material de clave se materializa en un contexto
-   aislado.
-4. **Zeroización de memoria como contrato.** Los buffers de contraseña se
-   consumen in-place tras derivar (`zeroPasswordBytes`); la puesta a cero de
-   máximo esfuerzo es doble relleno (`fill(0)` → XOR `0xAA` → `fill(0)`) para
-   derrotar la elisión del compilador. El detalle operativo completo está en
-   `AGENTS.md` §1, que es la referencia normativa de este contrato.
-5. **Progreso de migración visible.** La reescritura de filas durante el bump
-   de versión de esquema (`src/db/migration-progress.ts`) muestra un overlay de
-   progreso (`tests/e2e/vault-migration-progress.spec.ts`) porque una migración
-   Argon2id puede tardar minutos en hardware lento.
-6. **Parámetros de prueba vs producción.** El modo test de Vite usa parámetros
-   Argon2id reducidos (8 MiB, t=1) para que la suite E2E no pague el KDF de
-   128 MiB (~28 s) en cada setup; producción conserva los parámetros fuertes
-   (`isProdBuild()` en `playwright.config.ts`).
+1. **Argon2id is the only forward KDF.** Base data key
+   derivation uses Argon2id with elevated memory parameters; domain
+   keys are separated with HKDF (`crypto-core.ts`). The legacy `v2:` format
+   (PBKDF2) remains **read-only** to allow migrating existing vaults;
+   new code never writes `v2:`.
+2. **Stable wire formats** (contract documented in `AGENTS.md` §2):
+   - `v6:` = base64(`vault_salt(16) || hkdf_salt(16) || iv(12) || ciphertext`) — current write format.
+   - `v5:` = `hkdf_salt(16) || iv(12) || ciphertext` — legacy read-only.
+   - `v4:` = `salt(16) || iv(12) || ciphertext` — Argon2id per operation (legacy of the migration itself).
+   - `v2:` = PBKDF2 — read-only.
+3. **Cryptography off the main thread.** Background derivation and encryption
+   live in `src/workers/crypto.worker.ts`, so the heavy KDF
+   never blocks the UI and key material is materialized in an isolated context.
+4. **Memory zeroization as a contract.** Password buffers are
+   consumed in place after derivation (`zeroPasswordBytes`); maximum-effort
+   zeroing is a double fill (`fill(0)` → XOR `0xAA` → `fill(0)`) to
+   defeat compiler elision. The full operational detail is in
+   `AGENTS.md` §2, which is the normative reference for this contract.
+5. **Visible migration progress.** Row rewrites during the schema
+   version bump (`src/db/migration-progress.ts`) show a progress
+   overlay (`tests/e2e/vault-migration-progress.spec.ts`) because an Argon2id
+   migration can take minutes on slow hardware.
+6. **Test vs production parameters.** Vite's test mode uses reduced
+   Argon2id parameters (8 MiB, t=1) so the E2E suite does not pay the
+   128 MiB KDF (~28 s) on every setup; production keeps the strong parameters
+   (`isProdBuild()` in `playwright.config.ts`).
 
-## Consecuencias
+## Consequences
 
-- Los formatos `v5:`/`v4:`/`v2:` son contratos de wire congelados: cualquier
-  cambio requiere un ADR nuevo y un camino de lectura migratorio.
-- Los archivos de este dominio llevan el ancla de cabecera `// ADR-019: …`
+- The `v6:`/`v5:`/`v4:`/`v2:` formats are frozen wire contracts: any
+  change requires a new ADR and a migratory read path.
+- Files in this domain carry the header anchor `// ADR-019: …`
   (`crypto-core.ts`, `argon2-kdf.ts`, `crypto.worker.ts`, `database.core.ts`,
   `EncryptionService.ts`, `SecureStorage.ts`, `SecurityVault.ts`, etc.).
-- El gate `check:audit-drift` vigila las anclas de regresión ligadas a este
-  dominio; eliminar o renombrar los tests anclados es un cambio a nivel ADR.
-- El costo de la derivación fuerte hace que la creación/desbloqueo del vault
-  sea deliberadamente lento; no se relajan los parámetros sin un ADR.
+- The `check:audit-drift` gate watches the regression anchors tied to this
+  domain; removing or renaming anchored tests is an ADR-level change.
+- The cost of strong derivation makes vault creation/unlock
+   deliberately slow; the parameters are not relaxed without an ADR.

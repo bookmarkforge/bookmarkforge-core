@@ -10,6 +10,11 @@
  */
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
+// `fileURLToPath` decodes the percent-encoding `import.meta.url` carries, so
+// the CLI guard below matches even when the checkout lives under a path with
+// spaces — a bare string comparison silently skips main() there and the gate
+// exits 0 as a no-op.
+import { fileURLToPath } from "node:url";
 
 export const DOCUMENT_ROOTS = [
   "README.md",
@@ -103,6 +108,6 @@ function main() {
   console.log("[check:documented-npm-commands] all documented commands exist");
 }
 
-if (process.argv[1] && import.meta.url.endsWith(process.argv[1].replaceAll("\\", "/"))) {
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   main();
 }

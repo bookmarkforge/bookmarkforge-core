@@ -65,12 +65,12 @@ describe("useClipperSync", () => {
     expect(mockInitDB).not.toHaveBeenCalled();
   });
 
-  it("reports the free-tier wall instead of staying silent when the save hits the 1,000 limit", async () => {
+  it("reports the free-tier wall instead of staying silent when the save hits the 2,500 limit", async () => {
     // The preInsert wall throws LicenseError("FREE_LIMIT_REACHED") — this
     // used to fall into INTENTIONAL SILENCE (the worst UX in the app).
     const { LicenseError } = await import("../../services/LicenseService");
     const limitError = new LicenseError(
-      "Free plan is limited to 1000 bookmarks. Upgrade to Pro for unlimited bookmarks.",
+      "Free plan is limited to 2500 bookmarks. Upgrade to Pro for unlimited bookmarks.",
       "FREE_LIMIT_REACHED",
     );
     mockInitDB.mockResolvedValue({
@@ -103,7 +103,7 @@ describe("useClipperSync", () => {
     // The suite's t() mock returns "key:{opts}" — asserting the interpolated
     // limit validates the {{limit}} substitution end-to-end.
     expect(mockToast.error).toHaveBeenCalledWith(
-      expect.stringContaining("1000"),
+      expect.stringContaining("2500"),
       expect.anything(),
     );
     expect(mockToast.success).not.toHaveBeenCalled();

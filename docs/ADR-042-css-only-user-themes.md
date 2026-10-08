@@ -1,67 +1,67 @@
-# ADR-042: Temas de usuario solo-CSS (D4)
+# ADR-042: CSS-only user themes (D4)
 
-- **Estado:** aceptado (implementado; este registro formaliza la decisión existente)
-- **Fecha:** 2026-09-02 (retro-documentado desde `src/services/ThemeService.ts` y su suite adversarial)
+- **Status:** accepted (implemented; this record formalizes the existing decision)
+- **Date:** 2026-09-02 (retro-documented from `src/services/ThemeService.ts` and its adversarial suite)
 
-## Contexto
+## Context
 
-La personalización visual era una superficie de riesgo sin decisión registrada:
-un "tema de usuario" es, a efectos del navegador, CSS controlado por el
-usuario (o por un import futuro) que se inyecta en el documento de la app —
-el mismo documento que muestra el vault descifrado. Los vectores clásicos del
-CSS como canal de ejecución/exfiltración (`@import` externo, `url()`,
-`expression()`, `behavior:`, `-moz-binding`, esquemas `javascript:`) pueden
-convertir un tema inocente en un canal de fuga: una petición de red con datos
-codificados en la URL es exfiltración silenciosa en una app local-first cuyo
-CSP de producción es la única línea defensiva restante. La decisión "D4" de la
-serie ADR-042 fija el modelo de temas como **CSS-only con sanitización
-fail-closed**.
+Visual personalization was a risk surface with no recorded decision:
+a "user theme" is, as far as the browser is concerned, CSS controlled by the
+user (or by a future import) injected into the app's document —
+the same document that displays the decrypted vault. The classic vectors of
+CSS as an execution/exfiltration channel (external `@import`, `url()`,
+`expression()`, `behavior:`, `-moz-binding`, `javascript:` schemes) can
+turn an innocent theme into a leak channel: a network request with data
+encoded in the URL is silent exfiltration in a local-first app whose
+production CSP is the only remaining defensive line. The "D4" decision of the
+ADR-042 series fixes the theming model as **CSS-only with fail-closed
+sanitization**.
 
-## Decisión
+## Decision
 
-1. **Un tema es CSS puro, nada más.** El modelo de datos es exclusivamente una
-   hoja de estilos: no hay JS, no hay HTML, no hay URLs externas. Cualquier
-   construct que pueda cargar un recurso externo o ejecutar código queda
-   fuera del lenguaje permitido por diseño, no por filtrado de salida.
-2. **Sanitización fail-closed (`sanitizeThemeCss`).** El servicio rechaza el
-   tema completo si encuentra cualquiera de los constructos prohibidos:
+1. **A theme is pure CSS, nothing else.** The data model is exclusively a
+   stylesheet: no JS, no HTML, no external URLs. Any
+   construct that could load an external resource or execute code is
+   outside the allowed language by design, not by output filtering.
+2. **Fail-closed sanitization (`sanitizeThemeCss`).** The service rejects the
+   whole theme if it finds any of the forbidden constructs:
    `@import`, `url(`, `expression(`, `behavior:`, `javascript:`,
-   `-moz-binding`. La normalización previa (`normalizeCssForSafety`) neutraliza
-   las evasiones sintácticas que el navegador trataría como equivalentes:
-   comentarios (`u/**/rl(`), escapes hexadecimales CSS (`u\72 l(`), escapes de
-   identificador, y descarta escapes hacia puntos de código inválidos
-   (NUL, > 0x10FFFF, sustitutos). Sin tema válido no hay aplicación: la
-   denegación es la respuesta por defecto.
-3. **Límite de volumen.** Máximo **64 KB** de CSS por tema: acota el coste de
-   hasheo/parsing y elimina la clase "tema de 50 MB" como vector de
-   degradación del hilo de UI.
-4. **Inyección por `textContent`, nunca `innerHTML`.** El tema se aplica en un
-   `<style id="bookmarkforge-user-theme" data-bookmarkforge-theme="user">`
-   dedicado, creado una sola vez y reutilizado, vía `textContent` — el escape
-   a marcado es estructuralmente imposible, no una regla de estilo de código.
-5. **Persistencia local y re-sanitizada.** El CSS se guarda en localStorage
-   (`forge_user_theme_css`) solo tras pasar el sanitizador, y `load()`
-   **re-sanitiza al leer**: un tema envenenado por manipulación externa del
-   storage (devtools, otra pestaña) no revive — falla como `null` y no se
-   aplica. Opt-in y 100 % local: no hay sincronización de temas.
-6. **Cobertura adversarial anclada a la suite.** `ThemeService.test.ts`
-   ejercita las evasiones conocidas (escapes CSS, obfuscación por comentarios,
-   vectores legacy IE/Gecko, límite de volumen) y el ciclo completo
-   aplicar/limpiar/persistir/cargar, incluido el caso de tema corrupto en
-   storage.
+   `-moz-binding`. The prior normalization (`normalizeCssForSafety`) neutralizes
+   the syntactic evasions a browser would treat as equivalent:
+   comments (`u/**/rl(`), CSS hexadecimal escapes (`u\72 l(`), identifier escapes, and
+   discards escapes toward invalid code points
+   (NUL, > 0x10FFFF, surrogates). Without a valid theme there is no application:
+   denial is the default answer.
+3. **Volume limit.** Maximum **64 KB** of CSS per theme: it bounds the
+   hashing/parsing cost and eliminates the "50 MB theme" class as a
+   UI-thread degradation vector.
+4. **Injection via `textContent`, never `innerHTML`.** The theme is applied to a
+   dedicated `<style id="bookmarkforge-user-theme" data-bookmarkforge-theme="user">`,
+   created once and reused, via `textContent` — escaping to
+   markup is structurally impossible, not a code style rule.
+5. **Local, re-sanitized persistence.** The CSS is stored in localStorage
+   (`forge_user_theme_css`) only after passing the sanitizer, and `load()`
+   **re-sanitizes on read**: a theme poisoned by external manipulation of the
+   storage (devtools, another tab) does not come back to life — it fails as `null` and is not
+   applied. Opt-in and 100% local: there is no theme synchronization.
+6. **Adversarial coverage anchored to the suite.** `ThemeService.test.ts`
+   exercises the known evasions (CSS escapes, comment obfuscation,
+   legacy IE/Gecko vectors, volume limit) and the complete
+   apply/clear/persist/load cycle, including the corrupted-theme-in-storage
+   case.
 
-## Consecuencias
+## Consequences
 
-- La superficie de personalización es inerte por construcción: el peor caso
-  de un tema malicioso es un CSS inválido que no se aplica — nunca una
-  petición de red, nunca ejecución de código.
-- Reglas nuevas (p. ej. permitir `url(#fragment)` interno, data-URIs) son
-  cambios a nivel ADR: cada permiso nuevo reabre un canal de exfiltración en
-  una app cuyo presupuesto de confianza es cero por diseño.
-- El `<style>` dedicado hace trivial el razonamiento de cascada (un nodo, una
-  identidad, borrado = estado limpio) y evita filtrar el tema por el DOM de
-  componentes.
-- Numeración: la serie ADR-042 sigue siendo prosa implícita excepto esta
-  decisión D4, ahora formalizada. ADR-042 no pertenece al catálogo de anclas
-  (`scripts/audit-anchors.mjs`); su protección es la suite unitaria
-  adversarial existente en `src/tests/services/ThemeService.test.ts`.
+- The personalization surface is inert by construction: the worst case
+  for a malicious theme is invalid CSS that is not applied — never a
+  network request, never code execution.
+- New rules (e.g. allowing internal `url(#fragment)`, data-URIs) are
+  ADR-level changes: every new permission reopens an exfiltration channel in
+  an app whose trust budget is zero by design.
+- The dedicated `<style>` makes cascade reasoning trivial (one node, one
+  identity, removal = clean state) and avoids threading the theme through component
+  DOM.
+- Numbering: the ADR-042 series remains implicit prose except for this
+  D4 decision, now formalized. ADR-042 is not part of the anchor catalog
+  (`scripts/audit-anchors.mjs`); its protection is the adversarial unit suite
+  already in `src/tests/services/ThemeService.test.ts`.

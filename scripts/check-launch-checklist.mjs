@@ -31,11 +31,11 @@ const readJson = (path) => {
 };
 
 export const REQUIRED_RULESET_CHECKS = [
-  // Contextos de required checks = NOMBRES DE JOB de ci.yml/sast.yml.
-  // "Enforce mandatory security gates" era un nombre de STEP dentro del job
-  // quality: un contexto así nunca aparecería y bloquearía todos los merges.
-  // Esos gates (check:security-internal, check:server-log-ip-privacy,
-  // check:blindeo) corren dentro del job quality, ya requerido aquí.
+  // Required-check contexts = JOB NAMES from ci.yml/sast.yml.
+  // "Enforce mandatory security gates" was a STEP name inside the quality
+  // job: such a context would never show up and would block every merge.
+  // Those gates (check:security-internal, check:server-log-ip-privacy,
+  // check:blindeo) run inside the quality job, already required here.
   "Typecheck, lint, tests and security gates",
   "Playwright E2E",
   "Production build and repository checks",
@@ -47,12 +47,12 @@ export const REQUIRED_RULESET_CHECKS = [
 const EXPORT_ONLY_FIELDS = ["id", "source", "source_type", "node_id", "_links", "created_at", "updated_at"];
 
 export function verifyRuleset(parsed) {
-  if (parsed == null || typeof parsed !== "object") return { ok: false, note: "ruleset ausente o JSON inválido" };
-  // El archivo es el payload directo de POST /repos/{owner}/{repo}/rulesets;
-  // los campos de export (id, source, source_type…) no pertenecen al body de creación.
+  if (parsed == null || typeof parsed !== "object") return { ok: false, note: "ruleset missing or invalid JSON" };
+  // The file is the direct payload of POST /repos/{owner}/{repo}/rulesets;
+  // export fields (id, source, source_type…) do not belong in the creation body.
   const exportFields = EXPORT_ONLY_FIELDS.filter((field) => field in parsed);
   if (exportFields.length) {
-    return { ok: false, note: `campos de export no válidos en el payload: ${exportFields.join(", ")}` };
+    return { ok: false, note: `invalid export fields in the payload: ${exportFields.join(", ")}` };
   }
   const checks =
     parsed?.rules
@@ -61,17 +61,17 @@ export function verifyRuleset(parsed) {
   const contexts = checks.map((check) => check.context);
   const missing = REQUIRED_RULESET_CHECKS.filter((context) => !contexts.includes(context));
   if (missing.length) {
-    return { ok: false, note: `faltan checks obligatorios: ${missing.join(", ")}` };
+    return { ok: false, note: `missing mandatory checks: ${missing.join(", ")}` };
   }
-  return { ok: true, note: "checks obligatorios presentes (importación/activación en GitHub = manual)" };
+  return { ok: true, note: "mandatory checks present (import/activation in GitHub = manual)" };
 }
 
 export function verifySloRpoRto(text) {
-  if (text == null) return { ok: false, note: "docs/operations.md no existe" };
+  if (text == null) return { ok: false, note: "docs/operations.md does not exist" };
   const ok = ["RPO:", "RTO:", "SLOs", "99.9%"].every((needle) => text.includes(needle));
   return ok
-    ? { ok: true, note: "baselines documentados (confirmación oficial trimestral = manual)" }
-    : { ok: false, note: "faltan RPO/RTO/SLOs en docs/operations.md" };
+    ? { ok: true, note: "baselines documented (quarterly official sign-off = manual)" }
+    : { ok: false, note: "RPO/RTO/SLOs missing from docs/operations.md" };
 }
 
 export function verifySast(workflowText, gateExists) {
@@ -81,17 +81,17 @@ export function verifySast(workflowText, gateExists) {
     workflowText.includes("CodeQL analysis") &&
     workflowText.includes("Semgrep analysis");
   return ok
-    ? { ok: true, note: "sast.yml + scripts/check-sarif-severity.mjs presentes" }
-    : { ok: false, note: "sast.yml o gate de severidad ausentes" };
+    ? { ok: true, note: "sast.yml + scripts/check-sarif-severity.mjs present" }
+    : { ok: false, note: "sast.yml or the severity gate missing" };
 }
 
 export function verifyErrorReporting(pkg, reporter) {
   if (!pkg?.dependencies?.["@sentry/browser"]) {
-    return { ok: false, note: "falta @sentry/browser en dependencies" };
+    return { ok: false, note: "@sentry/browser missing from dependencies" };
   }
-  if (!reporter) return { ok: false, note: "falta src/telemetry/remoteErrorReporter.ts" };
+  if (!reporter) return { ok: false, note: "src/telemetry/remoteErrorReporter.ts missing" };
   if (!reporter.includes("beforeSend")) {
-    return { ok: false, note: "remoteErrorReporter sin beforeSend sancador" };
+    return { ok: false, note: "remoteErrorReporter without a scrubbing beforeSend" };
   }
   // ADR-030: consent lives in ConsentService. Accept either the legacy direct
   // key marker or a delegation to the purpose-scoped gate ("sentry").
@@ -99,34 +99,34 @@ export function verifyErrorReporting(pkg, reporter) {
     reporter.includes("CONSENT_ERROR_REPORTING") ||
     /isPurposeConsented\s*\(\s*["']sentry["']\s*\)/.test(reporter);
   if (!hasConsentGate) {
-    return { ok: false, note: "remoteErrorReporter sin gate de consentimiento opt-in" };
+    return { ok: false, note: "remoteErrorReporter without an opt-in consent gate" };
   }
   if (!reporter.includes("initRemoteErrorReporting") || !reporter.includes("sentry.init")) {
-    return { ok: false, note: "remoteErrorReporter sin inicialización condicional" };
+    return { ok: false, note: "remoteErrorReporter without conditional initialization" };
   }
-  return { ok: true, note: "@sentry/browser + beforeSend sancador + opt-in (desactivado por defecto)" };
+  return { ok: true, note: "@sentry/browser + scrubbing beforeSend + opt-in (disabled by default)" };
 }
 
 export function verifyLoadTest(pkg, scriptExists, scriptText = "") {
   const scripts = JSON.stringify(pkg?.scripts ?? {});
   const hasScript = /(test:load|load:companion|load:server)/i.test(scripts);
   if (!hasScript || !scriptExists) {
-    return { ok: false, note: "sin prueba de carga del companion server (pendiente)" };
+    return { ok: false, note: "no companion-server load test (pending)" };
   }
-  // La prueba debe cubrir la superficie que escala con los usuarios y fijar
-  // presupuestos medibles. Ya no se exige cobertura de un proxy de IA: el
-  // servidor no proxya proveedores (el navegador llama al proveedor del
-  // usuario directamente), así que no hay endpoint de generación que medir.
+  // The test must cover the surface that scales with users and pin measurable
+  // budgets. AI-proxy coverage is no longer required: the server does not
+  // proxy providers (the browser calls the user's provider directly), so
+  // there is no generation endpoint to measure.
   const text = scriptText ?? "";
   const coversSignaling = /\bjoin\b/i.test(text) && /relay|signal/i.test(text);
   const hasBudgets = /p95|percentile/i.test(text) && /(BUDGETS|SLO)/i.test(text);
   const hasSaturation = /saturat/i.test(text);
-  // El servidor debe seguir vivo tras la ráfaga: es el presupuesto de liveness.
+  // The server must stay alive after the burst: that is the liveness budget.
   const hasLiveness = /\/health/i.test(text);
   const ok = coversSignaling && hasBudgets && hasSaturation && hasLiveness;
   return ok
-    ? { ok: true, note: "prueba de carga (señalización WS + saturación) con presupuestos detectada" }
-    : { ok: false, note: "prueba de carga incompleta: faltan señalización, presupuestos, saturación o liveness" };
+    ? { ok: true, note: "load test (WS signaling + saturation) with budgets detected" }
+    : { ok: false, note: "incomplete load test: signaling, budgets, saturation or liveness missing" };
 }
 
 export function verifyContracts(docs) {
@@ -135,55 +135,55 @@ export function verifyContracts(docs) {
   const specHeader = /(?:^|\n)\s*(?:openapi|swagger)\s*:\s*["']?\d+\.\d+/i;
   const ok = (docs ?? []).some((text) => specHeader.test(text));
   return ok
-    ? { ok: true, note: "contratos OpenAPI/Swagger detectados" }
-    : { ok: false, note: "sin contratos versionados (pendiente)" };
+    ? { ok: true, note: "OpenAPI/Swagger contracts detected" }
+    : { ok: false, note: "no versioned contracts (pending)" };
 }
 
 export function verifyDrill(pkg, drillExists) {
   const ok = drillExists && Boolean(pkg?.scripts?.["drill:backup-restore"]);
   return ok
-    ? { ok: true, note: "drill mensual presente (simulacro trimestral = manual)" }
-    : { ok: false, note: "drill de restauración ausente" };
+    ? { ok: true, note: "monthly drill present (quarterly simulation = manual)" }
+    : { ok: false, note: "restore drill missing" };
 }
 
 export function verifyExtensions(manifestsExist) {
   return manifestsExist
-    ? { ok: true, note: "manifests presentes (publicación en tiendas = manual)" }
-    : { ok: false, note: "faltan manifests de extensión" };
+    ? { ok: true, note: "manifests present (store publishing = manual)" }
+    : { ok: false, note: "extension manifests missing" };
 }
 
 export function verifyEnvGates(pkg) {
   const gates = ["check:http-config", "check:compose-config", "check:runtime-config", "check:docker-context"];
   const missing = gates.filter((gate) => !pkg?.scripts?.[gate]);
   return missing.length === 0
-    ? { ok: true, note: "gates de configuración presentes (inspección del despliegue = manual)" }
-    : { ok: false, note: `faltan gates: ${missing.join(", ")}` };
+    ? { ok: true, note: "configuration gates present (deployment inspection = manual)" }
+    : { ok: false, note: `missing gates: ${missing.join(", ")}` };
 }
 
 export function verifyDastDisabled(text) {
   if (text == null) return { ok: false, note: "dast-nightly.yml no existe" };
   const disabled = text.includes("if: ${{ false }}");
   const digestPending = text.includes("REPLACE_WITH_VERIFIED_ZAP_IMAGE_DIGEST");
-  if (!disabled) return { ok: false, note: "los pasos autenticados NO están deshabilitados" };
+  if (!disabled) return { ok: false, note: "the authenticated steps are NOT disabled" };
   return {
     ok: true,
     note: digestPending
-      ? "deshabilitado de forma segura (digest e imagen ZAP pendientes de verificar; activación = manual)"
-      : "deshabilitado de forma segura (activación = manual)",
+      ? "safely disabled (ZAP image digest and image pending verification; activation = manual)"
+      : "safely disabled (activation = manual)",
   };
 }
 
 export function verifyProdConfig(text) {
-  if (text == null) return { ok: false, note: "docs/security.md no existe" };
-  // Los tokens son la configuración que el servidor REALMENTE exige en
-  // producción hoy. Solo se comprueban variables que tienen lectores runtime;
-  // no se incluyen flags retirados de subsistemas antiguos.
+  if (text == null) return { ok: false, note: "docs/security.md does not exist" };
+  // The tokens are the configuration the server ACTUALLY enforces in
+  // production today. Only variables with runtime readers are checked;
+  // retired flags from old subsystems are not included.
   const ok = ["NODE_ENV=production", "AI_SESSION_ORIGINS", "ENFORCE_SIGNAL_HMAC", "LICENSE_SIGNING_PRIVATE_KEY_FILE"].every(
     (needle) => text.includes(needle),
   );
   return ok
-    ? { ok: true, note: "config obligatoria documentada (verificación del despliegue = manual)" }
-    : { ok: false, note: "falta config obligatoria en docs/security.md" };
+    ? { ok: true, note: "mandatory config documented (deployment verification = manual)" }
+    : { ok: false, note: "mandatory config missing from docs/security.md" };
 }
 
 export function verifyPreflightScripts(pkg) {
@@ -202,23 +202,23 @@ export function verifyPreflightScripts(pkg) {
   ];
   const missing = scripts.filter((script) => !pkg?.scripts?.[script]);
   return missing.length === 0
-    ? { ok: true, note: "preflight completo en package.json" }
-    : { ok: false, note: `faltan scripts: ${missing.join(", ")}` };
+    ? { ok: true, note: "preflight complete in package.json" }
+    : { ok: false, note: `missing scripts: ${missing.join(", ")}` };
 }
 
 export function verifyRopa(text) {
-  if (text == null) return { ok: false, note: "docs/ROPA.md no existe" };
+  if (text == null) return { ok: false, note: "docs/ROPA.md does not exist" };
   const pending = (text.match(/COMPLETAR/g) ?? []).length;
   return pending === 0
-    ? { ok: true, note: "ROPA sin campos pendientes" }
-    : { ok: false, note: `quedan ${pending} campos ⚠ COMPLETAR en docs/ROPA.md` };
+    ? { ok: true, note: "ROPA with no pending fields" }
+    : { ok: false, note: `${pending} ⚠ COMPLETAR fields left in docs/ROPA.md` };
 }
 
 export function verifyZapFailLevels(text) {
-  if (text == null) return { ok: false, note: ".zap/baseline.conf no existe" };
+  if (text == null) return { ok: false, note: ".zap/baseline.conf does not exist" };
   const levels = text.match(/^FAIL_LEVELS=(.*)$/m)?.[1] ?? "";
   const ok = levels.includes("High") && levels.includes("Critical");
-  return ok ? { ok: true, note: `FAIL_LEVELS=${levels}` } : { ok: false, note: "FAIL_LEVELS sin High+Critical" };
+  return ok ? { ok: true, note: `FAIL_LEVELS=${levels}` } : { ok: false, note: "FAIL_LEVELS without High+Critical" };
 }
 
 export function hasBlockerFailures(results) {
@@ -234,34 +234,34 @@ if (isMain) {
     .filter((text) => text != null);
 
   const items = [
-    { id: 2, section: "blocker", title: "Protección de main: ruleset con checks obligatorios", run: () => verifyRuleset(readJson(".github/rulesets/main-protection.json")) },
-    { id: 3, section: "blocker", title: "RPO/RTO y SLOs documentados", run: () => verifySloRpoRto(read("docs/operations.md")) },
-    { id: 4, section: "blocker", title: "Responsable y canal de alertas", manual: true },
-    { id: 5, section: "blocker", title: "Cierre legal RGPD", run: () => verifyRopa(read("docs/ROPA.md")) },
+    { id: 2, section: "blocker", title: "main protection: ruleset with mandatory checks", run: () => verifyRuleset(readJson(".github/rulesets/main-protection.json")) },
+    { id: 3, section: "blocker", title: "RPO/RTO and SLOs documented", run: () => verifySloRpoRto(read("docs/operations.md")) },
+    { id: 4, section: "blocker", title: "Owner and alerting channel", manual: true },
+    { id: 5, section: "blocker", title: "GDPR legal closure", run: () => verifyRopa(read("docs/ROPA.md")) },
     { id: 6, section: "external", title: "Pentest", manual: true },
-    { id: 7, section: "external", title: "Revisión manual WCAG y privacidad", manual: true },
-    { id: 8, section: "external", title: "SAST independiente (CodeQL + Semgrep) en CI", run: () => verifySast(read(".github/workflows/sast.yml"), has("scripts/check-sarif-severity.mjs")) },
-    { id: 9, section: "p1", title: "Registro de errores con redacción PII y opt-in", run: () => verifyErrorReporting(pkg, read("src/telemetry/remoteErrorReporter.ts")) },
-    { id: 10, section: "p1", title: "Decisión de analítica de negocio", manual: true },
-    { id: 11, section: "p1", title: "Prueba de carga del companion server", run: () => verifyLoadTest(pkg, has("scripts/load-test-server.mjs"), read("scripts/load-test-server.mjs") ?? "") },
-    { id: 12, section: "p1", title: "Contratos versionados con integraciones", run: () => verifyContracts(docs) },
-    { id: 13, section: "p1", title: "Simulacro de desastre trimestral (drill mensual)", run: () => verifyDrill(pkg, has("scripts/drill-backup-restore.mjs")) },
-    { id: 14, section: "p1", title: "Checklist de publicación de extensiones", run: () => verifyExtensions(has("extension/manifest.json") && has("extension/manifest-firefox.json")) },
-    { id: 15, section: "env", title: "Secretos, environments y permisos de despliegue", manual: true },
-    { id: 16, section: "env", title: "Seguridad real de staging y producción (gates)", run: () => verifyEnvGates(pkg) },
-    { id: 17, section: "env", title: "DAST autenticado deshabilitado de forma segura", run: () => verifyDastDisabled(read(".github/workflows/dast-nightly.yml")) },
-    { id: 18, section: "env", title: "Configuración obligatoria de producción documentada", run: () => verifyProdConfig(read("docs/security.md")) },
+    { id: 7, section: "external", title: "Manual WCAG and privacy review", manual: true },
+    { id: 8, section: "external", title: "Independent SAST (CodeQL + Semgrep) in CI", run: () => verifySast(read(".github/workflows/sast.yml"), has("scripts/check-sarif-severity.mjs")) },
+    { id: 9, section: "p1", title: "Error reporting with PII scrubbing and opt-in", run: () => verifyErrorReporting(pkg, read("src/telemetry/remoteErrorReporter.ts")) },
+    { id: 10, section: "p1", title: "Business analytics decision", manual: true },
+    { id: 11, section: "p1", title: "Companion-server load test", run: () => verifyLoadTest(pkg, has("scripts/load-test-server.mjs"), read("scripts/load-test-server.mjs") ?? "") },
+    { id: 12, section: "p1", title: "Versioned contracts with integrations", run: () => verifyContracts(docs) },
+    { id: 13, section: "p1", title: "Quarterly disaster simulation (monthly drill)", run: () => verifyDrill(pkg, has("scripts/drill-backup-restore.mjs")) },
+    { id: 14, section: "p1", title: "Extension publishing checklist", run: () => verifyExtensions(has("extension/manifest.json") && has("extension/manifest-firefox.json")) },
+    { id: 15, section: "env", title: "Secrets, environments and deploy permissions", manual: true },
+    { id: 16, section: "env", title: "Real staging and production security (gates)", run: () => verifyEnvGates(pkg) },
+    { id: 17, section: "env", title: "Authenticated DAST safely disabled", run: () => verifyDastDisabled(read(".github/workflows/dast-nightly.yml")) },
+    { id: 18, section: "env", title: "Mandatory production configuration documented", run: () => verifyProdConfig(read("docs/security.md")) },
   ];
 
   const gates = [
-    { title: "Preflight de release (scripts en package.json)", run: () => verifyPreflightScripts(pkg) },
-    { title: "FAIL_LEVELS de ZAP incluye High + Critical", run: () => verifyZapFailLevels(read(".zap/baseline.conf")) },
+    { title: "Release preflight (scripts in package.json)", run: () => verifyPreflightScripts(pkg) },
+    { title: "ZAP FAIL_LEVELS includes High + Critical", run: () => verifyZapFailLevels(read(".zap/baseline.conf")) },
   ];
 
   const evaluate = (item) => {
-    if (item.manual) return { ok: null, note: "manual (no verificable desde el repo)" };
+    if (item.manual) return { ok: null, note: "manual (not verifiable from the repo)" };
     try {
-      return item.run() ?? { ok: false, note: "sin resultado" };
+      return item.run() ?? { ok: false, note: "no result" };
     } catch (error) {
       return { ok: false, note: `error: ${error.message}` };
     }
@@ -271,12 +271,12 @@ if (isMain) {
   const gateResults = gates.map((gate) => ({ title: gate.title, ...evaluate(gate) }));
 
   const sections = [
-    ["blocker", "🔴 Bloqueante (P0)"],
-    ["external", "🟠 Validación externa"],
-    ["p1", "🟡 Primer trimestre"],
-    ["env", "🟢 Verificación del entorno"],
+    ["blocker", "🔴 Blocker (P0)"],
+    ["external", "🟠 External validation"],
+    ["p1", "🟡 First quarter"],
+    ["env", "🟢 Environment verification"],
   ];
-  console.log("[check-launch-checklist] Informe de progreso de pre-lanzamiento");
+  console.log("[check-launch-checklist] Pre-launch progress report");
   for (const [section, header] of sections) {
     console.log(`\n${header}`);
     for (const result of results.filter((r) => r.section === section)) {
@@ -294,19 +294,19 @@ if (isMain) {
   const manual = results.filter((r) => r.ok === null).length;
   const blockerFails = results.filter((r) => r.section === "blocker" && r.ok === false);
   console.log(
-    `\nResumen: ${done}/${verified.length} verificables completados · ${pending} pendientes · ${manual} manuales`,
+    `\nSummary: ${done}/${verified.length} verifiables completed · ${pending} pending · ${manual} manual`,
   );
   if (strict) {
     if (blockerFails.length) {
       console.error(
-        `[check-launch-checklist] STRICT FAIL: ${blockerFails.length} bloqueante(s) sin completar: ${blockerFails
+        `[check-launch-checklist] STRICT FAIL: ${blockerFails.length} unfinished blocker(s): ${blockerFails
           .map((r) => r.id)
           .join(", ")}`,
       );
       process.exit(1);
     }
-    console.log("[check-launch-checklist] strict: bloqueantes completados");
+    console.log("[check-launch-checklist] strict: blockers completed");
   } else {
-    console.log("[check-launch-checklist] modo informe (usa --strict para fallar con bloqueantes)");
+    console.log("[check-launch-checklist] report mode (use --strict to fail on blockers)");
   }
 }

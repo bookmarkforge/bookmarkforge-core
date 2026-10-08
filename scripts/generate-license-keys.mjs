@@ -51,11 +51,11 @@ import { join } from "node:path";
 
 const ROOT = process.cwd();
 const OUT_PATH = join(ROOT, "src", "services", "licenseKeys.ts");
-// El servidor NO puede importar el módulo del cliente: la imagen de la API
-// copia únicamente `server/`. Lleva por tanto su propia copia de la clave
-// pública, emitida por este script y verificada igual a la del cliente en
-// --check: las dos copias ya se habían desincronizado una vez, y un servidor
-// que verifica con la clave equivocada rechaza TODA licencia válida.
+// The server CANNOT import the client module: the API image copies only
+// `server/`. It therefore carries its own copy of the public key, emitted by
+// this script and verified equal to the client's in --check: the two copies
+// had already drifted apart once, and a server verifying with the wrong key
+// rejects EVERY valid license.
 const SERVER_OUT_PATH = join(ROOT, "server", "src", "license-public-key.ts");
 const PRIVATE_KEY_PATH = join(ROOT, "server", ".license-signing-key.pkcs8");
 const MODULUS = 2048;
@@ -196,9 +196,9 @@ function checkCommitted() {
   }
   console.log("[generate-license-keys] committed public key OK (fixture signature verifies)");
 
-  // El servidor verifica los proofs del cliente con su propia copia. Si las
-  // copias divergen, todo proof legítimamente firmado se rechaza — el gate
-  // falla aquí, no en producción.
+  // The server verifies client proofs with its own copy. If the copies
+  // diverge, every legitimately signed proof is rejected — the gate fails
+  // here, not in production.
   if (!existsSync(SERVER_OUT_PATH)) {
     console.error(
       "[generate-license-keys] missing " + SERVER_OUT_PATH + " — run --sync-server-key",
@@ -228,8 +228,9 @@ if (process.argv.includes("--check")) {
 }
 
 if (process.argv.includes("--sync-server-key")) {
-  // Copia la clave pública commiteada al módulo del servidor. Idempotente: es
-  // la operación a ejecutar tras rotar la clave, sin regenerar el keypair.
+  // Copies the committed public key into the server module. Idempotent: this
+  // is the operation to run after rotating the key, without regenerating the
+  // keypair.
   const committed = /LICENSE_PUBLIC_KEY_SPKI =\s*\n?\s*"([^"]+)"/.exec(
     readFileSync(OUT_PATH, "utf8"),
   )?.[1];

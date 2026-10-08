@@ -21,7 +21,10 @@ const VITEST_GLOBALS = {
 const BROWSER_EXTENSION_GLOBALS = { chrome: "readonly", browser: "readonly" };
 
 export default tseslint.config(
-  { ignores: ["**/node_modules/**", "dist/**", "dist-extension/**", "coverage/**", "playwright-report*/**", "test-results/**", "test-results-human-like/**", "*.min.js"] },
+  // `.d/` is the local scratch/experiment tree (gitignored, see .gitignore):
+  // `eslint .` used to walk the generated `.d/tmp/pro-dts` declarations and
+  // report 46 type errors that belong to a build artifact, none to source.
+  { ignores: ["**/node_modules/**", ".d/**", "dist/**", "dist-extension/**", "coverage/**", "playwright-report*/**", "test-results/**", "test-results-human-like/**", "*.min.js"] },
   {
     files: SOURCE_JS,
     ...js.configs.recommended,

@@ -15,6 +15,11 @@
  * Docker images were tag-only.
  */
 import { readFileSync, existsSync } from "node:fs";
+// `pathToFileURL` percent-encodes the path and supplies the `file:///` the URL
+// form requires, so the CLI guard below matches on Windows and on any path
+// with spaces; a `` `file://${process.argv[1]}` `` comparison matches neither
+// (`file://D:\...` vs the real `file:///D:/...`), so main() never ran.
+import { pathToFileURL } from "node:url";
 
 const FILES = [
   "Dockerfile",
@@ -101,7 +106,7 @@ export function validateImagePins(content) {
 
 // ── CLI entry point ───────────────────────────────────────────────
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   let violations = [];
   let checked = 0;
 

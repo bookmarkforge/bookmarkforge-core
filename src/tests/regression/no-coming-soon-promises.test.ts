@@ -8,7 +8,7 @@ import { join, relative } from "node:path";
  *
  * User-facing copy must never promise features that are not in the plan.
  * The "coming soon" family is the tell: pricing.html shipped disabled
- * Team/Empresa cards with "Próximamente" buttons for tiers that do not exist
+ * Team/Empresa cards with "Coming Soon" buttons for tiers that do not exist
  * in the license engine (LicenseService only knows free|pro), and tier copy
  * once contained "Basic collaboration (coming soon)". The Spanish leak
  * (`próximamente`/`proximamente`) is scanned because that exact page mixed
@@ -117,7 +117,7 @@ describe("regression/no-coming-soon-promises", () => {
         `(coming soon / próximamente / admin panel) — ROADMAP non-goal: ` +
         `"Don't chase Notion-style collaboration; the private individual is ` +
         `the market". Regression anchor: pricing.html shipped disabled ` +
-        `Team/Empresa cards with "Próximamente" buttons for tiers that do ` +
+        `Team/Empresa cards with "Coming Soon" buttons for tiers that do ` +
         `not exist in the license engine.`,
     ).toEqual([]);
   });

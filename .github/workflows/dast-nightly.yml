@@ -52,7 +52,7 @@ jobs:
             exit 1
           fi
           case "$host" in
-            bookmarkforge.com|www.bookmarkforge.com|api.bookmarkforge.com|signal.bookmarkforge.com)
+            bookmarkforgeapp.com|www.bookmarkforgeapp.com|api.bookmarkforgeapp.com|signal.bookmarkforgeapp.com)
               echo "Refusing to run DAST against production host: $host" >&2
               exit 1
               ;;
@@ -98,7 +98,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
 
       - name: Install dependencies

@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 /**
- * scripts/kpi-local-collector-check.mjs — valida el collector de analítica
- * contra un servidor LOCAL, sin depender de staging.
+ * scripts/kpi-local-collector-check.mjs — validates the analytics collector
+ * against a LOCAL server, without depending on staging.
  *
- * Arranca el handler real del collector (`createAnalyticsHandler` de
- * server/src/business-analytics.ts) sobre un HTTP server en 127.0.0.1, siembra
- * un dataset determinista vía ANALYTICS_STATE_FILE (installs con cohorte de
- * retención D7/D30 madura), hace un POST /api/analytics/events en vivo para
- * validar la ingesta, y ejecuta el gate `kpi-report` contra localhost con
- * umbrales exactos.
+ * Boots the real collector handler (`createAnalyticsHandler` from
+ * server/src/business-analytics.ts) on an HTTP server at 127.0.0.1, seeds a
+ * deterministic dataset via ANALYTICS_STATE_FILE (installs with a mature
+ * D7/D30 retention cohort), does a live POST /api/analytics/events to
+ * validate ingestion, and runs the `kpi-report` gate against localhost with
+ * exact thresholds.
  *
- * Uso:
+ * Usage:
  *   npx tsx scripts/kpi-local-collector-check.mjs [--json]
  *
- * Salida: 0 si el collector agrega/cuenta lo esperado y el gate pasa; 1 si no.
- * No requiere ningún secreto ni red externa.
+ * Exit: 0 when the collector aggregates/counts as expected and the gate
+ * passes; 1 otherwise. Requires no secrets and no external network.
  */
 import { createHash } from "node:crypto";
 import { mkdtempSync, writeFileSync } from "node:fs";
@@ -27,8 +27,8 @@ const utcDayHere = (ts) => Math.floor(ts / DAY_MS);
 
 const iid = (seed) => createHash("sha256").update(`kpi-local-${seed}`).digest("hex");
 
-// ── Dataset determinista (installs + cohortes de retención) ────────────
-// instalar → [firstDay][lastDay] relativo a hoy
+// ── Deterministic dataset (installs + retention cohorts) ────────────
+// install → [firstDay][lastDay] relative to today
 const SEED = [
   ["dau-a", 1, 0],
   ["dau-b", 1, 0],
@@ -43,7 +43,7 @@ const SEED = [
   ["r30-1", 30, 30],
   ["r30-2", 30, 0],
 ];
-// r7-2 y r30-2 "vuelven" hoy → suman a DAU.
+// r7-2 and r30-2 "return" today → they add to DAU.
 const installs = SEED.map(([seed, firstAgo, lastAgo]) => [
   iid(seed),
   { firstDay: utcDayHere(TODAY) - firstAgo, lastDay: utcDayHere(TODAY) - lastAgo },
@@ -57,16 +57,16 @@ const daily = {
   [utcDayHere(TODAY) - 30]: { vault_created: 2 },
 };
 
-// KPIs esperados: DAU=5 (dau-a/b + r7-2 + r30-2 + probe en vivo), WAU=8,
-// MAU=12 (todo lo anterior + wau-1..3 + mau-1..3 + r7-1). Retención D7=1/2
-// de la cohorte madura (firstDay = hace 8 días). La retención D30 no se
-// podría validar con un ventana de 30 días (el collector solo abre cohortes
-// hasta 29 días atrás), así que ese umbral queda desactivado.
+// Expected KPIs: DAU=5 (dau-a/b + r7-2 + r30-2 + live probe), WAU=8,
+// MAU=12 (all of the above + wau-1..3 + mau-1..3 + r7-1). D7 retention=1/2
+// of the mature cohort (firstDay = 8 days ago). D30 retention could not be
+// validated with a 30-day window (the collector only opens cohorts up to 29
+// days back), so that threshold stays disabled.
 const EXPECTED = { dau: 5, wau: 8, mau: 12, d7Pct: 0.5 };
 
 async function main() {
-  // Todo log informativo (collector + kpi-report) va a stderr; el stdout queda
-  // reservado para la evidencia JSON única.
+  // All informational logging (collector + kpi-report) goes to stderr; stdout
+  // stays reserved for the single JSON evidence blob.
   const logOut = console.log;
   console.log = (...args) => console.error(...args);
 
@@ -126,9 +126,9 @@ async function main() {
   const matches = dauOk && wauOk && mauOk && sentinel.accepted && run.code === 0;
 
   server.close();
-  // Se deja el directorio temporal en su sitio: el handler persiste el estado
-  // de forma asíncrona (timer) y borrarlo aquí dispararía un persist fallido.
-  // En CI el job es efímero; el SO limpia /tmp.
+  // The temp directory is left in place: the handler persists state
+  // asynchronously (timer) and deleting it here would trigger a failed
+  // persist. In CI the job is ephemeral; the OS cleans /tmp.
 
   console.log = logOut;
 

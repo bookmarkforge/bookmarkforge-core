@@ -1,38 +1,38 @@
 #!/usr/bin/env node
 /**
- * scripts/push-images-lib.mjs — Lógica del push de imágenes por SHA a un
- * registro Docker, extraída para poder probarse contra un registro local.
+ * scripts/push-images-lib.mjs — Logic for pushing images by SHA to a Docker
+ * registry, extracted so it can be tested against a local registry.
  *
- * Motivo: deploy-prod.mjs --push-images hace retag + push de
- * `bookmarkforge/{web,api}:<sha>` al registro remoto. Esa lógica vivía
- * embebida en su Fase G. Aquí la extraemos a un módulo reutilizable: la MISMA
- * función que corre en producción puede ejercitarse en CI contra un
- * `registry:2` desechable (scripts/test-push-images.mjs) sin depender del
- * pipeline completo de deploy (gates, build, tag git).
+ * Why: deploy-prod.mjs --push-images retags + pushes
+ * `bookmarkforge/{web,api}:<sha>` to the remote registry. That logic used to
+ * live embedded in its Phase G. Here it is extracted into a reusable module:
+ * the SAME function that runs in production can be exercised in CI against a
+ * disposable `registry:2` (scripts/test-push-images.mjs) without depending on
+ * the full deploy pipeline (gates, build, git tag).
  *
- * El módulo es paramétrico: recibe `runOrThrow` (un wrapper de spawn/execSync
- * que honra --dry-run devolviendo 0 sin ejecutar) y `log`/`fail`, de modo que
- * deploy-prod.mjs la inyecta con sus helpers reales y el test inyecta los
- * suyos. Así el comportamiento es idéntico donde sea que se ejecute.
+ * The module is parametric: it receives `runOrThrow` (a spawn/execSync wrapper
+ * that honors --dry-run by returning 0 without executing) and `log`/`fail`,
+ * so deploy-prod.mjs injects its real helpers and the test injects its own.
+ * Behavior is identical wherever it runs.
  */
 
 import { spawnSync } from "node:child_process";
 import { validateRegistry } from "./registry-policy.mjs";
 
 /**
- * Valida y normaliza el registro destino para --push-images.
- * Fail-closed: solo retorna un registro no vacío y con sintaxis de host/port.
+ * Validates and normalizes the target registry for --push-images.
+ * Fail-closed: only returns a non-empty registry with host/port syntax.
  *
  *   valid                        → { ok:true, registry }
- *   vacío/null (sin dry-run)     → { ok:false, reason:"missing" }
- *   vacío/null (dry-run)         → { ok:true, registry:"registry.example.com" }
- *                                   (simulado: no hay push real en dry-run)
- *   formato inválido             → { ok:false, reason:"invalid" }
+ *   empty/null (no dry-run)      → { ok:false, reason:"missing" }
+ *   empty/null (dry-run)         → { ok:true, registry:"registry.example.com" }
+ *                                   (simulated: no real push in dry-run)
+ *   invalid format               → { ok:false, reason:"invalid" }
  *
- * Regex de host/port: primer char alfanumérico, luego [A-Za-z0-9._:/-]*.
+ * Host/port regex: first char alphanumeric, then [A-Za-z0-9._:/-]*.
  */
 export function resolveRegistry(rawRegistry, { push: _push, dryRun }) {
-  void _push; // la flag `push` se documenta en el contrato; aquí solo importa dryRun
+  void _push; // the `push` flag is documented in the contract; only dryRun matters here
 
   const registry = (typeof rawRegistry === "string" ? rawRegistry : "")
     .trim()
@@ -50,8 +50,8 @@ export function resolveRegistry(rawRegistry, { push: _push, dryRun }) {
 }
 
 /**
- * Genera el plan de retag + push para web y api de un sha dado.
- * Devuelve [{ name, local, remote }]. Asume `registry` ya normalizado.
+ * Builds the retag + push plan for the web and api images of a given sha.
+ * Returns [{ name, local, remote }]. Assumes `registry` is already normalized.
  */
 export function planPushTargets(sha, registry) {
   if (!sha || !/^[0-9a-f]{7,12}$/i.test(sha)) return [];
@@ -64,16 +64,16 @@ export function planPushTargets(sha, registry) {
 }
 
 /**
- * Ejecuta el retag + push de las imágenes por SHA al registro, y VERIFICA
- * que la imagen sea visible en el registro antes de declarar éxito.
+ * Runs the retag + push of the SHA images to the registry, and VERIFIES the
+ * image is visible in the registry before declaring success.
  *
- * `run` es `(cmd, opts?) => exitCode` y debe honrar --dry-run (0 sin ejecutar).
- * `runVisible` es `(remote, opts?) => boolean` y hace `docker buildx
- * imagetools inspect <remote>` (defaultInspectVisible) para confirmar que el
- * push se propagó y es consultable en el registro.
+ * `run` is `(cmd, opts?) => exitCode` and must honor --dry-run (0 without
+ * executing). `runVisible` is `(remote, opts?) => boolean` and runs `docker
+ * buildx imagetools inspect <remote>` (defaultInspectVisible) to confirm the
+ * push propagated and is queryable in the registry.
  *
- * Devuelve { ok, pushed: [remotes…] } en éxito; en fallo devuelve
- * { ok:false, step:"tag"|"push"|"not-visible", remote } (no lanza).
+ * Returns { ok, pushed: [remotes…] } on success; on failure returns
+ * { ok:false, step:"tag"|"push"|"not-visible", remote } (never throws).
  */
 export function pushImages({
   sha,
@@ -83,7 +83,7 @@ export function pushImages({
   runVisible = defaultInspectVisible,
 }) {
   if (!sha || !/^[0-9a-f]{7,12}$/i.test(sha) || !validateRegistry(registry)) {
-    return { ok: false, step: "config", remote: `<configuración inválida>` };
+    return { ok: false, step: "config", remote: `<invalid configuration>` };
   }
   const pushed = [];
   for (const name of images) {
@@ -95,9 +95,9 @@ export function pushImages({
     if (run(["docker", "push", remote], { timeout: 300_000 }) !== 0) {
       return { ok: false, step: "push", remote };
     }
-    // Confirmar visibilidad real: el push puede reportar éxito pero la imagen
-    // no estar aún consultable (quiesce de registry, credenciales, proxy
-    // caching). Sin esto, el tag NO debe imprimirse como desplegable.
+    // Confirm real visibility: the push may report success while the image
+    // is not yet queryable (registry quiesce, credentials, proxy caching).
+    // Without this, the tag must NOT be printed as deployable.
     if (!runVisible(remote)) {
       return { ok: false, step: "not-visible", remote };
     }
@@ -107,10 +107,10 @@ export function pushImages({
 }
 
 /**
- * Verdadero si la imagen remota es consultable en el registro vía buildx
- * imagetools inspect. Es inyectable para tests (que pasan un mock) y para
- * hosts sin buildx. NO honra dry-run: la verificación de visibilidad es real
- * aunque el resto del push estuviera simulado.
+ * True when the remote image is queryable in the registry via buildx
+ * imagetools inspect. Injectable for tests (which pass a mock) and for hosts
+ * without buildx. Does NOT honor dry-run: the visibility check is real even
+ * when the rest of the push was simulated.
  */
 export function defaultInspectVisible(remoteRef) {
   if (typeof remoteRef !== "string" || !/^[A-Za-z0-9][A-Za-z0-9._:-]*\/bookmarkforge\/(?:web|api):[0-9a-f]{7,12}$/i.test(remoteRef)) return false;

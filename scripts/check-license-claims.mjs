@@ -3,13 +3,13 @@
  * scripts/check-license-claims.mjs
  *
  * CI gate: the BookmarkForge Core is MIT (root LICENSE, package.json
- * del repo público exportado, el modelo open-core en OPEN-CORE.md
- * y el exported public LICENSE). El checkout privado usa notación
- * de licencia dual. Este gate existe porque una ola de documentación
- * todavía envió AGPL-3.0 en treinta manuales localizados, sus PDFs,
- * un comparador de landing y la metadata de la API: deriva legal,
- * exactamente la clase de error que este gate debe atrapar antes de
- * que llegue al repositorio público.
+ * of the exported public repo, the open-core model in OPEN-CORE.md
+ * and the exported public LICENSE). The private checkout uses dual
+ * license notation. This gate exists because one documentation wave
+ * still shipped AGPL-3.0 across thirty localized manuals, their PDFs,
+ * a landing comparison page and the API metadata: legal drift,
+ * exactly the class of error this gate must catch before it reaches
+ * the public repository.
  *
  * It enforces two directions:
  *
@@ -23,10 +23,10 @@
  *     not scanned: many dependencies are legitimately MIT-variant, BSD or
  *     Apache.
  *  2. Positive claims — the canonical MIT claims must still exist and be
- *     consistent: el `package.json` del repo público dice `"license": "MIT"`,
- *     el `LICENSE` raíz es el texto MIT, la licencia OpenAPI es MIT, y
- *     cada manual de usuario que lleva un encabezado de licencia dice MIT.
- *     En el checkout privado, `package.json` usa la notación dual.
+ *     consistent: the public repo's `package.json` says `"license": "MIT"`,
+ *     the root `LICENSE` is the MIT text, the OpenAPI license is MIT, and
+ *     every user manual carrying a license header says MIT. In the private
+ *     checkout, `package.json` uses the dual notation.
  *
  * Style note: the negative scan is denylist-based on purpose. An allowlist of
  * every MIT formulation would break the next legitimate wording ("dual
@@ -38,6 +38,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { LANDING_CODES, MANUAL_FILES } from "./landing-registry.mjs";
 
 const DEFAULT_ROOT = process.cwd();
 const THIS_DIR = fileURLToPath(new URL(".", import.meta.url));
@@ -47,12 +48,14 @@ const REPO_ROOT = join(THIS_DIR, "..");
 // Scanned corpus (user-visible license claims)
 // ---------------------------------------------------------------------------
 
-const MANUAL_PREFIX = "manual-usuario";
-const MANUAL_LANGS = [
-  "ar", "bg", "cs", "da", "de", "el", "en", "fi", "fr", "he", "hi", "hr", "hu",
-  "id", "it", "ja", "ko", "nl", "no", "pl", "pt", "ro", "ru", "sv", "th", "tr",
-  "uk", "vi", "zh",
-];
+/**
+ * The localized manual family, DERIVED from the MANUAL_FILES table in
+ * scripts/landing-registry.mjs (endonym basenames like `manual-de-usuario-es`,
+ * `benutzerhandbuch-de`, `user-manual-ja`) — the same single source the
+ * figures gate, the PDF generator and the exporter use, so a renamed or added
+ * manual cannot drift out of the license corpus.
+ */
+const MANUAL_NAMES = LANDING_CODES.map((code) => MANUAL_FILES[code]);
 
 /** Root-relative corpus entries (forward-slash paths, OS-independent). Missing
  * required entries are reported separately, not silently skipped. Entries
@@ -62,24 +65,22 @@ const MANUAL_LANGS = [
  * sources themselves (private-repo tooling by definition).
  */
 function corpusEntries() {
-  const manualNames = [MANUAL_PREFIX];
-  for (const lang of MANUAL_LANGS) manualNames.push(`${MANUAL_PREFIX}-${lang}`);
-
   const entries = [];
   const add = (rel, extra = {}) => entries.push({ rel, kind: "manual", ...extra });
 
   // Manual sources in docs/ (md + styled html + generated pdf).
-  for (const name of manualNames) {
+  for (const name of MANUAL_NAMES) {
     add(`docs/${name}.md`);
     add(`docs/${name}-styled.html`, { optional: true });
     add(`docs/${name}.pdf`);
   }
 
-  // Public overlay copies (the exported public repo ships these two).
-  add("scripts/public-export/manual-usuario.md", { optional: true });
-  add("scripts/public-export/manual-usuario-en.md", { optional: true });
-  add("scripts/public-export/manual-usuario.pdf", { optional: true });
-  add("scripts/public-export/manual-usuario-en.pdf", { optional: true });
+  // Public overlay copies (the exported public repo ships the es/en pair).
+  for (const code of ["es", "en"]) {
+    const name = MANUAL_FILES[code];
+    add(`scripts/public-export/${name}.md`, { optional: true });
+    add(`scripts/public-export/${name}.pdf`, { optional: true });
+  }
 
   // Landing pages and their translation sources.
   entries.push({ rel: "public/pocket-alternative.html", kind: "landing" });
@@ -185,7 +186,7 @@ function scanEntry(entry, root) {
       const lock = JSON.parse(readFileSync(absPath, "utf8"));
       const selfLicense = lock.packages?.[""]?.license ?? lock.license;
       if (selfLicense !== "MIT" && selfLicense !== "SEE LICENSE IN LICENSE AND PRO-LICENSE.md") {
-        problems.push(`self entry license must be "MIT" o notación dual (found ${JSON.stringify(selfLicense ?? null)})`);
+        problems.push(`self entry license must be "MIT" or the dual notation (found ${JSON.stringify(selfLicense ?? null)})`);
       }
     } catch (error) {
       problems.push(`not valid JSON (${error.message})`);

@@ -148,8 +148,7 @@ export function buildPlan(root, specs, { pages = false } = {}) {
   // Per-file failures under old and new truth, then diff them.
   const collect = (allowed, truth) => {
     const perFile = new Map();
-    for (const lang of MANUAL_GATE.MANUAL_LANGS) {
-      const rel = join("docs", `manual-usuario${lang}.md`);
+    for (const rel of MANUAL_GATE.MANUAL_SOURCE_PATHS) {
       let src;
       try {
         src = readFileSync(join(root, rel), "utf8");

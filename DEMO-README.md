@@ -208,8 +208,8 @@ tus datos seguros en tu dispositivo mientras te da el poder de la IA.
 • Auditoría de seguridad continua
 • Transparencia total
 
-Prueba BookmarkForge: https://bookmarkforge.com
-Código fuente: https://github.com/bookmarkforge/core
+Prueba BookmarkForge: https://bookmarkforgeapp.com
+Código fuente: https://github.com/bookmarkforge/bookmarkforge
 ```
 
 ## 💡 Tips Profesionales
@@ -264,7 +264,7 @@ ffmpeg -list_devices true -f dshow -i dummy
 - **Scripts de grabación**: `demo-recording.ps1`, `demo-recording.sh`
 - **Script de post-producción**: `demo-postprocess.ps1`
 - **Documentación del proyecto**: `docs/`
-- **Repositorio GitHub**: https://github.com/bookmarkforge/core
+- **Repositorio GitHub**: https://github.com/bookmarkforge/bookmarkforge
 
 ## ✅ Checklist Final
 

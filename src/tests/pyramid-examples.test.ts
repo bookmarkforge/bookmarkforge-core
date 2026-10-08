@@ -265,8 +265,8 @@ describe("Integration: Bookmark + AI + Memory flow", () => {
       persona: null,
       scenarios: [],
       atoms: [],
-      recentMessages: [{ role: "user", content: "¿Qué dice sobre example?" }] as any,
-      contextString: "Resumen de ejemplo",
+      recentMessages: [{ role: "user", content: "What does it say about example?" }] as any,
+      contextString: "Example summary",
     });
   });
 
@@ -293,7 +293,7 @@ describe("Integration: Bookmark + AI + Memory flow", () => {
     const { bookmarkAIService } = await import("../services/BookmarkAIService");
     (bookmarkAIService as any).summarize = vi
       .fn()
-      .mockResolvedValue("Resumen de ejemplo" as any);
+      .mockResolvedValue("Example summary" as any);
     await (bookmarkAIService as any).summarize(
       "https://example.com",
       "Example",
@@ -305,27 +305,27 @@ describe("Integration: Bookmark + AI + Memory flow", () => {
       150,
     );
 
-    // 3. Almacenar en memoryEngine
+    // 3. Store in memoryEngine
     await memoryEngine.initialize();
     const sessionId = await memoryEngine.getOrCreateSession(
-      "Análisis de bookmark",
+      "Bookmark analysis",
     );
-    await memoryEngine.addMessage(sessionId, "assistant", "Resumen de ejemplo");
+    await memoryEngine.addMessage(sessionId, "assistant", "Example summary");
 
     // 4. Verify via memoryRecall
     const context = await memoryRecall.recall(
-      "¿Qué dice sobre example?",
+      "What does it say about example?",
       sessionId,
     );
     expect(context).toBeDefined();
-    expect(context.contextString).toContain("Resumen de ejemplo");
+    expect(context.contextString).toContain("Example summary");
 
     // 5. Verify interactions with the engine
     expect(memoryEngine.initialize).toHaveBeenCalled();
     expect(memoryEngine.addMessage).toHaveBeenCalledWith(
       "session-ai",
       "assistant",
-      "Resumen de ejemplo",
+      "Example summary",
     );
   });
 });

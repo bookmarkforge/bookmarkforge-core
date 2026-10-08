@@ -1,47 +1,47 @@
-# ADR-034: Frescura de la fecha de backup manual y aviso de cuota de almacenamiento
+# ADR-034: Manual backup date freshness and storage quota warning
 
-- **Estado:** aceptado (implementado; este registro formaliza las decisiones existentes)
-- **Fecha:** 2026-09-02 (retro-documentado desde el código y el catálogo de anclas)
+- **Status:** accepted (implemented; this record formalizes the existing decisions)
+- **Date:** 2026-09-02 (retro-documented from the code and the anchor catalog)
 
-## Contexto
+## Context
 
-Dos defectos de UX de almacenamiento quedaron registrados en el flujo F0-3
-(feedback del usuario en Settings/StorageStatus):
+Two storage UX defects were recorded in the F0-3 flow
+(user feedback in Settings/StorageStatus):
 
-1. **La fecha del último backup no se refrescaba tras una exportación manual.**
-   Los indicadores de estado (`StorageStatus`, banner del dashboard) leían la
-   fecha desde `forge_last_manual_backup_date` en localStorage, pero el dataset
-   era un snapshot viejo: tras exportar, la edad seguía la de la última escritura
-   previa hasta un reload — el usuario veía "backup de hace 30 días" justo
-   después de exportar.
-2. **No había aviso de cuota casi llena.** Con almacenamiento web al 85–95 %, el
-   usuario no tenía señal para liberar espacio antes de que fallaran escrituras.
+1. **The last-backup date did not refresh after a manual export.**
+   The status indicators (`StorageStatus`, dashboard banner) read the
+   date from `forge_last_manual_backup_date` in localStorage, but the dataset
+   was an old snapshot: after exporting, the age still followed the previous
+   write until a reload — the user saw "backup from 30 days ago" right
+   after exporting.
+2. **There was no near-full quota warning.** With web storage at 85–95 %, the
+   user had no signal to free space before writes started failing.
 
-## Decisión
+## Decision
 
-1. **D1 — La exportación manual escribe `LAST_MANUAL_BACKUP_DATE`.** El flujo de
-   export desde Settings (`StorageSection` → `Export backup`) persiste la marca
-   `forge_last_manual_backup_date` con el timestamp actual inmediatamente tras el
-   export, de modo que `StorageStatus` y el banner del dashboard pueden leer la
-   edad fresca **sin reload** (ancla `manual-export-refreshes-backup-age` en
-   `src/tests/components/settings/StorageSection.test.tsx`, regresión F0-3, que
-   verifica timestamp reciente < 5 s y el contrato de escritura vía `safeSet`).
-2. **D5 — Aviso de cuota con umbrales.** Cuando `navigator.storage.estimate()`
-   supera el **85 %** (warning) o el **95 %** (crítico), el pill de
-   `StorageStatus` muestra el botón "Free up space", que abre el
-   `StorageCleanupDialog` con acciones concretas ("Export backup first",
-   "Clear AI models", "Compact Database"); por debajo del **70 %** el botón no
-   aparece (spec E2E `tests/e2e/storage-quota-warning.spec.ts`, anotado como
-   F0-3 / ADR-034 D5). El stub de `storage.estimate()` se instala con
-   `addInitScript` para sobrevivir al reload del vault setup.
+1. **D1 — Manual export writes `LAST_MANUAL_BACKUP_DATE`.** The Settings export
+   flow (`StorageSection` → `Export backup`) persists the
+   `forge_last_manual_backup_date` marker with the current timestamp immediately after the
+   export, so that `StorageStatus` and the dashboard banner can read the
+   fresh age **without a reload** (anchor `manual-export-refreshes-backup-age` in
+   `src/tests/components/settings/StorageSection.test.tsx`, F0-3 regression, which
+   verifies a recent timestamp < 5 s and the write contract via `safeSet`).
+2. **D5 — Quota warning with thresholds.** When `navigator.storage.estimate()`
+   exceeds **85 %** (warning) or **95 %** (critical), the `StorageStatus`
+   pill shows the "Free up space" button, which opens the
+   `StorageCleanupDialog` with concrete actions ("Export backup first",
+   "Clear AI models", "Compact Database"); below **70 %** the button does not
+   appear (E2E spec `tests/e2e/storage-quota-warning.spec.ts`, annotated as
+   F0-3 / ADR-034 D5). The `storage.estimate()` stub is installed with
+   `addInitScript` so it survives the vault-setup reload.
 
-## Consecuencias
+## Consequences
 
-- Los indicadores de edad de backup reflejan la verdad del dispositivo tras cada
-  exportación; el test D1 es un ancla de regresión (falla `check:audit-drift` si
-  la escritura desaparece).
-- El aviso de cuota es proporcional (85 % warning / 95 % crítico), accionable y
-  testeado E2E con umbrales simulados (el navegador real en CI no llega al 95 %).
-- El ancla `manual-export-refreshes-backup-age` se cataloga como
-  `ADR-034 D1 / ADR-032` porque comparte dominio con el contrato de backups en
-  disco de ADR-032 — cada ADR formaliza su propia mitad del ecosistema de backup.
+- Backup age indicators reflect the device's truth after every
+  export; the D1 test is a regression anchor (it fails `check:audit-drift` if
+  the write disappears).
+- The quota warning is proportional (85 % warning / 95 % critical), actionable and
+  E2E-tested with simulated thresholds (the real browser in CI does not reach 95 %).
+- The `manual-export-refreshes-backup-age` anchor is catalogued as
+  `ADR-034 D1 / ADR-032` because it shares a domain with ADR-032's on-disk backup
+  contract — each ADR formalizes its own half of the backup ecosystem.

@@ -1438,7 +1438,7 @@
   "app_proActivationsLeft": "การเปิดใช้งานที่เหลือ: {{count}}",
   "app_proDeactivate": "ปิดใช้งาน",
   "app_proUpgradeTitle": "ปลดล็อก BookmarkForge Pro",
-  "app_proUpgradeText": "บุ๊กมาร์กไม่จำกัด ซิงก์ P2P บน 3 อุปกรณ์ และ AI ในเครื่อง จ่ายครั้งเดียว เป็นของคุณตลอดไป",
+  "app_proUpgradeText": "บุ๊กมาร์กไม่จำกัด ซิงก์ P2P บน 5 อุปกรณ์ และ AI ในเครื่อง จ่ายครั้งเดียว เป็นของคุณตลอดไป",
   "app_proBuy": "รับ Pro — {{price}}",
 "app_proStateFeaturePro": "Pro",
 "app_proStateBodyLicense": "ปลดล็อกด้วยลิขสิทธิ์ Pro จ่ายครั้งเดียว ทุกอย่างที่คุณบันทึกไว้แล้วจะยังอยู่ครบถ้วน",

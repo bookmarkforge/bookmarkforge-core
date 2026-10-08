@@ -33,7 +33,7 @@
  * to the always-fresh behaviour — the verdict never depends on the cache
  * being available.
  */
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { ESLint } from "eslint";
 
@@ -98,10 +98,10 @@ try {
 }
 
 let baseline = { count: null, updatedAt: null };
-if (existsSync(BASELINE_PATH)) {
-  try {
-    baseline = JSON.parse(readFileSync(BASELINE_PATH, "utf8"));
-  } catch {
+try {
+  baseline = JSON.parse(readFileSync(BASELINE_PATH, "utf8"));
+} catch (error) {
+  if (error?.code !== "ENOENT") {
     console.error(
       `[baseline-no-unbounded-text] FAIL: ${BASELINE_PATH} is not valid JSON — fix or re-run with --fix`,
     );

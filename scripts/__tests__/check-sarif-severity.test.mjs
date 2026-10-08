@@ -293,7 +293,7 @@ describe("buildSummaryTable", () => {
       { tool: "CodeQL", threshold: "high", total: 3, blocking: 2 },
       { tool: "Semgrep", threshold: "medium", total: 1, blocking: 0 },
     ]);
-    expect(rows[0]).toContain("Herramienta");
+    expect(rows[0]).toContain("Tool");
     expect(rows[1]).toContain("FAIL");
     expect(rows[2]).toContain("PASS");
   });
@@ -304,7 +304,7 @@ describe("buildFindingsTable", () => {
     const rows = buildFindingsTable([
       { severity: "high", ruleId: "js/x", toolName: "CodeQL", file: "src/a.ts", line: 3 },
     ]);
-    expect(rows[0]).toContain("Severidad");
+    expect(rows[0]).toContain("Severity");
     expect(rows[1]).toContain("high");
     expect(rows[1]).toContain("src/a.ts:3");
   });
@@ -351,7 +351,7 @@ describe("CLI", () => {
       );
       const result = runCli(["--baseline", baseline, high]);
       expect(result.status).toBe(0);
-      expect(result.stdout).toContain("ignorado");
+      expect(result.stdout).toContain("ignored");
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
@@ -364,7 +364,7 @@ describe("CLI", () => {
   it("prints the summary table in table format", () => {
     const result = runCli(["--format", "table", high]);
     expect(result.status).toBe(1);
-    expect(result.stdout).toContain("Herramienta");
-    expect(result.stdout).toContain("Resumen por herramienta");
+    expect(result.stdout).toContain("Tool");
+    expect(result.stdout).toContain("Summary per tool");
   });
 });

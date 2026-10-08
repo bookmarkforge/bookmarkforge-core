@@ -74,6 +74,7 @@
  */
 import { appendFileSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { resolveEntryChunk } from "./entry-chunk-lib.mjs";
 
 const ROOT = process.cwd();
 const ASSETS = join(ROOT, "dist", "assets");
@@ -270,11 +271,14 @@ if (uiChunks.length === 0) {
 // MORE than one chunk (SecurityManager ships a 79 B re-export wrapper next
 // to the real 12 kB chunk), so protect every chunk matching each prefix — a
 // leak into any variant must fail the build.
-const entry = files.find((f) => f.startsWith("index-"));
+// ADR-028: gate drift — the entry is derived from dist's HTML module
+// script (app-*.js since the marketing/SPA split), never from a stale
+// filename pattern; see scripts/entry-chunk-lib.mjs.
+const entry = resolveEntryChunk(ROOT, files);
 const securityManagerChunks = files.filter((f) => f.startsWith("SecurityManager-"));
 const securityConfirmationChunks = files.filter((f) => f.startsWith("SecurityConfirmation-"));
 
-if (!entry) fail("entry chunk (index-*.js) not found", INV_UI_RUNTIME);
+if (!entry) fail("entry chunk (app-*.js / index-*.js) not found", INV_UI_RUNTIME);
 if (securityManagerChunks.length === 0) fail("SecurityManager chunk not found", INV_UI_RUNTIME);
 if (securityConfirmationChunks.length === 0) fail("SecurityConfirmation chunk not found", INV_UI_RUNTIME);
 

@@ -9,10 +9,10 @@ current release before reporting.
 
 **Please report privately.** Do not open a public issue for security problems.
 
-- Email: **security@bookmarkforge.com**
+- Email: **security@bookmarkforgeapp.com**
 - Include: affected component, reproduction steps, impact, and (if possible) a
   proof of concept. Encrypt sensitive reports with our PGP key (published at
-  `https://bookmarkforge.com/.well-known/security.txt`).
+  `https://bookmarkforgeapp.com/.well-known/security.txt`).
 
 We aim to acknowledge reports within **72 hours** and publish a fix or a
 mitigation for accepted reports within **90 days**.

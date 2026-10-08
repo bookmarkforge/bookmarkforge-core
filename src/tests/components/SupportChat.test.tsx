@@ -1237,16 +1237,16 @@ describe("SupportChat", () => {
     );
     const { unmount } = render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "qrzx sin keyword conocido");
+    await userEvent.type(input, "qrzx without known keyword");
     fireEvent.keyDown(input, { key: "Enter" });
     expect(agentService.supportChat).toHaveBeenCalled();
 
     unmount();
     await act(async () => {
-      resolveChat!("respuesta tardía");
+      resolveChat!("late response");
     });
 
     // The late response must not render anywhere after unmount.
-    expect(screen.queryByText("respuesta tardía")).toBeNull();
+    expect(screen.queryByText("late response")).toBeNull();
   });
 });

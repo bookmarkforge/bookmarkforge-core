@@ -52,7 +52,7 @@ licenses) → **$79 regular**. A license covers the lifetime of v1: all v1.x
 bugfixes and security updates forever, 12 months of feature updates, and you
 keep v1 working forever. Future major versions (v2, v3) are separate products,
 60% off for existing owners. 30-day refund, no questions asked. Buy at
-[bookmarkforge.com](https://bookmarkforge.com).
+[bookmarkforgeapp.com](https://bookmarkforgeapp.com).
 
 > **Honest note for this build:** a Pro license does **not** unlock Pro
 > features inside this repository, because the Pro code simply is not here. In
@@ -75,8 +75,8 @@ keep v1 working forever. Future major versions (v2, v3) are separate products,
 **Prerequisites:** Node.js ≥ 20.19.
 
 ```bash
-git clone https://github.com/bookmarkforge/core.git
-cd core
+git clone https://github.com/bookmarkforge/bookmarkforge.git
+cd bookmarkforge
 npm install
 npm run dev        # the app at http://localhost:5173
 ```
@@ -118,6 +118,6 @@ the exported tree on every push — the Open Core boundary cannot silently break
 
 ## Links
 
-- Site & Pro licensing: <https://bookmarkforge.com>
+- Site & Pro licensing: <https://bookmarkforgeapp.com>
 - User manuals in 30 languages: [docs/index.md](docs/index.md)
 - Security reports: [SECURITY.md](.github/SECURITY.md) (please report privately)

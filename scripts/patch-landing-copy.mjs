@@ -18,7 +18,7 @@
  *     claim-drift prices rule whitelists our own prices only, and the
  *     competitor neutralizer is line-local (no competitor name -> no mask)
  *   - no "$"+digit at all in the new copy; no money-back/refund wording
- *   - bookmark caps read 1,000; device counts read 3; recovery = 24 words
+ *   - bookmark caps read 2,500; device counts read 3; recovery = 24 words
  *   - no "$"-amount near "year" phrasing
  * Fails loudly and writes nothing on any violation.
  */
@@ -240,32 +240,32 @@ const META = {
   en: {
     title: "BookmarkForge — Everything stays on your computer. Pay once.",
     description:
-      "Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 1,000 bookmarks.",
+      "Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 2,500 bookmarks.",
   },
   es: {
     title: "BookmarkForge — Todo se queda en tu ordenador. Paga una vez.",
     description:
-      "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. 59 dólares una vez. Gratis: 1.000 marcadores.",
+      "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. 59 dólares una vez. Gratis: 2.500 marcadores.",
   },
   fr: {
     title: "BookmarkForge — Tout reste sur votre ordinateur. Payez une fois.",
     description:
-      "Raindrop garde vos favoris sur ses serveurs et vous facture chaque année. BookmarkForge les garde sur votre ordinateur, verrouillés pour que même pas nous puissions les lire. 59 dollars une fois. Gratuit : 1 000 favoris.",
+      "Raindrop garde vos favoris sur ses serveurs et vous facture chaque année. BookmarkForge les garde sur votre ordinateur, verrouillés pour que même pas nous puissions les lire. 59 dollars une fois. Gratuit : 2 500 favoris.",
   },
   de: {
     title: "BookmarkForge — Alles bleibt auf deinem Computer. Einmal zahlen.",
     description:
-      "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. 59 Dollar einmalig. Kostenlos: 1.000 Lesezeichen.",
+      "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. 59 Dollar einmalig. Kostenlos: 2.500 Lesezeichen.",
   },
   pt: {
     title: "BookmarkForge — Tudo fica no seu computador. Pague uma vez.",
     description:
-      "O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 1.000 marcadores.",
+      "O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 2.500 marcadores.",
   },
   it: {
     title: "BookmarkForge — Tutto resta sul tuo computer. Paga una volta.",
     description:
-      "Raindrop tiene i tuoi segnalibri sui suoi server e ti fa pagare ogni anno. BookmarkForge li tiene sul tuo computer, bloccati così nemmeno noi possiamo leggerli. 59 dollari una volta. Gratis: 1.000 segnalibri.",
+      "Raindrop tiene i tuoi segnalibri sui suoi server e ti fa pagare ogni anno. BookmarkForge li tiene sul tuo computer, bloccati così nemmeno noi possiamo leggerli. 59 dollari una volta. Gratis: 2.500 segnalibri.",
   },
 };
 
@@ -280,7 +280,7 @@ const FEATURES = {
       { title: "Smart search", text: "Find things by keyword or by meaning — even when you do not remember the exact words. Raindrop charges 28 dollars a year for this; here it is included free." },
       { title: "An AI that reads your library, inside your computer", text: "Ask questions about what you saved and get answers with the sources shown. Nothing is sent to the cloud, and it works without internet. Requires Pro." },
       { title: "Chat with your own library", text: "Ask anything about your bookmarks and notes and get cited answers. The private mode runs 100% on your machine. Requires Pro." },
-      { title: "Sync between your own devices", text: "Your devices talk to each other directly — no server in the middle, and everything stays encrypted. Pair them by scanning a QR code. Up to 3 devices. Requires Pro." },
+      { title: "Sync between your own devices", text: "Your devices talk to each other directly — no server in the middle, and everything stays encrypted. Pair them by scanning a QR code. Up to 5 devices. Requires Pro." },
       { title: "Backups you own", text: "Automatic backups you can keep wherever you like — an external drive, a cloud folder, anywhere. Export everything to Markdown, JSON, CSV or PDF whenever you want. You hold the keys." },
       { title: "A map of your knowledge", text: "See how your notes and bookmarks connect. Filter by tags, dates and similarity, and zoom around an endless canvas." },
       { title: "Study cards that beat forgetting", text: "Turn any saved document into question cards that resurface right before you would forget them — the same scheduling idea as Anki. Requires Pro." },
@@ -533,43 +533,43 @@ const PRIVACY = {
 // Fixes three free-tier copy problems: (1) drops the unenforceable "1 device"
 // fiction (there are no accounts; the real limit is per-device vaults, sync is
 // the Pro feature), (2) leads with the smart-search wedge that undercuts
-// Raindrop's paywall, (3) defines the at-1,000 experience honestly (the RxDB
+// Raindrop's paywall, (3) defines the at-2,500 experience honestly (the RxDB
 // preInsert hook pauses new saves; reading, search and export continue).
 const FREE_TIER = {
   en: {
-    description: "Free forever: 1,000 bookmarks plus the smart search others charge yearly for. At 1,000 your vault stays whole — reading, search and export never stop; only new saves pause.",
+    description: "Free forever: 2,500 bookmarks plus the smart search others charge yearly for. At 2,500 your vault stays whole — reading, search and export never stop; only new saves pause.",
     featureSearch: "Smart search (full-text + semantic) — included free; Raindrop charges yearly for this",
-    featureCap: "1,000 bookmarks, notes, documents",
+    featureCap: "2,500 bookmarks, notes, documents",
     featureDevices: "Works on any device — each keeps its own vault",
   },
   es: {
-    description: "Gratis para siempre: 1.000 marcadores y la búsqueda inteligente que otros cobran cada año. Al llegar a 1.000 tu bóveda sigue entera: leer, buscar y exportar nunca se detienen; solo se pausan los guardados nuevos.",
+    description: "Gratis para siempre: 2.500 marcadores y la búsqueda inteligente que otros cobran cada año. Al llegar a 2.500 tu bóveda sigue entera: leer, buscar y exportar nunca se detienen; solo se pausan los guardados nuevos.",
     featureSearch: "Búsqueda inteligente (texto completo + semántica) — incluida gratis; Raindrop cobra cada año por esto",
-    featureCap: "1.000 marcadores, notas y documentos",
+    featureCap: "2.500 marcadores, notas y documentos",
     featureDevices: "Funciona en cualquier dispositivo — cada uno con su propia bóveda",
   },
   fr: {
-    description: "Gratuit pour toujours : 1 000 favoris et la recherche intelligente que d'autres font payer chaque année. À 1 000, votre bibliothèque reste entière : lire, chercher et exporter ne s'arrêtent jamais ; seuls les nouveaux enregistrements pause.",
+    description: "Gratuit pour toujours : 2 500 favoris et la recherche intelligente que d'autres font payer chaque année. À 2 500, votre bibliothèque reste entière : lire, chercher et exporter ne s'arrêtent jamais ; seuls les nouveaux enregistrements pause.",
     featureSearch: "Recherche intelligente (texte intégral + sémantique) — incluse gratuitement ; Raindrop la fait payer chaque année",
-    featureCap: "1 000 favoris, notes et documents",
+    featureCap: "2 500 favoris, notes et documents",
     featureDevices: "Fonctionne sur n'importe quel appareil — chacun garde sa propre bibliothèque",
   },
   de: {
-    description: "Für immer kostenlos: 1.000 Lesezeichen plus die intelligente Suche, für die andere jährlich verlangen. Bei 1.000 bleibt deine Bibliothek ganz — Lesen, Suchen und Exportieren enden nie; nur neue Speicherungen pausieren.",
+    description: "Für immer kostenlos: 2.500 Lesezeichen plus die intelligente Suche, für die andere jährlich verlangen. Bei 2.500 bleibt deine Bibliothek ganz — Lesen, Suchen und Exportieren enden nie; nur neue Speicherungen pausieren.",
     featureSearch: "Intelligente Suche (Volltext + semantisch) — gratis inklusive; Raindrop verlangt dafür jährlich Geld",
-    featureCap: "1.000 Lesezeichen, Notizen und Dokumente",
+    featureCap: "2.500 Lesezeichen, Notizen und Dokumente",
     featureDevices: "Funktioniert auf jedem Gerät — jedes mit seinem eigenen Tresor",
   },
   pt: {
-    description: "Grátis para sempre: 1.000 marcadores e a pesquisa inteligente pela qual outros cobram todos os anos. Ao chegar a 1.000, a sua biblioteca continua intacta — ler, pesquisar e exportar nunca param; só as novas gravações ficam em pausa.",
+    description: "Grátis para sempre: 2.500 marcadores e a pesquisa inteligente pela qual outros cobram todos os anos. Ao chegar a 2.500, a sua biblioteca continua intacta — ler, pesquisar e exportar nunca param; só as novas gravações ficam em pausa.",
     featureSearch: "Pesquisa inteligente (texto integral + semântica) — incluída grátis; o Raindrop cobra todos os anos por isto",
-    featureCap: "1.000 marcadores, notas e documentos",
+    featureCap: "2.500 marcadores, notas e documentos",
     featureDevices: "Funciona em qualquer dispositivo — cada um com a sua própria biblioteca",
   },
   it: {
-    description: "Gratis per sempre: 1.000 segnalibri e la ricerca intelligente che altri fanno pagare ogni anno. Arrivato a 1.000, la tua biblioteca resta intera — leggere, cercare ed esportare non si fermano mai; si mettono in pausa solo i nuovi salvataggi.",
+    description: "Gratis per sempre: 2.500 segnalibri e la ricerca intelligente che altri fanno pagare ogni anno. Arrivato a 2.500, la tua biblioteca resta intera — leggere, cercare ed esportare non si fermano mai; si mettono in pausa solo i nuovi salvataggi.",
     featureSearch: "Ricerca intelligente (testo completo + semantica) — inclusa gratis; Raindrop la fa pagare ogni anno",
-    featureCap: "1.000 segnalibri, note e documenti",
+    featureCap: "2.500 segnalibri, note e documenti",
     featureDevices: "Funziona su qualsiasi dispositivo — ognuno con la sua stessa biblioteca",
   },
 };
@@ -628,7 +628,7 @@ function auditAll() {
       if (PRICE_YEAR_RE.test(s)) problems.push(`${lang}: $ near year: "${s.slice(0, 70)}"`);
       const bm = s.match(BOOKMARK_RE);
       if (bm && !VALID_BOOKMARKS.has(Number(bm[1].replace(/[.,\s]/g, "")))) {
-        problems.push(`${lang}: bookmark cap "${bm[1]}" not 1,000`);
+        problems.push(`${lang}: bookmark cap "${bm[1]}" not 2,500`);
       }
       const dv = s.match(DEVICE_RE);
       if (dv && !VALID_DEVICES.has(Number(dv[1]))) problems.push(`${lang}: device count "${dv[1]}" not 3`);
@@ -665,33 +665,33 @@ function auditAll() {
 const SECONDARY_PATH = join(ROOT, "scripts", "landing-translations.json");
 const SECONDARY_FREE_TIER = {
   ar: { desc: "لأرشفة شخصية (1000 إشارة مرجعية، تعمل على أي جهاز — لكل جهاز خزنته الخاصة)", wedge: "بحث ذكي (نص كامل + دلالي) — مشمول مجانًا؛ Raindrop يتقاضى مقابل هذا اشتراكًا سنويًا" },
-  bg: { desc: "За лична библиотека (1 000 отметки, работи на всяко устройство — всяко със собствен трезор)", wedge: "Интелигентно търсене (пълнотекстово + семантично) — включено безплатно; Raindrop го таксува годишно" },
-  cs: { desc: "Pro osobní archiv (1 000 záložek, funguje na jakémkoli zařízení — každé má svůj trezor)", wedge: "Chytré vyhledávání (plnotextové + sémantické) — zdarma; Raindrop za něj účtuje roční předplatné" },
-  da: { desc: "Til personligt arkiv (1.000 bogmærker, virker på enhver enhed — hver har sit eget valv)", wedge: "Smart søgning (fuldtekst + semantisk) — inkluderet gratis; Raindrop opkræver årligt betaling for dette" },
-  el: { desc: "Για προσωπικό αρχείο (1.000 σελιδοδείκτες, λειτουργεί σε κάθε συσκευή — κάθε συσκευή έχει το δικό της θησαυροφυλάκιο)", wedge: "Έξυπνη αναζήτηση (πλήρες κείμενο + σημασιολογική) — δωρεάν· το Raindrop χρεώνει ετήσια συνδρομή γι' αυτή" },
-  fi: { desc: "Henkilökohtaiseen arkistoon (1 000 kirjanmerkkiä, toimii millä tahansa laitteella — jokaisella on oma holvinsa)", wedge: "Älykäs haku (kokoteksti + semanttinen) — sisältyy ilmaiseksi; Raindrop perii siitä vuosimaksun" },
+  bg: { desc: "За лична библиотека (2 500 отметки, работи на всяко устройство — всяко със собствен трезор)", wedge: "Интелигентно търсене (пълнотекстово + семантично) — включено безплатно; Raindrop го таксува годишно" },
+  cs: { desc: "Pro osobní archiv (2 500 záložek, funguje na jakémkoli zařízení — každé má svůj trezor)", wedge: "Chytré vyhledávání (plnotextové + sémantické) — zdarma; Raindrop za něj účtuje roční předplatné" },
+  da: { desc: "Til personligt arkiv (2.500 bogmærker, virker på enhver enhed — hver har sit eget valv)", wedge: "Smart søgning (fuldtekst + semantisk) — inkluderet gratis; Raindrop opkræver årligt betaling for dette" },
+  el: { desc: "Για προσωπικό αρχείο (2.500 σελιδοδείκτες, λειτουργεί σε κάθε συσκευή — κάθε συσκευή έχει το δικό της θησαυροφυλάκιο)", wedge: "Έξυπνη αναζήτηση (πλήρες κείμενο + σημασιολογική) — δωρεάν· το Raindrop χρεώνει ετήσια συνδρομή γι' αυτή" },
+  fi: { desc: "Henkilökohtaiseen arkistoon (2 500 kirjanmerkkiä, toimii millä tahansa laitteella — jokaisella on oma holvinsa)", wedge: "Älykäs haku (kokoteksti + semanttinen) — sisältyy ilmaiseksi; Raindrop perii siitä vuosimaksun" },
   he: { desc: "לארכיון אישי (1000 סימניות, עובד בכל מכשיר — לכל מכשיר הכספת שלו)", wedge: "חיפוש חכם (טקסט מלא + סמנטי) — כלול בחינם; Raindrop גובה על זה תשלום שנתי" },
-  hi: { desc: "व्यक्तिगत आर्काइव के लिए (1,000 बुकमार्क, किसी भी डिवाइस पर काम करता है — हर डिवाइस का अपना वॉल्ट)", wedge: "स्मार्ट खोज (पूर्ण पाठ + सिमेंटिक) — मुफ़्त शामिल; Raindrop इसके लिए सालाना पैसे लेता है" },
-  hr: { desc: "Za osobni arhiv (1.000 oznaka, radi na bilo kojem uređaju — svaki ima svoj sef)", wedge: "Pametno pretraživanje (cjelovit tekst + semantičko) — uključeno besplatno; Raindrop za to naplaćuje godišnje" },
-  hu: { desc: "Személyes archívumhoz (1 000 könyvjelző, bármely eszközön működik — mindegyiknek saját széfje van)", wedge: "Okos keresés (teljes szöveges + szemantikus) — ingyenesen tartalmazza; a Raindrop évente fizetést kér érte" },
-  id: { desc: "Untuk arsip pribadi (1.000 bookmark, berfungsi di perangkat apa pun — masing-masing punya vault sendiri)", wedge: "Pencarian pintar (teks penuh + semantik) — termasuk gratis; Raindrop menagihnya tiap tahun" },
-  ja: { desc: "個人用アーカイブとして（1,000件のブックマーク、どのデバイスでも動作 — 各デバイスが独自のボルトを持つ）", wedge: "スマート検索（全文 + セマンティック）— 無料で搭載。Raindropはこれに年額を課しています" },
-  ko: { desc: "개인 아카이브용 (북마크 1,000개, 어떤 기기에서든 작동 — 기기마다 자체 볼트 보유)", wedge: "스마트 검색(전문 + 시맨틱) — 무료 포함. Raindrop은 이 기능에 연간 요금을 받습니다" },
-  nl: { desc: "Voor persoonlijk archief (1.000 bladwijzers, werkt op elk apparaat — elk met zijn eigen kluis)", wedge: "Slim zoeken (volledige tekst + semantisch) — gratis inbegrepen; Raindrop rekent hiervoor jaarlijks" },
-  no: { desc: "Til personlig arkiv (1 000 bokmerker, fungerer på enhver enhet — hver med sitt eget hvelv)", wedge: "Smart søk (fulltekst + semantisk) — inkludert gratis; Raindrop krever årlig betaling for dette" },
-  pl: { desc: "Do osobistego archiwum (1 000 zakładek, działa na dowolnym urządzeniu — każde ma własny sejf)", wedge: "Inteligentne wyszukiwanie (pełnotekstowe + semantyczne) — wliczone bezpłatnie; Raindrop pobiera za to opłatę roczną" },
-  ro: { desc: "Pentru arhivă personală (1.000 marcaje, funcționează pe orice dispozitiv — fiecare are propriul seif)", wedge: "Căutare inteligentă (text integral + semantică) — inclusă gratuit; Raindrop taxează asta anual" },
-  ru: { desc: "Для личного архива (1 000 закладок, работает на любом устройстве — у каждого свой сейф)", wedge: "Умный поиск (полнотекстовый + семантический) — включён бесплатно; Raindrop берёт за это годовую плату" },
-  sv: { desc: "För personligt arkiv (1 000 bokmärken, fungerar på vilken enhet som helst — varje enhet har sitt eget valv)", wedge: "Smart sökning (hela texten + semantisk) — ingår gratis; Raindrop tar årsavgift för detta" },
-  th: { desc: "สำหรับคลังส่วนตัว (บุ๊กมาร์ก 1,000 รายการ ใช้ได้บนอุปกรณ์ใดก็ได้ — แต่ละเครื่องมีห้องนิรภัยของตัวเอง)", wedge: "การค้นหาอัจฉริยะ (แบบเต็มข้อความ + ความหมาย) — รวมฟรี; Raindrop เก็บเงินรายปีสำหรับฟีเจอร์นี้" },
-  tr: { desc: "Kişisel arşiv için (1.000 yer imi, her cihazda çalışır — her cihazın kendi kasası vardır)", wedge: "Akıllı arama (tam metin + anlamsal) — ücretsiz dahil; Raindrop bunun için yıllık ücret alıyor" },
-  uk: { desc: "Для особистого архіву (1 000 закладок, працює на будь-якому пристрої — кожен має власний сейф)", wedge: "Розумний пошук (повнотекстовий + семантичний) — включено безкоштовно; Raindrop бере за це річну плату" },
-  vi: { desc: "Cho kho lưu trữ cá nhân (1.000 bookmark, hoạt động trên mọi thiết bị — mỗi thiết bị có kho riêng)", wedge: "Tìm kiếm thông minh (toàn văn + ngữ nghĩa) — miễn phí; Raindrop thu phí hàng năm cho tính năng này" },
-  zh: { desc: "个人知识库（1,000个书签，可在任何设备上使用 — 每台设备拥有独立保险库）", wedge: "智能搜索（全文 + 语义）— 免费包含；Raindrop 对此功能每年收费" },
+  hi: { desc: "व्यक्तिगत आर्काइव के लिए (2,500 बुकमार्क, किसी भी डिवाइस पर काम करता है — हर डिवाइस का अपना वॉल्ट)", wedge: "स्मार्ट खोज (पूर्ण पाठ + सिमेंटिक) — मुफ़्त शामिल; Raindrop इसके लिए सालाना पैसे लेता है" },
+  hr: { desc: "Za osobni arhiv (2.500 oznaka, radi na bilo kojem uređaju — svaki ima svoj sef)", wedge: "Pametno pretraživanje (cjelovit tekst + semantičko) — uključeno besplatno; Raindrop za to naplaćuje godišnje" },
+  hu: { desc: "Személyes archívumhoz (2 500 könyvjelző, bármely eszközön működik — mindegyiknek saját széfje van)", wedge: "Okos keresés (teljes szöveges + szemantikus) — ingyenesen tartalmazza; a Raindrop évente fizetést kér érte" },
+  id: { desc: "Untuk arsip pribadi (2.500 bookmark, berfungsi di perangkat apa pun — masing-masing punya vault sendiri)", wedge: "Pencarian pintar (teks penuh + semantik) — termasuk gratis; Raindrop menagihnya tiap tahun" },
+  ja: { desc: "個人用アーカイブとして（2,500件のブックマーク、どのデバイスでも動作 — 各デバイスが独自のボルトを持つ）", wedge: "スマート検索（全文 + セマンティック）— 無料で搭載。Raindropはこれに年額を課しています" },
+  ko: { desc: "개인 아카이브용 (북마크 2,500개, 어떤 기기에서든 작동 — 기기마다 자체 볼트 보유)", wedge: "스마트 검색(전문 + 시맨틱) — 무료 포함. Raindrop은 이 기능에 연간 요금을 받습니다" },
+  nl: { desc: "Voor persoonlijk archief (2.500 bladwijzers, werkt op elk apparaat — elk met zijn eigen kluis)", wedge: "Slim zoeken (volledige tekst + semantisch) — gratis inbegrepen; Raindrop rekent hiervoor jaarlijks" },
+  no: { desc: "Til personlig arkiv (2 500 bokmerker, fungerer på enhver enhet — hver med sitt eget hvelv)", wedge: "Smart søk (fulltekst + semantisk) — inkludert gratis; Raindrop krever årlig betaling for dette" },
+  pl: { desc: "Do osobistego archiwum (2 500 zakładek, działa na dowolnym urządzeniu — każde ma własny sejf)", wedge: "Inteligentne wyszukiwanie (pełnotekstowe + semantyczne) — wliczone bezpłatnie; Raindrop pobiera za to opłatę roczną" },
+  ro: { desc: "Pentru arhivă personală (2.500 marcaje, funcționează pe orice dispozitiv — fiecare are propriul seif)", wedge: "Căutare inteligentă (text integral + semantică) — inclusă gratuit; Raindrop taxează asta anual" },
+  ru: { desc: "Для личного архива (2 500 закладок, работает на любом устройстве — у каждого свой сейф)", wedge: "Умный поиск (полнотекстовый + семантический) — включён бесплатно; Raindrop берёт за это годовую плату" },
+  sv: { desc: "För personligt arkiv (2 500 bokmärken, fungerar på vilken enhet som helst — varje enhet har sitt eget valv)", wedge: "Smart sökning (hela texten + semantisk) — ingår gratis; Raindrop tar årsavgift för detta" },
+  th: { desc: "สำหรับคลังส่วนตัว (บุ๊กมาร์ก 2,500 รายการ ใช้ได้บนอุปกรณ์ใดก็ได้ — แต่ละเครื่องมีห้องนิรภัยของตัวเอง)", wedge: "การค้นหาอัจฉริยะ (แบบเต็มข้อความ + ความหมาย) — รวมฟรี; Raindrop เก็บเงินรายปีสำหรับฟีเจอร์นี้" },
+  tr: { desc: "Kişisel arşiv için (2.500 yer imi, her cihazda çalışır — her cihazın kendi kasası vardır)", wedge: "Akıllı arama (tam metin + anlamsal) — ücretsiz dahil; Raindrop bunun için yıllık ücret alıyor" },
+  uk: { desc: "Для особистого архіву (2 500 закладок, працює на будь-якому пристрої — кожен має власний сейф)", wedge: "Розумний пошук (повнотекстовий + семантичний) — включено безкоштовно; Raindrop бере за це річну плату" },
+  vi: { desc: "Cho kho lưu trữ cá nhân (2.500 bookmark, hoạt động trên mọi thiết bị — mỗi thiết bị có kho riêng)", wedge: "Tìm kiếm thông minh (toàn văn + ngữ nghĩa) — miễn phí; Raindrop thu phí hàng năm cho tính năng này" },
+  zh: { desc: "个人知识库（2,500个书签，可在任何设备上使用 — 每台设备拥有独立保险库）", wedge: "智能搜索（全文 + 语义）— 免费包含；Raindrop 对此功能每年收费" },
 };
 
 /** Audit the secondary strings: same gate rules + digit sanity (any standalone
- *  digits in the description must be the 1,000 cap). */
+ *  digits in the description must be the 2,500 cap). */
 function auditSecondary(T) {
   const problems = [];
   for (const [lang, fix] of Object.entries(SECONDARY_FREE_TIER)) {
@@ -704,7 +704,7 @@ function auditSecondary(T) {
       if (dv) problems.push(`secondary/${lang}: device count "${dv[1]}" in new copy (fiction must not return)`);
       const bm = s.match(BOOKMARK_RE);
       if (bm && !VALID_BOOKMARKS.has(Number(bm[1].replace(/[.,\s]/g, "")))) {
-        problems.push(`secondary/${lang}: bookmark cap "${bm[1]}" not 1,000`);
+        problems.push(`secondary/${lang}: bookmark cap "${bm[1]}" not 2,500`);
       }
     }
   }

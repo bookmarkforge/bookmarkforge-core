@@ -32,7 +32,7 @@ function parseStateIndex(markdownText) {
 
   for (const line of lines) {
     const trimmed = line.trim();
-    if (trimmed.startsWith('| Documento | Estado | Nota |')) {
+    if (trimmed.startsWith('| Document | State | Note |') || trimmed.startsWith('| Documento | Estado | Nota |')) {
       inTable = true;
       continue;
     }

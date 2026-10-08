@@ -11,7 +11,11 @@ export default defineConfig({
   fullyParallel: false,
   workers: 1,
   forbidOnly: Boolean(process.env.CI),
-  retries: 0,
+  // One retry: the floor judges sub-second timings on a shared CI runner,
+  // where a single cold sample can sit above the regression floor. The hard
+  // budget (2500 ms, scripts/performance-budget.json) must still fail on
+  // every attempt.
+  retries: 1,
   reporter: "line",
   outputDir: "test-results-performance",
   use: {

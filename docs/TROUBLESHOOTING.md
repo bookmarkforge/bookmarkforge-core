@@ -591,8 +591,8 @@ npm run e2e:custom-provider
 
 **Solution:**
 ```bash
-# Check WebGPU support
-npm run check:webgpu
+# Check WebGPU support from the browser console (not from the shell):
+#   !!navigator.gpu && (await navigator.gpu.requestAdapter()) !== null
 
 # Verify network for model download
 # Check browser console for download errors

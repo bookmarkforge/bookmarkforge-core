@@ -1,72 +1,64 @@
-# Smoke post-deploy de staging y rollback
+# Staging post-deploy smoke and rollback
 
 ## Smoke tests
 
-El workflow `.github/workflows/staging-smoke.yml` se ejecuta manualmente o mediante `workflow_call` tras un despliegue. Valida URL, headers CSP/HSTS, health, ausencia de secretos en respuestas, smoke funcional y Playwright.
+The workflow `.github/workflows/staging-smoke.yml` runs manually or via `workflow_call` after a deployment. It validates URL, CSP/HSTS headers, health, absence of secrets in responses, functional smoke and Playwright.
 
-## Rollback manual aprobado
+## Approved manual rollback
 
-El rollback se ejecuta exclusivamente mediante `.github/workflows/staging-rollback.yml`:
+Rollback is executed exclusively via `.github/workflows/staging-rollback.yml`:
 
-1. Abrir **Actions → Manual staging rollback → Run workflow**.
-2. Introducir `target_tag` con el tag anotado anterior validado, por ejemplo:
+1. Open **Actions → Manual staging rollback → Run workflow**.
+2. Enter `target_tag` with the previous validated annotated tag, for example:
    `prod-20260829-0001-a1b2c3d`.
-3. Introducir la URL HTTPS de staging.
-4. Esperar la aprobación del environment protegido `staging-rollback-approval`.
-5. El job aprobado ejecuta exclusivamente `scripts/staging-rollback.mjs` dentro del environment `staging`.
-6. Se ejecutan de nuevo los checks HTTP de staging.
+3. Enter the staging HTTPS URL.
+4. Wait for approval of the protected environment `staging-rollback-approval`.
+5. The approved job executes exclusively `scripts/staging-rollback.mjs` inside the `staging` environment.
+6. Staging HTTP checks run again.
 
-### Guardas de selección
+### Selection guards
 
-El workflow rechaza:
+The workflow rejects:
 
-- `latest` o tags arbitrarios;
-- SHA sin prefijo `prod-`;
-- nombres que no coincidan con `prod-YYYYMMDD-HHMM-<sha>`;
-- tags inexistentes;
-- tags ligeros/no anotados;
-- tags que no resuelvan a un commit;
-- URLs HTTP o dominios de producción.
+- `latest` or arbitrary tags;
+- SHA without `prod-` prefix;
+- names that do not match `prod-YYYYMMDD-HHMM-<sha>`;
+- non-existent tags;
+- lightweight/non-annotated tags;
+- tags that do not resolve to a commit;
+- HTTP URLs or production domains.
 
-La selección es explícita para evitar que un rollback manual elija accidentalmente el despliegue actual. No se ejecuta rollback automático ni se toca producción.
+Selection is explicit to avoid a manual rollback accidentally choosing the current deployment. No automatic rollback is executed nor production is touched.
 
-## Configuración requerida en GitHub
+## Required GitHub configuration
 
 Environment `staging`:
 
-- `STAGING_URL` como variable.
-- `DEPLOY_COMPOSE_FILE` queda fijado por el workflow a `docker-compose.staging.yml`.
-- `IMAGE_TAG` y `TARGET_TAG` se pasan como variables de entorno validadas a scripts versionados; no se ejecutan comandos arbitrarios desde secretos.
+- `STAGING_URL` as variable.
+- `DEPLOY_COMPOSE_FILE` is fixed by the workflow to `docker-compose.staging.yml`.
+- `IMAGE_TAG` and `TARGET_TAG` are passed as validated environment variables to versioned scripts; no arbitrary commands are executed from secrets.
 
 Environment `staging-rollback-approval`:
 
-- Revisores requeridos configurados en **Settings → Environments**.
-- Sólo el equipo de operaciones puede aprobar.
+- Required reviewers configured in **Settings → Environments**.
+- Only the operations team can approve.
 
-El rollback usa directamente el entrypoint versionado `scripts/staging-rollback.mjs`, que fuerza `docker-compose.staging.yml` y valida `TARGET_TAG` antes de invocar Docker.
+The rollback uses directly the versioned entrypoint `scripts/staging-rollback.mjs`, which forces `docker-compose.staging.yml` and validates `TARGET_TAG` before invoking Docker.
 
-Los scripts versionados deben permanecer restringidos al entorno de staging y no deben usar `:latest`.
+Versioned scripts must remain restricted to the staging environment and must not use `:latest`.
 
-## Proveedor AI local opcional (Ollama)
+## Optional local AI provider (Ollama)
 
-Ollama es un proveedor **de cliente**: la app lo llama desde el navegador con la URL que
-el usuario configura en Ajustes. No forma parte del stack de staging. El perfil
-`ai-local` que vivía en `docker-compose.staging.yml` existía para alimentar el upstream
-del api, y ese upstream se retiró junto con el proxy de IA; ya no queda ningún consumidor
-en el stack.
+Ollama is a **client** provider: the app calls it from the browser with the URL the user configures in Settings. It is not part of the staging stack. The `ai-local` profile that lived in `docker-compose.staging.yml` existed to feed the api upstream, and that upstream was retired together with the AI proxy; there is no longer any consumer in the stack.
 
-Para ejercitarlo, ejecuta Ollama donde el navegador pueda alcanzarlo (lo habitual es el
-host) y apunta el proveedor Ollama de la app a esa URL. Ojo con el contenido mixto: si
-sirves la app por HTTPS, una URL `http://` de Ollama se bloquea — usa `http://localhost`
-(exento) o sirve Ollama por HTTPS.
+To exercise it, run Ollama where the browser can reach it (usually the host) and point the app's Ollama provider to that URL. Watch out for mixed content: if you serve the app by HTTPS, an `http://` Ollama URL is blocked — use `http://localhost` (exempt) or serve Ollama by HTTPS.
 
-### Contrato probado
+### Tested contract
 
-`npm run test:ollama-contract` valida contra cualquier servidor Ollama (local o contenedor):
+`npm run test:ollama-contract` validates against any Ollama server (local or container):
 
-- `/api/tags` responde 200 y lista el modelo esperado (o al menos uno instalado);
-- `/api/generate` responde 200 con `response` string no vacío y `done=true`;
-- timeout acotado por `--timeout` (default 120s).
+- `/api/tags` responds 200 and lists the expected model (or at least one installed);
+- `/api/generate` responds 200 with non-empty `response` string and `done=true`;
+- timeout bounded by `--timeout` (default 120s).
 
-No exige literalidad del texto generado (los LLM no la garantizan) — sólo estructura,
-disponibilidad y tiempo.
+It does not require literalness of generated text (LLMs do not guarantee it) — only structure, availability and time.

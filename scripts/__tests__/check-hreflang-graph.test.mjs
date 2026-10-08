@@ -36,9 +36,9 @@ describe("check-hreflang-graph helpers", () => {
 
   it("parses alternates from HTML <link> and sitemap xhtml:link syntax", () => {
     const html =
-      '<link rel="alternate" hreflang="en" href="https://bookmarkforge.com/">' +
-      '<link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/">' +
-      '<link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">';
+      '<link rel="alternate" hreflang="en" href="https://bookmarkforgeapp.com/">' +
+      '<link rel="alternate" hreflang="fr" href="https://bookmarkforgeapp.com/fr/">' +
+      '<link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/">';
     expect([...parseAlternates(html).entries()]).toEqual([
       ["en", "/"],
       ["fr", "/fr/"],
@@ -46,9 +46,9 @@ describe("check-hreflang-graph helpers", () => {
     ]);
 
     const sitemapBlock =
-      "<url>\n    <loc>https://bookmarkforge.com/fr/privacy-and-terms.html</loc>\n" +
-      '    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforge.com/privacy-and-terms.html" />\n' +
-      '    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforge.com/fr/privacy-and-terms.html" />\n' +
+      "<url>\n    <loc>https://bookmarkforgeapp.com/fr/privacy-and-terms.html</loc>\n" +
+      '    <xhtml:link rel="alternate" hreflang="en" href="https://bookmarkforgeapp.com/privacy-and-terms.html" />\n' +
+      '    <xhtml:link rel="alternate" hreflang="fr" href="https://bookmarkforgeapp.com/fr/privacy-and-terms.html" />\n' +
       "</url>";
     expect([...parseAlternates(sitemapBlock).entries()]).toEqual([
       ["en", "/privacy-and-terms.html"],

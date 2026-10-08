@@ -41,7 +41,7 @@ function generateTranslation(englishData, langConfig) {
   translation.lang = langConfig.code;
   translation.langName = langConfig.name;
   translation.dir = langConfig.dir;
-  translation.canonical = `https://bookmarkforge.com/${langConfig.code}/`;
+  translation.canonical = `https://bookmarkforgeapp.com/${langConfig.code}/`;
   translation.ogLocale = langConfig.locale;
   translation.ogLocaleAlternate = 'en_US';
   translation.homeHref = `/${langConfig.code}/`;

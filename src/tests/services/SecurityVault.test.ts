@@ -100,6 +100,13 @@ vi.mock("../../services/AuditLogService", () => ({
   auditLog: {
     record: vi.fn().mockResolvedValue(undefined),
     flushPending: vi.fn().mockResolvedValue(undefined),
+    // P1: the H2 post-unlock hook guards on this member — without it the
+    // audit-chain verification was silently skipped on every unlock.
+    verifyIntegrity: vi.fn().mockResolvedValue({
+      valid: true,
+      brokenAt: null,
+      checked: 0,
+    }),
   },
   rotateAuditSessionId: vi.fn(),
 }));
@@ -219,6 +226,11 @@ describe("SecurityVault", () => {
     // Reset auditLog mocks (clearAllMocks resets mockResolvedValue)
     (auditLog.record as any).mockResolvedValue(undefined);
     (auditLog.flushPending as any).mockResolvedValue(undefined);
+    (auditLog.verifyIntegrity as any).mockResolvedValue({
+      valid: true,
+      brokenAt: null,
+      checked: 0,
+    });
     vi.useFakeTimers();
     cryptoCounter = 0;
     if (!securityVault.isLocked()) {
@@ -2461,6 +2473,57 @@ describe("SecurityVault", () => {
         "correct-share-password",
       );
       expect(ok).toBe(payload);
+    });
+  });
+
+  // ── P1 mock-contract sweep — H2 audit-chain verification after unlock ──
+  describe("P1 — audit integrity hook after unlock (H2)", () => {
+    it("runs auditLog.verifyIntegrity after a successful unlock", async () => {
+      const { secureStorage } = await import("../../services/SecureStorage");
+      const { encryptionService } = await import("../../services/EncryptionService");
+      (secureStorage.getVerificationToken as any).mockResolvedValueOnce(
+        "encrypted_vault_verification",
+      );
+      vi.spyOn(encryptionService, "decrypt").mockResolvedValueOnce(
+        "bookmarkforge-verify-ok",
+      );
+
+      const result = await securityVault.unlock("correct_password");
+
+      expect(result).toBe(true);
+      expect(auditLog.verifyIntegrity).toHaveBeenCalled();
+    });
+
+    it("records audit_integrity_failed when the chain reports tampering", async () => {
+      const { secureStorage } = await import("../../services/SecureStorage");
+      const { encryptionService } = await import("../../services/EncryptionService");
+      (secureStorage.getVerificationToken as any).mockResolvedValueOnce(
+        "encrypted_vault_verification",
+      );
+      vi.spyOn(encryptionService, "decrypt").mockResolvedValueOnce(
+        "bookmarkforge-verify-ok",
+      );
+      (auditLog.verifyIntegrity as any).mockResolvedValueOnce({
+        valid: false,
+        brokenAt: 7,
+        checked: 10,
+      });
+
+      await securityVault.unlock("correct_password");
+
+      await vi.waitFor(() => {
+        expect(auditLog.record).toHaveBeenCalledWith(
+          expect.objectContaining({
+            action: "audit_integrity_failed",
+            result: "failure",
+            origin: "SecurityVault",
+          }),
+        );
+      });
+      expect(logger.error).toHaveBeenCalledWith(
+        "[SecurityVault] Audit log integrity check FAILED — possible tampering",
+        { brokenAt: 7 },
+      );
     });
   });
 });

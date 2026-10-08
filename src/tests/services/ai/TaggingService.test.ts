@@ -312,7 +312,9 @@ describe("TaggingService", () => {
       expect(summary).toBe("This is a concise summary.");
     });
 
-    it("uses Spanish prompt if lang=es", async () => {
+    // Both prompt-language branches of the product are pinned: summarize
+    // stays localized for Spanish users (lang=es) and English otherwise.
+    it("uses Spanish prompt when lang=es", async () => {
       mockGenerateText.mockResolvedValue({
         text: "Resumen en español.",
         provider: "gemini",
@@ -325,6 +327,23 @@ describe("TaggingService", () => {
       );
       expect(mockGenerateText).toHaveBeenCalled();
       expect(mockGenerateText.mock.calls[0]![0]).toContain("Resumen del");
+    });
+
+    it("uses English prompt when lang=en", async () => {
+      mockGenerateText.mockResolvedValue({
+        text: "English summary.",
+        provider: "gemini",
+      });
+      const service = new TaggingService();
+      await service.generateSummary(
+        uniqueText("summary en", 11),
+        "Title",
+        "en",
+      );
+      expect(mockGenerateText).toHaveBeenCalled();
+      expect(mockGenerateText.mock.calls[0]![0]).toContain(
+        "Summarize the following content",
+      );
     });
 
     it("returns truncated fallback if AI fails", async () => {
@@ -352,7 +371,7 @@ describe("TaggingService", () => {
       });
       const service = new TaggingService();
       const folder = await service.suggestFolder(
-        "Texto sobre tecnología.",
+        "Text about technology.",
         "Tech Article",
       );
       expect(folder).toBe("Technology");

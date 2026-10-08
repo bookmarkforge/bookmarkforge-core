@@ -149,6 +149,8 @@ test.describe('Advanced Export/Import Coverage', () => {
   });
 
   test('11.7 Cross-platform compatibility works', async ({ page }) => {
+    // The export button only exists inside the unlocked app.
+    await skipPassword(page);
     const human = createHumanBehavior(page, ciBasicOptions);
     
     const exportButton = page.getByRole('button', { name: /export/i });

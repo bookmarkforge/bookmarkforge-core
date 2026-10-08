@@ -15,6 +15,10 @@ const { mockSecrets, mockSecureStorage } = vi.hoisted(() => {
       deleteSecret: vi.fn(async (key: string) => {
         delete secrets[key];
       }),
+      // P1: device-key gate used by recoverFallbackEntries() — without these
+      // the boot recovery silently returned on every import (TypeError swallowed).
+      isDeviceKeyWrapped: vi.fn(async () => false),
+      isDeviceKeyMaterialized: vi.fn(() => false),
     },
   };
 });
@@ -1113,6 +1117,61 @@ describe("AuditLogService", () => {
       const secondCall = calls[1]![1] as string;
       const secondEntries = JSON.parse(secondCall) as AuditEntry[];
       expect(secondEntries.length).toBe(2);
+    });
+  });
+
+  // ── P1 mock-contract sweep — boot fallback recovery gate ─────────────────
+  describe("P1 — boot fallback recovery (device-key gate)", () => {
+    const FALLBACK_ENTRY = {
+      id: "fb-1",
+      timestamp: "2026-09-30T00:00:00.000Z",
+      action: "vault_unlock_failed",
+      target: "system",
+      result: "failure",
+      origin: "test",
+      sessionId: "s_boot",
+    };
+
+    it("merges sessionStorage fallback entries when the device key is available", async () => {
+      expect(mockSecureStorage.isDeviceKeyWrapped).toBeDefined();
+      expect(mockSecureStorage.isDeviceKeyMaterialized).toBeDefined();
+
+      sessionStorage.setItem(
+        "audit_pending_fallback",
+        JSON.stringify([FALLBACK_ENTRY]),
+      );
+      mockSecrets["audit_log"] = JSON.stringify([]);
+      (auditLog as any).cache = null;
+
+      await auditLog.recoverFallbackEntries();
+
+      expect(mockSecureStorage.isDeviceKeyWrapped).toHaveBeenCalled();
+      expect(sessionStorage.getItem("audit_pending_fallback")).toBeNull();
+      expect((auditLog as any).cache).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({ id: "fb-1" }),
+        ]),
+      );
+    });
+
+    it("keeps the fallback queued while the device key is wrapped but not materialized", async () => {
+      expect(mockSecureStorage.isDeviceKeyWrapped).toBeDefined();
+      expect(mockSecureStorage.isDeviceKeyMaterialized).toBeDefined();
+
+      sessionStorage.setItem(
+        "audit_pending_fallback",
+        JSON.stringify([FALLBACK_ENTRY]),
+      );
+      mockSecureStorage.isDeviceKeyWrapped.mockResolvedValue(true);
+      mockSecureStorage.isDeviceKeyMaterialized.mockReturnValue(false);
+
+      await auditLog.recoverFallbackEntries();
+
+      // The gate branch must actually run (this is the P1 finding):
+      expect(mockSecureStorage.isDeviceKeyWrapped).toHaveBeenCalled();
+      expect(mockSecureStorage.isDeviceKeyMaterialized).toHaveBeenCalled();
+      // Still queued — SecureStorage must not be touched while wrapped+locked:
+      expect(sessionStorage.getItem("audit_pending_fallback")).not.toBeNull();
     });
   });
 });

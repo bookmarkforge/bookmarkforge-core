@@ -1,13 +1,13 @@
 /**
- * scripts/audit-core.mjs — núcleo reutilizable de la auditoría de locales.
+ * scripts/audit-core.mjs — reusable core of the locale audit.
  *
- * Extraído de scripts/gen-audit-report.mjs (batch-29) para que la MISMA
- * clasificación alimente dos consumidores:
- *   - gen-audit-report.mjs    → genera auditoria_placeholders.md (informe)
- *   - check-audit-drift.mjs   → gate de CI con baseline (delta > 0 = FAIL)
+ * Extracted from scripts/gen-audit-report.mjs (batch-29) so the SAME
+ * classification feeds two consumers:
+ *   - gen-audit-report.mjs    → generates auditoria_placeholders.md (report)
+ *   - check-audit-drift.mjs   → CI gate with baseline (delta > 0 = FAIL)
  *
- * La clasificación (skip regex, préstamos, blind spot de batch-24, tipo A/B)
- * vive SOLO aquí; cualquier cambio de umbral se refleja en ambos.
+ * The classification (skip regex, loanwords, batch-24 blind spot, type A/B)
+ * lives ONLY here; any threshold change is reflected in both.
  */
 
 import { readFileSync, readdirSync } from "node:fs";
@@ -60,63 +60,64 @@ const SUPPORT_CONTENT_KEYS = new Set([
   "app_graphEmptyDesc",
 ]);
 
-// Marcas / términos técnicos / rutas / urls / ejemplos / atajos / colores / versiones
+// Brands / technical terms / paths / urls / examples / shortcuts / colors / versions
 const skip =
   /^(Pro$|Team$|Free$|Enterprise$|Chat$|Kanban$|Nostalgia$|Gallery$|Timeline$|tokens|Tokens|min$|Ollama|Gemini|WebLLM|WebGPU|OneDrive|WebDAV|Polar[0-9]|QJL|Float32|RAM|GB RAM|ON$|OFF$|Local-First|BookmarkForge|Dropbox|Google Drive|Google Gemini|Box$|pCloud|Notion|Obsidian|OpenAI|OpenRouter|Anthropic|Groq|Llama|Phi-|Qwen|Gemma|deepseek|CodeQL|UX|QA|Ctrl\+Shift|https?:|\/|#|XXXX|sk-|v[0-9]\.|-q4f16_1-MLC|WebRTC|RxDB|IndexedDB|P2P|AES|GCM|JWT|IP$|URL$|CSV|JSON|QR|Web Clipper$|WebClipper$|AES-GCM|⚠️ Plugin$|Bookmark Forge$|BMF Concierge$|\(Gemini\)$|\(Ollama\)$|Microsoft OneDrive$)/i;
 
-// Préstamos legítimos por idioma: valores que en ese locale son nativos o
-// préstamos establecidos (no inglés sin traducir). La exclusión es PER-LOCALE
-// para no ocultar inglés genuinamente pendiente en otros idiomas (ru, ja, ko...).
+// Legitimate loanwords per language: values that are native or established
+// loans in that locale (not untranslated English). The exclusion is
+// PER-LOCALE so genuine pending English in other languages (ru, ja, ko…)
+// is not hidden.
 const loanwordsByLocale = {
   pt: new Set([
     "Backlinks", "Tags", "Links", "Clusters", "Canvas", "Volume",
     "Downloads", "Backups", "Cache:", "Link", "General", "Empresa", "Design UX",
-    "{{count}} tokens", // batch-27: préstamo establecido en portugués
+    "{{count}} tokens", // batch-27: established loanword in Portuguese
   ]),
   es: new Set(["Error", "General", "Empresa", "{{count}} tokens"]),
-  ar: new Set(["friend@example.com"]), // placeholder de email universal (batch-12)
-  // Préstamos universales establecidos (offline/partner/profiler) en locales
-  // que usan el mismo término nativamente — batch-9. Solo locales cuyo valor
-  // ES el préstamo exacto; los que ya tradujeron (hr "Izvan mreže", id
-  // "Luring", fi "Kumppani", ro "Partener", sv "Profilerare") no se excluyen.
+  ar: new Set(["friend@example.com"]), // universal email placeholder (batch-12)
+  // Established universal loans (offline/partner/profiler) in locales that
+  // use the same term natively — batch-9. Only locales whose value IS the
+  // exact loan; those already translated (hr "Izvan mreže", id "Luring",
+  // fi "Kumppani", ro "Partener", sv "Profilerare") are not excluded.
   cs: new Set(["Offline", "Partner", "📊 Profiler (Ctrl+Shift+P)", "Limit", "AI Engine"]),
   da: new Set(["Offline", "Partner", "📊 Profiler (Ctrl+Shift+P)", "Send", "Acceleration", "Marketingspecialist", "{{count}} tokens"]),
   de: new Set(["Offline", "Partner", "📊 Profiler (Ctrl+Shift+P)", "Limit", "Stacktrace", "Exportformat", "GOLD", "Bookmarks", "Growth Hacker"]),
   fi: new Set(["Offline", "Copywriter"]), // fi app_offline stays "Offline" (loanword)
   fr: new Set([
-    "Source", "Contradictions", // cognados franceses: "la source", "les contradictions"
-    // batch-12: palabras francesas nativas idénticas al inglés (selfRef FPs)
+    "Source", "Contradictions", // French cognates: "la source", "les contradictions"
+    // batch-12: native French words identical to English (selfRef FPs)
     "Actions", "Documents", "Date", "Suggestions", "Questions",
-    "Diagnostics", "Image", "Question", "Public", "Dates", // cognados franceses nativos
+    "Diagnostics", "Image", "Question", "Public", "Dates", // native French cognates
   ]),
   hr: new Set(["Partner", "📊 Profiler (Ctrl+Shift+P)", "Copywriter"]),
   hu: new Set(["Offline", "Partner", "📊 Profiler (Ctrl+Shift+P)"]),
-  id: new Set(["📊 Profiler (Ctrl+Shift+P)", "Edit"]), // "Edit" es préstamo común en UI indonesia
+  id: new Set(["📊 Profiler (Ctrl+Shift+P)", "Edit"]), // "Edit" is a common loan in Indonesian UI
   it: new Set(["Offline", "Partner", "📊 Profiler (Ctrl+Shift+P)", "Copywriter", "Privacy"]),
   nl: new Set([
     "Offline", "Partner", "📊 Profiler (Ctrl+Shift+P)", "items", "Privacy",
-    "Onlinestatus", "Marketingspecialist", "Stacktrace", "Realtime", // neerlandés nativo
-    // batch-12: compuestos neerlandeses legítimos + préstamos tech
+    "Onlinestatus", "Marketingspecialist", "Stacktrace", "Realtime", // native Dutch
+    // batch-12: legitimate Dutch compounds + tech loans
     "Uptime", "Recent", "Cloudprovider", "Chatprompt", "Cloudarchitect",
     "Codereviewer", "Databasearchitect", "Productmanager", "Renders:", "Update",
-    // batch-27: "tokens"/"records" son préstamos establecidos en neerlandés
-    // (consistente con filter_results "{{count}} van {{total}} records").
+    // batch-27: "tokens"/"records" are established loans in Dutch
+    // (consistent with filter_results "{{count}} van {{total}} records").
     "{{count}} tokens", "{{count}} records",
   ]),
   no: new Set(["Offline", "Partner", "📊 Profiler (Ctrl+Shift+P)", "Send", "Onlinestatus", "{{count}} tokens"]),
   pl: new Set(["Offline", "Partner", "📊 Profiler (Ctrl+Shift+P)", "Limit", "Copywriter"]),
-  ro: new Set(["Offline", "📊 Profiler (Ctrl+Shift+P)", "Copywriter", "Calendar", "Card", "Public"]), // "public" es rumano nativo
+  ro: new Set(["Offline", "📊 Profiler (Ctrl+Shift+P)", "Copywriter", "Calendar", "Card", "Public"]), // "public" is native Romanian
   sv: new Set(["Offline", "Partner", "Acceleration", "Copywriter", "Exportformat", "Onlinestatus", "{{count}} tokens"]),
 };
 
-// Préstamos/cognados universales de UI técnica que se usan idénticos en los
-// idiomas de alfabeto latino europeo (de, fr, nl, it, da, no, sv, fi, pl,
-// cs, hu, hr, ro, el, tr, id, pt): "Filter" en alemán/holandés, "Items" en
-// neerlandés, "Volume" en francés… son traducciones legítimas, no inglés
-// pendiente. Solo se aplican a locales de alfabeto LATINO; en ar/bg/he/hi/
-// ja/ko/ru/th/uk/vi/zh un valor idéntico al inglés sí es inglés sin traducir
-// (el flag se mantiene). Los concatenados rotos ("AutoTag", "PromptsSaved",
-// "PrivateDoc"…) NO están en esta lista — esos son placeholders camelJunk.
+// Universal UI loanwords/cognates used identically across European Latin
+// alphabet languages (de, fr, nl, it, da, no, sv, fi, pl, cs, hu, hr, ro,
+// el, tr, id, pt): "Filter" in German/Dutch, "Items" in Dutch, "Volume" in
+// French… these are legitimate translations, not pending English. They only
+// apply to LATIN-alphabet locales; in ar/bg/he/hi/ja/ko/ru/th/uk/vi/zh a
+// value identical to English IS untranslated English (the flag stands).
+// Broken concatenations ("AutoTag", "PromptsSaved", "PrivateDoc"…) are NOT
+// in this list — those are camelJunk placeholders.
 const EURO_LATIN_LOCALES = new Set([
   "cs", "da", "de", "el", "fi", "fr", "hr", "hu", "id", "it",
   "nl", "no", "pl", "pt", "ro", "sv", "tr",
@@ -135,42 +136,43 @@ const EURO_LOANWORDS = new Set([
 ]);
 
 export const langNames = {
-  ar: "Árabe", bg: "Búlgaro", cs: "Checo", da: "Danés", de: "Alemán",
-  el: "Griego", es: "Español", fi: "Finlandés", fr: "Francés", he: "Hebreo",
-  hi: "Hindi", hr: "Croata", hu: "Húngaro", id: "Indonesio", it: "Italiano",
-  ja: "Japonés", ko: "Coreano", nl: "Neerlandés", no: "Noruego", pl: "Polaco",
-  pt: "Portugués", ro: "Rumano", ru: "Ruso", sv: "Sueco", th: "Tailandés",
-  tr: "Turco", uk: "Ucraniano", vi: "Vietnamita", zh: "Chino",
+  ar: "Arabic", bg: "Bulgarian", cs: "Czech", da: "Danish", de: "German",
+  el: "Greek", es: "Spanish", fi: "Finnish", fr: "French", he: "Hebrew",
+  hi: "Hindi", hr: "Croatian", hu: "Hungarian", id: "Indonesian", it: "Italian",
+  ja: "Japanese", ko: "Korean", nl: "Dutch", no: "Norwegian", pl: "Polish",
+  pt: "Portuguese", ro: "Romanian", ru: "Russian", sv: "Swedish", th: "Thai",
+  tr: "Turkish", uk: "Ukrainian", vi: "Vietnamese", zh: "Chinese",
 };
 
 /**
- * Clasifica un valor de locale.
- * @returns {"A"|"B"|null} — A: placeholder crudo; B: inglés sin traducir.
+ * Classify a locale value.
+ * @returns {"A"|"B"|null} — A: raw placeholder; B: untranslated English.
  */
 function classify(en, key, value) {
   if (typeof value !== "string" || !value) return null;
   if (SUPPORT_CONTENT_KEYS.has(key)) return null;
   const ev = typeof en[key] === "string" ? en[key] : "";
   if (skip.test(value)) return null;
-  // Blind spot histórico (batch-24): el skip `/^[{{]/` descartaba TODO valor
-  // que empezara por `{` — incluido `{{count}} days ago`, inglés real invisible
-  // al tipo B. Ahora solo se salta un PLACEHOLDER PURO (sin letras/dígitos
-  // fuera de `{{...}}`, ej. `{{count}}`, `{{price}}`, `{{url}}`). Un valor que
-  // empieza por `{` pero contiene texto (p.ej. `{{count}} days ago`) sigue a
-  // la clasificación A/B y el tipo B lo caza si es byte-idéntico a en.
+  // Historical blind spot (batch-24): the `/^[{{]/` skip discarded EVERY
+  // value starting with `{` — including `{{count}} days ago`, real English
+  // invisible to type B. Now only a PURE PLACEHOLDER is skipped (no
+  // letters/digits outside `{{...}}`, e.g. `{{count}}`, `{{price}}`,
+  // `{{url}}`). A value starting with `{` but containing text (e.g.
+  // `{{count}} days ago`) still goes through A/B classification and type B
+  // catches it when byte-identical to en.
   if (/^[{]/.test(value)) {
     const stripped = value
       .replace(/\{\{[^}]+\}\}/g, "")
       .replace(/[^\p{L}\p{N}]/gu, "");
-    if (stripped === "") return null; // placeholder puro — sin texto real
-    // si hay letras/dígitos fuera de los braces: texto real, sigue clasificando
+    if (stripped === "") return null; // pure placeholder — no real text
+    // letters/digits outside the braces: real text, keep classifying
   }
   const lastSeg = key.split("_").pop().toLowerCase();
   const selfRef = lastSeg.length >= 4 && value.toLowerCase() === lastSeg;
-  // camelJunk ampliado a diacríticos completos (é/è/ä/ö/ü/ő/ı/ş…): el rango
-  // [a-záéíóúñ] anterior NO detectaba concatenados con acentos fuera de ese
-  // set (ej. fr "ConfirmerRéinitialiserParamètres" con "è"). Ahora cubre
-  // todo el alfabeto latino con diacríticos (U+00E0–U+00FF).
+  // camelJunk extended to full diacritics (é/è/ä/ö/ü/ő/ı/ş…): the previous
+  // [a-záéíóúñ] range did not detect concatenations with accents outside
+  // that set (e.g. fr "ConfirmerRéinitialiserParamètres" with "è"). Now it
+  // covers the whole Latin alphabet with diacritics (U+00E0–U+00FF).
   const camelJunk =
     /^[A-ZÀ-ÖØ-Þ][a-zà-öø-ÿ]{2,}([A-ZÀ-ÖØ-Þ][a-zà-öø-ÿ]{1,}){1,}[A-Za-zÀ-ÖØ-Þà-öø-ÿ]*$/.test(
       value,
@@ -184,21 +186,22 @@ function classify(en, key, value) {
   return null;
 }
 
-// batch-31: umbral del detector de longitud desproporcionada (compartido
-// entre check-i18n-quality.mjs — gate con baseline — y gen-length-report.mjs
-// — informe priorizado). Un valor traducido > LENGTH_RATIO_CAP × el texto en
-// (tras quitar {{placeholders}}) es la firma estática de un overflow de UI
-// (etiquetas cortas que se vuelven compuestos 2.5×+ en de/fi/hu).
+// batch-31: threshold of the disproportionate-length detector (shared
+// between check-i18n-quality.mjs — gate with baseline — and
+// gen-length-report.mjs — prioritized report). A translated value >
+// LENGTH_RATIO_CAP × the English text (after stripping {{placeholders}}) is
+// the static signature of a UI overflow (short labels that become 2.5×+
+// compounds in de/fi/hu).
 export const LENGTH_RATIO_CAP = 2.5;
 export const LENGTH_MIN_EN = 10;
 
 /**
- * Compara la longitud visible de un valor de locale contra su par en inglés.
- * Los {{placeholders}} se quitan de AMBOS lados (renderizan en runtime y
- * contribuyen por igual). Devuelve null cuando el texto en es demasiado
- * corto (< LENGTH_MIN_EN: etiquetas diminutas donde 2-3 palabras de
- * traducción son normales y no false-positivarían) o cuando alguno de los
- * dos no es texto; si no, { ratio, enLen, locLen }.
+ * Compare the visible length of a locale value against its English peer.
+ * {{placeholders}} are stripped from BOTH sides (they render at runtime and
+ * contribute equally). Returns null when the English text is too short
+ * (< LENGTH_MIN_EN: tiny labels where 2-3 translation words are normal and
+ * would not be false positives) or when either side is not text;
+ * otherwise { ratio, enLen, locLen }.
  * @returns {{ratio: number, enLen: number, locLen: number}|null}
  */
 export function lengthStats(enValue, value) {
@@ -214,7 +217,7 @@ export function lengthStats(enValue, value) {
 }
 
 /**
- * Ejecuta la auditoría completa sobre public/locales.
+ * Run the full audit over public/locales.
  * @returns {{files: string[], keyCount: Record<string,number>,
  *            perLang: Record<string,{a:number,b:number}>, total: number,
  *            unique: number, all29: number}}

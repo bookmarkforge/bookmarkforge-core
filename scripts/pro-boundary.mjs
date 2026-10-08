@@ -78,7 +78,14 @@ const PRO_MODULE_BASES = PRO_MODULE_PATHS.map((proPath) => proPath.replace(/\.ts
  * to the gate — a leftover Pro implementation would have passed it.
  */
 export function isProModulePath(relPath) {
-  const norm = relPath.split(sep).join("/");
+  // Normalise BOTH separators, not just the platform's own: relPath reaches
+  // this function from manifests, specifiers and test fixtures of arbitrary
+  // provenance, so a Windows-style path must classify identically on Linux.
+  // `split(sep)` made `src\pro\X.ts` invisible to the boundary gates on
+  // POSIX (sep === "/" splits nothing) — caught by the "normalizes Windows
+  // separators" contract test failing in the Linux nightly (2026-09-23,
+  // run 35833219915) while passing on this Windows checkout.
+  const norm = relPath.split(/[\\/]/).join("/");
   if (PRO_MODULE_DIRS.some((dir) => norm.startsWith(dir))) return true;
   const base = norm.replace(/\.(?:d\.ts|ts|tsx|mts|cts|jsx|js|mjs|cjs)$/, "");
   return PRO_MODULE_BASES.includes(base);

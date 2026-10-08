@@ -1,41 +1,41 @@
 #!/usr/bin/env node
 /**
- * scripts/deploy-prod.mjs — Deploy a producción automatizado.
+ * scripts/deploy-prod.mjs — Automated production deploy.
  *
- * Garantiza los requisitos del checklist de blindeo:
- *   1. Corre los gates (check-blindeo + prod-blindeo-checklist).
- *   2. Construye imágenes Docker etiquetadas por SHA:
- *        bookmarkforge/web:<sha>  y  bookmarkforge/api:<sha>
- *      (también actualiza :latest para ops manuales).
- *   3. Crea el tag git anotado  prod-YYYYMMDD-HHMM-<sha>  que
- *      scripts/rollback.mjs exige para revertir en <1min (imagen por SHA).
+ * Guarantees the hardening-checklist requirements:
+ *   1. Runs the gates (check-blindeo + prod-blindeo-checklist).
+ *   2. Builds SHA-tagged Docker images:
+ *        bookmarkforge/web:<sha>  and  bookmarkforge/api:<sha>
+ *      (also updates :latest for manual ops).
+ *   3. Creates the annotated git tag  prod-YYYYMMDD-HHMM-<sha>  that
+ *      scripts/rollback.mjs requires to revert in <1min (image by SHA).
  *
- * Local-first: el rollback NUNCA toca IndexedDB del cliente; este
- * script tampoco toca datos, solo contenedores y bundle + tag git.
+ * Local-first: rollback NEVER touches the client's IndexedDB; this script
+ * does not touch data either — only containers and bundle + git tag.
  *
- * Uso:
- *   node scripts/deploy-prod.mjs                  # gates + build + tag git
+ * Usage:
+ *   node scripts/deploy-prod.mjs                  # gates + build + git tag
  *   node scripts/deploy-prod.mjs --deploy          # + docker compose up -d
- *   node scripts/deploy-prod.mjs --verify          # + production-smoke (todos los checks)
- *   node scripts/deploy-prod.mjs --deploy --verify  # pipeline completo
- *   node scripts/deploy-prod.mjs --dry-run         # muestra sin ejecutar
- *   node scripts/deploy-prod.mjs --push-images     # docker push al registro remoto (requiere DOCKER_REGISTRY)
+ *   node scripts/deploy-prod.mjs --verify          # + production-smoke (all checks)
+ *   node scripts/deploy-prod.mjs --deploy --verify  # full pipeline
+ *   node scripts/deploy-prod.mjs --dry-run         # print without executing
+ *   node scripts/deploy-prod.mjs --push-images     # docker push to remote registry (requires DOCKER_REGISTRY)
  *   node scripts/deploy-prod.mjs --push-tag        # git push origin <tag>
- *   node scripts/deploy-prod.mjs --allow-dirty     # permite working tree sucio
- *   node scripts/deploy-prod.mjs --skip-checklist  # omite el gate largo (build:ci+tests)
- *   node scripts/deploy-prod.mjs --no-docker        # solo tag git (sin imágenes)
- *   node scripts/deploy-prod.mjs --no-tag           # omite crear tag (CI/manual)
+ *   node scripts/deploy-prod.mjs --allow-dirty     # allow dirty working tree
+ *   node scripts/deploy-prod.mjs --skip-checklist  # skip the long gate (build:ci+tests)
+ *   node scripts/deploy-prod.mjs --no-docker        # git tag only (no images)
+ *   node scripts/deploy-prod.mjs --no-tag           # skip tag creation (CI/manual)
  *
- * Variables de entorno:
- *   PROD_BASE_URL   base URL para --verify (default http://127.0.0.1:8080)
- *   IMAGE_TAG       override del SHA (default: git rev-parse --short HEAD)
- *   DOCKER_REGISTRY registro destino para --push-images (ej: registry.example.com:5000).
- *                   Requerido: push al registro se hace de forma explícita y fail-closed.
- *   DEPLOY_COMPOSE_FILE compose a usar (default docker-compose.prod.yml).
- *                   Útil para drills en staging: DEPLOY_COMPOSE_FILE=docker-compose.staging.yml
+ * Environment variables:
+ *   PROD_BASE_URL   base URL for --verify (default http://127.0.0.1:8080)
+ *   IMAGE_TAG       override the SHA (default: git rev-parse --short HEAD)
+ *   DOCKER_REGISTRY destination registry for --push-images (e.g. registry.example.com:5000).
+ *                   Required: pushing to a registry is explicit and fail-closed.
+ *   DEPLOY_COMPOSE_FILE compose file to use (default docker-compose.prod.yml).
+ *                   Useful for staging drills: DEPLOY_COMPOSE_FILE=docker-compose.staging.yml
  *
- * Salida:
- *   Imprime el tag creado y el comando exacto de rollback al final.
+ * Output:
+ *   Prints the created tag and the exact rollback command at the end.
  */
 
 import { execSync, execFileSync, spawnSync } from "node:child_process";
@@ -73,25 +73,25 @@ import { pathToFileURL } from "node:url";
 const isMain = typeof process.argv[1] === "string" && import.meta.url === pathToFileURL(process.argv[1]).href;
 const argSet = new Set(process.argv.slice(2));
 if (isMain && (argSet.has("--help") || argSet.has("-h"))) {
-  console.log(`deploy-prod — Deploy a producción con tag + imágenes por SHA
+  console.log(`deploy-prod — production deploy with tag + images per SHA
 
-  --deploy          docker compose up -d (usa las imágenes recién construidas)
-  --verify          production-smoke (todos los checks) al final
-  --dry-run         muestra todos los comandos sin ejecutarlos
-  --push-images     docker push <registro>/bookmarkforge/{web,api}:<sha>
-                    (requiere DOCKER_REGISTRY; se ejecuta DESPUÉS de --verify)
-  --push-tag        git push origin <tag> (NUNCA por defecto)
-  --allow-dirty     permite working tree sucio (peligroso: tag != código)
-  --skip-checklist  omite prod-blindeo-checklist (build:ci + test:fast)
-  --no-docker       omite build/etiquetado de imágenes (solo tag git)
-  --no-tag          omite la creación del tag git (CI/manual: el tag ya existe)
-  --help            esta ayuda
+  --deploy          docker compose up -d (uses the freshly built images)
+  --verify          production-smoke (all checks) at the end
+  --dry-run         print every command without executing it
+  --push-images     docker push <registry>/bookmarkforge/{web,api}:<sha>
+                    (requires DOCKER_REGISTRY; runs AFTER --verify)
+  --push-tag        git push origin <tag> (NEVER by default)
+  --allow-dirty     allow a dirty working tree (dangerous: tag != code)
+  --skip-checklist  skip prod-blindeo-checklist (build:ci + test:fast)
+  --no-docker       skip image build/tagging (git tag only)
+  --no-tag          skip git tag creation (CI/manual: the tag already exists)
+  --help            this help
 
 Env:
-  DOCKER_REGISTRY   registro para --push-images (ej: registry.example.com:5000)
+  DOCKER_REGISTRY   registry for --push-images (e.g. registry.example.com:5000)
 
-Pipeline por defecto: gates → build imágenes → tag git.
-Recomendado para go-live: --deploy --verify --push-images --push-tag`);
+Default pipeline: gates → image build → git tag.
+Recommended for go-live: --deploy --verify --push-images --push-tag`);
   process.exit(0);
 }
 
@@ -105,18 +105,18 @@ const SKIP_CHECKLIST = argSet.has("--skip-checklist");
 const NO_DOCKER = argSet.has("--no-docker");
 const NO_TAG = argSet.has("--no-tag");
 
-if (isMain && DRY_RUN) console.log("⚠️  --dry-run: no se ejecuta nada, solo se imprime.\n");
+if (isMain && DRY_RUN) console.log("⚠️  --dry-run: nothing is executed, only printed.\n");
 
 // ── helpers ────────────────────────────────────────────────────────────────
 function capture(cmd, opts = {}) {
   if (DRY_RUN) {
     console.log(`$ ${cmd}`);
-    return null; // dry-run: nada real; el caller debe proveer un fallback.
+    return null; // dry-run: nothing real; the caller must provide a fallback.
   }
   try {
     return captureShell(cmd, opts);
   } catch (e) {
-    throw new Error(`comando falló: ${cmd}\n${e.stderr || e.message}`);
+    throw new Error(`command failed: ${cmd}\n${e.stderr || e.message}`);
   }
 }
 
@@ -131,14 +131,14 @@ function run(cmd, opts = {}) {
   }
 }
 
-/** run() con argumentos separados: sin shell, sin interpolación. */
+/** run() with separate arguments: no shell, no interpolation. */
 function runArgs(argv, opts = {}) {
   console.log(`$ ${formatCommand(argv[0], argv.slice(1))}`);
   if (DRY_RUN) return 0;
   return runCommand(argv[0], argv.slice(1), opts);
 }
 
-/** capture() con argumentos separados; devuelve null en --dry-run. */
+/** capture() with separate arguments; returns null on --dry-run. */
 function captureArgs(argv, opts = {}) {
   if (DRY_RUN) {
     console.log(`$ ${formatCommand(argv[0], argv.slice(1))}`);
@@ -147,7 +147,7 @@ function captureArgs(argv, opts = {}) {
   try {
     return captureCommand(argv[0], argv.slice(1), opts);
   } catch (e) {
-    throw new Error(`comando falló: ${formatCommand(argv[0], argv.slice(1))}\n${e.message}`);
+    throw new Error(`command failed: ${formatCommand(argv[0], argv.slice(1))}\n${e.message}`);
   }
 }
 
@@ -166,201 +166,201 @@ if (!isMain) {
   // perform gates, Docker, Git, or process exits during module import.
 } else {
 
-// Registro remoto para --push-images. Validación TEMPRANA (antes de correr
-// los gates pesados): un error de configuración no debe hacer esperar
-// build:ci + tests completos para fallar. Fail-closed: la bandera sin
-// DOCKER_REGISTRY válido detiene el deploy. La semántica vive en
-// push-images-lib.mjs (resolveRegistry) para poder probarla en CI contra un
-// registrar local sin levantar todo el pipeline.
+// Remote registry for --push-images. EARLY validation (before running the
+// heavy gates): a configuration error must not wait for build:ci + full tests
+// to fail. Fail-closed: the flag without a valid DOCKER_REGISTRY stops the
+// deploy. The semantics live in push-images-lib.mjs (resolveRegistry) so they
+// can be tested in CI against a local registry without bringing up the whole
+// pipeline.
 let REGISTRY = (process.env.DOCKER_REGISTRY ?? "").trim().replace(/\/+$/, "");
 if (PUSH_IMAGES) {
-  if (NO_DOCKER) fail("--push-images requiere imágenes locales; incompatible con --no-docker.");
+  if (NO_DOCKER) fail("--push-images requires local images; incompatible with --no-docker.");
   const r = resolveRegistry(REGISTRY, { push: true, dryRun: DRY_RUN });
   if (!r.ok) {
-    fail(`--push-images requiere DOCKER_REGISTRY válido (ej: registry.example.com:5000).`);
+    fail(`--push-images requires a valid DOCKER_REGISTRY (e.g. registry.example.com:5000).`);
   }
   REGISTRY = r.registry;
-  if (r.simulated) log("--dry-run: DOCKER_REGISTRY no seteado — simulando con registry.example.com");
-  log(`registro destino: ${REGISTRY}`);
+  if (r.simulated) log("--dry-run: DOCKER_REGISTRY not set — simulating with registry.example.com");
+  log(`target registry: ${REGISTRY}`);
 }
 
-// ── Fase A: Gates de blindeo ───────────────────────────────────────────────
-console.log("\n🔒 FASE A — Gates de blindeo\n");
+// ── Phase A: Hardening gates ───────────────────────────────────────────────
+console.log("\n🔒 PHASE A — Hardening gates\n");
 
 const stamp = localStamp();
-log(`inicio deploy — timestamp local ${stamp}`);
+log(`deploy start — local timestamp ${stamp}`);
 
 if (runNode("scripts/check-blindeo.mjs") !== 0) {
-  fail("check-blindeo.mjs FAIL — bloqueado (corrige antes de deploy).");
-}    log("check-blindeo.mjs PASS (10 puntos estáticos)");
+  fail("check-blindeo.mjs FAIL — blocked (fix before deploy).");
+}    log("check-blindeo.mjs PASS (10 static checkpoints)");
 
 if (!SKIP_CHECKLIST) {
-  log("corriendo prod-blindeo-checklist.mjs (build:ci + tests + gates completos)…");
+  log("running prod-blindeo-checklist.mjs (build:ci + tests + full gates)…");
   if (runNode("scripts/prod-blindeo-checklist.mjs", { timeout: 600_000 }) !== 0) {
-    fail("prod-blindeo-checklist.mjs FAIL — usa --skip-checklist solo si ya pasaste hoy.");
+    fail("prod-blindeo-checklist.mjs FAIL — use --skip-checklist only if it already passed today.");
   }
   log("prod-blindeo-checklist.mjs PASS");
 } else {
-  log("--skip-checklist: omitiendo gate largo (asumido verde hoy).");
+  log("--skip-checklist: skipping the long gate (assumed green today).");
 }
 
-// ── Fase B: Preflight (working tree, sha, docker, env) ─────────────────────
-console.log("\n🔍 FASE B — Preflight\n");
+// ── Phase B: Preflight (working tree, sha, docker, env) ─────────────────────
+console.log("\n🔍 PHASE B — Preflight\n");
 
-// Working tree limpio: el tag debe apuntar al código exacto desplegado.
+// Clean working tree: the tag must point at the exact deployed code.
 if (!ALLOW_DIRTY) {
   const dirty = capture("git status --porcelain");
   if (dirty === null) {
-    log("--dry-run: working tree no verificado (simulado limpio)");
+    log("--dry-run: working tree not verified (simulated clean)");
   } else if (dirty) {
-    fail(`working tree sucio — el tag NO reflejaría el código desplegado.\n  ${dirty.split("\n").slice(0, 5).join("\n  ")}\n  Comitea o usa --allow-dirty (bajo tu responsabilidad).`);
+    fail(`dirty working tree — the tag would NOT reflect the deployed code.\n  ${dirty.split("\n").slice(0, 5).join("\n  ")}\n  Commit or use --allow-dirty (at your own risk).`);
   } else {
-    log("working tree limpio ✓");
+    log("clean working tree ✓");
   }
 } else {
-  log("⚠️  --allow-dirty: el tag puede no coincidir con el código desplegado.");
+  log("⚠️  --allow-dirty: the tag may not match the deployed code.");
 }
 
-// SHA corto (7 chars, mismo formato que los tags existentes: 84c7fe5).
+// Short SHA (7 chars, same format as existing tags: 84c7fe5).
 let sha;
 try {
   const resolved = process.env.IMAGE_TAG || capture("git rev-parse --short HEAD");
   sha = calculateImageTag({ imageTag: process.env.IMAGE_TAG, gitSha: resolved, dryRun: DRY_RUN });
-  if (sha === "deadbeef") log("--dry-run: usando SHA simulado deadbeef");
+  if (sha === "deadbeef") log("--dry-run: using simulated SHA deadbeef");
 } catch (e) {
-  fail(`no se pudo obtener el SHA: ${e.message}`);
+  fail(`could not obtain the SHA: ${e.message}`);
 }
 if (!sha) {
-  fail(`SHA inválido: "${sha}". Esperaba 7-12 hex chars (o setea IMAGE_TAG).`);
+  fail(`invalid SHA: "${sha}". Expected 7-12 hex chars (or set IMAGE_TAG).`);
 }
-log(`SHA del deploy: ${sha}`);
+log(`deploy SHA: ${sha}`);
 
 const tagName = `prod-${stamp}-${sha}`;
-log(`tag git objetivo: ${tagName}`);
+log(`target git tag: ${tagName}`);
 
-// Colisión de tag: mismo minuto + mismo SHA = ya desplegado.
+// Tag collision: same minute + same SHA = already deployed.
 try {
   execFileSync("git", ["cat-file", "-t", tagName], { stdio: "ignore" });
-  fail(`el tag ${tagName} ya existe — ya desplegaste este commit. ¿Quieres --deploy --verify sin re-tag?`);
+  fail(`tag ${tagName} already exists — you already deployed this commit. Want --deploy --verify without re-tagging?`);
 } catch {
-  // tag no existe: bien
+  // tag does not exist: good
 }
 
-// Docker disponible (no requerido con --no-docker).
+// Docker available (not required with --no-docker).
 let dockerOk = false;
 if (!NO_DOCKER) {
   dockerOk = run(`docker version --format "{{.Server.Version}}"`) === 0 || DRY_RUN;
   if (!dockerOk) {
-    fail("docker no disponible. Usa --no-docker para solo crear el tag git, o instala Docker.");
+    fail("docker not available. Use --no-docker to only create the git tag, or install Docker.");
   }
-  log("docker disponible ✓");
+  log("docker available ✓");
 } else {
-  log("--no-docker: se omite build/etiquetado de imágenes (solo tag git).");
+  log("--no-docker: skipping image build/tagging (git tag only).");
 }
 
-// Compose objetivo: prod por defecto; sobreescribible para drills en staging.
+// Target compose: prod by default; overridable for staging drills.
 const COMPOSE_FILE = process.env.DEPLOY_COMPOSE_FILE?.trim() || "docker-compose.prod.yml";
-if (!existsSync(COMPOSE_FILE)) fail(`compose file no encontrado: ${COMPOSE_FILE}`);
-log(`compose objetivo: ${COMPOSE_FILE}`);
+if (!existsSync(COMPOSE_FILE)) fail(`compose file not found: ${COMPOSE_FILE}`);
+log(`target compose: ${COMPOSE_FILE}`);
 
-// .env.production: compose lo necesita para los build args (VITE_*) y runtime.
+// .env.production: compose needs it for the build args (VITE_*) and runtime.
 const envFileArg = existsSync(".env.production") ? "--env-file .env.production" : "";
 if (envFileArg) {
-  log(".env.production presente ✓");
+  log(".env.production present ✓");
 } else {
-log("⚠️ no .env.production — las vars VITE_* deben venir del entorno o .env");
+log("⚠️ no .env.production — the VITE_* vars must come from the environment or .env");
 }
 const composeBase = `docker compose -f ${COMPOSE_FILE} ${envFileArg}`.trim();
 
-// ── Fase C: Build de imágenes etiquetadas por SHA ──────────────────────────
+// ── Phase C: Build SHA-tagged images ──────────────────────────────────
 if (!NO_DOCKER) {
-  console.log("\n📦 FASE C — Build de imágenes Docker (tag <sha> + latest)\n");
+  console.log("\n📦 PHASE C — Docker image build (tag <sha> + latest)\n");
 
-  // compose build lee los build args de .env.production y etiqueta con IMAGE_TAG.
+  // compose build reads the build args from .env.production and tags with IMAGE_TAG.
   const buildEnv = { ...process.env, IMAGE_TAG: sha };
   const rc = run(`${composeBase} build web api`, { env: buildEnv, timeout: 600_000 });
-  if (rc !== 0) fail("docker compose build falló — revisa los build args / .env.production");
+  if (rc !== 0) fail("docker compose build failed — check the build args / .env.production");
 
-  // latest apunta al SHA recién construido (ops manuales y fallback).
+  // latest points at the freshly built SHA (manual ops and fallback).
   runArgs(["docker", "tag", `bookmarkforge/web:${sha}`, "bookmarkforge/web:latest"]);
   runArgs(["docker", "tag", `bookmarkforge/api:${sha}`, "bookmarkforge/api:latest"]);
-  log(`imágenes: bookmarkforge/web:${sha}  +  bookmarkforge/api:${sha}  (+ :latest)`);
+  log(`images: bookmarkforge/web:${sha}  +  bookmarkforge/api:${sha}  (+ :latest)`);
 }
 
-// ── Fase D: Tag git anotado ────────────────────────────────────────────────
-console.log("\n🏷️  FASE D — Tag git anotado\n");
+// ── Phase D: Annotated git tag ────────────────────────────────────────────────
+console.log("\n🏷️  PHASE D — Annotated git tag\n");
 
 if (NO_TAG) {
-  log("--no-tag: saltando creación del tag (el tag ya existe; CI/manual).");
+  log("--no-tag: skipping tag creation (the tag already exists; CI/manual).");
 } else {
-  // Tag anotado: scripts/rollback.mjs valida `git cat-file -t <tag>` === "tag".
+  // Annotated tag: scripts/rollback.mjs validates `git cat-file -t <tag>` === "tag".
   const tagMsg = `Deploy prod ${stamp} — ${sha}`;
   runArgs(["git", "tag", "-a", tagName, "-m", tagMsg]);
   let tagType = "";
   try {
     tagType = captureArgs(["git", "cat-file", "-t", tagName]) ?? "";
   } catch (e) {
-    fail(`no se pudo verificar el tag recién creado ${tagName}: ${e.message}`);
+    fail(`could not verify the freshly created tag ${tagName}: ${e.message}`);
   }
   if (!isAnnotatedTagType(tagType)) {
-    fail(`tag ${tagName} no es anotado (git cat-file -t devolvió "${tagType || "(vacío)"}"). Rollback --auto bloqueado.`);
+    fail(`tag ${tagName} is not annotated (git cat-file -t returned "${tagType || "(empty)"}"). Rollback --auto blocked.`);
   }
-  log(`tag creado y verificado como anotado ✓ (${tagName})`);
+  log(`tag created and verified as annotated ✓ (${tagName})`);
 }
 
-// ── Fase E (solo --deploy): docker compose up -d ───────────────────────────
+// ── Phase E (only --deploy): docker compose up -d ───────────────────────────
 if (DO_DEPLOY) {
-  if (NO_DOCKER) fail("--deploy requiere imágenes; no se puede usar con --no-docker.");
-  console.log("\n🚀 FASE E — Deploy (docker compose up -d)\n");
+  if (NO_DOCKER) fail("--deploy requires images; cannot be used with --no-docker.");
+  console.log("\n🚀 PHASE E — Deploy (docker compose up -d)\n");
 
-  // up -d sin --build: usa exactamente las imágenes recién etiquetadas con <sha>.
-  // Determinista: lo que se construyó es lo que corre.
+  // up -d without --build: uses exactly the freshly tagged <sha> images.
+  // Deterministic: what was built is what runs.
   const rc = run(`${composeBase} up -d web api`, { env: { ...process.env, IMAGE_TAG: sha }, timeout: 180_000 });
   if (rc !== 0) {
-    log(`⚠️  up -d falló — no hice rollback automático. Revisa con: docker compose -f ${COMPOSE_FILE} ps`);
-    fail("deploy falló en up -d.");
+    log(`⚠️  up -d failed — no automatic rollback performed. Check with: docker compose -f ${COMPOSE_FILE} ps`);
+    fail("deploy failed at up -d.");
   }
-  log("contenedores web + api arriba ✓");
+  log("web + api containers up ✓");
 } else {
-  log("--deploy no seteado: imágenes construidas y tag creado, sin levantar contenedores.");
+  log("--deploy not set: images built and tag created, no containers started.");
 }
 
-// ── Fase F (solo --verify): production-smoke ────────────────────────────────
+// ── Phase F (only --verify): production-smoke ────────────────────────────────
 if (DO_VERIFY) {
-  if (NO_DOCKER) fail("--verify requiere contenedores corriendo; no se puede con --no-docker.");
-  console.log("\n✅ FASE F — Verify (production-smoke)\n");
+  if (NO_DOCKER) fail("--verify requires running containers; cannot be used with --no-docker.");
+  console.log("\n✅ PHASE F — Verify (production-smoke)\n");
 
   const baseUrl = process.env.PROD_BASE_URL ?? "http://127.0.0.1:8080";
-  log(`production-smoke contra ${baseUrl}…`);
+  log(`production-smoke against ${baseUrl}…`);
   const rc = runNode("scripts/production-smoke.mjs", { env: { ...process.env, PROD_BASE_URL: baseUrl } });
   if (rc !== 0) {
-    console.error("\n[deploy] ✗ VERIFY FAIL — production-smoke no pasó.");
-    console.error("[deploy] Revierte YA:");
+    console.error("\n[deploy] ✗ VERIFY FAIL — production-smoke did not pass.");
+    console.error("[deploy] Roll back NOW:");
     console.error("  node scripts/rollback.mjs --auto");
-    fail("verify falló — ejecuta rollback.");
+    fail("verify failed — run rollback.");
   }
   log("production-smoke PASS ✓");
 }
 
-// ── Fase G (solo --push-images): docker push al registro remoto ────────────
+// ── Phase G (only --push-images): docker push to the remote registry ────────
 if (PUSH_IMAGES) {
-  if (NO_DOCKER) fail("--push-images requiere imágenes locales; incompatible con --no-docker.");
-  console.log("\n📤 FASE G — Push de imágenes al registro remoto\n");
+  if (NO_DOCKER) fail("--push-images requires local images; incompatible with --no-docker.");
+  console.log("\n📤 PHASE G — Push images to the remote registry\n");
 
-  // Retag con prefijo del registro + push. Corre DESPUÉS de --verify: solo
-  // sube al registro lo que pasó el smoke. Los refs remotos son
-  // inmutables (<sha>), por lo que el rollback desde cualquier nodo del
-  // clúster puede apuntar a esta imagen exacta. La mecánica (retag+push+
-  // manifest-inspect) vive en push-images-lib.mjs (pushImages) — la misma
-  // que prueba el test de CI contra un registry:2 local. Si el push no es
-  // visible en el registro, FAIL antes de imprimir el tag: la imagen debe
-  // estar consultable para que el rollback por imagen pueda usarla.
-  // `runVisible` confirma que el push es consultable en el registro. En
-  // --dry-run NO se ejecuta el manifest inspect real (escaparía al sandbox):
-  // se simula visible, igual que `run` simula los comandos.
+  // Retag with the registry prefix + push. Runs AFTER --verify: only what
+  // passed the smoke test is uploaded to the registry. Remote refs are
+  // immutable (<sha>), so rollback from any node in the cluster can point at
+  // this exact image. The mechanics (retag+push+manifest-inspect) live in
+  // push-images-lib.mjs (pushImages) — the same one the CI test exercises
+  // against a local registry:2. If the push is not visible in the registry,
+  // FAIL before printing the tag: the image must be queryable for image-based
+  // rollback to use it.
+  // `runVisible` confirms the push is queryable in the registry. In --dry-run
+  // the real manifest inspect is NOT executed (it would escape the sandbox):
+  // it is simulated as visible, just like `run` simulates the commands.
   const runVisible = (remote) => {
     if (DRY_RUN) {
-      console.log(`$ docker buildx imagetools inspect ${remote} (simulado en dry-run)`);
+      console.log(`$ docker buildx imagetools inspect ${remote} (simulated in dry-run)`);
       return true;
     }
     return defaultInspectVisible(remote);
@@ -373,58 +373,58 @@ if (PUSH_IMAGES) {
   });
   if (!res.ok) {
     if (res.step === "tag") {
-      fail(`docker tag de ${res.remote} falló.`);
+      fail(`docker tag of ${res.remote} failed.`);
     } else if (res.step === "push") {
-      fail(`docker push ${res.remote} falló — revisa credenciales/red del registro.`);
+      fail(`docker push ${res.remote} failed — check registry credentials/network.`);
     } else if (res.step === "not-visible") {
       fail(
-        `docker manifest inspect de ${res.remote} falló tras el push — la imagen NO es ` +
-          "consultable en el registro. No se imprime el tag como desplegable.",
+        `docker manifest inspect of ${res.remote} failed after the push — the image is NOT ` +
+          "queryable in the registry. The tag is not printed as deployable.",
       );
     } else {
-      fail(res.remote || "sha inválido para --push-images.");
+      fail(res.remote || "invalid SHA for --push-images.");
     }
   }
-  for (const remote of res.pushed) log(`${remote} pusheada ✓ (visible en el registro)`);
-  log(`imágenes disponibles para el clúster (SHA inmutables, verificadas): ${REGISTRY}/bookmarkforge/web:${sha}`);
+  for (const remote of res.pushed) log(`${remote} pushed ✓ (visible in the registry)`);
+  log(`images available to the cluster (immutable SHAs, verified): ${REGISTRY}/bookmarkforge/web:${sha}`);
 } else {
-  log("--push-images no seteado: las imágenes quedan solo en esta máquina.");
+  log("--push-images not set: the images stay on this machine only.");
 }
 
-// ── Fase H (solo --push-tag): git push origin <tag> ────────────────────────
+// ── Phase H (only --push-tag): git push origin <tag> ────────────────────────
 if (PUSH_TAG) {
-  if (NO_TAG) fail("--push-tag requiere que el tag se cree; incompatible con --no-tag.");
-  console.log("\n⬆️  FASE H — Push tag al remoto\n");
+  if (NO_TAG) fail("--push-tag requires the tag to be created; incompatible with --no-tag.");
+  console.log("\n⬆️  PHASE H — Push tag to the remote\n");
   const rc = runArgs(["git", "push", "origin", tagName]);
-  if (rc !== 0) fail(`git push origin ${tagName} falló — el tag existe localmente pero no en el remoto.`);
-  log(`tag ${tagName} pusheado ✓`);
+  if (rc !== 0) fail(`git push origin ${tagName} failed — the tag exists locally but not on the remote.`);
+  log(`tag ${tagName} pushed ✓`);
 } else {
-  log("--push-tag no seteado: el tag es local. Para que el rollback funcione desde otra máquina, ejecuta: git push origin " + tagName);
+  log("--push-tag not set: the tag is local. For rollback to work from another machine, run: git push origin " + tagName);
 }
 
-// ── Resumen ────────────────────────────────────────────────────────────────
+// ── Summary ────────────────────────────────────────────────────────────────
 const elapsed = ((Date.now() - T0) / 1000).toFixed(1);
 console.log("\n" + "=".repeat(60));
-console.log(`✅ DEPLOY COMPLETO en ${elapsed}s`);
+console.log(`✅ DEPLOY COMPLETE in ${elapsed}s`);
 console.log(`   Tag:      ${tagName}`);
 console.log(`   SHA:      ${sha}`);
 if (!NO_DOCKER) {
-  console.log(`   Imágenes: bookmarkforge/web:${sha}  bookmarkforge/api:${sha}`);
+  console.log(`   Images: bookmarkforge/web:${sha}  bookmarkforge/api:${sha}`);
 }
 if (PUSH_IMAGES) {
-  console.log(`   Registro: ${REGISTRY}/bookmarkforge/web:${sha}  ${REGISTRY}/bookmarkforge/api:${sha}`);
+  console.log(`   Registry: ${REGISTRY}/bookmarkforge/web:${sha}  ${REGISTRY}/bookmarkforge/api:${sha}`);
 }
 console.log("=".repeat(60));
-console.log("\nComandos de seguimiento:");
-console.log(`  Verificar ahora:  PROD_BASE_URL=${process.env.PROD_BASE_URL ?? "http://127.0.0.1:8080"} node scripts/production-smoke.mjs`);
-console.log(`  Monitorear:       node scripts/monitoring-alerts.mjs --json`);
+console.log("\nFollow-up commands:");
+console.log(`  Verify now:  PROD_BASE_URL=${process.env.PROD_BASE_URL ?? "http://127.0.0.1:8080"} node scripts/production-smoke.mjs`);
+console.log(`  Monitor:     node scripts/monitoring-alerts.mjs --json`);
 console.log(`  Rollback (<1min):  node scripts/rollback.mjs --auto`);
-console.log(`  Listar tags:      node scripts/rollback.mjs --list`);
+console.log(`  List tags:   node scripts/rollback.mjs --list`);
 if (PUSH_IMAGES) {
-  console.log("\nPreparar un nodo del clúster para rollback por imagen:");
+  console.log("\nPrepare a cluster node for image-based rollback:");
   console.log(`  docker pull ${REGISTRY}/bookmarkforge/web:${sha} && docker tag ${REGISTRY}/bookmarkforge/web:${sha} bookmarkforge/web:${sha}`);
   console.log(`  docker pull ${REGISTRY}/bookmarkforge/api:${sha} && docker tag ${REGISTRY}/bookmarkforge/api:${sha} bookmarkforge/api:${sha}`);
-  console.log("  (tras esto, rollback.mjs --auto usa la imagen local en <1min, sin rebuild)");
+  console.log("  (after this, rollback.mjs --auto uses the local image in <1min, no rebuild)");
 }
 // ── util ───────────────────────────────────────────────────────────────────
 function localStamp(now = new Date()) {
@@ -438,4 +438,4 @@ function localStamp(now = new Date()) {
 }
 
 process.exit(0);
-} // fin else (isMain) — cierre del bloque CLI
+} // end else (isMain) — CLI block close

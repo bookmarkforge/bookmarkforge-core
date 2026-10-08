@@ -34,7 +34,7 @@ test.describe("Advanced Data Persistence", () => {
     });
   });
 
-  test("should handle sessionStorage operations", async ({ page }) => {
+  test("should handle sessionStorage operations", async ({ page, browser }) => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
 
@@ -50,15 +50,19 @@ test.describe("Advanced Data Persistence", () => {
 
     expect(sessionData).toBe("session-value");
 
-    // Verify it's cleared on page reload
-    await page.reload();
-    await page.waitForLoadState("networkidle");
+    // sessionStorage is scoped to the tab session: a reload PRESERVES it —
+    // only a fresh browsing context starts empty. Assert that isolation.
+    const freshContext = await browser.newContext();
+    const freshPage = await freshContext.newPage();
+    await freshPage.goto("/");
+    await freshPage.waitForLoadState("networkidle");
 
-    const clearedData = await page.evaluate(() => {
+    const clearedData = await freshPage.evaluate(() => {
       return sessionStorage.getItem("session-data");
     });
 
     expect(clearedData).toBeNull();
+    await freshContext.close();
   });
 
   test("should handle IndexedDB operations", async ({ page }) => {

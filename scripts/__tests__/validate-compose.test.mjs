@@ -52,7 +52,7 @@ describe("validateCompose", () => {
       "docker-compose.prod.yml",
       PROD_OK.replace(
         "AI_SESSION_ORIGINS: ${AI_SESSION_ORIGINS:?AI_SESSION_ORIGINS is required}",
-        "AI_SESSION_ORIGINS: https://bookmarkforge.com",
+        "AI_SESSION_ORIGINS: https://bookmarkforgeapp.com",
       ),
     );
     expect(result.errors.some((error) => error.includes("origins must be required"))).toBe(true);

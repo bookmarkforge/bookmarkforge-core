@@ -49,7 +49,7 @@ import {
 } from "../../components/block-editor/useBlockEditorLogic";
 
 // Shared BroadcastChannel mock with a static registry of instances,
-// reusado por los tests de presencia (evita duplicar la clase por test).
+// reused by presence tests (avoids duplicating the class per test).
 class MockBroadcastChannel {
   static instances: MockBroadcastChannel[] = [];
   listeners = new Set<(e: { data: unknown }) => void>();
@@ -689,7 +689,7 @@ describe("useBlockEditorLogic — helpers internos", () => {
 
   it("tokenize filters stop words and short words", () => {
     const tokens = _internal.tokenize("the cat and JavaScript are great tools");
-    // the/and/are son stop words; cat tiene 3 letras y pasa
+    // the/and/are are stop words; cat has 3 letters and passes
     expect(tokens).toContain("javascript");
     expect(tokens).toContain("great");
     expect(tokens).toContain("tools");

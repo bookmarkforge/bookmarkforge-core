@@ -1,42 +1,42 @@
-# ADR-057: Gate de integridad de referencias documentales
+# ADR-057: Documented reference integrity gate
 
-- **Estado:** aceptado (implementado en `scripts/check-documented-doc-references.mjs`)
-- **Fecha:** 2026-09-18
+- **Status:** accepted (implemented in `scripts/check-documented-doc-references.mjs`)
+- **Date:** 2026-09-18
 
-## Contexto
+## Context
 
-La documentación operativa puede quedar aparentemente correcta después de retirar
-un archivo o un endpoint: el Markdown sigue renderizando, pero el runbook conduce
-a una ruta inexistente o a una evidencia que ya no está en el checkout. La retirada
-del proxy de IA dejó precisamente este tipo de riesgo en probes, auditorías y
+Operational documentation can stay apparently correct after a file
+or an endpoint is retired: the Markdown still renders, but the runbook leads
+to a nonexistent route or to evidence that is no longer in the checkout. Retiring
+the AI proxy left exactly this kind of risk in probes, audits and
 runbooks.
 
-No es válido escanear todo el repositorio con la misma política. ADRs, auditorías
-y el índice documental conservan nombres retirados como evidencia histórica. El
-corpus debe centrarse en documentación viva: onboarding, workflows y documentos
-marcados `vivo` en `docs/docs-state-index.md`.
+It is not valid to scan the whole repository with the same policy. ADRs, audits
+and the documentation index deliberately keep retired names as historical evidence.
+The corpus must focus on live documentation: onboarding, workflows and documents
+marked `vivo` in `docs/docs-state-index.md`.
 
-## Decisión
+## Decision
 
-1. Añadir `check:documented-doc-references` a la cadena oficial `npm run check`.
-2. Escanear referencias concretas a archivos locales en el corpus vivo y fallar si
-   el destino no existe.
-3. Extraer rutas HTTP concretas y comprobarlas contra `server/src/route-table.ts`,
-   respetando rutas declaradas como prefijo.
-4. Ignorar familias históricas (`ADR-*`, `docs/audit.md` y el propio índice) y
-   expresiones de familia con comodines, que no describen un destino único.
-5. Emitir archivo, línea y referencia fallida para facilitar la corrección.
-6. Registrar el gate en el inspector freeze como categoría `docs` y mantener este
-   ADR como contrato de alcance.
+1. Add `check:documented-doc-references` to the official `npm run check` chain.
+2. Scan concrete local-file references in the live corpus and fail if
+   the target does not exist.
+3. Extract concrete HTTP paths and check them against `server/src/route-table.ts`,
+   honoring paths declared as prefixes.
+4. Ignore historical families (`ADR-*`, `docs/audit.md` and the index itself) and
+   wildcard family expressions, which do not describe a single target.
+5. Emit file, line and failing reference to make the fix easy.
+6. Register the gate in the freeze inspector as category `docs` and keep this
+   ADR as the scope contract.
 
-## Consecuencias
+## Consequences
 
-- El borrado o renombrado de un archivo utilizado por un runbook falla localmente
-  antes de llegar a revisión.
-- La retirada de una ruta HTTP exige actualizar las instrucciones vivas al mismo
-  tiempo que el router.
-- Las auditorías históricas pueden seguir describiendo incidentes y endpoints
-  retirados sin falsear el estado operativo actual.
-- El detector es deliberadamente sintáctico: no demuestra que un endpoint acepte
-  todos los métodos ni que una URL externa esté disponible. Esas propiedades
-  siguen cubiertas por los contratos de servidor, OpenAPI, smoke y despliegue.
+- Deleting or renaming a file used by a runbook fails locally
+  before reaching review.
+- Retiring an HTTP route requires updating the live instructions at the same
+  time as the router.
+- Historical audits can keep describing retired incidents and endpoints
+  without misrepresenting the current operational state.
+- The detector is deliberately syntactic: it does not prove that an endpoint accepts
+  every method nor that an external URL is reachable. Those properties
+  remain covered by the server, OpenAPI, smoke and deploy contracts.

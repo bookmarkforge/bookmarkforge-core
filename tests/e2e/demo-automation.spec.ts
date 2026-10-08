@@ -6,6 +6,13 @@ import { test, expect } from '@playwright/test';
  */
 
 test.describe('Demo BookmarkForge - Human-like Automation', () => {
+  // Opt-in (the repo's house pattern, cf. webrtc-handshake-diagnostics): this
+  // spec is a scripted 5-minute demo with NO assertions at all — it has zero
+  // `expect` calls, so as a nightly test it measured theatre: the multi-user
+  // shard paid ~1 min of runner time per night for a run that could not fail
+  // by construction. Set BMF_RUN_DEMO_AUTOMATION=true to run it on purpose;
+  // the vacuous-tests ratchet still tracks it as declared debt.
+  test.skip(!process.env.BMF_RUN_DEMO_AUTOMATION, 'opt-in demo: set BMF_RUN_DEMO_AUTOMATION=true');
   test('demo completa automatizada', async ({ page }) => {
     test.setTimeout(300000); // 5 minutos timeout para demo completa
     // Configurar viewport como escritorio normal

@@ -85,6 +85,38 @@ describe("SRI verification", () => {
       await server.close();
     }
   });
+
+  // ADR-028: gate drift — since the marketing/SPA split the SRI bundle is
+  // served at /app.html; /index.html is the marketing page with no SRI
+  // scripts. The probe must verify the page that actually ships the bundle.
+  it("verifies the SPA bundle at /app.html when /index.html is marketing-only", async () => {
+    const body = Buffer.from("console.log('spa');");
+    const integrity = `sha256-${digestBase64("sha256", body)}`;
+    const { createServer } = await import("node:http");
+    const server = createServer((req, res) => {
+      if (req.url === "/app.js") {
+        res.setHeader("content-type", "text/javascript");
+        res.end(body);
+        return;
+      }
+      res.setHeader("content-type", "text/html");
+      res.end(
+        req.url === "/app.html"
+          ? `<!doctype html><script src="/app.js" integrity="${integrity}"></script>`
+          : "<!doctype html><script src=\"/landing.js\" defer></script>",
+      );
+    });
+    await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const { port } = server.address();
+    try {
+      await expect(verifyBundleSri(`http://127.0.0.1:${port}`)).resolves.toMatchObject({
+        mode: "served",
+        ok: true,
+      });
+    } finally {
+      await new Promise((resolve) => server.close(resolve));
+    }
+  });
 });
 
 function digestBase64(algorithm, body) {
@@ -113,7 +145,7 @@ describe("MONITORING_ACTIVO", () => {
       ok: true,
     });
     expect(result.detail).toContain("csp-violation-spike");
-    expect(result.detail).toContain("proxy nginx");
+    expect(result.detail).toContain("nginx proxy");
   });
 
   it("fails when the CSP listener is missing", async () => {
@@ -309,7 +341,7 @@ describe("checkRetryDegraded", () => {
       await expect(checkRetryDegraded({ logFile, now: NOW, windowMs: 600_000 })).resolves.toEqual({
         name: "RETRY_DEGRADED",
         ok: false,
-        detail: "1 señal(es) de entrega degradada en 10min — +3 eventos perdidos",
+        detail: "1 degraded delivery signal(s) in 10min — +3 events lost",
         degradedEvents: 1,
       });
     } finally {
@@ -420,7 +452,7 @@ describe("checkApiDegradado", () => {
       });
       expect(result.ok).toBe(false);
       expect(result.p95Ms).toBeGreaterThanOrEqual(300);
-      expect(result.detail).toContain("DEGRADADO");
+      expect(result.detail).toContain("DEGRADED");
     } finally {
       await server.close();
     }
@@ -480,7 +512,7 @@ describe("API_DEGRADADO end-to-end", () => {
       const degraded = await checkApiDegradado({ baseUrl, samples: 3, timeoutMs: 1000, latencyThresholdMs: 50, errorRateThreshold: 0.2 });
       expect(degraded.ok).toBe(false);
       expect(degraded.p95Ms).toBeGreaterThanOrEqual(200);
-      expect(degraded.detail).toContain("DEGRADADO");
+      expect(degraded.detail).toContain("DEGRADED");
       expect(degraded.totalProbes).toBe(6);
 
       latencyMs = 0;
@@ -520,7 +552,7 @@ describe("checkClientCritical", () => {
       })).resolves.toEqual({
         name: "CLIENT_CRITICAL",
         ok: false,
-        detail: "1 cluster event(s) en 10min — criticalClients>=4",
+        detail: "1 cluster event(s) in 10min — criticalClients>=4",
         clusterEvents: 1,
       });
     } finally {

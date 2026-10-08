@@ -27,7 +27,7 @@ describe("VaultHealthScanner", () => {
     mockDb.chunks.find.mockReturnValue({ exec: vi.fn(async () => []) });
   });
 
-  it("detecta pendientes, embeddings ausentes y chunks huérfanos sin devolver contenido", async () => {
+  it("detects pending, missing embeddings and orphaned chunks without returning content", async () => {
     mockDb.bookmarks.find.mockReturnValueOnce({
       exec: vi.fn(async () => [{
         id: "bookmark-1",
@@ -77,7 +77,7 @@ describe("VaultHealthScanner", () => {
     expect(JSON.stringify(report)).not.toContain("must-not-leak");
   });
 
-  it("recomienda reconstruir cuando el índice está en estado no fiable", async () => {
+  it("recommends rebuild when index is in unreliable state", async () => {
     mockIndex.getLoadStatus.mockReturnValue("malformed-rebuilt");
     const { scanVaultHealth } = await import("../../../src/services/ai/VaultHealthScanner");
     const report = await scanVaultHealth();
@@ -88,13 +88,13 @@ describe("VaultHealthScanner", () => {
     });
   });
 
-  it("rechaza el escaneo con la bóveda bloqueada", async () => {
+  it("rejects scan with locked vault", async () => {
     mockVault.isLocked.mockReturnValue(true);
     const { scanVaultHealth } = await import("../../../src/services/ai/VaultHealthScanner");
     await expect(scanVaultHealth()).rejects.toMatchObject({ name: "VAULT_LOCKED" });
   });
 
-  it("respeta la cancelación antes de abrir la base de datos", async () => {
+  it("respects cancellation before opening database", async () => {
     const controller = new AbortController();
     controller.abort();
     const { scanVaultHealth } = await import("../../../src/services/ai/VaultHealthScanner");

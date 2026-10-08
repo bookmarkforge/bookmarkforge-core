@@ -63,7 +63,6 @@ const KNOWN_GATES = {
   // Declared-dependency vulnerabilities: every advisory classified as ours or
   // inherited, with the minimal bump. Security core, like check:override-cve.
   "check:direct-cve": "security",
-  "check:direct-cve:dev": "security",
   "check:env": "security",
   "check:workflows": "security",
   "check:http-config": "security",
@@ -79,6 +78,10 @@ const KNOWN_GATES = {
   // Protected core — language (may grow without an ADR).
   "check:i18n": "language",
   "check:english-only": "language",
+  // Spanish-prose ratchet for docs/, scripts/ and legal/ — the protected core
+  // that stops the English translation from regressing. Same class as
+  // check:english-only, which only covers src/.
+  "check:no-spanish": "language",
   "check:no-unbounded-text": "language",
   "check:landing-free-plan": "language",
   "check:pocket-onboarding-copy": "language",
@@ -135,6 +138,12 @@ const KNOWN_GATES = {
   "check:manual-figures": "docs",
   "check:page-figures": "docs",
   "check:landings-fresh": "meta",
+  // The browser half of ADR-062. Registered although it is NOT in the `check`
+  // chain: the chain is offline by contract and this gate needs a Chromium
+  // binary, so it lives in the release chain (`check:deploy`) and in its own
+  // named CI step, where the browser is installed anyway. Meta rather than
+  // documentation-format: it polices the served landing, not the doc format.
+  "check:landing-smoke": "meta",
   "plan:manual-figures": "docs",
   "check:rxdb17": "meta",
   "check:nginx-render": "meta",
@@ -154,20 +163,102 @@ const KNOWN_GATES = {
   "check:removed-deps": "meta",
   "check:chunks": "meta",
   "check:inspector-freeze": "meta",
+  // No phantom scripts: a declared script whose local target file does not
+  // exist, a `npm run <name>` nobody declares, or a script no entry point
+  // reaches. Meta rather than documentation-format: it polices the script
+  // manifest, and the baseline it ships (KNOWN_UNREACHABLE, every entry with a
+  // reason) is what keeps the unreachable set a decision instead of an
+  // oversight.
+  "check:script-reachability": "meta",
+  // Script-inventory snapshot contract (docs/scripts-inventory-scanner-limits.md).
+  // On demand, like check:extension-dist, and for a harder reason: its snapshot
+  // (.tmp-audit-script-candidates.txt) is gitignored by design — the "unreferenced
+  // candidates" review queue is a local audit state, not repo data — so a fresh
+  // clone cannot run it until the maintainer regenerates the snapshot. In the
+  // offline chain it would be red everywhere for the wrong reason.
+  "check:audit-script-snapshot": "meta",
+  // Assertion-integrity ratchet (docs/ops-nightly.md §1, docs/PENDIENTES.md):
+  // a test that passes when the feature it names is absent is not coverage —
+  // the nightly "Human-like E2E" job was green over 1657 such tests. On demand
+  // here and in nightly.yml's coverage step, like the other audit gates: it is
+  // a static AST read (no browser), but it is a nightly-quality report, not a
+  // release blocker, so it stays out of the offline `npm run check` chain.
+  "check:vacuous-tests": "meta",
   lint: "meta",
 };
 
-/** Parse the gate tokens (check:* | lint) out of the `check` script chain. */
+/** The token shape the chain is measured in: `check:*` scripts plus `lint`. */
+const GATE_TOKEN_RE = /^(?:check:[a-z0-9:-]+|lint)$/;
+
+/**
+ * Every `check:*`/`lint` token a script body invokes, with or without the
+ * `npm run` prefix (the flat chain used to carry the bare form). The trailing
+ * lookahead keeps `lint` from matching inside a path like
+ * `scripts/tooling/lint-bounded.mjs`, which would make `lint` look like it
+ * delegates to itself.
+ */
+export function scriptReferences(command) {
+  return [
+    ...String(command).matchAll(/(?:npm run )?(check:[a-z0-9:-]+|lint)(?![a-z0-9:_-])/g),
+  ].map((match) => match[1]);
+}
+
+/**
+ * Gate tokens (check:* | lint) the `npm run check` chain actually RUNS.
+ *
+ * Both halves of that sentence are load-bearing:
+ *
+ *  - TRANSITIVE: `check` delegates to group scripts (`check:security`,
+ *    `check:quality`, …). Reading only the literal tokens of the `check`
+ *    string would hand the freeze the 5 wrappers instead of the 50 gates they
+ *    run, so a new gate slipped into any group would escape the freeze — the
+ *    very failure this gate exists to catch, one level up.
+ *  - LEAVES ONLY: a group is a label for the gates it runs, never a gate
+ *    itself, so counting it would double-count the same coverage (and report
+ *    the 5 labels as 5 unregistered gates).
+ *
+ * A fixture whose chain names scripts it does not declare still counts those
+ * tokens; they simply contribute no outgoing edges.
+ */
+export function chainGateTokens(pkg) {
+  const scripts = pkg?.scripts;
+  if (typeof scripts?.check !== "string") return [];
+  const reachable = new Set();
+  const gateRefs = new Map();
+  const stack = scriptReferences(scripts.check);
+  while (stack.length > 0) {
+    const name = stack.pop();
+    if (reachable.has(name)) continue;
+    reachable.add(name);
+    const command = scripts[name];
+    if (typeof command !== "string") continue;
+    const refs = scriptReferences(command);
+    gateRefs.set(
+      name,
+      refs.filter((ref) => GATE_TOKEN_RE.test(ref)),
+    );
+    stack.push(...refs);
+  }
+  return [...reachable].filter(
+    (name) =>
+      GATE_TOKEN_RE.test(name) &&
+      // A group delegates to another reachable gate; a gate that runs its own
+      // script (`node scripts/…`) has no gate references and is a leaf.
+      !(gateRefs.get(name) ?? []).some((ref) => reachable.has(ref)),
+  );
+}
+
+/**
+ * The gate tokens the chain runs; throws when there is no chain to freeze.
+ * (check-audit-freshness shares `chainGateTokens` and reports the missing
+ * chain as a row failure instead of crashing.)
+ */
 export function checkChain(pkg) {
   const script = pkg?.scripts?.check;
   if (typeof script !== "string" || script.trim().length === 0) {
     throw new Error("[check-inspector-freeze] package.json has no `check` script");
   }
-  return new Set(
-    [...script.matchAll(/(?:npm run )?(check:[a-z0-9:-]+|lint)/g)].map(
-      (m) => m[1],
-    ),
-  );
+  return new Set(chainGateTokens(pkg));
 }
 
 /** Collect every ADR body. Handles missing directory gracefully. */

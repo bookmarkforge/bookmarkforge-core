@@ -1,29 +1,41 @@
-# ADR-063 — Gate de presupuestos por feature
+# ADR-063 — Feature budgets gate
 
-- **Estado:** aceptado
-- **Fecha:** 2026-09-21
-- **Decisores:** equipo de BookmarkForge
+- **Status:** accepted
+- **Date:** 2026-09-21
+- **Deciders:** BookmarkForge team
 
-## Contexto
+## Context
 
-El presupuesto global de bundle detecta crecimiento agregado, pero no identifica qué feature introduce el coste. Un nuevo módulo grande podía permanecer por debajo del límite global y aun así degradar una superficie concreta como PDF, editor, base de datos o IA local.
+The global bundle budget detects aggregate growth, but it does not identify
+which feature introduces the cost. A large new module could stay below the
+global limit and still degrade a specific surface such as PDF, the editor,
+the database or local AI.
 
-## Decisión
+## Decision
 
-Se añade `check:feature-budgets` a la cadena de `npm run check`. El gate lee `scripts/feature-budgets.json`, suma los assets emitidos que coinciden con cada feature y falla cuando:
+`check:feature-budgets` is added to the `npm run check` chain. The gate reads
+`scripts/feature-budgets.json`, sums the emitted assets matching each feature
+and fails when:
 
-1. una feature supera su presupuesto de bytes;
-2. una feature declarada desaparece del build;
-3. aparece un asset grande sin clasificación.
+1. a feature exceeds its byte budget;
+2. a declared feature disappears from the build;
+3. a large unclassified asset appears.
 
-Los patrones ignoran el hash de Vite y se aplican sobre `dist/assets`, por lo que el gate detecta tanto regresiones de tamaño como nuevos módulos pesados.
+The patterns ignore Vite's hash and are applied over `dist/assets`, so the gate
+detects both size regressions and new heavy modules.
 
-## Relación con la gobernanza de gates
+## Relation to gate governance
 
-Este gate está registrado para `check-inspector-freeze`. La necesidad que evita es concreta: el crecimiento de una feature no debe ocultarse detrás del presupuesto global. Su funcionamiento es verificable por `scripts/__tests__/check-feature-budgets.test.mjs` y su alta en la cadena queda protegida por `check-inspector-freeze`, siguiendo ADR-028.
+This gate is registered for `check-inspector-freeze`. The need it avoids is
+concrete: a feature's growth must not hide behind the global budget. Its
+behavior is verifiable by `scripts/__tests__/check-feature-budgets.test.mjs` and
+its addition to the chain is protected by `check-inspector-freeze`, following
+ADR-028.
 
-## Consecuencias
+## Consequences
 
-- Cada feature nueva debe añadir un patrón o demostrar que permanece por debajo del umbral de clasificación.
-- Los presupuestos son límites de release, no una orden de reestructuración inmediata.
-- Las actualizaciones de presupuesto requieren revisar el informe de bundle y justificar el cambio en documentación.
+- Every new feature must add a pattern or demonstrate that it stays below the
+  classification threshold.
+- Budgets are release limits, not an order for immediate restructuring.
+- Budget updates require reviewing the bundle report and justifying the change
+  in documentation.

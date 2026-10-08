@@ -42,6 +42,7 @@ import {
   verifyProBoundary,
 } from "./pro-boundary.mjs";
 import { checkReleaseTarget, remediesFor } from "./check-release-target.mjs";
+import { LANDING_CODES, MANUAL_FILES } from "./landing-registry.mjs";
 
 // ---------------------------------------------------------------------------
 // Exclusion policy
@@ -98,70 +99,18 @@ const PUBLIC_DOCS = new Set([
    // recognises the export (see check-audit-freshness.mjs) and reports "not
    // shipped" instead of failing.
    "ADR-064-audit-freshness-gate.md",
-  "manual-usuario.md",
-  "manual-usuario-en.md",
   "index.md",
-  // The full localized user-manual set (30 languages, Markdown + PDF) is user
-  // documentation, not business content: docs/index.md links every one of them,
-  // so they ship together to keep the exported index resolvable.
-  "manual-usuario-ar.md",
-  "manual-usuario-bg.md",
-  "manual-usuario-cs.md",
-  "manual-usuario-da.md",
-  "manual-usuario-de.md",
-  "manual-usuario-el.md",
-  "manual-usuario-fi.md",
-  "manual-usuario-fr.md",
-  "manual-usuario-he.md",
-  "manual-usuario-hi.md",
-  "manual-usuario-hr.md",
-  "manual-usuario-hu.md",
-  "manual-usuario-id.md",
-  "manual-usuario-it.md",
-  "manual-usuario-ja.md",
-  "manual-usuario-ko.md",
-  "manual-usuario-nl.md",
-  "manual-usuario-no.md",
-  "manual-usuario-pl.md",
-  "manual-usuario-pt.md",
-  "manual-usuario-ro.md",
-  "manual-usuario-ru.md",
-  "manual-usuario-sv.md",
-  "manual-usuario-th.md",
-  "manual-usuario-tr.md",
-  "manual-usuario-uk.md",
-  "manual-usuario-vi.md",
-  "manual-usuario-zh.md",
-  "manual-usuario.pdf",
-  "manual-usuario-en.pdf",
-  "manual-usuario-ar.pdf",
-  "manual-usuario-bg.pdf",
-  "manual-usuario-cs.pdf",
-  "manual-usuario-da.pdf",
-  "manual-usuario-de.pdf",
-  "manual-usuario-el.pdf",
-  "manual-usuario-fi.pdf",
-  "manual-usuario-fr.pdf",
-  "manual-usuario-he.pdf",
-  "manual-usuario-hi.pdf",
-  "manual-usuario-hr.pdf",
-  "manual-usuario-hu.pdf",
-  "manual-usuario-id.pdf",
-  "manual-usuario-it.pdf",
-  "manual-usuario-ja.pdf",
-  "manual-usuario-ko.pdf",
-  "manual-usuario-nl.pdf",
-  "manual-usuario-no.pdf",
-  "manual-usuario-pl.pdf",
-  "manual-usuario-pt.pdf",
-  "manual-usuario-ro.pdf",
-  "manual-usuario-ru.pdf",
-  "manual-usuario-sv.pdf",
-  "manual-usuario-th.pdf",
-  "manual-usuario-tr.pdf",
-  "manual-usuario-uk.pdf",
-  "manual-usuario-vi.pdf",
-  "manual-usuario-zh.pdf",
+  // The full localized user-manual set (30 languages, Markdown + PDF) —
+  // user documentation, not business content: docs/index.md links every one
+  // of them, so they ship together to keep the exported index resolvable.
+  // DERIVED from the MANUAL_FILES table in scripts/landing-registry.mjs
+  // (endonym basenames like `manual-de-usuario-es` / `benutzerhandbuch-de` /
+  // `user-manual-ja`), so a renamed or added manual cannot drift out of the
+  // export while this list keeps its old spelling.
+  ...LANDING_CODES.flatMap((code) => [
+    `${MANUAL_FILES[code]}.md`,
+    `${MANUAL_FILES[code]}.pdf`,
+  ]),
 ]);
 
 /**
@@ -252,12 +201,11 @@ const EXCLUDED_FILES = new Set([
   "scripts/public-export/SECURITY.md",
   "scripts/public-export/NOTICE",
   "scripts/public-export/TRADEMARKS.md",
-  "scripts/public-export/manual-usuario.md",
-  "scripts/public-export/manual-usuario-en.md",
-  "scripts/public-export/manual-usuario.pdf",
-  "scripts/public-export/manual-usuario-en.pdf",
-   "scripts/public-export/RELEASE-NOTES-v1.0.0.md",
-   "scripts/public-export/RELEASE-NOTES-v1.0.0.es.md",
+  "scripts/public-export/manual-de-usuario-es.md",
+  "scripts/public-export/user-manual-en.md",
+  "scripts/public-export/manual-de-usuario-es.pdf",
+  "scripts/public-export/user-manual-en.pdf",
+"scripts/public-export/RELEASE-NOTES-v1.0.0.md",
 // Pro tests must not be copied into the public Core tree.
     "src/tests/services/WebRTCSyncService.test.ts",
     "src/tests/services/BackupService.test.ts",
@@ -459,16 +407,32 @@ writeFileSync(
     "",
   ].join("\n"),
 );
-cpSync(join(repoRoot, "scripts", "public-export", "LICENSE"), join(outDir, "LICENSE"));
-cpSync(join(repoRoot, "scripts", "public-export", "README.md"), join(outDir, "README.md"));
-cpSync(join(repoRoot, "scripts", "public-export", "NOTICE"), join(outDir, "NOTICE"));
-cpSync(join(repoRoot, "scripts", "public-export", "TRADEMARKS.md"), join(outDir, "TRADEMARKS.md"));
-cpSync(join(repoRoot, "scripts", "public-export", "manual-usuario.md"), join(outDir, "manual-usuario.md"));
-cpSync(join(repoRoot, "scripts", "public-export", "manual-usuario-en.md"), join(outDir, "manual-usuario-en.md"));
-cpSync(join(repoRoot, "scripts", "public-export", "RELEASE-NOTES-v1.0.0.md"), join(outDir, "RELEASE-NOTES-v1.0.0.md"));
-cpSync(join(repoRoot, "scripts", "public-export", "RELEASE-NOTES-v1.0.0.es.md"), join(outDir, "RELEASE-NOTES-v1.0.0.es.md"));
-cpSync(join(repoRoot, "scripts", "public-export", "manual-usuario.pdf"), join(outDir, "manual-usuario.pdf"));
-cpSync(join(repoRoot, "scripts", "public-export", "manual-usuario-en.pdf"), join(outDir, "manual-usuario-en.pdf"));
+// Public root files copied verbatim. Every entry must exist on disk: when a
+// source is removed from the tree and a copy line survives it (the
+// RELEASE-NOTES-v1.0.0.es.md removal did exactly that), the export used to
+// crash mid-materialization inside CI. The manifest fails closed instead,
+// naming the drifted file before anything is copied.
+const PUBLIC_ROOT_FILES = [
+  "LICENSE",
+  "README.md",
+  "NOTICE",
+  "TRADEMARKS.md",
+  // The es/en manual pair at the export root, DERIVED from the MANUAL_FILES
+  // registry (endonym basenames) so a manual rename cannot orphan these
+  // overlay copies.
+  `${MANUAL_FILES.es}.md`,
+  `${MANUAL_FILES.en}.md`,
+  "RELEASE-NOTES-v1.0.0.md",
+  `${MANUAL_FILES.es}.pdf`,
+  `${MANUAL_FILES.en}.pdf`,
+];
+for (const name of PUBLIC_ROOT_FILES) {
+  const source = join(repoRoot, "scripts", "public-export", name);
+  if (!existsSync(source)) {
+    throw new Error(`[export-public] missing public root file: scripts/public-export/${name}`);
+  }
+  cpSync(source, join(outDir, name));
+}
 mkdirSync(join(outDir, ".github"), { recursive: true });
 writeFileSync(
   join(outDir, ".github", "SECURITY.md"),

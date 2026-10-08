@@ -111,7 +111,7 @@ describe("Dashboard", () => {
   it("H-02: the clipper bookmarklet points to /capture#url= (fragment), not a query string or /api/clipper", async () => {
     // Regression for high-severity finding H-02: the old bookmarklet made
     // POST to a non-existent /api/clipper (dead feature). It must now open
-    // el flujo de captura propio con el payload en el FRAGMENTO
+    // the capture flow itself with the payload in the FRAGMENT
     // (/capture#url=…&title=…&text=…) so the URL is not leaked in the query
     // string (logs/CDN/Referer).
     render(<Dashboard onClose={onClose} />);

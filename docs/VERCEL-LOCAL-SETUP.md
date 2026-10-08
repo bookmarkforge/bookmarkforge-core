@@ -4,7 +4,7 @@ This guide explains how to use Vercel for local development with BookmarkForge.
 
 ## Prerequisites
 
-- Node.js >= 20.19.0
+- Node.js >= 24.17.0
 - Vercel CLI installed (`npm install -g vercel`)
 - Vercel account (free tier works)
 

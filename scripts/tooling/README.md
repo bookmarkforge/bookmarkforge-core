@@ -1,84 +1,85 @@
-# Tooling de calidad
+# Quality Tooling
 
-Esta carpeta contiene ejecutores y utilidades de desarrollo que no forman
-parte del dominio de la aplicación ni de la operación del servidor.
+This folder contains executors and development utilities that are not part of
+the application domain or server operation.
 
-## Lint acotado
+## Bounded Lint
 
-`lint-bounded.mjs` ejecuta la misma configuración flat de ESLint por dominios y
-lotes secuenciales. Evita que `eslint .` acumule todo el grafo del repositorio
-en un único proceso y permite trabajar con un presupuesto de memoria explícito:
+`lint-bounded.mjs` runs the same flat ESLint configuration by domain and
+sequential batches. It prevents `eslint .` from accumulating the entire
+repository graph in a single process and allows working with an explicit
+memory budget:
 
 ```bash
-npm run lint                 # entrada recomendada; usa el ejecutor acotado
-npm run lint:all             # diagnóstico/comprobación monolítica de ESLint
+npm run lint                 # Recommended entry; uses the bounded executor
+npm run lint:all             # Monolithic ESLint diagnostics/checking
 BMF_LINT_HEAP_MB=2048 npm run lint
 BMF_LINT_BATCH_SIZE=80 npm run lint
 ```
 
-El lint acotado falla en el primer lote con errores; no convierte errores en
-warnings ni omite archivos. `lint:all` se conserva como control de paridad y
-para diagnosticar diferencias entre lotes y la ejecución monolítica.
+Bounded lint fails on the first batch with errors; it does not convert
+errors to warnings or skip files. `lint:all` is preserved as a parity
+control and for diagnosing differences between batches and the monolithic
+execution.
 
-## Auditoría de contratos de mocks
+## Mock Contract Audit
 
-`mock-contract-audit.mjs` compara, para cada `vi.mock(spec, factory)` de
-`src/tests`, la forma que devuelve la factoría con lo que los módulos que el
-test carga de verdad importan y usan en posición de valor. Detecta mocks que
-sustituyen parcialmente a su módulo y solo pasan porque la rama que toca el
-miembro ausente nunca se ejercita. Los hallazgos `[dir]` (módulo importado
-directamente por el test) son los candidatos reales; el resto suele ser ruido
-de módulos alcanzables solo por import transitivo.
+`mock-contract-audit.mjs` compares, for each `vi.mock(spec, factory)` in
+`src/tests`, the shape returned by the factory with what the modules that
+the test actually imports and uses at value position. Detects mocks that
+partially substitute their module and only pass because the branch touching
+the absent member is never exercised. `[dir]` findings (modules imported
+directly by the test) are the real candidates; the rest is usually noise
+from modules reachable only by transitive import.
 
 ```bash
 node scripts/tooling/mock-contract-audit.mjs
 MOCK_AUDIT_VERBOSE=1 node scripts/tooling/mock-contract-audit.mjs
-MOCK_AUDIT_STRICT=1 node scripts/tooling/mock-contract-audit.mjs  # sale 1 si hay hallazgos [dir]
+MOCK_AUDIT_STRICT=1 node scripts/tooling/mock-contract-audit.mjs  # exits 1 if [dir] findings exist
 ```
 
-Es un informe, no un gate: no está cableado en `npm run check`.
+It is a report, not a gate: it is not wired into `npm run check`.
 
-## Informe unificado de presupuestos
+## Unified Budget Report
 
-`build-budget-report.mjs` genera un JSON unificado que combina los tres
-perspectivas de presupuesto del proyecto:
+`build-budget-report.mjs` generates a unified JSON combining the three
+project budget perspectives:
 
-- **Estático** (performance-budget): entry static closure, precache total, bundles totales, chunks count
+- **Static** (performance-budget): entry static closure, total precache, total bundles, chunks count
 - **Chunks** (check-chunk-boundaries): entry, unlock (SecurityManager + SecurityConfirmation), mainApp, precache, ort-wasm
-- **Navegador** (performance-budget): firstInteractionMs
+- **Browser** (performance-budget): firstInteractionMs
 
 ```bash
-node scripts/build-budget-report.mjs           # tabla humana
-node scripts/build-budget-report.mjs --json    # JSON a stdout
-node scripts/build-budget-report.mjs --write   # escribe dist/reports/budget-report.json
-npm run build:budget-report                    # alias en package.json
+node scripts/build-budget-report.mjs           # human table
+node scripts/build-budget-report.mjs --json    # JSON to stdout
+node scripts/build-budget-report.mjs --write   # writes dist/reports/budget-report.json
+npm run build:budget-report                    # alias in package.json
 ```
 
-El JSON tiene la forma `{ generated, status, static, chunks, browser }` donde
-cada campo de presupuesto es `{ budget, actual, unit }`. El status es `pass`
-si todos los valores actuales ≤ presupuesto, `fail` si alguno excede, y
-`skip` si dist/ no existe.
+The JSON has the shape `{ generated, status, static, chunks, browser }` where
+each budget field is `{ budget, actual, unit }`. Status is `pass` if all
+actual values ≤ budget, `fail` if any exceed, and `skip` if dist/ does not exist.
 
-## Ruido de logs en tests
+## Log Noise in Tests
 
-El runner acotado usa `--silent=passed-only` por defecto: conserva los
-resúmenes de Vitest y muestra la salida de consola de las pruebas fallidas,
-pero no inunda CI ni el terminal con logs esperados de cada caso exitoso.
+The bounded runner uses `--silent=passed-only` by default: preserves
+Vitest summaries and shows console output from failed tests, but does not
+flood CI or the terminal with expected logs for each passing case.
 
 ```bash
-npm run test:fast                 # salida acotada
-BMF_TEST_LOGS=full npm run test:fast  # diagnóstico completo
+npm run test:fast                 # bounded output
+BMF_TEST_LOGS=full npm run test:fast  # full diagnostics
 ```
 
-La supresión solo afecta a la salida del proceso de Vitest; no desactiva el
-buffer, sinks, telemetría ni las aserciones del logger.
+Suppression only affects the Vitest process output; it does not deactivate
+the buffer, sinks, telemetry, or logger assertions.
 
 
-- `scripts/tooling/`: utilidades de calidad, análisis estático y empaquetado.
-- `scripts/testing/`: ejecutores, perfiles y reportes de pruebas.
-- `scripts/security/`: gates de seguridad y cumplimiento técnico.
-- `scripts/operations/`: despliegue, staging, drills y observabilidad.
+- `scripts/tooling/`: quality utilities, static analysis, and bundling.
+- `scripts/testing/`: executors, profiles, and test reports.
+- `scripts/security/`: security gates and technical compliance.
+- `scripts/operations/`: deployment, staging, drills, and observability.
 
-La migración se realiza por etapas: primero se estabilizan los entrypoints y
-los tests; después se pueden mover módulos internos. Los scripts actuales en
-la raíz siguen siendo entrypoints compatibles durante la transición.
+Migration is done in phases: first stabilize entrypoints and tests; then
+internal modules can be moved. Current scripts at the root remain
+compatible entrypoints during the transition.

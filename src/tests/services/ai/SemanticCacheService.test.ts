@@ -20,6 +20,9 @@ vi.mock("@huggingface/transformers", () => ({
 
 vi.mock("../../../utils/logger", () => ({
   logger: { info: vi.fn(), error: vi.fn(), warn: vi.fn(), debug: vi.fn() },
+  // P1: EncryptionService (directly imported here) redacts every failure
+  // message through this — without it the catch crashes before logging.
+  redactSecrets: vi.fn((message: string) => message),
 }));
 
 vi.mock("../../../services/SecurityVault", () => ({
@@ -756,6 +759,31 @@ describe("SemanticCacheService", () => {
 
       expect(result).toEqual({ content: "r-1", model: "test" });
       expect(elapsed).toBeLessThan(5000);
+    });
+  });
+
+  // ── P1 mock-contract sweep ──────────────────────────────────────────────
+  // This file mocks utils/logger WITHOUT `redactSecrets`, but the directly
+  // imported EncryptionService calls it on every failure path — the log line
+  // crashed before firing and the contract gap stayed invisible.
+  describe("P1 — logger redactSecrets contract (EncryptionService error paths)", () => {
+    it("logs a real decrypt failure through redactSecrets", async () => {
+      const { encryptionService } = await import(
+        "../../../services/EncryptionService"
+      );
+      const { logger } = await import("../../../utils/logger");
+
+      await expect(
+        encryptionService.decryptWithBytes(
+          "not-a-real-ciphertext",
+          new Uint8Array(32),
+        ),
+      ).rejects.toThrow();
+
+      expect(logger.error).toHaveBeenCalledWith(
+        "[EncryptionService] decryptWithBytes failed",
+        expect.objectContaining({ error: expect.any(String) }),
+      );
     });
   });
 });

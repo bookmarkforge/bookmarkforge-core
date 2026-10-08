@@ -303,15 +303,17 @@ export function validateLegalTerms({ pages }) {
 }
 
 /** The expected visible language-link href per language (nav/footer of
- *  the landings): the target landing URL carrying the ?lang= preference
- *  parameter. Registry-derived; re-exported under the historical name. */
+ *  the landings): the target landing URL as a clean path (`/es/`, `/` for
+ *  en) — the `?lang=` query form was deliberately dropped from visible
+ *  links (f83eb3a). Registry-derived; re-exported under the historical
+ *  name. */
 export const LANG_LINK_HREFS = REGISTRY_LINK_HREFS;
 
 /**
  * Validate the visible language links (nav + footer) of the 30 landings:
  * every one of the languages must be linked, each link must carry BOTH
  * lang and hreflang attributes with the same value, must point at the
- * right landing URL with ?lang= (the preference mechanism), and each page
+ * right landing URL (clean path), and each page
  * must link its OWN version correctly. `pages` maps a language code to
  * the raw page content. Pure function — returns failure strings.
  */
@@ -1013,7 +1015,7 @@ export function runCheck() {
   }
 
   // Landing language links (nav/footer): lang + hreflang attributes,
-  // correct ?lang= targets, and each page links its own version.
+  // correct clean-path targets, and each page links its own version.
   const landingLangPages = {};
   for (const cfg of LANDING_PAGES) {
     landingLangPages[cfg.lang] = readOrFail(cfg.file, failures);
@@ -1023,7 +1025,7 @@ export function runCheck() {
     failures.push(...langLinkFailures);
   } else {
     console.log(
-      `${TAG} ok  landing language links (lang+hreflang on all 6, ?lang= targets, own version linked) in ${Object.keys(landingLangPages).length} languages`,
+      `${TAG} ok  landing language links (lang+hreflang on all 6, clean-path targets, own version linked) in ${Object.keys(landingLangPages).length} languages`,
     );
   }
 

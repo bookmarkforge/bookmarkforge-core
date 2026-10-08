@@ -19,7 +19,7 @@
  *   2  dist/ missing (can't measure, not a budget failure)
  */
 
-import { existsSync, readFileSync, mkdirSync, writeFileSync, statSync, readdirSync } from "node:fs";
+import { readFileSync, mkdirSync, writeFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 // ---------------------------------------------------------------------------
@@ -49,10 +49,15 @@ function readFileSafe(p) {
 
 function fileSize(p) {
   try {
-    return statSync(p).size;
+    return readFileSync(p).byteLength;
   } catch {
     return null;
   }
+}
+
+function readDirSafe(p) {
+  try { return readdirSync(p, { withFileTypes: true }); }
+  catch (error) { if (error?.code === "ENOENT") return null; throw error; }
 }
 
 // ---------------------------------------------------------------------------
@@ -69,14 +74,14 @@ function readPerfBudget() {
 }
 
 function entryStaticBytes() {
-  if (!existsSync(ASSETS)) return null;
-  const files = readdirSync(ASSETS).filter((f) => /^index-.*\.js$/.test(f));
+  const entries = readDirSafe(ASSETS);
+  if (!entries) return null;
+  const files = entries.filter((entry) => entry.isFile()).map((entry) => entry.name).filter((f) => /^index-.*\.js$/.test(f));
   if (files.length === 0) return null;
   return files.reduce((s, f) => s + fileSize(join(ASSETS, f)), 0);
 }
 
 function precacheTotalBytes() {
-  if (!existsSync(join(DIST, "sw.js"))) return null;
   const raw = readFileSafe(join(DIST, "sw.js"));
   const m = raw?.match(/"assets\/(?!assets\/)((?!entry-|mainApp-|unlock-)[^"]+)"/g);
   if (!m) return null;
@@ -93,8 +98,9 @@ function precacheTotalBytes() {
 // 2. Chunk-boundary budget sizes
 // ---------------------------------------------------------------------------
 function chunkBytes(pattern) {
-  if (!existsSync(ASSETS)) return null;
-  const files = readdirSync(ASSETS).filter((f) => pattern.test(f));
+  const entries = readDirSafe(ASSETS);
+  if (!entries) return null;
+  const files = entries.filter((entry) => entry.isFile()).map((entry) => entry.name).filter((f) => pattern.test(f));
   if (files.length === 0) return 0;
   return files.reduce((s, f) => s + fileSize(join(ASSETS, f)), 0);
 }
@@ -117,15 +123,17 @@ const BUNDLE_TOTAL_MB = 40;
 const BUNDLE_MAX_CHUNKS = 400;
 
 function bundleTotalMB() {
-  if (!existsSync(ASSETS)) return null;
-  const files = readdirSync(ASSETS).filter((f) => /\.(js|css)$/.test(f));
+  const entries = readDirSafe(ASSETS);
+  if (!entries) return null;
+  const files = entries.filter((entry) => entry.isFile()).map((entry) => entry.name).filter((f) => /\.(js|css)$/.test(f));
   const total = files.reduce((s, f) => s + fileSize(join(ASSETS, f)), 0);
   return +(total / (1024 * 1024)).toFixed(2);
 }
 
 function bundleChunkCount() {
-  if (!existsSync(ASSETS)) return null;
-  return readdirSync(ASSETS).filter((f) => /\.(js|css)$/.test(f)).length;
+  const entries = readDirSafe(ASSETS);
+  if (!entries) return null;
+  return entries.filter((entry) => entry.isFile() && /\.(js|css)$/.test(entry.name)).length;
 }
 
 // ---------------------------------------------------------------------------
@@ -149,7 +157,7 @@ function browserActual() {
 // ---------------------------------------------------------------------------
 function buildReport() {
   const perf = readPerfBudget();
-  const distPresent = existsSync(DIST);
+  const distPresent = readDirSafe(DIST) !== null;
 
   // Static budgets
   const entryActual = entryStaticBytes();

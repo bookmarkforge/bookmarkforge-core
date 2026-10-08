@@ -55,7 +55,7 @@ jobs:
           host="${STAGING_URL#https://}"; host="${host%%/*}"
           [[ "$host" != *:* ]] || { echo 'staging_url must not include a port' >&2; exit 1; }
           case "$host" in
-            bookmarkforge.com|www.bookmarkforge.com|api.bookmarkforge.com|signal.bookmarkforge.com)
+            bookmarkforgeapp.com|www.bookmarkforgeapp.com|api.bookmarkforgeapp.com|signal.bookmarkforgeapp.com)
               echo 'Refusing production target' >&2; exit 1 ;;
           esac
           [[ "$host" == *staging* || "$host" == *-stage* || "$host" == *.test.* ]] || {
@@ -98,7 +98,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
 
       - name: Install dependencies for staging verification

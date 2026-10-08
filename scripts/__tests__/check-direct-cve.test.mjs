@@ -271,8 +271,11 @@ describe("direct-CVE gate CLI", () => {
     const dir = fixture({ pkg: PKG, lock: LOCK, audit: auditWith([["js-yaml", JS_YAML_ENTRY]]) });
     const args = ["--include-dev", "--audit-json", "audit.json", "--offline", "--report", "report.md", "--step-summary"];
 
-    // No summary destination at all (a local run).
-    const local = run(dir, args);
+    // No summary destination at all (a local run). The variable is cleared
+    // explicitly instead of inherited: GitHub Actions sets GITHUB_STEP_SUMMARY
+    // on every step, so an inherited environment would make this branch
+    // unreachable in CI — the exact shape this assertion exists to protect.
+    const local = run(dir, args, { GITHUB_STEP_SUMMARY: "" });
     expect(local.status).toBe(0);
     expect(local.output).toContain("GITHUB_STEP_SUMMARY is not set");
     expect(local.output).not.toContain("(+ job summary)");

@@ -1,200 +1,195 @@
-# Guion de prueba manual — Sync P2P iPhone ↔ escritorio (pre-lanzamiento)
+# Manual test script — P2P Sync iPhone ↔ desktop (pre-launch)
 
-> **Objetivo:** certificar en dispositivos reales el flujo que ninguna batería
-> automatizada puede cubrir del todo: emparejamiento por doble QR con cámara
-> física, sync real entre dos bóvedas en la misma red y comportamiento offline.
-> La lógica (replicación de colecciones, reconciliación LWW, recuperación tras
-> interrupción) ya está automatizada en `tests/e2e/vault-sync-real.spec.ts`;
-> aquí se prueba lo que solo existe con hardware real: cámaras, Wi-Fi real,
-> avión real y Safari iOS real.
+> **Objective:** certify on real devices the flow that no automated battery can
+> fully cover: pairing by double QR with a physical camera, real sync between
+> two vaults on the same network, and offline behavior.
+> The logic (collection replication, LWW reconciliation, recovery after
+> interruption) is already automated in `tests/e2e/vault-sync-real.spec.ts`;
+> what is tested here only exists with real hardware: cameras, real Wi-Fi,
+> real airplane mode and real iOS Safari.
 >
-> - **Duración:** ~40 min con ambos dispositivos a mano.
-> - **Necesitas:** un escritorio/portátil **con cámara web** (ambos roles
->     escanean un QR exactamente una vez) + un iPhone con iOS 16+, ambos con
->     la app en HTTPS (producción o staging), papel para notas.
-> - **Importante:** el P2P de BookmarkForge es **air-gapped por diseño**
->     (`iceServers: []` — sin STUN/TURN): los dos dispositivos deben estar en
->     la **misma red local**. Si no conectan, el 90% de las veces es la red,
->     no la app (sección 6).
-> - **Relación:** complementa el [guion iPhone](ios-manual-test-script.md) y
->     el ítem 16 de [launch-checklist.md](launch-checklist.md).
+> - **Duration:** ~40 min with both devices at hand.
+> - **You need:** a desktop/laptop **with a webcam** (both roles scan a QR exactly once) + an iPhone with iOS 16+, both with the app on HTTPS (production or staging), paper for notes.
+> - **Important:** BookmarkForge's P2P is **air-gapped by design**
+>     (`iceServers: []` — no STUN/TURN): both devices must be on the
+>     **same local network**. If they do not connect, 90% of the time it is the
+>     network, not the app (section 6).
+> - **Relationship:** complements the [iPhone script](ios-manual-test-script.md) and
+>     item 16 of [launch-checklist.md](launch-checklist.md).
 
 ---
 
-## Preparación (5 min)
+## Preparation (5 min)
 
-1. [ ] Conecta el iPhone y el escritorio a la **misma red Wi-Fi**.
-       Evita redes de "invitados": suelen tener *client isolation* y bloquean
-       el tráfico entre dispositivos (el sync no podrá conectar y NO es un bug).
-2. [ ] Abre la app en ambos dispositivos (HTTPS obligatorio: cámara y WebRTC
-       requieren contexto seguro) y desbloquea cada bóveda.
-3. [ ] En el escritorio, deja el portátil **sin cable de red** si quieres
-       validar el modo 100% offline (sección 5). Wi-Fi puede seguir conectado:
-       el sync nunca sale de la LAN de todas formas.
-4. [ ] En el iPhone: ajustes de Safari → cámara permitida para el dominio
-       (te lo pedirá al escanear; acéptalo).
-5. [ ] Datos de prueba reconocibles: crea en el ESCRITORIO 2 marcadores y 1
-       documento con la palabra **DESK** en el título; en el iPhone 2 marcadores
-       y 1 documento con **PHONE**. Anota los títulos exactos en papel.
-6. [ ] Mantén **ambas pantallas encendidas** durante todo el emparejamiento
-       (si el iPhone bloquea o Safari va a segundo plano, la conexión ICE se
-       corta y hay que reintentar desde el paso 1).
+1. [ ] Connect the iPhone and the desktop to the **same Wi-Fi network**.
+       Avoid "guest" networks: they usually have *client isolation* and block
+       traffic between devices (sync will not connect and this is NOT a bug).
+2. [ ] Open the app on both devices (HTTPS mandatory: camera and WebRTC
+       require a secure context) and unlock each vault.
+3. [ ] On the desktop, leave the laptop **unplugged from the network** if you
+       want to validate the 100% offline mode (section 5). Wi-Fi can stay
+       connected: sync never leaves the LAN anyway.
+4. [ ] On the iPhone: Safari settings → camera allowed for the domain
+       (it will ask you when scanning; accept it).
+5. [ ] Recognizable test data: create on the DESKTOP 2 bookmarks and 1
+       document with the word **DESK** in the title; on the iPhone 2 bookmarks
+       and 1 document with **PHONE**. Write the exact titles on paper.
+6. [ ] Keep **both screens on** for the whole pairing
+       (if the iPhone locks or Safari goes to the background, the ICE
+       connection drops and you must retry from step 1).
 
 ---
 
-## 1. Emparejamiento por QR (escritorio = anfitrión) (10 min)
+## 1. QR pairing (desktop = host) (10 min)
 
-1. [ ] Escritorio: Dashboard → tarjeta **"Secure P2P Sync"** → botón
-       **"This is the host"**. Tras unos segundos aparece el QR (paso 1) sobre
-       fondo blanco. _Captura._
-2. [ ] iPhone: misma tarjeta → **"Link this device"** → Safari pedirá cámara.
-       Acepta y apunta al QR del escritorio.
-3. [ ] El iPhone muestra ahora **su QR de respuesta** ("Step 2: Show this QR
+1. [ ] Desktop: Dashboard → **"Secure P2P Sync"** card → **"This is the host"** button. After a few seconds the QR appears (step 1) on a white background. _Capture._
+2. [ ] iPhone: same card → **"Link this device"** → Safari will ask for the camera.
+       Accept and point it at the desktop's QR.
+3. [ ] The iPhone now shows **its response QR** ("Step 2: Show this QR
        to your main device camera").
-4. [ ] Escritorio: pulsa **"Step 2: Scan answer"** y apunta la webcam al
-       iPhone. La cámara del escritorio debe leer el QR del teléfono (ajusta
-       distancia/brillo si tarda más de ~15 s).
-5. [ ] Ambos lados pasan por **"Syncing vaults..."** con barra de progreso y
-       terminan en **"Sync Successful!"** / "Both devices are up to date."
-       _Captura del estado final en ambos._
-6. [ ] **Verifica la convergencia:** en el iPhone deben aparecer los títulos
-       con **DESK**; en el escritorio los de **PHONE** (marcadores Y
-       documentos). Los cuentas en voz alta contra tu papel.
+4. [ ] Desktop: press **"Step 2: Scan answer"** and point the webcam at the
+       iPhone. The desktop's camera must read the phone's QR (adjust
+       distance/brightness if it takes more than ~15 s).
+5. [ ] Both sides go through **"Syncing vaults..."** with a progress bar and
+       finish at **"Sync Successful!"** / "Both devices are up to date."
+       _Capture of the final state on both._
+6. [ ] **Verify convergence:** on the iPhone the titles with **DESK** must
+       appear; on the desktop the ones with **PHONE** (bookmarks AND
+       documents). Count them out loud against your paper.
 
-**✅ Criterio de éxito:** ambos lados llegan a "Sync Successful!" y cada
-dispositivo ve los 4 elementos del otro.
-
----
-
-## 2. Roles invertidos (iPhone = anfitrión) (5 min)
-
-1. [ ] Cierra el modal en ambos dispositivos (la desconexión es automática).
-2. [ ] Repite el emparejamiento con **roles al revés**: el iPhone como
-       "This is the host" y el escritorio como "Link this device".
-3. [ ] De nuevo: doble QR, progreso, "Sync Successful!" y convergencia
-       (usa un marcador nuevo **SWAP** en cada lado para verificar).
-
-**✅ Criterio de éxito:** el flujo funciona igual en ambas direcciones — el
-rol no es privilegio, es solo quién genera el primer QR.
+**✅ Success criterion:** both sides reach "Sync Successful!" and each
+device sees the other's 4 items.
 
 ---
 
-## 3. Sync incremental (5 min)
+## 2. Reversed roles (iPhone = host) (5 min)
 
-1. [ ] Con la sesión aún conectada (o repitiendo el emparejamiento, ~1 min):
-       crea un marcador nuevo en el iPhone (**INC1**) mientras la barra aún
-       puede sincronizar, o crea ANTES y empareja después — ambos caminos
-       deben converger.
-2. [ ] Comprueba que **INC1** aparece en el escritorio y **INC2** (creado en
-       escritorio) aparece en el iPhone.
-3. [ ] Edita en el escritorio la descripción de un marcador **DESK** y
-       verifica que el cambio llega al iPhone tras el siguiente emparejamiento.
+1. [ ] Close the modal on both devices (the disconnect is automatic).
+2. [ ] Repeat the pairing with **roles reversed**: the iPhone as
+       "This is the host" and the desktop as "Link this device".
+3. [ ] Again: double QR, progress, "Sync Successful!" and convergence
+       (use a new **SWAP** bookmark on each side to verify it).
 
-**✅ Criterio de éxito:** los cambios nuevos viajan en la siguiente sesión sin
-crear duplicados (mismo título = 1 fila, no 2).
+**✅ Success criterion:** the flow works the same in both directions — the
+role is not a privilege, it is only who generates the first QR.
 
 ---
 
-## 4. Ediciones concurrentes y resolución de conflictos (8 min)
+## 3. Incremental sync (5 min)
 
-> La reconciliación es **last-writer-wins por timestamp**: la versión con
-> modificación MÁS RECIENTE gana, en ambos dispositivos. Este bloque verifica
-> que sea determinista y sin duplicados.
+1. [ ] With the session still connected (or repeating the pairing, ~1 min):
+       create a new bookmark on the iPhone (**INC1**) while the bar can still
+       sync, or create it BEFORE and pair after — both paths must converge.
+2. [ ] Check that **INC1** appears on the desktop and **INC2** (created on the
+       desktop) appears on the iPhone.
+3. [ ] On the desktop edit the description of a **DESK** bookmark and
+       verify the change reaches the iPhone after the next pairing.
 
-1. [ ] Antes de conectar: edita el MISMO marcador en ambos dispositivos
-       (título distinto en cada uno: **WINS-DESK** en escritorio,
-       **WINS-PHONE** en iPhone). Deja pasar **2-3 minutos** entre las dos
-       ediciones para que los timestamps no sean casi simultáneos.
-2. [ ] Empareja y espera "Sync Successful!".
-3. [ ] Resultado esperado: **ambos** dispositivos muestran la edición más
-       reciente (si editaste WINS-PHONE después, ambos muestran WINS-PHONE).
-       _Anota cuál ganó y en qué orden editaste — debe coincidir._
-4. [ ] **Sin duplicados:** el marcador conflictivo aparece UNA sola vez en
-       cada bóveda (ni fusiones raras ni filas gemelas).
-5. [ ] **Creación simultánea del mismo título:** crea en ambos lados un
-       marcador con título idéntico (p. ej. **DUPTEST**) antes de conectar.
-       Tras el sync: una sola entrada (deduplicación por id/operación), no dos.
-6. [ ] Verifica que el perdedor del conflicto no corrompió nada más: los
-       títulos DESK/PHONE/INC siguen íntegros en ambos lados.
-
-**✅ Criterio de éxito:** LWW determinista (la edición más nueva gana en ambos),
-sin duplicados y sin daños colaterales.
+**✅ Success criterion:** new changes travel in the next session without
+creating duplicates (same title = 1 row, not 2).
 
 ---
 
-## 5. Offline real / air-gapped (7 min)
+## 4. Concurrent edits and conflict resolution (8 min)
 
-> La promesa del producto: los datos **nunca salen de tu red**. Aquí se demuestra.
+> Reconciliation is **last-writer-wins by timestamp**: the version with the
+> MOST RECENT modification wins, on both devices. This block verifies that
+> it is deterministic and duplicate-free.
 
-1. [ ] **Modo avión total en el iPhone** (Wi-Fi OFF también)… pero entonces no
-       hay LAN: este paso verifica lo contrario — que NO necesita internet:
-       con el router **desconectado de internet** (o el portátil sin cable y
-       el móvil con Wi-Fi al router sin WAN), empareja y sincroniza.
-2. [ ] El sync debe completar igual que en la sección 1 (la app no debe
-       mostrar errores de red ni bloquearse por no haber internet).
-3. [ ] **Corte a mitad de sync:** durante "Syncing vaults..." (con una bóveda
-       grande para que dure), fuerza el cierre del modal en el escritorio a
-       mitad de la barra. Reabre y re-empareja: debe completar sin duplicados
-       ni corrupción (la e2e ya cubre la recuperación tras interrupción;
-       aquí se confirma en hardware real).
-4. [ ] **Safari en segundo plano:** con el emparejamiento a medias, envía el
-       iPhone a segundo plano 10 s y vuelve. Comportamiento esperado: error
-       visible de conexión o reintentos limpios — nunca un estado "completado"
-       falso ni un cuelgue silencioso. _Captura si hay error._
-5. [ ] Verifica tras cada paso que ambas bóvedas siguen desbloqueables y
-       con sus datos intactos.
+1. [ ] Before connecting: edit the SAME bookmark on both devices
+       (a different title on each: **WINS-DESK** on desktop,
+       **WINS-PHONE** on iPhone). Leave **2-3 minutes** between the two
+       edits so the timestamps are not almost simultaneous.
+2. [ ] Pair and wait for "Sync Successful!".
+3. [ ] Expected result: **both** devices show the most recent
+       edit (if you edited WINS-PHONE last, both show WINS-PHONE).
+       _Note which one won and in what order you edited — they must match._
+4. [ ] **No duplicates:** the conflicting bookmark appears only ONCE in
+       each vault (neither odd merges nor twin rows).
+5. [ ] **Simultaneous creation of the same title:** create on both sides a
+       bookmark with an identical title (e.g. **DUPTEST**) before connecting.
+       After sync: a single entry (deduplication by id/operation), not two.
+6. [ ] Verify that the conflict loser did not corrupt anything else: the
+       DESK/PHONE/INC titles remain intact on both sides.
 
-**✅ Criterio de éxito:** sync completo SIN internet; interrupciones degradan
-con error visible y se recuperan re-emparejando.
-
----
-
-## 6. Límites de red: lo que NO debe conectar (5 min)
-
-> Privacidad por diseño: fuera de la LAN, el sync no existe.
-
-1. [ ] iPhone en **datos móviles** (Wi-Fi OFF) + escritorio en su red:
-       intenta emparejar. Tras el QR debe quedarse en "connecting" y acabar en
-       error/timeout visible — **nunca** completar. _Captura del error._
-2. [ ] iPhone en una **red de invitados** distinta (si tienes una) con el
-       escritorio en la principal: mismo resultado esperado (no conecta).
-3. [ ] Restaura el iPhone a la red correcta y empareja de nuevo: debe volver
-       a funcionar (el fallo anterior no dejó estado roto).
-
-**✅ Criterio de éxito:** redes distintas = no hay conexión (y hay error
-visible, no cuelgue); volver a la LAN = funciona.
+**✅ Success criterion:** deterministic LWW (the newest edit wins on both),
+no duplicates and no collateral damage.
 
 ---
 
-## 7. Particularidades de iOS que vigilar (hallazgos, no bloqueantes siempre)
+## 5. Real offline / air-gapped (7 min)
 
-- **Banner "WebRTC is not supported"** en el modal en lugar del selector de
-  roles: si aparece en tu iOS, es hallazgo **bloqueante** (anota versión de
-  iOS) — el sync P2P no funcionará para usuarios de iPhone.
-- **Cámara dentro de la PWA instalada:** iOS es restrictivo con getUserMedia
-  en modo standalone. Si el escaneo falla en la PWA pero funciona en Safari,
-  anótalo: la documentación de usuario debe decir "empareja siempre desde
+> The product's promise: data **never leaves your network**. Here it is proven.
+
+1. [ ] **Full airplane mode on the iPhone** (Wi-Fi OFF too)… but then there is
+       no LAN: this step verifies the opposite — that it does NOT need internet:
+       with the router **disconnected from the internet** (or the laptop
+       unplugged and the phone on Wi-Fi to a router without WAN), pair and sync.
+2. [ ] Sync must complete the same as in section 1 (the app must not
+       show network errors or block for lack of internet).
+3. [ ] **Cut mid-sync:** during "Syncing vaults..." (with a large vault so it
+       lasts), force the modal closed on the desktop halfway through the bar.
+       Reopen and re-pair: it must complete without duplicates
+       nor corruption (the e2e already covers recovery after interruption;
+       here it is confirmed on real hardware).
+4. [ ] **Safari in the background:** with pairing half done, send the
+       iPhone to the background for 10 s and come back. Expected behavior: a
+       visible connection error or clean retries — never a false "completed"
+       state nor a silent hang. _Capture if there is an error._
+5. [ ] After each step verify that both vaults remain unlockable and
+       with their data intact.
+
+**✅ Success criterion:** full sync WITHOUT internet; interruptions degrade
+with a visible error and recover by re-pairing.
+
+---
+
+## 6. Network limits: what must NOT connect (5 min)
+
+> Privacy by design: outside the LAN, sync does not exist.
+
+1. [ ] iPhone on **mobile data** (Wi-Fi OFF) + desktop on its network:
+       try to pair. After the QR it must stay at "connecting" and end in a
+       visible error/timeout — it must **never** complete. _Capture of the error._
+2. [ ] iPhone on a **different guest network** (if you have one) with the
+       desktop on the main one: same expected result (it does not connect).
+3. [ ] Restore the iPhone to the correct network and pair again: it must work
+       again (the earlier failure left no broken state).
+
+**✅ Success criterion:** different networks = no connection (and a visible
+error, not a hang); back on the LAN = it works.
+
+---
+
+## 7. iOS particularities to watch (findings, not always blocking)
+
+- **"WebRTC is not supported" banner** in the modal instead of the role
+  selector: if it appears on your iOS, it is a **blocking** finding (note the
+  iOS version) — P2P sync will not work for iPhone users.
+- **Camera inside the installed PWA:** iOS is restrictive with getUserMedia
+  in standalone mode. If scanning fails in the PWA but works in Safari,
+  note it: the user documentation must say "always pair from
   Safari".
-- **Bloqueo de pantalla** a mitad de emparejamiento: el ICE se corta. La app
-  debe mostrar error y permitir reintentar (verificado en 5.4).
-- **QR que no lee la webcam del escritorio:** baja el brillo del iPhone o
-  aléjalo — es óptica, no software, si el mismo QR se lee con otra cámara.
+- **Screen lock** mid-pairing: ICE is cut. The app must show an error and
+  allow a retry (verified in 5.4).
+- **QR the desktop webcam cannot read:** lower the iPhone's brightness or move
+  it away — it is optics, not software, if the same QR reads with another camera.
 
 ---
 
-## Registro de resultados
+## Results log
 
-| Sección | Resultado (OK/FALLO/N-A) | Evidencia (captura/nota) | Fecha |
+| Section | Result (OK/FAIL/N-A) | Evidence (screenshot/note) | Date |
 |---|---|---|---|
-| 1. Emparejamiento QR (desk host) | | | |
-| 2. Roles invertidos (iPhone host) | | | |
-| 3. Sync incremental | | | |
-| 4. Conflictos LWW / deduplicación | | | |
-| 5. Offline real + cortes | | | |
-| 6. Límites de red (no conectar) | | | |
+| 1. QR pairing (desk host) | | | |
+| 2. Reversed roles (iPhone host) | | | |
+| 3. Incremental sync | | | |
+| 4. LWW conflicts / deduplication | | | |
+| 5. Real offline + cuts | | | |
+| 6. Network limits (must not connect) | | | |
 
-**Criterio de cierre:** las 6 filas en OK = sync P2P certificado para
-anunciar. FALLO en 1-2 = bloqueante del anuncio de sync (el resto del
-lanzamiento puede seguir); FALLO en 5 = bloqueante de reputación (revisar
-ANTES de lanzar cualquier mención de "air-gapped"); FALLO en 4 o 6 =
-bloqueante si implica pérdida o duplicación de datos del usuario.
+**Closure criterion:** all 6 rows OK = P2P sync certified to announce.
+FAIL in 1-2 = blocks the sync announcement (the rest of the launch can
+proceed); FAIL in 5 = reputation blocker (review BEFORE launching any mention
+of "air-gapped"); FAIL in 4 or 6 = blocking if it implies loss or
+duplication of user data.

@@ -2,17 +2,17 @@
   "lang": "es",
   "langName": "Español",
   "dir": "ltr",
-  "canonical": "https://bookmarkforge.com/es/",
+  "canonical": "https://bookmarkforgeapp.com/es/",
   "ogLocale": "es_ES",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge — Todo se queda en tu ordenador. Paga una vez.",
-  "description": "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. 59 dólares una vez. Gratis: 1.000 marcadores.",
+  "description": "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. 59 dólares una vez. Gratis: 2.500 marcadores.",
   "ogTitle": "BookmarkForge — Todo se queda en tu ordenador. Paga una vez.",
-  "ogDescription": "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. 59 dólares una vez. Gratis: 1.000 marcadores.",
-  "ogImage": "https://bookmarkforge.com/og-image-es.png",
+  "ogDescription": "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. 59 dólares una vez. Gratis: 2.500 marcadores.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image-es.png",
   "twitterTitle": "BookmarkForge — Todo se queda en tu ordenador. Paga una vez.",
-  "twitterDescription": "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. 59 dólares una vez. Gratis: 1.000 marcadores.",
-  "twitterImage": "https://bookmarkforge.com/og-image-es.png",
+  "twitterDescription": "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. 59 dólares una vez. Gratis: 2.500 marcadores.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image-es.png",
   "skipLink": "Saltar al contenido principal",
   "navBrandAria": "BookmarkForge inicio",
   "navAriaLabel": "Navegación principal",
@@ -177,7 +177,7 @@
       },
       {
         "title": "Sincroniza entre tus propios dispositivos",
-        "text": "Tus dispositivos se hablan directamente — sin servidor en medio y con todo cifrado. Emparéjalos escaneando un código QR. Hasta 3 dispositivos. Requiere Pro."
+        "text": "Tus dispositivos se hablan directamente — sin servidor en medio y con todo cifrado. Emparéjalos escaneando un código QR. Hasta 5 dispositivos. Requiere Pro."
       },
       {
         "title": "Copias de seguridad que son tuyas",
@@ -287,13 +287,13 @@
   "pricing": {
     "id": "precios",
     "title": "Precios simples y justos — Sin suscripciones",
-    "subtitle": "1.000 marcadores gratis para siempre. Pro es una licencia Lifetime para v1 — paga una vez, tuya para siempre. Incluye todas las v1.x y 12 meses de novedades. Seguridad para siempre. Sin cuotas mensuales.",
+    "subtitle": "2.500 marcadores gratis para siempre. Pro es una licencia Lifetime para v1 — paga una vez, tuya para siempre. Incluye todas las v1.x y 12 meses de novedades. Seguridad para siempre. Sin cuotas mensuales.",
     "plans": [
       {
         "name": "Gratis",
         "price": "$ 0",
         "period": "/para siempre",
-        "description": "Gratis para siempre: 1.000 marcadores y la búsqueda inteligente que otros cobran cada año. Al llegar a 1.000 tu bóveda sigue entera: leer, buscar y exportar nunca se detienen; solo se pausan los guardados nuevos.",
+        "description": "Gratis para siempre: 2.500 marcadores y la búsqueda inteligente que otros cobran cada año. Al llegar a 2.500 tu bóveda sigue entera: leer, buscar y exportar nunca se detienen; solo se pausan los guardados nuevos.",
         "features": [
           {
             "included": true,
@@ -301,7 +301,7 @@
           },
           {
             "included": true,
-            "text": "1.000 marcadores, notas y documentos"
+            "text": "2.500 marcadores, notas y documentos"
           },
           {
             "included": true,
@@ -369,7 +369,7 @@
           },
           {
             "included": true,
-            "text": "3 devices · P2P sync across 3 devices"
+            "text": "5 devices · P2P sync across 5 devices"
           },
           {
             "included": true,
@@ -405,7 +405,7 @@
           }
         ],
         "cta": "Get Pro $59 Early Bird",
-        "ctaHref": "/buy-pro",
+        "ctaHref": "https://whop.com/checkout/plan_XU1GaWhoYhoDh",
         "ctaClass": "btn-primary",
         "priceWas": "$79",
         "priceSub": "luego $79 regular",
@@ -420,7 +420,7 @@
     "items": [
       {
         "question": "¿El plan Gratis es realmente gratis para siempre?",
-        "answer": "Sí. Sin prueba ni suscripción. Incluye 1.000 marcadores, búsqueda completa y semántica, grafo de conocimiento e IA con tu propia clave API (pagas al proveedor)."
+        "answer": "Sí. Sin prueba ni suscripción. Incluye 2.500 marcadores, búsqueda completa y semántica, grafo de conocimiento e IA con tu propia clave API (pagas al proveedor)."
       },
       {
         "question": "¿Qué significa \"Lifetime de v1\" en Pro?",
@@ -436,7 +436,7 @@
       },
       {
         "question": "Soporte — ¿qué tan rápido responden?",
-        "answer": "Gratis: ayuda comunitaria vía <a href=\"/help\">Centro de Ayuda</a> + GitHub Discussions (mejor esfuerzo). Pro: 48h laborables por email. : 24h prioritario + cola beta. La bóveda está cifrada — nunca te pedimos contraseña ni frase. Ver <a href=\"/help#sla\">SLA</a>."
+        "answer": "Gratis: ayuda comunitaria vía <a href=\"/help\">Centro de Ayuda</a> + GitHub Discussions (mejor esfuerzo). Pro: 48h laborables por email. La bóveda está cifrada — nunca te pedimos contraseña ni frase. Ver <a href=\"/help#sla\">SLA</a>."
       },
       {
         "question": "¿Qué pasa si olvido la contraseña de mi bóveda?",
@@ -449,7 +449,7 @@
     "text": "Únete a miles de investigadores, desarrolladores y estudiantes que confían en BookmarkForge como su segundo cerebro.",
     "ctaPrimary": "Abrir la App Gratis",
     "ctaSecondary": "Pasar a Pro",
-    "note": "Sin necesidad de cuenta. Funciona al instante en tu navegador. Nivel gratis: 1.000 marcadores."
+    "note": "Sin necesidad de cuenta. Funciona al instante en tu navegador. Nivel gratis: 2.500 marcadores."
   },
   "footer": {
     "brand": "Tu bóveda de conocimiento privada con IA. 100% local.",
@@ -498,20 +498,20 @@
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
-    "websiteDescription": "Tu bóveda de conocimiento privada con IA. 100% local. La alternativa privada a Pocket. Gratis: 1.000 marcadores.",
+    "websiteDescription": "Tu bóveda de conocimiento privada con IA. 100% local. La alternativa privada a Pocket. Gratis: 2.500 marcadores.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforge.com/",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforge.com/es/",
+    "softwareUrl": "https://bookmarkforgeapp.com/es/",
     "offers": [
       {
         "name": "Gratis",
         "price": "0",
         "currency": "USD",
-        "description": "1,000 bookmarks. Forever free."
+        "description": "2,500 bookmarks. Forever free."
       },
       {
         "name": "Pro Lifetime v1 — Early Bird",
@@ -546,7 +546,7 @@
     "faq": [
       {
         "question": "¿El plan Gratis es realmente gratis para siempre?",
-        "answer": "Sí. Sin prueba ni suscripción. Incluye 1.000 marcadores, búsqueda completa y semántica, grafo de conocimiento e IA con tu propia clave API (pagas al proveedor)."
+        "answer": "Sí. Sin prueba ni suscripción. Incluye 2.500 marcadores, búsqueda completa y semántica, grafo de conocimiento e IA con tu propia clave API (pagas al proveedor)."
       },
       {
         "question": "¿Qué significa \"Lifetime de v1\" en Pro?",
@@ -562,7 +562,7 @@
       },
       {
         "question": "Soporte — ¿qué tan rápido responden?",
-        "answer": "Gratis: ayuda comunitaria vía Centro de Ayuda + GitHub Discussions (mejor esfuerzo). Pro: 48h laborables por email. : 24h prioritario + cola beta. La bóveda está cifrada — nunca te pedimos contraseña ni frase. Ver SLA."
+        "answer": "Gratis: ayuda comunitaria vía Centro de Ayuda + GitHub Discussions (mejor esfuerzo). Pro: 48h laborables por email. La bóveda está cifrada — nunca te pedimos contraseña ni frase. Ver SLA."
       },
       {
         "question": "¿Qué pasa si olvido la contraseña de mi bóveda?",

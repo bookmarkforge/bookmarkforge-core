@@ -1,40 +1,41 @@
-# Entrada en el inventario de scripts: límites del scanner
+# Scripts inventory entry: scanner limits
 
-- **Estado:** activo; documentación operativa del gate `check:audit-script-snapshot`.
-- **Propietario:** mantenedor del proyecto.
-- **Última revisión:** 2026-09-10.
+- **Status:** active; operational documentation of the `check:audit-script-snapshot` gate.
+- **Owner:** project maintainer.
+- **Last review:** 2026-09-24 (the gate was declared in `package.json` and registered
+  in the inspector freeze as on-demand; see `CONTRIBUTING.md`).
 
-## Propósito
+## Purpose
 
-El gate `check:audit-script-snapshot` (y su snapshot `.tmp-audit-script-candidates.txt`)
-mantienen una lista de **candidatos sin referencias conocidas** en `scripts/`. Esta
-lista es el resultado de un escáner estático que recorre el repositorio buscando
-referencias a archivos de `scripts/`.
+The gate `check:audit-script-snapshot` (and its snapshot `.tmp-audit-script-candidates.txt`)
+maintains a list of **candidates without known references** in `scripts/`. This
+list is the result of a static scanner that traverses the repository searching
+for references to files in `scripts/`.
 
-Este documento enumera lo que **el escáner no puede ver**, para que los revisores
-de limpieza sepan que la lista de candidatos es un **límite inferior**, no un
-inventario exhaustivo de lo que está vivo.
+This document enumerates what **the scanner cannot see**, so that cleanup
+reviewers know that the candidate list is a **lower bound**, not an
+exhaustive inventory of what is alive.
 
-## Lo que el scanner detecta
+## What the scanner detects
 
-El escáner busca, de forma estática:
+The scanner searches, statically:
 
-- Importaciones `import ... from "scripts/..."` y `require("scripts/...")`.
-- Referencias de ruta en archivos JS/CSS/HTML/JSON/YAML/TOML del repo.
-- Referencias en `package.json` → `scripts.*`.
-- Referencias en `.github/workflows/*.yml` (solo `ci.yml` y los workflows que el
-  scanner configura explícitamente).
-- Referencias en archivos de configuración del proyecto (docker-compose, Dockerfile,
-  netlify, nginx, etc.) cuando aparecen como strings literales.
+- Imports `import ... from "scripts/..."` and `require("scripts/...")`.
+- Path references in JS/CSS/HTML/JSON/YAML/TOML files in the repo.
+- References in `package.json` → `scripts.*`.
+- References in `.github/workflows/*.yml` (only `ci.yml` and workflows the
+  scanner explicitly configures).
+- References in project configuration files (docker-compose, Dockerfile,
+  netlify, nginx, etc.) when appearing as literal strings.
 
-## Lo que el scanner NO detecta (limbite inferior)
+## What the scanner does NOT detect (lower bound)
 
-### 1. Rutas construidas en tiempo de ejecución (runtime data-driven joins)
+### 1. Paths built at runtime (runtime data-driven joins)
 
-El scanner no ejecuta código. Si un script construye la ruta a otro script en
-tiempo de ejecución, el scanner no ve la dependencia.
+The scanner does not execute code. If a script builds the path to another script at
+runtime, the scanner does not see the dependency.
 
-Ejemplo documentado: `scripts/build-ci.mjs` hace:
+Documented example: `scripts/build-ci.mjs` does:
 
 ```js
 const rollupWasmLoader = join(ROOT, "scripts", "rollup-wasm-loader.cjs");
@@ -43,102 +44,104 @@ const nodeOptions = [process.env.NODE_OPTIONS, useRollupWasm
   ? `--require=${rollupWasmLoader}` : ""].filter(Boolean).join(" ");
 ```
 
-El scanner estático no ve que `build-ci.mjs` requiere `rollup-wasm-loader.cjs`
-solo en `win32 && arm64`. En la máquina actual (win32/arm64) el loader está
-activo; en otras plataformas no. El scanner género la lista de candidatos
-puede marcar `rollup-wasm-loader.cjs` como "sin referencias conocidas" aunque
-tenga un uso real condicional.
+The static scanner does not see that `build-ci.mjs` requires `rollup-wasm-loader.cjs`
+only in `win32 && arm64`. On the current machine (win32/arm64) the loader is
+active; on other platforms it is not. Therefore the candidate list may mark
+`rollup-wasm-loader.cjs` as "without known references" even though
+it has real conditional use.
 
-**Implicación:** un archivo marcado como candidato puede tener una referencia
-condicional dependiente de plataforma, entorno, variable de entorno o estado
-en tiempo de ejecución. Antes de eliminar cualquier candidato, revisar si hay
-uso condicional en los scripts que lo podrían cargar.
+**Implication:** a file marked as candidate may have a conditional reference
+dependent on platform, environment, environment variable or runtime state.
+Before deleting any candidate, review if there is conditional use in scripts
+that could load it.
 
-### 2. Referencias en archivos de configuración que el scanner no recorre
+### 2. References in configuration files the scanner does not traverse
 
-El scanner recorre solo los archivos que configura explícitamente. Si un archivo
-de configuración externo (por ejemplo, un Makefile, un script de despliegue externo,
-un runbook de operaciones, un script de CI externo, un hook de git) referencia un
-script de `scripts/`, el scanner no lo ve.
+The scanner traverses only files it explicitly configures. If an external
+configuration file (e.g. a Makefile, external deployment script, operations
+runbook, external CI script, git hook) references a script in `scripts/`,
+the scanner does not see it.
 
-**Implicación:** antes de eliminar un candidato, revisar también `docs/`, `AGENTS.md`,
+**Implication:** before deleting a candidate, also review `docs/`, `AGENTS.md`,
 `README.md`, `.github/`, `docker-compose*.yml`, `Dockerfile`, `netlify.toml`,
-`public/nginx.conf`, `functions/`, y cualquier otro archivo de configuración de
-despliegue o operaciones que pueda invocar el script.
+`public/nginx.conf`, `functions/`, and any other deployment or operations
+configuration file that could invoke the script.
 
-### 3. Nombres de scripts construidos a partir de configuración
+### 3. Script names built from configuration
 
-Si un script usa un nombre de otro script que se construye a partir de una
-variable de configuración (por ejemplo, `join(ROOT, "scripts", config.scriptName)`),
-el scanner no ve la dependencia porque el nombre no es un literal en el código.
+If a script uses another script's name built from a configuration variable
+(e.g. `join(ROOT, "scripts", config.scriptName)`), the scanner does not see the
+dependency because the name is not a literal in the code.
 
-**Implicación:** los scripts que leen nombres de otros scripts desde config,
-environment variables, o datos en tiempo de ejecución no son detectados.
+**Implication:** scripts that read other scripts' names from config,
+environment variables, or runtime data are not detected.
 
-### 4. Scripts invocados por nombre en shells, runbooks, o documentación operativa
+### 4. Scripts invoked by name in shells, runbooks, or operational documentation
 
-El scanner no ejecuta ni analiza shells históricos, ni runbooks de operaciones, ni
-documentación que describa comandos para desplegar, revertir, o diagnosticar. Si
-un operador o un runbook ejecuta `node scripts/shutdown.mjs` como parte de un
-procedimiento, el scanner no lo registra como referencia.
+The scanner does not execute or analyze historical shells, operations runbooks, or
+documentation that describes commands to deploy, revert, or diagnose. If an
+operator or a runbook executes `node scripts/shutdown.mjs` as part of a
+procedure, the scanner does not register it as a reference.
 
-**Implicación:** revisar también `docs/operations.md`, `docs/staging-smoke.md`,
-`docs/launch-checklist.md`, `docs/ops-nightly.md`, y cualquier runbook de operaciones
-antes de eliminar un candidato que pueda ser invocado por nombre en procedimientos
-de despliegue o recuperación.
+**Implication:** also review `docs/operations.md`, `docs/staging-smoke.md`,
+`docs/launch-checklist.md`, `docs/ops-nightly.md`, and any operations runbook
+before deleting a candidate that could be invoked by name in deployment or
+recovery procedures.
 
-### 5. Scripts que son "candidatos" pero tienen referencias condicionales de plataforma
+### 5. Scripts that are "candidates" but have conditional platform references
 
-El scanner no distingue entre "nunca referenciado" y "referenciado solo en cierta
-plataforma". Un script como `rollup-wasm-loader.cjs` puede aparecer en la lista de
-candidatos aunque tenga un uso real en `win32/arm64`.
+The scanner does not distinguish between "never referenced" and "referenced only
+on certain platform". A script like `rollup-wasm-loader.cjs` may appear in the
+candidate list even though it has real use in `win32/arm64`.
 
-**Implicación:** la lista de candidatos es un límite inferior. Un candidato no
-eliminado no prueba que esté muerto; solo prueba que el scanner estático no lo
-vió referenciado. La decisión de eliminar requiere revisión manual de los casos
-condicionales antes descritos.
+**Implication:** the candidate list is a lower bound. A candidate not deleted
+does not prove it is dead; it only proves that the static scanner did not see
+it referenced. The deletion decision requires manual review of the conditional
+cases described above.
 
-## Reglas de decisión para la limpieza
+## Decision rules for cleanup
 
-1. **La lista de candidatos es un límite inferior, no una lista de eliminación.**
-   Cada candidato requiere revisión manual antes de eliminarse.
-2. **Revisar referencias condicionales de plataforma** en `scripts/build-ci.mjs` y
-   otros scripts que construyan rutas o nombres en tiempo de ejecución.
-3. **Revisar archivos de configuración y operaciones** que puedan invocar el script
-   por nombre (docker-compose, workflows, runbooks, documentación).
-4. **Revisar si el script se carga dinámicamente** desde otro script (por ejemplo,
-   `await import(...)` con nombre construido, o `require(...)` con variable).
-5. **Revisar si el script es un duplicado** de funcionalidad que ya existe en otro
-   archivo (ej. `shutdown.mjs` vs la copia inline en `monitoring-alerts.mjs`).
-6. **Documentar la decisión de eliminación** en el diff, con la evidencia revisada,
-   antes de hacer el commit.
+1. **The candidate list is a lower bound, not a deletion list.**
+   Each candidate requires manual review before deletion.
+2. **Review conditional platform references** in `scripts/build-ci.mjs` and
+   other scripts that build paths or names at runtime.
+3. **Review configuration and operations files** that could invoke the script
+   by name (docker-compose, workflows, runbooks, documentation).
+4. **Review if the script is loaded dynamically** from another script (e.g.,
+   `await import(...)` with built name, or `require(...)` with variable).
+5. **Review if the script is a duplicate** of functionality that already exists
+   in another file (e.g. `shutdown.mjs` vs the inline copy in
+   `monitoring-alerts.mjs`).
+6. **Document the deletion decision** in the diff, with the reviewed evidence,
+   before committing.
 
-## Relación con el gate de auditoría
+## Relationship with the audit gate
 
-El gate `check:audit-script-snapshot` ejecuta el escáner y compara el resultado
-con `.tmp-audit-script-candidates.txt`. Si el snapshot driftea (por eliminación de
-un script referenciado, o por adición de un nuevo script sin referencias), el gate
-falla. Esto asegura que la lista de candidatos se mantenga sincronizada con la
-realidad del repositorio, pero **no reemplaza la revisión manual** de los límites
-descritos en este documento.
+The gate `check:audit-script-snapshot` executes the scanner and compares the result
+with `.tmp-audit-script-candidates.txt`. If the snapshot drifts (by deletion of
+a referenced script, or by addition of a new script without references), the gate
+fails. This ensures that the candidate list stays synchronized with the
+repository reality, but **does not replace manual review** of the limits
+described in this document.
 
-El snapshot debe regenerarse con
-`node scripts/__tests__/audit-script-inventory.test.mjs --update` después de cualquier
-cambio en la estructura de `scripts/` que afecte las referencias, y el resultado debe
-ser revisado manualmente antes de commitear:
+The snapshot must be regenerated with
+`node scripts/__tests__/audit-script-inventory.test.mjs --update` after any
+change in the structure of `scripts/` that affects references, and the result must
+be manually reviewed before committing:
 
 ```bash
 node scripts/__tests__/audit-script-inventory.test.mjs --update
-node scripts/__tests__/check-audit-script-snapshot.mjs   # verifica el contrato
+node scripts/__tests__/check-audit-script-snapshot.mjs   # verifies the contract
 ```
 
-Sin `--update` el script solo verifica el contrato contra el snapshot existente.
+Without `--update` the script only verifies the contract against the existing
+snapshot.
 
-## Véase también
+## See also
 
-- `docs/legacy-compatibility-plan.md` — política de retirada de compatibilidad.
-- `scripts/__tests__/audit-script-inventory.test.mjs` — implementación del escáner y
-  del contrato de snapshot.
-- `.tmp-audit-script-candidates.txt` — snapshot actual de candidatos sin referencias
-  conocidas.
-- `scripts/check-audit-drift.mjs` — gate de deriva del inventario de scripts.
+- `docs/legacy-compatibility-plan.md` — compatibility retirement policy.
+- `scripts/__tests__/audit-script-inventory.test.mjs` — scanner implementation and
+  snapshot contract.
+- `.tmp-audit-script-candidates.txt` — current snapshot of candidates without known
+  references.
+- `scripts/check-audit-drift.mjs` — scripts inventory drift gate.

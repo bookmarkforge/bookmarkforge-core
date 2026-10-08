@@ -31,6 +31,6 @@ describe("prod-blindeo-checklist", () => {
 
   it("conserva el tail del diagnóstico", () => {
     expect(tailOutput("123456", 3)).toBe("…456");
-    expect(tailOutput("  ")).toBe("sin salida");
+    expect(tailOutput("  ")).toBe("no output");
   });
 });

@@ -55,7 +55,7 @@ describe("check-release-target target parsing", () => {
     expect(normalizeTarget("ssh://git@github.com/acme/forge.git")).toBe("acme/forge");
     expect(normalizeTarget("https://github.com/acme/forge/")).toBe("acme/forge");
     // A product site is not a repository target.
-    expect(normalizeTarget("https://bookmarkforge.com")).toBeNull();
+    expect(normalizeTarget("https://bookmarkforgeapp.com")).toBeNull();
   });
 
   it("finds the target inside badge and workflow URLs", () => {
@@ -182,6 +182,46 @@ describe("check-release-target findings", () => {
       "README.md:1",
       "scripts/public-export/RELEASE-NOTES-v1.0.0.md:3",
     ]);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  it("flags a real-but-different repository in a shipped artifact (ADR-058 amendment 8)", () => {
+    // The rename failure shape: not a placeholder — a genuine repo that the
+    // declared destination no longer names. A reader would clone `core` while
+    // the release publishes `forge`.
+    const root = fixture({
+      files: {
+        "README.md": "[![CI](https://github.com/acme/legacy/actions/workflows/ci.yml)]\n",
+      },
+    });
+    const result = checkReleaseTarget({
+      ...withRemotes(root, [{ name: "origin", url: CONFIRMED, kind: "fetch", target: "acme/forge" }]),
+    });
+
+    expect(kindsOf(result)).toEqual(["artifact-drift"]);
+    expect(result.findings[0].location).toBe("README.md:1");
+    expect(result.findings[0].value).toBe("acme/legacy");
+    expect(result.findings[0].reason).toContain('declares "acme/forge"');
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  it("does not drift-flag artifacts when the declared target is itself provisional", () => {
+    // An unconfirmed declared destination has nothing to drift FROM: the
+    // provisional findings already carry the failure, and adding drift on top
+    // would misattribute the remedy.
+    const root = fixture({
+      repository: "https://github.com/bookmarkforge/core.git",
+      files: {
+        "README.md": "[![CI](https://github.com/acme/legacy/actions/workflows/ci.yml)]\n",
+      },
+    });
+    const result = checkReleaseTarget({
+      ...withRemotes(root, [{ name: "origin", url: CONFIRMED, kind: "fetch", target: "acme/forge" }]),
+      provisionalTargets: ["bookmarkforge/core"],
+    });
+
+    expect(kindsOf(result)).not.toContain("artifact-drift");
+    expect(kindsOf(result)).toContain("declared-provisional");
     rmSync(root, { recursive: true, force: true });
   });
 

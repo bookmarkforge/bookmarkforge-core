@@ -35,7 +35,7 @@ import { LOCALIZED_LANDING_CODES, PREF_LANGS } from "../landing-registry.mjs";
 
 const ROOT = fileURLToPath(new URL("../..", import.meta.url));
 const ENTRY = join(ROOT, "functions", "_middleware.js");
-const SITE = "https://bookmarkforge.com";
+const SITE = "https://bookmarkforgeapp.com";
 
 /**
  * The build shape the deployment depends on. `conditions` mirrors the edge

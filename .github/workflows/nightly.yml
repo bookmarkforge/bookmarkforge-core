@@ -51,7 +51,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Send synthetic alert to webhook
@@ -75,9 +75,15 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
+      # Assertion-integrity ratchet (docs/PENDIENTES.md P2): this job is the
+      # nightly's quality report, so it is where the suite theatre gets
+      # reported too — a test that cannot fail is measured here, next to the
+      # coverage it fakes. Declared-surface drift (docs/ops-nightly.md §1 vs
+      # the tree) fails in the same step.
+      - run: node scripts/check-vacuous-tests.mjs
       - run: npm run test:coverage
       - name: Upload coverage
         if: always()
@@ -97,10 +103,11 @@ jobs:
           fail_ci_if_error: false
 
   multiuser-sharded:
-    # Multi-user E2E suite (51 spec files / ~136 tests) split into N equal
-    # shards by Playwright's NATIVE test-count sharding (--shard=n/N). The
-    # suite runs serial (workers=1) and exceeds the 30 min single-job budget,
-    # so N=2 keeps each shard around 20-25 min on CI hardware.
+    # Multi-user E2E suite — declared size in docs/ops-nightly.md §1, verified
+    # by `npm run check:vacuous-tests` — split into N equal shards by
+    # Playwright's NATIVE test-count sharding (--shard=n/N). The suite runs
+    # serial (workers=1) and exceeds the 30 min single-job budget, so N=2 keeps
+    # each shard around 20-25 min on CI hardware.
     #
     # The blob reporter is enabled (MULTIUSER_BLOB_REPORT) so each shard
     # writes into playwright-report-multiuser-<N> (MULTIUSER_SHARD drives the
@@ -125,13 +132,17 @@ jobs:
       # report (nightly-consistency job); rides the same .nightly-history cache.
       NIGHTLY_MULTIUSER_ALERT_LOG_FILE: .nightly-history/alerts/multiuser-shard-${{ matrix.shard }}.jsonl
       NIGHTLY_MULTIUSER_DEGRADE_RATIO: ${{ vars.NIGHTLY_MULTIUSER_DEGRADE_RATIO || '1.25' }}
+      # Pro-seeding specs (backup/restore) activate through the real signing
+      # stack: the companion needs the private key matching the committed
+      # public key (empty = 503, specs fail loudly, never silently grant Pro).
+      LICENSE_SIGNING_PRIVATE_KEY_PKCS8: ${{ secrets.LICENSE_SIGNING_PRIVATE_KEY_PKCS8 }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Restore duration history cache (WoW budget)
@@ -143,6 +154,10 @@ jobs:
             nightly-multiuser-history-v1-
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
+      # extension.spec.ts is sharded into this suite and loads dist-extension/
+      # (gitignored); build it first or the spec fails asking for it.
+      - name: Build browser extension bundle
+        run: npm run build:extension:custom
       - name: Run multi-user shard ${{ matrix.shard }}/${{ matrix.total }}
         run: |
           set -o pipefail
@@ -200,7 +215,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Download multi-user blob reports
@@ -249,17 +264,19 @@ jobs:
           path: playwright-report/
 
   human-like-sharded:
-    # Human-like E2E suite (290 tests in 15 spec files) split into N equal
-    # shards by Playwright's NATIVE test-count sharding (--shard=n/N): each
-    # shard runs the same fraction of TESTS regardless of which spec file they
-    # live in. This balances the wall clock far better than splitting by file
-    # (full-coverage-tests alone is ~20 min; bookmark-app only ~6 min), so no
-    # single job owns a heavyweight spec.
+    # Human-like E2E suite, split into N equal shards by Playwright's NATIVE
+    # test-count sharding (--shard=n/N): each shard runs the same fraction of
+    # TESTS regardless of which spec file they live in. This balances the wall
+    # clock far better than splitting by file (full-coverage-tests alone is
+    # ~20 min; bookmark-app only ~6 min), so no single job owns a heavyweight
+    # spec.
     #
-    # N=4 keeps every shard well under the 60 min per-job budget: the whole
-    # suite measures ~75 min serial on a local 1-worker run, so each shard
-    # carries ~73 tests and lands around 11-19 min on CI hardware — roughly
-    # 4x headroom. Bump N (matrix.shard + matrix.total) as the suite grows;
+    # The suite size and its per-shard budget are NOT repeated here: the
+    # declared size lives in docs/ops-nightly.md §1 ("Suites and jobs") and
+    # `npm run check:vacuous-tests` fails when the tree stops matching it. The
+    # numbers that used to sit in this comment ("290 tests in 15 spec files",
+    # "~73 tests per shard") were a 7x understatement by 2026-09-24 and no gate
+    # re-read them. Bump N (matrix.shard + matrix.total) as the suite grows;
     # the blob-report merge (human-like-report) is shard-agnostic.
     #
     # The blob reporter is enabled (HUMAN_LIKE_BLOB_REPORT) so each shard
@@ -285,13 +302,17 @@ jobs:
       # report (nightly-consistency job); rides the same .nightly-history cache.
       NIGHTLY_HUMAN_LIKE_ALERT_LOG_FILE: .nightly-history/alerts/human-like-shard-${{ matrix.shard }}.jsonl
       NIGHTLY_HUMAN_LIKE_DEGRADE_RATIO: ${{ vars.NIGHTLY_HUMAN_LIKE_DEGRADE_RATIO || '1.25' }}
+      # Pro-seeding specs (backup/restore) activate through the real signing
+      # stack: the companion needs the private key matching the committed
+      # public key (empty = 503, specs fail loudly, never silently grant Pro).
+      LICENSE_SIGNING_PRIVATE_KEY_PKCS8: ${{ secrets.LICENSE_SIGNING_PRIVATE_KEY_PKCS8 }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Restore duration history cache (WoW budget)
@@ -303,11 +324,15 @@ jobs:
             nightly-human-like-history-v1-
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
+      # extension.spec.ts is sharded into this suite and loads dist-extension/
+      # (gitignored); build it first or the spec fails asking for it.
+      - name: Build browser extension bundle
+        run: npm run build:extension:custom
       - name: Run human-like shard ${{ matrix.shard }}/${{ matrix.total }}
         run: |
           set -o pipefail
           start=$(date +%s)
-          npm run test:human-like:shard -- --shard=${{ matrix.shard }}/${{ matrix.total }}
+          npm run test:human -- --shard=${{ matrix.shard }}/${{ matrix.total }}
           code=$?
           end=$(date +%s)
           echo "NIGHTLY_HUMAN_LIKE_MINUTES=$(( (end - start) / 60 ))" >> "$GITHUB_ENV"
@@ -351,7 +376,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Download human-like blob reports
@@ -443,7 +468,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Restore duration history cache (WoW trends)
@@ -527,7 +552,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Restore duration history cache (alert log + trends)
@@ -602,7 +627,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Restore duration history cache (WoW budget)
@@ -670,7 +695,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Install Playwright browser
@@ -705,12 +730,20 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
+      # Own port: every other Playwright profile in this repo defaults to
+      # 4173, and a fresh runner still managed to find it busy (run
+      # 35833219915, "http://127.0.0.1:4173 is already used") — likely a
+      # leaked preview from an earlier step in this same job. The config's
+      # PLAYWRIGHT_PORT escape hatch exists for exactly this; 4732 is not
+      # used by any other profile, server or battery in the repo.
       - name: Build production bundle and run SW integrity tamper suite
+        env:
+          PLAYWRIGHT_PORT: 4732
         run: npm run e2e:sw-integrity
       - name: Upload tamper evidence
         if: always()
@@ -733,7 +766,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - name: Enforce launch checklist blockers (strict)
         run: npm run check:launch-checklist:strict
@@ -750,7 +783,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Run companion server load test (WS + SLO gates)
@@ -762,16 +795,24 @@ jobs:
     timeout-minutes: 10
     env:
       CI: true
+      # Pre-launch pause switch: both empty until staging is configured.
+      # (Secrets are not allowed in `if:` — promote to env and test env.)
+      KPI_STAGING_URL: ${{ vars.STAGING_URL }}
+      KPI_STAGING_READY: ${{ secrets.STAGING_ANALYTICS_ADMIN_TOKEN }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
+      # Pre-launch: no staging deployment exists yet, so there is nothing to
+      # measure. Pause the gate (skip) instead of failing red; set STAGING_URL
+      # + STAGING_ANALYTICS_ADMIN_TOKEN to enable it at launch.
       - name: Run business KPI gate against staging
+        if: ${{ env.KPI_STAGING_URL != '' && env.KPI_STAGING_READY != '' }}
         env:
           ANALYTICS_BASE_URL: ${{ vars.STAGING_URL }}
           ANALYTICS_ADMIN_TOKEN: ${{ secrets.STAGING_ANALYTICS_ADMIN_TOKEN }}
@@ -790,6 +831,9 @@ jobs:
         run: |
           set -o pipefail
           node scripts/kpi-report.mjs --json 2>&1 | tee kpi-report.json
+      - name: KPI gate paused (no staging configured)
+        if: ${{ env.KPI_STAGING_URL == '' || env.KPI_STAGING_READY == '' }}
+        run: 'echo "kpi-staging paused (staging is not configured yet)"'
       - name: Upload KPI report evidence
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -820,7 +864,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Build the dependency CVE report (prod + dev)
@@ -867,7 +911,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Install Playwright browsers

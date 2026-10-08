@@ -32,7 +32,13 @@ export function parseStateIndex(markdownText) {
   let inTable = false;
   for (const line of markdownText.split(/\r?\n/)) {
     const trimmed = line.trim();
-    if (trimmed.startsWith("| Documento | Estado | Nota |")) {
+    // English header is canonical (the generator no longer emits Spanish
+    // notes); the Spanish one still parses so a pre-change inventory does not
+    // read as an empty one.
+    if (
+      trimmed.startsWith("| Document | State | Note |") ||
+      trimmed.startsWith("| Documento | Estado | Nota |") // i18n-allow — legacy anchor
+    ) {
       inTable = true;
       continue;
     }

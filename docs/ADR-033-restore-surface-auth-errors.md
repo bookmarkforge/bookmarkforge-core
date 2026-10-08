@@ -1,43 +1,43 @@
-# ADR-033: Superficie de restore — los errores de autenticación nunca ofrecen restaurar
+# ADR-033: Restore surface — authentication errors never offer restore
 
-- **Estado:** aceptado (implementado; este registro formaliza la decisión existente)
-- **Fecha:** 2026-09-02 (retro-documentado desde el código y el catálogo de anclas)
+- **Status:** accepted (implemented; this record formalizes the existing decision)
+- **Date:** 2026-09-02 (retro-documented from the code and the anchor catalog)
 
-## Contexto
+## Context
 
-La pantalla de error de base de datos de `AppContent` ofrece un camino de
-recuperación "Restore from backup file" cuando el storage está dañado
-(corrupción `INACCESSIBLE`/`UNKNOWN` — legacy F0-2: el DB error screen debe
-ofrecer la ruta de recovery, no solo un Retry infinito). Pero no todos los
-errores de BD significan corrupción: los flujos de autenticación
-(`WRONG_PASSWORD`, `VAULT_LOCKED`) indican que la BD está **sana** y solo hace
-falta la credencial/desbloqueo correctos. Ofrecer un restore destructivo ahí
-confundiría al usuario y provocaría un borrado innecesario de datos.
+`AppContent`'s database error screen offers a
+"Restore from backup file" recovery path when storage is damaged
+(`INACCESSIBLE`/`UNKNOWN` corruption — legacy F0-2: the DB error screen must
+offer the recovery path, not just an endless Retry). But not all
+DB errors mean corruption: authentication flows
+(`WRONG_PASSWORD`, `VAULT_LOCKED`) mean the DB is **healthy** and only the
+correct credential/unlock is missing. Offering a destructive restore there
+would confuse the user and cause unnecessary data loss.
 
-## Decisión
+## Decision
 
-1. **D3 — `WRONG_PASSWORD` y `VAULT_LOCKED` nunca muestran la acción de
-   restore.** Cuando el `dbErrorClass` es `WRONG_PASSWORD` o `VAULT_LOCKED`, la
-   pantalla de error de BD no renderiza: el botón "Restore from backup file", el
-   texto de hint de corrupción ("Your database appears damaged…") **ni** el file
-   input oculto (`restore-backup-input`). Los tres deben estar ausentes (ancla
-   `wrong-password-no-restore` en `src/tests/app/AppContent.test.tsx`, que cubre
-   ambos classes por separado).
-2. **Contraste explícito con la corrupción.** El restore sigue presente
-   únicamente para clases de error que indican storage dañado
-   (`INACCESSIBLE`/`UNKNOWN`, DB3), donde la recuperación desde backup es la
-   ruta correcta. La superficie se decide por clase de error, no por el mensaje
-   crudo — el clasificador (`dbErrorClass`) ya está normalizado en la capa de
-   inicio de BD (ADR-019 / `database.ts`).
+1. **D3 — `WRONG_PASSWORD` and `VAULT_LOCKED` never show the restore
+   action.** When `dbErrorClass` is `WRONG_PASSWORD` or `VAULT_LOCKED`, the
+   DB error screen does not render: the "Restore from backup file" button, the
+   corruption hint text ("Your database appears damaged…") **nor** the hidden file
+   input (`restore-backup-input`). All three must be absent (anchor
+   `wrong-password-no-restore` in `src/tests/app/AppContent.test.tsx`, which covers
+   both classes separately).
+2. **Explicit contrast with corruption.** Restore remains present
+   only for error classes that indicate damaged storage
+   (`INACCESSIBLE`/`UNKNOWN`, DB3), where backup recovery is the
+   right route. The surface is decided by error class, not by the raw message
+   — the classifier (`dbErrorClass`) is already normalized in the DB startup
+   layer (ADR-019 / `database.ts`).
 
-## Consecuencias
+## Consequences
 
-- El usuario con password equivocado o vault bloqueado ve únicamente el aviso de
-  autenticación y reintenta; no hay riesgo de borrado accidental desde la pantalla
-  de error.
-- La distinción corrupción-vs-autenticación queda anclada por test de regresión:
-  un refactor que reintroduzca el restore para errores de auth rompe
-  `check:audit-drift` (ancla en el catálogo como `ADR-033 D3`).
-- Los flujos D1/D2 de la serie ADR-033 (clasificación y presentación genérica de
-  errores de BD) quedan fuera del catálogo de anclas y no se formalizan aquí —
-  solo D3 tiene ancla de regresión.
+- A user with the wrong password or a locked vault sees only the
+  authentication notice and retries; there is no risk of accidental deletion from the error
+  screen.
+- The corruption-vs-authentication distinction is anchored by a regression test:
+  a refactor reintroducing restore for auth errors breaks
+  `check:audit-drift` (anchor in the catalog as `ADR-033 D3`).
+- The ADR-033 series' D1/D2 flows (classification and generic presentation of
+  DB errors) are outside the anchor catalog and are not formalized here —
+  only D3 has a regression anchor.

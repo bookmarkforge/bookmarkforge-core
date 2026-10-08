@@ -2,7 +2,7 @@
 
 # Landing pages (SEO) — the static marketing HTML is the indexable
 # content, served at clean URLs with a 200 rewrite so the canonical
-# stays https://bookmarkforge.com/ and /es/. Must precede the SPA
+# stays https://bookmarkforgeapp.com/ and /es/. Must precede the SPA
 # catch-all below.
 /       /landing.html  200
 /es     /es.html       200

@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from "node:fs";
+// `pathToFileURL` percent-encodes the path and supplies the `file:///` the URL
+// form requires; the previous `` `file://${argv[1]?.replaceAll("\\\\", "/")}` ``
+// form also escaped the wrong character (a double backslash), so the guard was
+// false on Windows and main() never ran.
+import { pathToFileURL } from "node:url";
 
 export function validateZapWorkflowText(text) {
   const errors = [];
@@ -22,7 +27,7 @@ export function validateZapWorkflowText(text) {
   return errors;
 }
 
-if (import.meta.url === `file://${process.argv[1]?.replaceAll("\\\\", "/")}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const path = ".github/workflows/dast-nightly.yml";
   const result = validateZapWorkflowText(existsSync(path) ? readFileSync(path, "utf8") : "");
   if (result.length) {

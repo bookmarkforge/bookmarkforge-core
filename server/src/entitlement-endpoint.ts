@@ -153,7 +153,7 @@ export function createEntitlementHandler(
     }
 
     const { entitlement } = verification.context;
-    applySecurityHeaders(res);
+applySecurityHeaders(res);
     res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
     res.end(
       JSON.stringify({
@@ -168,6 +168,10 @@ export function createEntitlementHandler(
           ? { activationsLeft: entitlement.activationsLeft }
           : {}),
         ...(entitlement.instanceId !== undefined ? { instanceId: entitlement.instanceId } : {}),
+        // Trial information — for 7-day free trial flow
+        // TODO: integrate with Whop membership trial data for exact days remaining
+        isInTrial: false,
+        trialDaysRemaining: null,
       }),
     );
   };

@@ -102,7 +102,7 @@ function buildMv3Manifest(cspExtensionPages) {
       default_icon: { "128": "icon-128.png" },
     },
     permissions: ["storage", "tabs"],
-    host_permissions: ["https://bookmarkforge.com/*"],
+    host_permissions: ["https://bookmarkforgeapp.com/*"],
     content_security_policy: { extension_pages: cspExtensionPages },
   };
 }
@@ -123,7 +123,7 @@ function buildMv2Manifest(csp) {
       default_popup: "popup.html",
       default_icon: { "128": "icon-128.png" },
     },
-    permissions: ["storage", "<all_urls>", "https://bookmarkforge.com/*"],
+    permissions: ["storage", "<all_urls>", "https://bookmarkforgeapp.com/*"],
     content_security_policy: csp,
   };
 }
@@ -223,7 +223,7 @@ describe("check-extension-csp gate — seven contract assertions", () => {
     expect(mv3.actual).toBe(CANONICAL_CSP);
 
     const mv2 = mod.checkManifest({
-      label: "Firefox MV2",
+      label: "Firefox MV3",
       path: "extension/manifest-firefox.json",
       extract: extractMv2,
     });
@@ -254,10 +254,10 @@ describe("check-extension-csp gate — seven contract assertions", () => {
     expect(mv3.reason).toBe("no-csp");
     expect(mv3.canonical).toBe(CANONICAL_CSP);
 
-    // MV2 still passes alongside the MV3 failure — proves the gate
-    // reports per-manifest, does not collectively short-circuit.
+    // The Firefox manifest still passes alongside the MV3 failure — proves
+    // the gate reports per-manifest, does not collectively short-circuit.
     const mv2 = mod.checkManifest({
-      label: "Firefox MV2",
+      label: "Firefox MV3",
       path: "extension/manifest-firefox.json",
       extract: extractMv2,
     });
@@ -288,7 +288,7 @@ describe("check-extension-csp gate — seven contract assertions", () => {
     expect(mv3.ok).toBe(true);
 
     const mv2 = mod.checkManifest({
-      label: "Firefox MV2",
+      label: "Firefox MV3",
       path: "extension/manifest-firefox.json",
       extract: extractMv2,
     });
@@ -386,7 +386,7 @@ describe("check-extension-csp gate — seven contract assertions", () => {
     expect(mv3.ok).toBe(true);
 
     const mv2 = mod.checkManifest({
-      label: "Firefox MV2",
+      label: "Firefox MV3",
       path: "extension/manifest-firefox.json",
       extract: extractMv2,
     });
@@ -431,7 +431,7 @@ describe("check-extension-csp gate — seven contract assertions", () => {
 
     expect(proc.status, `stdout=${proc.stdout}\nstderr=${proc.stderr}`).toBe(0);
     expect(proc.stdout).toMatch(/--fix rewrote 1 manifest\(s\)/);
-    expect(proc.stderr).toMatch(/--fix skipped Firefox MV2 — malformed JSON left untouched/);
+    expect(proc.stderr).toMatch(/--fix skipped Firefox MV3 — malformed JSON left untouched/);
 
     const afterMv3 = JSON.parse(
       readFileSync(join(repo, "extension/manifest.json"), "utf8"),

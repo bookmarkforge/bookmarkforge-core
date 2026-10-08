@@ -99,7 +99,7 @@ export function runQuickChecks({ gates = QUICK_GATES, spawn = spawnSync } = {}) 
   const passed = rows.filter((r) => r.status === "PASS").length;
   const summary =
     `[check:quick] ${passed}/${gates.length} gates en ${total} ms` +
-    (failed ? " — FAIL (cadena completa: npm run check)" : " — sigue con npm run check antes de pushear");
+    (failed ? " — FAIL (full chain: npm run check)" : " — continue with npm run check before pushing");
   console.log(summary);
   return { failed, rows, total, summary };
 }

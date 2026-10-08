@@ -1,16 +1,15 @@
 #!/usr/bin/env node
 /**
- * scripts/check-ci-groups.mjs — ejecuta grupos de CI definidos en ci-groups.json
+ * scripts/check-ci-groups.mjs — runs CI groups defined in ci-groups.json
  *
  * Uso:
- *   node scripts/check-ci-groups.mjs                  # lista todos los grupos disponibles
- *   node scripts/check-ci-groups.mjs core-integrity    # ejecuta el grupo específico
- *   node scripts/check-ci-groups.mjs --list            # lista sin ejecutar
- *   node scripts/check-ci-groups.mjs --all             # ejecuta todos los grupos en orden
+ *   node scripts/check-ci-groups.mjs                  # list all available groups
+ *   node scripts/check-ci-groups.mjs core-integrity    # run the specific group
+ *   node scripts/check-ci-groups.mjs --list            # list without running
+ *   node scripts/check-ci-groups.mjs --all             # run all groups in order
  *
- * Cada grupo se ejecuta de forma secuencial dentro del grupo,
- * y los grupos se ejecutan en paralelo cuando se usa --all.
- * Los resultados se resumen al final con tiempo por grupo.
+ * Each group runs sequentially inside the group, and groups run in parallel
+ * when --all is used. Results are summarized at the end with per-group time.
  */
 import { spawnSync } from "node:child_process";
 import { readFileSync, existsSync } from "node:fs";
@@ -23,7 +22,7 @@ const GROUPS_FILE = join(__dirname, "ci-groups.json");
 
 function loadGroups() {
   if (!existsSync(GROUPS_FILE)) {
-    console.error(`[check:ci-groups] No se encontró ci-groups.json en ${GROUPS_FILE}`);
+    console.error(`[check:ci-groups] ci-groups.json not found at ${GROUPS_FILE}`);
     process.exit(1);
   }
   const data = JSON.parse(readFileSync(GROUPS_FILE, "utf8"));
@@ -40,8 +39,8 @@ function runGroup(group) {
   console.log(`\n${"═".repeat(60)}`);
   console.log(`📦 Grupo: ${group.label}`);
   console.log(`${"═".repeat(60)}`);
-  console.log(`Propósito: ${group.purpose}`);
-  console.log(`Tiempo estimado: ${formatMs(group.typical_time_ms)}`);
+  console.log(`Purpose: ${group.purpose}`);
+  console.log(`Estimated time: ${formatMs(group.typical_time_ms)}`);
   console.log("");
 
   const rows = [];
@@ -68,38 +67,38 @@ function runGroup(group) {
       console.log(`  ${"─".repeat(50)}`);
       console.log(`  ${errorLines}`);
     }
-    if (failed) break; // fail-fast por grupo
+    if (failed) break; // fail-fast per group
   }
 
   const totalMs = Date.now() - t0;
   const passed = rows.filter(r => r.status.startsWith("✅")).length;
-  console.log(`\n  Resultado: ${passed}/${rows.length} passed en ${formatMs(totalMs)}`);
+  console.log(`\n  Result: ${passed}/${rows.length} passed in ${formatMs(totalMs)}`);
   console.log(`${"═".repeat(60)}\n`);
   return { name: group.name, failed, totalMs, passed, rows };
 }
 
 function listGroups(groups) {
-  console.log("\n📋 Grupos de CI disponibles:\n");
-  console.log(`${"Grupo".padEnd(25)} ${"Tiempo estimado".padEnd(15)} ${"Frecuencia fallo".padEnd(20)} ${"Descripción"}`);
+  console.log("\n📋 Available CI groups:\n");
+  console.log(`${"Group".padEnd(25)} ${"Est. time".padEnd(15)} ${"Failure frequency".padEnd(20)} ${"Description"}`);
   console.log("-".repeat(95));
   for (const g of groups) {
-    const freq = g.fail_frequency === "high" ? "🔴 Alto" : g.fail_frequency === "medium" ? "🟡 Medio" : "🟢 Bajo";
+    const freq = g.fail_frequency === "high" ? "🔴 High" : g.fail_frequency === "medium" ? "🟡 Medium" : "🟢 Low";
     const label = g.label.padEnd(25).slice(0, 25);
     const time = formatMs(g.typical_time_ms).padEnd(15);
     const freqLabel = freq.padEnd(20);
     console.log(`  ${label} ${time} ${freqLabel} ${g.purpose}`);
   }
   console.log("");
-  console.log("Uso:");
-  console.log("  node scripts/check-ci-groups.mjs <nombre-grupo>   # Ejecutar grupo específico");
-  console.log("  node scripts/check-ci-groups.mjs --list            # Solo listar");
-  console.log("  node scripts/check-ci-groups.mjs --all             # Ejecutar todos los grupos");
-  console.log("  node scripts/check-ci-groups.mjs --fast            # Solo grupos críticos (core + security)");
+  console.log("Usage:");
+  console.log("  node scripts/check-ci-groups.mjs <group-name>      # Run a specific group");
+  console.log("  node scripts/check-ci-groups.mjs --list            # List only");
+  console.log("  node scripts/check-ci-groups.mjs --all             # Run every group");
+  console.log("  node scripts/check-ci-groups.mjs --fast            # Critical groups only (core + security)");
   console.log("");
 }
 
 function runAll(groups) {
-  console.log("🚀 Ejecutando todos los grupos de CI...\n");
+  console.log("🚀 Running all CI groups...\n");
   const t0 = Date.now();
   const results = [];
   let overallFailed = false;
@@ -112,23 +111,23 @@ function runAll(groups) {
 
   const totalMs = Date.now() - t0;
   console.log("\n" + "═".repeat(60));
-  console.log("📊 RESUMEN GLOBAL");
+  console.log("📊 GLOBAL SUMMARY");
   console.log("═".repeat(60));
   for (const r of results) {
     const icon = r.failed ? "❌" : "✅";
     console.log(`  ${icon} ${r.name.padEnd(30)} ${r.passed}/${r.rows.length}  ${formatMs(r.totalMs)}`);
   }
-  console.log(`\n  Tiempo total: ${formatMs(totalMs)}`);
-  console.log(`  Estado: ${overallFailed ? "❌ FALLÓ" : "✅ TODO PASS"}`);
+  console.log(`\n  Total time: ${formatMs(totalMs)}`);
+  console.log(`  Status: ${overallFailed ? "❌ FAILED" : "✅ ALL PASS"}`);
   console.log("═".repeat(60) + "\n");
 
   process.exit(overallFailed ? 1 : 0);
 }
 
 function runFast(groups) {
-  // Solo grupos críticos: core-integrity + security-environment
+  // Critical groups only: core-integrity + security-environment
   const critical = groups.filter(g => g.name === "core-integrity" || g.name === "security-environment");
-  console.log("⚡ Ejecutando grupo rápido (core-integrity + security-environment)...\n");
+  console.log("⚡ Running fast group (core-integrity + security-environment)...\n");
   const t0 = Date.now();
   let failed = false;
   for (const group of critical) {

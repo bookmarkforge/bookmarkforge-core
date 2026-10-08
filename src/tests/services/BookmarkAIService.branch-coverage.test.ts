@@ -2,11 +2,23 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { bookmarkAIService } from "../../services/BookmarkAIService";
 import type { AIManager, TranslationFunction, Bookmark } from "../../types";
 
+// The real RAGEngine worker pool times out (60s) inside unit tests; mock it
+// at MODULE scope so every path resolves instantly. The previous in-test
+// vi.doMock calls could never apply — the module was already imported —
+// which is exactly what produced the two 60s hangs in this suite.
+const { mockGenerateEmbedding } = vi.hoisted(() => ({
+  mockGenerateEmbedding: vi.fn(),
+}));
+vi.mock("../../services/ai/RAGEngine", () => ({
+  ragEngine: { generateEmbedding: mockGenerateEmbedding },
+}));
+
 describe("BookmarkAIService - Branch Coverage", () => {
   let mockAIManager: AIManager;
   let mockT: TranslationFunction;
 
   beforeEach(() => {
+    mockGenerateEmbedding.mockReset().mockResolvedValue([0.1, 0.2, 0.3]);
     mockAIManager = {
       generateText: vi.fn(),
       getProviderInfo: vi.fn(() => ({ provider: "gemini", model: "gemini-pro" })),
@@ -66,12 +78,8 @@ describe("BookmarkAIService - Branch Coverage", () => {
         provider: "gemini",
       });
 
-      // Mock RAGEngine to throw error
-      vi.doMock("../../services/ai/RAGEngine", () => ({
-        ragEngine: {
-          generateEmbedding: vi.fn().mockRejectedValue(new Error("Embedding failed")),
-        },
-      }));
+      // Embedding generation fails for this bookmark.
+      mockGenerateEmbedding.mockRejectedValueOnce(new Error("Embedding failed"));
 
       await bookmarkAIService.summarize(bookmark, mockT, mockAIManager);
 
@@ -103,12 +111,7 @@ describe("BookmarkAIService - Branch Coverage", () => {
         provider: "gemini",
       });
 
-      // Mock RAGEngine to succeed
-      vi.doMock("../../services/ai/RAGEngine", () => ({
-        ragEngine: {
-          generateEmbedding: vi.fn().mockResolvedValue([0.1, 0.2, 0.3]),
-        },
-      }));
+      // Embedding generation succeeds via the beforeEach default.
 
       await bookmarkAIService.summarize(bookmark, mockT, mockAIManager);
 
@@ -179,13 +182,12 @@ describe("BookmarkAIService - Branch Coverage", () => {
 
       await bookmarkAIService.generateDetailedContent(bookmark, mockT, mockAIManager);
 
-      expect(mockAIManager.generateText).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.any(String),
-        expect.objectContaining({
-          tools: undefined,
-        }),
-      );
+      // Non-Gemini providers get NO tools key at all (not even undefined).
+      const callOpts = vi.mocked(mockAIManager.generateText).mock.calls[0]![2] as
+        | Record<string, unknown>
+        | undefined;
+      expect(callOpts).not.toHaveProperty("tools");
+      expect(callOpts?.isPrivate).toBe(false);
     });
 
     it("should handle AI generation failure", async () => {
@@ -354,12 +356,6 @@ describe("BookmarkAIService - Branch Coverage", () => {
       ];
 
       const reportProgress = vi.fn();
-
-      vi.doMock("../../services/ai/RAGEngine", () => ({
-        ragEngine: {
-          generateEmbedding: vi.fn().mockResolvedValue([0.1, 0.2, 0.3]),
-        },
-      }));
 
       await bookmarkAIService.generateMissingEmbeddings(bookmarks, reportProgress);
 

@@ -90,7 +90,7 @@ export function LanguageSelector() {
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         data-testid="language-select"
-        className="p-2 ds-ghost-btn-icon focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] ds-radius-item"
+        className="p-2 min-h-11 min-w-11 inline-flex items-center justify-center ds-ghost-btn-icon focus:outline-none focus:ring-2 focus:ring-[var(--accent-primary)] ds-radius-item"
         title={t("app_language", "Language")}
         aria-label={t("app_language", "Language")}
         aria-haspopup="menu"

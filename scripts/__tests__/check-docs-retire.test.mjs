@@ -16,26 +16,27 @@ import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { execSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const GATE_PATH = path.resolve(ROOT, 'scripts/check-docs-retire.mjs');
 
+// spawnSync with argv, never a shell string: an interpolated command splits an
+// absolute gate path on its spaces (`node D:\Nueva carpeta\...\gate.mjs` became
+// "Cannot find module 'D:\Nueva'"), and joining args into a shell line invites
+// injection. The failure mode was silent in the worst way — the two tests that
+// assert a NON-zero exit passed for the wrong reason (the spawn error's status
+// is non-zero), so only the "expected success" cases caught it.
 function runGate(args = []) {
-  try {
-    const stdout = execSync(`node ${GATE_PATH} ${args.join(' ')}`, {
-      cwd: ROOT,
-      encoding: 'utf8',
-      stdio: ['pipe', 'pipe', 'pipe'],
-    });
-    return { stdout, stderr: '', exitCode: 0 };
-  } catch (error) {
-    return {
-      stdout: error.stdout ?? '',
-      stderr: error.stderr ?? '',
-      exitCode: error.status ?? 1,
-    };
-  }
+  const result = spawnSync(process.execPath, [GATE_PATH, ...args], {
+    cwd: ROOT,
+    encoding: 'utf8',
+  });
+  return {
+    stdout: result.stdout ?? '',
+    stderr: result.stderr ?? '',
+    exitCode: result.status ?? 1,
+  };
 }
 
 describe('check-docs-retire', () => {

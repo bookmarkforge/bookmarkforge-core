@@ -13,6 +13,8 @@ const store = new Map<string, string>();
 vi.mock("../../store/safeStorage", () => ({
   safeGet: (key: string) => store.get(key) ?? null,
   safeSet: (key: string, value: string) => { store.set(key, value); },
+  // P1: revoke() (consent revocation) removes the install id through this.
+  safeRemove: (key: string) => { store.delete(key); },
 }));
 
 // Minimal IndexedDB mock for analytics events
@@ -105,14 +107,24 @@ function createMockIDB() {
                 setTimeout(() => req.onsuccess?.(), 0);
                 return req;
               }),
+              // P1: clearStoredEvents() clears via this — the old mock had no
+              // `clear()` and never fired `oncomplete`, so any transaction was
+              // pending FOREVER (revoke() awaiting the flush loop timed out).
+              clear: vi.fn(() => {
+                data.clear();
+              }),
             };
-            return {
+            const tx = {
               objectStore: vi.fn().mockReturnValue(txStore),
               oncomplete: null as (() => void) | null,
               onerror: null as (() => void) | null,
               onabort: null as (() => void) | null,
               error: null,
             };
+            // Handlers are assigned synchronously right after transaction()
+            // returns, so a 0ms tick fires whichever the code set.
+            setTimeout(() => tx.oncomplete?.(), 0);
+            return tx;
           }),
           close: vi.fn(),
           onversionchange: null,
@@ -244,5 +256,17 @@ describe("AnalyticsService", () => {
     // track should be a no-op
     analyticsService.track("bookmark_created");
     analyticsService.stop();
+  });
+
+  // ── P1 mock-contract sweep ──────────────────────────────────────────────
+  // The safeStorage factory omitted safeRemove, so revoke() — the consent
+  // revocation path — crashed on it and the install id was never removed.
+  it("revoke() removes the analytics install id from storage", async () => {
+    const { analyticsService } = await import("../../services/AnalyticsService");
+    store.set(STORAGE_KEYS.ANALYTICS_INSTALL_ID, "install-xyz");
+
+    await analyticsService.revoke();
+
+    expect(store.has(STORAGE_KEYS.ANALYTICS_INSTALL_ID)).toBe(false);
   });
 });

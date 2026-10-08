@@ -17,7 +17,15 @@ export function validateInputContracts(deploy, rollback, smoke) {
   if (!/\[\[\s*\"\$url\"\s*==\s*https:\/\/\*\s*\]\]/.test(smoke)) errors.push("staging-smoke.yml: HTTPS URL validation missing");
   if (!/staging_url must not include a port/.test(smoke) || !/staging_url must not include a port/.test(rollback)) errors.push("staging workflows: staging URL port rejection missing");
   if (!/STAGING_SMOKE_TOKEN/.test(smoke) || !/secrets:\s*$/m.test(smoke)) errors.push("staging-smoke.yml: reusable workflow secret contract missing");
-  if (/STAGING_SMOKE_ADMIN_TOKEN/.test(smoke) && (!/STAGING_SMOKE_ADMIN_TOKEN:\s*\$\{\{\s*secrets\.STAGING_SMOKE_ADMIN_TOKEN\s*\}\}/.test(smoke) || !/if:\s*\$\{\{\s*secrets\.STAGING_SMOKE_ADMIN_TOKEN\s*!=\s*''\s*\}\}/.test(smoke))) errors.push("staging-smoke.yml: admin diagnostic secret contract must remain explicit and opt-in");
+  // Opt-in contract, VALID shape: the admin secret is consumed explicitly
+  // (${{ secrets.… }}) at job-level env — where the secrets context is legal —
+  // and the step's `if` reads the env context. The old contract pinned the
+  // invalid construction (secrets inside `if:`), which is what left this file
+  // unparseable for GitHub its whole life: every push recorded a 0-second red
+  // run with zero jobs. A regression test frozen the bug; see
+  // scripts/validate-workflows.mjs for the parse-level rule that catches the
+  // class.
+  if (/STAGING_SMOKE_ADMIN_TOKEN/.test(smoke) && (!/STAGING_SMOKE_ADMIN_TOKEN:\s*\$\{\{\s*secrets\.STAGING_SMOKE_ADMIN_TOKEN\s*\}\}/.test(smoke) || !/if:\s*env\.STAGING_SMOKE_ADMIN_TOKEN\s*!=\s*''/.test(smoke))) errors.push("staging-smoke.yml: admin diagnostic secret contract must remain explicit and opt-in");
   return { errors };
 }
 

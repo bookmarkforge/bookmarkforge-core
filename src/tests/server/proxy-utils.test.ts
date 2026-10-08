@@ -30,8 +30,8 @@ describe("shared server proxy helpers", () => {
   });
 
   it("compares UTF-8 secrets and handles different byte lengths", () => {
-    expect(constantTimeUtf8Equal("clave", "clave")).toBe(true);
-    expect(constantTimeUtf8Equal("clave", "clavE")).toBe(false);
+    expect(constantTimeUtf8Equal("password", "password")).toBe(true);
+    expect(constantTimeUtf8Equal("password", "passworD")).toBe(false);
     expect(constantTimeUtf8Equal("ñ", "n")).toBe(false);
   });
 

@@ -57,11 +57,11 @@ function generatePage(code, t) {
   // Use localized OG image if it exists, otherwise fall back to default
   const ogImageFile = resolve(PUBLIC, `og-image-${code}.png`);
   const ogImageUrl = existsSync(ogImageFile)
-    ? `https://bookmarkforge.com/og-image-${code}.png`
-    : "https://bookmarkforge.com/og-image.png";
+    ? `https://bookmarkforgeapp.com/og-image-${code}.png`
+    : "https://bookmarkforgeapp.com/og-image.png";
 
   const hreflangLinks = ALL_LOCALES.map(l => {
-    const url = l === "en" ? "https://bookmarkforge.com/" : `https://bookmarkforge.com/${l}/`;
+    const url = l === "en" ? "https://bookmarkforgeapp.com/" : `https://bookmarkforgeapp.com/${l}/`;
     return `  <link rel="alternate" hreflang="${l}" href="${url}">`;
   }).join("\n");
 
@@ -74,8 +74,8 @@ function generatePage(code, t) {
     "@graph": [
       {
         "@type": "WebSite",
-        "@id": `https://bookmarkforge.com/${code}/#website`,
-        "url": `https://bookmarkforge.com/${code}/`,
+        "@id": `https://bookmarkforgeapp.com/${code}/#website`,
+        "url": `https://bookmarkforgeapp.com/${code}/`,
         "name": "BookmarkForge",
         "description": t.heroSub,
         "inLanguage": code,
@@ -83,31 +83,31 @@ function generatePage(code, t) {
           "@type": "SearchAction",
           "target": {
             "@type": "EntryPoint",
-            "urlTemplate": `https://bookmarkforge.com/${code}/?s={search_term_string}`
+            "urlTemplate": `https://bookmarkforgeapp.com/${code}/?s={search_term_string}`
           },
           "query-input": "required name=search_term_string"
         },
-        "publisher": { "@id": "https://bookmarkforge.com/#organization" }
+        "publisher": { "@id": "https://bookmarkforgeapp.com/#organization" }
       },
       {
         "@type": "Organization",
-        "@id": "https://bookmarkforge.com/#organization",
+        "@id": "https://bookmarkforgeapp.com/#organization",
         "name": "BookmarkForge",
-        "url": "https://bookmarkforge.com/",
-        "logo": { "@type": "ImageObject", "url": "https://bookmarkforge.com/logo.png", "width": 64, "height": 64 },
+        "url": "https://bookmarkforgeapp.com/",
+        "logo": { "@type": "ImageObject", "url": "https://bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
         "email": "bookmarkforge@proton.me"
       },
       {
         "@type": "SoftwareApplication",
-        "@id": `https://bookmarkforge.com/${code}/#software`,
+        "@id": `https://bookmarkforgeapp.com/${code}/#software`,
         "name": "BookmarkForge",
         "applicationCategory": "ProductivityApplication",
         "operatingSystem": "Web",
-        "url": `https://bookmarkforge.com/${code}/`,
+        "url": `https://bookmarkforgeapp.com/${code}/`,
         "image": ogImageUrl,
         "description": t.heroSub,
         "offers": [
-          { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD", "description": "1,000 bookmarks. Forever free." },
+          { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD", "description": "2,500 bookmarks. Forever free." },
           { "@type": "Offer", "name": "Pro Lifetime v1 — Early Bird", "price": "59", "priceCurrency": "USD", "description": "Early Bird 200. Lifetime of v1, 12 months features, security forever, v2 60% off.", "priceValidUntil": "2026-12-31" },
           { "@type": "Offer", "name": "Pro Lifetime v1", "price": "79", "priceCurrency": "USD", "description": "Regular. Lifetime of v1." }
         ],
@@ -117,7 +117,7 @@ function generatePage(code, t) {
       },
       {
         "@type": "FAQPage",
-        "@id": `https://bookmarkforge.com/${code}/#faq`,
+        "@id": `https://bookmarkforgeapp.com/${code}/#faq`,
         "mainEntity": [
           {
             "@type": "Question",
@@ -145,17 +145,18 @@ function generatePage(code, t) {
   const dirAttr = isRTL ? `\n  dir="rtl"` : "";
   const skipLinkText = t.lang === "ar" ? "انتقل إلى المحتوى الرئيسي" : t.lang === "he" ? "דלג לתוכן הראשי" : "Skip to main content";
 
-  // Nav language links — all 30 locales
+  // Nav language links — all 30 locales (clean paths; the ?lang= query
+  // form was dropped from visible links in f83eb3a)
   const navLangLinks = ALL_LOCALES.map(l => {
     const nativeName = NATIVE_NAME[l];
-    const href = l === "en" ? "/?lang=en" : `/${l}/?lang=${l}`;
+    const href = l === "en" ? "/" : `/${l}/`;
     return `        <a href="${href}" hreflang="${l}" lang="${l}">${nativeName}</a>`;
   }).join("\n");
 
   // Footer language links — same 30 locales
   const footerLangLinks = ALL_LOCALES.map(l => {
     const nativeName = NATIVE_NAME[l];
-    const href = l === "en" ? "/?lang=en" : `/${l}/?lang=${l}`;
+    const href = l === "en" ? "/" : `/${l}/`;
     return `          <li><a href="${href}">${nativeName}</a></li>`;
   }).join("\n");
 
@@ -188,15 +189,15 @@ function generatePage(code, t) {
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/manifest.json">
   <!-- SEO: canonical + hreflang -->
-  <link rel="canonical" href="https://bookmarkforge.com/${code}/">
+  <link rel="canonical" href="https://bookmarkforgeapp.com/${code}/">
 ${hreflangLinks}
-  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/">
   <!-- Open Graph (og-image.png is 1200x630) -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="BookmarkForge">
   <meta property="og:title" content="${t.title}">
   <meta property="og:description" content="${t.metaDesc}">
-  <meta property="og:url" content="https://bookmarkforge.com/${code}/">
+  <meta property="og:url" content="https://bookmarkforgeapp.com/${code}/">
   <meta property="og:image" content="${ogImageUrl}">
   <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
   <meta property="og:image:width" content="1200">
@@ -386,7 +387,8 @@ ${priceFreeItems}
             <ul>
 ${priceProItems}
             </ul>
-            <a href="https://whop.com/bookmarkforge" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">${t.priceProCta}</a>
+            <a href="https://whop.com/checkout/plan_9oP0DrBuqFEb7" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">${t.priceProCta}</a>
+            <a href="https://whop.com/checkout/plan_FTmrDjPDKqQVC" class="btn-secondary btn-block" target="_blank" rel="noopener noreferrer">Get Pro $79 Regular</a>
           </div>
         </div>
         <p class="pricing-legal">${t.priceLegal || 'Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.'}</p>

@@ -177,7 +177,7 @@ describe("RecoveryService", () => {
       await expect(
         recoveryService.encryptMasterPasswordWithRecovery(
           "pass",
-          "frase inválida",
+          "invalid phrase",
         ),
       ).rejects.toThrow("Invalid recovery phrase");
     });

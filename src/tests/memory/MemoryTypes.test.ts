@@ -77,8 +77,8 @@ describe("MemoryTypes — tipos e interfaces", () => {
     it("has the correct structure", () => {
       const scenario: MemoryScenario = {
         id: "sc_1",
-        title: "Patrón de trabajo matutino",
-        description: "El usuario trabaja mejor por la mañana",
+        title: "Morning work pattern",
+        description: "The user works better in the morning",
         atomIds: ["a1", "a2"],
         frequency: 5,
         lastActive: "2025-01-01T00:00:00.000Z",
@@ -94,10 +94,10 @@ describe("MemoryTypes — tipos e interfaces", () => {
     it("has the correct structure", () => {
       const persona: MemoryPersona = {
         id: "persona",
-        preferences: ["le gusta el código limpio"],
-        goals: ["mejorar rendimiento"],
-        tone: "profesional",
-        workflows: ["revisión de PRs"],
+        preferences: ["likes clean code"],
+        goals: ["improve performance"],
+        tone: "professional",
+        workflows: ["PR review"],
         updatedAt: "2025-01-01T00:00:00.000Z",
         generatedFromScenarioIds: ["sc_1", "sc_2"],
       };
@@ -114,7 +114,7 @@ describe("MemoryTypes — tipos e interfaces", () => {
       const session: MemorySession = {
         type: "session",
         id: "session_1",
-        title: "Sesión de prueba",
+        title: "Test session",
         messageIds: ["msg_1", "msg_2"],
         createdAt: "2025-01-01T00:00:00.000Z",
         startedAt: "2025-01-01T00:00:00.000Z",

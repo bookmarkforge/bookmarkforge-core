@@ -37,7 +37,7 @@ describe("SafeRepairCoordinator", () => {
     });
   });
 
-  it("no hace nada cuando la bóveda está sana", async () => {
+  it("does nothing when vault is healthy", async () => {
     const { safeRepairCoordinator } = await import("../../../src/services/ai/SafeRepairCoordinator");
     const result = await safeRepairCoordinator.run();
     expect(result).toMatchObject({ status: "completed", repaired: 0, failed: 0, operations: [] });
@@ -45,7 +45,7 @@ describe("SafeRepairCoordinator", () => {
     expect(mocks.rebuild).not.toHaveBeenCalled();
   });
 
-  it("reconstruye el índice si el escáner lo recomienda y vuelve a verificar", async () => {
+  it("rebuilds index if scanner recommends it and re-verifies", async () => {
     mocks.scan
       .mockResolvedValueOnce({
         scannedAt: "2026-01-01T00:00:00.000Z",
@@ -76,7 +76,7 @@ describe("SafeRepairCoordinator", () => {
     expect(mocks.scan).toHaveBeenCalledTimes(2);
   });
 
-  it("rechaza una reparación con la bóveda bloqueada", async () => {
+  it("rejects repair with locked vault", async () => {
     mocks.locked.mockReturnValue(true);
     const { safeRepairCoordinator } = await import("../../../src/services/ai/SafeRepairCoordinator");
     await expect(safeRepairCoordinator.run()).rejects.toMatchObject({ name: "VAULT_LOCKED" });

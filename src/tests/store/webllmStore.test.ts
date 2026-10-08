@@ -71,12 +71,12 @@ describe("webllmStore", () => {
 
   describe("setError", () => {
     it("sets an error message", () => {
-      useWebLLMStore.getState().setError("Algo salió mal");
-      expect(useWebLLMStore.getState().error).toBe("Algo salió mal");
+      useWebLLMStore.getState().setError("Something went wrong");
+      expect(useWebLLMStore.getState().error).toBe("Something went wrong");
     });
 
     it("clears the error with null", () => {
-      useWebLLMStore.setState({ error: "Error previo" });
+      useWebLLMStore.setState({ error: "Previous error" });
       useWebLLMStore.getState().setError(null);
       expect(useWebLLMStore.getState().error).toBeNull();
     });

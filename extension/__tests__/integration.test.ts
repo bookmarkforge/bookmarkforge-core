@@ -54,7 +54,7 @@ describe('Extension Integration', () => {
 
   it('createBookmarklet produces a safe javascript: URL', () => {
     const bookmarklet = (globalThis as any).BookmarkForgeCaptureUrl.createBookmarklet(
-      'https://bookmarkforge.com',
+      'https://bookmarkforgeapp.com',
     );
 
     // Must start with javascript:(function(){
@@ -62,7 +62,7 @@ describe('Extension Integration', () => {
     // Must end with })();
     expect(bookmarklet).toMatch(/\}\)\(\);$/);
     // The base URL is serialized via JSON.stringify (double-quoted string)
-    expect(bookmarklet).toContain('var b="https://bookmarkforge.com"');
+    expect(bookmarklet).toContain('var b="https://bookmarkforgeapp.com"');
     // Uses encodeURIComponent for user data (no raw injection)
     expect(bookmarklet).toContain('encodeURIComponent(window.location.href)');
     expect(bookmarklet).toContain('encodeURIComponent(document.title');
@@ -115,7 +115,7 @@ describe('Extension Integration', () => {
   });
 
   it('isValidBaseUrl accepts valid https URLs', () => {
-    expect((globalThis as any).BookmarkForgeCaptureUrl.isValidBaseUrl('https://bookmarkforge.com')).toBe(true);
+    expect((globalThis as any).BookmarkForgeCaptureUrl.isValidBaseUrl('https://bookmarkforgeapp.com')).toBe(true);
     expect((globalThis as any).BookmarkForgeCaptureUrl.isValidBaseUrl('https://example.com/path?q=1')).toBe(true);
     expect((globalThis as any).BookmarkForgeCaptureUrl.isValidBaseUrl('https://sub.domain.co.uk')).toBe(true);
   });

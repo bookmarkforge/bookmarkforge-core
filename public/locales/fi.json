@@ -1438,7 +1438,7 @@
   "app_proActivationsLeft": "Jäljellä olevat aktivoinnit: {{count}}",
   "app_proDeactivate": "Poista käytöstä",
   "app_proUpgradeTitle": "Avaa BookmarkForge Pro",
-  "app_proUpgradeText": "Rajattomat kirjanmerkit, P2P-synkronointi 3 laitteella ja paikallinen AI. Yksi maksu, sinun ikuisesti.",
+  "app_proUpgradeText": "Rajattomat kirjanmerkit, P2P-synkronointi 5 laitteella ja paikallinen AI. Yksi maksu, sinun ikuisesti.",
   "app_proBuy": "Hanki Pro — {{price}}",
 "app_proStateFeaturePro": "Pro",
 "app_proStateBodyLicense": "Avaa sen Pro-lisenssillä — maksa kerran ja omista pysyvästi. Kaikki aiemmin tallentamasi säilyy ennallaan.",

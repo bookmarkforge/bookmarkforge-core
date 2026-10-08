@@ -678,12 +678,12 @@ describe.skipIf(!serverEntryExists)("Signaling server — DoS hardening (env lim
     });
     const spUrl = spServer.url;
     try {
+      // Route through open(): it installs the message queue at socket
+      // creation, so the server's init frame can never race the listener
+      // registration and hang nextMessage until the 60s timeout (the
+      // legacy queue-less path this helper used to take in CI).
       const openWithHeader = (xff: string) =>
-        new Promise<WebSocket>((resolvePromise, reject) => {
-          const ws = new WebSocket(spUrl, { headers: { "x-forwarded-for": xff } });
-          ws.on("open", () => resolvePromise(ws));
-          ws.on("error", reject);
-        });
+        open(spUrl, { headers: { "x-forwarded-for": xff } });
 
       const a = await openWithHeader("203.0.113.1");
       await nextMessage(a);
@@ -1344,14 +1344,10 @@ describe.skipIf(!serverEntryExists)("Signaling server — bounded join-window ca
     });
     const sockets: WebSocket[] = [];
     try {
+      // open() attaches the message queue at socket creation — same race
+      // guard as every other socket in this file (see the queue comment).
       const openWithHeader = (xff: string) =>
-        new Promise<WebSocket>((resolvePromise, reject) => {
-          const ws = new WebSocket(started.url, {
-            headers: { "x-forwarded-for": xff },
-          });
-          ws.on("open", () => resolvePromise(ws));
-          ws.on("error", reject);
-        });
+        open(started.url, { headers: { "x-forwarded-for": xff } });
 
       const first = await openWithHeader("203.0.113.10");
       sockets.push(first);

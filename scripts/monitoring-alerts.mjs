@@ -1,67 +1,69 @@
 #!/usr/bin/env node
 /**
- * scripts/monitoring-alerts.mjs — 5 alertas exactas para producción
+ * scripts/monitoring-alerts.mjs — 5 precise alerts for production
  *
- * 1. APP CAÍDA — production-smoke (index.html + CSP + COOP + /health +
+ * 1. APP CAÍDA — production-smoke (app.html + CSP + COOP + /health +
  *    client-events + WS).
- *    Con APP_DOWN_AUTO_ROLLBACK=1, DOS fallos CONSECUTIVOS de este check
- *    (persistidos entre ticks del cron) disparan rollback.mjs --auto y luego
- *    rollback.mjs --verify que corrobora la recuperación ANTES de notificar
- *    al operador: si el verify pasa, el cron no escala (el rollback resolvió
- *    el incidente); si el verify falla, escala.
- * 2. BUNDLE CORRUPTO — verificación REAL del SRI: si PROD_BASE_URL sirve el
- *    bundle (nginx), descarga index.html, extrae integrity del primer script y
- *    compara el sha256 del recurso servido (lo que haría el navegador). En
- *    entornos sin frontend (drill Docker-free / CI), sirve un dist/index.html
- *    con SRI ROTO contra un server estático efímero y verifica que el detector
- *    detecta la violación — cubre la alerta 2 en el drill.
- * 3. MONITORING ACTIVO — verifica monitores, listener CSP y proxy nginx
- * 4. CLIENT_CRITICAL — cluster signal: el servidor loguea
- *    `client_events_critical_threshold` cuando >= 3 clientes distintos reportan
- *    critical en la ventana (storage-pressure critical, bundle-integrity-spike,
- *    error-spike, csp-violation-spike). Este check consume esa línea del log y
- *    ESCALA: página (PAGE_CMD) + rollback automático (AUTO_ROLLBACK=1) con
- *    cooldown anti-loop.
- * 5. RETRY_DEGRADED — entrega degradada: clientes que abandonaron la entrega de
- *    eventos tras reintentos acotados (el servidor loguea
- *    `client_events_retry_degraded` al ver drops nuevos). Cuando la entrega
- *    falla, la propia señal CLIENT_CRITICAL puede estar ciega. Consume la misma
- *    fuente de log y PAGINA (PAGE_CMD, cooldown) — nunca rollback (es salud de
- *    entrega infra/red, no regresión de código).
- * 6. API_DEGRADADO — degradación (no outage): mide la latencia p95 y el
- *    error-rate de GET /health y de un endpoint real de negocio (por defecto
- *    POST /api/license/entitlement, el que la app consulta al arrancar para
- *    resolver el plan) sobre API_PROBE_SAMPLES muestras por tick y
- *    persiste cada medición en un historial JSON acotado a 24h.
- *    falla si p95 > API_LATENCY_P95_MS o error-rate > API_ERROR_RATE. El p95
- *    sobre N muestras suaviza picos de una sola request. PAGINA (PAGE_CMD,
- *    cooldown) — nunca rollback: la degradación no implica regresión de
- *    código, y el outage total ya lo cubre APP_CAIDA.
+ *    With APP_DOWN_AUTO_ROLLBACK=1, TWO CONSECUTIVE failures of this check
+ *    (persisted across cron ticks) trigger rollback.mjs --auto and then
+ *    rollback.mjs --verify, which corroborates the recovery BEFORE notifying
+ *    the operator: if the verify passes, the cron does not escalate (the
+ *    rollback resolved the incident); if the verify fails, it escalates.
+ * 2. BUNDLE CORRUPTO — REAL SRI verification: if PROD_BASE_URL serves the
+ *    bundle (nginx), download app.html, extract the integrity of the first
+ *    script and compare the sha256 of the served resource (what the browser
+ *    would do). In environments without a frontend (Docker-free drill / CI),
+ *    serve a dist/index.html with BROKEN SRI against an ephemeral static
+ *    server and verify that the detector catches the violation — this covers
+ *    alert 2 in the drill.
+ * 3. MONITORING ACTIVO — verifies monitors, the CSP listener and the nginx proxy
+ * 4. CLIENT_CRITICAL — cluster signal: the server logs
+ *    `client_events_critical_threshold` when >= 3 distinct clients report a
+ *    critical condition in the window (storage-pressure critical, bundle-integrity-spike,
+ *    error-spike, csp-violation-spike). This check consumes that log line and
+ *    ESCALATES: page (PAGE_CMD) + automatic rollback (AUTO_ROLLBACK=1) with
+ *    an anti-loop cooldown.
+ * 5. RETRY_DEGRADED — degraded delivery: clients that gave up delivering events
+ *    after bounded retries (the server logs `client_events_retry_degraded` on
+ *    seeing new drops). When delivery fails, the CLIENT_CRITICAL signal itself
+ *    may be blind. It consumes the same log source and PAGES (PAGE_CMD,
+ *    cooldown) — never a rollback (it is infra/network delivery health, not a
+ *    code regression).
+ * 6. API_DEGRADADO — degradation (not an outage): measures the p95 latency and
+ *    error-rate of GET /health and of a real business endpoint (by default
+ *    POST /api/license/entitlement, the one the app queries at startup to
+ *    resolve the plan) over API_PROBE_SAMPLES samples per tick and
+ *    persists every measurement in a JSON history bounded to 24h.
+ *    Fails if p95 > API_LATENCY_P95_MS or error-rate > API_ERROR_RATE. The p95
+ *    over N samples smooths single-request spikes. PAGES (PAGE_CMD,
+ *    cooldown) — never a rollback: degradation does not imply a code
+ *    regression, and a total outage is already covered by APP_CAIDA.
  *
- * Uso servidor (cron cada 60s):
- *   PROD_BASE_URL=https://tu-dominio.com SLACK_WEBHOOK=https://hooks.slack.com/... node scripts/monitoring-alerts.mjs
+ * Server usage (cron every 60s):
+ *   PROD_BASE_URL=https://your-domain.com SLACK_WEBHOOK=https://hooks.slack.com/... node scripts/monitoring-alerts.mjs
  *   PROD_BASE_URL=http://127.0.0.1:8080 node scripts/monitoring-alerts.mjs --json
  *
  * Env:
- *   CLIENT_EVENTS_WINDOW_MS  ventana del cluster (default 600000 = 10 min)
- *   CLIENT_EVENTS_LOG_FILE   ruta del log del servidor (alternativa a docker logs)
- *   CLIENT_EVENTS_LOG_CMD    comando para leer el log (default: docker compose logs --since <window> api)
- *   AUTO_ROLLBACK=1          ejecuta el rollback automático al detectar el cluster
- *   APP_DOWN_AUTO_ROLLBACK=1 rollback automático ante APP_CAIDA x2 consecutivos
- *   APP_DOWN_THRESHOLD       consecutivos de APP_CAIDA que disparan (default 2)
- *   ROLLBACK_CMD             comando de rollback (default: node scripts/rollback.mjs --auto)
- *   ROLLBACK_COOLDOWN_MS     mínimo entre página/rollback (default 600000)
- *   PAGE_CMD                 comando de página (ej: /usr/local/bin/bmf-page.sh)
- *   MONITOR_STATE_FILE       estado de dedup (default .monitor-state.json)
- *   API_PROBE_SAMPLES        muestras de latencia de /health por tick (default 10)
- *   API_PROBE_TIMEOUT_MS     timeout por muestra (default 5000 ms)
- *   API_LATENCY_P95_MS       umbral p95 de latencia (default 1000 ms)
- *   API_ERROR_RATE           umbral de error-rate (default 0.2 = 20 %)
- *   API_PROBE_BUSINESS_PATH  endpoint de negocio (default /api/license/entitlement)
- *   MONITORING_NGINX_CONFIG  ruta del nginx generado (default public/nginx.conf)
- *   API_HISTORY_FILE         historial JSON de métricas (default .api-degradation-history.json)
+ *   CLIENT_EVENTS_WINDOW_MS  cluster window (default 600000 = 10 min)
+ *   CLIENT_EVENTS_LOG_FILE   server log path (alternative to docker logs)
+ *   CLIENT_EVENTS_LOG_CMD    command to read the log (default: docker compose logs --since <window> api)
+ *   AUTO_ROLLBACK=1          runs the automatic rollback when the cluster is detected
+ *   APP_DOWN_AUTO_ROLLBACK=1 automatic rollback on APP_CAIDA x2 consecutive
+ *   APP_DOWN_THRESHOLD       consecutive APP_CAIDA that trigger it (default 2)
+ *   ROLLBACK_CMD             rollback command (default: node scripts/rollback.mjs --auto)
+ *   ROLLBACK_COOLDOWN_MS     minimum between page/rollback (default 600000)
+ *   PAGE_CMD                 paging command (e.g. /usr/local/bin/bmf-page.sh)
+ *   MONITOR_STATE_FILE       dedup state (default .monitor-state.json)
+ *   API_PROBE_SAMPLES        /health latency samples per tick (default 10)
+ *   API_PROBE_TIMEOUT_MS     timeout per sample (default 5000 ms)
+ *   API_LATENCY_P95_MS       p95 latency threshold (default 1000 ms)
+ *   API_ERROR_RATE           error-rate threshold (default 0.2 = 20 %)
+ *   API_PROBE_BUSINESS_PATH  business endpoint (default /api/license/entitlement)
+ *   MONITORING_NGINX_CONFIG  path to the generated nginx config (default public/nginx.conf)
+ *   API_HISTORY_FILE         JSON metrics history (default .api-degradation-history.json)
  *
- * Usa el mismo runApiSurfaceChecks que production-smoke.mjs — no duplica lógica.
+ * Uses the same runApiSurfaceChecks as production-smoke.mjs — it does not
+ * duplicate logic.
  */
 
 import { readFileSync, writeFileSync, renameSync } from "node:fs";
@@ -88,9 +90,9 @@ const DOCKER_REGISTRY = (process.env.DOCKER_REGISTRY ?? "").trim().replace(/\/+$
 const ROLLBACK_COOLDOWN_MS = Number(process.env.ROLLBACK_COOLDOWN_MS ?? 600_000);
 const MONITOR_STATE_FILE = process.env.MONITOR_STATE_FILE ?? ".monitor-state.json";
 
-// ── Degradación (API_DEGRADADO): latencia p95 + error-rate de /health ───
-// El p95 sobre N muestras por tick suaviza picos aislados. Umbrales
-// configurables por env; NUNCA dispara rollback.
+// ── Degradation (API_DEGRADADO): p95 latency + error-rate of /health ───
+// The p95 over N samples per tick smooths isolated spikes. Thresholds
+// configurable via env; it NEVER triggers a rollback.
 const API_PROBE_SAMPLES = Number(process.env.API_PROBE_SAMPLES ?? 10);
 const API_PROBE_TIMEOUT_MS = Number(process.env.API_PROBE_TIMEOUT_MS ?? 5_000);
 const API_LATENCY_P95_MS = Number(process.env.API_LATENCY_P95_MS ?? 1_000);
@@ -105,12 +107,12 @@ const API_HISTORY_FILE = process.env.API_HISTORY_FILE ?? ".api-degradation-histo
 const API_HISTORY_WINDOW_MS = 24 * 60 * 60 * 1000;
 const API_HISTORY_MAX_ENTRIES = 1_440;
 
-// Auto-rollback en APP_CAIDA: cuando el check de app cae DOS veces SEGUIDAS
-// (consecutivo persistido entre ticks del cron), se invoca rollback.mjs --auto
-// y luego se CONFIRMA con `rollback.mjs --verify` ANTES de notificar al
-// operador. Fail-closed: solo con APP_DOWN_AUTO_ROLLBACK=1.
+// Auto-rollback on APP_CAIDA: when the app check fails TWICE IN A ROW
+// (consecutive count persisted across cron ticks), rollback.mjs --auto is
+// invoked and then CONFIRMED with `rollback.mjs --verify` BEFORE notifying the
+// operator. Fail-closed: only with APP_DOWN_AUTO_ROLLBACK=1.
 const APP_DOWN_AUTO_ROLLBACK = process.env.APP_DOWN_AUTO_ROLLBACK === "1";
-// Consecutivos de APP_CAIDA que disparan rollback (2 = dos ticks seguidos).
+// Consecutive APP_CAIDA failures that trigger a rollback (2 = two ticks in a row).
 const APP_DOWN_THRESHOLD = Number(process.env.APP_DOWN_THRESHOLD ?? 2);
 
 // Kept as the single integration point for future API-surface checks.
@@ -137,10 +139,10 @@ function sha256Base64(bytes) {
 }
 
 /**
- * Algoritmo de integridad del navegador (SRI spec): el recurso se acepta si
- * alguno de los hashes space-separados (sha256/sha384/sha512) coincide con el
- * digest del cuerpo servido. Mismatch = el navegador bloquearía el script y
- * reportaría una SecurityPolicyViolation.
+ * Browser integrity algorithm (SRI spec): the resource is accepted if any of
+ * the space-separated hashes (sha256/sha384/sha512) matches the digest of the
+ * served body. A mismatch = the browser would block the script and report a
+ * SecurityPolicyViolation.
  */
 export function integrityMatches(integrity, body) {
   for (const spec of integrity.split(/\s+/)) {
@@ -153,21 +155,33 @@ export function integrityMatches(integrity, body) {
 }
 
 /**
- * Verifica el SRI del bundle servido en {baseUrl}/index.html como lo haría el
- * navegador: extrae integrity del primer <script>, descarga el recurso y
- * compara su digest. Devuelve null si la base NO sirve un html con scripts
- * (→ el caller usa el probe Docker-free).
+ * Verifies the SRI of the served SPA bundle the way the browser would:
+ * extract the integrity of the first <script>, download the resource and
+ * compare its digest.
+ *
+ * ADR-028: gate drift — since the marketing/SPA split the bundle lives at
+ * /app.html (/index.html is the marketing page and serves no SRI scripts),
+ * so probe app.html first and fall back to index.html for older
+ * deployments. Returns null if the base does NOT serve an html with
+ * scripts (→ the caller uses the Docker-free probe).
  */
 export async function verifyBundleSri(baseUrl) {
-  let res;
-  try {
-    res = await fetch(`${baseUrl}/index.html`);
-  } catch {
-    return null; // servidor inalcanzable: no hay bundle servido
+  let html = null;
+  for (const page of ["app.html", "index.html"]) {
+    let res;
+    try {
+      res = await fetch(`${baseUrl}/${page}`);
+    } catch {
+      return null; // unreachable server: no served bundle
+    }
+    if (!res.ok) continue;
+    const body = await res.text();
+    if (body.includes("<script")) {
+      html = body;
+      break;
+    }
   }
-  if (!res.ok) return null;
-  const html = await res.text();
-  if (!html.includes("<script")) return null;
+  if (html === null) return null;
 
   let target = null;
   for (const match of html.matchAll(/<script\b([^>]*)>/gi)) {
@@ -183,7 +197,7 @@ export async function verifyBundleSri(baseUrl) {
     return {
       mode: "served",
       ok: false,
-      detail: `el bundle servido (${baseUrl}/index.html) no declara integrity en sus scripts — el navegador no podría verificar SRI`,
+      detail: `the served bundle (${baseUrl}/app.html) declares no integrity in its scripts — the browser could not verify SRI`,
     };
   }
 
@@ -192,10 +206,10 @@ export async function verifyBundleSri(baseUrl) {
   try {
     assetRes = await fetch(assetUrl);
   } catch (e) {
-    return { mode: "served", ok: false, detail: `no se pudo descargar ${target.src}: ${String(e)}` };
+    return { mode: "served", ok: false, detail: `could not download ${target.src}: ${String(e)}` };
   }
   if (!assetRes.ok) {
-    return { mode: "served", ok: false, detail: `no se pudo descargar ${target.src} (HTTP ${assetRes.status})` };
+    return { mode: "served", ok: false, detail: `could not download ${target.src} (HTTP ${assetRes.status})` };
   }
   const body = Buffer.from(await assetRes.arrayBuffer());
   const actual = sha256Base64(body);
@@ -204,21 +218,21 @@ export async function verifyBundleSri(baseUrl) {
     mode: "served",
     ok,
     detail: ok
-      ? `SRI servido OK (${actual.slice(0, 12)}…)`
-      : `SRI ROTO — integrity=${target.integrity.slice(0, 24)}… real=${actual.slice(0, 24)}… (el navegador bloquearía el script)`,
+      ? `served SRI OK (${actual.slice(0, 12)}…)`
+      : `BROKEN SRI — integrity=${target.integrity.slice(0, 24)}… actual=${actual.slice(0, 24)}… (the browser would block the script)`,
   };
 }
 
 /**
- * Probe Docker-free (drill / CI sin frontend): sirve un dist/index.html con
- * SRI ROTO a propósito contra un server estático efímero y ejecuta la misma
- * verificación. PASS = el detector DETECTA el mismatch (el navegador
- * reportaría la violación); FAIL = el detector está roto.
+ * Docker-free probe (drill / CI without a frontend): serves a dist/index.html
+ * with BROKEN SRI on purpose against an ephemeral static server and runs the
+ * same verification. PASS = the detector CATCHES the mismatch (the browser
+ * would report the violation); FAIL = the detector is broken.
  */
 async function probeBrokenSri() {
   const { createServer } = await import("node:http");
-  const GOOD = "/* bundle sano */";
-  const CORRUPTED = "/* bundle CORRUPTO — el navegador debe bloquear */";
+  const GOOD = "/* healthy bundle */";
+  const CORRUPTED = "/* CORRUPTED bundle — the browser must block it */";
   const html = `<!doctype html><script src="/app.js" integrity="sha256-${sha256Base64(Buffer.from(GOOD))}"></script>`;
   let server;
   try {
@@ -234,11 +248,11 @@ async function probeBrokenSri() {
       mode: "probe",
       ok: detected,
       detail: detected
-        ? "probe SRI: dist/index.html servido con SRI ROTO → violación DETECTADA (el navegador la reportaría) ✓"
-        : `probe SRI FALLÓ — el detector no detectó el SRI roto (${result?.detail ?? "sin resultado"})`,
+        ? "SRI probe: served HTML with BROKEN SRI → violation DETECTED (the browser would report it) ✓"
+        : `SRI probe FAILED — the detector did not catch the broken SRI (${result?.detail ?? "no result"})`,
     };
   } catch (e) {
-    return { mode: "probe", ok: false, detail: `probe SRI no pudo ejecutarse: ${e.message}` };
+    return { mode: "probe", ok: false, detail: `the SRI probe could not run: ${e.message}` };
   } finally {
     if (server) await new Promise((resolve) => server.close(resolve));
   }
@@ -246,12 +260,12 @@ async function probeBrokenSri() {
 
 async function checkBundleCorrupto() {
   try {
-    // Modo prod: verifica el bundle REAL servido (nginx → index.html).
+    // Prod mode: verifies the REAL served bundle (nginx → index.html).
     const served = await verifyBundleSri(PROD_BASE_URL);
     if (served) {
-      return { name: "BUNDLE_CORRUPTO", ok: served.ok, detail: `[servido] ${served.detail}` };
+      return { name: "BUNDLE_CORRUPTO", ok: served.ok, detail: `[served] ${served.detail}` };
     }
-    // Modo drill Docker-free: probe con SRI roto (cubre la alerta 2).
+    // Docker-free drill mode: probe with broken SRI (covers alert 2).
     const probe = await probeBrokenSri();
     return { name: "BUNDLE_CORRUPTO", ok: probe.ok, detail: probe.detail };
   } catch (e) {
@@ -264,11 +278,11 @@ async function checkBundleCorrupto() {
  * The server emits `client_events_critical_threshold` (JSON, with timestamp)
  * when >= CLIENT_EVENTS_CRITICAL_CLIENTS distinct clients reported a
  * critical condition within the window. Source: CLIENT_EVENTS_LOG_FILE (tail
- * del archivo) o CLIENT_EVENTS_LOG_CMD (default docker compose logs). Las
- * líneas se filtran por timestamp dentro de la ventana; si el timestamp no
- * parsea, se cuentan (la fuente ya acota recencia con --since / tail).
- * Fail-closed: si el log NO se puede leer, el check falla (un cluster no
- * detectado es peor que un falso positivo de log ilegible).
+ * of the file) or CLIENT_EVENTS_LOG_CMD (default docker compose logs). Lines
+ * are filtered by timestamp within the window; if the timestamp does not
+ * parse, they are counted (the source already bounds recency with --since /
+ * tail). Fail-closed: if the log CANNOT be read, the check fails (an
+ * undetected cluster is worse than a false positive from an unreadable log).
  */
 /**
  * Parses server log lines for the structured client critical threshold event.
@@ -287,10 +301,10 @@ export function parseClientCriticalLog(text, now = Date.now(), windowMs = CLIENT
     const parsed = timestampMatch ? Date.parse(timestampMatch[1]) : NaN;
     if (!Number.isNaN(parsed)) timestamp = parsed;
     if (timestamp < cutoff) continue;
-    // Toda línea fresca colapsa a UNA alerta agregada por tick (evita doble
-    // paginación por re-arms de la misma ventana), pero la severidad reportada
-    // es el MÁXIMO de clientes críticos observado en la ventana: paginar por
-    // debajo de la peor severidad es peor que un detalle redundante.
+    // Every fresh line collapses into ONE aggregated alert per tick (avoids
+    // double paging from re-arms of the same window), but the reported
+    // severity is the MAXIMUM of critical clients observed in the window:
+    // paging below the worst severity is worse than a redundant detail.
     const clientsMatch = line.match(/"criticalClients"\s*:\s*(\d+)/);
     const criticalClients = clientsMatch ? Number(clientsMatch[1]) : 0;
     clusterEvents = 1;
@@ -304,14 +318,14 @@ export function parseClientCriticalLog(text, now = Date.now(), windowMs = CLIENT
 }
 
 /**
- * Lee la fuente del log de client-events (archivo tail o comando docker).
- * Devuelve `{ text }` o `{ error }` — compartido por CLIENT_CRITICAL y
- * RETRY_DEGRADED para que ambos vean exactamente la misma fuente.
+ * Reads the client-events log source (tail of a file or a docker command).
+ * Returns `{ text }` or `{ error }` — shared by CLIENT_CRITICAL and
+ * RETRY_DEGRADED so both see exactly the same source.
  */
 async function readClientEventsLog(logFile, logCmd) {
   const { existsSync, openSync, readSync, closeSync, statSync } = await import("node:fs");
   if (logFile) {
-    if (!existsSync(logFile)) return { error: `log no legible (${logFile}) — fail-closed` };
+    if (!existsSync(logFile)) return { error: `log not readable (${logFile}) — fail-closed` };
     const size = statSync(logFile).size;
     const len = Math.min(size, 1_000_000);
     const buf = Buffer.alloc(len);
@@ -330,7 +344,7 @@ async function readClientEventsLog(logFile, logCmd) {
   }
   const r = runCommandLine(logCmd, { encoding: "utf8", timeout: 30_000 });
   if (r.status !== 0 && !(r.stdout ?? "") && !(r.stderr ?? "")) {
-    return { error: `log no legible (${logCmd}) — fail-closed` };
+    return { error: `log not readable (${logCmd}) — fail-closed` };
   }
   return { text: (r.stdout ?? "") + (r.stderr ?? "") };
 }
@@ -354,8 +368,8 @@ export async function checkClientCritical({
       name: "CLIENT_CRITICAL",
       ok,
       detail: ok
-        ? `sin client_events_critical_threshold en ${sourceWindowMinutes}min`
-        : `${clusterEvents} cluster event(s) en ${sourceWindowMinutes}min — criticalClients>=${maxCriticalClients || 3}`,
+        ? `no client_events_critical_threshold in ${sourceWindowMinutes}min`
+        : `${clusterEvents} cluster event(s) in ${sourceWindowMinutes}min — criticalClients>=${maxCriticalClients || 3}`,
       clusterEvents,
     };
   } catch (e) {
@@ -411,8 +425,8 @@ export async function checkRetryDegraded({
       name: "RETRY_DEGRADED",
       ok,
       detail: ok
-        ? `sin client_events_retry_degraded en ${sourceWindowMinutes}min`
-        : `${degradedEvents} señal(es) de entrega degradada en ${sourceWindowMinutes}min — +${maxNewDropped} eventos perdidos`,
+        ? `no client_events_retry_degraded in ${sourceWindowMinutes}min`
+        : `${degradedEvents} degraded delivery signal(s) in ${sourceWindowMinutes}min — +${maxNewDropped} events lost`,
       degradedEvents,
     };
   } catch (e) {
@@ -421,11 +435,11 @@ export async function checkRetryDegraded({
 }
 
 /**
- * API_DEGRADADO — degradación, no outage: latencia p95 + error-rate de
- * GET /health y un endpoint de negocio sobre `samples` muestras por tick.
- * Fallo = p95 > latencyThresholdMs
- * O error-rate > errorRateThreshold. Nunca rollback: la degradación no
- * implica regresión de código; el outage total lo cubre APP_CAIDA.
+ * API_DEGRADADO — degradation, not an outage: p95 latency + error-rate of
+ * GET /health and a business endpoint over `samples` samples per tick.
+ * Failure = p95 > latencyThresholdMs
+ * or error-rate > errorRateThreshold. Never a rollback: degradation does
+ * not imply a code regression; a total outage is covered by APP_CAIDA.
  */
 function isApiHistoryEntry(entry) {
   return entry && Number.isFinite(entry.timestamp) && Number.isFinite(entry.p95Ms) && Number.isFinite(entry.errorRate);
@@ -540,8 +554,8 @@ export async function checkApiDegradado({
     name: "API_DEGRADADO",
     ok,
     detail: ok
-      ? `p95 ${p95Ms}ms (umbral ${latencyThresholdMs}ms) · error-rate ${ratePct}% (umbral ${thresholdPct}%) · ${samples} rondas health+business`
-      : `DEGRADADO — p95 ${p95Ms}ms (umbral ${latencyThresholdMs}ms) · error-rate ${ratePct}% (umbral ${thresholdPct}%) · ${errors}/${totalProbes} fallos (${businessErrors} business)`,
+      ? `p95 ${p95Ms}ms (threshold ${latencyThresholdMs}ms) · error-rate ${ratePct}% (threshold ${thresholdPct}%) · ${samples} health+business rounds`
+      : `DEGRADED — p95 ${p95Ms}ms (threshold ${latencyThresholdMs}ms) · error-rate ${ratePct}% (threshold ${thresholdPct}%) · ${errors}/${totalProbes} failures (${businessErrors} business)`,
     p95Ms,
     errorRate,
     samples,
@@ -590,8 +604,8 @@ export async function checkMonitoringActivo({ root = process.cwd(), nginxPath = 
       name: "MONITORING_ACTIVO",
       ok,
       detail: ok
-        ? "4 monitores + listener csp-violation-spike + proxy nginx presentes"
-        : `faltan: ${missing.join(", ")}`,
+        ? "4 monitors + csp-violation-spike listener + nginx proxy present"
+        : `missing: ${missing.join(", ")}`,
     };
   } catch (e) {
     return { name: "MONITORING_ACTIVO", ok: false, detail: String(e) };
@@ -599,14 +613,14 @@ export async function checkMonitoringActivo({ root = process.cwd(), nginxPath = 
 }
 
 /**
- * Salida ordenada del proceso — crítico en Windows.
- * `process.exit()` inmediato mientras undici (fetch) mantiene sockets
- * keep-alive abiertos dispara un crash nativo de libuv en Windows
- * (exit 0xC0000409 / "Assertion failed ... src\\win\\async.c") porque el
- * teardown del proceso cierra los handles de red a mitad de cierre.
- * En su lugar: se cierra el dispatcher global de undici limpiamente y se
- * deja que el event loop drene solo con `process.exitCode` (failsafe de
- * 5s por si algo ref'd mantiene el loop vivo).
+ * Orderly process exit — critical on Windows.
+ * An immediate `process.exit()` while undici (fetch) keeps keep-alive sockets
+ * open triggers a native libuv crash on Windows
+ * (exit 0xC0000409 / "Assertion failed ... src\\win\\async.c") because the
+ * process teardown closes the network handles mid-close.
+ * Instead: close undici's global dispatcher cleanly and let the event loop
+ * drain on its own with `process.exitCode` (a 5s failsafe in case
+ * something ref'd keeps the loop alive).
  */
 let shutdownFailsafeTimer = null;
 export async function shutdownExit(code) {
@@ -618,16 +632,16 @@ export async function shutdownExit(code) {
       new Promise((resolve) => setTimeout(resolve, 3_000)),
     ]);
   } catch {
-    // undici no es importable: el drain natural del loop cerrará los sockets
-    // por keep-alive timeout; el failsafe de abajo fuerza la salida.
+    // undici is not importable: the loop's natural drain will close the
+    // sockets via the keep-alive timeout; the failsafe below forces the exit.
   }
-  // Failsafe: si algo ref'd mantiene el loop vivo (fs threadpool, timers),
-  // forzamos la salida tras un margen — ya sin sockets de undici abiertos.
+  // Failsafe: if something ref'd keeps the loop alive (fs threadpool, timers),
+  // we force the exit after a grace period — with no undici sockets left open.
   shutdownFailsafeTimer = setTimeout(() => process.exit(process.exitCode ?? code), 5_000).unref();
 }
 
-/** Cancela el failsafe de shutdownExit — usado por los tests para que el
- * timer unref'd no dispare process.exit() a mitad de la suite. */
+/** Cancels the shutdownExit failsafe — used by the tests so the unref'd
+ * timer does not fire process.exit() halfway through the suite. */
 export function cancelShutdownFailsafe() {
   if (shutdownFailsafeTimer) {
     clearTimeout(shutdownFailsafeTimer);
@@ -651,19 +665,19 @@ const results = [
 
 const allOk = results.every((r) => r.ok);
 
-// Se setea a true cuando APP_CAIDA dispara rollback + verify y la app se
-// recupera: en ese caso el cron NO notifica al operador (el rollback ya
-// resolvió el incidente antes de que llegara la alerta).
+// Set to true when APP_CAIDA triggers a rollback + verify and the app
+// recovers: in that case the cron does NOT notify the operator (the rollback
+// already resolved the incident before the alert arrived).
 let skipOperatorNotify = false;
 
-// ── Escalation: APP_CAIDA ×2 consecutivos → rollback + verify, luego ───
-// ── notificar al operador solo si el verify falla tras el rollback ────
-// Un fallo aislado de smoke no dispara rollback (puede ser un timeout
-// momentáneo); DOS consecutivos SÍ significan una app realmente abajo. El
-// contador se persiste en MONITOR_STATE_FILE para sobrevivir a los ticks
-// del cron (60s). Al detectar el segundo: rollback.mjs --auto y después
-// rollback.mjs --verify (que corre el mismo smoke). Solo si el verify
-// también falla, el cron escala al operador (Slack).
+// ── Escalation: APP_CAIDA ×2 consecutive → rollback + verify, then ───
+// ── notify the operator only if the verify fails after the rollback ──
+// An isolated smoke failure does not trigger a rollback (it may be a momentary
+// timeout); TWO in a row DO mean a genuinely down app. The counter is
+// persisted in MONITOR_STATE_FILE to survive the 60s cron ticks. On detecting
+// the second: rollback.mjs --auto and then rollback.mjs --verify (which runs
+// the same smoke). Only if the verify also fails does the cron escalate to the
+// operator (Slack).
 const appDown = results.find((r) => r.name === "APP_CAIDA");
 if (appDown && !appDown.ok) {
   let state = {};
@@ -675,18 +689,18 @@ if (appDown && !appDown.ok) {
   try {
     writeFileSync(MONITOR_STATE_FILE, JSON.stringify(state));
   } catch { /* INTENTIONAL SILENCE: state persistence is best-effort; the in-memory decision for this tick still stands. */ }
-  console.error(`[monitor] APP_CAIDA consecutivo #${consecutive} (disparo de rollback en #${APP_DOWN_THRESHOLD})`);
+  console.error(`[monitor] consecutive APP_CAIDA #${consecutive} (rollback triggers at #${APP_DOWN_THRESHOLD})`);
 
   if (consecutive >= APP_DOWN_THRESHOLD) {
-    // Reset del contador (una vez accionado) para que un fallo continuado no
-    // dispare en todos los ticks; el verify decidirá si escalar.
+    // Reset the counter (once fired) so an ongoing failure does not trigger
+    // on every tick; the verify decides whether to escalate.
     state.appDownConsecutive = 0;
     try {
       writeFileSync(MONITOR_STATE_FILE, JSON.stringify(state));
     } catch { /* INTENTIONAL SILENCE: state persistence is best-effort; the in-memory decision for this tick still stands. */ }
 
     if (APP_DOWN_AUTO_ROLLBACK) {
-      console.error(`[monitor] APP_CAIDA ×${APP_DOWN_THRESHOLD} consecutivos → rollback: ${ROLLBACK_CMD}`);
+      console.error(`[monitor] APP_CAIDA ×${APP_DOWN_THRESHOLD} consecutive → rollback: ${ROLLBACK_CMD}`);
       let rollbackStatus = -1;
       try {
         const r = runCommandLine(ROLLBACK_CMD, {
@@ -696,12 +710,12 @@ if (appDown && !appDown.ok) {
         });
         rollbackStatus = r.status;
       } catch (e) {
-        console.error(`[monitor] ROLLBACK FALLÓ: ${e.message}`);
+        console.error(`[monitor] ROLLBACK FAILED: ${e.message}`);
       }
 
       if (rollbackStatus === 0) {
-        // Confirmación post-rollback: rollback.mjs --verify corre el smoke.
-        console.error("[monitor] rollback OK (exit 0) — confirmando con --verify...");
+        // Post-rollback confirmation: rollback.mjs --verify runs the smoke.
+        console.error("[monitor] rollback OK (exit 0) — confirming with --verify...");
         let verifyStatus = -1;
         try {
           const v = runCommandLine(ROLLBACK_VERIFY_CMD, {
@@ -712,27 +726,27 @@ if (appDown && !appDown.ok) {
           });
           verifyStatus = v.status;
         } catch (e) {
-          console.error(`[monitor] VERIFY FALLÓ: ${e.message}`);
+          console.error(`[monitor] VERIFY FAILED: ${e.message}`);
         }
         if (verifyStatus === 0) {
-          // App recuperada — no notificar al operador: el rollback resolvió el
-          // incidente antes de que llegara la alerta.
+          // App recovered — do not notify the operator: the rollback resolved
+          // the incident before the alert arrived.
           skipOperatorNotify = true;
-          console.error("[monitor] VERIFY OK post-rollback — app recuperada, sin notificación al operador.");
+          console.error("[monitor] VERIFY OK post-rollback — app recovered, no operator notification.");
         } else {
           console.error(
-            `[monitor] VERIFY FAIL post-rollback (exit ${verifyStatus}) — la app NO se recuperó. ESCALAR manualmente: ${ROLLBACK_CMD}`,
+            `[monitor] VERIFY FAIL post-rollback (exit ${verifyStatus}) — the app did NOT recover. ESCALATE manually: ${ROLLBACK_CMD}`,
           );
         }
       } else {
-        console.error(`[monitor] ROLLBACK FALLÓ (exit ${rollbackStatus}) — la app sigue abajo. ESCALAR manualmente: ${ROLLBACK_CMD}`);
+        console.error(`[monitor] ROLLBACK FAILED (exit ${rollbackStatus}) — the app is still down. ESCALATE manually: ${ROLLBACK_CMD}`);
       }
     } else {
-      console.error(`[monitor] APP_DOWN_AUTO_ROLLBACK no seteado — NO se ejecutó rollback. Ejecuta: ${ROLLBACK_CMD}`);
+      console.error(`[monitor] APP_DOWN_AUTO_ROLLBACK not set — NO rollback was run. Run: ${ROLLBACK_CMD}`);
     }
   }
 } else if (appDown) {
-  // La app volvió a responder — reset del contador para la próxima racha.
+  // The app is responding again — reset the counter for the next streak.
   let state = {};
   try {
     state = JSON.parse(readFileSync(MONITOR_STATE_FILE, "utf8"));
@@ -742,14 +756,14 @@ if (appDown && !appDown.ok) {
     try {
       writeFileSync(MONITOR_STATE_FILE, JSON.stringify(state));
     } catch { /* INTENTIONAL SILENCE: state persistence is best-effort; the in-memory decision for this tick still stands. */ }
-    console.error("[monitor] APP_CAIDA recuperado — contador de consecutivos reseteado.");
+    console.error("[monitor] APP_CAIDA recovered — consecutive counter reset.");
   }
 }
 
-// ── Escalation: CLIENT_CRITICAL → página + rollback automático ─────────
-// El evento de cluster ya es una señal fuerte (>= 3 clientes critical): se
-// escala en la PRIMERA aparición, deduplicado por cooldown para que la
-// ventana del log (10 min) no re-dispare en cada tick del cron (60s).
+// ── Escalation: CLIENT_CRITICAL → page + automatic rollback ─────────────
+// The cluster event is already a strong signal (>= 3 critical clients): it
+// escalates on the FIRST occurrence, deduplicated by cooldown so the log
+// window (10 min) does not re-trigger on every 60s cron tick.
 const clientCritical = results.find((r) => r.name === "CLIENT_CRITICAL");
 if (clientCritical && !clientCritical.ok) {
   let state = {};
@@ -766,7 +780,7 @@ if (clientCritical && !clientCritical.ok) {
       writeFileSync(MONITOR_STATE_FILE, JSON.stringify(state));
     } catch { /* INTENTIONAL SILENCE: state persistence is best-effort; the in-memory decision for this tick still stands. */ }
 
-    // 1) Página (notificación ruidosa) — ej: /usr/local/bin/bmf-page.sh
+    // 1) Page (noisy notification) — e.g. /usr/local/bin/bmf-page.sh
     if (PAGE_CMD) {
       try {
         runCommandLine(PAGE_CMD, {
@@ -774,13 +788,13 @@ if (clientCritical && !clientCritical.ok) {
           timeout: 30_000,
           env: { ...process.env, CLUSTER_DETAIL: clientCritical.detail },
         });
-        console.error(`[monitor] PAGE enviada (${PAGE_CMD})`);
+        console.error(`[monitor] PAGE sent (${PAGE_CMD})`);
       } catch { /* INTENTIONAL SILENCE: a failing page command must not abort escalation or the monitor tick. */ }
     }
 
-    // 2) Rollback automático (fail-closed: solo con AUTO_ROLLBACK=1)
+    // 2) Automatic rollback (fail-closed: only with AUTO_ROLLBACK=1)
     if (AUTO_ROLLBACK) {
-      console.error(`[monitor] CLIENT_CRITICAL → rollback automático: ${ROLLBACK_CMD}`);
+      console.error(`[monitor] CLIENT_CRITICAL → automatic rollback: ${ROLLBACK_CMD}`);
       try {
         const r = runCommandLine(ROLLBACK_CMD, {
           encoding: "utf8",
@@ -790,24 +804,24 @@ if (clientCritical && !clientCritical.ok) {
         if (r.status === 0) {
           console.error("[monitor] rollback OK (exit 0)");
         } else {
-          console.error(`[monitor] ROLLBACK FALLÓ (exit ${r.status}) — escalar manualmente: ${ROLLBACK_CMD}`);
+          console.error(`[monitor] ROLLBACK FAILED (exit ${r.status}) — escalate manually: ${ROLLBACK_CMD}`);
         }
       } catch (e) {
-        console.error(`[monitor] ROLLBACK FALLÓ: ${e.message}`);
+        console.error(`[monitor] ROLLBACK FAILED: ${e.message}`);
       }
     } else {
-      console.error(`[monitor] AUTO_ROLLBACK no seteado — NO se ejecutó rollback. Ejecuta: ${ROLLBACK_CMD}`);
+      console.error(`[monitor] AUTO_ROLLBACK not set — NO rollback was run. Run: ${ROLLBACK_CMD}`);
     }
   } else {
-    console.error(`[monitor] cooldown activo (${Math.round((now - lastAction) / 1000)}s desde la última acción) — sin nueva página/rollback`);
+    console.error(`[monitor] cooldown active (${Math.round((now - lastAction) / 1000)}s since the last action) — no new page/rollback`);
   }
 }
 
-// ── Escalation: RETRY_DEGRADED → página (sin rollback) ───────────────
-// Clientes que abandonaron la entrega de eventos tras reintentos acotados:
-// la señal CLIENT_CRITICAL misma puede estar ciega. Es salud de entrega
-// (infra/red), NO una regresión de código — página con cooldown, nunca
-// rollback automático.
+// ── Escalation: RETRY_DEGRADED → page (no rollback) ───────────────────
+// Clients that gave up delivering events after bounded retries: the
+// CLIENT_CRITICAL signal itself may be blind. It is delivery health
+// (infra/network), NOT a code regression — page with a cooldown, never an
+// automatic rollback.
 const retryDegraded = results.find((r) => r.name === "RETRY_DEGRADED");
 if (retryDegraded && !retryDegraded.ok) {
   let state = {};
@@ -831,20 +845,20 @@ if (retryDegraded && !retryDegraded.ok) {
           timeout: 30_000,
           env: { ...process.env, CLUSTER_DETAIL: retryDegraded.detail },
         });
-        console.error(`[monitor] PAGE enviada por entrega degradada (${PAGE_CMD})`);
+        console.error(`[monitor] PAGE sent for degraded delivery (${PAGE_CMD})`);
       } catch { /* INTENTIONAL SILENCE: a failing page command must not abort escalation or the monitor tick. */ }
     } else {
-      console.error(`[monitor] RETRY_DEGRADED sin PAGE_CMD — define PAGE_CMD para paginar entrega degradada`);
+      console.error(`[monitor] RETRY_DEGRADED without PAGE_CMD — define PAGE_CMD to page on degraded delivery`);
     }
   } else {
-    console.error(`[monitor] cooldown de entrega degradada activo (${Math.round((now - lastAction) / 1000)}s) — sin nueva página`);
+    console.error(`[monitor] degraded delivery cooldown active (${Math.round((now - lastAction) / 1000)}s) — no new page`);
   }
 }
 
-// ── Escalation: API_DEGRADADO → página (sin rollback) ───────────────
-// Degradación (p95/error-rate sobre el umbral), no outage: página con
-// cooldown — nunca rollback automático (CLIENT_CRITICAL/BUNDLE cubren
-// regresiones de código; APP_CAIDA cubre el colapso total).
+// ── Escalation: API_DEGRADADO → page (no rollback) ────────────────────
+// Degradation (p95/error-rate over the threshold), not an outage: page with
+// a cooldown — never an automatic rollback (CLIENT_CRITICAL/BUNDLE cover
+// code regressions; APP_CAIDA covers a total collapse).
 const apiDegraded = results.find((r) => r.name === "API_DEGRADADO");
 if (apiDegraded && !apiDegraded.ok) {
   let state = {};
@@ -868,13 +882,13 @@ if (apiDegraded && !apiDegraded.ok) {
           timeout: 30_000,
           env: { ...process.env, CLUSTER_DETAIL: apiDegraded.detail },
         });
-        console.error(`[monitor] PAGE enviada por degradación (${PAGE_CMD})`);
+        console.error(`[monitor] PAGE sent for degradation (${PAGE_CMD})`);
       } catch { /* INTENTIONAL SILENCE: a failing page command must not abort escalation or the monitor tick. */ }
     } else {
-      console.error(`[monitor] API_DEGRADADO sin PAGE_CMD — define PAGE_CMD para paginar degradación`);
+      console.error(`[monitor] API_DEGRADADO without PAGE_CMD — define PAGE_CMD to page on degradation`);
     }
   } else {
-    console.error(`[monitor] cooldown de degradación activo (${Math.round((now - lastAction) / 1000)}s) — sin nueva página`);
+    console.error(`[monitor] degradation cooldown active (${Math.round((now - lastAction) / 1000)}s) — no new page`);
   }
 }
 
@@ -886,15 +900,15 @@ if (isJson) {
   for (const r of results) {
     console.log(`${r.ok ? "✓ PASS" : "✗ FAIL"} ${r.name} — ${r.detail}`);
   }
-  console.log(`\n${allOk ? "✅ TODO OK" : "❌ ALERTA — revisa FAIL arriba"}\n`);
+  console.log(`\n${allOk ? "✅ ALL OK" : "❌ ALERT — review the FAILs above"}\n`);
   if (!allOk) {
-    console.log("Acción:");
-    console.log("  APP_CAIDA FAIL ×2 consecutivos + APP_DOWN_AUTO_ROLLBACK=1 → rollback automático + verify");
+    console.log("Action:");
+    console.log("  APP_CAIDA FAIL ×2 consecutive + APP_DOWN_AUTO_ROLLBACK=1 → automatic rollback + verify");
     console.log("  BUNDLE_CORRUPTO FAIL → npm run build:ci && docker compose up -d --build");
-    console.log("  MONITORING_ACTIVO FAIL → verifica que src/utils/storageMonitor.ts existe");
-    console.log("  CLIENT_CRITICAL FAIL → cluster de clientes críticos: página + rollback automático (AUTO_ROLLBACK=1)");
-    console.log("  RETRY_DEGRADED FAIL → clientes perdieron eventos: página (infra/red), revisa la entrega cliente→servidor");
-    console.log("  API_DEGRADADO FAIL → p95/error-rate sobre umbral: página (no rollback); revisa trend24h y sube API_LATENCY_P95_MS si es falso positivo");
+    console.log("  MONITORING_ACTIVO FAIL → verify that src/utils/storageMonitor.ts exists");
+    console.log("  CLIENT_CRITICAL FAIL → critical client cluster: page + automatic rollback (AUTO_ROLLBACK=1)");
+    console.log("  RETRY_DEGRADED FAIL → clients lost events: page (infra/network), review client→server delivery");
+    console.log("  API_DEGRADADO FAIL → p95/error-rate over threshold: page (no rollback); review trend24h and raise API_LATENCY_P95_MS if it is a false positive");
   }
 }
 
@@ -904,7 +918,7 @@ if (!allOk && SLACK_WEBHOOK && !skipOperatorNotify) {
     await fetch(SLACK_WEBHOOK, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ text: `🚨 BookmarkForge ALERTA — ${PROD_BASE_URL}\n${fails}` }),
+      body: JSON.stringify({ text: `🚨 BookmarkForge ALERT — ${PROD_BASE_URL}\n${fails}` }),
     });
   } catch { /* INTENTIONAL SILENCE: alert delivery is best-effort; a dead webhook must not crash the cron. */ }
 }

@@ -1,16 +1,33 @@
 /**
  * Canvas and Graph View Tests
- * 
- * Tests visual knowledge management features:
- * - Canvas view interactions
- * - Graph view navigation
- * - Node manipulation
- * - Connection management
- * - Zoom and pan
+ *
+ * REWRITTEN 2026-09-24 (debt payment #2, second advanced-* file out of the
+ * vacuous baseline — this file was the largest 100%-vacuous entry: 15 tests,
+ * every body wrapped in try/catch that swallowed everything, guards aimed at
+ * testids that no production component renders (canvas-node, graph-node,
+ * connection-mode, node-details-panel) and assertions like "hasContent is
+ * truthy" asserted on a boolean, not on the UI).
+ *
+ * The real contract (verified against src/components/CanvasView.tsx and
+ * GraphView.tsx, plus public/locales/en.json):
+ *   - CanvasView is an @xyflow/react board. With zero nodes it renders the
+ *     empty state carrying data-testid="canvas-view" ("Empty Canvas"); the
+ *     top-left Panel offers "Add Doc" / "Add Bookmark" / "Clear". With no
+ *     data in the vault those buttons toast "No documents found" / "No
+ *     bookmarks found" instead of adding a node. Once nodes exist, the empty
+ *     state disappears and xyflow's Controls + MiniMap mount.
+ *   - GraphView (d3 force) renders heading "Knowledge Graph", a "Filter
+ *     nodes" input (aria-label; 300ms debounce), a stats line
+ *     "Nodes: N | Links: N | Clusters: N", and its own empty state
+ *     ("Your knowledge graph is empty") when there is no data.
+ *
+ * Every assertion is unconditional on state the test drives, so the ratchet
+ * classifies all five tests as `real`.
  */
 
 import { test, expect } from '@playwright/test';
 import { createHumanBehavior, ciBasicOptions } from '../utils/human-behavior';
+import { saveBookmark } from '../utils/app-flows';
 import { skipPassword } from '../../../../tests/e2e/vault-helpers';
 
 test.describe('Canvas and Graph View Coverage', () => {
@@ -18,343 +35,132 @@ test.describe('Canvas and Graph View Coverage', () => {
     await skipPassword(page);
   });
 
-  test('2.1 Canvas view opens and displays nodes', async ({ page }) => {
+  async function openCanvas(page: import('@playwright/test').Page) {
+    await page.locator('[data-tab-id="canvas"]').first().click();
+    // The empty-state card IS the canvas-view testid (mounted only while
+    // nodes.length === 0), so first navigation asserts it.
+    await expect(page.getByText('Empty Canvas')).toBeVisible({
+      timeout: 15_000,
+    });
+  }
+
+  async function openGraph(page: import('@playwright/test').Page) {
+    await page.locator('[data-tab-id="graph"]').first().click();
+    // exact:true — the empty state's heading ("Your knowledge graph is
+    // empty") also contains this substring and would strict-violate.
+    await expect(
+      page.getByRole('heading', { name: 'Knowledge Graph', exact: true }),
+    ).toBeVisible({ timeout: 15_000 });
+  }
+
+  test('2.1 Canvas opens with its empty state and the add/clear panel', async ({
+    page,
+  }) => {
     const human = createHumanBehavior(page, ciBasicOptions);
-    
-    const sidebar = page.getByRole('navigation', { name: 'Sidebar sections' });
-    const canvasButton = sidebar.getByRole('button', { name: /canvas/i });
-    if (await canvasButton.isVisible()) {
-      await human.click(canvasButton);
-      
-      const canvas = page.locator('[data-testid="canvas-view"]');
-      try {
-        await expect(canvas).toBeVisible({ timeout: 5000 });
-        
-        // Canvas should have nodes or empty state
-        const canvasNode = page.locator('[data-testid="canvas-node"]').first();
-        const emptyState = page.locator('[data-testid="canvas-empty"]');
-        const hasContent = await canvasNode.isVisible() || await emptyState.isVisible();
-        await expect(hasContent).toBeTruthy();
-      } catch {
-        // Canvas view not implemented yet - pass gracefully
-      }
-    }
+    await openCanvas(page);
+
+    // Empty-state contract: the dedicated testid overlay + copy.
+    await expect(page.getByTestId('canvas-view')).toBeVisible();
+    await expect(
+      page.getByText(
+        'Start by adding documents or bookmarks from the top-left panel',
+      ),
+    ).toBeVisible();
+
+    // The toolbar panel exists with its three actions.
+    await expect(
+      page.getByRole('button', { name: 'Add Doc' }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'Add Bookmark' }),
+    ).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Clear' })).toBeVisible();
+
+    // Human pacing: one hover over the panel before leaving (a real user
+    // reads the toolbar before acting).
+    await human.hover(page.getByRole('button', { name: 'Add Doc' }));
   });
 
-  test('2.2 Graph view displays knowledge connections', async ({ page }) => {
+  test('2.2 Add Bookmark with an empty vault fails closed with its toast', async ({
+    page,
+  }) => {
     const human = createHumanBehavior(page, ciBasicOptions);
-    
-    const sidebar = page.getByRole('navigation', { name: 'Sidebar sections' });
-    const graphButton = sidebar.getByRole('button', { name: /graph/i });
-    if (await graphButton.isVisible()) {
-      await human.click(graphButton);
-      
-      const graph = page.locator('[data-testid="graph-view"]');
-      try {
-        await expect(graph).toBeVisible({ timeout: 5000 });
-        
-        // Graph should render nodes and edges
-        const graphNode = page.locator('[data-testid="graph-node"]').first();
-        if (await graphNode.isVisible()) {
-          await expect(graphNode).toBeVisible();
-        }
-      } catch {
-        // Graph view not implemented yet - pass gracefully
-      }
-    }
+    await openCanvas(page);
+
+    // No bookmarks were seeded: the guard path fires the toast and adds
+    // nothing — the empty state must stay visible.
+    await human.click(page.getByRole('button', { name: 'Add Bookmark' }));
+    await expect(
+      page.getByText('No bookmarks found'),
+    ).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByTestId('canvas-view')).toBeVisible();
   });
 
-  test('2.3 Canvas node selection and deselection', async ({ page }) => {
+  test('2.3 Seeded bookmark lets Add Bookmark mount xyflow controls', async ({
+    page,
+  }) => {
     const human = createHumanBehavior(page, ciBasicOptions);
-    
-    const sidebar = page.getByRole('navigation', { name: 'Sidebar sections' });
-    const canvasButton = sidebar.getByRole('button', { name: /canvas/i });
-    if (await canvasButton.isVisible()) {
-      await human.click(canvasButton);
-      
-      const canvasNode = page.locator('[data-testid="canvas-node"]').first();
-      if (await canvasNode.isVisible()) {
-        await human.click(canvasNode);
-        
-        // Node should show selection state
-        const isSelected = await canvasNode.evaluate((el) => {
-          return el.classList.contains('selected') || 
-                 el.getAttribute('aria-selected') === 'true';
-        });
-        
-        if (isSelected) {
-          await expect(true).toBeTruthy();
-        }
-        
-        // Click canvas background to deselect
-        const canvas = page.locator('[data-testid="canvas-view"]');
-        await human.click(canvas);
-      }
-    }
+    await saveBookmark(page, 'https://canvas.example.com', 'Canvas Fixture');
+
+    await openCanvas(page);
+    await human.click(page.getByRole('button', { name: 'Add Bookmark' }));
+
+    // The node is added: the empty state leaves, xyflow's Controls mount.
+    await expect(page.getByTestId('canvas-view')).toBeHidden({
+      timeout: 15_000,
+    });
+    await expect(
+      page.locator('.react-flow__controls'),
+    ).toBeVisible({ timeout: 15_000 });
+    // The bookmark node renders with its label through the custom node type.
+    await expect(page.getByText('Canvas Fixture').first()).toBeVisible();
+
+    // A second add works too (two nodes now); Clear returns to the empty
+    // state, closing the lifecycle.
+    await human.click(page.getByRole('button', { name: 'Add Bookmark' }));
+    await human.click(page.getByRole('button', { name: 'Clear' }));
+    await expect(page.getByTestId('canvas-view')).toBeVisible({
+      timeout: 15_000,
+    });
   });
 
-  test('2.4 Canvas node dragging and positioning', async ({ page }) => {
+  test('2.4 Graph opens with stats line and the empty state', async ({
+    page,
+  }) => {
     const human = createHumanBehavior(page, ciBasicOptions);
-    
-    const sidebar = page.getByRole('navigation', { name: 'Sidebar sections' });
-    const canvasButton = sidebar.getByRole('button', { name: /canvas/i });
-    if (await canvasButton.isVisible()) {
-      await human.click(canvasButton);
-      
-      const canvasNode = page.locator('[data-testid="canvas-node"]').first();
-      if (await canvasNode.isVisible()) {
-        await expect(canvasNode).toHaveAttribute('draggable', 'true');
-        
-        // Try to drag the node
-        await canvasNode.dragTo(page.locator('[data-testid="canvas-view"]'), {
-          targetPosition: { x: 100, y: 100 }
-        });
-      }
-    }
+    await openGraph(page);
+
+    // The stats line renders with real numbers ("Nodes: 0 | Links: 0 |
+    // Clusters: 0" on a fresh vault).
+    await expect(
+      page.getByText(/^Nodes: \d+ \| Links: \d+ \| Clusters: \d+$/),
+    ).toBeVisible();
+
+    // d3 svg surface present.
+    await expect(page.locator('svg.w-full.h-full')).toHaveCount(1);
+    await human.hover(page.getByRole('textbox', { name: 'Filter nodes' }));
   });
 
-  test('2.5 Graph view zoom controls work', async ({ page }) => {
+  test('2.5 Graph filter input drives its debounced search', async ({
+    page,
+  }) => {
     const human = createHumanBehavior(page, ciBasicOptions);
-    
-    const sidebar = page.getByRole('navigation', { name: 'Sidebar sections' });
-    const graphButton = sidebar.getByRole('button', { name: /graph/i });
-    if (await graphButton.isVisible()) {
-      await human.click(graphButton);
-      
-      const zoomInButton = page.getByRole('button', { name: /zoom in/i });
-      const zoomOutButton = page.getByRole('button', { name: /zoom out/i });
-      
-      if (await zoomInButton.isVisible()) {
-        await human.click(zoomInButton);
-        // Zoom should change
-      }
-      
-      if (await zoomOutButton.isVisible()) {
-        await human.click(zoomOutButton);
-        // Zoom should change
-      }
-    }
-  });
+    await saveBookmark(page, 'https://graph.example.com', 'Graph Fixture');
+    await openGraph(page);
 
-  test('2.6 Canvas node connection creation', async ({ page }) => {
-    const human = createHumanBehavior(page, ciBasicOptions);
-    
-    const sidebar = page.getByRole('navigation', { name: 'Sidebar sections' });
-    const canvasButton = sidebar.getByRole('button', { name: /canvas/i });
-    if (await canvasButton.isVisible()) {
-      await human.click(canvasButton);
-      
-      const canvasNode = page.locator('[data-testid="canvas-node"]').first();
-      if (await canvasNode.isVisible()) {
-        // Right-click to show context menu
-        await canvasNode.click({ button: 'right' });
-        
-        const connectOption = page.getByRole('menuitem', { name: /connect/i });
-        if (await connectOption.isVisible()) {
-          await human.click(connectOption);
-          
-          // Connection mode should activate
-          const connectionMode = page.locator('[data-testid="connection-mode"]');
-          if (await connectionMode.isVisible()) {
-            await expect(connectionMode).toBeVisible();
-          }
-        }
-      }
-    }
-  });
+    const filter = page.getByRole('textbox', { name: 'Filter nodes' });
+    await human.type(filter, 'Graph Fixture');
 
-  test('2.7 Graph view node filtering', async ({ page }) => {
-    const human = createHumanBehavior(page, ciBasicOptions);
-    
-    const sidebar = page.getByRole('navigation', { name: 'Sidebar sections' });
-    const graphButton = sidebar.getByRole('button', { name: /graph/i });
-    if (await graphButton.isVisible()) {
-      await human.click(graphButton);
-      
-      const filterButton = page.getByRole('button', { name: /filter/i });
-      if (await filterButton.isVisible()) {
-        await human.click(filterButton);
-        
-        const filterPanel = page.locator('[data-testid="graph-filter-panel"]');
-        if (await filterPanel.isVisible()) {
-          await expect(filterPanel).toBeVisible();
-        }
-      }
-    }
-  });
+    // The controlled input reflects the keystrokes (the debounce only
+    // delays the d3 reload, not the value).
+    await expect(filter).toHaveValue('Graph Fixture');
 
-  test('2.8 Canvas undo/redo operations', async ({ page }) => {
-    const human = createHumanBehavior(page, ciBasicOptions);
-    
-    const sidebar = page.getByRole('navigation', { name: 'Sidebar sections' });
-    const canvasButton = sidebar.getByRole('button', { name: /canvas/i });
-    if (await canvasButton.isVisible()) {
-      await human.click(canvasButton);
-      
-      const undoButton = page.getByRole('button', { name: /undo/i });
-      const redoButton = page.getByRole('button', { name: /redo/i });
-      
-      if (await undoButton.isVisible()) {
-        await expect(undoButton).toBeVisible();
-      }
-      
-      if (await redoButton.isVisible()) {
-        await expect(redoButton).toBeVisible();
-      }
-    }
-  });
-
-  test('2.9 Graph view layout options', async ({ page }) => {
-    const human = createHumanBehavior(page, ciBasicOptions);
-    
-    const sidebar = page.getByRole('navigation', { name: 'Sidebar sections' });
-    const graphButton = sidebar.getByRole('button', { name: /graph/i });
-    if (await graphButton.isVisible()) {
-      await human.click(graphButton);
-      
-      const layoutButton = page.getByRole('button', { name: /layout/i });
-      if (await layoutButton.isVisible()) {
-        await human.click(layoutButton);
-        
-        const layoutOptions = page.getByRole('menuitem');
-        if (await layoutOptions.first().isVisible()) {
-          await expect(layoutOptions.first()).toBeVisible();
-        }
-      }
-    }
-  });
-
-  test('2.10 Canvas fullscreen mode', async ({ page }) => {
-    const human = createHumanBehavior(page, ciBasicOptions);
-    
-    const sidebar = page.getByRole('navigation', { name: 'Sidebar sections' });
-    const canvasButton = sidebar.getByRole('button', { name: /canvas/i });
-    if (await canvasButton.isVisible()) {
-      await human.click(canvasButton);
-      
-      const fullscreenButton = page.getByRole('button', { name: /fullscreen/i });
-      if (await fullscreenButton.isVisible()) {
-        await human.click(fullscreenButton);
-        
-        // Canvas should enter fullscreen
-        const canvas = page.locator('[data-testid="canvas-view"]');
-        await expect(canvas).toBeVisible();
-      }
-    }
-  });
-
-  test('2.11 Graph view node details panel', async ({ page }) => {
-    const human = createHumanBehavior(page, ciBasicOptions);
-    
-    const sidebar = page.getByRole('navigation', { name: 'Sidebar sections' });
-    const graphButton = sidebar.getByRole('button', { name: /graph/i });
-    if (await graphButton.isVisible()) {
-      await human.click(graphButton);
-      
-      const graphNode = page.locator('[data-testid="graph-node"]').first();
-      if (await graphNode.isVisible()) {
-        await human.click(graphNode);
-        
-        const detailsPanel = page.locator('[data-testid="node-details-panel"]');
-        if (await detailsPanel.isVisible()) {
-          await expect(detailsPanel).toBeVisible();
-        }
-      }
-    }
-  });
-
-  test('2.12 Canvas save state persistence', async ({ page }) => {
-    const human = createHumanBehavior(page, ciBasicOptions);
-    
-    try {
-      const sidebar = page.getByRole('navigation', { name: 'Sidebar sections' });
-      const canvasButton = sidebar.getByRole('button', { name: /canvas/i });
-      
-      if (await canvasButton.isVisible({ timeout: 3000 }).catch(() => false)) {
-        await canvasButton.click({ timeout: 5000 });
-        
-        // Look for save button with very short timeout
-        const saveButton = page.getByRole('button', { name: /save/i }).first();
-        const isVisible = await saveButton.isVisible({ timeout: 2000 }).catch(() => false);
-        
-        if (isVisible) {
-          await saveButton.click({ timeout: 5000 });
-          
-          // Should show save confirmation
-          const toast = page.locator('[data-testid="toast-success"]');
-          if (await toast.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await expect(toast).toBeVisible();
-          }
-        }
-        // If save button not visible, pass gracefully
-      }
-    } catch {
-      // Any error - pass gracefully as feature may not be implemented
-    }
-  });
-
-  test('2.13 Graph view search functionality', async ({ page }) => {
-    const human = createHumanBehavior(page, ciBasicOptions);
-    
-    const sidebar = page.getByRole('navigation', { name: 'Sidebar sections' });
-    const graphButton = sidebar.getByRole('button', { name: /graph/i });
-    if (await graphButton.isVisible()) {
-      await human.click(graphButton);
-      
-      const searchInput = page.getByPlaceholder(/search/i);
-      if (await searchInput.isVisible()) {
-        await human.type(searchInput, 'test');
-        
-        // Should filter graph nodes
-        await expect(searchInput).toHaveValue('test');
-      }
-    }
-  });
-
-  test('2.14 Canvas node grouping', async ({ page }) => {
-    const human = createHumanBehavior(page, ciBasicOptions);
-    
-    const sidebar = page.getByRole('navigation', { name: 'Sidebar sections' });
-    const canvasButton = sidebar.getByRole('button', { name: /canvas/i });
-    if (await canvasButton.isVisible()) {
-      await human.click(canvasButton);
-      
-      const groupButton = page.getByRole('button', { name: /group/i });
-      if (await groupButton.isVisible()) {
-        await human.click(groupButton);
-        
-        // Grouping functionality should activate
-        const groupMode = page.locator('[data-testid="group-mode"]');
-        if (await groupMode.isVisible()) {
-          await expect(groupMode).toBeVisible();
-        }
-      }
-    }
-  });
-
-  test('2.15 Graph view export as image', async ({ page }) => {
-    const human = createHumanBehavior(page, ciBasicOptions);
-    
-    const sidebar = page.getByRole('navigation', { name: 'Sidebar sections' });
-    const graphButton = sidebar.getByRole('button', { name: /graph/i });
-    if (await graphButton.isVisible()) {
-      await human.click(graphButton);
-      
-      const exportButton = page.getByRole('button', { name: /export/i });
-      if (await exportButton.isVisible()) {
-        await human.click(exportButton);
-        
-        const exportOption = page.getByRole('menuitem', { name: /image/i });
-        if (await exportOption.isVisible()) {
-          await human.click(exportOption);
-          
-          // Should trigger image export
-          const downloadToast = page.locator('[data-testid="toast-success"]');
-          if (await downloadToast.isVisible()) {
-            await expect(downloadToast).toBeVisible();
-          }
-        }
-      }
-    }
+    // After the 300ms debounce + reload the view is still functional.
+    await expect(
+      page.getByRole('heading', { name: 'Knowledge Graph', exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText(/^Nodes: \d+ \| Links: \d+ \| Clusters: \d+$/),
+    ).toBeVisible();
   });
 });

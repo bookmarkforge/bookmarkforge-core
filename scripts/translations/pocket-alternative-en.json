@@ -2,17 +2,17 @@
   "lang": "en",
   "langName": "English",
   "dir": "ltr",
-  "canonical": "https://bookmarkforge.com/pocket-alternative",
+  "canonical": "https://bookmarkforgeapp.com/pocket-alternative",
   "ogLocale": "en_US",
   "ogLocaleAlternate": "",
   "title": "BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide",
   "description": "Pocket is going away. Smart search is included free — Raindrop charges yearly for it. BookmarkForge Free works on any device with no device cap. Migrate your library locally.",
   "ogTitle": "BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide",
   "ogDescription": "Smart search is included free — Raindrop charges yearly for it. Free has no device cap. Compare Pocket and BookmarkForge, then migrate your library locally.",
-  "ogImage": "https://bookmarkforge.com/og-image-pricing.png",
+  "ogImage": "https://bookmarkforgeapp.com/og-image-pricing.png",
   "twitterTitle": "BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide",
   "twitterDescription": "Compare every feature and migrate your Pocket library to a private, local-first vault in minutes.",
-  "twitterImage": "https://bookmarkforge.com/og-image-pricing.png",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image-pricing.png",
   "skipLink": "Skip to main content",
   "navBrandAria": "BookmarkForge home",
   "navAriaLabel": "Main navigation",
@@ -134,7 +134,7 @@
   },
   "structuredData": {
     "webpage": {
-      "url": "https://bookmarkforge.com/pocket-alternative",
+      "url": "https://bookmarkforgeapp.com/pocket-alternative",
       "name": "BookmarkForge vs Pocket — Full Comparison & Migration Guide",
       "description": "Feature-by-feature comparison between Pocket and BookmarkForge, plus a step-by-step guide to migrate your Pocket library."
     },
@@ -144,7 +144,7 @@
     },
     "organization": {
       "name": "BookmarkForge",
-      "url": "https://bookmarkforge.com/",
+      "url": "https://bookmarkforgeapp.com/",
       "email": "bookmarkforge@proton.me"
     },
     "software": {
@@ -152,7 +152,7 @@
       "description": "Save articles, notes and documents in a private, encrypted, local-first vault. AI search, Notion-style editor, P2P sync. The private Pocket alternative.",
       "category": "ProductivityApplication",
       "os": "Web",
-      "url": "https://bookmarkforge.com/",
+      "url": "https://bookmarkforgeapp.com/",
       "offers": [
         { "name": "Free", "price": "0", "currency": "USD" },
         { "name": "Pro Lifetime", "price": "79", "currency": "USD" }

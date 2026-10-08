@@ -48,8 +48,8 @@ function generatePage(code, t) {
   // Hreflang links for all 30 locales
   const hreflangLinks = ALL_LOCALES.map(l => {
     const url = l === "en"
-      ? "https://bookmarkforge.com/privacy-and-terms.html"
-      : `https://bookmarkforge.com/${l}/privacy-and-terms.html`;
+      ? "https://bookmarkforgeapp.com/privacy-and-terms.html"
+      : `https://bookmarkforgeapp.com/${l}/privacy-and-terms.html`;
     return `  <link rel="alternate" hreflang="${l}" href="${url}">`;
   }).join("\n");
 
@@ -86,16 +86,16 @@ function generatePage(code, t) {
   <title>${t.title} | BookmarkForge</title>
   <meta name="description" content="${t.metaDesc}">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://bookmarkforge.com/${code}/privacy-and-terms.html">
+  <link rel="canonical" href="https://bookmarkforgeapp.com/${code}/privacy-and-terms.html">
   <!-- SEO: hreflang for all 30 locales -->
 ${hreflangLinks}
-  <link rel="alternate" hreflang="x-default" href="https://bookmarkforge.com/privacy-and-terms.html">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/privacy-and-terms.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="BookmarkForge">
   <meta property="og:title" content="${t.title} | BookmarkForge">
   <meta property="og:description" content="${t.metaDesc}">
-  <meta property="og:url" content="https://bookmarkforge.com/${code}/privacy-and-terms.html">
-  <meta property="og:image" content="https://bookmarkforge.com/og-image.png">
+  <meta property="og:url" content="https://bookmarkforgeapp.com/${code}/privacy-and-terms.html">
+  <meta property="og:image" content="https://bookmarkforgeapp.com/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="${OG_LOCALE[code]}">
@@ -103,7 +103,7 @@ ${ogLocaleAlts}
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${t.title} | BookmarkForge">
   <meta name="twitter:description" content="${t.metaDesc}">
-  <meta name="twitter:image" content="https://bookmarkforge.com/og-image.png">
+  <meta name="twitter:image" content="https://bookmarkforgeapp.com/og-image.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
   <link rel="stylesheet" href="/brand-tokens.css">
   <link rel="stylesheet" href="/privacy-and-terms.css">

@@ -21,15 +21,15 @@ describe("ChunkingService", () => {
 
     it("splits by paragraphs when content exceeds chunkSize", () => {
       const text =
-        "Primer párrafo con contenido extenso para testing. ".repeat(5) +
-        "\n\nSegundo párrafo con más contenido para rellenar. ".repeat(5) +
-        "\n\nTercer párrafo con suficiente texto. ".repeat(5);
+        "First paragraph with extensive content for testing. ".repeat(5) +
+        "\n\nSecond paragraph with more content to fill. ".repeat(5) +
+        "\n\nThird paragraph with sufficient text. ".repeat(5);
       const chunks = ChunkingService.splitText(text, 80, 0);
       expect(chunks.length).toBeGreaterThanOrEqual(3);
     });
 
     it("filters empty chunks", () => {
-      const text = "Párrafo uno.\n\n  \n\nPárrafo dos.";
+      const text = "Paragraph one.\n\n  \n\nParagraph two.";
       const chunks = ChunkingService.splitText(text, 100, 0);
       expect(chunks.every((c) => c.length > 0)).toBe(true);
     });
@@ -52,7 +52,7 @@ describe("ChunkingService", () => {
   describe("splitText with large paragraphs", () => {
     it("splits long paragraphs by sentences", () => {
       const longParagraph =
-        "Oración uno. Oración dos. Oración tres. Oración cuatro. ".repeat(10);
+        "Sentence one. Sentence two. Sentence three. Sentence four. ".repeat(10);
       const chunks = ChunkingService.splitText(longParagraph, 100, 0);
       expect(chunks.length).toBeGreaterThan(1);
       chunks.forEach((chunk) => {
@@ -77,13 +77,13 @@ describe("ChunkingService", () => {
     });
 
     it("handles special characters", () => {
-      const text = "¡Hola! ¿Cómo estás? Test: uno; dos.";
+      const text = "Hello! How are you? Test: one; two.";
       const chunks = ChunkingService.splitText(text, 100, 0);
       expect(chunks.length).toBe(1);
     });
 
     it("handles extremely small chunkSize", () => {
-      const text = "Una oración de prueba para testear.";
+      const text = "A test sentence for testing.";
       const chunks = ChunkingService.splitText(text, 5, 0);
       expect(chunks.length).toBeGreaterThan(0);
     });
@@ -99,11 +99,11 @@ describe("ChunkingService", () => {
   describe("semantic overlap (Phase 3)", () => {
     it("applies overlap between adjacent chunks", () => {
       const text =
-        "Primer párrafo con contenido. Segunda oración. Tercera oración muy larga. " +
+        "First paragraph with content. Second sentence. Third very long sentence. " +
         "\n\n" +
-        "Segundo párrafo con más texto. Más oraciones aquí. Contenido suficiente. " +
+        "Second paragraph with more text. More sentences here. Sufficient content. " +
         "\n\n" +
-        "Tercer párrafo final. Última oración.";
+        "Third final paragraph. Last sentence.";
       const chunks = ChunkingService.splitText(text, 85, 30);
       // With overlap, adjacent chunks must share content.
       if (chunks.length >= 2) {

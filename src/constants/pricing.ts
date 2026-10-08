@@ -41,10 +41,10 @@ export const PRICING_CONFIG = {
       price: 0,
       currency: "USD",
       interval: "forever",
-      description: "Free forever: 1,000 bookmarks plus the smart search competitors charge yearly for. At 1,000 the vault stays whole — reading, search and export never stop; only new saves pause.",
+      description: "Free forever: 2,500 bookmarks plus the smart search competitors charge yearly for. At 2,500 the vault stays whole — reading, search and export never stop; only new saves pause.",
       features: [
         { text: "Smart search (full-text + semantic) — included free; Raindrop charges yearly for this", included: true },
-        { text: "1,000 bookmarks, notes, documents", included: true },
+        { text: "2,500 bookmarks, notes, documents", included: true },
         { text: "Works on any device — each keeps its own vault", included: true },
         { text: "AI with your own API key (you pay usage)", included: true },
         { text: "Knowledge graph", included: true },
@@ -57,7 +57,7 @@ export const PRICING_CONFIG = {
         { text: "Advanced export (10+ formats)", included: false },
       ],
       limitations: {
-        maxBookmarks: 1000,
+        maxBookmarks: 2500,
         maxDevices: 0,
         cloudSync: false,
         localAI: false,
@@ -81,13 +81,13 @@ export const PRICING_CONFIG = {
       interval: "lifetime",
       // Human-readable lifetime line — landed here + landing.html + privacy-and-terms
       lifetimeLine: "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
-      description: "Unlimited bookmarks, 3 devices, local AI. Pay once, yours forever (v1).",
+      description: "Unlimited bookmarks, 5 devices, local AI. Pay once, yours forever (v1).",
       badge: "Most Popular",
       earlyBadge: "Early Bird — 200 left",
       features: [
         { text: "Everything in Free", included: true },
         { text: "Unlimited bookmarks", included: true },
-        { text: "3 devices + P2P sync", included: true },
+        { text: "5 devices + P2P sync", included: true },
         { text: "Local AI (WebLLM, no API key)", included: true },
         { text: "RAG chat over your data + Expert agents", included: true },
         { text: "Flashcards with spaced repetition", included: true },
@@ -100,7 +100,7 @@ export const PRICING_CONFIG = {
       ],
       limitations: {
         maxBookmarks: Infinity,
-        maxDevices: 3,
+        maxDevices: 5,
         cloudSync: true,
         localAI: true,
         teamSharing: false,
@@ -112,7 +112,7 @@ export const PRICING_CONFIG = {
   ],
 
   trial: {
-    enabled: false,
+    enabled: true,
     days: 7,
     features: "pro",
   },
@@ -245,7 +245,7 @@ export const PRICING_CONFIG = {
     bundleEffect: true,
     lifetimePremium: "One-time payment vs $96-120/year from competitors. At 2 years you've already paid more with any other tool. BookmarkForge: pay once, own v1 forever.",
     fomo: "Early Bird $59 (200 licenses) → Regular $79 → Full $99.",
-    trial: "No trial paywall — Free 1,000 bookmarks forever to evaluate. Pro is lifetime of v1.",
+    trial: "No trial paywall — Free 2,500 bookmarks forever to evaluate. Pro is lifetime of v1.",
   },
 
   projections: {
@@ -258,7 +258,7 @@ export const PRICING_CONFIG = {
 
 export const LICENSE_FEATURES = {
   free: {
-    bookmarks: "1,000 bookmarks",
+    bookmarks: "2,500 bookmarks",
     devices: "Any device (per-device vaults)",
     ai: "With your API key",
     sync: "No",
@@ -269,9 +269,9 @@ export const LICENSE_FEATURES = {
   },
   pro: {
     bookmarks: "∞ UNLIMITED",
-    devices: "3 devices",
+    devices: "5 devices",
     ai: "Local AI (no API key)",
-    sync: "P2P (3 devices)",
+    sync: "P2P (5 devices)",
     graph: true,
     flashcards: true,
     pdf: true,

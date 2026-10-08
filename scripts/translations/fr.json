@@ -2,17 +2,17 @@
   "lang": "fr",
   "langName": "Français",
   "dir": "ltr",
-  "canonical": "https://bookmarkforge.com/fr/",
+  "canonical": "https://bookmarkforgeapp.com/fr/",
   "ogLocale": "fr_FR",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge — Tout reste sur votre ordinateur. Payez une fois.",
-  "description": "Raindrop garde vos favoris sur ses serveurs et vous facture chaque année. BookmarkForge les garde sur votre ordinateur, verrouillés pour que même pas nous puissions les lire. 59 dollars une fois. Gratuit : 1 000 favoris.",
+  "description": "Raindrop garde vos favoris sur ses serveurs et vous facture chaque année. BookmarkForge les garde sur votre ordinateur, verrouillés pour que même pas nous puissions les lire. 59 dollars une fois. Gratuit : 2 500 favoris.",
   "ogTitle": "BookmarkForge — Tout reste sur votre ordinateur. Payez une fois.",
-  "ogDescription": "Raindrop garde vos favoris sur ses serveurs et vous facture chaque année. BookmarkForge les garde sur votre ordinateur, verrouillés pour que même pas nous puissions les lire. 59 dollars une fois. Gratuit : 1 000 favoris.",
-  "ogImage": "https://bookmarkforge.com/og-image-fr.png",
+  "ogDescription": "Raindrop garde vos favoris sur ses serveurs et vous facture chaque année. BookmarkForge les garde sur votre ordinateur, verrouillés pour que même pas nous puissions les lire. 59 dollars une fois. Gratuit : 2 500 favoris.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image-fr.png",
   "twitterTitle": "BookmarkForge — Tout reste sur votre ordinateur. Payez une fois.",
-  "twitterDescription": "Raindrop garde vos favoris sur ses serveurs et vous facture chaque année. BookmarkForge les garde sur votre ordinateur, verrouillés pour que même pas nous puissions les lire. 59 dollars une fois. Gratuit : 1 000 favoris.",
-  "twitterImage": "https://bookmarkforge.com/og-image-fr.png",
+  "twitterDescription": "Raindrop garde vos favoris sur ses serveurs et vous facture chaque année. BookmarkForge les garde sur votre ordinateur, verrouillés pour que même pas nous puissions les lire. 59 dollars une fois. Gratuit : 2 500 favoris.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image-fr.png",
   "skipLink": "Aller au contenu principal",
   "navBrandAria": "BookmarkForge accueil",
   "navAriaLabel": "Navigation principale",
@@ -177,7 +177,7 @@
       },
       {
         "title": "Synchronisez vos propres appareils",
-        "text": "Vos appareils se parlent directement — sans serveur au milieu, et tout reste chiffré. Associez-les en scannant un QR code. Jusqu'à 3 appareils. Nécessite Pro."
+        "text": "Vos appareils se parlent directement — sans serveur au milieu, et tout reste chiffré. Associez-les en scannant un QR code. Jusqu'à 5 appareils. Nécessite Pro."
       },
       {
         "title": "Des sauvegardes qui vous appartiennent",
@@ -287,13 +287,13 @@
   "pricing": {
     "id": "tarifs",
     "title": "Tarifs simples et justes — Sans abonnement",
-    "subtitle": "1 000 signets gratuits pour toujours. Pro est une licence Lifetime v1 — payez une fois, gardez v1 pour toujours. Inclut toutes les v1.x et 12 mois de nouveautés. Sécurité à vie. Sans mensualité.",
+    "subtitle": "2 500 signets gratuits pour toujours. Pro est une licence Lifetime v1 — payez une fois, gardez v1 pour toujours. Inclut toutes les v1.x et 12 mois de nouveautés. Sécurité à vie. Sans mensualité.",
     "plans": [
       {
         "name": "Gratuit",
         "price": "$ 0",
         "period": "/à vie",
-        "description": "Gratuit pour toujours : 1 000 favoris et la recherche intelligente que d'autres font payer chaque année. À 1 000, votre bibliothèque reste entière : lire, chercher et exporter ne s'arrêtent jamais ; seuls les nouveaux enregistrements pause.",
+        "description": "Gratuit pour toujours : 2 500 favoris et la recherche intelligente que d'autres font payer chaque année. À 2 500, votre bibliothèque reste entière : lire, chercher et exporter ne s'arrêtent jamais ; seuls les nouveaux enregistrements pause.",
         "features": [
           {
             "included": true,
@@ -301,7 +301,7 @@
           },
           {
             "included": true,
-            "text": "1 000 favoris, notes et documents"
+            "text": "2 500 favoris, notes et documents"
           },
           {
             "included": true,
@@ -369,7 +369,7 @@
           },
           {
             "included": true,
-            "text": "3 devices · P2P sync across 3 devices"
+            "text": "5 devices · P2P sync across 5 devices"
           },
           {
             "included": true,
@@ -405,7 +405,7 @@
           }
         ],
         "cta": "Get Pro $59 Early Bird",
-        "ctaHref": "/buy-pro",
+        "ctaHref": "https://whop.com/checkout/plan_XU1GaWhoYhoDh",
         "ctaClass": "btn-primary",
         "priceWas": "$79",
         "priceSub": "puis $79 régulier",
@@ -420,7 +420,7 @@
     "items": [
       {
         "question": "Le plan Gratuit est-il vraiment gratuit à vie ?",
-        "answer": "Oui. Sans essai ni abonnement. Inclut 1 000 signets, recherche plein texte et sémantique, graphe de connaissances et IA avec votre propre clé API (vous payez le fournisseur)."
+        "answer": "Oui. Sans essai ni abonnement. Inclut 2 500 signets, recherche plein texte et sémantique, graphe de connaissances et IA avec votre propre clé API (vous payez le fournisseur)."
       },
       {
         "question": "Que signifie \"Lifetime de v1\" pour Pro ?",
@@ -436,7 +436,7 @@
       },
       {
         "question": "Support — délai de réponse ?",
-        "answer": "Gratuit : entraide via <a href=\"/help\">Centre d’aide</a> + GitHub Discussions (meilleur effort). Pro : 48h ouvrées par email.  : 24h prioritaire + file bêta. Coffre chiffré — on ne demande jamais mot de passe ni phrase. Voir <a href=\"/help#sla\">SLA</a>."
+        "answer": "Gratuit : entraide via <a href=\"/help\">Centre d’aide</a> + GitHub Discussions (meilleur effort). Pro : 48h ouvrées par email. Coffre chiffré — on ne demande jamais mot de passe ni phrase. Voir <a href=\"/help#sla\">SLA</a>."
       },
       {
         "question": "J’ai oublié le mot de passe de mon coffre ?",
@@ -449,7 +449,7 @@
     "text": "Rejoignez des milliers de chercheurs, développeurs et apprenants qui confient à BookmarkForge leur second cerveau.",
     "ctaPrimary": "Ouvrir l'App Gratuitement",
     "ctaSecondary": "Passer à Pro",
-    "note": "Aucun compte requis. Fonctionne instantanément dans votre navigateur. Niveau gratuit : 1 000 signets."
+    "note": "Aucun compte requis. Fonctionne instantanément dans votre navigateur. Niveau gratuit : 2 500 signets."
   },
   "footer": {
     "brand": "Votre coffre de connaissances privé avec IA. 100% local.",
@@ -498,20 +498,20 @@
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
-    "websiteDescription": "Votre coffre de connaissances privé avec IA. 100% local. L'alternative privée à Pocket. Gratuit : 1 000 signets.",
+    "websiteDescription": "Votre coffre de connaissances privé avec IA. 100% local. L'alternative privée à Pocket. Gratuit : 2 500 signets.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforge.com/",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforge.com/fr/",
+    "softwareUrl": "https://bookmarkforgeapp.com/fr/",
     "offers": [
       {
         "name": "Gratuit",
         "price": "0",
         "currency": "USD",
-        "description": "1,000 bookmarks. Forever free."
+        "description": "2,500 bookmarks. Forever free."
       },
       {
         "name": "Pro Lifetime v1 — Early Bird",
@@ -546,7 +546,7 @@
     "faq": [
       {
         "question": "Le plan Gratuit est-il vraiment gratuit à vie ?",
-        "answer": "Oui. Sans essai ni abonnement. Inclut 1 000 signets, recherche plein texte et sémantique, graphe de connaissances et IA avec votre propre clé API (vous payez le fournisseur)."
+        "answer": "Oui. Sans essai ni abonnement. Inclut 2 500 signets, recherche plein texte et sémantique, graphe de connaissances et IA avec votre propre clé API (vous payez le fournisseur)."
       },
       {
         "question": "Que signifie \"Lifetime de v1\" pour Pro ?",
@@ -562,7 +562,7 @@
       },
       {
         "question": "Support — délai de réponse ?",
-        "answer": "Gratuit : entraide via Centre d’aide + GitHub Discussions (meilleur effort). Pro : 48h ouvrées par email.  : 24h prioritaire + file bêta. Coffre chiffré — on ne demande jamais mot de passe ni phrase. Voir SLA."
+        "answer": "Gratuit : entraide via Centre d’aide + GitHub Discussions (meilleur effort). Pro : 48h ouvrées par email. Coffre chiffré — on ne demande jamais mot de passe ni phrase. Voir SLA."
       },
       {
         "question": "J’ai oublié le mot de passe de mon coffre ?",

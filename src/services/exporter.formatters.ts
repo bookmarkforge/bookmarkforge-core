@@ -890,7 +890,7 @@ export function exportToHTML(
 
   htmlChunks.push(`    </main>
     <footer>
-        <p>Exported by <a href="https://bookmarkforge.com">BookmarkForge</a></p>
+        <p>Exported by <a href="https://bookmarkforgeapp.com">BookmarkForge</a></p>
     </footer>
 </body>
 </html>`);

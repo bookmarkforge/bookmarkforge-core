@@ -2,17 +2,17 @@
   "lang": "de",
   "langName": "Deutsch",
   "dir": "ltr",
-  "canonical": "https://bookmarkforge.com/de/",
+  "canonical": "https://bookmarkforgeapp.com/de/",
   "ogLocale": "de_DE",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge — Alles bleibt auf deinem Computer. Einmal zahlen.",
-  "description": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. 59 Dollar einmalig. Kostenlos: 1.000 Lesezeichen.",
+  "description": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. 59 Dollar einmalig. Kostenlos: 2.500 Lesezeichen.",
   "ogTitle": "BookmarkForge — Alles bleibt auf deinem Computer. Einmal zahlen.",
-  "ogDescription": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. 59 Dollar einmalig. Kostenlos: 1.000 Lesezeichen.",
-  "ogImage": "https://bookmarkforge.com/og-image-de.png",
+  "ogDescription": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. 59 Dollar einmalig. Kostenlos: 2.500 Lesezeichen.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image-de.png",
   "twitterTitle": "BookmarkForge — Alles bleibt auf deinem Computer. Einmal zahlen.",
-  "twitterDescription": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. 59 Dollar einmalig. Kostenlos: 1.000 Lesezeichen.",
-  "twitterImage": "https://bookmarkforge.com/og-image-de.png",
+  "twitterDescription": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. 59 Dollar einmalig. Kostenlos: 2.500 Lesezeichen.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image-de.png",
   "skipLink": "Zum Hauptinhalt springen",
   "navBrandAria": "BookmarkForge Startseite",
   "navAriaLabel": "Hauptnavigation",
@@ -177,7 +177,7 @@
       },
       {
         "title": "Synchronisiere deine eigenen Geräte",
-        "text": "Deine Geräte sprechen direkt miteinander — ohne Server dazwischen, und alles bleibt verschlüsselt. Verbinde sie per QR-Code-Scan. Bis zu 3 Geräte. Erfordert Pro."
+        "text": "Deine Geräte sprechen direkt miteinander — ohne Server dazwischen, und alles bleibt verschlüsselt. Verbinde sie per QR-Code-Scan. Bis zu 5 Geräte. Erfordert Pro."
       },
       {
         "title": "Backups, die dir gehören",
@@ -287,13 +287,13 @@
   "pricing": {
     "id": "preise",
     "title": "Einfache, faire Preise — Kein Abo",
-    "subtitle": "1.000 Lesezeichen für immer kostenlos. Pro ist eine Lifetime-Lizenz für v1 — einmal zahlen, v1 für immer behalten. Alle v1.x + 12 Monate Features. Sicherheits-Updates für immer. Keine Monatsgebühr.",
+    "subtitle": "2.500 Lesezeichen für immer kostenlos. Pro ist eine Lifetime-Lizenz für v1 — einmal zahlen, v1 für immer behalten. Alle v1.x + 12 Monate Features. Sicherheits-Updates für immer. Keine Monatsgebühr.",
     "plans": [
       {
         "name": "Kostenlos",
         "price": "$ 0",
         "period": "/lebenslang",
-        "description": "Für immer kostenlos: 1.000 Lesezeichen plus die intelligente Suche, für die andere jährlich verlangen. Bei 1.000 bleibt deine Bibliothek ganz — Lesen, Suchen und Exportieren enden nie; nur neue Speicherungen pausieren.",
+        "description": "Für immer kostenlos: 2.500 Lesezeichen plus die intelligente Suche, für die andere jährlich verlangen. Bei 2.500 bleibt deine Bibliothek ganz — Lesen, Suchen und Exportieren enden nie; nur neue Speicherungen pausieren.",
         "features": [
           {
             "included": true,
@@ -301,7 +301,7 @@
           },
           {
             "included": true,
-            "text": "1.000 Lesezeichen, Notizen und Dokumente"
+            "text": "2.500 Lesezeichen, Notizen und Dokumente"
           },
           {
             "included": true,
@@ -369,7 +369,7 @@
           },
           {
             "included": true,
-            "text": "3 devices · P2P sync across 3 devices"
+            "text": "5 devices · P2P sync across 5 devices"
           },
           {
             "included": true,
@@ -405,7 +405,7 @@
           }
         ],
         "cta": "Get Pro $59 Early Bird",
-        "ctaHref": "/buy-pro",
+        "ctaHref": "https://whop.com/checkout/plan_XU1GaWhoYhoDh",
         "ctaClass": "btn-primary",
         "priceWas": "$79",
         "priceSub": "danach $79 regulär",
@@ -419,7 +419,7 @@
     "items": [
       {
         "question": "Ist der Gratis-Plan wirklich für immer kostenlos?",
-        "answer": "Ja. Kein Trial, kein Abo. Enthält 1.000 Lesezeichen, Volltext- & semantische Suche, Knowledge-Graph und KI mit eigenem API-Key (du zahlst den Provider)."
+        "answer": "Ja. Kein Trial, kein Abo. Enthält 2.500 Lesezeichen, Volltext- & semantische Suche, Knowledge-Graph und KI mit eigenem API-Key (du zahlst den Provider)."
       },
       {
         "question": "Was bedeutet \"Lifetime von v1\" bei Pro?",
@@ -445,7 +445,7 @@
     "text": "Schließ dich Tausenden Forschenden, Entwicklern und Lernenden an, die BookmarkForge als ihr zweites Gehirn nutzen.",
     "ctaPrimary": "App kostenlos öffnen",
     "ctaSecondary": "Auf Pro upgraden",
-    "note": "Kein Konto nötig. Funktioniert sofort im Browser. Kostenloser Tarif: 1.000 Lesezeichen."
+    "note": "Kein Konto nötig. Funktioniert sofort im Browser. Kostenloser Tarif: 2.500 Lesezeichen."
   },
   "footer": {
     "brand": "Dein privater KI-Wissensspeicher. 100% lokal.",
@@ -494,20 +494,20 @@
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
-    "websiteDescription": "Dein privater KI-Wissensspeicher. 100% lokal. Die private Pocket-Alternative. Kostenlos: 1.000 Lesezeichen.",
+    "websiteDescription": "Dein privater KI-Wissensspeicher. 100% lokal. Die private Pocket-Alternative. Kostenlos: 2.500 Lesezeichen.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforge.com/",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforge.com/de/",
+    "softwareUrl": "https://bookmarkforgeapp.com/de/",
     "offers": [
       {
         "name": "Kostenlos",
         "price": "0",
         "currency": "USD",
-        "description": "1,000 bookmarks. Forever free."
+        "description": "2,500 bookmarks. Forever free."
       },
       {
         "name": "Pro Lifetime v1 — Early Bird",
@@ -522,13 +522,6 @@
         "price": "79",
         "currency": "USD",
         "description": "Regular. Lifetime of v1."
-      },
-      {
-        "name": "Founder Edition",
-        "price": "99",
-        "currency": "USD",
-        "description": "Same Pro v1 + Founder badge + beta. Limited 100.",
-        "availability": "https://schema.org/LimitedAvailability"
       }
     ],
     "featureList": [
@@ -542,7 +535,7 @@
     "faq": [
       {
         "question": "Ist der Gratis-Plan wirklich für immer kostenlos?",
-        "answer": "Ja. Kein Trial, kein Abo. Enthält 1.000 Lesezeichen, Volltext- & semantische Suche, Knowledge-Graph und KI mit eigenem API-Key (du zahlst den Provider)."
+        "answer": "Ja. Kein Trial, kein Abo. Enthält 2.500 Lesezeichen, Volltext- & semantische Suche, Knowledge-Graph und KI mit eigenem API-Key (du zahlst den Provider)."
       },
       {
         "question": "Was bedeutet \"Lifetime von v1\" bei Pro?",
@@ -555,7 +548,7 @@
       },
       {
         "question": "Support — wie schnell antwortet ihr?",
-        "answer": "Gratis: Community via Hilfe-Center + GitHub Discussions (Best Effort). Pro: 48h werktags per E-Mail. Founder: 24h Priorität + Beta-Queue. Vault ist verschlüsselt — wir fragen nie nach Passwort oder Seed. Siehe SLA."
+        "answer": "Gratis: Community via Hilfe-Center + GitHub Discussions (Best Effort). Pro: 48h werktags per E-Mail. Vault ist verschlüsselt — wir fragen nie nach Passwort oder Seed. Siehe SLA."
       },
       {
         "question": "Was, wenn ich mein Vault-Passwort vergesse?",

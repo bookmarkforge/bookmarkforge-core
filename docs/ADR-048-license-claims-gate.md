@@ -1,91 +1,89 @@
-# ADR-048: Gate de licencia `check:license-claims`
+# ADR-048: `check:license-claims` license gate
 
-- **Estado:** aceptado (implementado: `scripts/check-license-claims.mjs` está en la cadena `npm run check` con su suite en `scripts/__tests__/check-license-claims.test.mjs` y step propio en `ci.yml`)
-- **Fecha:** 2026-09-16
+- **Status:** accepted (implemented: `scripts/check-license-claims.mjs` is in the `npm run check` chain with its suite in `scripts/__tests__/check-license-claims.test.mjs` and its own step in `ci.yml`)
+- **Date:** 2026-09-16
 
-## Contexto
+## Context
 
-BookmarkForge es MIT: lo dicen el `LICENSE` raíz, `package.json`, el modelo
-Open Core (`OPEN-CORE.md`) y el `LICENSE` del repositorio público exportado.
-Aun así, una ola de documentación localizada llegó a publicar **AGPL-3.0** en
-treinta manuales de usuario traducidos, sus PDFs, la tabla comparativa de la
-landing de Pocket, la línea de licencias comerciales de los términos legales y
-los metadatos de licencia de la API OpenAPI. Es el mismo tipo de deriva que
-persigue `check:claim-drift` (ADR-047), pero sobre afirmaciones legales: una
-licencia citada en marketing no es un hecho de dependencia, es una promesa al
-usuario, y ninguna superficie visible puede nombrar una licencia que el
-proyecto no aplica.
+BookmarkForge is MIT: the root `LICENSE`, `package.json`, the
+Open Core model (`OPEN-CORE.md`) and the exported public repo's `LICENSE`
+all say so. Even so, a wave of localized documentation ended up publishing **AGPL-3.0** in
+thirty translated user manuals, their PDFs, the Pocket landing's comparison table, the commercial licenses
+line of the legal terms and the license metadata of the OpenAPI spec. It is the same kind of drift that
+`check:claim-drift` (ADR-047) hunts, but over legal claims: a license
+cited in marketing is not a dependency fact, it is a promise to the
+user, and no visible surface may name a license the project does not apply.
 
-La falla concreta que este gate previene: **deriva de licencia en el corpus
-visible al usuario** — cualquier mención de AGPL/GPL/LGPL/Apache/MPL/EUPL/
-EPL/CC-BY u otra licencia de terceros en manuales, landings, páginas legales o
-metadatos de API, o un contrato MIT roto en `package.json`, `LICENSE` u
-OpenAPI. Sin gate, esa deriva solo se detecta en revisión manual (aquí falló
-durante semanas: el overlay público ya estaba corregido y las fuentes
-privadas no).
+The concrete failure this gate prevents: **license drift in the corpus
+visible to the user** — any mention of AGPL/GPL/LGPL/Apache/MPL/EUPL/
+EPL/CC-BY or another third-party license in manuals, landings, legal pages or
+API metadata, or a broken MIT contract in `package.json`, `LICENSE` or
+OpenAPI. Without a gate, that drift is only caught in manual review (where it failed
+for weeks here: the public overlay was already fixed and the private
+sources were not).
 
-Es «detectable por detección de deriva» en el sentido de ADR-028 porque el
-gate es determinista y de dos direcciones: (1) escaneo negativo por tokens
-denylist — inyectar cualquier token de licencia de terceros en el corpus hace
-fallar CI (verificado en drill: restaurar `AGPL-3.0-or-later` en un manual
-rompe el gate con exit 1); (2) claims positivos — el contrato MIT raíz
-(`package.json` = `"MIT"`, `LICENSE` = texto MIT, OpenAPI = MIT, todo manual
-con encabezado de licencia = MIT) debe seguir en pie. La suite adversarial
-(`scripts/__tests__/check-license-claims.test.mjs`, 12 casos; el runner
-bounded la colecta de `scripts/__tests__/` y corre en el job `slow-tests` de
-CI) muta cada dirección en fixtures temporales y exige que el gate la
-detecte.
+It is "detectable by drift detection" in ADR-028's sense because the
+gate is deterministic and bidirectional: (1) negative token-based
+denylist scan — injecting any third-party license token into the corpus makes
+CI fail (verified in drill: restoring `AGPL-3.0-or-later` in a manual
+breaks the gate with exit 1); (2) positive claims — the root MIT contract
+(`package.json` = `"MIT"`, `LICENSE` = MIT text, OpenAPI = MIT, every manual
+with a license header = MIT) must still hold. The adversarial suite
+(`scripts/__tests__/check-license-claims.test.mjs`, 12 cases; the bounded
+runner excludes the `scripts/__tests__/` collection and runs in CI's `slow-tests` job)
+mutates each direction in temporary fixtures and requires the gate to
+detect it.
 
-## Decisión
+## Decision
 
-1. **Alcance del corpus.** Exactamente las superficies donde una licencia es
-   una afirmación: los 30 manuales de usuario (`.md`, `-styled.html`, `.pdf`)
-   en `docs/`, los dos pares del overlay público
-   (`scripts/public-export/manual-usuario*.md/.pdf`), la landing
-   `pocket-alternative` (HTML + fuente de traducción), la página legal
-   `privacy-and-terms` (HTML + fuente de traducción), `docs/openapi.yaml`,
-   `package.json` y la **entrada self** de `package-lock.json`. Todo incluido
-   en la exportación pública, así que el repo exportado corre el gate
-   idéntico en su CI.
-2. **Licencias de dependencias fuera de alcance.** Las entradas de licencia
-   de las dependencias reales en `package-lock.json` son hechos, no
-   afirmaciones — muchas son legítimamente Apache/BSD/otros. El gate parsea
-   el JSON y valida solo `packages[""].license`, y no escanea el resto del
-   lockfile. Lo mismo excluye `node_modules` por construcción.
-3. **Denylist, no allowlist.** Una lista de permitidos de formulaciones MIT
-   rompería la redacción legítima siguiente («dual licensed», referencias a
-   NOTICE) y ocultaría exactamente la deriva que el gate existe para
-   atrapar. Los tokens denegados cubren AGPL (y cualquier variante
-   «Affero»), LGPL, GPLv2/v3, Apache-2.0, MPL-2.0, EUPL, EPL-2.0, BSD
-   2/3-Clause, CC-BY y «proprietary license». Si aparece un falso positivo
-   genuino, se estrecha el patrón en el gate — nunca se bypasea.
-4. **PDFs por extracción dirigida.** Los PDFs no llevan texto plano: el
-   extractor reconstruye runs ASCII imprimibles y filtra por vocabulario de
-   licencias, robusto a la fragmentación de operadores de texto del
-   generador (pdfkit). La regeneración de los 30 PDFs es
-   `npm run docs:pdf:localized`; el gate valida el artefacto, no el proceso.
-5. **Registro en el freeze (O-1).** `check:license-claims` se registra en
-   `KNOWN_GATES` como `docs` — la misma categoría que `check:claim-drift`:
-   valida la verdad de afirmaciones visibles al usuario (aquí legales,
-   allí numéricas) y no es un inspector de formato de Markdown. Esta ADR
-   es la justificación que exige el freeze; el registro mantiene ordenado
-   `KNOWN_GATES`.
-6. **Cableado.** `check:license-claims` en `package.json`, dentro de la
-   cadena `npm run check` (después de `check:pocket-onboarding-copy`,
-   agrupado con los gates de contenido visible), y **step propio** en
-   `ci.yml` («Enforce MIT license claims») para que una deriva de licencia
-   se vea como check rojo separado, no enterrada en el agregador — mismo
-   patrón que `check:brand-logo` y `check:claim-drift`.
+1. **Corpus scope.** Exactly the surfaces where a license is
+   a claim: the 30 user manuals (`.md`, `-styled.html`, `.pdf`)
+   in `docs/`, the two pairs of the public overlay
+   (`scripts/public-export/manual-usuario*.md/.pdf`), the `pocket-alternative`
+   landing (HTML + translation source), the `privacy-and-terms` legal
+   page (HTML + translation source), `docs/openapi.yaml`,
+   `package.json` and the **self** entry of `package-lock.json`. All of it
+   included in the public export, so the exported repo runs the
+   identical gate in its CI.
+2. **Dependency licenses out of scope.** The license entries
+   of the real dependencies in `package-lock.json` are facts, not
+   claims — many are legitimately Apache/BSD/other. The gate parses
+   the JSON and validates only `packages[""].license`, and does not scan the rest of the
+   lockfile. The same excludes `node_modules` by construction.
+3. **Denylist, not allowlist.** An allowlist of MIT wordings
+   would break legitimate phrasing ("dual licensed", NOTICE references)
+   and would hide exactly the drift the gate exists to
+   catch. The denied tokens cover AGPL (and any
+   "Affero" variant), LGPL, GPLv2/v3, Apache-2.0, MPL-2.0, EUPL, EPL-2.0, BSD
+   2/3-Clause, CC-BY and "proprietary license". If a genuine false positive
+   appears, the pattern is narrowed in the gate — it is never bypassed.
+4. **PDFs via targeted extraction.** PDFs carry no plain text: the
+   extractor reconstructs printable ASCII runs and filters by license vocabulary,
+   robust to the text-operator fragmentation of the
+   generator (pdfkit). Regenerating the 30 PDFs is
+   `npm run docs:pdf:localized`; the gate validates the artifact, not the process.
+5. **Registration in the freeze (O-1).** `check:license-claims` is registered in
+   `KNOWN_GATES` as `docs` — the same category as `check:claim-drift`:
+   it validates the truth of claims visible to the user (legal here,
+   numeric there) and is not a Markdown-format inspector. This ADR
+   is the justification the freeze requires; the registry keeps `KNOWN_GATES`
+   ordered.
+6. **Wiring.** `check:license-claims` in `package.json`, inside the
+   `npm run check` chain (after `check:pocket-onboarding-copy`,
+   grouped with the user-visible content gates), and an **own step** in
+   `ci.yml` ("Enforce MIT license claims") so license drift
+   shows up as a separate red check, not buried in the aggregator — the same
+   pattern as `check:brand-logo` and `check:claim-drift`.
 
-## Consecuencias
+## Consequences
 
-- Cualquier reintroducción de AGPL u otra licencia de terceros en manuales,
-  PDFs, landings, legales o metadatos de API rompe CI con un mensaje que
-  nombra el archivo y el patrón.
-- El contrato MIT raíz está anclado: cambiar `package.json` fuera de `MIT`,
-  intercambiar el texto de `LICENSE` o sacar MIT de OpenAPI rompe el gate
-  aunque ningún documento lo mencione.
-- Mantenimiento: una nueva licencia de terceros que un tercero podría citar
-  se añade como token denylist (una línea). Un falso positivo se estrecha
-  como patrón (una línea). El inventario del corpus está centralizado en
+- Any reintroduction of AGPL or another third-party license into manuals,
+  PDFs, landings, legal pages or API metadata breaks CI with a message
+  naming the file and the pattern.
+- The root MIT contract is anchored: changing `package.json` away from `MIT`,
+  swapping the `LICENSE` text or removing MIT from OpenAPI breaks the gate
+  even if no document mentions it.
+- Maintenance: a new third-party license that a third party might cite
+  is added as a denylist token (one line). A false positive is narrowed
+  as a pattern (one line). The corpus inventory is centralized in
   `corpusEntries()`.

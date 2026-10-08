@@ -28,6 +28,9 @@ vi.mock("../../../utils/logger", () => ({
 vi.mock("../../../services/ai/ResourceManager", () => ({
   resourceManager: {
     switchToWebLLM: vi.fn().mockResolvedValue(undefined),
+    // P1: second conjunct of the local-route DUAL GATE (ProviderManager.ts
+    // resolveProvider) — without it every private-data routing call crashes.
+    isHighEndDevice: vi.fn().mockReturnValue(true),
   },
 }));
 
@@ -128,9 +131,16 @@ vi.mock("../../../services/ai/ProviderConfiguration", () => ({
       setModel: vi.fn(),
       getCustomBaseUrl: vi.fn().mockReturnValue(""),
       setCustomBaseUrl: vi.fn(),
-      getOllamaProvider: vi.fn(),
-      getGeminiProvider: vi.fn(),
-      getOpenAIProvider: vi.fn(),
+      // Routing (resolveProvider) probes availability eagerly:
+      getOllamaProvider: vi.fn().mockReturnValue({
+        isAvailable: vi.fn().mockResolvedValue(false),
+      }),
+      getGeminiProvider: vi.fn().mockReturnValue({
+        isAvailable: vi.fn().mockResolvedValue(false),
+      }),
+      getOpenAIProvider: vi.fn().mockReturnValue({
+        isAvailable: vi.fn().mockResolvedValue(false),
+      }),
     };
   }),
 }));
@@ -161,6 +171,10 @@ vi.mock("../../../services/ai/utils", () => ({
   detectProvider: vi.fn(),
   sanitizeErrorMessage: vi.fn((msg: string) => msg),
   getUserFriendlyErrorMessage: vi.fn((msg: string) => msg),
+  // P1: part of the ai/utils contract WebLLMService consumes at chat time;
+  // exercised there (WebLLMService.test asserts the wrapped content) and
+  // directly by src/tests/ai/buildSafeUserContent.test.ts.
+  buildSafeUserContent: vi.fn((content: string) => content),
 }));
 
 vi.mock("../../../services/ai/adapters/RoutingOptimizer", () => ({
@@ -409,5 +423,23 @@ describe("warmup × idle-TTL latch (real composition)", () => {
     expect(logger.warn).not.toHaveBeenCalledWith(
       expect.stringContaining("unloaded after 30 minutes of inactivity"),
     );
+  });
+
+  // ── P1 mock-contract sweep ──────────────────────────────────────────────
+  it("P1: private-data routing evaluates the high-end-device dual gate", async () => {
+    const { resourceManager } = await import(
+      "../../../services/ai/ResourceManager"
+    );
+
+    // The capable-device fixture makes the REAL canRunLocalLLM() probes pass,
+    // so the private-data local route reaches
+    // `hasWebLLM && resourceManager.isHighEndDevice()` (the DUAL GATE).
+    const result = await (manager as any).resolveProvider({
+      isPrivate: true,
+      complexity: "simple",
+    });
+
+    expect(resourceManager.isHighEndDevice).toHaveBeenCalled();
+    expect(result.provider).toBe("webllm");
   });
 });

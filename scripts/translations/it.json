@@ -2,17 +2,17 @@
   "lang": "it",
   "langName": "Italiano",
   "dir": "ltr",
-  "canonical": "https://bookmarkforge.com/it/",
+  "canonical": "https://bookmarkforgeapp.com/it/",
   "ogLocale": "it_IT",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge — Tutto resta sul tuo computer. Paga una volta.",
-  "description": "Raindrop tiene i tuoi segnalibri sui suoi server e ti fa pagare ogni anno. BookmarkForge li tiene sul tuo computer, bloccati così nemmeno noi possiamo leggerli. 59 dollari una volta. Gratis: 1.000 segnalibri.",
+  "description": "Raindrop tiene i tuoi segnalibri sui suoi server e ti fa pagare ogni anno. BookmarkForge li tiene sul tuo computer, bloccati così nemmeno noi possiamo leggerli. 59 dollari una volta. Gratis: 2.500 segnalibri.",
   "ogTitle": "BookmarkForge — Tutto resta sul tuo computer. Paga una volta.",
-  "ogDescription": "Raindrop tiene i tuoi segnalibri sui suoi server e ti fa pagare ogni anno. BookmarkForge li tiene sul tuo computer, bloccati così nemmeno noi possiamo leggerli. 59 dollari una volta. Gratis: 1.000 segnalibri.",
-  "ogImage": "https://bookmarkforge.com/og-image-it.png",
+  "ogDescription": "Raindrop tiene i tuoi segnalibri sui suoi server e ti fa pagare ogni anno. BookmarkForge li tiene sul tuo computer, bloccati così nemmeno noi possiamo leggerli. 59 dollari una volta. Gratis: 2.500 segnalibri.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image-it.png",
   "twitterTitle": "BookmarkForge — Tutto resta sul tuo computer. Paga una volta.",
-  "twitterDescription": "Raindrop tiene i tuoi segnalibri sui suoi server e ti fa pagare ogni anno. BookmarkForge li tiene sul tuo computer, bloccati così nemmeno noi possiamo leggerli. 59 dollari una volta. Gratis: 1.000 segnalibri.",
-  "twitterImage": "https://bookmarkforge.com/og-image-it.png",
+  "twitterDescription": "Raindrop tiene i tuoi segnalibri sui suoi server e ti fa pagare ogni anno. BookmarkForge li tiene sul tuo computer, bloccati così nemmeno noi possiamo leggerli. 59 dollari una volta. Gratis: 2.500 segnalibri.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image-it.png",
   "skipLink": "Vai al contenuto principale",
   "navBrandAria": "BookmarkForge home",
   "navAriaLabel": "Navigazione principale",
@@ -177,7 +177,7 @@
       },
       {
         "title": "Sincronizza i tuoi stessi dispositivi",
-        "text": "I tuoi dispositivi si parlano direttamente — senza server in mezzo e tutto resta cifrato. Abbinali leggendo un codice QR. Fino a 3 dispositivi. Richiede Pro."
+        "text": "I tuoi dispositivi si parlano direttamente — senza server in mezzo e tutto resta cifrato. Abbinali leggendo un codice QR. Fino a 5 dispositivi. Richiede Pro."
       },
       {
         "title": "Backup che sono tuoi",
@@ -287,13 +287,13 @@
   "pricing": {
     "id": "prezzi",
     "title": "Prezzi semplici e giusti — Nessun abbonamento",
-    "subtitle": "1.000 segnalibri gratis per sempre. Pro è licenza Lifetime v1 — paghi una volta, tieni v1 per sempre. Include tutte le v1.x e 12 mesi di novità. Sicurezza per sempre. Nessun canone mensile.",
+    "subtitle": "2.500 segnalibri gratis per sempre. Pro è licenza Lifetime v1 — paghi una volta, tieni v1 per sempre. Include tutte le v1.x e 12 mesi di novità. Sicurezza per sempre. Nessun canone mensile.",
     "plans": [
       {
         "name": "Gratis",
         "price": "$ 0",
         "period": "/per sempre",
-        "description": "Gratis per sempre: 1.000 segnalibri e la ricerca intelligente che altri fanno pagare ogni anno. Arrivato a 1.000, la tua biblioteca resta intera — leggere, cercare ed esportare non si fermano mai; si mettono in pausa solo i nuovi salvataggi.",
+        "description": "Gratis per sempre: 2.500 segnalibri e la ricerca intelligente che altri fanno pagare ogni anno. Arrivato a 2.500, la tua biblioteca resta intera — leggere, cercare ed esportare non si fermano mai; si mettono in pausa solo i nuovi salvataggi.",
         "features": [
           {
             "included": true,
@@ -301,7 +301,7 @@
           },
           {
             "included": true,
-            "text": "1.000 segnalibri, note e documenti"
+            "text": "2.500 segnalibri, note e documenti"
           },
           {
             "included": true,
@@ -369,7 +369,7 @@
           },
           {
             "included": true,
-            "text": "3 devices · P2P sync across 3 devices"
+            "text": "5 devices · P2P sync across 5 devices"
           },
           {
             "included": true,
@@ -405,7 +405,7 @@
           }
         ],
         "cta": "Get Pro $59 Early Bird",
-        "ctaHref": "/buy-pro",
+        "ctaHref": "https://whop.com/checkout/plan_XU1GaWhoYhoDh",
         "ctaClass": "btn-primary",
         "priceWas": "$79",
         "priceSub": "poi $79 regolare",
@@ -420,7 +420,7 @@
     "items": [
       {
         "question": "Il piano Gratis è davvero gratis per sempre?",
-        "answer": "Sì. Nessuna prova né abbonamento. Include 1.000 segnalibri, ricerca full-text e semantica, grafo di conoscenza e IA con la tua API key (paghi il provider)."
+        "answer": "Sì. Nessuna prova né abbonamento. Include 2.500 segnalibri, ricerca full-text e semantica, grafo di conoscenza e IA con la tua API key (paghi il provider)."
       },
       {
         "question": "Cosa significa \"Lifetime di v1\" per Pro?",
@@ -436,7 +436,7 @@
       },
       {
         "question": "Supporto — quanto rispondete in fretta?",
-        "answer": "Gratis: community via <a href=\"/help\">Centro Assistenza</a> + GitHub Discussions (best effort). Pro: 48h lavorative via email. : 24h prioritario + coda beta. Vault cifrato — non chiediamo mai password o frase. Vedi <a href=\"/help#sla\">SLA</a>."
+        "answer": "Gratis: community via <a href=\"/help\">Centro Assistenza</a> + GitHub Discussions (best effort). Pro: 48h lavorative via email. Vault cifrato — non chiediamo mai password o frase. Vedi <a href=\"/help#sla\">SLA</a>."
       },
       {
         "question": "Cosa succede se dimentico la password del vault?",
@@ -449,7 +449,7 @@
     "text": "Unisciti a migliaia di ricercatori, sviluppatori e studenti che affidano a BookmarkForge il loro secondo cervello.",
     "ctaPrimary": "Apri l'App Gratis",
     "ctaSecondary": "Passa a Pro",
-    "note": "Nessun account richiesto. Funziona immediatamente nel tuo browser. Livello gratis: 1.000 segnalibri."
+    "note": "Nessun account richiesto. Funziona immediatamente nel tuo browser. Livello gratis: 2.500 segnalibri."
   },
   "footer": {
     "brand": "La tua cassaforte di conoscenza privata con IA. 100% locale.",
@@ -498,20 +498,20 @@
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
-    "websiteDescription": "La tua cassaforte di conoscenza privata con IA. 100% locale. L'alternativa privata a Pocket. Gratis: 1.000 segnalibri.",
+    "websiteDescription": "La tua cassaforte di conoscenza privata con IA. 100% locale. L'alternativa privata a Pocket. Gratis: 2.500 segnalibri.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforge.com/",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforge.com/it/",
+    "softwareUrl": "https://bookmarkforgeapp.com/it/",
     "offers": [
       {
         "name": "Gratis",
         "price": "0",
         "currency": "USD",
-        "description": "1,000 bookmarks. Forever free."
+        "description": "2,500 bookmarks. Forever free."
       },
       {
         "name": "Pro Lifetime v1 — Early Bird",
@@ -546,7 +546,7 @@
     "faq": [
       {
         "question": "Il piano Gratis è davvero gratis per sempre?",
-        "answer": "Sì. Nessuna prova né abbonamento. Include 1.000 segnalibri, ricerca full-text e semantica, grafo di conoscenza e IA con la tua API key (paghi il provider)."
+        "answer": "Sì. Nessuna prova né abbonamento. Include 2.500 segnalibri, ricerca full-text e semantica, grafo di conoscenza e IA con la tua API key (paghi il provider)."
       },
       {
         "question": "Cosa significa \"Lifetime di v1\" per Pro?",
@@ -562,7 +562,7 @@
       },
       {
         "question": "Supporto — quanto rispondete in fretta?",
-        "answer": "Gratis: community via Centro Assistenza + GitHub Discussions (best effort). Pro: 48h lavorative via email. : 24h prioritario + coda beta. Vault cifrato — non chiediamo mai password o frase. Vedi SLA."
+        "answer": "Gratis: community via Centro Assistenza + GitHub Discussions (best effort). Pro: 48h lavorative via email. Vault cifrato — non chiediamo mai password o frase. Vedi SLA."
       },
       {
         "question": "Cosa succede se dimentico la password del vault?",

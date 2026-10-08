@@ -36,7 +36,7 @@ jobs:
           fetch-tags: true
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Install Playwright browsers
@@ -88,7 +88,7 @@ jobs:
           fetch-tags: true
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Provision gitignored license signing key (no committed files touched)
@@ -133,7 +133,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Validate analytics collector locally (ingest → agregación → kpi-report)

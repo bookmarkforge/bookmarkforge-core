@@ -64,7 +64,7 @@
   <g>
     <circle cx="667" cy="472" r="9" fill="none" stroke="#00aeef" stroke-width="2"/>
     <path d="M 662.5 472 l 3.5 3.5 l 6 -6.5" stroke="#00aeef" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="687" y="478" font-family="system-ui, -apple-system, sans-serif" font-size="17" fill="#e5e7eb" text-anchor="start">P2P sync across 3 devices</text>
+    <text x="687" y="478" font-family="system-ui, -apple-system, sans-serif" font-size="17" fill="#e5e7eb" text-anchor="start">P2P sync across 5 devices</text>
   </g>
   <g>
     <circle cx="667" cy="502" r="9" fill="none" stroke="#00aeef" stroke-width="2"/>

@@ -1,72 +1,72 @@
-# Informe de matriz de staging — 2026-09-21
+# Staging matrix report — 2026-09-21
 
-## Alcance
+## Scope
 
-Se ejecutó la matriz local aislada de staging sin tocar producción:
+The isolated local staging matrix was executed without touching production:
 
-- `/health` del companion server.
-- Superficie HTTP/API y eventos de cliente.
-- Handshake WebSocket de señalización.
-- Activación y ciclo de licencia.
-- Backup/restore cifrado y en claro.
-- Build de producción y critical-path smoke con Chromium.
-- Certificación WebRTC según el informe Playwright disponible.
+- `/health` of the companion server.
+- HTTP/API surface and client events.
+- WebSocket signaling handshake.
+- License activation and cycle.
+- Encrypted and clear backup/restore.
+- Production build and critical-path smoke with Chromium.
+- WebRTC certification according to the available Playwright report.
 
-## Resultados
+## Results
 
-| Área | Resultado | Evidencia |
+| Area | Result | Evidence |
 |---|---:|---|
-| Build de producción | PASS | `npm run launch:smoke:prod` |
-| Critical paths | PASS | 7/7 Playwright: vault, recovery, licencia y backup |
-| `/health` local | PASS | `npm run local-smoke`: HTTP 200, `{ status: "ok" }` |
-| CSP/COOP del frontend servido | PASS | smoke de producción: CSP presente y COOP `same-origin` |
-| Eventos de cliente | PASS | `/api/client-events` acepta `csp-violation-spike` con HTTP 204 |
-| WebSocket signaling | PASS | handshake `join` → `joined` contra `ws://127.0.0.1:8787` |
-| Ciclo de licencia mock | PASS | 21/21 checks en `npm run license-smoke` |
-| Licencia en critical path real | PASS | activación válida e inválida en `launch-smoke:prod` |
-| Backup cifrado `.bmf` | PASS | restore y verificación de datos; RTO 4.242 s |
-| Backup JSON | PASS | restore y verificación de datos; RTO 4.110 s |
-| WebRTC certificado | PASS | Chromium, Firefox y WebKit: 3/3 contratos pasados |
-| Prueba de carga local | PASS | 5/5 presupuestos; join p95 20 ms, relay p95 1 ms, saturación 1013 |
-| Typecheck/lint | PASS | `npm run typecheck:prod` y `npm run lint` |
-| Policy tests | PASS | 3/3 tests de staging |
+| Production build | PASS | `npm run launch:smoke:prod` |
+| Critical paths | PASS | 7/7 Playwright: vault, recovery, license and backup |
+| Local `/health` | PASS | `npm run local-smoke`: HTTP 200, `{ status: "ok" }` |
+| Served frontend CSP/COOP | PASS | production smoke: CSP present and COOP `same-origin` |
+| Client events | PASS | `/api/client-events` accepts `csp-violation-spike` with HTTP 204 |
+| WebSocket signaling | PASS | handshake `join` → `joined` against `ws://127.0.0.1:8787` |
+| Mock license cycle | PASS (historical) | 21/21 checks with `license-smoke` harness, which does not exist in this tree: evidence not reproducible today |
+| Real critical path license | PASS | valid and invalid activation in `launch-smoke:prod` |
+| Encrypted backup `.bmf` | PASS | restore and data verification; RTO 4.242 s |
+| JSON backup | PASS | restore and data verification; RTO 4.110 s |
+| WebRTC certified | PASS | Chromium, Firefox and WebKit: 3/3 contracts passed |
+| Local load test | PASS | 5/5 budgets; join p95 20 ms, relay p95 1 ms, saturation 1013 |
+| Typecheck/lint | PASS | `npm run typecheck:prod` and `npm run lint` |
+| Policy tests | PASS | 3/3 staging tests |
 
-## Correcciones realizadas durante el drill
+## Corrections made during drill
 
-- `scripts/drill-backup-restore.mjs`: sustitución del shim `npx.cmd`, que fallaba con `EINVAL` en Windows, por la invocación directa del CLI local de Playwright.
-- `scripts/local-smoke.mjs`: apagado ordenado de los procesos hijos y espera del cierre WebSocket; evita la aserción de libuv que provocaba salida 127 después de checks exitosos en Windows.
+- `scripts/drill-backup-restore.mjs`: replacement of the `npx.cmd` shim, which failed with `EINVAL` on Windows, by direct invocation of the local Playwright CLI.
+- `scripts/local-smoke.mjs`: ordered shutdown of child processes and wait for WebSocket close; avoids the libuv assertion that caused exit 127 after successful checks on Windows.
 
-## Limitaciones de evidencia
+## Evidence limitations
 
-- `check:staging-http` exige `STAGING_URL` HTTPS y no se ejecutó contra un dominio remoto porque no se proporcionó un endpoint de staging. Por tanto, no existe todavía evidencia externa de HSTS ni de headers del reverse proxy.
-- El `local-smoke` no activó licencia contra una clave privada local porque el archivo de firma gitignored no estaba configurado; el ciclo mock sí pasó y el critical-path de producción sí ejercitó el servicio de firma real del entorno de smoke.
-- La certificación WebRTC valida el informe Playwright nocturno disponible; no sustituye una nueva ejecución multi-navegador contra un endpoint público con TURN.
+- `check:staging-http` requires `STAGING_URL` HTTPS and was not executed against a remote domain because no staging endpoint was provided. Therefore, there is still no external evidence of HSTS or reverse proxy headers.
+- The `local-smoke` did not activate license against a local private key because the gitignored signature file was not configured; the mock cycle passed and the production critical-path did exercise the real signature service of the smoke environment.
+- The WebRTC certification validates the available nightly Playwright report; it does not replace a new multi-browser execution against a public endpoint with TURN.
 
-## Decisión Go/No-Go
+## Go/No-Go decision
 
-**GO para staging local aislado.**
+**GO for isolated local staging.**
 
-**NO-GO para declarar producción verificada todavía**, hasta ejecutar con un endpoint HTTPS real:
+**NO-GO to declare production verified yet**, until executing with a real HTTPS endpoint:
 
 ```bash
 STAGING_URL=https://staging.example.com npm run check:staging-http
 PROD_BASE_URL=https://staging.example.com npm run production-smoke
-LICENSE_SMOKE_BASE_URL=https://staging.example.com \
-  LICENSE_SMOKE_KEY=<clave-de-prueba> npm run license-smoke
+# Real sandbox/Whop license: no harness in this tree (`license-smoke` does not exist).
+# Local reproducible cycle of mock adapter: npm run launch:smoke
 ```
 
-También debe repetirse el drill de WebRTC desde al menos dos redes externas y conservar el informe como artefacto de release.
+The WebRTC drill must also be repeated from at least two external networks and the report kept as a release artifact.
 
-## Validación interna adicional
+## Additional internal validation
 
-El bloque no externo también pasó:
+The non-external block also passed:
 
 ```text
-npm run check:launch-checklist:strict  ✅ 12/12 verificables; 5 manuales
+npm run check:launch-checklist:strict  ✅ 12/12 verifiable; 5 manual
 npm run check:security-internal       ✅
-npm run test:fast                     ✅ 156 archivos, 3.099 tests ejecutados, 1 skip documentado
+npm run test:fast                     ✅ 156 files, 3,099 tests executed, 1 documented skip
 npm run check                         ✅
-npm run test:load                     ✅ 5/5 presupuestos
+npm run test:load                     ✅ 5/5 budgets
 ```
 
-Las cinco comprobaciones manuales del checklist son responsabilidades de operación o validaciones externas, no defectos detectables desde el repositorio.
+The five manual checklist checks are operational responsibilities or external validations, not defects detectable from the repository.

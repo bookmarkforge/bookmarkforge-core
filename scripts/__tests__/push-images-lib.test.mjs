@@ -151,7 +151,7 @@ describe("pushImages", () => {
   it("fail-closed ante registro inválido antes de ejecutar comandos", () => {
     const ran = [];
     const res = pushImages({ sha: "deadbeef", registry: "reg.io/path", run: (cmd) => { ran.push(cmd); return 0; }, runVisible: () => true });
-    expect(res).toEqual({ ok: false, step: "config", remote: "<configuración inválida>" });
+    expect(res).toEqual({ ok: false, step: "config", remote: "<invalid configuration>" });
     expect(ran).toEqual([]);
   });
 

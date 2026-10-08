@@ -1,93 +1,92 @@
-# Plan de retirada de compatibilidad heredada
+# Legacy compatibility retirement plan
 
-- **Estado:** activo; ninguna ruta heredada se elimina automáticamente.
-- **Propietario:** mantenedor del proyecto.
-- **Revisión:** en cada release mayor y antes de modificar formatos persistidos.
-- **Última revisión técnica:** 2026-09-05.
+- **Status:** active; no legacy path is automatically removed.
+- **Owner:** project maintainer.
+- **Review:** on every major release and before modifying persisted formats.
+- **Last technical review:** 2026-09-05.
 
-## Objetivo
+## Objective
 
-Reducir el coste de mantener formatos, claves de almacenamiento y APIs de
-compatibilidad sin romper vaults existentes ni provocar pérdida de datos. Una
-ruta solo puede retirarse cuando existe evidencia de que no quedan consumidores
-compatibles o cuando se introduce una migración explícita y reversible.
+Reduce the cost of maintaining compatibility formats, storage keys and APIs
+without breaking existing vaults or causing data loss. A path can only be retired
+when evidence exists that no compatible consumers remain or when an explicit
+and reversible migration is introduced.
 
-## Inventario actual
+## Current inventory
 
-| Superficie | Compatibilidad | Política actual | Criterio de retirada |
+| Surface | Compatibility | Current policy | Retirement criterion |
 |---|---|---|---|
-| Cifrado `v2:`/PBKDF2 | Lectura heredada, escritura nueva deshabilitada | Descifrar y migrar a un formato actual durante una operación segura; nunca escribir `v2:` | Métrica o diagnóstico local que demuestre cero filas `v2:` en las instalaciones soportadas, más una migración de lectura probada |
-| Envelopes de almacenamiento internos | Lectura de filas legacy y autenticadas | Leer ambos formatos; las escrituras nuevas usan el envelope autenticado | Todas las filas migradas y tests de downgrade/upgrade conservados |
-| Claves antiguas de consentimiento | Lectura de migración acotada | Las claves `forge_consent_*` son la autoridad; las claves antiguas no conceden permisos nuevos y se limpian cuando corresponde | Una versión mayor con migración documentada y prueba de que la ausencia de la clave antigua no cambia la privacidad |
-| Claves antiguas de vault/licencia | Migración de lectura | Copiar al almacenamiento seguro y limpiar la superficie antigua; el estado legacy no concede Pro | Evidencia de migración completa y soporte de recuperación para instalaciones no abiertas durante la transición |
-| Migraciones de esquema RxDB | Migraciones históricas | Se conservan porque son necesarias para abrir instalaciones antiguas; cada versión se prueba | Solo después de una política explícita de versión mínima y una herramienta de exportación/migración para versiones fuera de soporte |
-| APIs sin `batchId` en analítica | Semántica de cliente antiguo | Se acepta como compatibilidad de lectura; clientes nuevos envían `batchId` | Retirada coordinada del cliente y del servidor en una versión de protocolo documentada |
-| Re-exportaciones de contenedores | Compatibilidad de imports | Se mantienen mientras existan consumidores; el contenedor es la vía canónica | Censo de imports igual a cero durante una release completa y migración de consumidores |
+| Encryption `v2:`/PBKDF2 | Legacy read, new write disabled | Decrypt and migrate to a current format during a safe operation; never write `v2:` | Metric or local diagnosis demonstrating zero `v2:` rows in supported installations, plus a tested read migration |
+| Internal storage envelopes | Read of legacy and authenticated rows | Read both formats; new writes use authenticated envelope | All rows migrated and downgrade/upgrade tests preserved |
+| Old consent keys | Scoped migration read | `forge_consent_*` keys are the authority; old keys grant no new permissions and are cleaned when appropriate | A major version with documented migration and proof that absence of old key does not change privacy |
+| Old vault/license keys | Read migration | Copy to secure storage and clean old surface; legacy state does not grant Pro | Evidence of complete migration and recovery support for installations not opened during transition |
+| RxDB schema migrations | Historical migrations | Kept because necessary to open old installations; each version is tested | Only after an explicit minimum version policy and an export/migration tool for unsupported versions |
+| Analytics APIs without `batchId` | Old client semantics | Accepted as read compatibility; new clients send `batchId` | Coordinated client and server retirement in a documented protocol version |
+| Container re-exports | Import compatibility | Kept while consumers exist; container is the canonical path | Import census equal to zero during a full release and consumer migration |
 
-## Reglas de decisión
+## Decision rules
 
-1. **No confundir `fallback` con legacy.** Los `Suspense fallback`, degradaciones
-   de navegador y rutas fail-closed son comportamiento operativo actual, no deuda
-   de compatibilidad.
-2. **No borrar migraciones por antigüedad aparente.** La antigüedad del código no
-   prueba que no existan datos antiguos en producción.
-3. **No usar telemetría remota para identificar contenido del vault.** Las
-   decisiones deben apoyarse en diagnósticos agregados, opt-in y sin contenido,
-   o en una inspección local explícita.
-4. **Cada retirada requiere:** ADR o actualización de ADR relevante, test de
-   regresión del formato vigente, nota de release y una ruta de recuperación.
-5. **Eliminación por fases:** marcar como solo lectura → medir/admitir una
-   versión mínima → migrar → retirar en una versión mayor.
+1. **Do not confuse `fallback` with legacy.** `Suspense fallback`, browser
+   degradations and fail-closed paths are current operational behavior, not
+   compatibility debt.
+2. **Do not delete migrations by apparent age.** Code age does not prove that
+   old data does not exist in production.
+3. **Do not use remote telemetry to identify vault content.** Decisions must
+   rely on aggregated, opt-in, content-free diagnostics, or explicit local
+   inspection.
+4. **Each retirement requires:** ADR or update of relevant ADR, regression test
+   of current format, release note and a recovery path.
+5. **Phased removal:** mark as read-only → measure/admit a minimum version →
+   migrate → retire in a major version.
 
-## Acciones próximas
+## Next actions
 
-- [ ] Añadir a la documentación de cada formato la versión mínima de lectura y
-      la versión que dejó de escribirlo.
-- [ ] Incorporar un diagnóstico local de formatos legacy encontrados, sin enviar
-      contenido ni identificadores del vault.
-- [ ] Crear una matriz de soporte por versión de aplicación antes de retirar
-      cualquier migración RxDB.
-- [ ] Revisar los consumidores de re-exportaciones de `src/container` y registrar
-      el resultado en el ADR correspondiente.
-- [ ] Al cerrar una ruta, actualizar el inventario, los tests y la nota de
-      release en el mismo cambio.
+- [ ] Add to each format's documentation the minimum read version and the
+      version that stopped writing it.
+- [ ] Incorporate a local diagnosis of legacy formats found, without sending
+      vault content or identifiers.
+- [ ] Create a support matrix by application version before retiring any
+      RxDB migration.
+- [ ] Review consumers of `src/container` re-exports and register the result
+      in the corresponding ADR.
+- [ ] When closing a path, update inventory, tests and release note in the same
+      change.
 
-## Higiene documental de esta transición
+## Documentary hygiene of this transition
 
-- **Se conservan los ADRs** que aparecen en el catálogo de anchors o justifican
-  gates activos; no se elimina un ADR por antigüedad aparente.
-- **Se conservan los informes de auditoría fechados** como evidencia histórica,
-  pero `docs/audit.md`, `docs/launch-checklist.md` y los gates son la fuente
-  operativa vigente. Un informe antiguo no autoriza una decisión actual.
-- **Se conservan los registros de drills** cuando documentan un fallo, causa
-  raíz o recuperación reproducible; sirven como evidencia de aprendizaje y no
-  como estado actual del sistema.
-- **Las notas de release** se mantienen como historial de releases. Los datos
-  temporales (commits, conteos y estados de una ejecución) no deben copiarse a
-  runbooks vivos sin una nueva verificación.
-- **Los índices de deuda pre-lanzamiento** que dupliquen las fuentes vivas deben
-  retirarse o marcarse como archivados en un cambio separado, después de
-  comprobar que no son consumidos por un gate. No se borran aquí porque el
-  checkout ya contiene modificaciones ajenas en esos documentos.
+- **ADRs appearing in the anchor catalog or justifying active gates are kept;**
+  an ADR is not deleted by apparent age.
+- **Dated audit reports are kept as historical evidence,** but
+  `docs/audit.md`, `docs/launch-checklist.md` and gates are the current
+  operational source. An old report does not authorize a current decision.
+- **Drill logs are kept when they document a failure, root cause or reproducible
+  recovery; they serve as learning evidence, not as current system state.
+- **Release notes are kept as release history.** Temporal data (commits, counts
+  and states of a run) must not be copied to living runbooks without new
+  verification.
+- **Pre-launch debt indexes that duplicate live sources must be retired or
+  marked as archived in a separate change, after verifying they are not consumed
+  by a gate. Not deleted here because the checkout already contains third-party
+  modifications in those documents.
 
-## Convención de tooling durante la migración
+## Tooling convention during migration
 
-La raíz de `scripts/` sigue siendo una superficie de entrypoints compatible.
-Los módulos nuevos se ubican por responsabilidad:
+The root of `scripts/` remains a compatible entrypoint surface.
+New modules are located by responsibility:
 
-| Área | Ubicación | Regla |
+| Area | Location | Rule |
 |---|---|---|
-| Calidad y empaquetado | `scripts/tooling/` | lint, análisis estático y presupuestos |
-| Pruebas y perfiles | `scripts/` durante la transición | los entrypoints no cambian de nombre mientras CI los consuma |
-| Seguridad y cumplimiento | `scripts/` durante la transición | mover internals solo con actualización de referencias y tests |
-| Operaciones | `scripts/` durante la transición | no mover despliegues/drills sin revisar workflows y runbooks |
+| Quality and packaging | `scripts/tooling/` | lint, static analysis and budgets |
+| Tests and profiles | `scripts/` during transition | entrypoints do not change name while CI consumes them |
+| Security and compliance | `scripts/` during transition | move internals only with reference update and tests |
+| Operations | `scripts/` during transition | do not move deployments/drills without reviewing workflows and runbooks |
 
-La reducción de superficie se hace eliminando primero entrypoints sin
-referencias y después fusionando duplicados, siempre con un test de contrato.
-Un simple movimiento de archivos no se considera reducción: cada migración debe
-reducir comandos, duplicación o coste de mantenimiento.
+Surface reduction is done by first removing unreferenced entrypoints and then
+fusing duplicates, always with a contract test. A simple file move is not
+considered reduction: each migration must reduce commands, duplication or
+maintenance cost.
 
 
-Este documento no autoriza eliminar código, borrar datos locales, cambiar
-formatos criptográficos ni desactivar migraciones. Es un control de decisión;
-la retirada efectiva requiere evidencia y revisión separada.
+This document does not authorize deleting code, deleting local data, changing
+cryptographic formats or disabling migrations. It is a decision control;
+effective retirement requires evidence and separate review.

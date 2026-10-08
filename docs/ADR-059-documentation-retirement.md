@@ -1,21 +1,36 @@
-# ADR-059 — Retiro controlado de documentación
+# ADR-059 — Controlled documentation retirement
 
-## Estado
+## Status
 
-Aceptado
+Accepted
 
-## Fecha
+## Date
 
 2026-09-19
 
-## Contexto
+## Context
 
-La documentación histórica creció junto con el producto y algunas guías dejaron de representar la arquitectura actual. Borrar archivos sin actualizar las referencias produjo fallos de CI y podía ocultar pérdida de cobertura operativa.
+Historical documentation grew along with the product and some guides stopped
+representing the current architecture. Deleting files without updating
+references produced CI failures and could hide a loss of operational coverage.
 
-## Decisión
+## Decision
 
-Los documentos retirados se eliminan de forma explícita y se registra el cambio en `docs/PENDIENTES.md` o en un ADR. `docs/docs-state-index.md` refleja solamente documentos presentes. El gate `check:docs-retire` impide retirar un documento que no tenga una razón y una revisión de referencias, y `check:docs-index` impide que el estado intermedio `retirable` sobreviva a un commit: el inventario canónico se deriva del disco y solo emite `vivo` o `transitorio`, así que una fila marcada para retiro que no complete el flujo (consentimiento → borrado → regeneración) rompe la cadena `npm run check` en lugar de quedar como una marca pendiente. RPO/RTO/SLO, seguridad, cumplimiento y contratos de API no pueden desaparecer sin un reemplazo equivalente.
+Retired documents are explicitly deleted and the change is recorded in
+`docs/PENDIENTES.md` or in an ADR. `docs/docs-state-index.md` reflects only
+present documents. The `check:docs-retire` gate prevents retiring a document that has no
+reason and reference review, and `check:docs-index` prevents the intermediate `retirable` state
+from surviving a commit: the canonical inventory is derived from disk and
+only emits `vivo` or `transitorio`, so a row marked for retirement that does not
+complete the flow (consent → deletion → regeneration) breaks the `npm run check` chain instead of
+remaining as a pending mark. RPO/RTO/SLO, security, compliance and API contracts
+cannot disappear without an equivalent replacement.
 
-## Consecuencias
+## Consequences
 
-El inventario deja de ser una lista histórica de archivos borrados y pasa a ser un catálogo verificable del checkout. Las retiradas masivas requieren revisar scripts, workflows, tests y referencias documentales antes de regenerar baselines. Esta decisión (que entró en conflicto de numeración con el ADR-026 original y por eso se renumeró) supera las mil palabras de contexto acumulado en las auditorías previas y mantiene la trazabilidad necesaria para futuros retiros.
+The inventory stops being a historical list of deleted files and becomes a
+verifiable catalog of the checkout. Mass retirements require reviewing scripts,
+workflows, tests and documentary references before regenerating baselines. This
+decision (which entered a numbering conflict with the original ADR-026 and was
+therefore renumbered) supersedes the thousand-plus words of accumulated context in
+the previous audits and keeps the traceability needed for future retirements.

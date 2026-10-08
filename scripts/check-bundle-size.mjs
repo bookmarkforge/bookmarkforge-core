@@ -2,7 +2,7 @@
  * scripts/check-bundle-size.mjs — P6 bundle-size + report gate.
  *
  * Walks dist/assets/*.js after a production build and asserts:
- *   1. entry chunk (index-*.js) <= 1.5 MB (matches P60 gate budget).
+ *   1. entry chunk (app-*.js / index-*.js) <= 1.5 MB (matches P60 gate budget).
  *   2. total JS payload <= 20 MB (soft cap; catches gross bloat even when
  *      individual lazy vendors stay within their own caps).
  *   3. no single JS chunk exceeds 1 MB unless it is a known large lazy
@@ -12,6 +12,7 @@
  */
 import { readdirSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { resolveEntryChunk } from "./entry-chunk-lib.mjs";
 
 const ROOT = process.cwd();
 const ASSETS = join(ROOT, "dist", "assets");
@@ -56,8 +57,11 @@ function fail(msg) {
 const files = walkJs();
 if (files.length === 0) fail("dist/assets has no .js/.mjs chunks");
 
-const entry = files.find((f) => f.name.startsWith("index-"));
-if (!entry) fail("entry chunk (index-*.js) not found");
+// ADR-028: gate drift — entry derived from dist's HTML module script
+// (app-*.js since the marketing/SPA split), see scripts/entry-chunk-lib.mjs.
+const entryName = resolveEntryChunk(ROOT, files.map((f) => f.name));
+const entry = files.find((f) => f.name === entryName);
+if (!entry) fail("entry chunk (app-*.js / index-*.js) not found");
 
 const totalBytes = files.reduce((s, f) => s + f.bytes, 0);
 const entryMB = (entry.bytes / 1024 / 1024).toFixed(2);

@@ -138,6 +138,21 @@ test("relay mode joins with the keyed room and never sends the room secret", asy
       .poll(() => frames.length, { timeout: 45_000, intervals: [100, 250, 500, 1_000] })
       .toBeGreaterThan(0);
 
+    // The first frame to land can be the bookmarks join — wait for THIS
+    // session's documents join too before judging, so the keyed-room check
+    // below never races the order the joins happen to arrive in.
+    await expect
+      .poll(
+        () =>
+          frames.some(
+            (entry) =>
+              entry.frame?.type === "join" &&
+              entry.frame?.room === topics.documents,
+          ),
+        { timeout: 45_000, intervals: [100, 250, 500, 1_000] },
+      )
+      .toBe(true);
+
     const joins = frames.filter((entry) => entry.frame?.type === "join");
     const evidence = {
       phase,

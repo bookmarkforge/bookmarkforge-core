@@ -479,9 +479,9 @@ describe("LicenseService", () => {
 
   describe("canAddBookmarks", () => {
     test("caps the free tier at FREE_LIMITS.maxBookmarks", async () => {
-      expect(await licenseService.canAddBookmarks(999)).toBe(true);
-      expect(await licenseService.canAddBookmarks(1000)).toBe(false);
-      expect(await licenseService.canAddBookmarks(1000, 3)).toBe(false);
+      expect(await licenseService.canAddBookmarks(FREE_LIMITS.maxBookmarks - 1)).toBe(true);
+      expect(await licenseService.canAddBookmarks(FREE_LIMITS.maxBookmarks)).toBe(false);
+      expect(await licenseService.canAddBookmarks(FREE_LIMITS.maxBookmarks, 3)).toBe(false);
     });
 
     test("always allows inserts for Pro (license)", async () => {
@@ -492,11 +492,13 @@ describe("LicenseService", () => {
 
     test("does not allow inserts from a client-controlled trial timestamp", async () => {
       localStorage.setItem(LICENSE_CONFIG.storageKeys.trialStartedAt, String(Date.now()));
-      expect(await licenseService.canAddBookmarks(1000)).toBe(false);
+      expect(await licenseService.canAddBookmarks(FREE_LIMITS.maxBookmarks)).toBe(false);
     });
 
     test("FREE_LIMITS mirrors the expected values", () => {
-      expect(FREE_LIMITS.maxBookmarks).toBe(1000);
+      // The literal pin lives in src/tests/constants/license.test.ts; this row
+      // records the value the service actually caps against.
+      expect(FREE_LIMITS.maxBookmarks).toBe(2500);
       expect(FREE_LIMITS.maxDevices).toBe(0);
     });
   });

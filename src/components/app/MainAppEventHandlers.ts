@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { type TabType } from "../../hooks/useTabManager";
 import { initDB } from "../../container/database";
 import { generateId } from "../../utils/id";
 

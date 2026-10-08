@@ -254,10 +254,23 @@ test.describe("browser-extension E2E", () => {
   test.beforeAll(() => {
     const manifestPath = path.join(DIST_EXTENSION, "manifest.json");
     if (!fs.existsSync(manifestPath)) {
-      throw new Error(
-        `[extension.spec] dist-extension/ is missing or has no manifest.json. ` +
-          `Run \`npm run build:extension:custom\` before this test.`,
-      );
+      // Auto-provision instead of failing the whole suite: packaging is a
+      // deterministic copy of extension/ sources (no bundler, no network),
+      // so the suite that needs the artifact can build it. The nightly
+      // multiuser job never ran build:extension:custom, and its shard 2/2
+      // died here with "dist-extension/ is missing" (run 35833219915). The
+      // error text documented the remedy for months; this performs it.
+      const build = spawnSync("npm", ["run", "build:extension:custom"], {
+        cwd: path.resolve(__dirname, "..", ".."),
+        stdio: "inherit",
+        shell: process.platform === "win32",
+      });
+      if (build.status !== 0 || !fs.existsSync(manifestPath)) {
+        throw new Error(
+          `[extension.spec] dist-extension/ is missing and auto-build failed ` +
+            `(exit ${build.status}). Run \`npm run build:extension:custom\` manually.`,
+        );
+      }
     }
     fs.mkdirSync(userDataDir, { recursive: true });
   });
@@ -580,7 +593,7 @@ test.describe("browser-extension E2E", () => {
     // Must mirror `extension/background.js` DEFAULT_BASE_URL. Verified to
     // resolve to a real host (178.156.204.210), so the fallback is never
     // contacted in this test — it is only asserted as the rejection outcome.
-    const DEFAULT_BASE_URL = "https://bookmarkforge.com";
+    const DEFAULT_BASE_URL = "https://bookmarkforgeapp.com";
 
     const ctx = await chromium.launchPersistentContext(userDataDir, {
       headless: false,
@@ -676,7 +689,7 @@ test.describe("browser-extension E2E", () => {
           }
           return {
             storedValid: false,
-            resolvedBaseUrl: "https://bookmarkforge.com",
+            resolvedBaseUrl: "https://bookmarkforgeapp.com",
           };
         },
         [HTTP_BAD_BASE] as [string],
@@ -760,7 +773,7 @@ test.describe("browser-extension E2E", () => {
           );
           // Mirror background.js getBaseUrl() exactly.
           const stored = items["bookmarkforge_base_url"];
-          let resolved = "https://bookmarkforge.com";
+          let resolved = "https://bookmarkforgeapp.com";
           if (typeof stored === "string" && stored.length > 0) {
             const trimmed = builder.normalizeBaseUrl(stored);
             if (builder.isValidBaseUrl(trimmed)) resolved = trimmed;

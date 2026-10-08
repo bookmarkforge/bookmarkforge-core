@@ -184,12 +184,12 @@ describe("MemoryEngine", () => {
 
   describe("createSession", () => {
     it("creates session with given title", async () => {
-      const id = await memoryEngine.createSession("Mi sesión");
+      const id = await memoryEngine.createSession("My session");
       expect(id).toMatch(
         /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
       );
       expect(mockDb.memory.insert).toHaveBeenCalledWith(
-        expect.objectContaining({ title: "Mi sesión" }),
+        expect.objectContaining({ title: "My session" }),
       );
     });
     it("sets active session in store", async () => {
@@ -295,7 +295,7 @@ describe("MemoryEngine", () => {
       mockDb.memory.findOne = vi
         .fn()
         .mockReturnValue({ exec: vi.fn().mockResolvedValue(null) });
-      await memoryEngine.addMessage("s1", "user", "público");
+      await memoryEngine.addMessage("s1", "user", "public");
       expect(mockDb.memory.insert).toHaveBeenCalledWith(
         expect.objectContaining({ isPrivate: false }),
       );
@@ -438,7 +438,7 @@ describe("MemoryEngine", () => {
               sessionId: "s1",
               role: "user" as const,
               isPrivate: false,
-              content: "público reciente",
+              content: "recent public",
               createdAt: "2025-01-05T00:00:00.000Z",
             }) as MemoryChatMessage,
         },
@@ -460,7 +460,7 @@ describe("MemoryEngine", () => {
               sessionId: "s1",
               role: "user" as const,
               isPrivate: false,
-              content: "público 2",
+              content: "public 2",
               createdAt: "2025-01-03T00:00:00.000Z",
             }) as MemoryChatMessage,
         },
@@ -482,7 +482,7 @@ describe("MemoryEngine", () => {
               sessionId: "s1",
               role: "user" as const,
               isPrivate: false,
-              content: "público 4",
+              content: "public 4",
               createdAt: "2025-01-01T00:00:00.000Z",
             }) as MemoryChatMessage,
         },
@@ -492,16 +492,16 @@ describe("MemoryEngine", () => {
       });
       const { aiManager } = await import("../../services/ai/ProviderManager");
       (aiManager.generateText as any).mockResolvedValue({
-        text: "resumen público",
+        text: "public summary",
       });
       await memoryEngine.closeSession("s1");
       expect(aiManager.generateText).toHaveBeenCalled();
       // The summary prompt never contains the private message.
       const prompt = vi.mocked(aiManager.generateText).mock.calls[0]![0] as string;
-      expect(prompt).not.toContain("SECRETO PRIVADO");
-      expect(prompt).toContain("público reciente");
+      expect(prompt).not.toContain("PRIVATE SECRET");
+      expect(prompt).toContain("recent public");
       expect(patchSpy).toHaveBeenCalledWith(
-        expect.objectContaining({ summary: "resumen público" }),
+        expect.objectContaining({ summary: "public summary" }),
       );
     });
   });

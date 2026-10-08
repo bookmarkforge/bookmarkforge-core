@@ -466,9 +466,13 @@ describe("AppContent", () => {
       expect(overlay).not.toBeNull();
       expect(overlay!.className).not.toContain("opacity-0");
       expect(getByText("Loading vault…")).toBeTruthy();
-      // toLocaleString() in the jsdom/Node test env (no full ICU) renders
-      // "2000" without a thousands separator — the browser shows "2,000".
-      expect(getByText("Preparing 2000 items…")).toBeTruthy();
+      // The count reaches the copy through toLocaleString(), so its group
+      // separator follows the runtime locale ("2,000" under en-US, "2000"
+      // under es-ES). Deriving the expected string the same way keeps this
+      // assertion on the wiring — the row count really arrives — instead of on
+      // the default locale of whichever machine happens to run the suite.
+      const expected = `Preparing ${(2000).toLocaleString()} items…`;
+      expect(getByText(expected)).toBeTruthy();
 
       // Init settles: the overlay does NOT unmount instantly — it holds
       // (frozen) then fades out, same anti-flicker contract as migration.
@@ -479,7 +483,7 @@ describe("AppContent", () => {
       expect(closing).not.toBeNull();
       expect(closing!.className).toContain("opacity-0");
       // Frozen: the row count stays visible during the hold.
-      expect(getByText("Preparing 2000 items…")).toBeTruthy();
+      expect(getByText(expected)).toBeTruthy();
 
       act(() => {
         vi.advanceTimersByTime(700);

@@ -1,76 +1,75 @@
-# ADR-045: Registro y documentación del gate de marca `check:brand-logo`
+# ADR-045: Record and documentation for the `check:brand-logo` brand gate
 
-- **Estado:** aceptado (implementado: `scripts/check-brand-logo-consistency.mjs` está en la cadena `npm run check` con su suite adversarial en `scripts/__tests__/check-brand-logo-consistency.test.mjs`)
-- **Fecha:** 2026-09-09
+- **Status:** accepted (implemented: `scripts/check-brand-logo-consistency.mjs` is in the `npm run check` chain with its adversarial suite in `scripts/__tests__/check-brand-logo-consistency.test.mjs`)
+- **Date:** 2026-09-09
 
-## Contexto
+## Context
 
-La marca de BookmarkForge aparece en muchas superficies: el PWA manifest, los
-manifests de la extensión, `browserconfig`, los links `favicon`/`apple-touch`
-de los HTML, las data-URIs `<image>` embebidas en SVGs públicos (como la
-tarjeta `og-image`) y el logo inline de las landings. Históricamente, un logo
-"placeholder" estándar podía colarse de nuevo en la app, las landings o la
-extensión sin que nadie lo notara: la degradación de marca era silenciosa y
-solo se detectaba en revisión visual.
+The BookmarkForge brand appears on many surfaces: the PWA manifest, the
+extension manifests, `browserconfig`, the `favicon`/`apple-touch` links
+of the HTML files, the `<image>` data-URIs embedded in public SVGs (such as
+the `og-image` card) and the inline logo of the landings. Historically, a standard
+"placeholder" logo could sneak back into the app, the landings or the
+extension without anyone noticing: brand degradation was silent and
+only caught in visual review.
 
-`check:brand-logo` cierra esa brecha con una fuente única: el arte canónico
-`public/icons/logo-512.png`. El gate falla si cualquier icono PNG o SVG de
-marca inline se desvía de ese canónico, de modo que un placeholder no puede
-volver a entrar sin romper CI.
+`check:brand-logo` closes that gap with a single source: the canonical artwork
+`public/icons/logo-512.png`. The gate fails if any brand PNG or SVG icon
+inline deviates from that canonical file, so a placeholder cannot
+come back without breaking CI.
 
-El inspector freeze (O-1, `docs/ADR-028-gate-drift-detection.md`) exige que
-todo gate nuevo esté gobernado: o es núcleo protegido, o está registrado en
-`KNOWN_GATES` con categoría explícita, o lo justifica un ADR.
-`check:brand-logo` no es un inspector de formato de documentación (no valida
-`docs/`): es un contrato de identidad visual del producto, la misma familia
-que `check:static-brand` (tokens de marca en CSS/HTML). Esta decisión lo
-registra formalmente y documenta qué valida y cómo ejecutarlo, con paridad de
-gobernanza con el resto de gates del repo — en particular con `check:seo`
-(`docs/ADR-043-check-seo-gate.md`), con el que comparte la categoría `meta`
-en el freeze y el patrón de suite adversarial.
+The freeze inspector (O-1, `docs/ADR-028-gate-drift-detection.md`) requires that
+every new gate be governed: either it is protected core, or it is registered in
+`KNOWN_GATES` with an explicit category, or an ADR justifies it.
+`check:brand-logo` is not a documentation-format inspector (it does not validate
+`docs/`): it is a visual identity contract for the product, the same family
+as `check:static-brand` (brand tokens in CSS/HTML). This decision records it
+formally and documents what it validates and how to run it, with governance
+parity with the rest of the repo's gates — in particular with `check:seo`
+(`docs/ADR-043-check-seo-gate.md`), with which it shares the `meta` category
+in the freeze and the adversarial-suite pattern.
 
-## Decisión
+## Decision
 
-1. **Alcance del gate.** `node scripts/check-brand-logo-consistency.mjs`
-   valida dos superficies:
-   - **Iconos PNG** — todo icono PNG referenciado desde las superficies de
-     marca conocidas (PWA manifest, manifests de la extensión,
-     `browserconfig`, links `favicon`/`apple-touch` en HTML y data-URIs
-     `<image>` embebidas en SVGs públicos como la tarjeta `og-image`) se
-     decodifica y se compara **pixel a pixel** contra el arte canónico
-     (`public/icons/logo-512.png`) tras re-muestrear a 64×64. Un icono
-     ausente, no cuadrado, no decodificable o visualmente distinto hace
-     fallar el gate. El umbral de similitud (`THRESHOLD`) absorbe las
-     diferencias de resampler entre variantes del icono; una marca
-     genuinamente distinta mide ~4× por encima del umbral.
-   - **SVGs de marca inline** — los SVGs placeholder dibujados a mano
-     (viewBox `"0 0 128 128"`, el antiguo path trapezoidal, los rects de
-     brand-tile) en fuentes HTML/TSX/JS/SVG hacen fallar el gate: la marca
-     debe ser el PNG canónico (`/logo-64.png`), nunca una aproximación
-     reescrita.
-2. **Gate puro y sin dependencias.** Sin `--fix`; solo Node core —
-   deliberadamente **no** depende de `sharp`, de modo que corre incluso con
-   un `node_modules` roto (igual que otros gates de la cadena).
-3. **Cómo ejecutarlo.** `node scripts/check-brand-logo-consistency.mjs`;
-   corre en la cadena `npm run check` y en `check:ci`. Su suite adversarial
-   (`scripts/__tests__/check-brand-logo-consistency.test.mjs`, perfil
-   `test:slow`) muta cada pieza del contrato y exige que el gate la detecte.
-4. **Registro en el freeze.** `check:brand-logo` se registra en
-   `KNOWN_GATES` de `scripts/check-inspector-freeze.mjs` como `meta` — la
-   misma categoría que `check:static-brand` y `check:seo`: no es un
-   inspector de formato de documentación, por lo que no requiere ADR por
-   O-1; este ADR documenta la decisión y su contrato igualmente.
+1. **Gate scope.** `node scripts/check-brand-logo-consistency.mjs`
+   validates two surfaces:
+   - **PNG icons** — every PNG icon referenced from the known brand
+     surfaces (PWA manifest, extension manifests,
+     `browserconfig`, `favicon`/`apple-touch` links in HTML and `<image>` data-URIs
+     embedded in public SVGs such as the `og-image` card) is
+     decoded and compared **pixel by pixel** against the canonical artwork
+     (`public/icons/logo-512.png`) after resampling to 64×64. A missing, non-square,
+     undecodable or visually different icon makes
+     the gate fail. The similarity threshold (`THRESHOLD`) absorbs
+     resampler differences between icon variants; a genuinely
+     different brand measures ~4× above the threshold.
+   - **Inline brand SVGs** — hand-drawn placeholder SVGs
+     (viewBox `"0 0 128 128"`, the old trapezoidal path, the brand-tile
+     rects) in HTML/TSX/JS/SVG sources make the gate fail: the brand
+     must be the canonical PNG (`/logo-64.png`), never a rewritten approximation.
+2. **Pure gate with no dependencies.** No `--fix`; Node core only —
+   deliberately **not** dependent on `sharp`, so it runs even with a
+   broken `node_modules` (like the chain's other gates).
+3. **How to run it.** `node scripts/check-brand-logo-consistency.mjs`;
+   it runs in the `npm run check` chain and in `check:ci`. Its adversarial suite
+   (`scripts/__tests__/check-brand-logo-consistency.test.mjs`, `test:slow` profile)
+   mutates every piece of the contract and requires the gate to detect it.
+4. **Registration in the freeze.** `check:brand-logo` is registered in
+   `KNOWN_GATES` of `scripts/check-inspector-freeze.mjs` as `meta` — the
+   same category as `check:static-brand` and `check:seo`: it is not a
+   documentation-format inspector, so O-1 does not require an ADR for it;
+   this ADR documents the decision and its contract all the same.
 
-## Consecuencias
+## Consequences
 
-- Toda superficie nueva de marca (un icono, un manifest, un HTML) debe
-  añadirse a la lista de escaneo del gate, o puede degradarse sin
-  detección — el gate solo vigila lo que conoce.
-- Cambiar el arte canónico (`public/icons/logo-512.png`) o regenerar los
-  iconos derivados exige actualizar el gate y su suite: el re-muestreo a
-  64×64 es el contrato de comparación.
-- Los PNG referenciados deben ser cuadrados y decodificables; un icono
-  placeholder "estándar" rompe CI antes de llegar a producción.
-- El gate está implementado y en la cadena; este ADR registra la decisión y
-  sirve de referencia canónica de qué valida y cómo ejecutarlo, con paridad
-  de gobernanza con `docs/ADR-043-check-seo-gate.md`.
+- Every new brand surface (an icon, a manifest, an HTML file) must
+  be added to the gate's scan list, or it can degrade without
+  detection — the gate only watches what it knows.
+- Changing the canonical artwork (`public/icons/logo-512.png`) or regenerating the
+  derived icons requires updating the gate and its suite: resampling to
+  64×64 is the comparison contract.
+- Referenced PNGs must be square and decodable; a "standard" placeholder
+  icon breaks CI before it reaches production.
+- The gate is implemented and in the chain; this ADR records the decision and
+  serves as the canonical reference for what it validates and how to run it, with governance
+  parity with `docs/ADR-043-check-seo-gate.md`.

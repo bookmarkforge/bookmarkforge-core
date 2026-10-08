@@ -64,6 +64,7 @@ let queuedMessages = 0;
 let messageQueue: Promise<void> = Promise.resolve();
 
 self.onmessage = (e: MessageEvent) => {
+  if (e.origin && e.origin !== self.location.origin) return Promise.resolve();
   const { taskId, type, payload } = (e.data ?? {}) as Record<string, unknown>;
 
   // The pool always sends taskId/type; guard anyway so malformed messages

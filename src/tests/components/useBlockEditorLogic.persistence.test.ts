@@ -105,11 +105,11 @@ describe("useBlockEditorLogic — persistence (load + autosave)", () => {
   });
 
   it("loads an existing document: title, text, blocks and privacy", async () => {
-    const blocks: PartialBlock[] = [{ type: "heading", content: "Título" }];
+    const blocks: PartialBlock[] = [{ type: "heading", content: "Title" }];
     dbMocks.findOne.mockReturnValue({
       exec: vi.fn().mockResolvedValue({
-        title: "Mi Doc",
-        textContent: "Hola mundo",
+        title: "My Doc",
+        textContent: "Hello world",
         blocks,
         isPrivate: true,
         lastVersionSavedAt: 123,
@@ -125,8 +125,8 @@ describe("useBlockEditorLogic — persistence (load + autosave)", () => {
     });
 
     expect(state.setInitialContent).toHaveBeenCalledWith("loading");
-    expect(state.setDocTitle).toHaveBeenCalledWith("Mi Doc");
-    expect(state.setEditorText).toHaveBeenCalledWith("Hola mundo");
+    expect(state.setDocTitle).toHaveBeenCalledWith("My Doc");
+    expect(state.setEditorText).toHaveBeenCalledWith("Hello world");
     expect(state.setIsPrivate).toHaveBeenCalledWith(true);
     expect(state.setLastVersionSavedAt).toHaveBeenCalledWith(123);
     expect(state.setInitialContent).toHaveBeenCalledWith(blocks);
@@ -170,8 +170,8 @@ describe("useBlockEditorLogic — persistence (load + autosave)", () => {
       }),
     });
     state = makeState({
-      docTitle: "Título editado",
-      editorText: "Contenido editado",
+      docTitle: "Edited title",
+      editorText: "Edited content",
       isPrivate: false,
       lastVersionSavedAt: null,
     });
@@ -194,9 +194,9 @@ describe("useBlockEditorLogic — persistence (load + autosave)", () => {
 
     expect(dbMocks.incrementalPatch).toHaveBeenCalledWith(
       expect.objectContaining({
-        title: "Título editado",
+        title: "Edited title",
         blocks,
-        textContent: "Contenido editado",
+        textContent: "Edited content",
         processed: false,
         isPrivate: false,
         updatedAt: expect.any(String),

@@ -1,45 +1,45 @@
-# ADR-027: Hardening post-auditoría — wave 2 (servidor de señalización)
+# ADR-027: Post-audit hardening — wave 2 (signaling server)
 
-- **Estado:** aceptado (implementado; este registro formaliza la decisión existente)
-- **Fecha:** 2026-09-02 (retro-documentado desde el código y `docs/audit.md`)
+- **Status:** accepted (implemented; this record formalizes the existing decision)
+- **Date:** 2026-09-02 (retro-documented from the code and `docs/audit.md`)
 
-## Contexto
+## Context
 
-La wave 1 del hardening post-auditoría (`docs/ADR-026-post-audit-hardening-wave-1.md`)
-cubrió el cliente (sincronización WebRTC, almacenamiento, resolución de
-conflictos). La auditoría también identificó que el servidor de señalización
-self-hosted — exposible a Internet por diseño, pues coordina el handshake P2P —
-necesitaba límites de recursos y endurecimiento de autenticación propios. El
-compañero server no recibe contenido del vault (ver `docs/architecture.md`),
-pero un atacante puede abusar de sus recursos y de su superficie de join.
+Wave 1 of post-audit hardening (`docs/ADR-026-post-audit-hardening-wave-1.md`)
+covered the client (WebRTC sync, storage, conflict
+resolution). The audit also identified that the self-hosted signaling
+server — exposed to the Internet by design, since it coordinates the P2P handshake —
+needed resource limits and authentication hardening of its own. The
+companion server receives no vault content (see `docs/architecture.md`),
+but an attacker can abuse its resources and its join surface.
 
-## Decisión
+## Decision
 
-1. **Enteros acotados por entorno.** Todos los límites numéricos del servidor
-   (conexiones, rooms, peers por room, tamaños de payload, ventanas de tiempo)
-   se leen del entorno validados como enteros acotados — sin defaults
-   ilimitados ni coerción silenciosa de strings.
-2. **Ventana anti-replay.** Los mensajes firmados del protocolo de señalización
-   se validan contra una ventana de tiempo/replay; mensajes fuera de la ventana
-   se rechazan (protección de reenvío de handshakes capturados).
-3. **Autenticación en tiempo constante.** La comparación de credenciales
-   admin/token (`SIGNALING_ADMIN_TOKEN`) usa comparación en tiempo constante
-   para no filtrar longitud ni prefijo por timing.
-4. **Rate-limit de join aislado.** El límite de tasa de entradas a rooms usa un
-   mapa aislado por identidad, de modo que un cliente abusivo no pueda agotar
-   el presupuesto de rate-limit global ni provocar colisión de claves con
-   otros clientes (ancla `signaling-server-bounded-resources`).
-5. **Ancla de regresión.** El conjunto completo está anclado en
-   `src/tests/sync/signaling-server.test.*` vía `scripts/audit-anchors.mjs`
-   (ADR-027 / wave 2): la eliminación o renombrado del test falla el gate
-   `check:audit-drift`.
+1. **Environment-bounded integers.** All of the server's numeric limits
+   (connections, rooms, peers per room, payload sizes, time windows)
+   are read from the environment validated as bounded integers — with no unbounded
+   defaults nor silent string coercion.
+2. **Anti-replay window.** Signed messages of the signaling protocol
+   are validated against a time/replay window; messages outside the window
+   are rejected (protection against replaying captured handshakes).
+3. **Constant-time authentication.** Comparison of admin/token credentials
+   (`SIGNALING_ADMIN_TOKEN`) uses constant-time comparison
+   so as not to leak length or prefix through timing.
+4. **Isolated join rate limit.** The rate limit for room entries uses a
+   map isolated per identity, so that an abusive client cannot exhaust
+   the global rate-limit budget nor cause key collisions with
+   other clients (anchor `signaling-server-bounded-resources`).
+5. **Regression anchor.** The complete set is anchored in
+   `src/tests/sync/signaling-server.test.*` via `scripts/audit-anchors.mjs`
+   (ADR-027 / wave 2): removing or renaming the test fails the
+   `check:audit-drift` gate.
 
-## Consecuencias
+## Consequences
 
-- El servidor de señalización es fail-closed: sin configuración de límites
-  explícita, los defaults son restrictivos, no permisivos.
-- Los límites son operables vía entorno sin redeploy de código; los cambios de
-  defaults estructurales requieren ADR.
-- La política de webhooks/secretos del operativo nocturno (P92/H5) y el
-  presupuesto WoW de duración (ADR-019) viven en `docs/ops-nightly.md` y
-  `docs/audit.md` — este ADR cubre solo la superficie de señalización.
+- The signaling server is fail-closed: without explicit limits configuration,
+  the defaults are restrictive, not permissive.
+- Limits are operable via the environment without a code redeploy; changes to
+  structural defaults require an ADR.
+- The night operator's webhook/secret policy (P92/H5) and the WoW duration
+  budget (ADR-019) live in `docs/ops-nightly.md` and
+  `docs/audit.md` — this ADR covers only the signaling surface.

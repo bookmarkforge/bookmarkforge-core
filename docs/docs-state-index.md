@@ -1,150 +1,173 @@
-# Inventario documental — BookmarkForge
+# Documentation inventory — BookmarkForge
 
-Este índice se genera desde los documentos presentes en el checkout. Un documento eliminado deja de aparecer aquí; cualquier retiro debe quedar trazado en `docs/PENDIENTES.md` o en un ADR.
+This index is generated from the documents present in the checkout. A deleted document stops appearing here; any retirement must be traced in `docs/PENDIENTES.md` or in an ADR.
 
-## Estados
+## States
 
-| Estado | Significado |
+| State | Meaning |
 |---|---|
-| `vivo` | Documento activo o usado por un flujo del proyecto. |
-| `transitorio` | Documento pendiente de consolidación. |
-| `archivo` | Evidencia histórica conservada. |
-| `retirable` | Puede eliminarse únicamente tras pasar `check:docs-retire`. |
+| `vivo` | Active document, or one a project flow depends on. |
+| `transitorio` | Document awaiting consolidation. |
+| `archivo` | Historical evidence kept for the record. |
+| `retirable` | May be deleted only after passing `check:docs-retire`. |
 
-## Documentos presentes
+## Documents present
 
-| Documento | Estado | Nota |
+| Document | State | Note |
 |---|---|---|
-| `docs/ADR-001-check-static-brand.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-019-argon2id-migration.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-026-post-audit-hardening-wave-1.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-027-post-audit-hardening-wave-2.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-028-gate-drift-detection.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-029-webrtc-sync-hardening.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-030-security-tier-regression-umbrella.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-032-disk-backup-pruning.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-033-restore-surface-auth-errors.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-034-backup-age-and-storage-quota.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-037-backup-deletion-ownership.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-038-constant-time-hmac-attestation.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-039-sw-integrity-runtime.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-040-docs-markdown-gate-fusion.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-042-css-only-user-themes.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-043-check-seo-gate.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-044-og-image-policy.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-045-check-brand-logo-gate.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-046-vault-kdf-salt-rotation.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-047-claim-drift-gate.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-048-license-claims-gate.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-049-manual-figures-gate.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-050-page-figures-gate-and-planner.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-051-landings-fresh-gate.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-052-v5-format-sunset.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-053-vault-salt-registry.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-054-check-quick-tier.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-055-collapsible-surfaces.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-056-documented-npm-commands-gate.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-057-documented-reference-integrity-gate.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-058-release-target-confirmation-gate.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-059-documentation-retirement.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-060-legal-consolidation-gate.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-061-controlled-retirement-2026-09-19.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-062-landing-smoke-gate.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-063-feature-budgets-gate.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ADR-064-audit-freshness-gate.md` | vivo | Registro de decisión arquitectónica. |
-| `docs/ai-performance-local-device-report-2026-09-21.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/api.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/ARCHITECTURE-TUTORIAL.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/architecture.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/audit-report-2026-09-02.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/audit.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/CHANGELOG.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/CRYPTO-PATTERNS.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/deployment-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/docs-state-index.md` | vivo | Inventario canónico generado por scripts/doctor-docs-index.mjs. |
-| `docs/edge-case-hardening-vault-audit.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/EXTENSION-LOCAL-SETUP.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/fix-findings-plan.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/github-secrets-and-push-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/google-search-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/history-attribution.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/index.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/internal-security-checklist.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/ios-day0-session-sheet.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/ios-manual-test-script.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/launch-checklist.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/launch-day-smoke.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/legacy-compatibility-plan.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/legacy-schema-version-map.md` | vivo | Mapa de compatibilidad de esquemas generado desde src/db/schema.ts. |
-| `docs/legal-closing-package.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/locale-addition-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/manual-usuario-ar.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-bg.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-cs.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-da.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-de.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-el.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-en.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-fi.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-fr.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-he.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-hi.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-hr.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-hu.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-id.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-it.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-ja.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-ko.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-nl.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-no.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-pl.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-pt.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-ro.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-ru.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-sv.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-th.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-tr.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-uk.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-vi.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario-zh.md` | vivo | Manual localizado de usuario. |
-| `docs/manual-usuario.md` | vivo | Manual localizado de usuario. |
-| `docs/market-validation-plan.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/onboarding-emails.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/ONBOARDING.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/openapi.yaml` | vivo | Contrato OpenAPI versionado del servidor companion. |
-| `docs/operations.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/operator-quick-reference.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/ops-nightly.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/p2p-sync-manual-test-script.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/p2p-sync-session-prep.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/PENDIENTES.md` | transitorio | Registro de trabajo pendiente y deuda conocida. |
-| `docs/performance-budget-by-feature.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/PLAN-FIRST-USER-2-SEMANAS.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/plan-super-optimizacion.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/positioning.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/pricing-decision.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/production-license-launch-checklist.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/release-candidate-package-2026-09-21.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/RELEASE-STATUS.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/ROPA.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/sast-triage.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/scripts-inventory-scanner-limits.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/SECURITY-INCIDENT-ghp-2026-09-23.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/security.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/SELF-HOSTING.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/server-api-index.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/staging-matrix-report-2026-09-21.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/staging-smoke.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/support-chargebacks-log.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/support-data-loss-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/support-license-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/support-refunds-log.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/TESTING-PATTERNS.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/TROUBLESHOOTING.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/VERCEL-LOCAL-SETUP.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/WEBRTC-COMPATIBILITY.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
-| `docs/whop-setup-runbook.md` | vivo | Documento presente en el checkout; revisar su estado antes de retirarlo. |
+| `docs/ADR-001-check-static-brand.md` | vivo | Architectural decision record. |
+| `docs/ADR-019-argon2id-migration.md` | vivo | Architectural decision record. |
+| `docs/ADR-026-post-audit-hardening-wave-1.md` | vivo | Architectural decision record. |
+| `docs/ADR-027-post-audit-hardening-wave-2.md` | vivo | Architectural decision record. |
+| `docs/ADR-028-gate-drift-detection.md` | vivo | Architectural decision record. |
+| `docs/ADR-029-webrtc-sync-hardening.md` | vivo | Architectural decision record. |
+| `docs/ADR-030-security-tier-regression-umbrella.md` | vivo | Architectural decision record. |
+| `docs/ADR-032-disk-backup-pruning.md` | vivo | Architectural decision record. |
+| `docs/ADR-033-restore-surface-auth-errors.md` | vivo | Architectural decision record. |
+| `docs/ADR-034-backup-age-and-storage-quota.md` | vivo | Architectural decision record. |
+| `docs/ADR-037-backup-deletion-ownership.md` | vivo | Architectural decision record. |
+| `docs/ADR-038-constant-time-hmac-attestation.md` | vivo | Architectural decision record. |
+| `docs/ADR-039-sw-integrity-runtime.md` | vivo | Architectural decision record. |
+| `docs/ADR-040-docs-markdown-gate-fusion.md` | vivo | Architectural decision record. |
+| `docs/ADR-042-css-only-user-themes.md` | vivo | Architectural decision record. |
+| `docs/ADR-043-check-seo-gate.md` | vivo | Architectural decision record. |
+| `docs/ADR-044-og-image-policy.md` | vivo | Architectural decision record. |
+| `docs/ADR-045-check-brand-logo-gate.md` | vivo | Architectural decision record. |
+| `docs/ADR-046-vault-kdf-salt-rotation.md` | vivo | Architectural decision record. |
+| `docs/ADR-047-claim-drift-gate.md` | vivo | Architectural decision record. |
+| `docs/ADR-048-license-claims-gate.md` | vivo | Architectural decision record. |
+| `docs/ADR-049-manual-figures-gate.md` | vivo | Architectural decision record. |
+| `docs/ADR-050-page-figures-gate-and-planner.md` | vivo | Architectural decision record. |
+| `docs/ADR-051-landings-fresh-gate.md` | vivo | Architectural decision record. |
+| `docs/ADR-052-v5-format-sunset.md` | vivo | Architectural decision record. |
+| `docs/ADR-053-vault-salt-registry.md` | vivo | Architectural decision record. |
+| `docs/ADR-054-check-quick-tier.md` | vivo | Architectural decision record. |
+| `docs/ADR-055-collapsible-surfaces.md` | vivo | Architectural decision record. |
+| `docs/ADR-056-documented-npm-commands-gate.md` | vivo | Architectural decision record. |
+| `docs/ADR-057-documented-reference-integrity-gate.md` | vivo | Architectural decision record. |
+| `docs/ADR-058-release-target-confirmation-gate.md` | vivo | Architectural decision record. |
+| `docs/ADR-059-documentation-retirement.md` | vivo | Architectural decision record. |
+| `docs/ADR-060-legal-consolidation-gate.md` | vivo | Architectural decision record. |
+| `docs/ADR-061-controlled-retirement-2026-09-19.md` | vivo | Architectural decision record. |
+| `docs/ADR-062-landing-smoke-gate.md` | vivo | Architectural decision record. |
+| `docs/ADR-063-feature-budgets-gate.md` | vivo | Architectural decision record. |
+| `docs/ADR-064-audit-freshness-gate.md` | vivo | Architectural decision record. |
+| `docs/ADR-065-webrtc-playwright-webkit-limitations.md` | vivo | Architectural decision record. |
+| `docs/ai-performance-local-device-report-2026-09-21.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/anvandhandbok-sv.md` | vivo | Localized user manual. |
+| `docs/api.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/ARCHITECTURE-TUTORIAL.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/architecture.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/audit-report-2026-09-02.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/audit.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/benutzerhandbuch-de.md` | vivo | Localized user manual. |
+| `docs/brugervejledning-da.md` | vivo | Localized user manual. |
+| `docs/brukerhandbok-no.md` | vivo | Localized user manual. |
+| `docs/CHANGELOG.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/CRYPTO-PATTERNS.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/deployment-runbook.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/DEVELOPER-GUIDE.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/docs-state-index.md` | vivo | Canonical inventory generated by scripts/doctor-docs-index.mjs. |
+| `docs/DOCUMENTATION-EXECUTIVE-SUMMARY.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/E2E-HUMAN-LIKE-BROWSERS-REPORT.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/edge-case-hardening-vault-audit.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/egcheiridio-christi-el.md` | vivo | Localized user manual. |
+| `docs/EXTENSION-LOCAL-SETUP.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/EXTERNAL-SERVICES-AUDIT-CHECKLIST.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/FAQ-SOPORTE.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/felhasznaloi-kezikonyv-hu.md` | vivo | Localized user manual. |
+| `docs/FIRST-WEEK-SUPPORT.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/fix-findings-plan.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/gebruikershandleiding-nl.md` | vivo | Localized user manual. |
+| `docs/GITHUB-RULESET-IMPORT-GUIDE.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/github-secrets-and-push-runbook.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/GITHUB-SECRETS.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/google-search-runbook.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/history-attribution.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/huong-dan-su-dung-vi.md` | vivo | Localized user manual. |
+| `docs/INCIDENT-RESPONSE-PLAN.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/index.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/INFORME-E2E-HUMAN-LIKE-BROWSERS.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/internal-security-checklist.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/ios-day0-session-sheet.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/ios-manual-test-script.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/kayttoopas-fi.md` | vivo | Localized user manual. |
+| `docs/korisnicki-prirucnik-hr.md` | vivo | Localized user manual. |
+| `docs/kullanici-kilavuzu-tr.md` | vivo | Localized user manual. |
+| `docs/LAUNCH-CHECKLIST-COMPLETO.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/launch-checklist.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/launch-day-smoke.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/legacy-compatibility-plan.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/legacy-schema-version-map.md` | vivo | Schema compatibility map generated from src/db/schema.ts. |
+| `docs/legal-closing-package.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/locale-addition-runbook.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/manual-de-usuario-es.md` | vivo | Localized user manual. |
+| `docs/manual-de-utilizare-ro.md` | vivo | Localized user manual. |
+| `docs/manual-do-utilizador-pt.md` | vivo | Localized user manual. |
+| `docs/manuale-utente-it.md` | vivo | Localized user manual. |
+| `docs/manuel-utilisateur-fr.md` | vivo | Localized user manual. |
+| `docs/market-validation-plan.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/onboarding-emails.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/ONBOARDING.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/openapi.yaml` | vivo | Versioned OpenAPI contract of the companion server. |
+| `docs/operations.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/operator-quick-reference.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/ops-nightly.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/p2p-sync-manual-test-script.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/p2p-sync-session-prep.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/panduan-pengguna-id.md` | vivo | Localized user manual. |
+| `docs/PENDIENTES.md` | transitorio | Register of pending work and known debt. |
+| `docs/PENDING-ITEMS.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/performance-budget-by-feature.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/plan-super-optimizacion.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/podrecznik-uzytkownika-pl.md` | vivo | Localized user manual. |
+| `docs/POLITICA-PRIVACIDAD.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/POLITICA-REEMBOLSOS.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/positioning.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/pricing-decision.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/PRIMERA-SEMANA-SOPORTE.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/PRIVACY-EXTENSION.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/PRIVACY-POLICY.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/production-license-launch-checklist.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/REFUND-POLICY.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/release-candidate-package-2026-09-21.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/RELEASE-STATUS.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/RESUMEN-EJECUTIVO-DOCUMENTACION.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/ROPA.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/RPO-RTO-APPROVAL.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/RPO-RTO-APROBACION.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/sast-triage.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/scripts-inventory-scanner-limits.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/security.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/SELF-HOSTING.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/server-api-index.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/staging-matrix-report-2026-09-21.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/staging-smoke.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/STORE-DESCRIPTIONS.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/STORE-SUBMISSION-CHECKLIST.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/support-chargebacks-log.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/support-data-loss-runbook.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/support-license-runbook.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/support-refunds-log.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/TESTING-PATTERNS.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/TROUBLESHOOTING.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/user-manual-ar.md` | vivo | Localized user manual. |
+| `docs/user-manual-bg.md` | vivo | Localized user manual. |
+| `docs/user-manual-en.md` | vivo | Localized user manual. |
+| `docs/user-manual-he.md` | vivo | Localized user manual. |
+| `docs/user-manual-hi.md` | vivo | Localized user manual. |
+| `docs/user-manual-ja.md` | vivo | Localized user manual. |
+| `docs/user-manual-ko.md` | vivo | Localized user manual. |
+| `docs/user-manual-ru.md` | vivo | Localized user manual. |
+| `docs/user-manual-th.md` | vivo | Localized user manual. |
+| `docs/user-manual-uk.md` | vivo | Localized user manual. |
+| `docs/user-manual-zh.md` | vivo | Localized user manual. |
+| `docs/uzivatelska-prirucka-cs.md` | vivo | Localized user manual. |
+| `docs/VERCEL-LOCAL-SETUP.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/WEBRTC-COMPATIBILITY.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/WHOP-INTEGRATION.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/whop-setup-runbook.md` | vivo | Document present in the checkout; review its state before retiring it. |
 
-## Política de retiro
+## Retirement policy
 
-Los documentos retirados no se reintroducen automáticamente. Antes de eliminar un documento presente, debe marcarse `retirable`, documentarse el motivo y pasar el gate de referencias. Los documentos críticos de operación, seguridad y cumplimiento no se consideran retirables: deben mantenerse o sustituirse por un documento equivalente.
+Retired documents are not reintroduced automatically. Before deleting a present document, mark it `retirable`, document the reason and pass the references gate. Operationally critical documents — operations, security and compliance — are not retirable: they must be kept or replaced by an equivalent document.

@@ -72,7 +72,7 @@ describe("SpecializedAgentsService", () => {
   ] as const;
 
   it.each(agentMethods)(
-    "%s retorna resultado de ejecución de agente",
+    "%s returns agent execution result",
     async (method) => {
       mockGenerateText.mockResolvedValue({ text: `${method} result` });
       const result = await (specializedAgentsService as any)[method](

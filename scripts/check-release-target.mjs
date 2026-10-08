@@ -28,6 +28,11 @@
  *     such as `tu_usuario` / `your-org`;
  *   - declared and actual agree, so a release cannot be published from a
  *     different place than the one it advertises.
+ *   - the same agreement is enforced over the release-shipping artifacts
+ *     (README, exported RELEASE-NOTES, the Help Center): a real-but-different
+ *     repository in a shipped URL fails as `artifact-drift` — the 09-22 rename
+ *     left `bookmarkforge/core` in those surfaces for three days with the gate
+ *     green (ADR-058 amendment 8).
  *
  * Modes:
  *   - default: BLOCKING, and the only mode. Any finding makes the gate exit 1.
@@ -91,7 +96,11 @@ const PLACEHOLDER_SEGMENTS = [
 export const RELEASE_ARTIFACTS = [
   "README.md",
   "scripts/public-export/RELEASE-NOTES-v1.0.0.md",
-  "scripts/public-export/RELEASE-NOTES-v1.0.0.es.md",
+  // The Help Center ships to readers too: its support table told Free users
+  // to open discussions on github.com/OWNER/bookmarkforge — a placeholder that
+  // this gate was blind to, because public/ was not scanned at all (found by
+  // the ADR-062 landing smoke link probes).
+  "public/help.html",
 ];
 
 const HTTPS_GITHUB_RE = /https?:\/\/github\.com\/([A-Za-z0-9_.-]+)\/([A-Za-z0-9_.-]+)/gi;
@@ -309,11 +318,32 @@ export function checkReleaseTarget({
   }
 
   // 4. Release-shipping artifacts: URLs a reader of the release will copy.
+  //    Two failure classes, not one:
+  //      - a provisional/placeholder target (never releasable), and
+  //      - a REAL repository that disagrees with the declared destination.
+  //    The second class is the ADR-058 amendment-8 failure: the 2026-09-22
+  //    rename to `bookmarkforge/bookmarkforge` left the README badges and the
+  //    exported RELEASE-NOTES pointing at `bookmarkforge/core` for three days
+  //    while this gate stayed green, because it only hunted placeholders. A
+  //    reader of the release must never copy a URL the release does not
+  //    publish.
+  const declaredConfirmed =
+    declaredTarget !== null && !provisionalReason(declaredTarget, provisionalTargets);
   for (const artifact of artifactsFound) {
     for (const { target, line } of artifact.targets) {
       const reason = provisionalReason(target, provisionalTargets);
-      if (!reason) continue;
-      add("artifact-provisional", `${artifact.file}:${line ?? "?"}`, target, reason);
+      if (reason) {
+        add("artifact-provisional", `${artifact.file}:${line ?? "?"}`, target, reason);
+        continue;
+      }
+      if (declaredConfirmed && target !== declaredTarget) {
+        add(
+          "artifact-drift",
+          `${artifact.file}:${line ?? "?"}`,
+          target,
+          `artifact names "${target}" but package.json declares "${declaredTarget}" — this URL ships to readers`,
+        );
+      }
     }
   }
 
@@ -335,6 +365,8 @@ const REMEDIES = {
   "remote-missing": "add the confirmed remote: `git remote add origin <confirmed-url>`",
   "artifact-provisional":
     "update the release artifact to the confirmed URL (it ships to readers)",
+  "artifact-drift":
+    "update the release artifact to the declared destination (it ships to readers)",
 };
 
 /** One actionable remedy line per distinct finding kind. */
@@ -346,6 +378,7 @@ export function remediesFor(findings) {
     "remote-provisional",
     "declared-actual-drift",
     "artifact-provisional",
+    "artifact-drift",
   ];
   const kinds = new Set(findings.map((finding) => finding.kind));
   return order

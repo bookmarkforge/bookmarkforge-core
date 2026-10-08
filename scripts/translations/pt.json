@@ -2,17 +2,17 @@
   "lang": "pt",
   "langName": "Português",
   "dir": "ltr",
-  "canonical": "https://bookmarkforge.com/pt/",
+  "canonical": "https://bookmarkforgeapp.com/pt/",
   "ogLocale": "pt_PT",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge — Tudo fica no seu computador. Pague uma vez.",
-  "description": "O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 1.000 marcadores.",
+  "description": "O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 2.500 marcadores.",
   "ogTitle": "BookmarkForge — Tudo fica no seu computador. Pague uma vez.",
-  "ogDescription": "O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 1.000 marcadores.",
-  "ogImage": "https://bookmarkforge.com/og-image-pt.png",
+  "ogDescription": "O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 2.500 marcadores.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image-pt.png",
   "twitterTitle": "BookmarkForge — Tudo fica no seu computador. Pague uma vez.",
-  "twitterDescription": "O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 1.000 marcadores.",
-  "twitterImage": "https://bookmarkforge.com/og-image-pt.png",
+  "twitterDescription": "O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. 59 dólares uma vez. Grátis: 2.500 marcadores.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image-pt.png",
   "skipLink": "Saltar para o conteúdo principal",
   "navBrandAria": "BookmarkForge início",
   "navAriaLabel": "Navegação principal",
@@ -177,7 +177,7 @@
       },
       {
         "title": "Sincronize os seus próprios dispositivos",
-        "text": "Os seus dispositivos falam diretamente entre si — sem servidor no meio e com tudo encriptado. Emparelhe-os ao ler um código QR. Até 3 dispositivos. Requer Pro."
+        "text": "Os seus dispositivos falam diretamente entre si — sem servidor no meio e com tudo encriptado. Emparelhe-os ao ler um código QR. Até 5 dispositivos. Requer Pro."
       },
       {
         "title": "Cópias de segurança que são suas",
@@ -287,13 +287,13 @@
   "pricing": {
     "id": "precos",
     "title": "Preços simples e justos — Sem assinatura",
-    "subtitle": "1.000 favoritos grátis para sempre. Pro é licença Lifetime v1 — pague uma vez, use v1 para sempre. Inclui todas as v1.x e 12 meses de novidades. Segurança para sempre. Sem mensalidade.",
+    "subtitle": "2.500 favoritos grátis para sempre. Pro é licença Lifetime v1 — pague uma vez, use v1 para sempre. Inclui todas as v1.x e 12 meses de novidades. Segurança para sempre. Sem mensalidade.",
     "plans": [
       {
         "name": "Grátis",
         "price": "$ 0",
         "period": "/para sempre",
-        "description": "Grátis para sempre: 1.000 marcadores e a pesquisa inteligente pela qual outros cobram todos os anos. Ao chegar a 1.000, a sua biblioteca continua intacta — ler, pesquisar e exportar nunca param; só as novas gravações ficam em pausa.",
+        "description": "Grátis para sempre: 2.500 marcadores e a pesquisa inteligente pela qual outros cobram todos os anos. Ao chegar a 2.500, a sua biblioteca continua intacta — ler, pesquisar e exportar nunca param; só as novas gravações ficam em pausa.",
         "features": [
           {
             "included": true,
@@ -301,7 +301,7 @@
           },
           {
             "included": true,
-            "text": "1.000 marcadores, notas e documentos"
+            "text": "2.500 marcadores, notas e documentos"
           },
           {
             "included": true,
@@ -369,7 +369,7 @@
           },
           {
             "included": true,
-            "text": "3 devices · P2P sync across 3 devices"
+            "text": "5 devices · P2P sync across 5 devices"
           },
           {
             "included": true,
@@ -405,7 +405,7 @@
           }
         ],
         "cta": "Get Pro $59 Early Bird",
-        "ctaHref": "/buy-pro",
+        "ctaHref": "https://whop.com/checkout/plan_XU1GaWhoYhoDh",
         "ctaClass": "btn-primary",
         "priceWas": "$79",
         "priceSub": "depois $79 regular",
@@ -420,7 +420,7 @@
     "items": [
       {
         "question": "O plano Grátis é realmente grátis para sempre?",
-        "answer": "Sim. Sem teste nem assinatura. Inclui 1.000 favoritos, busca completa e semântica, grafo de conhecimento e IA com sua própria chave API (você paga o provedor)."
+        "answer": "Sim. Sem teste nem assinatura. Inclui 2.500 favoritos, busca completa e semântica, grafo de conhecimento e IA com sua própria chave API (você paga o provedor)."
       },
       {
         "question": "O que significa \"Lifetime de v1\" no Pro?",
@@ -446,7 +446,7 @@
     "text": "Junte-se a milhares de investigadores, programadores e estudantes que confiam no BookmarkForge como o seu segundo cérebro.",
     "ctaPrimary": "Abrir a App Grátis",
     "ctaSecondary": "Passar para Pro",
-    "note": "Sem necessidade de conta. Funciona instantaneamente no seu navegador. Nível grátis: 1.000 marcadores."
+    "note": "Sem necessidade de conta. Funciona instantaneamente no seu navegador. Nível grátis: 2.500 marcadores."
   },
   "footer": {
     "brand": "A sua cápsula de conhecimento privada com IA. 100% local.",
@@ -495,20 +495,20 @@
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
-    "websiteDescription": "A sua cápsula de conhecimento privada com IA. 100% local. A alternativa privada ao Pocket. Grátis: 1.000 marcadores.",
+    "websiteDescription": "A sua cápsula de conhecimento privada com IA. 100% local. A alternativa privada ao Pocket. Grátis: 2.500 marcadores.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforge.com/",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforge.com/pt/",
+    "softwareUrl": "https://bookmarkforgeapp.com/pt/",
     "offers": [
       {
         "name": "Grátis",
         "price": "0",
         "currency": "USD",
-        "description": "1,000 bookmarks. Forever free."
+        "description": "2,500 bookmarks. Forever free."
       },
       {
         "name": "Pro Lifetime v1 — Early Bird",
@@ -523,13 +523,6 @@
         "price": "79",
         "currency": "USD",
         "description": "Regular. Lifetime of v1."
-      },
-      {
-        "name": "Founder Edition",
-        "price": "99",
-        "currency": "USD",
-        "description": "Same Pro v1 + Founder badge + beta. Limited 100.",
-        "availability": "https://schema.org/LimitedAvailability"
       }
     ],
     "featureList": [
@@ -543,7 +536,7 @@
     "faq": [
       {
         "question": "O plano Grátis é realmente grátis para sempre?",
-        "answer": "Sim. Sem teste nem assinatura. Inclui 1.000 favoritos, busca completa e semântica, grafo de conhecimento e IA com sua própria chave API (você paga o provedor)."
+        "answer": "Sim. Sem teste nem assinatura. Inclui 2.500 favoritos, busca completa e semântica, grafo de conhecimento e IA com sua própria chave API (você paga o provedor)."
       },
       {
         "question": "O que significa \"Lifetime de v1\" no Pro?",
@@ -556,7 +549,7 @@
       },
       {
         "question": "Suporte — quão rápido respondem?",
-        "answer": "Grátis: comunidade via Central de Ajuda + GitHub Discussions (melhor esforço). Pro: 48h úteis por email. Founder: 24h prioritário + fila beta. Cofre criptografado — nunca pedimos senha ou frase. Ver SLA."
+        "answer": "Grátis: comunidade via Central de Ajuda + GitHub Discussions (melhor esforço). Pro: 48h úteis por email. Cofre criptografado — nunca pedimos senha ou frase. Ver SLA."
       },
       {
         "question": "E se eu esquecer a senha do cofre?",

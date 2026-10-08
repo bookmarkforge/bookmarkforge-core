@@ -1,192 +1,192 @@
-# Guion de prueba manual en iPhone — BookmarkForge (pre-lanzamiento)
+# iPhone manual test script — BookmarkForge (pre-launch)
 
-> **Objetivo:** validar en un iPhone real las rutas que ninguna automatización
-> puede certificar — Safari/WebKit iOS es el motor con el comportamiento más
-> agresivo contra los datos locales (expulsa IndexedDB tras 7 días de
-> inactividad, cuotas distintas, gestión de descargas diferente). Si algo falla
-> aquí, es un bloqueante de lanzamiento: los usuarios que pierden datos no
-> perdonan.
+> **Objective:** validate on a real iPhone the routes that no automation can
+> certify — Safari/WebKit iOS is the engine with the most aggressive behavior
+> against local data (ejects IndexedDB after 7 days of inactivity, different
+> quotas, different download management). If something fails here, it is a
+> launch blocker: users who lose data do not forgive.
 >
-> - **Duración total:** ~45 min la primera sesión + 2 visitas de 5 min durante
->   8 días (prueba de expulsión de Safari).
-> - **Necesitas:** iPhone con iOS 16+, la URL de producción (o staging HTTPS —
->   el SW y la instalación requieren contexto seguro), papel para la frase,
->   acceso a tu correo para verificar la copia en la nube.
-> - **Regla de oro:** documenta cada resultado con captura de pantalla. Lo que
->   no está documentado, no cuenta como probado.
-> - **Relación:** complementa el ítem 16 de [launch-checklist.md](launch-checklist.md)
->   y el runbook [launch-day-smoke.md](launch-day-smoke.md). Las 24 palabras y
->   la contraseña mínima ya están automatizadas en Chromium/Firefox/WebKit de
->   escritorio; aquí se certifica el dispositivo real.
+> - **Total duration:** ~45 min first session + 2 visits of 5 min during
+>   8 days (Safari ejection test).
+> - **You need:** iPhone with iOS 16+, production URL (or staging HTTPS —
+>   SW and installation require secure context), paper for the phrase,
+>   access to your email to verify cloud copy.
+> - **Golden rule:** document each result with screenshot. What is not
+>   documented does not count as proven.
+> - **Relationship:** complements item 16 of [launch-checklist.md](launch-checklist.md)
+>   and the runbook [launch-day-smoke.md](launch-day-smoke.md). The 24 words and
+>   minimum password are already automated in Chromium/Firefox/WebKit desktop;
+>   here the real device is certified.
 
 ---
 
-## Preparación (5 min)
+## Preparation (5 min)
 
-1. [ ] Abre Safari en el iPhone y navega a la URL de la app (HTTPS obligatorio).
-2. [ ] Verifica que la página carga sin advertencias de certificado.
-3. [ ] Ajustes → activa **Copiar de Safari** si quieres guardar capturas:
-       botón lateral + volumen arriba (o Asistencia → "captura de pantalla").
-4. [ ] Ten a mano: **contraseña de prueba** (mínimo 12 caracteres — p. ej.
-       `prueba-iphone-2026`), papel y bolígrafo.
-
----
-
-## 1. Creación de bóveda y contraseña de 12 caracteres (10 min)
-
-1. [ ] Inicia la app por primera vez: debe aparecer el flujo de creación
-       (SecurityConfirmation → crear bóveda).
-2. [ ] **Prueba negativa:** escribe una contraseña de **11 caracteres**
-       (p. ej. `prueba-11-a`). El validador debe rechazarla ANTES de crear
-       nada — busca el mensaje de mínimo de caracteres. _Captura._
-3. [ ] Escribe la contraseña de 12+ (`prueba-iphone-2026`) y confirma.
-4. [ ] La creación en iPhone puede tardar **20-60 s** (Argon2id móvil,
-       64 MiB): es normal; si tarda más de 2 min, anótalo como hallazgo.
-5. [ ] Al terminar, la app debe abrir desbloqueada (Dashboard).
-6. [ ] **Bloquea la bóveda** y desbloquéala con la misma contraseña:
-       el round-trip bloquear→desbloquear debe funcionar sin errores.
-       _Captura del desbloqueo._
-7. [ ] Deja la app con **1 marcador de prueba** creado (lo necesitas para la
-       sección 3): añade un marcador con URL y título reconocibles
-       (p. ej. "iPhone smoke test").
-
-**✅ Criterio de éxito:** contraseña de 11 rechazada, 12 aceptada,
-bloquear/desbloquear OK, marcador visible.
+1. [ ] Open Safari on iPhone and navigate to the app URL (HTTPS mandatory).
+2. [ ] Verify the page loads without certificate warnings.
+3. [ ] Settings → enable **Safari Copy** if you want to save screenshots:
+       side button + volume up (or Assist → "screenshot").
+4. [ ] Have at hand: **test password** (minimum 12 characters — e.g.
+       `prueba-iphone-2026`), paper and pen.
 
 ---
 
-## 2. Frase de recuperación de 24 palabras (10 min)
+## 1. Vault creation and 12-character password (10 min)
 
-1. [ ] Si aún la tienes en pantalla, salta al paso 3. Si no: Ajustes de la
-       bóveda → opción de mostrar/verificar frase de recuperación
-       (introduce la contraseña si la pide).
-2. [ ] **Copia las 24 palabras A MANO en papel** — no uses capturas ni notas
-       del teléfono. Es exactamente lo que pediremos a los usuarios.
-3. [ ] Verifica el contador: deben ser **24 palabras exactas**, ni 12 ni 23.
-       _Captura de la pantalla de la frase (sin las palabras en el marco)._
-4. [ ] **Prueba negativa:** usa la función de recuperación con la frase
-       **incompleta a propósito** (23 palabras). Debe rechazarla con mensaje
-       claro y NO desbloquear nada.
-5. [ ] Ahora recupera con las 24 palabras correctas (en el orden exacto).
-       La bóveda debe desbloquearse.
-6. [ ] OJO: entre un intento fallido y el reintento espera **unos segundos** —
-       el servicio limita a un intento cada 2 s (anti fuerza bruta).
+1. [ ] Start the app for the first time: creation flow should appear
+       (SecurityConfirmation → create vault).
+2. [ ] **Negative test:** write an **11-character password**
+       (e.g. `prueba-11-a`). The validator must reject it BEFORE creating
+       anything — look for the minimum characters message. _Screenshot._
+3. [ ] Write the 12+ password (`prueba-iphone-2026`) and confirm.
+4. [ ] Creation on iPhone may take **20-60 s** (mobile Argon2id,
+       64 MiB): normal; if it takes more than 2 min, note as finding.
+5. [ ] When finished, the app should open unlocked (Dashboard).
+6. [ ] **Lock the vault** and unlock with the same password:
+       the lock→unlock round-trip must work without errors.
+       _Screenshot of unlock._
+7. [ ] Leave the app with **1 test bookmark** created (you need it for
+       section 3): add a bookmark with recognizable URL and title
+       (e.g. "iPhone smoke test").
 
-**✅ Criterio de éxito:** 24 palabras exactas en papel; 23 rechazadas;
-24 desbloquean la bóveda.
-
----
-
-## 3. Backup cifrado .bmf y restauración (10 min)
-
-1. [ ] Con la bóveda desbloqueada: Ajustes → Almacenamiento → **Export Backup**.
-2. [ ] Cuando pida contraseña del backup, usa **la misma contraseña de la
-       bóveda** (`prueba-iphone-2026`) — el asistente de restauración la
-       esperará tras una pérdida total.
-3. [ ] Safari descargará el archivo: localízalo en **Archivos → Descargas**
-       (Safari iOS). Mueve una copia a **iCloud Drive** (o mándatela por
-       correo) — esto simula el backup FUERA del dispositivo que recomendamos.
-       _Captura del archivo en iCloud/Correo._
-4. [ ] Verifica que el archivo tiene extensión **.bmf** y tamaño no cero.
-5. [ ] **Simula pérdida total:** Ajustes → Safari → Avanzado → **Datos de
-       sitios web** → busca el dominio de la app → **Eliminar**. Esto borra
-       IndexedDB/localStorage — el desastre real que puede provocar Safari.
-6. [ ] Vuelve a abrir la app: debe arrancar como primera vez.
-7. [ ] Sigue el asistente de restauración (F0-2): elige restaurar desde
-       archivo → selecciona el .bmf de iCloud Drive → introduce la contraseña
-       del backup.
-8. [ ] La bóveda debe abrirse desbloqueada y **tu marcador de prueba debe
-       estar** (búscalo por su título). _Captura del marcador restaurado._
-9. [ ] Nota: tras restaurar, la app usa la MISMA contraseña de bóveda de
-       siempre — la restauración no cambia las credenciales.
-
-**✅ Criterio de éxito:** .bmf exportado y fuera del dispositivo; tras borrar
-datos del sitio, la restauración recupera el marcador.
+**✅ Success criteria:** 11-character password rejected, 12 accepted,
+lock/unlock OK, bookmark visible.
 
 ---
 
-## 4. PWA e instalación en pantalla de inicio (5 min)
+## 2. 24-word recovery phrase (10 min)
 
-1. [ ] En Safari: botón Compartir → **Añadir a pantalla de inicio**.
-       Debe sugerir el nombre/icono de la app (manifest cargado).
-2. [ ] Ábrela desde el icono: debe abrir **a pantalla completa** (sin barra
-       de Safari — `display: standalone`).
-3. [ ] Verifica el **modo avión**: con la app ya cargada, activa avión,
-       cierra y reabre la app desde el icono. Debe abrir desde el caché del
-       service worker (puede mostrar estado "sin conexión", pero la bóveda
-       desbloqueable si la sesión lo permite).
-4. [ ] Desactiva avión.
+1. [ ] If you still have it on screen, skip to step 3. If not: Vault
+       settings → show/verify recovery phrase option
+       (enter password if asked).
+2. [ ] **Copy the 24 words BY HAND to paper** — do not use screenshots or
+       phone notes. This is exactly what we will ask users to do.
+3. [ ] Verify the counter: must be **exactly 24 words**, not 12 nor 23.
+       _Screenshot of the phrase screen (without words in frame)._
+4. [ ] **Negative test:** use recovery function with **deliberately incomplete
+       phrase** (23 words). It must reject with clear message and NOT
+       unlock anything.
+5. [ ] Now recover with the correct 24 words (in exact order).
+       The vault must unlock.
+6. [ ] NOTE: between a failed attempt and retry wait **a few seconds** —
+       the service limits to one attempt every 2 s (anti-brute force).
 
-**✅ Criterio de éxito:** instalable con icono/nombre correctos, standalone,
-y la app en modo avión no se rompe.
-
----
-
-## 5. La prueba de los 7 días — expulsión de IndexedDB por Safari (8 días)
-
-> Esta es LA prueba que motiva los avisos de la app. Safari borra los datos
-> de sitios web tras **7 días de inactividad** (los datos de la app de inicio
-> instalada tienen mejor trato, pero NO confíes: pruébalo también en Safari
-> normal). Tu defensa: el aviso de riesgo de expulsión + backups + sync.
-
-### Día 0 (hoy, 2 min)
-
-1. [ ] En Safari (no en la PWA), abre la app y verifica que tu marcador
-       sigue. Deja la sesión PERSISTENTE cerrada (no la abras más).
-2. [ ] Opcional pero recomendado: instala la captura del aviso — verifica que
-       la app MUESTRA el aviso de expulsión de Safari (7 días) en algún punto
-       del onboarding/ajustes. _Captura del aviso._
-
-### Día 3 (2 min) — control intermedio
-
-1. [ ] NO abras la app todavía. Solo verifica que tu .bmf sigue en iCloud
-       Drive / correo.
-2. [ ] Anota la fecha del día 7 previsto.
-
-### Día 8 (5 min) — la prueba real
-
-1. [ ] Abre la app en **Safari** (no la PWA) por primera vez desde el día 0.
-2. [ ] **Resultado A (esperado):** la app arranca "vacía" — Safari expulsó
-       los datos. Debe mostrarse el flujo de primera vez / restauración, NO
-       un error de base de datos corrupta. _Captura._
-3. [ ] Restaura desde tu .bmf de iCloud (sección 3, pasos 7-8). Todo debe
-       volver, incluido el marcador de prueba.
-4. [ ] **Resultado B (si los datos sobrevivieron):** anótalo — puede pasar si
-       el iPhone consideró el sitio activo. Repite el experimento abriendo
-       solo la PWA instalada, o acepta que iOS moderno trató tu uso como
-       actividad. En cualquiera de los dos casos, la app no debe corromperse.
-5. [ ] En ambos casos: verifica que la app NO pierde la bóveda de forma
-       silenciosa — siempre debe avisar (aviso de expulsión, asistente de
-       restauración) antes de dar por perdidos datos.
-
-**✅ Criterio de éxito:** tras 7+ días sin abrir, la app degrada con gracia
-(primera vez + restauración), nunca con corrupción ni pérdida silenciosa.
+**✅ Success criteria:** exact 24 words on paper; 23 rejected;
+24 unlock the vault.
 
 ---
 
-## 6. Lo que NO cubre esta prueba (y por qué está bien)
+## 3. Encrypted .bmf backup and restoration (10 min)
 
-- **Rendimiento del KDF en hardware real**: el perfil de 64 MiB ya está
-  certificado en CI con Android emulado (`npm run e2e:mobile`); en iPhone lo
-  que se mide aquí es que la creación tarda un tiempo razonable (<2 min).
-- **Firefox/iPad/Android reales**: cubiertos por las baterías automatizadas
-  (e2e:engines, e2e:mobile). Este guion es específico del motor que ninguna
-  automatización local alcanza: Safari iOS real.
-- **Sincronización P2P entre dispositivos**: merece su propio guion (iPhone ↔
-  escritorio con QR). Si vas a lanzar sync, prueba aparte ANTES del anuncio.
+1. [ ] With vault unlocked: Settings → Storage → **Export Backup**.
+2. [ ] When asked for backup password, use **the same vault password**
+       (`prueba-iphone-2026`) — the restoration assistant will expect
+       it after total loss.
+3. [ ] Safari will download the file: locate it in **Files → Downloads**
+       (Safari iOS). Move a copy to **iCloud Drive** (or email it) — this
+       simulates the backup OFF the device that we recommend.
+       _Screenshot of file in iCloud/Email._
+4. [ ] Verify the file has **.bmf** extension and non-zero size.
+5. [ ] **Simulate total loss:** Settings → Safari → Advanced → **Website
+       Data** → search for the app domain → **Delete**. This deletes
+       IndexedDB/localStorage — the real disaster Safari can cause.
+6. [ ] Reopen the app: it should start as first time.
+7. [ ] Follow the restoration assistant (F0-2): choose restore from
+       file → select the .bmf from iCloud Drive → enter the backup
+       password.
+8. [ ] The vault must open unlocked and **your test bookmark must be**
+       present (search by its title). _Screenshot of restored bookmark._
+9. [ ] Note: after restoration, the app uses the SAME vault password
+       always — restoration does not change credentials.
+
+**✅ Success criteria:** .bmf exported and off-device; after deleting
+site data, restoration recovers the bookmark.
 
 ---
 
-## Registro de resultados
+## 4. PWA and home screen installation (5 min)
 
-| Sección | Resultado (OK/FALLO/N-A) | Evidencia (captura/nota) | Fecha |
+1. [ ] In Safari: Share button → **Add to Home Screen**.
+       It should suggest the app's name/icon (manifest loaded).
+2. [ ] Open from the icon: it should open **full screen** (without Safari
+       bar — `display: standalone`).
+3. [ ] Verify **airplane mode**: with app already loaded, enable airplane,
+       close and reopen the app from the icon. It should open from the service
+       worker cache (may show "no connection" state, but vault unlockable
+       if session allows).
+4. [ ] Disable airplane mode.
+
+**✅ Success criteria:** installable with correct icon/name, standalone,
+and the app in airplane mode does not break.
+
+---
+
+## 5. The 7-day test — Safari IndexedDB ejection (8 days)
+
+> This is THE test that motivates the app's warnings. Safari deletes website
+> data after **7 days of inactivity** (home screen installed app data gets
+> better treatment, but DO NOT rely on it: test it also in normal Safari).
+> Your defense: the ejection risk warning + backups + sync.
+
+### Day 0 (today, 2 min)
+
+1. [ ] In Safari (not the PWA), open the app and verify your bookmark
+       still exists. Leave the session PERSISTENT closed (do not open it again).
+2. [ ] Optional but recommended: install the warning capture — verify that
+       the app SHOWS the Safari ejection warning (7 days) at some point
+       of onboarding/settings. _Screenshot of warning._
+
+### Day 3 (2 min) — intermediate check
+
+1. [ ] Do NOT open the app yet. Only verify your .bmf is still in iCloud
+       Drive / email.
+2. [ ] Note the expected day 7 date.
+
+### Day 8 (5 min) — the real test
+
+1. [ ] Open the app in **Safari** (not the PWA) for the first time since day 0.
+2. [ ] **Result A (expected):** the app starts "empty" — Safari ejected
+       the data. First time / restoration flow should appear, NOT a corrupt
+       database error. _Screenshot._
+3. [ ] Restore from your iCloud .bmf (section 3, steps 7-8). Everything should
+       return, including the test bookmark.
+4. [ ] **Result B (if data survived):** note it — can happen if
+       iPhone considered the site active. Repeat the experiment opening
+       only the installed PWA, or accept that modern iOS treated your use as
+       activity. In either case, the app must not corrupt.
+5. [ ] In both cases: verify the app does NOT lose the vault silently
+       — it must always warn (ejection warning, restoration assistant)
+       before considering data lost.
+
+**✅ Success criteria:** after 7+ days without opening, the app degrades
+gracefully (first time + restoration), never with corruption or silent loss.
+
+---
+
+## 6. What this test does NOT cover (and why it's fine)
+
+- **Real hardware KDF performance:** the 64 MiB profile is already
+  certified in CI with emulated Android (`npm run e2e:mobile`); on iPhone
+  what is measured here is that creation takes reasonable time (<2 min).
+- **Real Firefox/iPad/Android:** covered by automated batteries
+  (e2e:engines, e2e:mobile). This script is specific to the engine no local
+  automation reaches: real Safari iOS.
+- **P2P sync between devices:** deserves its own script (iPhone ↔
+  desktop with QR). If you are launching sync, test separately BEFORE
+  the announcement.
+
+---
+
+## Results registry
+
+| Section | Result (OK/FAIL/N-A) | Evidence (screenshot/note) | Date |
 |---|---|---|---|
-| 1. Bóveda + contraseña 12 | | | |
-| 2. Frase de 24 palabras | | | |
-| 3. Backup .bmf + restauración | | | |
+| 1. Vault + 12-character password | | | |
+| 2. 24-word phrase | | | |
+| 3. .bmf backup + restoration | | | |
 | 4. PWA / standalone | | | |
-| 5. Expulsión Safari (día 8) | | | |
+| 5. Safari ejection (day 8) | | | |
 
-**Criterio de cierre:** las 5 filas en OK = dispositivo iOS certificado para
-lanzamiento. Cualquier FALLO en 1-3 es bloqueante; en 4-5, bloqueante si
-impide recuperar datos, hallazgo si es cosmético.
+**Closing criteria:** all 5 rows OK = iOS device certified for
+launch. Any FAIL in 1-3 is blocking; in 4-5, blocking if it prevents
+data recovery, finding if cosmetic.

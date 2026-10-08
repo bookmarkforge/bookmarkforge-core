@@ -25,7 +25,7 @@ import { pathToFileURL } from "node:url";
  *     paths (/fr.html, / → /landing.html) because static dev servers do
  *     not apply the platform 200-rewrites. The legal pages are already
  *     served at their real paths.
- *   node scripts/check-hreflang-graph.mjs https://bookmarkforge.com
+ *   node scripts/check-hreflang-graph.mjs https://bookmarkforgeapp.com
  *     Live mode (post-deploy): relies on the real nginx/Cloudflare/Netlify
  *     rewrites, so clean URLs are fetched as-is.
  *
@@ -106,7 +106,7 @@ export function parseAlternates(html) {
   for (const m of html.matchAll(re)) {
     let href = m[2];
     try {
-      href = new URL(m[2], "https://bookmarkforge.com").pathname;
+      href = new URL(m[2], "https://bookmarkforgeapp.com").pathname;
     } catch {
       // keep as-is; the graph check will flag it as out-of-cluster
     }

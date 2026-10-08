@@ -844,12 +844,12 @@ describe("NetworkFirewall — unit tests", () => {
         if (loopback) {
           await expect(
             checkNetworkRequest(url, "p82"),
-            `loopback ${url} debería permitirse`,
+            `loopback ${url} should be allowed`,
           ).resolves.toBeUndefined();
         } else {
           await expect(
             checkNetworkRequest(url, "p82"),
-            `no-loopback ${url} no debe pasar el firewall`,
+            `no-loopback ${url} should not pass firewall`,
           ).rejects.toThrow(NetworkFirewallError);
         }
       }

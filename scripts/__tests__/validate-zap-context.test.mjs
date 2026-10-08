@@ -10,7 +10,7 @@ describe('ZAP context validation', () => {
 
   it('rejects a non-HTTPS or production context', () => {
     const result = validateZapContextText(
-      '<context><name>x</name><authentication/><url>http://bookmarkforge.com.*</url></context>',
+      '<context><name>x</name><authentication/><url>http://bookmarkforgeapp.com.*</url></context>',
     );
     expect(result.errors).toContain('every context URL must use HTTPS');
     expect(result.errors).toContain('context URLs must identify a non-placeholder staging host');

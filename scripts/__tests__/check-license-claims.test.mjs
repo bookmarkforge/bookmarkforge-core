@@ -23,6 +23,7 @@ import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { runLicenseGate } from "../check-license-claims.mjs";
+import { MANUAL_FILES, manualPdfPath, manualSourcePath } from "../landing-registry.mjs";
 
 let tmpRoot;
 
@@ -56,7 +57,7 @@ function contractFiles(extra = {}) {
   return {
     "package.json": JSON.stringify({ name: "x", license: "MIT" }),
     "LICENSE": MIT_LICENSE,
-    "docs/manual-usuario.md": "**Licencia:** MIT\n",
+    [manualSourcePath("es")]: "**Licencia:** MIT\n",
     ...extra,
   };
 }
@@ -72,17 +73,17 @@ describe("check-license-claims", () => {
   it("fails when a localized manual claims AGPL-3.0 in its license header", () => {
     const root = makeRoot(
       contractFiles({
-        "docs/manual-usuario-de.md": "**Lizenz:** AGPL-3.0\n",
+        [manualSourcePath("de")]: "**Lizenz:** AGPL-3.0\n",
       }),
     );
     const { corpusFailures } = runLicenseGate(root);
-    expect(corpusFailures.some((f) => f.includes("manual-usuario-de.md"))).toBe(true);
+    expect(corpusFailures.some((f) => f.includes(`${MANUAL_FILES.de}.md`))).toBe(true);
   });
 
   it("fails when the Legal section names a non-MIT code license", () => {
     const root = makeRoot(
       contractFiles({
-        "docs/manual-usuario.md":
+        [manualSourcePath("es")]:
           "# Manual\n\n## 13. Legal\n\n- **Licencia del código:** AGPL-3.0-or-later\n",
       }),
     );
@@ -116,7 +117,7 @@ describe("check-license-claims", () => {
     const root = makeRoot({
       "package.json": JSON.stringify({ name: "x", license: "AGPL-3.0-or-later" }),
       "LICENSE": MIT_LICENSE,
-      "docs/manual-usuario.md": "**Licencia:** MIT\n",
+      [manualSourcePath("es")]: "**Licencia:** MIT\n",
     });
     const { contractFailures } = runLicenseGate(root);
     expect(contractFailures.some((f) => f.includes("package.json"))).toBe(true);
@@ -126,7 +127,7 @@ describe("check-license-claims", () => {
     const root = makeRoot({
       "package.json": JSON.stringify({ name: "x", license: "MIT" }),
       "LICENSE": "GNU AFFERO GENERAL PUBLIC LICENSE\nVersion 3, 19 November 2007\n",
-      "docs/manual-usuario.md": "**Licencia:** MIT\n",
+      [manualSourcePath("es")]: "**Licencia:** MIT\n",
     });
     const { contractFailures } = runLicenseGate(root);
     expect(contractFailures.some((f) => f.includes("LICENSE"))).toBe(true);
@@ -142,7 +143,7 @@ describe("check-license-claims", () => {
     // Content problems stay empty: a missing file is a different failure class
     // (CI treats it as broken inventory), not a wrong license claim.
     expect(corpusFailures).toEqual([]);
-    expect(missing).toContain("docs/manual-usuario.md");
+    expect(missing).toContain(manualSourcePath("es"));
   });
 
   it("treats -styled.html and public-export overlay copies as optional (the public export re-curates them away)", () => {
@@ -157,7 +158,7 @@ describe("check-license-claims", () => {
     expect(missing.some((f) => f.startsWith("scripts/public-export/"))).toBe(false);
     // ...but the required manual sources are still demanded (the .md ships in
     // contractFiles, the .pdf does not).
-    expect(missing.some((f) => f === "docs/manual-usuario.pdf")).toBe(true);
+    expect(missing.some((f) => f === manualPdfPath("es"))).toBe(true);
   });
 
   it("ignores dependency license metadata deep in package-lock.json (dependency facts, not claims)", () => {
@@ -209,7 +210,7 @@ describe("check-license-claims", () => {
     // A fake-but-plausible PDF body: the gate's extractor scores printable
     // ASCII runs that look like license vocabulary, so this is enough to pin
     // the PDF path without shipping a real generated PDF in fixtures. The
-    // Spanish manual IS docs/manual-usuario.pdf (no -es suffix).
+    // Spanish manual IS docs/manual-de-usuario-es.pdf (endonym + locale).
     const pdfBody = [
       "%PDF-1.4",
       "1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj",
@@ -220,16 +221,16 @@ describe("check-license-claims", () => {
       "%%EOF",
     ].join("\n");
     const root = makeRoot(
-      contractFiles({ "docs/manual-usuario.pdf": pdfBody }),
+      contractFiles({ [manualPdfPath("es")]: pdfBody }),
     );
     const { corpusFailures } = runLicenseGate(root);
-    expect(corpusFailures.some((f) => f.includes("docs/manual-usuario.pdf"))).toBe(true);
+    expect(corpusFailures.some((f) => f.includes(manualPdfPath("es")))).toBe(true);
   });
 
   it("does not flag the word MIT itself nor innocuous copy", () => {
     const root = makeRoot(
       contractFiles({
-        "docs/manual-usuario-en.md": "**License:** MIT — see LICENSE for details.\n",
+        [manualSourcePath("en")]: "**License:** MIT — see LICENSE for details.\n",
         "public/privacy-and-terms.html": "<p>Lifetime license for v1. No subscription.</p>\n",
       }),
     );

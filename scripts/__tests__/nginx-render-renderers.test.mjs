@@ -36,17 +36,17 @@ const HEADERS_LINES = [
 const REPORTING_VALUE =
   'csp-endpoint="/csp-report"';
 const REPORTTO_VALUE =
-  '{"group":"csp-endpoint","max_age":86400,"endpoints":[{"url":"https://bookmarkforge.com/csp-report"}]}';
+  '{"group":"csp-endpoint","max_age":86400,"endpoints":[{"url":"https://bookmarkforgeapp.com/csp-report"}]}';
 
-function headersFixture({ domain = "bookmarkforge.com", eol = "\r\n" } = {}) {
-  const csp = CSP_MODERATE.replaceAll("bookmarkforge.com", domain);
+function headersFixture({ domain = "bookmarkforgeapp.com", eol = "\r\n" } = {}) {
+  const csp = CSP_MODERATE.replaceAll("bookmarkforgeapp.com", domain);
   return HEADERS_LINES.map((l) =>
     l
       .replace("<CSP>", csp)
       // Reporting-Endpoints is origin-relative ("/csp-report") in the real
       // file: canonical and domain-INDEPENDENT, unlike Report-To/CSP.
       .replace("<REPORTING>", REPORTING_VALUE)
-      .replace("<REPORTTO>", REPORTTO_VALUE.replace("bookmarkforge.com", domain)),
+      .replace("<REPORTTO>", REPORTTO_VALUE.replace("bookmarkforgeapp.com", domain)),
   ).join(eol);
 }
 
@@ -72,7 +72,7 @@ const SITEMAP_FIXTURE = `<?xml version="1.0" encoding="UTF-8"?>
     <xhtml:link rel="alternate" hreflang="ar" href="https://DOMAIN/ar/privacy-and-terms.html" />
   </url>
 </urlset>
-`.replaceAll("DOMAIN", "bookmarkforge.com");
+`.replaceAll("DOMAIN", "bookmarkforgeapp.com");
 
 // ── rewriteHeadersCspValues ──────────────────────────────────────────────
 
@@ -94,7 +94,7 @@ describe("rewriteHeadersCspValues", () => {
     const stale = headersFixture({ domain: "stale.example" });
     const out = rewriteHeadersCspValues(stale);
     expect(out).not.toContain("stale.example");
-    expect(out).toContain("wss://signal.bookmarkforge.com");
+    expect(out).toContain("wss://signal.bookmarkforgeapp.com");
     // All three keys, in every block they occur, were rewritten.
     expect(out.match(/^ {2}Content-Security-Policy: /gm)?.length).toBe(3);
     expect(out.match(/^ {2}Report-To: /gm)?.length).toBe(2);
@@ -140,7 +140,7 @@ describe("rewriteHeadersCspValues", () => {
     const canonical = headersFixture();
     const out = rewriteHeadersCspValues(
       canonical,
-      CSP_MODERATE.replaceAll("bookmarkforge.com", "custom.example"),
+      CSP_MODERATE.replaceAll("bookmarkforgeapp.com", "custom.example"),
     );
     expect(out).toContain("wss://signal.custom.example");
     expect(out).toContain("https://custom.example/csp-report");
@@ -162,25 +162,25 @@ describe("replaceSitemapLocs", () => {
   });
 
   it("rewrites stale hosts in <loc> AND xhtml:link href, preserving paths", () => {
-    const stale = SITEMAP_FIXTURE.replaceAll("bookmarkforge.com", "stale.example");
+    const stale = SITEMAP_FIXTURE.replaceAll("bookmarkforgeapp.com", "stale.example");
     const out = replaceSitemapLocs(stale);
     expect(out).not.toContain("stale.example");
-    expect(out).toContain("<loc>https://bookmarkforge.com/ar/privacy-and-terms.html</loc>");
-    expect(out).toContain('hreflang="es" href="https://bookmarkforge.com/es/"');
+    expect(out).toContain("<loc>https://bookmarkforgeapp.com/ar/privacy-and-terms.html</loc>");
+    expect(out).toContain('hreflang="es" href="https://bookmarkforgeapp.com/es/"');
     // Paths, lastmod, changefreq, priority survive.
     expect(out).toContain("<lastmod>2026-09-09</lastmod>");
     expect(out).toContain("<priority>1.0</priority>");
   });
 
   it("never localises W3C/sitemaps.org namespace URIs", () => {
-    const stale = SITEMAP_FIXTURE.replaceAll("bookmarkforge.com", "stale.example");
+    const stale = SITEMAP_FIXTURE.replaceAll("bookmarkforgeapp.com", "stale.example");
     const out = replaceSitemapLocs(stale);
     expect(out).toContain('xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"');
     expect(out).toContain('xmlns:xhtml="http://www.w3.org/1999/xhtml"');
   });
 
   it("is byte-identical apart from the host: line count and attribute order unchanged", () => {
-    const stale = SITEMAP_FIXTURE.replaceAll("bookmarkforge.com", "stale.example");
+    const stale = SITEMAP_FIXTURE.replaceAll("bookmarkforgeapp.com", "stale.example");
     const out = replaceSitemapLocs(stale);
     expect(out.split("\n").length).toBe(stale.split("\n").length);
     expect(out.match(/<xhtml:link /g)?.length).toBe(
@@ -201,11 +201,11 @@ describe("replaceSitemapLocs", () => {
   it("honours an explicit domain override", () => {
     const out = replaceSitemapLocs(SITEMAP_FIXTURE, "custom.example");
     expect(out).toContain("https://custom.example/");
-    expect(out).not.toContain("bookmarkforge.com");
+    expect(out).not.toContain("bookmarkforgeapp.com");
   });
 
   it("is idempotent", () => {
-    const stale = SITEMAP_FIXTURE.replaceAll("bookmarkforge.com", "stale.example");
+    const stale = SITEMAP_FIXTURE.replaceAll("bookmarkforgeapp.com", "stale.example");
     const once = replaceSitemapLocs(stale);
     expect(replaceSitemapLocs(once)).toBe(once);
   });

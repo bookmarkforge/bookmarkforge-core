@@ -27,7 +27,7 @@ const MODERATE = [
   "style-src-attr 'unsafe-inline'",
   "img-src 'self' data: https:",
   "font-src 'self' data:",
-  "connect-src 'self' wss://signal.bookmarkforge.com",
+  "connect-src 'self' wss://signal.bookmarkforgeapp.com",
   "media-src 'self'",
   "object-src 'none'",
   "frame-src 'none'",
@@ -44,12 +44,12 @@ const MODERATE = [
 
 const OPEN = "default-src *; script-src * 'unsafe-inline' 'unsafe-eval'";
 const STRICT =
-  "default-src 'self'; connect-src 'self' https://oauth2.googleapis.com https://www.googleapis.com wss://signal.bookmarkforge.com; script-src 'self'";
+  "default-src 'self'; connect-src 'self' https://oauth2.googleapis.com https://www.googleapis.com wss://signal.bookmarkforgeapp.com; script-src 'self'";
 const COEP = "require-corp";
 const COOP = "same-origin";const REPORT_TO =
-  '{"group":"csp-endpoint","max_age":86400,"endpoints":[{"url":"https://bookmarkforge.com/csp-report"}]}';
+  '{"group":"csp-endpoint","max_age":86400,"endpoints":[{"url":"https://bookmarkforgeapp.com/csp-report"}]}';
 const REPORTING_ENDPOINTS =
-  'csp-endpoint="https://bookmarkforge.com/csp-report"';
+  'csp-endpoint="https://bookmarkforgeapp.com/csp-report"';
 
 const HEADERS = `Content-Security-Policy: ${MODERATE}\nCross-Origin-Embedder-Policy: ${COEP}\nCross-Origin-Opener-Policy: ${COOP}\nReporting-Endpoints: ${REPORTING_ENDPOINTS}\nReport-To: ${REPORT_TO}\n`;
 

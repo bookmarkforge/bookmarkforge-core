@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "fileCount": 101,
-  "adrFileCount": 34,
+  "fileCount": 143,
+  "adrFileCount": 38,
   "findings": [],
   "ruleCounts": {
     "docs-markdown/heading-hierarchy": 0,
@@ -16,7 +16,7 @@
     "docs-markdown/adr-template": {}
   },
   "foldIn": {
-    "rule": "eac21e689053e8514b27104ad6ff9489a3562297",
+    "rule": "651f5633a1e7d0b017a8f5820bddccb1acdcb831",
     "parser": "2529261d6d457c3ea1ec7e033a3a87f007482888",
     "eslint": "9.39.5"
   }

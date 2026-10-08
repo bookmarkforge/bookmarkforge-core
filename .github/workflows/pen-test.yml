@@ -64,7 +64,7 @@ jobs:
             exit 1
           fi
           # Never scan production without explicit confirmation
-          if [[ "$target" == *"bookmarkforge.com" ]]; then
+          if [[ "$target" == *"bookmarkforgeapp.com" ]]; then
             echo "Production domain detected. Ensure this is intentional." >&2
           fi
           echo "Target validated: $target"
@@ -72,7 +72,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
 
       - name: Install dependencies
@@ -96,7 +96,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
 
       - name: Install dependencies
@@ -107,7 +107,7 @@ jobs:
         env:
           VITE_APP_VERSION: pen-test
           VITE_DB_NAME: bookmarkforge_pen_test
-          VITE_P2P_SIGNALING_URL: wss://signal.bookmarkforge.com
+          VITE_P2P_SIGNALING_URL: wss://signal.bookmarkforgeapp.com
           VITE_WHOP_CHECKOUT_URL: https://example.invalid/pen-test
 
       - name: Start application server
@@ -131,7 +131,7 @@ jobs:
           # Origin allowlist for POST /api/license/entitlement (required in
           # production); provider calls happen in the browser, so the server
           # needs no AI key.
-          AI_SESSION_ORIGINS: https://bookmarkforge.com
+          AI_SESSION_ORIGINS: https://bookmarkforgeapp.com
           WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
           WHOP_LICENSE_API_URL: ${{ secrets.WHOP_LICENSE_API_URL }}
           LICENSE_SIGNING_PRIVATE_KEY_FILE: ${{ secrets.LICENSE_SIGNING_PRIVATE_KEY_FILE }}
@@ -191,7 +191,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch'
     environment:
       name: production-deploy
-      url: https://bookmarkforge.com
+      url: https://bookmarkforgeapp.com
     steps:
       - name: Wait for manual approval
         run: |
@@ -214,7 +214,7 @@ jobs:
         run: |
           set -euo pipefail
           echo "Verifying production security headers..."
-          response=$(curl -sI https://bookmarkforge.com)
+          response=$(curl -sI https://bookmarkforgeapp.com)
           echo "$response"
           echo "$response" | grep -q "strict-transport-security" || { echo "Missing HSTS header"; exit 1; }
           echo "$response" | grep -q "content-security-policy" || { echo "Missing CSP header"; exit 1; }
@@ -225,7 +225,7 @@ jobs:
       - name: Run post-deploy DAST
         uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25
         with:
-          target: https://bookmarkforge.com
+          target: https://bookmarkforgeapp.com
           allow_issue_writing: false
           fail_action: false
           artifact_name: zap-post-deploy

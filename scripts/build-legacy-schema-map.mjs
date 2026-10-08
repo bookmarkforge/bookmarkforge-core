@@ -2,6 +2,11 @@
 // scripts/build-legacy-schema-map.mjs
 // Generates docs/legacy-schema-version-map.md from src/db/schema.ts.
 // Idiomatic ESM, no TypeScript.
+//
+// The template text below is English because the committed document is: it was
+// translated in c57bf01 (which did not touch this script), and the file declares
+// itself generated, so regenerating it must reproduce those bytes exactly.
+// Spanish output here is what made every `npm test` rewrite the document.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -54,18 +59,18 @@ if (rows.length === 0) {
 rows.sort((a, b) => a.collection.localeCompare(b.collection));
 
 const table = [
-  '# Mapa de versiones de esquema — BookmarkForge',
+  '# Schema version map — BookmarkForge',
   '',
-  'Este archivo registra el mapa de versiones del esquema RxDB activo para la codebase actual.',
+  'This file records the RxDB schema version map active for the current codebase.',
   '',
-  'Se genera automáticamente desde `src/db/schema.ts`. No se edita a mano.',
-  'Su función es ofrecer un diagnóstico estable de compatibilidad/migración sin tocar datos reales del vault.',
+  'It is automatically generated from `src/db/schema.ts`. Do not edit manually.',
+  'Its function is to offer a stable compatibility/migration diagnosis without touching real vault data.',
   '',
-  '| Colección | Versión | Campos cifrados |',
+  '| Collection | Version | Encrypted fields |',
   '|---|---|---|',
   ...rows.map(r => `| \`${r.collection}\` | ${r.version} | \`${r.encrypted.join('`, `')}\` |`),
   '',
-  'Nota: la versión se lee desde la propiedad `version` declarada en el esquema RxDB correspondiente.',
+  'Note: the version is read from the `version` property declared in the corresponding RxDB schema.',
   '',
 ].join('\n');
 

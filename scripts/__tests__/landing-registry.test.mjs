@@ -144,9 +144,9 @@ describe("derived page identity", () => {
     }
   });
 
-  it("gives every locale a ?lang= preference href", () => {
+  it("gives every locale a clean-path preference href", () => {
     expect(Object.keys(LANG_LINK_HREFS)).toHaveLength(30);
-    expect(LANG_LINK_HREFS.en).toBe("/?lang=en");
-    expect(LANG_LINK_HREFS.ja).toBe("/ja/?lang=ja");
+    expect(LANG_LINK_HREFS.en).toBe("/");
+    expect(LANG_LINK_HREFS.ja).toBe("/ja/");
   });
 });

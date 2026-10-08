@@ -1,7 +1,7 @@
 // S0/R1 fix: Same fragment-hash pattern as background.js so PWA URLs never
 // leak via GET params to third-party logs / browser history / Referer headers.
 
-const DEFAULT_BASE_URL = "https://bookmarkforge.com";
+const DEFAULT_BASE_URL = "https://bookmarkforgeapp.com";
 const STORAGE_KEY = "bookmarkforge_base_url";
 
 const saveBtn = document.getElementById("saveBtn");
@@ -39,7 +39,7 @@ async function getBaseUrl() {
 async function saveBaseUrl(url) {
   const trimmed = globalThis.BookmarkForgeCaptureUrl.normalizeBaseUrl(url);
   if (!globalThis.BookmarkForgeCaptureUrl.isValidBaseUrl(trimmed)) {
-    showUrlStatus("Enter a valid HTTPS URL (e.g. https://bookmarkforge.com)", "error");
+    showUrlStatus("Enter a valid HTTPS URL (e.g. https://bookmarkforgeapp.com)", "error");
     return false;
   }
   try {

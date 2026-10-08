@@ -1,304 +1,303 @@
-# ADR-046: Rotación del salt KDF de la bóveda junto con la contraseña maestra
+# ADR-046: Vault KDF salt rotation together with the master password
 
-- **Estado:** aceptado (implementado: `src/services/security-vault/kdf-salt.ts`
-  y `SecurityVault.rotateMasterPassword`; regresión en
-  `src/tests/security/p0-vault-kdf-salt.regression.test.ts` y
+- **Status:** accepted (implemented in `src/services/security-vault/kdf-salt.ts`
+  and `SecurityVault.rotateMasterPassword`; regression in
+  `src/tests/security/p0-vault-kdf-salt.regression.test.ts` and
   `src/tests/services/SecurityVault.test.ts`; E2E
   `tests/e2e/vault-change-password.spec.ts`)
-- **Fecha:** 2026-09-12
+- **Date:** 2026-09-12
 
-## Contexto
+## Context
 
-La derivación de la clave maestra estiraba la contraseña con Argon2id contra un
-salt **constante y compartido por todo el bundle**
-(`bookmarkforge-v5-master-key`, `bookmarkforge-session-master-key-v6`). Una
-sola pasada de Argon2id sobre una contraseña candidata servía contra cualquier
-bóveda del mundo, que es exactamente lo que RFC 9106 prohíbe al exigir un salt
-único por contraseña.
+Master key derivation stretched the password with Argon2id against a
+**constant salt shared by the whole bundle**
+(`bookmarkforge-v5-master-key`, `bookmarkforge-session-master-key-v6`). A
+single Argon2id pass over a candidate password served against any vault in the
+world, which is exactly what RFC 9106 forbids by requiring a unique salt per
+password.
 
-A-1 cerró esa brecha para el aprovisionamiento y la migración: cada bóveda
-acuña 16 bytes aleatorios, los persiste en `SecureStorage`
-(`SECURE_STORAGE_KEYS.KDF_SALT` → `"kdf_salt"`) y los instala en la capa
-criptográfica. Los payloads nuevos salen `v6:` y **llevan su propio salt
-incrustado**; los `v5:` anteriores siguen leyéndose con el salt fijo legacy.
-El salt es metadato público: lo que se protege es su unicidad, no su secreto.
-(Ver también `docs/ADR-019-argon2id-migration.md` para la migración previa de
-los parámetros de Argon2id.)
+A-1 closed that gap for provisioning and migration: each vault mints 16 random
+bytes, persists them in `SecureStorage`
+(`SECURE_STORAGE_KEYS.KDF_SALT` → `"kdf_salt"`) and installs them in the
+cryptographic layer. New payloads come out `v6:` and **carry their own embedded
+salt**; earlier `v5:` ones are still read with the fixed legacy salt.
+The salt is public metadata: what is protected is its uniqueness, not its
+secrecy. (See also `docs/ADR-019-argon2id-migration.md` for the earlier migration
+of the Argon2id parameters.)
 
-Lo que A-1 **no** cubrió es la rotación de contraseña: `rotateMasterPassword`
-invalidaba la contraseña y conservaba el salt. El artefacto hostil no es la
-contraseña, es el **corpus de blobs cifrados con ella** — el token de
-verificación (H5, guardado sin la capa del device key, de modo que sigue
-legible con la bóveda bloqueada), `encrypted_db_key`, `encrypted_api_key` y el
-propio device key envuelto. Un corpus cosechado vale lo que valga el salt que
-lo produjo: dejar el salt intacto entregaba a quien ya hubiera construido un
-diccionario contra la contraseña **vieja** un diccionario que seguía
-aplicándose a los blobs escritos bajo la **nueva**. "He cambiado mi contraseña"
-solo era cierto en línea, no frente a un ataque offline.
+What A-1 **did not** cover is password rotation: `rotateMasterPassword`
+invalidated the password but kept the salt. The hostile artifact is not the
+password, it is the **corpus of blobs encrypted with it** — the verification
+token (H5, stored without the device-key layer, so it stays readable with the
+vault locked), `encrypted_db_key`, `encrypted_api_key` and the wrapped device
+key itself. A harvested corpus is worth exactly what the salt that produced it
+is worth: leaving the salt intact handed anyone who had already built a
+dictionary against the **old** password a dictionary that still applied to blobs
+written under the **new** one. "I changed my password" was only true online, not
+against an offline attack.
 
-Restricciones que dan forma a la decisión:
+Constraints that shape the decision:
 
-- La rotación no puede invalidar datos ya cifrados. Comparticiones, backups y
-  blobs pre-migración deben seguir descifrando, también si la operación se
-  deshace. `v6:` lo garantiza por construcción: descifrar nunca consulta el
-  salt del módulo (un `v6:` usa el suyo embebido; un `v5:` usa el fijo legacy).
-- El **desbloqueo** nunca puede romperse por culpa del salt. La rotación, en
-  cambio, es una operación explícita y autenticada: si no puede completarse,
-  debe fallar y deshacerse, nunca fingir éxito.
-- Puede haber más de una pestaña abierta, y la bóveda puede bloquearse en mitad
-  de la operación (`vaultGeneration` + `isLocked()` abortan la rotación). Y el
-  salt no es estado compartido: vive en memoria del módulo, así que una
-  rotación no llegaba a una pestaña ya abierta hasta que recargase — esa
-  pestaña seguía escribiendo bajo el salt retirado (ver Decisión 8).
-- `RECOVERY_DATA` **no** rota: está cifrado con la frase de recuperación, no con
-  la contraseña. Tratarlo como un secreto rotable fue un fallo de producción
-  que hacía **fallar toda rotación** (reintroducirlo es una regresión).
+- Rotation must not invalidate already-encrypted data. Shares, backups and
+  pre-migration blobs must keep decrypting, including if the operation is
+  undone. `v6:` guarantees this by construction: decryption never consults the
+  module salt (a `v6:` uses its own embedded one; a `v5:` uses the fixed legacy).
+- **Unlocking** must never break because of the salt. Rotation, on the other
+  hand, is an explicit authenticated operation: if it cannot complete, it must
+  fail and undo itself, never pretend success.
+- There may be more than one open tab, and the vault can lock mid-operation
+  (`vaultGeneration` + `isLocked()` abort the rotation). And the salt is not
+  shared state: it lives in module memory, so a rotation did not reach an
+  already-open tab until it reloaded — that tab kept writing under the retired
+  salt (see Decision 8).
+- `RECOVERY_DATA` does **not** rotate: it is encrypted with the recovery phrase,
+  not with the password. Treating it as a rotatable secret was a production bug
+  that made **every rotation fail** (reintroducing it is a regression).
 
-## Decisión
+## Decision
 
-1. **El salt rota en la misma operación que la contraseña**, y antes de
-   re-envolver ningún payload. Es el único momento en que el salt debe cambiar
-   obligatoriamente: la contraseña deja de ser válida ahí, y con ella el valor
-   del corpus que ese salt produjo.
-2. **Orden del swap: snapshot → persistir → instalar.** Nunca al revés (ver
-   "Alternativas descartadas" A-3).
-   - *Persistir primero*: un crash no puede dejar la bóveda cifrando bajo un
-     salt que el almacenamiento no ha visto; el siguiente desbloqueo adoptaría
-     el salt almacenado antiguo y partiría la bóveda en dos derivaciones.
-   - *Instalar segundo*: nada se escribe con el salt nuevo hasta que la bóveda
-     está comprometida con él, y por eso `restoreVaultKdfSalt` es un undo
-     completo. El estado previo se **pasa** a `rotateVaultKdfSalt` en lugar de
-     releerse ahí, para que no pueda recoger su propia escritura a medias.
-3. **Se re-envuelve todo lo cifrado con la contraseña**, no solo el salt:
+1. **The salt rotates in the same operation as the password**, and before
+   re-wrapping any payload. It is the only moment where the salt must change
+   mandatorily: the password stops being valid there, and with it the value of
+   the corpus that salt produced.
+2. **Swap order: snapshot → persist → install.** Never the other way round
+   (see "Rejected alternatives" A-3).
+   - *Persist first*: a crash cannot leave the vault encrypting under a salt
+     storage has not seen; the next unlock would adopt the old stored salt and
+     split the vault into two derivations.
+   - *Install second*: nothing is written with the new salt until the vault is
+     committed to it, which is why `restoreVaultKdfSalt` is a complete undo.
+     The prior state is **passed** into `rotateVaultKdfSalt` instead of being
+     re-read there, so it cannot pick up its own half-finished write.
+3. **Everything encrypted with the password is re-wrapped**, not just the salt:
 
-   | Artefacto | Cómo se re-clava | Motivo |
+   | Artifact | How it is re-keyed | Reason |
    |---|---|---|
-   | `encrypted_db_key`, `encrypted_api_key` | `decryptWithBytes` + `encryptWithBytes` con la contraseña nueva; salen `v6:` con el salt nuevo | son el corpus que un atacante cosecharía |
-   | device key envuelto (H5) | `rewrapDeviceKeyWithPasswordBytes(old, new)` mientras los bytes de la contraseña antigua siguen vivos | el handle en memoria no cambia, solo su sobre at-rest |
-   | token de verificación (H5) | `createVerificationToken(newPassword)` | es el oráculo de verificación oficial; debe quedar bajo la contraseña nueva **y** el salt nuevo |
-   | registro de integridad S1 del token | reemitido con el token | un registro desincronizado haría fallar la verificación al siguiente arranque |
+   | `encrypted_db_key`, `encrypted_api_key` | `decryptWithBytes` + `encryptWithBytes` with the new password; they come out `v6:` with the new salt | they are the corpus an attacker would harvest |
+   | wrapped device key (H5) | `rewrapDeviceKeyWithPasswordBytes(old, new)` while the old password bytes are still alive | the in-memory handle does not change, only its at-rest envelope |
+   | verification token (H5) | `createVerificationToken(newPassword)` | it is the official verification oracle; it must end up under the new password **and** the new salt |
+   | token's S1 integrity record | reissued with the token | a desynchronized record would make verification fail on next startup |
 
-4. **Contrato de rollback.** Un fallo en cualquier punto restaura, en este
-   orden, todo lo que se había escrito:
+4. **Rollback contract.** A failure at any point restores, in this order,
+   everything that had been written:
 
-   | Artefacto | Snapshot previo | Restauración |
+   | Artifact | Prior snapshot | Restoration |
    |---|---|---|
-   | `encrypted_api_key`, `encrypted_db_key` | valor por clave antes de tocar nada | `setSecret` del valor previo |
-   | device key envuelto | `getWrappedDeviceKeyBlob()` | `restoreWrappedDeviceKeyBlob` |
-   | token de verificación | `getVerificationToken()` | `restoreVerificationToken` |
-   | registro de integridad S1 | `getVerificationIntegrity()` | `storeVerificationIntegrity` o `deleteSecret` si no existía |
-   | salt KDF | `snapshotVaultKdfSalt()` → `{ stored, installed }` | `restoreVaultKdfSalt()`, **el último** |
+   | `encrypted_api_key`, `encrypted_db_key` | per-key value before touching anything | `setSecret` of the prior value |
+   | wrapped device key | `getWrappedDeviceKeyBlob()` | `restoreWrappedDeviceKeyBlob` |
+   | verification token | `getVerificationToken()` | `restoreVerificationToken` |
+   | S1 integrity record | `getVerificationIntegrity()` | `storeVerificationIntegrity` or `deleteSecret` if it did not exist |
+   | KDF salt | `snapshotVaultKdfSalt()` → `{ stored, installed }` | `restoreVaultKdfSalt()`, **last** |
 
-   Reglas del contrato:
+   Contract rules:
 
-   - **El salt se restaura el último**, cuando ya se ha puesto de vuelta cada
-     payload escrito bajo el nuevo. La mitad **en memoria** es la que sostiene
-     la sesión actual (sigue con la contraseña vieja, así que debe seguir con
-     la derivación con la que esa contraseña se estiraba); la mitad
-     **almacenada** es la que instalará el siguiente desbloqueo. Las dos
-     intentan restaurarse, incluso si la escritura falla.
-   - **`stored: undefined` no es `null`.** `undefined` significa "la lectura
-     falló" (device key bloqueado) y no se "restaura" borrando un valor que
-     nunca se llegó a ver; `null` significa "no había salt" y sí se borra.
-   - **`restoreVaultKdfSalt` nunca lanza.** Corre en el camino de fallo: si
-     lanzara, enmascararía el error original que provocó el rollback.
-   - El snapshot se toma **antes** de tocar el salt, así que una rotación que
-     muera entre "persistido" e "instalado" sigue siendo deshacible.
-5. **La rotación falla en voz alta; el aprovisionamiento no.** `rotateVaultKdfSalt`
-   propaga el error si el salt nuevo no se puede persistir (el llamador
-   deshace y devuelve `false`), al contrario que `ensureVaultKdfSalt`, que
-   corre en el camino de desbloqueo y por eso degrada a modo legacy con un
-   aviso en lugar de romper el desbloqueo.
-6. **RNG roto = error, no rotación aparente.** Si el salt recién acuñado
-   coincide con el anterior (probabilidad 2^-128: al llegar ahí el generador
-   está roto), se reintenta una vez y luego se **lanza**
-   (`Vault KDF salt rotation produced a repeated salt`): devolver el mismo salt
-   declararía una rotación que no ha ocurrido.
-7. **Serialización.** `rotationPromise` hace que dos rotaciones concurrentes
-   compartan una sola operación en lugar de pisarse. Serializa **rotaciones,
-   no escrituras**: otro servicio que escriba durante la ventana de rollback
-   (milisegundos) lo haría bajo el salt nuevo.
-8. **Propagación a las pestañas abiertas.** El salt vive en estado de módulo,
-   así que una rotación solo llegaba a las demás pestañas al recargar. El
-   tab que rota **anuncia** el cambio y los demás **vuelven a leer el salt de
-   storage** (`kdf-salt-sync.ts` + `adoptVaultKdfSaltFromStorage`):
-   - **El mensaje no lleva el valor, solo el disparador.** Cualquier script del
-     origen puede escribir en un `BroadcastChannel` (por eso el canal externo
-     de `BroadcastBridgeService` va firmado con HMAC) y aquí no hay clave
-     compartida con la que firmar: tras una rotación las dos pestañas tienen
-     contraseñas **distintas**. Storage es la autoridad, así que un mensaje
-     falsificado solo provoca una relectura del mismo salt, nunca la
-     instalación de uno elegido por el atacante (el downgrade que importaría:
-     un salt elegido vuelve a hacer reutilizable un único diccionario).
-   - **Solo se anuncia una rotación ya confirmada**, nunca una reversible:
-     avisar a mitad dejaría a las otras pestañas en un salt que esta puede
-     deshacer, con cada `v6:` escrito en esa ventana clavado a un salt que la
-     bóveda ya no tiene. Si la rotación se deshace, no se anuncia nada, storage
-     vuelve al salt anterior y las pestañas — que nunca se movieron — siguen
-     consistentes con él.
-   - **Idempotente y a prueba de entregas tardías o duplicadas:** el manejador
-     relee el salt ACTUAL, así que un mensaje repetido, reordenado o posterior
-     a un rollback converge al mismo valor en vez de resucitar el no confirmado.
-   - **Se escucha solo con la bóveda desbloqueada** (leer el salt necesita la
-     device key), y al bloquear se cierra el canal. Una pestaña bloqueada no
-     necesita nada: ni puede leer el salt ni puede escribir con él, y su
-     siguiente desbloqueo aprovisiona el corriente.
-   - **La contraseña no se transmite**: la pestaña que adopta conserva la
-     antigua en memoria y eso se registra como aviso (ver Consecuencias).
+   - **The salt is restored last**, once every payload written under the new one
+     has been put back. The **in-memory** half is what sustains the current
+     session (it is still on the old password, so it must stay on the
+     derivation that password was stretched with); the **stored** half is what
+     the next unlock will install. Both attempt to restore, even if the write
+     fails.
+   - **`stored: undefined` is not `null`.** `undefined` means "the read failed"
+     (device key locked) and is not "restored" by deleting a value that was
+     never seen; `null` means "there was no salt" and is deleted.
+   - **`restoreVaultKdfSalt` never throws.** It runs on the failure path: if it
+     threw, it would mask the original error that caused the rollback.
+   - The snapshot is taken **before** touching the salt, so a rotation that dies
+     between "persisted" and "installed" is still undoable.
+5. **Rotation fails loudly; provisioning does not.** `rotateVaultKdfSalt`
+   propagates the error if the new salt cannot be persisted (the caller undoes
+   and returns `false`), unlike `ensureVaultKdfSalt`, which runs on the unlock
+   path and therefore degrades to legacy mode with a warning instead of
+   breaking unlock.
+6. **Broken RNG = error, not an apparent rotation.** If the freshly minted salt
+   matches the previous one (probability 2^-128: by then the generator is
+   broken), it retries once and then **throws**
+   (`Vault KDF salt rotation produced a repeated salt`): returning the same salt
+   would declare a rotation that did not happen.
+7. **Serialization.** `rotationPromise` makes two concurrent rotations share a
+   single operation instead of stepping on each other. It serializes
+   **rotations, not writes**: another service writing during the rollback window
+   (milliseconds) would do so under the new salt.
+8. **Propagation to open tabs.** The salt lives in module state, so a rotation
+   only reached the other tabs on reload. The tab that rotates **announces** the
+   change and the others **re-read the salt from storage**
+   (`kdf-salt-sync.ts` + `adoptVaultKdfSaltFromStorage`):
+   - **The message carries no value, only the trigger.** Any script from the
+     origin can write to a `BroadcastChannel` (which is why `BroadcastBridgeService`'s
+     external channel is HMAC-signed) and here there is no shared key to sign
+     with: after a rotation the two tabs have **different** passwords. Storage
+     is the authority, so a forged message only causes a re-read of the same
+     salt, never the installation of an attacker-chosen one (the downgrade that
+     would matter: a chosen salt makes a single dictionary reusable again).
+   - **Only a confirmed rotation is announced**, never a reversible one:
+     announcing midway would leave the other tabs on a salt this one can still
+     undo, with every `v6:` written in that window pinned to a salt the vault no
+     longer has. If the rotation is undone, nothing is announced, storage
+     returns to the previous salt and the tabs — which never moved — stay
+     consistent with it.
+   - **Idempotent and safe against late or duplicate deliveries:** the handler
+     re-reads the CURRENT salt, so a repeated, reordered or post-rollback
+     message converges to the same value instead of resurrecting the
+     unconfirmed one.
+   - **It only listens while the vault is unlocked** (reading the salt needs the
+     device key), and the channel closes on lock. A locked tab needs nothing: it
+     can neither read the salt nor write with it, and its next unlock provisions
+     the current one.
+   - **The password is not transmitted**: the adopting tab keeps the old one in
+     memory, and that is recorded as a warning (see Consequences).
 
-## Consecuencias
+## Consequences
 
-- Un diccionario construido contra la contraseña anterior deja de aplicar a la
-  bóveda en cuanto `rotateMasterPassword` devuelve `true`, porque los payloads
-  re-escritos van clavados a una contraseña **y** un salt nuevos.
-- Nada ya migrado queda ilegible, pase lo que pase: el descifrado de un `v6:`
-  no depende del salt del módulo ni del almacenado. Backups, comparticiones y
-  una pestaña que aún tenga el salt viejo siguen descifrando.
-- Una rotación escribe varios payloads + el token + el wrapper + el registro de
-  integridad. El coste es el de una operación explícita y poco frecuente, a
-  cambio de que el rollback cubra exactamente esas escrituras.
-- **La ventana de dos salts vivos se cierra sin recargar:** una pestaña
-  abierta adopta el salt rotado en cuanto la rotación se confirma (verificado
-  end-to-end con dos pestañas reales en
-  `tests/e2e/vault-kdf-salt-cross-tab.spec.ts`), así que deja de acumular
-  ciphertext bajo el salt retirado. El caso que **no** cubre la notificación es
-  una pestaña sin `BroadcastChannel` (modo privado, navegador antiguo): esa
-  sigue con el salt anterior hasta recargar, que es el comportamiento previo,
-  no peor.
+- A dictionary built against the previous password stops applying to the vault
+  as soon as `rotateMasterPassword` returns `true`, because the rewritten
+  payloads are pinned to a new password **and** a new salt.
+- Nothing already migrated becomes unreadable, whatever happens: decrypting a
+  `v6:` depends on neither the module salt nor the stored one. Backups, shares
+  and a tab that still has the old salt keep decrypting.
+- A rotation writes several payloads + the token + the wrapper + the integrity
+  record. The cost is that of an explicit, infrequent operation, in exchange for
+  the rollback covering exactly those writes.
+- **The two-live-salts window closes without a reload:** an open tab adopts the
+  rotated salt as soon as the rotation is confirmed (verified end-to-end with
+  two real tabs in
+  `tests/e2e/vault-kdf-salt-cross-tab.spec.ts`), so it stops accumulating
+  ciphertext under the retired salt. The case the notification does **not**
+  cover is a tab without `BroadcastChannel` (private mode, old browser): that one
+  stays on the previous salt until reload, which is the previous behavior, not a
+  worse one.
 
-### Extensión de alcance (2026-09-17): el índice Voy deriva bajo el mismo salt por-vault
+### Scope extension (2026-09-17): the Voy index derives under the same per-vault salt
 
-El índice de búsqueda vectorial persistido (envelope AES-GCM del worker
-`voy.worker.ts`) mantenía un corpus cifrado paralelo cuyo KDF **no** estaba
-cubierto por este ADR: `deriveIndexKey` estiraba la contraseña con Argon2id
-contra `SHA-256("bookmarkforge-voy-index-v1")[0..16]`, una constante del
-bundle idéntica para toda bóveda — exactamente la clase de fallo de A-1 que
-este ADR corrigió para el corpus maestro. Un diccionario construido contra el
-índice cosechado de IndexedDB valía contra el de cualquier bóveda.
+The persisted vector search index (AES-GCM envelope of the
+`voy.worker.ts` worker) maintained a parallel encrypted corpus whose KDF was
+**not** covered by this ADR: `deriveIndexKey` stretched the password with
+Argon2id against `SHA-256("bookmarkforge-voy-index-v1")[0..16]`, a bundle
+constant identical for every vault — exactly the failure class A-1 fixed for the
+master corpus. A dictionary built against the harvested IndexedDB index was
+valid against any vault's.
 
-Alineación con este ADR (2026-09-17):
+Alignment with this ADR (2026-09-17):
 
-- **Contrato `SET_KEY` actualizado:** `VectorIndexService.setVaultKey` lee el
-  salt por-vault instalado (`getVaultKdfSaltHex`) y lo envía explícitamente
-  (`{ passwordBytes, vaultSalt, keyId }`). El campo `userId` constante queda
-  retirado. El orden ya garantizado por este ADR hace seguro el cambio: el
-  unlock instala el salt **antes** de disparar los listeners `onUnlock` desde
-  donde se instala la clave del índice.
-- **Fail-closed en ambos extremos:** el worker valida `vaultSalt` como 32 hex
-  y rechaza el `SET_KEY` antes de derivar (los `passwordBytes` se zeroizan
-  igualmente); sin salt instalado, el servicio no envía `SET_KEY` y degrada al
-  carril existente de `ensureVaultKey` — búsqueda en memoria sí, persistencia
-  cifrada no. Nunca se escribe un índice bajo un salt equivocado.
-- **Rotación de contraseña incluida gratis:** como el salt del índice es el
-  mismo que rota este ADR, la re-derivación tras una rotación re-clava el
-  corpus del índice sin código adicional.
-- **Compatibilidad de envelopes:** los índices ya persistidos bajo el salt
-  constante retirado **no** se migran; en el siguiente unlock la clave
-  re-derivada (salt nuevo) falla la autenticación AES-GCM y el path
-  fail-closed existente de `LOAD_INDEX` purga el registro y reconstruye el
-  índice desde las colecciones fuente de RxDB. Sin exposición de plaintext:
-  el coste es un re-indexado único por bóveda.
-- **Anclas de regresión:** `p0-voy-dedup.regression.test.ts` (roundtrip:
-  el envelope re-abierto exige el mismo salt en ambos `SET_KEY`),
-  `voy.worker.test.ts` (`vaultSalt` malformado rechazado sin derivar, con
-  ceroización) y `VectorIndexService.test.ts` (el `SET_KEY` lleva el salt
-  por-vault; la constante retirada jamás llega al worker). Archivos:
+- **Updated `SET_KEY` contract:** `VectorIndexService.setVaultKey` reads the
+  installed per-vault salt (`getVaultKdfSaltHex`) and sends it explicitly
+  (`{ passwordBytes, vaultSalt, keyId }`). The constant `userId` field is
+  retired. The order already guaranteed by this ADR makes the change safe:
+  unlock installs the salt **before** firing `onUnlock` listeners, and the
+  index key is installed from there.
+- **Fail-closed at both ends:** the worker validates `vaultSalt` as 32 hex and
+  rejects `SET_KEY` before deriving (the `passwordBytes` are zeroized
+  regardless); with no salt installed, the service does not send `SET_KEY` and
+  degrades to the existing `ensureVaultKey` lane — in-memory search yes,
+  encrypted persistence no. An index is never written under the wrong salt.
+- **Password rotation included for free:** since the index salt is the same one
+  this ADR rotates, re-derivation after a rotation re-keys the index corpus
+  without additional code.
+- **Envelope compatibility:** indexes already persisted under the retired
+  constant salt are **not** migrated; on the next unlock the re-derived key
+  (new salt) fails AES-GCM authentication and the existing fail-closed
+  `LOAD_INDEX` path purges the record and rebuilds the index from the source
+  RxDB collections. With no plaintext exposure: the cost is a one-time reindex
+  per vault.
+- **Regression anchors:** `p0-voy-dedup.regression.test.ts` (roundtrip: the
+  reopened envelope requires the same salt in both `SET_KEY`s),
+  `voy.worker.test.ts` (malformed `vaultSalt` rejected without deriving, with
+  zeroization) and `VectorIndexService.test.ts` (`SET_KEY` carries the
+  per-vault salt; the retired constant never reaches the worker). Files:
   `src/services/ai/VectorIndexService.ts`, `src/workers/voy.worker.ts`.
-- **La pestaña que adopta queda con credencial obsoleta.** Su contraseña en
-  memoria es la **antigua**: el salt adoptado la hace escribir `v6:` bajo el
-  salt nuevo pero clavados a la contraseña anterior, que la contraseña nueva
-  (la que el usuario tiene ahora) no abre tras recargar. Es el hazard previo de
-  rotar con varias pestañas abiertas — y la propagación no lo empeora, lo
-  mejora: ese corpus pasa de estar bajo el salt retirado (cuya precomputación
-  el atacante ya pagó) a estarlo bajo uno único. Cerrarlo del todo exigiría
-  transmitir la contraseña nueva entre pestañas, que es exactamente lo que no
-  se hace; la salida honesta es reloguear, y adoptar el salt no rompe la propia
-  lectura de esa pestaña (la caché de clave maestra va indexada por salt).
-- El salt sigue siendo metadato público y no se cifra ni se deriva de nada: la
-  propiedad que se mantiene es unicidad + rotación, no secreto.
-- Tests que anclan el contrato: `rotateVaultKdfSalt` (persistir antes de
-  instalar, fallo ruidoso sin instalar nada, rechazo de salt repetido, lectura
-  fallida reportada como desconocida, re-clavado real) y `restoreVaultKdfSalt`
-  (ambas mitades, borrado de un salt inexistente, no borrar lo ilegible, salt
-  malformado tratado como ausente) en
-  `src/tests/security/p0-vault-kdf-salt.regression.test.ts`; las tres pruebas
-  de rotación con rollback, abort temprano y re-envoltura completa en
-  `src/tests/services/SecurityVault.test.ts`, incluidos los dos extremos de la
-  notificación (anunciada una vez tras confirmar, **no** anunciada si la
-  rotación se deshace); la propagación cross-tab (adopción desde storage,
-  indiferencia a un salt falsificado, salt malformado/ausente/ilegible
-  rechazados, `stop` real y ausencia de `BroadcastChannel`) en el mismo
-  fichero P0; y dos comprobaciones end-to-end: que el salt **cambia de verdad**
-  (leyéndolo del ciphertext del token H5, en
-  `tests/e2e/vault-change-password.spec.ts`) y que una **segunda pestaña**
-  adopta el salt nuevo sin recargar y pasa a escribir con él
+- **The adopting tab is left with a stale credential.** Its in-memory password
+  is the **old** one: the adopted salt makes it write `v6:` under the new salt
+  but pinned to the previous password, which the new password (the one the user
+  now has) does not open after a reload. It is the prior hazard of rotating with
+  several tabs open — and propagation does not worsen it, it improves it: that
+  corpus goes from being under the retired salt (whose precomputation the
+  attacker already paid for) to being under a unique one. Closing it entirely
+  would require transmitting the new password between tabs, which is exactly
+  what is not done; the honest answer is to log in again, and adopting the salt
+  does not break that tab's own reads (the master key cache is indexed by salt).
+- The salt remains public metadata and is neither encrypted nor derived from
+  anything: the property maintained is uniqueness + rotation, not secrecy.
+- Tests anchoring the contract: `rotateVaultKdfSalt` (persist before install,
+  loud failure without installing anything, repeated-salt rejection, failed read
+  reported as unknown, real re-keying) and `restoreVaultKdfSalt`
+  (both halves, deleting a nonexistent salt, not deleting the unreadable,
+  malformed salt treated as absent) in
+  `src/tests/security/p0-vault-kdf-salt.regression.test.ts`; the three
+  rotation tests covering rollback, early abort and full re-wrapping in
+  `src/tests/services/SecurityVault.test.ts`, including both ends of the
+  notification (announced once after confirmation, **not** announced if the
+  rotation is undone); cross-tab propagation (adoption from storage,
+  indifference to a forged salt, malformed/absent/unreadable salts rejected,
+  real `stop` and absence of `BroadcastChannel`) in the same P0 file; and two
+  end-to-end checks: that the salt **actually changes** (read from the H5 token's
+  ciphertext, in `tests/e2e/vault-change-password.spec.ts`) and that a **second
+  tab** adopts the new salt without a reload and starts writing with it
   (`tests/e2e/vault-kdf-salt-cross-tab.spec.ts`).
 
-## Alternativas descartadas
+## Rejected alternatives
 
-- **A-1. Conservar el salt en la rotación (statu quo).** Es el fallo que este
-  ADR corrige: el corpus cosechado sobrevive al cambio de contraseña y un
-  diccionario antiguo sigue valiendo. Habría hecho falta que el atacante
-  repitiera el trabajo solo si el salt cambiase.
-- **A-2. Salt determinista derivado de la contraseña** (por ejemplo
-  `HKDF(password, "salt")`). Reproduce la clase de fallo que A-1 eliminó: el
-  salt deja de ser único por bóveda (dos bóvedas con la misma contraseña
-  comparten derivación) y pasa a ser adivinable/cosechable junto con la
-  contraseña. Además haría la rotación cosmética: el salt "nuevo" sería
-  verificable desde la contraseña candidata.
-- **A-3. Instalar primero y persistir después.** Un crash entre ambos pasos deja
-  payloads escritos bajo un salt que el almacenamiento no conoce; el siguiente
-  desbloqueo instala el salt antiguo y la bóveda queda partida entre dos
-  derivaciones, con datos potencialmente irrecuperables. Es la razón de que el
-  orden sea una decisión y no un detalle.
-- **A-4. Rotar sin rollback (fail-forward), por simplicidad.** Una bóveda a
-  medio re-envolver (un secreto con la contraseña nueva y otro con la vieja, el
-  token desincronizado de su registro S1) no se puede deshacer desde la UI y
-  puede costar los datos. Preferimos una operación que falla limpia a una que
-  falla a medias.
-- **A-5. Rotar el salt sin re-envolver los blobs existentes.** Cambiar solo el
-  metadato no reduce nada: los blobs ya cosechados seguirían clavados al salt
-  viejo, y el atacante solo tendría que usar el salt anterior que ya conoce.
-  La rotación vale por lo que se re-clava, no por lo que se escribe en el
-  almacén de metadatos.
-- **A-6. Bóveda nueva o migración completa en lugar de rotación in-place.**
-  Mucho más invasivo (invalidaría comparticiones y obligaría a re-importar),
-  y no aportaría nada frente al ataque offline: los objetos secretos son los
-  mismos y habría que re-envolverlos igual.
-- **A-7. Rotar el salt en cada desbloqueo** (defensa en profundidad "gratis").
-  No defiende de nada mientras la contraseña no cambie — el corpus cosechado y
-  su salt siguen siendo el mismo par — y metería una escritura y una derivación
-  Argon2id extra en el camino que nunca debe fallar, que es justo lo que hace
-  que `ensureVaultKdfSalt` sea silencioso y la rotación ruidosa.
-- **A-8. No persistir el salt y tomarlo del último payload descifrado.** Es
-  circular en el aprovisionamiento (una bóveda nueva no tiene payload del que
-  leerlo) y añadiría una lectura adicional en cada escritura para reconstruir
-  un valor que la capa criptográfica necesita disponible.
-- **A-9. Derivar el salt de material ya existente** (device key, id de bóveda)
-  en lugar de usar el RNG. Acopla dos ciclos de vida: re-envolver o regenerar
-  el device key cambiaría la derivación en silencio, y la rotación dejaría de
-  producir un valor independiente de todo lo que sobrevive al cambio.
-- **A-10. Snapshot sin distinguir "no hay salt" de "no se pudo leer".**
-  Restaurar borrando cuando la lectura falló destruiría el salt real de la
-  bóveda basándose en una suposición, y el siguiente desbloqueo acuñaría uno
-  distinto: pérdida de acceso a todo lo escrito `v5:` bajo el salt perdido.
-- **A-11. Transmitir el salt nuevo en el mensaje cross-tab.** Ahorra una
-  lectura de storage y convierte el canal en una vía para instalar un valor de
-  terceros: un `BroadcastChannel` es escribible por cualquier script del
-  origen, y tras la rotación las pestañas no comparten clave con la que firmar
-  (tienen contraseñas distintas). Un salt elegido por un atacante reintroduce
-  el fallo de A-1 — un único diccionario vuelve a servir para muchas bóvedas.
-  Con el disparador sin carga, storage decide y la falsificación es inerte.
-- **A-12. Anunciar en cuanto se instala el salt nuevo** (antes de re-envolver
-  los payloads y de la confirmación). Adopción más rápida, y a cambio las
-  otras pestañas se moverían a un salt que esta operación aún puede deshacer:
-  un rollback dejaría a las vecinas clavadas a un valor que la bóveda ya no
-  tiene, escribiendo con él. Se anuncia al confirmar, no al instalar.
-- **A-13. Bloquear las demás pestañas al detectar la rotación**, como forma
-  fuerte de "dejen de escribir". Es más seguro para los datos que quedarse con
-  una credencial obsoleta, pero es una decisión de producto (expulsa al usuario
-  de una pestaña que no ha tocado) y no es necesaria para el objetivo: el salt
-  adoptado ya evita que se acumule ciphertext bajo el retirado, y el modo en
-  que la pestaña convencional resuelve su credencial vieja — reloguear — sigue
-  disponible. La decisión queda registrada aquí como no tomada, no como
-  imposible.
+- **A-1. Keep the salt during rotation (status quo).** This is the failure this
+  ADR fixes: the harvested corpus survives the password change and an old
+  dictionary still holds. It would only require the attacker to repeat their
+  work if the salt changed.
+- **A-2. Deterministic salt derived from the password** (for example
+  `HKDF(password, "salt")`). Reproduces the failure class A-1 removed: the salt
+  stops being unique per vault (two vaults with the same password share a
+  derivation) and becomes guessable/harvestable together with the password. It
+  would also make rotation cosmetic: the "new" salt would be verifiable from the
+  candidate password.
+- **A-3. Install first and persist afterwards.** A crash between both steps
+  leaves payloads written under a salt storage does not know; the next unlock
+  installs the old salt and the vault is split between two derivations, with
+  potentially irrecoverable data. That is why the order is a decision and not a
+  detail.
+- **A-4. Rotate without rollback (fail-forward), for simplicity.** A vault
+  half-re-wrapped (one secret with the new password and another with the old,
+  the token desynchronized from its S1 record) cannot be undone from the UI and
+  can cost the data. We prefer an operation that fails cleanly over one that
+  fails halfway.
+- **A-5. Rotate the salt without re-wrapping existing blobs.** Changing only
+  the metadata reduces nothing: already-harvested blobs would stay pinned to the
+  old salt, and the attacker would only have to use the previous salt they
+  already know. Rotation is worth what gets re-keyed, not what gets written to
+  the metadata store.
+- **A-6. New vault or full migration instead of in-place rotation.** Much more
+  invasive (it would invalidate shares and force a re-import), and it would add
+  nothing against the offline attack: the secret objects are the same and would
+  have to be re-wrapped anyway.
+- **A-7. Rotate the salt on every unlock** ("free" defense in depth). It
+  defends against nothing while the password does not change — the harvested
+  corpus and its salt are still the same pair — and it would add a write and an
+  extra Argon2id derivation to the path that must never fail, which is exactly
+  what makes `ensureVaultKdfSalt` silent and rotation loud.
+- **A-8. Not persisting the salt and taking it from the last decrypted
+  payload.** It is circular during provisioning (a new vault has no payload to
+  read it from) and would add an extra read on every write to reconstruct a
+  value the cryptographic layer needs available.
+- **A-9. Deriving the salt from already-existing material** (device key, vault
+  id) instead of using the RNG. It couples two lifecycles: re-wrapping or
+  regenerating the device key would silently change the derivation, and rotation
+  would stop producing a value independent of everything that survives the
+  change.
+- **A-10. Snapshot without distinguishing "no salt" from "could not read".**
+  Restoring by deleting when the read failed would destroy the vault's real salt
+  based on an assumption, and the next unlock would mint a different one: loss
+  of access to everything written `v5:` under the lost salt.
+- **A-11. Transmitting the new salt in the cross-tab message.** It saves one
+  storage read and turns the channel into a way to install a third-party value: a
+  `BroadcastChannel` is writable by any script from the origin, and after the
+  rotation the tabs share no key to sign with (they have different passwords). An
+  attacker-chosen salt reintroduces A-1's failure — a single dictionary becomes
+  useful for many vaults again. With a payload-free trigger, storage decides and
+  the forgery is inert.
+- **A-12. Announcing as soon as the new salt is installed** (before re-wrapping
+  the payloads and before confirmation). Faster adoption, and in exchange the
+  other tabs would move to a salt this operation can still undo: a rollback
+  would leave the neighbors pinned to a value the vault no longer has, writing
+  with it. It is announced on confirmation, not on installation.
+- **A-13. Locking the other tabs when the rotation is detected**, as a strong
+  form of "stop writing". It is safer for the data than staying with a stale
+  credential, but it is a product decision (it evicts the user from a tab they
+  did not touch) and is not necessary for the goal: the adopted salt already
+  prevents ciphertext accumulating under the retired one, and the way the
+  ordinary tab resolves its stale credential — logging in again — is still
+  available. The decision is recorded here as not taken, not as impossible.

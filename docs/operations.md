@@ -1,55 +1,50 @@
-# Operaciones y continuidad
+# Operations and continuity
 
 ## SLOs
 
-- Disponibilidad objetivo del companion server: **99.9% mensual**.
-- Healthcheck `/health`: p95 menor de 500 ms bajo carga normal.
-- Señalización WebSocket: p95 de relay menor de 1 s bajo carga normal.
+- Companion server target availability: **99.9% monthly**.
+- Healthcheck `/health`: p95 under 500 ms under normal load.
+- WebSocket signaling: p95 relay under 1 s under normal load.
 
-## RPO y RTO
+## RPO and RTO
 
-- **RPO:** 24 horas para respaldos operativos configurados; el vault local depende de la exportación del usuario.
-- **RTO:** 2 horas para restaurar el companion server y su configuración desde imágenes y secretos respaldados.
-- Los datos primarios del vault permanecen localmente en el dispositivo del usuario; el servidor no almacena contenido del vault.
+- **RPO:** 24 hours for configured operational backups; local vault depends on user export.
+- **RTO:** 2 hours to restore companion server and its configuration from backed-up images and secrets.
+- Vault primary data remains locally on user device; server does not store vault content.
 
-## Backups y restauración
+## Backups and restoration
 
-Los drills de backup/restore se ejecutan con `npm run drill:backup-restore`. Cada ejecución debe conservar evidencia de duración, resultado y cualquier desviación del RTO. Las claves de licencia y secretos de despliegue se restauran desde el gestor de secretos, nunca desde el repositorio.
+Backup/restore drills run with `npm run drill:backup-restore`. Each execution must preserve evidence of duration, result and any RTO deviation. License keys and deployment secrets are restored from secret manager, never from repository.
 
-## Incidentes
+## Incidents
 
-1. Confirmar el incidente mediante `/health`, logs y métricas administrativas autenticadas.
-2. Contener: limitar tráfico, aislar el servicio afectado o activar rollback.
-3. Preservar logs y artefactos sin incluir contenido de vault ni credenciales.
-4. Restaurar desde la última imagen verificada y ejecutar smoke checks.
-5. Registrar causa raíz, impacto, RPO/RTO observado y acciones preventivas.
+1. Confirm incident via `/health`, authenticated admin logs and metrics.
+2. Contain: limit traffic, isolate affected service or activate rollback.
+3. Preserve logs and artifacts without including vault content or credentials.
+4. Restore from last verified image and run smoke checks.
+5. Register root cause, impact, observed RPO/RTO and preventive actions.
 
-## Releases y rollback
+## Releases and rollback
 
-Todo release debe pasar typecheck, lint, tests, build, auditorías de seguridad y los checks de configuración. El rollback usa imágenes Docker etiquetadas por commit y no debe modificar datos del usuario.
+Every release must pass typecheck, lint, tests, build, security audits and configuration checks. Rollback uses Docker images tagged by commit and must not modify user data.
 
-## Push y tracking de ramas
+## Push and branch tracking
 
-`main` es la rama de integración y su upstream es `origin/main`. El tracking se fija una sola vez y sin depender de la red, porque la configuración vive en el repositorio local:
+`main` is the integration branch and its upstream is `origin/main`. Tracking is set once and without network dependency, because configuration lives in local repository:
 
 ```bash
 git config --local branch.main.remote origin
 git config --local branch.main.merge refs/heads/main
 ```
 
-Mientras el clon no tenga el ref remoto, `git status -sb` muestra `## main...origin/main [gone]`: el tracking está configurado, pero el contador de adelanto/retraso solo queda operativo cuando un fetch o un push autenticado materializa `origin/main`. Flujo de publicación:
+While the clone does not have the remote ref, `git status -sb` shows `## main...origin/main [gone]`: tracking is configured, but the ahead/behind counter only becomes operational when a fetch or authenticated push materializes `origin/main`. Publication flow:
 
 ```bash
-git remote -v                  # confirmar el destino antes de nada
+git remote -v                  # confirm destination before anything
 npm run check:ci               # typecheck:prod + lint + test:fast + build:ci + check
-git ls-remote origin           # ensaya las credenciales sin publicar nada
+git ls-remote origin           # test credentials without publishing anything
 git push -u origin main
-gh run list --limit 10         # runs disparados por el push
+gh run list --limit 10         # runs triggered by push
 ```
 
-Reglas operativas:
-
-- **El destino está confirmado.** `bookmarkforge/core` es el repositorio real y las cuatro superficies lo nombran igual: `repository.url`, el remoto, los badges del README y las RELEASE-NOTES del export. `npm run check:release-target` sale 0 y la ruta de release puede prepararse (`node scripts/export-public-repo.mjs --dry-run` completa la planificación). Reintroducir un slug provisional, un propietario plantilla o una discrepancia declarado/real la vuelve a bloquear; el contrato está en `docs/ADR-058-release-target-confirmation-gate.md`.
-- **Sin credenciales no hay push ni fetch.** El helper de git puede no tener credencial almacenada y el aviso resultante (`could not read Username`, `User cancelled dialog`) apunta a eso, no al repositorio: hay que autenticar antes con `gh auth login` y `gh auth setup-git`. Los secretos y variables que consumen los workflows, más la verificación previa completa, están en `docs/github-secrets-and-push-runbook.md`.
-- **El primer push publica toda la historia local**, no un commit: conviene revisar antes `git log --oneline` y ejecutar `npm run check:secrets-in-commit`.
-- Solo los workflows con disparador `push` reaccionan al envío (CI, SAST y el export público); los de cron y los manuales se lanzan aparte. Un workflow que no aparece tras el push se revisa según el runbook de push, no se asume correcto.
+Operational rules:

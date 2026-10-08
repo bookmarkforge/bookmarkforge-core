@@ -1,30 +1,30 @@
-# Registro de actividades de tratamiento (ROPA)
+# Record of Processing Activities (ROPA)
 
-## Responsable y alcance
+## Controller and scope
 
-El responsable del tratamiento debe completar los datos legales y de contacto en el entorno de negocio antes del lanzamiento. Este registro describe la arquitectura actual de BookmarkForge y sus límites técnicos.
+The data controller must complete legal and contact data in the business environment before launch. This record describes the current architecture of BookmarkForge and its technical boundaries.
 
-## Datos tratados
+## Data processed
 
-- Datos de cuenta o licencia necesarios para activar planes de pago.
-- Datos técnicos mínimos de seguridad y diagnóstico, con retención limitada.
-- Eventos analíticos agregados únicamente después de consentimiento explícito.
-- Contenido del vault: permanece localmente y no se envía al companion server como parte del funcionamiento normal.
+- Account or license data necessary to activate paid plans.
+- Minimum technical security and diagnostic data, with limited retention.
+- Aggregated analytics events only after explicit consent.
+- Vault content: remains locally and is not sent to the companion server as part of normal operation.
 
-## Finalidad y base legal
+## Purpose and legal basis
 
-- Prestación del servicio y soporte: ejecución del contrato.
-- Seguridad, prevención de abuso y disponibilidad: interés legítimo documentado.
-- Analítica opcional y errores remotos: consentimiento, revocable desde la aplicación.
+- Service provision and support: contract execution.
+- Security, abuse prevention and availability: documented legitimate interest.
+- Optional analytics and remote errors: consent, revocable from the application.
 
-## Proveedores y transferencias
+## Providers and transfers
 
-Los proveedores externos deben estar listados en el inventario contractual del responsable, con DPA y revisión de transferencias internacionales cuando aplique. Las claves de proveedores AI se almacenan en el vault del usuario y las llamadas se realizan desde el navegador según la configuración elegida.
+External providers must be listed in the controller's contractual inventory, with DPA and international transfer review when applicable. AI provider keys are stored in the user's vault and calls are made from the browser according to the chosen configuration.
 
-## Retención y derechos
+## Retention and rights
 
-Los datos operativos se conservan solo durante el periodo necesario para seguridad, soporte y obligaciones legales. Las solicitudes de acceso, rectificación, supresión y oposición deben registrarse y atenderse mediante el canal de privacidad definido por el operador.
+Operational data is retained only for the period necessary for security, support and legal obligations. Requests for access, rectification, deletion and opposition must be recorded and addressed through the privacy channel defined by the operator.
 
-## Medidas técnicas
+## Technical measures
 
-Cifrado local, control de acceso, rate limiting, CSP, SAST, auditoría de dependencias, backups controlados y procedimientos de respuesta ante incidentes. Este documento debe revisarse al cambiar proveedores, endpoints o categorías de datos.
+Local encryption, access control, rate limiting, CSP, SAST, dependency auditing, controlled backups and incident response procedures. This document must be reviewed when changing providers, endpoints or data categories.

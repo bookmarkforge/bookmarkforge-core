@@ -1,64 +1,65 @@
-# ADR-050: Cifras en páginas públicas y planner de actualización
+# ADR-050: Figures on public pages and the update planner
 
-- **Estado:** aceptado (implementado: `scripts/check-page-figures.mjs`,
-  `scripts/plan-manual-figures-update.mjs` con sus suites en
-  `scripts/__tests__/`, step «Enforce page figure claims» en `ci.yml`)
-- **Fecha:** 2026-09-16
+- **Status:** accepted (implemented: `scripts/check-page-figures.mjs`,
+  `scripts/plan-manual-figures-update.mjs` with their suites in
+  `scripts/__tests__/`, step "Enforce page figure claims" in `ci.yml`)
+- **Date:** 2026-09-16
 
-## Contexto
+## Context
 
-ADR-049 blindó los 30 manuales. En la misma ronda, la restauración del
-generador de páginas legales (`generate-privacy-pages.mjs`) les añadió a las
-24 páginas localizadas el esqueleto completo de precios y SLA — y la sonda de
-páginas demostró que **ningún gate cubría esas superficies**:
-`check-claim-drift` solo escanea `public/*.html` en la raíz (las legales viven
-en `public/<locale>/privacy-and-terms.html`), y `check:manual-figures` solo
-lee `docs/`. Las landings generadas y `pocket-alternative.html` — que también
-afirman precios y límites — quedaban en el mismo hueco.
+ADR-049 hardened the 30 manuals. In the same round, restoring the
+legal pages generator (`generate-privacy-pages.mjs`) gave them — to the
+24 localized pages — the full pricing and SLA skeleton, and the pages probe showed that
+**no gate covered those surfaces**:
+`check-claim-drift` only scans root `public/*.html` (the legal pages live
+in `public/<locale>/privacy-and-terms.html`), and `check:manual-figures` only
+reads `docs/`. The generated landings and `pocket-alternative.html` — which also
+state prices and limits — were left in the same hole.
 
-Además, cambiar una constante de la truth obliga a actualizar decenas de
-líneas repartidas en 67 archivos; el desarrollador descubre *qué* líneas
-rompiendo el gate iteración a iteración. Ese descubrimiento pertenece al
-planner, no al error de CI.
+Also, changing a truth constant forces updating dozens of
+lines spread across 67 files; the developer discovers *which* lines
+are breaking the gate iteration by iteration. That discovery belongs to the
+planner, not to the CI error.
 
-## Decisión
+## Decision
 
-1. **Reutilizar, no duplicar.** `check-page-figures` importa la truth y el
-   evaluador de `check-manual-figures` (`loadTruth`, `allowedValueSets`,
-   `evaluateManual`). Toda regla nueva que gane el gate de manuales viaja
-   gratis a las páginas; no hay segunda copia de las regex que derivar.
-2. **Adaptar la superficie, no las reglas.** Las páginas son HTML: el gate
-   tira etiquetas por línea (los números de línea de los fallos son los del
-   archivo crudo), compacta el JSON-LD inline a una línea sintética (sus
-   escapes `u0026` fabricaban números) y neutraliza los precios hablados del
-   competidor según la convención documentada de `patch-landing-copy.mjs`
-   («28 dollars», sin `$`; nuestros precios siempre llevan `$`).
-3. **Contrato de 61 superficies.** Las 30 legales localizadas (EN en la raíz)
-   + 30 landings + pocket. Una página que falta se reporta como error — la
-   cobertura nunca se encoge en silencio.
-4. **Planner por evaluación diferencial.** El plan no reimprime regex: corre
-   el evaluador compartido con un valor centinela por constante y lista las
-   líneas que *dejan de pasar* (verde en el árbol actual). El baseline rojo
-   aborta la planeación; una constante cuyo valor retirado sigue siendo
-   canónico por otra vía (p. ej. `proPrice` 79→70 con `proRegularPrice` 79)
-   produce una advertencia explícita en vez de un «0 líneas» engañoso.
-5. **Registro en el freeze (O-1).** `check:page-figures` y
-   `plan:manual-figures` se registran en `KNOWN_GATES` como `docs`; esta ADR
-   es la justificación que exige el freeze.
-6. **Cableado.** `check:page-figures` en la cadena `npm run check` y step
-   propio en `ci.yml`; `plan:manual-figures` como herramienta de desarrollo
+1. **Reuse, do not duplicate.** `check-page-figures` imports the truth and the
+   evaluator from `check-manual-figures` (`loadTruth`, `allowedValueSets`,
+   `evaluateManual`). Every new rule the manuals gate wins travels
+   free to the pages; there is no second copy of the regexes to maintain.
+2. **Adapt the surface, not the rules.** Pages are HTML: the gate
+   strips tags per line (the failure line numbers are those of the
+   raw file), compacts inline JSON-LD into a synthetic line (its
+   `u0026` escapes fabricated numbers) and neutralizes the competitor's spoken prices
+   per `patch-landing-copy.mjs`'s documented convention
+   ("28 dollars", without `$`; our prices always carry `$`).
+3. **61-surface contract.** The 30 localized legal pages (EN at the root)
+   + 30 landings + pocket. A missing page is reported as an error — coverage never
+   shrinks silently.
+4. **Planner via differential evaluation.** The plan does not reprint regexes: it runs
+   the shared evaluator with a sentinel value per constant and lists the
+   lines that *stop passing* (green in the current tree). A red baseline
+   aborts planning; a constant whose removed value is still
+   canonical by another route (e.g. `proPrice` 79→70 with `proRegularPrice` 79)
+   produces an explicit warning instead of a misleading "0 lines".
+5. **Registration in the freeze (O-1).** `check:page-figures` and
+   `plan:manual-figures` are registered in `KNOWN_GATES` as `docs`; this ADR
+   is the justification the freeze requires.
+6. **Wiring.** `check:page-figures` in the `npm run check` chain and its own
+   step in `ci.yml`; `plan:manual-figures` as a developer tool
    (`node scripts/plan-manual-figures-update.mjs --set KEY=VALUE [--pages]
-   [--json]`). Ambos gates solo leen fuentes incluidas en la exportación
-   pública, así que el repo exportado corre la validación idéntica.
+   [--json]`). Both gates only read sources included in the public export,
+   so the exported repo runs the identical validation.
 
-## Consecuencias
+## Consequences
 
-- Las páginas públicas ya no pueden afirmar una cifra que el código no
-  respalda: la deriva de precios en las 24 legales localizadas que hoy no vería nadie rompe CI.
-- Un cambio de constante produce, con un comando, la lista exacta de líneas de
-  manuales (y páginas, con `--pages`) a actualizar — la coordinación multi-superficie deja de ser manual.
-- La convención «precios del competidor sin `$`» es ahora una invariante con
-  test: escribirla con `$` en una landing rompe el gate.
-- Mantenimiento: las unidades por idioma viven en un solo sitio
-  (`check-manual-figures.mjs`); las dos suites nuevas suman 27 casos al
-  perfil bounded (~1s).
+- Public pages can no longer state a figure the code does not
+  back: price drift in the 24 localized legal pages that nobody would see today breaks CI.
+- A constant change produces, with a single command, the exact list of
+  manual lines (and page lines, with `--pages`) to update — multi-surface coordination is
+  no longer manual.
+- The "competitor prices without `$`" convention is now an invariant with a
+  test: writing it with `$` on a landing breaks the gate.
+- Maintenance: the per-language units live in a single place
+  (`check-manual-figures.mjs`); the two new suites add 27 cases to the
+  bounded profile (~1s).

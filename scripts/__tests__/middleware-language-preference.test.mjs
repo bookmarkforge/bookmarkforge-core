@@ -18,7 +18,7 @@ import { describe, expect, it } from "vitest";
 import { onRequest } from "../../functions/_middleware.js";
 import { LANDING_LANG_CODES } from "../check-seo.mjs";
 
-const SITE = "https://bookmarkforge.com";
+const SITE = "https://bookmarkforgeapp.com";
 const nextCalled = () => new Response("next");
 
 function invoke(pathname, headers = {}) {

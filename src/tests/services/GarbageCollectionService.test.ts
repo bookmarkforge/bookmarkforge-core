@@ -196,7 +196,7 @@ describe("GarbageCollectionService", () => {
       // window over createdAt — versions never soft-delete), so it is the one
       // non-soft-deletable collection that GC touches.
       expect(mockCollections.versions.find).toHaveBeenCalled();
-      // Sin isDeleted en el schema → fuera del alcance de GC
+      // No isDeleted in schema → out of GC scope
       expect(mockCollections.folders.find).not.toHaveBeenCalled();
       expect(mockCollections.flashcards.find).not.toHaveBeenCalled();
       expect(mockCollections.messages.find).not.toHaveBeenCalled();
@@ -543,7 +543,7 @@ describe("GarbageCollectionService", () => {
 
       // Mock find for bookmarks: always returns 100 docs (the full batch)
       // so the loop never breaks on docs.length < BATCH_SIZE.
-      // El loop while (iterations < MAX_ITERATIONS=100) ejecuta el body 100
+      // The while loop (iterations < MAX_ITERATIONS=100) executes the body 100
       // complete runs (iterations 1..100), deleting 100 docs per batch →
       // deletedCount = 100 * 100 = 10000.
       const batchDoc = (i: number) => ({
@@ -610,7 +610,7 @@ describe("GarbageCollectionService", () => {
       (mockCollections.documents as any).find.mockReturnValue({
         exec: vi.fn().mockResolvedValue([{}, {}]),
       });
-      // folders/flashcards/versions/messages/chunks NO tienen isDeleted en su
+      // folders/flashcards/versions/messages/chunks do NOT have isDeleted in their
       // schema → GC does not query them (derived from COLLECTIONS).
       const stats = await garbageCollectionService.getSoftDeleteStats();
       expect(stats.bookmarks).toBe(3);

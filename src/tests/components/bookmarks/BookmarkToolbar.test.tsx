@@ -362,7 +362,7 @@ describe("BookmarkToolbar", () => {
         fileInputRef={ref}
       />,
     );
-    // El componente usa fileInputRef como atributo ref del input real:
+    // The component uses fileInputRef as the ref attribute of the real input:
     // React overwrites `current` with the DOM element. The click on the button
     // must invoke the native .click() method of THAT input (opens the picker).
     const fileInput = ref.current ??
@@ -826,7 +826,7 @@ describe("BulkActionsBar", () => {
         isSummarizingCollection={false}
       />,
     );
-    // El input es controlado por el padre (bulkTagInput prop):
+    // The input is controlled by the parent (bulkTagInput prop):
     // with a non-empty value the Add/Remove buttons stay enabled
     await userEvent.click(getByText("Add"));
     expect(onAdd).toHaveBeenCalled();

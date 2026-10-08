@@ -119,6 +119,18 @@ async function captureBaselineAndCollect(
 }
 
 test.describe("Text fit / overflow across locales (critical)", () => {
+  // The committed baselines are generated on Windows and therefore named
+  // `chromium-win32`; on any other platform Playwright looks for a
+  // `-linux`/`-darwin` variant that does not exist and the suite can only
+  // fail ("A snapshot doesn't exist") — as the nightly shard 2/2 did on
+  // Linux (run 35833219915). Until linux baselines are captured, this suite
+  // is a Windows-checked-out assertion; skip elsewhere honestly rather than
+  // paint the nightly red every night.
+  test.skip(
+    process.platform !== "win32",
+    "text-fit baselines are committed for chromium-win32 only; capture linux baselines before running this suite there",
+  );
+
   // Force serial execution: all 6 locale tests boot a fresh browser context,
   // navigate to /, and run the KDF Argon2id vault setup. When run in
   // parallel against the same Vite dev server, 6 concurrent KDF operations

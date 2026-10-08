@@ -26,7 +26,7 @@ function parseRows(markdownText) {
 
   for (const line of lines) {
     const trimmed = line.trim();
-    if (trimmed.startsWith('| Documento | Estado | Nota |')) {
+    if (trimmed.startsWith('| Document | State | Note |') || trimmed.startsWith('| Documento | Estado | Nota |')) {
       inTable = true;
       continue;
     }
@@ -58,7 +58,7 @@ const rows = parseRows(text);
 
 assert.ok(
   rows.length > 0,
-  'docs/docs-state-index.md did not yield any parsed rows in the Documento/Estado/Nota table',
+  'docs/docs-state-index.md did not yield any parsed rows in the Document/State/Note table',
 );
 
 const knownStates = new Set(rows.map((row) => row.state));

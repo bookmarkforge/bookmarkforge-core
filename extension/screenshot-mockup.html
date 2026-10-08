@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookmarkForge Extension - Screenshot Mockup</title>
+  <style>
+    /* Brand tokens from brand-tokens.css */
+    :root {
+      --bg-primary: #0f1c2e;
+      --bg-secondary: #162235;
+      --bg-card: #1a2a40;
+      --bg-topbar: #111e30;
+      --bg-sidebar: #0f1c2e;
+      --text-primary: #e8f0f8;
+      --text-secondary: #b9d4ea;
+      --text-accent: #38bdf8;
+      --text-muted: #b9d4ea;
+      --accent-primary: #00aeef;
+      --accent-secondary: #0d7fc4;
+      --accent-glow: rgba(0, 174, 239, 0.25);
+      --accent-primary-hover: rgba(0, 174, 239, 0.12);
+      --accent-primary-glow: rgba(0, 174, 239, 0.30);
+      --text-on-accent: #0f1c2e;
+      --state-active-border: #00aeef;
+      --state-inactive-border: #1e3352;
+      --state-hover-bg: rgba(0, 174, 239, 0.08);
+      --state-selected-bg: #1565a8;
+      --color-success: #34d399;
+      --color-success-text: #6ee7b7;
+      --color-warning: #f59e0b;
+      --color-warning-text: #fbbf24;
+      --color-danger: #ef4444;
+      --color-danger-hover: #dc2626;
+      --color-danger-text: #ff6b6b;
+      --success-soft: rgba(16, 185, 129, 0.10);
+      --success-soft-border: rgba(16, 185, 129, 0.20);
+      --warning-soft: rgba(245, 158, 11, 0.10);
+      --warning-soft-border: rgba(245, 158, 11, 0.20);
+      --danger-soft: rgba(239, 68, 68, 0.10);
+      --danger-soft-border: rgba(239, 68, 68, 0.20);
+      --danger-soft-deep: rgba(239, 68, 68, 0.18);
+      --toggle-on: #00aeef;
+      --toggle-off: #2e4560;
+      --divider: #1e3352;
+      --input-bg: #162235;
+      --modal-overlay: rgba(0, 0, 0, 0.60);
+      --scrim-on-accent: rgba(0, 0, 0, 0.25);
+      --accent-soft: rgba(0, 174, 239, 0.10);
+      --accent-faint: rgba(0, 174, 239, 0.05);
+      --accent-glow-soft: rgba(0, 174, 239, 0.20);
+      --accent-primary-glow-strong: rgba(0, 174, 239, 0.40);
+      --radius-card: 12px;
+      --radius-item: 8px;
+      --radius-button: 6px;
+      --radius-widget: 10px;
+      --radius-toggle: 50px;
+      --radius-input: 20px;
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --success: #0ea37e;
+      --success-text: #2dd4a7;
+      --error: var(--color-danger);
+      --error-text: var(--color-danger-text);
+      --focus-ring: rgba(0, 174, 239, 0.35);
+      --focus-ring-soft: rgba(0, 174, 239, 0.20);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      width: 320px;
+      font-family: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont,
+        'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      padding: 16px;
+      line-height: 1.4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .popup-container {
+      width: 320px;
+      background: var(--bg-primary);
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 0 16px;
+      padding-top: 16px;
+    }
+
+    .logo {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-item);
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--text-on-accent);
+    }
+
+    .brand {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-card);
+      padding: 14px;
+      margin: 0 16px 12px;
+      border: 1px solid var(--divider);
+    }
+
+    .card-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+    }
+
+    .card-url {
+      font-size: 11px;
+      color: var(--text-muted);
+      word-break: break-all;
+    }
+
+    .btn {
+      display: block;
+      width: calc(100% - 32px);
+      margin: 0 16px 12px;
+      padding: 10px;
+      border: none;
+      border-radius: var(--radius-button);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, box-shadow 0.2s;
+      background: var(--accent-primary);
+      color: var(--text-on-accent);
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .settings-toggle {
+      display: block;
+      width: calc(100% - 32px);
+      margin: 0 16px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12px;
+      cursor: pointer;
+      padding: 6px 0;
+      text-align: center;
+      transition: color 0.2s;
+    }
+
+    .settings-toggle:hover {
+      color: var(--accent-primary);
+    }
+
+    .settings-panel {
+      display: none;
+      background: var(--bg-card);
+      border: 1px solid var(--divider);
+      border-radius: var(--radius-item);
+      padding: 12px;
+      margin: 8px 16px 16px;
+    }
+
+    .settings-panel.is-open {
+      display: block;
+    }
+
+    .settings-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .settings-current {
+      font-size: 11px;
+      color: var(--text-muted);
+      word-break: break-all;
+      margin-bottom: 8px;
+    }
+
+    .settings-input {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid var(--divider);
+      border-radius: var(--radius-button);
+      background: var(--input-bg);
+      color: var(--text-primary);
+      font-size: 12px;
+      margin-bottom: 8px;
+      outline: none;
+    }
+
+    .settings-input:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px var(--focus-ring-soft);
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .settings-btn {
+      padding: 6px 14px;
+      border: none;
+      border-radius: var(--radius-button);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--accent-primary);
+      color: var(--text-on-accent);
+    }
+
+    .settings-btn:hover {
+      opacity: 0.9;
+    }
+
+    .settings-btn-secondary {
+      background: transparent;
+      border: 1px solid var(--divider);
+      color: var(--text-primary);
+      margin-right: 6px;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin: 0 16px 16px;
+    }
+
+    .footer a {
+      color: var(--accent-primary);
+      text-decoration: underline;
+    }
+
+    .screenshot-controls {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(15, 28, 46, 0.95);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--divider);
+      color: var(--text-primary);
+      font-size: 14px;
+      z-index: 1000;
+    }
+
+    .screenshot-controls h3 {
+      margin-bottom: 12px;
+      color: var(--accent-primary);
+    }
+
+    .screenshot-controls button {
+      display: block;
+      width: 100%;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      background: var(--accent-primary);
+      color: var(--text-on-accent);
+      border: none;
+      border-radius: var(--radius-button);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .screenshot-controls button:hover {
+      opacity: 0.9;
+    }
+
+    .screenshot-controls p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="screenshot-controls">
+    <h3>📸 Screenshot Controls</h3>
+    <button onclick="toggleSettings()">Toggle Settings Panel</button>
+    <button onclick="changePageContent()">Change Page Content</button>
+    <p>
+      <strong>Tips for screenshots:</strong><br>
+      • Resolution: 1280x800 (recommended)<br>
+      • Format: PNG (best quality)<br>
+      • Firefox Add-ons requires min 1 screenshot
+    </p>
+  </div>
+
+  <div class="popup-container">
+    <header class="header">
+      <div class="logo">B</div>
+      <span class="brand">BookmarkForge</span>
+    </header>
+
+    <section class="card" aria-labelledby="cardLabel pageTitle" aria-describedby="pageUrl">
+      <div class="card-label" id="cardLabel">Page to save</div>
+      <div class="card-title" id="pageTitle">Example Website - Build Fast with BookmarkForge</div>
+      <div class="card-url" id="pageUrl">https://bookmarkforgeapp.com/features</div>
+    </section>
+
+    <button class="btn" id="saveBtn" aria-describedby="saveHint">
+      Save to BookmarkForge
+    </button>
+
+    <button
+      class="settings-toggle"
+      id="settingsToggle"
+      aria-expanded="false"
+      aria-controls="settingsPanel"
+      onclick="toggleSettings()"
+    >
+      Settings
+    </button>
+
+    <div class="settings-panel" id="settingsPanel" role="region" aria-labelledby="settingsLabel">
+      <div class="settings-label" id="settingsLabel">BookmarkForge URL</div>
+      <div class="settings-current">
+        Current: <span id="currentUrlDisplay">https://bookmarkforgeapp.com</span>
+      </div>
+      <input
+        type="url"
+        class="settings-input"
+        id="customUrlInput"
+        placeholder="https://bookmarkforgeapp.com"
+        autocomplete="off"
+        spellcheck="false"
+        value="https://bookmarkforgeapp.com"
+      >
+      <div class="button-row">
+        <button class="settings-btn" id="saveUrlBtn">Save</button>
+        <button
+          class="settings-btn settings-btn-secondary"
+          id="resetUrlBtn"
+          title="Reset to default"
+        >
+          Reset
+        </button>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <a href="https://bookmarkforgeapp.com/privacy-and-terms.html" target="_blank" rel="noopener noreferrer">
+        Privacy Policy
+      </a>
+    </footer>
+  </div>
+
+  <script>
+    // BookmarkForge application domain URLs
+    const pageContents = [
+      {
+        title: "BookmarkForge - Home",
+        url: "https://bookmarkforgeapp.com"
+      },
+      {
+        title: "BookmarkForge - App",
+        url: "https://bookmarkforgeapp.com/app"
+      },
+      {
+        title: "BookmarkForge - Vault",
+        url: "https://bookmarkforgeapp.com/vault"
+      },
+      {
+        title: "BookmarkForge - Settings",
+        url: "https://bookmarkforgeapp.com/settings"
+      },
+      {
+        title: "BookmarkForge - Search",
+        url: "https://bookmarkforgeapp.com/search"
+      },
+      {
+        title: "BookmarkForge - AI Chat",
+        url: "https://bookmarkforgeapp.com/chat"
+      }
+    ];
+
+    let currentContentIndex = 0;
+
+    function toggleSettings() {
+      const panel = document.getElementById('settingsPanel');
+      const toggle = document.getElementById('settingsToggle');
+      panel.classList.toggle('is-open');
+      const isOpen = panel.classList.contains('is-open');
+      toggle.setAttribute('aria-expanded', String(isOpen));
+    }
+
+    function changePageContent() {
+      currentContentIndex = (currentContentIndex + 1) % pageContents.length;
+      const content = pageContents[currentContentIndex];
+      document.getElementById('pageTitle').textContent = content.title;
+      document.getElementById('pageUrl').textContent = content.url;
+    }
+
+    // Initialize with first page
+    function initializeContent() {
+      const content = pageContents[0];
+      document.getElementById('pageTitle').textContent = content.title;
+      document.getElementById('pageUrl').textContent = content.url;
+      
+      // Settings show the BookmarkForge domain
+      const serverUrl = "https://bookmarkforgeapp.com";
+      document.getElementById('customUrlInput').value = serverUrl;
+      document.getElementById('currentUrlDisplay').textContent = serverUrl;
+    }
+
+    // Auto-open settings panel after 2 seconds for demo
+    setTimeout(() => {
+      toggleSettings();
+    }, 2000);
+
+    // Initialize on load
+    initializeContent();
+  </script>
+</body>
+</html>

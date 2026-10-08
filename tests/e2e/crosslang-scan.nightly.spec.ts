@@ -225,9 +225,10 @@ test.describe(`cross-language scan: ${SEED_COUNT.toLocaleString()} bookmarks`, (
   test("worker scan is sub-second and the main thread stays responsive", async ({
     page,
   }) => {
-    // 10k ≈ 40s (insert-dominated), matching perf-scale; must stay under the
-    // nightly job's timeout-minutes.
-    test.setTimeout(Math.max(120_000, SEED_COUNT * 8));
+    // 10k ≈ 40s (insert-dominated) on dev hardware, ~2-3x on CI runners; the
+    // floor must cover the seed phase, not the budgets (see
+    // perf-scale.nightly.spec.ts, run 35833219915 for the failure shape).
+    test.setTimeout(Math.max(240_000, SEED_COUNT * 15));
 
     await page.goto("/");
     await skipPassword(page);

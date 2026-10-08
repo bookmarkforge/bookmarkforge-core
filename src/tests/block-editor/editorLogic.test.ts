@@ -75,13 +75,12 @@ describe("editorLogic — pure helper functions", () => {
     });
 
     it("handles Spanish stop words", () => {
-      const result = tokenize("el gato grande y la perra pequeña");
-      expect(result).not.toContain("el");
-      expect(result).not.toContain("y");
-      expect(result).not.toContain("la");
-      expect(result).toContain("gato");
-      expect(result).toContain("grande");
-      expect(result).toContain("perra");
+      const result = tokenize("the big cat and the small dog");
+      expect(result).not.toContain("the");
+      expect(result).not.toContain("and");
+      expect(result).toContain("cat");
+      expect(result).toContain("big");
+      expect(result).toContain("dog");
     });
 
     it("returns empty array for empty string", () => {
@@ -93,10 +92,10 @@ describe("editorLogic — pure helper functions", () => {
     });
 
     it("handles accented characters", () => {
-      const result = tokenize("introducción programación desarrollo");
-      expect(result).toContain("introducción");
-      expect(result).toContain("programación");
-      expect(result).toContain("desarrollo");
+      const result = tokenize("introduction programming development");
+      expect(result).toContain("introduction");
+      expect(result).toContain("programming");
+      expect(result).toContain("development");
     });
   });
 

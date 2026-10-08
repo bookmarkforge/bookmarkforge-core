@@ -1,26 +1,33 @@
-# Plan de validación de mercado
+# Market validation plan
 
-## Objetivo
+## Objective
 
-Validar que la propuesta local-first resuelve un problema real antes de ampliar infraestructura, marketing o compromisos operativos.
+Validate that the local-first proposal solves a real problem before scaling
+infrastructure, marketing or operational commitments.
 
-## Hipótesis
+## Hypotheses
 
-1. La privacidad local y el control de las claves son motivos de compra, no solo preferencias técnicas.
-2. La importación desde Pocket y exportación portable reducen la barrera de cambio.
-3. Los usuarios aceptan configurar su propia clave de IA si el producto explica claramente qué datos salen del dispositivo.
-4. El backup y la recuperación son decisivos para la confianza y deben medirse junto con la activación.
+1. Local privacy and control of the keys are purchase drivers, not just
+   technical preferences.
+2. Import from Pocket and portable export lower the switching barrier.
+3. Users accept configuring their own AI key if the product clearly explains
+   what data leaves the device.
+4. Backup and restore are decisive for trust and must be measured together with
+   activation.
 
-## Evidencia a recoger
+## Evidence to gather
 
-- Entrevistas y pruebas de onboarding con consentimiento.
-- Conversión de landing a instalación y activación.
-- Tiempo hasta primer bookmark/documento y finalización del backup.
-- Tasa de restore exitoso, tickets de pérdida de datos y abandono.
-- Feedback cualitativo segmentado por usuario técnico/no técnico.
+- Interviews and onboarding tests with consent.
+- Landing-to-install and activation conversion.
+- Time to first bookmark/document and backup completion.
+- Successful restore rate, data-loss tickets and churn.
+- Qualitative feedback segmented by technical/non-technical user.
 
-No almacenar contenido de vault ni datos personales innecesarios en los experimentos. La analítica debe ser opt-in, agregada y coherente con `docs/ROPA.md`.
+Do not store vault content or unnecessary personal data in the experiments.
+Analytics must be opt-in, aggregated and consistent with `docs/ROPA.md`.
 
-## Criterio de decisión
+## Decision criterion
 
-Continuar solo si la retención, activación y feedback confirman la hipótesis sin aumentar el riesgo de privacidad, soporte o recuperación. Registrar cada decisión y su evidencia en un informe fechado; no convertir una muestra pequeña en una claim pública.
+Continue only if retention, activation and feedback confirm the hypothesis
+without increasing privacy, support or recovery risk. Record every decision and
+its evidence in a dated report; do not turn a small sample into a public claim.

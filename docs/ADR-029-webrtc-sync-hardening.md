@@ -1,72 +1,72 @@
-# ADR-029: Endurecimiento del sync WebRTC (post-wave 2)
+# ADR-029: WebRTC sync hardening (post-wave 2)
 
-- **Estado:** aceptado (implementado; este registro formaliza las decisiones existentes)
-- **Fecha:** 2026-09-02 (retro-documentado desde el código, el catálogo de anclas y `docs/audit.md`)
+- **Status:** accepted (implemented; this record formalizes the existing decisions)
+- **Date:** 2026-09-02 (retro-documented from the code, the anchor catalog and `docs/audit.md`)
 
-## Contexto
+## Context
 
-El hardening post-auditoría se organizó en waves 1 y 2 (`docs/ADR-026-post-audit-hardening-wave-1.md`,
-`docs/ADR-027-post-audit-hardening-wave-2.md`). Tras esas waves, los seguimientos
-de WebRTC/DR vieron luz bajo **ADR-029+**: un conjunto de decisiones de
-sincronización punto-a-punto que endurecen el servicio WebRTC en superficie
-(sesiones de transferencia, forma del SDP, comparaciones de checksums) y fijan
-la dependencia de resolución de conflictos determinista del core de BD.
-El catálogo de anclas (`scripts/audit-anchors.mjs`) referencia las decisiones
-D1, D2, D5 y D6; el gate `check:extension-csp` se describe a sí mismo como
-follow-up de ADR-029.
+Post-audit hardening was organized in waves 1 and 2 (`docs/ADR-026-post-audit-hardening-wave-1.md`,
+`docs/ADR-027-post-audit-hardening-wave-2.md`). After those waves, the WebRTC/DR
+follow-ups came to light under **ADR-029+**: a set of point-to-point
+synchronization decisions that harden the WebRTC service at the surface
+(transfer sessions, SDP shape, checksum comparisons) and pin
+the deterministic conflict-resolution dependency of the DB core.
+The anchor catalog (`scripts/audit-anchors.mjs`) references decisions
+D1, D2, D5 and D6; the `check:extension-csp` gate describes itself as an
+ADR-029 follow-up.
 
-## Decisión
+## Decision
 
-1. **D1 — Watchdog de transferencias atascadas.** `WebRTCSyncService` mantiene un
-   watchdog de transferencia (`SYNC_TRANSFER_TIMEOUT_MS = 30_000`): si un peer
-   envía `sync_start` y luego se queda en silencio, la transferencia entrante se
-   cancela y se libera el estado de sesión que había reservado. El temporizador
-   solo se refresca tras chunks aceptados y se limpia cuando comienza la
-   verificación/persistencia — un peer lento no puede reservar al receptor para
-   siempre (ancla `p4-sync-transfer-watchdog`).
-2. **D2 — Gate de forma del SDP anterior al handoff del navegador.** Antes de
-   entregar una descripción de sesión al `RTCPeerConnection`, el servicio
-   rechaza SDP malformado, sobredimensionado y con roles no soportados:
-   - Encoded descriptions > 64 KiB se rechazan antes de descomprimir
-     (`decodeDescription` devuelve `null`).
-   - Tipos no soportados (`pranswer`), NUL bytes y forma JSON incorrecta se
-     rechazan (validator `isValidSessionDescription` en `webrtc-sync/validation`).
-   - `minimizeSDP` filtra candidatos `srflx`/`relay` (solo `host`), excluye
-     líneas irrelevantes y conserva la metadata de sesión de data-channel que el
-     parser del navegador necesita (ancla `p5-sdp-shape-gate`).
-3. **D5 — Comparación en tiempo constante de checksums/HMAC.** El cliente usa
-   comparación en tiempo constante (`constantTimeStringEqual` en
-   `webrtc-sync/compare`, espejo de la comparación del lado servidor) tanto para
-   checksums de sesión como para claves de autenticación del payload; la
-   cobertura adversarial está anclada en `WebRTCSyncService.test.ts` (input de 64
-   chars, mismatch de un char, longitudes distintas) (ancla `p4-constant-time-cmp`).
-4. **D6 — Resolución de conflictos determinista como fuente anclada.**
-   `src/db/database.core.ts` queda anclado como *source* (no como test): la
-   resolución LWW determinista por `compareRxRevision` no puede desaparecer
-   silenciosamente tras un refactor (ancla `database-core-source`). Complementa
+1. **D1 — Watchdog for stuck transfers.** `WebRTCSyncService` maintains a
+   transfer watchdog (`SYNC_TRANSFER_TIMEOUT_MS = 30_000`): if a peer
+   sends `sync_start` and then goes silent, the incoming transfer is
+   cancelled and the session state it had reserved is released. The timer
+   is only refreshed after accepted chunks and is cleared when
+   verification/persistence begins — a slow peer cannot reserve the receiver
+   forever (anchor `p4-sync-transfer-watchdog`).
+2. **D2 — SDP shape gate before the browser handoff.** Before
+   handing a session description to the `RTCPeerConnection`, the service
+   rejects malformed, oversized and unsupported-role SDP:
+   - Encoded descriptions > 64 KiB are rejected before decompressing
+     (`decodeDescription` returns `null`).
+   - Unsupported types (`pranswer`), NUL bytes and malformed JSON are
+     rejected (`isValidSessionDescription` validator in `webrtc-sync/validation`).
+   - `minimizeSDP` filters `srflx`/`relay` candidates (`host` only), excludes
+     irrelevant lines and preserves the data-channel session metadata the
+     browser's parser needs (anchor `p5-sdp-shape-gate`).
+3. **D5 — Constant-time comparison of checksums/HMAC.** The client uses
+   constant-time comparison (`constantTimeStringEqual` in
+   `webrtc-sync/compare`, mirroring the server-side comparison) both for
+   session checksums and for payload authentication keys; the
+   adversarial coverage is anchored in `WebRTCSyncService.test.ts` (64-char
+   input, one-char mismatch, differing lengths) (anchor `p4-constant-time-cmp`).
+4. **D6 — Deterministic conflict resolution as an anchored source.**
+   `src/db/database.core.ts` is anchored as a *source* (not as a test): deterministic
+   LWW resolution via `compareRxRevision` cannot silently
+   disappear in a refactor (anchor `database-core-source`). It complements
    ADR-026 D8 (`sync-version-comparator`).
-5. **Fuente de seguridad crítica.** `src/services/WebRTCSyncService.ts` queda
-   anclado como source (ancla `webrtc-sync-source`): el filtrado de registros
-   privados y el sync autenticado y acotado no pueden eliminarse sin que el gate
-   `check:audit-drift` falle.
-6. **Follow-up — CSP de la extensión.** El gate `check:extension-csp` impone una
-   CSP canónica única y verbatim en los manifests de la extensión (Chrome MV3 +
+5. **Security-critical source.** `src/services/WebRTCSyncService.ts` is
+   anchored as a source (anchor `webrtc-sync-source`): filtering of private
+   records and authenticated, bounded sync cannot be removed without the
+   `check:audit-drift` gate failing.
+6. **Follow-up — Extension CSP.** The `check:extension-csp` gate enforces a
+   single canonical, verbatim CSP in the extension manifests (Chrome MV3 +
    Firefox MV2): `script-src 'self'; object-src 'none'; connect-src 'self';
-   frame-src 'none'; base-uri 'none'; form-action 'none'; style-src 'self'`. Es
-   deliberadamente más estricta que la de la app (la extensión no hace fetch/XHR
-   propio), endurecida tras la auditoría de superficie de la extensión.
+   frame-src 'none'; base-uri 'none'; form-action 'none'; style-src 'self'`. It is
+   deliberately stricter than the app's (the extension does no fetch/XHR of
+   its own), hardened after the extension surface audit.
 
-## Consecuencias
+## Consequences
 
-- El sync WebRTC es fail-closed en las tres superficies: sesiones, forma del SDP
-  y comparaciones de integridad. Relajar cualquiera de ellas es un cambio a nivel
-  ADR (el gate `check:audit-drift` falla si un ancla desaparece).
-- El SDP minimizado solo conserva candidatos `host`: los peers dependen de
-  conectividad directa o de los STUN/TURN whitelistados por ADR-026/027; un relay
-  no whitelistado no puede colarse vía `srflx`/`relay` embebido en el SDP.
-- El registro de estos anchors (3 de ellos sobre el mismo
-  `WebRTCSyncService.test.ts`, más 2 sources) está en
-  `scripts/audit-anchors-baseline.json`; la numeración no es contigua (D1, D2,
-  D5, D6) porque solo las decisiones con ancla de regresión entran en el catálogo
-  — las decisiones D3/D4 de la serie original no tienen ancla y no se formalizan
-  aquí.
+- WebRTC sync is fail-closed on all three surfaces: sessions, SDP shape
+  and integrity comparisons. Relaxing any of them is an ADR-level change
+  (the `check:audit-drift` gate fails if an anchor disappears).
+- The minimized SDP only keeps `host` candidates: peers depend on
+  direct connectivity or on the STUN/TURN whitelisted by ADR-026/027; a non-whitelisted relay
+  cannot sneak in via `srflx`/`relay` embedded in the SDP.
+- The registry of these anchors (3 of them on the same
+  `WebRTCSyncService.test.ts`, plus 2 sources) is in
+  `scripts/audit-anchors-baseline.json`; the numbering is not contiguous (D1, D2,
+  D5, D6) because only decisions with a regression anchor enter the catalog
+  — the original series' D3/D4 decisions have no anchor and are not formalized
+  here.

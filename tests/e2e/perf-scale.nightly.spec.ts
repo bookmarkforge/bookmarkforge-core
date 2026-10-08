@@ -153,9 +153,16 @@ async function seedAndMeasure(
 
 test.describe(`scale: ${SEED_COUNT.toLocaleString()} bookmarks`, () => {
   test("query + render stay within budget", async ({ page }) => {
-    // Total run scales with SEED_COUNT (the insert dominates): 10k ≈ 40s,
-    // 100k ≈ 8-10 min. Must stay under the job's timeout-minutes (30).
-    test.setTimeout(Math.max(120_000, SEED_COUNT * 8));
+    // Total run scales with SEED_COUNT (the insert dominates): 10k ≈ 40s on
+    // the dev hardware these factors were calibrated on, ~2-3x that on a CI
+    // runner. The nightly died with the 120s floor killing the seeding
+    // evaluate BEFORE any budget could be evaluated (run 35833219915: timeout
+    // inside page.evaluate, both the attempt and its retry) — the seed phase
+    // alone is budgeted at 60s (BUDGET_INSERT_MS) and costs ~130s at CI
+    // speed. The floor must cover the phase, not the budgets: BUDGET_INSERT_MS
+    // and friends remain the actual pass/fail gates against regressions.
+    // 10k → 240s floor; 100k → 25min, inside the job's 45min budget.
+    test.setTimeout(Math.max(240_000, SEED_COUNT * 15));
 
     await page.goto("/");
     await skipPassword(page);

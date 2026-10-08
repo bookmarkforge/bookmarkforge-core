@@ -108,7 +108,7 @@ describe("ChatPanel", () => {
     await userEvent.type(input, "Hola");
     await userEvent.click(screen.getByText("Send"));
     // The partial text appears in the live bubble BEFORE the
-    // promise se resuelva — esto prueba el streaming real, no el final.
+    // promise resolves — this proves real streaming, not just the final render.
     await waitFor(() => {
       expect(screen.getByText("Hola mundo")).toBeTruthy();
     });
@@ -124,15 +124,15 @@ describe("ChatPanel", () => {
     render(
       <ChatPanel
         documentId="doc-123"
-        textContent="El contenido completo del documento actual."
+        textContent="The complete content of the current document."
       />,
     );
     const input = screen.getByLabelText("Type a message") as HTMLInputElement;
-    await userEvent.type(input, "¿De qué trata el documento?");
+    await userEvent.type(input, "What is the document about?");
     await userEvent.click(screen.getByText("Send"));
     await waitFor(() => {
       expect(mockAgentService.globalChat).toHaveBeenCalledWith(
-        "¿De qué trata el documento?",
+        "What is the document about?",
         undefined,
         undefined,
         expect.any(String),
@@ -140,7 +140,7 @@ describe("ChatPanel", () => {
         {
           id: "doc-123",
           isPublic: true,
-          text: "El contenido completo del documento actual.",
+          text: "The complete content of the current document.",
         },
         undefined,
         expect.any(AbortSignal),
@@ -237,17 +237,17 @@ describe("ChatPanel", () => {
 
   it("creates a session if none is active", async () => {
     mockAgentService.getActiveSessionId.mockResolvedValue(null);
-    mockAgentService.globalChat.mockResolvedValue({ text: "Respuesta", sources: [] });
+    mockAgentService.globalChat.mockResolvedValue({ text: "Response", sources: [] });
     render(<ChatPanel />);
     const input = screen.getByLabelText("Type a message") as HTMLInputElement;
-    await userEvent.type(input, "Nueva sesión");
+    await userEvent.type(input, "New session");
     await userEvent.click(screen.getByText("Send"));
     await waitFor(() => {
       expect(mockAgentService.ensureMemoryInitialized).toHaveBeenCalled();
     });
     await waitFor(() => {
       expect(mockAgentService.getOrCreateSession).toHaveBeenCalledWith(
-        "Nueva sesión",
+        "New session",
       );
     });
   });

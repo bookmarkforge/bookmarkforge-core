@@ -746,8 +746,7 @@ export function scanSurface({ root = DEFAULT_ROOT, sources } = {}) {
 // ── CLI ──────────────────────────────────────────────────────────────────────
 const invokedDirectly =
   process.argv[1] &&
-  (import.meta.url === new URL(`file://${process.argv[1].replace(/\\/g, "/")}`).href ||
-    import.meta.url.endsWith(process.argv[1].replace(/\\/g, "/")));
+  import.meta.url === pathToFileURL(process.argv[1]).href;
 
 if (invokedDirectly) {
   let report;

@@ -813,7 +813,7 @@ export function useBlockEditorLogic({
         description: t("editor_slash_bullet_desc") ?? "Create a bullet list",
         icon: List,
         group: "lists",
-        keywords: ["list", "bullet", "lista", "viñeta"],
+        keywords: ["list", "bullet"],
         onItemClick: (editor: BlockNoteEditor) =>
           insertOrUpdateBlockForSlashMenu(
             editor as Parameters<typeof insertOrUpdateBlockForSlashMenu>[0],

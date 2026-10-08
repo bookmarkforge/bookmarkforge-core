@@ -1,17 +1,25 @@
 /**
  * scripts/check-extension-csp.mjs — extension CSP gate (ADR-029 follow-up).
  *
- * Asserts that the browser-extension manifests (Chrome MV3 + Firefox MV2)
+ * Asserts that the browser-extension manifests (Chrome MV3 + Firefox MV3)
  * declare a content_security_policy that exactly matches a single canonical
- * string. Each platform uses a different JSON shape (MV3: structured object
- * with `extension_pages`, MV2: flat string) — the canonical string is
+ * string. The JSON shape follows the manifest's own version (MV3: structured
+ * object with `extension_pages`, MV2: flat string) — the canonical string is
  * applied verbatim to the right field in each manifest.
+ *
+ * ADR-029 fix: `extension/manifest-firefox.json` migrated to MV3 for the
+ * Firefox Add-ons submission (browser_specific_settings + strict_min_version
+ * 109), while this gate still modeled Firefox as a flat-string MV2 manifest
+ * and reported a phantom "no content_security_policy" failure. The Firefox
+ * entry is now shape-aware: it reads either form and injects the form the
+ * manifest actually uses, so the gate follows the manifest instead of
+ * freezing one platform's packaging decision.
  *
  * The extension's CSP is intentionally tighter than the app's: there is no
  * web-app context here, only the extension pages (popup, background). So we
  * disable things the extension never needs (websocket to arbitrary hosts,
  * cross-origin frames, base-URI override, form submission) and reference
- * the same domain the app connects to (`https://bookmarkforge.com`) so a
+ * the same domain the app connects to (`https://bookmarkforgeapp.com`) so a
  * deployment that flips the app base URL to a private instance via
  * `chrome.storage.sync` remains compatible.
  *
@@ -35,7 +43,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
  * `connect-src 'self'`: the extension does no fetch() / XHR / WebSocket of
  * its own. `chrome.tabs.create` (used to open the capture page) is NOT
  * subject to connect-src — so no external domain needs whitelisting.
- * Reducing to `'self'` eliminates the unnecessary bookmarkforge.com origin
+ * Reducing to `'self'` eliminates the unnecessary bookmarkforgeapp.com origin
  * and hardens the CSP against first-party exfiltration.
  *
  * `style-src 'self'` (no `'unsafe-inline'`): the popup stylesheet lives in
@@ -70,14 +78,20 @@ const MANIFESTS = [
     inject: (fileText, csp) => injectMvsContentSecurityPolicy(fileText, csp),
   },
   {
-    label: "Firefox MV2",
+    label: "Firefox MV3",
     path: "extension/manifest-firefox.json",
     extract: (manifest) => {
       const csp = manifest?.content_security_policy;
-      return typeof csp === "string" ? csp : null;
+      if (typeof csp === "string") return csp; // MV2 flat-string form
+      if (typeof csp === "object" && typeof csp?.extension_pages === "string") {
+        return csp.extension_pages; // MV3 structured form
+      }
+      return null;
     },
     inject: (fileText, csp) =>
-      injectFlatStringField(fileText, "content_security_policy", csp),
+      /"manifest_version"\s*:\s*3/.test(fileText)
+        ? injectMvsContentSecurityPolicy(fileText, csp)
+        : injectFlatStringField(fileText, "content_security_policy", csp),
   },
 ];
 

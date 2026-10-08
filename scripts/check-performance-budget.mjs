@@ -21,6 +21,7 @@ import {
 } from "node:fs";
 import { basename, join, normalize, relative, sep } from "node:path";
 import { pathToFileURL } from "node:url";
+import { resolveEntryChunk } from "./entry-chunk-lib.mjs";
 
 export const PERFORMANCE_SCHEMA_LABEL = "bmf.performance-budget/1";
 const ROOT = process.cwd();
@@ -103,11 +104,12 @@ function resolveAssetImport(importPath, currentFile, files) {
 /** Return the emitted entry chunk and its complete static JS closure. */
 export function collectEntryStaticMetrics() {
   const files = assetFiles();
-  const entryNames = [...files.keys()].filter((file) => file.startsWith("index-"));
-  if (entryNames.length !== 1) {
-    fail(`expected exactly one index-*.js entry chunk, found ${entryNames.length}`);
+  // ADR-028: gate drift — entry derived from dist's HTML module script
+  // (app-*.js since the marketing/SPA split), see scripts/entry-chunk-lib.mjs.
+  const entry = resolveEntryChunk(ROOT, [...files.keys()]);
+  if (!entry) {
+    fail("entry chunk (app-*.js / index-*.js) not found");
   }
-  const entry = entryNames[0];
   const closure = new Set([entry]);
   const queue = [entry];
   while (queue.length > 0) {

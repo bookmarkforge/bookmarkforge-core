@@ -283,6 +283,7 @@ async function processQueue() {
 }
 
 self.onmessage = async (e) => {
+  if (e.origin && e.origin !== self.location.origin) return;
   if (workerFatal) {
     const data = e.data as Record<string, unknown>;
     const failedTaskId = data.taskId ?? data.id ?? "unknown";

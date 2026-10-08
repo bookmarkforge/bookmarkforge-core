@@ -1,61 +1,61 @@
-# ADR-051: Gate de frescura de landings `check:landings-fresh`
+# ADR-051: `check:landings-fresh` landings freshness gate
 
-- **Estado:** aceptado (implementado: `scripts/check-landings-fresh.mjs` con
-  su suite en `scripts/__tests__/check-landings-fresh.test.mjs`, step
-  «Enforce landing page freshness» en `ci.yml`)
-- **Fecha:** 2026-09-17
+- **Status:** accepted (implemented: `scripts/check-landings-fresh.mjs` with
+  its suite in `scripts/__tests__/check-landings-fresh.test.mjs`, step
+  "Enforce landing page freshness" in `ci.yml`)
+- **Date:** 2026-09-17
 
-## Contexto
+## Context
 
-`pocket-alternative.html` derivó de su JSON de traducción durante semanas: era
-un HTML mantenido a mano cuya fuente de verdad evolucionó sin que nadie
-regenerara la página. La sincronización de esta ronda lo curó activando su
-generación en `build-landings.cjs` — pero nada impedía que la deriva
-volviera: una edición manual del HTML, una plantilla tocada sin rebuild, o un
-JSON actualizado con el HTML commiteado quedándose atrás, todos pasaban
-desapercibidos hasta que un lector veía copy contradictorio.
+`pocket-alternative.html` derived from its translation JSON for weeks: it was
+a hand-maintained HTML file whose source of truth evolved without anyone
+regenerating the page. This round's sync fixed it by enabling its
+generation in `build-landings.cjs` — but nothing prevented the drift from
+coming back: a manual HTML edit, a template touched without a rebuild, or an
+updated JSON with the HTML left behind in the commit all passed
+unnoticed until a reader saw contradictory copy.
 
-Es el mismo patrón de ADR-048/049/050 (fuentes paralelas que divergen), pero
-con una particularidad: aquí la verdad se materializa en archivos commiteados
-(`public/*.html`), así que la validación es de **frescura** — el artifact
-debe ser exactamente lo que el generador produce hoy — y no de semántica.
+It is the same pattern as ADR-048/049/050 (parallel sources that diverge), but
+with one particularity: here the truth materializes into committed files
+(`public/*.html`), so the validation is about **freshness** — the artifact
+must be exactly what the generator produces today — not about semantics.
 
-## Decisión
+## Decision
 
-1. **Render en memoria, no rebuild + diff de worktree.** El gate renderiza
-   las páginas con el mismo entorno Nunjucks, filtros y plantillas del build
-   (`renderAll()`, exportado por `build-landings.cjs` para esto) y compara
-   contra los archivos commiteados **sin escribir nada en `public/`**. Un
-   rebuild+diff sería frágil contra la conversión CRLF del checkout y
-   ensuciaría el árbol en ejecuciones locales.
-2. **Comparación normalizada de EOL.** El builder escribe LF; git puede
-   convertir a CRLF en Windows. Se compara tras normalizar, así un clone
-   fresco no falla en falso.
-3. **Contrato completo y huérfanos.** Toda página que el build produce debe
-   existir y coincidir (falta = error); todo archivo en `public/` que
-   calce los patrones de nombre del generador pero que el build ya no
-   produzca se marca como huérfano (renombrar un output exige eliminar el
-   viejo en el mismo PR). `404.html`/`404-<lang>.html` quedan exentos: son
-   estáticos declarados hasta que el generador crezca soporte de 404 (TODO
-   en `build-landings.cjs`).
-4. **Fallo accionable.** Cada drift nombra archivo y primera línea del diff,
-   con el remedio (`npm run build:landings`). Exit 2 si el render lanza —
-   fallo cerrado igual que los gates de la familia.
-5. **Categoría `meta` en el freeze (O-1).** No valida verdad factual (eso es
-   `check:page-figures`, ADR-050) sino la relación artifact↔fuente: higiene
-   de build, como `check:chunks` o `check:seo`. Esta ADR justifica el
-   registro ante `KNOWN_GATES`.
-6. **Cableado.** `check:landings-fresh` en `package.json`, en la cadena
-   `npm run check` (junto a los gates de contenido público) y step propio en
-   `ci.yml`. `build:landings` sigue siendo el único escritor de estas páginas.
+1. **In-memory render, not rebuild + worktree diff.** The gate renders
+   the pages with the same Nunjucks environment, filters and templates as the build
+   (`renderAll()`, exported by `build-landings.cjs` for this purpose) and compares
+   against the committed files **without writing anything into `public/`**. A
+   rebuild+diff would be fragile against the checkout's CRLF conversion
+   and would dirty the tree on local runs.
+2. **Normalized EOL comparison.** The builder writes LF; git may
+   convert to CRLF on Windows. The comparison happens after normalization, so a fresh
+   clone does not fail spuriously.
+3. **Complete contract and orphans.** Every page the build produces must
+   exist and match (missing = error); every file in `public/` that
+   matches the generator's naming patterns but is no longer produced by the build
+   is flagged as an orphan (renaming an output requires deleting the old one
+   in the same PR). `404.html`/`404-<lang>.html` are exempt: they are
+   static by declaration until the generator gains 404 support (TODO
+   in `build-landings.cjs`).
+4. **Actionable failure.** Each drift names the file and the first line of the diff,
+   with the remedy (`npm run build:landings`). Exit 2 if the render throws —
+   fail-closed like the gates of this family.
+5. **`meta` category in the freeze (O-1).** It does not validate factual truth (that is
+   `check:page-figures`, ADR-050) but the artifact↔source relationship: build
+   hygiene, like `check:chunks` or `check:seo`. This ADR justifies the
+   registration to `KNOWN_GATES`.
+6. **Wiring.** `check:landings-fresh` in `package.json`, in the
+   `npm run check` chain (alongside the public-content gates) and its own step in
+   `ci.yml`. `build:landings` remains the only writer of these pages.
 
-## Consecuencias
+## Consequences
 
-- Ninguna página generada puede volver a editarse a mano: el PR que lo haga
-  falla con la línea exacta del divergen.
-- Cambiar plantilla o JSON sin commitar el HTML regenerado rompe CI — la
-  regeneración deja de ser un paso opcional que se olvida.
-- El refactor de `build-landings.cjs` (salidas exportadas, `renderAll`) es
-  behavior-preserving: verificado byte a byte contra los 7 HTML previos.
-- Mantenimiento: el patrón de nombre de outputs vive en una sola regex; dar
-  soporte de 404 al generador será ampliar `renderAll` + la regex + esta ADR.
+- No generated page can be hand-edited again: the PR that does so
+  fails with the exact line of divergence.
+- Changing a template or JSON without committing the regenerated HTML breaks CI — regeneration
+  stops being an optional step that gets forgotten.
+- The `build-landings.cjs` refactor (exported outputs, `renderAll`) is
+  behavior-preserving: verified byte by byte against the 7 previous HTML files.
+- Maintenance: the output naming pattern lives in a single regex; giving
+  the generator 404 support means extending `renderAll` + the regex + this ADR.

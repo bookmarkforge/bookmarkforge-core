@@ -306,7 +306,9 @@ describe("CrossPollinationService", () => {
       expect(insights).toEqual([]);
     });
 
-    it("uses Spanish prompt if lang=es", async () => {
+    // The insight prompt is English-only since the prompt-language
+    // migration — passing lang=es must NOT switch it back to Spanish.
+    it("keeps the English prompt even when lang=es", async () => {
       (ragEngine.searchSimilar as any).mockResolvedValue([
         { id: "doc-2", similarity: 0.85 },
       ]);
@@ -320,7 +322,7 @@ describe("CrossPollinationService", () => {
       const callPrompt = mockGenerateText.mock.calls[0]![0];
       const callSystem = mockGenerateText.mock.calls[0]![1];
       expect(callPrompt).toContain("ITEM A");
-      expect(callSystem).toContain("Arquitecto de Conocimiento Cuántico");
+      expect(callSystem).toContain("Quantum Knowledge Architect");
     });
   });
 
@@ -475,14 +477,15 @@ describe("CrossPollinationService", () => {
       expect(curation!.content).toBe("");
     });
 
-    it("uses Spanish prompt if lang=es", async () => {
+    // English-only prompt contract, same as generateInsights above.
+    it("keeps the English prompt even when lang=es", async () => {
       mockGenerateText.mockResolvedValue({
         text: JSON.stringify({ title: "T", content: "C" }),
         provider: "gemini",
       });
       await crossPollinationService.generateWeeklyCuration("es");
       expect(mockGenerateText.mock.calls[0]![1]).toContain(
-        "Curador de Conocimiento Experto",
+        "Expert Knowledge Curator",
       );
     });
 

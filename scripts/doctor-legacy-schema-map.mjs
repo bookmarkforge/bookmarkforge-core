@@ -16,7 +16,13 @@ function parseIndexRows(text) {
 
   for (const line of lines) {
     const trimmed = line.trim();
-    if (trimmed.startsWith('| Documento | Estado | Nota |')) {
+    // English header is canonical (the generator no longer emits Spanish
+    // notes); the Spanish one still parses so a pre-change inventory does not
+    // read as an empty one.
+    if (
+      trimmed.startsWith('| Document | State | Note |') ||
+      trimmed.startsWith('| Documento | Estado | Nota |') // i18n-allow — legacy anchor
+    ) {
       inTable = true;
       continue;
     }
@@ -66,7 +72,7 @@ function main() {
   }
 
   const mapText = readFileSync(MAP_PATH, 'utf8');
-  if (!mapText.includes('| Colección | Versión | Campos cifrados |')) {
+  if (!mapText.includes('| Collection | Version | Encrypted fields |')) {
     console.error('docs/legacy-schema-version-map.md missing expected table header');
     process.exit(7);
   }
@@ -75,7 +81,7 @@ function main() {
   let inTable = false;
   for (const line of mapText.split('\n')) {
     const trimmed = line.trim();
-    if (trimmed.startsWith('| Colección | Versión | Campos cifrados |')) { inTable = true; continue; }
+    if (trimmed.startsWith('| Collection | Version | Encrypted fields |')) { inTable = true; continue; }
     if (inTable) {
       if (trimmed.startsWith('|---')) continue;
       if (trimmed.startsWith('|')) {

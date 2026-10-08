@@ -23,10 +23,10 @@ import {
   allowedValueSets,
   evaluateManual,
   loadTruth,
-  MANUAL_LANGS,
+  MANUAL_SOURCE_PATHS,
   runManualFiguresGate,
 } from "../check-manual-figures.mjs";
-import { LANDING_CODES } from "../landing-registry.mjs";
+import { LANDING_CODES, MANUAL_FILES, manualSourcePath } from "../landing-registry.mjs";
 
 let tmpRoot;
 
@@ -66,7 +66,7 @@ function makeRoot(files = {}) {
     "src/constants/license.ts": LICENSE_TS,
     "src/services/RecoveryService.ts": RECOVERY_TS,
     "src/constants/config.ts": CONFIG_TS,
-    "docs/manual-usuario.md": "nada\n",
+    [manualSourcePath("es")]: "nada\n",
   };
   for (const [rel, content] of Object.entries({ ...base, ...files })) {
     const p = join(tmpRoot, rel);
@@ -124,7 +124,7 @@ describe("check-manual-figures: claim rules", () => {
   const s = () =>
     sets(makeRoot({
       // extra manuals so scanManuals-style calls are not needed here
-      "docs/manual-usuario-en.md": "nada\n",
+      [manualSourcePath("en")]: "nada\n",
     }));
 
   it("accepts canonical price lines across the ladder (es/en)", () => {
@@ -223,18 +223,18 @@ describe("check-manual-figures: claim rules", () => {
 describe("check-manual-figures: fire drill on the real flow", () => {
   it("fails when a manual drifts from the code (stale early-bird price)", () => {
     const root = makeRoot({
-      "docs/manual-usuario-en.md":
+      [manualSourcePath("en")]:
         "**Early Bird:** first 200 buyers pay $49. Regular price is $79.\n",
     });
     const { failures } = runManualFiguresGate(root);
-    expect(failures.some((f) => f.includes("manual-usuario-en.md") && f.includes("price 49"))).toBe(true);
+    expect(failures.some((f) => f.includes(`${MANUAL_FILES.en}.md`) && f.includes("price 49"))).toBe(true);
   });
 
   it("fails when the truth constant moves and manuals no longer match it", () => {
     // The code changes 48h → 7d (168h); the manual still says 48 → must fail.
     const root = makeRoot({
       "src/constants/license.ts": "cacheTtlMs: 168 * 60 * 60 * 1000,",
-      "docs/manual-usuario-en.md": "- Re-validation every 48 hours when connected\n",
+      [manualSourcePath("en")]: "- Re-validation every 48 hours when connected\n",
     });
     const { failures } = runManualFiguresGate(root);
     expect(failures.some((f) => f.includes("re-validation claims 48 hours"))).toBe(true);
@@ -245,47 +245,45 @@ describe("check-manual-figures: fire drill on the real flow", () => {
     // complete family, not silently shrink coverage to what happens to exist.
     const root = makeRoot(
       Object.fromEntries(
-        MANUAL_LANGS.filter(Boolean).map((lang) => [
-          `docs/manual-usuario${lang}.md`,
-          "nada\n",
-        ]),
+        LANDING_CODES.map((code) => [manualSourcePath(code), "nada\n"]),
       ),
     );
-    rmSync(join(root, "docs", "manual-usuario-zh.md"), { force: true });
-    rmSync(join(root, "docs", "manual-usuario-ja.md"), { force: true });
+    rmSync(join(root, "docs", `${MANUAL_FILES.zh}.md`), { force: true });
+    rmSync(join(root, "docs", `${MANUAL_FILES.ja}.md`), { force: true });
     const { missing } = runManualFiguresGate(root);
     expect(missing).toHaveLength(2);
-    expect(missing.join(" ")).toContain("manual-usuario-zh.md");
+    expect(missing.join(" ")).toContain(`${MANUAL_FILES.zh}.md`);
   });
 });
 
 describe("check-manual-figures: coverage comes from the locale registry", () => {
-  it("derives MANUAL_LANGS from the registry (es is the master, others are suffixed)", () => {
-    // The mapping is positional, not a copy: "es" owns docs/manual-usuario.md
-    // (the only manual with the full pricing chapter), every other locale owns
-    // docs/manual-usuario-<code>.md. Pinning the derivation means the list can
-    // never fall behind the locale set again — the failure mode that left this
-    // gate validating a shrinking corpus while the pages grew.
-    expect(MANUAL_LANGS).toEqual([
-      "",
-      ...LANDING_CODES.filter((code) => code !== "es").map((code) => `-${code}`),
-    ]);
+  it("derives MANUAL_SOURCE_PATHS from the MANUAL_FILES registry (endonym per locale)", () => {
+    // The mapping is a lookup, not a copy: "es" owns docs/manual-de-usuario-es.md
+    // (the Spanish master, the only manual with the full pricing chapter),
+    // "de" owns docs/benutzerhandbuch-de.md, "ja" owns docs/user-manual-ja.md.
+    // Pinning the derivation means the list can never fall behind the locale
+    // set or the rename again — the failure mode that left this gate
+    // validating a shrinking corpus while the pages grew.
+    expect(MANUAL_SOURCE_PATHS).toEqual(
+      LANDING_CODES.map((code) => manualSourcePath(code)),
+    );
     // 1:1 with the registry: no locale unpoliced, no manual demanded twice.
-    expect(MANUAL_LANGS).toHaveLength(LANDING_CODES.length);
-    expect(new Set(MANUAL_LANGS).size).toBe(LANDING_CODES.length);
+    expect(MANUAL_SOURCE_PATHS).toHaveLength(LANDING_CODES.length);
+    expect(new Set(MANUAL_SOURCE_PATHS).size).toBe(LANDING_CODES.length);
   });
 
   it("demands the manual of every registry locale (a new locale cannot go unpoliced)", () => {
-    // Master present, no localized manual: the gate must ask for exactly the
-    // registry's remaining locales — not for a hardcoded subset that happens to
-    // match today (and would silently stay at 6 if the registry moved).
+    // Spanish master present, no other manual: the gate must ask for exactly
+    // the registry's remaining locales — not for a hardcoded subset that
+    // happens to match today (and would silently stay at 6 if the registry
+    // moved).
     const root = makeRoot({});
     const { missing } = runManualFiguresGate(root);
     expect(missing).toHaveLength(LANDING_CODES.length - 1);
     for (const code of LANDING_CODES) {
       if (code === "es") continue;
       expect(missing.join("\n"), `missing manual for ${code}`).toContain(
-        `manual-usuario-${code}.md`,
+        `${MANUAL_FILES[code]}.md`,
       );
     }
   });

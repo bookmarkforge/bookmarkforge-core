@@ -148,7 +148,7 @@ describe("entitlement endpoint", () => {
       createEntitlementHandler({
         licensePublicKeySpki: publicKeySpki,
         now: () => NOW,
-        allowedOrigins: ["https://bookmarkforge.com"],
+        allowedOrigins: ["https://bookmarkforgeapp.com"],
       }),
     );
 
@@ -164,7 +164,7 @@ describe("entitlement endpoint", () => {
 
     const allowed = await fetch(`${base}/api/license/entitlement`, {
       method: "POST",
-      headers: { "content-type": "application/json", origin: "https://bookmarkforge.com" },
+      headers: { "content-type": "application/json", origin: "https://bookmarkforgeapp.com" },
       body: "not json",
     });
     expect(allowed.status).toBe(400);

@@ -122,7 +122,7 @@ describe("CSP report collector", () => {
     const { status } = await fetchCspReport(port, "POST", {
       "csp-report": {
         "blocked-uri": "https://evil.example.com/xss.js",
-        "document-uri": "https://bookmarkforge.com/app",
+        "document-uri": "https://bookmarkforgeapp.com/app",
         "violated-directive": "script-src",
         "effective-directive": "script-src",
         disposition: "enforce",
@@ -138,7 +138,7 @@ describe("CSP report collector", () => {
     await fetchCspReport(port, "POST", {
       "csp-report": {
         "blocked-uri": "https://test.example.com/bad.js",
-        "document-uri": "https://bookmarkforge.com/dashboard",
+        "document-uri": "https://bookmarkforgeapp.com/dashboard",
         "violated-directive": "script-src",
       },
     });
@@ -193,7 +193,7 @@ describe("CSP report collector", () => {
       const { status } = await fetchCspReport(port, "POST", {
         "csp-report": {
           "blocked-uri": `https://evil-${i}.example.com/x.js`,
-          "document-uri": "https://bookmarkforge.com/app",
+          "document-uri": "https://bookmarkforgeapp.com/app",
           "violated-directive": "script-src",
         },
       });
@@ -215,7 +215,7 @@ describe("CSP report collector", () => {
     await fetchCspReport(port, "POST", {
       "csp-report": {
         "blocked-uri": longUri,
-        "document-uri": "https://bookmarkforge.com/app",
+        "document-uri": "https://bookmarkforgeapp.com/app",
         "violated-directive": "script-src",
       },
     });
@@ -238,7 +238,7 @@ describe("CSP report collector", () => {
       await fetchCspReport(port, "POST", {
         "csp-report": {
           "blocked-uri": `https://evict-${i}.example.com/x.js`,
-          "document-uri": "https://bookmarkforge.com/app",
+          "document-uri": "https://bookmarkforgeapp.com/app",
           "violated-directive": "script-src",
         },
       });
@@ -523,7 +523,7 @@ describe.skipIf(!serverEntryExists)("CSP report collector — webhook alerting",
     const { status } = await fetchCspReport(port, "POST", {
       "csp-report": {
         "blocked-uri": "https://evil.example.com/xss.js?payload=1",
-        "document-uri": "https://bookmarkforge.com/app#section",
+        "document-uri": "https://bookmarkforgeapp.com/app#section",
         "effective-directive": "script-src",
         "script-sample": "alert(1)//ignored",
         disposition: "enforce",
@@ -537,7 +537,7 @@ describe.skipIf(!serverEntryExists)("CSP report collector — webhook alerting",
     const report = last!.reports[0]!;
     // Origin-only: path, query and fragment are stripped.
     expect(report!.blockedOrigin).toBe("https://evil.example.com");
-    expect(report!.documentOrigin).toBe("https://bookmarkforge.com");
+    expect(report!.documentOrigin).toBe("https://bookmarkforgeapp.com");
     // The raw IP never leaves the server — only a one-way hash.
     expect(String(report!.ipHash)).toMatch(/^[0-9a-f]{24}$/);
     expect(report!.ipHash).not.toBe("xss.js");

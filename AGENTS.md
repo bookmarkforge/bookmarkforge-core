@@ -117,7 +117,7 @@ npm run test:slow               # every other test file (~460; CI's slow-tests j
                                 #   profile does not cover)
 npm run build:ci                # vite build + secret-scan + SRI + integrity
                                 #   manifest + chunk-boundary + bundle-size gates
-npm run check                   # the full gate chain (~40 check commands + lint):
+npm run check                   # the full gate chain (~50 check commands + lint):
                                  # open-core, pro-imports, removed-deps, env,
                                  # workflows,
                                  # http-config, compose-config, runtime-config,
@@ -136,13 +136,20 @@ npm run check                   # the full gate chain (~40 check commands + lint
                                  # tailwind-drift, rxdb17, static-brand,
                                  # brand-logo, seo, license-keys,
                                  # server-log-ip-privacy, pro-routes, lint,
-                                 # chunks, inspector-freeze
+                                 # chunks, script-reachability,
+                                 # inspector-freeze
 
 > Gates run separately in CI (not part of `npm run check`):
-> `check:e2e-selectors`, `check:performance`, `check:direct-cve:dev`
-> (requires dev-dependency CVE scan), `check:zap-context`,
-> `check:audit-drift:strict`, `check:audit-drift:strict-discovery`.
-> The `build` CI job runs these alongside `npm run check`.
+> `check:e2e-selectors`, `check:performance`,
+> `check:zap-context`, `check:audit-drift:strict`,
+> `check:audit-drift:strict-discovery`.
+> Where they run: `check:performance` in the `build` job of `ci.yml`,
+> `check:e2e-selectors` in that file's `quality` job, `check:zap-context` in
+> `dast-nightly.yml`; `check:audit-drift:strict` and
+> `check:audit-drift:strict-discovery` are by-hand modes no workflow runs.
+> The dev-dependency CVE scan is not one of them and has no gate-form npm
+> alias (`npm run cve:report` runs the same scan in report mode): `nightly.yml`
+> runs `node scripts/check-direct-cve.mjs --include-dev ...` directly.
 
 ```
 
@@ -157,6 +164,22 @@ npm run check                   # the full gate chain (~40 check commands + lint
   fail `check:i18n`/`check:english-only`. All 30 locales must stay
   key-complete with matching `{{placeholders}}`; add keys to every locale file
   (`npm run check:i18n:fix` scaffolds).
+- **Repository prose is English.** `src/` is covered by `check:english-only`;
+  `docs/`, `scripts/` and `legal/` are covered by `check:no-spanish`, a
+  per-file ratchet over `scripts/no-spanish-baseline.json`. It fails when a
+  file's Spanish line count GROWS above its baseline, so translating shrinks
+  the baseline on every pass instead of the gate sitting red. Translate
+  first; `--update` is only for a reviewed, deliberate re-pin. Local-language
+  surfaces are out of scope by path (the localized manual family registered
+  as `MANUAL_FILES` in `scripts/landing-registry.mjs`,
+  `scripts/translations/`, `*-<locale>.md`), and a legitimate non-English
+  line carries the same `i18n-allow` pragma `check:english-only` uses.
+  Two gates are excluded because they hold Spanish as DATA: this one and
+  `check-english-only`. ADR section labels accept both languages
+  (`Estado`/`Status`, `Fecha`/`Date`, `Contexto`/`Context`,
+  `Decisión`/`Decision`, `Consecuencias`/`Consequences`) and `docs/audit.md`
+  publishes its status table as `## Verified status` / `| Command | Mode |`,
+  both accepted by `check:audit-freshness`.
 - **Secrets:** `VITE_*` vars are **inlined into the bundle** by Vite — never
   put real keys in `VITE_*`. There is no server-side AI key to keep anywhere:
   provider keys live in the user's encrypted vault and are read by the browser
@@ -263,7 +286,7 @@ mandatory security gates before merge.
       `check:security-internal` itself covers 9.)
     - Blocks PR merge on any failure.
 
-2. **`npm run check`** — The full gate chain (~40 check commands + lint)
+2. **`npm run check`** — The full gate chain (~50 check commands + lint)
 
 3. **SAST** (CodeQL + Semgrep) — Blocked on High/Critical findings
 

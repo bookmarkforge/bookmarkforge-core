@@ -38,6 +38,14 @@ jobs:
     name: Post-deploy staging smoke
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    # `secrets` is NOT a valid context in `if:` conditions — every push since
+    # the repository existed registered a 0-second red run with zero jobs
+    # because the file failed to parse (GitHub's parser said so verbatim:
+    # "Line 82: Unrecognized named-value: 'secrets'"). The documented
+    # workaround is to promote the secret into job-level env — where secrets
+    # ARE allowed — and let the step's `if` read the env context instead.
+    env:
+      STAGING_SMOKE_ADMIN_TOKEN: ${{ secrets.STAGING_SMOKE_ADMIN_TOKEN }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -52,7 +60,7 @@ jobs:
           host="${url#https://}"; host="${host%%/*}"
           [[ "$host" != *:* ]] || { echo "staging_url must not include a port" >&2; exit 1; }
           case "$host" in
-            bookmarkforge.com|www.bookmarkforge.com|api.bookmarkforge.com|signal.bookmarkforge.com)
+            bookmarkforgeapp.com|www.bookmarkforgeapp.com|api.bookmarkforgeapp.com|signal.bookmarkforgeapp.com)
               echo "Refusing production target: $host" >&2; exit 1 ;;
           esac
           [[ "$host" == *staging* || "$host" == *-stage* || "$host" == *.test.* ]] || {
@@ -63,7 +71,7 @@ jobs:
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Install Playwright browsers
@@ -79,10 +87,12 @@ jobs:
           STAGING_SMOKE_ADMIN_TOKEN: ${{ secrets.STAGING_SMOKE_ADMIN_TOKEN }}
         run: npm run production-smoke
       - name: Verify protected client-events diagnostics
-        if: ${{ secrets.STAGING_SMOKE_ADMIN_TOKEN != '' }}
+        # Empty/unset secret ⇒ empty env var ⇒ step skipped (same semantics
+        # the secrets-based condition intended).
+        if: env.STAGING_SMOKE_ADMIN_TOKEN != ''
         env:
           STAGING_URL: ${{ env.STAGING_URL }}
-          CLIENT_EVENTS_ADMIN_TOKEN: ${{ secrets.STAGING_SMOKE_ADMIN_TOKEN }}
+          CLIENT_EVENTS_ADMIN_TOKEN: ${{ env.STAGING_SMOKE_ADMIN_TOKEN }}
         run: |
           set -euo pipefail
           status="$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' --max-time 20 \
@@ -94,6 +104,15 @@ jobs:
         env:
           PLAYWRIGHT_BASE_URL: ${{ env.STAGING_URL }}
         run: npx playwright test --config=playwright.config.ts tests/e2e/vault-init.spec.ts tests/e2e/a11y.spec.ts
+      # ADR-062 against the deployed surface: the Docker image serves the
+      # static landings through public/nginx.conf (language negotiation, SPA
+      # fallback), so the smoke that validates navigation, critical resources,
+      # links and console errors in CI is pointed at the staging URL instead of
+      # a local tree. --base-url is quoted: URLs may carry unusual characters.
+      - name: Landing smoke (ADR-062)
+        env:
+          STAGING_URL: ${{ env.STAGING_URL }}
+        run: npm run check:landing-smoke -- --base-url "$STAGING_URL"
       - name: Upload smoke diagnostics
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

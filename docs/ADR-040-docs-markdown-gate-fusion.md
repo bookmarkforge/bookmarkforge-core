@@ -1,21 +1,31 @@
-# ADR-040 — Gate unificado de documentación Markdown
+# ADR-040 — Unified Markdown documentation gate
 
-## Estado
+## Status
 
-Aceptado
+Accepted
 
-## Fecha
+## Date
 
 2026-09-19
 
-## Contexto
+## Context
 
-El repositorio mantiene documentación operativa, legal, histórica y localizada. Los checks separados para jerarquía de títulos, estilo de listas, metadatos y plantilla de ADR podían divergir y permitían que una parte del corpus quedara sin cobertura después de un retiro documental.
+The repository maintains operational, legal, historical and localized
+documentation. The separate checks for heading hierarchy, list style, metadata
+and the ADR template could diverge and allowed part of the corpus to end up
+without coverage after a documentation retirement.
 
-## Decisión
+## Decision
 
-`check:docs-markdown` es el único gate de formato Markdown. Escanea únicamente los documentos presentes en `docs/`, compara contra un baseline revisado y detecta reducción silenciosa de cobertura. La plantilla de ADR se valida con la misma regla ESLint que usa el lint general. El índice documental registra la presencia y el estado de cada documento.
+`check:docs-markdown` is the only Markdown-format gate. It scans only the documents present
+in `docs/`, compares against a reviewed baseline and detects silent
+coverage reduction. The ADR template is validated with the same ESLint rule used by
+general lint. The documentation index records each document's presence and
+state.
 
-## Consecuencias
+## Consequences
 
-La eliminación de documentos ya no se trata como un cambio accidental del baseline: debe acompañarse de una decisión documentada y de una revisión del índice. Los documentos críticos de operaciones, seguridad y cumplimiento deben mantenerse o sustituirse por equivalentes. El gate puede ampliarse cuando exista una revisión explícita de su baseline.
+Deleting documents is no longer treated as an accidental baseline change: it must be
+accompanied by a documented decision and an index review. Critical operations,
+security and compliance documents must be kept or replaced by equivalents. The
+gate can be extended when there is an explicit review of its baseline.

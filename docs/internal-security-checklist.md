@@ -1,8 +1,8 @@
-# Checklist de seguridad interna
+# Internal security checklist
 
-Este documento delimita lo que puede verificarse desde el repositorio, sin acceso a GitHub, staging, producción ni proveedores externos.
+This document delimits what can be verified from the repository, without access to GitHub, staging, production or external providers.
 
-## Gates locales obligatorios
+## Mandatory local gates
 
 ```bash
 npm ci
@@ -20,31 +20,31 @@ npm run check:workflow-security
 npm run build:ci
 ```
 
-## Controles cubiertos
+## Covered controls
 
-- Imágenes de producción identificadas por `IMAGE_TAG`, nunca por `latest`.
-- API ejecutada como usuario no-root.
-- Redis configurado en modo `fail-closed`.
-- Licencia requerida en producción.
-- Puertos publicados de staging ligados a loopback.
-- CSP, HSTS y headers HTTP de seguridad presentes.
-- Upstream Nginx con puerto explícito.
-- Secretos y archivos `.env` reales excluidos de commits.
-- Workflows con permisos declarados y sin interpolación de secretos en Docker.
-- Tests unitarios de los gates de seguridad.
-- SAST independiente (CodeQL + Semgrep) en CI con gate de severidad High/Critical (`scripts/check-sarif-severity.mjs`).
-- Contexto DAST autenticado opt-in, limpieza garantizada y archivos temporales con permisos restrictivos.
-- Workflows DAST/staging sin comandos dinámicos ni referencias mutables de imágenes.
+- Production images identified by `IMAGE_TAG`, never by `latest`.
+- API executed as non-root user.
+- Redis configured in `fail-closed` mode.
+- License required in production.
+- Staging published ports bound to loopback.
+- CSP, HSTS and HTTP security headers present.
+- Upstream Nginx with explicit port.
+- Real secrets and `.env` files excluded from commits.
+- Workflows with declared permissions and without secret interpolation in Docker.
+- Unit tests of security gates.
+- Independent SAST (CodeQL + Semgrep) in CI with High/Critical severity gate (`scripts/check-sarif-severity.mjs`).
+- Authenticated DAST context opt-in, guaranteed cleanup and temporary files with restrictive permissions.
+- DAST/staging workflows without dynamic commands or mutable image references.
 
-## No se puede verificar localmente
+## Cannot verify locally
 
-- Configuración efectiva de la protección de `main` en GitHub para el mantenedor único.
-- Protección efectiva de `main` en GitHub.
-- Hashes actuales de actions remotas e imágenes Docker de ZAP; deben verificarse contra sus releases oficiales antes de incorporarse.
-- Secretos de GitHub Actions.
-- Configuración de environments y permisos de despliegue.
-- Seguridad de la infraestructura de staging/producción.
-- DAST real, pentest, carga, restore y rollback operativo.
-- Hallazgos reales de CodeQL/Semgrep (requieren ejecución en CI).
-- Activación del DAST autenticado: permanece deshabilitado hasta verificar contexto, digest de imagen y SHA de la action.
-- Cumplimiento jurídico RGPD.
+- Effective configuration of `main` protection in GitHub for the single maintainer.
+- Effective protection of `main` in GitHub.
+- Current hashes of remote actions and ZAP Docker images; must be verified against their official releases before incorporation.
+- GitHub Actions secrets.
+- Environment configuration and deployment permissions.
+- Security of staging/production infrastructure.
+- Real DAST, pentest, load, restore and operational rollback.
+- Real CodeQL/Semgrep findings (require CI execution).
+- Authenticated DAST activation: remains disabled until verifying context, image digest and action SHA.
+- GDPR legal compliance.

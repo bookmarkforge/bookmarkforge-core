@@ -1,94 +1,94 @@
-# ADR-044: Política de tarjetas Open Graph por página (`OG_IMAGE_POLICY`)
+# ADR-044: Per-page Open Graph card policy (`OG_IMAGE_POLICY`)
 
-- **Estado:** aceptado (implementado en `scripts/check-seo.mjs`, con suite adversarial en `scripts/__tests__/check-seo.test.mjs`)
-- **Fecha:** 2026-09-09
+- **Status:** accepted (implemented in `scripts/check-seo.mjs`, with adversarial suite in `scripts/__tests__/check-seo.test.mjs`)
+- **Date:** 2026-09-09
 
-## Contexto
+## Context
 
-El sitio tiene dos tarjetas de compartir sociales en `public/`, gemelas en
-estilo (fondo azul marino de marca, logo real incrustado, 1200×630):
+The site has two social share cards in `public/`, twins in
+style (brand navy background, real embedded logo, 1200×630):
 
-- `og-image.png` — tarjeta general del producto ("Your Local-First Digital
+- `og-image.png` — the general product card ("Your Local-First Digital
   Brain").
-- `og-image-pricing.png` — tarjeta de precios ("Simple, Fair Pricing" /
-  "Free forever · Pro $79 one-time — no subscriptions") con las dos tier
-  cards lado a lado — Free $0/mes y Pro $79 una vez, cada una con sus
-  highlights — copia verificada contra la sección `#pricing` de la landing.
+- `og-image-pricing.png` — the pricing card ("Simple, Fair Pricing" /
+  "Free forever · Pro $79 one-time — no subscriptions") with the two tier
+  cards side by side — Free $0/month and Pro $79 once, each with its
+  highlights — copy verified against the `#pricing` section of the landing.
 
-Al crear la tarjeta de precios quedaba sin decidir qué página debía usarla.
-`og:image` es una etiqueta por URL: los crawlers ignoran los `#anclas`, así
-que no existe "compartir la sección de precios" — el fragmento
-`/#pricing` comparte la landing entera y su tarjeta general. La asignación se
-hace a nivel de página y depende de qué vende el cuerpo de cada página. Sin
-regla escrita, cada página nueva volvería a la ambigüedad que motivó
-las pasadas de marca: mezclas de activos sin nadie que lo note.
+When the pricing card was created, it was undecided which page should use it.
+`og:image` is a per-URL tag: crawlers ignore `#anchors`, so
+"sharing the pricing section" does not exist — the
+`/#pricing` fragment shares the whole landing and its general card. The assignment
+is made at page level and depends on what each page's body sells. Without a
+written rule, every new page would return to the ambiguity that motivated
+the brand passes: asset mixes nobody notices.
 
-El gate `check:seo` (ADR-043) ya validaba que `og:image` existiera y que el
-asset estuviera en `public/`, además de exigir identidad coherente con la
-landing EN en las páginas auxiliares; no decidía *qué* tarjeta corresponde a
-cada página.
+The `check:seo` gate (ADR-043) already validated that `og:image` existed and that the
+asset was in `public/`, plus requiring identity consistent with the
+EN landing on auxiliary pages; it did not decide *which* card corresponds to
+each page.
 
-## Decisión
+## Decision
 
-1. **Tarjeta por defecto.** Toda página usa `og-image.png` (la general del
-   producto) salvo las listadas en `OG_IMAGE_POLICY`.
-2. **Excepción: páginas orientadas a precios.** `/pocket-alternative` usa
-   `og-image-pricing.png`: todo su cuerpo es el pitch de migración Pocket
-   alrededor del tier gratuito y el Pro de $79 único (su tabla comparativa y
-   su JSON-LD `Offer` declaran exactamente esos precios), así que su tarjeta
-   de compartir vende los precios, no el resumen del producto.
-3. **Páginas auxiliares intactas.** El shell SPA (`index.html`) y `404.html`
-   siguen heredando identidad de la landing EN (coherencia de marca), es
-   decir la tarjeta general; la política no les añade excepciones.
-4. **Sincronía de copia en el gate de marca.** El gate
-   `check:brand-logo` extiende su guarda 3 a la copia de las tarjetas: los
-   textos de `og-image-pricing.svg` (nombres de tier, precios, highlights)
-   deben estar respaldados por la sección `#pricing` viva de la landing EN
-   (regla por tokens — un highlight puede condensar varias viñetas, pero
-   ninguna palabra significativa puede quedar huérfana), y los textos de
-   `og-image.svg` deben ser la copia de marca registrada en el propio gate
-   (`BRAND_NAME` / `BRAND_SLOGAN` — el slogan "Your Local-First Digital
-   Brain" vive solo en las tarjetas, así que el gate es su fuente única).
-   Cambiar el precio de la landing sin regenerar la tarjeta —o el slogan sin
-   actualizar el gate— rompe CI nombrando las palabras huérfanas.
-5. **Aplicación en el gate.** `validateLandingHtml` exige ahora el valor
-   exacto de `og:image` que `ogImageForFile(file)` asigna a la página
-   (con `cfg.ogImage` como override opcional para los auxiliares, que
-   conservan su coherencia contra la landing EN). Un `twitter:image` que no
-   coincida con `og:image` ya fallaba y sigue fallando, así que ambas redes
-   comparten tarjeta obligatoriamente. La política vive junto a los
-   inventarios de páginas (`LANDING_PAGES`, `SINGLE_PAGES`, `LEGAL_PAGES`)
-   y sus tests adversariales cubren: entrada que no corresponde a una página
-   real, tarjeta errónea detectada, y las páginas reales del repositorio
-   alineadas con la política.
+1. **Default card.** Every page uses `og-image.png` (the general product
+   card) except those listed in `OG_IMAGE_POLICY`.
+2. **Exception: pricing-oriented pages.** `/pocket-alternative` uses
+   `og-image-pricing.png`: its whole body is the Pocket migration
+   pitch built around the free tier and the single $79 Pro (its comparison table
+   and its JSON-LD `Offer` declare exactly those prices), so its share
+   card sells prices, not the product summary.
+3. **Auxiliary pages untouched.** The SPA shell (`index.html`) and `404.html`
+   keep inheriting identity from the EN landing (brand consistency), i.e.
+   the general card; the policy adds no exceptions for them.
+4. **Copy synchrony in the brand gate.** The
+   `check:brand-logo` gate extends its guard 3 to the cards' copy: the
+   texts of `og-image-pricing.svg` (tier names, prices, highlights)
+   must be backed by the live `#pricing` section of the EN landing
+   (token-based rule — a highlight may condense several bullets, but
+   no meaningful word may be left orphaned), and the texts of
+   `og-image.svg` must be the brand copy registered in the gate itself
+   (`BRAND_NAME` / `BRAND_SLOGAN` — the slogan "Your Local-First Digital
+   Brain" lives only in the cards, so the gate is its single source).
+   Changing the landing price without regenerating the card — or the slogan without
+   updating the gate — breaks CI naming the orphaned words.
+5. **Enforcement in the gate.** `validateLandingHtml` now requires the exact
+   `og:image` value that `ogImageForFile(file)` assigns to the page
+   (with `cfg.ogImage` as an optional override for the auxiliary pages, which
+   keep their consistency against the EN landing). A `twitter:image` that does not
+   match `og:image` already failed and still fails, so both networks
+   necessarily share the card. The policy lives next to the
+   page inventories (`LANDING_PAGES`, `SINGLE_PAGES`, `LEGAL_PAGES`)
+   and their adversarial tests cover: an entry that does not correspond to a real
+   page, a wrong card detected, and the repo's real pages
+   aligned with the policy.
 
-## Consecuencias
+## Consequences
 
-- Añadir una página nueva la obliga a declarar (o heredar por defecto) su
-  tarjeta; usar la de precios en una página sin pitch de precios —o la
-  general en una futura página de pricing dedicada— rompe CI con un mensaje
-  accionable (`og:image must be … per OG_IMAGE_POLICY`).
-- Si algún día existe una página `/pricing` dedicada, su alta en
-  `OG_IMAGE_POLICY` apuntando a `og-image-pricing.png` es una línea en el
-  gate y una en la página; la documentación y la verificación ya existen.
-- Las dos tarjetas siguen gemelas en estilo y verificadas por
-  `check:brand-logo` (logo incrustado contra `logo-512.png`), de modo que
-  cualquier tarjeta que una página comparta mantiene la marca.
-- **Tarjetas localizadas (og-image-<lang>.png).** Las cinco landings locales
-  (es, fr, de, pt, it) now usan su propia tarjeta (`og-image-es.png`,
+- Adding a new page forces it to declare (or inherit by default) its
+  card; using the pricing one on a page with no pricing pitch — or the
+  general one on a future dedicated pricing page — breaks CI with an
+  actionable message (`og:image must be … per OG_IMAGE_POLICY`).
+- If a dedicated `/pricing` page ever exists, adding it to
+  `OG_IMAGE_POLICY` pointing at `og-image-pricing.png` is one line in the
+  gate and one on the page; the documentation and verification already exist.
+- The two cards remain twins in style and verified by
+  `check:brand-logo` (embedded logo against `logo-512.png`), so
+  whatever card a page shares keeps the brand.
+- **Localized cards (og-image-<lang>.png).** The five local landings
+  (es, fr, de, pt, it) now use their own card (`og-image-es.png`,
   `og-image-fr.png`, `og-image-de.png`, `og-image-pt.png`, `og-image-it.png`)
-  con el mismo estilo, mismo logo incrustado y mismo nombre de marca, pero con
-  el eslogan traducido al idioma de esa landing (`Tu cerebro digital local y
+  with the same style, same embedded logo and same brand name, but with
+  the slogan translated into that landing's language (`Tu cerebro digital local y
   privado` / `Ton cerveau numérique local et privé` / `Dein lokaler und
   privater digitaler Geist` / `Seu cérebro digital local e privado` / `Il
-  tuo cervello digitale locale e privato`). La política las incluye en
-  `OG_IMAGE_POLICY` y el gate `check:seo` exige el valor exacto por página.
-  El gate `check:brand-logo` (Guard 1) verifica que el logo incrustado de
-  cada una coincide con la obra canónica, y Guard 3 verifica que el eslogan
-  traducido aparece (token a token) en el `og:description` de esa misma
-  landing, de modo que un cambio de copia localizada que deje huérfano el
-  eslogan de la tarjeta rompe CI nombrando las palabras huérfanas.
-  Las tarjetas PNG se generan a partir del mismo SVG base
-  (`public/og-image.svg`) con el eslogan localizado; el proceso se documenta
-  en `scripts/og-image-locale-gen.mjs` (una sola función sharp + logo
-  data-URI del SVG base).
+  tuo cervello digitale locale e privato`). The policy includes them in
+  `OG_IMAGE_POLICY` and the `check:seo` gate requires the exact per-page value.
+  The `check:brand-logo` gate (Guard 1) verifies that the embedded logo of
+  each matches the canonical artwork, and Guard 3 verifies that the translated
+  slogan appears (token by token) in that same landing's `og:description`,
+  so a localized copy change that orphans the
+  card's slogan breaks CI naming the orphaned words.
+  The PNG cards are generated from the same base SVG
+  (`public/og-image.svg`) with the localized slogan; the process is documented
+  in `scripts/og-image-locale-gen.mjs` (a single sharp function + the logo
+  data-URI from the base SVG).

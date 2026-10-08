@@ -11,7 +11,7 @@
 | `VITE_APP_VERSION` | App version | `1.0.0` |
 | `VITE_DB_NAME` | IndexedDB database name | `bookmarkforge_v5` |
 | `VITE_SENTRY_DSN` | Sentry DSN for error reporting | *(optional)* |
-| `AI_SESSION_ORIGINS` | Exact browser origins allowed to call `POST /api/license/entitlement` | `https://bookmarkforge.com` |
+| `AI_SESSION_ORIGINS` | Exact browser origins allowed to call `POST /api/license/entitlement` | `https://bookmarkforgeapp.com` |
 
 > **Security note:** `AI_SESSION_ORIGINS` is **required in production** — the
 > production Compose file refuses to start without it. Any other origin receives

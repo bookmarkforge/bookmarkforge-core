@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 /**
- * Lint acotado por dominios.
+ * Bounded, domain-grouped linting.
  *
- * `eslint .` construye un único grafo de configuración sobre todo el
- * checkout y puede superar el heap disponible en máquinas de desarrollo. Este
- * ejecutor conserva exactamente la misma configuración flat de ESLint, pero
- * procesa lotes secuenciales y aislados. La memoria máxima de cada proceso se
- * puede ajustar con BMF_LINT_HEAP_MB (por defecto 1536 MiB) y el tamaño con
+ * `eslint .` builds a single configuration graph over the whole checkout and
+ * can exceed the heap available on development machines. This executor keeps
+ * exactly the same ESLint flat config, but processes sequential, isolated
+ * batches. Each process's max memory can be tuned with BMF_LINT_HEAP_MB
+ * (default 1536 MiB) and the batch size with
  * BMF_LINT_BATCH_SIZE (por defecto 120 archivos).
  *
- * El proceso es deliberadamente secuencial: así no se intercambia el coste de
- * memoria de ESLint por N procesos concurrentes. Un fallo se propaga y no se
+ * The process is deliberately sequential: this does not trade ESLint's
+ * memory cost for N concurrent processes. A failure propagates and is not
  * ocultan warnings ni errores.
  *
  * Uso:
@@ -40,6 +40,7 @@ const ROOT_FILES = new Set([
   "playwright.launch-smoke.config.ts",
   "playwright.mobile.config.ts",
   "playwright.human-like.config.ts",
+  "playwright.human-like.browsers.config.ts",
   "playwright.multiuser.config.ts",
   "playwright.nightly.config.ts",
   "playwright.performance.config.ts",
@@ -123,7 +124,7 @@ function runBatch(label, files, batchIndex, totalBatches) {
     stdio: verbose ? "inherit" : ["ignore", "inherit", "inherit"],
   });
   if (result.error) {
-    console.error(`[lint-bounded] no se pudo iniciar ESLint: ${result.error.message}`);
+    console.error(`[lint-bounded] could not start ESLint: ${result.error.message}`);
     return 1;
   }
   return result.status ?? 1;
@@ -152,8 +153,8 @@ const lintableRootFiles = readdirSync(ROOT, { withFileTypes: true })
 const unregisteredRootFiles = lintableRootFiles.filter((name) => !ROOT_FILES.has(name)).sort();
 if (unregisteredRootFiles.length > 0) {
   console.error(
-    `[lint-bounded] archivos raíz con extensión linteable ausentes de ROOT_FILES: ` +
-      `${unregisteredRootFiles.join(", ")}. Añádelos a ROOT_FILES: sin eso ESLint los ignora y el lint igualmente dice PASS.`,
+    `[lint-bounded] root files with a lintable extension missing from ROOT_FILES: ` +
+      `${unregisteredRootFiles.join(", ")}. Add them to ROOT_FILES: without that ESLint ignores them and lint still says PASS.`,
   );
   process.exit(1);
 }
@@ -190,4 +191,4 @@ for (let index = 0; index < allBatches.length; index += 1) {
   }
 }
 
-console.log(`[lint-bounded] PASS — ${totalFiles} archivos lintados sin heap global de 4 GiB`);
+console.log(`[lint-bounded] PASS — ${totalFiles} files linted without a global 4 GiB heap`);

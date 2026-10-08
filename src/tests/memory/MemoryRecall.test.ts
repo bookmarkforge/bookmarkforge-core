@@ -89,7 +89,7 @@ describe("MemoryRecall", () => {
   const mockAtom = (o: Partial<MemoryAtom> = {}): MemoryAtom => ({
     type: "atom",
     id: "atom_1",
-    content: "prefiere código limpio",
+    content: "prefers clean code",
     category: "preference",
     confidence: 0.85,
     sourceMessageId: "msg_1",
@@ -100,8 +100,8 @@ describe("MemoryRecall", () => {
   });
   const mockScenario = (o: Partial<MemoryScenario> = {}): MemoryScenario => ({
     id: "sc_1",
-    title: "Patrón de prueba",
-    description: "Descripción del patrón",
+    title: "Test pattern",
+    description: "Pattern description",
     atomIds: ["atom_1"],
     frequency: 5,
     lastActive: "",
@@ -361,12 +361,12 @@ describe("MemoryRecall", () => {
       const msgs = [
         mockMessage({
           id: "msg_2",
-          content: "dato público",
+          content: "public data",
           createdAt: "2025-01-02T00:00:00.000Z",
         }),
         mockMessage({
           id: "msg_1",
-          content: "SECRETO PRIVADO",
+          content: "PRIVATE SECRET",
           isPrivate: true,
           createdAt: "2025-01-01T00:00:00.000Z",
         }),
@@ -377,7 +377,7 @@ describe("MemoryRecall", () => {
         "session_1",
       );
       expect(result).toHaveLength(1);
-      expect(result[0].content).toBe("dato público");
+      expect(result[0].content).toBe("public data");
     });
   });
 
@@ -536,16 +536,16 @@ describe("MemoryRecall", () => {
       (ragEngine.generateEmbedding as any).mockResolvedValue([0.1]);
       (vectorIndexService.search as any).mockResolvedValue({ neighbors: [] });
       mockDb.memory.find = mockFind([
-        mockMessage({ content: "público 1" }),
+        mockMessage({ content: "public 1" }),
         mockMessage({
           id: "msg_2",
-          content: "SECRETO ABSOLUTO",
+          content: "ABSOLUTE SECRET",
           isPrivate: true,
         }),
       ]);
       const result = await memoryRecall.recall("q", "session_1");
-      expect(result.contextString).not.toContain("SECRETO ABSOLUTO");
-      expect(result.contextString).toContain("público 1");
+      expect(result.contextString).not.toContain("ABSOLUTE SECRET");
+      expect(result.contextString).toContain("public 1");
     });
   });
 

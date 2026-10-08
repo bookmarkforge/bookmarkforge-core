@@ -1,74 +1,74 @@
-# BookmarkForge — 6 alertas exactas — cron para producción
+# BookmarkForge — 6 exact alerts — production cron
 # Copia este archivo a /etc/cron.d/bookmarkforge o usa `crontab -e`
 #
-# Requiere: PROD_BASE_URL y SLACK_WEBHOOK (opcional) en el entorno
-# Los checks ya están en el código: storageMonitor + productionMonitor + bundleIntegrity
-# + clientEventReporter + retry-stats + sondeo de degradación
+# Requires: PROD_BASE_URL and SLACK_WEBHOOK (optional) in the environment
+# The checks already live in the code: storageMonitor + productionMonitor + bundleIntegrity
+# + clientEventReporter + retry-stats + degradation probing
 
 # ALERTA 1: APP CAÍDA — cada 60s verifica nginx + api + WS + CSP
-# Cada fallo aislado → alerta Slack. Con APP_DOWN_AUTO_ROLLBACK=1, DOS fallos
-# CONSECUTIVOS (contador persistido entre ticks del cron) disparan rollback
-# automático y luego rollback.mjs --verify corrobora la recuperación ANTES de
-# notificar: verify OK → NO alerta al operador (el rollback resolvió); verify
-# FAIL → escala. Rollback/recovery verificado con mocks (see scripts/__tests__).
-# Rollback automático habilitado (fail-closed: sin esta var NO ejecuta rollback):
+# Every isolated failure → Slack alert. With APP_DOWN_AUTO_ROLLBACK=1, TWO
+# CONSECUTIVE failures (counter persisted across cron ticks) trigger automatic
+# rollback and then rollback.mjs --verify confirms recovery BEFORE notifying:
+# verify OK → NO operator alert (the rollback resolved it); verify FAIL →
+# escalate. Rollback/recovery verified with mocks (see scripts/__tests__).
+# Automatic rollback enabled (fail-closed: without this var NO rollback runs):
 #   APP_DOWN_AUTO_ROLLBACK=1
-# Umbral de consecutivos (default 2):
+# Consecutive-failure threshold (default 2):
 #   APP_DOWN_THRESHOLD=2
 # Comandos de rollback/verify (default node scripts/rollback.mjs --auto / --verify):
 #   ROLLBACK_CMD='node scripts/rollback.mjs --auto'
 #   ROLLBACK_VERIFY_CMD='node scripts/rollback.mjs --verify'
 * * * * * PROD_BASE_URL=https://tu-dominio.com SLACK_WEBHOOK=https://hooks.slack.com/services/T.../B.../... APP_DOWN_AUTO_ROLLBACK=1 /usr/bin/node /app/scripts/monitoring-alerts.mjs >> /var/log/bmf-monitoring.log 2>&1 || echo "ALERTA APP_CAIDA $(date)" | tee -a /var/log/bmf-monitoring.log
 
-# ALERTA 1 (alternativa simple sin Slack): solo log y exit code
+# ALERT 1 (simple alternative without Slack): log and exit code only
 # * * * * * PROD_BASE_URL=https://tu-dominio.com /usr/bin/node /app/scripts/production-smoke.mjs >> /var/log/bmf-smoke.log 2>&1 || /usr/local/bin/bmf-page.sh
 
 # ALERTA 2: BUNDLE CORRUPTO — se detecta en cliente via bundleIntegrity.ts:recordIntegritySpike
-# Cada `bundle-integrity-failed` incrementa contador. A los 3 fallos en 5min dispara evento `bundle-integrity-spike`
-# El servidor puede contar CSP violations vía /csp-report:
+# Each `bundle-integrity-failed` increments a counter. 3 failures within 5min fire the `bundle-integrity-spike` event
+# The server can count CSP violations via /csp-report:
 # En nginx log: tail -F /var/log/nginx/access.log | grep csp-report | awk '{print $1}' | sort | uniq -c
-# Si >10/min → alerta. Ya está en productionMonitor.ts:recordCspViolation (threshold 10)
+# If >10/min → alert. Already in productionMonitor.ts:recordCspViolation (threshold 10)
 
 # ALERTA 3: STORAGE PRESSURE + BUNDLE INTEGRITY — cliente cada 5min via storageMonitor.ts
 # Si pct>80% → evento `storage-pressure` (pressure). Si >90% → critical.
-# El cliente ya muestra toast QuotaExceededError (src/main.tsx:172).
-# IMPLEMENTADO: el cliente reenvía storage-pressure / bundle-integrity-spike /
-# error-spike a POST /api/client-events (same-origin, gated por bmf_local_error_storage).
+# The client already shows a QuotaExceededError toast (src/main.tsx:172).
+# IMPLEMENTED: the client forwards storage-pressure / bundle-integrity-spike /
+# error-spike to POST /api/client-events (same-origin, gated by bmf_local_error_storage).
 # error-spike: 3 errores globales (window error / unhandledrejection) en 60s →
 # evento window `error-spike` en productionMonitor.ts (recordGlobalError).
-# El servidor alerta cuando >= 3 clientes reportan critical en 10 min:
+# The server alerts when >= 3 clients report critical within 10 min:
 #   - Log estructurado `client_events_critical_threshold` (la alerta primaria)
 #   - Webhook opcional: CLIENT_EVENTS_WEBHOOK_URL=https://hooks.slack.com/...
 # Tunables: CLIENT_EVENTS_CRITICAL_CLIENTS (default 3), CLIENT_EVENTS_WINDOW_MS (default 600000)
-# Diagnóstico (requiere token):
+# Diagnostics (requires a token):
 #   curl -H 'x-client-events-admin-token: <CLIENT_EVENTS_ADMIN_TOKEN>' https://tu-dominio.com/api/client-events
 
-# ALERTA 4: CLIENT_CRITICAL — cluster de clientes críticos → PÁGINA + ROLLBACK AUTO
-# monitoring-alerts.mjs lee el log del servidor (client_events_critical_threshold
-# con timestamp) y escala: página (PAGE_CMD) + rollback automático (AUTO_ROLLBACK=1).
-# En producción con docker logs el default ya funciona; para log en archivo:
+# ALERT 4: CLIENT_CRITICAL — cluster of critical clients → PAGE + AUTO ROLLBACK
+# monitoring-alerts.mjs reads the server log (client_events_critical_threshold
+# with timestamp) and escalates: page (PAGE_CMD) + automatic rollback (AUTO_ROLLBACK=1).
+# In production with docker logs the default already works; for file logs:
 #   CLIENT_EVENTS_LOG_FILE=/var/log/bmf-server.log
-# Rollback automático habilitado (fail-closed: sin esta var NO ejecuta rollback):
+# Automatic rollback enabled (fail-closed: without this var NO rollback runs):
 #   AUTO_ROLLBACK=1
-# Página opcional (ej: script de SMS/PagerDuty):
+# Optional page command (e.g. SMS/PagerDuty script):
 #   PAGE_CMD=/usr/local/bin/bmf-page.sh
-# Cooldown anti-loop entre página/rollback (default 600000 ms):
+# Anti-loop cooldown between page/rollback (default 600000 ms):
 #   ROLLBACK_COOLDOWN_MS=600000
 
-# ALERTA 5: RETRY_DEGRADED — clientes que perdieron eventos tras reintentos acotados
-# El reporter POSTea contadores a /api/client-events/retry-stats; el servidor loguea
-# `client_events_retry_degraded` al ver drops nuevos. monitoring-alerts consume la
-# misma fuente de log (CLIENT_EVENTS_LOG_FILE / CLIENT_EVENTS_LOG_CMD) y PAGINA
-# (PAGE_CMD, cooldown). Nunca rollback: es salud de entrega, no regresión de código.
+# ALERT 5: RETRY_DEGRADED — clients that lost events after bounded retries
+# The reporter POSTs counters to /api/client-events/retry-stats; the server logs
+# `client_events_retry_degraded` on new drops. monitoring-alerts consumes the
+# same log source (CLIENT_EVENTS_LOG_FILE / CLIENT_EVENTS_LOG_CMD) and PAGES
+# (PAGE_CMD, cooldown). Never rollback: this is delivery health, not a code regression.
 
-# ALERTA 6: API_DEGRADADO — degradación (no outage): p95 de /health + error-rate
-# Sondea /health N veces por tick y falla si p95 > umbral o error-rate > umbral.
-# Página (PAGE_CMD, cooldown); NUNCA rollback (outage total = APP_CAIDA).
-# Umbrales (defaults):
-#   API_PROBE_SAMPLES=10        muestras de /health por tick
-#   API_PROBE_TIMEOUT_MS=5000   timeout por muestra (ms)
-#   API_LATENCY_P95_MS=1000     p95 >= 1000 ms = degradado
-#   API_ERROR_RATE=0.2          >= 20% de muestras fallidas = degradado
+# ALERT 6: API_DEGRADED — degradation (not an outage): /health p95 + error-rate
+# Probes /health N times per tick and fails when p95 > threshold or error-rate > threshold.
+# Page (PAGE_CMD, cooldown); NEVER rollback (total outage = APP_DOWN).
+# Thresholds (defaults):
+#   API_PROBE_SAMPLES=10        /health samples per tick
+#   API_PROBE_TIMEOUT_MS=5000   timeout per sample (ms)
+#   API_LATENCY_P95_MS=1000     p95 >= 1000 ms = degraded
+#   API_ERROR_RATE=0.2          >= 20% failed samples = degraded
 
 # VERIFICACIÓN MANUAL:
 # node scripts/monitoring-alerts.mjs --json

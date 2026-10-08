@@ -774,38 +774,54 @@ export async function decryptWithSessionKey(
   data: Uint8Array,
   password: string | Uint8Array,
 ): Promise<Uint8Array> {
-  if (data.length > 1 + VAULT_KDF_SALT_BYTES + 28 && data[0] === SESSION_V6_MARKER) {
-    // V6 layout. The marker is not a hard guarantee for LEGACY blobs (their
-    // first byte is random HKDF salt), so a failed v6 attempt falls through
-    // to the legacy layout instead of surfacing an auth error for a blob that
-    // is actually legacy.
-    const vaultSalt = data.slice(1, 1 + VAULT_KDF_SALT_BYTES);
-    const hkdfSalt = data.slice(1 + VAULT_KDF_SALT_BYTES, 1 + VAULT_KDF_SALT_BYTES + 16);
-    const iv = data.slice(1 + VAULT_KDF_SALT_BYTES + 16, 1 + VAULT_KDF_SALT_BYTES + 28);
-    const ciphertext = data.slice(1 + VAULT_KDF_SALT_BYTES + 28);
-    try {
-      return await decryptSessionPayload(
-        ciphertext,
-        iv,
-        hkdfSalt,
-        vaultSalt,
-        password,
-      );
-    } catch (error) {
-      // Ambiguous legacy payload whose first byte happened to equal the
-      // marker: retry with the legacy layout before failing.
-      void error;
+  // Each layout attempt gets its OWN password material. `decryptSessionPayload`
+  // consumes the buffer it is handed (zeroizing it once the master key is
+  // derived), so a Uint8Array password passed straight to the v6 attempt would
+  // reach the legacy retry below all-zero: the retry would then hash zeros,
+  // miss the cache and derive the wrong master key — failing for exactly the
+  // legacy blobs this retry exists for (random first byte equal to
+  // SESSION_V6_MARKER, 1/256). A string password encoded fresh per attempt
+  // never showed this; the service layer always passes bytes.
+  const owned = password instanceof Uint8Array ? password : null;
+  const attempt = (): string | Uint8Array => (owned ? owned.slice() : (password as string));
+  try {
+    if (data.length > 1 + VAULT_KDF_SALT_BYTES + 28 && data[0] === SESSION_V6_MARKER) {
+      // V6 layout. The marker is not a hard guarantee for LEGACY blobs (their
+      // first byte is random HKDF salt), so a failed v6 attempt falls through
+      // to the legacy layout instead of surfacing an auth error for a blob that
+      // is actually legacy.
+      const vaultSalt = data.slice(1, 1 + VAULT_KDF_SALT_BYTES);
+      const hkdfSalt = data.slice(1 + VAULT_KDF_SALT_BYTES, 1 + VAULT_KDF_SALT_BYTES + 16);
+      const iv = data.slice(1 + VAULT_KDF_SALT_BYTES + 16, 1 + VAULT_KDF_SALT_BYTES + 28);
+      const ciphertext = data.slice(1 + VAULT_KDF_SALT_BYTES + 28);
+      try {
+        return await decryptSessionPayload(
+          ciphertext,
+          iv,
+          hkdfSalt,
+          vaultSalt,
+          attempt(),
+        );
+      } catch (error) {
+        // Ambiguous legacy payload whose first byte happened to equal the
+        // marker: retry with the legacy layout before failing.
+        void error;
+      }
     }
-  }
 
-  // Legacy layout: hkdf_salt(16) || iv(12) || ciphertext
-  return decryptSessionPayload(
-    data.slice(28),
-    data.slice(16, 28),
-    data.slice(0, 16),
-    null,
-    password,
-  );
+    // Legacy layout: hkdf_salt(16) || iv(12) || ciphertext
+    return await decryptSessionPayload(
+      data.slice(28),
+      data.slice(16, 28),
+      data.slice(0, 16),
+      null,
+      attempt(),
+    );
+  } finally {
+    // Ownership contract unchanged: a Uint8Array password is consumed (and
+    // warned about if already zero) exactly once, by this call.
+    if (owned) {zeroPasswordBytes(owned);}
+  }
 }
 
 /** Shared body of the session-key decrypt paths (v6 and legacy). */

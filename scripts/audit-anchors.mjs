@@ -36,7 +36,7 @@
  * anchor via an ADR-level change. Pass `--strict-discovery` to make any
  * discovery a hard failure; `--strict` remains a compatibility alias.
  */
-import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import { isProSubjectGlob } from "./pro-boundary.mjs";
 
@@ -300,12 +300,10 @@ function globToRegex(glob) {
 
 /**
  * Walk `src/` and yield relative POSIX-style paths. We only need this for
- * patterns the gateway has to interpret; everything else uses `existsSync`
- * for the common exact-path case.
+ * patterns the gateway has to interpret; everything else uses direct path reads.
  */
 function* walkSrc(root) {
   const srcRoot = join(root, "src");
-  if (!existsSync(srcRoot)) return;
   const stack = [srcRoot];
   while (stack.length > 0) {
     const dir = stack.pop();
@@ -473,13 +471,13 @@ export function runAuditAnchors({
     updatedAt: null,
     anchors: [],
   };
-  if (existsSync(BASELINE_PATH)) {
-    try {
-      const parsed = JSON.parse(readFileSync(BASELINE_PATH, "utf8"));
-      baseline = parsed && typeof parsed === "object"
-        ? parsed
-        : { totalAnchors: 0, missingCount: 0, updatedAt: null, anchors: [] };
-    } catch {
+  try {
+    const parsed = JSON.parse(readFileSync(BASELINE_PATH, "utf8"));
+    baseline = parsed && typeof parsed === "object"
+      ? parsed
+      : { totalAnchors: 0, missingCount: 0, updatedAt: null, anchors: [] };
+  } catch (error) {
+    if (error?.code !== "ENOENT") {
       // A malformed baseline has no catalog entries; the inflation check below
       // fails closed and `--fix` can rewrite it after the intentional change.
       baseline = {

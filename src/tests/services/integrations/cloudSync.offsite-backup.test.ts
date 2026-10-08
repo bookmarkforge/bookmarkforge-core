@@ -32,6 +32,14 @@ vi.mock("../../../services/pro-access", async () => ({
   // end-to-end (the gate itself is covered by pro-access's own tests).
   loadBackupService: async () =>
     (await import("../../../services/BackupService")).BackupService,
+  // P1 contract member: BackupService imports the disk-copy loader for the
+  // F0-1 auto-backup branch. That branch is exercised end-to-end in
+  // BackupService.test (mock at L79, cases at L2040-2127); this file's flows
+  // never reach auto-backup — see ledger Ruling P1.7.
+  loadDiskBackupService: vi.fn().mockResolvedValue({
+    buildBackupFileName: vi.fn().mockReturnValue("bookmarkforge-backup.json"),
+    writeBackupToDisk: vi.fn().mockResolvedValue(null),
+  }),
 }));
 vi.mock("../../../services/SecurityVault", () => ({
   securityVault: {

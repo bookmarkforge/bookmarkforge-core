@@ -7,7 +7,7 @@ describe("validateStagingUrl", () => {
   });
 
   it("rejects production, credentials, query strings, and HTTP", () => {
-    expect(validateStagingUrl("https://bookmarkforge.com")).toBe(false);
+    expect(validateStagingUrl("https://bookmarkforgeapp.com")).toBe(false);
     expect(validateStagingUrl("https://user:pass@app-staging.example.test")).toBe(false);
     expect(validateStagingUrl("https://app-staging.example.test?token=secret")).toBe(false);
     expect(validateStagingUrl("http://app-staging.example.test")).toBe(false);

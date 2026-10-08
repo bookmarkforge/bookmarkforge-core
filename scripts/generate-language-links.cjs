@@ -35,9 +35,9 @@ function buildLanguageLinks() {
     // Generate the link based on language code
     let href;
     if (langCode === 'en') {
-      href = '/?lang=en';
+      href = '/';
     } else {
-      href = `/${langCode}/?lang=${langCode}`;
+      href = `/${langCode}/`;
     }
     
     languageLinks.push({

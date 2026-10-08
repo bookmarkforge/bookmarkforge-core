@@ -55,7 +55,7 @@ describe("AgentService", () => {
       ["fixGrammar", (s: string) => agentService.fixGrammar(s)],
       ["translate", (s: string) => agentService.translate(s)],
       ["extractKeyPoints", (s: string) => agentService.extractKeyPoints(s)],
-    ])("%s lanza error para texto vacío", async (_, fn) => {
+    ])("%s throws error for empty text", async (_, fn) => {
       await expect(fn("")).rejects.toThrow("[AgentService] Invalid input");
     });
   });
@@ -644,26 +644,26 @@ describe("AgentService", () => {
       expect(mockLogger.warn).toHaveBeenCalled();
     });
 
-    it("getOrCreateSession delega en memoryEngine", async () => {
+    it("getOrCreateSession delegates to memoryEngine", async () => {
       mockMemoryEngine.isInitialized.mockReturnValue(true);
       mockMemoryEngine.getOrCreateSession.mockResolvedValue("session-1");
-      await expect(agentService.getOrCreateSession("Título")).resolves.toBe(
+      await expect(agentService.getOrCreateSession("Title")).resolves.toBe(
         "session-1",
       );
-      expect(mockMemoryEngine.getOrCreateSession).toHaveBeenCalledWith("Título");
+      expect(mockMemoryEngine.getOrCreateSession).toHaveBeenCalledWith("Title");
     });
 
     it("getOrCreateSession initializes memory before creating", async () => {
       mockMemoryEngine.isInitialized.mockReturnValue(false);
       mockMemoryEngine.getOrCreateSession.mockResolvedValue("session-1");
-      await agentService.getOrCreateSession("Título");
+      await agentService.getOrCreateSession("Title");
       expect(mockMemoryEngine.initialize).toHaveBeenCalled();
     });
 
     it("getOrCreateSession returns null if it fails", async () => {
       mockMemoryEngine.isInitialized.mockReturnValue(true);
       mockMemoryEngine.getOrCreateSession.mockRejectedValue(new Error("fail"));
-      await expect(agentService.getOrCreateSession("Título")).resolves.toBeNull();
+      await expect(agentService.getOrCreateSession("Title")).resolves.toBeNull();
       expect(mockLogger.warn).toHaveBeenCalled();
     });
   });

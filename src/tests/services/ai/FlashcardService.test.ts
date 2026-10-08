@@ -30,8 +30,8 @@ describe("FlashcardService", () => {
   let mockDb: { flashcards: { insert: ReturnType<typeof vi.fn> } };
 
   const mockCards = [
-    { question: "¿Qué es IA?", answer: "Inteligencia Artificial" },
-    { question: "¿Qué es ML?", answer: "Machine Learning" },
+    { question: "What is AI?", answer: "Artificial Intelligence" },
+    { question: "What is ML?", answer: "Machine Learning" },
   ];
 
   beforeEach(() => {
@@ -122,7 +122,9 @@ describe("FlashcardService", () => {
       expect(mockDb.flashcards.insert).toHaveBeenCalledTimes(2);
     });
 
-    it("uses the Spanish prompt when lang=es", async () => {
+    // The flashcard prompt is English-only since the prompt-language
+    // migration — lang=es must NOT switch it to Spanish.
+    it("keeps the English prompt when lang=es", async () => {
       mockGenerateText.mockResolvedValue({
         text: JSON.stringify([{ question: "Q", answer: "A" }]),
         provider: "gemini",
@@ -136,7 +138,7 @@ describe("FlashcardService", () => {
       const callPrompt = mockGenerateText.mock.calls[0]![0];
       const callSystem = mockGenerateText.mock.calls[0]![1];
       expect(callPrompt).toContain("Text:");
-      expect(callSystem).toContain("tarjetas de estudio");
+      expect(callSystem).toContain("study flashcards");
     });
 
     it("uses the English prompt by default", async () => {
@@ -278,9 +280,9 @@ describe("FlashcardService", () => {
         text: JSON.stringify([{ question: "Q", answer: "A" }]),
         provider: "gemini",
       });
-      const content = "Contenido confidencial 777 ".repeat(10);
-      await service.generateFromBookmark("bm-1", "Título", content, "en", true);
-      await service.generateFromBookmark("bm-2", "Título", content, "en", false);
+      const content = "Confidential content 777 ".repeat(10);
+      await service.generateFromBookmark("bm-1", "Title", content, "en", true);
+      await service.generateFromBookmark("bm-2", "Title", content, "en", false);
       expect(mockGenerateText).toHaveBeenCalledTimes(2);
     });
 
@@ -289,9 +291,9 @@ describe("FlashcardService", () => {
         text: JSON.stringify([{ question: "Q", answer: "A" }]),
         provider: "gemini",
       });
-      const content = "Contenido compartido 888 ".repeat(10);
-      await service.generateFromBookmark("bm-1", "Título", content, "en", false);
-      await service.generateFromBookmark("bm-2", "Título", content, "en", true);
+      const content = "Shared content 888 ".repeat(10);
+      await service.generateFromBookmark("bm-1", "Title", content, "en", false);
+      await service.generateFromBookmark("bm-2", "Title", content, "en", true);
       expect(mockGenerateText).toHaveBeenCalledTimes(2);
     });
   });
@@ -368,7 +370,7 @@ describe("FlashcardService", () => {
       });
       const count = await service.generateFromBookmark(
         "bm-1",
-        "Título largo ".repeat(15),
+        "Long title ".repeat(15),
         "",
       );
       expect(count).toBe(1);
@@ -376,7 +378,7 @@ describe("FlashcardService", () => {
       const callPrompt = mockGenerateText.mock.calls[0]![0];
       // generateFromBookmark constructs: Title: "$title".\nContent: "$text"
       expect(callPrompt).toContain('Title: "');
-      expect(callPrompt).toContain('Título largo');
+      expect(callPrompt).toContain('Long title');
     });
 
     it("generates flashcards from AI and saves to DB with sourceType=bookmark", async () => {
@@ -386,8 +388,8 @@ describe("FlashcardService", () => {
       });
       const count = await service.generateFromBookmark(
         "bm-1",
-        "Título",
-        "Contenido largo ".repeat(15),
+        "Title",
+        "Long content ".repeat(15),
       );
       expect(count).toBe(2);
       expect(mockDb.flashcards.insert).toHaveBeenCalledTimes(2);
@@ -422,8 +424,8 @@ describe("FlashcardService", () => {
 
       const count = await service.generateFromBookmark(
         "bm-rollback",
-        "Título",
-        "Contenido largo rollback ".repeat(10),
+        "Title",
+        "Long content rollback ".repeat(10),
       );
 
       expect(count).toBe(0);
@@ -444,8 +446,8 @@ describe("FlashcardService", () => {
 
       const count = await service.generateFromBookmark(
         "bm-idempotent",
-        "Título",
-        "Contenido largo idempotente ".repeat(10),
+        "Title",
+        "Long idempotent content ".repeat(10),
       );
 
       expect(count).toBe(0);
@@ -462,16 +464,16 @@ describe("FlashcardService", () => {
         new Promise((resolve) => { resolveBulk = resolve; }),
       );
       Object.assign(mockDb.flashcards, { bulkInsert });
-      const content = "Contenido largo concurrencia persistente ".repeat(10);
+      const content = "Long persistent concurrency content ".repeat(10);
 
       const firstRequest = service.generateFromBookmark(
         "bm-concurrent-batch",
-        "Título",
+        "Title",
         content,
       );
       const secondRequest = service.generateFromBookmark(
         "bm-concurrent-batch",
-        "Título",
+        "Title",
         content,
       );
 
@@ -495,16 +497,16 @@ describe("FlashcardService", () => {
       );
       Object.assign(mockDb.flashcards, { bulkInsert });
       const controller = new AbortController();
-      const content = "Contenido largo lote cancelado ".repeat(10);
+      const content = "Long cancelled batch content ".repeat(10);
 
       const firstRequest = service.generateFromBookmark(
         "bm-cancel-shared",
-        "Título",
+        "Title",
         content,
       );
       const cancelledRequest = service.generateFromBookmark(
         "bm-cancel-shared",
-        "Título",
+        "Title",
         content,
         "en",
         false,
@@ -528,8 +530,8 @@ describe("FlashcardService", () => {
       const controller = new AbortController();
       const request = service.generateFromBookmark(
         "bm-cancel",
-        "Título",
-        "Contenido largo cancelable ".repeat(10),
+        "Title",
+        "Long cancellable content ".repeat(10),
         "en",
         false,
         controller.signal,
@@ -548,8 +550,8 @@ describe("FlashcardService", () => {
       mockGenerateText.mockRejectedValue(new Error("API error"));
       const count = await service.generateFromBookmark(
         "bm-1",
-        "Título",
-        "Contenido largo AI falla ".repeat(10),
+        "Title",
+        "Long AI fails content ".repeat(10),
       );
       expect(count).toBe(0);
     });
@@ -561,8 +563,8 @@ describe("FlashcardService", () => {
       });
       const count = await service.generateFromBookmark(
         "bm-1",
-        "Título",
-        "Contenido largo not array ".repeat(10),
+        "Title",
+        "Long not array content ".repeat(10),
       );
       expect(count).toBe(0);
     });
@@ -575,22 +577,22 @@ describe("FlashcardService", () => {
       mockDb.flashcards.insert.mockRejectedValue(new Error("DB error"));
       const count = await service.generateFromBookmark(
         "bm-1",
-        "Título",
-        "Contenido largo db fail ".repeat(10),
+        "Title",
+        "Long db fail content ".repeat(10),
       );
       expect(count).toBe(0);
     });
 
-    it("uses the Spanish prompt when lang=es", async () => {
+    it("uses the English prompt for all languages", async () => {
       mockGenerateText.mockResolvedValue({
         text: JSON.stringify([{ question: "Q", answer: "A" }]),
         provider: "gemini",
       });
       await service.generateFromBookmark(
         "bm-1",
-        "Título",
-        "Contenido largo ".repeat(10),
-        "es",
+        "Title",
+        "Long content ".repeat(10),
+        "en",
       );
       const callSystem = mockGenerateText.mock.calls[0]![1];
       expect(callSystem).toContain("flashcards");
@@ -601,7 +603,7 @@ describe("FlashcardService", () => {
         text: JSON.stringify([{ question: "Q", answer: "A" }]),
         provider: "gemini",
       });
-      const content = "Contenido largo cache ".repeat(10);
+      const content = "Long cache content ".repeat(10);
       const s1 = freshService();
       await s1.generateFromBookmark("bm-1", "T", content, "en", false);
       const s2 = freshService();
@@ -614,17 +616,17 @@ describe("FlashcardService", () => {
       mockGenerateText.mockReturnValue(
         new Promise((resolve) => { resolveAI = resolve; }),
       );
-      const content = "Contenido largo inferencia concurrente ".repeat(10);
+      const content = "Long concurrent inference content ".repeat(10);
       const firstRequest = service.generateFromBookmark(
         "bm-inference-1",
-        "Título compartido",
+        "Shared title",
         content,
         "en",
         false,
       );
       const secondRequest = service.generateFromBookmark(
         "bm-inference-2",
-        "Título compartido",
+        "Shared title",
         content,
         "en",
         false,
@@ -642,14 +644,14 @@ describe("FlashcardService", () => {
       expect(mockGenerateText).toHaveBeenCalledTimes(1);
     });
 
-    it("libera inferencias compartidas que quedan pendientes", async () => {
+    it("releases shared inferences that remain pending", async () => {
       vi.useFakeTimers();
       try {
         mockGenerateText.mockReturnValue(new Promise(() => {}));
-        const content = "Contenido largo inferencia atascada ".repeat(10);
+        const content = "Long stuck inference content ".repeat(10);
         const request = service.generateFromBookmark(
           "bm-inference-timeout",
-          "Título",
+          "Title",
           content,
           "en",
           false,
@@ -667,7 +669,7 @@ describe("FlashcardService", () => {
           provider: "gemini",
         });
         await expect(
-          service.generateFromBookmark("bm-inference-timeout", "Título", content, "en", false),
+          service.generateFromBookmark("bm-inference-timeout", "Title", content, "en", false),
         ).resolves.toBe(1);
         expect(mockGenerateText).toHaveBeenCalledTimes(2);
       } finally {

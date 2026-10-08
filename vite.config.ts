@@ -60,6 +60,28 @@ function sha256Hex(data: string | Buffer): string {
   return createHash("sha256").update(data).digest("hex");
 }
 
+/**
+ * SRI: hash straight from the on-disk files (the hashes in `files`) so
+ * integrity attributes always match what is actually served — hashing
+ * `ctx.bundle` chunk code pre-write produced mismatches with rolldown's
+ * final output. Idempotent: a page that already carries integrity is left
+ * untouched.
+ */
+function injectSriAttributes(html: string, files: Record<string, string>): string {
+  if (html.includes(' integrity="sha256-')) return html;
+  return html.replace(
+    /(<(?:script|link)\b[^>]*?\b(?:src|href)=")(\/assets\/[^"]+)(")/g,
+    (match, pre: string, file: string, post: string) => {
+      const hash = files[file];
+      if (!hash) {
+        return match;
+      }
+      const b64 = Buffer.from(hash, "hex").toString("base64");
+      return `${pre}${file}${post} integrity="sha256-${b64}" crossorigin="anonymous"`;
+    },
+  );
+}
+
 function walkDir(dir: string): string[] {
   const out: string[] = [];
   for (const entry of readdirSync(dir)) {
@@ -185,7 +207,7 @@ function integrityManifestPlugin(): Plugin {
         const rel = relative(outDir, file);
         if (
           rel.split(sep).includes("..") ||
-          rel === "index.html" ||
+          (rel === "index.html" || rel === "app.html") ||
           rel === "sw.js"
         ) {
           // index.html contains this manifest and sw.js embeds the SW-side
@@ -214,28 +236,34 @@ function integrityManifestPlugin(): Plugin {
         JSON.stringify(manifest, null, 2) + "\n",
       );
       let html = readFileSync(indexHtmlPath, "utf8");
-      // SRI: hash straight from the on-disk files (the hashes in
-      // `files`) so integrity attributes always match what is actually
-      // served — hashing `ctx.bundle` chunk code pre-write produced
-      // mismatches with rolldown's final output.
-      if (!html.includes(' integrity="sha256-')) {
-        html = html.replace(
-          /(<(?:script|link)\b[^>]*?\b(?:src|href)=")(\/assets\/[^"]+)(")/g,
-          (match, pre: string, file: string, post: string) => {
-            const hash = files[file];
-            if (!hash) {
-              return match;
-            }
-            const b64 = Buffer.from(hash, "hex").toString("base64");
-            return `${pre}${file}${post} integrity="sha256-${b64}" crossorigin="anonymous"`;
-          },
-        );
-      }
+      html = injectSriAttributes(html, files);
       if (!html.includes("__BMF_INTEGRITY_MANIFEST__")) {
         const tag = `<script id="__BMF_INTEGRITY_MANIFEST__" type="application/json">${JSON.stringify(manifest)}</script>`;
         html = html.replace("</head>", `${tag}\n</head>`);
       }
       writeFileSync(indexHtmlPath, html);
+
+      // The React SPA is a second HTML entry point. It needs the same
+      // runtime integrity manifest because main.tsx runs bundle integrity
+      // checks when /app.html is served directly or through a rewrite.
+      const appHtmlPath = join(outDir, "app.html");
+      if (existsSync(appHtmlPath)) {
+        let appHtml = readFileSync(appHtmlPath, "utf8");
+        // ADR-039: the SPA lives in app.html since the marketing/SPA split,
+        // so its /assets/ tags carry the real application bundle — they are
+        // the ones that MUST ship SRI. Before this, only index.html was
+        // processed and the app bundle went out with no integrity attributes
+        // at all (the build:ci SRI gate caught it against the wrong page).
+        appHtml = injectSriAttributes(appHtml, files);
+        if (!appHtml.includes("__BMF_INTEGRITY_MANIFEST__")) {
+          const tag =
+            '<script id="__BMF_INTEGRITY_MANIFEST__" type="application/json">' +
+            JSON.stringify(manifest) +
+            "</script>";
+          appHtml = appHtml.replace("</head>", tag + "\n</head>");
+          writeFileSync(appHtmlPath, appHtml);
+        }
+      }
     },
   };
 }
@@ -264,7 +292,7 @@ export default defineConfig(({ mode, isPreview }) => ({
       manifest: false,
       workbox: {
         cleanupOutdatedCaches: true,
-        navigateFallback: "/index.html",
+        navigateFallback: "/app.html",
         navigateFallbackDenylist: [
           /^\/404/,
           /^\/offline/,
@@ -277,7 +305,7 @@ export default defineConfig(({ mode, isPreview }) => ({
           // crawlers executing the SW would index an empty shell. Always
           // go to the network for them.
           /^\/(?:landing\.html)?$/,
-          /^\/(?:es|fr|de|pt|it)\/?$/,
+          /^\/(?:ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)\/?$/,
           /^\/pocket-alternative/,
         ],
         globPatterns: [
@@ -324,8 +352,8 @@ export default defineConfig(({ mode, isPreview }) => ({
           // assets for every app user; their navigation routes are already
           // denied by navigateFallbackDenylist above.
           "**/landing.{html,css,js}",
-          "**/{de,es,fr,it,pt}.html",
-          "**/{de,es,fr,it,pt}/**",
+          "**/{ar,bg,cs,da,de,el,es,fi,fr,he,hi,hr,hu,id,it,ja,ko,nl,no,pl,pt,ro,ru,sv,th,tr,uk,vi,zh}.html",
+          "**/{ar,bg,cs,da,de,el,es,fi,fr,he,hi,hr,hu,id,it,ja,ko,nl,no,pl,pt,ro,ru,sv,th,tr,uk,vi,zh}/**",
           "**/privacy-and-terms.{html,css}",
           "**/*/privacy-and-terms.html",
           "**/pocket-alternative.{html,css}",
@@ -456,6 +484,12 @@ export default defineConfig(({ mode, isPreview }) => ({
         }
       : undefined,
   build: {
+    rollupOptions: {
+      input: {
+        index: join(process.cwd(), "index.html"),
+        app: join(process.cwd(), "app.html"),
+      },
+    },
     // React.lazy() routes should not turn their dependencies into critical
     // network requests. Vite emits modulepreload hints for the dependency
     // graph; filter only the known feature bundles so the shell stays fast,

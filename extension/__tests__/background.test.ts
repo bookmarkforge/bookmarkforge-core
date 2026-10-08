@@ -95,7 +95,7 @@ describe("background.js", () => {
     const url = (globalThis as any).chrome.tabs.create.mock.calls[0][0]
       .url;
     expect(url).toContain("https://my-forge.example.com/capture#");
-    expect(url).not.toContain("bookmarkforge.com");
+    expect(url).not.toContain("bookmarkforgeapp.com");
   });
 
   it("should fall back to default URL when stored URL is invalid", async () => {
@@ -115,7 +115,7 @@ describe("background.js", () => {
     const url = (globalThis as any).chrome.tabs.create.mock.calls[0][0]
       .url;
     // Must use the default URL, not the invalid stored one.
-    expect(url).toContain("https://bookmarkforge.com/capture#");
+    expect(url).toContain("https://bookmarkforgeapp.com/capture#");
   });
 
   it("should block unsafe URL schemes", async () => {

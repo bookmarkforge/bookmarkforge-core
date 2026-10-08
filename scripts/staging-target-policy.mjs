@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const PRODUCTION_HOSTS = new Set(["bookmarkforge.com", "www.bookmarkforge.com", "api.bookmarkforge.com", "signal.bookmarkforge.com"]);
+const PRODUCTION_HOSTS = new Set(["bookmarkforgeapp.com", "www.bookmarkforgeapp.com", "api.bookmarkforgeapp.com", "signal.bookmarkforgeapp.com"]);
 
 export function validateStagingUrl(value) {
   if (typeof value !== "string" || value.length === 0 || value.length > 2048) return false;

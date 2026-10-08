@@ -1,46 +1,46 @@
 #!/usr/bin/env node
 /**
- * scripts/kpi-report.mjs — reporte de KPIs de negocio (analítica opt-in) + gate.
+ * scripts/kpi-report.mjs — business KPI report (opt-in analytics) + gate.
  *
- * Consulta GET /api/analytics/kpis del companion server y muestra:
- *   - DAU / WAU / MAU (installs activos en 1/7/30 días)
- *   - Retención por cohorte (D1/D7/D30) de los últimos 30 días
- *   - Funnel de activación (totales por tipo de evento)
- *   - Contadores del collector (accepted/rejected/rate-limited)
+ * Queries GET /api/analytics/kpis on the companion server and shows:
+ *   - DAU / WAU / MAU (active installs over 1/7/30 days)
+ *   - Cohort retention (D1/D7/D30) for the last 30 days
+ *   - Activation funnel (totals per event type)
+ *   - Collector counters (accepted/rejected/rate-limited)
  *
- * Gate con umbrales (paginación): cuando una métrica configurada cae por
- * debajo de su umbral el script emite un log estructurado de error
- * (evento `analytics_kpi_below_threshold`), dispara un webhook HTTPS opcional
- * y sale con código 1 — la run de CI queda en FAIL y eso es la página durable;
- * el webhook (p. ej. Slack) es la notificación inmediata.
+ * Threshold gate (paging): when a configured metric falls below its
+ * threshold the script emits a structured error log (event
+ * `analytics_kpi_below_threshold`), fires an optional HTTPS webhook and exits
+ * with code 1 — the CI run goes FAIL and that is the durable page; the
+ * webhook (e.g. Slack) is the immediate notification.
  *
- * Umbrales por env (desactivados por defecto; número entero ≥ 0 para
- * DAU/WAU/MAU, proporción 0..1 para retención):
- *   KPI_MIN_DAU        DAU mínimo
- *   KPI_MIN_WAU        WAU mínimo
- *   KPI_MIN_MAU        MAU mínimo
- *   KPI_MIN_D7_PCT     retención D7 mínima de la cohorte más reciente con
- *                      ≥ 7 días de antigüedad
- *   KPI_MIN_D30_PCT    retención D30 mínima (cohorte ≥ 30 días)
- *   ANALYTICS_ALERT_WEBHOOK_URL  webhook HTTPS (rechaza http, como el resto
- *                      de canales de alerta del repo). Si la URL es un
- *                      Incoming Webhook de Slack (`hooks.slack.com/services`),
- *                      envía automáticamente un payload nativo `{ text, blocks }`;
- *                      cualquier otro webhook HTTPS recibe el JSON estructurado.
+ * Thresholds via env (disabled by default; integer ≥ 0 for DAU/WAU/MAU,
+ * ratio 0..1 for retention):
+ *   KPI_MIN_DAU        minimum DAU
+ *   KPI_MIN_WAU        minimum WAU
+ *   KPI_MIN_MAU        minimum MAU
+ *   KPI_MIN_D7_PCT     minimum D7 retention of the latest cohort that is
+ *                      ≥ 7 days old
+ *   KPI_MIN_D30_PCT    minimum D30 retention (cohort ≥ 30 days)
+ *   ANALYTICS_ALERT_WEBHOOK_URL  HTTPS webhook (rejects http, like the rest
+ *                      of the repo's alert channels). When the URL is a Slack
+ *                      Incoming Webhook (`hooks.slack.com/services`), a native
+ *                      `{ text, blocks }` payload is sent automatically;
+ *                      any other HTTPS webhook receives the structured JSON.
  *
- * La retención de una cohorte es d7/cohortSize (o d30/cohortSize): el script
- * elige la cohorte MÁS RECIENTE que ya tenga la antigüedad necesaria, de modo
- * que el gate no mide a una cohorte demasiado joven.
+ * A cohort's retention is d7/cohortSize (or d30/cohortSize): the script
+ * picks the MOST RECENT cohort already old enough, so the gate never
+ * measures a cohort that is too young.
  *
- * Uso:
+ * Usage:
  *   ANALYTICS_ADMIN_TOKEN=... node scripts/kpi-report.mjs
  *   ANALYTICS_ADMIN_TOKEN=... node scripts/kpi-report.mjs --base http://127.0.0.1:8787
  *   ANALYTICS_ADMIN_TOKEN=... KPI_MIN_DAU=10 KPI_MIN_D7_PCT=0.15 node scripts/kpi-report.mjs
  *   ANALYTICS_ADMIN_TOKEN=... node scripts/kpi-report.mjs --json
  *
  * Env:
- *   ANALYTICS_ADMIN_TOKEN   token admin (requerido; el endpoint es 401/503 sin él)
- *   ANALYTICS_BASE_URL      base del servidor (default http://127.0.0.1:8787)
+ *   ANALYTICS_ADMIN_TOKEN   admin token (required; the endpoint is 401/503 without it)
+ *   ANALYTICS_BASE_URL      server base (default http://127.0.0.1:8787)
  */
 import { pathToFileURL } from "node:url";
 
@@ -111,7 +111,7 @@ export function evaluateKpis(kpis, thresholds) {
     if (minimum === undefined) return;
     const ok = actual >= minimum;
     checks.push({ name, actual, minimum, ok });
-    if (!ok) violations.push(`${name}=${actual} por debajo del umbral ${minimum}${suffix}`);
+    if (!ok) violations.push(`${name}=${actual} below threshold ${minimum}${suffix}`);
   };
   check("DAU", Number(kpis.dau ?? 0), thresholds.minDau);
   check("WAU", Number(kpis.wau ?? 0), thresholds.minWau);
@@ -121,10 +121,10 @@ export function evaluateKpis(kpis, thresholds) {
   if (todayDay !== undefined) {
     const d7 = latestCohortRetention(kpis.cohorts, todayDay, 7);
     const d30 = latestCohortRetention(kpis.cohorts, todayDay, 30);
-    check("retD7", d7 ? d7.rate : 0, thresholds.minD7Pct, " (cohorte más reciente ≥ 7 días)");
-    check("retD30", d30 ? d30.rate : 0, thresholds.minD30Pct, " (cohorte más reciente ≥ 30 días)");
+    check("retD7", d7 ? d7.rate : 0, thresholds.minD7Pct, " (latest cohort ≥ 7 days)");
+    check("retD30", d30 ? d30.rate : 0, thresholds.minD30Pct, " (latest cohort ≥ 30 days)");
   } else if (thresholds.minD7Pct !== undefined || thresholds.minD30Pct !== undefined) {
-    violations.push("generatedAt inválido — no se pudo evaluar la retención");
+    violations.push("invalid generatedAt — retention could not be evaluated");
   }
   return { ok: violations.length === 0, violations, checks };
 }
@@ -143,14 +143,14 @@ export function buildAlertPayload(kpis, violations) {
   };
 }
 
-// True cuando la URL apunta a un Incoming Webhook real de Slack (que solo
-// acepta el shape `{ text, blocks }`). Cualquier otro webhook HTTPS recibe el
-// payload estructurado `buildAlertPayload`.
+// True when the URL points at a real Slack Incoming Webhook (which only
+// accepts the `{ text, blocks }` shape). Any other HTTPS webhook receives
+// the structured `buildAlertPayload` payload.
 export function isSlackWebhook(raw) {
   return /^https:\/\/(hooks\.slack\.com\/services|api\.slack\.com)/i.test(raw?.trim() ?? "");
 }
 
-// Payload nativo de Slack (Incoming Webhook): text + blocks, sin datos PII.
+// Native Slack payload (Incoming Webhook): text + blocks, no PII data.
 export function buildSlackPayload(kpis, violations) {
   const lines = [
     `generatedAt  ${kpis.generatedAt}`,
@@ -159,11 +159,11 @@ export function buildSlackPayload(kpis, violations) {
     ...violations.map((v) => `• ${v}`),
   ].join("\n");
   return {
-    text: "⚠️ BookmarkForge — KPIs por debajo del umbral",
+    text: "⚠️ BookmarkForge — KPIs below threshold",
     blocks: [
       {
         type: "section",
-        text: { type: "mrkdwn", text: "⚠️ *KPIs por debajo del umbral*" },
+        text: { type: "mrkdwn", text: "⚠️ *KPIs below threshold*" },
       },
       {
         type: "section",
@@ -263,15 +263,15 @@ export async function runKpiReport(options = {}) {
     console.error(JSON.stringify(payload));
     const webhook = resolveWebhook(webhookUrl);
     if (webhook) {
-      // Slack Incoming Webhooks solo entienden `{ text, blocks }`; cualquier
-      // otro webhook HTTPS recibe el JSON estructurado del evento.
+      // Slack Incoming Webhooks only understand `{ text, blocks }`; any
+      // other HTTPS webhook receives the structured event JSON.
       const slack = isSlackWebhook(webhook) ? buildSlackPayload(kpis, evaluation.violations) : payload;
       await fireAlertWebhook(webhook, slack);
     }
     return { code: 1, reason: "below-threshold", violations: evaluation.violations };
   }
 
-  console.log("[kpi-report] ✅ KPIs por encima de los umbrales configurados");
+  console.log("[kpi-report] ✅ KPIs above the configured thresholds");
   return { code: 0, reason: "ok", evaluation };
 }
 
@@ -284,7 +284,7 @@ function printHumanReport(kpis, evaluation) {
   console.log(`installs         ${kpis.activeInstalls}`);
   console.log(`DAU / WAU / MAU  ${kpis.dau} / ${kpis.wau} / ${kpis.mau}`);
   console.log("");
-  console.log("Retención por cohorte (D1/D7/D30):");
+  console.log("Cohort retention (D1/D7/D30):");
   const cohortDays = Object.keys(kpis.cohorts ?? {}).sort();
   for (const day of cohortDays.slice(-10)) {
     const c = kpis.cohorts[day];
@@ -294,7 +294,7 @@ function printHumanReport(kpis, evaluation) {
     );
   }
   console.log("");
-  console.log("Funnel de activación (totales):");
+  console.log("Activation funnel (totals):");
   for (const [type, count] of Object.entries(kpis.funnel ?? {}).sort()) {
     console.log(`  ${type.padEnd(22)} ${count}`);
   }
@@ -305,13 +305,13 @@ function printHumanReport(kpis, evaluation) {
   );
   console.log(`serverInstanceId ${kpis.serverInstanceId}`);
   console.log("");
-  console.log("Gate de umbrales:");
+  console.log("Threshold gate:");
   if (evaluation.checks.length === 0) {
-    console.log("  (sin umbrales configurados — solo informe)");
+    console.log("  (no thresholds configured — report only)");
   }
   for (const check of evaluation.checks) {
     console.log(
-      `  ${check.ok ? "PASS" : "FAIL"}  ${check.name.padEnd(8)} actual=${check.actual} umbral=${check.minimum}`,
+      `  ${check.ok ? "PASS" : "FAIL"}  ${check.name.padEnd(8)} actual=${check.actual} threshold=${check.minimum}`,
     );
   }
 }

@@ -24,7 +24,7 @@ servers:
     description: Production (behind reverse proxy TLS)
     variables:
       host:
-        default: bookmarkforge.com
+        default: bookmarkforgeapp.com
   - url: http://127.0.0.1:{port}
     description: Local development / load testing
     variables:

@@ -9,7 +9,9 @@
  * It asserts that:
  *  - the parser extracts the expected collections from src/db/schema.ts
  *  - build and generate produce byte-identical output
- *  - the on-disk map matches the build output (drift detection)
+ *  - the committed map matches what the generator produces (drift detection;
+ *    the tests regenerate the file in place, so the comparison uses the snapshot
+ *    taken below, before any test body runs)
  *  - the doctor script exits 0 against the on-disk map
  *  - the doctor script rejects a missing map file
  */
@@ -24,6 +26,14 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const SCHEMA_PATH = path.resolve(ROOT, 'src/db/schema.ts');
 const MAP_PATH = path.resolve(ROOT, 'docs/legacy-schema-version-map.md');
+
+/**
+ * The map as committed, captured before any test body runs: the tests below
+ * regenerate the file in place (that is what the generator is for), so reading
+ * it here is the only way the drift check can still compare "what the checkout
+ * holds" against "what the generator produces".
+ */
+const COMMITTED_MAP = fs.readFileSync(MAP_PATH, 'utf8');
 
 const BUILD_SCRIPT = path.resolve(ROOT, 'scripts/build-legacy-schema-map.mjs');
 const GENERATE_SCRIPT = path.resolve(ROOT, 'scripts/generate-legacy-schema-map.mjs');
@@ -69,7 +79,7 @@ function parseMapMarkdown(text) {
   let inTable = false;
   for (const line of text.split('\n')) {
     const trimmed = line.trim();
-    if (trimmed.startsWith('| Colección | Versión | Campos cifrados |')) {
+    if (trimmed.startsWith('| Collection | Version | Encrypted fields |')) {
       inTable = true;
       continue;
     }
@@ -148,38 +158,41 @@ describe('legacy-schema-map', () => {
       'build-legacy-schema-map and generate-legacy-schema-map produced different output');
   });
 
-  it('on-disk legacy-schema-version-map.md matches build output (drift detection)', () => {
+  it('committed legacy-schema-version-map.md matches generator output (drift detection)', () => {
     assert.ok(fs.existsSync(MAP_PATH), `Map file not found at ${MAP_PATH}`);
 
-    // Rebuild and capture canonical output without overwriting on-disk file
     execFileSync('node', [BUILD_SCRIPT], { cwd: ROOT, timeout: 30_000, stdio: 'pipe' });
     const canonical = fs.readFileSync(MAP_PATH, 'utf8');
 
-    // Restore the original on-disk content by re-running generate
-    // (build already overwrote it, but the content should be identical)
-    const onDisk = canonical; // After build, on-disk == canonical by definition
-    // The real drift test: parse both and compare structure
-    const canonicalRows = parseMapMarkdown(canonical);
-    const onDiskRows = parseMapMarkdown(onDisk);
+    // Byte comparison against the snapshot taken before this file's tests ran:
+    // regenerating a fresh checkout must change nothing, so a mismatch here is
+    // real drift (schema.ts moved without the document being regenerated, or
+    // the generator's template fell out of step with the committed bytes).
+    assert.strictEqual(
+      COMMITTED_MAP,
+      canonical,
+      'docs/legacy-schema-version-map.md is stale: it does not match what ' +
+        'scripts/build-legacy-schema-map.mjs generates from src/db/schema.ts — ' +
+        'run `node scripts/build-legacy-schema-map.mjs` and commit the result',
+    );
 
-    assert.strictEqual(canonicalRows.length, onDiskRows.length,
-      `Row count mismatch: canonical=${canonicalRows.length}, on-disk=${onDiskRows.length}`);
-
-    for (let i = 0; i < canonicalRows.length; i++) {
-      assert.strictEqual(canonicalRows[i].collection, onDiskRows[i].collection,
-        `Collection mismatch at row ${i}`);
-      assert.strictEqual(canonicalRows[i].version, onDiskRows[i].version,
-        `Version mismatch at row ${i} for ${canonicalRows[i].collection}`);
+    // The generated document still parses into rows (a template regression that
+    // emptied the table would otherwise satisfy the byte comparison above).
+    const rows = parseMapMarkdown(canonical);
+    assert.ok(rows.length > 0, 'generated map has no parsed rows');
+    for (const row of rows) {
+      assert.ok(row.collection && row.version,
+        `Generated row is incomplete: ${JSON.stringify(row)}`);
     }
   });
 
   it('map file contains the expected table structure', () => {
     const text = fs.readFileSync(MAP_PATH, 'utf8');
-    assert.ok(text.includes('| Colección | Versión | Campos cifrados |'),
+    assert.ok(text.includes('| Collection | Version | Encrypted fields |'),
       'Map missing expected table header');
     assert.ok(text.includes('|---|---|---|'),
       'Map missing table separator');
-    assert.ok(text.startsWith('# Mapa de versiones de esquema'),
+    assert.ok(text.startsWith('# Schema version map'),
       'Map missing title');
   });
 

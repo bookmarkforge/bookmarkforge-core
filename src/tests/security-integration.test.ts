@@ -167,16 +167,25 @@ describe("HKDF session-key batching", () => {
 describe("Web Locks API (cross-tab mutual exclusion)", () => {
   let lockQueue: Array<() => void> = [];
   let activeLock: string | null = null;
+  let createdNavigator = false;
 
   beforeEach(() => {
     lockQueue = [];
     activeLock = null;
 
-    // Mock navigator.locks with a real queue-based lock. In Node 24
-    // `navigator` is a getter-only global, so the property must be defined
+    // Mock navigator.locks with a real queue-based lock. The navigator
+    // holder is ensured first because Node 20 (CI's pinned version) has no
+    // navigator global at all — it arrived in Node 21, and this checkout's
+    // Node 24 made the test pass locally while the Linux nightly died with
+    // "ReferenceError: navigator is not defined" (run 35833219915). On Node
+    // 24 `navigator` is a getter-only global, so the property must be defined
     // on it rather than reassigned (which throws "Cannot set property
-    // navigator of #<Object> which has only a getter").
-    Object.defineProperty(navigator, "locks", {
+    // navigator of #<Object> which has only a getter"); on Node 20 a plain
+    // globalThis holder is created and deleted per test.
+    const globalHolder = globalThis as { navigator?: unknown } & Record<string, unknown>;
+    createdNavigator = !globalHolder.navigator;
+    const nav = globalHolder.navigator ?? (globalHolder.navigator = {});
+    Object.defineProperty(nav, "locks", {
       value: {
         request: vi.fn(
           (name: string, callback: (lock: unknown) => Promise<unknown>) => {
@@ -210,7 +219,15 @@ describe("Web Locks API (cross-tab mutual exclusion)", () => {
   });
 
   afterEach(() => {
-    delete (navigator as unknown as Record<string, unknown>).locks;
+    const holder = (globalThis as { navigator?: unknown }).navigator as
+      | Record<string, unknown>
+      | undefined;
+    if (holder) delete holder.locks;
+    // Node 20: the holder itself was created by this suite — remove it so the
+    // global surface is unchanged for other tests. Node 21+: navigator is a
+    // real getter-only global, createdNavigator stays false and the global is
+    // left alone.
+    if (createdNavigator) delete (globalThis as Record<string, unknown>).navigator;
     vi.restoreAllMocks();
   });
 

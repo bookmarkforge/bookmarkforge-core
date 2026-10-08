@@ -188,7 +188,9 @@ async function seedAndMeasure(
 
 test.describe(`KnowledgeAudit scan: ${SEED_COUNT.toLocaleString()} bookmarks`, () => {
   test("runAuditScan stays sub-second without blocking frames", async ({ page }) => {
-    test.setTimeout(Math.max(120_000, SEED_COUNT * 8));
+    // Seed-phase floor calibrated for CI runners (see perf-scale.nightly.spec.ts:
+    // the 120s floor killed the seeding evaluate before any budget could fire).
+    test.setTimeout(Math.max(240_000, SEED_COUNT * 15));
 
     await page.goto("/");
     await skipPassword(page);

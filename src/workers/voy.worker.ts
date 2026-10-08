@@ -1202,6 +1202,10 @@ const MAX_QUEUED_MESSAGES = 256;
 let queuedMessages = 0;
 let messageQueue: Promise<void> = Promise.resolve();
 self.onmessage = (e: MessageEvent) => {
+  if (e.origin && e.origin !== self.location.origin) {
+    clearPasswordBytes((e.data as { payload?: unknown } | undefined)?.payload);
+    return Promise.resolve();
+  }
   if (queuedMessages >= MAX_QUEUED_MESSAGES) {
     clearPasswordBytes((e.data as { payload?: unknown } | undefined)?.payload);
     const id = (e.data as { id?: unknown } | undefined)?.id ?? "unknown";

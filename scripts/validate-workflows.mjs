@@ -17,6 +17,15 @@ export function validateWorkflowText(name, text) {
   // actions and must not trigger the pin warning.
   if (/uses:\s+(?!(?:\.\/|\.github\/))[^@\s]+\s*$/m.test(text)) warnings.push(`${name}: action reference is not pinned to a version or SHA`);
   if (/run:\s*[^\n]*\$\{\{\s*secrets\./.test(text)) errors.push(`${name}: secrets must be passed through env, not interpolated in run commands`);
+  // `secrets` is not a valid context in `if:` conditions (job or step): the
+  // workflow file fails to PARSE, and GitHub records a 0-second red run with
+  // zero jobs on every push — a tombstone, not a real test result. Documented
+  // workaround: promote the secret into a job-level `env:` block (where
+  // secrets ARE allowed) and let the condition read the env context.
+  // staging-smoke.yml shipped this for its whole life unparsed; no repository
+  // existed to reject the file until 2026-09-22 (found by workflow-dispatch
+  // probe, HTTP 422, "Unrecognized named-value: 'secrets'", line 82).
+  if (/^\s*if:.*secrets\./m.test(text)) errors.push(`${name}: secrets cannot be used in if conditions — promote the secret to job-level env and test the env context instead`);
   if (/bash\s+-c\s+"\$[A-Z_]+"/.test(text)) warnings.push(`${name}: dynamic bash command should be replaced by a versioned script`);
   if (/upload-artifact@[^\s]+[\s\S]{0,500}path:\s*[^\n]*(?:\.env|secret|credential|key)/i.test(text)) errors.push(`${name}: sensitive files must not be uploaded as artifacts`);
   if (/uses:\s+actions\/upload-artifact@/i.test(text) && !/retention-days:\s*\d+/i.test(text)) warnings.push(`${name}: artifact retention should be explicitly limited`);

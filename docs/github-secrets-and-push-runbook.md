@@ -2,7 +2,7 @@
 
 - **Date:** 2026-08-31
 - **Purpose:** Get `drill-quarterly.yml` (quarterly DR drill + KPI collector check) and `nightly.yml` (KPI gate vs staging, monthly drill) running for the first time on GitHub.
-- **Prerequisite:** Nothing here has been exercised against a real remote yet: the checkout has no remote branches and no verified workflow runs, its `origin` and every release surface name the confirmed target `bookmarkforge/core`, and `gh` is installed but not authenticated. **Run §1 first** — it confirms the destination, the credentials and that the workflows actually start. Create the repo + set secrets in the GitHub web UI or with the `gh` CLI — both paths below.
+- **Prerequisite:** Nothing here has been exercised against a real remote yet: the checkout has no remote branches and no verified workflow runs, its `origin` and every release surface name the confirmed target `bookmarkforge/bookmarkforge`, and `gh` is installed but not authenticated. **Run §1 first** — it confirms the destination, the credentials and that the workflows actually start. Create the repo + set secrets in the GitHub web UI or with the `gh` CLI — both paths below.
 
 ---
 
@@ -41,7 +41,7 @@ git remote get-url origin
 Expected: `origin` naming the repository you just created. Two failure modes to
 rule out *before* pushing:
 
-- **Confirmed target.** `bookmarkforge/core` is the real repository, confirmed by
+- **Confirmed target.** `bookmarkforge/bookmarkforge` is the real repository, confirmed by
   the project owner on 2026-09-19, and every release surface names it identically,
   so `npm run check:release-target` exits 0 and the release path runs. If you ever
   retarget the release somewhere else, re-run the gate: it exits 1 while the
@@ -152,7 +152,7 @@ git remote add origin git@github.com:TU_USUARIO/bookmarkforge.git
 git push -u origin main
 ```
 
-> **Destino confirmado (2026-09-19).** `bookmarkforge/core` es el repositorio
+> **Destino confirmado (2026-09-19).** `bookmarkforge/bookmarkforge` es el repositorio
 > real y las cuatro superficies lo nombran igual: `package.json` →
 > `repository.url`, el remoto, los badges del README y las `RELEASE-NOTES` del
 > export. `npm run check:release-target` sale 0 y la ruta de release (export
@@ -170,7 +170,7 @@ The push itself starts `ci.yml`, `sast.yml` and `open-core-export.yml` (the only
 | Name | Type | Value |
 |---|---|---|
 | `STAGING_ANALYTICS_ADMIN_TOKEN` | Secret | Same value as `ANALYTICS_ADMIN_TOKEN` in staging's `.env` (must match exactly — the KPI endpoint is fail-closed) |
-| `STAGING_URL` | Variable | Staging base URL, e.g. `https://staging.bookmarkforge.com` |
+| `STAGING_URL` | Variable | Staging base URL, e.g. `https://staging.bookmarkforgeapp.com` |
 | `ANALYTICS_ALERT_WEBHOOK_URL` | Secret | Slack incoming-webhook URL (https only) |
 | `DRILL_ALERT_WEBHOOK_URL` | Secret | Slack incoming-webhook URL (https only) |
 | `KPI_MIN_DAU` / `KPI_MIN_WAU` / `KPI_MIN_MAU` | Variables | e.g. `10` / `30` / `60` |
@@ -197,7 +197,7 @@ gh secret set ANALYTICS_ALERT_WEBHOOK_URL
 gh secret set DRILL_ALERT_WEBHOOK_URL
 
 # Variables
-gh variable set STAGING_URL                     # e.g. https://staging.bookmarkforge.com
+gh variable set STAGING_URL                     # e.g. https://staging.bookmarkforgeapp.com
 gh variable set KPI_MIN_DAU
 gh variable set KPI_MIN_WAU
 gh variable set KPI_MIN_MAU

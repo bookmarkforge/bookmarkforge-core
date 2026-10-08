@@ -1,29 +1,29 @@
 /**
  * scripts/check-audit-drift.mjs — audit drift gate (batch-29).
  *
- * Convierte el hallazgo de scripts/gen-audit-report.mjs (auditoría de
- * placeholders e inglés sin traducir) en un gate de CI con baseline, mismo
- * patrón que scripts/check-i18n-quality.mjs:
+ * Turns the finding of scripts/gen-audit-report.mjs (placeholder and
+ * untranslated-English audit) into a CI gate with a baseline, the same
+ * pattern as scripts/check-i18n-quality.mjs:
  *
  *   node scripts/check-audit-drift.mjs            # gate — falla si delta > 0
  *   node scripts/check-audit-drift.mjs --fix      # rebaseline al estado actual
  *   node scripts/check-audit-drift.mjs --strict-discovery # zero-discoveries policy
  *   node scripts/check-audit-drift.mjs --strict   # compatibility spelling
  *
- * Además, encadena la gate de regresión-anchors (scripts/audit-anchors.mjs)
- * que falla si algún hardening-test del post-audit ha sido removido. Los
- * anclajes son decisiones de seguridad (ADR-026 / ADR-027) y no pueden
- * desaparecer sin un cambio explícito en la ADR — exactamente el tipo de
- * regresión silenciosa que este gate atrapa. La lista canónica vive en
- * scripts/audit-anchors.mjs (importada), no aquí, para evitar duplicación.
+ * It also chains the regression-anchors gate (scripts/audit-anchors.mjs),
+ * which fails when any post-audit hardening test has been removed. The
+ * anchors are security decisions (ADR-026 / ADR-027) and cannot disappear
+ * without an explicit ADR change — exactly the kind of silent regression
+ * this gate catches. The canonical list lives in scripts/audit-anchors.mjs
+ * (imported), not here, to avoid duplication.
  *
- * La auditoría reporta 0 claves afectadas hoy; el baseline se commitea en ese
- * nivel para que el PR que reintroduzca un placeholder crudo (A) o inglés sin
- * traducir (B) rompa CI, mientras mantener el status quo pasa. La
- * clasificación vive SOLO en scripts/audit-core.mjs — compartida con el
- * generador del informe — así cualquier cambio de umbral se refleja en ambos.
+ * The audit reports 0 affected keys today; the baseline is committed at that
+ * level so the PR that reintroduces a raw placeholder (A) or untranslated
+ * English (B) breaks CI, while keeping the status quo passes. The
+ * classification lives ONLY in scripts/audit-core.mjs — shared with the
+ * report generator — so any threshold change is reflected in both.
  */
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { runAudit } from "./audit-core.mjs";
 import {
@@ -37,16 +37,18 @@ const BASELINE_PATH = join(ROOT, "scripts", "audit-drift-baseline.json");
 const { files, perLang, total, unique, all29 } = runAudit();
 
 let baseline = { locales: {}, unique: 0, updatedAt: null };
-if (existsSync(BASELINE_PATH)) {
+try {
   baseline = JSON.parse(readFileSync(BASELINE_PATH, "utf8"));
+} catch (error) {
+  if (error?.code !== "ENOENT") throw error;
 }
 
 let failures = 0;
 
-// Totales por-locale: placeholders (A) + inglés sin traducir (B). Una
-// regresión en cualquier locale (valores rotos NETOS nuevos) empuja el conteo
-// por encima de su baseline. Un locale nuevo sin entrada en el baseline parte
-// de 0 — si trae issues, falla (comportamiento deseado).
+// Per-locale totals: placeholders (A) + untranslated English (B). A
+// regression in any locale (NET new broken values) pushes the count above
+// its baseline. A new locale without a baseline entry starts at 0 — if it
+// brings issues, it fails (the desired behavior).
 for (const [lang, counts] of Object.entries(perLang)) {
   const prev = baseline.locales?.[lang]?.issues ?? 0;
   const issues = counts.a + counts.b;
@@ -64,13 +66,13 @@ for (const [lang, counts] of Object.entries(perLang)) {
   }
 }
 
-// Claves únicas afectadas en total: una clave rota nueva se ve aquí aunque
-// solo toque un idioma (la línea per-locale ya falla también). Esta métrica
-// NO caza movimientos net-cero (una clave que se repara en un locale y se
-// rompe en otro donde ya había issues no cambia unique ni ningún conteo
-// per-locale) — es una métrica de causa raíz informativa, no cobertura
-// adicional. Los deltas se miden por-local: un bug que aterriza en un
-// locale limpio (0→1) se detecta por la línea per-locale.
+// Unique keys affected in total: a new broken key shows up here even if it
+// touches a single language (the per-locale line already fails too). This
+// metric does NOT catch net-zero movements (a key fixed in one locale and
+// broken in another that already had issues changes neither unique nor any
+// per-locale count) — it is an informative root-cause metric, not additional
+// coverage. Deltas are measured per-locale: a bug landing in a clean locale
+// (0→1) is caught by the per-locale line.
 if (unique > baseline.unique) {
   console.error(
     `[check-audit-drift] FAIL unique keys: ${unique} (baseline ${baseline.unique})`,

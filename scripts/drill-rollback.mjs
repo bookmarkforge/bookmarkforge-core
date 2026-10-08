@@ -1,54 +1,54 @@
 #!/usr/bin/env node
 /**
- * scripts/drill-rollback.mjs — drill de rollback repetible en CI.
+ * scripts/drill-rollback.mjs — repeatable rollback drill in CI.
  *
- * Automatiza la cadena completa detect → rollback → restaurar. Dos modos:
+ * Automates the full chain detect → rollback → restore. Two modes:
  *
- *   SIN Docker (default, topología de local-smoke.mjs):
- *     1. BASELINE   — levanta license-mock + companion server y corre los
- *                     checks de producción (runApiSurfaceChecks).
- *     2. KILL       — mata SOLO el proceso del api (falla inducida).
- *     3. DETECT     — monitoring-alerts.mjs: APP_CAIDA debe fallar y
- *                     BUNDLE_CORRUPTO debe ejercitarse (probe SRI Docker-free).
- *     4. ROLLBACK   — rollback.mjs --auto (requiere >= 2 tags prod-*).
- *     5. RE-VERIFY  — re-arranca el server local y re-corre los checks.
+ *   WITHOUT Docker (default, local-smoke.mjs topology):
+ *     1. BASELINE   — starts license-mock + companion server and runs the
+ *                     production checks (runApiSurfaceChecks).
+ *     2. KILL       — kills ONLY the api process (induced failure).
+ *     3. DETECT     — monitoring-alerts.mjs: APP_CAIDA must fail and
+ *                     BUNDLE_CORRUPTO must be exercised (Docker-free SRI probe).
+ *     4. ROLLBACK   — rollback.mjs --auto (requires >= 2 prod-* tags).
+ *     5. RE-VERIFY  — restarts the local server and re-runs the checks.
  *
- *   CON Docker (DRILL_DOCKER=1, topología docker-compose.staging.yml):
- *     0. PREP       — construye las imágenes REALES por SHA del tag prod-*
- *                     previo (blanco del rollback) desde el ÁRBOL de ese tag
- *                     (git worktree), para que CAMINO A sea imagen == código
- *                     del tag. Las de HEAD las deja construidas staging-smoke
- *                     en CI (o las construye BASELINE si faltan).
- *     1. BASELINE   — levanta el stack staging con IMAGE_TAG=<sha de HEAD>
- *                     (--build solo si las imágenes no existen localmente).
- *     2. KILL       — docker compose stop api (falla inducida); el health vía
- *                     web cae en ~5s (proxy_connect_timeout 5s).
- *     3. DETECT     — igual, contra la web (PROD_BASE_URL=http://127.0.0.1:18080).
- *     4. ROLLBACK   — rollback.mjs --auto con DEPLOY_COMPOSE_FILE=staging y
- *                     GATE del drill: debe restaurar POR IMAGEN (CAMINO A,
- *                     sin rebuild) y el tiempo medido del camino (up -d +
- *                     sanity, línea 'CAMINO A confirmado … en X.Xs' de
- *                     rollback.mjs) debe ser < 60s; un fallback a CAMINO B o
- *                     un tiempo >= 60s hace FALLAR el drill.
- *     5. RE-VERIFY  — health + smoke contra la web restaurada.
+ *   WITH Docker (DRILL_DOCKER=1, docker-compose.staging.yml topology):
+ *     0. PREP       — builds the REAL images by SHA of the previous prod-*
+ *                     tag (the rollback's target) from THAT TAG'S TREE
+ *                     (git worktree), so PATH A is image == tag code.
+ *                     staging-smoke leaves the HEAD ones built in CI
+ *                     (or BASELINE builds them if they are missing).
+ *     1. BASELINE   — brings up the staging stack with IMAGE_TAG=<HEAD sha>
+ *                     (--build only if the images do not exist locally).
+ *     2. KILL       — docker compose stop api (induced failure); the web
+ *                     health drops in ~5s (proxy_connect_timeout 5s).
+ *     3. DETECT     — same, against the web (PROD_BASE_URL=http://127.0.0.1:18080).
+ *     4. ROLLBACK   — rollback.mjs --auto with DEPLOY_COMPOSE_FILE=staging and
+ *                     the drill GATE: it must restore BY IMAGE (PATH A,
+ *                     no rebuild) and the measured path time (up -d +
+ *                     sanity, the 'PATH A confirmed … in X.Xs' line from
+ *                     rollback.mjs) must be < 60s; a fallback to PATH B or
+ *                     a time >= 60s makes the drill FAIL.
+ *     5. RE-VERIFY  — health + smoke against the restored web.
  *
- * Reporta una tabla por fase con PASS/FAIL y tiempos, y sale 0/1 (CI-ready).
+ * Reports a per-phase table with PASS/FAIL and timings, and exits 0/1 (CI-ready).
  *
- * ⚠️  Efectos git: la fase 4 ejecuta rollback.mjs --auto, que hace checkout
- * del tag prod-* previo (git stash primero si el árbol está sucio). Corre el
- * drill en CI o en un worktree aislado — tu working tree terminará en el tag
- * restaurado.
+ * ⚠️  Git effects: phase 4 runs rollback.mjs --auto, which checks out
+ * the previous prod-* tag (git stash first if the tree is dirty). Run the
+ * drill in CI or in an isolated worktree — your working tree will end up on
+ * the restored tag.
  *
- * Uso:
+ * Usage:
  *   node scripts/drill-rollback.mjs
  *   node scripts/drill-rollback.mjs --json
- *   node scripts/drill-rollback.mjs --no-rollback   # debug: sin mutar git
- *   DRILL_DOCKER=1 node scripts/drill-rollback.mjs  # modo Docker (staging)
+ *   node scripts/drill-rollback.mjs --no-rollback   # debug: without mutating git
+ *   DRILL_DOCKER=1 node scripts/drill-rollback.mjs  # Docker mode (staging)
  *
- * Env (opcionales):
+ * Env (optional):
  *   API_PORT / LICENSE_MOCK_PORT                 (default 8787 / 8082)
  *   DRILL_ROLLBACK_TIMEOUT_MS                    (default 180000)
- *   LICENSE_SIGNING_PRIVATE_KEY_FILE             (checks de licencia)
+ *   LICENSE_SIGNING_PRIVATE_KEY_FILE             (license checks)
  *   DRILL_DOCKER=1                               (modo Docker staging)
  *   DRILL_COMPOSE_FILE                           (default docker-compose.staging.yml)
  *   HTTP_PORT                                    (puerto web staging, default 18080)
@@ -70,8 +70,8 @@ const LICENSE_MOCK_PORT = Number(process.env.LICENSE_MOCK_PORT ?? 8082);
 const LICENSE_MOCK_KEY = process.env.LICENSE_MOCK_KEY ?? "license-mock-key";
 const ROLLBACK_TIMEOUT_MS = Number(process.env.DRILL_ROLLBACK_TIMEOUT_MS ?? 180_000);
 
-// Modo Docker: el drill corre contra docker-compose.staging.yml (la web
-// publica 18080 y proxyea al api, que no expone puerto host).
+// Docker mode: the drill runs against docker-compose.staging.yml (the web
+// publishes 18080 and proxies to the api, which exposes no host port).
 const DOCKER = process.env.DRILL_DOCKER === "1";
 const COMPOSE_FILE = process.env.DRILL_COMPOSE_FILE?.trim() || "docker-compose.staging.yml";
 const DRILL_ENV_FILE = process.env.DRILL_ENV_FILE?.trim() || "";
@@ -97,13 +97,12 @@ function composeProject() {
   return process.env.COMPOSE_PROJECT_NAME ?? (PRODUCTION_COMPOSE ? "bookmarkforge-prod-drill" : "bookmarkforge-staging");
 }
 
-// ── Backup/restauración de topología (modo Docker) ──────────────────
-// El checkout de housekeeping del rollback puede BORRAR archivos de la
-// topología que el tag prod-* previo aún no contiene (p.ej. un compose
-// de staging commiteado después del tag). El drill respalda esos archivos
-// antes del rollback y los restaura antes de RE-VERIFY/teardown: la
-// recuperación no debe depender del contenido del tag antiguo (espeja lo
-// que PREP ya hace para el worktree de build).
+// ── Topology backup/restore (Docker mode) ───────────────────────────
+// The rollback's housekeeping checkout can DELETE topology files that the
+// previous prod-* tag does not contain yet (e.g. a staging compose committed
+// after the tag). The drill backs those files up before the rollback and
+// restores them before RE-VERIFY/teardown: recovery must not depend on the
+// old tag's content (mirrors what PREP already does for the build worktree).
 const topologyBackup = new Map();
 function backupTopology() {
   if (!DOCKER || topologyBackup.size > 0) return;
@@ -119,15 +118,15 @@ function ensureTopology() {
     if (!existsSync(dst)) {
       try {
         copyFileSync(src, dst);
-        console.log(`[DRILL] topología restaurada tras checkout del tag: ${rel}`);
+        console.log(`[DRILL] topology restored after the tag checkout: ${rel}`);
       } catch {
-        // sin copia: el RE-VERIFY reportará el fallo real
+        // no copy: RE-VERIFY will report the real failure
       }
     }
   }
 }
 
-// ── Fases ─────────────────────────────────────────────────────────────
+// ── Phases ────────────────────────────────────────────────────────────
 const phases = [];
 function recordPhase(name, ok, detail, ms) {
   phases.push({ name, ok, detail, ms: Math.round(ms) });
@@ -135,7 +134,7 @@ function recordPhase(name, ok, detail, ms) {
   console.log(`[DRILL] ${name.padEnd(10)} ${icon.padEnd(5)} ${(ms / 1000).toFixed(1)}s — ${detail}`);
 }
 
-// ── Stack local (mocks + server) ──────────────────────────────────────
+// ── Local stack (mocks + server) ─────────────────────────────────────
 const children = [];
 
 function spawnChild(command, args, env, label) {
@@ -175,7 +174,7 @@ async function waitForDown(url, attempts = 60, intervalMs = 250) {
   return false;
 }
 
-/** En modo Docker la web sigue viva y nginx responde 502/504 — "caído" es !ok. */
+/** In Docker mode the web stays alive and nginx answers 502/504 — "down" means !ok. */
 async function waitForNotOk(url, attempts = 60, intervalMs = 250) {
   for (let i = 0; i < attempts; i += 1) {
     try {
@@ -189,7 +188,7 @@ async function waitForNotOk(url, attempts = 60, intervalMs = 250) {
   return false;
 }
 
-// ── Docker helpers (modo DRILL_DOCKER) ───────────────────────────────
+// ── Docker helpers (DRILL_DOCKER mode) ────────────────────────────────
 function dockerOk(args, env = {}, cwd = ROOT) {
   return spawnSync("docker", args, {
     cwd,
@@ -254,10 +253,10 @@ async function startStack() {
       { IMAGE_TAG: sha, HTTP_PORT: String(WEB_PORT), AI_SESSION_ORIGINS: `http://127.0.0.1:${WEB_PORT},http://localhost:${WEB_PORT}` },
     );
     if (up.status !== 0) {
-      return `docker compose up falló (exit ${up.status})${buildArgs.length ? " — revisa el build" : ""}`;
+      return `docker compose up failed (exit ${up.status})${buildArgs.length ? " — check the build" : ""}`;
     }
     if (!(await waitForReady(`${BASE_URL}/health`, 120, 500))) {
-      return `la web no responde en ${BASE_URL}/health tras el up`;
+      return `the web did not respond at ${BASE_URL}/health after up`;
     }
     return null;
   }
@@ -279,7 +278,7 @@ async function startStack() {
   ];
   for (const target of targets) {
     if (!(await waitForReady(target.url))) {
-      return `no arrancó ${target.label} (${target.url}) — ¿puerto ocupado?`;
+      return `${target.label} did not start (${target.url}) — port busy?`;
     }
   }
   return null;
@@ -290,9 +289,9 @@ function gitRevParse(rev) {
   return r.status === 0 ? (r.stdout ?? "").trim() : "";
 }
 
-/** Tags prod-* ordenados por creatordate desc, deduplicados por SHA.
- * Mismalógica que selectAutoTarget en rollback.mjs: tags duplicados sobre
- * el mismo commit se colapsan para evitar rollbacks no-op. */
+/** prod-* tags sorted by creatordate desc, deduplicated by SHA.
+ * Same logic as selectAutoTarget in rollback.mjs: duplicate tags over the
+ * same commit collapse to avoid no-op rollbacks. */
 function prodTags() {
   const r = spawnSync("git", ["tag", "--sort=-creatordate"], { cwd: ROOT, encoding: "utf8" });
   const all = (r.stdout ?? "").split("\n").filter((t) => t.trim().startsWith("prod-"));
@@ -313,39 +312,39 @@ function gitHead() {
   return gitRevParse("HEAD").slice(0, 7) || "?";
 }
 
-// ── Drill ─────────────────────────────────────────────────────────────
+// ── Drill ────────────────────────────────────────────────────────────
 const t0 = Date.now();
 
 console.log("=".repeat(64));
 console.log(
-  `DRILL DE ROLLBACK — ${BASE_URL} — HEAD ${gitHead()}${DOCKER ? ` — modo Docker (${COMPOSE_FILE})` : " — modo procesos local"}`,
+  `ROLLBACK DRILL — ${BASE_URL} — HEAD ${gitHead()}${DOCKER ? ` — Docker mode (${COMPOSE_FILE})` : " — local process mode"}`,
 );
 console.log("=".repeat(64));
 if (!signingConfigured) {
-  console.log(`[DRILL] WARN sin key de licencia (${signingKeyFile}) — checks de licencia se omiten`);
+  console.log(`[DRILL] WARN no license key (${signingKeyFile}) — license checks are skipped`);
 }
 if (NO_ROLLBACK) {
-  console.log("[DRILL] --no-rollback: la fase ROLLBACK se omitirá (sin mutación git)");
+  console.log("[DRILL] --no-rollback: the ROLLBACK phase will be skipped (no git mutation)");
 } else {
-  console.log("[DRILL] ⚠️  la fase ROLLBACK hará git checkout del tag prod-* previo");
+  console.log("[DRILL] ⚠️  the ROLLBACK phase will git checkout the previous prod-* tag");
 }
 console.log("");
 
 let overallOk = true;
 
-// ── Fase 0: PREP (solo Docker) — imágenes reales por SHA ─────────────
-// Construye las imágenes del tag prod-* previo (blanco del rollback)
-// DESDE EL ÁRBOL DE ESE TAG (worktree git) para que CAMINO A sea real:
-// imagen == código del tag. Las de HEAD las construye staging-smoke (CI)
-// o BASELINE si faltan. Sin >= 2 tags, PREP se omite y ROLLBACK fallará
-// con su mensaje claro. La topología del drill puede incluir archivos
-// untracked (docker-compose.staging.yml, key de licencia) — se sincronizan
-// al worktree para que el build sea reproducible.
+// ── Phase 0: PREP (Docker only) — real images by SHA ─────────────────
+// Builds the images of the previous prod-* tag (the rollback target)
+// FROM THAT TAG'S TREE (git worktree) so PATH A is real:
+// image == tag code. staging-smoke (CI) builds the HEAD ones, or BASELINE
+// does if they are missing. Without >= 2 tags, PREP is skipped and
+// ROLLBACK fails with its clear message. The drill topology may include
+// untracked files (docker-compose.staging.yml, license key) — they are
+// synced into the worktree so the build is reproducible.
 if (overallOk && DOCKER) {
   const s = Date.now();
   const tags = prodTags();
   if (tags.length < 2) {
-    recordPhase("PREP", true, `se requieren >= 2 tags prod-* (hay ${tags.length}) — build de imágenes omitido`, Date.now() - s);
+    recordPhase("PREP", true, `>= 2 prod-* tags required (found ${tags.length}) — image build skipped`, Date.now() - s);
   } else {
     const prevTag = tags[1];
     const prevSha = gitRevParse(`${prevTag}^{commit}`).slice(0, 7);
@@ -353,7 +352,7 @@ if (overallOk && DOCKER) {
       dockerImageExists("bookmarkforge/web", prevSha) &&
       dockerImageExists("bookmarkforge/api", prevSha);
     if (hasPrevImages) {
-      recordPhase("PREP", true, `imágenes del tag previo ya existen (web/api:${prevSha}) — sin build`, Date.now() - s);
+      recordPhase("PREP", true, `images for the previous tag already exist (web/api:${prevSha}) — no build`, Date.now() - s);
     } else {
       const wt = join(tmpdir(), `bmf-prev-build-${process.pid}`);
       const add = spawnSync("git", ["worktree", "add", "--detach", wt, prevSha], {
@@ -364,18 +363,18 @@ if (overallOk && DOCKER) {
         recordPhase(
           "PREP",
           false,
-          `no se pudo crear worktree de ${prevSha} (git worktree add exit ${add.status}) — CAMINO A imposible`,
+          `could not create a worktree for ${prevSha} (git worktree add exit ${add.status}) — PATH A impossible`,
           Date.now() - s,
         );
         overallOk = false;
       } else {
         try {
-          // Sincroniza la topología del drill al árbol del tag (archivos
-          // untracked/gitignored que el compose y el build necesitan). El
-          // Dockerfile de HEAD se copia también para que el build del tag
-          // use el stage deps corregido (--ignore-scripts): uno antiguo,
-          // roto por `prepare: husky` + `--omit=dev`, imposibilitaba
-          // reconstruir la imagen del tag previo (CAMINO A).
+          // Syncs the drill topology into the tag's tree (untracked/gitignored
+          // files that the compose and the build need). HEAD's Dockerfile
+          // is copied too so the tag's build uses the fixed deps stage
+          // (--ignore-scripts): an old one, broken by `prepare: husky` +
+          // `--omit=dev`, made rebuilding the previous tag's image (PATH A)
+          // impossible.
           for (const rel of ["Dockerfile", "docker-compose.staging.yml", "public/nginx.conf"]) {
             const src = join(ROOT, rel);
             if (existsSync(src)) copyFileSync(src, join(wt, rel));
@@ -394,7 +393,7 @@ if (overallOk && DOCKER) {
             recordPhase(
               "PREP",
               false,
-              `build de ${prevSha} falló (exit ${build.status}) — CAMINO A imposible. Tail:\n${(build.stderr ?? "").split("\n").slice(-4).join("\n")}`,
+              `build of ${prevSha} failed (exit ${build.status}) — PATH A impossible. Tail:\n${(build.stderr ?? "").split("\n").slice(-4).join("\n")}`,
               Date.now() - s,
             );
             overallOk = false;
@@ -402,7 +401,7 @@ if (overallOk && DOCKER) {
             recordPhase(
               "PREP",
               true,
-              `imágenes construidas desde el árbol del tag ${prevTag} (web/api:${prevSha})`,
+              `images built from the tree of tag ${prevTag} (web/api:${prevSha})`,
               Date.now() - s,
             );
           }
@@ -414,7 +413,7 @@ if (overallOk && DOCKER) {
   }
 }
 
-// ── Fase 1: BASELINE ─────────────────────────────────────────────────
+// ── Phase 1: BASELINE ────────────────────────────────────────────────
 {
   const s = Date.now();
   const err = await startStack();
@@ -436,7 +435,7 @@ if (overallOk && DOCKER) {
   }
 }
 
-// ── Fase 2: KILL (falla inducida) ────────────────────────────────────
+// ── Phase 2: KILL (induced failure) ──────────────────────────────────
 if (overallOk) {
   const s = Date.now();
   let down = false;
@@ -463,19 +462,19 @@ if (overallOk) {
     down && mocksAlive,
     down
       ? mocksAlive
-        ? "api caído, mocks vivos ✓"
-        : "api caído pero un mock murió ✗"
-      : "el api siguió respondiendo — falla no inducida",
+        ? "api down, mocks alive ✓"
+        : "api down but a mock died ✗"
+      : "the api kept responding — failure not induced",
     Date.now() - s,
   );
   if (!down || !mocksAlive) overallOk = false;
 }
 
-// ── Fase 3: DETECT (monitoring-alerts) ───────────────────────────────
+// ── Phase 3: DETECT (monitoring-alerts) ──────────────────────────────
 if (overallOk) {
   const s = Date.now();
-  // Neutraliza CLIENT_CRITICAL: este drill no genera eventos de clientes;
-  // un log vacío evita el fail-closed por log ilegible del compose.
+  // Neutralizes CLIENT_CRITICAL: this drill generates no client events;
+  // an empty log avoids the compose unreadable-log fail-closed path.
   const tmpLog = join(tmpdir(), `bmf-drill-events-${process.pid}.log`);
   writeFileSync(tmpLog, "");
   const r = spawnSync(
@@ -497,8 +496,8 @@ if (overallOk) {
     parsed = JSON.parse((r.stdout ?? "").trim());
     const app = (parsed.results ?? []).find((x) => x.name === "APP_CAIDA");
     appDown = Boolean(app && app.ok === false);
-    // Alerta 2 (BUNDLE_CORRUPTO): el probe SRI Docker-free debe ejercitarse
-    // y detectar la violación → cubre la alerta 2 en el drill.
+    // Alert 2 (BUNDLE_CORRUPTO): the Docker-free SRI probe must be exercised
+    // and detect the violation → this covers alert 2 in the drill.
     const bundle = (parsed.results ?? []).find((x) => x.name === "BUNDLE_CORRUPTO");
     bundleOk = Boolean(bundle && bundle.ok === true);
     bundleDetail = bundle?.detail ?? "";
@@ -506,13 +505,13 @@ if (overallOk) {
     // fallthrough: parse failed → not detected
   }
   const detail = parsed
-    ? `APP_CAIDA detectado ✓ · BUNDLE_CORRUPTO ${bundleOk ? "probe OK" : "NO ejercitado"}${bundleDetail ? ` (${bundleDetail})` : ""} (monitoring exit ${r.status})`
-    : `no se pudo parsear monitoring-alerts (exit ${r.status})`;
+    ? `APP_CAIDA detected ✓ · BUNDLE_CORRUPTO ${bundleOk ? "probe OK" : "NOT exercised"}${bundleDetail ? ` (${bundleDetail})` : ""} (monitoring exit ${r.status})`
+    : `could not parse monitoring-alerts (exit ${r.status})`;
   recordPhase("DETECT", appDown && bundleOk, detail, Date.now() - s);
   if (!appDown || !bundleOk) overallOk = false;
 }
 
-// ── Fase 4: ROLLBACK (rollback.mjs --auto) ───────────────────────────
+// ── Phase 4: ROLLBACK (rollback.mjs --auto) ──────────────────────────
 if (overallOk && !NO_ROLLBACK) {
   const s = Date.now();
   const tags = prodTags();
@@ -520,14 +519,14 @@ if (overallOk && !NO_ROLLBACK) {
     recordPhase(
       "ROLLBACK",
       false,
-      `se requieren >= 2 tags prod-* (hay ${tags.length}) — crea tags con deploy-prod.mjs`,
+      `>= 2 prod-* tags required (found ${tags.length}) — create tags with deploy-prod.mjs`,
       Date.now() - s,
     );
     overallOk = false;
   } else {
-    // El criterio de restauración compara el SHA de HEAD contra el SHA del
-    // penúltimo tag (la misma selección que rollback --auto). Comparar por
-    // SHA es robusto incluso si dos tags apuntan al mismo commit.
+    // The restore criterion compares HEAD's SHA against the second-to-last
+    // tag's SHA (the same selection as rollback --auto). Comparing by
+    // SHA is robust even if two tags point at the same commit.
     const expectedTag = tags[1];
     const expectedSha = gitRevParse(`${expectedTag}^{commit}`);
     const beforeSha = gitRevParse("HEAD");
@@ -546,25 +545,25 @@ if (overallOk && !NO_ROLLBACK) {
       );
       if (nginxConf.status !== 0) {
         targetWebOk = false;
-        targetWebDetail = `no se pudo leer nginx.conf del tag ${expectedTag} (git show exit ${nginxConf.status})`;
+        targetWebDetail = `could not read nginx.conf from tag ${expectedTag} (git show exit ${nginxConf.status})`;
       } else {
         const violations = findProxyPassWithoutPort(nginxConf.stdout ?? "");
         if (violations.length > 0) {
           targetWebOk = false;
-          targetWebDetail = `${expectedTag} tiene ${violations.length} proxy_pass sin puerto explícito — la web restaurada serviría 502`;
+          targetWebDetail = `${expectedTag} has ${violations.length} proxy_pass without an explicit port — the restored web would serve 502`;
         }
       }
     } catch (e) {
       targetWebOk = false;
-      targetWebDetail = `error validando nginx.conf del tag ${expectedTag}: ${e.message}`;
+      targetWebDetail = `error validating nginx.conf from tag ${expectedTag}: ${e.message}`;
     }
     if (!targetWebOk) {
-      recordPhase("ROLLBACK", false, `GATE: rollback target con web rota — ${targetWebDetail}`, Date.now() - s);
+      recordPhase("ROLLBACK", false, `GATE: rollback target with a broken web — ${targetWebDetail}`, Date.now() - s);
       overallOk = false;
     }
     if (targetWebOk) {
-    // Respaldar la topología ANTES del rollback: el checkout del tag puede
-    // eliminarla si el tag es anterior a su commiteo.
+    // Back up the topology BEFORE the rollback: the tag checkout can
+    // delete it if the tag predates its commit.
     backupTopology();
     const r2 = spawnSync(
       process.execPath,
@@ -580,9 +579,9 @@ if (overallOk && !NO_ROLLBACK) {
             ? {
                 DEPLOY_COMPOSE_FILE: COMPOSE_FILE,
                 HTTP_PORT: String(WEB_PORT),
-                // rollback.mjs invoca compose SIN -p: sin esta variable el
-                // proyecto sería el basename del directorio y crearía un
-                // stack PARALELO al del drill (colisión de puerto web).
+                // rollback.mjs runs compose WITHOUT -p: without this variable the
+                // project would be the directory basename and would create a
+                // stack PARALLEL to the drill's (web port collision).
                 COMPOSE_PROJECT_NAME: composeProject(),
               }
             : {}),
@@ -590,45 +589,45 @@ if (overallOk && !NO_ROLLBACK) {
       },
     );
     const out = r2.stdout ?? "";
-    const camino = out.includes("CAMINO A")
-      ? "CAMINO A (imagen por SHA)"
-      : out.includes("CAMINO B")
-        ? "CAMINO B (rebuild)"
-        : "camino no identificado";
-    // Tiempo REAL medido por rollback.mjs para el paso up -d + sanity del
-    // camino imagen-por-SHA (línea 'CAMINO A confirmado … en X.Xs').
-    const caminoMatch = out.match(/CAMINO A confirmado[^\n]*?en ([\d.]+)s/);
-    const caminoASeconds = caminoMatch ? Number(caminoMatch[1]) : null;
+    const path = out.includes("PATH A")
+      ? "PATH A (image by SHA)"
+      : out.includes("PATH B")
+        ? "PATH B (rebuild)"
+        : "unidentified path";
+    // Real time measured by rollback.mjs for the up -d + sanity step of the
+    // image-by-SHA path (the 'PATH A confirmed … in X.Xs' line).
+    const pathMatch = out.match(/PATH A confirmed[^\n]*?in ([\d.]+)s/);
+    const pathASeconds = pathMatch ? Number(pathMatch[1]) : null;
     const afterSha = gitRevParse("HEAD");
     const restoreOk = Boolean(afterSha && afterSha === expectedSha);
-    // GATE del drill: el rollback debe restaurar POR IMAGEN (CAMINO A) y el
-    // tiempo medido del camino debe ser < 60s. Un fallback a rebuild (CAMINO
-    // B) o un tiempo >= 60s hacen FALLAR el drill — el objetivo es probar la
-    // vía imagen-por-SHA, no el rebuild.
-    const caminoGateOk = camino === "CAMINO A (imagen por SHA)" && caminoASeconds !== null && caminoASeconds < 60;
+    // The drill's GATE: the rollback must restore BY IMAGE (PATH A) and the
+    // measured path time must be < 60s. A fallback to a rebuild (PATH
+    // B) or a time >= 60s makes the drill FAIL — the goal is to exercise the
+    // image-by-SHA path, not the rebuild.
+    const pathGateOk = path === "PATH A (image by SHA)" && pathASeconds !== null && pathASeconds < 60;
     const tail = out.split("\n").slice(-6).join("\n").trim();
     recordPhase(
       "ROLLBACK",
-      restoreOk && caminoGateOk,
+      restoreOk && pathGateOk,
       restoreOk
-        ? caminoGateOk
-          ? `HEAD=${afterSha.slice(0, 7)} = ${expectedTag} — ${camino} medido ${caminoASeconds}s (< 60s GATE) (rollback exit ${r2.status})`
-          : `restauró pero ${camino}${caminoASeconds === null ? " — tiempo del camino no medible" : ` — CAMINO A en ${caminoASeconds}s >= 60s (GATE)`}. Tail:\n${tail}`
-        : `no restauró ${expectedTag} — antes ${beforeSha.slice(0, 7)} / después ${afterSha.slice(0, 7)} — exit ${r2.status}. Tail:\n${tail}`,
+        ? pathGateOk
+          ? `HEAD=${afterSha.slice(0, 7)} = ${expectedTag} — ${path} measured ${pathASeconds}s (< 60s GATE) (rollback exit ${r2.status})`
+          : `restored but ${path}${pathASeconds === null ? " — path time not measurable" : ` — PATH A took ${pathASeconds}s >= 60s (GATE)`}. Tail:\n${tail}`
+        : `did not restore ${expectedTag} — before ${beforeSha.slice(0, 7)} / after ${afterSha.slice(0, 7)} — exit ${r2.status}. Tail:\n${tail}`,
       Date.now() - s,
     );
-    if (!restoreOk || !caminoGateOk) overallOk = false;
-    } // fin if (targetWebOk)
+    if (!restoreOk || !pathGateOk) overallOk = false;
+    } // end if (targetWebOk)
   }
 } else if (overallOk) {
-  recordPhase("ROLLBACK", null, "omitido (--no-rollback)", 0);
+  recordPhase("ROLLBACK", null, "skipped (--no-rollback)", 0);
 }
 
-// ── Fase 5: RE-VERIFY ────────────────────────────────────────────────
+// ── Phase 5: RE-VERIFY ───────────────────────────────────────────────
 if (overallOk) {
   const s = Date.now();
-  // Si el rollback docker trajo el api arriba, úsalo; si no, lo re-arranca
-  // (en Docker: compose start api; en local: spawn desde el árbol restaurado).
+  // If the Docker rollback brought the api up, use it; otherwise restart it
+  // (in Docker: compose start api; locally: spawn from the restored tree).
   let ready = await waitForReady(`${BASE_URL}/health`, 20, 250);
   if (!ready) {
     ensureTopology();
@@ -647,7 +646,7 @@ if (overallOk) {
     ready = await waitForReady(`${BASE_URL}/health`);
   }
   if (!ready) {
-    recordPhase("RE-VERIFY", false, "el server no volvió a arrancar tras el rollback", Date.now() - s);
+    recordPhase("RE-VERIFY", false, "the server did not come back up after the rollback", Date.now() - s);
     overallOk = false;
   } else {
     const result = await runApiSurfaceChecks({
@@ -664,12 +663,12 @@ if (overallOk) {
   }
 }
 
-// ── Reporte ──────────────────────────────────────────────────────────
+// ── Report ───────────────────────────────────────────────────────────
 teardown();
 const totalMs = Date.now() - t0;
 console.log("");
 console.log("-".repeat(64));
-console.log(`DRILL ${overallOk ? "PASS ✅" : "FAIL ❌"} — ${phases.length} fases en ${(totalMs / 1000).toFixed(1)}s`);
+console.log(`DRILL ${overallOk ? "PASS ✅" : "FAIL ❌"} — ${phases.length} phases in ${(totalMs / 1000).toFixed(1)}s`);
 console.log("-".repeat(64));
 
 if (isJson) {

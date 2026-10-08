@@ -1,34 +1,34 @@
 #!/usr/bin/env node
 /**
- * scripts/rollback.mjs — Rollback <1min sin pérdida de datos (imagen por SHA)
+ * scripts/rollback.mjs — Rollback in <1min without data loss (image by SHA)
  *
- * Estrategia: IMAGEN PRIMERO. deploy-prod.mjs construye y etiqueta las
- * imágenes por SHA (bookmarkforge/web:<sha>, bookmarkforge/api:<sha>) y crea
- * el tag prod-YYYYMMDD-HHMM-<sha>. El rollback preferente NO reconstruye:
- * hace `docker compose up -d` con IMAGE_TAG=<sha> (sin --build) → segundos.
- * Solo si la imagen <sha> no existe localmente cae al rebuild desde el
- * código del tag (fallback de seguridad).
+ * Strategy: IMAGE FIRST. deploy-prod.mjs builds and tags the images by SHA
+ * (bookmarkforge/web:<sha>, bookmarkforge/api:<sha>) and creates the
+ * prod-YYYYMMDD-HHMM-<sha> tag. The preferred rollback does NOT rebuild:
+ * it runs `docker compose up -d` with IMAGE_TAG=<sha> (no --build) → seconds.
+ * Only if the <sha> image does not exist locally does it fall back to a
+ * rebuild from the tag's code (safety fallback).
  *
- * Uso:
+ * Usage:
  *   node scripts/rollback.mjs --prev-tag prod-20250826-a1b2c3d
  *   node scripts/rollback.mjs --list
- *   node scripts/rollback.mjs --auto  (revierte al último tag bueno)
+ *   node scripts/rollback.mjs --auto  (reverts to the last good tag)
  *
- * BookmarkForge es local-first (IndexedDB/RxDB). El rollback NUNCA borra
- * datos del cliente. Solo revierte contenedores web/api y bundle.
+ * BookmarkForge is local-first (IndexedDB/RxDB). The rollback NEVER deletes
+ * client data. It only reverts the web/api containers and the bundle.
  *
- * Pre-requisitos:
- *   - Cada deploy crea tag: prod-YYYYMMDD-HHMM-<shortsha>
- *   - Imágenes Docker taggeadas: bookmarkforge/web:<sha> y bookmarkforge/api:<sha>
+ * Pre-requisites:
+ *   - Every deploy creates a tag: prod-YYYYMMDD-HHMM-<shortsha>
+ *   - Tagged Docker images: bookmarkforge/web:<sha> and bookmarkforge/api:<sha>
  *
- * Registro remoto (opcional): si deploy-prod.mjs corrió con --push-images,
- * las imágenes por SHA están disponibles en DOCKER_REGISTRY. PRIMING
- * AUTOMÁTICO: cuando la imagen local falta pero el registro la tiene, el
- * propio rollback hace `docker pull` + `docker tag` por SHA y la usa sin
- * rebuild — NO hay que primar el nodo previamente (pull-prod-images.mjs es
- * solo para pre-calentar opcionalmente). El rollback imagen-por-SHA funciona
- * desde cualquier nodo del clúster (no solo el que construyó).
- *   DOCKER_REGISTRY  registro destino (ej: registry.example.com:5000)
+ * Remote registry (optional): if deploy-prod.mjs ran with --push-images,
+ * the SHA images are available in DOCKER_REGISTRY. AUTOMATIC PRIMING: when
+ * the local image is missing but the registry has it, the rollback itself
+ * runs `docker pull` + `docker tag` by SHA and uses it without a rebuild —
+ * there is no need to prime the node beforehand (pull-prod-images.mjs is
+ * only for optional pre-warming). The image-by-SHA rollback works from any
+ * node in the cluster (not only the one that built it).
+ *   DOCKER_REGISTRY  target registry (e.g. registry.example.com:5000)
  */
 
 import { execSync, spawnSync } from "node:child_process";
@@ -42,7 +42,7 @@ function run(cmd, opts = {}) {
   return execSync(cmd, { stdio: "inherit", ...opts });
 }
 
-/** run() que no lanza: devuelve true/false según el exit code. */
+/** run() that does not throw: returns true/false based on the exit code. */
 function runOk(cmd, opts = {}) {
   if (Array.isArray(cmd)) return runCommandOk(cmd[0], cmd.slice(1), opts);
   try {
@@ -70,8 +70,9 @@ function runCapture(cmd) {
 
 const args = process.argv.slice(2);
 
-// URL base para el smoke post-rollback: honra PROD_BASE_URL (igual que
-// deploy-prod.mjs y monitoring-alerts.mjs). Default = prod local 8080.
+// Base URL for the post-rollback smoke: honors PROD_BASE_URL (same as
+// deploy-prod.mjs and monitoring-alerts.mjs). Default = local prod 8080.
+
 export function validateRollbackTargetTag(tag) {
   return typeof tag === "string" && /^prod-[0-9]{8}-[0-9]{4}-[0-9a-fA-F]{7,40}$/.test(tag);
 }
@@ -95,11 +96,12 @@ if (!validateRollbackBaseUrl(PROD_BASE_URL) && process.argv[1]?.endsWith("rollba
 }
 const SMOKE_ENV = { ...process.env, PROD_BASE_URL };
 
-// ── Lógica pura (extraída para test unitario sin git/docker) ──────────
+// ── Pure logic (extracted for unit testing without git/docker) ─────────
 
 /**
- * Extrae el sha (último segmento) de un tag prod-*. Devuelve "" si el tag
- * no termina en un sha de 7-12 hex — en ese caso el rollback cae a rebuild.
+ * Extracts the sha (last segment) from a prod-* tag. Returns "" if the tag
+ * does not end in a 7-12 hex sha — in that case the rollback falls back to
+ * a rebuild.
  */
 export function extractSha(tag) {
   if (typeof tag !== "string" || !tag.startsWith("prod-")) return "";
@@ -108,19 +110,20 @@ export function extractSha(tag) {
 }
 
 /**
- * Selecciona el objetivo de --auto: el tag del penúltimo BUILD prod-*
- * distinto (último bueno). `tags` ya debe venir ordenado por creatordate
- * desc (como `git tag --sort=-creatordate`).
+ * Selects the --auto target: the tag of the second-to-last DISTINCT prod-*
+ * BUILD (last good). `tags` must already be sorted by creatordate
+ * descending (like `git tag --sort=-creatordate`).
  *
- * Dedupe por sha: cada deploy crea prod-YYYYMMDD-HHMM-<shortsha>, y un
- * re-despliegue del mismo commit crea OTRO tag con el MISMO sha (caso real:
- * 2 tags sobre bb21664 degradaban --auto a un rollback no-op — se "revertía"
- * a la misma imagen por SHA). Se conserva la primera aparición de cada sha
- * (la más reciente por creatordate); tags sin sha embebido válido se tratan
- * como build distinto por nombre (su ruteo de imagen cae a rebuild igual).
+ * Dedupe by sha: every deploy creates prod-YYYYMMDD-HHMM-<shortsha>, and a
+ * redeploy of the same commit creates ANOTHER tag with the SAME sha (a real
+ * case: 2 tags over bb21664 degraded --auto into a no-op rollback — it
+ * "reverted" to the same image by SHA). The first appearance of each sha is
+ * kept (the most recent by creatordate); tags without a valid embedded sha
+ * are treated as a distinct build by name (their image routing falls back
+ * to a rebuild anyway).
  *
- * Devuelve null si hay menos de 2 tags prod-* O menos de 2 builds distintos
- * (en ambos casos un rollback automático no tiene destino útil).
+ * Returns null if there are fewer than 2 prod-* tags OR fewer than 2 distinct
+ * builds (in both cases an automatic rollback has no useful target).
  */
 export function selectAutoTarget(tags) {
   const prodTags = (tags ?? []).filter((t) => typeof t === "string" && t.startsWith("prod-"));
@@ -134,28 +137,28 @@ export function selectAutoTarget(tags) {
     distinct.push(tag);
   }
   if (distinct.length < 2) return null;
-  return distinct[1]; // penúltimo build DISTINTO del actual
+  return distinct[1]; // second-to-last build DISTINCT from the current one
 }
 
 /**
- * Rutas del rollback por la presencia local de las imágenes por SHA:
+ * Rollback routing based on the local presence of the SHA images:
  *
- *   - CAMINO A (imagen por SHA, sin build): `bookmarkforge/web:<sha>` existe
- *     localmente y `bookmarkforge/api:<sha>` existe o se puede obtener desde
+ *   - PATH A (image by SHA, no build): `bookmarkforge/web:<sha>` exists
+ *     locally and `bookmarkforge/api:<sha>` exists or can be obtained from
  *     DOCKER_REGISTRY → `route = "image"`.
- *   - CAMINO B (rebuild desde el tag): no existe web:<sha>, o falta api:<sha>
- *     sin registro disponible → `route = "rebuild"`.
+ *   - PATH B (rebuild from the tag): web:<sha> does not exist, or api:<sha>
+ *     is missing with no registry available → `route = "rebuild"`.
  *
- * Un sha vacío/inválido SIEMPRE cae a rebuild (rollback.mjs ya imprime
- * "sin sha válida → rebuild").
+ * An empty/invalid sha ALWAYS falls back to a rebuild (rollback.mjs already
+ * prints "no valid sha → rebuild").
  *
- * `imageList` son las líneas `repo:tag` de `docker images --format
- * "{{.Repository}}:{{.Tag}}"`. Devuelve { route } para que los llamadores
- * puedan medir/actuar por separado.
+ * `imageList` are the `repo:tag` lines from `docker images --format
+ * "{{.Repository}}:{{.Tag}}"`. Returns { route } so callers can measure/act
+ * separately.
  */
 export function decideImagePath(sha, imageList) {
-  // Un sha vacío o malformado SIEMPRE cae a rebuild (coherente con
-  // extractSha): no se intenta arrancar una imagen con etiqueta inválida.
+  // An empty or malformed sha ALWAYS falls back to a rebuild (consistent with
+  // extractSha): we never try to start an image with an invalid tag.
   if (!sha || !/^[0-9a-f]{7,12}$/i.test(sha)) {
     return { route: "rebuild", reason: "invalid-sha" };
   }
@@ -170,14 +173,14 @@ export function decideImagePath(sha, imageList) {
 }
 
 /**
- * Decide si conviene intentar `docker pull` desde el registro remoto para
- * completar el CAMINO A. `web:<sha>` es el gate principal: nunca se intenta
- * reconstruir si web existe; solo se obtiene api:<sha> desde el registro cuando
- * api falta localmente. Devuelve { shouldPull, missing }.
+ * Decides whether it is worth attempting `docker pull` from the remote
+ * registry to complete PATH A. `web:<sha>` is the main gate: a rebuild is
+ * never attempted if web exists; api:<sha> is only fetched from the registry
+ * when api is missing locally. Returns { shouldPull, missing }.
  *
- * Sin web local, no se hace pull ni rebuild parcial: el camino imagen requiere
- * que web ya esté disponible localmente. Sin sha válido o sin registro no se
- * intenta pull.
+ * Without a local web, no pull and no partial rebuild happen: the image path
+ * requires web to already be available locally. Without a valid sha or
+ * without a registry, no pull is attempted.
  */
 export function shouldPullFromRegistry(sha, imageList, registry) {
   if (!sha || !/^[0-9a-f]{7,12}$/i.test(sha)) {
@@ -194,11 +197,11 @@ export function shouldPullFromRegistry(sha, imageList, registry) {
   return { shouldPull: true, missing };
 }
 
-/** Ejecuta el flujo solo cuando se invoca directo (no al ser importado). */
-// El flujo principal solo corre cuando se ejecuta directamente (import.meta.url
-// === script real), no cuando el test importa la lógica pura. pathToFileURL
-// normaliza el argv[1] del SO (incl. separadores \ de Windows) a una file://
-// URL canónica comparable con import.meta.url.
+/** Runs the flow only when invoked directly (not when imported). */
+// The main flow only runs when executed directly (import.meta.url === the
+// real script path), not when the test imports the pure logic. pathToFileURL
+// normalizes the OS argv[1] (including Windows \ separators) into a canonical
+// file:// URL comparable with import.meta.url.
 import { pathToFileURL } from "node:url";
 
 const isMain =
@@ -209,23 +212,24 @@ if (isMain) {
 
 if (args.includes("--help") || args.includes("-h")) {
   console.log(`
-Rollback BookmarkForge — <1min (imagen por SHA, fallback a rebuild)
+BookmarkForge Rollback — <1min (image by SHA, rebuild fallback)
 
-  --list              Lista últimos 5 tags prod-*
-  --prev-tag <tag>    Revierte a tag específico (ej: prod-20250826-a1b2c3d)
-  --auto              Revierte al penúltimo tag (último bueno)
-  --verify            Solo verifica health (no revierte)
-  --help              Esta ayuda
+  --list              List the last 5 prod-* tags
+  --prev-tag <tag>    Revert to a specific tag (e.g. prod-20250826-a1b2c3d)
+  --auto              Revert to the second-to-last tag (last good)
+  --verify            Only verify health (does not revert)
+  --help              This help
 
-Estrategia: usa la imagen bookmarkforge/web:<sha> ya taggeada por
-deploy-prod.mjs (up -d SIN --build, <1min). Priming AUTOMÁTICO: si la
-imagen no está local y DOCKER_REGISTRY está definido (deploy-prod
---push-images la subió), se hace docker pull + tag por SHA en este nodo y
-se continúa con la imagen — NO hace falta primar el nodo antes. Solo si no
-hay registro o el pull falla cae al checkout del tag + rebuild (fallback).
-Requiere DOCKER_REGISTRY (ej: registry.example.com:5000).
+Strategy: uses the bookmarkforge/web:<sha> image already tagged by
+deploy-prod.mjs (up -d WITHOUT --build, <1min). AUTOMATIC priming: if the
+image is not local and DOCKER_REGISTRY is set (deploy-prod --push-images
+uploaded it), a docker pull + tag by SHA is done on this node and we continue
+with that image — there is NO need to prime the node beforehand. Only if
+there is no registry or the pull fails does it fall back to the tag checkout
++ rebuild (fallback).
+Requires DOCKER_REGISTRY (e.g. registry.example.com:5000).
 
-Ejemplos:
+Examples:
   node scripts/rollback.mjs --list
   node scripts/rollback.mjs --prev-tag prod-20250826-a1b2c3d
   node scripts/rollback.mjs --auto
@@ -236,15 +240,15 @@ Ejemplos:
 if (args.includes("--list")) {
   try {
     const tags = runCapture("git tag --sort=-creatordate").split("\n").slice(0, 20).join("\n");
-    console.log(tags || "(sin tags prod-*)");
+    console.log(tags || "(no prod-* tags)");
     try {
       const imagesRaw = runCapture("docker images bookmarkforge/web --format \"{{.Repository}}:{{.Tag}} {{.CreatedSince}}\"");
       console.log("\nDocker images:\n" + imagesRaw.split("\n").slice(0, 20).join("\n"));
     } catch {
-      console.log("\nDocker images: (docker no disponible localmente — OK en dev Windows)");
+      console.log("\nDocker images: (docker not available locally — OK on Windows dev)");
     }
   } catch (e) {
-    console.error("No se pudieron listar tags:", e.message);
+    console.error("Could not list tags:", e.message);
   }
   process.exit(0);
 }
@@ -256,10 +260,10 @@ if (args.includes("--verify")) {
     timeout: 120_000,
   });
   if (r.status !== 0) {
-    console.error("\n[rollback] VERIFY FAIL — health check no pasó");
+    console.error("\n[rollback] VERIFY FAIL — health check did not pass");
     process.exit(1);
   }
-  console.log("\n[rollback] VERIFY OK — el smoke de producción pasó (todos los checks)");
+  console.log("\n[rollback] VERIFY OK — the production smoke passed (all checks)");
   process.exit(0);
 }
 
@@ -273,29 +277,29 @@ if (args.includes("--auto")) {
     targetTag = selectAutoTarget(tags);
     if (!targetTag) {
       if (tags.length < 2) {
-        console.error("[rollback] No hay suficientes tags prod-* para auto. Usa --prev-tag");
+        console.error("[rollback] Not enough prod-* tags for auto. Use --prev-tag");
       } else {
-        // Todos los tags apuntan al mismo build: revertir a tags[1] sería un
-        // no-op (misma imagen por SHA). Exigir destino explícito.
+        // Every tag points to the same build: reverting to tags[1] would be a
+        // no-op (same image by SHA). Require an explicit target.
         console.error(
-          `[rollback] Los ${tags.length} tags prod-* apuntan todos al mismo build (${extractSha(tags[0]) || "sin sha embebido"}). Usa --prev-tag <tag> para forzar otro destino.`,
+          `[rollback] All ${tags.length} prod-* tags point to the same build (${extractSha(tags[0]) || "no embedded sha"}). Use --prev-tag <tag> to force a different target.`,
         );
       }
       process.exit(1);
     }
-    console.log(`[rollback] Auto: revirtiendo a ${targetTag} (actual es ${tags[0]})`);
+    console.log(`[rollback] Auto: reverting to ${targetTag} (current is ${tags[0]})`);
   } catch (e) {
-    console.error("[rollback] --auto falló:", e.message);
+    console.error("[rollback] --auto failed:", e.message);
     process.exit(1);
   }
 }
 
 if (!targetTag) {
-  console.error("[rollback] Debes pasar --prev-tag <tag> o --auto. Usa --help");
+  console.error("[rollback] You must pass --prev-tag <tag> or --auto. Use --help");
   process.exit(1);
 }
 
-// VALIDACIÓN PREVIA: Verificar que el tag existe y tiene estructura mínima
+// PRE-VALIDATION: verify the tag exists and has a minimal structure
 try {
   if (!validateRollbackTargetTag(targetTag)) {
     console.error(`[rollback] Invalid target tag format: ${targetTag}`);
@@ -305,10 +309,10 @@ try {
   if (tagCheck.status !== 0) throw new Error(tagCheck.stderr?.trim() || "tag lookup failed");
   const tagType = tagCheck.stdout.trim();
   if (tagType !== "tag") {
-    console.error(`[rollback] El tag ${targetTag} no existe o no es un tag válido`);
+    console.error(`[rollback] The tag ${targetTag} does not exist or is not a valid tag`);
     process.exit(1);
   }
-  // Verificar que tiene al menos un archivo (evita tags vacíos/corruptos)
+  // Verify it has at least one file (avoids empty/corrupt tags)
   // Cross-platform: count lines in JS instead of piping to `wc` (missing under
   // cmd.exe on Windows dev boxes).
   const filesInTagResult = spawnSync("git", ["ls-tree", "-r", `refs/tags/${targetTag}`, "--name-only"], {
@@ -317,53 +321,54 @@ try {
   if (filesInTagResult.status !== 0) throw new Error(filesInTagResult.stderr?.trim() || "tag tree lookup failed");
   const filesInTag = filesInTagResult.stdout.trim().split("\n").filter(Boolean).length;
   if (filesInTag < 5) {
-    console.error(`[rollback] El tag ${targetTag} parece vacío o corrupto (pocos archivos)`);
+    console.error(`[rollback] The tag ${targetTag} looks empty or corrupt (too few files)`);
     process.exit(1);
   }
-  console.log(`[rollback] Tag ${targetTag} validado exitosamente`);
+  console.log(`[rollback] Tag ${targetTag} validated successfully`);
 } catch (e) {
-  console.error(`[rollback] Error validando tag ${targetTag}: ${e.message}`);
+  console.error(`[rollback] Error validating tag ${targetTag}: ${e.message}`);
   process.exit(1);
 }
 
-// ── Estrategia: IMAGEN PRIMERO ─────────────────────────────────────────
-// deploy-prod.mjs etiqueta las imágenes por SHA y docker-compose.prod.yml
-// declara imágenes parametrizadas por IMAGE_TAG. El rollback
-// preferente arranca la imagen YA construida (up -d sin --build → segundos);
-// solo si la imagen <sha> no existe localmente cae al rebuild desde el tag.
+// ── Strategy: IMAGE FIRST ──────────────────────────────────────────────
+// deploy-prod.mjs tags the images by SHA and docker-compose.prod.yml
+// declares images parameterized by IMAGE_TAG. The preferred rollback starts
+// the ALREADY BUILT image (up -d without --build → seconds); only if the
+// <sha> image does not exist locally does it fall back to a rebuild from the
+// tag.
 
 const sha = extractSha(targetTag);
-const shaLooksValid = Boolean(sha); // extractSha ya aplica el regex
-// Compose objetivo: prod por defecto; DEPLOY_COMPOSE_FILE para drills en staging.
+const shaLooksValid = Boolean(sha); // extractSha already applies the regex
+// Target compose: prod by default; DEPLOY_COMPOSE_FILE for staging drills.
 const COMPOSE_FILE = process.env.DEPLOY_COMPOSE_FILE?.trim() || "docker-compose.prod.yml";
 const envFileArg = existsSync(".env.production") ? "--env-file .env.production" : "";
 const composeBase = `docker compose -f ${COMPOSE_FILE} ${envFileArg}`.trim();
 
-// Registro remoto (opcional): deploy-prod.mjs --push-images sube las imágenes
-// por SHA a este registro. Si la imagen local no existe pero el registro
-// sí, CAMINO A puede hacer `docker pull` y usarla sin rebuild — permitiendo
-// el rollback imagen-por-SHA desde CUALQUIER nodo del clúster (no solo el
-// que construyó). Mismo env que deploy-prod.mjs; sin la var, el rollback
-// solo usa imágenes locales (comportamiento original).
+// Remote registry (optional): deploy-prod.mjs --push-images uploads the SHA
+// images to this registry. If the local image does not exist but the registry
+// does, PATH A can `docker pull` and use it without a rebuild — enabling the
+// image-by-SHA rollback from ANY node in the cluster (not only the one that
+// built it). Same env as deploy-prod.mjs; without the var, the rollback only
+// uses local images (original behavior).
 const REGISTRY = (process.env.DOCKER_REGISTRY ?? "").trim().replace(/\/+$/, "");
 if (REGISTRY && !validateRegistry(REGISTRY)) {
-  console.error("[rollback] DOCKER_REGISTRY contiene un host inválido");
+  console.error("[rollback] DOCKER_REGISTRY contains an invalid host");
   process.exit(1);
 }
 
-console.log(`\n[rollback] INICIANDO ROLLBACK A ${targetTag} — cronómetro 1:00`);
+console.log(`\n[rollback] STARTING ROLLBACK TO ${targetTag} — stopwatch 1:00`);
 console.log(
-  `[rollback] Imagen objetivo: bookmarkforge/web:${shaLooksValid ? sha : "(sin sha válida → rebuild)"}\n`,
+  `[rollback] Target image: bookmarkforge/web:${shaLooksValid ? sha : "(no valid sha → rebuild)"}\n`,
 );
 
 const t0 = Date.now();
 try {
-  // ── CAMINO A: imagen por SHA (sin build, <1 min) ─────────────────────
+  // ── PATH A: image by SHA (no build, <1 min) ──────────────────────────
   let imagePathOk = false;
   if (shaLooksValid) {
-    // Pre-check local: web:<sha> es el gate obligatorio. Si web no existe,
-    // no intentamos up -d ni hacemos rebuild parcial. api:<sha> puede primarse
-    // automáticamente desde DOCKER_REGISTRY cuando falte localmente.
+    // Local pre-check: web:<sha> is the mandatory gate. If web does not
+    // exist, we attempt neither up -d nor a partial rebuild. api:<sha> can be
+    // primed automatically from DOCKER_REGISTRY when missing locally.
     let hasWeb = false;
     let hasApi = false;
     let images = [];
@@ -372,15 +377,15 @@ try {
       hasWeb = images.includes(`bookmarkforge/web:${sha}`);
       hasApi = images.includes(`bookmarkforge/api:${sha}`);
     } catch {
-      console.log("[rollback] docker no disponible — el fallback lo confirmará");
+      console.log("[rollback] docker not available — the fallback will confirm it");
     }
-    // La imagen local falta pero el registro remoto puede tenerla: pull +
-    // retag por SHA permite el rollback imagen-por-SHA desde cualquier nodo
-    // del clúster (deploy-prod --push-images la subió). Sin sha válido o sin
-    // registro, shouldPullFromRegistry devuelve shouldPull=false → rebuild.
+    // The local image is missing but the remote registry may have it: pull +
+    // retag by SHA enables the image-by-SHA rollback from any node in the
+    // cluster (deploy-prod --push-images uploaded it). Without a valid sha or
+    // registry, shouldPullFromRegistry returns shouldPull=false → rebuild.
     const pullDecision = shouldPullFromRegistry(sha, images, REGISTRY);
     if (pullDecision.shouldPull) {
-      console.log(`[rollback] Verificando disponibilidad remota antes del pull (${REGISTRY})`);
+      console.log(`[rollback] Checking remote availability before the pull (${REGISTRY})`);
       const remoteRefs = pullDecision.missing.map((name) => `${REGISTRY}/bookmarkforge/${name}:${sha}`);
       let remotePublished = true;
       for (const remote of remoteRefs) {
@@ -392,15 +397,15 @@ try {
           if (manifest.status !== 0) throw new Error("docker manifest inspect failed");
         } catch {
           remotePublished = false;
-          console.error(`[rollback] imagen no publicada en el registro: ${remote}`);
+          console.error(`[rollback] image not published in the registry: ${remote}`);
           break;
         }
       }
       if (!remotePublished) {
-        console.error(`[rollback] SHA ${sha} no está publicado en ${REGISTRY} — abortando CAMINO A antes del pull`);
+        console.error(`[rollback] SHA ${sha} is not published in ${REGISTRY} — aborting PATH A before the pull`);
       }
       if (remotePublished) {
-      console.log(`[rollback] Imagen no local — intentando pull de ${REGISTRY}`);
+      console.log(`[rollback] Image not local — attempting pull from ${REGISTRY}`);
       let pulled = true;
       for (const name of pullDecision.missing) {
         const remote = `${REGISTRY}/bookmarkforge/${name}:${sha}`;
@@ -408,39 +413,39 @@ try {
         const pullOk = runOk(["docker", "pull", remote], { timeout: 120_000 });
         if (!pullOk) {
           pulled = false;
-          console.warn(`[rollback] pull de ${remote} falló — no hay imagen en el registro para este sha`);
+          console.warn(`[rollback] pull of ${remote} failed — no image in the registry for this sha`);
           break;
         }
         if (run(["docker", "tag", remote, local], { timeout: 30_000 }) !== 0) {
           pulled = false;
-          console.warn(`[rollback] tag local de ${remote} falló`);
+          console.warn(`[rollback] local tag of ${remote} failed`);
           break;
         }
       }
       if (remotePublished && pulled) {
         hasWeb = true;
         hasApi = true;
-        console.log(`[rollback] imágenes obtenidas del registro (${sha}) — continuando CAMINO A`);
+        console.log(`[rollback] Images obtained from the registry (${sha}) — continuing PATH A`);
       }
       }
     }
     if (hasWeb && hasApi) {
-      // Tiempo real medido del camino imagen-por-SHA: el drill de rollback
-      // lo parsea y lo gatea (< 60s) — ver scripts/drill-rollback.mjs.
-      const caminoAStart = Date.now();
-      console.log(`[T+0:00] ${composeBase} up -d web api  (IMAGE_TAG=${sha}, SIN build)`);
+      // Real time measured for the image-by-SHA path: the rollback drill
+      // parses and gates it (< 60s) — see scripts/drill-rollback.mjs.
+      const pathAStart = Date.now();
+      console.log(`[T+0:00] ${composeBase} up -d web api  (IMAGE_TAG=${sha}, NO build)`);
       imagePathOk = runOk(`${composeBase} up -d web api`, {
         env: { ...process.env, IMAGE_TAG: sha },
         timeout: 90_000,
       });
       if (imagePathOk) {
-        // Sanity: web y api deben quedar Up. La imagen puede existir pero
-        // estar corrupta/crash-looping; en ese caso caemos al rebuild.
-        // POLLING (no check único): `compose ps` inmediatamente después de
-        // `up -d` puede mostrar el api aún "starting"/no-Up, lo que dispara
-        // un fallback innecesario al rebuild (que además hace checkout del
-        // tag viejo y puede revivir bugs ya corregidos). Esperamos hasta
-        // 30s antes de declarar que la imagen es inútil.
+        // Sanity: web and api must end up Up. The image may exist but be
+        // corrupt/crash-looping; in that case we fall back to a rebuild.
+        // POLLING (not a single check): `compose ps` immediately after
+        // `up -d` may show api still "starting"/not Up, which triggers an
+        // unnecessary fallback to a rebuild (which also checks out the old
+        // tag and can revive already-fixed bugs). We wait up to 30s before
+        // declaring the image unusable.
         try {
           let webUp = false;
           let apiUp = false;
@@ -450,47 +455,48 @@ try {
             webUp = lines.some((l) => l.startsWith("web:") && /Up/i.test(l));
             apiUp = lines.some((l) => l.startsWith("api:") && /Up/i.test(l));
             if (webUp && apiUp) break;
-            if (attempt % 5 === 0) console.log(`[rollback] esperando web/api Up (intento ${attempt}/15)...`);
+            if (attempt % 5 === 0) console.log(`[rollback] waiting for web/api Up (attempt ${attempt}/15)...`);
             await new Promise((r) => setTimeout(r, 2000));
           }
           const ps = runCapture(`${composeBase} ps --format "{{.Service}}:{{.Status}}"`);
-          console.log("[rollback] Contenedores:\n" + ps);
+          console.log("[rollback] Containers:\n" + ps);
           if (!webUp || !apiUp) {
-            console.warn("[rollback] web/api no quedaron Up tras 30s — cayendo a rebuild");
+            console.warn("[rollback] web/api were not Up after 30s — falling back to rebuild");
             imagePathOk = false;
           } else {
-            const caminoASeconds = ((Date.now() - caminoAStart) / 1000).toFixed(1);
+            const pathASeconds = ((Date.now() - pathAStart) / 1000).toFixed(1);
             console.log(
-              `[rollback] CAMINO A confirmado: imagen por SHA, sin rebuild ✓ (up -d + sanity en ${caminoASeconds}s)`,
+              `[rollback] PATH A confirmed: image by SHA, no rebuild ✓ (up -d + sanity in ${pathASeconds}s)`,
             );
           }
         } catch (e) {
-          console.warn("[rollback] No se pudo verificar docker ps:", e.message);
+          console.warn("[rollback] Could not verify docker ps:", e.message);
         }
       } else {
-        console.log("[rollback] up -d falló — cayendo a rebuild");
+        console.log("[rollback] up -d failed — falling back to rebuild");
       }
     } else {
-      // Solo se llega aquí si shouldPullFromRegistry no intentó pull: o no hay
-      // DOCKER_REGISTRY definido (nodo aislado) o el pull/tag fracasó (el
-      // registro no tiene este sha). El priming automático ya se intentó.
+      // We only get here if shouldPullFromRegistry did not attempt a pull:
+      // either DOCKER_REGISTRY is not set (isolated node) or the pull/tag
+      // failed (the registry does not have this sha). Automatic priming was
+      // already attempted.
       if (!REGISTRY) {
         console.log(
-          `[rollback] Imagen bookmarkforge/web:${sha} no está local — es el gate obligatorio ` +
-            "y no hay DOCKER_REGISTRY para completar el rollback por imagen; cayendo a rebuild",
+          `[rollback] Image bookmarkforge/web:${sha} is not local — it is the mandatory gate ` +
+            "and there is no DOCKER_REGISTRY to complete the image rollback; falling back to rebuild",
         );
       } else {
         console.log(
-          `[rollback] web:${sha} no está local; no se puede completar el camino imagen ` +
-            `(DOCKER_REGISTRY=${REGISTRY} solo puede primar api cuando web ya existe) — cayendo a rebuild`,
+          `[rollback] web:${sha} is not local; the image path cannot be completed ` +
+            `(DOCKER_REGISTRY=${REGISTRY} can only prime api when web already exists) — falling back to rebuild`,
         );
       }
     }
   }
 
-  // ── CAMINO B (fallback): checkout del tag + rebuild ──────────────────
+  // ── PATH B (fallback): tag checkout + rebuild ─────────────────────────
   if (!imagePathOk) {
-    console.log("\n[rollback] CAMINO B — checkout del tag + rebuild (fallback)");
+    console.log("\n[rollback] PATH B — tag checkout + rebuild (fallback)");
     // Stash any uncommitted changes so checkout doesn't fail
     try {
       run("git stash push -m rollback-auto-stash");
@@ -499,26 +505,27 @@ try {
     console.log(`[T+0:05] git checkout ${targetTag}`);
     run(`git checkout ${targetTag}`);
 
-    console.log(`[T+0:10] ${composeBase} up -d --build web api (IMAGE_TAG=${sha || "(rebuild desde tag)"})`);
+    console.log(`[T+0:10] ${composeBase} up -d --build web api (IMAGE_TAG=${sha || "(rebuild from tag)"})`);
     try {
       run(`${composeBase} up -d --build web api`, {
         env: { ...process.env, IMAGE_TAG: sha },
         timeout: 180_000,
       });
     } catch {
-      console.log("[rollback] build falló, intentando up sin build con la imagen existente...");
+      console.log("[rollback] build failed, trying up without build using the existing image...");
       run(`${composeBase} up -d web api`, { env: { ...process.env, IMAGE_TAG: sha } });
     }
   } else {
-    // Sincronizar el working tree con el tag desplegado (housekeeping).
-    // No bloquea el rollback: el servicio ya corre la imagen correcta. Un
-    // tree sucio (hotfix en curso) NO debe destruir trabajo no commiteado.
+    // Sync the working tree with the deployed tag (housekeeping).
+    // It does not block the rollback: the service already runs the correct
+    // image. A dirty tree (in-flight hotfix) must NOT destroy uncommitted
+    // work.
     try {
-      console.log(`[T+0:05] git checkout ${targetTag} (sincronizar tree)`);
+      console.log(`[T+0:05] git checkout ${targetTag} (sync tree)`);
       run(`git checkout ${targetTag}`);
     } catch (e) {
-      console.warn(`[rollback] No se pudo hacer checkout a ${targetTag} (¿tree sucio?): ${e.message}`);
-      console.warn("[rollback] El servicio ya corre la imagen correcta; el tree queda como estaba.");
+      console.warn(`[rollback] Could not check out ${targetTag} (dirty tree?): ${e.message}`);
+      console.warn("[rollback] The service already runs the correct image; the tree is left as it was.");
     }
   }
 
@@ -529,15 +536,15 @@ try {
     run("docker ps --format \"{{.Names}} {{.Status}}\"");
   } catch { /* INTENTIONAL SILENCE: the container listing is a diagnostic log line; rollback continues without it. */ }
 
-  // Intento de smoke (contra PROD_BASE_URL — nunca hardcodear el puerto)
-  console.log(`[T+0:25] production-smoke contra ${PROD_BASE_URL}...`);
+  // Smoke attempt (against PROD_BASE_URL — never hardcode the port)
+  console.log(`[T+0:25] production-smoke against ${PROD_BASE_URL}...`);
   const smoke = spawnSync(process.execPath, ["scripts/production-smoke.mjs"], {
     stdio: "inherit",
     env: SMOKE_ENV,
     timeout: 120_000,
   });
   if (smoke.status !== 0) {
-    console.log("[rollback] smoke FAIL — regenerando nginx.conf y reintentando");
+    console.log("[rollback] smoke FAIL — regenerating nginx.conf and retrying");
     try {
       runNginxRenderWrite();
       run(`${composeBase} restart web`);
@@ -548,34 +555,34 @@ try {
         timeout: 120_000,
       });
       if (smoke2.status !== 0) {
-        console.error("[rollback] SMOKE SIGUE FALLANDO — escalar manualmente");
+        console.error("[rollback] SMOKE STILL FAILING — escalate manually");
         process.exit(1);
       }
     } catch (e) {
-      console.error("[rollback] Reintento falló:", e.message);
+      console.error("[rollback] Retry failed:", e.message);
       process.exit(1);
     }
   }
 
-  // T+0:40 — verificar SW
-  console.log("[T+0:40] Verificando SW...");
+  // T+0:40 — verify SW
+  console.log("[T+0:40] Verifying SW...");
   try {
     const sw = await fetch(`${PROD_BASE_URL}/sw.js`).then((r) => r.text()).then((t) => t.slice(0, 200));
     console.log(sw);
   } catch { /* INTENTIONAL SILENCE: SW fetch is a diagnostic step; a non-200/timeout must not fail the rollback. */ }
 
-  // T+0:45 — validar datos (no borrar IndexedDB jamás)
-  console.log("[T+0:45] Validando RxDB / datos locales — NUNCA borrar volumen");
-  console.log("  RxDB es local-first: el rollback NO toca IndexedDB del cliente.");
-  console.log("  Si la migración rompió, el schema viejo ya está en este tag.");
+  // T+0:45 — validate data (never delete IndexedDB)
+  console.log("[T+0:45] Validating RxDB / local data — NEVER delete the volume");
+  console.log("  RxDB is local-first: the rollback does NOT touch the client's IndexedDB.");
+  console.log("  If the migration broke it, the old schema is already in this tag.");
 
   const elapsed = ((Date.now() - t0) / 1000).toFixed(1);
-  console.log(`\n[rollback] ROLLBACK OK en ${elapsed}s — verifica https://tu-dominio.com`);
-  console.log(`[rollback] Tag: ${targetTag} — imagen bookmarkforge/web:${shaLooksValid ? sha : "(rebuild desde tag)"}`);
-  console.log(`[rollback] Siguiente: monitoriza con 'node scripts/production-smoke.mjs' cada 60s`);
+  console.log(`\n[rollback] ROLLBACK OK in ${elapsed}s — verify https://your-domain.com`);
+  console.log(`[rollback] Tag: ${targetTag} — image bookmarkforge/web:${shaLooksValid ? sha : "(rebuild from tag)"}`);
+  console.log(`[rollback] Next: monitor with 'node scripts/production-smoke.mjs' every 60s`);
 } catch (e) {
   console.error(`[rollback] FATAL: ${e.message}`);
   process.exit(1);
 }
 
-} // fin if (isMain)
+} // end if (isMain)

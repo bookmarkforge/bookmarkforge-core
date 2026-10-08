@@ -1,48 +1,48 @@
-# ADR-037: Propiedad del borrado de backups — nunca archivos ajenos
+# ADR-037: Backup deletion ownership — never other people's files
 
-- **Estado:** aceptado (implementado; este registro formaliza la decisión existente)
-- **Fecha:** 2026-09-02 (retro-documentado desde el código y el catálogo de anclas)
+- **Status:** accepted (implemented; this record formalizes the existing decision)
+- **Date:** 2026-09-02 (retro-documented from the code and the anchor catalog)
 
-## Contexto
+## Context
 
-El `DiskBackupService` poda backups viejos en la carpeta elegida por el usuario
-(contrato de retención formalizado en ADR-032 D1). La carpeta es **del
-usuario**, no del servicio: puede contener cualquier cosa (notas, documentos,
-otros backups de otras herramientas). Un error de filtrado al podar —borrar por
-antigüedad *todos* los archivos de la carpeta o por extensión genérica `.bmf`–
-destruiría datos que BookmarkForge no creó y sobre los que no tiene derecho de
-borrado. El ancla `disk-backup-pruning-contract` se cataloga como
-`ADR-032 D1 / ADR-037`: D1 fija la retención, ADR-037 fija la **propiedad** del
-borrado.
+`DiskBackupService` prunes old backups in the folder the user chose
+(retention contract formalized in ADR-032 D1). The folder belongs to the
+**user**, not to the service: it can contain anything (notes, documents,
+other tools' backups). A filtering mistake while pruning — deleting *all* files in the
+folder by age, or by the generic `.bmf` extension — would
+destroy data BookmarkForge did not create and has no right to
+delete. The `disk-backup-pruning-contract` anchor is catalogued as
+`ADR-032 D1 / ADR-037`: D1 fixes retention, ADR-037 fixes **ownership** of the
+deletion.
 
-## Decisión
+## Decision
 
-1. **Solo se eliminan archivos con el prefijo propio.** La poda construye la
-   lista de candidatos filtrada exclusivamente por `bookmarkforge-backup-`
-   (`BACKUP_FILE_PREFIX`); cualquier archivo que no empiece por ese prefijo se
-   ignora aunque sea antiguo, grande o se llame `other-backup.bmf` (test:
-   62 propios + `notes.md` + `other-backup.bmf` → se eliminan solo los 2
-   propios más antiguos; los ajenos nunca aparecen en las llamadas a
-   `removeEntry` — ancla `disk-backup-pruning-contract` en
+1. **Only files with our own prefix are removed.** Pruning builds the
+   candidate list filtered exclusively by `bookmarkforge-backup-`
+   (`BACKUP_FILE_PREFIX`); any file not starting with that prefix is
+   ignored even if it is old, large or named `other-backup.bmf` (test:
+   62 own + `notes.md` + `other-backup.bmf` → only the 2
+   oldest own ones are removed; foreign files never appear in the `removeEntry`
+   calls — anchor `disk-backup-pruning-contract` in
    `src/tests/services/DiskBackupService.test.ts`).
-2. **Fail-closed en la selección, fail-open en el borrado individual.**
-   El filtrado de nombres es estricto (fail-closed: un nombre desconocido nunca
-   entra en la lista de eliminación); si un `removeEntry` falla, el error se
-   loguea con `logger.warn` y la poda continúa con el resto — un borrado
-   individual fallido no bloquea la limpieza del exceso.
-3. **Contrato de superficie estable.** El prefijo `bookmarkforge-backup-` es un
-   contrato de formato de archivo estable: los backups llevan fecha en el nombre
-   (`bookmarkforge-backup-YYYY-MM-DD.bmf`) y la antigüedad se ordena por el
-   nombre, no por metadatos del sistema de archivos.
+2. **Fail-closed on selection, fail-open on individual deletion.**
+   Name filtering is strict (fail-closed: an unknown name never
+   enters the deletion list); if a `removeEntry` fails, the error is
+   logged with `logger.warn` and pruning continues with the rest — a failed
+   individual deletion does not block the cleanup of the excess.
+3. **Stable surface contract.** The `bookmarkforge-backup-` prefix is a
+   stable file-format contract: backups carry a date in their name
+   (`bookmarkforge-backup-YYYY-MM-DD.bmf`) and age is sorted by
+   name, not by filesystem metadata.
 
-## Consecuencias
+## Consequences
 
-- La rotación de backups se puede apuntar con seguridad a una carpeta compartida
-  (p. ej. raíz de la nube del usuario): el servicio nunca borra nada que no haya
-  creado con su propio prefijo.
-- El prefijo queda reservado: ningún otro archivo del usuario con un nombre que
-  empiece por `bookmarkforge-backup-` debe vivir en la carpeta, o podría ser
-  podado si supera la retención.
-- La variante de seguridad de la regla (añadir extensiones, prefijos adicionales
-  o poda por antigüedad ciego) es un cambio a nivel ADR — el test anclado lo
-  bloquea en CI vía `check:audit-drift`, compartiendo ancla con ADR-032 D1.
+- Backup rotation can safely target a shared folder
+  (e.g. the user's cloud root): the service never deletes anything it did not
+  create with its own prefix.
+- The prefix becomes reserved: no other user file with a name starting
+  with `bookmarkforge-backup-` should live in the folder, or it could be
+  pruned once it exceeds retention.
+- A laxer variant of the rule (adding extensions, extra prefixes
+  or blind age-based pruning) is an ADR-level change — the anchored test
+  blocks it in CI via `check:audit-drift`, sharing an anchor with ADR-032 D1.

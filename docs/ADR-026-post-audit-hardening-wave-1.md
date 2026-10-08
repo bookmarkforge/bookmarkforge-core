@@ -1,56 +1,56 @@
-# ADR-026: Hardening post-auditoría — wave 1
+# ADR-026: Post-audit hardening — wave 1
 
-- **Estado:** aceptado (implementado; este registro formaliza la decisión existente)
-- **Fecha:** 2026-09-02 (retro-documentado desde el código y `docs/audit.md`)
+- **Status:** accepted (implemented; this record formalizes the existing decision)
+- **Date:** 2026-09-02 (retro-documented from the code and `docs/audit.md`)
 
-## Contexto
+## Context
 
-La auditoría de seguridad completa (`docs/audit.md`) produjo un conjunto de
-hallazgos de severidad crítica y alta sobre la superficie de sincronización,
-almacenamiento y resolución de conflictos. La corrección se organizó en dos
-olas (`scripts/audit-anchors.mjs` — "ADR-026 wave 1, ADR-027 wave 2"), cada una
-con tests de regresión adversariales anclados por el gate `check:audit-drift`.
+The full security audit (`docs/audit.md`) produced a set of
+critical- and high-severity findings about the synchronization surface,
+storage and conflict resolution. The remediation was organized in two
+waves (`scripts/audit-anchors.mjs` — "ADR-026 wave 1, ADR-027 wave 2"), each with
+adversarial regression tests anchored by the `check:audit-drift` gate.
 
-## Decisión
+## Decision
 
-1. **Firewall de sincronización y listas de acceso restringido.**
-   - Whitelist de servidores ICE: los endpoints STUN/TURN se restringen a una
-     lista permitida — defensa contra endpoints hostiles que actúen como relay
-     (ancla `p0-ice-whitelist`).
-   - Los registros privados nunca se replican a un par: el filtro de
-     privacidad corre antes de la transferencia (ancla `p1-private-sync`).
-   - La superficie de desbloqueo no revela si existe un vault cuando el
-     fencing privado está activo (ancla `p3-verify-password-private`).
-2. **Guard de producción para SecureStorage.** Los builds de producción
-   rechazan montar un `SecureStorage` sin cifrar — fail-closed en la capa de
-   almacenamiento en reposo (ancla `p2-secure-storage-prod-guard`).
-3. **Serialización de la clave de dispositivo.** La generación criptográfica de
-   la clave de dispositivo se serializa entre pestañas para evitar carreras que
-   produzcan claves divergentes (ancla `secure-storage-device-key-lock`,
+1. **Sync firewall and restricted access lists.**
+   - ICE server allowlist: STUN/TURN endpoints are restricted to an
+     allowlist — defense against hostile endpoints acting as a relay
+     (anchor `p0-ice-whitelist`).
+   - Private records are never replicated to a peer: the privacy
+     filter runs before the transfer (anchor `p1-private-sync`).
+   - The unlock surface does not reveal whether a vault exists when
+     private fencing is active (anchor `p3-verify-password-private`).
+2. **Production guard for SecureStorage.** Production builds
+   refuse to mount an unencrypted `SecureStorage` — fail-closed at the
+   encryption-at-rest layer (anchor `p2-secure-storage-prod-guard`).
+3. **Device key serialization.** Cryptographic generation of the
+   device key is serialized across tabs to avoid races that would
+   produce divergent keys (anchor `secure-storage-device-key-lock`,
    ADR-026 D2).
-4. **Comparador numérico de revisión para LWW.** La resolución de conflictos
-   last-writer-wins de RxDB compara alturas de revisión numéricas
-   (`src/utils/syncVersion.ts`) en lugar de orden léxico, que rompía con `9 > 10`
-   (anclas `sync-version-comparator` + `sync-version-comparator-source`,
-   ADR-026 D8). El fichero fuente está anclado además del test: un refactor no
-   puede eliminar el comparador silenciosamente.
-5. **Fuentes de seguridad crítica ancladas.** `src/services/SecureStorage.ts` y
-   `src/services/WebRTCSyncService.ts` están anclados como fuente (no solo sus
-   tests): su desaparición silenciosa rompería el cifrado en reposo y el
-   filtrado de privacidad de la sincronización.
-6. **Anclas como contrato.** Cada corrección lleva su test de regresión bajo
-   `src/tests/security/p<severidad>-<slug>.regression.test.ts` y su entrada en
-   `scripts/audit-anchors-baseline.json`. Añadir o quitar un ancla es un cambio
-   a nivel ADR (`AGENTS.md` §2).
+4. **Numeric revision comparator for LWW.** RxDB's last-writer-wins conflict
+   resolution compares numeric revision heights
+   (`src/utils/syncVersion.ts`) instead of lexicographic order, which broke with `9 > 10`
+   (anchors `sync-version-comparator` + `sync-version-comparator-source`,
+   ADR-026 D8). The source file is anchored in addition to the test: a refactor cannot
+   remove the comparator silently.
+5. **Anchored security-critical sources.** `src/services/SecureStorage.ts` and
+   `src/services/WebRTCSyncService.ts` are anchored as sources (not just their
+   tests): their silent disappearance would break encryption at rest and
+   sync privacy filtering.
+6. **Anchors as a contract.** Every remediation carries its regression test under
+   `src/tests/security/p<severity>-<slug>.regression.test.ts` and its entry in
+   `scripts/audit-anchors-baseline.json`. Adding or removing an anchor is an
+   ADR-level change (`AGENTS.md` §3).
 
-## Consecuencias
+## Consequences
 
-- `npm run check:audit-drift` falla si un test o fuente anclada desaparece o se
-  renombra fuera de su ubicación esperada; el gate es parte de la cadena
-  `npm run check`.
-- La whtielist de ICE y el firewall de sync son configuración estructural, no
-  opcional: relajarlas requiere ADR y revisión de seguridad.
-- La wave 2 de este hardening (límites del servidor de señalización) está
-  registrada en `docs/ADR-027-post-audit-hardening-wave-2.md`; los trabajos
-  posteriores de WebRTC/DR vieron luz en ADR-029+ (referenciados en el catálogo
-  de anclas).
+- `npm run check:audit-drift` fails if an anchored test or source disappears or is
+  renamed out of its expected location; the gate is part of the
+  `npm run check` chain.
+- The ICE allowlist and the sync firewall are structural configuration, not
+  optional: relaxing them requires an ADR and a security review.
+- Wave 2 of this hardening (signaling server limits) is
+  recorded in `docs/ADR-027-post-audit-hardening-wave-2.md`; the later
+  WebRTC/DR work came to light in ADR-029+ (referenced in the anchor
+  catalog).

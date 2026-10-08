@@ -34,7 +34,7 @@
  *   node scripts/check-docs-markdown.mjs --json       # machine-readable
  */
 import { execFileSync } from "node:child_process";
-import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import { Linter } from "eslint";
 import markdownParser from "../eslint-rules/lib/markdown-parser.mjs";
@@ -340,9 +340,12 @@ function main() {
   const update = process.argv.includes("--update");
   const json = process.argv.includes("--json");
   const scan = scanDocs();
-  const baseline = existsSync(BASELINE_PATH)
-    ? JSON.parse(readFileSync(BASELINE_PATH, "utf8"))
-    : null;
+  let baseline = null;
+  try {
+    baseline = JSON.parse(readFileSync(BASELINE_PATH, "utf8"));
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+  }
 
   if (update) {
     writeFileSync(BASELINE_PATH, `${JSON.stringify(scan, null, 2)}\n`);

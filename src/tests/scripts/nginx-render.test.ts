@@ -126,7 +126,7 @@ describe("npm run nginx:render integration", () => {
     writeFileSync(
       headersPath,
       readFileSync(headersPath, "utf8").replaceAll(
-        "https://bookmarkforge.com/csp-report",
+        "https://bookmarkforgeapp.com/csp-report",
         "https://stale.example/csp-report",
       ),
     );
@@ -136,7 +136,7 @@ describe("npm run nginx:render integration", () => {
     writeFileSync(
       tomlPath,
       readFileSync(tomlPath, "utf8").replace(
-        "https://bookmarkforge.com/csp-report",
+        "https://bookmarkforgeapp.com/csp-report",
         "https://stale.example/csp-report",
       ),
     );
@@ -146,7 +146,7 @@ describe("npm run nginx:render integration", () => {
     writeFileSync(
       sitemapPath,
       readFileSync(sitemapPath, "utf8").replaceAll(
-        "bookmarkforge.com",
+        "bookmarkforgeapp.com",
         "stale.example",
       ),
     );
@@ -156,7 +156,7 @@ describe("npm run nginx:render integration", () => {
     writeFileSync(
       robotsPath,
       readFileSync(robotsPath, "utf8").replace(
-        "bookmarkforge.com",
+        "bookmarkforgeapp.com",
         "stale.example",
       ),
     );
@@ -179,7 +179,7 @@ describe("npm run nginx:render integration", () => {
       writeFileSync(
         p,
         readFileSync(p, "utf8").replace(
-          "bookmarkforge.com",
+          "bookmarkforgeapp.com",
           "stale.example",
         ),
       );
@@ -228,7 +228,7 @@ describe("npm run nginx:render integration", () => {
 
     // ── A9-1 headline: _headers repaired ONLY in its CSP-derived values ──
     const headersAfter = readFileSync(join(renderDir, "public", "_headers"), "utf8");
-    expect(headersAfter).toContain("https://bookmarkforge.com/csp-report");
+    expect(headersAfter).toContain("https://bookmarkforgeapp.com/csp-report");
     expect(headersAfter).not.toContain("stale.example");
     // Per-path structure survives (Cloudflare Pages most-specific-rule):
     // every path block keeps its repeated security headers and the noindex
@@ -236,18 +236,18 @@ describe("npm run nginx:render integration", () => {
     // match single lines instead of multi-line literals.)
     expect(headersAfter).toMatch(/^\/\*\.html\r?\n {2}Cache-Control: no-cache, must-revalidate$/m);
     expect(headersAfter).toContain("/app/*\r\n  X-Robots-Tag: noindex");
-    expect(headersAfter).toContain("`https://license.bookmarkforge.com`");
+    expect(headersAfter).toContain("`https://license.bookmarkforgeapp.com`");
     expect(headersAfter).toContain(
       "# Each path-specific block MUST repeat all security headers",
     );
 
     // ── A9-1 headline: sitemap repaired, NOT truncated to the old template ──
     const sitemapAfter = readFileSync(join(renderDir, "public", "sitemap.xml"), "utf8");
-    expect(sitemapAfter).toContain("https://bookmarkforge.com/");
+    expect(sitemapAfter).toContain("https://bookmarkforgeapp.com/");
     expect(sitemapAfter).not.toContain("stale.example");
     const locs = [...sitemapAfter.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
     expect(locs.length).toBe(61); // the old renderSitemap emitted 13 — that was the destruction
-    expect(locs).toContain("https://bookmarkforge.com/ar/privacy-and-terms.html");
+    expect(locs).toContain("https://bookmarkforgeapp.com/ar/privacy-and-terms.html");
     expect(sitemapAfter).toContain('hreflang="x-default"');
     // Namespace URIs are never localised.
     expect(sitemapAfter).toContain('xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"');
@@ -255,12 +255,12 @@ describe("npm run nginx:render integration", () => {
 
     // netlify.toml's CSP-derived lines are repaired, not rewritten wholesale.
     const tomlAfter = readFileSync(join(renderDir, "netlify.toml"), "utf8");
-    expect(tomlAfter).toContain("https://bookmarkforge.com/csp-report");
+    expect(tomlAfter).toContain("https://bookmarkforgeapp.com/csp-report");
     expect(tomlAfter).not.toContain("stale.example");
 
     // robots.txt is regenerated wholesale: domain restored everywhere.
     const robotsAfter = readFileSync(join(renderDir, "public", "robots.txt"), "utf8");
-    expect(robotsAfter).toContain("Sitemap: https://bookmarkforge.com/sitemap.xml");
+    expect(robotsAfter).toContain("Sitemap: https://bookmarkforgeapp.com/sitemap.xml");
     expect(robotsAfter).not.toContain("stale.example");
 
     // Verify mode is green again.
@@ -305,16 +305,16 @@ describe("npm run nginx:render integration", () => {
     // scope — that is the A9-1 ownership contract).
     const sitemapCustom = readFileSync(join(renderDir, "public", "sitemap.xml"), "utf8");
     expect(sitemapCustom).toContain("https://custom.example/ar/");
-    expect(sitemapCustom).not.toContain("bookmarkforge.com");
+    expect(sitemapCustom).not.toContain("bookmarkforgeapp.com");
 
     const robotsCustom = readFileSync(join(renderDir, "public", "robots.txt"), "utf8");
     expect(robotsCustom).toContain("Sitemap: https://custom.example/sitemap.xml");
-    expect(robotsCustom).not.toContain("bookmarkforge.com");
+    expect(robotsCustom).not.toContain("bookmarkforgeapp.com");
 
     const headersCustom = readFileSync(join(renderDir, "public", "_headers"), "utf8");
     expect(headersCustom).toContain("https://custom.example/csp-report");
     // Surgical scope: the hand-written prose comment is NOT rewritten…
-    expect(headersCustom).toContain("`https://license.bookmarkforge.com`");
+    expect(headersCustom).toContain("`https://license.bookmarkforgeapp.com`");
     // …while every CSP-derived header line is.
     expect(headersCustom).not.toMatch(/^ {2}(Reporting-Endpoints|Report-To|Content-Security-Policy): .*bookmarkforge\.com/m);
     expect(headersCustom).toContain("wss://signal.custom.example");
@@ -354,7 +354,7 @@ describe("npm run nginx:render integration", () => {
       "public/robots.txt",
     ]) {
       expect(readFileSync(join(renderDir, rel), "utf8")).toContain(
-        "bookmarkforge.com",
+        "bookmarkforgeapp.com",
       );
     }
 

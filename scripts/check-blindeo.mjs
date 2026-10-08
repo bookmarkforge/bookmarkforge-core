@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
- * BookmarkForge — Checklist de Blindeo Pre-Deploy
- * 
- * Ejecutar SIEMPRE antes de cualquier despliegue a producción.
- * Fallo en cualquiera de estos puntos = BLOQUEO de deploy.
+ * BookmarkForge — Pre-Deploy Hardening Checklist
+ *
+ * ALWAYS run before any deploy to production.
+ * Failure on any of these checkpoints = deploy BLOCKED.
  */
 
 import { execSync, execFileSync } from "node:child_process";
@@ -17,13 +17,13 @@ function pass(msg) { console.log(`  ✓ ${msg}`); }
 function fail(msg) { console.log(`  ✗ ${msg}`); process.exit(1); }
 
 /**
- * Detecta líneas `proxy_pass http://bookmarkforge_api...` SIN puerto
- * explícito. Un upstream sin puerto (nginx → :80 default) contra un api que
- * escucha en 8787 produce 502 permanente tras el rollback. Fuente de
- * verdad: public/nginx.conf del tag (el que se hornea en la imagen web).
+ * Detects `proxy_pass http://bookmarkforge_api...` lines WITHOUT an explicit
+ * port. A port-less upstream (nginx → :80 default) against an api listening
+ * on 8787 produces a permanent 502 after rollback. Source of truth:
+ * public/nginx.conf of the tag (the one baked into the web image).
  *
- * @param {string} nginxConf contenido de public/nginx.conf
- * @returns {string[]} líneas ofensivas (vacío = sano)
+ * @param {string} nginxConf content of public/nginx.conf
+ * @returns {string[]} offending lines (empty = healthy)
  */
 export function findProxyPassWithoutPort(nginxConf) {
   if (typeof nginxConf !== "string") return [];
@@ -32,8 +32,8 @@ export function findProxyPassWithoutPort(nginxConf) {
   for (const line of lines) {
     // Skip nginx comments — a commented-out proxy_pass is harmless.
     if (/^\s*#/.test(line)) continue;
-    // proxy_pass http://bookmarkforge_api/api/...  → sin puerto → VIOLACIÓN
-    // proxy_pass http://bookmarkforge_api:8787/... → puerto explícito → OK
+    // proxy_pass http://bookmarkforge_api/api/...  → no port → VIOLATION
+    // proxy_pass http://bookmarkforge_api:8787/... → explicit port → OK
     if (/proxy_pass\s+http:\/\/bookmarkforge_api(?!:)/i.test(line)) {
       violations.push(line.trim());
     }
@@ -42,13 +42,13 @@ export function findProxyPassWithoutPort(nginxConf) {
 }
 
 /**
- * Selecciona el rollback target: el penúltimo tag prod-* DISTINTO del
- * actual (último bueno), con deduplicación por SHA para evitar rollbacks
- * no-op cuando hay tags duplicados sobre el mismo commit (regresión bb21664).
- * Misma lógica que selectAutoTarget en rollback.mjs: deduplica por SHA
- * case-insensitive, y trata tags sin SHA válido como builds distintos por
- * nombre. `tags` ya debe venir ordenado por creatordate desc.
- * Devuelve null si hay menos de 2 tags prod- tras dedup.
+ * Selects the rollback target: the second-newest prod-* tag DISTINCT from
+ * the current one (last known good), deduplicating by SHA to avoid no-op
+ * rollbacks when duplicate tags point at the same commit (regression
+ * bb21664). Same logic as selectAutoTarget in rollback.mjs: dedup by
+ * case-insensitive SHA, treating tags without a valid SHA as distinct builds
+ * by name. `tags` must already be sorted by creatordate desc.
+ * Returns null when there are fewer than 2 prod- tags after dedup.
  */
 export function selectRollbackTarget(tags) {
   const prodTags = (Array.isArray(tags) ? tags : [])
@@ -64,16 +64,16 @@ export function selectRollbackTarget(tags) {
     distinct.push(tag);
   }
   if (distinct.length < 2) return null;
-  return distinct[1]; // penúltimo build DISTINTO del actual
+  return distinct[1]; // second-newest DISTINCT build from the current one
 }
 
 /**
- * Valida que docker-compose.prod.yml define el alias bookmarkforge_api.
- * Sin este alias, nginx no resuelve el upstream y el stack entra en
- * crash-loop ("host not found in upstream").
+ * Validates that docker-compose.prod.yml defines the bookmarkforge_api
+ * alias. Without this alias nginx cannot resolve the upstream and the stack
+ * enters a crash-loop ("host not found in upstream").
  *
- * @param {string} composeContent contenido de docker-compose.prod.yml
- * @returns {boolean} true si el alias está presente
+ * @param {string} composeContent content of docker-compose.prod.yml
+ * @returns {boolean} true when the alias is present
  */
 export function hasBookmarkforgeApiAlias(composeContent) {
   if (typeof composeContent !== "string") return false;
@@ -81,19 +81,19 @@ export function hasBookmarkforgeApiAlias(composeContent) {
     composeContent.includes("aliases:\n        - bookmarkforge_api");
 }
 
-// El flujo principal solo corre cuando se ejecuta directamente, no al ser
-// importado por los tests unitarios (mismo patrón que rollback.mjs /
-// deploy-prod.mjs / monitoring-alerts.mjs).
+// The main flow only runs when executed directly, not when imported by unit
+// tests (same pattern as rollback.mjs / deploy-prod.mjs /
+// monitoring-alerts.mjs).
 const isMain =
   typeof process.argv[1] === "string" &&
   import.meta.url === pathToFileURL(process.argv[1]).href;
 
 if (isMain) {
 
-console.log("🔒 BookmarkForge — Checklist de Blindeo Pre-Deploy");
+console.log("🔒 BookmarkForge — Pre-Deploy Hardening Checklist");
 console.log("=".repeat(50));
 
-// Punto 1: Tags prod- disponibles en git
+// Checkpoint 1: prod- tags available in git
 try {
   // Windows-safe: execSync uses cmd.exe, where single-quoted --list patterns
   // are passed literally and match nothing. List all tags and filter in JS.
@@ -102,66 +102,66 @@ try {
     .trim()
     .split("\n")
     .filter(t => t.startsWith("prod-"));
-  if (tags.length >= 2) pass(`Tags prod- disponibles: ${tags.length}`);
-  else fail("Necesitas al menos 2 tags prod- para rollback");
-} catch (_e) { fail("No se pueden listar tags git"); }
+  if (tags.length >= 2) pass(`prod- tags available: ${tags.length}`);
+  else fail("You need at least 2 prod- tags for rollback");
+} catch (_e) { fail("Cannot list git tags"); }
 
-// Punto 2: CSP config source of truth
+// Checkpoint 2: CSP config source of truth
 try {
   const cspSource = readFileSync(join(WORKSPACE, "scripts", "csp-config.js"), "utf8");
   if (cspSource.includes("CSP_STRICT") && cspSource.includes("CSP_MODERATE")) {
-    pass("CSP config source of truth presente (scripts/csp-config.js)");
-  } else fail("CSP config incompleta");
+    pass("CSP config source of truth present (scripts/csp-config.js)");
+  } else fail("Incomplete CSP config");
 } catch (_e) { fail("No scripts/csp-config.js"); }
 
-// Punto 3: CSP inlined en vite.config.ts
+// Checkpoint 3: CSP inlined in vite.config.ts
 try {
   const viteCfg = readFileSync(join(WORKSPACE, "vite.config.ts"), "utf8");
-  if (viteCfg.includes("CSP_MODERATE")) pass("CSP inlined en vite.config.ts");
-  else fail("CSP no inlined en vite.config.ts");
+  if (viteCfg.includes("CSP_MODERATE")) pass("CSP inlined in vite.config.ts");
+  else fail("CSP not inlined in vite.config.ts");
 } catch (_e) { fail("No vite.config.ts"); }
 
-// Punto 4: bundleIntegrity service presente + evento cableado a productionMonitor
+// Checkpoint 4: bundleIntegrity service present + event wired to productionMonitor
 try {
   const bi = readFileSync(join(WORKSPACE, "src", "utils", "bundleIntegrity.ts"), "utf8");
   const pm = readFileSync(join(WORKSPACE, "src", "telemetry", "productionMonitor.ts"), "utf8");
   if (bi.includes("bundle-integrity-failed") && pm.includes("bundle-integrity-failed")) {
-    pass("bundleIntegrity → productionMonitor cableado (bundle-integrity-failed)");
-  } else fail("bundleIntegrity.ts o productionMonitor.ts sin contrato bundle-integrity-failed");
+    pass("bundleIntegrity → productionMonitor wired (bundle-integrity-failed)");
+  } else fail("bundleIntegrity.ts or productionMonitor.ts missing the bundle-integrity-failed contract");
 } catch (_e) { fail("No src/utils/bundleIntegrity.ts"); }
 
-// Punto 5: productionMonitor.ts con thresholds
+// Checkpoint 5: productionMonitor.ts with thresholds
 try {
   const pm = readFileSync(join(WORKSPACE, "src", "telemetry", "productionMonitor.ts"), "utf8");
   if (pm.includes("INTEGRITY_SPIKE_THRESHOLD") && pm.includes("CSP_SPIKE_THRESHOLD")) {
-    pass("productionMonitor.ts con umbrales configurados");
-  } else fail("productionMonitor.ts sin umbrales");
+    pass("productionMonitor.ts with configured thresholds");
+  } else fail("productionMonitor.ts without thresholds");
 } catch (_e) { fail("No src/telemetry/productionMonitor.ts"); }
 
-// Punto 6: Error handler setup en main.tsx
+// Checkpoint 6: Error handler setup in main.tsx
 try {
   const mainTsx = readFileSync(join(WORKSPACE, "src", "main.tsx"), "utf8");
   if (mainTsx.includes("initCrisisHandler")) {
-    pass("main.tsx tiene handlers de crisis registrados (initCrisisHandler)");
-  } else fail("main.tsx sin handlers de crisis");
+    pass("main.tsx has crisis handlers registered (initCrisisHandler)");
+  } else fail("main.tsx without crisis handlers");
 } catch (_e) { fail("No src/main.tsx"); }
 
-// Punto 7: Zeroización (doble llenado con reuse guard) + password validation
+// Checkpoint 7: Zeroization (double fill with reuse guard) + password validation
 try {
   const cryptoCore = readFileSync(join(WORKSPACE, "src", "utils", "crypto-core.ts"), "utf8");
   const config = readFileSync(join(WORKSPACE, "src", "constants", "config.ts"), "utf8");
   if (cryptoCore.includes("zeroPasswordBytes") && cryptoCore.includes("already zero")) {
-    pass("zeroPasswordBytes presente (zeroización doble con reuse guard)");
-  } else fail("zeroPasswordBytes no encontrado en crypto-core.ts");
-  if (config.includes("MIN_PASSWORD_LENGTH: 12")) pass("MIN_PASSWORD_LENGTH configurado (= 12 en constants/config.ts)");
-  else fail("MIN_PASSWORD_LENGTH no configurado");
-} catch (_e) { fail("No src/utils/crypto-core.ts o src/constants/config.ts"); }
+    pass("zeroPasswordBytes present (double zeroization with reuse guard)");
+  } else fail("zeroPasswordBytes not found in crypto-core.ts");
+  if (config.includes("MIN_PASSWORD_LENGTH: 12")) pass("MIN_PASSWORD_LENGTH configured (= 12 in constants/config.ts)");
+  else fail("MIN_PASSWORD_LENGTH not configured");
+} catch (_e) { fail("No src/utils/crypto-core.ts or src/constants/config.ts"); }
 
-// Punto 8: Rollback target (penúltimo tag prod-*) con web válida:
-// proxy_pass hacia el api con puerto explícito. Un rollback a un tag cuya
-// imagen web no pueda alcanzar el api (proxy_pass sin :puerto) deja la web
-// en 502 permanente: rollback.mjs --verify lo detecta, pero este gate lo
-// impide ANTES de desplegar sobre un blanco inservible.
+// Checkpoint 8: Rollback target (second-newest prod-* tag) with a valid web:
+// proxy_pass towards the api with explicit port. Rolling back to a tag whose
+// web image cannot reach the api (proxy_pass without :port) leaves the web
+// in permanent 502: rollback.mjs --verify detects it, but this gate prevents
+// deploying over an unusable target in the first place.
 try {
   const tags = execSync("git tag --sort=-creatordate", { encoding: "utf8" })
     .toString()
@@ -169,55 +169,55 @@ try {
     .split("\n");
   const target = selectRollbackTarget(tags);
   if (!target) {
-    fail("No hay rollback target (se necesitan >= 2 tags prod-)");
+    fail("No rollback target (need >= 2 prod- tags)");
   }
-  // public/nginx.conf es el que se hornea en la imagen web al build
-  // (Dockerfile), por lo que validar el archivo del tag == validar la
-  // imagen del tag.
+  // public/nginx.conf is the one baked into the web image at build time
+  // (Dockerfile), so validating the file of the tag == validating the image
+  // of the tag.
   const nginxConf = execFileSync("git", ["show", `${target}:public/nginx.conf`], { encoding: "utf8" }).toString();
   const violations = findProxyPassWithoutPort(nginxConf);
   if (violations.length > 0) {
     fail(
-      `rollback target ${target}: ${violations.length} proxy_pass sin puerto explícito ` +
-      `(la web restaurada serviría 502). Corrige el nginx.conf o despliega un tag previo sano.`,
+      `rollback target ${target}: ${violations.length} proxy_pass without explicit port ` +
+      `(the restored web would serve 502). Fix the nginx.conf or deploy a previous healthy tag.`,
     );
   }
-  pass(`rollback target ${target}: proxy_pass hacia el api con puerto explícito`);
+  pass(`rollback target ${target}: proxy_pass towards the api with explicit port`);
 } catch (_e) {
-  fail(`No se pudo validar el nginx.conf del rollback target: ${_e.message}`);
+  fail(`Could not validate the nginx.conf of the rollback target: ${_e.message}`);
 }
 
-// Punto 9: docker-compose.prod.yml define el alias bookmarkforge_api
+// Checkpoint 9: docker-compose.prod.yml defines the bookmarkforge_api alias
 try {
   const compose = readFileSync(join(WORKSPACE, "docker-compose.prod.yml"), "utf8");
   if (hasBookmarkforgeApiAlias(compose)) {
-    pass("docker-compose.prod.yml: alias bookmarkforge_api definido en el servicio api");
+    pass("docker-compose.prod.yml: alias bookmarkforge_api defined on the api service");
   } else {
-    fail("docker-compose.prod.yml: alias bookmarkforge_api NO encontrado — nginx entrará en crash-loop");
+    fail("docker-compose.prod.yml: alias bookmarkforge_api NOT found — nginx will enter a crash-loop");
   }
 } catch (_e) {
-  fail("No se pudo leer docker-compose.prod.yml");
+  fail("Could not read docker-compose.prod.yml");
 }
 
-// Punto 10: Checklist de pre-lanzamiento (bloqueantes) — check:launch-checklist:strict.
-// No lanzar mientras haya bloqueantes 🔴 abiertos (ruleset, RPO/RTO,
-// guardia, RGPD). El gate emite el informe completo y sale != 0 con bloqueantes.
+// Checkpoint 10: Pre-launch checklist (blocking items) — check:launch-checklist:strict.
+// Do not launch while any 🔴 blocker is open (ruleset, RPO/RTO, guard,
+// GDPR). The gate emits the full report and exits != 0 with blockers.
 try {
   execFileSync(
     process.execPath,
     [join(WORKSPACE, "scripts", "check-launch-checklist.mjs"), "--strict"],
     { stdio: "inherit" },
   );
-  pass("Checklist de pre-lanzamiento: sin bloqueantes (check:launch-checklist:strict)");
+  pass("Pre-launch checklist: no blockers (check:launch-checklist:strict)");
 } catch (_e) {
   fail(
-    "Checklist de pre-lanzamiento con bloqueantes sin completar (check:launch-checklist:strict). " +
-    "Corrige los 🔴 bloqueantes (docs/launch-checklist.md) antes de desplegar a producción.",
+    "Pre-launch checklist has unfinished blockers (check:launch-checklist:strict). " +
+    "Fix the 🔴 blockers (docs/launch-checklist.md) before deploying to production.",
   );
 }
 
 console.log("\n" + "=".repeat(50));
-console.log("✅ Checklist de blindeo completado exitosamente");
+console.log("✅ Hardening checklist completed successfully");
 process.exit(0);
 
-} // fin if (isMain)
+} // end if (isMain)

@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, master, develop]
+    branches: [main, master, develop, release/v1.0.0]
   pull_request:
 
 permissions:
@@ -21,17 +21,29 @@ jobs:
       CI: true
       NODE_ENV: test
     steps:
+      # Full history + tags. The pre-deploy checklist (check:blindeo) asserts
+      # that at least two `prod-` rollback tags exist; the default depth-1
+      # checkout fetches none, so the gate read an empty tag list and failed on
+      # a repository state it could not see.
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
+          fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - run: npm run typecheck:prod
       - run: npm run lint
       - run: npm run test:fast
+      # The pre-deploy checklist (check:blindeo → point 11) loads the packaged
+      # extension into a REAL Chromium (scripts/extension-smoke.mjs). The
+      # `playwright` package ships no postinstall download, so `npm ci` leaves
+      # no browser binary behind — every other browser-dependent job installs
+      # it explicitly, and this job must too.
+      - name: Install Chromium for the extension smoke
+        run: npx playwright install --with-deps chromium
       # Security gate — MANDATORY. Blocks PR merge on any failure.
       # check:security-internal runs the full internal security pipeline:
       # secrets scan, workflow validation, HTTP/Compose/runtime config,
@@ -134,7 +146,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       # The slow profile runs every test file outside test:fast's curated
@@ -157,17 +169,26 @@ jobs:
       SIGNALING_ADMIN_TOKEN: e2e-admin-token
       SIGNALING_PORT: '8787'
       CRISIS_COMPANION_PORT: '8799'
+      # Pro-seeding specs (backup/restore) activate through the real signing
+      # stack: the companion needs the private key matching the committed
+      # public key (empty = 503, specs fail loudly, never silently grant Pro)
+      # — same contract as the nightly's Pro-seeding jobs.
+      LICENSE_SIGNING_PRIVATE_KEY_PKCS8: ${{ secrets.LICENSE_SIGNING_PRIVATE_KEY_PKCS8 }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
+      # extension.spec.ts loads dist-extension/ (gitignored build output);
+      # without this step it fails asking for `npm run build:extension:custom`.
+      - name: Build browser extension bundle
+        run: npm run build:extension:custom
       - name: Run Playwright E2E
         run: npm run e2e -- --config=playwright.config.ts --grep-invert "@nightly|@multiuser|@visual|@performance"
       - name: Upload Playwright artifacts
@@ -195,13 +216,18 @@ jobs:
     env:
       CI: true
       NODE_ENV: test
+      # Pro-seeding specs (backup/restore) activate through the real signing
+      # stack: the companion needs the private key matching the committed
+      # public key (empty = 503, specs fail loudly, never silently grant Pro)
+      # — same contract as the nightly's Pro-seeding jobs.
+      LICENSE_SIGNING_PRIVATE_KEY_PKCS8: ${{ secrets.LICENSE_SIGNING_PRIVATE_KEY_PKCS8 }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Install firefox + webkit browsers
@@ -242,7 +268,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Install Playwright chromium (mobile Chrome IS chromium)
@@ -270,13 +296,18 @@ jobs:
       NODE_ENV: test
       VITE_TEST_BUILD: 'true'
       VITE_FORCE_DEXIE_STORAGE: 'true'
+      # Pro-seeding specs (AI first boot) activate through the real signing
+      # stack: the companion needs the private key matching the committed
+      # public key (empty = 503, specs fail loudly, never silently grant Pro)
+      # — same contract as the nightly's Pro-seeding jobs.
+      LICENSE_SIGNING_PRIVATE_KEY_PKCS8: ${{ secrets.LICENSE_SIGNING_PRIVATE_KEY_PKCS8 }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Install Playwright Chromium
@@ -317,7 +348,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Install Playwright chromium
@@ -362,7 +393,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Install Playwright browsers
@@ -394,7 +425,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
       - run: npm ci
       - name: Flag visual baselines regenerated with >10% pixel drift
@@ -422,7 +453,7 @@ jobs:
       NODE_ENV: production
       VITE_APP_VERSION: ci
       VITE_DB_NAME: bookmarkforge_ci
-      VITE_P2P_SIGNALING_URL: wss://signal.bookmarkforge.com
+      VITE_P2P_SIGNALING_URL: wss://signal.bookmarkforgeapp.com
       VITE_WHOP_CHECKOUT_URL: https://example.invalid/ci-checkout
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -430,9 +461,13 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
-          node-version: '20.19.0'
+          node-version: '24.17.0'
           cache: npm
-      - run: npm ci
+      # This job's NODE_ENV=production makes npm omit devDependencies, so a
+      # plain `npm ci` dies in the `prepare` hook (`husky`, exit 127) and the
+      # build would not find vite/typescript either. Keep production for the
+      # build itself, but opt the dev toolchain into the install.
+      - run: npm ci --include=dev
       - run: npm run build:ci
       - name: Install Chromium for performance budget
         run: npx playwright install --with-deps chromium
@@ -440,6 +475,14 @@ jobs:
         run: npm run test:performance
       - name: Enforce complete performance budget
         run: npm run check:performance
+      # ADR-062's browser half: the landings are static HTML outside the React
+      # shell, so the render-vs-commit diff (check:landings-fresh) cannot see a
+      # footer link to a route that does not exist, a reference to an asset
+      # that was retired, or a console error. Needs the Chromium installed
+      # above; its own named step so a landing regression is not buried in
+      # `npm run check`.
+      - name: Smoke the landing routes in a real browser
+        run: npm run check:landing-smoke
       - run: npm run check
       - run: npm audit --omit=dev --audit-level=high
       - name: Upload build diagnostics

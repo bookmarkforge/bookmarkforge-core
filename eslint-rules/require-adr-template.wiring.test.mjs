@@ -38,13 +38,20 @@ describe("require-adr-template wiring", () => {
   });
 
   it("reports a template violation with a real line/column location", () => {
-    const broken = "# ADR-050: Prueba\n\n- **Estado:** aceptado\n- **Fecha:** 2026-09-02\n\n## Contexto\n\nc\n\n## Decision\n\nd\n\n## Consecuencias\n\ne\n";
+    // `## Decision` is a valid bilingual spelling now, so the broken fixture
+    // omits the Decisión/Decision section entirely → 1 missingSection report.
+    const broken = "# ADR-050: Prueba\n\n- **Estado:** aceptado\n- **Fecha:** 2026-09-02\n\n## Contexto\n\nc\n\n## Consecuencias\n\ne\n";
     const messages = lintAdr("docs/ADR-050-prueba.md", broken);
     expect(messages).toHaveLength(1);
     expect(messages[0].ruleId).toBe("bmf/require-adr-template");
     expect(messages[0].messageId).toBe("missingSection");
     // A missing section has no line to point at, so it anchors at file start.
     expect(messages[0].line).toBe(1);
+  });
+
+  it("accepts the English section labels (bilingual template)", () => {
+    const english = "# ADR-050: Test\n\n- **Status:** accepted\n- **Date:** 2026-09-02\n\n## Context\n\nc\n\n## Decision\n\nd\n\n## Consequences\n\ne\n";
+    expect(lintAdr("docs/ADR-050-prueba.md", english)).toEqual([]);
   });
 
   it("points at the heading line when a section exists but is empty", () => {

@@ -245,7 +245,7 @@ describe("BackupRestore", () => {
 
       await expect(
         BackupService.importBackup(file, "wrong-password"),
-      ).rejects.toThrow(/senha inválida|Invalid password/i);
+      ).rejects.toThrow(/Invalid password/i);
     });    test("rejects a truncated encrypted payload before touching the database", async () => {
       const truncated = new TextEncoder().encode("BMF1:{\"bookmarks\":[");
       (encryptionService.decryptBinary as any).mockResolvedValue(truncated);

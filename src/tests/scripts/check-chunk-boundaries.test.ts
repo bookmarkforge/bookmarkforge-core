@@ -233,11 +233,18 @@ describe("check-chunk-boundaries", () => {
   // -----------------------------------------------------------------------
   // SKIP / --require-dist
   // -----------------------------------------------------------------------
-  it("SKIPs with exit 0 when dist/assets is missing", () => {
+  it("fails closed when dist/assets is missing; --allow-missing-dist still skips", () => {
     const d = tempDir("skip");
+    // Current contract (scripts/__tests__/check-chunk-boundaries.test.mjs):
+    // a missing dist/ is a HARD failure unless the explicit opt-out is
+    // passed — the old silent-skip behavior was corrected by P60.
     const r = runGate(d);
-    expect(r.status).toBe(0);
-    expect(r.stderr).toContain("SKIP");
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain("--allow-missing-dist");
+
+    const skipped = runGate(d, ["--allow-missing-dist"]);
+    expect(skipped.status).toBe(0);
+    expect(skipped.stderr).toContain("SKIP");
   });
 
   it("fails with exit 1 when --require-dist and dist/assets is missing", () => {

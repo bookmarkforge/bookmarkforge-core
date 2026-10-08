@@ -11,7 +11,7 @@ used. It applies to everyone, including forks and derivatives.
 - The name and wordmark **BookmarkForge**
 - The BookmarkForge logo and icon
 - Confusable variants of the name, and the reserved domains
-  `bookmarkforge.com` and any official social handles
+  `bookmarkforgeapp.com` and any official social handles
 
 These are either registered trademarks or are claimed as such, and they are
 **not** covered by the MIT grant (see [NOTICE](NOTICE)).
@@ -50,7 +50,7 @@ You are free to fork the MIT-licensed Core under the MIT terms. A fork must:
 
 ## How to request permission
 
-Write to **legal@bookmarkforge.com** with a short description of who you are
+Write to **legal@bookmarkforgeapp.com** with a short description of who you are
 and how you want to use the Marks. We aim to answer within 10 business days
 and are generally happy to grant free licenses for community, educational and
 non-commercial uses.

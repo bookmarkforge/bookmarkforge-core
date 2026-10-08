@@ -389,14 +389,14 @@ describe("MemoryPipeline", () => {
           {
             toJSON: () =>
               msg({
-                content: "público reciente",
+                content: "recent public",
                 createdAt: "2025-01-03T00:00:00.000Z",
               }),
           },
           {
             toJSON: () =>
               msg({
-                content: "SECRETO PRIVADO",
+                content: "PRIVATE SECRET",
                 isPrivate: true,
                 createdAt: "2025-01-02T00:00:00.000Z",
               }),
@@ -404,26 +404,26 @@ describe("MemoryPipeline", () => {
           {
             toJSON: () =>
               msg({
-                content: "público anterior",
+                content: "earlier public",
                 createdAt: "2025-01-01T00:00:00.000Z",
               }),
           },
         ]) })
           .mockReturnValueOnce({ exec: vi.fn().mockResolvedValueOnce([]) });
       (aiManager.generateText as any).mockResolvedValue({
-        text: JSON.stringify([{ content: "hecho público", category: "fact" }]),
+        text: JSON.stringify([{ content: "public fact", category: "fact" }]),
       });
       (ragEngine.generateEmbedding as any).mockResolvedValue([0.1]);
 
       await (memoryPipeline as any).extractAtoms("s1", (memoryPipeline as any).lifecycleGeneration);
 
       const prompt = vi.mocked(aiManager.generateText).mock.calls[0]![0] as string;
-      expect(prompt).not.toContain("SECRETO PRIVADO");
-      expect(prompt).toContain("público reciente");
-      expect(prompt).toContain("público anterior");
+      expect(prompt).not.toContain("PRIVATE SECRET");
+      expect(prompt).toContain("recent public");
+      expect(prompt).toContain("earlier public");
       // Atoms are inserted (derived only from public content).
       expect(mockDb.memory.insert).toHaveBeenCalledWith(
-        expect.objectContaining({ content: "hecho público" }),
+        expect.objectContaining({ content: "public fact" }),
       );
     });
 
@@ -526,13 +526,13 @@ describe("MemoryPipeline", () => {
       (aiManager.generateText as any).mockResolvedValue({
         text: JSON.stringify([
           {
-            title: "Escenario vÃ¡lido",
-            description: "Tiene 2 Ã¡tomos",
+            title: "Valid scenario",
+            description: "Has 2 atoms",
             relatedAtomContents: ["fact 0", "fact 1"],
           },
           {
-            title: "Escenario invÃ¡lido",
-            description: "Solo 1 Ã¡tomo",
+            title: "Invalid scenario",
+            description: "Only 1 atom",
             relatedAtomContents: ["fact 0"],
           },
         ]),
@@ -543,10 +543,10 @@ describe("MemoryPipeline", () => {
       await (memoryPipeline as any).buildScenarios((memoryPipeline as any).lifecycleGeneration);
       // Only the scenario with >= 2 atoms is inserted
       expect(mockDb.memory.insert).toHaveBeenCalledWith(
-        expect.objectContaining({ title: "Escenario vÃ¡lido" }),
+        expect.objectContaining({ title: "Valid scenario" }),
       );
       expect(mockDb.memory.insert).not.toHaveBeenCalledWith(
-        expect.objectContaining({ title: "Escenario invÃ¡lido" }),
+        expect.objectContaining({ title: "Invalid scenario" }),
       );
     });
   });

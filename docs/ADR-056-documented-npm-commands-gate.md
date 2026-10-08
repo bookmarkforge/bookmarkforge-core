@@ -1,41 +1,41 @@
-# ADR-056: Gate de comandos npm documentados
+# ADR-056: Documented npm commands gate
 
-- **Estado:** aceptado (implementado en `scripts/check-documented-npm-commands.mjs`)
-- **Fecha:** 2026-09-18
+- **Status:** accepted (implemented in `scripts/check-documented-npm-commands.mjs`)
+- **Date:** 2026-09-18
 
-## Contexto
+## Context
 
-Los runbooks y checklists son una interfaz operativa: una orden `npm run` que no
-existe en `package.json` no es una errata inocua, sino un procedimiento de
-lanzamiento roto. La auditoría detectó dos nombres históricos de smoke, `smoke:launch`
-y `smoke:launch:dev`, que no correspondían con los scripts reales `launch:smoke` y
-`launch:smoke:prod`.
+Runbooks and checklists are an operational interface: an `npm run` command that
+does not exist in `package.json` is not a harmless typo, it is a broken release
+procedure. The audit found two historical smoke names, `smoke:launch`
+and `smoke:launch:dev`, which did not match the real `launch:smoke` and
+`launch:smoke:prod` scripts.
 
-Los tests de scripts contienen fixtures con nombres de gates deliberadamente
-inexistentes para probar validadores. Por eso el escaneo debe limitarse a los
-contratos documentales y workflows (`README.md`, `AGENTS.md`,
-`CONTRIBUTING.md`, `OPEN-CORE.md`, `docs/` y `.github/`), no a todo el árbol.
+Script tests contain fixtures with deliberately nonexistent gate
+names to exercise validators. Therefore the scan must be limited to the
+documentary contracts and workflows (`README.md`, `AGENTS.md`,
+`CONTRIBUTING.md`, `OPEN-CORE.md`, `docs/` and `.github/`), not the whole tree.
 
-## Decisión
+## Decision
 
-1. Añadir `check:documented-npm-commands` a la cadena oficial `npm run check`.
-2. Extraer cada referencia `npm run <script>` de los documentos operativos y
-   verificarla contra `package.json.scripts`.
-3. Emitir archivo y línea para cada comando inexistente y fallar cerrado.
-4. Registrar el gate en `KNOWN_GATES` como inspector de documentación (`docs`).
-5. Excluir scripts y tests del corpus porque contienen ejemplos y fixtures que
-   no son instrucciones operativas.
+1. Add `check:documented-npm-commands` to the official `npm run check` chain.
+2. Extract every `npm run <script>` reference from the operational documents and
+   verify it against `package.json.scripts`.
+3. Emit file and line for each nonexistent command and fail closed.
+4. Register the gate in `KNOWN_GATES` as a documentation inspector (`docs`).
+5. Exclude scripts and tests from the corpus because they contain examples and fixtures
+   that are not operational instructions.
 
-## Consecuencias
+## Consequences
 
-- Un renombrado o eliminación de script rompe inmediatamente el gate si queda
-  una instrucción viva apuntando al nombre antiguo.
-- Los ejemplos de validadores pueden seguir usando comandos ficticios sin
-  contaminar el contrato documental.
-- El gate no verifica que el comando sea seguro, que sus secretos estén
-  configurados ni que el procedimiento se complete: solo garantiza que el
-  nombre invocado existe. Esas propiedades permanecen bajo los gates de
-  workflows, entorno y checklist de lanzamiento.
-- Los repositorios exportados que no incluyan alguna raíz opcional siguen
-  siendo verificables; el lector ignora raíces ausentes, pero nunca ignora un
-  documento encontrado con un comando inválido.
+- A script rename or removal immediately breaks the gate if a
+  live instruction still points at the old name.
+- Validator examples can keep using fictitious commands without
+  contaminating the documentary contract.
+- The gate does not verify that the command is safe, that its secrets are
+  configured or that the procedure completes: it only guarantees that the
+  invoked name exists. Those properties remain covered by the
+  workflow, environment and launch-checklist gates.
+- Exported repositories that omit an optional root remain
+  verifiable; the reader ignores missing roots but never ignores a
+  found document containing an invalid command.

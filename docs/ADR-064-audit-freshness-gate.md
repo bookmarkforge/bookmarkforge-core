@@ -1,40 +1,40 @@
-# ADR-064 — Gate de frescura del ledger de auditoría
+# ADR-064 — Audit ledger freshness gate
 
-- **Estado:** aceptado
+- **Estado:** accepted
 - **Fecha:** 2026-09-23
-- **Decisores:** equipo de BookmarkForge
+- **Deciders:** BookmarkForge team
 
 ## Contexto
 
-`docs/audit.md` publica una tabla "Estado verificado" con la forma comando → observable, y su regla fundacional es que cada afirmación lleva el comando que la respalda. Pero nada re-ejecutaba esa tabla: sus afirmaciones envejecían en verde. En la re-verificación del 2026-09-23 el documento seguía diciendo **exit 2 · 3 errores** para `npm run typecheck` mientras el árbol producía 69 líneas de error en 3 loci, y **"~97 gates `check:*`"** cuando la cadena ejecuta 50 gates (los 99 son scripts *declarados*, no ejecutados). Ese es el modelo de drift de ADR-028 aplicado a un documento: el ledger no se rompe, se queda obsoleto.
+`docs/audit.md` publishes a "Verified status" table with the form command → observable, and its foundational rule is that each assertion carries the command that backs it. But nothing re-executed that table: its assertions aged in green. In the 2026-09-23 re-verification the document still said **exit 2 · 3 errors** for `npm run typecheck` while the tree produced 69 error lines in 3 loci, and **"~97 gates `check:*`"** when the chain executes 50 gates (the 99 are *declared* scripts, not executed). That is the drift model of ADR-028 applied to a document: the ledger does not break, it becomes obsolete.
 
-El gate vecino `check:audit-drift` (ADR-047 y anclas) vigila lo contrario: que el **código** no se aleje de los anclajes del ledger. Faltaba el otro sentido — que el **ledger** no se aleje del árbol.
+The neighboring gate `check:audit-drift` (ADR-047 and anchors) watches the opposite: that the **code** does not drift away from the ledger anchors. The other direction was missing — that the **ledger** does not drift away from the tree.
 
 ## Decisión
 
-Se añade `check:audit-freshness` a la cadena de `npm run check`. El gate parsea la tabla de estado y verifica cada fila según la columna `Modo`, que pasa a ser obligatoria:
+`check:audit-freshness` is added to the `npm run check` chain. The gate parses the status table and verifies each row according to the `Mode` column, which becomes mandatory:
 
-| Modo | Verificación |
+| Mode | Verification |
 |---|---|
-| `chain` | el comando es un gate de la cadena `npm run check`; el gate comprueba que sigue en ella (la ejecución es la de la cadena) |
-| `exec` | se ejecuta y se comparan el exit code documentado y cada fragmento entre backticks contra la salida real |
-| `deep` | como `exec`, solo bajo `--deep` (pesado para cada `npm run check`) |
-| `network` | como `exec`, solo bajo `--allow-network` (`npm audit` habla con el registro) |
-| `self` | el comando contiene al propio gate o es la suite que corre su test: su número se **deriva** del árbol (tamaño de la cadena, ficheros del perfil rápido) porque re-ejecutarlo sería recursivo |
+| `chain` | the command is a gate of the `npm run check` chain; the gate checks it remains in it (execution is the chain's) |
+| `exec` | executed and compare the documented exit code and each fragment between backticks against real output |
+| `deep` | like `exec`, only under `--deep` (heavy for every `npm run check`) |
+| `network` | like `exec`, only under `--allow-network` (`npm audit` talks to the registry) |
+| `self` | the command contains the gate itself or is the suite that runs its test: its number is **derived** from the tree (chain size, fast profile files) because re-executing it would be recursive |
 
-**Invariantes fail-closed** (nunca se omiten): tabla ausente o vacía; fila sin `Modo` o con modo desconocido; comando que no es `npm run <script>`, `npm audit [flags]` ni `node scripts/<file>.mjs`; script que no existe en `package.json`; fila `chain` que nombra un script fuera de la cadena; fila `self` sin derivación registrada o cuyo número publicado no es exactamente el derivado; `npm audit` fuera del modo `network`; un claim de salida escrito como desigualdad (`exit ≠ 0`); y cualquier exit code documentado que no cuadre con el real.
+**Fail-closed invariants** (never omitted): table absent or empty; row without `Mode` or with unknown mode; command that is not `npm run <script>`, `npm audit [flags]` nor `node scripts/<file>.mjs`; script that does not exist in `package.json`; `chain` row naming a script outside the chain; `self` row without registered derivation or whose published number is not exactly the derived one; `npm audit` outside `network` mode; an output claim written as inequality (`exit ≠ 0`); and any documented exit code that does not match the real one.
 
-El claim de salida es siempre un código **pinnado** (`exit N`). Una desigualdad se rechaza en vez de leerse como el `0` implícito: aceptarla como forma válida convertiría una fila roja en verde sin comprobar nada, que es justo el modo de fallo que este gate existe para terminar. El 2026-09-23 `npm run typecheck` era la única fila roja, con un código inestable (1/2/1 con salida idéntica por la carrera del `incremental` de tsc) y sus errores en un locus WIP que crecía y se reducía a diario; para esa fila existió una regla de loci por comando y una forma `exit ≠ 0`. Las dos se retiraron al pasar el árbol a verde: eran un caso especial hard-codeado a un nombre de comando que ninguna fila usaba, y mantenerlas habría dejado en el gate un camino de verificación que nada ejercita. Si el árbol vuelve a estar rojo de forma sostenida, el autor repone la regla junto con su fila — la frescura se paga con una edición, también en el propio gate.
+The output claim is always a **pinned** code (`exit N`). An inequality is rejected instead of being read as the implicit `0`: accepting it as a valid form would turn a red row green without checking anything, which is exactly the failure mode this gate exists to end. On 2026-09-23 `npm run typecheck` was the only red row, with an unstable code (1/2/1 with identical output due to tsc's `incremental` race) and its errors in a WIP locus that grew and shrank daily; for that row there existed a per-command locus rule and an `exit ≠ 0` form. Both were removed when the tree turned green: they were a special case hardcoded to a command name no row used, and keeping them would have left in the gate a verification path nothing exercises. If the tree becomes red in a sustained way again, the author restores the rule together with its row — freshness is paid with an edit, also in the gate itself.
 
-## Relación con la gobernanza de gates
+## Relationship with gate governance
 
-Registrado en `check-inspector-freeze` con categoría `docs`: un gate de formato documental necesita un ADR que lo nombre, y este lo hace. El ADR viaja en el export público (`PUBLIC_DOCS`), porque `docs/audit.md` **no** se publica: en el árbol exportado el gate declara "not shipped" en vez de fallar, ya que el export re-curá `docs/` y solo hereda la cadena tal cual. En el árbol privado, un ledger ausente sí falla (lo distingue la presencia de `docs/docs-state-index.md`, documento privado).
+Registered in `check-inspector-freeze` with category `docs`: a documentary format gate needs an ADR that names it, and this one does. The ADR travels in the public export (`PUBLIC_DOCS`), because `docs/audit.md` is **not** published: in the exported tree the gate declares "not shipped" instead of failing, since the export re-curs `docs/` and only inherits the chain as is. In the private tree, an absent ledger does fail (distinguished by the presence of `docs/docs-state-index.md`, a private document).
 
-El conteo de ficheros del perfil rápido —el número que la tabla publica para `npm run test:fast`— pasa a tener un solo dueño: `scripts/test-files.mjs`, extraído de `scripts/test-bounded.mjs` para que el runner y el gate no mantengan dos recorridos distintos del mismo árbol.
+The fast profile file count — the number the table publishes for `npm run test:fast` — now has a single owner: `scripts/test-files.mjs`, extracted from `scripts/test-bounded.mjs` so the runner and the gate do not maintain two separate traversals of the same tree.
 
 ## Consecuencias
 
-- Añadir una fila a la tabla ya no es decorativo: sin `Modo` verificable, la cadena falla.
-- Los comandos pesados y de red se ejecutan en CI en el step nombrado `npm run check:audit-freshness:deep` (`--deep --allow-network`); la cadena local mantiene los baratos.
-- Un árbol que se arregla (los WIP desaparecen y typecheck pasa a verde) hace fallar el gate y obliga a actualizar el documento: la frescura se paga con una edición, no con una lectura anual. Pasó el mismo día: al quedar `npm run typecheck` en verde, la fila se reescribió a `exit 0` y con ella se retiraron la regla de loci y la forma `exit ≠ 0`, que quedaban sin usuario.
-- La tabla "Superficie viva" (`grep`/`ls` con números en el observable) sigue fuera del gate: verificarla requiere declarar modo por fila como aquí. Es el siguiente tramo natural.
+- Adding a row to the table is no longer decorative: without verifiable `Mode`, the chain fails.
+- Heavy and network commands run in CI in the step named `npm run check:audit-freshness:deep` (`--deep --allow-network`); the local chain keeps the cheap ones.
+- A tree that gets fixed (WIPs disappear and typecheck turns green) makes the gate fail and forces updating the document: freshness is paid with an edit, not with an annual read. It happened the same day: when `npm run typecheck` turned green, the row was rewritten to `exit 0` and with it the locus rule and `exit ≠ 0` form were removed, remaining without user.
+- The "Live surface" table (`grep`/`ls` with numbers in observable) remains outside the gate: verifying it requires declaring mode per row as here. It is the next natural segment.

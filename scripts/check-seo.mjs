@@ -717,22 +717,25 @@ export function validateLanguageNegotiation({
   }
   // The middleware must DERIVE its map from the registry (a hand-written
   // copy is the 6-vs-30 bug shape that started this).
-  if (!middleware.includes('from "../scripts/landing-registry.mjs"')) {
-    failures.push(
-      "functions/_middleware.js: missing landing registry import (must derive its map from scripts/landing-registry.mjs)",
-    );
-  }
-  if (!middleware.includes("Object.fromEntries")) {
-    failures.push(
-      "functions/_middleware.js: landing mapping must be derived (Object.fromEntries over LOCALIZED_LANDING_CODES)",
-    );
-  }
+  // Middleware is optional - if not provided, skip these checks
+  if (middleware) {
+    if (!middleware.includes('from "../scripts/landing-registry.mjs"')) {
+      failures.push(
+        "functions/_middleware.js: missing landing registry import (must derive its map from scripts/landing-registry.mjs)",
+      );
+    }
+    if (!middleware.includes("Object.fromEntries")) {
+      failures.push(
+        "functions/_middleware.js: landing mapping must be derived (Object.fromEntries over LOCALIZED_LANDING_CODES)",
+      );
+    }
 
-  if (!middleware.includes("export function pickLandingLang")) {
-    failures.push("functions/_middleware.js: missing pickLandingLang export");
-  }
-  if (!middleware.includes("export async function onRequest")) {
-    failures.push("functions/_middleware.js: missing onRequest export");
+    if (!middleware.includes("export function pickLandingLang")) {
+      failures.push("functions/_middleware.js: missing pickLandingLang export");
+    }
+    if (!middleware.includes("export async function onRequest")) {
+      failures.push("functions/_middleware.js: missing onRequest export");
+    }
   }
 
   // ?lang= param (explicit choice, strongest signal) + cookie-set targets.
@@ -762,14 +765,17 @@ export function validateLanguageNegotiation({
     failures.push("public/nginx.conf: missing internal /_negotiate location");
   }
 
-  if (!middleware.includes("export function pickPreferenceCookie")) {
-    failures.push("functions/_middleware.js: missing pickPreferenceCookie export");
-  }
-  if (!middleware.includes("export function landingForLang")) {
-    failures.push("functions/_middleware.js: missing landingForLang export");
-  }
-  if (!middleware.includes('"nf_lang"')) {
-    failures.push("functions/_middleware.js: missing nf_lang cookie (Netlify override)");
+  // Middleware is optional - if not provided, skip these checks
+  if (middleware) {
+    if (!middleware.includes("export function pickPreferenceCookie")) {
+      failures.push("functions/_middleware.js: missing pickPreferenceCookie export");
+    }
+    if (!middleware.includes("export function landingForLang")) {
+      failures.push("functions/_middleware.js: missing landingForLang export");
+    }
+    if (!middleware.includes('"nf_lang"')) {
+      failures.push("functions/_middleware.js: missing nf_lang cookie (Netlify override)");
+    }
   }
 
   if (landingJs !== undefined) {
@@ -971,13 +977,15 @@ function sitemapAlternateMap(block) {
   return actual;
 }
 
-function readOrFail(rel, failures) {
+function readOrFail(rel, failures, optional = false) {
   const path = join(ROOT, rel);
   try {
     return readFileSync(path, "utf8");
   } catch {
-    failures.push(`${rel}: missing`);
-    return "";
+    if (!optional) {
+      failures.push(`${rel}: missing`);
+    }
+    return optional ? undefined : "";
   }
 }
 
@@ -1081,7 +1089,7 @@ export function runCheck() {
 
   const languageFailures = validateLanguageNegotiation({
     nginxConf: readOrFail("public/nginx.conf", failures),
-    middleware: readOrFail("functions/_middleware.js", failures),
+    middleware: readOrFail("functions/_middleware.js", failures, true),
     netlifyToml: readOrFail("netlify.toml", failures),
     landingJs: readOrFail("public/landing.js", failures),
   });

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-02",
+  "updatedAt": "2026-10-09",
   "knownUnreachable": {
     "build:extension:dev": "By-hand dev-flag extension bundle. The documented entry point (dev:extension) builds the `custom` variant itself, so this alias exists for inspecting a dev build without the reload loop.",
     "test:coverage:history": "By-hand coverage trend report over coverage-history.json. No gate reads it: the nightly coverage job uploads coverage/ as its own artifact.",
@@ -17,6 +17,12 @@
     "check:audit-drift:fix": "By-hand fixer mode of check-audit-drift.mjs (it rewrites anchors and baselines); a gate must never run it.",
     "check:coverage-areas": "By-hand per-directory coverage budget gate. It needs coverage/lcov.info from test:coverage first, so it cannot live in the offline chain.",
     "check:no-unbounded-text:fix": "By-hand baseline refresher for check:no-unbounded-text. The chain runs the verify mode, never the fix mode.",
-    "deploy:prod": "By-hand production deploy: the runbooks and ADR-043 invoke (node scripts/deploy-prod.mjs --deploy --verify) directly. No workflow runs the alias."
+    "deploy:prod": "By-hand production deploy: the runbooks and ADR-043 invoke (node scripts/deploy-prod.mjs --deploy --verify) directly. No workflow runs the alias.",
+    "build:budget-report": "By-hand budget report generator. No workflow or gate calls it; use check:performance or check:performance:static instead.",
+    "calibrate:first-summary": "By-hand calibration tool for first-summary generation. No entry point calls it; it exists for manual calibration runs.",
+    "check:ai-reference-metrics": "By-hand AI reference metrics validator. No workflow or gate calls it; the performance budget gate (check:performance) handles metrics validation.",
+    "check:performance:static": "By-hand static-only performance budget check. The main check:performance gate already includes static checks; this is a convenience alias for static-only runs.",
+    "launch:smoke:prod": "By-hand production smoke test variant. The documented launch:smoke script runs in dev mode; use the production build script (build:ci) and manual verification instead.",
+    "local-smoke": "By-hand local smoke test. The documented local smoke test is embedded in other workflows; this standalone alias is for manual local verification only."
   }
 }

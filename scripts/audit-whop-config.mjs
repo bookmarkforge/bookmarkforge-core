@@ -45,7 +45,7 @@ function loadEnv() {
         process.env[key.trim()] = valueParts.join('=').trim();
       }
     });
-  } catch (error) {
+  } catch (_error) {
     // .env.local might not exist, that's ok
   }
 }

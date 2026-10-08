@@ -3,6 +3,9 @@ import { useTranslation } from "react-i18next";
 import { useSecurityStore } from "./useSecurityStore";
 import { useSettings } from "./useSettings";
 import { toast } from "sonner";
+import { securityVault } from "../services/SecurityVault";
+import { encryptionService } from "../services/EncryptionService";
+import { logger } from "../utils/logger";
 
 /**
  * Arm the idle auto-lock on an **absolute deadline** instead of a countdown.
@@ -39,7 +42,7 @@ import { toast } from "sonner";
  */
 export const AutoLockManager = () => {
   const { t } = useTranslation();
-  const { isLocked, setForceSetup } = useSecurityStore();
+  const { isLocked, lock } = useSecurityStore();
   const { autoLockEnabled, autoLockTimeout } = useSettings();
   const autoLockTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   /** Absolute wall-clock instant the vault must lock; null = nothing armed. */
@@ -60,11 +63,26 @@ export const AutoLockManager = () => {
       }
     };
 
-    const lockNow = () => {
+    const lockNow = async () => {
       deadlineRef.current = null;
       clearTimer();
       if (!isLocked) {
-        setForceSetup(true);
+        // SECURITY: First lock the crypto vault, then update UI state.
+        // Auto-lock must clean sensitive material (master password, AI keys)
+        // from memory, not just hide the UI behind a lock screen.
+        try {
+          if (!securityVault.isLocked()) {
+            await securityVault.lock();
+          }
+          await encryptionService.destroy();
+        } catch (err) {
+          logger.warn("[AutoLockManager] Failed to lock vault on auto-lock", {
+            error: err,
+          });
+        }
+        // Use lock() instead of setForceSetup(true) to show unlock screen,
+        // not first-time setup screen. Auto-lock should never force setup.
+        lock();
         toast.info(t("app_vaultLocked", "Vault locked"));
       }
     };
@@ -154,7 +172,7 @@ export const AutoLockManager = () => {
       document.removeEventListener("resume", handleResume);
       clearTimer();
     };
-  }, [autoLockEnabled, autoLockTimeout, isLocked, setForceSetup, t]);
+  }, [autoLockEnabled, autoLockTimeout, isLocked, lock, t]);
 
   return null;
 };

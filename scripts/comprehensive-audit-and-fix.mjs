@@ -14,7 +14,6 @@
 
 import { execSync } from 'child_process';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { readdirSync, statSync } from 'fs';
 
 // Console colors
 const colors = {

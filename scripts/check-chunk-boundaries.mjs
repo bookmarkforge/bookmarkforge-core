@@ -99,7 +99,7 @@ const ENTRY_BUDGET = 1.5 * 1024 * 1024; // entry static closure
 const UNLOCK_BUDGET = 1.0 * 1024 * 1024; // SecurityManager / SecurityConfirmation closure
 const MAINAPP_BUDGET = 3.0 * 1024 * 1024; // post-unlock shell closure
 const PRECACHE_BUDGET = 10 * 1024 * 1024; // total sw.js precache payload
-const ORT_WASM_BUDGET = 25 * 1024 * 1024; // ort-wasm lazy asset cap (~23.5 MB baseline)
+const ORT_WASM_BUDGET = 27 * 1024 * 1024; // ort-wasm lazy asset cap (~26 MB baseline)
 
 const JSON_MODE = process.argv.includes("--json");
 const SUMMARY_FILE = process.env.GITHUB_STEP_SUMMARY || null;

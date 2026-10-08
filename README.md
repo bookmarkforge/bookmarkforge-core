@@ -4,10 +4,10 @@
 
 **Local-first AI Knowledge Vault with End-to-End Encryption**
 
-[![CI](https://github.com/bookmarkforge/bookmarkforge/actions/workflows/ci.yml/badge.svg)](https://github.com/bookmarkforge/bookmarkforge/actions/workflows/ci.yml)
-[![Nightly validation](https://github.com/bookmarkforge/bookmarkforge/actions/workflows/nightly.yml/badge.svg)](https://github.com/bookmarkforge/bookmarkforge/actions/workflows/nightly.yml)
+[![CI](https://github.com/bookmarkforge/bookmarkforge-2026/actions/workflows/ci.yml/badge.svg)](https://github.com/bookmarkforge/bookmarkforge-2026/actions/workflows/ci.yml)
+[![Nightly validation](https://github.com/bookmarkforge/bookmarkforge-2026/actions/workflows/nightly.yml/badge.svg)](https://github.com/bookmarkforge/bookmarkforge-2026/actions/workflows/nightly.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/bookmarkforge/bookmarkforge/releases/latest)
+[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/bookmarkforge/bookmarkforge-2026/releases/latest)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D24.17.0-brightgreen)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
 
@@ -61,7 +61,7 @@ BookmarkForge is a privacy-preserving personal knowledge application with encryp
 
 ```bash
 # Clone the repository
-git clone https://github.com/bookmarkforge/bookmarkforge.git
+git clone https://github.com/bookmarkforge/bookmarkforge-2026.git
 cd bookmarkforge
 
 # Install dependencies
@@ -390,9 +390,9 @@ See [`AGENTS.md`](AGENTS.md) for detailed engineering conventions and security g
 ## 📞 Support
 
 - **Documentation** — See the [documentation index](docs/index.md)
-- **Issues** — Report bugs on [GitHub Issues](https://github.com/bookmarkforge/bookmarkforge/issues)
+- **Issues** — Report bugs on [GitHub Issues](https://github.com/bookmarkforge/bookmarkforge-2026/issues)
 - **Security** — Report security vulnerabilities privately via responsible disclosure
-- **Discussions** — Join community discussions on [GitHub Discussions](https://github.com/bookmarkforge/bookmarkforge/discussions)
+- **Discussions** — Join community discussions on [GitHub Discussions](https://github.com/bookmarkforge/bookmarkforge-2026/discussions)
 
 ---
 

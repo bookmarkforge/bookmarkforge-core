@@ -75,7 +75,7 @@ keep v1 working forever. Future major versions (v2, v3) are separate products,
 **Prerequisites:** Node.js ≥ 20.19.
 
 ```bash
-git clone https://github.com/bookmarkforge/bookmarkforge.git
+git clone https://github.com/bookmarkforge/bookmarkforge-2026.git
 cd bookmarkforge
 npm install
 npm run dev        # the app at http://localhost:5173

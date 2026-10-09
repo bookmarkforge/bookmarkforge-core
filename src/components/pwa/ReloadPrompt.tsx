@@ -2,15 +2,23 @@ import { useEffect, useState } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 import { useTranslation } from "react-i18next";
 import { logger } from "../../utils/logger";
+import { Modal, Tooltip } from "@mantine/core";
+import { RefreshCw } from "lucide-react";
 
 interface PwaTestState {
   offlineReady: boolean;
   needRefresh: boolean;
 }
 
-const ReloadPromptContent = () => {
+interface ReloadPromptProps {
+  /** When true, renders a compact icon button for Header. When false, renders the full modal. */
+  compact?: boolean;
+}
+
+const ReloadPromptContent = ({ compact = false }: ReloadPromptProps) => {
   const { t } = useTranslation();
   const [testState, setTestState] = useState<PwaTestState | null>(null);
+  const [showModal, setShowModal] = useState(false);
   const {
     offlineReady: [offlineReady, setOfflineReady],
     needRefresh: [needRefresh, setNeedRefresh],
@@ -56,12 +64,83 @@ const ReloadPromptContent = () => {
     setTestState(null);
     setOfflineReady(false);
     setNeedRefresh(false);
+    setShowModal(false);
   };
 
   const updateSW = () => {
     updateServiceWorker(true);
+    setShowModal(false);
   };
 
+  // Compact mode: icon button in Header
+  if (compact) {
+    return (
+      <>
+        <Tooltip
+          label={effectiveNeedRefresh
+            ? t("app_updateAvailable", { defaultValue: "A new version is available." })
+            : t("app_offlineReady", { defaultValue: "App is ready for offline use." })}
+          position="bottom"
+          withArrow
+        >
+          <button
+            type="button"
+            onClick={() => setShowModal(true)}
+            className="p-2 ds-ghost-btn-icon ds-radius-item relative"
+            aria-label={
+              effectiveNeedRefresh
+                ? t("app_updateAvailable", { defaultValue: "A new version is available." })
+                : t("app_offlineReady", { defaultValue: "App is ready for offline use." })
+            }
+            data-testid="pwa-reload-button-compact"
+          >
+            <RefreshCw className="size-4" />
+            {effectiveNeedRefresh && (
+              <span className="absolute top-1 end-1 size-2 bg-cyan-500 rounded-full" />
+            )}
+          </button>
+        </Tooltip>
+        <Modal
+          opened={showModal}
+          onClose={close}
+          title={effectiveNeedRefresh
+            ? t("app_updateAvailable", { defaultValue: "A new version is available." })
+            : t("app_offlineReady", { defaultValue: "App is ready for offline use." })}
+          centered
+        >
+          <div className="space-y-4">
+            <p className="text-sm ds-text-secondary">
+              {effectiveNeedRefresh
+                ? t("app_updateAvailableDesc", {
+                    defaultValue: "A new version of the app is available. Reload to update.",
+                  })
+                : t("app_offlineReadyDesc", {
+                    defaultValue: "The app is now ready to work offline.",
+                  })}
+            </p>
+            <div className="flex gap-2 justify-end">
+              {effectiveNeedRefresh && (
+                <button
+                  onClick={updateSW}
+                  className="truncate px-4 py-2 text-sm font-medium text-white bg-cyan-600 rounded-lg hover:bg-cyan-700"
+                >
+                  {t("app_reload", { defaultValue: "Reload" })}
+                </button>
+              )}
+              <button
+                onClick={close}
+                className="truncate px-4 py-2 text-sm ds-text-secondary hover:ds-bg-secondary rounded-lg"
+              >
+                {t("app_dismiss", { defaultValue: "Dismiss" })}
+              </button>
+            </div>
+          </div>
+        </Modal>
+      </>
+    );
+  }
+
+  // Full modal mode (legacy, for overlays)
   return (
     <div
       data-testid="pwa-reload-prompt"

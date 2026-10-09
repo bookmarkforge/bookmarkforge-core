@@ -58,9 +58,10 @@ export const Dashboard = lazy(() =>
 export const HomeDashboard = lazy(() =>
   import("../HomeDashboard").then((m) => ({ default: m.HomeDashboard })),
 );
-export const ReloadPrompt = lazy(() =>
-  import("../pwa/ReloadPrompt").then((m) => ({ default: m.ReloadPrompt })),
-);
+// ReloadPrompt is now imported directly in Header (compact mode)
+// export const ReloadPrompt = lazy(() =>
+//   import("../pwa/ReloadPrompt").then((m) => ({ default: m.ReloadPrompt })),
+// );
 export const Collaboration = lazy(() =>
   import("../Collaboration").then((m) => ({ default: m.Collaboration })),
 );

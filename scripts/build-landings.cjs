@@ -118,6 +118,11 @@ function outputPathFor(pageType, key) {
       ? path.join(OUTPUT_DIR, 'pocket-alternative.html')
       : path.join(OUTPUT_DIR, `pocket-alternative-${lang}.html`);
   }
+  if (pageType === 'help') {
+    return key === 'en'
+      ? path.join(OUTPUT_DIR, 'help.html')
+      : path.join(OUTPUT_DIR, `help-${key}.html`);
+  }
   if (pageType === '404') {
     return key === 'en'
       ? path.join(OUTPUT_DIR, '404.html')
@@ -158,9 +163,9 @@ function renderAll() {
   const landingLangs = getLandingLangs(translations);
   const links = languageLinks();
   const rendered = [];
-  
-  for (const pageType of ['landing', 'pocket-alternative']) {
-    const template = env.getTemplate(`landing/${pageType}.njk`);
+
+  for (const pageType of ['landing', 'pocket-alternative', 'help']) {
+    const template = env.getTemplate(`${pageType === 'help' ? 'help' : 'landing'}/${pageType}.njk`);
     for (const [key, translation] of Object.entries(translations)) {
       if (pageType === 'landing') {
         if (!translation.hero?.badge) continue;
@@ -170,6 +175,8 @@ function renderAll() {
       // (pocket-alternative-<lang>.json); the main landing translation files
       // share the hero.badge shape but must not render the Pocket page.
       if (pageType === 'pocket-alternative' && !key.startsWith('pocket-alternative')) continue;
+      // help pages only render if help section exists in translation
+      if (pageType === 'help' && !translation.help) continue;
 
       const html = template.render({ t: translation, languageLinks: links });
       rendered.push({ key, pageType, path: outputPathFor(pageType, key), html });

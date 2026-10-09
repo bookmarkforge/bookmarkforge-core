@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, Suspense } from "react";
 import {
   Search,
   Settings as SettingsIcon,
@@ -13,6 +13,7 @@ import { LanguageSelector } from "./LanguageSelector";
 import { toast } from "sonner";
 import { SoundToggle } from "./SoundToggle";
 import { Modal, Tooltip } from "@mantine/core";
+import { ReloadPrompt } from "./pwa/ReloadPrompt";
 
 interface HeaderProps {
   activeTab?: string;
@@ -108,6 +109,11 @@ const Header = function Header({
 
           {/* Sound Toggle */}
           <SoundToggle />
+
+          {/* Reload Prompt (compact button) */}
+          <Suspense fallback={null}>
+            <ReloadPrompt compact />
+          </Suspense>
 
           {/* Theme Toggle */}
           <ThemeToggle />

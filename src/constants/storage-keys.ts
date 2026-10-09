@@ -20,6 +20,8 @@ export const STORAGE_KEYS = {
 
   // Master password
   HAS_MASTER_PASSWORD: "forge_has_master_password",
+  /** Flag set when user explicitly skips password setup on first run. */
+  PASSWORD_SKIPPED: "forge_password_skipped",
 
   // CSP profile
   CSP_PROFILE: "forge_csp_profile",

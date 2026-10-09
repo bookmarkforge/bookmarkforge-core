@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { Dashboard, Settings, FlashcardReview, Omnibar } from "./lazyComponents";
 import { RouteErrorBoundary } from "../errors/RouteErrorBoundary";
 import { ConsentBanner } from "../ConsentBanner";
-import { AIModelHydration, SyncStatus, BackgroundProgress, ReloadPrompt } from "./lazyComponents";
+import { AIModelHydration, SyncStatus, BackgroundProgress } from "./lazyComponents";
 import type { MainAppState } from "./MainAppState";
 import type { MainAppEventHandlers } from "./MainAppEventHandlers";
 
@@ -75,7 +75,7 @@ export function MainAppOverlays({ state, handlers }: MainAppOverlaysProps) {
 
       {/* Background components — fire-and-forget. Each gets its own
           RouteErrorBoundary so a broken SyncStatus doesn't blank
-          AIModelHydration, BackgroundProgress, or ReloadPrompt. */}
+          AIModelHydration, BackgroundProgress. */}
       <RouteErrorBoundary fallback={null}>
         <div
           aria-hidden={isOverlayVisible}
@@ -86,7 +86,7 @@ export function MainAppOverlays({ state, handlers }: MainAppOverlaysProps) {
           </Suspense>
         </div>
       </RouteErrorBoundary>
-      
+
       <RouteErrorBoundary fallback={null}>
         <div
           aria-hidden={isOverlayVisible}
@@ -97,7 +97,7 @@ export function MainAppOverlays({ state, handlers }: MainAppOverlaysProps) {
           </Suspense>
         </div>
       </RouteErrorBoundary>
-      
+
       <RouteErrorBoundary fallback={null}>
         <div
           aria-hidden={isOverlayVisible}
@@ -105,17 +105,6 @@ export function MainAppOverlays({ state, handlers }: MainAppOverlaysProps) {
         >
           <Suspense fallback={null}>
             <BackgroundProgress />
-          </Suspense>
-        </div>
-      </RouteErrorBoundary>
-      
-      <RouteErrorBoundary fallback={null}>
-        <div
-          aria-hidden={isOverlayVisible}
-          style={isOverlayVisible ? { visibility: "hidden" } : undefined}
-        >
-          <Suspense fallback={null}>
-            <ReloadPrompt />
           </Suspense>
         </div>
       </RouteErrorBoundary>

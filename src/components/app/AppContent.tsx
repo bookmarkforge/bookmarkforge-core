@@ -17,7 +17,7 @@ import { useSecurityStore } from "../../hooks/useSecurityStore";
 import { useDatabaseInit } from "../../hooks/useDatabaseInit";
 import { useMigrationProgress } from "../../hooks/useMigrationProgress";
 import type { DbErrorClass } from "../../db/database";
-import { safeGet } from "../../store/safeStorage";
+import { safeGet, safeSet } from "../../store/safeStorage";
 import { loadBackupService } from "../../services/pro-access";
 
 /**
@@ -432,13 +432,15 @@ export function AppContent() {
     };
   }, [db]);
 
-  const showSecurityConfirmation = isLocked && !hasPwd && !forceSetup;
+  const showSecurityConfirmation = isLocked && !hasPwd && !forceSetup && safeGet(STORAGE_KEYS.PASSWORD_SKIPPED) !== "true";
 
   const handleSkipPassword = () => {
+    safeSet(STORAGE_KEYS.PASSWORD_SKIPPED, "true");
     unlock();
   };
 
   const handleSetupPassword = () => {
+    safeSet(STORAGE_KEYS.PASSWORD_SKIPPED, "false");
     setForceSetup(true);
   };
 

@@ -183,8 +183,42 @@
     var match = (link.getAttribute('href') || '').match(/[?&]lang=([a-z]{2})/i);
     if (match && LANG_CODES.indexOf(match[1].toLowerCase()) !== -1) {
       setLangPreference(match[1].toLowerCase());
+      
+      // In local development, navigate to the localized HTML file
+      // since Vite dev server serves the public directory
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        event.preventDefault();
+        var lang = match[1].toLowerCase();
+        var target = lang === 'en' ? '/' : '/' + lang + '.html';
+        window.location.href = target;
+      }
     }
   });
+
+  // ── Fix help links in local development ───────────────────────────
+  // In production, /help is rewritten to help.html by the server
+  // In local development, we need to append .html to make it work
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    document.addEventListener('click', function (event) {
+      var link = event.target.closest ? event.target.closest('a[href^="/help"]') : null;
+      if (!link) return;
+      var href = link.getAttribute('href');
+      // Detect current language from URL or cookie
+      var currentLang = window.location.pathname.match(/^\/([a-z]{2})\.html/);
+      var langCode = currentLang ? currentLang[1] : null;
+      if (!langCode) {
+        var langCookie = localStorage.getItem('bf_lang');
+        if (langCookie) langCode = langCookie;
+      }
+
+      if (href === '/help' || href === '/help#sla' || href === '/help#pricing' || href === '/help#bf-e' || href === '/help#bf-e101') {
+        event.preventDefault();
+        var helpPath = langCode ? '/help-' + langCode + '.html' : '/help.html';
+        var hash = href.includes('#') ? href.split('#')[1] : '';
+        window.location.href = helpPath + (hash ? '#' + hash : '');
+      }
+    });
+  }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', handleLangParam);

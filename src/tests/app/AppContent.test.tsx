@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, act, waitFor, fireEvent } from "@testing-library/react";
 import React from "react";
+import { safeGet } from "../../store/safeStorage";
 
 vi.mock("react-i18next", async (importOriginal) => {
   const actual = await importOriginal();
@@ -56,6 +57,10 @@ vi.mock("../../components/SecurityConfirmation", () => ({
 }));
 vi.mock("sonner", () => ({
   toast: { success: vi.fn(), error: vi.fn(), warning: vi.fn(), info: vi.fn() },
+}));
+vi.mock("../../store/safeStorage", () => ({
+  safeGet: vi.fn(() => null),
+  safeSet: vi.fn(),
 }));
 vi.mock("../../services/BackupService", () => ({
   BackupService: {
@@ -338,10 +343,32 @@ describe("AppContent", () => {
       dbError: null,
       hasPwd: false,
     });
+    // Mock safeGet to return null for PASSWORD_SKIPPED (not skipped)
+    vi.mocked(safeGet).mockReturnValue(null);
     const { getByTestId } = render(<AppContent />);
     // SecurityConfirmation is lazy-loaded (it statically imports lucide
     // from the ui-runtime chunk); wait for the dynamic import to settle.
     await waitFor(() => expect(getByTestId("security-confirmation")).toBeTruthy());
+  });
+
+  it("does NOT render SecurityConfirmation when password was skipped", async () => {
+    (useSecurityStore as any).mockReturnValue({
+      isLocked: true,
+      forceSetup: false,
+    });
+    (useDatabaseInit as any).mockReturnValue({
+      db: null,
+      dbError: null,
+      hasPwd: false,
+    });
+    // Mock safeGet to return "true" for PASSWORD_SKIPPED (user skipped password)
+    vi.mocked(safeGet).mockImplementation((key) => {
+      if (key === "forge_password_skipped") return "true";
+      return null;
+    });
+    const { queryByTestId } = render(<AppContent />);
+    // SecurityConfirmation should NOT appear when password was skipped
+    await waitFor(() => expect(queryByTestId("security-confirmation")).toBeNull());
   });
 
   describe("migration overlay exit transition", () => {

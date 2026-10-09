@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="{{ t.lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ t.help.title }}</title>
+  <meta name="description" content="{{ t.help.description }}">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://bookmarkforgeapp.com/help">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/help">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="{{ t.help.ogTitle }}">
+  <meta property="og:description" content="{{ t.help.ogDescription }}">
+  <meta property="og:url" content="https://bookmarkforgeapp.com/help">
+  <meta property="og:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="{{ t.help.ogLocale }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ t.help.ogTitle }}">
+  <meta name="twitter:description" content="{{ t.help.ogDescription }}">
+  <meta name="twitter:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/privacy-and-terms.css">
+  <style>
+    .help-toc { background: var(--bg-card); border: 1px solid var(--divider); border-radius: 12px; padding: 16px 20px; margin: 24px 0; }
+    .help-toc ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 12px 20px; }
+    .help-toc a { font-size: 0.92em; color: var(--text-secondary); }
+    .help-toc a:hover { color: var(--accent-primary); }
+    .badge { display:inline-block; padding:4px 10px; border-radius: 999px; font-size:0.72em; font-weight:700; background: var(--accent-soft); color: var(--accent-primary); border:1px solid var(--accent-primary); }
+    table.sla { width:100%; border-collapse: collapse; margin: 12px 0; }
+    table.sla th, table.sla td { border:1px solid var(--divider); padding:10px 12px; text-align:left; vertical-align:top; }
+    table.sla thead th { background: var(--bg-card); color: var(--accent-primary); font-weight: 600; }
+    table.sla tbody tr:nth-child(even) { background: var(--accent-soft); }
+    code { background: var(--bg-card); padding:2px 6px; border-radius:6px; border:1px solid var(--divider); font-size:0.92em; color: var(--text-primary); }
+    .callout { background: var(--accent-soft); border:1px solid var(--divider); border-left:4px solid var(--accent-primary); padding:14px 16px; border-radius:10px; margin:16px 0; }
+    .callout-warn { background: rgba(245, 158, 11, 0.12); border-left-color:#f59e0b; }
+    .diag-box { background: var(--bg-card); border:1px solid var(--divider); border-radius:10px; padding:14px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:0.85em; white-space:pre-wrap; word-break:break-word; color: var(--text-secondary); }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "@id":"https://bookmarkforgeapp.com/help#faq",
+    "mainEntity":[
+      {"@type":"Question","name":"{{ t.help.faq.q1 | escapejs }}","acceptedAnswer":{"@type":"Answer","text":"{{ t.help.faq.a1 | escapejs }}"}},
+      {"@type":"Question","name":"{{ t.help.faq.q2 | escapejs }}","acceptedAnswer":{"@type":"Answer","text":"{{ t.help.faq.a2 | escapejs }}"}},
+      {"@type":"Question","name":"{{ t.help.faq.q3 | escapejs }}","acceptedAnswer":{"@type":"Answer","text":"{{ t.help.faq.a3 | escapejs }}"}}
+    ]
+  }
+  </script>
+  <script src="/landing.js"></script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="/" class="brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" alt="" width="28" height="28" />
+        BookmarkForge
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false" style="margin-left: auto;">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <p class="last-updated"><strong>{{ t.help.lastUpdated }}:</strong> {{ t.help.lastUpdatedDate }} · <a href="/">{{ t.help.backToHome }}</a></p>
+
+    <h1>{{ t.help.title }}</h1>
+    <p>{{ t.help.intro | safe }}</p>
+
+    <nav class="help-toc" aria-label="On this page">
+      <ul>
+        <li><a href="#pricing">{{ t.help.toc.pricing }}</a></li>
+        <li><a href="#sla">{{ t.help.toc.sla }}</a></li>
+        <li><a href="#troubleshooting">{{ t.help.toc.troubleshooting }}</a></li>
+        <li><a href="#bf-e">{{ t.help.toc.errorCodes }}</a></li>
+        <li><a href="#diagnostics">{{ t.help.toc.diagnostics }}</a></li>
+        <li><a href="#contact">{{ t.help.toc.contact }}</a></li>
+      </ul>
+    </nav>
+
+    <h2 id="pricing">{{ t.help.pricing.title }}</h2>
+    <p>{{ t.help.pricing.intro | safe }}</p>
+
+    <table class="sla">
+      <thead><tr><th>{{ t.help.pricing.table.tier }}</th><th>{{ t.help.pricing.table.price }}</th><th>{{ t.help.pricing.table.whatYouGet }}</th><th>{{ t.help.pricing.table.supply }}</th></tr></thead>
+      <tbody>
+        <tr><td><strong>{{ t.help.pricing.tier.free }}</strong></td><td>{{ t.help.pricing.freePrice }}</td><td>{{ t.help.pricing.freeDescription | safe }}</td><td>{{ t.help.pricing.unlimited }}</td></tr>
+        <tr><td><strong>{{ t.help.pricing.tier.pro }}</strong> <span class="badge">{{ t.help.pricing.badge }}</span></td><td><strong>{{ t.help.pricing.proPrice }}</strong> <span style="text-decoration:line-through;color:var(--text-muted)">{{ t.help.pricing.proPriceStriked }}</span> → {{ t.help.pricing.proPriceRegular }} → {{ t.help.pricing.proPriceTraction }}</td><td>{{ t.help.pricing.proDescription | safe }}</td><td>{{ t.help.pricing.proSupply }}</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>{{ t.help.legal.title }}:</strong> <em>{{ t.help.legal.text | safe }}</em>
+      <br>{{ t.help.legal.refunds }} <a href="/privacy-and-terms.html#terms">{{ t.help.legal.terms }}</a>
+    </div>
+
+    <div class="callout callout-warn">
+      <strong>{{ t.help.upgrade.title }}:</strong> {{ t.help.upgrade.text | safe }}
+    </div>
+
+    <h2 id="sla">{{ t.help.sla.title }}</h2>
+    <p>{{ t.help.sla.intro | safe }}</p>
+    <table class="sla">
+      <thead><tr><th>{{ t.help.sla.table.tier }}</th><th>{{ t.help.sla.table.channel }}</th><th>{{ t.help.sla.table.response }}</th><th>{{ t.help.sla.table.whatToDo }}</th></tr></thead>
+      <tbody>
+        <tr><td><strong>{{ t.help.sla.tier.free }}</strong></td><td>{{ t.help.sla.freeChannel | safe }}</td><td>{{ t.help.sla.freeResponse }}</td><td>{{ t.help.sla.freeWhatToDo | safe }}</td></tr>
+        <tr><td><strong>{{ t.help.sla.tier.pro }}</strong></td><td>{{ t.help.sla.proChannel | safe }}</td><td><strong>{{ t.help.sla.proResponse }}</strong></td><td>{{ t.help.sla.proWhatToDo | safe }}</td></tr>
+      </tbody>
+    </table>
+    <p style="color:var(--text-muted);font-size:0.92em;">{{ t.help.sla.note | safe }}</p>
+
+    <h2 id="troubleshooting">{{ t.help.troubleshooting.title }}</h2>
+    <h3>{{ t.help.troubleshooting.vaultLocked.title }}</h3>
+    <p>{{ t.help.troubleshooting.vaultLocked.text | safe }}</p>
+
+    <h3>{{ t.help.troubleshooting.storageFull.title }}</h3>
+    <p>{{ t.help.troubleshooting.storageFull.text | safe }}</p>
+
+    <h3>{{ t.help.troubleshooting.p2pNotConnecting.title }}</h3>
+    <p>{{ t.help.troubleshooting.p2pNotConnecting.text | safe }}</p>
+
+    <h3>{{ t.help.troubleshooting.localAiNotRunning.title }}</h3>
+    <p>{{ t.help.troubleshooting.localAiNotRunning.text | safe }}</p>
+
+    <h3>{{ t.help.troubleshooting.slowSearch.title }}</h3>
+    <p>{{ t.help.troubleshooting.slowSearch.text | safe }}</p>
+
+    <h2 id="bf-e">{{ t.help.errorCodes.title }}</h2>
+    <p>{{ t.help.errorCodes.intro }}</p>
+    <table class="sla">
+      <thead><tr><th>{{ t.help.errorCodes.table.code }}</th><th>{{ t.help.errorCodes.table.meaning }}</th><th>{{ t.help.errorCodes.table.fix }}</th></tr></thead>
+      <tbody>
+        <tr id="bf-e101"><td><strong>BF-E101</strong></td><td>{{ t.help.errorCodes.e101.meaning }}</td><td>{{ t.help.errorCodes.e101.fix | safe }}</td></tr>
+        <tr id="bf-e102"><td><strong>BF-E102</strong></td><td>{{ t.help.errorCodes.e102.meaning }}</td><td>{{ t.help.errorCodes.e102.fix | safe }}</td></tr>
+        <tr id="bf-e103"><td><strong>BF-E103</strong></td><td>{{ t.help.errorCodes.e103.meaning }}</td><td>{{ t.help.errorCodes.e103.fix | safe }}</td></tr>
+        <tr id="bf-e104"><td><strong>BF-E104</strong></td><td>{{ t.help.errorCodes.e104.meaning }}</td><td>{{ t.help.errorCodes.e104.fix | safe }}</td></tr>
+        <tr id="bf-e105"><td><strong>BF-E105</strong></td><td>{{ t.help.errorCodes.e105.meaning }}</td><td>{{ t.help.errorCodes.e105.fix | safe }}</td></tr>
+        <tr id="bf-e106"><td><strong>BF-E106</strong></td><td>{{ t.help.errorCodes.e106.meaning }}</td><td>{{ t.help.errorCodes.e106.fix | safe }}</td></tr>
+        <tr id="bf-e107"><td><strong>BF-E107</strong></td><td>{{ t.help.errorCodes.e107.meaning }}</td><td>{{ t.help.errorCodes.e107.fix | safe }}</td></tr>
+        <tr id="bf-e201"><td><strong>BF-E201</strong></td><td>{{ t.help.errorCodes.e201.meaning }}</td><td>{{ t.help.errorCodes.e201.fix | safe }}</td></tr>
+        <tr id="bf-e202"><td><strong>BF-E202</strong></td><td>{{ t.help.errorCodes.e202.meaning }}</td><td>{{ t.help.errorCodes.e202.fix | safe }}</td></tr>
+      </tbody>
+    </table>
+    <p>{{ t.help.errorCodes.tip | safe }}</p>
+
+    <h2 id="diagnostics">{{ t.help.diagnostics.title }}</h2>
+    <p>{{ t.help.diagnostics.intro | safe }}</p>
+    <div class="diag-box">{{ t.help.diagnostics.example }}</div>
+    <p>{{ t.help.diagnostics.contains | safe }}</p>
+    <p>{{ t.help.diagnostics.cantOpen | safe }}</p>
+
+    <h2 id="contact">{{ t.help.contact.title }}</h2>
+    <ul>
+      <li><strong>{{ t.help.contact.paid }}:</strong> <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> — {{ t.help.contact.paidDetail | safe }}</li>
+      <li><strong>{{ t.help.contact.community }}:</strong> <a href="https://github.com/bookmarkforge/bookmarkforge-2026/discussions">GitHub Discussions</a> — {{ t.help.contact.communityDetail | safe }}</li>
+      <li><strong>{{ t.help.contact.security }}:</strong> {{ t.help.contact.securityDetail | safe }}</li>
+    </ul>
+    <p style="color:var(--text-muted);font-size:0.92em;">{{ t.help.contact.note | safe }}</p>
+
+    <hr>
+    <p style="color:var(--text-muted);font-size:0.92em;">{{ t.help.alsoSee | safe }}</p>
+  </main>
+
+  <footer>
+    <div class="container">
+      &copy; 2026 BookmarkForge. All rights reserved. · <a href="/privacy-and-terms.html">{{ t.help.privacy }}</a> · <a href="/">{{ t.help.home }}</a>
+    </div>
+  </footer>
+</body>
+</html>

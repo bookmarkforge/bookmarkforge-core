@@ -35,12 +35,28 @@ header {
   text-decoration: none;
 }
 
+header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.theme-toggle {
+  width: 40px; height: 40px; border-radius: var(--radius-item);
+  border: 1px solid var(--divider); background: var(--bg-card);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.theme-toggle:hover { background: var(--accent-hover-fill); }
+.theme-toggle svg { width: 20px; height: 20px; color: var(--text-accent); }
+
 main { padding: 48px 0; }
 
 h1 {
   font-size: 2rem;
   margin: 0 0 8px;
   line-height: 1.2;
+  color: var(--text-primary);
 }
 
 h2 {
@@ -48,6 +64,7 @@ h2 {
   margin: 40px 0 16px;
   padding-bottom: 8px;
   border-bottom: 1px solid var(--divider);
+  color: var(--text-primary);
 }
 
 h3 {
@@ -56,7 +73,7 @@ h3 {
   color: var(--accent-primary);
 }
 
-p, li { color: var(--text-primary); }
+p, li { color: var(--text-secondary); }
 
 p { margin: 0 0 16px; }
 
@@ -77,7 +94,7 @@ hr {
 }
 
 .last-updated {
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 0.95rem;
   margin-bottom: 32px;
 }
@@ -87,7 +104,7 @@ footer {
   background: var(--bg-topbar);
   padding: 24px 0;
   text-align: center;
-  color: var(--text-muted);
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 

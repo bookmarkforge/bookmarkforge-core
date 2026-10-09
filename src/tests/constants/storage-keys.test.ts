@@ -30,6 +30,7 @@ describe("STORAGE_KEYS", () => {
     expect(STORAGE_KEYS.ONBOARDING_COMPLETE).toBe("forge_onboarding_complete");
     expect(STORAGE_KEYS.WELCOME_TOUR_COMPLETE).toBe("forge_welcome_tour_complete");
     expect(STORAGE_KEYS.HAS_MASTER_PASSWORD).toBe("forge_has_master_password");
+    expect(STORAGE_KEYS.PASSWORD_SKIPPED).toBe("forge_password_skipped");
     expect(STORAGE_KEYS.CSP_PROFILE).toBe("forge_csp_profile");
     expect(STORAGE_KEYS.NUCLEAR_AUDIT).toBe("forge_nuclear_audit");
   });

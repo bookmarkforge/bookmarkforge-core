@@ -7,7 +7,7 @@ import {
   shouldShowV5ResidueNotice,
   sampleV5ResidueAfterUnlock,
 } from "../services/security-vault/v5-residue-notice";
-import { safeGet } from "../store/safeStorage";
+import { safeGet, safeSet } from "../store/safeStorage";
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { logger } from "../utils/logger";
 import { SECURITY_CONFIG } from "../constants/config";
@@ -248,6 +248,8 @@ Date Generated: ${formatDate(new Date(), {
       // ADR-052 Fase 2: post-unlock exposure sample. Fire-and-forget —
       // every failure mode is silent; never gates the unlocked state.
       void sampleV5ResidueAfterUnlock();
+      // Clear the password-skipped flag when user successfully unlocks with a password
+      safeSet(STORAGE_KEYS.PASSWORD_SKIPPED, "false");
     } catch (err) {
       // Branch on classified DB error names so the user sees the right
       // message: wrong-password vs storage-inaccessible vs generic.
@@ -343,6 +345,8 @@ Date Generated: ${formatDate(new Date(), {
       // shell instead of leaving the setup boundary in place.
       setForceSetup(false);
       setSetupComplete(true);
+      // Clear the password-skipped flag when the user completes setup
+      safeSet(STORAGE_KEYS.PASSWORD_SKIPPED, "false");
     } catch (err) {
       setError(await resolveDbInitError(err, t("app_vault_setup_error")));
     } finally {
@@ -386,6 +390,8 @@ Date Generated: ${formatDate(new Date(), {
       void sampleV5ResidueAfterUnlock();
       setIsRecovering(false);
       setError("");
+      // Clear the password-skipped flag when user successfully recovers
+      safeSet(STORAGE_KEYS.PASSWORD_SKIPPED, "false");
     } catch (err) {
       setError(await resolveDbInitError(err, t("app_invalidRecoveryPhrase")));
     } finally {

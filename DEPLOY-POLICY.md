@@ -7,8 +7,23 @@ This project **does not use automatic Git deployments** to Vercel.
 ### Configuration
 
 - **Vercel Git Integration**: ❌ Disabled
-- **.vercelignore**: Blocks automatic Git sync
 - **vercel.json**: `git.deploymentEnabled: false`
+- **Vercel dashboard**: Git integration disconnected
+
+### Why `.vercelignore` must not be used for this
+
+`.vercelignore` filters the files uploaded for a **CLI** deploy. Ignoring the
+source tree there (`*`) makes Vercel receive only the whitelisted files, so the
+build container has no `package.json` and fails with:
+
+```
+npm error enoent Could not read package.json: ... /vercel/path0/package.json
+Error: Command "npm run build" exited with 254
+```
+
+`.vercelignore` only excludes build-irrelevant noise (dependencies, test
+artifacts, logs, IDE files); the mechanisms above are what disable Git
+deployments.
 
 ### How to Deploy
 

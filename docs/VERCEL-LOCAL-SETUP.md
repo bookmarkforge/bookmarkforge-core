@@ -89,6 +89,12 @@ Excludes unnecessary files from Vercel deployment:
 - `node_modules`, test artifacts, logs, IDE files
 - Development-only files
 
+**Important:** `.vercelignore` only trims build-irrelevant noise. It must never
+whitelist the source tree (`*`), because Vercel would upload almost nothing and
+the build would fail with `ENOENT ... /vercel/path0/package.json`. Automatic Git
+deploys are disabled via `vercel.json` (`git.deploymentEnabled: false`) and the
+dashboard, not with this file. See `DEPLOY-POLICY.md`.
+
 ## Scripts
 
 ### Available Commands

@@ -2,13 +2,30 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 
 const mockSetForceSetup = vi.fn();
+const mockLock = vi.fn();
 const mockToast = { info: vi.fn() };
 
 vi.mock("../../hooks/useSecurityStore", () => ({
   useSecurityStore: () => ({
     isLocked: false,
     setForceSetup: mockSetForceSetup,
+    lock: mockLock,
   }),
+}));
+
+vi.mock("../../services/SecurityVault", () => ({
+  securityVault: {
+    isLocked: vi.fn(() => false),
+    lock: vi.fn().mockResolvedValue(undefined),
+    onLock: vi.fn(),
+    onUnlock: vi.fn(),
+  },
+}));
+
+vi.mock("../../services/EncryptionService", () => ({
+  encryptionService: {
+    destroy: vi.fn().mockResolvedValue(undefined),
+  },
 }));
 
 // Mutable so a test can change the configured timeout (e.g. an oversized one
@@ -27,6 +44,7 @@ vi.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string, fallback?: string) => fallback || key,
   }),
+  initReactI18next: { type: "3rdParty", init: vi.fn() },
 }));
 
 import { AutoLockManager } from "../../hooks/AutoLockManager";
@@ -36,6 +54,7 @@ describe("AutoLockManager", () => {
     vi.useFakeTimers();
     mockSettings = { autoLockEnabled: true, autoLockTimeout: 300000 };
     mockSetForceSetup.mockClear();
+    mockLock.mockClear();
     mockToast.info.mockClear();
   });
 
@@ -51,14 +70,14 @@ describe("AutoLockManager", () => {
     expect(result.current).toBeNull();
   });
 
-  it("locks vault after timeout", () => {
+  it("locks vault after timeout", async () => {
     renderHook(() => AutoLockManager());
 
-    act(() => {
-      vi.advanceTimersByTime(300000); // 5 minutes
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(300000);
     });
 
-    expect(mockSetForceSetup).toHaveBeenCalledWith(true);
+    expect(mockLock).toHaveBeenCalled();
     expect(mockToast.info).toHaveBeenCalled();
   });
 
@@ -69,7 +88,7 @@ describe("AutoLockManager", () => {
       vi.advanceTimersByTime(299000); // Just under 5 minutes
     });
 
-    expect(mockSetForceSetup).not.toHaveBeenCalled();
+    expect(mockLock).not.toHaveBeenCalled();
   });
 
   it("resets timer on activity", () => {
@@ -91,7 +110,7 @@ describe("AutoLockManager", () => {
     });
 
     // Should not have locked yet (only 4 min since last activity)
-    expect(mockSetForceSetup).not.toHaveBeenCalled();
+    expect(mockLock).not.toHaveBeenCalled();
   });
 
   it("respects cooldown period", () => {
@@ -152,7 +171,7 @@ describe("AutoLockManager", () => {
     clearTimeoutSpy.mockRestore();
   });
 
-  it("responds to keyboard events", () => {
+  it("responds to keyboard events", async () => {
     renderHook(() => AutoLockManager());
 
     act(() => {
@@ -160,39 +179,39 @@ describe("AutoLockManager", () => {
     });
 
     // Timer should be reset
-    act(() => {
-      vi.advanceTimersByTime(300000);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(300000);
     });
 
-    expect(mockSetForceSetup).toHaveBeenCalled();
+    expect(mockLock).toHaveBeenCalled();
   });
 
-  it("responds to click events", () => {
+  it("responds to click events", async () => {
     renderHook(() => AutoLockManager());
 
     act(() => {
       window.dispatchEvent(new MouseEvent("click"));
     });
 
-    act(() => {
-      vi.advanceTimersByTime(300000);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(300000);
     });
 
-    expect(mockSetForceSetup).toHaveBeenCalled();
+    expect(mockLock).toHaveBeenCalled();
   });
 
-  it("responds to scroll events", () => {
+  it("responds to scroll events", async () => {
     renderHook(() => AutoLockManager());
 
     act(() => {
       window.dispatchEvent(new Event("scroll"));
     });
 
-    act(() => {
-      vi.advanceTimersByTime(300000);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(300000);
     });
 
-    expect(mockSetForceSetup).toHaveBeenCalled();
+    expect(mockLock).toHaveBeenCalled();
   });
 
   // ── Absolute deadline: the lock survives throttled/frozen/suspended tabs ──
@@ -208,57 +227,57 @@ describe("AutoLockManager", () => {
     });
   };
 
-  it("locks on visibilitychange when the deadline passed while the tab was hidden", () => {
+  it("locks on visibilitychange when the deadline passed while the tab was hidden", async () => {
     renderHook(() => AutoLockManager());
 
     suspendFor(60 * 60 * 1000); // an hour hidden, not a single timer fired
-    expect(mockSetForceSetup).not.toHaveBeenCalled();
+    expect(mockLock).not.toHaveBeenCalled();
 
-    act(() => {
+    await act(async () => {
       document.dispatchEvent(new Event("visibilitychange"));
     });
 
-    expect(mockSetForceSetup).toHaveBeenCalledWith(true);
+    expect(mockLock).toHaveBeenCalled();
     expect(mockToast.info).toHaveBeenCalledTimes(1);
   });
 
-  it("locks after a bfcache restore (pageshow) with no timer ever firing", () => {
+  it("locks after a bfcache restore (pageshow) with no timer ever firing", async () => {
     renderHook(() => AutoLockManager());
 
     suspendFor(2 * 60 * 60 * 1000); // laptop slept for two hours
 
-    act(() => {
+    await act(async () => {
       window.dispatchEvent(new Event("pageshow"));
     });
 
-    expect(mockSetForceSetup).toHaveBeenCalledWith(true);
+    expect(mockLock).toHaveBeenCalled();
   });
 
-  it("locks on the Page Lifecycle resume event after a freeze", () => {
+  it("locks on the Page Lifecycle resume event after a freeze", async () => {
     renderHook(() => AutoLockManager());
 
     suspendFor(30 * 60 * 1000);
 
-    act(() => {
+    await act(async () => {
       document.dispatchEvent(new Event("resume"));
     });
 
-    expect(mockSetForceSetup).toHaveBeenCalledWith(true);
+    expect(mockLock).toHaveBeenCalled();
   });
 
-  it("locks on window focus regained after the deadline", () => {
+  it("locks on window focus regained after the deadline", async () => {
     renderHook(() => AutoLockManager());
 
     suspendFor(10 * 60 * 1000);
 
-    act(() => {
+    await act(async () => {
       window.dispatchEvent(new Event("focus"));
     });
 
-    expect(mockSetForceSetup).toHaveBeenCalledWith(true);
+    expect(mockLock).toHaveBeenCalled();
   });
 
-  it("does not lock on a resume signal that arrives before the deadline", () => {
+  it("does not lock on a resume signal that arrives before the deadline", async () => {
     renderHook(() => AutoLockManager());
 
     suspendFor(60 * 1000); // one minute of a five-minute timeout
@@ -268,61 +287,61 @@ describe("AutoLockManager", () => {
       window.dispatchEvent(new Event("pageshow"));
     });
 
-    expect(mockSetForceSetup).not.toHaveBeenCalled();
+    expect(mockLock).not.toHaveBeenCalled();
 
     // The remaining four minutes still expire on the original deadline.
-    act(() => {
-      vi.advanceTimersByTime(4 * 60 * 1000);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(4 * 60 * 1000);
     });
 
-    expect(mockSetForceSetup).toHaveBeenCalledWith(true);
+    expect(mockLock).toHaveBeenCalled();
   });
 
-  it("locks exactly once when several resume signals arrive after the deadline", () => {
+  it("locks exactly once when several resume signals arrive after the deadline", async () => {
     renderHook(() => AutoLockManager());
 
     suspendFor(60 * 60 * 1000);
 
-    act(() => {
+    await act(async () => {
       document.dispatchEvent(new Event("visibilitychange"));
       window.dispatchEvent(new Event("focus"));
       window.dispatchEvent(new Event("pageshow"));
       document.dispatchEvent(new Event("resume"));
     });
 
-    expect(mockSetForceSetup).toHaveBeenCalledTimes(1);
+    expect(mockLock).toHaveBeenCalledTimes(1);
     expect(mockToast.info).toHaveBeenCalledTimes(1);
   });
 
-  it("locks on activity that arrives after the deadline instead of re-arming", () => {
+  it("locks on activity that arrives after the deadline instead of re-arming", async () => {
     renderHook(() => AutoLockManager());
 
     suspendFor(6 * 60 * 1000);
 
-    act(() => {
+    await act(async () => {
       window.dispatchEvent(new MouseEvent("mousemove"));
     });
 
-    expect(mockSetForceSetup).toHaveBeenCalledWith(true);
+    expect(mockLock).toHaveBeenCalled();
   });
 
-  it("clamps an oversized timeout and re-arms instead of locking early", () => {
+  it("clamps an oversized timeout and re-arms instead of locking early", async () => {
     // 3e9 ms never fits a setTimeout delay (32-bit overflow), so the armed
     // timer fires long before the deadline. That early fire must re-arm the
     // remainder, never discard the configured timeout by locking at once.
     mockSettings = { autoLockEnabled: true, autoLockTimeout: 3_000_000_000 };
     renderHook(() => AutoLockManager());
 
-    act(() => {
-      vi.advanceTimersByTime(2_147_483_647); // the clamp, not the deadline
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2_147_483_647); // the clamp, not the deadline
     });
 
-    expect(mockSetForceSetup).not.toHaveBeenCalled();
+    expect(mockLock).not.toHaveBeenCalled();
 
-    act(() => {
-      vi.advanceTimersByTime(3_000_000_000 - 2_147_483_647);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(3_000_000_000 - 2_147_483_647);
     });
 
-    expect(mockSetForceSetup).toHaveBeenCalledWith(true);
+    expect(mockLock).toHaveBeenCalled();
   });
 });

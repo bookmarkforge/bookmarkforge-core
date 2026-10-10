@@ -2518,12 +2518,29 @@ describe("WebRTCSyncService", () => {
         close: vi.fn(),
       };
       const selectors: Array<Record<string, unknown>> = [];
+      let callCount = 0;
       const senderCollection = (rows: Array<Record<string, unknown>>) => ({
         find: vi.fn((query: { selector: Record<string, unknown> }) => {
           selectors.push(query.selector);
+          callCount++;
+          // Return empty array on subsequent calls to break the while loop
+          if (callCount > 1) {
+            return {
+              exec: vi.fn().mockResolvedValue([]),
+            };
+          }
+          // Simple mock filtering for the $gte operator on updatedAt
+          let filteredRows = rows;
+          if (query.selector.updatedAt && typeof query.selector.updatedAt === 'object' && '$gte' in query.selector.updatedAt) {
+            const threshold = query.selector.updatedAt.$gte;
+            filteredRows = rows.filter((row) => {
+              const updatedAt = row.updatededAt as string;
+              return updatedAt >= threshold;
+            });
+          }
           return {
             exec: vi.fn().mockResolvedValue(
-              rows.map((row) => ({ toJSON: () => row })),
+              filteredRows.map((row) => ({ toJSON: () => row })),
             ),
           };
         }),

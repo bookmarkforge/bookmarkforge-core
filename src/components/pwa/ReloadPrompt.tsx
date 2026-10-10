@@ -82,11 +82,12 @@ const ReloadPromptContent = ({ compact = false }: ReloadPromptProps) => {
             : t("app_offlineReady", { defaultValue: "App is ready for offline use." })}
           position="bottom"
           withArrow
+          className="max-w-xs"
         >
           <button
             type="button"
             onClick={() => setShowModal(true)}
-            className="p-2 ds-ghost-btn-icon ds-radius-item relative"
+            className="p-2 ds-ghost-btn-icon ds-radius-item relative truncate"
             aria-label={
               effectiveNeedRefresh
                 ? t("app_updateAvailable", { defaultValue: "A new version is available." })

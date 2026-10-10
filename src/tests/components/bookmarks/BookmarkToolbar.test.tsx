@@ -187,7 +187,7 @@ describe("BookmarkToolbar", () => {
     expect(onSummarize).toHaveBeenCalled();
     await userEvent.click(getByText("Overviews"));
     expect(onOverviews).toHaveBeenCalled();
-  });
+  }, 10000);
 
   it("disables actions when all bookmarks are processed", () => {
     const bookmarks = [

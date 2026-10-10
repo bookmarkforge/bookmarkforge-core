@@ -1475,7 +1475,11 @@ describe("syncWithAdapter branch coverage", () => {
     expect(result.success).toBe(false);
     expect(result.errors?.[0]).toContain("Network");
     // verify fetch was called 4 times (1 original + 3 retries)
-    expect(mockFetch).toHaveBeenCalledTimes(4);
+    // Filter to Drive fetches only, as other modules may call fetch during the test
+    const driveCalls = mockFetch.mock.calls.filter((c) =>
+      String(c[0]).includes("googleapis.com"),
+    );
+    expect(driveCalls.length).toBe(4);
   });
 
   it("should compute backoff deterministically when jitter is disabled", () => {

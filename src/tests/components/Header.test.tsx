@@ -33,6 +33,14 @@ vi.mock("../../hooks/usePWAInstall", () => ({
   usePWAInstall: () => mockPWAInstall,
 }));
 
+vi.mock("virtual:pwa-register/react", () => ({
+  useRegisterSW: () => ({
+    offlineReady: [false, vi.fn()],
+    needRefresh: [false, vi.fn()],
+    updateServiceWorker: vi.fn(),
+  }),
+}));
+
 vi.mock("../../components/ThemeToggle", () => ({
   ThemeToggle: () => <div data-testid="theme-toggle" />,
 }));

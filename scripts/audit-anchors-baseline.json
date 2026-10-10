@@ -1,0 +1,134 @@
+{
+  "totalAnchors": 24,
+  "missingCount": 0,
+  "presentCount": 24,
+  "discoveredCount": 0,
+  "updatedAt": "2026-10-08T22:30:43.366Z",
+  "anchors": [
+    {
+      "id": "p0-ice-whitelist",
+      "adr": "ADR-026 / ADR-027",
+      "glob": "src/tests/security/p0-ice-whitelist*.regression.test.*"
+    },
+    {
+      "id": "p1-private-sync",
+      "adr": "ADR-026 / ADR-027",
+      "glob": "src/tests/security/p1-private-sync*.regression.test.*"
+    },
+    {
+      "id": "p2-secure-storage-prod-guard",
+      "adr": "ADR-026 / ADR-027",
+      "glob": "src/tests/security/p2-secure-storage-prod-guard*.regression.test.*"
+    },
+    {
+      "id": "p3-verify-password-private",
+      "adr": "ADR-026 / ADR-027",
+      "glob": "src/tests/security/p3-verify-password-private*.regression.test.*"
+    },
+    {
+      "id": "p3-constant-time-hmac",
+      "adr": "ADR-038",
+      "glob": "src/tests/security/p3-constant-time-hmac*.regression.test.*"
+    },
+    {
+      "id": "p3-sw-integrity-runtime",
+      "adr": "ADR-039",
+      "glob": "src/tests/security/p3-sw-integrity-runtime*.regression.test.*"
+    },
+    {
+      "id": "p4-sync-transfer-watchdog",
+      "adr": "ADR-029 D1",
+      "glob": "src/tests/services/WebRTCSyncService.test.ts"
+    },
+    {
+      "id": "p5-sdp-shape-gate",
+      "adr": "ADR-029 D2",
+      "glob": "src/tests/services/WebRTCSyncService.test.ts"
+    },
+    {
+      "id": "p4-constant-time-cmp",
+      "adr": "ADR-029 D5",
+      "glob": "src/tests/services/WebRTCSyncService.test.ts"
+    },
+    {
+      "id": "security-tier-4-p-regression-suite",
+      "adr": "ADR-030 / security tier 4",
+      "glob": "src/tests/security/p[0-9]-*.regression.test.ts"
+    },
+    {
+      "id": "sync-version-comparator",
+      "adr": "ADR-026 D8 / wave 2",
+      "glob": "src/tests/utils/syncVersion.test.*"
+    },
+    {
+      "id": "sync-version-comparator-source",
+      "adr": "ADR-026 D8 / wave 2",
+      "glob": "src/utils/syncVersion.ts",
+      "kind": "source"
+    },
+    {
+      "id": "secure-storage-source",
+      "adr": "ADR-026 / security-critical source",
+      "glob": "src/services/SecureStorage.ts",
+      "kind": "source"
+    },
+    {
+      "id": "webrtc-sync-source",
+      "adr": "ADR-026 / ADR-029 security-critical source",
+      "glob": "src/services/WebRTCSyncService.ts",
+      "kind": "source"
+    },
+    {
+      "id": "database-core-source",
+      "adr": "ADR-029 D6 / security-critical source",
+      "glob": "src/db/database.core.ts",
+      "kind": "source"
+    },
+    {
+      "id": "vault-salt-registry-source",
+      "adr": "ADR-053 / security-critical source",
+      "glob": "src/services/security-vault/salt-registry.ts",
+      "kind": "source"
+    },
+    {
+      "id": "secure-storage-device-key-lock",
+      "adr": "ADR-026 D2 / wave 2",
+      "glob": "src/tests/services/SecureStorage.device-key-lock.test.*"
+    },
+    {
+      "id": "signaling-server-bounded-resources",
+      "adr": "ADR-027 / wave 2",
+      "glob": "src/tests/sync/signaling-server.test.*"
+    },
+    {
+      "id": "disk-backup-pruning-contract",
+      "adr": "ADR-032 D1 / ADR-037",
+      "glob": "src/tests/services/DiskBackupService.test.ts"
+    },
+    {
+      "id": "wrong-password-no-restore",
+      "adr": "ADR-033 D3",
+      "glob": "src/tests/app/AppContent.test.tsx"
+    },
+    {
+      "id": "manual-export-refreshes-backup-age",
+      "adr": "ADR-034 D1 / ADR-032",
+      "glob": "src/tests/components/settings/StorageSection.test.tsx"
+    },
+    {
+      "id": "p0-vault-kdf-salt",
+      "adr": "ADR-046",
+      "glob": "src/tests/security/p0-vault-kdf-salt*.regression.test.*"
+    },
+    {
+      "id": "p0-vault-rotation-rollback-drill",
+      "adr": "ADR-046 D4",
+      "glob": "src/tests/security/p0-vault-rotation-rollback-drill*.test.ts"
+    },
+    {
+      "id": "v5-sunset-exposure-counter",
+      "adr": "ADR-052",
+      "glob": "src/tests/services/security-vault/kdf-salt-exposure*.test.*"
+    }
+  ]
+}

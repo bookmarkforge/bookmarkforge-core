@@ -1,0 +1,181 @@
+/* ============================================================
+   brand-tokens.css
+   Single source of truth for the BookmarkForge brand tokens used
+   by the static pages (404, offline, privacy-and-terms). Loaded
+   BEFORE each page's own stylesheet so the palette variables and
+   the self-hosted Inter Variable font are available everywhere.
+
+   Mirrors the app's design tokens in src/index.css ("Dark Flat UI
+   with Glow"). DARK is the brand default (matches app);
+   [data-theme="light"] provides the app's light-theme tokens.
+
+   Self-hosted fonts keep the local-first / zero-knowledge promise
+   (no external font CDN, no third-party IP log on page load) and
+   stay inside the strict CSP (font-src 'self').
+   ============================================================ */
+
+/* Inter Variable — latin subset */
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url(/fonts/inter-latin-wght-normal.woff2) format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Inter Variable — latin-ext subset */
+@font-face {
+  font-family: 'Inter Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url(/fonts/inter-latin-ext-wght-normal.woff2) format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
+    U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020,
+    U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ── Brand default: DARK "Dark Flat UI with Glow" (matches app) ─── */
+:root,
+[data-theme="dark"] {
+  /* Backgrounds - improved depth and warmth */
+  --bg-primary: #0a0f1c;
+  --bg-secondary: #141e2e;
+  --bg-card: #1e2a3d;
+  --bg-topbar: #141e2e;
+  --bg-sidebar: #0a0f1c;
+
+  /* Text - improved contrast for readability */
+  --text-primary: #f8fafc;
+  --text-secondary: #e2e8f0;
+  --text-accent: #38bdf8;
+  --text-muted: #a8b4c0;
+  /* Text on accent-colored fills */
+  --text-on-accent: #0a0f1c;
+
+  /* Accent / brand - refined for better visibility */
+  --accent-primary: #0ea5e9;
+  --accent-secondary: #0284c7;
+  --accent-glow: rgba(14, 165, 233, 0.30);
+  --accent-primary-hover: rgba(14, 165, 233, 0.15);
+  --accent-primary-glow: rgba(14, 165, 233, 0.35);
+  --text-on-accent: #ffffff;
+
+  /* States */
+  --state-active-border: #0ea5e9;
+  --state-inactive-border: #2d3b4d;
+  --state-hover-bg: rgba(14, 165, 233, 0.10);
+  --state-selected-bg: #0369a1;
+
+  /* Semantic - improved contrast */
+  --color-success: #22c55e;
+  --color-success-text: #86efac;
+  --color-warning: #f59e0b;
+  --color-warning-text: #fcd34d;
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+  --color-danger-text: #fca5a5;
+
+  /* Soft state */
+  --success-soft: rgba(34, 197, 94, 0.12);
+  --success-soft-border: rgba(34, 197, 94, 0.25);
+  --warning-soft: rgba(245, 158, 11, 0.12);
+  --warning-soft-border: rgba(245, 158, 11, 0.25);
+  --danger-soft: rgba(239, 68, 68, 0.12);
+  --danger-soft-border: rgba(239, 68, 68, 0.25);
+  --danger-soft-deep: rgba(239, 68, 68, 0.20);
+
+  /* Toggle */
+  --toggle-on: #0ea5e9;
+  --toggle-off: #2d3b4d;
+
+  /* Utilities */
+  --divider: #2d3b4d;
+  --input-bg: #141e2e;
+
+  /* Overlays */
+  --modal-overlay: rgba(0, 0, 0, 0.70);
+  --scrim-on-accent: rgba(0, 0, 0, 0.30);
+
+  /* Accent soft variants */
+  --accent-soft: rgba(14, 165, 233, 0.12);
+  --accent-faint: rgba(14, 165, 233, 0.06);
+  --accent-glow-soft: rgba(14, 165, 233, 0.20);
+  --accent-primary-glow-strong: rgba(14, 165, 233, 0.45);
+
+  /* Border radius */
+  --radius-card: 12px;
+  --radius-item: 8px;
+  --radius-button: 6px;
+  --radius-widget: 10px;
+  --radius-toggle: 50px;
+  --radius-input: 20px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+}
+
+/* ── Light theme (matches app) ────────────────────────────────── */
+[data-theme="light"] {
+  --bg-primary: #f1f5f9;
+  --bg-secondary: #e2e8f0;
+  --bg-card: #ffffff;
+  --bg-topbar: #ffffff;
+  --bg-sidebar: #f1f5f9;
+
+  --text-primary: #0f172a;
+  --text-secondary: #1e293b;
+  --text-accent: #0369a1;
+  --text-muted: #475569;
+  /* Text on accent-colored fills */
+  --text-on-accent: #ffffff;
+
+  --accent-primary: #0284c7;
+  --accent-secondary: #0369a1;
+  --accent-glow: rgba(2, 132, 199, 0.25);
+  --accent-primary-hover: rgba(2, 132, 199, 0.12);
+  --accent-primary-glow: rgba(2, 132, 199, 0.30);
+  --text-on-accent: #ffffff;
+
+  --state-active-border: #0284c7;
+  --state-inactive-border: #cbd5e1;
+  --state-hover-bg: rgba(2, 132, 199, 0.08);
+  --state-selected-bg: #bae6fd;
+
+  --color-success: #16a34a;
+  --color-success-text: #4ade80;
+  --color-warning: #d97706;
+  --color-warning-text: #fbbf24;
+  --color-danger: #dc2626;
+  --color-danger-hover: #b91c1c;
+  --color-danger-text: #f87171;
+
+  --success-soft: rgba(22, 163, 74, 0.12);
+  --success-soft-border: rgba(22, 163, 74, 0.25);
+  --warning-soft: rgba(217, 119, 6, 0.12);
+  --warning-soft-border: rgba(217, 119, 6, 0.25);
+  --danger-soft: rgba(220, 38, 38, 0.12);
+  --danger-soft-border: rgba(220, 38, 38, 0.25);
+
+  --toggle-on: #0284c7;
+  --toggle-off: #cbd5e1;
+
+  --divider: #cbd5e1;
+  --input-bg: #ffffff;
+
+  --modal-overlay: rgba(0, 0, 0, 0.50);
+  --scrim-on-accent: rgba(0, 0, 0, 0.20);
+
+  --accent-soft: rgba(2, 132, 199, 0.10);
+  --accent-faint: rgba(2, 132, 199, 0.05);
+  --accent-glow-soft: rgba(2, 132, 199, 0.18);
+  --accent-primary-glow-strong: rgba(2, 132, 199, 0.40);
+
+  /* Border radius & spacing same as dark */
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offline - BookmarkForge</title>
+<meta name="robots" content="noindex, follow">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+<!-- CSS/JS are EXTERNAL (offline.css / offline.js): the strict CSP
+     (style-src 'self', script-src 'self') blocks inline style and script
+     tags. Workbox precaches all of them (globPatterns **/*.{css,js,html}),
+     so the offline page stays styled and functional with no network. -->
+<link rel="stylesheet" href="/brand-tokens.css">
+<link rel="stylesheet" href="/offline.css">
+<script src="/landing.js"></script>
+</head>
+<body>
+<div class="container">
+  <img class="logo" src="/logo-64.png" alt="" width="64" height="64" />
+  <h1>BookmarkForge</h1>
+  <p>You're offline. Your local data is still accessible, but some features may be unavailable until you reconnect.</p>
+  <button id="retry-btn">Reconnect</button>
+  <div id="status" class="status" role="status"></div>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false" style="margin-top: 24px;">
+    <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+    <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+  </button>
+</div>
+<script src="/offline.js" defer></script>
+</body>
+</html>

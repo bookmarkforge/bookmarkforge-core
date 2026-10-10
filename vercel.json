@@ -1,0 +1,49 @@
+{
+  "git": {
+    "deploymentEnabled": false
+  },
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)",
+      "destination": "/$1.html"
+    },
+    {
+      "source": "/(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)/",
+      "destination": "/$1.html"
+    },
+    {
+      "source": "/(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)/:path*",
+      "destination": "/$1.html"
+    },
+    {
+      "source": "/app",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/app/:path*",
+      "destination": "/app.html"
+    },
+    {
+      "source": "/privacy-and-terms",
+      "destination": "/privacy-and-terms.html"
+    },
+    {
+      "source": "/help",
+      "destination": "/help.html"
+    },
+    {
+      "source": "/pocket-alternative",
+      "destination": "/pocket-alternative.html"
+    },
+    {
+      "source": "/offline",
+      "destination": "/offline.html"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/index.html"
+    }
+  ]
+}

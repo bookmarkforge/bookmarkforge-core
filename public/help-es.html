@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Centro de Ayuda — FAQ, Solución de Problemas y SLA de Soporte | BookmarkForge</title>
+  <meta name="description" content="Centro de Ayuda de BookmarkForge: precios lifetime v1, solución de problemas, códigos de error BF-E*, SLA de soporte y cómo copiar un informe de diagnóstico redactado.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://bookmarkforgeapp.com/help">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/help">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="Centro de Ayuda — BookmarkForge">
+  <meta property="og:description" content="FAQ, solución de problemas, códigos de error y SLA de soporte. Aprende cómo funciona lifetime v1 y cómo copiar un informe de diagnóstico.">
+  <meta property="og:url" content="https://bookmarkforgeapp.com/help">
+  <meta property="og:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="es_ES">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Centro de Ayuda — BookmarkForge">
+  <meta name="twitter:description" content="FAQ, solución de problemas, códigos de error y SLA de soporte. Aprende cómo funciona lifetime v1 y cómo copiar un informe de diagnóstico.">
+  <meta name="twitter:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/privacy-and-terms.css">
+  <style>
+    .help-toc { background: var(--bg-card); border: 1px solid var(--divider); border-radius: 12px; padding: 16px 20px; margin: 24px 0; }
+    .help-toc ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 12px 20px; }
+    .help-toc a { font-size: 0.92em; color: var(--text-secondary); }
+    .help-toc a:hover { color: var(--accent-primary); }
+    .badge { display:inline-block; padding:4px 10px; border-radius: 999px; font-size:0.72em; font-weight:700; background: var(--accent-soft); color: var(--accent-primary); border:1px solid var(--accent-primary); }
+    table.sla { width:100%; border-collapse: collapse; margin: 12px 0; }
+    table.sla th, table.sla td { border:1px solid var(--divider); padding:10px 12px; text-align:left; vertical-align:top; }
+    table.sla thead th { background: var(--bg-card); color: var(--accent-primary); font-weight: 600; }
+    table.sla tbody tr:nth-child(even) { background: var(--accent-soft); }
+    code { background: var(--bg-card); padding:2px 6px; border-radius:6px; border:1px solid var(--divider); font-size:0.92em; color: var(--text-primary); }
+    .callout { background: var(--accent-soft); border:1px solid var(--divider); border-left:4px solid var(--accent-primary); padding:14px 16px; border-radius:10px; margin:16px 0; }
+    .callout-warn { background: rgba(245, 158, 11, 0.12); border-left-color:#f59e0b; }
+    .diag-box { background: var(--bg-card); border:1px solid var(--divider); border-radius:10px; padding:14px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:0.85em; white-space:pre-wrap; word-break:break-word; color: var(--text-secondary); }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "@id":"https://bookmarkforgeapp.com/help#faq",
+    "mainEntity":[
+      {"@type":"Question","name":"¿El nivel Gratis es realmente gratis para siempre?","acceptedAnswer":{"@type":"Answer","text":"Sí. Sin prueba, sin suscripción. Gratis incluye 2,500 marcadores, búsqueda de texto completo y semántica, gráfico de conocimiento e IA con tu propia API key."}},
+      {"@type":"Question","name":"¿Qué significa Lifetime de v1?","acceptedAnswer":{"@type":"Answer","text":"Paga una vez, posee v1 para siempre. Todas las correcciones v1.x para siempre más 12 meses de actualizaciones de funciones desde la compra. Actualizaciones de seguridad para siempre. Después del mes 13 mantienes v1 funcionando. v2 y v3 son mayores de pago separados: $89 para nuevos clientes, $35 para propietarios de v1 (60% de descuento)."}},
+      {"@type":"Question","name":"¿Qué pasa si olvido mi contraseña de bóveda?","acceptedAnswer":{"@type":"Answer","text":"No podemos recuperarla. Al crear la bóveda mostramos una frase de recuperación de 24 palabras una vez — escríbela en papel. Sin ella la bóveda es irrecuperable. Ver BF-E101."}}
+    ]
+  }
+  </script>
+  <script src="/landing.js"></script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="/" class="brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" alt="" width="28" height="28" />
+        BookmarkForge
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false" style="margin-left: auto;">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <p class="last-updated"><strong>Última Actualización:</strong> 13 de septiembre de 2026 · <a href="/">← Volver al inicio</a></p>
+
+    <h1>Centro de Ayuda — FAQ, Solución de Problemas y SLA de Soporte | BookmarkForge</h1>
+    <p>Respuestas antes de que necesites enviar un correo. BookmarkForge es <strong>local-first y cifrado</strong> — no podemos ver tu bóveda. 90% de los problemas se resuelven aquí con un diagnóstico que puedes copiar y pegar.</p>
+
+    <nav class="help-toc" aria-label="On this page">
+      <ul>
+        <li><a href="#pricing">Precios y Lifetime v1</a></li>
+        <li><a href="#sla">SLA de Soporte</a></li>
+        <li><a href="#troubleshooting">Solución de Problemas</a></li>
+        <li><a href="#bf-e">Códigos de error BF-E*</a></li>
+        <li><a href="#diagnostics">Copiar informe de diagnóstico</a></li>
+        <li><a href="#contact">Contacto</a></li>
+      </ul>
+    </nav>
+
+    <h2 id="pricing">Precios — Lifetime de v1, sin suscripciones</h2>
+    <p><strong>Modelo:</strong> pagas una vez por <em>BookmarkForge v1</em>. Sin facturación mensual. Comparar: Raindrop Pro $28–38/año, Instapaper $60/año, Readwise $120/año, Capacities $120/año. $79 lifetime es ~2× Raindrop anual — justificado por lifetime + privacidad.</p>
+
+    <table class="sla">
+      <thead><tr><th>Nivel</th><th>Precio</th><th>Qué obtienes</th><th>Disponibilidad</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Gratis</strong></td><td>$0 para siempre</td><td>2,500 marcadores en cualquier dispositivo (cada uno mantiene su propia bóveda), búsqueda inteligente — texto completo + semántica, la función por la que Raindrop cobra anualmente — gráfico de conocimiento, IA con tu propia API key, PWA + extensiones. A 2,500 tu bóveda permanece intacta: lectura, búsqueda y exportación nunca se detienen; solo las nuevas guardas se pausan.</td><td>Ilimitado</td></tr>
+        <tr><td><strong>Pro Lifetime v1</strong> <span class="badge">Early Bird</span></td><td><strong>$59</strong> <span style="text-decoration:line-through;color:var(--text-muted)">$79</span> → $79 regular → $99 después de tracción</td><td>Marcadores ilimitados, 5 dispositivos + sincronización P2P, IA Local (WebLLM/Ollama) + RAG + Agentes Expertos, Flashcards, PDF/OCR, 10+ formatos de exportación, bóveda. <em>Lifetime de v1 · 12 meses de actualizaciones de funciones · Seguridad para siempre · v2 60% de descuento</em></td><td>200 Early Bird</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>Lifetime de v1 — línea legal::</strong> <em>Licencia lifetime para BookmarkForge v1. Incluye todas las actualizaciones v1.x (correcciones de errores + funciones menores) para siempre y 12 meses de actualizaciones de funciones desde la compra. Actualizaciones de seguridad para siempre. Las versiones principales futuras (v2, v3) son productos separados: $89 para nuevos clientes, $35 para propietarios de v1 (60% de descuento). Si no actualizas, mantienes v1 funcional para siempre. Reembolso de 30 días vía Whop.</em>
+      <br>Reembolsos: 30 días vía Whop. Pagos: tarjeta, PayPal, cripto (Whop — nunca vemos datos de tarjeta). <a href="/privacy-and-terms.html#terms">Términos § Licencias</a>
+    </div>
+
+    <div class="callout callout-warn">
+      <strong>Actualización sin suscripción::</strong> cada 12–18 meses lanzamos una versión principal de pago (v2.0 a $89 / $35 para propietarios). Sáltala y v1 sigue funcionando. Ese es el ingreso recurrente sin forzar una suscripción — mismo modelo que Affinity/Sketch/Sublime.
+    </div>
+
+    <h2 id="sla">SLA de Soporte — qué tan rápido respondemos</h2>
+    <p>Mantenedor único. La bóveda está cifrada — <strong>nunca pedimos tu contraseña de bóveda o frase de recuperación de 24 palabras</strong>. El soporte es mejor esfuerzo para Gratis, comprometido para niveles de pago.</p>
+    <table class="sla">
+      <thead><tr><th>Nivel</th><th>Canal</th><th>Respuesta</th><th>Qué hacer primero</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Gratis</strong></td><td>Autoservicio: este Centro de Ayuda + <a href="https://github.com/bookmarkforge/bookmarkforge-2026/discussions">Discusiones de GitHub</a></td><td>Mejor esfuerzo (comunidad)</td><td>Busca el código BF-E* abajo + copia el diagnóstico (<a href="#diagnostics">§Diagnósticos</a>) antes de publicar</td></tr>
+        <tr><td><strong>Pro</strong></td><td>Email <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> (asunto: Pro)</td><td><strong>48h</strong></td><td>Incluye el texto de diagnóstico de <code>Configuración → Ayuda → Copiar diagnóstico</code></td></tr>
+      </tbody>
+    </table>
+    <p style="color:var(--text-muted);font-size:0.92em;">No podemos ver tus marcadores, notas, URLs o prompts. Incluye solo el diagnóstico abajo — contiene conteos y versiones, nunca contenido de la bóveda.</p>
+
+    <h2 id="troubleshooting">Solución de Problemas — la mayoría de problemas en 30 segundos</h2>
+    <h3>Bóveda bloqueada / contraseña incorrecta</h3>
+    <p>Las contraseñas distinguen mayúsculas/minúsculas y espacios en blanco. Si cambiaste el diseño (ej. AZERTY→QWERTY) escribe lentamente. Después de 5 desbloqueos fallidos, espera 1 minuto. Si perdiste la contraseña, usa la <strong>frase de recuperación de 24 palabras</strong> mostrada una vez al crear la bóveda (<a href="#bf-e101">BF-E101</a>). Sin ella la recuperación es imposible por diseño — no tenemos puerta trasera.</p>
+
+    <h3>Almacenamiento del navegador lleno</h3>
+    <p>La cuota de IndexedDB es por navegador (típicamente 60–80% del disco). Cuando está lleno, las guardas fallan con <a href="#bf-e103">BF-E103</a>. Solución: <code>Configuración → Almacenamiento → Compactar base de datos</code> luego <code>Limpiar caché de IA</code>. O <code>Exportar respaldo (.bmf)</code> → <code>Eliminar vectores antiguos</code>. Ver <a href="#diagnostics">% de almacenamiento en diagnóstico</a> — arriba de 80% mostramos un banner.</p>
+
+    <h3>Sincronización P2P no conecta</h3>
+    <p>Ambos dispositivos deben estar <strong>en línea y desbloqueados</strong> al mismo tiempo (WebRTC). Sin relay TURN por defecto — algunas redes corporativas bloquean P2P. Prueba: ambos en el mismo Wi-Fi → emparejar QR → mantener la app abierta. Si <a href="#bf-e105">BF-E105</a>, prueba <code>Ayuda → Diagnósticos → P2P (WebRTC)</code> — si dice no disponible, tu navegador/red bloquea WebRTC.</p>
+
+    <h3>IA Local (WebLLM) no ejecuta</h3>
+    <p>Requiere WebGPU + ~4 GB de RAM libre + licencia Pro. Verifica <code>Ayuda → Diagnósticos → WebGPU/WebLLM</code>. Si <a href="#bf-e106">BF-E106</a>: actualiza Chrome/Edge a lo último, habilita <code>chrome://flags/#enable-unsafe-webgpu</code>, o cambia a Ollama (cualquier modelo que ejecutes localmente — tampoco se necesita API key).</p>
+
+    <h3>Búsqueda o importación lenta</h3>
+    <p>La primera importación construye vectores HNSW — pesado en CPU. Mantén la pestaña abierta. Para 10k+ marcadores usa <code>Configuración → Avanzado → Forzar reprocesar</code>. Si persiste, <code>Copiar diagnóstico</code> muestra <code>vectorIndexLoad</code> y latencia de consulta.</p>
+
+    <h2 id="bf-e">Códigos de error BF-E* — copia el código, salta a la solución</h2>
+    <p>Cada error crítico muestra un código como <code>BF-E101</code>. Haz clic en el código en la app o búscalo aquí.</p>
+    <table class="sla">
+      <thead><tr><th>Código</th><th>Significado</th><th>Solución</th></tr></thead>
+      <tbody>
+        <tr id="bf-e101"><td><strong>BF-E101</strong></td><td>Contraseña de bóveda olvidada / frase semilla requerida</td><td>No podemos recuperar contraseñas. Al crear la bóveda mostramos una <strong>frase de 24 palabras una vez</strong> — escríbela en papel. Úsala para restablecer. Sin frase = bóveda irrecuperable. <a href="#diagnostics">Ningún ticket la recuperará</a>.</td></tr>
+        <tr id="bf-e102"><td><strong>BF-E102</strong></td><td>Bóveda bloqueada / contraseña incorrecta</td><td>Escribe la contraseña exactamente. Después de 5 fallos espera 60s. Si rotaste la contraseña recientemente, prueba la anterior — la rotación mantiene la última sal para reversión.</td></tr>
+        <tr id="bf-e103"><td><strong>BF-E103</strong></td><td>Cuota de almacenamiento excedida</td><td>Ve a <code>Configuración → Almacenamiento</code>: Compactar BD + Limpiar caché de IA. Exporta respaldo .bmf si es necesario. Ver Solución de Problemas §Almacenamiento.</td></tr>
+        <tr id="bf-e104"><td><strong>BF-E104</strong></td><td>IndexedDB bloqueado / navegación privada</td><td>IndexedDB está bloqueado en navegación privada/incógnito o por política de almacenamiento. Usa una ventana normal. Verifica <code>Ayuda → Diagnósticos → Almacenamiento</code>.</td></tr>
+        <tr id="bf-e105"><td><strong>BF-E105</strong></td><td>P2P / WebRTC no disponible</td><td>El navegador o red bloquea WebRTC. Prueba otro navegador/red, deshabilita firewall estricto, o usa Exportar/Importar en lugar de sincronización en vivo.</td></tr>
+        <tr id="bf-e106"><td><strong>BF-E106</strong></td><td>IA Local (WebLLM) no puede ejecutar en este dispositivo</td><td>Necesita WebGPU + shader-f16 + 4 GB RAM + Pro. Actualiza navegador, o usa Ollama / proveedor cloud con tu propia key.</td></tr>
+        <tr id="bf-e107"><td><strong>BF-E107</strong></td><td>Importación de respaldo falló (contraseña incorrecta / archivo corrupto)</td><td>Para <code>.bmf</code> (cifrado) necesitas la contraseña de exportación, no la contraseña de la bóveda. Para JSON, asegúrate que el archivo no esté truncado.</td></tr>
+        <tr id="bf-e201"><td><strong>BF-E201</strong></td><td>Licencia Pro inválida / verificación expirada</td><td>Verifica <code>Configuración → Pro</code>: vuelve a ingresar la key. Las verificaciones offline cachéan; reconecta una vez para re-validar vía Whop.</td></tr>
+        <tr id="bf-e202"><td><strong>BF-E202</strong></td><td>Límite gratis alcanzado (2,500 marcadores)</td><td>Gratis es 2,500. Elimina o actualiza a Pro Lifetime v1 para ilimitado. La exportación siempre está disponible.</td></tr>
+      </tbody>
+    </table>
+    <p>Tip de soporte: hacer clic en <code>Copiar diagnóstico</code> del error copia código + contexto en un clic — pégalo en tu Discusión de GitHub o email.</p>
+
+    <h2 id="diagnostics">Copiar un diagnóstico redactado — qué pegas al soporte</h2>
+    <p>En la app: <code>Configuración → Avanzado</code> (o <code>Ayuda → Diagnósticos</code>) → <strong>Copiar diagnóstico</strong>. Se ve así — sin contenido de bóveda, sin URLs, sin prompts:</p>
+    <div class="diag-box">BookmarkForge v1.0.0 | Chrome 126 | Bóveda: 847 marcadores, 12 docs
+Almacenamiento: 42% (IndexedDB OK) | Último respaldo: hace 2 días (.bmf cifrado)
+P2P: no conectado | Sync: nunca | IA Local: WebLLM no cargado
+Errores: 0 últimos 7d | BF-E: ninguno | Build: a1b2c3d</div>
+    <p>Qué contiene: versión de app, navegador, conteos (marcadores/docs/vectores), % de almacenamiento + cuota, estado P2P, estado IA, conteos de errores & último código BF-E, hash de build. Usa un hash con sal de IP — nunca almacenamos IP. Ver <a href="/privacy-and-terms.html">Privacidad §3/§6</a>.</p>
+    <p>Si no puedes abrir la app: incluye navegador + SO + pasos para reproducir + el código <code>BF-E*</code> en pantalla. Eso es suficiente para 90% de los tickets.</p>
+
+    <h2 id="contact">Contacto</h2>
+    <ul>
+      <li><strong>Soporte de pago:</strong> <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> — incluye diagnóstico + código BF-E. Pro 48h (Lun–Vie).</li>
+      <li><strong>Comunidad (Gratis):</strong> <a href="https://github.com/bookmarkforge/bookmarkforge-2026/discussions">GitHub Discussions</a> — busca <code>BF-E*</code> antes de publicar. Lee <a href="/help#bf-e">Códigos de error</a> + pega diagnóstico.</li>
+      <li><strong>Problemas de seguridad:</strong> email con asunto <code>[SEGURIDAD]</code> — no abras una discusión pública.</li>
+    </ul>
+    <p style="color:var(--text-muted);font-size:0.92em;">BookmarkForge es local-first — el contenido de la bóveda nunca sale de tu dispositivo. El soporte nunca pide tu contraseña de bóveda o frase de recuperación.</p>
+
+    <hr>
+    <p style="color:var(--text-muted);font-size:0.92em;">También ver: <a href="/">Inicio</a> · <a href="/privacy-and-terms.html">Privacidad y Términos</a> · <a href="/privacy-and-terms.html#terms">Licencias (Lifetime v1)</a> · <a href="/#pricing">Precios</a></p>
+  </main>
+
+  <footer>
+    <div class="container">
+      &copy; 2026 BookmarkForge. All rights reserved. · <a href="/privacy-and-terms.html">Privacidad</a> · <a href="/">Inicio</a>
+    </div>
+  </footer>
+</body>
+</html>

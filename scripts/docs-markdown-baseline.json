@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "fileCount": 10,
+  "adrFileCount": 0,
+  "findings": [],
+  "ruleCounts": {
+    "docs-markdown/heading-hierarchy": 0,
+    "docs-markdown/list-style": 0,
+    "docs-markdown/file-metadata": 0,
+    "docs-markdown/adr-template": 0
+  },
+  "perFile": {
+    "docs-markdown/heading-hierarchy": {},
+    "docs-markdown/list-style": {},
+    "docs-markdown/file-metadata": {},
+    "docs-markdown/adr-template": {}
+  },
+  "foldIn": {
+    "rule": "651f5633a1e7d0b017a8f5820bddccb1acdcb831",
+    "parser": "2529261d6d457c3ea1ec7e033a3a87f007482888",
+    "eslint": "9.39.5"
+  }
+}

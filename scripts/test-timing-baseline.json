@@ -1,0 +1,28 @@
+{
+  "schema": "bmf.test-timing/1",
+  "updated": "2026-10-09",
+  "thresholdMs": 10000,
+  "budgetFactor": 2,
+  "files": {
+    "src/tests/components/SupportChat.test.tsx": 17077,
+    "src/tests/sync/signaling-server.test.ts": 13156,
+    "scripts/__tests__/build-ci-secret-scan.test.mjs": 48347,
+    "src/tests/components/WelcomeTour.test.tsx": 14822,
+    "src/tests/services/SecureStorage.test.ts": 5139,
+    "src/tests/components/Omnibar.test.tsx": 8114,
+    "scripts/__tests__/mock-contract-audit.test.mjs": 3965,
+    "src/tests/components/QuickCapture.test.tsx": 6363,
+    "src/tests/services/WebRTCSyncService.test.ts": 2606,
+    "src/tests/components/Chat.test.tsx": 5760,
+    "src/tests/components/DatabaseView.test.tsx": 5667,
+    "src/tests/bookmarks/TagManager.test.tsx": 5519,
+    "src/tests/components/CalendarView.test.tsx": 5065,
+    "scripts/__tests__/monitoring-alerts.test.mjs": 9367,
+    "src/tests/components/bookmarks/useBookmarkSearch.test.ts": 6916,
+    "src/tests/services/ai/AutoProcessorService.test.ts": 5938,
+    "src/tests/services/property-based.test.ts": 6934,
+    "src/tests/sync/csp-collector.test.ts": 7799,
+    "src/tests/components/DocumentManager.test.tsx": 5179,
+    "src/tests/sync/client-events.test.ts": 5234
+  }
+}

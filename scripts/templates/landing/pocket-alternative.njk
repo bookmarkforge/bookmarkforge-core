@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="{{ t.lang }}" dir="{{ t.dir }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef">
+  <meta name="description" content="{{ t.description }}">
+  <title>{{ t.title }}</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: this page is currently English-only; x-default points at the EN landing -->
+  <link rel="canonical" href="{{ t.canonical }}">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="{{ t.ogTitle }}">
+  <meta property="og:description" content="{{ t.ogDescription }}">
+  <meta property="og:url" content="{{ t.canonical }}">
+  <meta property="og:image" content="{{ t.ogImage }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="{{ t.ogLocale }}">
+  {% if t.ogLocaleAlternate %}
+  <meta property="og:locale:alternate" content="{{ t.ogLocaleAlternate }}">
+  {% endif %}
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ t.twitterTitle }}">
+  <meta name="twitter:description" content="{{ t.twitterDescription }}">
+  <meta name="twitter:image" content="{{ t.twitterImage }}">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <link rel="stylesheet" href="/pocket-alternative.css">
+  <!-- Structured data: WebPage / WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "{{ t.structuredData.webpage.url }}#webpage",
+        "url": "{{ t.structuredData.webpage.url }}",
+        "name": "{{ t.structuredData.webpage.name }}",
+        "description": "{{ t.structuredData.webpage.description }}",
+        "inLanguage": "{{ t.lang }}",
+        "isPartOf": { "@id": "https://bookmarkforgeapp.com/#website" },
+        "about": { "@id": "https://bookmarkforgeapp.com/#software" }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://bookmarkforgeapp.com/#website",
+        "url": "https://bookmarkforgeapp.com/",
+        "name": "{{ t.structuredData.website.name }}",
+        "description": "{{ t.structuredData.website.description }}",
+        "inLanguage": "{{ t.lang }}",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://bookmarkforgeapp.com/?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": { "@id": "https://bookmarkforgeapp.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://bookmarkforgeapp.com/#organization",
+        "name": "{{ t.structuredData.organization.name }}",
+        "url": "{{ t.structuredData.organization.url }}",
+        "logo": { "@type": "ImageObject", "url": "https://bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
+        "email": "{{ t.structuredData.organization.email }}"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://bookmarkforgeapp.com/#software",
+        "name": "{{ t.structuredData.software.name }}",
+        "applicationCategory": "{{ t.structuredData.software.category }}",
+        "operatingSystem": "{{ t.structuredData.software.os }}",
+        "url": "{{ t.structuredData.software.url }}",
+        "image": "https://bookmarkforgeapp.com/og-image.png",
+        "description": "{{ t.structuredData.software.description | escapejs }}",
+        "offers": [
+          {%- for offer in t.structuredData.software.offers %}
+          { "@type": "Offer", "name": "{{ offer.name }}", "price": "{{ offer.price }}", "priceCurrency": "{{ offer.currency }}" }{% if not loop.last %},{% endif %}
+          {%- endfor %}
+        ],
+        "featureList": [
+          {%- for feature in t.structuredData.software.featureList %}
+          "{{ feature }}"{% if not loop.last %},{% endif %}
+          {%- endfor %}
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "{{ t.canonical }}#faq",
+        "mainEntity": [
+          {%- for faq in t.structuredData.faq %}
+          {
+            "@type": "Question",
+            "name": "{{ faq.question | escapejs }}",
+            "acceptedAnswer": { "@type": "Answer", "text": "{{ faq.answer | escapejs }}" }
+          }{% if not loop.last %},{% endif %}
+          {%- endfor %}
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">{{ t.skipLink }}</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="{{ t.homeHref }}" class="nav-brand" aria-label="{{ t.navBrandAria }}">
+        <img src="/logo-64.png" width="32" height="32" alt="BookmarkForge logo" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="{{ t.navAriaLabel }}">
+        <a href="{{ t.homeHref }}#features">{{ t.navLinks.features }}</a>
+        <a href="{{ t.homeHref }}#ai">{{ t.navLinks.ai }}</a>
+        <a href="{{ t.homeHref }}#privacy">{{ t.navLinks.privacy }}</a>
+        <a href="{{ t.homeHref }}#pricing">{{ t.navLinks.pricing }}</a>
+        <a href="{{ t.langLink.href }}" hreflang="{{ t.langLink.hreflang }}" lang="{{ t.langLink.lang }}">{{ t.langLink.text }}</a>
+        <a href="/app" class="btn-primary nav-cta">{{ t.navCta }}</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="{{ t.themeToggleAria }}" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="cmp-hero" aria-labelledby="hero-title">
+      <div class="container">
+        <span class="hero-badge">{{ t.hero.badge }}</span>
+        <h1 id="hero-title">{{ t.hero.title | safe }}</h1>
+        <p class="subtitle">{{ t.hero.subtitle }}</p>
+      </div>
+    </section>
+
+    <!-- Why it matters -->
+    <section class="cmp-section alt" aria-labelledby="{{ t.whyMatters.id }}-title">
+      <div class="container">
+        <header class="section-head">
+          <h2 id="{{ t.whyMatters.id }}-title">{{ t.whyMatters.title }}</h2>
+          <p>{{ t.whyMatters.subtitle }}</p>
+        </header>
+        <div class="context-grid">
+          {% for card in t.whyMatters.cards %}
+          <article class="context-card">
+            <h3>{{ card.title }}</h3>
+            <p>{{ card.text }}</p>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison table -->
+    <section class="cmp-section" aria-labelledby="{{ t.comparison.id }}-title">
+      <div class="container">
+        <header class="section-head">
+          <h2 id="{{ t.comparison.id }}-title">{{ t.comparison.title }}</h2>
+          <p>{{ t.comparison.subtitle }}</p>
+        </header>
+
+        <div class="table-wrap" role="region" aria-label="Pocket vs BookmarkForge comparison" tabindex="0">
+          <table class="cmp">
+            <thead>
+              <tr>
+                <th scope="col">{{ t.comparison.headers[0] }}</th>
+                <th scope="col">{{ t.comparison.headers[1] }}</th>
+                <th scope="col">{{ t.comparison.headers[2] }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in t.comparison.rows %}
+              <tr>
+                <td class="feature">{{ row.feature }}</td>
+                <td><span class="{{ row.pocketClass }}">{{ row.pocket }}</span></td>
+                <td><span class="{{ row.bookmarkforgeClass }}">{{ row.bookmarkforge }}</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">{{ t.comparison.note }}</p>
+      </div>
+    </section>
+
+    <!-- Migration guide -->
+    <section class="cmp-section alt" aria-labelledby="{{ t.migration.id }}-title">
+      <div class="container">
+        <header class="section-head">
+          <h2 id="{{ t.migration.id }}-title">{{ t.migration.title }}</h2>
+          <p>{{ t.migration.subtitle }}</p>
+        </header>
+
+        <ol class="steps">
+          {% for step in t.migration.steps %}
+          <li class="step">
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.text | safe }}</p>
+          </li>
+          {% endfor %}
+        </ol>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="cmp-section" aria-labelledby="{{ t.faq.id }}-title">
+      <div class="container">
+        <header class="section-head">
+          <h2 id="{{ t.faq.id }}-title">{{ t.faq.title }}</h2>
+        </header>
+
+        <dl class="faq-list">
+          {% for item in t.faq.items %}
+          <dt>{{ item.question }}</dt>
+          <dd>{{ item.answer }}</dd>
+          {% endfor %}
+        </dl>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cmp-cta" aria-labelledby="{{ t.cta.id }}-title">
+      <div class="container">
+        <h2 id="{{ t.cta.id }}-title">{{ t.cta.title }}</h2>
+        <p>{{ t.cta.text }}</p>
+        <div class="hero-actions" style="justify-content:center;">
+          <a href="/app" class="btn-primary btn-lg">{{ t.cta.ctaPrimary }}</a>
+          <a href="{{ t.homeHref }}#features" class="btn-outline btn-lg">{{ t.cta.ctaSecondary }}</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="{{ t.homeHref }}" class="footer-logo" aria-label="{{ t.navBrandAria }}">
+            <img src="/logo-64.png" width="24" height="24" alt="BookmarkForge logo" />
+            <span>BookmarkForge</span>
+          </a>
+          <p>{{ t.footer.brand }}</p>
+        </div>
+
+        <nav class="footer-links" aria-label="Product">
+          <h4>{{ t.footer.product.title }}</h4>
+          <ul>
+            {% for link in t.footer.product.links %}
+            <li><a href="{{ link.href }}">{{ link.label }}</a></li>
+            {% endfor %}
+          </ul>
+        </nav>
+
+        <nav class="footer-links" aria-label="Resources">
+          <h4>{{ t.footer.resources.title }}</h4>
+          <ul>
+            {% for link in t.footer.resources.links %}
+            <li><a href="{{ link.href }}">{{ link.label }}</a></li>
+            {% endfor %}
+          </ul>
+        </nav>
+
+        <nav class="footer-links" aria-label="Languages">
+          <h4>{{ t.footer.languages.title }}</h4>
+          <ul>
+            {% for link in t.footer.languages.links %}
+            <li><a href="{{ link.href }}" hreflang="{{ link.hreflang }}" lang="{{ link.hreflang }}">{{ link.label }}</a></li>
+            {% endfor %}
+          </ul>
+        </nav>
+
+        <nav class="footer-links" aria-label="Support">
+          <h4>{{ t.footer.support.title }}</h4>
+          <ul>
+            {% for link in t.footer.support.links %}
+            <li><a href="{{ link.href }}">{{ link.label }}</a></li>
+            {% endfor %}
+          </ul>
+        </nav>
+      </div>
+
+      <div class="footer-bottom">
+        <p>{{ t.footer.copyright }}</p>
+        <p class="footer-legal">
+          <a href="{{ t.homeHref }}privacy-and-terms.html">{{ t.footer.legal[0] }}</a> ·
+          <a href="{{ t.homeHref }}privacy-and-terms.html#terms">{{ t.footer.legal[1] }}</a> ·
+          <a href="mailto:bookmarkforge@proton.me">{{ t.footer.legal[2] }}</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Save to BookmarkForge</title>
+  <link rel="stylesheet" href="brand-tokens.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="header">
+    <img class="logo" src="icon-128.png" alt="" width="28" height="28" />
+    <span class="brand">BookmarkForge</span>
+  </header>
+
+  <main>
+    <section class="card" aria-labelledby="cardLabel pageTitle" aria-describedby="pageUrl">
+      <div class="card-label" id="cardLabel">Page to save</div>
+      <div class="card-title" id="pageTitle">Loading...</div>
+      <div class="card-url" id="pageUrl">...</div>
+    </section>
+
+    <button class="btn" id="saveBtn" aria-describedby="saveHint">
+      Save to BookmarkForge
+    </button>
+    <div id="saveHint" class="visually-hidden">
+      Opens BookmarkForge in a new tab to save the current page.
+    </div>
+
+    <div
+      id="status"
+      class="status"
+      hidden
+      role="status"
+      aria-live="polite"
+    ></div>
+
+    <button
+      class="settings-toggle"
+      id="settingsToggle"
+      aria-expanded="false"
+      aria-controls="settingsPanel"
+    >
+      Settings
+    </button>
+
+    <div class="settings-panel" id="settingsPanel" role="region" aria-labelledby="settingsLabel">
+      <div class="settings-label" id="settingsLabel">BookmarkForge URL</div>
+      <div class="settings-current">
+        Current: <span id="currentUrlDisplay">...</span>
+      </div>
+      <input
+        type="url"
+        class="settings-input"
+        id="customUrlInput"
+        placeholder="https://bookmarkforgeapp.com"
+        autocomplete="off"
+        spellcheck="false"
+      >
+      <div class="button-row">
+        <button class="settings-btn" id="saveUrlBtn">Save</button>
+        <button
+          class="settings-btn settings-btn-secondary"
+          id="resetUrlBtn"
+          title="Reset to default"
+        >
+          Reset
+        </button>
+      </div>
+      <div
+        id="urlStatus"
+        class="url-status"
+        hidden
+        role="status"
+        aria-live="polite"
+      ></div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <a href="https://bookmarkforgeapp.com/privacy-and-terms.html" target="_blank" rel="noopener noreferrer">
+      Privacy Policy
+    </a>
+  </footer>
+
+  <script src="capture-url.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+# BookmarkForge production topology. All provider credentials and endpoints
+# are required at deploy time; this file contains no mock services or defaults.
+#
+# The stack is two stateless services. AI requests go from the browser directly
+# to the provider the user configured, so the server never holds an AI key and
+# has no cross-replica session state to share.
+services:
+  web:
+    # Imagen etiquetada por SHA (deploy-prod.mjs) para rollback determinista
+    # sin rebuild: IMAGE_TAG=<sha> docker compose up -d web api.
+    image: bookmarkforge/web:${IMAGE_TAG:?IMAGE_TAG is required}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+      args:
+        VITE_APP_VERSION: ${VITE_APP_VERSION:?VITE_APP_VERSION is required}
+        VITE_DB_NAME: ${VITE_DB_NAME:?VITE_DB_NAME is required}
+        VITE_P2P_SIGNALING_URL: ${VITE_P2P_SIGNALING_URL:?VITE_P2P_SIGNALING_URL is required}
+        VITE_WHOP_CHECKOUT_URL: ${VITE_WHOP_CHECKOUT_URL:?VITE_WHOP_CHECKOUT_URL is required}
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${HTTP_PORT:-8080}:8080"
+    restart: unless-stopped
+    networks: [prod]
+
+  api:
+    # Imagen etiquetada por SHA (deploy-prod.mjs). Ver nota en el servicio web.
+    image: bookmarkforge/api:${IMAGE_TAG:?IMAGE_TAG is required}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 8787
+      TRUST_PROXY: "1"
+      READ_ONLY: "true"
+      # Exact browser-origin allowlist for POST /api/license/entitlement. The
+      # handler rejects any other origin, so this must be set at deploy time.
+      # Provider calls originate in the browser, so no provider credential is
+      # configured on the companion server.
+      AI_SESSION_ORIGINS: ${AI_SESSION_ORIGINS:?AI_SESSION_ORIGINS is required}
+      WHOP_LICENSE_API_URL: ${WHOP_LICENSE_API_URL:?WHOP_LICENSE_API_URL is required}
+      WHOP_API_KEY: ${WHOP_API_KEY:?WHOP_API_KEY is required}
+      LICENSE_SIGNING_PRIVATE_KEY_FILE: /run/secrets/license_signing_key
+      TURN_RELAY_HOST: ${TURN_RELAY_HOST:-}
+      TURN_STATIC_AUTH_SECRET: ${TURN_STATIC_AUTH_SECRET:-}
+      # Client events endpoint (/api/client-events): alert webhook fired on
+      # the >= CRITICAL_CLIENTS threshold, and the admin token for the
+      # diagnostics GET. Empty defaults are fail-safe: no webhook (no leak)
+      # and no diagnostics (503). check-env-config.mjs verifies the webhook
+      # is https-only and required compose vars are present at deploy time.
+      CLIENT_EVENTS_WEBHOOK_URL: ${CLIENT_EVENTS_WEBHOOK_URL:-}
+      CLIENT_EVENTS_ADMIN_TOKEN: ${CLIENT_EVENTS_ADMIN_TOKEN:-}
+      CLIENT_EVENTS_CRITICAL_CLIENTS: ${CLIENT_EVENTS_CRITICAL_CLIENTS:-3}
+      CLIENT_EVENTS_WINDOW_MS: ${CLIENT_EVENTS_WINDOW_MS:-600000}
+      CLIENT_EVENTS_LIMIT: ${CLIENT_EVENTS_LIMIT:-30}
+      CLIENT_EVENTS_MAX: ${CLIENT_EVENTS_MAX:-200}
+      CLIENT_EVENTS_IP_HASH_SALT: ${CLIENT_EVENTS_IP_HASH_SALT:-}
+    secrets: [license_signing_key]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8787/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+    networks:
+      prod:
+        # La imagen web hornea public/nginx.conf con upstream
+        # `bookmarkforge_api:8787`; sin este alias el DNS de compose no
+        # resuelve el nombre y nginx muere con "host not found in upstream".
+        aliases: [bookmarkforge_api]
+
+secrets:
+  license_signing_key:
+    file: ${LICENSE_SIGNING_KEY_FILE:?LICENSE_SIGNING_KEY_FILE is required}
+
+networks:
+  prod:
+    driver: bridge

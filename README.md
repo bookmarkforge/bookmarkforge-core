@@ -396,26 +396,6 @@ See [`AGENTS.md`](AGENTS.md) for detailed engineering conventions and security g
 
 ---
 
-## 🗺️ Roadmap
-
-### v1.0.0 (Current)
-
-- ✅ Local-first encrypted vault
-- ✅ P2P synchronization
-- ✅ AI integration (BYO keys)
-- ✅ Multi-language support (30 languages)
-- ✅ PWA and browser extensions
-
-### Future (Planned)
-
-- 🔄 Desktop apps (Windows, macOS, Linux)
-- 🔄 Mobile apps (iOS, Android)
-- 🔄 Advanced AI features
-- 🔄 Enhanced collaboration tools
-- 🔄 Plugin system
-
----
-
 ## 🌐 Domain & URLs
 
 **Official domain:** [bookmarkforgeapp.com](https://bookmarkforgeapp.com)

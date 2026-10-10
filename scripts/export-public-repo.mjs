@@ -126,7 +126,7 @@ const WORKFLOW_GATE_REPLACEMENTS = [
   "scripts/validate-zap-workflow.mjs",
 ];
 const PUBLIC_WORKFLOW_GUARD = `#!/usr/bin/env node
-// Public-export variant. The staging/DAST/nightly workflows and their deploy
+// Public-export variant. The staging/DAST/nightly/export workflows and their deploy
 // scripts are private-infrastructure files and are intentionally absent from
 // this repository. This gate fails if such a workflow ever appears here
 // directly: infrastructure changes must be made in the private source
@@ -138,7 +138,7 @@ if (!existsSync(dir)) {
   console.error("[public-workflow-guard] FAIL: .github/workflows is missing");
   process.exit(1);
 }
-const infra = readdirSync(dir).filter((f) => /staging|deploy|rollback|dast|nightly|pen-test|drill/i.test(f));
+const infra = readdirSync(dir).filter((f) => /staging|deploy|rollback|dast|nightly|pen-test|drill|open-core-export/i.test(f));
 if (infra.length) {
   console.error("[public-workflow-guard] FAIL: private-infrastructure workflows present in public export:");
   infra.forEach((f) => console.error("- " + f));
@@ -444,13 +444,13 @@ for (const rel of WORKFLOW_GATE_REPLACEMENTS) {
   writeFileSync(join(outDir, rel), PUBLIC_WORKFLOW_GUARD);
 }
 
-// CI de-scope: skip nightly/pen-test/staging workflows whose target scripts were
+// CI de-scope: skip nightly/pen-test/staging/export workflows whose target scripts were
 // excluded; the main CI workflow stays intact.
 const workflowDir = join(outDir, ".github", "workflows");
 if (existsSync(workflowDir)) {
   for (const wf of readdirSync(workflowDir)) {
-    // nightly/pen-test/staging/dast target excluded private infra; drill-* too
-    if (/nightly|pen-test|staging|dast|drill/i.test(wf)) rmSync(join(workflowDir, wf));
+    // nightly/pen-test/staging/dast/export target excluded private infra; drill-* too
+    if (/nightly|pen-test|staging|dast|drill|open-core-export/i.test(wf)) rmSync(join(workflowDir, wf));
   }
 }
 

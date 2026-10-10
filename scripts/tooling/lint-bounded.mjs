@@ -49,6 +49,7 @@ const ROOT_FILES = new Set([
   "playwright.public-relay.config.ts",
   "playwright.smoke.config.ts",
   "playwright.sw-integrity.config.ts",
+  "_open-core-placeholder.js",
 ]);
 const EXCLUDED_DIRS = new Set([
   ".git",

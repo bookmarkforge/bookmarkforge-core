@@ -1,0 +1,89 @@
+# P49: Cache-Control strategy for static assets.
+# Content-hashed assets under /assets/ are immutable (fingerprinted by Vite).
+# HTML may change across deployments; validate with origin before serving.
+#
+# IMPORTANT: Cloudflare Pages applies the MOST SPECIFIC rule's headers only.
+# Each path-specific block MUST repeat all security headers — the catch-all
+# /* block's headers do NOT merge into more-specific rules.
+
+# Immutable content-hashed assets (JS, CSS, fonts, images, workers)
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Opener-Policy: same-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data:; connect-src 'self' https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri https://bookmarkforgeapp.com/csp-report; report-to csp-endpoint
+
+# HTML entry points — always revalidate with origin
+/*.html
+  Cache-Control: no-cache, must-revalidate
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Opener-Policy: same-origin
+  Reporting-Endpoints: csp-endpoint="/csp-report"
+  Report-To: {"group":"csp-endpoint","max_age":86400,"endpoints":[{"url":"https://bookmarkforgeapp.com/csp-report"}]}
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data:; connect-src 'self' https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri https://bookmarkforgeapp.com/csp-report; report-to csp-endpoint
+
+# Locale JSON and manifest — cache briefly, stale-while-revalidate for offline
+/*.json
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Opener-Policy: same-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data:; connect-src 'self' https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri https://bookmarkforgeapp.com/csp-report; report-to csp-endpoint
+
+# Service worker — never cache (Workbox manages its own lifecycle)
+/sw.js
+  Cache-Control: no-cache, must-revalidate
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Opener-Policy: same-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data:; connect-src 'self' https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri https://bookmarkforgeapp.com/csp-report; report-to csp-endpoint
+
+# SECURITY: Only the custom domain `https://license.bookmarkforgeapp.com` is allowed.
+# No workers.dev wildcard — that would match attacker-controlled subdomains.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Opener-Policy: same-origin
+  Reporting-Endpoints: csp-endpoint="/csp-report"
+  Report-To: {"group":"csp-endpoint","max_age":86400,"endpoints":[{"url":"https://bookmarkforgeapp.com/csp-report"}]}
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data:; connect-src 'self' https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri https://bookmarkforgeapp.com/csp-report; report-to csp-endpoint
+
+/payment/*
+  X-Robots-Tag: noindex
+
+/pricing/*
+  X-Robots-Tag: noindex
+
+# Private app — local-first vault, SPA shell only, never indexable
+/app
+  X-Robots-Tag: noindex
+/app/*
+  X-Robots-Tag: noindex
+/capture
+  X-Robots-Tag: noindex
+/capture/*
+  X-Robots-Tag: noindex
+/offline*
+  X-Robots-Tag: noindex

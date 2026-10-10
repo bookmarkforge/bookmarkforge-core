@@ -1,0 +1,512 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop, release/v1.0.0]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Typecheck, lint, tests and security gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CI: true
+      NODE_ENV: test
+    steps:
+      # Full history + tags. The pre-deploy checklist (check:blindeo) asserts
+      # that at least two `prod-` rollback tags exist; the default depth-1
+      # checkout fetches none, so the gate read an empty tag list and failed on
+      # a repository state it could not see.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck:prod
+      - run: npm run lint
+      - run: npm run test:fast
+      # The pre-deploy checklist (check:blindeo → point 11) loads the packaged
+      # extension into a REAL Chromium (scripts/extension-smoke.mjs). The
+      # `playwright` package ships no postinstall download, so `npm ci` leaves
+      # no browser binary behind — every other browser-dependent job installs
+      # it explicitly, and this job must too.
+      - name: Install Chromium for the extension smoke
+        run: npx playwright install --with-deps chromium
+      # Security gate — MANDATORY. Blocks PR merge on any failure.
+      # check:security-internal runs the full internal security pipeline:
+      # secrets scan, workflow validation, HTTP/Compose/runtime config,
+      # Docker context, image pins, repository hygiene, and ZAP baseline.
+      # check:server-log-ip-privacy and check:blindeo are separate
+      # security checks not covered by check:security-internal.
+      - name: Enforce mandatory security gates
+        run: |
+          npm run check:security-internal
+          npm run check:server-log-ip-privacy
+          npm run check:blindeo
+      # Its own named step so boundary erosion (a Core file statically
+      # importing a Pro module outside the pro-access seam, or the export
+      # policy disagreeing with the generators) surfaces as a separate red
+      # check in this fast job instead of being buried in the production
+      # build job's full `npm run check`. The export CI re-runs the import
+      # gate inside the materialized tree; these two run against the source.
+      - name: Enforce the Open Core Pro import boundary
+        run: |
+          npm run check:open-core
+          npm run check:pro-imports
+      # Its own named step so a brand drift (icon or share card deviating
+      # from the canonical logo-512.png artwork) surfaces as a separate red
+      # check in the Actions UI instead of being buried in `npm run check`.
+      - name: Enforce brand logo consistency
+        run: npm run check:brand-logo
+      # Its own named step so SEO contract drift (canonical/hreflang/OG/Twitter
+      # regressions or a noindex leak across landings, legal and aux pages)
+      # surfaces as a separate red check instead of being buried in
+      # `npm run check`.
+      - name: Enforce SEO visibility contract
+        run: npm run check:seo
+      - name: Validate workflow, artifact, HTTP, Compose and repository safety
+        run: npm run check:workflows && npm run check:workflow-artifacts && npm run check:http-config && npm run check:compose-config && npm run check:runtime-config && npm run check:docker-context && npm run check:repository-hygiene
+      # Its own named step so a fabricated E2E selector (one that exists only
+      # in a unit-test mock, like the lazy BlockNoteView stub's
+      # "blocknote-view") surfaces as a separate red check: such a selector
+      # can never fail on production drift, which is exactly the failure
+      # class the unit-side mock audit exposed.
+      - name: Enforce E2E selector reality
+        run: npm run check:e2e-selectors
+      # Its own named step so factual claim drift (a UI string or locale
+      # promising a different password minimum, recovery word count, device
+      # limit, KDF MiB parameter, backup interval or price than the code
+      # enforces) surfaces as a separate red check. This step ships to the
+      # public export unchanged: the open-source tree gets the same gate on
+      # its own CI (the exporter also runs it inside the exported tree before
+      # it can be pushed).
+      - name: Enforce factual claim consistency
+        run: npm run check:claim-drift
+      # Its own named step so license drift (a manual, PDF, landing or legal
+      # page mentioning AGPL/GPL/Apache or any other non-MIT license, or a
+      # broken MIT claim in package.json / LICENSE / OpenAPI) surfaces as a
+      # separate red check instead of being buried in `npm run check`. This
+      # step ships to the public export unchanged: the corpus it scans
+      # (localized manuals, landings, legal pages, API metadata) is included
+      # in the exported tree, so the open-source repo runs the identical gate
+      # on its own CI.
+      - name: Enforce MIT license claims
+        run: npm run check:license-claims
+
+      # Numeric figure claims in the 30 localized manuals must agree with
+      # pricing.ts / license.ts / config.ts / RecoveryService.ts. Same story
+      # as the license gate: parses truth from code, so the exported tree
+      # runs the identical gate on its own CI.
+      - name: Enforce manual figure claims
+        run: npm run check:manual-figures
+
+      # Same truth, wider surface: the 30 localized legal pages, the 6
+      # generated landings and the Pocket alternative page must also agree
+      # with the code-parsed constants (ADR-050).
+      - name: Enforce page figure claims
+        run: npm run check:page-figures
+
+      # Generated landing pages must be in sync with their templates and
+      # translation JSONs — a hand-edited page is a fork of its own source
+      # of truth (ADR-051). Read-only render + diff; fix with build:landings.
+      - name: Enforce landing page freshness
+        run: npm run check:landings-fresh
+
+      # docs/audit.md's status table is a contract of "command → observable".
+      # The chain re-executes the cheap rows (chain/exec/self); this named step
+      # is where the expensive and networked ones are enforced (ADR-064), so a
+      # documented observable that stopped matching the tree fails here instead
+      # of ageing into a false claim.
+      - name: Enforce audit ledger freshness
+        run: npm run check:audit-freshness:deep
+
+  slow-tests:
+    name: Full unit suite (slow profile, timing enforced)
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 30
+    env:
+      CI: true
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      # The slow profile runs every test file outside test:fast's curated
+      # set (~480 files). CI=true turns the timing guard on: a NEW file
+      # at/over 10 s, or a pinned file past 2x its budget, fails this job
+      # naming the culprit (scripts/check-test-timing.mjs).
+      - run: npm run test:slow
+
+  e2e:
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 30
+    env:
+      CI: true
+      NODE_ENV: test
+      VITE_TEST_BUILD: 'true'
+      VITE_FORCE_DEXIE_STORAGE: 'true'
+      VITE_P2P_SIGNALING_URL: ws://127.0.0.1:8787
+      SIGNALING_ADMIN_TOKEN: e2e-admin-token
+      SIGNALING_PORT: '8787'
+      CRISIS_COMPANION_PORT: '8799'
+      # Pro-seeding specs (backup/restore) activate through the real signing
+      # stack: the companion needs the private key matching the committed
+      # public key (empty = 503, specs fail loudly, never silently grant Pro)
+      # — same contract as the nightly's Pro-seeding jobs.
+      LICENSE_SIGNING_PRIVATE_KEY_PKCS8: ${{ secrets.LICENSE_SIGNING_PRIVATE_KEY_PKCS8 }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      # extension.spec.ts loads dist-extension/ (gitignored build output);
+      # without this step it fails asking for `npm run build:extension:custom`.
+      - name: Build browser extension bundle
+        run: npm run build:extension:custom
+      - name: Run Playwright E2E
+        run: npm run e2e -- --config=playwright.config.ts --grep-invert "@nightly|@multiuser|@visual|@performance"
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: playwright-artifacts
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results/
+            playwright-report/
+
+  # Second and third browser engines on the reputational paths (vault create,
+  # 24-word recovery, backup round-trip). Chromium is covered by the job
+  # above; Safari's WebKit drives iOS/macOS where IndexedDB eviction and
+  # storage quotas behave differently — the class of bug users never forgive.
+  # License activation steps skip with a marker: CI runners have no signing
+  # key by design (gitignored).
+  e2e-engines:
+    name: Playwright E2E (firefox + webkit)
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 25
+    env:
+      CI: true
+      NODE_ENV: test
+      # Pro-seeding specs (backup/restore) activate through the real signing
+      # stack: the companion needs the private key matching the committed
+      # public key (empty = 503, specs fail loudly, never silently grant Pro)
+      # — same contract as the nightly's Pro-seeding jobs.
+      LICENSE_SIGNING_PRIVATE_KEY_PKCS8: ${{ secrets.LICENSE_SIGNING_PRIVATE_KEY_PKCS8 }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - name: Install firefox + webkit browsers
+        run: npx playwright install --with-deps firefox webkit
+      - name: Run critical paths on firefox + webkit
+        run: npm run e2e:engines
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: playwright-engines-artifacts
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results/
+            playwright-report/
+
+  # Emulated Android (Pixel 7) on the PRODUCTION build — the only automated
+  # proof that the vault KDF resolves the 64 MiB mobile Argon2id profile (the
+  # dev/test server forces 8 MiB, so this can never run against a dev server)
+  # and that the PWA install surface (manifest, service worker, deferred
+  # install prompt) works on a phone-shaped viewport. The runner builds dist/
+  # itself with the two E2E-only diagnostic flags (VITE_E2E_KDF_DIAGNOSTICS /
+  # VITE_E2E_PREVIEW_DIAGNOSTICS); neither is ever set in real production
+  # builds, so the diagnostic hooks ship nowhere. Ships to the public export
+  # unchanged together with the rest of this workflow.
+  e2e-mobile:
+    name: Playwright E2E (emulated Android — 64 MiB KDF + PWA)
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 20
+    env:
+      CI: true
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright chromium (mobile Chrome IS chromium)
+        run: npx playwright install --with-deps chromium
+      - name: Run mobile battery (prod build + emulated Android)
+        run: npm run e2e:mobile
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: playwright-mobile-artifacts
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results/
+            playwright-report/
+
+  e2e-ai-performance:
+    name: Playwright E2E (mobile AI first inference)
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 20
+    env:
+      CI: true
+      NODE_ENV: test
+      VITE_TEST_BUILD: 'true'
+      VITE_FORCE_DEXIE_STORAGE: 'true'
+      # Pro-seeding specs (AI first boot) activate through the real signing
+      # stack: the companion needs the private key matching the committed
+      # public key (empty = 503, specs fail loudly, never silently grant Pro)
+      # — same contract as the nightly's Pro-seeding jobs.
+      LICENSE_SIGNING_PRIVATE_KEY_PKCS8: ${{ secrets.LICENSE_SIGNING_PRIVATE_KEY_PKCS8 }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run mobile AI orchestration budget
+        run: npm run test:ai-performance:mobile
+      - name: Upload mobile AI performance evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: playwright-ai-performance-artifacts
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results-ai-performance/
+            playwright-report/
+
+  e2e-sync:
+    # The WebRTC replication battery: real two-vault sync (LWW conflict
+    # resolution, privacy/tombstone invariants, interruption recovery) plus the
+    # signaling-server room-security spec. Workers are pinned to 1: each test
+    # drives two full browser contexts through Argon2id vault setup, and
+    # parallel contexts starve the main thread badly enough to flake the
+    # overlay-dismissal harness. Sequential is cheap (~2 min total) and turns
+    # the battery deterministic — the local 3-consecutive-parallel-runs proof
+    # (commit 7b88702) relies on the harness retries, CI keeps the simpler
+    # guarantee.
+    name: Playwright E2E (WebRTC sync battery)
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 20
+    env:
+      CI: true
+      NODE_ENV: test
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run WebRTC sync battery
+        run: npm run e2e:sync
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: playwright-sync-artifacts
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results/
+            playwright-report/
+
+  e2e-public-relay:
+    # A-3: the one deployment shape the main E2E config cannot exercise — the app
+    # built WITHOUT VITE_P2P_SIGNALING_URL, i.e. public-relay mode, where the
+    # room secret must never reach the relay the app falls back to. Booting it
+    # needs its own Vite dev server (Vite bakes the variable at start-up), which
+    # playwright.public-relay.config.ts provides; the spec then stands in for the
+    # public relay and asserts the `join` frame carries the keyed room and no
+    # secret. Kept a separate job so its budget cannot eat the main E2E suite's.
+    name: Playwright E2E (public relay)
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 20
+    env:
+      CI: true
+      NODE_ENV: test
+      VITE_TEST_BUILD: 'true'
+      VITE_FORCE_DEXIE_STORAGE: 'true'
+      # Deliberately empty: this job's whole premise is an app with no
+      # configured signaling server. (The Playwright config forces it empty too,
+      # because Playwright merges `process.env` into the webServer environment.)
+      VITE_P2P_SIGNALING_URL: ''
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Run public-relay E2E
+        run: npm run e2e:relay
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: playwright-public-relay-artifacts
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results/
+            playwright-report/
+
+  visual-baseline-drift:
+    name: Visual baseline drift gate
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 10
+    env:
+      CI: true
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - name: Flag visual baselines regenerated with >10% pixel drift
+        run: node scripts/check-baseline-drift.mjs --base "${BASE_REF}" --max-ratio 0.10
+        env:
+          # Compare the PR head against the merge base so a regenerated
+          # baseline's content shift is reviewed, not silently updated.
+          BASE_REF: ${{ github.base_ref && format('origin/{0}', github.base_ref) || format('HEAD~1') }}
+      - name: Fail on toHaveScreenshot references to untracked baselines
+        # A spec comparing against a baseline the repo has never committed is
+        # the silent-gap failure class that twice broke the nightly text-fit
+        # suite on fresh checkouts (a first run auto-writes the "expected"
+        # image and passes with an unreviewed baseline). The gate statically
+        # derives every name a spec's toHaveScreenshot will compare against
+        # and fails when one is not tracked in git.
+        run: node scripts/check-baseline-gaps.mjs
+
+  build:
+    name: Production build and repository checks
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 30
+    env:
+      CI: true
+      NODE_ENV: production
+      VITE_APP_VERSION: ci
+      VITE_DB_NAME: bookmarkforge_ci
+      VITE_P2P_SIGNALING_URL: wss://signal.bookmarkforgeapp.com
+      VITE_WHOP_CHECKOUT_URL: https://example.invalid/ci-checkout
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      # This job's NODE_ENV=production makes npm omit devDependencies, so a
+      # plain `npm ci` dies in the `prepare` hook (`husky`, exit 127) and the
+      # build would not find vite/typescript either. Keep production for the
+      # build itself, but opt the dev toolchain into the install.
+      - run: npm ci --include=dev
+      - run: npm run build:ci
+      - name: Install Chromium for performance budget
+        run: npx playwright install --with-deps chromium
+      - name: Measure first interaction performance budget
+        run: npm run test:performance
+      - name: Enforce complete performance budget
+        run: npm run check:performance
+      # ADR-062's browser half: the landings are static HTML outside the React
+      # shell, so the render-vs-commit diff (check:landings-fresh) cannot see a
+      # footer link to a route that does not exist, a reference to an asset
+      # that was retired, or a console error. Needs the Chromium installed
+      # above; its own named step so a landing regression is not buried in
+      # `npm run check`.
+      - name: Smoke the landing routes in a real browser
+        run: npm run check:landing-smoke
+      - run: npm run check
+      - run: npm audit --omit=dev --audit-level=high
+      - name: Upload build diagnostics
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: build-diagnostics
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            bundle-report.md
+            ci-chunk-report.json
+            performance-budget-report.json
+            dist/manifest.webmanifest
+            dist/sw.js
+
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48

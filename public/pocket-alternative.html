@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef">
+  <meta name="description" content="Pocket is going away. Smart search is included free — Raindrop charges yearly for it. BookmarkForge Free works on any device with no device cap. Migrate your library locally.">
+  <title>BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: this page is currently English-only; x-default points at the EN landing -->
+  <link rel="canonical" href="https://bookmarkforgeapp.com/pocket-alternative">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide">
+  <meta property="og:description" content="Smart search is included free — Raindrop charges yearly for it. Free has no device cap. Compare Pocket and BookmarkForge, then migrate your library locally.">
+  <meta property="og:url" content="https://bookmarkforgeapp.com/pocket-alternative">
+  <meta property="og:image" content="https://bookmarkforgeapp.com/og-image-pricing.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide">
+  <meta name="twitter:description" content="Compare every feature and migrate your Pocket library to a private, local-first vault in minutes.">
+  <meta name="twitter:image" content="https://bookmarkforgeapp.com/og-image-pricing.png">
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <link rel="stylesheet" href="/pocket-alternative.css">
+  <!-- Structured data: WebPage / WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://bookmarkforgeapp.com/pocket-alternative#webpage",
+        "url": "https://bookmarkforgeapp.com/pocket-alternative",
+        "name": "BookmarkForge vs Pocket — Full Comparison & Migration Guide",
+        "description": "Feature-by-feature comparison between Pocket and BookmarkForge, plus a step-by-step guide to migrate your Pocket library.",
+        "inLanguage": "en",
+        "isPartOf": { "@id": "https://bookmarkforgeapp.com/#website" },
+        "about": { "@id": "https://bookmarkforgeapp.com/#software" }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://bookmarkforgeapp.com/#website",
+        "url": "https://bookmarkforgeapp.com/",
+        "name": "BookmarkForge",
+        "description": "Your private, AI-powered knowledge vault. 100% Local-First. The private Pocket alternative.",
+        "inLanguage": "en",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://bookmarkforgeapp.com/?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": { "@id": "https://bookmarkforgeapp.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://bookmarkforgeapp.com/#organization",
+        "name": "BookmarkForge",
+        "url": "https://bookmarkforgeapp.com/",
+        "logo": { "@type": "ImageObject", "url": "https://bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
+        "email": "bookmarkforge@proton.me"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://bookmarkforgeapp.com/#software",
+        "name": "BookmarkForge",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "url": "https://bookmarkforgeapp.com/",
+        "image": "https://bookmarkforgeapp.com/og-image.png",
+        "description": "Save articles, notes and documents in a private, encrypted, local-first vault. AI search, Notion-style editor, P2P sync. The private Pocket alternative.",
+        "offers": [          { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },          { "@type": "Offer", "name": "Pro Lifetime", "price": "79", "priceCurrency": "USD" }        ],
+        "featureList": [          "Local-first storage",          "End-to-end encryption",          "Works offline",          "AI search",          "Notion-style editor",          "P2P sync",          "Pocket import"        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://bookmarkforgeapp.com/pocket-alternative#faq",
+        "mainEntity": [          {
+            "@type": "Question",
+            "name": "Can I import my Pocket library into BookmarkForge?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes. Export your list from Pocket as an HTML file, then open BookmarkForge\u0027s importer and drop the file in. BookmarkForge detects the Pocket HTML export format automatically and imports every link with its title, tags and original save date. Untagged items are labeled \"pocket-import\" so you can find them instantly." }
+          },          {
+            "@type": "Question",
+            "name": "Does migrating from Pocket require an account?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. BookmarkForge has no accounts. The import runs entirely on your device — nothing is uploaded anywhere." }
+          },          {
+            "@type": "Question",
+            "name": "Will my imported bookmarks be sent to a server?",
+            "acceptedAnswer": { "@type": "Answer", "text": "No. BookmarkForge is local-first: your bookmarks, notes and documents are stored in your browser\u0027s local database and never leave your device unless you explicitly export, share or sync them." }
+          },          {
+            "@type": "Question",
+            "name": "What import formats does BookmarkForge support?",
+            "acceptedAnswer": { "@type": "Answer", "text": "The importer accepts .html (including Pocket and Netscape bookmark exports), .json, .csv, .md and .zip (Markdown/Obsidian vault) files." }
+          },          {
+            "@type": "Question",
+            "name": "Is the comparison table still valid after Pocket closes?",
+            "acceptedAnswer": { "@type": "Answer", "text": "The table reflects Pocket\u0027s feature set as it existed before the shutdown announcement. Once the service is fully retired, any Pocket-specific rows (export, offline app) become unavailable by definition — BookmarkForge\u0027s side of the table is unaffected because it runs locally." }
+          }        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" width="32" height="32" alt="BookmarkForge logo" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="/#features">Features</a>
+        <a href="/#ai">AI</a>
+        <a href="/#privacy">Privacy</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/es/" hreflang="es" lang="es">Español</a>
+        <a href="/app" class="btn-primary nav-cta">Open App</a>
+      </nav>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="cmp-hero" aria-labelledby="hero-title">
+      <div class="container">
+        <span class="hero-badge">Pocket Alternative</span>
+        <h1 id="hero-title">BookmarkForge vs Pocket: <span class="accent-text">The Full Comparison</span></h1>
+        <p class="subtitle">Pocket is going away. Smart search is included free — Raindrop charges yearly for it. BookmarkForge works on any device with no device cap on Free, while your reading list stays encrypted and yours.</p>
+      </div>
+    </section>
+
+    <!-- Why it matters -->
+    <section class="cmp-section alt" aria-labelledby="context-title">
+      <div class="container">
+        <header class="section-head">
+          <h2 id="context-title">Why the Shutdown Changes Everything</h2>
+          <p>Pocket closing is not just a missing app — it is a reminder that a read-it-later service holding your list on someone else's servers can disappear overnight.</p>
+        </header>
+        <div class="context-grid">
+          <article class="context-card">
+            <h3>Your list is gone with it</h3>
+            <p>Years of saved articles, tags and reading history lived on Pocket's servers. When the service goes away, so does that data — unless you export it first.</p>
+          </article>
+          <article class="context-card">
+            <h3>Local-first is the only guarantee</h3>
+            <p>BookmarkForge stores your vault in your browser's local database. No server, no shutdown can take it away. Offline, encrypted, and always yours.</p>
+          </article>
+          <article class="context-card">
+            <h3>You keep the keys</h3>
+            <p>Your data is encrypted with keys derived from your master password (AES-256-GCM + Argon2id). No account, no backdoor, no "forgot password" reset — just your keys.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison table -->
+    <section class="cmp-section" aria-labelledby="table-title">
+      <div class="container">
+        <header class="section-head">
+          <h2 id="table-title">Feature by Feature</h2>
+          <p>Everything Pocket could do — and everything it couldn't — compared honestly.</p>
+        </header>
+
+        <div class="table-wrap" role="region" aria-label="Pocket vs BookmarkForge comparison" tabindex="0">
+          <table class="cmp">
+            <thead>
+              <tr>
+                <th scope="col">Feature</th>
+                <th scope="col">Pocket</th>
+                <th scope="col">BookmarkForge</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="feature">Save articles, videos &amp; PDFs to read later</td>
+                <td><span class="yes">✅ Yes</span></td>
+                <td><span class="yes">✅ Yes</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Read offline</td>
+                <td><span class="partial">⚠️ Cached app only</span></td>
+                <td><span class="yes">✅ Full vault offline</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Tags &amp; folders</td>
+                <td><span class="partial">⚠️ Tags only</span></td>
+                <td><span class="yes">✅ Tags + folders</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Highlights &amp; annotations</td>
+                <td><span class="yes">✅ Yes</span></td>
+                <td><span class="yes">✅ Yes</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Notion-style block notes on any bookmark</td>
+                <td><span class="no">❌ No</span></td>
+                <td><span class="yes">✅ Yes</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Full-text search</td>
+                <td><span class="yes">✅ Yes</span></td>
+                <td><span class="yes">✅ Yes</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Smart search (meaning, not just keywords)</td>
+                <td><span class="no">❌ No</span></td>
+                <td><span class="yes">✅ Included free — Raindrop charges yearly</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Device limit on Free</td>
+                <td><span class="partial">⚠️ Service-dependent</span></td>
+                <td><span class="yes">✅ No device cap</span></td>
+              </tr>
+              <tr>
+                <td class="feature">AI chat over your saved content (RAG)</td>
+                <td><span class="no">❌ No</span></td>
+                <td><span class="yes">✅ Yes — local (WebLLM/Ollama) or cloud</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Knowledge graph of your notes &amp; links</td>
+                <td><span class="no">❌ No</span></td>
+                <td><span class="yes">✅ Yes</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Flashcards with spaced repetition</td>
+                <td><span class="no">❌ No</span></td>
+                <td><span class="yes">✅ Yes</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Runs 100% on your device (local-first)</td>
+                <td><span class="no">❌ No — cloud storage</span></td>
+                <td><span class="yes">✅ Yes — IndexedDB, no server</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Works without an account</td>
+                <td><span class="no">❌ No</span></td>
+                <td><span class="yes">✅ Yes</span></td>
+              </tr>
+              <tr>
+                <td class="feature">End-to-end encryption</td>
+                <td><span class="no">❌ No</span></td>
+                <td><span class="yes">✅ AES-256-GCM + Argon2id</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Sync between devices without a cloud server</td>
+                <td><span class="no">❌ No</span></td>
+                <td><span class="yes">✅ P2P via WebRTC, E2E encrypted</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Zero ads &amp; tracking by default</td>
+                <td><span class="no">❌ No</span></td>
+                <td><span class="yes">✅ Yes — no analytics by default</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Import from Pocket's HTML export</td>
+                <td><span class="partial">⚠️ Export only</span></td>
+                <td><span class="yes">✅ Built-in importer</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Data export</td>
+                <td><span class="partial">⚠️ HTML export</span></td>
+                <td><span class="yes">✅ JSON, Markdown, CSV, PDF, .bmf</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Open source &amp; self-hostable</td>
+                <td><span class="no">❌ No</span></td>
+                <td><span class="yes">✅ MIT (open core)</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Price</td>
+                <td><span class="partial">⚠️ Free tier + Premium</span></td>
+                <td><span class="yes">✅ Free forever + one-time $79 Pro</span></td>
+              </tr>
+              <tr>
+                <td class="feature">Status</td>
+                <td><span class="no">❌ Shutting down</span></td>
+                <td><span class="yes">✅ Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note">Feature set reflects Pocket's capabilities before the shutdown announcement. BookmarkForge's side runs locally, so it stays accurate regardless of what happens to any cloud service.</p>
+      </div>
+    </section>
+
+    <!-- Migration guide -->
+    <section class="cmp-section alt" aria-labelledby="migration-title">
+      <div class="container">
+        <header class="section-head">
+          <h2 id="migration-title">Migrate from Pocket in 4 Steps</h2>
+          <p>Your library — titles, tags and original save dates — moves to your device in minutes. Smart search is included free (Raindrop charges yearly for it), and Free works on any device with no device cap. No account, no upload.</p>
+        </header>
+
+        <ol class="steps">
+          <li class="step">
+            <h3>Export your Pocket library</h3>
+            <p>If you still have access to Pocket, use its export feature to download the HTML file of your saved list. The file contains every link with its title, tags and original save date.</p>
+          </li>
+          <li class="step">
+            <h3>Open the BookmarkForge importer</h3>
+            <p>Open <a href="/app">BookmarkForge</a> (no account needed) and click <strong>Open Importer</strong> on the dashboard. The importer accepts <code>.html</code>, <code>.json</code>, <code>.csv</code>, <code>.md</code> and <code>.zip</code> files.</p>
+          </li>
+          <li class="step">
+            <h3>Drop in your Pocket file</h3>
+            <p>BookmarkForge detects the Pocket HTML export format automatically and imports every link with its title, tags and original date. Items without tags are labeled <code>pocket-import</code> so you can find them instantly.</p>
+          </li>
+          <li class="step">
+            <h3>Make it yours</h3>
+            <p>Search by meaning for free — Raindrop charges yearly for that feature. Free has no device cap, so use BookmarkForge on any device, then add notes, folders and private peer-to-peer sync. Everything stays encrypted on your devices.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="cmp-section" aria-labelledby="faq-title">
+      <div class="container">
+        <header class="section-head">
+          <h2 id="faq-title">Frequently Asked Questions</h2>
+        </header>
+
+        <dl class="faq-list">
+          <dt>Can I import my Pocket library into BookmarkForge?</dt>
+          <dd>Yes. Export your list from Pocket as an HTML file, then open BookmarkForge's importer and drop the file in. BookmarkForge detects the Pocket HTML export format automatically and imports every link with its title, tags and original save date. Untagged items are labeled "pocket-import" so you can find them instantly.</dd>
+          <dt>Does migrating from Pocket require an account?</dt>
+          <dd>No. BookmarkForge has no accounts. The import runs entirely on your device — nothing is uploaded anywhere.</dd>
+          <dt>Will my imported bookmarks be sent to a server?</dt>
+          <dd>No. BookmarkForge is local-first: your bookmarks, notes and documents are stored in your browser's local database and never leave your device unless you explicitly export, share or sync them.</dd>
+          <dt>What import formats does BookmarkForge support?</dt>
+          <dd>The importer accepts .html (including Pocket and Netscape bookmark exports), .json, .csv, .md and .zip (Markdown/Obsidian vault) files.</dd>
+          <dt>Is the comparison table still valid after Pocket closes?</dt>
+          <dd>The table reflects Pocket's feature set as it existed before the shutdown announcement. Once the service is fully retired, any Pocket-specific rows (export, offline app) become unavailable by definition — BookmarkForge's side of the table is unaffected because it runs locally.</dd>
+        </dl>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cmp-cta" aria-labelledby="cta-title">
+      <div class="container">
+        <h2 id="cta-title">Own Your Reading List Again</h2>
+        <p>Smart search included free — Raindrop charges yearly for it. No device cap on Free. No account. Your data never leaves your device.</p>
+        <div class="hero-actions" style="justify-content:center;">
+          <a href="/app" class="btn-primary btn-lg">Start Saving Free</a>
+          <a href="/#features" class="btn-outline btn-lg">Explore Features</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="footer-logo" aria-label="BookmarkForge home">
+            <img src="/logo-64.png" width="24" height="24" alt="BookmarkForge logo" />
+            <span>BookmarkForge</span>
+          </a>
+          <p>Your private, AI-powered knowledge vault. 100% Local-First.</p>
+        </div>
+
+        <nav class="footer-links" aria-label="Product">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#ai">AI Capabilities</a></li>
+            <li><a href="/#privacy">Privacy</a></li>
+            <li><a href="/#pricing">Pricing</a></li>
+            <li><a href="/app">Launch App</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-links" aria-label="Resources">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="/pocket-alternative">Pocket Comparison</a></li>
+            <li><a href="/privacy-and-terms.html">Privacy &amp; Terms</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-links" aria-label="Languages">
+          <h4>Languages</h4>
+          <ul>
+            <li><a href="/" hreflang="en" lang="en">English</a></li>
+            <li><a href="/es/" hreflang="es" lang="es">Español</a></li>
+            <li><a href="/fr/" hreflang="fr" lang="fr">Français</a></li>
+            <li><a href="/de/" hreflang="de" lang="de">Deutsch</a></li>
+            <li><a href="/pt/" hreflang="pt" lang="pt">Português</a></li>
+            <li><a href="/it/" hreflang="it" lang="it">Italiano</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-links" aria-label="Support">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="mailto:bookmarkforge@proton.me">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 BookmarkForge. All rights reserved.</p>
+        <p class="footer-legal">
+          <a href="/privacy-and-terms.html">Privacy Policy</a> ·
+          <a href="/privacy-and-terms.html#terms">Terms of Service</a> ·
+          <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

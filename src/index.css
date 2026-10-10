@@ -1,0 +1,1627 @@
+/* stylelint-disable at-rule-no-unknown -- Tailwind CSS v4 directives */
+/* Inter font family is self-hosted via @fontsource-variable/inter (see src/main.tsx).
+   Self-hosting preserves the local-first / zero-knowledge architecture — no
+   external font CDN, no third-party IP log on every page load. */
+
+/* ============================================================
+   DESIGN SYSTEM RULES (hard bans — do NOT violate)
+   ============================================================
+   - No bg-gradient-to-(br|tl|tr|bl|r|l|t|b) — gradients violate brand.
+     Use flat fills from the semantic palette instead.
+   - No backdrop-blur-(sm|md|lg|xl) — glassmorphism is forbidden.
+     Use opaque/solid surfaces.
+   - No raw Tailwind text-Nxl font-NNN tracking-tight headings.
+     Use .ds-h1 / .ds-h2 / .ds-h3 / .ds-label-section classes.
+   - No literal #10b981 / #ef4444 / #f59e0b in JSX style attributes.
+     Use var(--color-success / --color-danger / --color-warning).
+   ============================================================ */
+
+@import "tailwindcss";
+
+/* First-paint boot surface. Loaded directly by index.html so the shell has
+   stable geometry before the module graph and React mount complete. */
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@variant dark (&:where(.dark, .dark *));
+
+@custom-variant sidebar-collapsed (&:where(.sidebar-collapsed, .sidebar-collapsed *));
+
+@theme {
+  --font-sans: "Inter Variable", "Inter", system-ui, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Georgia", serif;
+  --font-display: "Inter Variable", "Inter", system-ui, sans-serif;
+
+  /* Background tokens */
+  --color-app-bg: var(--bg-primary);
+  --color-app-bg-secondary: var(--bg-secondary);
+  --color-app-card: var(--bg-card);
+  --color-app-topbar: var(--bg-topbar);
+  --color-app-sidebar: var(--bg-sidebar);
+  --color-app-border: var(--divider);
+  --color-input-bg: var(--input-bg);
+
+  /* Text tokens */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-accent: var(--text-accent);
+  --color-text-muted: var(--text-muted);
+
+  /* Accent tokens */
+  --color-primary: var(--accent-primary);
+  --color-primary-dark: var(--accent-secondary);
+
+  --color-accent: var(--accent-primary);
+  --color-accent-dark: var(--accent-secondary);
+
+  /* Semantic tokens */
+  --color-success: #10b981;
+  --color-success-text: #065f46;
+  --badge-success-bg: #cdeede;
+  --badge-success-border: #9bd9bf;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  /* State tokens */
+  --color-state-hover: var(--state-hover-bg);
+  --color-state-selected: var(--state-selected-bg);
+  --color-state-active-border: var(--state-active-border);
+  --color-state-inactive-border: var(--state-inactive-border);
+
+  /* Toggle */
+  --color-toggle-on: var(--toggle-on);
+  --color-toggle-off: var(--toggle-off);
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Radii */
+  --radius-card: 12px;
+  --radius-item: 8px;
+  --radius-button: 6px;
+  --radius-widget: 10px;
+  --radius-toggle: 50px;
+  --radius-input: 20px;
+}
+
+/* ============================================================
+   DESIGN SYSTEM TOKENS
+   Dark Flat UI with Glow Effects
+   ============================================================ */
+:root,
+.dark {
+  /* FONDOS */
+  --bg-primary: #0f1c2e;
+  --bg-secondary: #162235;
+  --bg-card: #1a2a40;
+  --bg-topbar: #111e30;
+  --bg-sidebar: #0f1c2e;
+
+  /* ACENTO / BRAND */
+  --accent-primary: #00aeef;
+  --accent-secondary: #0d7fc4;
+  --accent-glow: rgba(0, 174, 239, 0.25);
+  --accent-primary-hover: rgba(0, 174, 239, 0.12);
+  --accent-primary-glow: rgba(0, 174, 239, 0.30);
+
+  /* TEXTO */
+  --text-primary: #e8f0f8;
+  --text-secondary: #b9d4ea;  /* WCAG AA: ~9:1 on --bg-sidebar (#0f172a) / --bg-card */
+  --text-accent: #38bdf8;
+  --text-muted: #b9d4ea;  /* WCAG AA: ~9:1 against dark surfaces */
+  --text-on-accent: #0f1c2e;  /* dark text on #00aeef = 5.75:1 WCAG AA */
+
+  /* ESTADOS */
+  --state-active-border: #00aeef;
+  --state-inactive-border: #1e3352;
+  --state-hover-bg: rgba(0, 174, 239, 0.08);
+  --state-selected-bg: #1565a8;
+
+  /* SEMANTIC STATE — recoverable palette for ok/warn/danger across UI.
+     Use these (not raw hex) so brand restyle is one-file-edit. */
+  /* Text-safe success tone: readable on dark surfaces. */
+  --color-success: #34d399;
+  --success-text-foreground: #6ee7b7;
+  /* Explicit dark-theme badge tokens keep WebKit from falling back to the
+     light @theme defaults during first-paint style resolution. */
+  --color-success-text: #6ee7b7;
+  --badge-success-bg: rgba(16, 185, 129, 0.16);
+  --badge-success-border: rgba(110, 231, 183, 0.35);
+  --color-warning: #f59e0b;
+  --color-warning-text: #fbbf24;  /* lighter amber for text on dark surfaces: ~8:1 on --bg-card */
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+  --color-danger-text: #ff6b6b;  /* lighter red: 4.65:1 against --bg-card (#1a2a40) — WCAG AA */
+
+  /* SOFT STATE — translucent counterparts for tint fills. */
+  --success-soft: rgba(16, 185, 129, 0.10);
+  --success-soft-border: rgba(16, 185, 129, 0.20);
+  --warning-soft: rgba(245, 158, 11, 0.10);
+  --warning-soft-border: rgba(245, 158, 11, 0.20);
+  --danger-soft: rgba(239, 68, 68, 0.10);
+  --danger-soft-border: rgba(239, 68, 68, 0.20);
+  /* DANGER SOFT DEEP — variant for dark-mode hover on destructive actions.
+     Replaces the broken `bg-[var(--danger-soft)]0/10` pattern (Tailwind v4
+     does not support opacity modifiers on arbitrary CSS variable values). */
+  --danger-soft-deep: rgba(239, 68, 68, 0.18);
+
+  /* TOGGLE / SWITCH */
+  --toggle-on: #00aeef;
+  --toggle-off: #2e4560;
+
+  /* UTILIDADES */
+  --divider: #1e3352;
+  --input-bg: #162235;
+
+  /* OVERLAYS & SCRIMS — modal backdrops and dark pills on accent fills. */
+  --modal-overlay: rgba(0, 0, 0, 0.60);
+  --scrim-on-accent: rgba(0, 0, 0, 0.25);
+
+  /* ACCENT SOFT — soft cyan fill consolidated across components.
+     (--accent-glow at 0.25 is reused for the slightly-stronger border.) */
+  --accent-soft: rgba(0, 174, 239, 0.10);
+  /* ACCENT FAINT — very subtle cyan tint (5%) for hero callouts and AI summary
+     cards. Use --accent-soft for chips/badges (10%) and --accent-glow for
+     borders (25%). */
+  --accent-faint: rgba(0, 174, 239, 0.05);
+  /* ACCENT GLOW SOFT — mid-strength cyan glow (focus halos, active card ring).
+     Sits between --accent-glow (0.25, borders) and --accent-primary-glow
+     (0.30, CTA shadow). */
+  --accent-glow-soft: rgba(0, 174, 239, 0.20);
+  /* ACCENT PRIMARY GLOW STRONG — strongest CTA hover shadow, hero glows. */
+  --accent-primary-glow-strong: rgba(0, 174, 239, 0.40);
+  /* QUOTA FILL — categorical color for the AI slice in StorageSection quota bar.
+     Not a brand token; intentionally distinct (indigo) to differentiate from
+     document/vector slices. */
+  --quota-fill: #6366f1;
+
+  /* BORDER RADIUS */
+  --radius-card: 12px;
+  --radius-item: 8px;
+  --radius-button: 6px;
+  --radius-widget: 10px;
+  --radius-toggle: 50px;
+  --radius-input: 20px;
+
+  /* SPACING */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* SKELETON */
+  --skeleton-base: #374151;
+  --skeleton-shine: #4b5563;
+}
+
+/* ============================================================
+   Motion tokens (shared easing curves — single source of truth)
+   ============================================================ */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* ============================================================
+   Light Theme
+   ============================================================ */
+.light {
+  --bg-primary: #f4f7fb;
+  --bg-secondary: #e8edf4;
+  --bg-card: #ffffff;
+  --bg-topbar: #ffffff;
+  --bg-sidebar: #f4f7fb;
+
+  --accent-primary: #0095d6;
+  --accent-secondary: #0a6fa8;
+  --accent-glow: rgba(0, 149, 214, 0.20);
+  --accent-primary-hover: rgba(0, 149, 214, 0.10);
+  --accent-primary-glow: rgba(0, 149, 214, 0.25);
+
+  --text-primary: #1a2a3e;
+  --text-secondary: #3d5673;
+  --text-accent: #00609a;
+  --text-muted: #4a6178;
+  --text-on-accent: #04121f;
+
+  --state-active-border: #0095d6;
+  --state-inactive-border: #d0dae8;
+  --state-hover-bg: rgba(0, 149, 214, 0.06);
+  --state-selected-bg: #cce6f5;
+
+  /* Text-safe success tone: 5.4:1 against white card surfaces. */
+  --color-success: #047857;
+  --success-text-foreground: #047857;
+  --color-success-text: #065f46;
+  --badge-success-bg: #cdeede;
+  --badge-success-border: #9bd9bf;
+  --color-warning: #d98c0a;
+  --color-warning-text: #92400e;  /* dark amber: 7.0:1 on white, 4.6:1 on the 10% tint */
+  --color-danger: #dc2626;
+  --color-danger-hover: #b91c1c;
+  --color-danger-text: #dc2626;
+
+  --success-soft: rgba(14, 163, 126, 0.08);
+  --success-soft-border: rgba(14, 163, 126, 0.18);
+  --badge-success-border: #9bd9bf;
+  --warning-soft: rgba(217, 140, 10, 0.08);
+  --warning-soft-border: rgba(217, 140, 10, 0.18);
+  --danger-soft: rgba(220, 38, 38, 0.08);
+  --danger-soft-border: rgba(220, 38, 38, 0.18);
+  --danger-soft-deep: rgba(220, 38, 38, 0.15);
+
+  --toggle-on: #0095d6;
+  --toggle-off: #c0cce0;
+
+  --divider: #d0dae8;
+  --input-bg: #ffffff;
+
+  --modal-overlay: rgba(0, 0, 0, 0.40);
+  --scrim-on-accent: rgba(0, 0, 0, 0.15);
+
+  --accent-soft: rgba(0, 149, 214, 0.08);
+  --accent-faint: rgba(0, 149, 214, 0.04);
+  --accent-glow-soft: rgba(0, 149, 214, 0.15);
+  --accent-primary-glow-strong: rgba(0, 149, 214, 0.35);
+  --quota-fill: #6366f1;
+
+  /* SKELETON */
+  --skeleton-base: #e5e7eb;
+  --skeleton-shine: #f3f4f6;
+}
+
+/* ============================================================
+   View Transitions (P49)
+   Enables animated cross-fades on same-origin navigations.
+   Chromium-based browsers render a GPU-composited cross-fade;
+   other engines ignore the at-rule safely.
+   ============================================================ */
+@view-transition {
+  navigation: auto;
+}
+
+@layer base {
+  body {
+    @apply antialiased;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Inter Variable', 'Inter', system-ui, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text-primary);
+  }
+
+  /* Baseline typography scale per design system spec.
+     Auto-applies to <h1>/<h2>/<h3> elements throughout the app
+     without needing manual class names. Explicit .ds-h1/h2/h3 still
+     available for non-standard elements. */
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  h2 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+@layer utilities {
+  /* Typography utilities — apply via .ds-hN class on any element.
+     Wrapped in @layer utilities for proper Tailwind v4 cascade ordering
+     (e.g., ds-card-title can still win vs arbitrary text-* utilities). */
+  .ds-h1 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .ds-h2 {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .ds-h3 {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .ds-display-numeric {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .ds-label-section {
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .ds-card-title {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--text-primary);
+  }
+  .ds-card-subtitle {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--text-secondary);
+  }
+  .ds-list-item-text {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  .ds-btn-text {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .ds-body-secondary {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  /* Tab button — flat side-nav style for IN-SHELL tabs (e.g. SupportChat
+     chat/faq/diagnostics rendered inside a panel). Active variant applied
+     via .is-active. Distinguished from .sidebar-item below: this one fills
+     a card-sized panel; .sidebar-item is for top-level app navigation. */
+  .ds-side-tab {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: var(--radius-item);
+    color: var(--text-secondary);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease,
+      box-shadow 0.2s ease;
+    width: 100%;
+  }
+  .ds-side-tab:hover {
+    background: var(--state-hover-bg);
+  }
+  .ds-side-tab.is-active {
+    background: var(--bg-card);
+    color: var(--accent-primary);
+    font-weight: 700;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.30);
+  }
+}
+
+  /* Buttons - flat outline style */
+  button, .btn {
+    border-radius: var(--radius-button) !important;
+  }
+
+  /* Inputs - capsule style for search */
+  input, textarea, select {
+    border-radius: var(--radius-button) !important;
+  }
+
+  /* Cards and modals */
+  .card, .modal, [class*="Modal"], [class*="Dialog"] {
+    border-radius: var(--radius-card) !important;
+  }
+
+  /* Safe Area Utilities */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+}
+
+/* ============================================================
+   Theme utility classes
+   ============================================================ */
+.text-theme { color: var(--text-primary); }
+
+
+/* ============================================================
+   Design System utility classes — use these instead of inline
+   `style={{}}` for common patterns.
+   ============================================================ */
+
+/* Modal / dialog overlay backdrop — includes common fullscreen positioning.
+   Usage: <div className="ds-modal-overlay"><div className="ds-card ...">...</div></div> */
+.ds-modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--modal-overlay);
+}
+
+/* Card surface (replaces repeated borderRadius + background + border inline styles) */
+.ds-card {
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+  border: 1px solid var(--divider);
+  color: var(--text-primary);
+}
+
+/* Topbar / header surface */
+.ds-topbar {
+  background: var(--bg-topbar);
+  border-bottom: 1px solid var(--divider);
+}
+
+/* Standard input field (search, text, password) */
+.ds-input {
+  border-radius: var(--radius-button);
+  background: var(--input-bg);
+  border: 1px solid var(--state-inactive-border);
+  color: var(--text-primary);
+  outline: none;
+}
+.ds-input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 2px var(--accent-glow-soft);
+}
+
+/* Note: use existing .btn-primary / .btn-primary-outline classes for buttons.
+   See Design System tokens documentation for full component compositors. */
+
+/* Text color shortcuts (avoid style={{ color: 'var(--text-*)' }}) */
+.ds-text-primary { color: var(--text-primary); }
+.ds-text-secondary { color: var(--text-secondary); }
+.ds-text-muted { color: var(--text-muted); }
+.ds-text-accent { color: var(--text-accent); }
+.ds-text-success { color: var(--success-text-foreground, var(--color-success)); }
+.ds-text-warning {
+  /* Prefer the dedicated text token: the raw --color-warning is tuned for
+     background tints (10% fills) and fails 4.5:1 on white in light mode.
+     Falls back to --color-warning when a theme omits the text variant. */
+  color: var(--color-warning-text, var(--color-warning));
+}
+.ds-text-danger { color: var(--color-danger-text); }
+
+/* Background shortcuts (avoid style={{ background: 'var(--bg-*)' }}) */
+.ds-bg-secondary { background: var(--bg-secondary); }
+.ds-bg-card { background: var(--bg-card); }
+.ds-bg-card-plain { background: var(--bg-card); border-radius: var(--radius-card); }
+.ds-surface-secondary { background: var(--bg-secondary); border-radius: var(--radius-card); }
+
+/* Accent filled surface (non-button uses of accent bg + white text) */
+.ds-accent-filled { background: var(--accent-primary); color: var(--text-on-accent); }
+.ds-accent-filled:hover { background: var(--accent-secondary); }
+
+/* Divider border utility */
+.ds-divider-b { border-bottom: 1px solid var(--divider); }
+.ds-divider-t { border-top: 1px solid var(--divider); }
+.ds-border-divider { border: 1px solid var(--divider); }
+.ds-border-inactive { border: 1px solid var(--state-inactive-border); }
+.ds-radius-btn { border-radius: var(--radius-button); }
+.ds-radius-card { border-radius: var(--radius-card); }
+.ds-shadow-glow { box-shadow: 0 4px 14px var(--accent-glow); }
+.ds-shadow-card { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); }
+.ds-shadow-sidebar { box-shadow: -2px 0 12px rgba(0, 0, 0, 0.30); }
+.ds-accent-hover-card { background: var(--accent-primary-hover); border: 1px solid var(--accent-glow); color: var(--text-secondary); }
+.ds-accent-hover-border { background: var(--accent-primary-hover); border: 1px solid var(--accent-glow); }
+
+/* ============================================================
+   Component Patterns
+   ============================================================ */
+
+/* TARJETA INACTIVA */
+.card-inactive {
+  background: var(--bg-card);
+  border: 1px solid var(--state-inactive-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-lg);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* ACTIVE CARD — 2px cyan border + outer glow ring */
+
+
+@layer utilities {
+  /* Subtle active state — glow only without outer ring */
+  .ds-active-soft {
+    border: 1px solid var(--accent-primary);
+    box-shadow: 0 0 20px var(--accent-glow-soft);
+  }
+}
+
+/* HOVER DE TARJETA */
+.card-hover:hover {
+  background: var(--state-hover-bg);
+  cursor: pointer;
+}
+
+/* PRIMARY BUTTON filled (flat, prominent CTA) */
+.btn-primary {
+  background: var(--accent-primary);
+  border: 1px solid var(--accent-primary);
+  color: var(--text-on-accent);
+  border-radius: var(--radius-button);
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px var(--accent-primary-glow);
+}
+
+.btn-primary:hover {
+  background: var(--accent-secondary);
+  box-shadow: 0 6px 18px var(--accent-primary-glow-strong);
+  color: var(--text-on-accent);
+}
+
+/* PRIMARY BUTTON outline style (subtle secondary CTA) */
+.btn-primary-outline {
+  background: transparent;
+  border: 1px solid var(--accent-primary);
+  color: var(--text-accent);
+  border-radius: var(--radius-button);
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.btn-primary-outline:hover {
+  background: var(--accent-primary-hover);
+}
+
+/* ITEM DE LISTA SELECCIONADO */
+.list-item-selected {
+  background: var(--state-selected-bg);
+  border-radius: var(--radius-item);
+  color: var(--text-primary);
+}
+
+/* ITEM DE LISTA HOVER */
+.list-item-hover:hover {
+  background: var(--state-hover-bg);
+  border-radius: var(--radius-item);
+}
+
+/* INPUT / BUSCADOR */
+.input-search {
+  background: var(--input-bg);
+  border: 1px solid var(--state-inactive-border);
+  border-radius: var(--radius-input);
+  color: var(--text-primary);
+  padding: 8px 16px;
+}
+
+/* INPUT FOCUS */
+.input-search:focus {
+  border-color: var(--accent-primary);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-glow-soft);
+}
+
+/* TOGGLE ON */
+.toggle-on {
+  background: var(--toggle-on);
+}
+
+/* TOGGLE OFF */
+.toggle-off {
+  background: var(--toggle-off);
+}
+
+/* ============================================================
+   Markdown Body
+   ============================================================ */
+.markdown-body h1 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+  font-family: 'Inter Variable', 'Inter', system-ui, sans-serif;
+}
+
+.markdown-body h2 {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 12px;
+  margin-top: 24px;
+  color: var(--text-primary);
+  font-family: 'Inter Variable', 'Inter', system-ui, sans-serif;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  margin-top: 16px;
+  color: var(--text-secondary);
+  font-family: 'Inter Variable', 'Inter', system-ui, sans-serif;
+}
+
+.markdown-body p {
+  margin-bottom: 16px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.markdown-body ul {
+  list-style: disc;
+  padding-inline-start: 24px;
+  margin-bottom: 16px;
+  color: var(--text-secondary);
+}
+
+.markdown-body ol {
+  list-style: decimal;
+  padding-inline-start: 24px;
+  margin-bottom: 16px;
+  color: var(--text-secondary);
+}
+
+.markdown-body a {
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+.markdown-body a:hover {
+  text-decoration: underline;
+}
+
+.markdown-body strong {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.markdown-body code {
+  background: var(--bg-secondary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-secondary);
+}
+
+.markdown-body pre {
+  background: var(--bg-secondary);
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  border: 1px solid var(--divider);
+}
+
+.markdown-body pre code {
+  background: transparent;
+  padding: 0;
+  color: var(--text-secondary);
+}
+
+.markdown-body blockquote {
+  border-inline-start: 4px solid var(--accent-primary);
+  padding-inline-start: 16px;
+  font-style: italic;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+/* ============================================================
+   Ghost Button Hover Utilities
+   ============================================================ */
+
+/* Ghost button: transparent background, text color changes on hover */
+.ds-ghost-btn {
+  color: var(--text-secondary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.ds-ghost-btn:hover {
+  background: var(--state-hover-bg);
+  color: var(--text-primary);
+}
+
+/* Ghost button for icon-only elements */
+.ds-ghost-btn-icon {
+  color: var(--text-secondary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.ds-ghost-btn-icon:hover {
+  background: var(--state-hover-bg);
+  color: var(--text-primary);
+}
+
+/* Ghost button that only changes background */
+.ds-ghost-bg {
+  transition: background 0.2s ease;
+}
+
+.ds-ghost-bg:hover {
+  background: var(--state-hover-bg);
+}
+
+/* Ghost button bg - accent (cyan) */
+.ds-ghost-bg-accent {
+  transition: background 0.2s ease;
+}
+
+.ds-ghost-bg-accent:hover {
+  background: var(--accent-primary-hover);
+}
+
+/* Ghost button bg - success (green) */
+.ds-ghost-bg-success {
+  transition: background 0.2s ease;
+}
+
+.ds-ghost-bg-success:hover {
+  background: rgba(16, 185, 129, 0.12);
+}
+
+/* React Flow attribution link — default gray (#999 on white) fails WCAG AA.
+   Use the secondary text token, which is 5.7:1 on light surfaces and ~9:1
+   on dark surfaces. The attribution is the <a> itself (carries the
+   `.react-flow__attribution` class), hence the `a.react-flow__attribution`
+   selector — a descendant selector here matched nothing. */
+a.react-flow__attribution,
+.react-flow__attribution a {
+  /* `!important` required: React Flow's own stylesheet ships
+     `.react-flow__attribution a { color: rgb(153,153,153) }` loaded after
+     ours with equal specificity — without !important it wins (2.63:1). */
+  color: var(--text-secondary) !important;
+}
+
+/* Ghost button bg - danger (red) */
+.ds-ghost-bg-danger {
+  transition: background 0.2s ease;
+}
+
+.ds-ghost-bg-danger:hover {
+  background: rgba(239, 68, 68, 0.12);
+}
+
+/* ============================================================
+   Sidebar Navigation
+   Top-level app-shell nav (sidebar rail / topbar). Distinct from
+   .ds-side-tab, which is for in-panel in-shell tabs.
+   ============================================================ */
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  border-radius: var(--radius-item);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--text-primary);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-inline-start-color 0.2s ease;
+}
+.sidebar-item:hover {
+  background: var(--state-hover-bg);
+  color: var(--text-primary);
+}
+/* Set the label color directly as well as on the button. Some Tailwind/Mantine
+   utility combinations can otherwise win the inherited color in Chromium,
+   which made the settings navigation fail axe color-contrast in light mode. */
+.sidebar-item > span {
+  color: var(--text-primary);
+}
+.sidebar-item.active {
+  /* Use the opaque selected surface rather than the low-contrast hover tint.
+     This keeps active navigation labels readable in both themes (WCAG AA)
+     while preserving the cyan active-edge affordance. */
+  background: var(--state-selected-bg);
+  border-inline-start: 2px solid var(--accent-primary);
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Sidebar collapsed state */
+.sidebar-collapsed .sidebar-item {
+  justify-content: center;
+  padding: 8px;
+}
+.sidebar-collapsed .sidebar-item span {
+  display: none;
+}
+
+/* ============================================================
+   Scrollbar
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-muted) transparent;
+}
+
+/* Selection color */
+::selection {
+  background: var(--accent-glow);
+  color: inherit;
+}
+
+/* ============================================================
+   Focus Management
+   ============================================================ */
+*:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Skip-link pattern — WCAG 2.4.1 Bypass Blocks. axe-core-compliant technique:
+   the element stays in the accessibility tree AND inside the layout flow at
+   1x1 visual size (so axe doesn't flag region/content-outside-landmark), but
+   is clipped to invisibility until :focus. On :focus the size expands + the
+   clip collapses, the element becomes visible at the top-left of the viewport,
+   styled with the brand accent fill + on-accent text (5.75:1 WCAG AA).
+   The previous `left:-9999px` technique (widely used) causes axe-core to
+   flag BOTH region AND skip-link rules because the element is geometrically
+   outside the viewport flow. The 1px-clipped technique is the axe-preferred
+   canonical pattern. */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+  background: var(--accent-primary);
+  color: var(--text-on-accent);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  border-radius: 0 0 var(--radius-button) 0;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  width: auto;
+  height: auto;
+  padding: 12px 16px;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  outline: 3px solid var(--accent-primary);
+  outline-offset: 2px;
+  /* toolbar-style top-left pill: 5.75:1 WCAG AA on dark + light themes */
+  box-shadow: 0 4px 14px var(--accent-primary-glow);
+}
+
+/* Visually hidden — keeps content in the accessibility tree but out of the
+   visual flow. Use for screen-reader-only labels (e.g. inside icon buttons). */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ============================================================
+   Transitions
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
+}
+
+/* GPU-accelerated transitions */
+.transition-gpu {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* ============================================================
+   Content Visibility
+   ============================================================ */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Prevent text overflow */
+.truncate-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.truncate-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* ============================================================
+   Loading Skeleton
+   ============================================================ */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  background: var(--accent-soft);
+  border-radius: 4px;
+}
+
+/* Gradient shimmer variant — used by OptimizedSkeleton */
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-base) 25%,
+    var(--skeleton-shine) 50%,
+    var(--skeleton-base) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: 4px;
+}
+
+
+
+.skeleton-text {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  background: var(--accent-soft);
+  border-radius: 4px;
+  height: 16px;
+  margin-bottom: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer {
+    animation: none;
+    background: var(--skeleton-base);
+  }
+}
+
+/* ============================================================
+   Empty States
+   ============================================================ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+/* Tooltip CSS classes removed: zero consumers — tooltips use Mantine <Tooltip>. */
+
+/* ============================================================
+   Offline Indicator
+   ============================================================ */
+.offline-indicator {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--accent-primary);
+  color: var(--text-on-accent);
+  padding: 12px 20px;
+  border-radius: var(--radius-item);
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  animation: slideIn 0.3s ease-out;
+}
+
+/* WCAG AA: dark text on #10b981 → 4.6:1 (was white-on-green ≈ 2.5:1, FAIL). */
+.offline-indicator.online {
+  background: var(--color-success);
+  color: var(--text-on-accent);
+}
+
+/* WCAG AA: dark text on #ef4444 → 5.5:1 (was white-on-red ≈ 4.05:1, borderline). */
+.offline-indicator.offline {
+  background: var(--color-danger);
+  color: var(--text-on-accent);
+}
+
+@keyframes slideIn {
+  from { transform: translateY(100px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.offline-indicator.hidden {
+  display: none;
+}
+
+/* ============================================================
+   ARIA Live Regions for Accessibility
+   ============================================================ */
+[aria-live="polite"],
+[aria-live="assertive"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+[aria-live="assertive"] {
+  z-index: 10001;
+}
+
+/* ============================================================
+   Virtual Items
+   ============================================================ */
+.virtual-item {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 64px;
+}
+
+/* ============================================================
+   Reduced Motion Support
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .skeleton {
+    animation: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ============================================================
+   High Contrast Mode Support
+   ============================================================ */
+@media (prefers-contrast: high) {
+  body {
+    background: #000000 !important;
+    color: #ffffff !important;
+  }
+  .light body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .card-inactive,
+  .bento-item {
+    background: #1a1a1a !important;
+    border: 2px solid #ffffff !important;
+  }
+
+  button, a {
+    border: 2px solid #ffffff !important;
+  }
+}
+
+/* ============================================================
+   RTL Support
+   ============================================================ */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+  /* .ds-border-r / .ds-border-l use border-inline-* so they flip automatically */
+}
+
+/* RTL icon flip — directional icons mirror horizontally in RTL languages.
+   Add .rtl-flip to ChevronRight, ChevronLeft, ArrowRight, ArrowLeft,
+   and any other directional icon that should point the opposite way in RTL.
+   Uses the standalone `scale` property (not `transform`) to avoid overriding
+   Tailwind hover animations (e.g. group-hover:translate-x-*). */
+[dir="rtl"] .rtl-flip {
+  scale: -1 1;
+}
+
+/* ============================================================
+   Icon Tint & Badge Composers
+   Reusable utility classes consuming --color-*, --accent-soft,
+   --success-soft etc. Use these instead of inline rgba literals.
+   ============================================================ */
+
+/* Tinted glyph backgrounds — NavCard / collaborative seat icons.
+   Each .ds-icon-tint-* sets background, color, and a 1px solid state-tinted border
+   (matching soft-border tier) so consumers don't need a separate border class. */
+.ds-icon-tint-cyan { background: var(--accent-soft); color: var(--accent-primary); border: 1px solid var(--accent-glow); }
+.ds-icon-tint-success { background: var(--success-soft); color: var(--color-success); border: 1px solid var(--success-soft-border); }
+.ds-icon-tint-warning { background: var(--warning-soft); color: var(--color-warning); border: 1px solid var(--warning-soft-border); }
+.ds-icon-tint-danger { background: var(--danger-soft); color: var(--color-danger); border: 1px solid var(--danger-soft-border); }
+.ds-icon-tint-neutral { background: rgba(255, 255, 255, 0.06); color: var(--text-secondary); border: 1px solid var(--divider); }
+
+/* Pills — translucent state badges with pill radius. */
+.ds-badge-success {
+  background: var(--badge-success-bg);
+  color: var(--color-success-text);
+  border: 1px solid var(--success-soft-border);
+  border-radius: var(--radius-toggle);
+}
+.ds-badge-danger {
+  background: var(--danger-soft);
+  color: var(--color-danger);
+  border: 1px solid var(--danger-soft-border);
+  border-radius: var(--radius-toggle);
+}
+/* Solid warning call-out CTA (e.g. SecurityConfirmation unlock flow).
+   WCAG AA: dark text on #f59e0b → 4.6:1 (was white-on-amber ≈ 2.1:1, FAIL). */
+.ds-badge-warning-solid {
+  background: var(--color-warning);
+  color: var(--text-on-accent);
+  border-radius: var(--radius-button);
+}
+
+/* Soft warning pill (10% fill + 20% border) — mirror of .ds-badge-success/-danger
+   for symmetric state badge system. Used by InsightCards amber/rust alerts. */
+.ds-badge-warning-soft {
+  background: var(--warning-soft);
+  color: var(--color-warning);
+  border: 1px solid var(--warning-soft-border);
+  border-radius: var(--radius-toggle);
+}
+
+/* ============================================================
+   Bento Item
+   ============================================================ */
+.bento-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--state-inactive-border);
+  background: var(--bg-card);
+  padding: var(--space-lg);
+  min-height: 120px;
+  contain: layout style;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.bento-item:hover {
+  background: var(--state-hover-bg);
+  border-color: var(--accent-glow);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 24px var(--accent-primary-hover);
+}
+
+/* ============================================================
+   Sidebar Rail
+   ============================================================ */
+.sidebar-rail {
+  background: var(--bg-sidebar);
+  border-inline-end: 1px solid var(--divider);
+}
+
+/* ============================================================
+   Navigation Styles
+   ============================================================ */
+.nav-gray {
+  background: var(--bg-topbar);
+  border-bottom: 1px solid var(--divider);
+}
+
+.nav-item {
+  color: var(--text-secondary);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  border-radius: var(--radius-button);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.nav-item:hover {
+  background: var(--state-hover-bg);
+  color: var(--accent-primary);
+}
+
+.nav-item.active {
+  background: var(--accent-primary);
+  color: var(--text-on-accent);
+  font-weight: 600;
+  box-shadow: 0 2px 8px var(--accent-primary-glow);
+}
+
+/* ============================================================
+   Animations
+   ============================================================ */
+/* Vault gate screens (SecurityManager / SecurityConfirmation) animate
+   with these CSS classes instead of motion/react, so the first-painted
+   pre-unlock screens never statically import the 910 kB ui-runtime
+   vendor chunk (lucide + motion + mantine). The global
+   prefers-reduced-motion block above neutralizes them for users who
+   ask for reduced motion. */
+@keyframes security-card-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.security-card-in {
+  animation: security-card-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes security-error-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.security-error-in {
+  animation: security-error-in 0.2s ease-out;
+}
+
+@keyframes lux-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.lux-reveal {
+  animation: lux-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes lux-pulse {
+  0% { box-shadow: 0 0 0 0 var(--accent-primary-glow-strong); }
+  70% { box-shadow: 0 0 0 10px rgba(0, 174, 239, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 174, 239, 0); }
+}
+
+.lux-pulse {
+  animation: lux-pulse 2s infinite;
+}
+
+/* =============================================
+   Utility classes - Migrated inline style patterns
+   ============================================= */
+
+/* Chat bubble styles */
+.ds-chat-bubble-user {
+  border-radius: var(--radius-card);
+  background: var(--accent-primary);
+  color: var(--text-on-accent);
+  padding: 8px 12px;
+}
+.ds-chat-bubble-assistant {
+  border-radius: var(--radius-card);
+  background: var(--bg-secondary);
+  border: 1px solid var(--divider);
+  color: var(--text-primary);
+  padding: 8px 12px;
+}
+
+/* Card styles */
+.ds-card-soft {
+  border-radius: var(--radius-card);
+  background: var(--bg-secondary);
+  border: 1px solid var(--divider);
+  color: var(--text-primary);
+  padding: 16px;
+}
+.ds-card-accent {
+  border-radius: var(--radius-button);
+  background: var(--accent-soft);
+  color: var(--text-accent);
+  padding: 8px 16px;
+}
+
+/* Text sizes */
+.ds-text-tiny {
+  font-size: 11px;
+  line-height: 1.3;
+}
+.ds-text-small {
+  font-size: 12px;
+  line-height: 1.4;
+}
+.ds-text-caption {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+/* Animation delays - typing indicator */
+.ds-anim-delay-1 { animation-delay: 0ms; }
+.ds-anim-delay-2 { animation-delay: 150ms; }
+.ds-anim-delay-3 { animation-delay: 300ms; }
+.ds-anim-delay-4 { animation-delay: 450ms; }
+
+/* Search bar */
+.ds-search-bar {
+  border-radius: var(--radius-input);
+  background: var(--bg-secondary);
+  border: 1px solid var(--divider);
+  padding: 8px 12px;
+  color: var(--text-primary);
+}
+.ds-search-bar-active {
+  border-radius: var(--radius-input);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-glow);
+  padding: 8px 12px;
+  color: var(--text-primary);
+}
+
+/* Spacing */
+.ds-gap-xs { gap: 4px; }
+.ds-gap-sm { gap: 8px; }
+.ds-gap-md { gap: 12px; }
+.ds-gap-lg { gap: 16px; }
+.ds-gap-xl { gap: 24px; }
+
+/* Paddings */
+.ds-p-sm { padding: 8px; }
+.ds-p-md { padding: 12px; }
+.ds-p-lg { padding: 16px; }
+.ds-p-xl { padding: 24px; }
+.ds-px-sm { padding-left: 8px; padding-right: 8px; }
+.ds-px-md { padding-left: 12px; padding-right: 12px; }
+
+/* Margins */
+.ds-mt-sm { margin-top: 8px; }
+.ds-mt-md { margin-top: 12px; }
+.ds-mt-lg { margin-top: 16px; }
+.ds-mb-sm { margin-bottom: 8px; }
+.ds-mb-md { margin-bottom: 12px; }
+
+/* Colors */
+.ds-bg-muted { background: var(--text-muted); }
+
+/* Borders */
+.ds-border-accent { border: 1px solid var(--accent-glow); }
+.ds-radius-button { border-radius: var(--radius-button); }
+.ds-radius-input { border-radius: var(--radius-input); }
+
+/* Specific component utility */
+.ds-typing-dot {
+  background: var(--text-muted);
+  border-radius: 50%;
+  width: 6px;
+  height: 6px;
+  display: inline-block;
+  animation: ds-pulse 1.4s infinite ease-in-out;
+}
+.ds-typing-dot:nth-child(1) { animation-delay: 0ms; }
+.ds-typing-dot:nth-child(2) { animation-delay: 150ms; }
+.ds-typing-dot:nth-child(3) { animation-delay: 300ms; }
+
+@keyframes ds-pulse {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+/* Additional utility classes for chat and components */
+.ds-badge-source {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: var(--radius-button);
+  background: var(--accent-soft);
+  color: var(--accent-primary);
+  border: 1px solid var(--accent-glow);
+  font-size: 10px;
+  font-weight: 700;
+}
+.ds-bg-accent-soft {
+  background: var(--accent-soft);
+}
+.ds-bg-accent-primary {
+  background: var(--accent-primary);
+}
+.ds-bg-card-soft {
+  background: var(--bg-secondary);
+}
+.ds-bg-card-soft-primary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+.ds-border-soft {
+  border: 1px solid var(--divider);
+}
+.ds-border-accent-soft {
+  border: 1px solid var(--accent-glow);
+}
+/* .ds-text-white — historically `color: white;`, redefined to use
+   --text-on-accent for WCAG AA contrast on cyan accent backgrounds
+   (#00aeef dark / #0095d6 light). The legacy `color: white` style caused
+   serious axe color-contrast violations wherever .ds-text-white was
+   paired with the brand cyan (2.52:1; AA needs 4.5:1).
+   
+   If a component genuinely needs hard-white text (e.g. on a dark backdrop
+   that's NOT the brand accent), set color explicitly with `style={{ color:
+   'white' }}` or define a one-off class — do not rely on this shortcut.
+   
+   Token reference: --text-on-accent = #0f1c2e (dark) / #04121f (light)
+   yields 5.75:1 WCAG AA on the cyan accent. */
+/* `.ds-text-on-accent` — dark text on brand accent backgrounds.
+   Use with `.ds-bg-accent-primary` (or `.btn-primary`) to guarantee
+   WCAG-AA 5.75:1 contrast in both dark and light themes. Replaces the
+   anti-pattern of pairing raw Tailwind `text-white` with the cyan accent
+   (axe-core flagged this 2.52:1). */
+.ds-text-on-accent {
+  color: var(--text-on-accent);
+}
+
+/* `.ds-text-white` — REMOVED. Historically `color: white;`, it caused
+   serious axe color-contrast violations wherever paired with the brand cyan
+   #00aeef (2.52:1; AA needs 4.5:1). After redefinition it resolved to
+   dark text via .ds-text-on-accent, but the literal "white" name misled
+   contributors applying it on dark surfaces (invisible text). All three
+   JSX callers (BookmarkToolbar, TagFilterBar, Chat) have migrated to
+   .ds-text-on-accent; the rule is therefore deleted. Reinstate only via
+   intentional one-off mapping paired with explicit dark-bg context. */
+
+/* `.btn-primary` (defined earlier in this file) already encodes the WCAG-AA
+   pair (var(--accent-primary) bg + var(--text-on-accent) color + accent
+   shadow). Don't introduce a third CTA class for the same composition;
+   reuse .btn-primary. */
+/* Used design system utilities — kept. */
+.ds-bg-success { background: var(--color-success); }
+.ds-bg-success-soft { background: var(--success-soft); }
+.ds-bg-primary { background: var(--bg-primary); }
+.ds-bg-sidebar { background: var(--bg-sidebar); }
+.ds-bg-divider { background: var(--divider); }
+.ds-bg-inverse { background: var(--text-primary); }
+.ds-text-inverse { color: var(--bg-primary); }
+.ds-radius-item { border-radius: var(--radius-item); }
+.ds-shadow-accent { box-shadow: 0 4px 14px var(--accent-glow); }
+.ds-shadow-accent-strong { box-shadow: 0 4px 14px var(--accent-primary-glow); }
+.ds-shadow-accent-lg { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); }
+.ds-shadow-accent-xl { box-shadow: 0 12px 32px var(--accent-primary-glow); }
+.ds-shadow-accent-hero { box-shadow: 0 8px 24px var(--accent-primary-glow-strong); }
+.ds-shadow-sm { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
+.ds-border-accent-primary { border: 1px solid var(--accent-primary); }
+.ds-border-accent-glow { border-color: var(--accent-glow); }
+.ds-border-t { border-top: 1px solid var(--divider); }
+.ds-border-b { border-bottom: 1px solid var(--divider); }
+.ds-border-card { border: 2px solid var(--bg-card); }
+.ds-border-warning { border: 1px solid rgba(245, 158, 11, 0.3); }
+.ds-border-transparent { border-color: transparent; }
+.ds-transition-colors { transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
+.ds-bg-topbar { background: var(--bg-topbar); }
+.ds-bg-overlay { background: var(--modal-overlay); }
+.ds-bg-hover { background: var(--state-hover-bg); }
+.ds-bg-warning-soft { background: var(--warning-soft); }
+.ds-bg-warning { background: var(--color-warning); }
+.ds-bg-input { background: var(--input-bg); }
+.ds-bg-text-muted { background: var(--text-muted); }
+.ds-bg-black-80 { background: rgba(0, 0, 0, 0.8); }
+.ds-bg-black-50 { background: rgba(0, 0, 0, 0.5); }
+.ds-bg-white-20 { background: rgba(255, 255, 255, 0.2); }
+
+/* Soft card container */
+.ds-card-soft-primary {
+  background: var(--bg-card);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-card);
+}
+
+/* Badge soft variant */
+.ds-badge-soft {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--radius-button);
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--accent-soft);
+  color: var(--text-accent);
+}
+
+/* Border radius */
+.ds-radius-widget { border-radius: var(--radius-widget); }
+.ds-radius-toggle { border-radius: var(--radius-toggle); }
+
+/* Border */
+.ds-border-state-inactive { border: 1px solid var(--state-inactive-border); }
+
+/* Combined: card with state border */
+.ds-border-inactive { border-color: var(--state-inactive-border); }
+
+/* Fill backgrounds */
+.ds-bg-accent { background: var(--accent-primary); }
+
+/* Animation: typing dot bounce keyframe */
+@keyframes ds-typing-bounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* Flashcard review palette (not brand tokens) */
+.ds-bg-orange-soft { background: rgba(249, 115, 22, 0.1); }
+.ds-border-orange-soft { border: 1px solid rgba(249, 115, 22, 0.2); }
+.ds-text-orange { color: #f97316; }
+.ds-bg-blue-soft { background: rgba(59, 130, 246, 0.1); }
+.ds-border-blue-soft { border: 1px solid rgba(59, 130, 246, 0.2); }
+.ds-text-blue { color: #3b82f6; }

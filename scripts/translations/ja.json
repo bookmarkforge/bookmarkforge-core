@@ -1,0 +1,558 @@
+{
+  "lang": "ja",
+  "langName": "日本語",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/ja/",
+  "ogLocale": "ja_JP",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — すべてがあなたのコンピュータに残ります。一度だけ支払います。",
+  "description": "Raindropはブックマークをサーバーに保存します。BookmarkForgeはブックマークをあなたのコンピュータに保存します — 私たちでさえ読めないようにロックされています。59ドル一度だけ。無料：2,500件のブックマーク。",
+  "ogTitle": "BookmarkForge — すべてがあなたのコンピュータに残ります。一度だけ支払います。",
+  "ogDescription": "Raindropはブックマークをサーバーに保存します。BookmarkForgeはブックマークをあなたのコンピュータに保存します — 私たちでさえ読めないようにロックされています。59ドル一度だけ。無料：2,500件のブックマーク。",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — すべてがあなたのコンピュータに残ります。一度だけ支払います。",
+  "twitterDescription": "Raindropはブックマークをサーバーに保存します。BookmarkForgeはブックマークをあなたのコンピュータに保存します — 私たちでさえ読めないようにロックされています。59ドル一度だけ。無料：2,500件のブックマーク。",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "メインコンテンツにスキップ",
+  "navBrandAria": "BookmarkForge ホーム",
+  "navAriaLabel": "メインナビゲーション",
+  "homeHref": "/ja/",
+  "navLinks": {
+    "pocketAlternative": "Pocketの代替",
+    "features": "機能",
+    "ai": "AI",
+    "privacy": "プライバシー",
+    "pricing": "料金",
+    "help": "ヘルプ",
+    "raindropCompare": "Raindropとの比較"
+  },
+  "langLink": {
+    "href": "/?lang=en",
+    "hreflang": "en",
+    "lang": "en",
+    "text": "English"
+  },
+  "navCta": "アプリを開く",
+  "themeToggleAria": "テーマを切り替え",
+  "hero": {
+    "badge": "一回限りの支払い · サブスクリプションなし",
+    "title": "保存したものはすべてあなたのコンピュータに残ります。<span class=\"accent-text\">すべて。</span>",
+    "subtitle": "Raindropはブックマークをサーバーに保存し、毎年課金します。BookmarkForgeはブックマークをあなたのコンピュータに保存し、あなただけが持つ鍵でロックします。アカウント不要。月額料金なし。誰も肩越しに見ません。",
+    "ctaPrimary": "無料でアプリを起動",
+    "ctaSecondary": "料金を表示",
+    "pillars": [
+      {
+        "strong": "プライベート",
+        "text": "保存したページはあなたのコンピュータから出ません"
+      },
+      {
+        "strong": "ロック済み",
+        "text": "私たちでさえ読めません"
+      },
+      {
+        "strong": "オフライン",
+        "text": "飛行機でも、トンネルでも、どこでも動作します"
+      },
+      {
+        "strong": "一度だけ支払う",
+        "text": "59ドル一度だけ、毎年28ドルではありません"
+      }
+    ]
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "実際に動作している様子を見る",
+    "title": "本物のアプリ、モックアップではありません",
+    "subtitle": "サインアップの壁も、ストックフッテージも、偽のカーソルもありません。このループは普通のデスクトップでリリースされたビルドです：ボールトをロック解除し、ページを保存し、ライブラリを検索して再度ロックします。",
+    "imageAlt": "BookmarkForgeのアニメーションループ：ボールトのロック解除、ブックマークのキャプチャ、ライブラリの検索、再度のロック",
+    "caption": "デスクトップアプリからデモデータで録画されました。完全なウォークスルーはプロジェクトに含まれています。",
+    "steps": [
+      {
+        "title": "ロック解除",
+        "text": "ボールトはあなたが選択したパスワードで開きます。鍵はあなたのデバイスに残ります。"
+      },
+      {
+        "title": "キャプチャ",
+        "text": "アプリから直接ページを保存 — アカウントも拡張機能も不要です。"
+      },
+      {
+        "title": "検索",
+        "text": "キーワードまたは意味で検索し、すべての回答のソースが表示されます。"
+      },
+      {
+        "title": "ロック",
+        "text": "ボールトを閉じると、復号化鍵はメモリから消去されます。"
+      }
+    ],
+    "ctaPrimary": "アプリを起動"
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "後で読む機能の復活",
+    "title": "プライベートなPocketの代替",
+    "subtitle": "Pocketはなくなります。BookmarkForgeは後で読む習慣を維持します — すべての記事、メモ、ハイライトがデバイスに暗号化されて保存されます。",
+    "features": [
+      {
+        "title": "後で読む、永遠にあなたのもの",
+        "text": "PWA、ブラウザ拡張機能、シェアメニューからワンクリックで記事、動画、PDFを保存。Pocketとは異なり、読書リストはデバイスに保存され、暗号化され、オフラインでも動作します。"
+      },
+      {
+        "title": "すべての記事にNotionスタイルのメモ",
+        "text": "ハイライト、要約、ブロックベースのメモを任意のブックマークに添付。保存した記事を独自のナレッジベースに変換 — リンクリストではありません。"
+      },
+      {
+        "title": "ゼロ追跡、ゼロ広告",
+        "text": "BookmarkForgeにはデフォルトでアカウント、分析、広告がありません。読書習慣はあなたのビジネスだけです。"
+      }
+    ],
+    "ctaPrimary": "無料で保存を開始",
+    "ctaSecondary": "完全な比較と移行ガイド",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "シンプルな言葉、マーケティングなし",
+    "title": "BookmarkForge vs Raindrop、細かい条件なし",
+    "subtitle": "Raindropは良いアプリです。大きな違いはあなたのものがどこにあるかです。",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "リストがどこにあるか",
+        "us": "あなたのコンピュータ上",
+        "them": "彼らのサーバー上"
+      },
+      {
+        "topic": "誰が保存したものを読めるか",
+        "us": "誰も — あなたの鍵でロックされており、私たちでも読めません",
+        "them": "会社と、彼らに要求する誰でも"
+      },
+      {
+        "topic": "インターネットなし",
+        "us": "すべてが動作し続けます",
+        "them": "基本機能のみ"
+      },
+      {
+        "topic": "支払うもの",
+        "us": "59ドル一度だけ。完了。",
+        "them": "毎年28ドル、永遠に"
+      },
+      {
+        "topic": "会社が消えた場合（RIP Pocket）",
+        "us": "何も変わりません — すでにあなたの手元にあります",
+        "them": "エクスポートして再開"
+      },
+      {
+        "topic": "AIアシスタント",
+        "us": "プライベートモードであなたのコンピュータ内で実行 — 何もどこにも送信されません",
+        "them": "あなたの読書は考えるためにクラウドに行きます"
+      }
+    ],
+    "ctaPrimary": "2分で無料で試す — アカウント不要",
+    "ctaSecondary": "完全なPocket比較",
+    "close": "Raindropはシンプルで無料 — それだけで十分なら、喜んで使ってください。しかし、読書生活を自分の手に保ちたいなら、BookmarkForgeはまさにそのために構築されています。"
+  },
+  "features": {
+    "id": "features",
+    "tag": "必要なすべて",
+    "title": "必要なすべて、シンプルな言葉で",
+    "items": [
+      {
+        "title": "ブックマークとドキュメント",
+        "text": "ワンクリックで任意のページを保存。横にメモを書き、クリーンでシンプルなエディタで。100,000個の保存アイテムでも高速を維持。"
+      },
+      {
+        "title": "スマート検索",
+        "text": "キーワードまたは意味で物を見つける — 正確な言葉を覚えていなくても。Raindropはこれに年間28ドルを課金しますが、ここでは無料で含まれています。"
+      },
+      {
+        "title": "あなたのライブラリを読むAI、あなたのコンピュータ内",
+        "text": "保存したものについて質問し、ソースが表示された回答を得る。何もクラウドに送信されず、インターネットなしで動作。Proが必要。"
+      },
+      {
+        "title": "独自のライブラリとチャット",
+        "text": "ブックマークとメモについて何でも質問し、引用された回答を得る。プライベートモードは100%あなたのマシンで実行。Proが必要。"
+      },
+      {
+        "title": "独自のデバイス間で同期",
+        "text": "デバイスが直接相互に通信 — サーバーは中間になく、すべてが暗号化されたまま。QRコードをスキャンしてペアリング。最大5台のデバイス。Proが必要。"
+      },
+      {
+        "title": "あなたが所有するバックアップ",
+        "text": "外部ドライブ、クラウドフォルダ、どこでも好きな場所に保持できる自動バックアップ。いつでもMarkdown、JSON、CSV、PDFにすべてをエクスポート。あなたが鍵を保持します。"
+      },
+      {
+        "title": "あなたのナレッジのマップ",
+        "text": "メモとブックマークがどのように接続されているかを確認。タグ、日付、類似性でフィルタリングし、無限のキャンバス周りをズーム。"
+      },
+      {
+        "title": "忘却を防ぐ学習カード",
+        "text": "任意の保存ドキュメントを質問カードに変換し、忘れる直前に再表示 — Ankiと同じスケジューリングアイデア。Proが必要。"
+      },
+      {
+        "title": "デフォルトでプライベート",
+        "text": "アカウントなし、追跡なし、広告なし。あなたは顧客であり、製品ではありません。使用状況の共有は存在し、オプションで、オンにするまでオフのままです。"
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "あなたを尊重するAI",
+    "title": "あなたのナレッジ、増幅されました",
+    "subtitle": "アシスタントをあなたのコンピュータ内で実行 — 何もそこから出ず、オフラインで動作。大きなクラウドモデルを好む？独自の鍵を接続：あなたの質問と回答に必要なページがそのプロバイダーに行き、あなたのコストで。あなたのプロンプト、あなたのデータ、あなたのルール。",
+    "providers": {
+      "title": "対応プロバイダー",
+      "list": [
+        {
+          "type": "local",
+          "name": "あなたのコンピュータ内 — WebLLMモデル（TinyLlama、Llama 3.2、Phi-3.5-mini） — Proのみ"
+        },
+        {
+          "type": "local",
+          "name": "独自のマシン上 — Ollama（実行する任意のモデル）"
+        },
+        {
+          "type": "cloud",
+          "name": "クラウド — Google Gemini（鍵は私たちが管理）"
+        },
+        {
+          "type": "cloud",
+          "name": "クラウド — OpenAI / GPT-4o（独自の鍵を使用）"
+        },
+        {
+          "type": "cloud",
+          "name": "クラウド — Anthropic Claude（独自の鍵を使用）"
+        },
+        {
+          "type": "cloud",
+          "name": "クラウド — Groq（独自の鍵を使用）"
+        },
+        {
+          "type": "cloud",
+          "name": "クラウド — OpenRouterまたは他のカスタムプロバイダー（独自の鍵を使用）"
+        }
+      ]
+    },
+    "modes": {
+      "title": "チャットモード",
+      "items": [
+        {
+          "title": "プライベートモード",
+          "text": "アシスタントは完全にあなたのコンピュータ内で実行。何もそこから出ず、インターネット不要。Proが必要。"
+        },
+        {
+          "title": "ウェブ検索モード",
+          "text": "ライブラリとウェブからのライブ結果を組み合わせ（クラウドプロバイダー）。"
+        },
+        {
+          "title": "エキスパートエージェント",
+          "text": "専門ヘルパー：コーダー、ライター、アナリスト、リサーチャー。Proが必要。"
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "プライバシーは機能ではありません — 基盤です",
+    "subtitle": "すべてのアーキテクチャ上の決定があなたをコントロールにします",
+    "items": [
+      {
+        "title": "誰も読めないようにロック — 私たちでも",
+        "text": "ライブラリはマスターパスワードから派生した鍵で暗号化されます。私たちはあなたのパスワードもコンテンツも見ません。"
+      },
+      {
+        "title": "独自のデバイスに保存",
+        "text": "すべてはあなたのコンピュータに存在します。コンパニオンサーバーはライセンス、デバイスペアリング、クラウドモードAI質問の中継のみを処理 — コンテンツは処理しません。"
+      },
+      {
+        "title": "デフォルトで追跡なし",
+        "text": "分析、クラッシュレポート、追跡なし。使用統計やエラーレポートの共有は別の選択で、デフォルトでオフ。"
+      },
+      {
+        "title": "あなたが鍵を保持",
+        "text": "マスターパスワードなしはアクセスなし — 「パスワードを忘れた」バックドアはありません。24単語のリカバリーフレーズが唯一の入り口です。安全に保管してください。"
+      },
+      {
+        "title": "あなたの権利、尊重",
+        "text": "アクセス、修正、削除、またはデータを持ち帰る — すべてローカルで可能、いつでも。"
+      },
+      {
+        "title": "ロックインなし",
+        "text": "いつでもオープン形式（JSON、Markdown、CSV、PDF）でデータをエクスポート。あなたのナレッジはあなたのもののまま、ポータブル。"
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "シンプルで公平な料金 — サブスクリプションなし",
+    "subtitle": "無料で2,500件のブックマークを永遠に。Proはv1のライフタイムライセンス — 一度支払い、v1を永遠に所有。すべてのv1.x更新と12ヶ月の機能更新を含む。セキュリティ更新は永遠に。月額請求なし。",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "$ 0",
+        "period": "/forever",
+        "description": "個人用アーカイブとして（2,500件のブックマーク、どのデバイスでも動作 — 各デバイスが独自のボルトを持つ）",
+        "features": [
+          {
+            "included": true,
+            "text": "2,500件のブックマーク、メモ、ドキュメント"
+          },
+          {
+            "included": true,
+            "text": "スマート検索（全文 + セマンティック）— 無料で搭載。Raindropはこれに年額を課しています"
+          },
+          {
+            "included": true,
+            "text": "独自のAPIキーでAI（プロバイダーに支払い）"
+          },
+          {
+            "included": true,
+            "text": "ナレッジグラフ"
+          },
+          {
+            "included": true,
+            "text": "基本テンプレート"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTMLエクスポート"
+          },
+          {
+            "included": true,
+            "text": "PWA + ブラウザ拡張機能"
+          },
+          {
+            "included": false,
+            "text": "デバイス間のP2P同期"
+          },
+          {
+            "included": false,
+            "text": "ローカルAI (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "データ上のRAGチャット"
+          },
+          {
+            "included": false,
+            "text": "間隔反復によるフラッシュカード"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": false,
+            "text": "高度なエクスポート (10+フォーマット)"
+          }
+        ],
+        "cta": "無料で開始",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "badge": "最も人気 — アーリーバード200",
+        "price": "$ 59",
+        "period": "アーリーバード（その後$79）",
+        "description": "v1のライフタイム · 12ヶ月の機能更新 · セキュリティ永遠 · v2 60%オフ",
+        "features": [
+          {
+            "included": true,
+            "text": "Freeのすべて"
+          },
+          {
+            "included": true,
+            "text": "無制限のブックマーク"
+          },
+          {
+            "included": true,
+            "text": "5台のデバイス · 5台のデバイス間でP2P同期"
+          },
+          {
+            "included": true,
+            "text": "ローカルAIモデル（WebLLM、APIキー不要） · RAGチャット"
+          },
+          {
+            "included": true,
+            "text": "エキスパートエージェント（コーダー、ライター、アナリスト、リサーチャー）"
+          },
+          {
+            "included": true,
+            "text": "間隔反復付きフラッシュカード · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "高度なエクスポート（10以上の形式） · 暗号化バックアップ"
+          },
+          {
+            "included": true,
+            "text": "セキュリティボールト（AES-GCM）"
+          },
+          {
+            "included": true,
+            "text": "v1のライフタイム · 12ヶ月の機能更新"
+          },
+          {
+            "included": true,
+            "text": "セキュリティ更新永遠"
+          },
+          {
+            "included": true,
+            "text": "メールサポート（48時間） + アーリーアクセス"
+          }
+        ],
+        "cta": "Pro $59 アーリーバードを取得",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "その後$79通常",
+        "sla": "サポート：メール48時間（月〜金）"
+      }
+    ],
+    "legal": "BookmarkForge v1のライフタイムライセンス。すべてのv1.x更新と12ヶ月の機能更新を含む。セキュリティ更新は永遠に。将来のメジャーバージョン（v2、v3）は既存オーナーに対して60%オフ。Whop経由で30日返金。<a href=\"/privacy-and-terms.html#terms\">利用規約</a> · <a href=\"/help#pricing\">詳細</a>"
+  },
+  "faq": {
+    "title": "よくある質問",
+    "items": [
+      {
+        "question": "Freeティアは本当に永遠に無料ですか？",
+        "answer": "はい。トライアルなし、サブスクリプションなし。Freeティアには2,500件のブックマーク、全文と意味検索、ナレッジグラフ、独自のAPIキーでのAI（あなたがプロバイダーに支払う）が含まれています。"
+      },
+      {
+        "question": "Proの「v1のライフタイム」はどういう意味ですか？",
+        "answer": "一度支払い、v1を永遠に所有。すべてのv1.x更新（バグ修正 + マイナー機能）を永遠に、購入から12ヶ月の機能更新を含む。セキュリティ更新は永遠に。13ヶ月後もv1は機能し続けますが、新機能はありません。将来のメジャーバージョン（v2、v3）は別製品：新規顧客$89、v1オーナー$35（60%オフ）。"
+      },
+      {
+        "question": "支払い方法と返金？",
+        "answer": "Whop経由：クレジットカード、PayPal、暗号通貨。私たちはあなたの支払い詳細を見ません。30日返金 — <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>まで連絡。"
+      },
+      {
+        "question": "サポート — どのくらい早く回答しますか？",
+        "answer": "Free：<a href=\"/help\">ヘルプセンター</a> + GitHubディスカッション（ベストエフォート）経由のコミュニティヘルプ。Pro：営業日48時間メール。ボールトは暗号化されているため、私たちはあなたのデータを見られないため、パスワードやリカバリーフレーズを尋ねません。<a href=\"/help#sla\">サポートSLA</a>を参照。"
+      },
+      {
+        "question": "ボールトのパスワードを忘れた場合は？",
+        "answer": "回復できません。ボールトを作成すると、24単語のリカバリーフレーズを一度だけ表示します — 紙に書いてください。それがないと、誰（私たちを含む）もボールトを開けません。<a href=\"/help#bf-e101\">BF-E101</a>を参照。"
+      }
+    ]
+  },
+  "cta": {
+    "title": "あなたのナレッジを所有する準備はできましたか？",
+    "text": "BookmarkForgeを第二の脳として信頼する数千人の研究者、開発者、学習者に参加してください。",
+    "ctaPrimary": "無料アプリを起動",
+    "ctaSecondary": "Proにアップグレード",
+    "note": "アカウント不要。ブラウザで即座に動作。Freeティア：2,500件のブックマーク。"
+  },
+  "footer": {
+    "brand": "あなたのプライベートなAI搭載ナレッジボールト。100%ローカルファースト。",
+    "product": {
+      "title": "製品",
+      "links": [
+        "機能",
+        "AI機能",
+        "プライバシー",
+        "料金",
+        "アプリを起動"
+      ]
+    },
+    "resources": {
+      "title": "リソース",
+      "links": [
+        "Pocket比較",
+        "プライバシーと利用規約",
+        "セキュリティ",
+        "運用"
+      ]
+    },
+    "languages": {
+      "title": "言語",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "サポート",
+      "links": [
+        "連絡先"
+      ],
+      "helpCenter": "ヘルプセンター",
+      "errorCodes": "エラーコード"
+    },
+    "copyright": "© 2026 BookmarkForge. All rights reserved.",
+    "legal": [
+      "プライバシーポリシー",
+      "利用規約",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Your private, AI-powered knowledge vault. 100% Local-First. The private Pocket alternative. Free: 2,500 bookmarks.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "Free",
+        "price": "0",
+        "currency": "USD",
+        "description": "2,500 bookmarks. Forever free."
+      },
+      {
+        "name": "Pro Lifetime v1 — Early Bird",
+        "price": "59",
+        "currency": "USD",
+        "description": "Early Bird 200. Lifetime of v1, 12 months features, security forever, v2 60% off.",
+        "priceValidUntil": "2026-12-31"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "price": "79",
+        "currency": "USD",
+        "description": "Regular. Lifetime of v1."
+      }
+    ],
+    "featureList": [
+      "100% local storage",
+      "End-to-end encryption",
+      "Offline-first",
+      "AI search",
+      "Notion-style editor",
+      "P2P sync"
+    ],
+    "faq": [
+      {
+        "question": "Freeティアは本当に永遠に無料ですか？",
+        "answer": "はい。トライアルなし、サブスクリプションなし。Freeティアには2,500件のブックマーク、全文と意味検索、ナレッジグラフ、独自のAPIキーでのAI（あなたがプロバイダーに支払う）が含まれています。"
+      },
+      {
+        "question": "Proの「v1のライフタイム」はどういう意味ですか？",
+        "answer": "一度支払い、v1を永遠に所有。すべてのv1.x更新（バグ修正 + マイナー機能）を永遠に、購入から12ヶ月の機能更新を含む。セキュリティ更新は永遠に。13ヶ月後もv1は機能し続けますが、新機能はありません。将来のメジャーバージョン（v2、v3）は別製品：新規顧客$89、v1オーナー$35（60%オフ）。"
+      },
+      {
+        "question": "支払い方法と返金？",
+        "answer": "Whop経由：クレジットカード、PayPal、暗号通貨。私たちはあなたの支払い詳細を見ません。30日返金 — bookmarkforge@proton.meまで連絡。"
+      },
+      {
+        "question": "サポート — どのくらい早く回答しますか？",
+        "answer": "Free：ヘルプセンター + GitHubディスカッション（ベストエフォート）経由のコミュニティヘルプ。Pro：営業日48時間メール。ボールトは暗号化されているため、私たちはあなたのデータを見られないため、パスワードやリカバリーフレーズを尋ねません。サポートSLAを参照。"
+      },
+      {
+        "question": "ボールトのパスワードを忘れた場合は？",
+        "answer": "回復できません。ボールトを作成すると、24単語のリカバリーフレーズを一度だけ表示します — 紙に書いてください。それがないと、誰（私たちを含む）もボールトを開けません。BF-E101を参照。"
+      }
+    ]
+  }
+}

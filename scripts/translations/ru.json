@@ -1,0 +1,559 @@
+{
+  "lang": "ru",
+  "langName": "Русский",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/ru/",
+  "ogLocale": "ru_RU",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Everything stays on your computer. Pay once.",
+  "description": "Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 2,500 bookmarks.",
+  "ogTitle": "BookmarkForge — Everything stays on your computer. Pay once.",
+  "ogDescription": "Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 2,500 bookmarks.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Everything stays on your computer. Pay once.",
+  "twitterDescription": "Raindrop keeps your bookmarks on its servers. BookmarkForge keeps them on your computer — locked so not even we can read them. 59 dollars once. Free: 2,500 bookmarks.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Skip to main content",
+  "navBrandAria": "BookmarkForge home",
+  "navAriaLabel": "Main navigation",
+  "homeHref": "/ru/",
+  "navLinks": {
+    "pocketAlternative": "Pocket Alternative",
+    "features": "Features",
+    "ai": "AI",
+    "privacy": "Privacy",
+    "pricing": "Pricing",
+    "help": "Help",
+    "raindropCompare": "Raindrop Comparison"
+  },
+  "langLink": {
+    "href": "/es/",
+    "hreflang": "es",
+    "lang": "es",
+    "text": "Español"
+  },
+  "navCta": "Open App",
+  "themeToggleAria": "Toggle theme",
+  "hero": {
+    "badge": "One-time payment · No subscription",
+    "title": "Everything you save stays on your computer. <span class=\"accent-text\">Everything.</span>",
+    "subtitle": "Raindrop keeps your bookmarks on its servers — and charges you every year. BookmarkForge keeps them on your computer, locked with a key only you have. No accounts. No monthly fees. No one reading over your shoulder.",
+    "ctaPrimary": "Launch App Free",
+    "ctaSecondary": "View Pricing",
+    "pillars": [
+      {
+        "strong": "Private",
+        "text": "your saved pages never leave your computer"
+      },
+      {
+        "strong": "Locked",
+        "text": "not even we can read them"
+      },
+      {
+        "strong": "Offline",
+        "text": "works on a plane, in a tunnel, wherever"
+      },
+      {
+        "strong": "Pay once",
+        "text": "59 dollars once, not 28 dollars every year"
+      }
+    ]
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "See It Working",
+    "title": "The real app, not a mock-up",
+    "subtitle": "No sign-up wall, no stock footage and no fake cursor. This loop is the released build on an ordinary desktop: unlock the vault, save a page, search the library and lock it again.",
+    "imageAlt": "Animated loop of BookmarkForge: unlocking the vault, capturing a bookmark, searching the library and locking it again",
+    "caption": "Recorded from the desktop app with demo data. The full walkthrough ships with the project.",
+    "steps": [
+      {
+        "title": "Unlock",
+        "text": "The vault opens with a password you choose; the key stays on your device."
+      },
+      {
+        "title": "Capture",
+        "text": "Save a page straight from the app — no account and no extension required."
+      },
+      {
+        "title": "Find",
+        "text": "Search by keyword or by meaning, with the sources of every answer shown."
+      },
+      {
+        "title": "Lock",
+        "text": "Close the vault and the decryption key is gone from memory."
+      }
+    ],
+    "ctaPrimary": "Launch the app"
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Read-It-Later Reborn",
+    "title": "The Private Pocket Alternative",
+    "subtitle": "Pocket is going away. BookmarkForge keeps the read-it-later habit alive — with every article, note and highlight stored encrypted on your device.",
+    "features": [
+      {
+        "title": "Read It Later, Yours Forever",
+        "text": "Save articles, videos and PDFs with one click — from the PWA, browser extension or share menu. Unlike Pocket, your reading list lives on your device, encrypted, and still works offline."
+      },
+      {
+        "title": "Notion-Style Notes on Every Article",
+        "text": "Highlight, summarize and take block-based notes attached to any bookmark. Turn a saved article into your own knowledge base — not just a link list."
+      },
+      {
+        "title": "Zero Tracking, Zero Ads",
+        "text": "BookmarkForge has no accounts, no analytics and no ads by default. Your reading habits are nobody's business but yours."
+      }
+    ],
+    "ctaPrimary": "Start Saving Free",
+    "ctaSecondary": "Full Comparison & Migration Guide",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "Plain words, no marketing",
+    "title": "BookmarkForge vs Raindrop, without the fine print",
+    "subtitle": "Raindrop is a good app. The big difference is where your stuff lives.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Where your list lives",
+        "us": "On your computer",
+        "them": "On their servers"
+      },
+      {
+        "topic": "Who can read what you save",
+        "us": "Nobody — locked with your key, not even us",
+        "them": "The company, and whoever demands it of them"
+      },
+      {
+        "topic": "Without internet",
+        "us": "Everything keeps working",
+        "them": "Only the basics"
+      },
+      {
+        "topic": "What you pay",
+        "us": "59 dollars once. Done.",
+        "them": "28 dollars every year, forever"
+      },
+      {
+        "topic": "If the company disappears (RIP Pocket)",
+        "us": "Nothing changes — it is already in your hands",
+        "them": "You export and start over"
+      },
+      {
+        "topic": "The AI assistant",
+        "us": "Runs inside your computer in private mode — nothing is sent anywhere",
+        "them": "Your reading goes off to the cloud to think"
+      }
+    ],
+    "ctaPrimary": "Try it free in 2 minutes — no account",
+    "ctaSecondary": "Full Pocket comparison",
+    "close": "Raindrop is simpler and free — if that is all you need, use it happily. But if you would rather keep your reading life in your own hands, BookmarkForge is built for exactly that."
+  },
+  "features": {
+    "id": "features",
+    "tag": "Everything You Need",
+    "title": "Everything you need, in plain words",
+    "items": [
+      {
+        "title": "Bookmarks & documents",
+        "text": "Save any page with one click. Write notes right next to it, in a clean, simple editor. Stays fast even with 100,000 saved items."
+      },
+      {
+        "title": "Smart search",
+        "text": "Find things by keyword or by meaning — even when you do not remember the exact words. Raindrop charges 28 dollars a year for this; here it is included free."
+      },
+      {
+        "title": "An AI that reads your library, inside your computer",
+        "text": "Ask questions about what you saved and get answers with the sources shown. Nothing is sent to the cloud, and it works without internet. Requires Pro."
+      },
+      {
+        "title": "Chat with your own library",
+        "text": "Ask anything about your bookmarks and notes and get cited answers. The private mode runs 100% on your machine. Requires Pro."
+      },
+      {
+        "title": "Sync between your own devices",
+        "text": "Your devices talk to each other directly — no server in the middle, and everything stays encrypted. Pair them by scanning a QR code. Up to 5 devices. Requires Pro."
+      },
+      {
+        "title": "Backups you own",
+        "text": "Automatic backups you can keep wherever you like — an external drive, a cloud folder, anywhere. Export everything to Markdown, JSON, CSV or PDF whenever you want. You hold the keys."
+      },
+      {
+        "title": "A map of your knowledge",
+        "text": "See how your notes and bookmarks connect. Filter by tags, dates and similarity, and zoom around an endless canvas."
+      },
+      {
+        "title": "Study cards that beat forgetting",
+        "text": "Turn any saved document into question cards that resurface right before you would forget them — the same scheduling idea as Anki. Requires Pro."
+      },
+      {
+        "title": "Private by default",
+        "text": "No accounts, no tracking, no ads. You are the customer, not the product. Usage sharing exists, it is optional and stays off until you turn it on."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI That Respects You",
+    "title": "Your Knowledge, Amplified",
+    "subtitle": "Run the assistant inside your computer — nothing leaves it, and it works offline. Prefer a big cloud model? Connect your own key: your questions and the pages needed to answer them go to that provider, at your cost. Your prompts, your data, your rules.",
+    "providers": {
+      "title": "Supported Providers",
+      "list": [
+        {
+          "type": "local",
+          "name": "Inside your computer — WebLLM models (TinyLlama, Llama 3.2, Phi-3.5-mini) — Pro only"
+        },
+        {
+          "type": "local",
+          "name": "On your own machine — Ollama (any model you run)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Google Gemini (key managed by us)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — OpenAI / GPT-4o (with your own key)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Anthropic Claude (with your own key)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Groq (with your own key)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — OpenRouter or another custom provider (with your own key)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Chat Modes",
+      "items": [
+        {
+          "title": "Private Mode",
+          "text": "The assistant runs entirely inside your computer. Nothing leaves it, and it needs no internet. Requires Pro."
+        },
+        {
+          "title": "Web Search Mode",
+          "text": "Combines your library with live results from the web (cloud providers)."
+        },
+        {
+          "title": "Expert Agents",
+          "text": "Specialized helpers: Coder, Writer, Analyst and Researcher. Requires Pro."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Privacy Isn't a Feature — It's the Foundation",
+    "subtitle": "Every architectural decision puts you in control",
+    "items": [
+      {
+        "title": "Locked so nobody can read it — not even us",
+        "text": "Your library is encrypted with a key derived from your master password. We never see your password or your content."
+      },
+      {
+        "title": "Stored on your own device",
+        "text": "Everything lives on your computer. The companion server only handles licensing, device pairing and relaying your cloud-mode AI questions — never your content."
+      },
+      {
+        "title": "No tracking by default",
+        "text": "No analytics, no crash reports, no tracking. Sharing usage stats or error reports is a separate choice, off by default."
+      },
+      {
+        "title": "You hold the keys",
+        "text": "No master password means no access — there is no \"forgot password\" backdoor. Your 24-word recovery phrase is the only way in; keep it safe."
+      },
+      {
+        "title": "Your rights, respected",
+        "text": "Access, correct, erase or take your data with you — all doable locally, whenever you want."
+      },
+      {
+        "title": "No lock-in",
+        "text": "Export your data anytime in open formats (JSON, Markdown, CSV, PDF). Your knowledge stays yours and portable."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Simple, Fair Pricing — No Subscriptions",
+    "subtitle": "Free 2,500 bookmarks forever. Pro is a Lifetime license for v1 — pay once, own v1 forever. Includes all v1.x updates and 12 months of feature updates. Security updates forever. No monthly billing.",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "$ 0",
+        "period": "/forever",
+        "description": "Для личного архива (2 500 закладок, работает на любом устройстве — у каждого свой сейф)",
+        "features": [
+          {
+            "included": true,
+            "text": "2 500 закладок, заметок и документов"
+          },
+          {
+            "included": true,
+            "text": "Умный поиск (полнотекстовый + семантический) — включён бесплатно; Raindrop берёт за это годовую плату"
+          },
+          {
+            "included": true,
+            "text": "AI с вашим API-ключом (вы платите провайдеру)"
+          },
+          {
+            "included": true,
+            "text": "Граф знаний"
+          },
+          {
+            "included": true,
+            "text": "Базовые шаблоны"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML экспорт"
+          },
+          {
+            "included": true,
+            "text": "PWA + расширения браузера"
+          },
+          {
+            "included": false,
+            "text": "P2P-синхронизация между устройствами"
+          },
+          {
+            "included": false,
+            "text": "Локальный AI (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "RAG-чат по вашим данным"
+          },
+          {
+            "included": false,
+            "text": "Флешкарты со spaced repetition"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": false,
+            "text": "Продвинутый экспорт (10+ форматов)"
+          }
+        ],
+        "cta": "Start Free",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "badge": "Most Popular — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (then $79)",
+        "description": "Lifetime of v1 · 12 months feature updates · Security forever · v2 60% off",
+        "features": [
+          {
+            "included": true,
+            "text": "Everything in Free"
+          },
+          {
+            "included": true,
+            "text": "Unlimited bookmarks"
+          },
+          {
+            "included": true,
+            "text": "5 devices · P2P sync across 5 devices"
+          },
+          {
+            "included": true,
+            "text": "Local AI models (WebLLM, no API key) · RAG chat"
+          },
+          {
+            "included": true,
+            "text": "Expert agents (Coder, Writer, Analyst, Researcher)"
+          },
+          {
+            "included": true,
+            "text": "Flashcards with spaced repetition · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Advanced export (10+ formats) · Encrypted backups"
+          },
+          {
+            "included": true,
+            "text": "Security vault (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Lifetime of v1 · 12 months feature updates"
+          },
+          {
+            "included": true,
+            "text": "Security updates forever"
+          },
+          {
+            "included": true,
+            "text": "Email support (48h) + early access"
+          }
+        ],
+        "cta": "Get Pro $59 Early Bird",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "then $79 regular",
+        "sla": "Support: Email 48h (Mon–Fri)"
+      }
+    ],
+    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help#pricing\">Learn more</a>"
+  },
+  "faq": {
+    "title": "Common Questions",
+    "items": [
+      {
+        "question": "Is the Free tier really free forever?",
+        "answer": "Yes. No trial, no subscription. The free tier includes 2,500 bookmarks, full-text & semantic search, knowledge graph, and AI with your own API key (you pay the provider)."
+      },
+      {
+        "question": "What does \"Lifetime of v1\" mean for Pro?",
+        "answer": "Pay once, own v1 forever. Includes all v1.x updates (bugfixes + minor features) forever and 12 months of feature updates from purchase. Security updates forever. After month 13 you keep v1 functional, just without new features. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off)."
+      },
+      {
+        "question": "What payment methods & refunds?",
+        "answer": "Via Whop: credit card, PayPal, crypto. We never see your payment details. 30-day refund — contact <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
+      },
+      {
+        "question": "Support — how fast do you answer?",
+        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help#sla\">Support SLA</a>."
+      },
+      {
+        "question": "What if I forget my vault password?",
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Ready to Own Your Knowledge?",
+    "text": "Join thousands of researchers, developers, and learners who trust BookmarkForge with their second brain.",
+    "ctaPrimary": "Launch Free App",
+    "ctaSecondary": "Upgrade to Pro",
+    "note": "No account required. Works instantly in your browser. Free tier: 2,500 bookmarks."
+  },
+  "footer": {
+    "brand": "Your private, AI-powered knowledge vault. 100% Local-First.",
+    "product": {
+      "title": "Product",
+      "links": [
+        "Features",
+        "AI Capabilities",
+        "Privacy",
+        "Pricing",
+        "Launch App"
+      ]
+    },
+    "resources": {
+      "title": "Resources",
+      "links": [
+        "Pocket Comparison",
+        "Privacy & Terms",
+        "Security",
+        "Operations"
+      ]
+    },
+    "languages": {
+      "title": "Languages",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Support",
+      "links": [
+        "Contact"
+      ],
+      "helpCenter": "Help Center",
+      "errorCodes": "Error Codes"
+    },
+    "copyright": "© 2026 BookmarkForge. All rights reserved.",
+    "legal": [
+      "Privacy Policy",
+      "Terms of Service",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Your private, AI-powered knowledge vault. 100% Local-First. The private Pocket alternative. Free: 2,500 bookmarks.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "Free",
+        "price": "0",
+        "currency": "USD",
+        "description": "2,500 bookmarks. Forever free."
+      },
+      {
+        "name": "Pro Lifetime v1 — Early Bird",
+        "price": "59",
+        "currency": "USD",
+        "description": "Early Bird 200. Lifetime of v1, 12 months features, security forever, v2 60% off.",
+        "priceValidUntil": "2026-12-31",
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "price": "79",
+        "currency": "USD",
+        "description": "Regular. Lifetime of v1."
+      }
+    ],
+    "featureList": [
+      "Local-first storage",
+      "End-to-end encryption",
+      "Works offline",
+      "AI search",
+      "Notion-style editor",
+      "P2P sync"
+    ],
+    "faq": [
+      {
+        "question": "Is the Free tier really free forever?",
+        "answer": "Yes. No trial, no subscription. The free tier includes 2,500 bookmarks, full-text & semantic search, knowledge graph, and AI with your own API key (you pay the provider)."
+      },
+      {
+        "question": "What does \"Lifetime of v1\" mean for Pro?",
+        "answer": "Pay once, own v1 forever. Includes all v1.x updates (bugfixes + minor features) forever and 12 months of feature updates from purchase. Security updates forever. After month 13 you keep v1 functional, just without new features. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off)."
+      },
+      {
+        "question": "What payment methods & refunds?",
+        "answer": "Via Whop: credit card, PayPal, crypto. We never see your payment details. 30-day refund — contact bookmarkforge@proton.me."
+      },
+      {
+        "question": "Support — how fast do you answer?",
+        "answer": "Free: Community help via Help Center + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See Support SLA."
+      },
+      {
+        "question": "What if I forget my vault password?",
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See BF-E101."
+      }
+    ]
+  }
+}

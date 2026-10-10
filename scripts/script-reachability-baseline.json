@@ -1,0 +1,28 @@
+{
+  "updatedAt": "2026-10-09",
+  "knownUnreachable": {
+    "build:extension:dev": "By-hand dev-flag extension bundle. The documented entry point (dev:extension) builds the `custom` variant itself, so this alias exists for inspecting a dev build without the reload loop.",
+    "test:coverage:history": "By-hand coverage trend report over coverage-history.json. No gate reads it: the nightly coverage job uploads coverage/ as its own artifact.",
+    "e2e:preview": "By-hand preview-build E2E suite (playwright.preview.config.ts). It needs a preview server, so neither the chain nor a CI step drives it.",
+    "e2e:multiuser": "By-hand full multi-user suite. The nightly job shards the same config through e2e:multiuser:shard.",
+    "mock:ai": "By-hand OpenAI-compatible mock. The custom-provider topology starts (node scripts/mock-openai-server.mjs) itself from playwright.custom-provider.config.ts.",
+    "test:human:core": "By-hand subset of the human-like example suite (8 specs). The nightly job shards the whole suite through test:human.",
+    "test:human:depth": "By-hand subset of the human-like example suite (7 specs). The nightly job shards the whole suite through test:human.",
+    "test:human-regression": "By-hand single-spec run of the human-like suite (regression-tests.spec.ts). The nightly job shards the whole suite through test:human.",
+    "test:oculix": "By-hand external visual suite: it runs a Maven project from an absolute Windows path (C:\\bookmark6-oculix-tests) that is not part of this repository.",
+    "check:input-contracts": "Alias for a validator the chain already runs: check:workflows calls (node scripts/validate-input-contracts.mjs) directly. Kept for running that validator alone.",
+    "record:ai-performance-history": "By-hand recorder for the AI performance trend (--metrics <file> --history <file>); no workflow and no gate wires it.",
+    "plan:manual-figures": "Development tool: ADR-050 declares the manual-figures planner a by-hand tool, not a gate.",
+    "check:audit-drift:strict-discovery": "By-hand strict-discovery mode of check-audit-drift.mjs. The chain runs the default mode as check:audit-drift.",
+    "check:audit-drift:fix": "By-hand fixer mode of check-audit-drift.mjs (it rewrites anchors and baselines); a gate must never run it.",
+    "check:coverage-areas": "By-hand per-directory coverage budget gate. It needs coverage/lcov.info from test:coverage first, so it cannot live in the offline chain.",
+    "check:no-unbounded-text:fix": "By-hand baseline refresher for check:no-unbounded-text. The chain runs the verify mode, never the fix mode.",
+    "deploy:prod": "By-hand production deploy: the runbooks and ADR-043 invoke (node scripts/deploy-prod.mjs --deploy --verify) directly. No workflow runs the alias.",
+    "build:budget-report": "By-hand budget report generator. No workflow or gate calls it; use check:performance or check:performance:static instead.",
+    "calibrate:first-summary": "By-hand calibration tool for first-summary generation. No entry point calls it; it exists for manual calibration runs.",
+    "check:ai-reference-metrics": "By-hand AI reference metrics validator. No workflow or gate calls it; the performance budget gate (check:performance) handles metrics validation.",
+    "check:performance:static": "By-hand static-only performance budget check. The main check:performance gate already includes static checks; this is a convenience alias for static-only runs.",
+    "launch:smoke:prod": "By-hand production smoke test variant. The documented launch:smoke script runs in dev mode; use the production build script (build:ci) and manual verification instead.",
+    "local-smoke": "By-hand local smoke test. The documented local smoke test is embedded in other workflows; this standalone alias is for manual local verification only."
+  }
+}

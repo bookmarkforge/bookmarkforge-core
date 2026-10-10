@@ -1,0 +1,74 @@
+{
+  "groups": [
+    {
+      "name": "core-integrity",
+      "label": "Core integrity (Open Core + Pro boundary)",
+      "commands": ["check:open-core", "check:pro-imports", "check:pro-routes"],
+      "purpose": "Verifies the MIT Core contains no Pro code and every route is classified correctly",
+      "typical_time_ms": 3000,
+      "fail_frequency": "high"
+    },
+    {
+      "name": "security-environment",
+      "label": "Security and environment",
+      "commands": ["check:env", "check:secrets-in-commit", "check:server-log-ip-privacy", "check:compose-config", "check:runtime-config", "check:http-config", "check:docker-context", "check:image-pins", "check:repository-hygiene"],
+      "purpose": "Validates the environment, secrets and deployment configuration are secure",
+      "typical_time_ms": 4000,
+      "fail_frequency": "medium"
+    },
+    {
+      "name": "workflow-pipeline",
+      "label": "CI/CD pipeline",
+      "commands": ["check:workflows", "check:workflow-artifacts", "check:workflow-vars-documented", "check:workflow-security"],
+      "purpose": "Validates all GitHub Actions workflows are correct and secure",
+      "typical_time_ms": 5000,
+      "fail_frequency": "low"
+    },
+    {
+      "name": "quality-code",
+      "label": "Code quality",
+      "commands": ["typecheck:prod", "lint", "check:boundaries", "check:e2e-helpers", "check:chunks", "check-inspector-freeze"],
+      "purpose": "Type-checking, linting, boundary verification and chunk limits",
+      "typical_time_ms": 25000,
+      "fail_frequency": "high"
+    },
+    {
+      "name": "content-integrity",
+      "label": "Content integrity and i18n",
+      "commands": ["check:i18n", "check:english-only", "check:claim-drift", "check:manual-figures", "check:page-figures", "check:landings-fresh", "check:docs-markdown", "check:documented-npm-commands", "check:documented-doc-references"],
+      "purpose": "Verifies all visible content is in sync with the code and properly localized",
+      "typical_time_ms": 12000,
+      "fail_frequency": "medium"
+    },
+    {
+      "name": "brand-visual",
+      "label": "Brand and visual elements",
+      "commands": ["check:static-brand", "check:brand-logo", "check:tailwind-drift", "check:seo", "check:sitemap-coverage", "check:csp", "check:extension-csp"],
+      "purpose": "Verifies brand consistency, SEO, CSP and visual elements",
+      "typical_time_ms": 5000,
+      "fail_frequency": "medium"
+    },
+    {
+      "name": "security-depth",
+      "label": "Deep security",
+      "commands": ["check:audit-drift", "check:override-cve", "check:direct-cve", "check:no-unbounded-text", "check:license-claims", "check:license-keys", "check:landing-free-plan", "check:pocket-onboarding-copy"],
+      "purpose": "Audit drift, CVEs, licenses and claim contracts",
+      "typical_time_ms": 8000,
+      "fail_frequency": "low"
+    },
+    {
+      "name": "build-verification",
+      "label": "Build verification",
+      "commands": ["build:ci", "check:performance", "check:baseline-drift", "check:baseline-gaps", "check:nginx-render"],
+      "purpose": "Production build, performance budget, visual drift and nginx configuration",
+      "typical_time_ms": 60000,
+      "fail_frequency": "medium"
+    }
+  ],
+  "usage": {
+    "ci:local": "npm run ci:local = typecheck:prod + lint + test:fast + build:ci + full check",
+    "ci:groups": "Run individual groups to iterate faster",
+    "example": "# Only verify Core integrity and security (~7s instead of ~62s)",
+    "command": "npm run check:core-integrity && npm run check:security-environment"
+  }
+}

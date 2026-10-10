@@ -1,0 +1,826 @@
+{
+  "generatedAt": "2026-10-10T18:45:31.438Z",
+  "version": "1.0.0",
+  "source": "private repository (export checkout)",
+  "license": "MIT",
+  "model": "open-core",
+  "proExcluded": [],
+  "proPlaceholders": [
+    "src/services/BackupService.ts",
+    "src/services/DiskBackupService.ts",
+    "src/services/WebRTCSyncService.ts",
+    "src/services/ai/FlashcardService.ts",
+    "src/services/ai/GlobalRAGService.ts",
+    "src/services/ai/SpecializedAgentsService.ts",
+    "src/services/ai/WebLLMService.ts",
+    "src/services/pdfService.ts"
+  ],
+  "proSpecifiersRewritten": 11,
+  "includedCount": 1852,
+  "excluded": [
+    {
+      "file": ".zap\\authenticated.context",
+      "reason": "excluded dir"
+    },
+    {
+      "file": "docs\\ADR-001-check-static-brand.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-019-argon2id-migration.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-026-post-audit-hardening-wave-1.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-027-post-audit-hardening-wave-2.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-028-gate-drift-detection.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-029-webrtc-sync-hardening.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-030-security-tier-regression-umbrella.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-032-disk-backup-pruning.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-033-restore-surface-auth-errors.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-034-backup-age-and-storage-quota.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-037-backup-deletion-ownership.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-038-constant-time-hmac-attestation.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-039-sw-integrity-runtime.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-040-docs-markdown-gate-fusion.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-042-css-only-user-themes.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-043-check-seo-gate.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-044-og-image-policy.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-045-check-brand-logo-gate.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-046-vault-kdf-salt-rotation.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-047-claim-drift-gate.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-048-license-claims-gate.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-049-manual-figures-gate.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-050-page-figures-gate-and-planner.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-051-landings-fresh-gate.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-052-v5-format-sunset.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-053-vault-salt-registry.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-054-check-quick-tier.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-055-collapsible-surfaces.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-056-documented-npm-commands-gate.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-057-documented-reference-integrity-gate.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-058-release-target-confirmation-gate.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-059-documentation-retirement.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-060-legal-consolidation-gate.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-061-controlled-retirement-2026-09-19.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-062-landing-smoke-gate.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-063-feature-budgets-gate.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-064-audit-freshness-gate.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ADR-065-webrtc-playwright-webkit-limitations.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ARCHITECTURE-TUTORIAL.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\CHANGELOG.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\CRYPTO-PATTERNS.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\DEVELOPER-GUIDE.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\DOCUMENTATION-EXECUTIVE-SUMMARY.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\E2E-HUMAN-LIKE-BROWSERS-REPORT.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\EXTENSION-LOCAL-SETUP.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\EXTERNAL-SERVICES-AUDIT-CHECKLIST.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\FAQ-SOPORTE.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\FIRST-WEEK-SUPPORT.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\GITHUB-RULESET-IMPORT-GUIDE.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\GITHUB-SECRETS.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\INCIDENT-RESPONSE-PLAN.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\INFORME-E2E-HUMAN-LIKE-BROWSERS.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\LAUNCH-CHECKLIST-COMPLETO.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ONBOARDING.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\PRIVACY-EXTENSION.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\PRIVACY-POLICY.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\REFUND-POLICY.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\RELEASE-STATUS.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ROPA.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\RPO-RTO-APPROVAL.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\RPO-RTO-APROBACION.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\SELF-HOSTING.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\STORE-DESCRIPTIONS.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\STORE-SUBMISSION-CHECKLIST.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\TESTING-PATTERNS.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\TROUBLESHOOTING.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\VERCEL-LOCAL-SETUP.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\WEBRTC-COMPATIBILITY.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\WHOP-INTEGRATION.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\audit.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\cls-report.desktop.json",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\cls-report.mobile.json",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\docs-state-index.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\github-secrets-and-push-runbook.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\history-attribution.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\internal-security-checklist.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\launch-checklist.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\legacy-schema-version-map.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\legal-closing-package.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\locale-addition-runbook.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\onboarding-emails.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\operations.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\operator-quick-reference.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\ops-nightly.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\performance-budget-by-feature.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\positioning.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\pricing-decision.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\production-license-launch-checklist.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\sast-triage.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\support-data-loss-runbook.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\support-license-runbook.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\whop-setup-runbook.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "legal\\README.md",
+      "reason": "excluded dir"
+    },
+    {
+      "file": "legal\\REGISTRO.md",
+      "reason": "excluded dir"
+    },
+    {
+      "file": "legal\\plantillas\\DPA-proveedor.md",
+      "reason": "excluded dir"
+    },
+    {
+      "file": "legal\\plantillas\\README.md",
+      "reason": "excluded dir"
+    },
+    {
+      "file": "legal\\plantillas\\SCC-transferencia-internacional.md",
+      "reason": "excluded dir"
+    },
+    {
+      "file": "legal\\plantillas\\checklist-violacion-seguridad.md",
+      "reason": "excluded dir"
+    },
+    {
+      "file": "legal\\plantillas\\confirmacion-Whop.md",
+      "reason": "excluded dir"
+    },
+    {
+      "file": "legal\\plantillas\\notificacion-art-33-autoridad.md",
+      "reason": "excluded dir"
+    },
+    {
+      "file": "legal\\plantillas\\notificacion-art-34-interesados.md",
+      "reason": "excluded dir"
+    },
+    {
+      "file": "legal\\plantillas\\revision-privacidad-proveedor.md",
+      "reason": "excluded dir"
+    },
+    {
+      "file": "scripts\\__tests__\\audit-script-inventory.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\check-workflow-security.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\deploy-prod-push.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\deploy-prod.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\docs-retire-policy.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\docs-state-index.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\drill-backup-restore.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\drill-rollback.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\kpi-report.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\legacy-schema-map.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\merge-nightly-blobs.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\nightly-alert.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\nightly-consistency.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\nightly-dependency-cve-report.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\nightly-trends.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\staging-deploy.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\staging-http-checks.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\staging-target-policy.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\validate-input-contracts.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\validate-operational-workflows.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\validate-zap-context.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\validate-zap-workflow.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\deploy-prod.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\drill-backup-restore.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\drill-rollback.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\export-public-repo.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\generate-license-keys.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\health-dashboard.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\kpi-report.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\load-test-server.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\monitoring-cron.example",
+      "reason": "excluded dir"
+    },
+    {
+      "file": "scripts\\nightly-alert.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\public-export\\LICENSE",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\public-export\\NOTICE",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\public-export\\README.md",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\public-export\\RELEASE-NOTES-v1.0.0.md",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\public-export\\SECURITY.md",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\public-export\\TRADEMARKS.md",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\public-export\\manual-de-usuario-es.md",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\public-export\\manual-de-usuario-es.pdf",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\public-export\\user-manual-en.md",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\public-export\\user-manual-en.pdf",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\staging-deploy.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\staging-http-checks.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\staging-rollback.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\staging-smoke.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\staging-target-policy.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "src\\services\\BackupService.ts",
+      "reason": "pro feature implementation"
+    },
+    {
+      "file": "src\\services\\DiskBackupService.ts",
+      "reason": "pro feature implementation"
+    },
+    {
+      "file": "src\\services\\WebRTCSyncService.ts",
+      "reason": "pro feature implementation"
+    },
+    {
+      "file": "src\\services\\ai\\FlashcardService.ts",
+      "reason": "pro feature implementation"
+    },
+    {
+      "file": "src\\services\\ai\\GlobalRAGService.ts",
+      "reason": "pro feature implementation"
+    },
+    {
+      "file": "src\\services\\ai\\SpecializedAgentsService.ts",
+      "reason": "pro feature implementation"
+    },
+    {
+      "file": "src\\services\\ai\\WebLLMService.ts",
+      "reason": "pro feature implementation"
+    },
+    {
+      "file": "src\\services\\pdfService.ts",
+      "reason": "pro feature implementation"
+    },
+    {
+      "file": "src\\tests\\ai\\CostTrackerService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\ai\\adapters\\RoutingOptimizer.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\ai\\buildSafeUserContent.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\ai\\providers\\GeminiProvider.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\ai\\providers\\OllamaProvider.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\ai\\providers\\OpenAICompatibleProvider.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\security\\p0-ice-whitelist.regression.test.ts",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "src\\tests\\security\\p1-private-sync.regression.test.ts",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "src\\tests\\services\\BackupRestore.test.ts",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "src\\tests\\services\\BackupService.test.ts",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "src\\tests\\services\\DiskBackupService.test.ts",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "src\\tests\\services\\WebRTCSyncService.test.ts",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\AIRequestCache.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\AgentService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\AutoProcessorService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\ChunkingService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\CrossPollinationService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\FlashcardService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\GlobalRAGService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\ProviderConfiguration.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\ProviderManager.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\QuantizationService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\RAGEngine.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\RAGEngine.worker-path.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\ResourceManager.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\SafeRepairCoordinator.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\SemanticCacheService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\SemanticSearchService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\SpecializedAgentsService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\TTSService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\TaggingService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\VaultIntegration.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\VectorIndexService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\WebLLMService.gpu.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\WebLLMService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\WebSearchService.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\privacy.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\prompt-language.contract.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\utils.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\ai\\warmup-latch.integration.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
+      "file": "src\\tests\\services\\integrations\\cloudSync.f2c-backup.test.ts",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "src\\tests\\services\\integrations\\cloudSync.offsite-backup.test.ts",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "src\\tests\\services\\pdfService.test.ts",
+      "reason": "private ops/business script"
+    }
+  ]
+}

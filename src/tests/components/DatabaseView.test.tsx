@@ -83,6 +83,12 @@ const sampleRows = [
   },
 ];
 
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+  user = userEvent.setup({ delay: null });
+});
+
 describe("DatabaseView", () => {
   beforeEach(() => {
     mockUseRxCollection.mockReset();
@@ -161,49 +167,49 @@ describe("DatabaseView", () => {
 
   it("toggles filter panel on click", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
-    await userEvent.click(screen.getByText("Filter"));
+    await user.click(screen.getByText("Filter"));
     expect(screen.getByText("Active Filters")).toBeDefined();
   });
 
   it("filters rows by search query", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
     const input = screen.getByPlaceholderText("Search records...");
-    await userEvent.type(input, "Alice");
+    await user.type(input, "Alice");
     expect(screen.getByText("Design System Tokens")).toBeDefined();
     expect(screen.queryByText("RxDB Migration Plan")).toBeNull();
   });
 
   it("opens inline editor on cell click", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
-    await userEvent.click(screen.getByText("Design System Tokens"));
+    await user.click(screen.getByText("Design System Tokens"));
     expect(screen.getByDisplayValue("Design System Tokens")).toBeDefined();
   });
 
   it("commits inline edit on Enter", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
-    await userEvent.click(screen.getByText("Design System Tokens"));
+    await user.click(screen.getByText("Design System Tokens"));
     const input = screen.getByDisplayValue("Design System Tokens");
-    await userEvent.clear(input);
-    await userEvent.type(input, "Updated Title");
+    await user.clear(input);
+    await user.type(input, "Updated Title");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("Updated Title")).toBeDefined();
   });
 
   it("cancels inline edit on Escape", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
-    await userEvent.click(screen.getByText("Design System Tokens"));
+    await user.click(screen.getByText("Design System Tokens"));
     const input = screen.getByDisplayValue("Design System Tokens");
-    await userEvent.type(input, "Changed");
+    await user.type(input, "Changed");
     input.focus();
-    await userEvent.keyboard("{Escape}");
+    await user.keyboard("{Escape}");
     expect(screen.getByText("Design System Tokens")).toBeDefined();
   });
 
   it("uses select for columns with few unique values", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
     const cells = screen.getAllByText("Done");
-    await userEvent.click(cells[cells.length - 1]!);
+    await user.click(cells[cells.length - 1]!);
     const select = document.querySelector("select");
     expect(select).not.toBeNull();
   });
@@ -211,7 +217,7 @@ describe("DatabaseView", () => {
   it("adds a new row on New button click", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
     const countBefore = screen.getAllByRole("row").length;
-    await userEvent.click(screen.getByText("New"));
+    await user.click(screen.getByText("New"));
     const countAfter = screen.getAllByRole("row").length;
     expect(countAfter).toBeGreaterThan(countBefore);
   });
@@ -224,7 +230,7 @@ describe("DatabaseView", () => {
       (th) => th.textContent?.includes("title"),
     );
     if (titleHeader) {
-      await userEvent.click(titleHeader);
+      await user.click(titleHeader);
       const rows2 = screen.getAllByRole("row");
       expect(rows2.length).toBeGreaterThan(1);
     }
@@ -236,8 +242,8 @@ describe("DatabaseView", () => {
       (th) => th.textContent?.includes("title"),
     );
     if (titleHeader) {
-      await userEvent.click(titleHeader);
-      await userEvent.click(titleHeader);
+      await user.click(titleHeader);
+      await user.click(titleHeader);
       const rows = screen.getAllByRole("row");
       expect(rows.length).toBeGreaterThan(1);
     }
@@ -246,7 +252,7 @@ describe("DatabaseView", () => {
   it("select all checkbox toggles all rows", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
     const selectAll = screen.getByLabelText("Select all records");
-    await userEvent.click(selectAll);
+    await user.click(selectAll);
     const checkboxes = screen.getAllByLabelText("Select record");
     expect(checkboxes.length).toBeGreaterThan(0);
   });
@@ -254,8 +260,8 @@ describe("DatabaseView", () => {
   it("deselect all when all selected", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
     const selectAll = screen.getByLabelText("Select all records");
-    await userEvent.click(selectAll);
-    await userEvent.click(selectAll);
+    await user.click(selectAll);
+    await user.click(selectAll);
     const checkboxes = screen.getAllByLabelText("Select record");
     checkboxes.forEach((cb) => {
       expect((cb as HTMLInputElement).checked).toBe(false);
@@ -265,32 +271,32 @@ describe("DatabaseView", () => {
   it("toggles individual row selection", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
     const rowCheckbox = screen.getAllByLabelText("Select record")[0];
-    await userEvent.click(rowCheckbox!);
+    await user.click(rowCheckbox!);
     expect((rowCheckbox as HTMLInputElement).checked).toBe(true);
-    await userEvent.click(rowCheckbox!);
+    await user.click(rowCheckbox!);
     expect((rowCheckbox as HTMLInputElement).checked).toBe(false);
   });
 
   it("adds filter via filter panel", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
-    await userEvent.click(screen.getByText("Filter"));
+    await user.click(screen.getByText("Filter"));
     const addFilterBtn = screen.getByText((content, el) =>
       el?.tagName === "BUTTON" && content.includes("Add Filter"),
     );
-    await userEvent.click(addFilterBtn);
+    await user.click(addFilterBtn);
     const filterInputs = screen.getAllByPlaceholderText("Value...");
     expect(filterInputs.length).toBeGreaterThanOrEqual(1);
   });
 
   it("removes filter on X click", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
-    await userEvent.click(screen.getByText("Filter"));
+    await user.click(screen.getByText("Filter"));
     const addFilterBtn = screen.getByText((content, el) =>
       el?.tagName === "BUTTON" && content.includes("Add Filter"),
     );
-    await userEvent.click(addFilterBtn);
+    await user.click(addFilterBtn);
     const removeBtn = screen.getByLabelText("Remove filter");
-    await userEvent.click(removeBtn);
+    await user.click(removeBtn);
     expect(
       screen.getByText(
         "No filters applied. Click 'Add Filter' to start.",
@@ -300,35 +306,35 @@ describe("DatabaseView", () => {
 
   it("updates filter value", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
-    await userEvent.click(screen.getByText("Filter"));
+    await user.click(screen.getByText("Filter"));
     const addFilterBtn = screen.getByText((content, el) =>
       el?.tagName === "BUTTON" && content.includes("Add Filter"),
     );
-    await userEvent.click(addFilterBtn);
+    await user.click(addFilterBtn);
     const filterInput = screen.getByPlaceholderText("Value...");
-    await userEvent.type(filterInput, "Alice");
+    await user.type(filterInput, "Alice");
     expect(filterInput).toHaveValue("Alice");
   });
 
   it("shows filter result count when filtering", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
-    await userEvent.click(screen.getByText("Filter"));
+    await user.click(screen.getByText("Filter"));
     const addFilterBtn = screen.getByText((content, el) =>
       el?.tagName === "BUTTON" && content.includes("Add Filter"),
     );
-    await userEvent.click(addFilterBtn);
+    await user.click(addFilterBtn);
     const filterInput = screen.getByPlaceholderText("Value...");
-    await userEvent.type(filterInput, "Alice");
+    await user.type(filterInput, "Alice");
     expect(screen.getByText(/Showing/)).toBeDefined();
   });
 
   it("calls onCellEdit when cell edit is committed", async () => {
     const onCellEdit = vi.fn();
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} onCellEdit={onCellEdit} />);
-    await userEvent.click(screen.getByText("Design System Tokens"));
+    await user.click(screen.getByText("Design System Tokens"));
     const input = screen.getByDisplayValue("Design System Tokens");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(onCellEdit).toHaveBeenCalled();
   });
 
@@ -343,27 +349,27 @@ describe("DatabaseView", () => {
   it("shows empty state when no rows match filter", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
     const input = screen.getByPlaceholderText("Search records...");
-    await userEvent.type(input, "zzzznonexistent");
+    await user.type(input, "zzzznonexistent");
     expect(screen.getByText("No records found")).toBeDefined();
   });
 
   it("commits edit via check button click", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
-    await userEvent.click(screen.getByText("Design System Tokens"));
+    await user.click(screen.getByText("Design System Tokens"));
     const input = screen.getByDisplayValue("Design System Tokens");
-    await userEvent.clear(input);
-    await userEvent.type(input, "Via Check");
+    await user.clear(input);
+    await user.type(input, "Via Check");
     const checkBtn = screen.getByLabelText("Confirm edit");
-    await userEvent.click(checkBtn);
+    await user.click(checkBtn);
     expect(screen.getByText("Via Check")).toBeDefined();
   });
 
   it("commits edit on blur", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
-    await userEvent.click(screen.getByText("Design System Tokens"));
+    await user.click(screen.getByText("Design System Tokens"));
     const input = screen.getByDisplayValue("Design System Tokens");
-    await userEvent.clear(input);
-    await userEvent.type(input, "Blur Value");
+    await user.clear(input);
+    await user.type(input, "Blur Value");
     fireEvent.blur(input);
     expect(screen.getByText("Blur Value")).toBeDefined();
   });
@@ -380,11 +386,11 @@ describe("DatabaseView", () => {
 
   it("filter column select changes filter column", async () => {
     render(<DatabaseView collection="test" schema={{}} rows={sampleRows} />);
-    await userEvent.click(screen.getByText("Filter"));
+    await user.click(screen.getByText("Filter"));
     const addFilterBtn = screen.getByText((content, el) =>
       el?.tagName === "BUTTON" && content.includes("Add Filter"),
     );
-    await userEvent.click(addFilterBtn);
+    await user.click(addFilterBtn);
     const selects = screen.getAllByLabelText("Filter column");
     expect(selects.length).toBeGreaterThanOrEqual(1);
   });
@@ -411,7 +417,7 @@ describe("DatabaseView", () => {
       result: [{ toJSON: () => ({ id: "1", title: "Real Doc", status: "Done" }) }],
     } as any as any as any as any as any);
     render(<DatabaseView collection="bookmarks" schema={{}} />);
-    await userEvent.click(screen.getByText("New"));
+    await user.click(screen.getByText("New"));
     expect(upsert).toHaveBeenCalled();
   });
 
@@ -469,7 +475,7 @@ describe("DatabaseView", () => {
     } as any as any);
     mockUseRxQuery.mockReturnValue({ result: [] } as any as any);
     render(<DatabaseView collection="bookmarks" schema={{}} />);
-    await userEvent.click(screen.getByText("New"));
+    await user.click(screen.getByText("New"));
     expect(mockLogger.warn).toHaveBeenCalled();
   });
 
@@ -494,12 +500,12 @@ describe("DatabaseView", () => {
       ],
     } as any as any as any as any);
     render(<DatabaseView collection="bookmarks" schema={{}} />);
-    await userEvent.click(screen.getByText("Real Doc A"));
+    await user.click(screen.getByText("Real Doc A"));
     const input = screen.getByDisplayValue("Real Doc A");
-    await userEvent.clear(input);
-    await userEvent.type(input, "Renamed Doc");
+    await user.clear(input);
+    await user.type(input, "Renamed Doc");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(patch).toHaveBeenCalledWith({ title: "Renamed Doc" });
   });
 
@@ -523,12 +529,12 @@ describe("DatabaseView", () => {
       ],
     } as any as any as any as any);
     render(<DatabaseView collection="bookmarks" schema={{}} />);
-    await userEvent.click(screen.getByText("Real Doc A"));
+    await user.click(screen.getByText("Real Doc A"));
     const input = screen.getByDisplayValue("Real Doc A");
-    await userEvent.clear(input);
-    await userEvent.type(input, "Rebuilt");
+    await user.clear(input);
+    await user.type(input, "Rebuilt");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(upsert).toHaveBeenCalledWith(
       expect.objectContaining({ id: "1", title: "Rebuilt" }),
     );
@@ -552,10 +558,10 @@ describe("DatabaseView", () => {
       ],
     } as any as any as any as any);
     render(<DatabaseView collection="bookmarks" schema={{}} />);
-    await userEvent.click(screen.getByText("Real Doc A"));
+    await user.click(screen.getByText("Real Doc A"));
     const input = screen.getByDisplayValue("Real Doc A");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(mockLogger.warn).toHaveBeenCalled();
   });
 
@@ -563,7 +569,7 @@ describe("DatabaseView", () => {
     mockUseRxCollection.mockReturnValue(undefined as any);
     mockUseRxQuery.mockReturnValue({ result: [] } as any as any);
     render(<DatabaseView collection="bookmarks" schema={{}} />);
-    await userEvent.click(screen.getByText("New"));
+    await user.click(screen.getByText("New"));
     expect(mockLogger.warn).toHaveBeenCalled();
   });
 
@@ -589,7 +595,7 @@ describe("DatabaseView", () => {
       ],
     } as any as any as any);
     render(<DatabaseView collection="bookmarks" schema={{}} />);
-    await userEvent.click(screen.getByText("New"));
+    await user.click(screen.getByText("New"));
     const payload = upsert.mock.calls[0]![0] as Record<string, unknown>;
     expect(payload.tags).toBeUndefined();
     expect(payload.visitCount).toBeUndefined();
@@ -612,7 +618,7 @@ describe("DatabaseView", () => {
     render(
       <DatabaseView collection="bookmarks" schema={{}} newRecordDefaults={defaults} />,
     );
-    const click = () => userEvent.click(screen.getByText("New"));
+    const click = () => user.click(screen.getByText("New"));
     // The title column (unique value) renders as a select editor… but the
     // "New" button is in the toolbar, unaffected by cell editing.
     return click().then(() => {
@@ -655,12 +661,12 @@ describe("DatabaseView", () => {
     } as any as any as any as any);
     render(<DatabaseView collection="bookmarks" schema={{}} />);
     // Edit the tags cell of row 1 — the editor is a text <input>.
-    await userEvent.click(screen.getByText("tag-1"));
+    await user.click(screen.getByText("tag-1"));
     const input = screen.getByDisplayValue("tag-1");
-    await userEvent.clear(input);
-    await userEvent.type(input, "alpha,beta");
+    await user.clear(input);
+    await user.type(input, "alpha,beta");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(patch).toHaveBeenCalledWith({ tags: ["alpha", "beta"] });
   });
 
@@ -686,15 +692,15 @@ describe("DatabaseView", () => {
     } as any as any as any as any);
     render(<DatabaseView collection="bookmarks" schema={{}} />);
     const cell = screen.getAllByText("false")[0];
-    await userEvent.click(cell!);
+    await user.click(cell!);
     const select = document.querySelector("select");
     expect(select).not.toBeNull();
     if (select) {
       // NOTE: fireEvent.blur on the pre-re-render node is a no-op (React
       // re-attaches the select after onChange); commit via the Confirm
       // button, which holds a fresh commitEdit closure.
-      await userEvent.selectOptions(select, "true");
-      await userEvent.click(screen.getByLabelText("Confirm edit"));
+      await user.selectOptions(select, "true");
+      await user.click(screen.getByLabelText("Confirm edit"));
       expect(patch).toHaveBeenCalled();
       // patched value must be boolean true, not string "true"
       const args = patch.mock.calls[0]![0];
@@ -729,12 +735,12 @@ describe("DatabaseView", () => {
     render(<DatabaseView collection="bookmarks" schema={{}} />);
     // Select the single row, then click Delete.
     const checkbox = screen.getByLabelText("Select record");
-    await userEvent.click(checkbox);
+    await user.click(checkbox);
     const deleteBtn = screen.getByRole("button", {
       name: /delete selected records/i,
     });
     expect(deleteBtn).not.toBeDisabled();
-    await userEvent.click(deleteBtn);
+    await user.click(deleteBtn);
     expect(patch).toHaveBeenCalledWith(
       expect.objectContaining({ isDeleted: true, updatedAt: expect.any(String) }),
     );
@@ -775,11 +781,11 @@ describe("DatabaseView", () => {
       />,
     );
     const checkbox = screen.getAllByLabelText("Select record")[0];
-    await userEvent.click(checkbox!);
+    await user.click(checkbox!);
     const deleteBtn = screen.getByRole("button", {
       name: /delete selected records/i,
     });
-    await userEvent.click(deleteBtn);
+    await user.click(deleteBtn);
     // The selected row disappears from the local table.
     expect(screen.queryByText("Design System Tokens")).toBeNull();
     expect(screen.getByText("RxDB Migration Plan")).toBeDefined();
@@ -798,10 +804,10 @@ describe("DatabaseView", () => {
       ],
     } as any as any as any as any);
     render(<DatabaseView collection="bookmarks" schema={{}} />);
-    await userEvent.click(screen.getByText("Real Doc A"));
+    await user.click(screen.getByText("Real Doc A"));
     const input = screen.getByDisplayValue("Real Doc A");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     // No collection: the edit is cancelled silently (no throw).
     expect(screen.getByText("Real Doc A")).toBeDefined();
   });

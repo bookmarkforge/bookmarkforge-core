@@ -198,6 +198,12 @@ vi.mock("motion/react", async () => {
 
 import SupportChat from "../../components/SupportChat";
 
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+  user = userEvent.setup({ delay: null });
+});
+
 describe("SupportChat", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -245,13 +251,13 @@ describe("SupportChat", () => {
   it("renders FAQ when switching to faq tab", async () => {
     render(<SupportChat />);
     const faqBtn = screen.getAllByText(/Knowledge Base/i)[0];
-    await userEvent.click(faqBtn!);
+    await user.click(faqBtn!);
     expect(screen.getByText("How to create a document?")).toBeTruthy();
   });
 
   it("switches to the diagnostics tab", async () => {
     render(<SupportChat />);
-    await userEvent.click(screen.getByTestId("icon-Activity"));
+    await user.click(screen.getByTestId("icon-Activity"));
     expect(screen.getAllByTestId("icon-RefreshCw").length).toBeGreaterThan(0);
   });
 
@@ -277,16 +283,16 @@ describe("SupportChat", () => {
   it("does not send a message when the input is empty", async () => {
     render(<SupportChat />);
     const sendBtn = screen.getAllByTestId("icon-Send")[0]!.closest("button")!;
-    await userEvent.click(sendBtn);
+    await user.click(sendBtn);
     expect(agentService.supportChat).not.toHaveBeenCalled();
   });
 
   it("does not send a message when the input has only spaces", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "   ");
+    await user.type(input, "   ");
     const sendBtn = screen.getAllByTestId("icon-Send")[0]!.closest("button")!;
-    await userEvent.click(sendBtn);
+    await user.click(sendBtn);
     expect(agentService.supportChat).not.toHaveBeenCalled();
   });
 
@@ -309,180 +315,180 @@ describe("SupportChat", () => {
   it("detects greeting in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "hello there");
+    await user.type(input, "hello there");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("hello there")).toBeTruthy();
   });
 
   it("detects hola in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "hola mundo");
+    await user.type(input, "hola mundo");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("hola mundo")).toBeTruthy();
   });
 
   it("detects privacy keywords in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "privacy settings");
+    await user.type(input, "privacy settings");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("privacy settings")).toBeTruthy();
   });
 
   it("detects security in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "seguridad");
+    await user.type(input, "seguridad");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("seguridad")).toBeTruthy();
   });
 
   it("detects editor keywords in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "editor options");
+    await user.type(input, "editor options");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("editor options")).toBeTruthy();
   });
 
   it("detects note in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "nota nueva");
+    await user.type(input, "nota nueva");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("nota nueva")).toBeTruthy();
   });
 
   it("detects bookmark keywords in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "bookmark manager");
+    await user.type(input, "bookmark manager");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("bookmark manager")).toBeTruthy();
   });
 
   it("detects link in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "add a link");
+    await user.type(input, "add a link");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("add a link")).toBeTruthy();
   });
 
   it("detects rag keywords in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "how does rag work");
+    await user.type(input, "how does rag work");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("how does rag work")).toBeTruthy();
   });
 
   it("detects theme keywords in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "dark theme");
+    await user.type(input, "dark theme");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("dark theme")).toBeTruthy();
   });
 
   it("detects topic in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "cambiar tema");
+    await user.type(input, "cambiar tema");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("cambiar tema")).toBeTruthy();
   });
 
   it("detects tutorial keywords in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "tutorial guide");
+    await user.type(input, "tutorial guide");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("tutorial guide")).toBeTruthy();
   });
 
   it("detects shortcut keywords in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "keyboard shortcuts");
+    await user.type(input, "keyboard shortcuts");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("keyboard shortcuts")).toBeTruthy();
   });
 
   it("detects keyboard in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "atajos de teclado");
+    await user.type(input, "atajos de teclado");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("atajos de teclado")).toBeTruthy();
   });
 
   it("detects backup keywords in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "create a backup");
+    await user.type(input, "create a backup");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("create a backup")).toBeTruthy();
   });
 
   it("detects copy in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "hacer copia");
+    await user.type(input, "hacer copia");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("hacer copia")).toBeTruthy();
   });
 
   it("detects ai keywords in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "setup ai");
+    await user.type(input, "setup ai");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("setup ai")).toBeTruthy();
   });
 
   it("detects gemini in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "gemini provider");
+    await user.type(input, "gemini provider");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("gemini provider")).toBeTruthy();
   });
 
   it("detects slow/error keywords in query (troubleshoot)", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "app is slow");
+    await user.type(input, "app is slow");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("app is slow")).toBeTruthy();
   });
 
   it("detects problem in query", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "tengo un problema");
+    await user.type(input, "tengo un problema");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("tengo un problema")).toBeTruthy();
   });
 
@@ -493,9 +499,9 @@ describe("SupportChat", () => {
     );
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "quantum computing");
+    await user.type(input, "quantum computing");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(agentService.supportChat).toHaveBeenCalledWith(
       "quantum computing",
       "en",
@@ -508,9 +514,9 @@ describe("SupportChat", () => {
     );
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "quantum computing");
+    await user.type(input, "quantum computing");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     const response = await screen.findByText("Custom AI answer");
     expect(response).toBeTruthy();
   });
@@ -521,9 +527,9 @@ describe("SupportChat", () => {
     );
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "quantum computing");
+    await user.type(input, "quantum computing");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     const fallback = await screen.findByText("app_supportChatDefault");
     expect(fallback).toBeTruthy();
   });
@@ -532,7 +538,7 @@ describe("SupportChat", () => {
   it("clears history when clicking clear history", async () => {
     render(<SupportChat />);
     const clearBtn = screen.getByTitle("Clear History");
-    await userEvent.click(clearBtn);
+    await user.click(clearBtn);
     expect(screen.getByText("app_supportChatWelcome")).toBeTruthy();
     expect(screen.queryByText("tutorials")).toBeNull();
   });
@@ -556,15 +562,15 @@ describe("SupportChat", () => {
 
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "first unknown request");
+    await user.type(input, "first unknown request");
     fireEvent.keyDown(input, { key: "Enter" });
     expect(agentService.supportChat).toHaveBeenCalledTimes(1);
 
-    await userEvent.click(screen.getByTitle("Clear History"));
-    await userEvent.click(screen.getByRole("button", { name: "Delete" }));
+    await user.click(screen.getByTitle("Clear History"));
+    await user.click(screen.getByRole("button", { name: "Delete" }));
 
     const nextInput = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(nextInput, "second unknown request");
+    await user.type(nextInput, "second unknown request");
     fireEvent.keyDown(nextInput, { key: "Enter" });
     expect(agentService.supportChat).toHaveBeenCalledTimes(2);
     const sendButton = screen.getByRole("button", { name: "Send" });
@@ -583,7 +589,7 @@ describe("SupportChat", () => {
     });
     expect(await screen.findByText("second response")).toBeTruthy();
     // The composer is enabled again once text is entered for a follow-up.
-    await userEvent.type(nextInput, "follow up");
+    await user.type(nextInput, "follow up");
     expect(sendButton).not.toBeDisabled();
   });
 
@@ -591,52 +597,52 @@ describe("SupportChat", () => {
   it("switches to faq tab and shows FAQ items", async () => {
     render(<SupportChat />);
     const faqBtn = screen.getAllByText(/Knowledge Base/i)[0];
-    await userEvent.click(faqBtn!);
+    await user.click(faqBtn!);
     expect(screen.getByText("How to create a document?")).toBeTruthy();
     expect(screen.getByText("How to export?")).toBeTruthy();
   });
 
   it("switches to the chat tab from faq", async () => {
     render(<SupportChat />);
-    await userEvent.click(screen.getAllByText(/Knowledge Base/i)[0]!);
+    await user.click(screen.getAllByText(/Knowledge Base/i)[0]!);
     expect(screen.getByText("How to create a document?")).toBeTruthy();
-    await userEvent.click(screen.getAllByText(/AI Assistant/i)[0]!);
+    await user.click(screen.getAllByText(/AI Assistant/i)[0]!);
     expect(screen.getByTestId("icon-MessageCircle")).toBeTruthy();
   });
 
   it("switches to diagnostics tab and shows pending results", async () => {
     render(<SupportChat />);
-    await userEvent.click(screen.getByTestId("icon-Activity"));
+    await user.click(screen.getByTestId("icon-Activity"));
     expect(screen.getAllByTestId("icon-RefreshCw").length).toBeGreaterThan(0);
   });
 
   // --- Branch: FAQ toggle ---
   it("opens and closes FAQ item", async () => {
     render(<SupportChat />);
-    await userEvent.click(screen.getAllByText(/Knowledge Base/i)[0]!);
+    await user.click(screen.getAllByText(/Knowledge Base/i)[0]!);
     const faqBtn = screen.getByText("How to create a document?");
-    await userEvent.click(faqBtn);
+    await user.click(faqBtn);
     expect(screen.getByText("Use the create button.")).toBeTruthy();
-    await userEvent.click(faqBtn);
+    await user.click(faqBtn);
   });
 
   it("opens one FAQ and closes when opening another", async () => {
     render(<SupportChat />);
-    await userEvent.click(screen.getAllByText(/Knowledge Base/i)[0]!);
+    await user.click(screen.getAllByText(/Knowledge Base/i)[0]!);
     const faq1 = screen.getByText("How to create a document?");
     const faq2 = screen.getByText("How to export?");
-    await userEvent.click(faq1);
+    await user.click(faq1);
     expect(screen.getByText("Use the create button.")).toBeTruthy();
-    await userEvent.click(faq2);
+    await user.click(faq2);
     expect(screen.getByText("Go to File > Export.")).toBeTruthy();
   });
 
   // --- Branch: FAQ "Go to AI Assistant" button ---
   it("navigates to chat from FAQ via Go to AI Assistant button", async () => {
     render(<SupportChat />);
-    await userEvent.click(screen.getAllByText(/Knowledge Base/i)[0]!);
+    await user.click(screen.getAllByText(/Knowledge Base/i)[0]!);
     const goToAiBtn = screen.getByText("Go to AI Assistant");
-    await userEvent.click(goToAiBtn);
+    await user.click(goToAiBtn);
     expect(screen.getByTestId("icon-MessageCircle")).toBeTruthy();
   });
 
@@ -650,7 +656,7 @@ describe("SupportChat", () => {
   it("send button enabled when input has text", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "hello");
+    await user.type(input, "hello");
     const sendBtn = screen.getAllByTestId("icon-Send")[0]!.closest("button")!;
     expect(sendBtn).not.toBeDisabled();
   });
@@ -659,18 +665,18 @@ describe("SupportChat", () => {
   it("sends message with Enter key", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "hello");
+    await user.type(input, "hello");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("hello")).toBeTruthy();
   });
 
   it("does not send with a key other than Enter", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "hello");
+    await user.type(input, "hello");
     input.focus();
-    await userEvent.keyboard("a");
+    await user.keyboard("a");
     expect(screen.queryByText("hello")).toBeNull();
   });
 
@@ -678,16 +684,16 @@ describe("SupportChat", () => {
   it("shows typing indicator after sending a message", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "hello");
+    await user.type(input, "hello");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getAllByTestId("icon-Bot").length).toBeGreaterThan(0);
   });
 
   // --- Branch: quick action buttons ---
   it("sends Privacy query via quick action", async () => {
     render(<SupportChat />);
-    await userEvent.click(screen.getByText("Privacy"));
+    await user.click(screen.getByText("Privacy"));
     expect(screen.getByText("privacy")).toBeTruthy();
   });
 
@@ -707,7 +713,7 @@ describe("SupportChat", () => {
 
   it("sends Backups query via quick action", async () => {
     render(<SupportChat />);
-    await userEvent.click(screen.getByText("Backups"));
+    await user.click(screen.getByText("Backups"));
     expect(screen.getByText("backup")).toBeTruthy();
   });
 
@@ -752,9 +758,9 @@ describe("SupportChat", () => {
   it("saves messages to localStorage on send", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "saved message");
+    await user.type(input, "saved message");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     const stored = JSON.parse(
       localStorage.getItem("bmf_support_history") || "[]",
     );
@@ -764,23 +770,23 @@ describe("SupportChat", () => {
   // --- Branch: diagnostics auto-run ---
   it("runs diagnostics automatically when switching to the diagnostics tab", async () => {
     render(<SupportChat />);
-    await userEvent.click(screen.getByTestId("icon-Activity"));
+    await user.click(screen.getByTestId("icon-Activity"));
     expect(screen.getAllByTestId("icon-RefreshCw").length).toBeGreaterThan(0);
   });
 
   // --- Branch: runDiagnostics manual ---
   it("runs diagnostics manually via the Re-evaluate button", async () => {
     render(<SupportChat />);
-    await userEvent.click(screen.getByTestId("icon-Activity"));
+    await user.click(screen.getByTestId("icon-Activity"));
     const reevalBtn = screen.getByText("Re-evaluate");
-    await userEvent.click(reevalBtn);
+    await user.click(reevalBtn);
     expect(screen.getAllByTestId("icon-RefreshCw").length).toBeGreaterThan(0);
   });
 
   // --- Branch: diagnostics results pending status ---
   it("shows pending status in diagnostics", async () => {
     render(<SupportChat />);
-    await userEvent.click(screen.getByTestId("icon-Activity"));
+    await user.click(screen.getByTestId("icon-Activity"));
     expect(screen.getAllByText("Verifying status...").length).toBeGreaterThan(
       0,
     );
@@ -809,7 +815,7 @@ describe("SupportChat", () => {
   // --- Branch: diagnostics refresh button ---
   it("renders refresh button in diagnostics", async () => {
     render(<SupportChat />);
-    await userEvent.click(screen.getByTestId("icon-Activity"));
+    await user.click(screen.getByTestId("icon-Activity"));
     expect(screen.getByText("Refresh App (F5)")).toBeTruthy();
   });
 
@@ -817,9 +823,9 @@ describe("SupportChat", () => {
   it("sends message via the Send button", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "via button");
+    await user.type(input, "via button");
     const sendBtn = screen.getAllByTestId("icon-Send")[0]!.closest("button")!;
-    await userEvent.click(sendBtn);
+    await user.click(sendBtn);
     expect(screen.getByText("via button")).toBeTruthy();
   });
 
@@ -828,9 +834,9 @@ describe("SupportChat", () => {
     vi.mocked(agentService.supportChat).mockResolvedValueOnce("Response");
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "unknown query");
+    await user.type(input, "unknown query");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(agentService.supportChat).toHaveBeenCalledWith(
       "unknown query",
       "en",
@@ -841,9 +847,9 @@ describe("SupportChat", () => {
     vi.mocked(agentService.supportChat).mockResolvedValue("AI reply");
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "first message");
+    await user.type(input, "first message");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("first message")).toBeTruthy();
   });
 
@@ -980,9 +986,9 @@ describe("SupportChat", () => {
     );
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "slow query");
+    await user.type(input, "slow query");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     const sendBtn = screen.getAllByTestId("icon-Send")[0]!.closest("button")!;
     expect(sendBtn).toBeDisabled();
   });
@@ -990,7 +996,7 @@ describe("SupportChat", () => {
   // --- Branch: FAQ with es language fallback ---
   it("uses English FAQ when language is not supported", async () => {
     render(<SupportChat />);
-    await userEvent.click(screen.getAllByText(/Knowledge Base/i)[0]!);
+    await user.click(screen.getAllByText(/Knowledge Base/i)[0]!);
     expect(screen.getByText("How to create a document?")).toBeTruthy();
   });
 
@@ -998,7 +1004,7 @@ describe("SupportChat", () => {
   it("handleSend with customQuery does not use input", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "different text");
+    await user.type(input, "different text");
     // The custom query wins: the typed input value is NOT sent.
     fireEvent.click(screen.getByText("Tutorials"));
     expect(screen.getByText("getting started")).toBeTruthy();
@@ -1008,9 +1014,9 @@ describe("SupportChat", () => {
   // --- Branch: diagnostics with isDiagnosing true disables button ---
   it("disables Re-evaluate button while diagnosing", async () => {
     render(<SupportChat />);
-    await userEvent.click(screen.getByTestId("icon-Activity"));
+    await user.click(screen.getByTestId("icon-Activity"));
     const reevalBtn = screen.getByText("Re-evaluate");
-    await userEvent.click(reevalBtn);
+    await user.click(reevalBtn);
     expect(reevalBtn.closest("button")).toBeDisabled();
   });
 
@@ -1018,9 +1024,9 @@ describe("SupportChat", () => {
   it("detects export in query for backup", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "export data");
+    await user.type(input, "export data");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("export data")).toBeTruthy();
   });
 
@@ -1028,9 +1034,9 @@ describe("SupportChat", () => {
   it("detects local ai in query for RAG", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "local ai setup");
+    await user.type(input, "local ai setup");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("local ai setup")).toBeTruthy();
   });
 
@@ -1038,9 +1044,9 @@ describe("SupportChat", () => {
   it("detects ollama in query for AI setup", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "ollama config");
+    await user.type(input, "ollama config");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("ollama config")).toBeTruthy();
   });
 
@@ -1048,9 +1054,9 @@ describe("SupportChat", () => {
   it("detects bookmark in query for bookmarks", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "agregar marcador");
+    await user.type(input, "agregar marcador");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("agregar marcador")).toBeTruthy();
   });
 
@@ -1058,9 +1064,9 @@ describe("SupportChat", () => {
   it("detects note in query for editor", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "create note");
+    await user.type(input, "create note");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("create note")).toBeTruthy();
   });
 
@@ -1068,9 +1074,9 @@ describe("SupportChat", () => {
   it("detects chat in query for RAG", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "chat feature");
+    await user.type(input, "chat feature");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("chat feature")).toBeTruthy();
   });
 
@@ -1078,9 +1084,9 @@ describe("SupportChat", () => {
   it("detects guide in query for tutorials", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "guia de uso");
+    await user.type(input, "guia de uso");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("guia de uso")).toBeTruthy();
   });
 
@@ -1088,9 +1094,9 @@ describe("SupportChat", () => {
   it("detects privacy in query for privacy", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "configurar privacidad");
+    await user.type(input, "configurar privacidad");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("configurar privacidad")).toBeTruthy();
   });
 
@@ -1098,9 +1104,9 @@ describe("SupportChat", () => {
   it("detects error in query for troubleshoot", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "error message");
+    await user.type(input, "error message");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("error message")).toBeTruthy();
   });
 
@@ -1108,16 +1114,16 @@ describe("SupportChat", () => {
   it("detects hi in query for greeting", async () => {
     render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "hi");
+    await user.type(input, "hi");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByText("hi")).toBeTruthy();
   });
 
   // --- Branch: copy report button ---
   it("renders Copy Report button in diagnostics", async () => {
     render(<SupportChat />);
-    await userEvent.click(screen.getByTestId("icon-Activity"));
+    await user.click(screen.getByTestId("icon-Activity"));
     expect(screen.getByText("Copy Report")).toBeTruthy();
   });
 
@@ -1185,6 +1191,11 @@ describe("SupportChat", () => {
     });
     vi.useFakeTimers();
     try {
+      // The file's shared userEvent instance attaches a clipboard stub, but
+      // this test's premise is that the clipboard IS unavailable — assert
+      // that precondition explicitly instead of relying on a prior test's
+      // cleanup.
+      delete (navigator as unknown as Record<string, unknown>).clipboard;
       render(<SupportChat />);
       fireEvent.click(screen.getByTestId("icon-Activity"));
       await act(async () => {
@@ -1210,6 +1221,11 @@ describe("SupportChat", () => {
     });
     vi.useFakeTimers();
     try {
+      // The file's shared userEvent instance attaches a clipboard stub, but
+      // this test's premise is that the clipboard IS unavailable — assert
+      // that precondition explicitly instead of relying on a prior test's
+      // cleanup.
+      delete (navigator as unknown as Record<string, unknown>).clipboard;
       render(<SupportChat />);
       fireEvent.click(screen.getByTestId("icon-Activity"));
       await act(async () => {
@@ -1237,7 +1253,7 @@ describe("SupportChat", () => {
     );
     const { unmount } = render(<SupportChat />);
     const input = screen.getByPlaceholderText("Type a message...");
-    await userEvent.type(input, "qrzx without known keyword");
+    await user.type(input, "qrzx without known keyword");
     fireEvent.keyDown(input, { key: "Enter" });
     expect(agentService.supportChat).toHaveBeenCalled();
 

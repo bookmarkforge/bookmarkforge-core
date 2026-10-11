@@ -71,6 +71,12 @@ vi.mock("i18next", () => ({ default: { language: "en" } }));
 
 import { QuickCapture, generateEmbeddingWithTimeout } from "../../components/QuickCapture";
 
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+  user = userEvent.setup({ delay: null });
+});
+
 describe("QuickCapture", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -96,7 +102,7 @@ describe("QuickCapture", () => {
   it("opens panel when clicking the button", async () => {
     render(<QuickCapture />);
     const btn = screen.getByTestId("icon-Zap").closest("button")!;
-    await userEvent.click(btn);
+    await user.click(btn);
     expect(screen.getByText("app_quickCapture")).toBeTruthy();
     expect(screen.getByPlaceholderText("Enter URL...")).toBeTruthy();
   });
@@ -104,10 +110,10 @@ describe("QuickCapture", () => {
   it("closes panel when clicking X", async () => {
     render(<QuickCapture />);
     const openBtn = screen.getByTestId("icon-Zap").closest("button")!;
-    await userEvent.click(openBtn);
+    await user.click(openBtn);
     expect(screen.getByText("app_quickCapture")).toBeTruthy();
     const closeBtns = screen.getAllByLabelText("Close quick capture");
-    await userEvent.click(closeBtns[0]!);
+    await user.click(closeBtns[0]!);
     await waitFor(() => {
       expect(screen.queryByText("app_quickCapture")).toBeNull();
     });
@@ -116,7 +122,7 @@ describe("QuickCapture", () => {
   it("send button disabled if input is empty", async () => {
     render(<QuickCapture />);
     const openBtn = screen.getByTestId("icon-Zap").closest("button")!;
-    await userEvent.click(openBtn);
+    await user.click(openBtn);
     const sendBtn = screen.getByTestId("icon-Send").closest("button")!;
     expect(sendBtn.disabled).toBe(true);
   });
@@ -124,11 +130,11 @@ describe("QuickCapture", () => {
   it("send button enabled if there is text", async () => {
     render(<QuickCapture />);
     const openBtn = screen.getByTestId("icon-Zap").closest("button")!;
-    await userEvent.click(openBtn);
+    await user.click(openBtn);
     const input = screen.getByPlaceholderText(
       "Enter URL...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "https://example.com");
+    await user.type(input, "https://example.com");
     const sendBtn = screen.getByTestId("icon-Send").closest("button")!;
     expect(sendBtn.disabled).toBe(false);
   });
@@ -136,12 +142,12 @@ describe("QuickCapture", () => {
   it("switches icon to Link when a URL is entered", async () => {
     render(<QuickCapture />);
     const openBtn = screen.getByTestId("icon-Zap").closest("button")!;
-    await userEvent.click(openBtn);
+    await user.click(openBtn);
     const input = screen.getByPlaceholderText(
       "Enter URL...",
     ) as HTMLInputElement;
     expect(screen.getByTestId("icon-FileText")).toBeTruthy();
-    await userEvent.type(input, "https://example.com");
+    await user.type(input, "https://example.com");
     expect(screen.getByTestId("icon-Link")).toBeTruthy();
   });
 
@@ -171,13 +177,13 @@ describe("QuickCapture", () => {
 
     render(<QuickCapture />);
     const openBtn = screen.getByTestId("icon-Zap").closest("button")!;
-    await userEvent.click(openBtn);
+    await user.click(openBtn);
     const input = screen.getByPlaceholderText(
       "Enter URL...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "https://example.com");
+    await user.type(input, "https://example.com");
     const sendBtn = screen.getByTestId("icon-Send").closest("button")!;
-    await userEvent.click(sendBtn);
+    await user.click(sendBtn);
 
     await waitFor(() => {
       expect(insert).toHaveBeenCalled();
@@ -215,13 +221,13 @@ describe("QuickCapture", () => {
 
     render(<QuickCapture />);
     const openBtn = screen.getByTestId("icon-Zap").closest("button")!;
-    await userEvent.click(openBtn);
+    await user.click(openBtn);
     const input = screen.getByPlaceholderText(
       "Enter URL...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Mi idea genial");
+    await user.type(input, "Mi idea genial");
     const sendBtn = screen.getByTestId("icon-Send").closest("button")!;
-    await userEvent.click(sendBtn);
+    await user.click(sendBtn);
 
     await waitFor(() => {
       expect(insert).toHaveBeenCalled();
@@ -260,13 +266,13 @@ describe("QuickCapture", () => {
 
     render(<QuickCapture />);
     const openBtn = screen.getByTestId("icon-Zap").closest("button")!;
-    await userEvent.click(openBtn);
+    await user.click(openBtn);
     const input = screen.getByPlaceholderText(
       "Enter URL...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "https://fallback.com");
+    await user.type(input, "https://fallback.com");
     const sendBtn = screen.getByTestId("icon-Send").closest("button")!;
-    await userEvent.click(sendBtn);
+    await user.click(sendBtn);
 
     await waitFor(() => {
       expect(insert).toHaveBeenCalled();
@@ -306,9 +312,9 @@ describe("QuickCapture", () => {
     (ragEngine.generateEmbedding as ReturnType<typeof vi.fn>).mockResolvedValue([]);
 
     render(<QuickCapture />);
-    await userEvent.click(screen.getByTestId("add-bookmark-button"));
-    await userEvent.type(screen.getByPlaceholderText("Enter URL..."), "https://safe.example");
-    await userEvent.click(screen.getByTestId("save-bookmark-button"));
+    await user.click(screen.getByTestId("add-bookmark-button"));
+    await user.type(screen.getByPlaceholderText("Enter URL..."), "https://safe.example");
+    await user.click(screen.getByTestId("save-bookmark-button"));
 
     await waitFor(() => expect(insert).toHaveBeenCalled());
     const inserted = insert.mock.calls[0]![0];
@@ -326,13 +332,13 @@ describe("QuickCapture", () => {
 
     render(<QuickCapture />);
     const openBtn = screen.getByTestId("icon-Zap").closest("button")!;
-    await userEvent.click(openBtn);
+    await user.click(openBtn);
     const input = screen.getByPlaceholderText(
       "Enter URL...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "https://error.com");
+    await user.type(input, "https://error.com");
     const sendBtn = screen.getByTestId("icon-Send").closest("button")!;
-    await userEvent.click(sendBtn);
+    await user.click(sendBtn);
 
     await waitFor(() => {
       expect(mockToast.error).toHaveBeenCalledWith("app_captureError");
@@ -350,12 +356,12 @@ describe("QuickCapture", () => {
     mockIsFreeLimitError.mockReturnValue(true);
 
     render(<QuickCapture />);
-    await userEvent.click(screen.getByTestId("add-bookmark-button"));
-    await userEvent.type(
+    await user.click(screen.getByTestId("add-bookmark-button"));
+    await user.type(
       screen.getByPlaceholderText("Enter URL..."),
       "https://limit.example",
     );
-    await userEvent.click(screen.getByTestId("save-bookmark-button"));
+    await user.click(screen.getByTestId("save-bookmark-button"));
 
     await waitFor(() => {
       expect(mockToast.error).toHaveBeenCalledWith(
@@ -387,12 +393,12 @@ describe("QuickCapture", () => {
         return originalDispatch(event);
       });
     render(<QuickCapture />);
-    await userEvent.click(screen.getByTestId("add-bookmark-button"));
-    await userEvent.type(
+    await user.click(screen.getByTestId("add-bookmark-button"));
+    await user.type(
       screen.getByPlaceholderText("Enter URL..."),
       "https://pro.example",
     );
-    await userEvent.click(screen.getByTestId("save-bookmark-button"));
+    await user.click(screen.getByTestId("save-bookmark-button"));
     await vi.waitFor(() => expect(dispatched.length).toBe(1));
     expect(dispatched[0]!.detail).toEqual({
       feature: "SpecializedAgentsService",
@@ -411,13 +417,13 @@ describe("QuickCapture", () => {
 
     render(<QuickCapture />);
     const openBtn = screen.getByTestId("icon-Zap").closest("button")!;
-    await userEvent.click(openBtn);
+    await user.click(openBtn);
     const input = screen.getByPlaceholderText(
       "Enter URL...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "https://loading.com");
+    await user.type(input, "https://loading.com");
     const sendBtn = screen.getByTestId("icon-Send").closest("button")!;
-    await userEvent.click(sendBtn);
+    await user.click(sendBtn);
 
     await waitFor(() => {
       expect(screen.getByTestId("icon-Loader2")).toBeTruthy();
@@ -436,16 +442,16 @@ describe("QuickCapture", () => {
 
     render(<QuickCapture />);
     const openBtn = screen.getByTestId("icon-Zap").closest("button")!;
-    await userEvent.click(openBtn);
+    await user.click(openBtn);
     const input = screen.getByPlaceholderText(
       "Enter URL...",
     ) as HTMLInputElement;
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     await waitFor(() => {
       expect(insert).not.toHaveBeenCalled();
     });
-    await userEvent.type(input, "https://enter.com");
-    await userEvent.keyboard("{Enter}");
+    await user.type(input, "https://enter.com");
+    await user.keyboard("{Enter}");
     await waitFor(() => {
       expect(insert).toHaveBeenCalled();
     });
@@ -462,12 +468,12 @@ describe("QuickCapture", () => {
     );
 
     const { unmount } = render(<QuickCapture />);
-    await userEvent.click(screen.getByTestId("add-bookmark-button"));
-    await userEvent.type(
+    await user.click(screen.getByTestId("add-bookmark-button"));
+    await user.type(
       screen.getByPlaceholderText("Enter URL..."),
       "https://stale.example",
     );
-    await userEvent.click(screen.getByTestId("save-bookmark-button"));
+    await user.click(screen.getByTestId("save-bookmark-button"));
     await waitFor(() => {
       expect(screen.getByTestId("icon-Loader2")).toBeTruthy();
     });

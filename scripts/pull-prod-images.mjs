@@ -26,11 +26,10 @@
  * image is missing and fails the script.
  */
 
-import { execSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 import { extractSha } from "./rollback.mjs";
 import { validateRegistry } from "./registry-policy.mjs";
-import { runCommandOk } from "./command-runner.mjs";
+import { captureCommandLine, runCommandLine, runCommandOk } from "./command-runner.mjs";
 export { validateRegistry };
 
 // ── Pure logic (extracted for unit testing without docker or git) ────────
@@ -75,16 +74,12 @@ const args = process.argv.slice(2);
 function runOk(cmd) {
   if (Array.isArray(cmd)) return runCommandOk(cmd[0], cmd.slice(1), { stdio: "inherit" });
   console.log(`$ ${cmd}`);
-  try {
-    execSync(cmd, { stdio: "inherit" });
-    return true;
-  } catch {
-    return false;
-  }
+  const result = runCommandLine(cmd, { stdio: "inherit" });
+  return !result.error && result.status === 0;
 }
 
 function runCapture(cmd) {
-  return execSync(cmd, { encoding: "utf8" }).trim();
+  return captureCommandLine(cmd);
 }
 
 const isMain =

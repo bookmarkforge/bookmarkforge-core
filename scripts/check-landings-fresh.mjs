@@ -29,6 +29,10 @@ import { readFileSync, existsSync, readdirSync } from "node:fs";
 import { join, dirname, basename } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createRequire } from "node:module";
+import {
+  STATUS_RELPATH,
+  deriveStatusJson,
+} from "./generate-early-bird-status.mjs";
 
 const THIS_DIR = dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = join(THIS_DIR, "..", "public");
@@ -113,10 +117,61 @@ export function checkLandingsFresh({ publicDir = PUBLIC_DIR } = {}) {
   return { checked: contract.size, failures };
 }
 
+/**
+ * The Early Bird phase signal (public/api/early-bird-status.json) is generated
+ * from src/constants/pricing.ts by scripts/generate-early-bird-status.mjs and
+ * ships with the landings. It is the only thing the landing's pricing-card
+ * switch reads, so a stale copy keeps selling a sold-out Early Bird offer.
+ *
+ * Kept separate from checkLandingsFresh() so the page gate's hermetic fixtures
+ * (a temp public/ holding only rendered HTML) need no knowledge of it.
+ */
+export function checkEarlyBirdStatus({ publicDir = PUBLIC_DIR } = {}) {
+  const file = `public/${STATUS_RELPATH}`;
+  let fresh;
+  try {
+    fresh = deriveStatusJson();
+  } catch (error) {
+    return { checked: 0, failures: [{ file, reason: `cannot be derived from pricing.ts: ${error.message}` }] };
+  }
+
+  const abs = join(publicDir, STATUS_RELPATH);
+  if (!existsSync(abs)) {
+    return {
+      checked: 0,
+      failures: [
+        {
+          file,
+          reason: "missing: the generator produces it but it is not committed (run node scripts/generate-early-bird-status.mjs)",
+        },
+      ],
+    };
+  }
+
+  const committed = normalizeEol(readFileSync(abs, "utf8"));
+  if (committed !== fresh) {
+    return {
+      checked: 1,
+      failures: [
+        {
+          file,
+          reason: `stale: does not match src/constants/pricing.ts#earlyBird (fix: npm run build:landings)`,
+        },
+      ],
+    };
+  }
+  return { checked: 1, failures: [] };
+}
+
 function main() {
   let result;
   try {
-    result = checkLandingsFresh();
+    const pages = checkLandingsFresh();
+    const status = checkEarlyBirdStatus();
+    result = {
+      checked: pages.checked + status.checked,
+      failures: [...pages.failures, ...status.failures],
+    };
   } catch (error) {
     console.error(`[check-landings-fresh] FAIL: render threw: ${error.message}`);
     process.exit(2);
@@ -128,7 +183,7 @@ function main() {
     }
     process.exit(1);
   }
-  console.log(`[check-landings-fresh] ok: ${result.checked} generated landing page(s) are in sync with their sources`);
+  console.log(`[check-landings-fresh] ok: ${result.checked} generated landing artifact(s) are in sync with their sources`);
 }
 
 const isMain =

@@ -157,8 +157,10 @@ export function parseRedirects(text) {
 }
 
 /**
- * Which response a request gets, following the `_redirects` contract: exact
- * rewrite → file on disk → splat (unless excluded) → 404.
+ * Which response a request gets, following the `_redirects` contract: rewrite
+ * (exact path, or a glob when the row carries `*`/`?` — Cloudflare Pages and
+ * Netlify both match `from` patterns, which is how the `/<lang>/*` rows claim a
+ * localized subtree) → file on disk → splat (unless excluded) → 404.
  */
 export function resolveRequest({ pathname, root, redirects }) {
   const fileExists = (relative) => {
@@ -168,7 +170,10 @@ export function resolveRequest({ pathname, root, redirects }) {
       : null;
   };
   for (const rewrite of redirects.rewrites) {
-    if (rewrite.from !== pathname) continue;
+    const matches = rewrite.from.includes("*") || rewrite.from.includes("?")
+      ? matchGlob(rewrite.from, pathname)
+      : rewrite.from === pathname;
+    if (!matches) continue;
     if (rewrite.status >= 300 && rewrite.status < 400) {
       return { kind: "redirect", location: rewrite.to, status: rewrite.status };
     }

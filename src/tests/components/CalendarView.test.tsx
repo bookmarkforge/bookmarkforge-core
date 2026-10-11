@@ -48,6 +48,12 @@ function todayStr() {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 }
 
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+  user = userEvent.setup({ delay: null });
+});
+
 describe("CalendarView", () => {
   beforeEach(() => {
     mockUseRxCollection.mockReset();
@@ -111,14 +117,14 @@ describe("CalendarView", () => {
 
   it("opens event creation modal on Add Event click", async () => {
     render(<CalendarView events={[]} />);
-    await userEvent.click(screen.getByText("Add Event"));
+    await user.click(screen.getByText("Add Event"));
     expect(screen.getByText("New Event")).toBeDefined();
   });
 
   it("closes event creation modal on Cancel click", async () => {
     render(<CalendarView events={[]} />);
-    await userEvent.click(screen.getByText("Add Event"));
-    await userEvent.click(screen.getByText("Cancel"));
+    await user.click(screen.getByText("Add Event"));
+    await user.click(screen.getByText("Cancel"));
     expect(screen.queryByText("New Event")).toBeNull();
   });
 
@@ -133,12 +139,12 @@ describe("CalendarView", () => {
   it("calls onCreate when event is created via modal", async () => {
     const onCreate = vi.fn();
     render(<CalendarView events={[]} onCreate={onCreate} />);
-    await userEvent.click(screen.getByText("Add Event"));
+    await user.click(screen.getByText("Add Event"));
     await waitFor(async () => {
       const input = screen.getByDisplayValue("");
-      await userEvent.type(input, "Test Event");
+      await user.type(input, "Test Event");
     });
-    await userEvent.click(screen.getByText("Create"));
+    await user.click(screen.getByText("Create"));
     expect(onCreate).toHaveBeenCalled();
   });
 
@@ -147,14 +153,14 @@ describe("CalendarView", () => {
       { id: "e1", title: "Meeting", date: todayStr(), type: "event" as const },
     ];
     render(<CalendarView events={events} onEventClick={vi.fn()} />);
-    await userEvent.click(screen.getByTitle("Meeting"));
+    await user.click(screen.getByTitle("Meeting"));
     expect(screen.getByText("Edit Event")).toBeDefined();
   });
 
   it("navigates to previous month", async () => {
     render(<CalendarView events={[]} />);
     const prevBtn = screen.getAllByRole("button")[0];
-    await userEvent.click(prevBtn!);
+    await user.click(prevBtn!);
     const now = new Date();
     const prevMonth = new Date(now.getFullYear(), now.getMonth() - 1).toLocaleDateString("en", {
       month: "long",
@@ -166,7 +172,7 @@ describe("CalendarView", () => {
   it("navigates to next month", async () => {
     render(<CalendarView events={[]} />);
     const nextBtn = screen.getAllByRole("button")[1];
-    await userEvent.click(nextBtn!);
+    await user.click(nextBtn!);
     const now = new Date();
     const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1).toLocaleDateString("en", {
       month: "long",
@@ -178,8 +184,8 @@ describe("CalendarView", () => {
   it("goToToday returns to current month", async () => {
     render(<CalendarView events={[]} />);
     const nextBtn = screen.getAllByRole("button")[1];
-    await userEvent.click(nextBtn!);
-    await userEvent.click(screen.getByText("Today"));
+    await user.click(nextBtn!);
+    await user.click(screen.getByText("Today"));
     const header = new Date().toLocaleDateString("en", { month: "long", year: "numeric" });
     expect(screen.getByText(header)).toBeDefined();
   });
@@ -190,8 +196,8 @@ describe("CalendarView", () => {
       { id: "e1", title: "Meeting", date: todayStr(), type: "event" as const },
     ];
     render(<CalendarView events={events} onDelete={onDelete} />);
-    await userEvent.click(screen.getByTitle("Meeting"));
-    await userEvent.click(screen.getByText("Delete"));
+    await user.click(screen.getByTitle("Meeting"));
+    await user.click(screen.getByText("Delete"));
     expect(onDelete).toHaveBeenCalledWith("e1");
   });
 
@@ -229,10 +235,10 @@ describe("CalendarView", () => {
   it("commits event on Enter key in title input", async () => {
     const onCreate = vi.fn();
     render(<CalendarView events={[]} onCreate={onCreate} />);
-    await userEvent.click(screen.getByText("Add Event"));
+    await user.click(screen.getByText("Add Event"));
     await waitFor(async () => {
       const input = screen.getByDisplayValue("");
-      await userEvent.type(input, "Test Event{Enter}");
+      await user.type(input, "Test Event{Enter}");
     });
     expect(onCreate).toHaveBeenCalled();
   });
@@ -240,7 +246,7 @@ describe("CalendarView", () => {
   it("does not create event with empty title", async () => {
     const onCreate = vi.fn();
     render(<CalendarView events={[]} onCreate={onCreate} />);
-    await userEvent.click(screen.getByText("Add Event"));
+    await user.click(screen.getByText("Add Event"));
     const createBtn = screen.getByText("Create");
     expect(createBtn).toBeDisabled();
   });
@@ -249,7 +255,7 @@ describe("CalendarView", () => {
     render(<CalendarView events={[]} />);
     const cells = screen.getAllByRole("gridcell");
     if (cells.length > 0) {
-      await userEvent.click(cells[0]!);
+      await user.click(cells[0]!);
       expect(screen.getByText("New Event")).toBeDefined();
     }
   });
@@ -265,11 +271,11 @@ describe("CalendarView", () => {
     } as any as any);
     mockUseRxQuery.mockReturnValue({ result: [] } as any as any);
     render(<CalendarView />);
-    await userEvent.click(screen.getByText("Add Event"));
+    await user.click(screen.getByText("Add Event"));
     await waitFor(async () => {
-      await userEvent.type(screen.getByDisplayValue(""), "New RxDB Event");
+      await user.type(screen.getByDisplayValue(""), "New RxDB Event");
     });
-    await userEvent.click(screen.getByText("Create"));
+    await user.click(screen.getByText("Create"));
     expect(upsert).toHaveBeenCalledWith(
       expect.objectContaining({ title: "New RxDB Event" }),
     );
@@ -297,11 +303,11 @@ describe("CalendarView", () => {
       ],
     } as any as any as any as any);
     render(<CalendarView />);
-    await userEvent.click(screen.getByTitle("Existing Event"));
+    await user.click(screen.getByTitle("Existing Event"));
     const titleInput = screen.getByDisplayValue("Existing Event");
-    await userEvent.clear(titleInput);
-    await userEvent.type(titleInput, "Renamed Event");
-    await userEvent.click(screen.getByText("Save"));
+    await user.clear(titleInput);
+    await user.type(titleInput, "Renamed Event");
+    await user.click(screen.getByText("Save"));
     expect(findOne).toHaveBeenCalledWith("d1");
     expect(patch).toHaveBeenCalledWith(
       expect.objectContaining({ title: "Renamed Event" }),
@@ -328,8 +334,8 @@ describe("CalendarView", () => {
       ],
     } as any as any as any as any);
     render(<CalendarView />);
-    await userEvent.click(screen.getByTitle("Doomed Event"));
-    await userEvent.click(screen.getByText("Delete"));
+    await user.click(screen.getByTitle("Doomed Event"));
+    await user.click(screen.getByText("Delete"));
     expect(patch).toHaveBeenCalledWith(
       expect.objectContaining({ isDeleted: true, updatedAt: expect.any(String) }),
     );
@@ -360,11 +366,11 @@ describe("CalendarView", () => {
     } as any as any);
     mockUseRxQuery.mockReturnValue({ result: [] } as any as any);
     render(<CalendarView />);
-    await userEvent.click(screen.getByText("Add Event"));
+    await user.click(screen.getByText("Add Event"));
     await waitFor(async () => {
-      await userEvent.type(screen.getByDisplayValue(""), "Fail Event");
+      await user.type(screen.getByDisplayValue(""), "Fail Event");
     });
-    await userEvent.click(screen.getByText("Create"));
+    await user.click(screen.getByText("Create"));
     expect(mockLogger.warn).toHaveBeenCalled();
   });
 
@@ -387,8 +393,8 @@ describe("CalendarView", () => {
       ],
     } as any as any as any as any);
     render(<CalendarView />);
-    await userEvent.click(screen.getByTitle("Doomed Event"));
-    await userEvent.click(screen.getByText("Delete"));
+    await user.click(screen.getByTitle("Doomed Event"));
+    await user.click(screen.getByText("Delete"));
     expect(mockLogger.warn).toHaveBeenCalled();
   });
 
@@ -401,7 +407,7 @@ describe("CalendarView", () => {
     });
     const prevBtn = screen.getAllByRole("button")[0];
     for (let i = 0; i < 13; i++) {
-      await userEvent.click(prevBtn!);
+      await user.click(prevBtn!);
     }
     // 13 months back always crosses January; the header must show that month/year.
     expect(screen.getByText(expected)).toBeDefined();
@@ -416,7 +422,7 @@ describe("CalendarView", () => {
     });
     const nextBtn = screen.getAllByRole("button")[1];
     for (let i = 0; i < 13; i++) {
-      await userEvent.click(nextBtn!);
+      await user.click(nextBtn!);
     }
     expect(screen.getByText(expected)).toBeDefined();
   });
@@ -446,9 +452,9 @@ describe("CalendarView", () => {
     } as any);
     mockUseRxQuery.mockReturnValue({ result: [] } as any);
     const { unmount } = render(<CalendarView />);
-    await userEvent.click(screen.getByText("Add Event"));
+    await user.click(screen.getByText("Add Event"));
     await waitFor(async () => {
-      await userEvent.type(screen.getByDisplayValue(""), "Late Fail");
+      await user.type(screen.getByDisplayValue(""), "Late Fail");
     });
     fireEvent.click(screen.getByText("Create"));
     unmount();
@@ -481,7 +487,7 @@ describe("CalendarView", () => {
       ],
     } as any);
     const { unmount } = render(<CalendarView />);
-    await userEvent.click(screen.getByTitle("Doomed Event"));
+    await user.click(screen.getByTitle("Doomed Event"));
     fireEvent.click(screen.getByText("Delete"));
     unmount();
     await act(async () => {

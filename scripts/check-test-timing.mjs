@@ -10,13 +10,23 @@
  * check-docs-markdown (fail-closed on hygiene paths, --update to re-pin,
  * baseline reviewed in the PR diff).
  *
- * Detection is two-layer:
+ * Detection is three-layer:
  *   1. absolute threshold (BMF_TEST_TIMING_MS, default 5000 ms): a NEW file
  *      (not in the baseline) at or above it is a finding;
  *   2. baseline budget (BMF_TEST_TIMING_BUDGET × the pinned duration,
  *      default 2×): a pinned file that regresses past that fails. Pinned
  *      files are exempt from layer 1 — they are pinned precisely because
- *      they sit over the threshold.
+ *      they sit over the threshold;
+ *   3. pin floor (BMF_TEST_TIMING_PIN_FLOOR, default 0.25): a pin sitting
+ *      more than that fraction BELOW its fresh measurement is a stale pin.
+ *      A pin IS a measurement, so one that no run reproduces is a weakened
+ *      guard even when nothing else moved: a `31000` against a real 48347 ms
+ *      shrank that file's budget from 96.7 s to 62 s while both layers above
+ *      stayed quiet (1.56× < 2×), and only a hand re-measurement noticed.
+ *      0 makes any under-pin a finding; 1 disables the layer.
+ *      Only the under-pin direction is judged — a pin ABOVE reality costs
+ *      budget, not detection, and is the normal result of pinning on a
+ *      slower machine, so flagging it would turn machine speed into failures.
  *
  * Noise tolerance: a run must exercise at least BMF_TEST_TIMING_MINCOV
  * (default 80%) of the baseline files to be judgeable — a partially parsed
@@ -27,6 +37,7 @@
  * Env:
  *   BMF_TEST_TIMING=1|update   1 = enforce; update = regenerate baseline
  *   BMF_TEST_TIMING_OFF=1      disable the guard entirely (visible opt-out)
+ *   BMF_TEST_TIMING_PIN_FLOOR under-pin tolerance for layer 3 (default 0.25)
  *
  * Usage:
  *   node scripts/check-test-timing.mjs --log <file>   # evaluate a run log
@@ -66,6 +77,11 @@ export function evaluateTimings(durations, baseline, mode = "enforce", opts = {}
   const thresholdMs = opts.thresholdMs ?? 5000;
   const budgetFactor = opts.budgetFactor ?? 2;
   const minCoveragePct = opts.minCoveragePct ?? 80;
+  // Clamped to [0, 1]: 0 = any under-pin is a finding, 1 = layer 3 disabled.
+  // A non-finite value (empty env var) falls back to the documented default
+  // rather than silently disabling the layer.
+  const rawPinFloor = opts.pinFloor ?? 0.25;
+  const pinFloor = Number.isFinite(rawPinFloor) ? Math.min(1, Math.max(0, rawPinFloor)) : 0.25;
   const lines = [];
 
   if (mode !== "update" && (!baseline || typeof baseline !== "object" || !baseline.files)) {
@@ -99,7 +115,6 @@ export function evaluateTimings(durations, baseline, mode = "enforce", opts = {}
       baseline: {
         schema: TIMING_SCHEMA_LABEL,
         updated: new Date().toISOString().slice(0, 10),
-        thresholdMs,
         budgetFactor,
         files,
       },
@@ -151,11 +166,24 @@ export function evaluateTimings(durations, baseline, mode = "enforce", opts = {}
       violations.push(
         `${file}: ${ms}ms exceeds ${budgetFactor}x its pinned ${pinned}ms budget`,
       );
+    } else if ((ms - pinned) / ms > pinFloor) {
+      // Layer 3 — stale pin: the run measured this file materially slower
+      // than its pin without crossing the regression budget, so the pin no
+      // longer describes the file. Reported here instead of layer 2 so the
+      // remedy (re-pin) is not confused with a real regression.
+      violations.push(
+        `${file}: pinned ${pinned}ms sits ${Math.round(((ms - pinned) / ms) * 100)}% ` +
+          `below this run's ${ms}ms (pin floor ${Math.round(pinFloor * 100)}%) — ` +
+          "the pin is stale: re-pin with BMF_TEST_TIMING=update if the new time " +
+          "is intended, or fix the test",
+      );
     }
   }
 
   if (violations.length > 0) {
-    lines.push("[test-timing] SLOW TEST REGRESSION — files slow or regressed:");
+    lines.push(
+      "[test-timing] SLOW TEST REGRESSION OR STALE PIN — files slow, regressed or pinned below reality:",
+    );
     for (const v of violations) lines.push(`  x ${v}`);
     lines.push(
       "  Fix the test (split it, trim waits, avoid real sleeps) or, if the new",
@@ -165,7 +193,8 @@ export function evaluateTimings(durations, baseline, mode = "enforce", opts = {}
   } else {
     lines.push(
       `[test-timing] OK — ${durations.size} file(s) within budgets ` +
-        `(slow-file threshold ${thresholdMs}ms, regression budget ${budgetFactor}x)`,
+        `(slow-file threshold ${thresholdMs}ms, regression budget ${budgetFactor}x, ` +
+        `pin floor ${Math.round(pinFloor * 100)}%)`,
     );
   }
   return { ok: violations.length === 0, exitCode: violations.length === 0 ? 0 : 1, violations, lines };
@@ -177,6 +206,9 @@ export function optsFromEnv(env = process.env) {
     thresholdMs: Number.parseInt(env.BMF_TEST_TIMING_MS ?? "5000", 10) || 5000,
     budgetFactor: Number.parseInt(env.BMF_TEST_TIMING_BUDGET ?? "2", 10) || 2,
     minCoveragePct: Number.parseInt(env.BMF_TEST_TIMING_MINCOV ?? "80", 10) || 0,
+    // Under-pin tolerance for layer 3. NaN (empty/unset-and-malformed) is
+    // resolved to the default inside evaluateTimings.
+    pinFloor: Number.parseFloat(env.BMF_TEST_TIMING_PIN_FLOOR ?? "0.25"),
   };
 }
 

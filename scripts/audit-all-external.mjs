@@ -14,7 +14,7 @@
  * Usage: node scripts/audit-all-external.mjs
  */
 
-import { execSync } from 'child_process';
+import { captureCommandLine } from './command-runner.mjs';
 
 const colors = {
   reset: '\x1b[0m',
@@ -33,7 +33,9 @@ function log(message, color = colors.reset) {
 function runCommand(command, description) {
   log(`\n🔧 ${description}...`, colors.cyan);
   try {
-    const output = execSync(command, {
+    // Through the command-runner boundary: the line is split into argv and
+    // spawned without a shell, so a fixed repo command is never re-parsed.
+    const output = captureCommandLine(command, {
       encoding: 'utf-8',
       stdio: 'pipe',
       maxBuffer: 10 * 1024 * 1024

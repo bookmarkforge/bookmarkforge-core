@@ -27,13 +27,14 @@
  *                          chip (collapses to a 3-row subset).
  *   5. settings-panel     — Mantine modal opened via `settings-button`
  *
- * Pixel baselines are captured for a single visual-backstop locale only
- * (`fi`: all views incl. narrow; see `VISUAL_BACKSTOP_LOCALES`) as
- * `text-fit-{view}-{locale}.png` in
- * `tests/e2e/text-fit.nightly.spec.ts-snapshots/` — Playwright namespaces
- * by spec filename so the snapshots do NOT collide with the critical
- * spec's baselines. All 24 locales still run the authoritative DOM
- * overflow audit.
+ * Pixel baselines are currently DISABLED for every locale: no PNGs are
+ * committed in this repository, so `VISUAL_BACKSTOP_LOCALES` is empty and
+ * the captures are skipped — all 24 locales run the authoritative DOM
+ * overflow audit only. When a baseline set IS committed under
+ * `tests/e2e/text-fit.nightly.spec.ts-snapshots/` (Playwright namespaces by
+ * spec filename, so the snapshots do NOT collide with the critical spec's
+ * baselines), add those locales to `VISUAL_BACKSTOP_LOCALES` to re-enable
+ * the capture.
  *
  * Why a separate dev-server port (5175): the dedicated
  * `playwright.nightly.config.ts` boots its own Vite so a nightly run
@@ -70,13 +71,13 @@ import { dismissOverlays, skipPassword } from "./vault-helpers";
  * without adding coverage, while making fresh-checkout runs fragile when the
  * matrix drifts.
  *
- * Per the audit, only ONE locale gets pixel captures as the backstop:
- * `fi` was chosen because it already has the complete tracked set — 9
- * desktop views + all 4 narrow-viewport captures — so the trimmed set
- * requires zero regeneration and still parks a pixel on every view,
- * including the nightly-only views (editor, chat, canvas, collaboration)
- * that exist in no other suite. The other 23 locales run the DOM audit and
- * deliberately skip the screenshot.
+ * The pixel backstop is currently DISABLED: no PNG baselines are committed
+ * in this repository, so a capture would compare against an auto-written,
+ * unreviewed image — exactly what `check:baseline-gaps` refuses. Every
+ * locale therefore runs the DOM audit only. To re-enable the backstop for
+ * specific locales, commit their PNGs under
+ * `tests/e2e/text-fit.nightly.spec.ts-snapshots/` and list those locales in
+ * `VISUAL_BACKSTOP_LOCALES` below.
  *
  * Real visual-regression coverage for shared views stays in
  * `tests/e2e/visual-testing.spec.ts` (every-CI, pixelmach) and the
@@ -85,7 +86,8 @@ import { dismissOverlays, skipPassword } from "./vault-helpers";
  * if a remaining baseline is ever regenerated with >10% pixel drift.
  */
 const VISUAL_BACKSTOP_MAX_DIFF_RATIO = 0.05;
-const VISUAL_BACKSTOP_LOCALES: ReadonlySet<LocaleCode> = new Set(["fi"]);
+// Empty allow-list = captures disabled (see the policy note above).
+const VISUAL_BACKSTOP_LOCALES: ReadonlySet<LocaleCode> = new Set<LocaleCode>([]);
 
 async function captureBaselineAndCollect(
   page: Page,

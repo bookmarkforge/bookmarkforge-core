@@ -417,8 +417,19 @@ export function validateSecondaryCoverage({
   return violations;
 }
 /** File stem → locale for the rendered pages (landing.html is en). */
-function localeOfFileStem(stem) {
-  return stem === "landing" ? "en" : stem;
+/**
+ * The English landing ships under two file stems: `landing.html` (the explicit
+ * one) and `index.html` (the root route `/`). Both are EN, so both must park
+ * the Free-card wedge at the primary slot 0.
+ *
+ * Without the `index` alias the root page was scanned as the locale "index":
+ * `isWedgeLine` silently fell back to the English keywords (WEDGE_TABLE.en),
+ * so the page still matched a wedge but was expected at the SECONDARY slot 1 —
+ * a false "wedge-position" violation on a primary-locale page. Exported so the
+ * mapping itself is pinned by a test, not just the rendered cards.
+ */
+export function localeOfFileStem(stem) {
+  return stem === "landing" || stem === "index" ? "en" : stem;
 }
 
 if (IS_MAIN) {

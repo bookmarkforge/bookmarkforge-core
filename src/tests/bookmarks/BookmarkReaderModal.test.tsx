@@ -116,6 +116,12 @@ const mockEmptyBookmark: any = {
   tags: [],
 };
 
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+  user = userEvent.setup({ delay: null });
+});
+
 describe("BookmarkReaderModal", () => {
   const defaultProps = {
     viewingContent: mockBookmark,
@@ -157,7 +163,7 @@ describe("BookmarkReaderModal", () => {
         setViewingContent={setViewingContent}
       />,
     );
-    await userEvent.click(getByLabelText("app_closeReader"));
+    await user.click(getByLabelText("app_closeReader"));
     expect(setViewingContent).toHaveBeenCalledWith(null);
   });
 
@@ -176,31 +182,31 @@ describe("BookmarkReaderModal", () => {
   it("toggles theme to sepia when Coffee icon clicked", async () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const typeBtn = container.querySelector('[data-testid="icon-type"]');
-    await userEvent.click(typeBtn!);
+    await user.click(typeBtn!);
     const coffeeBtn = container.querySelector('[data-testid="icon-coffee"]');
     expect(coffeeBtn).toBeTruthy();
-    await userEvent.click(coffeeBtn!);
+    await user.click(coffeeBtn!);
   });
 
   it("increases font size with + button", async () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const typeBtn = container.querySelector('[data-testid="icon-type"]');
-    await userEvent.click(typeBtn!);
+    await user.click(typeBtn!);
     const allButtons = container.querySelectorAll("button");
     const sizeUp = Array.from(allButtons).find((b) => b.textContent === "+");
     expect(sizeUp).toBeTruthy();
-    await userEvent.click(sizeUp!);
+    await user.click(sizeUp!);
     expect(container.textContent).toContain("20");
   });
 
   it("decreases font size with - button", async () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const typeBtn = container.querySelector('[data-testid="icon-type"]');
-    await userEvent.click(typeBtn!);
+    await user.click(typeBtn!);
     const allButtons = container.querySelectorAll("button");
     const sizeDown = Array.from(allButtons).find((b) => b.textContent === "-");
     expect(sizeDown).toBeTruthy();
-    await userEvent.click(sizeDown!);
+    await user.click(sizeDown!);
     expect(container.textContent).toContain("16");
   });
 
@@ -208,7 +214,7 @@ describe("BookmarkReaderModal", () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const maximizeBtn = container.querySelector('[data-testid="icon-maximize2"]');
     expect(maximizeBtn).toBeTruthy();
-    await userEvent.click(maximizeBtn!);
+    await user.click(maximizeBtn!);
     const minimizeBtn = container.querySelector('[data-testid="icon-minimize2"]');
     expect(minimizeBtn).toBeTruthy();
   });
@@ -217,7 +223,7 @@ describe("BookmarkReaderModal", () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const typeBtn = container.querySelector('[data-testid="icon-type"]');
     expect(typeBtn).toBeTruthy();
-    await userEvent.click(typeBtn!);
+    await user.click(typeBtn!);
     expect(container.textContent).toContain("app_theme");
     expect(container.textContent).toContain("app_size");
     expect(container.textContent).toContain("app_line");
@@ -235,7 +241,7 @@ describe("BookmarkReaderModal", () => {
     expect(sparklesBtn).toBeTruthy();
     const cleanBtn =
       sparklesBtn!.closest("button") || sparklesBtn!.parentElement;
-    await userEvent.click(cleanBtn!);
+    await user.click(cleanBtn!);
     expect(handleCleanContent).toHaveBeenCalledWith(mockBookmark);
   });
 
@@ -247,7 +253,7 @@ describe("BookmarkReaderModal", () => {
         handleExportPDF={handleExportPDF}
       />,
     );
-    await userEvent.click(getByLabelText("app_exportPdf"));
+    await user.click(getByLabelText("app_exportPdf"));
     expect(handleExportPDF).toHaveBeenCalled();
   });
 
@@ -259,7 +265,7 @@ describe("BookmarkReaderModal", () => {
         handleExportMarkdown={handleExportMarkdown}
       />,
     );
-    await userEvent.click(getByText("app_md"));
+    await user.click(getByText("app_md"));
     expect(handleExportMarkdown).toHaveBeenCalled();
   });
 
@@ -271,7 +277,7 @@ describe("BookmarkReaderModal", () => {
         handleFetchContent={handleFetchContent}
       />,
     );
-    await userEvent.click(getByTitle("app_extractArticle"));
+    await user.click(getByTitle("app_extractArticle"));
     expect(handleFetchContent).toHaveBeenCalledWith(mockBookmark);
   });
 
@@ -303,7 +309,7 @@ describe("BookmarkReaderModal", () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const sunBtn = container.querySelector('[data-testid="icon-sun"]');
     expect(sunBtn).toBeTruthy();
-    await userEvent.click(sunBtn!.closest("button")!);
+    await user.click(sunBtn!.closest("button")!);
     const lightRadio = container.querySelector('[aria-label="app_lightTheme"]');
     expect(lightRadio?.getAttribute("aria-checked")).toBe("true");
   });
@@ -312,7 +318,7 @@ describe("BookmarkReaderModal", () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const moonBtn = container.querySelector('[data-testid="icon-moon"]');
     expect(moonBtn).toBeTruthy();
-    await userEvent.click(moonBtn!.closest("button")!);
+    await user.click(moonBtn!.closest("button")!);
     const darkRadio = container.querySelector('[aria-label="app_darkTheme"]');
     expect(darkRadio?.getAttribute("aria-checked")).toBe("true");
   });
@@ -322,21 +328,21 @@ describe("BookmarkReaderModal", () => {
   it("increases line height with + button in settings", async () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const typeBtn = container.querySelector('[data-testid="icon-type"]');
-    await userEvent.click(typeBtn!.closest("button")!);
+    await user.click(typeBtn!.closest("button")!);
     // Find the line-height group by its aria-labelledby or find the + button next to the 1.7 value
     const lineGroup = container.querySelector('[aria-labelledby="line-label"]');
     const linePlus = lineGroup?.querySelectorAll("button")[1];
-    await userEvent.click(linePlus!);
+    await user.click(linePlus!);
     expect(lineGroup?.textContent).toContain("1.8");
   });
 
   it("decreases line height with - button in settings", async () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const typeBtn = container.querySelector('[data-testid="icon-type"]');
-    await userEvent.click(typeBtn!.closest("button")!);
+    await user.click(typeBtn!.closest("button")!);
     const lineGroup = container.querySelector('[aria-labelledby="line-label"]');
     const lineMinus = lineGroup?.querySelectorAll("button")[0];
-    await userEvent.click(lineMinus!);
+    await user.click(lineMinus!);
     expect(lineGroup?.textContent).toContain("1.6");
   });
 
@@ -345,23 +351,23 @@ describe("BookmarkReaderModal", () => {
   it("decreases content width via Width controls", async () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const typeBtn = container.querySelector('[data-testid="icon-type"]');
-    await userEvent.click(typeBtn!.closest("button")!);
+    await user.click(typeBtn!.closest("button")!);
     const alignLeft = container.querySelector('[data-testid="icon-alignleft"]');
-    await userEvent.click(alignLeft!.closest("button")!);
+    await user.click(alignLeft!.closest("button")!);
     expect(container.textContent).toContain("90%");
   });
 
   it("increases content width via Width controls", async () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const typeBtn = container.querySelector('[data-testid="icon-type"]');
-    await userEvent.click(typeBtn!.closest("button")!);
+    await user.click(typeBtn!.closest("button")!);
     // Decrease width first to 90%
     const alignLeft = container.querySelector('[data-testid="icon-alignleft"]');
-    await userEvent.click(alignLeft!.closest("button")!);
+    await user.click(alignLeft!.closest("button")!);
     expect(container.textContent).toContain("90%");
     // Increase back to 100%
     const alignJustify = container.querySelector('[data-testid="icon-alignjustify"]');
-    await userEvent.click(alignJustify!.closest("button")!);
+    await user.click(alignJustify!.closest("button")!);
     expect(container.textContent).toContain("100%");
   });
 
@@ -370,10 +376,10 @@ describe("BookmarkReaderModal", () => {
   it("exits focus mode when minimize button clicked", async () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const maxBtn = container.querySelector('[data-testid="icon-maximize2"]');
-    await userEvent.click(maxBtn!.closest("button")!);
+    await user.click(maxBtn!.closest("button")!);
     const minBtn = container.querySelector('[data-testid="icon-minimize2"]');
     expect(minBtn).toBeTruthy();
-    await userEvent.click(minBtn!.closest("button")!);
+    await user.click(minBtn!.closest("button")!);
     // After exiting focus mode, the header should be visible with close button
     expect(container.querySelector('[aria-label="app_closeReader"]')).toBeTruthy();
   });
@@ -384,7 +390,7 @@ describe("BookmarkReaderModal", () => {
     const { container, getByText } = render(<BookmarkReaderModal {...defaultProps} />);
     const copilotBtn = container.querySelector('[title="app_aiCopilot"]');
     expect(copilotBtn).toBeTruthy();
-    await userEvent.click(copilotBtn!);
+    await user.click(copilotBtn!);
     // Copilot panel should appear
     expect(getByText("app_keyPoints")).toBeTruthy();
     expect(getByText("app_related")).toBeTruthy();
@@ -408,10 +414,10 @@ describe("BookmarkReaderModal", () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const typeBtn = container.querySelector('[data-testid="icon-type"]');
     // Open settings
-    await userEvent.click(typeBtn!.closest("button")!);
+    await user.click(typeBtn!.closest("button")!);
     expect(container.textContent).toContain("app_size");
     // Close settings
-    await userEvent.click(typeBtn!.closest("button")!);
+    await user.click(typeBtn!.closest("button")!);
     // Settings panel should be hidden
     expect(container.textContent).not.toContain("app_size");
   });
@@ -469,43 +475,43 @@ describe("BookmarkReaderModal", () => {
   it("does not reduce font size below 14 (boundary floor)", async () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const typeBtn = container.querySelector('[data-testid="icon-type"]');
-    await userEvent.click(typeBtn!.closest("button")!);
+    await user.click(typeBtn!.closest("button")!);
     const allButtons = container.querySelectorAll("button");
     const sizeDown = Array.from(allButtons).find((b) => b.textContent === "-")!;
     // 18 → 16 → 14 → 14 (floor)
-    await userEvent.click(sizeDown);
-    await userEvent.click(sizeDown);
-    await userEvent.click(sizeDown);
+    await user.click(sizeDown);
+    await user.click(sizeDown);
+    await user.click(sizeDown);
     expect(container.textContent).toContain("14");
   });
 
   it("does not reduce line height below 1.3 (boundary floor)", async () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const typeBtn = container.querySelector('[data-testid="icon-type"]');
-    await userEvent.click(typeBtn!.closest("button")!);
+    await user.click(typeBtn!.closest("button")!);
     const lineGroup = container.querySelector('[aria-labelledby="line-label"]')!;
     const lineMinus = lineGroup.querySelectorAll("button")[0];
     // 1.7 → 1.6 → 1.5 → 1.4 → 1.3 → 1.3 (floor)
-    await userEvent.click(lineMinus!);
-    await userEvent.click(lineMinus!);
-    await userEvent.click(lineMinus!);
-    await userEvent.click(lineMinus!);
-    await userEvent.click(lineMinus!);
+    await user.click(lineMinus!);
+    await user.click(lineMinus!);
+    await user.click(lineMinus!);
+    await user.click(lineMinus!);
+    await user.click(lineMinus!);
     expect(lineGroup.textContent).toContain("1.3");
   });
 
   it("does not reduce content width below 60% (boundary floor)", async () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const typeBtn = container.querySelector('[data-testid="icon-type"]');
-    await userEvent.click(typeBtn!.closest("button")!);
+    await user.click(typeBtn!.closest("button")!);
     const alignLeft = container.querySelector('[data-testid="icon-alignleft"]')!;
     const alignLeftBtn = alignLeft.closest("button")!;
     // 100 → 90 → 80 → 70 → 60 → 60 (floor)
-    await userEvent.click(alignLeftBtn);
-    await userEvent.click(alignLeftBtn);
-    await userEvent.click(alignLeftBtn);
-    await userEvent.click(alignLeftBtn);
-    await userEvent.click(alignLeftBtn);
+    await user.click(alignLeftBtn);
+    await user.click(alignLeftBtn);
+    await user.click(alignLeftBtn);
+    await user.click(alignLeftBtn);
+    await user.click(alignLeftBtn);
     expect(container.textContent).toContain("60%");
   });
 
@@ -555,7 +561,7 @@ describe("BookmarkReaderModal", () => {
       expect(container.textContent).toContain("Highlighted text");
     });
     const trashBtn = container.querySelector('[data-testid="icon-trash2"]');
-    await userEvent.click(trashBtn!.closest("button")!);
+    await user.click(trashBtn!.closest("button")!);
     await waitFor(() => {
       expect(mockRemoveHighlight).toHaveBeenCalledWith("h1");
     });
@@ -582,7 +588,7 @@ describe("BookmarkReaderModal", () => {
     expect(toolbar).toBeTruthy();
     const colorBtn = toolbar!.querySelector("button")!;
     mockAddHighlight.mockResolvedValue({});
-    await userEvent.click(colorBtn);
+    await user.click(colorBtn);
     await waitFor(() => {
       expect(mockAddHighlight).toHaveBeenCalledWith(
         "1",
@@ -611,9 +617,9 @@ describe("BookmarkReaderModal", () => {
     const copilotBtn = screen
       .getByTitle("app_aiCopilot")
       .closest("button")!;
-    await userEvent.click(copilotBtn);
+    await user.click(copilotBtn);
     const keyPointsBtn = screen.getByText("app_keyPoints");
-    await userEvent.click(keyPointsBtn);
+    await user.click(keyPointsBtn);
     await screen.findByText("Bullet one");
     expect(screen.getByText("Bullet two")).toBeTruthy();
   });
@@ -626,8 +632,8 @@ describe("BookmarkReaderModal", () => {
       }),
     );
     const { rerender } = render(<BookmarkReaderModal {...defaultProps} />);
-    await userEvent.click(screen.getByTitle("app_aiCopilot"));
-    await userEvent.click(screen.getByText("app_keyPoints"));
+    await user.click(screen.getByTitle("app_aiCopilot"));
+    await user.click(screen.getByText("app_keyPoints"));
     await waitFor(() => expect(mockGenerateText).toHaveBeenCalled());
     const signal = mockGenerateText.mock.calls[0]?.[2]?.signal;
     expect(signal).toBeInstanceOf(AbortSignal);
@@ -678,8 +684,8 @@ describe("BookmarkReaderModal", () => {
     const copilotBtn = screen
       .getByTitle("app_aiCopilot")
       .closest("button")!;
-    await userEvent.click(copilotBtn);
-    await userEvent.click(screen.getByText("app_related"));
+    await user.click(copilotBtn);
+    await user.click(screen.getByText("app_related"));
     await screen.findByText("Related article");
   });
 
@@ -689,8 +695,8 @@ describe("BookmarkReaderModal", () => {
     const copilotBtn = screen
       .getByTitle("app_aiCopilot")
       .closest("button")!;
-    await userEvent.click(copilotBtn);
-    await userEvent.click(screen.getByText("app_keyPoints"));
+    await user.click(copilotBtn);
+    await user.click(screen.getByText("app_keyPoints"));
     await screen.findByText("Failed to generate key points.");
   });
 
@@ -774,12 +780,12 @@ describe("BookmarkReaderModal", () => {
     try {
       const { container } = render(<BookmarkReaderModal {...defaultProps} />);
       const typeBtn = container.querySelector('[data-testid="icon-type"]');
-      await userEvent.click(typeBtn!.closest("button")!);
+      await user.click(typeBtn!.closest("button")!);
       const moodRadio = container.querySelector(
         '[aria-label="app_readerModeMood"]',
       );
       expect(moodRadio).toBeTruthy();
-      await userEvent.click(moodRadio!);
+      await user.click(moodRadio!);
       // Mood pill always shows the scroll-speed readout.
       expect(container.textContent).toContain("px/s");
     } finally {
@@ -793,11 +799,11 @@ describe("BookmarkReaderModal", () => {
   it("activates AIReadingPartner when selecting the Partner mode", async () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const typeBtn = container.querySelector('[data-testid="icon-type"]');
-    await userEvent.click(typeBtn!.closest("button")!);
+    await user.click(typeBtn!.closest("button")!);
     const partnerRadio = container.querySelector(
       '[aria-label="app_readerModePartner"]',
     );
-    await userEvent.click(partnerRadio!);
+    await user.click(partnerRadio!);
     // Vertical "AI" trigger button of the right-side drawer.
     expect(screen.getByText("AI")).toBeTruthy();
   });
@@ -805,9 +811,9 @@ describe("BookmarkReaderModal", () => {
   it("activates DevilAdvocateReader when selecting the Devil mode", async () => {
     const { container } = render(<BookmarkReaderModal {...defaultProps} />);
     const typeBtn = container.querySelector('[data-testid="icon-type"]');
-    await userEvent.click(typeBtn!.closest("button")!);
+    await user.click(typeBtn!.closest("button")!);
     const devilRadio = container.querySelector('[aria-label="app_readerModeDevil"]');
-    await userEvent.click(devilRadio!);
+    await user.click(devilRadio!);
     expect(
       container.querySelector('[aria-label="Enable Devil\'s Advocate"]'),
     ).toBeTruthy();
@@ -821,9 +827,9 @@ describe("BookmarkReaderModal", () => {
       />,
     );
     const typeBtn = container.querySelector('[data-testid="icon-type"]');
-    await userEvent.click(typeBtn!.closest("button")!);
+    await user.click(typeBtn!.closest("button")!);
     const moodRadio = container.querySelector('[aria-label="app_readerModeMood"]');
-    await userEvent.click(moodRadio!);
+    await user.click(moodRadio!);
     // No content → no overlays render even with the mode active.
     expect(container.textContent).not.toContain("px/s");
     expect(container.querySelector('[aria-label="Enable Devil\'s Advocate"]')).toBeNull();

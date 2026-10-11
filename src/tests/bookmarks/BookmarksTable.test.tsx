@@ -303,6 +303,12 @@ function renderWithBookmarks(overrides?: Record<string, any>) {
   return render(<BookmarksTable />);
 }
 
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+  user = userEvent.setup({ delay: null });
+});
+
 describe("BookmarksTable", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -377,7 +383,7 @@ describe("BookmarksTable", () => {
       setError,
     });
     const dismissBtn = getByTestId("x-icon").closest("button");
-    await userEvent.click(dismissBtn!);
+    await user.click(dismissBtn!);
     expect(setError).toHaveBeenCalledWith(null);
   });
 
@@ -398,7 +404,7 @@ describe("BookmarksTable", () => {
       setShareEmail,
     });
     expect(getByTestId("share-modal")).toBeTruthy();
-    await userEvent.click(getByTestId("share-btn"));
+    await user.click(getByTestId("share-btn"));
     expect(setSharingBookmark).toHaveBeenCalledWith(null);
     expect(setShareEmail).toHaveBeenCalledWith("");
   });
@@ -450,14 +456,14 @@ describe("BookmarksTable", () => {
     it("calls handleSort when title header clicked", async () => {
       const handleSort = vi.fn();
       const { getByText } = renderWithBookmarks({ handleSort });
-      await userEvent.click(getByText("app_title"));
+      await user.click(getByText("app_title"));
       expect(handleSort).toHaveBeenCalledWith("title");
     });
 
     it("calls handleSort when url header clicked", async () => {
       const handleSort = vi.fn();
       const { getByText } = renderWithBookmarks({ handleSort });
-      await userEvent.click(getByText("app_url"));
+      await user.click(getByText("app_url"));
       expect(handleSort).toHaveBeenCalledWith("url");
     });
 
@@ -467,14 +473,14 @@ describe("BookmarksTable", () => {
         sortField: "title",
         handleSort,
       });
-      await userEvent.click(getByText("app_createdAt"));
+      await user.click(getByText("app_createdAt"));
       expect(handleSort).toHaveBeenCalledWith("createdAt");
     });
 
     it("calls handleSort when updatedAt header clicked", async () => {
       const handleSort = vi.fn();
       const { getByText } = renderWithBookmarks({ handleSort });
-      await userEvent.click(getByText("app_updatedAt"));
+      await user.click(getByText("app_updatedAt"));
       expect(handleSort).toHaveBeenCalledWith("updatedAt");
     });
 
@@ -485,7 +491,7 @@ describe("BookmarksTable", () => {
         sortDirection: "asc",
         handleSort,
       });
-      await userEvent.click(getByText("app_title"));
+      await user.click(getByText("app_title"));
       expect(handleSort).toHaveBeenCalledWith("title");
     });
 
@@ -496,7 +502,7 @@ describe("BookmarksTable", () => {
         sortDirection: "asc",
         handleSort,
       });
-      await userEvent.click(getByText("app_url"));
+      await user.click(getByText("app_url"));
       expect(handleSort).toHaveBeenCalledWith("url");
     });
 
@@ -505,8 +511,8 @@ describe("BookmarksTable", () => {
       const { getByText } = renderWithBookmarks({ handleSort });
       const header = getByText("app_title").closest("button")!;
       header.focus();
-      await userEvent.keyboard("{Enter}");
-      await userEvent.click(header);
+      await user.keyboard("{Enter}");
+      await user.click(header);
       expect(handleSort).toHaveBeenCalledWith("title");
     });
 
@@ -515,8 +521,8 @@ describe("BookmarksTable", () => {
       const { getByText } = renderWithBookmarks({ handleSort });
       const header = getByText("app_title").closest("button")!;
       header.focus();
-      await userEvent.keyboard(" ");
-      await userEvent.click(header);
+      await user.keyboard(" ");
+      await user.click(header);
       expect(handleSort).toHaveBeenCalledWith("title");
     });
 
@@ -525,7 +531,7 @@ describe("BookmarksTable", () => {
       const { getByText } = renderWithBookmarks({ handleSort });
       const header = getByText("app_title").closest("button")!;
       header.focus();
-      await userEvent.keyboard("{Tab}");
+      await user.keyboard("{Tab}");
       expect(handleSort).not.toHaveBeenCalled();
     });
   });
@@ -573,7 +579,7 @@ describe("BookmarksTable", () => {
         },
         sort: { sortedBookmarks: [] },
       });
-      await userEvent.click(getByTestId("clear-filters-btn"));
+      await user.click(getByTestId("clear-filters-btn"));
       expect(setSelectedTags).toHaveBeenCalledWith([]);
     });
   });
@@ -608,14 +614,14 @@ describe("BookmarksTable", () => {
       const { getByTestId } = renderWithBookmarks({
         selection: { handleSelect },
       });
-      await userEvent.click(getByTestId("bookmark-row"));
+      await user.click(getByTestId("bookmark-row"));
       expect(handleSelect).toHaveBeenCalledWith("1");
     });
 
     it("calls handleViewContent when view button clicked", async () => {
       const setViewingContent = vi.fn();
       const { getByTestId } = renderWithBookmarks({ setViewingContent });
-      await userEvent.click(getByTestId("view-content-btn"));
+      await user.click(getByTestId("view-content-btn"));
       const callArg = setViewingContent.mock.calls[0]![0];
       expect(callArg).toHaveProperty("id", "1");
       expect(callArg).toHaveProperty("title", "Test");
@@ -623,7 +629,7 @@ describe("BookmarksTable", () => {
 
     it("calls handleAudioSummary without crashing", async () => {
       const { getByTestId } = renderWithBookmarks({});
-      await userEvent.click(getByTestId("audio-summary-btn"));
+      await user.click(getByTestId("audio-summary-btn"));
       await vi.waitFor(() => {
         expect(getByTestId("audio-summary-btn")).toBeTruthy();
       });
@@ -634,7 +640,7 @@ describe("BookmarksTable", () => {
       const { getByTestId } = renderWithBookmarks({
         crud: { handleDelete },
       });
-      await userEvent.click(getByTestId("delete-btn"));
+      await user.click(getByTestId("delete-btn"));
       expect(handleDelete).toHaveBeenCalledWith("1");
     });
   });
@@ -661,7 +667,7 @@ describe("BookmarksTable", () => {
       el.id = "reading-content";
       document.body.appendChild(el);
       expect(getByTestId("reader-modal")).toBeTruthy();
-      await userEvent.click(getByTestId("export-pdf-btn"));
+      await user.click(getByTestId("export-pdf-btn"));
     });
 
     it("calls handleExportMarkdown when export MD button clicked", async () => {
@@ -681,7 +687,7 @@ describe("BookmarksTable", () => {
           ],
         },
       });
-      await userEvent.click(getByTestId("export-md-btn"));
+      await user.click(getByTestId("export-md-btn"));
     });
 
     it("calls handleCleanContent when clean button clicked", async () => {
@@ -703,7 +709,7 @@ describe("BookmarksTable", () => {
         },
         setIsCleaningContent,
       });
-      await userEvent.click(getByTestId("clean-content-btn"));
+      await user.click(getByTestId("clean-content-btn"));
       expect(setIsCleaningContent).toHaveBeenCalled();
     });
   });
@@ -735,7 +741,7 @@ describe("BookmarksTable", () => {
         ],
       });
       const { getByRole } = render(<BookmarksTable />);
-      await userEvent.click(getByRole("button", { name: "app_selectAll" }));
+      await user.click(getByRole("button", { name: "app_selectAll" }));
       expect(handleSelectAll).toHaveBeenCalled();
     });
 
@@ -766,7 +772,7 @@ describe("BookmarksTable", () => {
         ],
       });
       const { getByRole } = render(<BookmarksTable />);
-      await userEvent.click(getByRole("button", { name: "app_deselectAll" }));
+      await user.click(getByRole("button", { name: "app_deselectAll" }));
       expect(handleSelectAll).toHaveBeenCalled();
     });
   });
@@ -775,7 +781,7 @@ describe("BookmarksTable", () => {
     it("does not play audio when generateAudio returns a non-string URL", async () => {
       mockGenerateAudio.mockResolvedValueOnce(null);
       const { getByTestId } = renderWithBookmarks();
-      await userEvent.click(getByTestId("audio-summary-btn"));
+      await user.click(getByTestId("audio-summary-btn"));
       await vi.waitFor(() => {
         expect(mockGenerateAudio).toHaveBeenCalled();
       });
@@ -785,7 +791,7 @@ describe("BookmarksTable", () => {
     it("logs an error when audio generation fails", async () => {
       mockGenerateAudio.mockRejectedValueOnce(new Error("tts down"));
       const { getByTestId } = renderWithBookmarks();
-      await userEvent.click(getByTestId("audio-summary-btn"));
+      await user.click(getByTestId("audio-summary-btn"));
       await vi.waitFor(() => {
         expect(mockLogger.error).toHaveBeenCalled();
       });
@@ -795,7 +801,7 @@ describe("BookmarksTable", () => {
   describe("flashcard generation", () => {
     it("shows a success toast when flashcards are generated", async () => {
       const { getByTestId } = renderWithBookmarks();
-      await userEvent.click(getByTestId("flashcards-btn"));
+      await user.click(getByTestId("flashcards-btn"));
       await vi.waitFor(() => {
         expect(mockFlashcardGenerate).toHaveBeenCalledWith(
           "1",
@@ -829,7 +835,7 @@ describe("BookmarksTable", () => {
         expandedIds,
         bookmarks: [{ id: "1", title: "Test", ...baseBm }],
       });
-      await userEvent.click(getByTestId("flashcards-btn"));
+      await user.click(getByTestId("flashcards-btn"));
       await vi.waitFor(() => {
         expect(mockFlashcardGenerate).toHaveBeenCalled();
       });
@@ -851,7 +857,7 @@ describe("BookmarksTable", () => {
     it("does not toast when zero flashcards are generated", async () => {
       mockFlashcardGenerate.mockResolvedValueOnce(0);
       const { getByTestId } = renderWithBookmarks();
-      await userEvent.click(getByTestId("flashcards-btn"));
+      await user.click(getByTestId("flashcards-btn"));
       await vi.waitFor(() => {
         expect(mockFlashcardGenerate).toHaveBeenCalled();
       });
@@ -861,7 +867,7 @@ describe("BookmarksTable", () => {
     it("logs an error when flashcard generation fails", async () => {
       mockFlashcardGenerate.mockRejectedValueOnce(new Error("gen failed"));
       const { getByTestId } = renderWithBookmarks();
-      await userEvent.click(getByTestId("flashcards-btn"));
+      await user.click(getByTestId("flashcards-btn"));
       await vi.waitFor(() => {
         expect(mockLogger.error).toHaveBeenCalled();
       });
@@ -882,7 +888,7 @@ describe("BookmarksTable", () => {
         bookmarks: [{ id: "1", title: "Test", ...baseBm }],
         sort: { sortedBookmarks: [{ id: "1", title: "Test", ...baseBm }] },
       });
-      await userEvent.click(getByTestId("fetch-content-btn"));
+      await user.click(getByTestId("fetch-content-btn"));
       await vi.waitFor(() => {
         expect(mockFetchAndExtract).toHaveBeenCalled();
       });
@@ -903,7 +909,7 @@ describe("BookmarksTable", () => {
         bookmarks: [{ id: "1", title: "Test", ...baseBm }],
         sort: { sortedBookmarks: [{ id: "1", title: "Test", ...baseBm }] },
       });
-      await userEvent.click(getByTestId("fetch-content-btn"));
+      await user.click(getByTestId("fetch-content-btn"));
       await vi.waitFor(() => {
         expect(mockLogger.error).toHaveBeenCalled();
       });
@@ -930,7 +936,7 @@ describe("BookmarksTable", () => {
         bookmarks: [{ id: "1", title: "Test", ...baseBm }],
         sort: { sortedBookmarks: [{ id: "1", title: "Test", ...baseBm }] },
       });
-      await userEvent.click(getByTestId("clean-content-btn"));
+      await user.click(getByTestId("clean-content-btn"));
       await vi.waitFor(() => {
         expect(patch).toHaveBeenCalled();
       });
@@ -954,7 +960,7 @@ describe("BookmarksTable", () => {
         bookmarks: [{ id: "1", title: "Test", ...baseBm }],
         sort: { sortedBookmarks: [{ id: "1", title: "Test", ...baseBm }] },
       });
-      await userEvent.click(getByTestId("clean-content-btn"));
+      await user.click(getByTestId("clean-content-btn"));
       await vi.waitFor(() => {
         expect(mockLogger.error).toHaveBeenCalled();
       });
@@ -971,7 +977,7 @@ describe("BookmarksTable", () => {
         shareEmail: "",
         setShareEmail,
       });
-      await userEvent.click(getByTestId("share-btn"));
+      await user.click(getByTestId("share-btn"));
       expect(setSharingBookmark).not.toHaveBeenCalled();
       expect(setShareEmail).not.toHaveBeenCalled();
     });

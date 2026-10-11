@@ -11,6 +11,8 @@ import { join } from 'node:path';
 const filesToCopy = [
   'landing.js',
   'landing.css',
+  'help.css',
+  'theme-init.js',
   'ar.html',
   'bg.html',
   'cs.html',

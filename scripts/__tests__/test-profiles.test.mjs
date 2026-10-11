@@ -6,13 +6,27 @@
  * the runnable tree, and the vitest-excluded files must never be scheduled.
  */
 import { describe, expect, it } from "vitest";
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  statSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
 import { join, relative, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { isProSubjectGlob } from "../pro-boundary.mjs";
 import {
   FAST_SELECTORS,
   FAST_THRESHOLD_MS,
+  pinnedLabel,
+  pinnedMs,
   PROFILE_DEFAULTS,
+  SLOW_GATE_TESTS,
   SLOW_THRESHOLD_MS,
   VITEST_EXCLUDED_FILES,
 } from "../test-profiles.mjs";
@@ -92,6 +106,57 @@ describe("FAST_SELECTORS", () => {
     expect(FAST_THRESHOLD_MS).toBeLessThan(SLOW_THRESHOLD_MS);
     expect(PROFILE_DEFAULTS.fast.thresholdMs).toBe(FAST_THRESHOLD_MS);
     expect(PROFILE_DEFAULTS.slow.thresholdMs).toBe(SLOW_THRESHOLD_MS);
+  });
+});
+
+describe("SLOW_GATE_TESTS — pins derived from the timing baseline", () => {
+  const gateTestNames = readdirSync(join(ROOT, "scripts", "__tests__")).filter((file) =>
+    /^.+\.test\.mjs$/.test(file),
+  );
+  const pinOf = (name) => `scripts/__tests__/${name}`;
+  // Descriptions carry the DERIVED pin, so a failure quotes the baseline
+  // rather than a number typed into this file.
+  const describePin = (name) => `${name} (${pinnedLabel(pinOf(name))})`;
+
+  it("justifies every slow-only gate test with a pin at/over the fast bar", () => {
+    // Membership is the deliberate act; a pin at/over the bar is what makes it
+    // true. A gate test held back with a pin under the bar is either stale
+    // (move it to fast) or its pin is wrong (re-pin from a measurement).
+    const unjustified = [...SLOW_GATE_TESTS].filter((name) => {
+      const ms = pinnedMs(pinOf(name));
+      return ms === null || ms < FAST_THRESHOLD_MS;
+    });
+    expect(unjustified.map(describePin)).toEqual([]);
+  });
+
+  it("keeps every over-bar gate test out of the fast profile", () => {
+    const strays = gateTestNames.filter((name) => {
+      const ms = pinnedMs(pinOf(name));
+      return ms !== null && ms >= FAST_THRESHOLD_MS && !SLOW_GATE_TESTS.has(name);
+    });
+    expect(strays.map(describePin)).toEqual([]);
+  });
+
+  it("stays quiet in a tree that ships no timing baseline", () => {
+    // A fixture root must import this module cleanly and silently: the runner,
+    // the wrapper, the file collector and check-audit-freshness all import it,
+    // and a sibling gate test asserting clean stderr is what caught the noisy
+    // version of the baseline read.
+    const moduleUrl = pathToFileURL(join(ROOT, "scripts", "test-profiles.mjs")).href;
+    const root = mkdtempSync(join(tmpdir(), "bmf-profiles-"));
+    try {
+      mkdirSync(join(root, "src", "tests", "security"), { recursive: true });
+      mkdirSync(join(root, "scripts", "__tests__"), { recursive: true });
+      const result = spawnSync(
+        process.execPath,
+        ["--input-type=module", "-e", `await import(${JSON.stringify(moduleUrl)});`],
+        { cwd: root, encoding: "utf8" },
+      );
+      expect(result.status).toBe(0);
+      expect(result.stderr).toBe("");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 });
 

@@ -91,7 +91,7 @@ describe("CLI integration", () => {
   it("npm run check:english-only exits 0 against the real repo", () => {
     const { status, stdout } = runNpm(process.cwd(), "check:english-only");
     expect(status).toBe(0);
-    expect(stdout).toContain("ok");
+    expect(stdout).toContain("[check-english-only] ok");
   });
 
   it("npm run check:english-only exits 1 against the dirty scaffold", () => {

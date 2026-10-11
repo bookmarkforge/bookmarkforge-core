@@ -43,6 +43,12 @@ vi.mock("../../services/SanitizationService", (() => ({
 const { TagManager, ExpandedTagManager } =
   await import("../../components/bookmarks/TagManager");
 
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+  user = userEvent.setup({ delay: null });
+});
+
 describe("TagManager - getContrastColor branches", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -93,15 +99,15 @@ describe("TagManager - input value changes reset selectedIndex", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
-    await userEvent.type(input, "ap");
-    await userEvent.keyboard("{ArrowDown}");
-    await userEvent.keyboard("{ArrowDown}");
+    await user.type(input, "ap");
+    await user.keyboard("{ArrowDown}");
+    await user.keyboard("{ArrowDown}");
     // Clear then re-type to replace value for new suggestion filter
-    await userEvent.clear(input);
-    await userEvent.type(input, "ba");
-    await userEvent.keyboard("{Enter}");
+    await user.clear(input);
+    await user.type(input, "ba");
+    await user.keyboard("{Enter}");
     expect(onAddTag).toHaveBeenCalledWith("banana");
   });
 });
@@ -119,10 +125,10 @@ describe("TagManager - no suggestions available on Enter", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
-    await userEvent.click(input);
-    await userEvent.keyboard("{Enter}");
+    await user.click(input);
+    await user.keyboard("{Enter}");
     expect(onAddTag).not.toHaveBeenCalled();
   });
 });
@@ -140,9 +146,9 @@ describe("TagManager - blur handler branches", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
-    await userEvent.type(input, "newtag");
+    await user.type(input, "newtag");
     fireEvent.blur(input);
     await waitFor(() => {
       expect(onAddTag).toHaveBeenCalledWith("newtag");
@@ -159,7 +165,7 @@ describe("TagManager - blur handler branches", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
     fireEvent.blur(input);
     // Let component's internal async blur handler settle
@@ -177,9 +183,9 @@ describe("TagManager - blur handler branches", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
-    await userEvent.type(input, "   ");
+    await user.type(input, "   ");
     fireEvent.blur(input);
     // Let component's internal async blur handler settle
     await act(async () => { await new Promise((r) => setTimeout(r, 200)); });
@@ -200,9 +206,9 @@ describe("TagManager - suggestion click and keyboard handlers", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
-    await userEvent.type(input, "a");
+    await user.type(input, "a");
     const suggestion = getByText("alpha");
     fireEvent.mouseDown(suggestion);
     expect(onAddTag).toHaveBeenCalledWith("alpha");
@@ -218,9 +224,9 @@ describe("TagManager - suggestion click and keyboard handlers", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
-    await userEvent.type(input, "a");
+    await user.type(input, "a");
     const suggestionDiv = container.querySelector(
       '[role="button"]',
     ) as HTMLElement;
@@ -243,9 +249,9 @@ describe("TagManager - suggestion click and keyboard handlers", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
-    await userEvent.type(input, "a");
+    await user.type(input, "a");
     const suggestionDiv = container.querySelector(
       '[role="button"]',
     ) as HTMLElement;
@@ -268,9 +274,9 @@ describe("TagManager - suggestion click and keyboard handlers", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
-    await userEvent.type(input, "a");
+    await user.type(input, "a");
     const suggestionDiv = container.querySelector(
       '[role="button"]',
     ) as HTMLElement;
@@ -293,13 +299,13 @@ describe("TagManager - suggestion click and keyboard handlers", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
-    await userEvent.type(input, "a");
+    await user.type(input, "a");
     for (let i = 0; i < 10; i++) {
-      await userEvent.keyboard("{ArrowDown}");
+      await user.keyboard("{ArrowDown}");
     }
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(onAddTag).toHaveBeenCalledWith("gamma");
   });
 
@@ -313,14 +319,14 @@ describe("TagManager - suggestion click and keyboard handlers", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
-    await userEvent.type(input, "a");
-    await userEvent.keyboard("{ArrowDown}");
-    await userEvent.keyboard("{ArrowUp}");
-    await userEvent.keyboard("{ArrowUp}");
-    await userEvent.keyboard("{ArrowUp}");
-    await userEvent.keyboard("{Enter}");
+    await user.type(input, "a");
+    await user.keyboard("{ArrowDown}");
+    await user.keyboard("{ArrowUp}");
+    await user.keyboard("{ArrowUp}");
+    await user.keyboard("{ArrowUp}");
+    await user.keyboard("{Enter}");
     expect(onAddTag).toHaveBeenCalledWith("alpha");
   });
 });
@@ -340,11 +346,11 @@ describe("TagManager - color picker branches", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByTestId("palette-icon"));
+    await user.click(getByTestId("palette-icon"));
     const colorBtn = container.querySelector(
       'button[title="#00ff00"]',
     ) as HTMLElement;
-    await userEvent.click(colorBtn);
+    await user.click(colorBtn);
     expect(mockSetTagColor).toHaveBeenCalledWith("mytag", "#00ff00");
   });
 
@@ -357,11 +363,11 @@ describe("TagManager - color picker branches", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByTestId("palette-icon"));
+    await user.click(getByTestId("palette-icon"));
     const removeBtn = container.querySelector(
       'button[title="app_removeColor"]',
     ) as HTMLElement;
-    await userEvent.click(removeBtn);
+    await user.click(removeBtn);
     expect(mockRemoveTagColor).toHaveBeenCalledWith("mytag");
   });
 
@@ -374,11 +380,11 @@ describe("TagManager - color picker branches", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByTestId("palette-icon"));
+    await user.click(getByTestId("palette-icon"));
     expect(container.querySelector('button[title="#ff0000"]')).toBeTruthy();
     expect(container.querySelector('button[title="#00ff00"]')).toBeTruthy();
     expect(container.querySelector('button[title="#0000ff"]')).toBeTruthy();
-    await userEvent.click(getByTestId("palette-icon"));
+    await user.click(getByTestId("palette-icon"));
     expect(container.querySelector('button[title="#ff0000"]')).toBeNull();
   });
 });
@@ -532,7 +538,7 @@ describe("TagManager - AI suggestions branches", () => {
     await waitFor(() => {
       expect(getByText("suggested")).toBeTruthy();
     });
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     expect(getByLabelText("app_newTag")).toBeTruthy();
   });
 
@@ -590,9 +596,9 @@ describe("TagManager - suggestion filtering", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
-    await userEvent.type(input, "avail");
+    await user.type(input, "avail");
     // Check the suggestion dropdown (not the tag pills)
     const suggestions = container.querySelectorAll('[role="button"]');
     const suggestionTexts = Array.from(suggestions).map((el) => el.textContent);
@@ -610,9 +616,9 @@ describe("TagManager - suggestion filtering", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
-    await userEvent.type(input, "tag");
+    await user.type(input, "tag");
     const suggestions = container.querySelectorAll('[role="button"]');
     expect(suggestions.length).toBeLessThanOrEqual(5);
     expect(getByText("tag-0")).toBeTruthy();
@@ -636,10 +642,10 @@ describe("TagManager - Enter with custom tag sanitization", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
-    await userEvent.type(input, "raw tag");
-    await userEvent.keyboard("{Enter}");
+    await user.type(input, "raw tag");
+    await user.keyboard("{Enter}");
     expect(onAddTag).toHaveBeenCalledWith("sanitized-tag");
   });
 
@@ -654,10 +660,10 @@ describe("TagManager - Enter with custom tag sanitization", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
-    await userEvent.type(input, "<script>");
-    await userEvent.keyboard("{Enter}");
+    await user.type(input, "<script>");
+    await user.keyboard("{Enter}");
     expect(onAddTag).not.toHaveBeenCalled();
   });
 });
@@ -674,9 +680,9 @@ describe("TagManager - highlight selected suggestion", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("app_tags"));
+    await user.click(getByText("app_tags"));
     const input = getByLabelText("app_newTag") as HTMLInputElement;
-    await userEvent.type(input, "a");
+    await user.type(input, "a");
     const suggestionDivs = container.querySelectorAll('[role="button"]');
     expect(suggestionDivs[0]!.className).toContain("bg-blue-50");
     expect(suggestionDivs[1]!.className).toContain(
@@ -752,7 +758,7 @@ describe("ExpandedTagManager - edge cases", () => {
       />,
     );
     const input = getByLabelText("app_typeTag") as HTMLInputElement;
-    await userEvent.type(input, "zzzz");
+    await user.type(input, "zzzz");
     expect(getByText("app_noMatchingTags")).toBeTruthy();
   });
 
@@ -767,8 +773,8 @@ describe("ExpandedTagManager - edge cases", () => {
       />,
     );
     const input = getByLabelText("app_typeTag") as HTMLInputElement;
-    await userEvent.click(input);
-    await userEvent.keyboard("{Enter}");
+    await user.click(input);
+    await user.keyboard("{Enter}");
     expect(onAddTag).not.toHaveBeenCalled();
   });
 
@@ -783,8 +789,8 @@ describe("ExpandedTagManager - edge cases", () => {
       />,
     );
     const input = getByLabelText("app_typeTag") as HTMLInputElement;
-    await userEvent.type(input, "   ");
-    await userEvent.keyboard("{Enter}");
+    await user.type(input, "   ");
+    await user.keyboard("{Enter}");
     expect(onAddTag).not.toHaveBeenCalled();
   });
 
@@ -798,7 +804,7 @@ describe("ExpandedTagManager - edge cases", () => {
         onRemoveTag={vi.fn()}
       />,
     );
-    await userEvent.click(getByText("available"));
+    await user.click(getByText("available"));
     expect(onAddTag).toHaveBeenCalledWith("available");
   });
 
@@ -838,7 +844,7 @@ describe("ExpandedTagManager - edge cases", () => {
       />,
     );
     const input = getByLabelText("app_typeTag") as HTMLInputElement;
-    await userEvent.type(input, "my");
+    await user.type(input, "my");
     expect(getByText("MyTag")).toBeTruthy();
   });
 
@@ -853,7 +859,7 @@ describe("ExpandedTagManager - edge cases", () => {
       />,
     );
     const input = getByLabelText("app_typeTag") as HTMLInputElement;
-    await userEvent.type(input, "tag");
+    await user.type(input, "tag");
     expect(queryByText("tag15")).toBeNull();
     expect(queryByText("tag0")).toBeTruthy();
   });
@@ -883,7 +889,7 @@ describe("ExpandedTagManager - edge cases", () => {
         onClearTags={onClearTags}
       />,
     );
-    await userEvent.click(getByText("app_clearTags"));
+    await user.click(getByText("app_clearTags"));
     expect(onClearTags).toHaveBeenCalled();
   });
 });

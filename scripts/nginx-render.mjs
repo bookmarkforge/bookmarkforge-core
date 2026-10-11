@@ -20,6 +20,10 @@
  *                         attributes, preserving paths and structure.
  *   - netlify.toml        HAND-MAINTAINED; only the three CSP-derived lines are
  *                         surgically replaced (see renderNetlifyToml).
+ *   - vercel.json         HAND-MAINTAINED; only the three CSP-derived header
+ *                         VALUES are surgically replaced — inside JSON strings,
+ *                         so the replacement is JSON-escaped (see
+ *                         renderVercelJson).
  *   - Everything in TARGETS_SURGICAL (HTML pages, manifest, extension files):
  *                         hand-maintained; only domain-bearing substrings are
  *                         replaced.
@@ -50,6 +54,7 @@ import {
   LOCALIZED_LANDING_CODES as REGISTRY_LOCALIZED,
   PREF_LANGS as REGISTRY_PREF,
 } from "./landing-registry.mjs";
+import { shellRoutes } from "./app-routes.mjs";
 
 const ROOT = process.cwd();
 
@@ -112,6 +117,87 @@ export function renderNginxPolicy(csp = CSP_MODERATE) {
     .join("\n");
   const cspHeader = `    add_header Content-Security-Policy "${csp}" always;`;
   const repeat = SECURITY_HEADERS.map((h) => `        ${h}`).join("\n");
+
+  // The app's own client routes (src/components/app/AppRoutes.tsx + /capture),
+  // parsed rather than retyped so a route added to the app cannot go
+  // unserved here: check:spa-routes compares this alternation with the route
+  // table on every CI run, and with the same list in vercel.json,
+  // public/_redirects and netlify.toml.
+  const appRouteLocation = `    # ── React SPA shell — the app's client routes ─────────────────────
+    # Exactly the paths src/components/app/AppRoutes.tsx declares, plus
+    # /capture (resolved in App.tsx before the router mounts). Mirrors
+    # public/_redirects, netlify.toml and vercel.json; check:spa-routes fails
+    # the build when this alternation and the app drift apart.
+    # The ten security headers are repeated because nginx does not inherit
+    # add_header into a location that sets its own — the same rule every block
+    # above follows. X-Robots-Tag keeps the private shell out of search
+    # results, the way public/_headers does for the Cloudflare path.
+    # Any other path falls through to the location below, whose try_files ends
+    # =404: an unknown URL is a real 404 on this host too.
+    location ~ ^/(?:${shellRoutes()
+      .map((route) => route.slice(1))
+      .join("|")})/?$ {
+${repeat}
+        add_header X-Robots-Tag "noindex" always;
+        add_header Cache-Control "no-cache, must-revalidate";
+        try_files /app.html =404;
+    }`;
+
+  // /<lang>/<path> belongs to that locale's landing: the service worker's
+  // navigation policy denies those navigations to the app shell, and
+  // vercel.json has expressed the same subtree as /(lang)/:path* all along.
+  // The localized legal pages are real files in the same subtree and are
+  // excluded by the lookahead below.
+  const localeSubtreeLocation = `    # ── Localized subtrees ───────────────────────────────────────────
+    # A localized landing owns every path under it (/es/<path>): the service
+    # worker's navigation policy denies those navigations to the app shell, so
+    # the host answers them with that locale's page — the rewrite vercel.json
+    # expresses as /(lang)/:path*, mirrored by the /<lang>/* rows in
+    # public/_redirects and netlify.toml. The localized legal pages are real
+    # files and are deliberately left out of the alternation.
+    location ~ ^/(${LANDING_LANGS.join("|")})/(?!privacy-and-terms)(.+)$ {
+        # [a-z][a-z] instead of {2}: nginx parses an unquoted brace in a rewrite
+        # regex as a block delimiter and refuses to start ("rewrite is not
+        # terminated by ;") — the alternation above already limits this to the
+        # real locale codes, so the two letters are the locale.
+        rewrite ^/([a-z][a-z])/ /$1.html last;
+    }`;
+
+  // The legal URLs the app itself routes to (AppRoutes.tsx: /privacy, /terms),
+  // plus /offline — where the app navigates when the network is gone. Vercel
+  // and Netlify rewrote all of them; the self-hosted path fell through to the
+  // marketing index.html and served the wrong page.
+  const legalAndOfflineLocations = `    # Legal pages — the URLs the app itself routes to (AppRoutes.tsx declares
+    # /privacy and /terms). Vercel and public/_redirects already rewrite them;
+    # without these, a cold load of /privacy on the self-hosted path was a 404.
+    location = /privacy {
+        rewrite ^ /privacy-and-terms.html last;
+    }
+
+    location = /privacy/ {
+        rewrite ^ /privacy-and-terms.html last;
+    }
+
+    location = /terms {
+        rewrite ^ /privacy-and-terms.html last;
+    }
+
+    location = /terms/ {
+        rewrite ^ /privacy-and-terms.html last;
+    }
+
+    # ── Offline fallback ─────────────────────────────────────────────
+    # The app (and the service worker) navigates to /offline when the
+    # network is gone. Vercel and Netlify rewrite it; without these the
+    # page fell through to the marketing index.html on this host.
+    location = /offline {
+        rewrite ^ /offline.html last;
+    }
+
+    location = /offline/ {
+        rewrite ^ /offline.html last;
+    }`;
+
   const langPrefLocations = PREF_LANGS.map((lang) => {
     const cleanTarget = lang === "en" ? "/" : `/${lang}/`;
     return `    location = /_lang/${lang} {
@@ -126,6 +212,15 @@ ${repeat}
   return `server {
     listen 8080;
     server_name _;
+    # Every redirect in this config must be RELATIVE (Location: /es/). nginx
+    # answers a redirect with an ABSOLUTE URL built from $scheme and the Host
+    # by default, so behind a TLS terminator that speaks http to this
+    # container the language-preference bounce (/ or /?lang=… → /<lang>/) was
+    # handed back as http://… — the plaintext-Location downgrade the
+    # insecure-redirect audit rule reports (58 findings, one per negotiation
+    # rule). absolute_redirect off plus a return-with-path keeps the header
+    # free of both the scheme and the Host header.
+    absolute_redirect off;
     root /usr/share/nginx/html;
     index index.html;
 
@@ -333,7 +428,14 @@ ${PREF_LANGS.map(
       (lang) => `        if ($arg_lang ~* "^${lang}$") { rewrite ^ /_lang/${lang} last; }`,
     ).join("\n")}
 ${LANDING_LANGS.map(
-      (lang) => `        if ($cookie_bf_lang ~* "^${lang}$") { rewrite ^ /${lang}/ redirect; }`,
+      // `return 302 /<lang>/` (a RELATIVE Location) instead of
+      // `rewrite ^ /<lang>/ redirect`: the rewrite builds an absolute URL
+      // out of the request scheme and Host, so behind a TLS terminator that
+      // speaks http to nginx a preference bounce can be answered with a
+      // plaintext Location (what the insecure-redirect audit rule flags, 29
+      // findings on this template alone), and it hands the Host header a say
+      // in the redirect. A relative Location has neither problem.
+      (lang) => `        if ($cookie_bf_lang ~* "^${lang}$") { return 302 /${lang}/; }`,
     ).join("\n")}
         if ($cookie_bf_lang = "") {
             rewrite ^ /_negotiate last;
@@ -349,7 +451,8 @@ ${LANDING_LANGS.map(
     location = /_negotiate {
         internal;
 ${LANDING_LANGS.map(
-      (lang) => `        if ($http_accept_language ~* "^${lang}") { rewrite ^ /${lang}/ redirect; }`,
+      // Same relative-Location reasoning as the cookie rules above.
+      (lang) => `        if ($http_accept_language ~* "^${lang}") { return 302 /${lang}/; }`,
     ).join("\n")}
         rewrite ^ /landing.html last;
     }
@@ -381,17 +484,28 @@ ${LANDING_LANGS.map(
         rewrite ^ /help.html last;
     }
 
+${legalAndOfflineLocations}
+
     # Pocket comparison page (SEO) — static HTML at a clean URL
     location = /pocket-alternative {
         rewrite ^ /pocket-alternative.html last;
     }
 
+${localeSubtreeLocation}
+
+${appRouteLocation}
+
     # ── SPA fallback + WebSocket routing ─────────────────────────────
+    # No document fallback here: an unknown path has to be a real 404. The
+    # app routes are served by the location above and every marketing page has
+    # its own location, so =404 is what remains — answering with index.html
+    # from here was the soft 404 that hid every routing mistake (a typo, a
+    # retired asset, a route that only worked if you started at /app).
     location / {
         if ($http_upgrade != "") {
             rewrite ^ /_ws_ last;
         }
-        try_files $uri $uri/ /index.html;
+        try_files $uri $uri/ =404;
     }
 }
 `;
@@ -511,6 +625,55 @@ Disallow: /api
 
 Sitemap: https://${domain}/sitemap.xml
 `;
+}
+
+/**
+ * Render the CSP-derived header values in vercel.json.
+ *
+ * vercel.json is NOT generated wholesale: its header rules, noindex blocks and
+ * rewrites are static. Only the three CSP-derived values come from
+ * csp-config.js, so a BOOKMARKFORGE_DOMAIN (or VITE_SENTRY_DSN) change
+ * propagates here in the same --write as _headers and netlify.toml.
+ *
+ * The values live inside JSON strings, so each replacement is compared and
+ * written through JSON.stringify: a raw ${CSP} placed in the file would be
+ * invalid JSON the moment it contained a double quote (Report-To always does).
+ */
+export function renderVercelJson(existing, csp = CSP_MODERATE) {
+  if (existing === null) {
+    throw new Error(
+      "[nginx-render] vercel.json is missing — restore it from git before running --write",
+    );
+  }
+  const entries = [
+    ["Reporting-Endpoints", REPORTING_ENDPOINTS_HEADER],
+    ["Report-To", REPORT_TO_HEADER],
+    ["Content-Security-Policy", csp],
+  ];
+  let out = existing;
+  for (const [key, value] of entries) {
+    // Targets one header entry: the "key": "<name>" line followed by its
+    // "value": "…" string. Bounded by the key name, so the surrounding JSON
+    // (other headers, rewrites, comments-free formatting) is never touched.
+    const re = new RegExp(
+      `("key":[ \\t]*"${key.replace(/[-]/g, "\\-")}",[ \\t]*\\r?\\n[ \\t]*"value":[ \\t]*)` +
+        `("(?:[^"\\\\]|\\\\.)*")`,
+      "g",
+    );
+    let hits = 0;
+    out = out.replace(re, (_match, prefix, oldJson) => {
+      hits += 1;
+      const next = JSON.stringify(value);
+      // Already canonical → byte-identical no-op (idempotency).
+      return oldJson === next ? `${prefix}${oldJson}` : `${prefix}${next}`;
+    });
+    if (hits === 0) {
+      throw new Error(
+        `vercel.json: no "${key}" header entry found — the file looks damaged or was restructured; refusing to rewrite (restore it from git and edit by hand)`,
+      );
+    }
+  }
+  return out;
 }
 
 /**
@@ -644,6 +807,7 @@ const targets = [
   { label: "public/nginx.conf", render: () => renderNginxPolicy() },
   { label: "public/_headers", render: (existing) => rewriteHeadersCspValues(existing) },
   { label: "netlify.toml", render: (existing) => renderNetlifyToml(existing) },
+  { label: "vercel.json", render: (existing) => renderVercelJson(existing) },
   { label: "public/sitemap.xml", render: (existing) => replaceSitemapLocs(existing) },
   { label: "public/robots.txt", render: () => renderRobotsTxt() },
   ...TARGETS_SURGICAL,

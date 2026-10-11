@@ -24,13 +24,20 @@ function toggleTheme() {
 
 function applyTheme(theme) {
     document.body.setAttribute('data-theme', theme);
-    try { localStorage.setItem('theme', theme); } catch(_e) { /* best-effort */ }
+    try {
+        // Shared with the landings (landing.js / theme-init.js) — one choice
+        // follows the visitor everywhere instead of resetting on this page.
+        // The legacy `theme` key is still written so an existing pick made
+        // here before the unification is not lost.
+        localStorage.setItem('bmf_landing_theme', theme);
+        localStorage.setItem('theme', theme);
+    } catch(_e) { /* best-effort */ }
     return theme;
 }
 
 /* Default is brand dark (matches src/index.css "Dark Flat UI"). */
 try {
-    var saved = localStorage.getItem('theme');
+    var saved = localStorage.getItem('bmf_landing_theme') || localStorage.getItem('theme');
     var initial = (saved === 'light' || saved === 'dark') ? saved : 'dark';
     setIcons(applyTheme(initial));
 } catch(_e) { /* best-effort */ }

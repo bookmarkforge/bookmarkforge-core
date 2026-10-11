@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-10T18:45:31.438Z",
+  "generatedAt": "2026-10-11T06:23:51.958Z",
   "version": "1.0.0",
   "source": "private repository (export checkout)",
   "license": "MIT",
@@ -16,7 +16,7 @@
     "src/services/pdfService.ts"
   ],
   "proSpecifiersRewritten": 11,
-  "includedCount": 1852,
+  "includedCount": 1873,
   "excluded": [
     {
       "file": ".zap\\authenticated.context",
@@ -375,7 +375,15 @@
       "reason": "docs: business/internal documentation"
     },
     {
+      "file": "docs\\sast-triage-log.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
       "file": "docs\\sast-triage.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\superpowers\\plans\\2026-10-11-test-hygiene-cleanup.md",
       "reason": "docs: business/internal documentation"
     },
     {

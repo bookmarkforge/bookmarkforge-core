@@ -39,6 +39,24 @@ lock callbacks at construction). The rule requires lock/unlock lifecycle
 symmetry in any vault mock (`AGENTS.md` §7).
 → `require-securityvault-mock-lock-unlock.mjs`
 
+### `bmf/no-direct-userevent`
+**Scope:** `src/tests/**`, `tests/e2e/**`.
+Flags module-level `@testing-library/user-event` calls (`userEvent.click(...)`,
+`userEvent.type(...)`, …): every direct call re-creates its own event setup.
+The preferred pattern is ONE shared instance per test —
+`const user = userEvent.setup({ delay: null })` then `await user.click(...)`.
+The rule resolves the real import bindings (default / namespace / aliased named
+`userEvent`), so a `setup()` instance and its methods are never flagged, and
+`userEvent.setup()` itself is always allowed.
+
+The tree predates the rule, so it ships with a reviewed **per-file count
+baseline** (`eslint-rules/userevent-direct-baseline.json`, read by
+`eslint.config.js`): a file absent from the baseline may not use the direct API
+at all, and a baselined file may not add calls past its recorded ceiling. This
+is the `no-unbounded-text` baseline pattern applied inside the rule, which keeps
+`npm run lint` green today while any NEW direct call fails it.
+→ `no-direct-userevent.mjs`
+
 ### `bmf/no-unexplained-test-skip`
 **Scope:** `tests/e2e/**`.
 `test.skip()` / `test.fixme()` / `test.todo()` must carry an explicit reason,

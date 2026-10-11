@@ -9,8 +9,13 @@
  *   2. public/_headers                  (Cloudflare Pages)
  *   3. public/nginx.conf                (self-hosted Docker / nginx)
  *   4. netlify.toml                     (Netlify)
+ *   5. vercel.json                      (the domain the product is served from)
  *
  * Drift between copies means one deployment path serves a stale policy.
+ * vercel.json is the only copy whose values sit inside JSON strings, so its
+ * contribution is unescaped through JSON.parse first (see
+ * vercelHeaderValuesText) — comparing the raw bytes would fail on the escaped
+ * quotes Report-To always carries and pass a policy nobody can read.
  * This gate verifies every copy carries CSP_MODERATE verbatim, that
  * CSP_STRICT stays privacy-maximal (own OAuth + signaling only), and that
  * the dev-only CSP_OPEN never ships.
@@ -196,6 +201,32 @@ export function runCspSyncChecks({
   return { ok: failures.length === 0, oks, failures };
 }
 
+/**
+ * Flatten the header entries of vercel.json into the `key: value` text shape
+ * the other copies have, so the verbatim comparisons above apply unchanged.
+ * Returns "" when the file is unreadable or has no `headers` array: an empty
+ * copy fails the CSP checks loudly instead of silently passing.
+ */
+export function vercelHeaderValuesText(raw) {
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    return "";
+  }
+  const rules = Array.isArray(parsed?.headers) ? parsed.headers : [];
+  const lines = [];
+  for (const rule of rules) {
+    const entries = Array.isArray(rule?.headers) ? rule.headers : [];
+    for (const entry of entries) {
+      if (typeof entry?.key === "string" && typeof entry?.value === "string") {
+        lines.push(`${entry.key}: ${entry.value}`);
+      }
+    }
+  }
+  return lines.join("\n");
+}
+
 // ── CLI wrapper (file I/O + output) ──────────────────────────────────
 
 const isMain =
@@ -208,16 +239,26 @@ if (isMain) {
     { label: "public/_headers", path: join(ROOT, "public", "_headers"), required: true },
     { label: "public/nginx.conf", path: join(ROOT, "public", "nginx.conf"), required: true },
     { label: "netlify.toml", path: join(ROOT, "netlify.toml"), required: false },
+    {
+      label: "vercel.json",
+      path: join(ROOT, "vercel.json"),
+      required: true,
+      // JSON strings, not a plain-text header block: unescape before comparing.
+      transform: vercelHeaderValuesText,
+    },
     // dist/_headers is emitted by the build; validate it when present so a
     // freshly built artifact is verified without forcing a build on every run.
     { label: "dist/_headers", path: join(ROOT, "dist", "_headers"), required: false },
   ];
 
-  const withContents = copies.map((c) => ({
-    label: c.label,
-    content: existsSync(c.path) ? readFileSync(c.path, "utf8") : null,
-    required: c.required,
-  }));
+  const withContents = copies.map((c) => {
+    const raw = existsSync(c.path) ? readFileSync(c.path, "utf8") : null;
+    return {
+      label: c.label,
+      content: raw === null ? null : (c.transform ? c.transform(raw) : raw),
+      required: c.required,
+    };
+  });
 
   // Missing required copies are failures reported before the pure check.
   const missingRequired = withContents.filter((c) => c.content === null && c.required);

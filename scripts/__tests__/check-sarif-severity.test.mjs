@@ -58,8 +58,30 @@ describe("classifySeverity", () => {
     expect(classifySeverity(resultWith({ level: "note" }))).toBe("low");
   });
 
-  it("reports unknown when no severity information exists", () => {
+  it("reports unknown when neither the result nor its rule has a level", () => {
     expect(classifySeverity(resultWith({ level: undefined, properties: {} }))).toBe("unknown");
+    expect(
+      classifySeverity(resultWith({ level: undefined, properties: {} }), {
+        defaultConfiguration: {},
+      }),
+    ).toBe("unknown");
+  });
+
+  it("falls back to the rule's level (Semgrep puts it there, not on the result)", () => {
+    const noLevel = resultWith({ level: undefined, properties: {} });
+    expect(classifySeverity(noLevel, { defaultConfiguration: { level: "error" } })).toBe("high");
+    expect(classifySeverity(noLevel, { defaultConfiguration: { level: "warning" } })).toBe(
+      "medium",
+    );
+    expect(classifySeverity(noLevel, { defaultConfiguration: { level: "note" } })).toBe("low");
+  });
+
+  it("prefers the result's own level over the rule's", () => {
+    expect(
+      classifySeverity(resultWith({ level: "warning" }), {
+        defaultConfiguration: { level: "error" },
+      }),
+    ).toBe("medium");
   });
 });
 
@@ -93,6 +115,35 @@ describe("analyzeSarif", () => {
   it("blocks on a raw error level without security-severity", () => {
     const sarif = sarifWith([resultWith({ properties: undefined })], "Semgrep");
     expect(analyzeSarif(sarif, "high").blocking).toHaveLength(1);
+  });
+
+  it("classifies Semgrep findings whose level lives on the rule", () => {
+    const semgrepSarif = (ruleLevel) => ({
+      version: "2.1.0",
+      runs: [
+        {
+          tool: {
+            driver: {
+              name: "Semgrep OSS",
+              rules: [
+                {
+                  id: "test/rule",
+                  defaultConfiguration: { level: ruleLevel },
+                  properties: {},
+                },
+              ],
+            },
+          },
+          results: [resultWith({ level: undefined, properties: {} })],
+        },
+      ],
+    });
+    const errorRule = analyzeSarif(semgrepSarif("error"), "high");
+    expect(errorRule.findings[0].severity).toBe("high");
+    expect(errorRule.blocking).toHaveLength(1);
+    const warningRule = analyzeSarif(semgrepSarif("warning"), "high");
+    expect(warningRule.findings[0].severity).toBe("medium");
+    expect(warningRule.blocking).toHaveLength(0);
   });
 
   it("does not block on warning findings at the high threshold", () => {

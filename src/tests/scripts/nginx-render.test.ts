@@ -63,6 +63,7 @@ const ALL_TARGETS = [
   "public/nginx.conf",
   "public/_headers",
   "netlify.toml",
+  "vercel.json",
   "public/sitemap.xml",
   "public/robots.txt",
   "public/404.html",
@@ -110,6 +111,18 @@ describe("npm run nginx:render integration", () => {
     copyFileSync(
       join(REPO, "scripts", "landing-registry.mjs"),
       join(renderDir, "scripts", "landing-registry.mjs"),
+    );
+    // The renderer also derives the app-route location from the app's own
+    // route table (scripts/app-routes.mjs -> AppRoutes.tsx): copy both, or
+    // the rendered nginx.conf cannot match the committed one.
+    copyFileSync(
+      join(REPO, "scripts", "app-routes.mjs"),
+      join(renderDir, "scripts", "app-routes.mjs"),
+    );
+    mkdirSync(join(renderDir, "src", "components", "app"), { recursive: true });
+    copyFileSync(
+      join(REPO, "src", "components", "app", "AppRoutes.tsx"),
+      join(renderDir, "src", "components", "app", "AppRoutes.tsx"),
     );
     writeFileSync(
       join(renderDir, "package.json"),

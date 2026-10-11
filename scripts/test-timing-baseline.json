@@ -1,7 +1,6 @@
 {
   "schema": "bmf.test-timing/1",
   "updated": "2026-10-09",
-  "thresholdMs": 10000,
   "budgetFactor": 2,
   "files": {
     "src/tests/components/SupportChat.test.tsx": 17077,

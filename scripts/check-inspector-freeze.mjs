@@ -66,6 +66,12 @@ const KNOWN_GATES = {
   "check:env": "security",
   "check:workflows": "security",
   "check:http-config": "security",
+  // Host routing contract: every client route the app declares must be served
+  // by the shell on all four hosts, the public surface must never be, and an
+  // unknown path must reach the host's 404 document (no catch-all). Same
+  // protected core as check:http-config — a config that drifts here silently
+  // 404s the app or hands a crawler the private shell.
+  "check:spa-routes": "security",
   "check:compose-config": "security",
   "check:runtime-config": "security",
   // Open Core export boundary: prevents proprietary Pro source from entering

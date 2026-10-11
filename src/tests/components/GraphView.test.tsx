@@ -536,12 +536,9 @@ describe("GraphView", () => {
       },
     });
     render(<GraphView />);
-    await waitFor(
-      () => {
-        expect(document.querySelector(".animate-spin")).toBeFalsy();
-      },
-      { timeout: 3000 },
-    );
+    await waitFor(() => {
+      expect(document.querySelector(".animate-spin")).toBeFalsy();
+    });
   });
 
   it("includes bookmarks in stats", async () => {

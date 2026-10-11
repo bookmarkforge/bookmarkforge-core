@@ -80,6 +80,7 @@ scripts/__tmp-sw-debug.mjs
 *.tmp-*
 .merge_file_*
 .d/
+.wrangler/
 
 # OS/editor
 .DS_Store

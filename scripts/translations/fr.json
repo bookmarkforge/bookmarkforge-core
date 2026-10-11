@@ -427,10 +427,6 @@
         "answer": "Payez une fois, à vous pour toujours. Inclut toutes les v1.x à vie et 12 mois de nouveautés dès l’achat. Sécurité à vie. Après le mois 13, v1 reste fonctionnel sans les nouveautés. Futures majeures (v2, v3) : 89 $ nouveaux, 35 $ propriétaires v1 (-60%)."
       },
       {
-        "question": "Qu’est-ce que  Edition ?",
-        "answer": "Même binaire Pro v1 — pas un palier différent. Badge  # dans l’app, accès bêta v2 et -60% à vie sur les futures majeures. Limité à 100. Prestige, pas paywall."
-      },
-      {
         "question": "Moyens de paiement & remboursements ?",
         "answer": "Via Whop : carte, PayPal, crypto. Nous ne voyons jamais vos paiements. Remboursement 30 jours : <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
       },
@@ -526,13 +522,6 @@
         "price": "79",
         "currency": "USD",
         "description": "Regular. Lifetime of v1."
-      },
-      {
-        "name": " Edition",
-        "price": "99",
-        "currency": "USD",
-        "description": "Same Pro v1 +  badge + beta. Limited 100.",
-        "availability": "https://schema.org/LimitedAvailability"
       }
     ],
     "featureList": [
@@ -551,10 +540,6 @@
       {
         "question": "Que signifie \"Lifetime de v1\" pour Pro ?",
         "answer": "Payez une fois, à vous pour toujours. Inclut toutes les v1.x à vie et 12 mois de nouveautés dès l’achat. Sécurité à vie. Après le mois 13, v1 reste fonctionnel sans les nouveautés. Futures majeures (v2, v3) : 89 $ nouveaux, 35 $ propriétaires v1 (-60%)."
-      },
-      {
-        "question": "Qu’est-ce que  Edition ?",
-        "answer": "Même binaire Pro v1 — pas un palier différent. Badge  # dans l’app, accès bêta v2 et -60% à vie sur les futures majeures. Limité à 100. Prestige, pas paywall."
       },
       {
         "question": "Moyens de paiement & remboursements ?",

@@ -291,7 +291,9 @@ body {
 .price-card { background: var(--bg-card); border: 1px solid var(--divider); border-radius: var(--radius-card); padding: 32px; display: flex; flex-direction: column; position: relative; }
 .price-card.popular { border-color: var(--accent-primary); box-shadow: 0 0 0 1px var(--accent-primary), 0 20px 60px rgba(14,165,233,0.12); }
 .price-card .badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent-primary); color: var(--text-primary); padding: 4px 12px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
-.price-card .badge.badge-early { background: #0ea5e9; top: -28px; }
+/* Background is inherited from `.price-card .badge` (var(--accent-primary));
+   restating it here hardcoded a brand hex outside brand-tokens.css. */
+.price-card .badge.badge-early { top: -28px; }
 .price { display: flex; gap: 8px; align-items: baseline; justify-content: center; flex-wrap: wrap; font-size: 2.25rem; font-weight: 800; }
 .price .price-now { color: var(--text-primary); }
 .price .price-was { color: var(--text-secondary); text-decoration: line-through; font-size: 1.25rem; font-weight: 600; }

@@ -178,7 +178,7 @@ here still exists.
 | `npm run benchmark:import-csv` | Importer benchmark over a large CSV. |
 | `npm run benchmark:storage` | Storage benchmark (Dexie vs the RxDB SQLite trial). |
 | `npm run charts:webrtc-recovery` | Renders `webrtc-recovery-history.json` as a self-contained HTML trend page. |
-| `npm run check:vacuous-tests` | Assertion-integrity ratchet for the E2E suites: fails if a test that passes when its feature is absent is added without a baseline entry, and verifies the declared suite sizes in `docs/ops-nightly.md` match the tree. The current debt (1589 of 2050 tests in the human-like suite) is baselined on purpose — see `docs/PENDIENTES.md`. |
+| `npm run check:vacuous-tests` | Assertion-integrity ratchet for the E2E suites: fails if a test that passes when its feature is absent is added without a baseline entry, and verifies the declared suite sizes in `docs/ops-nightly.md` match the tree. The current debt (1589 of 2050 tests in the human-like suite) is baselined on purpose — see `scripts/vacuous-tests-baseline.json`. |
 | `npm run history:webrtc-recovery` | Appends one WebRTC recovery summary to the nightly history file. |
 | `npm run report:webrtc-handshake` | Per-browser handshake diagnostics from a saved Playwright report. |
 | `npm run report:webrtc-nightly` | Renders the convergence summary as a Markdown table for PR comments. |
@@ -188,8 +188,8 @@ Five rows are gates rather than dev loops: `npm run check:extension-dist` and
 also absent from `npm run check`, but for a different reason — it needs a
 Chromium binary and the chain is offline by contract — so it runs in the release
 chain (`check:deploy`) and in its own CI step. `npm run
-check:audit-script-snapshot` (script-inventory scanner,
-`docs/scripts-inventory-scanner-limits.md`) stays out of the chain for a third
+check:audit-script-snapshot` (script-inventory scanner) stays out of the chain
+for a third
 reason: its snapshot is gitignored local audit state, so a fresh clone must
 regenerate it first (`node scripts/__tests__/audit-script-inventory.test.mjs
 --update`). `npm run check:vacuous-tests` is the fourth reason: it is a
@@ -315,9 +315,14 @@ touching the surfaces they guard:
   10 s for the slow profile (its files are legitimately heavier; a 5 s bar
   would flake), plus 2× its pinned time in
   `scripts/test-timing-baseline.json` for every pinned file; locally it
-  warns only. The `slow-tests` CI job enforces timing on the slow profile.
-  Re-pin an intended slowdown with `BMF_TEST_TIMING=update` (baseline is
-  reviewed in the PR diff); `BMF_TEST_TIMING_OFF=1` is the explicit opt-out.
+  warns only. A pin is a measurement, so a third layer fails when one sits
+  more than 25% below its fresh measurement (`BMF_TEST_TIMING_PIN_FLOOR`; 1
+  disables it) — the `31000` against a real 48347 ms shape, where a stale
+  pin silently shrank that file's budget from 96.7 s to 62 s while every
+  other layer stayed quiet. The `slow-tests` CI job enforces timing on the
+  slow profile. Re-pin an intended slowdown with `BMF_TEST_TIMING=update`
+  (baseline is reviewed in the PR diff); `BMF_TEST_TIMING_OFF=1` is the
+  explicit opt-out.
 - Security tests are adversarial, not happy-path: property tests (fast-check),
   fuzzed SSRF gate parity (P81 differential), format-level crypto vectors.
   Tests may not be skipped without a reason — the custom rule

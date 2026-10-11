@@ -185,7 +185,7 @@ function validLanguageNegotiation(overrides = {}) {
             rewrite ^ /_ws_ last;
         }
 ${prefLangs.map((lang) => `        if ($arg_lang ~* "^${lang}$") { rewrite ^ /_lang/${lang} last; }`).join("\n")}
-${langs.map((lang) => `        if ($cookie_bf_lang ~* "^${lang}$") { rewrite ^ /${lang}/ redirect; }`).join("\n")}
+${langs.map((lang) => `        if ($cookie_bf_lang ~* "^${lang}$") { return 302 /${lang}/; }`).join("\n")}
         if ($cookie_bf_lang = "") {
             rewrite ^ /_negotiate last;
         }
@@ -194,7 +194,7 @@ ${langs.map((lang) => `        if ($cookie_bf_lang ~* "^${lang}$") { rewrite ^ /
 
     location = /_negotiate {
         internal;
-${langs.map((lang) => `        if ($http_accept_language ~* "^${lang}") { rewrite ^ /${lang}/ redirect; }`).join("\n")}
+${langs.map((lang) => `        if ($http_accept_language ~* "^${lang}") { return 302 /${lang}/; }`).join("\n")}
         rewrite ^ /landing.html last;
     }
 
@@ -355,6 +355,17 @@ function validNoindexContent(overrides = {}) {
     ].join("\n"),
     offlineHtml: '<meta name="robots" content="noindex, follow">',
     sitemapXml: buildValidSitemap(),
+    // The Vercel path declares the same noindex contract with its own
+    // pattern syntax (`(.*)` instead of `*`).
+    vercelJson: JSON.stringify({
+      headers: [
+        { source: "/app", headers: [{ key: "X-Robots-Tag", value: "noindex" }] },
+        { source: "/app/(.*)", headers: [{ key: "X-Robots-Tag", value: "noindex" }] },
+        { source: "/capture", headers: [{ key: "X-Robots-Tag", value: "noindex" }] },
+        { source: "/capture/(.*)", headers: [{ key: "X-Robots-Tag", value: "noindex" }] },
+        { source: "/offline(.*)", headers: [{ key: "X-Robots-Tag", value: "noindex" }] },
+      ],
+    }),
     ...overrides,
   };
 }
@@ -770,8 +781,11 @@ describe("check-seo gate", () => {
     // (both the cookie and the negotiate copies).
     const nginxDrift = validLanguageNegotiation({
       nginxConf: base.nginxConf
-        .replace('if ($http_accept_language ~* "^fr") { rewrite ^ /fr/ redirect; }', "")
-        .replace(/rewrite \^ \/es\/ redirect;/g, "rewrite ^ /es/ permanent;"),
+        .replace('if ($http_accept_language ~* "^fr") { return 302 /fr/; }', "")
+        .replace(
+          'if ($http_accept_language ~* "^es") { return 302 /es/; }',
+          'if ($http_accept_language ~* "^es") { return 301 /es/; }',
+        ),
     });
     const nginxFails = validateLanguageNegotiation(nginxDrift);
     expect(nginxFails.some((f) => f.includes("^fr"))).toBe(true);
@@ -781,7 +795,7 @@ describe("check-seo gate", () => {
     // removed, and the empty-cookie guard dropped.
     const prefDrift = validLanguageNegotiation({
       nginxConf: base.nginxConf
-        .replace('if ($cookie_bf_lang ~* "^fr$") { rewrite ^ /fr/ redirect; }', "")
+        .replace('if ($cookie_bf_lang ~* "^fr$") { return 302 /fr/; }', "")
         .replace('if ($arg_lang ~* "^en$") { rewrite ^ /_lang/en last; }', "")
         .replace(
           '    location = /_lang/fr {\n        internal;\n        add_header Set-Cookie "bf_lang=fr; Path=/; Max-Age=31536000; SameSite=Lax; Secure" always;\n        add_header Set-Cookie "nf_lang=fr; Path=/; Max-Age=31536000; SameSite=Lax; Secure" always;\n        return 302 /fr/;\n    }\n\n',
@@ -970,6 +984,26 @@ describe("check-seo gate", () => {
     });
     expect(
       validateNoindexContent(tomlMissing).some((f) => f.includes("netlify.toml")),
+    ).toBe(true);
+
+    const vercelMissing = validNoindexContent({
+      vercelJson: JSON.stringify({
+        headers: [
+          { source: "/app", headers: [{ key: "X-Robots-Tag", value: "all" }] },
+        ],
+      }),
+    });
+    const vercelFails = validateNoindexContent(vercelMissing);
+    expect(vercelFails.some((f) => f.includes("vercel.json") && f.includes("/app/(.*)"))).toBe(
+      true,
+    );
+
+    // An unparseable vercel.json is a failure, not a skipped check.
+    const vercelBroken = validNoindexContent({ vercelJson: "{ not json" });
+    expect(
+      validateNoindexContent(vercelBroken).some((f) =>
+        f.includes("vercel.json: not valid JSON"),
+      ),
     ).toBe(true);
 
     const robotsMissing = validNoindexContent({

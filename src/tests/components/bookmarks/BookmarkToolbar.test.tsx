@@ -181,13 +181,14 @@ describe("BookmarkToolbar", () => {
         fileInputRef={{ current: null } as any}
       />,
     );
-    await userEvent.click(getByText("Embeddings"));
+    const user = userEvent.setup({ delay: null });
+    await user.click(getByText("Embeddings"));
     expect(onGenerate).toHaveBeenCalled();
-    await userEvent.click(getByText("Summarize All"));
+    await user.click(getByText("Summarize All"));
     expect(onSummarize).toHaveBeenCalled();
-    await userEvent.click(getByText("Overviews"));
+    await user.click(getByText("Overviews"));
     expect(onOverviews).toHaveBeenCalled();
-  }, 10000);
+  });
 
   it("disables actions when all bookmarks are processed", () => {
     const bookmarks = [

@@ -99,7 +99,6 @@ export function evaluateTimings(durations, baseline, mode = "enforce", opts = {}
       baseline: {
         schema: TIMING_SCHEMA_LABEL,
         updated: new Date().toISOString().slice(0, 10),
-        thresholdMs,
         budgetFactor,
         files,
       },

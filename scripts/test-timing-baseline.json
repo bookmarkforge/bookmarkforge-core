@@ -5,7 +5,7 @@
   "files": {
     "src/tests/components/SupportChat.test.tsx": 17077,
     "src/tests/sync/signaling-server.test.ts": 13156,
-    "scripts/__tests__/build-ci-secret-scan.test.mjs": 31000,
+    "scripts/__tests__/build-ci-secret-scan.test.mjs": 48347,
     "src/tests/components/WelcomeTour.test.tsx": 14822,
     "src/tests/services/SecureStorage.test.ts": 5139,
     "src/tests/components/Omnibar.test.tsx": 8114,

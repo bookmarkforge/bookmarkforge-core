@@ -396,6 +396,26 @@
   ],
   "rewrites": [
     {
+      "source": "/(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)/help",
+      "destination": "/$1/help-$1.html"
+    },
+    {
+      "source": "/(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)/help/",
+      "destination": "/$1/help-$1.html"
+    },
+    {
+      "source": "/(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)/help/:path*",
+      "destination": "/$1/help-$1.html"
+    },
+    {
+      "source": "/help-(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)",
+      "destination": "/$1/help-$1.html"
+    },
+    {
+      "source": "/help-(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)/",
+      "destination": "/$1/help-$1.html"
+    },
+    {
       "source": "/(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)/privacy-and-terms",
       "destination": "/$1/privacy-and-terms.html"
     },

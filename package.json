@@ -102,6 +102,7 @@
     "check:zap-workflow": "node scripts/validate-zap-workflow.mjs",
     "check:http-config": "node scripts/validate-http-config.mjs",
     "check:spa-routes": "node scripts/check-spa-routes.mjs",
+    "check:live-routes": "node scripts/check-live-routes.mjs",
     "check:compose-config": "node scripts/validate-compose-config.mjs",
     "check:runtime-config": "node scripts/validate-runtime-config.mjs",
     "check:docker-context": "node scripts/validate-docker-context.mjs",

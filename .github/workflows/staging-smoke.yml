@@ -113,6 +113,15 @@ jobs:
         env:
           STAGING_URL: ${{ env.STAGING_URL }}
         run: npm run check:landing-smoke -- --base-url "$STAGING_URL"
+
+      # The offline counterpart (check:spa-routes) only proves the four host
+      # configs are written correctly; this proves the deployed host executes
+      # them — every client route answers the shell, the public surface never
+      # does, and a typo is a real 404 rather than a soft-404 landing.
+      - name: Live route and 404 contract
+        env:
+          STAGING_URL: ${{ env.STAGING_URL }}
+        run: npm run check:live-routes -- --base-url "$STAGING_URL"
       - name: Upload smoke diagnostics
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

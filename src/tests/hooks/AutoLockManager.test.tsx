@@ -1,14 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 
-const mockSetForceSetup = vi.fn();
 const mockLock = vi.fn();
 const mockToast = { info: vi.fn() };
 
 vi.mock("../../hooks/useSecurityStore", () => ({
   useSecurityStore: () => ({
     isLocked: false,
-    setForceSetup: mockSetForceSetup,
     lock: mockLock,
   }),
 }));
@@ -53,7 +51,6 @@ describe("AutoLockManager", () => {
   beforeEach(() => {
     vi.useFakeTimers();
     mockSettings = { autoLockEnabled: true, autoLockTimeout: 300000 };
-    mockSetForceSetup.mockClear();
     mockLock.mockClear();
     mockToast.info.mockClear();
   });

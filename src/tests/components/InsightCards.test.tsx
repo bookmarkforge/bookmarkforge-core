@@ -31,6 +31,12 @@ vi.mock("lucide-react", () => {
   };
 });
 
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+  user = userEvent.setup({ delay: null });
+});
+
 describe("InsightCards", () => {
   let InsightCards: React.FC<{
     insights: any[];
@@ -107,7 +113,6 @@ describe("InsightCards", () => {
   });
 
   it("is keyboard-activatable with Enter and Space", async () => {
-    const user = userEvent.setup();
     const onAction = vi.fn();
     const insight = {
       id: "keyboard-1",
@@ -134,7 +139,7 @@ describe("InsightCards", () => {
       createdAt: new Date().toISOString(),
     };
     render(<InsightCards insights={[insight]} onAction={onAction} />);
-    await userEvent.click(screen.getByText("Title"));
+    await user.click(screen.getByText("Title"));
     expect(onAction).toHaveBeenCalledWith(insight);
   });
 });

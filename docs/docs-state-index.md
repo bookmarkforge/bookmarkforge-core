@@ -101,6 +101,7 @@ This index is generated from the documents present in the checkout. A deleted do
 | `docs/ROPA.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/RPO-RTO-APPROVAL.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/RPO-RTO-APROBACION.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/sast-triage-log.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/sast-triage.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/security.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/SELF-HOSTING.md` | vivo | Document present in the checkout; review its state before retiring it. |

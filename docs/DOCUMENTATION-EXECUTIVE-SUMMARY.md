@@ -155,14 +155,11 @@
 | `docs/ROPA.md` | Existing |
 | `docs/launch-checklist.md` | Existing |
 | `docs/operations.md` | Existing |
-| `docs/support-chargebacks-log.md` | Empty template (use per REFUND-POLICY) |
-| `docs/support-refunds-log.md` | Empty template (use per REFUND-POLICY) |
 | `docs/support-data-loss-runbook.md` | Existing |
 | `docs/whop-setup-runbook.md` | Existing |
 | `docs/onboarding-emails.md` | Existing |
 | `docs/positioning.md` | Existing |
 | `docs/pricing-decision.md` | Existing |
-| `docs/market-validation-plan.md` | Existing |
 | `server/src/license-server.ts` | Existing (669 lines) |
 | `server/src/entitlement-endpoint.ts` | Existing (174 lines) |
 | `extension/manifest.json` | Existing |

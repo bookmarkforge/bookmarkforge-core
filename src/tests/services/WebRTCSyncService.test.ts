@@ -2518,33 +2518,25 @@ describe("WebRTCSyncService", () => {
         close: vi.fn(),
       };
       const selectors: Array<Record<string, unknown>> = [];
-      let callCount = 0;
-      const senderCollection = (rows: Array<Record<string, unknown>>) => ({
-        find: vi.fn((query: { selector: Record<string, unknown> }) => {
-          selectors.push(query.selector);
-          callCount++;
-          // Return empty array on subsequent calls to break the while loop
-          if (callCount > 1) {
+      const senderCollection = (rows: Array<Record<string, unknown>>) => {
+        // Keyset pagination: each collection's first page returns its rows
+        // and the next is empty, so `hasMore` is false and the send loop
+        // stops after one batch. The page counter is per collection, so the
+        // bookmarks query can no longer silently empty the documents page.
+        let page = 0;
+        return {
+          find: vi.fn((query: { selector: Record<string, unknown> }) => {
+            selectors.push(query.selector);
+            const pageRows = page === 0 ? rows : [];
+            page++;
             return {
-              exec: vi.fn().mockResolvedValue([]),
+              exec: vi.fn().mockResolvedValue(
+                pageRows.map((row) => ({ toJSON: () => row })),
+              ),
             };
-          }
-          // Simple mock filtering for the $gte operator on updatedAt
-          let filteredRows = rows;
-          if (query.selector.updatedAt && typeof query.selector.updatedAt === 'object' && '$gte' in query.selector.updatedAt) {
-            const threshold = query.selector.updatedAt.$gte;
-            filteredRows = rows.filter((row) => {
-              const updatedAt = row.updatededAt as string;
-              return updatedAt >= threshold;
-            });
-          }
-          return {
-            exec: vi.fn().mockResolvedValue(
-              filteredRows.map((row) => ({ toJSON: () => row })),
-            ),
-          };
-        }),
-      });
+          }),
+        };
+      };
       (initDB as any).mockResolvedValue({
         documents: senderCollection(docs),
         bookmarks: senderCollection(bookmarks),
@@ -2552,11 +2544,25 @@ describe("WebRTCSyncService", () => {
       const syncPromise = (service as any).startSync();
       await (service as any).handleIncomingMessage(ack);
       await syncPromise;
-      return { send, selectors };
+      // Reassemble what actually crossed the wire: the sender streams the
+      // payload as sync_chunk frames, so concatenating their `data` rebuilds
+      // the sync_data payload the peer receives.
+      const transferred = send.mock.calls
+        .map((call: unknown[]) => JSON.parse(call[0] as string))
+        .filter((frame: { type?: string }) => frame.type === "sync_chunk")
+        .map((frame: { data: string }) => frame.data)
+        .join("");
+      const sentPayload = transferred
+        ? (JSON.parse(transferred) as {
+            documents: Array<{ id: string }>;
+            bookmarks: Array<{ id: string }>;
+          })
+        : { documents: [], bookmarks: [] };
+      return { send, selectors, sentPayload };
     };
 
     it("sender filters documents by the peer's cursor (updatedAt >= lastSyncAt)", async () => {
-      const { selectors } = await runOutboundSync({
+      const { selectors, sentPayload } = await runOutboundSync({
         docs: [{ id: "d1", updatedAt: "2026-08-13T11:00:00.000Z" }],
         bookmarks: [],
         ack: { type: "sync_capabilities_ack", paginated: true, lastSyncAt: CURSOR },
@@ -2568,10 +2574,14 @@ describe("WebRTCSyncService", () => {
       // still never leave the device.
       expect(selectors[0]!.isPrivate).toBe(false);
       expect(selectors[1]!.isPrivate).toBe(false);
+      // The query result must actually cross the wire: a mock that returns
+      // documents but sends none would leave this test green while proving
+      // nothing about the incremental transfer.
+      expect(sentPayload.documents.map((d) => d.id)).toEqual(["d1"]);
     });
 
     it("sender sends a full snapshot when the peer advertises no cursor (first pairing)", async () => {
-      const { selectors } = await runOutboundSync({
+      const { selectors, sentPayload } = await runOutboundSync({
         docs: [{ id: "d1", updatedAt: "2026-08-13T11:00:00.000Z" }],
         bookmarks: [],
         ack: { type: "sync_capabilities_ack", paginated: true },
@@ -2579,6 +2589,7 @@ describe("WebRTCSyncService", () => {
       expect(selectors).toHaveLength(2);
       expect(selectors[0]!.updatedAt).toBeUndefined();
       expect(selectors[1]!.updatedAt).toBeUndefined();
+      expect(sentPayload.documents.map((d) => d.id)).toEqual(["d1"]);
     });
 
     it("the capability frames carry this device's durable cursor", async () => {

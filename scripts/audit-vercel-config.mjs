@@ -13,7 +13,7 @@
  * Usage: node scripts/audit-vercel-config.mjs
  */
 
-import { execSync } from 'child_process';
+import { captureCommandLine } from './command-runner.mjs';
 
 const colors = {
   reset: '\x1b[0m',
@@ -31,7 +31,9 @@ function log(message, color = colors.reset) {
 function runCommand(command, description) {
   log(`\n🔧 ${description}...`, colors.cyan);
   try {
-    const output = execSync(command, {
+    // Through the command-runner boundary (argv, no shell): a fixed repo
+    // command is never re-parsed by /bin/sh.
+    const output = captureCommandLine(command, {
       encoding: 'utf-8',
       stdio: 'pipe',
       maxBuffer: 10 * 1024 * 1024
@@ -46,7 +48,7 @@ function runCommand(command, description) {
 
 function checkVercelCLI() {
   try {
-    execSync('vercel --version', { encoding: 'utf-8' });
+    captureCommandLine('vercel --version', { encoding: 'utf-8' });
     return true;
   } catch {
     return false;

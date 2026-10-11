@@ -31,15 +31,28 @@
  *   DOCKER_REGISTRY  target registry (e.g. registry.example.com:5000)
  */
 
-import { execSync, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { validateRegistry } from "./registry-policy.mjs";
 import { runCommand, runCommandOk } from "./command-runner.mjs";
+// Second statement on purpose: rollback.test.mjs pins the import above as the
+// boundary guard, and the line-runner helpers are what the configured command
+// lines (ROLLBACK_CMD, registry policy) go through.
+import { captureCommandLine, runCommandLine } from "./command-runner.mjs";
 
 function run(cmd, opts = {}) {
   if (Array.isArray(cmd)) return runCommand(cmd[0], cmd.slice(1), opts);
   console.log(`$ ${cmd}`);
-  return execSync(cmd, { stdio: "inherit", ...opts });
+  // The string form goes through the boundary too: split into argv, spawned
+  // without a shell, and a non-zero status throws exactly like execSync did.
+  const result = runCommandLine(cmd, { stdio: "inherit", ...opts });
+  if (result.error) throw result.error;
+  if (result.status !== 0) {
+    const error = new Error(`${cmd} exited with ${result.status}`);
+    error.status = result.status;
+    throw error;
+  }
+  return result.stdout ?? "";
 }
 
 /** run() that does not throw: returns true/false based on the exit code. */
@@ -65,7 +78,7 @@ export function runNginxRenderWrite({ cwd = process.cwd(), runner = run } = {}) 
 }
 
 function runCapture(cmd) {
-  return execSync(cmd, { encoding: "utf8" }).trim();
+  return captureCommandLine(cmd);
 }
 
 const args = process.argv.slice(2);

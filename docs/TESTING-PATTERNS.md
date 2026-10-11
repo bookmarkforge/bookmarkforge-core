@@ -391,6 +391,21 @@ Files in the slow profile must complete in ≤10 seconds:
 }
 ```
 
+### Stale Pins
+
+A pin is a measurement, so a pin that no run reproduces is itself a failure:
+`scripts/check-test-timing.mjs` fails when a pinned file's fresh measurement
+is more than **25%** above its pin (the pin sits under the file's real cost
+and shrinks the guard's budget). The failure names both numbers and the
+remedy. The band is `BMF_TEST_TIMING_PIN_FLOOR` (a fraction: `0` makes any
+under-pin a finding, `1` disables the layer).
+
+Only the under-pin direction is judged. A pin *above* reality costs budget,
+not detection, and is the normal result of pinning on a slower machine, so
+flagging it would turn machine speed into false failures. Wall-clock drift is
+noisy — the same machine varies by ~20% median run to run — so measure twice
+before re-pinning.
+
 ### Updating Baselines
 
 If a test legitimately needs more time:

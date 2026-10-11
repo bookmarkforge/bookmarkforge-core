@@ -112,6 +112,12 @@ vi.mock("../../components/EmbeddingProgressIndicator", () => ({
   EmbeddingProgressIndicator: () => <div data-testid="embedding-progress" />,
 }));
 
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+  user = userEvent.setup({ delay: null });
+});
+
 describe("DocumentManager", () => {
   let DocumentManager: React.FC<any>;
   const onSelectDocument = vi.fn();
@@ -171,28 +177,28 @@ describe("DocumentManager", () => {
   it("updates searchTerm when typing in the search input", async () => {
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const input = screen.getByLabelText("app_searchPlaceholder");
-    await userEvent.type(input, "test query");
+    await user.type(input, "test query");
     expect(input).toHaveValue("test query");
   });
 
   it("shows app_noResultsFound when typing a search term", async () => {
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const input = screen.getByLabelText("app_searchPlaceholder");
-    await userEvent.type(input, "xyz123");
+    await user.type(input, "xyz123");
     expect(screen.getByText("app_noResultsFound")).toBeTruthy();
   });
 
   it("switches to list mode when clicking the list button", async () => {
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const listButtons = screen.getAllByTestId("icon-List");
-    await userEvent.click(listButtons[0]!);
+    await user.click(listButtons[0]!);
     expect(listButtons[0]!.closest("button")).toHaveClass(/bg-white/);
   });
 
   it("calls createNewFolder when clicking the sidebar plus button", async () => {
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const plusButtons = screen.getAllByTestId("icon-Plus");
-    await userEvent.click(plusButtons[0]!);
+    await user.click(plusButtons[0]!);
     await waitFor(() => {
       expect(mockFoldersUpsert).toHaveBeenCalled();
     });
@@ -200,7 +206,7 @@ describe("DocumentManager", () => {
 
   it("calls createNew when clicking the new document button", async () => {
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
-    await userEvent.click(screen.getByText("app_newDocument"));
+    await user.click(screen.getByText("app_newDocument"));
     await waitFor(() => {
       expect(mockDocumentsUpsert).toHaveBeenCalled();
     });
@@ -208,7 +214,7 @@ describe("DocumentManager", () => {
 
   it("shows success toast when creating a document", async () => {
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
-    await userEvent.click(screen.getByText("app_newDocument"));
+    await user.click(screen.getByText("app_newDocument"));
     await waitFor(() => {
       expect(mockToast.success).toHaveBeenCalledWith("app_documentCreated");
     });
@@ -225,7 +231,7 @@ describe("DocumentManager", () => {
     const { unmount } = render(
       <DocumentManager onSelectDocument={onSelectDocument} />,
     );
-    await userEvent.click(screen.getByText("app_newDocument"));
+    await user.click(screen.getByText("app_newDocument"));
     await waitFor(() => expect(initDB).toHaveBeenCalled());
 
     unmount();
@@ -241,7 +247,7 @@ describe("DocumentManager", () => {
 
   it("calls onSelectDocument when creating a new document", async () => {
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
-    await userEvent.click(screen.getByText("app_newDocument"));
+    await user.click(screen.getByText("app_newDocument"));
     await waitFor(() => {
       expect(onSelectDocument).toHaveBeenCalled();
     });
@@ -251,7 +257,7 @@ describe("DocumentManager", () => {
     const { initDB } = await import("../../db/database");
     (initDB as any).mockRejectedValueOnce(new Error("DB error"));
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
-    await userEvent.click(screen.getByText("app_newDocument"));
+    await user.click(screen.getByText("app_newDocument"));
     await waitFor(() => {
       expect(mockToast.error).toHaveBeenCalledWith("app_createDocError");
     });
@@ -260,7 +266,7 @@ describe("DocumentManager", () => {
   it("shows success toast when creating a folder", async () => {
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const plusButtons = screen.getAllByTestId("icon-Plus");
-    await userEvent.click(plusButtons[0]!);
+    await user.click(plusButtons[0]!);
     await waitFor(() => {
       expect(mockToast.success).toHaveBeenCalledWith("app_folderCreated");
     });
@@ -271,7 +277,7 @@ describe("DocumentManager", () => {
     (initDB as any).mockRejectedValueOnce(new Error("DB error"));
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const plusButtons = screen.getAllByTestId("icon-Plus");
-    await userEvent.click(plusButtons[0]!);
+    await user.click(plusButtons[0]!);
     await waitFor(() => {
       expect(mockToast.error).toHaveBeenCalledWith("app_createFolderError");
     });
@@ -310,14 +316,14 @@ describe("DocumentManager", () => {
   it("allows searching by tag", async () => {
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const input = screen.getByLabelText("app_searchPlaceholder");
-    await userEvent.type(input, "important");
+    await user.type(input, "important");
     expect(screen.getByText("app_noResultsFound")).toBeTruthy();
   });
 
   it("switches between grid and list views", async () => {
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const listBtns = screen.getAllByTestId("icon-List");
-    await userEvent.click(listBtns[0]!);
+    await user.click(listBtns[0]!);
     expect(listBtns[0]!.closest("button")).toHaveClass(/bg-white/);
   });
 
@@ -388,7 +394,7 @@ describe("DocumentManager - Branch coverage maximization", () => {
     mockUseRxQuery.mockReturnValueOnce({ result: [] });
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const trashIcons = screen.getAllByTestId("icon-Trash2");
-    await userEvent.click(trashIcons[0]!.closest("button")!);
+    await user.click(trashIcons[0]!.closest("button")!);
     await waitFor(() => {
       expect(mockFindOneExec).toHaveBeenCalled();
     });
@@ -459,7 +465,7 @@ describe("DocumentManager - Branch coverage maximization", () => {
     mockUseRxQuery.mockReturnValueOnce({ result: [wrapToJSON(doc)] });
     mockUseRxQuery.mockReturnValueOnce({ result: [] });
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
-    await userEvent.click(screen.getAllByTestId("icon-List")[0]!);
+    await user.click(screen.getAllByTestId("icon-List")[0]!);
     expect(screen.queryAllByText(/^#\w+$/).length).toBe(0);
   });
 
@@ -468,7 +474,7 @@ describe("DocumentManager - Branch coverage maximization", () => {
     mockUseRxQuery.mockReturnValueOnce({ result: [wrapToJSON(doc)] });
     mockUseRxQuery.mockReturnValueOnce({ result: [] });
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
-    await userEvent.click(screen.getAllByTestId("icon-List")[0]!);
+    await user.click(screen.getAllByTestId("icon-List")[0]!);
     expect(screen.queryAllByText(/^#\w+$/).length).toBe(0);
   });
 
@@ -481,7 +487,7 @@ describe("DocumentManager - Branch coverage maximization", () => {
     mockUseRxQuery.mockReturnValueOnce({ result: [wrapToJSON(doc)] });
     mockUseRxQuery.mockReturnValueOnce({ result: [] });
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
-    await userEvent.click(screen.getAllByTestId("icon-List")[0]!);
+    await user.click(screen.getAllByTestId("icon-List")[0]!);
     expect(screen.getByText(/12\/25\/2023|25\/12\/2023/)).toBeTruthy();
   });
 
@@ -527,7 +533,7 @@ describe("DocumentManager - Branch coverage maximization", () => {
     const sidebarBtn = screen
       .getAllByText("Active Folder")[0]!
       .closest("button")!;
-    await userEvent.click(sidebarBtn);
+    await user.click(sidebarBtn);
     expect(sidebarBtn).toHaveClass(/bg-[var(--bg-secondary)]/);
   });
 
@@ -553,9 +559,9 @@ describe("DocumentManager - Branch coverage maximization", () => {
     const doc = makeDoc({ id: "doc-list-del", title: "List Delete" });
     mockUseRxQuery.mockReturnValue({ result: [wrapToJSON(doc)] });
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
-    await userEvent.click(screen.getAllByTestId("icon-List")[0]!);
+    await user.click(screen.getAllByTestId("icon-List")[0]!);
     const trashIcons = screen.getAllByTestId("icon-Trash2");
-    await userEvent.click(trashIcons[0]!.closest("button")!);
+    await user.click(trashIcons[0]!.closest("button")!);
     await waitFor(() => {
       expect(mockPatch).toHaveBeenCalledWith(
         expect.objectContaining({ isDeleted: true }),
@@ -579,9 +585,9 @@ describe("DocumentManager - Branch coverage maximization", () => {
     const doc = makeDoc({ id: "doc-list-err", title: "List Error" });
     mockUseRxQuery.mockReturnValue({ result: [wrapToJSON(doc)] });
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
-    await userEvent.click(screen.getAllByTestId("icon-List")[0]!);
+    await user.click(screen.getAllByTestId("icon-List")[0]!);
     const trashIcons = screen.getAllByTestId("icon-Trash2");
-    await userEvent.click(trashIcons[0]!.closest("button")!);
+    await user.click(trashIcons[0]!.closest("button")!);
     await waitFor(() => {
       expect(mockToast.error).toHaveBeenCalledWith("app_deleteError");
     });
@@ -596,7 +602,7 @@ describe("DocumentManager - Branch coverage maximization", () => {
       return { result: [wrapToJSON(folder)] };
     });
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
-    await userEvent.click(screen.getByText("My Special Folder"));
+    await user.click(screen.getByText("My Special Folder"));
     const h1 = screen.getByRole("heading", { level: 1 });
     expect(h1.textContent).toBe("My Special Folder");
   });
@@ -618,7 +624,7 @@ describe("DocumentManager - Branch coverage maximization", () => {
     // Find the AI Search button by its Sparkles icon (text is hidden on mobile in jsdom)
     const sparkleIcons = screen.getAllByTestId("icon-Sparkles");
     const aiBtn = sparkleIcons[0]!.closest("button")!;
-    await userEvent.click(aiBtn);
+    await user.click(aiBtn);
     // After toggle, the AI Search button should have the active class
     expect(aiBtn).toHaveClass(/bg-blue-500/);
     expect(mockPrefetch).toHaveBeenCalledTimes(1);
@@ -635,7 +641,7 @@ describe("DocumentManager - Branch coverage maximization", () => {
       return { result: [wrapToJSON(folder)] };
     });
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
-    await userEvent.click(screen.getByText("Breadcrumb Folder"));
+    await user.click(screen.getByText("Breadcrumb Folder"));
     // Breadcrumb text appears; use getAllByText since folder name appears twice (sidebar + breadcrumb)
     expect(screen.getAllByText("Breadcrumb Folder").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByTestId("icon-ChevronRight")).toBeTruthy();
@@ -664,7 +670,7 @@ describe("DocumentManager - Branch coverage maximization", () => {
     // the browser's built-in behavior, so we focus and press Enter via userEvent.
     const card = screen.getByText("Keyboard Doc").closest("button")!;
     card.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(onSelect).toHaveBeenCalledWith("enter-doc");
   });
 
@@ -685,7 +691,7 @@ describe("DocumentManager - Branch coverage maximization", () => {
     mockUseRxQuery.mockReturnValue({ result: [wrapToJSON(doc)] });
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const trashIcons = screen.getAllByTestId("icon-Trash2");
-    await userEvent.click(trashIcons[0]!.closest("button")!);
+    await user.click(trashIcons[0]!.closest("button")!);
     await waitFor(() => {
       expect(mockPatch).toHaveBeenCalledWith(
         expect.objectContaining({ isDeleted: true }),
@@ -704,7 +710,7 @@ describe("DocumentManager - Branch coverage maximization", () => {
     render(<DocumentManager onSelectDocument={onSelect} />);
     const card = screen.getByText("Space Doc").closest("button")!;
     card.focus();
-    await userEvent.keyboard("{ }");
+    await user.keyboard("{ }");
     expect(onSelect).toHaveBeenCalledWith("space-doc");
   });
 
@@ -716,7 +722,7 @@ describe("DocumentManager - Branch coverage maximization", () => {
     mockUseRxQuery.mockReturnValueOnce({ result: [] });
     const onSelect = vi.fn();
     render(<DocumentManager onSelectDocument={onSelect} />);
-    await userEvent.click(screen.getByText("Clickable Doc"));
+    await user.click(screen.getByText("Clickable Doc"));
     expect(onSelect).toHaveBeenCalledWith("click-doc");
   });
 
@@ -749,7 +755,7 @@ describe("DocumentManager - Branch coverage maximization", () => {
     mockUseRxQuery.mockReturnValue({ result: [] });
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const sparkleIcons = screen.getAllByTestId("icon-Sparkles");
-    await userEvent.click(sparkleIcons[0]!.closest("button")!);
+    await user.click(sparkleIcons[0]!.closest("button")!);
     const input = screen.getByLabelText("app_searchPlaceholder");
     // Placeholder should change (t() returns the key; ?? fallback not triggered)
     expect(input.getAttribute("placeholder")).toBe(
@@ -766,9 +772,9 @@ describe("DocumentManager - Branch coverage maximization", () => {
     mockUseRxQuery.mockReturnValue({ result: [wrapToJSON(semDoc)] });
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const sparkleIcons = screen.getAllByTestId("icon-Sparkles");
-    await userEvent.click(sparkleIcons[0]!.closest("button")!);
+    await user.click(sparkleIcons[0]!.closest("button")!);
     const input = screen.getByLabelText("app_searchPlaceholder");
-    await userEvent.type(input, "meaning");
+    await user.type(input, "meaning");
     await waitFor(() => {
       expect(mockExpandQuery).toHaveBeenCalledWith(
         "meaning",
@@ -792,9 +798,9 @@ describe("DocumentManager - Branch coverage maximization", () => {
     mockUseRxQuery.mockReturnValue({ result: [] });
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const sparkleIcons = screen.getAllByTestId("icon-Sparkles");
-    await userEvent.click(sparkleIcons[0]!.closest("button")!);
+    await user.click(sparkleIcons[0]!.closest("button")!);
     const input = screen.getByLabelText("app_searchPlaceholder");
-    await userEvent.type(input, "meaning");
+    await user.type(input, "meaning");
     await waitFor(() => {
       expect(mockLoggerError).toHaveBeenCalledWith(
         "[DocumentManager] Semantic search failed",
@@ -809,9 +815,9 @@ describe("DocumentManager - Branch coverage maximization", () => {
     mockUseRxQuery.mockReturnValue({ result: [] });
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const sparkleIcons = screen.getAllByTestId("icon-Sparkles");
-    await userEvent.click(sparkleIcons[0]!.closest("button")!);
+    await user.click(sparkleIcons[0]!.closest("button")!);
     const input = screen.getByLabelText("app_searchPlaceholder");
-    await userEvent.type(input, "hi");
+    await user.type(input, "hi");
     // Debounce fires but term is too short → no semantic call
     await act(async () => { await new Promise((r) => setTimeout(r, 450)); });
     expect(mockExpandQuery).not.toHaveBeenCalled();
@@ -835,9 +841,9 @@ describe("DocumentManager - Branch coverage maximization", () => {
     });
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const sparkleIcons = screen.getAllByTestId("icon-Sparkles");
-    await userEvent.click(sparkleIcons[0]!.closest("button")!);
+    await user.click(sparkleIcons[0]!.closest("button")!);
     const input = screen.getByLabelText("app_searchPlaceholder");
-    await userEvent.type(input, "alpha");
+    await user.type(input, "alpha");
     // Text match (alpha) + semantic-only result both visible
     await waitFor(() => {
       expect(screen.getByText("Alpha Doc")).toBeTruthy();
@@ -854,9 +860,9 @@ describe("DocumentManager - Branch coverage maximization", () => {
     mockUseRxQuery.mockReturnValue({ result: [] });
     render(<DocumentManager onSelectDocument={onSelectDocument} />);
     const sparkleIcons = screen.getAllByTestId("icon-Sparkles");
-    await userEvent.click(sparkleIcons[0]!.closest("button")!);
+    await user.click(sparkleIcons[0]!.closest("button")!);
     const input = screen.getByLabelText("app_searchPlaceholder");
-    await userEvent.type(input, "meaning");
+    await user.type(input, "meaning");
     await waitFor(() => {
       expect(screen.getByTestId("icon-Loader2")).toBeTruthy();
     });

@@ -32,6 +32,12 @@ const renderCard = (
     />,
   );
 
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+  user = userEvent.setup({ delay: null });
+});
+
 describe("NavCard — iconAccent mapping", () => {
   it("'cyan' renders ds-icon-tint-cyan class", () => {
     const { container } = renderCard({ iconAccent: "cyan", icon: Bookmark });
@@ -72,30 +78,27 @@ describe("NavCard — accessibility & interaction", () => {
   });
 
   it("forwards onClick handler on click", async () => {
-    const user = userEvent.setup();
     const onClick = vi.fn();
     renderCard({ onClick });
-    await userEvent.click(screen.getByRole("button"));
+    await user.click(screen.getByRole("button"));
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it("keyboard — Enter triggers onClick", async () => {
-    const user = userEvent.setup();
     const onClick = vi.fn();
     renderCard({ onClick });
     const button = screen.getByRole("button");
     button.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
   it("keyboard — Space triggers onClick", async () => {
-    const user = userEvent.setup();
     const onClick = vi.fn();
     renderCard({ onClick });
     const button = screen.getByRole("button");
     button.focus();
-    await userEvent.keyboard(" ");
+    await user.keyboard(" ");
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 

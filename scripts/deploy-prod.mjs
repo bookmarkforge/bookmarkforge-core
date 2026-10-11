@@ -38,10 +38,16 @@
  *   Prints the created tag and the exact rollback command at the end.
  */
 
-import { execSync, execFileSync, spawnSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { resolveRegistry, pushImages, defaultInspectVisible } from "./push-images-lib.mjs";
-import { runCommand, formatCommand, captureShell, captureCommand } from "./command-runner.mjs";
+import {
+  runCommand,
+  runCommandLine,
+  formatCommand,
+  captureShell,
+  captureCommand,
+} from "./command-runner.mjs";
 
 const T0 = Date.now();
 
@@ -123,12 +129,11 @@ function capture(cmd, opts = {}) {
 function run(cmd, opts = {}) {
   console.log(`$ ${cmd}`);
   if (DRY_RUN) return 0;
-  try {
-    execSync(cmd, { stdio: "inherit", ...opts });
-    return 0;
-  } catch (e) {
-    return e.status ?? 1;
-  }
+  // Boundary: the line is split into argv and spawned without a shell (see
+  // command-runner.mjs) — execSync re-parsed it through /bin/sh.
+  const result = runCommandLine(cmd, { stdio: "inherit", ...opts });
+  if (result.error) return 1;
+  return result.status ?? 1;
 }
 
 /** run() with separate arguments: no shell, no interpolation. */

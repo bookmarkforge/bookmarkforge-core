@@ -251,9 +251,14 @@ npm run check                   # the full gate chain (~50 check commands + lint
   10 s for the slow profile (its files are legitimately heavier; a 5 s bar
   would flake), plus 2× its pinned time in
   `scripts/test-timing-baseline.json` for every pinned file; locally it
-  warns only. The `slow-tests` CI job enforces timing on the slow profile.
-  Re-pin an intended slowdown with `BMF_TEST_TIMING=update` (baseline is
-  reviewed in the PR diff); `BMF_TEST_TIMING_OFF=1` is the explicit opt-out.
+  warns only. A pin is a measurement, so a third layer fails when one sits
+  more than 25% below its fresh measurement (`BMF_TEST_TIMING_PIN_FLOOR`; 1
+  disables it) — the `31000` against a real 48347 ms shape, where a stale
+  pin silently shrank that file's budget from 96.7 s to 62 s while every
+  other layer stayed quiet. The `slow-tests` CI job enforces timing on the
+  slow profile. Re-pin an intended slowdown with `BMF_TEST_TIMING=update`
+  (baseline is reviewed in the PR diff); `BMF_TEST_TIMING_OFF=1` is the
+  explicit opt-out.
 - Security tests are adversarial, not happy-path: property tests (fast-check),
   fuzzed SSRF gate parity (P81 differential), format-level crypto vectors.
   Tests may not be skipped without a reason — the custom rule

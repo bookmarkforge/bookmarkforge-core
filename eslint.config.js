@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import js from "@eslint/js";
 import globals from "globals";
 import tseslint from "typescript-eslint";
@@ -7,6 +8,7 @@ import noSecurityVaultMockWithoutLock from "./eslint-rules/require-securityvault
 import noUnexplainedTestSkip from "./eslint-rules/no-unexplained-test-skip.mjs";
 import noUnboundedLoop from "./eslint-rules/no-unbounded-loop.mjs";
 import noSilentCatch from "./eslint-rules/no-silent-catch.mjs";
+import noDirectUserEvent from "./eslint-rules/no-direct-userevent.mjs";
 import markdownParser from "./eslint-rules/lib/markdown-parser.mjs";
 import requireAdrTemplate from "./eslint-rules/require-adr-template.mjs";
 import reactCompiler from "eslint-plugin-react-compiler";
@@ -19,6 +21,12 @@ const VITEST_GLOBALS = {
   it: "readonly", test: "readonly", vi: "readonly",
 };
 const BROWSER_EXTENSION_GLOBALS = { chrome: "readonly", browser: "readonly" };
+// Debt ceiling for bmf/no-direct-userevent: the reviewed, per-file allowed
+// count of module-level userEvent calls that predate the rule. See the rule
+// header for the rebaseline procedure.
+const USER_EVENT_DIRECT_BASELINE = JSON.parse(
+  readFileSync(new URL("./eslint-rules/userevent-direct-baseline.json", import.meta.url), "utf8"),
+);
 
 export default tseslint.config(
   // `.d/` is the local scratch/experiment tree (gitignored, see .gitignore):
@@ -51,7 +59,7 @@ export default tseslint.config(
   { files: ["src/env.config.ts"], rules: { "@typescript-eslint/no-explicit-any": "off" } },
   {
     files: ["src/**/*.{ts,tsx}", "tests/e2e/**/*.{ts,tsx}", "scripts/**/*.{mjs,cjs,js}", "server/src/**/*.ts", "extension/**/*.js"],
-    plugins: { bmf: { rules: { "no-unbounded-text": noUnboundedText, "no-unbounded-card-header": noUnboundedCardHeader, "no-securityvault-mock-without-lock": noSecurityVaultMockWithoutLock, "no-unexplained-test-skip": noUnexplainedTestSkip, "no-unbounded-loop": noUnboundedLoop, "no-silent-catch": noSilentCatch, "require-adr-template": requireAdrTemplate } } },
+    plugins: { bmf: { rules: { "no-unbounded-text": noUnboundedText, "no-unbounded-card-header": noUnboundedCardHeader, "no-securityvault-mock-without-lock": noSecurityVaultMockWithoutLock, "no-unexplained-test-skip": noUnexplainedTestSkip, "no-unbounded-loop": noUnboundedLoop, "no-silent-catch": noSilentCatch, "no-direct-userevent": noDirectUserEvent, "require-adr-template": requireAdrTemplate } } },
   },
   {
     // NOTE: exclusions MUST go in `ignores`, never as `!`-prefixed entries in
@@ -78,6 +86,12 @@ export default tseslint.config(
     rules: { "bmf/require-adr-template": "error" },
   },
   { files: ["src/tests/**/*.{ts,tsx}"], rules: { "bmf/no-securityvault-mock-without-lock": "error" } },
+  // One shared userEvent.setup() instance per test; the baseline grandfathers
+  // the direct calls that predate the rule (see the rule header).
+  {
+    files: ["src/tests/**/*.{ts,tsx}", "tests/e2e/**/*.{ts,tsx}"],
+    rules: { "bmf/no-direct-userevent": ["error", { baseline: USER_EVENT_DIRECT_BASELINE }] },
+  },
   { files: ["tests/e2e/**/*.{ts,tsx}"], rules: { "bmf/no-unexplained-test-skip": "error" } },
   { files: ["src/services/**/*.{ts,tsx}", "src/workers/**/*.{ts,tsx}", "src/utils/**/*.{ts,tsx}", "src/tests/**/*.{ts,tsx}"], rules: { "bmf/no-unbounded-loop": "error" } },
   { files: ["src/**/*.{ts,tsx}"], plugins: { "react-compiler": reactCompiler }, rules: { "react-compiler/react-compiler": "warn" } },

@@ -28,13 +28,28 @@ export const SEVERITY_RANK = {
   none: 4,
 };
 
-export function classifySeverity(result) {
-  const property = result?.properties?.["security-severity"];
+/**
+ * Severity of one SARIF result.
+ *
+ * The level can live on the result (CodeQL) or ONLY on the rule it points at:
+ * `semgrep scan --sarif` writes `level` into `rules[].defaultConfiguration` and
+ * leaves every result without one. Reading only the result classified all 79
+ * Semgrep findings of this repo as "unknown", which the gate treats as
+ * blocking (fail-closed) — so the Semgrep job failed on warnings too and no
+ * finding could ever be triaged. The rule is the fallback; a result that
+ * carries its own level still wins, because it is the more specific signal.
+ *
+ * @param {object} result one `runs[].results[]` entry
+ * @param {object} [rule] the `runs[].tool.driver.rules[]` entry with this id
+ */
+export function classifySeverity(result, rule) {
+  const property =
+    result?.properties?.["security-severity"] ?? rule?.properties?.["security-severity"];
   if (typeof property === "string") {
     const severity = property.toLowerCase();
     if (severity in SEVERITY_RANK) return severity;
   }
-  switch (result?.level) {
+  switch (result?.level ?? rule?.defaultConfiguration?.level) {
     case "error":
       return "high";
     case "warning":
@@ -56,10 +71,15 @@ export function collectFindings(sarif) {
   const findings = [];
   for (const run of sarif?.runs ?? []) {
     const toolName = run?.tool?.driver?.name ?? "unknown tool";
+    // Rules are where a Semgrep result's level actually lives (see
+    // classifySeverity): index them by id so each result can reach its own.
+    const rulesById = new Map(
+      (run?.tool?.driver?.rules ?? []).map((rule) => [rule?.id, rule]),
+    );
     for (const result of run?.results ?? []) {
       const location = result?.locations?.[0]?.physicalLocation ?? {};
       findings.push({
-        severity: classifySeverity(result),
+        severity: classifySeverity(result, rulesById.get(result?.ruleId)),
         ruleId: result?.ruleId ?? "(unknown rule)",
         file: location?.artifactLocation?.uri ?? "(unknown file)",
         line: location?.region?.startLine ?? null,

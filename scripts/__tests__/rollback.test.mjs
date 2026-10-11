@@ -63,6 +63,7 @@ describe("rollback nginx recovery integration", () => {
       "public/nginx.conf",
       "public/_headers",
       "netlify.toml",
+      "vercel.json",
       "public/sitemap.xml",
       "public/robots.txt",
       "public/404.html",
@@ -88,6 +89,25 @@ describe("rollback nginx recovery integration", () => {
       copyFileSync("scripts/nginx-render.mjs", join(root, "scripts/nginx-render.mjs"));
       copyFileSync("scripts/csp-config.js", join(root, "scripts/csp-config.js"));
       copyFileSync("scripts/landing-registry.mjs", join(root, "scripts/landing-registry.mjs"));
+      // The renderer derives the app-route location from the app's own route
+      // table (scripts/app-routes.mjs -> AppRoutes.tsx): copy both, or the
+      // renderer cannot load at all in the scaffold.
+      copyFileSync("scripts/app-routes.mjs", join(root, "scripts", "app-routes.mjs"));
+      mkdirSync(join(root, "src", "components", "app"), { recursive: true });
+      copyFileSync(
+        join("src", "components", "app", "AppRoutes.tsx"),
+        join(root, "src", "components", "app", "AppRoutes.tsx"),
+      );
+      // nginx-render derives the app-route location from the app's OWN route
+      // table (scripts/app-routes.mjs parses AppRoutes.tsx), so the fixture
+      // tree needs both — exactly like the locale registry above. Without
+      // them the renderer cannot reproduce the committed nginx.conf.
+      copyFileSync("scripts/app-routes.mjs", join(root, "scripts", "app-routes.mjs"));
+      mkdirSync(join(root, "src", "components", "app"), { recursive: true });
+      copyFileSync(
+        "src/components/app/AppRoutes.tsx",
+        join(root, "src", "components", "app", "AppRoutes.tsx"),
+      );
 
       const expectedHeaders = readFileSync(join(root, "public/_headers"), "utf8");
       const expectedSitemap = readFileSync(join(root, "public/sitemap.xml"), "utf8");

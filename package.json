@@ -22,7 +22,7 @@
     "dev:extension": "node scripts/dev-extension.mjs",
     "whop:validate": "tsx src/services/WhopService.ts",
     "whop:test": "vitest run src/tests/services/WhopService.test.ts",
-    "build:landings": "node scripts/build-landings.cjs",
+    "build:landings": "node scripts/build-landings.cjs && node scripts/generate-early-bird-status.mjs",
     "docs:pdf:localized": "node scripts/generate-pdf-localized.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",

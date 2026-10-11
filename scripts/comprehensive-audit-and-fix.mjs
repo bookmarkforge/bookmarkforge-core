@@ -12,8 +12,8 @@
  * and prepare for production deployment without wasting GitHub Actions quotas
  */
 
-import { execSync } from 'child_process';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { captureCommandLine } from './command-runner.mjs';
 
 // Console colors
 const colors = {
@@ -33,7 +33,9 @@ function log(message, color = colors.reset) {
 function runCommand(command, description) {
   log(`\n🔧 ${description}...`, colors.cyan);
   try {
-    const output = execSync(command, {
+    // Through the command-runner boundary (argv, no shell): a fixed repo
+    // command is never re-parsed by /bin/sh.
+    const output = captureCommandLine(command, {
       encoding: 'utf-8',
       stdio: 'pipe',
       maxBuffer: 10 * 1024 * 1024 // 10MB

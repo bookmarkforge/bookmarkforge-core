@@ -191,6 +191,28 @@ BMF_TEST_TIMING_OFF=1 npm run test:fast
 **Prevention:**
 - Keep fast tests under 5 seconds
 - Mock slow operations (API, crypto)
+
+### Problem: "the pin is stale" (test-timing guard failed)
+
+**Symptoms:**
+- All tests pass, yet the profile fails with `[test-timing] SLOW TEST
+  REGRESSION OR STALE PIN`
+- `pinned <N>ms sits <M>% below this run's <T>ms (pin floor 25%)`
+
+**Solution:**
+```bash
+# The run measured the file >25% slower than its pin. Either fix the test
+# (usually a wait or a real sleep), or accept the new time and re-pin:
+BMF_TEST_TIMING=update npm run test:fast   # baseline diff is reviewed in the PR
+```
+
+Re-pin only from a real run: a pin must be the file's measured total. The
+`31000` that landed once was a single subtest (31.4 s) of a 47.6 s file, which
+shrank the guard's budget from 96.7 s to 62 s without failing anything.
+
+**Prevention:**
+- Measure twice — the same machine drifts ~20% median between runs; a noisy
+  file belongs in the slow profile rather than in a tight pin
 - Use `vi.useFakeTimers()` for time-based tests
 
 ### Problem: E2E tests flake on vault setup

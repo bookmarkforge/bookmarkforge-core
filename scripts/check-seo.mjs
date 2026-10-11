@@ -45,7 +45,8 @@
  *
  *   The private app must never be indexed:
  *     - X-Robots-Tag: noindex for /app, /app/*, /capture, /capture/* and
- *       /offline* in public/_headers (Cloudflare Pages) and netlify.toml
+ *       /offline* on all three deployment paths (public/_headers for
+ *       Cloudflare Pages, netlify.toml for Netlify, vercel.json for Vercel)
  *     - robots.txt Disallow for /app, /capture, /offline and /api
  *     - <meta name="robots" content="noindex"> in public/offline.html
  *     - public/sitemap.xml must not list /app and must list every landing
@@ -703,8 +704,21 @@ export function validateLanguageNegotiation({
     if (!re.test(nginxConf)) {
       failures.push(`public/nginx.conf: missing Accept-Language match for ^${lang}`);
     }
-    if (!nginxConf.includes(`rewrite ^ /${lang}/ redirect;`)) {
-      failures.push(`public/nginx.conf: missing 302 redirect to /${lang}/`);
+    // The bounce is a RELATIVE Location (`return 302 /<lang>/`): no scheme and
+    // no Host in the header, so a TLS terminator cannot downgrade it and the
+    // Host header has no say in the destination (see scripts/nginx-render.mjs).
+    // Asserted per rule — the /_lang/<lang> locations end in the same
+    // `return 302 /<lang>/;`, so a substring check on the target alone would
+    // pass with the negotiation rule deleted.
+    if (!nginxConf.includes(`if ($cookie_bf_lang ~* "^${lang}$") { return 302 /${lang}/; }`)) {
+      failures.push(`public/nginx.conf: missing bf_lang 302 redirect to /${lang}/`);
+    }
+    if (
+      !nginxConf.includes(
+        `if ($http_accept_language ~* "^${lang}") { return 302 /${lang}/; }`,
+      )
+    ) {
+      failures.push(`public/nginx.conf: missing Accept-Language 302 redirect to /${lang}/`);
     }
 
     // Manual preference: cookie rules in nginx (one per localized lang).
@@ -858,6 +872,18 @@ export function validateLanguageNegotiation({
 }
 
 /**
+ * Translate a `_headers` / netlify path glob into the equivalent Vercel
+ * `source` pattern: `/app/*` → `/app/(.*)`, `/offline*` → `/offline(.*)`,
+ * exact paths unchanged. Keeps the three noindex copies comparable without
+ * restating the same list three times in three syntaxes.
+ */
+export function vercelSourceFor(glob) {
+  if (glob.endsWith("/*")) return `${glob.slice(0, -2)}/(.*)`;
+  if (glob.endsWith("*")) return `${glob.slice(0, -1)}(.*)`;
+  return glob;
+}
+
+/**
  * Validate the noindex contracts for the private app.
  * All arguments are raw file contents (pure function — testable without
  * touching the repo). Returns an array of failure strings.
@@ -868,6 +894,7 @@ export function validateNoindexContent({
   robots,
   offlineHtml,
   sitemapXml,
+  vercelJson,
   siteUrl = SITE_URL,
 }) {
   const failures = [];
@@ -889,6 +916,31 @@ export function validateNoindexContent({
       failures.push(`netlify.toml: X-Robots-Tag noindex missing for ${p}`);
     }
   }
+  // vercel.json — the deployment the product is actually served from. Its
+  // header rules are JSON, so the parsed sources are compared rather than the
+  // raw text regexed; an unparseable file is a failure, never a silent pass.
+  let vercel = null;
+  try {
+    vercel = JSON.parse(vercelJson ?? "");
+  } catch {
+    failures.push("vercel.json: not valid JSON — cannot verify the noindex contract");
+  }
+  if (vercel !== null) {
+    const rules = Array.isArray(vercel.headers) ? vercel.headers : [];
+    for (const p of NOINDEX_PATHS) {
+      const source = vercelSourceFor(p);
+      const rule = rules.find((r) => r?.source === source);
+      const declared =
+        Array.isArray(rule?.headers) &&
+        rule.headers.some(
+          (h) => h?.key === "X-Robots-Tag" && /noindex/i.test(h?.value ?? ""),
+        );
+      if (!declared) {
+        failures.push(`vercel.json: X-Robots-Tag noindex missing for ${source}`);
+      }
+    }
+  }
+
   for (const d of ROBOTS_DISALLOWS) {
     const re = new RegExp(`^Disallow:\\s*${escapeRe(d)}\\s*$`, "m");
     if (!re.test(robots)) {
@@ -1119,12 +1171,13 @@ export function runCheck() {
     robots: readOrFail("public/robots.txt", failures),
     offlineHtml: readOrFail("public/offline.html", failures),
     sitemapXml: readOrFail("public/sitemap.xml", failures),
+    vercelJson: readOrFail("vercel.json", failures),
   });
   if (noindexFailures.length > 0) {
     failures.push(...noindexFailures);
   } else {
     console.log(
-      `${TAG} ok  noindex contracts (_headers, netlify.toml, robots.txt, offline.html, sitemap.xml)`,
+      `${TAG} ok  noindex contracts (_headers, netlify.toml, vercel.json, robots.txt, offline.html, sitemap.xml)`,
     );
   }
 

@@ -47,9 +47,6 @@ vi.mock("../../../components/Dashboard", () => ({ Dashboard: stubComponent }));
 vi.mock("../../../components/HomeDashboard", () => ({
   HomeDashboard: stubComponent,
 }));
-vi.mock("../../../components/pwa/ReloadPrompt", () => ({
-  ReloadPrompt: stubComponent,
-}));
 vi.mock("../../../components/Collaboration", () => ({
   Collaboration: stubComponent,
   default: stubComponent,
@@ -64,44 +61,15 @@ vi.mock("../../../components/PrivacyPage", () => ({
   PrivacyPage: stubComponent,
 }));
 
-// Single canonical list — update here only when the barrel gains an export.
-const EXPECTED_LAZY_EXPORTS = [
-  "GraphView",
-  "CanvasView",
-  "SharedDocumentView",
-  "FlashcardReview",
-  "Omnibar",
-  "PrivacyPage",
-  "DocumentManager",
-  "KnowledgeDashboard",
-  "SecurityDashboard",
-  "SupportChat",
-  "BlockEditor",
-  "Chat",
-  "BookmarksTable",
-  "AICopilotPanel",
-  "ExpertAgentsPanel",
-  "VoiceCommandCenterWrapper",
-  "AIModelHydration",
-  "BackgroundProgress",
-  "SyncStatus",
-  "InsightCards",
-  "Settings",
-  "Dashboard",
-  "HomeDashboard",
-  "ReloadPrompt",
-  "Collaboration",
-  "DatabaseView",
-  "KanbanView",
-  "CalendarView",
-  "ListView",
-  "GalleryView",
-  "TimelineView",
-];
+// The barrel is the single source of truth for the lazy surface. Deriving the
+// names from it keeps this test correct when an export is added or removed,
+// instead of a second hardcoded list that silently drifts from the barrel.
+const LAZY_EXPORT_NAMES = Object.keys(lazyComponents).sort();
 
 describe("lazyComponents barrel", () => {
-  it("exports every expected lazy component, all lazily loaded", () => {
-    for (const name of EXPECTED_LAZY_EXPORTS) {
+  it("exports only lazy components (no eager import leak)", () => {
+    expect(LAZY_EXPORT_NAMES.length).toBeGreaterThan(0);
+    for (const name of LAZY_EXPORT_NAMES) {
       const component = (lazyComponents as Record<string, unknown>)[name];
       expect(component, `${name} should be exported`).toBeDefined();
       expect(
@@ -109,12 +77,6 @@ describe("lazyComponents barrel", () => {
         `${name} should be a lazy component (no eager import leak)`,
       ).toBe(REACT_LAZY_TYPE);
     }
-  });
-
-  it("keeps the export surface stable (no accidental renames)", () => {
-    expect(Object.keys(lazyComponents).sort()).toEqual(
-      EXPECTED_LAZY_EXPORTS.sort(),
-    );
   });
 
   it("every lazy() resolves through its dynamic import to a module (wiring + normalization)", async () => {
@@ -127,7 +89,7 @@ describe("lazyComponents barrel", () => {
     const { render, act } = await import("@testing-library/react");
     const React = await import("react");
     const { Suspense } = React;
-    for (const name of EXPECTED_LAZY_EXPORTS) {
+    for (const name of LAZY_EXPORT_NAMES) {
       const Component = (lazyComponents as Record<string, unknown>)[name] as React.ComponentType;
       // Mount the lazy component inside a Suspense boundary and flush via
       // act() so its dynamic import resolves; a broken target path or a

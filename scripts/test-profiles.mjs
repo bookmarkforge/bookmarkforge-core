@@ -14,7 +14,7 @@
 // silently shrinks the profile (ADR-038 found the MutationGuard .tsx selector
 // had dropped its 12 tests for months because the spelling drifted). The
 // runner fails loudly via scripts/__tests__/test-profiles.test.mjs instead.
-import { readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 export const FAST_THRESHOLD_MS = 5000;
@@ -29,16 +29,51 @@ const securityRegressions = readdirSync(join(ROOT, "src/tests/security"))
   .filter((file) => /^p\d-.*\.regression\.test\.ts$/.test(file))
   .map((file) => rel(`security/${file}`));
 
+// ── Pinned times: read from the baseline, never hand-written ────────────────
+// scripts/test-timing-baseline.json is the only place a pinned duration lives.
+// These definitions used to carry a hand-typed "pinned 48.3 s" beside the two
+// slow-only gate tests, and one of them had already drifted (33.7 s against a
+// 48.3 s pin): prose nobody re-derives is the drift class this avoids. Read it
+// with pinnedMs()/pinnedLabel(); scripts/__tests__/test-profiles.test.mjs
+// enforces the membership rule against these derived values.
+const timingBaseline = (() => {
+  const baselinePath = join(ROOT, "scripts", "test-timing-baseline.json");
+  // Absent is a legitimate state — a fixture root or any tree that ships no
+  // timing baseline — and this module is imported by the runner, the wrapper,
+  // the file collector and check-audit-freshness, so it must stay quiet there
+  // (a gate test asserting clean stderr is what caught the noisy version).
+  // Present but unparseable is a defect and is loud.
+  if (!existsSync(baselinePath)) return null;
+  try {
+    return JSON.parse(readFileSync(baselinePath, "utf8"));
+  } catch (error) {
+    console.error(`[test-profiles] timing baseline unreadable: ${error.message}`);
+    return null;
+  }
+})();
+
+/** The baseline's pin for a repo-relative test path, in ms (null when unpinned). */
+export function pinnedMs(repoPath) {
+  return timingBaseline?.files?.[repoPath] ?? null;
+}
+
+/** The pin as prose should quote it, e.g. "48.3 s" — derived, so it cannot drift. */
+export function pinnedLabel(repoPath) {
+  const ms = pinnedMs(repoPath);
+  return ms === null ? "unpinned" : `${(ms / 1000).toFixed(1)} s`;
+}
+
 // Quality-gate script tests (scripts/__tests__) run on EVERY PR via the fast
 // profile — CI's first job must see gate drift, not the slow job hours later.
-// Files whose PINNED time in scripts/test-timing-baseline.json exceeds the
-// fast bar (5 s) stay slow-only via SLOW_GATE_TESTS: the timing guard would
-// fail the fast profile on them otherwise. A NEW gate test lands in fast
-// automatically (they are sub-second); if one ever grows past the bar, CI
-// names it and it moves into SLOW_GATE_TESTS — a deliberate, reviewed act.
+// A gate test whose PINNED time is at/over FAST_THRESHOLD_MS stays slow-only
+// via SLOW_GATE_TESTS: the fast profile has to stay ~2 min, and a pinned file
+// is exempt from the slow-file threshold, so nothing else would hold it back.
+// A NEW gate test lands in fast automatically (they are sub-second); if one
+// ever grows past the bar, test-profiles.test.mjs names it and moving it here
+// is a deliberate, reviewed act.
 export const SLOW_GATE_TESTS = new Set([
-  "build-ci-secret-scan.test.mjs", // pinned 33.7 s
-  "monitoring-alerts.test.mjs", // pinned 9.4 s
+  "build-ci-secret-scan.test.mjs",
+  "monitoring-alerts.test.mjs",
 ]);
 const gateTestFiles = readdirSync(join(ROOT, "scripts/__tests__"))
   .filter((file) => /^.+\.test\.mjs$/.test(file))

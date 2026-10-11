@@ -75,6 +75,12 @@ export function splitCommandLine(line) {
  * spawnSync directly. Returns the raw spawnSync result (status may be null
  * when the process could not be spawned). `options` passes through, so
  * `stdio`, `timeout`, `env`, `encoding` behave exactly as with spawnSync.
+ *
+ * This is the ONLY subprocess entry point the repo's operational scripts use
+ * for a configured command line: the caller keeps writing a readable line
+ * ("node scripts/nginx-render.mjs --write"), and nothing in it is ever
+ * re-interpreted by /bin/sh. The single exception is the Windows fallback
+ * below, and it exists because the platform, not the caller, forces it.
  */
 export function runCommandLine(line, options = {}) {
   const argv = splitCommandLine(line);
@@ -82,5 +88,37 @@ export function runCommandLine(line, options = {}) {
     return { status: -1, error: new Error("empty command line"), stdout: "", stderr: "" };
   }
   const [file, ...args] = argv;
-  return spawnSync(file, args, options);
+  const result = spawnSync(file, args, options);
+  // Windows resolves the CLI shims (npm, vercel, gh, …) to `.cmd` batch files
+  // that Node refuses to exec without a shell (ENOENT/EINVAL). The direct argv
+  // spawn stays the first — and on POSIX the only — attempt; the shell is a
+  // platform fallback for a line the caller wrote literally, never for data.
+  if (
+    process.platform === "win32" &&
+    (result.error?.code === "ENOENT" || result.error?.code === "EINVAL")
+  ) {
+    return spawnSync(line, { ...options, shell: true });
+  }
+  return result;
+}
+
+/**
+ * execSync replacement over runCommandLine: returns the trimmed stdout and
+ * throws on a non-zero status. The thrown error carries `status`, `stdout` and
+ * `stderr`, exactly like execSync's, so existing catch blocks that log
+ * `error.stdout` keep working after the conversion.
+ */
+export function captureCommandLine(line, options = {}) {
+  const result = runCommandLine(line, { encoding: "utf8", ...options });
+  const stdout = typeof result.stdout === "string" ? result.stdout : "";
+  const stderr = typeof result.stderr === "string" ? result.stderr : "";
+  if (result.error) throw result.error;
+  if (result.status !== 0) {
+    const error = new Error(stderr.trim() || `${line} exited with ${result.status}`);
+    error.status = result.status;
+    error.stdout = stdout;
+    error.stderr = stderr;
+    throw error;
+  }
+  return stdout.trim();
 }

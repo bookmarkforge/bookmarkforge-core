@@ -122,7 +122,6 @@ npm run check
 - [**Commercial Positioning**](docs/positioning.md) — Market positioning and strategy
 - [**Audit Report**](docs/audit.md) — Security audit findings
 - [**ROPA (GDPR)**](docs/ROPA.md) — Records of processing activities
-- [**Market Validation Plan**](docs/market-validation-plan.md) — 30-day validation strategy
 
 ---
 

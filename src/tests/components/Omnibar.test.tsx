@@ -74,6 +74,12 @@ vi.mock("motion/react", async () => {
   return createMotionMock();
 });
 
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+  user = userEvent.setup({ delay: null });
+});
+
 describe("Omnibar", () => {
   let Omnibar: React.FC<any>;
   const defaultProps = {
@@ -135,7 +141,7 @@ describe("Omnibar", () => {
 
   it("Intelligence Center command fires show_analysis and closes", async () => {
     render(<Omnibar {...defaultProps} />);
-    await userEvent.click(
+    await user.click(
       screen.getByRole("option", { name: "intelligenceCenter" }),
     );
     expect(defaultProps.onAction).toHaveBeenCalledWith("show_analysis");
@@ -145,7 +151,7 @@ describe("Omnibar", () => {
   it("updates query when typing in the input", async () => {
     render(<Omnibar {...defaultProps} />);
     const input = screen.getByRole("combobox");
-    await userEvent.type(input, "test query");
+    await user.type(input, "test query");
     expect(input).toHaveValue("test query");
   });
 
@@ -154,10 +160,10 @@ describe("Omnibar", () => {
     // Command count is a moving target; clamp-driven navigation must always
     // return to the top (the selection clamps at the last result either way).
     for (let i = 0; i < 10; i += 1) {
-      await userEvent.keyboard("{ArrowDown}");
+      await user.keyboard("{ArrowDown}");
     }
     for (let i = 0; i < 10; i += 1) {
-      await userEvent.keyboard("{ArrowUp}");
+      await user.keyboard("{ArrowUp}");
     }
     const options = screen.getAllByRole("option");
     expect(options[0]).toHaveAttribute("aria-selected", "true");
@@ -165,7 +171,7 @@ describe("Omnibar", () => {
 
   it("ArrowDown does not exceed results limit", async () => {
     render(<Omnibar {...defaultProps} />);
-    for (let i = 0; i < 50; i++) await userEvent.keyboard("{ArrowDown}");
+    for (let i = 0; i < 50; i++) await user.keyboard("{ArrowDown}");
     const options = screen.getAllByRole("option");
     expect(options[options.length - 1]).toHaveAttribute(
       "aria-selected",
@@ -175,27 +181,27 @@ describe("Omnibar", () => {
 
   it("Enter on a command executes the action and closes", async () => {
     render(<Omnibar {...defaultProps} />);
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(defaultProps.onNavigate).toHaveBeenCalledWith("dashboard");
     expect(defaultProps.onClose).toHaveBeenCalled();
   });
 
   it("Escape llama a onClose", async () => {
     render(<Omnibar {...defaultProps} />);
-    await userEvent.keyboard("{Escape}");
+    await user.keyboard("{Escape}");
     expect(defaultProps.onClose).toHaveBeenCalled();
   });
 
   it("click on backdrop closes the omnibar", async () => {
     render(<Omnibar {...defaultProps} />);
-    await userEvent.click(screen.getByRole("dialog"));
+    await user.click(screen.getByRole("dialog"));
     expect(defaultProps.onClose).toHaveBeenCalled();
   });
 
   it("click on inner panel does not close due to stopPropagation", async () => {
     render(<Omnibar {...defaultProps} />);
     const innerPanel = document.querySelector(".max-w-2xl");
-    await userEvent.click(innerPanel!);
+    await user.click(innerPanel!);
     expect(defaultProps.onClose).not.toHaveBeenCalled();
   });
 
@@ -229,7 +235,7 @@ describe("Omnibar", () => {
       target: { value: "zzz" },
     });
     await screen.findByText("Document 1");
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByRole("group")).toBeTruthy();
     expect(screen.getByText("app_open")).toBeTruthy();
   });
@@ -240,9 +246,9 @@ describe("Omnibar", () => {
       target: { value: "zzz" },
     });
     await screen.findByText("Document 1");
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByRole("group")).toBeTruthy();
-    await userEvent.keyboard("{Escape}");
+    await user.keyboard("{Escape}");
     expect(screen.getByRole("listbox")).toBeTruthy();
     expect(defaultProps.onClose).not.toHaveBeenCalled();
   });
@@ -253,7 +259,7 @@ describe("Omnibar", () => {
       target: { value: "zzz" },
     });
     await screen.findByText("Document 1");
-    await userEvent.click(screen.getAllByRole("option")[0]!);
+    await user.click(screen.getAllByRole("option")[0]!);
     expect(screen.getByText("app_open")).toBeTruthy();
     expect(screen.getByText("app_copyLink")).toBeTruthy();
     expect(screen.getByText("app_delete")).toBeTruthy();
@@ -265,8 +271,8 @@ describe("Omnibar", () => {
       target: { value: "zzz" },
     });
     await screen.findByText("Document 1");
-    await userEvent.click(screen.getAllByRole("option")[0]!);
-    await userEvent.click(screen.getByText("app_open"));
+    await user.click(screen.getAllByRole("option")[0]!);
+    await user.click(screen.getByText("app_open"));
     expect(defaultProps.onSelectDocument).toHaveBeenCalledWith("1");
     expect(defaultProps.onClose).toHaveBeenCalled();
   });
@@ -277,8 +283,8 @@ describe("Omnibar", () => {
       target: { value: "zzz" },
     });
     await screen.findByText("Document 1");
-    await userEvent.click(screen.getAllByRole("option")[0]!);
-    await userEvent.click(screen.getByText("app_copyLink"));
+    await user.click(screen.getAllByRole("option")[0]!);
+    await user.click(screen.getByText("app_copyLink"));
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
       expect.stringContaining("/doc/1"),
     );
@@ -297,8 +303,8 @@ describe("Omnibar", () => {
       target: { value: "zzz" },
     });
     await screen.findByText("Document 1");
-    await userEvent.click(screen.getAllByRole("option")[0]!);
-    await userEvent.click(screen.getByText("app_copyLink"));
+    await user.click(screen.getAllByRole("option")[0]!);
+    await user.click(screen.getByText("app_copyLink"));
     unmount();
     await waitFor(() => expect(defaultProps.onClose).toHaveBeenCalled());
     expect(mockToastSuccess).not.toHaveBeenCalled();
@@ -310,8 +316,8 @@ describe("Omnibar", () => {
       target: { value: "zzz" },
     });
     await screen.findByText("Document 1");
-    await userEvent.click(screen.getAllByRole("option")[0]!);
-    await userEvent.click(screen.getByText("app_delete"));
+    await user.click(screen.getAllByRole("option")[0]!);
+    await user.click(screen.getByText("app_delete"));
     expect(defaultProps.onAction).toHaveBeenCalledWith("delete_doc_1");
     expect(defaultProps.onClose).toHaveBeenCalled();
   });
@@ -322,9 +328,9 @@ describe("Omnibar", () => {
       target: { value: "zzz" },
     });
     await screen.findByText("Document 1");
-    await userEvent.keyboard("{ArrowDown}");
-    await userEvent.keyboard("{Enter}");
-    await userEvent.click(screen.getByText("app_open"));
+    await user.keyboard("{ArrowDown}");
+    await user.keyboard("{Enter}");
+    await user.click(screen.getByText("app_open"));
     expect(defaultProps.onSelectBookmark).toHaveBeenCalledWith("2");
     expect(defaultProps.onClose).toHaveBeenCalled();
   });
@@ -335,9 +341,9 @@ describe("Omnibar", () => {
       target: { value: "zzz" },
     });
     await screen.findByText("Document 1");
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     defaultProps.onClose.mockClear();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(defaultProps.onClose).not.toHaveBeenCalled();
   });
 
@@ -362,7 +368,7 @@ describe("Omnibar", () => {
       target: { value: "zzz" },
     });
     await screen.findByText("Document 1");
-    await userEvent.click(screen.getAllByRole("option")[0]!);
+    await user.click(screen.getAllByRole("option")[0]!);
     expect(screen.getByTestId("icon-ArrowRight")).toBeTruthy();
     expect(screen.getByTestId("icon-Trash2")).toBeTruthy();
   });
@@ -383,7 +389,7 @@ describe("Omnibar", () => {
     await screen.findByText("Document 1");
     const options = screen.getAllByRole("option");
     options[0]!.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(screen.getByRole("group")).toBeTruthy();
   });
 
@@ -393,15 +399,15 @@ describe("Omnibar", () => {
       target: { value: "zzz" },
     });
     await screen.findByText("Document 1");
-    await userEvent.click(screen.getAllByRole("option")[0]!);
-    await userEvent.click(screen.getByText("app_delete"));
+    await user.click(screen.getAllByRole("option")[0]!);
+    await user.click(screen.getByText("app_delete"));
     expect(defaultProps.onAction).toHaveBeenCalled();
   });
 
   it("Escape key in the dialog also closes", async () => {
     render(<Omnibar {...defaultProps} />);
     screen.getByRole("dialog").focus();
-    await userEvent.keyboard("{Escape}");
+    await user.keyboard("{Escape}");
     expect(defaultProps.onClose).toHaveBeenCalled();
   });
 

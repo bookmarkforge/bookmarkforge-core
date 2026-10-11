@@ -295,11 +295,9 @@
   - ✅ `docs/ROPA.md` actualizado
 
 - [ ] **Política de privacidad publicada**
-  - ✅ `docs/POLITICA-PRIVACIDAD.md` con datos reales
   - ✅ URL accesible: `https://bookmarkforgeapp.com/privacy`
 
 - [ ] **Política de reembolsos**
-  - ✅ `docs/POLITICA-REEMBOLSOS.md` lista
 
 - [ ] **Políticas de privacidad de extensión**
   - ✅ `docs/PRIVACY-EXTENSION.md` lista

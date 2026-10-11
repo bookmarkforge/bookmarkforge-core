@@ -77,7 +77,7 @@ jobs:
       - name: Enforce SEO visibility contract
         run: npm run check:seo
       - name: Validate workflow, artifact, HTTP, Compose and repository safety
-        run: npm run check:workflows && npm run check:workflow-artifacts && npm run check:http-config && npm run check:compose-config && npm run check:runtime-config && npm run check:docker-context && npm run check:repository-hygiene
+        run: npm run check:workflows && npm run check:workflow-artifacts && npm run check:http-config && npm run check:spa-routes && npm run check:compose-config && npm run check:runtime-config && npm run check:docker-context && npm run check:repository-hygiene
       # Its own named step so a fabricated E2E selector (one that exists only
       # in a unit-test mock, like the lazy BlockNoteView stub's
       # "blocknote-view") surfaces as a separate red check: such a selector

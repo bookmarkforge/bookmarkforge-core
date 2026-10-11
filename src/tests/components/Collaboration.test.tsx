@@ -41,6 +41,12 @@ vi.mock("lucide-react", () => {
   };
 });
 
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+  user = userEvent.setup({ delay: null });
+});
+
 describe("Collaboration", () => {
   let Collaboration: React.FC;
   let clipboardText: string;
@@ -77,8 +83,8 @@ describe("Collaboration", () => {
   it("generates share payload when clicking Share", async () => {
     render(<Collaboration />);
     const passwordInputs = screen.getAllByPlaceholderText("app_masterPassword");
-    await userEvent.type(passwordInputs[0]!, "mypassword");
-    await userEvent.click(screen.getByText("app_share"));
+    await user.type(passwordInputs[0]!, "mypassword");
+    await user.click(screen.getByText("app_share"));
     expect(mockCollaborationService.generateSharePayload).toHaveBeenCalledWith(
       "mypassword",
       expect.any(AbortSignal),
@@ -94,11 +100,11 @@ describe("Collaboration", () => {
     );
     render(<Collaboration />);
     const passwordInputs = screen.getAllByPlaceholderText("app_masterPassword");
-    await userEvent.type(passwordInputs[0]!, "mypassword");
+    await user.type(passwordInputs[0]!, "mypassword");
 
     const shareButton = screen.getByText("app_share");
-    await userEvent.click(shareButton);
-    await userEvent.click(shareButton);
+    await user.click(shareButton);
+    await user.click(shareButton);
 
     expect(mockCollaborationService.generateSharePayload).toHaveBeenCalledTimes(1);
     resolvePayload?.("single-payload");
@@ -114,8 +120,8 @@ describe("Collaboration", () => {
     );
     const { unmount } = render(<Collaboration />);
     const passwordInputs = screen.getAllByPlaceholderText("app_masterPassword");
-    await userEvent.type(passwordInputs[0]!, "pass");
-    await userEvent.click(screen.getByText("app_share"));
+    await user.type(passwordInputs[0]!, "pass");
+    await user.click(screen.getByText("app_share"));
     await waitFor(() => {
       expect(mockCollaborationService.generateSharePayload).toHaveBeenCalled();
     });
@@ -136,10 +142,10 @@ describe("Collaboration", () => {
     );
     const { unmount } = render(<Collaboration />);
     const textarea = screen.getByPlaceholderText("app_roomIdPlaceholder");
-    await userEvent.type(textarea, "data");
+    await user.type(textarea, "data");
     const passwordInputs = screen.getAllByPlaceholderText("app_masterPassword");
-    await userEvent.type(passwordInputs[1]!, "pass");
-    await userEvent.click(screen.getByText("app_import"));
+    await user.type(passwordInputs[1]!, "pass");
+    await user.click(screen.getByText("app_import"));
     await waitFor(() => {
       expect(mockCollaborationService.importSharedVault).toHaveBeenCalled();
     });
@@ -153,15 +159,15 @@ describe("Collaboration", () => {
 
   it("shows error if there is no password when sharing", async () => {
     render(<Collaboration />);
-    await userEvent.click(screen.getByText("app_share"));
+    await user.click(screen.getByText("app_share"));
     expect(mockToast.error).toHaveBeenCalledWith("app_masterPasswordRequired");
   });
 
   it("shows generated payload", async () => {
     render(<Collaboration />);
     const passwordInputs = screen.getAllByPlaceholderText("app_masterPassword");
-    await userEvent.type(passwordInputs[0]!, "pass");
-    await userEvent.click(screen.getByText("app_share"));
+    await user.type(passwordInputs[0]!, "pass");
+    await user.click(screen.getByText("app_share"));
     await screen.findByText("mock-payload-data");
     expect(screen.getByText("mock-payload-data")).toBeTruthy();
   });
@@ -169,20 +175,20 @@ describe("Collaboration", () => {
   it("copies payload to the clipboard", async () => {
     render(<Collaboration />);
     const passwordInputs = screen.getAllByPlaceholderText("app_masterPassword");
-    await userEvent.type(passwordInputs[0]!, "pass");
-    await userEvent.click(screen.getByText("app_share"));
+    await user.type(passwordInputs[0]!, "pass");
+    await user.click(screen.getByText("app_share"));
     const copyBtn = await screen.findByTestId("icon-Copy");
-    await userEvent.click(copyBtn);
+    await user.click(copyBtn);
     expect(clipboardText).toBe("mock-payload-data");
   });
 
   it("imports vault successfully", async () => {
     render(<Collaboration />);
     const textarea = screen.getByPlaceholderText("app_roomIdPlaceholder");
-    await userEvent.type(textarea, "import-data");
+    await user.type(textarea, "import-data");
     const passwordInputs = screen.getAllByPlaceholderText("app_masterPassword");
-    await userEvent.type(passwordInputs[1]!, "importpass");
-    await userEvent.click(screen.getByText("app_import"));
+    await user.type(passwordInputs[1]!, "importpass");
+    await user.click(screen.getByText("app_import"));
     expect(mockCollaborationService.importSharedVault).toHaveBeenCalled();
   });
 
@@ -195,13 +201,13 @@ describe("Collaboration", () => {
     );
     render(<Collaboration />);
     const textarea = screen.getByPlaceholderText("app_roomIdPlaceholder");
-    await userEvent.type(textarea, "import-data");
+    await user.type(textarea, "import-data");
     const passwordInputs = screen.getAllByPlaceholderText("app_masterPassword");
-    await userEvent.type(passwordInputs[1]!, "importpass");
+    await user.type(passwordInputs[1]!, "importpass");
 
     const importButton = screen.getByText("app_import");
-    await userEvent.click(importButton);
-    await userEvent.click(importButton);
+    await user.click(importButton);
+    await user.click(importButton);
 
     expect(mockCollaborationService.importSharedVault).toHaveBeenCalledTimes(1);
     resolveImport?.(true);
@@ -210,17 +216,17 @@ describe("Collaboration", () => {
 
   it("validates empty fields on import", async () => {
     render(<Collaboration />);
-    await userEvent.click(screen.getByText("app_import"));
+    await user.click(screen.getByText("app_import"));
     expect(mockToast.error).toHaveBeenCalledWith("app_missingFields");
   });
 
   it("shows active sync after successful import", async () => {
     render(<Collaboration />);
     const textarea = screen.getByPlaceholderText("app_roomIdPlaceholder");
-    await userEvent.type(textarea, "data");
+    await user.type(textarea, "data");
     const passwordInputs = screen.getAllByPlaceholderText("app_masterPassword");
-    await userEvent.type(passwordInputs[1]!, "pass");
-    await userEvent.click(screen.getByText("app_import"));
+    await user.type(passwordInputs[1]!, "pass");
+    await user.click(screen.getByText("app_import"));
     await screen.findByTestId("icon-Wifi");
     expect(screen.getByTestId("icon-Wifi")).toBeTruthy();
   });
@@ -231,8 +237,8 @@ describe("Collaboration", () => {
     );
     render(<Collaboration />);
     const passwordInputs = screen.getAllByPlaceholderText("app_masterPassword");
-    await userEvent.type(passwordInputs[0]!, "pass");
-    await userEvent.click(screen.getByText("app_share"));
+    await user.type(passwordInputs[0]!, "pass");
+    await user.click(screen.getByText("app_share"));
     await screen.findByText("payload-data");
     expect(screen.getByText("payload-data")).toBeTruthy();
   });
@@ -241,10 +247,10 @@ describe("Collaboration", () => {
     mockCollaborationService.importSharedVault.mockResolvedValue(true);
     render(<Collaboration />);
     const textarea = screen.getByPlaceholderText("app_roomIdPlaceholder");
-    await userEvent.type(textarea, "data");
+    await user.type(textarea, "data");
     const passwordInputs = screen.getAllByPlaceholderText("app_masterPassword");
-    await userEvent.type(passwordInputs[1]!, "pass");
-    await userEvent.click(screen.getByText("app_import"));
+    await user.type(passwordInputs[1]!, "pass");
+    await user.click(screen.getByText("app_import"));
     await screen.findByTestId("icon-Wifi");
     expect(screen.getByTestId("icon-Wifi")).toBeTruthy();
   });
@@ -253,10 +259,10 @@ describe("Collaboration", () => {
     mockCollaborationService.importSharedVault.mockResolvedValue(false);
     render(<Collaboration />);
     const textarea = screen.getByPlaceholderText("app_roomIdPlaceholder");
-    await userEvent.type(textarea, "data");
+    await user.type(textarea, "data");
     const passwordInputs = screen.getAllByPlaceholderText("app_masterPassword");
-    await userEvent.type(passwordInputs[1]!, "pass");
-    await userEvent.click(screen.getByText("app_import"));
+    await user.type(passwordInputs[1]!, "pass");
+    await user.click(screen.getByText("app_import"));
     await new Promise((r) => setTimeout(r, 50));
     expect(screen.getByTestId("icon-WifiOff")).toBeTruthy();
   });

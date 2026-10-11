@@ -1,13 +1,14 @@
 // @vitest-environment node
 /**
- * Tests for the test-timing regression guard: log parsing, the two
+ * Tests for the test-timing regression guard: log parsing, the three
  * detection layers (absolute slow-file threshold + per-file regression
- * budget), coverage/noise tolerance, fail-closed hygiene paths, update
- * mode, and the env-mode resolution contract.
+ * budget + stale-pin floor), coverage/noise tolerance, fail-closed hygiene
+ * paths, update mode, and the env-mode resolution contract.
  */
 import { describe, expect, it } from "vitest";
 import {
   evaluateTimings,
+  optsFromEnv,
   parseTimings,
   resolveTimingMode,
   TIMING_SCHEMA_LABEL,
@@ -98,13 +99,20 @@ describe("evaluateTimings — detection layers", () => {
     expect(r.ok).toBe(false);
     expect(r.violations[0]).toContain("17100ms exceeds 2x its pinned 8500ms budget");
   });
-  it("does not flag a regression at exactly the budget boundary", () => {
-    const r = evaluateTimings(
+  it("hands the 2x boundary to layer 3 instead of the budget", () => {
+    const args = [
       new Map([["src/tests/services/SyncService.test.ts", { tests: 78, ms: 1400 }]]),
       BASE({ "src/tests/services/SyncService.test.ts": 700 }),
       "enforce",
-    );
-    expect(r.ok).toBe(true);
+    ];
+    // Layer 2 is strict `>`: exactly 2x never was a budget violation. It is
+    // now a stale pin (a pin half the size of the run), because the pin floor
+    // owns everything between the pin and the budget.
+    const r = evaluateTimings(...args);
+    expect(r.ok).toBe(false);
+    expect(r.violations[0]).toContain("pinned 700ms sits 50% below this run's 1400ms");
+    // The historical budget contract is unchanged once the floor is disabled.
+    expect(evaluateTimings(...args, { pinFloor: 1 }).ok).toBe(true);
   });
 
   it("passes a clean run with a summary line", () => {
@@ -115,6 +123,53 @@ describe("evaluateTimings — detection layers", () => {
     );
     expect(r.ok).toBe(true);
     expect(r.lines.at(-1)).toContain("OK — 1 file(s) within budgets");
+  });
+});
+
+describe("evaluateTimings — pin floor (a pin no run reproduces)", () => {
+  const SYNC = "src/tests/services/SyncService.test.ts";
+  const run = (ms) => new Map([[SYNC, { tests: 2, ms }]]);
+
+  it("fails the 31000ms pin a real 48347ms run contradicts", () => {
+    const r = evaluateTimings(run(48347), BASE({ [SYNC]: 31000 }), "enforce");
+    expect(r.ok).toBe(false);
+    expect(r.violations[0]).toContain("pinned 31000ms sits 36% below this run's 48347ms");
+    expect(r.violations[0]).toContain("BMF_TEST_TIMING=update");
+  });
+
+  it("does not flag a pin above the measurement (slower-machine drift)", () => {
+    const r = evaluateTimings(run(4704), BASE({ [SYNC]: 8114 }), "enforce");
+    expect(r.ok).toBe(true);
+  });
+
+  it("holds the documented boundary exactly at the floor", () => {
+    expect(evaluateTimings(run(1000), BASE({ [SYNC]: 750 }), "enforce").ok).toBe(true);
+    const past = evaluateTimings(run(1000), BASE({ [SYNC]: 740 }), "enforce");
+    expect(past.ok).toBe(false);
+    expect(past.violations[0]).toContain("26% below this run's 1000ms");
+  });
+
+  it("honours the knob: 1 disables the layer, 0 makes any under-pin a finding", () => {
+    const pin = BASE({ [SYNC]: 700 });
+    expect(evaluateTimings(run(1000), pin, "enforce", { pinFloor: 1 }).ok).toBe(true);
+    expect(evaluateTimings(run(1000), pin, "enforce", { pinFloor: 0 }).ok).toBe(false);
+    // A malformed value must not silently disable the layer.
+    expect(evaluateTimings(run(1000), pin, "enforce", { pinFloor: Number.NaN }).ok).toBe(false);
+  });
+
+  it("reads the tolerance from the env (default 0.25)", () => {
+    expect(optsFromEnv({}).pinFloor).toBe(0.25);
+    expect(optsFromEnv({ BMF_TEST_TIMING_PIN_FLOOR: "0.4" }).pinFloor).toBe(0.4);
+  });
+
+  it("stays quiet when the run is too partial to judge", () => {
+    const r = evaluateTimings(
+      run(9000),
+      BASE({ [SYNC]: 3000, "a.test.ts": 6000, "b.test.ts": 6000, "c.test.ts": 6000 }),
+      "enforce",
+    );
+    expect(r.ok).toBe(true);
+    expect(r.lines.join("\n")).toContain("run not judged");
   });
 });
 

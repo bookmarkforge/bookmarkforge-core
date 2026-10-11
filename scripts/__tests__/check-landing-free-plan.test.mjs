@@ -20,11 +20,29 @@ import {
   checkSecondarySource,
   findDeviceCountClaim,
   isWedgeLine,
+  localeOfFileStem,
   normalizeCapNumbers,
   validateSecondaryCoverage,
   WEDGE_TABLE,
 } from "../check-landing-free-plan.mjs";
 import { LANDING_CODES, PRIMARY_LOCALE_CODES } from "../landing-registry.mjs";
+
+// ── Landing file stem → locale ───────────────────────────────────────────────
+describe("localeOfFileStem", () => {
+  it("maps both English landing files to en", () => {
+    expect(localeOfFileStem("landing")).toBe("en");
+    // public/index.html is the English landing on the root route `/`, not a
+    // locale of its own — reading it as "index" parked the wedge check at the
+    // secondary slot (rule C false positive).
+    expect(localeOfFileStem("index")).toBe("en");
+  });
+
+  it("passes every real locale stem through untouched", () => {
+    for (const lang of LANDING_CODES) {
+      expect(localeOfFileStem(lang), lang).toBe(lang);
+    }
+  });
+});
 
 // ── Rule A: cap normalization ────────────────────────────────────────────────
 describe("normalizeCapNumbers", () => {
@@ -305,6 +323,7 @@ describe("freeze on the real repo tree", () => {
     const { join } = await import("node:path");
     const root = join(import.meta.dirname, "..", "..");
     for (const [file, lang, slot] of [
+      ["index.html", "en", 0],
       ["landing.html", "en", 0],
       ["es.html", "es", 0],
       ["ja.html", "ja", 1],

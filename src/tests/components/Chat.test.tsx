@@ -140,6 +140,12 @@ vi.mock("remark-gfm", () => ({ default: () => {} }));
 
 import Chat from "../../components/Chat";
 
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+  user = userEvent.setup({ delay: null });
+});
+
 describe("Chat", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -198,7 +204,7 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
+    await user.type(input, "Hola");
     const sendBtn = screen.getByTestId("icon-Send").closest("button")!;
     expect(sendBtn.disabled).toBe(false);
   });
@@ -212,8 +218,8 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => {
       expect(mockGlobalChat).toHaveBeenCalled();
     });
@@ -228,9 +234,9 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
+    await user.type(input, "Hola");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     await waitFor(() => {
       expect(mockGlobalChat).toHaveBeenCalled();
     });
@@ -247,7 +253,7 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
+    await user.type(input, "Hola");
     input.focus();
     fireEvent.keyDown(input, { key: "Enter" });
     fireEvent.keyDown(input, { key: "Enter" });
@@ -266,12 +272,12 @@ describe("Chat", () => {
     mockWebSearch.mockResolvedValue({ text: "Web result", sources: [] });
     render(<Chat />);
     const webBtn = screen.getByTestId("icon-Globe").closest("button")!;
-    await userEvent.click(webBtn);
+    await user.click(webBtn);
     const input = screen.getByPlaceholderText(
       "app_webSearchPlaceholder",
     ) as HTMLInputElement;
-    await userEvent.type(input, "buscar");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "buscar");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => {
       expect(mockWebSearch).toHaveBeenCalled();
     });
@@ -283,8 +289,8 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => {
       expect(mockMessagesInsert).toHaveBeenCalledTimes(2);
     });
@@ -341,8 +347,8 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => {
       expect(mockMessagesInsert).toHaveBeenCalledTimes(2);
     });
@@ -354,8 +360,8 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => {
       expect(mockMessagesInsert).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -373,8 +379,8 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "   ");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "   ");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     expect(mockGlobalChat).not.toHaveBeenCalled();
   });
 
@@ -383,9 +389,9 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "   ");
+    await user.type(input, "   ");
     input.focus();
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(mockGlobalChat).not.toHaveBeenCalled();
   });
 
@@ -406,7 +412,7 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "texto visible");
+    await user.type(input, "texto visible");
     // We do not send with direct click; we use the handleSendRef reference via pending_ai_query
     // This test verifies that the overrideInput path exists in the handler
     expect(input.value).toBe("texto visible");
@@ -417,7 +423,7 @@ describe("Chat", () => {
     const globeIcons = screen.getAllByTestId("icon-Globe");
     const webBtn = globeIcons[0]!.closest("button")!;
     expect(webBtn).toBeTruthy();
-    await userEvent.click(webBtn);
+    await user.click(webBtn);
     expect(
       screen.getByPlaceholderText("app_webSearchPlaceholder"),
     ).toBeTruthy();
@@ -465,12 +471,12 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
+    await user.type(input, "Hola");
     // Button enabled before click (input has text)
     expect(screen.getByTestId("icon-Send").closest("button")!.disabled).toBe(
       false,
     );
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     // Button disabled after click (isTyping=true + input cleared)
     expect(screen.getByTestId("icon-Send").closest("button")!.disabled).toBe(
       true,
@@ -483,8 +489,8 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => {
       expect(mockMessagesInsert).toHaveBeenCalledWith(
         expect.objectContaining({ content: "Sorry, I encountered an error processing your request. Please try again." }),
@@ -504,10 +510,10 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "   ");
+    await user.type(input, "   ");
     fireEvent.keyDown(input, { key: "Enter" });
-    await userEvent.clear(input);
-    await userEvent.type(input, "valid query");
+    await user.clear(input);
+    await user.type(input, "valid query");
     fireEvent.keyDown(input, { key: "Enter" });
     await waitFor(() => {
       expect(mockGlobalChat).toHaveBeenCalledTimes(1);
@@ -578,7 +584,7 @@ describe("Chat", () => {
     } as any);
     render(<Chat />);
     const copyBtns = screen.getAllByTestId("icon-Copy");
-    await userEvent.click(copyBtns[0]!.closest("button")!);
+    await user.click(copyBtns[0]!.closest("button")!);
     expect(writeText).toHaveBeenCalledWith("texto a copiar");
   });
 
@@ -620,7 +626,7 @@ describe("Chat", () => {
       sort: () => ({ result: [assistMsg] }),
     } as any);
     render(<Chat onSelectSource={onSelectSource} />);
-    await userEvent.click(screen.getByText("Fuente 1"));
+    await user.click(screen.getByText("Fuente 1"));
     expect(onSelectSource).toHaveBeenCalledWith("bookmark", "b1");
   });
 
@@ -668,8 +674,8 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => {
       expect(mockMessagesInsert).toHaveBeenCalledWith(
         expect.objectContaining({ content: "Sorry, I encountered an error processing your request. Please try again." }),
@@ -700,7 +706,7 @@ describe("Chat", () => {
       sort: () => ({ result: [assistMsg] }),
     } as any);
     render(<Chat />);
-    await userEvent.click(screen.getAllByTestId("icon-Copy")[0]!.closest("button")!);
+    await user.click(screen.getAllByTestId("icon-Copy")[0]!.closest("button")!);
     expect(writeText).toHaveBeenCalledWith("texto a copiar");
     expect(screen.getByTestId("icon-Check")).toBeTruthy();
     mockMessagesFind.mockImplementation(() => ({
@@ -727,7 +733,7 @@ describe("Chat", () => {
     } as any);
     render(<Chat onSelectSource={onSelectSource} />);
     expect(screen.getAllByTestId("icon-FileText").length).toBeGreaterThan(0);
-    await userEvent.click(screen.getByText("Doc 1"));
+    await user.click(screen.getByText("Doc 1"));
     expect(onSelectSource).toHaveBeenCalledWith("document", "d1");
   });
 
@@ -799,8 +805,8 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => {
       expect(screen.getByText("Generating with WebLLM (Local)...")).toBeTruthy();
     });
@@ -828,8 +834,8 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => {
       expect(screen.getByText("Generating with Ollama...")).toBeTruthy();
     });
@@ -857,8 +863,8 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => {
       expect(screen.getByText("Generating with Google Gemini...")).toBeTruthy();
     });
@@ -877,8 +883,8 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => {
       expect(screen.getByText("Stop")).toBeTruthy();
     });
@@ -906,8 +912,8 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     // The token already appears in the streaming bubble before completing.
     await waitFor(() => {
       expect(screen.getByText("parcial")).toBeTruthy();
@@ -929,8 +935,8 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     // Completes the response INSIDE act: the continuation of handleSend
     // (inserting the message, hiding the streaming bubble) is flushed and the
     // reactive history renders the final response.
@@ -966,8 +972,8 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => expect(mockGlobalChat).toHaveBeenCalledTimes(1));
 
     const signal = mockGlobalChat.mock.calls[0]![7] as AbortSignal;
@@ -993,8 +999,8 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => {
       expect(screen.getByText("Stop")).toBeTruthy();
     });
@@ -1014,14 +1020,14 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     // The partial text appears in the streaming bubble
     await waitFor(() => {
       expect(screen.getByText("Texto parcial")).toBeTruthy();
     });
     // The user cancels
-    await userEvent.click(screen.getByText("Stop"));
+    await user.click(screen.getByText("Stop"));
     // The partial text is persisted as the assistant's message
     await waitFor(() => {
       expect(mockMessagesInsert).toHaveBeenCalledWith(
@@ -1051,13 +1057,13 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => {
       expect(screen.getByText("Stop")).toBeTruthy();
     });
     const insertCallsBefore = mockMessagesInsert.mock.calls.length;
-    await userEvent.click(screen.getByText("Stop"));
+    await user.click(screen.getByText("Stop"));
     // The user's message was already inserted (1); cancelling without chunks does NOT add
     // another empty assistant message.
     await waitFor(() => {
@@ -1079,22 +1085,22 @@ describe("Chat", () => {
     const input = screen.getByPlaceholderText(
       "Ask about your bookmarks and documents...",
     ) as HTMLInputElement;
-    await userEvent.type(input, "Hola");
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.type(input, "Hola");
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => {
       expect(screen.getByText("Stop")).toBeTruthy();
     });
-    await userEvent.click(screen.getByText("Stop"));
+    await user.click(screen.getByText("Stop"));
     await waitFor(() => {
       expect(screen.queryByText("Stop")).toBeNull();
     });
     // After cancelling, typing and sending work again (isTyping was already
     // released in the finally; the input was empty after the first send).
-    await userEvent.type(input, "segunda");
+    await user.type(input, "segunda");
     expect(
       screen.getByTestId("icon-Send").closest("button")!.disabled,
     ).toBe(false);
-    await userEvent.click(screen.getByTestId("icon-Send").closest("button")!);
+    await user.click(screen.getByTestId("icon-Send").closest("button")!);
     await waitFor(() => {
       expect(mockGlobalChat).toHaveBeenCalledTimes(2);
     });

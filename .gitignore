@@ -74,6 +74,7 @@ scripts/__tmp-sw-debug.mjs
 
 # Local scratch / experiments (never source)
 .d/
+.wrangler/
 .d/tmp/
 
 # OS/editor

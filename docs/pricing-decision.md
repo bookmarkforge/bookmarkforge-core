@@ -41,9 +41,12 @@ These are the final, official launch prices:
 | **Full** (optional) | $99 | $129 | Only after 500+ positive reviews and data; a manual, not automatic, decision |
 
 **Phase change procedure** (10 min): edit `earlyBird.phase` in
-`src/constants/pricing.ts` → regenerate the pricing OG image
-(`og-image-pricing`) → update the landings if the copy changes → commit +
-deploy. The flag is designed to be a one-line change.
+`src/constants/pricing.ts` → `npm run build:landings`, which regenerates the
+30 locale pages **and** the Early Bird status the landing probes
+(`early-bird-status.json` under `public/api`; `check:landings-fresh` verifies
+it against `pricing.ts`) → regenerate the pricing OG image (`og-image-pricing`)
+→ update the landings if the copy changes → commit + deploy. The flag is
+designed to be a one-line change.
 
 ## 4. What this is NOT (so the debate is not reopened)
 

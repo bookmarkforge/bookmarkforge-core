@@ -49,6 +49,12 @@ vi.mock("react-i18next", () => ({
   initReactI18next: { type: "3rdParty", init: vi.fn() },
 }));
 
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+  user = userEvent.setup({ delay: null });
+});
+
 describe("BookmarkToolbar", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -181,7 +187,6 @@ describe("BookmarkToolbar", () => {
         fileInputRef={{ current: null } as any}
       />,
     );
-    const user = userEvent.setup({ delay: null });
     await user.click(getByText("Embeddings"));
     expect(onGenerate).toHaveBeenCalled();
     await user.click(getByText("Summarize All"));
@@ -275,9 +280,9 @@ describe("BookmarkToolbar", () => {
         fileInputRef={{ current: null } as any}
       />,
     );
-    await userEvent.click(getByText("Export CSV"));
+    await user.click(getByText("Export CSV"));
     expect(onExport).toHaveBeenCalled();
-    await userEvent.click(getByText("AI Settings"));
+    await user.click(getByText("AI Settings"));
     expect(onSettings).toHaveBeenCalled();
   });
 
@@ -369,7 +374,7 @@ describe("BookmarkToolbar", () => {
     const fileInput = ref.current ??
       container.querySelector('input[type="file"]')!;
     const clickSpy = vi.spyOn(fileInput, "click");
-    await userEvent.click(getByRole("button", { name: "Import HTML" }));
+    await user.click(getByRole("button", { name: "Import HTML" }));
     expect(clickSpy).toHaveBeenCalled();
   });
 
@@ -648,7 +653,7 @@ describe("SearchBar", () => {
     );
     const button = getByText("AI Search").closest("button")!;
     expect(button).toHaveAttribute("aria-pressed", "false");
-    await userEvent.click(button);
+    await user.click(button);
     expect(setIsSemantic).toHaveBeenCalledWith(true);
   });
 
@@ -680,7 +685,7 @@ describe("SearchBar", () => {
     const clearBtn = Array.from(buttons).find(
       (b) => !b.textContent?.includes("AI Search"),
     );
-    if (clearBtn) await userEvent.click(clearBtn);
+    if (clearBtn) await user.click(clearBtn);
     expect(setQuery).toHaveBeenCalledWith("");
   });
 
@@ -780,7 +785,7 @@ describe("BulkActionsBar", () => {
         isSummarizingCollection={false}
       />,
     );
-    await userEvent.click(getByText("Delete"));
+    await user.click(getByText("Delete"));
     expect(onDelete).toHaveBeenCalled();
   });
 
@@ -829,9 +834,9 @@ describe("BulkActionsBar", () => {
     );
     // The input is controlled by the parent (bulkTagInput prop):
     // with a non-empty value the Add/Remove buttons stay enabled
-    await userEvent.click(getByText("Add"));
+    await user.click(getByText("Add"));
     expect(onAdd).toHaveBeenCalled();
-    await userEvent.click(getByText("Remove"));
+    await user.click(getByText("Remove"));
     expect(onRemove).toHaveBeenCalled();
   });
 
@@ -859,15 +864,15 @@ describe("BulkActionsBar", () => {
         isSummarizingCollection={false}
       />,
     );
-    await userEvent.click(getByText("Clear"));
+    await user.click(getByText("Clear"));
     expect(onClear).toHaveBeenCalled();
-    await userEvent.click(getByText("Export"));
+    await user.click(getByText("Export"));
     expect(onExport).toHaveBeenCalled();
-    await userEvent.click(getByText("Generate"));
+    await user.click(getByText("Generate"));
     expect(onOverviews).toHaveBeenCalled();
-    await userEvent.click(getByText("Summarize"));
+    await user.click(getByText("Summarize"));
     expect(onSummarize).toHaveBeenCalled();
-    await userEvent.click(getByText("Auto Tag"));
+    await user.click(getByText("Auto Tag"));
     expect(onAutoTag).toHaveBeenCalled();
   });
 

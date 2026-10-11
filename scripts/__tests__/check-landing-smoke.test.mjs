@@ -262,7 +262,7 @@ describe("the counts the audit ledger publishes", () => {
     for (const link of extractInternalLinks(html, { page: "/" })) links.add(link);
   }
 
-  it("sees 15 critical resources across the 31 pages", () => {
+  it("sees 16 critical resources across the 31 pages", () => {
     expect([...resources].sort()).toEqual([
       "/apple-touch-icon.png",
       "/brand-tokens.css",
@@ -279,6 +279,11 @@ describe("the counts the audit ledger publishes", () => {
       "/og-image-pt.png",
       "/og-image.png",
       "/pocket-alternative.css",
+      // The pre-paint theme hook every landing <head> loads synchronously (the
+      // CSP forbids an inline script): if it 404s, each hop flashes the default
+      // theme — exactly the regression this smoke gate exists to catch, so the
+      // resource is part of the audited set.
+      "/theme-init.js",
     ]);
   });
 

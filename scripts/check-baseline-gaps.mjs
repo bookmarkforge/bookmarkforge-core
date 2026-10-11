@@ -498,15 +498,27 @@ export function analyzeSpec(raw, specBase, locales) {
       if (!cm) continue;
       const constValues = setConsts.get(cm[1]);
       const target = cm[2];
-      if (!constValues || constValues.length === 0) continue;
+      // A recognized const is folded below; an EMPTY one is handled there
+      // explicitly (it is an allow-list with no entries, not a parse gap).
+      if (!constValues) continue;
       const openBrace = skipWs(raw, mask, closeParen + 1);
       if (raw[openBrace] !== "{") continue;
       const closeBrace = matchCode(raw, mask, openBrace, "{", "}");
       if (closeBrace === -1 || callIdx <= openBrace || callIdx >= closeBrace) continue;
       const current = bindings.get(target);
       if (!current || current === "unresolved") continue;
-      // Only fold when both sides look like 2-letter locale codes — never
-      // intersect an arbitrary value-set const into a domain by accident.
+      // An EMPTY allow-list is an explicit "captures disabled": `SET.has(x)`
+      // is false for EVERY value, so the guarded call can never run — whatever
+      // the domain's shape. Fold it to an empty intersection so the verified
+      // guard-emptied path below honours it and no baseline reference is
+      // derived. Without this, the advertised "gate the toHaveScreenshot"
+      // escape hatch only worked with a non-empty value set.
+      if (constValues.length === 0) {
+        bindings.set(target, new Set());
+        continue;
+      }
+      // Otherwise only fold when both sides look like 2-letter locale codes —
+      // never intersect an arbitrary value-set const into a domain by accident.
       const twoLetter = (arr) => arr.every((v) => /^[a-z]{2}$/.test(v));
       if (!twoLetter([...current]) || !twoLetter(constValues)) continue;
       // Keep the binding a Set: callers rely on `.size` (an empty array's

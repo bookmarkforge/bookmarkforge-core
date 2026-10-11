@@ -40,6 +40,12 @@ Element.prototype.getBoundingClientRect = vi.fn(() => ({
 
 import { WelcomeTour } from "../../components/WelcomeTour";
 
+let user: ReturnType<typeof userEvent.setup>;
+
+beforeEach(() => {
+  user = userEvent.setup({ delay: null });
+});
+
 describe("WelcomeTour", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -95,7 +101,7 @@ describe("WelcomeTour", () => {
   it("Next advances to the next step", async () => {
     render(<WelcomeTour />);
     await screen.findByText("Main Navigation", {}, { timeout: 2000 });
-    await userEvent.click(screen.getByText("Next"));
+    await user.click(screen.getByText("Next"));
     expect(screen.getByText("Instant Search")).toBeTruthy();
     expect(screen.getByText(/Press Ctrl\+K/)).toBeTruthy();
   });
@@ -103,8 +109,8 @@ describe("WelcomeTour", () => {
   it("Back returns to the previous step", async () => {
     render(<WelcomeTour />);
     await screen.findByText("Main Navigation", {}, { timeout: 2000 });
-    await userEvent.click(screen.getByText("Next")); // → step 2
-    await userEvent.click(screen.getByText("Back")); // → step 1
+    await user.click(screen.getByText("Next")); // → step 2
+    await user.click(screen.getByText("Back")); // → step 1
     expect(screen.getByText("Main Navigation")).toBeTruthy();
   });
 
@@ -120,10 +126,10 @@ describe("WelcomeTour", () => {
     await screen.findByText("Main Navigation", {}, { timeout: 2000 });
     // Advance through all 8 steps
     for (let i = 0; i < 7; i++) {
-      await userEvent.click(screen.getByText("Next"));
+      await user.click(screen.getByText("Next"));
     }
     expect(screen.getByText("Got it!")).toBeTruthy();
-    await userEvent.click(screen.getByText("Got it!"));
+    await user.click(screen.getByText("Got it!"));
     expect(safeSetMock).toHaveBeenCalledWith("bmf_welcome_tour_complete", "true");
   });
 
@@ -131,7 +137,7 @@ describe("WelcomeTour", () => {
     render(<WelcomeTour />);
     await screen.findByText("Main Navigation", {}, { timeout: 2000 });
     // Use Escape key instead of clicking Skip (AnimatePresence may hide DOM)
-    await userEvent.keyboard("{Escape}");
+    await user.keyboard("{Escape}");
     // Poll: the keydown handler updates React state outside act() (real
     // timers), so the persist may land a tick later.
     await waitFor(() =>
@@ -149,7 +155,7 @@ describe("WelcomeTour", () => {
     expect(screen.getByText("1 / 8")).toBeTruthy();
     // Advance to last step
     for (let i = 0; i < 7; i++) {
-      await userEvent.click(screen.getByText("Next"));
+      await user.click(screen.getByText("Next"));
     }
     expect(screen.getByText("8 / 8")).toBeTruthy();
     expect(screen.getByText("Got it!")).toBeTruthy();
@@ -158,7 +164,7 @@ describe("WelcomeTour", () => {
   it("Escape completes the tour", async () => {
     render(<WelcomeTour />);
     await screen.findByText("Main Navigation", {}, { timeout: 2000 });
-    await userEvent.keyboard("{Escape}");
+    await user.keyboard("{Escape}");
     await waitFor(() =>
       expect(safeSetMock).toHaveBeenCalledWith(
         "bmf_welcome_tour_complete",
@@ -170,7 +176,7 @@ describe("WelcomeTour", () => {
   it("ArrowRight advances to the next step", async () => {
     render(<WelcomeTour />);
     await screen.findByText("Main Navigation", {}, { timeout: 5000 });
-    await userEvent.keyboard("{ArrowRight}");
+    await user.keyboard("{ArrowRight}");
     expect(
       await screen.findByText("Instant Search", {}, { timeout: 5000 }),
     ).toBeTruthy();
@@ -181,7 +187,7 @@ describe("WelcomeTour", () => {
     await screen.findByText("Main Navigation", {}, { timeout: 5000 });
     // userEvent.keyboard dispatches a full trusted-style keydown cycle; raw
     // fireEvent.keyDown on window has been flaky under batch load here.
-    await userEvent.keyboard("{Enter}");
+    await user.keyboard("{Enter}");
     expect(
       await screen.findByText("Instant Search", {}, { timeout: 5000 }),
     ).toBeTruthy();
@@ -192,11 +198,11 @@ describe("WelcomeTour", () => {
     await screen.findByText("Main Navigation", {}, { timeout: 5000 });
     // userEvent.keyboard dispatches a full trusted-style keydown cycle; raw
     // fireEvent.keyDown on window has been flaky under batch load here.
-    await userEvent.keyboard("{ArrowRight}");
+    await user.keyboard("{ArrowRight}");
     expect(
       await screen.findByText("Instant Search", {}, { timeout: 5000 }),
     ).toBeTruthy();
-    await userEvent.keyboard("{ArrowLeft}");
+    await user.keyboard("{ArrowLeft}");
     expect(
       await screen.findByText("Main Navigation", {}, { timeout: 5000 }),
     ).toBeTruthy();
@@ -224,9 +230,9 @@ describe("WelcomeTour", () => {
     });
     render(<WelcomeTour />);
     await screen.findByText("Main Navigation", {}, { timeout: 2000 });
-    await userEvent.click(screen.getByText("Next"));
+    await user.click(screen.getByText("Next"));
     expect(screen.getByText("Instant Search")).toBeTruthy();
-    await userEvent.click(screen.getByText("Back"));
+    await user.click(screen.getByText("Back"));
     expect(screen.getByText("Main Navigation")).toBeTruthy();
     // Mobile Back is disabled on the first step
     expect((screen.getByText("Back") as HTMLButtonElement).disabled).toBe(
@@ -262,7 +268,7 @@ describe("WelcomeTour", () => {
       );
       // Advance to the "search" step (position: bottom) — covers the
       // arrow-up variant of the tooltip arrow
-      await userEvent.click(screen.getByText("Next"));
+      await user.click(screen.getByText("Next"));
       expect(screen.getByText("Instant Search")).toBeTruthy();
       await screen.findByRole("dialog", {}, { timeout: 3000 });
     } finally {

@@ -1,1 +1,44 @@
-[]
+[
+  {
+    "ruleId": "javascript.lang.security.detect-child-process.detect-child-process",
+    "file": "scripts/command-runner.mjs",
+    "tool": "Semgrep OSS",
+    "approved": true,
+    "justification": "Accepted boundary: this module IS the audited subprocess boundary of the repository. Every helper is argv-first (runCommand, runCommandOk, captureCommand, runCommandLine, captureCommandLine) and the only shell paths are the deliberate captureShell escape hatch and the Windows .cmd shim fallback, which exists because npm/vercel/gh are batch files Node cannot exec without one. All callers pass repo-authored literals, never data. Fix at the call sites, not here. Reviewed 2026-10-11."
+  },
+  {
+    "ruleId": "javascript.lang.security.detect-child-process.detect-child-process",
+    "file": "scripts/check-audit-freshness.mjs",
+    "tool": "Semgrep OSS",
+    "approved": true,
+    "justification": "False positive: this checker executes the command lines quoted in docs/audit.md, which are repo-authored and version-controlled, and must reproduce them verbatim (npm run ..., pipelines) or it would stop validating what the document claims. Nothing from outside the repository reaches the call. Reviewed 2026-10-11."
+  },
+  {
+    "ruleId": "javascript.lang.security.detect-child-process.detect-child-process",
+    "file": "scripts/ci-local-parallel.mjs",
+    "tool": "Semgrep OSS",
+    "approved": true,
+    "justification": "False positive: already argv-based (spawn(phase.command[0], phase.command.slice(1))) and never a command string. USE_SHELL is true only on Windows, where npm resolves to npm.cmd and Node cannot exec it without a shell; every phase command is a static literal in this file, as the comment above the constant records. Reviewed 2026-10-11."
+  },
+  {
+    "ruleId": "javascript.lang.security.detect-child-process.detect-child-process",
+    "file": "scripts/drill-rollback.mjs",
+    "tool": "Semgrep OSS",
+    "approved": true,
+    "justification": "False positive: spawn(command, args) with an argv array, for the local drill stack (license mock + companion server). No shell, no string interpolation, no external input. Reviewed 2026-10-11."
+  },
+  {
+    "ruleId": "javascript.lang.security.detect-child-process.detect-child-process",
+    "file": "scripts/local-smoke.mjs",
+    "tool": "Semgrep OSS",
+    "approved": true,
+    "justification": "False positive: spawn(command, args) with an argv array, for the local smoke stack started by this script. No shell, no string interpolation, no external input. Reviewed 2026-10-11."
+  },
+  {
+    "ruleId": "javascript.lang.security.detect-child-process.detect-child-process",
+    "file": "scripts/prod-blindeo-checklist.mjs",
+    "tool": "Semgrep OSS",
+    "approved": true,
+    "justification": "False positive: spawnSync(cmd, args) with an argv array; every checklist command is a literal in the same file. No shell and no interpolation. Reviewed 2026-10-11."
+  }
+]

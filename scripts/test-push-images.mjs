@@ -27,7 +27,8 @@
  * Exit: 0 = PASS, 1 = FAIL. --json prints a JSON summary at the end.
  */
 
-import { execSync, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
+import { runCommand, runCommandLine } from "./command-runner.mjs";
 import {
   resolveRegistry,
   planPushTargets,
@@ -59,12 +60,9 @@ function recordFatal(msg) {
 
 function runOk(cmd, opts = {}) {
   console.log(`$ ${cmd}`);
-  try {
-    execSync(cmd, { stdio: "inherit", ...opts });
-    return true;
-  } catch {
-    return false;
-  }
+  // Boundary: argv, no shell (see command-runner.mjs).
+  const result = runCommandLine(cmd, { stdio: "inherit", ...opts });
+  return !result.error && result.status === 0;
 }
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
@@ -250,7 +248,7 @@ async function main() {
     if (containerName) {
       console.log(`\n[teardown] rm -f ${containerName}`);
       try {
-        execSync(`docker rm -f ${containerName}`, { stdio: "ignore", timeout: 30_000 });
+        runCommand("docker", ["rm", "-f", containerName], { stdio: "ignore", timeout: 30_000 });
       } catch {
         // the container was already gone (--rm) or removed separately
       }

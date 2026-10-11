@@ -427,10 +427,6 @@
         "answer": "Paga una vez, tuya para siempre. Incluye todas las v1.x para siempre y 12 meses de novedades desde la compra. Seguridad para siempre. Tras el mes 13 sigues con v1 funcional, solo sin novedades. Futuras majors (v2, v3) son productos aparte: 89 $ para nuevos, 35 $ para propietarios v1 (60% dto)."
       },
       {
-        "question": "¿Qué es  Edition?",
-        "answer": "Mismo binario Pro v1 — no es un nivel distinto. Te da insignia  # en la app, acceso beta a v2 y 60% dto en futuras majors para siempre. Limitado a 100. Distinción, no muro de pago."
-      },
-      {
         "question": "¿Qué métodos de pago y reembolsos?",
         "answer": "Vía Whop: tarjeta, PayPal, cripto. Nunca vemos tus datos de pago. Reembolso 30 días: <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
       },
@@ -526,13 +522,6 @@
         "price": "79",
         "currency": "USD",
         "description": "Regular. Lifetime of v1."
-      },
-      {
-        "name": " Edition",
-        "price": "99",
-        "currency": "USD",
-        "description": "Same Pro v1 +  badge + beta. Limited 100.",
-        "availability": "https://schema.org/LimitedAvailability"
       }
     ],
     "featureList": [
@@ -551,10 +540,6 @@
       {
         "question": "¿Qué significa \"Lifetime de v1\" en Pro?",
         "answer": "Paga una vez, tuya para siempre. Incluye todas las v1.x para siempre y 12 meses de novedades desde la compra. Seguridad para siempre. Tras el mes 13 sigues con v1 funcional, solo sin novedades. Futuras majors (v2, v3) son productos aparte: 89 $ para nuevos, 35 $ para propietarios v1 (60% dto)."
-      },
-      {
-        "question": "¿Qué es  Edition?",
-        "answer": "Mismo binario Pro v1 — no es un nivel distinto. Te da insignia  # en la app, acceso beta a v2 y 60% dto en futuras majors para siempre. Limitado a 100. Distinción, no muro de pago."
       },
       {
         "question": "¿Qué métodos de pago y reembolsos?",

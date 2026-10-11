@@ -321,3 +321,380 @@
   from = "/pocket-alternative"
   to = "/pocket-alternative.html"
   status = 200
+
+# App entry + client routes — the SPA shell
+# Same contract as public/_redirects and vercel.json: only the routes
+# src/components/app/AppRoutes.tsx declares (+ /capture) are answered by the
+# shell. Anything else falls through to Netlify's own 404 page — there is no
+# blanket fallback here either. scripts/check-spa-routes.mjs keeps all four
+# host configs aligned with the app.
+
+[[redirects]]
+  from = "/analytics"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/analytics/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/app"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/app/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/bookmarks"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/bookmarks/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/calendar"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/calendar/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/canvas"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/canvas/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/capture"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/capture/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/chat"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/chat/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/chatLocal"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/chatLocal/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/collaboration"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/collaboration/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/database"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/database/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/documents"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/documents/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/editor"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/editor/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/gallery"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/gallery/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/graph"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/graph/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/kanban"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/kanban/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/list"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/list/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/security"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/security/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/settings"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/settings/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/shared"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/shared/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/timeline"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/timeline/"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/voiceLocal"
+  to = "/app.html"
+  status = 200
+
+[[redirects]]
+  from = "/voiceLocal/"
+  to = "/app.html"
+  status = 200
+
+# Offline fallback + localized subtrees
+# /offline is where the app navigates when the network is gone; each
+# localized landing owns its subtree (see public/_redirects and
+# scripts/sw-navigation-policy.js). Vercel already rewrote both.
+
+[[redirects]]
+  from = "/offline"
+  to = "/offline.html"
+  status = 200
+
+[[redirects]]
+  from = "/offline/"
+  to = "/offline.html"
+  status = 200
+
+[[redirects]]
+  from = "/ar/*"
+  to = "/ar.html"
+  status = 200
+
+[[redirects]]
+  from = "/bg/*"
+  to = "/bg.html"
+  status = 200
+
+[[redirects]]
+  from = "/cs/*"
+  to = "/cs.html"
+  status = 200
+
+[[redirects]]
+  from = "/da/*"
+  to = "/da.html"
+  status = 200
+
+[[redirects]]
+  from = "/de/*"
+  to = "/de.html"
+  status = 200
+
+[[redirects]]
+  from = "/el/*"
+  to = "/el.html"
+  status = 200
+
+[[redirects]]
+  from = "/es/*"
+  to = "/es.html"
+  status = 200
+
+[[redirects]]
+  from = "/fi/*"
+  to = "/fi.html"
+  status = 200
+
+[[redirects]]
+  from = "/fr/*"
+  to = "/fr.html"
+  status = 200
+
+[[redirects]]
+  from = "/he/*"
+  to = "/he.html"
+  status = 200
+
+[[redirects]]
+  from = "/hi/*"
+  to = "/hi.html"
+  status = 200
+
+[[redirects]]
+  from = "/hr/*"
+  to = "/hr.html"
+  status = 200
+
+[[redirects]]
+  from = "/hu/*"
+  to = "/hu.html"
+  status = 200
+
+[[redirects]]
+  from = "/id/*"
+  to = "/id.html"
+  status = 200
+
+[[redirects]]
+  from = "/it/*"
+  to = "/it.html"
+  status = 200
+
+[[redirects]]
+  from = "/ja/*"
+  to = "/ja.html"
+  status = 200
+
+[[redirects]]
+  from = "/ko/*"
+  to = "/ko.html"
+  status = 200
+
+[[redirects]]
+  from = "/nl/*"
+  to = "/nl.html"
+  status = 200
+
+[[redirects]]
+  from = "/no/*"
+  to = "/no.html"
+  status = 200
+
+[[redirects]]
+  from = "/pl/*"
+  to = "/pl.html"
+  status = 200
+
+[[redirects]]
+  from = "/pt/*"
+  to = "/pt.html"
+  status = 200
+
+[[redirects]]
+  from = "/ro/*"
+  to = "/ro.html"
+  status = 200
+
+[[redirects]]
+  from = "/ru/*"
+  to = "/ru.html"
+  status = 200
+
+[[redirects]]
+  from = "/sv/*"
+  to = "/sv.html"
+  status = 200
+
+[[redirects]]
+  from = "/th/*"
+  to = "/th.html"
+  status = 200
+
+[[redirects]]
+  from = "/tr/*"
+  to = "/tr.html"
+  status = 200
+
+[[redirects]]
+  from = "/uk/*"
+  to = "/uk.html"
+  status = 200
+
+[[redirects]]
+  from = "/vi/*"
+  to = "/vi.html"
+  status = 200
+
+[[redirects]]
+  from = "/zh/*"
+  to = "/zh.html"
+  status = 200

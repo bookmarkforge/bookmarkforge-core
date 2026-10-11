@@ -55,6 +55,10 @@ import { defineConfig, type Plugin } from "vite";
 import basicSsl from "@vitejs/plugin-basic-ssl";
 import { VitePWA } from "vite-plugin-pwa";
 import { CSP_MODERATE, CSP_OPEN, CSP_STRICT } from "./scripts/csp-config.js";
+import {
+  NAVIGATE_FALLBACK,
+  NAVIGATE_FALLBACK_DENYLIST,
+} from "./scripts/sw-navigation-policy.js";
 
 function sha256Hex(data: string | Buffer): string {
   return createHash("sha256").update(data).digest("hex");
@@ -292,22 +296,14 @@ export default defineConfig(({ mode, isPreview }) => ({
       manifest: false,
       workbox: {
         cleanupOutdatedCaches: true,
-        navigateFallback: "/app.html",
-        navigateFallbackDenylist: [
-          /^\/404/,
-          /^\/offline/,
-          /^\/privacy-and-terms/,
-          /^\/[a-z]{2}\/privacy-and-terms/,
-          // SEO: the landing pages (served at / and /es/ with a 200
-          // rewrite) are the only indexable content. If the SW precached
-          // shell answered these navigations, users with the SW installed
-          // would see the private SPA instead of the marketing page — and
-          // crawlers executing the SW would index an empty shell. Always
-          // go to the network for them.
-          /^\/(?:landing\.html)?$/,
-          /^\/(?:ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)\/?$/,
-          /^\/pocket-alternative/,
-        ],
+        // The public-surface contract (which URLs may never be answered by
+        // the precached shell, and why the rules must tolerate the `?lang=xx`
+        // the landing language menu links carry) lives in
+        // scripts/sw-navigation-policy.js — one source for the build and for
+        // scripts/__tests__/sw-navigation-policy.test.mjs, which evaluates it
+        // through the real workbox-routing NavigationRoute.
+        navigateFallback: NAVIGATE_FALLBACK,
+        navigateFallbackDenylist: NAVIGATE_FALLBACK_DENYLIST,
         globPatterns: [
           "**/*.{js,css,html,ico,png,svg,woff2,json}",
         ],

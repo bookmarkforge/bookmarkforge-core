@@ -1,4 +1,18 @@
-# SPA Routing — client-side routes are served by index.html.
+# SPA Routing — client-side routes are served by the app shell (app.html) and
+# every marketing/legal page by its own static HTML.
+#
+# ORDER IS PART OF THE CONTRACT (Cloudflare's parser, verified with the real
+# pages-dev runtime): a rule with a splat or a placeholder CLOSES the static
+# budget, and every rule after it counts as dynamic against a 100-rule cap —
+# when the cap is hit the parser discards the rest of the file without failing
+# the deploy. Cloudflare's docs state the same ordering requirement ("static
+# redirects should appear before dynamic redirects"). This file therefore lists
+# every static rule first and the /<lang>/* subtree rows LAST; scripts/check-
+# spa-routes.mjs fails the build if a static rule ends up after a dynamic one,
+# or if the dynamic count exceeds the platform budget. The file used to put the
+# subtree rows in the middle, and the real parser silently dropped the app-route
+# block at the end — /settings, /security, /shared, /timeline and /voiceLocal
+# answered 404 on Cloudflare while every local check stayed green.
 
 # Landing pages (SEO) — the static marketing HTML is the indexable
 # content, served at clean URLs with a 200 rewrite so the canonical
@@ -64,6 +78,7 @@
 /zh     /zh.html       200
 /zh/    /zh.html       200
 
+
 # Pocket comparison page (SEO)
 /pocket-alternative  /pocket-alternative.html  200
 
@@ -71,12 +86,19 @@
 /help  /help.html  200
 /help/  /help.html  200
 
+# Offline fallback — the app (and the service worker) navigates here when the
+# network is gone; without these rows the page 404s while Vercel serves it.
+/offline  /offline.html  200
+/offline/  /offline.html  200
+
 # Legacy markdown privacy policy -> HTML
 /privacy-and-terms.md  /privacy-and-terms.html  301
 
 # Legal pages — serve the static HTML directly before SPA catch-all
 /privacy  /privacy-and-terms.html  200
+/privacy/  /privacy-and-terms.html  200
 /terms    /privacy-and-terms.html  200
+/terms/    /privacy-and-terms.html  200
 
 # Localized legal pages
 /ar/privacy-and-terms.html  /ar/privacy-and-terms.html  200
@@ -109,27 +131,94 @@
 /vi/privacy-and-terms.html  /vi/privacy-and-terms.html  200
 /zh/privacy-and-terms.html  /zh/privacy-and-terms.html  200
 
-# App entry (PWA start_url / share_target point here)
-/app  /index.html  200
+# App entry + client routes — the React SPA shell. These are exactly the
+# paths src/components/app/AppRoutes.tsx declares, plus /capture (which
+# App.tsx resolves before the router mounts). scripts/check-spa-routes.mjs
+# fails the build when this list and the app drift apart, so a new route
+# cannot ship unreachable.
+/analytics  /app.html  200
+/analytics/  /app.html  200
+/app  /app.html  200
+/app/  /app.html  200
+/bookmarks  /app.html  200
+/bookmarks/  /app.html  200
+/calendar  /app.html  200
+/calendar/  /app.html  200
+/canvas  /app.html  200
+/canvas/  /app.html  200
+/capture  /app.html  200
+/capture/  /app.html  200
+/chat  /app.html  200
+/chat/  /app.html  200
+/chatLocal  /app.html  200
+/chatLocal/  /app.html  200
+/collaboration  /app.html  200
+/collaboration/  /app.html  200
+/database  /app.html  200
+/database/  /app.html  200
+/documents  /app.html  200
+/documents/  /app.html  200
+/editor  /app.html  200
+/editor/  /app.html  200
+/gallery  /app.html  200
+/gallery/  /app.html  200
+/graph  /app.html  200
+/graph/  /app.html  200
+/kanban  /app.html  200
+/kanban/  /app.html  200
+/list  /app.html  200
+/list/  /app.html  200
+/security  /app.html  200
+/security/  /app.html  200
+/settings  /app.html  200
+/settings/  /app.html  200
+/shared  /app.html  200
+/shared/  /app.html  200
+/timeline  /app.html  200
+/timeline/  /app.html  200
+/voiceLocal  /app.html  200
+/voiceLocal/  /app.html  200
 
-# App routes (SPA fallback)
-/*
-  !/index.html
-  !/*.js
-  !/*.css
-  !/*.ico
-  !/*.png
-  !/*.svg
-  !/*.json
-  !/*.woff2
-  !/*.woff
-  !/*.ttf
-  !/*.eot
-  !/*.webp
-  !/*.avif
-  !/*.webmanifest
-  !/*.xml
-  !/*.txt
-  !/*.html
-  !/*.bmf
-  /index.html 200
+
+# Localized subtrees — a localized landing owns every path under it. The
+# service worker's navigation policy denies /<lang>/<path> to the app shell,
+# so these navigations must reach the locale's page on every host.
+#
+# LAST BLOCK ON PURPOSE: these are the only dynamic (splat) rules, and anything
+# after the first of them would be parsed as dynamic too (see the header).
+/ar/*  /ar.html  200
+/bg/*  /bg.html  200
+/cs/*  /cs.html  200
+/da/*  /da.html  200
+/de/*  /de.html  200
+/el/*  /el.html  200
+/es/*  /es.html  200
+/fi/*  /fi.html  200
+/fr/*  /fr.html  200
+/he/*  /he.html  200
+/hi/*  /hi.html  200
+/hr/*  /hr.html  200
+/hu/*  /hu.html  200
+/id/*  /id.html  200
+/it/*  /it.html  200
+/ja/*  /ja.html  200
+/ko/*  /ko.html  200
+/nl/*  /nl.html  200
+/no/*  /no.html  200
+/pl/*  /pl.html  200
+/pt/*  /pt.html  200
+/ro/*  /ro.html  200
+/ru/*  /ru.html  200
+/sv/*  /sv.html  200
+/th/*  /th.html  200
+/tr/*  /tr.html  200
+/uk/*  /uk.html  200
+/vi/*  /vi.html  200
+/zh/*  /zh.html  200
+
+# NO catch-all. An unknown path is a 404: the pages-dev runtime serves
+# dist/404.html with a real 404 status whenever no rule and no asset matches
+# (without a 404.html it falls back to index.html and a 200 instead, so that
+# file is part of this contract). The old `/*` splat answered every typo with
+# the marketing page and a 200 — a soft 404 for crawlers and, once it matched
+# first, the reason /chat and /bookmarks never reached the app.

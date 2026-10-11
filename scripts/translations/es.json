@@ -413,7 +413,7 @@
       }
 
     ],
-    "legal": "Licencia Lifetime para BookmarkForge v1. Incluye todas las v1.x y 12 meses de novedades. Seguridad para siempre. Futuras majors (v2, v3) 60% dto para propietarios. Reembolso 30 días vía Whop. <a href=\"/es/privacy-and-terms.html#terms\">Términos</a> · <a href=\"/help#pricing\">Más info</a>"
+    "legal": "Licencia Lifetime para BookmarkForge v1. Incluye todas las v1.x y 12 meses de novedades. Seguridad para siempre. Futuras majors (v2, v3) 60% dto para propietarios. Reembolso 30 días vía Whop. <a href=\"/es/privacy-and-terms.html#terms\">Términos</a> · <a href=\"/help-es#pricing\">Más info</a>"
   },
   "faq": {
     "title": "Preguntas Frecuentes",
@@ -432,11 +432,11 @@
       },
       {
         "question": "Soporte — ¿qué tan rápido responden?",
-        "answer": "Gratis: ayuda comunitaria vía <a href=\"/help\">Centro de Ayuda</a> + GitHub Discussions (mejor esfuerzo). Pro: 48h laborables por email. La bóveda está cifrada — nunca te pedimos contraseña ni frase. Ver <a href=\"/help#sla\">SLA</a>."
+        "answer": "Gratis: ayuda comunitaria vía <a href=\"/help-es\">Centro de Ayuda</a> + GitHub Discussions (mejor esfuerzo). Pro: 48h laborables por email. La bóveda está cifrada — nunca te pedimos contraseña ni frase. Ver <a href=\"/help-es#sla\">SLA</a>."
       },
       {
         "question": "¿Qué pasa si olvido la contraseña de mi bóveda?",
-        "answer": "No podemos recuperarla. Al crear la bóveda te mostramos una frase semilla de 24 palabras una sola vez — escríbela en papel. Sin ella nadie (ni nosotros) puede abrir la bóveda. Ver <a href=\"/help#bf-e101\">BF-E101</a>."
+        "answer": "No podemos recuperarla. Al crear la bóveda te mostramos una frase semilla de 24 palabras una sola vez — escríbela en papel. Sin ella nadie (ni nosotros) puede abrir la bóveda. Ver <a href=\"/help-es#bf-e101\">BF-E101</a>."
       }
     ]
   },
@@ -709,7 +709,7 @@
       "paid": "Soporte de pago",
       "paidDetail": "incluye diagnóstico + código BF-E. Pro 48h (Lun–Vie).",
       "community": "Comunidad (Gratis)",
-      "communityDetail": "busca <code>BF-E*</code> antes de publicar. Lee <a href=\"/help#bf-e\">Códigos de error</a> + pega diagnóstico.",
+      "communityDetail": "busca <code>BF-E*</code> antes de publicar. Lee <a href=\"/help-es#bf-e\">Códigos de error</a> + pega diagnóstico.",
       "security": "Problemas de seguridad",
       "securityDetail": "email con asunto <code>[SEGURIDAD]</code> — no abras una discusión pública.",
       "note": "BookmarkForge es local-first — el contenido de la bóveda nunca sale de tu dispositivo. El soporte nunca pide tu contraseña de bóveda o frase de recuperación."

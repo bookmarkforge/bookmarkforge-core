@@ -600,6 +600,14 @@
       "destination": "/help.html"
     },
     {
+      "source": "/help-(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)",
+      "destination": "/help-$1.html"
+    },
+    {
+      "source": "/help-(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)/",
+      "destination": "/help-$1.html"
+    },
+    {
       "source": "/pocket-alternative",
       "destination": "/pocket-alternative.html"
     },

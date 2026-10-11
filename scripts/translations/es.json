@@ -215,7 +215,7 @@
         },
         {
           "type": "cloud",
-          "name": "En la nube — Google Gemini (clave gestionada por nosotros)"
+          "name": "En la nube — Google Gemini (con tu propia clave)"
         },
         {
           "type": "cloud",

@@ -215,7 +215,7 @@
         },
         {
           "type": "cloud",
-          "name": "Cloud — Google Gemini (key managed by us)"
+          "name": "Cloud — Google Gemini (with your own key)"
         },
         {
           "type": "cloud",

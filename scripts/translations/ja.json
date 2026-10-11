@@ -215,7 +215,7 @@
         },
         {
           "type": "cloud",
-          "name": "クラウド — Google Gemini（鍵は私たちが管理）"
+          "name": "クラウド — Google Gemini（独自の鍵を使用）"
         },
         {
           "type": "cloud",

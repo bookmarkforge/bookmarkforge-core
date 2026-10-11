@@ -365,7 +365,7 @@ L'IA locale utilise WebGPU. Sur les ordinateurs portables, elle peut consommer l
 - **Marque :** BookmarkForge et ses marques sont protégées (voir `TRADEMARKS.md`)
 - **Tarifs :** Figés dans `docs/pricing-decision.md`. Tous les prix sont à vie version 1.
 - **Remboursements :** 30 jours via Whop. Politique de remboursement complète.
-- **Confidentialité :** Voir `docs/ROPA.md` pour le registre de traitement des données personnelles sous RGPD.
+- **Confidentialité :** Voir the private `ROPA.md` pour le registre de traitement des données personnelles sous RGPD.
 
 ---
 

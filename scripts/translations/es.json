@@ -620,7 +620,7 @@
         "free": "Gratis",
         "pro": "Pro"
       },
-      "freeChannel": "Autoservicio: este Centro de Ayuda + <a href=\"https://github.com/bookmarkforge/bookmarkforge-2026/discussions\">Discusiones de GitHub</a>",
+      "freeChannel": "Autoservicio: este Centro de Ayuda + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">Discusiones de GitHub</a>",
       "freeResponse": "Mejor esfuerzo (comunidad)",
       "freeWhatToDo": "Busca el código BF-E* abajo + copia el diagnóstico (<a href=\"#diagnostics\">§Diagnósticos</a>) antes de publicar",
       "proChannel": "Email <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (asunto: Pro)",

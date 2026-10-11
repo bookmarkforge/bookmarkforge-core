@@ -10,6 +10,12 @@
  * are not operational instructions. The live corpus is the root onboarding
  * docs, .github documentation/workflows, and documents marked `vivo` in
  * docs/docs-state-index.md, excluding those historical record families.
+ *
+ * Export safety: the open-core export re-curates `docs/` and does not ship the
+ * canonical state index (export-public-repo.mjs), so there the live corpus is
+ * the root onboarding docs plus `.github` — still worth verifying, and still
+ * verified. A missing index WITHOUT the export manifest is a hard failure, as
+ * in check-docs-retire and the docs-index doctor.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -205,7 +211,12 @@ function main() {
   const root = path.resolve(process.env.DOCUMENTED_DOC_REFERENCES_ROOT ?? process.cwd());
   const indexPath = path.resolve(root, STATE_INDEX);
   const routeTablePath = path.resolve(root, "server/src/route-table.ts");
-  if (!fs.existsSync(indexPath)) {
+  // The index drives which documents are `vivo`; without it the corpus is the
+  // root onboarding docs plus `.github`, which is exactly what the export can
+  // still be held to.
+  const hasIndex = fs.existsSync(indexPath);
+  const isPublicExport = !hasIndex && fs.existsSync(path.resolve(root, "manifest.json"));
+  if (!hasIndex && !isPublicExport) {
     console.error(`[check:documented-doc-references] FAIL missing ${STATE_INDEX}`);
     process.exitCode = 1;
     return;
@@ -218,12 +229,13 @@ function main() {
 
   const result = scanDocumentReferences({
     root,
-    stateIndexText: fs.readFileSync(indexPath, "utf8"),
+    stateIndexText: hasIndex ? fs.readFileSync(indexPath, "utf8") : "",
     routeTableText: fs.readFileSync(routeTablePath, "utf8"),
   });
   console.log(
     `[check:documented-doc-references] scanned ${result.files.length} live documents, ` +
-      `${result.localReferences} local references and ${result.routeReferences} route references`,
+      `${result.localReferences} local references and ${result.routeReferences} route references` +
+      (isPublicExport ? " (public export: private docs index absent, so the corpus is the root docs and .github)" : ""),
   );
   for (const item of result.missingFiles) {
     console.error(

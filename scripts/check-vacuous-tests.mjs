@@ -271,6 +271,19 @@ function main() {
 
   const docPath = join(root, DOC);
   if (!existsSync(docPath)) {
+    // The open-core export curates `docs/`: the ops runbook that publishes the
+    // vacuity budgets is private infrastructure documentation and is
+    // deliberately absent. There the gate skips instead of failing — the
+    // budgets are enforced in the private repository. A missing runbook WITHOUT
+    // the export manifest is still a hard failure (real regression upstream).
+    const isPublicExport =
+      !existsSync(join(root, "legal")) && existsSync(join(root, "manifest.json"));
+    if (isPublicExport) {
+      console.log(
+        `[check:vacuous-tests] skip: public export ships no ${DOC}; the budgets are enforced upstream.`,
+      );
+      return 0;
+    }
     console.error(`[check:vacuous-tests] the documented surface is missing: ${DOC}`);
     return 1;
   }

@@ -276,14 +276,29 @@ export function inspect({ root = process.cwd(), baseline = null } = {}) {
     (existsSync(resolve(root, BASELINE_PATH))
       ? JSON.parse(readFileSync(resolve(root, BASELINE_PATH), "utf8"))
       : {});
+  // The open-core export ships neither the private workflows that invoke a
+  // script nor the ops documentation that names it, so two of the three rules
+  // cannot be evaluated there: every reachable-by-private-caller script looks
+  // unreachable, and the curated docs still mention commands whose private
+  // implementation was excluded. The phantom-TARGET rule is tree-local and
+  // keeps applying — that is the one that catches a broken command. Both
+  // skipped rules stay enforced in the private repository (they need its entry
+  // corpus), and a missing corpus WITHOUT the export manifest still fails.
+  const isPublicExport =
+    !existsSync(resolve(root, "legal")) && existsSync(resolve(root, "manifest.json"));
   const failures = [
     ...phantomTargetFailures({ root, scripts }),
-    ...phantomReferenceFailures({ scripts, references }),
-    ...unreachableFailures({ scripts, reachable, baseline: resolvedBaseline }),
+    ...(isPublicExport ? [] : phantomReferenceFailures({ scripts, references })),
+    ...(isPublicExport
+      ? []
+      : unreachableFailures({ scripts, reachable, baseline: resolvedBaseline })),
   ];
   const notes = [
     `${Object.keys(scripts).length} declared script(s), ${reachable.size} reached from the entry corpus, ${unreachable.length} baselined as by-hand`,
     `${files.length} entry-corpus file(s) scanned`,
+    ...(isPublicExport
+      ? ["public export: the reference and reachability rules are evaluated upstream (its entry corpus is private)"]
+      : []),
   ];
   return { ok: failures.length === 0, failures, notes, scripts, reachable, unreachable, baseline: resolvedBaseline };
 }

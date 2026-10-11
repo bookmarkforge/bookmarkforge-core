@@ -36,6 +36,8 @@
  *   node scripts/check-quick.mjs   # same, direct
  */
 import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 
 /**
  * Fast tier of registered gates (security core + the boundaries meta gate),
@@ -111,6 +113,18 @@ const isMain =
     new URL(`file://${process.argv[1].replace(/\\/g, "/")}`).href;
 
 if (isMain) {
-  const { failed } = runQuickChecks();
+  // The open-core export ships the tier without the gates whose implementation
+  // is private business tooling (`scripts/generate-license-keys.mjs`), so it
+  // runs only the gates this tree can actually execute. The filter lives here,
+  // not in runQuickChecks: the function stays pure so the tier's own tests can
+  // drive it with fixtures. A missing legal/ WITHOUT the export manifest is
+  // still a hard failure upstream.
+  const isPublicExport =
+    !existsSync(join(process.cwd(), "legal")) &&
+    existsSync(join(process.cwd(), "manifest.json"));
+  const gates = isPublicExport
+    ? QUICK_GATES.filter((entry) => existsSync(entry.script))
+    : QUICK_GATES;
+  const { failed } = runQuickChecks({ gates });
   process.exit(failed ? 1 : 0);
 }

@@ -12,7 +12,7 @@ The ruleset cannot be installed on this repository today, and the blocker is the
 
 The repository is private and owned by a personal Free-plan account. Classic branch protection is gated identically, so there is no API-based fallback.
 
-**Decision taken 2026-10-02:** stay on Free and rely on CI-only enforcement — the single-maintainer release control documented in [docs/launch-checklist.md](../docs/launch-checklist.md) and in [AGENTS.md](../AGENTS.md). The payload stays ready and is re-verified by `npm run check:launch-checklist`; import it after upgrading to GitHub Pro or moving the repository to a Team org. Making the repository public would also lift the gate, but it breaches the Open Core boundary (the public Core ships only as the curated export), so it is excluded.
+**Decision taken 2026-10-02:** stay on Free and rely on CI-only enforcement — the single-maintainer release control documented in the private launch checklist and in [AGENTS.md](../AGENTS.md). The payload stays ready and is re-verified by `npm run check:launch-checklist`; import it after upgrading to GitHub Pro or moving the repository to a Team org. Making the repository public would also lift the gate, but it breaches the Open Core boundary (the public Core ships only as the curated export), so it is excluded.
 
 ## Configuration
 

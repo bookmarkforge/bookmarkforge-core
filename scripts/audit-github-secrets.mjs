@@ -9,7 +9,7 @@
  * Prerequisites:
  * - GitHub CLI installed: https://cli.github.com/
  * - Logged in to GitHub: gh auth login
- * - Repo: bookmarkforge/bookmarkforge
+ * - Repo: bookmarkforge/bookmarkforge-core
  *
  * Usage: node scripts/audit-github-secrets.mjs
  */

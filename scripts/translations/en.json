@@ -622,7 +622,7 @@
         "free": "Free",
         "pro": "Pro"
       },
-      "freeChannel": "Self-service: this Help Center + <a href=\"https://github.com/bookmarkforge/bookmarkforge-2026/discussions\">GitHub Discussions</a>",
+      "freeChannel": "Self-service: this Help Center + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
       "freeResponse": "Best effort (community)",
       "freeWhatToDo": "Search BF-E* code below + copy diagnostic (<a href=\"#diagnostics\">§Diagnostics</a>) before posting",
       "proChannel": "Email <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (subject: Pro)",

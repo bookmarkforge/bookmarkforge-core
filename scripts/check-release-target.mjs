@@ -322,7 +322,7 @@ export function checkReleaseTarget({
   //      - a provisional/placeholder target (never releasable), and
   //      - a REAL repository that disagrees with the declared destination.
   //    The second class is the ADR-058 amendment-8 failure: the 2026-09-22
-  //    rename to `bookmarkforge/bookmarkforge` left the README badges and the
+  //    rename to `bookmarkforge/bookmarkforge-core` left the README badges and the
   //    exported RELEASE-NOTES pointing at `bookmarkforge/core` for three days
   //    while this gate stayed green, because it only hunted placeholders. A
   //    reader of the release must never copy a URL the release does not

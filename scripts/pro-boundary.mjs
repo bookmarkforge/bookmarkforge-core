@@ -434,7 +434,6 @@ export function placeholderSource(modulePath, exports) {
     " * part of this repository. This file exists so the exported Core keeps resolving",
     " * its imports; the sibling generated `.d.ts` carries the type surface.",
     " */",
-    "/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */",
     `import { placeholderFor } from "${helperImportFor(modulePath)}";`,
     "",
     `const placeholder = placeholderFor("${modulePath.replace(/\.tsx?$/, "")}");`,
@@ -449,7 +448,14 @@ export function placeholderSource(modulePath, exports) {
   }
   if (exports.values.has("default")) lines.push("export default placeholder;");
   if (!names.length && !exports.values.has("default") && !exports.reexports.length) {
-    lines.push("export {};");
+    // Nothing to export: keep the binding referenced so the file stays clean
+    // under `no-unused-vars`. An `eslint-disable` naming the TypeScript rules
+    // is NOT the tool here — this generated file is `.js`, where the
+    // @typescript-eslint plugin is never registered, so the directive itself is
+    // a lint error in the exported Core ("Definition for rule ... was not
+    // found"). Generated code has to lint clean without suppressing rules that
+    // do not apply to it.
+    lines.push("void placeholder;", "export {};");
   }
   return lines.join("\n") + "\n";
 }
@@ -462,7 +468,6 @@ export function helperSource() {
  * helper, so the Core keeps resolving and running without the proprietary
  * implementation.
  */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 const warned = new Set();
 
 function warnOnce(moduleName, property) {

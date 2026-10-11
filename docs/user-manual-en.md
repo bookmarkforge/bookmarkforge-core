@@ -366,7 +366,7 @@ Local AI uses WebGPU. On laptops, it may consume battery faster. Disable local A
 - **Trademark:** BookmarkForge and its marks are protected (see `TRADEMARKS.md`)
 - **Pricing:** Frozen in `docs/pricing-decision.md`. All prices are lifetime version 1.
 - **Refunds:** 30 days via Whop. Full refund policy.
-- **Privacy:** See `docs/ROPA.md` for the personal data processing record under GDPR.
+- **Privacy:** See the private `ROPA.md` for the personal data processing record under GDPR.
 
 ---
 

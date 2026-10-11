@@ -64,7 +64,7 @@ A real run lists the existing rulesets, deletes one already carrying the payload
 
 ## Verifying afterwards
 
-1. Open `https://github.com/bookmarkforge/bookmarkforge/settings/rules` and confirm the ruleset exists and is active.
+1. Open `https://github.com/bookmarkforge/bookmarkforge-core/settings/rules` and confirm the ruleset exists and is active.
 2. Confirm the settings match the payload: branch pattern `refs/heads/main`, zero required approvals, and the six required job-name checks.
 3. Confirm a direct push to `main` is rejected:
 

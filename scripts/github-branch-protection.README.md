@@ -97,8 +97,8 @@ GITHUB_TOKEN=your_token GITHUB_REPO_OWNER=bookmarkforge GITHUB_REPO_NAME=bookmar
 ## Example Output
 
 ```
-🔧 Configuring branch protection for bookmarkforge/bookmarkforge:release/v1.0.0
-📦 Repository: bookmarkforge/bookmarkforge
+🔧 Configuring branch protection for bookmarkforge/bookmarkforge-core:release/v1.0.0
+📦 Repository: bookmarkforge/bookmarkforge-core
 🌿 Branch: release/v1.0.0
 🔒 Require PR: false
 ✅ Require Status Checks: false
@@ -139,7 +139,7 @@ What this means:
 
 ✅ Branch protection configuration completed successfully!
 
-🌐 View at: https://github.com/bookmarkforge/bookmarkforge/settings/branches
+🌐 View at: https://github.com/bookmarkforge/bookmarkforge-core/settings/branches
 ```
 
 ## Troubleshooting

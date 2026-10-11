@@ -5,11 +5,11 @@
 **Local-first AI Knowledge Vault with End-to-End Encryption**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/bookmarkforge/bookmarkforge/releases/latest)
+[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/bookmarkforge/bookmarkforge-core/releases/latest)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20.19.0-brightgreen)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
-[![CI](https://github.com/bookmarkforge/bookmarkforge/actions/workflows/ci.yml/badge.svg)](https://github.com/bookmarkforge/bookmarkforge/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-460%2B-brightgreen)](https://github.com/bookmarkforge/bookmarkforge/actions)
+[![CI](https://github.com/bookmarkforge/bookmarkforge-core/actions/workflows/ci.yml/badge.svg)](https://github.com/bookmarkforge/bookmarkforge-core/actions/workflows/ci.yml)
+[![Tests](https://img.shields.io/badge/tests-460%2B-brightgreen)](https://github.com/bookmarkforge/bookmarkforge-core/actions)
 
 > **Distribution model:** Open Core. This repository is the MIT-licensed Core; Pro features identified in `OPEN-CORE.md` are proprietary and not included here.
 
@@ -76,7 +76,7 @@ Most bookmark managers store your library in someone else's cloud in plain text.
 
 ```bash
 # Clone the public Core
-git clone https://github.com/bookmarkforge/bookmarkforge.git
+git clone https://github.com/bookmarkforge/bookmarkforge-core.git
 cd bookmarkforge
 
 # Install dependencies
@@ -284,8 +284,8 @@ Before opening a change that crosses the Core/Pro boundary, document the decisio
 ## 📞 Support
 
 - **Documentation** — See the [documentation index](docs/index.md)
-- **Issues** — Report bugs on [GitHub Issues](https://github.com/bookmarkforge/bookmarkforge/issues)
-- **Discussions** — Join community discussions on [GitHub Discussions](https://github.com/bookmarkforge/bookmarkforge/discussions)
+- **Issues** — Report bugs on [GitHub Issues](https://github.com/bookmarkforge/bookmarkforge-core/issues)
+- **Discussions** — Join community discussions on [GitHub Discussions](https://github.com/bookmarkforge/bookmarkforge-core/discussions)
 - **Security** — Report vulnerabilities privately via [SECURITY.md](.github/SECURITY.md)
 
 ---

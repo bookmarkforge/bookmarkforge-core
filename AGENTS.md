@@ -15,7 +15,7 @@ security-adjacent code.
 ## 1. Open Core boundary (MANDATORY)
 
 - Keep the Core/Pro classification synchronized with `OPEN-CORE.md` and
-  `scripts/export-public-repo.mjs`.
+  the private `export-public-repo.mjs` tooling.
 - Pro code must never enter the public export. Run `npm run check:open-core` after
   changing export rules or feature boundaries.
 - New files that implement paid features must be classified before merge; do
@@ -63,7 +63,7 @@ The codebase has an explicit ownership contract for secrets-as-bytes:
 - Security-significant changes carry a header anchor mapping to the decision
   record: `// ADR-019: …`, or audit round codes such as `// S1/R3: …`,
   `// P92: …`, `// H5: …`, `// B28: …` (security/privacy/hygiene/… items from
-  `docs/audit.md`). Keep the anchor when you touch the file; add one for new
+  the private `audit.md`). Keep the anchor when you touch the file; add one for new
   hardening work.
 - Standing decisions get a file at `docs/ADR-###-slug.md` — template:
   `Estado / Fecha` then `Contexto / Decisión / Consecuencias`
@@ -157,8 +157,8 @@ npm run check                   # the full gate chain (~50 check commands + lint
   test:fast && build:ci && check`).
 - Before a release: `npm run check:launch-checklist:strict` (Sentry DSN/DPA,
   RPO/RTO sign-off and manual WCAG are tracked as open operational items in
-  `docs/launch-checklist.md` — see `docs/audit.md` for the known-gap ledger
-  and `docs/ROPA.md` for GDPR processing records). This repository is operated
+  the private `launch-checklist.md` — see the private `audit.md` for the known-gap ledger
+  and the private `ROPA.md` for GDPR processing records). This repository is operated
   by a single maintainer; automated checks remain the release control.
 - **i18n:** every user-facing string goes through `t()` — hardcoded UI strings
   fail `check:i18n`/`check:english-only`. All 30 locales must stay
@@ -177,7 +177,7 @@ npm run check                   # the full gate chain (~50 check commands + lint
   Two gates are excluded because they hold Spanish as DATA: this one and
   `check-english-only`. ADR section labels accept both languages
   (`Estado`/`Status`, `Fecha`/`Date`, `Contexto`/`Context`,
-  `Decisión`/`Decision`, `Consecuencias`/`Consequences`) and `docs/audit.md`
+  `Decisión`/`Decision`, `Consecuencias`/`Consequences`) and the private `audit.md`
   publishes its status table as `## Verified status` / `| Command | Mode |`,
   both accepted by `check:audit-freshness`.
 - **Secrets:** `VITE_*` vars are **inlined into the bundle** by Vite — never
@@ -324,7 +324,7 @@ The ruleset is at `.github/rulesets/main-protection.json` with `integration_id: 
 
 ### Penetration Testing
 
-- **Monthly DAST**: `.github/workflows/pen-test.yml` runs OWASP ZAP against staging
+- **Monthly DAST**: the private `pen-test.yml` workflow runs OWASP ZAP against staging
 - **Pre-production penetration test**: `node scripts/penetration-test.mjs --target <url> --scope full`
 - **Reports**: Written to `pen-test-reports/` with JSON and Markdown formats
 - **Gate**: All CRITICAL and HIGH findings must be remediated before production deployment

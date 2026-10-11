@@ -10,7 +10,7 @@ proprietary and are distributed under a Pro license.
 - You can study, run, modify, and redistribute the MIT Core respecting `LICENSE`.
 - The private development repository also contains Pro code. The MIT license
   **does not automatically cover everything that appears in this checkout**.
-- `scripts/export-public-repo.mjs` produces the public repository and removes
+- the private `export-public-repo.mjs` tooling produces the public repository and removes
   Pro components, private contracts, internal operations, and secrets.
 - The public export includes an auditable `manifest.json` and fails if a Pro
   file appears in the result.

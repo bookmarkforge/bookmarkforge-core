@@ -364,7 +364,7 @@ IA local usa WebGPU. En laptops, puede consumir batería más rápido. Desactiva
 - **Marca:** BookmarkForge y sus marcas están protegidas (ver `TRADEMARKS.md`)
 - **Precios:** Congelados en `docs/pricing-decision.md`. Todos los precios son lifetime versión 1.
 - **Reembolsos:** 30 días vía Whop. Política de devolución completa.
-- **Privacidad:** Ver `docs/ROPA.md` para el registro de tratamiento de datos personales bajo GDPR.
+- **Privacidad:** Ver the private `ROPA.md` para el registro de tratamiento de datos personales bajo GDPR.
 
 ---
 

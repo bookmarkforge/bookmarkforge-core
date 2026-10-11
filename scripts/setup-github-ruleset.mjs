@@ -21,7 +21,7 @@
  * Requires:
  * - GITHUB_TOKEN: token with `repo` scope and repository admin
  * - GITHUB_OWNER / GITHUB_REPO: repository coordinates
- *   (default: bookmarkforge/bookmarkforge)
+ *   (default: bookmarkforge/bookmarkforge-core)
  */
 
 import { readFileSync } from 'node:fs';
@@ -272,7 +272,7 @@ async function main() {
     console.error('');
     console.error('📞 Troubleshooting:');
     console.error('  1. Check that GITHUB_TOKEN has repo:admin permissions');
-    console.error('  2. Check that the repo exists: https://github.com/bookmarkforge/bookmarkforge');
+    console.error('  2. Check that the repo exists: https://github.com/bookmarkforge/bookmarkforge-core');
     console.error('  3. Check that you have Admin permissions on the repo');
     process.exit(1);
   }

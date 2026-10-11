@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-11T06:23:51.958Z",
+  "generatedAt": "2026-10-11T07:15:40.280Z",
   "version": "1.0.0",
   "source": "private repository (export checkout)",
   "license": "MIT",
@@ -16,115 +16,31 @@
     "src/services/pdfService.ts"
   ],
   "proSpecifiersRewritten": 11,
-  "includedCount": 1873,
+  "documentedCommandLinesPruned": [
+    "CONTRIBUTING.md: | `npm run test:staging-policy` | Staging target policy and HTTP checks, run by hand against staging. |",
+    "CONTRIBUTING.md: | `npm run health:dashboard` | Real-time terminal health dashboard (local probing, not a gate). |",
+    "docs/architecture.md: - **Companion server load test:** implemented and validated (`scripts/load-test-server.mjs`, `npm run test:load`) with signaling budgets (join/relay/saturation) aligned to SLOs; the nightly cron runs it with 50 connections. It no longer measures the AI proxy: the server does not proxy providers and its upstream mock was removed with it (2026-09)."
+  ],
+  "privateReferencesRewritten": [
+    ".github/branch-protection.md",
+    "AGENTS.md",
+    "CONTRIBUTING.md",
+    "OPEN-CORE.md",
+    "docs/ADR-019-argon2id-migration.md",
+    "docs/ADR-026-post-audit-hardening-wave-1.md",
+    "docs/ADR-027-post-audit-hardening-wave-2.md",
+    "docs/ADR-029-webrtc-sync-hardening.md",
+    "docs/ADR-064-audit-freshness-gate.md",
+    "docs/architecture.md",
+    "docs/manual-de-usuario-es.md",
+    "docs/manuel-utilisateur-fr.md",
+    "docs/user-manual-en.md"
+  ],
+  "includedCount": 1895,
   "excluded": [
     {
       "file": ".zap\\authenticated.context",
       "reason": "excluded dir"
-    },
-    {
-      "file": "docs\\ADR-001-check-static-brand.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-019-argon2id-migration.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-026-post-audit-hardening-wave-1.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-027-post-audit-hardening-wave-2.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-028-gate-drift-detection.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-029-webrtc-sync-hardening.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-030-security-tier-regression-umbrella.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-032-disk-backup-pruning.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-033-restore-surface-auth-errors.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-034-backup-age-and-storage-quota.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-037-backup-deletion-ownership.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-038-constant-time-hmac-attestation.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-039-sw-integrity-runtime.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-040-docs-markdown-gate-fusion.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-042-css-only-user-themes.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-043-check-seo-gate.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-044-og-image-policy.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-045-check-brand-logo-gate.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-046-vault-kdf-salt-rotation.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-047-claim-drift-gate.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-048-license-claims-gate.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-049-manual-figures-gate.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-050-page-figures-gate-and-planner.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-051-landings-fresh-gate.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-052-v5-format-sunset.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-053-vault-salt-registry.md",
-      "reason": "docs: business/internal documentation"
     },
     {
       "file": "docs\\ADR-054-check-quick-tier.md",
@@ -147,27 +63,11 @@
       "reason": "docs: business/internal documentation"
     },
     {
-      "file": "docs\\ADR-059-documentation-retirement.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-060-legal-consolidation-gate.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
       "file": "docs\\ADR-061-controlled-retirement-2026-09-19.md",
       "reason": "docs: business/internal documentation"
     },
     {
       "file": "docs\\ADR-062-landing-smoke-gate.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-063-feature-budgets-gate.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ADR-064-audit-freshness-gate.md",
       "reason": "docs: business/internal documentation"
     },
     {
@@ -443,6 +343,30 @@
       "reason": "private ops/business script"
     },
     {
+      "file": "scripts\\__tests__\\check-audit-freshness.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\check-docs-markdown.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\check-inspector-freeze.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\check-quick.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\check-script-reachability.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\check-vacuous-tests.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
       "file": "scripts\\__tests__\\check-workflow-security.test.mjs",
       "reason": "private ops/business script"
     },
@@ -468,6 +392,10 @@
     },
     {
       "file": "scripts\\__tests__\\drill-rollback.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\gate-refresh.test.mjs",
       "reason": "private ops/business script"
     },
     {
@@ -508,6 +436,10 @@
     },
     {
       "file": "scripts\\__tests__\\staging-target-policy.test.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\__tests__\\test-profiles.test.mjs",
       "reason": "private ops/business script"
     },
     {

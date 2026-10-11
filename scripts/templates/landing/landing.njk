@@ -148,7 +148,7 @@
         <a href="#{{ t.ai.id }}">{{ t.navLinks.ai }}</a>
         <a href="#{{ t.privacy.id }}">{{ t.navLinks.privacy }}</a>
         <a href="#{{ t.pricing.id }}">{{ t.navLinks.pricing }}</a>
-        <a href="/help">{{ t.navLinks.help | default('Help') }}</a>
+        <a href="{% if t.lang == 'en' %}/help{% else %}/help-{{ t.lang }}{% endif %}">{{ t.navLinks.help | default('Help') }}</a>
         
         <!-- Language Dropdown -->
         <div class="language-dropdown">
@@ -385,7 +385,7 @@
             <a href="{{ plan.cta2Href }}" class="{{ plan.cta2Class }} btn-block" target="_blank" rel="noopener noreferrer">{{ plan.cta2 }}</a>
             {% endif %}
             {% if plan.sla %}
-            <p class="sla-note">{{ plan.sla }} · <a href="/help#sla">SLA</a></p>
+            <p class="sla-note">{{ plan.sla }} · <a href="{% if t.lang == 'en' %}/help#sla{% else %}/help-{{ t.lang }}#sla{% endif %}">SLA</a></p>
             {% endif %}
           </div>
           {% endfor %}
@@ -458,9 +458,9 @@
       <div class="footer-links">
         <h4>{{ t.footer.support.title }}</h4>
         <ul>
-          <li><a href="/help">{{ t.footer.support.helpCenter | default('Help Center') }}</a></li>
-          <li><a href="/help#sla">SLA</a></li>
-          <li><a href="/help#bf-e">{{ t.footer.support.errorCodes | default('Error Codes') }}</a></li>
+          <li><a href="{% if t.lang == 'en' %}/help{% else %}/help-{{ t.lang }}{% endif %}">{{ t.footer.support.helpCenter | default('Help Center') }}</a></li>
+          <li><a href="{% if t.lang == 'en' %}/help#sla{% else %}/help-{{ t.lang }}#sla{% endif %}">SLA</a></li>
+          <li><a href="{% if t.lang == 'en' %}/help#bf-e{% else %}/help-{{ t.lang }}#bf-e{% endif %}">{{ t.footer.support.errorCodes | default('Error Codes') }}</a></li>
           {% for link in t.footer.support.links %}
           <li><a href="mailto:bookmarkforge@proton.me">{{ link }}</a></li>
           {% endfor %}

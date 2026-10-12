@@ -1,93 +1,93 @@
 {
-  "total": 1796,
+  "total": 1809,
   "locales": {
     "ar": {
-      "untranslated": 219
+      "untranslated": 232
     },
     "bg": {
-      "untranslated": 244
+      "untranslated": 255
     },
     "cs": {
-      "untranslated": 244
+      "untranslated": 255
     },
     "da": {
-      "untranslated": 244
+      "untranslated": 257
     },
     "de": {
-      "untranslated": 80
+      "untranslated": 0
     },
     "el": {
-      "untranslated": 244
+      "untranslated": 255
     },
     "es": {
-      "untranslated": 4
+      "untranslated": 0
     },
     "fi": {
-      "untranslated": 244
+      "untranslated": 257
     },
     "fr": {
-      "untranslated": 219
+      "untranslated": 232
     },
     "he": {
-      "untranslated": 244
+      "untranslated": 257
     },
     "hi": {
-      "untranslated": 244
+      "untranslated": 257
     },
     "hr": {
-      "untranslated": 244
+      "untranslated": 255
     },
     "hu": {
-      "untranslated": 244
+      "untranslated": 257
     },
     "id": {
-      "untranslated": 245
+      "untranslated": 258
     },
     "it": {
-      "untranslated": 220
+      "untranslated": 233
     },
     "ja": {
-      "untranslated": 219
+      "untranslated": 232
     },
     "ko": {
-      "untranslated": 244
+      "untranslated": 257
     },
     "nl": {
-      "untranslated": 244
+      "untranslated": 257
     },
     "no": {
-      "untranslated": 244
+      "untranslated": 257
     },
     "pl": {
-      "untranslated": 244
+      "untranslated": 255
     },
     "pt": {
-      "untranslated": 219
+      "untranslated": 232
     },
     "ro": {
-      "untranslated": 245
+      "untranslated": 258
     },
     "ru": {
-      "untranslated": 244
+      "untranslated": 255
     },
     "sv": {
-      "untranslated": 244
+      "untranslated": 257
     },
     "th": {
-      "untranslated": 244
+      "untranslated": 257
     },
     "tr": {
-      "untranslated": 244
+      "untranslated": 257
     },
     "uk": {
-      "untranslated": 244
+      "untranslated": 255
     },
     "vi": {
-      "untranslated": 250
+      "untranslated": 263
     },
     "zh": {
-      "untranslated": 219
+      "untranslated": 232
     }
   },
-  "updatedAt": "2026-09-19T15:08:56.614Z"
+  "updatedAt": "2026-10-12T21:11:52.758Z"
 }

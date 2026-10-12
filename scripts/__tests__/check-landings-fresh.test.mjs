@@ -64,17 +64,26 @@ function makePublicDir(overrides = {}, { includeRender = true } = {}) {
 }
 
 describe("check-landings-fresh: contract", () => {
-  it("passes on a fresh tree and checks the full 33-page contract", () => {
+  it("passes on a fresh tree and checks the full 61-page contract", () => {
     const pub = makePublicDir();
     const r = checkLandingsFresh({ publicDir: pub });
     expect(r.failures).toEqual([]);
-    expect(r.checked).toBe(33);
+    expect(r.checked).toBe(61);
     // The generator's complete output, pinned: a page that disappears (or a
     // locale that joins) must show up as a diff here instead of silently
     // shrinking what check:landings-fresh covers.
+    // Updated 2026-10-12: generator now produces 30 help-{lang}.html pages
+    // (added in recent commits), so 30 landings + 30 help + landing.html +
+    // pocket-alternative.html + help.html = 61 total.
     expect(PAGE_NAMES).toEqual([
       "ar.html", "bg.html", "cs.html", "da.html", "de.html", "el.html",
-      "es.html", "fi.html", "fr.html", "he.html", "help-es.html", "help.html",
+      "es.html", "fi.html", "fr.html", "he.html",
+      "help-ar.html", "help-bg.html", "help-cs.html", "help-da.html", "help-de.html",
+      "help-el.html", "help-es.html", "help-fi.html", "help-fr.html", "help-he.html",
+      "help-hi.html", "help-hr.html", "help-hu.html", "help-id.html", "help-it.html",
+      "help-ja.html", "help-ko.html", "help-nl.html", "help-no.html", "help-pl.html",
+      "help-pt.html", "help-ro.html", "help-ru.html", "help-sv.html", "help-th.html",
+      "help-tr.html", "help-uk.html", "help-vi.html", "help-zh.html", "help.html",
       "hi.html", "hr.html", "hu.html", "id.html", "it.html", "ja.html", "ko.html", "landing.html",
       "nl.html", "no.html", "pl.html", "pocket-alternative.html", "pt.html",
       "ro.html", "ru.html", "sv.html", "th.html", "tr.html", "uk.html",

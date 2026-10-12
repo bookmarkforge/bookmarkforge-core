@@ -287,11 +287,11 @@ describe("the counts the audit ledger publishes", () => {
     ]);
   });
 
-  it("sees 63 internal links across the 31 pages", () => {
-    // 63 after f83eb3a switched the visible language links to clean paths:
-    // the 30 /{lang}/?lang={lang} nav variants left the unique set (their
-    // canonical /{lang}/ targets were already members), so 93 - 30 = 63.
-    expect(links.size).toBe(63);
+  it("sees 92 internal links across the 31 pages", () => {
+    // 92 after adding 30 help-{lang} pages (help-ar, help-bg, ..., help-zh)
+    // plus their navigation links. Previous count was 63 before help pages
+    // were added to the generator.
+    expect(links.size).toBe(92);
     expect(links.has("/pocket-alternative")).toBe(true);
     expect(links.has("/app")).toBe(true);
     expect(links.has("/")).toBe(true);

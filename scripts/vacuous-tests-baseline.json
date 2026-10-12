@@ -157,12 +157,13 @@
       }
     },
     "tests/e2e": {
-      "reason": "Healthy suite kept under the same ratchet as the human-like one: 7 vacuous tests in 6 files. a11y.spec.ts and launch-smoke-critical-paths.spec.ts assert through helpers that throw; dashboard-banner-cls.spec.ts and webrtc-handshake-diagnostics.spec.ts declare their project via test.skip; demo-automation.spec.ts is a 5-minute no-assert demo now made opt-in (BMF_RUN_DEMO_AUTOMATION=true); diag-integrity.spec.ts was converted to a real expect (identical-after-reload vault records verified green). Any NEW conditional-only test in this directory must be justified here.",
+      "reason": "Healthy suite kept under the same ratchet as the human-like one: 7 vacuous tests in 6 files. a11y.spec.ts and launch-smoke-critical-paths.spec.ts assert through helpers that throw; dashboard-banner-cls.spec.ts and webrtc-handshake-diagnostics.spec.ts declare their project via test.skip; demo-automation.spec.ts is a 5-minute no-assert demo now made opt-in (BMF_RUN_DEMO_AUTOMATION=true); diag-integrity.spec.ts was converted to a real expect (identical-after-reload vault records verified green). playtest-regressions.spec.ts added 2026-10-12 as regression suite for playtest findings. Any NEW conditional-only test in this directory must be justified here.",
       "files": {
         "a11y.spec.ts": 1,
         "dashboard-banner-cls.spec.ts": 2,
         "demo-automation.spec.ts": 1,
         "launch-smoke-critical-paths.spec.ts": 1,
+        "playtest-regressions.spec.ts": 0,
         "vault-skip-password.spec.ts": 1,
         "webrtc-handshake-diagnostics.spec.ts": 1
       }

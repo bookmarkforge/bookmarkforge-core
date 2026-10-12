@@ -15,7 +15,6 @@
   "scripts": {
     "dev": "vite",
     "dev:vercel": "vercel dev",
-    "deploy:ci": "deploy-and-push.bat",
     "build": "vite build && node scripts/copy-landing-assets.mjs",
     "build:ci": "node scripts/build-ci.mjs",
     "build:extension:custom": "node scripts/build-extension.cjs",

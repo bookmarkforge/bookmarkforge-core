@@ -9,7 +9,7 @@
 | Job | Suite | Shards | Timeout | Budget (repo var) |
 |---|---|---|---|---|
 | `human-like-sharded` | 161 spec files / 2050 tests (`src/tests/human-like/examples`) | 4 | 60 min | `NIGHTLY_HUMAN_LIKE_MAX_MINUTES` |
-| `multiuser-sharded` | 63 spec files / ~134 tests (`tests/e2e`, workers=1) | 2 | 45 min | `NIGHTLY_MULTIUSER_MAX_MINUTES` |
+| `multiuser-sharded` | 64 spec files / ~134 tests (`tests/e2e`, workers=1) | 2 | 45 min | `NIGHTLY_MULTIUSER_MAX_MINUTES` |
 | `performance` | `tests/e2e/perf-scale.nightly.spec.ts` | 1 ("single") | 45 min | `NIGHTLY_PERF_SCALE_MAX_MINUTES` |
 
 The *Suite* column is a verified declaration, not a description: `npm run check:vacuous-tests` measures the tree and fails if the declared files or tests do not match (a figure marked with `~` is approximate —the suite parameterizes tests in loops— and is only reported). The same gate budgets the **vacuous assertions** of each suite: a test that passes when the function it names does not exist is not coverage. Current debt: 1589 of 2050 tests (77.5%) of `human-like-sharded` and 7 of 134 (5.2%) of `multiuser-sharded`, registered in `scripts/vacuous-tests-baseline.json`. The first remediation measure of the round was to remove the file `advanced-content-tests.spec.ts` (pilot, 2026-09-24): its 43 tests targeted a collaborative application that does not exist in BookmarkForge — all its `data-testid` are defined only in the spec and its assertions were in dead branches. The tree measures itself and rejects drift; the figure must be updated with the same tool, never manually.
@@ -176,4 +176,4 @@ block the launch, but they are candidates for the first post-launch sprint.
   colors (high/medium/low) but does not include the streak ramp; an observer
   looking only at the consistency SVG cannot see how far each suite is from the
   gate. Adding the streak ramp to the consistency SVG (or at least a numeric
-  streak indicator per bar) would close that readability gap.
+  streak indicator per bar) would close that readability gap.

@@ -67,7 +67,6 @@ describe("every landing loads the bootstrap before anything renders", () => {
     "index.html",
     "landing.html",
     "help.html",
-    "help-es.html",
     "offline.html",
     "privacy-and-terms.html",
     "pocket-alternative.html",

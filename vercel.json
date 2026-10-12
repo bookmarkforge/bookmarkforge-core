@@ -1,6 +1,6 @@
 {
   "git": {
-    "deploymentEnabled": false
+    "deploymentEnabled": true
   },
   "buildCommand": "npm run build",
   "outputDirectory": "dist",

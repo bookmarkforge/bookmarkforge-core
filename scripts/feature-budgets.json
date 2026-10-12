@@ -13,6 +13,7 @@
     { "id": "runtime-vendors", "label": "large runtime vendors", "patterns": ["^native-", "^prod-", "^esm-"], "budgetBytes": 1572864 },
     { "id": "mlc-runtime", "label": "WebLLM/MLC runtime vendor", "patterns": ["^lib-"], "budgetBytes": 7340032 },
     { "id": "styles", "label": "feature styles", "patterns": ["^style-"], "budgetBytes": 307200 },
+    { "id": "app-styles", "label": "entry stylesheet (Tailwind + design tokens + Mantine components)", "patterns": ["^app-.*\\.css$"], "budgetBytes": 245760 },
     { "id": "recovery", "label": "recovery flow", "patterns": ["^RecoveryService-"], "budgetBytes": 307200 },
     { "id": "import-export", "label": "import/export helpers", "patterns": ["^ImportDialog-", "^exporter\\.formatters-", "^jszip"], "budgetBytes": 409600 }
   ]

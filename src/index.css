@@ -16,7 +16,43 @@
      Use var(--color-success / --color-danger / --color-warning).
    ============================================================ */
 
+/* CSS-layer order for the app shell.
+   Tailwind's own `theme, base, components, utilities` order is kept, and two
+   layers are admitted in between:
+     - `mantine` (the scoped Mantine styles imported below) has to outrank
+       Tailwind's preflight — its `* { padding: 0 }` otherwise strips every
+       Mantine surface — while still losing to Tailwind utilities so app
+       classes can override any Mantine component.
+     - `app` carries the shell's own page surface (see `@layer app` below),
+       which has to outrank Mantine's global `body` styles.
+   Without Mantine's stylesheet its overlay variables (`--mb-z-index: 200`) are
+   dead and its Modal/Tooltip render in the normal flow, off-screen. */
+@layer theme, base, mantine, app, components, utilities;
+
 @import "tailwindcss";
+
+/* Mantine styles, scoped to the components this app actually renders:
+     Modal      → Header, Sidebar, VersionHistory, ReloadPrompt
+     Tooltip    → Header, Sidebar, SoundToggle, ThemeToggle
+     ActionIcon → ThemeToggle
+   `default-css-variables` is what makes the overlay scale real
+   (--mantine-z-index-modal: 200) and `baseline`/`global` carry the resets and
+   focus helpers those components rely on. Importing the full
+   `@mantine/core/styles.layer.css` also works, but it drags every component
+   Mantine ships (~390 KiB of app CSS) and trips check-feature-budgets'
+   large-asset threshold. Add the matching *.layer.css here if a new Mantine
+   component is adopted. */
+@import "@mantine/core/styles/default-css-variables.layer.css";
+@import "@mantine/core/styles/baseline.layer.css";
+@import "@mantine/core/styles/global.layer.css";
+@import "@mantine/core/styles/ModalBase.layer.css";
+@import "@mantine/core/styles/Modal.layer.css";
+@import "@mantine/core/styles/Overlay.layer.css";
+@import "@mantine/core/styles/Paper.layer.css";
+@import "@mantine/core/styles/CloseButton.layer.css";
+@import "@mantine/core/styles/UnstyledButton.layer.css";
+@import "@mantine/core/styles/Tooltip.layer.css";
+@import "@mantine/core/styles/ActionIcon.layer.css";
 
 /* First-paint boot surface. Loaded directly by index.html so the shell has
    stable geometry before the module graph and React mount complete. */
@@ -294,7 +330,12 @@ body,
   navigation: auto;
 }
 
-@layer base {
+/* App-owned page surface. It sits in a layer of its own — after `mantine`,
+   before `components`/`utilities` — because Mantine's stylesheet also styles
+   `body` (font, size, background, text color). In `base` those declarations
+   lost to Mantine's and the shell fell back to the system font, 16px and a
+   white page in dark mode. Tailwind utilities still win on top of this. */
+@layer app {
   body {
     @apply antialiased;
     background: var(--bg-primary);
@@ -304,7 +345,9 @@ body,
     line-height: 1.5;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
+}
 
+@layer base {
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
     color: var(--text-primary);

@@ -142,9 +142,15 @@ export const ConsentBanner: React.FC<ConsentBannerProps> = ({
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 100, opacity: 0 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
-        className="fixed bottom-0 inset-x-0 z-[100] p-4 md:p-6"
+        /* The wrapper spans the full viewport width to anchor the card at the
+           bottom, but it is transparent: with pointer-events:auto it swallowed
+           every click in that band, including the Quick Capture FAB
+           (z-50) that shares it. Keep the wrapper inert and re-enable hit
+           testing on the card itself, which is the only interactive surface
+           here. */
+        className="fixed bottom-0 inset-x-0 z-[100] p-4 md:p-6 pointer-events-none"
       >
-        <div className="max-w-2xl mx-auto ds-bg-card ds-border rounded-2xl shadow-2xl overflow-hidden">
+        <div className="max-w-2xl mx-auto ds-bg-card ds-border rounded-2xl shadow-2xl overflow-hidden pointer-events-auto">
           {/* Header */}
           <div className="p-5 pb-3">
             <div className="flex items-start gap-3">

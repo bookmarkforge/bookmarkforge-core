@@ -90,6 +90,7 @@ This index is generated from the documents present in the checkout. A deleted do
 | `docs/operations.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/operator-quick-reference.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/ops-nightly.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/PENDIENTES.md` | transitorio | Register of pending work and known debt. |
 | `docs/performance-budget-by-feature.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/positioning.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/pricing-decision.md` | vivo | Document present in the checkout; review its state before retiring it. |

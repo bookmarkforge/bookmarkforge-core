@@ -39,3 +39,9 @@ ADR-028.
 - Budgets are release limits, not an order for immediate restructuring.
 - Budget updates require reviewing the bundle report and justifying the change
   in documentation.
+- `app-styles` (patterns `^app-.*\.css$`, 240 KiB) classifies the entry
+  stylesheet. It was added when the Mantine component styles were admitted to
+  the entry (`src/index.css`, see the CSS-layer note there): the sheet moved
+  from 164.7 KiB to 200.1 KiB, crossing the unclassified threshold. The pattern
+  is scoped to `.css` on purpose — `^app-` alone would also capture the entry
+  JS chunks.

@@ -1,0 +1,287 @@
+{
+  "schema": "bmf.documented-doc-references-baseline/1",
+  "fingerprint": "relative-links/v1: markdown-link-targets, extension-gated, resolved against the document directory",
+  "note": "Frozen dangling relative links in live documents. The gate fails when this set grows, when an entry resolves today (pay the debt and drop the entry), or when an entry has no reason.",
+  "knownMissingLinks": [
+    {
+      "file": "docs/index.md",
+      "reference": "../TRADEMARKS.md",
+      "reason": "TRADEMARKS.md is not at the repository root the link points to; the only copy lives in scripts/public-export/. Tracked as P-30 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "anvandhandbok-sv.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "anvandhandbok-sv.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "benutzerhandbuch-de.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "benutzerhandbuch-de.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "brugervejledning-da.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "brugervejledning-da.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "brukerhandbok-no.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "brukerhandbok-no.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "egcheiridio-christi-el.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "egcheiridio-christi-el.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "felhasznaloi-kezikonyv-hu.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "felhasznaloi-kezikonyv-hu.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "huong-dan-su-dung-vi.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "huong-dan-su-dung-vi.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "kayttoopas-fi.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "kayttoopas-fi.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "korisnicki-prirucnik-hr.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "korisnicki-prirucnik-hr.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "manual-de-utilizare-ro.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "manual-de-utilizare-ro.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "manual-do-utilizador-pt.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "manual-do-utilizador-pt.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "manuale-utente-it.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "manuale-utente-it.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "panduan-pengguna-id.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "panduan-pengguna-id.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "podrecznik-uzytkownika-pl.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "podrecznik-uzytkownika-pl.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-ar.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-ar.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-bg.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-bg.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-he.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-he.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-hi.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-hi.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-ja.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-ja.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-ko.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-ko.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-ru.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-ru.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-th.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-th.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-uk.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-uk.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-zh.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "user-manual-zh.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "uzivatelska-prirucka-cs.md",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/index.md",
+      "reference": "uzivatelska-prirucka-cs.pdf",
+      "reason": "The localized manual family is not materialized in the checkout (only en, es, fr, nl and tr ship); docs/index.md still lists all 30 locales. Tracked as P-29 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/launch-checklist.md",
+      "reference": "ios-day0-session-sheet.md",
+      "reason": "The manual validation procedure this row depends on has not been written yet. Tracked as P-31 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/launch-checklist.md",
+      "reference": "ios-manual-test-script.md",
+      "reason": "The manual validation procedure this row depends on has not been written yet. Tracked as P-31 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/launch-checklist.md",
+      "reference": "launch-day-smoke.md",
+      "reason": "The manual validation procedure this row depends on has not been written yet. Tracked as P-31 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/launch-checklist.md",
+      "reference": "p2p-sync-manual-test-script.md",
+      "reason": "The manual validation procedure this row depends on has not been written yet. Tracked as P-31 in docs/PENDIENTES.md."
+    },
+    {
+      "file": "docs/launch-checklist.md",
+      "reference": "p2p-sync-session-prep.md",
+      "reason": "The manual validation procedure this row depends on has not been written yet. Tracked as P-31 in docs/PENDIENTES.md."
+    }
+  ]
+}

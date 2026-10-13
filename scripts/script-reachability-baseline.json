@@ -22,7 +22,6 @@
     "calibrate:first-summary": "By-hand calibration tool for first-summary generation. No entry point calls it; it exists for manual calibration runs.",
     "check:ai-reference-metrics": "By-hand AI reference metrics validator. No workflow or gate calls it; the performance budget gate (check:performance) handles metrics validation.",
     "check:performance:static": "By-hand static-only performance budget check. The main check:performance gate already includes static checks; this is a convenience alias for static-only runs.",
-    "launch:smoke:prod": "By-hand production smoke test variant. The documented launch:smoke script runs in dev mode; use the production build script (build:ci) and manual verification instead.",
     "local-smoke": "By-hand local smoke test. The documented local smoke test is embedded in other workflows; this standalone alias is for manual local verification only."
   }
 }

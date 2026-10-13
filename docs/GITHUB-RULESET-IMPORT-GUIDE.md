@@ -129,4 +129,4 @@ git push origin --delete test-branch
 - [Rulesets REST API](https://docs.github.com/en/rest/repos/rules)
 - [`.github/branch-protection.md`](../.github/branch-protection.md) — the operator reference for the payload
 - [docs/launch-checklist.md](launch-checklist.md) — blocking items 1 and 2 and the plan-gate decision
-- [scripts/setup-github-ruleset.README.md](../scripts/setup-github-ruleset.README.md) — the scripted path and how its defaults differ from the payload
+- Removed 2026-10-13: the provisional scripted path (`scripts/setup-github-ruleset.mjs` and its README) went with the external-infrastructure cleanup, so there is no repository script to run. The payload `.github/rulesets/main-protection.json` is the artefact imported here, and [`.github/branch-protection.md`](../.github/branch-protection.md) documents the settings it installs.

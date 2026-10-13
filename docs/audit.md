@@ -17,8 +17,8 @@ A row without `Mode`, an unknown mode, a non-existent script, a `self` without r
 
 | Command | Mode | Observable on this date |
 |---|---|---|
-| `npm run check` | `self` | exit 0 · 53-gate chain |
-| `npm run test:fast` | `self` | exit 0 · all 177 test files passed |
+| `npm run check` | `self` | exit 0 · 54-gate chain |
+| `npm run test:fast` | `self` | exit 0 · all 179 test files passed |
 | `npm run lint` | `chain` | exit 0 (within chain) |
 | `node scripts/check-page-figures.mjs` | `exec` | `ok: 61 pages agree with code (freeCap=2500, devices={0,5}, prices=59/79, refund=30d, revalidation=48h, recovery=24w)` |
 | `npm run typecheck` | `deep` | exit 0 (tsc exits 0 only without errors) — the old WIP locus src/tests/human-like/examples/ compiles again |

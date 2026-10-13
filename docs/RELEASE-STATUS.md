@@ -1,5 +1,13 @@
 # Release status report — BookmarkForge
 
+> **Superseded 2026-10-13 — snapshot, not current state.** The matrix below was
+> executed on 2026-10-02 and several rows have moved since: `npm run lint` exits 0
+> (it is still listed as the chain's first red gate), `npm run test:fast` exits 0 over
+> **179** files (the matrix says 170), `check:landing-free-plan` and
+> `check:script-reachability` are green, and `check:no-spanish` is red (P-04) although the
+> docs/registry row below claims it green. `docs/PENDIENTES.md` is the register of record
+> for the current state; regenerate this matrix from a full local run before releasing.
+
 **Date:** 2026-10-02 · **Branch:** `automation-and-ruleset` (local `release/v1.0.0` fast-forwarded to the same commit) · **Status: release candidate — matrix executed end-to-end; the red rows are pre-existing at HEAD, launch blockers are manual/plan-gated.**
 
 Regenerated 2026-10-02 from a full local execution of every matrix row below (single-maintainer release control: automated checks are the release gate; see `docs/launch-checklist.md` → Automated evidence). The work verified by this matrix — registry consumers, P1 mock-contract closures, the five test-fixture fixes, the English inventory emission and the ruleset-document alignment — is committed on `automation-and-ruleset`, and `release/v1.0.0` is fast-forwarded to the same tip. Git state: PR #13 (`automation-and-ruleset` → `release/v1.0.0`) is open; `release/v1.0.0` is the repository's default branch.
@@ -44,9 +52,8 @@ Other unchecked checklist sections: 🟠 external validation 3 (pentest, manual 
 
 ## Known gaps at HEAD (pre-existing, red in the chain)
 
-- `check:landing-free-plan`: `public/index.html` — features wedge at slot 0, expected slot 1 (introduced with the file in `f83eb3a`; script last changed `b422826`).
 - `test:extension`: MV2 expectations against the MV3 manifest since the Firefox Add-ons preparation (`d01faee`).
-- The SPA/marketing shell (`index.html`, `public/index.html`) still links its language menu with `?lang=` while the 31 landings use clean paths — ungated and functional (the query form remains a supported direct-URL mechanism), but inconsistent with `f83eb3a`.
+- Resolved in the working tree (2026-10-13, not yet committed, so not yet reflected in the matrix above): the EN landing used to exist as three copies (the Vite root HTML entry, a hand-kept copy under `public/`, and the generated landing) and the two shells linked their language menu with `?lang=` — the two entries that used to sit here. Both duplicates are deleted, the generated EN landing is the single root document, all four host configs serve it at `/`, and the `index` stem alias in `check:landing-free-plan` went with the file it existed for. `check:landing-root` now fails if a host diverges from the others or a duplicate root document returns.
 
 ## Known minor risks (non-blocking)
 

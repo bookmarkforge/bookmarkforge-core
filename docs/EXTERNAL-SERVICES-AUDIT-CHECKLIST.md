@@ -4,8 +4,10 @@
 > Based on local configuration review on 2026-10-02
 > Dashboard items cannot be automated — they require manual verification in
 > dashboards; the CLI-assisted audits below cover the configuration side of
-> each section. Run the three per-service audits in one pass with
-> `npm run audit:external`.
+> each section. Run the two per-service audits that remain in one pass:
+> `npm run audit:vercel` and `npm run audit:github-secrets`. The umbrella
+> `audit:external` wrapper and the Whop `audit:whop` CLI were removed on
+> 2026-10-13 with the other external-infrastructure scripts.
 
 ---
 
@@ -85,8 +87,9 @@ Current headers in vercel.json:
 
 **Access**: https://whop.com/dashboard
 
-**CLI-assisted audit:** `npm run audit:whop` (requires `WHOP_API_KEY` in the
-environment or `.env.local`; fails closed with instructions when absent).
+**CLI-assisted audit:** none — the Whop `audit:whop` CLI was removed on
+2026-10-13 with the other external-infrastructure scripts, so this section is
+verified by hand; `WHOP_API_KEY` has no local reader.
 
 #### 1. Account Setup
 - [ ] Business profile is complete

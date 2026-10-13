@@ -1,57 +1,118 @@
 # ADR-065: Single Source of Truth for Host Route Configs
 
-**Estado:** Propuesto  
-**Fecha:** 2026-10-12
+**Status:** Proposed  
+**Date:** 2026-10-12
 
-## Contexto
+## Context
 
-BookmarkForge se despliega en 4 plataformas (Vercel, Netlify, Cloudflare Pages, Nginx/Docker), cada una con su propio archivo de configuración de rutas:
+BookmarkForge is deployed on 4 platforms (Vercel, Netlify, Cloudflare Pages, Nginx/Docker), each with its own route configuration file:
 - `vercel.json` (Vercel)
 - `netlify.toml` (Netlify)
 - `public/_redirects` (Cloudflare Pages)
 - `public/nginx.conf` (Nginx self-hosted)
 
-Cada vez que se añade una nueva ruta a la aplicación, hay que actualizar manualmente los 4 archivos. El gate `check:spa-routes` verifica que estén sincronizados, pero el mantenimiento manual es propenso a errores.
+Every time a new application route is added, the 4 files must be updated manually. The gate `check:spa-routes` verifies that they are synchronized, but manual maintenance is error-prone.
 
-## Decisión
+## Decision
 
-**Mantener el gate `check:spa-routes` como solución actual** (Opción A), con plan para implementar generación automática en el futuro (Opción C).
+**Keep the gate `check:spa-routes` as the current solution** (Option A), with a plan to implement automatic generation in the future (Option C).
 
-### Solución Actual
+### Current Solution
 
-- Mantener `check:spa-routes` en `npm run check:security-internal`
-- El gate verifica que los 4 archivos estén sincronizados con `scripts/app-routes.mjs`
-- Es aceptable para el volumen actual de rutas (~20 rutas de app)
+- Keep `check:spa-routes` in `npm run check:security-internal`
+- The gate verifies that the 4 files are synchronized with `scripts/app-routes.mjs`
+- It is acceptable for the current route volume (~20 app routes)
 
-### Mejora Futura
+### Future Improvement
 
-Implementar `scripts/generate-host-configs.mjs` que:
-1. Lee las rutas de `scripts/app-routes.mjs` (fuente única)
-2. Genera automáticamente `public/_redirects`
-3. Genera automáticamente las secciones de rutas de `vercel.json`
-4. Genera automáticamente las secciones de rutas de `netlify.toml`
-5. Genera automáticamente los location blocks de `public/nginx.conf`
-6. Se ejecuta como parte de `npm run build:ci`
+Implement `scripts/generate-host-configs.mjs` which:
+1. Reads the routes from `scripts/app-routes.mjs` (single source)
+2. Automatically generates `public/_redirects`
+3. Automatically generates the route sections of `vercel.json`
+4. Automatically generates the route sections of `netlify.toml`
+5. Automatically generates the location blocks of `public/nginx.conf`
+6. Runs as part of `npm run build:ci`
 
-## Consecuencias
+## Consequences
 
-### Positivas
-- **Immediate:** No requiere trabajo de implementación complejo
-- **Future-proof:** El gate evita drift en producción
-- **Path clear:** La mejora futura está documentada
+- **No new implementation required:** the decision needs no new code right now.
+- **Drift protection:** the gate keeps the four files aligned without ongoing manual effort.
+- **Documented future path:** the future improvement (Option C) has its shape, entry points and decision criteria recorded here.
 
-### Negativas
-- **Maintenance overhead:** Actualizar 4 archivos manualmente cuando se añaden rutas
-- **Technical debt:** Gate necesario por duplicación manual
+## Negatives
 
-## Alternativas Consideradas
+- **Manual maintenance:** four files to touch every time an application route is added or changed.
+- **Operational load:** the difference is small at low route counts, but it is a class of error that repetition tends to introduce.
+- **Proposed but not adopted:** the ADR stays in Proposed until the future improvement is executed or removed from the registry, so a reader may treat it as a commitment that is not yet a rule.
 
-1. **Eliminar gate (Opción B):** Menos overhead, pero mayor riesgo de drift en producción
-2. **Generación automática inmediata (Opción C original):** Mejor solución técnica, pero requiere implementación compleja de parsers TOML/NGINX
+## Alternatives Considered
 
-##何时
+1. **Remove the gate (Option B):** less overhead, but higher risk of drift in production.
+2. **Immediate automatic generation (original Option C):** better technical solution, but requires complex implementation of TOML/Nginx parsers.
 
-Implementar la generación automática cuando:
-- El volumen de rutas crezca significativamente (>50 rutas)
-- Se añada un nuevo host platform
-- El tiempo de mantenimiento manual se vuelva problemático
+## When
+
+Run the future improvement when:
+
+- The application route volume grows significantly (proposed threshold: more than 50 routes).
+- A new hosting platform is added and its routing artifact needs a similar section.
+- The manual cost of maintaining the four files becomes visible in maintenance data.
+
+Keep this ADR in Proposed until Option C is adopted or removed from the registry, at which point its Status is changed and the future-action document is cleared.
+### Positives
+- **No new implementation required:** the decision needs no new code right now.
+- **Drift protection:** the gate keeps the four files aligned without ongoing manual effort.
+- **Documented future path:** the future improvement (Option C) has its shape, entry points and decision criteria recorded here.
+
+### Consequences
+
+Positives:
+
+- The decision needs no new code right now.
+- The gate keeps the four files aligned without ongoing manual effort.
+- The future improvement (Option C) has its shape, entry points and decision criteria recorded here.
+
+Negatives:
+
+- Four files to touch every time an application route is added or changed.
+- The difference is small at low route counts, but it is a class of error that repetition tends to introduce.
+- The ADR stays in Proposed until the future improvement is executed or removed from the registry, so a reader may treat it as a commitment that is not yet a rule.
+
+## Alternatives Considered
+
+1. **Remove the gate (Option B):** less overhead, but higher risk of drift in production.
+2. **Immediate automatic generation (original Option C):** better technical solution, but requires complex implementation of TOML/Nginx parsers.
+
+## When
+
+Run the future improvement when:
+
+- The application route volume grows significantly (proposed threshold: more than 50 routes).
+- A new hosting platform is added and its routing artifact needs a similar section.
+- The manual cost of maintaining the four files becomes visible in maintenance data.
+
+Keep this ADR in Proposed until Option C is adopted or removed from the registry, at which point its Status is changed and the future-action document is cleared.
+1. **Remove the gate (Option B):** less overhead, but higher risk of drift in production
+2. **Immediate automatic generation (original Option C):** better technical solution, but requires complex implementation of TOML/Nginx parsers
+
+## When
+
+Run the future improvement when:
+
+- The application route volume grows significantly (proposed threshold: more than 50 routes)
+- A new hosting platform is added and its routing artifact needs a similar section
+- The manual cost of maintaining the four files becomes visible in maintenance data
+
+Keep this ADR in Proposed until Option C is adopted or removed from the registry, at which point its Status is changed and the future-action document is cleared.
+1. **Remove the gate (Option B):** less overhead, but higher risk of drift in production.
+2. **Immediate automatic generation (original Option C):** better technical solution, but requires complex implementation of TOML/Nginx parsers.
+
+## When
+
+Run the future improvement when:
+
+- The application route volume grows significantly (proposed threshold: more than 50 routes)
+- A new hosting platform is added and its routing artifact needs a similar section
+- The manual cost of maintaining the four files becomes visible in maintenance data
+
+Keep this ADR in Proposed until Option C is adopted or removed from the registry, at which point its Status is changed and the future-action document is cleared.

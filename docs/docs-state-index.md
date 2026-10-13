@@ -52,6 +52,7 @@ This index is generated from the documents present in the checkout. A deleted do
 | `docs/ADR-062-landing-smoke-gate.md` | vivo | Architectural decision record. |
 | `docs/ADR-063-feature-budgets-gate.md` | vivo | Architectural decision record. |
 | `docs/ADR-064-audit-freshness-gate.md` | vivo | Architectural decision record. |
+| `docs/ADR-065-single-source-routes.md` | vivo | Architectural decision record. |
 | `docs/ADR-065-webrtc-playwright-webkit-limitations.md` | vivo | Architectural decision record. |
 | `docs/api.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/ARCHITECTURE-TUTORIAL.md` | vivo | Document present in the checkout; review its state before retiring it. |

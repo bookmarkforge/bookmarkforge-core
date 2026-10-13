@@ -129,7 +129,8 @@ npm run check                   # the full gate chain (~50 check commands + lint
                                  #   the release path),
                                  # baseline-drift, baseline-gaps, csp,
                                  # extension-csp, i18n, claim-drift,
-                                 # landing-free-plan, pocket-onboarding-copy,
+                                 # landing-free-plan, landing-root,
+                                 # pocket-onboarding-copy,
                                  # license-claims, manual-figures, page-figures,
                                  # landings-fresh, english-only, audit-drift,
                                  # override-cve, direct-cve, no-unbounded-text,
@@ -153,6 +154,16 @@ npm run check                   # the full gate chain (~50 check commands + lint
 
 ```
 
+- **The EN landing has ONE source.** `public/landing.html` (written by
+  `scripts/build-landings.cjs`, registered as the `en` landing in
+  `scripts/landing-registry.mjs`) is the document every host serves at `/`.
+  Both retired copies were removed: `public/index.html` (the duplicate root
+  document) and the repo-root `index.html`. `/index.html` is a permanent
+  redirect to `/` on all four hosts, and the SPA shell lives at `/app`
+  (`app.html`, the only Vite HTML entry, which the dev server serves at `/app`
+  while `/` stays the landing). `check:landing-root` fails when a host answers
+  `/` with another document, when the hosts disagree with each other, or when a
+  duplicate root document comes back.
 - `npm run ci:local` aggregates the CI job (`typecheck:prod && lint &&
   test:fast && build:ci && check`).
 - Before a release: `npm run check:launch-checklist:strict` (Sentry DSN/DPA,
@@ -218,6 +229,11 @@ npm run check                   # the full gate chain (~50 check commands + lint
   already-running servers, and the `--mode test` webServer keeps Argon2id
   on fast test params — never start the dev server for E2E without it
   (~28 s per vault setup otherwise).
+- The landing surface has a packaged-build run too: `npm run test:landing:dist`
+  builds `dist/`, serves it with `vite preview` (`playwright.preview.config.ts`)
+  and walks the 30 generated locales in `tests/e2e/landing-responsive.spec.ts`
+  against the packaged output — the artefact that ships, where a landing the
+  build failed to emit fails even though the dev server would still serve it.
 - **Custom-provider E2E topology:** `npm run e2e:custom-provider`
   (`playwright.custom-provider.config.ts`, `tests/e2e/custom-provider*.spec.ts`)
   drives the Custom (OpenAI-format) provider through the app's real Settings

@@ -17,10 +17,12 @@
 > (Free plan, personal account owner). Decision taken 2026-10-02: stay on Free
 > and rely on CI-only enforcement (this repository's documented
 > single-maintainer release control);
-> [`scripts/setup-github-ruleset.mjs`](../scripts/setup-github-ruleset.mjs)
-> and the importable payload `.github/rulesets/main-protection.json` stay
-> ready — re-run/import them after upgrading to GitHub Pro or moving the
-> repository to a Team org. Making the repository public would lift the gate
+> The scripted path `scripts/setup-github-ruleset.mjs` was removed on 2026-10-13
+> with the rest of the external-infrastructure scripts, so item 2 imports the
+> payload directly (`.github/rulesets/main-protection.json`, or the equivalent
+> `gh api --input` call) instead of running a repository script. The importable
+> payload stays ready and is the actual artifact.
+> Making the repository public would lift the gate
 > but breaches the Open Core boundary (the public Core ships only as the
 > curated export), so it is excluded.
 

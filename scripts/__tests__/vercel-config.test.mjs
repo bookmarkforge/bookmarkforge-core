@@ -91,7 +91,11 @@ function isFile(path) {
 
 function staticFile(pathname) {
   const rel = pathname.replace(/^\//, "");
-  if (rel === "") return "index.html";
+  // "/" is NOT a directory index any more: there is no public/index.html
+  // (the EN landing is landing.html) and no repo-root index.html entry, so
+  // the root is resolved by the rewrite below — which is exactly how Vercel
+  // resolves it (filesystem first, then rewrites, then 404).
+  if (rel === "") return isFile(join(ROOT, "public", "index.html")) ? "index.html" : null;
   if (isFile(join(ROOT, "public", rel))) return rel;
   if (isFile(join(ROOT, rel))) return rel; // app.html lives at the repo root
   return null;
@@ -154,7 +158,7 @@ describe("vercel.json — routing contract", () => {
     for (const rule of rewrites) {
       const matchesEverything = sourceToRegex(rule.source).test("/no-such-page-lol");
       expect(
-        !matchesEverything || rule.destination !== "/index.html",
+        !matchesEverything || !["/index.html", "/landing.html"].includes(rule.destination),
         `${rule.source} → ${rule.destination} answers unknown paths with a 200`,
       ).toBe(true);
     }
@@ -205,8 +209,27 @@ describe("vercel.json — routing contract", () => {
     }
   });
 
+  it("serves the root from the EN landing rewrite, not a directory index", () => {
+    const rootRule = rewrites.find((r) => sourceToRegex(r.source).test("/"));
+    expect(rootRule, "no rewrite answers /").toBeTruthy();
+    expect(rootRule.destination).toBe("/landing.html");
+    // The retired copy is unreachable as a file: nothing may answer
+    // /index.html with a page — the redirect below is the only rule for it.
+    expect(resolveRoute("/index.html")).toBeNull();
+  });
+
+  it("retires /index.html with a permanent redirect to the root", () => {
+    const rule = (CONFIG.redirects ?? []).find((r) => r.source === "/index.html");
+    expect(rule, "vercel.json declares no /index.html redirect").toBeTruthy();
+    expect(rule.destination).toBe("/");
+    expect(rule.permanent).toBe(true);
+  });
+
   it("keeps the marketing pages reachable at their clean URLs", () => {
-    expect(resolveRoute("/")).toBe("index.html");
+    // The root serves the one generated EN landing (landing.html) — the same
+    // file nginx, Cloudflare and Netlify serve — while the app shell stays at
+    // /app.
+    expect(resolveRoute("/")).toBe("landing.html");
     expect(resolveRoute("/help")).toBe("help.html");
     expect(resolveRoute("/help/")).toBe("help.html");
     expect(resolveRoute("/privacy-and-terms")).toBe("privacy-and-terms.html");

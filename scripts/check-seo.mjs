@@ -17,7 +17,7 @@
  *     - at least one parseable application/ld+json block declaring the four
  *       schema.org types the pages use: WebSite, Organization,
  *       SoftwareApplication and FAQPage (with real Question entries)
- * *   The auxiliary pages (the SPA shell index.html and public/404.html) are
+ * *   The auxiliary pages (the SPA shell app.html and public/404.html) are
  *   not indexed, but social crawlers still read their head when the URL is
  *   shared, so they must carry the canonical + full OG/Twitter set and stay
  *   coherent with the EN landing's brand identity (og:site_name, og:image).
@@ -360,13 +360,13 @@ export function validateLandingLangLinks({ pages }) {
 
 /**
  * Auxiliary pages that are never indexed but must still share correctly:
- * the SPA shell (index.html, canonical points at the landing it mirrors)
+ * the SPA shell (app.html, canonical points at the landing it mirrors)
  * and the custom 404 page (canonical to itself). Their og:site_name and
  * og:image are validated against the EN landing (brand coherence).
  */
 export const AUX_PAGES = [
   {
-    file: "index.html",
+    file: "app.html",
     canonical: `${SITE_URL}/`,
   },
   {

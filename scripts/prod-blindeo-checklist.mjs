@@ -61,8 +61,10 @@ console.log(isJson ? "" : "\n🔒 BOOKMARKFORGE — HARDENING CHECKLIST (11 chec
 // 1. SRI + manifest + SW integrity — build:ci already runs vite build + verifies SRI/manifest/SW/chunks/bundle-size
 {
   const bc = run(process.execPath, [join(ROOT, "scripts/build-ci.mjs")], { timeout: 180000 });
-  const htmlOk = existsSync(join(ROOT, "dist/index.html")) && readFileSync(join(ROOT, "dist/index.html"), "utf8").includes("__BMF_INTEGRITY_MANIFEST__");
-  // SRI rides on the SPA page (dist/app.html) since the marketing/SPA split.
+  // The SPA shell (dist/app.html) is the only HTML entry the build emits and
+  // the page carrying both the runtime integrity manifest and the SRI
+  // attributes; the EN landing is a static generated file.
+  const htmlOk = existsSync(join(ROOT, "dist/app.html")) && readFileSync(join(ROOT, "dist/app.html"), "utf8").includes("__BMF_INTEGRITY_MANIFEST__");
   const sriOk = existsSync(join(ROOT, "dist/app.html")) && readFileSync(join(ROOT, "dist/app.html"), "utf8").includes('integrity="sha256-');
   const swOk = existsSync(join(ROOT, "dist/sw.js"));
   results.push(check("1. Bundle integrity (SRI + manifest + SW)", bc.ok && htmlOk && sriOk && swOk, bc.ok ? "build:ci OK" : "build:ci FAIL — " + (bc.stdout.slice(-300) || "")));

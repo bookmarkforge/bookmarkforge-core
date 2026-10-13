@@ -34,6 +34,8 @@
   },
   "navCta": "アプリを開く",
   "themeToggleAria": "テーマを切り替え",
+  "navToggleAria": "メニューを開く",
+  "navToggleAriaClose": "メニューを閉じる",
   "hero": {
     "badge": "一回限りの支払い · サブスクリプションなし",
     "title": "保存したものはすべてあなたのコンピュータに残ります。<span class=\"accent-text\">すべて。</span>",

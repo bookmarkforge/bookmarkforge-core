@@ -34,6 +34,8 @@
   },
   "navCta": "Apri l'App",
   "themeToggleAria": "Cambia tema",
+  "navToggleAria": "Apri menu",
+  "navToggleAriaClose": "Chiudi menu",
   "hero": {
     "badge": "Pagamento unico · Senza abbonamento",
     "title": "Tutto ciò che salvi resta sul tuo computer. <span class=\"accent-text\">Tutto.</span>",

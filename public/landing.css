@@ -1,4 +1,27 @@
-/* Landing page styles — consumes brand tokens from /brand-tokens.css */
+/* Landing page styles — consumes brand tokens from /brand-tokens.css
+ *
+ * The markup is owned by scripts/templates/landing/landing.njk (and
+ * pocket-alternative.njk for the comparison page, which loads this sheet too).
+ * This file had drifted away from it in three ways, all fixed here:
+ *
+ *   1. Sections were styled under names the template stopped emitting
+ *      (.features / .privacy / .pricing / .cta while it emits
+ *      .features-section / .privacy-section / .pricing-section / .final-cta),
+ *      so Features, Privacy, the FAQ and the closing CTA rendered unstyled;
+ *      cards were styled as .feature-card / .privacy-card while the template
+ *      emits .feature-item. The look moved with the selectors.
+ *   2. The hero kept a `1fr 1fr` grid after the product visual was retired
+ *      with the demo-media pipeline, leaving the copy in a 586 px column next
+ *      to an empty track. It is a single column again.
+ *   3. ~40 rules described the retired device/chat mockups, the old pricing
+ *      toggle and the old section names: 77 rule blocks, deleted. Every
+ *      selector below is reachable from the served HTML (checked by a class
+ *      pass over public/*.html), and pocket-alternative.css owns the
+ *      comparison page's own classes (.cmp-*, .table-wrap, .faq-list, …).
+ *
+ * Only brand tokens are used (check:static-brand-tokens forbids hardcoding the
+ * brand hex palette outside brand-tokens.css).
+ */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { scroll-behavior: smooth; }
@@ -14,7 +37,7 @@ body {
 }
 
 .skip-link {
-  position: absolute; top: -40px; left: 0;
+  position: absolute; top: -40px; inset-inline-start: 0;
   background: var(--accent-primary); color: var(--text-on-accent);
   padding: 8px 16px; z-index: 100; transition: top 0.2s;
 }
@@ -34,28 +57,63 @@ body {
   background: rgba(255, 255, 255, 0.95);
 }
 .nav-inner {
-  max-width: 1200px; margin: 0 auto; padding: 0 24px;
+  max-width: 1200px; margin: 0 auto; padding: 6px 24px;
   display: flex; align-items: center; justify-content: space-between;
-  height: 72px;
+  /* Measured 2026-10-13 across the 30 landing locales: the inline row's
+     natural width is 1228-1588px against a 1152px content box (the container
+     caps at 1200px), so no locale fits its six links, brand, language menu,
+     CTA and theme toggle on one line. With a FIXED 72px height the squeezed
+     row wrapped labels mid-word instead (fr ran a nav link to five lines and
+     out of the header), which `scrollWidth` never reports. The row now keeps
+     its 72px minimum and grows where a locale needs a second line: measured
+     max 92px, against a hero padded 140px on top. */
+  height: auto; min-height: 72px;
 }
 .nav-brand {
   display: flex; align-items: center; gap: 10px;
   font-size: 1.125rem; font-weight: 700; color: var(--accent-primary);
   text-decoration: none;
 }
-.nav-links { display: flex; align-items: center; gap: 8px; }
+/* Wrap the LINK BLOCK into rows rather than squeezing each label: `min-width:
+   0` is what lets the block shrink at all (its `auto` minimum was the reason
+   the row overflowed), and `gap: 0` leaves the horizontal rhythm to the links'
+   own 14px padding so a wrapped row reads as one line. */
+.nav-links {
+  display: flex; align-items: center; justify-content: center;
+  flex-wrap: wrap; min-width: 0; gap: 0; align-content: center;
+}
 .nav-links a {
   color: var(--text-secondary); text-decoration: none;
-  padding: 8px 16px; border-radius: var(--radius-item);
-  font-size: 0.875rem; font-weight: 500; transition: all 0.15s;
+  /* 6/14 with an explicit line-height: two rows of these still fit the 72px
+     header, so most locales never grow it. The panel below overrides both. */
+  padding: 6px 14px; border-radius: var(--radius-item);
+  font-size: 0.875rem; font-weight: 500; line-height: 1.4; transition: all 0.15s;
 }
 .nav-links a:hover { color: var(--text-primary); background: var(--accent-soft); }
-.nav-cta { margin-left: 8px; padding: 8px 20px !important; }
+/* Logical, not `margin-left`: in RTL (ar/he) the CTA must sit on the mirrored
+   side, otherwise it and the theme toggle are pushed off the viewport edge
+   (measured: theme-toggle at left -35px on a 374px-wide ar page). */
+.nav-cta { margin-inline-start: 8px; padding: 8px 20px !important; }
 
-/* Language Dropdown */
+/* Hamburger + theme toggle, kept together so the row distributes identically
+   on desktop (the toggle is hidden there). */
+.nav-actions { display: flex; align-items: center; gap: 8px; }
+.nav-toggle {
+  display: none; align-items: center; justify-content: center;
+  width: 40px; height: 40px; flex: none;
+  background: transparent; color: var(--text-secondary);
+  border: 1px solid var(--divider); border-radius: var(--radius-item);
+  cursor: pointer; transition: all 0.15s;
+}
+.nav-toggle:hover { color: var(--text-primary); background: var(--accent-soft); }
+.nav-toggle .icon-close { display: none; }
+.nav.is-open .nav-toggle .icon-menu { display: none; }
+.nav.is-open .nav-toggle .icon-close { display: block; }
+
+/* Language dropdown */
 .language-dropdown {
   position: relative;
-  margin-left: 8px;
+  margin-inline-start: 8px;
 }
 .language-toggle {
   display: flex; align-items: center; gap: 6px;
@@ -74,7 +132,7 @@ body {
   transform: rotate(180deg);
 }
 .language-menu {
-  position: absolute; top: calc(100% + 8px); right: 0;
+  position: absolute; top: calc(100% + 8px); inset-inline-end: 0;
   background: var(--bg-primary); border: 1px solid var(--divider);
   border-radius: var(--radius-item); min-width: 220px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
@@ -127,7 +185,12 @@ body {
   background: radial-gradient(ellipse at 50% -20%, var(--accent-faint) 0%, transparent 60%);
   pointer-events: none;
 }
-.hero .container { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; max-width: 1300px; }
+/* One child (.hero-content): the product visual was retired, so the grid keeps
+   a single track and a readable measure instead of an empty second column. */
+.hero .container {
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 48px;
+  align-items: center; max-width: 920px;
+}
 
 .hero-badge {
   display: inline-block; padding: 6px 16px; border-radius: var(--radius-toggle);
@@ -144,18 +207,18 @@ body {
 .accent-text { color: var(--accent-primary); }
 
 .hero-subtitle {
-  font-size: 1.25rem; color: var(--text-secondary); max-width: 560px;
+  font-size: 1.25rem; color: var(--text-secondary); max-width: 620px;
   margin-bottom: 40px; line-height: 1.7;
 }
 
-.hero-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 32px; }
-
 .hero-ctas { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 32px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 32px; }
 
 .hero-pillars { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 32px; }
 .hero-pillars span { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; }
 .hero-pillars strong { color: var(--text-primary); }
 
+/* ── Buttons ─────────────────────────────────────────────────────── */
 .btn-secondary {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   padding: 14px 28px; border-radius: var(--radius-button);
@@ -182,155 +245,201 @@ body {
 }
 .btn-outline:hover { background: var(--accent-soft); }
 .btn-lg { padding: 16px 32px; font-size: 1.125rem; }
-
-.hero-trust { display: flex; flex-wrap: wrap; gap: 24px; }
-.trust-item { font-size: 0.875rem; color: var(--text-secondary); }
-.trust-item strong { color: var(--text-primary); }
-
-.hero-visual { position: relative; }
-.device-frame {
-  width: 100%; max-width: 520px; margin: 0 auto;
-  background: var(--bg-card); border-radius: 20px;
-  border: 1px solid var(--divider); box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-  overflow: hidden;
+.btn-block { width: 100%; }
+/* Secondary action next to a primary CTA (.btn-link in the comparison rows). */
+.btn-link {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px 20px; border-radius: var(--radius-button);
+  font-size: 1rem; font-weight: 600; text-decoration: none;
+  color: var(--accent-primary); transition: all 0.15s;
 }
-.device-screen { background: var(--bg-primary); }
-.screen-header { height: 36px; background: var(--bg-topbar); border-bottom: 1px solid var(--divider); display: flex; align-items: center; padding: 0 12px; }
-.screen-dots { display: flex; gap: 6px; }
-.screen-dots span { width: 12px; height: 12px; border-radius: 50%; background: var(--divider); }
-.screen-body { display: flex; height: 420px; }
-.demo-sidebar { width: 200px; background: var(--bg-topbar); border-right: 1px solid var(--divider); padding: 16px 0; }
-.demo-nav-item { padding: 10px 16px; font-size: 0.875rem; color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
-.demo-nav-item.active { background: var(--accent-soft); color: var(--accent-primary); border-left: 3px solid var(--accent-primary); }
-.demo-main { flex: 1; padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
-.demo-card { background: var(--bg-card); border: 1px solid var(--divider); border-radius: var(--radius-card); padding: 20px; }
-.demo-card-title { font-weight: 600; margin-bottom: 8px; color: var(--text-primary); }
-.demo-card-text { font-size: 0.875rem; color: var(--text-muted); line-height: 1.5; }
+.btn-link:hover { background: var(--accent-soft); }
 
-/* ── Pocket Alternative ───────────────────────────────────────────── */
-.pocket { padding: 100px 0; }
-.pocket-cta { text-align: center; margin-top: 48px; }
-
-/* ── Section Header ──────────────────────────────────────────────── */
+/* ── Section headers ─────────────────────────────────────────────── */
 .section-header { text-align: center; margin-bottom: 80px; }
 .section-header h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 24px; line-height: 1.2; color: var(--text-primary); }
-.section-header p { font-size: 1.125rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto; line-height: 1.6; }
-.section-label { display: inline-block; padding: 6px 16px; border-radius: var(--radius-toggle); background: var(--accent-soft); color: var(--accent-primary); font-size: 0.8125rem; font-weight: 600; margin-bottom: 16px; letter-spacing: 0.025em; }
+.section-header p { font-size: 1.125rem; color: var(--text-secondary); max-width: 640px; margin: 0 auto; line-height: 1.6; }
+.section-tag {
+  display: inline-block; padding: 6px 16px; border-radius: var(--radius-toggle);
+  background: var(--accent-soft); color: var(--accent-primary);
+  font-size: 0.8125rem; font-weight: 600; margin-bottom: 16px;
+  letter-spacing: 0.025em;
+}
+.section-subtitle { font-size: 1.125rem; color: var(--text-secondary); line-height: 1.6; }
 
-/* ── Features ────────────────────────────────────────────────────── */
-.features { padding: 120px 0; background: var(--bg-secondary); }
+/* ── Product demo (steps + CTA; the tour GIF was retired) ────────── */
+.demo-tour { padding: 88px 0; background: var(--bg-secondary); }
+.demo-tour-header { max-width: 780px; margin: 0 auto 40px; text-align: center; }
+.demo-tour-tag {
+  display: inline-block; padding: 6px 16px; margin-bottom: 16px;
+  border-radius: var(--radius-toggle); background: var(--accent-soft);
+  color: var(--accent-primary); font-size: 0.8125rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.demo-tour-title { font-size: clamp(1.75rem, 3.4vw, 2.5rem); font-weight: 700; line-height: 1.2; margin-bottom: 16px; color: var(--text-primary); }
+.demo-tour-subtitle { font-size: 1.0625rem; color: var(--text-secondary); line-height: 1.7; }
+.demo-tour-steps {
+  counter-reset: demo-step; list-style: none;
+  max-width: 1040px; margin: 40px auto 0; padding: 0;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+}
+.demo-tour-step {
+  position: relative; padding: 18px 18px 18px 48px;
+  border: 1px solid var(--divider); border-radius: var(--radius-item);
+  background: var(--bg-card);
+}
+.demo-tour-step::before {
+  counter-increment: demo-step; content: counter(demo-step);
+  position: absolute; inset-inline-start: 16px; top: 18px;
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent-soft); color: var(--accent-primary);
+  font-size: 0.6875rem; font-weight: 700;
+}
+.demo-tour-step-title { display: block; margin-bottom: 6px; font-size: 0.9375rem; color: var(--text-primary); }
+.demo-tour-step-text { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; }
+.demo-tour-cta { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-top: 40px; }
+
+/* ── Pocket Alternative ───────────────────────────────────────────── */
+.comparison-section { padding: 100px 0; }
+.features-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.center-cta {
+  display: flex; flex-wrap: wrap; gap: 16px;
+  justify-content: center; align-items: center; margin-top: 48px;
+}
+/* pocket-alternative.html loads this sheet as well: its <dl class="faq-list">
+   FAQ is styled here (pocket-alternative.css owns the .cmp-* family only). */
+.faq-list { display: grid; gap: 20px; }
+.faq-list dt { font-weight: 600; color: var(--text-primary); }
+.faq-list dd { color: var(--text-secondary); margin: 8px 0 0; line-height: 1.6; }
+
+/* ── Raindrop comparison (rc) ────────────────────────────────────── */
+.raindrop-section { padding: 100px 0; background: var(--bg-secondary); }
+.rc-table { max-width: 880px; margin: 0 auto 40px; background: var(--bg-card); border: 1px solid var(--divider); border-radius: var(--radius-card); overflow: hidden; }
+.rc-row { display: grid; grid-template-columns: 1.1fr 1.2fr 1.2fr; }
+.rc-row + .rc-row { border-top: 1px solid var(--divider); }
+.rc-head { background: var(--accent-soft); }
+.rc-head > div { font-weight: 700; color: var(--accent-primary); font-size: 0.95rem; }
+.rc-row > div { padding: 16px 20px; font-size: 0.9375rem; line-height: 1.5; }
+.rc-topic { font-weight: 600; color: var(--text-secondary); }
+.rc-us { color: var(--text-primary); }
+.rc-them { color: var(--text-secondary); }
+.rc-close { max-width: 720px; margin: 0 auto 32px; text-align: center; color: var(--text-secondary); font-size: 1rem; line-height: 1.7; }
+
+/* ── Features / Privacy (both render .features-grid + .feature-item) ─ */
+.features-section { padding: 120px 0; }
 .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-.feature-card { background: var(--bg-card); border: 1px solid var(--divider); border-radius: var(--radius-card); padding: 40px; transition: all 0.2s; }
-.feature-card:hover { border-color: var(--accent-glow); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.2); }
-.feature-icon { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background: var(--accent-soft); border-radius: 12px; color: var(--accent-primary); margin-bottom: 20px; }
-.feature-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 16px; line-height: 1.4; color: var(--text-primary); }
-.feature-card p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.7; }
+.feature-item {
+  background: var(--bg-card); border: 1px solid var(--divider);
+  border-radius: var(--radius-card); padding: 40px; transition: all 0.2s;
+}
+.feature-item:hover { border-color: var(--accent-glow); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2); }
+.feature-item h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 16px; line-height: 1.4; color: var(--text-primary); }
+.feature-item p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.7; }
+
+.features-grid-3 .feat-card {
+  background: var(--bg-card); border: 1px solid var(--divider);
+  border-radius: var(--radius-card); padding: 40px; transition: all 0.2s;
+}
+.features-grid-3 .feat-card:hover { border-color: var(--accent-glow); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2); }
+.features-grid-3 .feat-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 16px; line-height: 1.4; color: var(--text-primary); }
+.features-grid-3 .feat-card p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.7; }
+
+.privacy-section { padding: 120px 0; background: var(--bg-secondary); }
 
 /* ── AI Section ──────────────────────────────────────────────────── */
 .ai-section { padding: 120px 0; }
-.ai-content { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
-.ai-text h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; line-height: 1.2; margin-bottom: 24px; color: var(--text-primary); }
-.ai-text > p { font-size: 1.125rem; color: var(--text-secondary); margin-bottom: 48px; line-height: 1.7; }
+.ai-split { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+.ai-column h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 20px; color: var(--text-primary); }
 
-.ai-providers { margin-bottom: 40px; }
-.ai-providers h4 { font-size: 1rem; font-weight: 600; margin-bottom: 16px; color: var(--text-secondary); }
-.provider-grid { display: flex; flex-wrap: wrap; gap: 10px; }
-.provider { padding: 10px 16px; border-radius: var(--radius-item); font-size: 0.8125rem; font-weight: 500; border: 1px solid var(--divider); background: var(--bg-card); color: var(--text-secondary); transition: all 0.15s; }
-.provider:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
-.provider-badge { display: inline-block; font-size: 0.625rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-right: 8px; text-transform: uppercase; }
-.provider.local .provider-badge { background: var(--success-soft); color: var(--color-success-text); }
-.provider.cloud .provider-badge { background: var(--accent-soft); color: var(--accent-primary); }
+.providers-list { list-style: none; display: flex; flex-wrap: wrap; gap: 10px; }
+.providers-list li {
+  padding: 10px 16px; border-radius: var(--radius-item);
+  font-size: 0.8125rem; font-weight: 500;
+  border: 1px solid var(--divider); background: var(--bg-card);
+  color: var(--text-secondary); transition: all 0.15s;
+}
+.providers-list li:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
 
-.ai-modes h4 { font-size: 1rem; font-weight: 600; margin-bottom: 16px; color: var(--text-secondary); }
-.mode-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.mode-card { background: var(--bg-card); border: 1px solid var(--divider); border-radius: var(--radius-card); padding: 20px; }
-.mode-card h5 { font-size: 0.9375rem; font-weight: 600; margin-bottom: 8px; color: var(--text-primary); }
-.mode-card p { font-size: 0.8125rem; color: var(--text-secondary); }
-
-.ai-visual { position: sticky; top: 100px; }
-.chat-demo { background: var(--bg-card); border: 1px solid var(--divider); border-radius: var(--radius-card); overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
-.chat-header { display: flex; align-items: center; gap: 12px; padding: 16px; background: var(--bg-topbar); border-bottom: 1px solid var(--divider); }
-.chat-dots { display: flex; gap: 6px; }
-.chat-dots span { width: 12px; height: 12px; border-radius: 50%; background: var(--divider); }
-.chat-title { font-weight: 600; flex: 1; }
-.chat-badge { font-size: 0.625rem; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-toggle); background: var(--success-soft); color: var(--color-success-text); }
-.chat-messages { padding: 16px; max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
-.msg { max-width: 85%; padding: 12px 16px; border-radius: 16px; font-size: 0.875rem; line-height: 1.5; animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.msg.user { align-self: flex-end; background: var(--accent-primary); color: var(--text-on-accent); border-bottom-right-radius: 4px; }
-.msg.assistant { align-self: flex-start; background: var(--bg-topbar); color: var(--text-primary); border-bottom-left-radius: 4px; border: 1px solid var(--divider); }
-.chat-input { display: flex; gap: 8px; padding: 16px; border-top: 1px solid var(--divider); background: var(--bg-topbar); }
-.chat-input input { flex: 1; padding: 12px 16px; border: 1px solid var(--divider); border-radius: var(--radius-input); background: var(--input-bg); color: var(--text-primary); font-size: 0.875rem; }
-.chat-input button { width: 44px; height: 44px; border-radius: var(--radius-button); background: var(--accent-primary); color: var(--text-on-accent); border: none; cursor: pointer; font-size: 1.25rem; }
-
-/* ── Privacy ─────────────────────────────────────────────────────── */
-.privacy { padding: 120px 0; background: var(--bg-secondary); }
-.privacy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
-.privacy-card { background: var(--bg-card); border: 1px solid var(--divider); border-radius: var(--radius-card); padding: 40px; text-align: center; transition: all 0.2s; }
-.privacy-card:hover { border-color: var(--accent-glow); }
-.privacy-icon { width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; background: var(--accent-soft); border-radius: 14px; color: var(--accent-primary); }
-.privacy-card h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 16px; line-height: 1.4; color: var(--text-primary); }
-.privacy-card p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.6; }
+.mode-items { display: grid; gap: 16px; }
+.mode-item {
+  background: var(--bg-card); border: 1px solid var(--divider);
+  border-radius: var(--radius-card); padding: 20px;
+}
+.mode-item h4 { font-size: 0.9375rem; font-weight: 600; margin-bottom: 8px; color: var(--text-primary); }
+.mode-item p { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; }
 
 /* ── Pricing ─────────────────────────────────────────────────────── */
-.pricing { padding: 120px 0; }
-.pricing-toggle { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 48px; color: var(--text-secondary); font-weight: 500; }
-.toggle { position: relative; width: 56px; height: 28px; }
-.toggle input { opacity: 0; width: 0; height: 0; }
-.toggle-slider { position: absolute; inset: 0; background: var(--divider); border-radius: 28px; transition: 0.3s; cursor: pointer; }
-.toggle-slider::before { content: ''; position: absolute; height: 20px; width: 20px; left: 4px; bottom: 4px; background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-.toggle input:checked + .toggle-slider { background: var(--accent-primary); }
-.toggle input:checked + .toggle-slider::before { transform: translateX(28px); }
-.annual-badge { font-size: 0.75rem; font-weight: 700; color: var(--color-success-text); background: var(--success-soft); padding: 2px 8px; border-radius: var(--radius-toggle); }
-.save-badge { margin-left: 6px; }
-
-.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: start; }
+.pricing-section { padding: 120px 0; }
 .pricing-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: stretch; }
 .pricing-cards.three-col { grid-template-columns: repeat(3, 1fr); }
 @media (max-width: 1024px) { .pricing-cards.three-col { grid-template-columns: 1fr; } }
 .price-card { background: var(--bg-card); border: 1px solid var(--divider); border-radius: var(--radius-card); padding: 32px; display: flex; flex-direction: column; position: relative; }
-.price-card.popular { border-color: var(--accent-primary); box-shadow: 0 0 0 1px var(--accent-primary), 0 20px 60px rgba(14,165,233,0.12); }
-.price-card .badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent-primary); color: var(--text-primary); padding: 4px 12px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+.price-card.popular { border-color: var(--accent-primary); box-shadow: 0 0 0 1px var(--accent-primary), 0 20px 60px rgba(14, 165, 233, 0.12); }
+/* Badges live in one ribbon above the card. Two things used to break here:
+   each badge was absolutely centred on its own, so a plan carrying BOTH badges
+   overlapped them, and `white-space: nowrap` let a long (or translated) badge
+   grow past the card edge — measured 311px of text in a 280px card, i.e. 15px
+   off each side at 390px. The ribbon is bounded by the card's padding and the
+   badges stack inside it instead. */
+.price-badges {
+  position: absolute; top: -12px; inset-inline: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 0 12px;
+  pointer-events: none;
+}
+.price-card .badge {
+  max-width: 100%;
+  background: var(--accent-primary); color: var(--text-primary);
+  padding: 4px 12px; border-radius: 999px;
+  font-size: 0.72rem; font-weight: 700; line-height: 1.35;
+  white-space: normal; text-align: center; overflow-wrap: anywhere;
+}
 /* Background is inherited from `.price-card .badge` (var(--accent-primary));
    restating it here hardcoded a brand hex outside brand-tokens.css. */
-.price-card .badge.badge-early { top: -28px; }
+.price-card .badge.badge-early { top: auto; }
 .price { display: flex; gap: 8px; align-items: baseline; justify-content: center; flex-wrap: wrap; font-size: 2.25rem; font-weight: 800; }
 .price .price-now { color: var(--text-primary); }
 .price .price-was { color: var(--text-secondary); text-decoration: line-through; font-size: 1.25rem; font-weight: 600; }
 .price-sub { text-align: center; font-size: 0.82rem; color: var(--text-secondary); margin-top: 4px; }
 .pricing-legal { max-width: 860px; margin: 28px auto 0; text-align: center; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6; }
 .sla-note { margin-top: 12px; text-align: center; font-size: 0.78rem; color: var(--text-secondary); }
-.pricing-card { position: relative; background: var(--bg-card); border: 1px solid var(--divider); border-radius: var(--radius-card); padding: 32px; display: flex; flex-direction: column; transition: all 0.2s; }
-.pricing-card:hover { border-color: var(--accent-glow); }
-.pricing-card.pro { border-color: var(--accent-primary); box-shadow: 0 0 0 1px var(--accent-primary), 0 20px 60px rgba(14,165,233,0.15); }
-.pro-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent-primary); color: var(--text-on-accent); padding: 4px 16px; border-radius: var(--radius-toggle); font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
-.pricing-card header { text-align: center; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--divider); }
-.pricing-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 8px; color: var(--text-primary); }
-.price { display: flex; align-items: baseline; justify-content: center; gap: 2px; }
-.price .currency { font-size: 1.5rem; font-weight: 600; color: var(--text-secondary); }
-.price .amount { font-size: 4rem; font-weight: 700; line-height: 1; color: var(--text-primary); }
-.price .period { font-size: 1rem; color: var(--text-secondary); margin-bottom: 4px; }
-.pricing-card header > p { color: var(--text-secondary); font-size: 0.9375rem; }
+/* The plan feature list is a bare <ul> in the template. Kept in normal flow:
+   a flex row here raised the track's min-content and pushed the pricing grid
+   past the viewport at 390px (measured: scrollWidth 446 vs 390). */
+.price-card ul { list-style: none; flex: 1; margin: 24px 0; padding: 0; }
+.price-card ul li { padding: 10px 0; font-size: 0.875rem; color: var(--text-secondary); border-bottom: 1px solid var(--divider); }
+.price-card ul li:last-child { border-bottom: none; }
 
-.features-list { list-style: none; flex: 1; margin-bottom: 24px; }
-.features-list li { padding: 10px 0; font-size: 0.875rem; color: var(--text-secondary); border-bottom: 1px solid var(--divider); display: flex; align-items: flex-start; gap: 8px; }
-.features-list li:last-child { border-bottom: none; }
+/* ── FAQ ─────────────────────────────────────────────────────────── */
+.faq-section { padding: 120px 0; background: var(--bg-secondary); }
+.faq-section > .container > h2 {
+  font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; line-height: 1.2;
+  margin-bottom: 48px; text-align: center; color: var(--text-primary);
+}
+.faq-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.faq-item {
+  background: var(--bg-card); border: 1px solid var(--divider);
+  border-radius: var(--radius-card); padding: 28px;
+}
+.faq-item h3 { font-size: 1.0625rem; font-weight: 600; margin-bottom: 12px; line-height: 1.4; color: var(--text-primary); }
+.faq-item p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.7; }
 
-.btn-block { width: 100%; }
-
-.pricing-faq { margin-top: 80px; max-width: 800px; margin-left: auto; margin-right: auto; }
-.pricing-faq h3 { text-align: center; font-size: 1.5rem; margin-bottom: 32px; color: var(--text-primary); }
-.faq-list { display: grid; gap: 20px; }
-.faq-list dt { font-weight: 600; color: var(--text-primary); }
-.faq-list dd { color: var(--text-secondary); margin: 8px 0 0; line-height: 1.6; }
-
-/* ── CTA ─────────────────────────────────────────────────────────── */
-.cta { padding: 120px 0; background: var(--bg-secondary); text-align: center; }
-.cta-content { max-width: 640px; margin: 0 auto; }
-.cta-content h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 24px; line-height: 1.2; color: var(--text-primary); }
-.cta-content > p { font-size: 1.125rem; color: var(--text-secondary); margin-bottom: 40px; line-height: 1.6; }
-.cta-actions { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-bottom: 20px; }
-.cta-note { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; }
+/* ── Final CTA ───────────────────────────────────────────────────── */
+.final-cta {
+  padding: 120px 0; text-align: center; position: relative; overflow: hidden;
+  border-top: 1px solid var(--divider);
+}
+.final-cta::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 120%, var(--accent-faint) 0%, transparent 60%);
+  pointer-events: none;
+}
+.final-cta > .container { position: relative; max-width: 720px; }
+.final-cta h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 24px; line-height: 1.2; color: var(--text-primary); }
+.final-cta p { font-size: 1.125rem; color: var(--text-secondary); margin-bottom: 40px; line-height: 1.6; }
+.final-cta .ctas { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-bottom: 20px; }
+.final-cta .note { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0; }
 
 /* ── Footer ──────────────────────────────────────────────────────── */
 .footer { padding: 80px 0 40px; background: var(--bg-card); border-top: 1px solid var(--divider); }
@@ -348,47 +457,55 @@ body {
 
 /* ── Responsive ──────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .features-grid, .privacy-grid, .pricing-grid { grid-template-columns: repeat(2, 1fr); }
-  .ai-content { grid-template-columns: 1fr; }
-  .ai-visual { position: static; max-width: 500px; margin: 40px auto 0; }
+  .features-grid, .faq-grid { grid-template-columns: repeat(2, 1fr); }
+  .features-grid-3 { grid-template-columns: repeat(2, 1fr); }
+  .ai-split { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .footer-brand { grid-column: span 2; }
+  .demo-tour-steps { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* The header row needs ~1036 px before it stops overflowing: at 769 px the
+   inline row measured a scrollWidth of 1036 against a 753 px viewport. 768 px
+   was therefore too narrow a breakpoint — it hid the links from phones up but
+   left every tablet in landscape (and small laptop) with a header that ran off
+   the screen. The panel takes over at the width the row actually needs, and
+   only the header moves: the content grids below keep their 768 px breakpoint. */
+@media (max-width: 1100px) {
+  .nav-toggle { display: inline-flex; }
+  .nav-links {
+    display: none;
+    position: absolute; top: 100%; inset-inline: 0;
+    /* nowrap: the base row wraps, and a COLUMN flex container that runs out of
+       its max-height wraps into COLUMNS — the wrong axis in a dropdown. */
+    flex-direction: column; align-items: stretch; flex-wrap: nowrap; gap: 2px;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--divider);
+    padding: 12px 20px 20px;
+    max-height: calc(100vh - 72px); overflow-y: auto;
+  }
+  .nav.is-open .nav-links { display: flex; }
+  .nav-links a { padding: 12px; font-size: 1rem; }
+  .nav-cta { margin: 10px 0 0; justify-content: center; }
+  .language-dropdown { margin: 10px 0 0; }
+  .language-toggle { width: 100%; justify-content: space-between; }
+  .language-menu { position: static; min-width: 0; box-shadow: none; }
 }
 
 @media (max-width: 768px) {
-  .nav-links a:not(.nav-cta) { display: none; }
-  .hero .container { grid-template-columns: 1fr; text-align: center; }
-  .hero-trust { justify-content: center; }
-  .hero-visual { order: -1; }
-  .features-grid, .privacy-grid, .pricing-grid { grid-template-columns: 1fr; }
-  .mode-cards { grid-template-columns: 1fr; }
+  .hero .container { text-align: center; }
+  .hero-subtitle { margin-inline: auto; }
+  .features-grid, .features-grid-3, .faq-grid { grid-template-columns: 1fr; }
+  /* Two price cards side by side in a 390px viewport left each one ~163px
+     wide and pushed the “Most Popular” badge off-screen. */
+  .pricing-cards, .pricing-cards.three-col { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; text-align: center; }
   .footer-brand { grid-column: auto; }
+  .footer-brand p { margin: 0 auto; }
   .footer-legal { flex-direction: column; gap: 8px; }
-}
+  .demo-tour { padding: 56px 0; }
+  .demo-tour-steps { grid-template-columns: 1fr; }
 
-@media (max-width: 480px) {
-  .hero { padding: 100px 20px 80px; }
-  .section-header { margin-bottom: 48px; }
-  .features, .ai-section, .privacy, .pricing, .cta { padding: 80px 0; }
-  .pricing-toggle { flex-wrap: wrap; }
-  .container { padding: 0 20px; }
-}
-
-/* ── Raindrop comparison (rc) ────────────────────────────────────── */
-.raindrop-section { padding: 100px 0; background: var(--bg-secondary); }
-.rc-table { max-width: 880px; margin: 0 auto 40px; background: var(--bg-card); border: 1px solid var(--divider); border-radius: var(--radius-card); overflow: hidden; }
-.rc-row { display: grid; grid-template-columns: 1.1fr 1.2fr 1.2fr; }
-.rc-row + .rc-row { border-top: 1px solid var(--divider); }
-.rc-head { background: var(--accent-soft); }
-.rc-head > div { font-weight: 700; color: var(--accent-primary); font-size: 0.95rem; }
-.rc-row > div { padding: 16px 20px; font-size: 0.9375rem; line-height: 1.5; }
-.rc-topic { font-weight: 600; color: var(--text-secondary); }
-.rc-us { color: var(--text-primary); }
-.rc-them { color: var(--text-secondary); }
-.rc-close { max-width: 720px; margin: 0 auto 32px; text-align: center; color: var(--text-secondary); font-size: 1rem; line-height: 1.7; }
-
-@media (max-width: 768px) {
   .rc-head { display: none; }
   .rc-row { grid-template-columns: 1fr 1fr; }
   .rc-row > .rc-topic { grid-column: 1 / -1; padding-bottom: 0; font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -396,51 +513,10 @@ body {
   .rc-us::before { content: "✓ "; color: var(--color-success-text); }
   .rc-them::before { content: "— "; }
 }
-/* ── Product demo (tour GIF) ─────────────────────────────────────── */
-.demo-tour { padding: 88px 0; background: var(--bg-secondary); }
-.demo-tour-header { max-width: 780px; margin: 0 auto 40px; text-align: center; }
-.demo-tour-tag {
-  display: inline-block; padding: 6px 16px; margin-bottom: 16px;
-  border-radius: var(--radius-toggle); background: var(--accent-soft);
-  color: var(--accent-primary); font-size: 0.8125rem; font-weight: 600;
-  letter-spacing: 0.06em; text-transform: uppercase;
-}
-.demo-tour-title { font-size: clamp(1.75rem, 3.4vw, 2.5rem); font-weight: 700; line-height: 1.2; margin-bottom: 16px; color: var(--text-primary); }
-.demo-tour-subtitle { font-size: 1.0625rem; color: var(--text-secondary); line-height: 1.7; }
-.demo-tour-figure {
-  max-width: 880px; margin: 0 auto; padding: 16px;
-  border: 1px solid var(--divider); border-radius: var(--radius-card);
-  background: var(--bg-card); box-shadow: 0 24px 60px rgba(10, 15, 28, 0.20);
-}
-.demo-tour-media { display: block; width: 100%; height: auto; border-radius: var(--radius-input); background: var(--bg-primary); }
-.demo-tour-caption { margin-top: 12px; text-align: center; font-size: 0.8125rem; color: var(--text-secondary); }
-.demo-tour-steps {
-  counter-reset: demo-step; list-style: none;
-  max-width: 1040px; margin: 40px auto 0; padding: 0;
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
-}
-.demo-tour-step {
-  position: relative; padding: 18px 18px 18px 48px;
-  border: 1px solid var(--divider); border-radius: var(--radius-item);
-  background: var(--bg-card);
-}
-.demo-tour-step::before {
-  counter-increment: demo-step; content: counter(demo-step);
-  position: absolute; left: 16px; top: 18px;
-  width: 22px; height: 22px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--accent-soft); color: var(--accent-primary);
-  font-size: 0.6875rem; font-weight: 700;
-}
-.demo-tour-step-title { display: block; margin-bottom: 6px; font-size: 0.9375rem; color: var(--text-primary); }
-.demo-tour-step-text { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; }
-.demo-tour-cta { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-top: 40px; }
 
-@media (max-width: 1024px) {
-  .demo-tour-steps { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 768px) {
-  .demo-tour { padding: 56px 0; }
-  .demo-tour-figure { padding: 10px; }
-  .demo-tour-steps { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  .hero { padding: 100px 20px 80px; }
+  .section-header { margin-bottom: 48px; }
+  .features-section, .ai-section, .privacy-section, .pricing-section, .faq-section, .final-cta, .comparison-section, .raindrop-section { padding: 80px 0; }
+  .container { padding: 0 20px; }
 }

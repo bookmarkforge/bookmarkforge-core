@@ -31,6 +31,8 @@
   },
   "navCta": "Open App",
   "themeToggleAria": "Toggle theme",
+  "navToggleAria": "Open menu",
+  "navToggleAriaClose": "Close menu",
   "hero": {
     "badge": "Pocket Alternative",
     "title": "BookmarkForge vs Pocket: <span class=\"accent-text\">The Full Comparison</span>",

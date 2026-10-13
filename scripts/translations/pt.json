@@ -34,6 +34,8 @@
   },
   "navCta": "Abrir a App",
   "themeToggleAria": "Mudar tema",
+  "navToggleAria": "Abrir menu",
+  "navToggleAriaClose": "Fechar menu",
   "hero": {
     "badge": "Pagamento único · Sem subscrição",
     "title": "Tudo o que guarda fica no seu computador. <span class=\"accent-text\">Tudo.</span>",

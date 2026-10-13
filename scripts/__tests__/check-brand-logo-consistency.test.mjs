@@ -141,8 +141,14 @@ function writeHealthyFixture() {
   copyFileSync(CANONICAL_SOURCE, join(fixtureRoot, "public", "icons", "logo-192.png"));
   writeFileSync(join(fixtureRoot, "extension", "manifest.json"), JSON.stringify({ icons: { 128: "icon-128.png" } }));
   copyFileSync(CANONICAL_SOURCE, join(fixtureRoot, "extension", "icon-128.png"));
+  // The favicon reference lives in a scanned public HTML page. It is NOT
+  // written into public/landing.html: Guard 3 (share-card copy sync) activates
+  // only when an OG card AND the landing both exist, and this fixture's
+  // partial landing would then be judged as a real landing (test (h) writes
+  // og-image.svg). 404.html is scanned like every other public page, so the
+  // reference coverage is identical.
   writeFileSync(
-    join(fixtureRoot, "index.html"),
+    join(fixtureRoot, "public", "404.html"),
     '<html><head><link rel="icon" type="image/png" href="/favicon.png"></head></html>',
   );
   copyFileSync(CANONICAL_SOURCE, join(fixtureRoot, "public", "favicon.png"));

@@ -141,7 +141,7 @@
         <span>BookmarkForge</span>
       </a>
 
-      <nav class="nav-links" aria-label="{{ t.navAriaLabel }}">
+      <nav class="nav-links" id="navLinks" aria-label="{{ t.navAriaLabel }}">
         <a href="#{{ t.pocketAlternative.id }}">{{ t.pocketAlternative.tag }}</a>
         <a href="#{{ t.raindropCompare.id }}">{{ t.navLinks.raindropCompare }}</a>
         <a href="#{{ t.features.id }}">{{ t.navLinks.features }}</a>
@@ -172,10 +172,16 @@
         <a href="/app" class="btn-primary nav-cta">{{ t.navCta }}</a>
       </nav>
 
-      <button class="theme-toggle" id="themeToggle" aria-label="{{ t.themeToggleAria }}" aria-pressed="false">
-        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
-        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-      </button>
+      <div class="nav-actions">
+        <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="{{ t.navToggleAria }}" data-label-close="{{ t.navToggleAriaClose }}">
+          <svg class="icon-menu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+          <svg class="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <button class="theme-toggle" id="themeToggle" aria-label="{{ t.themeToggleAria }}" aria-pressed="false">
+          <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -359,11 +365,15 @@
         <div class="pricing-cards{% if t.pricing.plans.length == 3 %} three-col{% endif %}">
           {% for plan in t.pricing.plans %}
           <div class="price-card {% if plan.badge %}popular{% endif %}">
-            {% if plan.badge %}
-            <span class="badge">{{ plan.badge }}</span>
-            {% endif %}
-            {% if plan.badgeEarly %}
-            <span class="badge badge-early">{{ plan.badgeEarly }}</span>
+            {% if plan.badge or plan.badgeEarly %}
+            <div class="price-badges">
+              {% if plan.badge %}
+              <span class="badge">{{ plan.badge }}</span>
+              {% endif %}
+              {% if plan.badgeEarly %}
+              <span class="badge badge-early">{{ plan.badgeEarly }}</span>
+              {% endif %}
+            </div>
             {% endif %}
             <h3>{{ plan.name }}</h3>
             {% if plan.priceWas %}

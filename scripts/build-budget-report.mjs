@@ -137,7 +137,7 @@ function bundleChunkCount() {
 }
 
 // ---------------------------------------------------------------------------
-// 4. Browser budget (from dist/index.html, already evaluated by the gate)
+// 4. Browser budget (from dist/app.html, already evaluated by the gate)
 // ---------------------------------------------------------------------------
 function browserActual() {
   const raw = readFileSafe(BROWSER_REPORT_PATH);

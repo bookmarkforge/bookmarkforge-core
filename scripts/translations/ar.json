@@ -34,6 +34,8 @@
   },
   "navCta": "Open App",
   "themeToggleAria": "Toggle theme",
+  "navToggleAria": "فتح القائمة",
+  "navToggleAriaClose": "إغلاق القائمة",
   "hero": {
     "badge": "One-time payment · No subscription",
     "title": "Everything you save stays on your computer. <span class=\"accent-text\">Everything.</span>",

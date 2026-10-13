@@ -66,6 +66,14 @@ const CATEGORIES = {
     description: "Cross-locale overflow audits + visual baselines",
     specs: ["text-fit.spec.ts", "text-fit-fuzz.spec.ts"],
   },
+  // The public landings need no vault and no companion server, so this batch is
+  // the cheapest one in the list; it is its own category only because no other
+  // category owns `public/*.html`. `landing-visual.spec.ts` carries the pixel
+  // baselines, so this batch is also where a baseline recapture is exercised.
+  landing: {
+    description: "Public landing pages: header/price-badge fit, and their appearance baselines",
+    specs: ["landing-responsive.spec.ts", "landing-visual.spec.ts"],
+  },
   crisis: {
     description: "Crisis containment (spawns its own companion server on 8799)",
     specs: ["crisis-containment.spec.ts"],
@@ -133,6 +141,7 @@ const CATEGORIES = {
 // Batch order: cheap/fast first, heavyweight last so a slow tail doesn't
 // block quick signal early.
 const BATCH_ORDER = [
+  "landing",
   "a11y",
   "navigation",
   "misc",

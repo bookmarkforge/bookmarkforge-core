@@ -323,9 +323,11 @@ export function collectGuardedPngAssets(root = REPO_ROOT) {
     for (const ref of manifestIconPaths(manifest, baseDir)) addRef(ref);
   }
 
+  // Every tracked HTML page, minus the retired repo-root index.html: the EN
+  // landing is public/landing.html, and a second root copy is check:landing-root's
+  // finding, not this gate's.
   const attrRefFiles = [
     "public/browserconfig.xml",
-    "index.html",
     ...listFiles(resolve(root, "public"), root).filter((f) => f.endsWith(".html")),
   ].map((rel) => resolve(root, rel));
   for (const abs of attrRefFiles) {

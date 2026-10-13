@@ -72,6 +72,7 @@ const KNOWN_GATES = {
   // protected core as check:http-config — a config that drifts here silently
   // 404s the app or hands a crawler the private shell.
   "check:spa-routes": "security",
+  "check:landing-root": "security",
   "check:compose-config": "security",
   "check:runtime-config": "security",
   // Open Core export boundary: prevents proprietary Pro source from entering

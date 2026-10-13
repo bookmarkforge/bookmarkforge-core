@@ -34,6 +34,8 @@
   },
   "navCta": "Abrir la App",
   "themeToggleAria": "Cambiar tema",
+  "navToggleAria": "Abrir menú",
+  "navToggleAriaClose": "Cerrar menú",
   "hero": {
     "badge": "Pago único · Sin suscripción",
     "title": "Todo lo que guardas se queda en tu ordenador. <span class=\"accent-text\">Todo.</span>",

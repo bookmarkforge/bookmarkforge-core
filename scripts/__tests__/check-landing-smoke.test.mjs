@@ -38,20 +38,20 @@ const REDIRECTS = `# SPA routing
 /       /landing.html  200
 /es     /es.html       200
 /es/    /es.html       200
-/app    /index.html    200
+/app    /app.html      200
 /old    /privacy-and-terms.html  301
 
 /* 
-  !/index.html
+  !/app.html
   !/*.js
   !/*.png
-  /index.html 200
+  /app.html 200
 `;
 
 /** A served tree with the shape `dist/` has (shell + landings + assets). */
 function sandbox() {
   const dir = mkdtempSync(join(tmpdir(), "landing-smoke-"));
-  writeFileSync(join(dir, "index.html"), "<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><title>App</title></html>");
+  writeFileSync(join(dir, "app.html"), "<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><title>App</title></html>");
   writeFileSync(join(dir, "landing.html"), "<!DOCTYPE html><html lang=\"en\" dir=\"ltr\"><title>Landing</title></html>");
   writeFileSync(join(dir, "es.html"), "<!DOCTYPE html><html lang=\"es\" dir=\"ltr\"><title>Landing ES</title></html>");
   writeFileSync(join(dir, "app.js"), "console.log(1)\n");
@@ -107,8 +107,8 @@ describe("_redirects parsing", () => {
   });
 
   it("attaches the exclusions and the SPA target to the splat", () => {
-    expect(redirects.splat.exclusions).toEqual(["/index.html", "/*.js", "/*.png"]);
-    expect(redirects.splat.to).toBe("/index.html");
+    expect(redirects.splat.exclusions).toEqual(["/app.html", "/*.js", "/*.png"]);
+    expect(redirects.splat.to).toBe("/app.html");
     expect(redirects.splat.status).toBe(200);
   });
 
@@ -116,8 +116,8 @@ describe("_redirects parsing", () => {
     expect(matchGlob("/*.js", "/app.js")).toBe(true);
     expect(matchGlob("/*.js", "/deep/app.js")).toBe(true);
     expect(matchGlob("/*.js", "/app.json")).toBe(false);
-    expect(matchGlob("/index.html", "/index.html")).toBe(true);
-    expect(matchGlob("/index.html", "/index.htmlx")).toBe(false);
+    expect(matchGlob("/app.html", "/app.html")).toBe(true);
+    expect(matchGlob("/app.html", "/app.htmlx")).toBe(false);
   });
 });
 
@@ -132,7 +132,7 @@ describe("the routing contract as served", () => {
     expect(at("/es/")).toMatchObject({ kind: "file" });
     expect(at("/app.js")).toMatchObject({ kind: "file" });
     expect(at("/deep/app-route")).toMatchObject({ kind: "file", fallback: true });
-    expect(at("/index.html")).toMatchObject({ kind: "file" });
+    expect(at("/app.html")).toMatchObject({ kind: "file" });
     expect(at("/old")).toMatchObject({ kind: "redirect", status: 301 });
     expect(at("/missing.png")).toMatchObject({ kind: "missing" });
     // Not excluded from the splat, so it gets the shell — the ADR's .gif case.

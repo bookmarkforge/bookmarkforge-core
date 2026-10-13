@@ -230,7 +230,8 @@ export async function setupVault(
   } = {},
 ): Promise<void> {
   // Playwright does not auto-navigate; every spec must land on the app first.
-  await page.goto("/");
+  // The app shell is served at /app — every host serves the EN landing at /.
+  await page.goto("/app");
   const human = humanE2E(page);
 
   // Collect app-side events so a vault-setup failure reports the ROOT cause:
@@ -361,7 +362,8 @@ export async function skipPassword(page: Page): Promise<void> {
       /* ignore */
     }
   });
-  await page.goto("/");
+  // The app shell is served at /app — every host serves the EN landing at /.
+  await page.goto("/app");
   const securityDialog = page.locator(
     '[aria-labelledby="security-confirmation-title"]',
   );

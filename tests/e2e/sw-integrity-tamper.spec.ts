@@ -33,7 +33,9 @@ async function bootWithSw(page: Page): Promise<void> {
       console.log(`[debug console.${msg.type()}]`, msg.text().slice(0, 250));
     }
   });
-  await page.goto("/", { waitUntil: "domcontentloaded" });
+  // The SPA shell is served at /app (the root serves the marketing landing,
+  // which never carries the build manifest).
+  await page.goto("/app", { waitUntil: "domcontentloaded" });
   try {
     await page.evaluate(() => navigator.serviceWorker.ready, undefined);
   } catch (err) {
@@ -68,12 +70,12 @@ async function bootWithSw(page: Page): Promise<void> {
   await page.waitForSelector("#root > *");
 }
 
-/** The build manifest element injected into index.html must exist (ADR-039). */
+/** The build manifest element injected into the shell (app.html) must exist (ADR-039). */
 async function expectManifestPresent(page: Page): Promise<void> {
   const present = await page.evaluate(
     () => document.getElementById("__BMF_INTEGRITY_MANIFEST__") !== null,
   );
-  expect(present, "production index.html must embed __BMF_INTEGRITY_MANIFEST__").toBe(true);
+  expect(present, "production app.html (served at /app) must embed __BMF_INTEGRITY_MANIFEST__").toBe(true);
 }
 
 /** Rewrite every cached entry whose pathname matches with tampered bytes. */

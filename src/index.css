@@ -54,8 +54,9 @@
 @import "@mantine/core/styles/Tooltip.layer.css";
 @import "@mantine/core/styles/ActionIcon.layer.css";
 
-/* First-paint boot surface. Loaded directly by index.html so the shell has
-   stable geometry before the module graph and React mount complete. */
+/* First-paint boot surface. Loaded directly by the Vite HTML entry (app.html)
+   so the shell has stable geometry before the module graph and React mount
+   complete. */
 html,
 body,
 #root {

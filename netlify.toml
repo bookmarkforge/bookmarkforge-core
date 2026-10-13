@@ -257,6 +257,14 @@
   to = "/landing.html"
   status = 200
 
+# Retired root document (same rule as public/_redirects and vercel.json): the
+# duplicate EN landing copies are gone, so /index.html is answered with a
+# permanent redirect to the canonical root instead of a 404.
+[[redirects]]
+  from = "/index.html"
+  to = "/"
+  status = 301
+
 [[redirects]]
   from = "/es"
   to = "/es.html"

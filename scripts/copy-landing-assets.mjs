@@ -2,7 +2,12 @@
 
 /**
  * Copy landing page assets from public/ to dist/
- * This ensures landing.js and landing.css are always up-to-date in dist/
+ * This ensures landing.js and landing.css are always up-to-date in dist/.
+ *
+ * The list carries the EN landing (public/landing.html — the single generated
+ * source every host serves at `/`) and the 29 localized landings; there is no
+ * index.html any more (the root copies were retired in favour of that one
+ * file).
  */
 
 import { copyFileSync, existsSync } from 'node:fs';
@@ -43,7 +48,6 @@ const filesToCopy = [
   'vi.html',
   'zh.html',
   'landing.html',
-  'index.html',
   '404.html',
 ];
 

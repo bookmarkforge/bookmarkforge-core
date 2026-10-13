@@ -199,9 +199,11 @@ if (isMain) {
   const request = makeRequester(baseUrl);
 
   // ── Static frontend + security headers (nginx only) ──────────────
-  const root = await request("/");
+  // The SPA shell is served at /app on every host; `/` is the EN landing
+  // (public/landing.html), which carries no #root mount point.
+  const root = await request("/app");
   check(
-    "index.html served",
+    "app shell served",
     root.response.status === 200 && root.text.includes("<div id=\"root\">"),
     `HTTP ${root.response.status}`,
   );

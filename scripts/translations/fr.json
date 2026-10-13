@@ -34,6 +34,8 @@
   },
   "navCta": "Ouvrir l'App",
   "themeToggleAria": "Changer de thème",
+  "navToggleAria": "Ouvrir le menu",
+  "navToggleAriaClose": "Fermer le menu",
   "hero": {
     "badge": "Paiement unique · Sans abonnement",
     "title": "Tout ce que vous enregistrez reste sur votre ordinateur. <span class=\"accent-text\">Tout.</span>",

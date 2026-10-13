@@ -196,7 +196,7 @@ describe("the markers match the shipped artifacts", () => {
 
   it.runIf(existsSync(appHtml))("the shell marker is in dist/app.html, not in the landings", () => {
     expect(readFileSync(appHtml, "utf8")).toContain(SHELL_MARKER);
-    for (const landing of ["dist/index.html", "dist/es.html"]) {
+    for (const landing of ["dist/landing.html", "dist/es.html"]) {
       const path = join(ROOT, landing);
       if (existsSync(path)) expect(readFileSync(path, "utf8"), landing).not.toContain(SHELL_MARKER);
     }

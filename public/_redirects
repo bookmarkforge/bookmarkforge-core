@@ -19,6 +19,14 @@
 # stays https://bookmarkforgeapp.com/ and /es/. Must precede the SPA
 # catch-all below.
 /       /landing.html  200
+
+# Retired root document. The duplicate copies of the EN landing (the repo-root
+# index.html and public/index.html) are gone: public/landing.html is the single
+# generated document every host serves at /. An old bookmark or backlink to
+# /index.html gets the canonical root instead of a 404. STATIC rule: it must
+# stay above the /<lang>/* rows (see the ordering contract in the header).
+/index.html  /  301
+
 /es     /es.html       200
 /es/    /es.html       200
 /fr     /fr.html       200

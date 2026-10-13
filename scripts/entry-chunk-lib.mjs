@@ -3,9 +3,11 @@
  *
  * ADR-028: gate drift — since the marketing/SPA split the SPA entry is
  * emitted as app-*.js and referenced by dist/app.html's module script
- * (index-*.js was the pre-split name). Every bundle gate derives the entry
- * from the HTML module script so the gates track the real build output
- * instead of a stale filename pattern.
+ * (index-*.js was the pre-split name, kept only as a last-resort filename
+ * fallback). dist/app.html is the only HTML entry the build emits — the EN
+ * landing is a static generated file, not a Vite-processed index.html. Every
+ * bundle gate derives the entry from the HTML module script so the gates
+ * track the real build output instead of a stale filename pattern.
  */
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -18,7 +20,7 @@ import { join } from "node:path";
  * @returns {string|undefined} the entry chunk name, or undefined
  */
 export function resolveEntryChunk(root, files) {
-  const fromHtml = ["app.html", "index.html"]
+  const fromHtml = ["app.html"]
     .map((h) => {
       const p = join(root, "dist", h);
       return existsSync(p) ? readFileSync(p, "utf8") : "";

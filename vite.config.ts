@@ -15,10 +15,13 @@
  *      * Adds `integrity="sha256-…" crossorigin="anonymous"` to every
  *        /assets/ script & link emitted by the build.
  *      * Injects `<script id="__BMF_INTEGRITY_MANIFEST__" type="application/json">`
- *        into index.html with a sha256 of every emitted + public file. The
- *        runtime integrity check (src/utils/bundleIntegrity.ts) treats the
- *        absence of this manifest in production as a hard failure, so the
- *        plugin is required for a functional production build.
+ *        into every HTML entry the build emits (app.html, the SPA shell) with a
+ *        sha256 of every emitted + public file. The runtime integrity check
+ *        (src/utils/bundleIntegrity.ts) treats the absence of this manifest in
+ *        production as a hard failure, so the plugin is required for a
+ *        functional production build. The marketing landing is the static
+ *        public/landing.html every host serves at `/` (see
+ *        scripts/check-landing-root.mjs), so it carries no manifest.
  *      * ADR-039: writes dist/integrity-manifest.json — the single source
  *        of truth for the SW-side verification surface.
  *  - bookmarkforge:sw-integrity-embed — reads that manifest and embeds it
@@ -202,7 +205,7 @@ function integrityManifestPlugin(): Plugin {
       outDir = config.build.outDir;
     },
     async closeBundle() {
-      const indexHtmlPath = join(outDir, "index.html");
+      const indexHtmlPath = join(outDir, "app.html");
       if (!existsSync(indexHtmlPath)) {
         return;
       }
@@ -211,10 +214,10 @@ function integrityManifestPlugin(): Plugin {
         const rel = relative(outDir, file);
         if (
           rel.split(sep).includes("..") ||
-          (rel === "index.html" || rel === "app.html") ||
+          (rel === "app.html" || rel === "index.html") ||
           rel === "sw.js"
         ) {
-          // index.html contains this manifest and sw.js embeds the SW-side
+          // app.html contains this manifest and sw.js embeds the SW-side
           // copy (ADR-039), so hashing either would be self-referential —
           // and the sw.js embed below would invalidate the stored digest.
           // The HTML is protected by server transport + SRI attributes; the
@@ -239,6 +242,14 @@ function integrityManifestPlugin(): Plugin {
         join(outDir, "integrity-manifest.json"),
         JSON.stringify(manifest, null, 2) + "\n",
       );
+      // ADR-039: the SPA shell (app.html) is the only HTML entry the build
+      // emits, and its /assets/ tags carry the real application bundle, so it
+      // is the page that MUST ship the SRI attributes and the manifest. The
+      // marketing landing is the static public/landing.html every host serves
+      // at / (see scripts/check-landing-root.mjs), so it has no build-time
+      // surface to protect. Before the duplicates were removed only index.html
+      // was processed and the app bundle went out with no integrity attributes
+      // at all (the build:ci SRI gate caught it against the wrong page).
       let html = readFileSync(indexHtmlPath, "utf8");
       html = injectSriAttributes(html, files);
       if (!html.includes("__BMF_INTEGRITY_MANIFEST__")) {
@@ -246,28 +257,6 @@ function integrityManifestPlugin(): Plugin {
         html = html.replace("</head>", `${tag}\n</head>`);
       }
       writeFileSync(indexHtmlPath, html);
-
-      // The React SPA is a second HTML entry point. It needs the same
-      // runtime integrity manifest because main.tsx runs bundle integrity
-      // checks when /app.html is served directly or through a rewrite.
-      const appHtmlPath = join(outDir, "app.html");
-      if (existsSync(appHtmlPath)) {
-        let appHtml = readFileSync(appHtmlPath, "utf8");
-        // ADR-039: the SPA lives in app.html since the marketing/SPA split,
-        // so its /assets/ tags carry the real application bundle — they are
-        // the ones that MUST ship SRI. Before this, only index.html was
-        // processed and the app bundle went out with no integrity attributes
-        // at all (the build:ci SRI gate caught it against the wrong page).
-        appHtml = injectSriAttributes(appHtml, files);
-        if (!appHtml.includes("__BMF_INTEGRITY_MANIFEST__")) {
-          const tag =
-            '<script id="__BMF_INTEGRITY_MANIFEST__" type="application/json">' +
-            JSON.stringify(manifest) +
-            "</script>";
-          appHtml = appHtml.replace("</head>", tag + "\n</head>");
-          writeFileSync(appHtmlPath, appHtml);
-        }
-      }
     },
   };
 }
@@ -427,6 +416,21 @@ export default defineConfig(({ mode, isPreview }) => ({
         maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
       },
     }),
+    // Dev/test parity with the four host configs: `/` is the EN landing
+    // (public/landing.html) and the SPA shell lives at /app (app.html). Vite
+    // serves publicDir files verbatim, so without this the dev server would
+    // answer `/` with a 404 — and the Playwright webServer, which probes `/`
+    // for readiness, could not come up at all.
+    {
+      name: "bookmarkforge:dev-root-landing",
+      apply: "serve",
+      configureServer(server) {
+        server.middlewares.use((req, _res, next) => {
+          if (req.url === "/" || req.url === "/index.html") req.url = "/landing.html";
+          next();
+        });
+      },
+    },
     // ADR-039: last in the array for readability — its `order: "post"`
     // closeBundle runs after VitePWA (sw.js generated) and
     // integrityManifestPlugin (manifest written) regardless of position.
@@ -488,8 +492,12 @@ export default defineConfig(({ mode, isPreview }) => ({
       : undefined,
   build: {
     rollupOptions: {
+      // One HTML entry: the SPA shell (app.html → dist/app.html, served at
+      // /app by every host). The marketing landing is NOT an entry — it is the
+      // generated public/landing.html, copied verbatim by Vite's publicDir and
+      // served at / (scripts/check-landing-root.mjs pins that contract). Having
+      // it as an entry is what produced the third, drifting copy.
       input: {
-        index: join(process.cwd(), "index.html"),
         app: join(process.cwd(), "app.html"),
       },
     },

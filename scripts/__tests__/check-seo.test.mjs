@@ -603,7 +603,7 @@ describe("check-seo gate", () => {
 
   it("accepts fully-compliant auxiliary pages (SPA shell and 404)", () => {
     expect(validateAuxHtml(buildValidAuxPage(), AUX_CFG)).toEqual([]);
-    const shellCfg = { ...AUX_CFG, file: "index.html", canonical: "https://bookmarkforgeapp.com/" };
+    const shellCfg = { ...AUX_CFG, file: "app.html", canonical: "https://bookmarkforgeapp.com/" };
     expect(
       validateAuxHtml(
         buildValidAuxPage({ canonical: "https://bookmarkforgeapp.com/" }),
@@ -735,10 +735,10 @@ describe("check-seo gate", () => {
 
   it("declares the two auxiliary pages with their canonical targets", () => {
     expect(AUX_PAGES.map((p) => p.file).sort()).toEqual([
-      "index.html",
+      "app.html",
       "public/404.html",
     ]);
-    expect(AUX_PAGES.find((p) => p.file === "index.html").canonical).toBe(
+    expect(AUX_PAGES.find((p) => p.file === "app.html").canonical).toBe(
       "https://bookmarkforgeapp.com/",
     );
     expect(AUX_PAGES.find((p) => p.file === "public/404.html").canonical).toBe(

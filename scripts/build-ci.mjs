@@ -3,8 +3,9 @@
  *
  * Runs the Vite production build and then verifies the security-critical
  * artifacts the runtime depends on:
- *   1. dist/index.html embeds the __BMF_INTEGRITY_MANIFEST__ (the runtime
- *      integrity check hard-fails without it — src/utils/bundleIntegrity.ts).
+ *   1. dist/app.html (the SPA shell, and the only HTML entry the build emits)
+ *      embeds the __BMF_INTEGRITY_MANIFEST__ (the runtime integrity check
+ *      hard-fails without it — src/utils/bundleIntegrity.ts).
  *   2. /assets/ script/link tags carry SRI integrity="sha256-…".
  *   3. dist/sw.js (Workbox service worker) was generated.
  *   4. ADR-039: dist/sw.js embeds the SW-side integrity runtime + manifest
@@ -112,32 +113,27 @@ if (run.status !== 0) process.exit(run.status ?? 1);
 }
 
 const failures = [];
-const indexHtmlPath = join(ROOT, "dist", "index.html");
-
-const html = readTextIfExists(indexHtmlPath);
-
-if (html === null) {
-  failures.push("dist/index.html missing");
-} else if (!html.includes("__BMF_INTEGRITY_MANIFEST__")) {
-  failures.push("__BMF_INTEGRITY_MANIFEST__ not injected into dist/index.html");
-}
-// ADR-039: SRI lives on the pages that reference /assets/ tags — the SPA
-// (app.html) since the marketing/SPA split. index.html is the marketing page
-// and carries no /assets/ tags at all, so checking it alone both missed the
-// real bundle and demanded integrity where there is nothing to protect.
-// Every /assets/ script/link tag in any emitted HTML must carry SRI.
+// The SPA shell is the only HTML entry the build emits: since the marketing/
+// SPA split it is dist/app.html. The EN landing is a generated static file
+// (public/landing.html) and no host serves dist/index.html any more, so the
+// manifest and SRI checks read the shell.
 const appHtml = readTextIfExists(join(ROOT, "dist", "app.html"));
+
+if (appHtml === null) {
+  failures.push("dist/app.html missing");
+} else if (!appHtml.includes("__BMF_INTEGRITY_MANIFEST__")) {
+  failures.push("__BMF_INTEGRITY_MANIFEST__ not injected into dist/app.html");
+}
+// ADR-039: SRI lives on the page that references /assets/ tags — the SPA
+// shell. Every /assets/ script/link tag the shell emits must carry SRI.
 const assetTagRe = /<(?:script|link)\b[^>]*\b(?:src|href)="(\/assets\/[^"]+)"[^>]*>/g;
 let assetTags = 0;
 let sriMissing = 0;
-for (const page of [html ?? "", appHtml ?? ""]) {
-  for (const match of page.matchAll(assetTagRe)) {
-    assetTags += 1;
-    if (!/integrity="sha256-/.test(match[0])) sriMissing += 1;
-  }
+for (const match of (appHtml ?? "").matchAll(assetTagRe)) {
+  assetTags += 1;
+  if (!/integrity="sha256-/.test(match[0])) sriMissing += 1;
 }
-if (assetTags === 0) {
-  failures.push("no /assets/ tags found in dist/*.html — nothing to SRI-verify");
+if (assetTags === 0) {    failures.push("no /assets/ tags found in dist/app.html — nothing to SRI-verify");
 }
 if (sriMissing > 0) {
   failures.push(`${sriMissing} /assets/ tag(s) without SRI integrity="sha256-"`);
@@ -227,7 +223,7 @@ console.log("[build-ci] integrity manifest + SRI + service worker verified");
     process.exit(1);
   }
   const selfReferential = entries.filter(
-    (f) => f === "/index.html" || f === "/sw.js" || f === "/integrity-manifest.json",
+    (f) => f === "/app.html" || f === "/sw.js" || f === "/integrity-manifest.json",
   );
   if (selfReferential.length > 0) {
     console.error(

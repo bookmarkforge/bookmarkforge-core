@@ -61,10 +61,9 @@ describe("pre-paint theme bootstrap", () => {
 
 describe("every landing loads the bootstrap before anything renders", () => {
   const pages = [
-    ...LANDING_PAGES.filter((p) => p.file.startsWith("public/") || p.file === "index.html").map(
-      (p) => p.file.replace(/^public\//, ""),
+    ...LANDING_PAGES.filter((p) => p.file.startsWith("public/")).map((p) =>
+      p.file.replace(/^public\//, ""),
     ),
-    "index.html",
     "landing.html",
     "help.html",
     "offline.html",
@@ -113,7 +112,7 @@ describe("landing.js — the language choice survives the tour", () => {
   it("treats the EN root landing as English and general pages as no language", () => {
     // p === '/' → en; the language-agnostic pages must resolve to null, or an
     // ES visitor reading /privacy-and-terms would be pinned to EN.
-    expect(LANDING_JS).toMatch(/p === '\/' \|\| p === '\/index\.html' \|\| p === '\/landing\.html'/);
+    expect(LANDING_JS).toMatch(/p === '\/' \|\| p === '\/landing\.html'/);
     expect(LANDING_JS).toMatch(/return null;/);
   });
 
@@ -152,30 +151,6 @@ describe("landing.js — the language choice survives the tour", () => {
     ]) {
       expect(LANDING_JS).toContain(token);
     }
-  });
-});
-
-// `npm run build` copies public/index.html over the emitted dist/index.html,
-// so the Vercel artifact is covered above. `npm run build:ci` (the Dockerfile
-// and CI path) does NOT run that copy step: there dist/index.html is the
-// Vite-processed ROOT index.html, and nginx falls back to it via
-// `try_files $uri $uri/ /index.html`. The root entry is the same EN landing
-// page, so it needs the same pre-paint hook — otherwise the only host that
-// ships it flashes the default theme on every hop.
-describe("the Vite entry (repo-root index.html) keeps the same pre-paint hook", () => {
-  const html = readFileSync(join(ROOT, "index.html"), "utf8");
-
-  it("loads /theme-init.js synchronously before the stylesheet", () => {
-    const init = html.indexOf('src="/theme-init.js"');
-    const style = html.indexOf('<link rel="stylesheet"');
-    expect(init, "root index.html: theme-init.js missing").toBeGreaterThan(-1);
-    expect(style).toBeGreaterThan(-1);
-    expect(init).toBeLessThan(style);
-    expect(html).toMatch(/<script src="\/theme-init\.js"><\/script>/);
-  });
-
-  it("loads landing.js so the language choice is recorded there too", () => {
-    expect(html).toContain('src="/landing.js"');
   });
 });
 

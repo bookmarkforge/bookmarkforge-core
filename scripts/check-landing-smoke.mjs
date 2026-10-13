@@ -514,9 +514,10 @@ export async function startBrowser(launch = null) {
 
 /** Start the local server for `root`, or explain why the tree cannot be served. */
 export async function startLocalServer(root) {
-  if (!existsSync(join(root, "index.html"))) {
+  if (!existsSync(join(root, "landing.html"))) {
     throw new SmokeEnvironmentError(
-      `${root} has no index.html — the edge serves the built tree, so run ` +
+      `${root} has no landing.html — / is the EN landing on every host and the ` +
+        `edge serves the built tree, so run ` +
         `\`npm run build:ci\` first (or pass --base-url for a deployed surface)`,
     );
   }

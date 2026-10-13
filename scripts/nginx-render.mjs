@@ -166,7 +166,7 @@ ${repeat}
   // The legal URLs the app itself routes to (AppRoutes.tsx: /privacy, /terms),
   // plus /offline — where the app navigates when the network is gone. Vercel
   // and Netlify rewrote all of them; the self-hosted path fell through to the
-  // marketing index.html and served the wrong page.
+  // marketing landing and served the wrong page.
   const legalAndOfflineLocations = `    # Legal pages — the URLs the app itself routes to (AppRoutes.tsx declares
     # /privacy and /terms). Vercel and public/_redirects already rewrite them;
     # without these, a cold load of /privacy on the self-hosted path was a 404.
@@ -189,7 +189,7 @@ ${repeat}
     # ── Offline fallback ─────────────────────────────────────────────
     # The app (and the service worker) navigates to /offline when the
     # network is gone. Vercel and Netlify rewrite it; without these the
-    # page fell through to the marketing index.html on this host.
+    # page fell through to the marketing landing on this host.
     location = /offline {
         rewrite ^ /offline.html last;
     }
@@ -222,7 +222,11 @@ ${repeat}
     # free of both the scheme and the Host header.
     absolute_redirect off;
     root /usr/share/nginx/html;
-    index index.html;
+    # Deliberately no index directive here (it used to name index.html, the
+    # deleted duplicate): the tree has exactly ONE root document — landing.html,
+    # served by the explicit location = / below — and no directory is served
+    # through a directory index. Spelling the retired name out here would only
+    # invite a second copy back, and a directory request must stay a 404.
 
     # ── Compression ──────────────────────────────────────────────────
     gzip on;
@@ -375,7 +379,7 @@ ${repeat}
     # ── HTML entry points — always revalidate (mirrors public/_headers) ──
     location ~*\\.html$ {
         # Repeat security headers (inheritance override — see server block).
-        # The SPA's index.html is the security-critical entry: losing CSP here
+        # The SPA's app.html is the security-critical entry: losing CSP here
         # would let the HTML render without any policy on the Docker path.
 ${repeat}
         add_header Cache-Control "no-cache, must-revalidate";
@@ -445,6 +449,18 @@ ${LANDING_LANGS.map(
         rewrite ^ /landing.html last;
     }
 
+    # Retired root document. This host served the landing at /index.html until
+    # the duplicate copies were deleted (the single generated root document is
+    # public/landing.html, and every host serves it at / — see
+    # scripts/check-landing-root.mjs). Without this rule an old bookmark or a
+    # backlink to /index.html would 404; the URL is answered with a permanent
+    # redirect to the root instead, so the canonical stays
+    # https://<domain>/ and no second document has to exist. absolute_redirect
+    # off (server block, above) keeps the Location relative.
+    location = /index.html {
+        return 301 /;
+    }
+
     # Internal: Accept-Language negotiation ONLY for visitors without a
     # preference cookie (first visit). Keeping it out of location = / makes
     # a cookie=en choice short-circuit negotiation entirely.
@@ -498,7 +514,7 @@ ${appRouteLocation}
     # ── SPA fallback + WebSocket routing ─────────────────────────────
     # No document fallback here: an unknown path has to be a real 404. The
     # app routes are served by the location above and every marketing page has
-    # its own location, so =404 is what remains — answering with index.html
+    # its own location, so =404 is what remains — answering with a document
     # from here was the soft 404 that hid every routing mistake (a typo, a
     # retired asset, a route that only worked if you started at /app).
     location / {

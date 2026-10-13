@@ -160,10 +160,11 @@ export function integrityMatches(integrity, body) {
  * compare its digest.
  *
  * ADR-028: gate drift — since the marketing/SPA split the bundle lives at
- * /app.html (/index.html is the marketing page and serves no SRI scripts),
- * so probe app.html first and fall back to index.html for older
- * deployments. Returns null if the base does NOT serve an html with
- * scripts (→ the caller uses the Docker-free probe).
+ * /app.html, so probe app.html first. /index.html is retired from current
+ * deployments (every host serves the EN landing at / and answers
+ * /index.html with a 301), so it stays in the probe only as a fallback for
+ * deployments older than that retirement. Returns null if the base does NOT
+ * serve an html with scripts (→ the caller uses the Docker-free probe).
  */
 export async function verifyBundleSri(baseUrl) {
   let html = null;
@@ -224,9 +225,10 @@ export async function verifyBundleSri(baseUrl) {
 }
 
 /**
- * Docker-free probe (drill / CI without a frontend): serves a dist/index.html
- * with BROKEN SRI on purpose against an ephemeral static server and runs the
- * same verification. PASS = the detector CATCHES the mismatch (the browser
+ * Docker-free probe (drill / CI without a frontend): serves a shell-shaped
+ * HTML document (the SPA shell — app.html on a real deployment) with BROKEN
+ * SRI on purpose against an ephemeral static server and runs the same
+ * verification. PASS = the detector CATCHES the mismatch (the browser
  * would report the violation); FAIL = the detector is broken.
  */
 async function probeBrokenSri() {
@@ -260,7 +262,7 @@ async function probeBrokenSri() {
 
 async function checkBundleCorrupto() {
   try {
-    // Prod mode: verifies the REAL served bundle (nginx → index.html).
+    // Prod mode: verifies the REAL served bundle (nginx → app.html).
     const served = await verifyBundleSri(PROD_BASE_URL);
     if (served) {
       return { name: "BUNDLE_CORRUPTO", ok: served.ok, detail: `[served] ${served.detail}` };

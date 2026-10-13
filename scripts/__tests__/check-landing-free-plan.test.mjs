@@ -29,12 +29,16 @@ import { LANDING_CODES, PRIMARY_LOCALE_CODES } from "../landing-registry.mjs";
 
 // ── Landing file stem → locale ───────────────────────────────────────────────
 describe("localeOfFileStem", () => {
-  it("maps both English landing files to en", () => {
+  it("maps the single English landing file to en", () => {
     expect(localeOfFileStem("landing")).toBe("en");
-    // public/index.html is the English landing on the root route `/`, not a
-    // locale of its own — reading it as "index" parked the wedge check at the
-    // secondary slot (rule C false positive).
-    expect(localeOfFileStem("index")).toBe("en");
+  });
+
+  it("no longer aliases the retired root copy", () => {
+    // public/index.html is gone — the EN landing on the root route `/` is
+    // public/landing.html. The alias existed because reading the retired copy
+    // as the locale "index" parked the wedge check at the secondary slot
+    // (rule C false positive); "index" is now just an unknown stem.
+    expect(localeOfFileStem("index")).toBe("index");
   });
 
   it("passes every real locale stem through untouched", () => {
@@ -323,7 +327,6 @@ describe("freeze on the real repo tree", () => {
     const { join } = await import("node:path");
     const root = join(import.meta.dirname, "..", "..");
     for (const [file, lang, slot] of [
-      ["index.html", "en", 0],
       ["landing.html", "en", 0],
       ["es.html", "es", 0],
       ["ja.html", "ja", 1],

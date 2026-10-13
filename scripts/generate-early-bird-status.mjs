@@ -9,7 +9,9 @@
  * pricing card sells the Early Bird ($59, first 200 licenses) or the Regular
  * price. It shipped WITHOUT a producer: there is no serverless layer in this
  * deployment (a static Vite build served behind a catch-all rewrite), so the
- * request was answered by `index.html` with `Content-Type: text/html`, the
+ * request was answered by the root landing document (`landing.html`; it was
+ * the root `index.html` before the duplicates were removed) with
+ * `Content-Type: text/html`, the
  * `await response.json()` threw, and the function's `catch {}` swallowed it.
  * The sell-out switch — the one thing that code exists for — could never fire,
  * and the landing would have kept advertising an exhausted Early Bird

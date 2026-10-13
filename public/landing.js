@@ -88,6 +88,70 @@
     });
   }
 
+  // ── Mobile navigation menu ──────────────────────────────────────
+  // Under 768px the `.nav-links` anchors were `display: none` with nothing to
+  // bring them back, so Features, Pricing and Help were unreachable on a phone
+  // and the language dropdown + CTA alone pushed the theme toggle off the
+  // viewport. The button restores the same links as a panel below the fixed
+  // header; the state lives on `.nav` so the CSS and the ARIA stay in step.
+  const navToggle = document.getElementById('navToggle');
+  const navLinksPanel = document.getElementById('navLinks');
+  const navRoot = document.querySelector('.nav');
+
+  if (navToggle && navLinksPanel && navRoot) {
+    // The button's accessible name has to follow the state: while the panel is
+    // open the icon is a close cross, so a name that still said "Open menu"
+    // would contradict `aria-expanded="true"`. Both labels come from the
+    // template (translated), never from a literal in this file.
+    const navOpenLabel = navToggle.getAttribute('aria-label') || '';
+    const navCloseLabel = navToggle.getAttribute('data-label-close') || navOpenLabel;
+    const setNavOpen = (open) => {
+      navRoot.classList.toggle('is-open', open);
+      navToggle.setAttribute('aria-expanded', String(open));
+      if (navOpenLabel) navToggle.setAttribute('aria-label', open ? navCloseLabel : navOpenLabel);
+      if (!open) {
+        // Leave no sub-menu open behind the one that just closed.
+        const languageToggle = document.querySelector('.language-toggle');
+        const languageMenu = document.querySelector('.language-menu');
+        if (languageToggle) languageToggle.setAttribute('aria-expanded', 'false');
+        if (languageMenu) languageMenu.setAttribute('aria-hidden', 'true');
+      }
+    };
+    const isNavOpen = () => navToggle.getAttribute('aria-expanded') === 'true';
+
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setNavOpen(!isNavOpen());
+    });
+
+    // Escape closes the panel and returns focus to the control that opened it,
+    // so keyboard users are not dropped back at the top of the document.
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || !isNavOpen()) return;
+      setNavOpen(false);
+      navToggle.focus();
+    });
+
+    // A tap anywhere outside the header closes it.
+    document.addEventListener('click', (e) => {
+      if (!navRoot.contains(e.target)) setNavOpen(false);
+    });
+
+    // Following a link collapses the panel, or it would still be covering the
+    // section the anchor jump scrolled to.
+    navLinksPanel.addEventListener('click', (e) => {
+      if (e.target && e.target.closest && e.target.closest('a')) setNavOpen(false);
+    });
+
+    // Back at desktop width the inline row is visible again, so the open state
+    // must not linger on `.nav`. The breakpoint is 1100px because that is where
+    // the inline row stops overflowing (measured: 1036 px of header content).
+    const desktop = window.matchMedia('(min-width: 1101px)');
+    const resetOnDesktop = () => setNavOpen(false);
+    if (typeof desktop.addEventListener === 'function') desktop.addEventListener('change', resetOnDesktop);
+    else if (typeof desktop.addListener === 'function') desktop.addListener(resetOnDesktop);
+  }
+
   // ── Smooth Scroll for anchor links ───────────────────────────────
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
@@ -114,8 +178,11 @@
     });
   }, observerOptions);
 
-  // Add initial styles for animation
-  document.querySelectorAll('.feature-card, .privacy-card, .pricing-card, .mode-card').forEach(el => {
+  // Add initial styles for animation. The selector list follows the card
+  // classes the template emits today (.feature-item covers Features AND
+  // Privacy; the old .feature-card/.privacy-card/.pricing-card/.mode-card names
+  // matched nothing, so no card animated in).
+  document.querySelectorAll('.feature-item, .feat-card, .faq-item, .mode-item, .price-card').forEach(el => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(20px)';
     el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
@@ -132,17 +199,6 @@
       heroContent.style.opacity = '1';
       heroContent.style.transform = 'translateY(0)';
     }, 100);
-  }
-
-  const heroVisual = document.querySelector('.hero-visual');
-  if (heroVisual) {
-    heroVisual.style.opacity = '0';
-    heroVisual.style.transform = 'translateY(20px)';
-    heroVisual.style.transition = 'opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s';
-    setTimeout(() => {
-      heroVisual.style.opacity = '1';
-      heroVisual.style.transform = 'translateY(0)';
-    }, 300);
   }
 
   // ── Language preference (?lang= + bf_lang/nf_lang cookies) ───────
@@ -196,7 +252,7 @@
     if (dir && LANG_CODES.indexOf(dir[1]) !== -1) return dir[1];
     const file = p.match(/^\/([a-z]{2})\.html$/);
     if (file && LANG_CODES.indexOf(file[1]) !== -1) return file[1];
-    if (p === '/' || p === '/index.html' || p === '/landing.html') return 'en';
+    if (p === '/' || p === '/landing.html') return 'en';
     return null;
   }
 
@@ -251,9 +307,10 @@
   // on hosts whose edge negotiates before any JS runs (e.g. Netlify's
   // Language conditions).
   // The language a link points at, from any of the three forms the pages
-  // ship: the legacy query (/id/?lang=id, still on index.html), the clean
-  // locale link every generated page carries (/id/ or /id), and the EN root
-  // landing (/ — what the "English" entry links to). Recording from the click
+  // ship: the legacy query (/id/?lang=id, a supported direct-URL mechanism
+  // the visible links no longer use), the clean locale link every generated
+  // page carries (/id/ or /id), and the EN root landing (/ — what the
+  // "English" entry links to). Recording from the click
   // is what stops a host that negotiates BEFORE any JS runs (Netlify's
   // Language conditions, an nginx proxy) from bouncing the visitor straight
   // back to the language they just left.
@@ -262,7 +319,7 @@
     if (query) return query[1].toLowerCase();
     var clean = href.match(/^\/([a-z]{2})\/?$/);
     if (clean) return clean[1].toLowerCase();
-    if (href === '/' || href === '/index.html' || href === '/landing.html') return 'en';
+    if (href === '/' || href === '/landing.html') return 'en';
     return null;
   }
 

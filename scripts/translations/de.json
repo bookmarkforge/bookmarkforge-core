@@ -34,6 +34,8 @@
   },
   "navCta": "App öffnen",
   "themeToggleAria": "Design wechseln",
+  "navToggleAria": "Menü öffnen",
+  "navToggleAriaClose": "Menü schließen",
   "hero": {
     "badge": "Einmal zahlen · Kein Abo",
     "title": "Alles, was du speicherst, bleibt auf deinem Computer. <span class=\"accent-text\">Alles.</span>",

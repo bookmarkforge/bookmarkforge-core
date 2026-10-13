@@ -92,3 +92,18 @@ now 0.
 - `scripts/__tests__/monitoring-alerts.test.mjs:80` (medium) is reviewed but not
   fixed: the value is a fixture body in a test, and the rule cannot see through
   the helper that builds it.
+
+### Cleanup (2026-10-13)
+
+Removed external infrastructure configuration scripts (GitHub branch protection,
+Namecheap DNS, Vercel domain, Whop config) and their associated audit scripts
+as they are not needed for local development or core project functionality:
+- `scripts/audit-all-external.mjs` (previously finding #1)
+- `scripts/auto-audit-and-fix.mjs` (previously finding #4)
+- `scripts/comprehensive-audit-and-fix.mjs` (previously finding #5)
+- `scripts/audit-whop-config.mjs`
+- `scripts/github-branch-protection.*`
+- `scripts/namecheap-dns-config.*`
+- `scripts/namecheap-dns-manual-guide.*`
+- `scripts/vercel-domain-config.*`
+- `scripts/whop-config.*`

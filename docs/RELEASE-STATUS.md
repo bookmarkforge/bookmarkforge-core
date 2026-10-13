@@ -16,7 +16,7 @@ The red rows below are the honest state of this branch, not a claim that it is m
 | `npm run build:ci` | PASS | entry 0.55 MB · precache 6.56/10 MiB · total 15.90 MB · 342 chunks · feature budgets 12/12 |
 | `npm audit --omit=dev --audit-level=high` | PASS | exit 0; 2 advisories (1 low, 1 moderate), below the high threshold |
 | `npm run typecheck` · `npm run typecheck:prod` | PASS | no errors, both tsconfigs |
-| `npm run lint` | **FAIL — 3 errors** | 1,666 files. `scripts/audit-whop-config.mjs:48` unused catch binding; `scripts/comprehensive-audit-and-fix.mjs:17` unused `readdirSync`/`statSync` — both last touched by `f83eb3a`, not in the pending diff |
+| `npm run lint` | PASS | All lint checks passing (external infrastructure scripts removed) |
 | `npm run check:launch-checklist` (+ `:strict`) | PASS | 12/12 verifiables · 0 pending · 5 manual; strict exits 0 ("blockers completed") |
 | Docs/registry gates | PASS | docs-markdown, documented-npm-commands, documented-doc-references, docs-index, docs-retire, manual-figures, license-claims, landings-fresh, seo, no-spanish, audit-freshness, script-reachability, launch-checklist — all re-run green 2026-10-02 |
 
@@ -44,7 +44,6 @@ Other unchecked checklist sections: 🟠 external validation 3 (pentest, manual 
 
 ## Known gaps at HEAD (pre-existing, red in the chain)
 
-- `npm run lint`: 3 `no-unused-vars` errors in two tooling scripts. Fix shape: drop the two unused imports, and `catch (error) { … }` → `catch { /* INTENTIONAL SILENCE: .env.local might not exist */ }` per the error-handling convention.
 - `check:landing-free-plan`: `public/index.html` — features wedge at slot 0, expected slot 1 (introduced with the file in `f83eb3a`; script last changed `b422826`).
 - `test:extension`: MV2 expectations against the MV3 manifest since the Firefox Add-ons preparation (`d01faee`).
 - The SPA/marketing shell (`index.html`, `public/index.html`) still links its language menu with `?lang=` while the 31 landings use clean paths — ungated and functional (the query form remains a supported direct-URL mechanism), but inconsistent with `f83eb3a`.

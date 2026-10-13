@@ -13,6 +13,7 @@ import {
   hashString,
   resetSessionKeyCache,
   setVaultKdfSalt,
+  zeroPasswordBytes,
 } from "../utils/crypto-core";
 
 /**
@@ -208,15 +209,11 @@ export class EncryptionService {
    * fill — the caller likely reused a consumed password.
    */
   private zeroBytes(bytes: Uint8Array): Uint8Array {
-    if (bytes.length > 0 && bytes.every((b) => b === 0)) {
-      logger.warn(
-        "[EncryptionService.zeroBytes] Buffer is already zeroized — possible reuse of a consumed password.",
-      );
-    }
-    bytes.fill(0);
-    for (let i = 0; i < bytes.length; i++) {bytes[i] = bytes[i]! ^ 0xaa;}
-    bytes.fill(0);
-    return bytes;
+    // Delegates to the canonical crypto-core routine (single implementation);
+    // the reuse warning is routed through the app logger.
+    return zeroPasswordBytes(bytes, (message) =>
+      logger.warn(`[EncryptionService.zeroBytes] ${message}`),
+    );
   }
 
    

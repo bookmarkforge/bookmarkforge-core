@@ -157,9 +157,14 @@ describe("AttestationChain", () => {
 
   it("zeroizes the password copy after signing", async () => {
     const passwordBytes = new Uint8Array([1, 2, 3]);
-    vaultMock.withMasterPasswordBytes.mockImplementation((_caller, fn) =>
-      fn(passwordBytes),
-    );
+    // Mirror the real wrapper: it owns the copy and wipes it in its finally.
+    vaultMock.withMasterPasswordBytes.mockImplementation(async (_caller, fn) => {
+      try {
+        return await fn(passwordBytes);
+      } finally {
+        passwordBytes.fill(0);
+      }
+    });
 
     await attestationChain.append("zeroize", "password-copy");
 

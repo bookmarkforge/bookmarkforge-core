@@ -185,11 +185,9 @@ class AttestationChain {
             ["sign"],
 );
      } finally {
-       // withMasterPasswordBytes returns a caller-owned copy. Clear both
-       // the domain-separated key material and the original password copy
-       // even when importKey rejects before copying it.
+       // Clear the domain-separated key material even when importKey
+       // rejects. The password copy is wiped by withMasterPasswordBytes.
        zeroPasswordBytes(combined);
-       zeroPasswordBytes(passwordBytes);
      }
    },
      );

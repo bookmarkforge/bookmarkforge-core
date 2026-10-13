@@ -564,6 +564,73 @@ describe("SecurityVault", () => {
     });
   });
 
+  describe("master-password buffer zeroization", () => {
+    // Captures the live internal buffer so the test can prove the bytes are
+    // overwritten (not merely dereferenced) on every lock/unlock path.
+    const liveBuffer = (): Uint8Array | null =>
+      (securityVault as any).masterPasswordBytes ?? null;
+    const isAllZero = (bytes: Uint8Array): boolean =>
+      bytes.every((b) => b === 0);
+
+    it("zeroes the buffer on lock and drops the reference", async () => {
+      await securityVault.unlock("password123456");
+      const buf = liveBuffer();
+      expect(buf).not.toBeNull();
+      expect(isAllZero(buf!)).toBe(false);
+
+      await securityVault.lock();
+      expect(isAllZero(buf!)).toBe(true);
+      expect(liveBuffer()).toBeNull();
+    });
+
+    it("zeroes the previous buffer when the vault is re-unlocked", async () => {
+      await securityVault.unlock("first_password");
+      const first = liveBuffer()!;
+      expect(isAllZero(first)).toBe(false);
+
+      await securityVault.lock();
+      await securityVault.unlock("second_password");
+      expect(isAllZero(first)).toBe(true);
+
+      const second = liveBuffer()!;
+      expect(second).not.toBe(first);
+      expect(new TextDecoder().decode(second)).toBe("second_password");
+    });
+
+    it("zeroes the previous buffer on rotation and keeps only the new password", async () => {
+      await securityVault.unlock("old_password123");
+      const before = liveBuffer()!;
+      await resetMocks();
+
+      const ok = await securityVault.rotateMasterPassword(
+        "new_password_123",
+        "old_password123",
+      );
+      expect(ok).toBe(true);
+      expect(isAllZero(before)).toBe(true);
+      expect(new TextDecoder().decode(liveBuffer()!)).toBe("new_password_123");
+    });
+
+    it("holds no password buffer after a rejected unlock while locked", async () => {
+      const { encryptionService } = await import("../../services/EncryptionService");
+      const { secureStorage } = await import("../../services/SecureStorage");
+      (secureStorage.getVerificationToken as any).mockResolvedValueOnce("encrypted_vault_verification");
+      (encryptionService.decryptWithBytes as any).mockResolvedValueOnce("wrong_decrypted_value");
+      (secureStorage.getSecret as any).mockImplementation((key: string) =>
+        Promise.resolve(
+          key === "vault_verification_integrity"
+            ? "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f" +
+              ":aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899"
+            : null,
+        ),
+      );
+
+      const result = await securityVault.unlock("wrong_password");
+      expect(result).toBe(false);
+      expect(liveBuffer()).toBeNull();
+    });
+  });
+
   describe("lock", () => {
     it("clears password, token and expiry", async () => {
       await securityVault.unlock("password123456");

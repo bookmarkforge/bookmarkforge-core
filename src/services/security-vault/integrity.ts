@@ -111,6 +111,10 @@ export async function validateVerificationIntegrity(
  */
 export async function createVerificationToken(password: string): Promise<void> {
   const passwordBytes = new TextEncoder().encode(password);
+  // Tracks the early zeroization so the finally block zeroizes only when the
+  // early path did not run (error before the HMAC step). Avoids a false
+  // "possible reuse" warning on every successful token creation.
+  let zeroizedEarly = false;
   try {
     // encryptWithBytes zeroizes the transferred buffer (ownership
     // contract in crypto-core.ts). Pass a fresh copy so passwordBytes
@@ -142,6 +146,7 @@ const hmacSig = await crypto.subtle.sign(
     // use. This shrinks the exposure window: the bytes no longer survive
     // during the IDB write below.
     zeroPasswordBytes(passwordBytes);
+    zeroizedEarly = true;
     const nonceHex = Array.from(nonce, (b) =>
       b.toString(16).padStart(2, "0"),
     ).join("");
@@ -156,7 +161,7 @@ await secureStorage.storeVerificationTokenWithIntegrity(
       `${nonceHex}:${hmacHex}`,
     );
   } finally {
-    // Defense-in-depth: zeroize even if the early fill(0) already ran.
-    zeroPasswordBytes(passwordBytes);
+    // Defense-in-depth: zeroize on every error path that skipped the early pass.
+    if (!zeroizedEarly) {zeroPasswordBytes(passwordBytes);}
   }
  }

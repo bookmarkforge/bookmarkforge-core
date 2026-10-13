@@ -405,16 +405,25 @@ function getPasswordBytes(password: string | Uint8Array): Uint8Array {
  * claim ownership (e.g. `encryptWithBytes` then `deriveIntegrityHmacKey`
  * without a fresh copy).
  *
+ * @param onReuse - Optional reuse-warning sink (e.g. the app logger). Defaults
+ *   to `console.warn`, so the worker-side callers keep their existing behaviour.
  * @returns The same buffer (now zero-filled) for chaining.
  */
-export function zeroPasswordBytes(bytes: Uint8Array): Uint8Array {
+export function zeroPasswordBytes(
+  bytes: Uint8Array,
+  onReuse?: (message: string) => void,
+): Uint8Array {
   // Fail-closed: detect reuse before the fill so we can warn even though
   // the buffer is about to become all-zeros anyway.
   if (bytes.length > 0 && bytes.every((b) => b === 0)) {
-    console.warn(
+    const message =
       "[zeroPasswordBytes] Buffer is already zeroized — possible reuse of a consumed password. " +
-        "Callers must pass a fresh copy if the bytes are needed after a crypto operation.",
-    );
+      "Callers must pass a fresh copy if the bytes are needed after a crypto operation.";
+    if (onReuse) {
+      onReuse(message);
+    } else {
+      console.warn(message);
+    }
   }
   // Max-effort zeroization (ADR): fill(0) → XOR 0xAA → fill(0) defeats
   // compiler elision, matching EncryptionService.zeroBytes.

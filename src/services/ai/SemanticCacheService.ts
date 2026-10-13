@@ -317,18 +317,15 @@ export class SemanticCacheService {
   private async withVaultPassword<T>(
     operation: (passwordBytes: Uint8Array) => Promise<T>,
   ): Promise<T | null> {
-    const passwordBytes = securityVault.withMasterPasswordBytes(
+    // The wrapper wipes its copy once the async operation settles; the
+    // operation must run inside the callback, never after it returns.
+    return securityVault.withMasterPasswordBytes(
       semanticCacheCaller,
-      (bytes) => bytes,
+      async (bytes) => {
+        if (!bytes) {return null;}
+        return operation(bytes);
+      },
     );
-    if (!passwordBytes) {return null;}
-    const pw = passwordBytes as Uint8Array;
-    try {
-      return await operation(pw);
-    } finally {
-      for (let i = 0; i < pw.length; i++) { pw[i] = pw[i]! ^ 0xAA; }
-      pw.fill(0);
-    }
   }
 
    private async persistEntry(

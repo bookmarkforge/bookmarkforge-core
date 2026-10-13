@@ -110,16 +110,15 @@ class MutationGuard {
                 { name: "HMAC", hash: "SHA-256" },
                 false,
                 ["sign"],
-);
-               resolved = keyMaterial;
-     } finally {
-       // Clear both the derived input and the ephemeral password copy
-       // returned by withMasterPasswordBytes, including import errors.
-       zeroPasswordBytes(combined);
-       zeroPasswordBytes(passwordBytes);
-     }
-   },
-     );
+              );
+              resolved = keyMaterial;
+            } finally {
+              // Clear the derived input, including import errors. The password
+              // copy is wiped by withMasterPasswordBytes itself.
+              zeroPasswordBytes(combined);
+            }
+          },
+        );
       } catch (err) {
         this.keyCache.clear();
         logger.warn(

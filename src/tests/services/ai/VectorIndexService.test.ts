@@ -27,7 +27,12 @@ vi.mock("../../../services/SecurityVault", () => ({
 const cryptoCoreMock = vi.hoisted(() => ({
   getVaultKdfSaltHex: vi.fn(() => "ab".repeat(16)),
 }));
-vi.mock("../../../utils/crypto-core", () => cryptoCoreMock);
+// The real zeroPasswordBytes is kept: the lifecycle tests assert that the
+// password handed to the worker is actually zeroed.
+vi.mock("../../../utils/crypto-core", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../../utils/crypto-core")>()),
+  ...cryptoCoreMock,
+}));
 
 interface PostedMessage {
   id: number;
@@ -131,8 +136,16 @@ describe("VectorIndexService worker lifecycle", () => {
     let suppliedPasswordBytes: Uint8Array | null = null;
     securityVaultMock.withMasterPasswordBytes.mockImplementation(
       (_caller: object, callback: (bytes: Uint8Array | null) => unknown) => {
-        suppliedPasswordBytes = new Uint8Array([1, 2, 3, 4]);
-        return callback(suppliedPasswordBytes);
+        const bytes = new Uint8Array([1, 2, 3, 4]);
+        suppliedPasswordBytes = bytes;
+        // Mirror the real wrapper: it owns the copy and wipes it once the
+        // callback settles, on every path.
+        const result = callback(bytes);
+        if (result instanceof Promise) {
+          return result.finally(() => bytes.fill(0));
+        }
+        bytes.fill(0);
+        return result;
       },
     );
     const { vectorIndexService } =

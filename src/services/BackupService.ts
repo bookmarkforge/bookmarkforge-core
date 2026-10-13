@@ -936,13 +936,10 @@ const rawPassword = normalizePassword(password);
       const result = await securityVault.withMasterPasswordBytes(
         BackupService,
         async (passwordBytes) => {
-          try {
-            if (!passwordBytes) {return null;}
-            logger.info("[AutoBackup] Creating automatic backup...");
-            return this.createBackupData(passwordBytes);
-          } finally {
-            if (passwordBytes) {zeroPasswordBytes(passwordBytes);}
-          }
+          if (!passwordBytes) {return null;}
+          logger.info("[AutoBackup] Creating automatic backup...");
+          // createBackupData consumes (zeroizes) the copy; the wrapper wipes its own.
+          return this.createBackupData(passwordBytes);
         },
       );
       if (!result) {
@@ -1138,15 +1135,10 @@ const rawPassword = normalizePassword(password);
                 "Vault is locked, password required to decrypt auto-backup",
               );
             }
-            try {
-              // L-03: decode once and pass the string on (decryptData accepts
-              // both), then wipe the ephemeral byte copy. The string form
-              // cannot be zeroed, but no second immutable copy is made.
-              dbPassword = bytesToPw(passwordBytes);
-              return await this.decryptData(backupBuffer, dbPassword);
-            } finally {
-              passwordBytes.fill(0);
-            }
+            // L-03: decode once and pass the string on (decryptData accepts
+            // both). The byte copy is wiped by withMasterPasswordBytes.
+            dbPassword = bytesToPw(passwordBytes);
+            return await this.decryptData(backupBuffer, dbPassword);
           },
         );
       } else {

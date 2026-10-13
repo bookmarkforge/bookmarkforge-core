@@ -112,9 +112,14 @@ describe("MutationGuard", () => {
 
   it("zeroizes the password copy after key derivation", async () => {
     const passwordBytes = new TextEncoder().encode("test_password");
-    vaultMock.withMasterPasswordBytes.mockImplementation((_caller, fn) =>
-      fn(passwordBytes),
-    );
+    // Mirror the real wrapper: it owns the copy and wipes it in its finally.
+    vaultMock.withMasterPasswordBytes.mockImplementation(async (_caller, fn) => {
+      try {
+        return await fn(passwordBytes);
+      } finally {
+        passwordBytes.fill(0);
+      }
+    });
 
     await mutationGuard.guard("zeroize", "password-copy");
 
@@ -124,9 +129,13 @@ describe("MutationGuard", () => {
   it("zeroizes key material when importKey fails", async () => {
     const passwordBytes = new TextEncoder().encode("test_password");
     let combined: Uint8Array | undefined;
-    vaultMock.withMasterPasswordBytes.mockImplementation((_caller, fn) =>
-      fn(passwordBytes),
-    );
+    vaultMock.withMasterPasswordBytes.mockImplementation(async (_caller, fn) => {
+      try {
+        return await fn(passwordBytes);
+      } finally {
+        passwordBytes.fill(0);
+      }
+    });
     cryptoMock.importKey.mockImplementationOnce(
       (_algorithm, raw) => {
         combined = raw as Uint8Array;

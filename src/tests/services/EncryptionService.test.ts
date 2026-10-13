@@ -5,6 +5,7 @@ vi.mock("../../i18n", () => ({
 }));
 
 import { EncryptionService, encryptionService } from "../../services/EncryptionService";
+import { logger } from "../../utils/logger";
 
 describe("EncryptionService", () => {
   afterEach(() => {
@@ -377,6 +378,21 @@ describe("EncryptionService", () => {
       const bytes = new Uint8Array([1, 2, 3, 4, 5]);
       (service as any).zeroBytes(bytes);
       expect(bytes.every((b) => b === 0)).toBe(true);
+    });
+
+    it("zeroBytes reports a reused buffer once, through the logger", () => {
+      const service = new EncryptionService();
+      const loggerWarn = vi.spyOn(logger, "warn").mockImplementation(() => {});
+      const consoleWarn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      try {
+        (service as any).zeroBytes(new Uint8Array(4)); // already zeroed => reuse
+        expect(loggerWarn).toHaveBeenCalledTimes(1);
+        expect(String(loggerWarn.mock.calls[0]?.[0])).toContain("EncryptionService.zeroBytes");
+        expect(consoleWarn).not.toHaveBeenCalled();
+      } finally {
+        loggerWarn.mockRestore();
+        consoleWarn.mockRestore();
+      }
     });
 
     it("does not zeroize a byte password twice on the main-thread fallback", async () => {

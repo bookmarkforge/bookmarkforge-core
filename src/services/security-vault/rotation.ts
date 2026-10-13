@@ -122,8 +122,7 @@ export async function rotateMasterPassword(
         ctx.assertActive();
       }
     } finally {
-      for (let i = 0; i < oldPwBytes.length; i++) { oldPwBytes[i] = oldPwBytes[i]! ^ 0xAA; }
-      oldPwBytes.fill(0);
+      zeroPasswordBytes(oldPwBytes);
     }
 
     await ctx.createVerificationToken(newPassword);

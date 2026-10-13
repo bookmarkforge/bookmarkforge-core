@@ -118,8 +118,6 @@ class SecurityVault {
   // Incremented on every lock so an in-flight password rotation cannot
   // re-unlock the vault after the user explicitly locked it.
   private vaultGeneration = 0;
-  // Session rotation tracking.
-  private sessionRotationActive = false;
   private static readonly INTERNAL_MARKER = {};
 
   // Secret storage map (for SecretsContext delegation).
@@ -155,28 +153,34 @@ class SecurityVault {
   private zeroBytes(): void {
     if (!this.masterPasswordBytes) {return;}
     const bytes = this.masterPasswordBytes;
+    // The JS pass runs first, on the live bytes: the WASM processor is an
+    // optimization and its success must never be the only thing that overwrites
+    // the password. Running JS first also avoids a false reuse warning from
+    // zeroPasswordBytes when the bytes were already zeroed by the processor.
+    zeroPasswordBytes(bytes);
     try {
       this.zeroMemoryProcessor?.zeroBytes(bytes);
     } catch (err) {
       logger.warn(
-        "[SecurityVault] WASM zero-memory failed, using JS fallback",
+        "[SecurityVault] WASM zero-memory failed after JS zeroing",
         {
           error: err,
         },
       );
-      // Max-effort fallback (ADR): use zeroPasswordBytes
-      zeroPasswordBytes(bytes);
-    }
-    if (!this.zeroMemoryProcessor) {
-      zeroPasswordBytes(bytes);
     }
     this.masterPasswordBytes = null;
   }
 
+  // Replaces the master-password buffer. The previous buffer is zeroed first so
+  // a re-unlock or a rotation never orphans an un-zeroed copy on the heap.
+  private replaceMasterPasswordBytes(password: string): void {
+    this.zeroBytes();
+    this.masterPasswordBytes = new TextEncoder().encode(password);
+  }
+
   private clearShareCredential(): void {
     if (this.shareCredentialBytes) {
-      for (let i = 0; i < this.shareCredentialBytes.length; i++) { this.shareCredentialBytes[i] = this.shareCredentialBytes[i]! ^ 0xAA; }
-      this.shareCredentialBytes.fill(0);
+      zeroPasswordBytes(this.shareCredentialBytes);
       this.shareCredentialBytes = null;
     }
   }
@@ -366,7 +370,7 @@ class SecurityVault {
       }
 
       this.clearShareCredential();
-      this.masterPasswordBytes = new TextEncoder().encode(trimmedPassword);
+      this.replaceMasterPasswordBytes(trimmedPassword);
       this.isUnlocked = true;
       this.initZeroMemoryProcessor().catch((err) =>
         logger.warn("[SecurityVault] Zero-memory init failed post-unlock", {
@@ -1093,7 +1097,28 @@ class SecurityVault {
     const bytes = this.masterPasswordBytes
       ? new Uint8Array(this.masterPasswordBytes)
       : null;
-    return fn(bytes);
+    // The wrapper owns this copy: it is wiped in its own finally once `fn`
+    // settles (async callbacks are awaited first), on every path.
+    const wipe = (): void => {
+      if (bytes) {
+        // Silent: a consumer (e.g. BackupService.exportBackup) may already
+        // have zeroized this copy, which is expected here and not a reuse.
+        zeroPasswordBytes(bytes, () => undefined);
+      }
+    };
+    let pending = false;
+    try {
+      const result = fn(bytes);
+      if (result instanceof Promise) {
+        pending = true;
+        return result.finally(wipe) as T;
+      }
+      return result;
+    } finally {
+      if (!pending) {
+        wipe();
+      }
+    }
   }
 
   /**
@@ -1195,313 +1220,17 @@ class SecurityVault {
     if (this.rotationPromise) {
       return this.rotationPromise;
     }
-    const operation = this.rotateMasterPasswordWithContext(newPassword, oldPassword);
+    const operation = rotateMasterPasswordWithContext(
+      newPassword,
+      oldPassword ?? null,
+      this.buildRotationContext(this.vaultGeneration),
+    );
     this.rotationPromise = operation;
     try {
       return await operation;
     } finally {
       if (this.rotationPromise === operation) {
         this.rotationPromise = null;
-      }
-    }
-  }
-
-  private async rotateMasterPasswordWithContext(
-    newPassword: string,
-    oldPassword?: string,
-  ): Promise<boolean> {
-    return rotateMasterPasswordWithContext(
-      newPassword,
-      oldPassword ?? null,
-      this.buildRotationContext(this.vaultGeneration),
-    );
-  }
-
-  /** Legacy implementation retained temporarily while the extracted rotation
-   * path is proven by the rollback drill; it is no longer called. */
-  private async rotateMasterPasswordInternal(
-    newPassword: string,
-    oldPassword?: string,
-  ): Promise<boolean> {
-    const rotationGeneration = this.vaultGeneration;
-    if (this.isLocked()) {
-      return false;
-    }
-    const assertRotationActive = (): void => {
-      if (this.vaultGeneration !== rotationGeneration || this.isLocked()) {
-        throw new Error("Vault locked during password rotation");
-      }
-    };
-
-    // RECOVERY_DATA is intentionally NOT rotated: it stores the master
-    // password encrypted with the BIP39 recovery phrase (see
-    // RecoveryService.encryptMasterPasswordWithRecovery), NOT with the
-    // master password. decryptWithBytes() with the master-password key
-    // always fails AES-GCM auth, which made EVERY password rotation fail
-    // in production (regression caught by the change-password E2E smoke
-    // test). The stale copy is cleared after a successful rotation below.
-    const rotatedKeys = [
-      SECURE_STORAGE_KEYS.API_KEY,
-      SECURE_STORAGE_KEYS.DB_KEY,
-    ] as const;
-    const snapshot: Record<string, string | null> = {};
-    let wrappedDeviceKeySnapshot: string | null = null;
-    let verificationTokenSnapshot: string | null = null;
-    let verificationIntegritySnapshot: string | null = null;
-    let wrappedDeviceKeySnapshotted = false;
-    let verificationTokenSnapshotted = false;
-    // A-1: pre-rotation KDF-salt state. Set before the salt is swapped (never
-    // after), so a rotation that fails between "stored" and "installed" is
-    // still fully undoable.
-    let vaultSaltSnapshot: VaultKdfSaltSnapshot | null = null;
-    let oldPwBytes: Uint8Array | null = null;
-    let newPwBytes: Uint8Array | null = null;
-
-    try {
-      // Audit M-05: reject new passwords that unlock()'s legacy trim()
-      // would silently alter — " p" and "p" must never be equivalent.
-      if (
-        typeof newPassword !== "string" ||
-        newPassword.trim().length < SECURITY_CONFIG.MIN_PASSWORD_LENGTH
-      ) {
-        this.recordAudit({
-          action: "master_password_rotate",
-          result: "failure",
-          origin: "SecurityVault",
-          context: { reason: "Invalid new password length" },
-        });
-        return false;
-      }
-      if (newPassword !== newPassword.trim()) {
-        this.recordAudit({
-          action: "master_password_rotate",
-          result: "failure",
-          origin: "SecurityVault",
-          context: {
-            reason: "New password has leading or trailing whitespace",
-          },
-        });
-        return false;
-      }
-      for (const key of rotatedKeys) {
-        snapshot[key] = await secureStorage.getSecret(key);
-      }
-      wrappedDeviceKeySnapshot = await secureStorage.getWrappedDeviceKeyBlob();
-      wrappedDeviceKeySnapshotted = true;
-      verificationTokenSnapshot = await secureStorage.getVerificationToken();
-      verificationTokenSnapshotted = true;
-      // S1: snapshot the integrity record so it can be restored on rollback.
-      verificationIntegritySnapshot =
-        await secureStorage.getVerificationIntegrity();
-
-      oldPwBytes = oldPassword
-        ? new TextEncoder().encode(oldPassword)
-        : this.masterPasswordBytes
-          ? new Uint8Array(this.masterPasswordBytes)
-          : null;
-      if (!oldPwBytes)
-        {throw new Error("Vault is locked or old password not available");}
-
-      newPwBytes = new TextEncoder().encode(newPassword);
-
-      // Audit H5: detect the wrapped device key BEFORE oldPwBytes is zeroed.
-      const deviceKeyWrapped = await secureStorage.isDeviceKeyWrapped();
-      assertRotationActive();
-
-      // A-1 / ADR-046: rotate the per-vault Argon2id salt with the password.
-      // The salt is the other half of the offline-attack cost, and it is only
-      // worth what its corpus is worth: leaving it in place would let a
-      // dictionary built against the OLD password keep applying to the blobs
-      // written under the new one. Everything rewritten below (the rotated
-      // secrets, the wrapped device key, the verification token) is therefore
-      // re-keyed onto the new salt; `v6:` payloads embed the salt they were
-      // written with, so nothing already migrated becomes unreadable whatever
-      // the outcome. Decryption needs no cooperation from the module-level
-      // salt (v6 carries its own, v5 uses the legacy fixed one), so swapping it
-      // here cannot break the reads performed below.
-      vaultSaltSnapshot = await snapshotVaultKdfSalt();
-      await rotateVaultKdfSalt(vaultSaltSnapshot);
-      assertRotationActive();
-
-      try {
-        for (const key of rotatedKeys) {
-          const encrypted = snapshot[key];
-          if (!encrypted) {continue;}
-          // EncryptionService zeroizes transferred byte buffers. Pass
-          // per-operation copies because the original buffers are reused for
-          // every secret and for device-key rewrapping below.
-          const plaintext = await encryptionService.decryptWithBytes(
-            encrypted,
-            oldPwBytes.slice(),
-          );
-          const reEncrypted = await encryptionService.encryptWithBytes(
-            plaintext,
-            newPwBytes.slice(),
-          );
-          await secureStorage.setSecret(key, reEncrypted);
-        }
-        // Audit H5: re-wrap the device key with the NEW password while
-        // oldPwBytes is still live (zeroed in the finally below). The
-        // in-memory key handle is unchanged — only its at-rest wrapper.
-        if (deviceKeyWrapped) {
-          await secureStorage.rewrapDeviceKeyWithPasswordBytes(
-            oldPwBytes,
-            newPwBytes,
-          );
-        }
-        assertRotationActive();
-      } finally {
-        if (oldPwBytes) {
-          for (let i = 0; i < oldPwBytes.length; i++) { oldPwBytes[i] = oldPwBytes[i]! ^ 0xAA; }
-          oldPwBytes.fill(0);
-          oldPwBytes = null;
-        }
-      }
-
-      // Persist the new verification token before replacing the in-memory
-      // password. If this write fails, the catch block can restore the old
-      // token while the current session still uses the old password.
-      // A-1: re-minted as a `v6:` payload, so it embeds the salt rotated above.
-      await createVerificationToken(newPassword);
-      assertRotationActive();
-      // Generate the replacement session token while the old session is still
-      // intact. After this point the remaining assignments are synchronous, so
-      // a crypto failure cannot leave storage rolled back with a new password
-      // still resident in memory.
-      await this.generateSessionToken();
-      assertRotationActive();
-
-      zeroPasswordBytes(newPwBytes);
-      newPwBytes = null;
-      this.zeroBytes();
-      this.masterPasswordBytes = new TextEncoder().encode(newPassword);
-
-      // H2: re-sign the audit attestation chain with the NEW password so a
-      // subsequent verifyIntegrity() does not false-positive on entries
-      // signed before the rotation. Best-effort — a failure must not roll
-      // back the rotation.
-      try {
-        const { attestationChain } = await import("./security/AttestationChain");
-        await attestationChain.reSignAll();
-      } catch (err) {
-        logger.warn(
-          "[SecurityVault] Failed to re-sign attestation chain after rotation",
-          { error: err },
-        );
-      }
-
-      // The stored recovery data decrypts to the OLD master password; we
-      // cannot re-encrypt the new one without the recovery phrase (shown
-      // only once at setup). Clear the stale copy so the recovery flow
-      // reports "no data" instead of silently returning a dead password.
-      await this.clearRecoveryData().catch((err) =>
-        logger.warn(
-          "[SecurityVault] Failed to clear stale recovery data after rotation",
-          { error: err },
-        ),
-      );
-
-      // Corpus hygiene: the auto-backup in IDB was encrypted with the OLD
-      // password. Leaving it in place gives an attacker who harvests the IDB
-      // a brute-forceable corpus under the retired key material. Clear it so
-      // the next auto-backup cycle creates one under the new password. The
-      // cloud-sync backup blob is similarly stale; clearing the local
-      // metadata forces the next sync to re-upload with the new password.
-      // Both are best-effort: a failure must not abort the committed rotation.
-      try {
-        // BackupService is Pro: resolved behind the hasProAccess gate. A
-        // rejection (Free user, or placeholder build) is best-effort too —
-        // the catch below only warns.
-        const backup = await loadBackupService();
-        await backup.clearAutoBackup();
-      } catch (err) {
-        logger.warn(
-          "[SecurityVault] Failed to clear stale auto-backup after rotation",
-          { error: err },
-        );
-      }
-
-      this.recordAudit({
-        action: "master_password_rotate",
-        result: "success",
-        origin: "SecurityVault",
-      });
-      // A-1 / ADR-046: the salt changed, so the tabs that are already open
-      // must re-read it or they keep writing under the retired one. Announced
-      // ONLY here — after the rotation is committed and no longer undoable: a
-      // notification sent mid-rotation would make sibling tabs adopt a salt
-      // this tab may still roll back, and every `v6:` payload written in that
-      // window would be keyed to a salt the vault no longer holds.
-      announceVaultKdfSaltChange();
-      return true;
-    } catch (error) {
-      logger.error("[SecurityVault] Failed to rotate master password", {
-        error,
-      });
-      for (const key of rotatedKeys) {
-        if (snapshot[key] !== null && snapshot[key] !== undefined) {
-          await secureStorage.setSecret(key, snapshot[key]!).catch((err) =>
-            logger.error("[SecurityVault] Rollback setSecret failed", {
-              key,
-              error: err,
-            }),
-          );
-        }
-      }
-      if (wrappedDeviceKeySnapshotted) {
-        await secureStorage.restoreWrappedDeviceKeyBlob(wrappedDeviceKeySnapshot).catch((err) =>
-          logger.error("[SecurityVault] Rollback device-key wrapper failed", { error: err }),
-        );
-      }
-      if (verificationTokenSnapshotted) {
-        await secureStorage.restoreVerificationToken(verificationTokenSnapshot).catch((err) =>
-          logger.error("[SecurityVault] Rollback verification token failed", { error: err }),
-        );
-        // S1: rollback the integrity record.
-        if (verificationIntegritySnapshot !== null && verificationIntegritySnapshot !== undefined) {
-          await secureStorage.storeVerificationIntegrity(
-            verificationIntegritySnapshot,
-          ).catch((err) =>
-            logger.error("[SecurityVault] Rollback integrity record failed", { error: err }),
-          );
-        } else {
-          await secureStorage.deleteSecret(
-            VERIFICATION_INTEGRITY_KEY,
-          ).catch((err) =>
-            logger.error("[SecurityVault] Rollback integrity record delete failed", { error: err }),
-          );
-        }
-      }
-      // A-1 / ADR-046: restore the previous KDF salt LAST, once every payload
-      // under the new one has been put back. Only the in-memory half is
-      // load-bearing for the current session (it continues with the OLD
-      // password, so it must also continue under the derivation that password
-      // was stretched with); the stored half is what the next unlock installs.
-      if (vaultSaltSnapshot) {
-        await restoreVaultKdfSalt(vaultSaltSnapshot).catch((err) =>
-          logger.error("[SecurityVault] Rollback vault KDF salt failed", {
-            error: err,
-          }),
-        );
-      }
-      this.recordAudit({
-        action: "master_password_rotate",
-        result: "failure",
-        origin: "SecurityVault",
-        context: {
-          reason: error instanceof Error ? error.message : "Unknown",
-        },
-      });
-      return false;
-} finally {
-      if (oldPwBytes) {
-        for (let i = 0; i < oldPwBytes.length; i++) { oldPwBytes[i] = oldPwBytes[i]! ^ 0xAA; }
-        oldPwBytes.fill(0);
-        oldPwBytes = null;
-      }
-      if (newPwBytes) {
-        zeroPasswordBytes(newPwBytes);
-        newPwBytes = null;
       }
     }
   }
@@ -1570,7 +1299,7 @@ class SecurityVault {
       getMasterPasswordBytes: () => this.masterPasswordBytes,
       clearShareCredential: () => this.clearShareCredential(),
       setMasterPasswordBytes: (pw: string) => {
-        this.masterPasswordBytes = new TextEncoder().encode(pw);
+        this.replaceMasterPasswordBytes(pw);
         this.isUnlocked = true;
       },
       zeroBytes: () => {
@@ -1580,8 +1309,8 @@ class SecurityVault {
       recordFailedAttempt: () => { this.recordFailedAttempt(); },
       recordAudit: (params: Record<string, unknown>) => { this.recordAudit(params as unknown as Parameters<typeof auditLog.record>[0]); },
       generateSessionToken: async () => { this.sessionToken = await generateSecureToken(); },
-      startSessionRotation: () => { this.sessionRotationActive = true; },
-      stopSessionRotation: () => { this.sessionRotationActive = false; },
+      startSessionRotation: () => { this.startSessionRotation(); },
+      stopSessionRotation: () => { this.stopSessionRotation(); },
       notifyLockListeners: () => { this.notifyLockListeners(); },
       notifyUnlockListeners: () => { this.notifyUnlockListeners(); },
       installVaultKdfSalt: async () => { return await ensureVaultKdfSalt(); },
@@ -1664,7 +1393,7 @@ class SecurityVault {
       clearRecoveryData: async () => { await this.clearRecoveryData(); },
       loadBackupService: async () => await loadBackupService(),
       setMasterPasswordBytes: (pw: string) => {
-        this.masterPasswordBytes = new TextEncoder().encode(pw);
+        this.replaceMasterPasswordBytes(pw);
         this.isUnlocked = true;
       },
       zeroBytes: () => {

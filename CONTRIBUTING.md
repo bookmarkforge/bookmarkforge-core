@@ -158,8 +158,6 @@ here still exists.
 | `npm run test:watch` | Vitest in watch mode for the file you are editing. |
 | `npm run test:rollback` | Unit tests for the pure decision logic of `scripts/rollback.mjs`. |
 | `npm run test:timing` | Slowest test files, for the timing budget (diagnostic, not a gate). |
-| `npm run whop:test` | Whop service unit tests. |
-| `npm run whop:validate` | Runs the Whop integration service against the configured sandbox. |
 | `npm run e2e:headed` | E2E with a visible browser, for debugging one spec. |
 | `npm run e2e:browsers` | Cross-browser E2E config (Chromium, Firefox, WebKit). |
 | `npm run e2e:human-like:browsers` | The human-like example suite across Chromium, Firefox and WebKit (`playwright.human-like.browsers.config.ts`); needs `npx playwright install firefox webkit`. |

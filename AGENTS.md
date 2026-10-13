@@ -425,4 +425,9 @@ themes, decision D4) and ADR-043 (SEO contract gate — `check:seo`:
     registry consolidating `kdf_salt` and the `deriveDbKey` salt) is
     implemented in full — registry, per-salt diagnostics inventory and the
     `vault-salt-registry-source` anchor — per
-    `docs/ADR-053-vault-salt-registry.md`.
+    `docs/ADR-053-vault-salt-registry.md`. ADR-066 (the P2P sync transport is
+    Pro as a whole; the Core sync UI and CollaborationService reach it only
+    through `src/services/pro-access.ts`) is formalized in
+    `docs/ADR-066-p2p-sync-pro-boundary.md` and anchored by the dedicated
+    `p2p-sync-core-degradation` / `collaboration-seam-start-stop` anchor
+    entries in `scripts/audit-anchors.mjs`.

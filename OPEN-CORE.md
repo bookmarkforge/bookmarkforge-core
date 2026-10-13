@@ -88,23 +88,57 @@ chunk:
   the seam. There is no tolerated zone: every reference either goes through
   the loader or is part of the Pro side itself.
 
-## Core MIT
+## Feature classification
 
-Includes local vault, bookmark CRUD, notes, basic search, basic import/export,
-vault security, interface, PWA/extensions, i18n, and organization views not
-identified as Pro.
+Every shipped feature belongs to exactly one side. The machine-readable list of
+**Pro implementations** is `scripts/pro-boundary.mjs` (`PRO_MODULE_PATHS`), read
+equally by the exporter, the placeholder generator, `check:open-core` and
+`check:pro-imports`; `check:open-core` fails if a path declared there is not
+named in this table, so the published document cannot drift from the enforced
+boundary.
 
-## Pro proprietary
+"Tier" is the shipped product classification
+(`src/constants/pricing.ts`). "Boundary" says **where** the line is
+implemented: *excluded* means the implementation is proprietary code absent
+from the public export (replaced there by a generated `.d.ts` + inert `.js`
+pair), *core module* means the code is MIT and any entitlement is decided at
+runtime by `licenseService.hasProAccess()`.
 
-Includes, among others, local AI (WebLLM/Ollama on the client), RAG and
-specialized agents, P2P sync, flashcards, PDF/OCR, advanced exports, advanced
-backups, and associated commercial services. The server AI proxy no longer
-exists (removed in 2026-09): AI features are client-side and call the provider
-with the user's own key. The exact list and its paths are maintained in
-`scripts/pro-boundary.mjs` and consumed equally by the exporter, the
-compilation boundary generator, and the `check:open-core` gate; if a
-discrepancy exists, the automated exclusion prevails until the maintainer
-reviews it.
+| Feature | Tier | Boundary |
+|---|---|---|
+| Local vault: bookmarks, notes, documents, tags, organization views, knowledge graph | Core | Core modules, no Pro reference |
+| Vault security: AES-GCM, Argon2id, device key, lock/unlock, vault sharing/export | Core | Core modules, no Pro reference |
+| Smart search: full-text plus on-device semantic search | Core (Free) | Core: `src/services/ai/RAGEngine.ts` (embedding + similarity engine, no LLM calls) |
+| AI with your own API key (cloud BYOK, incl. Ollama) | Core (Free) | Core: `src/services/ai/ProviderManager.ts`, `src/services/ai/providers/**` |
+| Import, basic export (JSON/HTML), templates | Core | Core: `src/services/UniversalImporter.ts`, `src/services/UniversalExporter.ts` |
+| Folder sync (bidirectional vault↔folder, local filesystem) | Core | Core: `src/services/FolderSyncService.ts` |
+| PWA, browser extension, web clipper | Core | Core: `extension/**`, `public/**` |
+| Interface, i18n (30 locales), themes, landing and manual surfaces | Core | Core: `public/locales/**`, `scripts/build-landings.cjs` |
+| Entitlement, the Pro seam, and the "requires Pro" degradation UI | Core | Core: `src/services/LicenseService.ts`, `src/services/pro-access.ts`, `src/components/ProRequiredState.tsx` |
+| Companion server (self-hosting: health, licenses, client events, signaling relay) | Core | Core: `server/**` |
+| P2P device-to-device sync (transport, signaling, protocol) | Pro | Excluded: `src/services/WebRTCSyncService.ts`, `src/services/SyncService.ts`, `src/services/sync/signaling.ts`, `src/services/sync/replication.ts`, `src/services/webrtc-sync/protocol.ts`, `src/services/webrtc-sync/validation.ts` |
+| Encrypted backups and disk backups | Pro | Excluded: `src/services/BackupService.ts`, `src/services/DiskBackupService.ts` |
+| Local AI runtime (on-device model, no API key) | Pro | Excluded: `src/services/ai/WebLLMService.ts` |
+| RAG chat over your data | Pro | Excluded: `src/services/ai/GlobalRAGService.ts` |
+| Expert agents | Pro | Excluded: `src/services/ai/SpecializedAgentsService.ts` |
+| Flashcards and spaced repetition | Pro | Excluded: `src/services/ai/FlashcardService.ts` |
+| PDF/OCR text extraction | Pro | Excluded: `src/services/pdfService.ts` |
+| Pro entitlements of otherwise-Core code (free-tier bookmark cap, activation limit) | Pro | Core module with a runtime gate: `src/db/database.ts` (`FREE_LIMITS.maxBookmarks`), `src/constants/license.ts` (`maxActivationsPerLicense`) |
+
+Two rules keep the table honest at the edges:
+
+- **Pro is an exact file list, never a directory.** Mixed trees keep their Core
+  parts: `src/services/webrtc-sync/compare.ts` (the revision comparator the Core
+  folder sync imports) and the AI tree's Core modules (`RAGEngine`,
+  `ProviderManager`, `VectorIndexService`) stay MIT while their Pro siblings are
+  excluded.
+- **The P2P sync surface degrades honestly.** The Core-side sync UI
+  (`src/components/sync/**`) holds no Pro implementation: it resolves the
+  replication manager through `src/services/pro-access.ts`, so a Free user
+  downloads no Pro byte and the widget reports the true local-first state
+  instead of a dead control. There is no server-side AI proxy any more
+  (removed in 2026-09): server-side AI features are client-side and call the
+  provider with the user's own key.
 
 ## Contributions
 

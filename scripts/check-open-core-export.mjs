@@ -29,6 +29,7 @@ import {
   PRO_MODULE_PATHS,
   isProModulePath,
   sourceFiles,
+  undocumentedProPaths,
   verifyProBoundary,
 } from "./pro-boundary.mjs";
 
@@ -56,6 +57,28 @@ const holdsProImplementations = (dir) => {
     return entries.some((entry) => entry.isFile() && isRealSource(entry.name));
   });
 };
+
+// ── Documentation reconciliation ──────────────────────────────────────────
+// The published Core/Pro document must classify every declared Pro path (see
+// undocumentedProPaths). Checked in both trees — the private source tree when
+// the policy is edited, the export when the public repository re-audits
+// itself — so the shipped document cannot describe a boundary the policy no
+// longer has. Fail closed: a missing document is a failure, not a skip.
+const docTree = process.argv[2] ?? ".";
+const docPath = join(docTree, "OPEN-CORE.md");
+if (!existsSync(docPath)) {
+  console.error(`[open-core] FAIL: ${normalized(docPath)} is missing — the Core/Pro classification cannot be verified`);
+  process.exit(1);
+}
+const undocumented = undocumentedProPaths(readFileSync(docPath, "utf8"));
+if (undocumented.length) {
+  console.error(
+    "[open-core] FAIL: Pro module(s) declared in scripts/pro-boundary.mjs but not classified in OPEN-CORE.md:",
+  );
+  for (const proPath of undocumented) console.error(`- ${proPath}`);
+  console.error("  Add each one to the Feature classification table in OPEN-CORE.md.");
+  process.exit(1);
+}
 
 let root = process.argv[2];
 if (!root) {

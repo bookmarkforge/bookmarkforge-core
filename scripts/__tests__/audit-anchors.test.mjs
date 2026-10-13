@@ -3,10 +3,10 @@
  *
  * Vitest unit tests for `scripts/audit-anchors.mjs`. Covers the anchor
  * guarantees, the baseline catalog contract, and the current advisory:
- *   (a) all 24 anchors resolve today, and no canonical-shape file in
+ *   (a) all 26 anchors resolve today, and no canonical-shape file in
  *        the catalog is mis-classified as `discovered`
  *   (b) a `.bak` rename of any anchored file produces exactly 1 missing,
- *        leaving the other 21 anchors intact
+ *        leaving the other 25 anchors intact
  *   (c) a non-test suffix (`.txt`, etc.) that matches the bare regex is
  *        rejected by the suffix filter
  *   (d) `--fix` (i.e. `runAuditAnchors({ fix: true })`) writes baseline
@@ -77,7 +77,7 @@ function setupFakeRepo(files) {
 }
 
 /**
- * The full set of 24 anchors from `audit-anchors.mjs`, mapped to fake files
+ * The full set of 26 anchors from `audit-anchors.mjs`, mapped to fake files
  * we'll install in the tmpdir. Naming mirrors the conventions of the real
  * anchored files (suffix `.regression.test.ts` for the p0–p3 set, plain
  * `.test.ts(x)` for sync/storage/signaling).
@@ -114,6 +114,8 @@ const BASELINE_ANCHORS = Object.freeze([
   { id: "p0-vault-rotation-rollback-drill", glob: "src/tests/security/p0-vault-rotation-rollback-drill*.test.ts" },
   { id: "v5-sunset-exposure-counter", glob: "src/tests/services/security-vault/kdf-salt-exposure*.test.*" },
   { id: "vault-salt-registry-source", glob: "src/services/security-vault/salt-registry.ts", kind: "source" },
+  { id: "p2p-sync-core-degradation", glob: "src/tests/components/sync/SyncStatus.test.tsx" },
+  { id: "collaboration-seam-start-stop", glob: "src/tests/services/CollaborationService.test.ts" },
 ]);
 
 const ALL_ANCHORED_FILES = Object.freeze({
@@ -140,6 +142,8 @@ const ALL_ANCHORED_FILES = Object.freeze({
   "src/tests/security/p0-vault-rotation-rollback-drill.test.ts": "anchor-n",
   "src/tests/services/security-vault/kdf-salt-exposure.test.ts": "anchor-o",
   "src/services/security-vault/salt-registry.ts": "anchor-p",
+  "src/tests/components/sync/SyncStatus.test.tsx": "anchor-q",
+  "src/tests/services/CollaborationService.test.ts": "anchor-r",
 });
 
 /** Dynamic import of audit-anchors.mjs with a per-test cache buster. */
@@ -181,7 +185,7 @@ function newFakeRepo(files = {}) {
 }
 
 describe("audit-anchors gate — catalog and resolution contracts", () => {
-  test("(a) all 24 anchors resolve when targeted files exist", async () => {
+  test("(a) all 26 anchors resolve when targeted files exist", async () => {
 
     newFakeRepo(ALL_ANCHORED_FILES);
     const { runAuditAnchors } = await importAuditScript("a");
@@ -189,15 +193,15 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
     const result = runAuditAnchors();
 
     expect(result.failures).toEqual([]);
-    expect(result.present).toHaveLength(24);
-    expect(result.total).toBe(24);
+    expect(result.present).toHaveLength(26);
+    expect(result.total).toBe(26);
     // Every present entry has at least one matching file path.
     for (const present of result.present) {
       expect(present.id).toMatch(/^[a-z0-9-]+$/);
       expect(present.matches.length).toBeGreaterThanOrEqual(1);
     }
     // No "advisory NEW" lines when only the catalog is installed. This
-    // pins down the contract that the 24-anchor catalog's regression files
+    // pins down the contract that the 26-anchor catalog's regression files
     // themselves never get surfaced as discoveries (they are caught by
     // their anchor's glob).
     expect(result.discovered).toEqual([]);
@@ -231,11 +235,11 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
         glob: "src/services/WebRTCSyncService.ts",
       }),
     ]);
-    expect(result.present).toHaveLength(23);
-    expect(result.total).toBe(24);
+    expect(result.present).toHaveLength(25);
+    expect(result.total).toBe(26);
   });
 
-  test("(b) renaming p0-ice-whitelist to .bak produces 1 missing, others 22 intact", async () => {
+  test("(b) renaming p0-ice-whitelist to .bak produces 1 missing, others 24 intact", async () => {
     // Copy ALL_ANCHORED_FILES, then surgically rename one file from
     // `.regression.test.ts` → `.regression.test.ts.bak`. The glob regex
     // matches the `.bak` file (bare `*` in the suffix), but the
@@ -254,10 +258,10 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
 
     expect(result.failures).toHaveLength(1);
     expect(result.failures[0]).toMatchObject({ id: "p0-ice-whitelist" });
-    expect(result.present).toHaveLength(23);
-    expect(result.total).toBe(24);
+    expect(result.present).toHaveLength(25);
+    expect(result.total).toBe(26);
 
-    // The remaining 21 must be present (id order is stable per ANCHORS[]).
+    // The remaining 25 must be present (id order is stable per ANCHORS[]).
     const presentIds = result.present.map((p) => p.id).sort();
     expect(presentIds).toEqual(
       [
@@ -284,6 +288,8 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
         "p0-vault-rotation-rollback-drill",
         "v5-sunset-exposure-counter",
         "vault-salt-registry-source",
+        "p2p-sync-core-degradation",
+        "collaboration-seam-start-stop",
       ].sort(),
     );
   });
@@ -305,7 +311,7 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
 
     expect(result.failures).toHaveLength(1);
     expect(result.failures[0].id).toBe("p0-ice-whitelist");
-    expect(result.present).toHaveLength(23);
+    expect(result.present).toHaveLength(25);
   });
 
   test("(d) --fix rewrites scripts/audit-anchors-baseline.json with a new updatedAt", async () => {
@@ -333,12 +339,12 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
 
     const { runAuditAnchors } = await importAuditScript("d");
     const result = runAuditAnchors({ fix: true });    expect(result.failures).toEqual([]);
-    expect(result.present).toHaveLength(24);
+    expect(result.present).toHaveLength(26);
     expect(existsSync(baselinePath)).toBe(true);
     const rewritten = JSON.parse(readFileSync(baselinePath, "utf8"));
-    expect(rewritten.totalAnchors).toBe(24);
+    expect(rewritten.totalAnchors).toBe(26);
     expect(rewritten.missingCount).toBe(0);
-    expect(rewritten.presentCount).toBe(24);
+    expect(rewritten.presentCount).toBe(26);
     expect(rewritten.updatedAt).not.toBe(ONE_HUNDRED_YEARS_AGO);
 
     // updatedAt must parse as a valid ISO string AND be newer than the
@@ -352,7 +358,7 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
 
     // Catalog shape must round-trip every anchor by id.
     expect(Array.isArray(rewritten.anchors)).toBe(true);
-    expect(rewritten.anchors).toHaveLength(24);
+    expect(rewritten.anchors).toHaveLength(26);
     const ids = rewritten.anchors.map((a) => a.id).sort();
     expect(ids).toEqual(
       [
@@ -380,12 +386,14 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
         "p0-vault-rotation-rollback-drill",
         "v5-sunset-exposure-counter",
         "vault-salt-registry-source",
+        "p2p-sync-core-degradation",
+        "collaboration-seam-start-stop",
       ].sort(),
     );
   });
 
   test("(e) extra canonical-shape regression test is surfaced as `discovered` (advisory, non-failing)", async () => {
-    // Install all 19 non-umbrella anchored files plus a canonical p5 file.
+    // Install all 25 non-umbrella anchored files plus a canonical p5 file.
     // Run against the pre-umbrella catalog to preserve the advisory
     // discovery contract; the production catalog now intentionally covers
     // this shape.
@@ -400,10 +408,10 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
     );
     const result = runAuditAnchors({ anchors: legacyCatalog });
 
-    // The legacy catalog tier is unchanged — same 23 of 23, no failures.
+    // The legacy catalog tier is unchanged — same 25 of 25, no failures.
     expect(result.failures).toEqual([]);
-    expect(result.present).toHaveLength(23);
-    expect(result.total).toBe(23);
+    expect(result.present).toHaveLength(25);
+    expect(result.total).toBe(25);
 
     // The extra file shows up exactly once, with its full path, and
     // does NOT shadow any anchor (the 14 anchored files are filtered out
@@ -471,12 +479,12 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
       }),
     ]);
     expect(result.failures).toEqual([
-      expect.objectContaining({
+      expect.      objectContaining({
         type: "catalog-inflation",
         id: "p3-verify-password-private",
       }),
     ]);
-    expect(result.present).toHaveLength(24);
+    expect(result.present).toHaveLength(26);
   });
 
   test("(i) every source-kind anchor resolves against the actual repository", async () => {
@@ -548,7 +556,7 @@ describe("audit-anchors gate — catalog and resolution contracts", () => {
         }),
       ]),
     );
-    expect(result.present).toHaveLength(24);
-    expect(result.total).toBe(25);
+    expect(result.present).toHaveLength(26);
+    expect(result.total).toBe(27);
   });
 });

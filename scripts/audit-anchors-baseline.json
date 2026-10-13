@@ -1,9 +1,9 @@
 {
-  "totalAnchors": 24,
+  "totalAnchors": 26,
   "missingCount": 0,
-  "presentCount": 24,
+  "presentCount": 26,
   "discoveredCount": 0,
-  "updatedAt": "2026-10-08T22:30:43.366Z",
+  "updatedAt": "2026-10-13T19:52:59.517Z",
   "anchors": [
     {
       "id": "p0-ice-whitelist",
@@ -129,6 +129,16 @@
       "id": "v5-sunset-exposure-counter",
       "adr": "ADR-052",
       "glob": "src/tests/services/security-vault/kdf-salt-exposure*.test.*"
+    },
+    {
+      "id": "p2p-sync-core-degradation",
+      "adr": "ADR-066",
+      "glob": "src/tests/components/sync/SyncStatus.test.tsx"
+    },
+    {
+      "id": "collaboration-seam-start-stop",
+      "adr": "ADR-066",
+      "glob": "src/tests/services/CollaborationService.test.ts"
     }
   ]
 }

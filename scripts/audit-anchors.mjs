@@ -224,6 +224,20 @@ export const ANCHORS = [
       "v5 sunset exposure counter (Phase 1): the diagnostic report classifies every password-encrypted secret as legacy v5 or per-vault-salt v6, counts the residual static-salt corpus (the Phase 3 removal gate), and reports unknown — never zero — when storage cannot be read.",
     glob: "src/tests/services/security-vault/kdf-salt-exposure*.test.*",
   },
+  {
+    id: "p2p-sync-core-degradation",
+    adr: "ADR-066",
+    description:
+      "Core-side P2P sync surface (ADR-066): the widget resolves the replication manager through the Pro seam, so a Free session or an Open Core build gets the typed ProUnavailableError, makes no connection attempt, and the shared \"requires Pro\" panel explains the absence.",
+    glob: "src/tests/components/sync/SyncStatus.test.tsx",
+  },
+  {
+    id: "collaboration-seam-start-stop",
+    adr: "ADR-066",
+    description:
+      "CollaborationService (ADR-066): start() reaches the transport only through the entitlement seam and propagates its typed rejection instead of pretending to sync; stop() is a clean no-op when the Pro implementation was never loaded.",
+    glob: "src/tests/services/CollaborationService.test.ts",
+  },
 ];
 
 /**

@@ -92,6 +92,10 @@ const PUBLIC_DOCS = new Set([
    "ADR-051-landings-fresh-gate.md",
    "ADR-052-v5-format-sunset.md",
    "ADR-053-vault-salt-registry.md",
+   // The P2P sync boundary decision (ADR-066) ships with the Core: the public
+   // tree has no transport at all, and this ADR is where the seam contract
+   // (why the sync controls degrade instead of working) is recorded.
+   "ADR-066-p2p-sync-pro-boundary.md",
    // The audit-freshness ADR ships even though its subject ledger
    // (docs/audit.md) does not: check-inspector-freeze requires a `docs`-category
    // gate to be named by an ADR that is present in the tree, so without this
@@ -208,6 +212,22 @@ const EXCLUDED_FILES = new Set([
 "scripts/public-export/RELEASE-NOTES-v1.0.0.md",
 // Pro tests must not be copied into the public Core tree.
     "src/tests/services/WebRTCSyncService.test.ts",
+    // P2P sync transport (SyncService, the signaling socket, the replication
+    // modifiers, the WebRTC protocol/validation helpers — see
+    // scripts/pro-boundary.mjs). In the export their imports resolve to the
+    // generated placeholders, so the tests would assert on inert stubs. The
+    // Core-side degradation they used to cover is pinned instead by
+    // SyncStatus.test.tsx and CollaborationService.test.ts, which mock the
+    // pro-access seam and therefore ship in the public tree.
+    "src/tests/services/SyncService.test.ts",
+    "src/tests/services/sync/signaling.test.ts",
+    "src/tests/services/webrtc-sync/validation.test.ts",
+    "src/tests/sync/SyncService.test.ts",
+    "src/tests/sync/SyncService-turn.test.ts",
+    "src/tests/sync/replication.test.ts",
+    "src/tests/sync/signaling-helpers.test.ts",
+    "src/tests/sync/signaling-client-server.integration.test.ts",
+    "src/tests/security/signaling-ice-authorization.test.ts",
     "src/tests/services/BackupService.test.ts",
     "src/tests/services/DiskBackupService.test.ts",
     "src/tests/services/pdfService.test.ts",
@@ -287,6 +307,11 @@ function exclusionReason(relPath) {
   // excluded in one place and forgotten in another.
   if (isProModulePath(norm)) return "pro feature implementation";
   if (norm.startsWith("src/tests/services/ai/") || norm.startsWith("src/tests/ai/")) return "pro feature tests";
+  // Unit tests whose subject is a proprietary implementation. They are listed
+  // one by one (unlike the AI tree, which is excluded by directory) and the
+  // manifest should say WHY they are absent: the export ships only the
+  // placeholder pair, so they would assert on inert stubs.
+  if (EXCLUDED_FILES.has(norm) && norm.startsWith("src/tests/")) return "pro feature behaviour test";
   if (EXCLUDED_FILES.has(norm)) return "private ops/business script";
   return null;
 }
@@ -300,7 +325,11 @@ const included = [];
 const excluded = [];
 
 for (const rel of all) {
-  const reason = exclusionReason(rel);
+  // git ls-files also lists index entries deleted from the working tree
+  // (unstaged deletions). They cannot be copied, so record them as excluded.
+  const reason = !existsSync(join(repoRoot, rel))
+    ? "deleted from working tree (still in git index)"
+    : exclusionReason(rel);
   if (reason) excluded.push({ file: rel, reason });
   else included.push(rel);
 }

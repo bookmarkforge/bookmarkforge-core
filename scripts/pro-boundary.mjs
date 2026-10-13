@@ -36,12 +36,32 @@ import ts from "typescript";
 
 // ---------------------------------------------------------------------------
 // What counts as Pro
-// ---------------------------------------------------------------------------
-
-/** Exact proprietary implementation paths (repo-relative, forward slashes). */
+// ---------------------------------------------------------------------------/** Exact proprietary implementation paths (repo-relative, forward slashes). */
 export const PRO_MODULE_PATHS = [
-   "src/services/WebRTCSyncService.ts",
-   "src/services/pdfService.ts",
+  // --- P2P sync: the whole transport -------------------------------------
+  // ADR-066 records the decision: the transport is Pro as a whole and the
+  // Core sync surface (SyncStatus, P2PSyncModal, CollaborationService) reaches
+  // it only through src/services/pro-access.ts, degrading to the shared Pro
+  // panel when the entitlement is absent.
+  // The direct device-to-device transfer (WebRTCSyncService), the replication
+  // manager the UI drives (SyncService), the signaling socket and replication
+  // modifiers it is built from, and the protocol/validation helpers the
+  // direct transfer parses with. P2P sync is sold as Pro (see
+  // src/constants/pricing.ts: Free has "P2P sync across devices: false"), so
+  // the transport is Pro as a whole — half of it behind the seam would leave
+  // the other half linked into Core chunks.
+  //
+  // `src/services/webrtc-sync/compare.ts` deliberately STAYS Core: it is the
+  // revision comparator the Core folder sync (FolderSyncService, ADR-053
+  // F1-E) imports. Same reasoning as the mixed src/services/ai/ tree below —
+  // Pro is an exact file list, not a directory.
+  "src/services/WebRTCSyncService.ts",
+  "src/services/SyncService.ts",
+  "src/services/sync/signaling.ts",
+  "src/services/sync/replication.ts",
+  "src/services/webrtc-sync/protocol.ts",
+  "src/services/webrtc-sync/validation.ts",
+  "src/services/pdfService.ts",
    "src/services/BackupService.ts",
    "src/services/DiskBackupService.ts",
    // The genuinely proprietary AI surfaces: the local model runtime (the
@@ -92,6 +112,24 @@ export function isProModulePath(relPath) {
 }
 
 /**
+ * Pro module paths the published Core/Pro document does not classify.
+ *
+ * Why this exists: the boundary is enforced in code (this file) and described
+ * in prose (OPEN-CORE.md). Those two used to be maintained by hand, so a Pro
+ * module could be added to the policy while the public document kept
+ * describing a boundary it no longer had. `check:open-core` calls this with
+ * the shipped OPEN-CORE.md and fails when the list is non-empty, in BOTH the
+ * private tree and the export — the reconciliation is a gate, not a promise.
+ *
+ * @param {string} docSource OPEN-CORE.md contents
+ * @param {string[]} proPaths paths to require (defaults to the declared policy)
+ * @returns {string[]} paths missing from the document
+ */
+export function undocumentedProPaths(docSource, proPaths = PRO_MODULE_PATHS) {
+  return proPaths.filter((proPath) => !docSource.includes(proPath));
+}
+
+/**
  * Anchor globs whose subject lives entirely on the Pro side of the boundary.
  *
  * These name either a proprietary implementation or a test whose subject is
@@ -110,6 +148,19 @@ export const PRO_SUBJECT_ANCHOR_GLOBS = [
   "src/tests/services/WebRTCSyncService.test.ts",
   "src/tests/security/p0-ice-whitelist*.regression.test.*",
   "src/tests/security/p1-private-sync*.regression.test.*",
+  // P2P sync transport (declared above) and the behaviour tests that drive it.
+  "src/services/SyncService.ts",
+  "src/tests/services/SyncService.test.ts",
+  "src/tests/services/sync/*.test.ts",
+  "src/tests/services/webrtc-sync/*.test.ts",
+  "src/tests/sync/SyncService*.test.ts",
+  "src/tests/sync/replication.test.ts",
+  "src/tests/sync/signaling-helpers.test.ts",
+  "src/tests/sync/signaling-client-server.integration.test.ts",
+  "src/tests/security/signaling-ice-authorization.test.ts",
+  // NOTE: src/tests/collaboration/p2p-integration.test.ts is deliberately NOT
+  // listed: it drives a local WebSocket echo server and imports no Pro module,
+  // so it ships and runs in the export like any other Core test.
   // DiskBackupService: implementation excluded, its contract test ships only
   // in the private tree.
   "src/services/DiskBackupService.ts",

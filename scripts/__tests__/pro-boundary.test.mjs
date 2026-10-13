@@ -19,9 +19,10 @@
  * literal Pro module paths: a fixture that spelled one out would be reported as
  * an uncovered reference by the code it is testing.
  */
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   PLACEHOLDER_MARKER,
@@ -34,8 +35,11 @@ import {
   resolveProReference,
   runtimeOf,
   splitSpecifier,
+  undocumentedProPaths,
   verifyProBoundary,
 } from "../pro-boundary.mjs";
+
+const REPO_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 
 /** Build a repo-relative path without ever spelling a Pro path out in source. */
 const pathOf = (...parts) => parts.join("/");
@@ -82,6 +86,23 @@ describe("isProModulePath", () => {
   });
 });
 
+// ── Documentation reconciliation ─────────────────────────────────────────────
+describe("undocumentedProPaths", () => {
+  it("classifies every declared Pro path in the shipped OPEN-CORE.md", () => {
+    // The published document and the enforced policy are one contract: a Pro
+    // module added to PRO_MODULE_PATHS without a line in OPEN-CORE.md would
+    // ship a document describing a boundary the code no longer has (and
+    // check:open-core, which uses this same function, would fail the build).
+    const doc = readFileSync(join(REPO_ROOT, "OPEN-CORE.md"), "utf8");
+    expect(undocumentedProPaths(doc)).toEqual([]);
+  });
+
+  it("names exactly the paths the document omits", () => {
+    const documented = `| P2P sync | Pro | Excluded: ${PRO_MODULE_PATHS[0]} |\n`;
+    expect(undocumentedProPaths(documented)).toEqual(PRO_MODULE_PATHS.slice(1));
+  });
+});
+
 // ── Specifiers ───────────────────────────────────────────────────────────────
 describe("splitSpecifier / declarationOf / runtimeOf", () => {
   it("separates a query or hash suffix from the path", () => {
@@ -114,7 +135,9 @@ describe("splitSpecifier / declarationOf / runtimeOf", () => {
 });
 
 describe("resolveProReference", () => {
-  const exists = (rel) => [`${PRO_MODULE}.ts`, pathOf("src", "services", "SyncService.ts")].includes(rel);
+  // A Core service (the P2P transport moved Pro, so it can no longer stand in
+  // for "an ordinary Core module" here).
+  const exists = (rel) => [`${PRO_MODULE}.ts`, pathOf("src", "services", "EncryptionService.ts")].includes(rel);
 
   it("resolves relative, absolute-style and extensionless specifiers", () => {
     expect(resolveProReference(pathOf("src", "components", "Foo.tsx"), "../services/ai/WebLLMService", exists)).toMatchObject({
@@ -127,7 +150,7 @@ describe("resolveProReference", () => {
 
   it("ignores package imports and Core modules", () => {
     expect(resolveProReference("src/A.ts", "react", exists)).toBeNull();
-    expect(resolveProReference("src/A.ts", "../services/SyncService", exists)).toBeNull();
+    expect(resolveProReference("src/A.ts", "../services/EncryptionService", exists)).toBeNull();
   });
 
   it("does not accept a directory as a module", () => {

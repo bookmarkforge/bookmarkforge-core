@@ -16,6 +16,9 @@ import {
 import { motion } from "motion/react";
 import type { SyncState } from "../../services/WebRTCSyncService";
 import { ProRequiredState } from "../ProRequiredState";
+// ADR-066: the transfer behind this modal is Pro; the modal resolves it
+// through the seam, so a Free session gets the shared Pro panel instead of an
+// inert placeholder.
 import {
   loadWebRTCSyncService,
   type WebRTCSyncServiceType,

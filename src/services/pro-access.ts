@@ -192,8 +192,10 @@ export function setSyncFacade<T>(service: string, facade: T): void {
 import type { BackupService as BackupServiceClass } from "./BackupService";
 import type { DiskBackupService as DiskBackupServiceType } from "./DiskBackupService";
 // WebRTCSyncService's class is not exported; its instance type is derived via
-// the module's typeof. Same for the pdf extractor (an async arrow const).
+// the module's typeof. Same for the pdf extractor (an async arrow const) and
+// the P2P replication manager (a singleton instance).
 type WebRTCSyncServiceType = typeof import("./WebRTCSyncService")["webRTCSyncService"];
+type SyncServiceType = typeof import("./SyncService")["syncService"];
 type ExtractTextFromPdfType = typeof import("./pdfService")["extractTextFromPdf"];
 export interface BackupServiceFacade {
   exportBackup(password?: string | Uint8Array): Promise<void>;
@@ -225,6 +227,16 @@ registerLoader<DiskBackupServiceType>("DiskBackupService", async () => {
 registerLoader<WebRTCSyncServiceType>("WebRTCSyncService", async () => {
   const mod = await import("./WebRTCSyncService");
   return mod.webRTCSyncService;
+});
+// ADR-066: the P2P sync transport is Pro as a whole; this registry is the
+// only tolerated Core reference to it.
+// The P2P replication manager is a singleton whose callers need it
+// synchronously on teardown paths that cannot await (a stop() that has to
+// release a live session), so its successful load installs a sync facade.
+registerLoader<SyncServiceType>("SyncService", async () => {
+  const mod = await import("./SyncService");
+  setSyncFacade<SyncServiceType>("SyncService", mod.syncService);
+  return mod.syncService;
 });
 registerLoader<ExtractTextFromPdfType>("pdfService", async () => {
   const mod = await import("./pdfService");
@@ -267,6 +279,7 @@ export type {
   BackupServiceClass,
   DiskBackupServiceType,
   WebRTCSyncServiceType,
+  SyncServiceType,
   ExtractTextFromPdfType,
   WebLLMServiceClass,
   GlobalRAGServiceClass,
@@ -280,6 +293,16 @@ export function loadBackupService(): Promise<BackupServiceFacade> {
 
 export function loadDiskBackupService(): Promise<DiskBackupServiceType> {
   return loadProService<DiskBackupServiceType>("DiskBackupService");
+}
+
+/**
+ * P2P replication manager (device-to-device sync). Rejects with
+ * `ProUnavailableError` for a Free user or an Open Core build; once loaded,
+ * `requireProService("SyncService")` hands the same instance back
+ * synchronously for teardown paths that cannot await.
+ */
+export function loadSyncService(): Promise<SyncServiceType> {
+  return loadProService<SyncServiceType>("SyncService");
 }
 
 export function loadWebRTCSyncService(): Promise<WebRTCSyncServiceType> {

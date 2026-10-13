@@ -1,7 +1,7 @@
 
 /**
  * Tests for CollaborationService
- * Mocks encryptionService, securityVault, useSecurityStore, syncService, logger
+ * Mocks encryptionService, securityVault, useSecurityStore, the Pro sync seam, logger
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
@@ -46,14 +46,27 @@ vi.mock("../../hooks/useSecurityStore", () => ({
   },
 }));
 
-const mockStartP2PSync = vi.hoisted(() => vi.fn());
-const mockStopAll = vi.hoisted(() => vi.fn());
-vi.mock("../../services/SyncService", () => ({
-  syncService: {
-    startP2PSync: mockStartP2PSync,
-    stopAll: mockStopAll,
-  },
+// P2P sync is Pro: CollaborationService resolves the replication manager
+// through the entitlement-gated seam (loadSyncService) and stops a live
+// session through requireProService, so the seam is what this suite drives.
+const syncSeam = vi.hoisted(() => {
+  const service = {
+    startP2PSync: vi.fn(),
+    stopAll: vi.fn(),
+  };
+  return {
+    service,
+    loadSyncService: vi.fn(async () => service),
+    requireProService: vi.fn(() => service),
+  };
+});
+vi.mock("../../services/pro-access", () => ({
+  loadSyncService: syncSeam.loadSyncService,
+  requireProService: syncSeam.requireProService,
 }));
+
+const mockStartP2PSync = syncSeam.service.startP2PSync;
+const mockStopAll = syncSeam.service.stopAll;
 
 vi.mock("../../utils/logger", () => ({
   logger: { error: vi.fn(), info: vi.fn(), warn: vi.fn(), debug: vi.fn() },
@@ -64,6 +77,9 @@ import { collaborationService } from "../../services/CollaborationService";
 describe("CollaborationService", () => {
   beforeEach(() => {
     vi.resetAllMocks();
+    // resetAllMocks drops implementations, so the seam doubles are re-seeded.
+    syncSeam.loadSyncService.mockImplementation(async () => syncSeam.service);
+    syncSeam.requireProService.mockImplementation(() => syncSeam.service);
     mockWithMasterPasswordBytes.mockImplementation(
       (_caller: object, fn: (p: Uint8Array | null) => unknown) =>
         fn(new TextEncoder().encode("master-password")),
@@ -357,6 +373,25 @@ describe("CollaborationService", () => {
       expect(mockStartP2PSync).toHaveBeenCalledWith(db, "room-1");
     });
 
+    it("propagates the typed Pro rejection instead of pretending to sync", async () => {
+      // What a Free user (or an Open Core build) gets: no session, no silent
+      // success — the caller surfaces ProUnavailableError as the Pro panel.
+      const proError = Object.assign(new Error("Pro feature is unavailable"), {
+        name: "ProUnavailableError",
+        service: "SyncService",
+        reason: "no-license",
+      });
+      syncSeam.loadSyncService.mockRejectedValue(proError);
+
+      await expect(
+        collaborationService.start({} as any, "room-1"),
+      ).rejects.toMatchObject({
+        name: "ProUnavailableError",
+        reason: "no-license",
+      });
+      expect(mockStartP2PSync).not.toHaveBeenCalled();
+    });
+
     it("should propagate error if startP2PSync fails", async () => {
       mockStartP2PSync.mockRejectedValue(new Error("Sync failed"));
       await expect(
@@ -401,6 +436,10 @@ describe("CollaborationService", () => {
         controller.signal,
       );
 
+      // The Pro replication manager is resolved through the seam first, so
+      // wait until the (hanging) startup is actually in flight.
+      await vi.waitFor(() => expect(mockStartP2PSync).toHaveBeenCalled());
+
       // Abort while the startup is still in flight: stopAll must run NOW, not
       // after the (possibly hanging) startup completes.
       controller.abort();
@@ -422,6 +461,21 @@ describe("CollaborationService", () => {
     it("should be safe (no throw) when calling stop without starting", async () => {
       await expect(collaborationService.stop()).resolves.toBeUndefined();
       expect(mockStopAll).toHaveBeenCalled();
+    });
+
+    it("is a no-op when the Pro implementation was never loaded", async () => {
+      // Teardown paths must stay safe on Free: without a loaded Pro module
+      // there cannot be a live session to release.
+      syncSeam.requireProService.mockImplementation(() => {
+        throw Object.assign(new Error("Pro feature is unavailable"), {
+          name: "ProUnavailableError",
+          service: "SyncService",
+          reason: "no-license",
+        });
+      });
+
+      await expect(collaborationService.stop()).resolves.toBeUndefined();
+      expect(mockStopAll).not.toHaveBeenCalled();
     });
 
     it("should be safe calling stop multiple times", async () => {

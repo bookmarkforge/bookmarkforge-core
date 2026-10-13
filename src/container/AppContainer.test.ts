@@ -7,7 +7,6 @@ import {
 } from "./AppContainer";
 import { encryptionService as prodEncryptionService } from "../services/EncryptionService";
 import { securityVault as prodSecurityVault } from "../services/SecurityVault";
-import { syncService as prodSyncService } from "../services/SyncService";
 import { vectorIndexService as prodVectorIndexService } from "../services/ai/VectorIndexService";
 import { ragEngine as prodRagEngine } from "../services/ai/RAGEngine";
 import { cloudSyncService as prodCloudSyncService } from "../services/integrations/cloudSync";
@@ -21,9 +20,6 @@ vi.mock("../services/EncryptionService", () => ({
 }));
 vi.mock("../services/SecurityVault", () => ({
   securityVault: { __prod: "securityVault" },
-}));
-vi.mock("../services/SyncService", () => ({
-  syncService: { __prod: "syncService" },
 }));
 vi.mock("../services/ai/VectorIndexService", () => ({
   vectorIndexService: { __prod: "vectorIndexService" },
@@ -39,11 +35,10 @@ vi.mock("../services/integrations/cloudSync", () => ({
 const dep = <T>(value: unknown): T => value as unknown as T;
 
 describe("AppContainer", () => {
-  it("defaults every dependency to the production singleton", () => {
+  it("defaults every Core dependency to the production singleton", () => {
     const container = new AppContainer();
     expect(container.encryptionService).toBe(prodEncryptionService);
     expect(container.securityVault).toBe(prodSecurityVault);
-    expect(container.syncService).toBe(prodSyncService);
     expect(container.vectorIndexService).toBe(prodVectorIndexService);
     expect(container.ragEngine).toBe(prodRagEngine);
     expect(container.cloudSyncService).toBe(prodCloudSyncService);
@@ -53,10 +48,18 @@ describe("AppContainer", () => {
     const container = new AppContainer({});
     expect(container.encryptionService).toBe(prodEncryptionService);
     expect(container.securityVault).toBe(prodSecurityVault);
-    expect(container.syncService).toBe(prodSyncService);
     expect(container.vectorIndexService).toBe(prodVectorIndexService);
     expect(container.ragEngine).toBe(prodRagEngine);
     expect(container.cloudSyncService).toBe(prodCloudSyncService);
+  });
+
+  it("never wires the Pro P2P replication manager itself", () => {
+    // P2P sync is Pro: a Core-side default would link the Pro module into
+    // every consumer of this container. Core call sites resolve it through
+    // src/services/pro-access.ts (loadSyncService) instead, so both the
+    // default container and the production singleton stay without it.
+    expect(new AppContainer().syncService).toBeUndefined();
+    expect(appContainer.syncService).toBeUndefined();
   });
 
   it("uses injected dependencies when every dependency is provided", () => {
@@ -82,7 +85,6 @@ describe("AppContainer", () => {
     const container = new AppContainer({ securityVault: injected });
     expect(container.securityVault).toBe(injected);
     expect(container.encryptionService).toBe(prodEncryptionService);
-    expect(container.syncService).toBe(prodSyncService);
     expect(container.vectorIndexService).toBe(prodVectorIndexService);
     expect(container.ragEngine).toBe(prodRagEngine);
     expect(container.cloudSyncService).toBe(prodCloudSyncService);
@@ -99,7 +101,8 @@ describe("AppContainer", () => {
     });
     // Explicitly-undefined deps must behave like omitted ones (?? prod).
     expect(container.encryptionService).toBe(prodEncryptionService);
-    expect(container.syncService).toBe(prodSyncService);
+    // The Pro sync dep has no production default to fall back to.
+    expect(container.syncService).toBeUndefined();
     // The provided dep is honored.
     expect(container.securityVault).toBe(customVault);
     // Omitted deps keep defaulting to production.
@@ -120,7 +123,6 @@ describe("AppContainer", () => {
     expect(appContainer).toBeInstanceOf(AppContainer);
     expect(appContainer.encryptionService).toBe(prodEncryptionService);
     expect(appContainer.securityVault).toBe(prodSecurityVault);
-    expect(appContainer.syncService).toBe(prodSyncService);
     expect(appContainer.vectorIndexService).toBe(prodVectorIndexService);
     expect(appContainer.ragEngine).toBe(prodRagEngine);
     expect(appContainer.cloudSyncService).toBe(prodCloudSyncService);

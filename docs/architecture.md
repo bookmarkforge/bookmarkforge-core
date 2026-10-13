@@ -6,10 +6,16 @@ The private repository combines an MIT Core with proprietary Pro components.
 The distribution separation is not based solely on folders: the exporter
 maintains an explicit list of Pro files and the `check:open-core` gate checks
 the materialized result. The Core includes vault, CRUD, notes, basic
-import/export, search, security, and interface. Pro includes advanced AI, RAG,
-agents, P2P sync, flashcards, PDF/OCR, advanced exports, and advanced backups.
-The normative classification lives in `OPEN-CORE.md` and
-`scripts/export-public-repo.mjs`.
+import/export, search, security, and interface. Pro includes the local AI
+runtime, RAG chat, expert agents, P2P sync (transport and protocol), flashcards,
+PDF/OCR, and encrypted/disk backups.
+The normative classification lives in `OPEN-CORE.md` (one row per shipped
+feature, enforced by `check:open-core`) and in the machine-readable policy at
+`scripts/pro-boundary.mjs` (`PRO_MODULE_PATHS`), which the exporter, the
+placeholder generator and the boundary gates all read. Pro is an exact file
+list rather than a directory, so shared helpers stay Core — e.g.
+`src/services/webrtc-sync/compare.ts`, the revision comparator the Core folder
+sync uses.
 
 ## Components
 

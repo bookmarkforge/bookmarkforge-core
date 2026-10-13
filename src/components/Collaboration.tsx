@@ -9,6 +9,10 @@ import {
   WifiOff,
 } from "lucide-react";
 import { collaborationService } from "../services/CollaborationService";
+import {
+  announceProUnavailable,
+  ProUnavailableError,
+} from "../services/pro-access";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useRxDB } from "../hooks/useRxDB";
@@ -82,6 +86,13 @@ export const Collaboration: React.FC = () => {
       initialLoading: false,
       onSuccess: () => setIsSyncing(true),
       onError: (error) => {
+        if (error instanceof ProUnavailableError) {
+          // P2P sync is Pro: the shared panel explains the missing
+          // entitlement (or the Open Core build) instead of a generic
+          // "import failed" toast.
+          announceProUnavailable(error);
+          return;
+        }
         if (!(error instanceof Error && error.name === "AbortError")) {
           toast.error(t("app_importFailed"));
         }

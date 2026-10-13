@@ -5,6 +5,9 @@ const mockGate = vi.hoisted(() => ({ hasProAccess: vi.fn(() => true) }));
 /** Shared real-shape double so cache-reset identity can be observed. */
 const realBackupDouble = { exportBackup: vi.fn() };
 
+/** Stand-in for the Pro P2P replication-manager singleton. */
+const syncServiceDouble = { stopAll: vi.fn(), startP2PSync: vi.fn() };
+
 vi.mock("../../services/LicenseService", () => ({
   licenseService: mockGate,
 }));
@@ -90,6 +93,39 @@ describe("pro-access loader", () => {
     expect(typeof (first as { exportBackup: unknown }).exportBackup).toBe(
       "function",
     );
+  });
+
+  it("loads the P2P replication manager and leaves a sync facade behind", async () => {
+    // The teardown paths (CollaborationService.stop) cannot await, so a
+    // successful load must install the same instance as a sync facade.
+    vi.doMock("../../services/SyncService", () => ({
+      syncService: syncServiceDouble,
+    }));
+    vi.resetModules();
+    const fresh = await import("../../services/pro-access");
+    fresh.resetProAccessForTests();
+
+    await expect(fresh.loadSyncService()).resolves.toBe(syncServiceDouble);
+    expect(fresh.requireProService("SyncService")).toBe(syncServiceDouble);
+  });
+
+  it("rejects loadSyncService for a Free user without fetching the module", async () => {
+    const loaderSpy = vi.fn();
+    vi.doMock("../../services/SyncService", () => {
+      loaderSpy();
+      return { syncService: syncServiceDouble };
+    });
+    vi.resetModules();
+    const fresh = await import("../../services/pro-access");
+    fresh.resetProAccessForTests();
+    mockGate.hasProAccess.mockReturnValue(false);
+
+    await expect(fresh.loadSyncService()).rejects.toMatchObject({
+      name: "ProUnavailableError",
+      service: "SyncService",
+      reason: "no-license",
+    });
+    expect(loaderSpy).not.toHaveBeenCalled();
   });
 
   it("resetProAccessForTests clears the cache", async () => {

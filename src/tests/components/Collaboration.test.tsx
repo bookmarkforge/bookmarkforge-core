@@ -11,13 +11,43 @@ vi.mock("react-i18next", () => {
 const mockCollaborationService = {
   generateSharePayload: vi.fn(),
   importSharedVault: vi.fn(),
+  start: vi.fn(),
   stop: vi.fn(),
 };
 vi.mock("../../services/CollaborationService", () => ({
   collaborationService: mockCollaborationService,
 }));
 
+// P2P sync is Pro and the component routes a rejected sync start through the
+// entitlement seam, so the seam is mocked here (never the Pro module itself).
+const proAccessMock = vi.hoisted(() => {
+  class ProUnavailableError extends Error {
+    readonly service: string;
+    readonly reason: "no-license" | "load-failed";
+    constructor(service: string, reason: "no-license" | "load-failed") {
+      super(`Pro feature "${service}" is unavailable (${reason}).`);
+      this.name = "ProUnavailableError";
+      this.service = service;
+      this.reason = reason;
+    }
+  }
+  return { announceProUnavailable: vi.fn(), ProUnavailableError };
+});
+vi.mock("../../services/pro-access", () => proAccessMock);
+
 vi.mock("../../hooks/useRxDB", () => ({ useRxDB: vi.fn(() => ({})) }));
+
+// jsdom serves the document from http://localhost, and the real sanitizeUrl
+// rejects loopback by design — so the URL-driven sync path (room + secret in
+// the address) is unreachable in this environment. Only that guard is
+// neutralised here, and only so the Pro-routing assertion below can drive the
+// path a real non-loopback origin produces; every other export stays real.
+vi.mock("../../services/SanitizationService", async (importOriginal) => ({
+  ...(await importOriginal<
+    typeof import("../../services/SanitizationService")
+  >()),
+  sanitizeUrl: (url: string) => url,
+}));
 
 const mockToast = { success: vi.fn(), error: vi.fn() };
 vi.mock("sonner", () => ({ toast: mockToast }));
@@ -78,6 +108,29 @@ describe("Collaboration", () => {
   it("shows sync inactive by default", () => {
     render(<Collaboration />);
     expect(screen.getByTestId("icon-WifiOff")).toBeTruthy();
+  });
+
+  it("routes a Pro-gated sync start to the shared Pro panel", async () => {
+    // A Free user (or an Open Core build) joining a room over P2P: the start
+    // rejects with the typed Pro error and the component must explain the
+    // entitlement instead of a generic "import failed" toast.
+    mockCollaborationService.start.mockRejectedValue(
+      new proAccessMock.ProUnavailableError("SyncService", "no-license"),
+    );
+    const previous = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    window.history.replaceState({}, "", `/app?room=room-1#secret=${'a'.repeat(64)}`);
+    try {
+      render(<Collaboration />);
+      await waitFor(() => {
+        expect(mockCollaborationService.start).toHaveBeenCalled();
+      });
+      await waitFor(() => {
+        expect(proAccessMock.announceProUnavailable).toHaveBeenCalledTimes(1);
+      });
+      expect(mockToast.error).not.toHaveBeenCalled();
+    } finally {
+      window.history.replaceState({}, "", previous || "/");
+    }
   });
 
   it("generates share payload when clicking Share", async () => {

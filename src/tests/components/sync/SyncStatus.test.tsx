@@ -48,15 +48,28 @@ vi.mock("../../../db/database", () => ({
   initDB: vi.fn().mockResolvedValue({/* fake db */}),
 }));
 
-vi.mock("../../../services/SyncService", () => ({
-  syncService: (globalThis as any).__syncMock,
-}));
-
-vi.mock("../../../services/LicenseService", () => ({
-  licenseService: {
-    hasProAccess: vi.fn().mockReturnValue(true),
-  },
-}));
+// P2P sync is Pro: the widget resolves the replication manager through the
+// entitlement-gated seam (src/services/pro-access.ts), so the seam is what
+// this suite drives — a resolved service, or the typed rejection a Free user
+// (or an Open Core build) gets in production.
+const proAccessMock = vi.hoisted(() => {
+  class ProUnavailableError extends Error {
+    readonly service: string;
+    readonly reason: "no-license" | "load-failed";
+    constructor(service: string, reason: "no-license" | "load-failed") {
+      super(`Pro feature "${service}" is unavailable (${reason}).`);
+      this.name = "ProUnavailableError";
+      this.service = service;
+      this.reason = reason;
+    }
+  }
+  return {
+    loadSyncService: vi.fn(),
+    announceProUnavailable: vi.fn(),
+    ProUnavailableError,
+  };
+});
+vi.mock("../../../services/pro-access", () => proAccessMock);
 
 (globalThis as any).__syncMock = {
   isSyncing: false,
@@ -82,11 +95,11 @@ let SyncStatusForTest: React.FC;
 describe("SyncStatus", () => {
   beforeEach(async () => {
     vi.clearAllMocks();
-    // Re-seed the default Pro license mock after clearAllMocks.
-    const licenseMock = (await import("../../../services/LicenseService"))
-      .licenseService as any;
-    (licenseMock.hasProAccess as any).mockReturnValue(true);
     localStorage.setItem("bf_trial_started_at", String(Date.now()));
+    // Pro session by default: the seam hands back the sync double.
+    proAccessMock.loadSyncService.mockReset();
+    proAccessMock.announceProUnavailable.mockReset();
+    proAccessMock.loadSyncService.mockResolvedValue((globalThis as any).__syncMock);
     setMock({
       isSyncing: false,
       currentRoomId: null,
@@ -183,19 +196,24 @@ describe("SyncStatus", () => {
     });
   });
 
-  it("blocks P2P sync on Free (no license, no trial)", async () => {
-    localStorage.removeItem("bf_trial_started_at");
-    // Override the default Pro mock to simulate Free tier.
-    const licenseMock = (await import("../../../services/LicenseService"))
-      .licenseService as any;
-    (licenseMock.hasProAccess as any).mockReturnValue(false);
+  it("blocks P2P sync on Free: the seam rejects and the Pro panel explains it", async () => {
+    // What a Free user actually gets from the seam: a typed rejection, with
+    // no Pro byte fetched. The widget must not attempt a connection and must
+    // route the reason to the shared "requires Pro" panel.
+    proAccessMock.loadSyncService.mockRejectedValue(
+      new proAccessMock.ProUnavailableError("SyncService", "no-license"),
+    );
     setMock({ currentRoomId: null });
     await renderSyncStatus();
+    await waitFor(() => {
+      expect(screen.getByText("app_syncInactive")).toBeTruthy();
+    });
     await userEvent.click(screen.getByTitle("app_syncNow"));
     await waitFor(() => {
-      expect((globalThis as any).__syncMock.startP2PSync).not.toHaveBeenCalled();
-      expect((globalThis as any).__syncMock.restartSync).not.toHaveBeenCalled();
+      expect(proAccessMock.announceProUnavailable).toHaveBeenCalled();
     });
+    expect((globalThis as any).__syncMock.startP2PSync).not.toHaveBeenCalled();
+    expect((globalThis as any).__syncMock.restartSync).not.toHaveBeenCalled();
   });
 
   it("restarts existing sync when a room is active", async () => {

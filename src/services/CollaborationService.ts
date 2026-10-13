@@ -4,7 +4,14 @@ import { securityVault } from "./SecurityVault";
 import { useSecurityStore } from "../hooks/useSecurityStore";
 import { logger } from "../utils/logger";
 import { zeroPasswordBytes } from "../utils/crypto-core";
-import { syncService } from "./SyncService";
+// ADR-066: P2P sync is Pro — this Core service resolves the replication
+// manager through the entitlement-gated seam rather than linking the Pro
+// module statically.
+import {
+  loadSyncService,
+  requireProService,
+  type SyncServiceType,
+} from "./pro-access";
 
 const SHARE_PAYLOAD_VERSION = 2;
 const SHARE_INFO = "bookmarkforge-share";
@@ -78,13 +85,12 @@ class CollaborationService {
     if (typeof sharePassword !== "string" || !sharePassword) {return null;}
     throwIfAborted(signal);
 
-    const masterPw = await securityVault.withMasterPasswordBytes(
+    // The wrapper owns the password copy and wipes it once this callback
+    // settles, so it is never returned out of the callback.
+    return securityVault.withMasterPasswordBytes(
       CollaborationService,
-      (pw) => pw,
-    );
-    if (!masterPw) {return null;}
-
-    try {
+      async (masterPw) => {
+      if (!masterPw) {return null;}
       throwIfAborted(signal);
       // Derive a temporary sharing credential using HKDF. The source master
       // password never leaves this device and the session token is never
@@ -144,13 +150,8 @@ return btoa(JSON.stringify(payload));
        } finally {
          zeroPasswordBytes(derivedBits);
        }
-     } finally {
-// withMasterPasswordBytes returns an ephemeral copy for callers. Do
-      // not leave the source password copy alive after HKDF completes.
-      if (masterPw) {
-        zeroPasswordBytes(masterPw);
-      }
-    }
+      },
+    );
   }
 
   /**
@@ -312,11 +313,25 @@ return btoa(JSON.stringify(payload));
     // live P2P session the caller believes was cancelled. Without this
     // listener the abort is only observed after the (possibly hanging)
     // startup completes — leaving the vault actively syncing meanwhile.
+    //
+    // Registered BEFORE the Pro resolution below, and holding the instance
+    // through a local, so the listener is in place for the whole startup.
+    // An abort that lands while the Pro chunk is still being fetched cannot
+    // have a session to stop (nothing has started yet) and is re-checked by
+    // the throwIfAborted right after the load.
+    let loaded: SyncServiceType | null = null;
     const onAbort = () => {
-      syncService.stopAll();
+      loaded?.stopAll();
     };
     signal?.addEventListener("abort", onAbort, { once: true });
     try {
+      // P2P sync is Pro. Resolving here means a Free user (or an Open Core
+      // build) gets ProUnavailableError before any Pro byte is fetched, which
+      // the caller surfaces as the shared "requires Pro" state — instead of a
+      // shared-vault flow that silently never connects.
+      const syncService = await loadSyncService();
+      loaded = syncService;
+      throwIfAborted(signal);
       if (roomSecret === undefined) {
         await syncService.startP2PSync(db, roomId);
       } else {
@@ -329,18 +344,30 @@ return btoa(JSON.stringify(payload));
       await this.stop();
       throwIfAborted(signal);
     }
-    const getRoomSecret = (syncService as unknown as {
+    // The startup returned, so the Pro module is loaded and `loaded` is set
+    // (a rejection would have propagated before this line).
+    const getRoomSecret = (loaded as unknown as {
       getRoomSecret?: () => string | null;
-    }).getRoomSecret;
+    })?.getRoomSecret;
     return typeof getRoomSecret === "function" ? getRoomSecret() : null;
   }
 
   /**
    * Stop P2P Synchronization
+   *
+   * Reads the already-loaded Pro instance synchronously: this runs on
+   * teardown paths (unmount, lock) that cannot await, and `start()` above is
+   * the only way a session is ever established, so nothing can be running
+   * when the module was never loaded.
    */
   async stop(): Promise<void> {
     logger.info("[CollaborationService] P2P Sync Stopped");
-    syncService.stopAll();
+    try {
+      requireProService<SyncServiceType>("SyncService").stopAll();
+    } catch {
+      // INTENTIONAL SILENCE: no P2P session exists without the Pro service
+      // having been loaded first — there is nothing to stop.
+    }
   }
 }
 

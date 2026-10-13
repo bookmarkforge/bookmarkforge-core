@@ -85,11 +85,14 @@ This index is generated from the documents present in the checkout. A deleted do
 | `docs/index.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/INFORME-E2E-HUMAN-LIKE-BROWSERS.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/internal-security-checklist.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/ios-day0-session-sheet.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/ios-manual-test-script.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/kayttoopas-fi.md` | vivo | Localized user manual. |
 | `docs/korisnicki-prirucnik-hr.md` | vivo | Localized user manual. |
 | `docs/kullanici-kilavuzu-tr.md` | vivo | Localized user manual. |
 | `docs/LAUNCH-CHECKLIST-COMPLETO.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/launch-checklist.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/launch-day-smoke.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/legacy-schema-version-map.md` | vivo | Schema compatibility map generated from src/db/schema.ts. |
 | `docs/legal-closing-package.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/locale-addition-runbook.md` | vivo | Document present in the checkout; review its state before retiring it. |
@@ -104,6 +107,8 @@ This index is generated from the documents present in the checkout. A deleted do
 | `docs/operations.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/operator-quick-reference.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/ops-nightly.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/p2p-sync-manual-test-script.md` | vivo | Document present in the checkout; review its state before retiring it. |
+| `docs/p2p-sync-session-prep.md` | vivo | Document present in the checkout; review its state before retiring it. |
 | `docs/panduan-pengguna-id.md` | vivo | Localized user manual. |
 | `docs/PENDIENTES.md` | transitorio | Register of pending work and known debt. |
 | `docs/performance-budget-by-feature.md` | vivo | Document present in the checkout; review its state before retiring it. |

@@ -2,36 +2,5 @@
   "schema": "bmf.documented-doc-references-baseline/1",
   "fingerprint": "relative-links/v1: markdown-link-targets, extension-gated, resolved against the document directory",
   "note": "Frozen dangling relative links in live documents. The gate fails when this set grows, when an entry resolves today (pay the debt and drop the entry), or when an entry has no reason.",
-  "knownMissingLinks": [
-    {
-      "file": "docs/index.md",
-      "reference": "../TRADEMARKS.md",
-      "reason": "TRADEMARKS.md is not at the repository root the link points to; the only copy lives in scripts/public-export/. Tracked as P-30 in docs/PENDIENTES.md."
-    },
-    {
-      "file": "docs/launch-checklist.md",
-      "reference": "ios-day0-session-sheet.md",
-      "reason": "The manual validation procedure this row depends on has not been written yet. Tracked as P-31 in docs/PENDIENTES.md."
-    },
-    {
-      "file": "docs/launch-checklist.md",
-      "reference": "ios-manual-test-script.md",
-      "reason": "The manual validation procedure this row depends on has not been written yet. Tracked as P-31 in docs/PENDIENTES.md."
-    },
-    {
-      "file": "docs/launch-checklist.md",
-      "reference": "launch-day-smoke.md",
-      "reason": "The manual validation procedure this row depends on has not been written yet. Tracked as P-31 in docs/PENDIENTES.md."
-    },
-    {
-      "file": "docs/launch-checklist.md",
-      "reference": "p2p-sync-manual-test-script.md",
-      "reason": "The manual validation procedure this row depends on has not been written yet. Tracked as P-31 in docs/PENDIENTES.md."
-    },
-    {
-      "file": "docs/launch-checklist.md",
-      "reference": "p2p-sync-session-prep.md",
-      "reason": "The manual validation procedure this row depends on has not been written yet. Tracked as P-31 in docs/PENDIENTES.md."
-    }
-  ]
+  "knownMissingLinks": []
 }

@@ -369,3 +369,16 @@ const performanceStatic = spawnSync(
 if (performanceStatic.status !== 0) {
   process.exit(performanceStatic.status ?? 1);
 }
+
+// Copy help-*.html files from public/ to dist/ for landing smoke checks
+const publicDir = join(ROOT, "public");
+const distDir = join(ROOT, "dist");
+const helpFiles = readdirSync(publicDir, { withFileTypes: true })
+  .filter((entry) => entry.isFile() && entry.name.startsWith("help-") && entry.name.endsWith(".html"))
+  .map((entry) => entry.name);
+for (const file of helpFiles) {
+  const src = join(publicDir, file);
+  const dst = join(distDir, file);
+  writeFileSync(dst, readFileSync(src));
+}
+console.log(`[build-ci] copied ${helpFiles.length} help-*.html files to dist/`);

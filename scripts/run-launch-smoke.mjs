@@ -177,7 +177,10 @@ if (WRITE_REPORT) {
 const run = spawnSync(process.execPath, [playwrightCli, "test", ...args], {
   cwd: ROOT,
   stdio: "inherit",
-  env: process.env,
+  env: {
+    ...process.env,
+    BMF_LAUNCH_SMOKE_MODE: PROD ? "prod" : "test",
+  },
 });
 
 if (run.status !== 0) {

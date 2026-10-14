@@ -4,51 +4,57 @@ import { expect, type Page } from "@playwright/test";
  * Pro entitlement seeding for Pro-gated E2E specs (backup / restore flows).
  *
  * HOW IT WORKS — no client-side forging, ever:
- * The client only trusts a license state that is an RSA-PSS signature over
- * a payload bound to the install deviceId, verified with the committed
- * public key. Nothing editable can fake that. Instead, this helper runs the
- * REAL activation path in the page: LicenseService.activate() →
- * /api/license/activate (Vite proxy) → companion signing service (8787) →
- * Whop adapter → scripts/license-mock.mjs (8082, wired in
- * playwright.config.ts) → the server signs a payload for THIS deviceId with
- * the gitignored dev key (server/.license-signing-key.pkcs8). The response
- * is persisted by the production code path itself, exactly like a real
- * activation (launch-smoke-critical-paths does the same through the UI).
+ * The client only trusts an RSA-PSS signature over a payload bound to this
+ * install's deviceId, verified with the committed public key. This helper
+ * enters the mock license through the real Settings → Pro UI; no test imports
+ * app source or forges client state. The request travels through the signing
+ * service and Whop-compatible local adapter, which still requires the
+ * operator's matching private signing key.
  *
  * Without the dev key the signing service fails closed (503
  * SIGNING_KEY_INVALID) and the seed fails loudly — it never silently
  * grants Pro.
  *
  * INTENTIONALLY OPT-IN: never call this from setupVault. Several specs
- * assert Free-tier limits (1,000-bookmark wall, Pro-unavailable panels);
- * seeding globally would break them. Only Pro-gated specs call it, on the
- * already-loaded app origin (no navigation: a goto after setupVault would
- * re-lock the vault and would interrupt the open onboarding wizard).
+ * assert Free-tier limits and Pro-unavailable panels. Call only from a Pro-
+ * gated spec after onboarding is closed; this helper opens and closes Settings.
  */
-
-/** Value scripts/license-mock.mjs accepts (matches LICENSE_MOCK_KEY in playwright.config.ts). */
-const E2E_LICENSE_KEY = process.env.BMF_E2E_LICENSE_KEY ?? "e2e-license-key";
 
 /** Persisted state key — mirrors LICENSE_CONFIG.storageKeys.licenseState. */
 const LICENSE_STATE_KEY = "bf_license_state";
 
 /**
- * Activate the mock-adapter license for this browser context's install and
- * wait until the signed state is persisted and cryptographically trusted.
- * The page must already be on the app origin (localStorage is origin-bound)
- * and the app bundle must be loaded — call it after setupVault/skipPassword.
+ * Activate a mock-adapter license through the visible Settings → Pro flow.
+ * The caller may supply the license key expected by its profile's mock
+ * adapter; omitting it uses the shared E2E profile default.
  */
-export async function seedProEntitlement(page: Page): Promise<void> {
-  await page.evaluate(async (licenseKey) => {
-    const { licenseService } = await import("/src/services/LicenseService.ts");
-    await licenseService.activate(licenseKey);
-    if (!licenseService.hasProAccess()) {
-      throw new Error(
-        "seedProEntitlement: activation did not yield Pro access " +
-          "(signing service unreachable, dev key missing, or adapter key mismatch)",
-      );
-    }
-  }, E2E_LICENSE_KEY);
+export async function seedProEntitlement(
+  page: Page,
+  licenseKey = process.env.BMF_E2E_LICENSE_KEY ?? "e2e-license-key",
+): Promise<void> {
+  if (!licenseKey.trim()) {
+    throw new Error("seedProEntitlement requires a non-empty mock license key");
+  }
+  const settings = page.getByTestId("settings-button");
+  await expect(settings).toBeVisible();
+  await settings.click();
+  const dialog = page.locator('[aria-labelledby="settings-dialog-title"]');
+  await expect(dialog).toBeVisible();
+  const pro = page.getByTestId("settings-pro");
+  await expect(pro).toBeVisible();
+  const activationError = pro.locator('p[role="alert"]');
+  const activationStatus = pro.getByText(/^(Devices:|Activations left:)/);
+  await pro.locator("#license-key-input").fill(licenseKey);
+  await pro.getByRole("button", { name: "Activate" }).click();
+  await expect(activationError.or(activationStatus)).toBeVisible({
+    timeout: 60_000,
+  });
+  if (await activationError.isVisible()) {
+    throw new Error(
+      `seedProEntitlement: Settings license activation failed: ${(await activationError.textContent())?.trim() || "unknown license error"}`,
+    );
+  }
+  await expect(pro.getByRole("button", { name: "Deactivate" })).toBeVisible();
 
   // The production persistence contract: a signed { payload, signature }
   // state in localStorage. Assert it so a silent downgrade (e.g. tamper
@@ -63,13 +69,15 @@ export async function seedProEntitlement(page: Page): Promise<void> {
       ),
     )
     .toContain('"signature"');
+
+  await dialog.getByRole("button", { name: "Close" }).first().click();
+  await expect(dialog).toBeHidden();
 }
 
 /**
- * Remove the seeded entitlement (specs that flip Pro → Free mid-test).
- * Deliberately does NOT call licenseService.deactivate(): that performs
- * server-side bookkeeping on the shared mock instance, and a local state
- * removal is all a reload needs to boot back to Free.
+ * Remove the signed entitlement locally for specs that flip Pro → Free.
+ * This deliberately avoids a server-side deactivation; it is only suitable
+ * when the current test discards or reloads this browser state afterwards.
  */
 export async function clearProEntitlement(page: Page): Promise<void> {
   await page.evaluate((key) => localStorage.removeItem(key), LICENSE_STATE_KEY);

@@ -247,7 +247,7 @@ describe("Omnibar", () => {
     });
     await screen.findByText("Document 1");
     await user.keyboard("{Enter}");
-    expect(screen.getByRole("group")).toBeTruthy();
+    expect(screen.getByRole("dialog")).toBeTruthy();
     await user.keyboard("{Escape}");
     expect(screen.getByRole("listbox")).toBeTruthy();
     expect(defaultProps.onClose).not.toHaveBeenCalled();

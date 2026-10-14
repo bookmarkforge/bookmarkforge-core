@@ -18,7 +18,7 @@ import { seedProEntitlement } from "./pro-entitlement-helpers";
  *      (Whop-adapter mock → RSA-PSS entitlement → client verification);
  *   6. an invalid license key failing closed with a visible error;
  *   7. an encrypted .bmf backup round-trip after a simulated total data loss
- *      (Settings → Export Backup → disaster → F0-2 restore-first wizard).
+ *      (Settings → Export Backup → disaster → F0-2 prompt → Settings import).
  *
  * Everything is UI-driven ON PURPOSE: the same spec runs in two profiles
  * (see playwright.launch-smoke.config.ts) — the fast `--mode test` dev server
@@ -141,7 +141,7 @@ test.describe("critical path: vault create", () => {
   test("an 11-character password is rejected at the UI before any vault work", async ({
     page,
   }) => {
-    await page.goto("/");
+    await page.goto("/app");
     await expect(
       page.getByRole("heading", { name: "Secure your vault" }),
     ).toBeVisible({ timeout: 30_000 });
@@ -271,18 +271,9 @@ test.describe("critical path: license activation", () => {
     await setupVault(page);
     await dismissOverlays(page);
 
-    const pro = await openProSection(page);
-    await pro.locator("#license-key-input").fill(LICENSE_KEY);
-    await pro.getByRole("button", { name: "Activate" }).click();
-
-    // Pro state renders after the signed entitlement is verified locally.
-    // Current entitlements expose the canonical device status; legacy signing
-    // responses may only expose activationsLeft, so keep this smoke contract
-    // compatible with both payload shapes during migration.
-    await expect(
-      pro.getByText(/^(Devices:|Activations left:)/),
-    ).toBeVisible({ timeout: 60_000 });
-    await expect(pro.getByRole("button", { name: "Deactivate" })).toBeVisible();
+    // The shared helper exercises the real Settings → Pro activation UI,
+    // signature verification, and persisted signed state.
+    await seedProEntitlement(page, LICENSE_KEY);
   });
 
   test("an invalid key fails closed with a visible error", async ({ page }) => {
@@ -327,7 +318,7 @@ test.describe("critical path: encrypted backup round-trip", () => {
     //    Pro-gated surface: seed the entitlement through the real signing
     //    stack (license-mock) so the export is not stopped by the gate.
     await setupVault(page, { password: LAUNCH_PASSWORD });
-    await seedProEntitlement(page);
+    await seedProEntitlement(page, LICENSE_KEY);
     await dismissOverlays(page);
     await addBookmarkViaUi(page, SMOKE_URL, SMOKE_TITLE);
 
@@ -364,39 +355,49 @@ test.describe("critical path: encrypted backup round-trip", () => {
     //    encrypted with the master password, so the restored vault must be
     //    opened with it — exactly what the kit warning tells users).
     //    dismissOnboarding:false keeps the F0-2 restore-first wizard open.
-    //    totalDisaster wiped localStorage, so the entitlement must be
-    //    re-seeded for the restore-side import path.
+    //    totalDisaster also removed the signed Pro state.
     await setupVault(page, {
       password: LAUNCH_PASSWORD,
       dismissOnboarding: false,
     });
+    const onboarding = page.locator('[aria-labelledby="onboarding-dialog-title"]');
     await expect(
-      page.getByRole("heading", { name: "Your vault is empty" }),
+      onboarding.getByRole("heading", { name: "Your vault is empty" }),
     ).toBeVisible({ timeout: 30_000 });
-    await seedProEntitlement(page); // second seed after totalDisaster
+    await onboarding.getByRole("button", { name: "Continue without restoring" }).click();
+    await onboarding.getByRole("button", { name: "Skip onboarding" }).click();
+    await expect(onboarding).toBeHidden();
 
-    // 5. RESTORE — through the real wizard file input (accepts .bmf and
-    //    prompts for the password itself). The handler reloads the app when
-    //    the import resolves; wait for that load explicitly.
-    const dialog = page.locator('[aria-labelledby="onboarding-dialog-title"]');
-    const fileInput = dialog.locator('input[type="file"][accept=".json,.bmf"]');
-    await expect(fileInput).toBeAttached();
+    // The signed license was correctly wiped with site data. Re-activate Pro
+    // through the real Settings UI, then restore the same encrypted artifact
+    // through Settings → Import Data; no source-module import or local-state
+    // forging, and this path works against both Vite dev and the built bundle.
+    await seedProEntitlement(page, LICENSE_KEY);
+    await page.getByTestId("settings-button").click();
+    const settingsDialog = page.locator('[aria-labelledby="settings-dialog-title"]');
+    await expect(settingsDialog).toBeVisible();
+    const importButton = settingsDialog.getByRole("button", { name: "Import Data" });
+    const fileChooserPromise = page.waitForEvent("filechooser");
+    await importButton.click();
+    const fileChooser = await fileChooserPromise;
     const reload = page.waitForEvent("load", { timeout: 120_000 });
-    await fileInput.setInputFiles({
+    await fileChooser.setFiles({
       name: "launch-smoke.bmf",
       mimeType: "application/octet-stream",
       buffer: readFileSync(backupPath),
     });
+    const passwordDialog = page.locator('[aria-labelledby="backup-password-dialog-title"]');
+    await expect(passwordDialog).toBeVisible();
+    await passwordDialog.getByLabel("Enter the password to decrypt this backup:").fill(LAUNCH_PASSWORD);
+    await passwordDialog.getByRole("button", { name: "Unlock" }).click();
+    await expect(page.getByText("Backup imported successfully", { exact: true })).toBeVisible({ timeout: 60_000 });
     await reload;
 
     // 6. VERIFY — the vault unlocks with the ORIGINAL password (proving the
     //    password survived inside the encrypted backup) and the bookmark is
     //    back, found through the same search UI a user would use.
     await expect(
-      page
-        .getByTestId("vault-locked-screen")
-        .or(page.getByRole("heading", { name: "Secure your vault" }))
-        .or(page.getByTestId("settings-button")),
+      page.getByTestId("vault-locked-screen").or(page.getByTestId("settings-button")),
     ).toBeVisible({ timeout: 60_000 });
     if (await vaultIsLocked(page)) {
       await unlockVault(page, LAUNCH_PASSWORD);

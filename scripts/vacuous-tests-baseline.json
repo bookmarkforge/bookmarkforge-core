@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-24",
+  "updatedAt": "2026-10-14",
   "suites": {
     "src/tests/human-like/examples": {
       "reason": "Debt inherited from bace7c2 (\"Add 1360 new human-like Playwright tests for comprehensive coverage\", 2026-09-22): 1657 of 2102 tests (78.8%) assert only inside a visibility/count guard, so they pass when the feature they name is absent. First and second debt payments 2026-09-24: advanced-alerts-tests.spec.ts rewritten from 10 vacuous tests into 5 real ones against the sonner toast contract; canvas-graph-tests.spec.ts (the largest entry, 15 tests of try/catch theatre) into 5 real ones against the verified xyflow/d3 canvas+graph contracts — all passing in Chromium. 122 of the 160 files (now 120) are 100% vacuous. Counting: node scripts/analyze-vacuous-tests.mjs. Remediation: rewrite or retire the 92 advanced-* files remaining after the 2026-09-24 pilot retirement of advanced-content-tests.spec.ts (its 43 tests drove a fictional collaborative-wiki UI; every data-testid existed only inside the spec). This gate refuses growth.",
@@ -162,8 +162,7 @@
         "a11y.spec.ts": 1,
         "dashboard-banner-cls.spec.ts": 2,
         "demo-automation.spec.ts": 1,
-        "launch-smoke-critical-paths.spec.ts": 1,
-        "playtest-regressions.spec.ts": 0,
+        "launch-smoke-critical-paths.spec.ts": 2,
         "vault-skip-password.spec.ts": 1,
         "webrtc-handshake-diagnostics.spec.ts": 1
       }

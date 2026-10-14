@@ -7,9 +7,9 @@ import { seedProEntitlement } from "./pro-entitlement-helpers";
  * vault-recovery-restore — F0-2 end to end.
  *
  * After first-time setup the vault is empty, so the onboarding wizard opens
- * on the restore-first recovery screen. Restoring a plain `.json` backup
- * must replace the empty vault and make the imported data visible in the
- * bookmarks panel — no new blank vault is created silently.
+ * on the restore-first recovery screen. The user can continue without restore,
+ * activate Pro through Settings, then import a plain `.json` backup; imported
+ * data must replace the empty vault and appear in the bookmarks panel.
  *
  * The backup file is a minimal-but-valid unversioned envelope: the importer
  * accepts a flat `{ bookmarks: [...] }` object (validateBackupEnvelope),
@@ -26,30 +26,37 @@ test("empty vault → recovery screen → restore from file → data visible", a
   });
   page.on("pageerror", (err) => appErrors.push(err.message));
 
-  // Keep the onboarding wizard open so the recovery screen is what we assert
-  // against (setupVault otherwise auto-dismisses it).
+  // Assert the F0-2 restore-first screen before activating Pro. The signed
+  // license is created through Settings UI; re-arm only onboarding's display
+  // flag after reload so this test can return to that user-facing recovery
+  // path without forging any license state.
   await setupVault(page, { dismissOnboarding: false });
-
-  // Restore goes through BackupService (Pro-gated): seed the entitlement on
-  // the already-loaded page — no navigation, the wizard must stay open.
+  const onboarding = page.locator('[aria-labelledby="onboarding-dialog-title"]');
+  await expect(
+    onboarding.getByRole("heading", { name: "Your vault is empty" }),
+  ).toBeVisible({ timeout: 30_000 });
+  await onboarding.getByRole("button", { name: "Continue without restoring" }).click();
+  await onboarding.getByRole("button", { name: "Skip onboarding" }).click();
+  await expect(onboarding).toBeHidden();
   await seedProEntitlement(page);
 
-  // F0-2: the empty vault opens the wizard on the restore-first screen.
+  await page.evaluate(() =>
+    localStorage.setItem("forge_onboarding_complete", "false"),
+  );
+  await page.reload();
+  const lockedScreen = page.getByTestId("vault-locked-screen");
+  await expect(lockedScreen).toBeVisible({ timeout: 30_000 });
+  await unlockVault(page);
   await expect(
     page.getByRole("heading", { name: "Your vault is empty" }),
   ).toBeVisible({ timeout: 30_000 });
 
-  // Restore via the hidden file input inside the onboarding dialog
-  // (same interaction the real button triggers, without the native chooser).
+  // Restore via the hidden input inside the real F0-2 wizard. `setInputFiles()`
+  // dispatches the change event but does not wait for the async importer; the
+  // successful handler reloads only after BackupService commits.
   const dialog = page.locator('[aria-labelledby="onboarding-dialog-title"]');
   const fileInput = dialog.locator('input[type="file"][accept=".json,.bmf"]');
   await expect(fileInput).toBeAttached();
-
-  // `setInputFiles()` dispatches the change event but does not await the
-  // component's async handler. The successful handler calls
-  // `window.location.reload()` only after importBackup resolves, so wait for
-  // the NEXT load event explicitly; otherwise the old unlocked shell remains
-  // visible behind the onboarding modal and the test can race the reload.
   const reload = page.waitForEvent("load", { timeout: 30_000 });
   await fileInput.setInputFiles({
     name: "bookmarkforge-restore.json",
@@ -78,13 +85,9 @@ test("empty vault → recovery screen → restore from file → data visible", a
   });
   await reload;
 
-  // Success path reloads immediately. A password-protected vault returns to
-  // the lock screen, while a passwordless first-run vault returns to the
-  // security confirmation screen. Wait for either before continuing.
   const successGate = page.locator(
     '[aria-labelledby="security-confirmation-title"]',
   );
-  const lockedScreen = page.getByTestId("vault-locked-screen");
   const settingsButton = page.getByTestId("settings-button");
   const errorToast = page.getByText(
     "Could not restore the backup. Check the file and password.",
@@ -103,14 +106,7 @@ test("empty vault → recovery screen → restore from file → data visible", a
     await successGate.getByRole("button").last().click();
   }
   await expect(settingsButton).toBeVisible({ timeout: 30_000 });
-  const onboarding = page.locator(
-    '[aria-labelledby="onboarding-dialog-title"]',
-  );
   if (await onboarding.isVisible().catch(() => false)) {
-    // The successful restore reloads a new app boot. Because setupVault kept
-    // onboarding open, the restored vault can return on either the
-    // restore-first screen or the normal welcome step. Skip the modal through
-    // its own accessible control so its backdrop cannot intercept navigation.
     const skipOnboarding = onboarding.getByRole("button", {
       name: "Skip onboarding",
     });

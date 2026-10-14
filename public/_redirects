@@ -93,6 +93,35 @@
 # Help Center — static HTML with same headers as landing/legal
 /help  /help.html  200
 /help/  /help.html  200
+/help-ar  /help-ar.html  200
+/help-bg  /help-bg.html  200
+/help-cs  /help-cs.html  200
+/help-da  /help-da.html  200
+/help-de  /help-de.html  200
+/help-el  /help-el.html  200
+/help-es  /help-es.html  200
+/help-fi  /help-fi.html  200
+/help-fr  /help-fr.html  200
+/help-he  /help-he.html  200
+/help-hi  /help-hi.html  200
+/help-hr  /help-hr.html  200
+/help-hu  /help-hu.html  200
+/help-id  /help-id.html  200
+/help-it  /help-it.html  200
+/help-ja  /help-ja.html  200
+/help-ko  /help-ko.html  200
+/help-nl  /help-nl.html  200
+/help-no  /help-no.html  200
+/help-pl  /help-pl.html  200
+/help-pt  /help-pt.html  200
+/help-ro  /help-ro.html  200
+/help-ru  /help-ru.html  200
+/help-sv  /help-sv.html  200
+/help-th  /help-th.html  200
+/help-tr  /help-tr.html  200
+/help-uk  /help-uk.html  200
+/help-vi  /help-vi.html  200
+/help-zh  /help-zh.html  200
 
 # Offline fallback — the app (and the service worker) navigates here when the
 # network is gone; without these rows the page 404s while Vercel serves it.

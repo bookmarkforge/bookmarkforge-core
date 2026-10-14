@@ -49,6 +49,7 @@ const port = prodMode
   ? Number(process.env.PLAYWRIGHT_PORT ?? 4174)
   : Number(process.env.PLAYWRIGHT_PORT ?? 4173);
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`;
+const readinessURL = prodMode ? `${baseURL}/app` : baseURL;
 const licenseMockPort = Number(process.env.LICENSE_MOCK_PORT ?? 8082);
 const signalingPort = Number(process.env.SIGNALING_PORT ?? 8787);
 const LICENSE_MOCK_KEY = process.env.LICENSE_MOCK_KEY ?? "license-mock-key";
@@ -109,7 +110,7 @@ export default defineConfig({
     prodMode
       ? {
           command: `npm run preview -- --host 127.0.0.1 --port ${port}`,
-          url: baseURL,
+          url: readinessURL,
           reuseExistingServer: !process.env.CI,
           timeout: 120_000,
           env: {

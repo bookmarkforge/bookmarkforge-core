@@ -137,7 +137,7 @@ describe("WelcomeTour", () => {
     render(<WelcomeTour />);
     await screen.findByText("Main Navigation", {}, { timeout: 2000 });
     // Use Escape key instead of clicking Skip (AnimatePresence may hide DOM)
-    await user.keyboard("{Escape}");
+    fireEvent.keyDown(window, { key: "Escape" });
     // Poll: the keydown handler updates React state outside act() (real
     // timers), so the persist may land a tick later.
     await waitFor(() =>
@@ -164,7 +164,7 @@ describe("WelcomeTour", () => {
   it("Escape completes the tour", async () => {
     render(<WelcomeTour />);
     await screen.findByText("Main Navigation", {}, { timeout: 2000 });
-    await user.keyboard("{Escape}");
+    fireEvent.keyDown(window, { key: "Escape" });
     await waitFor(() =>
       expect(safeSetMock).toHaveBeenCalledWith(
         "bmf_welcome_tour_complete",

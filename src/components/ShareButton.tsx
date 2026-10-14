@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import type { Block } from "@blocknote/core";
-import { Check, Loader2, Globe, QrCode, X, Copy } from "lucide-react";
+import { Check, Loader2, Globe, QrCode, X, Copy, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import LZString from "lz-string";
 import { useTranslation } from "react-i18next";
@@ -25,6 +25,9 @@ export const ShareButton = ({
   const [shareUrl, setShareUrl] = useState("");
   const { t } = useTranslation();
   const copyTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  // Web Share API: check if supported
+  const supportsWebShare = navigator.share !== undefined;
+
   const {
     run: runShare,
     isRunning: isSharing,
@@ -107,6 +110,27 @@ export const ShareButton = ({
     });
   };
 
+  // Web Share API handler: share document via native device share menu
+  const handleNativeShare = useCallback(async () => {
+    if (!supportsWebShare) {
+      logger.warn("Web Share API not supported");
+      return;
+    }
+
+    try {
+      await navigator.share({
+        title: title || t("app_untitledDocument", "Untitled Document"),
+        text: `${title || t("app_untitledDocument", "Untitled Document")}\n\n${shareUrl}`,
+        url: shareUrl,
+      });
+    } catch (error) {
+      // User cancelled share or error occurred
+      if ((error as Error).name !== "AbortError") {
+        logger.error("Failed to share via Web Share API:", error);
+      }
+    }
+  }, [supportsWebShare, title, shareUrl, t]);
+
   return (
     <>
       <button
@@ -158,6 +182,16 @@ export const ShareButton = ({
                     "Scan this QR code with your phone camera to open this document instantly, no internet required.",
                 })}
               </p>
+
+              {supportsWebShare && (
+                <button
+                  onClick={handleNativeShare}
+                  className="w-full mb-4 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg transition-all text-sm font-medium bg-cyan-50 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-100 dark:hover:bg-cyan-500/20 truncate"
+                >
+                  <Share2 className="size-4 shrink-0" />
+                  <span className="truncate">{t("app_shareNative", "Share via Device")}</span>
+                </button>
+              )}
 
               <div className="w-full relative group">
                 <input

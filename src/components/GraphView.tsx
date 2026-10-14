@@ -28,6 +28,9 @@ const GraphView = ({ onNodeClick }: GraphViewProps) => {
   // loader reads it (like the original doRender(nextQuery) argument).
   const queryRef = useRef<string | undefined>(undefined);
 
+  // Web Share API: check if supported
+  const supportsWebShare = navigator.share !== undefined;
+
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const graphRefreshTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
@@ -84,6 +87,52 @@ const GraphView = ({ onNodeClick }: GraphViewProps) => {
 
     return { nodes, links: buildLinksFromTags(nodes) };
   }, []);
+
+  // Web Share API handler: share the current graph visualization
+  const handleShareGraph = useCallback(async () => {
+    if (!supportsWebShare) {
+      logger.warn("Web Share API not supported");
+      return;
+    }
+
+    try {
+      // Capture the SVG as an image
+      const svgElement = svgRef.current;
+      if (!svgElement) return;
+
+      const svgData = new XMLSerializer().serializeToString(svgElement);
+      const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+      const url = URL.createObjectURL(svgBlob);
+
+      const img = new Image();
+      img.onload = async () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = svgElement.clientWidth || 800;
+        canvas.height = svgElement.clientHeight || 600;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          ctx.fillStyle = "#ffffff";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0);
+          const dataUrl = canvas.toDataURL("image/png");
+          URL.revokeObjectURL(url);
+
+          const response = await fetch(dataUrl);
+          const blob = await response.blob();
+          const file = new File([blob], "knowledge-graph.png", { type: "image/png" });
+
+          await navigator.share({
+            title: t("app_knowledgeGraph", "Knowledge Graph"),
+            text: `${t("app_nodes")}: ${stats.nodes} | ${t("app_links")}: ${stats.links} | ${t("app_clusters")}: ${stats.clusters}`,
+            files: [file],
+          });
+        }
+      };
+      img.src = url;
+    } catch (error) {
+      logger.error("Failed to share graph:", error);
+    }
+  }, [supportsWebShare, stats, t]);
 
   // The render pipeline is one data-load: the loader fetches (cached via
   // graphDataRef), filters by the current query, renders the simulation and
@@ -193,9 +242,20 @@ const GraphView = ({ onNodeClick }: GraphViewProps) => {
   return (
     <div className="relative w-full h-[650px] overflow-hidden ds-radius-card ds-bg-secondary">
       <div className="absolute top-4 start-4 z-10 flex flex-col gap-2">
-        <h1 className="text-lg font-semibold ds-text-primary truncate">
-          {t("app_knowledgeGraph")}
-        </h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-lg font-semibold ds-text-primary truncate">
+            {t("app_knowledgeGraph")}
+          </h1>
+          {supportsWebShare && stats.nodes > 0 && (
+            <button
+              onClick={handleShareGraph}
+              className="p-1.5 rounded-lg hover:bg-[var(--state-hover-bg)] dark:hover:bg-[var(--state-hover-bg)] transition-colors ds-text-muted hover:ds-text-primary"
+              title={t("app_shareNative", "Share via Device")}
+            >
+              <Share2 className="size-4" />
+            </button>
+          )}
+        </div>
         <input
           type="text"
           aria-label={t("app_filterGraph") || "Filter nodes"}

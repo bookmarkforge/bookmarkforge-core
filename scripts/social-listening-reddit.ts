@@ -70,16 +70,6 @@ interface RSSFeed {
 }
 
 /**
- * Check if a text contains any of the configured keywords (case-insensitive)
- */
-function containsKeyword(text: string): boolean {
-  const lowerText = text.toLowerCase();
-  return KEYWORDS.some((keyword) =>
-    lowerText.includes(keyword.toLowerCase())
-  );
-}
-
-/**
  * Parse RSS feed and extract Reddit posts
  */
 async function fetchRedditFeed(subreddit: string): Promise<RedditItem[]> {

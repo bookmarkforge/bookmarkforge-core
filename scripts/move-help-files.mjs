@@ -3,7 +3,7 @@
  * Move help files to their respective language directories
  */
 
-import { readdirSync, renameSync } from 'fs';
+import { renameSync } from 'fs';
 import { join } from 'path';
 
 const PUBLIC_DIR = join(process.cwd(), 'public');
@@ -21,7 +21,7 @@ for (const lang of LANGUAGES) {
     movedCount++;
   } catch (error) {
     // File might not exist or already moved
-    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+    if (error && error.code !== 'ENOENT') {
       console.error(`Error moving help-${lang}.html:`, error);
     }
   }

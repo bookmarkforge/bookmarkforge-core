@@ -1,7 +1,7 @@
 {
   "name": "BookmarkForge",
   "short_name": "BForge",
-  "description": "Your private, AI-powered knowledge vault. 100% Local-First.",
+  "description": "Local-first bookmark manager with AES-256-GCM encryption, Argon2id key derivation, and BYOK AI integration. 100% offline-capable PWA with no account registration.",
   "id": "/",
   "start_url": "/",
   "display": "standalone",
@@ -11,7 +11,7 @@
   "theme_color": "#00aeef",
   "scope": "/",
   "lang": "en",
-  "categories": ["productivity", "utilities"],
+  "categories": ["productivity", "utilities", "security"],
   "screenshots": [
     {
       "src": "/screenshots/desktop-main.png",
@@ -55,9 +55,34 @@
     }
   ],
   "shortcuts": [
-    { "name": "Quick Save", "short_name": "Save", "url": "/capture", "icons": [{ "src": "/icons/logo-192.png", "sizes": "192x192" }] },
-    { "name": "Search", "short_name": "Search", "url": "/app?search=true", "icons": [{ "src": "/icons/logo-192.png", "sizes": "192x192" }] },
-    { "name": "My Vault", "short_name": "Vault", "url": "/bookmarks", "icons": [{ "src": "/icons/logo-192.png", "sizes": "192x192" }] }
+    {
+      "name": "Quick Save",
+      "short_name": "Save",
+      "description": "Capture and save a bookmark",
+      "url": "/capture",
+      "icons": [{ "src": "/icons/logo-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Search",
+      "short_name": "Search",
+      "description": "Search encrypted bookmarks",
+      "url": "/app?search=true",
+      "icons": [{ "src": "/icons/logo-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "My Vault",
+      "short_name": "Vault",
+      "description": "Open encrypted bookmark vault",
+      "url": "/bookmarks",
+      "icons": [{ "src": "/icons/logo-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Graph View",
+      "short_name": "Graph",
+      "description": "Visual knowledge graph of bookmarks",
+      "url": "/graph",
+      "icons": [{ "src": "/icons/logo-192.png", "sizes": "192x192" }]
+    }
   ],
   "related_applications": [
     {

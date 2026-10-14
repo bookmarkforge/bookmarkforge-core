@@ -92,6 +92,7 @@
     "check:launch-checklist": "node scripts/check-launch-checklist.mjs",
     "check:launch-checklist:strict": "node scripts/check-launch-checklist.mjs --strict",
     "check:workflows": "node scripts/validate-workflows.mjs && node scripts/validate-operational-workflows.mjs && node scripts/validate-input-contracts.mjs && node scripts/check-workflow-security.mjs && node scripts/validate-zap-workflow.mjs && node scripts/check-workflow-vars-documented.mjs",
+    "marketing:social-listen": "tsx scripts/social-listening-reddit.ts",
     "check:workflow-vars-documented": "node scripts/check-workflow-vars-documented.mjs",
     "check:workflow-security": "node scripts/check-workflow-security.mjs",
     "check:workflow-artifacts": "node scripts/validate-workflow-artifacts.mjs",
@@ -290,6 +291,7 @@
     "husky": "^9.1.7",
     "jsdom": "^30.0.1",
     "lint-staged": "^17.6.0",
+    "node-fetch": "^3.3.2",
     "nunjucks": "^3.2.4",
     "pixelmatch": "^7.2.0",
     "playwright": "^1.62.1",
@@ -301,7 +303,8 @@
     "vite": "^8.2.0",
     "vite-plugin-pwa": "^1.3.0",
     "vitest": "^4.1.10",
-    "vitest-canvas-mock": "^1.1.4"
+    "vitest-canvas-mock": "^1.1.4",
+    "xml2js": "^0.6.2"
   },
   "lint-staged": {
     "*.{ts,tsx,mjs}": "eslint --fix"

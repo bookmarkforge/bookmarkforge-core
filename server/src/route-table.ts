@@ -143,6 +143,13 @@ export const ROUTE_POLICIES: readonly RoutePolicy[] = [
     auth: "aggregate-only read; payload validation + rate limit",
     note: "Daily aggregate buckets for the operator dashboard.",
   },
+  {
+    path: "/og",
+    methods: ["GET"],
+    access: "public",
+    auth: "none (public Open Graph card generation)",
+    note: "Generates dynamic SVG-based Open Graph cards for social sharing.",
+  },
 ];
 
 /** Strip the query string: route identity is the path. */

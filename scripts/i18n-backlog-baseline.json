@@ -1,8 +1,8 @@
 {
-  "total": 1796,
+  "total": 1798,
   "locales": {
     "ar": {
-      "untranslated": 219
+      "untranslated": 221
     },
     "bg": {
       "untranslated": 244
@@ -11,83 +11,83 @@
       "untranslated": 244
     },
     "da": {
-      "untranslated": 244
+      "untranslated": 246
     },
     "de": {
-      "untranslated": 80
+      "untranslated": 0
     },
     "el": {
       "untranslated": 244
     },
     "es": {
-      "untranslated": 4
+      "untranslated": 0
     },
     "fi": {
-      "untranslated": 244
+      "untranslated": 246
     },
     "fr": {
-      "untranslated": 219
+      "untranslated": 221
     },
     "he": {
-      "untranslated": 244
+      "untranslated": 246
     },
     "hi": {
-      "untranslated": 244
+      "untranslated": 246
     },
     "hr": {
       "untranslated": 244
     },
     "hu": {
-      "untranslated": 244
+      "untranslated": 246
     },
     "id": {
-      "untranslated": 245
+      "untranslated": 247
     },
     "it": {
-      "untranslated": 220
+      "untranslated": 222
     },
     "ja": {
-      "untranslated": 219
+      "untranslated": 221
     },
     "ko": {
-      "untranslated": 244
+      "untranslated": 246
     },
     "nl": {
-      "untranslated": 244
+      "untranslated": 246
     },
     "no": {
-      "untranslated": 244
+      "untranslated": 246
     },
     "pl": {
       "untranslated": 244
     },
     "pt": {
-      "untranslated": 219
+      "untranslated": 221
     },
     "ro": {
-      "untranslated": 245
+      "untranslated": 247
     },
     "ru": {
       "untranslated": 244
     },
     "sv": {
-      "untranslated": 244
+      "untranslated": 246
     },
     "th": {
-      "untranslated": 244
+      "untranslated": 246
     },
     "tr": {
-      "untranslated": 244
+      "untranslated": 246
     },
     "uk": {
       "untranslated": 244
     },
     "vi": {
-      "untranslated": 250
+      "untranslated": 252
     },
     "zh": {
-      "untranslated": 219
+      "untranslated": 221
     }
   },
-  "updatedAt": "2026-09-19T15:08:56.614Z"
+  "updatedAt": "2026-10-14T18:41:29.045Z"
 }

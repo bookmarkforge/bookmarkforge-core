@@ -1809,16 +1809,5 @@
   "app_secUnlocked": "Entsperrt",
   "app_secNoBackup": "Nie",
   "app_secConfigured": "Konfiguriert",
-  "app_secNotConfigured": "Nicht konfiguriert",
-  "landing_title": "BookmarkForge",
-  "landing_subtitle": "Dein KI-gestützter Wissenstresor für das moderne Web",
-  "landing_enter_app": "App öffnen",
-  "landing_get_pro": "Pro für 59 $ (Early Bird) sichern",
-  "landing_feature_1_title": "KI-gestützt",
-  "landing_feature_1_desc": "Organisiere und fasse deine Lesezeichen automatisch mit KI zusammen",
-  "landing_feature_2_title": "Datenschutz zuerst",
-  "landing_feature_2_desc": "Deine Daten bleiben lokal und verschlüsselt – nichts verlässt dein Gerät",
-  "landing_feature_3_title": "Lebenslanger Zugang",
-  "landing_feature_3_desc": "Einmalzahlung für lebenslangen Zugang zu allen Pro-Funktionen",
-  "landing_language_note": "Verfügbar in 30 Sprachen"
+  "app_secNotConfigured": "Nicht konfiguriert"
 }

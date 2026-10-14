@@ -47,7 +47,9 @@ interface SidebarProps {
 // typecheck: a tab id removed from the shared array becomes an excess-key
 // error here, and a shared id missing here fails the Record completeness
 // check. The id strings themselves live ONLY in navigation.ts.
-const SIDEBAR_ITEM_META: Record<
+// Exported for Sidebar.test.tsx, which pins every labelKey against the whole
+// locale corpus (P-05).
+export const SIDEBAR_ITEM_META: Record<
   SidebarTabId,
   {
     labelKey: string;
@@ -94,8 +96,10 @@ const SIDEBAR_ITEM_META: Record<
   voiceLocal: { labelKey: "app_voiceLocal", icon: Mic },
   collaboration: { labelKey: "app_collaborationTitle", icon: Users },
   analytics: { labelKey: "app_analytics", icon: Activity },
-  // Reuses the key the dashboard itself already ships in all 30 locales.
-  security: { labelKey: "app_security", icon: ShieldCheck },
+  // P-05: `app_security` existed in NO locale, so the sidebar rendered the
+  // raw key as its label. Point at the key the locales actually define
+  // (Sidebar.test.tsx pins every labelKey against the locale corpus).
+  security: { labelKey: "app_security_title", icon: ShieldCheck },
   chat: {
     labelKey: "app_supportChat",
     defaultValue: "Support",

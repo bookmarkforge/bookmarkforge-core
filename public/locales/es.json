@@ -1807,16 +1807,5 @@
   "app_secUnlocked": "Unlocked",
   "app_secNoBackup": "Never",
   "app_secConfigured": "Configured",
-  "app_secNotConfigured": "Not configured",
-  "landing_title": "BookmarkForge",
-  "landing_subtitle": "Tu bóveda de conocimiento con IA para la web moderna",
-  "landing_enter_app": "Entrar a la App",
-  "landing_get_pro": "Obtener Pro $59 Early Bird",
-  "landing_feature_1_title": "Potenciado por IA",
-  "landing_feature_1_desc": "Organiza y resume automáticamente tus marcadores con IA",
-  "landing_feature_2_title": "Privacidad Primero",
-  "landing_feature_2_desc": "Tus datos permanecen locales y encriptados - nada sale de tu dispositivo",
-  "landing_feature_3_title": "Acceso de por Vida",
-  "landing_feature_3_desc": "Pago único por acceso de por vida a todas las características Pro",
-  "landing_language_note": "Disponible en 30 idiomas"
+  "app_secNotConfigured": "Not configured"
 }

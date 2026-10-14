@@ -1,0 +1,7 @@
+# Reviewed ZAP false-positive exclusions for the baseline scan.
+#
+# One TAB-separated row per accepted rule:
+#   <zap rule id>\tIGNORE\t<reason, at least 20 characters>
+#
+# Populated only by the weekly DAST review (Security Champions program).
+# An empty list means every current finding is treated as a real finding.

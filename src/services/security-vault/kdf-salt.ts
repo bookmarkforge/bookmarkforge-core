@@ -342,7 +342,16 @@ export async function reportVaultSecretFormatExposure(): Promise<VaultSecretForm
     for (const key of EXPOSURE_SECRET_KEYS) {
       let stored: string | null;
       try {
-        stored = await secureStorage.getSecret(key);
+        // P-06: the H5 verification token is stored RAW (password-encrypted
+        // envelope only, no device-key layer — it must stay readable while the
+        // vault is locked), so its at-rest value is NOT device-key Base64 and
+        // reading it through getSecret made every unlock log an atob failure.
+        // It is the one EXPOSURE key with a dedicated accessor, which also
+        // carries the legacy device-key-encrypted fallback.
+        stored =
+          key === SECURE_STORAGE_KEYS.VERIFICATION
+            ? await secureStorage.getVerificationToken()
+            : await secureStorage.getSecret(key);
       } catch (error) {
         // One unreadable secret makes the whole corpus unknown: the keys
         // share the device-key protection, so "the others are readable" does

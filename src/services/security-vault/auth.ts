@@ -82,12 +82,21 @@ export async function verifyPassword(
 
   const passwordBytes = new TextEncoder().encode(password);
   try {
+    // P-06: validateVerificationIntegrity only imports the bytes (it does not
+    // consume them); decryptWithBytes DOES consume its buffer per the
+    // crypto-core ownership contract. Hand it a fresh copy so the finally
+    // below wipes exactly one still-intact buffer — the consumer wipes its
+    // own — instead of tripping the fail-closed "possible reuse" warning on
+    // every verification that reaches the decrypt step.
     const integrityOk = await validateVerificationIntegrity(stored, passwordBytes);
     if (!integrityOk) {
       logger.warn("[SecurityVault] Verification integrity check failed — rejecting");
       return false;
     }
-    const decrypted = await encryptionService.decryptWithBytes(stored, passwordBytes);
+    const decrypted = await encryptionService.decryptWithBytes(
+      stored,
+      new Uint8Array(passwordBytes),
+    );
     return constantTimeCompare(decrypted, VERIFICATION_PLAINTEXT);
   } catch (error) {
     logger.warn("[SecurityVault] Password verification failed", { error });

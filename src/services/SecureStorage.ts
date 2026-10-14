@@ -42,6 +42,14 @@ function isDeviceKeyLifecycleError(error: unknown): boolean {
   );
 }
 
+// P-06: an at-rest record that is not valid Base64 can never be decrypted —
+// damaged or foreign data in the secrets store, not a crypto failure. It gets
+// its own class so the expected failure is reported once at warn level and
+// real AES-GCM failures stay visible at error level.
+function isSecretRecordCorruptError(error: unknown): boolean {
+  return error instanceof Error && error.name === "SECRET_RECORD_CORRUPT";
+}
+
 export class SecureStorage {
   private static readonly DB_NAME = "bookmarkforge_secure_vault";
   private static readonly STORE_NAME = "secrets";
@@ -882,7 +890,20 @@ try {
     }
     try {
       const key = await this.getDeviceKey();
-      const combined = this.fromBase64(payload);
+      // P-06: classify a non-Base64 at-rest payload before the generic catch
+      // so it never reaches the error-level log.
+      let combined: Uint8Array;
+      try {
+        combined = this.fromBase64(payload);
+      } catch {
+        /* INTENTIONAL SILENCE: the atob error carries no useful detail; the
+           named class below is the diagnostic. */
+        const corrupt = new Error(
+          "[SecureStorage] Secret record is not valid Base64",
+        );
+        corrupt.name = "SECRET_RECORD_CORRUPT";
+        throw corrupt;
+      }
       const iv = combined.slice(0, 12);
       const cipher = combined.slice(12);
       const plain = await crypto.subtle.decrypt(
@@ -892,14 +913,18 @@ try {
       );
       return new TextDecoder().decode(plain);
     } catch (error) {
-      if (!isDeviceKeyLifecycleError(error)) {
+      if (
+        !isDeviceKeyLifecycleError(error) &&
+        !isSecretRecordCorruptError(error)
+      ) {
         logger.error("[SecureStorage] AES-GCM decryption failed", { error });
       }
       if (
         error instanceof Error &&
         (error.name === "DEVICE_KEY_CORRUPT" ||
           error.name === "DEVICE_KEY_MISSING" ||
-          error.name === "DEVICE_KEY_WRAPPED")
+          error.name === "DEVICE_KEY_WRAPPED" ||
+          error.name === "SECRET_RECORD_CORRUPT")
       ) {
         throw error;
       }
@@ -1240,6 +1265,17 @@ try {
       if (ciphertext === null) {return null;}
       return await this.decryptValue(ciphertext);
     } catch (error) {
+      if (isSecretRecordCorruptError(error)) {
+        // P-06: expected-failure class — one warn that NAMES the record (the
+        // "locate" half of the repair), never an error record. Rethrown so a
+        // fail-closed caller (the exposure report) can still distinguish
+        // "absent" from "unreadable".
+        logger.warn(
+          "[SecureStorage] Unreadable secret record (not valid Base64)",
+          { id },
+        );
+        throw error;
+      }
       if (!isDeviceKeyLifecycleError(error)) {
         logger.error("[SecureStorage] Failed to retrieve secret", { error });
       }

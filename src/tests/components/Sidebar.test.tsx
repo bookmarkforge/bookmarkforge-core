@@ -1,8 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
-import { Sidebar } from "../../components/Sidebar";
+import { Sidebar, SIDEBAR_ITEM_META } from "../../components/Sidebar";
 
 vi.mock("../../hooks/useRxDB", () => ({
   useRxDB: vi.fn(() => ({})),
@@ -221,5 +223,33 @@ describe("Sidebar", () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
     expect(errorSpy).not.toHaveBeenCalled();
     errorSpy.mockRestore();
+  });
+});
+
+// P-05: `app_security` shipped as a labelKey that existed in NO locale, so
+// the sidebar rendered the raw identifier as its label in every language.
+// Pin every sidebar labelKey against the whole locale corpus so a missing
+// key can never ship as a visible identifier again.
+describe("Sidebar label keys", () => {
+  it("every SIDEBAR_ITEM_META labelKey exists in every locale", () => {
+    const localesDir = join(process.cwd(), "public", "locales");
+    const files = readdirSync(localesDir).filter((f) => f.endsWith(".json"));
+    expect(files.length).toBeGreaterThanOrEqual(30);
+    const labelKeys = Object.values(SIDEBAR_ITEM_META).map(
+      (meta) => meta.labelKey,
+    );
+    expect(labelKeys.length).toBeGreaterThan(0);
+    for (const file of files) {
+      const dict = JSON.parse(
+        readFileSync(join(localesDir, file), "utf8"),
+      ) as Record<string, unknown>;
+      for (const key of labelKeys) {
+        expect(
+          dict[key],
+          `${file} is missing the sidebar label key ${key}`,
+        ).toBeDefined();
+        expect(typeof dict[key]).toBe("string");
+      }
+    }
   });
 });

@@ -13,6 +13,10 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   secureStorage: {
     getSecret: vi.fn(),
+    // P-06: the H5 verification token is stored RAW and must be read through
+    // its own accessor — getSecret would try to device-key-decrypt the raw
+    // envelope and fail on every unlock.
+    getVerificationToken: vi.fn(),
     setSecret: vi.fn(),
     deleteSecret: vi.fn(),
   },
@@ -57,9 +61,10 @@ describe("ADR-052 Phase 1 — vault secret format exposure", () => {
       if (key === SECURE_STORAGE_KEYS.API_KEY) {
         return Promise.resolve("v5:legacy-payload");
       }
-      // Verification token absent (fresh vault, pre-mint).
       return Promise.resolve(null);
     });
+    // Verification token absent (fresh vault, pre-mint).
+    mocks.secureStorage.getVerificationToken.mockResolvedValue(null);
 
     const report = await reportVaultSecretFormatExposure();
 
@@ -73,11 +78,8 @@ describe("ADR-052 Phase 1 — vault secret format exposure", () => {
   });
 
   it("reports a fully migrated vault as zero (the Phase 3 gate condition)", async () => {
-    mocks.secureStorage.getSecret.mockImplementation((key: string) =>
-      key === SECURE_STORAGE_KEYS.VERIFICATION
-        ? Promise.resolve("v6:token")
-        : Promise.resolve("v6:payload"),
-    );
+    mocks.secureStorage.getSecret.mockResolvedValue("v6:payload");
+    mocks.secureStorage.getVerificationToken.mockResolvedValue("v6:token");
 
     const report = await reportVaultSecretFormatExposure();
 
@@ -85,6 +87,25 @@ describe("ADR-052 Phase 1 — vault secret format exposure", () => {
     expect(report.legacyV5).toBe(0);
     expect(report.legacyKeys).toEqual([]);
     expect(report.saltedV6).toBe(report.inspected);
+  });
+
+  it("reads the raw-stored H5 token through its raw accessor, never getSecret (P-06)", async () => {
+    // The token's at-rest value is the password-encrypted envelope stored
+    // WITHOUT the device-key layer (it must be readable while the vault is
+    // locked). Reading it through getSecret made every unlock log
+    // `InvalidCharacterError: atob` + two error records; the raw accessor is
+    // the correct reader and also classifies the v5/v6 envelope directly.
+    mocks.secureStorage.getSecret.mockResolvedValue("v6:payload");
+    mocks.secureStorage.getVerificationToken.mockResolvedValue("v6:raw-token");
+
+    const report = await reportVaultSecretFormatExposure();
+
+    expect(report.status).toBe("ok");
+    expect(report.saltedV6).toBe(3);
+    expect(mocks.secureStorage.getSecret).not.toHaveBeenCalledWith(
+      SECURE_STORAGE_KEYS.VERIFICATION,
+    );
+    expect(mocks.secureStorage.getVerificationToken).toHaveBeenCalledTimes(1);
   });
 
   it("reports unknown (never zero) when a secret is unreadable", async () => {
@@ -152,12 +173,11 @@ describe("ADR-053 Phase B — unified per-salt inventory", () => {
     mocks.secureStorage.getSecret.mockImplementation(async (key: string) => {
       if (key === "kdf_salt") {return "a".repeat(32);}
       if (key === "vault_salt") {return "b".repeat(32);}
-      if (key === SECURE_STORAGE_KEYS.VERIFICATION) {
-        return "v6:00000000000000000000000000000000:"
-          + "0".repeat(64);
-      }
       return null;
     });
+    mocks.secureStorage.getVerificationToken.mockResolvedValue(
+      "v6:00000000000000000000000000000000:" + "0".repeat(64),
+    );
 
     const inventory = await reportVaultSaltInventory();
     expect(inventory[0]?.corpus).toEqual({ legacyV5: 0, saltedV6: 1, legacyKeys: [] });

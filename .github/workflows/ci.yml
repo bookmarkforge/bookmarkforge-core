@@ -499,6 +499,33 @@ jobs:
             dist/manifest.webmanifest
             dist/sw.js
 
+  release-gate:
+    name: Release gate (DEPLOY-POLICY pre-deploy checklist)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      CI: true
+      NODE_ENV: test
+    steps:
+      # P-03: one deployment path, gated. `deploy:prod` is manual BY DESIGN
+      # (DEPLOY-POLICY.md), so THIS job executes the policy's Pre-Deploy
+      # Checklist (items 1-4; 5-6 are the human commit+push) and is the check
+      # that must be green before anyone runs it. The old deploy-and-push
+      # scripts pushed and deployed with no check in between and were removed.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck:prod
+      - run: npm run lint
+      - run: npm run test:fast
+      - run: npm run build:ci
+
   dependency-review:
     name: Dependency review
     if: github.event_name == 'pull_request'

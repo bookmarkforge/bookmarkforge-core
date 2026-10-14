@@ -161,16 +161,28 @@ describe("SecureStorage error paths — ciphertext corrupto (production)", () =>
     vi.unstubAllGlobals();
   });
 
-  it("invalid base64 in ciphertext → getSecret throws Failed to decrypt", async () => {
+  it("invalid base64 in ciphertext → named corrupt-record error, warn not error (P-06)", async () => {
     const store = new Map<string, any>();
     setupMockDb(store);
     localStorage.setItem("bmf_device_key_jwk", await makeJwk());
     // Corrupt record: not valid base64, so fromBase64() throws inside decryptValue.
     store.set("k", "!!!not-base64!!!");
+    vi.clearAllMocks();
+    const { logger } = await import("../../utils/logger");
 
-    await expect(secureStorage.getSecret("k")).rejects.toThrow(
-      "Failed to decrypt secret",
+    // P-06: the class is named so fail-closed callers can distinguish
+    // "unreadable" from "absent", and it must NOT produce an error record —
+    // it is the expected-failure class, so real AES-GCM failures keep the
+    // error level visible. The warn names the record.
+    await expect(secureStorage.getSecret("k")).rejects.toMatchObject({
+      name: "SECRET_RECORD_CORRUPT",
+      message: expect.stringContaining("not valid Base64"),
+    });
+    expect(vi.mocked(logger.warn)).toHaveBeenCalledWith(
+      "[SecureStorage] Unreadable secret record (not valid Base64)",
+      { id: "k" },
     );
+    expect(vi.mocked(logger.error)).not.toHaveBeenCalled();
   });
 
   it("ciphertext corrupto (byte alterado) → fallo de auth AES-GCM", async () => {

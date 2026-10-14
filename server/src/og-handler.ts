@@ -94,6 +94,7 @@ export function createOgHandler() {
     const svgCard = generateSvgCard(params);
 
     // Return HTML with Open Graph meta tags
+    const svgDataUri = `data:image/svg+xml;base64,${Buffer.from(svgCard).toString("base64")}`;
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -105,16 +106,16 @@ export function createOgHandler() {
   <meta property="og:type" content="website" />
   <meta property="og:title" content="${escapeXml(params.title || "BookmarkForge")}" />
   <meta property="og:description" content="Your private, AI-powered knowledge vault. 100% Local-First." />
-  <meta property="og:image" content="data:image/svg+xml;base64,${Buffer.from(svgCard).toString("base64")}" />
+  <meta property="og:image" content="${svgDataUri}" />
   
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${escapeXml(params.title || "BookmarkForge")}" />
   <meta name="twitter:description" content="Your private, AI-powered knowledge vault. 100% Local-First." />
-  <meta name="twitter:image" content="data:image/svg+xml;base64,${Buffer.from(svgCard).toString("base64")}" />
+  <meta name="twitter:image" content="${svgDataUri}" />
 </head>
 <body style="margin:0;padding:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#0f172a;">
-  ${svgCard}
+  <img src="${svgDataUri}" alt="BookmarkForge Card" style="max-width:100%;height:auto;" />
 </body>
 </html>`;
 

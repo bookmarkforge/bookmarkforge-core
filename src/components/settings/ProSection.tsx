@@ -132,6 +132,26 @@ export const ProSection: React.FC = () => {
                 {t("app_proBuy", "Get Pro — {{price}}", { price: getActiveProPrice() })}
               </button>
             </div>
+
+            <div className="pt-2 border-t border-[var(--divider)]/50">
+              <p className="text-xs text-[var(--text-muted)] mb-2">
+                {t("app_proDonate", "Support the project with a donation")}
+              </p>
+              <a
+                href="https://ko-fi.com/M0Q528TAFF"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2"
+              >
+                <img
+                  height="36"
+                  style={{ border: "0px", height: "36px" }}
+                  src="https://storage.ko-fi.com/cdn/kofi5.png?v=6"
+                  border="0"
+                  alt="Buy Me a Coffee at ko-fi.com"
+                />
+              </a>
+            </div>
             {!isCheckoutConfigured() && (
               <p className="text-xs text-[var(--text-muted)]">
                 {t(

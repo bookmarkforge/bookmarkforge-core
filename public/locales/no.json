@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "Lås opp BookmarkForge Pro",
   "app_proUpgradeText": "Ubegrensede bokmerker, P2P-synkronisering på 5 enheter og lokal AI. Én betaling, din for alltid.",
   "app_proBuy": "Skaff Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Lås opp med en Pro-lisens — betal én gang og eie for alltid. Alt du allerede har lagret forblir urørt.",
-"app_proStateToastAction": "Se Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Lås opp med en Pro-lisens — betal én gang og eie for alltid. Alt du allerede har lagret forblir urørt.",
+  "app_proStateToastAction": "Se Pro",
   "app_proStartTrial": "Aktiver Pro-lisens",
   "app_proCheckoutMissing": "Betalingen er ennå ikke tilkoblet — legg til checkout-URLen fra betalingsleverandøren for å fullføre kjøpet.",
   "app_proHaveLicense": "Har du allerede en lisensnøkkel?",
@@ -1563,5 +1563,8 @@
   "app_freeWallKeepFree": "Fortsett med Free",
   "app_freeWallTrust": "Engangsbetaling · din for alltid · pengene tilbake innen {{days}} dager",
   "app_freeLimitToast": "Free har plass til {{limit}} lagringer — hvelvet ditt er trygt; bare nye lagringer settes på pause.",
-  "app_freeLimitToastAction": "Pro er ubegrenset →"
+  "app_freeLimitToastAction": "Pro er ubegrenset →",
+  "app_proAffiliateTitle": "Tjen med henvisninger",
+  "app_proAffiliateDesc": "Del din affiliate link og tjen 50% provisjon på hvert Pro salg. Få linken fra Whop dashboard.",
+  "app_proGetAffiliateLink": "Få affiliate link"
 }

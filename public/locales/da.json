@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "Lås BookmarkForge Pro op",
   "app_proUpgradeText": "Ubegrænsede bogmærker, P2P-synkronisering på 5 enheder og lokal AI. Én betaling, din for evigt.",
   "app_proBuy": "Få Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Lås op med en Pro-licens — betal én gang og eje for altid. Alt, du allerede har gemt, forbliver uændret.",
-"app_proStateToastAction": "Se Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Lås op med en Pro-licens — betal én gang og eje for altid. Alt, du allerede har gemt, forbliver uændret.",
+  "app_proStateToastAction": "Se Pro",
   "app_proStartTrial": "Aktivér Pro-licens",
   "app_proCheckoutMissing": "Betalingen er endnu ikke tilsluttet — tilføj din betalingsudbyders checkout-URL for at gennemføre købet.",
   "app_proHaveLicense": "Har du allerede en licensnøgle?",
@@ -1563,5 +1563,8 @@
   "app_freeWallKeepFree": "Fortsæt med Free",
   "app_freeWallTrust": "Engangsbetaling · din for altid · {{days}} dages pengene-tilbage",
   "app_freeLimitToast": "Free rummer {{limit}} gemte links — din hvælving er sikker; kun nye gemninger sættes på pause.",
-  "app_freeLimitToastAction": "Pro er ubegrænset →"
+  "app_freeLimitToastAction": "Pro er ubegrænset →",
+  "app_proAffiliateTitle": "Tjen med henvisninger",
+  "app_proAffiliateDesc": "Del dit affiliate link og tjen 50% kommission på hvert Pro salg. Få linket fra Whop dashboard.",
+  "app_proGetAffiliateLink": "Få affiliate link"
 }

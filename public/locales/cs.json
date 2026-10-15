@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "Odemkněte BookmarkForge Pro",
   "app_proUpgradeText": "Neomezené záložky, P2P synchronizace na 5 zařízeních a lokální AI. Jedna platba, navždy vaše.",
   "app_proBuy": "Získejte Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Odemkněte jednorázovou licencí Pro. Vše, co jste již uložili, zůstane nedotčeno.",
-"app_proStateToastAction": "Zobrazit Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Odemkněte jednorázovou licencí Pro. Vše, co jste již uložili, zůstane nedotčeno.",
+  "app_proStateToastAction": "Zobrazit Pro",
   "app_proStartTrial": "Aktivujte licenci Pro",
   "app_proCheckoutMissing": "Platba zatím není připojena — pro dokončení nákupu přidejte checkout URL své platební brány.",
   "app_proHaveLicense": "Už máte licenční klíč?",
@@ -1599,5 +1599,8 @@
   "app_freeWallKeepFree": "Zůstat u Free",
   "app_freeWallTrust": "Jednorázová platba · navždy vaše · vrácení peněz do {{days}} dnů",
   "app_freeLimitToast": "Free pojme {{limit}} uložených odkazů — vaše úložiště je v bezpečí; pozastaví se jen nové ukládání.",
-  "app_freeLimitToastAction": "Pro bez limitu →"
+  "app_freeLimitToastAction": "Pro bez limitu →",
+  "app_proAffiliateTitle": "Vydělávejte s doporučeními",
+  "app_proAffiliateDesc": "Sdílejte svůj affiliate odkaz a získejte 50% provizi z každého Pro prodeje. Získejte odkaz z Whop dashboardu.",
+  "app_proGetAffiliateLink": "Získat affiliate odkaz"
 }

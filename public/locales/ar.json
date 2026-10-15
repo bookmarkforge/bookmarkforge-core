@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "افتح BookmarkForge Pro",
   "app_proUpgradeText": "مؤشرات غير محدودة، مزامنة P2P على 5 أجهزة وذكاء اصطناعي محلي. دفع واحد، ملكك للأبد.",
   "app_proBuy": "احصل على Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "افتحه برخصة Pro بدفع واحد. كل ما حفظته سابقًا يبقى كما هو دون أي تغيير.",
-"app_proStateToastAction": "استكشف Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "افتحه برخصة Pro بدفع واحد. كل ما حفظته سابقًا يبقى كما هو دون أي تغيير.",
+  "app_proStateToastAction": "استكشف Pro",
   "app_proStartTrial": "فعّل ترخيص Pro",
   "app_proCheckoutMissing": "لم يتم ربط الدفع بعد — أضف رابط الدفع الخاص بمزوّدك لإتمام الشراء.",
   "app_proHaveLicense": "لديك مفتاح ترخيص بالفعل؟",
@@ -1588,5 +1588,8 @@
   "app_pocketTags": "الوسوم",
   "app_pocketImportStatusSummary": "سيتم الحفاظ على حالتي القراءة والأرشفة.",
   "app_pocketImportConfirm": "استيراد هذه الروابط",
-  "app_pocketImportChooseAnother": "اختيار ملف آخر"
+  "app_pocketImportChooseAnother": "اختيار ملف آخر",
+  "app_proAffiliateTitle": "اكسب مع الإحالات",
+  "app_proAffiliateDesc": "شارك رابطك كمسوق واكسب 50% عمولة على كل بيع Pro. احصل على الرابط من لوحة تحكم Whop.",
+  "app_proGetAffiliateLink": "الحصول على رابط المسوق"
 }

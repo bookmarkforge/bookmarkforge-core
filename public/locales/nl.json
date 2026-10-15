@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "BookmarkForge Pro ontgrendelen",
   "app_proUpgradeText": "Onbeperkte bladwijzers, P2P-synchronisatie op 5 apparaten en lokale AI. Eén betaling, voor altijd van jou.",
   "app_proBuy": "Pro verkrijgen — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Ontgrendel het met een Pro-licentie: één keer betalen en voor altijd van jou. Alles wat je al hebt opgeslagen blijft onaangetast.",
-"app_proStateToastAction": "Bekijk Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Ontgrendel het met een Pro-licentie: één keer betalen en voor altijd van jou. Alles wat je al hebt opgeslagen blijft onaangetast.",
+  "app_proStateToastAction": "Bekijk Pro",
   "app_proStartTrial": "Pro-licentie activeren",
   "app_proCheckoutMissing": "De betaling is nog niet gekoppeld — voeg de checkout-URL van je betaalprovider toe om de aankoop af te ronden.",
   "app_proHaveLicense": "Heb je al een licentiesleutel?",
@@ -1563,5 +1563,8 @@
   "app_freeWallKeepFree": "Free blijven gebruiken",
   "app_freeWallTrust": "Eenmalige betaling · voor altijd van jou · {{days}} dagen geld-terug",
   "app_freeLimitToast": "Free biedt ruimte voor {{limit}} opgeslagen links — je kluis is veilig; alleen nieuwe opslag wordt gepauzeerd.",
-  "app_freeLimitToastAction": "Pro is onbeperkt →"
+  "app_freeLimitToastAction": "Pro is onbeperkt →",
+  "app_proAffiliateTitle": "Verdien met doorverwijzingen",
+  "app_proAffiliateDesc": "Deel je affiliate link en verdien 50% commissie op elke Pro verkoop. Haal de link op uit het Whop dashboard.",
+  "app_proGetAffiliateLink": "Affiliate link ophalen"
 }

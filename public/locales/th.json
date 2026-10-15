@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "ปลดล็อก BookmarkForge Pro",
   "app_proUpgradeText": "บุ๊กมาร์กไม่จำกัด ซิงก์ P2P บน 5 อุปกรณ์ และ AI ในเครื่อง จ่ายครั้งเดียว เป็นของคุณตลอดไป",
   "app_proBuy": "รับ Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "ปลดล็อกด้วยลิขสิทธิ์ Pro จ่ายครั้งเดียว ทุกอย่างที่คุณบันทึกไว้แล้วจะยังอยู่ครบถ้วน",
-"app_proStateToastAction": "ดู Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "ปลดล็อกด้วยลิขสิทธิ์ Pro จ่ายครั้งเดียว ทุกอย่างที่คุณบันทึกไว้แล้วจะยังอยู่ครบถ้วน",
+  "app_proStateToastAction": "ดู Pro",
   "app_proStartTrial": "เปิดใช้งานใบอนุญาต Pro",
   "app_proCheckoutMissing": "ยังไม่ได้เชื่อมต่อชำระเงิน — เพิ่ม URL ชำระเงินของผู้ให้บริการเพื่อสำเร็จการซื้อ",
   "app_proHaveLicense": "มีรหัสใบอนุญาตอยู่แล้วหรือไม่",
@@ -1563,5 +1563,8 @@
   "app_freeWallKeepFree": "ใช้ Free ต่อ",
   "app_freeWallTrust": "จ่ายครั้งเดียว · เป็นของคุณตลอดไป · คืนเงินภายใน {{days}} วัน",
   "app_freeLimitToast": "Free เก็บได้ {{limit}} รายการ ห้องนิรภัยของคุณปลอดภัย และหยุดชั่วคราวเฉพาะการบันทึกใหม่",
-  "app_freeLimitToastAction": "Pro ไม่จำกัด →"
+  "app_freeLimitToastAction": "Pro ไม่จำกัด →",
+  "app_proAffiliateTitle": "สร้างรายได้จากการแนะนำ",
+  "app_proAffiliateDesc": "แชร์ลิงก์พันธมิตและสร้างรายได้ 50% คอมมิชชั่นจากการขาย Pro แต่ละครั้ง รับลิงก์จาก Whop dashboard",
+  "app_proGetAffiliateLink": "รับลิงก์พันธมิต"
 }

@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "Desbloqueie o BookmarkForge Pro",
   "app_proUpgradeText": "Favoritos ilimitados, sincronização P2P em 5 dispositivos e IA local. Pagamento único, seu para sempre.",
   "app_proBuy": "Obtenha o Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Desbloqueie com uma licença Pro de pagamento único. Tudo o que você já salvou fica intacto.",
-"app_proStateToastAction": "Ver Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Desbloqueie com uma licença Pro de pagamento único. Tudo o que você já salvou fica intacto.",
+  "app_proStateToastAction": "Ver Pro",
   "app_proStartTrial": "Ativar licença Pro",
   "app_proCheckoutMissing": "O pagamento ainda não está conectado — adicione a URL de checkout do seu provedor para concluir a compra.",
   "app_proHaveLicense": "Já tem uma chave de licença?",
@@ -1588,5 +1588,8 @@
   "app_pocketTags": "Etiquetas",
   "app_pocketImportStatusSummary": "Os estados lido e arquivado serão preservados.",
   "app_pocketImportConfirm": "Importar estas ligações",
-  "app_pocketImportChooseAnother": "Escolher outro ficheiro"
+  "app_pocketImportChooseAnother": "Escolher outro ficheiro",
+  "app_proAffiliateTitle": "Ganhe com Indicações",
+  "app_proAffiliateDesc": "Compartilhe seu link de afiliado e ganhe 50% de comissão em cada venda Pro. Obtenha o link do dashboard Whop.",
+  "app_proGetAffiliateLink": "Obter link de afiliado"
 }

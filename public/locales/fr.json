@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "Débloquez BookmarkForge Pro",
   "app_proUpgradeText": "Signets illimités, synchronisation P2P sur 5 appareils et IA locale. Paiement unique, à vous pour toujours.",
   "app_proBuy": "Obtenez Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Débloquez cette fonctionnalité avec une licence Pro à paiement unique. Tout ce que vous avez déjà enregistré reste intact.",
-"app_proStateToastAction": "Découvrir Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Débloquez cette fonctionnalité avec une licence Pro à paiement unique. Tout ce que vous avez déjà enregistré reste intact.",
+  "app_proStateToastAction": "Découvrir Pro",
   "app_proStartTrial": "Activer la licence Pro",
   "app_proCheckoutMissing": "Le paiement n'est pas encore connecté — ajoutez l'URL de checkout de votre prestataire pour finaliser l'achat.",
   "app_proHaveLicense": "Vous avez déjà une clé de licence ?",
@@ -1588,5 +1588,8 @@
   "app_pocketTags": "Étiquettes",
   "app_pocketImportStatusSummary": "Les états lu et archivé seront conservés.",
   "app_pocketImportConfirm": "Importer ces liens",
-  "app_pocketImportChooseAnother": "Choisir un autre fichier"
+  "app_pocketImportChooseAnother": "Choisir un autre fichier",
+  "app_proAffiliateTitle": "Gagnez avec les parrainages",
+  "app_proAffiliateDesc": "Partagez votre lien d'affiliation et gagnez 50% de commission sur chaque vente Pro. Obtenez le lien depuis le tableau de bord Whop.",
+  "app_proGetAffiliateLink": "Obtenir le lien d'affiliation"
 }

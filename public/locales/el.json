@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "Ξεκλειδώστε το BookmarkForge Pro",
   "app_proUpgradeText": "Απεριόριστοι σελιδοδείκτες, συγχρονισμός P2P σε 5 συσκευές και τοπικό AI. Μία πληρωμή, δικά σας για πάντα.",
   "app_proBuy": "Αποκτήστε το Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Ξεκλειδώστε το με μια άδεια Pro εφάπαξ πληρωμής. Ό,τι έχετε ήδη αποθηκεύσει παραμένει ανέγγιχτο.",
-"app_proStateToastAction": "Δείτε το Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Ξεκλειδώστε το με μια άδεια Pro εφάπαξ πληρωμής. Ό,τι έχετε ήδη αποθηκεύσει παραμένει ανέγγιχτο.",
+  "app_proStateToastAction": "Δείτε το Pro",
   "app_proStartTrial": "Ενεργοποιήστε την άδεια Pro",
   "app_proCheckoutMissing": "Η πληρωμή δεν έχει συνδεθεί ακόμη — προσθέστε το checkout URL του πάροχου πληρωμών για να ολοκληρώσετε την αγορά.",
   "app_proHaveLicense": "Έχετε ήδη κλειδί άδειας;",
@@ -1582,5 +1582,8 @@
   "app_freeWallKeepFree": "Συνεχίστε με Free",
   "app_freeWallTrust": "Εφάπαξ πληρωμή · για πάντα δικό σας · επιστροφή χρημάτων εντός {{days}} ημερών",
   "app_freeLimitToast": "Το Free χωρά {{limit}} αποθηκεύσεις — το θησαυροφυλάκιό σας είναι ασφαλές· παύουν μόνο οι νέες αποθηκεύσεις.",
-  "app_freeLimitToastAction": "Το Pro είναι απεριόριστο →"
+  "app_freeLimitToastAction": "Το Pro είναι απεριόριστο →",
+  "app_proAffiliateTitle": "Κερδίστε με συστάσεις",
+  "app_proAffiliateDesc": "Μοιραστείτε τον affiliate σύνδεσμό και κερδίστε 50% προμήθεια σε κάθε πώληση Pro. Λάβετε τον σύνδεσμο από το Whop dashboard.",
+  "app_proGetAffiliateLink": "Λήψη affiliate link"
 }

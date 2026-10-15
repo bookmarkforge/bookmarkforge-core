@@ -1511,6 +1511,9 @@
   "app_nuclearForgetFailed": "Could not erase data: {{error}}",
   "app_nuclearForgetFailedGeneric": "Unknown error",
   "app_proSectionTitle": "Pro",
+  "app_proAffiliateTitle": "Earn with Referrals",
+  "app_proAffiliateDesc": "Share your affiliate link and earn 50% commission on every Pro sale. Get your link from Whop dashboard.",
+  "app_proGetAffiliateLink": "Get Affiliate Link",
   "app_proTrialActive": "Pro trial active",
   "app_proActive": "Pro active",
   "app_proLicenseMasked": "License",
@@ -1807,16 +1810,5 @@
   "app_secUnlocked": "Unlocked",
   "app_secNoBackup": "Never",
   "app_secConfigured": "Configured",
-  "app_secNotConfigured": "Not configured",
-  "landing_title": "BookmarkForge",
-  "landing_subtitle": "Your AI-powered knowledge vault for the modern web",
-  "landing_enter_app": "Enter App",
-  "landing_get_pro": "Get Pro $59 Early Bird",
-  "landing_feature_1_title": "AI-Powered",
-  "landing_feature_1_desc": "Automatically organize and summarize your bookmarks with AI",
-  "landing_feature_2_title": "Privacy-First",
-  "landing_feature_2_desc": "Your data stays local and encrypted - nothing leaves your device",
-  "landing_feature_3_title": "Lifetime Access",
-  "landing_feature_3_desc": "One-time payment for lifetime access to all Pro features",
-  "landing_language_note": "Available in 30 languages"
+  "app_secNotConfigured": "Not configured"
 }

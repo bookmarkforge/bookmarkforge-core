@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "解锁 BookmarkForge Pro",
   "app_proUpgradeText": "无限书签，5 台设备 P2P 同步，本地 AI。一次付费，永久拥有。",
   "app_proBuy": "获取 Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "一次付费的 Pro 许可即可解锁。你已保存的内容将原样保留。",
-"app_proStateToastAction": "查看 Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "一次付费的 Pro 许可即可解锁。你已保存的内容将原样保留。",
+  "app_proStateToastAction": "查看 Pro",
   "app_proStartTrial": "激活 Pro 许可证",
   "app_proCheckoutMissing": "结账尚未连接——请添加你的支付服务商结账链接以完成购买。",
   "app_proHaveLicense": "已经有许可证密钥了吗？",
@@ -1588,5 +1588,8 @@
   "app_pocketTags": "标签",
   "app_pocketImportStatusSummary": "将保留已读和归档状态。",
   "app_pocketImportConfirm": "导入这些链接",
-  "app_pocketImportChooseAnother": "选择其他文件"
+  "app_pocketImportChooseAnother": "选择其他文件",
+  "app_proAffiliateTitle": "通过推荐赚取",
+  "app_proAffiliateDesc": "分享您的联盟链接，每次Pro销售赚取50%佣金。从Whop仪表板获取链接。",
+  "app_proGetAffiliateLink": "获取联盟链接"
 }

@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "Mở khóa BookmarkForge Pro",
   "app_proUpgradeText": "Dấu trang không giới hạn, đồng bộ P2P trên 5 thiết bị và AI cục bộ. Trả một lần, sở hữu mãi mãi.",
   "app_proBuy": "Nhận Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Mở khóa bằng giấy phép Pro trả một lần. Mọi thứ bạn đã lưu đều được giữ nguyên.",
-"app_proStateToastAction": "Xem Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Mở khóa bằng giấy phép Pro trả một lần. Mọi thứ bạn đã lưu đều được giữ nguyên.",
+  "app_proStateToastAction": "Xem Pro",
   "app_proStartTrial": "Kích hoạt giấy phép Pro",
   "app_proCheckoutMissing": "Thanh toán chưa được kết nối — thêm URL thanh toán của nhà cung cấp để hoàn tất mua hàng.",
   "app_proHaveLicense": "Bạn đã có khóa giấy phép chưa?",
@@ -1557,5 +1557,8 @@
   "app_freeWallKeepFree": "Tiếp tục dùng Free",
   "app_freeWallTrust": "Thanh toán một lần · thuộc về bạn mãi mãi · hoàn tiền trong {{days}} ngày",
   "app_freeLimitToast": "Free chứa {{limit}} lượt lưu — kho của bạn vẫn an toàn; chỉ lượt lưu mới tạm dừng.",
-  "app_freeLimitToastAction": "Pro không giới hạn →"
+  "app_freeLimitToastAction": "Pro không giới hạn →",
+  "app_proAffiliateTitle": "Kiếm tiền với Referral",
+  "app_proAffiliateDesc": "Chia sẻ affiliate link của bạn và kiếm 50% hoa hồng trên mỗi lần bán Pro. Nhận link từ Whop dashboard.",
+  "app_proGetAffiliateLink": "Nhận affiliate link"
 }

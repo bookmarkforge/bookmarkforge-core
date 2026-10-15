@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "Avaa BookmarkForge Pro",
   "app_proUpgradeText": "Rajattomat kirjanmerkit, P2P-synkronointi 5 laitteella ja paikallinen AI. Yksi maksu, sinun ikuisesti.",
   "app_proBuy": "Hanki Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Avaa sen Pro-lisenssillä — maksa kerran ja omista pysyvästi. Kaikki aiemmin tallentamasi säilyy ennallaan.",
-"app_proStateToastAction": "Katso Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Avaa sen Pro-lisenssillä — maksa kerran ja omista pysyvästi. Kaikki aiemmin tallentamasi säilyy ennallaan.",
+  "app_proStateToastAction": "Katso Pro",
   "app_proStartTrial": "Aktivoi Pro-lisenssi",
   "app_proCheckoutMissing": "Maksua ei ole vielä yhdistetty — lisää maksupalveluntarjoajasi checkout-URL oston viimeistelyyn.",
   "app_proHaveLicense": "Onko sinulla jo lisenssiavain?",
@@ -1563,5 +1563,8 @@
   "app_freeWallKeepFree": "Jatka Freellä",
   "app_freeWallTrust": "Kertamaksu · ikuisesti omasi · rahat takaisin {{days}} päivän ajan",
   "app_freeLimitToast": "Freeen mahtuu {{limit}} tallennusta — holvisi on turvassa; vain uudet tallennukset pysähtyvät.",
-  "app_freeLimitToastAction": "Pro on rajaton →"
+  "app_freeLimitToastAction": "Pro on rajaton →",
+  "app_proAffiliateTitle": "Tiena suosituksilla",
+  "app_proAffiliateDesc": "Jaa affiliate-linkisi ja tienä 50% provisiosta jokaisesta Pro-myyntikerrästä. Hanki linkki Whop dashboardista.",
+  "app_proGetAffiliateLink": "Hanki affiliate-linkki"
 }

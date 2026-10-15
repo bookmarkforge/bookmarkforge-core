@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "Otključajte BookmarkForge Pro",
   "app_proUpgradeText": "Neograničeni zabilješke, P2P sinkronizacija na 5 uređaja i lokalni AI. Jedno plaćanje, vaše zauvijek.",
   "app_proBuy": "Nabavite Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Otključajte jednokratnom licencom Pro. Sve što ste već spremili ostaje netaknuto.",
-"app_proStateToastAction": "Pogledajte Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Otključajte jednokratnom licencom Pro. Sve što ste već spremili ostaje netaknuto.",
+  "app_proStateToastAction": "Pogledajte Pro",
   "app_proStartTrial": "Aktivirajte Pro licencu",
   "app_proCheckoutMissing": "Plaćanje još nije povezano — dodajte checkout URL svog pružatelja plaćanja kako biste završili kupnju.",
   "app_proHaveLicense": "Već imate licencni ključ?",
@@ -1599,5 +1599,8 @@
   "app_freeWallKeepFree": "Ostanite na Freeu",
   "app_freeWallTrust": "Jednokratno plaćanje · vaše zauvijek · povrat novca u {{days}} dana",
   "app_freeLimitToast": "Free podržava {{limit}} spremanja — vaš je trezor siguran; samo se nova spremanja pauziraju.",
-  "app_freeLimitToastAction": "Pro je neograničen →"
+  "app_freeLimitToastAction": "Pro je neograničen →",
+  "app_proAffiliateTitle": "Zaradi s preporukama",
+  "app_proAffiliateDesc": "Podijelite svoj affiliate link i zaradite 50% provizije na svaku Pro prodaju. Nabavite link iz Whop dashboarda.",
+  "app_proGetAffiliateLink": "Dobijte affiliate link"
 }

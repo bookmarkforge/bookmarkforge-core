@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "BookmarkForge Pro 잠금 해제",
   "app_proUpgradeText": "무제한 북마크, 5개 기기 P2P 동기화, 로컬 AI. 한 번 결제, 영원히 소유.",
   "app_proBuy": "Pro 받기 — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "일회성 Pro 라이선스로 잠금 해제할 수 있어요. 이미 저장한 콘텐츠는 그대로 유지됩니다.",
-"app_proStateToastAction": "Pro 보기",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "일회성 Pro 라이선스로 잠금 해제할 수 있어요. 이미 저장한 콘텐츠는 그대로 유지됩니다.",
+  "app_proStateToastAction": "Pro 보기",
   "app_proStartTrial": "Pro 라이선스 활성화",
   "app_proCheckoutMissing": "결제가 아직 연결되지 않았습니다 — 결제 제공업체의 결제 URL을 추가하여 구매를 완료하세요.",
   "app_proHaveLicense": "이미 라이선스 키가 있습니까?",
@@ -1563,5 +1563,8 @@
   "app_freeWallKeepFree": "Free 계속 사용",
   "app_freeWallTrust": "일회성 결제 · 영구 소유 · {{days}}일 환불 보장",
   "app_freeLimitToast": "Free 저장 한도는 {{limit}}개입니다. 보관함은 안전하며 새 저장만 일시 중지됩니다.",
-  "app_freeLimitToastAction": "Pro는 무제한 →"
+  "app_freeLimitToastAction": "Pro는 무제한 →",
+  "app_proAffiliateTitle": "추천으로 수익",
+  "app_proAffiliateDesc": "추천 링크를 공유하고 Pro 판매마다 50% 수수료를 획득하세요. Whop 대시보드에서 링크를 가져오세요.",
+  "app_proGetAffiliateLink": "추천 링크 가져오기"
 }

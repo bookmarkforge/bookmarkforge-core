@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "Buka BookmarkForge Pro",
   "app_proUpgradeText": "Markah tanpa batas, sinkronisasi P2P di 5 perangkat dan AI lokal. Bayar sekali, milik Anda selamanya.",
   "app_proBuy": "Dapatkan Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Buka dengan lisensi Pro sekali bayar. Semua yang sudah Anda simpan tetap utuh.",
-"app_proStateToastAction": "Lihat Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Buka dengan lisensi Pro sekali bayar. Semua yang sudah Anda simpan tetap utuh.",
+  "app_proStateToastAction": "Lihat Pro",
   "app_proStartTrial": "Aktifkan lisensi Pro",
   "app_proCheckoutMissing": "Pembayaran belum terhubung — tambahkan URL checkout penyedia pembayaran Anda untuk menyelesaikan pembelian.",
   "app_proHaveLicense": "Sudah punya kunci lisensi?",
@@ -1562,5 +1562,8 @@
   "app_freeWallKeepFree": "Tetap di Free",
   "app_freeWallTrust": "Bayar sekali · milik Anda selamanya · pengembalian dana dalam {{days}} hari",
   "app_freeLimitToast": "Free menampung {{limit}} penyimpanan — vault Anda aman; hanya penyimpanan baru yang berhenti.",
-  "app_freeLimitToastAction": "Pro tanpa batas →"
+  "app_freeLimitToastAction": "Pro tanpa batas →",
+  "app_proAffiliateTitle": "Dapatkan dari Rujukan",
+  "app_proAffiliateDesc": "Bagikan affiliate link Anda dan dapatkan 50% komisi dari setiap penjualan Pro. Dapatkan link dari dashboard Whop.",
+  "app_proGetAffiliateLink": "Dapatkan affiliate link"
 }

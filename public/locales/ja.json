@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "BookmarkForge Pro を解除",
   "app_proUpgradeText": "ブックマーク無制限、5台でP2P同期、ローカルAI。支払いは1回、ずっとあなたのもの。",
   "app_proBuy": "Proを入手 — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "買い切りProライセンスでアンロックできます。保存済みのデータはそのまま残ります。",
-"app_proStateToastAction": "Proを見る",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "買い切りProライセンスでアンロックできます。保存済みのデータはそのまま残ります。",
+  "app_proStateToastAction": "Proを見る",
   "app_proStartTrial": "Pro ライセンスを有効化",
   "app_proCheckoutMissing": "決済はまだ接続されていません — 購入を完了するには決済プロバイダーのチェックアウトURLを追加してください。",
   "app_proHaveLicense": "ライセンスキーをお持ちですか？",
@@ -1588,5 +1588,8 @@
   "app_pocketTags": "タグ",
   "app_pocketImportStatusSummary": "既読とアーカイブの状態も保持されます。",
   "app_pocketImportConfirm": "これらのリンクをインポート",
-  "app_pocketImportChooseAnother": "別のファイルを選択"
+  "app_pocketImportChooseAnother": "別のファイルを選択",
+  "app_proAffiliateTitle": "紹介で稼ぐ",
+  "app_proAffiliateDesc": "アフィリエイトリンクを共有して、Pro販売ごとに50%のコミッションを獲得。Whopダッシュボードからリンクを取得。",
+  "app_proGetAffiliateLink": "アフィリエイトリンクを取得"
 }

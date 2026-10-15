@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "Odblokuj BookmarkForge Pro",
   "app_proUpgradeText": "Nieograniczone zakładki, synchronizacja P2P na 5 urządzeniach i lokalne AI. Jedna płatność, Twoje na zawsze.",
   "app_proBuy": "Kup Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Odblokuj to jednorazową licencją Pro. Wszystko, co już masz zapisane, zostanie nietknięte.",
-"app_proStateToastAction": "Zobacz Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Odblokuj to jednorazową licencją Pro. Wszystko, co już masz zapisane, zostanie nietknięte.",
+  "app_proStateToastAction": "Zobacz Pro",
   "app_proStartTrial": "Aktywuj licencję Pro",
   "app_proCheckoutMissing": "Płatność nie jest jeszcze połączona — dodaj adres checkout swojego operatora płatności, aby dokończyć zakup.",
   "app_proHaveLicense": "Masz już klucz licencyjny?",
@@ -1599,5 +1599,8 @@
   "app_freeWallKeepFree": "Zostań przy Free",
   "app_freeWallTrust": "Jednorazowa płatność · na zawsze Twoje · zwrot w ciągu {{days}} dni",
   "app_freeLimitToast": "Free mieści {{limit}} zapisów — Twój sejf jest bezpieczny; pauzują tylko nowe zapisy.",
-  "app_freeLimitToastAction": "Pro bez limitu →"
+  "app_freeLimitToastAction": "Pro bez limitu →",
+  "app_proAffiliateTitle": "Zarabiaj na poleceniach",
+  "app_proAffiliateDesc": "Udostępnij swój link afiliacyjny i zarabiaj 50% prowizji od każdej sprzedaży Pro. Uzyskaj link z dashboardu Whop.",
+  "app_proGetAffiliateLink": "Uzyskaj link afiliacyjny"
 }

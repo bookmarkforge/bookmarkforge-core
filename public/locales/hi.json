@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "BookmarkForge Pro अनलॉक करें",
   "app_proUpgradeText": "असीमित बुकमार्क, 5 डिवाइसों पर P2P सिंक और स्थानीय AI। एक बार भुगतान, हमेशा आपका।",
   "app_proBuy": "Pro प्राप्त करें — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "इसे एक बार भुगतान वाली Pro लाइसेंस से अनलॉक करें। आपकी पहले से सेव की गई हर चीज़ सुरक्षित रहेगी।",
-"app_proStateToastAction": "Pro देखें",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "इसे एक बार भुगतान वाली Pro लाइसेंस से अनलॉक करें। आपकी पहले से सेव की गई हर चीज़ सुरक्षित रहेगी।",
+  "app_proStateToastAction": "Pro देखें",
   "app_proStartTrial": "Pro लाइसेंस सक्रिय करें",
   "app_proCheckoutMissing": "चेकआउट अभी कनेक्ट नहीं है — खरीद पूरी करने के लिए अपने भुगतान प्रदाता का चेकआउट URL जोड़ें।",
   "app_proHaveLicense": "क्या आपके पास पहले से लाइसेंस कुंजी है?",
@@ -1563,5 +1563,8 @@
   "app_freeWallKeepFree": "Free पर रहें",
   "app_freeWallTrust": "एक बार भुगतान · हमेशा आपका · {{days}} दिनों में रिफंड",
   "app_freeLimitToast": "Free में {{limit}} सेविंग रखी जा सकती हैं — आपकी वॉल्ट सुरक्षित है; केवल नई सेविंग रुकती है।",
-  "app_freeLimitToastAction": "Pro अनलिमिटेड है →"
+  "app_freeLimitToastAction": "Pro अनलिमिटेड है →",
+  "app_proAffiliateTitle": "रेफरल के साथ कमाएं",
+  "app_proAffiliateDesc": "अपना affiliate link साझा करें और हर Pro बिक्री पर 50% कमीशन कमाएं। Whop dashboard से लिंक प्राप्त करें।",
+  "app_proGetAffiliateLink": "Affiliate link प्राप्त करें"
 }

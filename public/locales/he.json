@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "פתח את BookmarkForge Pro",
   "app_proUpgradeText": "סימניות ללא הגבלה, סנכרון P2P ב-5 מכשירים ו-AI מקומי. תשלום אחד, שלך לנצח.",
   "app_proBuy": "השג את Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "פתחו את זה עם רישיון Pro בתשלום אחד. כל מה שכבר שמרתם נשאר כמו שהוא.",
-"app_proStateToastAction": "צפו ב-Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "פתחו את זה עם רישיון Pro בתשלום אחד. כל מה שכבר שמרתם נשאר כמו שהוא.",
+  "app_proStateToastAction": "צפו ב-Pro",
   "app_proStartTrial": "הפעל את רישיון Pro",
   "app_proCheckoutMissing": "התשלום עדיין לא מחובר — הוסיפו את כתובת הצ'ק-אאוט של ספק התשלומים כדי להשלים את הרכישה.",
   "app_proHaveLicense": "יש לך כבר מפתח רישיון?",
@@ -1563,5 +1563,8 @@
   "app_freeWallKeepFree": "להישאר עם Free",
   "app_freeWallTrust": "תשלום חד־פעמי · שלך לתמיד · החזר כספי בתוך {{days}} ימים",
   "app_freeLimitToast": "Free מאפשר {{limit}} שמירות — הכספת שלך בטוחה; רק שמירות חדשות נעצרות.",
-  "app_freeLimitToastAction": "Pro ללא הגבלה →"
+  "app_freeLimitToastAction": "Pro ללא הגבלה →",
+  "app_proAffiliateTitle": "הרוויח עם הפניות",
+  "app_proAffiliateDesc": "שתף את קישור השותף שלך והרוויח 50% עמלה על כל מכירת Pro. קבל את הקישור מלוח הבקרה של Whop.",
+  "app_proGetAffiliateLink": "קבל קישור שותף"
 }

@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "BookmarkForge Pro'yu açın",
   "app_proUpgradeText": "Sınırsız yer imleri, 5 cihazda P2P senkronizasyon ve yerel AI. Tek ödeme, sonsuza dek sizin.",
   "app_proBuy": "Pro edinin — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Tek seferlik Pro lisansıyla aç. Şu ana kadar kaydettiklerin aynen kalır.",
-"app_proStateToastAction": "Pro'yu gör",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Tek seferlik Pro lisansıyla aç. Şu ana kadar kaydettiklerin aynen kalır.",
+  "app_proStateToastAction": "Pro'yu gör",
   "app_proStartTrial": "Pro lisansını etkinleştir",
   "app_proCheckoutMissing": "Ödeme henüz bağlı değil — satın almayı tamamlamak için ödeme sağlayıcınızın ödeme URL'sini ekleyin.",
   "app_proHaveLicense": "Zaten bir lisans anahtarınız var mı?",
@@ -1563,5 +1563,8 @@
   "app_freeWallKeepFree": "Free ile devam et",
   "app_freeWallTrust": "Tek seferlik ödeme · sonsuza kadar senin · {{days}} gün para iade garantisi",
   "app_freeLimitToast": "Free {{limit}} kayıt tutar — kasanız güvende; yalnızca yeni kayıtlar duraklatılır.",
-  "app_freeLimitToastAction": "Pro sınırsız →"
+  "app_freeLimitToastAction": "Pro sınırsız →",
+  "app_proAffiliateTitle": "Yönlendelerle Kazanın",
+  "app_proAffiliateDesc": "Affiliate linkinizi paylaşın ve her Pro satışında %50 komisyon kazanın. Linki Whop dashboardından alın.",
+  "app_proGetAffiliateLink": "Affiliate link alın"
 }

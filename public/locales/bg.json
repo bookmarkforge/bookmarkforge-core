@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "Отключете BookmarkForge Pro",
   "app_proUpgradeText": "Неограничени маркери, P2P синхронизация на 5 устройства и локален AI. Еднократно плащане, ваше завинаги.",
   "app_proBuy": "Вземете Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Отключете с еднократна лицензия Pro. Всичко, което вече сте запазили, остава непокътнато.",
-"app_proStateToastAction": "Вижте Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Отключете с еднократна лицензия Pro. Всичко, което вече сте запазили, остава непокътнато.",
+  "app_proStateToastAction": "Вижте Pro",
   "app_proStartTrial": "Активирайте Pro лиценза",
   "app_proCheckoutMissing": "Плащането още не е свързано — добавете checkout URL на вашия платежен доставчик, за да завършите покупката.",
   "app_proHaveLicense": "Вече имате лицензионен ключ?",
@@ -1582,5 +1582,8 @@
   "app_freeWallKeepFree": "Останете на Free",
   "app_freeWallTrust": "Еднократно плащане · завинаги ваш · връщане на сумата до {{days}} дни",
   "app_freeLimitToast": "Free побира {{limit}} запазвания — хранилището ви е в безопасност; спира само новото запазване.",
-  "app_freeLimitToastAction": "Pro без ограничения →"
+  "app_freeLimitToastAction": "Pro без ограничения →",
+  "app_proAffiliateTitle": "Печелете с препоръки",
+  "app_proAffiliateDesc": "Споделете affiliate link и печелете 50% комисионна на всяка Pro продажба. Вземете линка от Whop dashboard.",
+  "app_proGetAffiliateLink": "Вземете affiliate link"
 }

@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "Розблокуйте BookmarkForge Pro",
   "app_proUpgradeText": "Безлімітні закладки, P2P-синхронізація на 5 пристроях і локальний ШІ. Один платіж — ваше назавжди.",
   "app_proBuy": "Отримайте Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Розблокуйте разовою ліцензією Pro. Усе, що ви вже зберегли, залишиться недоторканим.",
-"app_proStateToastAction": "Переглянути Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Розблокуйте разовою ліцензією Pro. Усе, що ви вже зберегли, залишиться недоторканим.",
+  "app_proStateToastAction": "Переглянути Pro",
   "app_proStartTrial": "Активувати ліцензію Pro",
   "app_proCheckoutMissing": "Оплату ще не підключено — додайте URL оформлення замовлення вашого платіжного провайдера, щоб завершити покупку.",
   "app_proHaveLicense": "Уже маєте ліцензійний ключ?",
@@ -1599,5 +1599,8 @@
   "app_freeWallKeepFree": "Залишитися на Free",
   "app_freeWallTrust": "Одноразова оплата · назавжди ваше · повернення коштів протягом {{days}} днів",
   "app_freeLimitToast": "Free вміщує {{limit}} збережень — ваше сховище в безпеці; призупиняються лише нові збереження.",
-  "app_freeLimitToastAction": "Pro без обмежень →"
+  "app_freeLimitToastAction": "Pro без обмежень →",
+  "app_proAffiliateTitle": "Заробляйте на рефералах",
+  "app_proAffiliateDesc": "Поділіться своєю реферальною посиланням і заробляйте 50% комісії з кожного продажу Pro. Отримайте посилання з Whop dashboard.",
+  "app_proGetAffiliateLink": "Отримати реферальне посилання"
 }

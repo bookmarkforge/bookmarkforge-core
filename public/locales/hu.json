@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "BookmarkForge Pro feloldása",
   "app_proUpgradeText": "Korlátlan könyvjelzők, P2P szinkron 5 eszközön és helyi AI. Egyetlen fizetés, örökre a tiéd.",
   "app_proBuy": "Pro beszerzése — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Oldd fel egy egyszeri fizetésű Pro licenccel. Amit eddig mentettél, az érintetlen marad.",
-"app_proStateToastAction": "Pro megtekintése",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Oldd fel egy egyszeri fizetésű Pro licenccel. Amit eddig mentettél, az érintetlen marad.",
+  "app_proStateToastAction": "Pro megtekintése",
   "app_proStartTrial": "Pro-licenc aktiválása",
   "app_proCheckoutMissing": "A fizetés még nincs csatlakoztatva — a vásárlás befejezéséhez add meg a fizetési szolgáltatód checkout URL-jét.",
   "app_proHaveLicense": "Már van licenckulcsa?",
@@ -1563,5 +1563,8 @@
   "app_freeWallKeepFree": "Maradok a Freenél",
   "app_freeWallTrust": "Egyszeri fizetés · örökre a tiéd · pénzvisszatérítés {{days}} napon belül",
   "app_freeLimitToast": "A Free {{limit}} mentést enged — a tárolód biztonságban van; csak az új mentések szünetelnek.",
-  "app_freeLimitToastAction": "A Pro korlátlan →"
+  "app_freeLimitToastAction": "A Pro korlátlan →",
+  "app_proAffiliateTitle": "Keresszen ajánlásokkal",
+  "app_proAffiliateDesc": "Oszd meg az affiliate linket és keress 50% jutalékot minden Pro eladásból. Szerezd meg a linket a Whop irányítópulton.",
+  "app_proGetAffiliateLink": "Affiliate link megszerzése"
 }

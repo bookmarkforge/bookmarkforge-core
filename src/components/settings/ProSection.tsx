@@ -56,32 +56,33 @@ export const ProSection: React.FC = () => {
 
       <div className="space-y-4 p-4 bg-[var(--bg-card)]/50 rounded-xl border border-[var(--divider)]/50">
         {isPro ? (
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-start gap-3">
-              <BadgeCheck className="size-6 text-amber-400 shrink-0 mt-0.5" />
-              <div>
-                <p className="text-sm font-semibold">
-                  {entitlements.source === "trial"
-                    ? t("app_proTrialActive", "Pro active")
-                    : t("app_proActive", "Pro active")}
-                </p>
-                <p className="text-xs text-[var(--text-muted)] mt-1">
-                  {entitlements.source === "license" && maskedKey
-                    ? `${t("app_proLicenseMasked", "License")} ${maskedKey}`
-                    : entitlements.expiresAt
-                      ? t("app_proTrialUntil", "Valid until {{date}}", {
-                          date: new Date(entitlements.expiresAt).toLocaleDateString(),
-                        })
-                      : null}
-                  {entitlements.source === "license" && entitlements.grace && (
-                    <span className="block mt-0.5">
-                      {t(
-                        "app_proGraceNote",
-                        "Offline grace — license re-validation pending.",
-                      )}
-                    </span>
-                  )}
-                  {typeof entitlements.activationsLeft === "number" &&
+          <>
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <BadgeCheck className="size-6 text-amber-400 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm font-semibold">
+                    {entitlements.source === "trial"
+                      ? t("app_proTrialActive", "Pro active")
+                      : t("app_proActive", "Pro active")}
+                  </p>
+                  <p className="text-xs text-[var(--text-muted)] mt-1">
+                    {entitlements.source === "license" && maskedKey
+                      ? `${t("app_proLicenseMasked", "License")} ${maskedKey}`
+                      : entitlements.expiresAt
+                        ? t("app_proTrialUntil", "Valid until {{date}}", {
+                            date: new Date(entitlements.expiresAt).toLocaleDateString(),
+                          })
+                        : null}
+                    {entitlements.source === "license" && entitlements.grace && (
+                      <span className="block mt-0.5">
+                        {t(
+                          "app_proGraceNote",
+                          "Offline grace — license re-validation pending.",
+                        )}
+                      </span>
+                    )}
+                    {typeof entitlements.activationsLeft === "number" &&
                     entitlements.activationsLeft >= 0 && (
                       <span className="block mt-0.5">
                         {t("app_proActivationsLeft", "Activations left: {{count}}", {
@@ -89,23 +90,49 @@ export const ProSection: React.FC = () => {
                         })}
                       </span>
                     )}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => void deactivate()}
+                disabled={busy}
+                className="truncate text-xs flex items-center gap-1 px-3 py-2 rounded-lg border border-[var(--divider)] text-[var(--text-muted)] hover:text-red-400 transition-colors disabled:opacity-50"
+                aria-label={t("app_proDeactivate", "Deactivate license")}
+              >
+                {busy ? (
+                  <Loader2 className="size-3.5 animate-spin" />
+                ) : (
+                  <LogOut className="size-3.5" />
+                )}
+                {t("app_proDeactivate", "Deactivate")}
+              </button>
+            </div>
+
+            {/* Affiliate Section */}
+            <div className="pt-4 border-t border-[var(--divider)]/50">
+              <div className="flex items-center gap-2 mb-2">
+                <Sparkles className="size-4 text-amber-400" />
+                <p className="text-sm font-semibold">
+                  {t("app_proAffiliateTitle", "Earn with Referrals")}
                 </p>
               </div>
+              <p className="text-xs text-[var(--text-muted)] mb-3">
+                {t(
+                  "app_proAffiliateDesc",
+                  "Share your affiliate link and earn 50% commission on every Pro sale. Get your link from Whop dashboard.",
+                )}
+              </p>
+              <a
+                href="https://whop.com/dashboard/affiliates"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
+              >
+                <Key className="size-3.5" />
+                {t("app_proGetAffiliateLink", "Get Affiliate Link")}
+              </a>
             </div>
-            <button
-              onClick={() => void deactivate()}
-              disabled={busy}
-              className="truncate text-xs flex items-center gap-1 px-3 py-2 rounded-lg border border-[var(--divider)] text-[var(--text-muted)] hover:text-red-400 transition-colors disabled:opacity-50"
-              aria-label={t("app_proDeactivate", "Deactivate license")}
-            >
-              {busy ? (
-                <Loader2 className="size-3.5 animate-spin" />
-              ) : (
-                <LogOut className="size-3.5" />
-              )}
-              {t("app_proDeactivate", "Deactivate")}
-            </button>
-          </div>
+          </>
         ) : (
           <>
             <div className="flex items-start gap-3">

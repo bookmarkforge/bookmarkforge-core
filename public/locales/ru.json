@@ -1440,9 +1440,9 @@
   "app_proUpgradeTitle": "Разблокируйте BookmarkForge Pro",
   "app_proUpgradeText": "Безлимитные закладки, P2P-синхронизация на 5 устройствах и локальный ИИ. Один платёж — ваше навсегда.",
   "app_proBuy": "Получите Pro — {{price}}",
-"app_proStateFeaturePro": "Pro",
-"app_proStateBodyLicense": "Откройте это с разовой лицензией Pro. Всё, что вы уже сохранили, останется нетронутым.",
-"app_proStateToastAction": "Открыть Pro",
+  "app_proStateFeaturePro": "Pro",
+  "app_proStateBodyLicense": "Откройте это с разовой лицензией Pro. Всё, что вы уже сохранили, останется нетронутым.",
+  "app_proStateToastAction": "Открыть Pro",
   "app_proStartTrial": "Активировать лицензию Pro",
   "app_proCheckoutMissing": "Оплата пока не подключена — добавьте URL оформления заказа вашего платёжного провайдера, чтобы завершить покупку.",
   "app_proHaveLicense": "Уже есть ключ лицензии?",
@@ -1599,5 +1599,8 @@
   "app_freeWallKeepFree": "Остаться на Free",
   "app_freeWallTrust": "Единоразовая оплата · навсегда ваш · возврат в течение {{days}} дней",
   "app_freeLimitToast": "Free вмещает {{limit}} сохранений — ваша хранилище в безопасности; приостанавливаются только новые сохранения.",
-  "app_freeLimitToastAction": "Pro без ограничений →"
+  "app_freeLimitToastAction": "Pro без ограничений →",
+  "app_proAffiliateTitle": "Зарабатывайте с рефералами",
+  "app_proAffiliateDesc": "Поделитесь своей реферальной ссылкой и зарабатывайте 50% комиссии с каждой продажи Pro. Получите ссылку из Whop dashboard.",
+  "app_proGetAffiliateLink": "Получить реферальную ссылку"
 }

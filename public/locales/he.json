@@ -1566,5 +1566,8 @@
   "app_freeLimitToastAction": "Pro ללא הגבלה →",
   "app_proAffiliateTitle": "הרוויח עם הפניות",
   "app_proAffiliateDesc": "שתף את קישור השותף שלך והרוויח 50% עמלה על כל מכירת Pro. קבל את הקישור מלוח הבקרה של Whop.",
-  "app_proGetAffiliateLink": "קבל קישור שותף"
+  "app_proGetAffiliateLink": "קבל קישור שותף",
+  "app_proAffiliateTotalReferrals": "סהכ הפניות",
+  "app_proAffiliateTotalEarnings": "הכנסות כולל",
+  "app_proAffiliateDashboard": "לוח בקרה"
 }

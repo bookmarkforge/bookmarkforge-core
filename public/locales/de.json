@@ -1812,5 +1812,8 @@
   "app_secNotConfigured": "Nicht konfiguriert",
   "app_proAffiliateTitle": "Verdienen mit Empfehlungen",
   "app_proAffiliateDesc": "Teilen Sie Ihren Affiliate-Link und verdienen Sie 50% Provision bei jedem Pro-Verkauf. Holen Sie den Link vom Whop-Dashboard.",
-  "app_proGetAffiliateLink": "Affiliate-Link erhalten"
+  "app_proGetAffiliateLink": "Affiliate-Link erhalten",
+  "app_proAffiliateTotalReferrals": "Gesamt Empfehlungen",
+  "app_proAffiliateTotalEarnings": "Gesamtverdienst",
+  "app_proAffiliateDashboard": "Dashboard"
 }

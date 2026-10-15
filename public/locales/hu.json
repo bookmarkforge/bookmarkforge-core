@@ -1566,5 +1566,8 @@
   "app_freeLimitToastAction": "A Pro korlátlan →",
   "app_proAffiliateTitle": "Keresszen ajánlásokkal",
   "app_proAffiliateDesc": "Oszd meg az affiliate linket és keress 50% jutalékot minden Pro eladásból. Szerezd meg a linket a Whop irányítópulton.",
-  "app_proGetAffiliateLink": "Affiliate link megszerzése"
+  "app_proGetAffiliateLink": "Affiliate link megszerzése",
+  "app_proAffiliateTotalReferrals": "Összes ajánlás",
+  "app_proAffiliateTotalEarnings": "Összes bevétel",
+  "app_proAffiliateDashboard": "Vezérlőpult"
 }

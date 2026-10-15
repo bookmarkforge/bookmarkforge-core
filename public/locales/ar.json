@@ -1591,5 +1591,8 @@
   "app_pocketImportChooseAnother": "اختيار ملف آخر",
   "app_proAffiliateTitle": "اكسب مع الإحالات",
   "app_proAffiliateDesc": "شارك رابطك كمسوق واكسب 50% عمولة على كل بيع Pro. احصل على الرابط من لوحة تحكم Whop.",
-  "app_proGetAffiliateLink": "الحصول على رابط المسوق"
+  "app_proGetAffiliateLink": "الحصول على رابط المسوق",
+  "app_proAffiliateTotalReferrals": "إجمالي الإحالات",
+  "app_proAffiliateTotalEarnings": "إجمالي الأرباح",
+  "app_proAffiliateDashboard": "لوحة التحكم"
 }

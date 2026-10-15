@@ -1602,5 +1602,8 @@
   "app_freeLimitToastAction": "Pro без ограничений →",
   "app_proAffiliateTitle": "Зарабатывайте с рефералами",
   "app_proAffiliateDesc": "Поделитесь своей реферальной ссылкой и зарабатывайте 50% комиссии с каждой продажи Pro. Получите ссылку из Whop dashboard.",
-  "app_proGetAffiliateLink": "Получить реферальную ссылку"
+  "app_proGetAffiliateLink": "Получить реферальную ссылку",
+  "app_proAffiliateTotalReferrals": "Всего рефералов",
+  "app_proAffiliateTotalEarnings": "Всего заработок",
+  "app_proAffiliateDashboard": "Панель управления"
 }

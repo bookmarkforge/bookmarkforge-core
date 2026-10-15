@@ -1566,5 +1566,8 @@
   "app_freeLimitToastAction": "Pro on rajaton →",
   "app_proAffiliateTitle": "Tiena suosituksilla",
   "app_proAffiliateDesc": "Jaa affiliate-linkisi ja tienä 50% provisiosta jokaisesta Pro-myyntikerrästä. Hanki linkki Whop dashboardista.",
-  "app_proGetAffiliateLink": "Hanki affiliate-linkki"
+  "app_proGetAffiliateLink": "Hanki affiliate-linkki",
+  "app_proAffiliateTotalReferrals": "Suositu suositukset",
+  "app_proAffiliateTotalEarnings": "Kokonaisansiot",
+  "app_proAffiliateDashboard": "Hallintapaneeli"
 }

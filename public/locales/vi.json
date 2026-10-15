@@ -1560,5 +1560,8 @@
   "app_freeLimitToastAction": "Pro không giới hạn →",
   "app_proAffiliateTitle": "Kiếm tiền với Referral",
   "app_proAffiliateDesc": "Chia sẻ affiliate link của bạn và kiếm 50% hoa hồng trên mỗi lần bán Pro. Nhận link từ Whop dashboard.",
-  "app_proGetAffiliateLink": "Nhận affiliate link"
+  "app_proGetAffiliateLink": "Nhận affiliate link",
+  "app_proAffiliateTotalReferrals": "Tổng giới thiệu",
+  "app_proAffiliateTotalEarnings": "Tổng thu nhập",
+  "app_proAffiliateDashboard": "Bảng điều khiển"
 }

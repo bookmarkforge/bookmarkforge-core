@@ -1591,5 +1591,8 @@
   "app_pocketImportChooseAnother": "选择其他文件",
   "app_proAffiliateTitle": "通过推荐赚取",
   "app_proAffiliateDesc": "分享您的联盟链接，每次Pro销售赚取50%佣金。从Whop仪表板获取链接。",
-  "app_proGetAffiliateLink": "获取联盟链接"
+  "app_proGetAffiliateLink": "获取联盟链接",
+  "app_proAffiliateTotalReferrals": "总推荐数",
+  "app_proAffiliateTotalEarnings": "总收入",
+  "app_proAffiliateDashboard": "仪表板"
 }

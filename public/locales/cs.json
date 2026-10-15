@@ -1602,5 +1602,8 @@
   "app_freeLimitToastAction": "Pro bez limitu →",
   "app_proAffiliateTitle": "Vydělávejte s doporučeními",
   "app_proAffiliateDesc": "Sdílejte svůj affiliate odkaz a získejte 50% provizi z každého Pro prodeje. Získejte odkaz z Whop dashboardu.",
-  "app_proGetAffiliateLink": "Získat affiliate odkaz"
+  "app_proGetAffiliateLink": "Získat affiliate odkaz",
+  "app_proAffiliateTotalReferrals": "Celkem doporučení",
+  "app_proAffiliateTotalEarnings": "Celkem výdělky",
+  "app_proAffiliateDashboard": "Panel"
 }

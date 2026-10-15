@@ -1590,5 +1590,8 @@
   "app_pocketImportChooseAnother": "Scegli un altro file",
   "app_proAffiliateTitle": "Guadagna con i Referral",
   "app_proAffiliateDesc": "Condividi il tuo link di affiliazione e guadagna il 50% di commissione su ogni vendita Pro. Ottieni il link dal dashboard Whop.",
-  "app_proGetAffiliateLink": "Ottieni link di affiliazione"
+  "app_proGetAffiliateLink": "Ottieni link di affiliazione",
+  "app_proAffiliateTotalReferrals": "Totale raccomandazioni",
+  "app_proAffiliateTotalEarnings": "Guadagni totali",
+  "app_proAffiliateDashboard": "Dashboard"
 }

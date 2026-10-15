@@ -1602,5 +1602,8 @@
   "app_freeLimitToastAction": "Pro bez limitu →",
   "app_proAffiliateTitle": "Zarabiaj na poleceniach",
   "app_proAffiliateDesc": "Udostępnij swój link afiliacyjny i zarabiaj 50% prowizji od każdej sprzedaży Pro. Uzyskaj link z dashboardu Whop.",
-  "app_proGetAffiliateLink": "Uzyskaj link afiliacyjny"
+  "app_proGetAffiliateLink": "Uzyskaj link afiliacyjny",
+  "app_proAffiliateTotalReferrals": "Łącznie poleceń",
+  "app_proAffiliateTotalEarnings": "Łączne zarobki",
+  "app_proAffiliateDashboard": "Panel sterowniczy"
 }

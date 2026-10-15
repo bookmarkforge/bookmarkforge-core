@@ -1565,5 +1565,8 @@
   "app_freeLimitToastAction": "Pro tanpa batas →",
   "app_proAffiliateTitle": "Dapatkan dari Rujukan",
   "app_proAffiliateDesc": "Bagikan affiliate link Anda dan dapatkan 50% komisi dari setiap penjualan Pro. Dapatkan link dari dashboard Whop.",
-  "app_proGetAffiliateLink": "Dapatkan affiliate link"
+  "app_proGetAffiliateLink": "Dapatkan affiliate link",
+  "app_proAffiliateTotalReferrals": "Total rujukan",
+  "app_proAffiliateTotalEarnings": "Total pendapatan",
+  "app_proAffiliateDashboard": "Dasbor"
 }

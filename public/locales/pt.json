@@ -1591,5 +1591,8 @@
   "app_pocketImportChooseAnother": "Escolher outro ficheiro",
   "app_proAffiliateTitle": "Ganhe com Indicações",
   "app_proAffiliateDesc": "Compartilhe seu link de afiliado e ganhe 50% de comissão em cada venda Pro. Obtenha o link do dashboard Whop.",
-  "app_proGetAffiliateLink": "Obter link de afiliado"
+  "app_proGetAffiliateLink": "Obter link de afiliado",
+  "app_proAffiliateTotalReferrals": "Total de indicações",
+  "app_proAffiliateTotalEarnings": "Ganhos totais",
+  "app_proAffiliateDashboard": "Painel de controle"
 }

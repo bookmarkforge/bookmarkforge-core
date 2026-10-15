@@ -1565,5 +1565,8 @@
   "app_freeLimitToastAction": "Pro este nelimitat →",
   "app_proAffiliateTitle": "Câștigă cu recomandări",
   "app_proAffiliateDesc": "Distribuie link-ul tău de afiliat și câștigă 50% comision la fiecare vânzare Pro. Obține link-ul din dashboard Whop.",
-  "app_proGetAffiliateLink": "Obține link de afiliat"
+  "app_proGetAffiliateLink": "Obține link de afiliat",
+  "app_proAffiliateTotalReferrals": "Total recomandări",
+  "app_proAffiliateTotalEarnings": "Câștiguri totale",
+  "app_proAffiliateDashboard": "Panou de control"
 }

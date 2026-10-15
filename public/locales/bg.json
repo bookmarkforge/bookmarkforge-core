@@ -1585,5 +1585,8 @@
   "app_freeLimitToastAction": "Pro без ограничения →",
   "app_proAffiliateTitle": "Печелете с препоръки",
   "app_proAffiliateDesc": "Споделете affiliate link и печелете 50% комисионна на всяка Pro продажба. Вземете линка от Whop dashboard.",
-  "app_proGetAffiliateLink": "Вземете affiliate link"
+  "app_proGetAffiliateLink": "Вземете affiliate link",
+  "app_proAffiliateTotalReferrals": "Общо реферали",
+  "app_proAffiliateTotalEarnings": "Общо приходи",
+  "app_proAffiliateDashboard": "Табло"
 }

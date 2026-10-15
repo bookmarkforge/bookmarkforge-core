@@ -1602,5 +1602,8 @@
   "app_freeLimitToastAction": "Pro je neograničen →",
   "app_proAffiliateTitle": "Zaradi s preporukama",
   "app_proAffiliateDesc": "Podijelite svoj affiliate link i zaradite 50% provizije na svaku Pro prodaju. Nabavite link iz Whop dashboarda.",
-  "app_proGetAffiliateLink": "Dobijte affiliate link"
+  "app_proGetAffiliateLink": "Dobijte affiliate link",
+  "app_proAffiliateTotalReferrals": "Ukupno preporuka",
+  "app_proAffiliateTotalEarnings": "Ukupno zarada",
+  "app_proAffiliateDashboard": "Upravljačka ploča"
 }

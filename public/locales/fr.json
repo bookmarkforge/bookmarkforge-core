@@ -1591,5 +1591,8 @@
   "app_pocketImportChooseAnother": "Choisir un autre fichier",
   "app_proAffiliateTitle": "Gagnez avec les parrainages",
   "app_proAffiliateDesc": "Partagez votre lien d'affiliation et gagnez 50% de commission sur chaque vente Pro. Obtenez le lien depuis le tableau de bord Whop.",
-  "app_proGetAffiliateLink": "Obtenir le lien d'affiliation"
+  "app_proGetAffiliateLink": "Obtenir le lien d'affiliation",
+  "app_proAffiliateTotalReferrals": "Total des parrainages",
+  "app_proAffiliateTotalEarnings": "Gains totaux",
+  "app_proAffiliateDashboard": "Tableau de bord"
 }

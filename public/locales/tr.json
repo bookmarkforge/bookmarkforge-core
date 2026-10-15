@@ -1566,5 +1566,8 @@
   "app_freeLimitToastAction": "Pro sınırsız →",
   "app_proAffiliateTitle": "Yönlendelerle Kazanın",
   "app_proAffiliateDesc": "Affiliate linkinizi paylaşın ve her Pro satışında %50 komisyon kazanın. Linki Whop dashboardından alın.",
-  "app_proGetAffiliateLink": "Affiliate link alın"
+  "app_proGetAffiliateLink": "Affiliate link alın",
+  "app_proAffiliateTotalReferrals": "Toplam yönlendirme",
+  "app_proAffiliateTotalEarnings": "Toplam kazanç",
+  "app_proAffiliateDashboard": "Kontrol paneli"
 }

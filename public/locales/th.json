@@ -1566,5 +1566,8 @@
   "app_freeLimitToastAction": "Pro ไม่จำกัด →",
   "app_proAffiliateTitle": "สร้างรายได้จากการแนะนำ",
   "app_proAffiliateDesc": "แชร์ลิงก์พันธมิตและสร้างรายได้ 50% คอมมิชชั่นจากการขาย Pro แต่ละครั้ง รับลิงก์จาก Whop dashboard",
-  "app_proGetAffiliateLink": "รับลิงก์พันธมิต"
+  "app_proGetAffiliateLink": "รับลิงก์พันธมิต",
+  "app_proAffiliateTotalReferrals": "การแนะนำรวม",
+  "app_proAffiliateTotalEarnings": "รายได้รวม",
+  "app_proAffiliateDashboard": "แดชบอร์ด"
 }

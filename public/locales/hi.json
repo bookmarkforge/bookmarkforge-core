@@ -1566,5 +1566,8 @@
   "app_freeLimitToastAction": "Pro अनलिमिटेड है →",
   "app_proAffiliateTitle": "रेफरल के साथ कमाएं",
   "app_proAffiliateDesc": "अपना affiliate link साझा करें और हर Pro बिक्री पर 50% कमीशन कमाएं। Whop dashboard से लिंक प्राप्त करें।",
-  "app_proGetAffiliateLink": "Affiliate link प्राप्त करें"
+  "app_proGetAffiliateLink": "Affiliate link प्राप्त करें",
+  "app_proAffiliateTotalReferrals": "कुल रेफरल",
+  "app_proAffiliateTotalEarnings": "कुल कमाई",
+  "app_proAffiliateDashboard": "डैशबोर्ड"
 }

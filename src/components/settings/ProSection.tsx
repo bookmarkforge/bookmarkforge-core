@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Crown, Key, BadgeCheck, Loader2, LogOut, Sparkles } from "lucide-react";
+import { Crown, Key, BadgeCheck, Loader2, LogOut, Sparkles, Copy, ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLicenseStore } from "../../store/useLicenseStore";
 import { licenseService } from "../../services/LicenseService";
 import { LICENSE_CONFIG, isCheckoutConfigured } from "../../constants/license";
 import { getActiveProPrice } from "../../constants/pricing";
+import { getAffiliateStats } from "../../services/AffiliateService";
 
 export const ProSection: React.FC = () => {
   const { t } = useTranslation();
@@ -17,6 +18,9 @@ export const ProSection: React.FC = () => {
   const [storedKey, setStoredKey] = useState<string | null>(() =>
     licenseService.getStoredLicenseKey(),
   );
+  const [affiliateLink, setAffiliateLink] = useState<string | null>(null);
+  const [affiliateStats, setAffiliateStats] = useState<any>(null);
+  const [showAffiliateSection, setShowAffiliateSection] = useState(false);
 
   const isPro = entitlements.plan === "pro";
 
@@ -29,6 +33,25 @@ export const ProSection: React.FC = () => {
       active = false;
     };
   }, []);
+
+  // Load affiliate stats when Pro
+  useEffect(() => {
+    if (isPro) {
+      let active = true;
+      void getAffiliateStats("pro-user@bookmarkforge.local").then((stats) => {
+        if (active) {
+          setAffiliateStats(stats);
+          setShowAffiliateSection(true);
+        }
+      }).catch(() => {
+        // Affiliate might not exist yet, that's okay
+        setShowAffiliateSection(true);
+      });
+      return () => {
+        active = false;
+      };
+    }
+  }, [isPro]);
 
   const handleBuy = () => {
     if (!isCheckoutConfigured()) {return;}
@@ -122,15 +145,61 @@ export const ProSection: React.FC = () => {
                   "Share your affiliate link and earn 50% commission on every Pro sale. Get your link from Whop dashboard.",
                 )}
               </p>
-              <a
-                href="https://whop.com/dashboard/affiliates"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
-              >
-                <Key className="size-3.5" />
-                {t("app_proGetAffiliateLink", "Get Affiliate Link")}
-              </a>
+              {showAffiliateSection && affiliateStats ? (
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[var(--text-muted)]">
+                      {t("app_proAffiliateTotalReferrals", "Total Referrals")}:
+                    </span>
+                    <span className="font-semibold">
+                      {affiliateStats.totalReferrals || 0}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[var(--text-muted)]">
+                      {t("app_proAffiliateTotalEarnings", "Total Earnings")}:
+                    </span>
+                    <span className="font-semibold text-green-400">
+                      {affiliateStats.totalEarnings || "$0"}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      readOnly
+                      value="https://whop.com/checkout/plan_g4oAakLGDjaoM?a=YOUR_AFFILIATE_ID"
+                      className="flex-1 text-xs bg-[var(--bg-card)] border border-[var(--divider)] rounded px-3 py-2"
+                    />
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText("https://whop.com/checkout/plan_g4oAakLGDjaoM?a=YOUR_AFFILIATE_ID");
+                      }}
+                      className="text-xs flex items-center gap-1 px-3 py-2 rounded-lg border border-[var(--divider)] text-[var(--text-muted)] hover:text-cyan-400 transition-colors"
+                    >
+                      <Copy className="size-3.5" />
+                    </button>
+                  </div>
+                  <a
+                    href="https://whop.com/dashboard/affiliates"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
+                  >
+                    <ExternalLink className="size-3.5" />
+                    {t("app_proAffiliateDashboard", "View Dashboard")}
+                  </a>
+                </div>
+              ) : (
+                <a
+                  href="https://whop.com/dashboard/affiliates"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-xs text-cyan-400 hover:text-cyan-300 transition-colors"
+                >
+                  <Key className="size-3.5" />
+                  {t("app_proGetAffiliateLink", "Get Affiliate Link")}
+                </a>
+              )}
             </div>
           </>
         ) : (

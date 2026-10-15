@@ -1566,5 +1566,8 @@
   "app_freeLimitToastAction": "Pro는 무제한 →",
   "app_proAffiliateTitle": "추천으로 수익",
   "app_proAffiliateDesc": "추천 링크를 공유하고 Pro 판매마다 50% 수수료를 획득하세요. Whop 대시보드에서 링크를 가져오세요.",
-  "app_proGetAffiliateLink": "추천 링크 가져오기"
+  "app_proGetAffiliateLink": "추천 링크 가져오기",
+  "app_proAffiliateTotalReferrals": "총 추천",
+  "app_proAffiliateTotalEarnings": "총 수익",
+  "app_proAffiliateDashboard": "대시보드"
 }

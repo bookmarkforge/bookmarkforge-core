@@ -1566,5 +1566,8 @@
   "app_freeLimitToastAction": "Pro er ubegrenset →",
   "app_proAffiliateTitle": "Tjen med henvisninger",
   "app_proAffiliateDesc": "Del din affiliate link og tjen 50% provisjon på hvert Pro salg. Få linken fra Whop dashboard.",
-  "app_proGetAffiliateLink": "Få affiliate link"
+  "app_proGetAffiliateLink": "Få affiliate link",
+  "app_proAffiliateTotalReferrals": "Total henvisninger",
+  "app_proAffiliateTotalEarnings": "Total inntjening",
+  "app_proAffiliateDashboard": "Kontrollpanel"
 }

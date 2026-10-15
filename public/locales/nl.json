@@ -1566,5 +1566,8 @@
   "app_freeLimitToastAction": "Pro is onbeperkt →",
   "app_proAffiliateTitle": "Verdien met doorverwijzingen",
   "app_proAffiliateDesc": "Deel je affiliate link en verdien 50% commissie op elke Pro verkoop. Haal de link op uit het Whop dashboard.",
-  "app_proGetAffiliateLink": "Affiliate link ophalen"
+  "app_proGetAffiliateLink": "Affiliate link ophalen",
+  "app_proAffiliateTotalReferrals": "Totaal doorverwijzingen",
+  "app_proAffiliateTotalEarnings": "Totaal verdiensten",
+  "app_proAffiliateDashboard": "Dashboard"
 }

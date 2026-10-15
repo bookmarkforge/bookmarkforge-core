@@ -1591,5 +1591,8 @@
   "app_pocketImportChooseAnother": "別のファイルを選択",
   "app_proAffiliateTitle": "紹介で稼ぐ",
   "app_proAffiliateDesc": "アフィリエイトリンクを共有して、Pro販売ごとに50%のコミッションを獲得。Whopダッシュボードからリンクを取得。",
-  "app_proGetAffiliateLink": "アフィリエイトリンクを取得"
+  "app_proGetAffiliateLink": "アフィリエイトリンクを取得",
+  "app_proAffiliateTotalReferrals": "総紹介数",
+  "app_proAffiliateTotalEarnings": "総収益",
+  "app_proAffiliateDashboard": "ダッシュボード"
 }

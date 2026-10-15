@@ -1585,5 +1585,8 @@
   "app_freeLimitToastAction": "Το Pro είναι απεριόριστο →",
   "app_proAffiliateTitle": "Κερδίστε με συστάσεις",
   "app_proAffiliateDesc": "Μοιραστείτε τον affiliate σύνδεσμό και κερδίστε 50% προμήθεια σε κάθε πώληση Pro. Λάβετε τον σύνδεσμο από το Whop dashboard.",
-  "app_proGetAffiliateLink": "Λήψη affiliate link"
+  "app_proGetAffiliateLink": "Λήψη affiliate link",
+  "app_proAffiliateTotalReferrals": "Συνολικές προτάσεις",
+  "app_proAffiliateTotalEarnings": "Συνολικά κέρδη",
+  "app_proAffiliateDashboard": "Πίνακας"
 }

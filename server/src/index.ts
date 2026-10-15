@@ -49,6 +49,7 @@ import { createGuardedDispatcher } from "./route-table";
 import { createClientEventsHandler } from "./client-events";
 import { createAnalyticsHandler } from "./business-analytics";
 import { createOgHandler } from "./og-handler";
+import { handleCreateAffiliate, handleGetAffiliateStats } from "./affiliate-handler";
 import { applySecurityHeaders, cspCorsHeaders } from "./middleware/security";
 import { createEntitlementGuard } from "./entitlement-guard";
 import { constantTimeUtf8Equal, readBoundedInteger } from "./proxy-utils";
@@ -1080,6 +1081,14 @@ const dispatchUnGuardedRequest = (req: IncomingMessage, res: ServerResponse): vo
   }
   if (req.method === "GET" && req.url?.startsWith("/og")) {
     void ogHandler(req, res);
+    return;
+  }
+  if (req.method === "POST" && req.url === "/api/affiliate/create") {
+    void handleCreateAffiliate(req, res);
+    return;
+  }
+  if (req.method === "POST" && req.url === "/api/affiliate/stats") {
+    void handleGetAffiliateStats(req, res);
     return;
   }
   // Any other HTTP request gets a 426 Upgrade Required — the server

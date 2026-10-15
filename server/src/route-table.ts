@@ -150,6 +150,20 @@ export const ROUTE_POLICIES: readonly RoutePolicy[] = [
     auth: "none (public Open Graph card generation)",
     note: "Generates dynamic SVG-based Open Graph cards for social sharing.",
   },
+  {
+    path: "/api/affiliate/create",
+    methods: ["POST"],
+    access: "public",
+    auth: "server-side only (WHOP_API_KEY is server secret)",
+    note: "Creates Whop affiliate for Pro users; client sends deviceId only.",
+  },
+  {
+    path: "/api/affiliate/stats",
+    methods: ["POST"],
+    access: "public",
+    auth: "server-side only (WHOP_API_KEY is server secret)",
+    note: "Gets Whop affiliate stats; client sends deviceId only.",
+  },
 ];
 
 /** Strip the query string: route identity is the path. */

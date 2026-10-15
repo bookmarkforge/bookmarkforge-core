@@ -38,7 +38,9 @@ export const ProSection: React.FC = () => {
   useEffect(() => {
     if (isPro) {
       let active = true;
-      void getAffiliateStats("pro-user@bookmarkforge.local").then((stats) => {
+      // Use device ID from license service
+      const deviceId = licenseService.getDeviceId?.() || "unknown";
+      void getAffiliateStats(deviceId).then((stats) => {
         if (active) {
           setAffiliateStats(stats);
           setShowAffiliateSection(true);

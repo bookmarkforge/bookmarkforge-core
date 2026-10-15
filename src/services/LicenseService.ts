@@ -608,7 +608,7 @@ class LicenseService {
       
       // Create Whop affiliate for Pro users (non-blocking)
       if (res.payload.plan === "pro") {
-        createProAffiliate("pro-user@bookmarkforge.local", this.getDeviceId())
+        createProAffiliate(this.getDeviceId())
           .catch((err) => logger.warn("[License] Failed to create affiliate", { error: err }));
       }
       

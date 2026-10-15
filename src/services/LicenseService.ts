@@ -34,6 +34,7 @@ import {
   verifyLicensePayload,
   type LicensePayload,
 } from "./licenseSigning";
+import { createProAffiliate } from "./AffiliateService";
 
 // ── Types ────────────────────────────────────────────────────────────
 
@@ -604,6 +605,13 @@ class LicenseService {
       // signed payload, never in the audit log).
       if (this.state) {this.state.key = key;}
       await this.migrateLegacyKey(key);
+      
+      // Create Whop affiliate for Pro users (non-blocking)
+      if (res.payload.plan === "pro") {
+        createProAffiliate("pro-user@bookmarkforge.local", this.getDeviceId())
+          .catch((err) => logger.warn("[License] Failed to create affiliate", { error: err }));
+      }
+      
       auditLog
         .record({
           action: "license_activated",

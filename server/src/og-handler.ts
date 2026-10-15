@@ -11,20 +11,32 @@
 
 import type { IncomingMessage, ServerResponse } from "node:http";
 
+// ADR-067: OG types allowlist - validate before interpolation
+const OG_TYPES = ["graph", "document", "bookmark"] as const;
+type OgType = (typeof OG_TYPES)[number];
+
 interface OgParams {
   title?: string;
-  type?: "graph" | "document" | "bookmark";
+  type?: OgType;
   stats?: string;
 }
 
 function parseOgParams(url: string | undefined): OgParams {
   if (!url) return {};
-  const urlObj = new URL(url, "http://localhost");
-  return {
-    title: urlObj.searchParams.get("title") || undefined,
-    type: (urlObj.searchParams.get("type") as OgParams["type"]) || undefined,
-    stats: urlObj.searchParams.get("stats") || undefined,
-  };
+  try {
+    const urlObj = new URL(url, "http://localhost");
+    const rawType = urlObj.searchParams.get("type");
+    // ADR-067: Validate type against allowlist, fail-closed to default
+    const type = OG_TYPES.includes(rawType as OgType) ? (rawType as OgType) : undefined;
+    return {
+      title: urlObj.searchParams.get("title") || undefined,
+      type,
+      stats: urlObj.searchParams.get("stats") || undefined,
+    };
+  } catch {
+    // ADR-067: Fail-closed on malformed URLs
+    return {};
+  }
 }
 
 function generateSvgCard(params: OgParams): string {
@@ -119,9 +131,14 @@ export function createOgHandler() {
 </body>
 </html>`;
 
+    // ADR-067: Add security headers
     res.writeHead(200, {
       "Content-Type": "text/html; charset=utf-8",
       "Cache-Control": "public, max-age=3600", // Cache for 1 hour
+      "Content-Security-Policy": "default-src 'none'; img-src data:;",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "Referrer-Policy": "no-referrer",
     });
     res.end(html);
   };

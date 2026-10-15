@@ -401,6 +401,48 @@ ${priceProItems}
       </div>
     </section>
 
+    <!-- Affiliate Program Section -->
+    <section class="affiliate-section" aria-labelledby="affiliate-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">🚀</span>
+          <h2 id="affiliate-title">${t.affiliateTitle || 'Welcome to the BookmarkForge Affiliate Program!'}</h2>
+        </div>
+        <div class="affiliate-content">
+          <p class="affiliate-intro">Here are the guidelines and essential instructions to start earning commissions with us:</p>
+          <div class="affiliate-details">
+            <div class="affiliate-item">
+              <h3>About BookmarkForge</h3>
+              <p>${t.affiliateAbout || 'Local-first AI Knowledge Vault with End-to-End Encryption'}</p>
+            </div>
+            <div class="affiliate-item">
+              <h3>Your Commission</h3>
+              <p>${t.affiliateCommission || 'You will earn a 30% recurring commission for every user who registers through your link, as long as they remain active.'}</p>
+            </div>
+            <div class="affiliate-item">
+              <h3>Holding Period</h3>
+              <p>${t.affiliateHolding || 'Payouts are automatically released to your balance 30 days after the user purchase (standard platform policy to protect against refunds).'}</p>
+            </div>
+          </div>
+          <div class="affiliate-rules">
+            <h3>⚠️ ${t.affiliateRules || 'Important Rules (Strictly Prohibited):'}</h3>
+            <ul>
+              <li><strong>${t.affiliateRule1Title || 'Self-purchasing:'}</strong> ${t.affiliateRule1 || 'You are not allowed to buy the product using your own affiliate link to get a discount.'}</li>
+              <li><strong>${t.affiliateRule2Title || 'Spamming:'}</strong> ${t.affiliateRule2 || 'Spamming your link in other communities, forums, or bulk messaging is completely banned.'}</li>
+              <li><strong>${t.affiliateRule3Title || 'Misleading Ads:'}</strong> ${t.affiliateRule3 || 'Do not use false promises or outdated information to secure a sale.'}</li>
+            </ul>
+          </div>
+          <div class="affiliate-tip">
+            <h3>💡 ${t.affiliateTipTitle || 'Sales Tip'}</h3>
+            <p>${t.affiliateTip || 'Share screenshots, real use cases, or quick videos showing how BookmarkForge works on your social media (X/Twitter, TikTok, LinkedIn). Authentic demonstrations convert twice as well!'}</p>
+          </div>
+          <div class="affiliate-cta">
+            <a href="https://whop.com/dashboard/affiliates" target="_blank" rel="noopener noreferrer" class="btn-primary">${t.affiliateCta || 'Get Your Affiliate Link'}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- FAQ Section -->
     <section class="faq-section" aria-labelledby="faq-title">
       <div class="container">

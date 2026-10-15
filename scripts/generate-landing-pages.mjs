@@ -377,6 +377,12 @@ ${privItems}
 ${priceFreeItems}
             </ul>
             <a href="/app" class="btn-outline ">${t.priceFreeCta}</a>
+            <div class="price-donate">
+              <p class="price-donate-text">${t.priceDonate || 'Support the project with a donation'}</p>
+              <a href="https://ko-fi.com/M0Q528TAFF" target="_blank" rel="noopener noreferrer" class="price-donate-link">
+                <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi5.png?v=6" border="0" alt="Buy Me a Coffee at ko-fi.com" />
+              </a>
+            </div>
           </div>
           <div class="price-card popular">
             <span class="badge">Most Popular</span>

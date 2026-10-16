@@ -1,0 +1,154 @@
+/* ============================================================
+   extension/brand-tokens.css
+   Single source of truth for the extension's brand tokens —
+   the browser-action popup (and any future extension UI page).
+   Mirrors public/brand-tokens.css / src/index.css "Dark Flat UI
+   with Glow" (dark default). Uses the SAME token names as the app
+   so a brand restyle is a one-file edit shared across web + extension.
+
+   NOTE: the extension intentionally does NOT self-host Inter here.
+   It runs offline in a sandboxed 320px popup where network font
+   loading is disproportionate; the popup falls back to the system
+   font stack via font-family in popup.css. If self-hosted Inter is
+   ever wanted, drop the woff2 into extension/ and add the @font-face
+   HERE (this file is the single place for it).
+   ============================================================ */
+
+/* ── Brand default: DARK "Dark Flat UI with Glow" (matches app) ─── */
+:root,
+[data-theme="dark"] {
+  /* Backgrounds */
+  --bg-primary: #0f1c2e;
+  --bg-secondary: #162235;
+  --bg-card: #1a2a40;
+  --bg-topbar: #111e30;
+  --bg-sidebar: #0f1c2e;
+
+  /* Text */
+  --text-primary: #e8f0f8;
+  --text-secondary: #b9d4ea;
+  --text-accent: #38bdf8;
+  --text-muted: #b9d4ea;
+
+  /* Accent / brand */
+  --accent-primary: #00aeef;
+  --accent-secondary: #0d7fc4;
+  --accent-glow: rgba(0, 174, 239, 0.25);
+  --accent-primary-hover: rgba(0, 174, 239, 0.12);
+  --accent-primary-glow: rgba(0, 174, 239, 0.30);
+  --text-on-accent: #0f1c2e;
+
+  /* States */
+  --state-active-border: #00aeef;
+  --state-inactive-border: #1e3352;
+  --state-hover-bg: rgba(0, 174, 239, 0.08);
+  --state-selected-bg: #1565a8;
+
+  /* Semantic */
+  --color-success: #34d399;
+  --color-success-text: #6ee7b7;
+  --color-warning: #f59e0b;
+  --color-warning-text: #fbbf24;
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+  --color-danger-text: #ff6b6b;
+
+  /* Soft state */
+  --success-soft: rgba(16, 185, 129, 0.10);
+  --success-soft-border: rgba(16, 185, 129, 0.20);
+  --warning-soft: rgba(245, 158, 11, 0.10);
+  --warning-soft-border: rgba(245, 158, 11, 0.20);
+  --danger-soft: rgba(239, 68, 68, 0.10);
+  --danger-soft-border: rgba(239, 68, 68, 0.20);
+  --danger-soft-deep: rgba(239, 68, 68, 0.18);
+
+  /* Toggle */
+  --toggle-on: #00aeef;
+  --toggle-off: #2e4560;
+
+  /* Utilities */
+  --divider: #1e3352;
+  --input-bg: #162235;
+
+  /* Overlays */
+  --modal-overlay: rgba(0, 0, 0, 0.60);
+  --scrim-on-accent: rgba(0, 0, 0, 0.25);
+
+  /* Accent soft variants */
+  --accent-soft: rgba(0, 174, 239, 0.10);
+  --accent-faint: rgba(0, 174, 239, 0.05);
+  --accent-glow-soft: rgba(0, 174, 239, 0.20);
+  --accent-primary-glow-strong: rgba(0, 174, 239, 0.40);
+
+  /* Border radius */
+  --radius-card: 12px;
+  --radius-item: 8px;
+  --radius-button: 6px;
+  --radius-widget: 10px;
+  --radius-toggle: 50px;
+  --radius-input: 20px;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+}
+
+/* ── Light theme (matches app) ────────────────────────────────── */
+[data-theme="light"] {
+  --bg-primary: #f4f7fb;
+  --bg-secondary: #e8edf4;
+  --bg-card: #ffffff;
+  --bg-topbar: #ffffff;
+  --bg-sidebar: #f4f7fb;
+
+  --text-primary: #1a2a3e;
+  --text-secondary: #3d5673;
+  --text-accent: #00609a;
+  --text-muted: #4a6178;
+
+  --accent-primary: #0095d6;
+  --accent-secondary: #0a6fa8;
+  --accent-glow: rgba(0, 149, 214, 0.20);
+  --accent-primary-hover: rgba(0, 149, 214, 0.10);
+  --accent-primary-glow: rgba(0, 149, 214, 0.25);
+  --text-on-accent: #04121f;
+
+  --state-active-border: #0095d6;
+  --state-inactive-border: #d0dae8;
+  --state-hover-bg: rgba(0, 149, 214, 0.06);
+  --state-selected-bg: #cce6f5;
+
+  --color-success: #047857;
+  --color-success-text: #6ee7b7;
+  --color-warning: #d98c0a;
+  --color-warning-text: #92400e;
+  --color-danger: #dc2626;
+  --color-danger-hover: #b91c1c;
+  --color-danger-text: #dc2626;
+
+  --success-soft: rgba(16, 185, 129, 0.16);
+  --success-soft-border: rgba(110, 231, 183, 0.35);
+  --warning-soft: rgba(245, 158, 11, 0.10);
+  --warning-soft-border: rgba(245, 158, 11, 0.20);
+  --danger-soft: rgba(239, 68, 68, 0.10);
+  --danger-soft-border: rgba(239, 68, 68, 0.20);
+
+  --toggle-on: #0095d6;
+  --toggle-off: #d0dae8;
+
+  --divider: #d0dae8;
+  --input-bg: #ffffff;
+
+  --modal-overlay: rgba(0, 0, 0, 0.40);
+  --scrim-on-accent: rgba(0, 0, 0, 0.15);
+
+  --accent-soft: rgba(0, 149, 214, 0.08);
+  --accent-faint: rgba(0, 149, 214, 0.04);
+  --accent-glow-soft: rgba(0, 149, 214, 0.15);
+  --accent-primary-glow-strong: rgba(0, 149, 214, 0.35);
+
+  /* Border radius & spacing same as dark */
+}

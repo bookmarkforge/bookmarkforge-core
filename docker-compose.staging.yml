@@ -1,0 +1,89 @@
+# BookmarkForge local staging only. Never use this file for production.
+# All published ports bind to loopback; mocks are private to the Docker network.
+#
+# The client calls the configured AI provider directly, so nothing in the stack
+# points at a fake AI upstream. `license-mock` (Whop adapter) and the optional
+# `ai-local` Ollama provider (a client-side provider) remain.
+services:
+  web:
+    # Imagen etiquetada por SHA (igual que prod): permite el rollback
+    # imagen-por-SHA (rollback.mjs CAMINO A) en staging/CI sin rebuild.
+    image: bookmarkforge/web:${IMAGE_TAG:-staging}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+      args:
+        VITE_APP_VERSION: ${VITE_APP_VERSION:-staging}
+        VITE_DB_NAME: ${VITE_DB_NAME:-bookmarkforge_staging}
+        VITE_P2P_SIGNALING_URL: ${VITE_P2P_SIGNALING_URL:-ws://127.0.0.1:18080}
+        VITE_WHOP_CHECKOUT_URL: ${VITE_WHOP_CHECKOUT_URL:-https://example.invalid/staging-checkout}
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      staging:
+        aliases: [bookmarkforge_web]
+    ports:
+      - "127.0.0.1:${HTTP_PORT:-18080}:8080"
+
+  api:
+    # Imagen etiquetada por SHA — ver nota en el servicio web.
+    image: bookmarkforge/api:${IMAGE_TAG:-staging}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    depends_on:
+      license-mock:
+        condition: service_healthy
+    environment:
+      NODE_ENV: staging
+      HOST: 0.0.0.0
+      PORT: 8787
+      TRUST_PROXY: "1"
+      # Origin allowlist for POST /api/license/entitlement. Must interpolate
+      # HTTP_PORT: a hardcoded 18080 rejects the request with 403 CSRF_ORIGIN
+      # whenever the stack is published on any other port.
+      AI_SESSION_ORIGINS: http://127.0.0.1:${HTTP_PORT:-18080},http://localhost:${HTTP_PORT:-18080}
+      WHOP_LICENSE_API_URL: http://license-mock:8082/license
+      WHOP_API_KEY: staging-license-key
+      LICENSE_PROVIDER_ALLOW_HTTP: "1"
+      LICENSE_SIGNING_PRIVATE_KEY_FILE: /run/secrets/license_signing_key
+    secrets: [license_signing_key]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8787/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      staging:
+        aliases: [bookmarkforge_api]
+
+  license-mock:
+    image: node:22-alpine@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    command: ["node", "/app/scripts/license-mock.mjs"]
+    volumes: [.:/app:ro]
+    environment:
+      LICENSE_MOCK_PORT: 8082
+      LICENSE_MOCK_KEY: staging-license-key
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8082/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+    networks: [staging]
+
+# Ollama is a CLIENT-side provider: the app calls it from the browser, so it does
+# not belong in this stack. Run Ollama on the host (or wherever the browser can
+# reach it) and point the app's Ollama provider at it;
+# `npm run test:ollama-contract` verifies the contract.
+
+networks:
+  staging:
+    driver: bridge
+
+secrets:
+  license_signing_key:
+    file: ${STAGING_LICENSE_SIGNING_KEY_FILE:-./server/.license-signing-key.pkcs8}
+

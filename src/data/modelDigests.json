@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "pinnedAt": "2026-08-03T22:07:10.533Z",
+  "remoteHost": "https://huggingface.co",
+  "models": {
+    "Xenova/all-MiniLM-L6-v2": {
+      "revision": "main",
+      "files": {
+        "config.json": "7135149f7cffa1a573466c6e4d8423ed73b62fd2332c575bf738a0d033f70df7",
+        "onnx/model.onnx": "759c3cd2b7fe7e93933ad23c4c9181b7396442a2ed746ec7c1d46192c469c46e",
+        "onnx/model_bnb4.onnx": "106c4807d85ceaf3590d9da9c07b3a22ded29bcc0d47333da0b1b741410eb128",
+        "onnx/model_fp16.onnx": "2cdb5e58291813b6d6e248ed69010100246821a367fa17b1b81ae9483744533d",
+        "onnx/model_int8.onnx": "afdb6f1a0e45b715d0bb9b11772f032c399babd23bfc31fed1c170afc848bdb1",
+        "onnx/model_q4.onnx": "ac0f989345605769651a18bb796fda6235d921a37bd4ac065cb51781da44d079",
+        "onnx/model_q4f16.onnx": "eb08a666c46109637e0b6cb04f6052a68efd59bb0252d4e0438d28fb6b2d853d",
+        "onnx/model_quantized.onnx": "afdb6f1a0e45b715d0bb9b11772f032c399babd23bfc31fed1c170afc848bdb1",
+        "onnx/model_uint8.onnx": "57097fb267dcffb2a9f12fba945201c76ae99b7640ed1c6389cc9e0341c71ee6",
+        "special_tokens_map.json": "b6d346be366a7d1d48332dbc9fdf3bf8960b5d879522b7799ddba59e76237ee3",
+        "tokenizer.json": "da0e79933b9ed51798a3ae27893d3c5fa4a201126cef75586296df9b4d2c62a0",
+        "tokenizer_config.json": "9261e7d79b44c8195c1cada2b453e55b00aeb81e907a6664974b4d7776172ab3",
+        "vocab.txt": "07eced375cec144d27c900241f3e339478dec958f92fddbc551f295c992038a3"
+      }
+    }
+  }
+}

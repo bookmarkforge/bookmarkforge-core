@@ -1,0 +1,44 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+!.env.production.example
+*.pem
+*.key
+*.crt
+server/.license-signing-key.pkcs8
+
+# Dependencies and generated output
+node_modules
+dist
+dist-extension
+coverage
+playwright-report
+test-results
+test-results-performance
+.vite
+
+# Local state and reports
+*.log
+*.jsonl
+.monitor-state.json
+.api-degradation-history.json
+ci-chunk-report.json
+performance-budget-report.json
+
+# Generated nightly reports and local debug scripts
+nightly-trends.csv
+nightly-trends-summary.csv
+nightly-trends-summary.md
+nightly-trends.svg
+nightly-consistency.csv
+nightly-consistency.json
+nightly-consistency.svg
+scripts/__tmp-sw-debug.mjs
+
+# VCS and local tooling
+.git
+.github
+.freebuff
+.vscode
+.idea

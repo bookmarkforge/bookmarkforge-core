@@ -1,0 +1,150 @@
+/* Privacy & Terms — consumes the shared brand tokens + Inter
+   Variable from /brand-tokens.css (loaded first). Brand default
+   is dark navy; this page supports both dark and light themes. */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+header {
+  border-bottom: 1px solid var(--divider);
+  background: var(--bg-topbar);
+  padding: 24px 0;
+}
+
+.container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+
+header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.theme-toggle {
+  width: 40px; height: 40px; border-radius: var(--radius-item);
+  border: 1px solid var(--divider); background: var(--bg-card);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.theme-toggle:hover { background: var(--accent-hover-fill); }
+.theme-toggle svg { width: 20px; height: 20px; color: var(--text-accent); }
+
+main { padding: 48px 0; }
+
+h1 {
+  font-size: 2rem;
+  margin: 0 0 8px;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+h2 {
+  font-size: 1.35rem;
+  margin: 40px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--divider);
+  color: var(--text-primary);
+}
+
+h3 {
+  font-size: 1.1rem;
+  margin: 24px 0 8px;
+  color: var(--accent-primary);
+}
+
+p, li { color: var(--text-secondary); }
+
+p { margin: 0 0 16px; }
+
+ul, ol {
+  margin: 0 0 16px;
+  padding-left: 24px;
+}
+
+li { margin-bottom: 8px; }
+
+a { color: var(--accent-primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--divider);
+  margin: 48px 0;
+}
+
+.last-updated {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 32px;
+}
+
+footer {
+  border-top: 1px solid var(--divider);
+  background: var(--bg-topbar);
+  padding: 24px 0;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.15rem; }
+  main { padding: 32px 0; }
+}
+
+/* ── GDPR processing-register table (section 12) ─────────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.92em;
+}
+
+th,
+td {
+  border: 1px solid var(--divider);
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+thead th {
+  background: var(--bg-card);
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+tbody tr:nth-child(even) {
+  background: var(--accent-soft);
+}
+
+@media (max-width: 640px) {
+  /* Horizontal scroll on narrow screens instead of crushing columns. */
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

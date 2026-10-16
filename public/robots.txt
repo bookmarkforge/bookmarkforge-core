@@ -1,0 +1,16 @@
+# robots.txt for BookmarkForge
+
+# Only the marketing landing (served at / and /es/) is indexable content.
+# The app is a private local-first vault behind /app — its routes render an
+# empty SPA shell, so nothing under the app must be crawled.
+
+User-agent: *
+Allow: /
+
+# Private app routes (local-first vault — no indexable content)
+Disallow: /app
+Disallow: /capture
+Disallow: /offline
+Disallow: /api
+
+Sitemap: https://bookmarkforgeapp.com/sitemap.xml

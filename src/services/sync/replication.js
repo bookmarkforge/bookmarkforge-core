@@ -1,0 +1,13 @@
+/**
+ * Open Core placeholder — the proprietary implementation of `src/services/sync/replication.ts` is not
+ * part of this repository. This file exists so the exported Core keeps resolving
+ * its imports; the sibling generated `.d.ts` carries the type surface.
+ */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+import { placeholderFor } from "../../../_open-core-placeholder.js";
+
+const placeholder = placeholderFor("src/services/sync/replication");
+
+export const SYNC_ALLOWED_COLLECTIONS = placeholder;
+export const SYNC_REPLICATION_BATCH_SIZE = placeholder;
+export const syncReplicationModifier = placeholder;

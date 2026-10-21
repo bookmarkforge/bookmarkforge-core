@@ -9,7 +9,7 @@ current release before reporting.
 
 **Please report privately.** Do not open a public issue for security problems.
 
-- Email: **security@bookmarkforgeapp.com**
+- Email: **bookmarkforge@proton.me**
 - Include: affected component, reproduction steps, impact, and (if possible) a
   proof of concept. Encrypt sensitive reports with our PGP key (published at
   `https://bookmarkforgeapp.com/.well-known/security.txt`).

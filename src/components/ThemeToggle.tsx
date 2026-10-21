@@ -75,7 +75,7 @@ export function ThemeToggle() {
     classNames={{ tooltip: "max-w-xs line-clamp-3" }}
   >
       <ActionIcon
-        variant="subtle"
+        variant="default"
         size="lg"
         aria-label={getNextActionLabel()}
         data-testid="theme-toggle"

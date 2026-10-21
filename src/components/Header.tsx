@@ -4,6 +4,7 @@ import {
   Settings as SettingsIcon,
   Lock,
   Download,
+  RefreshCw,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useSecurityStore } from "../hooks/useSecurityStore";
@@ -114,6 +115,17 @@ const Header = function Header({
           <Suspense fallback={null}>
             <ReloadPrompt compact />
           </Suspense>
+
+          {/* Sync/Refresh Button */}
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="p-2 ds-ghost-btn-icon ds-radius-item"
+            title={t("app_reload", "Reload")}
+            aria-label={t("app_reload", "Reload")}
+          >
+            <RefreshCw className="size-4" />
+          </button>
 
           {/* Theme Toggle */}
           <ThemeToggle />

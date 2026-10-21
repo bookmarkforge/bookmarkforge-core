@@ -34,6 +34,18 @@ Your personal knowledge vault — encrypted on your device, works offline, and s
 
 ---
 
+## 📸 Screenshots
+
+![BookmarkForge Dashboard](docs/images/Screenshot_1.png)
+
+![BookmarkManager View](docs/images/Screenshot_2.png)
+
+![Notes & AI Integration](docs/images/Screenshot_3.png)
+
+![Settings & Configuration](docs/images/Screenshot_4.png)
+
+---
+
 ## ✨ Features
 
 ### 🔒 Security & Privacy

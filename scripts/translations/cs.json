@@ -1,0 +1,740 @@
+{
+  "lang": "cs",
+  "langName": "Čeština",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/cs/",
+  "ogLocale": "cs_CZ",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Vše zůstane na vašem počítači. Zaplaťte jednou.",
+  "description": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. 59 dolarů jednou. Zdarma: 2 500 záložek.",
+  "ogTitle": "BookmarkForge — Vše zůstane na vašem počítači. Zaplaťte jednou.",
+  "ogDescription": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. 59 dolarů jednou. Zdarma: 2 500 záložek.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Vše zůstane na vašem počítači. Zaplaťte jednou.",
+  "twitterDescription": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. 59 dolarů jednou. Zdarma: 2 500 záložek.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Přejít na hlavní obsah",
+  "navBrandAria": "Domov BookmarkForge",
+  "navAriaLabel": "Hlavní navigace",
+  "homeHref": "/cs/",
+  "navLinks": {
+    "pocketAlternative": "Kapesní alternativa",
+    "features": "Vlastnosti",
+    "ai": "AI",
+    "privacy": "Soukromí",
+    "pricing": "Ceny",
+    "help": "Pomoc",
+    "raindropCompare": "Srovnání dešťové kapky"
+  },
+  "langLink": {
+    "href": "/es/",
+    "hreflang": "es",
+    "lang": "es",
+    "text": "španělsky"
+  },
+  "navCta": "Otevřete aplikaci",
+  "themeToggleAria": "Přepnout motiv",
+  "navToggleAria": "Otevřít menu",
+  "navToggleAriaClose": "Zavřít menu",
+  "hero": {
+    "badge": "Jednorázová platba · Žádné předplatné",
+    "title": "Vše, co uložíte, zůstane ve vašem počítači. <span class=\"accent-text\">Všechno.</span>",
+    "subtitle": "Raindrop uchovává vaše záložky na svých serverech – a každý rok vám účtuje poplatky. BookmarkForge je uchovává ve vašem počítači uzamčené klíčem, který máte pouze vy. Žádné účty. Žádné měsíční poplatky. Nikdo ti nečte přes rameno.",
+    "ctaPrimary": "Spusťte aplikaci zdarma",
+    "ctaSecondary": "Zobrazit ceník",
+    "pillars": [
+      {
+        "strong": "Soukromé",
+        "text": "vaše uložené stránky nikdy neopustí váš počítač"
+      },
+      {
+        "strong": "Zamčeno",
+        "text": "ani my je neumíme číst"
+      },
+      {
+        "strong": "Mimo síť",
+        "text": "pracuje v letadle, v tunelu, kdekoli"
+      },
+      {
+        "strong": "Zaplaťte jednou",
+        "text": "59 dolarů jednou, ne 28 dolarů každý rok"
+      }
+    ]
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "Podívejte se, jak to funguje",
+    "title": "Skutečná aplikace, ne maketa",
+    "subtitle": "Žádná registrační zeď, žádná skladová stopáž a žádný falešný kurzor. Tato smyčka je uvolněná sestava na běžné ploše: odemkněte trezor, uložte stránku, prohledejte knihovnu a znovu ji zamkněte.",
+    "imageAlt": "Animovaná smyčka BookmarkForge: odemknutí trezoru, zachycení záložky, prohledání knihovny a její opětovné zamknutí",
+    "caption": "Nahráno z desktopové aplikace s ukázkovými daty. Úplný návod je dodáván s projektem.",
+    "steps": [
+      {
+        "title": "Odemknout",
+        "text": "Trezor se otevře s heslem, které si zvolíte; klíč zůstane na vašem zařízení."
+      },
+      {
+        "title": "Zachyťte",
+        "text": "Uložte si stránku přímo z aplikace – není potřeba žádný účet ani rozšíření."
+      },
+      {
+        "title": "Nalézt",
+        "text": "Hledejte podle klíčového slova nebo významu, přičemž se zobrazí zdroje každé odpovědi."
+      },
+      {
+        "title": "Zámek",
+        "text": "Zavřete trezor a dešifrovací klíč zmizí z paměti."
+      }
+    ],
+    "ctaPrimary": "Spusťte aplikaci"
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Přečíst později, znovuzrozeno",
+    "title": "Alternativa soukromé kapsy",
+    "subtitle": "Pocket odchází. BookmarkForge udržuje zvyk číst později naživu – každý článek, poznámka a zvýraznění jsou uloženy zašifrovány ve vašem zařízení.",
+    "features": [
+      {
+        "title": "Přečtěte si to později, váš navždy",
+        "text": "Ukládejte články, videa a soubory PDF jedním kliknutím – z PWA, rozšíření prohlížeče nebo nabídky sdílení. Na rozdíl od Pocket váš seznam četby žije ve vašem zařízení, je zašifrován a stále funguje offline."
+      },
+      {
+        "title": "Poznámky ve stylu Notion u každého článku",
+        "text": "Zvýrazněte, shrňte a pořiďte blokové poznámky připojené k jakékoli záložce. Udělejte z uloženého článku svou vlastní znalostní databázi – nejen seznam odkazů."
+      },
+      {
+        "title": "Nulové sledování, nulové reklamy",
+        "text": "BookmarkForge ve výchozím nastavení nemá žádné účty, žádné analýzy a žádné reklamy. Vaše čtenářské návyky nejsou nikoho jiného než vaše."
+      }
+    ],
+    "ctaPrimary": "Začněte šetřit zdarma",
+    "ctaSecondary": "Kompletní průvodce porovnáváním a migrací",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "Prostá slova, žádný marketing",
+    "title": "BookmarkForge vs Raindrop, bez drobného písma",
+    "subtitle": "Raindrop je dobrá aplikace. Velký rozdíl je v tom, kde vaše věci žijí.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Kde váš seznam žije",
+        "us": "Na vašem počítači",
+        "them": "Na jejich serverech"
+      },
+      {
+        "topic": "Kdo může číst, co ušetříte",
+        "us": "Nikdo — zamčený tvým klíčem, dokonce ani my",
+        "them": "Společnost a kdokoli to po nich požaduje"
+      },
+      {
+        "topic": "Bez internetu",
+        "us": "Všechno funguje dál",
+        "them": "Pouze základy"
+      },
+      {
+        "topic": "Co platíte",
+        "us": "59 dolarů jednou. Hotovo.",
+        "them": "28 dolarů každý rok, navždy"
+      },
+      {
+        "topic": "Pokud společnost zmizí (RIP Pocket)",
+        "us": "Nic se nemění – už je to ve vašich rukou",
+        "them": "Exportujete a začnete znovu"
+      },
+      {
+        "topic": "Asistent AI",
+        "us": "Běží uvnitř vašeho počítače v soukromém režimu – nic se nikam neodesílá",
+        "them": "Vaše čtení odejde do cloudu k přemýšlení"
+      }
+    ],
+    "ctaPrimary": "Vyzkoušejte to zdarma za 2 minuty – bez účtu",
+    "ctaSecondary": "Plné kapesní srovnání",
+    "close": "Raindrop je jednodušší a zdarma – pokud je to vše, co potřebujete, používejte jej s radostí. Ale pokud byste raději měli svůj čtenářský život ve vlastních rukou, BookmarkForge je přesně na to stvořena."
+  },
+  "features": {
+    "id": "features",
+    "tag": "Vše, co potřebujete",
+    "title": "Vše, co potřebujete, jednoduchými slovy",
+    "items": [
+      {
+        "title": "Záložky a dokumenty",
+        "text": "Uložte libovolnou stránku jedním kliknutím. Pište poznámky hned vedle, v čistém a jednoduchém editoru. Zůstane rychlý i se 100 000 uloženými položkami."
+      },
+      {
+        "title": "Chytré vyhledávání",
+        "text": "Najděte věci podle klíčových slov nebo podle významu – i když si nepamatujete přesná slova. Raindrop si za to účtuje 28 dolarů ročně; zde je zahrnut zdarma."
+      },
+      {
+        "title": "AI, která čte vaši knihovnu uvnitř vašeho počítače",
+        "text": "Zeptejte se na to, co jste uložili, a získejte odpovědi pomocí zobrazených zdrojů. Nic se neodesílá do cloudu a funguje to bez internetu. Vyžaduje Pro."
+      },
+      {
+        "title": "Chatujte s vlastní knihovnou",
+        "text": "Zeptejte se na cokoliv ohledně vašich záložek a poznámek a získejte citované odpovědi. Soukromý režim běží na vašem počítači na 100 %. Vyžaduje Pro."
+      },
+      {
+        "title": "Synchronizujte mezi svými vlastními zařízeními",
+        "text": "Vaše zařízení spolu mluví přímo – žádný server uprostřed a vše zůstává šifrované. Spárujte je naskenováním QR kódu. Až 5 zařízení. Vyžaduje Pro."
+      },
+      {
+        "title": "Zálohy, které vlastníte",
+        "text": "Automatické zálohování, které můžete mít kdekoli – na externím disku, v cloudové složce, kdekoli. Exportujte vše do Markdown, JSON, CSV nebo PDF, kdykoli budete chtít. Držíš klíče."
+      },
+      {
+        "title": "Mapa vašich znalostí",
+        "text": "Podívejte se, jak se vaše poznámky a záložky propojují. Filtrujte podle značek, dat a podobností a přibližujte nekonečné plátno."
+      },
+      {
+        "title": "Studijní karty, které překonávají zapomínání",
+        "text": "Proměňte jakýkoli uložený dokument na kartičky s otázkami, které se znovu objeví dříve, než na ně zapomenete – stejný plán plánování jako Anki. Vyžaduje Pro."
+      },
+      {
+        "title": "Ve výchozím nastavení soukromé",
+        "text": "Žádné účty, žádné sledování, žádné reklamy. Vy jste zákazník, ne produkt. Sdílení využití existuje, je volitelné a zůstane vypnuté, dokud jej nezapnete."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI, která vás respektuje",
+    "title": "Vaše znalosti, rozšířené",
+    "subtitle": "Spusťte asistenta v počítači – nic z něj neodejde a funguje offline. Preferujete model velkého cloudu? Připojte svůj vlastní klíč: vaše otázky a stránky potřebné k jejich zodpovězení se dostanou k danému poskytovateli na vaše náklady. Vaše výzvy, vaše data, vaše pravidla.",
+    "providers": {
+      "title": "Podporovaní poskytovatelé",
+      "list": [
+        {
+          "type": "local",
+          "name": "Uvnitř počítače — Modely WebLLM (TinyLlama, Llama 3.2, Phi-3.5-mini) — Pouze Pro"
+        },
+        {
+          "type": "local",
+          "name": "Na vašem vlastním počítači — Ollama (jakýkoli model, který provozujete)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Google Gemini (s vlastním klíčem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — OpenAI / GPT-4o (s vlastním klíčem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Antropický Claude (s vlastním klíčem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Groq (s vlastním klíčem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — OpenRouter nebo jiný vlastní poskytovatel (s vlastním klíčem)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Režimy chatu",
+      "items": [
+        {
+          "title": "Soukromý režim",
+          "text": "Asistent běží zcela uvnitř vašeho počítače. Nic z něj neodchází a nepotřebuje žádný internet. Vyžaduje Pro."
+        },
+        {
+          "title": "Režim vyhledávání na webu",
+          "text": "Kombinuje vaši knihovnu s živými výsledky z webu (poskytovatelé cloudu)."
+        },
+        {
+          "title": "Odborní agenti",
+          "text": "Specializovaní pomocníci: kodér, spisovatel, analytik a výzkumník. Vyžaduje Pro."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Soukromí není funkce — je to základ",
+    "subtitle": "Každé architektonické rozhodnutí vám dává kontrolu",
+    "items": [
+      {
+        "title": "Zamčeno, aby si to nikdo nemohl přečíst – ani my",
+        "text": "Vaše knihovna je zašifrována klíčem odvozeným z vašeho hlavního hesla. Nikdy nevidíme vaše heslo ani váš obsah."
+      },
+      {
+        "title": "Uloženo na vašem vlastním zařízení",
+        "text": "Všechno žije ve vašem počítači. Doprovodný server se zabývá pouze licencováním, párováním zařízení a předáváním vašich otázek AI v cloudovém režimu – nikdy ne vašeho obsahu."
+      },
+      {
+        "title": "Ve výchozím nastavení žádné sledování",
+        "text": "Žádné analýzy, žádné zprávy o selhání, žádné sledování. Sdílení statistik využití nebo chybových zpráv je samostatná volba, ve výchozím nastavení vypnutá."
+      },
+      {
+        "title": "Držíš klíče",
+        "text": "Žádné hlavní heslo neznamená žádný přístup – neexistuje žádná zadní vrátka „zapomenuté heslo“. Vaše 24slovná obnovovací fráze je jedinou cestou dovnitř; držte to v bezpečí."
+      },
+      {
+        "title": "Vaše práva, respektována",
+        "text": "Získejte přístup, opravte, vymažte nebo vezměte svá data s sebou – to vše lze provést lokálně, kdykoli budete chtít."
+      },
+      {
+        "title": "Žádné uzamčení",
+        "text": "Exportujte svá data kdykoli v otevřených formátech (JSON, Markdown, CSV, PDF). Vaše znalosti zůstanou vaše a přenosné."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Jednoduché, spravedlivé ceny – žádné předplatné",
+    "subtitle": "Zdarma 2 500 záložek navždy. Pro je doživotní licence pro verzi 1 – zaplaťte jednou, vlastníte verzi 1 navždy. Zahrnuje všechny aktualizace v1.x a 12 měsíců aktualizací funkcí. Aktualizace zabezpečení navždy. Žádné měsíční vyúčtování.",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "$ 0",
+        "period": "/navždy",
+        "description": "Pro osobní archiv (2 500 záložek, funguje na jakémkoli zařízení — každé má svůj trezor)",
+        "features": [
+          {
+            "included": true,
+            "text": "2 500 záložek, poznámek a dokumentů"
+          },
+          {
+            "included": true,
+            "text": "Chytré vyhledávání (plnotextové + sémantické) — zdarma; Raindrop za něj účtuje roční předplatné"
+          },
+          {
+            "included": true,
+            "text": "AI s vaším API klíčem (vy platíte poskytovateli)"
+          },
+          {
+            "included": true,
+            "text": "Graf znalostí"
+          },
+          {
+            "included": true,
+            "text": "Základní šablony"
+          },
+          {
+            "included": true,
+            "text": "Export JSON/HTML"
+          },
+          {
+            "included": true,
+            "text": "PWA + prohlížečová rozšíření"
+          },
+          {
+            "included": false,
+            "text": "P2P synchronizace mezi zařízeními"
+          },
+          {
+            "included": false,
+            "text": "Místní AI (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "RAG chat nad vašimi daty"
+          },
+          {
+            "included": false,
+            "text": "Flashcards s spaced repetition"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          }
+        ],
+        "cta": "Začněte zdarma",
+        "ctaHref": "/app",
+        "ctaClass": "btn-sekundární"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "badge": "Nejoblíbenější — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (pak 79 $)",
+        "description": "Životnost v1 · 12měsíční aktualizace funkcí · Zabezpečení navždy · v2 60% sleva",
+        "features": [
+          {
+            "included": true,
+            "text": "Vše zdarma"
+          },
+          {
+            "included": true,
+            "text": "Neomezené záložky"
+          },
+          {
+            "included": true,
+            "text": "5 zařízení · P2P synchronizace přes 5 zařízení"
+          },
+          {
+            "included": true,
+            "text": "Lokální modely AI (WebLLM, bez klíče API) · RAG chat"
+          },
+          {
+            "included": true,
+            "text": "Expertní agenti (kodér, spisovatel, analytik, výzkumník)"
+          },
+          {
+            "included": true,
+            "text": "Kartičky s opakováním s mezerami · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Pokročilý export (10+ formátů) · Šifrované zálohy"
+          },
+          {
+            "included": true,
+            "text": "Bezpečnostní trezor (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Životnost v1 · 12 měsíců aktualizací funkcí"
+          },
+          {
+            "included": true,
+            "text": "Aktualizace zabezpečení navždy"
+          },
+          {
+            "included": true,
+            "text": "E-mailová podpora (48 hodin) + časný přístup"
+          }
+        ],
+        "cta": "Získejte Pro $ 59 Early Bird",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primární",
+        "priceWas": "$79",
+        "priceSub": "pak 79 $ běžných",
+        "sla": "Podpora: E-mail 48 hodin (Po–Pá)",
+        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
+        "cta2": "Získat Pro $79 Regular",
+        "cta2Class": "btn-secondary"
+      }
+    ],
+    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-cs#pricing\">Learn more</a>"
+  },
+  "faq": {
+    "title": "Běžné otázky",
+    "items": [
+      {
+        "question": "Je úroveň zdarma skutečně navždy zdarma?",
+        "answer": "Ano. Žádná zkušební verze, žádné předplatné. Bezplatná úroveň zahrnuje 2 500 záložek, fulltextové a sémantické vyhledávání, graf znalostí a AI s vaším vlastním API klíčem (platíte poskytovateli)."
+      },
+      {
+        "question": "Co znamená „Lifetime of v1“ pro Pro?",
+        "answer": "Zaplaťte jednou, vlastnte v1 navždy. Zahrnuje všechny aktualizace v1.x (opravy chyb + drobné funkce) navždy a 12 měsíců aktualizací funkcí od zakoupení. Aktualizace zabezpečení navždy. Po 13. měsíci zůstane v1 funkční, jen bez nových funkcí. Budoucí hlavní verze (v2, v3) jsou samostatné produkty: 89 USD pro nové zákazníky, 35 USD pro vlastníky verze 1 (60% sleva)."
+      },
+      {
+        "question": "Jaké platební metody a refundace?",
+        "answer": "Přes Whop: kreditní karta, PayPal, krypto. Nikdy nevidíme vaše platební údaje. 30denní vrácení peněz – kontaktujte <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
+      },
+      {
+        "question": "Podpora – jak rychle odpovídáte?",
+        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help-cs#sla\">Support SLA</a>."
+      },
+      {
+        "question": "Co když zapomenu heslo k trezoru?",
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-cs#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Jste připraveni vlastnit své znalosti?",
+    "text": "Připojte se k tisícům výzkumníků, vývojářů a studentů, kteří BookmarkForge důvěřují svým druhým mozkem.",
+    "ctaPrimary": "Spusťte bezplatnou aplikaci",
+    "ctaSecondary": "Upgradujte na Pro",
+    "note": "Není vyžadován žádný účet. Funguje okamžitě ve vašem prohlížeči. Volná úroveň: 2 500 záložek."
+  },
+  "footer": {
+    "brand": "Váš soukromý trezor znalostí poháněný umělou inteligencí. 100% místní-první.",
+    "product": {
+      "title": "Produkt",
+      "links": [
+        "Vlastnosti",
+        "Schopnosti AI",
+        "Soukromí",
+        "Ceny",
+        "Spusťte aplikaci"
+      ],
+      "hrefs": [
+        "/#vlastnosti",
+        "/#ai",
+        "/#soukromí",
+        "/#cena",
+        "/app"
+      ]
+    },
+    "resources": {
+      "title": "Zdroje",
+      "links": [
+        "Kapesní srovnání",
+        "Ochrana osobních údajů a podmínky"
+      ],
+      "hrefs": [
+        "/kapesni-alternativa.html",
+        "/privacy-and-terms.html"
+      ]
+    },
+    "languages": {
+      "title": "Jazyky",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Podpora",
+      "links": [
+        "Kontakt"
+      ],
+      "helpCenter": "Centrum nápovědy",
+      "errorCodes": "Chybové kódy"
+    },
+    "copyright": "© 2026 BookmarkForge. Všechna práva vyhrazena.",
+    "legal": [
+      "Zásady ochrany osobních údajů",
+      "Podmínky služby",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Váš soukromý trezor znalostí poháněný umělou inteligencí. 100% místní-první. Soukromá kapesní alternativa. Zdarma: 2 500 záložek.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "Free",
+        "price": "0",
+        "currency": "USD",
+        "description": "2 500 záložek. Navždy zdarma."
+      },
+      {
+        "name": "Pro Lifetime v1 — Early Bird",
+        "price": "59",
+        "currency": "USD",
+        "description": "Early Bird 200. Životnost verze 1, funkce 12 měsíců, zabezpečení navždy, v2 60% sleva.",
+        "priceValidUntil": "2026-12-31",
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "price": "79",
+        "currency": "USD",
+        "description": "Pravidelný. Životnost v1."
+      }
+    ],
+    "featureList": [
+      "Lokální-první úložiště",
+      "End-to-end šifrování",
+      "Funguje offline",
+      "AI vyhledávání",
+      "Editor pojmového stylu",
+      "P2P synchronizace"
+    ],
+    "faq": [
+      {
+        "question": "Je úroveň zdarma skutečně navždy zdarma?",
+        "answer": "Ano. Žádná zkušební verze, žádné předplatné. Bezplatná úroveň zahrnuje 2 500 záložek, fulltextové a sémantické vyhledávání, graf znalostí a AI s vaším vlastním API klíčem (platíte poskytovateli)."
+      },
+      {
+        "question": "Co znamená „Lifetime of v1“ pro Pro?",
+        "answer": "Zaplaťte jednou, vlastnte v1 navždy. Zahrnuje všechny aktualizace v1.x (opravy chyb + drobné funkce) navždy a 12 měsíců aktualizací funkcí od zakoupení. Aktualizace zabezpečení navždy. Po 13. měsíci zůstane v1 funkční, jen bez nových funkcí. Budoucí hlavní verze (v2, v3) jsou samostatné produkty: 89 USD pro nové zákazníky, 35 USD pro vlastníky verze 1 (60% sleva)."
+      },
+      {
+        "question": "Jaké platební metody a refundace?",
+        "answer": "Přes Whop: kreditní karta, PayPal, krypto. Nikdy nevidíme vaše platební údaje. 30denní vrácení peněz — kontaktujte bookmarkforge@proton.me."
+      },
+      {
+        "question": "Podpora – jak rychle odpovídáte?",
+        "answer": "Zdarma: Komunitní pomoc prostřednictvím centra nápovědy + diskuzí na GitHubu (nejlepší úsilí). Pro: E-mail do 48 hodin pracovních dnů. Sejf je zašifrovaný – vaše data nevidíme, takže nikdy nepožadujeme vaše heslo ani frázi pro obnovení. Viz Podpora SLA."
+      },
+      {
+        "question": "Co když zapomenu heslo k trezoru?",
+        "answer": "Nemůžeme to obnovit. Když vytvoříte trezor, jednou zobrazíme 24slovou frázi pro obnovení – napište ji na papír. Bez toho nikdo (včetně nás) nemůže otevřít trezor. Viz BF-E101."
+      }
+    ]
+  },
+  "help": {
+    "title": "Centrum nápovědy — FAQ, odstraňování problémů a podpora SLA | BookmarkForge",
+    "description": "BookmarkForge Help Center: cenová životnost v1, odstraňování problémů, chybové kódy BF-E*, podpora SLA a jak zkopírovat redigovanou diagnostickou zprávu.",
+    "ogTitle": "Centrum nápovědy — BookmarkForge",
+    "ogDescription": "Časté dotazy, odstraňování problémů, chybové kódy a podpora SLA. Přečtěte si, jak funguje lifetime v1 a jak zkopírovat diagnostickou zprávu.",
+    "ogLocale": "en_US",
+    "lastUpdated": "Poslední aktualizace",
+    "lastUpdatedDate": "13. září 2026",
+    "backToHome": "← Zpět na hlavní stránku",
+    "intro": "Odpovědi, než budete muset poslat e-mail. BookmarkForge je <strong>místní a šifrovaný</strong> – váš trezor nevidíme. 90 % problémů je zde vyřešeno pomocí diagnostiky, kterou můžete zkopírovat a vložit.",
+    "toc": {
+      "pricing": "Ceny a životnost v1",
+      "sla": "Podpora SLA",
+      "troubleshooting": "Odstraňování problémů",
+      "errorCodes": "Chybové kódy BF-E*",
+      "diagnostics": "Zkopírujte diagnostickou zprávu",
+      "contact": "Kontakt"
+    },
+    "pricing": {
+      "title": "Ceny – životnost verze 1, žádné předplatné",
+      "intro": "<strong>Model:</strong> za <em>BookmarkForge v1</em> zaplatíte jednou. Žádné měsíční vyúčtování. Porovnat: Raindrop Pro 28–38$/y, Instapaper 60$/y, Readwise 120$/y, Kapacity 120$/y. Životnost $79 je ~2× Raindrop ročně — odůvodněná životností + soukromím.",
+      "table": {
+        "tier": "Tarif",
+        "price": "Cena",
+        "whatYouGet": "Co získáte",
+        "supply": "Zásobování"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro Lifetime v1"
+      },
+      "freePrice": "0 $ navždy",
+      "freeDescription": "2 500 záložek na libovolném zařízení (každé má svůj vlastní trezor), chytré vyhledávání — fulltextové + sémantické, funkce, kterou si Raindrop účtuje ročně — graf znalostí, AI s vlastním API klíčem, PWA + rozšíření. Při hodnotě 2 500 zůstane váš trezor celý: čtení, vyhledávání a export se nikdy nezastaví; pouze nové ukládání pauza.",
+      "unlimited": "Neomezený",
+      "badge": "Early Bird",
+      "proPrice": "$59",
+      "proPriceStriked": "$79",
+      "proPriceRegular": "79 $ běžných",
+      "proPriceTraction": "99 $ po trakci",
+      "proDescription": "Neomezené záložky, 5 zařízení + P2P synchronizace, místní umělá inteligence (WebLLM/Ollama) + RAG + expertní agenti, kartičky, PDF/OCR, 10+ exportních formátů, trezor. <em>Životnost verze 1 · 12měsíční aktualizace funkcí · Navždy zabezpečení · 60% sleva v2</em>",
+      "proSupply": "200 Early Bird"
+    },
+    "legal": {
+      "title": "Životnost v1 — právní linie:",
+      "text": "Doživotní licence pro BookmarkForge v1. Zahrnuje všechny aktualizace v1.x (opravy chyb + drobné funkce) navždy a 12 měsíců aktualizací funkcí od zakoupení. Aktualizace zabezpečení navždy. Budoucí hlavní verze (v2, v3) jsou samostatné produkty: 89 USD pro nové zákazníky, 35 USD pro vlastníky verze 1 (60% sleva). Pokud neprovedete upgrade, zůstane v1 funkční navždy. 30denní vrácení peněz prostřednictvím služby Whop.",
+      "refunds": "Vrácení peněz: 30 dní přes Whop. Platby: karta, PayPal, krypto (Whop — nikdy nevidíme údaje o kartě).",
+      "terms": "Podmínky § Licencování"
+    },
+    "upgrade": {
+      "title": "Upgrade bez předplatného:",
+      "text": "každých 12–18 měsíců odesíláme placenou hlavní (v2.0 za 89 $ / 35 $ pro vlastníky). Přeskočte to a v1 bude fungovat dál. To jsou opakující se příjmy bez vynucení předplatného – stejný model jako Affinity/Sketch/Sulime."
+    },
+    "sla": {
+      "title": "Podpora SLA – jak rychle odpovídáme",
+      "intro": "Jediný správce. Trezor je šifrovaný – <strong>nikdy od vás nepožadujeme heslo k trezoru ani 24slovnou frázi pro obnovení</strong>. Podpora je nejlepším úsilím zdarma a platí pro placené úrovně.",
+      "table": {
+        "tier": "Tarif",
+        "channel": "Kanál",
+        "response": "Odpověď",
+        "whatToDo": "Co udělat jako první"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro"
+      },
+      "freeChannel": "Samoobsluha: toto centrum nápovědy + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">Diskuze na GitHubu</a>",
+      "freeResponse": "Nejlepší úsilí (komunita)",
+      "freeWhatToDo": "Před odesláním vyhledejte kód BF-E* níže + zkopírujte diagnostiku (<a href=\"#diagnostics\">§Diagnostika</a>)",
+      "proChannel": "E-mail <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (předmět: Pro)",
+      "proResponse": "48h",
+      "proWhatToDo": "Zahrnout diagnostický text z <code>Nastavení → Nápověda → Kopírovat diagnostiku</code>",
+      "note": "Nevidíme vaše záložky, poznámky, adresy URL nebo výzvy. Zahrňte pouze níže uvedenou diagnostiku – obsahuje počty a verze, nikdy obsah úložiště."
+    },
+    "troubleshooting": {
+      "title": "Odstraňování problémů – většina problémů do 30 sekund",
+      "vaultLocked": {
+        "title": "Trezor uzamčen / špatné heslo",
+        "text": "Hesla rozlišují malá a velká písmena a mezery. Pokud jste změnili rozložení (např. AZERTY→QWERTY), zadejte znovu pomalu. Po 5 neúspěšných odemknutích počkejte 1 minutu. Pokud jste heslo ztratili, použijte <strong>24slovnou frázi pro obnovení</strong>, která se jednou zobrazila při vytváření trezoru (<a href=\"#bf-e101\">BF-E101</a>). Bez ní je obnova záměrně nemožná – nemáme žádná zadní vrátka."
+      },
+      "storageFull": {
+        "title": "Úložiště prohlížeče je plné",
+        "text": "Kvóta indexované databáze je pro každý prohlížeč (obvykle 60–80 % disku). Po zaplnění se u <a href=\"#bf-e103\">BF-E103</a> nezdaří. Oprava: <code>Nastavení → Úložiště → Kompaktní databáze</code> a poté <code>Vymazat mezipaměť AI</code>. Nebo <code>Exportovat zálohu (.bmf)</code> → <code>Smazat staré vektory</code>. Zkontrolujte <a href=\"#diagnostics\">procento úložiště v diagnostice</a> – nad 80 % zobrazíme banner."
+      },
+      "p2pNotConnecting": {
+        "title": "P2P synchronizace se nepřipojuje",
+        "text": "Obě zařízení musí být <strong>online a odemčená</strong> současně (WebRTC). Ve výchozím nastavení žádné TURN relé — některé podnikové sítě blokují P2P. Zkuste: oba na stejné Wi-Fi → pár QR → nechte aplikaci otevřenou. Pokud <a href=\"#bf-e105\">BF-E105</a>, otestujte <code>Nápověda → Diagnostika → P2P (WebRTC)</code> — pokud je uvedeno nedostupné, váš prohlížeč/síť blokuje WebRTC."
+      },
+      "localAiNotRunning": {
+        "title": "Místní AI (WebLLM) neběží",
+        "text": "Vyžaduje WebGPU + ~4 GB volné paměti RAM + Pro licenci. Zkontrolujte <code>Nápověda → Diagnostika → WebGPU/WebLLM</code>. Pokud <a href=\"#bf-e106\">BF-E106</a>: aktualizujte Chrome/Edge na nejnovější, povolte <code>chrome://flags/#enable-unsafe-webgpu</code> nebo přepněte na Ollama (jakýkoli model, který provozujete místně – není potřeba ani klíč API)."
+      },
+      "slowSearch": {
+        "title": "Pomalé vyhledávání nebo import",
+        "text": "První import vytvoří vektory HNSW — CPU těžké. Nechte kartu otevřenou. Pro záložky 10k+ použijte <code>Nastavení → Upřesnit → Vynutit opětovné zpracování</code>. Pokud přetrvává, <code>Diagnostika kopírování</code> zobrazí <code>vectorIndexLoad</code> a latenci dotazu."
+      }
+    },
+    "errorCodes": {
+      "title": "Chybové kódy BF-E* — zkopírujte kód, přejděte na opravu",
+      "intro": "Každá kritická chyba zobrazuje kód jako <code>BF-E101</code>. Klikněte na kód v aplikaci nebo jej vyhledejte zde.",
+      "table": {
+        "code": "Kód",
+        "meaning": "Význam",
+        "fix": "Opravit"
+      },
+      "e101": {
+        "meaning": "Zapomenuté heslo trezoru / vyžadována počáteční fráze",
+        "fix": "Nemůžeme obnovit hesla. Při vytváření trezoru zobrazujeme <strong>24slovnou frázi jednou</strong> – napište ji na papír. Použijte jej k resetování. Žádná fráze = trezor nelze obnovit. <a href=\"#diagnostics\">Žádný tiket jej neobnoví</a>."
+      },
+      "e102": {
+        "meaning": "Trezor uzamčen / špatné heslo",
+        "fix": "Znovu zadejte heslo přesně. Po 5 selháních počkejte 60s. Pokud jste nedávno otočili heslo, vyzkoušejte předchozí – otočení uchovává poslední sůl pro vrácení zpět."
+      },
+      "e103": {
+        "meaning": "Překročena kvóta úložiště",
+        "fix": "Přejděte do <code>Nastavení → Úložiště</code>: Kompaktní databáze + Vymazání mezipaměti AI. V případě potřeby exportujte zálohu .bmf. Viz Odstraňování problémů §Úložiště."
+      },
+      "e104": {
+        "meaning": "IndexedDB blokováno / soukromé procházení",
+        "fix": "IndexedDB je blokován v soukromém/anonymním režimu nebo zásadami úložiště. Použijte normální okno. Zaškrtněte <code>Nápověda → Diagnostika → Úložiště</code>."
+      },
+      "e105": {
+        "meaning": "P2P / WebRTC není k dispozici",
+        "fix": "WebRTC blokuje prohlížeč nebo síť. Vyzkoušejte jiný prohlížeč/síť, vypněte přísnou bránu firewall nebo místo živé synchronizace použijte Export/Import."
+      },
+      "e106": {
+        "meaning": "Místní AI (WebLLM) nelze na tomto zařízení spustit",
+        "fix": "Vyžaduje WebGPU + shader-f16 + 4 GB RAM + Pro. Aktualizujte prohlížeč nebo použijte Ollama / poskytovatele cloudu s vlastním klíčem."
+      },
+      "e107": {
+        "meaning": "Import zálohy se nezdařil (nesprávné heslo / poškozený soubor)",
+        "fix": "Pro <code>.bmf</code> (zašifrované) potřebujete heslo pro export, nikoli heslo trezoru. U JSON se ujistěte, že soubor nebyl zkrácen."
+      },
+      "e201": {
+        "meaning": "Licence Pro je neplatná / kontrola vypršela",
+        "fix": "Zkontrolujte <code>Nastavení → Pro</code>: znovu zadejte klíč. Offline kontroluje mezipaměť; znovu se jednou připojte pro opětovné ověření přes Whop."
+      },
+      "e202": {
+        "meaning": "Bylo dosaženo bezplatného limitu (2 500 záložek)",
+        "fix": "Zdarma je 2500. Neomezené smazání nebo upgrade na Pro Lifetime v1. Export je vždy k dispozici."
+      },
+      "tip": "Tip podpory: Kliknutím na <code>Kopírovat diagnostiku</code> chyby zkopírujete kód + kontext jediným kliknutím – vložte jej do své diskuze na GitHubu nebo do e-mailu."
+    },
+    "diagnostics": {
+      "title": "Zkopírujte redigovanou diagnostiku – to, co vložíte na podporu",
+      "intro": "V aplikaci: <code>Nastavení → Upřesnit</code> (nebo <code>Nápověda → Diagnostika</code>) → <strong>Kopírovat diagnostiku</strong>. Vypadá to takto – žádný obsah trezoru, žádné adresy URL, žádné výzvy:",
+      "example": "BookmarkForge v1.0.0 | Chrome 126 | Trezor: 847 záložek, 12 dokumentů\nÚložiště: 42 % (IndexedDB OK) | Poslední záloha: před 2 dny (zašifrováno .bmf)\nP2P: nepřipojeno | Synchronizace: nikdy | Místní AI: WebLLM není načten\nChyby: 0 posledních 7d | BF-E: žádné | Sestavení: a1b2c3d",
+      "contains": "Co obsahuje: verze aplikace, prohlížeč, počty (záložky/dokumenty/vektory), % úložiště + kvóta, stav P2P, stav AI, počty chyb a poslední kód BF-E, hash sestavení. Používá osolený hash IP – IP nikdy neukládáme. Viz <a href=\"/privacy-and-terms.html\">Ochrana osobních údajů §3/§6</a>.",
+      "cantOpen": "Pokud aplikaci nelze otevřít: zahrňte prohlížeč + OS + kroky k reprodukci + kód <code>BF-E*</code> na obrazovce. To stačí na 90 % vstupenek."
+    },
+    "contact": {
+      "title": "Kontakt",
+      "paid": "Placená podpora",
+      "paidDetail": "včetně diagnostického + BF-E kódu. Pro 48 hodin (po–pá).",
+      "community": "Komunita (zdarma)",
+      "communityDetail": "search <code>BF-E*</code> before posting. Read <a href=\"/help-cs#bf-e\">Error codes</a> + paste diagnostic.",
+      "security": "Bezpečnostní problémy",
+      "securityDetail": "e-mail s předmětem <code>[ZABEZPEČENÍ]</code> — neotevírejte veřejnou diskusi.",
+      "note": "BookmarkForge je na prvním místě – obsah trezoru nikdy neopustí vaše zařízení. Podpora nikdy nepožaduje heslo vašeho trezoru ani frázi pro obnovení."
+    },
+    "alsoSee": "Viz také: <a href=\"/\">Domovská stránka</a> · <a href=\"/privacy-and-terms.html\">Ochrana soukromí a podmínky</a> · <a href=\"/privacy-and-terms.html#terms\">Licencování (Lifetime v1)</a> · <a href=\"/#pricing\">Cena</a>",
+    "privacy": "Soukromí",
+    "home": "Domov",
+    "faq": {
+      "q1": "Je úroveň zdarma skutečně navždy zdarma?",
+      "a1": "Ano. Žádná zkušební verze, žádné předplatné. Zdarma obsahuje 2 500 záložek, fulltextové a sémantické vyhledávání, graf znalostí a AI s vaším vlastním klíčem API.",
+      "q2": "Co znamená Lifetime of v1?",
+      "a2": "Zaplaťte jednou, vlastnte v1 navždy. Všechny opravy chyb v1.x navždy plus 12 měsíců aktualizací funkcí od zakoupení. Aktualizace zabezpečení navždy. Po 13. měsíci zůstane v1 funkční. v2 a v3 jsou samostatné placené velké společnosti: 89 USD pro nové zákazníky, 35 USD pro vlastníky verze 1 (60% sleva).",
+      "q3": "Co když zapomenu heslo k trezoru?",
+      "a3": "Nemůžeme to obnovit. Když vytvoříte úschovnu, jednou zobrazíme 24slovnou frázi pro obnovení – napište ji na papír. Bez něj je trezor neobnovitelný. Viz BF-E101."
+    }
+  }
+}

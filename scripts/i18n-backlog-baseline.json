@@ -1,0 +1,93 @@
+{
+  "total": 1805,
+  "locales": {
+    "ar": {
+      "untranslated": 224
+    },
+    "bg": {
+      "untranslated": 247
+    },
+    "cs": {
+      "untranslated": 247
+    },
+    "da": {
+      "untranslated": 249
+    },
+    "de": {
+      "untranslated": 3
+    },
+    "el": {
+      "untranslated": 247
+    },
+    "es": {
+      "untranslated": 2
+    },
+    "fi": {
+      "untranslated": 249
+    },
+    "fr": {
+      "untranslated": 224
+    },
+    "he": {
+      "untranslated": 249
+    },
+    "hi": {
+      "untranslated": 249
+    },
+    "hr": {
+      "untranslated": 247
+    },
+    "hu": {
+      "untranslated": 249
+    },
+    "id": {
+      "untranslated": 250
+    },
+    "it": {
+      "untranslated": 225
+    },
+    "ja": {
+      "untranslated": 224
+    },
+    "ko": {
+      "untranslated": 249
+    },
+    "nl": {
+      "untranslated": 249
+    },
+    "no": {
+      "untranslated": 249
+    },
+    "pl": {
+      "untranslated": 247
+    },
+    "pt": {
+      "untranslated": 224
+    },
+    "ro": {
+      "untranslated": 250
+    },
+    "ru": {
+      "untranslated": 247
+    },
+    "sv": {
+      "untranslated": 249
+    },
+    "th": {
+      "untranslated": 249
+    },
+    "tr": {
+      "untranslated": 249
+    },
+    "uk": {
+      "untranslated": 247
+    },
+    "vi": {
+      "untranslated": 255
+    },
+    "zh": {
+      "untranslated": 224
+    }
+  },
+  "updatedAt": "2026-10-18T22:17:49.184Z"
+}

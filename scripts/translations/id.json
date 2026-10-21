@@ -1,0 +1,740 @@
+{
+  "lang": "id",
+  "langName": "Bahasa Indonesia",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/id/",
+  "ogLocale": "id_ID",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Semua tetap di komputer Anda. Bayar sekali.",
+  "description": "Raindrop menyimpan bookmark Anda di servernya. BookmarkForge menyimpannya di komputer Anda — terkunci sehingga bahkan kami tidak bisa membacanya. $59 sekali. Gratis: 2.500 bookmark.",
+  "ogTitle": "BookmarkForge — Semua tetap di komputer Anda. Bayar sekali.",
+  "ogDescription": "Raindrop menyimpan bookmark Anda di servernya. BookmarkForge menyimpannya di komputer Anda — terkunci sehingga bahkan kami tidak bisa membacanya. $59 sekali. Gratis: 2.500 bookmark.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Semua tetap di komputer Anda. Bayar sekali.",
+  "twitterDescription": "Raindrop menyimpan bookmark Anda di servernya. BookmarkForge menyimpannya di komputer Anda — terkunci sehingga bahkan kami tidak bisa membacanya. $59 sekali. Gratis: 2.500 bookmark.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Lewati ke konten utama",
+  "navBrandAria": "Beranda BookmarkForge",
+  "navAriaLabel": "Navigasi utama",
+  "homeHref": "/id/",
+  "navLinks": {
+    "pocketAlternative": "Alternatif Pocket",
+    "features": "Fitur",
+    "ai": "AI",
+    "privacy": "Privasi",
+    "pricing": "Harga",
+    "help": "Bantuan",
+    "raindropCompare": "Perbandingan Raindrop"
+  },
+  "langLink": {
+    "href": "/es/",
+    "hreflang": "es",
+    "lang": "es",
+    "text": "Español"
+  },
+  "navCta": "Buka Aplikasi",
+  "themeToggleAria": "Ganti tema",
+  "navToggleAria": "Buka menu",
+  "navToggleAriaClose": "Tutup menu",
+  "hero": {
+    "badge": "Pembayaran sekali · Tanpa langganan",
+    "title": "Semua yang Anda simpan tetap di komputer Anda. <span class=\"accent-text\">Semuanya.</span>",
+    "subtitle": "Raindrop menyimpan bookmark Anda di servernya — dan menagih Anda setiap tahun. BookmarkForge menyimpannya di komputer Anda, terkunci dengan kunci yang hanya Anda miliki. Tanpa akun. Tanpa biaya bulanan. Tak ada yang mengintip di balik pundak Anda.",
+    "ctaPrimary": "Luncurkan Aplikasi Gratis",
+    "ctaSecondary": "Lihat Harga",
+    "pillars": [
+      {
+        "strong": "Privat",
+        "text": "halaman yang Anda simpan tidak pernah meninggalkan komputer Anda"
+      },
+      {
+        "strong": "Terkunci",
+        "text": "bahkan kami tidak bisa membacanya"
+      },
+      {
+        "strong": "Luring",
+        "text": "bekerja di pesawat, di terowongan, di mana saja"
+      },
+      {
+        "strong": "Bayar sekali",
+        "text": "$59 sekali, bukan 28 dolar setiap tahun"
+      }
+    ]
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "Lihat Cara Kerjanya",
+    "title": "Aplikasi aslinya, bukan purwarupa",
+    "subtitle": "Tanpa dinding pendaftaran, tanpa cuplikan stok dan tanpa kursor palsu. Putaran ini adalah build rilis di desktop biasa: buka vault, simpan halaman, cari di perpustakaan, lalu kunci lagi.",
+    "imageAlt": "Putaran animasi BookmarkForge: membuka vault, menangkap bookmark, mencari di perpustakaan, lalu mengunci lagi",
+    "caption": "Direkam dari aplikasi desktop dengan data demo. Panduan lengkap ikut disertakan dalam proyek.",
+    "steps": [
+      {
+        "title": "Buka",
+        "text": "Vault dibuka dengan kata sandi pilihan Anda; kunci tetap di perangkat Anda."
+      },
+      {
+        "title": "Tangkap",
+        "text": "Simpan halaman langsung dari aplikasi — tanpa akun dan tanpa ekstensi."
+      },
+      {
+        "title": "Temukan",
+        "text": "Cari berdasarkan kata kunci atau makna, dengan sumber setiap jawaban ditampilkan."
+      },
+      {
+        "title": "Kunci",
+        "text": "Tutup vault dan kunci dekripsi hilang dari memori."
+      }
+    ],
+    "ctaPrimary": "Luncurkan aplikasi"
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Baca Nanti Lahir Kembali",
+    "title": "Alternatif Pocket yang Privat",
+    "subtitle": "Pocket akan dihentikan. BookmarkForge tetap menjaga kebiasaan baca-nanti — dengan setiap artikel, catatan dan sorotan disimpan terenkripsi di perangkat Anda.",
+    "features": [
+      {
+        "title": "Baca Nanti, Milik Anda Selamanya",
+        "text": "Simpan artikel, video dan PDF dengan satu klik — dari PWA, ekstensi browser atau menu bagikan. Berbeda dari Pocket, daftar bacaan Anda tinggal di perangkat Anda, terenkripsi, dan tetap bekerja luring."
+      },
+      {
+        "title": "Catatan ala Notion di Setiap Artikel",
+        "text": "Sorot, ringkas dan buat catatan berbasis blok yang melekat pada bookmark mana pun. Ubah artikel tersimpan menjadi basis pengetahuan Anda sendiri — bukan sekadar daftar tautan."
+      },
+      {
+        "title": "Tanpa Pelacakan, Tanpa Iklan",
+        "text": "BookmarkForge tidak punya akun, analitik maupun iklan secara bawaan. Kebiasaan baca Anda bukan urusan siapa pun kecuali Anda."
+      }
+    ],
+    "ctaPrimary": "Mulai Menyimpan Gratis",
+    "ctaSecondary": "Perbandingan & Panduan Migrasi Lengkap",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "Kata-kata jujur, tanpa pemasaran",
+    "title": "BookmarkForge vs Raindrop, tanpa cetakan kecil",
+    "subtitle": "Raindrop adalah aplikasi bagus. Perbedaan besarnya ada di tempat data Anda tinggal.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Di mana daftar Anda tinggal",
+        "us": "Di komputer Anda",
+        "them": "Di server mereka"
+      },
+      {
+        "topic": "Siapa yang bisa membaca yang Anda simpan",
+        "us": "Tidak ada — terkunci dengan kunci Anda, bahkan bukan kami",
+        "them": "Perusahaan, dan siapa pun yang memintanya"
+      },
+      {
+        "topic": "Tanpa internet",
+        "us": "Semua tetap bekerja",
+        "them": "Hanya yang dasar"
+      },
+      {
+        "topic": "Yang Anda bayar",
+        "us": "$59 sekali. Selesai.",
+        "them": "28 dolar setiap tahun, selamanya"
+      },
+      {
+        "topic": "Jika perusahaan hilang (RIP Pocket)",
+        "us": "Tidak ada yang berubah — sudah di tangan Anda",
+        "them": "Anda ekspor dan mulai dari awal"
+      },
+      {
+        "topic": "Asisten AI",
+        "us": "Berjalan di dalam komputer Anda dalam mode privat — tidak ada yang dikirim ke mana pun",
+        "them": "Bacaan Anda dikirim ke cloud untuk berpikir"
+      }
+    ],
+    "ctaPrimary": "Coba gratis dalam 2 menit — tanpa akun",
+    "ctaSecondary": "Perbandingan Pocket lengkap",
+    "close": "Raindrop lebih sederhana dan gratis — jika itu yang Anda butuhkan, gunakan dengan senang hati. Tapi jika Anda lebih suka menjaga kehidupan bacaan di tangan sendiri, BookmarkForge dibangun tepat untuk itu."
+  },
+  "features": {
+    "id": "features",
+    "tag": "Semua yang Anda Butuhkan",
+    "title": "Semua yang Anda butuhkan, dengan kata-kata sederhana",
+    "items": [
+      {
+        "title": "Bookmark & dokumen",
+        "text": "Simpan halaman apa pun dengan satu klik. Tulis catatan tepat di sebelahnya, di editor yang bersih dan sederhana. Tetap cepat bahkan dengan 100.000 item tersimpan."
+      },
+      {
+        "title": "Pencarian cerdas",
+        "text": "Temukan hal dengan kata kunci atau makna — bahkan ketika Anda tidak ingat kata persisnya. Raindrop menagih 28 dolar setahun untuk ini; di sini sudah termasuk gratis."
+      },
+      {
+        "title": "AI yang membaca perpustakaan Anda, di dalam komputer",
+        "text": "Tanyakan tentang yang Anda simpan dan dapatkan jawaban dengan sumber yang ditampilkan. Tidak ada yang dikirim ke cloud, dan bekerja tanpa internet. Memerlukan Pro."
+      },
+      {
+        "title": "Ngobrol dengan perpustakaan Anda sendiri",
+        "text": "Tanyakan apa pun tentang bookmark dan catatan Anda dan dapatkan jawaban yang disitasi. Mode privat berjalan 100% di mesin Anda. Memerlukan Pro."
+      },
+      {
+        "title": "Sinkron antar perangkat Anda sendiri",
+        "text": "Perangkat Anda saling berbicara langsung — tanpa server di tengah, dan semuanya tetap terenkripsi. Pasangkan dengan memindai kode QR. Hingga 5 perangkat. Memerlukan Pro."
+      },
+      {
+        "title": "Cadangan milik Anda",
+        "text": "Cadangan otomatis yang bisa Anda simpan di mana pun Anda suka — drive eksternal, folder cloud, mana saja. Ekspor semuanya ke Markdown, JSON, CSV atau PDF kapan pun Anda mau. Anda memegang kuncinya."
+      },
+      {
+        "title": "Peta pengetahuan Anda",
+        "text": "Lihat bagaimana catatan dan bookmark Anda terhubung. Filter berdasarkan tag, tanggal dan kemiripan, lalu jelajahi kanvas tanpa batas."
+      },
+      {
+        "title": "Kartu belajar yang mengalahkan lupa",
+        "text": "Ubah dokumen tersimpan apa pun menjadi kartu pertanyaan yang muncul kembali tepat sebelum Anda lupa — gagasan penjadwalan yang sama seperti Anki. Memerlukan Pro."
+      },
+      {
+        "title": "Privat secara bawaan",
+        "text": "Tanpa akun, tanpa pelacakan, tanpa iklan. Anda adalah pelanggan, bukan produk. Berbagi penggunaan ada, opsional dan tetap mati hingga Anda menyalakannya."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI yang Menghormati Anda",
+    "title": "Pengetahuan Anda, Diperkuat",
+    "subtitle": "Jalankan asisten di dalam komputer Anda — tidak ada yang keluar, dan bekerja luring. Lebih suka model cloud besar? Hubungkan kunci Anda sendiri: pertanyaan Anda dan halaman yang dibutuhkan untuk menjawabnya pergi ke penyedia itu, dengan biaya Anda. Prompt Anda, data Anda, aturan Anda.",
+    "providers": {
+      "title": "Penyedia yang Didukung",
+      "list": [
+        {
+          "type": "local",
+          "name": "Di dalam komputer Anda — model WebLLM (TinyLlama, Llama 3.2, Phi-3.5-mini) — hanya Pro"
+        },
+        {
+          "type": "local",
+          "name": "Di mesin Anda sendiri — Ollama (model apa pun yang Anda jalankan)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Google Gemini (dengan kunci Anda sendiri)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — OpenAI / GPT-4o (dengan kunci Anda sendiri)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Anthropic Claude (dengan kunci Anda sendiri)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Groq (dengan kunci Anda sendiri)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — OpenRouter atau penyedia kustom lain (dengan kunci Anda sendiri)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Mode Obrolan",
+      "items": [
+        {
+          "title": "Mode Privat",
+          "text": "Asisten berjalan seluruhnya di dalam komputer Anda. Tidak ada yang keluar, dan tidak butuh internet. Memerlukan Pro."
+        },
+        {
+          "title": "Mode Pencarian Web",
+          "text": "Menggabungkan perpustakaan Anda dengan hasil langsung dari web (penyedia cloud)."
+        },
+        {
+          "title": "Agen Ahli",
+          "text": "Pembantu khusus: Coder, Writer, Analyst dan Researcher. Memerlukan Pro."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Privasi Bukan Fitur — Ini Pondasinya",
+    "subtitle": "Setiap keputusan arsitektur menempatkan Anda di kendali",
+    "items": [
+      {
+        "title": "Terkunci sehingga tak seorang pun bisa membacanya — bahkan bukan kami",
+        "text": "Perpustakaan Anda dienkripsi dengan kunci yang diturunkan dari kata sandi utama Anda. Kami tidak pernah melihat kata sandi maupun konten Anda."
+      },
+      {
+        "title": "Disimpan di perangkat Anda sendiri",
+        "text": "Semuanya tinggal di komputer Anda. Server pendamping hanya menangani lisensi, pemasangan perangkat dan penerusan pertanyaan AI mode cloud Anda — tidak pernah konten Anda."
+      },
+      {
+        "title": "Tanpa pelacakan secara bawaan",
+        "text": "Tanpa analitik, tanpa laporan kerusakan, tanpa pelacakan. Berbagi statistik penggunaan atau laporan kesalahan adalah pilihan terpisah, mati secara bawaan."
+      },
+      {
+        "title": "Anda memegang kuncinya",
+        "text": "Tanpa kata sandi utama berarti tanpa akses — tidak ada pintu belakang \"lupa kata sandi\". Frasa pemulihan 24 kata Anda adalah satu-satunya jalan masuk; jaga dengan aman."
+      },
+      {
+        "title": "Hak Anda dihormati",
+        "text": "Akses, koreksi, hapus atau bawa data Anda — semua bisa dilakukan secara lokal, kapan pun Anda mau."
+      },
+      {
+        "title": "Tanpa ketergantungan",
+        "text": "Ekspor data Anda kapan pun dalam format terbuka (JSON, Markdown, CSV, PDF). Pengetahuan Anda tetap milik Anda dan portabel."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Harga Sederhana dan Adil — Tanpa Langganan",
+    "subtitle": "Gratis 2.500 bookmark selamanya. Pro adalah lisensi Lifetime untuk v1 — bayar sekali, miliki v1 selamanya. Termasuk semua pembaruan v1.x dan 12 bulan pembaruan fitur. Pembaruan keamanan selamanya. Tanpa tagihan bulanan.",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "$ 0",
+        "period": "/selamanya",
+        "description": "Untuk arsip pribadi (2.500 bookmark, berfungsi di perangkat apa pun — masing-masing punya vault sendiri)",
+        "features": [
+          {
+            "included": true,
+            "text": "2.500 bookmark, catatan, dan dokumen"
+          },
+          {
+            "included": true,
+            "text": "Pencarian pintar (teks penuh + semantik) — termasuk gratis; Raindrop menagihnya tiap tahun"
+          },
+          {
+            "included": true,
+            "text": "AI dengan kunci API sendiri (Anda membayar penyedia)"
+          },
+          {
+            "included": true,
+            "text": "Graf pengetahuan"
+          },
+          {
+            "included": true,
+            "text": "Template dasar"
+          },
+          {
+            "included": true,
+            "text": "Ekspor JSON/HTML"
+          },
+          {
+            "included": true,
+            "text": "PWA + ekstensi browser"
+          },
+          {
+            "included": false,
+            "text": "Sinkronisasi P2P antar perangkat"
+          },
+          {
+            "included": false,
+            "text": "AI lokal (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "RAG chat atas data Anda"
+          },
+          {
+            "included": false,
+            "text": "Flashcards dengan spaced repetition"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          }
+        ],
+        "cta": "Mulai Gratis",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "badge": "Paling Populer — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (lalu $79)",
+        "description": "Lifetime v1 · 12 bulan pembaruan fitur · Keamanan selamanya · v2 diskon 60%",
+        "features": [
+          {
+            "included": true,
+            "text": "Semua yang ada di Gratis"
+          },
+          {
+            "included": true,
+            "text": "Bookmark tak terbatas"
+          },
+          {
+            "included": true,
+            "text": "5 perangkat · sinkron P2P di 5 perangkat"
+          },
+          {
+            "included": true,
+            "text": "Model AI lokal (WebLLM, tanpa kunci API) · obrolan RAG"
+          },
+          {
+            "included": true,
+            "text": "Agen ahli (Coder, Writer, Analyst, Researcher)"
+          },
+          {
+            "included": true,
+            "text": "Kartu flash dengan pengulangan spasi · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Ekspor lanjutan (10+ format) · Cadangan terenkripsi"
+          },
+          {
+            "included": true,
+            "text": "Vault keamanan (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Lifetime v1 · 12 bulan pembaruan fitur"
+          },
+          {
+            "included": true,
+            "text": "Pembaruan keamanan selamanya"
+          },
+          {
+            "included": true,
+            "text": "Dukungan email (48 jam) + akses awal"
+          }
+        ],
+        "cta": "Dapatkan Pro $59 Early Bird",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "lalu $79 regular",
+        "sla": "Dukungan: Email 48 jam (Sen–Jum)",
+        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
+        "cta2": "Dapatkan Pro $79 Regular",
+        "cta2Class": "btn-secondary"
+      }
+    ],
+    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-id#pricing\">Learn more</a>"
+  },
+  "faq": {
+    "title": "Pertanyaan Umum",
+    "items": [
+      {
+        "question": "Apakah tier Gratis benar-benar gratis selamanya?",
+        "answer": "Ya. Tanpa masa percobaan, tanpa langganan. Tier gratis mencakup 2.500 bookmark, pencarian teks lengkap & semantik, graf pengetahuan, dan AI dengan kunci API Anda sendiri (Anda membayar penyedia)."
+      },
+      {
+        "question": "Apa arti \"Lifetime v1\" untuk Pro?",
+        "answer": "Bayar sekali, miliki v1 selamanya. Termasuk semua pembaruan v1.x (perbaikan bug + fitur kecil) selamanya dan 12 bulan pembaruan fitur dari pembelian. Pembaruan keamanan selamanya. Setelah bulan ke-13 Anda tetap memakai v1 yang berfungsi, hanya tanpa fitur baru. Versi mayor mendatang (v2, v3) adalah produk terpisah: $89 untuk pelanggan baru, $35 untuk pemilik v1 (diskon 60%)."
+      },
+      {
+        "question": "Metode pembayaran & pengembalian dana?",
+        "answer": "Via Whop: kartu kredit, PayPal, crypto. Kami tidak pernah melihat detail pembayaran Anda. Pengembalian dana 30 hari — hubungi <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
+      },
+      {
+        "question": "Dukungan — seberapa cepat Anda menjawab?",
+        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help-id#sla\">Support SLA</a>."
+      },
+      {
+        "question": "Bagaimana jika saya lupa kata sandi vault?",
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-id#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Siap Memiliki Pengetahuan Anda?",
+    "text": "Bergabunglah dengan ribuan peneliti, pengembang dan pembelajar yang mempercayai BookmarkForge sebagai otak kedua mereka.",
+    "ctaPrimary": "Luncurkan Aplikasi Gratis",
+    "ctaSecondary": "Tingkatkan ke Pro",
+    "note": "Tanpa akun. Bekerja instan di browser. Tier gratis: 2.500 bookmark."
+  },
+  "footer": {
+    "brand": "Vault pengetahuan privat bertenaga AI Anda. 100% Lokal-Pertama.",
+    "product": {
+      "title": "Produk",
+      "links": [
+        "Features",
+        "AI Capabilities",
+        "Privacy",
+        "Pricing",
+        "Launch App"
+      ],
+      "hrefs": [
+        "/#features",
+        "/#ai",
+        "/#privacy",
+        "/#pricing",
+        "/app"
+      ]
+    },
+    "resources": {
+      "title": "Sumber Daya",
+      "links": [
+        "Pocket Comparison",
+        "Privacy & Terms"
+      ],
+      "hrefs": [
+        "/pocket-alternative.html",
+        "/privacy-and-terms.html"
+      ]
+    },
+    "languages": {
+      "title": "Bahasa",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Dukungan",
+      "links": [
+        "Contact"
+      ],
+      "helpCenter": "Pusat Bantuan",
+      "errorCodes": "Kode Kesalahan"
+    },
+    "copyright": "© 2026 BookmarkForge. Hak cipta dilindungi.",
+    "legal": [
+      "Kebijakan Privasi",
+      "Syarat Layanan",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Vault pengetahuan privat bertenaga AI Anda. 100% Lokal-Pertama. Alternatif Pocket privat. Gratis: 2.500 bookmark.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "Free",
+        "price": "0",
+        "currency": "USD",
+        "description": "2.500 bookmark. Gratis selamanya."
+      },
+      {
+        "name": "Pro Lifetime v1 — Early Bird",
+        "price": "59",
+        "currency": "USD",
+        "description": "Early Bird 200. Lifetime v1, 12 bulan fitur, keamanan selamanya, v2 diskon 60%.",
+        "priceValidUntil": "2026-12-31",
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "price": "79",
+        "currency": "USD",
+        "description": "Regular. Lifetime v1."
+      }
+    ],
+    "featureList": [
+      "Penyimpanan lokal-pertama",
+      "Enkripsi ujung-ke-ujung",
+      "Bekerja luring",
+      "Pencarian AI",
+      "Editor ala Notion",
+      "Sinkron P2P"
+    ],
+    "faq": [
+      {
+        "question": "Apakah tier Gratis benar-benar gratis selamanya?",
+        "answer": "Ya. Tanpa masa percobaan, tanpa langganan. Tier gratis mencakup 2.500 bookmark, pencarian teks lengkap & semantik, graf pengetahuan, dan AI dengan kunci API Anda sendiri (Anda membayar penyedia)."
+      },
+      {
+        "question": "Apa arti \"Lifetime v1\" untuk Pro?",
+        "answer": "Bayar sekali, miliki v1 selamanya. Termasuk semua pembaruan v1.x (perbaikan bug + fitur kecil) selamanya dan 12 bulan pembaruan fitur dari pembelian. Pembaruan keamanan selamanya. Setelah bulan ke-13 Anda tetap memakai v1 yang berfungsi, hanya tanpa fitur baru. Versi mayor mendatang (v2, v3) adalah produk terpisah: $89 untuk pelanggan baru, $35 untuk pemilik v1 (diskon 60%)."
+      },
+      {
+        "question": "Metode pembayaran & pengembalian dana?",
+        "answer": "Via Whop: kartu kredit, PayPal, crypto. Kami tidak pernah melihat detail pembayaran Anda. Pengembalian dana 30 hari — hubungi bookmarkforge@proton.me."
+      },
+      {
+        "question": "Dukungan — seberapa cepat Anda menjawab?",
+        "answer": "Gratis: Bantuan komunitas via Pusat Bantuan + GitHub Discussions (best effort). Pro: email 48 jam hari kerja. Vault terenkripsi — kami tidak bisa melihat data Anda, jadi kami tidak pernah meminta kata sandi atau frasa pemulihan Anda. Lihat SLA Dukungan."
+      },
+      {
+        "question": "Bagaimana jika saya lupa kata sandi vault?",
+        "answer": "Kami tidak bisa memulihkannya. Saat Anda membuat vault kami menampilkan frasa pemulihan 24 kata sekali — tulis di kertas. Tanpa itu, tak seorang pun (termasuk kami) bisa membuka vault. Lihat BF-E101."
+      }
+    ]
+  },
+  "help": {
+    "title": "Pusat Bantuan — FAQ, Pemecahan Masalah & SLA Dukungan | BookmarkForge",
+    "description": "Pusat Bantuan BookmarkForge: lisensi lifetime v1, pemecahan masalah, kode kesalahan BF-E*, SLA dukungan dan cara menyalin laporan diagnostik yang disensor.",
+    "ogTitle": "Pusat Bantuan — BookmarkForge",
+    "ogDescription": "FAQ, pemecahan masalah, kode kesalahan dan SLA dukungan. Pelajari cara kerja lifetime v1 dan cara menyalin laporan diagnostik.",
+    "ogLocale": "en_US",
+    "lastUpdated": "Terakhir Diperbarui",
+    "lastUpdatedDate": "13 September 2026",
+    "backToHome": "← Kembali ke beranda",
+    "intro": "Jawaban sebelum Anda perlu mengirim email. BookmarkForge adalah <strong>lokal-pertama dan terenkripsi</strong> — kami tidak bisa melihat vault Anda. 90% masalah diselesaikan di sini dengan diagnostik yang bisa Anda salin-tempel.",
+    "toc": {
+      "pricing": "Harga & Lifetime v1",
+      "sla": "SLA Dukungan",
+      "troubleshooting": "Pemecahan masalah",
+      "errorCodes": "Kode kesalahan BF-E*",
+      "diagnostics": "Salin laporan diagnostik",
+      "contact": "Kontak"
+    },
+    "pricing": {
+      "title": "Harga — Lifetime v1, tanpa langganan",
+      "intro": "<strong>Model:</strong> Anda bayar sekali untuk <em>BookmarkForge v1</em>. Tanpa tagihan bulanan. Bandingkan: Raindrop Pro 28–38 dolar/tahun, Instapaper 60 dolar/tahun, Readwise 120 dolar/tahun, Capacities 120 dolar/tahun. Lifetime $79 sekitar 2× tahunan Raindrop — dibenarkan oleh lifetime + privasi.",
+      "table": {
+        "tier": "Tier",
+        "price": "Harga",
+        "whatYouGet": "Yang Anda dapatkan",
+        "supply": "Pasokan"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro Lifetime v1"
+      },
+      "freePrice": "$0 selamanya",
+      "freeDescription": "2.500 bookmark di perangkat mana pun (masing-masing punya vault sendiri), pencarian cerdas — teks lengkap + semantik, fitur yang Raindrop tagih tahunan — graf pengetahuan, AI dengan kunci API Anda sendiri, PWA + ekstensi. Pada 2.500 vault Anda tetap utuh: membaca, mencari dan mengekspor tidak pernah berhenti; hanya penyimpanan baru yang berhenti.",
+      "unlimited": "Tak terbatas",
+      "badge": "Early Bird",
+      "proPrice": "$59",
+      "proPriceStriked": "$79",
+      "proPriceRegular": "$79 reguler",
+      "proPriceTraction": "$99 setelah traction",
+      "proDescription": "Bookmark tak terbatas, 5 perangkat + sinkron P2P, AI lokal (WebLLM/Ollama) + RAG + agen ahli, Kartu flash, PDF/OCR, 10+ format ekspor, vault. <em>Lifetime v1 · 12 bulan pembaruan fitur · Keamanan selamanya · v2 diskon 60%</em>",
+      "proSupply": "200 Early Bird"
+    },
+    "legal": {
+      "title": "Lifetime v1 — baris hukum:",
+      "text": "Lisensi lifetime untuk BookmarkForge v1. Termasuk semua pembaruan v1.x (perbaikan bug + fitur kecil) selamanya dan 12 bulan pembaruan fitur dari pembelian. Pembaruan keamanan selamanya. Versi mayor mendatang (v2, v3) adalah produk terpisah: $89 untuk pelanggan baru, $35 untuk pemilik v1 (diskon 60%). Jika Anda tidak meningkatkan, v1 tetap berfungsi selamanya. Pengembalian dana 30 hari via Whop.",
+      "refunds": "Pengembalian dana: 30 hari via Whop. Pembayaran: kartu, PayPal, crypto (Whop — kami tidak pernah melihat data kartu).",
+      "terms": "Syarat § Lisensi"
+    },
+    "upgrade": {
+      "title": "Tingkatkan tanpa langganan:",
+      "text": "setiap 12–18 bulan kami merilis mayor berbayar (v2.0 dengan $89 / $35 untuk pemilik). Lewati dan v1 tetap berfungsi. Itulah pendapatan berulang tanpa memaksa langganan — model yang sama seperti Affinity/Sketch/Sublime."
+    },
+    "sla": {
+      "title": "SLA Dukungan — seberapa cepat kami menjawab",
+      "intro": "Pengelola tunggal. Vault terenkripsi — <strong>kami tidak pernah meminta kata sandi vault atau frasa pemulihan 24 kata Anda</strong>. Dukungan best-effort untuk Gratis, komitmen untuk tier berbayar.",
+      "table": {
+        "tier": "Tier",
+        "channel": "Kanal",
+        "response": "Respons",
+        "whatToDo": "Yang harus dilakukan dulu"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro"
+      },
+      "freeChannel": "Layanan mandiri: Pusat Bantuan ini + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeResponse": "Best effort (komunitas)",
+      "freeWhatToDo": "Cari kode BF-E* di bawah + salin diagnostik (<a href=\"#diagnostics\">§Diagnostik</a>) sebelum memposting",
+      "proChannel": "Email <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (subjek: Pro)",
+      "proResponse": "48h",
+      "proWhatToDo": "Sertakan teks diagnostik dari <code>Pengaturan → Bantuan → Salin diagnostik</code>",
+      "note": "Kami tidak bisa melihat bookmark, catatan, URL atau prompt Anda. Sertakan hanya diagnostik di bawah — berisi jumlah dan versi, bukan konten vault."
+    },
+    "troubleshooting": {
+      "title": "Pemecahan masalah — kebanyakan masalah dalam 30 detik",
+      "vaultLocked": {
+        "title": "Vault terkunci / kata sandi salah",
+        "text": "Kata sandi peka huruf besar-kecil dan spasi. Jika Anda ganti tata letak (mis. AZERTY→QWERTY) ketik perlahan. Setelah 5 kali gagal membuka, tunggu 1 menit. Jika Anda kehilangan kata sandi, gunakan <strong>frasa pemulihan 24 kata</strong> yang ditampilkan sekali saat pembuatan vault (<a href=\"#bf-e101\">BF-E101</a>). Tanpa itu pemulihan mustahil secara desain — kami tidak punya pintu belakang."
+      },
+      "storageFull": {
+        "title": "Penyimpanan browser penuh",
+        "text": "Kuota IndexedDB per-browser (biasanya 60–80% dari disk). Saat penuh, penyimpanan gagal dengan <a href=\"#bf-e103\">BF-E103</a>. Perbaiki: <code>Pengaturan → Penyimpanan → Kompak basis data</code> lalu <code>Bersihkan cache AI</code>. Atau <code>Ekspor cadangan (.bmf)</code> → <code>Hapus vektor lama</code>. Periksa <a href=\"#diagnostics\">% penyimpanan di diagnostik</a> — di atas 80% kami menampilkan spanduk."
+      },
+      "p2pNotConnecting": {
+        "title": "Sinkron P2P tidak terhubung",
+        "text": "Kedua perangkat harus <strong> daring dan terbuka</strong> pada saat bersamaan (WebRTC). Tanpa relay TURN secara bawaan — beberapa jaringan perusahaan memblokir P2P. Coba: keduanya di Wi-Fi yang sama → pasang QR → biarkan aplikasi tetap terbuka. Jika <a href=\"#bf-e105\">BF-E105</a>, uji <code>Bantuan → Diagnostik → P2P (WebRTC)</code> — jika dikatakan tidak tersedia, browser/jaringan Anda memblokir WebRTC."
+      },
+      "localAiNotRunning": {
+        "title": "AI lokal (WebLLM) tidak berjalan",
+        "text": "Memerlukan WebGPU + ~4 GB RAM bebas + lisensi Pro. Periksa <code>Bantuan → Diagnostik → WebGPU/WebLLM</code>. Jika <a href=\"#bf-e106\">BF-E106</a>: perbarui Chrome/Edge ke terbaru, aktifkan <code>chrome://flags/#enable-unsafe-webgpu</code>, atau beralih ke Ollama (model apa pun yang Anda jalankan lokal — tanpa kunci API juga)."
+      },
+      "slowSearch": {
+        "title": "Pencarian atau impor lambat",
+        "text": "Impor pertama membangun vektor HNSW — berat di CPU. Biarkan tab terbuka. Untuk 10k+ bookmark gunakan <code>Pengaturan → Lanjutan → Paksa proses ulang</code>. Jika tetap, <code>Salin diagnostik</code> menampilkan <code>vectorIndexLoad</code> dan latensi kueri."
+      }
+    },
+    "errorCodes": {
+      "title": "Kode kesalahan BF-E* — salin kode, lompat ke perbaikan",
+      "intro": "Setiap kesalahan kritis menampilkan kode seperti <code>BF-E101</code>. Klik kode di aplikasi atau cari di sini.",
+      "table": {
+        "code": "Kode",
+        "meaning": "Arti",
+        "fix": "Perbaikan"
+      },
+      "e101": {
+        "meaning": "Kata sandi vault lupa / frasa seed diperlukan",
+        "fix": "Kami tidak bisa memulihkan kata sandi. Saat pembuatan vault kami menampilkan <strong>frasa 24 kata sekali</strong> — tulis di kertas. Gunakan untuk reset. Tanpa frasa = vault tidak dapat dipulihkan. <a href=\"#diagnostics\">Tiket tidak akan memulihkannya</a>."
+      },
+      "e102": {
+        "meaning": "Vault terkunci / kata sandi salah",
+        "fix": "Ketik ulang kata sandi persis. Setelah 5 kegagalan tunggu 60 detik. Jika Anda baru merotasi kata sandi, coba yang sebelumnya — rotasi menyimpan salt terakhir untuk rollback."
+      },
+      "e103": {
+        "meaning": "Kuota penyimpanan terlampaui",
+        "fix": "Buka <code>Pengaturan → Penyimpanan</code>: Kompak DB + Bersihkan cache AI. Ekspor cadangan .bmf jika perlu. Lihat Pemecahan Masalah §Penyimpanan."
+      },
+      "e104": {
+        "meaning": "IndexedDB diblokir / penjelajahan privat",
+        "fix": "IndexedDB diblokir di jendela privat/incognito atau oleh kebijakan penyimpanan. Gunakan jendela normal. Periksa <code>Bantuan → Diagnostik → Penyimpanan</code>."
+      },
+      "e105": {
+        "meaning": "P2P / WebRTC tidak tersedia",
+        "fix": "Browser atau jaringan memblokir WebRTC. Coba browser/jaringan lain, nonaktifkan firewall ketat, atau gunakan Ekspor/Impor alih-alih sinkron langsung."
+      },
+      "e106": {
+        "meaning": "AI lokal (WebLLM) tidak bisa berjalan di perangkat ini",
+        "fix": "Memerlukan WebGPU + shader-f16 + 4 GB RAM + Pro. Perbarui browser, atau gunakan Ollama / penyedia cloud dengan kunci Anda sendiri."
+      },
+      "e107": {
+        "meaning": "Impor cadangan gagal (kata sandi salah / file rusak)",
+        "fix": "Untuk <code>.bmf</code> (terenkripsi) Anda butuh kata sandi ekspor, bukan kata sandi vault. Untuk JSON, pastikan file tidak terpotong."
+      },
+      "e201": {
+        "meaning": "Lisensi Pro tidak valid / pemeriksaan kedaluwarsa",
+        "fix": "Periksa <code>Pengaturan → Pro</code>: masukkan ulang kunci. Pemeriksaan luring menyimpan cache; hubungkan sekali untuk validasi ulang via Whop."
+      },
+      "e202": {
+        "meaning": "Batas gratis tercapai (2.500 bookmark)",
+        "fix": "Gratis adalah 2.500. Hapus atau tingkatkan ke Pro Lifetime v1 untuk tak terbatas. Ekspor selalu tersedia."
+      },
+      "tip": "Tips dukungan: mengklik <code>Salin diagnostik</code> pada kesalahan menyalin kode + konteks dalam satu klik — tempel di GitHub Discussion atau email Anda."
+    },
+    "diagnostics": {
+      "title": "Salin diagnostik yang disensor — yang Anda tempel ke dukungan",
+      "intro": "Di aplikasi: <code>Pengaturan → Lanjutan</code> (atau <code>Bantuan → Diagnostik</code>) → <strong>Salin diagnostik</strong>. Tampilannya seperti ini — tanpa konten vault, tanpa URL, tanpa prompt:",
+      "example": "BookmarkForge v1.0.0 | Chrome 126 | Vault: 847 bookmarks, 12 docs\nStorage: 42% (IndexedDB OK) | Last backup: 2 days ago (.bmf encrypted)\nP2P: not connected | Sync: never | Local AI: WebLLM not loaded\nErrors: 0 last 7d | BF-E: none | Build: a1b2c3d",
+      "contains": "Yang dikandungnya: versi aplikasi, browser, jumlah (bookmark/dokumen/vektor), % penyimpanan + kuota, status P2P, status AI, jumlah kesalahan & kode BF-E terakhir, hash build. Menggunakan hash ber-salt dari IP — kami tidak pernah menyimpan IP. Lihat <a href=\"/privacy-and-terms.html\">Privasi §3/§6</a>.",
+      "cantOpen": "Jika Anda tidak bisa membuka aplikasi: sertakan browser + OS + langkah reproduksi + kode <code>BF-E*</code> di layar. Itu cukup untuk 90% tiket."
+    },
+    "contact": {
+      "title": "Kontak",
+      "paid": "Dukungan berbayar",
+      "paidDetail": "sertakan diagnostik + kode BF-E. Pro 48 jam (Sen–Jum).",
+      "community": "Komunitas (Gratis)",
+      "communityDetail": "search <code>BF-E*</code> before posting. Read <a href=\"/help-id#bf-e\">Error codes</a> + paste diagnostic.",
+      "security": "Masalah keamanan",
+      "securityDetail": "email dengan subjek <code>[SECURITY]</code> — jangan buka diskusi publik.",
+      "note": "BookmarkForge adalah lokal-pertama — konten vault tidak pernah meninggalkan perangkat Anda. Dukungan tidak pernah meminta kata sandi vault atau frasa pemulihan Anda."
+    },
+    "alsoSee": "Lihat juga: <a href=\"/\">Beranda</a> · <a href=\"/privacy-and-terms.html\">Privasi & Syarat</a> · <a href=\"/privacy-and-terms.html#terms\">Lisensi (Lifetime v1)</a> · <a href=\"/#pricing\">Harga</a>",
+    "privacy": "Privasi",
+    "home": "Beranda",
+    "faq": {
+      "q1": "Apakah tier Gratis benar-benar gratis selamanya?",
+      "a1": "Ya. Tanpa masa percobaan, tanpa langganan. Gratis mencakup 2.500 bookmark, pencarian teks lengkap & semantik, graf pengetahuan dan AI dengan kunci API Anda sendiri.",
+      "q2": "Apa arti Lifetime v1?",
+      "a2": "Bayar sekali, miliki v1 selamanya. Semua perbaikan bug v1.x selamanya ditambah 12 bulan pembaruan fitur dari pembelian. Pembaruan keamanan selamanya. Setelah bulan ke-13 v1 tetap berfungsi. v2 dan v3 adalah mayor berbayar terpisah: $89 untuk pelanggan baru, $35 untuk pemilik v1 (diskon 60%).",
+      "q3": "Bagaimana jika saya lupa kata sandi vault?",
+      "a3": "Kami tidak bisa memulihkannya. Saat Anda membuat vault kami menampilkan frasa pemulihan 24 kata sekali — tulis di kertas. Tanpa itu vault tidak dapat dipulihkan. Lihat BF-E101."
+    }
+  }
+}

@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="ko"
+  dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Raindrop은 북마크를 서버에 보관합니다. BookmarkForge는 당신의 컴퓨터에 보관합니다 — 우리도 읽을 수 없도록 잠급니다. 59달러 한 번. 무료: 2,500개 북마크.">
+  <title>BookmarkForge — 모든 것이 당신의 컴퓨터에 남습니다. 한 번만 결제하세요.</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforgeapp.com/ko/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforgeapp.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforgeapp.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforgeapp.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforgeapp.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforgeapp.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforgeapp.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforgeapp.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforgeapp.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforgeapp.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforgeapp.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforgeapp.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforgeapp.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforgeapp.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforgeapp.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforgeapp.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforgeapp.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforgeapp.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforgeapp.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforgeapp.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforgeapp.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforgeapp.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforgeapp.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforgeapp.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforgeapp.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforgeapp.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforgeapp.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforgeapp.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforgeapp.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforgeapp.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforgeapp.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — 모든 것이 당신의 컴퓨터에 남습니다. 한 번만 결제하세요.">
+  <meta property="og:description" content="Raindrop은 북마크를 서버에 보관합니다. BookmarkForge는 당신의 컴퓨터에 보관합니다 — 우리도 읽을 수 없도록 잠급니다. 59달러 한 번. 무료: 2,500개 북마크.">
+  <meta property="og:url" content="https://bookmarkforgeapp.com/ko/">
+  <meta property="og:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:locale:alternate" content="en_US">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — 모든 것이 당신의 컴퓨터에 남습니다. 한 번만 결제하세요.">
+  <meta name="twitter:description" content="Raindrop은 북마크를 서버에 보관합니다. BookmarkForge는 당신의 컴퓨터에 보관합니다 — 우리도 읽을 수 없도록 잠급니다. 59달러 한 번. 무료: 2,500개 북마크.">
+  <meta name="twitter:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <script src="/theme-init.js"></script>
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://bookmarkforgeapp.com/ko/#website",
+        "url": "https://bookmarkforgeapp.com/ko/",
+        "name": "BookmarkForge",
+        "description": "당신의 비공개, AI 기반 지식 볼트. 100% 로컬 우선. Private Pocket 대안. 무료: 2,500개 북마크.",
+        "inLanguage": "ko",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://bookmarkforgeapp.com/ko/?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": { "@id": "https://bookmarkforgeapp.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://bookmarkforgeapp.com/#organization",
+        "name": "BookmarkForge",
+        "url": "https://bookmarkforgeapp.com/",
+        "logo": { "@type": "ImageObject", "url": "https://bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
+        "email": "bookmarkforge@proton.me"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://bookmarkforgeapp.com/ko/#software",
+        "name": "BookmarkForge",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "url": "https://bookmarkforgeapp.com/",
+        "image": "https://bookmarkforgeapp.com/og-image.png",
+        "description": "Raindrop은 북마크를 서버에 보관합니다. BookmarkForge는 당신의 컴퓨터에 보관합니다 — 우리도 읽을 수 없도록 잠급니다. 59달러 한 번. 무료: 2,500개 북마크.",
+        "offers": [
+          { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD", "description": "2,500개 북마크. 영원히 무료." },          { "@type": "Offer", "name": "Pro Lifetime v1 — Early Bird", "price": "59", "priceCurrency": "USD", "description": "얼리버드 200. v1의 Lifetime, 12개월 기능, 보안 영원히, v2 60% 할인.", "priceValidUntil": "2026-12-31", "availability": "https://schema.org/InStock" },          { "@type": "Offer", "name": "Pro Lifetime v1", "price": "79", "priceCurrency": "USD", "description": "일반가. v1의 Lifetime." }        ],
+        "featureList": [
+          "로컬 우선 저장",          "종단간 암호화",          "오프라인 작동",          "AI 검색",          "Notion 스타일 편집기",          "P2P 동기화"        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://bookmarkforgeapp.com/ko/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "무료 등급이 정말 영원히 무료인가요?",
+            "acceptedAnswer": { "@type": "Answer", "text": "네. 체험판도, 구독도 없습니다. 무료 등급에는 2,500개 북마크, 전문 검색 \u0026 의미 검색, 지식 그래프, 당신의 API 키로 사용하는 AI (제공자에게 지불)가 포함됩니다." }
+          },          {
+            "@type": "Question",
+            "name": "\"v1의 Lifetime\"은 Pro에게 무엇을 의미하나요?",
+            "acceptedAnswer": { "@type": "Answer", "text": "한 번 결제, v1을 영원히 소유. 모든 v1.x 업데이트 (버그 수정 + 마이너 기능) 영원히와 구매일로부터 12개월 기능 업데이트 포함. 보안 업데이트 영원히. 13개월 이후에도 v1은 기능적으로 유지되지만 새 기능은 없습니다. 미래 주요 버전 (v2, v3)은 별도 제품입니다: 신규 고객 $89, v1 소유자 $35 (60% 할인)." }
+          },          {
+            "@type": "Question",
+            "name": "결제 수단 \u0026 환불은?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Whop을 통해: 신용카드, PayPal, 암호화폐. 우리는 당신의 결제 정보를 보지 않습니다. 30일 환불 — bookmarkforge@proton.me로 연락." }
+          },          {
+            "@type": "Question",
+            "name": "지원 — 얼마나 빨리 답변하나요?",
+            "acceptedAnswer": { "@type": "Answer", "text": "무료: Help Center + GitHub Discussions을 통한 커뮤니티 도움 (best effort). Pro: 영업일 48시간 이메일. 볼트는 암호화되어 있어 — 우리는 당신의 데이터를 볼 수 없으므로 비밀번호나 복구 문구를 절대 묻지 않습니다. Support SLA 참조." }
+          },          {
+            "@type": "Question",
+            "name": "볼트 비밀번호를 잊으면 어떻게 되나요?",
+            "acceptedAnswer": { "@type": "Answer", "text": "복구할 수 없습니다. 볼트 생성 시 24단어 복구 문구를 한 번 보여드립니다 — 종이에 적어두세요. 없으면 누구도 (우리 포함) 볼트를 열 수 없습니다. BF-E101 참조." }
+          }        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">본문으로 건너뛰기</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/ko/" class="nav-brand" aria-label="BookmarkForge 홈">
+        <img src="/logo-64.png" width="32" height="32" alt="BookmarkForge logo" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" id="navLinks" aria-label="메인 내비게이션">
+        <a href="#pocket-alternative">Read-It-Later의 부활</a>
+        <a href="#raindrop-compare">Raindrop 비교</a>
+        <a href="#features">기능</a>
+        <a href="#ai">AI</a>
+        <a href="#privacy">개인정보</a>
+        <a href="#pricing">가격</a>
+        <a href="/help-ko">도움말</a>
+        
+        <!-- Language Dropdown -->
+        <div class="language-dropdown">
+          <button class="language-toggle" aria-label="Select language" aria-expanded="false">
+            <span class="current-lang">한국어</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 4 L6 8 L10 4"/>
+            </svg>
+          </button>
+          <ul class="language-menu" role="menu" aria-hidden="true">
+            <li role="none">
+              <a href="/id/" hreflang="id" lang="id" role="menuitem">
+                Bahasa Indonesia
+              </a>
+            </li>
+            <li role="none">
+              <a href="/cs/" hreflang="cs" lang="cs" role="menuitem">
+                Čeština
+              </a>
+            </li>
+            <li role="none">
+              <a href="/da/" hreflang="da" lang="da" role="menuitem">
+                Dansk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/de/" hreflang="de" lang="de" role="menuitem">
+                Deutsch
+              </a>
+            </li>
+            <li role="none">
+              <a href="/" hreflang="en" lang="en" role="menuitem">
+                English
+              </a>
+            </li>
+            <li role="none">
+              <a href="/es/" hreflang="es" lang="es" role="menuitem">
+                Español
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fr/" hreflang="fr" lang="fr" role="menuitem">
+                Français
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hr/" hreflang="hr" lang="hr" role="menuitem">
+                Hrvatski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/it/" hreflang="it" lang="it" role="menuitem">
+                Italiano
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hu/" hreflang="hu" lang="hu" role="menuitem">
+                Magyar
+              </a>
+            </li>
+            <li role="none">
+              <a href="/nl/" hreflang="nl" lang="nl" role="menuitem">
+                Nederlands
+              </a>
+            </li>
+            <li role="none">
+              <a href="/no/" hreflang="no" lang="no" role="menuitem">
+                Norsk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pl/" hreflang="pl" lang="pl" role="menuitem">
+                Polski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pt/" hreflang="pt" lang="pt" role="menuitem">
+                Português
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ro/" hreflang="ro" lang="ro" role="menuitem">
+                Română
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fi/" hreflang="fi" lang="fi" role="menuitem">
+                Suomi
+              </a>
+            </li>
+            <li role="none">
+              <a href="/sv/" hreflang="sv" lang="sv" role="menuitem">
+                Svenska
+              </a>
+            </li>
+            <li role="none">
+              <a href="/vi/" hreflang="vi" lang="vi" role="menuitem">
+                Tiếng Việt
+              </a>
+            </li>
+            <li role="none">
+              <a href="/tr/" hreflang="tr" lang="tr" role="menuitem">
+                Türkçe
+              </a>
+            </li>
+            <li role="none">
+              <a href="/el/" hreflang="el" lang="el" role="menuitem">
+                Ελληνικά
+              </a>
+            </li>
+            <li role="none">
+              <a href="/bg/" hreflang="bg" lang="bg" role="menuitem">
+                Български
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ru/" hreflang="ru" lang="ru" role="menuitem">
+                Русский
+              </a>
+            </li>
+            <li role="none">
+              <a href="/uk/" hreflang="uk" lang="uk" role="menuitem">
+                Українська
+              </a>
+            </li>
+            <li role="none">
+              <a href="/he/" hreflang="he" lang="he" role="menuitem">
+                עברית
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ar/" hreflang="ar" lang="ar" role="menuitem">
+                العربية
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hi/" hreflang="hi" lang="hi" role="menuitem">
+                हिन्दी
+              </a>
+            </li>
+            <li role="none">
+              <a href="/th/" hreflang="th" lang="th" role="menuitem">
+                ไทย
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ko/" hreflang="ko" lang="ko" role="menuitem" class="current">
+                한국어
+              </a>
+            </li>
+            <li role="none">
+              <a href="/zh/" hreflang="zh" lang="zh" role="menuitem">
+                中文
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ja/" hreflang="ja" lang="ja" role="menuitem">
+                日本語
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <a href="/app" class="btn-primary nav-cta">앱 열기</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="메뉴 열기" data-label-close="메뉴 닫기">
+          <svg class="icon-menu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+          <svg class="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <button class="theme-toggle" id="themeToggle" aria-label="테마 전환" aria-pressed="false">
+          <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">일회성 결제 · 구독 없음</span>
+          <h1 id="hero-title">저장한 모든 것이 당신의 컴퓨터에 남습니다. <span class="accent-text">전부.</span></h1>
+          <p class="hero-subtitle">Raindrop은 북마크를 서버에 보관하고 매년 요금을 청구합니다. BookmarkForge는 북마크를 당신의 컴퓨터에 보관하며, 오직 당신만 가진 키로 잠급니다. 계정 없음. 월 요금 없음. 누군가 엿보지 않습니다.</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">무료로 앱 실행</a>
+            <a href="#pricing" class="btn-secondary">가격 보기</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>개인정보</strong> — 저장한 페이지가 절대 당신의 컴퓨터를 떠나지 않습니다</span>
+            <span><strong>잠김</strong> — 우리조차 읽을 수 없습니다</span>
+            <span><strong>오프라인</strong> — 비행기 안, 터널 안, 어디서든 작동합니다</span>
+            <span><strong>한 번 결제</strong> — 59달러 한 번, 매년 28달러가 아닙니다</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Demo Section — steps and CTA only. The tour GIF this section
+         used to show was retired with the demo-media pipeline; the template kept
+         a dead <img> pointing at it until the ADR-062 smoke gate reported the 404
+         on all 30 landings. The demo.* copy still describes the loop: rewriting it
+         has to come with the translations, not from the template. -->
+    <section id="demo" class="demo-tour" aria-labelledby="demo-title">
+      <div class="container">
+        <div class="demo-tour-header">
+          <span class="demo-tour-tag">작동 모습 보기</span>
+          <h2 id="demo-title" class="demo-tour-title">모형이 아닌 실제 앱</h2>
+          <p class="demo-tour-subtitle">가입 벽도, 재고 영상도, 가짜 커서도 없습니다. 이 루프는 평범한 데스크톱에서 실행되는 출시 빌드입니다: 볼트 잠금 해제, 페이지 저장, 라이브러리 검색, 다시 잠금.</p>
+        </div>
+        <ol class="demo-tour-steps">
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">잠금 해제</strong>
+            <span class="demo-tour-step-text">볼트는 당신이 정한 비밀번호로 열리며, 키는 당신의 기기에 남습니다.</span>
+          </li>
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">캡처</strong>
+            <span class="demo-tour-step-text">계정이나 확장 프로그램 없이 앱에서 바로 페이지를 저장합니다.</span>
+          </li>
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">찾기</strong>
+            <span class="demo-tour-step-text">키워드나 의미로 검색하며, 모든 답변의 출처가 표시됩니다.</span>
+          </li>
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">잠금</strong>
+            <span class="demo-tour-step-text">볼트를 닫으면 복호화 키가 메모리에서 사라집니다.</span>
+          </li>
+        </ol>
+        <div class="demo-tour-cta">
+          <a href="/app" class="btn-primary">앱 실행</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="pocket-alternative" class="comparison-section" aria-labelledby="pocket-alternative-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Read-It-Later의 부활</span>
+          <h2 id="pocket-alternative-title">Private Pocket 대안</h2>
+          <p class="section-subtitle">Pocket은 사라집니다. BookmarkForge는 읽을거리 저장 습관을 이어갑니다 — 모든 기사, 노트, 하이라이트를 당신의 기기에 암호화하여 저장합니다.</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>영원히 당신의 읽을거리</h3>
+            <p>PWA, 브라우저 확장, 공유 메뉴에서 한 번의 클릭으로 기사, 동영상, PDF를 저장합니다. Pocket과 달리 읽기 목록은 당신의 기기에 암호화되어 저장되고 오프라인에서도 작동합니다.</p>
+          </div>
+          <div class="feat-card">
+            <h3>모든 기사에 Notion 스타일 노트</h3>
+            <p>어떤 북마크에도 하이라이트, 요약, 블록 기반 노트를 첨부합니다. 저장한 기사를 단순 링크 목록이 아닌 당신만의 지식 베이스로 만드세요.</p>
+          </div>
+          <div class="feat-card">
+            <h3>추적 없음, 광고 없음</h3>
+            <p>BookmarkForge에는 계정, 분석, 광고가 기본적으로 없습니다. 당신의 읽기 습관은 당신만의 것입니다.</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">무료로 저장 시작</a>
+          <a href="/pocket-alternative" class="btn-link">전체 비교 & 마이그레이션 가이드</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Raindrop Comparison Section -->
+    <section id="raindrop-compare" class="raindrop-section" aria-labelledby="raindrop-compare-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">마케팅 없이 솔직하게</span>
+          <h2 id="raindrop-compare-title">BookmarkForge vs Raindrop, 작은 글씨 없이</h2>
+          <p class="section-subtitle">Raindrop은 좋은 앱입니다. 큰 차이는 당신의 데이터가 어디에 사는지입니다.</p>
+        </div>
+        <div class="rc-table" role="table" aria-label="BookmarkForge vs Raindrop, 작은 글씨 없이">
+          <div class="rc-row rc-head" role="row">
+            <div class="rc-topic" role="columnheader"></div>
+            <div class="rc-us" role="columnheader">BookmarkForge</div>
+            <div class="rc-them" role="columnheader">Raindrop</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">목록이 사는 곳</div>
+            <div class="rc-us" role="cell">당신의 컴퓨터</div>
+            <div class="rc-them" role="cell">그들의 서버</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">저장한 것을 누가 읽을 수 있는지</div>
+            <div class="rc-us" role="cell">아무도 — 당신의 키로 잠김, 우리도 못 봅니다</div>
+            <div class="rc-them" role="cell">회사, 그리고 그들에게 요구하는 누구든</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">인터넷 없을 때</div>
+            <div class="rc-us" role="cell">모든 것이 계속 작동</div>
+            <div class="rc-them" role="cell">기본 기능만</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">지불하는 금액</div>
+            <div class="rc-us" role="cell">59달러 한 번. 끝.</div>
+            <div class="rc-them" role="cell">매년 28달러, 영원히</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">회사가 사라지면 (RIP Pocket)</div>
+            <div class="rc-us" role="cell">아무것도 바뀌지 않음 — 이미 당신 손에 있습니다</div>
+            <div class="rc-them" role="cell">내보내고 다시 시작</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">AI 어시스턴트</div>
+            <div class="rc-us" role="cell">컴퓨터 안에서 비공개로 실행 — 어디에도 보내지 않음</div>
+            <div class="rc-them" role="cell">생각하려고 클라우드로 읽기 내용을 보냄</div>
+          </div>
+        </div>
+        <p class="rc-close">Raindrop은 더 단순하고 무료입니다 — 그 정도면 충분하다면 즐겁게 쓰세요. 하지만 읽기 생활을 스스로의 손에 쥐고 싶다면, BookmarkForge는 바로 그 목적으로 만들어졌습니다.</p>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">2분 만에 무료 체험 — 계정 없음</a>
+          <a href="/pocket-alternative" class="btn-link">Pocket 전체 비교</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">필요한 모든 것</span>
+          <h2 id="features-title">평범한 말로, 필요한 모든 것</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>북마크 & 문서</h3>
+            <p>한 번의 클릭으로 어떤 페이지든 저장합니다. 깔끔한 간단한 편집기로 바로 옆에 노트를 씁니다. 100,000개 저장 항목에서도 빠릅니다.</p>
+          </div>
+          <div class="feature-item">
+            <h3>스마트 검색</h3>
+            <p>정확한 단어를 기억하지 못해도 키워드나 의미로 찾습니다. Raindrop은 이 기능에 연 28달러를 청구합니다; 여기서는 무료로 포함됩니다.</p>
+          </div>
+          <div class="feature-item">
+            <h3>당신의 라이브러리를 읽는 AI, 컴퓨터 안에서</h3>
+            <p>저장한 것에 대해 질문하고 출처가 표시된 답변을 받습니다. 클라우드로 보내지지 않고 인터넷 없이도 작동합니다. Pro 필요.</p>
+          </div>
+          <div class="feature-item">
+            <h3>당신의 라이브러리와 채팅</h3>
+            <p>북마크와 노트에 대해 무엇이든 물어보고 출처가 있는 답변을 받습니다. 비공개 모드는 100% 당신의 기계에서 실행됩니다. Pro 필요.</p>
+          </div>
+          <div class="feature-item">
+            <h3>당신의 기기 사이 동기화</h3>
+            <p>기기들이 서로 직접 통신합니다 — 중간에 서버가 없고 모든 것이 암호화됩니다. QR 코드 스캔으로 페어링합니다. 최대 5대 기기. Pro 필요.</p>
+          </div>
+          <div class="feature-item">
+            <h3>당신이 소유하는 백업</h3>
+            <p>원하는 곳 어디든 보관할 수 있는 자동 백업 — 외장 드라이브, 클라우드 폴더, 어디든. 언제든 Markdown, JSON, CSV, PDF로 모두 내보냅니다. 키는 당신이 쥐고 있습니다.</p>
+          </div>
+          <div class="feature-item">
+            <h3>당신의 지식 지도</h3>
+            <p>노트와 북마크가 어떻게 연결되는지 봅니다. 태그, 날짜, 유사도로 필터하고 끝없는 캔버스를 줌합니다.</p>
+          </div>
+          <div class="feature-item">
+            <h3>망각을 이기는 학습 카드</h3>
+            <p>저장한 어떤 문서든 잊기 직전에 다시 surfaced되는 질문 카드로 만듭니다 — Anki와 같은 스케줄링 아이디어. Pro 필요.</p>
+          </div>
+          <div class="feature-item">
+            <h3>기본적으로 비공개</h3>
+            <p>계정 없음, 추적 없음, 광고 없음. 당신은 고객이지 상품이 아닙니다. 사용량 공유는 선택 사항이며 켜지 전까지 꺼져 있습니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">당신을 존중하는 AI</span>
+          <h2 id="ai-title">당신의 지식, 증폭</h2>
+          <p class="section-subtitle">어시스턴트를 컴퓨터 안에서 실행합니다 — 아무것도 떠나지 않고 오프라인에서도 작동합니다. 큰 클라우드 모델을 선호한다면? 당신의 키를 연결하세요: 질문과 답변에 필요한 페이지가 그 제공자로 가며, 비용은 당신이 냅니다. 당신의 프롬프트, 당신의 데이터, 당신의 규칙.</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>지원 제공자</h3>
+            <ul class="providers-list">
+              <li>컴퓨터 안에서 — WebLLM 모델 (TinyLlama, Llama 3.2, Phi-3.5-mini) — Pro 전용</li>
+              <li>당신의 기계에서 — Ollama (당신이 실행하는 어떤 모델든)</li>
+              <li>클라우드 — Google Gemini (당신의 키로)</li>
+              <li>클라우드 — OpenAI / GPT-4o (당신의 키로)</li>
+              <li>클라우드 — Anthropic Claude (당신의 키로)</li>
+              <li>클라우드 — Groq (당신의 키로)</li>
+              <li>클라우드 — OpenRouter 또는 다른 커스텀 제공자 (당신의 키로)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>채팅 모드</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>비공개 모드</h4>
+                <p>어시스턴트가 완전히 당신의 컴퓨터 안에서 실행됩니다. 아무것도 떠나지 않고 인터넷이 필요 없습니다. Pro 필요.</p>
+              </div>
+              <div class="mode-item">
+                <h4>웹 검색 모드</h4>
+                <p>라이브러리를 실시간 웹 결과와 결합합니다 (클라우드 제공자).</p>
+              </div>
+              <div class="mode-item">
+                <h4>전문 에이전트</h4>
+                <p>전문 도우미: Coder, Writer, Analyst, Researcher. Pro 필요.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">개인정보는 기능이 아닙니다 — 토대입니다</h2>
+          <p class="section-subtitle">모든 아키텍처 결정이 당신에게 제어권을 부여합니다</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>아무도 읽을 수 없도록 잠김 — 우리도 못 봅니다</h3>
+            <p>라이브러리는 마스터 비밀번호에서 파생된 키로 암호화됩니다. 우리는 당신의 비밀번호나 콘텐츠를 절대 보지 않습니다.</p>
+          </div>
+          <div class="feature-item">
+            <h3>당신의 기기에 저장</h3>
+            <p>모든 것이 당신의 컴퓨터에 살고 있습니다. 동반 서버는 라이선싱, 기기 페어링, 클라우드 모드 AI 질문 릴레이만 처리합니다 — 콘텐츠는 절대 아닙니다.</p>
+          </div>
+          <div class="feature-item">
+            <h3>기본적으로 추적 없음</h3>
+            <p>분석, 충돌 보고서, 추적 없음. 사용량 통계나 오류 보고 공유는 별도 선택으로, 기본적으로 꺼져 있습니다.</p>
+          </div>
+          <div class="feature-item">
+            <h3>당신이 키를 쥡니다</h3>
+            <p>마스터 비밀번호가 없으면 접근 불가 — "비밀번호 찾기" 백도어가 없습니다. 24단어 복구 문구가 유일한 길입니다; 안전하게 보관하세요.</p>
+          </div>
+          <div class="feature-item">
+            <h3>당신의 권리, 존중</h3>
+            <p>접근, 정정, 삭제, 데이터 가져가기 — 모두 로컬에서, 원할 때마다 가능합니다.</p>
+          </div>
+          <div class="feature-item">
+            <h3>락인 없음</h3>
+            <p>언제든 개방 형식으로 데이터를 내보냅니다 (JSON, Markdown, CSV, PDF). 당신의 지식은 당신의 것이며 이식 가능합니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">간단하고 공정한 가격 — 구독 없음</h2>
+          <p class="section-subtitle">2,500개 북마크 영원히 무료. Pro는 v1에 대한 Lifetime 라이선스입니다 — 한 번 결제, v1을 영원히 소유. 모든 v1.x 업데이트와 12개월 기능 업데이트 포함. 보안 업데이트는 영원히. 월 청구 없음.</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Free</h3>
+            <div class="price">$ 0<span>/영원히</span></div>
+            <p>개인 아카이브용 (북마크 2,500개, 어떤 기기에서든 작동 — 기기마다 자체 볼트 보유)</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> 2,500개 북마크, 메모, 문서</li>
+              <li><span aria-hidden="true">✅</span> 스마트 검색(전문 + 시맨틱) — 무료 포함. Raindrop은 이 기능에 연간 요금을 받습니다</li>
+              <li><span aria-hidden="true">✅</span> 자체 API 키로 AI (공급업체에 지불)</li>
+              <li><span aria-hidden="true">✅</span> 지식 그래프</li>
+              <li><span aria-hidden="true">✅</span> 기본 템플릿</li>
+              <li><span aria-hidden="true">✅</span> JSON/HTML 내보내기</li>
+              <li><span aria-hidden="true">✅</span> PWA + 브라우저 확장</li>
+              <li><span aria-hidden="true">❌</span> 기기 간 P2P 동기화</li>
+              <li><span aria-hidden="true">❌</span> 로컬 AI (WebLLM/Ollama)</li>
+              <li><span aria-hidden="true">❌</span> 데이터 위 RAG 채팅</li>
+              <li><span aria-hidden="true">❌</span> 간격 반복 플래시카드</li>
+              <li><span aria-hidden="true">❌</span> PDF + OCR</li>
+            </ul>
+            <a href="/app" class="btn-secondary " >무료 시작</a>
+          </div>
+          <div class="price-card popular">
+            <div class="price-badges">
+              <span class="badge">가장 인기 — 얼리버드 200</span>
+            </div>
+            <h3>Pro Lifetime v1</h3>
+            <div class="price"><span class="price-now">$ 59</span> <span class="price-was">$79</span><span>얼리버드 (이후 $79)</span></div>
+            <div class="price-sub">이후 일반가 $79</div>
+            <p>v1의 Lifetime · 12개월 기능 업데이트 · 보안 영원히 · v2 60% 할인</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Free의 모든 것</li>
+              <li><span aria-hidden="true">✅</span> 무제한 북마크</li>
+              <li><span aria-hidden="true">✅</span> 5대 기기 · 5대 기기 간 P2P 동기화</li>
+              <li><span aria-hidden="true">✅</span> 로컬 AI 모델 (WebLLM, API 키 불필요) · RAG 채팅</li>
+              <li><span aria-hidden="true">✅</span> 전문 에이전트 (Coder, Writer, Analyst, Researcher)</li>
+              <li><span aria-hidden="true">✅</span> 간격 반복 학습 카드 · PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> 고급 내보내기 (10+ 형식) · 암호화 백업</li>
+              <li><span aria-hidden="true">✅</span> 보안 볼트 (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> v1의 Lifetime · 12개월 기능 업데이트</li>
+              <li><span aria-hidden="true">✅</span> 보안 업데이트 영원히</li>
+              <li><span aria-hidden="true">✅</span> 이메일 지원 (48시간) + 얼리 액세스</li>
+            </ul>
+            <a href="https://whop.com/checkout/plan_g4oAakLGDjaoM" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Pro $59 얼리버드 받기</a>
+            <a href="https://whop.com/checkout/plan_wFiqyaojHKXmG" class="btn-secondary btn-block" target="_blank" rel="noopener noreferrer">Pro $79 일반가 받기</a>
+            <p class="sla-note">지원: 이메일 48시간 (월–금) · <a href="/help-ko#sla">SLA</a></p>
+          </div>
+        </div>
+        <p class="pricing-legal">Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href="/privacy-and-terms.html#terms">Terms</a> · <a href="/help-ko#pricing">Learn more</a></p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">자주 묻는 질문</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>무료 등급이 정말 영원히 무료인가요?</h3>
+            <p>네. 체험판도, 구독도 없습니다. 무료 등급에는 2,500개 북마크, 전문 검색 & 의미 검색, 지식 그래프, 당신의 API 키로 사용하는 AI (제공자에게 지불)가 포함됩니다.</p>
+          </div>
+          <div class="faq-item">
+            <h3>"v1의 Lifetime"은 Pro에게 무엇을 의미하나요?</h3>
+            <p>한 번 결제, v1을 영원히 소유. 모든 v1.x 업데이트 (버그 수정 + 마이너 기능) 영원히와 구매일로부터 12개월 기능 업데이트 포함. 보안 업데이트 영원히. 13개월 이후에도 v1은 기능적으로 유지되지만 새 기능은 없습니다. 미래 주요 버전 (v2, v3)은 별도 제품입니다: 신규 고객 $89, v1 소유자 $35 (60% 할인).</p>
+          </div>
+          <div class="faq-item">
+            <h3>결제 수단 & 환불은?</h3>
+            <p>Whop을 통해: 신용카드, PayPal, 암호화폐. 우리는 당신의 결제 정보를 보지 않습니다. 30일 환불 — <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>로 연락.</p>
+          </div>
+          <div class="faq-item">
+            <h3>지원 — 얼마나 빨리 답변하나요?</h3>
+            <p>Free: Community help via <a href="/help">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href="/help-ko#sla">Support SLA</a>.</p>
+          </div>
+          <div class="faq-item">
+            <h3>볼트 비밀번호를 잊으면 어떻게 되나요?</h3>
+            <p>We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href="/help-ko#bf-e101">BF-E101</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>당신의 지식을 소유할 준비가 되셨나요?</h2>
+        <p>BookmarkForge를 두 번째 뇌로 신뢰하는 수천 명의 연구자, 개발자, 학습자와 함께하세요.</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">무료 앱 실행</a>
+          <a href="#pricing" class="btn-secondary">Pro로 업그레이드</a>
+        </div>
+        <p class="note">계정 불필요. 브라우저에서 즉시 작동. 무료 등급: 2,500개 북마크.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>당신의 비공개, AI 기반 지식 볼트. 100% 로컬 우선.</p>
+      </div>
+      <div class="footer-links">
+        <h4>제품</h4>
+        <ul>
+          <li><a href="/#features">Features</a></li>
+          <li><a href="/#ai">AI Capabilities</a></li>
+          <li><a href="/#privacy">Privacy</a></li>
+          <li><a href="/#pricing">Pricing</a></li>
+          <li><a href="/app">Launch App</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>리소스</h4>
+        <ul>
+          <li><a href="/pocket-alternative.html">Pocket Comparison</a></li>
+          <li><a href="/privacy-and-terms.html">Privacy & Terms</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>언어</h4>
+        <ul>
+          <li><a href="/id/" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+          <li><a href="/cs/" hreflang="cs" lang="cs">Čeština</a></li>
+          <li><a href="/da/" hreflang="da" lang="da">Dansk</a></li>
+          <li><a href="/de/" hreflang="de" lang="de">Deutsch</a></li>
+          <li><a href="/" hreflang="en" lang="en">English</a></li>
+          <li><a href="/es/" hreflang="es" lang="es">Español</a></li>
+          <li><a href="/fr/" hreflang="fr" lang="fr">Français</a></li>
+          <li><a href="/hr/" hreflang="hr" lang="hr">Hrvatski</a></li>
+          <li><a href="/it/" hreflang="it" lang="it">Italiano</a></li>
+          <li><a href="/hu/" hreflang="hu" lang="hu">Magyar</a></li>
+          <li><a href="/nl/" hreflang="nl" lang="nl">Nederlands</a></li>
+          <li><a href="/no/" hreflang="no" lang="no">Norsk</a></li>
+          <li><a href="/pl/" hreflang="pl" lang="pl">Polski</a></li>
+          <li><a href="/pt/" hreflang="pt" lang="pt">Português</a></li>
+          <li><a href="/ro/" hreflang="ro" lang="ro">Română</a></li>
+          <li><a href="/fi/" hreflang="fi" lang="fi">Suomi</a></li>
+          <li><a href="/sv/" hreflang="sv" lang="sv">Svenska</a></li>
+          <li><a href="/vi/" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+          <li><a href="/tr/" hreflang="tr" lang="tr">Türkçe</a></li>
+          <li><a href="/el/" hreflang="el" lang="el">Ελληνικά</a></li>
+          <li><a href="/bg/" hreflang="bg" lang="bg">Български</a></li>
+          <li><a href="/ru/" hreflang="ru" lang="ru">Русский</a></li>
+          <li><a href="/uk/" hreflang="uk" lang="uk">Українська</a></li>
+          <li><a href="/he/" hreflang="he" lang="he">עברית</a></li>
+          <li><a href="/ar/" hreflang="ar" lang="ar">العربية</a></li>
+          <li><a href="/hi/" hreflang="hi" lang="hi">हिन्दी</a></li>
+          <li><a href="/th/" hreflang="th" lang="th">ไทย</a></li>
+          <li><a href="/ko/" hreflang="ko" lang="ko">한국어</a></li>
+          <li><a href="/zh/" hreflang="zh" lang="zh">中文</a></li>
+          <li><a href="/ja/" hreflang="ja" lang="ja">日本語</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>지원</h4>
+        <ul>
+          <li><a href="/help-ko">도움말 센터</a></li>
+          <li><a href="/help-ko#sla">SLA</a></li>
+          <li><a href="/help-ko#bf-e">오류 코드</a></li>
+          <li><a href="mailto:bookmarkforge@proton.me">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+         Every other locale has its own directory. The rule has one owner —
+         scripts/landing-registry.mjs (LEGAL_LOCALE_CODES), already encoded by
+         check-seo, check-sitemap-coverage, check-hreflang-graph and
+         check-page-figures. Emitting "/ko/…" unconditionally shipped a
+         404 footer link on every EN landing until the ADR-062 smoke gate opened it. -->
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. 모든 권리 보유.</p>
+      <a href="/ko/privacy-and-terms.html">개인정보 처리방침</a> · <a href="/ko/privacy-and-terms.html#terms">서비스 약관</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

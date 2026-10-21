@@ -1,0 +1,740 @@
+{
+  "lang": "hr",
+  "langName": "Hrvatski",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/hr/",
+  "ogLocale": "hr_HR",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Sve ostaje na vašem računalu. Platite jednom.",
+  "description": "Raindrop drži vaše zabilješke na svojim poslužiteljima. BookmarkForge drži ih na vašem računalu — zaključane tako da ih ni mi ne možemo pročitati. 59 dolara jednom. Besplatno: 2,500 zabilješki.",
+  "ogTitle": "BookmarkForge — Sve ostaje na vašem računalu. Platite jednom.",
+  "ogDescription": "Raindrop drži vaše zabilješke na svojim poslužiteljima. BookmarkForge drži ih na vašem računalu — zaključane tako da ih ni mi ne možemo pročitati. 59 dolara jednom. Besplatno: 2,500 zabilješki.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Sve ostaje na vašem računalu. Platite jednom.",
+  "twitterDescription": "Raindrop drži vaše zabilješke na svojim poslužiteljima. BookmarkForge drži ih na vašem računalu — zaključane tako da ih ni mi ne možemo pročitati. 59 dolara jednom. Besplatno: 2,500 zabilješki.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Preskoči na glavni sadržaj",
+  "navBrandAria": "BookmarkForge — početna stranica",
+  "navAriaLabel": "Glavna navigacija",
+  "homeHref": "/hr/",
+  "navLinks": {
+    "pocketAlternative": "Alternativa za Pocket",
+    "features": "Značajke",
+    "ai": "AI",
+    "privacy": "Privatnost",
+    "pricing": "Cijene",
+    "help": "Pomoć",
+    "raindropCompare": "Usporedba s Raindropom"
+  },
+  "langLink": {
+    "href": "/es/",
+    "hreflang": "es",
+    "lang": "es",
+    "text": "Español"
+  },
+  "navCta": "Otvori aplikaciju",
+  "themeToggleAria": "Promijeni temu",
+  "navToggleAria": "Otvori izbornik",
+  "navToggleAriaClose": "Zatvori izbornik",
+  "hero": {
+    "badge": "Jednokratno plaćanje · Bez pretplate",
+    "title": "Sve što spremite ostaje na vašem računalu. <span class=\"accent-text\">Sve.</span>",
+    "subtitle": "Raindrop drži vaše zabilješke na svojim poslužiteljima — i svake godine vam naplaćuje. BookmarkForge drži ih na vašem računalu, zaključane ključem koji imate samo vi. Bez računa. Bez mjesečnih naknada. Bez ikoga tko bi vam gledao preko ramena.",
+    "ctaPrimary": "Pokreni aplikaciju besplatno",
+    "ctaSecondary": "Prikaži cijene",
+    "pillars": [
+      {
+        "strong": "Privatno",
+        "text": "vaše spremljene stranice nikada ne napuštaju vaše računalo"
+      },
+      {
+        "strong": "Zaključano",
+        "text": "čak ni mi ne možemo pročitati"
+      },
+      {
+        "strong": "Izvan mreže",
+        "text": "radi u zrakoplovu, u tunelu, posvuda"
+      },
+      {
+        "strong": "Plata jednom",
+        "text": "59 dolara jednom, a ne 28 dolara svake godine"
+      }
+    ]
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "Pogledajte kako radi",
+    "title": "Stvarna aplikacija, a ne samo maketa",
+    "subtitle": "Bez registracijske barijere, bez šablonskih snimaka i lažnog kursora. Ova petlja je objavljena verzija na običnom računalu: otključajte sef, spremite stranicu, pretražite biblioteku i ponovno zaključajte.",
+    "imageAlt": "Animirana petlja aplikacije BookmarkForge: otključavanje sefa, snimanje zabilješke, pretraživanje biblioteke i ponovno zaključavanje",
+    "caption": "Snimljeno iz desktop aplikacije s demo podacima. Cjeloviti vodič dolazi uz projekt.",
+    "steps": [
+      {
+        "title": "Otključaj",
+        "text": "Sef se otvara lozinkom koju sami odaberete; ključ ostaje na vašem uređaju."
+      },
+      {
+        "title": "Spremi",
+        "text": "Spremite stranicu izravno iz aplikacije — bez računa i bez proširenja."
+      },
+      {
+        "title": "Pronađi",
+        "text": "Pretražujte po ključnoj riječi ili po značenju, uz prikazane izvore svakog odgovora."
+      },
+      {
+        "title": "Zaključaj",
+        "text": "Zatvorite sef i ključ za dešifriranje nestaje iz memorije."
+      }
+    ],
+    "ctaPrimary": "Pokrenite aplikaciju"
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Čitaj kasnije, nanovo",
+    "title": "Privatna alternativa za Pocket",
+    "subtitle": "Pocket uskoro nestaje. BookmarkForge održava naviku čitanja nakon toga — sa svakim člankom, bilješkom i istaknutim dijelom spremljenim šifrirano na vašem uređaju.",
+    "features": [
+      {
+        "title": "Čitaj kasnije, vaše zauvijek",
+        "text": "Spremite članke, videozapise i PDF-ove jednim klikom — iz PWA-e, proširenja za preglednik ili izbornika za dijeljenje. Za razliku od Pocketa, vaš popis za čitanje živi na vašem uređaju, šifriran, i i dalje radi izvan mreže."
+      },
+      {
+        "title": "Bilješke u stilu Notiona uz svaki članak",
+        "text": "Istaknite, sažmite i pišite blokovske bilješke uz bilo koju zabilješku. Pretvorite spremljeni članak u vlastitu bazu znanja — a ne samo popis poveznica."
+      },
+      {
+        "title": "Bez praćenja, bez reklama",
+        "text": "BookmarkForge nema računa, nema analitike i nema reklama po zadanom. Vaše navike čitanja nikoga ne se tiču osim vas."
+      }
+    ],
+    "ctaPrimary": "Počnite spremati besplatno",
+    "ctaSecondary": "Cjelovita usporedba i vodič za migraciju",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "Jednostavnim riječima, bez marketinških fraza",
+    "title": "BookmarkForge nasuprot Raindropu, bez sitnog tiska",
+    "subtitle": "Raindrop je dobra aplikacija. Velika razlika je u tome gdje vaše stvari žive.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Gdje vaš popis živi",
+        "us": "Na vašem računalu",
+        "them": "Na njihovim poslužiteljima"
+      },
+      {
+        "topic": "Tko može pročitati što spremite",
+        "us": "Nitko — zaključano vašim ključem, čak ni mi",
+        "them": "Tvrtka i onaj tko od njih to zahtijeva"
+      },
+      {
+        "topic": "Bez interneta",
+        "us": "Sve nastavlja raditi",
+        "them": "Samo osnovno"
+      },
+      {
+        "topic": "Koliko plaćate",
+        "us": "59 dolara jednom. Gotovo.",
+        "them": "28 dolara svake godine, zauvijek"
+      },
+      {
+        "topic": "Ako tvrtka nestane (R.I.P. Pocket)",
+        "us": "Ništa se ne mijenja — već je u vašim rukama",
+        "them": "Izvezete i počnete ispočetka"
+      },
+      {
+        "topic": "AI asistent",
+        "us": "Radi unutar vašeg računala u privatnom načinu rada — ništa se nikamo ne šalje",
+        "them": "Vaše čitanje odlazi u oblak da razmišlja"
+      }
+    ],
+    "ctaPrimary": "Isprobajte besplatno za 2 minute — bez računa",
+    "ctaSecondary": "Cjelovita usporedba s Pocketom",
+    "close": "Raindrop je jednostavniji i besplatan — ako vam je to sve što treba, koristite ga bez problema. Ali ako radije držite svoj život čitanja u vlastitim rukama, BookmarkForge je napravljen upravo za to."
+  },
+  "features": {
+    "id": "features",
+    "tag": "Sve što vam treba",
+    "title": "Sve što vam treba, jednostavnim riječima",
+    "items": [
+      {
+        "title": "Zabilješke i dokumenti",
+        "text": "Spremite bilo koju stranicu jednim klikom. Pišite bilješke uz nju, u čistom i jednostavnom uređivaču. Brzo ostaje brzo i sa 100,000 spremljenih stavki."
+      },
+      {
+        "title": "Pametna pretraga",
+        "text": "Pronađite stvari po ključnoj riječi ili po značenju — čak i kada se ne sjećate točnih riječi. Raindrop za to naplaćuje 28 dolara godišnje; ovdje je uključeno besplatno."
+      },
+      {
+        "title": "AI koji čita vašu biblioteku, unutar vašeg računala",
+        "text": "Postavite pitanja o tome što ste spremili i dobijete odgovore s prikazanim izvorima. Ništa se ne šalje u oblak, a radi i bez interneta. Zahtijeva Pro."
+      },
+      {
+        "title": "Razgovarajte sa svojom bibliotekom",
+        "text": "Pitajte bilo što o svojim zabilješkama i bilješkama i dobijete odgovore s citatima. Privatni način rada radi 100% na vašem stroju. Zahtijeva Pro."
+      },
+      {
+        "title": "Sinkronizacija između vaših uređaja",
+        "text": "Vaši uređaji razgovaraju izravno jedni s drugima — bez poslužitelja u sredini, i sve ostaje šifrirano. Spojite ih skeniranjem QR koda. Do 5 uređaja. Zahtijeva Pro."
+      },
+      {
+        "title": "Sigurnosne kopije koje su vaše",
+        "text": "Automatske sigurnosne kopije koje možete držati gdje god želite — na vanjskom disku, u oblaku, bilo gdje. Izvezite sve u Markdown, JSON, CSV ili PDF kad god želite. Ključeve držite vi."
+      },
+      {
+        "title": "Karta vašeg znanja",
+        "text": "Pogledajte kako se vaše bilješke i zabilješke povezuju. Filtrirajte po oznakama, datumima i sličnosti te zoomirajte po beskonačnom platnu."
+      },
+      {
+        "title": "Kartice za učenje koje pobjeđuju zaborav",
+        "text": "Pretvorite bilo koji spremljeni dokument u kartice s pitanjima koje se vraćaju upravo prije nego što biste ih zaboravili — ista ideja raspoređivanja kao kod Anki-ja. Zahtijeva Pro."
+      },
+      {
+        "title": "Privatno po zadanom",
+        "text": "Bez računa, bez praćenja, bez reklama. Vi ste kupac, a ne proizvod. Dijeljenje podataka o korištenju postoji, opcionalno je i isključeno dok ga ne uključite."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI koji poštuje vas",
+    "title": "Vaše znanje, pojačano",
+    "subtitle": "Pokrenite asistenta unutar svog računala — ništa iz njega ne izlazi, a radi i izvan mreže. Više volite veliki model u oblaku? Povežite svoj ključ: vaša pitanja i stranice potrebne za odgovore idu tom pružatelju, po vašoj cijeni. Vaši upiti, vaši podaci, vaša pravila.",
+    "providers": {
+      "title": "Podržani pružatelji",
+      "list": [
+        {
+          "type": "local",
+          "name": "Unutar vašeg računala — WebLLM modeli (TinyLlama, Llama 3.2, Phi-3.5-mini) — samo Pro"
+        },
+        {
+          "type": "local",
+          "name": "Na vašem stroju — Ollama (bilo koji model koji pokrećete)"
+        },
+        {
+          "type": "cloud",
+          "name": "Oblak — Google Gemini (s vlastitim ključem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Oblak — OpenAI / GPT-4o (s vlastitim ključem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Oblak — Anthropic Claude (s vlastitim ključem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Oblak — Groq (s vlastitim ključem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Oblak — OpenRouter ili drugi prilagođeni pružatelj (s vlastitim ključem)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Načini rada u razgovoru",
+      "items": [
+        {
+          "title": "Privatni način rada",
+          "text": "Asistent radi potpuno unutar vašeg računala. Ništa iz njega ne izlazi i ne treba internet. Zahtijeva Pro."
+        },
+        {
+          "title": "Način rada s web pretragom",
+          "text": "Spaja vašu biblioteku s aktualnim rezultatima s weba (pružatelji u oblaku)."
+        },
+        {
+          "title": "Stručni agenti",
+          "text": "Specijalizirani pomoćnici: Programer, Pisac, Analitičar i Istraživač. Zahtijeva Pro."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Privatnost nije značajka — nego temelj",
+    "subtitle": "Svaka arhitektonska odluka stavlja vas na prvo mjesto",
+    "items": [
+      {
+        "title": "Zaključano tako da nitko ne može pročitati — ni mi",
+        "text": "Vaša biblioteka je šifrirana ključem izvedenim iz vaše glavne lozinke. Nikada ne vidimo vašu lozinku niti vaš sadržaj."
+      },
+      {
+        "title": "Spremljeno na vašem uređaju",
+        "text": "Sve živi na vašem računalu. Prateći poslužitelj samo rješava licenci, uparivanje uređaja i prosljeđivanje pitanja za AI u oblaku — nikad vaš sadržaj."
+      },
+      {
+        "title": "Bez praćenja po zadanom",
+        "text": "Bez analitike, bez izvještaja o padovima, bez praćenja. Dijeljenje statistike korištenja ili izvještaja o pogreškama zasebna je odluka, isključena po zadanom."
+      },
+      {
+        "title": "Ključeve držite vi",
+        "text": "Bez glavne lozinke nema pristupa — nema zaobilaznice za „zaboravljenu lozinku“. Vaša fraza za oporavak od 24 riječi jedini je put unutra; čuvajte je."
+      },
+      {
+        "title": "Vaša prava su poštovana",
+        "text": "Pristup, ispravak, brisanje ili odvođenje podataka sa sobom — sve se radi lokalno, kad god želite."
+      },
+      {
+        "title": "Bez zarobljavanja",
+        "text": "Izvezite svoje podatke u otvorenim formatima (JSON, Markdown, CSV, PDF) u bilo kojem trenutku. Vaše znanje ostaje vaše i prenosivo."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Jednostavne, poštene cijene — bez pretplata",
+    "subtitle": "Besplatno: 2,500 zabilješki zauvijek. Pro je Lifetime dozvola za v1 — platite jednom i v1 je vaš zauvijek. Uključuje sve v1.x nadogradnje i 12 mjeseci nadogradnji značajki. Sigurnosne nadogradnje zauvijek. Bez mjesečnog naplaćivanja.",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "$ 0",
+        "period": "/zauvijek",
+        "description": "Za osobni arhiv (2.500 oznaka, radi na bilo kojem uređaju — svaki ima svoj sef)",
+        "features": [
+          {
+            "included": true,
+            "text": "2.500 oznaka, bilješki i dokumenata"
+          },
+          {
+            "included": true,
+            "text": "Pametno pretraživanje (cjelovit tekst + semantičko) — uključeno besplatno; Raindrop za to naplaćuje godišnje"
+          },
+          {
+            "included": true,
+            "text": "AI s vašim API ključem (vi plaćate pružatelja)"
+          },
+          {
+            "included": true,
+            "text": "Graf znanja"
+          },
+          {
+            "included": true,
+            "text": "Osnovni predlošci"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML izvoz"
+          },
+          {
+            "included": true,
+            "text": "PWA + proširenja preglednika"
+          },
+          {
+            "included": false,
+            "text": "P2P sinkronizacija između uređaja"
+          },
+          {
+            "included": false,
+            "text": "Lokalni AI (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "RAG chat nad vašim podacima"
+          },
+          {
+            "included": false,
+            "text": "Flashcards s spaced repetitionom"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          }
+        ],
+        "cta": "Počni besplatno",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "badge": "Najpopularniji — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (zatim $79)",
+        "description": "Lifetime v1 · 12 mjeseci nadogradnji značajki · Sigurnost zauvijek · v2 60% popusta",
+        "features": [
+          {
+            "included": true,
+            "text": "Sve iz Free plana"
+          },
+          {
+            "included": true,
+            "text": "Neograničene zabilješke"
+          },
+          {
+            "included": true,
+            "text": "5 uređaja · P2P sinkronizacija između 5 uređaja"
+          },
+          {
+            "included": true,
+            "text": "Lokalni AI modeli (WebLLM, bez API ključa) · RAG razgovor"
+          },
+          {
+            "included": true,
+            "text": "Stručni agenti (Programer, Pisac, Analitičar, Istraživač)"
+          },
+          {
+            "included": true,
+            "text": "Kartice s ponavljanjem u razmacima · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Napredni izvoz (10+ formata) · Šifrirane sigurnosne kopije"
+          },
+          {
+            "included": true,
+            "text": "Sigurnosni sef (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Lifetime v1 · 12 mjeseci nadogradnji značajki"
+          },
+          {
+            "included": true,
+            "text": "Sigurnosne nadogradnje zauvijek"
+          },
+          {
+            "included": true,
+            "text": "Podrška e-poštom (48h) + rani pristup"
+          }
+        ],
+        "cta": "Kupi Pro $59 Early Bird",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "zatim $79 po redovnoj cijeni",
+        "sla": "Podrška: e-pošta 48h (Pon–Pet)",
+        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
+        "cta2": "Nabavite Pro za $79 (redovna cijena)",
+        "cta2Class": "btn-secondary"
+      }
+    ],
+    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-hr#pricing\">Learn more</a>"
+  },
+  "faq": {
+    "title": "Česta pitanja",
+    "items": [
+      {
+        "question": "Je li Free razina stvarno besplatna zauvijek?",
+        "answer": "Da. Bez probnog razdoblja, bez pretplate. Besplatna razina uključuje 2,500 zabilješki, cjelovitu i semantičku pretragu, graf znanja i AI s vlastitim API ključem (platite pružatelju)."
+      },
+      {
+        "question": "Što znači „Lifetime v1“ za Pro?",
+        "answer": "Platite jednom, v1 je vaš zauvijek. Uključuje sve v1.x nadogradnje (ispravci grešaka + manje značajke) zauvijek i 12 mjeseci nadogradnji značajki od kupnje. Sigurnosne nadogradnje zauvijek. Nakon 13. mjeseca v1 ostaje funkcionalan, samo bez novih značajki. Buduće glavne verzije (v2, v3) zasebni su proizvodi: $89 za nove korisnike, $35 za vlasnike v1 (60% popusta)."
+      },
+      {
+        "question": "Načini plaćanja i povrat?",
+        "answer": "Putem Whopa: kreditna kartica, PayPal, kripto. Nikada ne vidimo vaše podatke o plaćanju. Povrat u roku od 30 dana — kontaktirajte <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
+      },
+      {
+        "question": "Podrška — koliko brzo odgovarate?",
+        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help-hr#sla\">Support SLA</a>."
+      },
+      {
+        "question": "Što ako zaboravim lozinku sefa?",
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-hr#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Spremni preuzeti vlastito znanje?",
+    "text": "Pridružite se tisućama istraživača, razvojnih programera i učenika koji povjeravaju BookmarkForgeu svoju bazu znanja.",
+    "ctaPrimary": "Pokreni besplatnu aplikaciju",
+    "ctaSecondary": "Nadogradi na Pro",
+    "note": "Nije potreban račun. Odmah radi u vašem pregledniku. Besplatna razina: 2,500 zabilješki."
+  },
+  "footer": {
+    "brand": "Vaš privatni sef znanja s AI-jem. 100% lokalno-prvi.",
+    "product": {
+      "title": "Proizvod",
+      "links": [
+        "Značajke",
+        "AI mogućnosti",
+        "Privatnost",
+        "Cijene",
+        "Pokreni aplikaciju"
+      ],
+      "hrefs": [
+        "/#features",
+        "/#ai",
+        "/#privacy",
+        "/#pricing",
+        "/app"
+      ]
+    },
+    "resources": {
+      "title": "Resursi",
+      "links": [
+        "Usporedba s Pocketom",
+        "Privatnost i uvjeti"
+      ],
+      "hrefs": [
+        "/pocket-alternative.html",
+        "/privacy-and-terms.html"
+      ]
+    },
+    "languages": {
+      "title": "Jezici",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Podrška",
+      "links": [
+        "Kontakt"
+      ],
+      "helpCenter": "Centar za pomoć",
+      "errorCodes": "Šifre pogrešaka"
+    },
+    "copyright": "© 2026 BookmarkForge. Sva prava pridržana.",
+    "legal": [
+      "Pravila o privatnosti",
+      "Uvjeti korištenja",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Vaš privatni sef znanja s AI-jem. 100% lokalno-prvi. Privatna alternativa za Pocket. Besplatno: 2,500 zabilješki.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "Free",
+        "price": "0",
+        "currency": "USD",
+        "description": "2,500 zabilješki. Besplatno zauvijek."
+      },
+      {
+        "name": "Pro Lifetime v1 — Early Bird",
+        "price": "59",
+        "currency": "USD",
+        "description": "Early Bird 200. Lifetime v1, 12 mjeseci značajki, sigurnost zauvijek, v2 60% popusta.",
+        "priceValidUntil": "2026-12-31",
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "price": "79",
+        "currency": "USD",
+        "description": "Redovna cijena. Lifetime v1."
+      }
+    ],
+    "featureList": [
+      "Lokalno-prvo skladištenje",
+      "Šifriranje od kraja do kraja",
+      "Radi izvan mreže",
+      "AI pretraga",
+      "Uređivač u stilu Notiona",
+      "P2P sinkronizacija"
+    ],
+    "faq": [
+      {
+        "question": "Je li Free razina stvarno besplatna zauvijek?",
+        "answer": "Da. Bez probnog razdoblja, bez pretplate. Besplatna razina uključuje 2,500 zabilješki, cjelovitu i semantičku pretragu, graf znanja i AI s vlastitim API ključem (platite pružatelju)."
+      },
+      {
+        "question": "Što znači „Lifetime v1“ za Pro?",
+        "answer": "Platite jednom, v1 je vaš zauvijek. Uključuje sve v1.x nadogradnje (ispravci grešaka + manje značajke) zauvijek i 12 mjeseci nadogradnji značajki od kupnje. Sigurnosne nadogradnje zauvijek. Nakon 13. mjeseca v1 ostaje funkcionalan, samo bez novih značajki. Buduće glavne verzije (v2, v3) zasebni su proizvodi: $89 za nove korisnike, $35 za vlasnike v1 (60% popusta)."
+      },
+      {
+        "question": "Načini plaćanja i povrat?",
+        "answer": "Putem Whopa: kreditna kartica, PayPal, kripto. Nikada ne vidimo vaše podatke o plaćanju. Povrat u roku od 30 dana — kontaktirajte bookmarkforge@proton.me."
+      },
+      {
+        "question": "Podrška — koliko brzo odgovarate?",
+        "answer": "Besplatno: pomoć zajednice putem Centra za pomoć + GitHub Discussions (najbolji mogući učinak). Pro: e-pošta unutar 48h radnih dana. Sef je šifriran — ne možemo vidjeti vaše podatke, pa nikada ne tražimo vašu lozinku ni frazu za oporavak. Pogledajte SLA podrške."
+      },
+      {
+        "question": "Što ako zaboravim lozinku sefa?",
+        "answer": "Ne možemo je oporaviti. Pri stvaranju sefa jednom prikazujemo frazu za oporavak od 24 riječi — zapišite je na papir. Bez nje sef ne može otvoriti (ni mi). Pogledajte BF-E101."
+      }
+    ]
+  },
+  "help": {
+    "title": "Centar za pomoć — FAQ, rješavanje problema i SLA podrške | BookmarkForge",
+    "description": "Centar za pomoć BookmarkForgea: cijene za Lifetime v1, rješavanje problema, šifre pogrešaka BF-E*, SLA podrške i kako kopirati redigirani izvještaj za dijagnostiku.",
+    "ogTitle": "Centar za pomoć — BookmarkForge",
+    "ogDescription": "FAQ, rješavanje problema, šifre pogrešaka i SLA podrške. Saznajte kako funkcionira Lifetime v1 i kako kopirati izvještaj za dijagnostiku.",
+    "ogLocale": "en_US",
+    "lastUpdated": "Posljednje ažuriranje",
+    "lastUpdatedDate": "13. rujna 2026.",
+    "backToHome": "← Natrag na početnu",
+    "intro": "Odgovori prije nego što napišete e-poštu. BookmarkForge je <strong>lokalno-prvi i šifriran</strong> — ne možemo vidjeti vaš sef. 90% problema riješi se ovdje uz dijagnostiku koju možete kopirati i zalijepiti.",
+    "toc": {
+      "pricing": "Cijene i Lifetime v1",
+      "sla": "SLA podrške",
+      "troubleshooting": "Rješavanje problema",
+      "errorCodes": "Šifre pogrešaka BF-E*",
+      "diagnostics": "Kopiranje izvještaja za dijagnostiku",
+      "contact": "Kontakt"
+    },
+    "pricing": {
+      "title": "Cijene — Lifetime v1, bez pretplata",
+      "intro": "<strong>Model:</strong> plaćate jednom za <em>BookmarkForge v1</em>. Bez mjesečnog naplaćivanja. Usporedite: Raindrop Pro $28–38/g, Instapaper $60/g, Readwise $120/g, Capacities $120/g. Lifetime od $79 je ~2× godišnji Raindrop — opravdano trajnošću i privatnošću.",
+      "table": {
+        "tier": "Razina",
+        "price": "Cijena",
+        "whatYouGet": "Što dobijate",
+        "supply": "Dostupnost"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro Lifetime v1"
+      },
+      "freePrice": "$0 zauvijek",
+      "freeDescription": "2,500 zabilješki na bilo kojem uređaju (svaki ima svoj sef), pametna pretraga — cjelovita + semantička, značajka za koju Raindrop naplaćuje godišnje — graf znanja, AI s vlastitim API ključem, PWA + proširenja. Pri 2,500 vaš sef ostaje cjelovit: čitanje, pretraga i izvoz se nikada ne zaustavljaju; samo se privremeno zaustavlja spremanje novog.",
+      "unlimited": "Neograničeno",
+      "badge": "Early Bird",
+      "proPrice": "$59",
+      "proPriceStriked": "$79",
+      "proPriceRegular": "$79 po redovnoj cijeni",
+      "proPriceTraction": "$99 nakon dokazane potražnje",
+      "proDescription": "Neograničene zabilješke, 5 uređaja + P2P sinkronizacija, lokalni AI (WebLLM/Ollama) + RAG + stručni agenti, kartice, PDF/OCR, 10+ formata izvoza, sef. <em>Lifetime v1 · 12 mjeseci nadogradnji značajki · Sigurnost zauvijek · v2 60% popusta</em>",
+      "proSupply": "200 Early Bird"
+    },
+    "legal": {
+      "title": "Lifetime v1 — pravna napomena:",
+      "text": "Lifetime dozvola za BookmarkForge v1. Uključuje sve v1.x nadogradnje (ispravci grešaka + manje značajke) zauvijek i 12 mjeseci nadogradnji značajki od kupnje. Sigurnosne nadogradnje zauvijek. Buduće glavne verzije (v2, v3) zasebni su proizvodi: $89 za nove korisnike, $35 za vlasnike v1 (60% popusta). Ako ne nadogradite, v1 ostaje funkcionalan zauvijek. Povrat u roku od 30 dana putem Whopa.",
+      "refunds": "Povrat: 30 dana putem Whopa. Plaćanja: kartica, PayPal, kripto (Whop — nikada ne vidimo podatke kartice).",
+      "terms": "Uvjeti § Licenciranje"
+    },
+    "upgrade": {
+      "title": "Nadogradnja bez pretplate:",
+      "text": "svakih 12–18 mjeseci izdamo plaćenu glavnu verziju (v2.0 za $89 / $35 za vlasnike). Preskočite je i v1 i dalje radi. To je ponavljajući prihod bez prisiljavanja na pretplatu — isti model kao Affinity/Sketch/Sublime."
+    },
+    "sla": {
+      "title": "SLA podrške — koliko brzo odgovaramo",
+      "intro": "Jedan održavatelj. Sef je šifriran — <strong>nikada ne tražimo vašu lozinku sefa ni frazu za oporavak od 24 riječi</strong>. Podrška je najboljeg mogućeg učinka za Free, a zajamčena za plaćene razine.",
+      "table": {
+        "tier": "Razina",
+        "channel": "Kanal",
+        "response": "Odgovor",
+        "whatToDo": "Što prvo učiniti"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro"
+      },
+      "freeChannel": "Samopomoć: ovaj Centar za pomoć + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeResponse": "Najbolji mogući učinak (zajednica)",
+      "freeWhatToDo": "Prije objave pretražite BF-E* šifru u nastavku i kopirajte dijagnostiku (<a href=\"#diagnostics\">§Dijagnostika</a>)",
+      "proChannel": "E-pošta <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (tema: Pro)",
+      "proResponse": "48h",
+      "proWhatToDo": "Priložite tekst dijagnostike iz <code>Postavke → Pomoć → Kopiraj dijagnostiku</code>",
+      "note": "Ne možemo vidjeti vaše zabilješke, bilješke, URL-ove ni upite. Priložite samo donju dijagnostiku — sadrži brojeve i verzije, nikad sadržaj sefa."
+    },
+    "troubleshooting": {
+      "title": "Rješavanje problema — većina problema za 30 sekundi",
+      "vaultLocked": {
+        "title": "Sef zaključan / pogrešna lozinka",
+        "text": "Lozinke su osjetljive na velika i mala slova te na razmake. Ako ste promijenili raspored tipki (npr. AZERTY→QWERTY), unesite polako. Nakon 5 neuspjelih otključavanja pričekajte 1 minutu. Ako ste izgubili lozinku, upotrijebite <strong>frazu za oporavak od 24 riječi</strong> prikazanu jednom pri stvaranju sefa (<a href=\"#bf-e101\">BF-E101</a>). Bez nje oporavak nije moguć — namjerno nemamo zaobilaznicu."
+      },
+      "storageFull": {
+        "title": "Puna pohrana preglednika",
+        "text": "Kvota IndexedDB-a je po pregledniku (obično 60–80% diska). Kad se napuni, spremanje pada s <a href=\"#bf-e103\">BF-E103</a>. Rješenje: <code>Postavke → Pohrana → Sažmi bazu</code> pa <code>Očisti AI predmemoriju</code>. Ili <code>Izvezi sigurnosnu kopiju (.bmf)</code> → <code>Obriši stare vektore</code>. Provjerite <a href=\"#diagnostics\">udio % u dijagnostici</a> — iznad 80% prikazujemo banner."
+      },
+      "p2pNotConnecting": {
+        "title": "P2P sinkronizacija se ne povezuje",
+        "text": "Oba uređaja moraju biti <strong>na mreži i otključana</strong> u isto vrijeme (WebRTC). Nema TURN relaya po zadanom — neke korporativne mreže blokiraju P2P. Pokušajte: oba na istom Wi-Fi-ju → QR pariranje → ostavite aplikaciju otvorenom. Ako <a href=\"#bf-e105\">BF-E105</a>, testirajte <code>Pomoć → Dijagnostika → P2P (WebRTC)</code> — ako piše da nije dostupno, vaš preglednik ili mreža blokiraju WebRTC."
+      },
+      "localAiNotRunning": {
+        "title": "Lokalni AI (WebLLM) se ne pokreće",
+        "text": "Potrebni su WebGPU + ~4 GB slobodne RAM-a + Pro licenca. Provjerite <code>Pomoć → Dijagnostika → WebGPU/WebLLM</code>. Ako <a href=\"#bf-e106\">BF-E106</a>: nadogradite Chrome/Edge na najnoviju verziju, omogućite <code>chrome://flags/#enable-unsafe-webgpu</code> ili prijeđite na Ollama (bilo koji model koji pokrećete lokalno — ni ključ API-ja nije potreban)."
+      },
+      "slowSearch": {
+        "title": "Spora pretraga ili uvoz",
+        "text": "Prvi uvoz gradi HNSW vektore — opterećuje CPU. Ostavite karticu otvorenom. Za 10k+ zabilješki koristite <code>Postavke → Napredno → Prisili ponovnu obradu</code>. Ako potraje, <code>Kopiraj dijagnostiku</code> pokazuje <code>vectorIndexLoad</code> i latenciju upita."
+      }
+    },
+    "errorCodes": {
+      "title": "Šifre pogrešaka BF-E* — kopirajte šifru i skočite na rješenje",
+      "intro": "Svaka kritična pogreška prikazuje šifru poput <code>BF-E101</code>. Kliknite šifru u aplikaciji ili je potražite ovdje.",
+      "table": {
+        "code": "Šifra",
+        "meaning": "Značenje",
+        "fix": "Rješenje"
+      },
+      "e101": {
+        "meaning": "Lozinka sefa zaboravljena / potrebna je fraza za oporavak",
+        "fix": "Lozinke ne možemo oporaviti. Pri stvaranju sefa jednom prikazujemo <strong>frazu od 24 riječi</strong> — zapišite je na papir. Upotrijebite je za ponovno postavljanje. Bez fraze sef je neoporavljiv. <a href=\"#diagnostics\">Nijedan tiket ga neće oporaviti</a>."
+      },
+      "e102": {
+        "meaning": "Sef zaključan / pogrešna lozinka",
+        "fix": "Precizno ponovno unesite lozinku. Nakon 5 pokušaja pričekajte 60 s. Ako ste nedavno promijenili lozinku, pokušajte prethodnu — promjena čuva zadnju sol za vraćanje."
+      },
+      "e103": {
+        "meaning": "Prekoračena kvota pohrane",
+        "fix": "Idite na <code>Postavke → Pohrana</code>: Sažmi bazu + Očisti AI predmemoriju. Ako je potrebno, izvezite .bmf sigurnosnu kopiju. Pogledajte Rješavanje problema §Pohrana."
+      },
+      "e104": {
+        "meaning": "IndexedDB blokiran / privatno pregledavanje",
+        "fix": "IndexedDB je blokiran u privatnom/inkognito načinu ili pravilima pohrane. Koristite uobičajeni prozor. Provjerite <code>Pomoć → Dijagnostika → Pohrana</code>."
+      },
+      "e105": {
+        "meaning": "P2P / WebRTC nije dostupno",
+        "fix": "WebRTC blokira preglednik ili mreža. Pokušajte drugi preglednik/mrežu, isključite strog vatrozid ili umjesto žive sinkronizacije koristite izvoz/uvoz."
+      },
+      "e106": {
+        "meaning": "Lokalni AI (WebLLM) ne može se pokrenuti na ovom uređaju",
+        "fix": "Potrebni su WebGPU + shader-f16 + 4 GB RAM-a + Pro. Nadogradite preglednik ili koristite Ollama / pružatelja u oblaku s vlastitim ključem."
+      },
+      "e107": {
+        "meaning": "Uvoz sigurnosne kopije nije uspio (pogrešna lozinka / oštećena datoteka)",
+        "fix": "Za <code>.bmf</code> (šifrirano) trebate lozinku izvoza, a ne lozinku sefa. Za JSON provjerite da datoteka nije odrezana."
+      },
+      "e201": {
+        "meaning": "Neispravna Pro licenca / istekla provjera",
+        "fix": "Provjerite <code>Postavke → Pro</code>: ponovno unesite ključ. Izvan mreže provjere se predmemoriraju; povežite se jednom da se ponovno validira putem Whopa."
+      },
+      "e202": {
+        "meaning": "Dosegnut besplatni limit (2,500 zabilješki)",
+        "fix": "Besplatno je 2,500. Izbrišite ili nadogradite na Pro Lifetime v1 za neograničeno. Izvoz je uvijek dostupan."
+      },
+      "tip": "Savjet za podršku: klik na <code>Kopiraj dijagnostiku</code> uz pogrešku kopira šifru i kontekst u jednom kliku — zalijepite u GitHub Discussion ili e-poštu."
+    },
+    "diagnostics": {
+      "title": "Kopirajte redigirani izvještaj za dijagnostiku — što šaljete podršci",
+      "intro": "U aplikaciji: <code>Postavke → Napredno</code> (ili <code>Pomoć → Dijagnostika</code>) → <strong>Kopiraj dijagnostiku</strong>. Izgleda ovako — nema sadržaja sefa, nema URL-ova, nema upita:",
+      "example": "BookmarkForge v1.0.0 | Chrome 126 | Sef: 847 zabilješki, 12 dok\nPohrana: 42% (IndexedDB OK) | Zadnja sigurnosna kopija: prije 2 dana (.bmf šifrirano)\nP2P: nije povezano | Sinkronizacija: nikad | Lokalni AI: WebLLM nije učitan\nPogreške: 0 zadnjih 7d | BF-E: nema | Build: a1b2c3d",
+      "contains": "Što sadrži: verzija aplikacije, preglednik, brojevi (zabilješke/dokumenti/vektori), postotak pohrane + kvota, P2P status, AI status, broj pogrešaka i posljednja BF-E šifra, build hash. Koristi soleni hash IP-a — IP nikada ne spremamo. Pogledajte <a href=\"/privacy-and-terms.html\">Privatnost §3/§6</a>.",
+      "cantOpen": "Ako ne možete otvoriti aplikaciju: priložite preglednik + operativni sustav + korake za reprodukciju + <code>BF-E*</code> šifru na zaslonu. To je dovoljno za 90% tiketa."
+    },
+    "contact": {
+      "title": "Kontakt",
+      "paid": "Plaćena podrška",
+      "paidDetail": "priložite dijagnostiku + BF-E šifru. Pro 48h (Pon–Pet).",
+      "community": "Zajednica (Free)",
+      "communityDetail": "search <code>BF-E*</code> before posting. Read <a href=\"/help-hr#bf-e\">Error codes</a> + paste diagnostic.",
+      "security": "Sigurnosni problemi",
+      "securityDetail": "e-pošta s temom <code>[SECURITY]</code> — ne otvarate javnu raspravu.",
+      "note": "BookmarkForge je lokalno-prvi — sadržaj sefa nikada ne napušta vaš uređaj. Podrška nikada ne traži vašu lozinku sefa ni frazu za oporavak."
+    },
+    "alsoSee": "Vidi također: <a href=\"/\">Početna</a> · <a href=\"/privacy-and-terms.html\">Privatnost i uvjeti</a> · <a href=\"/privacy-and-terms.html#terms\">Licenciranje (Lifetime v1)</a> · <a href=\"/#pricing\">Cijene</a>",
+    "privacy": "Privatnost",
+    "home": "Početna",
+    "faq": {
+      "q1": "Je li Free razina stvarno besplatna zauvijek?",
+      "a1": "Da. Bez probnog razdoblja, bez pretplate. Besplatno uključuje 2,500 zabilješki, cjelovitu i semantičku pretragu, graf znanja i AI s vlastitim API ključem.",
+      "q2": "Što znači Lifetime v1?",
+      "a2": "Platite jednom, v1 je vaš zauvijek. Sve v1.x ispravke grešaka zauvijek plus 12 mjeseci nadogradnji značajki od kupnje. Sigurnosne nadogradnje zauvijek. Nakon 13. mjeseca v1 i dalje radi. v2 i v3 zasebne su plaćene glavne verzije: $89 za nove korisnike, $35 za vlasnike v1 (60% popusta).",
+      "q3": "Što ako zaboravim lozinku sefa?",
+      "a3": "Ne možemo je oporaviti. Pri stvaranju sefa jednom prikazujemo frazu za oporavak od 24 riječi — zapišite je na papir. Bez nje sef je neoporavljiv. Pogledajte BF-E101."
+    }
+  }
+}

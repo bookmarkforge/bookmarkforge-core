@@ -1,0 +1,740 @@
+{
+  "lang": "zh",
+  "langName": "中文",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/zh/",
+  "ogLocale": "zh_CN",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — 数据都留在你的电脑上。一次付费。",
+  "description": "Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次 59 美元。免费版：2,500 个书签。",
+  "ogTitle": "BookmarkForge — 数据都留在你的电脑上。一次付费。",
+  "ogDescription": "Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次 59 美元。免费版：2,500 个书签。",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — 数据都留在你的电脑上。一次付费。",
+  "twitterDescription": "Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次 59 美元。免费版：2,500 个书签。",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "跳到主要内容",
+  "navBrandAria": "BookmarkForge 首页",
+  "navAriaLabel": "主导航",
+  "homeHref": "/zh/",
+  "navLinks": {
+    "pocketAlternative": "Pocket 替代品",
+    "features": "功能",
+    "ai": "AI",
+    "privacy": "隐私",
+    "pricing": "定价",
+    "help": "帮助",
+    "raindropCompare": "与 Raindrop 对比"
+  },
+  "langLink": {
+    "href": "/es/",
+    "hreflang": "es",
+    "lang": "es",
+    "text": "Español"
+  },
+  "navCta": "打开应用",
+  "themeToggleAria": "切换主题",
+  "navToggleAria": "打开菜单",
+  "navToggleAriaClose": "关闭菜单",
+  "hero": {
+    "badge": "一次性付费 · 无订阅",
+    "title": "你保存的一切都留在你的电脑上。<span class=\"accent-text\">全部。</span>",
+    "subtitle": "Raindrop 把你的书签存在它的服务器上，还要你年年付费。BookmarkForge 把它们留在你的电脑上，用只有你掌握的密钥锁住。无需账号。没有月费。没人能在你背后翻看。",
+    "ctaPrimary": "免费启动应用",
+    "ctaSecondary": "查看定价",
+    "pillars": [
+      {
+        "strong": "私密",
+        "text": "保存的页面永不离开你的电脑"
+      },
+      {
+        "strong": "锁定",
+        "text": "连我们也读不到"
+      },
+      {
+        "strong": "离线",
+        "text": "飞机上、隧道里，哪儿都能用"
+      },
+      {
+        "strong": "一次付费",
+        "text": "一次 59 美元，不是每年 28 美元"
+      }
+    ]
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "看它真实运行",
+    "title": "真实应用，不是样片",
+    "subtitle": "没有注册墙，没有素材库视频，也没有假光标。这段循环演示就是在普通桌面电脑上运行的正式版本：解锁保险库、保存一个页面、检索资料库、再锁上。",
+    "imageAlt": "BookmarkForge 演示动效：解锁保险库、收藏书签、检索资料库、再次上锁",
+    "caption": "录自桌面应用，使用演示数据。完整走查随项目一同发布。",
+    "steps": [
+      {
+        "title": "解锁",
+        "text": "保险库用你自设的密码打开；密钥留在你的设备上。"
+      },
+      {
+        "title": "收藏",
+        "text": "直接在应用里保存页面——无需账号，也无需扩展。"
+      },
+      {
+        "title": "查找",
+        "text": "按关键词或按含义搜索，每个答案都附来源。"
+      },
+      {
+        "title": "上锁",
+        "text": "关闭保险库，解密密钥即从内存中消失。"
+      }
+    ],
+    "ctaPrimary": "启动应用"
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "稍后读的再生",
+    "title": "私密的 Pocket 替代品",
+    "subtitle": "Pocket 要停了。BookmarkForge 让“稍后读”的习惯继续下去——每篇文章、笔记和高亮都以加密形式存在你的设备上。",
+    "features": [
+      {
+        "title": "稍后读，永远归你",
+        "text": "一键保存文章、视频和 PDF——从 PWA、浏览器扩展或分享菜单皆可。与 Pocket 不同，你的阅读清单加密存放在你的设备上，离线依然可用。"
+      },
+      {
+        "title": "为每篇文章加上 Notion 式笔记",
+        "text": "高亮、摘要，用块式笔记挂到任意书签上。把收藏的文章变成你自己的知识库，而不只是链接列表。"
+      },
+      {
+        "title": "零追踪，零广告",
+        "text": "BookmarkForge 没有账号、没有统计分析、没有广告。你的阅读习惯只属于你自己。"
+      }
+    ],
+    "ctaPrimary": "免费开始收藏",
+    "ctaSecondary": "完整对比与迁移指南",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "说人话，不打广告",
+    "title": "BookmarkForge 对比 Raindrop，不绕弯子",
+    "subtitle": "Raindrop 是个好应用。真正的差别在于你的数据存在哪。",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "你的列表存在哪",
+        "us": "在你的电脑上",
+        "them": "在他们的服务器上"
+      },
+      {
+        "topic": "谁能读到你保存的内容",
+        "us": "没有人——用你的密钥锁住，连我们都不行",
+        "them": "那家公司，以及向他们施压的人"
+      },
+      {
+        "topic": "没有网络时",
+        "us": "一切照常可用",
+        "them": "只能用最基本的功能"
+      },
+      {
+        "topic": "你要付多少钱",
+        "us": "一次 59 美元，完事。",
+        "them": "永远每年 28 美元"
+      },
+      {
+        "topic": "如果公司倒闭（想想 Pocket）",
+        "us": "毫无影响——数据本就在你手里",
+        "them": "只能导出后重新开始"
+      },
+      {
+        "topic": "AI 助手",
+        "us": "在你的电脑里以私密模式运行——不向任何地方发送数据",
+        "them": "你的阅读内容被送上云端去思考"
+      }
+    ],
+    "ctaPrimary": "2 分钟免费试用——无需账号",
+    "ctaSecondary": "完整 Pocket 对比",
+    "close": "Raindrop 更简单，而且免费——如果你只需要这些，尽管用。但如果你更愿意把阅读生活掌握在自己手里，BookmarkForge 正是为此而生。"
+  },
+  "features": {
+    "id": "features",
+    "tag": "你需要的全都有",
+    "title": "用大白话说清你需要的一切",
+    "items": [
+      {
+        "title": "书签与文档",
+        "text": "一键保存任意页面，就地写笔记，编辑器干净简单。即使存了 100,000 条也依然流畅。"
+      },
+      {
+        "title": "智能搜索",
+        "text": "按关键词或按含义查找——就算你记不清原话。Raindrop 为此每年收 28 美元；这里免费提供。"
+      },
+      {
+        "title": "在你电脑里读懂你资料库的 AI",
+        "text": "就你保存的内容提问，答案附来源。数据不送上云，断网也能用。需要 Pro。"
+      },
+      {
+        "title": "和你的资料库对话",
+        "text": "关于书签和笔记想问什么都可以，答案带引用。私密模式 100% 在你的机器上运行。需要 Pro。"
+      },
+      {
+        "title": "在自己的设备间同步",
+        "text": "设备之间直连——中间没有服务器，全程保持加密。扫一下二维码即可配对，最多 5 台设备。需要 Pro。"
+      },
+      {
+        "title": "备份归你所有",
+        "text": "自动备份，你想放哪就放哪——移动硬盘、云盘、哪儿都行。随时可导出为 Markdown、JSON、CSV 或 PDF。密钥在你手里。"
+      },
+      {
+        "title": "你的知识地图",
+        "text": "看清笔记与书签之间的关联。按标签、日期和相似度筛选，在无限画布上自由缩放。"
+      },
+      {
+        "title": "战胜遗忘的记忆卡",
+        "text": "把任何保存的文档变成问答卡片，在你快要忘记之前推送给你——与 Anki 相同的排程思路。需要 Pro。"
+      },
+      {
+        "title": "默认私密",
+        "text": "无账号、无追踪、无广告。你是客户，不是产品。确实存在使用数据共享，但它是可选的，不开启就保持关闭。"
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "尊重你的 AI",
+    "title": "放大你的知识",
+    "subtitle": "让助手在你的电脑里运行——数据不出机器，离线也能用。想用大型云端模型？接入你自己的密钥：你的问题和回答所需的页面会发送给该提供商，费用由你承担。你的提示词、你的数据、你的规则。",
+    "providers": {
+      "title": "支持的提供商",
+      "list": [
+        {
+          "type": "local",
+          "name": "在你的电脑内 — WebLLM 模型（TinyLlama、Llama 3.2、Phi-3.5-mini）— 仅限 Pro"
+        },
+        {
+          "type": "local",
+          "name": "在你自己的机器上 — Ollama（任何你自行运行的模型）"
+        },
+        {
+          "type": "cloud",
+          "name": "云端 — Google Gemini（使用你自己的密钥）"
+        },
+        {
+          "type": "cloud",
+          "name": "云端 — OpenAI / GPT-4o（使用你自己的密钥）"
+        },
+        {
+          "type": "cloud",
+          "name": "云端 — Anthropic Claude（使用你自己的密钥）"
+        },
+        {
+          "type": "cloud",
+          "name": "云端 — Groq（使用你自己的密钥）"
+        },
+        {
+          "type": "cloud",
+          "name": "云端 — OpenRouter 或其他自定义提供商（使用你自己的密钥）"
+        }
+      ]
+    },
+    "modes": {
+      "title": "对话模式",
+      "items": [
+        {
+          "title": "私密模式",
+          "text": "助手完全在你的电脑内运行。数据不出机器，也不需要网络。需要 Pro。"
+        },
+        {
+          "title": "联网搜索模式",
+          "text": "把你的资料库与网页实时结果结合（云端提供商）。"
+        },
+        {
+          "title": "专家智能体",
+          "text": "专职助手：编程、写作、分析、研究。需要 Pro。"
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "隐私不是功能，而是地基",
+    "subtitle": "每一个架构决策都让你说了算",
+    "items": [
+      {
+        "title": "锁死，谁也读不了——我们也读不了",
+        "text": "你的资料库用由主密码派生的密钥加密。我们从不接触你的密码，也不接触你的内容。"
+      },
+      {
+        "title": "存在你自己的设备上",
+        "text": "一切都住在你的电脑里。伴随服务器只处理许可、设备配对，以及转发你云端模式的 AI 提问——绝不接触你的内容。"
+      },
+      {
+        "title": "默认不追踪",
+        "text": "没有统计分析，没有崩溃上报，没有追踪。分享使用统计或错误报告是单独的选择，默认关闭。"
+      },
+      {
+        "title": "密钥在你手里",
+        "text": "没有主密码就无从访问——没有“忘记密码”的后门。你的 24 词恢复短语是唯一的入口，请妥善保管。"
+      },
+      {
+        "title": "你的权利被尊重",
+        "text": "访问、更正、删除，或把数据带走——都可以在本地随时完成。"
+      },
+      {
+        "title": "不被锁定",
+        "text": "随时可用开放格式（JSON、Markdown、CSV、PDF）导出数据。你的知识始终属于你，也可以带走。"
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "简单、公道的定价——没有订阅",
+    "subtitle": "免费版 2,500 个书签永久可用。Pro 是 v1 的终身授权——一次付费，永久拥有 v1。含全部 v1.x 更新和 12 个月的功能更新。安全更新永久提供。没有月度账单。",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "$ 0",
+        "period": "/永久",
+        "description": "个人知识库（2,500个书签，可在任何设备上使用 — 每台设备拥有独立保险库）",
+        "features": [
+          {
+            "included": true,
+            "text": "2,500个书签、笔记和文档"
+          },
+          {
+            "included": true,
+            "text": "智能搜索（全文 + 语义）— 免费包含；Raindrop 对此功能每年收费"
+          },
+          {
+            "included": true,
+            "text": "使用您自己的API密钥的AI（您支付提供商）"
+          },
+          {
+            "included": true,
+            "text": "知识图谱"
+          },
+          {
+            "included": true,
+            "text": "基础模板"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML导出"
+          },
+          {
+            "included": true,
+            "text": "PWA + 浏览器扩展"
+          },
+          {
+            "included": false,
+            "text": "设备间的P2P同步"
+          },
+          {
+            "included": false,
+            "text": "本地AI (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "数据上的RAG聊天"
+          },
+          {
+            "included": false,
+            "text": "间隔重复的闪卡"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          }
+        ],
+        "cta": "免费开始",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "badge": "最受欢迎 — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird（之后 $79）",
+        "description": "v1 终身 · 12 个月功能更新 · 安全更新永久 · v2 享 60% 折扣",
+        "features": [
+          {
+            "included": true,
+            "text": "Free 版全部功能"
+          },
+          {
+            "included": true,
+            "text": "无限书签"
+          },
+          {
+            "included": true,
+            "text": "5 台设备 · 5 台设备间 P2P 同步"
+          },
+          {
+            "included": true,
+            "text": "本地 AI 模型（WebLLM，无需 API 密钥）· RAG 对话"
+          },
+          {
+            "included": true,
+            "text": "专家智能体（编程、写作、分析、研究）"
+          },
+          {
+            "included": true,
+            "text": "间隔重复记忆卡 · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "高级导出（10+ 种格式）· 加密备份"
+          },
+          {
+            "included": true,
+            "text": "安全保险库（AES-GCM）"
+          },
+          {
+            "included": true,
+            "text": "v1 终身 · 12 个月功能更新"
+          },
+          {
+            "included": true,
+            "text": "安全更新永久提供"
+          },
+          {
+            "included": true,
+            "text": "邮件支持（48 小时）+ 抢先体验"
+          }
+        ],
+        "cta": "Early Bird $59 获得 Pro",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "之后常规价 $79",
+        "sla": "支持：邮件 48 小时（周一至周五）",
+        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
+        "cta2": "以 $79（标准价）获取 Pro",
+        "cta2Class": "btn-secondary"
+      }
+    ],
+    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-zh#pricing\">Learn more</a>"
+  },
+  "faq": {
+    "title": "常见问题",
+    "items": [
+      {
+        "question": "Free 版真的永久免费吗？",
+        "answer": "是的。没有试用，没有订阅。免费版包含 2,500 个书签、全文与语义搜索、知识图谱，以及使用你自己 API 密钥的 AI（费用由提供商收取）。"
+      },
+      {
+        "question": "Pro 的“v1 终身”是什么意思？",
+        "answer": "一次付费，永久拥有 v1。永久包含全部 v1.x 更新（缺陷修复 + 小功能），以及自购买起 12 个月的功能更新。安全更新永久提供。第 13 个月之后 v1 仍可正常使用，只是不再有新功能。未来的大版本（v2、v3）是独立产品：新用户 $89，v1 用户 $35（60% 折扣）。"
+      },
+      {
+        "question": "支持哪些支付方式？如何退款？",
+        "answer": "通过 Whop：信用卡、PayPal、加密货币。我们从不接触你的支付信息。30 天退款——请联系 <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>。"
+      },
+      {
+        "question": "支持——你们多久回复？",
+        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help-zh#sla\">Support SLA</a>."
+      },
+      {
+        "question": "如果我忘了保险库密码？",
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-zh#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "准备好拥有自己的知识了吗？",
+    "text": "加入数千名把第二大脑托付给 BookmarkForge 的研究者、开发者和学习者。",
+    "ctaPrimary": "免费启动应用",
+    "ctaSecondary": "升级到 Pro",
+    "note": "无需账号。在浏览器中即刻可用。免费版：2,500 个书签。"
+  },
+  "footer": {
+    "brand": "你的私密 AI 知识保险库。100% 本地优先。",
+    "product": {
+      "title": "产品",
+      "links": [
+        "功能",
+        "AI 能力",
+        "隐私",
+        "定价",
+        "打开应用"
+      ],
+      "hrefs": [
+        "/#features",
+        "/#ai",
+        "/#privacy",
+        "/#pricing",
+        "/app"
+      ]
+    },
+    "resources": {
+      "title": "资源",
+      "links": [
+        "Pocket 对比",
+        "隐私与条款"
+      ],
+      "hrefs": [
+        "/pocket-alternative.html",
+        "/privacy-and-terms.html"
+      ]
+    },
+    "languages": {
+      "title": "语言",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "支持",
+      "links": [
+        "联系我们"
+      ],
+      "helpCenter": "帮助中心",
+      "errorCodes": "错误代码"
+    },
+    "copyright": "© 2026 BookmarkForge。保留所有权利。",
+    "legal": [
+      "隐私政策",
+      "服务条款",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "你的私密 AI 知识保险库。100% 本地优先。私密的 Pocket 替代品。免费版：2,500 个书签。",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "Free",
+        "price": "0",
+        "currency": "USD",
+        "description": "2,500 个书签。永久免费。"
+      },
+      {
+        "name": "Pro Lifetime v1 — Early Bird",
+        "price": "59",
+        "currency": "USD",
+        "description": "Early Bird 200。v1 终身，12 个月功能更新，安全更新永久，v2 享 60% 折扣。",
+        "priceValidUntil": "2026-12-31",
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "price": "79",
+        "currency": "USD",
+        "description": "常规价。v1 终身。"
+      }
+    ],
+    "featureList": [
+      "本地优先存储",
+      "端到端加密",
+      "离线可用",
+      "AI 搜索",
+      "Notion 式编辑器",
+      "P2P 同步"
+    ],
+    "faq": [
+      {
+        "question": "Free 版真的永久免费吗？",
+        "answer": "是的。没有试用，没有订阅。免费版包含 2,500 个书签、全文与语义搜索、知识图谱，以及使用你自己 API 密钥的 AI（费用由提供商收取）。"
+      },
+      {
+        "question": "Pro 的“v1 终身”是什么意思？",
+        "answer": "一次付费，永久拥有 v1。永久包含全部 v1.x 更新（缺陷修复 + 小功能），以及自购买起 12 个月的功能更新。安全更新永久提供。第 13 个月之后 v1 仍可正常使用，只是不再有新功能。未来的大版本（v2、v3）是独立产品：新用户 $89，v1 用户 $35（60% 折扣）。"
+      },
+      {
+        "question": "支持哪些支付方式？如何退款？",
+        "answer": "通过 Whop：信用卡、PayPal、加密货币。我们从不接触你的支付信息。30 天退款——请联系 bookmarkforge@proton.me。"
+      },
+      {
+        "question": "支持——你们多久回复？",
+        "answer": "Free：社区帮助，通过帮助中心 + GitHub Discussions（尽力而为）。Pro：工作日 48 小时内邮件回复。保险库已加密——我们看不到你的数据，所以从不索要你的密码或恢复短语。参见支持 SLA。"
+      },
+      {
+        "question": "如果我忘了保险库密码？",
+        "answer": "我们无法恢复。创建保险库时我们会显示一次 24 词恢复短语——请写在纸上。没有它，任何人（包括我们）都无法打开保险库。参见 BF-E101。"
+      }
+    ]
+  },
+  "help": {
+    "title": "帮助中心 — FAQ、故障排查与支持 SLA | BookmarkForge",
+    "description": "BookmarkForge 帮助中心：v1 终身定价、故障排查、错误代码 BF-E*、支持 SLA，以及如何复制一份已脱敏的诊断报告。",
+    "ogTitle": "帮助中心 — BookmarkForge",
+    "ogDescription": "FAQ、故障排查、错误代码与支持 SLA。了解 v1 终身机制，以及如何复制诊断报告。",
+    "ogLocale": "en_US",
+    "lastUpdated": "最后更新",
+    "lastUpdatedDate": "2026 年 9 月 13 日",
+    "backToHome": "← 返回首页",
+    "intro": "先看答案，再决定要不要发邮件。BookmarkForge <strong>本地优先且加密</strong>——我们看不到你的保险库。90% 的问题在这里就能解决，靠的是一份可以复制粘贴的诊断信息。",
+    "toc": {
+      "pricing": "定价与 v1 终身",
+      "sla": "支持 SLA",
+      "troubleshooting": "故障排查",
+      "errorCodes": "错误代码 BF-E*",
+      "diagnostics": "复制诊断报告",
+      "contact": "联系我们"
+    },
+    "pricing": {
+      "title": "定价——v1 终身，没有订阅",
+      "intro": "<strong>模式：</strong>你为 <em>BookmarkForge v1</em> 付一次钱。没有月度账单。横向对比：Raindrop Pro $28–38/年、Instapaper $60/年、Readwise $120/年、Capacities $120/年。$79 的终身价约为 Raindrop 年费的 2 倍——换来终身使用加隐私，值得。",
+      "table": {
+        "tier": "版本",
+        "price": "价格",
+        "whatYouGet": "你得到",
+        "supply": "供应量"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro Lifetime v1"
+      },
+      "freePrice": "$0 永久",
+      "freeDescription": "任意设备上 2,500 个书签（每台设备各持有一个保险库）、智能搜索——全文 + 语义，也就是 Raindrop 按年收费的那项——知识图谱、使用你自己 API 密钥的 AI、PWA + 扩展。2,500 条以内你的保险库始终完整：阅读、搜索和导出都不会中断；只是暂停新增保存。",
+      "unlimited": "无限",
+      "badge": "Early Bird",
+      "proPrice": "$59",
+      "proPriceStriked": "$79",
+      "proPriceRegular": "常规 $79",
+      "proPriceTraction": "推广期后 $99",
+      "proDescription": "无限书签、5 台设备 + P2P 同步、本地 AI（WebLLM/Ollama）+ RAG + 专家智能体、记忆卡、PDF/OCR、10+ 种导出格式、保险库。<em>v1 终身 · 12 个月功能更新 · 安全更新永久 · v2 享 60% 折扣</em>",
+      "proSupply": "200 Early Bird"
+    },
+    "legal": {
+      "title": "v1 终身——法律条款：",
+      "text": "BookmarkForge v1 终身授权。永久包含全部 v1.x 更新（缺陷修复 + 小功能），以及自购买起 12 个月的功能更新。安全更新永久提供。未来的大版本（v2、v3）是独立产品：新用户 $89，v1 用户 $35（60% 折扣）。不升级的话，v1 永久可用。30 天内可通过 Whop 退款。",
+      "refunds": "退款：30 天内通过 Whop 申请。支付方式：银行卡、PayPal、加密货币（Whop——我们从不接触卡号信息）。",
+      "terms": "条款 § 许可"
+    },
+    "upgrade": {
+      "title": "无需订阅也能升级：",
+      "text": "每 12–18 个月我们发布一个付费大版本（v2.0 售价 $89 / v1 用户 $35）。你可以跳过，v1 照常运行。这就是不强迫订阅的持续收入来源——与 Affinity/Sketch/Sublime 同一模式。"
+    },
+    "sla": {
+      "title": "支持 SLA——我们多久回复",
+      "intro": "一名维护者。保险库已加密——<strong>我们从不索要你的保险库密码或 24 词恢复短语</strong>。Free 用户为尽力而为，付费版本则有承诺时限。",
+      "table": {
+        "tier": "版本",
+        "channel": "渠道",
+        "response": "响应",
+        "whatToDo": "先做什么"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro"
+      },
+      "freeChannel": "自助：本帮助中心 + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeResponse": "尽力而为（社区）",
+      "freeWhatToDo": "在下方搜索 BF-E* 代码并复制诊断信息（<a href=\"#diagnostics\">§诊断</a>）后再发帖",
+      "proChannel": "邮件 <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>（主题：Pro）",
+      "proResponse": "48 小时",
+      "proWhatToDo": "附上 <code>设置 → 帮助 → 复制诊断信息</code> 中的诊断文本",
+      "note": "我们看不到你的书签、笔记、URL 或提示词。请只附上下面这份诊断信息——它只含计数与版本号，绝不含保险库内容。"
+    },
+    "troubleshooting": {
+      "title": "故障排查——30 秒解决大部分问题",
+      "vaultLocked": {
+        "title": "保险库已锁定 / 密码错误",
+        "text": "密码区分大小写和空格。若你换过键盘布局（例如 AZERTY→QWERTY），请慢慢重新输入。连续 5 次解锁失败后，等待 1 分钟。如果密码丢失，请使用创建保险库时显示过的<strong>24 词恢复短语</strong>（<a href=\"#bf-e101\">BF-E101</a>）。没有它就无法恢复——这是设计使然，我们没有后门。"
+      },
+      "storageFull": {
+        "title": "浏览器存储已满",
+        "text": "IndexedDB 配额按浏览器计算（通常为磁盘的 60–80%）。写满时保存会失败并报 <a href=\"#bf-e103\">BF-E103</a>。解决：<code>设置 → 存储 → 压缩数据库</code>，然后 <code>清除 AI 缓存</code>。或者 <code>导出备份 (.bmf)</code> → <code>删除旧向量</code>。查看<a href=\"#diagnostics\">诊断信息中的存储占用百分比</a>——超过 80% 时我们会显示提示横幅。"
+      },
+      "p2pNotConnecting": {
+        "title": "P2P 同步连不上",
+        "text": "两台设备必须<strong>同时在线且已解锁</strong>（WebRTC）。默认没有 TURN 中继——部分企业网络会阻断 P2P。试试：两台设备连同一个 Wi-Fi → 扫码配对 → 保持应用打开。如果报 <a href=\"#bf-e105\">BF-E105</a>，测试 <code>帮助 → 诊断 → P2P (WebRTC)</code>——若显示不可用，说明浏览器或网络阻断了 WebRTC。"
+      },
+      "localAiNotRunning": {
+        "title": "本地 AI（WebLLM）无法运行",
+        "text": "需要 WebGPU + 约 4 GB 空闲内存 + Pro 许可证。检查 <code>帮助 → 诊断 → WebGPU/WebLLM</code>。如果报 <a href=\"#bf-e106\">BF-E106</a>：将 Chrome/Edge 更新到最新版，启用 <code>chrome://flags/#enable-unsafe-webgpu</code>，或改用 Ollama（任何你本地运行的模型——同样不需要 API 密钥）。"
+      },
+      "slowSearch": {
+        "title": "搜索或导入缓慢",
+        "text": "首次导入会构建 HNSW 向量——吃 CPU。请保持标签页打开。书签达到 10k+ 时使用 <code>设置 → 高级 → 强制重新处理</code>。若问题持续，<code>复制诊断信息</code>会显示 <code>vectorIndexLoad</code> 与查询延迟。"
+      }
+    },
+    "errorCodes": {
+      "title": "错误代码 BF-E*——复制代码，直达解决方案",
+      "intro": "每个严重错误都会显示类似 <code>BF-E101</code> 的代码。在应用里点击该代码，或在这里搜索。",
+      "table": {
+        "code": "代码",
+        "meaning": "含义",
+        "fix": "解决方法"
+      },
+      "e101": {
+        "meaning": "忘记保险库密码 / 需要助记短语",
+        "fix": "我们无法恢复密码。创建保险库时我们会显示一次<strong>24 词短语</strong>——请写在纸上。用它来重置。没有短语 = 保险库无法恢复。<a href=\"#diagnostics\">提交工单也救不回来</a>。"
+      },
+      "e102": {
+        "meaning": "保险库已锁定 / 密码错误",
+        "fix": "请原样重新输入密码。5 次失败后等待 60 秒。若你最近改过密码，可试上一个——轮换会保留最后的盐值以便回滚。"
+      },
+      "e103": {
+        "meaning": "存储配额已超",
+        "fix": "前往 <code>设置 → 存储</code>：压缩数据库 + 清除 AI 缓存。需要时导出 .bmf 备份。参见故障排查 §存储。"
+      },
+      "e104": {
+        "meaning": "IndexedDB 被阻止 / 隐私浏览",
+        "fix": "隐私/无痕模式或存储策略会阻止 IndexedDB。请用普通窗口。检查 <code>帮助 → 诊断 → 存储</code>。"
+      },
+      "e105": {
+        "meaning": "P2P / WebRTC 不可用",
+        "fix": "浏览器或网络阻断了 WebRTC。换一个浏览器/网络、关闭严格防火墙，或改用导出/导入代替实时同步。"
+      },
+      "e106": {
+        "meaning": "本地 AI（WebLLM）无法在此设备运行",
+        "fix": "需要 WebGPU + shader-f16 + 4 GB 内存 + Pro。更新浏览器，或改用 Ollama / 云端提供商（使用你自己的密钥）。"
+      },
+      "e107": {
+        "meaning": "备份导入失败（密码错误 / 文件损坏）",
+        "fix": "对于 <code>.bmf</code>（加密）需要的是导出密码，不是保险库密码。对于 JSON，确认文件未被截断。"
+      },
+      "e201": {
+        "meaning": "Pro 授权无效 / 过期校验",
+        "fix": "检查 <code>设置 → Pro</code>：重新输入密钥。离线校验有缓存；重新联网一次即可通过 Whop 复核。"
+      },
+      "e202": {
+        "meaning": "已达免费上限（2,500 个书签）",
+        "fix": "免费版上限是 2,500。删除一些，或升级到 Pro 终身版 v1 以获得无限数量。导出始终可用。"
+      },
+      "tip": "支持小贴士：点击错误提示中的 <code>复制诊断信息</code> 可一次复制代码与上下文——直接粘贴到你的 GitHub Discussion 或邮件里。"
+    },
+    "diagnostics": {
+      "title": "复制一份已脱敏的诊断信息——这就是你发给支持团队的内容",
+      "intro": "在应用里：<code>设置 → 高级</code>（或 <code>帮助 → 诊断</code>）→ <strong>复制诊断信息</strong>。内容大致如下——没有保险库数据、没有 URL、没有提示词：",
+      "example": "BookmarkForge v1.0.0 | Chrome 126 | 保险库：847 个书签，12 个文档\n存储：42%（IndexedDB 正常）| 上次备份：2 天前（.bmf 已加密）\nP2P：未连接 | 同步：从未 | 本地 AI：WebLLM 未加载\n错误：近 7 天 0 个 | BF-E：无 | 构建：a1b2c3d",
+      "contains": "包含内容：应用版本、浏览器、计数（书签/文档/向量）、存储占用百分比与配额、P2P 状态、AI 状态、错误计数与最近的 BF-E 代码、构建哈希。使用加盐的 IP 哈希——我们从不存储 IP。参见<a href=\"/privacy-and-terms.html\">隐私 §3/§6</a>。",
+      "cantOpen": "如果你打不开应用：请附上浏览器与操作系统信息、复现步骤，以及屏幕上显示的 <code>BF-E*</code> 代码。这足以解决 90% 的工单。"
+    },
+    "contact": {
+      "title": "联系我们",
+      "paid": "付费支持",
+      "paidDetail": "请附上诊断信息与 BF-E 代码。Pro 48 小时（周一至周五）。",
+      "community": "社区（Free）",
+      "communityDetail": "search <code>BF-E*</code> before posting. Read <a href=\"/help-zh#bf-e\">Error codes</a> + paste diagnostic.",
+      "security": "安全问题",
+      "securityDetail": "邮件主题请写 <code>[SECURITY]</code>——不要公开发帖讨论。",
+      "note": "BookmarkForge 本地优先——保险库内容永不离开你的设备。支持团队从不索要你的保险库密码或恢复短语。"
+    },
+    "alsoSee": "另见：<a href=\"/\">首页</a> · <a href=\"/privacy-and-terms.html\">隐私与条款</a> · <a href=\"/privacy-and-terms.html#terms\">许可（v1 终身）</a> · <a href=\"/#pricing\">定价</a>",
+    "privacy": "隐私",
+    "home": "首页",
+    "faq": {
+      "q1": "Free 版真的永久免费吗？",
+      "a1": "是的。没有试用，没有订阅。Free 版包含 2,500 个书签、全文与语义搜索、知识图谱，以及使用你自己 API 密钥的 AI。",
+      "q2": "v1 终身是什么意思？",
+      "a2": "一次付费，永久拥有 v1。永久包含全部 v1.x 缺陷修复，外加自购买起 12 个月的功能更新。安全更新永久提供。第 13 个月之后 v1 仍可使用。v2 和 v3 是独立的付费大版本：新用户 $89，v1 用户 $35（60% 折扣）。",
+      "q3": "如果我忘了保险库密码？",
+      "a3": "我们无法恢复。创建保险库时我们会显示一次 24 词恢复短语——请写在纸上。没有它保险库就无法恢复。参见 BF-E101。"
+    }
+  }
+}

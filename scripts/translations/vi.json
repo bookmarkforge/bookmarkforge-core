@@ -1,0 +1,740 @@
+{
+  "lang": "vi",
+  "langName": "Tiếng Việt",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/vi/",
+  "ogLocale": "vi_VN",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Mọi thứ nằm trên máy của bạn. Trả một lần.",
+  "description": "Raindrop giữ dấu trang của bạn trên máy chủ của họ. BookmarkForge giữ chúng trên máy của bạn — có khóa bảo vệ, đến mức chúng tôi cũng không đọc được. 59 đô la một lần. Free: 2,500 dấu trang.",
+  "ogTitle": "BookmarkForge — Mọi thứ nằm trên máy của bạn. Trả một lần.",
+  "ogDescription": "Raindrop giữ dấu trang của bạn trên máy chủ của họ. BookmarkForge giữ chúng trên máy của bạn — có khóa bảo vệ, đến mức chúng tôi cũng không đọc được. 59 đô la một lần. Free: 2,500 dấu trang.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Mọi thứ nằm trên máy của bạn. Trả một lần.",
+  "twitterDescription": "Raindrop giữ dấu trang của bạn trên máy chủ của họ. BookmarkForge giữ chúng trên máy của bạn — có khóa bảo vệ, đến mức chúng tôi cũng không đọc được. 59 đô la một lần. Free: 2,500 dấu trang.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Bỏ qua, tới nội dung chính",
+  "navBrandAria": "Trang chủ BookmarkForge",
+  "navAriaLabel": "Điều hướng chính",
+  "homeHref": "/vi/",
+  "navLinks": {
+    "pocketAlternative": "Thay thế Pocket",
+    "features": "Tính năng",
+    "ai": "AI",
+    "privacy": "Quyền riêng tư",
+    "pricing": "Bảng giá",
+    "help": "Trợ giúp",
+    "raindropCompare": "So sánh với Raindrop"
+  },
+  "langLink": {
+    "href": "/es/",
+    "hreflang": "es",
+    "lang": "es",
+    "text": "Español"
+  },
+  "navCta": "Mở ứng dụng",
+  "themeToggleAria": "Chuyển đổi giao diện sáng/tối",
+  "navToggleAria": "Mở menu",
+  "navToggleAriaClose": "Đóng menu",
+  "hero": {
+    "badge": "Thanh toán một lần · Không đăng ký",
+    "title": "Mọi thứ bạn lưu đều nằm trên máy của bạn. <span class=\"accent-text\">Tất cả.</span>",
+    "subtitle": "Raindrop giữ dấu trang của bạn trên máy chủ của họ — và thu phí bạn hằng năm. BookmarkForge giữ chúng trên máy của bạn, khóa bằng khóa chỉ mình bạn có. Không tài khoản. Không phí tháng. Không ai lén theo dõi bạn.",
+    "ctaPrimary": "Mở ứng dụng Free",
+    "ctaSecondary": "Xem bảng giá",
+    "pillars": [
+      {
+        "strong": "Riêng tư",
+        "text": "các trang bạn lưu không bao giờ rời khỏi máy của bạn"
+      },
+      {
+        "strong": "Đã khóa",
+        "text": "đến chúng tôi cũng không đọc được"
+      },
+      {
+        "strong": "Ngoại tuyến",
+        "text": "chạy được trên máy bay, trong hầm, ở bất cứ đâu"
+      },
+      {
+        "strong": "Trả một lần",
+        "text": "59 đô la một lần, không phải 28 đô la mỗi năm"
+      }
+    ]
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "Xem nó hoạt động",
+    "title": "Ứng dụng thật, không phải bản dựng hình",
+    "subtitle": "Không tường đăng ký, không hình ảnh stock, không con trỏ giả. Vòng lặp này chạy trên bản phát hành thật ở một máy tính bàn thông thường: mở khóa vault, lưu một trang, tìm kiếm thư viện rồi khóa lại.",
+    "imageAlt": "Vòng lặp động của BookmarkForge: mở khóa vault, lưu một dấu trang, tìm kiếm thư viện rồi khóa lại",
+    "caption": "Quay từ ứng dụng máy tính với dữ liệu demo. Bản hướng dẫn đầy đủ đi kèm dự án.",
+    "steps": [
+      {
+        "title": "Mở khóa",
+        "text": "Vault mở bằng mật khẩu bạn tự chọn; khóa nằm lại trên thiết bị của bạn."
+      },
+      {
+        "title": "Lưu lại",
+        "text": "Lưu một trang ngay trong ứng dụng — không cần tài khoản, không cần tiện ích trình duyệt."
+      },
+      {
+        "title": "Tìm kiếm",
+        "text": "Tìm theo từ khóa hoặc theo ý nghĩa, kèm nguồn của mọi câu trả lời."
+      },
+      {
+        "title": "Khóa lại",
+        "text": "Đóng vault là khóa giải mã biến mất khỏi bộ nhớ."
+      }
+    ],
+    "ctaPrimary": "Mở ứng dụng"
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Đọc sau hồi sinh",
+    "title": "Lựa chọn thay thế Pocket riêng tư",
+    "subtitle": "Pocket sắp bị giải thể. BookmarkForge giữ thói quen đọc-sau-hồi còn sống — với mọi bài viết, ghi chú và đoạn highlight được lưu mã hóa ngay trên thiết bị của bạn.",
+    "features": [
+      {
+        "title": "Đọc sau, thuộc về bạn mãi mãi",
+        "text": "Lưu bài viết, video và PDF bằng một cú nhấp — từ PWA, tiện ích trình duyệt hoặc menu chia sẻ. Khác với Pocket, danh sách đọc của bạn nằm trên thiết bị, đã mã hóa, và vẫn chạy khi offline."
+      },
+      {
+        "title": "Ghi chú kiểu Notion cho mọi bài viết",
+        "text": "Highlight, tóm tắt và ghi chú dạng khối gắn với bất kỳ dấu trang nào. Biến một bài viết đã lưu thành kho tri thức của riêng bạn — không chỉ là một danh sách liên kết."
+      },
+      {
+        "title": "Không theo dõi, không quảng cáo",
+        "text": "BookmarkForge không có tài khoản, không phân tích hành vi, không quảng cáo. Thói quen đọc của bạn là việc riêng của chính bạn."
+      }
+    ],
+    "ctaPrimary": "Bắt đầu lưu với gói Free",
+    "ctaSecondary": "Bảng so sánh đầy đủ & hướng dẫn chuyển đổi",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "Nói thẳng, không marketing",
+    "title": "BookmarkForge và Raindrop, không mập mờ",
+    "subtitle": "Raindrop là một ứng dụng tốt. Khác biệt lớn nằm ở chỗ dữ liệu của bạn nằm ở đâu.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Danh sách của bạn nằm ở đâu",
+        "us": "Trên máy tính của bạn",
+        "them": "Trên máy chủ của họ"
+      },
+      {
+        "topic": "Ai có thể đọc nội dung bạn lưu",
+        "us": "Không ai — khóa bằng khóa của bạn, kể cả chúng tôi",
+        "them": "Công ty, và bất kỳ ai đòi họ phải đưa ra"
+      },
+      {
+        "topic": "Không có internet",
+        "us": "Mọi thứ vẫn chạy bình thường",
+        "them": "Chỉ những tính năng cơ bản"
+      },
+      {
+        "topic": "Bạn phải trả bao nhiêu",
+        "us": "59 đô la một lần. Xong.",
+        "them": "28 đô la mỗi năm, mãi mãi"
+      },
+      {
+        "topic": "Nếu công ty biến mất (RIP Pocket)",
+        "us": "Không có gì thay đổi — dữ liệu đã ở trong tay bạn",
+        "them": "Bạn phải xuất ra rồi làm lại từ đầu"
+      },
+      {
+        "topic": "Trợ lý AI",
+        "us": "Chạy trong máy tính của bạn ở chế độ riêng tư — không gửi đi đâu cả",
+        "them": "Dữ liệu đọc của bạn bay lên đám mây để suy nghĩ"
+      }
+    ],
+    "ctaPrimary": "Dùng thử miễn phí trong 2 phút — không cần tài khoản",
+    "ctaSecondary": "So sánh đầy đủ với Pocket",
+    "close": "Raindrop đơn giản và miễn phí — nếu bạn chỉ cần thế thì cứ dùng thoải mái. Nhưng nếu bạn muốn giữ cuộc sống đọc trong tay mình, BookmarkForge được xây dựng chính xác cho điều đó."
+  },
+  "features": {
+    "id": "features",
+    "tag": "Mọi thứ bạn cần",
+    "title": "Mọi thứ bạn cần, bằng lời lẽ dễ hiểu",
+    "items": [
+      {
+        "title": "Dấu trang & tài liệu",
+        "text": "Lưu bất kỳ trang nào bằng một cú nhấp. Viết ghi chú ngay bên cạnh, trong trình soạn thảo gọn gàng và đơn giản. Vẫn nhanh dù bạn đã lưu 100,000 mục."
+      },
+      {
+        "title": "Tìm kiếm thông minh",
+        "text": "Tìm mọi thứ theo từ khóa hoặc theo ý nghĩa — kể cả khi bạn không nhớ chính xác từ ngữ. Raindrop thu 28 đô la mỗi năm cho tính năng này; ở đây bạn được dùng miễn phí."
+      },
+      {
+        "title": "AI đọc thư viện của bạn, ngay trong máy tính",
+        "text": "Hỏi bất cứ điều gì về những gì bạn đã lưu và nhận câu trả lời kèm nguồn. Không gì được gửi lên đám mây, và vẫn chạy khi không có internet. Cần gói Pro."
+      },
+      {
+        "title": "Trò chuyện với thư viện của chính bạn",
+        "text": "Hỏi bất cứ điều gì về dấu trang và ghi chú của bạn, nhận câu trả lời có dẫn nguồn. Chế độ riêng tư chạy 100% trên máy của bạn. Cần gói Pro."
+      },
+      {
+        "title": "Đồng bộ giữa các thiết bị của bạn",
+        "text": "Các thiết bị nói chuyện trực tiếp với nhau — không có máy chủ ở giữa, và mọi thứ vẫn được mã hóa. Ghép cặp bằng cách quét mã QR. Tối đa 5 thiết bị. Cần gói Pro."
+      },
+      {
+        "title": "Bản sao lưu do bạn làm chủ",
+        "text": "Bản sao lưu tự động mà bạn có thể giữ ở bất cứ đâu — ổ cứng ngoài, thư mục đám mây, hay bất cứ nơi nào. Xuất toàn bộ sang Markdown, JSON, CSV hoặc PDF bất cứ lúc nào. Khóa nằm trong tay bạn."
+      },
+      {
+        "title": "Bản đồ tri thức của bạn",
+        "text": "Nhìn thấy ghi chú và dấu trang của bạn liên kết với nhau ra sao. Lọc theo thẻ, ngày và mức độ tương đồng, rồi thu phóng trên một canvas bất tận."
+      },
+      {
+        "title": "Thẻ ôn tập đánh bại quên mất",
+        "text": "Biến bất kỳ tài liệu đã lưu nào thành thẻ câu hỏi hiện lại đúng lúc bạn sắp quên — cùng ý tưởng lên lịch ôn tập như Anki. Cần gói Pro."
+      },
+      {
+        "title": "Riêng tư mặc định",
+        "text": "Không tài khoản, không theo dõi, không quảng cáo. Bạn là khách hàng, không phải sản phẩm. Tính năng chia sẻ dữ liệu sử dụng có tồn tại, nhưng là tùy chọn và mặc định tắt cho tới khi bạn bật lên."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI tôn trọng bạn",
+    "title": "Tri thức của bạn, khuếch đại lên",
+    "subtitle": "Chạy trợ lý ngay trong máy tính — không gì ra khỏi máy, và vẫn hoạt động offline. Thích một mô hình đám mây lớn? Kết nối khóa của riêng bạn: câu hỏi và những trang cần thiết để trả lời sẽ đi tới nhà cung cấp đó, chi phí do bạn trả. Câu lệnh của bạn, dữ liệu của bạn, quy tắc của bạn.",
+    "providers": {
+      "title": "Nhà cung cấp được hỗ trợ",
+      "list": [
+        {
+          "type": "local",
+          "name": "Trong máy tính của bạn — mô hình WebLLM (TinyLlama, Llama 3.2, Phi-3.5-mini) — chỉ gói Pro"
+        },
+        {
+          "type": "local",
+          "name": "Trên máy của bạn — Ollama (bất kỳ mô hình nào bạn tự chạy)"
+        },
+        {
+          "type": "cloud",
+          "name": "Đám mây — Google Gemini (dùng khóa của bạn)"
+        },
+        {
+          "type": "cloud",
+          "name": "Đám mây — OpenAI / GPT-4o (dùng khóa của bạn)"
+        },
+        {
+          "type": "cloud",
+          "name": "Đám mây — Anthropic Claude (dùng khóa của bạn)"
+        },
+        {
+          "type": "cloud",
+          "name": "Đám mây — Groq (dùng khóa của bạn)"
+        },
+        {
+          "type": "cloud",
+          "name": "Đám mây — OpenRouter hoặc nhà cung cấp tùy chỉnh khác (dùng khóa của bạn)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Chế độ trò chuyện",
+      "items": [
+        {
+          "title": "Chế độ riêng tư",
+          "text": "Trợ lý chạy hoàn toàn trong máy tính của bạn. Không gì ra khỏi máy, và không cần internet. Cần gói Pro."
+        },
+        {
+          "title": "Chế độ tìm kiếm web",
+          "text": "Kết hợp thư viện của bạn với kết quả trực tiếp từ web (nhà cung cấp đám mây)."
+        },
+        {
+          "title": "Chuyên gia AI",
+          "text": "Trợ lý chuyên biệt: Coder, Writer, Analyst và Researcher. Cần gói Pro."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Quyền riêng tư không phải tính năng — mà là nền tảng",
+    "subtitle": "Mọi quyết định kiến trúc đều đặt bạn làm chủ",
+    "items": [
+      {
+        "title": "Khóa kín đến mức không ai đọc được — kể cả chúng tôi",
+        "text": "Thư viện của bạn được mã hóa bằng khóa suy ra từ mật khẩu chính. Chúng tôi không bao giờ thấy mật khẩu hay nội dung của bạn."
+      },
+      {
+        "title": "Lưu trên thiết bị của bạn",
+        "text": "Mọi thứ nằm trên máy tính của bạn. Máy chủ đồng hành chỉ lo cấp phép, ghép nối thiết bị và chuyển tiếp câu hỏi AI ở chế độ đám mây — không bao giờ chạm vào nội dung của bạn."
+      },
+      {
+        "title": "Không theo dõi mặc định",
+        "text": "Không phân tích hành vi, không báo cáo lỗi, không theo dõi. Chia sẻ thống kê sử dụng hoặc báo cáo lỗi là một lựa chọn riêng biệt, mặc định tắt."
+      },
+      {
+        "title": "Khóa nằm trong tay bạn",
+        "text": "Không có mật khẩu chính là không có quyền truy cập — không tồn tại lối sau kiểu \"quên mật khẩu\". Cụm 24 từ khôi phục là đường vào duy nhất; hãy giữ nó an toàn."
+      },
+      {
+        "title": "Quyền của bạn được tôn trọng",
+        "text": "Truy cập, sửa, xóa hoặc mang dữ liệu của bạn đi — tất cả đều làm được ngay trên máy, bất cứ lúc nào bạn muốn."
+      },
+      {
+        "title": "Không bị gắn chặt",
+        "text": "Xuất dữ liệu bất cứ lúc nào ở các định dạng mở (JSON, Markdown, CSV, PDF). Tri thức của bạn vẫn là của bạn và luôn mang theo được."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Bảng giá đơn giản, công bằng — không đăng ký",
+    "subtitle": "Gói Free: 2,500 dấu trang mãi mãi. Pro là giấy phép Lifetime cho v1 — trả một lần, sở hữu v1 mãi mãi. Bao gồm mọi bản cập nhật v1.x và 12 tháng cập nhật tính năng. Cập nhật bảo mật mãi mãi. Không tính phí hằng tháng.",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "$ 0",
+        "period": "/vĩnh viễn",
+        "description": "Cho kho lưu trữ cá nhân (2.500 bookmark, hoạt động trên mọi thiết bị — mỗi thiết bị có kho riêng)",
+        "features": [
+          {
+            "included": true,
+            "text": "2.500 bookmark, ghi chú và tài liệu"
+          },
+          {
+            "included": true,
+            "text": "Tìm kiếm thông minh (toàn văn + ngữ nghĩa) — miễn phí; Raindrop thu phí hàng năm cho tính năng này"
+          },
+          {
+            "included": true,
+            "text": "AI với API key của bạn (bạn trả cho nhà cung cấp)"
+          },
+          {
+            "included": true,
+            "text": "Đồ thị tri thức"
+          },
+          {
+            "included": true,
+            "text": "Mẫu cơ bản"
+          },
+          {
+            "included": true,
+            "text": "Xuất JSON/HTML"
+          },
+          {
+            "included": true,
+            "text": "PWA + tiện ích trình duyệt"
+          },
+          {
+            "included": false,
+            "text": "Đồng bộ P2P giữa các thiết bị"
+          },
+          {
+            "included": false,
+            "text": "AI cục bộ (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "Chat RAG trên dữ liệu"
+          },
+          {
+            "included": false,
+            "text": "Flashcards với spaced repetition"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          }
+        ],
+        "cta": "Bắt đầu với gói Free",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "badge": "Phổ biến nhất — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (sau đó $79)",
+        "description": "Lifetime của v1 · 12 tháng cập nhật tính năng · Bảo mật mãi mãi · v2 giảm 60%",
+        "features": [
+          {
+            "included": true,
+            "text": "Tất cả tính năng của gói Free"
+          },
+          {
+            "included": true,
+            "text": "Dấu trang không giới hạn"
+          },
+          {
+            "included": true,
+            "text": "5 thiết bị · Đồng bộ P2P trên 5 thiết bị"
+          },
+          {
+            "included": true,
+            "text": "Mô hình AI cục bộ (WebLLM, không cần API key) · Trò chuyện RAG"
+          },
+          {
+            "included": true,
+            "text": "Agent chuyên biệt (Coder, Writer, Analyst, Researcher)"
+          },
+          {
+            "included": true,
+            "text": "Flashcard lặp lại ngắt quãng · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Xuất nâng cao (10+ định dạng) · Sao lưu đã mã hóa"
+          },
+          {
+            "included": true,
+            "text": "Kho bảo mật (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Lifetime của v1 · 12 tháng cập nhật tính năng"
+          },
+          {
+            "included": true,
+            "text": "Cập nhật bảo mật mãi mãi"
+          },
+          {
+            "included": true,
+            "text": "Hỗ trợ qua email (48h) + quyền truy cập sớm"
+          }
+        ],
+        "cta": "Nhận Pro $59 Early Bird",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "sau đó $79 giá thường",
+        "sla": "Hỗ trợ: Email 48h (Thứ hai–Thứ sáu)",
+        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
+        "cta2": "Nhận Pro $79 giá thường",
+        "cta2Class": "btn-secondary"
+      }
+    ],
+    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-vi#pricing\">Learn more</a>"
+  },
+  "faq": {
+    "title": "Câu hỏi thường gặp",
+    "items": [
+      {
+        "question": "Gói Free có thật sự miễn phí mãi mãi không?",
+        "answer": "Có. Không dùng thử, không đăng ký. Gói miễn phí gồm 2,500 dấu trang, tìm kiếm toàn văn và ngữ nghĩa, đồ thị tri thức, cùng AI với API key của chính bạn (bạn trả phí cho nhà cung cấp)."
+      },
+      {
+        "question": "\"Lifetime of v1\" nghĩa là gì với gói Pro?",
+        "answer": "Trả một lần, sở hữu v1 mãi mãi. Bao gồm mọi bản cập nhật v1.x (sửa lỗi và tính năng nhỏ) mãi mãi cùng 12 tháng cập nhật tính năng kể từ lúc mua. Cập nhật bảo mật mãi mãi. Sau tháng thứ 13 bạn vẫn dùng được v1, chỉ là không có tính năng mới. Các phiên bản lớn tương lai (v2, v3) là sản phẩm riêng: $89 cho khách mới, $35 cho chủ sở hữu v1 (giảm 60%)."
+      },
+      {
+        "question": "Phương thức thanh toán & hoàn tiền?",
+        "answer": "Qua Whop: thẻ tín dụng, PayPal, crypto. Chúng tôi không bao giờ thấy thông tin thanh toán của bạn. Hoàn tiền trong 30 ngày — liên hệ <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
+      },
+      {
+        "question": "Hỗ trợ — bạn phản hồi nhanh thế nào?",
+        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help-vi#sla\">Support SLA</a>."
+      },
+      {
+        "question": "Lỡ quên mật khẩu vault thì sao?",
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-vi#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Sẵn sàng làm chủ tri thức của bạn?",
+    "text": "Tham gia cùng hàng nghìn nhà nghiên cứu, lập trình viên và người học đang giao phó bộ não thứ hai của mình cho BookmarkForge.",
+    "ctaPrimary": "Mở ứng dụng Free",
+    "ctaSecondary": "Nâng cấp lên Pro",
+    "note": "Không cần tài khoản. Chạy ngay trong trình duyệt. Gói Free: 2,500 dấu trang."
+  },
+  "footer": {
+    "brand": "Kho tri thức riêng tư, chạy bằng AI của bạn. 100% Local-First.",
+    "product": {
+      "title": "Sản phẩm",
+      "links": [
+        "Features",
+        "AI Capabilities",
+        "Privacy",
+        "Pricing",
+        "Launch App"
+      ],
+      "hrefs": [
+        "/#features",
+        "/#ai",
+        "/#privacy",
+        "/#pricing",
+        "/app"
+      ]
+    },
+    "resources": {
+      "title": "Tài nguyên",
+      "links": [
+        "Pocket Comparison",
+        "Privacy & Terms"
+      ],
+      "hrefs": [
+        "/pocket-alternative.html",
+        "/privacy-and-terms.html"
+      ]
+    },
+    "languages": {
+      "title": "Ngôn ngữ",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Hỗ trợ",
+      "links": [
+        "Contact"
+      ],
+      "helpCenter": "Trung tâm trợ giúp",
+      "errorCodes": "Mã lỗi"
+    },
+    "copyright": "© 2026 BookmarkForge. Bảo lưu mọi quyền.",
+    "legal": [
+      "Chính sách quyền riêng tư",
+      "Điều khoản dịch vụ",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Kho tri thức riêng tư, chạy bằng AI của bạn. 100% Local-First. Lựa chọn thay thế Pocket riêng tư. Free: 2,500 dấu trang.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "Free",
+        "price": "0",
+        "currency": "USD",
+        "description": "2,500 dấu trang. Miễn phí mãi mãi."
+      },
+      {
+        "name": "Pro Lifetime v1 — Early Bird",
+        "price": "59",
+        "currency": "USD",
+        "description": "Early Bird 200. Lifetime của v1, 12 tháng tính năng, bảo mật mãi mãi, v2 giảm 60%.",
+        "priceValidUntil": "2026-12-31",
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "price": "79",
+        "currency": "USD",
+        "description": "Giá thường. Lifetime của v1."
+      }
+    ],
+    "featureList": [
+      "Lưu trữ theo mô hình local-first",
+      "Mã hóa đầu cuối",
+      "Chạy được khi offline",
+      "Tìm kiếm bằng AI",
+      "Trình soạn thảo kiểu Notion",
+      "Đồng bộ P2P"
+    ],
+    "faq": [
+      {
+        "question": "Gói Free có thật sự miễn phí mãi mãi không?",
+        "answer": "Có. Không dùng thử, không đăng ký. Gói miễn phí gồm 2,500 dấu trang, tìm kiếm toàn văn và ngữ nghĩa, đồ thị tri thức, cùng AI với API key của chính bạn (bạn trả phí cho nhà cung cấp)."
+      },
+      {
+        "question": "\"Lifetime of v1\" nghĩa là gì với gói Pro?",
+        "answer": "Trả một lần, sở hữu v1 mãi mãi. Bao gồm mọi bản cập nhật v1.x (sửa lỗi và tính năng nhỏ) mãi mãi cùng 12 tháng cập nhật tính năng kể từ lúc mua. Cập nhật bảo mật mãi mãi. Sau tháng thứ 13 bạn vẫn dùng được v1, chỉ là không có tính năng mới. Các phiên bản lớn tương lai (v2, v3) là sản phẩm riêng: $89 cho khách mới, $35 cho chủ sở hữu v1 (giảm 60%)."
+      },
+      {
+        "question": "Phương thức thanh toán & hoàn tiền?",
+        "answer": "Qua Whop: thẻ tín dụng, PayPal, crypto. Chúng tôi không bao giờ thấy thông tin thanh toán của bạn. Hoàn tiền trong 30 ngày — liên hệ bookmarkforge@proton.me."
+      },
+      {
+        "question": "Hỗ trợ — bạn phản hồi nhanh thế nào?",
+        "answer": "Free: Hỗ trợ cộng đồng qua Trung tâm trợ giúp + GitHub Discussions (theo khả năng). Pro: email trong 48h vào ngày làm việc. Vault đã mã hóa — chúng tôi không thấy dữ liệu của bạn, nên không bao giờ hỏi mật khẩu hay cụm khôi phục. Xem Support SLA."
+      },
+      {
+        "question": "Lỡ quên mật khẩu vault thì sao?",
+        "answer": "Chúng tôi không thể khôi phục. Khi tạo vault, chúng tôi hiển thị cụm 24 từ khôi phục đúng một lần — hãy chép ra giấy. Không có nó thì không ai (kể cả chúng tôi) mở được vault. Xem BF-E101."
+      }
+    ]
+  },
+  "help": {
+    "title": "Trung tâm trợ giúp — FAQ, khắc phục sự cố & Support SLA | BookmarkForge",
+    "description": "Trung tâm trợ giúp BookmarkForge: bảng giá lifetime v1, khắc phục sự cố, mã lỗi BF-E*, support SLA và cách sao chép một báo cáo chẩn đoán đã che thông tin.",
+    "ogTitle": "Trung tâm trợ giúp — BookmarkForge",
+    "ogDescription": "FAQ, khắc phục sự cố, mã lỗi và support SLA. Tìm hiểu về lifetime v1 và cách sao chép báo cáo chẩn đoán.",
+    "ogLocale": "en_US",
+    "lastUpdated": "Cập nhật lần cuối",
+    "lastUpdatedDate": "13 tháng Chín, 2026",
+    "backToHome": "← Quay lại trang chủ",
+    "intro": "Câu trả lời trước khi bạn phải gửi email. BookmarkForge <strong>theo mô hình local-first và đã mã hóa</strong> — chúng tôi không thấy vault của bạn. 90% sự cố được giải quyết ngay tại đây với một báo cáo chẩn đoán bạn có thể sao chép.",
+    "toc": {
+      "pricing": "Bảng giá & Lifetime v1",
+      "sla": "Cam kết hỗ trợ (Support SLA)",
+      "troubleshooting": "Khắc phục sự cố",
+      "errorCodes": "Mã lỗi BF-E*",
+      "diagnostics": "Sao chép báo cáo chẩn đoán",
+      "contact": "Liên hệ"
+    },
+    "pricing": {
+      "title": "Bảng giá — Lifetime của v1, không đăng ký",
+      "intro": "<strong>Mô hình:</strong> bạn trả một lần cho <em>BookmarkForge v1</em>. Không tính phí hằng tháng. So sánh: Raindrop Pro $28–38/năm, Instapaper $60/năm, Readwise $120/năm, Capacities $120/năm. Lifetime $79 tương đương khoảng 2× chi phí hằng năm của Raindrop — hoàn toàn xứng đáng với lifetime + quyền riêng tư.",
+      "table": {
+        "tier": "Gói",
+        "price": "Giá",
+        "whatYouGet": "Bạn nhận được",
+        "supply": "Cung cấp"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro Lifetime v1"
+      },
+      "freePrice": "$0 mãi mãi",
+      "freeDescription": "2,500 dấu trang trên mọi thiết bị (mỗi thiết bị giữ vault riêng), tìm kiếm thông minh — toàn văn + ngữ nghĩa, tính năng mà Raindrop thu phí hằng năm — đồ thị tri thức, AI với API key của bạn, PWA + tiện ích trình duyệt. Ở mức 2,500, vault của bạn vẫn nguyên vẹn: đọc, tìm kiếm và xuất dữ liệu không bao giờ gián đoạn; chỉ có việc lưu mới tạm dừng.",
+      "unlimited": "Không giới hạn",
+      "badge": "Early Bird",
+      "proPrice": "$59",
+      "proPriceStriked": "$79",
+      "proPriceRegular": "$79 giá thường",
+      "proPriceTraction": "$99 sau khi có sức bật",
+      "proDescription": "Dấu trang không giới hạn, 5 thiết bị + đồng bộ P2P, AI cục bộ (WebLLM/Ollama) + RAG + agent chuyên biệt, Flashcard, PDF/OCR, hơn 10 định dạng xuất, vault. <em>Lifetime của v1 · 12 tháng cập nhật tính năng · Bảo mật mãi mãi · v2 giảm 60%</em>",
+      "proSupply": "200 Early Bird"
+    },
+    "legal": {
+      "title": "Lifetime của v1 — dòng pháp lý:",
+      "text": "Giấy phép Lifetime cho BookmarkForge v1. Bao gồm mọi bản cập nhật v1.x (sửa lỗi và tính năng nhỏ) mãi mãi cùng 12 tháng cập nhật tính năng kể từ lúc mua. Cập nhật bảo mật mãi mãi. Các phiên bản lớn tương lai (v2, v3) là sản phẩm riêng: $89 cho khách mới, $35 cho chủ sở hữu v1 (giảm 60%). Nếu bạn không nâng cấp, v1 vẫn hoạt động mãi mãi. Hoàn tiền trong 30 ngày qua Whop.",
+      "refunds": "Hoàn tiền: 30 ngày qua Whop. Thanh toán: thẻ, PayPal, crypto (Whop — chúng tôi không bao giờ thấy dữ liệu thẻ).",
+      "terms": "Điều khoản § Cấp phép"
+    },
+    "upgrade": {
+      "title": "Nâng cấp mà không phải đăng ký:",
+      "text": "mỗi 12–18 tháng chúng tôi phát hành một phiên bản lớn có phí (v2.0 giá $89 / $35 cho chủ sở hữu). Bỏ qua nó và v1 vẫn chạy. Đó là doanh thu định kỳ mà không ép ai phải đăng ký — cùng mô hình với Affinity/Sketch/Sublime."
+    },
+    "sla": {
+      "title": "Support SLA — chúng tôi phản hồi nhanh thế nào",
+      "intro": "Chỉ một người duy trì. Vault đã mã hóa — <strong>chúng tôi không bao giờ hỏi mật khẩu vault hay cụm 24 từ khôi phục của bạn</strong>. Hỗ trợ là nỗ lực tốt nhất cho gói Free, và là cam kết cho các gói trả phí.",
+      "table": {
+        "tier": "Gói",
+        "channel": "Kênh",
+        "response": "Thời gian phản hồi",
+        "whatToDo": "Việc nên làm trước"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro"
+      },
+      "freeChannel": "Tự phục vụ: Trung tâm trợ giúp này + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeResponse": "Theo khả năng (cộng đồng)",
+      "freeWhatToDo": "Tìm mã BF-E* bên dưới + sao chép báo cáo chẩn đoán (<a href=\"#diagnostics\">§Chẩn đoán</a>) trước khi đăng bài",
+      "proChannel": "Email <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (tiêu đề: Pro)",
+      "proResponse": "48h",
+      "proWhatToDo": "Kèm nội dung chẩn đoán lấy từ <code>Settings → Help → Copy diagnostic</code>",
+      "note": "Chúng tôi không thấy dấu trang, ghi chú, URL hay câu lệnh của bạn. Chỉ kèm báo cáo chẩn đoán bên dưới — nó chứa số đếm và phiên bản, không bao giờ chứa nội dung vault."
+    },
+    "troubleshooting": {
+      "title": "Khắc phục sự cố — xử lý hầu hết vấn đề trong 30 giây",
+      "vaultLocked": {
+        "title": "Vault bị khóa / sai mật khẩu",
+        "text": "Mật khẩu phân biệt chữ hoa chữ thường và khoảng trắng. Nếu bạn đã đổi bố cục (ví dụ AZERTY→QWERTY), hãy gõ lại thật chậm. Sau 5 lần mở khóa thất bại, hãy chờ 1 phút. Nếu đánh mất mật khẩu, hãy dùng <strong>cụm 24 từ khôi phục</strong> hiển thị một lần khi tạo vault (<a href=\"#bf-e101\">BF-E101</a>). Không có cụm đó thì không thể khôi phục theo thiết kế — chúng tôi không có lối sau."
+      },
+      "storageFull": {
+        "title": "Bộ nhớ trình duyệt đã đầy",
+        "text": "Hạn mức IndexedDB áp dụng riêng cho từng trình duyệt (thường 60–80% dung lượng ổ đĩa). Khi đầy, thao tác lưu sẽ thất bại với <a href=\"#bf-e103\">BF-E103</a>. Cách sửa: <code>Settings → Storage → Compact database</code> rồi <code>Clear AI cache</code>. Hoặc <code>Export backup (.bmf)</code> → <code>Delete old vectors</code>. Kiểm tra <a href=\"#diagnostics\">% dung lượng trong báo cáo chẩn đoán</a> — trên 80% chúng tôi hiện một biểu ngữ."
+      },
+      "p2pNotConnecting": {
+        "title": "Đồng bộ P2P không kết nối được",
+        "text": "Cả hai thiết bị phải <strong>trực tuyến và đã mở khóa</strong> cùng lúc (WebRTC). Mặc định không có TURN relay — một số mạng doanh nghiệp chặn P2P. Hãy thử: cùng Wi-Fi → ghép cặp bằng QR → giữ ứng dụng mở. Nếu gặp <a href=\"#bf-e105\">BF-E105</a>, hãy kiểm tra <code>Help → Diagnostics → P2P (WebRTC)</code> — nếu báo unavailable, trình duyệt hoặc mạng của bạn đang chặn WebRTC."
+      },
+      "localAiNotRunning": {
+        "title": "AI cục bộ (WebLLM) không chạy",
+        "text": "Cần WebGPU + khoảng 4 GB RAM trống + giấy phép Pro. Kiểm tra <code>Help → Diagnostics → WebGPU/WebLLM</code>. Nếu gặp <a href=\"#bf-e106\">BF-E106</a>: hãy cập nhật Chrome/Edge lên bản mới nhất, bật <code>chrome://flags/#enable-unsafe-webgpu</code>, hoặc chuyển sang Ollama (bất kỳ mô hình nào bạn chạy cục bộ — cũng không cần API key)."
+      },
+      "slowSearch": {
+        "title": "Tìm kiếm hoặc nhập dữ liệu bị chậm",
+        "text": "Lần nhập đầu tiên sẽ dựng vector HNSW — rất nặng CPU. Hãy để mở tab. Với hơn 10k dấu trang, hãy dùng <code>Settings → Advanced → Force reprocess</code>. Nếu vẫn chậm, <code>Copy diagnostic</code> hiển thị <code>vectorIndexLoad</code> và độ trễ truy vấn."
+      }
+    },
+    "errorCodes": {
+      "title": "Mã lỗi BF-E* — sao chép mã, nhảy thẳng tới cách sửa",
+      "intro": "Mọi lỗi nghiêm trọng đều hiện một mã như <code>BF-E101</code>. Nhấn vào mã trong ứng dụng hoặc tìm mã ở đây.",
+      "table": {
+        "code": "Mã",
+        "meaning": "Ý nghĩa",
+        "fix": "Cách sửa"
+      },
+      "e101": {
+        "meaning": "Quên mật khẩu vault / cần cụm từ hạt giống",
+        "fix": "Chúng tôi không thể khôi phục mật khẩu. Khi tạo vault, chúng tôi hiện <strong>cụm 24 từ đúng một lần</strong> — hãy chép ra giấy. Dùng nó để đặt lại. Không có cụm = không thể khôi phục vault. <a href=\"#diagnostics\">Không ticket nào khôi phục được</a>."
+      },
+      "e102": {
+        "meaning": "Vault bị khóa / sai mật khẩu",
+        "fix": "Gõ lại mật khẩu chính xác. Sau 5 lần thất bại, hãy chờ 60 giây. Nếu bạn vừa đổi mật khẩu, hãy thử mật khẩu cũ — việc xoay vòng vẫn giữ lại salt cuối cùng để có thể quay lui."
+      },
+      "e103": {
+        "meaning": "Vượt hạn mức bộ nhớ",
+        "fix": "Vào <code>Settings → Storage</code>: Compact DB + Clear AI cache. Hãy xuất bản sao lưu .bmf nếu cần. Xem Khắc phục sự cố §Bộ nhớ."
+      },
+      "e104": {
+        "meaning": "IndexedDB bị chặn / cửa sổ ẩn danh",
+        "fix": "IndexedDB bị chặn trong chế độ riêng tư/incognito hoặc bởi chính sách bộ nhớ. Hãy dùng cửa sổ thường. Kiểm tra <code>Help → Diagnostics → Storage</code>."
+      },
+      "e105": {
+        "meaning": "P2P / WebRTC không khả dụng",
+        "fix": "Trình duyệt hoặc mạng đang chặn WebRTC. Hãy thử trình duyệt/mạng khác, tắt tường lửa nghiêm ngặt, hoặc dùng Xuất/Nhập thay cho đồng bộ trực tiếp."
+      },
+      "e106": {
+        "meaning": "AI cục bộ (WebLLM) không chạy được trên thiết bị này",
+        "fix": "Cần WebGPU + shader-f16 + 4 GB RAM + gói Pro. Hãy cập nhật trình duyệt, hoặc dùng Ollama / nhà cung cấp đám mây với khóa của bạn."
+      },
+      "e107": {
+        "meaning": "Nhập bản sao lưu thất bại (sai mật khẩu / tệp hỏng)",
+        "fix": "Với <code>.bmf</code> (đã mã hóa) bạn cần mật khẩu lúc xuất, không phải mật khẩu vault. Với JSON, hãy chắc chắn tệp không bị cắt cụt."
+      },
+      "e201": {
+        "meaning": "Giấy phép Pro không hợp lệ / kiểm tra hết hạn",
+        "fix": "Kiểm tra <code>Settings → Pro</code>: nhập lại khóa. Kết quả kiểm tra offline được cache lại; hãy kết nối một lần để xác thực lại qua Whop."
+      },
+      "e202": {
+        "meaning": "Đã đạt giới hạn gói Free (2,500 dấu trang)",
+        "fix": "Gói Free giới hạn 2,500 dấu trang. Hãy xóa bớt hoặc nâng cấp lên Pro Lifetime v1 để không giới hạn. Bạn luôn có thể xuất dữ liệu."
+      },
+      "tip": "Mẹo hỗ trợ: nhấn <code>Copy diagnostic</code> của lỗi sẽ sao chép mã kèm ngữ cảnh trong một cú nhấp — hãy dán vào GitHub Discussion hoặc email của bạn."
+    },
+    "diagnostics": {
+      "title": "Sao chép một báo cáo chẩn đoán đã che thông tin — thứ bạn gửi cho bộ phận hỗ trợ",
+      "intro": "Trong ứng dụng: <code>Settings → Advanced</code> (hoặc <code>Help → Diagnostics</code>) → <strong>Copy diagnostic</strong>. Nó trông như thế này — không nội dung vault, không URL, không câu lệnh:",
+      "example": "BookmarkForge v1.0.0 | Chrome 126 | Vault: 847 bookmarks, 12 docs\nStorage: 42% (IndexedDB OK) | Last backup: 2 days ago (.bmf encrypted)\nP2P: not connected | Sync: never | Local AI: WebLLM not loaded\nErrors: 0 last 7d | BF-E: none | Build: a1b2c3d",
+      "contains": "Nội dung gồm: phiên bản ứng dụng, trình duyệt, số đếm (dấu trang/tài liệu/vector), % dung lượng + hạn mức, trạng thái P2P, trạng thái AI, số lỗi và mã BF-E gần nhất, build hash. Dùng hash IP có salt — chúng tôi không bao giờ lưu IP. Xem <a href=\"/privacy-and-terms.html\">Quyền riêng tư §3/§6</a>.",
+      "cantOpen": "Nếu bạn không mở được ứng dụng: hãy gửi trình duyệt + hệ điều hành + các bước tái hiện + mã <code>BF-E*</code> đang hiển thị trên màn hình. Như vậy là đủ cho 90% ticket."
+    },
+    "contact": {
+      "title": "Liên hệ",
+      "paid": "Hỗ trợ trả phí",
+      "paidDetail": "kèm báo cáo chẩn đoán + mã BF-E. Pro 48h (Thứ hai–Thứ sáu).",
+      "community": "Cộng đồng (Free)",
+      "communityDetail": "search <code>BF-E*</code> before posting. Read <a href=\"/help-vi#bf-e\">Error codes</a> + paste diagnostic.",
+      "security": "Vấn đề bảo mật",
+      "securityDetail": "gửi email với tiêu đề <code>[SECURITY]</code> — đừng mở thảo luận công khai.",
+      "note": "BookmarkForge theo mô hình local-first — nội dung vault không bao giờ rời khỏi thiết bị của bạn. Bộ phận hỗ trợ không bao giờ hỏi mật khẩu vault hay cụm khôi phục của bạn."
+    },
+    "alsoSee": "Xem thêm: <a href=\"/\">Trang chủ</a> · <a href=\"/privacy-and-terms.html\">Quyền riêng tư & Điều khoản</a> · <a href=\"/privacy-and-terms.html#terms\">Cấp phép (Lifetime v1)</a> · <a href=\"/#pricing\">Bảng giá</a>",
+    "privacy": "Quyền riêng tư",
+    "home": "Trang chủ",
+    "faq": {
+      "q1": "Gói Free có thật sự miễn phí mãi mãi không?",
+      "a1": "Có. Không dùng thử, không đăng ký. Gói Free gồm 2,500 dấu trang, tìm kiếm toàn văn và ngữ nghĩa, đồ thị tri thức cùng AI với API key của chính bạn.",
+      "q2": "Lifetime của v1 nghĩa là gì?",
+      "a2": "Trả một lần, sở hữu v1 mãi mãi. Mọi bản sửa lỗi v1.x mãi mãi cộng 12 tháng cập nhật tính năng kể từ lúc mua. Cập nhật bảo mật mãi mãi. Sau tháng thứ 13 bạn vẫn dùng được v1. v2 và v3 là hai phiên bản lớn có phí riêng: $89 cho khách mới, $35 cho chủ sở hữu v1 (giảm 60%).",
+      "q3": "Lỡ quên mật khẩu vault thì sao?",
+      "a3": "Chúng tôi không thể khôi phục. Khi tạo vault, chúng tôi hiển thị cụm 24 từ khôi phục đúng một lần — hãy chép ra giấy. Không có nó thì vault không thể khôi phục. Xem BF-E101."
+    }
+  }
+}

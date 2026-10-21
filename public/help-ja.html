@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ヘルプセンター — FAQ・トラブルシューティング・サポートSLA | BookmarkForge</title>
+  <meta name="description" content="BookmarkForgeヘルプセンター：v1ライフタイム、トラブルシューティング、エラーコード BF-E*、サポートSLA、診断レポートのコピー方法。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://bookmarkforgeapp.com/help">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/help">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="ヘルプセンター — BookmarkForge">
+  <meta property="og:description" content="FAQ・トラブルシューティング・エラーコード・サポートSLA。v1ライフタイムの仕組みと診断レポートのコピー方法。">
+  <meta property="og:url" content="https://bookmarkforgeapp.com/help">
+  <meta property="og:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="ja_JP">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="ヘルプセンター — BookmarkForge">
+  <meta name="twitter:description" content="FAQ・トラブルシューティング・エラーコード・サポートSLA。v1ライフタイムの仕組みと診断レポートのコピー方法。">
+  <meta name="twitter:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <script src="/theme-init.js"></script>
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/privacy-and-terms.css">
+  <link rel="stylesheet" href="/help.css">
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "@id":"https://bookmarkforgeapp.com/help#faq",
+    "mainEntity":[
+      {"@type":"Question","name":"Freeプランは本当に永久無料ですか？","acceptedAnswer":{"@type":"Answer","text":"はい。トライアル・サブスクリプションなし。Freeは2,500ブックマーク、全文検索＋セマンティック検索、ナレッジグラフ、自分のAPIキーでAI利用が可能です。"}},
+      {"@type":"Question","name":"「v1ライフタイム」とは何ですか？","acceptedAnswer":{"@type":"Answer","text":"一度購入すればv1を永久に利用できます。v1.xのバグ修正は永久、購入から12ヶ月間は機能更新を提供。セキュリティ更新は永久。13ヶ月目以降もv1は動作し続けます。v2・v3は別メジャー版（新規$89、v1保有者$35／60%オフ）です。"}},
+      {"@type":"Question","name":"Vaultパスワードを忘れた場合は？","acceptedAnswer":{"@type":"Answer","text":"復元できません。Vault作成時に一度だけ24語リカバリーフレーズを表示します。紙に保管してください。フレーズなしでは復元不可です（BF-E101参照）。"}}
+    ]
+  }
+  </script>
+  <script src="/landing.js"></script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="/" class="brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" alt="" width="28" height="28" />
+        BookmarkForge
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false" style="margin-left: auto;">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <p class="last-updated"><strong>最終更新:</strong> 2026年9月13日 · <a href="/">← ホームへ戻る</a></p>
+
+    <h1>ヘルプセンター — FAQ・トラブルシューティング・サポートSLA | BookmarkForge</h1>
+    <p>メールで問い合わせる前にチェックしてください。BookmarkForgeは<strong>ローカルファースト・暗号化</strong>です。Vaultは閲覧できません。90%の問題は、ここで診断情報をコピー＆ペーストするだけで解決します。</p>
+
+    <nav class="help-toc" aria-label="On this page">
+      <ul>
+        <li><a href="#pricing">料金・v1ライフタイム</a></li>
+        <li><a href="#sla">サポートSLA</a></li>
+        <li><a href="#troubleshooting">トラブルシューティング</a></li>
+        <li><a href="#bf-e">エラーコード BF-E*</a></li>
+        <li><a href="#diagnostics">診断レポートのコピー</a></li>
+        <li><a href="#contact">お問い合わせ</a></li>
+      </ul>
+    </nav>
+
+    <h2 id="pricing">料金 — v1ライフタイム・サブスクリプション不要</h2>
+    <p><strong>方針：</strong><em>BookmarkForge v1</em>は一度だけ購入。月額課金はありません。比較：Raindrop Pro 年額$28〜38、Instapaper 年額$60、Readwise 年額$120、Capacities 年額$120。$79ライフタイムはRaindrop年額の約2倍ですが、ライフタイム＋プライバシーを考慮すれば妥当です。</p>
+
+    <table class="sla">
+      <thead><tr><th>プラン</th><th>価格</th><th>内容</th><th>枠</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Free</strong></td><td>$0 / 永久</td><td>2,500ブックマーク／デバイス（各デバイスは独自Vault）。全文検索＋セマンティック検索、ナレッジグラフ、自分のAPIキーでAI利用、PWA＋拡張機能。2,500以内なら閲覧・検索・エクスポートは継続し、新規保存のみ一時停止します。</td><td>無制限</td></tr>
+        <tr><td><strong>Pro Lifetime v1</strong> <span class="badge">Early Bird</span></td><td><strong>$59</strong> <span style="text-decoration:line-through;color:var(--text-muted)">$79</span> → $79 通常価格 → $99 Traction後</td><td>無制限ブックマーク、5デバイス＋P2P同期、ローカルAI（WebLLM/Ollama）＋RAG＋Expertエージェント、Flashcards、PDF/OCR、10+エクスポート形式、Vault。<em>v1ライフタイム・機能更新12ヶ月・セキュリティ更新永久・v2 60%オフ</em></td><td>200 Early Bird</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>v1ライフタイム — 重要事項：:</strong> <em>BookmarkForge v1ライフタイムライセンス。v1.xの全更新（バグ修正・軽微な機能追加）は永久。購入から12ヶ月間は機能更新を提供。セキュリティ更新は永久。v2・v3などのメジャーバージョンは別製品：新規$89、v1保有者$35（60%オフ）。アップグレードしなくてもv1は永久に動作します。30日間返金保証（Whop経由）。</em>
+      <br>返金：30日間（Whop経由）。決済：カード・PayPal・暗号通貨（Whop経由、カード情報は保存しません）。 <a href="/privacy-and-terms.html#terms">利用規約 § ライセンス</a>
+    </div>
+
+    <div class="callout callout-warn">
+      <strong>サブスクリプションなしでアップグレード：:</strong> 12〜18ヶ月ごとに有料メジャー版（v2.0 $89／v1保有者$35）をリリースします。スキップしてもv1は継続動作。サブスクリプションを強制せず定期収益を得る手法はAffinity・Sketch・Sublimeと同じです。
+    </div>
+
+    <h2 id="sla">サポートSLA — 回答までの時間</h2>
+    <p>単一メンテナー。Vaultは暗号化されているため、<strong>Vaultパスワードや24語のリカバリーフレーズは一切お尋ねしません</strong>。サポートはFreeはベストエフォート、有料はSLA付きです。</p>
+    <table class="sla">
+      <thead><tr><th>プラン</th><th>チャネル</th><th>応答時間</th><th>事前対応</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Free</strong></td><td>セルフサービス：本ヘルプセンター＋<a href="https://github.com/bookmarkforge/bookmarkforge-core/discussions">GitHub Discussions</a></td><td>ベストエフォート（コミュニティ）</td><td>BF-E*コードを検索し、<a href="#diagnostics">§診断</a>の診断情報を投稿前にコピーしてください</td></tr>
+        <tr><td><strong>Pro</strong></td><td>メール <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>（件名：Pro）</td><td><strong>48時間以内</strong></td><td><code>設定 → ヘルプ → 診断情報をコピー</code> で診断テキストを添付してください</td></tr>
+      </tbody>
+    </table>
+    <p style="color:var(--text-muted);font-size:0.92em;">ブックマーク・ノート・URL・プロンプトは閲覧できません。添付は診断情報のみ（カウント・バージョン等）で、Vault内容は含みません。</p>
+
+    <h2 id="troubleshooting">トラブルシューティング — 多くは30秒で解決</h2>
+    <h3>Vaultがロック／パスワード不一致</h3>
+    <p>パスワードは大文字小文字・空白を区別します。キーボードレイアウト（例：AZERTY→QWERTY）が変わっていないか確認し、ゆっくり入力してください。5回失敗後は1分待ってください。パスワードを忘れた場合は、Vault作成時に一度だけ表示される<strong>24語リカバリーフレーズ</strong>を使用してください（<a href="#bf-e101">BF-E101</a>）。フレーズがない場合は設計上復元不可です（バックドアなし）。</p>
+
+    <h3>ブラウザストレージ満杯</h3>
+    <p>IndexedDBの容量はブラウザごと（通常はディスクの60〜80％）。満杯時は<a href="#bf-e103">BF-E103</a>が発生します。対処：<code>設定 → ストレージ → DBを圧縮</code> → <code>AIキャッシュを削除</code>。または<code>バックアップをエクスポート (.bmf)</code> → <code>古いベクトルを削除</code>。<a href="#diagnostics">診断</a>の<code>ストレージ%</code>が80%超だとバナーが表示されます。</p>
+
+    <h3>P2P同期が接続しない</h3>
+    <p>両端末が<strong>オンラインかつアンロック</strong>の同時状態である必要があります（WebRTC）。デフォルトではTURNリレーなしのため、一部企業ネットワークではP2Pが遮断されます。対処：同一Wi-FiでQRペアリング → アプリを開いたままにする。<a href="#bf-e105">BF-E105</a>の場合は<code>ヘルプ → 診断 → P2P（WebRTC）</code>を確認。利用不可ならブラウザ／ネットワークがWebRTCをブロックしています。</p>
+
+    <h3>ローカルAI（WebLLM）が動作しない</h3>
+    <p>要件：WebGPU、空きRAM約4 GB、Proライセンス。<code>ヘルプ → 診断 → WebGPU／WebLLM</code>で確認。<a href="#bf-e106">BF-E106</a>の場合：Chrome/Edge最新版に更新、<code>chrome://flags/#enable-unsafe-webgpu</code>を有効化、またはOllamaへ切替（ローカル実行モデル、APIキー不要）。</p>
+
+    <h3>検索・インポートが遅い</h3>
+    <p>初回インポート時はHNSWベクトル生成（CPU負荷大）です。タブは開いたままにしてください。1万件超なら<code>設定 → 詳細 → 強制再処理</code>。改善しない場合は<code>診断情報をコピー</code>の<code>vectorIndexLoad</code>／クエリ遅延を確認してください。</p>
+
+    <h2 id="bf-e">エラーコード BF-E* — コードをコピーして修正へ</h2>
+    <p>重大なエラーは<code>BF-E101</code>などのコードを表示します。アプリ内コードをクリックするか、ここで検索してください。</p>
+    <table class="sla">
+      <thead><tr><th>コード</th><th>内容</th><th>対処</th></tr></thead>
+      <tbody>
+        <tr id="bf-e101"><td><strong>BF-E101</strong></td><td>Vaultパスワード忘却／リカバリーフレーズ必須</td><td>パスワードは復元できません。Vault作成時に<strong>24語フレーズ</strong>を一度だけ表示しています。紙に書き留め、復旧に使用してください。フレーズなし＝復元不可です。<a href="#diagnostics">この理由でチケットでは復旧できません</a>。</td></tr>
+        <tr id="bf-e102"><td><strong>BF-E102</strong></td><td>Vaultロック／パスワード不一致</td><td>パスワードを正確に入力してください。5回失敗後は60秒待ってください。直近でパスワードを変更した場合は、以前のものを試すと解決することがあります（ローテーションは直前のsaltを保持）。</td></tr>
+        <tr id="bf-e103"><td><strong>BF-E103</strong></td><td>ストレージ容量超過</td><td><code>設定 → ストレージ</code>で DB圧縮＋AIキャッシュ削除を実行。必要なら.bmfバックアップをエクスポート。詳細は「トラブルシューティング §ストレージ」。</td></tr>
+        <tr id="bf-e104"><td><strong>BF-E104</strong></td><td>IndexedDBブロック／プライベートブラウジング</td><td>プライベート／シークレットモードやストレージ制限でIndexedDBがブロックされている可能性があります。通常ウィンドウで開いてください。<code>ヘルプ → 診断 → ストレージ</code>を確認。</td></tr>
+        <tr id="bf-e105"><td><strong>BF-E105</strong></td><td>P2P／WebRTC利用不可</td><td>ブラウザ／ネットワークがWebRTCをブロックしています。他のブラウザ／ネットワークを試す、ファイアウォールの厳格度を下げる、またはリアルタイム同期ではなくエクスポート／インポートを使用してください。</td></tr>
+        <tr id="bf-e106"><td><strong>BF-E106</strong></td><td>ローカルAI（WebLLM）がこの端末で動作不可</td><td>要件：WebGPU + shader-f16 + 4 GB RAM + Pro。ブラウザを更新するか、Ollama／自身のキーでクラウドプロバイダーを使用してください。</td></tr>
+        <tr id="bf-e107"><td><strong>BF-E107</strong></td><td>バックアップインポート失敗（パスワード誤り／ファイル破損）</td><td><code>.bmf</code>（暗号化済み）はエクスポート時のパスワード（Vaultパスワードではありません）が必要です。JSONはファイルが切断されていないか確認してください。</td></tr>
+        <tr id="bf-e201"><td><strong>BF-E201</strong></td><td>Proライセンス無効／検証失敗</td><td><code>設定 → Pro</code>でライセンスキーを再入力してください。オフライン時は検証結果をキャッシュしています。再接続するとWhopで再検証されます。</td></tr>
+        <tr id="bf-e202"><td><strong>BF-E202</strong></td><td>Free上限到達（2,500ブックマーク）</td><td>Freeは2,500件まで。削除するか、Pro v1ライフタイム（無制限）にアップグレードしてください。エクスポートは常時利用可能です。</td></tr>
+      </tbody>
+    </table>
+    <p>サポートヒント：エラー表示の<code>診断情報をコピー</code>をクリックすると、コード＋文脈が1クリックでコピーされます。GitHub Discussionsまたはメールに貼り付けてください。</p>
+
+    <h2 id="diagnostics">個人情報を除去した診断情報のコピー — サポートへ貼り付ける内容</h2>
+    <p>アプリ内：<code>設定 → 詳細</code>（または<code>ヘルプ → 診断</code>）→ <strong>診断情報をコピー</strong>。次のような形式です（Vault内容・URL・プロンプトは含みません）：</p>
+    <div class="diag-box">BookmarkForge v1.0.0 | Chrome 126 | Vault: 847ブックマーク、12ドキュメント
+ストレージ: 42% (IndexedDB OK) | 最終バックアップ: 2日前 (.bmf 暗号化)
+P2P: 未接続 | 同期: 未実行 | ローカルAI: WebLLM 未読み込み
+エラー: 過去7日 0 | BF-E: なし | Build: a1b2c3d</div>
+    <p>含まれる情報：アプリバージョン・ブラウザ・件数（ブックマーク／ドキュメント／ベクトル）、ストレージ%＋容量、P2P状態、AI状態、エラー件数・直近BF-Eコード、ビルドハッシュ。IPはソルト付きハッシュのみで保存し、IPそのものは保存しません。詳細は<a href="/privacy-and-terms.html">プライバシー §3/§6</a>。</p>
+    <p>アプリを開けない場合：ブラウザ＋OS＋再現手順＋画面に表示されている<code>BF-E*</code>コードを記載してください。90%はそれで解決します。</p>
+
+    <h2 id="contact">お問い合わせ</h2>
+    <ul>
+      <li><strong>有料サポート:</strong> <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> — 診断情報＋BF-Eコードを添付してください。Proは48時間以内（平日）。</li>
+      <li><strong>コミュニティ（Free）:</strong> <a href="https://github.com/bookmarkforge/bookmarkforge-core/discussions">GitHub Discussions</a> — search <code>BF-E*</code> before posting. Read <a href="/help-ja#bf-e">Error codes</a> + paste diagnostic.</li>
+      <li><strong>セキュリティ報告:</strong> 件名に<code>[SECURITY]</code>を付けてメールしてください。公開のディスカッションは避けてください。</li>
+    </ul>
+    <p style="color:var(--text-muted);font-size:0.92em;">BookmarkForgeはローカルファーストです。Vault内容は端末から出ません。サポートはVaultパスワードやリカバリーフレーズを一切お尋ねしません。</p>
+
+    <hr>
+    <p style="color:var(--text-muted);font-size:0.92em;">関連リンク：<a href="/">ホーム</a> · <a href="/privacy-and-terms.html">プライバシー・利用規約</a> · <a href="/privacy-and-terms.html#terms">ライセンス（v1ライフタイム）</a> · <a href="/#pricing">料金</a></p>
+  </main>
+
+  <footer>
+    <div class="container">
+      &copy; 2026 BookmarkForge. All rights reserved. · <a href="/privacy-and-terms.html">プライバシー</a> · <a href="/">ホーム</a>
+    </div>
+  </footer>
+</body>
+</html>

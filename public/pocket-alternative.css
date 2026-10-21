@@ -1,0 +1,168 @@
+/* Pocket-alternative comparison page — consumes brand tokens from
+   /brand-tokens.css (shared nav/footer/buttons come from /landing.css). */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+.cmp-hero {
+  padding: 140px 24px 72px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cmp-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% -20%, var(--accent-faint) 0%, transparent 60%);
+  pointer-events: none;
+}
+.cmp-hero .container { position: relative; }
+.cmp-hero h1 {
+  font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  margin-bottom: 20px;
+}
+.cmp-hero .subtitle {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.cmp-section { padding: 72px 0; }
+.cmp-section.alt { background: var(--bg-secondary); }
+.cmp-section .section-head { text-align: center; margin-bottom: 48px; }
+.cmp-section .section-head h2 {
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.cmp-section .section-head p {
+  color: var(--text-muted);
+  font-size: 1.0625rem;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+/* ── Context cards ───────────────────────────────────────────────── */
+.context-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.context-card {
+  background: var(--bg-card);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-card);
+  padding: 28px;
+}
+.context-card h3 { font-size: 1.0625rem; font-weight: 600; margin-bottom: 10px; }
+.context-card p { color: var(--text-muted); font-size: 0.9375rem; }
+
+/* ── Comparison table ────────────────────────────────────────────── */
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+}
+table.cmp {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 620px;
+}
+.cmp th {
+  background: var(--bg-topbar);
+  color: var(--text-secondary);
+  text-align: left;
+  padding: 14px 16px;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--divider);
+  white-space: nowrap;
+}
+.cmp th:first-child { width: 38%; }
+.cmp td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--divider);
+  font-size: 0.9375rem;
+  vertical-align: top;
+}
+.cmp tr:last-child td { border-bottom: none; }
+.cmp td.feature { color: var(--text-secondary); font-weight: 500; }
+.yes { color: var(--color-success-text); font-weight: 600; white-space: nowrap; }
+.no { color: var(--color-danger-text); font-weight: 600; white-space: nowrap; }
+.partial { color: var(--color-warning-text); font-weight: 600; white-space: nowrap; }
+.table-note {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  text-align: center;
+  margin-top: 16px;
+}
+
+/* ── Migration steps ─────────────────────────────────────────────── */
+.steps {
+  counter-reset: step;
+  display: grid;
+  gap: 20px;
+  max-width: 780px;
+  margin: 0 auto;
+}
+.step {
+  background: var(--bg-card);
+  border: 1px solid var(--divider);
+  border-radius: var(--radius-card);
+  padding: 26px 28px 26px 84px;
+  position: relative;
+}
+.step::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  left: 26px;
+  top: 26px;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-soft);
+  color: var(--accent-primary);
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 1.0625rem;
+}
+.step h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 8px; }
+.step p { color: var(--text-muted); font-size: 0.9375rem; line-height: 1.65; }
+.step code {
+  background: var(--bg-topbar);
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  color: var(--text-accent);
+}
+
+/* ── FAQ ─────────────────────────────────────────────────────────── */
+.faq-list { max-width: 780px; margin: 0 auto; display: grid; gap: 20px; }
+.faq-list dt { font-weight: 600; color: var(--text-primary); }
+.faq-list dd { color: var(--text-muted); margin-top: 6px; line-height: 1.6; }
+
+/* ── CTA ─────────────────────────────────────────────────────────── */
+.cmp-cta { padding: 88px 0; background: var(--bg-secondary); text-align: center; }
+.cmp-cta h2 { font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 700; margin-bottom: 14px; }
+.cmp-cta p { color: var(--text-muted); margin-bottom: 28px; }
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .context-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .cmp-hero { padding: 110px 16px 56px; }
+  .cmp-section { padding: 56px 0; }
+  .step { padding: 22px 20px 22px 72px; }
+  .step::before { left: 20px; top: 22px; width: 34px; height: 34px; }
+}

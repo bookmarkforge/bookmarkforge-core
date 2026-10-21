@@ -1,0 +1,740 @@
+{
+  "lang": "ro",
+  "langName": "Română",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/ro/",
+  "ogLocale": "ro_RO",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Totul rămâne pe computerul tău. Plătești o singură dată.",
+  "description": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. 59 de dolari, o singură dată. Free: 2,500 marcaje.",
+  "ogTitle": "BookmarkForge — Totul rămâne pe computerul tău. Plătești o singură dată.",
+  "ogDescription": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. 59 de dolari, o singură dată. Free: 2,500 marcaje.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Totul rămâne pe computerul tău. Plătești o singură dată.",
+  "twitterDescription": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. 59 de dolari, o singură dată. Free: 2,500 marcaje.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Sari la conținutul principal",
+  "navBrandAria": "Pagina principală BookmarkForge",
+  "navAriaLabel": "Navigație principală",
+  "homeHref": "/ro/",
+  "navLinks": {
+    "pocketAlternative": "Alternativa Pocket",
+    "features": "Funcționalități",
+    "ai": "AI",
+    "privacy": "Confidențialitate",
+    "pricing": "Prețuri",
+    "help": "Ajutor",
+    "raindropCompare": "Comparație cu Raindrop"
+  },
+  "langLink": {
+    "href": "/es/",
+    "hreflang": "es",
+    "lang": "es",
+    "text": "Español"
+  },
+  "navCta": "Deschide aplicația",
+  "themeToggleAria": "Schimbă tema",
+  "navToggleAria": "Deschide meniul",
+  "navToggleAriaClose": "Închide meniul",
+  "hero": {
+    "badge": "Plată unică · Fără abonament",
+    "title": "Tot ce salvezi rămâne pe computerul tău. <span class=\"accent-text\">Totul.</span>",
+    "subtitle": "Raindrop îți ține marcajele pe serverele lui — și te taxă în fiecare an. BookmarkForge le ține pe computerul tău, blocate cu o cheie pe care o ai doar tu. Fără conturi. Fără abonamente lunare. Nimeni nu îți citește peste umăr.",
+    "ctaPrimary": "Lansează aplicația Free",
+    "ctaSecondary": "Vezi prețurile",
+    "pillars": [
+      {
+        "strong": "Privat",
+        "text": "paginile salvate nu părăsesc niciodată computerul tău"
+      },
+      {
+        "strong": "Blocat",
+        "text": "nici noi nu le putem citi"
+      },
+      {
+        "strong": "Fără internet",
+        "text": "funcționează în avion, în tunel, oriunde"
+      },
+      {
+        "strong": "Plătești o singură dată",
+        "text": "59 de dolari o singură dată, nu 28 de dolari în fiecare an"
+      }
+    ]
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "Vezi cum funcționează",
+    "title": "Aplicația reală, nu o simulare",
+    "subtitle": "Fără zid de înregistrare, fără înregistrări video de stoc și fără cursor fals. Bucla este versiunea lansată, pe un desktop obișnuit: deblochezi seiful, salvezi o pagină, cauți în bibliotecă și îl blochezi din nou.",
+    "imageAlt": "Buclă animată a aplicației BookmarkForge: deblocarea seifului, capturarea unui marcaj, căutarea în bibliotecă și blocarea din nou",
+    "caption": "Înregistrat din aplicația desktop cu date demonstrative. Parcurgerea completă este inclusă în proiect.",
+    "steps": [
+      {
+        "title": "Deblochează",
+        "text": "Seiful se deschide cu o parolă pe care o alegi tu; cheia rămâne pe dispozitivul tău."
+      },
+      {
+        "title": "Salvează",
+        "text": "Salvează o pagină direct din aplicație — fără cont și fără extensie."
+      },
+      {
+        "title": "Găsește",
+        "text": "Caută după cuvânt-cheie sau după sens, cu sursele fiecărui răspuns afișate."
+      },
+      {
+        "title": "Blochează",
+        "text": "Închide seiful și cheia de decriptare dispare din memorie."
+      }
+    ],
+    "ctaPrimary": "Lansează aplicația"
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Salvează pentru mai târziu, reînviat",
+    "title": "Alternativa privată la Pocket",
+    "subtitle": "Pocket dispare. BookmarkForge ține viu obiceiul de a salva pentru mai târziu — cu fiecare articol, notiță și fragment evidențiat stocate criptat pe dispozitivul tău.",
+    "features": [
+      {
+        "title": "Salvează pentru mai târziu, al tău pentru totdeauna",
+        "text": "Salvează articole, videoclipuri și PDF cu un singur clic — din PWA, din extensia de browser sau din meniul de partajare. Spre deosebire de Pocket, lista ta de citire trăiește pe dispozitivul tău, criptată, și funcționează în continuare fără internet."
+      },
+      {
+        "title": "Note în stil Notion pentru fiecare articol",
+        "text": "Evidențiază, rezumă și ține note pe bază de blocuri atașate oricărui marcaj. Transformă un articol salvat într-o bază de cunoștințe a ta — nu doar într-o listă de linkuri."
+      },
+      {
+        "title": "Zero urmărire, zero reclame",
+        "text": "BookmarkForge nu are conturi, nu are analiză de trafic și nu are reclame implicit. Obiceiurile tale de citire nu sunt treaba altcuiva decât a ta."
+      }
+    ],
+    "ctaPrimary": "Începe să salvezi în varianta Free",
+    "ctaSecondary": "Ghid complet de comparație și migrare",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "Cuvinte simple, fără marketing",
+    "title": "BookmarkForge vs Raindrop, fără litera mică",
+    "subtitle": "Raindrop este o aplicație bună. Diferența mare este unde trăiește lucrurile tale.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Unde trăiește lista ta",
+        "us": "Pe computerul tău",
+        "them": "Pe serverele lor"
+      },
+      {
+        "topic": "Cine poate citi ce salvezi",
+        "us": "Nimeni — blocat cu cheia ta, nici noi",
+        "them": "Compania, și cineva care le cere de la ei"
+      },
+      {
+        "topic": "Fără internet",
+        "us": "Totul continuă să funcționeze",
+        "them": "Doar elementele de bază"
+      },
+      {
+        "topic": "Ce plătești",
+        "us": "59 de dolari, o singură dată. Gata.",
+        "them": "28 de dolari în fiecare an, la nesfârșit"
+      },
+      {
+        "topic": "Dacă compania dispare (RIP Pocket)",
+        "us": "Nu se schimbă nimic — totul e deja în mâinile tale",
+        "them": "Exporti și reiei de la zero"
+      },
+      {
+        "topic": "Asistentul AI",
+        "us": "Rulește în computerul tău, în modul privat — nu se trimite nimic nicăieri",
+        "them": "Lecturile tale pleacă în cloud ca să se gândească"
+      }
+    ],
+    "ctaPrimary": "Încearcă-l gratuit în 2 minute — fără cont",
+    "ctaSecondary": "Comparație completă cu Pocket",
+    "close": "Raindrop e mai simplu și gratuit — dacă asta e tot ce ai nevoie, folosește-l fără griji. Dar dacă preferi să îți ții viața de citire în propriile mâini, BookmarkForge e făcut exact pentru asta."
+  },
+  "features": {
+    "id": "features",
+    "tag": "Tot ce ai nevoie",
+    "title": "Tot ce ai nevoie, în cuvinte simple",
+    "items": [
+      {
+        "title": "Marcaje și documente",
+        "text": "Salvează orice pagină cu un singur clic. Scrie notițe chiar lângă ea, într-un editor curat și simplu. Rămâne rapidă chiar și cu 100,000 de elemente salvate."
+      },
+      {
+        "title": "Căutare inteligentă",
+        "text": "Găsești lucruri după cuvânt-cheie sau după sens — chiar și când nu îți amintești exact cuvintele. Raindrop cere 28 de dolari pe an pentru asta; aici e inclus gratuit."
+      },
+      {
+        "title": "O AI care îți citește biblioteca, în computerul tău",
+        "text": "Întreabă despre ce ai salvat și primești răspunsuri cu sursele afișate. Nimic nu merge în cloud și funcționează fără internet. Necesită Pro."
+      },
+      {
+        "title": "Discută cu propria ta bibliotecă",
+        "text": "Întreabă orice despre marcajele și notițele tale și primești răspunsuri cu surse. Modul privat rulează 100% pe calculatorul tău. Necesită Pro."
+      },
+      {
+        "title": "Sincronizare între dispozitivele tale",
+        "text": "Dispozitivele tale comunică direct între ele — fără server intermediar, iar totul rămâne criptat. Împerechează-le scanând un cod QR. Până la 5 dispozitive. Necesită Pro."
+      },
+      {
+        "title": "Copii de rezervă ale tale",
+        "text": "Copii de rezervă automate pe care le poți ține unde vrei — pe un disc extern, într-un folder din cloud, oriunde. Exportă totul în Markdown, JSON, CSV sau PDF oricând vrei. Cheile sunt ale tale."
+      },
+      {
+        "title": "O hartă a cunoștințelor tale",
+        "text": "Vezi cum se leagă notițele și marcajele tale. Filtrează după etichete, date și similitudine și plimbă-te printr-o pânză fără margini."
+      },
+      {
+        "title": "Carduri de învățare care combat uitarea",
+        "text": "Transformă orice document salvat în carduri cu întrebări care îți reapar exact înainte să uiți — aceeași idee de programare ca în Anki. Necesită Pro."
+      },
+      {
+        "title": "Confidențial implicit",
+        "text": "Fără conturi, fără urmărire, fără reclame. Tu ești clientul, nu produsul. Partajarea statisticilor de utilizare există, este opțională și rămâne oprită până când o activezi."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "O AI care te respectă",
+    "title": "Cunoștințele tale, amplificate",
+    "subtitle": "Rulează asistentul în computerul tău — nu iese nimic din el și funcționează fără internet. Preferi un model mare din cloud? Conectează-ți cheia: întrebările tale și paginile necesare ca să le răspunzi ajung la acel furnizor, pe cheltuiala ta. Prompturile tale, datele tale, regulile tale.",
+    "providers": {
+      "title": "Furnizori acceptați",
+      "list": [
+        {
+          "type": "local",
+          "name": "În computerul tău — modele WebLLM (TinyLlama, Llama 3.2, Phi-3.5-mini) — doar Pro"
+        },
+        {
+          "type": "local",
+          "name": "Pe calculatorul tău — Ollama (orice model pe care îl rulezi)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Google Gemini (cu propria ta cheie)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — OpenAI / GPT-4o (cu propria ta cheie)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Anthropic Claude (cu propria ta cheie)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Groq (cu propria ta cheie)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — OpenRouter sau alt furnizor personalizat (cu propria ta cheie)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Moduri de chat",
+      "items": [
+        {
+          "title": "Mod privat",
+          "text": "Asistentul rulează în întregime în computerul tău. Nu iese nimic din el și nu are nevoie de internet. Necesită Pro."
+        },
+        {
+          "title": "Mod căutare web",
+          "text": "Combină biblioteca ta cu rezultate live de pe web (furnizori cloud)."
+        },
+        {
+          "title": "Agenți experți",
+          "text": "Ajutoare specializate: Programator, Scriitor, Analist și Cercetător. Necesită Pro."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Confidențialitatea nu e o funcționalitate — e temelia",
+    "subtitle": "Fiecare decizie arhitecturală te pune pe tine în control",
+    "items": [
+      {
+        "title": "Blocat, încât nimeni să nu-l poată citi — nici noi",
+        "text": "Biblioteca ta este criptată cu o cheie derivată din parola ta principală. Nu vedem niciodată parola ta sau conținutul tău."
+      },
+      {
+        "title": "Stocat pe dispozitivul tău",
+        "text": "Totul trăiește pe computerul tău. Serverul auxiliar se ocupă doar de licențiere, de împerecherea dispozitivelor și de trimiterea întrebărilor tale de AI în modul cloud — niciodată de conținutul tău."
+      },
+      {
+        "title": "Fără urmărire implicit",
+        "text": "Fără analiză de trafic, fără rapoarte de erori, fără urmărire. Partajarea statisticilor de utilizare sau a rapoartelor de eroare este o alegere separată, oprită implicit."
+      },
+      {
+        "title": "Cheile sunt ale tale",
+        "text": "Fără parola principală nu există acces — nu există nicio cale de recuperare ascunsă pentru \"parolă uitată\". Fraza ta de recuperare de 24 de cuvinte este singura cale de intrare; păstreaz-o în siguranță."
+      },
+      {
+        "title": "Drepturile tale, respectate",
+        "text": "Accesează, corectează, șterge sau ia datele tale cu tine — totul se face local, oricând vrei."
+      },
+      {
+        "title": "Fără dependențe",
+        "text": "Exportă-ți datele oricând în formate deschise (JSON, Markdown, CSV, PDF). Cunoștințele tale rămân ale tale și portabile."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Prețuri simple și corecte — fără abonamente",
+    "subtitle": "Free: 2,500 marcaje pentru totdeauna. Pro este o licență Lifetime pentru v1 — plătești o singură dată, v1 e al tău pentru totdeauna. Include toate actualizările v1.x și 12 luni de actualizări de funcționalități. Actualizări de securitate pentru totdeauna. Fără facturare lunară.",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "$ 0",
+        "period": "/pentru totdeauna",
+        "description": "Pentru arhivă personală (2.500 marcaje, funcționează pe orice dispozitiv — fiecare are propriul seif)",
+        "features": [
+          {
+            "included": true,
+            "text": "2.500 marcaje, note și documente"
+          },
+          {
+            "included": true,
+            "text": "Căutare inteligentă (text integral + semantică) — inclusă gratuit; Raindrop taxează asta anual"
+          },
+          {
+            "included": true,
+            "text": "AI cu cheia ta de API (tu plătești furnizorul)"
+          },
+          {
+            "included": true,
+            "text": "Graf de cunoștințe"
+          },
+          {
+            "included": true,
+            "text": "Șabloane de bază"
+          },
+          {
+            "included": true,
+            "text": "Export JSON/HTML"
+          },
+          {
+            "included": true,
+            "text": "PWA + extensii de browser"
+          },
+          {
+            "included": false,
+            "text": "Sincronizare P2P între dispozitive"
+          },
+          {
+            "included": false,
+            "text": "AI local (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "Chat RAG peste datele tale"
+          },
+          {
+            "included": false,
+            "text": "Flashcards cu spaced repetition"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          }
+        ],
+        "cta": "Începe cu Free",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "badge": "Cea mai populară — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (apoi $79)",
+        "description": "Lifetime de v1 · 12 luni de actualizări de funcționalități · Securitate pentru totdeauna · v2 cu 60% reducere",
+        "features": [
+          {
+            "included": true,
+            "text": "Tot ce include Free"
+          },
+          {
+            "included": true,
+            "text": "Marcaje nelimitate"
+          },
+          {
+            "included": true,
+            "text": "5 dispozitive · sincronizare P2P între 5 dispozitive"
+          },
+          {
+            "included": true,
+            "text": "Modele AI locale (WebLLM, fără cheie de API) · chat RAG"
+          },
+          {
+            "included": true,
+            "text": "Agenți experți (Programator, Scriitor, Analist, Cercetător)"
+          },
+          {
+            "included": true,
+            "text": "Flashcards cu repetiție spațiată · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Export avansat (10+ formate) · copii de rezervă criptate"
+          },
+          {
+            "included": true,
+            "text": "Seif de securitate (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Lifetime de v1 · 12 luni de actualizări de funcționalități"
+          },
+          {
+            "included": true,
+            "text": "Actualizări de securitate pentru totdeauna"
+          },
+          {
+            "included": true,
+            "text": "Suport prin e-mail (48h) + acces anticipat"
+          }
+        ],
+        "cta": "Ia Pro $59 Early Bird",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "apoi $79 preț normal",
+        "sla": "Suport: e-mail 48h (Lun–Vin)",
+        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
+        "cta2": "Obține Pro $79 Regular",
+        "cta2Class": "btn-secondary"
+      }
+    ],
+    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-ro#pricing\">Learn more</a>"
+  },
+  "faq": {
+    "title": "Întrebări frecvente",
+    "items": [
+      {
+        "question": "Este nivelul Free cu adevărat gratuit pentru totdeauna?",
+        "answer": "Da. Fără perioadă de test, fără abonament. Nivelul Free include 2,500 marcaje, căutare pe text integral și semantică, graf de cunoștințe și AI cu propria cheie de API (plătești furnizorul)."
+      },
+      {
+        "question": "Ce înseamnă \"Lifetime de v1\" pentru Pro?",
+        "answer": "Plătești o singură dată, v1 e al tău pentru totdeauna. Include toate actualizările v1.x (corectări de erori + funcționalități mici) pentru totdeauna și 12 luni de actualizări de funcționalități de la data achiziției. Actualizări de securitate pentru totdeauna. După luna a 13-a v1 rămâne funcțional, doar fără funcționalități noi. Versiunile majore viitoare (v2, v3) sunt produse separate: $89 pentru clienți noi, $35 pentru deținătorii de v1 (60% reducere)."
+      },
+      {
+        "question": "Ce metode de plată și ce rambursări?",
+        "answer": "Prin Whop: card de credit, PayPal, crypto. Nu vedem niciodată datele tale de plată. Rambursare în 30 de zile — scrie la <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
+      },
+      {
+        "question": "Suport — cât de repede răspundeți?",
+        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help-ro#sla\">Support SLA</a>."
+      },
+      {
+        "question": "Ce fac dacă uit parola seifului?",
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-ro#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Gata să îți stăpânești cunoștințele?",
+    "text": "Alătură-te miilor de cercetători, dezvoltatori și învățători care își încredințează BookmarkForge cel de-al doilea creier.",
+    "ctaPrimary": "Lansează aplicația Free",
+    "ctaSecondary": "Trecă la Pro",
+    "note": "Nu e necesar niciun cont. Funcționează imediat în browser. Nivelul Free: 2,500 marcaje."
+  },
+  "footer": {
+    "brand": "Seiful tău privat de cunoștințe, cu AI. 100% local.",
+    "product": {
+      "title": "Produs",
+      "links": [
+        "Funcționalități",
+        "Capabilități AI",
+        "Confidențialitate",
+        "Prețuri",
+        "Deschide aplicația"
+      ],
+      "hrefs": [
+        "/#features",
+        "/#ai",
+        "/#privacy",
+        "/#pricing",
+        "/app"
+      ]
+    },
+    "resources": {
+      "title": "Resurse",
+      "links": [
+        "Comparație cu Pocket",
+        "Confidențialitate și termeni"
+      ],
+      "hrefs": [
+        "/pocket-alternative.html",
+        "/privacy-and-terms.html"
+      ]
+    },
+    "languages": {
+      "title": "Limbi",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Suport",
+      "links": [
+        "Contact"
+      ],
+      "helpCenter": "Centru de ajutor",
+      "errorCodes": "Coduri de eroare"
+    },
+    "copyright": "© 2026 BookmarkForge. Toate drepturile rezervate.",
+    "legal": [
+      "Politica de confidențialitate",
+      "Termeni și condiții",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Seiful tău privat de cunoștințe, cu AI. 100% local. Alternativa privată la Pocket. Free: 2,500 marcaje.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "Free",
+        "price": "0",
+        "currency": "USD",
+        "description": "2,500 marcaje. Gratuit pentru totdeauna."
+      },
+      {
+        "name": "Pro Lifetime v1 — Early Bird",
+        "price": "59",
+        "currency": "USD",
+        "description": "Early Bird 200. Lifetime de v1, 12 luni de funcționalități, securitate pentru totdeauna, v2 cu 60% reducere.",
+        "priceValidUntil": "2026-12-31",
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "price": "79",
+        "currency": "USD",
+        "description": "Preț normal. Lifetime de v1."
+      }
+    ],
+    "featureList": [
+      "Stocare locală",
+      "Criptare de la un capăt la altul",
+      "Funcționează fără internet",
+      "Căutare cu AI",
+      "Editor în stil Notion",
+      "Sincronizare P2P"
+    ],
+    "faq": [
+      {
+        "question": "Este nivelul Free cu adevărat gratuit pentru totdeauna?",
+        "answer": "Da. Fără perioadă de test, fără abonament. Nivelul Free include 2,500 marcaje, căutare pe text integral și semantică, graf de cunoștințe și AI cu propria cheie de API (plătești furnizorul)."
+      },
+      {
+        "question": "Ce înseamnă \"Lifetime de v1\" pentru Pro?",
+        "answer": "Plătești o singură dată, v1 e al tău pentru totdeauna. Include toate actualizările v1.x (corectări de erori + funcționalități mici) pentru totdeauna și 12 luni de actualizări de funcționalități de la data achiziției. Actualizări de securitate pentru totdeauna. După luna a 13-a v1 rămâne funcțional, doar fără funcționalități noi. Versiunile majore viitoare (v2, v3) sunt produse separate: $89 pentru clienți noi, $35 pentru deținătorii de v1 (60% reducere)."
+      },
+      {
+        "question": "Ce metode de plată și ce rambursări?",
+        "answer": "Prin Whop: card de credit, PayPal, crypto. Nu vedem niciodată datele tale de plată. Rambursare în 30 de zile — contactează bookmarkforge@proton.me."
+      },
+      {
+        "question": "Suport — cât de repede răspundeți?",
+        "answer": "Free: ajutor comunitar prin Centrul de ajutor + GitHub Discussions (în măsura posibilului). Pro: e-mail în 48h, zile lucrătoare. Seiful este criptat — nu putem vedea datele tale, așa că nu cerem niciodată parola sau fraza de recuperare. Vezi SLA de suport."
+      },
+      {
+        "question": "Ce fac dacă uit parola seifului?",
+        "answer": "Nu putem recupera parola. Când creezi un seif afișăm o singură dată fraza de recuperare de 24 de cuvinte — scrie-o pe hârtie. Fără ea, nimeni (nici noi) nu poate deschide seiful. Vezi BF-E101."
+      }
+    ]
+  },
+  "help": {
+    "title": "Centru de ajutor — FAQ, diagnosticare și SLA de suport | BookmarkForge",
+    "description": "Centrul de ajutor BookmarkForge: prețuri lifetime v1, diagnosticare, coduri de eroare BF-E*, SLA de suport și cum să copiezi un raport de diagnosticare redactat.",
+    "ogTitle": "Centru de ajutor — BookmarkForge",
+    "ogDescription": "FAQ, diagnosticare, coduri de eroare și SLA de suport. Află cum funcționează lifetime v1 și cum să copiezi un raport de diagnosticare.",
+    "ogLocale": "en_US",
+    "lastUpdated": "Ultima actualizare",
+    "lastUpdatedDate": "13 septembrie 2026",
+    "backToHome": "← Înapoi la pagina principală",
+    "intro": "Răspunsuri înainte să fie nevoie să scrii un e-mail. BookmarkForge este <strong>local și criptat</strong> — nu putem vedea seiful tău. 90% din probleme se rezolvă aici, cu un raport de diagnosticare pe care îl poți copia și lipi.",
+    "toc": {
+      "pricing": "Prețuri și Lifetime v1",
+      "sla": "SLA de suport",
+      "troubleshooting": "Diagnosticare",
+      "errorCodes": "Coduri de eroare BF-E*",
+      "diagnostics": "Copiază raportul de diagnosticare",
+      "contact": "Contact"
+    },
+    "pricing": {
+      "title": "Prețuri — Lifetime de v1, fără abonamente",
+      "intro": "<strong>Model:</strong> plătești o singură dată pentru <em>BookmarkForge v1</em>. Fără facturare lunară. Comparație: Raindrop Pro $28–38/y, Instapaper $60/y, Readwise $120/y, Capacities $120/y. Un lifetime de $79 e de ~2× prețul anual al lui Raindrop — justificat de lifetime + confidențialitate.",
+      "table": {
+        "tier": "Nivel",
+        "price": "Preț",
+        "whatYouGet": "Ce primești",
+        "supply": "Disponibilitate"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro Lifetime v1"
+      },
+      "freePrice": "$0 pentru totdeauna",
+      "freeDescription": "2,500 marcaje pe orice dispozitiv (fiecare are propriul seif), căutare inteligentă — text integral + semantic, funcționalitatea pentru care Raindrop cere plata anuală — graf de cunoștințe, AI cu propria cheie de API, PWA + extensii. La 2,500 seiful tău rămâne întreg: citirea, căutarea și exportul nu se opresc; doar salvările noi se pun în pauză.",
+      "unlimited": "Nelimitat",
+      "badge": "Early Bird",
+      "proPrice": "$59",
+      "proPriceStriked": "$79",
+      "proPriceRegular": "$79 preț normal",
+      "proPriceTraction": "$99 după atingerea pragului de tracțiune",
+      "proDescription": "Marcaje nelimitate, 5 dispozitive + sincronizare P2P, AI local (WebLLM/Ollama) + RAG + agenți experți, flashcards, PDF/OCR, 10+ formate de export, seif. <em>Lifetime de v1 · 12 luni de actualizări de funcționalități · Securitate pentru totdeauna · v2 cu 60% reducere</em>",
+      "proSupply": "200 Early Bird"
+    },
+    "legal": {
+      "title": "Lifetime de v1 — formularea legală:",
+      "text": "Licență Lifetime pentru BookmarkForge v1. Include toate actualizările v1.x (corectări de erori + funcționalități mici) pentru totdeauna și 12 luni de actualizări de funcționalități de la data achiziției. Actualizări de securitate pentru totdeauna. Versiunile majore viitoare (v2, v3) sunt produse separate: $89 pentru clienți noi, $35 pentru deținătorii de v1 (60% reducere). Dacă nu faci upgrade, v1 rămâne funcțional pentru totdeauna. Rambursare în 30 de zile prin Whop.",
+      "refunds": "Rambursări: 30 de zile prin Whop. Plăți: card, PayPal, crypto (Whop — nu vedem niciodată datele cardului).",
+      "terms": "Termeni § Licențiere"
+    },
+    "upgrade": {
+      "title": "Upgrade fără abonament:",
+      "text": "la fiecare 12–18 luni lansăm o versiune majoră plătită (v2.0 la $89 / $35 pentru deținători). Poți să o ignori, iar v1 merge în continuare. Așa obținem venit recurent fără să impunem abonament — același model ca Affinity/Sketch/Sublime."
+    },
+    "sla": {
+      "title": "SLA de suport — cât de repede răspundem",
+      "intro": "Un singur întreținător al proiectului. Seiful este criptat — <strong>nu cerem niciodată parola seifului sau fraza de recuperare de 24 de cuvinte</strong>. Suportul pentru Free este oferit în măsura posibilului, iar pentru planurile plătite este garantat.",
+      "table": {
+        "tier": "Nivel",
+        "channel": "Canal",
+        "response": "Timp de răspuns",
+        "whatToDo": "Ce să faci primul"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro"
+      },
+      "freeChannel": "Autoajutor: acest Centru de ajutor + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeResponse": "În măsura posibilului (comunitate)",
+      "freeWhatToDo": "Caută codul BF-E* mai jos și copiază raportul de diagnosticare (<a href=\"#diagnostics\">§Diagnosticare</a>) înainte de a posta",
+      "proChannel": "E-mail <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (subiect: Pro)",
+      "proResponse": "48h",
+      "proWhatToDo": "Include textul raportului de diagnosticare din <code>Settings → Help → Copy diagnostic</code>",
+      "note": "Nu vedem marcajele, notițele, URL-urile sau prompturile tale. Include doar raportul de diagnosticare de mai jos — conține doar numere și versiuni, niciodată conținutul seifului."
+    },
+    "troubleshooting": {
+      "title": "Diagnosticare — majoritatea problemelor în 30 de secunde",
+      "vaultLocked": {
+        "title": "Seif blocat / parolă greșită",
+        "text": "Parolele sunt sensibile la majuscule și la spații. Dacă ai schimbat tastatura (de ex. AZERTY→QWERTY), rescrie lent. După 5 deblocări eșuate, așteaptă 1 minut. Dacă ai pierdut parola, folosește <strong>fraza de recuperare de 24 de cuvinte</strong> afișată o singură dată la crearea seifului (<a href=\"#bf-e101\">BF-E101</a>). Fără ea, recuperarea e imposibilă prin design — nu avem nicio cale de recuperare ascunsă."
+      },
+      "storageFull": {
+        "title": "Stocarea browserului e plină",
+        "text": "Cota IndexedDB este per browser (de obicei 60–80% din disc). Când se umple, salvările eșuează cu <a href=\"#bf-e103\">BF-E103</a>. Soluție: <code>Settings → Storage → Compact database</code>, apoi <code>Clear AI cache</code>. Sau <code>Export backup (.bmf)</code> → <code>Delete old vectors</code>. Verifică <a href=\"#diagnostics\">procentul de stocare din raportul de diagnosticare</a> — peste 80% afișăm un banner."
+      },
+      "p2pNotConnecting": {
+        "title": "Sincronizarea P2P nu se conectează",
+        "text": "Ambele dispozitive trebuie să fie <strong>online și deblocate</strong> în același moment (WebRTC). Fără releu TURN implicit — unele rețele corporative blochează P2P. Încearcă: ambele pe același Wi-Fi → împerechere cu QR → ține aplicația deschisă. Dacă apare <a href=\"#bf-e105\">BF-E105</a>, testează <code>Help → Diagnostics → P2P (WebRTC)</code> — dacă spune indisponibil, browserul sau rețeaua ta blochează WebRTC."
+      },
+      "localAiNotRunning": {
+        "title": "AI-ul local (WebLLM) nu rulează",
+        "text": "Necesită WebGPU + ~4 GB RAM liberi + licență Pro. Verifică <code>Help → Diagnostics → WebGPU/WebLLM</code>. Dacă apare <a href=\"#bf-e106\">BF-E106</a>: actualizează Chrome/Edge la ultima versiune, activează <code>chrome://flags/#enable-unsafe-webgpu</code> sau trece pe Ollama (orice model pe care îl rulezi local — nici aici nu e nevoie de cheie de API)."
+      },
+      "slowSearch": {
+        "title": "Căutare sau import lent",
+        "text": "Primul import construiește vectorii HNSW — greu pentru procesor. Lasă fila deschisă. Pentru 10k+ marcaje folosește <code>Settings → Advanced → Force reprocess</code>. Dacă problema persistă, <code>Copy diagnostic</code> arată <code>vectorIndexLoad</code> și latența interogărilor."
+      }
+    },
+    "errorCodes": {
+      "title": "Coduri de eroare BF-E* — copiază codul și ajungi direct la soluție",
+      "intro": "Fiecare eroare critică afișează un cod precum <code>BF-E101</code>. Dă clic pe cod în aplicație sau caută-l aici.",
+      "table": {
+        "code": "Cod",
+        "meaning": "Semnificație",
+        "fix": "Soluție"
+      },
+      "e101": {
+        "meaning": "Parola seifului uitată / fraza de recuperare este obligatorie",
+        "fix": "Nu putem recupera parole. La crearea seifului afișăm o <strong>frază de 24 de cuvinte o singură dată</strong> — scrie-o pe hârtie. Folosește-o pentru resetare. Fără frază, seiful nu poate fi recuperat. <a href=\"#diagnostics\">Niciun ticket nu o va recupera</a>."
+      },
+      "e102": {
+        "meaning": "Seif blocat / parolă greșită",
+        "fix": "Rescrie parola exact. După 5 încercări așteaptă 60s. Dacă ai schimbat recent parola, încearcă-o pe cea anterioară — rotația păstrează ultimul salt pentru revenire."
+      },
+      "e103": {
+        "meaning": "Cota de stocare depășită",
+        "fix": "Mergi la <code>Settings → Storage</code>: Compact DB + Clear AI cache. Exportă copia .bmf dacă e nevoie. Vezi Diagnosticare §Stocare."
+      },
+      "e104": {
+        "meaning": "IndexedDB blocat / navigare privată",
+        "fix": "IndexedDB este blocat în modul privat/incognito sau de o politică de stocare. Folosește o fereastră normală. Verifică <code>Help → Diagnostics → Storage</code>."
+      },
+      "e105": {
+        "meaning": "P2P / WebRTC indisponibil",
+        "fix": "Browserul sau rețeaua blochează WebRTC. Încearcă alt browser sau altă rețea, dezactivează parfire strict sau folosește Export/Import în locul sincronizării live."
+      },
+      "e106": {
+        "meaning": "AI-ul local (WebLLM) nu poate rula pe acest dispozitiv",
+        "fix": "Are nevoie de WebGPU + shader-f16 + 4 GB RAM + Pro. Actualizează browserul sau folosește Ollama / un furnizor cloud cu propria ta cheie."
+      },
+      "e107": {
+        "meaning": "Importul copiei de rezervă a eșuat (parolă greșită / fișier corupt)",
+        "fix": "Pentru <code>.bmf</code> (criptat) ai nevoie de parola de export, nu de parola seifului. Pentru JSON, asigură-te că fișierul nu a fost trunchiat."
+      },
+      "e201": {
+        "meaning": "Licență Pro invalidă / verificare expirată",
+        "fix": "Verifică <code>Settings → Pro</code>: reintrodu cheia. Verificările offline sunt în cache; reconectează-te o dată pentru revalidare prin Whop."
+      },
+      "e202": {
+        "meaning": "Limita Free atinsă (2,500 marcaje)",
+        "fix": "Free înseamnă 2,500. Șterge câteva sau fă upgrade la Pro Lifetime v1 pentru marcaje nelimitate. Exportul este mereu disponibil."
+      },
+      "tip": "Sfat pentru suport: dând clic pe <code>Copy diagnostic</code> din eroare, copiezi codul și contextul cu un singur clic — lipește-l în discuția ta de pe GitHub sau în e-mail."
+    },
+    "diagnostics": {
+      "title": "Copiază un raport de diagnosticare redactat — ce trimiți suportului",
+      "intro": "În aplicație: <code>Settings → Advanced</code> (sau <code>Help → Diagnostics</code>) → <strong>Copy diagnostic</strong>. Arată așa — fără conținutul seifului, fără URL-uri, fără prompturi:",
+      "example": "BookmarkForge v1.0.0 | Chrome 126 | Seif: 847 marcaje, 12 documente\nStocare: 42% (IndexedDB OK) | Ultima copie de rezervă: acum 2 zile (.bmf criptat)\nP2P: neconectat | Sincronizare: niciodată | AI local: WebLLM neîncărcat\nErori: 0 în ultimele 7z | BF-E: niciunul | Build: a1b2c3d",
+      "contains": "Ce conține: versiunea aplicației, browserul, numărătoare (marcaje/documente/vectori), procentul de stocare + cota, starea P2P, starea AI, numărul de erori și ultimul cod BF-E, hash-ul buildului. Folosește un hash cu salt al adresei IP — nu stocăm niciodată IP-ul. Vezi <a href=\"/privacy-and-terms.html\">Confidențialitate §3/§6</a>.",
+      "cantOpen": "Dacă nu poți deschide aplicația: include browserul + sistemul de operare + pașii pentru a reproduce problema + codul <code>BF-E*</code> de pe ecran. Ajunge pentru 90% din ticketuri."
+    },
+    "contact": {
+      "title": "Contact",
+      "paid": "Suport plătit",
+      "paidDetail": "include raportul de diagnosticare + codul BF-E. Pro 48h (Lun–Vin).",
+      "community": "Comunitate (Free)",
+      "communityDetail": "search <code>BF-E*</code> before posting. Read <a href=\"/help-ro#bf-e\">Error codes</a> + paste diagnostic.",
+      "security": "Probleme de securitate",
+      "securityDetail": "e-mail cu subiectul <code>[SECURITY]</code> — nu deschide o discuție publică.",
+      "note": "BookmarkForge este local — conținutul seifului nu părăsește niciodată dispozitivul tău. Suportul nu cere niciodată parola seifului sau fraza de recuperare."
+    },
+    "alsoSee": "Vezi și: <a href=\"/\">Pagina principală</a> · <a href=\"/privacy-and-terms.html\">Confidențialitate și termeni</a> · <a href=\"/privacy-and-terms.html#terms\">Licențiere (Lifetime v1)</a> · <a href=\"/#pricing\">Prețuri</a>",
+    "privacy": "Confidențialitate",
+    "home": "Pagina principală",
+    "faq": {
+      "q1": "Este nivelul Free cu adevărat gratuit pentru totdeauna?",
+      "a1": "Da. Fără perioadă de test, fără abonament. Free include 2,500 marcaje, căutare pe text integral și semantică, graf de cunoștințe și AI cu propria cheie de API.",
+      "q2": "Ce înseamnă Lifetime de v1?",
+      "a2": "Plătești o singură dată, v1 e al tău pentru totdeauna. Toate corectările de erori din v1.x pentru totdeauna, plus 12 luni de actualizări de funcționalități de la data achiziției. Actualizări de securitate pentru totdeauna. După luna a 13-a v1 merge în continuare. v2 și v3 sunt versiuni majore plătite separate: $89 pentru clienți noi, $35 pentru deținătorii de v1 (60% reducere).",
+      "q3": "Ce fac dacă uit parola seifului?",
+      "a3": "Nu putem recupera parola. Când creezi un seif afișăm o singură dată o frază de recuperare de 24 de cuvinte — scrie-o pe hârtie. Fără ea seiful nu poate fi recuperat. Vezi BF-E101."
+    }
+  }
+}

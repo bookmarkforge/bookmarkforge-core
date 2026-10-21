@@ -1,0 +1,740 @@
+{
+  "lang": "no",
+  "langName": "Norsk",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/no/",
+  "ogLocale": "no_NO",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Alt blir værende på datamaskinen din. Betal én gang.",
+  "description": "Raindrop lagrer bokmerkingene dine på serverne sine. BookmarkForge lagrer dem på datamaskinen din — låst slik at ikke engang vi kan lese dem. 59 dollar én gang. Gratis: 2,500 bokmerker.",
+  "ogTitle": "BookmarkForge — Alt blir værende på datamaskinen din. Betal én gang.",
+  "ogDescription": "Raindrop lagrer bokmerkingene dine på serverne sine. BookmarkForge lagrer dem på datamaskinen din — låst slik at ikke engang vi kan lese dem. 59 dollar én gang. Gratis: 2,500 bokmerker.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Alt blir værende på datamaskinen din. Betal én gang.",
+  "twitterDescription": "Raindrop lagrer bokmerkingene dine på serverne sine. BookmarkForge lagrer dem på datamaskinen din — låst slik at ikke engang vi kan lese dem. 59 dollar én gang. Gratis: 2,500 bokmerker.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Hopp til hovedinnhold",
+  "navBrandAria": "BookmarkForge-hjem",
+  "navAriaLabel": "Hovednavigasjon",
+  "homeHref": "/no/",
+  "navLinks": {
+    "pocketAlternative": "Pocket-alternativ",
+    "features": "Funksjoner",
+    "ai": "AI",
+    "privacy": "Personvern",
+    "pricing": "Priser",
+    "help": "Hjelp",
+    "raindropCompare": "Raindrop-sammenligning"
+  },
+  "langLink": {
+    "href": "/es/",
+    "hreflang": "es",
+    "lang": "es",
+    "text": "Español"
+  },
+  "navCta": "Åpne appen",
+  "themeToggleAria": "Bytt tema",
+  "navToggleAria": "Åpne meny",
+  "navToggleAriaClose": "Lukk meny",
+  "hero": {
+    "badge": "Engangsbetaling · Ingen abonnement",
+    "title": "Alt du lagrer blir værende på datamaskinen din. <span class=\"accent-text\">Alt.</span>",
+    "subtitle": "Raindrop lagrer bokmerkingene dine på serverne sine — og krever betaling hvert år. BookmarkForge lagrer dem på datamaskinen din, låst med en nøkkel bare du har. Ingen kontoer. Ingen månedlige avgifter. Ingen som skuer over skulderen din.",
+    "ctaPrimary": "Start appen gratis",
+    "ctaSecondary": "Se priser",
+    "pillars": [
+      {
+        "strong": "Privat",
+        "text": "de lagrede sidene forlater aldri datamaskinen din"
+      },
+      {
+        "strong": "Låst",
+        "text": "ikke engang vi kan lese dem"
+      },
+      {
+        "strong": "Uten internett",
+        "text": "fungerer på flyet, i en tunnel, hvor som helst"
+      },
+      {
+        "strong": "Betal én gang",
+        "text": "59 dollar én gang, ikke 28 dollar hvert år"
+      }
+    ]
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "Se den i aksjon",
+    "title": "Den ekte appen, ikke en mockup",
+    "subtitle": "Ingen registreringsmur, ingen stockbilder og ingen falsk markør. Denne løkken er den lanserte versjonen på en vanlig datamaskin: lås opp hvelvet, lagre en side, søk i biblioteket og lås det igjen.",
+    "imageAlt": "Animasjonsløkke av BookmarkForge: låser opp hvelvet, tar et bokmerke, søker i biblioteket og låser det igjen",
+    "caption": "Innspilt fra skrivebordsappen med demodata. Den komplette gjennomgangen følger med prosjektet.",
+    "steps": [
+      {
+        "title": "Lås opp",
+        "text": "Hvelvet åpnes med et passord du velger selv; nøkkelen blir værende på enheten din."
+      },
+      {
+        "title": "Lagre",
+        "text": "Lagre en side rett fra appen — ingen konto og ingen utvidelse nødvendig."
+      },
+      {
+        "title": "Finn",
+        "text": "Søk etter nøkkelord eller etter mening, med kildene til hvert svar vist."
+      },
+      {
+        "title": "Lås",
+        "text": "Lukk hvelvet, og dekrypteringsnøkkelen er borte fra minnet."
+      }
+    ],
+    "ctaPrimary": "Start appen"
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "«Les senere» gjenfødt",
+    "title": "Det private Pocket-alternativet",
+    "subtitle": "Pocket forsvinner. BookmarkForge holder «les senere»-vanen levende — med hver artikkel, notat og markering lagret kryptert på enheten din.",
+    "features": [
+      {
+        "title": "Les senere, for alltid din",
+        "text": "Lagre artikler, videoer og PDF-er med ett klikk — fra PWA-en, nettleserutvidelsen eller delingsmenyen. I motsetning til Pocket ligger leselisten din på enheten din, kryptert, og fungerer fortsatt uten internett."
+      },
+      {
+        "title": "Notion-lignende notater på hver artikkel",
+        "text": "Marker, oppsummer og ta blokkbaserte notater knyttet til ethvert bokmerke. Gjør en lagret artikkel til din egen kunnskapsbase — ikke bare en lenkeliste."
+      },
+      {
+        "title": "Ingen sporing, ingen reklame",
+        "text": "BookmarkForge har ingen kontoer, ingen analyse og ingen reklame som standard. Lesevanene dine er ingen andres sak enn din egen."
+      }
+    ],
+    "ctaPrimary": "Begynn å lagre gratis",
+    "ctaSecondary": "Full sammenligning og migreringsguide",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "Klar tale, ingen reklametekst",
+    "title": "BookmarkForge mot Raindrop, uten det fine trykket",
+    "subtitle": "Raindrop er en god app. Den store forskjellen er hvor innholdet ditt ligger.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Hvor listen din ligger",
+        "us": "På datamaskinen din",
+        "them": "På serverne deres"
+      },
+      {
+        "topic": "Hvem som kan lese det du lagrer",
+        "us": "Ingen — låst med nøkkelen din, ikke engang vi",
+        "them": "Selskapet, og alle som krever det av dem"
+      },
+      {
+        "topic": "Uten internett",
+        "us": "Alt fortsetter å virke",
+        "them": "Bare det aller grunnleggende"
+      },
+      {
+        "topic": "Hva du betaler",
+        "us": "59 dollar én gang. Ferdig.",
+        "them": "28 dollar hvert år, for alltid"
+      },
+      {
+        "topic": "Hvis selskapet forsvinner (RIP Pocket)",
+        "us": "Ingenting endres — det ligger allerede i hendene dine",
+        "them": "Du eksporterer og starter på nytt"
+      },
+      {
+        "topic": "AI-assistenten",
+        "us": "Kjører inne i datamaskinen din i privatmodus — ingenting sendes noe sted",
+        "them": "Lesingen din sendes ut i skyen for å tenke"
+      }
+    ],
+    "ctaPrimary": "Prøv det gratis på 2 minutter — ingen konto",
+    "ctaSecondary": "Full Pocket-sammenligning",
+    "close": "Raindrop er enklere og gratis — hvis det er alt du trenger, kan du gjerne bruke den. Men hvis du heller vil holde leselivet ditt i egne hender, er BookmarkForge bygget for akkurat det."
+  },
+  "features": {
+    "id": "features",
+    "tag": "Alt du trenger",
+    "title": "Alt du trenger, med klar tale",
+    "items": [
+      {
+        "title": "Bokmerker og dokumenter",
+        "text": "Lagre hvilken som helst side med ett klikk. Skriv notater rett ved siden av den, i en ren og enkel redigering. Det går raskt selv med 100,000 lagrede elementer."
+      },
+      {
+        "title": "Smart søk",
+        "text": "Finn ting etter nøkkelord eller etter mening — selv når du ikke husker de eksakte ordene. Raindrop krever 28 dollar i året for dette; her er det inkludert gratis."
+      },
+      {
+        "title": "En KI som leser biblioteket ditt, inne i datamaskinen din",
+        "text": "Still spørsmål om det du har lagret, og få svar med kildene vist. Ingenting sendes til skyen, og det fungerer uten internett. Krever Pro."
+      },
+      {
+        "title": "Snakk med ditt eget bibliotek",
+        "text": "Still hva som helst om bokmerkene og notatene dine, og få svar med kilder. Privatmodusen kjøres 100 % på maskinen din. Krever Pro."
+      },
+      {
+        "title": "Synkronisering mellom dine egne enheter",
+        "text": "Enhetene snakker direkte med hverandre — ingen server imellom, og alt forblir kryptert. Koble dem sammen ved å skanne en QR-kode. Opptil 5 enheter. Krever Pro."
+      },
+      {
+        "title": "Sikkerhetskopier du eier",
+        "text": "Automatiske sikkerhetskopier du kan oppbevare hvor du vil — en ekstern harddisk, en skymappe, hvor som helst. Eksporter alt til Markdown, JSON, CSV eller PDF når du vil. Du holder nøklene."
+      },
+      {
+        "title": "Et kart over kunnskapen din",
+        "text": "Se hvordan notatene og bokmerkene henger sammen. Filtrer etter emneknagger, datoer og likhet, og zoom rundt på et uendelig lerret."
+      },
+      {
+        "title": "Friminnskort som slår glemsel",
+        "text": "Gjør ethvert lagret dokument til spørsmålskort som dukker opp like før du ville glemt dem — samme planleggingsidé som Anki. Krever Pro."
+      },
+      {
+        "title": "Privat som standard",
+        "text": "Ingen kontoer, ingen sporing, ingen reklame. Du er kunden, ikke produktet. Deling av bruksdata finnes, men er valgfri og av til slik at du slår den på."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "KI som respekterer deg",
+    "title": "Kunnskapen din, forsterket",
+    "subtitle": "Kjør assistenten inne i datamaskinen din — ingenting forlater den, og den fungerer uten internett. Foretrekker du en stor sky-modell? Koble til egen nøkkel: spørsmålene dine og sidene som trengs for å svare sendes til den leverandøren, for din regning. Dine oppfordringer, dine data, dine regler.",
+    "providers": {
+      "title": "Støttede leverandører",
+      "list": [
+        {
+          "type": "local",
+          "name": "Inne i datamaskinen din — WebLLM-modeller (TinyLlama, Llama 3.2, Phi-3.5-mini) — kun Pro"
+        },
+        {
+          "type": "local",
+          "name": "På din egen maskin — Ollama (hvilken som helst modell du kjører)"
+        },
+        {
+          "type": "cloud",
+          "name": "Sky — Google Gemini (med din egen nøkkel)"
+        },
+        {
+          "type": "cloud",
+          "name": "Sky — OpenAI / GPT-4o (med din egen nøkkel)"
+        },
+        {
+          "type": "cloud",
+          "name": "Sky — Anthropic Claude (med din egen nøkkel)"
+        },
+        {
+          "type": "cloud",
+          "name": "Sky — Groq (med din egen nøkkel)"
+        },
+        {
+          "type": "cloud",
+          "name": "Sky — OpenRouter eller en annen tilpasset leverandør (med din egen nøkkel)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Samtalemoduser",
+      "items": [
+        {
+          "title": "Privatmodus",
+          "text": "Assistenten kjøres helt inne i datamaskinen din. Ingenting forlater den, og den trenger ikke internett. Krever Pro."
+        },
+        {
+          "title": "Websøkmodus",
+          "text": "Kombinerer biblioteket ditt med ferske resultater fra nettet (skyleverandører)."
+        },
+        {
+          "title": "Ekspertagenter",
+          "text": "Spesialiserte hjelpere: Coder, Writer, Analyst og Researcher. Krever Pro."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Personvern er ikke en funksjon — det er fundamentet",
+    "subtitle": "Hver arkitekturvalg setter deg i kontroll",
+    "items": [
+      {
+        "title": "Låst slik at ingen kan lese det — ikke engang vi",
+        "text": "Biblioteket ditt krypteres med en nøkkel som er utledet fra hovedpassordet ditt. Vi ser aldri passordet eller innholdet ditt."
+      },
+      {
+        "title": "Lagret på din egen enhet",
+        "text": "Alt lever på datamaskinen din. Følgeserveren håndterer bare lisensiering, paring av enheter og videresending av AI-spørsmålene dine i skymodus — aldri innholdet ditt."
+      },
+      {
+        "title": "Ingen sporing som standard",
+        "text": "Ingen analyse, ingen krasjrapporter, ingen sporing. Deling av bruksstatistikk eller feilrapporter er et eget valg og er av til som standard."
+      },
+      {
+        "title": "Du holder nøklene",
+        "text": "Uten hovedpassord er det ingen tilgang — det finnes ingen «glemt passord»-bakvei. Din 24-ords gjenopprettingsfrase er den eneste veien inn; hold den trygg."
+      },
+      {
+        "title": "Rettighetene dine respekteres",
+        "text": "Få tilgang, rett, slett eller ta med deg dataene — alt kan gjøres lokalt, når du vil."
+      },
+      {
+        "title": "Ingen lås til leverandøren",
+        "text": "Eksporter dataene dine når som helst i åpne formater (JSON, Markdown, CSV, PDF). Kunnskapen din forblir din og kan flyttes."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Enkel, rettferdig prising — ingen abonnementer",
+    "subtitle": "Gratis med 2,500 bokmerker for alltid. Pro er en Lifetime-lisens for v1 — betal én gang, eie v1 for alltid. Inkluderer alle v1.x-oppdateringer og 12 måneder med funksjonsoppdateringer. Sikkerhetsoppdateringer for alltid. Ingen månedlig fakturering.",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "$ 0",
+        "period": "/for alltid",
+        "description": "Til personlig arkiv (2 500 bokmerker, fungerer på enhver enhet — hver med sitt eget hvelv)",
+        "features": [
+          {
+            "included": true,
+            "text": "2.500 bokmerker, notater og dokumenter"
+          },
+          {
+            "included": true,
+            "text": "Smart søk (fulltekst + semantisk) — inkludert gratis; Raindrop krever årlig betaling for dette"
+          },
+          {
+            "included": true,
+            "text": "AI med din egen API-nøkkel (du betaler leverandøren)"
+          },
+          {
+            "included": true,
+            "text": "Kunnskapsgraf"
+          },
+          {
+            "included": true,
+            "text": "Grunnleggende maler"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML-eksport"
+          },
+          {
+            "included": true,
+            "text": "PWA + nettleserutvidelser"
+          },
+          {
+            "included": false,
+            "text": "P2P-synkronisering mellom enheter"
+          },
+          {
+            "included": false,
+            "text": "Lokal AI (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "RAG-chat over dataene dine"
+          },
+          {
+            "included": false,
+            "text": "Flashcards med spaced repetition"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          }
+        ],
+        "cta": "Start gratis",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "badge": "Mest populær — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (deretter $79)",
+        "description": "Lifetime for v1 · 12 måneder med funksjonsoppdateringer · Sikkerhet for alltid · v2 60 % rabatt",
+        "features": [
+          {
+            "included": true,
+            "text": "Alt som er i Free"
+          },
+          {
+            "included": true,
+            "text": "Ubegrensede bokmerker"
+          },
+          {
+            "included": true,
+            "text": "5 enheter · P2P-synkronisering mellom 5 enheter"
+          },
+          {
+            "included": true,
+            "text": "Lokale KI-modeller (WebLLM, ingen API-nøkkel) · RAG-chat"
+          },
+          {
+            "included": true,
+            "text": "Ekspertagenter (Coder, Writer, Analyst, Researcher)"
+          },
+          {
+            "included": true,
+            "text": "Friminnskort med repetisjon i mellomrom · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Avansert eksport (10+ formater) · Krypterte sikkerhetskopier"
+          },
+          {
+            "included": true,
+            "text": "Sikkerhetshvelv (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Lifetime for v1 · 12 måneder med funksjonsoppdateringer"
+          },
+          {
+            "included": true,
+            "text": "Sikkerhetsoppdateringer for alltid"
+          },
+          {
+            "included": true,
+            "text": "E-poststøtte (48h) + tidlig tilgang"
+          }
+        ],
+        "cta": "Få Pro $59 Early Bird",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "deretter $79 normalpris",
+        "sla": "Støtte: E-post 48h (man–fre)",
+        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
+        "cta2": "Få Pro $79 normalpris",
+        "cta2Class": "btn-secondary"
+      }
+    ],
+    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-no#pricing\">Learn more</a>"
+  },
+  "faq": {
+    "title": "Vanlige spørsmål",
+    "items": [
+      {
+        "question": "Er Free-nivået virkelig gratis for alltid?",
+        "answer": "Ja. Ingen prøveperiode, intet abonnement. Gratisnivået inneholder 2,500 bokmerker, fulltekst- og semantisk søk, kunnskapsgraf og KI med din egen API-nøkkel (du betaler leverandøren)."
+      },
+      {
+        "question": "Hva betyr «Lifetime of v1» for Pro?",
+        "answer": "Betal én gang, eie v1 for alltid. Inkluderer alle v1.x-oppdateringer (feilrettinger + mindre funksjoner) for alltid og 12 måneder med funksjonsoppdateringer fra kjøpet. Sikkerhetsoppdateringer for alltid. Etter måned 13 har du fortsatt v1 i drift, bare uten nye funksjoner. Fremtidige hovedversjoner (v2, v3) er separate produkter: $89 for nye kunder, $35 for v1-eiere (60 % rabatt)."
+      },
+      {
+        "question": "Hvilke betalingsmetoder og refusjoner?",
+        "answer": "Via Whop: kredittkort, PayPal, krypto. Vi ser aldri betalingsopplysningene dine. 30 dagers refusjon — kontakt <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
+      },
+      {
+        "question": "Støtte — hvor raskt svarer dere?",
+        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help-no#sla\">Support SLA</a>."
+      },
+      {
+        "question": "Hva hvis jeg glemmer hvelvpassordet mitt?",
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-no#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Klar til å eie kunnskapen din?",
+    "text": "Bli med tusenvis av forskere, utviklere og elever som stoler på BookmarkForge med sin andre hjerne.",
+    "ctaPrimary": "Start gratisappen",
+    "ctaSecondary": "Oppgrader til Pro",
+    "note": "Ingen konto nødvendig. Fungerer umiddelbart i nettleseren din. Gratisnivå: 2,500 bokmerker."
+  },
+  "footer": {
+    "brand": "Ditt private, KI-drevne kunnskapshvelv. 100 % lokalt-først.",
+    "product": {
+      "title": "Produkt",
+      "links": [
+        "Features",
+        "AI Capabilities",
+        "Privacy",
+        "Pricing",
+        "Launch App"
+      ],
+      "hrefs": [
+        "/#features",
+        "/#ai",
+        "/#privacy",
+        "/#pricing",
+        "/app"
+      ]
+    },
+    "resources": {
+      "title": "Ressurser",
+      "links": [
+        "Pocket Comparison",
+        "Privacy & Terms"
+      ],
+      "hrefs": [
+        "/pocket-alternative.html",
+        "/privacy-and-terms.html"
+      ]
+    },
+    "languages": {
+      "title": "Språk",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Støtte",
+      "links": [
+        "Contact"
+      ],
+      "helpCenter": "Hjelpesenter",
+      "errorCodes": "Feilkoder"
+    },
+    "copyright": "© 2026 BookmarkForge. Alle rettigheter forbeholdt.",
+    "legal": [
+      "Personvernerklæring",
+      "Vilkår for bruk",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "Ditt private, KI-drevne kunnskapshvelv. 100 % lokalt-først. Det private Pocket-alternativet. Gratis: 2,500 bokmerker.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "Free",
+        "price": "0",
+        "currency": "USD",
+        "description": "2,500 bokmerker. Gratis for alltid."
+      },
+      {
+        "name": "Pro Lifetime v1 — Early Bird",
+        "price": "59",
+        "currency": "USD",
+        "description": "Early Bird 200. Lifetime for v1, 12 måneder med funksjoner, sikkerhet for alltid, 60 % rabatt på v2.",
+        "priceValidUntil": "2026-12-31",
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "price": "79",
+        "currency": "USD",
+        "description": "Normalpris. Lifetime for v1."
+      }
+    ],
+    "featureList": [
+      "Lokalt-først lagring",
+      "Kryptering fra ende til ende",
+      "Fungerer uten internett",
+      "KI-søk",
+      "Notion-lignende redigering",
+      "P2P-synkronisering"
+    ],
+    "faq": [
+      {
+        "question": "Er Free-nivået virkelig gratis for alltid?",
+        "answer": "Ja. Ingen prøveperiode, intet abonnement. Gratisnivået inneholder 2,500 bokmerker, fulltekst- og semantisk søk, kunnskapsgraf og KI med din egen API-nøkkel (du betaler leverandøren)."
+      },
+      {
+        "question": "Hva betyr «Lifetime of v1» for Pro?",
+        "answer": "Betal én gang, eie v1 for alltid. Inkluderer alle v1.x-oppdateringer (feilrettinger + mindre funksjoner) for alltid og 12 måneder med funksjonsoppdateringer fra kjøpet. Sikkerhetsoppdateringer for alltid. Etter måned 13 har du fortsatt v1 i drift, bare uten nye funksjoner. Fremtidige hovedversjoner (v2, v3) er separate produkter: $89 for nye kunder, $35 for v1-eiere (60 % rabatt)."
+      },
+      {
+        "question": "Hvilke betalingsmetoder og refusjoner?",
+        "answer": "Via Whop: kredittkort, PayPal, krypto. Vi ser aldri betalingsopplysningene dine. 30 dagers refusjon — kontakt bookmarkforge@proton.me."
+      },
+      {
+        "question": "Støtte — hvor raskt svarer dere?",
+        "answer": "Free: fellesskapsstøtte via Hjelpesenteret + GitHub Discussions (best effort). Pro: e-post 48h på hverdager. Hvelvet er kryptert — vi kan ikke se dataene dine, så vi spør aldri om passordet eller gjenopprettingsfrasen din. Se støtte-SLA."
+      },
+      {
+        "question": "Hva hvis jeg glemmer hvelvpassordet mitt?",
+        "answer": "Vi kan ikke gjenopprette det. Når du oppretter et hvelv viser vi en 24-ords gjenopprettingsfrase én gang — skriv den på papir. Uten den kan ingen (inkludert oss) åpne hvelvet. Se BF-E101."
+      }
+    ]
+  },
+  "help": {
+    "title": "Hjelpesenter — FAQ, feilsøking og støtte-SLA | BookmarkForge",
+    "description": "BookmarkForge Hjelpesenter: prising for Lifetime v1, feilsøking, feilkoder BF-E*, støtte-SLA og hvordan du kopierer en redigert diagnostikkrapport.",
+    "ogTitle": "Hjelpesenter — BookmarkForge",
+    "ogDescription": "FAQ, feilsøking, feilkoder og støtte-SLA. Lær hvordan Lifetime v1 fungerer, og hvordan du kopierer en diagnostikkrapport.",
+    "ogLocale": "en_US",
+    "lastUpdated": "Sist oppdatert",
+    "lastUpdatedDate": "13. september 2026",
+    "backToHome": "← Tilbake til forsiden",
+    "intro": "Svar før du trenger å sende e-post. BookmarkForge er <strong>lokalt-først og kryptert</strong> — vi kan ikke se hvelvet ditt. 90 % av problemene løses her med en diagnostikk du kan kopiere og lime inn.",
+    "toc": {
+      "pricing": "Prising og Lifetime v1",
+      "sla": "Støtte-SLA",
+      "troubleshooting": "Feilsøking",
+      "errorCodes": "Feilkoder BF-E*",
+      "diagnostics": "Kopier diagnostikkrapport",
+      "contact": "Kontakt"
+    },
+    "pricing": {
+      "title": "Prising — Lifetime for v1, ingen abonnementer",
+      "intro": "<strong>Modell:</strong> du betaler én gang for <em>BookmarkForge v1</em>. Ingen månedlig fakturering. Sammenlign: Raindrop Pro $28–38/år, Instapaper $60/år, Readwise $120/år, Capacities $120/år. Et livslangt kjøp på $79 er ~2× Raindrops årlige pris — rettferdiggjort av livslang bruk og personvern.",
+      "table": {
+        "tier": "Nivå",
+        "price": "Pris",
+        "whatYouGet": "Hva du får",
+        "supply": "Inngår"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro Lifetime v1"
+      },
+      "freePrice": "$0 for alltid",
+      "freeDescription": "2,500 bokmerker på hvilken som helst enhet (hver enhet har sitt eget hvelv), smart søk — fulltekst + semantisk, altså funksjonen Raindrop krever årlig betaling for — kunnskapsgraf, KI med din egen API-nøkkel, PWA + utvidelser. Ved 2,500 forblir hvelvet ditt helt: lesing, søk og eksport stopper aldri; bare nye lagringer settes på pause.",
+      "unlimited": "Ubegrenset",
+      "badge": "Early Bird",
+      "proPrice": "$59",
+      "proPriceStriked": "$79",
+      "proPriceRegular": "$79 normalpris",
+      "proPriceTraction": "$99 etter oppslutning",
+      "proDescription": "Ubegrensede bokmerker, 5 enheter + P2P-synkronisering, lokal KI (WebLLM/Ollama) + RAG + ekspertagenter, friminnskort, PDF/OCR, 10+ eksportformater, hvelv. <em>Lifetime for v1 · 12 måneder med funksjonsoppdateringer · Sikkerhet for alltid · v2 60 % rabatt</em>",
+      "proSupply": "200 Early Bird"
+    },
+    "legal": {
+      "title": "Lifetime for v1 — juridisk linje:",
+      "text": "Livslang lisens for BookmarkForge v1. Inkluderer alle v1.x-oppdateringer (feilrettinger + mindre funksjoner) for alltid og 12 måneder med funksjonsoppdateringer fra kjøpet. Sikkerhetsoppdateringer for alltid. Fremtidige hovedversjoner (v2, v3) er separate produkter: $89 for nye kunder, $35 for v1-eiere (60 % rabatt). Hvis du ikke oppgraderer, har du fortsatt v1 i drift for alltid. 30 dagers refusjon via Whop.",
+      "refunds": "Refusjoner: 30 dager via Whop. Betalinger: kort, PayPal, krypto (Whop — vi ser aldri kortdata).",
+      "terms": "Vilkår § Lisensiering"
+    },
+    "upgrade": {
+      "title": "Oppgrader uten abonnement:",
+      "text": "hvert 12.–18. måned lanserer vi en betalt hovedversjon (v2.0 til $89 / $35 for eierne). Hopp over den, så fortsetter v1 å virke. Det er gjentakende inntekt uten å tvinge et abonnement — samme modell som Affinity/Sketch/Sublime."
+    },
+    "sla": {
+      "title": "Støtte-SLA — hvor raskt vi svarer",
+      "intro": "Én vedlikeholder. Hvelvet er kryptert — <strong>vi spør aldri om hvelvpassordet eller den 24-ords gjenopprettingsfrasen din</strong>. Støtten er best-effort for Free og forpliktende for betalte nivåer.",
+      "table": {
+        "tier": "Nivå",
+        "channel": "Kanal",
+        "response": "Svar",
+        "whatToDo": "Hva du bør gjøre først"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro"
+      },
+      "freeChannel": "Selvhjelp: dette Hjelpesenteret + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeResponse": "Beste innsats (fellesskapet)",
+      "freeWhatToDo": "Søk etter BF-E*-koden nedenfor + kopier diagnostikken (<a href=\"#diagnostics\">§Diagnostikk</a>) før du poster",
+      "proChannel": "E-post <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (emne: Pro)",
+      "proResponse": "48h",
+      "proWhatToDo": "Ta med diagnostikkteksten fra <code>Settings → Help → Copy diagnostic</code>",
+      "note": "Vi kan ikke se bokmerkene, notatene, URL-ene eller oppfordringene dine. Ta bare med diagnostikken nedenfor — den inneholder antall og versjoner, aldri innhold fra hvelvet."
+    },
+    "troubleshooting": {
+      "title": "Feilsøking — de fleste problemer på 30 sekunder",
+      "vaultLocked": {
+        "title": "Hvelvet er låst / feil passord",
+        "text": "Passord skiller mellom store og små bokstaver, og mellomrom teller. Har du byttet tastaturlayout (f.eks. AZERTY→QWERTY), skriver du sakte. Etter 5 mislykkede opplåsinger venter du 1 minutt. Har du mistet passordet, bruker du <strong>den 24-ords gjenopprettingsfrasen</strong> som vises én gang ved opprettelse av hvelvet (<a href=\"#bf-e101\">BF-E101</a>). Uten den er gjenoppretting umulig med vilje — vi har ingen bakvei."
+      },
+      "storageFull": {
+        "title": "Nettleserens lager er fullt",
+        "text": "IndexedDB-kvoten gjelder per nettleser (vanligvis 60–80 % av disken). Når lageret er fullt, feiler lagring med <a href=\"#bf-e103\">BF-E103</a>. Løsning: <code>Settings → Storage → Compact database</code> og deretter <code>Clear AI cache</code>. Eller <code>Export backup (.bmf)</code> → <code>Delete old vectors</code>. Sjekk <a href=\"#diagnostics\">lager % i diagnostikken</a> — over 80 % viser vi et banner."
+      },
+      "p2pNotConnecting": {
+        "title": "P2P-synkroniseringen kobler ikke",
+        "text": "Begge enhetene må være <strong>pålogget og ulåste</strong> samtidig (WebRTC). Ingen TURN-relay som standard — enkelte bedriftsnettverk blokkerer P2P. Prøv: begge på samme Wi-Fi → QR-paring → hold appen åpen. Får du <a href=\"#bf-e105\">BF-E105</a>, test <code>Help → Diagnostics → P2P (WebRTC)</code> — står det utilgjengelig, blokkerer nettleseren eller nettverket ditt WebRTC."
+      },
+      "localAiNotRunning": {
+        "title": "Lokal KI (WebLLM) kjører ikke",
+        "text": "Krever WebGPU + ~4 GB ledig RAM + Pro-lisens. Sjekk <code>Help → Diagnostics → WebGPU/WebLLM</code>. Får du <a href=\"#bf-e106\">BF-E106</a>: oppdater Chrome/Edge til nyeste versjon, slå på <code>chrome://flags/#enable-unsafe-webgpu</code>, eller bytt til Ollama (hvilken som helst modell du kjører lokalt — du trenger heller ikke API-nøkkel)."
+      },
+      "slowSearch": {
+        "title": "Langsomt søk eller import",
+        "text": "Første import bygger HNSW-vektorer — krever mye CPU. Hold fanen åpen. For 10k+ bokmerker bruker du <code>Settings → Advanced → Force reprocess</code>. Vedvarer problemet, viser <code>Copy diagnostic</code> <code>vectorIndexLoad</code> og spørringsforsinkelsen."
+      }
+    },
+    "errorCodes": {
+      "title": "Feilkoder BF-E* — kopier koden, hopp til løsningen",
+      "intro": "Alle kritiske feil viser en kode som <code>BF-E101</code>. Klikk på koden i appen, eller søk etter den her.",
+      "table": {
+        "code": "Kode",
+        "meaning": "Betydning",
+        "fix": "Løsning"
+      },
+      "e101": {
+        "meaning": "Hvelvpassord glemt / frøfrase kreves",
+        "fix": "Vi kan ikke gjenopprette passord. Ved opprettelse av hvelvet viser vi en <strong>24-ords frase én gang</strong> — skriv den på papir. Bruk den til å tilbakestille. Uten frase er hvelvet uopprettelig. <a href=\"#diagnostics\">Ingen billett kan gjenopprette det</a>."
+      },
+      "e102": {
+        "meaning": "Hvelvet er låst / feil passord",
+        "fix": "Skriv passordet nøyaktig. Etter 5 feil venter du 60 s. Har du byttet passord nylig, prøv det forrige — bytting beholder siste salt for tilbakerulling."
+      },
+      "e103": {
+        "meaning": "Lagerkvoten er overskredet",
+        "fix": "Gå til <code>Settings → Storage</code>: Compact DB + Clear AI cache. Eksporter en .bmf-sikkerhetskopi ved behov. Se Feilsøking §Lager."
+      },
+      "e104": {
+        "meaning": "IndexedDB er blokkert / privatmodus i nettleseren",
+        "fix": "IndexedDB er blokkert i privat-/inkognitomodus eller av lagerpolicyen. Bruk et vanlig vindu. Sjekk <code>Help → Diagnostics → Storage</code>."
+      },
+      "e105": {
+        "meaning": "P2P / WebRTC utilgjengelig",
+        "fix": "Nettleseren eller nettverket blokkerer WebRTC. Prøv en annen nettleser eller et annet nettverk, slå av streng brannmur, eller bruk Eksport/Import i stedet for direkte synkronisering."
+      },
+      "e106": {
+        "meaning": "Lokal KI (WebLLM) kan ikke kjøres på denne enheten",
+        "fix": "Krever WebGPU + shader-f16 + 4 GB RAM + Pro. Oppdater nettleseren, eller bruk Ollama / skyleverandør med din egen nøkkel."
+      },
+      "e107": {
+        "meaning": "Import av sikkerhetskopi mislyktes (feil passord / ødelagt fil)",
+        "fix": "For <code>.bmf</code> (kryptert) trenger du eksportpassordet, ikke hvelvpassordet. For JSON må du kontrollere at filen ikke er avkortet."
+      },
+      "e201": {
+        "meaning": "Pro-lisensen er ugyldig / utløpt kontroll",
+        "fix": "Sjekk <code>Settings → Pro</code>: skriv inn nøkkelen på nytt. Offlinekontroller mellomlagres; koble til én gang for å validere på nytt via Whop."
+      },
+      "e202": {
+        "meaning": "Gratisgrensen er nådd (2,500 bokmerker)",
+        "fix": "Gratis er 2,500. Slett bokmerker eller oppgrader til Pro Lifetime v1 for ubegrenset. Eksport er alltid tilgjengelig."
+      },
+      "tip": "Støttetips: å klikke på feilens <code>Copy diagnostic</code> kopierer kode + kontekst med ett klikk — lim den inn i GitHub Discussion eller e-posten din."
+    },
+    "diagnostics": {
+      "title": "Kopier en redigert diagnostikk — dette sender du til støtten",
+      "intro": "I appen: <code>Settings → Advanced</code> (eller <code>Help → Diagnostics</code>) → <strong>Copy diagnostic</strong>. Den ser slik ut — intet innhold fra hvelvet, ingen URL-er, ingen oppfordringer:",
+      "example": "BookmarkForge v1.0.0 | Chrome 126 | Vault: 847 bookmarks, 12 docs\nStorage: 42% (IndexedDB OK) | Last backup: 2 days ago (.bmf encrypted)\nP2P: not connected | Sync: never | Local AI: WebLLM not loaded\nErrors: 0 last 7d | BF-E: none | Build: a1b2c3d",
+      "contains": "Innhold: appversjon, nettleser, antall (bokmerker/dokumenter/vektorer), lager % + kvote, P2P-status, KI-status, feilantall og siste BF-E-kode, bygghash. Bruker en saltet hash av IP-en — vi lagrer aldri IP. Se <a href=\"/privacy-and-terms.html\">Personvern §3/§6</a>.",
+      "cantOpen": "Får du ikke åpnet appen: ta med nettleser + operativsystem + trinnene for å reprodusere + <code>BF-E*</code>-koden på skjermen. Det er nok for 90 % av billettene."
+    },
+    "contact": {
+      "title": "Kontakt",
+      "paid": "Betalt støtte",
+      "paidDetail": "ta med diagnostikk + BF-E-kode. Pro 48h (man–fre).",
+      "community": "Fellesskap (Free)",
+      "communityDetail": "search <code>BF-E*</code> before posting. Read <a href=\"/help-no#bf-e\">Error codes</a> + paste diagnostic.",
+      "security": "Sikkerhetssaker",
+      "securityDetail": "e-post med emne <code>[SECURITY]</code> — ikke opprett en offentlig diskusjon.",
+      "note": "BookmarkForge er lokalt-først — innholdet i hvelvet forlater aldri enheten din. Støtten spør aldri om hvelvpassordet eller gjenopprettingsfrasen din."
+    },
+    "alsoSee": "Se også: <a href=\"/\">Forside</a> · <a href=\"/privacy-and-terms.html\">Personvern og vilkår</a> · <a href=\"/privacy-and-terms.html#terms\">Lisensiering (Lifetime v1)</a> · <a href=\"/#pricing\">Prising</a>",
+    "privacy": "Personvern",
+    "home": "Forside",
+    "faq": {
+      "q1": "Er Free-nivået virkelig gratis for alltid?",
+      "a1": "Ja. Ingen prøveperiode, intet abonnement. Free inneholder 2,500 bokmerker, fulltekst- og semantisk søk, kunnskapsgraf og KI med din egen API-nøkkel.",
+      "q2": "Hva betyr Lifetime for v1?",
+      "a2": "Betal én gang, eie v1 for alltid. Alle v1.x-feilrettinger for alltid, pluss 12 måneder med funksjonsoppdateringer fra kjøpet. Sikkerhetsoppdateringer for alltid. Etter måned 13 fortsetter v1 å virke. v2 og v3 er separate betalte hovedversjoner: $89 for nye kunder, $35 for v1-eiere (60 % rabatt).",
+      "q3": "Hva hvis jeg glemmer hvelvpassordet mitt?",
+      "a3": "Vi kan ikke gjenopprette det. Når du oppretter et hvelv viser vi en 24-ords gjenopprettingsfrase én gang — skriv den på papir. Uten den er hvelvet uopprettelig. Se BF-E101."
+    }
+  }
+}

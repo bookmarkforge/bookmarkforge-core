@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="hu"
+  dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. 59 dollár egyszer. Ingyenes: 2 500 könyvjelző.">
+  <title>BookmarkForge — Minden a saját számítógépén marad. Egyszer fizet, örökre.</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforgeapp.com/hu/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforgeapp.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforgeapp.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforgeapp.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforgeapp.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforgeapp.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforgeapp.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforgeapp.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforgeapp.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforgeapp.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforgeapp.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforgeapp.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforgeapp.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforgeapp.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforgeapp.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforgeapp.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforgeapp.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforgeapp.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforgeapp.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforgeapp.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforgeapp.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforgeapp.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforgeapp.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforgeapp.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforgeapp.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforgeapp.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforgeapp.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforgeapp.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforgeapp.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforgeapp.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforgeapp.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — Minden a saját számítógépén marad. Egyszer fizet, örökre.">
+  <meta property="og:description" content="A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. 59 dollár egyszer. Ingyenes: 2 500 könyvjelző.">
+  <meta property="og:url" content="https://bookmarkforgeapp.com/hu/">
+  <meta property="og:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="hu_HU">
+  <meta property="og:locale:alternate" content="en_US">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — Minden a saját számítógépén marad. Egyszer fizet, örökre.">
+  <meta name="twitter:description" content="A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. 59 dollár egyszer. Ingyenes: 2 500 könyvjelző.">
+  <meta name="twitter:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <script src="/theme-init.js"></script>
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://bookmarkforgeapp.com/hu/#website",
+        "url": "https://bookmarkforgeapp.com/hu/",
+        "name": "BookmarkForge",
+        "description": "A privát, MI-vel működő tudástárad. 100% helyi első. A privát Pocket alternatíva. Ingyenes: 2 500 könyvjelző.",
+        "inLanguage": "hu",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://bookmarkforgeapp.com/hu/?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": { "@id": "https://bookmarkforgeapp.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://bookmarkforgeapp.com/#organization",
+        "name": "BookmarkForge",
+        "url": "https://bookmarkforgeapp.com/",
+        "logo": { "@type": "ImageObject", "url": "https://bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
+        "email": "bookmarkforge@proton.me"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://bookmarkforgeapp.com/hu/#software",
+        "name": "BookmarkForge",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "url": "https://bookmarkforgeapp.com/",
+        "image": "https://bookmarkforgeapp.com/og-image.png",
+        "description": "A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. 59 dollár egyszer. Ingyenes: 2 500 könyvjelző.",
+        "offers": [
+          { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD", "description": "2 500 könyvjelző. Örökre ingyenes." },          { "@type": "Offer", "name": "Pro Lifetime v1 — Early Bird", "price": "59", "priceCurrency": "USD", "description": "Early Bird 200. A v1 örökre, 12 hónap funkció, biztonság örökre, v2 60% kedvezmény.", "priceValidUntil": "2026-12-31", "availability": "https://schema.org/InStock" },          { "@type": "Offer", "name": "Pro Lifetime v1", "price": "79", "priceCurrency": "USD", "description": "Normál. A v1 örökre." }        ],
+        "featureList": [
+          "Helyi első tárolás",          "Végpontok közötti titkosítás",          "Offline működik",          "MI keresés",          "Notion-stílusú szerkesztő",          "P2P szinkron"        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://bookmarkforgeapp.com/hu/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Az ingyenes szint tényleg ingyenes örökre?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Igen. Nincs próba, nincs előfizetés. Az ingyenes szint 2 500 könyvjelzőt, teljes szöveges és szemantikus keresést, tudásgráfot és MI-t a saját API-kulcsoddal (a szolgáltatót fizeted) tartalmaz." }
+          },          {
+            "@type": "Question",
+            "name": "Mit jelent a „v1 örökre” a Pro esetén?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Fizess egyszer, birtokold a v1-et örökre. Tartalmazza az összes v1.x frissítést (hibajavítás + kisebb funkciók) örökre és 12 hónap funkciófrissítést a vásárlástól. Biztonsági frissítések örökre. A 13. hónap után a v1 működőképes marad, csak új funkciók nélkül. A jövőbeli főverziók (v2, v3) külön termékek: $89 új vásárlóknak, $35 a v1 tulajdonosoknak (60% kedvezmény)." }
+          },          {
+            "@type": "Question",
+            "name": "Milyen fizetési módok és visszatérítés?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Whop-on keresztül: bankkártya, PayPal, kripto. A fizetési adataidat soha nem látjuk. 30 napos visszatérítés — kapcsolatfelvétel: bookmarkforge@proton.me." }
+          },          {
+            "@type": "Question",
+            "name": "Támogatás — milyen gyorsan válaszolunk?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Ingyenes: közösségi segítség a Súgóközponton + GitHub Discussions (legjobb erőfeszítés). Pro: e-mail 48 óra munkanapokon. A pince titkosított — nem látjuk az adataidat, ezért soha nem kérjük a jelszavadat vagy a helyreállítási kifejezésedet. Lásd a támogatási SLA-t." }
+          },          {
+            "@type": "Question",
+            "name": "Mi van, ha elfelejtem a pince jelszavát?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Nem tudjuk helyreállítani. A pince létrehozásakor egyszer megmutatjuk a 24 szavas helyreállítási kifejezést — írd fel papírra. Nélküle senki (még mi sem) nem tudja megnyitni a pincét. Lásd BF-E101." }
+          }        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Ugrás a fő tartalomra</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/hu/" class="nav-brand" aria-label="BookmarkForge kezdőlap">
+        <img src="/logo-64.png" width="32" height="32" alt="BookmarkForge logo" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" id="navLinks" aria-label="Fő navigáció">
+        <a href="#pocket-alternative">Olvasd később, újjászületve</a>
+        <a href="#raindrop-compare">Raindrop összehasonlítás</a>
+        <a href="#features">Funkciók</a>
+        <a href="#ai">MI</a>
+        <a href="#privacy">Adatvédelem</a>
+        <a href="#pricing">Árak</a>
+        <a href="/help-hu">Súgó</a>
+        
+        <!-- Language Dropdown -->
+        <div class="language-dropdown">
+          <button class="language-toggle" aria-label="Select language" aria-expanded="false">
+            <span class="current-lang">Magyar</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 4 L6 8 L10 4"/>
+            </svg>
+          </button>
+          <ul class="language-menu" role="menu" aria-hidden="true">
+            <li role="none">
+              <a href="/id/" hreflang="id" lang="id" role="menuitem">
+                Bahasa Indonesia
+              </a>
+            </li>
+            <li role="none">
+              <a href="/cs/" hreflang="cs" lang="cs" role="menuitem">
+                Čeština
+              </a>
+            </li>
+            <li role="none">
+              <a href="/da/" hreflang="da" lang="da" role="menuitem">
+                Dansk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/de/" hreflang="de" lang="de" role="menuitem">
+                Deutsch
+              </a>
+            </li>
+            <li role="none">
+              <a href="/" hreflang="en" lang="en" role="menuitem">
+                English
+              </a>
+            </li>
+            <li role="none">
+              <a href="/es/" hreflang="es" lang="es" role="menuitem">
+                Español
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fr/" hreflang="fr" lang="fr" role="menuitem">
+                Français
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hr/" hreflang="hr" lang="hr" role="menuitem">
+                Hrvatski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/it/" hreflang="it" lang="it" role="menuitem">
+                Italiano
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hu/" hreflang="hu" lang="hu" role="menuitem" class="current">
+                Magyar
+              </a>
+            </li>
+            <li role="none">
+              <a href="/nl/" hreflang="nl" lang="nl" role="menuitem">
+                Nederlands
+              </a>
+            </li>
+            <li role="none">
+              <a href="/no/" hreflang="no" lang="no" role="menuitem">
+                Norsk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pl/" hreflang="pl" lang="pl" role="menuitem">
+                Polski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pt/" hreflang="pt" lang="pt" role="menuitem">
+                Português
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ro/" hreflang="ro" lang="ro" role="menuitem">
+                Română
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fi/" hreflang="fi" lang="fi" role="menuitem">
+                Suomi
+              </a>
+            </li>
+            <li role="none">
+              <a href="/sv/" hreflang="sv" lang="sv" role="menuitem">
+                Svenska
+              </a>
+            </li>
+            <li role="none">
+              <a href="/vi/" hreflang="vi" lang="vi" role="menuitem">
+                Tiếng Việt
+              </a>
+            </li>
+            <li role="none">
+              <a href="/tr/" hreflang="tr" lang="tr" role="menuitem">
+                Türkçe
+              </a>
+            </li>
+            <li role="none">
+              <a href="/el/" hreflang="el" lang="el" role="menuitem">
+                Ελληνικά
+              </a>
+            </li>
+            <li role="none">
+              <a href="/bg/" hreflang="bg" lang="bg" role="menuitem">
+                Български
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ru/" hreflang="ru" lang="ru" role="menuitem">
+                Русский
+              </a>
+            </li>
+            <li role="none">
+              <a href="/uk/" hreflang="uk" lang="uk" role="menuitem">
+                Українська
+              </a>
+            </li>
+            <li role="none">
+              <a href="/he/" hreflang="he" lang="he" role="menuitem">
+                עברית
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ar/" hreflang="ar" lang="ar" role="menuitem">
+                العربية
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hi/" hreflang="hi" lang="hi" role="menuitem">
+                हिन्दी
+              </a>
+            </li>
+            <li role="none">
+              <a href="/th/" hreflang="th" lang="th" role="menuitem">
+                ไทย
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ko/" hreflang="ko" lang="ko" role="menuitem">
+                한국어
+              </a>
+            </li>
+            <li role="none">
+              <a href="/zh/" hreflang="zh" lang="zh" role="menuitem">
+                中文
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ja/" hreflang="ja" lang="ja" role="menuitem">
+                日本語
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <a href="/app" class="btn-primary nav-cta">App megnyitása</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Menü megnyitása" data-label-close="Menü bezárása">
+          <svg class="icon-menu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+          <svg class="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Téma váltása" aria-pressed="false">
+          <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">Egyszeri fizetés · Nincs előfizetés</span>
+          <h1 id="hero-title">Amit elmentesz, a saját számítógépeden marad. <span class="accent-text">Minden.</span></h1>
+          <p class="hero-subtitle">A Raindrop a szerverein tartja a könyvjelzőidet — és minden évben kér érte pénzt. A BookmarkForge a számítógépeden tartja őket, egy kulccsal zárva, amely csak a tiéd. Nincs fiók. Nincs havi díj. Senki sem olvas a vállad fölött.</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">App indítása ingyen</a>
+            <a href="#pricing" class="btn-secondary">Árak megtekintése</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>Privát</strong> — az elmentett oldalak sosem hagyják el a számítógépedet</span>
+            <span><strong>Zárt</strong> — még mi sem tudjuk elolvasni őket</span>
+            <span><strong>Kapcsolat nélkül</strong> — működik repülőn, alagútban, bárhol</span>
+            <span><strong>Egyszer fizetsz</strong> — 59 dollár egyszer, nem 28 dollár minden évben</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Demo Section — steps and CTA only. The tour GIF this section
+         used to show was retired with the demo-media pipeline; the template kept
+         a dead <img> pointing at it until the ADR-062 smoke gate reported the 404
+         on all 30 landings. The demo.* copy still describes the loop: rewriting it
+         has to come with the translations, not from the template. -->
+    <section id="demo" class="demo-tour" aria-labelledby="demo-title">
+      <div class="container">
+        <div class="demo-tour-header">
+          <span class="demo-tour-tag">Működés közben</span>
+          <h2 id="demo-title" class="demo-tour-title">A valódi app, nem makett</h2>
+          <p class="demo-tour-subtitle">Nincs regisztrációs fal, nincs stock videó és nincs hamis kurzor. Ez a ciklus a kiadott build egy átlagos asztali gépen: pince feloldása, oldal mentése, könyvtár keresése, majd újra zárás.</p>
+        </div>
+        <ol class="demo-tour-steps">
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">Feloldás</strong>
+            <span class="demo-tour-step-text">A pince egy általad választott jelszóval nyílik; a kulcs az eszközödön marad.</span>
+          </li>
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">Mentés</strong>
+            <span class="demo-tour-step-text">Ments el egy oldalt közvetlenül az appból — nincs szükség fiókra és bővítményre sem.</span>
+          </li>
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">Keresés</strong>
+            <span class="demo-tour-step-text">Keresés kulcsszó vagy jelentés szerint, minden válasz forrásával együtt.</span>
+          </li>
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">Zárás</strong>
+            <span class="demo-tour-step-text">Zárd be a pincét, és a visszafejtési kulcs eltűnik a memóriából.</span>
+          </li>
+        </ol>
+        <div class="demo-tour-cta">
+          <a href="/app" class="btn-primary">App indítása</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="pocket-alternative" class="comparison-section" aria-labelledby="pocket-alternative-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Olvasd később, újjászületve</span>
+          <h2 id="pocket-alternative-title">A privát Pocket alternatíva</h2>
+          <p class="section-subtitle">A Pocket megszűnik. A BookmarkForge életben tartja az „olvasd később” szokást — minden cikk, jegyzet és kiemelés titkosítva az eszközödön marad.</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>Olvasd később, örökre a tiéd</h3>
+            <p>Ments el cikkeket, videókat és PDF-eket egy kattintással — PWA-ból, böngészőbővítményből vagy megosztási menüből. A Pocketkal ellentétben az olvasási listád az eszközödön él, titkosítva, és offline is működik.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Notion-stílusú jegyzetek minden cikkhez</h3>
+            <p>Jelölj ki, foglald össze és írj blokkalapú jegyzeteket bármely könyvjelzőhöz. Alakíts egy elmentett cikket a saját tudásbázisoddá — ne csak linklistává.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Nulla követés, nulla hirdetés</h3>
+            <p>A BookmarkForge-nak nincs fiókja, nincs analitikája és alapból nincs hirdetése. Az olvasási szokásaid senki más dolga, csak a tiéd.</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Mentés indítása ingyen</a>
+          <a href="/pocket-alternative" class="btn-link">Teljes összehasonlítás és migrációs útmutató</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Raindrop Comparison Section -->
+    <section id="raindrop-compare" class="raindrop-section" aria-labelledby="raindrop-compare-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Egyszerű szavakkal, marketing nélkül</span>
+          <h2 id="raindrop-compare-title">BookmarkForge vs. Raindrop, apróbetűs rész nélkül</h2>
+          <p class="section-subtitle">A Raindrop jó app. A nagy különbség ott van, hol élnek a dolgaid.</p>
+        </div>
+        <div class="rc-table" role="table" aria-label="BookmarkForge vs. Raindrop, apróbetűs rész nélkül">
+          <div class="rc-row rc-head" role="row">
+            <div class="rc-topic" role="columnheader"></div>
+            <div class="rc-us" role="columnheader">BookmarkForge</div>
+            <div class="rc-them" role="columnheader">Raindrop</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Hol él a listád</div>
+            <div class="rc-us" role="cell">A számítógépeden</div>
+            <div class="rc-them" role="cell">A szervereiken</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Ki olvashatja, amit elmentesz</div>
+            <div class="rc-us" role="cell">Senki — a kulcsoddal zárva, még mi sem</div>
+            <div class="rc-them" role="cell">A cég, és aki követeli tőlük</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Internet nélkül</div>
+            <div class="rc-us" role="cell">Minden tovább működik</div>
+            <div class="rc-them" role="cell">Csak az alapok</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Mit fizetsz</div>
+            <div class="rc-us" role="cell">59 dollár egyszer. Kész.</div>
+            <div class="rc-them" role="cell">28 dollár minden évben, örökre</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Ha a cég eltűnik (nyugodjék békében a Pocket)</div>
+            <div class="rc-us" role="cell">Semmi nem változik — már a kezedben van</div>
+            <div class="rc-them" role="cell">Exportálsz és újrakezdesz</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Az MI-asszisztens</div>
+            <div class="rc-us" role="cell">A számítógépeden belül fut privát módban — semmi sem megy sehova</div>
+            <div class="rc-them" role="cell">Az olvasnivalód a felhőbe vándorol gondolkodni</div>
+          </div>
+        </div>
+        <p class="rc-close">A Raindrop egyszerűbb és ingyenes — ha csak ennyi kell, használd nyugodtan. De ha inkább a saját kezedben tartanád az olvasási életedet, a BookmarkForge pontosan erre készült.</p>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Próbáld ki ingyen 2 perc alatt — nincs fiók</a>
+          <a href="/pocket-alternative" class="btn-link">Teljes Pocket-összehasonlítás</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Minden, amire szükséged van</span>
+          <h2 id="features-title">Minden, amire szükséged van, egyszerű szavakkal</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Könyvjelzők és dokumentumok</h3>
+            <p>Ments el bármely oldalt egy kattintással. Írj jegyzetet rögtön mellé, egy tiszta, egyszerű szerkesztőben. 100 000 mentett elemmel is gyors marad.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Okos keresés</h3>
+            <p>Találj dolgokat kulcsszó vagy jelentés szerint — akkor is, ha nem emlékszel a pontos szavakra. A Raindrop évi 28 dollárért adja; itt ingyen benne van.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Egy MI, amely a könyvtáradat olvassa, a számítógépeden belül</h3>
+            <p>Kérdezz a mentett dolgaidról, és kapj választ a forrásokkal együtt. Semmi sem megy a felhőbe, és internet nélkül is működik. Pro szükséges.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Csevegés a saját könyvtáradról</h3>
+            <p>Kérdezz bármit a könyvjelzőidről és jegyzeteidről, és kapj hivatkozott válaszokat. A privát mód 100%-ban a gépeden fut. Pro szükséges.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Szinkron az eszközeid között</h3>
+            <p>Az eszközeid közvetlenül beszélnek egymással — nincs köztes szerver, és minden titkosítva marad. Párosítsd őket QR-kód beolvasásával. Legfeljebb 5 eszköz. Pro szükséges.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Saját biztonsági mentések</h3>
+            <p>Automatikus mentések, amelyeket bárhová tehetsz — külső meghajtóra, felhőmappába, bárhová. Exportálj bármikor Markdown, JSON, CSV vagy PDF formátumban. A kulcsok a te kezedben vannak.</p>
+          </div>
+          <div class="feature-item">
+            <h3>A tudásod térképe</h3>
+            <p>Lásd, hogyan kapcsolódnak a jegyzeteid és könyvjelzőid. Szűrj címkék, dátumok és hasonlóság szerint, és nagyíts egy végtelen vásznon.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Tanulókártyák, amelyek legyőzik a felejtést</h3>
+            <p>Alakíts bármely elmentett dokumentumot kérdőkártyákká, amelyek éppen akkor bukkannak elő, amikor már felejtenéd — ugyanaz az ütemezési ötlet, mint az Anki-nél. Pro szükséges.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Alapból privát</h3>
+            <p>Nincs fiók, nincs követés, nincs hirdetés. Te vagy a vásárló, nem a termék. A használati adatok megosztása létezik, opcionális, és kikapcsolva marad, amíg be nem kapcsolod.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">MI, amely tiszteli téged</span>
+          <h2 id="ai-title">A tudásod, felerősítve</h2>
+          <p class="section-subtitle">Futtasd az asszisztenst a számítógépeden belül — semmi sem hagyja el, és offline is működik. Nagy felhőmodellt preferálsz? Csatlakoztasd a saját kulcsodat: a kérdéseid és a válaszhoz szükséges oldalak ahhoz a szolgáltatóhoz mennek, a te költségeden. A promptjaid, az adataid, a szabályaid.</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>Támogatott szolgáltatók</h3>
+            <ul class="providers-list">
+              <li>A számítógépeden belül — WebLLM modellek (TinyLlama, Llama 3.2, Phi-3.5-mini) — csak Pro</li>
+              <li>A saját gépeden — Ollama (bármely modell, amit futtatsz)</li>
+              <li>Felhő — Google Gemini (a saját kulcsoddal)</li>
+              <li>Felhő — OpenAI / GPT-4o (a saját kulcsoddal)</li>
+              <li>Felhő — Anthropic Claude (a saját kulcsoddal)</li>
+              <li>Felhő — Groq (a saját kulcsoddal)</li>
+              <li>Felhő — OpenRouter vagy egyéb egyedi szolgáltató (a saját kulcsoddal)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>Csevegési módok</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>Privát mód</h4>
+                <p>Az asszisztens teljesen a számítógépeden belül fut. Semmi sem hagyja el, és nem kell hozzá internet. Pro szükséges.</p>
+              </div>
+              <div class="mode-item">
+                <h4>Webes keresési mód</h4>
+                <p>A könyvtáradat élő webes találatokkal kombinálja (felhőszolgáltatók).</p>
+              </div>
+              <div class="mode-item">
+                <h4>Szakértő ügynökök</h4>
+                <p>Speciális segítők: Coder, Writer, Analyst és Researcher. Pro szükséges.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">Az adatvédelem nem funkció — az alap</h2>
+          <p class="section-subtitle">Minden architekturális döntés téged állít hatalomba</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Úgy zárva, hogy senki sem olvashatja — még mi sem</h3>
+            <p>A könyvtáradat egy, a mesterjelszódból származtatott kulccsal titkosítjuk. Soha nem látjuk a jelszavadat vagy a tartalmadat.</p>
+          </div>
+          <div class="feature-item">
+            <h3>A saját eszközödön tárolva</h3>
+            <p>Minden a számítógépeden él. A kísérő szerver csak licencelést, eszközpárosítást és a felhőmódú MI-kérdések továbbítását kezeli — soha nem a tartalmadat.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Alapból nincs követés</h3>
+            <p>Nincs analitika, nincs összeomlás-jelentés, nincs követés. A használati statisztikák vagy hibajelentések megosztása külön választás, alapból kikapcsolva.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Te tartod a kulcsokat</h3>
+            <p>Nincs mesterjelszó = nincs hozzáférés — nincs „elfelejtett jelszó” hátsó ajtó. A 24 szavas helyreállítási kifejezés az egyetlen út be; őrizd biztonságban.</p>
+          </div>
+          <div class="feature-item">
+            <h3>A jogaid tiszteletben tartva</h3>
+            <p>Hozzáférés, helyesbítés, törlés vagy az adataid elvitele — mind helyben, bármikor megtehető.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Nincs bezártság</h3>
+            <p>Exportáld az adataidat bármikor nyílt formátumokban (JSON, Markdown, CSV, PDF). A tudásod a tiéd marad és hordozható.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">Egyszerű, tisztességes árazás — nincs előfizetés</h2>
+          <p class="section-subtitle">Ingyenes 2 500 könyvjelző örökre. A Pro Lifetime licenc a v1-hez — fizess egyszer, birtokold a v1-et örökre. Tartalmazza az összes v1.x frissítést és 12 hónap funkciófrissítést. Biztonsági frissítések örökre. Nincs havi számlázás.</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Free</h3>
+            <div class="price">$ 0<span>/örökre</span></div>
+            <p>Személyes archívumhoz (2 500 könyvjelző, bármely eszközön működik — mindegyiknek saját széfje van)</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> 2 500 könyvjelző, jegyzet és dokumentum</li>
+              <li><span aria-hidden="true">✅</span> Okos keresés (teljes szöveges + szemantikus) — ingyenesen tartalmazza; a Raindrop évente fizetést kér érte</li>
+              <li><span aria-hidden="true">✅</span> AI saját API-kulcsával (Ön fizeti a szolgáltatót)</li>
+              <li><span aria-hidden="true">✅</span> Tudásgráf</li>
+              <li><span aria-hidden="true">✅</span> Alap sablonok</li>
+              <li><span aria-hidden="true">✅</span> JSON/HTML exportálás</li>
+              <li><span aria-hidden="true">✅</span> PWA + böngészőbővítések</li>
+              <li><span aria-hidden="true">❌</span> P2P szinkronizálás eszközök között</li>
+              <li><span aria-hidden="true">❌</span> Helyi AI (WebLLM/Ollama)</li>
+              <li><span aria-hidden="true">❌</span> RAG chat az adatai felett</li>
+              <li><span aria-hidden="true">❌</span> Flashcards spaced repetitionnal</li>
+              <li><span aria-hidden="true">❌</span> PDF + OCR</li>
+            </ul>
+            <a href="/app" class="btn-secondary " >Ingyenes indítás</a>
+          </div>
+          <div class="price-card popular">
+            <div class="price-badges">
+              <span class="badge">Legnépszerűbb — Early Bird 200</span>
+            </div>
+            <h3>Pro Lifetime v1</h3>
+            <div class="price"><span class="price-now">$ 59</span> <span class="price-was">$79</span><span>Early Bird (majd $79)</span></div>
+            <div class="price-sub">majd $79 normál áron</div>
+            <p>A v1 örökre · 12 hónap funkciófrissítés · Biztonság örökre · v2 60% kedvezmény</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Minden, ami ingyenesben</li>
+              <li><span aria-hidden="true">✅</span> Korlátlan könyvjelző</li>
+              <li><span aria-hidden="true">✅</span> 5 eszköz · P2P szinkron 5 eszközön</li>
+              <li><span aria-hidden="true">✅</span> Helyi MI modellek (WebLLM, nincs API-kulcs) · RAG csevegés</li>
+              <li><span aria-hidden="true">✅</span> Szakértő ügynökök (Coder, Writer, Analyst, Researcher)</li>
+              <li><span aria-hidden="true">✅</span> Tanulókártyák időzített ismétléssel · PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> Haladó export (10+ formátum) · Titkosított mentések</li>
+              <li><span aria-hidden="true">✅</span> Biztonsági pince (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> A v1 örökre · 12 hónap funkciófrissítés</li>
+              <li><span aria-hidden="true">✅</span> Biztonsági frissítések örökre</li>
+              <li><span aria-hidden="true">✅</span> E-mail támogatás (48h) + korai hozzáférés</li>
+            </ul>
+            <a href="https://whop.com/checkout/plan_g4oAakLGDjaoM" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Pro beszerzése $59 Early Bird áron</a>
+            <a href="https://whop.com/checkout/plan_wFiqyaojHKXmG" class="btn-secondary btn-block" target="_blank" rel="noopener noreferrer">Szerezd meg a Pro-t: $79 Regular</a>
+            <p class="sla-note">Támogatás: E-mail 48h (H–P) · <a href="/help-hu#sla">SLA</a></p>
+          </div>
+        </div>
+        <p class="pricing-legal">Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href="/privacy-and-terms.html#terms">Terms</a> · <a href="/help-hu#pricing">Learn more</a></p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">Gyakori kérdések</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Az ingyenes szint tényleg ingyenes örökre?</h3>
+            <p>Igen. Nincs próba, nincs előfizetés. Az ingyenes szint 2 500 könyvjelzőt, teljes szöveges és szemantikus keresést, tudásgráfot és MI-t a saját API-kulcsoddal (a szolgáltatót fizeted) tartalmaz.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Mit jelent a „v1 örökre” a Pro esetén?</h3>
+            <p>Fizess egyszer, birtokold a v1-et örökre. Tartalmazza az összes v1.x frissítést (hibajavítás + kisebb funkciók) örökre és 12 hónap funkciófrissítést a vásárlástól. Biztonsági frissítések örökre. A 13. hónap után a v1 működőképes marad, csak új funkciók nélkül. A jövőbeli főverziók (v2, v3) külön termékek: $89 új vásárlóknak, $35 a v1 tulajdonosoknak (60% kedvezmény).</p>
+          </div>
+          <div class="faq-item">
+            <h3>Milyen fizetési módok és visszatérítés?</h3>
+            <p>Whop-on keresztül: bankkártya, PayPal, kripto. A fizetési adataidat soha nem látjuk. 30 napos visszatérítés — írj a <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> címre.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Támogatás — milyen gyorsan válaszolunk?</h3>
+            <p>Free: Community help via <a href="/help">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href="/help-hu#sla">Support SLA</a>.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Mi van, ha elfelejtem a pince jelszavát?</h3>
+            <p>We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href="/help-hu#bf-e101">BF-E101</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>Készen állsz birtokolni a tudásodat?</h2>
+        <p>Csatlakozz a több ezer kutatóhoz, fejlesztőhöz és tanulóhoz, akik a BookmarkForge-ra bízzák második agyukat.</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">Ingyenes app indítása</a>
+          <a href="#pricing" class="btn-secondary">Frissítés Pro-ra</a>
+        </div>
+        <p class="note">Nincs szükség fiókra. Azonnal működik a böngészőben. Ingyenes szint: 2 500 könyvjelző.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>A privát, MI-vel működő tudástárad. 100% helyi első.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Termék</h4>
+        <ul>
+          <li><a href="/#features">Funkciók</a></li>
+          <li><a href="/#ai">MI-képességek</a></li>
+          <li><a href="/#privacy">Adatvédelem</a></li>
+          <li><a href="/#pricing">Árak</a></li>
+          <li><a href="/app">App indítása</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Források</h4>
+        <ul>
+          <li><a href="/pocket-alternative.html">Pocket-összehasonlítás</a></li>
+          <li><a href="/privacy-and-terms.html">Adatvédelem és feltételek</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Nyelvek</h4>
+        <ul>
+          <li><a href="/id/" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+          <li><a href="/cs/" hreflang="cs" lang="cs">Čeština</a></li>
+          <li><a href="/da/" hreflang="da" lang="da">Dansk</a></li>
+          <li><a href="/de/" hreflang="de" lang="de">Deutsch</a></li>
+          <li><a href="/" hreflang="en" lang="en">English</a></li>
+          <li><a href="/es/" hreflang="es" lang="es">Español</a></li>
+          <li><a href="/fr/" hreflang="fr" lang="fr">Français</a></li>
+          <li><a href="/hr/" hreflang="hr" lang="hr">Hrvatski</a></li>
+          <li><a href="/it/" hreflang="it" lang="it">Italiano</a></li>
+          <li><a href="/hu/" hreflang="hu" lang="hu">Magyar</a></li>
+          <li><a href="/nl/" hreflang="nl" lang="nl">Nederlands</a></li>
+          <li><a href="/no/" hreflang="no" lang="no">Norsk</a></li>
+          <li><a href="/pl/" hreflang="pl" lang="pl">Polski</a></li>
+          <li><a href="/pt/" hreflang="pt" lang="pt">Português</a></li>
+          <li><a href="/ro/" hreflang="ro" lang="ro">Română</a></li>
+          <li><a href="/fi/" hreflang="fi" lang="fi">Suomi</a></li>
+          <li><a href="/sv/" hreflang="sv" lang="sv">Svenska</a></li>
+          <li><a href="/vi/" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+          <li><a href="/tr/" hreflang="tr" lang="tr">Türkçe</a></li>
+          <li><a href="/el/" hreflang="el" lang="el">Ελληνικά</a></li>
+          <li><a href="/bg/" hreflang="bg" lang="bg">Български</a></li>
+          <li><a href="/ru/" hreflang="ru" lang="ru">Русский</a></li>
+          <li><a href="/uk/" hreflang="uk" lang="uk">Українська</a></li>
+          <li><a href="/he/" hreflang="he" lang="he">עברית</a></li>
+          <li><a href="/ar/" hreflang="ar" lang="ar">العربية</a></li>
+          <li><a href="/hi/" hreflang="hi" lang="hi">हिन्दी</a></li>
+          <li><a href="/th/" hreflang="th" lang="th">ไทย</a></li>
+          <li><a href="/ko/" hreflang="ko" lang="ko">한국어</a></li>
+          <li><a href="/zh/" hreflang="zh" lang="zh">中文</a></li>
+          <li><a href="/ja/" hreflang="ja" lang="ja">日本語</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Támogatás</h4>
+        <ul>
+          <li><a href="/help-hu">Súgóközpont</a></li>
+          <li><a href="/help-hu#sla">SLA</a></li>
+          <li><a href="/help-hu#bf-e">Hibakódok</a></li>
+          <li><a href="mailto:bookmarkforge@proton.me">Kapcsolat</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+         Every other locale has its own directory. The rule has one owner —
+         scripts/landing-registry.mjs (LEGAL_LOCALE_CODES), already encoded by
+         check-seo, check-sitemap-coverage, check-hreflang-graph and
+         check-page-figures. Emitting "/hu/…" unconditionally shipped a
+         404 footer link on every EN landing until the ADR-062 smoke gate opened it. -->
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. Minden jog fenntartva.</p>
+      <a href="/hu/privacy-and-terms.html">Adatvédelmi szabályzat</a> · <a href="/hu/privacy-and-terms.html#terms">Szolgáltatási feltételek</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

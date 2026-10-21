@@ -1,0 +1,740 @@
+{
+  "lang": "hu",
+  "langName": "Magyar",
+  "dir": "ltr",
+  "canonical": "https://bookmarkforgeapp.com/hu/",
+  "ogLocale": "hu_HU",
+  "ogLocaleAlternate": "en_US",
+  "title": "BookmarkForge — Minden a saját számítógépén marad. Egyszer fizet, örökre.",
+  "description": "A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. 59 dollár egyszer. Ingyenes: 2 500 könyvjelző.",
+  "ogTitle": "BookmarkForge — Minden a saját számítógépén marad. Egyszer fizet, örökre.",
+  "ogDescription": "A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. 59 dollár egyszer. Ingyenes: 2 500 könyvjelző.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "BookmarkForge — Minden a saját számítógépén marad. Egyszer fizet, örökre.",
+  "twitterDescription": "A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. 59 dollár egyszer. Ingyenes: 2 500 könyvjelző.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Ugrás a fő tartalomra",
+  "navBrandAria": "BookmarkForge kezdőlap",
+  "navAriaLabel": "Fő navigáció",
+  "homeHref": "/hu/",
+  "navLinks": {
+    "pocketAlternative": "Pocket alternatíva",
+    "features": "Funkciók",
+    "ai": "MI",
+    "privacy": "Adatvédelem",
+    "pricing": "Árak",
+    "help": "Súgó",
+    "raindropCompare": "Raindrop összehasonlítás"
+  },
+  "langLink": {
+    "href": "/es/",
+    "hreflang": "es",
+    "lang": "es",
+    "text": "Español"
+  },
+  "navCta": "App megnyitása",
+  "themeToggleAria": "Téma váltása",
+  "navToggleAria": "Menü megnyitása",
+  "navToggleAriaClose": "Menü bezárása",
+  "hero": {
+    "badge": "Egyszeri fizetés · Nincs előfizetés",
+    "title": "Amit elmentesz, a saját számítógépeden marad. <span class=\"accent-text\">Minden.</span>",
+    "subtitle": "A Raindrop a szerverein tartja a könyvjelzőidet — és minden évben kér érte pénzt. A BookmarkForge a számítógépeden tartja őket, egy kulccsal zárva, amely csak a tiéd. Nincs fiók. Nincs havi díj. Senki sem olvas a vállad fölött.",
+    "ctaPrimary": "App indítása ingyen",
+    "ctaSecondary": "Árak megtekintése",
+    "pillars": [
+      {
+        "strong": "Privát",
+        "text": "az elmentett oldalak sosem hagyják el a számítógépedet"
+      },
+      {
+        "strong": "Zárt",
+        "text": "még mi sem tudjuk elolvasni őket"
+      },
+      {
+        "strong": "Kapcsolat nélkül",
+        "text": "működik repülőn, alagútban, bárhol"
+      },
+      {
+        "strong": "Egyszer fizetsz",
+        "text": "59 dollár egyszer, nem 28 dollár minden évben"
+      }
+    ]
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "Működés közben",
+    "title": "A valódi app, nem makett",
+    "subtitle": "Nincs regisztrációs fal, nincs stock videó és nincs hamis kurzor. Ez a ciklus a kiadott build egy átlagos asztali gépen: pince feloldása, oldal mentése, könyvtár keresése, majd újra zárás.",
+    "imageAlt": "BookmarkForge animált ciklus: pince feloldása, könyvjelző mentése, könyvtár keresése és újra zárása",
+    "caption": "Asztali appról rögzítve demoadatokkal. A teljes bejárás a projekttel szállít.",
+    "steps": [
+      {
+        "title": "Feloldás",
+        "text": "A pince egy általad választott jelszóval nyílik; a kulcs az eszközödön marad."
+      },
+      {
+        "title": "Mentés",
+        "text": "Ments el egy oldalt közvetlenül az appból — nincs szükség fiókra és bővítményre sem."
+      },
+      {
+        "title": "Keresés",
+        "text": "Keresés kulcsszó vagy jelentés szerint, minden válasz forrásával együtt."
+      },
+      {
+        "title": "Zárás",
+        "text": "Zárd be a pincét, és a visszafejtési kulcs eltűnik a memóriából."
+      }
+    ],
+    "ctaPrimary": "App indítása"
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Olvasd később, újjászületve",
+    "title": "A privát Pocket alternatíva",
+    "subtitle": "A Pocket megszűnik. A BookmarkForge életben tartja az „olvasd később” szokást — minden cikk, jegyzet és kiemelés titkosítva az eszközödön marad.",
+    "features": [
+      {
+        "title": "Olvasd később, örökre a tiéd",
+        "text": "Ments el cikkeket, videókat és PDF-eket egy kattintással — PWA-ból, böngészőbővítményből vagy megosztási menüből. A Pocketkal ellentétben az olvasási listád az eszközödön él, titkosítva, és offline is működik."
+      },
+      {
+        "title": "Notion-stílusú jegyzetek minden cikkhez",
+        "text": "Jelölj ki, foglald össze és írj blokkalapú jegyzeteket bármely könyvjelzőhöz. Alakíts egy elmentett cikket a saját tudásbázisoddá — ne csak linklistává."
+      },
+      {
+        "title": "Nulla követés, nulla hirdetés",
+        "text": "A BookmarkForge-nak nincs fiókja, nincs analitikája és alapból nincs hirdetése. Az olvasási szokásaid senki más dolga, csak a tiéd."
+      }
+    ],
+    "ctaPrimary": "Mentés indítása ingyen",
+    "ctaSecondary": "Teljes összehasonlítás és migrációs útmutató",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "Egyszerű szavakkal, marketing nélkül",
+    "title": "BookmarkForge vs. Raindrop, apróbetűs rész nélkül",
+    "subtitle": "A Raindrop jó app. A nagy különbség ott van, hol élnek a dolgaid.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Hol él a listád",
+        "us": "A számítógépeden",
+        "them": "A szervereiken"
+      },
+      {
+        "topic": "Ki olvashatja, amit elmentesz",
+        "us": "Senki — a kulcsoddal zárva, még mi sem",
+        "them": "A cég, és aki követeli tőlük"
+      },
+      {
+        "topic": "Internet nélkül",
+        "us": "Minden tovább működik",
+        "them": "Csak az alapok"
+      },
+      {
+        "topic": "Mit fizetsz",
+        "us": "59 dollár egyszer. Kész.",
+        "them": "28 dollár minden évben, örökre"
+      },
+      {
+        "topic": "Ha a cég eltűnik (nyugodjék békében a Pocket)",
+        "us": "Semmi nem változik — már a kezedben van",
+        "them": "Exportálsz és újrakezdesz"
+      },
+      {
+        "topic": "Az MI-asszisztens",
+        "us": "A számítógépeden belül fut privát módban — semmi sem megy sehova",
+        "them": "Az olvasnivalód a felhőbe vándorol gondolkodni"
+      }
+    ],
+    "ctaPrimary": "Próbáld ki ingyen 2 perc alatt — nincs fiók",
+    "ctaSecondary": "Teljes Pocket-összehasonlítás",
+    "close": "A Raindrop egyszerűbb és ingyenes — ha csak ennyi kell, használd nyugodtan. De ha inkább a saját kezedben tartanád az olvasási életedet, a BookmarkForge pontosan erre készült."
+  },
+  "features": {
+    "id": "features",
+    "tag": "Minden, amire szükséged van",
+    "title": "Minden, amire szükséged van, egyszerű szavakkal",
+    "items": [
+      {
+        "title": "Könyvjelzők és dokumentumok",
+        "text": "Ments el bármely oldalt egy kattintással. Írj jegyzetet rögtön mellé, egy tiszta, egyszerű szerkesztőben. 100 000 mentett elemmel is gyors marad."
+      },
+      {
+        "title": "Okos keresés",
+        "text": "Találj dolgokat kulcsszó vagy jelentés szerint — akkor is, ha nem emlékszel a pontos szavakra. A Raindrop évi 28 dollárért adja; itt ingyen benne van."
+      },
+      {
+        "title": "Egy MI, amely a könyvtáradat olvassa, a számítógépeden belül",
+        "text": "Kérdezz a mentett dolgaidról, és kapj választ a forrásokkal együtt. Semmi sem megy a felhőbe, és internet nélkül is működik. Pro szükséges."
+      },
+      {
+        "title": "Csevegés a saját könyvtáradról",
+        "text": "Kérdezz bármit a könyvjelzőidről és jegyzeteidről, és kapj hivatkozott válaszokat. A privát mód 100%-ban a gépeden fut. Pro szükséges."
+      },
+      {
+        "title": "Szinkron az eszközeid között",
+        "text": "Az eszközeid közvetlenül beszélnek egymással — nincs köztes szerver, és minden titkosítva marad. Párosítsd őket QR-kód beolvasásával. Legfeljebb 5 eszköz. Pro szükséges."
+      },
+      {
+        "title": "Saját biztonsági mentések",
+        "text": "Automatikus mentések, amelyeket bárhová tehetsz — külső meghajtóra, felhőmappába, bárhová. Exportálj bármikor Markdown, JSON, CSV vagy PDF formátumban. A kulcsok a te kezedben vannak."
+      },
+      {
+        "title": "A tudásod térképe",
+        "text": "Lásd, hogyan kapcsolódnak a jegyzeteid és könyvjelzőid. Szűrj címkék, dátumok és hasonlóság szerint, és nagyíts egy végtelen vásznon."
+      },
+      {
+        "title": "Tanulókártyák, amelyek legyőzik a felejtést",
+        "text": "Alakíts bármely elmentett dokumentumot kérdőkártyákká, amelyek éppen akkor bukkannak elő, amikor már felejtenéd — ugyanaz az ütemezési ötlet, mint az Anki-nél. Pro szükséges."
+      },
+      {
+        "title": "Alapból privát",
+        "text": "Nincs fiók, nincs követés, nincs hirdetés. Te vagy a vásárló, nem a termék. A használati adatok megosztása létezik, opcionális, és kikapcsolva marad, amíg be nem kapcsolod."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "MI, amely tiszteli téged",
+    "title": "A tudásod, felerősítve",
+    "subtitle": "Futtasd az asszisztenst a számítógépeden belül — semmi sem hagyja el, és offline is működik. Nagy felhőmodellt preferálsz? Csatlakoztasd a saját kulcsodat: a kérdéseid és a válaszhoz szükséges oldalak ahhoz a szolgáltatóhoz mennek, a te költségeden. A promptjaid, az adataid, a szabályaid.",
+    "providers": {
+      "title": "Támogatott szolgáltatók",
+      "list": [
+        {
+          "type": "local",
+          "name": "A számítógépeden belül — WebLLM modellek (TinyLlama, Llama 3.2, Phi-3.5-mini) — csak Pro"
+        },
+        {
+          "type": "local",
+          "name": "A saját gépeden — Ollama (bármely modell, amit futtatsz)"
+        },
+        {
+          "type": "cloud",
+          "name": "Felhő — Google Gemini (a saját kulcsoddal)"
+        },
+        {
+          "type": "cloud",
+          "name": "Felhő — OpenAI / GPT-4o (a saját kulcsoddal)"
+        },
+        {
+          "type": "cloud",
+          "name": "Felhő — Anthropic Claude (a saját kulcsoddal)"
+        },
+        {
+          "type": "cloud",
+          "name": "Felhő — Groq (a saját kulcsoddal)"
+        },
+        {
+          "type": "cloud",
+          "name": "Felhő — OpenRouter vagy egyéb egyedi szolgáltató (a saját kulcsoddal)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Csevegési módok",
+      "items": [
+        {
+          "title": "Privát mód",
+          "text": "Az asszisztens teljesen a számítógépeden belül fut. Semmi sem hagyja el, és nem kell hozzá internet. Pro szükséges."
+        },
+        {
+          "title": "Webes keresési mód",
+          "text": "A könyvtáradat élő webes találatokkal kombinálja (felhőszolgáltatók)."
+        },
+        {
+          "title": "Szakértő ügynökök",
+          "text": "Speciális segítők: Coder, Writer, Analyst és Researcher. Pro szükséges."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Az adatvédelem nem funkció — az alap",
+    "subtitle": "Minden architekturális döntés téged állít hatalomba",
+    "items": [
+      {
+        "title": "Úgy zárva, hogy senki sem olvashatja — még mi sem",
+        "text": "A könyvtáradat egy, a mesterjelszódból származtatott kulccsal titkosítjuk. Soha nem látjuk a jelszavadat vagy a tartalmadat."
+      },
+      {
+        "title": "A saját eszközödön tárolva",
+        "text": "Minden a számítógépeden él. A kísérő szerver csak licencelést, eszközpárosítást és a felhőmódú MI-kérdések továbbítását kezeli — soha nem a tartalmadat."
+      },
+      {
+        "title": "Alapból nincs követés",
+        "text": "Nincs analitika, nincs összeomlás-jelentés, nincs követés. A használati statisztikák vagy hibajelentések megosztása külön választás, alapból kikapcsolva."
+      },
+      {
+        "title": "Te tartod a kulcsokat",
+        "text": "Nincs mesterjelszó = nincs hozzáférés — nincs „elfelejtett jelszó” hátsó ajtó. A 24 szavas helyreállítási kifejezés az egyetlen út be; őrizd biztonságban."
+      },
+      {
+        "title": "A jogaid tiszteletben tartva",
+        "text": "Hozzáférés, helyesbítés, törlés vagy az adataid elvitele — mind helyben, bármikor megtehető."
+      },
+      {
+        "title": "Nincs bezártság",
+        "text": "Exportáld az adataidat bármikor nyílt formátumokban (JSON, Markdown, CSV, PDF). A tudásod a tiéd marad és hordozható."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Egyszerű, tisztességes árazás — nincs előfizetés",
+    "subtitle": "Ingyenes 2 500 könyvjelző örökre. A Pro Lifetime licenc a v1-hez — fizess egyszer, birtokold a v1-et örökre. Tartalmazza az összes v1.x frissítést és 12 hónap funkciófrissítést. Biztonsági frissítések örökre. Nincs havi számlázás.",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "$ 0",
+        "period": "/örökre",
+        "description": "Személyes archívumhoz (2 500 könyvjelző, bármely eszközön működik — mindegyiknek saját széfje van)",
+        "features": [
+          {
+            "included": true,
+            "text": "2 500 könyvjelző, jegyzet és dokumentum"
+          },
+          {
+            "included": true,
+            "text": "Okos keresés (teljes szöveges + szemantikus) — ingyenesen tartalmazza; a Raindrop évente fizetést kér érte"
+          },
+          {
+            "included": true,
+            "text": "AI saját API-kulcsával (Ön fizeti a szolgáltatót)"
+          },
+          {
+            "included": true,
+            "text": "Tudásgráf"
+          },
+          {
+            "included": true,
+            "text": "Alap sablonok"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML exportálás"
+          },
+          {
+            "included": true,
+            "text": "PWA + böngészőbővítések"
+          },
+          {
+            "included": false,
+            "text": "P2P szinkronizálás eszközök között"
+          },
+          {
+            "included": false,
+            "text": "Helyi AI (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "RAG chat az adatai felett"
+          },
+          {
+            "included": false,
+            "text": "Flashcards spaced repetitionnal"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          }
+        ],
+        "cta": "Ingyenes indítás",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "badge": "Legnépszerűbb — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (majd $79)",
+        "description": "A v1 örökre · 12 hónap funkciófrissítés · Biztonság örökre · v2 60% kedvezmény",
+        "features": [
+          {
+            "included": true,
+            "text": "Minden, ami ingyenesben"
+          },
+          {
+            "included": true,
+            "text": "Korlátlan könyvjelző"
+          },
+          {
+            "included": true,
+            "text": "5 eszköz · P2P szinkron 5 eszközön"
+          },
+          {
+            "included": true,
+            "text": "Helyi MI modellek (WebLLM, nincs API-kulcs) · RAG csevegés"
+          },
+          {
+            "included": true,
+            "text": "Szakértő ügynökök (Coder, Writer, Analyst, Researcher)"
+          },
+          {
+            "included": true,
+            "text": "Tanulókártyák időzített ismétléssel · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Haladó export (10+ formátum) · Titkosított mentések"
+          },
+          {
+            "included": true,
+            "text": "Biztonsági pince (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "A v1 örökre · 12 hónap funkciófrissítés"
+          },
+          {
+            "included": true,
+            "text": "Biztonsági frissítések örökre"
+          },
+          {
+            "included": true,
+            "text": "E-mail támogatás (48h) + korai hozzáférés"
+          }
+        ],
+        "cta": "Pro beszerzése $59 Early Bird áron",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "majd $79 normál áron",
+        "sla": "Támogatás: E-mail 48h (H–P)",
+        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
+        "cta2": "Szerezd meg a Pro-t: $79 Regular",
+        "cta2Class": "btn-secondary"
+      }
+    ],
+    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-hu#pricing\">Learn more</a>"
+  },
+  "faq": {
+    "title": "Gyakori kérdések",
+    "items": [
+      {
+        "question": "Az ingyenes szint tényleg ingyenes örökre?",
+        "answer": "Igen. Nincs próba, nincs előfizetés. Az ingyenes szint 2 500 könyvjelzőt, teljes szöveges és szemantikus keresést, tudásgráfot és MI-t a saját API-kulcsoddal (a szolgáltatót fizeted) tartalmaz."
+      },
+      {
+        "question": "Mit jelent a „v1 örökre” a Pro esetén?",
+        "answer": "Fizess egyszer, birtokold a v1-et örökre. Tartalmazza az összes v1.x frissítést (hibajavítás + kisebb funkciók) örökre és 12 hónap funkciófrissítést a vásárlástól. Biztonsági frissítések örökre. A 13. hónap után a v1 működőképes marad, csak új funkciók nélkül. A jövőbeli főverziók (v2, v3) külön termékek: $89 új vásárlóknak, $35 a v1 tulajdonosoknak (60% kedvezmény)."
+      },
+      {
+        "question": "Milyen fizetési módok és visszatérítés?",
+        "answer": "Whop-on keresztül: bankkártya, PayPal, kripto. A fizetési adataidat soha nem látjuk. 30 napos visszatérítés — írj a <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> címre."
+      },
+      {
+        "question": "Támogatás — milyen gyorsan válaszolunk?",
+        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help-hu#sla\">Support SLA</a>."
+      },
+      {
+        "question": "Mi van, ha elfelejtem a pince jelszavát?",
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-hu#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Készen állsz birtokolni a tudásodat?",
+    "text": "Csatlakozz a több ezer kutatóhoz, fejlesztőhöz és tanulóhoz, akik a BookmarkForge-ra bízzák második agyukat.",
+    "ctaPrimary": "Ingyenes app indítása",
+    "ctaSecondary": "Frissítés Pro-ra",
+    "note": "Nincs szükség fiókra. Azonnal működik a böngészőben. Ingyenes szint: 2 500 könyvjelző."
+  },
+  "footer": {
+    "brand": "A privát, MI-vel működő tudástárad. 100% helyi első.",
+    "product": {
+      "title": "Termék",
+      "links": [
+        "Funkciók",
+        "MI-képességek",
+        "Adatvédelem",
+        "Árak",
+        "App indítása"
+      ],
+      "hrefs": [
+        "/#features",
+        "/#ai",
+        "/#privacy",
+        "/#pricing",
+        "/app"
+      ]
+    },
+    "resources": {
+      "title": "Források",
+      "links": [
+        "Pocket-összehasonlítás",
+        "Adatvédelem és feltételek"
+      ],
+      "hrefs": [
+        "/pocket-alternative.html",
+        "/privacy-and-terms.html"
+      ]
+    },
+    "languages": {
+      "title": "Nyelvek",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Támogatás",
+      "links": [
+        "Kapcsolat"
+      ],
+      "helpCenter": "Súgóközpont",
+      "errorCodes": "Hibakódok"
+    },
+    "copyright": "© 2026 BookmarkForge. Minden jog fenntartva.",
+    "legal": [
+      "Adatvédelmi szabályzat",
+      "Szolgáltatási feltételek",
+      "bookmarkforge@proton.me"
+    ]
+  },
+  "structuredData": {
+    "websiteName": "BookmarkForge",
+    "websiteDescription": "A privát, MI-vel működő tudástárad. 100% helyi első. A privát Pocket alternatíva. Ingyenes: 2 500 könyvjelző.",
+    "organizationName": "BookmarkForge",
+    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationEmail": "bookmarkforge@proton.me",
+    "softwareName": "BookmarkForge",
+    "softwareCategory": "ProductivityApplication",
+    "softwareOs": "Web",
+    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "offers": [
+      {
+        "name": "Free",
+        "price": "0",
+        "currency": "USD",
+        "description": "2 500 könyvjelző. Örökre ingyenes."
+      },
+      {
+        "name": "Pro Lifetime v1 — Early Bird",
+        "price": "59",
+        "currency": "USD",
+        "description": "Early Bird 200. A v1 örökre, 12 hónap funkció, biztonság örökre, v2 60% kedvezmény.",
+        "priceValidUntil": "2026-12-31",
+        "availability": "https://schema.org/InStock"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "price": "79",
+        "currency": "USD",
+        "description": "Normál. A v1 örökre."
+      }
+    ],
+    "featureList": [
+      "Helyi első tárolás",
+      "Végpontok közötti titkosítás",
+      "Offline működik",
+      "MI keresés",
+      "Notion-stílusú szerkesztő",
+      "P2P szinkron"
+    ],
+    "faq": [
+      {
+        "question": "Az ingyenes szint tényleg ingyenes örökre?",
+        "answer": "Igen. Nincs próba, nincs előfizetés. Az ingyenes szint 2 500 könyvjelzőt, teljes szöveges és szemantikus keresést, tudásgráfot és MI-t a saját API-kulcsoddal (a szolgáltatót fizeted) tartalmaz."
+      },
+      {
+        "question": "Mit jelent a „v1 örökre” a Pro esetén?",
+        "answer": "Fizess egyszer, birtokold a v1-et örökre. Tartalmazza az összes v1.x frissítést (hibajavítás + kisebb funkciók) örökre és 12 hónap funkciófrissítést a vásárlástól. Biztonsági frissítések örökre. A 13. hónap után a v1 működőképes marad, csak új funkciók nélkül. A jövőbeli főverziók (v2, v3) külön termékek: $89 új vásárlóknak, $35 a v1 tulajdonosoknak (60% kedvezmény)."
+      },
+      {
+        "question": "Milyen fizetési módok és visszatérítés?",
+        "answer": "Whop-on keresztül: bankkártya, PayPal, kripto. A fizetési adataidat soha nem látjuk. 30 napos visszatérítés — kapcsolatfelvétel: bookmarkforge@proton.me."
+      },
+      {
+        "question": "Támogatás — milyen gyorsan válaszolunk?",
+        "answer": "Ingyenes: közösségi segítség a Súgóközponton + GitHub Discussions (legjobb erőfeszítés). Pro: e-mail 48 óra munkanapokon. A pince titkosított — nem látjuk az adataidat, ezért soha nem kérjük a jelszavadat vagy a helyreállítási kifejezésedet. Lásd a támogatási SLA-t."
+      },
+      {
+        "question": "Mi van, ha elfelejtem a pince jelszavát?",
+        "answer": "Nem tudjuk helyreállítani. A pince létrehozásakor egyszer megmutatjuk a 24 szavas helyreállítási kifejezést — írd fel papírra. Nélküle senki (még mi sem) nem tudja megnyitni a pincét. Lásd BF-E101."
+      }
+    ]
+  },
+  "help": {
+    "title": "Súgóközpont — GYIK, hibaelhárítás és támogatási SLA | BookmarkForge",
+    "description": "BookmarkForge súgóközpont: lifetime v1 árazás, hibaelhárítás, BF-E* hibakódok, támogatási SLA és a redaktált diagnosztikai jelentés másolása.",
+    "ogTitle": "Súgóközpont — BookmarkForge",
+    "ogDescription": "GYIK, hibaelhárítás, hibakódok és támogatási SLA. Ismerd meg, hogyan működik a lifetime v1 és hogyan másolhatsz diagnosztikai jelentést.",
+    "ogLocale": "en_US",
+    "lastUpdated": "Utolsó frissítés",
+    "lastUpdatedDate": "2026. szeptember 13.",
+    "backToHome": "← Vissza a kezdőlapra",
+    "intro": "Válaszok, mielőtt e-mailt írnál. A BookmarkForge <strong>helyi első és titkosított</strong> — nem láthatjuk a pincédet. A problémák 90%-a itt megoldható egy másolható diagnosztikával.",
+    "toc": {
+      "pricing": "Árazás és Lifetime v1",
+      "sla": "Támogatási SLA",
+      "troubleshooting": "Hibaelhárítás",
+      "errorCodes": "BF-E* hibakódok",
+      "diagnostics": "Diagnosztikai jelentés másolása",
+      "contact": "Kapcsolat"
+    },
+    "pricing": {
+      "title": "Árazás — Lifetime v1, nincs előfizetés",
+      "intro": "<strong>Modell:</strong> egyszer fizetsz a <em>BookmarkForge v1</em>-ért. Nincs havi számlázás. Összehasonlítás: Raindrop Pro $28–38/év, Instapaper $60/év, Readwise $120/év, Capacities $120/év. A $79 egyszeri életre szóló ár ~2× a Raindrop éves díja — indokolt az örökre szóló használat + adatvédelem miatt.",
+      "table": {
+        "tier": "Szint",
+        "price": "Ár",
+        "whatYouGet": "Mit kapsz",
+        "supply": "Kínálat"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro Lifetime v1"
+      },
+      "freePrice": "$0 örökre",
+      "freeDescription": "2 500 könyvjelző bármely eszközön (mindegyik saját pincével), okos keresés — teljes szöveg + szemantika, az a funkció, amit a Raindrop évente számláz — tudásgráf, MI a saját API-kulcsoddal, PWA + bővítmények. 2 500-nál a pince érintetlen marad: az olvasás, keresés és export soha nem áll le; csak az új mentések szünetelnek.",
+      "unlimited": "Korlátlan",
+      "badge": "Early Bird",
+      "proPrice": "$59",
+      "proPriceStriked": "$79",
+      "proPriceRegular": "$79 normál",
+      "proPriceTraction": "$99 a bevezetés után",
+      "proDescription": "Korlátlan könyvjelző, 5 eszköz + P2P szinkron, Helyi MI (WebLLM/Ollama) + RAG + Szakértő ügynökök, Tanulókártyák, PDF/OCR, 10+ export formátum, pince. <em>A v1 örökre · 12 hónap funkciófrissítés · Biztonság örökre · v2 60% kedvezmény</em>",
+      "proSupply": "200 Early Bird"
+    },
+    "legal": {
+      "title": "A v1 örökre — jogi sor:",
+      "text": "Lifetime licenc a BookmarkForge v1-hez. Tartalmazza az összes v1.x frissítést (hibajavítás + kisebb funkciók) örökre és 12 hónap funkciófrissítést a vásárlástól. Biztonsági frissítések örökre. A jövőbeli főverziók (v2, v3) külön termékek: $89 új vásárlóknak, $35 a v1 tulajdonosoknak (60% kedvezmény). Ha nem frissítesz, a v1 örökre működőképes marad. 30 napos visszatérítés Whop-on keresztül.",
+      "refunds": "Visszatérítés: 30 nap Whop-on keresztül. Fizetés: kártya, PayPal, kripto (Whop — soha nem látjuk a kártyaadatokat).",
+      "terms": "Feltételek § Licencelés"
+    },
+    "upgrade": {
+      "title": "Frissítés előfizetés nélkül:",
+      "text": "minden 12–18 hónapban kiadunk egy fizetős főverziót (v2.0 $89 / $35 tulajdonosoknak). Ha átugrod, a v1 tovább működik. Ez a visszatérő bevétel előfizetés kényszerítése nélkül — ugyanaz a modell, mint az Affinity/Sketch/Sublime."
+    },
+    "sla": {
+      "title": "Támogatási SLA — milyen gyorsan válaszolunk",
+      "intro": "Egyetlen karbantartó. A pince titkosított — <strong>soha nem kérjük a pince jelszavadat vagy a 24 szavas helyreállítási kifejezésedet</strong>. Az ingyenes szinten legjobb erőfeszítés, a fizetős szinteken vállalt.",
+      "table": {
+        "tier": "Szint",
+        "channel": "Csatorna",
+        "response": "Válasz",
+        "whatToDo": "Mit tegyél először"
+      },
+      "tier": {
+        "free": "Free",
+        "pro": "Pro"
+      },
+      "freeChannel": "Önkiszolgáló: ez a Súgóközpont + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeResponse": "Legjobb erőfeszítés (közösség)",
+      "freeWhatToDo": "Keress BF-E* kódot lent + másold a diagnosztikát (<a href=\"#diagnostics\">§Diagnostics</a>) posztolás előtt",
+      "proChannel": "E-mail <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (tárgy: Pro)",
+      "proResponse": "48h",
+      "proWhatToDo": "Csatold a diagnosztikai szöveget a <code>Beállítások → Súgó → Diagnosztika másolása</code> helyről",
+      "note": "Nem látjuk a könyvjelzőidet, jegyzeteidet, URL-jeidet vagy promptjaidat. Csak a lentebb lévő diagnosztikát add meg — darabszámokat és verziókat tartalmaz, soha nem pince-tartalmat."
+    },
+    "troubleshooting": {
+      "title": "Hibaelhárítás — a legtöbb probléma 30 másodperc alatt",
+      "vaultLocked": {
+        "title": "Pince zárva / rossz jelszó",
+        "text": "A jelszavak kis- és nagybetű-, valamint szóközérzékenyek. Ha billentyűzetkiosztást váltottál (pl. AZERTY→QWERTY), gépeld lassan. 5 sikertelen feloldás után várj 1 percet. Ha elvesztetted a jelszót, használd a <strong>24 szavas helyreállítási kifejezést</strong>, amelyet egyszer mutatunk a pince létrehozásakor (<a href=\"#bf-e101\">BF-E101</a>). Nélküle a helyreállítás tervezetten lehetetlen — nincs hátsó ajtónk."
+      },
+      "storageFull": {
+        "title": "A böngésző tárolója megtelt",
+        "text": "Az IndexedDB kvóta böngészőnkénti (általában a lemez 60–80%-a). Ha megtelik, a mentések a <a href=\"#bf-e103\">BF-E103</a> hibával meghiúsulnak. Javítás: <code>Beállítások → Tárolás → Adatbázis tömörítése</code>, majd <code>MI-gyorsítótár törlése</code>. Vagy <code>Export biztonsági mentés (.bmf)</code> → <code>Régi vektorok törlése</code>. Ellenőrizd a <a href=\"#diagnostics\">tárolási %-ot a diagnosztikában</a> — 80% felett bannert mutatunk."
+      },
+      "p2pNotConnecting": {
+        "title": "P2P szinkron nem csatlakozik",
+        "text": "Mindkét eszköznek <strong>online-nak és feloldottnak kell lennie egyszerre</strong> (WebRTC). Alapból nincs TURN-relé — egyes vállalati hálózatok blokkolják a P2P-t. Próbáld: mindkét eszköz ugyanazon a Wi-Fi-n → QR-párosítás → tartsd nyitva az appot. Ha <a href=\"#bf-e105\">BF-E105</a>, teszteld a <code>Súgó → Diagnosztika → P2P (WebRTC)</code> menüt — ha azt mondja, nem elérhető, a böngésződ/hálózatod blokkolja a WebRTC-t."
+      },
+      "localAiNotRunning": {
+        "title": "Helyi MI (WebLLM) nem fut",
+        "text": "WebGPU + ~4 GB szabad RAM + Pro licenc szükséges. Ellenőrizd a <code>Súgó → Diagnosztika → WebGPU/WebLLM</code> menüt. Ha <a href=\"#bf-e106\">BF-E106</a>: frissítsd a Chrome/Edge-et a legújabb verzióra, engedélyezd a <code>chrome://flags/#enable-unsafe-webgpu</code> beállítást, vagy válts Ollamára (bármely modell, amit helyben futtatsz — API-kulcs nélkül is)."
+      },
+      "slowSearch": {
+        "title": "Lassú keresés vagy import",
+        "text": "Az első import HNSW vektorokat épít — CPU-igényes. Tartsd nyitva a lapot. 10k+ könyvjelzőnél használd a <code>Beállítások → Haladó → Újrafeldolgozás kényszerítése</code> lehetőséget. Ha továbbra is fennáll, a <code>Diagnosztika másolása</code> mutatja a <code>vectorIndexLoad</code> értéket és a lekérdezési késleltetést."
+      }
+    },
+    "errorCodes": {
+      "title": "BF-E* hibakódok — másold a kódot, ugorj a javításhoz",
+      "intro": "Minden kritikus hiba egy kódot mutat, például <code>BF-E101</code>. Kattints a kódra az appban, vagy keress rá itt.",
+      "table": {
+        "code": "Kód",
+        "meaning": "Jelentés",
+        "fix": "Javítás"
+      },
+      "e101": {
+        "meaning": "Pince jelszó elfelejtve / seed kifejezés szükséges",
+        "fix": "A jelszavakat nem tudjuk helyreállítani. A pince létrehozásakor egyszer megmutatunk egy <strong>24 szavas kifejezést</strong> — írd fel papírra. Használd a visszaállításhoz. Nincs kifejezés = a pince helyreállíthatatlan. <a href=\"#diagnostics\">Egyetlen jegy sem állítja helyre</a>."
+      },
+      "e102": {
+        "meaning": "Pince zárva / rossz jelszó",
+        "fix": "Gépeld be a jelszót pontosan. 5 sikertelenség után várj 60 másodpercet. Ha nemrég forgattad a jelszót, próbáld a korábbi jelszót — a forgatás megtartja az utolsó saltot a visszagörgetéshez."
+      },
+      "e103": {
+        "meaning": "Tárolási kvóta túllépve",
+        "fix": "Menj a <code>Beállítások → Tárolás</code> menübe: Tömörítés + MI-gyorsítótár törlése. Exportáld a .bmf biztonsági mentést, ha szükséges. Lásd a Hibaelhárítás §Tárolás részt."
+      },
+      "e104": {
+        "meaning": "IndexedDB blokkolva / privát böngészés",
+        "fix": "Az IndexedDB blokkolva van privát/inkognitó módban vagy tárolási szabályzat miatt. Használj normál ablakot. Ellenőrizd a <code>Súgó → Diagnosztika → Tárolás</code> menüt."
+      },
+      "e105": {
+        "meaning": "P2P / WebRTC nem elérhető",
+        "fix": "A böngésző vagy a hálózat blokkolja a WebRTC-t. Próbálj másik böngészőt/hálózatot, kapcsold ki a szigorú tűzfalat, vagy használj Export/Import-ot az élő szinkron helyett."
+      },
+      "e106": {
+        "meaning": "A helyi MI (WebLLM) nem tud futni ezen az eszközön",
+        "fix": "WebGPU + shader-f16 + 4 GB RAM + Pro szükséges. Frissítsd a böngészőt, vagy használj Ollamát / felhőszolgáltatót a saját kulcsoddal."
+      },
+      "e107": {
+        "meaning": "Biztonsági mentés importálása sikertelen (rossz jelszó / sérült fájl)",
+        "fix": "A <code>.bmf</code>-hez (titkosított) az export jelszó kell, nem a pince jelszava. JSON esetén győződj meg róla, hogy a fájl nem csonkolt."
+      },
+      "e201": {
+        "meaning": "Pro licenc érvénytelen / ellenőrzési hiba",
+        "fix": "Ellenőrizd a <code>Beállítások → Pro</code> menüt: írd be újra a kulcsot. Az offline ellenőrzés gyorsítótáraz; csatlakozz egyszer az újravalidáláshoz Whop-on keresztül."
+      },
+      "e202": {
+        "meaning": "Ingyenes korlát elérve (2 500 könyvjelző)",
+        "fix": "Az ingyenes szint 2 500. Törölj, vagy frissíts Pro Lifetime v1-re a korlátlan használathoz. Az export mindig elérhető."
+      },
+      "tip": "Támogatási tipp: a hiba <code>Diagnosztika másolása</code> gombja egy kattintással másolja a kódot + kontextust — illeszd be a GitHub Discussionödbe vagy az e-mailbe."
+    },
+    "diagnostics": {
+      "title": "Redaktált diagnosztika másolása — mit illesztesz a támogatáshoz",
+      "intro": "Az appban: <code>Beállítások → Haladó</code> (vagy <code>Súgó → Diagnosztika</code>) → <strong>Diagnosztika másolása</strong>. Így néz ki — nincs pince-tartalom, nincs URL, nincs prompt:",
+      "example": "BookmarkForge v1.0.0 | Chrome 126 | Vault: 847 bookmarks, 12 docs\nStorage: 42% (IndexedDB OK) | Last backup: 2 days ago (.bmf encrypted)\nP2P: not connected | Sync: never | Local AI: WebLLM not loaded\nErrors: 0 last 7d | BF-E: none | Build: a1b2c3d",
+      "contains": "Tartalma: app verzió, böngésző, darabszámok (könyvjelzők/dokumentumok/vektorok), tárolási % + kvóta, P2P állapot, MI állapot, hibaszámok és utolsó BF-E kód, build hash. Saltolt IP-hash-t használ — soha nem tároljuk az IP-t. Lásd <a href=\"/privacy-and-terms.html\">Adatvédelem §3/§6</a>.",
+      "cantOpen": "Ha nem tudod megnyitni az appot: add meg a böngészőt + OS-t + a reprodukálás lépéseit + a képernyőn lévő <code>BF-E*</code> kódot. Ez elegendő a jegyek 90%-ához."
+    },
+    "contact": {
+      "title": "Kapcsolat",
+      "paid": "Fizetős támogatás",
+      "paidDetail": "csatold a diagnosztikát + BF-E kódot. Pro 48h (H–P).",
+      "community": "Közösség (ingyenes)",
+      "communityDetail": "search <code>BF-E*</code> before posting. Read <a href=\"/help-hu#bf-e\">Error codes</a> + paste diagnostic.",
+      "security": "Biztonsági problémák",
+      "securityDetail": "e-mail <code>[SECURITY]</code> tárggyal — ne nyiss nyilvános discussiont.",
+      "note": "A BookmarkForge helyi első — a pince tartalma soha nem hagyja el az eszközödet. A támogatás soha nem kéri a pince jelszavadat vagy a helyreállítási kifejezésedet."
+    },
+    "alsoSee": "Lásd még: <a href=\"/\">Kezdőlap</a> · <a href=\"/privacy-and-terms.html\">Adatvédelem és feltételek</a> · <a href=\"/privacy-and-terms.html#terms\">Licencelés (Lifetime v1)</a> · <a href=\"/#pricing\">Árak</a>",
+    "privacy": "Adatvédelem",
+    "home": "Kezdőlap",
+    "faq": {
+      "q1": "Az ingyenes szint tényleg ingyenes örökre?",
+      "a1": "Igen. Nincs próba, nincs előfizetés. Az ingyenes szint 2 500 könyvjelzőt, teljes szöveges és szemantikus keresést, tudásgráfot és MI-t a saját API-kulcsoddal tartalmaz.",
+      "q2": "Mit jelent a Lifetime v1?",
+      "a2": "Fizess egyszer, birtokold a v1-et örökre. Minden v1.x hibajavítás örökre, plusz 12 hónap funkciófrissítés a vásárlástól. Biztonsági frissítések örökre. A 13. hónap után a v1 tovább működik. A v2 és v3 külön fizetős főverziók: $89 új vásárlóknak, $35 a v1 tulajdonosoknak (60% kedvezmény).",
+      "q3": "Mi van, ha elfelejtem a pince jelszavát?",
+      "a3": "Nem tudjuk helyreállítani. A pince létrehozásakor egyszer megmutatunk egy 24 szavas helyreállítási kifejezést — írd fel papírra. Nélküle a pince helyreállíthatatlan. Lásd BF-E101."
+    }
+  }
+}

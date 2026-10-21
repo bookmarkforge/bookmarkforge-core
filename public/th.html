@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="th"
+  dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Raindrop เก็บบุ๊กมาร์กไว้บนเซิร์ฟเวอร์ของมัน BookmarkForge เก็บไว้ในคอมพิวเตอร์ของคุณ — ล็อกจนแม้แต่เราเองก็อ่านไม่ได้ 59 ดอลลาร์ครั้งเดียว ฟรี: 2,500 บุ๊กมาร์ก">
+  <title>BookmarkForge — ทุกอย่างอยู่ในคอมพิวเตอร์ของคุณ จ่ายครั้งเดียว</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforgeapp.com/th/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforgeapp.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforgeapp.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforgeapp.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforgeapp.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforgeapp.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforgeapp.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforgeapp.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforgeapp.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforgeapp.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforgeapp.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforgeapp.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforgeapp.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforgeapp.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforgeapp.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforgeapp.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforgeapp.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforgeapp.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforgeapp.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforgeapp.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforgeapp.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforgeapp.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforgeapp.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforgeapp.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforgeapp.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforgeapp.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforgeapp.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforgeapp.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforgeapp.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforgeapp.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforgeapp.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — ทุกอย่างอยู่ในคอมพิวเตอร์ของคุณ จ่ายครั้งเดียว">
+  <meta property="og:description" content="Raindrop เก็บบุ๊กมาร์กไว้บนเซิร์ฟเวอร์ของมัน BookmarkForge เก็บไว้ในคอมพิวเตอร์ของคุณ — ล็อกจนแม้แต่เราเองก็อ่านไม่ได้ 59 ดอลลาร์ครั้งเดียว ฟรี: 2,500 บุ๊กมาร์ก">
+  <meta property="og:url" content="https://bookmarkforgeapp.com/th/">
+  <meta property="og:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="th_TH">
+  <meta property="og:locale:alternate" content="en_US">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — ทุกอย่างอยู่ในคอมพิวเตอร์ของคุณ จ่ายครั้งเดียว">
+  <meta name="twitter:description" content="Raindrop เก็บบุ๊กมาร์กไว้บนเซิร์ฟเวอร์ของมัน BookmarkForge เก็บไว้ในคอมพิวเตอร์ของคุณ — ล็อกจนแม้แต่เราเองก็อ่านไม่ได้ 59 ดอลลาร์ครั้งเดียว ฟรี: 2,500 บุ๊กมาร์ก">
+  <meta name="twitter:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <script src="/theme-init.js"></script>
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://bookmarkforgeapp.com/th/#website",
+        "url": "https://bookmarkforgeapp.com/th/",
+        "name": "BookmarkForge",
+        "description": "vault ความรู้ส่วนตัวที่ใช้ AI 100% Local-First ทางเลือก Pocket ที่เป็นส่วนตัว ฟรี: 2,500 บุ๊กมาร์ก",
+        "inLanguage": "th",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://bookmarkforgeapp.com/th/?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": { "@id": "https://bookmarkforgeapp.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://bookmarkforgeapp.com/#organization",
+        "name": "BookmarkForge",
+        "url": "https://bookmarkforgeapp.com/",
+        "logo": { "@type": "ImageObject", "url": "https://bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
+        "email": "bookmarkforge@proton.me"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://bookmarkforgeapp.com/th/#software",
+        "name": "BookmarkForge",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "url": "https://bookmarkforgeapp.com/",
+        "image": "https://bookmarkforgeapp.com/og-image.png",
+        "description": "Raindrop เก็บบุ๊กมาร์กไว้บนเซิร์ฟเวอร์ของมัน BookmarkForge เก็บไว้ในคอมพิวเตอร์ของคุณ — ล็อกจนแม้แต่เราเองก็อ่านไม่ได้ 59 ดอลลาร์ครั้งเดียว ฟรี: 2,500 บุ๊กมาร์ก",
+        "offers": [
+          { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD", "description": "2,500 บุ๊กมาร์ก ฟรีตลอดไป" },          { "@type": "Offer", "name": "Pro Lifetime v1 — Early Bird", "price": "59", "priceCurrency": "USD", "description": "Early Bird 200 Lifetime ของ v1 12 เดือนฟีเจอร์ ความปลอดภัยตลอดไป v2 ลด 60%", "priceValidUntil": "2026-12-31", "availability": "https://schema.org/InStock" },          { "@type": "Offer", "name": "Pro Lifetime v1", "price": "79", "priceCurrency": "USD", "description": "ราคาปกติ Lifetime ของ v1" }        ],
+        "featureList": [
+          "การจัดเก็บแบบ local-first",          "การเข้ารหัสแบบ end-to-end",          "ทำงานออฟไลน์",          "การค้นหา AI",          "ตัวแก้ไขแบบ Notion",          "ซิงค์แบบ P2P"        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://bookmarkforgeapp.com/th/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "ระดับ Free ฟรีจริงตลอดไปไหม?",
+            "acceptedAnswer": { "@type": "Answer", "text": "ใช่ ไม่มี trial ไม่มีการสมัครสมาชิกรายเดือน ระดับฟรีรวม 2,500 บุ๊กมาร์ก การค้นหา full-text และ semantic knowledge graph และ AI ด้วย API key ของคุณเอง (คุณจ่ายให้ผู้ให้บริการ)" }
+          },          {
+            "@type": "Question",
+            "name": "“Lifetime ของ v1” หมายถึงอะไรสำหรับ Pro?",
+            "acceptedAnswer": { "@type": "Answer", "text": "จ่ายครั้งเดียว เป็นเจ้าของ v1 ตลอดชีวิต รวมการอัปเดต v1.x ทั้งหมด (แก้บั๊กและฟีเจอร์เล็กน้อย) ตลอดไป และ 12 เดือนของการอัปเดตฟีเจอร์นับจากวันที่ซื้อ การอัปเดตความปลอดภัยตลอดไป หลังเดือนที่ 13 คุณยังใช้ v1 ได้ตามปกติ เพียงแต่ไม่มีฟีเจอร์ใหม่ เวอร์ชันใหญ่ในอนาคต (v2, v3) เป็นผลิตภัณฑ์แยกต่างหาก: $89 สำหรับลูกค้าใหม่ $35 สำหรับเจ้าของ v1 (ลด 60%)" }
+          },          {
+            "@type": "Question",
+            "name": "วิธีการชำระเงินและคืนเงิน?",
+            "acceptedAnswer": { "@type": "Answer", "text": "ผ่าน Whop: บัตรเครดิต, PayPal, crypto เราไม่เคยเห็นรายละเอียดการชำระเงินของคุณ คืนเงินภายใน 30 วัน — ติดต่อ bookmarkforge@proton.me" }
+          },          {
+            "@type": "Question",
+            "name": "การสนับสนุน — ตอบกลับเร็วแค่ไหน?",
+            "acceptedAnswer": { "@type": "Answer", "text": "ฟรี: ความช่วยเหลือจากชุมชนผ่าน Help Center + GitHub Discussions (best effort) Pro: อีเมล 48 ชม. ในวันทำการ vault เข้ารหัส — เราไม่สามารถเห็นข้อมูลของคุณ เราจึงไม่เคยขอรหัสผ่านหรือวลีกู้คืน ดู SLA การสนับสนุน" }
+          },          {
+            "@type": "Question",
+            "name": "หากฉันลืมรหัสผ่าน vault ล่ะ?",
+            "acceptedAnswer": { "@type": "Answer", "text": "เราไม่สามารถกู้คืนได้ เมื่อคุณสร้าง vault เราแสดงวลีกู้คืน 24 คำครั้งเดียว — เขียนลงกระดาษ ไม่มีวลีนั้น ไม่มีใคร (รวมถึงเรา) เปิด vault ได้ ดู BF-E101" }
+          }        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">ข้ามไปยังเนื้อหาหลัก</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/th/" class="nav-brand" aria-label="หน้าแรก BookmarkForge">
+        <img src="/logo-64.png" width="32" height="32" alt="BookmarkForge logo" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" id="navLinks" aria-label="เมนูหลัก">
+        <a href="#pocket-alternative">Read-It-Later กลับมาแล้ว</a>
+        <a href="#raindrop-compare">เปรียบเทียบ Raindrop</a>
+        <a href="#features">ฟีเจอร์</a>
+        <a href="#ai">AI</a>
+        <a href="#privacy">ความเป็นส่วนตัว</a>
+        <a href="#pricing">ราคา</a>
+        <a href="/help-th">ช่วยเหลือ</a>
+        
+        <!-- Language Dropdown -->
+        <div class="language-dropdown">
+          <button class="language-toggle" aria-label="Select language" aria-expanded="false">
+            <span class="current-lang">ไทย</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 4 L6 8 L10 4"/>
+            </svg>
+          </button>
+          <ul class="language-menu" role="menu" aria-hidden="true">
+            <li role="none">
+              <a href="/id/" hreflang="id" lang="id" role="menuitem">
+                Bahasa Indonesia
+              </a>
+            </li>
+            <li role="none">
+              <a href="/cs/" hreflang="cs" lang="cs" role="menuitem">
+                Čeština
+              </a>
+            </li>
+            <li role="none">
+              <a href="/da/" hreflang="da" lang="da" role="menuitem">
+                Dansk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/de/" hreflang="de" lang="de" role="menuitem">
+                Deutsch
+              </a>
+            </li>
+            <li role="none">
+              <a href="/" hreflang="en" lang="en" role="menuitem">
+                English
+              </a>
+            </li>
+            <li role="none">
+              <a href="/es/" hreflang="es" lang="es" role="menuitem">
+                Español
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fr/" hreflang="fr" lang="fr" role="menuitem">
+                Français
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hr/" hreflang="hr" lang="hr" role="menuitem">
+                Hrvatski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/it/" hreflang="it" lang="it" role="menuitem">
+                Italiano
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hu/" hreflang="hu" lang="hu" role="menuitem">
+                Magyar
+              </a>
+            </li>
+            <li role="none">
+              <a href="/nl/" hreflang="nl" lang="nl" role="menuitem">
+                Nederlands
+              </a>
+            </li>
+            <li role="none">
+              <a href="/no/" hreflang="no" lang="no" role="menuitem">
+                Norsk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pl/" hreflang="pl" lang="pl" role="menuitem">
+                Polski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pt/" hreflang="pt" lang="pt" role="menuitem">
+                Português
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ro/" hreflang="ro" lang="ro" role="menuitem">
+                Română
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fi/" hreflang="fi" lang="fi" role="menuitem">
+                Suomi
+              </a>
+            </li>
+            <li role="none">
+              <a href="/sv/" hreflang="sv" lang="sv" role="menuitem">
+                Svenska
+              </a>
+            </li>
+            <li role="none">
+              <a href="/vi/" hreflang="vi" lang="vi" role="menuitem">
+                Tiếng Việt
+              </a>
+            </li>
+            <li role="none">
+              <a href="/tr/" hreflang="tr" lang="tr" role="menuitem">
+                Türkçe
+              </a>
+            </li>
+            <li role="none">
+              <a href="/el/" hreflang="el" lang="el" role="menuitem">
+                Ελληνικά
+              </a>
+            </li>
+            <li role="none">
+              <a href="/bg/" hreflang="bg" lang="bg" role="menuitem">
+                Български
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ru/" hreflang="ru" lang="ru" role="menuitem">
+                Русский
+              </a>
+            </li>
+            <li role="none">
+              <a href="/uk/" hreflang="uk" lang="uk" role="menuitem">
+                Українська
+              </a>
+            </li>
+            <li role="none">
+              <a href="/he/" hreflang="he" lang="he" role="menuitem">
+                עברית
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ar/" hreflang="ar" lang="ar" role="menuitem">
+                العربية
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hi/" hreflang="hi" lang="hi" role="menuitem">
+                हिन्दी
+              </a>
+            </li>
+            <li role="none">
+              <a href="/th/" hreflang="th" lang="th" role="menuitem" class="current">
+                ไทย
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ko/" hreflang="ko" lang="ko" role="menuitem">
+                한국어
+              </a>
+            </li>
+            <li role="none">
+              <a href="/zh/" hreflang="zh" lang="zh" role="menuitem">
+                中文
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ja/" hreflang="ja" lang="ja" role="menuitem">
+                日本語
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <a href="/app" class="btn-primary nav-cta">เปิดแอป</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="เปิดเมนู" data-label-close="ปิดเมนู">
+          <svg class="icon-menu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+          <svg class="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <button class="theme-toggle" id="themeToggle" aria-label="สลับธีม" aria-pressed="false">
+          <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">จ่ายครั้งเดียว · ไม่มีการสมัครสมาชิกรายเดือน</span>
+          <h1 id="hero-title">ทุกอย่างที่คุณบันทึกจะอยู่ในคอมพิวเตอร์ของคุณ <span class="accent-text">ทุกอย่าง</span></h1>
+          <p class="hero-subtitle">Raindrop เก็บบุ๊กมาร์กไว้บนเซิร์ฟเวอร์ของมัน — และเรียกเก็บเงินจากคุณทุกปี BookmarkForge เก็บไว้ในคอมพิวเตอร์ของคุณ ล็อกด้วยกุญแจที่มีเพียงคุณเท่านั้น ไม่มีบัญชี ไม่มีค่าธรรมเนียมรายเดือน ไม่มีใครแอบอ่าน</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">เปิดใช้ฟรี</a>
+            <a href="#pricing" class="btn-secondary">ดูราคา</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>เป็นส่วนตัว</strong> — หน้าที่คุณบันทึกไม่เคยออกจากคอมพิวเตอร์</span>
+            <span><strong>ล็อกไว้</strong> — แม้แต่เราเองก็อ่านไม่ได้</span>
+            <span><strong>ออฟไลน์</strong> — ใช้งานได้บนเครื่องบิน ในอุโมงค์ หรือที่ไหนก็ได้</span>
+            <span><strong>จ่ายครั้งเดียว</strong> — 59 ดอลลาร์ครั้งเดียว ไม่ใช่ 28 ดอลลาร์ทุกปี</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Demo Section — steps and CTA only. The tour GIF this section
+         used to show was retired with the demo-media pipeline; the template kept
+         a dead <img> pointing at it until the ADR-062 smoke gate reported the 404
+         on all 30 landings. The demo.* copy still describes the loop: rewriting it
+         has to come with the translations, not from the template. -->
+    <section id="demo" class="demo-tour" aria-labelledby="demo-title">
+      <div class="container">
+        <div class="demo-tour-header">
+          <span class="demo-tour-tag">ดูการทำงานจริง</span>
+          <h2 id="demo-title" class="demo-tour-title">แอปจริง ไม่ใช่ mock-up</h2>
+          <p class="demo-tour-subtitle">ไม่มีกำแพงสมัครสมาชิก ไม่มีฟุตเทจสต็อก ไม่มีเคอร์เซอร์ปลอม ลูปนี้คือ build ที่วางจำหน่ายแล้วบนเดสก์ท็อปธรรมดา: ปลดล็อก vault บันทึกหน้าค้นหาในคลัง และล็อกอีกครั้ง</p>
+        </div>
+        <ol class="demo-tour-steps">
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">ปลดล็อก</strong>
+            <span class="demo-tour-step-text">vault เปิดด้วยรหัสผ่านที่คุณเลือก กุญแจอยู่บนอุปกรณ์ของคุณ</span>
+          </li>
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">บันทึก</strong>
+            <span class="demo-tour-step-text">บันทึกหน้าจากแอปโดยตรง — ไม่ต้องมีบัญชีหรือส่วนขยาย</span>
+          </li>
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">ค้นหา</strong>
+            <span class="demo-tour-step-text">ค้นหาด้วยคำสำคัญหรือด้วยความหมาย พร้อมแสดงแหล่งที่มาของคำตอบทุกข้อ</span>
+          </li>
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">ล็อก</strong>
+            <span class="demo-tour-step-text">ปิด vault แล้วกุญแจถอดรหัสก็หายไปจากหน่วยความจำ</span>
+          </li>
+        </ol>
+        <div class="demo-tour-cta">
+          <a href="/app" class="btn-primary">เปิดแอป</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="pocket-alternative" class="comparison-section" aria-labelledby="pocket-alternative-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Read-It-Later กลับมาแล้ว</span>
+          <h2 id="pocket-alternative-title">ทางเลือก Pocket ที่เป็นส่วนตัว</h2>
+          <p class="section-subtitle">Pocket กำลังหายไป BookmarkForge คงนิสัย read-it-later ไว้ — พร้อมบทความ บันทึก และไฮไลต์ทั้งหมด เก็บเข้ารหัสไว้บนอุปกรณ์ของคุณ</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>อ่านทีหลัง เป็นของคุณตลอดไป</h3>
+            <p>บันทึกบทความ วิดีโอ และ PDF ด้วยคลิกเดียว — จาก PWA ส่วนขยายเบราว์เซอร์ หรือเมนูแชร์ ไม่เหมือน Pocket รายการอ่านของคุณอยู่บนอุปกรณ์ของคุณ เข้ารหัส และใช้งานออฟไลน์ได้</p>
+          </div>
+          <div class="feat-card">
+            <h3>บันทึกแบบ Notion บนทุกบทความ</h3>
+            <p>ไฮไลต์ สรุป และเขียนบันทึกแบบบล็อกแนบกับบุ๊กมาร์กใดก็ได้ เปลี่ยนบทความที่บันทึกไว้ให้เป็นฐานความรู้ของคุณเอง — ไม่ใช่แค่รายการลิงก์</p>
+          </div>
+          <div class="feat-card">
+            <h3>ไม่ติดตาม ไม่มีโฆษณา</h3>
+            <p>BookmarkForge ไม่มีบัญชี ไม่มีการวิเคราะห์ และไม่มีโฆษณาโดยค่าเริ่มต้น พฤติกรรมการอ่านของคุณเป็นเรื่องของคุณเท่านั้น</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">เริ่มบันทึกฟรี</a>
+          <a href="/pocket-alternative" class="btn-link">คู่มือเปรียบเทียบและย้ายข้อมูลฉบับเต็ม</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Raindrop Comparison Section -->
+    <section id="raindrop-compare" class="raindrop-section" aria-labelledby="raindrop-compare-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">พูดตรง ไม่มีการตลาด</span>
+          <h2 id="raindrop-compare-title">BookmarkForge vs Raindrop โดยไม่มีข้อความเล็กๆ</h2>
+          <p class="section-subtitle">Raindrop เป็นแอปที่ดี ความแตกต่างใหญ่คือข้อมูลของคุณอยู่ที่ไหน</p>
+        </div>
+        <div class="rc-table" role="table" aria-label="BookmarkForge vs Raindrop โดยไม่มีข้อความเล็กๆ">
+          <div class="rc-row rc-head" role="row">
+            <div class="rc-topic" role="columnheader"></div>
+            <div class="rc-us" role="columnheader">BookmarkForge</div>
+            <div class="rc-them" role="columnheader">Raindrop</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">รายการของคุณอยู่ที่ไหน</div>
+            <div class="rc-us" role="cell">ในคอมพิวเตอร์ของคุณ</div>
+            <div class="rc-them" role="cell">บนเซิร์ฟเวอร์ของพวกเขา</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">ใครอ่านสิ่งที่คุณบันทึกได้</div>
+            <div class="rc-us" role="cell">ไม่มีใคร — ล็อกด้วยกุญแจของคุณ แม้แต่เรา</div>
+            <div class="rc-them" role="cell">บริษัท และผู้ที่เรียกร้องจากพวกเขา</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">โดยไม่มีอินเทอร์เน็ต</div>
+            <div class="rc-us" role="cell">ทุกอย่างยังทำงานได้</div>
+            <div class="rc-them" role="cell">ได้แค่พื้นฐาน</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">คุณจ่ายเท่าไร</div>
+            <div class="rc-us" role="cell">59 ดอลลาร์ครั้งเดียว จบ</div>
+            <div class="rc-them" role="cell">28 ดอลลาร์ทุกปี ตลอดไป</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">หากบริษัทหายไป (RIP Pocket)</div>
+            <div class="rc-us" role="cell">ไม่มีอะไรเปลี่ยน — มันอยู่ในมือคุณแล้ว</div>
+            <div class="rc-them" role="cell">คุณส่งออกแล้วเริ่มใหม่</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">ผู้ช่วย AI</div>
+            <div class="rc-us" role="cell">ทำงานในคอมพิวเตอร์ของคุณในโหมดส่วนตัว — ไม่มีอะไรถูกส่งไปที่ไหน</div>
+            <div class="rc-them" role="cell">การอ่านของคุณถูกส่งไปยังคลาวด์เพื่อคิด</div>
+          </div>
+        </div>
+        <p class="rc-close">Raindrop ง่ายกว่าและฟรี — หากนั่นคือทั้งหมดที่คุณต้องการ ใช้ได้อย่างสบายใจ แต่หากคุณอยากเก็บชีวิตการอ่านไว้ในมือตัวเอง BookmarkForge สร้างมาเพื่อสิ่งนั้นโดยเฉพาะ</p>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">ทดลองใช้ฟรีใน 2 นาที — ไม่ต้องมีบัญชี</a>
+          <a href="/pocket-alternative" class="btn-link">เปรียบเทียบ Pocket ฉบับเต็ม</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">ทุกอย่างที่คุณต้องการ</span>
+          <h2 id="features-title">ทุกอย่างที่คุณต้องการ ในคำพูดธรรมดา</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>บุ๊กมาร์กและเอกสาร</h3>
+            <p>บันทึกหน้าใดก็ได้ด้วยคลิกเดียว เขียนบันทึกข้างๆ ได้ในตัวแก้ไขที่สะอาดและเรียบง่าย ยังคงเร็วแม้มีรายการบันทึก 100,000 รายการ</p>
+          </div>
+          <div class="feature-item">
+            <h3>การค้นหาอัจฉริยะ</h3>
+            <p>ค้นหาด้วยคำสำคัญหรือด้วยความหมาย — แม้คุณไม่จำคำที่แน่นอน Raindrop เรียกเก็บ 28 ดอลลาร์ต่อปีสำหรับสิ่งนี้ ที่นี่รวมให้ฟรี</p>
+          </div>
+          <div class="feature-item">
+            <h3>AI ที่อ่านคลังของคุณ ในคอมพิวเตอร์</h3>
+            <p>ถามคำถามเกี่ยวกับสิ่งที่คุณบันทึกและรับคำตอบพร้อมแสดงแหล่งที่มา ไม่มีอะไรถูกส่งไปยังคลาวด์ และใช้งานได้โดยไม่มีอินเทอร์เน็ต ต้องใช้ Pro</p>
+          </div>
+          <div class="feature-item">
+            <h3>แชทกับคลังของคุณเอง</h3>
+            <p>ถามอะไรก็ได้เกี่ยวกับบุ๊กมาร์กและบันทึกของคุณ รับคำตอบพร้อมอ้างอิง โหมดส่วนตัวทำงาน 100% บนเครื่องของคุณ ต้องใช้ Pro</p>
+          </div>
+          <div class="feature-item">
+            <h3>ซิงก์ระหว่างอุปกรณ์ของคุณเอง</h3>
+            <p>อุปกรณ์ของคุณคุยกันโดยตรง — ไม่มีเซิร์ฟเวอร์ตรงกลาง และทุกอย่างยังคงเข้ารหัส จับคู่โดยสแกน QR code ได้สูงสุด 5 อุปกรณ์ ต้องใช้ Pro</p>
+          </div>
+          <div class="feature-item">
+            <h3>แบ็กอัพที่คุณเป็นเจ้าของ</h3>
+            <p>แบ็กอัพอัตโนมัติที่คุณเก็บไว้ที่ไหนก็ได้ — ไดรฟ์ภายนอก โฟลเดอร์คลาวด์ ที่ไหนก็ได้ ส่งออกทุกอย่างเป็น Markdown, JSON, CSV หรือ PDF เมื่อใดก็ได้ คุณถือกุญแจ</p>
+          </div>
+          <div class="feature-item">
+            <h3>แผนที่ความรู้ของคุณ</h3>
+            <p>ดูว่าบันทึกและบุ๊กมาร์กของคุณเชื่อมต่อกันอย่างไร กรองตามแท็ก วันที่ และความคล้ายคลึง ซูมไปรอบๆ แคนวาสไม่สิ้นสุด</p>
+          </div>
+          <div class="feature-item">
+            <h3>การ์ดทบทวนที่เอาชนะการลืม</h3>
+            <p>เปลี่ยนเอกสารที่บันทึกไว้ให้เป็นการ์ดคำถามที่โผล่ขึ้นมาพอดีก่อนที่คุณจะลืม — แนวคิดการจัดตารางเดียวกับ Anki ต้องใช้ Pro</p>
+          </div>
+          <div class="feature-item">
+            <h3>เป็นส่วนตัวโดยค่าเริ่มต้น</h3>
+            <p>ไม่มีบัญชี ไม่มีการติดตาม ไม่มีโฆษณา คุณคือลูกค้า ไม่ใช่สินค้า การแชร์การใช้งานมีอยู่ แต่เป็นทางเลือก และยังปิดอยู่จนกว่าคุณจะเปิด</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">AI ที่เคารพคุณ</span>
+          <h2 id="ai-title">ความรู้ของคุณ ขยายขึ้น</h2>
+          <p class="section-subtitle">เรียกใช้ผู้ช่วยในคอมพิวเตอร์ของคุณ — ไม่มีอะไรออกจากมัน และทำงานออฟไลน์ได้ ชอบโมเดลคลาวด์ขนาดใหญ่? เชื่อมกุญแจของคุณเอง: คำถามและหน้าที่ต้องใช้ในการตอบจะไปยังผู้ให้บริการนั้น ตามค่าใช้จ่ายของคุณ พรอมต์ของคุณ ข้อมูลของคุณ กฎของคุณ</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>ผู้ให้บริการที่รองรับ</h3>
+            <ul class="providers-list">
+              <li>ในคอมพิวเตอร์ของคุณ — โมเดล WebLLM (TinyLlama, Llama 3.2, Phi-3.5-mini) — Pro เท่านั้น</li>
+              <li>บนเครื่องของคุณเอง — Ollama (โมเดลใดก็ได้ที่คุณรัน)</li>
+              <li>คลาวด์ — Google Gemini (ด้วยกุญแจของคุณเอง)</li>
+              <li>คลาวด์ — OpenAI / GPT-4o (ด้วยกุญแจของคุณเอง)</li>
+              <li>คลาวด์ — Anthropic Claude (ด้วยกุญแจของคุณเอง)</li>
+              <li>คลาวด์ — Groq (ด้วยกุญแจของคุณเอง)</li>
+              <li>คลาวด์ — OpenRouter หรือผู้ให้บริการกำหนดเองอื่น (ด้วยกุญแจของคุณเอง)</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>โหมดแชท</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>โหมดส่วนตัว</h4>
+                <p>ผู้ช่วยทำงานทั้งหมดในคอมพิวเตอร์ของคุณ ไม่มีอะไรออกจากมัน และไม่ต้องการอินเทอร์เน็ต ต้องใช้ Pro</p>
+              </div>
+              <div class="mode-item">
+                <h4>โหมดค้นเว็บ</h4>
+                <p>รวมคลังของคุณกับผลลัพธ์สดจากเว็บ (ผู้ให้บริการคลาวด์)</p>
+              </div>
+              <div class="mode-item">
+                <h4>ผู้ช่วยผู้เชี่ยวชาญ</h4>
+                <p>ผู้ช่วยเฉพาะทาง: Coder, Writer, Analyst และ Researcher ต้องใช้ Pro</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">ความเป็นส่วนตัวไม่ใช่ฟีเจอร์ — มันคือรากฐาน</h2>
+          <p class="section-subtitle">ทุกการตัดสินใจทางสถาปัตยกรรมอยู่ภายใต้การควบคุมของคุณ</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>ล็อกจนไม่มีใครอ่านได้ — แม้แต่เรา</h3>
+            <p>คลังของคุณเข้ารหัสด้วยกุญแจที่ได้จากรหัสผ่านหลักของคุณ เราไม่เคยเห็นรหัสผ่านหรือเนื้อหาของคุณ</p>
+          </div>
+          <div class="feature-item">
+            <h3>เก็บไว้บนอุปกรณ์ของคุณเอง</h3>
+            <p>ทุกอย่างอยู่ในคอมพิวเตอร์ของคุณ เซิร์ฟเวอร์ companion จัดการเฉพาะใบอนุญาต การจับคู่อุปกรณ์ และการส่งต่อคำถาม AI โหมดคลาวด์ — ไม่เคยเป็นเนื้อหาของคุณ</p>
+          </div>
+          <div class="feature-item">
+            <h3>ไม่ติดตามโดยค่าเริ่มต้น</h3>
+            <p>ไม่มีการวิเคราะห์ ไม่มีรายงานข้อขัดข้อง ไม่มีการติดตาม การแชร์สถิติการใช้งานหรือรายงานข้อผิดพลาดเป็นทางเลือกแยกต่างหาก ปิดอยู่โดยค่าเริ่มต้น</p>
+          </div>
+          <div class="feature-item">
+            <h3>คุณถือกุญแจ</h3>
+            <p>ไม่มีรหัสผ่านหลัก = ไม่มีการเข้าถึง — ไม่มี "ลืมรหัสผ่าน" backdoor วลีกู้คืน 24 คำของคุณเป็นทางเดียวที่จะเข้าได้ เก็บให้ปลอดภัย</p>
+          </div>
+          <div class="feature-item">
+            <h3>สิทธิ์ของคุณ ได้รับการเคารพ</h3>
+            <p>เข้าถึง แก้ไข ลบ หรือนำข้อมูลของคุณไปกับคุณ — ทั้งหมดทำได้ในเครื่อง เมื่อใดก็ได้</p>
+          </div>
+          <div class="feature-item">
+            <h3>ไม่มีการผูกมัด</h3>
+            <p>ส่งออกข้อมูลของคุณเมื่อใดก็ได้ในรูปแบบเปิด (JSON, Markdown, CSV, PDF) ความรู้ของคุณยังเป็นของคุณและพกพาได้</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">ราคาเรียบง่าย ยุติธรรม — ไม่มีการสมัครสมาชิกรายเดือน</h2>
+          <p class="section-subtitle">ฟรี 2,500 บุ๊กมาร์กตลอดไป Pro คือใบอนุญาต Lifetime สำหรับ v1 — จ่ายครั้งเดียว เป็นเจ้าของ v1 ตลอดไป รวมการอัปเดต v1.x ทั้งหมดและ 12 เดือนของการอัปเดตฟีเจอร์ การอัปเดตด้านความปลอดภัยตลอดไป ไม่มีการเรียกเก็บรายเดือน</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Free</h3>
+            <div class="price">$ 0<span>/ตลอดไป</span></div>
+            <p>สำหรับคลังส่วนตัว (บุ๊กมาร์ก 2,500 รายการ ใช้ได้บนอุปกรณ์ใดก็ได้ — แต่ละเครื่องมีห้องนิรภัยของตัวเอง)</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> 2,500 บุ๊กมาร์ก บันทึก และเอกสาร</li>
+              <li><span aria-hidden="true">✅</span> การค้นหาอัจฉริยะ (แบบเต็มข้อความ + ความหมาย) — รวมฟรี; Raindrop เก็บเงินรายปีสำหรับฟีเจอร์นี้</li>
+              <li><span aria-hidden="true">✅</span> AI ด้วย API Key ของคุณ (คุณจ่ายให้ผู้ให้บริการ)</li>
+              <li><span aria-hidden="true">✅</span> กราฟความรู้</li>
+              <li><span aria-hidden="true">✅</span> แม่แบบพื้นฐาน</li>
+              <li><span aria-hidden="true">✅</span> ส่งออก JSON/HTML</li>
+              <li><span aria-hidden="true">✅</span> PWA + ส่วนขยายเบราว์เซอร์</li>
+              <li><span aria-hidden="true">❌</span> การซิงค์ P2P ระหว่างอุปกรณ์</li>
+              <li><span aria-hidden="true">❌</span> AI ในเครื่อง (WebLLM/Ollama)</li>
+              <li><span aria-hidden="true">❌</span> RAG แชทเหนือข้อมูลของคุณ</li>
+              <li><span aria-hidden="true">❌</span> Flashcards ด้วย spaced repetition</li>
+              <li><span aria-hidden="true">❌</span> PDF + OCR</li>
+            </ul>
+            <a href="/app" class="btn-secondary " >เริ่มฟรี</a>
+          </div>
+          <div class="price-card popular">
+            <div class="price-badges">
+              <span class="badge">ยอดนิยม — Early Bird 200</span>
+            </div>
+            <h3>Pro Lifetime v1</h3>
+            <div class="price"><span class="price-now">$ 59</span> <span class="price-was">$79</span><span>Early Bird (แล้ว $79)</span></div>
+            <div class="price-sub">แล้ว $79 ราคาปกติ</div>
+            <p>Lifetime ของ v1 · 12 เดือนอัปเดตฟีเจอร์ · ความปลอดภัยตลอดไป · v2 ลด 60%</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> ทุกอย่างใน Free</li>
+              <li><span aria-hidden="true">✅</span> บุ๊กมาร์กไม่จำกัด</li>
+              <li><span aria-hidden="true">✅</span> 5 อุปกรณ์ · P2P sync ข้าม 5 อุปกรณ์</li>
+              <li><span aria-hidden="true">✅</span> โมเดล AI ในเครื่อง (WebLLM, ไม่ต้องใช้ API key) · RAG chat</li>
+              <li><span aria-hidden="true">✅</span> ผู้ช่วยผู้เชี่ยวชาญ (Coder, Writer, Analyst, Researcher)</li>
+              <li><span aria-hidden="true">✅</span> Flashcards ด้วย spaced repetition · PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> การส่งออกขั้นสูง (10+ รูปแบบ) · แบ็กอัพเข้ารหัส</li>
+              <li><span aria-hidden="true">✅</span> กุญแจความปลอดภัย (AES-GCM)</li>
+              <li><span aria-hidden="true">✅</span> Lifetime ของ v1 · 12 เดือนอัปเดตฟีเจอร์</li>
+              <li><span aria-hidden="true">✅</span> การอัปเดตด้านความปลอดภัยตลอดไป</li>
+              <li><span aria-hidden="true">✅</span> การสนับสนุนทางอีเมล (48 ชม.) + การเข้าถึงก่อน</li>
+            </ul>
+            <a href="https://whop.com/checkout/plan_g4oAakLGDjaoM" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">รับ Pro $59 Early Bird</a>
+            <a href="https://whop.com/checkout/plan_wFiqyaojHKXmG" class="btn-secondary btn-block" target="_blank" rel="noopener noreferrer">รับ Pro ราคา $79 (ราคาปกติ)</a>
+            <p class="sla-note">การสนับสนุน: อีเมล 48 ชม. (จันทร์–ศุกร์) · <a href="/help-th#sla">SLA</a></p>
+          </div>
+        </div>
+        <p class="pricing-legal">Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href="/privacy-and-terms.html#terms">Terms</a> · <a href="/help-th#pricing">Learn more</a></p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">คำถามที่พบบ่อย</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>ระดับ Free ฟรีจริงตลอดไปไหม?</h3>
+            <p>ใช่ ไม่มี trial ไม่มีการสมัครสมาชิกรายเดือน ระดับฟรีรวม 2,500 บุ๊กมาร์ก การค้นหา full-text และ semantic knowledge graph และ AI ด้วย API key ของคุณเอง (คุณจ่ายให้ผู้ให้บริการ)</p>
+          </div>
+          <div class="faq-item">
+            <h3>"Lifetime of v1" สำหรับ Pro หมายความว่าอะไร?</h3>
+            <p>จ่ายครั้งเดียว เป็นเจ้าของ v1 ตลอดไป รวมการอัปเดต v1.x ทั้งหมด (bugfixes + ฟีเจอร์เล็กน้อย) ตลอดไปและ 12 เดือนของการอัปเดตฟีเจอร์นับจากวันซื้อ การอัปเดตด้านความปลอดภัยตลอดไป หลังเดือนที่ 13 คุณยังคงใช้ v1 ได้ตามปกติ เพียงแต่ไม่มีฟีเจอร์ใหม่ รุ่นหลักในอนาคต (v2, v3) เป็นผลิตภัณฑ์แยก: $89 สำหรับลูกค้าใหม่ $35 สำหรับเจ้าของ v1 (ลด 60%)</p>
+          </div>
+          <div class="faq-item">
+            <h3>วิธีการชำระเงินและคืนเงิน?</h3>
+            <p>ผ่าน Whop: บัตรเครดิต, PayPal, crypto เราไม่เคยเห็นรายละเอียดการชำระเงินของคุณ คืนเงินภายใน 30 วัน — ติดต่อ <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a></p>
+          </div>
+          <div class="faq-item">
+            <h3>การสนับสนุน — ตอบกลับเร็วแค่ไหน?</h3>
+            <p>Free: Community help via <a href="/help">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href="/help-th#sla">Support SLA</a>.</p>
+          </div>
+          <div class="faq-item">
+            <h3>หากฉันลืมรหัสผ่าน vault ล่ะ?</h3>
+            <p>We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href="/help-th#bf-e101">BF-E101</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>พร้อมเป็นเจ้าของความรู้ของคุณหรือยัง?</h2>
+        <p>เข้าร่วมกับนักวิจัย นักพัฒนา และผู้เรียนนับพันที่ไว้วางใจ BookmarkForge กับสมองที่สองของพวกเขา</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">เปิดแอปฟรี</a>
+          <a href="#pricing" class="btn-secondary">อัปเกรดเป็น Pro</a>
+        </div>
+        <p class="note">ไม่ต้องมีบัญชี ใช้งานได้ทันทีในเบราว์เซอร์ ระดับฟรี: 2,500 บุ๊กมาร์ก</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>vault ความรู้ส่วนตัวที่ใช้ AI 100% Local-First</p>
+      </div>
+      <div class="footer-links">
+        <h4>ผลิตภัณฑ์</h4>
+        <ul>
+          <li><a href="/#features">ฟีเจอร์</a></li>
+          <li><a href="/#ai">ความสามารถ AI</a></li>
+          <li><a href="/#privacy">ความเป็นส่วนตัว</a></li>
+          <li><a href="/#pricing">ราคา</a></li>
+          <li><a href="/app">เปิดแอป</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>ทรัพยากร</h4>
+        <ul>
+          <li><a href="/pocket-alternative.html">เปรียบเทียบ Pocket</a></li>
+          <li><a href="/privacy-and-terms.html">ความเป็นส่วนตัวและข้อกำหนด</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>ภาษา</h4>
+        <ul>
+          <li><a href="/id/" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+          <li><a href="/cs/" hreflang="cs" lang="cs">Čeština</a></li>
+          <li><a href="/da/" hreflang="da" lang="da">Dansk</a></li>
+          <li><a href="/de/" hreflang="de" lang="de">Deutsch</a></li>
+          <li><a href="/" hreflang="en" lang="en">English</a></li>
+          <li><a href="/es/" hreflang="es" lang="es">Español</a></li>
+          <li><a href="/fr/" hreflang="fr" lang="fr">Français</a></li>
+          <li><a href="/hr/" hreflang="hr" lang="hr">Hrvatski</a></li>
+          <li><a href="/it/" hreflang="it" lang="it">Italiano</a></li>
+          <li><a href="/hu/" hreflang="hu" lang="hu">Magyar</a></li>
+          <li><a href="/nl/" hreflang="nl" lang="nl">Nederlands</a></li>
+          <li><a href="/no/" hreflang="no" lang="no">Norsk</a></li>
+          <li><a href="/pl/" hreflang="pl" lang="pl">Polski</a></li>
+          <li><a href="/pt/" hreflang="pt" lang="pt">Português</a></li>
+          <li><a href="/ro/" hreflang="ro" lang="ro">Română</a></li>
+          <li><a href="/fi/" hreflang="fi" lang="fi">Suomi</a></li>
+          <li><a href="/sv/" hreflang="sv" lang="sv">Svenska</a></li>
+          <li><a href="/vi/" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+          <li><a href="/tr/" hreflang="tr" lang="tr">Türkçe</a></li>
+          <li><a href="/el/" hreflang="el" lang="el">Ελληνικά</a></li>
+          <li><a href="/bg/" hreflang="bg" lang="bg">Български</a></li>
+          <li><a href="/ru/" hreflang="ru" lang="ru">Русский</a></li>
+          <li><a href="/uk/" hreflang="uk" lang="uk">Українська</a></li>
+          <li><a href="/he/" hreflang="he" lang="he">עברית</a></li>
+          <li><a href="/ar/" hreflang="ar" lang="ar">العربية</a></li>
+          <li><a href="/hi/" hreflang="hi" lang="hi">हिन्दी</a></li>
+          <li><a href="/th/" hreflang="th" lang="th">ไทย</a></li>
+          <li><a href="/ko/" hreflang="ko" lang="ko">한국어</a></li>
+          <li><a href="/zh/" hreflang="zh" lang="zh">中文</a></li>
+          <li><a href="/ja/" hreflang="ja" lang="ja">日本語</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>การสนับสนุน</h4>
+        <ul>
+          <li><a href="/help-th">ศูนย์ช่วยเหลือ</a></li>
+          <li><a href="/help-th#sla">SLA</a></li>
+          <li><a href="/help-th#bf-e">รหัสข้อผิดพลาด</a></li>
+          <li><a href="mailto:bookmarkforge@proton.me">ติดต่อ</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+         Every other locale has its own directory. The rule has one owner —
+         scripts/landing-registry.mjs (LEGAL_LOCALE_CODES), already encoded by
+         check-seo, check-sitemap-coverage, check-hreflang-graph and
+         check-page-figures. Emitting "/th/…" unconditionally shipped a
+         404 footer link on every EN landing until the ADR-062 smoke gate opened it. -->
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge สงวนลิขสิทธิ์</p>
+      <a href="/th/privacy-and-terms.html">นโยบายความเป็นส่วนตัว</a> · <a href="/th/privacy-and-terms.html#terms">ข้อกำหนดการใช้บริการ</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

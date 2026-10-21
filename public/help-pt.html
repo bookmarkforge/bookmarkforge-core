@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Central de ajuda — FAQ, solução de problemas e SLA de suporte | BookmarkForge</title>
+  <meta name="description" content="Central de ajuda do BookmarkForge: lifetime da v1, solução de problemas, códigos de erro BF-E*, SLA de suporte e como copiar um relatório de diagnóstico redigido.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://bookmarkforgeapp.com/help">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/help">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="Central de ajuda — BookmarkForge">
+  <meta property="og:description" content="FAQ, solução de problemas, códigos de erro e SLA de suporte. Saiba como funciona o lifetime da v1 e como copiar um relatório de diagnóstico.">
+  <meta property="og:url" content="https://bookmarkforgeapp.com/help">
+  <meta property="og:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Central de ajuda — BookmarkForge">
+  <meta name="twitter:description" content="FAQ, solução de problemas, códigos de erro e SLA de suporte. Saiba como funciona o lifetime da v1 e como copiar um relatório de diagnóstico.">
+  <meta name="twitter:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <script src="/theme-init.js"></script>
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/privacy-and-terms.css">
+  <link rel="stylesheet" href="/help.css">
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"FAQPage",
+    "@id":"https://bookmarkforgeapp.com/help#faq",
+    "mainEntity":[
+      {"@type":"Question","name":"O nível Free é realmente gratuito para sempre?","acceptedAnswer":{"@type":"Answer","text":"Sim. Sem teste, sem assinatura. O Free inclui 2.500 bookmarks, busca de texto completo e semântica, grafo de conhecimento e IA com sua própria chave de API."}},
+      {"@type":"Question","name":"O que significa Lifetime da v1?","acceptedAnswer":{"@type":"Answer","text":"Pague uma vez, tenha a v1 para sempre. Todas as correções v1.x para sempre mais 12 meses de atualizações de funcionalidades a partir da compra. Atualizações de segurança para sempre. Após o mês 13 você mantém a v1 funcionando. v2 e v3 são versões principais pagas separadas: $89 para novos clientes, $35 para proprietários da v1 (60% de desconto)."}},
+      {"@type":"Question","name":"E se eu esquecer a senha do cofre?","acceptedAnswer":{"@type":"Answer","text":"Não conseguimos recuperá-la. Quando você cria um cofre exibimos uma frase de recuperação de 24 palavras uma única vez — anote-a no papel. Sem ela o cofre é irrecuperável. Veja BF-E101."}}
+    ]
+  }
+  </script>
+  <script src="/landing.js"></script>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="/" class="brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" alt="" width="28" height="28" />
+        BookmarkForge
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false" style="margin-left: auto;">
+        <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <p class="last-updated"><strong>Última atualização:</strong> 13 de setembro de 2026 · <a href="/">← Voltar ao início</a></p>
+
+    <h1>Central de ajuda — FAQ, solução de problemas e SLA de suporte | BookmarkForge</h1>
+    <p>Respostas antes de você precisar enviar um e-mail. O BookmarkForge é <strong>local-first e criptografado</strong> — não conseguimos ver seu cofre. 90% dos problemas são resolvidos aqui com um diagnóstico que você pode copiar e colar.</p>
+
+    <nav class="help-toc" aria-label="On this page">
+      <ul>
+        <li><a href="#pricing">Preços e Lifetime da v1</a></li>
+        <li><a href="#sla">SLA de suporte</a></li>
+        <li><a href="#troubleshooting">Solução de problemas</a></li>
+        <li><a href="#bf-e">Códigos de erro BF-E*</a></li>
+        <li><a href="#diagnostics">Copiar relatório de diagnóstico</a></li>
+        <li><a href="#contact">Contato</a></li>
+      </ul>
+    </nav>
+
+    <h2 id="pricing">Preços — Lifetime da v1, sem assinaturas</h2>
+    <p><strong>Modelo:</strong> você paga uma vez pelo <em>BookmarkForge v1</em>. Sem cobrança mensal. Compare: Raindrop Pro $28–38/ano, Instapaper $60/ano, Readwise $120/ano, Capacities $120/ano. Um lifetime de $79 é ~2× o anual do Raindrop — justificado pelo lifetime + privacidade.</p>
+
+    <table class="sla">
+      <thead><tr><th>Nível</th><th>Preço</th><th>O que você recebe</th><th>Disponibilidade</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Free</strong></td><td>$0 para sempre</td><td>2.500 bookmarks em qualquer dispositivo (cada um mantém seu próprio cofre), busca inteligente — texto completo + semântica, o recurso que o Raindrop cobra anualmente — grafo de conhecimento, IA com sua própria chave de API, PWA + extensões. Ao chegar a 2.500, seu cofre permanece intacto: leitura, busca e exportação nunca param; apenas novos salvamentos pausam.</td><td>Ilimitado</td></tr>
+        <tr><td><strong>Pro Lifetime v1</strong> <span class="badge">Early Bird</span></td><td><strong>$59</strong> <span style="text-decoration:line-through;color:var(--text-muted)">$79</span> → $79 preço normal → $99 após tração</td><td>Bookmarks ilimitados, 5 dispositivos + sincronização P2P, IA local (WebLLM/Ollama) + RAG + agentes especialistas, flashcards, PDF/OCR, mais de 10 formatos de exportação, cofre. <em>Lifetime da v1 · 12 meses de atualizações de funcionalidades · Segurança para sempre · v2 com 60% de desconto</em></td><td>200 Early Bird</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout">
+      <strong>Lifetime da v1 — linha legal::</strong> <em>Licença lifetime do BookmarkForge v1. Inclui todas as atualizações v1.x (correções de bugs + funcionalidades menores) para sempre e 12 meses de atualizações de funcionalidades a partir da compra. Atualizações de segurança para sempre. Versões principais futuras (v2, v3) são produtos separados: $89 para novos clientes, $35 para proprietários da v1 (60% de desconto). Se você não atualizar, mantém a v1 funcional para sempre. Reembolso em 30 dias via Whop.</em>
+      <br>Reembolsos: 30 dias via Whop. Pagamentos: cartão, PayPal, cripto (Whop — nunca vemos dados de cartão). <a href="/privacy-and-terms.html#terms">Termos § Licenciamento</a>
+    </div>
+
+    <div class="callout callout-warn">
+      <strong>Atualize sem assinatura::</strong> a cada 12–18 meses lançamos uma versão principal paga (v2.0 a $89 / $35 para proprietários). Pule-a e a v1 continua funcionando. Esse é o modelo de receita recorrente sem forçar assinatura — mesmo modelo da Affinity/Sketch/Sublime.
+    </div>
+
+    <h2 id="sla">SLA de suporte — quão rápido respondemos</h2>
+    <p>Mantenedor único. O cofre é criptografado — <strong>nunca pedimos sua senha do cofre nem a frase de recuperação de 24 palavras</strong>. Suporte é best-effort para o Free, comprometido para os níveis pagos.</p>
+    <table class="sla">
+      <thead><tr><th>Nível</th><th>Canal</th><th>Resposta</th><th>O que fazer primeiro</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Free</strong></td><td>Autosserviço: esta Central de Ajuda + <a href="https://github.com/bookmarkforge/bookmarkforge-core/discussions">Discussões no GitHub</a></td><td>Best effort (comunidade)</td><td>Pesquise códigos BF-E* abaixo + copie o diagnóstico (<a href="#diagnostics">§Diagnóstico</a>) antes de postar</td></tr>
+        <tr><td><strong>Pro</strong></td><td>E-mail <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> (assunto: Pro)</td><td><strong>48h</strong></td><td>Inclua o texto de diagnóstico de <code>Configurações → Ajuda → Copiar diagnóstico</code></td></tr>
+      </tbody>
+    </table>
+    <p style="color:var(--text-muted);font-size:0.92em;">Não conseguimos ver seus bookmarks, anotações, URLs ou prompts. Inclua apenas o diagnóstico abaixo — ele contém contagens e versões, nunca conteúdo do cofre.</p>
+
+    <h2 id="troubleshooting">Solução de problemas — a maioria dos casos em 30 segundos</h2>
+    <h3>Cofre bloqueado / senha incorreta</h3>
+    <p>Senhas diferenciam maiúsculas/minúsculas e espaços em branco. Se você mudou o layout (ex.: AZERTY→QWERTY), redigite devagar. Após 5 desbloqueios falhos, aguarde 1 minuto. Se perdeu a senha, use a <strong>frase de recuperação de 24 palavras</strong> exibida uma única vez na criação do cofre (<a href="#bf-e101">BF-E101</a>). Sem ela a recuperação é impossível por design — não temos backdoor.</p>
+
+    <h3>Armazenamento do navegador cheio</h3>
+    <p>A cota do IndexedDB é por navegador (tipicamente 60–80% do disco). Quando cheia, salvamentos falham com <a href="#bf-e103">BF-E103</a>. Correção: <code>Configurações → Armazenamento → Compactar banco de dados</code> depois <code>Limpar cache de IA</code>. Ou <code>Exportar backup (.bmf)</code> → <code>Excluir vetores antigos</code>. Verifique <a href="#diagnostics">o % de armazenamento no diagnóstico</a> — acima de 80% mostramos um banner.</p>
+
+    <h3>Sincronização P2P não conecta</h3>
+    <p>Ambos os dispositivos devem estar <strong>online e desbloqueados</strong> ao mesmo tempo (WebRTC). Sem relay TURN por padrão — algumas redes corporativas bloqueiam P2P. Tente: ambos no mesmo Wi-Fi → pareamento por QR → mantenha o app aberto. Se <a href="#bf-e105">BF-E105</a>, teste <code>Ajuda → Diagnósticos → P2P (WebRTC)</code> — se disser indisponível, seu navegador/rede bloqueia WebRTC.</p>
+
+    <h3>IA local (WebLLM) não está rodando</h3>
+    <p>Requer WebGPU + ~4 GB de RAM livre + licença Pro. Verifique <code>Ajuda → Diagnósticos → WebGPU/WebLLM</code>. Se <a href="#bf-e106">BF-E106</a>: atualize Chrome/Edge para a versão mais recente, ative <code>chrome://flags/#enable-unsafe-webgpu</code> ou mude para Ollama (qualquer modelo que você rode localmente — também não precisa de chave de API).</p>
+
+    <h3>Busca ou importação lenta</h3>
+    <p>A primeira importação constrói vetores HNSW — pesado para a CPU. Mantenha a aba aberta. Para 10k+ bookmarks use <code>Configurações → Avançado → Forçar reprocessamento</code>. Se persistir, <code>Copiar diagnóstico</code> mostra <code>vectorIndexLoad</code> e a latência da consulta.</p>
+
+    <h2 id="bf-e">Códigos de erro BF-E* — copie o código, vá para a correção</h2>
+    <p>Todo erro crítico exibe um código como <code>BF-E101</code>. Clique no código no app ou pesquise-o aqui.</p>
+    <table class="sla">
+      <thead><tr><th>Código</th><th>Significado</th><th>Correção</th></tr></thead>
+      <tbody>
+        <tr id="bf-e101"><td><strong>BF-E101</strong></td><td>Senha do cofre esquecida / frase semente necessária</td><td>Não conseguimos recuperar senhas. Na criação do cofre exibimos uma <strong>frase de 24 palavras uma única vez</strong> — anote-a no papel. Use-a para redefinir. Sem frase = cofre irrecuperável. <a href="#diagnostics">Nenhum ticket a recuperará</a>.</td></tr>
+        <tr id="bf-e102"><td><strong>BF-E102</strong></td><td>Cofre bloqueado / senha incorreta</td><td>Redigite a senha exatamente. Após 5 falhas aguarde 60s. Se você rotacionou a senha recentemente, tente a anterior — a rotação mantém o último salt para rollback.</td></tr>
+        <tr id="bf-e103"><td><strong>BF-E103</strong></td><td>Cota de armazenamento excedida</td><td>Vá para <code>Configurações → Armazenamento</code>: Compactar BD + Limpar cache de IA. Exporte backup .bmf se necessário. Veja Solução de problemas §Armazenamento.</td></tr>
+        <tr id="bf-e104"><td><strong>BF-E104</strong></td><td>IndexedDB bloqueado / navegação privativa</td><td>O IndexedDB é bloqueado em modo privativo/anônimo ou por política de armazenamento. Use uma janela normal. Verifique <code>Ajuda → Diagnósticos → Armazenamento</code>.</td></tr>
+        <tr id="bf-e105"><td><strong>BF-E105</strong></td><td>P2P / WebRTC indisponível</td><td>O navegador ou a rede bloqueia WebRTC. Tente outro navegador/rede, desative firewall rígido ou use Exportar/Importar em vez de sincronização ao vivo.</td></tr>
+        <tr id="bf-e106"><td><strong>BF-E106</strong></td><td>IA local (WebLLM) não pode rodar neste dispositivo</td><td>Precisa de WebGPU + shader-f16 + 4 GB de RAM + Pro. Atualize o navegador ou use Ollama / provedor na nuvem com sua própria chave.</td></tr>
+        <tr id="bf-e107"><td><strong>BF-E107</strong></td><td>Importação de backup falhou (senha incorreta / arquivo corrompido)</td><td>Para <code>.bmf</code> (criptografado) você precisa da senha de exportação, não da senha do cofre. Para JSON, verifique se o arquivo não foi truncado.</td></tr>
+        <tr id="bf-e201"><td><strong>BF-E201</strong></td><td>Licença Pro inválida / verificação expirada</td><td>Verifique <code>Configurações → Pro</code>: reinsira a chave. Verificações offline usam cache; reconecte uma vez para revalidar via Whop.</td></tr>
+        <tr id="bf-e202"><td><strong>BF-E202</strong></td><td>Limite do Free atingido (2.500 bookmarks)</td><td>O Free é 2.500. Exclua ou atualize para o Pro Lifetime v1 para ilimitado. A exportação está sempre disponível.</td></tr>
+      </tbody>
+    </table>
+    <p>Dica de suporte: clicar em <code>Copiar diagnóstico</code> do erro copia código + contexto em um clique — cole na sua Discussão no GitHub ou e-mail.</p>
+
+    <h2 id="diagnostics">Copiar um diagnóstico redigido — o que você cola no suporte</h2>
+    <p>No app: <code>Configurações → Avançado</code> (ou <code>Ajuda → Diagnósticos</code>) → <strong>Copiar diagnóstico</strong>. É assim que parece — sem conteúdo do cofre, sem URLs, sem prompts:</p>
+    <div class="diag-box">BookmarkForge v1.0.0 | Chrome 126 | Cofre: 847 bookmarks, 12 docs
+Armazenamento: 42% (IndexedDB OK) | Último backup: há 2 dias (.bmf criptografado)
+P2P: não conectado | Sync: nunca | IA local: WebLLM não carregado
+Erros: 0 nos últimos 7d | BF-E: nenhum | Build: a1b2c3d</div>
+    <p>O que ele contém: versão do app, navegador, contagens (bookmarks/docs/vetores), % de armazenamento + cota, status do P2P, status da IA, contagens de erro e último código BF-E, hash do build. Usa um hash com salt do IP — nunca armazenamos IP. Veja <a href="/privacy-and-terms.html">Privacidade §3/§6</a>.</p>
+    <p>Se você não consegue abrir o app: inclua navegador + SO + passos para reproduzir + o código <code>BF-E*</code> na tela. Isso basta para 90% dos tickets.</p>
+
+    <h2 id="contact">Contato</h2>
+    <ul>
+      <li><strong>Suporte pago:</strong> <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> — inclua diagnóstico + código BF-E. Pro em 48h (seg–sex).</li>
+      <li><strong>Comunidade (Free):</strong> <a href="https://github.com/bookmarkforge/bookmarkforge-core/discussions">GitHub Discussions</a> — search <code>BF-E*</code> before posting. Read <a href="/help-pt#bf-e">Error codes</a> + paste diagnostic.</li>
+      <li><strong>Problemas de segurança:</strong> e-mail com assunto <code>[SECURITY]</code> — não abra uma discussão pública.</li>
+    </ul>
+    <p style="color:var(--text-muted);font-size:0.92em;">O BookmarkForge é local-first — o conteúdo do cofre nunca sai do seu dispositivo. O suporte nunca pede sua senha do cofre nem a frase de recuperação.</p>
+
+    <hr>
+    <p style="color:var(--text-muted);font-size:0.92em;">Veja também: <a href="/">Início</a> · <a href="/privacy-and-terms.html">Privacidade e Termos</a> · <a href="/privacy-and-terms.html#terms">Licenciamento (Lifetime v1)</a> · <a href="/#pricing">Preços</a></p>
+  </main>
+
+  <footer>
+    <div class="container">
+      &copy; 2026 BookmarkForge. All rights reserved. · <a href="/privacy-and-terms.html">Privacidade</a> · <a href="/">Início</a>
+    </div>
+  </footer>
+</body>
+</html>

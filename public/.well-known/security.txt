@@ -1,0 +1,21 @@
+# Security Policy for BookmarkForge
+# Contact: bookmarkforge@proton.me
+# Last Updated: 2026-08-30
+
+# Preferred Method
+Contact: mailto:bookmarkforge@proton.me
+
+# Encryption
+Encryption: https://keys.openpgp.org/pks/lookup?op=get&search=security@proton.me
+
+# Acknowledgments
+Acknowledgments: https://bookmarkforgeapp.com/security/acknowledgments
+
+# Policy URL
+Policy: https://bookmarkforgeapp.com/security/policy
+
+# Preferred Languages
+Preferred-Languages: en, es, fr, de, pt
+
+# Canonical
+Canonical: https://bookmarkforgeapp.com/.well-known/security.txt

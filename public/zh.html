@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="zh"
+  dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次 59 美元。免费版：2,500 个书签。">
+  <title>BookmarkForge — 数据都留在你的电脑上。一次付费。</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://bookmarkforgeapp.com/zh/">
+  <link rel="alternate" hreflang="ar" href="https://bookmarkforgeapp.com/ar/">
+  <link rel="alternate" hreflang="bg" href="https://bookmarkforgeapp.com/bg/">
+  <link rel="alternate" hreflang="cs" href="https://bookmarkforgeapp.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://bookmarkforgeapp.com/da/">
+  <link rel="alternate" hreflang="de" href="https://bookmarkforgeapp.com/de/">
+  <link rel="alternate" hreflang="el" href="https://bookmarkforgeapp.com/el/">
+  <link rel="alternate" hreflang="en" href="https://bookmarkforgeapp.com/">
+  <link rel="alternate" hreflang="es" href="https://bookmarkforgeapp.com/es/">
+  <link rel="alternate" hreflang="fi" href="https://bookmarkforgeapp.com/fi/">
+  <link rel="alternate" hreflang="fr" href="https://bookmarkforgeapp.com/fr/">
+  <link rel="alternate" hreflang="he" href="https://bookmarkforgeapp.com/he/">
+  <link rel="alternate" hreflang="hi" href="https://bookmarkforgeapp.com/hi/">
+  <link rel="alternate" hreflang="hr" href="https://bookmarkforgeapp.com/hr/">
+  <link rel="alternate" hreflang="hu" href="https://bookmarkforgeapp.com/hu/">
+  <link rel="alternate" hreflang="id" href="https://bookmarkforgeapp.com/id/">
+  <link rel="alternate" hreflang="it" href="https://bookmarkforgeapp.com/it/">
+  <link rel="alternate" hreflang="ja" href="https://bookmarkforgeapp.com/ja/">
+  <link rel="alternate" hreflang="ko" href="https://bookmarkforgeapp.com/ko/">
+  <link rel="alternate" hreflang="nl" href="https://bookmarkforgeapp.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://bookmarkforgeapp.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://bookmarkforgeapp.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://bookmarkforgeapp.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://bookmarkforgeapp.com/ro/">
+  <link rel="alternate" hreflang="ru" href="https://bookmarkforgeapp.com/ru/">
+  <link rel="alternate" hreflang="sv" href="https://bookmarkforgeapp.com/sv/">
+  <link rel="alternate" hreflang="th" href="https://bookmarkforgeapp.com/th/">
+  <link rel="alternate" hreflang="tr" href="https://bookmarkforgeapp.com/tr/">
+  <link rel="alternate" hreflang="uk" href="https://bookmarkforgeapp.com/uk/">
+  <link rel="alternate" hreflang="vi" href="https://bookmarkforgeapp.com/vi/">
+  <link rel="alternate" hreflang="zh" href="https://bookmarkforgeapp.com/zh/">
+  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge — 数据都留在你的电脑上。一次付费。">
+  <meta property="og:description" content="Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次 59 美元。免费版：2,500 个书签。">
+  <meta property="og:url" content="https://bookmarkforgeapp.com/zh/">
+  <meta property="og:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:locale:alternate" content="en_US">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge — 数据都留在你的电脑上。一次付费。">
+  <meta name="twitter:description" content="Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次 59 美元。免费版：2,500 个书签。">
+  <meta name="twitter:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <script src="/theme-init.js"></script>
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data: WebSite / Organization / SoftwareApplication / FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://bookmarkforgeapp.com/zh/#website",
+        "url": "https://bookmarkforgeapp.com/zh/",
+        "name": "BookmarkForge",
+        "description": "你的私密 AI 知识保险库。100% 本地优先。私密的 Pocket 替代品。免费版：2,500 个书签。",
+        "inLanguage": "zh",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://bookmarkforgeapp.com/zh/?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": { "@id": "https://bookmarkforgeapp.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://bookmarkforgeapp.com/#organization",
+        "name": "BookmarkForge",
+        "url": "https://bookmarkforgeapp.com/",
+        "logo": { "@type": "ImageObject", "url": "https://bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
+        "email": "bookmarkforge@proton.me"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://bookmarkforgeapp.com/zh/#software",
+        "name": "BookmarkForge",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "url": "https://bookmarkforgeapp.com/",
+        "image": "https://bookmarkforgeapp.com/og-image.png",
+        "description": "Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次 59 美元。免费版：2,500 个书签。",
+        "offers": [
+          { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD", "description": "2,500 个书签。永久免费。" },          { "@type": "Offer", "name": "Pro Lifetime v1 — Early Bird", "price": "59", "priceCurrency": "USD", "description": "Early Bird 200。v1 终身，12 个月功能更新，安全更新永久，v2 享 60% 折扣。", "priceValidUntil": "2026-12-31", "availability": "https://schema.org/InStock" },          { "@type": "Offer", "name": "Pro Lifetime v1", "price": "79", "priceCurrency": "USD", "description": "常规价。v1 终身。" }        ],
+        "featureList": [
+          "本地优先存储",          "端到端加密",          "离线可用",          "AI 搜索",          "Notion 式编辑器",          "P2P 同步"        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://bookmarkforgeapp.com/zh/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Free 版真的永久免费吗？",
+            "acceptedAnswer": { "@type": "Answer", "text": "是的。没有试用，没有订阅。免费版包含 2,500 个书签、全文与语义搜索、知识图谱，以及使用你自己 API 密钥的 AI（费用由提供商收取）。" }
+          },          {
+            "@type": "Question",
+            "name": "Pro 的“v1 终身”是什么意思？",
+            "acceptedAnswer": { "@type": "Answer", "text": "一次付费，永久拥有 v1。永久包含全部 v1.x 更新（缺陷修复 + 小功能），以及自购买起 12 个月的功能更新。安全更新永久提供。第 13 个月之后 v1 仍可正常使用，只是不再有新功能。未来的大版本（v2、v3）是独立产品：新用户 $89，v1 用户 $35（60% 折扣）。" }
+          },          {
+            "@type": "Question",
+            "name": "支持哪些支付方式？如何退款？",
+            "acceptedAnswer": { "@type": "Answer", "text": "通过 Whop：信用卡、PayPal、加密货币。我们从不接触你的支付信息。30 天退款——请联系 bookmarkforge@proton.me。" }
+          },          {
+            "@type": "Question",
+            "name": "支持——你们多久回复？",
+            "acceptedAnswer": { "@type": "Answer", "text": "Free：社区帮助，通过帮助中心 + GitHub Discussions（尽力而为）。Pro：工作日 48 小时内邮件回复。保险库已加密——我们看不到你的数据，所以从不索要你的密码或恢复短语。参见支持 SLA。" }
+          },          {
+            "@type": "Question",
+            "name": "如果我忘了保险库密码？",
+            "acceptedAnswer": { "@type": "Answer", "text": "我们无法恢复。创建保险库时我们会显示一次 24 词恢复短语——请写在纸上。没有它，任何人（包括我们）都无法打开保险库。参见 BF-E101。" }
+          }        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">跳到主要内容</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/zh/" class="nav-brand" aria-label="BookmarkForge 首页">
+        <img src="/logo-64.png" width="32" height="32" alt="BookmarkForge logo" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" id="navLinks" aria-label="主导航">
+        <a href="#pocket-alternative">稍后读的再生</a>
+        <a href="#raindrop-compare">与 Raindrop 对比</a>
+        <a href="#features">功能</a>
+        <a href="#ai">AI</a>
+        <a href="#privacy">隐私</a>
+        <a href="#pricing">定价</a>
+        <a href="/help-zh">帮助</a>
+        
+        <!-- Language Dropdown -->
+        <div class="language-dropdown">
+          <button class="language-toggle" aria-label="Select language" aria-expanded="false">
+            <span class="current-lang">中文</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 4 L6 8 L10 4"/>
+            </svg>
+          </button>
+          <ul class="language-menu" role="menu" aria-hidden="true">
+            <li role="none">
+              <a href="/id/" hreflang="id" lang="id" role="menuitem">
+                Bahasa Indonesia
+              </a>
+            </li>
+            <li role="none">
+              <a href="/cs/" hreflang="cs" lang="cs" role="menuitem">
+                Čeština
+              </a>
+            </li>
+            <li role="none">
+              <a href="/da/" hreflang="da" lang="da" role="menuitem">
+                Dansk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/de/" hreflang="de" lang="de" role="menuitem">
+                Deutsch
+              </a>
+            </li>
+            <li role="none">
+              <a href="/" hreflang="en" lang="en" role="menuitem">
+                English
+              </a>
+            </li>
+            <li role="none">
+              <a href="/es/" hreflang="es" lang="es" role="menuitem">
+                Español
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fr/" hreflang="fr" lang="fr" role="menuitem">
+                Français
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hr/" hreflang="hr" lang="hr" role="menuitem">
+                Hrvatski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/it/" hreflang="it" lang="it" role="menuitem">
+                Italiano
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hu/" hreflang="hu" lang="hu" role="menuitem">
+                Magyar
+              </a>
+            </li>
+            <li role="none">
+              <a href="/nl/" hreflang="nl" lang="nl" role="menuitem">
+                Nederlands
+              </a>
+            </li>
+            <li role="none">
+              <a href="/no/" hreflang="no" lang="no" role="menuitem">
+                Norsk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pl/" hreflang="pl" lang="pl" role="menuitem">
+                Polski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pt/" hreflang="pt" lang="pt" role="menuitem">
+                Português
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ro/" hreflang="ro" lang="ro" role="menuitem">
+                Română
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fi/" hreflang="fi" lang="fi" role="menuitem">
+                Suomi
+              </a>
+            </li>
+            <li role="none">
+              <a href="/sv/" hreflang="sv" lang="sv" role="menuitem">
+                Svenska
+              </a>
+            </li>
+            <li role="none">
+              <a href="/vi/" hreflang="vi" lang="vi" role="menuitem">
+                Tiếng Việt
+              </a>
+            </li>
+            <li role="none">
+              <a href="/tr/" hreflang="tr" lang="tr" role="menuitem">
+                Türkçe
+              </a>
+            </li>
+            <li role="none">
+              <a href="/el/" hreflang="el" lang="el" role="menuitem">
+                Ελληνικά
+              </a>
+            </li>
+            <li role="none">
+              <a href="/bg/" hreflang="bg" lang="bg" role="menuitem">
+                Български
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ru/" hreflang="ru" lang="ru" role="menuitem">
+                Русский
+              </a>
+            </li>
+            <li role="none">
+              <a href="/uk/" hreflang="uk" lang="uk" role="menuitem">
+                Українська
+              </a>
+            </li>
+            <li role="none">
+              <a href="/he/" hreflang="he" lang="he" role="menuitem">
+                עברית
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ar/" hreflang="ar" lang="ar" role="menuitem">
+                العربية
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hi/" hreflang="hi" lang="hi" role="menuitem">
+                हिन्दी
+              </a>
+            </li>
+            <li role="none">
+              <a href="/th/" hreflang="th" lang="th" role="menuitem">
+                ไทย
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ko/" hreflang="ko" lang="ko" role="menuitem">
+                한국어
+              </a>
+            </li>
+            <li role="none">
+              <a href="/zh/" hreflang="zh" lang="zh" role="menuitem" class="current">
+                中文
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ja/" hreflang="ja" lang="ja" role="menuitem">
+                日本語
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <a href="/app" class="btn-primary nav-cta">打开应用</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="打开菜单" data-label-close="关闭菜单">
+          <svg class="icon-menu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+          <svg class="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <button class="theme-toggle" id="themeToggle" aria-label="切换主题" aria-pressed="false">
+          <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">一次性付费 · 无订阅</span>
+          <h1 id="hero-title">你保存的一切都留在你的电脑上。<span class="accent-text">全部。</span></h1>
+          <p class="hero-subtitle">Raindrop 把你的书签存在它的服务器上，还要你年年付费。BookmarkForge 把它们留在你的电脑上，用只有你掌握的密钥锁住。无需账号。没有月费。没人能在你背后翻看。</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">免费启动应用</a>
+            <a href="#pricing" class="btn-secondary">查看定价</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>私密</strong> — 保存的页面永不离开你的电脑</span>
+            <span><strong>锁定</strong> — 连我们也读不到</span>
+            <span><strong>离线</strong> — 飞机上、隧道里，哪儿都能用</span>
+            <span><strong>一次付费</strong> — 一次 59 美元，不是每年 28 美元</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Product Demo Section — steps and CTA only. The tour GIF this section
+         used to show was retired with the demo-media pipeline; the template kept
+         a dead <img> pointing at it until the ADR-062 smoke gate reported the 404
+         on all 30 landings. The demo.* copy still describes the loop: rewriting it
+         has to come with the translations, not from the template. -->
+    <section id="demo" class="demo-tour" aria-labelledby="demo-title">
+      <div class="container">
+        <div class="demo-tour-header">
+          <span class="demo-tour-tag">看它真实运行</span>
+          <h2 id="demo-title" class="demo-tour-title">真实应用，不是样片</h2>
+          <p class="demo-tour-subtitle">没有注册墙，没有素材库视频，也没有假光标。这段循环演示就是在普通桌面电脑上运行的正式版本：解锁保险库、保存一个页面、检索资料库、再锁上。</p>
+        </div>
+        <ol class="demo-tour-steps">
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">解锁</strong>
+            <span class="demo-tour-step-text">保险库用你自设的密码打开；密钥留在你的设备上。</span>
+          </li>
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">收藏</strong>
+            <span class="demo-tour-step-text">直接在应用里保存页面——无需账号，也无需扩展。</span>
+          </li>
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">查找</strong>
+            <span class="demo-tour-step-text">按关键词或按含义搜索，每个答案都附来源。</span>
+          </li>
+          <li class="demo-tour-step">
+            <strong class="demo-tour-step-title">上锁</strong>
+            <span class="demo-tour-step-text">关闭保险库，解密密钥即从内存中消失。</span>
+          </li>
+        </ol>
+        <div class="demo-tour-cta">
+          <a href="/app" class="btn-primary">启动应用</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="pocket-alternative" class="comparison-section" aria-labelledby="pocket-alternative-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">稍后读的再生</span>
+          <h2 id="pocket-alternative-title">私密的 Pocket 替代品</h2>
+          <p class="section-subtitle">Pocket 要停了。BookmarkForge 让“稍后读”的习惯继续下去——每篇文章、笔记和高亮都以加密形式存在你的设备上。</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>稍后读，永远归你</h3>
+            <p>一键保存文章、视频和 PDF——从 PWA、浏览器扩展或分享菜单皆可。与 Pocket 不同，你的阅读清单加密存放在你的设备上，离线依然可用。</p>
+          </div>
+          <div class="feat-card">
+            <h3>为每篇文章加上 Notion 式笔记</h3>
+            <p>高亮、摘要，用块式笔记挂到任意书签上。把收藏的文章变成你自己的知识库，而不只是链接列表。</p>
+          </div>
+          <div class="feat-card">
+            <h3>零追踪，零广告</h3>
+            <p>BookmarkForge 没有账号、没有统计分析、没有广告。你的阅读习惯只属于你自己。</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">免费开始收藏</a>
+          <a href="/pocket-alternative" class="btn-link">完整对比与迁移指南</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Raindrop Comparison Section -->
+    <section id="raindrop-compare" class="raindrop-section" aria-labelledby="raindrop-compare-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">说人话，不打广告</span>
+          <h2 id="raindrop-compare-title">BookmarkForge 对比 Raindrop，不绕弯子</h2>
+          <p class="section-subtitle">Raindrop 是个好应用。真正的差别在于你的数据存在哪。</p>
+        </div>
+        <div class="rc-table" role="table" aria-label="BookmarkForge 对比 Raindrop，不绕弯子">
+          <div class="rc-row rc-head" role="row">
+            <div class="rc-topic" role="columnheader"></div>
+            <div class="rc-us" role="columnheader">BookmarkForge</div>
+            <div class="rc-them" role="columnheader">Raindrop</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">你的列表存在哪</div>
+            <div class="rc-us" role="cell">在你的电脑上</div>
+            <div class="rc-them" role="cell">在他们的服务器上</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">谁能读到你保存的内容</div>
+            <div class="rc-us" role="cell">没有人——用你的密钥锁住，连我们都不行</div>
+            <div class="rc-them" role="cell">那家公司，以及向他们施压的人</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">没有网络时</div>
+            <div class="rc-us" role="cell">一切照常可用</div>
+            <div class="rc-them" role="cell">只能用最基本的功能</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">你要付多少钱</div>
+            <div class="rc-us" role="cell">一次 59 美元，完事。</div>
+            <div class="rc-them" role="cell">永远每年 28 美元</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">如果公司倒闭（想想 Pocket）</div>
+            <div class="rc-us" role="cell">毫无影响——数据本就在你手里</div>
+            <div class="rc-them" role="cell">只能导出后重新开始</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">AI 助手</div>
+            <div class="rc-us" role="cell">在你的电脑里以私密模式运行——不向任何地方发送数据</div>
+            <div class="rc-them" role="cell">你的阅读内容被送上云端去思考</div>
+          </div>
+        </div>
+        <p class="rc-close">Raindrop 更简单，而且免费——如果你只需要这些，尽管用。但如果你更愿意把阅读生活掌握在自己手里，BookmarkForge 正是为此而生。</p>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">2 分钟免费试用——无需账号</a>
+          <a href="/pocket-alternative" class="btn-link">完整 Pocket 对比</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">你需要的全都有</span>
+          <h2 id="features-title">用大白话说清你需要的一切</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>书签与文档</h3>
+            <p>一键保存任意页面，就地写笔记，编辑器干净简单。即使存了 100,000 条也依然流畅。</p>
+          </div>
+          <div class="feature-item">
+            <h3>智能搜索</h3>
+            <p>按关键词或按含义查找——就算你记不清原话。Raindrop 为此每年收 28 美元；这里免费提供。</p>
+          </div>
+          <div class="feature-item">
+            <h3>在你电脑里读懂你资料库的 AI</h3>
+            <p>就你保存的内容提问，答案附来源。数据不送上云，断网也能用。需要 Pro。</p>
+          </div>
+          <div class="feature-item">
+            <h3>和你的资料库对话</h3>
+            <p>关于书签和笔记想问什么都可以，答案带引用。私密模式 100% 在你的机器上运行。需要 Pro。</p>
+          </div>
+          <div class="feature-item">
+            <h3>在自己的设备间同步</h3>
+            <p>设备之间直连——中间没有服务器，全程保持加密。扫一下二维码即可配对，最多 5 台设备。需要 Pro。</p>
+          </div>
+          <div class="feature-item">
+            <h3>备份归你所有</h3>
+            <p>自动备份，你想放哪就放哪——移动硬盘、云盘、哪儿都行。随时可导出为 Markdown、JSON、CSV 或 PDF。密钥在你手里。</p>
+          </div>
+          <div class="feature-item">
+            <h3>你的知识地图</h3>
+            <p>看清笔记与书签之间的关联。按标签、日期和相似度筛选，在无限画布上自由缩放。</p>
+          </div>
+          <div class="feature-item">
+            <h3>战胜遗忘的记忆卡</h3>
+            <p>把任何保存的文档变成问答卡片，在你快要忘记之前推送给你——与 Anki 相同的排程思路。需要 Pro。</p>
+          </div>
+          <div class="feature-item">
+            <h3>默认私密</h3>
+            <p>无账号、无追踪、无广告。你是客户，不是产品。确实存在使用数据共享，但它是可选的，不开启就保持关闭。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">尊重你的 AI</span>
+          <h2 id="ai-title">放大你的知识</h2>
+          <p class="section-subtitle">让助手在你的电脑里运行——数据不出机器，离线也能用。想用大型云端模型？接入你自己的密钥：你的问题和回答所需的页面会发送给该提供商，费用由你承担。你的提示词、你的数据、你的规则。</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>支持的提供商</h3>
+            <ul class="providers-list">
+              <li>在你的电脑内 — WebLLM 模型（TinyLlama、Llama 3.2、Phi-3.5-mini）— 仅限 Pro</li>
+              <li>在你自己的机器上 — Ollama（任何你自行运行的模型）</li>
+              <li>云端 — Google Gemini（使用你自己的密钥）</li>
+              <li>云端 — OpenAI / GPT-4o（使用你自己的密钥）</li>
+              <li>云端 — Anthropic Claude（使用你自己的密钥）</li>
+              <li>云端 — Groq（使用你自己的密钥）</li>
+              <li>云端 — OpenRouter 或其他自定义提供商（使用你自己的密钥）</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>对话模式</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>私密模式</h4>
+                <p>助手完全在你的电脑内运行。数据不出机器，也不需要网络。需要 Pro。</p>
+              </div>
+              <div class="mode-item">
+                <h4>联网搜索模式</h4>
+                <p>把你的资料库与网页实时结果结合（云端提供商）。</p>
+              </div>
+              <div class="mode-item">
+                <h4>专家智能体</h4>
+                <p>专职助手：编程、写作、分析、研究。需要 Pro。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">隐私不是功能，而是地基</h2>
+          <p class="section-subtitle">每一个架构决策都让你说了算</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>锁死，谁也读不了——我们也读不了</h3>
+            <p>你的资料库用由主密码派生的密钥加密。我们从不接触你的密码，也不接触你的内容。</p>
+          </div>
+          <div class="feature-item">
+            <h3>存在你自己的设备上</h3>
+            <p>一切都住在你的电脑里。伴随服务器只处理许可、设备配对，以及转发你云端模式的 AI 提问——绝不接触你的内容。</p>
+          </div>
+          <div class="feature-item">
+            <h3>默认不追踪</h3>
+            <p>没有统计分析，没有崩溃上报，没有追踪。分享使用统计或错误报告是单独的选择，默认关闭。</p>
+          </div>
+          <div class="feature-item">
+            <h3>密钥在你手里</h3>
+            <p>没有主密码就无从访问——没有“忘记密码”的后门。你的 24 词恢复短语是唯一的入口，请妥善保管。</p>
+          </div>
+          <div class="feature-item">
+            <h3>你的权利被尊重</h3>
+            <p>访问、更正、删除，或把数据带走——都可以在本地随时完成。</p>
+          </div>
+          <div class="feature-item">
+            <h3>不被锁定</h3>
+            <p>随时可用开放格式（JSON、Markdown、CSV、PDF）导出数据。你的知识始终属于你，也可以带走。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">简单、公道的定价——没有订阅</h2>
+          <p class="section-subtitle">免费版 2,500 个书签永久可用。Pro 是 v1 的终身授权——一次付费，永久拥有 v1。含全部 v1.x 更新和 12 个月的功能更新。安全更新永久提供。没有月度账单。</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Free</h3>
+            <div class="price">$ 0<span>/永久</span></div>
+            <p>个人知识库（2,500个书签，可在任何设备上使用 — 每台设备拥有独立保险库）</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> 2,500个书签、笔记和文档</li>
+              <li><span aria-hidden="true">✅</span> 智能搜索（全文 + 语义）— 免费包含；Raindrop 对此功能每年收费</li>
+              <li><span aria-hidden="true">✅</span> 使用您自己的API密钥的AI（您支付提供商）</li>
+              <li><span aria-hidden="true">✅</span> 知识图谱</li>
+              <li><span aria-hidden="true">✅</span> 基础模板</li>
+              <li><span aria-hidden="true">✅</span> JSON/HTML导出</li>
+              <li><span aria-hidden="true">✅</span> PWA + 浏览器扩展</li>
+              <li><span aria-hidden="true">❌</span> 设备间的P2P同步</li>
+              <li><span aria-hidden="true">❌</span> 本地AI (WebLLM/Ollama)</li>
+              <li><span aria-hidden="true">❌</span> 数据上的RAG聊天</li>
+              <li><span aria-hidden="true">❌</span> 间隔重复的闪卡</li>
+              <li><span aria-hidden="true">❌</span> PDF + OCR</li>
+            </ul>
+            <a href="/app" class="btn-secondary " >免费开始</a>
+          </div>
+          <div class="price-card popular">
+            <div class="price-badges">
+              <span class="badge">最受欢迎 — Early Bird 200</span>
+            </div>
+            <h3>Pro Lifetime v1</h3>
+            <div class="price"><span class="price-now">$ 59</span> <span class="price-was">$79</span><span>Early Bird（之后 $79）</span></div>
+            <div class="price-sub">之后常规价 $79</div>
+            <p>v1 终身 · 12 个月功能更新 · 安全更新永久 · v2 享 60% 折扣</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Free 版全部功能</li>
+              <li><span aria-hidden="true">✅</span> 无限书签</li>
+              <li><span aria-hidden="true">✅</span> 5 台设备 · 5 台设备间 P2P 同步</li>
+              <li><span aria-hidden="true">✅</span> 本地 AI 模型（WebLLM，无需 API 密钥）· RAG 对话</li>
+              <li><span aria-hidden="true">✅</span> 专家智能体（编程、写作、分析、研究）</li>
+              <li><span aria-hidden="true">✅</span> 间隔重复记忆卡 · PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> 高级导出（10+ 种格式）· 加密备份</li>
+              <li><span aria-hidden="true">✅</span> 安全保险库（AES-GCM）</li>
+              <li><span aria-hidden="true">✅</span> v1 终身 · 12 个月功能更新</li>
+              <li><span aria-hidden="true">✅</span> 安全更新永久提供</li>
+              <li><span aria-hidden="true">✅</span> 邮件支持（48 小时）+ 抢先体验</li>
+            </ul>
+            <a href="https://whop.com/checkout/plan_g4oAakLGDjaoM" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Early Bird $59 获得 Pro</a>
+            <a href="https://whop.com/checkout/plan_wFiqyaojHKXmG" class="btn-secondary btn-block" target="_blank" rel="noopener noreferrer">以 $79（标准价）获取 Pro</a>
+            <p class="sla-note">支持：邮件 48 小时（周一至周五） · <a href="/help-zh#sla">SLA</a></p>
+          </div>
+        </div>
+        <p class="pricing-legal">Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href="/privacy-and-terms.html#terms">Terms</a> · <a href="/help-zh#pricing">Learn more</a></p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">常见问题</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Free 版真的永久免费吗？</h3>
+            <p>是的。没有试用，没有订阅。免费版包含 2,500 个书签、全文与语义搜索、知识图谱，以及使用你自己 API 密钥的 AI（费用由提供商收取）。</p>
+          </div>
+          <div class="faq-item">
+            <h3>Pro 的“v1 终身”是什么意思？</h3>
+            <p>一次付费，永久拥有 v1。永久包含全部 v1.x 更新（缺陷修复 + 小功能），以及自购买起 12 个月的功能更新。安全更新永久提供。第 13 个月之后 v1 仍可正常使用，只是不再有新功能。未来的大版本（v2、v3）是独立产品：新用户 $89，v1 用户 $35（60% 折扣）。</p>
+          </div>
+          <div class="faq-item">
+            <h3>支持哪些支付方式？如何退款？</h3>
+            <p>通过 Whop：信用卡、PayPal、加密货币。我们从不接触你的支付信息。30 天退款——请联系 <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>。</p>
+          </div>
+          <div class="faq-item">
+            <h3>支持——你们多久回复？</h3>
+            <p>Free: Community help via <a href="/help">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href="/help-zh#sla">Support SLA</a>.</p>
+          </div>
+          <div class="faq-item">
+            <h3>如果我忘了保险库密码？</h3>
+            <p>We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href="/help-zh#bf-e101">BF-E101</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>准备好拥有自己的知识了吗？</h2>
+        <p>加入数千名把第二大脑托付给 BookmarkForge 的研究者、开发者和学习者。</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">免费启动应用</a>
+          <a href="#pricing" class="btn-secondary">升级到 Pro</a>
+        </div>
+        <p class="note">无需账号。在浏览器中即刻可用。免费版：2,500 个书签。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>你的私密 AI 知识保险库。100% 本地优先。</p>
+      </div>
+      <div class="footer-links">
+        <h4>产品</h4>
+        <ul>
+          <li><a href="/#features">功能</a></li>
+          <li><a href="/#ai">AI 能力</a></li>
+          <li><a href="/#privacy">隐私</a></li>
+          <li><a href="/#pricing">定价</a></li>
+          <li><a href="/app">打开应用</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>资源</h4>
+        <ul>
+          <li><a href="/pocket-alternative.html">Pocket 对比</a></li>
+          <li><a href="/privacy-and-terms.html">隐私与条款</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>语言</h4>
+        <ul>
+          <li><a href="/id/" hreflang="id" lang="id">Bahasa Indonesia</a></li>
+          <li><a href="/cs/" hreflang="cs" lang="cs">Čeština</a></li>
+          <li><a href="/da/" hreflang="da" lang="da">Dansk</a></li>
+          <li><a href="/de/" hreflang="de" lang="de">Deutsch</a></li>
+          <li><a href="/" hreflang="en" lang="en">English</a></li>
+          <li><a href="/es/" hreflang="es" lang="es">Español</a></li>
+          <li><a href="/fr/" hreflang="fr" lang="fr">Français</a></li>
+          <li><a href="/hr/" hreflang="hr" lang="hr">Hrvatski</a></li>
+          <li><a href="/it/" hreflang="it" lang="it">Italiano</a></li>
+          <li><a href="/hu/" hreflang="hu" lang="hu">Magyar</a></li>
+          <li><a href="/nl/" hreflang="nl" lang="nl">Nederlands</a></li>
+          <li><a href="/no/" hreflang="no" lang="no">Norsk</a></li>
+          <li><a href="/pl/" hreflang="pl" lang="pl">Polski</a></li>
+          <li><a href="/pt/" hreflang="pt" lang="pt">Português</a></li>
+          <li><a href="/ro/" hreflang="ro" lang="ro">Română</a></li>
+          <li><a href="/fi/" hreflang="fi" lang="fi">Suomi</a></li>
+          <li><a href="/sv/" hreflang="sv" lang="sv">Svenska</a></li>
+          <li><a href="/vi/" hreflang="vi" lang="vi">Tiếng Việt</a></li>
+          <li><a href="/tr/" hreflang="tr" lang="tr">Türkçe</a></li>
+          <li><a href="/el/" hreflang="el" lang="el">Ελληνικά</a></li>
+          <li><a href="/bg/" hreflang="bg" lang="bg">Български</a></li>
+          <li><a href="/ru/" hreflang="ru" lang="ru">Русский</a></li>
+          <li><a href="/uk/" hreflang="uk" lang="uk">Українська</a></li>
+          <li><a href="/he/" hreflang="he" lang="he">עברית</a></li>
+          <li><a href="/ar/" hreflang="ar" lang="ar">العربية</a></li>
+          <li><a href="/hi/" hreflang="hi" lang="hi">हिन्दी</a></li>
+          <li><a href="/th/" hreflang="th" lang="th">ไทย</a></li>
+          <li><a href="/ko/" hreflang="ko" lang="ko">한국어</a></li>
+          <li><a href="/zh/" hreflang="zh" lang="zh">中文</a></li>
+          <li><a href="/ja/" hreflang="ja" lang="ja">日本語</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>支持</h4>
+        <ul>
+          <li><a href="/help-zh">帮助中心</a></li>
+          <li><a href="/help-zh#sla">SLA</a></li>
+          <li><a href="/help-zh#bf-e">错误代码</a></li>
+          <li><a href="mailto:bookmarkforge@proton.me">联系我们</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+         Every other locale has its own directory. The rule has one owner —
+         scripts/landing-registry.mjs (LEGAL_LOCALE_CODES), already encoded by
+         check-seo, check-sitemap-coverage, check-hreflang-graph and
+         check-page-figures. Emitting "/zh/…" unconditionally shipped a
+         404 footer link on every EN landing until the ADR-062 smoke gate opened it. -->
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge。保留所有权利。</p>
+      <a href="/zh/privacy-and-terms.html">隐私政策</a> · <a href="/zh/privacy-and-terms.html#terms">服务条款</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+# Marketing Automation: Star Welcome System
+# This workflow creates a welcome discussion when a user stars the repository.
+# Uses only GitHub native APIs (GITHUB_TOKEN) - no external services or secrets.
+#
+# Trigger: Runs automatically when a star is added to the repository
+# Execution: Isolated GitHub Actions environment - no impact on production
+
+name: Marketing - Star Welcome
+
+on:
+  # Trigger when a star is added
+  watch:
+    types: [started]
+
+# IMPORTANT: Only run for external users (not the repo owner)
+# This prevents the workflow from running when you star your own repo
+permissions:
+  discussions: write
+  contents: read
+
+jobs:
+  star-welcome:
+    if: github.actor != github.repository_owner
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@a81bbbf8298c0fa03ea29cdc473d45769f9536d0
+
+      - name: Create Welcome Discussion
+        uses: actions/github-script@9bb5618a847f7d8bdde4bd4e92192214e0f0675b
+        with:
+          script: |
+            const whoStared = context.payload.sender.login;
+            const repoName = context.repository.name;
+            const repoOwner = context.repository.owner.login;
+
+            // Create a welcome discussion in the repository
+            const discussion = await github.rest.discussions.create({
+              owner: repoOwner,
+              repo: repoName,
+              title: `🎉 Welcome @${whoStared}! Thanks for starring ${repoName}`,
+              body: `
+## Welcome to BookmarkForge! 🚀
+
+Thank you for your support, @${whoStared}! We're excited to have you as part of our community.
+
+### About BookmarkForge
+
+BookmarkForge is a **local-first, privacy-preserving AI knowledge vault**. Your data stays on your device - encrypted with AES-GCM and protected by Argon2id. No cloud sync, no tracking, no subscription required for the core features.
+
+### Quick Links
+
+- 📖 [Documentation](https://bookmarkforge.com/docs)
+- 🔒 [Privacy Policy](https://bookmarkforge.com/privacy)
+- 💻 [GitHub Repository](https://github.com/${repoOwner}/${repoName})
+- 🐛 [Report Issues](https://github.com/${repoOwner}/${repoName}/issues)
+- 💬 [Join Discussions](https://github.com/${repoOwner}/${repoName}/discussions)
+
+### Key Features
+
+- 🔐 **End-to-end encryption** - Your bookmarks and documents are encrypted locally
+- 🤖 **Local AI** - Semantic search with local embeddings (no API keys required)
+- 🌐 **PWA-ready** - Works offline, installable on any device
+- 🌍 **Multi-language** - Support for 30+ languages
+- 📱 **Cross-platform** - Browser, desktop, and mobile support
+
+### Need Help?
+
+Feel free to:
+- Open a discussion for questions
+- Report bugs in the Issues section
+- Check our documentation for guides and tutorials
+
+---
+
+*This message was automatically generated when you starred the repository. Feel free to delete this discussion if you prefer.*
+
+
+`,
+              category_id: 'general' // Use the default "General" category
+            });
+
+            console.log(`Created welcome discussion for @${whoStared}: ${discussion.data.html_url}`);

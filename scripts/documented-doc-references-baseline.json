@@ -1,0 +1,6 @@
+{
+  "schema": "bmf.documented-doc-references-baseline/1",
+  "fingerprint": "relative-links/v1: markdown-link-targets, extension-gated, resolved against the document directory",
+  "note": "Frozen dangling relative links in live documents. The gate fails when this set grows, when an entry resolves today (pay the debt and drop the entry), or when an entry has no reason.",
+  "knownMissingLinks": []
+}

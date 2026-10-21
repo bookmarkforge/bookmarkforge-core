@@ -6,10 +6,12 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](https://github.com/bookmarkforge/bookmarkforge/releases/latest)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D20.19.0-brightgreen)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D24.17.0-brightgreen)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue)](https://www.typescriptlang.org/)
 [![CI](https://github.com/bookmarkforge/bookmarkforge/actions/workflows/ci.yml/badge.svg)](https://github.com/bookmarkforge/bookmarkforge/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-460%2B-brightgreen)](https://github.com/bookmarkforge/bookmarkforge/actions)
+[![Stars](https://img.shields.io/github/stars/bookmarkforge/bookmarkforge-core?style=social)](https://github.com/bookmarkforge/bookmarkforge-core/stargazers)
+[![Forks](https://img.shields.io/github/forks/bookmarkforge/bookmarkforge-core?style=social)](https://github.com/bookmarkforge/bookmarkforge-core/network/members)
 
 > **Distribution model:** Open Core. This repository is the MIT-licensed Core; Pro features identified in `OPEN-CORE.md` are proprietary and not included here.
 
@@ -18,6 +20,17 @@ Your personal knowledge vault — encrypted on your device, works offline, and s
 [Quick Start](#-quick-start) • [Features](#-features) • [Free vs Pro](#-free-vs-pro) • [Documentation](#-documentation) • [Architecture](#-architecture) • [Security](#-security--privacy) • [Contributing](#-contributing)
 
 </div>
+
+---
+
+## 🤔 Why BookmarkForge?
+
+- **Privacy First:** Your data stays on your device, encrypted with AES-GCM + Argon2id
+- **BYO AI:** Use any AI provider you want (OpenAI, Anthropic, Gemini, etc.) with your own keys
+- **Lifetime:** One payment, no subscriptions or recurring fees
+- **Offline:** Works without internet connection
+- **Open Source:** Core is MIT-licensed, auditable and customizable
+- **No Tracking:** Opt-in telemetry only, full control over your data
 
 ---
 
@@ -126,6 +139,30 @@ This repository contains the MIT-licensed **Core**. The private distribution add
 | Support | Community | Email 48h |
 
 **Buy a Pro license:** [bookmarkforgeapp.com](https://bookmarkforgeapp.com) — $59 Early Bird (first 200 licenses) → $79 regular.
+
+---
+
+## 🆚 Comparison with Alternatives
+
+| Feature | BookmarkForge | Obsidian | Notion |
+|----------|---------------|---------|--------|
+| Local Storage | ✅ | ✅ | ❌ |
+| AI Integration | ✅ (BYO keys) | ❌ | ✅ (embedded) |
+| Privacy | 🔒🔒🔒 Zero-knowledge | 🔒🔒 | 🔒 |
+| Lifetime | ✅ | ❌ | ❌ (subscription) |
+| Offline | ✅ | ✅ | ❌ |
+| Open Source | ✅ (Core MIT) | ✅ | ❌ |
+| BYO AI Keys | ✅ | ❌ | ❌ |
+
+---
+
+## 🔗 Links
+
+- **Website:** https://bookmarkforgeapp.com
+- **Documentation:** https://github.com/bookmarkforge/bookmarkforge-core/tree/main/docs
+- **Security Policy:** https://github.com/bookmarkforge/bookmarkforge-core/blob/main/.github/SECURITY.md
+- **Contributing:** https://github.com/bookmarkforge/bookmarkforge-core/blob/main/CONTRIBUTING.md
+- **Private Repository:** https://github.com/bookmarkforge/bookmarkforge-2026
 
 ---
 

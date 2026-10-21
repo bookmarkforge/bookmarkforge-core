@@ -69,7 +69,7 @@ Most bookmark managers store your library in someone else's cloud in plain text.
 
 ### Prerequisites
 
-- **Node.js** >= 20.19.0
+- **Node.js** >= 24.17.0
 - **npm** (comes with Node.js)
 
 ### Installation

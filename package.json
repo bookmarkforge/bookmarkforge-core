@@ -13,6 +13,7 @@
     "node": ">=24.17.0"
   },
   "scripts": {
+    "help": "node scripts/help.mjs",
     "dev": "vite",
     "dev:vercel": "vercel dev",
     "build": "vite build && node scripts/copy-landing-assets.mjs",

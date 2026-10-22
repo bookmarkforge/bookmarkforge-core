@@ -199,8 +199,8 @@ This repository contains the MIT-licensed **Core**. The private distribution add
 
 ### User Manual
 
-- [English](user-manual-en.md) · [Español](manual-de-usuario-es.md)
-- [PDF English](user-manual-en.pdf) · [PDF Español](manual-de-usuario-es.pdf)
+- [English 🇺🇸](docs/user-manual-en.md) · [Español 🇪🇸](docs/manual-de-usuario-es.md)
+- [PDF English 🇺🇸](docs/user-manual-en.pdf) · [PDF Español 🇪🇸](docs/manual-de-usuario-es.pdf)
 - The full set ships in **30 languages** under `docs/`: see [docs/index.md](docs/index.md).
 
 ---
@@ -309,8 +309,36 @@ BookmarkForge ships **30 languages** with complete UI translations. Each languag
 
 | Language | Markdown | PDF |
 |----------|----------|-----|
-| English | [user-manual-en.md](user-manual-en.md) | [user-manual-en.pdf](user-manual-en.pdf) |
-| Spanish | [manual-de-usuario-es.md](manual-de-usuario-es.md) | [manual-de-usuario-es.pdf](manual-de-usuario-es.pdf) |
+| 🇸🇦 Arabic | [MD](docs/user-manual-ar.md) | [PDF](docs/user-manual-ar.pdf) |
+| 🇧🇬 Bulgarian | [MD](docs/user-manual-bg.md) | [PDF](docs/user-manual-bg.pdf) |
+| 🇨🇿 Czech | [MD](docs/uzivatelska-prirucka-cs.md) | [PDF](docs/uzivatelska-prirucka-cs.pdf) |
+| 🇩🇰 Danish | [MD](docs/brugervejledning-da.md) | [PDF](docs/brugervejledning-da.pdf) |
+| 🇩🇪 German | [MD](docs/benutzerhandbuch-de.md) | [PDF](docs/benutzerhandbuch-de.pdf) |
+| 🇬🇷 Greek | [MD](docs/egcheiridio-christi-el.md) | [PDF](docs/egcheiridio-christi-el.pdf) |
+| 🇺🇸 English | [MD](docs/user-manual-en.md) | [PDF](docs/user-manual-en.pdf) |
+| 🇪🇸 Spanish | [MD](docs/manual-de-usuario-es.md) | [PDF](docs/manual-de-usuario-es.pdf) |
+| 🇫🇮 Finnish | [MD](docs/kayttoopas-fi.md) | [PDF](docs/kayttoopas-fi.pdf) |
+| 🇫🇷 French | [MD](docs/manuel-utilisateur-fr.md) | [PDF](docs/manuel-utilisateur-fr.pdf) |
+| 🇮🇱 Hebrew | [MD](docs/user-manual-he.md) | [PDF](docs/user-manual-he.pdf) |
+| 🇮🇳 Hindi | [MD](docs/user-manual-hi.md) | [PDF](docs/user-manual-hi.pdf) |
+| 🇭🇷 Croatian | [MD](docs/korisnicki-prirucnik-hr.md) | [PDF](docs/korisnicki-prirucnik-hr.pdf) |
+| 🇭🇺 Hungarian | [MD](docs/felhasznaloi-kezikonyv-hu.md) | [PDF](docs/felhasznaloi-kezikonyv-hu.pdf) |
+| 🇮🇩 Indonesian | [MD](docs/panduan-pengguna-id.md) | [PDF](docs/panduan-pengguna-id.pdf) |
+| 🇮🇹 Italian | [MD](docs/manuale-utente-it.md) | [PDF](docs/manuale-utente-it.pdf) |
+| 🇯🇵 Japanese | [MD](docs/user-manual-ja.md) | [PDF](docs/user-manual-ja.pdf) |
+| 🇰🇷 Korean | [MD](docs/user-manual-ko.md) | [PDF](docs/user-manual-ko.pdf) |
+| 🇳🇱 Dutch | [MD](docs/gebruikershandleiding-nl.md) | [PDF](docs/gebruikershandleiding-nl.pdf) |
+| 🇳🇴 Norwegian | [MD](docs/brukerhandbok-no.md) | [PDF](docs/brukerhandbok-no.pdf) |
+| 🇵🇱 Polish | [MD](docs/podrecznik-uzytkownika-pl.md) | [PDF](docs/podrecznik-uzytkownika-pl.pdf) |
+| 🇵🇹 Portuguese | [MD](docs/manual-do-utilizador-pt.md) | [PDF](docs/manual-do-utilizador-pt.pdf) |
+| 🇷🇴 Romanian | [MD](docs/manual-de-utilizare-ro.md) | [PDF](docs/manual-de-utilizare-ro.pdf) |
+| 🇷🇺 Russian | [MD](docs/user-manual-ru.md) | [PDF](docs/user-manual-ru.pdf) |
+| 🇸🇪 Swedish | [MD](docs/anvandhandbok-sv.md) | [PDF](docs/anvandhandbok-sv.pdf) |
+| 🇹🇭 Thai | [MD](docs/user-manual-th.md) | [PDF](docs/user-manual-th.pdf) |
+| 🇹🇷 Turkish | [MD](docs/kullanici-kilavuzu-tr.md) | [PDF](docs/kullanici-kilavuzu-tr.pdf) |
+| 🇺🇦 Ukrainian | [MD](docs/user-manual-uk.md) | [PDF](docs/user-manual-uk.pdf) |
+| 🇻🇳 Vietnamese | [MD](docs/huong-dan-su-dung-vi.md) | [PDF](docs/huong-dan-su-dung-vi.pdf) |
+| 🇨🇳 Chinese | [MD](docs/user-manual-zh.md) | [PDF](docs/user-manual-zh.pdf) |
 
 ---
 

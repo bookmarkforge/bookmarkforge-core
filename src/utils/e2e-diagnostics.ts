@@ -19,11 +19,26 @@ const E2E_KDF_PARAMS_KEY = "__bmf_active_kdf_params__";
 
 type E2eKdfParams = { m: number; t: number; p: number };
 
+/**
+ * Vite's `import.meta.env` is replaced at build time, but this leaf module is
+ * also reached outside Vite (scripts, `tsx` probes, Node integration tests),
+ * where `import.meta.env` is simply `undefined`. Reading `.PROD` there threw a
+ * TypeError from inside `deriveArgon2idKey` (M5, 2026-10-20 audit), which made
+ * every non-Vite consumer unable to derive a key at all. Read it defensively.
+ */
+type ViteEnv = { PROD?: boolean; VITE_E2E_KDF_DIAGNOSTICS?: string };
+
+function readViteEnv(): ViteEnv | undefined {
+  try {
+    return (import.meta as ImportMeta & { env?: ViteEnv }).env;
+  } catch {
+    return undefined;
+  }
+}
+
 export function publishKdfParams(params: E2eKdfParams): void {
-  if (
-    import.meta.env.PROD &&
-    import.meta.env.VITE_E2E_KDF_DIAGNOSTICS !== "true"
-  ) {
+  const env = readViteEnv();
+  if (env?.PROD === true && env.VITE_E2E_KDF_DIAGNOSTICS !== "true") {
     return;
   }
   try {
@@ -31,6 +46,8 @@ export function publishKdfParams(params: E2eKdfParams): void {
       ...params,
     };
   } catch {
-    /* Non-configurable globalThis — diagnostics only. */
+    /* INTENTIONAL SILENCE: a non-configurable globalThis makes the diagnostic
+     * publish fail; the probe is observability only and must never break the
+     * KDF path that called it. */
   }
 }

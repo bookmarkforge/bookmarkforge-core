@@ -116,6 +116,16 @@ const IGNORED_DIRECTORIES = new Set([
   "coverage",
 ]);
 const IGNORED_DIRECTORY_PREFIXES = ["test-results", "playwright-report"];
+
+/**
+ * A public-export checkout (`*bookmarkforge-core`) is a SEPARATE repository
+ * materialized next to this one. Scanning it made every basename in the docs
+ * "ambiguous" — the same file resolved to both `scripts/x.mjs` and
+ * `BOOKMARKbookmarkforge-core/scripts/x.mjs` (C2, 2026-10-20 audit).
+ */
+function isSiblingExportCheckout(name) {
+  return /bookmarkforge-core$/i.test(name);
+}
 /** `` `name.ext` `` / `` `name.ext:12-34` `` as a whole token: no spaces, no path. */
 const BASENAME_TOKEN_RE = /^([A-Za-z0-9_][A-Za-z0-9_.-]*)\.([A-Za-z0-9]{1,8})(?::(\d[0-9,\s-]*))?$/;
 const BACKTICKED_SPAN_RE = /`([^`\n]+)`/g;
@@ -125,6 +135,15 @@ export const RELATIVE_LINK_FINGERPRINT =
 const HISTORICAL_DOC_RE = /^docs\/(?:ADR-\d+.*\.md|audit\.md|docs-state-index\.md)$/;
 const EXAMPLE_DOC_RE = /^docs\/(?:sast-triage\.md|scripts-inventory-scanner-limits\.md|staging-smoke\.md)$/;
 const EXPLICIT_HISTORICAL_REFS = new Set(["scripts/test-upstream-server.mjs"]);
+/**
+ * Scripts the docs must keep naming even though the checkout does not ship
+ * them. `scripts/export-public-repo.mjs` is deliberately untracked
+ * (`.gitignore`) and lives only on the author machine; `open-core-export.yml`
+ * still invokes it in CI, so the reference is an active contract about a
+ * machine-local component, not doc rot. Remove the entry (and the tolerance)
+ * if the script is ever restored to the repository (B-3).
+ */
+const DELIBERATELY_UNTRACKED_REFS = new Set(["scripts/export-public-repo.mjs"]);
 const LOCAL_PATH_RE = /(?:^|[^A-Za-z0-9_.-])((?:docs|scripts|src|server|public|tests|eslint-rules|\.github|docker)\/[A-Za-z0-9_./-]+|(?:package\.json|tsconfig(?:\.[A-Za-z0-9_-]+)?\.json|vite\.config\.[A-Za-z0-9_.-]+))/g;
 const ROUTE_RE = /\/(?:api\/[A-Za-z0-9._~:-]+(?:\/[A-Za-z0-9._~:-]+)*|health|admin|csp-report)(?:\?[A-Za-z0-9=&._~-]+)?/g;
 /** `[label](target)` with an optional title; target cannot contain whitespace. */
@@ -257,6 +276,7 @@ export function buildBasenameIndex(root) {
     for (const entry of entries) {
       if (IGNORED_DIRECTORIES.has(entry.name)) continue;
       if (IGNORED_DIRECTORY_PREFIXES.some((prefix) => entry.name.startsWith(prefix))) continue;
+      if (isSiblingExportCheckout(entry.name)) continue;
       const absolute = path.join(directory, entry.name);
       if (entry.isDirectory()) {
         walk(absolute);
@@ -337,6 +357,7 @@ export function extractReferencesFromLine(line) {
 }
 
 export function extractRoutePolicies(routeTableText) {
+  if (routeTableText == null) return [];
   const policies = [];
   const pathPattern = /\bpath\s*:\s*["']([^"']+)["']/g;
   for (const match of routeTableText.matchAll(pathPattern)) {
@@ -485,6 +506,7 @@ export function scanDocumentReferences({ root, stateIndexText, routeTableText, b
       for (const referencedPath of references.localPaths) {
         localReferences += 1;
         if (EXPLICIT_HISTORICAL_REFS.has(referencedPath)) continue;
+        if (DELIBERATELY_UNTRACKED_REFS.has(referencedPath)) continue;
         const target = path.resolve(root, referencedPath.split("#")[0]);
         if (!fs.existsSync(target)) {
           missingFiles.push({ file: relativeFile, line: index + 1, reference: referencedPath });
@@ -511,6 +533,7 @@ export function scanDocumentReferences({ root, stateIndexText, routeTableText, b
         }
       }
       for (const route of references.routes) {
+        if (routeTableText == null) continue;
         const routeEnd = lineText.indexOf(route) + route.length;
         if (lineText.slice(routeEnd).startsWith("*")) continue;
         routeReferences += 1;
@@ -584,15 +607,17 @@ function main() {
   const update = process.argv.includes("--update");
   const indexPath = path.resolve(root, STATE_INDEX);
   const routeTablePath = path.resolve(root, "server/src/route-table.ts");
+  const hasRouteTable = fs.existsSync(routeTablePath);
   if (!fs.existsSync(indexPath)) {
     console.error(`[check:documented-doc-references] FAIL missing ${STATE_INDEX}`);
     process.exitCode = 1;
     return;
   }
-  if (!fs.existsSync(routeTablePath)) {
-    console.error("[check:documented-doc-references] FAIL missing server/src/route-table.ts");
-    process.exitCode = 1;
-    return;
+  if (!hasRouteTable) {
+    // The public export has no `server/` tree, so there is no truth source for
+    // route declarations there. Other checks (local paths, basenames,
+    // relative links) still run; only route verification degrades.
+    console.error("[check:documented-doc-references] NOTE server/src/route-table.ts absent — route references are not verified");
   }
 
   const baseline = loadRelativeLinkBaseline(root);
@@ -610,7 +635,7 @@ function main() {
   const result = scanDocumentReferences({
     root,
     stateIndexText: fs.readFileSync(indexPath, "utf8"),
-    routeTableText: fs.readFileSync(routeTablePath, "utf8"),
+    routeTableText: hasRouteTable ? fs.readFileSync(routeTablePath, "utf8") : null,
     baseline,
     serverlessRouteMatchers: extractServerlessRouteMatchers(apiFiles),
   });

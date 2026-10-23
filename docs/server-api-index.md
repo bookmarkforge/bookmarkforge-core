@@ -10,8 +10,8 @@ By default it listens on `ws://0.0.0.0:8787`. In production it must sit behind a
 reverse proxy that terminates TLS; the server itself speaks HTTP for the endpoints
 documented below and WebSocket for P2P signaling.
 
-This document is aligned with the server's actual handlers
-(`server/src/index.ts` and the modules it mounts). It is not a separate
+This document is aligned with the server's actual handlers (the modules it
+mounts; the server source is not part of this export). It is not a separate
 specification: if the code changes, this index must be updated.
 
 ---
@@ -39,8 +39,8 @@ specification: if the code changes, this index must be updated.
 
 ## 2. HTTP endpoints
 
-The authoritative table of the routes the companion server answers lives in
-`server/src/route-table.ts`. `npm run check:pro-routes` fails if the router
+The authoritative table of the routes the companion server answers lives with
+the server source (not part of this export). `npm run check:pro-routes` fails if the router
 dispatches an undeclared route, if a declared route is never dispatched, or if
 a route appears under a paid namespace without an enforcement point.
 

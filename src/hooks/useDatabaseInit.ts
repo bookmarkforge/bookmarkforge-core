@@ -118,6 +118,28 @@ export function useDatabaseInit() {
             setDbError(null);
             setDbErrorClass(null);
 
+            // H1: a vault with no master password never runs
+            // SecurityVault.unlock(), so it never reached the only place that
+            // provisioned the per-vault Argon2id salt — every later write was
+            // `v5:` while decryption rejects v5 by default, i.e. the vault
+            // wrote data it could not read back. Passwordless vaults have no
+            // legacy verification token to keep readable, so provisioning
+            // here is safe (master-password vaults still install it during
+            // unlock, after the password is verified).
+            if (!hasPwdRef.current) {
+              try {
+                const { ensureVaultKdfSalt } = await import(
+                  "../services/security-vault/kdf-salt"
+                );
+                await ensureVaultKdfSalt();
+              } catch (error) {
+                logger.warn(
+                  "[DB] Could not provision the per-vault KDF salt — writes may be legacy v5",
+                  { error },
+                );
+              }
+            }
+
             const currentDb = await getDB();
             if (cancelled) {return;}
             if (currentDb && currentDb !== dbInstance) {

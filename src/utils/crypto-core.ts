@@ -179,12 +179,32 @@ async function deriveContextSalt(
   return new Uint8Array(digest);
 }
 
-async function hashBytes(bytes: Uint8Array): Promise<Uint8Array> {
-  const buf = await crypto.subtle.digest(
-    "SHA-256",
-    bytes as Uint8Array<ArrayBuffer>,
+/**
+ * Per-session random key for the master-key cache's password tag.
+ *
+ * M4 (2026-10-20 audit): the tag used to be a bare SHA-256 of the password.
+ * That made a process-memory dump a fast offline verifier for the master
+ * password — cheaper than the Argon2id the vault is built around. Keying the
+ * tag with a random per-session secret keeps the cache's equality check while
+ * making the stored tag useless once the process is gone.
+ */
+let cacheTagKeyPromise: Promise<CryptoKey> | null = null;
+
+async function computeCacheTag(passwordBytes: Uint8Array): Promise<Uint8Array> {
+  cacheTagKeyPromise ??= crypto.subtle.importKey(
+    "raw",
+    crypto.getRandomValues(new Uint8Array(32)),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
   );
-  return new Uint8Array(buf);
+  const key = await cacheTagKeyPromise;
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    passwordBytes as Uint8Array<ArrayBuffer>,
+  );
+  return new Uint8Array(signature);
 }
 
 function equalBytes(left: Uint8Array, right: Uint8Array): boolean {
@@ -286,7 +306,7 @@ async function deriveCachedMasterKey(
   salt: Uint8Array | null,
 ): Promise<CryptoKey> {
   const key = cacheKey(purpose, salt);
-  const passwordTag = await hashBytes(passwordBytes);
+  const passwordTag = await computeCacheTag(passwordBytes);
   const cached = takeCachedMasterKey(key, passwordTag);
   if (cached) {
     passwordTag.fill(0);
@@ -306,11 +326,14 @@ async function deriveCachedMasterKey(
       expiresAt: Date.now() + SESSION_KEY_CACHE_TTL_MS,
     });
     return derived;
-  } catch (_error) {
+  } catch (error) {
     passwordTag.fill(0);
-    throw new Error(
-      "[crypto-core] Master key derivation failed",
-    );
+    // Preserve the cause: the previous generic rethrow hid whether the failure
+    // was Argon2, HKDF or a missing environment (M5). Callers can still rely on
+    // the stable prefix, and diagnostics keep the real reason.
+    throw new Error("[crypto-core] Master key derivation failed", {
+      cause: error,
+    });
   }
 }
 
@@ -483,8 +506,10 @@ export async function encrypt(
     masterKey = await getV5MasterKey(pwBytes, vaultSalt);
   } finally {
     // Argon2id/HKDF can reject before the normal post-derivation cleanup.
-    // Clear the caller-owned bytes on both success and failure.
-    pwBytes.fill(0);
+    // Clear the caller-owned bytes on both success and failure. Uses the
+    // max-effort zeroizer (double fill + XOR + reuse guard) so the documented
+    // ownership contract in AGENTS §2 holds for the primitives too (M6).
+    zeroPasswordBytes(pwBytes);
   }
 
   const opKey = await crypto.subtle.deriveKey(
@@ -558,7 +583,7 @@ export async function decrypt(
       // payload was actually written with.
       masterKey = await getV5MasterKey(pwBytes, vaultSalt);
     } finally {
-      pwBytes.fill(0);
+      zeroPasswordBytes(pwBytes);
     }
 
     const opKey = await crypto.subtle.deriveKey(
@@ -609,7 +634,7 @@ export async function decrypt(
     try {
       masterKey = await getV5MasterKey(pwBytes, null);
     } finally {
-      pwBytes.fill(0);
+      zeroPasswordBytes(pwBytes);
     }
 
     const opKey = await crypto.subtle.deriveKey(
@@ -646,7 +671,7 @@ export async function decrypt(
     try {
       key = await deriveArgon2Key(pwBytes, salt);
     } finally {
-      pwBytes.fill(0);
+      zeroPasswordBytes(pwBytes);
     }
 
     const decrypted = await crypto.subtle.decrypt(
@@ -706,7 +731,7 @@ export async function decrypt(
       );
       return new TextDecoder().decode(decrypted);
     } finally {
-      pwBytes.fill(0);
+      zeroPasswordBytes(pwBytes);
     }
   }
 
@@ -750,7 +775,7 @@ export async function encryptWithSessionKey(
   try {
     masterKey = await getSessionMasterKey(pwBytes, vaultSalt);
   } finally {
-    pwBytes.fill(0);
+    zeroPasswordBytes(pwBytes);
   }
 
   // HKDF-SHA256: derive a unique per-operation AES-256-GCM key.
@@ -862,7 +887,7 @@ async function decryptSessionPayload(
   try {
     masterKey = await getSessionMasterKey(pwBytes, vaultSalt);
   } finally {
-    pwBytes.fill(0);
+    zeroPasswordBytes(pwBytes);
   }
 
   // HKDF-SHA256: derive the same per-operation key used at encrypt time.
@@ -907,7 +932,7 @@ export async function encryptBinary(
   try {
     key = await deriveArgon2Key(pwBytes, salt);
   } finally {
-    pwBytes.fill(0);
+    zeroPasswordBytes(pwBytes);
   }
 
   const ciphertext = await crypto.subtle.encrypt(
@@ -944,7 +969,7 @@ export async function decryptBinary(
   try {
     key = await deriveArgon2Key(pwBytes, salt);
   } finally {
-    pwBytes.fill(0);
+    zeroPasswordBytes(pwBytes);
   }
 
   const decrypted = await crypto.subtle.decrypt(
@@ -1015,7 +1040,7 @@ export async function deriveDbKey(
       b.toString(16).padStart(2, "0"),
     ).join("");
   } finally {
-    pwBytes.fill(0);
+    zeroPasswordBytes(pwBytes);
   }
 }
 

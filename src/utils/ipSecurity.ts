@@ -107,7 +107,7 @@ export function isPrivateIpv4(ip: string): boolean {
     // NOTE: also covers 192.0.0.9/.10 (anycast DNS) — intentional, per
     // OWASP SSRF guidance to block the whole special-use /24.
     /^192\.0\.2\./, // 192.0.2.0/24 TEST-NET-1
-    /^198\.18\./, // 198.18.0.0/15 benchmarking
+    /^198\.1[89]\./, // 198.18.0.0/15 benchmarking (198.18/16 AND 198.19/16)
     /^198\.51\.100\./, // 198.51.100.0/24 TEST-NET-2
     /^203\.0\.113\./, // 203.0.113.0/24 TEST-NET-3
     /^2(2[4-9]|3[0-9])\./, // 224.0.0.0/4 multicast (224–239)
@@ -165,6 +165,7 @@ const IPV6_PRIVATE_RANGES = [
   /^fd[0-9a-f]{2}:/, // ULA fd00::/8
   /^fe[89ab][0-9a-f]?:/, // Link-local fe80::/10
   /^fe[c-f][0-9a-f]?:/, // Site-local fec0::/10 (deprecated)
+  /^ff[0-9a-f]{2}:/, // Multicast ff00::/8 — never a fetchable peer
 ] as const;
 
 /**

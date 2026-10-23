@@ -133,7 +133,7 @@ npm run build:ci
 npm run check
 ```
 
-Build for production: `npm run build`. See `docs/architecture.md` for the full topology: static web + signaling/licensing companion server.
+Build for production: `npm run build`. See `docs/architecture.md` for the full topology: static web + signaling/licensing companion server (Pro-only hosted infrastructure, not included in this MIT export — the Core runs fully without it).
 
 ---
 
@@ -184,7 +184,7 @@ This repository contains the MIT-licensed **Core**. The private distribution add
 
 - [**Architecture**](docs/architecture.md) — System architecture and design decisions
 - [**Security**](docs/security.md) — Security model and best practices
-- [**API Reference**](docs/api.md) — Companion server API documentation
+- [**API Reference**](docs/api.md) — API of the hosted companion server (Pro infrastructure, not part of this export)
 - [**OpenAPI Spec**](docs/openapi.yaml) — OpenAPI 3.0 specification
 - [**Documentation Index**](docs/index.md) — Full documentation catalog
 - [**Open Core Model**](OPEN-CORE.md) — Licensing and feature boundaries
@@ -195,13 +195,11 @@ This repository contains the MIT-licensed **Core**. The private distribution add
 - [**Engineering Conventions**](AGENTS.md) — Code style and architectural rules
 - [**Trademark Policy**](TRADEMARKS.md) — Brand usage guidelines
 - [**Core MIT License**](LICENSE) — Open source components
-- [**Pro License**](PRO-LICENSE.md) — Commercial features
+- **Pro License** — commercial terms for the hosted Pro product (published with the served product, not in this export)
 
 ### User Manual
 
-- [English 🇺🇸](docs/user-manual-en.md) · [Español 🇪🇸](docs/manual-de-usuario-es.md)
-- [PDF English 🇺🇸](docs/user-manual-en.pdf) · [PDF Español 🇪🇸](docs/manual-de-usuario-es.pdf)
-- The full set ships in **30 languages** under `docs/`: see [docs/index.md](docs/index.md).
+The end-user manuals (Markdown and PDF, 30 languages) are published with the hosted product and are not shipped in this repository export. The UI translations themselves ship under `public/locales`.
 
 ---
 
@@ -237,6 +235,8 @@ This repository contains the MIT-licensed **Core**. The private distribution add
 
 Cryptography: AES-GCM, Argon2id/HKDF, keys managed in Web Workers
 ```
+
+> **Note:** the Companion Server shown above (signaling, licenses, CSP/telemetry collection) is hosted Pro infrastructure; it is **not included in this export**. The client tree in this repository is self-sufficient: the encrypted local vault and BYO AI work with no server at all.
 
 ### Key Architectural Principles
 
@@ -305,40 +305,7 @@ Reaching a Pro surface is never silent: the placeholder helper also dispatches `
 
 ## 🌍 Internationalization
 
-BookmarkForge ships **30 languages** with complete UI translations. Each language has a Markdown source and a generated PDF under `docs/`. See [`docs/index.md`](docs/index.md) for the complete list.
-
-| Language | Markdown | PDF |
-|----------|----------|-----|
-| 🇸🇦 Arabic | [MD](docs/user-manual-ar.md) | [PDF](docs/user-manual-ar.pdf) |
-| 🇧🇬 Bulgarian | [MD](docs/user-manual-bg.md) | [PDF](docs/user-manual-bg.pdf) |
-| 🇨🇿 Czech | [MD](docs/uzivatelska-prirucka-cs.md) | [PDF](docs/uzivatelska-prirucka-cs.pdf) |
-| 🇩🇰 Danish | [MD](docs/brugervejledning-da.md) | [PDF](docs/brugervejledning-da.pdf) |
-| 🇩🇪 German | [MD](docs/benutzerhandbuch-de.md) | [PDF](docs/benutzerhandbuch-de.pdf) |
-| 🇬🇷 Greek | [MD](docs/egcheiridio-christi-el.md) | [PDF](docs/egcheiridio-christi-el.pdf) |
-| 🇺🇸 English | [MD](docs/user-manual-en.md) | [PDF](docs/user-manual-en.pdf) |
-| 🇪🇸 Spanish | [MD](docs/manual-de-usuario-es.md) | [PDF](docs/manual-de-usuario-es.pdf) |
-| 🇫🇮 Finnish | [MD](docs/kayttoopas-fi.md) | [PDF](docs/kayttoopas-fi.pdf) |
-| 🇫🇷 French | [MD](docs/manuel-utilisateur-fr.md) | [PDF](docs/manuel-utilisateur-fr.pdf) |
-| 🇮🇱 Hebrew | [MD](docs/user-manual-he.md) | [PDF](docs/user-manual-he.pdf) |
-| 🇮🇳 Hindi | [MD](docs/user-manual-hi.md) | [PDF](docs/user-manual-hi.pdf) |
-| 🇭🇷 Croatian | [MD](docs/korisnicki-prirucnik-hr.md) | [PDF](docs/korisnicki-prirucnik-hr.pdf) |
-| 🇭🇺 Hungarian | [MD](docs/felhasznaloi-kezikonyv-hu.md) | [PDF](docs/felhasznaloi-kezikonyv-hu.pdf) |
-| 🇮🇩 Indonesian | [MD](docs/panduan-pengguna-id.md) | [PDF](docs/panduan-pengguna-id.pdf) |
-| 🇮🇹 Italian | [MD](docs/manuale-utente-it.md) | [PDF](docs/manuale-utente-it.pdf) |
-| 🇯🇵 Japanese | [MD](docs/user-manual-ja.md) | [PDF](docs/user-manual-ja.pdf) |
-| 🇰🇷 Korean | [MD](docs/user-manual-ko.md) | [PDF](docs/user-manual-ko.pdf) |
-| 🇳🇱 Dutch | [MD](docs/gebruikershandleiding-nl.md) | [PDF](docs/gebruikershandleiding-nl.pdf) |
-| 🇳🇴 Norwegian | [MD](docs/brukerhandbok-no.md) | [PDF](docs/brukerhandbok-no.pdf) |
-| 🇵🇱 Polish | [MD](docs/podrecznik-uzytkownika-pl.md) | [PDF](docs/podrecznik-uzytkownika-pl.pdf) |
-| 🇵🇹 Portuguese | [MD](docs/manual-do-utilizador-pt.md) | [PDF](docs/manual-do-utilizador-pt.pdf) |
-| 🇷🇴 Romanian | [MD](docs/manual-de-utilizare-ro.md) | [PDF](docs/manual-de-utilizare-ro.pdf) |
-| 🇷🇺 Russian | [MD](docs/user-manual-ru.md) | [PDF](docs/user-manual-ru.pdf) |
-| 🇸🇪 Swedish | [MD](docs/anvandhandbok-sv.md) | [PDF](docs/anvandhandbok-sv.pdf) |
-| 🇹🇭 Thai | [MD](docs/user-manual-th.md) | [PDF](docs/user-manual-th.pdf) |
-| 🇹🇷 Turkish | [MD](docs/kullanici-kilavuzu-tr.md) | [PDF](docs/kullanici-kilavuzu-tr.pdf) |
-| 🇺🇦 Ukrainian | [MD](docs/user-manual-uk.md) | [PDF](docs/user-manual-uk.pdf) |
-| 🇻🇳 Vietnamese | [MD](docs/huong-dan-su-dung-vi.md) | [PDF](docs/huong-dan-su-dung-vi.pdf) |
-| 🇨🇳 Chinese | [MD](docs/user-manual-zh.md) | [PDF](docs/user-manual-zh.pdf) |
+BookmarkForge ships **30 languages** with complete UI translations (shipped under `public/locales`). The generated user manuals (a Markdown source and a PDF per language) are published with the hosted product and are not part of this repository export; see [`docs/index.md`](docs/index.md) for the documentation that ships here.
 
 ---
 

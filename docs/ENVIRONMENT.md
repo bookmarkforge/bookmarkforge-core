@@ -91,7 +91,7 @@ These variables are **inlined into the client bundle at build time** by Vite.
 
 ## Server-Side Variables
 
-These variables are used by the companion server (`server/src/index.ts`) and Docker Compose. They are **NOT** available in the client bundle.
+These variables are used by the companion server and Docker Compose. They are **NOT** available in the client bundle.
 
 ### Server Configuration
 
@@ -223,7 +223,7 @@ docker-compose -f docker-compose.prod.yml up -d
 
 ## Additional Documentation
 
-- [Security Model](docs/security.md) - Security practices
-- [Architecture](docs/architecture.md) - System architecture
-- [AGENTS.md](AGENTS.md) - Engineering conventions
-- [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guide
+- [Security Model](security.md) - Security practices
+- [Architecture](architecture.md) - System architecture
+- [AGENTS.md](../AGENTS.md) - Engineering conventions
+- [CONTRIBUTING.md](../CONTRIBUTING.md) - Contribution guide

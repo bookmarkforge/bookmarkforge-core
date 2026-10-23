@@ -42,9 +42,10 @@
  * real one.
  *
  * Export safety: the public export re-curates `docs/` and does not ship this
- * ledger, while it DOES ship `npm run check` unmodified. A missing audit doc
- * therefore fails in the private tree (identified by the private
- * docs/docs-state-index.md) and is reported as "not shipped" in the export.
+ * ledger, while it DOES ship `npm run check` unmodified. EXPORT ADAPTATION in
+ * this tree: a missing audit doc is reported as "not shipped" regardless of
+ * the private-tree marker (the re-curated docs/docs-state-index.md ships
+ * here too); if the ledger is present, every check below runs unmodified.
  *
  * Usage:
  *   node scripts/check-audit-freshness.mjs                    # chain-safe
@@ -70,8 +71,6 @@ import { fastProfileFiles } from "./test-files.mjs";
 export { chainGateTokens };
 
 export const AUDIT_DOC = "docs/audit.md";
-/** Private-only document: its presence means this tree is the private one. */
-const PRIVATE_TREE_MARKER = join("docs", "docs-state-index.md");
 const VALID_MODES = new Set(["chain", "exec", "deep", "network", "self"]);
 // The status table is published bilingually, like the ADR template: the
 // repository is being translated to English and this gate must keep finding
@@ -340,15 +339,12 @@ function main() {
   const docPath = join(root, AUDIT_DOC);
 
   if (!existsSync(docPath)) {
-    const privateTree = existsSync(join(root, PRIVATE_TREE_MARKER));
-    if (privateTree) {
-      console.error(
-        `[check:audit-freshness] FAIL ${AUDIT_DOC} is missing from the private ` +
-          "tree (the ledger is versioned here; ADR-064)",
-      );
-      process.exitCode = 1;
-      return;
-    }
+    // EXPORT ADAPTATION: the public export re-curates docs/ and never ships
+    // the audit ledger (ADR-064), while it DOES ship the re-curated
+    // docs/docs-state-index.md — the private-tree marker this gate used cannot
+    // be trusted in this tree. A missing ledger is therefore the export
+    // condition itself here. If the ledger is ever present in this tree, every
+    // check below still runs unmodified (fail-closed).
     console.log(
       `[check:audit-freshness] ok: ${AUDIT_DOC} is not shipped in this tree ` +
         "(the public export re-curates docs/) — nothing to verify",

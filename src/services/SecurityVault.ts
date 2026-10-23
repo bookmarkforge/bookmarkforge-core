@@ -273,7 +273,7 @@ class SecurityVault {
     if (Date.now() < rl.lockoutUntil) {
       const remaining = Math.ceil((rl.lockoutUntil - Date.now()) / 1000);
       logger.warn(
-        "[SecurityVault] Rate limited - muitas tentativas de desbloqueio",
+        "[SecurityVault] Rate limited - too many unlock attempts",
         {
           remainingSeconds: remaining,
         },

@@ -137,13 +137,14 @@ describe("check-license-claims", () => {
     const root = makeRoot({
       "package.json": JSON.stringify({ name: "x", license: "MIT" }),
       "LICENSE": MIT_LICENSE,
-      // no manual at all
+      // no openapi.yaml at all (the manual family is optional in this tree,
+      // see the export adaptation below)
     });
     const { corpusFailures, missing } = runLicenseGate(root);
     // Content problems stay empty: a missing file is a different failure class
     // (CI treats it as broken inventory), not a wrong license claim.
     expect(corpusFailures).toEqual([]);
-    expect(missing).toContain(manualSourcePath("es"));
+    expect(missing).toContain("docs/openapi.yaml");
   });
 
   it("treats -styled.html and public-export overlay copies as optional (the public export re-curates them away)", () => {
@@ -156,9 +157,11 @@ describe("check-license-claims", () => {
     const { missing } = runLicenseGate(root);
     expect(missing.some((f) => f.includes("-styled.html"))).toBe(false);
     expect(missing.some((f) => f.startsWith("scripts/public-export/"))).toBe(false);
-    // ...but the required manual sources are still demanded (the .md ships in
-    // contractFiles, the .pdf does not).
-    expect(missing.some((f) => f === manualPdfPath("es"))).toBe(true);
+    // EXPORT ADAPTATION in this tree: the whole manual family (md + pdf) is
+    // optional — the public export publishes the manuals with the hosted
+    // product and keeps none of them under docs/.
+    expect(missing.some((f) => f === manualPdfPath("es"))).toBe(false);
+    expect(missing.some((f) => f === manualSourcePath("es"))).toBe(false);
   });
 
   it("ignores dependency license metadata deep in package-lock.json (dependency facts, not claims)", () => {

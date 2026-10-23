@@ -107,4 +107,18 @@ export async function initDemoDatabase(password: string) {
       throw dbErr;
     }
   }
+
+  // H1: the demo vault opens through initDB() and never runs
+  // SecurityVault.unlock(), so it never provisioned the per-vault Argon2id
+  // salt — every write stayed `v5:` while decryption rejects v5 by default.
+  try {
+    const { ensureVaultKdfSalt } = await import(
+      "../../services/security-vault/kdf-salt"
+    );
+    await ensureVaultKdfSalt();
+  } catch (error) {
+    logger.warn("[AppInitializer] Demo vault KDF salt provisioning failed", {
+      error,
+    });
+  }
 }

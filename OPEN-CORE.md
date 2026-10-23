@@ -115,14 +115,14 @@ runtime by `licenseService.hasProAccess()`.
 | PWA, browser extension, web clipper | Core | Core: `extension/**`, `public/**` |
 | Interface, i18n (30 locales), themes, landing and manual surfaces | Core | Core: `public/locales/**`, `scripts/build-landings.cjs` |
 | Entitlement, the Pro seam, and the "requires Pro" degradation UI | Core | Core: `src/services/LicenseService.ts`, `src/services/pro-access.ts`, `src/components/ProRequiredState.tsx` |
-| Companion server (self-hosting: health, licenses, client events, signaling relay) | Core | Core: `server/**` |
-| P2P device-to-device sync (transport, signaling, protocol) | Pro | Excluded: `src/services/WebRTCSyncService.ts`, `src/services/SyncService.ts`, `src/services/sync/signaling.ts`, `src/services/sync/replication.ts`, `src/services/webrtc-sync/protocol.ts`, `src/services/webrtc-sync/validation.ts` |
-| Encrypted backups and disk backups | Pro | Excluded: `src/services/BackupService.ts`, `src/services/DiskBackupService.ts` |
-| Local AI runtime (on-device model, no API key) | Pro | Excluded: `src/services/ai/WebLLMService.ts` |
-| RAG chat over your data | Pro | Excluded: `src/services/ai/GlobalRAGService.ts` |
-| Expert agents | Pro | Excluded: `src/services/ai/SpecializedAgentsService.ts` |
-| Flashcards and spaced repetition | Pro | Excluded: `src/services/ai/FlashcardService.ts` |
-| PDF/OCR text extraction | Pro | Excluded: `src/services/pdfService.ts` |
+| Companion server (health, licenses, client events, signaling relay) | Hosted (not in this export) | The companion server runs as hosted Pro infrastructure; its API surface is documented in `docs/api.md` and `docs/server-api-index.md`. |
+| P2P device-to-device sync (transport, signaling, protocol) | Pro | Excluded from this export (private repository). |
+| Encrypted backups and disk backups | Pro | Excluded from this export (private repository). |
+| Local AI runtime (on-device model, no API key) | Pro | Excluded from this export (private repository). |
+| RAG chat over your data | Pro | Excluded from this export (private repository). |
+| Expert agents | Pro | Excluded from this export (private repository). |
+| Flashcards and spaced repetition | Pro | Excluded from this export (private repository). |
+| PDF/OCR text extraction | Pro | Excluded from this export (private repository). |
 | Pro entitlements of otherwise-Core code (free-tier bookmark cap, activation limit) | Pro | Core module with a runtime gate: `src/db/database.ts` (`FREE_LIMITS.maxBookmarks`), `src/constants/license.ts` (`maxActivationsPerLicense`) |
 
 Two rules keep the table honest at the edges:

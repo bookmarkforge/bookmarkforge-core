@@ -10,34 +10,43 @@ import { secureStorage } from "../SecureStorage";
 import { logger } from "../../utils/logger";
 import { VERIFICATION_PLAINTEXT } from "./constants";
 import { zeroPasswordBytes } from "../../utils/crypto-core";
+import { deriveArgon2idKey } from "../../utils/argon2-kdf";
 
 /**
- * Derives an HMAC key from a password and integrity nonce via HKDF-SHA256.
- * Used exclusively for verification-token integrity validation (S1 fix).
+ * Derives the HMAC key for the verification-token integrity record (S1).
+ *
+ * C1 (2026-10-20 audit): this used to be HKDF-SHA256 straight over the
+ * password, with the public integrity nonce as salt. Both halves of that
+ * record are stored unencrypted so they stay readable while the vault is
+ * locked — which turned them into an offline password verifier costing one
+ * HKDF per candidate. An attacker with the vault files could therefore skip
+ * Argon2id (128 MiB, t=3) entirely and brute-force the master password at
+ * hash-table speed, defeating the KDF the whole design is built on.
+ *
+ * The key is now derived with Argon2id, using the stored nonce as its salt:
+ * the record stays stateless and readable while locked (the nonce travels with
+ * it), but every guess now costs the same memory-hard work as a real unlock.
+ * The trade-off is one extra KDF per *verification attempt* (rate-limited to
+ * 5 per 5 minutes), never per ciphertext operation.
  */
 export async function deriveIntegrityHmacKey(
   passwordBytes: Uint8Array,
   nonce: Uint8Array,
 ): Promise<CryptoKey> {
-  const baseKey = await crypto.subtle.importKey(
-    "raw",
-    passwordBytes as Uint8Array<ArrayBuffer>,
-    { name: "HKDF" },
-    false,
-    ["deriveBits", "deriveKey"],
-  );
-  return crypto.subtle.deriveKey(
-    {
-      name: "HKDF",
-      salt: nonce as Uint8Array<ArrayBuffer>,
-      info: new TextEncoder().encode("bmf-vault-verify-integrity"),
-      hash: "SHA-256",
-    },
-    baseKey,
-    { name: "HMAC", hash: "SHA-256", length: 256 },
-    false,
-    ["sign", "verify"],
-  );
+  const derived = await deriveArgon2idKey(passwordBytes, nonce);
+  try {
+    return await crypto.subtle.importKey(
+      "raw",
+      derived as Uint8Array<ArrayBuffer>,
+      { name: "HMAC", hash: "SHA-256" },
+      false,
+      ["sign", "verify"],
+    );
+  } finally {
+    // The raw HMAC key never outlives the import: the record only ever holds
+    // an HMAC tag and the CryptoKey stays non-extractable.
+    derived.fill(0);
+  }
 }
 
 /**
@@ -132,6 +141,8 @@ export async function createVerificationToken(password: string): Promise<void> {
     // HMAC signature) so it stays readable while the vault is locked —
     // verifyPassword() validates it BEFORE the wrapped device key is
     // materialized; the device-key layer would deadlock reload-unlock.
+    // C1: the signature is Argon2id-keyed (see deriveIntegrityHmacKey), so
+    // this raw record cannot be used as a cheap offline password oracle.
     const nonce = crypto.getRandomValues(new Uint8Array(32));
     const hmacKey = await deriveIntegrityHmacKey(
       passwordBytes,

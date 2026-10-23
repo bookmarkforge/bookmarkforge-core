@@ -12,10 +12,10 @@ import { publishKdfParams } from "./e2e-diagnostics";
 /**
  * S1/R3: Argon2id KDF (V4 — the ONLY supported KDF).
  *
- * Parameters adhere to RFC 9106 § 4:
- *   - t (time cost)        = 3
- *   - p (parallelism)      = 1
- *   - dkLen (derived len)  = 32 bytes
+ * Parameters follow RFC 9106's memory-constrained recommendation (§4): t=3,
+ * p=1, dkLen=32. The RFC's *first* recommended option uses p=4; p=1 is the
+ * single-lane profile it explicitly allows for constrained clients, which is
+ * what a browser tab is. Memory (§3.1) is the parameter doing the work here.
  *
  * Memory cost (m) is adaptive:
  *   - Desktop: 131072 KiB (128 MiB) — OWASP recommended for sensitive data

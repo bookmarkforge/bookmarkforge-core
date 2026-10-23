@@ -96,6 +96,11 @@ legal/
 docs/cls-report.json
 .vercel
 .env*
+# Re-allow the committed templates: the generic `.env*` above also matched
+# them and silently removed them from the repo (audit M-2, 2026-10-23).
+!.env.example
+!.env.production.example
+!.env.whop.example
 
 # Marketing automation artifacts (local state, never source)
 marketing/syndication-history.json

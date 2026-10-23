@@ -86,7 +86,7 @@ For **local development**, most environment variables have safe defaults. You ca
 npm run dev
 ```
 
-For **custom configuration**, see [docs/ENVIRONMENT.md](docs/ENVIRONMENT.md).
+For **custom configuration**, see [ENVIRONMENT.md](ENVIRONMENT.md).
 
 **Optional: Create `.env.local` for custom values**
 
@@ -452,15 +452,7 @@ npm run check:i18n
 
 ### Running Companion Server
 
-```bash
-# Start server
-npm run server
-
-# Or with watch mode
-npm run server:watch
-```
-
-Server runs at `http://localhost:8787`.
+The signaling/licensing companion server is Pro-only hosted infrastructure and is **not included in this MIT Core export** — the client runs fully without it. To develop the server itself, work in the private `bookmarkforge-2026` tree, which ships its own start/watch scripts (bound to `http://localhost:8787`).
 
 ### Docker Development
 
@@ -479,7 +471,7 @@ docker-compose -f docker-compose.staging.yml logs -f
 
 ## Getting Help
 
-- **Documentation:** See [docs/index.md](docs/index.md)
+- **Documentation:** See [docs/index.md](index.md)
 - **Issues:** Report bugs on [GitHub Issues](https://github.com/bookmarkforge/bookmarkforge/issues)
 - **Discussions:** Join [GitHub Discussions](https://github.com/bookmarkforge/bookmarkforge/discussions)
 - **Security:** Report vulnerabilities privately via responsible disclosure
@@ -507,7 +499,7 @@ docker-compose -f docker-compose.staging.yml logs -f
 
 ## Additional Resources
 
-- [Architecture](docs/architecture.md) - System architecture
-- [Security](docs/security.md) - Security practices
-- [API Reference](docs/api.md) - Companion server API
-- [Open Core Model](OPEN-CORE.md) - Licensing and feature boundaries
+- [Architecture](architecture.md) - System architecture
+- [Security](security.md) - Security practices
+- [API Reference](api.md) - Companion server API
+- [Open Core Model](../OPEN-CORE.md) - Licensing and feature boundaries

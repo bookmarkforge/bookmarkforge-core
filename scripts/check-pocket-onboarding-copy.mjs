@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = process.cwd();
@@ -32,7 +32,12 @@ function requireCopy(name, text, patterns) {
 
 const source = read("guideSource");
 const guide = read("guideHtml");
-const emails = read("emails");
+// EXPORT ADAPTATION: docs/onboarding-emails.md is private-repo marketing copy
+// and is not part of the public export. When the file is absent the email
+// corpus checks are skipped; the guide source, rendered guide and English
+// locale checks below still run against what this tree ships.
+const emailsShipped = existsSync(files.emails);
+const emails = emailsShipped ? read("emails") : "";
 const onboarding = JSON.parse(read("onboardingEn") || "{}");
 
 requireCopy("guide source", source, [
@@ -47,12 +52,14 @@ requireCopy("rendered Pocket guide", guide, [
   ["no-device-cap message", NO_DEVICE_CAP],
   ["any-device wording", ANY_DEVICE],
 ]);
-requireCopy("onboarding emails", emails, [
-  ["smart-search message", SMART_SEARCH],
-  ["Raindrop yearly comparison", RAINDROP_YEARLY],
-  ["no-device-cap message", NO_DEVICE_CAP],
-  ["any-device wording", ANY_DEVICE],
-]);
+if (emailsShipped) {
+  requireCopy("onboarding emails", emails, [
+    ["smart-search message", SMART_SEARCH],
+    ["Raindrop yearly comparison", RAINDROP_YEARLY],
+    ["no-device-cap message", NO_DEVICE_CAP],
+    ["any-device wording", ANY_DEVICE],
+  ]);
+}
 requireCopy("English onboarding welcome", String(onboarding.app_onboardingWelcomeDesc ?? ""), [
   ["smart-search message", SMART_SEARCH],
   ["Raindrop yearly comparison", RAINDROP_YEARLY],

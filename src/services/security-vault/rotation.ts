@@ -81,7 +81,11 @@ export async function rotateMasterPassword(
   let verificationTokenSnapshot: string | null = null;
   let verificationIntegritySnapshot: string | null = null;
   let vaultSaltSnapshot: VaultKdfSaltSnapshot | null = null;
-  let oldPwBytes: Uint8Array;
+  // H3: both buffers are caller-owned copies of live secrets. They must be
+  // zeroized on EVERY exit path, not only on success — a failed rotation is
+  // exactly the moment both passwords coexist in memory.
+  let oldPwBytes: Uint8Array = new Uint8Array(0);
+  let oldPwZeroized = false;
   let newPwBytes: Uint8Array | null = null;
 
   try {
@@ -123,6 +127,7 @@ export async function rotateMasterPassword(
       }
     } finally {
       zeroPasswordBytes(oldPwBytes);
+      oldPwZeroized = true;
     }
 
     await ctx.createVerificationToken(newPassword);
@@ -199,5 +204,15 @@ export async function rotateMasterPassword(
       context: { reason: error instanceof Error ? error.message : "Unknown" },
     });
     return false;
+  } finally {
+    // H3: the error paths above return before the success-path zeroization.
+    // Wipe whatever is still live (length 0 for a buffer never assigned).
+    if (newPwBytes) {
+      zeroPasswordBytes(newPwBytes);
+      newPwBytes = null;
+    }
+    if (!oldPwZeroized && oldPwBytes.length > 0) {
+      zeroPasswordBytes(oldPwBytes);
+    }
   }
 }

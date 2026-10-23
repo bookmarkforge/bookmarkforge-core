@@ -130,7 +130,49 @@ function nextMessage(ws: WebSocket): Promise<any> {
   });
 }
 
+/**
+ * Room secret every test join carries unless it opts out.
+ *
+ * M7 (2026-10-20 audit): the server now rejects a `join` without a room
+ * secret. Before that, a secret-less room relayed SDP/ICE to anyone holding
+ * the room id with no authentication at all. The tests that only need a room
+ * get the default here; the negative case (`rejectsJoinWithoutSecret`) writes
+ * the frame itself so the rule stays covered.
+ */
+const TEST_ROOM_SECRET = "test-room-secret-0123456789abcdef";
+
 function send(ws: WebSocket, msg: unknown): void {
+  if (msg !== null && typeof msg === "object") {
+    const frame = msg as Record<string, unknown>;
+    // A room with a secret requires signed signals (server rule, default on).
+    // Rooms created by this helper always have TEST_ROOM_SECRET, so sign the
+    // frame exactly as the client does unless the test supplies its own tag.
+    if (
+      frame.type === "signal" &&
+      !Object.prototype.hasOwnProperty.call(frame, "signalAuth")
+    ) {
+      ws.send(
+        JSON.stringify({
+          ...frame,
+          signalAuth: signalAuthHex(
+            TEST_ROOM_SECRET,
+            String(frame.room ?? ""),
+            String(frame.senderPeerId ?? ""),
+            String(frame.receiverPeerId ?? ""),
+            frame.data,
+          ),
+        }),
+      );
+      return;
+    }
+    if (
+      frame.type === "join" &&
+      !Object.prototype.hasOwnProperty.call(frame, "roomSecret")
+    ) {
+      ws.send(JSON.stringify({ ...frame, roomSecret: TEST_ROOM_SECRET }));
+      return;
+    }
+  }
   ws.send(JSON.stringify(msg));
 }
 
@@ -162,7 +204,7 @@ describe.skipIf(!serverEntryExists)("Signaling server — NET-01/02/04 security"
     proc?.kill("SIGTERM");
   });
 
-  it("NET-01: first peer can join a new room without secret (becomes host)", async () => {
+  it("NET-01: first peer creates a secret-protected room and becomes host", async () => {
     const a = await open(url);
     const initA = await nextMessage(a);
     expect(initA.type).toBe("init");
@@ -171,6 +213,20 @@ describe.skipIf(!serverEntryExists)("Signaling server — NET-01/02/04 security"
     expect(joinedA.type).toBe("joined");
     expect(joinedA.otherPeerIds).toContain(initA.yourPeerId);
     a.close();
+    await waitClose(a);
+  });
+
+  it("NET-01: a join without any room secret is rejected (M7 — no open relay)", async () => {
+    const a = await open(url);
+    await nextMessage(a);
+    // Bypass the helper: this is the one frame that must NOT get a secret.
+    a.send(JSON.stringify({ type: "join", room: "open-relay-room" }));
+    const closed = await new Promise<boolean>((resolvePromise) => {
+      a.once("close", () => resolvePromise(true));
+      a.once("error", () => resolvePromise(true));
+      setTimeout(() => resolvePromise(false), 3000);
+    });
+    expect(closed).toBe(true);
     await waitClose(a);
   });
 
@@ -1124,29 +1180,12 @@ describe.skipIf(!serverEntryExists)("Signaling server — HMAC signal auth (defa
     await waitClose(b);
   });
 
-  it("public room (no secret) signals are relayed without signalAuth", async () => {
+  it("public room (no secret) is rejected — no unauthenticated relay (M7)", async () => {
     const a = await open(url);
-    const initA = await nextMessage(a);
-    send(a, { type: "join", room: "hmac-public-room" });
     await nextMessage(a);
-
-    const b = await open(url);
-    const initB = await nextMessage(b);
-    send(b, { type: "join", room: "hmac-public-room" });
-    await nextMessage(b);
-
-    send(a, {
-      type: "signal",
-      senderPeerId: initA.yourPeerId,
-      receiverPeerId: initB.yourPeerId,
-      data: { sdp: "offer" },
-    });
-    const sig = await nextMessage(b);
-    expect(sig.type).toBe("signal");
-    a.close();
-    b.close();
-    await waitClose(a);
-    await waitClose(b);
+    // Raw frame: the whole point is that no secret is sent.
+    a.send(JSON.stringify({ type: "join", room: "hmac-public-room" }));
+    expect(await expectClosed(a)).toBe(true);
   });
 });
 

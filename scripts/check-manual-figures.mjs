@@ -477,6 +477,19 @@ function main() {
     process.exit(2);
   }
   if (result.missing.length) {
+    // EXPORT ADAPTATION: the public export ships no manuals under docs/ (they
+    // are published with the hosted product), so a tree where EVERY manual
+    // source is absent is the export condition itself, not coverage drift.
+    // A partial absence still fails (a checkout that lost some manuals), and
+    // whatever manuals are present are still evaluated against the truth
+    // table below.
+    if (result.missing.length === MANUAL_SOURCE_PATHS.length) {
+      console.log(
+        "[check-manual-figures] ok: no manual sources ship in this tree " +
+          "(the public export keeps them with the hosted product) — nothing to verify",
+      );
+      return;
+    }
     console.error(`[check-manual-figures] FAIL: missing manual source(s):`);
     for (const rel of result.missing) console.error(`  - ${rel}`);
     process.exit(1);

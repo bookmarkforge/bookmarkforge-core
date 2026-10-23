@@ -1,0 +1,3 @@
+# Husky v9 pre-commit — wired by the audit fix B-2 (2026-10-23).
+# Formats/lints only the staged files, per the lint-staged config in package.json.
+npx lint-staged

@@ -10,9 +10,9 @@ info:
     Provider calls happen in the browser with a key stored in the user's own
     vault. Consequently this API carries no AI credentials and no AI endpoints.
 
-    The authoritative route table (path, methods, access level) lives in
-    `server/src/route-table.ts`; `npm run check:pro-routes` fails when the router
-    and that table disagree. See `docs/security.md` and `docs/api.md`.
+    The authoritative route table (path, methods, access level) lives with
+    the companion server source, which is not part of this export. See
+    `docs/security.md` and `docs/api.md`.
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT

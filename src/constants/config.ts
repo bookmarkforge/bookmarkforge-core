@@ -36,7 +36,10 @@ export const SECURITY_CONFIG = {
   SESSION_TOKEN_TTL_MS: 30 * 60 * 1000, // 30 minutes
   SESSION_ROTATION_INTERVAL_MS: 15 * 60 * 1000, // 15 minutes
   KEY_ROTATION_INTERVAL_DAYS: 90,
-  ENCRYPTION_KEY_VERSION: 4, // Argon2id (V4)
+  // Legacy label: the wire format in use is v6 (ADR-046). Kept because a
+  // persisted value may reference it; new code must read the format prefix
+  // from the payload, never this constant (L2, 2026-10-20 audit).
+  ENCRYPTION_KEY_VERSION: 4,
   MIN_PASSWORD_LENGTH: 12,
   BATTERY_CRITICAL_THRESHOLD: 0.15, // 15%
   MAX_TAB_INSTANCES: 3,

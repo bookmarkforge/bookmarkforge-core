@@ -69,10 +69,15 @@ function corpusEntries() {
   const add = (rel, extra = {}) => entries.push({ rel, kind: "manual", ...extra });
 
   // Manual sources in docs/ (md + styled html + generated pdf).
+  // EXPORT ADAPTATION: the public export does not ship the 30-language
+  // manual family under docs/ (they are published with the hosted product),
+  // so in this tree every member of the family is scanned when present but
+  // may be absent. The rest of the corpus — landing pages, legal pages,
+  // openapi, manifest metadata — is still required.
   for (const name of MANUAL_NAMES) {
-    add(`docs/${name}.md`);
+    add(`docs/${name}.md`, { optional: true });
     add(`docs/${name}-styled.html`, { optional: true });
-    add(`docs/${name}.pdf`);
+    add(`docs/${name}.pdf`, { optional: true });
   }
 
   // Public overlay copies (the exported public repo ships the es/en pair).

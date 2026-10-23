@@ -1085,7 +1085,13 @@ function sitemapAlternateMap(block) {
 function readOrFail(rel, failures, optional = false) {
   const path = join(ROOT, rel);
   try {
-    return readFileSync(path, "utf8");
+    // Normalize CRLF→LF: on Windows checkouts (core.autocrlf=true) every
+    // committed file arrives with CRLF working-tree endings while the git
+    // index stays LF. Contracts that parse with line regexes (e.g. the
+    // nginx legal-redirect block) are written against the canonical LF
+    // form; without this normalization the gate fails only on Windows
+    // checkouts — the file content is identical.
+    return readFileSync(path, "utf8").replaceAll("\r\n", "\n");
   } catch {
     if (!optional) {
       failures.push(`${rel}: missing`);

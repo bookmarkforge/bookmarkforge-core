@@ -6,7 +6,7 @@
  *
  * Pricing Model: Lifetime License for Major Version (no subscriptions)
  * - Early Bird: $59 (200 licenses FOMO)
- * - Regular v1: $79 (6-12 months after launch)
+ * - Regular v1: 9 (after Early Bird sells out)
  * - v2 upgrade: $89 new / $35 v1 owners (60% off)
  *
  * See docs/pricing-decision.md for the complete pricing strategy.

@@ -92,7 +92,7 @@
     "id": "alternativa-pocket",
     "tag": "Leer después, sin renunciar a tu privacidad",
     "title": "La Alternativa Privada a Pocket",
-    "subtitle": "Pocket se va. BookmarkForge mantiene vivo el hábito de leer después — con cada artículo, nota y subrayado cifrado en tu dispositivo.",
+    "subtitle": "Pocket cerró el 8 de julio de 2025. BookmarkForge mantiene vivo el hábito de leer después — con cada artículo, nota y subrayado cifrado en tu dispositivo.",
     "features": [
       {
         "title": "Guarda artículos para leer después, tuyos para siempre",
@@ -413,7 +413,7 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Licencia Lifetime para BookmarkForge v1. Incluye todas las v1.x y 12 meses de novedades. Seguridad para siempre. Futuras majors (v2, v3) 60% dto para propietarios. Reembolso 30 días vía Whop. <a href=\"/es/privacy-and-terms.html#terms\">Términos</a> · <a href=\"/help-es#pricing\">Más info</a>"
+    "legal": "Licencia Lifetime para BookmarkForge v1. Incluye 12 meses de todas las actualizaciones (novedades, correcciones, seguridad). Después de 12 meses, seguridad para siempre. Futuras majors (v2, v3) 60% dto para propietarios. Reembolso 30 días vía Whop. <a href=\"/es/privacy-and-terms.html#terms\">Términos</a> · <a href=\"/help-es#pricing\">Más info</a>"
   },
   "faq": {
     "title": "Preguntas Frecuentes",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. De por vida v1, 12 meses de funciones, seguridad de por vida, v2 con 60% de descuento.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

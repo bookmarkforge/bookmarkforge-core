@@ -92,7 +92,7 @@
     "id": "pocket-alternative",
     "tag": "„Прочети по-късно“ — второ раждане",
     "title": "Частната алтернатива на Pocket",
-    "subtitle": "Pocket изчезва. BookmarkForge запазва навика „прочети по-късно“ — като всяка статия, бележка и отметка се пази шифрована на устройството ви.",
+    "subtitle": "Pocket затвори на 8 юли 2025 г.. BookmarkForge запазва навика „прочети по-късно“ — като всяка статия, бележка и отметка се пази шифрована на устройството ви.",
     "features": [
       {
         "title": "„Прочети по-късно“ — ваше завинаги",
@@ -413,7 +413,7 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-bg#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-bg#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Чести въпроси",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Целият живот на v1, 12 месеца функции, сигурност завинаги, v2 с 60% отстъпка.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

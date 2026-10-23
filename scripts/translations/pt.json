@@ -92,7 +92,7 @@
     "id": "alternativa-pocket",
     "tag": "Ler mais tarde, sem abrir mão da privacidade",
     "title": "A Alternativa Privada ao Pocket",
-    "subtitle": "O Pocket está a acabar. O BookmarkForge mantém vivo o hábito de ler mais tarde — com cada artigo, nota e sublinhado encriptado no seu dispositivo.",
+    "subtitle": "O Pocket fechou em 8 de julho de 2025. O BookmarkForge mantém vivo o hábito de ler mais tarde — com cada artigo, nota e sublinhado encriptado no seu dispositivo.",
     "features": [
       {
         "title": "Leia mais tarde, seu para sempre",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Lifetime da v1, 12 meses de funcionalidades, segurança para sempre, v2 com 60% de desconto.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

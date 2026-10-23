@@ -92,7 +92,7 @@
     "id": "pocket-alternative",
     "tag": "Đọc sau hồi sinh",
     "title": "Lựa chọn thay thế Pocket riêng tư",
-    "subtitle": "Pocket sắp bị giải thể. BookmarkForge giữ thói quen đọc-sau-hồi còn sống — với mọi bài viết, ghi chú và đoạn highlight được lưu mã hóa ngay trên thiết bị của bạn.",
+    "subtitle": "Pocket đã đóng vào ngày 8 tháng 7 năm 2025.. BookmarkForge giữ thói quen đọc-sau-hồi còn sống — với mọi bài viết, ghi chú và đoạn highlight được lưu mã hóa ngay trên thiết bị của bạn.",
     "features": [
       {
         "title": "Đọc sau, thuộc về bạn mãi mãi",
@@ -413,7 +413,7 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-vi#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-vi#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Câu hỏi thường gặp",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Lifetime của v1, 12 tháng tính năng, bảo mật mãi mãi, v2 giảm 60%.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

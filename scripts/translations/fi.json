@@ -92,7 +92,7 @@
     "id": "pocket-alternative",
     "tag": "Lue myöhemmin uudelleensyntynyt",
     "title": "Yksityinen Pocket-vaihtoehto",
-    "subtitle": "Pocket katoaa. BookmarkForge pitää lue-myöhemmin-tavan hengissä — jokainen artikkeli, muistiinpano ja korostus tallennettuna salattuna laitteellesi.",
+    "subtitle": "Pocket suljettiin 8. heinäkuuta 2025.. BookmarkForge pitää lue-myöhemmin-tavan hengissä — jokainen artikkeli, muistiinpano ja korostus tallennettuna salattuna laitteellesi.",
     "features": [
       {
         "title": "Lue myöhemmin, ikuisesti sinun",
@@ -413,7 +413,7 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-fi#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-fi#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Yleiset kysymykset",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. V1:n ikä, 12 kuukauden ominaisuudet, tietoturva ikuisesti, v2 60 % alennuksella.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

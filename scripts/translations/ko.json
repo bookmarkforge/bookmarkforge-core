@@ -92,7 +92,7 @@
     "id": "pocket-alternative",
     "tag": "Read-It-Later의 부활",
     "title": "Private Pocket 대안",
-    "subtitle": "Pocket은 사라집니다. BookmarkForge는 읽을거리 저장 습관을 이어갑니다 — 모든 기사, 노트, 하이라이트를 당신의 기기에 암호화하여 저장합니다.",
+    "subtitle": "Pocket은 2025년 7월 8일에 폐쇄되었습니다. BookmarkForge는 읽을거리 저장 습관을 이어갑니다 — 모든 기사, 노트, 하이라이트를 당신의 기기에 암호화하여 저장합니다.",
     "features": [
       {
         "title": "영원히 당신의 읽을거리",
@@ -413,7 +413,7 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-ko#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-ko#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "자주 묻는 질문",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "얼리버드 200. v1의 Lifetime, 12개월 기능, 보안 영원히, v2 60% 할인.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

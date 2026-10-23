@@ -92,7 +92,7 @@
     "id": "pocket-alternative",
     "tag": "اقرأ لاحقًا، من جديد",
     "title": "البديل الخاص لـ Pocket",
-    "subtitle": "Pocket في طريقها إلى الزوال. تبقي BookmarkForge عادة \"اقرأ لاحقًا\" على قيد الحياة — مع كل مقالة وملاحظة وتمييز مخزنة بشكل مشفر على جهازك.",
+    "subtitle": "Pocket أغلقت في 8 يوليو 2025. تبقي BookmarkForge عادة \"اقرأ لاحقًا\" على قيد الحياة — مع كل مقالة وملاحظة وتمييز مخزنة بشكل مشفر على جهازك.",
     "features": [
       {
         "title": "اقرأ لاحقًا، لك إلى الأبد",
@@ -413,7 +413,7 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-ar#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-ar#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "أسئلة شائعة",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. مدى الحياة لـ v1، 12 شهرًا من الميزات، أمان إلى الأبد، خصم 60% على v2.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

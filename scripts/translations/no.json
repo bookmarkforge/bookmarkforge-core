@@ -92,7 +92,7 @@
     "id": "pocket-alternative",
     "tag": "«Les senere» gjenfødt",
     "title": "Det private Pocket-alternativet",
-    "subtitle": "Pocket forsvinner. BookmarkForge holder «les senere»-vanen levende — med hver artikkel, notat og markering lagret kryptert på enheten din.",
+    "subtitle": "Pocket ble stengt 8. juli 2025.. BookmarkForge holder «les senere»-vanen levende — med hver artikkel, notat og markering lagret kryptert på enheten din.",
     "features": [
       {
         "title": "Les senere, for alltid din",
@@ -413,7 +413,7 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-no#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-no#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Vanlige spørsmål",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Lifetime for v1, 12 måneder med funksjoner, sikkerhet for alltid, 60 % rabatt på v2.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

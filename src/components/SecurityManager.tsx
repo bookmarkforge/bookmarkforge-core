@@ -48,8 +48,7 @@ export const SecurityManager: React.FC<{ children: React.ReactNode }> = ({
         });
       });
   }, []);
-  const [setupComplete, setSetupComplete] = useState(false);
-  const isFirstTime = isFirstTimeInitial && !setupComplete;
+  const isFirstTime = isFirstTimeInitial;
   const [isUnlocking, setIsUnlocking] = useState(false);
   const vaultOperationInFlightRef = useRef(false);
   // RecoveryService bundles the full bip39 stack (2048-word English
@@ -344,7 +343,6 @@ Date Generated: ${formatDate(new Date(), {
       // after first-time setup so AppContent can mount the authenticated
       // shell instead of leaving the setup boundary in place.
       setForceSetup(false);
-      setSetupComplete(true);
       // Clear the password-skipped flag when the user completes setup
       safeSet(STORAGE_KEYS.PASSWORD_SKIPPED, "false");
     } catch (err) {

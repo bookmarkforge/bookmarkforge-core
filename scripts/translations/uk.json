@@ -92,7 +92,7 @@
     "id": "pocket-alternative",
     "tag": "Read-it-later повертається",
     "title": "Приватна альтернатива Pocket",
-    "subtitle": "Pocket зникає. BookmarkForge зберігає звичку читати пізніше — з кожною статтею, нотаткою і виділенням, збереженими зашифровано на вашому пристрої.",
+    "subtitle": "Pocket зачинено 8 липня 2025 року.. BookmarkForge зберігає звичку читати пізніше — з кожною статтею, нотаткою і виділенням, збереженими зашифровано на вашому пристрої.",
     "features": [
       {
         "title": "Читати пізніше — назавжди ваше",
@@ -413,7 +413,7 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-uk#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-uk#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Часті запитання",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Lifetime v1, 12 місяців функцій, безпека назавжди, v2 зі знижкою 60%.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

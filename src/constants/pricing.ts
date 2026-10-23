@@ -3,9 +3,9 @@
  * "Lifetime of the major version" — pays once, owns forever.
  *
  * Model: Lifetime License for Major Version (no subscriptions)
- * — Buy Pro v1 once, use v1.x forever (all minor + patch + security updates forever).
- * — Includes 12 months of feature updates from purchase date.
- * — After month 13 you keep v1 functional forever, only without new features.
+ * — Buy Pro v1 once, use v1.x forever.
+ * — Includes 12 months of all updates (features, bugfixes, security) from purchase date.
+ * — After 12 months, security updates forever. v1 stays functional forever.
  * — v2.0 (paid major) is a new product: $89 for new customers, $35 for v1 owners (60% off).
 
  *
@@ -16,7 +16,7 @@
  *
  * Launch ladder:
  * - Early Bird (200 licenses): Pro $59 — FOMO real
- * - Regular v1 (next 6-12mo): Pro $79 — anchor < $100 psychological
+ * - Regular v1 (after Early Bird sells out): Pro $79 — anchor < $100 psychological
  * - Post-traction / v1.5: Pro $89-99 — after 500+ reviews, A/B $79 vs $99
 
  *
@@ -27,10 +27,10 @@ export const PRICING_CONFIG = {
   lifetimeVersioned: {
     majorVersion: 1,
     label: "Lifetime license for BookmarkForge v1",
-    includes: "All v1.x updates (bugfixes + minor features) forever + 12 months of feature updates from purchase. Security updates forever.",
+    includes: "12 months of all updates (features, bugfixes, security) from purchase. After 12 months, security updates forever.",
     upgradeDiscountPct: 60,
     upgradePolicy: "Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off). If you don't upgrade you keep v1 functional forever.",
-    legalLine: "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop.",
+    legalLine: "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security) from purchase. After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop.",
     refundDays: 30,
   },
 

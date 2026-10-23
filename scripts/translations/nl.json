@@ -92,7 +92,7 @@
     "id": "pocket-alternative",
     "tag": "Read-It-Later opnieuw uitgevonden",
     "title": "Het privé Pocket-alternatief",
-    "subtitle": "Pocket verdwijnt. BookmarkForge houdt de read-it-later-gewoonte in leven — met elk artikel, elke notitie en elke markering versleuteld op je eigen apparaat.",
+    "subtitle": "Pocket is gesloten op 8 juli 2025. BookmarkForge houdt de read-it-later-gewoonte in leven — met elk artikel, elke notitie en elke markering versleuteld op je eigen apparaat.",
     "features": [
       {
         "title": "Read It Later, voor altijd van jou",
@@ -413,7 +413,7 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-nl#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-nl#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Veelgestelde vragen",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Lifetime van v1, 12 maanden functies, beveiliging voor altijd, v2 60% korting.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

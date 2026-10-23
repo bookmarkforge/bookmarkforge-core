@@ -92,7 +92,7 @@
     "id": "pocket-alternative",
     "tag": "稍后读的再生",
     "title": "私密的 Pocket 替代品",
-    "subtitle": "Pocket 要停了。BookmarkForge 让“稍后读”的习惯继续下去——每篇文章、笔记和高亮都以加密形式存在你的设备上。",
+    "subtitle": "Pocket于2025年7月8日关闭。BookmarkForge 让“稍后读”的习惯继续下去——每篇文章、笔记和高亮都以加密形式存在你的设备上。",
     "features": [
       {
         "title": "稍后读，永远归你",
@@ -413,7 +413,7 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-zh#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-zh#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "常见问题",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200。v1 终身，12 个月功能更新，安全更新永久，v2 享 60% 折扣。",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

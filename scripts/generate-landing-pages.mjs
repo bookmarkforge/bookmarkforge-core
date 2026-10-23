@@ -108,7 +108,7 @@ function generatePage(code, t) {
         "description": t.heroSub,
         "offers": [
           { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD", "description": "2,500 bookmarks. Forever free." },
-          { "@type": "Offer", "name": "Pro Lifetime v1 — Early Bird", "price": "59", "priceCurrency": "USD", "description": "Early Bird 200. Lifetime of v1, 12 months features, security forever, v2 60% off.", "priceValidUntil": "2026-12-31" },
+          { "@type": "Offer", "name": "Pro Lifetime v1 — Early Bird", "price": "59", "priceCurrency": "USD", "description": "Early Bird 200. 12 months of all updates, security forever, v2 60% off." },
           { "@type": "Offer", "name": "Pro Lifetime v1", "price": "79", "priceCurrency": "USD", "description": "Regular. Lifetime of v1." }
         ],
         "featureList": [
@@ -397,7 +397,7 @@ ${priceProItems}
             <a href="https://whop.com/checkout/plan_FTmrDjPDKqQVC" class="btn-secondary btn-block" target="_blank" rel="noopener noreferrer">Get Pro $79 Regular</a>
           </div>
         </div>
-        <p class="pricing-legal">${t.priceLegal || 'Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future majors 60% off for owners. 30-day refund via Whop.'}</p>
+        <p class="pricing-legal">${t.priceLegal || 'Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security) from purchase. After 12 months, security updates forever. Future majors 60% off for owners. 30-day refund via Whop.'}</p>
       </div>
     </section>
 

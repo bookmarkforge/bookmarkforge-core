@@ -92,7 +92,7 @@
     "id": "pocket-alternative",
     "tag": "Läs-senare, född på nytt",
     "title": "Det privata Pocket-alternativet",
-    "subtitle": "Pocket försvinner. BookmarkForge håller igång vanan att läsa senare — med varje artikel, anteckning och markering lagrad krypterat på din enhet.",
+    "subtitle": "Pocket stängdes 8 juli 2025.. BookmarkForge håller igång vanan att läsa senare — med varje artikel, anteckning och markering lagrad krypterat på din enhet.",
     "features": [
       {
         "title": "Läs senare — för alltid ditt",
@@ -413,7 +413,7 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-sv#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-sv#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Vanliga frågor",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Livstid för v1, 12 månaders funktioner, säkerhet för alltid, 60% rabatt på v2.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

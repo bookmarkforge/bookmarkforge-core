@@ -92,7 +92,7 @@
     "id": "pocket-alternative",
     "tag": "Read-It-Later Reborn",
     "title": "The Private Pocket Alternative",
-    "subtitle": "Pocket is going away. BookmarkForge keeps the read-it-later habit alive — with every article, note and highlight stored encrypted on your device.",
+    "subtitle": "Pocket shut down on July 8, 2025. BookmarkForge keeps the read-it-later habit alive — with every article, note and highlight stored encrypted on your device.",
     "features": [
       {
         "title": "Read It Later, Yours Forever",
@@ -289,7 +289,7 @@
   "pricing": {
     "id": "pricing",
     "title": "Simple, Fair Pricing — No Subscriptions",
-    "subtitle": "Free 2,500 bookmarks forever. Pro is a Lifetime license for v1 — pay once, own v1 forever. Includes all v1.x updates and 12 months of feature updates. Security updates forever. No monthly billing.",
+    "subtitle": "Free 2,500 bookmarks forever. Pro is a Lifetime license for v1 — pay once, own v1 forever. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. No monthly billing.",
     "plans": [
       {
         "name": "Free",
@@ -413,7 +413,7 @@
         "sla": "Support: Email 48h (Mon–Fri)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Common Questions",
@@ -424,7 +424,7 @@
       },
       {
         "question": "What does \"Lifetime of v1\" mean for Pro?",
-        "answer": "Pay once, own v1 forever. Includes all v1.x updates (bugfixes + minor features) forever and 12 months of feature updates from purchase. Security updates forever. After month 13 you keep v1 functional, just without new features. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off)."
+        "answer": "Pay once, own v1 forever. Includes 12 months of all updates (features, bugfixes, security) from purchase. After 12 months, security updates forever. v1 stays functional forever without new features. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off)."
       },
       {
         "question": "What payment methods & refunds?",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Lifetime of v1, 12 months features, security forever, v2 60% off.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {
@@ -550,7 +549,7 @@
       },
       {
         "question": "What does \"Lifetime of v1\" mean for Pro?",
-        "answer": "Pay once, own v1 forever. Includes all v1.x updates (bugfixes + minor features) forever and 12 months of feature updates from purchase. Security updates forever. After month 13 you keep v1 functional, just without new features. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off)."
+        "answer": "Pay once, own v1 forever. Includes 12 months of all updates (features, bugfixes, security) from purchase. After 12 months, security updates forever. v1 stays functional forever without new features. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off)."
       },
       {
         "question": "What payment methods & refunds?",
@@ -610,7 +609,7 @@
     },
     "legal": {
       "title": "Lifetime of v1 — legal line:",
-      "text": "Lifetime license for BookmarkForge v1. Includes all v1.x updates (bugfixes + minor features) forever and 12 months of feature updates from purchase. Security updates forever. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off). If you don't upgrade you keep v1 functional forever. 30-day refund via Whop.",
+      "text": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security) from purchase. After 12 months, security updates forever. Future major versions (v2, v3) are separate products: $89 for new customers, $35 for v1 owners (60% off). If you don't upgrade you keep v1 functional forever. 30-day refund via Whop.",
       "refunds": "Refunds: 30 days via Whop. Payments: card, PayPal, crypto (Whop — we never see card data).",
       "terms": "Terms § Licensing"
     },
@@ -732,7 +731,7 @@
       "q1": "Is the Free tier really free forever?",
       "a1": "Yes. No trial, no subscription. Free includes 2,500 bookmarks, full-text & semantic search, knowledge graph and AI with your own API key.",
       "q2": "What does Lifetime of v1 mean?",
-      "a2": "Pay once, own v1 forever. All v1.x bugfixes forever plus 12 months of feature updates from purchase. Security updates forever. After month 13 you keep v1 working. v2 and v3 are separate paid majors: $89 for new customers, $35 for v1 owners (60% off).",
+      "a2": "Pay once, own v1 forever. Includes 12 months of all updates (features, bugfixes, security) from purchase. After 12 months, security updates forever. v1 stays functional forever. v2 and v3 are separate paid majors: $89 for new customers, $35 for v1 owners (60% off).",
       "q3": "What if I forget my vault password?",
       "a3": "We cannot recover it. When you create a vault we show a 24-word recovery phrase once — write it on paper. Without it the vault is unrecoverable. See BF-E101."
     }

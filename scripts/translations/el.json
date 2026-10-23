@@ -92,7 +92,7 @@
     "id": "pocket-alternative",
     "tag": "Ανάγνωση-αργότερα αναγεννημένη",
     "title": "Η ιδιωτική εναλλακτική του Pocket",
-    "subtitle": "Το Pocket φεύγει. Το BookmarkForge κρατά ζωντανή τη συνήθεια της ανάγνωσης-αργότερα — με κάθε άρθρο, σημείωση και επισήμανση αποθηκευμένα κρυπτογραφημένα στη συσκευή σου.",
+    "subtitle": "Το Pocket έκλεισε στις 8 Ιουλίου 2025.. Το BookmarkForge κρατά ζωντανή τη συνήθεια της ανάγνωσης-αργότερα — με κάθε άρθρο, σημείωση και επισήμανση αποθηκευμένα κρυπτογραφημένα στη συσκευή σου.",
     "features": [
       {
         "title": "Ανάγνωση αργότερα, δική σου για πάντα",
@@ -413,7 +413,7 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-el#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-el#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Συχνές ερωτήσεις",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Lifetime της v1, 12 μήνες χαρακτηριστικά, ασφάλεια για πάντα, v2 60% έκπτωση.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

@@ -92,7 +92,7 @@
     "id": "pocket-alternative",
     "tag": "Přečíst později, znovuzrozeno",
     "title": "Alternativa soukromé kapsy",
-    "subtitle": "Pocket odchází. BookmarkForge udržuje zvyk číst později naživu – každý článek, poznámka a zvýraznění jsou uloženy zašifrovány ve vašem zařízení.",
+    "subtitle": "Pocket byl uzavřen 8. července 2025.. BookmarkForge udržuje zvyk číst později naživu – každý článek, poznámka a zvýraznění jsou uloženy zašifrovány ve vašem zařízení.",
     "features": [
       {
         "title": "Přečtěte si to později, váš navždy",
@@ -413,7 +413,7 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-cs#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-cs#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Běžné otázky",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Životnost verze 1, funkce 12 měsíců, zabezpečení navždy, v2 60% sleva.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

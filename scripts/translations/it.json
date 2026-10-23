@@ -92,7 +92,7 @@
     "id": "alternativa-pocket",
     "tag": "Leggi dopo, senza rinunciare alla privacy",
     "title": "L'Alternativa Privata a Pocket",
-    "subtitle": "Pocket sta chiudendo. BookmarkForge tiene vivo il piacere di leggere dopo — con ogni articolo, nota ed evidenziazione crittografati sul tuo dispositivo.",
+    "subtitle": "Pocket ha chiuso l'8 luglio 2025. BookmarkForge tiene vivo il piacere di leggere dopo — con ogni articolo, nota ed evidenziazione crittografati sul tuo dispositivo.",
     "features": [
       {
         "title": "Leggi dopo, tuo per sempre",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. A vita su v1, 12 mesi di funzionalità, sicurezza per sempre, v2 sconto 60%.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

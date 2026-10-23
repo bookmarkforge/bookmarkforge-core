@@ -92,7 +92,7 @@
     "id": "pocket-alternative",
     "tag": "Olvasd később, újjászületve",
     "title": "A privát Pocket alternatíva",
-    "subtitle": "A Pocket megszűnik. A BookmarkForge életben tartja az „olvasd később” szokást — minden cikk, jegyzet és kiemelés titkosítva az eszközödön marad.",
+    "subtitle": "A Pocket 2025. július 8-án bezárult.. A BookmarkForge életben tartja az „olvasd később” szokást — minden cikk, jegyzet és kiemelés titkosítva az eszközödön marad.",
     "features": [
       {
         "title": "Olvasd később, örökre a tiéd",
@@ -413,7 +413,7 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes all v1.x updates and 12 months of feature updates. Security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-hu#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-hu#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Gyakori kérdések",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. A v1 örökre, 12 hónap funkció, biztonság örökre, v2 60% kedvezmény.",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

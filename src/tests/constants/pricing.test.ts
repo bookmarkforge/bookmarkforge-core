@@ -35,7 +35,7 @@ describe("constants/pricing", () => {
     expect(free.limitations.maxBookmarks).toBe(2500);
 
     const pro = PRICING_CONFIG.tiers.find((t) => t.id === "pro")!;
-    // Regular anchor is $79; early bird $59 is in earlyBird.phases.early.pro
+    // Regular anchor is $79; early bird $59 is in earlyBird.phases.early.pro (no time limit)
     expect(pro.price).toBe(79);
     expect(pro.limitations.maxBookmarks).toBe(Infinity);
     expect(pro.popular).toBe(true);

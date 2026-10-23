@@ -131,7 +131,7 @@ describe("check-manual-figures: claim rules", () => {
     const allowed = s();
     const src = [
       "| Precio | $0 | $79 (lifetime) | $99 (lifetime) |",
-      "**Early Bird:** los primeros 200 compradores pagan $59 (o hasta 2026-12-31). Después $79.",
+      "**Early Bird:** los primeros 200 compradores pagan $59 (o hasta ). Después $79.",
       "- v2 para nuevos: $89. v2 para v1 owners: $35",
       "- v3 para nuevos: $99. v3 para v1 owners: $39",
       "Early Bird: first 200 buyers pay $59. Regular price is $79.",
@@ -212,7 +212,7 @@ describe("check-manual-figures: claim rules", () => {
       "1. Ve a Configuración",
       "2. Haz clic en **\"Get Pro Lifetime\"**",
       "- Los dueños de v1 mantienen v1 funcional para siempre",
-      "Los primeros 200 compradores pagan $59 hasta 2026-12-31.",
+      "Los primeros 200 compradores pagan $59 hasta .",
       "3. Asegúrate de que ambos dispositivos estén en la misma red",
       "La bóveda se cifra con AES-GCM en tu dispositivo.",
     ].join("\n");

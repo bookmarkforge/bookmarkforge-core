@@ -48,10 +48,11 @@ public export, enforced by CI:
 | BYOK cloud AI | Provider calls originate in the browser with the user's key (no server-side proxy) |
 
 **Pricing** — one-time purchase, no subscription: **$59 Early Bird** (first 200
-licenses) → **$79 regular**. A license covers the lifetime of v1: all v1.x
-bugfixes and security updates forever, 12 months of feature updates, and you
-keep v1 working forever. Future major versions (v2, v3) are separate products,
-60% off for existing owners. 30-day refund, no questions asked. Buy at
+licenses) → **$79 regular**. A license covers the lifetime of v1: 12 months of
+all updates (features, bugfixes, security) from purchase. After 12 months,
+security updates forever. v1 stays functional forever. Future major versions
+(v2, v3) are separate products, 60% off for existing owners. 30-day refund,
+no questions asked. Buy at
 [bookmarkforgeapp.com](https://bookmarkforgeapp.com).
 
 > **Honest note for this build:** a Pro license does **not** unlock Pro

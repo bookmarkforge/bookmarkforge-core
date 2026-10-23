@@ -36,7 +36,7 @@ const ORGANIZATION = {
   contactPoint: {
     '@type': 'ContactPoint',
     contactType: 'customer support',
-    email: 'support@bookmarkforgeapp.com',
+    email: 'bookmarkforge@proton.me',
     availableLanguage: ['en', 'es', 'de', 'fr', 'ja', 'zh'],
   },
 };

@@ -92,7 +92,7 @@
     "id": "pocket-alternative",
     "tag": "後で読む機能の復活",
     "title": "プライベートなPocketの代替",
-    "subtitle": "Pocketはなくなります。BookmarkForgeは後で読む習慣を維持します — すべての記事、メモ、ハイライトがデバイスに暗号化されて保存されます。",
+    "subtitle": "Pocketは2025年7月8日に閉鎖されました。BookmarkForgeは後で読む習慣を維持します — すべての記事、メモ、ハイライトがデバイスに暗号化されて保存されます。",
     "features": [
       {
         "title": "後で読む、永遠にあなたのもの",
@@ -525,7 +525,6 @@
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200件。v1の生涯ライセンス、12か月間の機能更新、セキュリティは永久、v2は60%オフ。",
-        "priceValidUntil": "2026-12-31",
         "availability": "https://schema.org/InStock"
       },
       {

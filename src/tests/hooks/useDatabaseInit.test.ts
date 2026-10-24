@@ -255,4 +255,84 @@ describe("useDatabaseInit", () => {
     const { result } = renderHook(() => useDatabaseInit());
     await waitFor(() => expect(result.current.db).toEqual(db2));
   });
+
+  // Regression: a vault WITHOUT a master password whose password prompt was
+  // skipped (PASSWORD_SKIPPED = "true") used to strand on the shell's
+  // "Loading…" screen after a reload (isLocked starts true) or an auto-lock:
+  // SecurityConfirmation only appears BEFORE the skip, the unlock screen
+  // requires hasPwd, and init() returned without a db — so nothing could ever
+  // flip the state. The reopen now happens inside init(), gated on
+  // SecureStorage's authoritative hasMasterPassword() === false.
+  describe("passwordless reopen — no \"Loading…\" strand (reload / auto-lock)", () => {
+    type StoreWithGetState = {
+      getState?: () => { unlock: () => void };
+    };
+
+    const attachGetState = (unlock: () => void) => {
+      (mockSecurityStore as unknown as StoreWithGetState).getState = () => ({
+        unlock,
+      });
+    };
+
+    afterEach(() => {
+      delete (mockSecurityStore as unknown as StoreWithGetState).getState;
+    });
+
+    it("auto-unlocks a skipped passwordless vault and resumes initDB", async () => {
+      const unlock = vi.fn(() => {
+        // The real store flips isLocked on unlock(); emulate the state the
+        // component tree would then render with so the effect re-runs, which
+        // is exactly what happens in the app after the reopen.
+        mockSecurityStore.mockReturnValue({ isLocked: false, forceSetup: false });
+      });
+      attachGetState(unlock);
+      localStorage.setItem("forge_password_skipped", "true");
+      mockHasMasterPassword.mockResolvedValue(false);
+      // Explicit fixtures: earlier tests leave persistent implementations on
+      // these mocks (clearAllMocks does not reset them).
+      mockInitDB.mockResolvedValue({ name: "reopened-db" });
+      mockGetDB.mockResolvedValue(null);
+      mockSecurityStore.mockReturnValue({ isLocked: true, forceSetup: false });
+
+      const { result, rerender } = renderHook(() => useDatabaseInit());
+      await waitFor(() => expect(unlock).toHaveBeenCalled());
+      rerender();
+      await waitFor(() => expect(mockInitDB).toHaveBeenCalled());
+      await waitFor(() => expect(result.current.db).toEqual({ name: "reopened-db" }));
+      expect(result.current.dbError).toBeNull();
+    });
+
+    it("leaves a fresh passwordless vault locked (confirmation screen owns the choice)", async () => {
+      const unlock = vi.fn();
+      attachGetState(unlock);
+      // PASSWORD_SKIPPED stays unset — the SecurityConfirmation choice has not
+      // been made yet, so the hook must keep waiting for it.
+      mockHasMasterPassword.mockResolvedValue(false);
+      mockSecurityStore.mockReturnValue({ isLocked: true, forceSetup: false });
+
+      const { result } = renderHook(() => useDatabaseInit());
+      await waitFor(() => expect(mockHasMasterPassword).toHaveBeenCalled());
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(unlock).not.toHaveBeenCalled();
+      expect(mockInitDB).not.toHaveBeenCalled();
+      expect(result.current.db).toBeNull();
+    });
+
+    it("never auto-unlocks when SecureStorage says a master password exists", async () => {
+      const unlock = vi.fn();
+      attachGetState(unlock);
+      // Even a stale/corrupt skipped flag must not override the authoritative
+      // answer: a locked vault WITH a password stays locked.
+      localStorage.setItem("forge_password_skipped", "true");
+      mockHasMasterPassword.mockResolvedValue(true);
+      mockSecurityStore.mockReturnValue({ isLocked: true, forceSetup: false });
+
+      const { result } = renderHook(() => useDatabaseInit());
+      await waitFor(() => expect(mockHasMasterPassword).toHaveBeenCalled());
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(unlock).not.toHaveBeenCalled();
+      expect(mockInitDB).not.toHaveBeenCalled();
+      expect(result.current.db).toBeNull();
+    });
+  });
 });

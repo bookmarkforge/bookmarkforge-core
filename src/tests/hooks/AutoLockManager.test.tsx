@@ -13,6 +13,7 @@ vi.mock("../../hooks/useSecurityStore", () => ({
 
 vi.mock("../../services/SecurityVault", () => ({
   securityVault: {
+    hasMasterPassword: vi.fn().mockResolvedValue(true),
     isLocked: vi.fn(() => false),
     lock: vi.fn().mockResolvedValue(undefined),
     onLock: vi.fn(),
@@ -46,10 +47,23 @@ vi.mock("react-i18next", () => ({
 }));
 
 import { AutoLockManager } from "../../hooks/AutoLockManager";
+import { securityVault } from "../../services/SecurityVault";
+
+const mockHasMasterPassword = vi.mocked(securityVault.hasMasterPassword);
 
 describe("AutoLockManager", () => {
+  const renderAutoLockManager = async () => {
+    const hook = renderHook(() => AutoLockManager());
+    await act(async () => {
+      await Promise.resolve();
+      await Promise.resolve();
+    });
+    return hook;
+  };
+
   beforeEach(() => {
     vi.useFakeTimers();
+    mockHasMasterPassword.mockResolvedValue(true);
     mockSettings = { autoLockEnabled: true, autoLockTimeout: 300000 };
     mockLock.mockClear();
     mockToast.info.mockClear();
@@ -59,16 +73,16 @@ describe("AutoLockManager", () => {
     vi.useRealTimers();
   });
 
-  it("renders nothing", () => {
+  it("renders nothing", async () => {
     // AutoLockManager returns null; renderHook executes the component and
     // surfaces its return value (the MantineProvider wrapper injected by
     // setup.ts would otherwise put <style> tags into the container).
-    const { result } = renderHook(() => AutoLockManager());
+    const { result } = await renderAutoLockManager();
     expect(result.current).toBeNull();
   });
 
   it("locks vault after timeout", async () => {
-    renderHook(() => AutoLockManager());
+    await renderAutoLockManager();
 
     await act(async () => {
       await vi.advanceTimersByTimeAsync(300000);
@@ -78,8 +92,33 @@ describe("AutoLockManager", () => {
     expect(mockToast.info).toHaveBeenCalled();
   });
 
-  it("does not lock before timeout", () => {
-    renderHook(() => AutoLockManager());
+  it("does not arm auto-lock for passwordless vaults", async () => {
+    mockHasMasterPassword.mockResolvedValue(false);
+    await renderAutoLockManager();
+
+    await act(async () => {
+      await Promise.resolve();
+      await vi.advanceTimersByTimeAsync(10 * 60 * 1000);
+    });
+
+    expect(mockLock).not.toHaveBeenCalled();
+    expect(mockToast.info).not.toHaveBeenCalled();
+  });
+
+  it("keeps auto-lock disabled when the password check fails", async () => {
+    mockHasMasterPassword.mockRejectedValue(new Error("storage unavailable"));
+    await renderAutoLockManager();
+
+    await act(async () => {
+      await Promise.resolve();
+      await vi.advanceTimersByTimeAsync(10 * 60 * 1000);
+    });
+
+    expect(mockLock).not.toHaveBeenCalled();
+  });
+
+  it("does not lock before timeout", async () => {
+    await renderAutoLockManager();
 
     act(() => {
       vi.advanceTimersByTime(299000); // Just under 5 minutes
@@ -88,8 +127,8 @@ describe("AutoLockManager", () => {
     expect(mockLock).not.toHaveBeenCalled();
   });
 
-  it("resets timer on activity", () => {
-    renderHook(() => AutoLockManager());
+  it("resets timer on activity", async () => {
+    await renderAutoLockManager();
 
     // Advance 4 minutes
     act(() => {
@@ -110,8 +149,8 @@ describe("AutoLockManager", () => {
     expect(mockLock).not.toHaveBeenCalled();
   });
 
-  it("respects cooldown period", () => {
-    renderHook(() => AutoLockManager());
+  it("respects cooldown period", async () => {
+    await renderAutoLockManager();
 
     // Two rapid mouse moves within cooldown (2s)
     act(() => {
@@ -129,10 +168,10 @@ describe("AutoLockManager", () => {
     // The timer should only have been reset once (second event was within cooldown)
   });
 
-  it("cleans up event listeners on unmount", () => {
+  it("cleans up event listeners on unmount", async () => {
     const removeEventListenerSpy = vi.spyOn(window, "removeEventListener");
 
-    const { unmount } = renderHook(() => AutoLockManager());
+    const { unmount } = await renderAutoLockManager();
 
     unmount();
 
@@ -156,10 +195,10 @@ describe("AutoLockManager", () => {
     removeEventListenerSpy.mockRestore();
   });
 
-  it("clears timeout on unmount", () => {
+  it("clears timeout on unmount", async () => {
     const clearTimeoutSpy = vi.spyOn(global, "clearTimeout");
 
-    const { unmount } = renderHook(() => AutoLockManager());
+    const { unmount } = await renderAutoLockManager();
 
     unmount();
 
@@ -169,7 +208,7 @@ describe("AutoLockManager", () => {
   });
 
   it("responds to keyboard events", async () => {
-    renderHook(() => AutoLockManager());
+    await renderAutoLockManager();
 
     act(() => {
       window.dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
@@ -184,7 +223,7 @@ describe("AutoLockManager", () => {
   });
 
   it("responds to click events", async () => {
-    renderHook(() => AutoLockManager());
+    await renderAutoLockManager();
 
     act(() => {
       window.dispatchEvent(new MouseEvent("click"));
@@ -198,7 +237,7 @@ describe("AutoLockManager", () => {
   });
 
   it("responds to scroll events", async () => {
-    renderHook(() => AutoLockManager());
+    await renderAutoLockManager();
 
     act(() => {
       window.dispatchEvent(new Event("scroll"));
@@ -225,7 +264,7 @@ describe("AutoLockManager", () => {
   };
 
   it("locks on visibilitychange when the deadline passed while the tab was hidden", async () => {
-    renderHook(() => AutoLockManager());
+    await renderAutoLockManager();
 
     suspendFor(60 * 60 * 1000); // an hour hidden, not a single timer fired
     expect(mockLock).not.toHaveBeenCalled();
@@ -239,7 +278,7 @@ describe("AutoLockManager", () => {
   });
 
   it("locks after a bfcache restore (pageshow) with no timer ever firing", async () => {
-    renderHook(() => AutoLockManager());
+    await renderAutoLockManager();
 
     suspendFor(2 * 60 * 60 * 1000); // laptop slept for two hours
 
@@ -251,7 +290,7 @@ describe("AutoLockManager", () => {
   });
 
   it("locks on the Page Lifecycle resume event after a freeze", async () => {
-    renderHook(() => AutoLockManager());
+    await renderAutoLockManager();
 
     suspendFor(30 * 60 * 1000);
 
@@ -263,7 +302,7 @@ describe("AutoLockManager", () => {
   });
 
   it("locks on window focus regained after the deadline", async () => {
-    renderHook(() => AutoLockManager());
+    await renderAutoLockManager();
 
     suspendFor(10 * 60 * 1000);
 
@@ -275,7 +314,7 @@ describe("AutoLockManager", () => {
   });
 
   it("does not lock on a resume signal that arrives before the deadline", async () => {
-    renderHook(() => AutoLockManager());
+    await renderAutoLockManager();
 
     suspendFor(60 * 1000); // one minute of a five-minute timeout
 
@@ -295,7 +334,7 @@ describe("AutoLockManager", () => {
   });
 
   it("locks exactly once when several resume signals arrive after the deadline", async () => {
-    renderHook(() => AutoLockManager());
+    await renderAutoLockManager();
 
     suspendFor(60 * 60 * 1000);
 
@@ -311,7 +350,7 @@ describe("AutoLockManager", () => {
   });
 
   it("locks on activity that arrives after the deadline instead of re-arming", async () => {
-    renderHook(() => AutoLockManager());
+    await renderAutoLockManager();
 
     suspendFor(6 * 60 * 1000);
 
@@ -327,7 +366,7 @@ describe("AutoLockManager", () => {
     // timer fires long before the deadline. That early fire must re-arm the
     // remainder, never discard the configured timeout by locking at once.
     mockSettings = { autoLockEnabled: true, autoLockTimeout: 3_000_000_000 };
-    renderHook(() => AutoLockManager());
+    await renderAutoLockManager();
 
     await act(async () => {
       await vi.advanceTimersByTimeAsync(2_147_483_647); // the clamp, not the deadline

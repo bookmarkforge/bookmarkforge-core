@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSecurityStore } from "./useSecurityStore";
 import { useSettings } from "./useSettings";
@@ -44,10 +44,26 @@ export const AutoLockManager = () => {
   const { t } = useTranslation();
   const { isLocked, lock } = useSecurityStore();
   const { autoLockEnabled, autoLockTimeout } = useSettings();
+  const [hasMasterPassword, setHasMasterPassword] = useState<boolean | null>(null);
   const autoLockTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   /** Absolute wall-clock instant the vault must lock; null = nothing armed. */
   const deadlineRef = useRef<number | null>(null);
   const lastActivityRef = useRef<number>(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    void securityVault.hasMasterPassword().then(
+      (configured) => {
+        if (!cancelled) {setHasMasterPassword(configured);}
+      },
+      (error) => {
+        logger.warn("[AutoLockManager] Could not check master password; auto-lock stays disabled", { error });
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const ACTIVITY_COOLDOWN_MS = 2000;
@@ -106,7 +122,7 @@ export const AutoLockManager = () => {
     };
 
     const armDeadline = () => {
-      if (!autoLockEnabled || isLocked) {
+      if (!autoLockEnabled || isLocked || hasMasterPassword !== true) {
         deadlineRef.current = null;
         clearTimer();
         return;
@@ -172,7 +188,7 @@ export const AutoLockManager = () => {
       document.removeEventListener("resume", handleResume);
       clearTimer();
     };
-  }, [autoLockEnabled, autoLockTimeout, isLocked, lock, t]);
+  }, [autoLockEnabled, autoLockTimeout, hasMasterPassword, isLocked, lock, t]);
 
   return null;
 };

@@ -101,6 +101,26 @@ export function useDatabaseInit() {
       if (!dbInitializedRef.current) {
         initAttemptedRef.current = true;
         try {
+          // Passwordless vault with the password prompt skipped — the state
+          // after a reload (isLocked starts true) and after an auto-lock.
+          // There is no secret to re-enter and NO screen renders an unlock
+          // affordance for it: SecurityConfirmation only appears BEFORE the
+          // skip (PASSWORD_SKIPPED unset), and the unlock screen requires
+          // hasPwd. Without reopening it here the init returns below with no
+          // db and the shell strands on the "Loading…" screen forever.
+          // secureHasResult is SecureStorage's authoritative answer
+          // (null = secure store unavailable → never guess), and
+          // PASSWORD_SKIPPED is the user's persisted choice, so reopen the
+          // same way "Continue without encryption" does.
+          if (
+            isLockedRef.current &&
+            secureHasResult === false &&
+            !forceSetupRef.current &&
+            safeGet(STORAGE_KEYS.PASSWORD_SKIPPED) === "true"
+          ) {
+            useSecurityStore.getState().unlock();
+            return;
+          }
           // Do not initialize RxDB while the vault is still locked without
           // a password. The confirmation screen only needs the security
           // state; loading the database here would undo the lazy boundary.

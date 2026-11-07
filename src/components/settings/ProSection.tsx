@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Crown, BadgeCheck, Loader2, LogOut, Key } from "lucide-react";
+import { Crown, BadgeCheck, Loader2, LogOut, Key, Coffee } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLicenseStore } from "../../store/useLicenseStore";
 import { licenseService } from "../../services/LicenseService";
@@ -133,13 +133,11 @@ export const ProSection: React.FC = () => {
                 href="https://ko-fi.com/M0Q528TAFF"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2"
+                className="inline-flex items-center gap-2 text-amber-500 hover:text-amber-400 transition-colors"
+                aria-label={t("app_koFiAlt", "Support BookmarkForge on Ko-fi")}
               >
-                <img
-                  style={{ border: "0px", height: "36px" }}
-                  src="https://storage.ko-fi.com/cdn/kofi5.png?v=6"
-                  alt={t("app_koFiAlt", "Support BookmarkForge on Ko-fi")}
-                />
+                <Coffee className="size-5" />
+                <span className="text-sm font-medium">Ko-fi</span>
               </a>
             </div>
             {!isCheckoutConfigured() && (

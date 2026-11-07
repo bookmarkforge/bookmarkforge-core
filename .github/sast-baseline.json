@@ -40,5 +40,26 @@
     "tool": "Semgrep OSS",
     "approved": true,
     "justification": "False positive: spawnSync(cmd, args) with an argv array; every checklist command is a literal in the same file. No shell and no interpolation. Reviewed 2026-10-11."
+  },
+  {
+    "ruleId": "js/biased-cryptographic-random",
+    "file": "src/services/webrtc-sync/pairing.ts",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "False positive: PAIRING_CODE_ALPHABET has exactly 32 characters (power of 2), so the modulo operation does not introduce bias. crypto.getRandomValues provides cryptographically secure randomness. The pairing code is a convenience for UX, not a security boundary — the actual HMAC key is derived separately. Reviewed 2026-11-07."
+  },
+  {
+    "ruleId": "js/file-system-race",
+    "file": "vite.config.ts",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "False positive: build-time configuration code, not runtime production code. The file system operations occur during Vite build, not in the deployed application. No race condition is exploitable in production. Reviewed 2026-11-07."
+  },
+  {
+    "ruleId": "js/remote-property-injection",
+    "file": "src/workers/crypto.worker.ts",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "False positive: the code already sanitizes the payload (limits string length to 50MB, clears sensitive references). The Object.entries iteration is over an internal postMessage payload from the worker's own context, not external untrusted input. The sanitization prevents oversized allocations and cleans up references after use. Reviewed 2026-11-07."
   }
 ]

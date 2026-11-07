@@ -20,6 +20,16 @@ vi.mock("lucide-react", () => {
     FolderSync: MockIcon,
   };
 });
+// Cloud sync is a Pro surface: the section renders ProRequiredState for Free
+// sessions, so these tests run with a Pro entitlement.
+vi.mock("../../../store/useLicenseStore", () => ({
+  useLicenseStore: Object.assign(
+    vi.fn((selector: any) =>
+      selector({ entitlements: { plan: "pro", features: {}, limits: {} } }),
+    ),
+    { getState: () => ({ entitlements: { plan: "pro" } }) },
+  ),
+}));
 vi.mock("sonner", () => ({
   toast: {
     success: vi.fn(),

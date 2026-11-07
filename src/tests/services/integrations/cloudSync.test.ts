@@ -17,6 +17,21 @@ vi.mock("../../../utils/logger", () => ({
   },
 }));
 
+// Cloud sync is a Pro feature: the service fails closed without an
+// entitlement, so these tests run as a licensed Pro session.
+vi.mock("../../../services/LicenseService", async () => {
+  const actual = await vi.importActual<
+    typeof import("../../../services/LicenseService")
+  >("../../../services/LicenseService");
+  return {
+    ...actual,
+    licenseService: {
+      ...actual.licenseService,
+      hasProAccess: vi.fn(() => true),
+    },
+  };
+});
+
 const mockGetSecret = vi.fn().mockResolvedValue(null);
 vi.mock("../../../services/SecureStorage", () => ({
   secureStorage: {
@@ -54,6 +69,8 @@ import {
   type SyncConflict,
   type CloudProvider,
 } from "../../../services/integrations/cloudSync";
+import { licenseService } from "../../../services/LicenseService";
+import { ProUnavailableError } from "../../../services/pro-access";
 
 describe("CloudSyncService", () => {
   let service: CloudSyncService;
@@ -1620,5 +1637,78 @@ describe("syncAll reentrancy guard", () => {
     // Assert: drive synced again
     expect(result.drive?.success).toBe(true);
     expect(mockFetch).toHaveBeenCalled();
+  });
+});
+
+describe("CloudSyncService Free-tier rejection", () => {
+  const baseConfig: CloudSyncConfig = {
+    provider: "drive",
+    authToken: "test-token",
+  };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockFetch.mockReset();
+    vi.mocked(licenseService.hasProAccess).mockReturnValue(false);
+  });
+
+  afterEach(() => {
+    vi.mocked(licenseService.hasProAccess).mockReturnValue(true);
+  });
+
+  it("init rejects before storing config or building an adapter", () => {
+    const service = new CloudSyncService();
+    expect(() => service.init(baseConfig)).toThrow(ProUnavailableError);
+    // init must fail before storing the config: the private field stays unset.
+    expect((service as unknown as { config?: unknown }).config).toBeUndefined();
+  });
+
+  it("constructor with config rejects for Free", () => {
+    expect(() => new CloudSyncService(baseConfig)).toThrow(
+      ProUnavailableError,
+    );
+  });
+
+  it("authenticate rejects without touching the network", async () => {
+    const service = new CloudSyncService();
+    await expect(service.authenticate()).rejects.toThrow(ProUnavailableError);
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  it("sync rejects without touching the network", async () => {
+    const service = new CloudSyncService();
+    await expect(service.sync()).rejects.toThrow(ProUnavailableError);
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  it("syncAll rejects before creating adapters", () => {
+    const service = new CloudSyncService();
+    expect(() => service.syncAll()).toThrow(ProUnavailableError);
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  it("listFiles rejects without touching the network", async () => {
+    const service = new CloudSyncService();
+    await expect(service.listFiles()).rejects.toThrow(ProUnavailableError);
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  it("downloadFile rejects without touching the network", async () => {
+    const service = new CloudSyncService();
+    await expect(service.downloadFile("file-id")).rejects.toThrow(
+      ProUnavailableError,
+    );
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
+  it("verifyRemoteBackup rejects without touching the network", async () => {
+    const service = new CloudSyncService();
+    await expect(
+      service.verifyRemoteBackup(
+        new Uint8Array([1]),
+        "bookmarkforge_sync_drive_1700000000000.json",
+      ),
+    ).rejects.toThrow(ProUnavailableError);
+    expect(mockFetch).not.toHaveBeenCalled();
   });
 });

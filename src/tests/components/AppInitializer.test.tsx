@@ -89,6 +89,20 @@ vi.mock("../../services/pro-access", () => ({
   loadBackupService: async () =>
     (await import("../../services/BackupService")).BackupService,
 }));
+// Cloud sync init is Pro-gated in AppInitializer; these tests exercise the
+// licensed path.
+vi.mock("../../services/LicenseService", async () => {
+  const actual = await vi.importActual<
+    typeof import("../../services/LicenseService")
+  >("../../services/LicenseService");
+  return {
+    ...actual,
+    licenseService: {
+      ...actual.licenseService,
+      hasProAccess: vi.fn(() => true),
+    },
+  };
+});
 vi.mock("../../services/ai/CrossPollinationService", () => ({
   crossPollinationService: { tryRunDigest: mocks.mockTryRunDigest },
 }));

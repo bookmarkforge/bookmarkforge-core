@@ -1,7 +1,8 @@
 import { logger } from "../../utils/logger";
 import { safeSet } from "../../store/safeStorage";
 import { STORAGE_KEYS } from "../../constants/storage-keys";
-import { loadBackupService } from "../pro-access";
+import { loadBackupService, ProUnavailableError } from "../pro-access";
+import { licenseService } from "../LicenseService";
 import { securityVault } from "../SecurityVault";
 import { createAdapter, getErrorMessage } from "./cloudSync.adapters";
 import {
@@ -228,6 +229,9 @@ export class CloudSyncService {
    * @param config - Cloud provider configuration including auth tokens
    */
   init(config: CloudSyncConfig): void {
+    // Fail closed before storing credentials or constructing an adapter:
+    // a Free session must not even hold a live provider configuration.
+    this.assertProEntitlement();
     this.config = config;
     this.adapter = createAdapter(
       config.provider,
@@ -242,7 +246,20 @@ export class CloudSyncService {
   setLocalDataProvider(dp: () => Promise<unknown>): void {
     this.dataProvider = dp;
   }
+  /**
+   * Cloud sync is a Pro feature (PRICING_CONFIG limitations.cloudSync).
+   * Every network path funnels through ensureAdapter()/syncWithAdapter() —
+   * syncAll included, which builds adapters directly — so the entitlement
+   * check lives at those two choke points and fails closed for Free
+   * sessions. Pure helpers (detectConflict/mergeData/metrics) stay open.
+   */
+  private assertProEntitlement(): void {
+    if (!licenseService.hasProAccess()) {
+      throw new ProUnavailableError("CloudSyncService", "no-license");
+    }
+  }
   private ensureAdapter(): CloudProviderAdapter {
+    this.assertProEntitlement();
     if (!this.adapter && this.config) {
       this.adapter = createAdapter(
         this.config.provider,
@@ -467,6 +484,7 @@ export class CloudSyncService {
     adapter: CloudProviderAdapter,
     options: SyncOptions = {},
   ): Promise<SyncResult> {
+    this.assertProEntitlement();
     const provider = adapter.providerName;
     const m = this.getProviderMetrics(provider);
     const { signal } = options;
@@ -791,6 +809,9 @@ export class CloudSyncService {
    * @returns Per-provider sync results
    */
   syncAll(options: SyncOptions = {}): Promise<Record<CloudProvider, SyncResult>> {
+    // syncAll builds adapters directly (bypassing ensureAdapter), so it
+    // carries its own entitlement check before any adapter is constructed.
+    this.assertProEntitlement();
     // Reentrancy guard: a concurrent syncAll would duplicate uploads and
     // corrupt per-provider metrics. Serialize overlapping calls by returning
     // the SAME in-flight promise (identity-preserving so callers can dedupe).

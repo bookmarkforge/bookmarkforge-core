@@ -24,6 +24,7 @@ import { toast } from "sonner";
 import i18n from "../../i18n";
 import { logger } from "../../utils/logger";
 import { loadBackupService } from "../../services/pro-access";
+import { licenseService } from "../../services/LicenseService";
 import { useSecurityStore } from "../../hooks/useSecurityStore";
 import { safeGet, safeSet } from "../../store/safeStorage";
 import { STORAGE_KEYS } from "../../constants/storage-keys";
@@ -301,6 +302,10 @@ export function AppInitializer() {
         }
       }
       if (cancelled) {return;}
+      // Cloud sync is Pro-only: a Free session (or a downgraded Pro user with
+      // stale stored config) must skip this path entirely — no decrypt, no
+      // adapter, no network. The service also fails closed on its own.
+      if (!licenseService.hasProAccess()) {return;}
       try {
         const hasCloudConfig =
           await securityVault.hasSecret("cloud_sync_config");

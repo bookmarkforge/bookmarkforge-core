@@ -39,6 +39,21 @@ vi.mock("../db/database", () => ({
   }),
 }));
 
+// Cloud sync is a Pro feature: the service fails closed without an
+// entitlement, so the sync flows below run as a licensed Pro session.
+vi.mock("../services/LicenseService", async () => {
+  const actual = await vi.importActual<
+    typeof import("../services/LicenseService")
+  >("../services/LicenseService");
+  return {
+    ...actual,
+    licenseService: {
+      ...actual.licenseService,
+      hasProAccess: () => true,
+    },
+  };
+});
+
 vi.mock("../services/BookmarkAIService", () => ({
   bookmarkAIService: {
     summarize: vi.fn().mockResolvedValue(undefined),

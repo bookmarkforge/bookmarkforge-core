@@ -19,6 +19,8 @@ import { safeGet, safeSet } from "../../store/safeStorage";
 import { STORAGE_KEYS } from "../../constants/storage-keys";
 import { useGuardedAction } from "../../hooks/useGuardedAction";
 import { useGuardedActions } from "../../hooks/useGuardedActions";
+import { useLicenseStore } from "../../store/useLicenseStore";
+import { ProRequiredState } from "../ProRequiredState";
 import {
   DefensiveBase64Error,
   decodeDefensiveBase64,
@@ -58,6 +60,10 @@ export function decodeRemoteBackupBase64(data: string): Uint8Array {
 
 export const CloudSyncSection: React.FC = () => {
   const { t } = useTranslation();
+  // Cloud sync is Pro (pricing.ts limitations.cloudSync). The service itself
+  // fails closed in assertProEntitlement; this gate keeps Free sessions from
+  // ever rendering the provider form or firing the mount-time config fetch.
+  const hasPro = useLicenseStore((s) => s.entitlements.plan === "pro");
   // Separate guard: remote-file listings can run concurrently with (and
   // after) connection/sync/restore flows without invalidating them — the
   // deliberate split the actions map below preserves by running on its own
@@ -246,6 +252,7 @@ export const CloudSyncSection: React.FC = () => {
 
   // Load configured cloud settings on mount
   useEffect(() => {
+    if (!hasPro) {return;}
     // hasSecret/decryptSecret are async: if they resolve after unmount, the
     // late code must not set state on a component that is gone.
     let cancelled = false;
@@ -295,7 +302,7 @@ export const CloudSyncSection: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [hasPro]);
 
   const fetchRemoteFiles = (config?: CloudSyncConfig) => {
     // isFetchingFiles doubles as the loading indicator: it stays true on
@@ -489,6 +496,18 @@ export const CloudSyncSection: React.FC = () => {
       );
     });
   };
+
+  if (!hasPro) {
+    return (
+      <section data-testid="settings-cloud-sync" className="space-y-4">
+        <h3 className="text-xs font-semibold text-[var(--text-muted)] dark:text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-2">
+          <Cloud className="size-4 text-cyan-500" />{" "}
+          {t("cloudSyncTitle", "Cloud Sync (Zero-Knowledge)")}
+        </h3>
+        <ProRequiredState feature="Cloud sync" reason="license" variant="card" />
+      </section>
+    );
+  }
 
   return (
     <section data-testid="settings-cloud-sync" className="space-y-4">

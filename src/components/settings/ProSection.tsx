@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Crown, BadgeCheck, Loader2, LogOut, Key, Heart } from "lucide-react";
+import { Crown, BadgeCheck, Loader2, LogOut, Key } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLicenseStore } from "../../store/useLicenseStore";
 import { licenseService } from "../../services/LicenseService";
@@ -125,21 +125,6 @@ export const ProSection: React.FC = () => {
               </button>
             </div>
 
-            <div className="pt-2 border-t border-[var(--divider)]/50">
-              <p className="text-xs text-[var(--text-muted)] mb-2">
-                {t("app_proDonate", "Support the project with a donation")}
-              </p>
-              <a
-                href="https://ko-fi.com/M0Q528TAFF"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-amber-500 hover:text-amber-400 transition-colors"
-                aria-label={t("app_koFiAlt", "Support BookmarkForge on Ko-fi")}
-              >
-                <Heart className="size-5" />
-                <span className="text-sm font-medium">Support</span>
-              </a>
-            </div>
             {!isCheckoutConfigured() && (
               <p className="text-xs text-[var(--text-muted)]">
                 {t(

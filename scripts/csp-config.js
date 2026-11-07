@@ -35,7 +35,7 @@ const BASE =
   " style-src 'self' 'unsafe-inline';" +
   " style-src-attr 'unsafe-inline';" +
   " font-src 'self' data:;" +
-  " img-src 'self' blob: data:;" +
+  " img-src 'self' blob: data: https://storage.ko-fi.com;" +
   " connect-src 'self'";
 
 /** Directives after connect-src (matches the _headers order). */
@@ -133,7 +133,7 @@ export const CSP_OPEN =
   " script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:*;" +
   " style-src 'self' 'unsafe-inline';" +
   " font-src 'self' data: http: https:;" +
-  " img-src 'self' blob: data: http: https:;" +
+  " img-src 'self' blob: data: http: https: https://storage.ko-fi.com;" +
   " connect-src 'self' http://localhost:* ws://localhost:* http: https: ws: wss:;" +
   " media-src 'self' blob:;" +
   " worker-src 'self' blob: http://localhost:*;" +

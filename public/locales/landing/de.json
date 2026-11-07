@@ -346,6 +346,10 @@
           {
             "included": false,
             "text": "Lokale KI-Übersetzung (demnächst)"
+          },
+          {
+            "included": true,
+            "text": "Verschlüsselte .bmf-Backups — täglich automatisch + Kopie auf Festplatte"
           }
         ],
         "cta": "Sofort ausprobieren",
@@ -385,7 +389,7 @@
           },
           {
             "included": true,
-            "text": "Erweiterter Export (10+ Formate) · Verschlüsselte Backups"
+            "text": "Erweiterter Export (10+ Formate)"
           },
           {
             "included": true,

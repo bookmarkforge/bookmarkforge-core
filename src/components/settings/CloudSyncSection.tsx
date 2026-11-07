@@ -482,7 +482,7 @@ export const CloudSyncSection: React.FC = () => {
           if (!passwordBytes) {
             throw new Error("Vault is locked. Enter your password first.");
           }
-          // 7. Import Backup (Pro service, resolved behind the gate)
+          // 7. Import Backup (proprietary module, free tier included)
           const backup = await loadBackupService();
           await backup.importBackup(tempFile, passwordBytes);
         },

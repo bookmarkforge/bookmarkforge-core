@@ -291,7 +291,7 @@ export const StorageSection: React.FC = () => {
         return;
       }
     }
-    // BackupService is Pro: resolved behind the hasProAccess gate.
+    // BackupService is a proprietary module loaded lazily via pro-access (free tier included).
     void runExport(async () => (await loadBackupService()).exportBackup(password));
   };
 

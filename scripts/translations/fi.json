@@ -353,6 +353,10 @@
           {
             "included": false,
             "text": "Paikallinen AI-käännös (tulossa)"
+          },
+          {
+            "included": true,
+            "text": "Salatut .bmf-varmuuskopiot — automaattiset päivittäiset + kopio levylle"
           }
         ],
         "cta": "Kokeile heti",
@@ -392,7 +396,7 @@
           },
           {
             "included": true,
-            "text": "Edistynyt vienti (10+ muotoa) · Salatut varmuuskopiot"
+            "text": "Edistynyt vienti (10+ muotoa)"
           },
           {
             "included": true,

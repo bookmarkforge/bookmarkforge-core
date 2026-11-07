@@ -346,6 +346,10 @@
           {
             "included": false,
             "text": "Lokale AI-vertaling (binnenkort)"
+          },
+          {
+            "included": true,
+            "text": "Versleutelde .bmf-back-ups — automatische dagelijkse + kopie naar schijf"
           }
         ],
         "cta": "Probeer het meteen",
@@ -385,7 +389,7 @@
           },
           {
             "included": true,
-            "text": "Geavanceerde export (10+ formaten) · Versleutelde back-ups"
+            "text": "Geavanceerde export (10+ formaten)"
           },
           {
             "included": true,

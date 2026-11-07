@@ -346,6 +346,10 @@
           {
             "included": false,
             "text": "Lokalne tłumaczenie AI (wkrótce)"
+          },
+          {
+            "included": true,
+            "text": "Zaszyfrowane kopie .bmf — automatyczne dzienne + kopia na dysk"
           }
         ],
         "cta": "Wypróbuj od razu",
@@ -385,7 +389,7 @@
           },
           {
             "included": true,
-            "text": "Zaawansowany eksport (10+ formatów) · zaszyfrowane kopie zapasowe"
+            "text": "Zaawansowany eksport (10+ formatów)"
           },
           {
             "included": true,

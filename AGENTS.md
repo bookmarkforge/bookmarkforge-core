@@ -20,6 +20,12 @@ security-adjacent code.
   changing export rules or feature boundaries.
 - New files that implement paid features must be classified before merge; do
   not rely on naming alone as a license boundary.
+- License tier and code ownership are separate axes: `FREE_TIER_SERVICES` in
+  `src/services/pro-access.ts` lists proprietary modules every licensed tier
+  (Free included) may load — currently the backup services, because data
+  safety is not a paywall. Adding a service there does NOT change the export
+  boundary; the module stays excluded from the MIT export and the placeholder
+  rejection still applies.
 
 ## 2. Password buffer ownership & zeroization (MANDATORY)
 

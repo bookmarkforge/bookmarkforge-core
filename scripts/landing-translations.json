@@ -80,7 +80,8 @@
       "<span aria-hidden='true'>❌</span> بطاقات تعليمية بتكرار متباعد",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> تصدير متقدم (أكثر من 10 صيغ)",
-      "<span aria-hidden='true'>❌</span> ترجمة بالذكاء الاصطناعي محليًا"
+      "<span aria-hidden='true'>❌</span> ترجمة بالذكاء الاصطناعي محليًا",
+      "نسخ احتياطية .bmf مشفرة — تلقائية يومية + نسخة على القرص"
     ],
     "priceFreeCta": "جرّبه فورًا",
     "priceProName": "Pro",
@@ -255,7 +256,8 @@
       "<span aria-hidden='true'>❌</span> Флашкарти с spaced repetition",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Разширен експорт (10+ формата)",
-      "<span aria-hidden='true'>❌</span> Локален AI превод"
+      "<span aria-hidden='true'>❌</span> Локален AI превод",
+      "Шифровани .bmf архиви — автоматични дневни + копие на диск"
     ],
     "priceFreeCta": "Опитайте веднага",
     "priceProName": "Pro",
@@ -430,7 +432,8 @@
       "<span aria-hidden='true'>❌</span> Flashcards s spaced repetition",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Pokročilý export (10+ formátů)",
-      "<span aria-hidden='true'>❌</span> Lokální překlad pomocí AI"
+      "<span aria-hidden='true'>❌</span> Lokální překlad pomocí AI",
+      "Šifrované .bmf zálohy — automatické denní + kopie na disk"
     ],
     "priceFreeCta": "Vyzkoušejte hned",
     "priceProName": "Pro",
@@ -605,7 +608,8 @@
       "<span aria-hidden='true'>❌</span> Flashcards med spaced repetition",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Avanceret eksport (10+ formater)",
-      "<span aria-hidden='true'>❌</span> Lokal AI-oversættelse"
+      "<span aria-hidden='true'>❌</span> Lokal AI-oversættelse",
+      "Krypterede .bmf-sikkerhedskopier — automatiske daglige + kopi til disk"
     ],
     "priceFreeCta": "Prøv det med det samme",
     "priceProName": "Pro",
@@ -780,7 +784,8 @@
       "<span aria-hidden='true'>❌</span> Flashcards με spaced repetition",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Προηγμένη εξαγωγή (10+ μορφές)",
-      "<span aria-hidden='true'>❌</span> Τοπική μετάφραση AI"
+      "<span aria-hidden='true'>❌</span> Τοπική μετάφραση AI",
+      "Κρυπτογραφημένα αντίγραφα .bmf — αυτόματα ημερήσια + αντίγραφο σε δίσκο"
     ],
     "priceFreeCta": "Δοκιμάστε το τώρα",
     "priceProName": "Pro",
@@ -955,7 +960,8 @@
       "<span aria-hidden='true'>❌</span> Flashcards spaced repetitionilla",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Edistynyt vienti (10+ muotoa)",
-      "<span aria-hidden='true'>❌</span> Paikallinen AI-käännös"
+      "<span aria-hidden='true'>❌</span> Paikallinen AI-käännös",
+      "Salatut .bmf-varmuuskopiot — automaattiset päivittäiset + kopio levylle"
     ],
     "priceFreeCta": "Kokeile heti",
     "priceProName": "Pro",
@@ -1130,7 +1136,8 @@
       "<span aria-hidden='true'>❌</span> כרטיסי פלאש עם חזרה מרווחת",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> ייצוא מתקדם (10+ פורמטים)",
-      "<span aria-hidden='true'>❌</span> תרגום AI מקומי"
+      "<span aria-hidden='true'>❌</span> תרגום AI מקומי",
+      "גיבויי .bmf מוצפנים — אוטומטיים יומיים + עותק לדיסק"
     ],
     "priceFreeCta": "נסו עכשיו",
     "priceProName": "Pro",
@@ -1305,7 +1312,8 @@
       "<span aria-hidden='true'>❌</span> Spaced Repetition के साथ फ़्लैशकार्ड",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> उन्नत निर्यात (10+ प्रारूप)",
-      "<span aria-hidden='true'>❌</span> लोकल AI अनुवाद"
+      "<span aria-hidden='true'>❌</span> लोकल AI अनुवाद",
+      "एन्क्रिप्टेड .bmf बैकअप — स्वचालित दैनिक + डिस्क कॉपी"
     ],
     "priceFreeCta": "तुरंत आज़माएँ",
     "priceProName": "Pro",
@@ -1480,7 +1488,8 @@
       "<span aria-hidden='true'>❌</span> Flashcards s spaced repetitionom",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Napredni izvoz (10+ formata)",
-      "<span aria-hidden='true'>❌</span> Lokalno AI prevođenje"
+      "<span aria-hidden='true'>❌</span> Lokalno AI prevođenje",
+      "Šifrirane .bmf sigurnosne kopije — automatske dnevne + kopija na disk"
     ],
     "priceFreeCta": "Isprobajte odmah",
     "priceProName": "Pro",
@@ -1655,7 +1664,8 @@
       "<span aria-hidden='true'>❌</span> Flashcards spaced repetitionnal",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Haladó exportálás (10+ formátum)",
-      "<span aria-hidden='true'>❌</span> Helyi AI-fordítás"
+      "<span aria-hidden='true'>❌</span> Helyi AI-fordítás",
+      "Titkosított .bmf mentések — automatikus napi + másolat a lemezre"
     ],
     "priceFreeCta": "Próbáld ki azonnal",
     "priceProName": "Pro",
@@ -1830,7 +1840,8 @@
       "<span aria-hidden='true'>❌</span> Flashcards dengan spaced repetition",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Ekspor lanjutan (10+ format)",
-      "<span aria-hidden='true'>❌</span> Terjemahan AI lokal"
+      "<span aria-hidden='true'>❌</span> Terjemahan AI lokal",
+      "Cadangan .bmf terenkripsi — otomatis harian + salinan ke disk"
     ],
     "priceFreeCta": "Coba langsung",
     "priceProName": "Pro",
@@ -2005,7 +2016,8 @@
       "<span aria-hidden='true'>❌</span> 間隔反復によるフラッシュカード",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> 高度なエクスポート (10+フォーマット)",
-      "<span aria-hidden='true'>❌</span> ローカルAI翻訳"
+      "<span aria-hidden='true'>❌</span> ローカルAI翻訳",
+      "暗号化 .bmf バックアップ — 自動デイリー + ディスクコピー"
     ],
     "priceFreeCta": "今すぐ試す",
     "priceProName": "Pro",
@@ -2180,7 +2192,8 @@
       "<span aria-hidden='true'>❌</span> 간격 반복 플래시카드",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> 고급 내보내기 (10+ 형식)",
-      "<span aria-hidden='true'>❌</span> 로컬 AI 번역"
+      "<span aria-hidden='true'>❌</span> 로컬 AI 번역",
+      "암호화된 .bmf 백업 — 자동 매일 + 디스크 복사본"
     ],
     "priceFreeCta": "바로 사용해 보기",
     "priceProName": "Pro",
@@ -2355,7 +2368,8 @@
       "<span aria-hidden='true'>❌</span> Flashcards met spaced repetition",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Geavanceerde export (10+ formaten)",
-      "<span aria-hidden='true'>❌</span> Lokale AI-vertaling"
+      "<span aria-hidden='true'>❌</span> Lokale AI-vertaling",
+      "Versleutelde .bmf-back-ups — automatische dagelijkse + kopie naar schijf"
     ],
     "priceFreeCta": "Probeer het meteen",
     "priceProName": "Pro",
@@ -2530,7 +2544,8 @@
       "<span aria-hidden='true'>❌</span> Flashcards med spaced repetition",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Avansert eksport (10+ formater)",
-      "<span aria-hidden='true'>❌</span> Lokal AI-oversettelse"
+      "<span aria-hidden='true'>❌</span> Lokal AI-oversettelse",
+      "Krypterte .bmf-sikkerhetskopier — automatiske daglige + kopi til disk"
     ],
     "priceFreeCta": "Prøv det med en gang",
     "priceProName": "Pro",
@@ -2705,7 +2720,8 @@
       "<span aria-hidden='true'>❌</span> Fiszki ze spaced repetition",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Zaawansowany eksport (10+ formatów)",
-      "<span aria-hidden='true'>❌</span> Lokalne tłumaczenie AI"
+      "<span aria-hidden='true'>❌</span> Lokalne tłumaczenie AI",
+      "Zaszyfrowane kopie .bmf — automatyczne dzienne + kopia na dysk"
     ],
     "priceFreeCta": "Wypróbuj od razu",
     "priceProName": "Pro",
@@ -2880,7 +2896,8 @@
       "<span aria-hidden='true'>❌</span> Flashcards cu spaced repetition",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Export avansat (10+ formate)",
-      "<span aria-hidden='true'>❌</span> Traducere AI locală"
+      "<span aria-hidden='true'>❌</span> Traducere AI locală",
+      "Copii de rezervă .bmf criptate — automate zilnice + copie pe disc"
     ],
     "priceFreeCta": "Încearcă acum",
     "priceProName": "Pro",
@@ -3055,7 +3072,8 @@
       "<span aria-hidden='true'>❌</span> Флешкарты со spaced repetition",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Продвинутый экспорт (10+ форматов)",
-      "<span aria-hidden='true'>❌</span> Локальный AI-перевод"
+      "<span aria-hidden='true'>❌</span> Локальный AI-перевод",
+      "Зашифрованные .bmf-резервные копии — автоматические ежедневные + копия на диск"
     ],
     "priceFreeCta": "Попробуйте сразу",
     "priceProName": "Pro",
@@ -3230,7 +3248,8 @@
       "<span aria-hidden='true'>❌</span> Flashcards med spaced repetition",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Avancerad export (10+ format)",
-      "<span aria-hidden='true'>❌</span> Lokal AI-översättning"
+      "<span aria-hidden='true'>❌</span> Lokal AI-översättning",
+      "Krypterade .bmf-säkerhetskopior — automatiska dagliga + kopia till disk"
     ],
     "priceFreeCta": "Prova direkt",
     "priceProName": "Pro",
@@ -3405,7 +3424,8 @@
       "<span aria-hidden='true'>❌</span> Flashcards ด้วย spaced repetition",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> ส่งออกขั้นสูง (10+ รูปแบบ)",
-      "<span aria-hidden='true'>❌</span> การแปลด้วย AI ภายในเครื่อง"
+      "<span aria-hidden='true'>❌</span> การแปลด้วย AI ภายในเครื่อง",
+      "แบ็กอัพ .bmf เข้ารหัส — อัตโนมัติรายวัน + สำเนาบนดิสก์"
     ],
     "priceFreeCta": "ลองใช้ทันที",
     "priceProName": "Pro",
@@ -3580,7 +3600,8 @@
       "<span aria-hidden='true'>❌</span> Spaced repetition ile flashcards",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Gelişmiş dışa aktarma (10+ format)",
-      "<span aria-hidden='true'>❌</span> Yerel AI çevirisi"
+      "<span aria-hidden='true'>❌</span> Yerel AI çevirisi",
+      "Şifreli .bmf yedekleri — otomatik günlük + disk kopyası"
     ],
     "priceFreeCta": "Hemen dene",
     "priceProName": "Pro",
@@ -3755,7 +3776,8 @@
       "<span aria-hidden='true'>❌</span> Флешкарти зі spaced repetition",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Розширений експорт (10+ форматів)",
-      "<span aria-hidden='true'>❌</span> Локальний AI-переклад"
+      "<span aria-hidden='true'>❌</span> Локальний AI-переклад",
+      "Зашифровані .bmf резервні копії — автоматичні щоденні + копія на диск"
     ],
     "priceFreeCta": "Спробуйте одразу",
     "priceProName": "Pro",
@@ -3930,7 +3952,8 @@
       "<span aria-hidden='true'>❌</span> Flashcards với spaced repetition",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> Xuất nâng cao (10+ định dạng)",
-      "<span aria-hidden='true'>❌</span> Dịch bằng AI cục bộ"
+      "<span aria-hidden='true'>❌</span> Dịch bằng AI cục bộ",
+      "Sao lưu .bmf đã mã hóa — tự động hàng ngày + bản sao trên đĩa"
     ],
     "priceFreeCta": "Dùng thử ngay",
     "priceProName": "Pro",
@@ -4105,7 +4128,8 @@
       "<span aria-hidden='true'>❌</span> 间隔重复的闪卡",
       "<span aria-hidden='true'>❌</span> PDF + OCR",
       "<span aria-hidden='true'>❌</span> 高级导出 (10+格式)",
-      "<span aria-hidden='true'>❌</span> 本地 AI 翻译"
+      "<span aria-hidden='true'>❌</span> 本地 AI 翻译",
+      "加密 .bmf 备份 — 自动每日 + 磁盘副本"
     ],
     "priceFreeCta": "立即试用",
     "priceProName": "Pro",

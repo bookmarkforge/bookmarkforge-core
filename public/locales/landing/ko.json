@@ -346,6 +346,10 @@
           {
             "included": false,
             "text": "로컬 AI 번역 (출시 예정)"
+          },
+          {
+            "included": true,
+            "text": "암호화된 .bmf 백업 — 자동 매일 + 디스크 복사본"
           }
         ],
         "cta": "바로 사용해 보기",
@@ -385,7 +389,7 @@
           },
           {
             "included": true,
-            "text": "고급 내보내기 (10+ 형식) · 암호화 백업"
+            "text": "고급 내보내기 (10+ 형식)"
           },
           {
             "included": true,

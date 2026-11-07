@@ -149,7 +149,7 @@ export const Settings = ({ onClose }: SettingsProps) => {
     // while the backup is being decrypted/imported (onSuccess/onError only
     // run if the invocation is still current).
     void runImportBackup(async () => {
-      // BackupService is Pro: resolved behind the hasProAccess gate.
+      // BackupService is a proprietary module loaded lazily via pro-access (free tier included).
       const backup = await loadBackupService();
       await backup.importBackup(file, password);
       if (fileInputRef.current) {fileInputRef.current.value = "";}

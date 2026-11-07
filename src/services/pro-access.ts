@@ -14,7 +14,12 @@
  *   1. Gated. `loadProService` consults `licenseService.hasProAccess()` before
  *      the first byte of the Pro module is requested. A Free user never even
  *      downloads the Pro chunk: the network request itself is behind the gate,
- *      not just the execution.
+ *      not just the execution. A small set of services (`FREE_TIER_SERVICES`)
+ *      is exempt from the license check: they remain proprietary modules
+ *      excluded from the MIT export, but every licensed tier — Free included —
+ *      may load them. Data-safety features (encrypted backups, disk copies)
+ *      are deliberately free: a user who loses their vault has no refund
+ *      remedy, so backup cannot be the paywall.
  *
  *   2. Lazy. The Pro module is referenced only as a dynamic `import()` inside
  *      this file, so bundlers keep it in its own chunk and the application
@@ -84,6 +89,21 @@ type ProGate = {
 
 const gate: ProGate = licenseService;
 
+/**
+ * Proprietary modules that every licensed tier may load — Free included.
+ * Membership here relaxes ONLY the license check: the module is still fetched
+ * lazily through its own chunk and the Open Core placeholder sentinel is still
+ * rejected, so the public MIT export keeps failing honestly with
+ * `ProUnavailableError("load-failed")`.
+ *
+ * BackupService/DiskBackupService are data-safety, not premium features: the
+ * daily encrypted auto-backup, the .bmf export/import/restore flow and the
+ * disk copy are what stand between a user and permanent vault loss when the
+ * browser clears site data. Gating them behind Pro would leave Free users —
+ * the least technical ones — with no protection at all.
+ */
+const FREE_TIER_SERVICES = new Set(["BackupService", "DiskBackupService"]);
+
 /** Warmed modules: one loaded, gated module per service name. */
 const loaded = new Map<string, Promise<unknown>>();
 
@@ -105,7 +125,7 @@ function registerLoader<T>(service: string, loader: ModuleLoader<T>): void {
  * Resolve a Pro service behind the entitlement gate.
  *
  * - Free user → rejects with `ProUnavailableError("no-license")` without
- *   fetching the chunk.
+ *   fetching the chunk, unless the service is in `FREE_TIER_SERVICES`.
  * - Pro user → fetches once, caches the promise for the session.
  * - Fetch failure (Open Core export, offline, corrupt chunk) → rejects with
  *   `ProUnavailableError("load-failed")` and logs once per service.
@@ -116,7 +136,7 @@ export function loadProService<T>(service: string): Promise<T> {
     return cached;
   }
   const promise = (async () => {
-    if (!gate.hasProAccess()) {
+    if (!FREE_TIER_SERVICES.has(service) && !gate.hasProAccess()) {
       throw new ProUnavailableError(service, "no-license");
     }
     const loader = loaders.get(service);

@@ -105,7 +105,7 @@ export const StorageCleanupDialog: React.FC<StorageCleanupDialogProps> = ({
       securityVault.withMasterPasswordBytes(
         cleanupDialogCaller,
         async (masterPasswordBytes) => {
-          // BackupService is Pro: resolved behind the hasProAccess gate.
+          // BackupService is a proprietary module loaded lazily via pro-access (free tier included).
           const backup = await loadBackupService();
           await backup.exportBackup(masterPasswordBytes ?? undefined);
         },

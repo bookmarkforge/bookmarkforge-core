@@ -346,6 +346,10 @@
           {
             "included": false,
             "text": "Local AI Translation (Coming Soon)"
+          },
+          {
+            "included": true,
+            "text": "Encrypted .bmf backups — automatic daily + disk copy"
           }
         ],
         "cta": "Try It Instantly",
@@ -385,7 +389,7 @@
           },
           {
             "included": true,
-            "text": "Advanced export (10+ formats) · Encrypted backups"
+            "text": "Advanced export (10+ formats)"
           },
           {
             "included": true,

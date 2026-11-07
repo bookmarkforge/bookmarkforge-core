@@ -353,6 +353,10 @@
           {
             "included": false,
             "text": "Lokal AI-översättning (kommer snart)"
+          },
+          {
+            "included": true,
+            "text": "Krypterade .bmf-säkerhetskopior — automatiska dagliga + kopia till disk"
           }
         ],
         "cta": "Prova direkt",
@@ -392,7 +396,7 @@
           },
           {
             "included": true,
-            "text": "Avancerad export (10+ format) · Krypterade säkerhetskopior"
+            "text": "Avancerad export (10+ format)"
           },
           {
             "included": true,

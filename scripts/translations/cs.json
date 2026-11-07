@@ -353,6 +353,10 @@
           {
             "included": false,
             "text": "Lokální překlad pomocí AI (již brzy)"
+          },
+          {
+            "included": true,
+            "text": "Šifrované .bmf zálohy — automatické denní + kopie na disk"
           }
         ],
         "cta": "Vyzkoušejte hned",
@@ -392,7 +396,7 @@
           },
           {
             "included": true,
-            "text": "Pokročilý export (10+ formátů) · Šifrované zálohy"
+            "text": "Pokročilý export (10+ formátů)"
           },
           {
             "included": true,

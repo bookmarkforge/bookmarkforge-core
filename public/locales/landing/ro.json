@@ -346,6 +346,10 @@
           {
             "included": false,
             "text": "Traducere AI locală (în curând)"
+          },
+          {
+            "included": true,
+            "text": "Copii de rezervă .bmf criptate — automate zilnice + copie pe disc"
           }
         ],
         "cta": "Încearcă acum",
@@ -385,7 +389,7 @@
           },
           {
             "included": true,
-            "text": "Export avansat (10+ formate) · copii de rezervă criptate"
+            "text": "Export avansat (10+ formate)"
           },
           {
             "included": true,

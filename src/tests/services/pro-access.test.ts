@@ -61,17 +61,48 @@ describe("pro-access loader", () => {
   });
 
   it("rejects with no-license without fetching the module for a Free user", async () => {
+    const loaderSpy = vi.fn();
+    vi.doMock("../../services/WebRTCSyncService", () => {
+      loaderSpy();
+      return { webRTCSyncService: { stop: vi.fn() } };
+    });
+    vi.resetModules();
+    const fresh = await import("../../services/pro-access");
+    fresh.resetProAccessForTests();
     mockGate.hasProAccess.mockReturnValue(false);
-    await expect(proAccess.loadBackupService()).rejects.toMatchObject({
+
+    await expect(fresh.loadWebRTCSyncService()).rejects.toMatchObject({
       name: "ProUnavailableError",
       reason: "no-license",
     });
+    expect(loaderSpy).not.toHaveBeenCalled();
+  });
+
+  it("lets a Free user load BackupService — data safety is not paywalled", async () => {
+    vi.doMock("../../services/BackupService", () => ({
+      BackupService: realBackupDouble,
+    }));
+    vi.resetModules();
+    const fresh = await import("../../services/pro-access");
+    fresh.resetProAccessForTests();
+    mockGate.hasProAccess.mockReturnValue(false);
+
+    await expect(fresh.loadBackupService()).resolves.toBe(realBackupDouble);
   });
 
   it("refuses to hand out an Open Core placeholder as success", async () => {
-    // The mocked BackupService above IS a placeholder; the loader must
-    // detect the sentinel and reject load-failed instead of resolving.
-    await expect(proAccess.loadBackupService()).rejects.toMatchObject({
+    // doMock overrides persist across tests in this file, so re-pin the
+    // placeholder double explicitly: the loader must detect the sentinel
+    // and reject load-failed instead of resolving — even for free-tier
+    // services, where the license check is skipped but the boundary is not.
+    vi.doMock("../../services/BackupService", () => ({
+      BackupService: { __isProPlaceholder: true, exportBackup: () => undefined },
+    }));
+    vi.resetModules();
+    const fresh = await import("../../services/pro-access");
+    fresh.resetProAccessForTests();
+    mockGate.hasProAccess.mockReturnValue(false);
+    await expect(fresh.loadBackupService()).rejects.toMatchObject({
       name: "ProUnavailableError",
       reason: "load-failed",
     });

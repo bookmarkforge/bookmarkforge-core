@@ -353,6 +353,10 @@
           {
             "included": false,
             "text": "Helyi AI-fordítás (hamarosan)"
+          },
+          {
+            "included": true,
+            "text": "Titkosított .bmf mentések — automatikus napi + másolat a lemezre"
           }
         ],
         "cta": "Próbáld ki azonnal",
@@ -392,7 +396,7 @@
           },
           {
             "included": true,
-            "text": "Haladó export (10+ formátum) · Titkosított mentések"
+            "text": "Haladó export (10+ formátum)"
           },
           {
             "included": true,

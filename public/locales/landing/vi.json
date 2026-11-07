@@ -346,6 +346,10 @@
           {
             "included": false,
             "text": "Dịch bằng AI cục bộ (sắp ra mắt)"
+          },
+          {
+            "included": true,
+            "text": "Sao lưu .bmf đã mã hóa — tự động hàng ngày + bản sao trên đĩa"
           }
         ],
         "cta": "Dùng thử ngay",
@@ -385,7 +389,7 @@
           },
           {
             "included": true,
-            "text": "Xuất nâng cao (10+ định dạng) · Sao lưu đã mã hóa"
+            "text": "Xuất nâng cao (10+ định dạng)"
           },
           {
             "included": true,

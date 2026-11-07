@@ -346,6 +346,10 @@
           {
             "included": false,
             "text": "本地 AI 翻译（即将推出）"
+          },
+          {
+            "included": true,
+            "text": "加密 .bmf 备份 — 自动每日 + 磁盘副本"
           }
         ],
         "cta": "立即试用",
@@ -385,7 +389,7 @@
           },
           {
             "included": true,
-            "text": "高级导出（10+ 种格式）· 加密备份"
+            "text": "高级导出（10+ 种格式）"
           },
           {
             "included": true,

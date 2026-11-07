@@ -346,6 +346,10 @@
           {
             "included": false,
             "text": "Lokal AI-oversættelse (kommer snart)"
+          },
+          {
+            "included": true,
+            "text": "Krypterede .bmf-sikkerhedskopier — automatiske daglige + kopi til disk"
           }
         ],
         "cta": "Prøv det med det samme",
@@ -385,7 +389,7 @@
           },
           {
             "included": true,
-            "text": "Avanceret eksport (10+ formater) · Krypterede sikkerhedskopier"
+            "text": "Avanceret eksport (10+ formater)"
           },
           {
             "included": true,

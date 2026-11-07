@@ -346,6 +346,10 @@
           {
             "included": false,
             "text": "Yerel AI çevirisi (yakında)"
+          },
+          {
+            "included": true,
+            "text": "Şifreli .bmf yedekleri — otomatik günlük + disk kopyası"
           }
         ],
         "cta": "Hemen dene",
@@ -385,7 +389,7 @@
           },
           {
             "included": true,
-            "text": "Gelişmiş dışa aktarma (10+ format) · Şifreli yedekler"
+            "text": "Gelişmiş dışa aktarma (10+ format)"
           },
           {
             "included": true,

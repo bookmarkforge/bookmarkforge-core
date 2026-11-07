@@ -346,6 +346,10 @@
           {
             "included": false,
             "text": "Terjemahan AI lokal (segera hadir)"
+          },
+          {
+            "included": true,
+            "text": "Cadangan .bmf terenkripsi — otomatis harian + salinan ke disk"
           }
         ],
         "cta": "Coba langsung",
@@ -385,7 +389,7 @@
           },
           {
             "included": true,
-            "text": "Ekspor lanjutan (10+ format) · Cadangan terenkripsi"
+            "text": "Ekspor lanjutan (10+ format)"
           },
           {
             "included": true,

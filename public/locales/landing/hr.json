@@ -346,6 +346,10 @@
           {
             "included": false,
             "text": "Lokalno AI prevođenje (uskoro)"
+          },
+          {
+            "included": true,
+            "text": "Šifrirane .bmf sigurnosne kopije — automatske dnevne + kopija na disk"
           }
         ],
         "cta": "Isprobajte odmah",
@@ -385,7 +389,7 @@
           },
           {
             "included": true,
-            "text": "Napredni izvoz (10+ formata) · Šifrirane sigurnosne kopije"
+            "text": "Napredni izvoz (10+ formata)"
           },
           {
             "included": true,

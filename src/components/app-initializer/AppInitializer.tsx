@@ -265,8 +265,8 @@ export function AppInitializer() {
     const syncController = new AbortController();
     const runPostUnlock = async () => {
       try {
-        // BackupService is Pro: resolved behind the hasProAccess gate. A
-        // Free user skips the auto-backup attempt entirely (no chunk fetch).
+        // BackupService is free-tier: resolved lazily via pro-access, which
+        // still rejects honestly in Open Core builds without the module.
         const backup = await loadBackupService();
         if (cancelled) {return;}
         await backup.runAutoBackup();

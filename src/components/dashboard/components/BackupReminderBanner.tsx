@@ -66,8 +66,8 @@ export const BackupReminderBanner: React.FC<BackupReminderBannerProps> = ({
       toast.dismiss();
       logger.error("Failed to export backup via banner:", error);
       if (error instanceof ProUnavailableError) {
-        // Encrypted backups are Pro: explain instead of a bare "failed"
-        // — the shared panel names the feature and links to the license.
+        // Open Core builds lack the module: explain instead of a bare
+        // "failed" — the shared panel names the feature and links onward.
         announceProUnavailable(error);
         return;
       }
@@ -81,7 +81,7 @@ export const BackupReminderBanner: React.FC<BackupReminderBannerProps> = ({
       securityVault.withMasterPasswordBytes(
         backupBannerCaller,
         async (masterPasswordBytes) => {
-          // BackupService is Pro: resolved behind the hasProAccess gate.
+          // BackupService is a proprietary module loaded lazily via pro-access (free tier included).
           const backup = await loadBackupService();
           await backup.exportBackup(masterPasswordBytes ?? undefined);
         },

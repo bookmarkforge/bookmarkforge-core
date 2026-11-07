@@ -386,7 +386,7 @@ export function AppContent() {
       // stale/corrupt storage on the same adapter.
       const { destroyDB } = await import("../../container/database");
       await destroyDB();
-      // BackupService is Pro: resolved behind the hasProAccess gate.
+      // BackupService is a proprietary module loaded lazily via pro-access (free tier included).
       const backup = await loadBackupService();
       await backup.importBackup(file, password);
       toast.success(

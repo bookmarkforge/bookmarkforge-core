@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-07T15:06:15.647Z",
+  "generatedAt": "2026-11-07T18:16:50.822Z",
   "version": "1.0.0",
   "source": "private repository (export checkout)",
   "license": "MIT",
@@ -23,7 +23,7 @@
     "src/services/webrtc-sync/validation.ts"
   ],
   "proSpecifiersRewritten": 14,
-  "includedCount": 2010,
+  "includedCount": 2011,
   "excluded": [
     {
       "file": ".zap\\authenticated.context",
@@ -846,6 +846,14 @@
       "reason": "private ops/business script"
     },
     {
+      "file": "scripts\\vercel-runtime-logs.mjs",
+      "reason": "private ops/business script"
+    },
+    {
+      "file": "scripts\\vercel-usage-report.mjs",
+      "reason": "private ops/business script"
+    },
+    {
       "file": "server\\README.md",
       "reason": "excluded dir"
     },
@@ -1280,12 +1288,18 @@
     {
       "file": ".github\\workflows\\staging-smoke.yml",
       "reason": "private-infrastructure workflow (CI de-scope)"
+    },
+    {
+      "file": ".github\\workflows\\vercel-logs.yml",
+      "reason": "private-infrastructure workflow (CI de-scope)"
     }
   ],
   "packageJsonScriptsPruned": [
     "check:staging-http",
     "deploy:prod",
     "export-public-repo",
+    "logs:vercel",
+    "report:vercel",
     "server",
     "server:watch",
     "test:load"

@@ -64,7 +64,10 @@ chunk:
 - a Free user does not download Pro code — the request itself is behind the
   gate — and the call rejects with `ProUnavailableError`, a typed error that
   the interface presents as a "requires Pro" state or upgrade prompt, never as
-  a silent dead button;
+  a silent dead button. The exception is `FREE_TIER_SERVICES` in
+  `pro-access.ts` (currently the backup modules): they stay proprietary and
+  lazily loaded, but every licensed tier — Free included — may resolve them,
+  because encrypted backups are data safety, not a premium feature;
 - a Pro user with a valid license loads the real implementation on demand,
   in its own chunk;
 - the AI tree follows the same rule with product nuance: the license decision
@@ -117,7 +120,7 @@ runtime by `licenseService.hasProAccess()`.
 | Entitlement, the Pro seam, and the "requires Pro" degradation UI | Core | Core: `src/services/LicenseService.ts`, `src/services/pro-access.ts`, `src/components/ProRequiredState.tsx` |
 | Companion server (health, client events, signaling relay) | Core — private operations | Not shipped in the public export. License routes are not part of it (retired 2026-10-19); the public tree carries that surface separately as `api/license/**`. |
 | P2P device-to-device sync (transport, signaling, protocol) | Pro | Excluded: `src/services/WebRTCSyncService.ts`, `src/services/SyncService.ts`, `src/services/sync/signaling.ts`, `src/services/sync/replication.ts`, `src/services/webrtc-sync/protocol.ts`, `src/services/webrtc-sync/validation.ts` |
-| Encrypted backups and disk backups | Pro | Excluded: `src/services/BackupService.ts`, `src/services/DiskBackupService.ts` |
+| Encrypted backups and disk backups | Pro implementation, free-tier feature | Excluded: `src/services/BackupService.ts`, `src/services/DiskBackupService.ts` — proprietary code, but `FREE_TIER_SERVICES` lets every licensed tier (Free included) load it |
 | Local AI runtime (on-device model, no API key) | Pro | Excluded: `src/services/ai/WebLLMService.ts` |
 | Private translation: unlimited local translation (WebLLM, NLLB fallback, Ollama route) | Pro | Core pipeline with an excluded runtime: chunking, prompts, encrypted pair cache, cost meter and orchestration are MIT; `src/modules/translation/pro/ProLocalEngine.ts` and `src/modules/translation/pro/localTranslation.worker.ts` are excluded |
 | RAG chat over your data | Pro | Excluded: `src/services/ai/GlobalRAGService.ts` |

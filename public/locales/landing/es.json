@@ -346,6 +346,10 @@
           {
             "included": false,
             "text": "Traducción con IA local (próximamente)"
+          },
+          {
+            "included": true,
+            "text": "Copias de seguridad .bmf cifradas — automáticas diarias + copia en disco"
           }
         ],
         "cta": "Pruébalo al instante",
@@ -385,7 +389,7 @@
           },
           {
             "included": true,
-            "text": "Exportación avanzada (10+ formatos) · copias de seguridad encriptadas"
+            "text": "Exportación avanzada (10+ formatos)"
           },
           {
             "included": true,

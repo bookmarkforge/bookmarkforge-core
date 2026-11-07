@@ -1,0 +1,29 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "CodeQL",
+          "rules": [{ "id": "js/command-line-injection", "name": "js/command-line-injection" }]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "js/command-line-injection",
+          "level": "error",
+          "message": { "text": "Unsafe use of child_process exec." },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": { "uri": "server/src/proxy-utils.ts" },
+                "region": { "startLine": 42 }
+              }
+            }
+          ],
+          "properties": { "security-severity": "high" }
+        }
+      ]
+    }
+  ]
+}

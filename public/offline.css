@@ -1,0 +1,43 @@
+/* Offline page styles — extracted from the inline <style> of
+   public/offline.html so it renders under the strict CSP (style-src
+   'self' blocks inline <style> blocks). Keep in sync with
+   public/offline.html.
+
+   Consumes the shared brand tokens + Inter Variable from
+   /brand-tokens.css (loaded first). Brand navy default, flat fills
+   (no gradients — design-system ban). */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+.container { text-align: center; padding: 2rem; max-width: 420px; }
+.logo {
+  width: 64px; height: 64px;
+  margin-bottom: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px var(--accent-primary-glow-strong);
+}
+h1 { font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-primary); }
+p { font-size: 1rem; margin-bottom: 1.5rem; color: var(--text-muted); line-height: 1.5; }
+button {
+  padding: 0.6rem 1.7rem;
+  border: 1px solid var(--accent-primary);
+  border-radius: var(--radius-button);
+  background: var(--accent-primary);
+  color: var(--text-on-accent);
+  font-family: 'Inter Variable', 'Inter', system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 14px var(--accent-primary-glow-strong);
+}
+button:hover { background: var(--accent-secondary); color: var(--text-primary); box-shadow: 0 6px 18px var(--accent-primary-glow-strong); }
+.status { font-size: 0.85rem; color: var(--text-muted); margin-top: 1rem; min-height: 1.5rem; }

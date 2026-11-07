@@ -1,0 +1,513 @@
+{
+  "lang": "cs",
+  "langName": "Čeština",
+  "dir": "ltr",
+  "title": "BookmarkForge: soukromý lokální správce záložek se seznamem ke čtení",
+  "description": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. Jedna platba: $59 doživotní přístup v akci early bird (ušetříte $20 před běžnou cenou). Zdarma: 300 záložek.",
+  "ogTitle": "BookmarkForge: soukromý lokální správce záložek se seznamem ke čtení",
+  "ogDescription": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. Jedna platba: $59 doživotní přístup v akci early bird (ušetříte $20 před běžnou cenou). Zdarma: 300 záložek.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImageAlt": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. 59 dolarů jednou. Zdarma: 300 záložek.",
+  "twitterTitle": "BookmarkForge: soukromý lokální správce záložek se seznamem ke čtení",
+  "twitterDescription": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. Jedna platba: $59 doživotní přístup v akci early bird (ušetříte $20 před běžnou cenou). Zdarma: 300 záložek.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Přejít na hlavní obsah",
+  "navBrandAria": "Domov BookmarkForge",
+  "navAriaLabel": "Hlavní navigace",
+  "navLinks": {
+    "pocketAlternative": "Kapesní alternativa",
+    "features": "Vlastnosti",
+    "ai": "AI",
+    "privacy": "Soukromí",
+    "pricing": "Ceny",
+    "help": "Pomoc",
+    "raindropCompare": "Srovnání dešťové kapky"
+  },
+  "navCta": "Vyzkoušejte hned (bez účtu)",
+  "themeToggleAria": "Přepnout motiv",
+  "navToggleAria": "Otevřít menu",
+  "navToggleAriaClose": "Zavřít menu",
+  "languageToggleAria": "Změnit jazyk",
+  "githubAria": "Dejte BookmarkForge hvězdičku na GitHubu",
+  "hero": {
+    "badge": "Jednorázová platba · Žádné předplatné",
+    "title": "Vše, co uložíte, zůstane ve vašem počítači. <span class=\"accent-text\">Všechno.</span>",
+    "subtitle": "Raindrop uchovává vaše záložky na svých serverech – a každý rok vám účtuje poplatky. BookmarkForge je uchovává ve vašem počítači uzamčené klíčem, který máte pouze vy. Žádné účty. Žádné měsíční poplatky. Nikdo ti nečte přes rameno.",
+    "ctaPrimary": "Vyzkoušejte hned (bez účtu)",
+    "ctaSecondary": "Zobrazit ceník",
+    "pillars": [
+      {
+        "strong": "Soukromé",
+        "text": "vaše uložené stránky nikdy neopustí váš počítač"
+      },
+      {
+        "strong": "Zamčeno",
+        "text": "ani my je neumíme číst"
+      },
+      {
+        "strong": "Mimo síť",
+        "text": "pracuje v letadle, v tunelu, kdekoli"
+      },
+      {
+        "strong": "Zaplaťte jednou",
+        "text": "$59 doživotní přístup v akci early bird (ušetříte $20 před běžnou cenou)"
+      }
+    ],
+    "announce": "⚡ Lokální překlad pomocí AI (již brzy)"
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "Podívejte se, jak to funguje",
+    "title": "Skutečná aplikace, ne maketa",
+    "subtitle": "Žádná registrační zeď, žádná skladová stopáž a žádný falešný kurzor. Tato smyčka je uvolněná sestava na běžné ploše: odemkněte trezor, uložte stránku, prohledejte knihovnu a znovu ji zamkněte.",
+    "imageAlt": "Animovaná smyčka BookmarkForge: odemknutí trezoru, zachycení záložky, prohledání knihovny a její opětovné zamknutí",
+    "caption": "Nahráno z desktopové aplikace s ukázkovými daty. Úplný návod je dodáván s projektem.",
+    "steps": [
+      {
+        "title": "Odemknout",
+        "text": "Trezor se otevře s heslem, které si zvolíte; klíč zůstane na vašem zařízení."
+      },
+      {
+        "title": "Zachyťte",
+        "text": "Uložte si stránku přímo z aplikace – není potřeba žádný účet ani rozšíření."
+      },
+      {
+        "title": "Nalézt",
+        "text": "Hledejte podle klíčového slova nebo významu, přičemž se zobrazí zdroje každé odpovědi."
+      },
+      {
+        "title": "Zámek",
+        "text": "Zavřete trezor a dešifrovací klíč zmizí z paměti."
+      }
+    ],
+    "ctaPrimary": "Vyzkoušejte hned"
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Přečíst později, znovuzrozeno",
+    "title": "Alternativa soukromé kapsy",
+    "subtitle": "Pocket byl uzavřen 8. července 2025.. BookmarkForge udržuje zvyk číst později naživu – každý článek, poznámka a zvýraznění jsou uloženy zašifrovány ve vašem zařízení.",
+    "features": [
+      {
+        "title": "Přečtěte si to později, váš navždy",
+        "text": "Ukládejte články, videa a soubory PDF jedním kliknutím – z PWA, rozšíření prohlížeče nebo nabídky sdílení. Na rozdíl od Pocket váš seznam četby žije ve vašem zařízení, je zašifrován a stále funguje offline."
+      },
+      {
+        "title": "Poznámky ve stylu Notion u každého článku",
+        "text": "Zvýrazněte, shrňte a pořiďte blokové poznámky připojené k jakékoli záložce. Udělejte z uloženého článku svou vlastní znalostní databázi – nejen seznam odkazů."
+      },
+      {
+        "title": "Nulové sledování, nulové reklamy",
+        "text": "BookmarkForge ve výchozím nastavení nemá žádné účty, žádné analýzy a žádné reklamy. Vaše čtenářské návyky nejsou nikoho jiného než vaše."
+      }
+    ],
+    "ctaPrimary": "Vyzkoušejte hned (bez účtu)",
+    "ctaSecondary": "Kompletní průvodce porovnáváním a migrací",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "Prostá slova, žádný marketing",
+    "title": "BookmarkForge vs Raindrop, bez drobného písma",
+    "subtitle": "Raindrop je dobrá aplikace. Velký rozdíl je v tom, kde vaše věci žijí.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Kde váš seznam žije",
+        "us": "Na vašem počítači",
+        "them": "Na jejich serverech"
+      },
+      {
+        "topic": "Kdo může číst, co ušetříte",
+        "us": "Nikdo — zamčený tvým klíčem, dokonce ani my",
+        "them": "Společnost a kdokoli to po nich požaduje"
+      },
+      {
+        "topic": "Bez internetu",
+        "us": "Všechno funguje dál",
+        "them": "Pouze základy"
+      },
+      {
+        "topic": "Co platíte",
+        "us": "$59 doživotní přístup v akci early bird (ušetříte $20 před běžnou cenou)",
+        "them": "28 dolarů každý rok, navždy"
+      },
+      {
+        "topic": "Pokud společnost zmizí (RIP Pocket)",
+        "us": "Nic se nemění – už je to ve vašich rukou",
+        "them": "Exportujete a začnete znovu"
+      },
+      {
+        "topic": "Asistent AI",
+        "us": "Běží uvnitř vašeho počítače v soukromém režimu – nic se nikam neodesílá",
+        "them": "Vaše čtení odejde do cloudu k přemýšlení"
+      }
+    ],
+    "ctaPrimary": "Vyzkoušejte hned (bez účtu)",
+    "ctaSecondary": "Plné kapesní srovnání",
+    "close": "Raindrop je jednodušší a zdarma – pokud je to vše, co potřebujete, používejte jej s radostí. Ale pokud byste raději měli svůj čtenářský život ve vlastních rukou, BookmarkForge je přesně na to stvořena."
+  },
+  "features": {
+    "id": "features",
+    "tag": "Vše, co potřebujete",
+    "title": "Vše, co potřebujete, jednoduchými slovy",
+    "items": [
+      {
+        "title": "Záložky a dokumenty",
+        "text": "Uložte libovolnou stránku jedním kliknutím. Pište poznámky hned vedle, v čistém a jednoduchém editoru. Zůstane rychlý i se 100 000 uloženými položkami."
+      },
+      {
+        "title": "Chytré vyhledávání",
+        "text": "Najděte věci podle klíčových slov nebo podle významu – i když si nepamatujete přesná slova. Raindrop si za to účtuje 28 dolarů ročně; zde je zahrnut zdarma."
+      },
+      {
+        "title": "AI, která čte vaši knihovnu uvnitř vašeho počítače",
+        "text": "Zeptejte se na to, co jste uložili, a získejte odpovědi pomocí zobrazených zdrojů. Nic se neodesílá do cloudu a funguje to bez internetu. Vyžaduje Pro."
+      },
+      {
+        "title": "Chatujte s vlastní knihovnou",
+        "text": "Zeptejte se na cokoliv ohledně vašich záložek a poznámek a získejte citované odpovědi. Soukromý režim běží na vašem počítači na 100 %. Vyžaduje Pro."
+      },
+      {
+        "title": "Synchronizujte mezi svými vlastními zařízeními",
+        "text": "Vaše zařízení spolu mluví přímo – žádný server uprostřed a vše zůstává šifrované. Spárujte je naskenováním QR kódu. Až 5 zařízení. Vyžaduje Pro."
+      },
+      {
+        "title": "Zálohy, které vlastníte",
+        "text": "Automatické zálohování, které můžete mít kdekoli – na externím disku, v cloudové složce, kdekoli. Exportujte vše do Markdown, JSON, CSV nebo PDF, kdykoli budete chtít. Držíš klíče."
+      },
+      {
+        "title": "Mapa vašich znalostí",
+        "text": "Podívejte se, jak se vaše poznámky a záložky propojují. Filtrujte podle značek, dat a podobností a přibližujte nekonečné plátno."
+      },
+      {
+        "title": "Studijní karty, které překonávají zapomínání",
+        "text": "Proměňte jakýkoli uložený dokument na kartičky s otázkami, které se znovu objeví dříve, než na ně zapomenete – stejný plán plánování jako Anki. Vyžaduje Pro."
+      },
+      {
+        "title": "Ve výchozím nastavení soukromé",
+        "text": "Žádné účty, žádné sledování, žádné reklamy. Vy jste zákazník, ne produkt. Sdílení využití existuje, je volitelné a zůstane vypnuté, dokud jej nezapnete."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI, která vás respektuje",
+    "title": "Vaše znalosti, rozšířené",
+    "subtitle": "Spusťte asistenta v počítači – nic z něj neodejde a funguje offline. Preferujete model velkého cloudu? Připojte svůj vlastní klíč: vaše otázky a stránky potřebné k jejich zodpovězení se dostanou k danému poskytovateli na vaše náklady. Vaše výzvy, vaše data, vaše pravidla.",
+    "providers": {
+      "title": "Podporovaní poskytovatelé",
+      "list": [
+        {
+          "type": "local",
+          "name": "Uvnitř počítače — Modely WebLLM (TinyLlama, Llama 3.2, Phi-3.5-mini) — Pouze Pro"
+        },
+        {
+          "type": "local",
+          "name": "Na vašem vlastním počítači — Ollama (jakýkoli model, který provozujete)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Google Gemini (s vlastním klíčem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — OpenAI / GPT-4o (s vlastním klíčem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Antropický Claude (s vlastním klíčem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — Groq (s vlastním klíčem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Cloud — OpenRouter nebo jiný vlastní poskytovatel (s vlastním klíčem)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Režimy chatu",
+      "items": [
+        {
+          "title": "Soukromý režim",
+          "text": "Asistent běží zcela uvnitř vašeho počítače. Nic z něj neodchází a nepotřebuje žádný internet. Vyžaduje Pro."
+        },
+        {
+          "title": "Režim vyhledávání na webu",
+          "text": "Kombinuje vaši knihovnu s živými výsledky z webu (poskytovatelé cloudu)."
+        },
+        {
+          "title": "Odborní agenti",
+          "text": "Specializovaní pomocníci: kodér, spisovatel, analytik a výzkumník. Vyžaduje Pro."
+        }
+      ]
+    },
+    "aiTranslation": {
+      "title": "⚡ Lokální překlad pomocí AI (již brzy)",
+      "text": "Čtěte libovolný článek ve svém rodném jazyce. Překládejte celé dokumenty 100% soukromě ve svém počítači, aniž byste text posílali na cizí cloudové servery. Součástí Pro."
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Soukromí není funkce — je to základ",
+    "subtitle": "Každé architektonické rozhodnutí vám dává kontrolu",
+    "items": [
+      {
+        "title": "Zamčeno, aby si to nikdo nemohl přečíst – ani my",
+        "text": "Vaše knihovna je zašifrována klíčem odvozeným z vašeho hlavního hesla. Nikdy nevidíme vaše heslo ani váš obsah."
+      },
+      {
+        "title": "Uloženo na vašem vlastním zařízení",
+        "text": "Všechno žije ve vašem počítači. Doprovodný server se zabývá pouze licencováním, párováním zařízení a předáváním vašich otázek AI v cloudovém režimu – nikdy ne vašeho obsahu."
+      },
+      {
+        "title": "Ve výchozím nastavení žádné sledování",
+        "text": "Žádné analýzy, žádné zprávy o selhání, žádné sledování. Sdílení statistik využití nebo chybových zpráv je samostatná volba, ve výchozím nastavení vypnutá."
+      },
+      {
+        "title": "Držíš klíče",
+        "text": "Žádné hlavní heslo neznamená žádný přístup – neexistuje žádná zadní vrátka „zapomenuté heslo“. Vaše 24slovná obnovovací fráze je jedinou cestou dovnitř; držte to v bezpečí."
+      },
+      {
+        "title": "Vaše práva, respektována",
+        "text": "Získejte přístup, opravte, vymažte nebo vezměte svá data s sebou – to vše lze provést lokálně, kdykoli budete chtít."
+      },
+      {
+        "title": "Žádné uzamčení",
+        "text": "Exportujte svá data kdykoli v otevřených formátech (JSON, Markdown, CSV, PDF). Vaše znalosti zůstanou vaše a přenosné."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Jednoduché, spravedlivé ceny – žádné předplatné",
+    "subtitle": "Zdarma 300 záložek navždy. Pro je doživotní licence pro verzi 1 – zaplaťte jednou, vlastníte verzi 1 navždy. Zahrnuje všechny aktualizace v1.x a 12 měsíců aktualizací funkcí. Aktualizace zabezpečení navždy. Žádné měsíční vyúčtování.",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "$ 0",
+        "period": "/navždy",
+        "description": "Pro osobní archiv (300 záložek, funguje na jakémkoli zařízení — každé má svůj trezor)",
+        "features": [
+          {
+            "included": true,
+            "text": "300 záložek, poznámek a dokumentů"
+          },
+          {
+            "included": true,
+            "text": "Chytré vyhledávání (plnotextové + sémantické) — zdarma; Raindrop za něj účtuje roční předplatné"
+          },
+          {
+            "included": true,
+            "text": "AI s vaším API klíčem (vy platíte poskytovateli)"
+          },
+          {
+            "included": true,
+            "text": "Graf znalostí"
+          },
+          {
+            "included": true,
+            "text": "Základní šablony"
+          },
+          {
+            "included": true,
+            "text": "Export JSON/HTML"
+          },
+          {
+            "included": true,
+            "text": "PWA + prohlížečová rozšíření"
+          },
+          {
+            "included": false,
+            "text": "P2P synchronizace mezi zařízeními"
+          },
+          {
+            "included": false,
+            "text": "Místní AI (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "RAG chat nad vašimi daty"
+          },
+          {
+            "included": false,
+            "text": "Flashcards s spaced repetition"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": false,
+            "text": "Lokální překlad pomocí AI (již brzy)"
+          }
+        ],
+        "cta": "Vyzkoušejte hned",
+        "ctaHref": "/app",
+        "ctaClass": "btn-sekundární"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "badge": "Nejoblíbenější — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (pak 79 $)",
+        "description": "Životnost v1 · 12měsíční aktualizace funkcí · Zabezpečení navždy · v2 60% sleva",
+        "features": [
+          {
+            "included": true,
+            "text": "Vše zdarma"
+          },
+          {
+            "included": true,
+            "text": "Neomezené záložky"
+          },
+          {
+            "included": true,
+            "text": "5 zařízení · P2P synchronizace přes 5 zařízení"
+          },
+          {
+            "included": true,
+            "text": "Lokální modely AI (WebLLM, bez klíče API) · RAG chat"
+          },
+          {
+            "included": true,
+            "text": "Expertní agenti (kodér, spisovatel, analytik, výzkumník)"
+          },
+          {
+            "included": true,
+            "text": "Kartičky s opakováním s mezerami · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Pokročilý export (10+ formátů) · Šifrované zálohy"
+          },
+          {
+            "included": true,
+            "text": "Bezpečnostní trezor (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Životnost v1 · 12 měsíců aktualizací funkcí"
+          },
+          {
+            "included": true,
+            "text": "Aktualizace zabezpečení navždy"
+          },
+          {
+            "included": true,
+            "text": "E-mailová podpora (48 hodin) + časný přístup"
+          },
+          {
+            "included": true,
+            "text": "Lokální překlad pomocí AI (již brzy)"
+          }
+        ],
+        "cta": "Získejte Pro $ 59 Early Bird",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primární",
+        "priceWas": "$79",
+        "priceSub": "pak 79 $ běžných",
+        "sla": "Podpora: E-mail 48 hodin (Po–Pá)",
+        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
+        "cta2": "Získat Pro $79 Regular",
+        "cta2Class": "btn-secondary"
+      }
+    ],
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-cs#pricing\">Learn more</a>"
+  },
+  "faq": {
+    "title": "Běžné otázky",
+    "items": [
+      {
+        "question": "Je úroveň zdarma skutečně navždy zdarma?",
+        "answer": "Ano. Žádná zkušební verze, žádné předplatné. Bezplatná úroveň zahrnuje 300 záložek, fulltextové a sémantické vyhledávání, graf znalostí a AI s vaším vlastním API klíčem (platíte poskytovateli)."
+      },
+      {
+        "question": "Co znamená „Lifetime of v1“ pro Pro?",
+        "answer": "Zaplaťte jednou, vlastnte v1 navždy. Zahrnuje všechny aktualizace v1.x (opravy chyb + drobné funkce) navždy a 12 měsíců aktualizací funkcí od zakoupení. Aktualizace zabezpečení navždy. Po 13. měsíci zůstane v1 funkční, jen bez nových funkcí. Budoucí hlavní verze (v2, v3) jsou samostatné produkty: 89 USD pro nové zákazníky, 35 USD pro vlastníky verze 1 (60% sleva)."
+      },
+      {
+        "question": "Jaké platební metody a refundace?",
+        "answer": "Přes Whop: kreditní karta, PayPal, krypto. Nikdy nevidíme vaše platební údaje. 30denní vrácení peněz – kontaktujte <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
+      },
+      {
+        "question": "Podpora – jak rychle odpovídáte?",
+        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help-cs#sla\">Support SLA</a>."
+      },
+      {
+        "question": "Co když zapomenu heslo k trezoru?",
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-cs#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Jste připraveni vlastnit své znalosti?",
+    "text": "Připojte se k tisícům výzkumníků, vývojářů a studentů, kteří BookmarkForge důvěřují svým druhým mozkem.",
+    "ctaPrimary": "Vyzkoušejte hned (bez účtu)",
+    "ctaSecondary": "Upgradujte na Pro",
+    "note": "Není vyžadován žádný účet. Funguje okamžitě ve vašem prohlížeči. Volná úroveň: 300 záložek."
+  },
+  "footer": {
+    "brand": "Váš soukromý trezor znalostí poháněný umělou inteligencí. 100% místní-první.",
+    "product": {
+      "title": "Produkt",
+      "links": [
+        "Vlastnosti",
+        "Schopnosti AI",
+        "Soukromí",
+        "Ceny",
+        "Vyzkoušejte hned"
+      ],
+      "hrefs": [
+        "/#vlastnosti",
+        "/#ai",
+        "/#soukromí",
+        "/#cena",
+        "/app"
+      ]
+    },
+    "resources": {
+      "title": "Zdroje",
+      "links": [
+        "Kapesní srovnání",
+        "Ochrana osobních údajů a podmínky"
+      ],
+      "hrefs": [
+        "/kapesni-alternativa.html",
+        "/privacy-and-terms.html"
+      ]
+    },
+    "languages": {
+      "title": "Jazyky",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Podpora",
+      "links": [
+        "Kontakt"
+      ],
+      "helpCenter": "Centrum nápovědy",
+      "errorCodes": "Chybové kódy"
+    },
+    "copyright": "© 2026 BookmarkForge. Všechna práva vyhrazena.",
+    "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
+    "legal": [
+      "Zásady ochrany osobních údajů",
+      "Podmínky služby",
+      "bookmarkforge@proton.me"
+    ]
+  }
+}

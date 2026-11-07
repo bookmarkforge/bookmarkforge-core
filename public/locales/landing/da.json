@@ -1,0 +1,513 @@
+{
+  "lang": "da",
+  "langName": "Dansk",
+  "dir": "ltr",
+  "title": "BookmarkForge: privat local-first bogmærkehåndtering med læseliste",
+  "description": "Raindrop gemmer dine bogmærker på deres servere. BookmarkForge gemmer dem på din computer — låst, så selv vi ikke kan læse dem. Betal én gang: $59 early bird livstidsadgang (spar $20 før normalpris). Free: 300 bogmærker.",
+  "ogTitle": "BookmarkForge: privat local-first bogmærkehåndtering med læseliste",
+  "ogDescription": "Raindrop gemmer dine bogmærker på deres servere. BookmarkForge gemmer dem på din computer — låst, så selv vi ikke kan læse dem. Betal én gang: $59 early bird livstidsadgang (spar $20 før normalpris). Free: 300 bogmærker.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImageAlt": "BookmarkForge - privat AI-drevet bogmærke- og noteapp",
+  "twitterTitle": "BookmarkForge: privat local-first bogmærkehåndtering med læseliste",
+  "twitterDescription": "Raindrop gemmer dine bogmærker på deres servere. BookmarkForge gemmer dem på din computer — låst, så selv vi ikke kan læse dem. Betal én gang: $59 early bird livstidsadgang (spar $20 før normalpris). Free: 300 bogmærker.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Gå til hovedindhold",
+  "navBrandAria": "BookmarkForge-hjem",
+  "navAriaLabel": "Hovednavigation",
+  "navLinks": {
+    "pocketAlternative": "Pocket-alternativ",
+    "features": "Funktioner",
+    "ai": "AI",
+    "privacy": "Privatliv",
+    "pricing": "Priser",
+    "help": "Hjælp",
+    "raindropCompare": "Raindrop-sammenligning"
+  },
+  "navCta": "Prøv det med det samme (ingen konto)",
+  "themeToggleAria": "Skift tema",
+  "navToggleAria": "Åbn menu",
+  "navToggleAriaClose": "Luk menu",
+  "languageToggleAria": "Skift sprog",
+  "githubAria": "Giv BookmarkForge en stjerne på GitHub",
+  "hero": {
+    "badge": "Én betaling · Intet abonnement",
+    "title": "Alt du gemmer bliver på din computer. <span class=\"accent-text\">Alt.</span>",
+    "subtitle": "Raindrop gemmer dine bogmærker på deres servere — og opkræver dig hvert år. BookmarkForge gemmer dem på din computer, låst med en nøgle, som kun du har. Ingen konti. Ingen månedlige gebyrer. Ingen der lurer over din skulder.",
+    "ctaPrimary": "Prøv det med det samme (ingen konto)",
+    "ctaSecondary": "Se priser",
+    "pillars": [
+      {
+        "strong": "Privat",
+        "text": "dine gemte sider forlader aldrig din computer"
+      },
+      {
+        "strong": "Låst",
+        "text": "selv vi kan ikke læse dem"
+      },
+      {
+        "strong": "Uden forbindelse",
+        "text": "fungerer i flyet, i en tunnel, overalt"
+      },
+      {
+        "strong": "Betal én gang",
+        "text": "$59 early bird livstidsadgang (spar $20 før normalpris)"
+      }
+    ],
+    "announce": "⚡ Lokal AI-oversættelse (kommer snart)"
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "Se den virke",
+    "title": "Den rigtige app, ikke en mockup",
+    "subtitle": "Ingen tilmelingsvæg, ingen lagerbilleder og ingen falsk markør. Sløjfen er den udgivne version på en almindelig computer: lås vaulten op, gem en side, søg i biblioteket og lås den igen.",
+    "imageAlt": "Animeret sløjfe af BookmarkForge: låser vaulten op, gemmer et bogmærke, søger i biblioteket og låser den igen",
+    "caption": "Optaget fra desktopappen med demodata. Den fulde gennemgang følger med projektet.",
+    "steps": [
+      {
+        "title": "Lås op",
+        "text": "Vaulten åbnes med en adgangskode, du selv vælger; nøglen bliver på din enhed."
+      },
+      {
+        "title": "Gem",
+        "text": "Gem en side direkte fra appen — hverken konto eller udvidelse er nødvendige."
+      },
+      {
+        "title": "Søg",
+        "text": "Søg på nøgleord eller betydning, og kilden til hvert svar vises."
+      },
+      {
+        "title": "Lås",
+        "text": "Luk vaulten, og dekrypteringsnøglen er væk fra hukommelsen."
+      }
+    ],
+    "ctaPrimary": "Prøv det med det samme"
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Læs-senere-genfødt",
+    "title": "Det private Pocket-alternativ",
+    "subtitle": "Pocket lukkede 8. juli 2025.. BookmarkForge holder liv i læs-senere-vanen — med alle artikler, noter og markeringer krypteret lagret på din enhed.",
+    "features": [
+      {
+        "title": "Læs det senere — for evigt",
+        "text": "Gem artikler, videoer og PDF'er med ét klik — fra PWA'en, browserudvidelsen eller delingsmenuen. I modsætning til Pocket ligger din læseliste krypteret på din enhed og virker stadig offline."
+      },
+      {
+        "title": "Notion-lignende noter på alle artikler",
+        "text": "Markér, opsummér og tag blokbaserede noter på ethvert bogmærke. Gør en gemt artikel til din egen vidensbase — ikke bare en liste med links."
+      },
+      {
+        "title": "Ingen tracking, ingen annoncer",
+        "text": "BookmarkForge har ingen konti, ingen analyse og ingen annoncer som standard. Dine læsevaner er ingen andres sag end din."
+      }
+    ],
+    "ctaPrimary": "Prøv det med det samme (ingen konto)",
+    "ctaSecondary": "Fuld sammenligning og migreringsguide",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "Klar tale, intet marketing",
+    "title": "BookmarkForge vs Raindrop, uden det små print",
+    "subtitle": "Raindrop er en god app. Den store forskel er, hvor dine ting ligger.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Hvor din liste ligger",
+        "us": "På din computer",
+        "them": "På deres servere"
+      },
+      {
+        "topic": "Hvem kan læse det, du gemmer",
+        "us": "Ingen — låst med din nøgle, ikke engang vi",
+        "them": "Virksomheden og alle, der kræver det af dem"
+      },
+      {
+        "topic": "Uden internet",
+        "us": "Alt bliver ved med at virke",
+        "them": "Kun det basale"
+      },
+      {
+        "topic": "Hvad du betaler",
+        "us": "$59 early bird livstidsadgang (spar $20 før normalpris)",
+        "them": "28 dollar hvert år, for evigt"
+      },
+      {
+        "topic": "Hvis virksomheden forsvinder (RIP Pocket)",
+        "us": "Intet ændres — det ligger allerede i dine hænder",
+        "them": "Du eksporterer og starter forfra"
+      },
+      {
+        "topic": "AI-assistenten",
+        "us": "Kører inde i din computer i privat tilstand — intet sendes nogen steder hen",
+        "them": "Din læsning sendes ud i skyen for at tænke"
+      }
+    ],
+    "ctaPrimary": "Prøv det med det samme (ingen konto)",
+    "ctaSecondary": "Fuld Pocket-sammenligning",
+    "close": "Raindrop er enklere og gratis — hvis det er alt, du har brug for, så brug det gerne. Men vil du hellere holde dit læseliv i egne hænder, er BookmarkForge bygget netop til det."
+  },
+  "features": {
+    "id": "features",
+    "tag": "Alt du har brug for",
+    "title": "Alt du har brug for, i klare ord",
+    "items": [
+      {
+        "title": "Bogmærker og dokumenter",
+        "text": "Gem enhver side med ét klik. Skriv noter lige ved siden af den i en ren, enkel editor. Forbliver hurtig selv med 100,000 gemte elementer."
+      },
+      {
+        "title": "Intelligent søgning",
+        "text": "Find ting på nøgleord eller betydning — selv når du ikke kan huske de præcise ord. Raindrop opkræver 28 dollar om året for det; her er det gratis med."
+      },
+      {
+        "title": "En AI, der læser dit bibliotek, inde i din computer",
+        "text": "Stil spørgsmål om det, du har gemt, og få svar med kilderne vist. Intet sendes til skyen, og det virker uden internet. Kræver Pro."
+      },
+      {
+        "title": "Chat med dit eget bibliotek",
+        "text": "Spørg om hvad som helst i dine bogmærker og noter, og få svar med henvisninger. Den private tilstand kører 100% på din egen maskine. Kræver Pro."
+      },
+      {
+        "title": "Synkronisering mellem dine egne enheder",
+        "text": "Dine enheder taler direkte sammen — ingen server imellem, og alt forbliver krypteret. Par dem ved at scanne en QR-kode. Op til 5 enheder. Kræver Pro."
+      },
+      {
+        "title": "Sikkerhedskopier, du ejer",
+        "text": "Automatiske sikkerhedskopier, du kan opbevare hvor som helst — en ekstern harddisk, en skymappe, overalt. Eksportér alt til Markdown, JSON, CSV eller PDF, når du vil. Nøglerne er dine."
+      },
+      {
+        "title": "Et kort over din viden",
+        "text": "Se, hvordan dine noter og bogmærker hænger sammen. Filtrer på tags, datoer og lighed, og zoom rundt på et uendeligt lærred."
+      },
+      {
+        "title": "Læringskort, der slår glemsel",
+        "text": "Genhvert gemt dokument til spørgsmålskort, der dukker op lige inden du ville glemme dem — samme princip som Anki. Kræver Pro."
+      },
+      {
+        "title": "Privat som standard",
+        "text": "Ingen konti, ingen tracking, ingen annoncer. Du er kunden, ikke produktet. Deling af brugsdata findes, men er valgfri og slået fra, indtil du tænder den."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI, der respekterer dig",
+    "title": "Din viden, forstærket",
+    "subtitle": "Kør assistenten inde i din computer — intet forlader den, og den virker offline. Foretrækker du en stor cloudmodel? Tilslut din egen nøgle: dine spørgsmål og de sider, der skal bruges til at svare, sendes til den udbyder, på din egen regning. Dine prompts, dine data, dine regler.",
+    "providers": {
+      "title": "Understøttede udbydere",
+      "list": [
+        {
+          "type": "local",
+          "name": "Inde i din computer — WebLLM-modeller (TinyLlama, Llama 3.2, Phi-3.5-mini) — kun Pro"
+        },
+        {
+          "type": "local",
+          "name": "På din egen maskine — Ollama (enhver model, du kører)"
+        },
+        {
+          "type": "cloud",
+          "name": "Sky — Google Gemini (med din egen nøgle)"
+        },
+        {
+          "type": "cloud",
+          "name": "Sky — OpenAI / GPT-4o (med din egen nøgle)"
+        },
+        {
+          "type": "cloud",
+          "name": "Sky — Anthropic Claude (med din egen nøgle)"
+        },
+        {
+          "type": "cloud",
+          "name": "Sky — Groq (med din egen nøgle)"
+        },
+        {
+          "type": "cloud",
+          "name": "Sky — OpenRouter eller en anden tilpasset udbyder (med din egen nøgle)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Chattemodi",
+      "items": [
+        {
+          "title": "Privat tilstand",
+          "text": "Assistenten kører udelukkende inde i din computer. Intet forlader den, og den kræver ikke internet. Kræver Pro."
+        },
+        {
+          "title": "Websøgningstilstand",
+          "text": "Kombinerer dit bibliotek med aktuelle resultater fra nettet (cloududbydere)."
+        },
+        {
+          "title": "Ekspertagenter",
+          "text": "Specialiserede hjælpere: Coder, Writer, Analyst og Researcher. Kræver Pro."
+        }
+      ]
+    },
+    "aiTranslation": {
+      "title": "⚡ Lokal AI-oversættelse (kommer snart)",
+      "text": "Læs enhver artikel på dit modersmål. Oversæt hele dokumenter 100 % privat på din computer uden at sende teksten til eksterne cloudservere. Inkluderet i Pro."
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Privatliv er ikke en funktion — det er fundamentet",
+    "subtitle": "Hver arkitekturbeslutning giver dig kontrollen",
+    "items": [
+      {
+        "title": "Låst, så ingen kan læse det — ikke engang vi",
+        "text": "Dit bibliotek krypteres med en nøgle, der udledes af din hovedadgangskode. Vi ser aldrig din adgangskode eller dit indhold."
+      },
+      {
+        "title": "Lagret på din egen enhed",
+        "text": "Alt lever på din computer. Companion-serveren håndter kun licenser, enhedspairing og videresendelse af dine AI-spørgsmål i cloud-tilstand — aldrig dit indhold."
+      },
+      {
+        "title": "Ingen tracking som standard",
+        "text": "Ingen analyse, ingen crashrapporter, ingen tracking. Deling af brugsstatistik eller fejlrapper er et separat valg, slået fra som standard."
+      },
+      {
+        "title": "Nøglerne er dine",
+        "text": "Ingen hovedadgangskode betyder ingen adgang — der findes ingen \"glemt adgangskode\"-bagdør. Din 24-ords genopretningssætning er den eneste vej ind; hold den i sikkerhed."
+      },
+      {
+        "title": "Dine rettigheder, respekteret",
+        "text": "Få adgang til, ret, slet eller tag dine data med dig — alt kan gøres lokalt, når du vil."
+      },
+      {
+        "title": "Ingen låsning",
+        "text": "Eksportér dine data når som helst i åbne formater (JSON, Markdown, CSV, PDF). Din viden forbliver din og kan flyttes."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Simple, fair prissætning — intet abonnement",
+    "subtitle": "300 bogmærker gratis for evigt. Pro er en Lifetime-licens til v1 — betal én gang, og v1 er din for evigt. Alle v1.x-opdateringer og 12 måneders funktionsopdateringer er inkluderet. Sikkerhedsopdateringer for evigt. Ingen månedlig fakturering.",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "$ 0",
+        "period": "/for evigt",
+        "description": "Til personligt arkiv (300 bogmærker, virker på enhver enhed — hver har sit eget valv)",
+        "features": [
+          {
+            "included": true,
+            "text": "300 bogmærker, notater og dokumenter"
+          },
+          {
+            "included": true,
+            "text": "Smart søgning (fuldtekst + semantisk) — inkluderet gratis; Raindrop opkræver årligt betaling for dette"
+          },
+          {
+            "included": true,
+            "text": "AI med din egen API-nøgle (du betaler udbyderen)"
+          },
+          {
+            "included": true,
+            "text": "Vidensgraf"
+          },
+          {
+            "included": true,
+            "text": "Grundlæggende skabeloner"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML-eksport"
+          },
+          {
+            "included": true,
+            "text": "PWA + browserudvidelser"
+          },
+          {
+            "included": false,
+            "text": "P2P-synkronisering mellem enheder"
+          },
+          {
+            "included": false,
+            "text": "Lokal AI (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "RAG-chat over dine data"
+          },
+          {
+            "included": false,
+            "text": "Flashcards med spaced repetition"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": false,
+            "text": "Lokal AI-oversættelse (kommer snart)"
+          }
+        ],
+        "cta": "Prøv det med det samme",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "badge": "Mest populære — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (derefter $79)",
+        "description": "Lifetime of v1 · 12 måneders funktionsopdateringer · Sikkerhed for evigt · v2 60% rabat",
+        "features": [
+          {
+            "included": true,
+            "text": "Alt i Free"
+          },
+          {
+            "included": true,
+            "text": "Ubegrænsede bogmærker"
+          },
+          {
+            "included": true,
+            "text": "5 enheder · P2P-synkronisering på tværs af 5 enheder"
+          },
+          {
+            "included": true,
+            "text": "Lokale AI-modeller (WebLLM, ingen API-nøgle) · RAG-chat"
+          },
+          {
+            "included": true,
+            "text": "Ekspertagenter (Coder, Writer, Analyst, Researcher)"
+          },
+          {
+            "included": true,
+            "text": "Flashcards med fordelt gentagelse · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Avanceret eksport (10+ formater) · Krypterede sikkerhedskopier"
+          },
+          {
+            "included": true,
+            "text": "Sikkerhedsvault (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Lifetime of v1 · 12 måneders funktionsopdateringer"
+          },
+          {
+            "included": true,
+            "text": "Sikkerhedsopdateringer for evigt"
+          },
+          {
+            "included": true,
+            "text": "E-mail-support (48t) + tidlig adgang"
+          },
+          {
+            "included": true,
+            "text": "Lokal AI-oversættelse (kommer snart)"
+          }
+        ],
+        "cta": "Få Pro $59 Early Bird",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "derefter $79 normalpris",
+        "sla": "Support: E-mail 48t (man–fre)",
+        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
+        "cta2": "Få Pro $79 Regular",
+        "cta2Class": "btn-secondary"
+      }
+    ],
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-da#pricing\">Learn more</a>"
+  },
+  "faq": {
+    "title": "Ofte stillede spørgsmål",
+    "items": [
+      {
+        "question": "Er Free-trinnet virkelig gratis for evigt?",
+        "answer": "Ja. Ingen prøveperiode, intet abonnement. Det gratis niveau indeholder 300 bogmærker, fuldtekst- og semantisk søgning, vidensgraf og AI med din egen API-nøgle (du betaler udbyderen)."
+      },
+      {
+        "question": "Hvad betyder \"Lifetime of v1\" for Pro?",
+        "answer": "Betal én gang, og v1 er din for evigt. Alle v1.x-opdateringer (fejlrettelser + mindre funktioner) er inkluderet for evigt og 12 måneders funktionsopdateringer fra købsdatoen. Sikkerhedsopdateringer for evigt. Efter måned 13 fungerer v1 stadig, men uden nye funktioner. Fremtidige større versioner (v2, v3) er separate produkter: $89 for nye kunder, $35 for v1-ejere (60% rabat)."
+      },
+      {
+        "question": "Hvilke betalingsmetoder og refusioner?",
+        "answer": "Via Whop: kreditkort, PayPal, krypto. Vi ser aldrig dine betalingsoplysninger. 30 dages refusion — kontakt <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
+      },
+      {
+        "question": "Support — hvor hurtigt svarer I?",
+        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help-da#sla\">Support SLA</a>."
+      },
+      {
+        "question": "Hvad nu hvis jeg glemmer min vault-adgangskode?",
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-da#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Klar til at eje din viden?",
+    "text": "Bliv en af tusindvis af forskere, udviklere og studerende, der stoler på BookmarkForge med deres anden hjerne.",
+    "ctaPrimary": "Prøv det med det samme (ingen konto)",
+    "ctaSecondary": "Opgradér til Pro",
+    "note": "Ingen konto nødvendig. Virker med det samme i din browser. Gratis niveau: 300 bogmærker."
+  },
+  "footer": {
+    "brand": "Din private, AI-drevne vidensvault. 100% Local-First.",
+    "product": {
+      "title": "Produkt",
+      "links": [
+        "Funktioner",
+        "AI-funktioner",
+        "Privatliv",
+        "Priser",
+        "Prøv det med det samme"
+      ],
+      "hrefs": [
+        "/#features",
+        "/#ai",
+        "/#privacy",
+        "/#pricing",
+        "/app"
+      ]
+    },
+    "resources": {
+      "title": "Ressourcer",
+      "links": [
+        "Pocket-sammenligning",
+        "Privatliv og vilkår"
+      ],
+      "hrefs": [
+        "/pocket-alternative.html",
+        "/privacy-and-terms.html"
+      ]
+    },
+    "languages": {
+      "title": "Sprog",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Støtte",
+      "links": [
+        "Kontakt"
+      ],
+      "helpCenter": "Hjælpecenter",
+      "errorCodes": "Fejlkoder"
+    },
+    "copyright": "© 2026 BookmarkForge. Alle rettigheder forbeholdes.",
+    "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
+    "legal": [
+      "Privatlivspolitik",
+      "Servicevilkår",
+      "bookmarkforge@proton.me"
+    ]
+  }
+}

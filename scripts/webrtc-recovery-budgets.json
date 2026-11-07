@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "policy": "informative",
+  "description": "Graded WebRTC recovery budgets. Tier boundaries are advisory review signals, not gates: no CI step fails on amber or red yet. The tiers exist so a regression trend is visible in the nightly summary, the PR comment and the trend chart before anyone promotes a hard gate.",
+  "metrics": {
+    "recoveryMs": {
+      "label": "Recovery latency (interruption → converged retry)",
+      "green": 500,
+      "amber": 1000,
+      "red": 2000
+    },
+    "interruptionObservedMs": {
+      "label": "Time until the interruption is observed",
+      "green": 1000,
+      "amber": 3000,
+      "red": 8000
+    },
+    "completionMs": {
+      "label": "Time until the retried session completes",
+      "green": 2000,
+      "amber": 5000,
+      "red": 10000
+    }
+  }
+}

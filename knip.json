@@ -1,0 +1,43 @@
+{
+  "$schema": "https://raw.githubusercontent.com/webpro/knip/main/schema.json",
+  "entry": [
+    "src/App.tsx",
+    "app.html",
+    "scripts/**/*.{mjs,cjs,js}",
+    "src/modules/translation/index.ts"
+  ],
+  "project": ["src/**/*.{ts,tsx}", "server/src/**/*.ts", "api/**/*.ts"],
+  "ignore": [
+    "**/*.test.{ts,tsx}",
+    "**/*.spec.{ts,tsx}",
+    "src/tests/**",
+    "tests/**",
+    "server/**"
+  ],
+  "ignoreDependencies": [
+    "eslint-plugin-react-compiler",
+    "glob",
+    "lint-staged",
+    "node-fetch",
+    "rollup",
+    "tailwindcss",
+    "xml2js",
+    "buffer",
+  ],
+  "ignoreBinaries": [
+    "vercel",
+    "netstat"
+  ],
+  "rules": {
+    "unlisted": "error",
+    "unresolved": "error",
+    "exports": "error",
+    "types": "error",
+    "enumMembers": "error",
+    "dependencies": "error",
+    "files": "error",
+    "nsExports": "error",
+    "nsTypes": "error",
+    "duplicates": "off"
+  }
+}

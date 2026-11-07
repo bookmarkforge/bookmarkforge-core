@@ -1,0 +1,24 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    // Production-only strict gate: noUncheckedIndexedAccess is enforced on
+    // the src/ production tree while the test files (excluded below) are
+    // left out of this check. The base tsconfig.json also carries the flag;
+    // this config is the low-churn alternative for fast, isolated
+    // verification of production code only (npm run typecheck:prod).
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "dist-extension",
+    "extension",
+    "src/tests",
+    "src/db/__tests__",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx"
+  ]
+}

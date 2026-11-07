@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "fileCount": 412,
+  "total": 5,
+  "fileTotal": 4,
+  "perFile": {
+    "scripts/audit-core.mjs": 1,
+    "scripts/check-documented-doc-references.mjs": 1,
+    "scripts/generate-pdf-localized.mjs": 1,
+    "scripts/og-image-locale-gen.mjs": 2
+  },
+  "scope": "bc6e6b106c7aaad6670f07f8bab2422a0f98bdd4"
+}

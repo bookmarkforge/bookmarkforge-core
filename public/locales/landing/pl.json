@@ -1,0 +1,513 @@
+{
+  "lang": "pl",
+  "langName": "Polski",
+  "dir": "ltr",
+  "title": "BookmarkForge: prywatny lokalny menedżer zakładek z listą do przeczytania",
+  "description": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. Jedna płatność: $59 dostęp na zawsze w cenie early bird (oszczędzasz $20 przed ceną regularną). Free: 300 zakładek.",
+  "ogTitle": "BookmarkForge: prywatny lokalny menedżer zakładek z listą do przeczytania",
+  "ogDescription": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. Jedna płatność: $59 dostęp na zawsze w cenie early bird (oszczędzasz $20 przed ceną regularną). Free: 300 zakładek.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImageAlt": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. 59 dolarów raz. Free: 300 zakładek.",
+  "twitterTitle": "BookmarkForge: prywatny lokalny menedżer zakładek z listą do przeczytania",
+  "twitterDescription": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. Jedna płatność: $59 dostęp na zawsze w cenie early bird (oszczędzasz $20 przed ceną regularną). Free: 300 zakładek.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Przejdź do treści głównej",
+  "navBrandAria": "Strona główna BookmarkForge",
+  "navAriaLabel": "Główna nawigacja",
+  "navLinks": {
+    "pocketAlternative": "Alternatywa dla Pocket",
+    "features": "Funkcje",
+    "ai": "AI",
+    "privacy": "Prywatność",
+    "pricing": "Cennik",
+    "help": "Pomoc",
+    "raindropCompare": "Porównanie z Raindrop"
+  },
+  "navCta": "Wypróbuj od razu (bez konta)",
+  "themeToggleAria": "Przełącz motyw",
+  "navToggleAria": "Otwórz menu",
+  "navToggleAriaClose": "Zamknij menu",
+  "languageToggleAria": "Zmień język",
+  "githubAria": "Dodaj gwiazdkę BookmarkForge na GitHubie",
+  "hero": {
+    "badge": "Jednorazowa opłata · Bez subskrypcji",
+    "title": "Wszystko, co zapisujesz, zostaje na Twoim komputerze. <span class=\"accent-text\">Wszystko.</span>",
+    "subtitle": "Raindrop trzyma Twoje zakładki na swoich serwerach — i każdego roku każe płacić. BookmarkForge trzyma je na Twoim komputerze, zamknięte kluczem, który masz tylko Ty. Bez kont. Bez opłat miesięcznych. Bez nikogo, kto zagląda Ci przez ramię.",
+    "ctaPrimary": "Wypróbuj od razu (bez konta)",
+    "ctaSecondary": "Zobacz cennik",
+    "pillars": [
+      {
+        "strong": "Prywatność",
+        "text": "Twoje zapisane strony nigdy nie opuszczają Twojego komputera"
+      },
+      {
+        "strong": "Zamknięte kluczem",
+        "text": "nawet my nie odczytamy Twoich zakładek"
+      },
+      {
+        "strong": "Bez sieci",
+        "text": "działa w samolocie, w tunelu, wszędzie"
+      },
+      {
+        "strong": "Zapłać raz",
+        "text": "$59 dostęp na zawsze w cenie early bird (oszczędzasz $20 przed ceną regularną)"
+      }
+    ],
+    "announce": "⚡ Lokalne tłumaczenie AI (wkrótce)"
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "Zobacz, jak działa",
+    "title": "Prawdziwa aplikacja, a nie makieta",
+    "subtitle": "Żadnej ściany rejestracji, żadnych materiałów stockowych i żadnego udawanego kursora. To pętla z wydanej wersji na zwykłym komputerze: odblokuj sejf, zapisz stronę, przeszukaj bibliotekę i zablokuj go ponownie.",
+    "imageAlt": "Animowana pętla BookmarkForge: odblokowanie sejfu, zapisanie zakładki, przeszukanie biblioteki i ponowne zablokowanie",
+    "caption": "Nagrane w aplikacji na komputer z danymi demonstracyjnymi. Pełne przejście przez wszystkie kroki jest częścią projektu.",
+    "steps": [
+      {
+        "title": "Odblokuj",
+        "text": "Sejf otwiera się hasłem, które sam wybierasz; klucz zostaje na Twoim urządzeniu."
+      },
+      {
+        "title": "Zapisz",
+        "text": "Zapisz stronę prosto z aplikacji — bez konta i bez rozszerzenia."
+      },
+      {
+        "title": "Znajdź",
+        "text": "Szukaj po słowie kluczowym albo po znaczeniu, zawsze ze źródłami każdej odpowiedzi."
+      },
+      {
+        "title": "Zablokuj",
+        "text": "Zamknij sejf, a klucz deszyfrowania znika z pamięci."
+      }
+    ],
+    "ctaPrimary": "Wypróbuj od razu"
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Czytanie później, od nowa",
+    "title": "Prywatna alternatywa dla Pocket",
+    "subtitle": "Pocket został zamknięty 8 lipca 2025.. BookmarkForge podtrzymuje nawyk czytania później — z każdym artykułem, notatką i zaznaczeniem zapisanym na Twoim urządzeniu w postaci zaszyfrowanej.",
+    "features": [
+      {
+        "title": "Czytaj później, na zawsze Twoje",
+        "text": "Zapisuj artykuły, filmy i PDF-y jednym kliknięciem — z PWA, rozszerzenia przeglądarki albo menu udostępniania. W przeciwieństwie do Pocket Twoja lista leży na Twoim urządzeniu, zaszyfrowana, i działa dalej bez internetu."
+      },
+      {
+        "title": "Notatki w stylu Notion przy każdym artykule",
+        "text": "Zaznaczaj, streszczaj i rób notatki blokowe dołączone do dowolnej zakładki. Zamień zapisany artykuł we własną bazę wiedzy — a nie tylko listę linków."
+      },
+      {
+        "title": "Zero śledzenia, zero reklam",
+        "text": "BookmarkForge nie ma kont, analityki ani reklam. Twoje nawyki czytania nie są niczyją sprawą poza Twoją."
+      }
+    ],
+    "ctaPrimary": "Wypróbuj od razu (bez konta)",
+    "ctaSecondary": "Pełne porównanie i przewodnik migracji",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "Proste słowa, bez marketingu",
+    "title": "BookmarkForge a Raindrop, bez drobnego druku",
+    "subtitle": "Raindrop to dobra aplikacja. Największa różnica polega na tym, gdzie mieszkają Twoje rzeczy.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Gdzie mieszka Twoja lista",
+        "us": "Na Twoim komputerze",
+        "them": "Na ich serwerach"
+      },
+      {
+        "topic": "Kto może czytać to, co zapisujesz",
+        "us": "Nikt — zamknięte Twoim kluczem, nawet nie my",
+        "them": "Firma i każdy, kto jej zażąda"
+      },
+      {
+        "topic": "Bez internetu",
+        "us": "Wszystko działa dalej",
+        "them": "Tylko podstawy"
+      },
+      {
+        "topic": "Co płacisz",
+        "us": "$59 dostęp na zawsze w cenie early bird (oszczędzasz $20 przed ceną regularną)",
+        "them": "28 dolarów co roku, w nieskończoność"
+      },
+      {
+        "topic": "Jeśli firma zniknie (RIP Pocket)",
+        "us": "Nic się nie zmienia — to już jest u Ciebie",
+        "them": "Eksportujesz i zaczynasz od zera"
+      },
+      {
+        "topic": "Asystent AI",
+        "us": "Działa w Twoim komputerze w trybie prywatnym — nic nie jest nigdzie wysyłane",
+        "them": "Twoje lektury wędrują do chmury, żeby się zastanowić"
+      }
+    ],
+    "ctaPrimary": "Wypróbuj od razu (bez konta)",
+    "ctaSecondary": "Pełne porównanie z Pocket",
+    "close": "Raindrop jest prostszy i darmowy — jeśli to jedyna rzecz, której potrzebujesz, używaj go śmiało. Ale jeśli wolisz trzymać swoje czytanie we własnych rękach, BookmarkForge jest stworzony dokładnie do tego."
+  },
+  "features": {
+    "id": "features",
+    "tag": "Wszystko, czego potrzebujesz",
+    "title": "Wszystko, czego potrzebujesz, prostym językiem",
+    "items": [
+      {
+        "title": "Zakładki i dokumenty",
+        "text": "Zapisz dowolną stronę jednym kliknięciem. Pisz notatki tuż obok, w przejrzystym i prostym edytorze. Pozostaje szybki nawet przy 100,000 zapisanych elementach."
+      },
+      {
+        "title": "Inteligentne wyszukiwanie",
+        "text": "Znajdź rzeczy po słowie kluczowym albo po znaczeniu — nawet jeśli nie pamiętasz dokładnych słów. Raindrop pobiera za to 28 dolarów rocznie; tutaj jest w cenie."
+      },
+      {
+        "title": "AI, które czyta Twoją bibliotekę, w środku Twojego komputera",
+        "text": "Zadawaj pytania o to, co zapisałeś, i otrzymuj odpowiedzi ze źródłami. Nic nie trafia do chmury, a wszystko działa bez internetu. Wymaga Pro."
+      },
+      {
+        "title": "Rozmawiaj ze swoją biblioteką",
+        "text": "Zapytaj o cokolwiek w swoich zakładkach i notatkach, a otrzymasz odpowiedzi z odwołaniami. Tryb prywatny działa w 100% na Twoim urządzeniu. Wymaga Pro."
+      },
+      {
+        "title": "Synchronizacja między Twoimi urządzeniami",
+        "text": "Twoje urządzenia łączą się bezpośrednio — bez serwera pośrodku, a wszystko pozostaje zaszyfrowane. Sparuj je, skanując kod QR. Do 5 urządzeń. Wymaga Pro."
+      },
+      {
+        "title": "Kopie zapasowe, które są Twoje",
+        "text": "Automatyczne kopie zapasowe, które możesz trzymać, gdzie chcesz — na dysku zewnętrznym, w folderze w chmurze, wszędzie. Wyeksportuj wszystko do Markdown, JSON, CSV lub PDF, kiedy zechcesz. Klucze masz Ty."
+      },
+      {
+        "title": "Mapa Twojej wiedzy",
+        "text": "Zobacz, jak łączą się Twoje notatki i zakładki. Filtruj po tagach, datach i podobieństwie, a potem przybliżaj na bezkończonym płótnie."
+      },
+      {
+        "title": "Karty nauki, które pokonują zapominanie",
+        "text": "Zamień dowolny zapisany dokument w karty z pytaniami, które wracają tuż przedtem, zanim byś zapomniał — ten sam pomysł harmonogramu co w Anki. Wymaga Pro."
+      },
+      {
+        "title": "Prywatne z założenia",
+        "text": "Bez kont, bez śledzenia, bez reklam. To Ty jesteś klientem, nie produktem. Udostępnianie statystyk użycia istnieje, jest opcjonalne i pozostaje wyłączone, dopóki go nie włączysz."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI, które szanuje Ciebie",
+    "title": "Twoja wiedza, wzmocniona",
+    "subtitle": "Uruchom asystenta wewnątrz swojego komputera — nic z niego nie wychodzi, a działa bez internetu. Wolisz duży model w chmurze? Podepnij własny klucz: Twoje pytania i strony potrzebne do odpowiedzi trafiają do tego dostawcy, na Twój koszt. Twoje polecenia, Twoje dane, Twoje zasady.",
+    "providers": {
+      "title": "Obsługiwani dostawcy",
+      "list": [
+        {
+          "type": "local",
+          "name": "W Twoim komputerze — modele WebLLM (TinyLlama, Llama 3.2, Phi-3.5-mini) — tylko Pro"
+        },
+        {
+          "type": "local",
+          "name": "Na Twojej własnej maszynie — Ollama (dowolny model, który sam uruchomisz)"
+        },
+        {
+          "type": "cloud",
+          "name": "Chmura — Google Gemini (z własnym kluczem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Chmura — OpenAI / GPT-4o (z własnym kluczem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Chmura — Anthropic Claude (z własnym kluczem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Chmura — Groq (z własnym kluczem)"
+        },
+        {
+          "type": "cloud",
+          "name": "Chmura — OpenRouter lub inny własny dostawca (z własnym kluczem)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Tryby rozmowy",
+      "items": [
+        {
+          "title": "Tryb prywatny",
+          "text": "Asystent działa w całości wewnątrz Twojego komputera. Nic z niego nie wychodzi i nie potrzebuje internetu. Wymaga Pro."
+        },
+        {
+          "title": "Tryb wyszukiwania w sieci",
+          "text": "Łączy Twoją bibliotekę ze świeżymi wynikami z sieci (dostawcy chmurowi)."
+        },
+        {
+          "title": "Agenci eksperckie",
+          "text": "Wyspecjalizowani asystenci: Coder, Writer, Analyst i Researcher. Wymaga Pro."
+        }
+      ]
+    },
+    "aiTranslation": {
+      "title": "⚡ Lokalne tłumaczenie AI (wkrótce)",
+      "text": "Czytaj dowolny artykuł w swoim języku ojczystym. Tłumacz całe dokumenty w 100 % prywatnie na swoim komputerze, bez wysyłania tekstu do zewnętrznych serwerów w chmurze. W zestawie z Pro."
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Prywatność to nie funkcja — to fundament",
+    "subtitle": "Każda decyzja architektoniczna daje Ci kontrolę",
+    "items": [
+      {
+        "title": "Zamknięte tak, że nikt nie odczyta — nawet nie my",
+        "text": "Twoja biblioteka jest zaszyfrowana kluczem wyprowadzonym z Twojego hasła głównego. Nigdy nie widzimy Twojego hasła ani Twojej treści."
+      },
+      {
+        "title": "Przechowywane na Twoim urządzeniu",
+        "text": "Wszystko żyje na Twoim komputerze. Serwer towarzyszący obsługuje tylko licencjonowanie, parowanie urządzeń i przesyłanie Twoich pytań do AI w trybie chmurowym — nigdy Twojej treści."
+      },
+      {
+        "title": "Brak śledzenia z założenia",
+        "text": "Bez analityki, bez raportów o błędach, bez śledzenia. Udostępnianie statystyk użycia lub raportów o błędach to osobny wybór, domyślnie wyłączony."
+      },
+      {
+        "title": "Klucze masz Ty",
+        "text": "Bez hasła głównego nie ma dostępu — nie ma żadnego wejścia awaryjnego typu „zapomniałem hasła”. Twoje 24-słowowe frazy odzyskiwania to jedyna droga; trzymaj ją w bezpiecznym miejscu."
+      },
+      {
+        "title": "Twoje prawa, uszanowane",
+        "text": "Uzyskaj dostęp, popraw, usuń albo zabierz swoje dane ze sobą — wszystko możesz zrobić lokalnie, kiedy zechcesz."
+      },
+      {
+        "title": "Bez uzależnienia",
+        "text": "Wyeksportuj swoje dane o każdej porze w otwartych formatach (JSON, Markdown, CSV, PDF). Twoja wiedza zostaje Twoja i można ją zabrać ze sobą."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Prosty, uczciwy cennik — bez subskrypcji",
+    "subtitle": "Free: 300 zakładek na zawsze. Pro to licencja Lifetime na v1 — zapłać raz, posiadaj v1 na zawsze. W cenie wszystkie aktualizacje v1.x i 12 miesięcy aktualizacji funkcji. Aktualizacje bezpieczeństwa na zawsze. Bez miesięcznych opłat.",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "$ 0",
+        "period": "/na zawsze",
+        "description": "Do osobistego archiwum (300 zakładek, działa na dowolnym urządzeniu — każde ma własny sejf)",
+        "features": [
+          {
+            "included": true,
+            "text": "300 zakładek, notatek i dokumentów"
+          },
+          {
+            "included": true,
+            "text": "Inteligentne wyszukiwanie (pełnotekstowe + semantyczne) — wliczone bezpłatnie; Raindrop pobiera za to opłatę roczną"
+          },
+          {
+            "included": true,
+            "text": "AI z własnym kluczem API (Ty płacisz dostawcy)"
+          },
+          {
+            "included": true,
+            "text": "Graf wiedzy"
+          },
+          {
+            "included": true,
+            "text": "Podstawowe szablony"
+          },
+          {
+            "included": true,
+            "text": "Eksport JSON/HTML"
+          },
+          {
+            "included": true,
+            "text": "PWA + rozszerzenia przeglądarki"
+          },
+          {
+            "included": false,
+            "text": "Synchronizacja P2P między urządzeniami"
+          },
+          {
+            "included": false,
+            "text": "AI lokalne (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "Czat RAG nad Twoimi danymi"
+          },
+          {
+            "included": false,
+            "text": "Fiszki ze spaced repetition"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": false,
+            "text": "Lokalne tłumaczenie AI (wkrótce)"
+          }
+        ],
+        "cta": "Wypróbuj od razu",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "badge": "Najpopularniejszy — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (potem $79)",
+        "description": "Lifetime v1 · 12 miesięcy aktualizacji funkcji · Bezpieczeństwo na zawsze · v2 z 60% rabatem",
+        "features": [
+          {
+            "included": true,
+            "text": "Wszystko w Free"
+          },
+          {
+            "included": true,
+            "text": "Nieograniczone zakładki"
+          },
+          {
+            "included": true,
+            "text": "5 urządzeń · synchronizacja P2P na 5 urządzeniach"
+          },
+          {
+            "included": true,
+            "text": "Lokalne modele AI (WebLLM, bez klucza API) · czat RAG"
+          },
+          {
+            "included": true,
+            "text": "Agenci eksperckie (Coder, Writer, Analyst, Researcher)"
+          },
+          {
+            "included": true,
+            "text": "Fiszki z powtórzeniem rozłożonym · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Zaawansowany eksport (10+ formatów) · zaszyfrowane kopie zapasowe"
+          },
+          {
+            "included": true,
+            "text": "Sejf bezpieczeństwa (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "Lifetime v1 · 12 miesięcy aktualizacji funkcji"
+          },
+          {
+            "included": true,
+            "text": "Aktualizacje bezpieczeństwa na zawsze"
+          },
+          {
+            "included": true,
+            "text": "Wsparcie e-mail (48h) + wcześniejszy dostęp"
+          },
+          {
+            "included": true,
+            "text": "Lokalne tłumaczenie AI (wkrótce)"
+          }
+        ],
+        "cta": "Weź Pro za $59 w Early Bird",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "potem $79 standard",
+        "sla": "Wsparcie: e-mail 48h (pon.–pt.)",
+        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
+        "cta2": "Zdobądź Pro $79 Regular",
+        "cta2Class": "btn-secondary"
+      }
+    ],
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-pl#pricing\">Learn more</a>"
+  },
+  "faq": {
+    "title": "Najczęstsze pytania",
+    "items": [
+      {
+        "question": "Czy plan Free naprawdę jest darmowy na zawsze?",
+        "answer": "Tak. Bez okresu próbnego, bez subskrypcji. Plan Free obejmuje 300 zakładek, wyszukiwanie pełnotekstowe i semantyczne, graf wiedzy oraz AI z własnym kluczem API (opłatę ponosisz dostawca)."
+      },
+      {
+        "question": "Co oznacza „Lifetime v1” w Pro?",
+        "answer": "Zapłać raz, posiadaj v1 na zawsze. W cenie wszystkie aktualizacje v1.x (poprawki błędów + drobne funkcje) na zawsze i 12 miesięcy aktualizacji funkcji od zakupu. Aktualizacje bezpieczeństwa na zawsze. Po 13 miesiącach v1 nadal działa, tylko bez nowych funkcji. Przyszłe wersje główne (v2, v3) to osobne produkty: $89 dla nowych klientów, $35 dla właścicieli v1 (60% taniej)."
+      },
+      {
+        "question": "Jakie metody płatności i zwroty?",
+        "answer": "Przez Whop: karta kredytowa, PayPal, krypto. Nigdy nie widzimy Twoich danych płatniczych. Zwrot w 30 dni — napisz na <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
+      },
+      {
+        "question": "Wsparcie — jak szybko odpowiadacie?",
+        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help-pl#sla\">Support SLA</a>."
+      },
+      {
+        "question": "Co jeśli zapomnę hasła do sejfu?",
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-pl#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Gotowy przejąć kontrolę nad swoją wiedzą?",
+    "text": "Dołącz do tysięcy badaczy, programistów i osób uczących się, którzy powierzyli BookmarkForge swój drugi mózg.",
+    "ctaPrimary": "Wypróbuj od razu (bez konta)",
+    "ctaSecondary": "Przejdź na Pro",
+    "note": "Bez konta. Działa natychmiast w przeglądarce. Plan Free: 300 zakładek."
+  },
+  "footer": {
+    "brand": "Twój prywatny, napędzany przez AI sejf wiedzy. 100% na własnym sprzęcie.",
+    "product": {
+      "title": "Produkt",
+      "links": [
+        "Funkcje",
+        "Możliwości AI",
+        "Prywatność",
+        "Cennik",
+        "Wypróbuj od razu"
+      ],
+      "hrefs": [
+        "/#features",
+        "/#ai",
+        "/#privacy",
+        "/#pricing",
+        "/app"
+      ]
+    },
+    "resources": {
+      "title": "Zasoby",
+      "links": [
+        "Porównanie z Pocket",
+        "Prywatność i regulamin"
+      ],
+      "hrefs": [
+        "/pocket-alternative.html",
+        "/privacy-and-terms.html"
+      ]
+    },
+    "languages": {
+      "title": "Języki",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Wsparcie",
+      "links": [
+        "Kontakt"
+      ],
+      "helpCenter": "Centrum pomocy",
+      "errorCodes": "Kody błędów"
+    },
+    "copyright": "© 2026 BookmarkForge. Wszelkie prawa zastrzeżone.",
+    "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
+    "legal": [
+      "Polityka prywatności",
+      "Regulamin",
+      "bookmarkforge@proton.me"
+    ]
+  }
+}

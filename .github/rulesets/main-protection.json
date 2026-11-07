@@ -1,0 +1,65 @@
+{
+  "name": "Protect main",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "include": ["refs/heads/main"],
+      "exclude": []
+    }
+  },
+  "rules": [
+    {
+      "type": "deletion"
+    },
+    {
+      "type": "non_fast_forward"
+    },
+    {
+      "type": "required_linear_history"
+    },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 0,
+        "dismiss_stale_reviews_on_push": false,
+        "require_last_push_approval": false,
+        "required_review_thread_resolution": true
+      }
+    },
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "required_status_checks": [
+          {
+            "context": "Typecheck, lint, tests and security gates",
+            "integration_id": 15368
+          },
+          {
+            "context": "Playwright E2E",
+            "integration_id": 15368
+          },
+          {
+            "context": "Production build and repository checks",
+            "integration_id": 15368
+          },
+          {
+            "context": "Dependency review",
+            "integration_id": 15368
+          },
+          {
+            "context": "CodeQL analysis",
+            "integration_id": 15368
+          },
+          {
+            "context": "Semgrep analysis",
+            "integration_id": 15368
+          }
+        ],
+        "strict_required_status_checks_policy": true,
+        "do_not_enforce_on_create": false
+      }
+    }
+  ],
+  "bypass_actors": []
+}

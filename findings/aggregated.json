@@ -1,0 +1,51 @@
+{
+  "metadata": {
+    "analyzedAt": "2026-11-06T05:33:19.061Z",
+    "analyzerVersion": "1.0.0",
+    "inputDir": "findings/",
+    "options": {
+      "classify": true,
+      "recommend": true
+    }
+  },
+  "summary": {
+    "total": 1,
+    "bySeverity": {
+      "critical": 0,
+      "high": 1,
+      "medium": 0,
+      "low": 0,
+      "info": 0
+    },
+    "byType": {
+      "task-failure": 1
+    },
+    "autoFixable": 0,
+    "manualReview": 1
+  },
+  "findings": [
+    {
+      "source": "task-results.json",
+      "type": "task-failure",
+      "message": "Task T4 \"Run check:quality\" failed with exit code 1",
+      "file": null,
+      "line": null,
+      "raw": {
+        "taskId": "T4",
+        "title": "Run check:quality",
+        "phase": "quality",
+        "status": "failed",
+        "exitCode": 1,
+        "duration": 51025,
+        "error": "Exit code 1"
+      },
+      "severity": "high",
+      "priority": 2,
+      "autoFixable": false,
+      "recommendations": [
+        "Inspect the task output in findings/ and execution-report.json",
+        "Fix the underlying gate or document it as a known exception"
+      ]
+    }
+  ]
+}

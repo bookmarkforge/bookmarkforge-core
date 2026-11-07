@@ -1,0 +1,94 @@
+name: SAST security analysis
+
+on:
+  push:
+    branches: [main, master, develop, release/v1.0.0]
+  pull_request:
+  schedule:
+    - cron: '17 4 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sast-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: true
+
+jobs:
+  codeql:
+    name: CodeQL analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938
+        with:
+          languages: javascript-typescript
+          build-mode: none
+          queries: security-extended
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938
+        with:
+          output: ../codeql-results
+          upload: never
+
+      - name: Enforce severity policy (block High/Critical)
+        shell: bash
+        run: node scripts/check-sarif-severity.mjs --min-severity high --baseline .github/sast-baseline.json ../codeql-results
+
+      - name: Publish results to code scanning (PR annotations)
+        if: always()
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938
+        with:
+          sarif_file: ../codeql-results
+          category: codeql
+
+  semgrep:
+    name: Semgrep analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+
+      - name: Install Semgrep CLI
+        shell: bash
+        # Pinned to a verified PyPI release (1.174.0, 2026-08-20); bump deliberately.
+        run: pipx install semgrep==1.174.0
+
+      - name: Run Semgrep (security-audit rules)
+        shell: bash
+        # Open-source mode: no token, no upload to any third party. The raw
+        # exit code is informational; the severity gate below is the policy.
+        run: |
+          set -euo pipefail
+          semgrep scan --config p/security-audit --metrics off --sarif --output semgrep.sarif || true
+
+      - name: Enforce severity policy (block High/Critical)
+        shell: bash
+        run: node scripts/check-sarif-severity.mjs --min-severity high --baseline .github/sast-baseline.json semgrep.sarif
+
+      - name: Publish results to code scanning (PR annotations)
+        if: always()
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@cdf488f595d80d6e07e03d4674febd5ab45fa938
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep

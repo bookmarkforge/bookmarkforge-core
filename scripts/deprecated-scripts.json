@@ -1,0 +1,150 @@
+{
+  "deprecated": {
+    "description": "Scripts marked as @deprecated. These scripts remain functional for backward compatibility during the 6-month migration period (until 2026-10-20). Use the recommended orchestrators instead.",
+    "migration_date": "2026-04-20",
+    "removal_date": "2026-10-20",
+    "categories": {
+      "check:security": {
+        "description": "Use 'npm run check:security' instead of these individual scripts",
+        "scripts": [
+          "check:open-core",
+          "check:pro-imports",
+          "check:removed-deps",
+          "check:env",
+          "check:workflows",
+          "check:http-config",
+          "check:spa-routes",
+          "check:landing-root",
+          "check:compose-config",
+          "check:runtime-config",
+          "check:csp",
+          "check:extension-csp",
+          "check:override-cve",
+          "check:direct-cve",
+          "check:release-target",
+          "check:pro-routes",
+          "check:license-keys",
+          "check:server-log-ip-privacy",
+          "check:legal-consolidation"
+        ]
+      },
+      "check:quality": {
+        "description": "Use 'npm run check:quality' instead of these individual scripts",
+        "scripts": [
+          "check:chunks"
+        ]
+      },
+      "check:content": {
+        "description": "Use 'npm run check:content' instead of these individual scripts",
+        "scripts": [
+          "check:i18n",
+          "check:docs-markdown",
+          "check:docs-index",
+          "check:docs-retire",
+          "check:documented-npm-commands",
+          "check:documented-doc-references",
+          "check:seo",
+          "check:license-claims",
+          "check:claim-drift",
+          "check:landing-free-plan",
+          "check:pocket-onboarding-copy",
+          "check:manual-figures",
+          "check:page-figures",
+          "check:landings-fresh",
+          "check:english-only",
+          "check:no-spanish",
+          "check:audit-drift",
+          "check:audit-freshness"
+        ]
+      },
+      "check:brand": {
+        "description": "Use 'npm run check:brand' instead of these individual scripts",
+        "scripts": [
+          "check:brand-logo",
+          "check:static-brand",
+          "check:sitemap-coverage",
+          "check:nginx-render"
+        ]
+      },
+      "check:build": {
+        "description": "Use 'npm run check:build' instead of these individual scripts",
+        "scripts": [
+          "check:baseline-drift",
+          "check:baseline-gaps",
+          "check:script-reachability",
+          "check:inspector-freeze"
+        ]
+      },
+      "e2e": {
+        "description": "Use 'npm run e2e' with config flags instead of these specialized scripts",
+        "scripts": [
+          "e2e:ui",
+          "e2e:batched",
+          "e2e:smoke:ui",
+          "e2e:visual",
+          "e2e:visual:browsers",
+          "e2e:preview",
+          "e2e:engines",
+          "e2e:mobile",
+          "e2e:sync",
+          "e2e:sw-integrity",
+          "e2e:headed",
+          "e2e:nightly",
+          "e2e:multiuser",
+          "e2e:relay",
+          "e2e:custom-provider",
+          "e2e:multiuser:shard",
+          "e2e:browsers",
+          "e2e:human-like:browsers",
+          "test:landing:dist"
+        ]
+      },
+      "test": {
+        "description": "Use 'npm run test:all' or orchestrators instead of these individual scripts",
+        "scripts": [
+          "test:unit",
+          "test:slow",
+          "test:human",
+          "test:human:core",
+          "test:human:depth",
+          "test:human-regression"
+        ]
+      },
+      "generate": {
+        "description": "Use 'npm run generate:all' instead of these individual scripts",
+        "scripts": [
+          "generate:sitemap",
+          "generate:spa-routes",
+          "generate:changelog",
+          "generate:structured-data",
+          "generate:article-schema"
+        ]
+      },
+      "ci": {
+        "description": "Use 'npm run ci:local' instead of these CI variants",
+        "scripts": [
+          "ci:local:e2e",
+          "ci:local:parallel",
+          "ci:fast",
+          "ci:standard",
+          "ci:full"
+        ]
+      },
+      "audit": {
+        "description": "Use 'npm run check:security' instead of these audit scripts",
+        "scripts": [
+          "audit:vercel",
+          "audit:github-secrets"
+        ]
+      },
+      "other": {
+        "description": "Use the recommended alternatives instead",
+        "scripts": [
+          "check:security-internal",
+          "check:quick",
+          "nginx:render"
+        ]
+      }
+    }
+  }
+}

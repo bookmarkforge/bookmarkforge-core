@@ -1,0 +1,513 @@
+{
+  "lang": "tr",
+  "langName": "Türkçe",
+  "dir": "ltr",
+  "title": "BookmarkForge: gizli, yerel öncelikli yer imi yöneticisi ve okuma listesi",
+  "description": "Raindrop yer imlerinizi kendi sunucularında tutar. BookmarkForge ise onları bilgisayarınızda tutar — kilitlidir, biz bile okuyamayız. Tek ödeme: $59 early bird ömür boyu erişim (normal fiyattan önce $20 tasarruf). Free: 300 yer imi.",
+  "ogTitle": "BookmarkForge: gizli, yerel öncelikli yer imi yöneticisi ve okuma listesi",
+  "ogDescription": "Raindrop yer imlerinizi kendi sunucularında tutar. BookmarkForge ise onları bilgisayarınızda tutar — kilitlidir, biz bile okuyamayız. Tek ödeme: $59 early bird ömür boyu erişim (normal fiyattan önce $20 tasarruf). Free: 300 yer imi.",
+  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImageAlt": "BookmarkForge - yapay zeka destekli özel yer imi ve not uygulaması",
+  "twitterTitle": "BookmarkForge: gizli, yerel öncelikli yer imi yöneticisi ve okuma listesi",
+  "twitterDescription": "Raindrop yer imlerinizi kendi sunucularında tutar. BookmarkForge ise onları bilgisayarınızda tutar — kilitlidir, biz bile okuyamayız. Tek ödeme: $59 early bird ömür boyu erişim (normal fiyattan önce $20 tasarruf). Free: 300 yer imi.",
+  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Ana içeriğe geç",
+  "navBrandAria": "BookmarkForge ana sayfası",
+  "navAriaLabel": "Ana gezinme",
+  "navLinks": {
+    "pocketAlternative": "Pocket Alternatifi",
+    "features": "Özellikler",
+    "ai": "AI",
+    "privacy": "Gizlilik",
+    "pricing": "Fiyatlandırma",
+    "help": "Yardım",
+    "raindropCompare": "Raindrop Karşılaştırması"
+  },
+  "navCta": "Hemen dene (hesap gerekmez)",
+  "themeToggleAria": "Temayı değiştir",
+  "navToggleAria": "Menüyü aç",
+  "navToggleAriaClose": "Menüyü kapat",
+  "languageToggleAria": "Dili değiştir",
+  "githubAria": "BookmarkForge'a GitHub'da yıldız verin",
+  "hero": {
+    "badge": "Tek seferlik ödeme · Abonelik yok",
+    "title": "Kaydettiğiniz her şey bilgisayarınızda kalır. <span class=\"accent-text\">Her şey.</span>",
+    "subtitle": "Raindrop yer imlerinizi kendi sunucularında tutar — ve her yıl sizden ücret alır. BookmarkForge onları bilgisayarınızda tutar, yalnızca sizde olan bir anahtarla kilitler. Hesap yok. Aylık ücret yok. Omzunuzun üstünden bakan kimse yok.",
+    "ctaPrimary": "Hemen dene (hesap gerekmez)",
+    "ctaSecondary": "Fiyatlandırmayı Gör",
+    "pillars": [
+      {
+        "strong": "Gizli",
+        "text": "kaydettiğiniz sayfalar bilgisayarınızdan hiç ayrılmaz"
+      },
+      {
+        "strong": "Kilitli",
+        "text": "biz bile okuyamayız"
+      },
+      {
+        "strong": "Çevrimdışı",
+        "text": "uçakta, tünelde, her yerde çalışır"
+      },
+      {
+        "strong": "Tek seferlik ödeme",
+        "text": "$59 early bird ömür boyu erişim (normal fiyattan önce $20 tasarruf)"
+      }
+    ],
+    "announce": "⚡ Yerel AI çevirisi (yakında)"
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "Çalışırken Görün",
+    "title": "Sahte bir görsel değil, gerçek uygulama",
+    "subtitle": "Kayıt duvarı, stok görüntü ya da sahte imleç yok. Bu döngü, sıradan bir masaüstünde çalışan yayınlanmış sürümü gösterir: kasayı kilit aç, bir sayfa kaydet, kitaplıkta ara ve yeniden kilitle.",
+    "imageAlt": "BookmarkForge'in animasyonlu döngüsü: kasayı kilit açma, bir yer imi yakalama, kitaplıkta arama ve yeniden kilitleme",
+    "caption": "Demo verileriyle masaüstü uygulamasından kaydedildi. Tam tur, projeyle birlikte gelir.",
+    "steps": [
+      {
+        "title": "Kilit Aç",
+        "text": "Kasa, belirlediğiniz bir parola ile açılır; anahtar cihazınızda kalır."
+      },
+      {
+        "title": "Yakala",
+        "text": "Bir sayfayı doğrudan uygulamadan kaydedin — hesap da eklenti de gerekmez."
+      },
+      {
+        "title": "Bul",
+        "text": "Anahtar kelimeyle ya da anlamına göre arayın; her yanıtın kaynakları gösterilir."
+      },
+      {
+        "title": "Kilitle",
+        "text": "Kasayı kapattığınızda çözme anahtarı bellekten silinir."
+      }
+    ],
+    "ctaPrimary": "Hemen dene"
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Sonra Okuma Alışkanlığının Yeniden Doğuşu",
+    "title": "Gizli Pocket Alternatifi",
+    "subtitle": "Pocket 8 Temmuz 2025 tarihinde kapatıldı.. BookmarkForge, sonra okuma alışkanlığını sürdürür — her makale, not ve vurgu cihazınızda şifreli olarak saklanır.",
+    "features": [
+      {
+        "title": "Sonra Oku, Hep Senin",
+        "text": "Makaleleri, videoları ve PDF'leri tek tıkla kaydedin — PWA'dan, tarayıcı eklentisinden veya paylaş menüsünden. Pocket'tan farklı olarak, okuma listeniz şifreli biçimde kendi cihazınızda durur ve çevrimdışı da çalışır."
+      },
+      {
+        "title": "Her Makale için Notion Tarzı Notlar",
+        "text": "Herhangi bir yer imine eklenen blok tabanlı notlar alın; vurgulayın, özetleyin. Kaydettiğiniz bir makaleyi yalnızca bir bağlantı listesi değil, kendi bilgi tabanınıza dönüştürün."
+      },
+      {
+        "title": "Sıfır Takip, Sıfır Reklam",
+        "text": "BookmarkForge'de varsayılan olarak hesap, analiz ya da reklam yok. Okuma alışkanlıklarınız sizin dışınızda kimsenin işi değil."
+      }
+    ],
+    "ctaPrimary": "Hemen dene (hesap gerekmez)",
+    "ctaSecondary": "Tam Karşılaştırma ve Geçiş Rehberi",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "Sade sözler, pazarlama yok",
+    "title": "Küçük yazılar olmadan BookmarkForge ve Raindrop",
+    "subtitle": "Raindrop iyi bir uygulama. Asıl fark, verilerinizin nerede durduğu.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Listenizin nerede durduğu",
+        "us": "Bilgisayarınızda",
+        "them": "Onların sunucularında"
+      },
+      {
+        "topic": "Kaydettiğiniz şeyleri kim okuyabilir",
+        "us": "Kimse — sizin anahtarınızla kilitli, biz bile değil",
+        "them": "Şirket ve ondan bunu isteyen herkes"
+      },
+      {
+        "topic": "İnternet olmadan",
+        "us": "Her şey çalışmaya devam eder",
+        "them": "Yalnızca temel işlevler"
+      },
+      {
+        "topic": "Ne ödersiniz",
+        "us": "$59 early bird ömür boyu erişim (normal fiyattan önce $20 tasarruf)",
+        "them": "Her yıl 28 dolar, sonsuza kadar"
+      },
+      {
+        "topic": "Şirket kapanırsa (Pocket'e RIP)",
+        "us": "Hiçbir şey değişmez — zaten elinizde",
+        "them": "Dışa aktarır ve baştan başlarsınız"
+      },
+      {
+        "topic": "AI asistanı",
+        "us": "Bilgisayarınızın içinde gizli modda çalışır — hiçbir şey hiçbir yere gönderilmez",
+        "them": "Okumanız düşünmek için buluta gider"
+      }
+    ],
+    "ctaPrimary": "Hemen dene (hesap gerekmez)",
+    "ctaSecondary": "Tam Pocket karşılaştırması",
+    "close": "Raindrop daha basit ve ücretsiz — ihtiyacınız buysa seve seve kullanın. Ancak okuma hayatınızı kendi elinizde tutmak isterseniz, BookmarkForge tam olarak bunun için tasarlandı."
+  },
+  "features": {
+    "id": "features",
+    "tag": "İhtiyacınız Her Şey",
+    "title": "İhtiyacınız olan her şey, sade sözlerle",
+    "items": [
+      {
+        "title": "Yer imleri ve belgeler",
+        "text": "Her sayfayı tek tıkla kaydedin. Notlarınızı hemen yanında, sade ve temiz bir düzenleyicide yazın. 100,000 kayıtlı öğe olsa bile hızlı kalır."
+      },
+      {
+        "title": "Akıllı arama",
+        "text": "Bir şeyleri anahtar kelimeyle ya da anlamına göre bulun — tam kelimeleri hatırlamadığınızda bile. Raindrop bunun için yıllık 28 dolar alıyor; burada ücretsiz dahil."
+      },
+      {
+        "title": "Kitaplığınızı okuyan, bilgisayarınızın içinde bir AI",
+        "text": "Kaydettiğiniz şeyler hakkında sorular sorun, kaynakları gösterilen yanıtlar alın. Hiçbir şey buluta gönderilmez ve internetsiz de çalışır. Pro gerektirir."
+      },
+      {
+        "title": "Kendi kitaplığınızla sohbet edin",
+        "text": "Yer imleriniz ve notlarınız hakkında her şeyi sorun, kaynak gösterilen yanıtlar alın. Gizli mod %100 makinenizde çalışır. Pro gerektirir."
+      },
+      {
+        "title": "Kendi cihazlarınız arasında eşitleme",
+        "text": "Cihazlarınız doğrudan birbiriyle konuşur — arada sunucu yoktur ve her şey şifreli kalır. QR kod okutarak eşleştirin. En fazla 5 cihaz. Pro gerektirir."
+      },
+      {
+        "title": "Sahibi olduğunuz yedekler",
+        "text": "İstediğiniz yere koyabileceğiniz otomatik yedekler — harici sürücü, bulut klasörü, herhangi bir yer. Her şeyi istediğiniz zaman Markdown, JSON, CSV ya da PDF olarak dışa aktarın. Anahtarlar sizde."
+      },
+      {
+        "title": "Bilginizin haritası",
+        "text": "Notlarınızın ve yer imlerinizin nasıl bağlandığını görün. Etiketlere, tarihlere ve benzerliğe göre filtreleyin, sonsuz tuvalde yakınlaştırın."
+      },
+      {
+        "title": "Unutmayı yenen çalışma kartları",
+        "text": "Kaydettiğiniz her belgeyi, unutmadan hemen önce karşınıza çıkacak soru kartlarına dönüştürün — Anki ile aynı planlama fikri. Pro gerektirir."
+      },
+      {
+        "title": "Varsayılan olarak gizli",
+        "text": "Hesap yok, takip yok, reklam yok. Ürün siz değilsiniz, müşteri sizsiniz. Kullanım paylaşımı var, isteğe bağlıdır ve siz açana kadar kapalı kalır."
+      }
+    ]
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "Sizi Saygı Gören AI",
+    "title": "Bilginiz, Güçlendirilmiş",
+    "subtitle": "Asistanı bilgisayarınızın içinde çalıştırın — hiçbir şey dışarı çıkmaz ve çevrimdışı da çalışır. Büyük bir bulut modelini mi tercih edersiniz? Kendi anahtarınızı bağlayın: sorularınız ve onları yanıtlamak için gereken sayfalar bu sağlayıcıya, maliyeti size ait olacak şekilde gider. Sizin istemleriniz, sizin veriniz, sizin kurallarınız.",
+    "providers": {
+      "title": "Desteklenen Sağlayıcılar",
+      "list": [
+        {
+          "type": "local",
+          "name": "Bilgisayarınızın içinde — WebLLM modelleri (TinyLlama, Llama 3.2, Phi-3.5-mini) — yalnızca Pro"
+        },
+        {
+          "type": "local",
+          "name": "Kendi makinenizde — Ollama (çalıştırdığınız her model)"
+        },
+        {
+          "type": "cloud",
+          "name": "Bulut — Google Gemini (kendi anahtarınızla)"
+        },
+        {
+          "type": "cloud",
+          "name": "Bulut — OpenAI / GPT-4o (kendi anahtarınızla)"
+        },
+        {
+          "type": "cloud",
+          "name": "Bulut — Anthropic Claude (kendi anahtarınızla)"
+        },
+        {
+          "type": "cloud",
+          "name": "Bulut — Groq (kendi anahtarınızla)"
+        },
+        {
+          "type": "cloud",
+          "name": "Bulut — OpenRouter ya da başka bir özel sağlayıcı (kendi anahtarınızla)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Sohbet Modları",
+      "items": [
+        {
+          "title": "Gizli Mod",
+          "text": "Asistan tamamen bilgisayarınızın içinde çalışır. Hiçbir şey dışarı çıkmaz ve internete ihtiyaç duymaz. Pro gerektirir."
+        },
+        {
+          "title": "Web Araması Modu",
+          "text": "Kitaplığınızı web'den gelen canlı sonuçlarla birleştirir (bulut sağlayıcıları)."
+        },
+        {
+          "title": "Uzman Ajanlar",
+          "text": "Uzmanlaşmış yardımcılar: Kodlayıcı, Yazıcı, Analist ve Araştırmacı. Pro gerektirir."
+        }
+      ]
+    },
+    "aiTranslation": {
+      "title": "⚡ Yerel AI çevirisi (yakında)",
+      "text": "Herhangi bir makaleyi ana dilinizde okuyun. Tüm belgeleri metni üçüncü taraf bulut sunucularına göndermeden, bilgisayarınızda %100 gizli şekilde çevirin. Pro'ya dahildir."
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Gizlilik Bir Özellik Değil — Temeldir",
+    "subtitle": "Her mimari karar kontrolü size verir",
+    "items": [
+      {
+        "title": "Kimse okuyamasın diye kilitli — biz bile",
+        "text": "Kitaplığınız, ana parolanızdan türetilen bir anahtarla şifrelenir. Parolanızı ya da içeriğinizi asla görmeyiz."
+      },
+      {
+        "title": "Kendi cihazınızda saklanır",
+        "text": "Her şey bilgisayarınızda yaşar. Yardımcı sunucu yalnızca lisanslama, cihaz eşleştirme ve bulut modundaki AI sorularınızı iletme işini yapar — içeriğinize asla dokunmaz."
+      },
+      {
+        "title": "Varsayılan olarak takip yok",
+        "text": "Analiz yok, çökme raporu yok, takip yok. Kullanım istatistiklerini ya da hata raporlarını paylaşmak ayrı bir seçimdir ve varsayılan olarak kapalıdır."
+      },
+      {
+        "title": "Anahtarlar sizde",
+        "text": "Ana parola olmasa erişim de olmaz — \"parolamı unuttum\" arka kapısı yoktur. 24 kelimelik kurtarma ifadeniz tek giriş yoludur; güvende tutun."
+      },
+      {
+        "title": "Haklarınıza saygı",
+        "text": "Verinize erişin, düzeltin, silin ya da yanınızda götürün — hepsi yerel olarak, istediğiniz zaman mümkün."
+      },
+      {
+        "title": "Bağımlılık yok",
+        "text": "Verilerinizi istediğiniz zaman açık formatlarda dışa aktarın (JSON, Markdown, CSV, PDF). Bilginiz sizin kalır ve taşınabilir."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Basit, Adil Fiyatlandırma — Abonelik Yok",
+    "subtitle": "Free: 300 yer imi sonsuza dek. Pro, v1 için bir Lifetime lisansıdır — bir kez ödeyin, v1'e sonsuza dek sahip olun. Tüm v1.x güncellemeleri ve 12 aylık özellik güncellemesi dahil. Güvenlik güncellemeleri sonsuza dek. Aylık faturalama yok.",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "$ 0",
+        "period": "/sonsuza dek",
+        "description": "Kişisel arşiv için (300 yer imi, her cihazda çalışır — her cihazın kendi kasası vardır)",
+        "features": [
+          {
+            "included": true,
+            "text": "300 yer imi, not ve belge"
+          },
+          {
+            "included": true,
+            "text": "Akıllı arama (tam metin + anlamsal) — ücretsiz dahil; Raindrop bunun için yıllık ücret alıyor"
+          },
+          {
+            "included": true,
+            "text": "Kendi API anahtarınızla AI (sağlayıcıya siz ödersiniz)"
+          },
+          {
+            "included": true,
+            "text": "Bilgi grafiği"
+          },
+          {
+            "included": true,
+            "text": "Temel şablonlar"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML dışa aktarma"
+          },
+          {
+            "included": true,
+            "text": "PWA + tarayıcı eklentileri"
+          },
+          {
+            "included": false,
+            "text": "Cihazlar arası P2P senkronizasyonu"
+          },
+          {
+            "included": false,
+            "text": "Yerel AI (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "Verileriniz üzerine RAG sohbeti"
+          },
+          {
+            "included": false,
+            "text": "Spaced repetition ile flashcards"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": false,
+            "text": "Yerel AI çevirisi (yakında)"
+          }
+        ],
+        "cta": "Hemen dene",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro Lifetime v1",
+        "badge": "En Popüler — Early Bird 200",
+        "price": "$ 59",
+        "period": "Early Bird (sonra $79)",
+        "description": "v1 için Lifetime · 12 ay özellik güncellemesi · Güvenlik sonsuza dek · v2 60% indirim",
+        "features": [
+          {
+            "included": true,
+            "text": "Free paketindeki her şey"
+          },
+          {
+            "included": true,
+            "text": "Sınırsız yer imi"
+          },
+          {
+            "included": true,
+            "text": "5 cihaz · 5 cihaz arasında P2P eşitleme"
+          },
+          {
+            "included": true,
+            "text": "Yerel AI modelleri (WebLLM, API anahtarı gerekmez) · RAG sohbeti"
+          },
+          {
+            "included": true,
+            "text": "Uzman ajanlar (Coder, Writer, Analyst, Researcher)"
+          },
+          {
+            "included": true,
+            "text": "Aralıklı tekrar ile bilgi kartları · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Gelişmiş dışa aktarma (10+ format) · Şifreli yedekler"
+          },
+          {
+            "included": true,
+            "text": "Güvenlik kasası (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "v1 için Lifetime · 12 ay özellik güncellemesi"
+          },
+          {
+            "included": true,
+            "text": "Güvenlik güncellemeleri sonsuza dek"
+          },
+          {
+            "included": true,
+            "text": "E-posta desteği (48 saat) + erken erişim"
+          },
+          {
+            "included": true,
+            "text": "Yerel AI çevirisi (yakında)"
+          }
+        ],
+        "cta": "Pro'yu edinin — $59 Early Bird",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primary",
+        "priceWas": "$79",
+        "priceSub": "sonra normal fiyat $79",
+        "sla": "Destek: E-posta 48 saat (Pzt–Cum)",
+        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
+        "cta2": "Pro'yu edinin — $79 normal fiyat",
+        "cta2Class": "btn-secondary"
+      }
+    ],
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-tr#pricing\">Learn more</a>"
+  },
+  "faq": {
+    "title": "Sık Sorulan Sorular",
+    "items": [
+      {
+        "question": "Free paketi gerçekten sonsuza dek ücretsiz mi?",
+        "answer": "Evet. Deneme süresi yok, abonelik yok. Free paket 300 yer imi, tam metin ve anlamsal arama, bilgi grafiği ve kendi API anahtarınızla AI içerir (sağlayıcıya siz ödersiniz)."
+      },
+      {
+        "question": "Pro'da \"v1 için Lifetime\" ne anlama geliyor?",
+        "answer": "Bir kez ödeyin, v1'e sonsuza dek sahip olun. Tüm v1.x güncellemeleri (hata düzeltmeleri + küçük özellikler) sonsuza dek ve satın alma tarihinden itibaren 12 aylık özellik güncellemesi dahil. Güvenlik güncellemeleri sonsuza dek. 13. aydan sonra v1 işlevsel kalır, yalnızca yeni özellikler gelmez. Gelecekteki ana sürümler (v2, v3) ayrı ürünlerdir: yeni müşteriler için $89, v1 sahipleri için $35 (60% indirim)."
+      },
+      {
+        "question": "Hangi ödeme yöntemleri ve iadeler geçerli?",
+        "answer": "Whop üzerinden: kredi kartı, PayPal, kripto. Ödeme bilgilerinizi asla görmeyiz. 30 günlük iade — <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> adresine yazın."
+      },
+      {
+        "question": "Destek — ne kadar hızlı yanıt veriyorsunuz?",
+        "answer": "Free: Community help via <a href=\"/help\">Help Center</a> + GitHub Discussions (best effort). Pro: email 48h business days. Vault is encrypted — we cannot see your data, so we never ask for your password or recovery phrase. See <a href=\"/help-tr#sla\">Support SLA</a>."
+      },
+      {
+        "question": "Kasa parolamı unutursam ne olur?",
+        "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-tr#bf-e101\">BF-E101</a>."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Bilginize Sahip Olmaya Hazır mısınız?",
+    "text": "İkinci beynini BookmarkForge'e emanet eden binlerce araştırmacı, geliştirici ve öğrenciye katılın.",
+    "ctaPrimary": "Hemen dene (hesap gerekmez)",
+    "ctaSecondary": "Pro'ya Yükselt",
+    "note": "Hesap gerekmez. Tarayıcınızda anında çalışır. Free paket: 300 yer imi."
+  },
+  "footer": {
+    "brand": "Size özel, AI destekli bilgi kasanız. 100% Yerel Öncelikli.",
+    "product": {
+      "title": "Ürün",
+      "links": [
+        "Features",
+        "AI Capabilities",
+        "Privacy",
+        "Pricing",
+        "Hemen dene"
+      ],
+      "hrefs": [
+        "/#features",
+        "/#ai",
+        "/#privacy",
+        "/#pricing",
+        "/app"
+      ]
+    },
+    "resources": {
+      "title": "Kaynaklar",
+      "links": [
+        "Pocket Comparison",
+        "Privacy & Terms"
+      ],
+      "hrefs": [
+        "/pocket-alternative.html",
+        "/privacy-and-terms.html"
+      ]
+    },
+    "languages": {
+      "title": "Diller",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Destek",
+      "links": [
+        "Contact"
+      ],
+      "helpCenter": "Yardım Merkezi",
+      "errorCodes": "Hata Kodları"
+    },
+    "copyright": "© 2026 BookmarkForge. Tüm hakları saklıdır.",
+    "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
+    "legal": [
+      "Gizlilik Politikası",
+      "Hizmet Şartları",
+      "bookmarkforge@proton.me"
+    ]
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "locales": {
+    "ar": {
+      "issues": 0
+    },
+    "bg": {
+      "issues": 0
+    },
+    "cs": {
+      "issues": 1
+    },
+    "da": {
+      "issues": 2
+    },
+    "de": {
+      "issues": 0
+    },
+    "el": {
+      "issues": 0
+    },
+    "es": {
+      "issues": 52
+    },
+    "fi": {
+      "issues": 0
+    },
+    "fr": {
+      "issues": 4
+    },
+    "he": {
+      "issues": 0
+    },
+    "hi": {
+      "issues": 0
+    },
+    "hr": {
+      "issues": 0
+    },
+    "hu": {
+      "issues": 1
+    },
+    "id": {
+      "issues": 0
+    },
+    "it": {
+      "issues": 1
+    },
+    "ja": {
+      "issues": 0
+    },
+    "ko": {
+      "issues": 0
+    },
+    "nl": {
+      "issues": 4
+    },
+    "no": {
+      "issues": 1
+    },
+    "pl": {
+      "issues": 0
+    },
+    "pt": {
+      "issues": 0
+    },
+    "ro": {
+      "issues": 3
+    },
+    "ru": {
+      "issues": 0
+    },
+    "sv": {
+      "issues": 3
+    },
+    "th": {
+      "issues": 0
+    },
+    "tr": {
+      "issues": 0
+    },
+    "uk": {
+      "issues": 0
+    },
+    "vi": {
+      "issues": 0
+    },
+    "zh": {
+      "issues": 0
+    }
+  },
+  "unique": 55,
+  "total": 72,
+  "all29": 0,
+  "updatedAt": "2026-11-01T07:37:21.320Z"
+}

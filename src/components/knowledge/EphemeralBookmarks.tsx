@@ -133,13 +133,14 @@ export function EphemeralBookmarks({
       const expiresAt = new Date(
         Date.now() + selectedDays * 24 * 60 * 60 * 1000,
       ).toISOString();
+      const updatedAt = new Date().toISOString();
+      const lastChecked = JSON.stringify({ expiresAt });
 
-      for (const bm of bookmarks) {
-        await bm.incrementalPatch({
-          lastChecked: JSON.stringify({ expiresAt }),
-          updatedAt: new Date().toISOString(),
-        });
-      }
+      await Promise.all(
+        bookmarks.map((bm) =>
+          bm.incrementalPatch({ lastChecked, updatedAt }),
+        ),
+      );
     });
   };
 
@@ -175,19 +176,18 @@ export function EphemeralBookmarks({
     void archiveAll.run(async () => {
       const { initDB } = await import("../../container/database");
       const db = await initDB();
-      const now = new Date().toISOString();
-
-      for (const entry of ephemeral) {
-        if (new Date(entry.expiresAt).getTime() <= Date.now()) {
-          const doc = await db.bookmarks.findOne(entry.id).exec();
-          if (doc) {
-            await doc.incrementalPatch({
-              isDeleted: true,
-              updatedAt: now,
-            });
-          }
-        }
-      }
+      const now = Date.now();
+      const updatedAt = new Date().toISOString();
+      await Promise.all(
+        ephemeral
+          .filter((entry) => new Date(entry.expiresAt).getTime() <= now)
+          .map(async (entry) => {
+            const doc = await db.bookmarks.findOne(entry.id).exec();
+            if (doc) {
+              await doc.incrementalPatch({ isDeleted: true, updatedAt });
+            }
+          }),
+      );
     });
   };
 

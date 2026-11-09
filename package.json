@@ -30,6 +30,7 @@
     "validate:all": "node scripts/validate-all.mjs",
     "report:all": "node scripts/report-all.mjs",
     "report:webrtc": "node scripts/report-webrtc.mjs",
+    "benchmark:import": "tsx scripts/benchmark-import-performance.ts",
     "deploy:all": "node scripts/deploy-all.mjs",
     "build:extension:custom": "node scripts/build-extension.cjs",
     "build:extension:dev": "node scripts/build-extension.cjs --dev",
@@ -96,6 +97,7 @@
     "check:audit-drift": "node scripts/check-audit-drift.mjs",
     "check:tailwind-drift": "node scripts/check-tailwind-rule-drift.mjs",
     "check:audit-freshness:deep": "node scripts/check-audit-freshness.mjs --deep --allow-network",
+    "check:release-target": "node scripts/check-release-target.mjs",
     "check:audit-drift:fix": "node scripts/check-audit-drift.mjs --fix",
     "check:secrets-in-commit": "node scripts/check-secrets-in-commit.mjs",
     "check:image-pins": "node scripts/validate-image-pins.mjs",
@@ -258,6 +260,12 @@
     },
     "onnxruntime-node": {
       "adm-zip": "0.6.1"
+    },
+    "workbox-build": {
+      "glob": "14.0.4"
+    },
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "11.0.5"
     }
   },
   "optionalDependencies": {

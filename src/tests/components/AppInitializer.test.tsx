@@ -732,6 +732,9 @@ describe("AppInitializer", () => {
         vi.advanceTimersByTime(1500);
         await vi.dynamicImportSettled();
       });
+      // The seed's urlHash values are precomputed, so every insert is a
+      // resolved-promise microtask inside the act() above: no crypto digest
+      // is in flight when these assertions run.
       expect(documentsCol!.insert).toHaveBeenCalledTimes(1);
       expect(bookmarksCol!.insert).toHaveBeenCalledTimes(2);
       expect(flashcardsCol!.insert).toHaveBeenCalledTimes(2);

@@ -219,9 +219,13 @@ describe("KnowledgeDashboard", () => {
       ]);
     });
 
-    expect(screen.getByText("app_analytics")).toBeTruthy();
+    // Stats are debounced ~400ms after the RxDB streams emit, and the card
+    // grid sits behind a single Suspense boundary of ~28 lazy imports — give
+    // the finders room for debounce + lazy resolution.
+    const lazyOpts = { timeout: 5000 };
+    expect(await screen.findByText("app_analytics")).toBeTruthy();
     expect(screen.getByText("app_analyticsSubtitle")).toBeTruthy();
-    expect(screen.getByTestId("activity-chart")).toBeTruthy();
+    expect(await screen.findByTestId("activity-chart", {}, lazyOpts)).toBeTruthy();
     expect(screen.getByTestId("tag-distribution")).toBeTruthy();
     expect(screen.getByTestId("ai-insights")).toBeTruthy();
     expect(screen.getByTestId("quick-action")).toBeTruthy();
@@ -234,8 +238,13 @@ describe("KnowledgeDashboard", () => {
       docsSubject.next([{ createdAt: new Date().toISOString(), tags: [], embedding: [] }]);
       bookmarksSubject.next([]);
     });
+    const quickAction = await screen.findByTestId(
+      "quick-action",
+      {},
+      { timeout: 5000 },
+    );
     await act(async () => {
-      screen.getByTestId("quick-action").click();
+      quickAction.click();
     });
     expect(mockForceReprocessAll).toHaveBeenCalledTimes(1);
   });
@@ -247,14 +256,19 @@ describe("KnowledgeDashboard", () => {
       docsSubject.next([{ createdAt: new Date().toISOString(), tags: [], embedding: [] }]);
       bookmarksSubject.next([]);
     });
+    const quickAction = await screen.findByTestId(
+      "quick-action",
+      {},
+      { timeout: 5000 },
+    );
     await act(async () => {
-      screen.getByTestId("quick-action").click();
+      quickAction.click();
     });
     expect(mockToast.success).toHaveBeenCalledWith("app_reprocessStarted");
 
     mockForceReprocessAll.mockRejectedValueOnce(new Error("failed"));
     await act(async () => {
-      screen.getByTestId("quick-action").click();
+      quickAction.click();
     });
     expect(mockToast.error).toHaveBeenCalledWith("Re-indexing failed");
   });
@@ -272,7 +286,7 @@ describe("KnowledgeDashboard", () => {
       ]);
     });
 
-    expect(screen.getByText("app_analysisEngineActive")).toBeTruthy();
+    expect(await screen.findByText("app_analysisEngineActive")).toBeTruthy();
   });
 
   it("shows the Most Read section when there are bookmarks with visitCount", async () => {
@@ -301,7 +315,7 @@ describe("KnowledgeDashboard", () => {
       ]);
     });
 
-    expect(screen.getByText("Most Read")).toBeTruthy();
+    expect(await screen.findByText("Most Read")).toBeTruthy();
     expect(screen.getByText("Popular Post")).toBeTruthy();
     expect(screen.getByText("Rare Post")).toBeTruthy();
   });
@@ -320,7 +334,7 @@ describe("KnowledgeDashboard", () => {
       bookmarksSubject.next([]);
     });
 
-    expect(screen.getByText("100%")).toBeTruthy();
+    expect(await screen.findByText("100%")).toBeTruthy();
   });
 
   it("does not show toasts if reindexing finishes after unmount", async () => {
@@ -339,8 +353,13 @@ describe("KnowledgeDashboard", () => {
       ]);
       bookmarksSubject.next([]);
     });
+    const quickAction = await screen.findByTestId(
+      "quick-action",
+      {},
+      { timeout: 5000 },
+    );
     await act(async () => {
-      screen.getByTestId("quick-action").click();
+      quickAction.click();
     });
     unmount();
     await act(async () => {

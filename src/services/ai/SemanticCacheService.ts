@@ -13,11 +13,9 @@ import { getIndexedDB } from "../../utils/indexedDB";
 import { AIResponse } from "./types";
 import { encryptionService } from "../EncryptionService";
 import { securityVault } from "../SecurityVault";
-import {
-  EMBEDDING_MODEL_DIMENSIONS,
-  EMBEDDING_MODEL_ID,
-  EMBEDDING_MODEL_PIPELINE_OPTIONS,
-} from "./embeddingModel";
+import { EMBEDDING_MODEL_DIMENSIONS } from "./embeddingModel";
+import embeddingWorkerUrl from "./embedding.worker.ts?worker&url";
+import { getWorkerPool, type WorkerPool } from "../../utils/WorkerPool";
 
 // Extend the Neighbor interface to include distance property that voy-search actually returns
 // despite not being in the official type definitions
@@ -69,8 +67,11 @@ const PERSIST_VERSION = 1;
 
 export class SemanticCacheService {
   private voy: import("voy-search").Voy | null = null;
-  private extractor:
-    import("@huggingface/transformers").FeatureExtractionPipeline | null = null;
+  // Embeddings run in the shared "embeddings" WorkerPool (same pool RAGEngine
+  // uses): ONNX inference stays off the UI thread and the ~580 kB
+  // transformers.web chunk is never downloaded on the main thread. The pool
+  // is a process-wide singleton — never terminate it here.
+  private _workerPool: WorkerPool | null = null;
   private isReady = false;
   private isInitializing = false;
   // Embeddings are an optional optimization. When the browser cannot load
@@ -116,6 +117,16 @@ export class SemanticCacheService {
   // import time, so an app session that never exercises the semantic cache
   // pays nothing for it.
 
+  private get workerPool(): WorkerPool | null {
+    if (typeof window === "undefined" || typeof Worker === "undefined") {
+      return null;
+    }
+    if (!this._workerPool) {
+      this._workerPool = getWorkerPool("embeddings", embeddingWorkerUrl, 2);
+    }
+    return this._workerPool;
+  }
+
   private async init() {
     if (this.isReady || this.isInitializing) {return;}
     if (this.initializationFailedUntil > Date.now()) {return;}
@@ -124,18 +135,14 @@ export class SemanticCacheService {
     try {
       logger.info("[SemanticCache] Initializing local embedding model...");
 
-      // 1. Load light embedding model (~22MB) via Web Worker or main thread.
-      // The real module has NO default export — env/pipeline are named
-      // exports. Reading (hf as any).default.env would be undefined.env and
-      // throw, silently disabling the semantic cache.
-      const hf = await import("@huggingface/transformers");
-      const { pipeline, env } = hf;
-      env.allowLocalModels = true;
-      this.extractor = (await pipeline(
-        "feature-extraction",
-        EMBEDDING_MODEL_ID,
-        { ...EMBEDDING_MODEL_PIPELINE_OPTIONS },
-      )) as unknown as import("@huggingface/transformers").FeatureExtractionPipeline;
+      // 1. Warm the shared embedding worker (~22MB model). The worker loads
+      // transformers.js inside its own realm, so the main thread never pays
+      // the chunk download or the ONNX inference cost.
+      const pool = this.workerPool;
+      if (!pool) {
+        throw new Error("Embedding workers are unavailable in this environment");
+      }
+      await pool.execute("prefetch", null);
 
       // 2. Initialize Voy vector database
       // Voy requires providing the dimension of the vectors.
@@ -170,9 +177,8 @@ export class SemanticCacheService {
     } catch (error) {
       // Leave the service usable as a no-op. The model can be retried after a
       // cooldown, but a failed optional optimization must not spam every chat
-      // request or retain a half-created extractor/index.
+      // request or retain a half-created index.
       this.isReady = false;
-      this.extractor = null;
       this.voy = null;
       this.initializationFailedUntil =
         Date.now() + this.INITIALIZATION_RETRY_COOLDOWN_MS;
@@ -421,16 +427,18 @@ export class SemanticCacheService {
    * Generate 384D embedding vector for a given text
    */
   private async getEmbedding(text: string): Promise<number[]> {
-    if (!this.extractor) {throw new Error("Extractor not initialized");}
+    const pool = this.workerPool;
+    if (!pool) {throw new Error("Embedding worker unavailable");}
 
-    // Generate embeddings
-    const output = await this.extractor(text, {
-      pooling: "mean",
-      normalize: true,
-    });
-
-    // Output is a Tensor, convert to standard JS array
-    return Array.from(output.data as Float32Array);
+    const embedding = await pool.execute<string, number[]>("embed", text);
+    if (
+      !Array.isArray(embedding) ||
+      embedding.length !== EMBEDDING_MODEL_DIMENSIONS ||
+      !embedding.every((value) => typeof value === "number" && Number.isFinite(value))
+    ) {
+      throw new Error("Embedding worker returned an invalid vector");
+    }
+    return embedding;
   }
 
   /**

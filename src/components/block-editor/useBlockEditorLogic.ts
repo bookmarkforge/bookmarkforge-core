@@ -456,11 +456,17 @@ export function useBlockEditorLogic({
               ? await attachmentStore.hydrateBlocks(documentId, rawBlocks)
               : rawBlocks
           ) as PartialBlock[];
+          // hydrateBlocks/hydrateText are async: the user may have switched
+          // documents (or unmounted) while they ran. Re-check before writing
+          // state or touching the hydration refs, or a stale load would
+          // poison the next document's autosave baseline.
+          if (cancelled) {return;}
           state.setInitialContent?.(blocks.length > 0 ? blocks : "empty");
           const hydratedText = await attachmentStore.hydrateText(
             documentId,
             result.textContent || "",
           );
+          if (cancelled) {return;}
           state.setEditorText?.(hydratedText);
           hydratedTextRef.current = hydratedText;
           skipAutosaveOnceRef.current = true;

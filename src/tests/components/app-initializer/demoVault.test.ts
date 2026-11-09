@@ -32,6 +32,7 @@ vi.mock("../../../store/safeStorage", () => ({
 }));
 
 import { createDemoVault } from "../../../components/app-initializer/demoVault";
+import { hashString } from "../../../utils/crypto-core";
 
 describe("createDemoVault", () => {
   beforeEach(() => {
@@ -102,11 +103,15 @@ describe("createDemoVault", () => {
     // `urlHash` (SHA-256 hex), otherwise the real insert fails schema
     // validation (VD2) and the demo vault never completes.
     const seeded = mockDb.collections.bookmarks.insert.mock.calls.map(
-      (call: unknown[]) => call[0] as { urlHash?: string },
+      (call: unknown[]) => call[0] as { url?: string; urlHash?: string },
     );
     expect(seeded.length).toBeGreaterThan(0);
     for (const doc of seeded) {
       expect(doc.urlHash).toMatch(/^[0-9a-f]{64}$/);
+      // The seed precomputes urlHash instead of awaiting crypto.subtle mid-
+      // insert, so each value must stay the plain SHA-256 of its own URL —
+      // otherwise dedup silently stops matching the real capture path.
+      expect(doc.urlHash).toBe(await hashString(doc.url!));
     }
     expect(mockSafeSet).toHaveBeenCalledWith("forge_demo_vault_created", "true");
   });

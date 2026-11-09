@@ -29,15 +29,18 @@ export const KnowledgeDecayHeatmap: React.FC<Props> = ({ cardVariants, t }) => {
     async (signal) => {
       const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
-      const bookmarks = await db.bookmarks.find().exec();
+      const bookmarks = await db.bookmarks
+        .find({ selector: { isDeleted: false } })
+        .exec();
       if (signal.aborted) {return [];}
       const tagMap = new Map<string, { lastRead: number; count: number }>();
       const now = Date.now();
 
       for (const bm of bookmarks) {
-        const doc = bm.toMutableJSON();
-        const tags = doc.tags ?? [];
-        const lastRead = doc.lastVisitedAt || doc.createdAt;
+        // Read fields off the RxDocument directly — toMutableJSON() deep-clones
+        // every doc (incl. embedding vectors and content) per bookmark.
+        const tags = bm.tags ?? [];
+        const lastRead = bm.lastVisitedAt || bm.createdAt;
         const lastReadTime = lastRead ? new Date(lastRead).getTime() : now;
 
         for (const tag of tags) {
@@ -82,11 +85,13 @@ export const KnowledgeDecayHeatmap: React.FC<Props> = ({ cardVariants, t }) => {
     runReset(async () => {
       const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
-      const bookmarks = await db.bookmarks.find().exec();
+      const bookmarks = await db.bookmarks
+        .find({ selector: { isDeleted: false } })
+        .exec();
       const now = new Date().toISOString();
       const patches = bookmarks
-        .filter((bm: { toMutableJSON(): { tags?: string[] } }) => (bm.toMutableJSON().tags ?? []).includes(tag))
-        .map((bm: { incrementalPatch(data: Record<string, unknown>): Promise<unknown> }) => bm.incrementalPatch({ lastVisitedAt: now }));
+        .filter((bm) => (bm.tags ?? []).includes(tag))
+        .map((bm) => bm.incrementalPatch({ lastVisitedAt: now }));
       await Promise.all(patches);
       await loadDecayData();
     });

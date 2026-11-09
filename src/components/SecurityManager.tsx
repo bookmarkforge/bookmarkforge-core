@@ -160,6 +160,9 @@ export const SecurityManager: React.FC<{ children: React.ReactNode }> = ({
     clearClipboardTimerRef.current = setTimeout(() => {
       // Only clear the clipboard if it still holds the recovery phrase —
       // blindly writing "" would destroy whatever the user copied since.
+      // Guard the API itself: on insecure contexts navigator.clipboard is
+      // undefined and readText() would throw synchronously inside the timer.
+      if (typeof navigator.clipboard?.readText !== "function") {return;}
       void navigator.clipboard
         .readText()
         .then((text) => {

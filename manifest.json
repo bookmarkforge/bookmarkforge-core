@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T00:07:28.588Z",
+  "generatedAt": "2026-11-09T14:38:43.690Z",
   "version": "1.0.0",
   "source": "private repository (export checkout)",
   "license": "MIT",
@@ -23,7 +23,7 @@
     "src/services/webrtc-sync/validation.ts"
   ],
   "proSpecifiersRewritten": 14,
-  "includedCount": 2007,
+  "includedCount": 2009,
   "excluded": [
     {
       "file": ".zap\\authenticated.context",
@@ -262,10 +262,6 @@
       "reason": "docs: business/internal documentation"
     },
     {
-      "file": "docs\\ARCHITECTURE-SIMPLIFIED.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
       "file": "docs\\ARCHITECTURE-TUTORIAL.md",
       "reason": "docs: business/internal documentation"
     },
@@ -438,14 +434,6 @@
       "reason": "docs: business/internal documentation"
     },
     {
-      "file": "docs\\consolidation-analysis.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\dependency-audit-report.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
       "file": "docs\\developers\\CHEAT-SHEET.md",
       "reason": "docs: business/internal documentation"
     },
@@ -475,10 +463,6 @@
     },
     {
       "file": "docs\\history-attribution.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\i18n-changes-summary.md",
       "reason": "docs: business/internal documentation"
     },
     {
@@ -558,10 +542,6 @@
       "reason": "docs: business/internal documentation"
     },
     {
-      "file": "docs\\scripts-consolidation.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
       "file": "docs\\security-vault-architecture.md",
       "reason": "docs: business/internal documentation"
     },
@@ -579,18 +559,6 @@
     },
     {
       "file": "docs\\security\\USER-SECURITY-GUIDE.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\services-architecture-summary.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\simplification-summary.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\stores-analysis.md",
       "reason": "docs: business/internal documentation"
     },
     {

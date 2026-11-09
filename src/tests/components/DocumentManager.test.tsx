@@ -26,7 +26,13 @@ const mockFindExec = vi.fn().mockResolvedValue([] as any[]);
 const mockUseRxQuery = vi.fn(() => ({ result: [] as any[] }));
 vi.mock("../../hooks/useRxDB", () => ({
   useRxCollection: vi.fn(() => ({
-    find: vi.fn(() => ({ exec: mockFindExec })),
+    // The component issues find().where("isDeleted").eq(false) through the
+    // RxDB query-builder plugin, so the mock has to expose that chain;
+    // useRxQuery is mocked, so the terminal object is never executed.
+    find: vi.fn(() => ({
+      exec: mockFindExec,
+      where: vi.fn(() => ({ eq: vi.fn(() => ({})) })),
+    })),
   })),
   useRxQuery: mockUseRxQuery,
 }));

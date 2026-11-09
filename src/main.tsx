@@ -33,6 +33,8 @@ import { initCrisisHandler } from "./telemetry/crisisHandler";
 import { applyUserCspProfile } from "./utils/cspReportThrottle";
 import { initLicenseStore } from "./store/useLicenseStore";
 import { initSwIntegrityBridge } from "./utils/swIntegrityBridge";
+import { safeGet } from "./store/safeStorage";
+import { STORAGE_KEYS } from "./constants/storage-keys";
 
 import i18n from "./i18n";
 
@@ -206,6 +208,36 @@ window.addEventListener("unhandledrejection", (event) => {
     );
   }
 });
+
+// Pre-unlock render-path warmup: App mounts a chain of lazy boundaries —
+// MotionThemeProvider → MantineThemeProvider → AppContent → the lock gate —
+// and React resolves them as a SERIAL waterfall (each boundary suspends
+// until its chunk arrives). Firing the same dynamic imports here overlaps
+// their fetch+eval with the entry bundle's own evaluation instead of paying
+// the waterfall after first paint; the lazy() calls share the module cache,
+// so render-time resolution is instant and a failed warmup just retries on
+// render. Only the gate this boot will actually render is warmed: the
+// HAS_MASTER_PASSWORD flag mirrors SecureStorage (both are written together
+// on vault setup), so a returning user warms SecurityManager while a first
+// run warms SecurityConfirmation — warming both would make the unused
+// gate's chunk graph compete for main-thread eval before first paint.
+if (typeof window !== "undefined") {
+  // Best-effort warmup: a failed prefetch is retried by the lazy() boundary
+  // when it renders, so the rejection is deliberately not surfaced.
+  const warm = (load: () => Promise<unknown>) => {
+    void load().catch(() => {
+      /* INTENTIONAL SILENCE: warmup failure falls back to the lazy boundary. */
+    });
+  };
+  warm(() => import("./components/MotionThemeProvider"));
+  warm(() => import("./components/MantineThemeProvider"));
+  warm(() => import("./components/app"));
+  if (safeGet(STORAGE_KEYS.HAS_MASTER_PASSWORD) === "true") {
+    warm(() => import("./components/SecurityManager"));
+  } else {
+    warm(() => import("./components/SecurityConfirmation"));
+  }
+}
 
 // Core Web Vitals monitoring (production only to avoid dev noise)
 if (!envBoot.isDev) {

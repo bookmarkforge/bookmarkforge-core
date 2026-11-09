@@ -7,6 +7,10 @@ import type { TFunction } from "i18next";
 import { logger } from "../../utils/logger";
 import { useGuardedAction } from "../../hooks/useGuardedAction";
 import { useGuardedDataLoad } from "../../hooks/useGuardedDataLoad";
+import {
+  boundedBookmarkQuery,
+  MAX_KNOWLEDGE_SCAN_ITEMS,
+} from "../../utils/knowledgeCardBounds";
 import { CardProps } from "./shared-props";
 
 interface Props extends CardProps {
@@ -33,12 +37,20 @@ export const BookmarkEchoes: React.FC<Props> = ({ cardVariants }) => {
     async () => {
       const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
-      const bookmarks = await db.bookmarks.find().exec();
+      // Bounded index-backed sample: an unbounded find() materializes the
+      // whole vault on the main thread for a card that shows top-10 echoes.
+      const bookmarks = await boundedBookmarkQuery(
+        db.bookmarks,
+        MAX_KNOWLEDGE_SCAN_ITEMS,
+        { isDeleted: false },
+      ).exec();
 
       const now = Date.now();
       const entries: EchoEntry[] = [];
 
       for (const bm of bookmarks) {
+        // Defensive: the selector already excludes deleted rows, but mocks
+        // and legacy docs may still carry the flag.
         if (bm.isDeleted) {continue;}
         const createdAt = new Date(bm.createdAt).getTime();
         const daysSinceSave = Math.floor(

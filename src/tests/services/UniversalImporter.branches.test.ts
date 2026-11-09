@@ -364,7 +364,7 @@ describe("UniversalImporter branch coverage", () => {
     const controller = new AbortController();
     let progressCalls = 0;
     const file = createStreamingCsvRowsFile({
-      rowCount: 60,
+      rowCount: 600,
       name: "bulk.csv",
       row: (index) => `Site ${index},https://site${index}.com\n`,
     });
@@ -373,7 +373,7 @@ describe("UniversalImporter branch coverage", () => {
       signal: controller.signal,
       onProgress: () => {
         progressCalls++;
-        if (progressCalls === 2) {
+        if (progressCalls === 10) {
           controller.abort();
         }
       },
@@ -381,9 +381,11 @@ describe("UniversalImporter branch coverage", () => {
 
     expect(result.success).toBe(false);
     expect(result.error).toBe("Import cancelled");
-    // Rows 1..49 are inserted; the abort fires inside the yield at row 50
-    // (index 50) before that row is parsed.
-    expect(mockDb.bookmarks.insert).toHaveBeenCalledTimes(49);
+    // Bookmark inserts are batched behind IMPORT_DEDUP_WINDOW (400): the
+    // first window flushes after record index 400, so rows 1..400 are
+    // inserted; the abort fires inside the yield at index 450 before that
+    // row is parsed and the remaining 49 pending rows are discarded.
+    expect(mockDb.bookmarks.insert).toHaveBeenCalledTimes(400);
     // The rollback query ran and found no rows (mock returns []).
     expect(mockDb.bookmarks.find).toHaveBeenCalled();
   });
@@ -1146,6 +1148,17 @@ describe("UniversalImporter branch coverage", () => {
   });
 
   it("dedups bookmarks by url hash and by bmf_id across vault notes", async () => {
+    // URL-hash dedup runs as a batched `$in` query; the stored row's `url`
+    // is mapped back to the plain SHA-256 basis the importer computed.
+    // (sanitizeUrl is identity-mocked in this file, so the stored URL keeps
+    // the unsanitized form the importer hashed.)
+    mockDb.bookmarks.find.mockImplementation(({ selector }: any) => ({
+      exec: vi.fn().mockResolvedValue(
+        selector?.urlHash?.$in
+          ? [{ id: "existing", url: "https://dup.com" }]
+          : [],
+      ),
+    }));
     mockDb.bookmarks.findOne.mockImplementation(({ selector }: any) => ({
       exec: vi.fn().mockResolvedValue(
         selector.urlHash ? { id: "existing" } : null,

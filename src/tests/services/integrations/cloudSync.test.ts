@@ -1467,9 +1467,20 @@ describe("syncWithAdapter branch coverage", () => {
   it("should fail fast on non-network error during retry", async () => {
     // Arrange: first upload fails with network error → enters retry loop
     // The retry itself fails with an AUTH error (non-network) → early exit
-    mockFetch
-      .mockRejectedValueOnce(new Error("Network error: timeout"))
-      .mockRejectedValueOnce(new Error("Unauthorized: token expired"));
+    // Every fetch rejects: the flow may issue more than one call before it
+    // reaches the retry (token/config lookups), and a one-shot queue that runs
+    // dry hands `undefined` to the response handling, which surfaced as
+    // "Cannot read properties of undefined (reading 'ok')" instead of the
+    // auth error this test is about.
+    let attempt = 0;
+    mockFetch.mockImplementation(async () => {
+      attempt += 1;
+      throw new Error(
+        attempt === 1
+          ? "Network error: timeout"
+          : "Unauthorized: token expired",
+      );
+    });
     service.setBackoffConfig({ baseMs: 10, maxRetries: 3 });
 
     // Act

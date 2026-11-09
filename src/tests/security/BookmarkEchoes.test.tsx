@@ -44,7 +44,11 @@ vi.mock("react-i18next", () => {
 
 const makeDb = (rows: unknown[]) => ({
   bookmarks: {
-    find: () => ({ exec: async () => rows }),
+    find: () => ({
+      sort: () => ({
+        limit: () => ({ exec: async () => rows }),
+      }),
+    }),
     findOne: () => ({
       exec: async () => ({ incrementalPatch: vi.fn().mockResolvedValue(undefined) }),
     }),
@@ -191,7 +195,11 @@ describe("BookmarkEchoes", () => {
   it("logs an error when reviving a bookmark fails", async () => {
     const failingDb = {
       bookmarks: {
-        find: () => ({ exec: async () => [oldBookmark("1", 100)] }),
+        find: () => ({
+          sort: () => ({
+            limit: () => ({ exec: async () => [oldBookmark("1", 100)] }),
+          }),
+        }),
         findOne: () => ({
           exec: async () => {
             throw new Error("revive failed");

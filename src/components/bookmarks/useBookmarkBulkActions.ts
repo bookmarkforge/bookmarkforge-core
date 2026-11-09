@@ -11,6 +11,9 @@ import { useTranslation } from "react-i18next";
 import { logger } from "../../utils/logger";
 import { useGuardedAction } from "../../hooks/useGuardedAction";
 
+/** In-flight find→patch pipelines per bulk batch (keeps RxDB/IDB sane). */
+const BULK_DB_CONCURRENCY = 16;
+
 interface UseBookmarkBulkActionsProps {
   bookmarks: Bookmark[];
   selectedIds: Set<string>;
@@ -50,6 +53,35 @@ export function useBookmarkBulkActions({
   const [isGeneratingEmbeddings, setIsGeneratingEmbeddings] = useState(false);
   const [bulkTagInput, setBulkTagInput] = useState("");
   const bulkMutationRef = useRef(false);
+
+  // Bulk DB ops used to await findOne+incrementalPatch strictly sequentially
+  // per selected id — 2N serialized IndexedDB round-trips. Docs are
+  // independent, so ids are processed in bounded concurrent batches instead:
+  // an unbounded Promise.all over a very large selection would materialize
+  // every document at once, which is the freeze this batching removes.
+  const forEachSelectedDoc = useCallback(
+    async (
+      db: Awaited<ReturnType<typeof initDB>>,
+      fn: (doc: {
+        tags?: string[];
+        content?: string | null;
+        incrementalPatch: (patch: Record<string, unknown>) => Promise<unknown>;
+      }) => unknown,
+    ) => {
+      const ids = Array.from(selectedIds);
+      for (let start = 0; start < ids.length; start += BULK_DB_CONCURRENCY) {
+        await Promise.all(
+          ids.slice(start, start + BULK_DB_CONCURRENCY).map(async (id) => {
+            const doc = await db.bookmarks.findOne(id).exec();
+            if (doc) {
+              await fn(doc as never);
+            }
+          }),
+        );
+      }
+    },
+    [selectedIds],
+  );
   // Only the overview batch uses a guard (long-running + cancellable); the
   // other bulk flows are plain sequential DB loops without UI cancellation.
   const {
@@ -107,23 +139,30 @@ export function useBookmarkBulkActions({
       const db = await initDB();
       const selectedBookmarks = bookmarks.filter((b) => selectedIds.has(b.id));
 
-      for (const b of selectedBookmarks) {
-        const textToAnalyze = `${b.title} ${b.summary || ""} ${b.content || ""}`;
-        const tags = await taggingService.suggestTags(
-          textToAnalyze,
-          "en",
-          b.title,
-          b.tags || [],
-          b.isPrivate !== false,
+      // Tag suggestion is AI-bound; a small concurrency keeps provider
+      // rate limits happy while avoiding fully serialized round-trips.
+      const CONCURRENCY = 3;
+      for (let i = 0; i < selectedBookmarks.length; i += CONCURRENCY) {
+        await Promise.all(
+          selectedBookmarks.slice(i, i + CONCURRENCY).map(async (b) => {
+            const textToAnalyze = `${b.title} ${b.summary || ""} ${b.content || ""}`;
+            const tags = await taggingService.suggestTags(
+              textToAnalyze,
+              "en",
+              b.title,
+              b.tags || [],
+              b.isPrivate !== false,
+            );
+            if (tags.length === 0) {return;}
+            const doc = await db.bookmarks.findOne(b.id).exec();
+            if (doc) {
+              const newTags = Array.from(
+                new Set([...(doc.tags || []), ...tags]),
+              );
+              await doc.incrementalPatch({ tags: newTags });
+            }
+          }),
         );
-        if (tags.length > 0) {
-          const currentTags = b.tags || [];
-          const newTags = Array.from(new Set([...currentTags, ...tags]));
-          const doc = await db.bookmarks.findOne(b.id).exec();
-          if (doc) {
-            await doc.incrementalPatch({ tags: newTags });
-          }
-        }
       }
     } catch (error) {
       logger.error("Bulk auto-tag failed", { error });
@@ -134,90 +173,72 @@ export function useBookmarkBulkActions({
   }, [selectedIds, bookmarks, isBulkTagging]);
 
   const handleBulkAddTag = useCallback(async () => {
-    if (selectedIds.size === 0 || !bulkTagInput.trim() || bulkMutationRef.current) {return;}
+    const tag = bulkTagInput.trim();
+    if (selectedIds.size === 0 || !tag || bulkMutationRef.current) {return;}
     bulkMutationRef.current = true;
     try {
       const db = await initDB();
-      for (const id of selectedIds) {
-        const doc = await db.bookmarks.findOne(id).exec();
-        if (doc) {
-          const currentTags = doc.tags || [];
-          const newTags = Array.from(
-            new Set([...currentTags, bulkTagInput.trim()]),
-          );
-          await doc.incrementalPatch({ tags: newTags });
-        }
-      }
+      await forEachSelectedDoc(db, async (doc) => {
+        const newTags = Array.from(new Set([...(doc.tags || []), tag]));
+        await doc.incrementalPatch({ tags: newTags });
+      });
       setBulkTagInput("");
     } catch (error) {
       logger.error("Bulk add tag failed", { error });
     } finally {
       bulkMutationRef.current = false;
     }
-  }, [selectedIds, bulkTagInput]);
+  }, [selectedIds, bulkTagInput, forEachSelectedDoc]);
 
   const handleBulkRemoveTag = useCallback(async () => {
-    if (selectedIds.size === 0 || !bulkTagInput.trim() || bulkMutationRef.current) {return;}
+    const tag = bulkTagInput.trim();
+    if (selectedIds.size === 0 || !tag || bulkMutationRef.current) {return;}
     bulkMutationRef.current = true;
     try {
       const db = await initDB();
-      for (const id of selectedIds) {
-        const doc = await db.bookmarks.findOne(id).exec();
-        if (doc) {
-          const currentTags = doc.tags || [];
-          const newTags = currentTags.filter(
-            (t: string) => t !== bulkTagInput.trim(),
-          );
-          await doc.incrementalPatch({ tags: newTags });
-        }
-      }
+      await forEachSelectedDoc(db, async (doc) => {
+        const newTags = (doc.tags || []).filter((t) => t !== tag);
+        await doc.incrementalPatch({ tags: newTags });
+      });
       setBulkTagInput("");
     } catch (error) {
       logger.error("Bulk remove tag failed", { error });
     } finally {
       bulkMutationRef.current = false;
     }
-  }, [selectedIds, bulkTagInput]);
+  }, [selectedIds, bulkTagInput, forEachSelectedDoc]);
 
   const handleBulkClearTags = useCallback(async () => {
     if (selectedIds.size === 0 || bulkMutationRef.current) {return;}
     bulkMutationRef.current = true;
     try {
       const db = await initDB();
-      for (const id of selectedIds) {
-        const doc = await db.bookmarks.findOne(id).exec();
-        if (doc) {
-          await doc.incrementalPatch({ tags: [] });
-        }
-      }
+      await forEachSelectedDoc(db, (doc) =>
+        doc.incrementalPatch({ tags: [] }),
+      );
     } catch (error) {
       logger.error("Bulk clear tags failed", { error });
     } finally {
       bulkMutationRef.current = false;
     }
-  }, [selectedIds]);
+  }, [selectedIds, forEachSelectedDoc]);
 
   const handleBulkDelete = useCallback(async () => {
     if (selectedIds.size === 0 || bulkMutationRef.current) {return;}
     bulkMutationRef.current = true;
     try {
       const db = await initDB();
-      for (const id of selectedIds) {
-        const doc = await db.bookmarks.findOne(id).exec();
-        if (doc) {
-          await doc.incrementalPatch({
-            isDeleted: true,
-            updatedAt: new Date().toISOString(),
-          });
-        }
-      }
+      const updatedAt = new Date().toISOString();
+      await forEachSelectedDoc(db, (doc) =>
+        doc.incrementalPatch({ isDeleted: true, updatedAt }),
+      );
       setSelectedIds(new Set());
     } catch (error) {
       logger.error("Bulk delete failed", { error });
     } finally {
       bulkMutationRef.current = false;
     }
-  }, [selectedIds, setSelectedIds]);
+  }, [selectedIds, setSelectedIds, forEachSelectedDoc]);
 
   const handleBulkGenerateOverviews = useCallback(async () => {
     if (selectedIds.size === 0 || bulkMutationRef.current) {return;}
@@ -243,19 +264,25 @@ export function useBookmarkBulkActions({
     try {
       const selectedBookmarks = bookmarks.filter((b) => selectedIds.has(b.id));
       const db = await initDB();
-      for (const bookmark of selectedBookmarks) {
-        if (!bookmark.embedding || bookmark.embedding.length === 0) {
-          const embedding = await ragEngine.generateEmbedding(
-            bookmark.content || bookmark.title || "",
-          );
-          const doc = await db.bookmarks.findOne(bookmark.id).exec();
-          if (doc) {
-            await doc.incrementalPatch({
-              embedding,
-              updatedAt: new Date().toISOString(),
-            });
-          }
-        }
+      // Embeddings are worker-bound; run small concurrent batches so the
+      // worker pool stays saturated instead of one round-trip at a time.
+      const CONCURRENCY = 4;
+      for (let i = 0; i < selectedBookmarks.length; i += CONCURRENCY) {
+        await Promise.all(
+          selectedBookmarks.slice(i, i + CONCURRENCY).map(async (bookmark) => {
+            if (bookmark.embedding && bookmark.embedding.length > 0) {return;}
+            const embedding = await ragEngine.generateEmbedding(
+              bookmark.content || bookmark.title || "",
+            );
+            const doc = await db.bookmarks.findOne(bookmark.id).exec();
+            if (doc) {
+              await doc.incrementalPatch({
+                embedding,
+                updatedAt: new Date().toISOString(),
+              });
+            }
+          }),
+        );
       }
     } catch (error) {
       logger.error("Bulk generate embeddings failed", { error });
@@ -271,22 +298,20 @@ export function useBookmarkBulkActions({
     setIsCleaningContent(true);
     try {
       const db = await initDB();
-      for (const id of selectedIds) {
-        const doc = await db.bookmarks.findOne(id).exec();
-        if (doc && doc.content) {
-          const cleaned = SanitizationService.sanitizeHtml(doc.content);
-          if (cleaned !== doc.content) {
-            await doc.incrementalPatch({ content: cleaned });
-          }
+      await forEachSelectedDoc(db, async (doc) => {
+        if (!doc.content) {return;}
+        const cleaned = SanitizationService.sanitizeHtml(doc.content);
+        if (cleaned !== doc.content) {
+          await doc.incrementalPatch({ content: cleaned });
         }
-      }
+      });
     } catch (error) {
       logger.error("Bulk clean content failed", { error });
     } finally {
       setIsCleaningContent(false);
       bulkMutationRef.current = false;
     }
-  }, [selectedIds]);
+  }, [selectedIds, forEachSelectedDoc]);
 
   return {
     isBulkTagging,

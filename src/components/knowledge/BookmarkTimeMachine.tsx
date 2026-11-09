@@ -38,7 +38,9 @@ export const BookmarkTimeMachine: React.FC<Props> = ({ cardVariants, t }) => {
     async () => {
       const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
-      const bookmarks = await db.bookmarks.find().exec();
+      const bookmarks = await db.bookmarks
+        .find({ selector: { isDeleted: false } })
+        .exec();
 
       const grouped: Record<string, TimelineMonth> = {};
 

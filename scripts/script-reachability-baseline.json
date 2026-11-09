@@ -1,6 +1,7 @@
 {
   "updatedAt": "2026-11-09",
   "knownUnreachable": {
+    "benchmark:import": "By-hand command. The public export's entry corpus is a strict subset of the private one (staging/nightly/ops workflows and internal docs do not ship), so nothing in this repository reaches it; it stays available for manual use.",
     "build:budget-report": "By-hand budget report (node scripts/build-budget-report.mjs), documented in scripts/tooling/README.md; build:ci enforces the budgets in CI.",
     "build:extension:dev": "By-hand command. The public export's entry corpus is a strict subset of the private one (staging/nightly/ops workflows and internal docs do not ship), so nothing in this repository reaches it; it stays available for manual use.",
     "build:landings": "By-hand command. The public export's entry corpus is a strict subset of the private one (staging/nightly/ops workflows and internal docs do not ship), so nothing in this repository reaches it; it stays available for manual use.",
@@ -32,6 +33,7 @@
     "check:no-spanish": "Spanish prose check is part of check:content, not standalone",
     "check:no-unbounded-text:fix": "Rebaseline companion of the no-unbounded-text baseline; the gate prints this alias when the baseline is missing.",
     "check:pro-routes": "Professional routes check runs via tsx directly",
+    "check:release-target": "check:security invokes node scripts/check-release-target.mjs directly (ADR-058 blocking gate); this alias is the documented by-hand/release-path entry, probed by check-launch-checklist and pinned in check-inspector-freeze.",
     "check:removed-deps": "By-hand dependency audit; not in automated check chain",
     "check:rxdb17": "By-hand alias for the RxDB 17 gate; check:quality runs the script directly and docs mark the alias deprecated in favour of check:quality.",
     "check:script-reachability": "No workflow or entry corpus file runs check:script-reachability; it is a standalone checker. Marked as by-hand decision.",

@@ -1003,6 +1003,14 @@ describe("BlockEditor - Auto-save behavior", () => {
       expect(screen.getByLabelText("app_title")).toHaveValue("Save Test");
     });
 
+    // Hydration is suppressed from autosave: the load rewrites the same
+    // values the document already holds, so the effect records a baseline and
+    // stays quiet until a real edit diverges from it. Type one, then let the
+    // debounce fire.
+    fireEvent.change(screen.getByLabelText("app_title"), {
+      target: { value: "Save Test edited" },
+    });
+
     await act(async () => {
       vi.advanceTimersByTime(2000);
     });
@@ -1010,7 +1018,7 @@ describe("BlockEditor - Auto-save behavior", () => {
     await waitFor(() => {
       expect(mockPatch).toHaveBeenCalled();
       const patchCall = mockPatch.mock.calls[0]![0];
-      expect(patchCall.title).toBe("Save Test");
+      expect(patchCall.title).toBe("Save Test edited");
       expect(patchCall.processed).toBe(false);
       expect(patchCall.updatedAt).toBeDefined();
     });
@@ -1032,6 +1040,15 @@ describe("BlockEditor - Auto-save behavior", () => {
     await act(async () => {
       render(<BlockEditor documentId="doc-1" />);
       await vi.advanceTimersByTimeAsync(0);
+    });
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("app_title")).toHaveValue("Doc");
+    });
+    // Same hydration suppression as above: only an edit that diverges from
+    // the loaded baseline reaches the debounced save.
+    fireEvent.change(screen.getByLabelText("app_title"), {
+      target: { value: "Doc edited" },
     });
 
     await act(async () => {

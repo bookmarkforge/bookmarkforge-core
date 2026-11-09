@@ -34,7 +34,9 @@ export const ReadingStreaksDebt: React.FC<Props> = ({ cardVariants }) => {
     async () => {
       const { initDB } = await import("../../container/database");
       const db = await initDB() as BookmarkForgeDB;
-      const bookmarks = await db.bookmarks.find().exec();
+      const bookmarks = await db.bookmarks
+        .find({ selector: { isDeleted: false } })
+        .exec();
 
       const active = bookmarks.filter((b: BookmarkDocType) => !b.isDeleted);
 

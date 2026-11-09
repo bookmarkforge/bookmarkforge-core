@@ -198,8 +198,8 @@ function loadGraphData(
       // Independent collections — fetch concurrently instead of serially;
       // on a large vault the two queries each scan thousands of docs.
       const [docs, bookmarks] = await Promise.all([
-        db.documents.find().exec(),
-        db.bookmarks.find().exec(),
+        db.documents.find({ selector: { isDeleted: false } }).exec(),
+        db.bookmarks.find({ selector: { isDeleted: false } }).exec(),
       ]);
 
       const nodeDocs: GraphNode[] = docs.map((d: { toJSON: () => unknown }) => {

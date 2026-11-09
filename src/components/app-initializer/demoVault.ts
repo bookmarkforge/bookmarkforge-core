@@ -1,5 +1,4 @@
 import { generateId } from "../../utils/id";
-import { hashString } from "../../utils/crypto-core";
 import { initDB } from "../../container/database";
 import { logger } from "../../utils/logger";
 import { safeGet, safeSet } from "../../store/safeStorage";
@@ -113,10 +112,19 @@ export async function createDemoVault() {
         updatedAt: new Date().toISOString(),
       });
 
+      // M-23: `urlHash` is required by the bookmarks schema (dedup index; the
+      // storage layer re-keys it per vault — A4). It is the plain SHA-256 hex
+      // of the URL — the same basis `hashString()` computes — precomputed here
+      // so the seed never awaits `crypto.subtle` mid-insert: both rows are
+      // complete before the batch starts, which removes the in-flight digest
+      // race the demo boot used to have. Keep each value in sync with its URL;
+      // demoVault.test.ts asserts the pair.
       const bookmarks = [
         {
           id: generateId(),
           url: "https://en.wikipedia.org/wiki/Local-first_software",
+          urlHash:
+            "741bacb90a220f77f9a8898ce5d3c3aff3af2f078d3989b65fc2c6027ace47e2",
           title: "Local-first software - Wikipedia",
           content:
             "Local-first software is a set of principles for software that enables both collaboration and ownership for users.",
@@ -134,6 +142,8 @@ export async function createDemoVault() {
         {
           id: generateId(),
           url: "https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API",
+          urlHash:
+            "57c5e67d5d966b6349559ac996f388da38649c6ca5426431a88639c290ebde5d",
           title: "WebGPU API - Web APIs | MDN",
           content:
             "The WebGPU API enables web developers to use the underlying system's GPU for high-performance computations.",
@@ -150,19 +160,10 @@ export async function createDemoVault() {
         },
       ];
 
-      // M-23: `urlHash` is required by the bookmarks schema (dedup index;
-      // the storage layer re-keys it per vault — A4).
-      // Without it every insert fails validation (VD2), the demo vault never
-      // finishes and `DEMO_VAULT_CREATED` is never written. Hash the URL here
-      // exactly like the capture/import paths do.
-      await Promise.all(
-        bookmarks.map(async (bm) =>
-          bookmarksCol.insert({
-            ...bm,
-            urlHash: await hashString(bm.url),
-          }),
-        ),
-      );
+      // Without a urlHash every insert fails validation (VD2) and the demo
+      // vault never finishes; the values above are precomputed, so each
+      // document is complete before the batch starts.
+      await Promise.all(bookmarks.map((bm) => bookmarksCol.insert(bm)));
 
       if (flashcardsCol) {
         const flashcards = [

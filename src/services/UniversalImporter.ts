@@ -371,6 +371,244 @@ function enforceImportRecordLimit(count: number): void {
   }
 }
 
+/** Records buffered between batched dedup queries during bookmark import. */
+const IMPORT_DEDUP_WINDOW = 400;
+/** urlHash operands per `$in` existence query (IndexedDB-friendly bound). */
+const EXISTENCE_QUERY_BATCH = 400;
+/** Documents per `bulkInsert` call inside one dedup window. */
+const BOOKMARK_BULK_INSERT_CHUNK = 100;
+
+interface PendingBookmarkInsert {
+  /** Plain SHA-256 hex of the sanitized URL — the query operand callers pass. */
+  urlHash: string;
+  /** Fully-built document; the storage layer re-keys urlHash on write (A4). */
+  doc: BookmarkDocType;
+}
+
+interface ImportCounters {
+  importedCount: number;
+  skippedCount: number;
+}
+
+/**
+ * Batched urlHash existence check for bookmark dedup.
+ *
+ * The per-record `findOne({ urlHash })` pattern cost one IndexedDB query —
+ * and one keyed-HMAC rewrite — per imported row, which dominates large
+ * HTML/CSV imports. Querying `$in` chunks returns the same information in
+ * ~1/400th of the round-trips; the storage layer already rewrites `$in`
+ * operands (authEncryptionStorage.transformUrlHashOperand).
+ *
+ * Returned documents carry the KEYED stored urlHash, so matches are mapped
+ * back through the decrypted `url` field: `hashString(doc.url)` reproduces
+ * the plain SHA-256 basis the callers computed. The result maps each
+ * existing plain hash to the stored document id (the Markdown importer
+ * needs the id for wikilink resolution). A failed chunk falls back to
+ * per-hash findOne lookups, and a failed lookup marks the hash as
+ * existing — the same fail-closed skip the old per-record catch produced.
+ */
+async function collectExistingUrlHashes(
+  db: BookmarkForgeDB,
+  urlHashes: readonly string[],
+  signal: AbortSignal | undefined,
+): Promise<Map<string, string>> {
+  const existing = new Map<string, string>();
+  const unique = Array.from(new Set(urlHashes));
+  for (let start = 0; start < unique.length; start += EXISTENCE_QUERY_BATCH) {
+    throwIfAborted(signal);
+    const slice = unique.slice(start, start + EXISTENCE_QUERY_BATCH);
+    try {
+      const docs = await db.bookmarks
+        .find({ selector: { urlHash: { $in: slice } } })
+        .exec();
+      await Promise.all(
+        docs.map(async (doc) => {
+          const storedUrl = typeof doc.url === "string" ? doc.url : "";
+          if (storedUrl && typeof doc.id === "string") {
+            existing.set(await hashString(storedUrl), doc.id);
+          }
+        }),
+      );
+    } catch (error) {
+      logger.warn(
+        "[UniversalImporter] Batched urlHash lookup failed; falling back to per-URL queries",
+        { error: error instanceof Error ? error.message : String(error) },
+      );
+      for (const hash of slice) {
+        throwIfAborted(signal);
+        try {
+          const doc = await db.bookmarks
+            .findOne({ selector: { urlHash: hash } })
+            .exec();
+          if (doc) {
+            const storedUrl = typeof doc.url === "string" ? doc.url : "";
+            existing.set(
+              storedUrl ? await hashString(storedUrl) : hash,
+              typeof doc.id === "string" ? doc.id : "",
+            );
+          }
+        } catch {
+          // Fail-closed: an unverifiable URL is skipped, matching the
+          // per-record catch → skippedCount path this replaces.
+          existing.set(hash, "");
+        }
+      }
+    }
+    if (start + EXISTENCE_QUERY_BATCH < unique.length) {
+      await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    }
+  }
+  return existing;
+}
+
+interface BulkInsertResultShape {
+  readonly success?: readonly unknown[];
+  readonly error?: readonly { readonly documentId?: string }[];
+}
+
+type BulkInsertCapable = {
+  bulkInsert?: (
+    documents: BookmarkDocType[],
+  ) => Promise<BulkInsertResultShape | undefined>;
+};
+
+/**
+ * Per-record write path: one `insert` per candidate, in order.
+ *
+ * Used for adapters without `bulkInsert` (test doubles, legacy mocks) and as
+ * the fallback for a chunk whose `bulkInsert` rejected. The Free wall is a
+ * `preInsert` hook, and RxDB runs pre-insert hooks through `Promise.all`
+ * BEFORE writing, so a FREE_LIMIT_REACHED rejects the whole batch with
+ * nothing written. Retrying row by row then reproduces the old partial-import
+ * accounting exactly: rows before the wall are counted, the wall itself is
+ * surfaced as `FreeTierImportLimitReached`.
+ */
+async function insertTrackedRowsIndividually(
+  db: BookmarkForgeDB,
+  items: readonly PendingBookmarkInsert[],
+  options: ImportExecutionOptions,
+  counters: ImportCounters,
+  completedHashes: Set<string>,
+): Promise<void> {
+  for (const item of items) {
+    throwIfAborted(options.signal);
+    try {
+      await insertTrackedBookmark(db, item.doc, options.journal);
+      counters.importedCount++;
+      options.importedCount++;
+    } catch (error) {
+      // Release the reservation so a later duplicate of this URL retries —
+      // the old path only ever recorded a hash after a successful insert.
+      completedHashes.delete(item.urlHash);
+      if (isFreeLimitError(error)) {
+        throw new FreeTierImportLimitReached(
+          options.importedCount,
+          counters.skippedCount,
+        );
+      }
+      counters.skippedCount++;
+    }
+  }
+}
+
+/**
+ * Inserts one window of pre-parsed bookmark candidates.
+ *
+ * Replaces the old per-record `findOne` + `insert` pair: existence is
+ * resolved once per window via `collectExistingUrlHashes`, then the surviving
+ * candidates are written with `bulkInsert` chunks — one storage write per
+ * chunk instead of one per row, which is the dominant cost of a large import
+ * once dedup is batched. The rollback journal, the Free-tier per-record limit
+ * and per-record error isolation are preserved: `bulkInsert` resolves with a
+ * per-document `error` array (skipped, never journaled), and any whole-chunk
+ * rejection falls back to the per-record path described above.
+ * `completedHashes` carries DB-existing AND successfully inserted hashes
+ * across windows, so a repeated URL in the same file is skipped after its
+ * first insert — and a FAILED first insert releases its hash, letting a later
+ * duplicate retry.
+ */
+async function flushBookmarkInsertWindow(
+  db: BookmarkForgeDB,
+  batch: readonly PendingBookmarkInsert[],
+  options: ImportExecutionOptions,
+  counters: ImportCounters,
+  completedHashes: Set<string>,
+): Promise<void> {
+  const existingHashes = await collectExistingUrlHashes(
+    db,
+    batch.map((item) => item.urlHash),
+    options.signal,
+  );
+  for (const hash of existingHashes.keys()) {
+    completedHashes.add(hash);
+  }
+
+  const pending: PendingBookmarkInsert[] = [];
+  for (const item of batch) {
+    throwIfAborted(options.signal);
+    if (completedHashes.has(item.urlHash)) {
+      counters.skippedCount++;
+      continue;
+    }
+    // Reserve while the chunk is in flight so a repeated URL inside this
+    // window is skipped; a failed row releases the reservation again.
+    completedHashes.add(item.urlHash);
+    pending.push(item);
+  }
+
+  const collection = db.bookmarks as unknown as BulkInsertCapable;
+  const bulkInsert = collection.bulkInsert;
+  if (typeof bulkInsert !== "function") {
+    await insertTrackedRowsIndividually(
+      db,
+      pending,
+      options,
+      counters,
+      completedHashes,
+    );
+    return;
+  }
+
+  for (let start = 0; start < pending.length; start += BOOKMARK_BULK_INSERT_CHUNK) {
+    throwIfAborted(options.signal);
+    const chunk = pending.slice(start, start + BOOKMARK_BULK_INSERT_CHUNK);
+    const failed = new Set<string>();
+    try {
+      const result = await bulkInsert.call(
+        collection,
+        chunk.map((item) => item.doc),
+      );
+      for (const entry of result?.error ?? []) {
+        if (entry && typeof entry.documentId === "string") {
+          failed.add(entry.documentId);
+        }
+      }
+    } catch {
+      // Whole-chunk rejection: nothing was written (pre-insert hooks run
+      // before the storage write), so the per-record retry cannot duplicate
+      // a row. This is the Free wall's path and the exact-accounting path.
+      await insertTrackedRowsIndividually(
+        db,
+        chunk,
+        options,
+        counters,
+        completedHashes,
+      );
+      continue;
+    }
+    for (const item of chunk) {
+      if (failed.has(item.doc.id)) {
+        completedHashes.delete(item.urlHash);
+        counters.skippedCount++;
+        continue;
+      }
+      options.journal.bookmarkIds.push(item.doc.id);
+      counters.importedCount++;
+      options.importedCount++;
+    }
+  }
+}
+
 /** Yield periodically so large imports do not monopolize the main thread. */
 async function yieldImportWork(
   index: number,
@@ -1057,14 +1295,26 @@ export class UniversalImporter {
     content: string,
     options: ImportExecutionOptions,
   ): Promise<ImportResult> {
-    let importedCount = 0;
-    let skippedCount = 0;
-
     const parser = new DOMParser();
     const doc = parser.parseFromString(content, "text/html");
     const links = doc.querySelectorAll("a");
     const headings = Array.from(doc.querySelectorAll("h3"));
     enforceImportRecordLimit(links.length);
+
+    const counters: ImportCounters = { importedCount: 0, skippedCount: 0 };
+    const pending: PendingBookmarkInsert[] = [];
+    const completedHashes = new Set<string>();
+    const flushPending = async (): Promise<void> => {
+      if (pending.length === 0) {return;}
+      const batch = pending.splice(0, pending.length);
+      await flushBookmarkInsertWindow(
+        db,
+        batch,
+        options,
+        counters,
+        completedHashes,
+      );
+    };
 
     for (let index = 0; index < links.length; index++) {
       await yieldImportWork(index, links.length, options);
@@ -1084,23 +1334,21 @@ export class UniversalImporter {
 
         const url = sanitizeUrl(href || "");
         if (!url || !url.startsWith("http")) {
-          skippedCount++;
+          counters.skippedCount++;
           continue;
         }
 
         const title = normalizeImportedTitle(rawTitle, "Untitled");
         const tags = normalizeImportedTags((tagsAttr || "").split(","));
         const createdAt = normalizeImportDate(addDateAttr);
+        const urlHash = await hashString(url);
 
-        const existing = await db.bookmarks
-          .findOne({ selector: { urlHash: await hashString(url) } })
-          .exec();
-
-        if (!existing) {
-          await insertTrackedBookmark(db, {
+        pending.push({
+          urlHash,
+          doc: {
             id: generateId(),
             url,
-            urlHash: await hashString(url),
+            urlHash,
             title,
             content: "",
             summary: "",
@@ -1116,21 +1364,25 @@ export class UniversalImporter {
             processed: false,
             relatedLinks: [],
             visitCount: 0,
-          } as BookmarkDocType, options.journal);
-          importedCount++;
-          options.importedCount++;
-        } else {
-          skippedCount++;
+          } as BookmarkDocType,
+        });
+        if (pending.length >= IMPORT_DEDUP_WINDOW) {
+          await flushPending();
         }
       } catch (error) {
         if (isFreeLimitError(error)) {
-          throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+          throw new FreeTierImportLimitReached(options.importedCount, counters.skippedCount);
         }
-        skippedCount++;
+        counters.skippedCount++;
       }
     }
+    await flushPending();
 
-    return { success: true, importedCount, skippedCount };
+    return {
+      success: true,
+      importedCount: counters.importedCount,
+      skippedCount: counters.skippedCount,
+    };
   }
 
   /**
@@ -1142,10 +1394,22 @@ export class UniversalImporter {
     content: string | CSVRecordSource,
     options: ImportExecutionOptions,
   ): Promise<ImportResult> {
-    let importedCount = 0;
-    let skippedCount = 0;
+    const counters: ImportCounters = { importedCount: 0, skippedCount: 0 };
     let headers: string[] = [];
     let recordIndex = 0;
+    const pending: PendingBookmarkInsert[] = [];
+    const completedHashes = new Set<string>();
+    const flushPending = async (): Promise<void> => {
+      if (pending.length === 0) {return;}
+      const batch = pending.splice(0, pending.length);
+      await flushBookmarkInsertWindow(
+        db,
+        batch,
+        options,
+        counters,
+        completedHashes,
+      );
+    };
     const records =
       typeof content === "string"
         ? UniversalImporter.iterateCSVRecords(content)
@@ -1182,19 +1446,17 @@ export class UniversalImporter {
         const tags = normalizeImportedTags(rawTags.split(/[,;]/));
 
         if (!url || !url.startsWith("http")) {
-          skippedCount++;
+          counters.skippedCount++;
           continue;
         }
 
-        const existing = await db.bookmarks
-          .findOne({ selector: { urlHash: await hashString(url) } })
-          .exec();
-
-        if (!existing) {
-          await insertTrackedBookmark(db, {
+        const urlHash = await hashString(url);
+        pending.push({
+          urlHash,
+          doc: {
             id: generateId(),
             url,
-            urlHash: await hashString(url),
+            urlHash,
             title,
             content: "",
             summary: SanitizationService.sanitizeHtml(
@@ -1215,21 +1477,25 @@ export class UniversalImporter {
             processed: false,
             relatedLinks: [],
             visitCount: 0,
-          } as BookmarkDocType, options.journal);
-          importedCount++;
-          options.importedCount++;
-        } else {
-          skippedCount++;
+          } as BookmarkDocType,
+        });
+        if (pending.length >= IMPORT_DEDUP_WINDOW) {
+          await flushPending();
         }
       } catch (error) {
         if (isFreeLimitError(error)) {
-          throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+          throw new FreeTierImportLimitReached(options.importedCount, counters.skippedCount);
         }
-        skippedCount++;
+        counters.skippedCount++;
       }
     }
+    await flushPending();
 
-    return { success: true, importedCount, skippedCount };
+    return {
+      success: true,
+      importedCount: counters.importedCount,
+      skippedCount: counters.skippedCount,
+    };
   }
 
   /**
@@ -1241,8 +1507,7 @@ export class UniversalImporter {
     content: string,
     options: ImportExecutionOptions,
   ): Promise<ImportResult> {
-    let importedCount = 0;
-    let skippedCount = 0;
+    const counters: ImportCounters = { importedCount: 0, skippedCount: 0 };
 
     try {
       const parsed = JSON.parse(content);
@@ -1250,7 +1515,6 @@ export class UniversalImporter {
         parsed?.data?.articles || parsed?.articles || parsed || [];
 
       if (!Array.isArray(articles)) {
-        skippedCount = 0;
         return {
           success: true,
           importedCount: 0,
@@ -1258,6 +1522,20 @@ export class UniversalImporter {
           error: "No articles array found",
         };
       }
+
+      const pending: PendingBookmarkInsert[] = [];
+      const completedHashes = new Set<string>();
+      const flushPending = async (): Promise<void> => {
+        if (pending.length === 0) {return;}
+        const batch = pending.splice(0, pending.length);
+        await flushBookmarkInsertWindow(
+          db,
+          batch,
+          options,
+          counters,
+          completedHashes,
+        );
+      };
 
       enforceImportRecordLimit(articles.length);
       for (let index = 0; index < articles.length; index++) {
@@ -1283,19 +1561,17 @@ export class UniversalImporter {
           );
 
           if (!url || !url.startsWith("http")) {
-            skippedCount++;
+            counters.skippedCount++;
             continue;
           }
 
-          const existing = await db.bookmarks
-            .findOne({ selector: { urlHash: await hashString(url) } })
-            .exec();
-
-          if (!existing) {
-            await insertTrackedBookmark(db, {
+          const urlHash = await hashString(url);
+          pending.push({
+            urlHash,
+            doc: {
               id: generateId(),
               url,
-              urlHash: await hashString(url),
+              urlHash,
               title,
               content: SanitizationService.sanitizeHtml(
                 normalizeImportedContent(
@@ -1317,19 +1593,19 @@ export class UniversalImporter {
               isDeleted: false,
               relatedLinks: [],
               visitCount: 0,
-            } as BookmarkDocType, options.journal);
-            importedCount++;
-            options.importedCount++;
-          } else {
-            skippedCount++;
+            } as BookmarkDocType,
+          });
+          if (pending.length >= IMPORT_DEDUP_WINDOW) {
+            await flushPending();
           }
         } catch (error) {
           if (isFreeLimitError(error)) {
-            throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+            throw new FreeTierImportLimitReached(options.importedCount, counters.skippedCount);
           }
-          skippedCount++;
+          counters.skippedCount++;
         }
       }
+      await flushPending();
     } catch (error) {
       if (error instanceof FreeTierImportLimitReached || isFreeLimitError(error)) {
         throw error;
@@ -1342,7 +1618,11 @@ export class UniversalImporter {
       };
     }
 
-    return { success: true, importedCount, skippedCount };
+    return {
+      success: true,
+      importedCount: counters.importedCount,
+      skippedCount: counters.skippedCount,
+    };
   }
 
   /**
@@ -1469,6 +1749,23 @@ export class UniversalImporter {
 
       // Import Bookmarks
       if (Array.isArray(data.bookmarks)) {
+        const bookmarkCounters: ImportCounters = {
+          importedCount: 0,
+          skippedCount: 0,
+        };
+        const pending: PendingBookmarkInsert[] = [];
+        const completedHashes = new Set<string>();
+        const flushPending = async (): Promise<void> => {
+          if (pending.length === 0) {return;}
+          const batch = pending.splice(0, pending.length);
+          await flushBookmarkInsertWindow(
+            db,
+            batch,
+            options,
+            bookmarkCounters,
+            completedHashes,
+          );
+        };
         for (let index = 0; index < data.bookmarks.length; index++) {
           await yieldImportWork(index, data.bookmarks.length, options);
           throwIfAborted(options.signal);
@@ -1479,25 +1776,23 @@ export class UniversalImporter {
             // SKIP the row, never insert a bookmark with an empty url.
             const url = sanitizeUrl(item.url || "");
             if (!url || !url.startsWith("http")) {
-              skippedCount++;
+              bookmarkCounters.skippedCount++;
               continue;
             }
 
             // Query only after sanitization so raw attacker-controlled URLs do
             // not enter database selectors or duplicate checks.
-            const existing = await db.bookmarks
-              .findOne({ selector: { urlHash: await hashString(url) } })
-              .exec();
-
-            if (!existing) {
-              const lastChecked = normalizeOptionalImportDate(item.lastChecked);
-              const lastVisitedAt = normalizeOptionalImportDate(item.lastVisitedAt);
-              const broken =
-                typeof item.broken === "boolean" ? item.broken : undefined;
-              await insertTrackedBookmark(db, {
+            const urlHash = await hashString(url);
+            const lastChecked = normalizeOptionalImportDate(item.lastChecked);
+            const lastVisitedAt = normalizeOptionalImportDate(item.lastVisitedAt);
+            const broken =
+              typeof item.broken === "boolean" ? item.broken : undefined;
+            pending.push({
+              urlHash,
+              doc: {
                 id: generateId(),
                 url,
-                urlHash: await hashString(url),
+                urlHash,
                 title: normalizeImportedTitle(
                   item.title,
                   "Untitled Bookmark",
@@ -1533,22 +1828,24 @@ export class UniversalImporter {
                 ...(lastVisitedAt === undefined ? {} : { lastVisitedAt }),
                 relatedLinks: normalizeImportedRelatedLinks(item.relatedLinks),
                 visitCount: normalizeImportedInteger(item.visitCount, 1_000_000),
-              } as BookmarkDocType, options.journal);
-              importedCount++;
-              options.importedCount++;
-            } else {
-              skippedCount++;
+              } as BookmarkDocType,
+            });
+            if (pending.length >= IMPORT_DEDUP_WINDOW) {
+              await flushPending();
             }
           } catch (e) {
             if (isFreeLimitError(e)) {
-              throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+              throw new FreeTierImportLimitReached(options.importedCount, bookmarkCounters.skippedCount);
             }
             logger.warn("[UniversalImporter] Failed to import bookmark", {
               error: e instanceof Error ? e.message : String(e),
             });
-            skippedCount++;
+            bookmarkCounters.skippedCount++;
           }
         }
+        await flushPending();
+        importedCount += bookmarkCounters.importedCount;
+        skippedCount += bookmarkCounters.skippedCount;
       }
 
       // Pre-allocate document IDs so links can be restored regardless of
@@ -1785,10 +2082,22 @@ export class UniversalImporter {
     content: string | CSVRecordSource,
     options: ImportExecutionOptions,
   ): Promise<ImportResult> {
-    let importedCount = 0;
-    let skippedCount = 0;
+    const counters: ImportCounters = { importedCount: 0, skippedCount: 0 };
     let recordIndex = 0;
     let headers: string[] = [];
+    const pending: PendingBookmarkInsert[] = [];
+    const completedHashes = new Set<string>();
+    const flushPending = async (): Promise<void> => {
+      if (pending.length === 0) {return;}
+      const batch = pending.splice(0, pending.length);
+      await flushBookmarkInsertWindow(
+        db,
+        batch,
+        options,
+        counters,
+        completedHashes,
+      );
+    };
     const records =
       typeof content === "string"
         ? UniversalImporter.iterateCSVRecords(content)
@@ -1823,17 +2132,13 @@ export class UniversalImporter {
 
       if (url && url.startsWith("http")) {
         try {
-          const existing = await db.bookmarks
-            .findOne({
-              selector: { urlHash: await hashString(url) },
-            })
-            .exec();
-
-          if (!existing) {
-            await insertTrackedBookmark(db, {
+          const urlHash = await hashString(url);
+          pending.push({
+            urlHash,
+            doc: {
               id: generateId(),
               url,
-              urlHash: await hashString(url),
+              urlHash,
               title: title || url,
               content: "",
               summary: "",
@@ -1846,27 +2151,31 @@ export class UniversalImporter {
               isDeleted: false,
               relatedLinks: [],
               visitCount: 0,
-            } as BookmarkDocType, options.journal);
-            importedCount++;
-            options.importedCount++;
-          } else {
-            skippedCount++;
+            } as BookmarkDocType,
+          });
+          if (pending.length >= IMPORT_DEDUP_WINDOW) {
+            await flushPending();
           }
         } catch (error) {
           if (isFreeLimitError(error)) {
-            throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+            throw new FreeTierImportLimitReached(options.importedCount, counters.skippedCount);
           }
-          skippedCount++;
+          counters.skippedCount++;
         }
       } else if (line) {
         // Audit 16-E2: rows with a disallowed scheme (javascript:, data:,
         // file:, …) are counted as skipped instead of falling through the
         // loop silently — the caller can now show an accurate count.
-        skippedCount++;
+        counters.skippedCount++;
       }
     }
+    await flushPending();
 
-    return { success: true, importedCount, skippedCount };
+    return {
+      success: true,
+      importedCount: counters.importedCount,
+      skippedCount: counters.skippedCount,
+    };
   }
   /**
    * Import a Markdown/Obsidian vault ZIP (the format UniversalExporter's
@@ -2070,7 +2379,33 @@ export class UniversalImporter {
       note: ParsedMarkdownNote;
       id: string;
       folderId?: string;
+      /** Sanitized URL + plain hash cached from the dedup pre-pass. */
+      url?: string;
+      urlHash?: string;
     }> = [];
+
+    // Dedup pre-pass: bookmark notes without the stable bmf_id contract are
+    // checked by URL hash. Collecting them first lets the existence lookup
+    // run as chunked `$in` queries instead of one findOne per note, and the
+    // sanitized url/hash are reused by pass 2 instead of being recomputed.
+    const urlInfoByNote = new Map<
+      ParsedMarkdownNote,
+      { url: string; urlHash: string }
+    >();
+    const dedupRequests: string[] = [];
+    for (const note of notes) {
+      if (note.kind !== "bookmark" || !note.url || note.bmfId) {continue;}
+      const url = sanitizeUrl(note.url);
+      if (!url || !url.startsWith("http")) {continue;}
+      const urlHash = await hashString(url);
+      urlInfoByNote.set(note, { url, urlHash });
+      dedupRequests.push(urlHash);
+    }
+    const existingUrlIds = await collectExistingUrlHashes(
+      db,
+      dedupRequests,
+      options.signal,
+    );
 
     for (let index = 0; index < notes.length; index++) {
       throwIfAborted(options.signal);
@@ -2078,17 +2413,17 @@ export class UniversalImporter {
 
       // Bookmarks without the stable id contract dedup by URL hash, matching
       // the CSV/HTML/JSON importers.
-      if (note.kind === "bookmark" && note.url && !note.bmfId) {
-        const url = sanitizeUrl(note.url);
-        if (url && url.startsWith("http")) {
-          const existing = await db.bookmarks
-            .findOne({ selector: { urlHash: await hashString(url) } })
-            .exec();
-          if (existing) {
-            slugMap.set(note.slug, { type: "bookmark", id: existing.id, url });
-            skippedCount++;
-            continue;
-          }
+      const urlInfo = urlInfoByNote.get(note);
+      if (urlInfo) {
+        const existingId = existingUrlIds.get(urlInfo.urlHash);
+        if (existingId !== undefined) {
+          slugMap.set(note.slug, {
+            type: "bookmark",
+            id: existingId,
+            url: urlInfo.url,
+          });
+          skippedCount++;
+          continue;
         }
       }
 
@@ -2118,7 +2453,7 @@ export class UniversalImporter {
         ? note.bmfId
         : generateId();
       if (note.bmfId) {assignedIds.set(note.bmfId, id);}
-      plan.push({ note, id });
+      plan.push({ note, id, url: urlInfo?.url, urlHash: urlInfo?.urlHash });
       slugMap.set(note.slug, { type: note.kind, id, url: note.url });
     }
 
@@ -2145,11 +2480,14 @@ export class UniversalImporter {
       const { note, id, folderId } = entry;
       try {
         if (note.kind === "bookmark") {
-          const url = sanitizeUrl(note.url || "");
+          // url/urlHash were sanitized + hashed in the dedup pre-pass when
+          // the note had no bmf_id; bmf_id notes still compute them here.
+          const url = entry.url ?? sanitizeUrl(note.url || "");
           if (!url || !url.startsWith("http")) {
             skippedCount++;
             continue;
           }
+          const urlHash = entry.urlHash ?? (await hashString(url));
           const relatedLinks = resolveBookmarkRelatedLinks(
             note.relatedLinks,
             slugMap,
@@ -2159,7 +2497,7 @@ export class UniversalImporter {
             {
               id,
               url,
-              urlHash: await hashString(url),
+              urlHash,
               title: normalizeImportedTitle(note.title, "Untitled Bookmark"),
               content: normalizeImportedContent(note.content),
               summary: normalizeImportedContent(note.summary),

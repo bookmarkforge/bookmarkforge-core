@@ -172,8 +172,6 @@ here still exists.
 | `npm run ci:local` | `ci:local` plus the browser suites. |
 | `npm run gate:refresh` | One ordered regeneration pass for the drift-sensitive artifacts. |
 | `check:landing-smoke (mapped to landing smoke checks)` | Opens the 31 landing routes in Chromium: navigation, critical resources, links and console errors (ADR-062). Needs `npx playwright install chromium`. |
-| `npm run benchmark:import-csv` | Importer benchmark over a large CSV. |
-| `npm run benchmark:storage` | Storage benchmark (Dexie vs the RxDB SQLite trial). |
 | `npm run report:all` | Renders `webrtc-recovery-history.json` as a self-contained HTML trend page. |
 | `npm run check:vacuous-tests` | Assertion-integrity ratchet for the E2E suites: fails if a test that passes when its feature is absent is added without a baseline entry, and verifies the declared suite sizes in `docs/ops-nightly.md` match the tree. The current debt (1589 of 2050 tests in the human-like suite) is baselined on purpose — see `scripts/vacuous-tests-baseline.json`. |
 | `npm run report:all` | Appends one WebRTC recovery summary to the nightly history file. |

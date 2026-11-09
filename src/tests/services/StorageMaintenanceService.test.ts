@@ -57,7 +57,13 @@ describe("StorageMaintenanceService", () => {
   });
 
   it("deletes WebLLM databases when the databases API is available", async () => {
-    const deleteDatabase = vi.fn();
+    // The real API returns an IDBOpenDBRequest whose onsuccess fires when the
+    // deletion completes; the mock mirrors that contract.
+    const deleteDatabase = vi.fn(() => {
+      const req: { onsuccess?: () => void; onerror?: () => void; onblocked?: () => void } = {};
+      queueMicrotask(() => req.onsuccess?.());
+      return req;
+    });
     const cachesMock = {
       keys: vi.fn().mockResolvedValue([]),
       open: vi.fn(),

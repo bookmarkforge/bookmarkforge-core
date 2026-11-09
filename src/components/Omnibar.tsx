@@ -94,8 +94,19 @@ const Omnibar = ({
 
   const docsCollection = useRxCollection("documents");
   const bookmarksCollection = useRxCollection("bookmarks");
-  const { result: docs = [] } = useRxQuery(docsCollection?.find());
-  const { result: bookmarks = [] } = useRxQuery(bookmarksCollection?.find());
+  // Only subscribe while the omnibar is open: it is mounted permanently,
+  // and hydrating + Fuse-indexing the whole vault on every app render was
+  // pure startup cost. Queries are memoized so keystrokes do not resubscribe.
+  const docsQuery = useMemo(
+    () => (isOpen && docsCollection ? docsCollection.find() : undefined),
+    [isOpen, docsCollection],
+  );
+  const bookmarksQuery = useMemo(
+    () => (isOpen && bookmarksCollection ? bookmarksCollection.find() : undefined),
+    [isOpen, bookmarksCollection],
+  );
+  const { result: docs = [] } = useRxQuery(docsQuery);
+  const { result: bookmarks = [] } = useRxQuery(bookmarksQuery);
 
   const allItems = useMemo(
     () =>

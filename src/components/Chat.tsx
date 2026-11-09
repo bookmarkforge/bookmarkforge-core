@@ -124,9 +124,14 @@ export default function Chat({ onSelectSource }: ChatProps) {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const messagesCollection = useRxCollection("messages");
-  const messagesQuery = useRxQuery(
-    messagesCollection?.find().sort({ createdAt: "asc" }),
+  // Memoize the RxQuery: an inline find() gets a new identity every render,
+  // and useRxQuery resubscribes + re-execs on identity change — per streamed
+  // token that meant a full messages re-query per chunk.
+  const messagesRxQuery = useMemo(
+    () => messagesCollection?.find().sort({ createdAt: "asc" }),
+    [messagesCollection],
   );
+  const messagesQuery = useRxQuery(messagesRxQuery);
   const scrollRef = useRef<HTMLDivElement>(null);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { ttsService, VoiceSettings } from "../services/ai/TTSService";
 import {
   Play,
@@ -67,13 +67,23 @@ export const TtsPlayer = ({
     pitch: 1,
     volume: 1,
   });
-  const availableVoices = useMemo(
-    () =>
-      ttsService.isWebSpeechAvailable()
-        ? ttsService.getVoicesForLanguage(lang)
-        : [],
-    [lang],
+  // Voices load asynchronously in most browsers (empty until the
+  // `voiceschanged` event), so keep them in state and refresh on that event
+  // instead of memoizing a one-shot snapshot that can stay empty forever.
+  const [availableVoices, setAvailableVoices] = useState(() =>
+    ttsService.isWebSpeechAvailable()
+      ? ttsService.getVoicesForLanguage(lang)
+      : [],
   );
+  useEffect(() => {
+    if (!ttsService.isWebSpeechAvailable()) {return;}
+    const refresh = () =>
+      setAvailableVoices(ttsService.getVoicesForLanguage(lang));
+    refresh();
+    const synth = window.speechSynthesis;
+    synth?.addEventListener?.("voiceschanged", refresh);
+    return () => synth?.removeEventListener?.("voiceschanged", refresh);
+  }, [lang]);
   const [selectedVoice, setSelectedVoice] = useState(() => {
     if (ttsService.isWebSpeechAvailable()) {
       const voices = ttsService.getVoicesForLanguage(lang);
@@ -81,6 +91,16 @@ export const TtsPlayer = ({
     }
     return "";
   });
+  // When voices arrive late (or the language changes), keep the selection
+  // valid: fall back to the first available voice.
+  useEffect(() => {
+    if (
+      availableVoices.length > 0 &&
+      !availableVoices.some((v) => v.voiceURI === selectedVoice)
+    ) {
+      setSelectedVoice(availableVoices[0]!.voiceURI);
+    }
+  }, [availableVoices, selectedVoice]);
 
   // Karaoke State
   const [currentChunk, setCurrentChunk] = useState<string>("");

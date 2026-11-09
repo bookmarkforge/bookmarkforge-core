@@ -313,7 +313,10 @@ export const BookmarkReaderModal = ({
         const scrollHeight = container.scrollHeight - container.clientHeight;
         const progress =
           scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
-        const nextProgress = Math.min(100, Math.max(0, progress));
+        // Integer percent: the UI only ever renders Math.round(progress), so
+        // fractional updates re-rendered the whole modal (and its markdown
+        // pipeline) on every scroll event for no visible change.
+        const nextProgress = Math.round(Math.min(100, Math.max(0, progress)));
         setProgress((previous) =>
           previous === nextProgress ? previous : nextProgress,
         );

@@ -56,22 +56,6 @@ export interface RxDBSubscription {
   unsubscribe: () => void;
 }
 
-// Type for BlockNote editor (simplified interface)
-interface _BlockNoteEditor {
-  getTextCursorPosition: () => { block: { content?: Array<{ text: string }> } };
-  insertBlocks: (
-    blocks: Array<{ type: string; content?: string }>,
-    referenceBlock: unknown,
-    placement: "before" | "after",
-  ) => void;
-  updateBlock: (
-    block: unknown,
-    updates: { type: string; content?: string },
-  ) => void;
-  replaceBlocks: (blocksToRemove: unknown[], blocksToInsert: unknown[]) => void;
-  document: Array<unknown>;
-}
-
 // Type for AI Manager (ProviderManager interface)
 export interface AIManager {
   generateText: (

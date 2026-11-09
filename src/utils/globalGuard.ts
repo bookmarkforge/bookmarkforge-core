@@ -4,6 +4,9 @@
  * Fail-safe wrappers for fetch and async ops. Every rejection is contained,
  * sanitized via logger and reported locally via errorReporter (no remote sink).
  * Never lets an unhandled promise kill the tab.
+ *
+ * TODO: These utilities are currently only used in tests. Consider adopting
+ * them in production code for better error containment and reporting.
  */
 
 import { logger } from "./logger";

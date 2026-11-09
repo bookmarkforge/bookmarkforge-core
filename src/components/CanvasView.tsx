@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import {
   ReactFlow,
   MiniMap,
@@ -85,8 +85,13 @@ export const CanvasView = () => {
   const docsCollection = useRxCollection("documents");
   const bookmarksCollection = useRxCollection("bookmarks");
 
-  const { result: docs = [] } = useRxQuery(docsCollection?.find());
-  const { result: bookmarks = [] } = useRxQuery(bookmarksCollection?.find());
+  const docsQuery = useMemo(() => docsCollection?.find(), [docsCollection]);
+  const bookmarksQuery = useMemo(
+    () => bookmarksCollection?.find(),
+    [bookmarksCollection],
+  );
+  const { result: docs = [] } = useRxQuery(docsQuery);
+  const { result: bookmarks = [] } = useRxQuery(bookmarksQuery);
 
   const onConnect = useCallback(
     (params: Connection | Edge) =>

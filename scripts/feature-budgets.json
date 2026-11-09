@@ -10,6 +10,7 @@
     { "id": "pdf", "label": "PDF and HTML-to-PDF", "patterns": ["^pdf-", "^pdf\\.worker", "^html2pdf-"], "budgetBytes": 2883584 },
     { "id": "ai-local", "label": "local AI runtime", "patterns": ["^transformers\\.web-", "^ort-wasm-", "^WebLLMService-"], "budgetBytes": 26214400 },
     { "id": "charts", "label": "dashboard charts", "patterns": ["^CategoricalChart-"], "budgetBytes": 345088 },
+    { "id": "react-runtime", "label": "React/client runtime", "patterns": ["^client-", "^react-", "^react-dom-", "^jsx-runtime-", "^rolldown-runtime-", "^polyfills-"], "budgetBytes": 786432 },
     { "id": "runtime-vendors", "label": "large runtime vendors", "patterns": ["^native-", "^prod-", "^esm-"], "budgetBytes": 1572864 },
     { "id": "mlc-runtime", "label": "WebLLM/MLC runtime vendor", "patterns": ["^lib-"], "budgetBytes": 7340032 },
     { "id": "styles", "label": "feature styles", "patterns": ["^style-"], "budgetBytes": 307200 },

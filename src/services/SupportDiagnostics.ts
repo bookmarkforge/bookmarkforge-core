@@ -1,9 +1,14 @@
 /**
- * SupportDiagnostics — real browser capability probes for the Help Center
- * Diagnostics tab. Each check performs an actual probe (IndexedDB write/read
- * round-trip, Storage Quota API, WebRTC ICE gathering, WebGPU adapter lookup,
- * network status, Ollama reachability, WebLLM readiness) instead of returning
- * hardcoded results.
+ * Capability Probe Service (formerly SupportDiagnostics)
+ *
+ * Real browser capability probes for the Help Center Diagnostics tab.
+ * Each check performs an actual probe (IndexedDB write/read round-trip,
+ * Storage Quota API, WebRTC ICE gathering, WebGPU adapter lookup,
+ * network status, Ollama reachability, WebLLM readiness) instead of
+ * returning hardcoded results.
+ *
+ * This is distinct from SystemDiagnosticsService which provides app-level
+ * health checks. This service focuses on browser/environment capabilities.
  *
  * All functions are defensive: they resolve (never reject) and fall back to
  * a "not available / failed" result when the underlying API is missing or

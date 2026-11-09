@@ -197,6 +197,12 @@ class AuditLogService {
   // (flush/forceFlush/recover) — otherwise a queued entry would recreate
   // the deleted secure vault IndexedDB with a freshly minted device key.
   private suspended = false;
+  // Bounded self-heal for failed flushes: without a reschedule, entries
+  // re-queued by the catch below would wait for the next record() or an
+  // unload, and a persistently failing store would silently drop the oldest
+  // once pendingWrites exceeds MAX_ENTRIES.
+  private flushRetryCount = 0;
+  private static readonly MAX_FLUSH_RETRIES = 5;
   private readonly BATCH_INTERVAL_MS = 5000; // Flush every 5 seconds
 
   // ── Attestation chain (H2) ──────────────────────────────────────────────
@@ -410,15 +416,33 @@ class AuditLogService {
             this.pendingWrites = [...entries, ...this.pendingWrites].slice(-MAX_ENTRIES);
             return;
           } catch {
-            // Continue to the bounded in-memory queue below.
+            // INTENTIONAL SILENCE: sessionStorage fallback unavailable —
+            // continue to the bounded in-memory queue below.
           }
         }
         throw error;
       }
+      this.flushRetryCount = 0;
     } catch (error) {
       logger.warn("[AuditLog] Persist deferred until vault unlock", { error: safeErrorForLog(error) });
       // Re-queue entries for next flush, retaining the same hard bound.
       this.pendingWrites = [...entries, ...this.pendingWrites].slice(-MAX_ENTRIES);
+      // Schedule a bounded retry so a transient failure self-heals instead
+      // of stranding the batch until the next record() or pagehide.
+      if (
+        !this.suspended &&
+        this.pendingWrites.length > 0 &&
+        this.flushRetryCount < AuditLogService.MAX_FLUSH_RETRIES &&
+        !this.writeTimer
+      ) {
+        this.flushRetryCount += 1;
+        this.writeTimer = setTimeout(() => {
+          this.writeTimer = null;
+          this.flush().catch((err) =>
+            logger.error("[AuditLog] Flush failed", { error: safeErrorForLog(err) }),
+          );
+        }, this.BATCH_INTERVAL_MS * this.flushRetryCount);
+      }
     } finally {
       // Clear this before the operation resolves so a new record arriving in
       // the same turn can schedule a fresh flush rather than being lost
@@ -464,7 +488,8 @@ class AuditLogService {
         ].slice(-MAX_ENTRIES);
         sessionStorage.setItem(PENDING_FALLBACK_KEY, JSON.stringify(merged));
       } catch (_err) {
-        // sessionStorage full or unavailable — entries will be lost.
+        // INTENTIONAL SILENCE: sessionStorage full or unavailable — entries
+        // will be lost, but flush must not throw during unload.
       }
     }
 
@@ -488,7 +513,7 @@ class AuditLogService {
           sessionStorage.removeItem(PENDING_FALLBACK_KEY);
         }
       } catch (_err) {
-        // Best-effort cleanup.
+        // INTENTIONAL SILENCE: best-effort fallback cleanup on unload.
       }
     }
   }

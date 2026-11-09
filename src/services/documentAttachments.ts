@@ -235,6 +235,15 @@ class AttachmentStore {
   }
 
   /**
+   * Drop the blob-url → attachment-id binding for a URL that is about to be
+   * (or has been) revoked. Without this the session map grows unboundedly
+   * with dead blob-url strings.
+   */
+  unregister(blobUrl: string): void {
+    blobUrlToAttachmentId.delete(blobUrl);
+  }
+
+  /**
    * Rewrite a block tree for persistence: live `blob:` URLs registered this
    * session become `bmf-attachment://<id>`. `data:` URLs and unregistered
    * `blob:` URLs (foreign / already-dead) pass through untouched.
@@ -328,6 +337,7 @@ class AttachmentStore {
       } catch {
         // Best-effort revoke; a failing revocation must not break teardown.
       }
+      blobUrlToAttachmentId.delete(url);
     }
     urls.clear();
   }
@@ -359,6 +369,67 @@ class AttachmentStore {
       trackHydratedUrl(documentId, blobUrl);
       return blobUrl;
     });
+  }
+
+  /**
+   * Batch variant of resolveTextForExport: resolves refs for many documents
+   * with ONE collection query instead of one query per document (the export
+   * path used to issue N IndexedDB reads for N documents).
+   * Returns resolved text keyed by documentId; entries whose text has no
+   * refs pass through unchanged, and a query failure degrades to unchanged
+   * text — same outcome as the per-document path's error handling.
+   */
+  async resolveTextsForExport(
+    entries: ReadonlyArray<{ documentId: string; text: string }>,
+    db?: AttachmentDb,
+  ): Promise<Map<string, string>> {
+    const result = new Map<string, string>();
+    const pending = entries.filter((entry) =>
+      entry.text.includes(ATTACHMENT_URL_PREFIX),
+    );
+    for (const entry of entries) {
+      if (!entry.text.includes(ATTACHMENT_URL_PREFIX)) {
+        result.set(entry.documentId, entry.text);
+      }
+    }
+    if (pending.length === 0) {return result;}
+
+    const documentIds = [...new Set(pending.map((entry) => entry.documentId))];
+    try {
+      const instance = db ?? (await initDB());
+      const docs = await getAttachmentCollection(instance)
+        .find({ selector: { documentId: { $in: documentIds } } })
+        .exec();
+      const byDocument = new Map<string, Map<string, AttachmentRecord>>();
+      for (const doc of docs) {
+        const record = doc.toJSON() as AttachmentRecord;
+        let byId = byDocument.get(record.documentId);
+        if (!byId) {
+          byId = new Map<string, AttachmentRecord>();
+          byDocument.set(record.documentId, byId);
+        }
+        byId.set(record.id, record);
+      }
+      for (const entry of pending) {
+        const byId = byDocument.get(entry.documentId);
+        result.set(
+          entry.documentId,
+          rewriteMarkdownImageUrls(entry.text, (url) => {
+            const id = parseAttachmentUrl(url);
+            if (!id) {return null;}
+            return byId?.get(id)?.dataUrl ?? null;
+          }),
+        );
+      }
+    } catch (error) {
+      logger.warn("[AttachmentStore] batch export resolve failed", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+      for (const entry of pending) {
+        result.set(entry.documentId, entry.text);
+      }
+    }
+    return result;
   }
 
   /** All attachment records belonging to a document. */

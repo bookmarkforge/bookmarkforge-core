@@ -131,10 +131,19 @@ export default function KanbanView({
 
   const docsCollection = useRxCollection<DocumentDocType>("documents");
   const foldersCollection = useRxCollection<FolderDocType>("folders");
-  const { result: rxDocs = [] } = useRxQuery(
-    docsCollection?.find().where("isDeleted").eq(false),
+  // Memoized query objects: an inline find() gets a new identity every
+  // render, which would resubscribe the RxQuery on each state change.
+  const docsQuery = useMemo(
+    () =>
+      docsCollection?.find().where("isDeleted").eq(false),
+    [docsCollection],
   );
-  const { result: rxFolders = [] } = useRxQuery(foldersCollection?.find());
+  const foldersQuery = useMemo(
+    () => foldersCollection?.find(),
+    [foldersCollection],
+  );
+  const { result: rxDocs = [] } = useRxQuery(docsQuery);
+  const { result: rxFolders = [] } = useRxQuery(foldersQuery);
 
   const rxColumns = useMemo<KanbanColumn[]>(() => {
     if (isControlled) {return [];}
@@ -158,8 +167,9 @@ export default function KanbanView({
       title: t("unfiled", "Unfiled"),
       items: [],
     };
+    const colById = new Map(cols.map((c) => [c.id, c]));
     for (const doc of docs) {
-      const col = cols.find((c) => c.id === doc.folderId) ?? unfiled;
+      const col = colById.get(doc.folderId) ?? unfiled;
       col.items.push({ id: doc.id, title: doc.title });
     }
     const result = [...cols];
@@ -168,6 +178,13 @@ export default function KanbanView({
   }, [isControlled, rxDocs, rxFolders, t]);
 
   const [localCols, setLocalCols] = useState<KanbanColumn[]>(columns ?? []);
+  // Controlled mode: resync when the parent passes a new columns array —
+  // useState only captures the first value, leaving the board stale.
+  useEffect(() => {
+    if (isControlled && columns) {
+      setLocalCols(columns);
+    }
+  }, [isControlled, columns]);
   const [draggedItem, setDraggedItem] = useState<{
     itemId: string;
     from: string;

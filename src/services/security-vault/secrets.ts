@@ -40,7 +40,10 @@ export async function encryptSecret(
   try {
     const encrypted = await encryptionService.encryptWithBytes(
       secret,
-      pwCopy,
+      // encryptWithBytes consumes (zeroizes) its buffer; hand it a private
+      // copy so the outer zeroPasswordBytes below does not trip the
+      // already-zeroed reuse warning.
+      new Uint8Array(pwCopy),
       secureStoragePurpose(key),
     );
     await ctx.setSecret(key, encrypted);
@@ -68,7 +71,8 @@ export async function decryptSecret(
   try {
     const result = await encryptionService.decryptWithBytes(
       encryptedSecret,
-      pwCopy,
+      // Same consumed-buffer contract as encryptSecret above.
+      new Uint8Array(pwCopy),
       secureStoragePurpose(key),
     );
     ctx.recordAudit({ action: "secret_decrypt", target: key, result: "success", origin: "SecurityVault" });

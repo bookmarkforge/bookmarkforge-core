@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-07",
+  "updatedAt": "2026-11-09",
   "knownUnreachable": {
     "build:budget-report": "By-hand budget report (node scripts/build-budget-report.mjs), documented in scripts/tooling/README.md; build:ci enforces the budgets in CI.",
     "build:extension:dev": "By-hand command. The public export's entry corpus is a strict subset of the private one (staging/nightly/ops workflows and internal docs do not ship), so nothing in this repository reaches it; it stays available for manual use.",
@@ -15,7 +15,6 @@
     "check:ci": "By-hand command. The public export's entry corpus is a strict subset of the private one (staging/nightly/ops workflows and internal docs do not ship), so nothing in this repository reaches it; it stays available for manual use.",
     "check:ci-groups": "By-hand command. The public export's entry corpus is a strict subset of the private one (staging/nightly/ops workflows and internal docs do not ship), so nothing in this repository reaches it; it stays available for manual use.",
     "check:compliance": "By-hand command. The public export's entry corpus is a strict subset of the private one (staging/nightly/ops workflows and internal docs do not ship), so nothing in this repository reaches it; it stays available for manual use.",
-    "check:core-integrity": "Documented fast CI group example in scripts/ci-groups.json; CI runs the same gates individually through check:security.",
     "check:csp": "CSP check runs as part of check:security, not standalone",
     "check:deploy": "By-hand command. The public export's entry corpus is a strict subset of the private one (staging/nightly/ops workflows and internal docs do not ship), so nothing in this repository reaches it; it stays available for manual use.",
     "check:english-only": "English-only check is part of check:content, not standalone",
@@ -37,11 +36,11 @@
     "check:rxdb17": "By-hand alias for the RxDB 17 gate; check:quality runs the script directly and docs mark the alias deprecated in favour of check:quality.",
     "check:script-reachability": "No workflow or entry corpus file runs check:script-reachability; it is a standalone checker. Marked as by-hand decision.",
     "check:secrets-in-commit": "check:deploy invokes node scripts/check-secrets-in-commit.mjs directly; this alias is kept for by-hand runs and the security pipeline.",
-    "check:security-environment": "Documented fast CI group example in scripts/ci-groups.json; CI runs the same gates individually through check:security.",
     "check:sitemap-coverage": "Sitemap coverage is part of check:brand, not standalone",
     "check:tailwind-drift": "The script runs inside check:quality as node scripts/check-tailwind-rule-drift.mjs; this alias is the documented by-hand entry and is exercised by src/tests/scripts/check-tailwind-drift.test.ts.",
     "check:zap-context": "By-hand command. The public export's entry corpus is a strict subset of the private one (staging/nightly/ops workflows and internal docs do not ship), so nothing in this repository reaches it; it stays available for manual use.",
     "cve:report": "By-hand dependency report generator (node scripts/check-direct-cve.mjs --report); dependency-cve-core prints this alias in its remediation hint.",
+    "demo:record": "By-hand Playwright demo recorder (playwright.demo.config.ts) for product videos; no workflow runs it.",
     "deploy:all": "By-hand command. The public export's entry corpus is a strict subset of the private one (staging/nightly/ops workflows and internal docs do not ship), so nothing in this repository reaches it; it stays available for manual use.",
     "dev:vercel": "By-hand command. The public export's entry corpus is a strict subset of the private one (staging/nightly/ops workflows and internal docs do not ship), so nothing in this repository reaches it; it stays available for manual use.",
     "docs:pdf:localized": "By-hand command. The public export's entry corpus is a strict subset of the private one (staging/nightly/ops workflows and internal docs do not ship), so nothing in this repository reaches it; it stays available for manual use.",

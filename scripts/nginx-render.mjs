@@ -391,6 +391,21 @@ ${cspHeader}
         proxy_buffering off;
     }
 
+    # The SVG card image the /og HTML wrapper references — same public,
+    # credential-free contract as /og itself (route-table policy +
+    # check-pro-routes require every declared route to be proxied).
+    location = /og-image.svg {
+        proxy_pass http://bookmarkforge_api:8787/og-image.svg;
+        proxy_http_version 1.1;
+        proxy_connect_timeout 5s;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_read_timeout 10s;
+        proxy_send_timeout 10s;
+        proxy_buffering off;
+    }
+
     # Opt-in product analytics ingest: unauthenticated by design (bounded,
     # pseudonymous, per-IP rate-limited). The token-gated /api/analytics/kpis
     # report is deliberately NOT exposed; see UNPROXIED_ROUTE_ALLOWLIST in

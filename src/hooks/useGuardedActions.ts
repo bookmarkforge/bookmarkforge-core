@@ -101,12 +101,15 @@ export function useGuardedActions<
         setRunning((r) => ({ ...r, [name as string]: true }));
       }
       let toastId: string | number | undefined;
-      const startId = opts?.onStart?.();
-      if (typeof startId === "string" || typeof startId === "number") {
-        toastId = startId;
-      }
       return (async () => {
         try {
+          // onStart runs inside the guarded path: a throw here must still
+          // reach the finally that decrements the in-flight count, or the
+          // action stays "running" forever.
+          const startId = opts?.onStart?.();
+          if (typeof startId === "string" || typeof startId === "number") {
+            toastId = startId;
+          }
           const result = await operation(signal);
           if (!isCurrent(generation)) {return undefined;}
           if (toastId === undefined) {

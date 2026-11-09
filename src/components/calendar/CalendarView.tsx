@@ -109,9 +109,11 @@ export default function CalendarView({
   const isControlled = events !== undefined;
 
   const docsCollection = useRxCollection<DocumentDocType>("documents");
-  const { result: rxDocs = [] } = useRxQuery(
-    docsCollection?.find().where("isDeleted").eq(false),
+  const docsQuery = useMemo(
+    () => docsCollection?.find().where("isDeleted").eq(false),
+    [docsCollection],
   );
+  const { result: rxDocs = [] } = useRxQuery(docsQuery);
 
   const derivedEvents = useMemo<CalendarEvent[]>(
     () =>

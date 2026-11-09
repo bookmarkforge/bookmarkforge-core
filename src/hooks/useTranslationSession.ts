@@ -38,6 +38,8 @@ export interface TranslationRowState {
   fromCache: boolean;
   reviewed: boolean;
   status: TranslationRowStatus;
+  /** Source whitespace preceding this chunk; needed to rebuild exact text. */
+  separatorBefore?: string;
 }
 
 type TranslationSessionStatus = "idle" | "running" | "done" | "error";
@@ -221,6 +223,7 @@ export function useTranslationSession({
                   fromCache: event.fromCache,
                   reviewed: false,
                   status: "pending",
+                  separatorBefore: event.separatorBefore,
                 };
                 return [...without, row].sort((a, b) => a.index - b.index);
               });
@@ -356,10 +359,13 @@ export function useTranslationSession({
   /** Current text: the pipeline result unless the user edited a row. */
   const assembledText = useMemo(() => {
     if (rows.length === 0) {return "";}
+    // Reassemble exactly like the pipeline does — `separatorBefore +
+    // translation` per chunk — so saving without edits never rewrites
+    // paragraph breaks, lists, tables or code-fence spacing.
     return rows
-      .map((row) => row.translation)
-      .filter((text) => text.trim().length > 0)
-      .join("\n\n")
+      .filter((row) => row.translation.trim().length > 0)
+      .map((row) => `${row.separatorBefore ?? ""}${row.translation}`)
+      .join("")
       .trim();
   }, [rows]);
 

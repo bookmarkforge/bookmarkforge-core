@@ -152,6 +152,13 @@ export type TranslationEvent =
       /** "code" blocks are echoed verbatim and must not be editable/translated. */
       kind: "prose" | "code" | "table" | "heading";
       translatable: boolean;
+      /**
+       * Whitespace that preceded this chunk in the source. The pipeline's own
+       * reassembly is `separatorBefore + translated` per chunk; consumers that
+       * rebuild the text from rows must carry it or paragraph/list/table
+       * breaks are lost on save.
+       */
+      separatorBefore: string;
     }
   | { type: "chunk-delta"; index: number; delta: string }
   | {

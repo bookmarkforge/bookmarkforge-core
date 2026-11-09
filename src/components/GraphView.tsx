@@ -107,16 +107,18 @@ const GraphView = ({ onNodeClick }: GraphViewProps) => {
 
       const img = new Image();
       img.onload = async () => {
-        const canvas = document.createElement("canvas");
-        canvas.width = svgElement.clientWidth || 800;
-        canvas.height = svgElement.clientHeight || 600;
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
+        // The object URL must be released on EVERY exit path — a null 2d
+        // context or a share failure used to leak it.
+        try {
+          const canvas = document.createElement("canvas");
+          canvas.width = svgElement.clientWidth || 800;
+          canvas.height = svgElement.clientHeight || 600;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {return;}
           ctx.fillStyle = "#ffffff";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(img, 0, 0);
           const dataUrl = canvas.toDataURL("image/png");
-          URL.revokeObjectURL(url);
 
           const response = await fetch(dataUrl);
           const blob = await response.blob();
@@ -127,7 +129,14 @@ const GraphView = ({ onNodeClick }: GraphViewProps) => {
             text: `${t("app_nodes")}: ${stats.nodes} | ${t("app_links")}: ${stats.links} | ${t("app_clusters")}: ${stats.clusters}`,
             files: [file],
           });
+        } catch (shareError) {
+          logger.error("Failed to share graph image:", shareError);
+        } finally {
+          URL.revokeObjectURL(url);
         }
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
       };
       img.src = url;
     } catch (error) {

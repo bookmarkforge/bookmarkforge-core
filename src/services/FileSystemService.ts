@@ -320,9 +320,26 @@ export class FileSystemService {
       .exec();
 
     const stripMd = (s: string) => s.replace(/\.md$/i, "");
-    const existingDocsMap = new Map(
-      existingDocs.map((doc) => [stripMd(doc.title), doc]),
-    );
+    // Multiple imported docs can share a stripped title; a plain
+    // Map<title, doc> silently dropped all but the last, so the losers were
+    // never matched and got hard-deleted at the end of the sync.
+    const existingDocsMap = new Map<string, DocumentDocument[]>();
+    for (const doc of existingDocs) {
+      const key = stripMd(doc.title);
+      const list = existingDocsMap.get(key);
+      if (list) {
+        list.push(doc);
+      } else {
+        existingDocsMap.set(key, [doc]);
+      }
+    }
+    const takeExisting = (name: string): DocumentDocument | undefined => {
+      const key = stripMd(name);
+      const list = existingDocsMap.get(key);
+      const doc = list?.shift();
+      if (list && list.length === 0) {existingDocsMap.delete(key);}
+      return doc;
+    };
     const newDocs: DocumentDocType[] = [];
     const updatedDocs: {
       doc: DocumentDocument;
@@ -330,7 +347,7 @@ export class FileSystemService {
     }[] = [];
 
     for (const file of files) {
-      const existing = existingDocsMap.get(stripMd(file.name));
+      const existing = takeExisting(file.name);
       if (existing) {
         if (existing.textContent !== file.content) {
           updatedDocs.push({
@@ -342,7 +359,6 @@ export class FileSystemService {
             },
           });
         }
-        existingDocsMap.delete(stripMd(file.name));
       } else {
         newDocs.push({
           id: generateId(),
@@ -368,16 +384,25 @@ export class FileSystemService {
       logger.info(`[FileSystemSync] Inserted ${newDocs.length} new files.`);
     }
 
-    for (const update of updatedDocs) {
-      await update.doc.incrementalPatch(update.patch);
+    // Batched writes: sequential per-document round-trips made large folder
+    // syncs O(n) slow. Bounded concurrency keeps IndexedDB responsive.
+    const WRITE_CONCURRENCY = 10;
+    for (let i = 0; i < updatedDocs.length; i += WRITE_CONCURRENCY) {
+      await Promise.all(
+        updatedDocs
+          .slice(i, i + WRITE_CONCURRENCY)
+          .map((update) => update.doc.incrementalPatch(update.patch)),
+      );
     }
     if (updatedDocs.length > 0) {
       logger.info(`[FileSystemSync] Updated ${updatedDocs.length} files.`);
     }
 
-    const docsToRemove = Array.from(existingDocsMap.values());
-    for (const doc of docsToRemove) {
-      await doc.remove();
+    const docsToRemove = [...existingDocsMap.values()].flat();
+    for (let i = 0; i < docsToRemove.length; i += WRITE_CONCURRENCY) {
+      await Promise.all(
+        docsToRemove.slice(i, i + WRITE_CONCURRENCY).map((doc) => doc.remove()),
+      );
     }
     if (docsToRemove.length > 0) {
       logger.info(

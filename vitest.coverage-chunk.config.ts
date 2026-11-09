@@ -9,7 +9,7 @@ export default mergeConfig(
         enabled: true,
         all: true,
         reporter: ["json"],
-        include: ["src/**/*.{ts,tsx}"],
+        include: ["src/**/*.{ts,tsx}", "src/services/UniversalImporter.ts"],
         exclude: [
           "server/**",
           "src/tests/**",

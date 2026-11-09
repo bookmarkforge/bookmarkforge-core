@@ -1,6 +1,9 @@
 /**
- * Redacted diagnostic builder for support — never includes vault content,
- * URLs, prompts or titles. Safe to paste in email/discussions.
+ * Redacted Diagnostics Builder for Support
+ *
+ * Never includes vault content, URLs, prompts or titles. Safe to paste in
+ * email/discussions. This is distinct from SystemDiagnosticsService and
+ * CapabilityProbeService — this builds a redacted summary for support tickets.
  *
  * Data gathered:
  *  - app version / build hash (vite __APP_VERSION__ if available, else package)

@@ -111,6 +111,7 @@ const KnowledgeDashboard = () => {
     let cancelled = false;
     let subDocs: { unsubscribe: () => void } | null = null;
     let subBookmarks: { unsubscribe: () => void } | null = null;
+    let statsTimer: ReturnType<typeof setTimeout> | null = null;
 
     const setup = async () => {
       try {
@@ -208,14 +209,24 @@ const KnowledgeDashboard = () => {
         let currentDocs: DocumentDocType[] = [];
         let currentBookmarks: BookmarkDocType[] = [];
 
+        // updateStats is O(collection size); every autosave/embedding write
+        // fires both streams. Debounce so a burst of writes recomputes once.
+        const scheduleStats = () => {
+          if (statsTimer) {return;}
+          statsTimer = setTimeout(() => {
+            statsTimer = null;
+            updateStats(currentDocs, currentBookmarks);
+          }, 400);
+        };
+
         subDocs = docs$.subscribe((docs: DocumentDocType[]) => {
           currentDocs = docs;
-          updateStats(currentDocs, currentBookmarks);
+          scheduleStats();
         });
 
         subBookmarks = bookmarks$.subscribe((bookmarks: BookmarkDocType[]) => {
           currentBookmarks = bookmarks;
-          updateStats(currentDocs, currentBookmarks);
+          scheduleStats();
         });
       } catch (err) {
         if (cancelled) {return;}
@@ -229,6 +240,7 @@ const KnowledgeDashboard = () => {
 
     return () => {
       cancelled = true;
+      if (statsTimer) {clearTimeout(statsTimer);}
       subDocs?.unsubscribe();
       subBookmarks?.unsubscribe();
     };

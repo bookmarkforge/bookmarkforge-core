@@ -337,6 +337,12 @@ export default defineConfig(({ mode, isPreview }) => ({
           // use via runtimeCaching instead, exactly like the PDF/editor flows.
           "**/assets/lib-*.js",
           "**/assets/transformers.web-*.js",
+          // The rolldown `esm-*` shared vendor chunk (zxing QR reader, marked,
+          // idb — reached only through lazy routes such as P2PSyncModal) is
+          // precached like any other asset even though no eager module imports
+          // it. Keep it out of the install precache and cache it on first use
+          // via runtimeCaching below, same as the other lazy vendors.
+          "**/assets/esm-*.js",
           // Public marketing/legal/share-card assets are served by the
           // network and are not part of the private app shell. Keeping them
           // out of the install precache avoids downloading duplicate
@@ -366,7 +372,7 @@ export default defineConfig(({ mode, isPreview }) => ({
             // by containing an `/assets/...` path.
             urlPattern: ({ url }) =>
               url.origin === self.location.origin &&
-              /^\/assets\/(?:blocknote|native|html2pdf|pdfjs|pdf-|pdf\.worker\.min|lib|transformers\.web)-[^/]+\.(?:js|css|mjs)$/.test(
+              /^\/assets\/(?:blocknote|native|html2pdf|pdfjs|pdf-|pdf\.worker\.min|lib|transformers\.web|esm)-[^/]+\.(?:js|css|mjs)$/.test(
                 url.pathname,
               ),
             handler: "CacheFirst",
@@ -523,7 +529,7 @@ export default defineConfig(({ mode, isPreview }) => ({
       resolveDependencies(_filename, deps) {
         return deps.filter(
           (dep) =>
-            !/(^|\/)(?:blocknote|html2pdf|pdfjs|pdf-|pdf\.worker\.min)-[^/]+\.(?:js|css|mjs)$/.test(
+            !/(^|\/)(?:blocknote|html2pdf|pdfjs|pdf-|pdf\.worker\.min|esm)-[^/]+\.(?:js|css|mjs)$/.test(
               dep,
             ),
         );

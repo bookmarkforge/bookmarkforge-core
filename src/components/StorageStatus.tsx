@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Database, AlertTriangle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useRxCollection, useRxQuery } from "../hooks/useRxDB";
@@ -99,12 +99,16 @@ export function StorageStatus() {
     useFreeTierUsage();
   const showFreeMeter = isFree && nearWall && freeCount !== undefined;
 
-  const { result: docsCount = 0 } = useRxQuery(
-    docsCollection?.count() as unknown as AnyRxQuery<unknown>,
+  const docsQuery = useMemo(
+    () => docsCollection?.count() as unknown as AnyRxQuery<unknown>,
+    [docsCollection],
   );
-  const { result: bookmarksCount = 0 } = useRxQuery(
-    bookmarksCollection?.count() as unknown as AnyRxQuery<unknown>,
+  const bookmarksQuery = useMemo(
+    () => bookmarksCollection?.count() as unknown as AnyRxQuery<unknown>,
+    [bookmarksCollection],
   );
+  const { result: docsCount = 0 } = useRxQuery(docsQuery);
+  const { result: bookmarksCount = 0 } = useRxQuery(bookmarksQuery);
 
   const total =
     (typeof docsCount === "number" ? docsCount : 0) +

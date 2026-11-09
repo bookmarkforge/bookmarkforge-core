@@ -145,10 +145,22 @@ const DocumentManager = ({ onSelectDocument }: { onSelectDocument: (id: string) 
     const docsCollection = useRxCollection("documents");
     const foldersCollection = useRxCollection("folders");
 
-    const { result: docsResult = [] } = useRxQuery(docsCollection?.find());
-    const { result: foldersResult = [] } = useRxQuery(
-      foldersCollection?.find(),
+    // Exclude tombstones at the query level: every consumer already filters
+    // !isDeleted, and hydrating deleted rows only to discard them wastes
+    // memory on large vaults. Memoized so renders do not resubscribe.
+    const docsQuery = useMemo(
+      () =>
+        docsCollection
+          ? docsCollection.find().where("isDeleted").eq(false)
+          : undefined,
+      [docsCollection],
     );
+    const foldersQuery = useMemo(
+      () => foldersCollection?.find(),
+      [foldersCollection],
+    );
+    const { result: docsResult = [] } = useRxQuery(docsQuery);
+    const { result: foldersResult = [] } = useRxQuery(foldersQuery);
 
     // Derived arrays must be memoized on their RxQuery result: a bare
     // `.map()` here would create a new array reference on every render, which

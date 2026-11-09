@@ -54,6 +54,9 @@ export function useMainAppState() {
       // Initialize Database
       setState((prev) => ({ ...prev, error: null }));
       const db = await initDB();
+      // The component may have unmounted while initDB() was in flight;
+      // every setState below must be gated or it mutates a dead tree.
+      if (!mountedRef.current) {return;}
       dbRef.current = db;
       setState((prev) => ({ ...prev, isDBReady: true }));
 
@@ -71,6 +74,7 @@ export function useMainAppState() {
         loading: false,
       }));
     } catch (error) {
+      if (!mountedRef.current) {return;}
       const message =
         error instanceof Error ? error.message : "Unknown initialization error";
       setState((prev) => ({

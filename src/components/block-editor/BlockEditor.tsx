@@ -96,6 +96,10 @@ export default function BlockEditor({
   } = logic;
 
   const uploadedObjectUrlsRef = useRef(new ObjectUrlRegistry());
+  // Component-registered blob URLs must also release their attachmentStore
+  // binding when revoked, or blobUrlToAttachmentId grows unboundedly.
+  uploadedObjectUrlsRef.current.onRevoke ??= (url) =>
+    attachmentStore.unregister(url);
 
   const editor = useCreateBlockNote({
     schema,

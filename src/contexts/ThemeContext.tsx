@@ -3,6 +3,7 @@ import {
   useContext,
   useState,
   useEffect,
+  useSyncExternalStore,
   ReactNode,
 } from "react";
 
@@ -18,6 +19,18 @@ interface ThemeContextType {
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+const SYSTEM_DARK_QUERY = "(prefers-color-scheme: dark)";
+
+function subscribeSystemDark(onChange: () => void): () => void {
+  const mediaQuery = window.matchMedia(SYSTEM_DARK_QUERY);
+  mediaQuery.addEventListener("change", onChange);
+  return () => mediaQuery.removeEventListener("change", onChange);
+}
+
+function getSystemDarkSnapshot(): boolean {
+  return window.matchMedia(SYSTEM_DARK_QUERY).matches;
+}
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const storeTheme = usePreferencesStore((s) => s.theme);
@@ -50,7 +63,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (theme === "system") {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      const mediaQuery = window.matchMedia(SYSTEM_DARK_QUERY);
       const handleChange = () => {
         const root = document.documentElement;
         const systemTheme = mediaQuery.matches ? "dark" : "light";
@@ -84,10 +97,14 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setStoreTheme(newTheme);
   };
 
-  const isDark =
-    theme === "dark" ||
-    (theme === "system" &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches);
+  // OS-level theme changes must re-render consumers of isDark; a plain
+  // matchMedia() read during render never notifies React.
+  const systemIsDark = useSyncExternalStore(
+    subscribeSystemDark,
+    getSystemDarkSnapshot,
+    () => false,
+  );
+  const isDark = theme === "dark" || (theme === "system" && systemIsDark);
 
   return (
     <ThemeContext.Provider value={{ theme, isDark, toggleTheme, setThemeMode }}>

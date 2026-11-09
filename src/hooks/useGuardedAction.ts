@@ -77,11 +77,14 @@ export function useGuardedAction<T = void>(options?: {
       isRunningRef.current = true;
       setIsRunning(true);
       let toastId: string | number | undefined;
-      const startId = optionsRef.current?.onStart?.();
-      if (typeof startId === "string" || typeof startId === "number") {
-        toastId = startId;
-      }
       try {
+        // onStart runs inside the guarded path: a throw here must still
+        // reach the finally that clears the running flag, or the action
+        // stays "running" forever.
+        const startId = optionsRef.current?.onStart?.();
+        if (typeof startId === "string" || typeof startId === "number") {
+          toastId = startId;
+        }
         const result = await operation(signal);
         if (!isCurrent(generation)) {return undefined;}
         if (toastId === undefined) {

@@ -363,7 +363,10 @@ export const BookmarkRow = ({
         </div>
         {isExpanded && (
           <div className="col-span-7 p-4 ds-bg-secondary ds-border-t">
-            <div className="text-sm whitespace-pre-wrap ds-text-secondary mb-4">
+            {/* Capped height: the table virtualizer estimates expanded rows
+                at ~200px; unbounded content overflowed into neighbouring
+                rows. Internal scroll keeps the estimate honest. */}
+            <div className="text-sm whitespace-pre-wrap ds-text-secondary mb-4 max-h-48 overflow-y-auto">
               {SanitizationService.sanitizeText(
                 bookmark.content || bookmark.summary || t("app_noContent"),
               )}

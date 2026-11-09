@@ -21,6 +21,7 @@ playwright-report-*/
 test-results/
 test-results-*/
 test-results-performance/
+demo-output/
 .vite/
 # Caché incremental de TypeScript (tsconfig.json declara "incremental": true):
 # `npm run typecheck` la reescribe en cada ejecución y no es fuente.

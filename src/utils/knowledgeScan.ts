@@ -199,6 +199,9 @@ export function computeBridges(
   const langs = selected.map(([lang]) => lang);
   const selectedByLang = new Map(selected);
   const computed: Bridge[] = [];
+  // Topic lookup by Map: computed.find() per candidate pair made the scan
+  // O(candidates × bridges) on tag-heavy vaults.
+  const bridgeByTopic = new Map<string | null, Bridge>();
 
   // Coarse progress: the O(n) sampling pass and one update per language
   // pair-group pass. Never per-item — the callback posts a worker message.
@@ -218,18 +221,20 @@ export function computeBridges(
             itemB.tags.includes(tag),
           );
           const topic = sharedTags[0] ?? null;
-          const existing = computed.find((br) => br.topic === topic);
+          const existing = bridgeByTopic.get(topic);
           if (existing) {
             pushPair(existing, langA, itemA.title);
             pushPair(existing, langB, itemB.title);
           } else {
-            computed.push({
+            const bridge: Bridge = {
               topic,
               pairs: [
                 { lang: langA, title: itemA.title },
                 { lang: langB, title: itemB.title },
               ],
-            });
+            };
+            computed.push(bridge);
+            bridgeByTopic.set(topic, bridge);
           }
         }
       }

@@ -52,8 +52,15 @@ export function useFreeTierUsage(): FreeTierUsage {
 
     let cancelled = false;
     let subscription: { unsubscribe: () => void } | null = null;
+    // evaluate() is re-entrant (storage events, lock flips): a generation
+    // counter plus unsubscribe-before-resubscribe keeps in-flight calls
+    // from orphaning an RxDB subscription.
+    let evaluateGeneration = 0;
 
     const evaluate = async () => {
+      const generation = ++evaluateGeneration;
+      subscription?.unsubscribe();
+      subscription = null;
       if (licenseService.hasProAccess()) {
         if (!cancelled) {setUsage(EMPTY);}
         return;
@@ -62,13 +69,19 @@ export function useFreeTierUsage(): FreeTierUsage {
         // initDB() reuses the live connection created at unlock — no second
         // database instance is opened (see useDatabaseInit).
         const db = await initDB();
-        if (cancelled || licenseService.hasProAccess()) {return;}
+        if (
+          cancelled ||
+          generation !== evaluateGeneration ||
+          licenseService.hasProAccess()
+        ) {
+          return;
+        }
         // Reactive query: same shape the preInsert wall counts with
         // ({ isDeleted: false }), so the meter never disagrees with the wall.
         const count$ = db.bookmarks.count({
           selector: { isDeleted: false },
         }).$;
-        subscription = count$.subscribe({
+        const sub = count$.subscribe({
           next: (count: number) => {
             if (cancelled || licenseService.hasProAccess()) {return;}
             void licenseService.canAddBookmarks(count).then((canAddBookmark) => {
@@ -89,6 +102,13 @@ export function useFreeTierUsage(): FreeTierUsage {
             });
           },
         });
+        // A newer evaluate() (or unmount) may have superseded this one while
+        // initDB() was in flight — never keep a stale subscription.
+        if (cancelled || generation !== evaluateGeneration) {
+          sub.unsubscribe();
+          return;
+        }
+        subscription = sub;
       } catch (error) {
         // DB not initialized yet (locked vault, cold start): stay quiet.
         logger.debug("[useFreeTierUsage] db unavailable", {

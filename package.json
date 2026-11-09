@@ -44,12 +44,11 @@
     "test": "node scripts/test-bounded.mjs",
     "test:fast": "node scripts/test-fast.mjs",
     "test:fast:watch": "node scripts/test-fast.mjs --watch",
-    "benchmark:storage": "node scripts/benchmark-storage.mjs",
-    "benchmark:import-csv": "node scripts/benchmark-import-csv.mjs",
     "test:extension": "vitest run --config=vitest.extension.config.ts",
     "test:extension:smoke": "node scripts/extension-smoke.mjs",
     "e2e": "playwright test",
     "e2e:smoke": "playwright test --config=playwright.smoke.config.ts",
+    "demo:record": "playwright test --config=playwright.demo.config.ts",
     "mock:ai": "node scripts/mock-openai-server.mjs",
     "server:build": "node scripts/build-server.mjs",
     "check:ci": "npm run typecheck:prod && npm run lint && npm run test:fast && npm run build:ci && npm run check",
@@ -98,8 +97,6 @@
     "check:tailwind-drift": "node scripts/check-tailwind-rule-drift.mjs",
     "check:audit-freshness:deep": "node scripts/check-audit-freshness.mjs --deep --allow-network",
     "check:audit-drift:fix": "node scripts/check-audit-drift.mjs --fix",
-    "check:core-integrity": "npm run check:open-core && npm run check:pro-imports && npm run check:pro-routes",
-    "check:security-environment": "npm run check:env && npm run check:secrets-in-commit && npm run check:server-log-ip-privacy && npm run check:compose-config && npm run check:runtime-config && npm run check:http-config && npm run check:docker-context && npm run check:image-pins && npm run check:repository-hygiene",
     "check:secrets-in-commit": "node scripts/check-secrets-in-commit.mjs",
     "check:image-pins": "node scripts/validate-image-pins.mjs",
     "check:i18n:fix": "node scripts/check-i18n-quality.mjs --fix",
@@ -224,7 +221,6 @@
     "crypto-js": "^4.2.0",
     "esbuild": "^0.28.2",
     "eslint": "^9.39.5",
-    "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "fake-indexeddb": "^6.2.5",
     "fast-check": "^4.9.0",
     "globals": "^14.0.0",
@@ -233,13 +229,11 @@
     "jsdom": "^30.0.1",
     "knip": "^6.43.0",
     "lint-staged": "^17.6.0",
-    "node-fetch": "^3.3.2",
     "nunjucks": "^3.2.4",
     "pdfkit": "^0.20.2",
     "pixelmatch": "^7.2.0",
     "playwright": "^1.62.1",
     "pngjs": "^7.0.0",
-    "rollup": "npm:@rollup/wasm-node@^4.62.4",
     "sharp": "^0.35.5",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.5",
@@ -262,22 +256,9 @@
     "@huggingface/transformers": {
       "sharp": "^0.35.4"
     },
-    "@tiptap/core": "3.31.0",
-    "@tiptap/extension-bold": "3.31.0",
-    "@tiptap/extension-bubble-menu": "3.31.0",
-    "@tiptap/extension-code": "3.31.0",
-    "@tiptap/extension-floating-menu": "3.31.0",
-    "@tiptap/extension-italic": "3.31.0",
-    "@tiptap/extension-strike": "3.31.0",
-    "@tiptap/extension-text": "3.31.0",
-    "@tiptap/extension-underline": "3.31.0",
-    "@tiptap/extensions": "3.31.0",
-    "@tiptap/pm": "3.31.0",
-    "@tiptap/react": "3.31.0",
     "onnxruntime-node": {
       "adm-zip": "0.6.1"
-    },
-    "zod": "^4.6.7"
+    }
   },
   "optionalDependencies": {
     "@rolldown/binding-win32-x64-msvc": "^1.2.14"

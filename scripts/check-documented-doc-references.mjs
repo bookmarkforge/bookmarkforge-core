@@ -406,11 +406,38 @@ export function extractServerlessRouteMatchers(apiFiles) {
 }
 
 /** Route roots the node server dispatches or the serverless tree serves. */
-function routeIsDeclared(route, policies, serverlessMatchers = []) {
+function routeIsDeclared(route, policies, serverlessMatchers = [], staticRoutes = null) {
   return (
     policies.some((policy) => route === policy || route.startsWith(`${policy}/`)) ||
-    serverlessMatchers.some((matcher) => matcher.test(route))
+    serverlessMatchers.some((matcher) => matcher.test(route)) ||
+    (staticRoutes?.has(route) ?? false)
   );
+}
+
+/**
+ * The static hosts (Vercel/Netlify/nginx) serve `public/` verbatim, so a file
+ * like `public/api/early-bird-status.json` IS a live route even though neither
+ * the companion server nor the `api/` serverless tree declares it. Collect
+ * those file-backed routes so health checks in workflows do not report a
+ * retired route for a URL that answers 200.
+ */
+function collectStaticPublicRoutes(root) {
+  const publicDir = path.join(root, "public");
+  const routes = new Set();
+  if (!fs.existsSync(publicDir)) return routes;
+  const stack = [publicDir];
+  while (stack.length > 0) {
+    const dir = stack.pop();
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const absolute = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        stack.push(absolute);
+      } else if (entry.isFile()) {
+        routes.add(`/${normalizeRelative(path.relative(publicDir, absolute))}`);
+      }
+    }
+  }
+  return routes;
 }
 
 export function loadRelativeLinkBaseline(root) {
@@ -499,6 +526,7 @@ export function scanDocumentReferences({ root, stateIndexText, routeTableText, b
   const policies = extractRoutePolicies(routeTableText);
   const resolvedBaseline = baseline ?? loadRelativeLinkBaseline(root);
   const policyExcluded = loadManifestExcluded(root);
+  const staticRoutes = collectStaticPublicRoutes(root);
   const missingFiles = [];
   const basenameFindings = [];
   const basenameIndex = buildBasenameIndex(root);
@@ -563,7 +591,7 @@ export function scanDocumentReferences({ root, stateIndexText, routeTableText, b
         const routeEnd = lineText.indexOf(route) + route.length;
         if (lineText.slice(routeEnd).startsWith("*")) continue;
         routeReferences += 1;
-        if (!routeIsDeclared(route, policies, serverlessRouteMatchers)) {
+        if (!routeIsDeclared(route, policies, serverlessRouteMatchers, staticRoutes)) {
           retiredRoutes.push({ file: relativeFile, line: index + 1, reference: route });
         }
       }

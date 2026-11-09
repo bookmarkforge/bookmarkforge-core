@@ -36,8 +36,15 @@ interface DocData {
   embeddings?: number[];
 }
 
+interface CollectionFindQuery {
+  selector?: Record<string, unknown>;
+  sort?: Array<Record<string, "asc" | "desc">>;
+  limit?: number;
+  skip?: number;
+}
+
 interface CollectionWithFind {
-  find: (query: { limit: number; skip: number }) => {
+  find: (query: CollectionFindQuery) => {
     exec(): Promise<{ toJSON?: () => DocData; [key: string]: unknown }[]>;
   };
 }
@@ -470,18 +477,34 @@ class VectorIndexService {
       { name: "memory", prefix: "atom:", selector: { type: "atom" } },
     ];
 
+    // Hard scan cap: documents without embeddings still consume pages, so
+    // the bound is on rows scanned, not embeddings collected. Well beyond
+    // any realistic vault, but the loop must terminate even if a
+    // misbehaving store kept returning full batches.
+    const MAX_SCAN_DOCUMENTS = 500_000;
+
     for (const col of collections) {
-      let offset = 0;
-      let hasMore = true;
+      // Keyset pagination on the primary key: `skip: offset` re-scans every
+      // preceding row per page (O(n²) row visits on large vaults).
+      let lastId: string | undefined;
+      let loaded = 0;
       const batchSize = 1000;
       const collection = db[col.name] as CollectionWithFind;
 
-      while (hasMore) {
+      for (;;) {
+        if (loaded >= MAX_SCAN_DOCUMENTS) {
+          throw new Error(
+            `Vector index scan exceeded ${MAX_SCAN_DOCUMENTS} documents in ${String(col.name)}`,
+          );
+        }
         const docs = await collection
           .find({
-            ...(col.selector ? { selector: col.selector } : {}),
+            selector: {
+              ...(col.selector ?? {}),
+              ...(lastId ? { id: { $gt: lastId } } : {}),
+            },
+            sort: [{ id: "asc" }],
             limit: batchSize,
-            skip: offset,
           })
           .exec();
         // Abort promptly when the vault changes while a large collection is
@@ -490,7 +513,20 @@ class VectorIndexService {
         assertCurrent();
 
         if (docs.length === 0) {
-          hasMore = false;
+          break;
+        }
+        // Advance the keyset cursor from the raw document id (RxDB primary
+        // key), not the prefixed index id.
+        const lastDoc = docs[docs.length - 1] as { id?: string };
+        if (typeof lastDoc.id === "string" && lastDoc.id.length > 0) {
+          lastId = lastDoc.id;
+        } else {
+          // A document without a usable id cannot advance the cursor;
+          // falling back to skip-style termination would re-scan forever,
+          // so stop this collection's pagination defensively.
+          logger.warn(
+            `[VectorIndex] Document without id ended ${String(col.name)} pagination`,
+          );
           break;
         }
 
@@ -515,10 +551,10 @@ class VectorIndexService {
           }
         }
 
-        offset += docs.length;
-        if (docs.length < batchSize) {hasMore = false;}
+        loaded += docs.length;
+        if (docs.length < batchSize) {break;}
         logger.debug(
-          `[VectorIndex] Loaded ${offset} embeddings from ${String(col.name)}...`,
+          `[VectorIndex] Loaded ${loaded} embeddings from ${String(col.name)}...`,
         );
       }
     }

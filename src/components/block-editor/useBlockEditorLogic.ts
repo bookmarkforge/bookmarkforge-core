@@ -335,6 +335,21 @@ export function useBlockEditorLogic({
   // documentId is used in copilot actions to scope operations to the current doc
   const documentIdRef = useRef(documentId);
   documentIdRef.current = documentId;
+  // Set when the load effect finishes writing title/blocks/text into state:
+  // the autosave effect must skip runs those writes trigger, or merely
+  // opening a document would dirty it (processed:false, bumped updatedAt,
+  // spurious version). The load writes land across several commits, so the
+  // skip is a baseline comparison, not a one-shot flag: hydratedTextRef
+  // records the text the load produced and hydratedBaselineRef snapshots
+  // the first fully-settled state; autosave only proceeds once the live
+  // state diverges from that baseline (i.e. a real user edit).
+  const skipAutosaveOnceRef = useRef(false);
+  const hydratedTextRef = useRef<string | null>(null);
+  const hydratedBaselineRef = useRef<{
+    title: string;
+    text: string;
+    isPrivate: boolean;
+  } | null>(null);
 
   useEffect(() => {
     if (typeof BroadcastChannel === "undefined") {return;}
@@ -410,6 +425,11 @@ export function useBlockEditorLogic({
   // replaces them into the live editor via `editor.replaceBlocks`.
   useEffect(() => {
     let cancelled = false;
+    // A document switch restarts hydration: drop the previous baseline so
+    // the new document's load writes are suppressed the same way.
+    skipAutosaveOnceRef.current = false;
+    hydratedTextRef.current = null;
+    hydratedBaselineRef.current = null;
     // Setters are optional-chained: hook-level tests may pass a partial state
     // to exercise copilot/helper actions without wiring full editor state.
     state.setInitialContent?.("loading");
@@ -437,12 +457,13 @@ export function useBlockEditorLogic({
               : rawBlocks
           ) as PartialBlock[];
           state.setInitialContent?.(blocks.length > 0 ? blocks : "empty");
-          state.setEditorText?.(
-            await attachmentStore.hydrateText(
-              documentId,
-              result.textContent || "",
-            ),
+          const hydratedText = await attachmentStore.hydrateText(
+            documentId,
+            result.textContent || "",
           );
+          state.setEditorText?.(hydratedText);
+          hydratedTextRef.current = hydratedText;
+          skipAutosaveOnceRef.current = true;
         } else {
           await db.documents.upsert({
             id: documentId,
@@ -461,11 +482,21 @@ export function useBlockEditorLogic({
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           });
-          if (!cancelled) state.setInitialContent?.("empty");
+          if (!cancelled) {
+            state.setInitialContent?.("empty");
+            // New/failed loads have no hydrated text to compare against;
+            // null makes the settle check rely on initialContent only.
+            hydratedTextRef.current = null;
+            skipAutosaveOnceRef.current = true;
+          }
         }
       } catch (error) {
         logger.warn("[BlockEditor] failed to load document", { error });
-        if (!cancelled) state.setInitialContent?.("empty");
+        if (!cancelled) {
+          state.setInitialContent?.("empty");
+          hydratedTextRef.current = null;
+          skipAutosaveOnceRef.current = true;
+        }
       }
     })();
     return () => {
@@ -481,6 +512,34 @@ export function useBlockEditorLogic({
   // document and (throttled to 5 min) snapshot a version for history.
   useEffect(() => {
     if (state.initialContent === "loading") return;
+    // The document-load effect rewrites title/blocks/text through the same
+    // state the autosave watches, across several commits. Stay quiet until
+    // the snapshot has fully settled (blocks normalized to "empty" AND the
+    // hydrated text is live), then record it as the baseline: autosave only
+    // proceeds once the live state diverges — i.e. a real user edit.
+    if (skipAutosaveOnceRef.current) {
+      const settled =
+        state.initialContent === "empty" &&
+        (hydratedTextRef.current === null ||
+          (state.editorText ?? "") === hydratedTextRef.current);
+      if (!settled) {return;}
+      hydratedBaselineRef.current = {
+        title: state.docTitle ?? "",
+        text: state.editorText ?? "",
+        isPrivate: state.isPrivate,
+      };
+      skipAutosaveOnceRef.current = false;
+      return;
+    }
+    const baseline = hydratedBaselineRef.current;
+    if (baseline) {
+      const unchanged =
+        baseline.title === (state.docTitle ?? "") &&
+        baseline.text === (state.editorText ?? "") &&
+        baseline.isPrivate === state.isPrivate;
+      if (unchanged) {return;}
+      hydratedBaselineRef.current = null;
+    }
     state.setSaveStatus?.("unsaved");
     const timer = window.setTimeout(async () => {
       state.setSaveStatus?.("saving");

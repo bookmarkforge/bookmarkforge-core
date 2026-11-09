@@ -273,16 +273,19 @@ export class UniversalExporter {
     // `attachments/` folder and JSON/Markdown exports stay faithful instead
     // of shipping dead refs. Spread the PLAIN record (see toPlainRecords).
     const plainDocuments = toPlainRecords(filteredDocuments);
-    const resolvedDocuments = await Promise.all(
-      plainDocuments.map(async (document) => ({
-        ...document,
-        textContent: await attachmentStore.resolveTextForExport(
-          document.id,
-          document.textContent || "",
-          db,
-        ),
+    // One batched attachment query for the whole export instead of one
+    // IndexedDB read per document.
+    const resolvedTexts = await attachmentStore.resolveTextsForExport(
+      plainDocuments.map((document) => ({
+        documentId: document.id,
+        text: document.textContent || "",
       })),
+      db,
     );
+    const resolvedDocuments = plainDocuments.map((document) => ({
+      ...document,
+      textContent: resolvedTexts.get(document.id) ?? document.textContent ?? "",
+    }));
     const exportDocuments = options.includeEmbeddings
       ? resolvedDocuments
       : (resolvedDocuments as (DocumentData & { embedding?: unknown })[]).map(

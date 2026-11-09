@@ -1,3 +1,15 @@
+/**
+ * System Diagnostics Service
+ *
+ * Provides system-level diagnostics for the application including:
+ * - Database initialization status and performance
+ * - AI provider availability and configuration
+ * - Browser capabilities (GPU, extensions)
+ * - Cloud sync status
+ * - Build integrity verification
+ *
+ * This is the main diagnostic service for production health checks.
+ */
 import { aiManager } from "./ai/ProviderManager";
 import { logger, redactSecrets } from "../utils/logger";
 import {

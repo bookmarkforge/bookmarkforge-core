@@ -23,6 +23,8 @@ export declare class SyncService {
     private lastProcessedHashes;
     private hashTimestamps;
     private static readonly DEDUPE_GRACE_MS;
+    private static readonly DEDUPE_SWEEP_INTERVAL_MS;
+    private lastDedupeSweepAt;
     private dedupeChannel;
     private dedupeChannelName;
     private dedupeRoomId;
@@ -32,6 +34,7 @@ export declare class SyncService {
     private closeDedupeChannel;
     private broadcastDedupeHash;
     private isOperationDuplicate;
+    private sweepExpiredDedupeEntries;
     private recordOperation;
     clearDedupeCache(): void;
     getDedupeStats(): {

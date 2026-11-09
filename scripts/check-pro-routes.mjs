@@ -255,10 +255,19 @@ export const DISPATCH_FN = "dispatchHttpRequest";
 export const ROUTE_DISPATCHER = "createRouteDispatcher";
 
 /**
- * `req.url === "/x"` and `req.url?.startsWith("/x?")`, i.e. both comparison
- * shapes the router uses to own a path.
+ * `req.url === "/x"`, `req.url?.startsWith("/x?")` and query-stripped path
+ * comparisons like `httpPath === "/x"` — i.e. every comparison shape the
+ * router uses to own a path. The identifier is generic on purpose: the OG
+ * routes dispatch on `httpPath` (query stripped) so `/og?utm=…` still cards;
+ * literals that do not start with "/" (e.g. `req.method === "GET"`) are
+ * filtered out by the caller.
  */
-const ROUTE_LITERAL_RE = /req\.url(?:\s*===\s*|\??\.startsWith\()\s*"((?:[^"\\\n]|\\.)*)"/g;
+const ROUTE_IDENT_RE = String.raw`(?:req\.url|[A-Za-z_$][\w$]*(?:\??\.[A-Za-z_$][\w$]*)*)`;
+const ROUTE_LITERAL_RE = new RegExp(
+  String.raw`${ROUTE_IDENT_RE}\s*===\s*"((?:[^"\\\n]|\\.)*)"` +
+    String.raw`|${ROUTE_IDENT_RE}\s*\??\.startsWith\(\s*"((?:[^"\\\n]|\\.)*)"`,
+  "g",
+);
 
 /**
  * Route path literals the router dispatches, in source order, deduplicated.
@@ -277,8 +286,8 @@ export function extractDispatchedRoutePaths(source) {
   ROUTE_LITERAL_RE.lastIndex = 0;
   let match;
   while ((match = ROUTE_LITERAL_RE.exec(scoped)) !== null) {
-    const literal = match[1];
-    if (literal && !paths.includes(literal)) paths.push(literal);
+    const literal = match[1] ?? match[2];
+    if (literal?.startsWith("/") && !paths.includes(literal)) paths.push(literal);
   }
   return paths;
 }

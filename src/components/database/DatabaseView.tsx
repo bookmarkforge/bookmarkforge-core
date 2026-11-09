@@ -188,7 +188,10 @@ export default function DatabaseView({
   // RxDB collection reactively — real user data, live updates on write.
   // Controlled mode (rows passed in, e.g. tests) keeps the old behavior.
   const rxCollection = useRxCollection<DatabaseRow>(collection);
-  const { result: rxDocs = [] } = useRxQuery(rxCollection?.find());
+  // Memoized: an inline find() produces a new RxQuery identity every render,
+  // which resubscribes and re-executes the query on each state change.
+  const rxQuery = useMemo(() => rxCollection?.find(), [rxCollection]);
+  const { result: rxDocs = [] } = useRxQuery(rxQuery);
   const isControlled = rows !== undefined;
 
   const [, startTransition] = useTransition();
@@ -206,6 +209,13 @@ export default function DatabaseView({
   // P90: no demo fallback — production must never show fake records that
   // look like real user data. Without `rows` the view is honestly empty.
   const [localData, setLocalData] = useState<DatabaseRow[]>(rows ?? []);
+  // Controlled mode: resync when the parent hands down a new rows array —
+  // useState only captures the first value, leaving edits/views stale.
+  useEffect(() => {
+    if (isControlled) {
+      setLocalData(rows ?? []);
+    }
+  }, [isControlled, rows]);
   const editInputRef = useRef<HTMLInputElement | HTMLSelectElement>(null);
 
   const liveData = useMemo(

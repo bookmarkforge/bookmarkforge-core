@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { securityVault } from "../services/SecurityVault";
 import { encryptionService } from "../services/EncryptionService";
@@ -53,12 +53,16 @@ export const SecurityDashboard: React.FC<SecurityDashboardProps> = ({
   // only typed as an array because the hook is shared with find() queries
   // (same shape StorageStatus reads). Narrow before adding, otherwise
   // `result.length` is undefined and the total becomes NaN.
-  const { result: docsCount = 0 } = useRxQuery(
-    docsCollection?.count() as unknown as AnyRxQuery<unknown>,
+  const docsQuery = useMemo(
+    () => docsCollection?.count() as unknown as AnyRxQuery<unknown>,
+    [docsCollection],
   );
-  const { result: bookmarksCount = 0 } = useRxQuery(
-    bookmarksCollection?.count() as unknown as AnyRxQuery<unknown>,
+  const bookmarksQuery = useMemo(
+    () => bookmarksCollection?.count() as unknown as AnyRxQuery<unknown>,
+    [bookmarksCollection],
   );
+  const { result: docsCount = 0 } = useRxQuery(docsQuery);
+  const { result: bookmarksCount = 0 } = useRxQuery(bookmarksQuery);
   const totalItems =
     (typeof docsCount === "number" ? docsCount : 0) +
     (typeof bookmarksCount === "number" ? bookmarksCount : 0);

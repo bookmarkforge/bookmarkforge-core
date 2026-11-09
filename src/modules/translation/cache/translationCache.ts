@@ -97,6 +97,24 @@ class TranslationCache {
   private pendingFlush = new Map<string, ReturnType<typeof setTimeout>>();
   private index: CacheIndex | null = null;
   private indexLoading: Promise<CacheIndex> | null = null;
+  // Per-key epoch: invalidate() bumps it so an already-running writeBundle
+  // cannot resurrect a bundle the user just dropped. The persisted index is
+  // LRU-capped, but this in-memory map had no bound — cap it the same way.
+  private generations = new Map<string, number>();
+  private static readonly MAX_MEMORY_KEYS =
+    TRANSLATION_CACHE_MAX_DOCUMENTS * 4;
+
+  /** Insert/refresh a memory entry, evicting the oldest key past the cap. */
+  private setMemory(key: string, byHash: Map<string, TranslationPair>): void {
+    // Refresh recency: delete+set moves the key to the newest position.
+    this.memory.delete(key);
+    this.memory.set(key, byHash);
+    while (this.memory.size > TranslationCache.MAX_MEMORY_KEYS) {
+      const oldest = this.memory.keys().next().value;
+      if (oldest === undefined) {break;}
+      this.memory.delete(oldest);
+    }
+  }
 
   /**
    * Load the cached pairs of one document for a hash-keyed lookup.
@@ -105,7 +123,10 @@ class TranslationCache {
   async load(context: TranslationCacheContext): Promise<Map<string, TranslationPair>> {
     const key = await cacheKeyFor(context);
     const cached = this.memory.get(key);
-    if (cached) {return cached;}
+    if (cached) {
+      this.setMemory(key, cached);
+      return cached;
+    }
 
     const byHash = new Map<string, TranslationPair>();
     try {
@@ -129,7 +150,7 @@ class TranslationCache {
         error: error instanceof Error ? error.message : String(error),
       });
     }
-    this.memory.set(key, byHash);
+    this.setMemory(key, byHash);
     return byHash;
   }
 
@@ -169,7 +190,7 @@ class TranslationCache {
           entry,
         ]),
       );
-      this.memory.set(key, byHash);
+      this.setMemory(key, byHash);
     }
 
     this.scheduleFlush(key, context, byHash);
@@ -194,6 +215,10 @@ class TranslationCache {
     context: TranslationCacheContext,
     byHash: Map<string, TranslationPair>,
   ): Promise<void> {
+    // Captured before the first await: an invalidate() that lands while this
+    // write is in flight must not let the stale bundle/index entry back in.
+    const generation = this.generations.get(key) ?? 0;
+    const isStale = () => (this.generations.get(key) ?? 0) !== generation;
     const bundle: CachedDocument = {
       version: TRANSLATION_CACHE_VERSION,
       documentId: context.documentId,
@@ -206,7 +231,9 @@ class TranslationCache {
     };
 
     try {
+      if (isStale()) {return;}
       await secureStorage.setSecret(BUNDLE_PREFIX + key, JSON.stringify(bundle));
+      if (isStale()) {return;}
       await this.touchIndex(key, context, bundle.pairs.length);
     } catch (error) {
       logger.warn("[translation] cache write failed; keeping it in memory only", {
@@ -292,6 +319,7 @@ class TranslationCache {
   async invalidate(context: TranslationCacheContext): Promise<void> {
     const key = await cacheKeyFor(context);
     this.memory.delete(key);
+    this.generations.set(key, (this.generations.get(key) ?? 0) + 1);
     const timer = this.pendingFlush.get(key);
     if (timer) {
       clearTimeout(timer);
@@ -316,6 +344,7 @@ class TranslationCache {
     this.memory.clear();
     this.index = null;
     this.indexLoading = null;
+    this.generations.clear();
   }
 }
 

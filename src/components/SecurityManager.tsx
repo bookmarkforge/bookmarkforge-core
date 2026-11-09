@@ -142,17 +142,36 @@ export const SecurityManager: React.FC<{ children: React.ReactNode }> = ({
     return fallback;
   };
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(recoveryPhrase);
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(recoveryPhrase);
+    } catch (copyError) {
+      // Report failure honestly: a rejected write must not show "copied".
+      logger.warn("[SecurityManager] Clipboard write failed", {
+        error: copyError,
+      });
+      return;
+    }
     setCopied(true);
     setHasDownloadedKit(true);
     clearTimeout(copyTimerRef.current);
     clearTimeout(clearClipboardTimerRef.current);
     copyTimerRef.current = setTimeout(() => setCopied(false), UI_CONFIG.COPY_FEEDBACK_DURATION_MS);
-    clearClipboardTimerRef.current = setTimeout(
-      () => navigator.clipboard.writeText(""),
-      60000,
-    );
+    clearClipboardTimerRef.current = setTimeout(() => {
+      // Only clear the clipboard if it still holds the recovery phrase —
+      // blindly writing "" would destroy whatever the user copied since.
+      void navigator.clipboard
+        .readText()
+        .then((text) => {
+          if (text === recoveryPhrase) {
+            return navigator.clipboard.writeText("");
+          }
+          return undefined;
+        })
+        .catch(() => {
+          // Clipboard read/write denied — leave the clipboard untouched.
+        });
+    }, 60000);
   };
 
   const handleRegeneratePhrase = async () => {

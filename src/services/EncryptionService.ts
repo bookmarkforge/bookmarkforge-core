@@ -649,6 +649,10 @@ export class EncryptionService {
         error: redactSecrets(error instanceof Error ? error.message : String(error)),
       });
       throw new Error(localizedError("encryptionError"));
+    } finally {
+      // Same consumed-buffer contract as encryptBinary/decryptBinary: the
+      // worker only receives a clone, so the caller's bytes are wiped here.
+      this.zeroBytes(password);
     }
   }
 

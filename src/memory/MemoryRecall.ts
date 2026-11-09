@@ -108,10 +108,12 @@ class MemoryRecall {
 
       const queryEmbedding = await ragEngine.generateEmbedding(query, signal);
 
-      // Use vector index for instant semantic search
+      // Use vector index for instant semantic search. The index mixes
+      // `chunk:` and `atom:` neighbors in one top-K, so over-fetch and
+      // filter — otherwise chunks can crowd out every atom.
       const searchResults = await vectorIndexService.search(
         queryEmbedding,
-        this.config.maxAtomsInContext,
+        Math.min(this.config.maxAtomsInContext * 4, 50),
         signal,
       );
 
@@ -128,7 +130,8 @@ class MemoryRecall {
       // Filter for memory atoms and extract IDs
       const atomIds = neighbors
         .filter((n): n is { id: string } => n.id.startsWith("atom:"))
-        .map((n) => n.id.replace("atom:", ""));
+        .map((n) => n.id.replace("atom:", ""))
+        .slice(0, this.config.maxAtomsInContext);
 
       if (atomIds.length === 0) {
         return [];

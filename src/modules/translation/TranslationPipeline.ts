@@ -265,6 +265,7 @@ export class TranslationPipeline {
           sourceText: chunk.text,
           kind: chunk.kind,
           translatable: chunk.translatable,
+          separatorBefore: chunk.separatorBefore,
         });
         emit(request, {
           type: "chunk-done",
@@ -289,6 +290,7 @@ export class TranslationPipeline {
           sourceText: chunk.text,
           kind: chunk.kind,
           translatable: chunk.translatable,
+          separatorBefore: chunk.separatorBefore,
         });
         emit(request, {
           type: "chunk-done",
@@ -309,6 +311,7 @@ export class TranslationPipeline {
         sourceText: chunk.text,
         kind: chunk.kind,
         translatable: chunk.translatable,
+        separatorBefore: chunk.separatorBefore,
       });
 
       const translatePrompt = buildTranslatePrompt(chunk.text, {

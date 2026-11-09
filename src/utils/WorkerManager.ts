@@ -85,6 +85,20 @@ export class WorkerManager<Req = unknown, Res = unknown> {
       this.worker = null;
     }
     this.generation++;
+    // The worker is gone: every still-pending request can never receive a
+    // reply. Reject them now instead of letting each wait out its own
+    // timeout against a dead worker.
+    if (this.pending.size > 0) {
+      const err = new Error(`Worker ${this.name} terminated`);
+      for (const [, p] of this.pending) {
+        if (p.timer) clearTimeout(p.timer);
+        if (p.signal && p.onAbort) {
+          p.signal.removeEventListener("abort", p.onAbort);
+        }
+        p.reject(err);
+      }
+      this.pending.clear();
+    }
   }
 
   async enqueue(

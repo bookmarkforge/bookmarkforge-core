@@ -862,12 +862,13 @@ const HomeDashboard = function HomeDashboard({
         isOpen={showResearch}
         onClose={() => setShowResearch(false)}
       />
-      <Suspense fallback={null}>
-        <ImportDialog
-          isOpen={showImportDialog}
-          onClose={() => setShowImportDialog(false)}
-        />
-      </Suspense>
+      {/* Mount the lazy chunk only when the dialog is actually opened —
+          rendering it closed still fetched and evaluated the bundle. */}
+      {showImportDialog && (
+        <Suspense fallback={null}>
+          <ImportDialog isOpen onClose={() => setShowImportDialog(false)} />
+        </Suspense>
+      )}
     </div>
   );
 };

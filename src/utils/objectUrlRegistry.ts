@@ -1,6 +1,8 @@
 /** Tracks temporary Blob URLs so callers can release them with their owner. */
 export class ObjectUrlRegistry {
   private readonly urls = new Set<string>();
+  /** Optional hook fired for every URL this registry revokes. */
+  onRevoke: ((url: string) => void) | undefined;
 
   create(value: Blob | MediaSource): string {
     const url = URL.createObjectURL(value);
@@ -11,11 +13,13 @@ export class ObjectUrlRegistry {
   revoke(url: string): void {
     if (!this.urls.delete(url)) {return;}
     URL.revokeObjectURL(url);
+    this.onRevoke?.(url);
   }
 
   revokeAll(): void {
     for (const url of this.urls) {
       URL.revokeObjectURL(url);
+      this.onRevoke?.(url);
     }
     this.urls.clear();
   }

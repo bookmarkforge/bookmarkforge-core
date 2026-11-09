@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-07T18:33:42.522Z",
+  "generatedAt": "2026-11-09T00:07:28.588Z",
   "version": "1.0.0",
   "source": "private repository (export checkout)",
   "license": "MIT",
@@ -23,7 +23,7 @@
     "src/services/webrtc-sync/validation.ts"
   ],
   "proSpecifiersRewritten": 14,
-  "includedCount": 2011,
+  "includedCount": 2007,
   "excluded": [
     {
       "file": ".zap\\authenticated.context",

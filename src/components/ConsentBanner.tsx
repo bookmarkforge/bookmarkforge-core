@@ -110,24 +110,24 @@ export const ConsentBanner: React.FC<ConsentBannerProps> = ({
     { title: string; description: string }
   > = {
     analytics: {
-      title: t("consent_analytics", "Product Analytics"),
+      title: t("consent_analytics", "Local usage stats"),
       description: t(
         "consent_analytics_desc",
-        "Local-only usage metrics (retention, feature usage). Never leaves your browser."
+        "Aggregated usage counts stay on this device — nothing is sent anywhere."
       ),
     },
     errorReporting: {
-      title: t("consent_errorReporting", "Error Reporting"),
+      title: t("consent_errorReporting", "Local error logs"),
       description: t(
         "consent_errorReporting_desc",
-        "Store error logs locally and, with your consent, send redacted technical errors to a remote diagnostics service. Never your bookmarks, notes, or AI prompts."
+        "Crash reports stay in this browser's local storage — we never receive them."
       ),
     },
     clientEvents: {
-      title: t("consent_clientEvents", "Operational Events"),
+      title: t("consent_clientEvents", "Local usage events"),
       description: t(
         "consent_clientEvents_desc",
-        "Forward storage/integrity events to your self-hosted companion server."
+        "Anonymized usage events stored locally only — never transmitted."
       ),
     },
   };
@@ -164,7 +164,7 @@ export const ConsentBanner: React.FC<ConsentBannerProps> = ({
                 <p className="text-xs mt-1 ds-text-secondary leading-relaxed">
                   {t(
                     "consent_description",
-                    "BookmarkForge is privacy-first: all data stays on your device. We need your consent for optional diagnostic features that help us improve the app."
+                    "BookmarkForge is privacy-first: all data stays on your device. The optional diagnostics below stay on this device too — nothing is sent to us."
                   )}
                 </p>
               </div>

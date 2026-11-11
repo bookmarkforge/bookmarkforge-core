@@ -67,6 +67,6 @@ export const isCheckoutConfigured = (): boolean => {
  * tier's maxDevices (5) is enforced there by the licensing backend.
  */
 export const FREE_LIMITS = {
-  maxBookmarks: 300,
+  maxBookmarks: 500,
   maxDevices: 0,
 } as const;

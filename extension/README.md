@@ -14,15 +14,11 @@ A browser extension for BookmarkForge that allows you to save any page to your p
 
 ### From Firefox Add-ons
 
-1. Visit the [BookmarkForge Extension page on Firefox Add-ons](https://addons.mozilla.org/)
-2. Click "Add to Firefox"
-3. Follow the installation prompts
+*Pending publication* — the listing is not live yet (launch-checklist item 14). Once published, install from the Firefox Add-ons page linked in the store dashboard.
 
 ### From Chrome Web Store
 
-1. Visit the [BookmarkForge Extension page on Chrome Web Store](https://chrome.google.com/webstore)
-2. Click "Add to Chrome"
-3. Follow the installation prompts
+*Pending publication* — the listing is not live yet (launch-checklist item 14). Once published, install from the Chrome Web Store page linked in the store dashboard.
 
 ### Manual Installation (Development)
 
@@ -96,7 +92,7 @@ npm test -- extension
 ### Manifest Files
 
 - `manifest.json` - Chrome/Edge (Manifest V3)
-- `manifest-firefox.json` - Firefox (Manifest V3)
+- `manifest-firefox.json` - Firefox (Manifest V2 — Firefox still requires the MV2 background-scripts shape for this extension's importScripts bootstrap; `strict_min_version` is 109)
 
 ## License
 

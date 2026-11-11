@@ -54,9 +54,9 @@ Trascina il pulsante **"Save to Forge"** nella barra dei segnalibri del tuo brow
 
 - **Lista virtualizzata** che gestisce 100.000+ elementi senza ritardo
 - **Ricerca profonda:** cerca nel testo completo delle pagine salvate
-- **Collezioni intelligenti:** auto-organizzazione per etichetta
-- **Import/Export:** da Notion, Evernote, Chrome, o esporta come .bmf, Markdown, PDF
-- **Free:** 300 segnalibri, ricerca intelligente inclusa e senza limite di dispositivi. A 300, i tuoi dati rimangono disponibili per lettura, ricerca ed export; solo i nuovi salvataggi vengono messi in pausa. **Pro:** segnalibri illimitati.
+- **Tag e Collezioni:** organizza con tag, suggerimenti di auto-tagging IA e collezioni
+- **Import/Export:** export di segnalibri (Pocket, Raindrop, Omnivore, Chrome, Pinboard, Firefox), .enex Evernote, vault Notion/Markdown/Obsidian (ZIP); esporta come .bmf, Markdown, HTML, CSV, JSON, JSONL, Notion, Obsidian, PDF (Pro)
+- **Free:** 500 segnalibri, ricerca intelligente inclusa e senza limite di dispositivi. A 500, i tuoi dati rimangono disponibili per lettura, ricerca ed export; solo i nuovi salvataggi vengono messi in pausa. **Pro:** segnalibri illimitati.
 
 ### 3.2 Editor di note
 
@@ -84,10 +84,10 @@ Visualizzazione interattiva 3D/2D delle tue note:
 
 ### 3.5 Comandi vocali
 
-Motore voce-azione:
-- Di "Hey BMF, trova le mie note di Biologia"
-- Di "Salva questa pagina"
-- Funziona 100% offline tramite la Web Speech API
+Motore push-to-talk (premi il microfono, parla, rilascia):
+- Premi il microfono e di' "trova le mie note di Biologia"
+- Premi il microfono e di' "salva questa pagina"
+- Usa la Web Speech API del browser — Chrome/Edge la supportano e richiede una connessione internet; il supporto su Firefox è limitato
 
 ### 3.6 Omnibar (Ctrl+K)
 
@@ -207,13 +207,13 @@ Il cervello dell'applicazione:
 | Funzionalità | Free | Pro |
 |---|---|--- |
 | Prezzo | $0 | $79 (vitalizio) |
-| Segnalibri | 300 | Illimitati |
+| Segnalibri | 500 | Illimitati |
 | Dispositivi | Nessun limite (ogni dispositivo ha il suo archivio) | Fino a 5 + sincronizzazione P2P |
 | IA con chiave propria | ✅ | ✅ |
 | IA Locale (WebLLM/Ollama) | ❌ | ✅ |
 | Chat RAG sui tuoi dati | ❌ | ✅ |
 | Flashcards + PDF/OCR | ❌ | ✅ |
-| Export avanzato (10+ formati) | ❌ | ✅ |
+| Export avanzato (7 formati) | ❌ | ✅ |
 | Cifratura locale dell'archivio (AES-GCM) | ✅ | ✅ |
 | Supporto | Comunità | Email 48h |
 | Sconti v2/v3 | ❌ | 60% sconto |
@@ -246,16 +246,19 @@ L'importazione riconosce le esportazioni HTML (`ril_export.html`) e CSV di Pocke
 ### 8.1 Importare
 
 Vai a **Impostazioni > Importa**:
-- **HTML/JSON da Notion o Evernote**
-- **Export segnalibri Chrome**
+- **Export di segnalibri HTML/JSON** (Pocket, Raindrop, Omnivore, Chrome)
+- **Export post Pinboard** (JSON) e **backup Firefox** (`places.json`)
+- **Export Evernote** (`.enex`) — le note diventano documenti
+- **Export Notion** (ZIP "Markdown & CSV") — le pagine diventano documenti e le cartelle sono preservate
+- **Vault Markdown o Obsidian** (ZIP)
 - **Backup .bmf**
 
 ### 8.2 Esportare
 
 - **.bmf:** Backup completo cifrato
-- **Markdown:** Note in formato leggibile
-- **PDF:** Esporta note come documenti PDF
-- **JSON:** Dati strutturati
+- **Markdown, HTML, CSV, JSON, JSONL:** Export strutturati
+- **Notion / Obsidian:** Export compatibili con vault
+- **PDF:** Esporta note come documenti PDF (Pro)
 
 ### 8.3 Backup e ripristino
 
@@ -334,7 +337,7 @@ consulta la documentazione interna o contatta il supporto.
 L'applicazione principale è local-first e gratuita. Le funzionalità avanzate di IA e sincronizzazione P2P richiedono una licenza Pro.
 
 **Posso usarlo sul mobile?**
-Sì. Installala come PWA via Chrome (Android) o Safari (iOS). Supporta l'accesso offline e le notifiche push.
+Sì. Installala come PWA via Chrome (Android) o Safari (iOS). Supporta l'accesso offline e le notifiche locali del browser.
 
 **Dove sono i miei file?**
 Nello spazio interno del browser (IndexedDB). Puoi esportarli come .bmf, Markdown o PDF in qualsiasi momento.

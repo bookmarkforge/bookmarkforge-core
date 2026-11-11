@@ -15,7 +15,7 @@ Valvet krypteras lokalt med AES-GCM och Argon2id härleder nyckeln från huvudl�
 
 ## Bokmärken och sökning
 
-Free innehåller smart sökning efter ord och betydelse. Free tillåter **300 bokmärken** och har ingen gräns för antal enheter; utan Pro-synkronisering har varje enhet ett eget valv. När 300 nås raderas inget: läsning, sökning och export fortsätter, medan nya sparningar pausas. Pro tar bort gränsen och synkroniserar upp till fem enheter via P2P.
+Free innehåller smart sökning efter ord och betydelse. Free tillåter **500 bokmärken** och har ingen gräns för antal enheter; utan Pro-synkronisering har varje enhet ett eget valv. När 500 nås raderas inget: läsning, sökning och export fortsätter, medan nya sparningar pausas. Pro tar bort gränsen och synkroniserar upp till fem enheter via P2P.
 
 ## Import från Pocket
 

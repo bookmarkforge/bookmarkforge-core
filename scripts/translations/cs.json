@@ -6,12 +6,12 @@
   "ogLocale": "cs_CZ",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: soukromý lokální správce záložek se seznamem ke čtení",
-  "description": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. Jedna platba: $59 doživotní přístup v akci early bird (ušetříte $20 před běžnou cenou). Zdarma: 300 záložek.",
+  "description": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. Jedna platba: $59 doživotní přístup v akci early bird (ušetříte $20 před běžnou cenou). Zdarma: 500 záložek.",
   "ogTitle": "BookmarkForge: soukromý lokální správce záložek se seznamem ke čtení",
-  "ogDescription": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. Jedna platba: $59 doživotní přístup v akci early bird (ušetříte $20 před běžnou cenou). Zdarma: 300 záložek.",
+  "ogDescription": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. Jedna platba: $59 doživotní přístup v akci early bird (ušetříte $20 před běžnou cenou). Zdarma: 500 záložek.",
   "ogImage": "https://bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: soukromý lokální správce záložek se seznamem ke čtení",
-  "twitterDescription": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. Jedna platba: $59 doživotní přístup v akci early bird (ušetříte $20 před běžnou cenou). Zdarma: 300 záložek.",
+  "twitterDescription": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. Jedna platba: $59 doživotní přístup v akci early bird (ušetříte $20 před běžnou cenou). Zdarma: 500 záložek.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
   "skipLink": "Přejít na hlavní obsah",
   "navBrandAria": "Domov BookmarkForge",
@@ -198,7 +198,13 @@
         "title": "Ve výchozím nastavení soukromé",
         "text": "Žádné účty, žádné sledování, žádné reklamy. Vy jste zákazník, ne produkt. Sdílení využití existuje, je volitelné a zůstane vypnuté, dokud jej nezapnete."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "Free obsahuje",
+      "free": "chytré vyhledávání, 500 záložek, AI s vlastnimi klíči, šifrované zálohy a export — navždy",
+      "proLabel": "Pro přidává",
+      "pro": "neomezené záložky, synchronizaci na 5 zařízeních, lokální AI a chat nad trezorem, kartičky, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ai",
@@ -219,22 +225,6 @@
         {
           "type": "cloud",
           "name": "Cloud — Google Gemini (s vlastním klíčem)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — OpenAI / GPT-4o (s vlastním klíčem)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — Antropický Claude (s vlastním klíčem)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — Groq (s vlastním klíčem)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — OpenRouter nebo jiný vlastní poskytovatel (s vlastním klíčem)"
         }
       ]
     },
@@ -288,23 +278,27 @@
       {
         "title": "Žádné uzamčení",
         "text": "Exportujte svá data kdykoli v otevřených formátech (JSON, Markdown, CSV, PDF). Vaše znalosti zůstanou vaše a přenosné."
+      },
+      {
+        "title": "Pouze Vercel nás hostuje — nula analytiky",
+        "text": "Web běží výhradně na Vercelu bez jakékoli analytiky: žádné trackery, žádný fingerprinting, žádné skripty třetích stran. Ověřte si to sami na kartě sítě ve svém prohlížeči."
       }
     ]
   },
   "pricing": {
     "id": "pricing",
     "title": "Jednoduché, spravedlivé ceny – žádné předplatné",
-    "subtitle": "Zdarma 300 záložek navždy. Pro je doživotní licence pro verzi 1 – zaplaťte jednou, vlastníte verzi 1 navždy. Zahrnuje všechny aktualizace v1.x a 12 měsíců aktualizací funkcí. Aktualizace zabezpečení navždy. Žádné měsíční vyúčtování.",
+    "subtitle": "Zdarma 500 záložek navždy. Pro je doživotní licence pro verzi 1 – zaplaťte jednou, vlastníte verzi 1 navždy. Zahrnuje všechny aktualizace v1.x a 12 měsíců aktualizací funkcí. Aktualizace zabezpečení navždy. Žádné měsíční vyúčtování.",
     "plans": [
       {
         "name": "Free",
         "price": "$ 0",
         "period": "/navždy",
-        "description": "Pro osobní archiv (300 záložek, funguje na jakémkoli zařízení — každé má svůj trezor)",
+        "description": "Pro osobní archiv (500 záložek, funguje na jakémkoli zařízení — každé má svůj trezor)",
         "features": [
           {
             "included": true,
-            "text": "300 záložek, poznámek a dokumentů"
+            "text": "500 záložek, poznámek a dokumentů"
           },
           {
             "included": true,
@@ -313,6 +307,10 @@
           {
             "included": true,
             "text": "AI s vaším API klíčem (vy platíte poskytovateli)"
+          },
+          {
+            "included": true,
+            "text": "Funguje na jakémkoli zařízení — každé má svůj trezor"
           },
           {
             "included": true,
@@ -360,11 +358,11 @@
           }
         ],
         "cta": "Vyzkoušejte hned",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-sekundární"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "Nejoblíbenější — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (pak 79 $)",
@@ -396,7 +394,7 @@
           },
           {
             "included": true,
-            "text": "Pokročilý export (10+ formátů)"
+            "text": "Pokročilý export (7 formátů)"
           },
           {
             "included": true,
@@ -405,18 +403,6 @@
           {
             "included": true,
             "text": "Životnost v1 · 12 měsíců aktualizací funkcí"
-          },
-          {
-            "included": true,
-            "text": "Aktualizace zabezpečení navždy"
-          },
-          {
-            "included": true,
-            "text": "E-mailová podpora (48 hodin) + časný přístup"
-          },
-          {
-            "included": true,
-            "text": "Lokální překlad pomocí AI (již brzy)"
           }
         ],
         "cta": "Získejte Pro $ 59 Early Bird",
@@ -430,14 +416,14 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-cs#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-cs#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Běžné otázky",
     "items": [
       {
         "question": "Je úroveň zdarma skutečně navždy zdarma?",
-        "answer": "Ano. Žádná zkušební verze, žádné předplatné. Bezplatná úroveň zahrnuje 300 záložek, fulltextové a sémantické vyhledávání, graf znalostí a AI s vaším vlastním API klíčem (platíte poskytovateli)."
+        "answer": "Ano. Žádná zkušební verze, žádné předplatné. Bezplatná úroveň zahrnuje 500 záložek, fulltextové a sémantické vyhledávání, graf znalostí a AI s vaším vlastním API klíčem (platíte poskytovateli)."
       },
       {
         "question": "Co znamená „Lifetime of v1“ pro Pro?",
@@ -454,6 +440,18 @@
       {
         "question": "Co když zapomenu heslo k trezoru?",
         "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-cs#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "Co se stane s mými daty, když přestanu používat?",
+        "answer": "Vaše data zůstávají na vašem zařízení. Můžete vše exportovat kdykoli do Markdown, JSON, CSV nebo PDF. Bez uzamčení, bez rukojmí."
+      },
+      {
+        "question": "Jsou moje data opravdu soukromá?",
+        "answer": "Absolutně. Vše je šifrováno na vašem zařízení klíčem, který máte pouze vy. My nikdy nevidíme vaše záložky, poznámky ani hesla. Dokonce ani my nemůžeme číst vaše data."
+      },
+      {
+        "question": "Mohu to používat na telefonu?",
+        "answer": "Ano! BookmarkForge funguje na jakémkoli zařízení s webovým prohlížečem. Bezplatná úroveň funguje na neomezených zařízeních (každé má vlastní trezor). Pro synchronizuje až 5 zařízení."
       }
     ]
   },
@@ -462,7 +460,7 @@
     "text": "Připojte se k tisícům výzkumníků, vývojářů a studentů, kteří BookmarkForge důvěřují svým druhým mozkem.",
     "ctaPrimary": "Vyzkoušejte hned (bez účtu)",
     "ctaSecondary": "Upgradujte na Pro",
-    "note": "Není vyžadován žádný účet. Funguje okamžitě ve vašem prohlížeči. Volná úroveň: 300 záložek."
+    "note": "Není vyžadován žádný účet. Funguje okamžitě ve vašem prohlížeči. Volná úroveň: 500 záložek."
   },
   "footer": {
     "brand": "Váš soukromý trezor znalostí poháněný umělou inteligencí. 100% místní-první.",
@@ -480,7 +478,7 @@
         "/#ai",
         "/#soukromí",
         "/#cena",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {
@@ -523,7 +521,7 @@
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
-    "websiteDescription": "Váš soukromý trezor znalostí poháněný umělou inteligencí. 100% místní-první. Soukromá kapesní alternativa. Zdarma: 300 záložek.",
+    "websiteDescription": "Váš soukromý trezor znalostí poháněný umělou inteligencí. 100% místní-první. Soukromá kapesní alternativa. Zdarma: 500 záložek.",
     "organizationName": "BookmarkForge",
     "organizationUrl": "https://bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
@@ -536,17 +534,17 @@
         "name": "Free",
         "price": "0",
         "currency": "USD",
-        "description": "300 záložek. Navždy zdarma."
+        "description": "500 záložek. Navždy zdarma."
       },
       {
-        "name": "Pro Lifetime v1 — Early Bird",
+        "name": "Pro Lifetime — Early Bird",
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Životnost verze 1, funkce 12 měsíců, zabezpečení navždy, v2 60% sleva.",
         "availability": "https://schema.org/InStock"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "price": "79",
         "currency": "USD",
         "description": "Pravidelný. Životnost v1."
@@ -563,7 +561,7 @@
     "faq": [
       {
         "question": "Je úroveň zdarma skutečně navždy zdarma?",
-        "answer": "Ano. Žádná zkušební verze, žádné předplatné. Bezplatná úroveň zahrnuje 300 záložek, fulltextové a sémantické vyhledávání, graf znalostí a AI s vaším vlastním API klíčem (platíte poskytovateli)."
+        "answer": "Ano. Žádná zkušební verze, žádné předplatné. Bezplatná úroveň zahrnuje 500 záložek, fulltextové a sémantické vyhledávání, graf znalostí a AI s vaším vlastním API klíčem (platíte poskytovateli)."
       },
       {
         "question": "Co znamená „Lifetime of v1“ pro Pro?",
@@ -612,17 +610,17 @@
       },
       "tier": {
         "free": "Free",
-        "pro": "Pro Lifetime v1"
+        "pro": "Pro Lifetime"
       },
       "freePrice": "0 $ navždy",
-      "freeDescription": "300 záložek na libovolném zařízení (každé má svůj vlastní trezor), chytré vyhledávání — fulltextové + sémantické, funkce, kterou si Raindrop účtuje ročně — graf znalostí, AI s vlastním API klíčem, PWA + rozšíření. Při hodnotě 300 zůstane váš trezor celý: čtení, vyhledávání a export se nikdy nezastaví; pouze nové ukládání pauza.",
+      "freeDescription": "500 záložek na libovolném zařízení (každé má svůj vlastní trezor), chytré vyhledávání — fulltextové + sémantické, funkce, kterou si Raindrop účtuje ročně — graf znalostí, AI s vlastním API klíčem, PWA + rozšíření. Při hodnotě 500 zůstane váš trezor celý: čtení, vyhledávání a export se nikdy nezastaví; pouze nové ukládání pauza.",
       "unlimited": "Neomezený",
       "badge": "Early Bird",
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "79 $ běžných",
       "proPriceTraction": "99 $ po trakci",
-      "proDescription": "Neomezené záložky, 5 zařízení + P2P synchronizace, místní umělá inteligence (WebLLM/Ollama) + RAG + expertní agenti, kartičky, PDF/OCR, 10+ exportních formátů, trezor. <em>Životnost verze 1 · 12měsíční aktualizace funkcí · Navždy zabezpečení · 60% sleva v2</em>",
+      "proDescription": "Neomezené záložky, 5 zařízení + P2P synchronizace, místní umělá inteligence (WebLLM/Ollama) + RAG + expertní agenti, kartičky, PDF/OCR, 7 exportních formátů, trezor. <em>Životnost verze 1 · 12měsíční aktualizace funkcí · Navždy zabezpečení · 60% sleva v2</em>",
       "proSupply": "200 Early Bird"
     },
     "legal": {
@@ -646,7 +644,7 @@
       },
       "tier": {
         "free": "Free",
-        "pro": "Pro"
+        "pro": "Pro v1 Lifetime"
       },
       "freeChannel": "Samoobsluha: toto centrum nápovědy + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">Diskuze na GitHubu</a>",
       "freeResponse": "Nejlepší úsilí (komunita)",
@@ -720,8 +718,8 @@
         "fix": "Zkontrolujte <code>Nastavení → Pro</code>: znovu zadejte klíč. Offline kontroluje mezipaměť; znovu se jednou připojte pro opětovné ověření přes Whop."
       },
       "e202": {
-        "meaning": "Bylo dosaženo bezplatného limitu (300 záložek)",
-        "fix": "Zdarma je 300. Neomezené smazání nebo upgrade na Pro Lifetime v1. Export je vždy k dispozici."
+        "meaning": "Bylo dosaženo bezplatného limitu (500 záložek)",
+        "fix": "Zdarma je 500. Neomezené smazání nebo upgrade na Pro Lifetime. Export je vždy k dispozici."
       },
       "tip": "Tip podpory: Kliknutím na <code>Kopírovat diagnostiku</code> chyby zkopírujete kód + kontext jediným kliknutím – vložte jej do své diskuze na GitHubu nebo do e-mailu."
     },
@@ -747,14 +745,46 @@
     "home": "Domov",
     "faq": {
       "q1": "Je úroveň zdarma skutečně navždy zdarma?",
-      "a1": "Ano. Žádná zkušební verze, žádné předplatné. Zdarma obsahuje 300 záložek, fulltextové a sémantické vyhledávání, graf znalostí a AI s vaším vlastním klíčem API.",
+      "a1": "Ano. Žádná zkušební verze, žádné předplatné. Zdarma obsahuje 500 záložek, fulltextové a sémantické vyhledávání, graf znalostí a AI s vaším vlastním klíčem API.",
       "q2": "Co znamená Lifetime of v1?",
       "a2": "Zaplaťte jednou, vlastnte v1 navždy. Všechny opravy chyb v1.x navždy plus 12 měsíců aktualizací funkcí od zakoupení. Aktualizace zabezpečení navždy. Po 13. měsíci zůstane v1 funkční. v2 a v3 jsou samostatné placené velké společnosti: 89 USD pro nové zákazníky, 35 USD pro vlastníky verze 1 (60% sleva).",
       "q3": "Co když zapomenu heslo k trezoru?",
       "a3": "Nemůžeme to obnovit. Když vytvoříte úschovnu, jednou zobrazíme 24slovnou frázi pro obnovení – napište ji na papír. Bez něj je trezor neobnovitelný. Viz BF-E101."
     }
   },
-  "ogImageAlt": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. 59 dolarů jednou. Zdarma: 300 záložek.",
+  "ogImageAlt": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. 59 dolarů jednou. Zdarma: 500 záložek.",
   "languageToggleAria": "Změnit jazyk",
-  "githubAria": "Dejte BookmarkForge hvězdičku na GitHubu"
+  "githubAria": "Dejte BookmarkForge hvězdičku na GitHubu",
+  "beforeAfter": {
+    "id": "before-after",
+    "tag": "Proč přejít",
+    "title": "Z chaosu k jasnosti za 30 sekund",
+    "subtitle": "Podívejte se na rozdíl mezi záložkami prohlížeče a skutečným trezorem znalostí.",
+    "before": {
+      "title": "Před: Záložky prohlížeče",
+      "items": [
+        "Záložky pohřbené v zapomenutých složkách",
+        "Žádný způsob vyhledávání podle významu",
+        "Ztraceny při vymazání dat prohlížeče",
+        "Žádné poznámky ani organizace",
+        "Přístupné pouze na jednom zařízení"
+      ]
+    },
+    "after": {
+      "title": "Po: BookmarkForge",
+      "items": [
+        "Vše okamžitě prohledávatelné",
+        "Najděte podle klíčového slova nebo významu",
+        "Šifrováno na vašem zařízení, vždy bezpečné",
+        "Poznámky, tagy a inteligentní organizace",
+        "Synchronizuje se na všech vašich zařízeních (Pro)"
+      ]
+    },
+    "ctaPrimary": "Vyzkoušet Zdarma",
+    "ctaSecondary": "Zobrazit Funkce"
+  },
+  "share": {
+    "text": "Sdílejte BookmarkForge s přáteli",
+    "twitterText": "Podívejte se na BookmarkForge - soukromý, lokální správce záložek"
+  }
 }

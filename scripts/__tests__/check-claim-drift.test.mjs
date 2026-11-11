@@ -831,7 +831,7 @@ describe("real repo freeze", () => {
     expect(t.recoveryWords).toBe(24);
     expect(t.refundDays).toBe(30);
     expect([...t.deviceCounts].sort((a, b) => a - b)).toEqual([0, 5]);
-    expect(t.freeBookmarkCap).toBe(300);
+    expect(t.freeBookmarkCap).toBe(500);
     expect(t.prices.has(79)).toBe(true);
   });
 });

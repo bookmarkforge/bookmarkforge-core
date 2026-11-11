@@ -14,6 +14,8 @@ import {
   AlertCircle,
   AlertTriangle,
   Lightbulb,
+  Copy,
+  Check,
 } from "lucide-react";
 import { motion } from "motion/react";
 import type { SyncState } from "../../services/WebRTCSyncService";
@@ -92,6 +94,14 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
   const [sasCode, setSasCode] = useState<string | null>(null);
   const [awaitingPairingCode, setAwaitingPairingCode] = useState(false);
   const [pairingCodeInput, setPairingCodeInput] = useState("");
+  // Camera-less pairing path: users without a working camera copy the SDP
+  // blob on one device and paste it on the other. The pairing secret still
+  // travels out-of-band ("code" mode) or via the in-band verifier ("verify").
+  const [manualOfferInput, setManualOfferInput] = useState("");
+  const [manualAnswerInput, setManualAnswerInput] = useState("");
+  const [showManualOffer, setShowManualOffer] = useState(false);
+  const [showManualAnswer, setShowManualAnswer] = useState(false);
+  const [copiedPairingData, setCopiedPairingData] = useState(false);
   const codePromptResolver = useRef<((code: string | null) => void) | null>(
     null,
   );
@@ -189,6 +199,11 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
     setSasCode(null);
     setAwaitingPairingCode(false);
     setPairingCodeInput("");
+    setManualOfferInput("");
+    setManualAnswerInput("");
+    setShowManualOffer(false);
+    setShowManualAnswer(false);
+    setCopiedPairingData(false);
     onClose();
   };
 
@@ -265,6 +280,28 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
     });
   };
 
+  // Shared offer handling for the camera and paste paths: the offer declares
+  // the host's pairing mode — "code" requires the typed code before the
+  // session is armed, anything unexpected fails closed.
+  const processOfferText = async (offerText: string, signal: AbortSignal) => {
+    const service = serviceRef.current;
+    if (!service) {
+      throw new Error("Sync service unavailable");
+    }
+    const offerPairing = service.describeOfferPairing(offerText);
+    if (offerPairing === "invalid") {
+      throw new Error("Invalid pairing data in the QR code");
+    }
+    if (offerPairing === "code") {
+      const code = await promptForPairingCode();
+      if (signal.aborted || code === null) {
+        throw new DOMException("Aborted", "AbortError");
+      }
+      return service.startClient(offerText, { pairingCode: code });
+    }
+    return service.startClient(offerText);
+  };
+
   // --- CLIENT FLOW ---
   const startClientFlow = () => {
     if (webrtcUnsupported) {
@@ -285,26 +322,41 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
       if (signal.aborted) {
         throw new DOMException("Aborted", "AbortError");
       }
-      const service = serviceRef.current;
-      if (!service) {
-        throw new Error("Sync service unavailable");
-      }
-      // The scanned offer declares the host's pairing mode. "code" mode
-      // requires the user to type the code displayed on the host screen
-      // before the session is armed — fail closed on anything else odd.
-      const offerPairing = service.describeOfferPairing(offerText);
-      if (offerPairing === "invalid") {
-        throw new Error("Invalid pairing data in the QR code");
-      }
-      if (offerPairing === "code") {
-        const code = await promptForPairingCode();
-        if (signal.aborted || code === null) {
-          throw new DOMException("Aborted", "AbortError");
-        }
-        return service.startClient(offerText, { pairingCode: code });
-      }
-      return service.startClient(offerText);
+      return processOfferText(offerText, signal);
     });
+  };
+
+  // Camera-less client path: the user pastes the offer blob the host copied.
+  const submitManualOffer = () => {
+    const offerText = manualOfferInput.trim();
+    if (!offerText) {return;}
+    setRole("client");
+    setErrorMessage("");
+    setSyncState("connecting");
+    void clientAction.runWithSignal(async (signal) =>
+      processOfferText(offerText, signal),
+    );
+  };
+
+  // Camera-less host path: the user pastes the answer blob the client copied.
+  // Reuses the scanAnswer guard; onSuccess already routes the text into
+  // service.processClientAnswer, identical to a decoded QR.
+  const submitManualAnswer = () => {
+    const answerText = manualAnswerInput.trim();
+    if (!answerText) {return;}
+    void scanAnswerAction.run(async () => answerText);
+  };
+
+  const copyPairingData = async () => {
+    try {
+      await navigator.clipboard.writeText(encodedSDP);
+      setCopiedPairingData(true);
+      setTimeout(() => setCopiedPairingData(false), 2000);
+    } catch {
+      setErrorMessage(
+        t("app_p2pCopyFailed", "Could not copy — select the data manually."),
+      );
+    }
   };
 
   /**
@@ -531,6 +583,45 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
                   </p>
                 </button>
               </div>
+
+              {/* Camera-less path: paste the offer blob the host copied. */}
+              <div className="w-full max-w-sm mx-auto">
+                <button
+                  onClick={() => setShowManualOffer((v) => !v)}
+                  className="w-full text-xs font-semibold ds-text-muted hover:ds-text-primary transition-colors py-2 truncate"
+                >
+                  {showManualOffer
+                    ? t("app_p2pManualHide", "Hide manual pairing")
+                    : t(
+                        "app_p2pManualToggle",
+                        "No camera? Pair by copying data instead",
+                      )}
+                </button>
+                {showManualOffer && (
+                  <div className="mt-2 space-y-3 p-4 rounded-2xl ds-card">
+                    <textarea
+                      value={manualOfferInput}
+                      onChange={(e) => setManualOfferInput(e.target.value)}
+                      placeholder={t(
+                        "app_p2pPasteOfferPlaceholder",
+                        "Paste the pairing data shown on the other device",
+                      )}
+                      aria-label={t(
+                        "app_p2pPasteOfferPlaceholder",
+                        "Paste the pairing data shown on the other device",
+                      )}
+                      className="w-full h-24 px-3 py-2 rounded-lg text-xs font-mono resize-none ds-input"
+                    />
+                    <button
+                      onClick={submitManualOffer}
+                      disabled={!manualOfferInput.trim()}
+                      className="w-full py-2.5 rounded-xl font-bold btn-primary disabled:opacity-50 truncate"
+                    >
+                      {t("app_p2pConnect", "Connect")}
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -565,6 +656,23 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
                         )}
                   </p>
 
+                  {/* Camera-less pairing: copy the blob, paste it on the other device. */}
+                  <button
+                    onClick={copyPairingData}
+                    className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold ds-text-muted hover:ds-text-primary transition-colors max-w-full"
+                  >
+                    {copiedPairingData ? (
+                      <Check className="size-3.5 ds-text-success shrink-0" />
+                    ) : (
+                      <Copy className="size-3.5 shrink-0" />
+                    )}
+                    <span className="truncate">
+                      {copiedPairingData
+                        ? t("app_copiedToClipboard", "Copied")
+                        : t("app_p2pCopyData", "No camera? Copy pairing data")}
+                    </span>
+                  </button>
+
                   {role === "host" && (
                     <button
                       onClick={hostScanAnswer}
@@ -573,6 +681,48 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
                       <Scan className="size-4" />
                       {t("app_p2pScanAnswerBtn", "Step 2: Scan answer")}
                     </button>
+                  )}
+
+                  {role === "host" && (
+                    <div className="w-full">
+                      <button
+                        onClick={() => setShowManualAnswer((v) => !v)}
+                        className="w-full text-xs font-semibold ds-text-muted hover:ds-text-primary transition-colors py-2 truncate"
+                      >
+                        {showManualAnswer
+                          ? t("app_p2pManualHide", "Hide manual pairing")
+                          : t(
+                              "app_p2pPasteAnswerToggle",
+                              "No camera? Paste the answer instead",
+                            )}
+                      </button>
+                      {showManualAnswer && (
+                        <div className="mt-2 space-y-3 p-4 rounded-xl ds-card">
+                          <textarea
+                            value={manualAnswerInput}
+                            onChange={(e) =>
+                              setManualAnswerInput(e.target.value)
+                            }
+                            placeholder={t(
+                              "app_p2pPasteAnswerPlaceholder",
+                              "Paste the pairing data shown on the other device",
+                            )}
+                            aria-label={t(
+                              "app_p2pPasteAnswerPlaceholder",
+                              "Paste the pairing data shown on the other device",
+                            )}
+                            className="w-full h-24 px-3 py-2 rounded-lg text-xs font-mono resize-none ds-input"
+                          />
+                          <button
+                            onClick={submitManualAnswer}
+                            disabled={!manualAnswerInput.trim()}
+                            className="w-full py-2.5 rounded-xl font-bold btn-primary disabled:opacity-50 truncate"
+                          >
+                            {t("app_p2pSubmitPasted", "Submit pasted data")}
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   )}
 
                   {role === "host" && pairingMode === "code" && (

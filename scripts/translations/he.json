@@ -6,12 +6,12 @@
   "ogLocale": "he_IL",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: מנהל סימניות פרטי מקומי עם רשימת קריאה",
-  "description": "Raindrop שומר את הסימניות שלך על שרתים שלו. BookmarkForge שומר אותן על המחשב שלך — נעולות, כך שגם אנחנו לא יכולים לקרוא אותן. תשלום אחד: $59 גישה לכל החיים במחיר early bird (חסכו $20 לפני המחיר הרגיל). Free: 300 סימניות.",
+  "description": "Raindrop שומר את הסימניות שלך על שרתים שלו. BookmarkForge שומר אותן על המחשב שלך — נעולות, כך שגם אנחנו לא יכולים לקרוא אותן. תשלום אחד: $59 גישה לכל החיים במחיר early bird (חסכו $20 לפני המחיר הרגיל). Free: 500 סימניות.",
   "ogTitle": "BookmarkForge: מנהל סימניות פרטי מקומי עם רשימת קריאה",
-  "ogDescription": "Raindrop שומר את הסימניות שלך על שרתים שלו. BookmarkForge שומר אותן על המחשב שלך — נעולות, כך שגם אנחנו לא יכולים לקרוא אותן. תשלום אחד: $59 גישה לכל החיים במחיר early bird (חסכו $20 לפני המחיר הרגיל). Free: 300 סימניות.",
+  "ogDescription": "Raindrop שומר את הסימניות שלך על שרתים שלו. BookmarkForge שומר אותן על המחשב שלך — נעולות, כך שגם אנחנו לא יכולים לקרוא אותן. תשלום אחד: $59 גישה לכל החיים במחיר early bird (חסכו $20 לפני המחיר הרגיל). Free: 500 סימניות.",
   "ogImage": "https://bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: מנהל סימניות פרטי מקומי עם רשימת קריאה",
-  "twitterDescription": "Raindrop שומר את הסימניות שלך על שרתים שלו. BookmarkForge שומר אותן על המחשב שלך — נעולות, כך שגם אנחנו לא יכולים לקרוא אותן. תשלום אחד: $59 גישה לכל החיים במחיר early bird (חסכו $20 לפני המחיר הרגיל). Free: 300 סימניות.",
+  "twitterDescription": "Raindrop שומר את הסימניות שלך על שרתים שלו. BookmarkForge שומר אותן על המחשב שלך — נעולות, כך שגם אנחנו לא יכולים לקרוא אותן. תשלום אחד: $59 גישה לכל החיים במחיר early bird (חסכו $20 לפני המחיר הרגיל). Free: 500 סימניות.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
   "skipLink": "דלג לתוכן הראשי",
   "navBrandAria": "העמוד הבית של BookmarkForge",
@@ -198,7 +198,13 @@
         "title": "פרטי כברירת מחדל",
         "text": "אין חשבונות, אין מעקב, אין פרסומות. אתה הלקוח, לא המוצר. שיתוף נתוני שימוש קיים, הוא אופציונלי ונשאר כבוי עד שתדליק אותו."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "הגרסה החינמית כוללת",
+      "free": "חיפוש חכם, 500 סימניות, AI עם המפתחות שלך, גיבויים מוצפנים וייצוא — לנצח",
+      "proLabel": "Pro מוסיף",
+      "pro": "סימניות ללא הגבלה, סנכרון ב-5 מכשירים, AI מקומי וצ'אט על הכספת שלך, כרטיסיות, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ai",
@@ -219,22 +225,6 @@
         {
           "type": "cloud",
           "name": "ענן — Google Gemini (עם המפתח שלך)"
-        },
-        {
-          "type": "cloud",
-          "name": "ענן — OpenAI / GPT-4o (עם המפתח שלך)"
-        },
-        {
-          "type": "cloud",
-          "name": "ענן — Anthropic Claude (עם המפתח שלך)"
-        },
-        {
-          "type": "cloud",
-          "name": "ענן — Groq (עם המפתח שלך)"
-        },
-        {
-          "type": "cloud",
-          "name": "ענן — OpenRouter או ספק מותאם אחר (עם המפתח שלך)"
         }
       ]
     },
@@ -288,23 +278,27 @@
       {
         "title": "בלי כבילה",
         "text": "ייצא את הנתונים שלך בכל עת בפורמטים פתוחים (JSON, Markdown, CSV, PDF). הידע שלך נשאר שלך וניתן להעברה."
+      },
+      {
+        "title": "רק Vercel מארח אותנו — אפס אנליטיקה",
+        "text": "האתר רץ בלעדית על Vercel ללא כל אנליטיקה: בלי עוקבים, בלי טביעת אצבע, בלי סקריפטים של צד שלישי. אמת זאת בעצמך בלשונית הרשת של הדפדפן שלך."
       }
     ]
   },
   "pricing": {
     "id": "pricing",
     "title": "תמחור פשוט והוגן — בלי מנוי",
-    "subtitle": "תוכנית Free: 300 סימניות לתמיד. תוכנית Pro היא רישיון Lifetime עבור v1 — משלמים פעם אחת, ו-v1 נשאר שלך לעד. כולל את כל עדכוני v1.x ו-12 חודשי עדכוני תכונות. עדכוני אבטחה לתמיד. בלי חיוב חודשי.",
+    "subtitle": "תוכנית Free: 500 סימניות לתמיד. תוכנית Pro היא רישיון Lifetime עבור v1 — משלמים פעם אחת, ו-v1 נשאר שלך לעד. כולל את כל עדכוני v1.x ו-12 חודשי עדכוני תכונות. עדכוני אבטחה לתמיד. בלי חיוב חודשי.",
     "plans": [
       {
         "name": "Free",
         "price": "$ 0",
         "period": "/לתמיד",
-        "description": "לארכיון אישי (300 סימניות, עובד בכל מכשיר — לכל מכשיר הכספת שלו)",
+        "description": "לארכיון אישי (500 סימניות, עובד בכל מכשיר — לכל מכשיר הכספת שלו)",
         "features": [
           {
             "included": true,
-            "text": "300 סימניות, הערות ומסמכים"
+            "text": "500 סימניות, הערות ומסמכים"
           },
           {
             "included": true,
@@ -313,6 +307,10 @@
           {
             "included": true,
             "text": "AI עם מפתח ה-API שלכם (אתם משלמים לספק)"
+          },
+          {
+            "included": true,
+            "text": "עובד בכל מכשיר — לכל מכשיר הכספת שלו"
           },
           {
             "included": true,
@@ -360,11 +358,11 @@
           }
         ],
         "cta": "נסו עכשיו",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-secondary"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "הפופולרי ביותר — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (אחר כך $79)",
@@ -396,7 +394,7 @@
           },
           {
             "included": true,
-            "text": "ייצוא מתקדם (10+ פורמטים)"
+            "text": "ייצוא מתקדם (7 פורמטים)"
           },
           {
             "included": true,
@@ -405,18 +403,6 @@
           {
             "included": true,
             "text": "Lifetime של v1 · 12 חודשי עדכוני תכונות"
-          },
-          {
-            "included": true,
-            "text": "עדכוני אבטחה לתמיד"
-          },
-          {
-            "included": true,
-            "text": "תמיכה באימייל (48 שעות) + גישה מוקדמת"
-          },
-          {
-            "included": true,
-            "text": "תרגום AI מקומי (בקרוב)"
           }
         ],
         "cta": "קבל את Pro ב-$59 ב-Early Bird",
@@ -430,14 +416,14 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-he#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-he#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "שאלות נפוצות",
     "items": [
       {
         "question": "האם התוכנית Free באמת חינמית לתמיד?",
-        "answer": "כן. בלי ניסיון, בלי מנוי. התוכנית החינמית כוללת 300 סימניות, חיפוש טקסטואלי וסמנטי, גרף ידע ו-AI עם מפתח API שלך (אתה משלם לספק)."
+        "answer": "כן. בלי ניסיון, בלי מנוי. התוכנית החינמית כוללת 500 סימניות, חיפוש טקסטואלי וסמנטי, גרף ידע ו-AI עם מפתח API שלך (אתה משלם לספק)."
       },
       {
         "question": "מה משמעות \"Lifetime של v1\" עבור Pro?",
@@ -454,6 +440,18 @@
       {
         "question": "מה אם שכחתי את סיסמת הכספת?",
         "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-he#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "מה קורה לנתונים שלי אם אני מפסיק להשתמש?",
+        "answer": "הנתונים שלך נשארים במכשיר שלך. אתה יכול לייצא הכל בכל עת ל-Markdown, JSON, CSV או PDF. בלי נעילה, בלי בני ערובה."
+      },
+      {
+        "question": "האם הנתונים שלי באמת פרטיים?",
+        "answer": "בהחלט. הכל מוצפן במכשיר שלך עם מפתח שרק לך יש. אנחנו אף פעם לא רואים את הסימניות, ההערות או הסיסמאות שלך. אפילו אנחנו לא יכולים לקרוא את הנתונים שלך."
+      },
+      {
+        "question": "האם אני יכול להשתמש בו בטלפון שלי?",
+        "answer": "כן! BookmarkForge עובד על כל מכשיר עם דפדפן אינטרנט. הרמה החינמית עובדת על מכשירים ללא הגבלה (לכל מכשיר כספת משלו). Pro מסנכרן עד 5 מכשירים."
       }
     ]
   },
@@ -462,7 +460,7 @@
     "text": "הצטרף לאלפי חוקרים, מפתחים ולומדים שמאמינים ב-BookmarkForge עם המוח השני שלהם.",
     "ctaPrimary": "נסו עכשיו (בלי חשבון)",
     "ctaSecondary": "שדרג ל-Pro",
-    "note": "אין צורך בחשבון. עובד מיד בדפדפן. תוכנית Free: 300 סימניות."
+    "note": "אין צורך בחשבון. עובד מיד בדפדפן. תוכנית Free: 500 סימניות."
   },
   "footer": {
     "brand": "כספת הידע הפרטית שלך, מופעלת באמצעות AI. 100% מקומי-לפני.",
@@ -480,7 +478,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {
@@ -523,7 +521,7 @@
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
-    "websiteDescription": "כספת הידע הפרטית שלך, מופעלת באמצעות AI. 100% מקומי-לפני. החלופה הפרטית ל-Pocket. Free: 300 סימניות.",
+    "websiteDescription": "כספת הידע הפרטית שלך, מופעלת באמצעות AI. 100% מקומי-לפני. החלופה הפרטית ל-Pocket. Free: 500 סימניות.",
     "organizationName": "BookmarkForge",
     "organizationUrl": "https://bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
@@ -536,17 +534,17 @@
         "name": "Free",
         "price": "0",
         "currency": "USD",
-        "description": "300 סימניות. חינמי לתמיד."
+        "description": "500 סימניות. חינמי לתמיד."
       },
       {
-        "name": "Pro Lifetime v1 — Early Bird",
+        "name": "Pro Lifetime — Early Bird",
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Lifetime של v1, 12 חודשי תכונות, אבטחה לתמיד, הנחה של 60% ל-v2.",
         "availability": "https://schema.org/InStock"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "price": "79",
         "currency": "USD",
         "description": "מחיר רגיל. Lifetime של v1."
@@ -563,7 +561,7 @@
     "faq": [
       {
         "question": "האם התוכנית Free באמת חינמית לתמיד?",
-        "answer": "כן. בלי ניסיון, בלי מנוי. התוכנית החינמית כוללת 300 סימניות, חיפוש טקסטואלי וסמנטי, גרף ידע ו-AI עם מפתח API שלך (אתה משלם לספק)."
+        "answer": "כן. בלי ניסיון, בלי מנוי. התוכנית החינמית כוללת 500 סימניות, חיפוש טקסטואלי וסמנטי, גרף ידע ו-AI עם מפתח API שלך (אתה משלם לספק)."
       },
       {
         "question": "מה משמעות \"Lifetime של v1\" עבור Pro?",
@@ -603,7 +601,7 @@
     },
     "pricing": {
       "title": "תמחור — Lifetime של v1, בלי מנוי",
-      "intro": "<strong>המודל:</strong> משלמים פעם אחת עבור <em>BookmarkForge v1</em>. בלי חיוב חודשי. להשוואה: Raindrop Pro $28–38 לשנה, Instapaper $60 לשנה, Readwise $120 לשנה, Capacities $120 לשנה. רישיון לכל החיים ב-$79 הוא כ-2× המחיר השנתי של Raindrop — המחיר מוצד בחיים ארוכים ובפרטיות.",
+      "intro": "<strong>המודל:</strong> משלמים פעם אחת עבור <em>BookmarkForge v1</em>. בלי חיוב חודשי. להשוואה: Raindrop Pro yearly–38 לשנה, Instapaper $60 לשנה, Readwise $120 לשנה, Capacities $120 לשנה. רישיון לכל החיים ב-$79 הוא כ-2× המחיר השנתי של Raindrop — המחיר מוצד בחיים ארוכים ובפרטיות.",
       "table": {
         "tier": "תוכנית",
         "price": "מחיר",
@@ -612,17 +610,17 @@
       },
       "tier": {
         "free": "Free",
-        "pro": "Pro Lifetime v1"
+        "pro": "Pro Lifetime"
       },
       "freePrice": "$0 לתמיד",
-      "freeDescription": "300 סימניות בכל מכשיר (לכל מכשיר כספת משלו), חיפוש חכם — טקסטואלי + סמנטי, התכונה ש-Raindrop גובה עליה שנתית — גרף ידע, AI עם מפתח API שלך, PWA + תוספים. ב-300 הכספת שלך נשארה שלמה: קריאה, חיפוש וייצוא לא נעצרים; רק השמירה של פריטים חדשים ממתינה.",
+      "freeDescription": "500 סימניות בכל מכשיר (לכל מכשיר כספת משלו), חיפוש חכם — טקסטואלי + סמנטי, התכונה ש-Raindrop גובה עליה שנתית — גרף ידע, AI עם מפתח API שלך, PWA + תוספים. ב-500 הכספת שלך נשארה שלמה: קריאה, חיפוש וייצוא לא נעצרים; רק השמירה של פריטים חדשים ממתינה.",
       "unlimited": "ללא הגבלה",
       "badge": "Early Bird",
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 במחיר רגיל",
       "proPriceTraction": "$99 אחרי שלב ההתפשטות",
-      "proDescription": "סימניות בלי הגבלה, 5 מכשירים + סנכרון P2P, AI מקומי (WebLLM/Ollama) + RAG + סוכנים מומחים, כרטיסי חזרה, PDF/OCR, 10+ פורמטי ייצוא, כספת. <em>Lifetime של v1 · 12 חודשי עדכוני תכונות · אבטחה לתמיד · הנחה של 60% ל-v2</em>",
+      "proDescription": "סימניות בלי הגבלה, 5 מכשירים + סנכרון P2P, AI מקומי (WebLLM/Ollama) + RAG + סוכנים מומחים, כרטיסי חזרה, PDF/OCR, 7 פורמטי ייצוא, כספת. <em>Lifetime של v1 · 12 חודשי עדכוני תכונות · אבטחה לתמיד · הנחה של 60% ל-v2</em>",
       "proSupply": "200 Early Bird"
     },
     "legal": {
@@ -646,7 +644,7 @@
       },
       "tier": {
         "free": "Free",
-        "pro": "Pro"
+        "pro": "Pro v1 Lifetime"
       },
       "freeChannel": "שירות עצמי: מרכז העזרה הזה + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
       "freeResponse": "במאמץ מיטבי (קהילה)",
@@ -720,8 +718,8 @@
         "fix": "בדוק ב-<code>הגדרות → Pro</code>: הזן את המפתח מחדש. בדיקות ללא אינטרנט נשמרות במטמון; התחבר פעם אחת כדי לאמת מחדש דרך Whop."
       },
       "e202": {
-        "meaning": "הגבלת Free הושגה (300 סימניות)",
-        "fix": "Free מוגבל ב-300. מחק סימניות או שדרג ל-Pro Lifetime v1 כדי לקבל הכול ללא הגבלה. ייצוא זמין תמיד."
+        "meaning": "הגבלת Free הושגה (500 סימניות)",
+        "fix": "Free מוגבל ב-500. מחק סימניות או שדרג ל-Pro Lifetime כדי לקבל הכול ללא הגבלה. ייצוא זמין תמיד."
       },
       "tip": "טיפ לתמיכה: לחיצה על <code>העתק דוח אבחון</code> של השגיאה מעתיקה את הקוד ואת ההקשר בלחיצה אחת — הדבק ב-GitHub Discussion או באימייל."
     },
@@ -747,7 +745,7 @@
     "home": "דף הבית",
     "faq": {
       "q1": "האם התוכנית Free באמת חינמית לתמיד?",
-      "a1": "כן. בלי ניסיון, בלי מנוי. Free כולל 300 סימניות, חיפוש טקסטואלי וסמנטי, גרף ידע ו-AI עם מפתח API שלך.",
+      "a1": "כן. בלי ניסיון, בלי מנוי. Free כולל 500 סימניות, חיפוש טקסטואלי וסמנטי, גרף ידע ו-AI עם מפתח API שלך.",
       "q2": "מה משמעות Lifetime של v1?",
       "a2": "משלמים פעם אחת, ו-v1 שלך לעד. כל תיקוני הבאגים של v1.x לתמיד, ועוד 12 חודשי עדכוני תכונות מרגע הרכישה. עדכוני אבטחה לתמיד. אחרי חודש 13 v1 ממשיך לעבוד. v2 ו-v3 הן גרסאות גדולות בתשלום נפרדות: $89 ללקוחות חדשים, $35 לבעלי v1 (הנחה של 60%).",
       "q3": "מה אם שכחתי את סיסמת הכספת?",
@@ -756,5 +754,37 @@
   },
   "ogImageAlt": "BookmarkForge — אפליקציית סימניות והערות פרטית עם בינה מלאכותית",
   "languageToggleAria": "שנה שפה",
-  "githubAria": "תנו כוכב ל-BookmarkForge ב-GitHub"
+  "githubAria": "תנו כוכב ל-BookmarkForge ב-GitHub",
+  "beforeAfter": {
+    "id": "before-after",
+    "tag": "למה להחליף",
+    "title": "מכאוס לבהירות ב-30 שניות",
+    "subtitle": "ראה את ההבדל בין סימניות הדפדפן לבין כספת ידע אמיתית.",
+    "before": {
+      "title": "לפני: סימניות דפדפן",
+      "items": [
+        "סימניות קבורות בתיקיות שנשכחו",
+        "אין דרך לחפש לפי משמעות",
+        "אובדות בעת ניקוי נתוני הדפדפן",
+        "אין הערות או ארגון",
+        "נגישות רק במכשיר אחד"
+      ]
+    },
+    "after": {
+      "title": "אחרי: BookmarkForge",
+      "items": [
+        "הכל ניתן לחיפוש באופן מיידי",
+        "מצא לפי מילות מפתח או משמעות",
+        "מוצפן במכשיר שלך, תמיד בטוח",
+        "הערות, תגיות וארגון חכם",
+        "מסונכרן בכל המכשירים שלך (Pro)"
+      ]
+    },
+    "ctaPrimary": "נסה בחינם",
+    "ctaSecondary": "צפה בתכונות"
+  },
+  "share": {
+    "text": "שתף BookmarkForge עם חברים",
+    "twitterText": "בדוק את BookmarkForge - מנהל סימניות פרטי ומקומי-ראשון"
+  }
 }

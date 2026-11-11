@@ -27,6 +27,19 @@ services:
     restart: unless-stopped
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
+    # P1-3 (review 2026-11-11): resource and log caps. Without them a memory
+    # spike or a log flood on one container degrades the host and the other
+    # service. The web image is nginx: it needs a writable /var/cache/nginx and
+    # /var/run, so `read_only` stays off here (the api service, which writes
+    # nothing, is read-only).
+    mem_limit: ${WEB_MEM_LIMIT:-256m}
+    cpus: ${WEB_CPUS:-1.0}
+    pids_limit: ${WEB_PIDS_LIMIT:-256}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     healthcheck:
       test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/"]
       interval: 15s
@@ -58,7 +71,12 @@ services:
       CSP_REPORT_IP_HASH_SALT: ${CSP_REPORT_IP_HASH_SALT:?CSP_REPORT_IP_HASH_SALT is required (>= 32 chars)}
       ANALYTICS_IP_HASH_SALT: ${ANALYTICS_IP_HASH_SALT:?ANALYTICS_IP_HASH_SALT is required (>= 32 chars)}
       CLIENT_EVENTS_IP_HASH_SALT: ${CLIENT_EVENTS_IP_HASH_SALT:?CLIENT_EVENTS_IP_HASH_SALT is required (>= 32 chars)}
-      READ_ONLY: "true"
+      # P1-3 (review 2026-11-11): the old `READ_ONLY: "true"` variable had no
+      # reader in server/src, so the operator believed the container was
+      # read-only while the rootfs stayed writable. The real control is the
+      # compose key below (read_only: true + a /tmp tmpfs), which Docker
+      # enforces; check:compose-config now fails on any api variable the server
+      # sources never mention.
       TURN_RELAY_HOST: ${TURN_RELAY_HOST:-}
       TURN_STATIC_AUTH_SECRET: ${TURN_STATIC_AUTH_SECRET:-}
       # Client events endpoint (/api/client-events): alert webhook fired on
@@ -74,6 +92,20 @@ services:
       CLIENT_EVENTS_MAX: ${CLIENT_EVENTS_MAX:-200}
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
+    # P1-3 (review 2026-11-11): Docker-enforced read-only rootfs. The companion
+    # writes nothing at runtime (csp persistence is opt-in and off here), so
+    # only /tmp is mounted writable for Node's scratch use.
+    read_only: true
+    tmpfs:
+      - /tmp
+    mem_limit: ${API_MEM_LIMIT:-512m}
+    cpus: ${API_CPUS:-1.0}
+    pids_limit: ${API_PIDS_LIMIT:-256}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8787/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
       interval: 10s

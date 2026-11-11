@@ -3,7 +3,7 @@
   "short_name": "BForge",
   "description": "Local-first bookmark manager with AES-256-GCM encryption, Argon2id key derivation, and BYOK AI integration. 100% offline-capable PWA with no account registration.",
   "id": "/",
-  "start_url": "/",
+  "start_url": "/app",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone", "minimal-ui"],
   "orientation": "portrait-primary",

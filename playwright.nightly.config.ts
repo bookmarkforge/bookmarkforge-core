@@ -3,6 +3,9 @@ import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   ...baseConfig,
+  // The base config ignores *.nightly.spec.ts for the regular e2e job; the
+  // nightly profile exists precisely to run them, so re-include the pattern.
+  testIgnore: [],
   // Nightly includes real 10k-record and model-startup benchmarks. Run
   // serially so IndexedDB, workers, and the shared Vite server do not
   // contend and turn valid per-test budgets into load-induced timeouts.

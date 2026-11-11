@@ -6,12 +6,12 @@
   "ogLocale": "no_NO",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: privat local-first bokmerkebehandler med leseliste",
-  "description": "Raindrop lagrer bokmerkingene dine på serverne sine. BookmarkForge lagrer dem på datamaskinen din — låst slik at ikke engang vi kan lese dem. Betal én gang: $59 early bird livstidstilgang (spar $20 før ordinær pris). Gratis: 300 bokmerker.",
+  "description": "Raindrop lagrer bokmerkingene dine på serverne sine. BookmarkForge lagrer dem på datamaskinen din — låst slik at ikke engang vi kan lese dem. Betal én gang: $59 early bird livstidstilgang (spar $20 før ordinær pris). Gratis: 500 bokmerker.",
   "ogTitle": "BookmarkForge: privat local-first bokmerkebehandler med leseliste",
-  "ogDescription": "Raindrop lagrer bokmerkingene dine på serverne sine. BookmarkForge lagrer dem på datamaskinen din — låst slik at ikke engang vi kan lese dem. Betal én gang: $59 early bird livstidstilgang (spar $20 før ordinær pris). Gratis: 300 bokmerker.",
+  "ogDescription": "Raindrop lagrer bokmerkingene dine på serverne sine. BookmarkForge lagrer dem på datamaskinen din — låst slik at ikke engang vi kan lese dem. Betal én gang: $59 early bird livstidstilgang (spar $20 før ordinær pris). Gratis: 500 bokmerker.",
   "ogImage": "https://bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: privat local-first bokmerkebehandler med leseliste",
-  "twitterDescription": "Raindrop lagrer bokmerkingene dine på serverne sine. BookmarkForge lagrer dem på datamaskinen din — låst slik at ikke engang vi kan lese dem. Betal én gang: $59 early bird livstidstilgang (spar $20 før ordinær pris). Gratis: 300 bokmerker.",
+  "twitterDescription": "Raindrop lagrer bokmerkingene dine på serverne sine. BookmarkForge lagrer dem på datamaskinen din — låst slik at ikke engang vi kan lese dem. Betal én gang: $59 early bird livstidstilgang (spar $20 før ordinær pris). Gratis: 500 bokmerker.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
   "skipLink": "Hopp til hovedinnhold",
   "navBrandAria": "BookmarkForge-hjem",
@@ -198,7 +198,13 @@
         "title": "Privat som standard",
         "text": "Ingen kontoer, ingen sporing, ingen reklame. Du er kunden, ikke produktet. Deling av bruksdata finnes, men er valgfri og av til slik at du slår den på."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "Gratis inkluderer",
+      "free": "smart søk, 500 bokmerker, AI med dine egne nøkler, krypterte sikkerhetskopier og eksport — for alltid",
+      "proLabel": "Pro legger til",
+      "pro": "ubegrensede bokmerker, synk på 5 enheter, lokal AI og chat over hvelvet ditt, flashcards, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ai",
@@ -219,22 +225,6 @@
         {
           "type": "cloud",
           "name": "Sky — Google Gemini (med din egen nøkkel)"
-        },
-        {
-          "type": "cloud",
-          "name": "Sky — OpenAI / GPT-4o (med din egen nøkkel)"
-        },
-        {
-          "type": "cloud",
-          "name": "Sky — Anthropic Claude (med din egen nøkkel)"
-        },
-        {
-          "type": "cloud",
-          "name": "Sky — Groq (med din egen nøkkel)"
-        },
-        {
-          "type": "cloud",
-          "name": "Sky — OpenRouter eller en annen tilpasset leverandør (med din egen nøkkel)"
         }
       ]
     },
@@ -288,23 +278,27 @@
       {
         "title": "Ingen lås til leverandøren",
         "text": "Eksporter dataene dine når som helst i åpne formater (JSON, Markdown, CSV, PDF). Kunnskapen din forblir din og kan flyttes."
+      },
+      {
+        "title": "Kun Vercel hoster oss — null analyse",
+        "text": "Nettstedet kjører utelukkende på Vercel uten analyser av noe slag: ingen sporere, ingen fingerprinting, ingen tredjepartsskript. Verifiser det selv i nettleserens nettverksfane."
       }
     ]
   },
   "pricing": {
     "id": "pricing",
     "title": "Enkel, rettferdig prising — ingen abonnementer",
-    "subtitle": "Gratis med 300 bokmerker for alltid. Pro er en Lifetime-lisens for v1 — betal én gang, eie v1 for alltid. Inkluderer alle v1.x-oppdateringer og 12 måneder med funksjonsoppdateringer. Sikkerhetsoppdateringer for alltid. Ingen månedlig fakturering.",
+    "subtitle": "Gratis med 500 bokmerker for alltid. Pro er en Lifetime-lisens for v1 — betal én gang, eie v1 for alltid. Inkluderer alle v1.x-oppdateringer og 12 måneder med funksjonsoppdateringer. Sikkerhetsoppdateringer for alltid. Ingen månedlig fakturering.",
     "plans": [
       {
         "name": "Free",
         "price": "$ 0",
         "period": "/for alltid",
-        "description": "Til personlig arkiv (300 bokmerker, fungerer på enhver enhet — hver med sitt eget hvelv)",
+        "description": "Til personlig arkiv (500 bokmerker, fungerer på enhver enhet — hver med sitt eget hvelv)",
         "features": [
           {
             "included": true,
-            "text": "300 bokmerker, notater og dokumenter"
+            "text": "500 bokmerker, notater og dokumenter"
           },
           {
             "included": true,
@@ -313,6 +307,10 @@
           {
             "included": true,
             "text": "AI med din egen API-nøkkel (du betaler leverandøren)"
+          },
+          {
+            "included": true,
+            "text": "Fungerer på enhver enhet — hver med sitt eget hvelv"
           },
           {
             "included": true,
@@ -360,11 +358,11 @@
           }
         ],
         "cta": "Prøv det med en gang",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-secondary"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "Mest populær — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (deretter $79)",
@@ -396,7 +394,7 @@
           },
           {
             "included": true,
-            "text": "Avansert eksport (10+ formater)"
+            "text": "Avansert eksport (7 formater)"
           },
           {
             "included": true,
@@ -405,18 +403,6 @@
           {
             "included": true,
             "text": "Lifetime for v1 · 12 måneder med funksjonsoppdateringer"
-          },
-          {
-            "included": true,
-            "text": "Sikkerhetsoppdateringer for alltid"
-          },
-          {
-            "included": true,
-            "text": "E-poststøtte (48h) + tidlig tilgang"
-          },
-          {
-            "included": true,
-            "text": "Lokal AI-oversettelse (kommer snart)"
           }
         ],
         "cta": "Få Pro $59 Early Bird",
@@ -430,14 +416,14 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-no#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-no#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Vanlige spørsmål",
     "items": [
       {
         "question": "Er Free-nivået virkelig gratis for alltid?",
-        "answer": "Ja. Ingen prøveperiode, intet abonnement. Gratisnivået inneholder 300 bokmerker, fulltekst- og semantisk søk, kunnskapsgraf og KI med din egen API-nøkkel (du betaler leverandøren)."
+        "answer": "Ja. Ingen prøveperiode, intet abonnement. Gratisnivået inneholder 500 bokmerker, fulltekst- og semantisk søk, kunnskapsgraf og KI med din egen API-nøkkel (du betaler leverandøren)."
       },
       {
         "question": "Hva betyr «Lifetime of v1» for Pro?",
@@ -454,6 +440,18 @@
       {
         "question": "Hva hvis jeg glemmer hvelvpassordet mitt?",
         "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-no#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "Hva skjer med dataene mine hvis jeg slutter å bruke det?",
+        "answer": "Dataene dine blir på enheten din. Du kan eksportere alt når som helst til Markdown, JSON, CSV eller PDF. Ingen låsing, ingen gisler."
+      },
+      {
+        "question": "Er dataene mine virkelig private?",
+        "answer": "Absolutt. Alt er kryptert på enheten din med en nøkkel som bare du har. Vi ser aldri bokmerkene, notatene eller passordene dine. Selv vi kan ikke lese dataene dine."
+      },
+      {
+        "question": "Kan jeg bruke det på telefonen min?",
+        "answer": "Ja! BookmarkForge fungerer på enhver enhet med en nettleser. Gratisnivået fungerer på ubegrensede enheter (hver har sitt eget hvelv). Pro synkroniserer opptil 5 enheter."
       }
     ]
   },
@@ -462,7 +460,7 @@
     "text": "Begynn å bygge din private AI knowledge vault i dag. Dine data forblir på enheten din — kryptert, søkbar og din for alltid.",
     "ctaPrimary": "Prøv det med en gang (ingen konto)",
     "ctaSecondary": "Oppgrader til Pro",
-    "note": "Ingen konto nødvendig. Fungerer umiddelbart i nettleseren din. Gratisnivå: 300 bokmerker."
+    "note": "Ingen konto nødvendig. Fungerer umiddelbart i nettleseren din. Gratisnivå: 500 bokmerker."
   },
   "footer": {
     "brand": "Ditt private, KI-drevne kunnskapshvelv. 100 % lokalt-først.",
@@ -480,7 +478,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {
@@ -523,7 +521,7 @@
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
-    "websiteDescription": "Ditt private, KI-drevne kunnskapshvelv. 100 % lokalt-først. Det private Pocket-alternativet. Gratis: 300 bokmerker.",
+    "websiteDescription": "Ditt private, KI-drevne kunnskapshvelv. 100 % lokalt-først. Det private Pocket-alternativet. Gratis: 500 bokmerker.",
     "organizationName": "BookmarkForge",
     "organizationUrl": "https://bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
@@ -536,17 +534,17 @@
         "name": "Free",
         "price": "0",
         "currency": "USD",
-        "description": "300 bokmerker. Gratis for alltid."
+        "description": "500 bokmerker. Gratis for alltid."
       },
       {
-        "name": "Pro Lifetime v1 — Early Bird",
+        "name": "Pro Lifetime — Early Bird",
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Lifetime for v1, 12 måneder med funksjoner, sikkerhet for alltid, 60 % rabatt på v2.",
         "availability": "https://schema.org/InStock"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "price": "79",
         "currency": "USD",
         "description": "Normalpris. Lifetime for v1."
@@ -563,7 +561,7 @@
     "faq": [
       {
         "question": "Er Free-nivået virkelig gratis for alltid?",
-        "answer": "Ja. Ingen prøveperiode, intet abonnement. Gratisnivået inneholder 300 bokmerker, fulltekst- og semantisk søk, kunnskapsgraf og KI med din egen API-nøkkel (du betaler leverandøren)."
+        "answer": "Ja. Ingen prøveperiode, intet abonnement. Gratisnivået inneholder 500 bokmerker, fulltekst- og semantisk søk, kunnskapsgraf og KI med din egen API-nøkkel (du betaler leverandøren)."
       },
       {
         "question": "Hva betyr «Lifetime of v1» for Pro?",
@@ -603,7 +601,7 @@
     },
     "pricing": {
       "title": "Prising — Lifetime for v1, ingen abonnementer",
-      "intro": "<strong>Modell:</strong> du betaler én gang for <em>BookmarkForge v1</em>. Ingen månedlig fakturering. Sammenlign: Raindrop Pro $28–38/år, Instapaper $60/år, Readwise $120/år, Capacities $120/år. Et livslangt kjøp på $79 er ~2× Raindrops årlige pris — rettferdiggjort av livslang bruk og personvern.",
+      "intro": "<strong>Modell:</strong> du betaler én gang for <em>BookmarkForge v1</em>. Ingen månedlig fakturering. Sammenlign: Raindrop Pro yearly–38/år, Instapaper $60/år, Readwise $120/år, Capacities $120/år. Et livslangt kjøp på $79 er ~2× Raindrops årlige pris — rettferdiggjort av livslang bruk og personvern.",
       "table": {
         "tier": "Nivå",
         "price": "Pris",
@@ -612,17 +610,17 @@
       },
       "tier": {
         "free": "Free",
-        "pro": "Pro Lifetime v1"
+        "pro": "Pro Lifetime"
       },
       "freePrice": "$0 for alltid",
-      "freeDescription": "300 bokmerker på hvilken som helst enhet (hver enhet har sitt eget hvelv), smart søk — fulltekst + semantisk, altså funksjonen Raindrop krever årlig betaling for — kunnskapsgraf, KI med din egen API-nøkkel, PWA + utvidelser. Ved 300 forblir hvelvet ditt helt: lesing, søk og eksport stopper aldri; bare nye lagringer settes på pause.",
+      "freeDescription": "500 bokmerker på hvilken som helst enhet (hver enhet har sitt eget hvelv), smart søk — fulltekst + semantisk, altså funksjonen Raindrop krever årlig betaling for — kunnskapsgraf, KI med din egen API-nøkkel, PWA + utvidelser. Ved 500 forblir hvelvet ditt helt: lesing, søk og eksport stopper aldri; bare nye lagringer settes på pause.",
       "unlimited": "Ubegrenset",
       "badge": "Early Bird",
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 normalpris",
       "proPriceTraction": "$99 etter oppslutning",
-      "proDescription": "Ubegrensede bokmerker, 5 enheter + P2P-synkronisering, lokal KI (WebLLM/Ollama) + RAG + ekspertagenter, friminnskort, PDF/OCR, 10+ eksportformater, hvelv. <em>Lifetime for v1 · 12 måneder med funksjonsoppdateringer · Sikkerhet for alltid · v2 60 % rabatt</em>",
+      "proDescription": "Ubegrensede bokmerker, 5 enheter + P2P-synkronisering, lokal KI (WebLLM/Ollama) + RAG + ekspertagenter, friminnskort, PDF/OCR, 7 eksportformater, hvelv. <em>Lifetime for v1 · 12 måneder med funksjonsoppdateringer · Sikkerhet for alltid · v2 60 % rabatt</em>",
       "proSupply": "200 Early Bird"
     },
     "legal": {
@@ -646,7 +644,7 @@
       },
       "tier": {
         "free": "Free",
-        "pro": "Pro"
+        "pro": "Pro v1 Lifetime"
       },
       "freeChannel": "Selvhjelp: dette Hjelpesenteret + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
       "freeResponse": "Beste innsats (fellesskapet)",
@@ -720,8 +718,8 @@
         "fix": "Sjekk <code>Settings → Pro</code>: skriv inn nøkkelen på nytt. Offlinekontroller mellomlagres; koble til én gang for å validere på nytt via Whop."
       },
       "e202": {
-        "meaning": "Gratisgrensen er nådd (300 bokmerker)",
-        "fix": "Gratis er 300. Slett bokmerker eller oppgrader til Pro Lifetime v1 for ubegrenset. Eksport er alltid tilgjengelig."
+        "meaning": "Gratisgrensen er nådd (500 bokmerker)",
+        "fix": "Gratis er 500. Slett bokmerker eller oppgrader til Pro Lifetime for ubegrenset. Eksport er alltid tilgjengelig."
       },
       "tip": "Støttetips: å klikke på feilens <code>Copy diagnostic</code> kopierer kode + kontekst med ett klikk — lim den inn i GitHub Discussion eller e-posten din."
     },
@@ -747,7 +745,7 @@
     "home": "Forside",
     "faq": {
       "q1": "Er Free-nivået virkelig gratis for alltid?",
-      "a1": "Ja. Ingen prøveperiode, intet abonnement. Free inneholder 300 bokmerker, fulltekst- og semantisk søk, kunnskapsgraf og KI med din egen API-nøkkel.",
+      "a1": "Ja. Ingen prøveperiode, intet abonnement. Free inneholder 500 bokmerker, fulltekst- og semantisk søk, kunnskapsgraf og KI med din egen API-nøkkel.",
       "q2": "Hva betyr Lifetime for v1?",
       "a2": "Betal én gang, eie v1 for alltid. Alle v1.x-feilrettinger for alltid, pluss 12 måneder med funksjonsoppdateringer fra kjøpet. Sikkerhetsoppdateringer for alltid. Etter måned 13 fortsetter v1 å virke. v2 og v3 er separate betalte hovedversjoner: $89 for nye kunder, $35 for v1-eiere (60 % rabatt).",
       "q3": "Hva hvis jeg glemmer hvelvpassordet mitt?",
@@ -756,5 +754,37 @@
   },
   "ogImageAlt": "BookmarkForge - privat AI-drevet bokmerke- og notatapp",
   "languageToggleAria": "Bytt språk",
-  "githubAria": "Gi BookmarkForge en stjerne på GitHub"
+  "githubAria": "Gi BookmarkForge en stjerne på GitHub",
+  "beforeAfter": {
+    "id": "before-after",
+    "tag": "Hvorfor bytte",
+    "title": "Fra kaos til klarhet på 30 sekunder",
+    "subtitle": "Se forskjellen mellom nettleser bokmerker og et ekte kunnskaps-vault.",
+    "before": {
+      "title": "Før: Nettleser bokmerker",
+      "items": [
+        "Bokmerker begravd i glemte mapper",
+        "Ingen måte å søke etter betydning",
+        "Mistet når du sletter nettleserdata",
+        "Ingen notater eller organisasjon",
+        "Bare tilgjengelig på én enhet"
+      ]
+    },
+    "after": {
+      "title": "Etter: BookmarkForge",
+      "items": [
+        "Alt søkbart umiddelbart",
+        "Finn etter nøkkelord eller betydning",
+        "Kryptert på enheten din, alltid sikker",
+        "Notater, tagger og smart organisasjon",
+        "Synkroniserer på alle enhetene dine (Pro)"
+      ]
+    },
+    "ctaPrimary": "Prøv Gratis",
+    "ctaSecondary": "Se Funksjoner"
+  },
+  "share": {
+    "text": "Del BookmarkForge med venner",
+    "twitterText": "Sjekk ut BookmarkForge - privat, lokal-først bokmerkeadministrator"
+  }
 }

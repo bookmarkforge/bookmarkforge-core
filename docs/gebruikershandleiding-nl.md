@@ -15,7 +15,7 @@ De kluis wordt lokaal versleuteld met AES-GCM; Argon2id leidt de sleutel af van 
 
 ## Bladwijzers en zoeken
 
-Free bevat slim zoeken op woorden en betekenis. Free ondersteunt **300 bladwijzers** en heeft geen limiet op het aantal apparaten; zonder Pro-synchronisatie heeft elk apparaat een eigen kluis. Bij 300 wordt niets verwijderd: lezen, zoeken en exporteren blijven werken, alleen nieuwe opslagen worden gepauzeerd. Pro verwijdert de limiet en synchroniseert maximaal vijf apparaten via P2P.
+Free bevat slim zoeken op woorden en betekenis. Free ondersteunt **500 bladwijzers** en heeft geen limiet op het aantal apparaten; zonder Pro-synchronisatie heeft elk apparaat een eigen kluis. Bij 500 wordt niets verwijderd: lezen, zoeken en exporteren blijven werken, alleen nieuwe opslagen worden gepauzeerd. Pro verwijdert de limiet en synchroniseert maximaal vijf apparaten via P2P.
 
 ## Importeren vanuit Pocket
 

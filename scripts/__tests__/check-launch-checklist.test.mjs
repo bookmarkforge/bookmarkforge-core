@@ -113,6 +113,26 @@ describe("verifyErrorReporting", () => {
     expect(verifyErrorReporting({ dependencies: { react: "19" } }, reporter).ok).toBe(false);
   });
 
+  it("passes in the retired state: no Sentry dep + clean local reporter", () => {
+    const local = "IndexedDB storage, consent-gated, no remote sink";
+    expect(
+      verifyErrorReporting({ dependencies: { react: "19" } }, null, local).ok,
+    ).toBe(true);
+  });
+
+  it("fails in the retired state if the local reporter gains a remote sink", () => {
+    const leaky = "IndexedDB storage\nfetch('/api/errors')";
+    expect(
+      verifyErrorReporting({ dependencies: { react: "19" } }, null, leaky).ok,
+    ).toBe(false);
+  });
+
+  it("fails in the retired state when the local reporter is missing", () => {
+    expect(
+      verifyErrorReporting({ dependencies: { react: "19" } }, null, null).ok,
+    ).toBe(false);
+  });
+
   it("fails without the reporter module, sanitizer or consent gate", () => {
     expect(
       verifyErrorReporting({ dependencies: { "@sentry/browser": "10" } }, null).ok,
@@ -176,6 +196,15 @@ describe("verifyDrill", () => {
   it("fails without it", () => {
     expect(verifyDrill({ scripts: {} }, true).ok).toBe(false);
     expect(verifyDrill({ scripts: { "drill:backup-restore": "node x" } }, false).ok).toBe(false);
+  });
+
+  it("passes when a workflow invokes the drill script directly (no npm alias)", () => {
+    const nightly = "run: node scripts/drill-backup-restore.mjs --json";
+    expect(verifyDrill({ scripts: {} }, true, nightly).ok).toBe(true);
+  });
+
+  it("fails when neither an npm script nor a workflow wires the drill", () => {
+    expect(verifyDrill({ scripts: {} }, true, "run: echo hi").ok).toBe(false);
   });
 });
 

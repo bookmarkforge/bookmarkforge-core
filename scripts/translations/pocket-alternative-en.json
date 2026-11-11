@@ -6,9 +6,9 @@
   "ogLocale": "en_US",
   "ogLocaleAlternate": "",
   "title": "Best Private Pocket Alternative 2026: Local-First & Encrypted",
-  "description": "Pocket is going away. Smart search is included free — Raindrop charges yearly for it. BookmarkForge Free works on any device with no device cap. Migrate your library locally.",
+  "description": "Pocket charges monthly and stores your reading list on their servers. BookmarkForge keeps everything encrypted on your device. Smart search is included free — Raindrop charges yearly for it. Free works on any device with no device cap.",
   "ogTitle": "BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide",
-  "ogDescription": "Smart search is included free — Raindrop charges yearly for it. Free has no device cap. Compare Pocket and BookmarkForge, then migrate your library locally.",
+  "ogDescription": "Compare Pocket and BookmarkForge feature by feature, then migrate your library locally. Smart search is included free — Raindrop charges yearly for it.",
   "ogImage": "https://bookmarkforgeapp.com/og-image-pricing.png",
   "twitterTitle": "BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide",
   "twitterDescription": "Compare every feature and migrate your Pocket library to a private, local-first vault in minutes.",
@@ -36,20 +36,20 @@
   "hero": {
     "badge": "Pocket Alternative",
     "title": "BookmarkForge vs Pocket: <span class=\"accent-text\">The Full Comparison</span>",
-    "subtitle": "Pocket is going away. Smart search is included free — Raindrop charges yearly for it. BookmarkForge works on any device with no device cap on Free, while your reading list stays encrypted and yours."
+    "subtitle": "Pocket charges monthly and stores your reading list on their servers. BookmarkForge works on any device with no device cap on Free, while your reading list stays encrypted and yours."
   },
   "whyMatters": {
     "id": "context",
-    "title": "Why the Shutdown Changes Everything",
-    "subtitle": "Pocket closing is not just a missing app — it is a reminder that a read-it-later service holding your list on someone else's servers can disappear overnight.",
+    "title": "Why Local-First Matters",
+    "subtitle": "A read-it-later service holding your list on someone else's servers means they can read, analyze or lose your data at any time.",
     "cards": [
       {
-        "title": "Your list is gone with it",
-        "text": "Years of saved articles, tags and reading history lived on Pocket's servers. When the service goes away, so does that data — unless you export it first."
+        "title": "Your list is not theirs",
+        "text": "Years of saved articles, tags and reading history should belong to you, not a cloud provider. Local-first means your data lives on your device, encrypted, and only you control it."
       },
       {
         "title": "Local-first is the only guarantee",
-        "text": "BookmarkForge stores your vault in your browser's local database. No server, no shutdown can take it away. Offline, encrypted, and always yours."
+        "text": "BookmarkForge stores your vault in your browser's local database. No server, no third party can access it. Offline, encrypted, and always yours."
       },
       {
         "title": "You keep the keys",
@@ -209,13 +209,13 @@
       },
       {
         "feature": "Status",
-        "pocket": "❌ Shutting down",
-        "pocketClass": "no",
+        "pocket": "⚠️ Cloud service",
+        "pocketClass": "partial",
         "bookmarkforge": "✅ Active",
         "bookmarkforgeClass": "yes"
       }
     ],
-    "note": "Feature set reflects Pocket's capabilities before the shutdown announcement. BookmarkForge's side runs locally, so it stays accurate regardless of what happens to any cloud service."
+    "note": "Feature comparison based on publicly available information. BookmarkForge runs locally, so it stays accurate regardless of what happens to any cloud service."
   },
   "migration": {
     "id": "migration",
@@ -261,8 +261,8 @@
         "answer": "The importer accepts .html (including Pocket and Netscape bookmark exports), .json, .csv, .md and .zip (Markdown/Obsidian vault) files."
       },
       {
-        "question": "Is the comparison table still valid after Pocket closes?",
-        "answer": "The table reflects Pocket's feature set as it existed before the shutdown announcement. Once the service is fully retired, any Pocket-specific rows (export, offline app) become unavailable by definition — BookmarkForge's side of the table is unaffected because it runs locally."
+        "question": "Is the comparison table accurate?",
+        "answer": "The comparison is based on publicly available feature information. BookmarkForge runs locally, so its capabilities remain consistent regardless of what happens to cloud services."
       }
     ]
   },
@@ -296,7 +296,7 @@
         },
         {
           "label": "Try It Instantly",
-          "href": "/app"
+          "href": "/app?demo=true"
         }
       ],
       "hrefs": [
@@ -304,7 +304,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {
@@ -315,12 +315,42 @@
           "href": "/pocket-alternative"
         },
         {
+          "label": "Raindrop.io Comparison",
+          "href": "/raindrop-alternative.html"
+        },
+        {
+          "label": "Geneziz Comparison",
+          "href": "/geneziz-alternative.html"
+        },
+        {
+          "label": "Karakeep Comparison",
+          "href": "/karakeep-alternative.html"
+        },
+        {
+          "label": "Readwise Comparison",
+          "href": "/readwise-alternative.html"
+        },
+        {
+          "label": "Omnivore Comparison",
+          "href": "/omnivore-alternative.html"
+        },
+        {
+          "label": "Instapaper Comparison",
+          "href": "/instapaper-alternative.html"
+        },
+        {
           "label": "Privacy &amp; Terms",
           "href": "/privacy-and-terms.html"
         }
       ],
       "hrefs": [
         "/pocket-alternative.html",
+        "/raindrop-alternative.html",
+        "/geneziz-alternative.html",
+        "/karakeep-alternative.html",
+        "/readwise-alternative.html",
+        "/omnivore-alternative.html",
+        "/instapaper-alternative.html",
         "/privacy-and-terms.html"
       ]
     },
@@ -403,7 +433,7 @@
           "currency": "USD"
         },
         {
-          "name": "Pro Lifetime",
+          "name": "Pro v1 Lifetime",
           "price": "79",
           "currency": "USD"
         }
@@ -436,9 +466,37 @@
         "answer": "The importer accepts .html (including Pocket and Netscape bookmark exports), .json, .csv, .md and .zip (Markdown/Obsidian vault) files."
       },
       {
-        "question": "Is the comparison table still valid after Pocket closes?",
-        "answer": "The table reflects Pocket's feature set as it existed before the shutdown announcement. Once the service is fully retired, any Pocket-specific rows (export, offline app) become unavailable by definition — BookmarkForge's side of the table is unaffected because it runs locally."
+        "question": "Is the comparison table accurate?",
+        "answer": "The comparison is based on publicly available feature information. BookmarkForge runs locally, so its capabilities remain consistent regardless of what happens to cloud services."
       }
     ]
+  },
+  "beforeAfter": {
+    "id": "before-after",
+    "tag": "Why Switch",
+    "title": "From chaos to clarity in 30 seconds",
+    "subtitle": "See the difference between browser bookmarks and a real knowledge vault.",
+    "before": {
+      "title": "Before: Browser bookmarks",
+      "items": [
+        "Bookmarks buried in folders you forgot",
+        "No way to search by meaning",
+        "Lost when you clear browser data",
+        "No notes or organization",
+        "Accessible only on one device"
+      ]
+    },
+    "after": {
+      "title": "After: BookmarkForge",
+      "items": [
+        "Everything searchable instantly",
+        "Find by keyword or meaning",
+        "Encrypted on your device, always safe",
+        "Notes, tags, and smart organization",
+        "Syncs across all your devices (Pro)"
+      ]
+    },
+    "ctaPrimary": "Try It Free",
+    "ctaSecondary": "See Features"
   }
 }

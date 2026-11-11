@@ -6,12 +6,12 @@
   "ogLocale": "zh_CN",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge：私密、本地优先的书签管理器与稍后阅读列表",
-  "description": "Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次付费: $59 早鸟价终身授权（比原价省 $20）。免费版：300 个书签。",
+  "description": "Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次付费: $59 早鸟价终身授权（比原价省 $20）。免费版：500 个书签。",
   "ogTitle": "BookmarkForge：私密、本地优先的书签管理器与稍后阅读列表",
-  "ogDescription": "Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次付费: $59 早鸟价终身授权（比原价省 $20）。免费版：300 个书签。",
+  "ogDescription": "Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次付费: $59 早鸟价终身授权（比原价省 $20）。免费版：500 个书签。",
   "ogImage": "https://bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge：私密、本地优先的书签管理器与稍后阅读列表",
-  "twitterDescription": "Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次付费: $59 早鸟价终身授权（比原价省 $20）。免费版：300 个书签。",
+  "twitterDescription": "Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次付费: $59 早鸟价终身授权（比原价省 $20）。免费版：500 个书签。",
   "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
   "skipLink": "跳到主要内容",
   "navBrandAria": "BookmarkForge 首页",
@@ -198,7 +198,13 @@
         "title": "默认私密",
         "text": "无账号、无追踪、无广告。你是客户，不是产品。确实存在使用数据共享，但它是可选的，不开启就保持关闭。"
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "免费版包含",
+      "free": "智能搜索、500 个书签、使用你自己的密钥的 AI、加密备份和导出——永久",
+      "proLabel": "Pro 新增",
+      "pro": "无限书签、5 台设备同步、本地 AI 和对保险库的聊天、抽认卡、PDF/OCR"
+    }
   },
   "ai": {
     "id": "ai",
@@ -219,22 +225,6 @@
         {
           "type": "cloud",
           "name": "云端 — Google Gemini（使用你自己的密钥）"
-        },
-        {
-          "type": "cloud",
-          "name": "云端 — OpenAI / GPT-4o（使用你自己的密钥）"
-        },
-        {
-          "type": "cloud",
-          "name": "云端 — Anthropic Claude（使用你自己的密钥）"
-        },
-        {
-          "type": "cloud",
-          "name": "云端 — Groq（使用你自己的密钥）"
-        },
-        {
-          "type": "cloud",
-          "name": "云端 — OpenRouter 或其他自定义提供商（使用你自己的密钥）"
         }
       ]
     },
@@ -288,23 +278,27 @@
       {
         "title": "不被锁定",
         "text": "随时可用开放格式（JSON、Markdown、CSV、PDF）导出数据。你的知识始终属于你，也可以带走。"
+      },
+      {
+        "title": "仅由 Vercel 托管——零分析",
+        "text": "本站仅在 Vercel 上运行，没有任何形式的分析：无跟踪器、无设备指纹、无第三方脚本。你可以在浏览器的网络标签页中自行验证。"
       }
     ]
   },
   "pricing": {
     "id": "pricing",
     "title": "简单、公道的定价——没有订阅",
-    "subtitle": "免费版 300 个书签永久可用。Pro 是 v1 的终身授权——一次付费，永久拥有 v1。含全部 v1.x 更新和 12 个月的功能更新。安全更新永久提供。没有月度账单。",
+    "subtitle": "免费版 500 个书签永久可用。Pro 是 v1 的终身授权——一次付费，永久拥有 v1。含全部 v1.x 更新和 12 个月的功能更新。安全更新永久提供。没有月度账单。",
     "plans": [
       {
         "name": "Free",
         "price": "$ 0",
         "period": "/永久",
-        "description": "个人知识库（300个书签，可在任何设备上使用 — 每台设备拥有独立保险库）",
+        "description": "个人知识库（500个书签，可在任何设备上使用 — 每台设备拥有独立保险库）",
         "features": [
           {
             "included": true,
-            "text": "300个书签、笔记和文档"
+            "text": "500个书签、笔记和文档"
           },
           {
             "included": true,
@@ -313,6 +307,10 @@
           {
             "included": true,
             "text": "使用您自己的API密钥的AI（您支付提供商）"
+          },
+          {
+            "included": true,
+            "text": "可在任何设备上使用 — 每台设备拥有独立保险库"
           },
           {
             "included": true,
@@ -360,11 +358,11 @@
           }
         ],
         "cta": "立即试用",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-secondary"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "最受欢迎 — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird（之后 $79）",
@@ -396,7 +394,7 @@
           },
           {
             "included": true,
-            "text": "高级导出（10+ 种格式）"
+            "text": "高级导出（7 种格式）"
           },
           {
             "included": true,
@@ -405,18 +403,6 @@
           {
             "included": true,
             "text": "v1 终身 · 12 个月功能更新"
-          },
-          {
-            "included": true,
-            "text": "安全更新永久提供"
-          },
-          {
-            "included": true,
-            "text": "邮件支持（48 小时）+ 抢先体验"
-          },
-          {
-            "included": true,
-            "text": "本地 AI 翻译（即将推出）"
           }
         ],
         "cta": "Early Bird $59 获得 Pro",
@@ -430,14 +416,14 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-zh#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-zh#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "常见问题",
     "items": [
       {
         "question": "Free 版真的永久免费吗？",
-        "answer": "是的。没有试用，没有订阅。免费版包含 300 个书签、全文与语义搜索、知识图谱，以及使用你自己 API 密钥的 AI（费用由提供商收取）。"
+        "answer": "是的。没有试用，没有订阅。免费版包含 500 个书签、全文与语义搜索、知识图谱，以及使用你自己 API 密钥的 AI（费用由提供商收取）。"
       },
       {
         "question": "Pro 的“v1 终身”是什么意思？",
@@ -454,6 +440,18 @@
       {
         "question": "如果我忘了保险库密码？",
         "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-zh#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "如果我停止使用，我的数据会怎样？",
+        "answer": "您的数据保留在您的设备上。您可以随时导出到 Markdown、JSON、CSV 或 PDF。没有锁定，没有人质。"
+      },
+      {
+        "question": "我的数据真的隐私吗？",
+        "answer": "绝对的。一切都使用只有您拥有的密钥在您的设备上加密。我们从不查看您的书签、笔记或密码。即使是我们也无法读取您的数据。"
+      },
+      {
+        "question": "我可以在手机上使用吗？",
+        "answer": "是的！BookmarkForge 可在任何带有网络浏览器的设备上使用。免费版可在无限设备上使用（每台设备都有自己的保险库）。Pro 可在最多 5 台设备上同步。"
       }
     ]
   },
@@ -462,7 +460,7 @@
     "text": "今天开始构建您的私有AI知识库。您的数据保留在您的设备上 — 加密、可搜索，并且永远属于您。",
     "ctaPrimary": "立即试用（无需账号）",
     "ctaSecondary": "升级到 Pro",
-    "note": "无需账号。在浏览器中即刻可用。免费版：300 个书签。"
+    "note": "无需账号。在浏览器中即刻可用。免费版：500 个书签。"
   },
   "footer": {
     "brand": "你的私密 AI 知识保险库。100% 本地优先。",
@@ -480,7 +478,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {
@@ -523,7 +521,7 @@
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
-    "websiteDescription": "你的私密 AI 知识保险库。100% 本地优先。私密的 Pocket 替代品。免费版：300 个书签。",
+    "websiteDescription": "你的私密 AI 知识保险库。100% 本地优先。私密的 Pocket 替代品。免费版：500 个书签。",
     "organizationName": "BookmarkForge",
     "organizationUrl": "https://bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
@@ -536,17 +534,17 @@
         "name": "Free",
         "price": "0",
         "currency": "USD",
-        "description": "300 个书签。永久免费。"
+        "description": "500 个书签。永久免费。"
       },
       {
-        "name": "Pro Lifetime v1 — Early Bird",
+        "name": "Pro Lifetime — Early Bird",
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200。v1 终身，12 个月功能更新，安全更新永久，v2 享 60% 折扣。",
         "availability": "https://schema.org/InStock"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "price": "79",
         "currency": "USD",
         "description": "常规价。v1 终身。"
@@ -563,7 +561,7 @@
     "faq": [
       {
         "question": "Free 版真的永久免费吗？",
-        "answer": "是的。没有试用，没有订阅。免费版包含 300 个书签、全文与语义搜索、知识图谱，以及使用你自己 API 密钥的 AI（费用由提供商收取）。"
+        "answer": "是的。没有试用，没有订阅。免费版包含 500 个书签、全文与语义搜索、知识图谱，以及使用你自己 API 密钥的 AI（费用由提供商收取）。"
       },
       {
         "question": "Pro 的“v1 终身”是什么意思？",
@@ -603,7 +601,7 @@
     },
     "pricing": {
       "title": "定价——v1 终身，没有订阅",
-      "intro": "<strong>模式：</strong>你为 <em>BookmarkForge v1</em> 付一次钱。没有月度账单。横向对比：Raindrop Pro $28–38/年、Instapaper $60/年、Readwise $120/年、Capacities $120/年。$79 的终身价约为 Raindrop 年费的 2 倍——换来终身使用加隐私，值得。",
+      "intro": "<strong>模式：</strong>你为 <em>BookmarkForge v1</em> 付一次钱。没有月度账单。横向对比：Raindrop Pro yearly–38/年、Instapaper $60/年、Readwise $120/年、Capacities $120/年。$79 的终身价约为 Raindrop 年费的 2 倍——换来终身使用加隐私，值得。",
       "table": {
         "tier": "版本",
         "price": "价格",
@@ -612,17 +610,17 @@
       },
       "tier": {
         "free": "Free",
-        "pro": "Pro Lifetime v1"
+        "pro": "Pro Lifetime"
       },
       "freePrice": "$0 永久",
-      "freeDescription": "任意设备上 300 个书签（每台设备各持有一个保险库）、智能搜索——全文 + 语义，也就是 Raindrop 按年收费的那项——知识图谱、使用你自己 API 密钥的 AI、PWA + 扩展。300 条以内你的保险库始终完整：阅读、搜索和导出都不会中断；只是暂停新增保存。",
+      "freeDescription": "任意设备上 500 个书签（每台设备各持有一个保险库）、智能搜索——全文 + 语义，也就是 Raindrop 按年收费的那项——知识图谱、使用你自己 API 密钥的 AI、PWA + 扩展。500 条以内你的保险库始终完整：阅读、搜索和导出都不会中断；只是暂停新增保存。",
       "unlimited": "无限",
       "badge": "Early Bird",
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "常规 $79",
       "proPriceTraction": "推广期后 $99",
-      "proDescription": "无限书签、5 台设备 + P2P 同步、本地 AI（WebLLM/Ollama）+ RAG + 专家智能体、记忆卡、PDF/OCR、10+ 种导出格式、保险库。<em>v1 终身 · 12 个月功能更新 · 安全更新永久 · v2 享 60% 折扣</em>",
+      "proDescription": "无限书签、5 台设备 + P2P 同步、本地 AI（WebLLM/Ollama）+ RAG + 专家智能体、记忆卡、PDF/OCR、7 种导出格式、保险库。<em>v1 终身 · 12 个月功能更新 · 安全更新永久 · v2 享 60% 折扣</em>",
       "proSupply": "200 Early Bird"
     },
     "legal": {
@@ -646,7 +644,7 @@
       },
       "tier": {
         "free": "Free",
-        "pro": "Pro"
+        "pro": "Pro v1 Lifetime"
       },
       "freeChannel": "自助：本帮助中心 + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
       "freeResponse": "尽力而为（社区）",
@@ -720,8 +718,8 @@
         "fix": "检查 <code>设置 → Pro</code>：重新输入密钥。离线校验有缓存；重新联网一次即可通过 Whop 复核。"
       },
       "e202": {
-        "meaning": "已达免费上限（300 个书签）",
-        "fix": "免费版上限是 300。删除一些，或升级到 Pro 终身版 v1 以获得无限数量。导出始终可用。"
+        "meaning": "已达免费上限（500 个书签）",
+        "fix": "免费版上限是 500。删除一些，或升级到 Pro 终身版 v1 以获得无限数量。导出始终可用。"
       },
       "tip": "支持小贴士：点击错误提示中的 <code>复制诊断信息</code> 可一次复制代码与上下文——直接粘贴到你的 GitHub Discussion 或邮件里。"
     },
@@ -747,7 +745,7 @@
     "home": "首页",
     "faq": {
       "q1": "Free 版真的永久免费吗？",
-      "a1": "是的。没有试用，没有订阅。Free 版包含 300 个书签、全文与语义搜索、知识图谱，以及使用你自己 API 密钥的 AI。",
+      "a1": "是的。没有试用，没有订阅。Free 版包含 500 个书签、全文与语义搜索、知识图谱，以及使用你自己 API 密钥的 AI。",
       "q2": "v1 终身是什么意思？",
       "a2": "一次付费，永久拥有 v1。永久包含全部 v1.x 缺陷修复，外加自购买起 12 个月的功能更新。安全更新永久提供。第 13 个月之后 v1 仍可使用。v2 和 v3 是独立的付费大版本：新用户 $89，v1 用户 $35（60% 折扣）。",
       "q3": "如果我忘了保险库密码？",
@@ -756,5 +754,37 @@
   },
   "ogImageAlt": "BookmarkForge — 私密 AI 驱动的书签与笔记应用",
   "languageToggleAria": "更改语言",
-  "githubAria": "在 GitHub 上为 BookmarkForge 加星"
+  "githubAria": "在 GitHub 上为 BookmarkForge 加星",
+  "beforeAfter": {
+    "id": "before-after",
+    "tag": "为什么要切换",
+    "title": "从混乱到清晰，只需30秒",
+    "subtitle": "看看浏览器书签和真正的知识库之间的区别。",
+    "before": {
+      "title": "之前：浏览器书签",
+      "items": [
+        "书签埋在被遗忘的文件夹里",
+        "无法按含义搜索",
+        "清除浏览器数据时丢失",
+        "没有笔记或组织",
+        "只能在一台设备上访问"
+      ]
+    },
+    "after": {
+      "title": "之后：BookmarkForge",
+      "items": [
+        "所有内容即时可搜索",
+        "按关键词或含义查找",
+        "在您的设备上加密，始终安全",
+        "笔记、标签和智能组织",
+        "在所有设备上同步（Pro）"
+      ]
+    },
+    "ctaPrimary": "免费试用",
+    "ctaSecondary": "查看功能"
+  },
+  "share": {
+    "text": " BookmarkForge",
+    "twitterText": " BookmarkForge - 、"
+  }
 }

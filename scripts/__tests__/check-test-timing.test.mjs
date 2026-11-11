@@ -242,6 +242,79 @@ describe("evaluateTimings — update mode", () => {
   });
 });
 
+describe("evaluateTimings — category budgets (P-25)", () => {
+  const DIR = "src/tests/services";
+  const base = (files, categories) => ({ ...BASE(files), categories });
+
+  it("flags a directory whose total regresses past the budget", () => {
+    const durations = new Map([
+      ["src/tests/services/a.test.ts", { tests: 1, ms: 4000 }],
+      ["src/tests/services/b.test.ts", { tests: 1, ms: 4000 }],
+    ]);
+    const r = evaluateTimings(
+      durations,
+      base(
+        { "src/tests/services/a.test.ts": 6000, "src/tests/services/b.test.ts": 6000 },
+        { [DIR]: 3000 },
+      ),
+      "enforce",
+    );
+    expect(r.ok).toBe(false);
+    expect(r.violations.some((v) => v.includes(`${DIR}: 8000ms exceeds 2x its pinned category total 3000ms`))).toBe(true);
+  });
+
+  it("stays quiet when per-file pins pass but the category total does not regress", () => {
+    const durations = new Map([
+      ["src/tests/services/a.test.ts", { tests: 1, ms: 6000 }],
+      ["src/tests/services/b.test.ts", { tests: 1, ms: 6000 }],
+    ]);
+    const r = evaluateTimings(
+      durations,
+      base(
+        { "src/tests/services/a.test.ts": 6000, "src/tests/services/b.test.ts": 6000 },
+        { [DIR]: 11000 },
+      ),
+      "enforce",
+    );
+    expect(r.ok).toBe(true);
+  });
+
+  it("skips a directory judged by fewer than 60% of its pinned files", () => {
+    const durations = new Map([["src/tests/services/a.test.ts", { tests: 1, ms: 9000 }]]);
+    const r = evaluateTimings(
+      durations,
+      base(
+        {
+          "src/tests/services/a.test.ts": 6000,
+          "src/tests/services/b.test.ts": 6000,
+          "src/tests/services/c.test.ts": 6000,
+          "src/tests/services/d.test.ts": 6000,
+          "src/tests/services/e.test.ts": 6000,
+        },
+        { [DIR]: 3000 },
+      ),
+      "enforce",
+      { expectedFiles: new Set(["src/tests/services/a.test.ts"]) },
+    );
+    // 1/5 pinned files ran — below the 60% bar, so the category layer is
+    // silent even though the dir total (9000) exceeds 2x the pin (5000).
+    expect(r.violations.some((v) => v.includes("category total"))).toBe(false);
+  });
+
+  it("is backward compatible: baselines without categories skip the layer", () => {
+    const durations = new Map([["src/tests/services/a.test.ts", { tests: 1, ms: 700 }]]);
+    const r = evaluateTimings(durations, BASE({ "src/tests/services/a.test.ts": 700 }), "enforce");
+    expect(r.ok).toBe(true);
+  });
+
+  it("update mode records per-directory totals", () => {
+    const r = evaluateTimings(parseTimings(LOG), null, "update");
+    expect(r.baseline.categories["src/tests/components"]).toBe(14300);
+    expect(r.baseline.categories["src/tests/services"]).toBe(6300);
+    expect(r.baseline.categories["src/tests/db"]).toBe(1300);
+  });
+});
+
 describe("resolveTimingMode", () => {
   it("OFF wins over everything (visible opt-out)", () => {
     expect(resolveTimingMode({ BMF_TEST_TIMING_OFF: "1", BMF_TEST_TIMING: "1" })).toBe("off");

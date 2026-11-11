@@ -39,6 +39,11 @@ services:
       HOST: 0.0.0.0
       PORT: 8787
       TRUST_PROXY: "1"
+      # M3 (audit 2026-11-06): origin enforcement is required for every
+      # runtime that is not explicitly development/test, so staging must
+      # declare the origin the browser actually uses — the nginx web port.
+      # Override WS_ALLOWED_ORIGINS if HTTP_PORT is changed.
+      WS_ALLOWED_ORIGINS: ${WS_ALLOWED_ORIGINS:-http://127.0.0.1:${HTTP_PORT:-18080}}
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8787/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
       interval: 5s

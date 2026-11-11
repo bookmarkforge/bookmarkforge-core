@@ -128,12 +128,13 @@ describe("rollback nginx recovery integration", () => {
       expect(result).toBeDefined();
       // The surgical renderers must restore the canonical values without
       // changing the hand-maintained structure or truncating the shipped
-      // URLs. The sitemap's URL count is the legal cluster's: 37 locations
-      // (30 landings + 6 reviewed legal pages + pocket), after the 24
-      // unreviewed legal pages were retired and redirected (ADR-070).
+      // URLs. The sitemap's URL count is the public surface's: 43 locations
+      // (30 landings + 6 reviewed legal pages + pocket + 6 comparison pages),
+      // after the 24 unreviewed legal pages were retired and redirected
+      // (ADR-070).
       expect(readFileSync(join(root, "public/_headers"), "utf8")).toBe(expectedHeaders);
       expect(readFileSync(join(root, "public/sitemap.xml"), "utf8")).toBe(expectedSitemap);
-      expect(expectedSitemap.match(/<loc>/g)).toHaveLength(37);
+      expect(expectedSitemap.match(/<loc>/g)).toHaveLength(43);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

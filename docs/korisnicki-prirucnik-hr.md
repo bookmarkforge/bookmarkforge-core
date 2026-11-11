@@ -15,7 +15,7 @@ Trezor se lokalno šifrira pomoću AES-GCM-a, a ključ se izvodi iz glavne lozin
 
 ## Oznake i pretraživanje
 
-Free uključuje pametno pretraživanje po riječima i značenju. Free dopušta **300 oznaka** i nema ograničenje broja uređaja; bez Pro sinkronizacije svaki uređaj ima vlastiti trezor. Kada dosegnete 300, ništa se ne briše: čitanje, pretraživanje i izvoz nastavljaju raditi, a pauziraju se samo nova spremanja. Pro uklanja granicu i sinkronizira do pet uređaja putem P2P-a.
+Free uključuje pametno pretraživanje po riječima i značenju. Free dopušta **500 oznaka** i nema ograničenje broja uređaja; bez Pro sinkronizacije svaki uređaj ima vlastiti trezor. Kada dosegnete 500, ništa se ne briše: čitanje, pretraživanje i izvoz nastavljaju raditi, a pauziraju se samo nova spremanja. Pro uklanja granicu i sinkronizira do pet uređaja putem P2P-a.
 
 ## Uvoz iz Pocketa
 

@@ -118,7 +118,7 @@ This repository contains the MIT-licensed **Core**. The private distribution add
 
 | Feature | Free (Core) | Pro |
 |---|---|---|
-| Bookmarks | 300 | Unlimited |
+| Bookmarks | 500 | Unlimited |
 | Smart search (Fuse.js + semantic) | ✅ included | ✅ |
 | Encrypted backups & PDF/OCR | — | ✅ |
 | Flashcards from bookmarks | — | ✅ |

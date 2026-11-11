@@ -24,9 +24,22 @@
  *      shrank that file's budget from 96.7 s to 62 s while both layers above
  *      stayed quiet (1.56× < 2×), and only a hand re-measurement noticed.
  *      0 makes any under-pin a finding; 1 disables the layer.
+ *      The floor compares a full-suite measurement against a pin captured on
+ *      a quieter machine, so subprocess-heavy files (full Vite builds, Node
+ *      child processes) can read 2-3x their quiescent time under batch
+ *      contention and trip it with nothing regressed: re-measure the flagged
+ *      file alone with scripts/test-bounded.mjs before re-pinning.
  *      Only the under-pin direction is judged — a pin ABOVE reality costs
  *      budget, not detection, and is the normal result of pinning on a
  *      slower machine, so flagging it would turn machine speed into failures.
+ *
+ *   4. category budget (P-25): per-file pins are noisy because wall time
+ *      varies with machine and load; the SUM of a test directory's durations
+ *      is far more stable (individual noise averages out). When the baseline
+ *      carries a `categories` map (written by --update), a directory whose
+ *      total exceeds budgetFactor × its pinned total fails. A directory is
+ *      only judged when ≥60% of its pinned files ran, so partial profiles
+ *      stay quiet. Baselines without `categories` skip the layer.
  *
  * Noise tolerance: a run must exercise at least BMF_TEST_TIMING_MINCOV
  * (default 80%) of the baseline files to be judgeable — a partially parsed
@@ -49,6 +62,12 @@ import { pathToFileURL } from "node:url";
 
 export const TIMING_SCHEMA_LABEL = "bmf.test-timing/1";
 const BASELINE_PATH = join(process.cwd(), "scripts", "test-timing-baseline.json");
+
+/** Test directory = category key for the aggregate budget layer. */
+function dirOf(file) {
+  const i = file.lastIndexOf("/");
+  return i === -1 ? "" : file.slice(0, i);
+}
 
 // Same line grammar as scripts/test-timing-report.mjs (vitest default
 // reporter, ANSI stripped): "✓ src/tests/... (12 tests) 345ms".
@@ -99,6 +118,7 @@ export function evaluateTimings(durations, baseline, mode = "enforce", opts = {}
 
   if (mode === "update") {
     const files = {};
+    const categories = {};
     for (const [file, { ms }] of durations) {
       // Pin files at/over the threshold, plus anything already pinned (so
       // --prune=false style pinning survives a regeneration of this entry).
@@ -106,6 +126,8 @@ export function evaluateTimings(durations, baseline, mode = "enforce", opts = {}
         files[file] = ms;
         lines.push(`[test-timing] pinned ${file}: ${ms}ms (budget ${budgetFactor}x = ${ms * budgetFactor}ms)`);
       }
+      const dir = dirOf(file);
+      categories[dir] = (categories[dir] ?? 0) + ms;
     }
     return {
       ok: true,
@@ -117,6 +139,7 @@ export function evaluateTimings(durations, baseline, mode = "enforce", opts = {}
         updated: new Date().toISOString().slice(0, 10),
         budgetFactor,
         files,
+        categories,
       },
     };
   }
@@ -177,6 +200,37 @@ export function evaluateTimings(durations, baseline, mode = "enforce", opts = {}
           "the pin is stale: re-pin with BMF_TEST_TIMING=update if the new time " +
           "is intended, or fix the test",
       );
+    }
+  }
+
+  // Layer 4 — category budgets: aggregate per-directory totals are far less
+  // noisy than per-file pins (P-25). Only directories containing at least
+  // one pinned file are judged, and only when ≥60% of that directory's
+  // pinned files ran — partial profiles stay quiet.
+  if (baseline.categories && typeof baseline.categories === "object") {
+    const currentByDir = new Map();
+    const ranByDir = new Map();
+    for (const [file, { ms }] of durations) {
+      const dir = dirOf(file);
+      currentByDir.set(dir, (currentByDir.get(dir) ?? 0) + ms);
+      ranByDir.set(dir, (ranByDir.get(dir) ?? 0) + 1);
+    }
+    const pinnedCountByDir = new Map();
+    for (const file of Object.keys(baseline.files)) {
+      const dir = dirOf(file);
+      pinnedCountByDir.set(dir, (pinnedCountByDir.get(dir) ?? 0) + 1);
+    }
+    for (const [dir, pinnedTotal] of Object.entries(baseline.categories)) {
+      const pinnedCount = pinnedCountByDir.get(dir) ?? 0;
+      if (pinnedCount === 0) continue;
+      const ranCount = ranByDir.get(dir) ?? 0;
+      if (ranCount / pinnedCount < 0.6) continue;
+      const currentTotal = currentByDir.get(dir) ?? 0;
+      if (currentTotal > pinnedTotal * budgetFactor) {
+        violations.push(
+          `${dir || "(root)"}: ${currentTotal}ms exceeds ${budgetFactor}x its pinned category total ${pinnedTotal}ms`,
+        );
+      }
     }
   }
 

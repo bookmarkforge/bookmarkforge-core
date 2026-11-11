@@ -25,6 +25,13 @@ const licenseProxyPort = Number(process.env.LICENSE_PROXY_PORT ?? 8788);
 
 export default defineConfig({
   testDir: "./tests/e2e",
+  // *.nightly.spec.ts is nightly-scope by filename contract (see
+  // perf-scale.nightly.spec.ts header): the default/CI e2e job must not pay
+  // for 10k-seed benchmarks. CI additionally filters by @nightly/@multiuser/
+  // @visual/@performance tags, but tags live in test titles — the filename
+  // ignore is the mechanism that actually covers untagged nightly specs.
+  // playwright.nightly.config.ts overrides this with [] to re-include them.
+  testIgnore: /.*\.nightly\.spec\.ts$/,
   timeout: 120_000,
   expect: { timeout: 30_000 },
   fullyParallel: true,

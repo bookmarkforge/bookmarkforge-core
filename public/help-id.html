@@ -32,7 +32,7 @@
     "@type":"FAQPage",
     "@id":"https://bookmarkforgeapp.com/help#faq",
     "mainEntity":[
-      {"@type":"Question","name":"Apakah tier Gratis benar-benar gratis selamanya?","acceptedAnswer":{"@type":"Answer","text":"Ya. Tanpa masa percobaan, tanpa langganan. Gratis mencakup 300 bookmark, pencarian teks lengkap \u0026 semantik, graf pengetahuan dan AI dengan kunci API Anda sendiri."}},
+      {"@type":"Question","name":"Apakah tier Gratis benar-benar gratis selamanya?","acceptedAnswer":{"@type":"Answer","text":"Ya. Tanpa masa percobaan, tanpa langganan. Gratis mencakup 500 bookmark, pencarian teks lengkap \u0026 semantik, graf pengetahuan dan AI dengan kunci API Anda sendiri."}},
       {"@type":"Question","name":"Apa arti Lifetime v1?","acceptedAnswer":{"@type":"Answer","text":"Bayar sekali, miliki v1 selamanya. Semua perbaikan bug v1.x selamanya ditambah 12 bulan pembaruan fitur dari pembelian. Pembaruan keamanan selamanya. Setelah bulan ke-13 v1 tetap berfungsi. v2 dan v3 adalah mayor berbayar terpisah: $89 untuk pelanggan baru, $35 untuk pemilik v1 (diskon 60%)."}},
       {"@type":"Question","name":"Bagaimana jika saya lupa kata sandi vault?","acceptedAnswer":{"@type":"Answer","text":"Kami tidak bisa memulihkannya. Saat Anda membuat vault kami menampilkan frasa pemulihan 24 kata sekali — tulis di kertas. Tanpa itu vault tidak dapat dipulihkan. Lihat BF-E101."}}
     ]
@@ -77,8 +77,8 @@
     <table class="sla">
       <thead><tr><th>Tier</th><th>Harga</th><th>Yang Anda dapatkan</th><th>Pasokan</th></tr></thead>
       <tbody>
-        <tr><td><strong>Free</strong></td><td>$0 selamanya</td><td>300 bookmark di perangkat mana pun (masing-masing punya vault sendiri), pencarian cerdas — teks lengkap + semantik, fitur yang Raindrop tagih tahunan — graf pengetahuan, AI dengan kunci API Anda sendiri, PWA + ekstensi. Pada 300 vault Anda tetap utuh: membaca, mencari dan mengekspor tidak pernah berhenti; hanya penyimpanan baru yang berhenti.</td><td>Tak terbatas</td></tr>
-        <tr><td><strong>Pro Lifetime v1</strong> <span class="badge">Early Bird</span></td><td><strong>$59</strong> <span style="text-decoration:line-through;color:var(--text-muted)">$79</span> → $79 reguler → $99 setelah traction</td><td>Bookmark tak terbatas, 5 perangkat + sinkron P2P, AI lokal (WebLLM/Ollama) + RAG + agen ahli, Kartu flash, PDF/OCR, 10+ format ekspor, vault. <em>Lifetime v1 · 12 bulan pembaruan fitur · Keamanan selamanya · v2 diskon 60%</em></td><td>200 Early Bird</td></tr>
+        <tr><td><strong>Free</strong></td><td>$0 selamanya</td><td>500 bookmark di perangkat mana pun (masing-masing punya vault sendiri), pencarian cerdas — teks lengkap + semantik, fitur yang Raindrop tagih tahunan — graf pengetahuan, AI dengan kunci API Anda sendiri, PWA + ekstensi. Pada 500 vault Anda tetap utuh: membaca, mencari dan mengekspor tidak pernah berhenti; hanya penyimpanan baru yang berhenti.</td><td>Tak terbatas</td></tr>
+        <tr><td><strong>Pro Lifetime</strong> <span class="badge">Early Bird</span></td><td><strong>$59</strong> <span style="text-decoration:line-through;color:var(--text-muted)">$79</span> → $79 reguler → $99 setelah traction</td><td>Bookmark tak terbatas, 5 perangkat + sinkron P2P, AI lokal (WebLLM/Ollama) + RAG + agen ahli, Kartu flash, PDF/OCR, 7 format ekspor, vault. <em>Lifetime v1 · 12 bulan pembaruan fitur · Keamanan selamanya · v2 diskon 60%</em></td><td>200 Early Bird</td></tr>
       </tbody>
     </table>
 
@@ -97,7 +97,7 @@
       <thead><tr><th>Tier</th><th>Kanal</th><th>Respons</th><th>Yang harus dilakukan dulu</th></tr></thead>
       <tbody>
         <tr><td><strong>Free</strong></td><td>Layanan mandiri: Pusat Bantuan ini + <a href="https://github.com/bookmarkforge/bookmarkforge-core/discussions">GitHub Discussions</a></td><td>Best effort (komunitas)</td><td>Cari kode BF-E* di bawah + salin diagnostik (<a href="#diagnostics">§Diagnostik</a>) sebelum memposting</td></tr>
-        <tr><td><strong>Pro</strong></td><td>Email <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> (subjek: Pro)</td><td><strong>48h</strong></td><td>Sertakan teks diagnostik dari <code>Pengaturan → Bantuan → Salin diagnostik</code></td></tr>
+        <tr><td><strong>Pro v1 Lifetime</strong></td><td>Email <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> (subjek: Pro)</td><td><strong>48h</strong></td><td>Sertakan teks diagnostik dari <code>Pengaturan → Bantuan → Salin diagnostik</code></td></tr>
       </tbody>
     </table>
     <p style="color:var(--text-muted);font-size:0.92em;">Kami tidak bisa melihat bookmark, catatan, URL atau prompt Anda. Sertakan hanya diagnostik di bawah — berisi jumlah dan versi, bukan konten vault.</p>
@@ -131,7 +131,7 @@
         <tr id="bf-e106"><td><strong>BF-E106</strong></td><td>AI lokal (WebLLM) tidak bisa berjalan di perangkat ini</td><td>Memerlukan WebGPU + shader-f16 + 4 GB RAM + Pro. Perbarui browser, atau gunakan Ollama / penyedia cloud dengan kunci Anda sendiri.</td></tr>
         <tr id="bf-e107"><td><strong>BF-E107</strong></td><td>Impor cadangan gagal (kata sandi salah / file rusak)</td><td>Untuk <code>.bmf</code> (terenkripsi) Anda butuh kata sandi ekspor, bukan kata sandi vault. Untuk JSON, pastikan file tidak terpotong.</td></tr>
         <tr id="bf-e201"><td><strong>BF-E201</strong></td><td>Lisensi Pro tidak valid / pemeriksaan kedaluwarsa</td><td>Periksa <code>Pengaturan → Pro</code>: masukkan ulang kunci. Pemeriksaan luring menyimpan cache; hubungkan sekali untuk validasi ulang via Whop.</td></tr>
-        <tr id="bf-e202"><td><strong>BF-E202</strong></td><td>Batas gratis tercapai (300 bookmark)</td><td>Gratis adalah 300. Hapus atau tingkatkan ke Pro Lifetime v1 untuk tak terbatas. Ekspor selalu tersedia.</td></tr>
+        <tr id="bf-e202"><td><strong>BF-E202</strong></td><td>Batas gratis tercapai (500 bookmark)</td><td>Gratis adalah 500. Hapus atau tingkatkan ke Pro Lifetime untuk tak terbatas. Ekspor selalu tersedia.</td></tr>
       </tbody>
     </table>
     <p>Tips dukungan: mengklik <code>Salin diagnostik</code> pada kesalahan menyalin kode + konteks dalam satu klik — tempel di GitHub Discussion atau email Anda.</p>

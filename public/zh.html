@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
-  <meta name="description" content="Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次付费: $59 早鸟价终身授权（比原价省 $20）。免费版：300 个书签。">
+  <meta name="description" content="Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次付费: $59 早鸟价终身授权（比原价省 $20）。免费版：500 个书签。">
   <title>BookmarkForge：私密、本地优先的书签管理器与稍后阅读列表</title>
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -48,7 +48,7 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="BookmarkForge">
   <meta property="og:title" content="BookmarkForge：私密、本地优先的书签管理器与稍后阅读列表">
-  <meta property="og:description" content="Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次付费: $59 早鸟价终身授权（比原价省 $20）。免费版：300 个书签。">
+  <meta property="og:description" content="Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次付费: $59 早鸟价终身授权（比原价省 $20）。免费版：500 个书签。">
   <meta property="og:url" content="https://bookmarkforgeapp.com/zh/">
   <meta property="og:image" content="https://bookmarkforgeapp.com/og-image.png">
   <meta property="og:image:alt" content="BookmarkForge — 私密 AI 驱动的书签与笔记应用">
@@ -59,7 +59,7 @@
   <!-- Twitter Cards -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="BookmarkForge：私密、本地优先的书签管理器与稍后阅读列表">
-  <meta name="twitter:description" content="Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次付费: $59 早鸟价终身授权（比原价省 $20）。免费版：300 个书签。">
+  <meta name="twitter:description" content="Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次付费: $59 早鸟价终身授权（比原价省 $20）。免费版：500 个书签。">
   <meta name="twitter:image" content="https://bookmarkforgeapp.com/og-image.png">
   <script src="/theme-init.js"></script>
   <link rel="stylesheet" href="/brand-tokens.css">
@@ -77,7 +77,7 @@
         "@id": "https://bookmarkforgeapp.com/zh/#website",
         "url": "https://bookmarkforgeapp.com/zh/",
         "name": "BookmarkForge",
-        "description": "你的私密 AI 知识保险库。100% 本地优先。私密的 Pocket 替代品。免费版：300 个书签。",
+        "description": "你的私密 AI 知识保险库。100% 本地优先。私密的 Pocket 替代品。免费版：500 个书签。",
         "inLanguage": "zh",
         "potentialAction": {
           "@type": "SearchAction",
@@ -113,11 +113,6 @@
           "priceCurrency": "USD",
           "valueAddedTaxIncluded": "false"
         },
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.9",
-          "ratingCount": "45"
-        },
         "featureList": [
           "本地优先存储",          "端到端加密",          "离线可用",          "AI 搜索",          "Notion 式编辑器",          "P2P 同步"        ]
       },
@@ -128,7 +123,7 @@
           {
             "@type": "Question",
             "name": "Free 版真的永久免费吗？",
-            "acceptedAnswer": { "@type": "Answer", "text": "是的。没有试用，没有订阅。免费版包含 300 个书签、全文与语义搜索、知识图谱，以及使用你自己 API 密钥的 AI（费用由提供商收取）。" }
+            "acceptedAnswer": { "@type": "Answer", "text": "是的。没有试用，没有订阅。免费版包含 500 个书签、全文与语义搜索、知识图谱，以及使用你自己 API 密钥的 AI（费用由提供商收取）。" }
           },          {
             "@type": "Question",
             "name": "Pro 的“v1 终身”是什么意思？",
@@ -145,6 +140,18 @@
             "@type": "Question",
             "name": "如果我忘了保险库密码？",
             "acceptedAnswer": { "@type": "Answer", "text": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See \u003ca href=\"/help-zh#bf-e101\"\u003eBF-E101\u003c/a\u003e." }
+          },          {
+            "@type": "Question",
+            "name": "如果我停止使用，我的数据会怎样？",
+            "acceptedAnswer": { "@type": "Answer", "text": "您的数据保留在您的设备上。您可以随时导出到 Markdown、JSON、CSV 或 PDF。没有锁定，没有人质。" }
+          },          {
+            "@type": "Question",
+            "name": "我的数据真的隐私吗？",
+            "acceptedAnswer": { "@type": "Answer", "text": "绝对的。一切都使用只有您拥有的密钥在您的设备上加密。我们从不查看您的书签、笔记或密码。即使是我们也无法读取您的数据。" }
+          },          {
+            "@type": "Question",
+            "name": "我可以在手机上使用吗？",
+            "acceptedAnswer": { "@type": "Answer", "text": "是的！BookmarkForge 可在任何带有网络浏览器的设备上使用。免费版可在无限设备上使用（每台设备都有自己的保险库）。Pro 可在最多 5 台设备上同步。" }
           }        ]
       }
     ]
@@ -332,7 +339,7 @@
           </ul>
         </div>
         
-        <a href="/app" class="btn-primary nav-cta">立即试用（无需账号）</a>
+        <a href="/app?demo=true" class="btn-primary nav-cta">立即试用（无需账号）</a>
       </nav>
 
       <div class="nav-actions">
@@ -358,7 +365,7 @@
           <h1 id="hero-title">你保存的一切都留在你的电脑上。<span class="accent-text">全部。</span></h1>
           <p class="hero-subtitle">Raindrop 把你的书签存在它的服务器上，还要你年年付费。BookmarkForge 把它们留在你的电脑上，用只有你掌握的密钥锁住。无需账号。没有月费。没人能在你背后翻看。</p>
           <div class="hero-ctas">
-            <a href="/app" class="btn-primary">立即试用（无需账号）</a>
+            <a href="/app?demo=true" class="btn-primary">立即试用（无需账号）</a>
             <a href="#pricing" class="btn-secondary">查看定价</a>
           </div>
           <div class="hero-pillars">
@@ -402,7 +409,44 @@
           </li>
         </ol>
         <div class="demo-tour-cta">
-          <a href="/app" class="btn-primary">立即试用</a>
+          <a href="/app?demo=true" class="btn-primary">立即试用</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Before/After Section -->
+    <section id="before-after" class="comparison-section" aria-labelledby="before-after-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">为什么要切换</span>
+          <h2 id="before-after-title">从混乱到清晰，只需30秒</h2>
+          <p class="section-subtitle">看看浏览器书签和真正的知识库之间的区别。</p>
+        </div>
+        <div class="features-grid-2">
+          <div class="feat-card feat-card-before">
+            <h3>之前：浏览器书签</h3>
+            <ul class="feat-list">
+              <li>书签埋在被遗忘的文件夹里</li>
+              <li>无法按含义搜索</li>
+              <li>清除浏览器数据时丢失</li>
+              <li>没有笔记或组织</li>
+              <li>只能在一台设备上访问</li>
+            </ul>
+          </div>
+          <div class="feat-card feat-card-after">
+            <h3>之后：BookmarkForge</h3>
+            <ul class="feat-list">
+              <li>所有内容即时可搜索</li>
+              <li>按关键词或含义查找</li>
+              <li>在您的设备上加密，始终安全</li>
+              <li>笔记、标签和智能组织</li>
+              <li>在所有设备上同步（Pro）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app?demo=true" class="btn-primary">免费试用</a>
+          <a href="#features" class="btn-link">查看功能</a>
         </div>
       </div>
     </section>
@@ -430,7 +474,7 @@
           </div>
         </div>
         <div class="center-cta">
-          <a href="/app" class="btn-primary">立即试用（无需账号）</a>
+          <a href="/app?demo=true" class="btn-primary">立即试用（无需账号）</a>
           <a href="/pocket-alternative" class="btn-link">完整对比与迁移指南</a>
         </div>
       </div>
@@ -483,9 +527,58 @@
         </div>
         <p class="rc-close">Raindrop 更简单，而且免费——如果你只需要这些，尽管用。但如果你更愿意把阅读生活掌握在自己手里，BookmarkForge 正是为此而生。</p>
         <div class="center-cta">
-          <a href="/app" class="btn-primary">立即试用（无需账号）</a>
+          <a href="/app?demo=true" class="btn-primary">立即试用（无需账号）</a>
           <a href="/pocket-alternative" class="btn-link">完整 Pocket 对比</a>
         </div>
+      </div>
+    </section>
+
+    <!-- Competitor Comparison Section -->
+    <section id="competitor-compare" class="comparison-section" aria-labelledby="competitor-compare-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Why BookmarkForge</span>
+          <h2 id="competitor-compare-title">How BookmarkForge Compares</h2>
+          <p class="section-subtitle">Honest comparison with popular alternatives. Different tools solve different problems.</p>
+        </div>
+        <div class="rc-table" role="table" aria-label="BookmarkForge comparison">
+          <div class="rc-row rc-head" role="row">
+            <div class="rc-topic" role="columnheader"></div>
+            <div class="rc-us" role="columnheader">BookmarkForge</div>
+            <div class="rc-them" role="columnheader">Others</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Data location</div>
+            <div class="rc-us" role="cell">On your device, encrypted</div>
+            <div class="rc-them" role="cell">Cloud servers or self-hosted Docker</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Open source</div>
+            <div class="rc-us" role="cell">MIT Core (auditable)</div>
+            <div class="rc-them" role="cell">Varies (Karakeep OSS, Geneziz closed)</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Languages</div>
+            <div class="rc-us" role="cell">30 languages</div>
+            <div class="rc-them" role="cell">English only (most)</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Price model</div>
+            <div class="rc-us" role="cell">Free + $59 one-time Pro</div>
+            <div class="rc-them" role="cell">Subscription or one-time (varies)</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Sync</div>
+            <div class="rc-us" role="cell">P2P, no server</div>
+            <div class="rc-them" role="cell">Cloud sync or manual export</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">AI</div>
+            <div class="rc-us" role="cell">Local (WebLLM/Ollama) or BYOK</div>
+            <div class="rc-them" role="cell">Cloud only or requires setup</div>
+          </div>
+        </div>
+        <p class="rc-close">Raindrop is simpler if you don't need privacy. Geneziz is great for markdown purists. Karakeep is for self-hosters. BookmarkForge is for users who want local-first privacy without Docker or subscriptions.</p>
       </div>
     </section>
 
@@ -534,6 +627,11 @@
             <p>无账号、无追踪、无广告。你是客户，不是产品。确实存在使用数据共享，但它是可选的，不开启就保持关闭。</p>
           </div>
         </div>
+        <p class="tier-note">
+          <strong>免费版包含:</strong> 智能搜索、500 个书签、使用你自己的密钥的 AI、加密备份和导出——永久
+          <span class="tier-note-sep" aria-hidden="true">·</span>
+          <strong>Pro 新增:</strong> 无限书签、5 台设备同步、本地 AI 和对保险库的聊天、抽认卡、PDF/OCR
+        </p>
       </div>
     </section>
 
@@ -553,10 +651,6 @@
               <li>在你的电脑内 — WebLLM 模型（TinyLlama、Llama 3.2、Phi-3.5-mini）— 仅限 Pro</li>
               <li>在你自己的机器上 — Ollama（任何你自行运行的模型）</li>
               <li>云端 — Google Gemini（使用你自己的密钥）</li>
-              <li>云端 — OpenAI / GPT-4o（使用你自己的密钥）</li>
-              <li>云端 — Anthropic Claude（使用你自己的密钥）</li>
-              <li>云端 — Groq（使用你自己的密钥）</li>
-              <li>云端 — OpenRouter 或其他自定义提供商（使用你自己的密钥）</li>
             </ul>
           </div>
 
@@ -618,6 +712,10 @@
             <h3>不被锁定</h3>
             <p>随时可用开放格式（JSON、Markdown、CSV、PDF）导出数据。你的知识始终属于你，也可以带走。</p>
           </div>
+          <div class="feature-item">
+            <h3>仅由 Vercel 托管——零分析</h3>
+            <p>本站仅在 Vercel 上运行，没有任何形式的分析：无跟踪器、无设备指纹、无第三方脚本。你可以在浏览器的网络标签页中自行验证。</p>
+          </div>
         </div>
       </div>
     </section>
@@ -627,17 +725,18 @@
       <div class="container">
         <div class="section-header">
           <h2 id="pricing-title">简单、公道的定价——没有订阅</h2>
-          <p class="section-subtitle">免费版 300 个书签永久可用。Pro 是 v1 的终身授权——一次付费，永久拥有 v1。含全部 v1.x 更新和 12 个月的功能更新。安全更新永久提供。没有月度账单。</p>
+          <p class="section-subtitle">免费版 500 个书签永久可用。Pro 是 v1 的终身授权——一次付费，永久拥有 v1。含全部 v1.x 更新和 12 个月的功能更新。安全更新永久提供。没有月度账单。</p>
         </div>
         <div class="pricing-cards">
           <div class="price-card ">
             <h3>Free</h3>
             <div class="price">$ 0<span>/永久</span></div>
-            <p>个人知识库（300个书签，可在任何设备上使用 — 每台设备拥有独立保险库）</p>
+            <p>个人知识库（500个书签，可在任何设备上使用 — 每台设备拥有独立保险库）</p>
             <ul>
-              <li><span aria-hidden="true">✅</span> 300个书签、笔记和文档</li>
+              <li><span aria-hidden="true">✅</span> 500个书签、笔记和文档</li>
               <li><span aria-hidden="true">✅</span> 智能搜索（全文 + 语义）— 免费包含；Raindrop 对此功能每年收费</li>
               <li><span aria-hidden="true">✅</span> 使用您自己的API密钥的AI（您支付提供商）</li>
+              <li><span aria-hidden="true">✅</span> 可在任何设备上使用 — 每台设备拥有独立保险库</li>
               <li><span aria-hidden="true">✅</span> 知识图谱</li>
               <li><span aria-hidden="true">✅</span> 基础模板</li>
               <li><span aria-hidden="true">✅</span> JSON/HTML导出</li>
@@ -650,13 +749,13 @@
               <li><span aria-hidden="true">❌</span> 本地 AI 翻译（即将推出）</li>
               <li><span aria-hidden="true">✅</span> 加密 .bmf 备份 — 自动每日 + 磁盘副本</li>
             </ul>
-            <a href="/app" class="btn-secondary " >立即试用</a>
+            <a href="/app?demo=true" class="btn-secondary " >立即试用</a>
           </div>
           <div class="price-card popular">
             <div class="price-badges">
               <span class="badge">最受欢迎 — Early Bird 200</span>
             </div>
-            <h3>Pro Lifetime v1</h3>
+            <h3>Pro Lifetime</h3>
             <div class="price"><span class="price-now">$ 59</span> <span class="price-was">$79</span><span>Early Bird（之后 $79）</span></div>
             <div class="price-sub">之后常规价 $79</div>
             <p>v1 终身 · 12 个月功能更新 · 安全更新永久 · v2 享 60% 折扣</p>
@@ -667,19 +766,16 @@
               <li><span aria-hidden="true">✅</span> 本地 AI 模型（WebLLM，无需 API 密钥）· RAG 对话</li>
               <li><span aria-hidden="true">✅</span> 专家智能体（编程、写作、分析、研究）</li>
               <li><span aria-hidden="true">✅</span> 间隔重复记忆卡 · PDF + OCR</li>
-              <li><span aria-hidden="true">✅</span> 高级导出（10+ 种格式）</li>
+              <li><span aria-hidden="true">✅</span> 高级导出（7 种格式）</li>
               <li><span aria-hidden="true">✅</span> 安全保险库（AES-GCM）</li>
               <li><span aria-hidden="true">✅</span> v1 终身 · 12 个月功能更新</li>
-              <li><span aria-hidden="true">✅</span> 安全更新永久提供</li>
-              <li><span aria-hidden="true">✅</span> 邮件支持（48 小时）+ 抢先体验</li>
-              <li><span aria-hidden="true">✅</span> 本地 AI 翻译（即将推出）</li>
             </ul>
             <a href="https://whop.com/checkout/plan_g4oAakLGDjaoM" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Early Bird $59 获得 Pro</a>
             <a href="https://whop.com/checkout/plan_wFiqyaojHKXmG" class="btn-secondary btn-block" target="_blank" rel="noopener noreferrer">以 $79（标准价）获取 Pro</a>
             <p class="sla-note">支持：邮件 48 小时（周一至周五） · <a href="/help-zh#sla">SLA</a></p>
           </div>
         </div>
-        <p class="pricing-legal">Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href="/privacy-and-terms.html#terms">Terms</a> · <a href="/help-zh#pricing">Learn more</a></p>
+        <p class="pricing-legal">Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href="/privacy-and-terms.html#terms">Terms</a> · <a href="/help-zh#pricing">Learn more</a></p>
       </div>
     </section>
 
@@ -690,7 +786,7 @@
         <div class="faq-grid">
           <div class="faq-item">
             <h3>Free 版真的永久免费吗？</h3>
-            <p>是的。没有试用，没有订阅。免费版包含 300 个书签、全文与语义搜索、知识图谱，以及使用你自己 API 密钥的 AI（费用由提供商收取）。</p>
+            <p>是的。没有试用，没有订阅。免费版包含 500 个书签、全文与语义搜索、知识图谱，以及使用你自己 API 密钥的 AI（费用由提供商收取）。</p>
           </div>
           <div class="faq-item">
             <h3>Pro 的“v1 终身”是什么意思？</h3>
@@ -708,6 +804,18 @@
             <h3>如果我忘了保险库密码？</h3>
             <p>We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href="/help-zh#bf-e101">BF-E101</a>.</p>
           </div>
+          <div class="faq-item">
+            <h3>如果我停止使用，我的数据会怎样？</h3>
+            <p>您的数据保留在您的设备上。您可以随时导出到 Markdown、JSON、CSV 或 PDF。没有锁定，没有人质。</p>
+          </div>
+          <div class="faq-item">
+            <h3>我的数据真的隐私吗？</h3>
+            <p>绝对的。一切都使用只有您拥有的密钥在您的设备上加密。我们从不查看您的书签、笔记或密码。即使是我们也无法读取您的数据。</p>
+          </div>
+          <div class="faq-item">
+            <h3>我可以在手机上使用吗？</h3>
+            <p>是的！BookmarkForge 可在任何带有网络浏览器的设备上使用。免费版可在无限设备上使用（每台设备都有自己的保险库）。Pro 可在最多 5 台设备上同步。</p>
+          </div>
         </div>
       </div>
     </section>
@@ -718,10 +826,10 @@
         <h2>准备好拥有自己的知识了吗？</h2>
         <p>今天开始构建您的私有AI知识库。您的数据保留在您的设备上 — 加密、可搜索，并且永远属于您。</p>
         <div class="ctas">
-          <a href="/app" class="btn-primary">立即试用（无需账号）</a>
+          <a href="/app?demo=true" class="btn-primary">立即试用（无需账号）</a>
           <a href="#pricing" class="btn-secondary">升级到 Pro</a>
         </div>
-        <p class="note">无需账号。在浏览器中即刻可用。免费版：300 个书签。</p>
+        <p class="note">无需账号。在浏览器中即刻可用。免费版：500 个书签。</p>
       </div>
     </section>
   </main>
@@ -739,13 +847,19 @@
           <li><a href="/#ai">AI 能力</a></li>
           <li><a href="/#privacy">隐私</a></li>
           <li><a href="/#pricing">定价</a></li>
-          <li><a href="/app">立即试用</a></li>
+          <li><a href="/app?demo=true">立即试用</a></li>
         </ul>
       </div>
       <div class="footer-links">
         <h4>资源</h4>
         <ul>
           <li><a href="/pocket-alternative.html">Pocket 对比</a></li>
+          <li><a href="/raindrop-alternative.html">Raindrop.io</a></li>
+          <li><a href="/geneziz-alternative.html">Geneziz</a></li>
+          <li><a href="/karakeep-alternative.html">Karakeep</a></li>
+          <li><a href="/readwise-alternative.html">Readwise</a></li>
+          <li><a href="/omnivore-alternative.html">Omnivore</a></li>
+          <li><a href="/instapaper-alternative.html">Instapaper</a></li>
           <li><a href="/privacy-and-terms.html">隐私与条款</a></li>
         </ul>
       </div>
@@ -811,6 +925,32 @@
           Like BookmarkForge? Star us on GitHub ⭐
         </a>
       </span>
+    </div>
+    <!-- Social Share Section -->
+    <div class="social-share" id="social-share">
+      <p class="share-text"> BookmarkForge</p>
+      <div class="share-buttons">
+        <a href="https://twitter.com/intent/tweet?text= BookmarkForge - 、&url=https://bookmarkforgeapp.com/zh/%3Futm_source%3Dtwitter%26utm_medium%3Dsocial%26utm_campaign%3Dshare" target="_blank" rel="noopener noreferrer" class="share-btn share-twitter" aria-label="Share on Twitter">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Twitter
+        </a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=https://bookmarkforgeapp.com/zh/%3Futm_source%3Dfacebook%26utm_medium%3Dsocial%26utm_campaign%3Dshare" target="_blank" rel="noopener noreferrer" class="share-btn share-facebook" aria-label="Share on Facebook">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Facebook
+        </a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://bookmarkforgeapp.com/zh/%3Futm_source%3Dlinkedin%26utm_medium%3Dsocial%26utm_campaign%3Dshare" target="_blank" rel="noopener noreferrer" class="share-btn share-linkedin" aria-label="Share on LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://news.ycombinator.com/submitlink?u=https://bookmarkforgeapp.com/zh/%3Futm_source%3Dhackernews%26utm_medium%3Dsocial%26utm_campaign%3Dlaunch&t=BookmarkForge" target="_blank" rel="noopener noreferrer" class="share-btn share-hackernews" aria-label="Share on Hacker News">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0v24h24V0H0zm12.898 7.5l3.5 4.5-3.5 4.5v-3h-6v-3h6V7.5zM3 18h18v2H3v-2z"/></svg>
+          Hacker News
+        </a>
+        <button class="share-btn share-copy" type="button" aria-label="Copy link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy Link
+        </button>
+      </div>
     </div>
   </footer>
 

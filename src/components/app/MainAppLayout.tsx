@@ -5,6 +5,7 @@ import { Header } from "../Header";
 import { Sidebar } from "../Sidebar";
 import { BottomNav } from "../BottomNav";
 import { AppRoutes } from "./AppRoutes";
+import { DemoModeBanner } from "../DemoModeBanner";
 import type { MainAppState } from "./MainAppState";
 import type { MainAppEventHandlers } from "./MainAppEventHandlers";
 
@@ -100,6 +101,8 @@ export function MainAppLayout({ state, handlers, containerRef, isRTL }: MainAppL
         }
         className="flex-1 flex flex-col min-h-screen md:ms-[220px] md:sidebar-collapsed:ms-[64px] transition-[margin-inline-start] duration-200 ease-[var(--ease-out)]"
       >
+        {!isDistractionFree && <DemoModeBanner />}
+
         {!isDistractionFree && (
           <Header
             activeTab={activeTab}

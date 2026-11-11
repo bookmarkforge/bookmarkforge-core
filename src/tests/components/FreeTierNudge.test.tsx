@@ -6,7 +6,7 @@ import React from "react";
 // assertions can check real rendered copy (price, device limit, refund
 // days) instead of raw keys.
 const DICT: Record<string, string> = {
-  app_freeWallTitle: "You've reached 1,000 — Free's limit",
+  app_freeWallTitle: "You've reached {{limit}} — Free's limit",
   app_freeWallBody:
     "Nothing is lost and nothing broke. Reading, search and export are exactly as they were — only new saves pause.",
   app_freeWallProLifts: "Pro lifts the cap:",
@@ -66,6 +66,11 @@ describe("FreeTierNudge", () => {
     render(
       <FreeTierNudge show={true} onDismiss={vi.fn()} onSeePro={vi.fn()} />,
     );
+    // The wall title interpolates FREE_LIMITS.maxBookmarks — it must never
+    // hardcode a number that drifts from the enforced cap.
+    expect(
+      screen.getByText("You've reached 500 — Free's limit"),
+    ).toBeInTheDocument();
     // The reassure line comes before the sell (design doc stance).
     expect(
       screen.getByText(

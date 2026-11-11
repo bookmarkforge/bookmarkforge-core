@@ -248,7 +248,7 @@ describe("per-route judgements", () => {
   });
 });
 
-describe("the counts the audit ledger publishes", () => {
+describe("the page census the smoke derives", () => {
   const pageFiles = [
     ...LANDING_LOCALES.map((locale) => locale.file),
     "public/pocket-alternative.html",
@@ -262,38 +262,63 @@ describe("the counts the audit ledger publishes", () => {
     for (const link of extractInternalLinks(html, { page: "/" })) links.add(link);
   }
 
-  it("sees 16 critical resources across the 31 pages", () => {
-    expect([...resources].sort()).toEqual([
-      "/apple-touch-icon.png",
-      "/brand-tokens.css",
-      "/favicon.png",
-      "/landing.css",
-      "/landing.js",
-      "/logo-64.png",
-      "/manifest.json",
-      "/og-image-de.png",
-      "/og-image-es.png",
-      "/og-image-fr.png",
-      "/og-image-it.png",
-      "/og-image-pricing.png",
-      "/og-image-pt.png",
-      "/og-image.png",
-      "/pocket-alternative.css",
-      // The pre-paint theme hook every landing <head> loads synchronously (the
-      // CSP forbids an inline script): if it 404s, each hop flashes the default
-      // theme — exactly the regression this smoke gate exists to catch, so the
-      // resource is part of the audited set.
-      "/theme-init.js",
-    ]);
+  it("keeps the shared chrome on every page without pinning the census", () => {
+    // The census used to be pinned (16 resources, listed one by one): adding a
+    // single icon to the shared <head> failed the suite even though nothing had
+    // regressed. The pages must satisfy a property instead, derived page by
+    // page: every landing carries the shared chrome (the intersection of the
+    // 31 pages), and the only resources outside it are the localized og:image
+    // and the Pocket page's own stylesheet.
+    const perPage = pageFiles.map((file, index) => ({
+      file,
+      resources: new Set(classifyCriticalResources(pages[index])),
+    }));
+    const shared = [...perPage[0].resources].filter((resource) =>
+      perPage.every((page) => page.resources.has(resource)),
+    );
+    expect(shared).toEqual(
+      expect.arrayContaining([
+        "/apple-touch-icon.png",
+        "/brand-tokens.css",
+        "/favicon.png",
+        "/landing.css",
+        "/landing.js",
+        "/logo-64.png",
+        "/manifest.json",
+        // The pre-paint theme hook every landing <head> loads synchronously
+        // (the CSP forbids an inline script): if it 404s, each hop flashes the
+        // default theme — exactly the regression this smoke gate exists to
+        // catch.
+        "/theme-init.js",
+      ]),
+    );
+
+    const pageOwned = /^\/og-image(?:-[a-z-]+)?\.png$|^\/pocket-alternative\.css$/;
+    for (const { file, resources: pageResources } of perPage) {
+      for (const resource of pageResources) {
+        if (!shared.includes(resource) && !pageOwned.test(resource)) {
+          expect.fail(`${file} references a resource outside the shared chrome: ${resource}`);
+        }
+      }
+      expect(pageResources.size).toBeGreaterThanOrEqual(shared.length);
+    }
+    expect(resources.size).toBeGreaterThanOrEqual(shared.length);
   });
 
-  it("sees 93 internal links across the 31 pages", () => {
-    // 93 after adding 30 help-{lang} pages (help-ar, help-bg, ..., help-zh)
-    // plus their navigation links. Previous count was 63 before help pages
-    // were added to the generator.
-    expect(links.size).toBe(93);
-    expect(links.has("/pocket-alternative")).toBe(true);
+  it("links every registry route without pinning the census", () => {
+    // This used to pin the census (63 → 93 → 96 → 97): every additive CTA —
+    // the demo-mode `/app?demo=true` was the last — failed the suite even
+    // though nothing had regressed, because a new link is additive by nature.
+    // The census stays derived from the pages (no literal), and what the test
+    // guarantees is a property instead of a number: every route the registry
+    // publishes, plus the SPA entry the CTAs point at, is linked from at least
+    // one page. A new link passes; dropping a route family fails.
+    for (const { route } of ROUTES) {
+      expect(links.has(route), `no page links ${route}`).toBe(true);
+    }
     expect(links.has("/app")).toBe(true);
+    expect(links.has("/app?demo=true")).toBe(true);
+    expect(links.size).toBeGreaterThanOrEqual(ROUTES.length);
     expect(links.has("/")).toBe(true);
   });
 });

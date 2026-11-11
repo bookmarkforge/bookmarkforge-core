@@ -3,13 +3,13 @@
   "langName": "Italiano",
   "dir": "ltr",
   "title": "BookmarkForge: gestore di segnalibri privato e local-first con lista di lettura",
-  "description": "Raindrop tiene i tuoi segnalibri sui suoi server e ti fa pagare ogni anno. BookmarkForge li tiene sul tuo computer, bloccati così nemmeno noi possiamo leggerli. Un solo pagamento: $59 accesso a vita early bird (risparmi $20 prima del prezzo pieno). Gratis: 300 segnalibri.",
+  "description": "Raindrop tiene i tuoi segnalibri sui suoi server e ti fa pagare ogni anno. BookmarkForge li tiene sul tuo computer, bloccati così nemmeno noi possiamo leggerli. Un solo pagamento: $59 accesso a vita early bird (risparmi $20 prima del prezzo pieno). Gratis: 500 segnalibri.",
   "ogTitle": "BookmarkForge: gestore di segnalibri privato e local-first con lista di lettura",
-  "ogDescription": "Raindrop tiene i tuoi segnalibri sui suoi server e ti fa pagare ogni anno. BookmarkForge li tiene sul tuo computer, bloccati così nemmeno noi possiamo leggerli. Un solo pagamento: $59 accesso a vita early bird (risparmi $20 prima del prezzo pieno). Gratis: 300 segnalibri.",
+  "ogDescription": "Raindrop tiene i tuoi segnalibri sui suoi server e ti fa pagare ogni anno. BookmarkForge li tiene sul tuo computer, bloccati così nemmeno noi possiamo leggerli. Un solo pagamento: $59 accesso a vita early bird (risparmi $20 prima del prezzo pieno). Gratis: 500 segnalibri.",
   "ogImage": "https://bookmarkforgeapp.com/og-image-it.png",
   "ogImageAlt": "BookmarkForge: app privata per segnalibri e note basata sull'intelligenza artificiale",
   "twitterTitle": "BookmarkForge: gestore di segnalibri privato e local-first con lista di lettura",
-  "twitterDescription": "Raindrop tiene i tuoi segnalibri sui suoi server e ti fa pagare ogni anno. BookmarkForge li tiene sul tuo computer, bloccati così nemmeno noi possiamo leggerli. Un solo pagamento: $59 accesso a vita early bird (risparmi $20 prima del prezzo pieno). Gratis: 300 segnalibri.",
+  "twitterDescription": "Raindrop tiene i tuoi segnalibri sui suoi server e ti fa pagare ogni anno. BookmarkForge li tiene sul tuo computer, bloccati così nemmeno noi possiamo leggerli. Un solo pagamento: $59 accesso a vita early bird (risparmi $20 prima del prezzo pieno). Gratis: 500 segnalibri.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image-it.png",
   "skipLink": "Vai al contenuto principale",
   "navBrandAria": "Home di BookmarkForge",
@@ -191,7 +191,13 @@
         "title": "Privato per impostazione predefinita",
         "text": "Senza account, senza tracciamento, senza pubblicità. Sei il cliente, non il prodotto. La condivisione di statistiche esiste, è facoltativa e resta spenta finché non la accendi."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "Free include",
+      "free": "ricerca intelligente, 500 segnalibri, IA con le tue chiavi, backup crittografati ed export — per sempre",
+      "proLabel": "Pro aggiunge",
+      "pro": "segnalibri illimitati, sincronizzazione su 5 dispositivi, IA locale e chat sulla tua cassaforte, flashcard, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ia",
@@ -212,22 +218,6 @@
         {
           "type": "cloud",
           "name": "Nel cloud — Google Gemini (con la tua chiave)"
-        },
-        {
-          "type": "cloud",
-          "name": "Nel cloud — OpenAI / GPT-4o (con la tua chiave)"
-        },
-        {
-          "type": "cloud",
-          "name": "Nel cloud — Anthropic Claude (con la tua chiave)"
-        },
-        {
-          "type": "cloud",
-          "name": "Nel cloud — Groq (con la tua chiave)"
-        },
-        {
-          "type": "cloud",
-          "name": "Nel cloud — OpenRouter o un fornitore personalizzato (con la tua chiave)"
         }
       ]
     },
@@ -281,19 +271,23 @@
       {
         "title": "Senza gabbia",
         "text": "Esporta i tuoi dati quando vuoi in formati aperti (JSON, Markdown, CSV, PDF). La tua conoscenza resta tua e portatile."
+      },
+      {
+        "title": "Solo Vercel ci ospita — zero analisi",
+        "text": "Il sito funziona esclusivamente su Vercel senza analisi di alcun tipo: nessun tracciatore, nessun fingerprinting, nessuno script di terze parti. Verificalo tu stesso nella scheda rete del tuo browser."
       }
     ]
   },
   "pricing": {
     "id": "prezzi",
     "title": "Prezzi semplici e giusti — Nessun abbonamento",
-    "subtitle": "300 segnalibri gratis per sempre. Pro è licenza Lifetime v1 — paghi una volta, tieni v1 per sempre. Include tutte le v1.x e 12 mesi di novità. Sicurezza per sempre. Nessun canone mensile.",
+    "subtitle": "500 segnalibri gratis per sempre. Pro è licenza Lifetime v1 — paghi una volta, tieni v1 per sempre. Include tutte le v1.x e 12 mesi di novità. Sicurezza per sempre. Nessun canone mensile.",
     "plans": [
       {
         "name": "Gratis",
         "price": "$ 0",
         "period": "/per sempre",
-        "description": "Gratis per sempre: 300 segnalibri e la ricerca intelligente che altri fanno pagare ogni anno. Arrivato a 300, la tua biblioteca resta intera — leggere, cercare ed esportare non si fermano mai; si mettono in pausa solo i nuovi salvataggi.",
+        "description": "Gratis per sempre: 500 segnalibri e la ricerca intelligente che altri fanno pagare ogni anno. Arrivato a 500, la tua biblioteca resta intera — leggere, cercare ed esportare non si fermano mai; si mettono in pausa solo i nuovi salvataggi.",
         "features": [
           {
             "included": true,
@@ -301,11 +295,15 @@
           },
           {
             "included": true,
-            "text": "300 segnalibri, note e documenti"
+            "text": "500 segnalibri, note e documenti"
           },
           {
             "included": true,
             "text": "Funziona su qualsiasi dispositivo — ognuno con la sua stessa biblioteca"
+          },
+          {
+            "included": true,
+            "text": "IA con la tua chiave API (paghi il provider)"
           },
           {
             "included": true,
@@ -353,11 +351,11 @@
           }
         ],
         "cta": "Provalo subito",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-outline"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "Più Popolare — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (poi $79)",
@@ -389,7 +387,7 @@
           },
           {
             "included": true,
-            "text": "Esportazione avanzata (10+ formati)"
+            "text": "Esportazione avanzata (7 formati)"
           },
           {
             "included": true,
@@ -398,18 +396,6 @@
           {
             "included": true,
             "text": "A vita su v1 · 12 mesi di aggiornamenti"
-          },
-          {
-            "included": true,
-            "text": "Aggiornamenti di sicurezza per sempre"
-          },
-          {
-            "included": true,
-            "text": "Supporto e-mail (48h) + accesso anticipato"
-          },
-          {
-            "included": true,
-            "text": "Traduzione con IA locale (in arrivo)"
           }
         ],
         "cta": "Ottieni Pro $59 Early Bird",
@@ -430,7 +416,7 @@
     "items": [
       {
         "question": "Il piano Gratis è davvero gratis per sempre?",
-        "answer": "Sì. Nessuna prova né abbonamento. Include 300 segnalibri, ricerca full-text e semantica, grafo di conoscenza e IA con la tua API key (paghi il provider)."
+        "answer": "Sì. Nessuna prova né abbonamento. Include 500 segnalibri, ricerca full-text e semantica, grafo di conoscenza e IA con la tua API key (paghi il provider)."
       },
       {
         "question": "Cosa significa \"Lifetime di v1\" per Pro?",
@@ -447,6 +433,18 @@
       {
         "question": "Cosa succede se dimentico la password del vault?",
         "answer": "Non possiamo recuperarla. Alla creazione mostriamo una frase seed di 24 parole una sola volta — scrivila su carta. Senza di essa nessuno (neppure noi) può aprire il vault. Vedi <a href=\"/help-it#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "Cosa succede ai miei dati se smetto di usarlo?",
+        "answer": "I tuoi dati restano sul tuo dispositivo. Puoi esportare tutto in qualsiasi momento in Markdown, JSON, CSV o PDF. Nessun blocco, nessun ostaggio."
+      },
+      {
+        "question": "I miei dati sono davvero privati?",
+        "answer": "Assolutamente. Tutto è crittografato sul tuo dispositivo con una chiave che solo tu possiedi. Non vediamo mai i tuoi segnalibri, note o password. Nemmeno noi possiamo leggere i tuoi dati."
+      },
+      {
+        "question": "Posso usarlo sul mio telefono?",
+        "answer": "Sì! BookmarkForge funziona su qualsiasi dispositivo con browser web. Il livello gratuito funziona su dispositivi illimitati (ognuno ha il proprio vault). Pro sincronizza fino a 5 dispositivi."
       }
     ]
   },
@@ -455,7 +453,7 @@
     "text": "Inizia a costruire il tuo vault di conoscenze IA privato oggi. I tuoi dati rimangono sul tuo dispositivo — crittografati, ricercabili e tuoi per sempre.",
     "ctaPrimary": "Provalo subito (senza account)",
     "ctaSecondary": "Passa a Pro",
-    "note": "Nessun account richiesto. Funziona immediatamente nel tuo browser. Livello gratis: 300 segnalibri."
+    "note": "Nessun account richiesto. Funziona immediatamente nel tuo browser. Livello gratis: 500 segnalibri."
   },
   "footer": {
     "brand": "La tua cassaforte di conoscenza privata con IA. 100% locale.",
@@ -473,7 +471,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {

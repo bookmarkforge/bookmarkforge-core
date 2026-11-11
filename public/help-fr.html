@@ -32,7 +32,7 @@
     "@type":"FAQPage",
     "@id":"https://bookmarkforgeapp.com/help#faq",
     "mainEntity":[
-      {"@type":"Question","name":"L\u0027offre Free est-elle vraiment gratuite à vie ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Aucun essai, aucun abonnement. L\u0027offre Free inclut 300 favoris, la recherche plein texte et sémantique, le graphe de connaissances et l\u0027AI avec votre propre clé API."}},
+      {"@type":"Question","name":"L\u0027offre Free est-elle vraiment gratuite à vie ?","acceptedAnswer":{"@type":"Answer","text":"Oui. Aucun essai, aucun abonnement. L\u0027offre Free inclut 500 favoris, la recherche plein texte et sémantique, le graphe de connaissances et l\u0027AI avec votre propre clé API."}},
       {"@type":"Question","name":"Que signifie « Lifetime de v1 » ?","acceptedAnswer":{"@type":"Answer","text":"Payez une fois, possédez v1 à vie. Tous les correctifs v1.x sont gratuits à vie, plus 12 mois de mises à jour fonctionnelles à compter de l\u0027achat. Mises à jour de sécurité à vie. Au-delà du 13e mois, v1 continue de fonctionner. Les versions v2 et v3 sont des mises à jour majeures distinctes et payantes : $89 pour les nouveaux clients, $35 pour les propriétaires de v1 (-60 %)."}},
       {"@type":"Question","name":"Que faire si j\u0027oublie mon mot de passe du coffre-fort ?","acceptedAnswer":{"@type":"Answer","text":"Nous ne pouvons pas le récupérer. Lors de la création du coffre-fort, une phrase de récupération de 24 mots vous est affichée une seule fois — notez-la sur papier. Sans elle, le coffre-fort est irrécupérable. Voir BF-E101."}}
     ]
@@ -77,8 +77,8 @@
     <table class="sla">
       <thead><tr><th>Offre</th><th>Prix</th><th>Ce que vous obtenez</th><th>Limite</th></tr></thead>
       <tbody>
-        <tr><td><strong>Free</strong></td><td>$0 à vie</td><td>300 favoris sur n'importe quel appareil (chaque appareil possède son propre coffre-fort), recherche intelligente — plein texte + sémantique, une fonctionnalité que Raindrop facture annuellement — graphe de connaissances, AI avec votre propre clé API, PWA + extensions. Jusqu'à 300, votre coffre-fort reste intact : lecture, recherche et export ne sont jamais bloqués ; seuls les nouveaux enregistrements sont suspendus.</td><td>Illimité</td></tr>
-        <tr><td><strong>Pro Lifetime v1</strong> <span class="badge">Early Bird</span></td><td><strong>$59</strong> <span style="text-decoration:line-through;color:var(--text-muted)">$79</span> → $79 (tarif normal) → $99 après période de lancement</td><td>Favoris illimités, 5 appareils + synchronisation P2P, AI local (WebLLM/Ollama) + RAG + agents experts, Flashcards, PDF/OCR, plus de 10 formats d'export, coffre-fort. <em>Lifetime de v1 · 12 mois de mises à jour fonctionnelles · Mises à jour de sécurité à vie · v2 à -60 %</em></td><td>200 Early Bird</td></tr>
+        <tr><td><strong>Free</strong></td><td>$0 à vie</td><td>500 favoris sur n'importe quel appareil (chaque appareil possède son propre coffre-fort), recherche intelligente — plein texte + sémantique, une fonctionnalité que Raindrop facture annuellement — graphe de connaissances, AI avec votre propre clé API, PWA + extensions. Jusqu'à 500, votre coffre-fort reste intact : lecture, recherche et export ne sont jamais bloqués ; seuls les nouveaux enregistrements sont suspendus.</td><td>Illimité</td></tr>
+        <tr><td><strong>Pro Lifetime</strong> <span class="badge">Early Bird</span></td><td><strong>$59</strong> <span style="text-decoration:line-through;color:var(--text-muted)">$79</span> → $79 (tarif normal) → $99 après période de lancement</td><td>Favoris illimités, 5 appareils + synchronisation P2P, AI local (WebLLM/Ollama) + RAG + agents experts, Flashcards, PDF/OCR, plus de 10 formats d'export, coffre-fort. <em>Lifetime de v1 · 12 mois de mises à jour fonctionnelles · Mises à jour de sécurité à vie · v2 à -60 %</em></td><td>200 Early Bird</td></tr>
       </tbody>
     </table>
 
@@ -97,7 +97,7 @@
       <thead><tr><th>Offre</th><th>Canal</th><th>Réponse</th><th>À faire en premier</th></tr></thead>
       <tbody>
         <tr><td><strong>Free</strong></td><td>En libre-service : ce Centre d'aide + <a href="https://github.com/bookmarkforge/bookmarkforge-core/discussions">GitHub Discussions</a></td><td>Au mieux (communauté)</td><td>Recherchez le code BF-E* ci-dessous + copiez le diagnostic (<a href="#diagnostics">§Diagnostic</a>) avant de publier</td></tr>
-        <tr><td><strong>Pro</strong></td><td>E-mail <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> (objet : Pro)</td><td><strong>48h</strong></td><td>Incluez le texte du diagnostic depuis <code>Paramètres → Aide → Copier le diagnostic</code></td></tr>
+        <tr><td><strong>Pro v1 Lifetime</strong></td><td>E-mail <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> (objet : Pro)</td><td><strong>48h</strong></td><td>Incluez le texte du diagnostic depuis <code>Paramètres → Aide → Copier le diagnostic</code></td></tr>
       </tbody>
     </table>
     <p style="color:var(--text-muted);font-size:0.92em;">Nous ne pouvons pas voir vos favoris, notes, URLs ou prompts. N'incluez que le diagnostic ci-dessous — il contient uniquement des comptes et des versions, jamais le contenu de votre coffre-fort.</p>
@@ -131,7 +131,7 @@
         <tr id="bf-e106"><td><strong>BF-E106</strong></td><td>L'AI local (WebLLM) ne peut pas s'exécuter sur cet appareil</td><td>Nécessite WebGPU + shader-f16 + 4 Go de RAM + Pro. Mettez à jour votre navigateur, ou utilisez Ollama / un fournisseur cloud avec votre propre clé.</td></tr>
         <tr id="bf-e107"><td><strong>BF-E107</strong></td><td>Échec de l'import de sauvegarde (mauvais mot de passe / fichier corrompu)</td><td>Pour un fichier <code>.bmf</code> (chiffré), vous avez besoin du mot de passe d'exportation, et non du mot de passe du coffre-fort. Pour un fichier JSON, assurez-vous qu'il n'a pas été tronqué.</td></tr>
         <tr id="bf-e201"><td><strong>BF-E201</strong></td><td>Licence Pro invalide / vérification expirée</td><td>Vérifiez <code>Paramètres → Pro</code> : saisissez à nouveau votre clé. Les vérifications hors ligne sont mises en cache ; reconnectez-vous une fois pour la revalider via Whop.</td></tr>
-        <tr id="bf-e202"><td><strong>BF-E202</strong></td><td>Limite Free atteinte (300 favoris)</td><td>L'offre Free est limitée à 300 favoris. Supprimez des éléments ou passez à Pro Lifetime v1 pour un usage illimité. L'export reste toujours disponible.</td></tr>
+        <tr id="bf-e202"><td><strong>BF-E202</strong></td><td>Limite Free atteinte (500 favoris)</td><td>L'offre Free est limitée à 500 favoris. Supprimez des éléments ou passez à Pro Lifetime pour un usage illimité. L'export reste toujours disponible.</td></tr>
       </tbody>
     </table>
     <p>Astuce support : cliquer sur <code>Copier le diagnostic</code> dans l'erreur copie le code et son contexte en un clic — collez-le dans votre GitHub Discussion ou votre e-mail.</p>

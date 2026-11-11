@@ -11,6 +11,7 @@
  * keeps `safeErrorForLog`.
  */
 import { sanitizeMessage } from "../telemetry/sanitize";
+import { describeErrorCode, noteUserError } from "./errorCodes";
 
 const MAX_USER_MESSAGE_LENGTH = 200;
 
@@ -19,6 +20,9 @@ const MAX_USER_MESSAGE_LENGTH = 200;
  * render. Returns `fallback` when the error carries no usable text.
  */
 export function toUserErrorMessage(error: unknown, fallback: string): string {
+  // Record the BF-E* code before sanitizing: the classifier reads the raw
+  // error (name/message/code), and the diagnostics report picks it up later.
+  const bfCode = noteUserError(error);
   const raw =
     error instanceof Error
       ? error.message
@@ -41,5 +45,8 @@ export function toUserErrorMessage(error: unknown, fallback: string): string {
     cleaned.length > MAX_USER_MESSAGE_LENGTH
       ? `${cleaned.slice(0, MAX_USER_MESSAGE_LENGTH - 1)}…`
       : cleaned;
-  return bounded.length > 0 ? bounded : fallback;
+  const base = bounded.length > 0 ? bounded : fallback;
+  // Surface the documented BF-E* code so users can quote it in a ticket —
+  // the /help error-code table only works if the app actually shows codes.
+  return bfCode ? `${base} [${describeErrorCode(bfCode)}]` : base;
 }

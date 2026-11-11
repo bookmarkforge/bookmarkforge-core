@@ -32,10 +32,9 @@ describe("constants/pricing", () => {
     const { PRICING_CONFIG } = await import("../../constants/pricing");
     const free = PRICING_CONFIG.tiers.find((t) => t.id === "free")!;
     expect(free.price).toBe(0);
-    // Kept in step with LICENSE_FEATURES.free.bookmarks (asserted below):
-    // commit 9b9009f lowered the free cap 2500 -> 300 but only rewrote the
-    // text assertion, leaving this one pinning the retired value.
-    expect(free.limitations.maxBookmarks).toBe(300);
+    // Kept in step with LICENSE_FEATURES.free.bookmarks (asserted below): the
+    // free cap is 500, so the constant and the tier copy must move together.
+    expect(free.limitations.maxBookmarks).toBe(500);
 
     const pro = PRICING_CONFIG.tiers.find((t) => t.id === "pro")!;
     // Regular anchor is $79; early bird $59 is in earlyBird.phases.early.pro (no time limit)
@@ -75,7 +74,7 @@ describe("constants/pricing", () => {
   it("should export LICENSE_FEATURES for free/pro", async () => {
     const { LICENSE_FEATURES } = await import("../../constants/pricing");
     expect(Object.keys(LICENSE_FEATURES)).toEqual(["free", "pro"]);
-    expect(LICENSE_FEATURES.free.bookmarks).toBe("300 bookmarks");
+    expect(LICENSE_FEATURES.free.bookmarks).toBe("500 bookmarks");
     expect(LICENSE_FEATURES.pro.bookmarks).toBe("∞ UNLIMITED");
   });
 

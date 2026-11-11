@@ -54,9 +54,9 @@ Drag the **"Save to Forge"** button to your browser's bookmark bar. Whenever you
 
 - **Virtualized list** handling 100,000+ items without lag
 - **Deep Search:** searches the full text of saved pages
-- **Smart Collections:** auto-organize by tag
-- **Import/Export:** from Notion, Evernote, Chrome, or export as .bmf, Markdown, PDF
-- **Free:** 300 bookmarks, smart search included, and no device cap. At 300 your vault remains available for reading, search, and export; only new saves pause. **Pro:** Unlimited bookmarks.
+- **Tags & Collections:** organize with tags, AI auto-tag suggestions and collections
+- **Import/Export:** bookmark exports (Pocket, Raindrop, Omnivore, Chrome, Pinboard, Firefox), Evernote .enex, Notion/Markdown/Obsidian vaults (ZIP); export as .bmf, Markdown, HTML, CSV, JSON, JSONL, Notion, Obsidian, PDF (Pro)
+- **Free:** 500 bookmarks, smart search included, and no device cap. At 500 your vault remains available for reading, search, and export; only new saves pause. **Pro:** Unlimited bookmarks.
 
 ### 3.2 Note Editor
 
@@ -84,10 +84,10 @@ Interactive 3D/2D visualization of your notes:
 
 ### 3.5 Voice Commands
 
-Voice-to-Action engine:
-- Say "Hey BMF, find my Biology notes"
-- Say "Save this page"
-- Works 100% offline via the Web Speech API
+Push-to-talk engine (press the mic, speak, release):
+- Press the mic and say "find my Biology notes"
+- Press the mic and say "save this page"
+- Uses the browser's Web Speech API — Chrome/Edge support it and it needs an internet connection; Firefox support is limited
 
 ### 3.6 Omnibar (Ctrl+K)
 
@@ -207,13 +207,13 @@ The brain of the application:
 | Feature | Free | Pro |
 |---|---|--- |
 | Price | $0 | $79 (lifetime) |
-| Bookmarks | 300 | Unlimited |
+| Bookmarks | 500 | Unlimited |
 | Devices | No cap (each device has its own vault) | Up to 5 + P2P sync |
 | AI with own API key | ✅ | ✅ |
 | Local AI (WebLLM/Ollama) | ❌ | ✅ |
 | RAG chat over your data | ❌ | ✅ |
 | Flashcards + PDF/OCR | ❌ | ✅ |
-| Advanced export (10+ formats) | ❌ | ✅ |
+| Advanced export (7 formats) | ❌ | ✅ |
 | Local vault encryption (AES-GCM) | ✅ | ✅ |
 | Support | Community | Email 48h |
 | v2/v3 discounts | ❌ | 60% off |
@@ -246,16 +246,19 @@ Pocket HTML exports (`ril_export.html`) and Pocket-shaped CSV files are detected
 ### 8.1 Import
 
 Go to **Settings > Import**:
-- **HTML/JSON from Notion or Evernote**
-- **Chrome bookmark export**
+- **HTML/JSON bookmark exports** (Pocket, Raindrop, Omnivore, Chrome)
+- **Pinboard posts export** (JSON) and **Firefox backup** (`places.json`)
+- **Evernote export** (`.enex`) — notes become documents
+- **Notion export** ("Markdown & CSV" ZIP) — pages become documents, folders preserved
+- **Markdown or Obsidian vaults** (ZIP)
 - **.bmf backup**
 
 ### 8.2 Export
 
 - **.bmf:** Complete encrypted backup
-- **Markdown:** Notes in readable format
-- **PDF:** Export notes as PDF documents
-- **JSON:** Structured data
+- **Markdown, HTML, CSV, JSON, JSONL:** Structured exports
+- **Notion / Obsidian:** Vault-compatible exports
+- **PDF:** Export notes as PDF documents (Pro)
 
 ### 8.3 Backup and Restore
 
@@ -334,7 +337,7 @@ refer to internal documentation or contact support.
 The main application is local-first and free. Advanced AI features and P2P sync require a Pro license.
 
 **Can I use it on mobile?**
-Yes. Install it as a PWA via Chrome (Android) or Safari (iOS). Supports offline access and push notifications.
+Yes. Install it as a PWA via Chrome (Android) or Safari (iOS). Supports offline access and local browser notifications.
 
 **Where are my files?**
 Inside browser storage (IndexedDB). You can export them as .bmf, Markdown, or PDF at any time.

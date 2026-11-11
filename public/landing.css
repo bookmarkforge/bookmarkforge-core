@@ -373,6 +373,12 @@ body {
 .feature-item:hover { border-color: var(--accent-glow); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2); }
 .feature-item h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 16px; line-height: 1.4; color: var(--text-primary); }
 .feature-item p { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.7; }
+.tier-note {
+  margin: 40px auto 0; max-width: 720px; text-align: center;
+  color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.7;
+}
+.tier-note strong { color: var(--text-primary); font-weight: 600; }
+.tier-note-sep { margin: 0 0.6em; color: var(--divider); }
 
 .features-grid-3 .feat-card {
   background: var(--bg-card); border: 1px solid var(--divider);
@@ -603,4 +609,86 @@ body {
   .affiliate-details { grid-template-columns: 1fr; }
   .affiliate-item { padding: 20px; }
   .affiliate-rules, .affiliate-tip { padding: 20px; }
+}
+
+/* ── Social Share ────────────────────────────────────────────────── */
+.social-share {
+  padding: 40px 0;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--divider);
+}
+
+.share-text {
+  text-align: center;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.share-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  border: 1px solid var(--divider);
+}
+
+.share-twitter {
+  background: #1da1f2;
+  color: white;
+  border-color: #1da1f2;
+}
+.share-twitter:hover { background: #0d8bd9; }
+
+.share-facebook {
+  background: #1877f2;
+  color: white;
+  border-color: #1877f2;
+}
+.share-facebook:hover { background: #0e5bc7; }
+
+.share-linkedin {
+  background: #0a66c2;
+  color: white;
+  border-color: #0a66c2;
+}
+.share-linkedin:hover { background: #084d94; }
+
+.share-hackernews {
+  background: #ff6600;
+  color: white;
+  border-color: #ff6600;
+}
+.share-hackernews:hover { background: #e55c00; }
+
+.share-copy {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--divider);
+}
+.share-copy:hover { background: var(--bg-tertiary); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .share-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  .share-btn {
+    width: 100%;
+    max-width: 300px;
+    justify-content: center;
+  }
 }

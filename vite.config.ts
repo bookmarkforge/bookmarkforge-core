@@ -503,6 +503,10 @@ export default defineConfig(({ mode, isPreview }) => ({
   preview:
     isPreview
       ? {
+          // Device drills (iOS Safari manual tests, LAN preview, tunnel
+          // URLs) reach this server under non-localhost Host headers;
+          // Vite's default host allowlist would 403 them.
+          allowedHosts: true,
           proxy: {
             "/api": {
               target: process.env.VITE_API_PROXY_TARGET || `http://127.0.0.1:${process.env.CRISIS_COMPANION_PORT || "8799"}`,

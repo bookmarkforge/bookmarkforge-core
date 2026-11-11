@@ -15,7 +15,7 @@ Holvi salataan paikallisesti AES-GCM:llä ja avain johdetaan pääsalasanasta Ar
 
 ## Kirjanmerkit ja haku
 
-Free sisältää älykkään hakuominaisuuden sanoilla ja merkityksellä. Free sallii **300 kirjanmerkkiä** eikä rajoita laitteiden määrää; ilman Pron synkronointia jokaisella laitteella on oma holvinsa. Kun 300 täyttyy, mitään ei poisteta: lukeminen, haku ja vienti toimivat edelleen, mutta uudet tallennukset pysähtyvät. Pro poistaa rajan ja synkronoi enintään viisi laitetta P2P-yhteydellä.
+Free sisältää älykkään hakuominaisuuden sanoilla ja merkityksellä. Free sallii **500 kirjanmerkkiä** eikä rajoita laitteiden määrää; ilman Pron synkronointia jokaisella laitteella on oma holvinsa. Kun 500 täyttyy, mitään ei poisteta: lukeminen, haku ja vienti toimivat edelleen, mutta uudet tallennukset pysähtyvät. Pro poistaa rajan ja synkronoi enintään viisi laitetta P2P-yhteydellä.
 
 ## Pocket-tuonti
 

@@ -15,7 +15,7 @@ Boksen krypteres lokalt med AES-GCM, og nøglen udledes af hovedadgangskoden med
 
 ## Bogmærker og søgning
 
-Free indeholder intelligent søgning efter både ord og betydning. Free tillader **300 bogmærker** og har ingen grænse for antal enheder; uden Pro-synkronisering har hver enhed sin egen boks. Når du når 300, slettes intet: læsning, søgning og eksport fortsætter, mens nye gemninger sættes på pause. Pro fjerner grænsen og synkroniserer op til fem enheder via P2P.
+Free indeholder intelligent søgning efter både ord og betydning. Free tillader **500 bogmærker** og har ingen grænse for antal enheder; uden Pro-synkronisering har hver enhed sin egen boks. Når du når 500, slettes intet: læsning, søgning og eksport fortsætter, mens nye gemninger sættes på pause. Pro fjerner grænsen og synkroniserer op til fem enheder via P2P.
 
 ## Import fra Pocket
 

@@ -6,12 +6,12 @@
   "ogLocale": "es_ES",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: gestor de marcadores privado y local-first con lista de lectura",
-  "description": "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. Un solo pago: $59 acceso de por vida early bird (ahorra $20 antes del precio regular). Gratis: 300 marcadores.",
+  "description": "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. Un solo pago: $59 acceso de por vida early bird (ahorra $20 antes del precio regular). Gratis: 500 marcadores.",
   "ogTitle": "BookmarkForge: gestor de marcadores privado y local-first con lista de lectura",
-  "ogDescription": "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. Un solo pago: $59 acceso de por vida early bird (ahorra $20 antes del precio regular). Gratis: 300 marcadores.",
+  "ogDescription": "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. Un solo pago: $59 acceso de por vida early bird (ahorra $20 antes del precio regular). Gratis: 500 marcadores.",
   "ogImage": "https://bookmarkforgeapp.com/og-image-es.png",
   "twitterTitle": "BookmarkForge: gestor de marcadores privado y local-first con lista de lectura",
-  "twitterDescription": "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. Un solo pago: $59 acceso de por vida early bird (ahorra $20 antes del precio regular). Gratis: 300 marcadores.",
+  "twitterDescription": "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. Un solo pago: $59 acceso de por vida early bird (ahorra $20 antes del precio regular). Gratis: 500 marcadores.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image-es.png",
   "skipLink": "Saltar al contenido principal",
   "navBrandAria": "BookmarkForge inicio",
@@ -198,7 +198,13 @@
         "title": "Privado por defecto",
         "text": "Sin cuentas, sin rastreo, sin anuncios. Eres el cliente, no el producto. Compartir estadísticas existe, es opcional y está apagado hasta que tú lo enciendas."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "Gratis incluye",
+      "free": "búsqueda inteligente, 500 marcadores, IA con tus propias claves, copias cifradas y exportación — para siempre",
+      "proLabel": "Pro añade",
+      "pro": "marcadores ilimitados, sincronización en 5 dispositivos, IA local y chat sobre tu bóveda, flashcards, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ia",
@@ -219,22 +225,6 @@
         {
           "type": "cloud",
           "name": "En la nube — Google Gemini (con tu propia clave)"
-        },
-        {
-          "type": "cloud",
-          "name": "En la nube — OpenAI / GPT-4o (con tu propia clave)"
-        },
-        {
-          "type": "cloud",
-          "name": "En la nube — Anthropic Claude (con tu propia clave)"
-        },
-        {
-          "type": "cloud",
-          "name": "En la nube — Groq (con tu propia clave)"
-        },
-        {
-          "type": "cloud",
-          "name": "En la nube — OpenRouter u otro proveedor personalizado (con tu propia clave)"
         }
       ]
     },
@@ -288,19 +278,23 @@
       {
         "title": "Sin encierro",
         "text": "Exporta tus datos cuando quieras en formatos abiertos (JSON, Markdown, CSV, PDF). Tu conocimiento sigue siendo tuyo y portable."
+      },
+      {
+        "title": "Solo Vercel nos aloja — cero analíticas",
+        "text": "El sitio funciona exclusivamente en Vercel sin analíticas de ningún tipo: sin rastreadores, sin huella digital, sin scripts de terceros. Compruébalo tú mismo en la pestaña de red de tu navegador."
       }
     ]
   },
   "pricing": {
     "id": "precios",
     "title": "Precios simples y justos — Sin suscripciones",
-    "subtitle": "300 marcadores gratis para siempre. Pro es una licencia Lifetime para v1 — paga una vez, tuya para siempre. Incluye todas las v1.x y 12 meses de novedades. Seguridad para siempre. Sin cuotas mensuales.",
+    "subtitle": "500 marcadores gratis para siempre. Pro es una licencia Lifetime para v1 — paga una vez, tuya para siempre. Incluye todas las v1.x y 12 meses de novedades. Seguridad para siempre. Sin cuotas mensuales.",
     "plans": [
       {
         "name": "Gratis",
         "price": "$ 0",
         "period": "/para siempre",
-        "description": "Gratis para siempre: 300 marcadores y la búsqueda inteligente que otros cobran cada año. Al llegar a 300 tu bóveda sigue entera: leer, buscar y exportar nunca se detienen; solo se pausan los guardados nuevos.",
+        "description": "Gratis para siempre: 500 marcadores y la búsqueda inteligente que otros cobran cada año. Al llegar a 500 tu bóveda sigue entera: leer, buscar y exportar nunca se detienen; solo se pausan los guardados nuevos.",
         "features": [
           {
             "included": true,
@@ -308,11 +302,15 @@
           },
           {
             "included": true,
-            "text": "300 marcadores, notas y documentos"
+            "text": "500 marcadores, notas y documentos"
           },
           {
             "included": true,
             "text": "Funciona en cualquier dispositivo — cada uno con su propia bóveda"
+          },
+          {
+            "included": true,
+            "text": "IA con tu propia clave de API (tú pagas al proveedor)"
           },
           {
             "included": true,
@@ -360,11 +358,11 @@
           }
         ],
         "cta": "Pruébalo al instante",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-outline"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "Más Popular — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (luego $79)",
@@ -396,7 +394,7 @@
           },
           {
             "included": true,
-            "text": "Exportación avanzada (10+ formatos)"
+            "text": "Exportación avanzada (7 formatos)"
           },
           {
             "included": true,
@@ -405,18 +403,6 @@
           {
             "included": true,
             "text": "De por vida v1 · 12 meses de actualizaciones de funciones"
-          },
-          {
-            "included": true,
-            "text": "Actualizaciones de seguridad para siempre"
-          },
-          {
-            "included": true,
-            "text": "Soporte por correo (48h) + acceso temprano"
-          },
-          {
-            "included": true,
-            "text": "Traducción con IA local (próximamente)"
           }
         ],
         "cta": "Obtener Pro $59 Early Bird",
@@ -437,7 +423,7 @@
     "items": [
       {
         "question": "¿El plan Gratis es realmente gratis para siempre?",
-        "answer": "Sí. Sin prueba ni suscripción. Incluye 300 marcadores, búsqueda completa y semántica, grafo de conocimiento e IA con tu propia clave API (pagas al proveedor)."
+        "answer": "Sí. Sin prueba ni suscripción. Incluye 500 marcadores, búsqueda completa y semántica, grafo de conocimiento e IA con tu propia clave API (pagas al proveedor)."
       },
       {
         "question": "¿Qué significa \"Lifetime de v1\" en Pro?",
@@ -454,6 +440,18 @@
       {
         "question": "¿Qué pasa si olvido la contraseña de mi bóveda?",
         "answer": "No podemos recuperarla. Al crear la bóveda te mostramos una frase semilla de 24 palabras una sola vez — escríbela en papel. Sin ella nadie (ni nosotros) puede abrir la bóveda. Ver <a href=\"/help-es#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "¿Qué pasa con mis datos si dejo de usarlo?",
+        "answer": "Tus datos se quedan en tu dispositivo. Puedes exportar todo en cualquier momento a Markdown, JSON, CSV o PDF. Sin ataduras, sin rehenes."
+      },
+      {
+        "question": "¿Mis datos son realmente privados?",
+        "answer": "Absolutamente. Todo está encriptado en tu dispositivo con una llave que solo tú tienes. Nunca vemos tus marcadores, notas o contraseñas. Ni siquiera nosotros podemos leer tus datos."
+      },
+      {
+        "question": "¿Puedo usarlo en mi teléfono?",
+        "answer": "¡Sí! BookmarkForge funciona en cualquier dispositivo con navegador web. El nivel gratuito funciona en dispositivos ilimitados (cada uno tiene su propio vault). Pro sincroniza hasta 5 dispositivos."
       }
     ]
   },
@@ -462,7 +460,7 @@
     "text": "Comienza a construir tu bóveda de conocimiento con IA privada hoy. Tus datos permanecen en tu dispositivo — cifrados, buscables y tuyos para siempre.",
     "ctaPrimary": "Pruébalo al instante (sin crear cuenta)",
     "ctaSecondary": "Pasar a Pro",
-    "note": "Sin necesidad de cuenta. Funciona al instante en tu navegador. Nivel gratis: 300 marcadores."
+    "note": "Sin necesidad de cuenta. Funciona al instante en tu navegador. Nivel gratis: 500 marcadores."
   },
   "footer": {
     "brand": "Tu bóveda de conocimiento privada con IA. 100% local.",
@@ -480,7 +478,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {
@@ -523,7 +521,7 @@
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
-    "websiteDescription": "Tu bóveda de conocimiento privada con IA. 100% local. La alternativa privada a Pocket. Gratis: 300 marcadores.",
+    "websiteDescription": "Tu bóveda de conocimiento privada con IA. 100% local. La alternativa privada a Pocket. Gratis: 500 marcadores.",
     "organizationName": "BookmarkForge",
     "organizationUrl": "https://bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
@@ -536,17 +534,17 @@
         "name": "Gratis",
         "price": "0",
         "currency": "USD",
-        "description": "300 marcadores. Para siempre gratis."
+        "description": "500 marcadores. Para siempre gratis."
       },
       {
-        "name": "Pro Lifetime v1 — Early Bird",
+        "name": "Pro Lifetime — Early Bird",
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. De por vida v1, 12 meses de funciones, seguridad de por vida, v2 con 60% de descuento.",
         "availability": "https://schema.org/InStock"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "price": "79",
         "currency": "USD",
         "description": "Normal. De por vida v1."
@@ -563,7 +561,7 @@
     "faq": [
       {
         "question": "¿El plan Gratis es realmente gratis para siempre?",
-        "answer": "Sí. Sin prueba ni suscripción. Incluye 300 marcadores, búsqueda completa y semántica, grafo de conocimiento e IA con tu propia clave API (pagas al proveedor)."
+        "answer": "Sí. Sin prueba ni suscripción. Incluye 500 marcadores, búsqueda completa y semántica, grafo de conocimiento e IA con tu propia clave API (pagas al proveedor)."
       },
       {
         "question": "¿Qué significa \"Lifetime de v1\" en Pro?",
@@ -603,7 +601,7 @@
     },
     "pricing": {
       "title": "Precios — Lifetime de v1, sin suscripciones",
-      "intro": "<strong>Modelo:</strong> pagas una vez por <em>BookmarkForge v1</em>. Sin facturación mensual. Comparar: Raindrop Pro $28–38/año, Instapaper $60/año, Readwise $120/año, Capacities $120/año. $79 lifetime es ~2× Raindrop anual — justificado por lifetime + privacidad.",
+      "intro": "<strong>Modelo:</strong> pagas una vez por <em>BookmarkForge v1</em>. Sin facturación mensual. Comparar: Raindrop Pro yearly–38/año, Instapaper $60/año, Readwise $120/año, Capacities $120/año. $79 lifetime es ~2× Raindrop anual — justificado por lifetime + privacidad.",
       "table": {
         "tier": "Nivel",
         "price": "Precio",
@@ -612,17 +610,17 @@
       },
       "tier": {
         "free": "Gratis",
-        "pro": "Pro Lifetime v1"
+        "pro": "Pro Lifetime"
       },
       "freePrice": "$0 para siempre",
-      "freeDescription": "300 marcadores en cualquier dispositivo (cada uno mantiene su propia bóveda), búsqueda inteligente — texto completo + semántica, la función por la que Raindrop cobra anualmente — gráfico de conocimiento, IA con tu propia API key, PWA + extensiones. A 300 tu bóveda permanece intacta: lectura, búsqueda y exportación nunca se detienen; solo las nuevas guardas se pausan.",
+      "freeDescription": "500 marcadores en cualquier dispositivo (cada uno mantiene su propia bóveda), búsqueda inteligente — texto completo + semántica, la función por la que Raindrop cobra anualmente — gráfico de conocimiento, IA con tu propia API key, PWA + extensiones. A 500 tu bóveda permanece intacta: lectura, búsqueda y exportación nunca se detienen; solo las nuevas guardas se pausan.",
       "unlimited": "Ilimitado",
       "badge": "Early Bird",
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 normal",
       "proPriceTraction": "$99 después de tracción",
-      "proDescription": "Marcadores ilimitados, 5 dispositivos + sincronización P2P, IA Local (WebLLM/Ollama) + RAG + Agentes Expertos, Flashcards, PDF/OCR, 10+ formatos de exportación, bóveda. <em>Lifetime de v1 · 12 meses de actualizaciones de funciones · Seguridad para siempre · v2 60% de descuento</em>",
+      "proDescription": "Marcadores ilimitados, 5 dispositivos + sincronización P2P, IA Local (WebLLM/Ollama) + RAG + Agentes Expertos, Flashcards, PDF/OCR, 7 formatos de exportación, bóveda. <em>Lifetime de v1 · 12 meses de actualizaciones de funciones · Seguridad para siempre · v2 60% de descuento</em>",
       "proSupply": "200 Early Bird"
     },
     "legal": {
@@ -646,7 +644,7 @@
       },
       "tier": {
         "free": "Gratis",
-        "pro": "Pro"
+        "pro": "Pro v1 Lifetime"
       },
       "freeChannel": "Autoservicio: este Centro de Ayuda + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">Discusiones de GitHub</a>",
       "freeResponse": "Mejor esfuerzo (comunidad)",
@@ -717,11 +715,11 @@
       },
       "e201": {
         "meaning": "Licencia Pro inválida / verificación expirada",
-        "fix": "Verifica <code>Configuración → Pro</code>: vuelve a ingresar la key. Las verificaciones offline cachéan; reconecta una vez para re-validar vía Whop."
+        "fix": "Verifica <code>Configuración → Pro</code>: vuelve a ingresar la clave. Las verificaciones offline usan caché; reconecta una vez para re-validar con tu proveedor de pago."
       },
       "e202": {
-        "meaning": "Límite gratis alcanzado (300 marcadores)",
-        "fix": "Gratis es 300. Elimina o actualiza a Pro Lifetime v1 para ilimitado. La exportación siempre está disponible."
+        "meaning": "Límite gratis alcanzado (500 marcadores)",
+        "fix": "Gratis es 500. Elimina marcadores o actualiza a Pro Lifetime para ilimitado. La exportación siempre está disponible."
       },
       "tip": "Tip de soporte: hacer clic en <code>Copiar diagnóstico</code> del error copia código + contexto en un clic — pégalo en tu Discusión de GitHub o email."
     },
@@ -747,7 +745,7 @@
     "home": "Inicio",
     "faq": {
       "q1": "¿El nivel Gratis es realmente gratis para siempre?",
-      "a1": "Sí. Sin prueba, sin suscripción. Gratis incluye 300 marcadores, búsqueda de texto completo y semántica, gráfico de conocimiento e IA con tu propia API key.",
+      "a1": "Sí. Sin prueba, sin suscripción. Gratis incluye 500 marcadores, búsqueda de texto completo y semántica, gráfico de conocimiento e IA con tu propia API key.",
       "q2": "¿Qué significa Lifetime de v1?",
       "a2": "Paga una vez, posee v1 para siempre. Todas las correcciones v1.x para siempre más 12 meses de actualizaciones de funciones desde la compra. Actualizaciones de seguridad para siempre. Después del mes 13 mantienes v1 funcionando. v2 y v3 son mayores de pago separados: $89 para nuevos clientes, $35 para propietarios de v1 (60% de descuento).",
       "q3": "¿Qué pasa si olvido mi contraseña de bóveda?",
@@ -756,5 +754,37 @@
   },
   "ogImageAlt": "BookmarkForge: aplicación privada de notas y marcadores basada en IA",
   "languageToggleAria": "Cambiar idioma",
-  "githubAria": "Da una estrella a BookmarkForge en GitHub"
+  "githubAria": "Da una estrella a BookmarkForge en GitHub",
+  "beforeAfter": {
+    "id": "before-after",
+    "tag": "Por qué cambiar",
+    "title": "De caos a claridad en 30 segundos",
+    "subtitle": "Mira la diferencia entre los marcadores del navegador y un vault de conocimiento real.",
+    "before": {
+      "title": "Antes: Marcadores del navegador",
+      "items": [
+        "Marcadores enterrados en carpetas olvidadas",
+        "Sin forma de buscar por significado",
+        "Se pierden al borrar datos del navegador",
+        "Sin notas ni organización",
+        "Accesibles solo en un dispositivo"
+      ]
+    },
+    "after": {
+      "title": "Después: BookmarkForge",
+      "items": [
+        "Todo searchable al instante",
+        "Encuentra por palabra clave o significado",
+        "Cifrado en tu dispositivo, siempre seguro",
+        "Notas, etiquetas y organización inteligente",
+        "Sincroniza en todos tus dispositivos (Pro)"
+      ]
+    },
+    "ctaPrimary": "Prueba Gratis",
+    "ctaSecondary": "Ver Features"
+  },
+  "share": {
+    "text": "Comparte BookmarkForge con amigos",
+    "twitterText": "Mira BookmarkForge - gestor de marcadores privado y local-first"
+  }
 }

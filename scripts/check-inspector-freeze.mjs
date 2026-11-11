@@ -188,6 +188,14 @@ const KNOWN_GATES = {
   // the failure mode is silent (the import only breaks where the bundler
   // resolves it, or gets "fixed" by re-declaring the dependency).
   "check:removed-deps": "meta",
+  // Dependency-placement hygiene (inverse of check:removed-deps): tooling-only
+  // packages must live in devDependencies so they cannot ship in the runtime
+  // bundle. Same meta class — it polices package.json, not docs format.
+  "check:tooling-deps": "meta",
+  // Dead-code and API-surface hygiene (knip): unused exports, unlisted deps,
+  // unresolved imports. Meta, like check:tooling-deps — it polices the module
+  // graph, not the documentation format.
+  "check:knip": "meta",
   "check:chunks": "meta",
   "check:inspector-freeze": "meta",
   // No phantom scripts: a declared script whose local target file does not

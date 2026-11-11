@@ -3,27 +3,13 @@
   "entry": [
     "src/App.tsx",
     "app.html",
+    "src/index.css",
     "scripts/**/*.{mjs,cjs,js}",
     "src/modules/translation/index.ts"
   ],
-  "project": ["src/**/*.{ts,tsx}", "server/src/**/*.ts", "api/**/*.ts"],
-  "ignore": [
-    "**/*.test.{ts,tsx}",
-    "**/*.spec.{ts,tsx}",
-    "src/tests/**",
-    "tests/**",
-    "server/**"
-  ],
-  "ignoreDependencies": [
-    "eslint-plugin-react-compiler",
-    "glob",
-    "lint-staged",
-    "node-fetch",
-    "rollup",
-    "tailwindcss",
-    "xml2js",
-    "buffer",
-  ],
+  "project": ["src/**/*.{ts,tsx,css}", "server/src/**/*.ts", "api/**/*.ts"],
+  "ignore": ["**/*.spec.{ts,tsx}", "src/tests/**", "server/**"],
+  "ignoreDependencies": ["lint-staged", "buffer"],
   "ignoreBinaries": [
     "vercel",
     "netstat"

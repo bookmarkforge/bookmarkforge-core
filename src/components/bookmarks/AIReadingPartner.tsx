@@ -58,7 +58,7 @@ export const AIReadingPartner: React.FC<Props> = ({
   isPrivate = true,
   currentBookmarkId,
 }) => {
-  useTranslation();
+  const { t } = useTranslation();
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   // Local analysis (mount/content change) is a data-load: autoLoad re-runs on
@@ -280,6 +280,7 @@ export const AIReadingPartner: React.FC<Props> = ({
                   cursor: "pointer",
                   padding: 4,
                 }}
+                aria-label={t("app_close", "Close")}
               >
                 <X size={16} />
               </button>

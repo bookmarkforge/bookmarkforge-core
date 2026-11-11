@@ -492,3 +492,37 @@
   window.setInterval(refreshEarlyBirdStatus, 5 * 60 * 1000);
 
 })();
+// ── Social Share Copy Link ─────────────────────────────────────────
+function copyShareLink() {
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(() => {
+    // Show feedback
+    const btn = document.querySelector('.share-copy');
+    if (btn) {
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+      setTimeout(() => {
+        btn.innerHTML = originalText;
+      }, 2000);
+    }
+  }).catch(() => {
+    // Fallback for older browsers
+    const textArea = document.createElement('textarea');
+    textArea.value = url;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    alert('Link copied to clipboard!');
+  });
+}
+
+// CSP: no inline handlers — the template ships a bare .share-copy button
+// and this listener is the only wiring (script-src 'self' blocks onclick=).
+document.querySelectorAll('.share-copy').forEach((btn) => {
+  btn.addEventListener('click', copyShareLink);
+});
+
+// ── Email Capture Form ─────────────────────────────────────────────
+// Removed: the landing collects no email addresses (privacy-first).
+// The /api/subscribe relay and this handler were deleted together.

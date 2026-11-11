@@ -6,12 +6,12 @@
   "ogLocale": "de_DE",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: Privater Local-First-Lesezeichen-Manager mit Leseliste",
-  "description": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. Einmal zahlen: $59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis). Kostenlos: 300 Lesezeichen.",
+  "description": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. Einmal zahlen: $59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis). Kostenlos: 500 Lesezeichen.",
   "ogTitle": "BookmarkForge: Privater Local-First-Lesezeichen-Manager mit Leseliste",
-  "ogDescription": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. Einmal zahlen: $59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis). Kostenlos: 300 Lesezeichen.",
+  "ogDescription": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. Einmal zahlen: $59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis). Kostenlos: 500 Lesezeichen.",
   "ogImage": "https://bookmarkforgeapp.com/og-image-de.png",
   "twitterTitle": "BookmarkForge: Privater Local-First-Lesezeichen-Manager mit Leseliste",
-  "twitterDescription": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. Einmal zahlen: $59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis). Kostenlos: 300 Lesezeichen.",
+  "twitterDescription": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. Einmal zahlen: $59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis). Kostenlos: 500 Lesezeichen.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image-de.png",
   "skipLink": "Zum Hauptinhalt springen",
   "navBrandAria": "BookmarkForge Startseite",
@@ -198,7 +198,13 @@
         "title": "Privat von Grund auf",
         "text": "Keine Konten, kein Tracking, keine Werbung. Du bist der Kunde, nicht das Produkt. Statistiken zu teilen gibt es, es ist freiwillig und bleibt aus, bis du es einschaltest."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "Free enthält",
+      "free": "intelligente Suche, 500 Lesezeichen, KI mit eigenen Schlüsseln, verschlüsselte Backups und Export — für immer",
+      "proLabel": "Pro ergänzt",
+      "pro": "unbegrenzte Lesezeichen, Sync auf 5 Geräten, lokale KI und Chat über deinen Vault, Karteikarten, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ki",
@@ -219,22 +225,6 @@
         {
           "type": "cloud",
           "name": "In der Cloud — Google Gemini (mit deinem eigenen Schlüssel)"
-        },
-        {
-          "type": "cloud",
-          "name": "In der Cloud — OpenAI / GPT-4o (mit deinem eigenen Schlüssel)"
-        },
-        {
-          "type": "cloud",
-          "name": "In der Cloud — Anthropic Claude (mit deinem eigenen Schlüssel)"
-        },
-        {
-          "type": "cloud",
-          "name": "In der Cloud — Groq (mit deinem eigenen Schlüssel)"
-        },
-        {
-          "type": "cloud",
-          "name": "In der Cloud — OpenRouter oder ein eigener Anbieter (mit deinem eigenen Schlüssel)"
         }
       ]
     },
@@ -288,19 +278,23 @@
       {
         "title": "Kein Einmauern",
         "text": "Exportiere deine Daten jederzeit in offenen Formaten (JSON, Markdown, CSV, PDF). Dein Wissen bleibt deins und tragbar."
+      },
+      {
+        "title": "Nur Vercel hostet uns — null Analysen",
+        "text": "Die Website läuft ausschließlich auf Vercel ganz ohne Analysen: keine Tracker, kein Fingerprinting, keine Drittanbieter-Skripte. Überprüfe es selbst im Netzwerk-Tab deines Browsers."
       }
     ]
   },
   "pricing": {
     "id": "preise",
     "title": "Einfache, faire Preise — Kein Abo",
-    "subtitle": "300 Lesezeichen für immer kostenlos. Pro ist eine Lifetime-Lizenz für v1 — einmal zahlen, v1 für immer behalten. Alle v1.x + 12 Monate Features. Sicherheits-Updates für immer. Keine Monatsgebühr.",
+    "subtitle": "500 Lesezeichen für immer kostenlos. Pro ist eine Lifetime-Lizenz für v1 — einmal zahlen, v1 für immer behalten. Alle v1.x + 12 Monate Features. Sicherheits-Updates für immer. Keine Monatsgebühr.",
     "plans": [
       {
         "name": "Kostenlos",
         "price": "$ 0",
         "period": "/lebenslang",
-        "description": "Für immer kostenlos: 300 Lesezeichen plus die intelligente Suche, für die andere jährlich verlangen. Bei 300 bleibt deine Bibliothek ganz — Lesen, Suchen und Exportieren enden nie; nur neue Speicherungen pausieren.",
+        "description": "Für immer kostenlos: 500 Lesezeichen plus die intelligente Suche, für die andere jährlich verlangen. Bei 500 bleibt deine Bibliothek ganz — Lesen, Suchen und Exportieren enden nie; nur neue Speicherungen pausieren.",
         "features": [
           {
             "included": true,
@@ -308,11 +302,15 @@
           },
           {
             "included": true,
-            "text": "300 Lesezeichen, Notizen und Dokumente"
+            "text": "500 Lesezeichen, Notizen und Dokumente"
           },
           {
             "included": true,
             "text": "Funktioniert auf jedem Gerät — jedes mit seinem eigenen Tresor"
+          },
+          {
+            "included": true,
+            "text": "KI mit Ihrem eigenen API-Schlüssel (Sie zahlen den Anbieter)"
           },
           {
             "included": true,
@@ -360,11 +358,11 @@
           }
         ],
         "cta": "Sofort ausprobieren",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-outline"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "Am beliebtesten — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (dann $79)",
@@ -396,7 +394,7 @@
           },
           {
             "included": true,
-            "text": "Erweiterter Export (10+ Formate)"
+            "text": "Erweiterter Export (7 Formate)"
           },
           {
             "included": true,
@@ -405,18 +403,6 @@
           {
             "included": true,
             "text": "Lifetime of v1 · 12 Monate Funktionsupdates"
-          },
-          {
-            "included": true,
-            "text": "Sicherheit auf Lebenszeit"
-          },
-          {
-            "included": true,
-            "text": "E-Mail-Support (48h) + Early Access"
-          },
-          {
-            "included": true,
-            "text": "Lokale KI-Übersetzung (demnächst)"
           }
         ],
         "cta": "Pro für $59 Early Bird holen",
@@ -437,7 +423,7 @@
     "items": [
       {
         "question": "Ist der Gratis-Plan wirklich für immer kostenlos?",
-        "answer": "Ja. Kein Trial, kein Abo. Enthält 300 Lesezeichen, Volltext- & semantische Suche, Knowledge-Graph und KI mit eigenem API-Key (du zahlst den Provider)."
+        "answer": "Ja. Kein Trial, kein Abo. Enthält 500 Lesezeichen, Volltext- & semantische Suche, Knowledge-Graph und KI mit eigenem API-Key (du zahlst den Provider)."
       },
       {
         "question": "Was bedeutet \"Lifetime von v1\" bei Pro?",
@@ -454,6 +440,18 @@
       {
         "question": "Was, wenn ich mein Vault-Passwort vergesse?",
         "answer": "Wir können es nicht wiederherstellen. Beim Erstellen zeigen wir einmal eine 24-Wort-Seed-Phrase — auf Papier notieren. Ohne sie kann niemand (auch wir nicht) den Vault öffnen. Siehe <a href=\"/help-de#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "Was passiert mit meinen Daten, wenn ich es nicht mehr benutze?",
+        "answer": "Ihre Daten bleiben auf Ihrem Gerät. Sie können alles jederzeit in Markdown, JSON, CSV oder PDF exportieren. Kein Lock-in, keine Geiselnahme."
+      },
+      {
+        "question": "Sind meine Daten wirklich privat?",
+        "answer": "Absolut. Alles ist auf Ihrem Gerät mit einem Schlüssel verschlüsselt, den nur Sie haben. Wir sehen nie Ihre Lesezeichen, Notizen oder Passwörter. Selbst wir können Ihre Daten nicht lesen."
+      },
+      {
+        "question": "Kann ich es auf meinem Telefon verwenden?",
+        "answer": "Ja! BookmarkForge funktioniert auf jedem Gerät mit einem Webbrowser. Die kostenlose Version funktioniert auf unbegrenzten Geräten (jedes hat sein eigenes Depot). Pro synchronisiert bis zu 5 Geräte."
       }
     ]
   },
@@ -462,7 +460,7 @@
     "text": "Beginnen Sie heute mit dem Aufbau Ihres privaten AI-Wissens-Tresors. Ihre Daten verbleiben auf Ihrem Gerät — verschlüsselt, durchsuchbar und für immer Ihr Eigentum.",
     "ctaPrimary": "Sofort ausprobieren (ohne Konto)",
     "ctaSecondary": "Auf Pro upgraden",
-    "note": "Kein Konto nötig. Funktioniert sofort im Browser. Kostenloser Tarif: 300 Lesezeichen."
+    "note": "Kein Konto nötig. Funktioniert sofort im Browser. Kostenloser Tarif: 500 Lesezeichen."
   },
   "footer": {
     "brand": "Dein privater KI-Wissensspeicher. 100% lokal.",
@@ -480,7 +478,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {
@@ -523,7 +521,7 @@
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
-    "websiteDescription": "Dein privater KI-Wissensspeicher. 100% lokal. Die private Pocket-Alternative. Kostenlos: 300 Lesezeichen.",
+    "websiteDescription": "Dein privater KI-Wissensspeicher. 100% lokal. Die private Pocket-Alternative. Kostenlos: 500 Lesezeichen.",
     "organizationName": "BookmarkForge",
     "organizationUrl": "https://bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
@@ -536,17 +534,17 @@
         "name": "Kostenlos",
         "price": "0",
         "currency": "USD",
-        "description": "300 Lesezeichen. Forever free."
+        "description": "500 Lesezeichen. Forever free."
       },
       {
-        "name": "Pro Lifetime v1 — Early Bird",
+        "name": "Pro Lifetime — Early Bird",
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Lifetime of v1, 12 Monate Features, Sicherheit auf Lebenszeit, v2 60% Rabatt.",
         "availability": "https://schema.org/InStock"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "price": "79",
         "currency": "USD",
         "description": "Regulär. Lifetime von v1."
@@ -563,7 +561,7 @@
     "faq": [
       {
         "question": "Ist der Gratis-Plan wirklich für immer kostenlos?",
-        "answer": "Ja. Kein Trial, kein Abo. Enthält 300 Lesezeichen, Volltext- & semantische Suche, Knowledge-Graph und KI mit eigenem API-Key (du zahlst den Provider)."
+        "answer": "Ja. Kein Trial, kein Abo. Enthält 500 Lesezeichen, Volltext- & semantische Suche, Knowledge-Graph und KI mit eigenem API-Key (du zahlst den Provider)."
       },
       {
         "question": "Was bedeutet \"Lifetime von v1\" bei Pro?",
@@ -603,7 +601,7 @@
     },
     "pricing": {
       "title": "Pricing — Lifetime of v1, keine Abonnements",
-      "intro": "<strong>Modell:</strong> Einmalzahlung für <em>BookmarkForge v1</em>. Keine monatliche Abrechnung. Vergleich: Raindrop Pro $28–38/Jahr, Instapaper $60/Jahr, Readwise $120/Jahr, Capacities $120/Jahr. $79 Lifetime sind etwa das Doppelte eines Jahres Raindrop — gerechtfertigt durch Lifetime + Datenschutz.",
+      "intro": "<strong>Modell:</strong> Einmalzahlung für <em>BookmarkForge v1</em>. Keine monatliche Abrechnung. Vergleich: Raindrop Pro yearly–38/Jahr, Instapaper $60/Jahr, Readwise $120/Jahr, Capacities $120/Jahr. $79 Lifetime sind etwa das Doppelte eines Jahres Raindrop — gerechtfertigt durch Lifetime + Datenschutz.",
       "table": {
         "tier": "Stufe",
         "price": "Preis",
@@ -612,17 +610,17 @@
       },
       "tier": {
         "free": "Free",
-        "pro": "Pro Lifetime v1"
+        "pro": "Pro Lifetime"
       },
       "freePrice": "$0 für immer",
-      "freeDescription": "300 Lesezeichen auf jedem Gerät (jedes verwaltet seinen eigenen Vault), Smart Search — Volltext + semantisch (die Funktion, für die Raindrop jährlich berechnet), Knowledge Graph, KI mit eigenem API-Key, PWA + Erweiterungen. Bei 300 bleibt Ihr Vault vollständig erhalten: Lesen, Suchen und Export funktionieren weiter; nur das Speichern neuer Einträge wird pausiert.",
+      "freeDescription": "500 Lesezeichen auf jedem Gerät (jedes verwaltet seinen eigenen Vault), Smart Search — Volltext + semantisch (die Funktion, für die Raindrop jährlich berechnet), Knowledge Graph, KI mit eigenem API-Key, PWA + Erweiterungen. Bei 500 bleibt Ihr Vault vollständig erhalten: Lesen, Suchen und Export funktionieren weiter; nur das Speichern neuer Einträge wird pausiert.",
       "unlimited": "Unbegrenzt",
       "badge": "Early Bird",
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 regulär",
       "proPriceTraction": "$99 nach Traction",
-      "proDescription": "Unbegrenzte Lesezeichen, 5 Geräte + P2P-Sync, Local AI (WebLLM/Ollama) + RAG + Expert Agents, Flashcards, PDF/OCR, 10+ Exportformate, Vault. <em>Lifetime of v1 · 12 Monate Funktionsupdates · Sicherheit auf Lebenszeit · v2 60% Rabatt</em>",
+      "proDescription": "Unbegrenzte Lesezeichen, 5 Geräte + P2P-Sync, Local AI (WebLLM/Ollama) + RAG + Expert Agents, Flashcards, PDF/OCR, 7 Exportformate, Vault. <em>Lifetime of v1 · 12 Monate Funktionsupdates · Sicherheit auf Lebenszeit · v2 60% Rabatt</em>",
       "proSupply": "200 Early Bird"
     },
     "legal": {
@@ -646,7 +644,7 @@
       },
       "tier": {
         "free": "Free",
-        "pro": "Pro"
+        "pro": "Pro v1 Lifetime"
       },
       "freeChannel": "Self-Service: dieses Help Center + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
       "freeResponse": "Bestmöglich (Community)",
@@ -720,8 +718,8 @@
         "fix": "Prüfen Sie <code>Einstellungen → Pro</code>: Geben Sie den Key erneut ein. Offline-Prüfungen werden gecacht; einmal verbinden, um über Whop neu zu validieren."
       },
       "e202": {
-        "meaning": "Free-Limit erreicht (300 Lesezeichen)",
-        "fix": "Free ist auf 300 begrenzt. Löschen Sie Einträge oder upgraden Sie auf Pro Lifetime v1 für unbegrenzt. Export ist immer verfügbar."
+        "meaning": "Free-Limit erreicht (500 Lesezeichen)",
+        "fix": "Free ist auf 500 begrenzt. Löschen Sie Einträge oder upgraden Sie auf Pro Lifetime für unbegrenzt. Export ist immer verfügbar."
       },
       "tip": "Support-Tipp: Durch Klicken auf <code>Diagnose kopieren</code> im Fehler werden Code + Kontext in einem Klick kopiert — fügen Sie ihn in Ihre GitHub Discussion oder E-Mail ein."
     },
@@ -747,7 +745,7 @@
     "home": "Startseite",
     "faq": {
       "q1": "Ist die Free-Stufe wirklich für immer kostenlos?",
-      "a1": "Ja. Keine Testphase, kein Abonnement. Free umfasst 300 Lesezeichen, Volltext- & Semantische Suche, Knowledge Graph und KI mit eigenem API-Key.",
+      "a1": "Ja. Keine Testphase, kein Abonnement. Free umfasst 500 Lesezeichen, Volltext- & Semantische Suche, Knowledge Graph und KI mit eigenem API-Key.",
       "q2": "Was bedeutet Lifetime of v1?",
       "a2": "Einmal zahlen, v1 für immer besitzen. Alle v1.x-Bugfixes für immer plus 12 Monate Funktionsupdates ab Kauf. Sicherheit auf Lebenszeit. Ab Monat 13 funktioniert v1 weiterhin. v2 und v3 sind separate kostenpflichtige Major-Versionen: $89 für Neukunden, $35 für v1-Besitzer (60% Rabatt).",
       "q3": "Was, wenn ich mein Vault-Passwort vergesse?",
@@ -756,5 +754,37 @@
   },
   "ogImageAlt": "BookmarkForge — private KI-gestützte Lesezeichen- und Notizen-App",
   "languageToggleAria": "Sprache ändern",
-  "githubAria": "BookmarkForge auf GitHub mit einem Stern markieren"
+  "githubAria": "BookmarkForge auf GitHub mit einem Stern markieren",
+  "beforeAfter": {
+    "id": "before-after",
+    "tag": "Warum wechseln",
+    "title": "Von Chaos zu Klarheit in 30 Sekunden",
+    "subtitle": "Sehen Sie den Unterschied zwischen Browser-Lesezeichen und einem echten Wissens-Tresor.",
+    "before": {
+      "title": "Vorher: Browser-Lesezeichen",
+      "items": [
+        "Lesezeichen in vergessenen Ordnern vergraben",
+        "Keine Suche nach Bedeutung",
+        "Verloren beim Löschen der Browser-Daten",
+        "Keine Notizen oder Organisation",
+        "Nur auf einem Gerät zugänglich"
+      ]
+    },
+    "after": {
+      "title": "Nachher: BookmarkForge",
+      "items": [
+        "Alles sofort durchsuchbar",
+        "Finden Sie nach Stichwort oder Bedeutung",
+        "Auf Ihrem Gerät verschlüsselt, immer sicher",
+        "Notizen, Tags und intelligente Organisation",
+        "Synchronisiert auf all Ihren Geräten (Pro)"
+      ]
+    },
+    "ctaPrimary": "Kostenlos testen",
+    "ctaSecondary": "Features ansehen"
+  },
+  "share": {
+    "text": "Teile BookmarkForge mit Freunden",
+    "twitterText": "Schau dir BookmarkForge an - privater, lokaler Lesezeichen-Manager"
+  }
 }

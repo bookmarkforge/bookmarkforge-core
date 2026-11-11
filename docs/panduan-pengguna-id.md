@@ -15,7 +15,7 @@ Brankas dienkripsi secara lokal dengan AES-GCM dan kuncinya diturunkan dari kata
 
 ## Bookmark dan pencarian
 
-Free mencakup pencarian cerdas berdasarkan kata dan makna. Free mendukung **300 bookmark** tanpa batas jumlah perangkat; tanpa sinkronisasi Pro, setiap perangkat memiliki brankas sendiri. Saat mencapai 300, tidak ada data yang dihapus: membaca, mencari, dan mengekspor tetap tersedia, hanya penyimpanan baru yang dijeda. Pro menghapus batas tersebut dan menyinkronkan hingga lima perangkat melalui P2P.
+Free mencakup pencarian cerdas berdasarkan kata dan makna. Free mendukung **500 bookmark** tanpa batas jumlah perangkat; tanpa sinkronisasi Pro, setiap perangkat memiliki brankas sendiri. Saat mencapai 500, tidak ada data yang dihapus: membaca, mencari, dan mengekspor tetap tersedia, hanya penyimpanan baru yang dijeda. Pro menghapus batas tersebut dan menyinkronkan hingga lima perangkat melalui P2P.
 
 ## Impor dari Pocket
 

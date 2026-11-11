@@ -139,6 +139,7 @@ export const BookmarkRow = ({
         ref={rowRef}
         role="button"
         tabIndex={0}
+        aria-label={bookmark.title || bookmark.url}
         className={`grid grid-cols-[48px_1fr_80px] md:grid-cols-[48px_1.5fr_1fr_2fr_1.5fr_120px_180px] items-center transition-all duration-200 group mb-2`}
         style={{
           borderRadius: "var(--radius-item)",

@@ -221,6 +221,7 @@ export async function fetchWithRetry(
   url: string,
   options: RequestInit = {},
   retries = MAX_RETRIES,
+  timeoutMs?: number,
 ): Promise<Response> {
   let lastError: Error | null = null;
   const method = (options.method ?? "GET").toUpperCase();
@@ -230,7 +231,7 @@ export async function fetchWithRetry(
 
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      const response = await fetchWithTimeout(url, options);
+      const response = await fetchWithTimeout(url, options, timeoutMs);
 
       // Retry on 5xx errors and 429 (Too Many Requests)
       if (response.status >= 500 || response.status === 429) {

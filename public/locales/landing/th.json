@@ -3,13 +3,13 @@
   "langName": "ไทย",
   "dir": "ltr",
   "title": "BookmarkForge: ตัวจัดการบุ๊กมาร์กส่วนตัวแบบ local-first พร้อมรายการอ่าน",
-  "description": "Raindrop เก็บบุ๊กมาร์กไว้บนเซิร์ฟเวอร์ของมัน BookmarkForge เก็บไว้ในคอมพิวเตอร์ของคุณ — ล็อกจนแม้แต่เราเองก็อ่านไม่ได้ จ่ายครั้งเดียว: $59 สิทธิ์ใช้งานตลอดชีพแบบ early bird (ประหยัด $20 ก่อนราคาปกติ) ฟรี: 300 บุ๊กมาร์ก",
+  "description": "Raindrop เก็บบุ๊กมาร์กไว้บนเซิร์ฟเวอร์ของมัน BookmarkForge เก็บไว้ในคอมพิวเตอร์ของคุณ — ล็อกจนแม้แต่เราเองก็อ่านไม่ได้ จ่ายครั้งเดียว: $59 สิทธิ์ใช้งานตลอดชีพแบบ early bird (ประหยัด $20 ก่อนราคาปกติ) ฟรี: 500 บุ๊กมาร์ก",
   "ogTitle": "BookmarkForge: ตัวจัดการบุ๊กมาร์กส่วนตัวแบบ local-first พร้อมรายการอ่าน",
-  "ogDescription": "Raindrop เก็บบุ๊กมาร์กไว้บนเซิร์ฟเวอร์ของมัน BookmarkForge เก็บไว้ในคอมพิวเตอร์ของคุณ — ล็อกจนแม้แต่เราเองก็อ่านไม่ได้ จ่ายครั้งเดียว: $59 สิทธิ์ใช้งานตลอดชีพแบบ early bird (ประหยัด $20 ก่อนราคาปกติ) ฟรี: 300 บุ๊กมาร์ก",
+  "ogDescription": "Raindrop เก็บบุ๊กมาร์กไว้บนเซิร์ฟเวอร์ของมัน BookmarkForge เก็บไว้ในคอมพิวเตอร์ของคุณ — ล็อกจนแม้แต่เราเองก็อ่านไม่ได้ จ่ายครั้งเดียว: $59 สิทธิ์ใช้งานตลอดชีพแบบ early bird (ประหยัด $20 ก่อนราคาปกติ) ฟรี: 500 บุ๊กมาร์ก",
   "ogImage": "https://bookmarkforgeapp.com/og-image.png",
   "ogImageAlt": "BookmarkForge — แอปบุ๊กมาร์กและโน้ตส่วนตัวที่ขับเคลื่อนด้วย AI",
   "twitterTitle": "BookmarkForge: ตัวจัดการบุ๊กมาร์กส่วนตัวแบบ local-first พร้อมรายการอ่าน",
-  "twitterDescription": "Raindrop เก็บบุ๊กมาร์กไว้บนเซิร์ฟเวอร์ของมัน BookmarkForge เก็บไว้ในคอมพิวเตอร์ของคุณ — ล็อกจนแม้แต่เราเองก็อ่านไม่ได้ จ่ายครั้งเดียว: $59 สิทธิ์ใช้งานตลอดชีพแบบ early bird (ประหยัด $20 ก่อนราคาปกติ) ฟรี: 300 บุ๊กมาร์ก",
+  "twitterDescription": "Raindrop เก็บบุ๊กมาร์กไว้บนเซิร์ฟเวอร์ของมัน BookmarkForge เก็บไว้ในคอมพิวเตอร์ของคุณ — ล็อกจนแม้แต่เราเองก็อ่านไม่ได้ จ่ายครั้งเดียว: $59 สิทธิ์ใช้งานตลอดชีพแบบ early bird (ประหยัด $20 ก่อนราคาปกติ) ฟรี: 500 บุ๊กมาร์ก",
   "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
   "skipLink": "ข้ามไปยังเนื้อหาหลัก",
   "navBrandAria": "หน้าแรก BookmarkForge",
@@ -191,7 +191,13 @@
         "title": "เป็นส่วนตัวโดยค่าเริ่มต้น",
         "text": "ไม่มีบัญชี ไม่มีการติดตาม ไม่มีโฆษณา คุณคือลูกค้า ไม่ใช่สินค้า การแชร์การใช้งานมีอยู่ แต่เป็นทางเลือก และยังปิดอยู่จนกว่าคุณจะเปิด"
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "ฟรีรวม",
+      "free": "ค้นหาอัจฉริยะ บุ๊กมาร์ก 500 รายการ AI ด้วยคีย์ของคุณเอง สำรองข้อมูลแบบเข้ารหัสและส่งออก — ตลอดไป",
+      "proLabel": "Pro เพิ่ม",
+      "pro": "บุ๊กมาร์กไม่จำกัด ซิงก์ 5 อุปกรณ์ AI ภายในเครื่องและแชทบนผนังข้อมูลของคุณ แฟลชการ์ด PDF/OCR"
+    }
   },
   "ai": {
     "id": "ai",
@@ -212,22 +218,6 @@
         {
           "type": "cloud",
           "name": "คลาวด์ — Google Gemini (ด้วยกุญแจของคุณเอง)"
-        },
-        {
-          "type": "cloud",
-          "name": "คลาวด์ — OpenAI / GPT-4o (ด้วยกุญแจของคุณเอง)"
-        },
-        {
-          "type": "cloud",
-          "name": "คลาวด์ — Anthropic Claude (ด้วยกุญแจของคุณเอง)"
-        },
-        {
-          "type": "cloud",
-          "name": "คลาวด์ — Groq (ด้วยกุญแจของคุณเอง)"
-        },
-        {
-          "type": "cloud",
-          "name": "คลาวด์ — OpenRouter หรือผู้ให้บริการกำหนดเองอื่น (ด้วยกุญแจของคุณเอง)"
         }
       ]
     },
@@ -281,23 +271,27 @@
       {
         "title": "ไม่มีการผูกมัด",
         "text": "ส่งออกข้อมูลของคุณเมื่อใดก็ได้ในรูปแบบเปิด (JSON, Markdown, CSV, PDF) ความรู้ของคุณยังเป็นของคุณและพกพาได้"
+      },
+      {
+        "title": "มีเพียง Vercel เป็นโฮสต์ — ไม่มีการวิเคราะห์เลย",
+        "text": "เว็บไซต์ทำงานบน Vercel เท่านั้นโดยไม่มีการวิเคราะห์ทุกประเภท: ไม่มีตัวติดตาม ไม่มีลายนิ้วมือดิจิทัล ไม่มีสคริปต์ของบุคคลที่สาม คุณสามารถตรวจสอบได้ด้วยตัวเองในแท็บเครือข่ายของเบราว์เซอร์"
       }
     ]
   },
   "pricing": {
     "id": "pricing",
     "title": "ราคาเรียบง่าย ยุติธรรม — ไม่มีการสมัครสมาชิกรายเดือน",
-    "subtitle": "ฟรี 300 บุ๊กมาร์กตลอดไป Pro คือใบอนุญาต Lifetime สำหรับ v1 — จ่ายครั้งเดียว เป็นเจ้าของ v1 ตลอดไป รวมการอัปเดต v1.x ทั้งหมดและ 12 เดือนของการอัปเดตฟีเจอร์ การอัปเดตด้านความปลอดภัยตลอดไป ไม่มีการเรียกเก็บรายเดือน",
+    "subtitle": "ฟรี 500 บุ๊กมาร์กตลอดไป Pro คือใบอนุญาต Lifetime สำหรับ v1 — จ่ายครั้งเดียว เป็นเจ้าของ v1 ตลอดไป รวมการอัปเดต v1.x ทั้งหมดและ 12 เดือนของการอัปเดตฟีเจอร์ การอัปเดตด้านความปลอดภัยตลอดไป ไม่มีการเรียกเก็บรายเดือน",
     "plans": [
       {
         "name": "Free",
         "price": "$ 0",
         "period": "/ตลอดไป",
-        "description": "สำหรับคลังส่วนตัว (บุ๊กมาร์ก 300 รายการ ใช้ได้บนอุปกรณ์ใดก็ได้ — แต่ละเครื่องมีห้องนิรภัยของตัวเอง)",
+        "description": "สำหรับคลังส่วนตัว (บุ๊กมาร์ก 500 รายการ ใช้ได้บนอุปกรณ์ใดก็ได้ — แต่ละเครื่องมีห้องนิรภัยของตัวเอง)",
         "features": [
           {
             "included": true,
-            "text": "300 บุ๊กมาร์ก บันทึก และเอกสาร"
+            "text": "500 บุ๊กมาร์ก บันทึก และเอกสาร"
           },
           {
             "included": true,
@@ -306,6 +300,10 @@
           {
             "included": true,
             "text": "AI ด้วย API Key ของคุณ (คุณจ่ายให้ผู้ให้บริการ)"
+          },
+          {
+            "included": true,
+            "text": "ใช้ได้บนอุปกรณ์ใดก็ได้ — แต่ละเครื่องมีห้องนิรภัยของตัวเอง"
           },
           {
             "included": true,
@@ -353,11 +351,11 @@
           }
         ],
         "cta": "ลองใช้ทันที",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-secondary"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "ยอดนิยม — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (แล้ว $79)",
@@ -389,7 +387,7 @@
           },
           {
             "included": true,
-            "text": "การส่งออกขั้นสูง (10+ รูปแบบ)"
+            "text": "การส่งออกขั้นสูง (7 รูปแบบ)"
           },
           {
             "included": true,
@@ -398,18 +396,6 @@
           {
             "included": true,
             "text": "Lifetime ของ v1 · 12 เดือนอัปเดตฟีเจอร์"
-          },
-          {
-            "included": true,
-            "text": "การอัปเดตด้านความปลอดภัยตลอดไป"
-          },
-          {
-            "included": true,
-            "text": "การสนับสนุนทางอีเมล (48 ชม.) + การเข้าถึงก่อน"
-          },
-          {
-            "included": true,
-            "text": "การแปลด้วย AI ภายในเครื่อง (เร็ว ๆ นี้)"
           }
         ],
         "cta": "รับ Pro $59 Early Bird",
@@ -423,14 +409,14 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-th#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-th#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "คำถามที่พบบ่อย",
     "items": [
       {
         "question": "ระดับ Free ฟรีจริงตลอดไปไหม?",
-        "answer": "ใช่ ไม่มี trial ไม่มีการสมัครสมาชิกรายเดือน ระดับฟรีรวม 300 บุ๊กมาร์ก การค้นหา full-text และ semantic knowledge graph และ AI ด้วย API key ของคุณเอง (คุณจ่ายให้ผู้ให้บริการ)"
+        "answer": "ใช่ ไม่มี trial ไม่มีการสมัครสมาชิกรายเดือน ระดับฟรีรวม 500 บุ๊กมาร์ก การค้นหา full-text และ semantic knowledge graph และ AI ด้วย API key ของคุณเอง (คุณจ่ายให้ผู้ให้บริการ)"
       },
       {
         "question": "\"Lifetime of v1\" สำหรับ Pro หมายความว่าอะไร?",
@@ -447,6 +433,18 @@
       {
         "question": "หากฉันลืมรหัสผ่าน vault ล่ะ?",
         "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-th#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "จะเกิดอะไรขึ้นกับข้อมูลของฉันถ้าหยุดใช้?",
+        "answer": "ข้อมูลของคุณอยู่บนอุปกรณ์ของคุณ คุณสามารถส่งออกทุกอย่างได้ทุกเมื่อเป็น Markdown, JSON, CSV หรือ PDF ไม่มีการล็อกอิน ไม่มีตัวประกัน"
+      },
+      {
+        "question": "ข้อมูลของฉันเป็นส่วนตัวจริงหรือ?",
+        "answer": "แน่นอน ทุกอย่างเข้ารหัสบนอุปกรณ์ของคุณด้วยคีย์ที่มีเพียงคุณเท่านั้นที่มี เราไม่เคยเห็นบุ๊กมาร์ก โน้ต หรือรหัสผ่านของคุณ แม้แต่เราก็อ่านข้อมูลของคุณไม่ได้"
+      },
+      {
+        "question": "ฉันสามารถใช้บนโทรศัพท์ได้หรือไม่?",
+        "answer": "ได้! BookmarkForge ทำงานบนอุปกรณ์ใดก็ได้ที่มีเว็บเบราว์เซอร์ ระดับฟรีทำงานบนอุปกรณ์ไม่จำกัด (แต่ละเครื่องมี vault ของตัวเอง) Pro ซิงค์สูงสุด 5 อุปกรณ์"
       }
     ]
   },
@@ -455,7 +453,7 @@
     "text": "เข้าร่วมกับนักวิจัย นักพัฒนา และผู้เรียนนับพันที่ไว้วางใจ BookmarkForge กับสมองที่สองของพวกเขา",
     "ctaPrimary": "ลองใช้ทันที (ไม่ต้องมีบัญชี)",
     "ctaSecondary": "อัปเกรดเป็น Pro",
-    "note": "ไม่ต้องมีบัญชี ใช้งานได้ทันทีในเบราว์เซอร์ ระดับฟรี: 300 บุ๊กมาร์ก"
+    "note": "ไม่ต้องมีบัญชี ใช้งานได้ทันทีในเบราว์เซอร์ ระดับฟรี: 500 บุ๊กมาร์ก"
   },
   "footer": {
     "brand": "vault ความรู้ส่วนตัวที่ใช้ AI 100% Local-First",
@@ -473,7 +471,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {

@@ -270,6 +270,10 @@ function runBatch(batch, number) {
       [
         vitestBin,
         "run",
+        // Pin the reporter: without it vitest picks a non-TTY reporter that
+        // omits the per-file "✓ <file> (N tests) <ms>" lines the timing
+        // guard parses, silently emptying `durations` (P-25 follow-up).
+        "--reporter=default",
         ...passthrough,
         ...testOutputArgs(),
         "--maxWorkers=1",

@@ -32,7 +32,7 @@
     "@type":"FAQPage",
     "@id":"https://bookmarkforgeapp.com/help#faq",
     "mainEntity":[
-      {"@type":"Question","name":"Onko Ilmainen-taso todella ilmainen ikuisesti?","acceptedAnswer":{"@type":"Answer","text":"Kyllä. Ei kokeilua, ei tilausta. Ilmainen sisältää 300 kirjanmerkkiä, täysteksti- ja semanttisen haun, tietämysgraafin sekä tekoälyn omalla API-avaimellasi."}},
+      {"@type":"Question","name":"Onko Ilmainen-taso todella ilmainen ikuisesti?","acceptedAnswer":{"@type":"Answer","text":"Kyllä. Ei kokeilua, ei tilausta. Ilmainen sisältää 500 kirjanmerkkiä, täysteksti- ja semanttisen haun, tietämysgraafin sekä tekoälyn omalla API-avaimellasi."}},
       {"@type":"Question","name":"Mitä Lifetime of v1 tarkoittaa?","acceptedAnswer":{"@type":"Answer","text":"Maksat kerran, omistat v1:n ikuisesti. Kaikki v1.x-bugikorjaukset ikuisesti plus 12 kuukauden ominaisuuspäivitykset ostosta. Tietoturvapäivitykset ikuisesti. Kuukauden 13 jälkeen v1 toimii edelleen. v2 ja v3 ovat erillisiä maksullisia pääversioita: $89 uusille asiakkaille, $35 v1-omistajille (60 % alennus)."}},
       {"@type":"Question","name":"Mitä jos unohdan holvisalasanani?","acceptedAnswer":{"@type":"Answer","text":"Emme voi palauttaa sitä. Holvia luotaessa näytämme 24-sanaisen palautuslauseen kerran — kirjoita se paperille. Ilman sitä holvi on palautumaton. Katso BF-E101."}}
     ]
@@ -72,13 +72,13 @@
     </nav>
 
     <h2 id="pricing">Hinnoittelu — Lifetime v1, ei tilauksia</h2>
-    <p><strong>Malli:</strong> maksat kerran <em>BookmarkForge v1:stä</em>. Ei kuukausilaskutusta. Vertailu: Raindrop Pro $28–38/v, Instapaper $60/v, Readwise $120/v, Capacities $120/v. $79 elinikäinen on ~2× Raindropin vuosimaksu — perusteltu elinikäisyydellä + yksityisyydellä.</p>
+    <p><strong>Malli:</strong> maksat kerran <em>BookmarkForge v1:stä</em>. Ei kuukausilaskutusta. Vertailu: Raindrop Pro yearly–38/v, Instapaper $60/v, Readwise $120/v, Capacities $120/v. $79 elinikäinen on ~2× Raindropin vuosimaksu — perusteltu elinikäisyydellä + yksityisyydellä.</p>
 
     <table class="sla">
       <thead><tr><th>Taso</th><th>Hinta</th><th>Mitä saat</th><th>Tarjonta</th></tr></thead>
       <tbody>
-        <tr><td><strong>Free</strong></td><td>$0 ikuisesti</td><td>300 kirjanmerkkiä millä tahansa laitteella (jokaisella oma holvinsa), älykäs haku — täysteksti + semanttinen, ominaisuus josta Raindrop veloittaa vuosittain — tietämysgraafi, tekoäly omalla API-avaimellasi, PWA + laajennukset. 300 kohdalla holvisi säilyy kokonaisena: lukeminen, haku ja vienti eivät koskaan pysähdy; vain uudet tallennukset taukoavat.</td><td>Rajoittamaton</td></tr>
-        <tr><td><strong>Pro Lifetime v1</strong> <span class="badge">Early Bird</span></td><td><strong>$59</strong> <span style="text-decoration:line-through;color:var(--text-muted)">$79</span> → $79 normaali → $99 traktion jälkeen</td><td>Rajoittamattomat kirjanmerkit, 5 laitetta + P2P-synkronointi, paikallinen tekoäly (WebLLM/Ollama) + RAG + asiantuntija-agentit, muistikortit, PDF/OCR, 10+ vientimuotoa, holvi. <em>V1:n ikä · 12 kuukauden ominaisuuspäivitykset · Tietoturva ikuisesti · v2 60 % alennuksella</em></td><td>200 Early Bird</td></tr>
+        <tr><td><strong>Free</strong></td><td>$0 ikuisesti</td><td>500 kirjanmerkkiä millä tahansa laitteella (jokaisella oma holvinsa), älykäs haku — täysteksti + semanttinen, ominaisuus josta Raindrop veloittaa vuosittain — tietämysgraafi, tekoäly omalla API-avaimellasi, PWA + laajennukset. 500 kohdalla holvisi säilyy kokonaisena: lukeminen, haku ja vienti eivät koskaan pysähdy; vain uudet tallennukset taukoavat.</td><td>Rajoittamaton</td></tr>
+        <tr><td><strong>Pro Lifetime</strong> <span class="badge">Early Bird</span></td><td><strong>$59</strong> <span style="text-decoration:line-through;color:var(--text-muted)">$79</span> → $79 normaali → $99 traktion jälkeen</td><td>Rajoittamattomat kirjanmerkit, 5 laitetta + P2P-synkronointi, paikallinen tekoäly (WebLLM/Ollama) + RAG + asiantuntija-agentit, muistikortit, PDF/OCR, 7 vientimuotoa, holvi. <em>V1:n ikä · 12 kuukauden ominaisuuspäivitykset · Tietoturva ikuisesti · v2 60 % alennuksella</em></td><td>200 Early Bird</td></tr>
       </tbody>
     </table>
 
@@ -97,7 +97,7 @@
       <thead><tr><th>Taso</th><th>Kanava</th><th>Vastaus</th><th>Mitä tehdä ensin</th></tr></thead>
       <tbody>
         <tr><td><strong>Free</strong></td><td>Itsepalvelu: tämä Ohjekeskus + <a href="https://github.com/bookmarkforge/bookmarkforge-core/discussions">GitHub Discussions</a></td><td>Parhaan mukaan (yhteisö)</td><td>Etsi BF-E*-koodit alta + kopioi diagnostiikka (<a href="#diagnostics">§Diagnostics</a>) ennen julkaisua</td></tr>
-        <tr><td><strong>Pro</strong></td><td>Sähköposti <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> (aihe: Pro)</td><td><strong>48 h</strong></td><td>Sisällytä diagnostiikkateksti kohdasta <code>Settings → Help → Copy diagnostic</code></td></tr>
+        <tr><td><strong>Pro v1 Lifetime</strong></td><td>Sähköposti <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> (aihe: Pro)</td><td><strong>48 h</strong></td><td>Sisällytä diagnostiikkateksti kohdasta <code>Settings → Help → Copy diagnostic</code></td></tr>
       </tbody>
     </table>
     <p style="color:var(--text-muted);font-size:0.92em;">Emme voi nähdä kirjanmerkkejäsi, muistiinpanojasi, URL-osoitteita tai kehotteitasi. Sisällytä vain alla oleva diagnostiikka — se sisältää määriä ja versioita, ei koskaan holvisisältöä.</p>
@@ -131,7 +131,7 @@
         <tr id="bf-e106"><td><strong>BF-E106</strong></td><td>Paikallinen tekoäly (WebLLM) ei voi toimia tällä laitteella</td><td>Vaatii WebGPU:n + shader-f16:n + 4 Gt RAM-muistia + Pro:n. Päivitä selain tai käytä Ollamaa / pilvitarjoajaa omalla avaimella.</td></tr>
         <tr id="bf-e107"><td><strong>BF-E107</strong></td><td>Varmuuskopion tuonti epäonnistui (väärä salasana / vioittunut tiedosto)</td><td><code>.bmf</code>-tiedostoille (salattu) tarvitset vientisalasanan, etkä holvisalasanaa. JSON-tiedostoissa varmista, ettei tiedosto typistynyt.</td></tr>
         <tr id="bf-e201"><td><strong>BF-E201</strong></td><td>Pro-lisenssi virheellinen / tarkistus epäonnistui</td><td>Tarkista <code>Settings → Pro</code>: syötä avain uudelleen. Offline-tarkistukset välimuistittavat; yhdistä kerran uudelleenvarmistaaksesi Whopin kautta.</td></tr>
-        <tr id="bf-e202"><td><strong>BF-E202</strong></td><td>Ilmaisraja saavutettu (300 kirjanmerkkiä)</td><td>Ilmaisraja on 300. Poista tai päivitä Pro Lifetime v1:een rajoittamattomille. Vienti on aina käytettävissä.</td></tr>
+        <tr id="bf-e202"><td><strong>BF-E202</strong></td><td>Ilmaisraja saavutettu (500 kirjanmerkkiä)</td><td>Ilmaisraja on 500. Poista tai päivitä Pro Lifetime:een rajoittamattomille. Vienti on aina käytettävissä.</td></tr>
       </tbody>
     </table>
     <p>Tukivinkki: virheen <code>Copy diagnostic</code> kopioi koodin + kontekstin yhdellä napsautuksella — liitä se GitHub Discussioniin tai sähköpostiin.</p>

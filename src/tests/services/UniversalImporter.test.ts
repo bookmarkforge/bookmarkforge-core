@@ -871,6 +871,194 @@ describe("UniversalImporter", () => {
       expect(result.success).toBe(true);
     });
 
+    it("infers folder paths from ZIP entry directories when frontmatter has none (Notion export)", async () => {
+      const zip = new JSZip();
+      zip.file("Projects/Web/page-one.md", "# Page One\n\nHello world.");
+      zip.file("Projects/page-two.md", "# Page Two\n\nSecond page.");
+      zip.file("root-page.md", "# Root Page\n\nTop level.");
+      const blob = await zip.generateAsync({ type: "blob" });
+      const file = new File([blob], "notion-export.zip", { type: "application/zip" });
+
+      const result = await importer.importData(mockDb, file);
+      expect(result.success).toBe(true);
+      expect(result.importedCount).toBe(3);
+
+      // Nested folders are created for the directory portions of the paths.
+      const folderTitles = mockDb.folders.insert.mock.calls.map(
+        (call: unknown[]) => (call[0] as { title?: string }).title,
+      );
+      expect(folderTitles).toContain("Projects");
+      expect(folderTitles).toContain("Web");
+
+      // Documents inside folders get a non-root folderId; the root-level
+      // note stays at "root".
+      const docFolderIds = mockDb.documents.insert.mock.calls.map(
+        (call: unknown[]) => (call[0] as { folderId?: string }).folderId,
+      );
+      expect(docFolderIds.filter((id) => id === "root")).toHaveLength(1);
+      expect(docFolderIds.filter((id) => id && id !== "root")).toHaveLength(2);
+    });
+
+    it("keeps the explicit frontmatter folder over the ZIP directory", async () => {
+      const zip = new JSZip();
+      zip.file(
+        "Zipped/Dir/note.md",
+        `---\ntitle: "Note"\nfolder: "Explicit/Path"\n---\n\nBody text.`,
+      );
+      const blob = await zip.generateAsync({ type: "blob" });
+      const file = new File([blob], "vault.zip", { type: "application/zip" });
+
+      const result = await importer.importData(mockDb, file);
+      expect(result.success).toBe(true);
+      expect(result.importedCount).toBe(1);
+
+      const folderTitles = mockDb.folders.insert.mock.calls.map(
+        (call: unknown[]) => (call[0] as { title?: string }).title,
+      );
+      expect(folderTitles).toEqual(["Explicit", "Path"]);
+      expect(folderTitles).not.toContain("Zipped");
+    });
+
+    it("imports an Evernote .enex export as documents with guid dedup", async () => {
+      const b64 = (s: string) => btoa(unescape(encodeURIComponent(s)));
+      const enex = `<?xml version="1.0" encoding="UTF-8"?>
+<en-export application="Evernote" version="10.0">
+<note><title>First</title><content>${b64('<en-note><h1>One</h1><div>Body one</div></en-note>')}</content><created>20240101T120000Z</created><updated>20240102T120000Z</updated><tag>work</tag><guid>guid-1</guid></note>
+<note><title>Second</title><content>${b64('<en-note><div>Body two</div></en-note>')}</content><guid>guid-2</guid></note>
+</en-export>`;
+      const file = new File([enex], "export.enex", { type: "text/xml" });
+
+      const result = await importer.importData(mockDb, file);
+      expect(result.success).toBe(true);
+      expect(result.importedCount).toBe(2);
+      expect(mockDb.documents.insert).toHaveBeenCalledTimes(2);
+
+      const first = mockDb.documents.insert.mock.calls[0]![0] as {
+        id: string; title: string; folderId: string; tags: string[];
+        createdAt: string; textContent: string;
+      };
+      expect(first.id).toBe("guid-1");
+      expect(first.title).toBe("First");
+      expect(first.folderId).toBe("root");
+      expect(first.tags).toEqual(["work"]);
+      expect(first.createdAt).toBe("2024-01-01T12:00:00.000Z");
+      expect(first.textContent).toContain("# One");
+      expect(first.textContent).toContain("Body one");
+    });
+
+    it("skips Evernote notes whose guid already exists (re-import dedup)", async () => {
+      const b64 = (s: string) => btoa(unescape(encodeURIComponent(s)));
+      const enex = `<en-export><note><title>Dup</title><content>${b64('<en-note><div>x</div></en-note>')}</content><guid>existing-guid</guid></note></en-export>`;
+      const file = new File([enex], "export.enex");
+      mockDb.documents.findOne.mockImplementation(() => ({
+        exec: vi.fn().mockResolvedValue({ id: "existing-guid" }),
+      }));
+
+      const result = await importer.importData(mockDb, file);
+      expect(result.success).toBe(true);
+      expect(result.importedCount).toBe(0);
+      expect(result.skippedCount).toBe(1);
+      expect(mockDb.documents.insert).not.toHaveBeenCalled();
+    });
+
+    it("rejects a file that is not a valid ENEX export", async () => {
+      const file = new File(["<not-enex/>"], "fake.enex");
+      const result = await importer.importData(mockDb, file);
+      expect(result.success).toBe(false);
+      expect(result.error).toContain("Evernote");
+    });
+
+    it("imports a Pinboard posts JSON export as bookmarks", async () => {
+      const pinboard = JSON.stringify([
+        {
+          href: "https://pin.example.com/a",
+          description: "Pinned A",
+          extended: "note body",
+          time: "2024-01-02T03:04:05Z",
+          tags: "dev,privacy",
+        },
+        { href: "notaurl" },
+        { href: "https://pin.example.com/b" },
+      ]);
+      const file = new File([pinboard], "bookmarks.json", {
+        type: "application/json",
+      });
+
+      const result = await importer.importData(mockDb, file);
+      expect(result.success).toBe(true);
+      expect(result.importedCount).toBe(2);
+      expect(result.skippedCount).toBe(1);
+
+      const first = mockDb.bookmarks.insert.mock.calls[0]![0] as {
+        url: string; title: string; summary: string; tags: string[];
+        createdAt: string;
+      };
+      expect(first.url).toBe("https://pin.example.com/a");
+      expect(first.title).toBe("Pinned A");
+      expect(first.summary).toContain("note body");
+      expect(first.tags).toEqual(["dev", "privacy"]);
+      expect(first.createdAt).toBe("2024-01-02T03:04:05.000Z");
+    });
+
+    it("imports a Firefox places.json backup as bookmarks", async () => {
+      const places = JSON.stringify({
+        guid: "places",
+        typeCode: 2,
+        children: [
+          {
+            title: "toolbar",
+            type: "text",
+            children: [
+              {
+                title: "Deep",
+                type: "text",
+                children: [
+                  {
+                    title: "FF link",
+                    uri: "https://ff.example.com",
+                    tags: "firefox,backup",
+                    dateAdded: 1704067200000,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
+      const file = new File([places], "places.json", {
+        type: "application/json",
+      });
+
+      const result = await importer.importData(mockDb, file);
+      expect(result.success).toBe(true);
+      expect(result.importedCount).toBe(1);
+
+      const doc = mockDb.bookmarks.insert.mock.calls[0]![0] as {
+        url: string; title: string; tags: string[];
+        createdAt: string;
+      };
+      expect(doc.url).toBe("https://ff.example.com");
+      expect(doc.title).toBe("FF link");
+      expect(doc.tags).toEqual(["firefox", "backup"]);
+      expect(doc.createdAt).toBe("2024-01-01T00:00:00.000Z");
+    });
+
+    it("detects a Pinboard export without a .json extension", async () => {
+      const pinboard = JSON.stringify([
+        { href: "https://det.example.com", description: "Detected" },
+      ]);
+      const file = new File([pinboard], "export.dat");
+
+      const result = await importer.importDataWithDetection(mockDb, file);
+      expect(result.success).toBe(true);
+      expect(result.importedCount).toBe(1);
+      const doc = mockDb.bookmarks.insert.mock.calls[0]![0] as {
+        url: string; title: string; tags: string[];
+      };
+      expect(doc.url).toBe("https://det.example.com");
+      expect(doc.tags).toEqual(["pinboard-import"]);
+    });
+
     it("skips SVG attachments from a markdown zip", async () => {
       const zip = new JSZip();
       const png = new TextEncoder().encode("PNGDATA");

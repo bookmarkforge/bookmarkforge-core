@@ -66,7 +66,7 @@
       <li><strong>Nessun prompt o risposta IA</strong> registrato da noi</li>
       <li><strong>Nessuna cronologia di navigazione</strong> tracciata</li>
       <li><strong>Nessuna informazione personale</strong> richiesta per usare l'app</li>
-      <li><strong>Nessuna analisi</strong> raccolta per impostazione predefinita</li>
+      <li><strong>Nessuna analisi di alcun tipo</strong> — nessuna analisi di prodotto, nessuna pipeline di eventi, nessun fingerprinting, nessuno script di analisi di terze parti</li>
     </ul>
 
     <h2>4. Dove vivono i tuoi dati</h2>
@@ -109,13 +109,13 @@
       <li><strong>IA cloud (Gemini, OpenAI, Anthropic, ecc.):</strong> i tuoi prompt vengono inviati direttamente al provider. Non intercettiamo, memorizziamo né registriamo queste richieste. Ogni provider ha la propria informativa sulla privacy.</li>
     </ul>
 
-    <h2>8. Report di errore facoltativi (solo con opt-in)</h2>
-    <p>Puoi scegliere di attivare i report di errore nelle Impostazioni. Se attivati:</p>
+    <h2>8. Report di errore facoltativi (solo con opt-in, solo locale)</h2>
+    <p>Puoi scegliere di attivare la registrazione locale degli errori nelle Impostazioni. Se attivata:</p>
     <ul>
-      <li>Riceviamo log tecnici anonimi di errore quando l'app va in crash</li>
+      <li>I log tecnici di errore (stack trace, classe di errore, versione dell'app) sono archiviati <strong>solo nel database locale del tuo browser</strong></li>
+      <li><strong>Nulla viene trasmesso a noi</strong> — il servizio ospitato non ha alcuna destinazione remota per gli errori; non esiste alcun endpoint che riceva report di crash</li>
       <li><strong>Non riceviamo MAI:</strong> i tuoi segnalibri, testi, URL, prompt o qualsiasi contenuto personale</li>
-      <li>Vengono inviati solo stack trace tecnici e informazioni sul dispositivo</li>
-      <li>Puoi disattivarli in qualsiasi momento</li>
+      <li>Puoi disattivarli in qualsiasi momento; la disattivazione interrompe l'archiviazione locale dei nuovi report</li>
     </ul>
 
     <h2>9. Bookmarklet PWA e destinazione di condivisione</h2>
@@ -129,7 +129,7 @@
     <h2>10. Servizi di terze parti</h2>
     <p>Utilizziamo i seguenti servizi di terze parti:</p>
     <ul>
-      <li><strong>Google Fonts</strong> — per la tipografia (i font vengono memorizzati nella cache locale)</li>
+      <li><strong>Vercel, Inc.</strong> — il fornitore di hosting esclusivo di questo sito e dell'applicazione (hosting web + CDN). Nessun altro provider di hosting è coinvolto.</li>
       <li><strong>Provider IA</strong> — Google, OpenAI, Anthropic, ecc. (solo se li configuri)</li>
     </ul>
 
@@ -171,13 +171,13 @@
           <td>Anello in memoria limitato (&lt;= 200 report) o file JSONL che ospiti tu</td>
         </tr>
         <tr>
-          <td>Analisi di business opt-in (solo se le accetti nel banner di consenso)</td>
+          <td>Analisi di business opt-in — <strong>solo server companion self-hosted</strong>; il servizio ospitato su bookmarkforgeapp.com non gestisce questo endpoint</td>
           <td>Conteggi aggregati giornalieri di un elenco fisso di tipi di evento, più un hash SHA-256 di un id casuale per installazione; nessun contenuto, URL, titolo o timestamp</td>
           <td><strong>Consenso</strong> (art. 6, par. 1, lett. a)) — disattivato per impostazione predefinita</td>
           <td>&lt;= 180 giorni di totali giornalieri; &lt;= 200 000 installazioni di stato limitato per installazione</td>
         </tr>
         <tr>
-          <td>Eventi di degradazione del client (solo con opt-in)</td>
+          <td>Eventi di degradazione del client — <strong>solo server companion self-hosted</strong>; non gestito sul deployment ospitato</td>
           <td>Classe di errore tecnico anonimizzata, IP con hash e sale per implementazione</td>
           <td><strong>Consenso</strong> (art. 6, par. 1, lett. a))</td>
           <td>Anello limitato (&lt;= 200 eventi), finestra di aggregazione &lt;= 10 minuti</td>
@@ -198,15 +198,15 @@
       <li><strong>Google (API Gemini)</strong> — prompt IA cloud e media generati. Tratta i dati in Google Cloud (regioni globali, residenza dei dati configurabile da Google; vedi i termini dell'API Gemini di Google). I trasferimenti fuori dall'UE possono avvenire ai sensi delle clausole contrattuali standard di Google.</li>
       <li><strong>OpenAI / Anthropic / Groq / OpenRouter / Hugging Face</strong> — provider IA cloud alternativi, solo se li configuri. Si applicano i rispettivi termini e CCS.</li>
       <li><strong>Whop</strong> — pagamento della licenza Pro e verifica del diritto. Riceve la tua chiave di licenza e i tuoi dati di pagamento quando acquisti Pro. Whop agisce come titolare indipendente dei dati di pagamento.</li>
-      <li><strong>Sentry (Functional Software)</strong> — report di errore facoltativi, solo se li attivi nelle Impostazioni e l'operatore ha configurato un endpoint di diagnostica. Riceve stack trace tecnici oscurati (URL senza stringhe di query, segreti rimossi, nessuna identità dell'utente). Sentry agisce come responsabile ai sensi del suo accordo sul trattamento dei dati; consulta l'informativa sulla privacy di Sentry per i trasferimenti internazionali.</li>
-      <li><strong>Hosting web / CDN</strong> — serve questo sito, l'applicazione e l'API delle licenze. Riceve i metadati di connessione che riceve qualsiasi server web (indirizzo IP, user agent, percorso della richiesta) e, per la verifica delle licenze, la chiave di licenza e un identificatore del dispositivo. I log di connessione sono conservati per un periodo breve e delimitato (vedi la sezione 6).</li>
+      <li><strong>Sentry (Functional Software)</strong> — report di errore facoltativi, <strong>attualmente non abilitati</strong> su bookmarkforgeapp.com (nessun endpoint di diagnostica configurato). Se fossero abilitati, funzionerebbero solo con il tuo consenso esplicito nelle Impostazioni e riceverebbero stack trace tecnici oscurati (URL senza stringhe di query, segreti rimossi, nessuna identità dell'utente). Sentry agisce come responsabile ai sensi del suo accordo sul trattamento dei dati; consulta l'informativa sulla privacy di Sentry per i trasferimenti internazionali.</li>
+      <li><strong>Vercel, Inc.</strong> — il fornitore esclusivo di hosting web e CDN di bookmarkforgeapp.com. Serve questo sito, l'applicazione e l'API delle licenze, e riceve i metadati di connessione che riceve qualsiasi server web (indirizzo IP, user agent, percorso della richiesta) e, per la verifica delle licenze, la chiave di licenza e un identificatore del dispositivo. I log di connessione sono conservati per un periodo breve e delimitato (vedi la sezione 6). Nessun altro provider di hosting è coinvolto.</li>
       <li><strong>GitHub</strong> — codice sorgente, gestore delle issue e CI/CD. Riceve i dati dei maintainer e dei contributori (dati account, commit, contenuto delle issue). Non riceve mai il contenuto della tua vault.</li>
       <li><strong>Provider di e-mail transazionale</strong> — messaggi di servizio, onboarding e assistenza. Riceve il tuo indirizzo e-mail e il contenuto del messaggio, oltre ai bounce.</li>
       <li><strong>Relay di segnalazione (rxdb.info / PubNub)</strong> — il servizio di rendez-vous usato per mettere in contatto due browser durante una sincronizzazione peer-to-peer quando non è configurato alcun endpoint di segnalazione self-hosted. Riceve il tuo indirizzo IP e i metadati di connessione necessari per abbinare le due peer; il payload è cifrato end-to-end e il segreto della stanza non lascia mai il tuo dispositivo. Un'installazione che configura il proprio endpoint di segnalazione (<code>signal.&lt;dominio&gt;</code>) non contatta affatto i relay pubblici.</li>
       <li><strong>Registrar del dominio</strong> — conserva i dati di contatto della registrazione del dominio e i log DNS del dominio stesso.</li>
       <li><strong>Provider di archiviazione scelti da te</strong> — quando colleghi il tuo cloud (WebDAV, Nextcloud, OneDrive, Dropbox, pCloud, Google Drive), quel provider tratta il backup cifrato che carichi con il tuo account. È il tuo provider, non il nostro, e non è un sub-responsabile del trattamento per conto di BookmarkForge.</li>
     </ul>
-    <p><strong>Non</strong> vendiamo, affittiamo né condividiamo i tuoi dati per finalità pubblicitarie. Non utilizziamo cookie di tracciamento né script di analisi di terze parti. I provider cloud sono vincolati ai propri accordi sul trattamento dei dati conformi al GDPR; ti consigliamo di rivederli prima di attivare l'IA cloud.</p>
+    <p><strong>Non</strong> vendiamo, affittiamo né condividiamo i tuoi dati per finalità pubblicitarie. <strong>Non gestiamo analisi di alcun tipo</strong> — nessun contatore di visualizzazioni di pagina, nessuna pipeline di eventi, nessun fingerprinting dei dispositivi, nessuno script di analisi di terze parti, e non esiste alcun endpoint di analisi a cui aderire. Puoi verificarlo tu stesso: apri l'ispettore di rete del tuo browser su bookmarkforgeapp.com e le uniche richieste vanno a questo dominio, ai provider di IA o di archiviazione che configuri, e a Whop al checkout. I provider cloud sono vincolati ai propri accordi sul trattamento dei dati conformi al GDPR; ti consigliamo di rivederli prima di attivare l'IA cloud.</p>
     <p><strong>Trasferimenti internazionali:</strong> quando un provider tratta dati al di fuori del SEE, i trasferimenti si basano sulla decisione di adeguatezza dell'UE o sulle clausole contrattuali standard del provider. L'uso esclusivamente locale di BookmarkForge non comporta alcun trasferimento internazionale.</p>
 
     <h2>14. Registro delle attività di trattamento (sintesi ROPA)</h2>

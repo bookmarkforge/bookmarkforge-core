@@ -28,6 +28,12 @@ import {
   type MarkdownLink,
   type ParsedMarkdownNote,
 } from "./importer.markdown";
+import { parseEnexDocument } from "./importer.enex";
+import {
+  parseFirefoxPlaces,
+  parsePinboardPosts,
+  type ParsedBookmarkCandidate,
+} from "./importer.alt-bookmarks";
 
 /** ZIP safety bounds (shared by the preflight and the per-entry checks). */
 const MAX_ZIP_ENTRY_BYTES = 50 * 1024 * 1024;
@@ -1046,6 +1052,17 @@ export class UniversalImporter {
     throwIfAborted(options.signal);
     const normalizedFilename = filename.toLowerCase();
     if (normalizedFilename.endsWith(".json")) {
+      // Pinboard posts exports are a top-level JSON array; Firefox backups
+      // are { children: [...] } trees. Both are bookmark lists, not the
+      // BookmarkForge document format — sniff before the generic parser.
+      const trimmed = content.trimStart();
+      if (trimmed.startsWith("[")) {
+        const pinboard = parsePinboardPosts(content);
+        if (pinboard) {return this.importBookmarkCandidates(db, pinboard, options, "pinboard");}
+      } else if (content.includes('"children"') && content.includes('"typeCode"')) {
+        const firefox = parseFirefoxPlaces(content);
+        if (firefox) {return this.importBookmarkCandidates(db, firefox, options, "firefox");}
+      }
       return this.importFromJSON(db, content, options);
     }
     if (normalizedFilename.endsWith(".csv")) {
@@ -1061,8 +1078,11 @@ export class UniversalImporter {
       const note = parseMarkdownNote(filename, content);
       return this.importParsedMarkdown(db, [note], new Map(), options);
     }
+    if (normalizedFilename.endsWith(".enex")) {
+      return this.importFromEnex(db, content, options);
+    }
     throw new Error(
-      "Unsupported file format. Please use .json, .csv, .html, .md, or .zip (Markdown/Obsidian vault) files.",
+      "Unsupported file format. Please use .json, .csv, .html, .md, .enex, or .zip (Markdown/Obsidian vault) files.",
     );
   }
 
@@ -1237,6 +1257,24 @@ export class UniversalImporter {
           content,
           importOptions,
         );
+      } else if (content.includes("<en-export")) {
+        detectedResult = await this.importFromEnex(db, content, importOptions);
+      } else if (content.trimStart().startsWith("[")) {
+        const pinboard = parsePinboardPosts(content);
+        if (pinboard) {
+          detectedResult = await this.importBookmarkCandidates(
+            db, pinboard, importOptions, "pinboard",
+          );
+        }
+      } else if (
+        content.includes('"children"') && content.includes('"typeCode"')
+      ) {
+        const firefox = parseFirefoxPlaces(content);
+        if (firefox) {
+          detectedResult = await this.importBookmarkCandidates(
+            db, firefox, importOptions, "firefox",
+          );
+        }
       }
       if (detectedResult) {
         reportProgress(importOptions, 100);
@@ -2274,7 +2312,19 @@ export class UniversalImporter {
         if (unknownSizeEntries.has(entryName)) {
           totalUncompressedBytes += contentBytes;
         }
-        notes.push(parseMarkdownNote(normalized, content));
+        const note = parseMarkdownNote(normalized, content);
+        // Folder inference: exports without `folder` frontmatter (Notion
+        // Markdown & CSV ZIPs, plain vaults) still carry their hierarchy in
+        // the entry path ("Folder/Sub/page.md"). Mirror the directory portion
+        // into folderPath so the two-pass pipeline recreates the tree; the
+        // value is re-validated by sanitizeFolderPath before use.
+        if (note.kind === "document" && !note.folderPath) {
+          const slash = normalized.lastIndexOf("/");
+          if (slash > 0) {
+            note.folderPath = normalized.slice(0, slash);
+          }
+        }
+        notes.push(note);
       } else if (isAttachmentPath(normalized)) {
         const bytes = await entry.async("uint8array");
         throwIfAborted(options.signal);
@@ -2556,6 +2606,159 @@ export class UniversalImporter {
     }
 
     return { success: true, importedCount, skippedCount };
+  }
+
+  /**
+   * Import an Evernote `.enex` export: every `<note>` becomes a document.
+   * `<guid>` doubles as the document id so re-importing the same export
+   * deduplicates instead of duplicating the whole vault.
+   */
+  private async importFromEnex(
+    db: BookmarkForgeDB,
+    content: string,
+    options: ImportExecutionOptions,
+  ): Promise<ImportResult> {
+    throwIfAborted(options.signal);
+    const notes = parseEnexDocument(content);
+    if (!notes || notes.length === 0) {
+      return {
+        success: false,
+        importedCount: 0,
+        skippedCount: 0,
+        error: 'Not a valid Evernote export (.enex). Export from Evernote via Settings → Export → "Notebooks" or "Notes".',
+      };
+    }
+    enforceImportRecordLimit(notes.length);
+
+    let importedCount = 0;
+    let skippedCount = 0;
+    let notesWithResources = 0;
+
+    for (let index = 0; index < notes.length; index++) {
+      await yieldImportWork(index, notes.length, options);
+      throwIfAborted(options.signal);
+      const note = notes[index]!;
+      if (note.hasResources) {notesWithResources++;}
+      try {
+        const id = note.guid ?? generateId();
+        if (note.guid) {
+          const existing = await db.documents
+            .findOne({ selector: { id: note.guid } })
+            .exec();
+          if (existing) {
+            skippedCount++;
+            continue;
+          }
+        }
+        await insertTrackedDocument(
+          db,
+          {
+            id,
+            folderId: "root",
+            title: normalizeImportedTitle(note.title, "Untitled Note"),
+            textContent: normalizeImportedContent(note.textContent),
+            tags: normalizeImportedTags(note.tags),
+            createdAt: normalizeImportDate(note.createdAt),
+            updatedAt: normalizeImportDate(note.updatedAt),
+            processed: false,
+            isPrivate: false,
+            isDeleted: false,
+            blocks: [],
+            links: [],
+          } as DocumentDocType,
+          options.journal,
+        );
+        importedCount++;
+        options.importedCount++;
+      } catch (error) {
+        if (isFreeLimitError(error)) {
+          throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+        }
+        logger.warn("[UniversalImporter] Failed to import Evernote note", {
+          error: error instanceof Error ? error.message : String(error),
+        });
+        skippedCount++;
+      }
+    }
+
+    if (notesWithResources > 0) {
+      logger.info("[UniversalImporter] Evernote attachments skipped", {
+        notesWithResources,
+        importedCount,
+      });
+    }
+
+    return { success: true, importedCount, skippedCount };
+  }
+
+  /**
+   * Shared bookmark import for Pinboard/Firefox-style candidate lists:
+   * sanitize URL → urlHash dedup window → bulk insert, same machinery as the
+   * HTML/CSV importers.
+   */
+  private async importBookmarkCandidates(
+    db: BookmarkForgeDB,
+    candidates: readonly ParsedBookmarkCandidate[],
+    options: ImportExecutionOptions,
+    source: string,
+  ): Promise<ImportResult> {
+    enforceImportRecordLimit(candidates.length);
+    const counters: ImportCounters = { importedCount: 0, skippedCount: 0 };
+    const pending: PendingBookmarkInsert[] = [];
+    const completedHashes = new Set<string>();
+    const flushPending = async (): Promise<void> => {
+      if (pending.length === 0) {return;}
+      const batch = pending.splice(0, pending.length);
+      await flushBookmarkInsertWindow(db, batch, options, counters, completedHashes);
+    };
+
+    for (let index = 0; index < candidates.length; index++) {
+      await yieldImportWork(index, candidates.length, options);
+      throwIfAborted(options.signal);
+      const candidate = candidates[index]!;
+      try {
+        const url = sanitizeUrl(candidate.url);
+        if (!url || !url.startsWith("http")) {
+          counters.skippedCount++;
+          continue;
+        }
+        const urlHash = await hashString(url);
+        const tags = normalizeImportedTags(candidate.tags);
+        pending.push({
+          urlHash,
+          doc: {
+            id: generateId(),
+            url,
+            urlHash,
+            title: normalizeImportedTitle(candidate.title, "Untitled Bookmark"),
+            content: "",
+            summary: SanitizationService.sanitizeHtml(
+              normalizeImportedContent(candidate.summary ?? ""),
+              true,
+            ),
+            tags: tags.length ? tags : [`${source}-import`],
+            createdAt: normalizeImportDate(candidate.createdAt),
+            updatedAt: new Date().toISOString(),
+            processed: false,
+            isPrivate: false,
+            isDeleted: false,
+            relatedLinks: [],
+            visitCount: 0,
+          } as BookmarkDocType,
+        });
+        if (pending.length >= IMPORT_DEDUP_WINDOW) {await flushPending();}
+      } catch (error) {
+        if (isFreeLimitError(error)) {
+          throw new FreeTierImportLimitReached(options.importedCount, counters.skippedCount);
+        }
+        logger.warn(`[UniversalImporter] Failed to import ${source} bookmark`, {
+          error: error instanceof Error ? error.message : String(error),
+        });
+        counters.skippedCount++;
+      }
+    }
+    await flushPending();
+    return { success: true, importedCount: counters.importedCount, skippedCount: counters.skippedCount };
   }
 
   /**

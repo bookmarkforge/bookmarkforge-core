@@ -107,7 +107,7 @@ if (envBoot.isProd) {
         "The current build exposes private keys or configuration in the browser bundle. The app refused to load.";
       const p2 = document.createElement("p");
       p2.style.opacity = "0.7";
-      p2.textContent = "Please contact support@proton.me.";
+      p2.textContent = "Please contact bookmarkforge@proton.me.";
       const pre = document.createElement("pre");
       pre.style.cssText =
         "font-size:11px;opacity:0.5;color:#94a3b8;margin-top:16px;white-space:pre-wrap;";

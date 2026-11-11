@@ -188,7 +188,14 @@ function renderAll() {
       // help pages only render if help section exists in translation
       if (pageType === 'help' && !translation.help) continue;
 
-      const html = template.render({ t: translation, languageLinks: links, hreflangLinks: hreflang });
+      // Zero-tracking policy: no analytics snippet is ever emitted. The
+      // PLAUSIBLE_DOMAIN opt-in was removed — generated pages must stay
+      // tracking-free and the CSP needs no plausible.io allowance.
+      const html = template.render({
+        t: translation,
+        languageLinks: links,
+        hreflangLinks: hreflang,
+      });
       rendered.push({ key, pageType, path: outputPathFor(pageType, key), html });
     }
   }

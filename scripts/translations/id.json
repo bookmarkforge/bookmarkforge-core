@@ -6,12 +6,12 @@
   "ogLocale": "id_ID",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: pengelola bookmark privat local-first dengan daftar bacaan",
-  "description": "Raindrop menyimpan bookmark Anda di servernya. BookmarkForge menyimpannya di komputer Anda — terkunci sehingga bahkan kami tidak bisa membacanya. Sekali bayar: $59 akses seumur hidup early bird (hemat $20 sebelum harga normal). Gratis: 300 bookmark.",
+  "description": "Raindrop menyimpan bookmark Anda di servernya. BookmarkForge menyimpannya di komputer Anda — terkunci sehingga bahkan kami tidak bisa membacanya. Sekali bayar: $59 akses seumur hidup early bird (hemat $20 sebelum harga normal). Gratis: 500 bookmark.",
   "ogTitle": "BookmarkForge: pengelola bookmark privat local-first dengan daftar bacaan",
-  "ogDescription": "Raindrop menyimpan bookmark Anda di servernya. BookmarkForge menyimpannya di komputer Anda — terkunci sehingga bahkan kami tidak bisa membacanya. Sekali bayar: $59 akses seumur hidup early bird (hemat $20 sebelum harga normal). Gratis: 300 bookmark.",
+  "ogDescription": "Raindrop menyimpan bookmark Anda di servernya. BookmarkForge menyimpannya di komputer Anda — terkunci sehingga bahkan kami tidak bisa membacanya. Sekali bayar: $59 akses seumur hidup early bird (hemat $20 sebelum harga normal). Gratis: 500 bookmark.",
   "ogImage": "https://bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: pengelola bookmark privat local-first dengan daftar bacaan",
-  "twitterDescription": "Raindrop menyimpan bookmark Anda di servernya. BookmarkForge menyimpannya di komputer Anda — terkunci sehingga bahkan kami tidak bisa membacanya. Sekali bayar: $59 akses seumur hidup early bird (hemat $20 sebelum harga normal). Gratis: 300 bookmark.",
+  "twitterDescription": "Raindrop menyimpan bookmark Anda di servernya. BookmarkForge menyimpannya di komputer Anda — terkunci sehingga bahkan kami tidak bisa membacanya. Sekali bayar: $59 akses seumur hidup early bird (hemat $20 sebelum harga normal). Gratis: 500 bookmark.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
   "skipLink": "Lewati ke konten utama",
   "navBrandAria": "Beranda BookmarkForge",
@@ -198,7 +198,13 @@
         "title": "Privat secara bawaan",
         "text": "Tanpa akun, tanpa pelacakan, tanpa iklan. Anda adalah pelanggan, bukan produk. Berbagi penggunaan ada, opsional dan tetap mati hingga Anda menyalakannya."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "Gratis mencakup",
+      "free": "pencarian pintar, 500 bookmark, AI dengan kunci Anda sendiri, cadangan terenkripsi dan ekspor — selamanya",
+      "proLabel": "Pro menambahkan",
+      "pro": "bookmark tanpa batas, sinkronisasi di 5 perangkat, AI lokal dan chat atas brankas Anda, flashcard, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ai",
@@ -219,22 +225,6 @@
         {
           "type": "cloud",
           "name": "Cloud — Google Gemini (dengan kunci Anda sendiri)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — OpenAI / GPT-4o (dengan kunci Anda sendiri)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — Anthropic Claude (dengan kunci Anda sendiri)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — Groq (dengan kunci Anda sendiri)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — OpenRouter atau penyedia kustom lain (dengan kunci Anda sendiri)"
         }
       ]
     },
@@ -288,23 +278,27 @@
       {
         "title": "Tanpa ketergantungan",
         "text": "Ekspor data Anda kapan pun dalam format terbuka (JSON, Markdown, CSV, PDF). Pengetahuan Anda tetap milik Anda dan portabel."
+      },
+      {
+        "title": "Hanya Vercel yang menghosting kami — nol analitik",
+        "text": "Situs ini berjalan secara eksklusif di Vercel tanpa analitik jenis apa pun: tanpa pelacak, tanpa fingerprinting, tanpa skrip pihak ketiga. Verifikasi sendiri di tab jaringan browser Anda."
       }
     ]
   },
   "pricing": {
     "id": "pricing",
     "title": "Harga Sederhana dan Adil — Tanpa Langganan",
-    "subtitle": "Gratis 300 bookmark selamanya. Pro adalah lisensi Lifetime untuk v1 — bayar sekali, miliki v1 selamanya. Termasuk semua pembaruan v1.x dan 12 bulan pembaruan fitur. Pembaruan keamanan selamanya. Tanpa tagihan bulanan.",
+    "subtitle": "Gratis 500 bookmark selamanya. Pro adalah lisensi Lifetime untuk v1 — bayar sekali, miliki v1 selamanya. Termasuk semua pembaruan v1.x dan 12 bulan pembaruan fitur. Pembaruan keamanan selamanya. Tanpa tagihan bulanan.",
     "plans": [
       {
         "name": "Free",
         "price": "$ 0",
         "period": "/selamanya",
-        "description": "Untuk arsip pribadi (300 bookmark, berfungsi di perangkat apa pun — masing-masing punya vault sendiri)",
+        "description": "Untuk arsip pribadi (500 bookmark, berfungsi di perangkat apa pun — masing-masing punya vault sendiri)",
         "features": [
           {
             "included": true,
-            "text": "300 bookmark, catatan, dan dokumen"
+            "text": "500 bookmark, catatan, dan dokumen"
           },
           {
             "included": true,
@@ -313,6 +307,10 @@
           {
             "included": true,
             "text": "AI dengan kunci API sendiri (Anda membayar penyedia)"
+          },
+          {
+            "included": true,
+            "text": "Berfungsi di perangkat apa pun — masing-masing punya vault sendiri"
           },
           {
             "included": true,
@@ -360,11 +358,11 @@
           }
         ],
         "cta": "Coba langsung",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-secondary"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "Paling Populer — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (lalu $79)",
@@ -396,7 +394,7 @@
           },
           {
             "included": true,
-            "text": "Ekspor lanjutan (10+ format)"
+            "text": "Ekspor lanjutan (7 format)"
           },
           {
             "included": true,
@@ -405,18 +403,6 @@
           {
             "included": true,
             "text": "Lifetime v1 · 12 bulan pembaruan fitur"
-          },
-          {
-            "included": true,
-            "text": "Pembaruan keamanan selamanya"
-          },
-          {
-            "included": true,
-            "text": "Dukungan email (48 jam) + akses awal"
-          },
-          {
-            "included": true,
-            "text": "Terjemahan AI lokal (segera hadir)"
           }
         ],
         "cta": "Dapatkan Pro $59 Early Bird",
@@ -430,14 +416,14 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-id#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-id#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Pertanyaan Umum",
     "items": [
       {
         "question": "Apakah tier Gratis benar-benar gratis selamanya?",
-        "answer": "Ya. Tanpa masa percobaan, tanpa langganan. Tier gratis mencakup 300 bookmark, pencarian teks lengkap & semantik, graf pengetahuan, dan AI dengan kunci API Anda sendiri (Anda membayar penyedia)."
+        "answer": "Ya. Tanpa masa percobaan, tanpa langganan. Tier gratis mencakup 500 bookmark, pencarian teks lengkap & semantik, graf pengetahuan, dan AI dengan kunci API Anda sendiri (Anda membayar penyedia)."
       },
       {
         "question": "Apa arti \"Lifetime v1\" untuk Pro?",
@@ -454,6 +440,18 @@
       {
         "question": "Bagaimana jika saya lupa kata sandi vault?",
         "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-id#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "Apa yang terjadi pada data saya jika saya berhenti menggunakannya?",
+        "answer": "Data Anda tetap di perangkat Anda. Anda dapat mengekspor semuanya kapan saja ke Markdown, JSON, CSV, atau PDF. Tanpa kunci, tanpa sandera."
+      },
+      {
+        "question": "Apakah data saya benar-benar privat?",
+        "answer": "Sangat privat. Semuanya dienkripsi di perangkat Anda dengan kunci yang hanya Anda miliki. Kami tidak pernah melihat bookmark, catatan, atau kata sandi Anda. Bahkan kami tidak dapat membaca data Anda."
+      },
+      {
+        "question": "Bisakah saya menggunakannya di ponsel saya?",
+        "answer": "Ya! BookmarkForge bekerja di perangkat apa pun dengan browser web. Tingkat gratis bekerja di perangkat tidak terbatas (masing-masing memiliki vault sendiri). Pro menyinkronkan hingga 5 perangkat."
       }
     ]
   },
@@ -462,7 +460,7 @@
     "text": "Bergabunglah dengan ribuan peneliti, pengembang dan pembelajar yang mempercayai BookmarkForge sebagai otak kedua mereka.",
     "ctaPrimary": "Coba langsung (tanpa akun)",
     "ctaSecondary": "Tingkatkan ke Pro",
-    "note": "Tanpa akun. Bekerja instan di browser. Tier gratis: 300 bookmark."
+    "note": "Tanpa akun. Bekerja instan di browser. Tier gratis: 500 bookmark."
   },
   "footer": {
     "brand": "Vault pengetahuan privat bertenaga AI Anda. 100% Lokal-Pertama.",
@@ -480,7 +478,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {
@@ -523,7 +521,7 @@
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
-    "websiteDescription": "Vault pengetahuan privat bertenaga AI Anda. 100% Lokal-Pertama. Alternatif Pocket privat. Gratis: 300 bookmark.",
+    "websiteDescription": "Vault pengetahuan privat bertenaga AI Anda. 100% Lokal-Pertama. Alternatif Pocket privat. Gratis: 500 bookmark.",
     "organizationName": "BookmarkForge",
     "organizationUrl": "https://bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
@@ -536,17 +534,17 @@
         "name": "Free",
         "price": "0",
         "currency": "USD",
-        "description": "300 bookmark. Gratis selamanya."
+        "description": "500 bookmark. Gratis selamanya."
       },
       {
-        "name": "Pro Lifetime v1 — Early Bird",
+        "name": "Pro Lifetime — Early Bird",
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Lifetime v1, 12 bulan fitur, keamanan selamanya, v2 diskon 60%.",
         "availability": "https://schema.org/InStock"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "price": "79",
         "currency": "USD",
         "description": "Regular. Lifetime v1."
@@ -563,7 +561,7 @@
     "faq": [
       {
         "question": "Apakah tier Gratis benar-benar gratis selamanya?",
-        "answer": "Ya. Tanpa masa percobaan, tanpa langganan. Tier gratis mencakup 300 bookmark, pencarian teks lengkap & semantik, graf pengetahuan, dan AI dengan kunci API Anda sendiri (Anda membayar penyedia)."
+        "answer": "Ya. Tanpa masa percobaan, tanpa langganan. Tier gratis mencakup 500 bookmark, pencarian teks lengkap & semantik, graf pengetahuan, dan AI dengan kunci API Anda sendiri (Anda membayar penyedia)."
       },
       {
         "question": "Apa arti \"Lifetime v1\" untuk Pro?",
@@ -612,17 +610,17 @@
       },
       "tier": {
         "free": "Free",
-        "pro": "Pro Lifetime v1"
+        "pro": "Pro Lifetime"
       },
       "freePrice": "$0 selamanya",
-      "freeDescription": "300 bookmark di perangkat mana pun (masing-masing punya vault sendiri), pencarian cerdas — teks lengkap + semantik, fitur yang Raindrop tagih tahunan — graf pengetahuan, AI dengan kunci API Anda sendiri, PWA + ekstensi. Pada 300 vault Anda tetap utuh: membaca, mencari dan mengekspor tidak pernah berhenti; hanya penyimpanan baru yang berhenti.",
+      "freeDescription": "500 bookmark di perangkat mana pun (masing-masing punya vault sendiri), pencarian cerdas — teks lengkap + semantik, fitur yang Raindrop tagih tahunan — graf pengetahuan, AI dengan kunci API Anda sendiri, PWA + ekstensi. Pada 500 vault Anda tetap utuh: membaca, mencari dan mengekspor tidak pernah berhenti; hanya penyimpanan baru yang berhenti.",
       "unlimited": "Tak terbatas",
       "badge": "Early Bird",
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 reguler",
       "proPriceTraction": "$99 setelah traction",
-      "proDescription": "Bookmark tak terbatas, 5 perangkat + sinkron P2P, AI lokal (WebLLM/Ollama) + RAG + agen ahli, Kartu flash, PDF/OCR, 10+ format ekspor, vault. <em>Lifetime v1 · 12 bulan pembaruan fitur · Keamanan selamanya · v2 diskon 60%</em>",
+      "proDescription": "Bookmark tak terbatas, 5 perangkat + sinkron P2P, AI lokal (WebLLM/Ollama) + RAG + agen ahli, Kartu flash, PDF/OCR, 7 format ekspor, vault. <em>Lifetime v1 · 12 bulan pembaruan fitur · Keamanan selamanya · v2 diskon 60%</em>",
       "proSupply": "200 Early Bird"
     },
     "legal": {
@@ -646,7 +644,7 @@
       },
       "tier": {
         "free": "Free",
-        "pro": "Pro"
+        "pro": "Pro v1 Lifetime"
       },
       "freeChannel": "Layanan mandiri: Pusat Bantuan ini + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
       "freeResponse": "Best effort (komunitas)",
@@ -720,8 +718,8 @@
         "fix": "Periksa <code>Pengaturan → Pro</code>: masukkan ulang kunci. Pemeriksaan luring menyimpan cache; hubungkan sekali untuk validasi ulang via Whop."
       },
       "e202": {
-        "meaning": "Batas gratis tercapai (300 bookmark)",
-        "fix": "Gratis adalah 300. Hapus atau tingkatkan ke Pro Lifetime v1 untuk tak terbatas. Ekspor selalu tersedia."
+        "meaning": "Batas gratis tercapai (500 bookmark)",
+        "fix": "Gratis adalah 500. Hapus atau tingkatkan ke Pro Lifetime untuk tak terbatas. Ekspor selalu tersedia."
       },
       "tip": "Tips dukungan: mengklik <code>Salin diagnostik</code> pada kesalahan menyalin kode + konteks dalam satu klik — tempel di GitHub Discussion atau email Anda."
     },
@@ -747,7 +745,7 @@
     "home": "Beranda",
     "faq": {
       "q1": "Apakah tier Gratis benar-benar gratis selamanya?",
-      "a1": "Ya. Tanpa masa percobaan, tanpa langganan. Gratis mencakup 300 bookmark, pencarian teks lengkap & semantik, graf pengetahuan dan AI dengan kunci API Anda sendiri.",
+      "a1": "Ya. Tanpa masa percobaan, tanpa langganan. Gratis mencakup 500 bookmark, pencarian teks lengkap & semantik, graf pengetahuan dan AI dengan kunci API Anda sendiri.",
       "q2": "Apa arti Lifetime v1?",
       "a2": "Bayar sekali, miliki v1 selamanya. Semua perbaikan bug v1.x selamanya ditambah 12 bulan pembaruan fitur dari pembelian. Pembaruan keamanan selamanya. Setelah bulan ke-13 v1 tetap berfungsi. v2 dan v3 adalah mayor berbayar terpisah: $89 untuk pelanggan baru, $35 untuk pemilik v1 (diskon 60%).",
       "q3": "Bagaimana jika saya lupa kata sandi vault?",
@@ -756,5 +754,37 @@
   },
   "ogImageAlt": "BookmarkForge - aplikasi bookmark dan catatan pribadi bertenaga AI",
   "languageToggleAria": "Ganti bahasa",
-  "githubAria": "Beri bintang untuk BookmarkForge di GitHub"
+  "githubAria": "Beri bintang untuk BookmarkForge di GitHub",
+  "beforeAfter": {
+    "id": "before-after",
+    "tag": "Mengapa Beralih",
+    "title": "Dari kekacauan ke kejelasan dalam 30 detik",
+    "subtitle": "Lihat perbedaan antara bookmark browser dan vault pengetahuan nyata.",
+    "before": {
+      "title": "Sebelum: Bookmark Browser",
+      "items": [
+        "Bookmark terkubur di folder yang terlupakan",
+        "Tidak ada cara mencari berdasarkan makna",
+        "Hilang saat menghapus data browser",
+        "Tidak ada catatan atau organisasi",
+        "Hanya dapat diakses di satu perangkat"
+      ]
+    },
+    "after": {
+      "title": "Sesudah: BookmarkForge",
+      "items": [
+        "Semua dapat dicari secara instan",
+        "Temukan berdasarkan kata kunci atau makna",
+        "Terenkripsi di perangkat Anda, selalu aman",
+        "Catatan, tag, dan organisasi pintar",
+        "Menyinkronkan di semua perangkat Anda (Pro)"
+      ]
+    },
+    "ctaPrimary": "Coba Gratis",
+    "ctaSecondary": "Lihat Fitur"
+  },
+  "share": {
+    "text": "Bagikan BookmarkForge dengan teman",
+    "twitterText": "Lihat BookmarkForge - manajer bookmark pribadi dan local-first"
+  }
 }

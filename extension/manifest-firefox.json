@@ -31,7 +31,5 @@
       "strict_min_version": "109.0"
     }
   },
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'none'; connect-src 'self'; frame-src 'none'; base-uri 'none'; form-action 'none'; style-src 'self'"
-  }
+  "content_security_policy": "script-src 'self'; object-src 'none'; connect-src 'self'; frame-src 'none'; base-uri 'none'; form-action 'none'; style-src 'self'"
 }

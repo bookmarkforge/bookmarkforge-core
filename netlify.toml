@@ -659,3 +659,13 @@
   from = "/voiceLocal/"
   to = "/app.html"
   status = 200
+
+# P1-2 (review 2026-11-11): the headers above advertise /csp-report via
+# report-uri and report-to, so the endpoint has to exist on this host too.
+# Netlify only auto-routes /api/* to functions/, so this exact rule is the
+# wiring; functions/csp-report.mjs is the collector (shared core with the
+# Vercel and Cloudflare Pages entry points).
+[[redirects]]
+  from = "/csp-report"
+  to = "/.netlify/functions/csp-report"
+  status = 200

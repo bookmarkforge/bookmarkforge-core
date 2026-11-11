@@ -43,6 +43,7 @@ import {
 } from "../services/SupportDiagnostics";
 import { logger } from "../utils/logger";
 import { logRateLimited } from "../utils/boundedLog";
+import { buildRedactedDiagnostic } from "../utils/supportDiagnostics";
 import type { LocaleCode } from "../constants/locales";
 import { useRequestGuard } from "../hooks/useRequestGuard";
 
@@ -104,12 +105,16 @@ const getSupportResponse = (query: string): string => {
   // the short English token "hi".
   if (hasSupportTerm("hi") || hasSupportTerm("hello") || hasSupportTerm("hola") || hasSupportTerm("hey"))
     {return "app_supportChatHi";}
-  // Privacy & Security
+  // Privacy & Security (incl. GDPR data-deletion requests — a top ticket)
   if (
     q.includes("privacy") || q.includes("privacidad") ||
     q.includes("seguridad") || q.includes("security") ||
     q.includes("gdpr") || q.includes("tracking") ||
-    q.includes("telemetry") || q.includes("anonymous")
+    q.includes("telemetry") || q.includes("anonymous") ||
+    q.includes("delete my data") || q.includes("delete account") ||
+    q.includes("delete all my") || q.includes("borrar mis datos") ||
+    q.includes("eliminar cuenta") || q.includes("right to be forgotten") ||
+    q.includes("derecho al olvido")
   )
     {return "app_supportChatPrivacy";}
   // Editor & Notes
@@ -182,12 +187,28 @@ const getSupportResponse = (query: string): string => {
       q.includes("pwa") || q.includes("ios") || q.includes("android") ||
       q.includes("install") || q.includes("instalar"))
     {return "app_supportChatMobile";}
-  // License & Pro
+  // Refunds — must precede License: "refund my pro license" contains
+  // license keywords but the intent is the refund flow, not activation.
+  if (q.includes("refund") || q.includes("reembolso") ||
+      q.includes("money back") || q.includes("devolucion") ||
+      q.includes("chargeback") || q.includes("reimburse"))
+    {return "app_supportChatRefund";}
+  // License & Pro (incl. LTD codes, discounts, coupons)
   if (q.includes("license") || q.includes("licencia") || hasSupportTerm("pro") ||
       q.includes("activate") || q.includes("activar") || q.includes("buy") ||
       q.includes("comprar") || q.includes("price") || q.includes("precio") ||
-      q.includes("pago") || q.includes("payment"))
+      q.includes("pago") || q.includes("payment") ||
+      q.includes("discount") || q.includes("descuento") ||
+      q.includes("coupon") || q.includes("cupon") ||
+      q.includes("appsumo") || q.includes("lifetime deal") ||
+      q.includes("oferta"))
     {return "app_supportChatLicense";}
+  // Updates — after License so "upgrade to pro" resolves to the license flow.
+  if (q.includes("update") || q.includes("actualizar") ||
+      q.includes("actualizacion") || q.includes("upgrade") ||
+      q.includes("new version") || q.includes("nueva version") ||
+      q.includes("version") || q.includes("versión"))
+    {return "app_supportChatUpdate";}
   // Flashcards & SRS
   if (q.includes("flashcard") || q.includes("srs") || q.includes("review") ||
       q.includes("repasar") || q.includes("memorize") || q.includes("memorizar"))
@@ -721,12 +742,18 @@ const SupportChat = function SupportChat() {
    */
   const copyReport = useCallback(async () => {
     const request = beginReport();
+    // Merge the live probe results with the redacted app diagnostic
+    // (version, build, vault counts, last BF-E code, 7-day error count) so a
+    // pasted report gives support everything in one shot. All fields are
+    // numbers/booleans/versions — no vault content, URLs or secrets.
+    const redacted = await buildRedactedDiagnostic().catch(() => null);
     const report = {
       app: "BookmarkForge",
       generatedAt: new Date().toISOString(),
       language: i18n.language,
       userAgent:
         typeof navigator !== "undefined" ? navigator.userAgent : undefined,
+      ...(redacted ?? {}),
       results: diagResults.map((d) => ({
         id: d.id,
         name: d.name,
@@ -1044,7 +1071,7 @@ const SupportChat = function SupportChat() {
               <p className="text-xs mb-3 ds-text-secondary">
                 {t(
                   "app_supportNotFoundDesc",
-                  "The AI Assistant (BMF Concierge) has been trained with all tutorials and usage guides. Use the Chat tab to ask specific questions and resolve your issue instantly.",
+                  "The Chat tab answers common questions instantly, even without AI configured. For deeper issues, run the Diagnostics tab and use 'Copy Report' — it produces a redacted summary you can send to support.",
                 )}
               </p>
               <button
@@ -1148,7 +1175,7 @@ const SupportChat = function SupportChat() {
               <p className="text-xs leading-relaxed mb-4 ds-text-muted">
                 {t(
                   "app_supportDiagGuaranteedDesc",
-                  "BookmarkForge is a Local-First application. This means 99% of issues are resolved by refreshing the page (F5) or restoring from a backup file (.bmf). There is no central database that can fail. You have absolute control over your data.",
+                  "BookmarkForge is a Local-First application. Most issues are resolved by refreshing the page (F5) or restoring from a backup file (.bmf). There is no central database that can fail. You have absolute control over your data.",
                 )}
               </p>
               <div className="flex gap-2">

@@ -54,9 +54,9 @@ Arrastra el botón **"Guardar en Forge"** a la barra de marcadores de tu navegad
 
 - **Lista virtualizada** que maneja 100,000+ elementos sin retraso
 - **Búsqueda Profunda:** busca en el texto completo de páginas guardadas
-- **Colecciones Inteligentes:** se auto-organizan por etiqueta
-- **Importar/Exportar:** desde Notion, Evernote, Chrome, o exportar como .bmf, Markdown, PDF
-- **Free:** 300 marcadores, búsqueda inteligente incluida y sin límite de dispositivos. Al llegar a 300, tus datos siguen disponibles para leer, buscar y exportar; solo se pausan los nuevos guardados. **Pro:** marcadores ilimitados.
+- **Etiquetas y Colecciones:** organiza con etiquetas, sugerencias de auto-etiquetado con IA y colecciones
+- **Importar/Exportar:** exportaciones de marcadores (Pocket, Raindrop, Omnivore, Chrome, Pinboard, Firefox), .enex de Evernote, bóvedas Notion/Markdown/Obsidian (ZIP); exporta como .bmf, Markdown, HTML, CSV, JSON, JSONL, Notion, Obsidian, PDF (Pro)
+- **Free:** 500 marcadores, búsqueda inteligente incluida y sin límite de dispositivos. Al llegar a 500, tus datos siguen disponibles para leer, buscar y exportar; solo se pausan los nuevos guardados. **Pro:** marcadores ilimitados.
 
 ### 3.2 Editor de notas
 
@@ -84,10 +84,10 @@ Visualización interactiva 3D/2D de tus notas:
 
 ### 3.5 Comandos de voz
 
-Motor de Voz a Acción:
-- Dile "Oye BMF, encuentra mis notas de Biología"
-- Dile "Guarda esta página"
-- Funciona 100% sin conexión mediante la Web Speech API
+Motor push-to-talk (pulsa el micrófono, habla, suelta):
+- Pulsa el micrófono y di "encuentra mis notas de Biología"
+- Pulsa el micrófono y di "guarda esta página"
+- Usa la Web Speech API del navegador — Chrome/Edge la soportan y requiere conexión a internet; el soporte en Firefox es limitado
 
 ### 3.6 Omnibar (Ctrl+K)
 
@@ -205,13 +205,13 @@ El cerebro de la aplicación:
 | Feature | Free | Pro |
 |---|---|--- |
 | Precio | $0 | $79 (lifetime) |
-| Marcadores | 300 | Ilimitados |
+| Marcadores | 500 | Ilimitados |
 | Dispositivos | Sin límite (cada dispositivo tiene su bóveda) | Hasta 5 + sincronización P2P |
 | IA con API propia | ✅ | ✅ |
 | IA Local (WebLLM/Ollama) | ❌ | ✅ |
 | RAG chat sobre tus datos | ❌ | ✅ |
 | Flashcards + PDF/OCR | ❌ | ✅ |
-| Exportación avanzada (10+ formatos) | ❌ | ✅ |
+| Exportación avanzada (7 formatos) | ❌ | ✅ |
 | Cifrado local de la bóveda (AES-GCM) | ✅ | ✅ |
 | Soporte | Comunidad | Email 48h |
 | Descubrimiento v2/v3 | ❌ | 60% off |
@@ -244,16 +244,19 @@ La importación reconoce exportaciones HTML (`ril_export.html`) y CSV de Pocket.
 ### 8.1 Importar
 
 Ve a **Configuración > Importar**:
-- **HTML/JSON desde Notion o Evernote**
-- **Exportación de marcadores de Chrome**
+- **Exportaciones de marcadores HTML/JSON** (Pocket, Raindrop, Omnivore, Chrome)
+- **Export de posts de Pinboard** (JSON) y **copia de Firefox** (`places.json`)
+- **Export de Evernote** (`.enex`) — las notas se convierten en documentos
+- **Export de Notion** (ZIP "Markdown & CSV") — las páginas se convierten en documentos y se conservan las carpetas
+- **Bóvedas Markdown u Obsidian** (ZIP)
 - **Copia de seguridad .bmf**
 
 ### 8.2 Exportar
 
 - **.bmf:** Backup completo cifrado
-- **Markdown:** Notas en formato legible
-- **PDF:** Exporta notas como documentos PDF
-- **JSON:** Datos estructurados
+- **Markdown, HTML, CSV, JSON, JSONL:** Exportaciones estructuradas
+- **Notion / Obsidian:** Exportaciones compatibles con vaults
+- **PDF:** Exporta notas como documentos PDF (Pro)
 
 ### 8.3 Backup y restauración
 
@@ -332,7 +335,7 @@ consulte la documentación interna o contacte soporte.
 La aplicación principal es local-first y gratuita. Las funciones avanzadas de IA y sincronización P2P requieren una Licencia Pro.
 
 **¿Puedo usarlo en el móvil?**
-Sí. Instálalo como PWA mediante Chrome (Android) o Safari (iOS). Soporta acceso sin conexión y notificaciones push.
+Sí. Instálalo como PWA mediante Chrome (Android) o Safari (iOS). Soporta acceso sin conexión y notificaciones locales del navegador.
 
 **¿Dónde están mis archivos?**
 Dentro del almacenamiento interno del navegador (IndexedDB). Puedes exportarlos como .bmf, Markdown o PDF en cualquier momento.

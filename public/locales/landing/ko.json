@@ -3,13 +3,13 @@
   "langName": "한국어",
   "dir": "ltr",
   "title": "BookmarkForge: 프라이빗 로컬 우선 북마크 관리자 및 읽기 목록",
-  "description": "Raindrop은 북마크를 서버에 보관합니다. BookmarkForge는 당신의 컴퓨터에 보관합니다 — 우리도 읽을 수 없도록 잠급니다. 한 번만 결제: $59 얼리버드 평생 이용권 (정가 전 $20 절약). 무료: 300개 북마크.",
+  "description": "Raindrop은 북마크를 서버에 보관합니다. BookmarkForge는 당신의 컴퓨터에 보관합니다 — 우리도 읽을 수 없도록 잠급니다. 한 번만 결제: $59 얼리버드 평생 이용권 (정가 전 $20 절약). 무료: 500개 북마크.",
   "ogTitle": "BookmarkForge: 프라이빗 로컬 우선 북마크 관리자 및 읽기 목록",
-  "ogDescription": "Raindrop은 북마크를 서버에 보관합니다. BookmarkForge는 당신의 컴퓨터에 보관합니다 — 우리도 읽을 수 없도록 잠급니다. 한 번만 결제: $59 얼리버드 평생 이용권 (정가 전 $20 절약). 무료: 300개 북마크.",
+  "ogDescription": "Raindrop은 북마크를 서버에 보관합니다. BookmarkForge는 당신의 컴퓨터에 보관합니다 — 우리도 읽을 수 없도록 잠급니다. 한 번만 결제: $59 얼리버드 평생 이용권 (정가 전 $20 절약). 무료: 500개 북마크.",
   "ogImage": "https://bookmarkforgeapp.com/og-image.png",
   "ogImageAlt": "BookmarkForge — AI 기반의 개인용 북마크 및 노트 앱",
   "twitterTitle": "BookmarkForge: 프라이빗 로컬 우선 북마크 관리자 및 읽기 목록",
-  "twitterDescription": "Raindrop은 북마크를 서버에 보관합니다. BookmarkForge는 당신의 컴퓨터에 보관합니다 — 우리도 읽을 수 없도록 잠급니다. 한 번만 결제: $59 얼리버드 평생 이용권 (정가 전 $20 절약). 무료: 300개 북마크.",
+  "twitterDescription": "Raindrop은 북마크를 서버에 보관합니다. BookmarkForge는 당신의 컴퓨터에 보관합니다 — 우리도 읽을 수 없도록 잠급니다. 한 번만 결제: $59 얼리버드 평생 이용권 (정가 전 $20 절약). 무료: 500개 북마크.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
   "skipLink": "본문으로 건너뛰기",
   "navBrandAria": "BookmarkForge 홈",
@@ -191,7 +191,13 @@
         "title": "기본적으로 비공개",
         "text": "계정 없음, 추적 없음, 광고 없음. 당신은 고객이지 상품이 아닙니다. 사용량 공유는 선택 사항이며 켜지 전까지 꺼져 있습니다."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "Free에 포함",
+      "free": "스마트 검색, 북마크 500개, 내 키로 AI, 암호화 백업 및보내기 — 영구적",
+      "proLabel": "Pro 추가",
+      "pro": "무제한 북마크, 5개 기기 동기화, 로컬 AI 및 볼트 채팅, 플래시카드, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ai",
@@ -212,22 +218,6 @@
         {
           "type": "cloud",
           "name": "클라우드 — Google Gemini (당신의 키로)"
-        },
-        {
-          "type": "cloud",
-          "name": "클라우드 — OpenAI / GPT-4o (당신의 키로)"
-        },
-        {
-          "type": "cloud",
-          "name": "클라우드 — Anthropic Claude (당신의 키로)"
-        },
-        {
-          "type": "cloud",
-          "name": "클라우드 — Groq (당신의 키로)"
-        },
-        {
-          "type": "cloud",
-          "name": "클라우드 — OpenRouter 또는 다른 커스텀 제공자 (당신의 키로)"
         }
       ]
     },
@@ -281,23 +271,27 @@
       {
         "title": "락인 없음",
         "text": "언제든 개방 형식으로 데이터를 내보냅니다 (JSON, Markdown, CSV, PDF). 당신의 지식은 당신의 것이며 이식 가능합니다."
+      },
+      {
+        "title": "Vercel만 호스팅 — 분석 제로",
+        "text": "이 사이트는 Vercel에서만 실행되며 어떤 종류의 분석도 없습니다: 트래커 없음, 핑거프린팅 없음, 서드파티 스크립트 없음. 브라우저의 네트워크 탭에서 직접 확인하세요."
       }
     ]
   },
   "pricing": {
     "id": "pricing",
     "title": "간단하고 공정한 가격 — 구독 없음",
-    "subtitle": "300개 북마크 영원히 무료. Pro는 v1에 대한 Lifetime 라이선스입니다 — 한 번 결제, v1을 영원히 소유. 모든 v1.x 업데이트와 12개월 기능 업데이트 포함. 보안 업데이트는 영원히. 월 청구 없음.",
+    "subtitle": "500개 북마크 영원히 무료. Pro는 v1에 대한 Lifetime 라이선스입니다 — 한 번 결제, v1을 영원히 소유. 모든 v1.x 업데이트와 12개월 기능 업데이트 포함. 보안 업데이트는 영원히. 월 청구 없음.",
     "plans": [
       {
         "name": "Free",
         "price": "$ 0",
         "period": "/영원히",
-        "description": "개인 아카이브용 (북마크 300개, 어떤 기기에서든 작동 — 기기마다 자체 볼트 보유)",
+        "description": "개인 아카이브용 (북마크 500개, 어떤 기기에서든 작동 — 기기마다 자체 볼트 보유)",
         "features": [
           {
             "included": true,
-            "text": "300개 북마크, 메모, 문서"
+            "text": "500개 북마크, 메모, 문서"
           },
           {
             "included": true,
@@ -306,6 +300,10 @@
           {
             "included": true,
             "text": "자체 API 키로 AI (공급업체에 지불)"
+          },
+          {
+            "included": true,
+            "text": "어떤 기기에서든 작동 — 기기마다 자체 볼트 보유"
           },
           {
             "included": true,
@@ -353,11 +351,11 @@
           }
         ],
         "cta": "바로 사용해 보기",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-secondary"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "가장 인기 — 얼리버드 200",
         "price": "$ 59",
         "period": "얼리버드 (이후 $79)",
@@ -389,7 +387,7 @@
           },
           {
             "included": true,
-            "text": "고급 내보내기 (10+ 형식)"
+            "text": "고급 내보내기 (7 형식)"
           },
           {
             "included": true,
@@ -398,18 +396,6 @@
           {
             "included": true,
             "text": "v1의 Lifetime · 12개월 기능 업데이트"
-          },
-          {
-            "included": true,
-            "text": "보안 업데이트 영원히"
-          },
-          {
-            "included": true,
-            "text": "이메일 지원 (48시간) + 얼리 액세스"
-          },
-          {
-            "included": true,
-            "text": "로컬 AI 번역 (출시 예정)"
           }
         ],
         "cta": "Pro $59 얼리버드 받기",
@@ -423,14 +409,14 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-ko#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-ko#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "자주 묻는 질문",
     "items": [
       {
         "question": "무료 등급이 정말 영원히 무료인가요?",
-        "answer": "네. 체험판도, 구독도 없습니다. 무료 등급에는 300개 북마크, 전문 검색 & 의미 검색, 지식 그래프, 당신의 API 키로 사용하는 AI (제공자에게 지불)가 포함됩니다."
+        "answer": "네. 체험판도, 구독도 없습니다. 무료 등급에는 500개 북마크, 전문 검색 & 의미 검색, 지식 그래프, 당신의 API 키로 사용하는 AI (제공자에게 지불)가 포함됩니다."
       },
       {
         "question": "\"v1의 Lifetime\"은 Pro에게 무엇을 의미하나요?",
@@ -447,6 +433,18 @@
       {
         "question": "볼트 비밀번호를 잊으면 어떻게 되나요?",
         "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-ko#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "사용을 중단하면 데이터는 어떻게 되나요?",
+        "answer": "데이터는 기기에 남아 있습니다. 언제든지 Markdown, JSON, CSV 또는 PDF로 내보낼 수 있습니다. 잠금 없음, 인질 없음."
+      },
+      {
+        "question": "내 데이터는 정말 비공개인가요?",
+        "answer": "물론입니다. 모든 것이 당신만의 키로 기기에서 암호화됩니다. 우리는 당신의 북마크, 메모, 비밀번호를 볼 수 없습니다. 우리조차도 당신의 데이터를 읽을 수 없습니다."
+      },
+      {
+        "question": "휴대폰에서 사용할 수 있나요?",
+        "answer": "네! BookmarkForge는 웹 브라우저가 있는 모든 기기에서 작동합니다. 무료 등급은 무제한 기기에서 작동합니다(각각 자체 볼트 보유). Pro는 최대 5대 기기에서 동기화됩니다."
       }
     ]
   },
@@ -455,7 +453,7 @@
     "text": "오늘부터 개인 AI 지식 보관소 구축을 시작하세요. 데이터는 기기에 남습니다 — 암호화, 검색 가능, 그리고 영원히 귀하의 것.",
     "ctaPrimary": "바로 사용해 보기 (계정 불필요)",
     "ctaSecondary": "Pro로 업그레이드",
-    "note": "계정 불필요. 브라우저에서 즉시 작동. 무료 등급: 300개 북마크."
+    "note": "계정 불필요. 브라우저에서 즉시 작동. 무료 등급: 500개 북마크."
   },
   "footer": {
     "brand": "당신의 비공개, AI 기반 지식 볼트. 100% 로컬 우선.",
@@ -473,7 +471,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {

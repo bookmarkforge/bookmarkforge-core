@@ -3,13 +3,13 @@
   "langName": "Nederlands",
   "dir": "ltr",
   "title": "BookmarkForge: privé local-first bladwijzerbeheer met leeslijst",
-  "description": "Raindrop bewaart je bladwijzers op zijn servers. BookmarkForge bewaart ze op je eigen computer — versleuteld, zodat zelfs wij ze niet kunnen lezen. Eén keer betalen: $59 early bird levenslange toegang (bespaar $20 vóór de normale prijs). Gratis: 300 bladwijzers.",
+  "description": "Raindrop bewaart je bladwijzers op zijn servers. BookmarkForge bewaart ze op je eigen computer — versleuteld, zodat zelfs wij ze niet kunnen lezen. Eén keer betalen: $59 early bird levenslange toegang (bespaar $20 vóór de normale prijs). Gratis: 500 bladwijzers.",
   "ogTitle": "BookmarkForge: privé local-first bladwijzerbeheer met leeslijst",
-  "ogDescription": "Raindrop bewaart je bladwijzers op zijn servers. BookmarkForge bewaart ze op je eigen computer — versleuteld, zodat zelfs wij ze niet kunnen lezen. Eén keer betalen: $59 early bird levenslange toegang (bespaar $20 vóór de normale prijs). Gratis: 300 bladwijzers.",
+  "ogDescription": "Raindrop bewaart je bladwijzers op zijn servers. BookmarkForge bewaart ze op je eigen computer — versleuteld, zodat zelfs wij ze niet kunnen lezen. Eén keer betalen: $59 early bird levenslange toegang (bespaar $20 vóór de normale prijs). Gratis: 500 bladwijzers.",
   "ogImage": "https://bookmarkforgeapp.com/og-image.png",
   "ogImageAlt": "BookmarkForge - privé, door AI aangedreven bladwijzer- en notitie-app",
   "twitterTitle": "BookmarkForge: privé local-first bladwijzerbeheer met leeslijst",
-  "twitterDescription": "Raindrop bewaart je bladwijzers op zijn servers. BookmarkForge bewaart ze op je eigen computer — versleuteld, zodat zelfs wij ze niet kunnen lezen. Eén keer betalen: $59 early bird levenslange toegang (bespaar $20 vóór de normale prijs). Gratis: 300 bladwijzers.",
+  "twitterDescription": "Raindrop bewaart je bladwijzers op zijn servers. BookmarkForge bewaart ze op je eigen computer — versleuteld, zodat zelfs wij ze niet kunnen lezen. Eén keer betalen: $59 early bird levenslange toegang (bespaar $20 vóór de normale prijs). Gratis: 500 bladwijzers.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
   "skipLink": "Naar hoofdinhoud",
   "navBrandAria": "Home van BookmarkForge",
@@ -191,7 +191,13 @@
         "title": "Privé standaard",
         "text": "Geen accounts, geen tracking, geen advertenties. Jij bent de klant, niet het product. Gebruiksdeling bestaat, is optioneel en blijft uit tot je hem aanzet."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "Gratis bevat",
+      "free": "slim zoeken, 500 bladwijzers, AI met je eigen sleutels, versleutelde back-ups en export — voor altijd",
+      "proLabel": "Pro voegt toe",
+      "pro": "onbeperkte bladwijzers, sync op 5 apparaten, lokale AI en chat over je kluis, flashcards, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ai",
@@ -212,22 +218,6 @@
         {
           "type": "cloud",
           "name": "Cloud — Google Gemini (met je eigen sleutel)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — OpenAI / GPT-4o (met je eigen sleutel)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — Anthropic Claude (met je eigen sleutel)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — Groq (met je eigen sleutel)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — OpenRouter of een andere aangepaste provider (met je eigen sleutel)"
         }
       ]
     },
@@ -281,23 +271,27 @@
       {
         "title": "Geen lock-in",
         "text": "Exporteer je data altijd in open formaten (JSON, Markdown, CSV, PDF). Je kennis blijft van jou en draagbaar."
+      },
+      {
+        "title": "Alleen Vercel host ons — nul analyses",
+        "text": "De site draait exclusief op Vercel zonder enige vorm van analyse: geen trackers, geen fingerprinting, geen scripts van derden. Verifieer het zelf in het netwerktabblad van je browser."
       }
     ]
   },
   "pricing": {
     "id": "pricing",
     "title": "Eenvoudige, eerlijke prijzen — geen abonnementen",
-    "subtitle": "Gratis 300 bladwijzers voor altijd. Pro is een Lifetime-licentie voor v1 — betaal eenmaal, bezit v1 voor altijd. Inclusief alle v1.x-updates en 12 maanden feature-updates. Beveiligingsupdates voor altijd. Geen maandelijkse facturering.",
+    "subtitle": "Gratis 500 bladwijzers voor altijd. Pro is een Lifetime-licentie voor v1 — betaal eenmaal, bezit v1 voor altijd. Inclusief alle v1.x-updates en 12 maanden feature-updates. Beveiligingsupdates voor altijd. Geen maandelijkse facturering.",
     "plans": [
       {
         "name": "Free",
         "price": "$ 0",
         "period": "/voor altijd",
-        "description": "Voor persoonlijk archief (300 bladwijzers, werkt op elk apparaat — elk met zijn eigen kluis)",
+        "description": "Voor persoonlijk archief (500 bladwijzers, werkt op elk apparaat — elk met zijn eigen kluis)",
         "features": [
           {
             "included": true,
-            "text": "300 bladwijzers, notities en documenten"
+            "text": "500 bladwijzers, notities en documenten"
           },
           {
             "included": true,
@@ -306,6 +300,10 @@
           {
             "included": true,
             "text": "AI met uw eigen API-sleutel (u betaalt de provider)"
+          },
+          {
+            "included": true,
+            "text": "Werkt op elk apparaat — elk met zijn eigen kluis"
           },
           {
             "included": true,
@@ -353,11 +351,11 @@
           }
         ],
         "cta": "Probeer het meteen",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-secondary"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "Populairst — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (dan $79)",
@@ -389,7 +387,7 @@
           },
           {
             "included": true,
-            "text": "Geavanceerde export (10+ formaten)"
+            "text": "Geavanceerde export (7 formaten)"
           },
           {
             "included": true,
@@ -398,18 +396,6 @@
           {
             "included": true,
             "text": "Lifetime van v1 · 12 maanden feature-updates"
-          },
-          {
-            "included": true,
-            "text": "Beveiligingsupdates voor altijd"
-          },
-          {
-            "included": true,
-            "text": "E-mailondersteuning (48u) + vroege toegang"
-          },
-          {
-            "included": true,
-            "text": "Lokale AI-vertaling (binnenkort)"
           }
         ],
         "cta": "Pro $59 Early Bird kopen",
@@ -423,14 +409,14 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-nl#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-nl#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Veelgestelde vragen",
     "items": [
       {
         "question": "Is de gratis laag echt voor altijd gratis?",
-        "answer": "Ja. Geen proefperiode, geen abonnement. De gratis laag bevat 300 bladwijzers, zoeken op volledige tekst & betekenis, kennisgraaf en AI met je eigen API-sleutel (jij betaalt de provider)."
+        "answer": "Ja. Geen proefperiode, geen abonnement. De gratis laag bevat 500 bladwijzers, zoeken op volledige tekst & betekenis, kennisgraaf en AI met je eigen API-sleutel (jij betaalt de provider)."
       },
       {
         "question": "Wat betekent \"Lifetime van v1\" voor Pro?",
@@ -447,6 +433,18 @@
       {
         "question": "Wat als ik mijn kluiswachtwoord vergeet?",
         "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-nl#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "Wat gebeurt er met mijn gegevens als ik stop met gebruiken?",
+        "answer": "Je gegevens blijven op je apparaat. Je kunt alles op elk moment exporteren naar Markdown, JSON, CSV of PDF. Geen lock-in, geen gijzeling."
+      },
+      {
+        "question": "Zijn mijn gegevens echt privé?",
+        "answer": "Absoluut. Alles is versleuteld op je apparaat met een sleutel die alleen jij hebt. We zien nooit je bladwijzers, notities of wachtwoorden. Zelfs wij kunnen je gegevens niet lezen."
+      },
+      {
+        "question": "Kan ik het op mijn telefoon gebruiken?",
+        "answer": "Ja! BookmarkForge werkt op elk apparaat met een webbrowser. De gratis versie werkt op onbeperkte apparaten (elk heeft zijn eigen kluis). Pro synchroniseert tot 5 apparaten."
       }
     ]
   },
@@ -455,7 +453,7 @@
     "text": "Begin vandaag met het bouwen van uw privé AI knowledge vault. Uw gegevens blijven op uw apparaat — versleuteld, doorzoekbaar en voor altijd van u.",
     "ctaPrimary": "Probeer het meteen (geen account nodig)",
     "ctaSecondary": "Upgraden naar Pro",
-    "note": "Geen account nodig. Werkt direct in je browser. Gratis laag: 300 bladwijzers."
+    "note": "Geen account nodig. Werkt direct in je browser. Gratis laag: 500 bladwijzers."
   },
   "footer": {
     "brand": "Je privé, AI-aangedreven kennisvault. 100% Local-First.",
@@ -473,7 +471,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {

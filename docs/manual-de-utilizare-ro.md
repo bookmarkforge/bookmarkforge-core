@@ -15,7 +15,7 @@ Seiful este criptat local cu AES-GCM, iar Argon2id derivă cheia din parola prin
 
 ## Marcaje și căutare
 
-Free include căutare inteligentă după cuvinte și sens. Free permite **300 de marcaje** și nu are limită de dispozitive; fără sincronizarea Pro, fiecare dispozitiv are propriul seif. La 300 nu se șterge nimic: citirea, căutarea și exportul continuă, iar doar salvările noi sunt puse pe pauză. Pro elimină limita și sincronizează până la cinci dispozitive prin P2P.
+Free include căutare inteligentă după cuvinte și sens. Free permite **500 de marcaje** și nu are limită de dispozitive; fără sincronizarea Pro, fiecare dispozitiv are propriul seif. La 500 nu se șterge nimic: citirea, căutarea și exportul continuă, iar doar salvările noi sunt puse pe pauză. Pro elimină limita și sincronizează până la cinci dispozitive prin P2P.
 
 ## Import din Pocket
 

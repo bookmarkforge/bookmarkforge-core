@@ -3,13 +3,13 @@
   "langName": "Français",
   "dir": "ltr",
   "title": "BookmarkForge : gestionnaire de favoris privé et local-first avec liste de lecture",
-  "description": "Raindrop garde vos favoris sur ses serveurs et vous facture chaque année. BookmarkForge les garde sur votre ordinateur, verrouillés pour que même pas nous puissions les lire. Un seul paiement: $59 accès à vie early bird (économisez $20 avant le prix normal). Gratuit : 300 favoris.",
+  "description": "Raindrop garde vos favoris sur ses serveurs et vous facture chaque année. BookmarkForge les garde sur votre ordinateur, verrouillés pour que même pas nous puissions les lire. Un seul paiement: $59 accès à vie early bird (économisez $20 avant le prix normal). Gratuit : 500 favoris.",
   "ogTitle": "BookmarkForge : gestionnaire de favoris privé et local-first avec liste de lecture",
-  "ogDescription": "Raindrop garde vos favoris sur ses serveurs et vous facture chaque année. BookmarkForge les garde sur votre ordinateur, verrouillés pour que même pas nous puissions les lire. Un seul paiement: $59 accès à vie early bird (économisez $20 avant le prix normal). Gratuit : 300 favoris.",
+  "ogDescription": "Raindrop garde vos favoris sur ses serveurs et vous facture chaque année. BookmarkForge les garde sur votre ordinateur, verrouillés pour que même pas nous puissions les lire. Un seul paiement: $59 accès à vie early bird (économisez $20 avant le prix normal). Gratuit : 500 favoris.",
   "ogImage": "https://bookmarkforgeapp.com/og-image-fr.png",
   "ogImageAlt": "BookmarkForge - application privée de signets et de notes alimentée par l'IA",
   "twitterTitle": "BookmarkForge : gestionnaire de favoris privé et local-first avec liste de lecture",
-  "twitterDescription": "Raindrop garde vos favoris sur ses serveurs et vous facture chaque année. BookmarkForge les garde sur votre ordinateur, verrouillés pour que même pas nous puissions les lire. Un seul paiement: $59 accès à vie early bird (économisez $20 avant le prix normal). Gratuit : 300 favoris.",
+  "twitterDescription": "Raindrop garde vos favoris sur ses serveurs et vous facture chaque année. BookmarkForge les garde sur votre ordinateur, verrouillés pour que même pas nous puissions les lire. Un seul paiement: $59 accès à vie early bird (économisez $20 avant le prix normal). Gratuit : 500 favoris.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image-fr.png",
   "skipLink": "Aller au contenu principal",
   "navBrandAria": "BookmarkForge accueil",
@@ -133,7 +133,7 @@
       {
         "topic": "Ce que vous payez",
         "us": "$59 accès à vie early bird (économisez $20 avant le prix normal)",
-        "them": "28 dollars chaque année, pour toujours"
+        "them": "charged yearly chaque année, pour toujours"
       },
       {
         "topic": "Si l'entreprise disparaît (RIP Pocket)",
@@ -161,7 +161,7 @@
       },
       {
         "title": "Recherche intelligente",
-        "text": "Trouvez par mot-clé ou par sens, même sans vous souvenir des mots exacts. Raindrop fait payer 28 dollars par an pour cela ; ici, c'est inclus gratuitement."
+        "text": "Trouvez par mot-clé ou par sens, même sans vous souvenir des mots exacts. Raindrop fait payer charged yearly par an pour cela ; ici, c'est inclus gratuitement."
       },
       {
         "title": "Une IA qui lit votre bibliothèque, dans votre ordinateur",
@@ -191,7 +191,13 @@
         "title": "Privé par défaut",
         "text": "Sans comptes, sans pistage, sans publicité. Vous êtes le client, pas le produit. Le partage de statistiques existe, il est facultatif et désactivé tant que vous ne l'activez pas."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "Gratuit inclut",
+      "free": "recherche intelligente, 500 favoris, IA avec vos propres clés, sauvegardes chiffrées et export — pour toujours",
+      "proLabel": "Pro ajoute",
+      "pro": "favoris illimités, synchronisation sur 5 appareils, IA locale et chat sur votre coffre, flashcards, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ia",
@@ -212,22 +218,6 @@
         {
           "type": "cloud",
           "name": "Dans le cloud — Google Gemini (avec votre propre clé)"
-        },
-        {
-          "type": "cloud",
-          "name": "Dans le cloud — OpenAI / GPT-4o (avec votre propre clé)"
-        },
-        {
-          "type": "cloud",
-          "name": "Dans le cloud — Anthropic Claude (avec votre propre clé)"
-        },
-        {
-          "type": "cloud",
-          "name": "Dans le cloud — Groq (avec votre propre clé)"
-        },
-        {
-          "type": "cloud",
-          "name": "Dans le cloud — OpenRouter ou un fournisseur personnalisé (avec votre propre clé)"
         }
       ]
     },
@@ -281,19 +271,23 @@
       {
         "title": "Sans enfermement",
         "text": "Exportez vos données à tout moment en formats ouverts (JSON, Markdown, CSV, PDF). Votre savoir reste vôtre et transportable."
+      },
+      {
+        "title": "Seul Vercel nous héberge — zéro analytique",
+        "text": "Le site fonctionne exclusivement sur Vercel sans aucune analytique : pas de traceurs, pas d'empreinte digitale, pas de scripts tiers. Vérifiez-le vous-même dans l'onglet réseau de votre navigateur."
       }
     ]
   },
   "pricing": {
     "id": "tarifs",
     "title": "Tarifs simples et justes — Sans abonnement",
-    "subtitle": "300 signets gratuits pour toujours. Pro est une licence Lifetime v1 — payez une fois, gardez v1 pour toujours. Inclut toutes les v1.x et 12 mois de nouveautés. Sécurité à vie. Sans mensualité.",
+    "subtitle": "500 signets gratuits pour toujours. Pro est une licence Lifetime v1 — payez une fois, gardez v1 pour toujours. Inclut toutes les v1.x et 12 mois de nouveautés. Sécurité à vie. Sans mensualité.",
     "plans": [
       {
         "name": "Gratuit",
         "price": "$ 0",
         "period": "/à vie",
-        "description": "Gratuit pour toujours : 300 favoris et la recherche intelligente que d'autres font payer chaque année. À 300, votre bibliothèque reste entière : lire, chercher et exporter ne s'arrêtent jamais ; seuls les nouveaux enregistrements pause.",
+        "description": "Gratuit pour toujours : 500 favoris et la recherche intelligente que d'autres font payer chaque année. À 500, votre bibliothèque reste entière : lire, chercher et exporter ne s'arrêtent jamais ; seuls les nouveaux enregistrements pause.",
         "features": [
           {
             "included": true,
@@ -301,11 +295,15 @@
           },
           {
             "included": true,
-            "text": "300 favoris, notes et documents"
+            "text": "500 favoris, notes et documents"
           },
           {
             "included": true,
             "text": "Fonctionne sur n'importe quel appareil — chacun garde sa propre bibliothèque"
+          },
+          {
+            "included": true,
+            "text": "IA avec votre propre clé API (vous payez le fournisseur)"
           },
           {
             "included": true,
@@ -353,11 +351,11 @@
           }
         ],
         "cta": "Essayez tout de suite",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-outline"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "Le Plus Populaire — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (puis $79)",
@@ -389,7 +387,7 @@
           },
           {
             "included": true,
-            "text": "Export avancé (10+ formats)"
+            "text": "Export avancé (7 formats)"
           },
           {
             "included": true,
@@ -398,18 +396,6 @@
           {
             "included": true,
             "text": "À vie sur v1 · 12 mois de mises à jour"
-          },
-          {
-            "included": true,
-            "text": "Mises à jour de sécurité à vie"
-          },
-          {
-            "included": true,
-            "text": "Support par e-mail (48h) + accès anticipé"
-          },
-          {
-            "included": true,
-            "text": "Traduction IA locale (bientôt disponible)"
           }
         ],
         "cta": "Obtenir Pro $59 Early Bird",
@@ -430,7 +416,7 @@
     "items": [
       {
         "question": "Le plan Gratuit est-il vraiment gratuit à vie ?",
-        "answer": "Oui. Sans essai ni abonnement. Inclut 300 signets, recherche plein texte et sémantique, graphe de connaissances et IA avec votre propre clé API (vous payez le fournisseur)."
+        "answer": "Oui. Sans essai ni abonnement. Inclut 500 signets, recherche plein texte et sémantique, graphe de connaissances et IA avec votre propre clé API (vous payez le fournisseur)."
       },
       {
         "question": "Que signifie \"Lifetime de v1\" pour Pro ?",
@@ -447,6 +433,18 @@
       {
         "question": "J’ai oublié le mot de passe de mon coffre ?",
         "answer": "Nous ne pouvons pas le récupérer. À la création, une phrase de 24 mots s’affiche une seule fois — notez-la sur papier. Sans elle, personne (nous inclus) ne peut ouvrir le coffre. Voir <a href=\"/help-fr#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "Que deviennent mes données si j'arrête de l'utiliser ?",
+        "answer": "Vos données restent sur votre appareil. Vous pouvez tout exporter à tout moment en Markdown, JSON, CSV ou PDF. Pas de verrouillage, pas de prise d'otage."
+      },
+      {
+        "question": "Mes données sont-elles vraiment privées ?",
+        "answer": "Absolument. Tout est chiffré sur votre appareil avec une clé que vous seul possédez. Nous ne voyons jamais vos favoris, notes ou mots de passe. Même nous ne pouvons pas lire vos données."
+      },
+      {
+        "question": "Puis-je l'utiliser sur mon téléphone ?",
+        "answer": "Oui ! BookmarkForge fonctionne sur tout appareil avec un navigateur web. Le niveau gratuit fonctionne sur des appareils illimités (chacun a son propre coffre). Pro synchronise jusqu'à 5 appareils."
       }
     ]
   },
@@ -455,7 +453,7 @@
     "text": "Commencez à construire votre coffre-fort de connaissances IA privée aujourd'hui. Vos données restent sur votre appareil — chiffrées, recherchables et à vous pour toujours.",
     "ctaPrimary": "Essayez tout de suite (sans compte)",
     "ctaSecondary": "Passer à Pro",
-    "note": "Aucun compte requis. Fonctionne instantanément dans votre navigateur. Niveau gratuit : 300 signets."
+    "note": "Aucun compte requis. Fonctionne instantanément dans votre navigateur. Niveau gratuit : 500 signets."
   },
   "footer": {
     "brand": "Votre coffre de connaissances privé avec IA. 100% local.",
@@ -473,7 +471,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {

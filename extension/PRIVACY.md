@@ -1,8 +1,7 @@
 # BookmarkForge Extension — Privacy
 
 The extension reads the active tab's URL and title only when the user
-explicitly invokes a capture action (context menu, toolbar button or
-keyboard shortcut).
+explicitly invokes a capture action (context menu or toolbar button).
 
 **It does not transmit anything.** A capture opens a new tab pointing at the
 BookmarkForge instance the user configured (`<base-url>#capture?url=…&title=…`).

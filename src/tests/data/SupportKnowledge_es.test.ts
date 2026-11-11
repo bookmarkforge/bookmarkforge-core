@@ -4,8 +4,8 @@ import { SUPPORT_KNOWLEDGE_ES } from "../../data/SupportKnowledge_es";
 describe("SUPPORT_KNOWLEDGE_ES (Spanish version)", () => {
   it("all texts are in Spanish", () => {
     expect(SUPPORT_KNOWLEDGE_ES.GENERAL.APP_NAME).toBe("BookmarkForge");
-    expect(SUPPORT_KNOWLEDGE_ES.GENERAL.VERSION).toBe("1.0.0 Estable");
-    expect(SUPPORT_KNOWLEDGE_ES.GENERAL.BUILD_DATE).toBe("Mayo 2026");
+    expect(SUPPORT_KNOWLEDGE_ES.GENERAL.VERSION).toBe("1.0.0");
+    expect(SUPPORT_KNOWLEDGE_ES.GENERAL.BUILD_DATE).toBe("Noviembre 2026");
     expect(SUPPORT_KNOWLEDGE_ES.GENERAL.PHILOSOPHY).toContain(
       "Privacidad total",
     );
@@ -81,7 +81,7 @@ describe("SUPPORT_KNOWLEDGE_ES (Spanish version)", () => {
       "Gemini",
     );
     expect(SUPPORT_KNOWLEDGE_ES.AI_CONFIGURATION_PRO.MODEL_SELECTION).toContain(
-      "Qwen",
+      "Ollama",
     );
   });
 
@@ -108,7 +108,7 @@ describe("SUPPORT_KNOWLEDGE_ES (Spanish version)", () => {
     ).toContain("Limpia la caché");
     expect(
       SUPPORT_KNOWLEDGE_ES.TROUBLESHOOTING_MASTER_LIST.SYNC_FAILING,
-    ).toContain("Wi-Fi");
+    ).toContain("WebRTC");
     expect(
       SUPPORT_KNOWLEDGE_ES.TROUBLESHOOTING_MASTER_LIST.AI_HALLUCINATIONS,
     ).toContain("La IA puede equivocarse");
@@ -129,7 +129,7 @@ describe("SUPPORT_KNOWLEDGE_ES (Spanish version)", () => {
       expect(question.length).toBeGreaterThan(0);
       expect(answer.length).toBeGreaterThan(0);
     }
-    expect(faq["¿Es gratis?"]).toContain("Licencia Pro");
+    expect(faq["¿Es gratis?"]).toContain("Pro");
   });
 
   it("TUTORIALS_QUICK_START has 3 tutorials in Spanish", () => {
@@ -169,7 +169,7 @@ describe("SUPPORT_KNOWLEDGE_ES (Spanish version)", () => {
       "proveedor de pagos",
     );
     expect(SUPPORT_KNOWLEDGE_ES.LICENSE_SUPPORT.REFUND_POLICY).toContain(
-      "30 días",
+      "Whop",
     );
     expect(SUPPORT_KNOWLEDGE_ES.LICENSE_SUPPORT.PRO_FEATURES).toContain("P2P");
   });

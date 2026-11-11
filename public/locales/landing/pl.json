@@ -3,13 +3,13 @@
   "langName": "Polski",
   "dir": "ltr",
   "title": "BookmarkForge: prywatny lokalny menedżer zakładek z listą do przeczytania",
-  "description": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. Jedna płatność: $59 dostęp na zawsze w cenie early bird (oszczędzasz $20 przed ceną regularną). Free: 300 zakładek.",
+  "description": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. Jedna płatność: $59 dostęp na zawsze w cenie early bird (oszczędzasz $20 przed ceną regularną). Free: 500 zakładek.",
   "ogTitle": "BookmarkForge: prywatny lokalny menedżer zakładek z listą do przeczytania",
-  "ogDescription": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. Jedna płatność: $59 dostęp na zawsze w cenie early bird (oszczędzasz $20 przed ceną regularną). Free: 300 zakładek.",
+  "ogDescription": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. Jedna płatność: $59 dostęp na zawsze w cenie early bird (oszczędzasz $20 przed ceną regularną). Free: 500 zakładek.",
   "ogImage": "https://bookmarkforgeapp.com/og-image.png",
-  "ogImageAlt": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. 59 dolarów raz. Free: 300 zakładek.",
+  "ogImageAlt": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. 59 dolarów raz. Free: 500 zakładek.",
   "twitterTitle": "BookmarkForge: prywatny lokalny menedżer zakładek z listą do przeczytania",
-  "twitterDescription": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. Jedna płatność: $59 dostęp na zawsze w cenie early bird (oszczędzasz $20 przed ceną regularną). Free: 300 zakładek.",
+  "twitterDescription": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. Jedna płatność: $59 dostęp na zawsze w cenie early bird (oszczędzasz $20 przed ceną regularną). Free: 500 zakładek.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
   "skipLink": "Przejdź do treści głównej",
   "navBrandAria": "Strona główna BookmarkForge",
@@ -191,7 +191,13 @@
         "title": "Prywatne z założenia",
         "text": "Bez kont, bez śledzenia, bez reklam. To Ty jesteś klientem, nie produktem. Udostępnianie statystyk użycia istnieje, jest opcjonalne i pozostaje wyłączone, dopóki go nie włączysz."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "Free zawiera",
+      "free": "inteligentne wyszukiwanie, 500 zakładek, AI z własnymi kluczami, szyfrowane kopie zapasowe i eksport — na zawsze",
+      "proLabel": "Pro dodaje",
+      "pro": "nieograniczone zakładki, synchronizację na 5 urządzeniach, lokalne AI i czat po sejfie, fiszki, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ai",
@@ -212,22 +218,6 @@
         {
           "type": "cloud",
           "name": "Chmura — Google Gemini (z własnym kluczem)"
-        },
-        {
-          "type": "cloud",
-          "name": "Chmura — OpenAI / GPT-4o (z własnym kluczem)"
-        },
-        {
-          "type": "cloud",
-          "name": "Chmura — Anthropic Claude (z własnym kluczem)"
-        },
-        {
-          "type": "cloud",
-          "name": "Chmura — Groq (z własnym kluczem)"
-        },
-        {
-          "type": "cloud",
-          "name": "Chmura — OpenRouter lub inny własny dostawca (z własnym kluczem)"
         }
       ]
     },
@@ -281,23 +271,27 @@
       {
         "title": "Bez uzależnienia",
         "text": "Wyeksportuj swoje dane o każdej porze w otwartych formatach (JSON, Markdown, CSV, PDF). Twoja wiedza zostaje Twoja i można ją zabrać ze sobą."
+      },
+      {
+        "title": "Tylko Vercel nas hostuje — zero analityki",
+        "text": "Strona działa wyłącznie na Vercel bez jakiejkolwiek analityki: bez trackerów, bez fingerprintingu, bez skryptów stron trzecich. Sprawdź sam w zakładce sieciowej swojej przeglądarki."
       }
     ]
   },
   "pricing": {
     "id": "pricing",
     "title": "Prosty, uczciwy cennik — bez subskrypcji",
-    "subtitle": "Free: 300 zakładek na zawsze. Pro to licencja Lifetime na v1 — zapłać raz, posiadaj v1 na zawsze. W cenie wszystkie aktualizacje v1.x i 12 miesięcy aktualizacji funkcji. Aktualizacje bezpieczeństwa na zawsze. Bez miesięcznych opłat.",
+    "subtitle": "Free: 500 zakładek na zawsze. Pro to licencja Lifetime na v1 — zapłać raz, posiadaj v1 na zawsze. W cenie wszystkie aktualizacje v1.x i 12 miesięcy aktualizacji funkcji. Aktualizacje bezpieczeństwa na zawsze. Bez miesięcznych opłat.",
     "plans": [
       {
         "name": "Free",
         "price": "$ 0",
         "period": "/na zawsze",
-        "description": "Do osobistego archiwum (300 zakładek, działa na dowolnym urządzeniu — każde ma własny sejf)",
+        "description": "Do osobistego archiwum (500 zakładek, działa na dowolnym urządzeniu — każde ma własny sejf)",
         "features": [
           {
             "included": true,
-            "text": "300 zakładek, notatek i dokumentów"
+            "text": "500 zakładek, notatek i dokumentów"
           },
           {
             "included": true,
@@ -306,6 +300,10 @@
           {
             "included": true,
             "text": "AI z własnym kluczem API (Ty płacisz dostawcy)"
+          },
+          {
+            "included": true,
+            "text": "Działa na dowolnym urządzeniu — każde ma własny sejf"
           },
           {
             "included": true,
@@ -353,11 +351,11 @@
           }
         ],
         "cta": "Wypróbuj od razu",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-secondary"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "Najpopularniejszy — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (potem $79)",
@@ -389,7 +387,7 @@
           },
           {
             "included": true,
-            "text": "Zaawansowany eksport (10+ formatów)"
+            "text": "Zaawansowany eksport (7 formatów)"
           },
           {
             "included": true,
@@ -398,18 +396,6 @@
           {
             "included": true,
             "text": "Lifetime v1 · 12 miesięcy aktualizacji funkcji"
-          },
-          {
-            "included": true,
-            "text": "Aktualizacje bezpieczeństwa na zawsze"
-          },
-          {
-            "included": true,
-            "text": "Wsparcie e-mail (48h) + wcześniejszy dostęp"
-          },
-          {
-            "included": true,
-            "text": "Lokalne tłumaczenie AI (wkrótce)"
           }
         ],
         "cta": "Weź Pro za $59 w Early Bird",
@@ -423,14 +409,14 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-pl#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-pl#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Najczęstsze pytania",
     "items": [
       {
         "question": "Czy plan Free naprawdę jest darmowy na zawsze?",
-        "answer": "Tak. Bez okresu próbnego, bez subskrypcji. Plan Free obejmuje 300 zakładek, wyszukiwanie pełnotekstowe i semantyczne, graf wiedzy oraz AI z własnym kluczem API (opłatę ponosisz dostawca)."
+        "answer": "Tak. Bez okresu próbnego, bez subskrypcji. Plan Free obejmuje 500 zakładek, wyszukiwanie pełnotekstowe i semantyczne, graf wiedzy oraz AI z własnym kluczem API (opłatę ponosisz dostawca)."
       },
       {
         "question": "Co oznacza „Lifetime v1” w Pro?",
@@ -447,6 +433,18 @@
       {
         "question": "Co jeśli zapomnę hasła do sejfu?",
         "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-pl#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "Co się dzieje z moimi danymi, jeśli przestanę go używać?",
+        "answer": "Twoje dane zostają na Twoim urządzeniu. Możesz wyeksportować wszystko w dowolnym momencie do Markdown, JSON, CSV lub PDF. Bez blokady, bez zakładników."
+      },
+      {
+        "question": "Czy moje dane są naprawdę prywatne?",
+        "answer": "Absolutnie. Wszystko jest szyfrowane na Twoim urządzeniu kluczem, który tylko Ty posiadasz. Nigdy nie widzimy Twoich zakładek, notatek ani haseł. Nawet my nie możemy odczytać Twoich danych."
+      },
+      {
+        "question": "Czy mogę go używać na telefonie?",
+        "answer": "Tak! BookmarkForge działa na każdym urządzeniu z przeglądarką internetową. Darmowy poziom działa na nieograniczonych urządzeniach (każde ma własny sejf). Pro synchronizuje do 5 urządzeń."
       }
     ]
   },
@@ -455,7 +453,7 @@
     "text": "Dołącz do tysięcy badaczy, programistów i osób uczących się, którzy powierzyli BookmarkForge swój drugi mózg.",
     "ctaPrimary": "Wypróbuj od razu (bez konta)",
     "ctaSecondary": "Przejdź na Pro",
-    "note": "Bez konta. Działa natychmiast w przeglądarce. Plan Free: 300 zakładek."
+    "note": "Bez konta. Działa natychmiast w przeglądarce. Plan Free: 500 zakładek."
   },
   "footer": {
     "brand": "Twój prywatny, napędzany przez AI sejf wiedzy. 100% na własnym sprzęcie.",
@@ -473,7 +471,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {

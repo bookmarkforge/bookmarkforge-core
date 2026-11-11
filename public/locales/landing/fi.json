@@ -3,13 +3,13 @@
   "langName": "Suomi",
   "dir": "ltr",
   "title": "BookmarkForge: yksityinen local-first kirjanmerkkien hallinta ja lukulista",
-  "description": "Raindrop pitää kirjanmerkkisi palvelimillaan. BookmarkForge pitää ne tietokoneellasi — lukittuna niin, ettei edes me voimme lukea niitä. Maksa kerran: $59 early bird -elämänaikainen käyttöoikeus (säästä $20 ennen normaalihintaa). Ilmainen: 300 kirjanmerkkiä.",
+  "description": "Raindrop pitää kirjanmerkkisi palvelimillaan. BookmarkForge pitää ne tietokoneellasi — lukittuna niin, ettei edes me voimme lukea niitä. Maksa kerran: $59 early bird -elämänaikainen käyttöoikeus (säästä $20 ennen normaalihintaa). Ilmainen: 500 kirjanmerkkiä.",
   "ogTitle": "BookmarkForge: yksityinen local-first kirjanmerkkien hallinta ja lukulista",
-  "ogDescription": "Raindrop pitää kirjanmerkkisi palvelimillaan. BookmarkForge pitää ne tietokoneellasi — lukittuna niin, ettei edes me voimme lukea niitä. Maksa kerran: $59 early bird -elämänaikainen käyttöoikeus (säästä $20 ennen normaalihintaa). Ilmainen: 300 kirjanmerkkiä.",
+  "ogDescription": "Raindrop pitää kirjanmerkkisi palvelimillaan. BookmarkForge pitää ne tietokoneellasi — lukittuna niin, ettei edes me voimme lukea niitä. Maksa kerran: $59 early bird -elämänaikainen käyttöoikeus (säästä $20 ennen normaalihintaa). Ilmainen: 500 kirjanmerkkiä.",
   "ogImage": "https://bookmarkforgeapp.com/og-image.png",
   "ogImageAlt": "BookmarkForge - yksityinen tekoälyllä toimiva kirjanmerkki- ja muistiinpanosovellus",
   "twitterTitle": "BookmarkForge: yksityinen local-first kirjanmerkkien hallinta ja lukulista",
-  "twitterDescription": "Raindrop pitää kirjanmerkkisi palvelimillaan. BookmarkForge pitää ne tietokoneellasi — lukittuna niin, ettei edes me voimme lukea niitä. Maksa kerran: $59 early bird -elämänaikainen käyttöoikeus (säästä $20 ennen normaalihintaa). Ilmainen: 300 kirjanmerkkiä.",
+  "twitterDescription": "Raindrop pitää kirjanmerkkisi palvelimillaan. BookmarkForge pitää ne tietokoneellasi — lukittuna niin, ettei edes me voimme lukea niitä. Maksa kerran: $59 early bird -elämänaikainen käyttöoikeus (säästä $20 ennen normaalihintaa). Ilmainen: 500 kirjanmerkkiä.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
   "skipLink": "Siirry pääsisältöön",
   "navBrandAria": "BookmarkForge-etusivu",
@@ -191,7 +191,13 @@
         "title": "Yksityinen oletuksena",
         "text": "Ei tilejä, ei seurantaa, ei mainoksia. Sinä olet asiakas, et tuote. Käytön jakaminen on olemassa, se on valinnainen ja pysyy pois päältä, kunnes otat sen käyttöön."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "Ilmainen sisältää",
+      "free": "älykäs haku, 500 kirjanmerkkiä, AI omilla avaimillasi, salatut varmuuskopiot ja vienti — ikuisesti",
+      "proLabel": "Pro lisää",
+      "pro": "rajattomat kirjanmerkit, synkronointi 5 laitteella, paikallinen AI ja chat holviisi, muistikortit, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ai",
@@ -212,22 +218,6 @@
         {
           "type": "cloud",
           "name": "Pilvi — Google Gemini (omalla avaimellasi)"
-        },
-        {
-          "type": "cloud",
-          "name": "Pilvi — OpenAI / GPT-4o (omalla avaimellasi)"
-        },
-        {
-          "type": "cloud",
-          "name": "Pilvi — Anthropic Claude (omalla avaimellasi)"
-        },
-        {
-          "type": "cloud",
-          "name": "Pilvi — Groq (omalla avaimellasi)"
-        },
-        {
-          "type": "cloud",
-          "name": "Pilvi — OpenRouter tai toinen mukautettu tarjoaja (omalla avaimellasi)"
         }
       ]
     },
@@ -281,23 +271,27 @@
       {
         "title": "Ei lukitusta toimittajaan",
         "text": "Vie tietosi milloin vain avoimissa muodoissa (JSON, Markdown, CSV, PDF). Tietämyksesi pysyy sinun ja siirrettävänä."
+      },
+      {
+        "title": "Vain Vercel hostaa meidät — ei analytiikkaa",
+        "text": "Sivusto toimii yksinomaan Vercelissä ilman minkäänlaista analytiikkaa: ei seurantaa, ei sormenjälkiä, ei kolmannen osapuolen skriptejä. Vahvista itse selaimen verkko-välilehdellä."
       }
     ]
   },
   "pricing": {
     "id": "pricing",
     "title": "Yksinkertainen, reilu hinnoittelu — ei tilauksia",
-    "subtitle": "Ilmainen 300 kirjanmerkkiä ikuisesti. Pro on Lifetime-lisenssi v1:ään — maksat kerran, omistat v1:n ikuisesti. Sisältää kaikki v1.x-päivitykset ja 12 kuukauden ominaisuuspäivitykset. Tietoturvapäivitykset ikuisesti. Ei kuukausilaskutusta.",
+    "subtitle": "Ilmainen 500 kirjanmerkkiä ikuisesti. Pro on Lifetime-lisenssi v1:ään — maksat kerran, omistat v1:n ikuisesti. Sisältää kaikki v1.x-päivitykset ja 12 kuukauden ominaisuuspäivitykset. Tietoturvapäivitykset ikuisesti. Ei kuukausilaskutusta.",
     "plans": [
       {
         "name": "Free",
         "price": "$ 0",
         "period": "/ikuisesti",
-        "description": "Henkilökohtaiseen arkistoon (300 kirjanmerkkiä, toimii millä tahansa laitteella — jokaisella on oma holvinsa)",
+        "description": "Henkilökohtaiseen arkistoon (500 kirjanmerkkiä, toimii millä tahansa laitteella — jokaisella on oma holvinsa)",
         "features": [
           {
             "included": true,
-            "text": "300 kirjanmerkkiä, muistiinpanoja ja asiakirjoja"
+            "text": "500 kirjanmerkkiä, muistiinpanoja ja asiakirjoja"
           },
           {
             "included": true,
@@ -306,6 +300,10 @@
           {
             "included": true,
             "text": "AI omalla API-avaimellasi (maksat palveluntarjoajaa)"
+          },
+          {
+            "included": true,
+            "text": "Toimii millä tahansa laitteella — jokaisella on oma holvinsa"
           },
           {
             "included": true,
@@ -353,11 +351,11 @@
           }
         ],
         "cta": "Kokeile heti",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-secondary"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "Suosituin — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (sitten $79)",
@@ -389,7 +387,7 @@
           },
           {
             "included": true,
-            "text": "Edistynyt vienti (10+ muotoa)"
+            "text": "Edistynyt vienti (7 muotoa)"
           },
           {
             "included": true,
@@ -398,18 +396,6 @@
           {
             "included": true,
             "text": "V1:n ikä · 12 kuukauden ominaisuuspäivitykset"
-          },
-          {
-            "included": true,
-            "text": "Tietoturvapäivitykset ikuisesti"
-          },
-          {
-            "included": true,
-            "text": "Sähköpostituki (48 h) + ennakkopääsy"
-          },
-          {
-            "included": true,
-            "text": "Paikallinen AI-käännös (tulossa)"
           }
         ],
         "cta": "Hanki Pro $59 Early Bird",
@@ -423,14 +409,14 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-fi#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-fi#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Yleiset kysymykset",
     "items": [
       {
         "question": "Onko Ilmainen-taso todella ilmainen ikuisesti?",
-        "answer": "Kyllä. Ei kokeilua, ei tilausta. Ilmainen taso sisältää 300 kirjanmerkkiä, täysteksti- ja semanttisen haun, tietämysgraafin sekä tekoälyn omalla API-avaimellasi (maksat tarjoajalle)."
+        "answer": "Kyllä. Ei kokeilua, ei tilausta. Ilmainen taso sisältää 500 kirjanmerkkiä, täysteksti- ja semanttisen haun, tietämysgraafin sekä tekoälyn omalla API-avaimellasi (maksat tarjoajalle)."
       },
       {
         "question": "Mitä \"Lifetime of v1\" tarkoittaa Pro:lle?",
@@ -447,6 +433,18 @@
       {
         "question": "Mitä jos unohdan holvisalasanani?",
         "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-fi#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "Mitä tapahtuu tiedoilleni, jos lopetan käytön?",
+        "answer": "Tietosi pysyvät laitteellasi. Voit viedä kaiken milloin tahansa Markdown-, JSON-, CSV- tai PDF-muodossa. Ei lukitusta, ei pantteja."
+      },
+      {
+        "question": "Ovatko tietoni todella yksityisiä?",
+        "answer": "Ehdottomasti. Kaikki on salattu laitteellasi avaimella, joka on vain sinulla. Emme koskaan näe kirjanmerkkejäsi, muistiinpanoja tai salasanoja. Emme edes me voimme lukea tietojasi."
+      },
+      {
+        "question": "Voiko sitä käyttää puhelimessani?",
+        "answer": "Kyllä! BookmarkForge toimii millä tahansa laitteella, jolla on verkkoselain. Ilmainen taso toimii rajattomasti laitteilla (jokaisella on oma holvinsa). Pro synkronoi enintään 5 laitetta."
       }
     ]
   },
@@ -455,7 +453,7 @@
     "text": "Aloita oman yksityisen AI knowledge vaultin rakentaminen tänään. Tietosi pysyvät laitteellasi — salattuina, haettavissa ja sinun ikuisesti.",
     "ctaPrimary": "Kokeile heti (ei tiliä)",
     "ctaSecondary": "Päivitä Pro:han",
-    "note": "Ei tiliä vaadita. Toimii heti selaimessasi. Ilmainen taso: 300 kirjanmerkkiä."
+    "note": "Ei tiliä vaadita. Toimii heti selaimessasi. Ilmainen taso: 500 kirjanmerkkiä."
   },
   "footer": {
     "brand": "Yksityinen, tekoälyä hyödyntävä tietämysholvisi. 100 % paikallinen.",
@@ -473,7 +471,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {

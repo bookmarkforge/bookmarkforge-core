@@ -15,7 +15,7 @@ A tároló helyben AES-GCM-mel titkosított, a kulcsot pedig az Argon2id a fő j
 
 ## Könyvjelzők és keresés
 
-A Free tartalmazza a szavak és jelentés szerinti intelligens keresést. A Free **300 könyvjelzőt** engedélyez, és nincs eszközszám-korlátja; Pro-szinkronizálás nélkül minden eszköz saját tárolót használ. 300 elemnél semmi sem törlődik: az olvasás, keresés és export folytatódik, csak az új mentések szünetelnek. A Pro megszünteti a korlátot, és legfeljebb öt eszköz P2P-szinkronizálását teszi lehetővé.
+A Free tartalmazza a szavak és jelentés szerinti intelligens keresést. A Free **500 könyvjelzőt** engedélyez, és nincs eszközszám-korlátja; Pro-szinkronizálás nélkül minden eszköz saját tárolót használ. 500 elemnél semmi sem törlődik: az olvasás, keresés és export folytatódik, csak az új mentések szünetelnek. A Pro megszünteti a korlátot, és legfeljebb öt eszköz P2P-szinkronizálását teszi lehetővé.
 
 ## Import Pocketből
 

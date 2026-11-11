@@ -3,13 +3,13 @@
   "langName": "Deutsch",
   "dir": "ltr",
   "title": "BookmarkForge: Privater Local-First-Lesezeichen-Manager mit Leseliste",
-  "description": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. Einmal zahlen: $59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis). Kostenlos: 300 Lesezeichen.",
+  "description": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. Einmal zahlen: $59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis). Kostenlos: 500 Lesezeichen.",
   "ogTitle": "BookmarkForge: Privater Local-First-Lesezeichen-Manager mit Leseliste",
-  "ogDescription": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. Einmal zahlen: $59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis). Kostenlos: 300 Lesezeichen.",
+  "ogDescription": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. Einmal zahlen: $59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis). Kostenlos: 500 Lesezeichen.",
   "ogImage": "https://bookmarkforgeapp.com/og-image-de.png",
   "ogImageAlt": "BookmarkForge — private KI-gestützte Lesezeichen- und Notizen-App",
   "twitterTitle": "BookmarkForge: Privater Local-First-Lesezeichen-Manager mit Leseliste",
-  "twitterDescription": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. Einmal zahlen: $59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis). Kostenlos: 300 Lesezeichen.",
+  "twitterDescription": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. Einmal zahlen: $59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis). Kostenlos: 500 Lesezeichen.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image-de.png",
   "skipLink": "Zum Hauptinhalt springen",
   "navBrandAria": "BookmarkForge Startseite",
@@ -191,7 +191,13 @@
         "title": "Privat von Grund auf",
         "text": "Keine Konten, kein Tracking, keine Werbung. Du bist der Kunde, nicht das Produkt. Statistiken zu teilen gibt es, es ist freiwillig und bleibt aus, bis du es einschaltest."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "Free enthält",
+      "free": "intelligente Suche, 500 Lesezeichen, KI mit eigenen Schlüsseln, verschlüsselte Backups und Export — für immer",
+      "proLabel": "Pro ergänzt",
+      "pro": "unbegrenzte Lesezeichen, Sync auf 5 Geräten, lokale KI und Chat über deinen Vault, Karteikarten, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ki",
@@ -212,22 +218,6 @@
         {
           "type": "cloud",
           "name": "In der Cloud — Google Gemini (mit deinem eigenen Schlüssel)"
-        },
-        {
-          "type": "cloud",
-          "name": "In der Cloud — OpenAI / GPT-4o (mit deinem eigenen Schlüssel)"
-        },
-        {
-          "type": "cloud",
-          "name": "In der Cloud — Anthropic Claude (mit deinem eigenen Schlüssel)"
-        },
-        {
-          "type": "cloud",
-          "name": "In der Cloud — Groq (mit deinem eigenen Schlüssel)"
-        },
-        {
-          "type": "cloud",
-          "name": "In der Cloud — OpenRouter oder ein eigener Anbieter (mit deinem eigenen Schlüssel)"
         }
       ]
     },
@@ -281,19 +271,23 @@
       {
         "title": "Kein Einmauern",
         "text": "Exportiere deine Daten jederzeit in offenen Formaten (JSON, Markdown, CSV, PDF). Dein Wissen bleibt deins und tragbar."
+      },
+      {
+        "title": "Nur Vercel hostet uns — null Analysen",
+        "text": "Die Website läuft ausschließlich auf Vercel ganz ohne Analysen: keine Tracker, kein Fingerprinting, keine Drittanbieter-Skripte. Überprüfe es selbst im Netzwerk-Tab deines Browsers."
       }
     ]
   },
   "pricing": {
     "id": "preise",
     "title": "Einfache, faire Preise — Kein Abo",
-    "subtitle": "300 Lesezeichen für immer kostenlos. Pro ist eine Lifetime-Lizenz für v1 — einmal zahlen, v1 für immer behalten. Alle v1.x + 12 Monate Features. Sicherheits-Updates für immer. Keine Monatsgebühr.",
+    "subtitle": "500 Lesezeichen für immer kostenlos. Pro ist eine Lifetime-Lizenz für v1 — einmal zahlen, v1 für immer behalten. Alle v1.x + 12 Monate Features. Sicherheits-Updates für immer. Keine Monatsgebühr.",
     "plans": [
       {
         "name": "Kostenlos",
         "price": "$ 0",
         "period": "/lebenslang",
-        "description": "Für immer kostenlos: 300 Lesezeichen plus die intelligente Suche, für die andere jährlich verlangen. Bei 300 bleibt deine Bibliothek ganz — Lesen, Suchen und Exportieren enden nie; nur neue Speicherungen pausieren.",
+        "description": "Für immer kostenlos: 500 Lesezeichen plus die intelligente Suche, für die andere jährlich verlangen. Bei 500 bleibt deine Bibliothek ganz — Lesen, Suchen und Exportieren enden nie; nur neue Speicherungen pausieren.",
         "features": [
           {
             "included": true,
@@ -301,11 +295,15 @@
           },
           {
             "included": true,
-            "text": "300 Lesezeichen, Notizen und Dokumente"
+            "text": "500 Lesezeichen, Notizen und Dokumente"
           },
           {
             "included": true,
             "text": "Funktioniert auf jedem Gerät — jedes mit seinem eigenen Tresor"
+          },
+          {
+            "included": true,
+            "text": "KI mit Ihrem eigenen API-Schlüssel (Sie zahlen den Anbieter)"
           },
           {
             "included": true,
@@ -353,11 +351,11 @@
           }
         ],
         "cta": "Sofort ausprobieren",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-outline"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "Am beliebtesten — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (dann $79)",
@@ -389,7 +387,7 @@
           },
           {
             "included": true,
-            "text": "Erweiterter Export (10+ Formate)"
+            "text": "Erweiterter Export (7 Formate)"
           },
           {
             "included": true,
@@ -398,18 +396,6 @@
           {
             "included": true,
             "text": "Lifetime of v1 · 12 Monate Funktionsupdates"
-          },
-          {
-            "included": true,
-            "text": "Sicherheit auf Lebenszeit"
-          },
-          {
-            "included": true,
-            "text": "E-Mail-Support (48h) + Early Access"
-          },
-          {
-            "included": true,
-            "text": "Lokale KI-Übersetzung (demnächst)"
           }
         ],
         "cta": "Pro für $59 Early Bird holen",
@@ -430,7 +416,7 @@
     "items": [
       {
         "question": "Ist der Gratis-Plan wirklich für immer kostenlos?",
-        "answer": "Ja. Kein Trial, kein Abo. Enthält 300 Lesezeichen, Volltext- & semantische Suche, Knowledge-Graph und KI mit eigenem API-Key (du zahlst den Provider)."
+        "answer": "Ja. Kein Trial, kein Abo. Enthält 500 Lesezeichen, Volltext- & semantische Suche, Knowledge-Graph und KI mit eigenem API-Key (du zahlst den Provider)."
       },
       {
         "question": "Was bedeutet \"Lifetime von v1\" bei Pro?",
@@ -447,6 +433,18 @@
       {
         "question": "Was, wenn ich mein Vault-Passwort vergesse?",
         "answer": "Wir können es nicht wiederherstellen. Beim Erstellen zeigen wir einmal eine 24-Wort-Seed-Phrase — auf Papier notieren. Ohne sie kann niemand (auch wir nicht) den Vault öffnen. Siehe <a href=\"/help-de#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "Was passiert mit meinen Daten, wenn ich es nicht mehr benutze?",
+        "answer": "Ihre Daten bleiben auf Ihrem Gerät. Sie können alles jederzeit in Markdown, JSON, CSV oder PDF exportieren. Kein Lock-in, keine Geiselnahme."
+      },
+      {
+        "question": "Sind meine Daten wirklich privat?",
+        "answer": "Absolut. Alles ist auf Ihrem Gerät mit einem Schlüssel verschlüsselt, den nur Sie haben. Wir sehen nie Ihre Lesezeichen, Notizen oder Passwörter. Selbst wir können Ihre Daten nicht lesen."
+      },
+      {
+        "question": "Kann ich es auf meinem Telefon verwenden?",
+        "answer": "Ja! BookmarkForge funktioniert auf jedem Gerät mit einem Webbrowser. Die kostenlose Version funktioniert auf unbegrenzten Geräten (jedes hat sein eigenes Depot). Pro synchronisiert bis zu 5 Geräte."
       }
     ]
   },
@@ -455,7 +453,7 @@
     "text": "Beginnen Sie heute mit dem Aufbau Ihres privaten AI-Wissens-Tresors. Ihre Daten verbleiben auf Ihrem Gerät — verschlüsselt, durchsuchbar und für immer Ihr Eigentum.",
     "ctaPrimary": "Sofort ausprobieren (ohne Konto)",
     "ctaSecondary": "Auf Pro upgraden",
-    "note": "Kein Konto nötig. Funktioniert sofort im Browser. Kostenloser Tarif: 300 Lesezeichen."
+    "note": "Kein Konto nötig. Funktioniert sofort im Browser. Kostenloser Tarif: 500 Lesezeichen."
   },
   "footer": {
     "brand": "Dein privater KI-Wissensspeicher. 100% lokal.",
@@ -473,7 +471,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {

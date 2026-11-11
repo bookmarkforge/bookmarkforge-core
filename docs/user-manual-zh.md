@@ -54,9 +54,9 @@ BookmarkForge是一个**本地优先**的个人知识应用，让您可以保存
 
 - **虚拟化列表**，可处理100,000+项目而不会延迟
 - **深度搜索：** 搜索已保存页面的全文
-- **智能收藏：** 按标签自动组织
-- **导入/导出：** 从Notion、Evernote、Chrome导入，或导出为.bmf、Markdown、PDF
-- **Free：** 300个书签，包含智能搜索，无设备限制。达到300个时，您的数据仍可用于阅读、搜索和导出；只有新保存会暂停。**Pro：** 无限书签。
+- **标签与收藏：** 通过标签、AI自动标签建议和收藏来整理
+- **导入/导出：** 书签导出（Pocket、Raindrop、Omnivore、Chrome、Pinboard、Firefox）、Evernote .enex、Notion/Markdown/Obsidian库（ZIP）；导出为.bmf、Markdown、HTML、CSV、JSON、JSONL、Notion、Obsidian、PDF（PDF为Pro功能）
+- **Free：** 500个书签，包含智能搜索，无设备限制。达到500个时，您的数据仍可用于阅读、搜索和导出；只有新保存会暂停。**Pro：** 无限书签。
 
 ### 3.2 笔记编辑器
 
@@ -84,10 +84,10 @@ BookmarkForge是一个**本地优先**的个人知识应用，让您可以保存
 
 ### 3.5 语音命令
 
-语音转动作引擎：
-- 说"Hey BMF，找到我的生物笔记"
-- 说"保存此页面"
-- 通过Web Speech API 100%离线工作
+按键说话引擎（按住麦克风，说话，松开）：
+- 按下麦克风说"找到我的生物笔记"
+- 按下麦克风说"保存此页面"
+- 通过浏览器的Web Speech API使用 — Chrome/Edge支持，需要互联网连接；Firefox支持有限
 
 ### 3.6 Omnibar（Ctrl+K）
 
@@ -207,13 +207,13 @@ BookmarkForge是一个**本地优先**的个人知识应用，让您可以保存
 | 功能 | Free | Pro |
 |---|---|--- |
 | 价格 | $0 | $79（终身） |
-| 书签 | 300 | 无限 |
+| 书签 | 500 | 无限 |
 | 设备 | 无限制（每台设备有自己的保险库） | 最多5台 + P2P同步 |
 | 使用自己密钥的AI | ✅ | ✅ |
 | 本地AI（WebLLM/Ollama） | ❌ | ✅ |
 | 针对您数据的RAG聊天 | ❌ | ✅ |
 | 闪卡 + PDF/OCR | ❌ | ✅ |
-| 高级导出（10+格式） | ❌ | ✅ |
+| 高级导出（7格式） | ❌ | ✅ |
 | 本地保险库加密（AES-GCM） | ✅ | ✅ |
 | 支持 | 社区 | 邮件48小时 |
 | v2/v3折扣 | ❌ | 60%折扣 |
@@ -246,16 +246,19 @@ BookmarkForge是一个**本地优先**的个人知识应用，让您可以保存
 ### 8.1 导入
 
 转到**设置 > 导入**：
-- **来自Notion或Evernote的HTML/JSON**
-- **Chrome书签导出**
+- **HTML/JSON书签导出**（Pocket、Raindrop、Omnivore、Chrome）
+- **Pinboard帖子导出**（JSON）和**Firefox备份**（`places.json`）
+- **Evernote导出**（`.enex`）— 笔记将转换为文档
+- **Notion导出**（"Markdown & CSV" ZIP）— 页面将转换为文档并保留文件夹结构
+- **Markdown或Obsidian库**（ZIP）
 - **.bmf备份**
 
 ### 8.2 导出
 
 - **.bmf：** 完整加密备份
-- **Markdown：** 可读格式的笔记
-- **PDF：** 将笔记导出为PDF文档
-- **JSON：** 结构化数据
+- **Markdown、HTML、CSV、JSON、JSONL：** 结构化导出
+- **Notion / Obsidian：** 与库兼容的导出
+- **PDF：** 将笔记导出为PDF文档（Pro）
 
 ### 8.3 备份和恢复
 
@@ -334,7 +337,7 @@ BookmarkForge是一个**本地优先**的个人知识应用，让您可以保存
 主应用程序是本地优先且免费的。高级AI功能和P2P同步需要Pro许可证。
 
 **我可以在移动设备上使用吗？**
-可以。通过Chrome（Android）或Safari（iOS）将其安装为PWA。支持离线访问和推送通知。
+可以。通过Chrome（Android）或Safari（iOS）将其安装为PWA。支持离线访问和浏览器本地通知。
 
 **我的文件在哪里？**
 在浏览器的内部存储（IndexedDB）中。您可以随时将其导出为.bmf、Markdown或PDF。

@@ -40,6 +40,8 @@ vi.mock("lucide-react", () => {
     AlertTriangle: mock("AlertTriangle"),
     Lightbulb: mock("Lightbulb"),
     AlertCircle: mock("AlertCircle"),
+    Copy: mock("Copy"),
+    Check: mock("Check"),
   };
 });
 
@@ -315,5 +317,65 @@ describe("P2PSyncModal", () => {
       rejectHost!(new Error("late host failure"));
     });
     expect(screen.queryByText("late host failure")).toBeNull();
+  });
+
+  // ── Camera-less (copy/paste) pairing path ──
+
+  it("connects the client from a pasted offer without opening the scanner", async () => {
+    const user = userEvent.setup();
+    render(<P2PSyncModal isOpen={true} onClose={vi.fn()} />);
+    await user.click(
+      screen.getByText("No camera? Pair by copying data instead"),
+    );
+    const textarea = screen.getByPlaceholderText(
+      "Paste the pairing data shown on the other device",
+    );
+    await user.type(textarea, "pasted-offer-sdp");
+    await user.click(screen.getByText("Connect"));
+    await waitFor(() =>
+      expect(mockWebRTC.startClient).toHaveBeenCalledWith("pasted-offer-sdp"),
+    );
+    expect(screen.queryByLabelText("QR Scanner")).not.toBeInTheDocument();
+  });
+
+  it("keeps the pasted-offer button disabled while the field is empty", async () => {
+    const user = userEvent.setup();
+    render(<P2PSyncModal isOpen={true} onClose={vi.fn()} />);
+    await user.click(
+      screen.getByText("No camera? Pair by copying data instead"),
+    );
+    const connectButtons = screen.getAllByText("Connect");
+    const manualConnect = connectButtons.find((el) =>
+      el.closest("button")?.className.includes("btn-primary"),
+    );
+    expect(manualConnect?.closest("button")).toBeDisabled();
+    expect(mockWebRTC.startClient).not.toHaveBeenCalled();
+  });
+
+  it("submits a pasted client answer from the host screen", async () => {
+    const user = userEvent.setup();
+    let stateCb: (s: string) => void = () => {};
+    mockWebRTC.registerCallbacks.mockImplementation((cb: any) => {
+      stateCb = cb;
+    });
+    render(<P2PSyncModal isOpen={true} onClose={vi.fn()} />);
+    await user.click(screen.getByText("This is the host"));
+    stateCb("ready_to_share");
+    await waitFor(() =>
+      expect(screen.getByTestId("qr-code")).toBeInTheDocument(),
+    );
+    await user.click(
+      screen.getByText("No camera? Paste the answer instead"),
+    );
+    const textarea = screen.getByPlaceholderText(
+      "Paste the pairing data shown on the other device",
+    );
+    await user.type(textarea, "pasted-answer-sdp");
+    await user.click(screen.getByText("Submit pasted data"));
+    await waitFor(() =>
+      expect(mockWebRTC.processClientAnswer).toHaveBeenCalledWith(
+        "pasted-answer-sdp",
+      ),
+    );
   });
 });

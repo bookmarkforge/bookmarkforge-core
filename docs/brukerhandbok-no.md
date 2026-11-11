@@ -15,7 +15,7 @@ Hvelvet krypteres lokalt med AES-GCM, og Argon2id utleder nøkkelen fra hovedpas
 
 ## Bokmerker og søk
 
-Free inkluderer smart søk etter ord og mening. Free tillater **300 bokmerker** og har ingen grense for antall enheter; uten Pro-synkronisering har hver enhet sitt eget hvelv. Når du når 300, slettes ingenting: lesing, søk og eksport fortsetter, mens nye lagringer settes på pause. Pro fjerner grensen og synkroniserer opptil fem enheter med P2P.
+Free inkluderer smart søk etter ord og mening. Free tillater **500 bokmerker** og har ingen grense for antall enheter; uten Pro-synkronisering har hver enhet sitt eget hvelv. Når du når 500, slettes ingenting: lesing, søk og eksport fortsetter, mens nye lagringer settes på pause. Pro fjerner grensen og synkroniserer opptil fem enheter med P2P.
 
 ## Import fra Pocket
 

@@ -15,7 +15,7 @@ Trezor se místně šifruje pomocí AES-GCM a klíč se odvozuje z hlavního hes
 
 ## Záložky a vyhledávání
 
-Free obsahuje chytré vyhledávání podle slov i významu. Free umožňuje **300 záložek** a nemá limit počtu zařízení; bez synchronizace Pro má každé zařízení vlastní trezor. Po dosažení 300 se nic nemaže: čtení, vyhledávání a export pokračují, pouze se pozastaví nové ukládání. Pro limit odstraní a synchronizuje až pět zařízení přes P2P.
+Free obsahuje chytré vyhledávání podle slov i významu. Free umožňuje **500 záložek** a nemá limit počtu zařízení; bez synchronizace Pro má každé zařízení vlastní trezor. Po dosažení 500 se nic nemaže: čtení, vyhledávání a export pokračují, pouze se pozastaví nové ukládání. Pro limit odstraní a synchronizuje až pět zařízení přes P2P.
 
 ## Import z Pocket
 

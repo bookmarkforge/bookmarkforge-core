@@ -15,7 +15,7 @@ Két dữ liệu được mã hóa cục bộ bằng AES-GCM; Argon2id tạo kh�
 
 ## Dấu trang và tìm kiếm
 
-Free có tìm kiếm thông minh theo từ khóa và ý nghĩa. Free hỗ trợ **300 dấu trang** và không giới hạn số thiết bị; nếu không dùng đồng bộ Pro, mỗi thiết bị có một két riêng. Khi đạt 300, không dữ liệu nào bị xóa: đọc, tìm kiếm và xuất vẫn hoạt động, chỉ việc lưu mới bị tạm dừng. Pro bỏ giới hạn và đồng bộ tối đa năm thiết bị qua P2P.
+Free có tìm kiếm thông minh theo từ khóa và ý nghĩa. Free hỗ trợ **500 dấu trang** và không giới hạn số thiết bị; nếu không dùng đồng bộ Pro, mỗi thiết bị có một két riêng. Khi đạt 500, không dữ liệu nào bị xóa: đọc, tìm kiếm và xuất vẫn hoạt động, chỉ việc lưu mới bị tạm dừng. Pro bỏ giới hạn và đồng bộ tối đa năm thiết bị qua P2P.
 
 ## Nhập từ Pocket
 

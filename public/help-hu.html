@@ -32,7 +32,7 @@
     "@type":"FAQPage",
     "@id":"https://bookmarkforgeapp.com/help#faq",
     "mainEntity":[
-      {"@type":"Question","name":"Az ingyenes szint tényleg ingyenes örökre?","acceptedAnswer":{"@type":"Answer","text":"Igen. Nincs próba, nincs előfizetés. Az ingyenes szint 300 könyvjelzőt, teljes szöveges és szemantikus keresést, tudásgráfot és MI-t a saját API-kulcsoddal tartalmaz."}},
+      {"@type":"Question","name":"Az ingyenes szint tényleg ingyenes örökre?","acceptedAnswer":{"@type":"Answer","text":"Igen. Nincs próba, nincs előfizetés. Az ingyenes szint 500 könyvjelzőt, teljes szöveges és szemantikus keresést, tudásgráfot és MI-t a saját API-kulcsoddal tartalmaz."}},
       {"@type":"Question","name":"Mit jelent a Lifetime v1?","acceptedAnswer":{"@type":"Answer","text":"Fizess egyszer, birtokold a v1-et örökre. Minden v1.x hibajavítás örökre, plusz 12 hónap funkciófrissítés a vásárlástól. Biztonsági frissítések örökre. A 13. hónap után a v1 tovább működik. A v2 és v3 külön fizetős főverziók: $89 új vásárlóknak, $35 a v1 tulajdonosoknak (60% kedvezmény)."}},
       {"@type":"Question","name":"Mi van, ha elfelejtem a pince jelszavát?","acceptedAnswer":{"@type":"Answer","text":"Nem tudjuk helyreállítani. A pince létrehozásakor egyszer megmutatunk egy 24 szavas helyreállítási kifejezést — írd fel papírra. Nélküle a pince helyreállíthatatlan. Lásd BF-E101."}}
     ]
@@ -72,13 +72,13 @@
     </nav>
 
     <h2 id="pricing">Árazás — Lifetime v1, nincs előfizetés</h2>
-    <p><strong>Modell:</strong> egyszer fizetsz a <em>BookmarkForge v1</em>-ért. Nincs havi számlázás. Összehasonlítás: Raindrop Pro $28–38/év, Instapaper $60/év, Readwise $120/év, Capacities $120/év. A $79 egyszeri életre szóló ár ~2× a Raindrop éves díja — indokolt az örökre szóló használat + adatvédelem miatt.</p>
+    <p><strong>Modell:</strong> egyszer fizetsz a <em>BookmarkForge v1</em>-ért. Nincs havi számlázás. Összehasonlítás: Raindrop Pro yearly–38/év, Instapaper $60/év, Readwise $120/év, Capacities $120/év. A $79 egyszeri életre szóló ár ~2× a Raindrop éves díja — indokolt az örökre szóló használat + adatvédelem miatt.</p>
 
     <table class="sla">
       <thead><tr><th>Szint</th><th>Ár</th><th>Mit kapsz</th><th>Kínálat</th></tr></thead>
       <tbody>
-        <tr><td><strong>Free</strong></td><td>$0 örökre</td><td>300 könyvjelző bármely eszközön (mindegyik saját pincével), okos keresés — teljes szöveg + szemantika, az a funkció, amit a Raindrop évente számláz — tudásgráf, MI a saját API-kulcsoddal, PWA + bővítmények. 300-nál a pince érintetlen marad: az olvasás, keresés és export soha nem áll le; csak az új mentések szünetelnek.</td><td>Korlátlan</td></tr>
-        <tr><td><strong>Pro Lifetime v1</strong> <span class="badge">Early Bird</span></td><td><strong>$59</strong> <span style="text-decoration:line-through;color:var(--text-muted)">$79</span> → $79 normál → $99 a bevezetés után</td><td>Korlátlan könyvjelző, 5 eszköz + P2P szinkron, Helyi MI (WebLLM/Ollama) + RAG + Szakértő ügynökök, Tanulókártyák, PDF/OCR, 10+ export formátum, pince. <em>A v1 örökre · 12 hónap funkciófrissítés · Biztonság örökre · v2 60% kedvezmény</em></td><td>200 Early Bird</td></tr>
+        <tr><td><strong>Free</strong></td><td>$0 örökre</td><td>500 könyvjelző bármely eszközön (mindegyik saját pincével), okos keresés — teljes szöveg + szemantika, az a funkció, amit a Raindrop évente számláz — tudásgráf, MI a saját API-kulcsoddal, PWA + bővítmények. 500-nál a pince érintetlen marad: az olvasás, keresés és export soha nem áll le; csak az új mentések szünetelnek.</td><td>Korlátlan</td></tr>
+        <tr><td><strong>Pro Lifetime</strong> <span class="badge">Early Bird</span></td><td><strong>$59</strong> <span style="text-decoration:line-through;color:var(--text-muted)">$79</span> → $79 normál → $99 a bevezetés után</td><td>Korlátlan könyvjelző, 5 eszköz + P2P szinkron, Helyi MI (WebLLM/Ollama) + RAG + Szakértő ügynökök, Tanulókártyák, PDF/OCR, 7 export formátum, pince. <em>A v1 örökre · 12 hónap funkciófrissítés · Biztonság örökre · v2 60% kedvezmény</em></td><td>200 Early Bird</td></tr>
       </tbody>
     </table>
 
@@ -97,7 +97,7 @@
       <thead><tr><th>Szint</th><th>Csatorna</th><th>Válasz</th><th>Mit tegyél először</th></tr></thead>
       <tbody>
         <tr><td><strong>Free</strong></td><td>Önkiszolgáló: ez a Súgóközpont + <a href="https://github.com/bookmarkforge/bookmarkforge-core/discussions">GitHub Discussions</a></td><td>Legjobb erőfeszítés (közösség)</td><td>Keress BF-E* kódot lent + másold a diagnosztikát (<a href="#diagnostics">§Diagnostics</a>) posztolás előtt</td></tr>
-        <tr><td><strong>Pro</strong></td><td>E-mail <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> (tárgy: Pro)</td><td><strong>48h</strong></td><td>Csatold a diagnosztikai szöveget a <code>Beállítások → Súgó → Diagnosztika másolása</code> helyről</td></tr>
+        <tr><td><strong>Pro v1 Lifetime</strong></td><td>E-mail <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> (tárgy: Pro)</td><td><strong>48h</strong></td><td>Csatold a diagnosztikai szöveget a <code>Beállítások → Súgó → Diagnosztika másolása</code> helyről</td></tr>
       </tbody>
     </table>
     <p style="color:var(--text-muted);font-size:0.92em;">Nem látjuk a könyvjelzőidet, jegyzeteidet, URL-jeidet vagy promptjaidat. Csak a lentebb lévő diagnosztikát add meg — darabszámokat és verziókat tartalmaz, soha nem pince-tartalmat.</p>
@@ -131,7 +131,7 @@
         <tr id="bf-e106"><td><strong>BF-E106</strong></td><td>A helyi MI (WebLLM) nem tud futni ezen az eszközön</td><td>WebGPU + shader-f16 + 4 GB RAM + Pro szükséges. Frissítsd a böngészőt, vagy használj Ollamát / felhőszolgáltatót a saját kulcsoddal.</td></tr>
         <tr id="bf-e107"><td><strong>BF-E107</strong></td><td>Biztonsági mentés importálása sikertelen (rossz jelszó / sérült fájl)</td><td>A <code>.bmf</code>-hez (titkosított) az export jelszó kell, nem a pince jelszava. JSON esetén győződj meg róla, hogy a fájl nem csonkolt.</td></tr>
         <tr id="bf-e201"><td><strong>BF-E201</strong></td><td>Pro licenc érvénytelen / ellenőrzési hiba</td><td>Ellenőrizd a <code>Beállítások → Pro</code> menüt: írd be újra a kulcsot. Az offline ellenőrzés gyorsítótáraz; csatlakozz egyszer az újravalidáláshoz Whop-on keresztül.</td></tr>
-        <tr id="bf-e202"><td><strong>BF-E202</strong></td><td>Ingyenes korlát elérve (300 könyvjelző)</td><td>Az ingyenes szint 300. Törölj, vagy frissíts Pro Lifetime v1-re a korlátlan használathoz. Az export mindig elérhető.</td></tr>
+        <tr id="bf-e202"><td><strong>BF-E202</strong></td><td>Ingyenes korlát elérve (500 könyvjelző)</td><td>Az ingyenes szint 500. Törölj, vagy frissíts Pro Lifetime-re a korlátlan használathoz. Az export mindig elérhető.</td></tr>
       </tbody>
     </table>
     <p>Támogatási tipp: a hiba <code>Diagnosztika másolása</code> gombja egy kattintással másolja a kódot + kontextust — illeszd be a GitHub Discussionödbe vagy az e-mailbe.</p>

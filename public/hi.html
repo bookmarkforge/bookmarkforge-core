@@ -77,7 +77,7 @@
         "@id": "https://bookmarkforgeapp.com/hi/#website",
         "url": "https://bookmarkforgeapp.com/hi/",
         "name": "BookmarkForge",
-        "description": "आपका प्राइवेट, AI-पावर्ड नॉलेज वॉल्ट। 100% लोकल-फ़र्स्ट। प्राइवेट Pocket विकल्प। फ्री: 300 बुकमार्क।",
+        "description": "आपका प्राइवेट, AI-पावर्ड नॉलेज वॉल्ट। 100% लोकल-फ़र्स्ट। प्राइवेट Pocket विकल्प। फ्री: 500 बुकमार्क।",
         "inLanguage": "hi",
         "potentialAction": {
           "@type": "SearchAction",
@@ -113,11 +113,6 @@
           "priceCurrency": "USD",
           "valueAddedTaxIncluded": "false"
         },
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.9",
-          "ratingCount": "45"
-        },
         "featureList": [
           "लोकल-फ़र्स्ट स्टोरेज",          "एंड-टू-एंड एन्क्रिप्शन",          "ऑफ़लाइन काम करता है",          "AI सर्च",          "Notion-स्टाइल एडिटर",          "P2P सिंक"        ]
       },
@@ -128,7 +123,7 @@
           {
             "@type": "Question",
             "name": "क्या फ्री टियर वाकई हमेशा फ्री है?",
-            "acceptedAnswer": { "@type": "Answer", "text": "हाँ। कोई ट्रायल नहीं, कोई सब्सक्रिप्शन नहीं। फ्री टियर में 300 बुकमार्क, फुल-टेक्स्ट और सिमैंटिक सर्च, नॉलेज ग्राफ और अपनी खुद की API चाबी से AI शामिल है (प्रोवाइडर को आप भुगतान करते हैं)।" }
+            "acceptedAnswer": { "@type": "Answer", "text": "हाँ। कोई ट्रायल नहीं, कोई सब्सक्रिप्शन नहीं। फ्री टियर में 500 बुकमार्क, फुल-टेक्स्ट और सिमैंटिक सर्च, नॉलेज ग्राफ और अपनी खुद की API चाबी से AI शामिल है (प्रोवाइडर को आप भुगतान करते हैं)।" }
           },          {
             "@type": "Question",
             "name": "\"Lifetime of v1\" Pro के लिए क्या मतलब है?",
@@ -145,6 +140,18 @@
             "@type": "Question",
             "name": "अगर वॉल्ट पासवर्ड भूल जाएँ?",
             "acceptedAnswer": { "@type": "Answer", "text": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See \u003ca href=\"/help-hi#bf-e101\"\u003eBF-E101\u003c/a\u003e." }
+          },          {
+            "@type": "Question",
+            "name": "अगर मैं इसे इस्तेमाल करना बंद कर दूं तो मेरे डेटा का क्या होगा?",
+            "acceptedAnswer": { "@type": "Answer", "text": "आपका डेटा आपके डिवाइस पर रहता है। आप कभी भी Markdown, JSON, CSV या PDF में सब कुछ एक्सपोर्ट कर सकते हैं। कोई लॉक-इन नहीं, कोई बंधक नहीं।" }
+          },          {
+            "@type": "Question",
+            "name": "क्या मेरा डेटा वास्तव में निजी है?",
+            "acceptedAnswer": { "@type": "Answer", "text": "बिल्कुल। सब कुछ आपके डिवाइस पर एक कुंजी से एन्क्रिप्ट किया गया है जो केवल आपके पास है। हम कभी आपके बुकमार्क, नोट्स या पासवर्ड नहीं देखते। हम भी आपके डेटा को नहीं पढ़ सकते।" }
+          },          {
+            "@type": "Question",
+            "name": "क्या मैं इसे अपने फोन पर इस्तेमाल कर सकता हूं?",
+            "acceptedAnswer": { "@type": "Answer", "text": "हां! BookmarkForge किसी भी वेब ब्राउज़र वाले डिवाइस पर काम करता है। मुफ्त स्तर असीमित डिवाइसों पर काम करता है (प्रत्येक का अपना वॉल्ट होता है)। Pro 5 डिवाइसों तक सिंक करता है।" }
           }        ]
       }
     ]
@@ -332,7 +339,7 @@
           </ul>
         </div>
         
-        <a href="/app" class="btn-primary nav-cta">तुरंत आज़माएँ (खाता ज़रूरी नहीं)</a>
+        <a href="/app?demo=true" class="btn-primary nav-cta">तुरंत आज़माएँ (खाता ज़रूरी नहीं)</a>
       </nav>
 
       <div class="nav-actions">
@@ -358,7 +365,7 @@
           <h1 id="hero-title">जो भी आप सेव करते हैं, वो आपके कंप्यूटर पर रहता है। <span class="accent-text">सब कुछ।</span></h1>
           <p class="hero-subtitle">Raindrop आपके बुकमार्क अपने सर्वर पर रखता है — और हर साल पैसे लेता है। BookmarkForge उन्हें आपके कंप्यूटर पर रखता है, ऐसी चाबी से लॉक जो सिर्फ आपके पास है। कोई अकाउंट नहीं। कोई मासिक शुल्क नहीं। कोई आपके कंधे पर नहीं झांक रहा।</p>
           <div class="hero-ctas">
-            <a href="/app" class="btn-primary">तुरंत आज़माएँ (खाता ज़रूरी नहीं)</a>
+            <a href="/app?demo=true" class="btn-primary">तुरंत आज़माएँ (खाता ज़रूरी नहीं)</a>
             <a href="#pricing" class="btn-secondary">प्राइसिंग देखें</a>
           </div>
           <div class="hero-pillars">
@@ -402,7 +409,44 @@
           </li>
         </ol>
         <div class="demo-tour-cta">
-          <a href="/app" class="btn-primary">तुरंत आज़माएँ</a>
+          <a href="/app?demo=true" class="btn-primary">तुरंत आज़माएँ</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Before/After Section -->
+    <section id="before-after" class="comparison-section" aria-labelledby="before-after-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">क्यों बदलें</span>
+          <h2 id="before-after-title">अराजकता से स्पष्टता तक 30 सेकंड में</h2>
+          <p class="section-subtitle">ब्राउज़र बुकमार्क और असली नॉलेज वॉल्ट के बीच का अंतर देखें।</p>
+        </div>
+        <div class="features-grid-2">
+          <div class="feat-card feat-card-before">
+            <h3>पहले: ब्राउज़र बुकमार्क</h3>
+            <ul class="feat-list">
+              <li>भूली हुई फोल्डरों में दबे बुकमार्क</li>
+              <li>अर्थ से खोजने का कोई तरीका नहीं</li>
+              <li>ब्राउज़र डेटा साफ करने पर खो जाते हैं</li>
+              <li>कोई नोट्स या संगठन नहीं</li>
+              <li>केवल एक डिवाइस पर सुलभ</li>
+            </ul>
+          </div>
+          <div class="feat-card feat-card-after">
+            <h3>बाद: BookmarkForge</h3>
+            <ul class="feat-list">
+              <li>सब कुछ तुरंत खोज योग्य</li>
+              <li>कीवर्ड या अर्थ से खोजें</li>
+              <li>आपके डिवाइस पर एन्क्रिप्टेड, हमेशा सुरक्षित</li>
+              <li>नोट्स, टैग और स्मार्ट संगठन</li>
+              <li>आपके सभी डिवाइस पर सिंक होता है (Pro)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app?demo=true" class="btn-primary">मुफ्त आजमाएं</a>
+          <a href="#features" class="btn-link">फीचर्स देखें</a>
         </div>
       </div>
     </section>
@@ -430,7 +474,7 @@
           </div>
         </div>
         <div class="center-cta">
-          <a href="/app" class="btn-primary">तुरंत आज़माएँ (खाता ज़रूरी नहीं)</a>
+          <a href="/app?demo=true" class="btn-primary">तुरंत आज़माएँ (खाता ज़रूरी नहीं)</a>
           <a href="/pocket-alternative" class="btn-link">पूरी तुलना और माइग्रेशन गाइड</a>
         </div>
       </div>
@@ -483,9 +527,58 @@
         </div>
         <p class="rc-close">Raindrop सरल और फ्री है — अगर बस इतना चाहिए, खुशी से इस्तेमाल करें। लेकिन अगर आप अपनी रीडिंग लाइफ अपने हाथ में रखना चाहते हैं, तो BookmarkForge बिल्कुल इसी के लिए बना है।</p>
         <div class="center-cta">
-          <a href="/app" class="btn-primary">तुरंत आज़माएँ (खाता ज़रूरी नहीं)</a>
+          <a href="/app?demo=true" class="btn-primary">तुरंत आज़माएँ (खाता ज़रूरी नहीं)</a>
           <a href="/pocket-alternative" class="btn-link">पूरा Pocket तुलना</a>
         </div>
+      </div>
+    </section>
+
+    <!-- Competitor Comparison Section -->
+    <section id="competitor-compare" class="comparison-section" aria-labelledby="competitor-compare-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Why BookmarkForge</span>
+          <h2 id="competitor-compare-title">How BookmarkForge Compares</h2>
+          <p class="section-subtitle">Honest comparison with popular alternatives. Different tools solve different problems.</p>
+        </div>
+        <div class="rc-table" role="table" aria-label="BookmarkForge comparison">
+          <div class="rc-row rc-head" role="row">
+            <div class="rc-topic" role="columnheader"></div>
+            <div class="rc-us" role="columnheader">BookmarkForge</div>
+            <div class="rc-them" role="columnheader">Others</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Data location</div>
+            <div class="rc-us" role="cell">On your device, encrypted</div>
+            <div class="rc-them" role="cell">Cloud servers or self-hosted Docker</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Open source</div>
+            <div class="rc-us" role="cell">MIT Core (auditable)</div>
+            <div class="rc-them" role="cell">Varies (Karakeep OSS, Geneziz closed)</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Languages</div>
+            <div class="rc-us" role="cell">30 languages</div>
+            <div class="rc-them" role="cell">English only (most)</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Price model</div>
+            <div class="rc-us" role="cell">Free + $59 one-time Pro</div>
+            <div class="rc-them" role="cell">Subscription or one-time (varies)</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Sync</div>
+            <div class="rc-us" role="cell">P2P, no server</div>
+            <div class="rc-them" role="cell">Cloud sync or manual export</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">AI</div>
+            <div class="rc-us" role="cell">Local (WebLLM/Ollama) or BYOK</div>
+            <div class="rc-them" role="cell">Cloud only or requires setup</div>
+          </div>
+        </div>
+        <p class="rc-close">Raindrop is simpler if you don't need privacy. Geneziz is great for markdown purists. Karakeep is for self-hosters. BookmarkForge is for users who want local-first privacy without Docker or subscriptions.</p>
       </div>
     </section>
 
@@ -534,6 +627,11 @@
             <p>कोई अकाउंट नहीं, कोई ट्रैकिंग नहीं, कोई एड नहीं। आप कस्टमर हैं, प्रोडक्ट नहीं। यूसेज शेयरिंग मौजूद है, वो ऑप्शनल है और तब तक बंद रहती है जब तक आप उसे ऑन न करें।</p>
           </div>
         </div>
+        <p class="tier-note">
+          <strong>फ्री में शामिल:</strong> स्मार्ट खोज, 500 बुकमार्क, अपनी कुंजियों के साथ AI, एन्क्रिप्टेड बैकअप और एक्सपोर्ट — हमेशा के लिए
+          <span class="tier-note-sep" aria-hidden="true">·</span>
+          <strong>Pro जोड़ता है:</strong> अनलिमिटेड बुकमार्क, 5 डिवाइस पर सिंक, लोकल AI और वॉल्ट पर चैट, फ्लैशकार्ड, PDF/OCR
+        </p>
       </div>
     </section>
 
@@ -553,10 +651,6 @@
               <li>आपके कंप्यूटर के अंदर — WebLLM मॉडल्स (TinyLlama, Llama 3.2, Phi-3.5-mini) — सिर्फ Pro</li>
               <li>आपकी अपनी मशीन पर — Ollama (जो भी मॉडल आप चलाएं)</li>
               <li>क्लाउड — Google Gemini (आपकी अपनी चाबी से)</li>
-              <li>क्लाउड — OpenAI / GPT-4o (आपकी अपनी चाबी से)</li>
-              <li>क्लाउड — Anthropic Claude (आपकी अपनी चाबी से)</li>
-              <li>क्लाउड — Groq (आपकी अपनी चाबी से)</li>
-              <li>क्लाउड — OpenRouter या कोई और कस्टम प्रोवाइडर (आपकी अपनी चाबी से)</li>
             </ul>
           </div>
 
@@ -618,6 +712,10 @@
             <h3>कोई लॉक-इन नहीं</h3>
             <p>कभी भी ओपन फ़ॉर्मैट्स (JSON, Markdown, CSV, PDF) में एक्सपोर्ट करें। आपका ज्ञान आपका रहता है और पोर्टेबल है।</p>
           </div>
+          <div class="feature-item">
+            <h3>केवल Vercel हमें होस्ट करता है — शून्य एनालिटिक्स</h3>
+            <p>यह साइट विशेष रूप से Vercel पर बिना किसी एनालिटिक्स के चलती है: कोई ट्रैकर नहीं, कोई फ़िंगरप्रिंटिंग नहीं, कोई तृतीय-पक्ष स्क्रिप्ट नहीं। अपने ब्राउज़र के नेटवर्क टैब में स्वयं सत्यापित करें।</p>
+          </div>
         </div>
       </div>
     </section>
@@ -627,17 +725,18 @@
       <div class="container">
         <div class="section-header">
           <h2 id="pricing-title">सरल, निष्पक्ष प्राइसिंग — कोई सब्सक्रिप्शन नहीं</h2>
-          <p class="section-subtitle">फ्री 300 बुकमार्क हमेशा। Pro v1 के लिए लाइफटाइम लाइसेंस है — एक बार भुगतान, v1 हमेशा आपका। सभी v1.x अपडेट और 12 महीने फ़ीचर अपडेट शामिल। सिक्योरिटी अपडेट हमेशा। कोई मासिक बिलिंग नहीं।</p>
+          <p class="section-subtitle">फ्री 500 बुकमार्क हमेशा। Pro v1 के लिए लाइफटाइम लाइसेंस है — एक बार भुगतान, v1 हमेशा आपका। सभी v1.x अपडेट और 12 महीने फ़ीचर अपडेट शामिल। सिक्योरिटी अपडेट हमेशा। कोई मासिक बिलिंग नहीं।</p>
         </div>
         <div class="pricing-cards">
           <div class="price-card ">
             <h3>Free</h3>
             <div class="price">$ 0<span>/हमेशा</span></div>
-            <p>व्यक्तिगत आर्काइव के लिए (300 बुकमार्क, किसी भी डिवाइस पर काम करता है — हर डिवाइस का अपना वॉल्ट)</p>
+            <p>व्यक्तिगत आर्काइव के लिए (500 बुकमार्क, किसी भी डिवाइस पर काम करता है — हर डिवाइस का अपना वॉल्ट)</p>
             <ul>
-              <li><span aria-hidden="true">✅</span> 300 बुकमार्क, नोट्स और दस्तावेज़</li>
+              <li><span aria-hidden="true">✅</span> 500 बुकमार्क, नोट्स और दस्तावेज़</li>
               <li><span aria-hidden="true">✅</span> स्मार्ट खोज (पूर्ण पाठ + सिमेंटिक) — मुफ़्त शामिल; Raindrop इसके लिए सालाना पैसे लेता है</li>
               <li><span aria-hidden="true">✅</span> अपनी API कुंजी के साथ AI (आप प्रदाता को भुगतान करते हैं)</li>
+              <li><span aria-hidden="true">✅</span> किसी भी डिवाइस पर काम करता है — हर डिवाइस का अपना वॉल्ट</li>
               <li><span aria-hidden="true">✅</span> ज्ञान ग्राफ</li>
               <li><span aria-hidden="true">✅</span> बुनियादी टेम्पलेट</li>
               <li><span aria-hidden="true">✅</span> JSON/HTML निर्यात</li>
@@ -650,13 +749,13 @@
               <li><span aria-hidden="true">❌</span> लोकल AI अनुवाद (जल्द आ रहा है)</li>
               <li><span aria-hidden="true">✅</span> एन्क्रिप्टेड .bmf बैकअप — स्वचालित दैनिक + डिस्क कॉपी</li>
             </ul>
-            <a href="/app" class="btn-secondary " >तुरंत आज़माएँ</a>
+            <a href="/app?demo=true" class="btn-secondary " >तुरंत आज़माएँ</a>
           </div>
           <div class="price-card popular">
             <div class="price-badges">
               <span class="badge">सबसे लोकप्रिय — Early Bird 200</span>
             </div>
-            <h3>Pro Lifetime v1</h3>
+            <h3>Pro Lifetime</h3>
             <div class="price"><span class="price-now">$ 59</span> <span class="price-was">$79</span><span>Early Bird (फिर $79)</span></div>
             <div class="price-sub">फिर $79 रेगुलर</div>
             <p>v1 का लाइफटाइम · 12 महीने फ़ीचर अपडेट · सिक्योरिटी हमेशा · v2 60% ऑफ</p>
@@ -667,19 +766,16 @@
               <li><span aria-hidden="true">✅</span> लोकल AI मॉडल्स (WebLLM, बिना API की) · RAG चैट</li>
               <li><span aria-hidden="true">✅</span> एक्सपर्ट एजेंट्स (Coder, Writer, Analyst, Researcher)</li>
               <li><span aria-hidden="true">✅</span> स्पेस्ड रिपिटिशन के साथ फ़्लैशकार्ड · PDF + OCR</li>
-              <li><span aria-hidden="true">✅</span> एडवांस्ड एक्सपोर्ट (10+ फ़ॉर्मैट्स)</li>
+              <li><span aria-hidden="true">✅</span> एडवांस्ड एक्सपोर्ट (7 फ़ॉर्मैट्स)</li>
               <li><span aria-hidden="true">✅</span> सिक्योरिटी वॉल्ट (AES-GCM)</li>
               <li><span aria-hidden="true">✅</span> v1 का लाइफटाइम · 12 महीने फ़ीचर अपडेट</li>
-              <li><span aria-hidden="true">✅</span> सिक्योरिटी अपडेट हमेशा</li>
-              <li><span aria-hidden="true">✅</span> ईमेल सपोर्ट (48h) + अर्ली एक्सेस</li>
-              <li><span aria-hidden="true">✅</span> लोकल AI अनुवाद (जल्द आ रहा है)</li>
             </ul>
             <a href="https://whop.com/checkout/plan_g4oAakLGDjaoM" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Pro $59 Early Bird लें</a>
             <a href="https://whop.com/checkout/plan_wFiqyaojHKXmG" class="btn-secondary btn-block" target="_blank" rel="noopener noreferrer">Pro $79 Regular लें</a>
             <p class="sla-note">सपोर्ट: ईमेल 48h (सोम–शुक्र) · <a href="/help-hi#sla">SLA</a></p>
           </div>
         </div>
-        <p class="pricing-legal">Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href="/privacy-and-terms.html#terms">Terms</a> · <a href="/help-hi#pricing">Learn more</a></p>
+        <p class="pricing-legal">Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href="/privacy-and-terms.html#terms">Terms</a> · <a href="/help-hi#pricing">Learn more</a></p>
       </div>
     </section>
 
@@ -690,7 +786,7 @@
         <div class="faq-grid">
           <div class="faq-item">
             <h3>क्या फ्री टियर वाकई हमेशा फ्री है?</h3>
-            <p>हाँ। कोई ट्रायल नहीं, कोई सब्सक्रिप्शन नहीं। फ्री टियर में 300 बुकमार्क, फुल-टेक्स्ट और सिमैंटिक सर्च, नॉलेज ग्राफ और अपनी खुद की API चाबी से AI शामिल है (प्रोवाइडर को आप भुगतान करते हैं)।</p>
+            <p>हाँ। कोई ट्रायल नहीं, कोई सब्सक्रिप्शन नहीं। फ्री टियर में 500 बुकमार्क, फुल-टेक्स्ट और सिमैंटिक सर्च, नॉलेज ग्राफ और अपनी खुद की API चाबी से AI शामिल है (प्रोवाइडर को आप भुगतान करते हैं)।</p>
           </div>
           <div class="faq-item">
             <h3>"Lifetime of v1" Pro के लिए क्या मतलब है?</h3>
@@ -708,6 +804,18 @@
             <h3>अगर वॉल्ट पासवर्ड भूल जाएँ?</h3>
             <p>We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href="/help-hi#bf-e101">BF-E101</a>.</p>
           </div>
+          <div class="faq-item">
+            <h3>अगर मैं इसे इस्तेमाल करना बंद कर दूं तो मेरे डेटा का क्या होगा?</h3>
+            <p>आपका डेटा आपके डिवाइस पर रहता है। आप कभी भी Markdown, JSON, CSV या PDF में सब कुछ एक्सपोर्ट कर सकते हैं। कोई लॉक-इन नहीं, कोई बंधक नहीं।</p>
+          </div>
+          <div class="faq-item">
+            <h3>क्या मेरा डेटा वास्तव में निजी है?</h3>
+            <p>बिल्कुल। सब कुछ आपके डिवाइस पर एक कुंजी से एन्क्रिप्ट किया गया है जो केवल आपके पास है। हम कभी आपके बुकमार्क, नोट्स या पासवर्ड नहीं देखते। हम भी आपके डेटा को नहीं पढ़ सकते।</p>
+          </div>
+          <div class="faq-item">
+            <h3>क्या मैं इसे अपने फोन पर इस्तेमाल कर सकता हूं?</h3>
+            <p>हां! BookmarkForge किसी भी वेब ब्राउज़र वाले डिवाइस पर काम करता है। मुफ्त स्तर असीमित डिवाइसों पर काम करता है (प्रत्येक का अपना वॉल्ट होता है)। Pro 5 डिवाइसों तक सिंक करता है।</p>
+          </div>
         </div>
       </div>
     </section>
@@ -718,10 +826,10 @@
         <h2>अपना ज्ञान अपना बनाने के लिए तैयार?</h2>
         <p>हज़ारों रिसर्चर्स, डेवलपर्स और लर्नर्स से जुड़ें जो अपने सेकंड ब्रेन के लिए BookmarkForge पर भरोसा करते हैं।</p>
         <div class="ctas">
-          <a href="/app" class="btn-primary">तुरंत आज़माएँ (खाता ज़रूरी नहीं)</a>
+          <a href="/app?demo=true" class="btn-primary">तुरंत आज़माएँ (खाता ज़रूरी नहीं)</a>
           <a href="#pricing" class="btn-secondary">Pro में अपग्रेड करें</a>
         </div>
-        <p class="note">कोई अकाउंट ज़रूरी नहीं। ब्राउज़र में तुरंत काम करता है। फ्री टियर: 300 बुकमार्क।</p>
+        <p class="note">कोई अकाउंट ज़रूरी नहीं। ब्राउज़र में तुरंत काम करता है। फ्री टियर: 500 बुकमार्क।</p>
       </div>
     </section>
   </main>
@@ -739,13 +847,19 @@
           <li><a href="/#ai">AI Capabilities</a></li>
           <li><a href="/#privacy">Privacy</a></li>
           <li><a href="/#pricing">Pricing</a></li>
-          <li><a href="/app">तुरंत आज़माएँ</a></li>
+          <li><a href="/app?demo=true">तुरंत आज़माएँ</a></li>
         </ul>
       </div>
       <div class="footer-links">
         <h4>रिसोर्सेस</h4>
         <ul>
           <li><a href="/pocket-alternative.html">Pocket Comparison</a></li>
+          <li><a href="/raindrop-alternative.html">Raindrop.io</a></li>
+          <li><a href="/geneziz-alternative.html">Geneziz</a></li>
+          <li><a href="/karakeep-alternative.html">Karakeep</a></li>
+          <li><a href="/readwise-alternative.html">Readwise</a></li>
+          <li><a href="/omnivore-alternative.html">Omnivore</a></li>
+          <li><a href="/instapaper-alternative.html">Instapaper</a></li>
           <li><a href="/privacy-and-terms.html">Privacy & Terms</a></li>
         </ul>
       </div>
@@ -811,6 +925,32 @@
           Like BookmarkForge? Star us on GitHub ⭐
         </a>
       </span>
+    </div>
+    <!-- Social Share Section -->
+    <div class="social-share" id="social-share">
+      <p class="share-text">BookmarkForge को दोस्तों के साथ साझा करें</p>
+      <div class="share-buttons">
+        <a href="https://twitter.com/intent/tweet?text=BookmarkForge देखें - निजी, लोकल-फर्स्ट बुकमार्क प्रबंधक&url=https://bookmarkforgeapp.com/hi/%3Futm_source%3Dtwitter%26utm_medium%3Dsocial%26utm_campaign%3Dshare" target="_blank" rel="noopener noreferrer" class="share-btn share-twitter" aria-label="Share on Twitter">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Twitter
+        </a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=https://bookmarkforgeapp.com/hi/%3Futm_source%3Dfacebook%26utm_medium%3Dsocial%26utm_campaign%3Dshare" target="_blank" rel="noopener noreferrer" class="share-btn share-facebook" aria-label="Share on Facebook">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Facebook
+        </a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://bookmarkforgeapp.com/hi/%3Futm_source%3Dlinkedin%26utm_medium%3Dsocial%26utm_campaign%3Dshare" target="_blank" rel="noopener noreferrer" class="share-btn share-linkedin" aria-label="Share on LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://news.ycombinator.com/submitlink?u=https://bookmarkforgeapp.com/hi/%3Futm_source%3Dhackernews%26utm_medium%3Dsocial%26utm_campaign%3Dlaunch&t=BookmarkForge" target="_blank" rel="noopener noreferrer" class="share-btn share-hackernews" aria-label="Share on Hacker News">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0v24h24V0H0zm12.898 7.5l3.5 4.5-3.5 4.5v-3h-6v-3h6V7.5zM3 18h18v2H3v-2z"/></svg>
+          Hacker News
+        </a>
+        <button class="share-btn share-copy" type="button" aria-label="Copy link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy Link
+        </button>
+      </div>
     </div>
   </footer>
 

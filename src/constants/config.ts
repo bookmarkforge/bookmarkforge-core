@@ -88,6 +88,10 @@ export const AI_CONFIG = {
   WEBLLM_TIMEOUT_MS: 15000,
   OLLAMA_CACHE_TTL_MS: 60 * 1000, // 1 minute
   OLLAMA_CHECK_TIMEOUT_MS: 3000,
+  // Non-streaming /api/generate returns headers only after the FULL
+  // completion — a multi-GB local model on CPU routinely needs minutes.
+  // The generic 30 s REQUEST_TIMEOUT_MS aborts it mid-generation.
+  OLLAMA_GENERATE_TIMEOUT_MS: 300_000,
   PROMPT_MAX_LENGTH: 100000,
   SYSTEM_PROMPT_MAX_LENGTH: 50000,
   GEMINI_CONTENT_MAX_LENGTH: 8000,

@@ -15,7 +15,7 @@ Sejf jest lokalnie szyfrowany za pomocą AES-GCM, a Argon2id wyprowadza klucz z 
 
 ## Zakładki i wyszukiwanie
 
-Free zawiera inteligentne wyszukiwanie według słów i znaczenia. Free obsługuje **300 zakładek** i nie ma limitu urządzeń; bez synchronizacji Pro każde urządzenie ma własny sejf. Po osiągnięciu 300 nic nie jest usuwane: czytanie, wyszukiwanie i eksport działają dalej, a wstrzymane zostają tylko nowe zapisy. Pro usuwa limit i synchronizuje do pięciu urządzeń przez P2P.
+Free zawiera inteligentne wyszukiwanie według słów i znaczenia. Free obsługuje **500 zakładek** i nie ma limitu urządzeń; bez synchronizacji Pro każde urządzenie ma własny sejf. Po osiągnięciu 500 nic nie jest usuwane: czytanie, wyszukiwanie i eksport działają dalej, a wstrzymane zostają tylko nowe zapisy. Pro usuwa limit i synchronizuje do pięciu urządzeń przez P2P.
 
 ## Import z Pocket
 

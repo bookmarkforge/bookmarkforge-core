@@ -154,12 +154,27 @@ export async function runApiSurfaceChecks({ baseUrl, skipLicense = false }) {
     // api. Use a dynamic import so this script runs on Node without bundling.
     import("ws")
       .then(({ WebSocket: WS }) => {
-        const socket = new WS(wsUrl);
+        // Browsers always send Origin on the upgrade; the server's
+        // verifyClient rejects upgrades without one when
+        // WS_ALLOWED_ORIGINS is configured (production default), so the
+        // smoke must present the same origin a real client would.
+        const socket = new WS(wsUrl, { origin: normalized });
         const timer = setTimeout(() => {
           socket.terminate();
           resolve(false);
         }, 5000);
-        socket.on("open", () => socket.send(JSON.stringify({ type: "join", room: "smoke-room" })));
+        // Join requires a room credential since the M7/A3 hardening: a bare
+        // { type: "join" } is closed with "invalid room secret". Any
+        // well-formed secret creates/verifies the smoke room.
+        socket.on("open", () =>
+          socket.send(
+            JSON.stringify({
+              type: "join",
+              room: "smoke-room",
+              roomSecret: `smoke-${Date.now()}`,
+            }),
+          ),
+        );
         socket.on("message", (data) => {
           let msg = null;
           try {

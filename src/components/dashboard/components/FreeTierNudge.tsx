@@ -7,6 +7,7 @@ import {
   getProDeviceLimit,
   PRICING_CONFIG,
 } from "../../../constants/pricing";
+import { FREE_LIMITS } from "../../../constants/license";
 import { DURATION_COLLAPSE } from "../../../constants/motion";
 import { CollapsibleSurface } from "./CollapsibleSurface";
 
@@ -18,7 +19,7 @@ interface FreeTierNudgeProps {
 
 /**
  * The one full Pro pitch, shown once: the first time a Free user's save is
- * blocked at the 1,000 wall. Design stance (design doc): this banner is an
+ * blocked at the free wall. Design stance (design doc): this banner is an
  * *explanation* first, a sale second — it opens by defusing the scare
  * ("nothing is lost, nothing broke") before presenting what Pro adds.
  * Price and device numbers are read from PRICING_CONFIG at render time so
@@ -52,7 +53,8 @@ export const FreeTierNudge: React.FC<FreeTierNudgeProps> = ({
                 <h3 className="text-base font-bold ds-text-primary mb-1">
                   {t(
                     "app_freeWallTitle",
-                    "You've reached 1,000 — Free's limit",
+                    "You've reached {{limit}} — Free's limit",
+                    { limit: FREE_LIMITS.maxBookmarks },
                   )}
                 </h3>
                 <p className="text-sm ds-text-secondary leading-relaxed mb-4">

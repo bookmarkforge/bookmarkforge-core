@@ -234,6 +234,47 @@ export function vercelHeaderValuesText(raw) {
 
 // ── CLI wrapper (file I/O + output) ──────────────────────────────────
 
+/**
+ * P1-2 (review 2026-11-11): every shipped CSP advertises `/csp-report`
+ * (report-uri + report-to), so a host whose endpoint is absent — or answers
+ * without reading the report, as the Vercel stub did — is a false promise.
+ * The gate reads the two serverless collectors and fails when one is missing
+ * or stops using the shared core (a per-host copy would drift from the
+ * validation/redaction/rate-limit contract).
+ */
+export const CSP_REPORT_COLLECTOR_PATHS = Object.freeze([
+  "api/csp-report.js",
+  "functions/csp-report.mjs",
+]);
+
+export function assessCspReportCollectors(files) {
+  const failures = [];
+  const oks = [];
+  for (const path of CSP_REPORT_COLLECTOR_PATHS) {
+    const content = files[path];
+    if (typeof content !== "string") {
+      failures.push(
+        `${path}: missing — the CSP advertises /csp-report on every host, so every host needs a collector`,
+      );
+      continue;
+    }
+    if (/_csp-report-core/.test(content) === false) {
+      failures.push(
+        `${path}: does not use api/_csp-report-core.js — a per-host copy would drift from the shared contract`,
+      );
+      continue;
+    }
+    if (/without storing any data|We do not store the report/i.test(content)) {
+      failures.push(
+        `${path}: still discards the report (stub) — the advertised endpoint would be a false promise`,
+      );
+      continue;
+    }
+    oks.push(`${path}: collector present`);
+  }
+  return { ok: failures.length === 0, oks, failures };
+}
+
 const isMain =
   process.argv[1] &&
   import.meta.url ===
@@ -286,10 +327,22 @@ if (isMain) {
     reportingEndpointsHeader: REPORTING_ENDPOINTS_HEADER,
     copies: withContents.map(({ label, content }) => ({ label, content })),
   });
-  for (const o of result.oks) console.log(`[check-csp-sync] ok ${o}`);
-  for (const f of result.failures) console.error(`[check-csp-sync] FAIL ${f}`);
+  const collectors = assessCspReportCollectors(
+    Object.fromEntries(
+      CSP_REPORT_COLLECTOR_PATHS.map((path) => [
+        path,
+        existsSync(join(ROOT, path)) ? readFileSync(join(ROOT, path), "utf8") : null,
+      ]),
+    ),
+  );
 
-  const totalFailures = result.failures.length + missingRequired.length;
+  for (const o of result.oks) console.log(`[check-csp-sync] ok ${o}`);
+  for (const o of collectors.oks) console.log(`[check-csp-sync] ok ${o}`);
+  for (const f of result.failures) console.error(`[check-csp-sync] FAIL ${f}`);
+  for (const f of collectors.failures) console.error(`[check-csp-sync] FAIL ${f}`);
+
+  const totalFailures =
+    result.failures.length + missingRequired.length + collectors.failures.length;
   if (totalFailures > 0) {
     console.error(`[check-csp-sync] ${totalFailures} failure(s) — fix the copy before deploying`);
     process.exit(1);

@@ -28,6 +28,22 @@ const MAX_CAPTURE_SUMMARY_CHARS = 4_000;
 const MAX_CAPTURE_TAGS = 8;
 const MAX_CAPTURE_TAG_CHARS = 80;
 
+/**
+ * Classify capture input. Full http(s) URLs pass through; bare domains
+ * ("example.com/path") are normalized to https:// so pasting a link without
+ * a scheme saves a bookmark instead of silently becoming a note. Anything
+ * else is a note. P-10: the field advertises "URL or note", so the
+ * classification must match what a user means, not just the scheme prefix.
+ */
+function captureTargetUrl(input: string): string | null {
+  const raw = input.trim();
+  if (/^https?:\/\/[^\s]+$/.test(raw)) return raw;
+  if (/^[^\s/?#]+\.[a-zA-Z]{2,}(?:[/?#]\S*)?$/.test(raw)) {
+    return `https://${raw}`;
+  }
+  return null;
+}
+
 function normalizeCaptureText(
   value: unknown,
   fallback: string,
@@ -204,7 +220,7 @@ export const QuickCapture: React.FC = () => {
     }
 
     await runCapture(async (signal) => {
-      const isUrl = /^https?:\/\/[^\s]+$/.test(input.trim());
+      const targetUrl = captureTargetUrl(input);
       const raw = input.trim();
       const userTitle = title.trim();
       const captureIsPrivate = safeGet("default_private") === "true";
@@ -225,7 +241,7 @@ export const QuickCapture: React.FC = () => {
         throw new DOMException(i18n.t("app_captureRequestAborted"), "AbortError");
       }
 
-      if (isUrl) {
+      if (targetUrl) {
         // Each external enrichment step degrades gracefully when offline /
         // no API key is configured, so a capture still succeeds.
         let title = raw;
@@ -235,7 +251,7 @@ export const QuickCapture: React.FC = () => {
         let hierarchy = "";
 
         try {
-          const metadata = await metadataService.fetchMetadata(raw, signal);
+          const metadata = await metadataService.fetchMetadata(targetUrl, signal);
           title = metadata.title || raw;
           summary = metadata.description || "";
         } catch (e) {
@@ -323,8 +339,8 @@ export const QuickCapture: React.FC = () => {
 
         await db.bookmarks.insert({
           id: generateId(),
-          url: raw,
-          urlHash: await hashString(raw),
+          url: targetUrl,
+          urlHash: await hashString(targetUrl),
           title: userTitle || title,
           summary,
           tags,
@@ -458,6 +474,8 @@ export const QuickCapture: React.FC = () => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            role="dialog"
+            aria-label={t("app_quickCapture")}
             className="absolute bottom-12 end-0 w-[calc(100vw-2rem)] sm:w-96 shadow-2xl p-4 overflow-hidden ds-radius-card ds-bg-card ds-border"
           >
             <div className="flex items-center gap-2 mb-4">
@@ -490,7 +508,7 @@ export const QuickCapture: React.FC = () => {
                   disabled={isProcessing}
                 />
                 <div className="absolute start-3 top-1/2 -translate-y-1/2">
-                  {input.startsWith("http") ? (
+                  {captureTargetUrl(input) ? (
                     <Link className="size-4 text-blue-500" />
                   ) : (
                     <FileText className="size-4 ds-text-success" />
@@ -537,6 +555,8 @@ export const QuickCapture: React.FC = () => {
         ref={fabRef}
         onClick={() => (isOpen ? closeCapture() : setIsOpen(true))}
         data-testid="add-bookmark-button"
+        aria-expanded={isOpen}
+        aria-haspopup="dialog"
         aria-label={
           isOpen
             ? t("app_closeQuickCapture", "Close quick capture")

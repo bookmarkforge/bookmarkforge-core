@@ -3,13 +3,13 @@
   "langName": "Română",
   "dir": "ltr",
   "title": "BookmarkForge: manager privat de marcaje, local-first, cu listă de citit",
-  "description": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. O singură plată: $59 acces pe viață early bird (economisești $20 înainte de prețul normal). Free: 300 marcaje.",
+  "description": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. O singură plată: $59 acces pe viață early bird (economisești $20 înainte de prețul normal). Free: 500 marcaje.",
   "ogTitle": "BookmarkForge: manager privat de marcaje, local-first, cu listă de citit",
-  "ogDescription": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. O singură plată: $59 acces pe viață early bird (economisești $20 înainte de prețul normal). Free: 300 marcaje.",
+  "ogDescription": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. O singură plată: $59 acces pe viață early bird (economisești $20 înainte de prețul normal). Free: 500 marcaje.",
   "ogImage": "https://bookmarkforgeapp.com/og-image.png",
-  "ogImageAlt": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. 59 de dolari, o singură dată. Free: 300 marcaje.",
+  "ogImageAlt": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. 59 de dolari, o singură dată. Free: 500 marcaje.",
   "twitterTitle": "BookmarkForge: manager privat de marcaje, local-first, cu listă de citit",
-  "twitterDescription": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. O singură plată: $59 acces pe viață early bird (economisești $20 înainte de prețul normal). Free: 300 marcaje.",
+  "twitterDescription": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. O singură plată: $59 acces pe viață early bird (economisești $20 înainte de prețul normal). Free: 500 marcaje.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
   "skipLink": "Sari la conținutul principal",
   "navBrandAria": "Pagina principală BookmarkForge",
@@ -191,7 +191,13 @@
         "title": "Confidențial implicit",
         "text": "Fără conturi, fără urmărire, fără reclame. Tu ești clientul, nu produsul. Partajarea statisticilor de utilizare există, este opțională și rămâne oprită până când o activezi."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "Gratuit include",
+      "free": "căutare inteligentă, 500 de marcaje, AI cu cheile tale, backupuri criptate și export — pentru totdeauna",
+      "proLabel": "Pro adaugă",
+      "pro": "marcaje nelimitate, sincronizare pe 5 dispozitive, AI local și chat peste seiful tău, flashcarduri, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ai",
@@ -212,22 +218,6 @@
         {
           "type": "cloud",
           "name": "Cloud — Google Gemini (cu propria ta cheie)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — OpenAI / GPT-4o (cu propria ta cheie)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — Anthropic Claude (cu propria ta cheie)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — Groq (cu propria ta cheie)"
-        },
-        {
-          "type": "cloud",
-          "name": "Cloud — OpenRouter sau alt furnizor personalizat (cu propria ta cheie)"
         }
       ]
     },
@@ -281,23 +271,27 @@
       {
         "title": "Fără dependențe",
         "text": "Exportă-ți datele oricând în formate deschise (JSON, Markdown, CSV, PDF). Cunoștințele tale rămân ale tale și portabile."
+      },
+      {
+        "title": "Doar Vercel ne găzduiește — zero analitice",
+        "text": "Site-ul rulează exclusiv pe Vercel fără analitice de niciun fel: fără trackere, fără fingerprinting, fără scripturi terțe. Verifică tu însuți în fila de rețea a browserului."
       }
     ]
   },
   "pricing": {
     "id": "pricing",
     "title": "Prețuri simple și corecte — fără abonamente",
-    "subtitle": "Free: 300 marcaje pentru totdeauna. Pro este o licență Lifetime pentru v1 — plătești o singură dată, v1 e al tău pentru totdeauna. Include toate actualizările v1.x și 12 luni de actualizări de funcționalități. Actualizări de securitate pentru totdeauna. Fără facturare lunară.",
+    "subtitle": "Free: 500 marcaje pentru totdeauna. Pro este o licență Lifetime pentru v1 — plătești o singură dată, v1 e al tău pentru totdeauna. Include toate actualizările v1.x și 12 luni de actualizări de funcționalități. Actualizări de securitate pentru totdeauna. Fără facturare lunară.",
     "plans": [
       {
         "name": "Free",
         "price": "$ 0",
         "period": "/pentru totdeauna",
-        "description": "Pentru arhivă personală (300 marcaje, funcționează pe orice dispozitiv — fiecare are propriul seif)",
+        "description": "Pentru arhivă personală (500 marcaje, funcționează pe orice dispozitiv — fiecare are propriul seif)",
         "features": [
           {
             "included": true,
-            "text": "300 marcaje, note și documente"
+            "text": "500 marcaje, note și documente"
           },
           {
             "included": true,
@@ -306,6 +300,10 @@
           {
             "included": true,
             "text": "AI cu cheia ta de API (tu plătești furnizorul)"
+          },
+          {
+            "included": true,
+            "text": "Funcționează pe orice dispozitiv — fiecare are propriul seif"
           },
           {
             "included": true,
@@ -353,11 +351,11 @@
           }
         ],
         "cta": "Încearcă acum",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-secondary"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "Cea mai populară — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (apoi $79)",
@@ -389,7 +387,7 @@
           },
           {
             "included": true,
-            "text": "Export avansat (10+ formate)"
+            "text": "Export avansat (7 formate)"
           },
           {
             "included": true,
@@ -398,18 +396,6 @@
           {
             "included": true,
             "text": "Lifetime de v1 · 12 luni de actualizări de funcționalități"
-          },
-          {
-            "included": true,
-            "text": "Actualizări de securitate pentru totdeauna"
-          },
-          {
-            "included": true,
-            "text": "Suport prin e-mail (48h) + acces anticipat"
-          },
-          {
-            "included": true,
-            "text": "Traducere AI locală (în curând)"
           }
         ],
         "cta": "Ia Pro $59 Early Bird",
@@ -423,14 +409,14 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-ro#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-ro#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Întrebări frecvente",
     "items": [
       {
         "question": "Este nivelul Free cu adevărat gratuit pentru totdeauna?",
-        "answer": "Da. Fără perioadă de test, fără abonament. Nivelul Free include 300 marcaje, căutare pe text integral și semantică, graf de cunoștințe și AI cu propria cheie de API (plătești furnizorul)."
+        "answer": "Da. Fără perioadă de test, fără abonament. Nivelul Free include 500 marcaje, căutare pe text integral și semantică, graf de cunoștințe și AI cu propria cheie de API (plătești furnizorul)."
       },
       {
         "question": "Ce înseamnă \"Lifetime de v1\" pentru Pro?",
@@ -447,6 +433,18 @@
       {
         "question": "Ce fac dacă uit parola seifului?",
         "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-ro#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "Ce se întâmplă cu datele mele dacă încetez să-l folosesc?",
+        "answer": "Datele tale rămân pe dispozitivul tău. Poți exporta totul oricând în Markdown, JSON, CSV sau PDF. Fără blocare, fără ostatici."
+      },
+      {
+        "question": "Sunt datele mele cu adevărat private?",
+        "answer": "Absolut. Totul este criptat pe dispozitivul tău cu o cheie pe care o ai doar tu. Nu vedem niciodată marcajele, notițele sau parolele tale. Chiar și noi nu putem citi datele tale."
+      },
+      {
+        "question": "Pot să-l folosesc pe telefon?",
+        "answer": "Da! BookmarkForge funcționează pe orice dispozitiv cu un browser web. Nivelul gratuit funcționează pe dispozitive nelimitate (fiecare are propriul seif). Pro sincronizează până la 5 dispozitive."
       }
     ]
   },
@@ -455,7 +453,7 @@
     "text": "Începeți să vă construiți seiful privat de cunoștințe AI astăzi. Datele dvs. rămân pe dispozitivul dvs. — criptate, căutabile și ale dvs. pentru totdeauna.",
     "ctaPrimary": "Încearcă acum (fără cont)",
     "ctaSecondary": "Trecă la Pro",
-    "note": "Nu e necesar niciun cont. Funcționează imediat în browser. Nivelul Free: 300 marcaje."
+    "note": "Nu e necesar niciun cont. Funcționează imediat în browser. Nivelul Free: 500 marcaje."
   },
   "footer": {
     "brand": "Seiful tău privat de cunoștințe, cu AI. 100% local.",
@@ -473,7 +471,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {

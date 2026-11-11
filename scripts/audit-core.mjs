@@ -24,6 +24,7 @@ export const LOCALES_DIR = "public/locales";
 // key here, it stops being identical to `en` and is naturally dropped from
 // the `all29` count — no script change needed.
 const SUPPORT_CONTENT_KEYS = new Set([
+  "app_supportChatDesc",
   "app_supportChatWelcome",
   "app_supportChatHi",
   "app_supportChatDefault",
@@ -52,6 +53,8 @@ const SUPPORT_CONTENT_KEYS = new Set([
   "app_supportChatCollaboration",
   "app_supportChatOffline",
   "app_supportChatStorage",
+  "app_supportChatRefund",
+  "app_supportChatUpdate",
   "app_switchTabs",
   "app_noFlashcardsYet",
   "app_noFlashcardsHint",

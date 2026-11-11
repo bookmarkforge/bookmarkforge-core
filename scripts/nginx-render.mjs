@@ -450,6 +450,18 @@ ${repeat}
         try_files $uri =404;
     }
 
+    # ── Legal / locale-subtree rewrites MUST precede ~*\.html$ ────────
+    # nginx evaluates regex locations in order of appearance: the retired-
+    # legal rule (/<lang>/privacy-and-terms.html → the English notice) and
+    # the localized-subtree rule (/<lang>/<path> → /<lang>.html) both match
+    # .html-suffixed URLs, so emitted after the ~*\.html$ block they never
+    # ran — /ar/privacy-and-terms.html 404'd on the self-hosted path while
+    # Netlify/Vercel answered 200 (found by check-landing-smoke --base-url
+    # against the staging compose stack, 2026-11-11).
+${legalAndOfflineLocations}
+
+${localeSubtreeLocation}
+
     # ── HTML entry points — always revalidate (mirrors public/_headers) ──
     location ~*\\.html$ {
         # Repeat security headers (inheritance override — see server block).
@@ -574,14 +586,16 @@ ${LANDING_LANGS.map(
         rewrite ^ /help.html last;
     }
 
-${legalAndOfflineLocations}
+${LANDING_LANGS.map(
+      (lang) => `    location = /help-${lang} {
+        rewrite ^ /help-${lang}.html last;
+    }`,
+    ).join("\n\n")}
 
     # Pocket comparison page (SEO) — static HTML at a clean URL
     location = /pocket-alternative {
         rewrite ^ /pocket-alternative.html last;
     }
-
-${localeSubtreeLocation}
 
 ${appRouteLocation}
 

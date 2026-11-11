@@ -53,6 +53,7 @@ declare module "lucide-react" {
   export const HardDrive: LucideComponent;
   export const Trash2: LucideComponent;
   export const Loader2: LucideComponent;
+  export const FlaskConical: LucideComponent;
   export const Database: LucideComponent;
   export const Download: LucideComponent;
   export const Upload: LucideComponent;

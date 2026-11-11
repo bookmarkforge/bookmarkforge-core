@@ -75,7 +75,7 @@ export const useClipperSync = (
         }
       }).catch((error: unknown) => {
         if (isFreeLimitError(error)) {
-          // The 1,000 wall, made visible: this was INTENTIONAL SILENCE
+          // The free wall, made visible: this was INTENTIONAL SILENCE
           // before — the user clicked "save" in the extension and nothing
           // ever happened. Now the one blocked save that matters reports
           // itself with the same message as the in-app paths.

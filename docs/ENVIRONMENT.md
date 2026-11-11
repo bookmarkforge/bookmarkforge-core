@@ -117,8 +117,21 @@ These variables are used by the companion server (`server/src/index.ts`) and Doc
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `WS_ALLOWED_ORIGINS` | Yes | `""` | Space-separated WebSocket origin allow-list |
+| `SIGNALING_IP_HASH_SALT` | Yes (production) | `""` | Salt for hashing client IPs in signaling logs/metrics — must be ≥32 chars; the server refuses to boot in production without it (falls back to the per-boot instance id in development, so hashes are NOT stable across restarts) |
+| `MAX_CONNECTIONS` | No | `"512"` | Global WebSocket connection cap; excess sockets are closed with 1013 |
+| `MAX_ROOMS` | No | `"2048"` | Maximum concurrent sync rooms |
+| `MAX_PEERS_PER_ROOM` | No | `"64"` | Peers per room (clamped to `MAX_CONNECTIONS`) |
+| `JOIN_LIMIT` | No | `"120"` | Join attempts per IP per window (rate limit) |
 
 **Example:** `https://bookmarkforgeapp.com https://staging.bookmarkforgeapp.com`
+
+**Load testing:** the connection caps above are boundary-tested by
+`server/src/__tests__/connection-caps.test.ts`, which boots the real server
+with a reduced `MAX_CONNECTIONS` and asserts the overflow socket is closed
+with 1013 while the accepted set stays alive. For capacity planning beyond
+the boundary (e.g. expected concurrent sync users), run a WS-level load
+test (k6/artillery) against a staging deployment before launch — no such
+sustained-load harness ships in this repo yet.
 
 ### Read-Only Mode
 

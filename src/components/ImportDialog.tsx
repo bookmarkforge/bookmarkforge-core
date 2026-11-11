@@ -317,14 +317,14 @@ export default function ImportDialog({ isOpen, onClose }: ImportDialogProps) {
                     <p className="text-xs text-[var(--text-muted)] dark:text-[var(--text-muted)]">
                       {}
                       JSON · CSV · HTML (Pocket · Raindrop · Omnivore) ·
-                      Markdown/Obsidian (ZIP)
+                      Markdown/Obsidian (ZIP) · Evernote (.enex) · Pinboard/Firefox (.json)
                     </p>
                   </div>
                   <input
                     ref={fileInputRef}
                     type="file"
                     aria-label={t("app_importClick", "Click to upload file")}
-                    accept=".json,.csv,.html,.htm,.md,.zip"
+                    accept=".json,.csv,.html,.htm,.md,.zip,.enex"
                     className="hidden"
                     onChange={handleFileSelect}
                   />

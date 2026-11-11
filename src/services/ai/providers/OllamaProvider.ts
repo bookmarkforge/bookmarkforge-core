@@ -82,18 +82,23 @@ export class OllamaProvider {
     systemPrompt?: string,
     signal?: AbortSignal,
   ): Promise<AIResponse> {
-    const response = await fetchWithRetry(this.config.url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: this.config.model,
-        prompt: systemPrompt
-          ? `${systemPrompt}\n\n${buildSafeUserContent(prompt)}`
-          : buildSafeUserContent(prompt),
-        stream: false,
-      }),
-      signal,
-    });
+    const response = await fetchWithRetry(
+      this.config.url,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: this.config.model,
+          prompt: systemPrompt
+            ? `${systemPrompt}\n\n${buildSafeUserContent(prompt)}`
+            : buildSafeUserContent(prompt),
+          stream: false,
+        }),
+        signal,
+      },
+      undefined,
+      AI_CONFIG.OLLAMA_GENERATE_TIMEOUT_MS,
+    );
 
     if (!response.ok) {
       await cancelResponseBody(response);

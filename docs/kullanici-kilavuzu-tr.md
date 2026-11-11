@@ -15,7 +15,7 @@ Kasa AES-GCM ile yerel olarak şifrelenir; Argon2id anahtarı ana paroladan tür
 
 ## Yer işaretleri ve arama
 
-Free, kelime ve anlamla akıllı aramayı içerir. Free **300 yer işaretine** izin verir ve cihaz sayısını sınırlamaz; Pro eşzamanlaması yoksa her cihazın kendi kasası vardır. 300’e ulaşıldığında hiçbir şey silinmez: okuma, arama ve dışa aktarma devam eder, yalnızca yeni kayıtlar duraklatılır. Pro sınırı kaldırır ve P2P ile en fazla beş cihazı eşzamanlar.
+Free, kelime ve anlamla akıllı aramayı içerir. Free **500 yer işaretine** izin verir ve cihaz sayısını sınırlamaz; Pro eşzamanlaması yoksa her cihazın kendi kasası vardır. 500’e ulaşıldığında hiçbir şey silinmez: okuma, arama ve dışa aktarma devam eder, yalnızca yeni kayıtlar duraklatılır. Pro sınırı kaldırır ve P2P ile en fazla beş cihazı eşzamanlar.
 
 ## Pocket’tan içe aktarma
 

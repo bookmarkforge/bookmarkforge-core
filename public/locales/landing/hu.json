@@ -3,13 +3,13 @@
   "langName": "Magyar",
   "dir": "ltr",
   "title": "BookmarkForge: privát, helyben futó könyvjelző-kezelő olvasási listával",
-  "description": "A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. Egyszeri fizetés: $59 early bird élettartam-hozzáférés (spórolj $20-at a normál ár előtt). Ingyenes: 300 könyvjelző.",
+  "description": "A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. Egyszeri fizetés: $59 early bird élettartam-hozzáférés (spórolj $20-at a normál ár előtt). Ingyenes: 500 könyvjelző.",
   "ogTitle": "BookmarkForge: privát, helyben futó könyvjelző-kezelő olvasási listával",
-  "ogDescription": "A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. Egyszeri fizetés: $59 early bird élettartam-hozzáférés (spórolj $20-at a normál ár előtt). Ingyenes: 300 könyvjelző.",
+  "ogDescription": "A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. Egyszeri fizetés: $59 early bird élettartam-hozzáférés (spórolj $20-at a normál ár előtt). Ingyenes: 500 könyvjelző.",
   "ogImage": "https://bookmarkforgeapp.com/og-image.png",
-  "ogImageAlt": "A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. 59 dollár egyszer. Ingyenes: 300 könyvjelző.",
+  "ogImageAlt": "A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. 59 dollár egyszer. Ingyenes: 500 könyvjelző.",
   "twitterTitle": "BookmarkForge: privát, helyben futó könyvjelző-kezelő olvasási listával",
-  "twitterDescription": "A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. Egyszeri fizetés: $59 early bird élettartam-hozzáférés (spórolj $20-at a normál ár előtt). Ingyenes: 300 könyvjelző.",
+  "twitterDescription": "A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. Egyszeri fizetés: $59 early bird élettartam-hozzáférés (spórolj $20-at a normál ár előtt). Ingyenes: 500 könyvjelző.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
   "skipLink": "Ugrás a fő tartalomra",
   "navBrandAria": "BookmarkForge kezdőlap",
@@ -191,7 +191,13 @@
         "title": "Alapból privát",
         "text": "Nincs fiók, nincs követés, nincs hirdetés. Te vagy a vásárló, nem a termék. A használati adatok megosztása létezik, opcionális, és kikapcsolva marad, amíg be nem kapcsolod."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "Az ingyenes tartalmazza",
+      "free": "okos keresés, 500 könyvjelző, AI saját kulcsokkal, titkosított biztonsági mentések és export — örökre",
+      "proLabel": "A Pro hozzáadja",
+      "pro": "korlátlan könyvjelző, szinkron 5 eszközön, helyi AI és chat a páncélodra, memóriajátékok, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ai",
@@ -212,22 +218,6 @@
         {
           "type": "cloud",
           "name": "Felhő — Google Gemini (a saját kulcsoddal)"
-        },
-        {
-          "type": "cloud",
-          "name": "Felhő — OpenAI / GPT-4o (a saját kulcsoddal)"
-        },
-        {
-          "type": "cloud",
-          "name": "Felhő — Anthropic Claude (a saját kulcsoddal)"
-        },
-        {
-          "type": "cloud",
-          "name": "Felhő — Groq (a saját kulcsoddal)"
-        },
-        {
-          "type": "cloud",
-          "name": "Felhő — OpenRouter vagy egyéb egyedi szolgáltató (a saját kulcsoddal)"
         }
       ]
     },
@@ -281,23 +271,27 @@
       {
         "title": "Nincs bezártság",
         "text": "Exportáld az adataidat bármikor nyílt formátumokban (JSON, Markdown, CSV, PDF). A tudásod a tiéd marad és hordozható."
+      },
+      {
+        "title": "Csak a Vercel hostol minket — nulla analitika",
+        "text": "Az oldal kizárólag a Vercelen fut bármilyen analitika nélkül: nincsenek nyomkövetők, ujjlenyomatolás vagy harmadik féltől származó szkriptek. Ellenőrizd magad a böngésződ hálózati fülén."
       }
     ]
   },
   "pricing": {
     "id": "pricing",
     "title": "Egyszerű, tisztességes árazás — nincs előfizetés",
-    "subtitle": "Ingyenes 300 könyvjelző örökre. A Pro Lifetime licenc a v1-hez — fizess egyszer, birtokold a v1-et örökre. Tartalmazza az összes v1.x frissítést és 12 hónap funkciófrissítést. Biztonsági frissítések örökre. Nincs havi számlázás.",
+    "subtitle": "Ingyenes 500 könyvjelző örökre. A Pro v1 Lifetime licenc a v1-hez — fizess egyszer, birtokold a v1-et örökre. Tartalmazza az összes v1.x frissítést és 12 hónap funkciófrissítést. Biztonsági frissítések örökre. Nincs havi számlázás.",
     "plans": [
       {
         "name": "Free",
         "price": "$ 0",
         "period": "/örökre",
-        "description": "Személyes archívumhoz (300 könyvjelző, bármely eszközön működik — mindegyiknek saját széfje van)",
+        "description": "Személyes archívumhoz (500 könyvjelző, bármely eszközön működik — mindegyiknek saját széfje van)",
         "features": [
           {
             "included": true,
-            "text": "300 könyvjelző, jegyzet és dokumentum"
+            "text": "500 könyvjelző, jegyzet és dokumentum"
           },
           {
             "included": true,
@@ -306,6 +300,10 @@
           {
             "included": true,
             "text": "AI saját API-kulcsával (Ön fizeti a szolgáltatót)"
+          },
+          {
+            "included": true,
+            "text": "Bármely eszközön működik — mindegyiknek saját széfje van"
           },
           {
             "included": true,
@@ -353,11 +351,11 @@
           }
         ],
         "cta": "Próbáld ki azonnal",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-secondary"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "Legnépszerűbb — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (majd $79)",
@@ -389,7 +387,7 @@
           },
           {
             "included": true,
-            "text": "Haladó export (10+ formátum)"
+            "text": "Haladó export (7 formátum)"
           },
           {
             "included": true,
@@ -398,18 +396,6 @@
           {
             "included": true,
             "text": "A v1 örökre · 12 hónap funkciófrissítés"
-          },
-          {
-            "included": true,
-            "text": "Biztonsági frissítések örökre"
-          },
-          {
-            "included": true,
-            "text": "E-mail támogatás (48h) + korai hozzáférés"
-          },
-          {
-            "included": true,
-            "text": "Helyi AI-fordítás (hamarosan)"
           }
         ],
         "cta": "Pro beszerzése $59 Early Bird áron",
@@ -423,14 +409,14 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-hu#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-hu#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Gyakori kérdések",
     "items": [
       {
         "question": "Az ingyenes szint tényleg ingyenes örökre?",
-        "answer": "Igen. Nincs próba, nincs előfizetés. Az ingyenes szint 300 könyvjelzőt, teljes szöveges és szemantikus keresést, tudásgráfot és MI-t a saját API-kulcsoddal (a szolgáltatót fizeted) tartalmaz."
+        "answer": "Igen. Nincs próba, nincs előfizetés. Az ingyenes szint 500 könyvjelzőt, teljes szöveges és szemantikus keresést, tudásgráfot és MI-t a saját API-kulcsoddal (a szolgáltatót fizeted) tartalmaz."
       },
       {
         "question": "Mit jelent a „v1 örökre” a Pro esetén?",
@@ -447,6 +433,18 @@
       {
         "question": "Mi van, ha elfelejtem a pince jelszavát?",
         "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-hu#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "Mi történik az adataimmal, ha abbahagyom a használatát?",
+        "answer": "Az adataid az eszközödön maradnak. Bármikor exportálhatod az összeset Markdown, JSON, CSV vagy PDF formátumban. Nincs zárolás, nincs túsz."
+      },
+      {
+        "question": "Valóban privátak az adataim?",
+        "answer": "Teljesen. Minden titkosítva van az eszközödön egy olyan kulccsal, amely csak a tiéd. Soha nem látjuk a könyvjelzőidet, jegyzeteidet vagy jelszavaidat. Még mi sem tudjuk olvasni az adataidat."
+      },
+      {
+        "question": "Használhatom a telefonomon?",
+        "answer": "Igen! A BookmarkForge bármilyen eszközön működik webes böngészővel. Az ingyenes szint korlátlan eszközön működik (mindegyiknek saját tárja van). A Pro akár 5 eszközön szinkronizál."
       }
     ]
   },
@@ -455,7 +453,7 @@
     "text": "Csatlakozz a több ezer kutatóhoz, fejlesztőhöz és tanulóhoz, akik a BookmarkForge-ra bízzák második agyukat.",
     "ctaPrimary": "Próbáld ki azonnal (fiók nélkül)",
     "ctaSecondary": "Frissítés Pro-ra",
-    "note": "Nincs szükség fiókra. Azonnal működik a böngészőben. Ingyenes szint: 300 könyvjelző."
+    "note": "Nincs szükség fiókra. Azonnal működik a böngészőben. Ingyenes szint: 500 könyvjelző."
   },
   "footer": {
     "brand": "A privát, MI-vel működő tudástárad. 100% helyi első.",
@@ -473,7 +471,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {

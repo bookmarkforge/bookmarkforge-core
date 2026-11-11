@@ -38,7 +38,18 @@ const OUTPUT_DIR = process.env.OUTPUT_DIR || "dist-extension";
 const OUT = path.isAbsolute(OUTPUT_DIR)
   ? OUTPUT_DIR
   : path.join(ROOT, OUTPUT_DIR);
-const EXCLUDED = new Set(["__tests__", "README.md", "PRIVACY.md"]);
+// Dev-only artifacts that must never ship in the store package:
+// __tests__ (vitest sources), README/PRIVACY (store listing text lives in the
+// dashboard), globals.d.ts (TS declarations, no runtime role) and
+// screenshot-mockup.html (store-screenshot mockup with inline styles that
+// would violate the extension_pages CSP if ever opened).
+const EXCLUDED = new Set([
+  "__tests__",
+  "README.md",
+  "PRIVACY.md",
+  "globals.d.ts",
+  "screenshot-mockup.html",
+]);
 
 /**
  * Per-file role description surfaced in MANIFEST.md so a reviewer can read

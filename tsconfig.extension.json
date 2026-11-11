@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "types": [
+      "chrome",
+      "node"
+    ],
+    "strict": false
+  },
+  "include": [
+    "extension/*.js",
+    "extension/globals.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "extension/__tests__"
+  ]
+}

@@ -6,12 +6,12 @@
   "ogLocale": "vi_VN",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: trình quản lý dấu trang riêng tư, local-first kèm danh sách đọc",
-  "description": "Raindrop giữ dấu trang của bạn trên máy chủ của họ. BookmarkForge giữ chúng trên máy của bạn — có khóa bảo vệ, đến mức chúng tôi cũng không đọc được. Trả một lần: $59 quyền truy cập trọn đời giá early bird (tiết kiệm $20 trước giá thường). Free: 300 dấu trang.",
+  "description": "Raindrop giữ dấu trang của bạn trên máy chủ của họ. BookmarkForge giữ chúng trên máy của bạn — có khóa bảo vệ, đến mức chúng tôi cũng không đọc được. Trả một lần: $59 quyền truy cập trọn đời giá early bird (tiết kiệm $20 trước giá thường). Free: 500 dấu trang.",
   "ogTitle": "BookmarkForge: trình quản lý dấu trang riêng tư, local-first kèm danh sách đọc",
-  "ogDescription": "Raindrop giữ dấu trang của bạn trên máy chủ của họ. BookmarkForge giữ chúng trên máy của bạn — có khóa bảo vệ, đến mức chúng tôi cũng không đọc được. Trả một lần: $59 quyền truy cập trọn đời giá early bird (tiết kiệm $20 trước giá thường). Free: 300 dấu trang.",
+  "ogDescription": "Raindrop giữ dấu trang của bạn trên máy chủ của họ. BookmarkForge giữ chúng trên máy của bạn — có khóa bảo vệ, đến mức chúng tôi cũng không đọc được. Trả một lần: $59 quyền truy cập trọn đời giá early bird (tiết kiệm $20 trước giá thường). Free: 500 dấu trang.",
   "ogImage": "https://bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: trình quản lý dấu trang riêng tư, local-first kèm danh sách đọc",
-  "twitterDescription": "Raindrop giữ dấu trang của bạn trên máy chủ của họ. BookmarkForge giữ chúng trên máy của bạn — có khóa bảo vệ, đến mức chúng tôi cũng không đọc được. Trả một lần: $59 quyền truy cập trọn đời giá early bird (tiết kiệm $20 trước giá thường). Free: 300 dấu trang.",
+  "twitterDescription": "Raindrop giữ dấu trang của bạn trên máy chủ của họ. BookmarkForge giữ chúng trên máy của bạn — có khóa bảo vệ, đến mức chúng tôi cũng không đọc được. Trả một lần: $59 quyền truy cập trọn đời giá early bird (tiết kiệm $20 trước giá thường). Free: 500 dấu trang.",
   "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
   "skipLink": "Bỏ qua, tới nội dung chính",
   "navBrandAria": "Trang chủ BookmarkForge",
@@ -198,7 +198,13 @@
         "title": "Riêng tư mặc định",
         "text": "Không tài khoản, không theo dõi, không quảng cáo. Bạn là khách hàng, không phải sản phẩm. Tính năng chia sẻ dữ liệu sử dụng có tồn tại, nhưng là tùy chọn và mặc định tắt cho tới khi bạn bật lên."
       }
-    ]
+    ],
+    "tierNote": {
+      "freeLabel": "Bản Free bao gồm",
+      "free": "tìm kiếm thông minh, 500 bookmark, AI với khóa của riêng bạn, sao lưu mã hóa và xuất — mãi mãi",
+      "proLabel": "Pro thêm",
+      "pro": "bookmark không giới hạn, đồng bộ trên 5 thiết bị, AI cục bộ và chat trên kho của bạn, thẻ ghi nhớ, PDF/OCR"
+    }
   },
   "ai": {
     "id": "ai",
@@ -219,22 +225,6 @@
         {
           "type": "cloud",
           "name": "Đám mây — Google Gemini (dùng khóa của bạn)"
-        },
-        {
-          "type": "cloud",
-          "name": "Đám mây — OpenAI / GPT-4o (dùng khóa của bạn)"
-        },
-        {
-          "type": "cloud",
-          "name": "Đám mây — Anthropic Claude (dùng khóa của bạn)"
-        },
-        {
-          "type": "cloud",
-          "name": "Đám mây — Groq (dùng khóa của bạn)"
-        },
-        {
-          "type": "cloud",
-          "name": "Đám mây — OpenRouter hoặc nhà cung cấp tùy chỉnh khác (dùng khóa của bạn)"
         }
       ]
     },
@@ -288,23 +278,27 @@
       {
         "title": "Không bị gắn chặt",
         "text": "Xuất dữ liệu bất cứ lúc nào ở các định dạng mở (JSON, Markdown, CSV, PDF). Tri thức của bạn vẫn là của bạn và luôn mang theo được."
+      },
+      {
+        "title": "Chỉ Vercel lưu trữ — không phân tích",
+        "text": "Trang web chạy độc quyền trên Vercel mà không có bất kỳ phân tích nào: không trình theo dõi, không dấu vân tay, không tập lệnh bên thứ ba. Hãy tự xác minh trong tab mạng của trình duyệt."
       }
     ]
   },
   "pricing": {
     "id": "pricing",
     "title": "Bảng giá đơn giản, công bằng — không đăng ký",
-    "subtitle": "Gói Free: 300 dấu trang mãi mãi. Pro là giấy phép Lifetime cho v1 — trả một lần, sở hữu v1 mãi mãi. Bao gồm mọi bản cập nhật v1.x và 12 tháng cập nhật tính năng. Cập nhật bảo mật mãi mãi. Không tính phí hằng tháng.",
+    "subtitle": "Gói Free: 500 dấu trang mãi mãi. Pro là giấy phép Lifetime cho v1 — trả một lần, sở hữu v1 mãi mãi. Bao gồm mọi bản cập nhật v1.x và 12 tháng cập nhật tính năng. Cập nhật bảo mật mãi mãi. Không tính phí hằng tháng.",
     "plans": [
       {
         "name": "Free",
         "price": "$ 0",
         "period": "/vĩnh viễn",
-        "description": "Cho kho lưu trữ cá nhân (300 bookmark, hoạt động trên mọi thiết bị — mỗi thiết bị có kho riêng)",
+        "description": "Cho kho lưu trữ cá nhân (500 bookmark, hoạt động trên mọi thiết bị — mỗi thiết bị có kho riêng)",
         "features": [
           {
             "included": true,
-            "text": "300 bookmark, ghi chú và tài liệu"
+            "text": "500 bookmark, ghi chú và tài liệu"
           },
           {
             "included": true,
@@ -313,6 +307,10 @@
           {
             "included": true,
             "text": "AI với API key của bạn (bạn trả cho nhà cung cấp)"
+          },
+          {
+            "included": true,
+            "text": "Hoạt động trên mọi thiết bị — mỗi thiết bị có kho riêng"
           },
           {
             "included": true,
@@ -360,11 +358,11 @@
           }
         ],
         "cta": "Dùng thử ngay",
-        "ctaHref": "/app",
+        "ctaHref": "/app?demo=true",
         "ctaClass": "btn-secondary"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "badge": "Phổ biến nhất — Early Bird 200",
         "price": "$ 59",
         "period": "Early Bird (sau đó $79)",
@@ -396,7 +394,7 @@
           },
           {
             "included": true,
-            "text": "Xuất nâng cao (10+ định dạng)"
+            "text": "Xuất nâng cao (7 định dạng)"
           },
           {
             "included": true,
@@ -405,18 +403,6 @@
           {
             "included": true,
             "text": "Lifetime của v1 · 12 tháng cập nhật tính năng"
-          },
-          {
-            "included": true,
-            "text": "Cập nhật bảo mật mãi mãi"
-          },
-          {
-            "included": true,
-            "text": "Hỗ trợ qua email (48h) + quyền truy cập sớm"
-          },
-          {
-            "included": true,
-            "text": "Dịch bằng AI cục bộ (sắp ra mắt)"
           }
         ],
         "cta": "Nhận Pro $59 Early Bird",
@@ -430,14 +416,14 @@
         "cta2Class": "btn-secondary"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-vi#pricing\">Learn more</a>"
+    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-vi#pricing\">Learn more</a>"
   },
   "faq": {
     "title": "Câu hỏi thường gặp",
     "items": [
       {
         "question": "Gói Free có thật sự miễn phí mãi mãi không?",
-        "answer": "Có. Không dùng thử, không đăng ký. Gói miễn phí gồm 300 dấu trang, tìm kiếm toàn văn và ngữ nghĩa, đồ thị tri thức, cùng AI với API key của chính bạn (bạn trả phí cho nhà cung cấp)."
+        "answer": "Có. Không dùng thử, không đăng ký. Gói miễn phí gồm 500 dấu trang, tìm kiếm toàn văn và ngữ nghĩa, đồ thị tri thức, cùng AI với API key của chính bạn (bạn trả phí cho nhà cung cấp)."
       },
       {
         "question": "\"Lifetime of v1\" nghĩa là gì với gói Pro?",
@@ -454,6 +440,18 @@
       {
         "question": "Lỡ quên mật khẩu vault thì sao?",
         "answer": "We cannot recover it. When you create a vault we show 24-word recovery phrase once — write it on paper. Without it, no one (including us) can open the vault. See <a href=\"/help-vi#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "Điều gì xảy ra với dữ liệu của tôi nếu tôi ngừng sử dụng?",
+        "answer": "Dữ liệu của bạn vẫn ở trên thiết bị của bạn. Bạn có thể xuất mọi thứ bất cứ lúc nào sang Markdown, JSON, CSV hoặc PDF. Không khóa, không con tin."
+      },
+      {
+        "question": "Dữ liệu của tôi có thực sự riêng tư không?",
+        "answer": "Tuyệt đối. Mọi thứ được mã hóa trên thiết bị của bạn với khóa chỉ bạn có. Chúng tôi không bao giờ thấy bookmark, ghi chú hoặc mật khẩu của bạn. Ngay cả chúng tôi cũng không thể đọc dữ liệu của bạn."
+      },
+      {
+        "question": "Tôi có thể sử dụng trên điện thoại không?",
+        "answer": "Có! BookmarkForge hoạt động trên bất kỳ thiết bị nào có trình duyệt web. Cấp miễn phí hoạt động trên thiết bị không giới hạn (mỗi thiết bị có vault riêng). Pro đồng bộ tối đa 5 thiết bị."
       }
     ]
   },
@@ -462,7 +460,7 @@
     "text": "Bắt đầu xây dựng kho lưu trữ kiến thức AI riêng tư của bạn ngay hôm nay. Dữ liệu của bạn vẫn nằm trên thiết bị của bạn — được mã hóa, có thể tìm kiếm và là của bạn mãi mãi.",
     "ctaPrimary": "Dùng thử ngay (không cần tài khoản)",
     "ctaSecondary": "Nâng cấp lên Pro",
-    "note": "Không cần tài khoản. Chạy ngay trong trình duyệt. Gói Free: 300 dấu trang."
+    "note": "Không cần tài khoản. Chạy ngay trong trình duyệt. Gói Free: 500 dấu trang."
   },
   "footer": {
     "brand": "Kho tri thức riêng tư, chạy bằng AI của bạn. 100% Local-First.",
@@ -480,7 +478,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app"
+        "/app?demo=true"
       ]
     },
     "resources": {
@@ -523,7 +521,7 @@
   },
   "structuredData": {
     "websiteName": "BookmarkForge",
-    "websiteDescription": "Kho tri thức riêng tư, chạy bằng AI của bạn. 100% Local-First. Lựa chọn thay thế Pocket riêng tư. Free: 300 dấu trang.",
+    "websiteDescription": "Kho tri thức riêng tư, chạy bằng AI của bạn. 100% Local-First. Lựa chọn thay thế Pocket riêng tư. Free: 500 dấu trang.",
     "organizationName": "BookmarkForge",
     "organizationUrl": "https://bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
@@ -536,17 +534,17 @@
         "name": "Free",
         "price": "0",
         "currency": "USD",
-        "description": "300 dấu trang. Miễn phí mãi mãi."
+        "description": "500 dấu trang. Miễn phí mãi mãi."
       },
       {
-        "name": "Pro Lifetime v1 — Early Bird",
+        "name": "Pro Lifetime — Early Bird",
         "price": "59",
         "currency": "USD",
         "description": "Early Bird 200. Lifetime của v1, 12 tháng tính năng, bảo mật mãi mãi, v2 giảm 60%.",
         "availability": "https://schema.org/InStock"
       },
       {
-        "name": "Pro Lifetime v1",
+        "name": "Pro Lifetime",
         "price": "79",
         "currency": "USD",
         "description": "Giá thường. Lifetime của v1."
@@ -563,7 +561,7 @@
     "faq": [
       {
         "question": "Gói Free có thật sự miễn phí mãi mãi không?",
-        "answer": "Có. Không dùng thử, không đăng ký. Gói miễn phí gồm 300 dấu trang, tìm kiếm toàn văn và ngữ nghĩa, đồ thị tri thức, cùng AI với API key của chính bạn (bạn trả phí cho nhà cung cấp)."
+        "answer": "Có. Không dùng thử, không đăng ký. Gói miễn phí gồm 500 dấu trang, tìm kiếm toàn văn và ngữ nghĩa, đồ thị tri thức, cùng AI với API key của chính bạn (bạn trả phí cho nhà cung cấp)."
       },
       {
         "question": "\"Lifetime of v1\" nghĩa là gì với gói Pro?",
@@ -603,7 +601,7 @@
     },
     "pricing": {
       "title": "Bảng giá — Lifetime của v1, không đăng ký",
-      "intro": "<strong>Mô hình:</strong> bạn trả một lần cho <em>BookmarkForge v1</em>. Không tính phí hằng tháng. So sánh: Raindrop Pro $28–38/năm, Instapaper $60/năm, Readwise $120/năm, Capacities $120/năm. Lifetime $79 tương đương khoảng 2× chi phí hằng năm của Raindrop — hoàn toàn xứng đáng với lifetime + quyền riêng tư.",
+      "intro": "<strong>Mô hình:</strong> bạn trả một lần cho <em>BookmarkForge v1</em>. Không tính phí hằng tháng. So sánh: Raindrop Pro yearly–38/năm, Instapaper $60/năm, Readwise $120/năm, Capacities $120/năm. Lifetime $79 tương đương khoảng 2× chi phí hằng năm của Raindrop — hoàn toàn xứng đáng với lifetime + quyền riêng tư.",
       "table": {
         "tier": "Gói",
         "price": "Giá",
@@ -612,10 +610,10 @@
       },
       "tier": {
         "free": "Free",
-        "pro": "Pro Lifetime v1"
+        "pro": "Pro Lifetime"
       },
       "freePrice": "$0 mãi mãi",
-      "freeDescription": "300 dấu trang trên mọi thiết bị (mỗi thiết bị giữ vault riêng), tìm kiếm thông minh — toàn văn + ngữ nghĩa, tính năng mà Raindrop thu phí hằng năm — đồ thị tri thức, AI với API key của bạn, PWA + tiện ích trình duyệt. Ở mức 300, vault của bạn vẫn nguyên vẹn: đọc, tìm kiếm và xuất dữ liệu không bao giờ gián đoạn; chỉ có việc lưu mới tạm dừng.",
+      "freeDescription": "500 dấu trang trên mọi thiết bị (mỗi thiết bị giữ vault riêng), tìm kiếm thông minh — toàn văn + ngữ nghĩa, tính năng mà Raindrop thu phí hằng năm — đồ thị tri thức, AI với API key của bạn, PWA + tiện ích trình duyệt. Ở mức 500, vault của bạn vẫn nguyên vẹn: đọc, tìm kiếm và xuất dữ liệu không bao giờ gián đoạn; chỉ có việc lưu mới tạm dừng.",
       "unlimited": "Không giới hạn",
       "badge": "Early Bird",
       "proPrice": "$59",
@@ -646,7 +644,7 @@
       },
       "tier": {
         "free": "Free",
-        "pro": "Pro"
+        "pro": "Pro v1 Lifetime"
       },
       "freeChannel": "Tự phục vụ: Trung tâm trợ giúp này + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
       "freeResponse": "Theo khả năng (cộng đồng)",
@@ -720,8 +718,8 @@
         "fix": "Kiểm tra <code>Settings → Pro</code>: nhập lại khóa. Kết quả kiểm tra offline được cache lại; hãy kết nối một lần để xác thực lại qua Whop."
       },
       "e202": {
-        "meaning": "Đã đạt giới hạn gói Free (300 dấu trang)",
-        "fix": "Gói Free giới hạn 300 dấu trang. Hãy xóa bớt hoặc nâng cấp lên Pro Lifetime v1 để không giới hạn. Bạn luôn có thể xuất dữ liệu."
+        "meaning": "Đã đạt giới hạn gói Free (500 dấu trang)",
+        "fix": "Gói Free giới hạn 500 dấu trang. Hãy xóa bớt hoặc nâng cấp lên Pro Lifetime để không giới hạn. Bạn luôn có thể xuất dữ liệu."
       },
       "tip": "Mẹo hỗ trợ: nhấn <code>Copy diagnostic</code> của lỗi sẽ sao chép mã kèm ngữ cảnh trong một cú nhấp — hãy dán vào GitHub Discussion hoặc email của bạn."
     },
@@ -747,14 +745,46 @@
     "home": "Trang chủ",
     "faq": {
       "q1": "Gói Free có thật sự miễn phí mãi mãi không?",
-      "a1": "Có. Không dùng thử, không đăng ký. Gói Free gồm 300 dấu trang, tìm kiếm toàn văn và ngữ nghĩa, đồ thị tri thức cùng AI với API key của chính bạn.",
+      "a1": "Có. Không dùng thử, không đăng ký. Gói Free gồm 500 dấu trang, tìm kiếm toàn văn và ngữ nghĩa, đồ thị tri thức cùng AI với API key của chính bạn.",
       "q2": "Lifetime của v1 nghĩa là gì?",
       "a2": "Trả một lần, sở hữu v1 mãi mãi. Mọi bản sửa lỗi v1.x mãi mãi cộng 12 tháng cập nhật tính năng kể từ lúc mua. Cập nhật bảo mật mãi mãi. Sau tháng thứ 13 bạn vẫn dùng được v1. v2 và v3 là hai phiên bản lớn có phí riêng: $89 cho khách mới, $35 cho chủ sở hữu v1 (giảm 60%).",
       "q3": "Lỡ quên mật khẩu vault thì sao?",
       "a3": "Chúng tôi không thể khôi phục. Khi tạo vault, chúng tôi hiển thị cụm 24 từ khôi phục đúng một lần — hãy chép ra giấy. Không có nó thì vault không thể khôi phục. Xem BF-E101."
     }
   },
-  "ogImageAlt": "Raindrop giữ dấu trang của bạn trên máy chủ của họ. BookmarkForge giữ chúng trên máy của bạn — có khóa bảo vệ, đến mức chúng tôi cũng không đọc được. 59 đô la một lần. Free: 300 dấu trang.",
+  "ogImageAlt": "Raindrop giữ dấu trang của bạn trên máy chủ của họ. BookmarkForge giữ chúng trên máy của bạn — có khóa bảo vệ, đến mức chúng tôi cũng không đọc được. 59 đô la một lần. Free: 500 dấu trang.",
   "languageToggleAria": "Đổi ngôn ngữ",
-  "githubAria": "Tặng sao cho BookmarkForge trên GitHub"
+  "githubAria": "Tặng sao cho BookmarkForge trên GitHub",
+  "beforeAfter": {
+    "id": "before-after",
+    "tag": "Tại sao chuyển đổi",
+    "title": "Từ hỗn loạn đến rõ ràng trong 30 giây",
+    "subtitle": "Xem sự khác biệt giữa bookmark trình duyệt và kho kiến thức thực sự.",
+    "before": {
+      "title": "Trước: Bookmark trình duyệt",
+      "items": [
+        "Bookmark bị chôn trong các thư mục đã quên",
+        "Không có cách tìm kiếm theo ý nghĩa",
+        "Mất khi xóa dữ liệu trình duyệt",
+        "Không có ghi chú hay tổ chức",
+        "Chỉ truy cập được trên một thiết bị"
+      ]
+    },
+    "after": {
+      "title": "Sau: BookmarkForge",
+      "items": [
+        "Mọi thứ có thể tìm kiếm ngay lập tức",
+        "Tìm theo từ khóa hoặc ý nghĩa",
+        "Mã hóa trên thiết bị của bạn, luôn an toàn",
+        "Ghi chú, thẻ và tổ chức thông minh",
+        "Đồng bộ trên tất cả thiết bị của bạn (Pro)"
+      ]
+    },
+    "ctaPrimary": "Dùng Thử Miễn Phí",
+    "ctaSecondary": "Xem Tính Năng"
+  },
+  "share": {
+    "text": "Chia sẻ BookmarkForge với bạn bè",
+    "twitterText": "Xem BookmarkForge - trình quản lý bookmark riêng tư, local-first"
+  }
 }

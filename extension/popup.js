@@ -4,7 +4,7 @@
 const DEFAULT_BASE_URL = "https://bookmarkforgeapp.com";
 const STORAGE_KEY = "bookmarkforge_base_url";
 
-const saveBtn = document.getElementById("saveBtn");
+const saveBtn = /** @type {HTMLButtonElement | null} */ (document.getElementById("saveBtn"));
 const statusEl = document.getElementById("status");
 const pageTitleEl = document.getElementById("pageTitle");
 const pageUrlEl = document.getElementById("pageUrl");
@@ -12,7 +12,7 @@ const pageUrlEl = document.getElementById("pageUrl");
 // Settings elements
 const settingsToggle = document.getElementById("settingsToggle");
 const settingsPanel = document.getElementById("settingsPanel");
-const customUrlInput = document.getElementById("customUrlInput");
+const customUrlInput = /** @type {HTMLInputElement | null} */ (document.getElementById("customUrlInput"));
 const saveUrlBtn = document.getElementById("saveUrlBtn");
 const urlStatusEl = document.getElementById("urlStatus");
 const currentUrlDisplay = document.getElementById("currentUrlDisplay");

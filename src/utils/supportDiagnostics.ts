@@ -19,6 +19,8 @@
 
 import { diagnosticService } from "../services/DiagnosticService";
 import { getBuildHash } from "../utils/bundleIntegrity";
+import { getLastErrorCode } from "./errorCodes";
+import { errorReporter } from "../telemetry/errorReporter";
 
 interface RedactedDiagnostic {
   app: string;
@@ -44,8 +46,19 @@ function getAppVersion(): string {
   return "1.0.0";
 }
 
-async function buildRedactedDiagnostic(lastBfE: string | null = null): Promise<RedactedDiagnostic> {
+export async function buildRedactedDiagnostic(lastBfE: string | null = null): Promise<RedactedDiagnostic> {
   const d = await diagnosticService.getDiagnostics();
+  // Prefer the caller-supplied code; fall back to the last classified
+  // user-facing error recorded by the UI boundary (toUserErrorMessage).
+  const effectiveBfE = lastBfE ?? getLastErrorCode();
+  // Real count: errors persisted locally by errorReporter in the last 7 days.
+  // getStoredErrors never rejects on a missing/blocked DB — it resolves [].
+  let count7d = 0;
+  try {
+    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    const stored = await errorReporter.getStoredErrors();
+    count7d = stored.filter((e) => e.timestamp >= weekAgo).length;
+  } catch { /* INTENTIONAL SILENCE: error store unavailable — count stays 0 */ }
   let usedBytes: number | null = null;
   let quotaBytes: number | null = null;
   let usagePct: number | null = null;
@@ -73,8 +86,8 @@ async function buildRedactedDiagnostic(lastBfE: string | null = null): Promise<R
     storage: { usagePct, usedBytes, quotaBytes, ok: storageOk },
     p2p: { connected: Object.keys(d.sync.providers || {}).length > 0 },
     ai: { provider: d.ai.provider, localAvailable: d.ai.ollamaAvailable || d.ai.webGpuSupported, webLLMStatus: d.ai.webLlmStatus },
-    errors: { count7d: 0, lastCode: lastBfE },
-    bfE: lastBfE,
+    errors: { count7d, lastCode: effectiveBfE },
+    bfE: effectiveBfE,
   };
 }
 

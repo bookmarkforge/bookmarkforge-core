@@ -54,9 +54,9 @@ Ziehe den **"Save to Forge"**-Button in die Lesezeichenleiste deines Browsers. W
 
 - **Virtualisierte Liste**, die 100.000+ Elemente ohne Verzögerung verarbeitet
 - **Tiefensuche:** durchsucht den Volltext gespeicherter Seiten
-- **Intelligente Sammlungen:** automatische Organisation nach Tag
-- **Import/Export:** aus Notion, Evernote, Chrome oder Export als .bmf, Markdown, PDF
-- **Free:** 300 Lesezeichen, intelligente Suche enthalten, keine Gerätebegrenzung. Bei 300 bleibt dein Tresor für Lesen, Suche und Export verfügbar; nur neue Speicherungen werden pausiert. **Pro:** Unbegrenzte Lesezeichen.
+- **Tags & Sammlungen:** mit Tags, KI-Auto-Tag-Vorschlägen und Sammlungen organisieren
+- **Import/Export:** Lesezeichen-Exporte (Pocket, Raindrop, Omnivore, Chrome, Pinboard, Firefox), Evernote .enex, Notion/Markdown/Obsidian-Tresore (ZIP); Export als .bmf, Markdown, HTML, CSV, JSON, JSONL, Notion, Obsidian, PDF (Pro)
+- **Free:** 500 Lesezeichen, intelligente Suche enthalten, keine Gerätebegrenzung. Bei 500 bleibt dein Tresor für Lesen, Suche und Export verfügbar; nur neue Speicherungen werden pausiert. **Pro:** Unbegrenzte Lesezeichen.
 
 ### 3.2 Notiz-Editor
 
@@ -84,10 +84,10 @@ Interaktive 3D/2D-Visualisierung deiner Notizen:
 
 ### 3.5 Sprachbefehle
 
-Sprache-zu-Aktion-Motor:
-- Sag "Hey BMF, finde meine Biologie-Notizen"
-- Sag "Speichere diese Seite"
-- Funktioniert 100% offline über die Web Speech API
+Push-to-Talk-Motor (Mikro drücken, sprechen, loslassen):
+- Drücke das Mikro und sag „finde meine Biologie-Notizen"
+- Drücke das Mikro und sag „speichere diese Seite"
+- Nutzt die Web Speech API des Browsers — Chrome/Edge unterstützen sie und sie benötigt eine Internetverbindung; Firefox-Unterstützung ist begrenzt
 
 ### 3.6 Omnibar (Ctrl+K)
 
@@ -207,13 +207,13 @@ Das Gehirn der Anwendung:
 | Funktion | Free | Pro |
 |---|---|--- |
 | Preis | $0 | $79 (lebenslang) |
-| Lesezeichen | 300 | Unbegrenzt |
+| Lesezeichen | 500 | Unbegrenzt |
 | Geräte | Keine Begrenzung (jedes Gerät hat eigenen Tresor) | Bis zu 5 + P2P-Sync |
 | KI mit eigenem Schlüssel | ✅ | ✅ |
 | Lokale KI (WebLLM/Ollama) | ❌ | ✅ |
 | RAG-Chat über deine Daten | ❌ | ✅ |
 | Lernkarten + PDF/OCR | ❌ | ✅ |
-| Erweiterter Export (10+ Formate) | ❌ | ✅ |
+| Erweiterter Export (7 Formate) | ❌ | ✅ |
 | Lokale Tresor-Verschlüsselung (AES-GCM) | ✅ | ✅ |
 | Support | Community | E-Mail 48h |
 | v2/v3-Rabatte | ❌ | 60% Rabatt |
@@ -246,16 +246,19 @@ Pocket-HTML-Exporte (`ril_export.html`) und Pocket-formatierte CSV-Dateien werde
 ### 8.1 Import
 
 Gehe zu **Einstellungen > Import**:
-- **HTML/JSON aus Notion oder Evernote**
-- **Chrome-Lesezeichen-Export**
+- **HTML/JSON-Lesezeichen-Exporte** (Pocket, Raindrop, Omnivore, Chrome)
+- **Pinboard-Posts-Export** (JSON) und **Firefox-Sicherung** (`places.json`)
+- **Evernote-Export** (`.enex`) — Notizen werden zu Dokumenten
+- **Notion-Export** (ZIP „Markdown & CSV") — Seiten werden zu Dokumenten, Ordner bleiben erhalten
+- **Markdown- oder Obsidian-Tresore** (ZIP)
 - **.bmf-Sicherung**
 
 ### 8.2 Export
 
 - **.bmf:** Vollständige verschlüsselte Sicherung
-- **Markdown:** Notizen in lesbarem Format
-- **PDF:** Exportiere Notizen als PDF-Dokumente
-- **JSON:** Strukturierte Daten
+- **Markdown, HTML, CSV, JSON, JSONL:** Strukturierte Exporte
+- **Notion / Obsidian:** Vault-kompatible Exporte
+- **PDF:** Exportiere Notizen als PDF-Dokumente (Pro)
 
 ### 8.3 Sicherung und Wiederherstellung
 
@@ -334,7 +337,7 @@ siehe interne Dokumentation oder kontaktiere den Support.
 Die Hauptanwendung ist local-first und kostenlos. Erweiterte KI-Funktionen und P2P-Synchronisation erfordern eine Pro-Lizenz.
 
 **Kann ich es auf Mobilgeräten nutzen?**
-Ja. Installiere es als PWA über Chrome (Android) oder Safari (iOS). Unterstützt Offline-Zugriff und Push-Benachrichtigungen.
+Ja. Installiere es als PWA über Chrome (Android) oder Safari (iOS). Unterstützt Offline-Zugriff und lokale Browser-Benachrichtigungen.
 
 **Wo sind meine Dateien?**
 Im Browserspeicher (IndexedDB). Du kannst sie jederzeit als .bmf, Markdown oder PDF exportieren.

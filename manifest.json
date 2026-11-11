@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-09T14:38:43.690Z",
+  "generatedAt": "2026-11-11T23:46:09.222Z",
   "version": "1.0.0",
   "source": "private repository (export checkout)",
   "license": "MIT",
@@ -23,7 +23,7 @@
     "src/services/webrtc-sync/validation.ts"
   ],
   "proSpecifiersRewritten": 14,
-  "includedCount": 2009,
+  "includedCount": 2071,
   "excluded": [
     {
       "file": ".zap\\authenticated.context",
@@ -394,6 +394,10 @@
       "reason": "docs: business/internal documentation"
     },
     {
+      "file": "docs\\appsumo-partner-obligations.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
       "file": "docs\\audit-raw.mjs",
       "reason": "docs: business/internal documentation"
     },
@@ -478,6 +482,10 @@
       "reason": "docs: business/internal documentation"
     },
     {
+      "file": "docs\\launch-1000-users.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
       "file": "docs\\launch-checklist.md",
       "reason": "docs: business/internal documentation"
     },
@@ -491,6 +499,22 @@
     },
     {
       "file": "docs\\locale-addition-runbook.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\marketing\\automation.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\marketing\\n8n-article-to-social.json",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\marketing\\social-proof.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\marketing\\testimonials.md",
       "reason": "docs: business/internal documentation"
     },
     {
@@ -562,11 +586,19 @@
       "reason": "docs: business/internal documentation"
     },
     {
+      "file": "docs\\support-ai-workflow.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
       "file": "docs\\support-data-loss-runbook.md",
       "reason": "docs: business/internal documentation"
     },
     {
       "file": "docs\\support-license-runbook.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\support-ltd-runbook.md",
       "reason": "docs: business/internal documentation"
     },
     {
@@ -830,6 +862,10 @@
       "reason": "excluded dir"
     },
     {
+      "file": "server\\src\\__tests__\\connection-caps.test.ts",
+      "reason": "excluded dir"
+    },
+    {
       "file": "server\\src\\__tests__\\origin-fail-closed.test.ts",
       "reason": "excluded dir"
     },
@@ -907,6 +943,10 @@
     },
     {
       "file": "server\\src\\signaling-handlers.ts",
+      "reason": "excluded dir"
+    },
+    {
+      "file": "server\\src\\signaling.ts",
       "reason": "excluded dir"
     },
     {

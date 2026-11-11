@@ -1,226 +1,133 @@
 #!/usr/bin/env node
-
 /**
- * Automated Changelog Generator
- * 
- * Generates release notes from git commits.
- * categorizes commits by type (feat, fix, docs, etc.)
- * formats for Markdown output.
- * 
- * Usage: node scripts/generate-changelog.mjs [since-tag]
+ * generate-changelog.mjs — deterministic CHANGELOG.md from git history.
+ *
+ * Reads `git log` (default: since the latest semver tag, or the last
+ * --days days when no tag exists), groups commits by conventional-commit
+ * prefix, and writes CHANGELOG.md. No fabricated entries: every line is a
+ * real commit subject. Review the output before committing — it is a
+ * release-notes draft, not marketing copy.
+ *
+ * Usage:
+ *   node scripts/generate-changelog.mjs            # since last tag / 30 days
+ *   node scripts/generate-changelog.mjs --days 7   # last N days
+ *   node scripts/generate-changelog.mjs --since v1.2.0
+ *   node scripts/generate-changelog.mjs --check    # fail if CHANGELOG.md is stale
+ *
+ * npm run changelog
  */
+import { execFileSync } from "node:child_process";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 
-import { execSync } from 'child_process';
-import { writeFileSync, readFileSync } from 'fs';
-import { join } from 'path';
-import { fileURLToPath } from 'url';
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const OUT = join(ROOT, "CHANGELOG.md");
 
-const __dirname = fileURLToPath(new URL('.', import.meta.url));
-const REPO_ROOT = join(__dirname, '..');
-const CHANGELOG_FILE = join(REPO_ROOT, 'CHANGELOG.md');
+const args = process.argv.slice(2);
+const daysIdx = args.indexOf("--days");
+const sinceIdx = args.indexOf("--since");
+const checkOnly = args.includes("--check");
+const days = daysIdx >= 0 ? Math.max(1, Math.min(365, Number(args[daysIdx + 1]) || 30)) : 30;
+const sinceArg = sinceIdx >= 0 ? args[sinceIdx + 1] : null;
 
-/**
- * Get git commits since a tag
- */
-function getCommits(sinceTag = null) {
+function git(args_) {
   try {
-    const cmd = sinceTag 
-      ? `git log ${sinceTag}..HEAD --pretty=format:"%H|%s|%an|%ae|%ad" --date=short`
-      : `git log HEAD --pretty=format:"%H|%s|%an|%ae|%ad" --date=short -20`;
-    
-    const output = execSync(cmd, { 
-      cwd: REPO_ROOT, 
-      encoding: 'utf-8' 
-    });
-    
-    return output.trim().split('\n').map(line => {
-      const [hash, subject, author, email, date] = line.split('|');
-      return { hash, subject, author, email, date };
-    });
-  } catch (error) {
-    console.error('Error getting git commits:', error.message);
-    return [];
+    return execFileSync("git", args_, { cwd: ROOT, encoding: "utf8", maxBuffer: 8 * 1024 * 1024 });
+  } catch {
+    return "";
   }
 }
 
-/**
- * Categorize commit by conventional commit format
- */
-function categorizeCommit(subject) {
-  const patterns = {
-    feat: /^feat(?:\([^)]+\))?:/,
-    fix: /^fix(?:\([^)]+\))?:/,
-    docs: /^docs(?:\([^)]+\))?:/,
-    style: /^style(?:\([^)]+\))?:/,
-    refactor: /^refactor(?:\([^)]+\))?:/,
-    perf: /^perf(?:\([^)]+\))?:/,
-    test: /^test(?:\([^)]+\))?:/,
-    chore: /^chore(?:\([^)]+\))?:/,
-    build: /^build(?:\([^)]+\))?:/,
-    ci: /^ci(?:\([^)]+\))?:/,
-  };
-  
-  for (const [type, pattern] of Object.entries(patterns)) {
-    if (pattern.test(subject)) {
-      return type;
-    }
-  }
-  
-  return 'other';
+function resolveRange() {
+  if (sinceArg) return sinceArg;
+  const tag = git(["describe", "--tags", "--abbrev=0", "HEAD"]).trim();
+  if (tag) return `${tag}..HEAD`;
+  return `--since=${days}.days.ago`;
 }
 
-/**
- * Format commit for changelog
- */
-function formatCommit(commit) {
-  categorizeCommit(commit.subject);
-  const cleanSubject = commit.subject
-    .replace(/^(feat|fix|docs|style|refactor|perf|test|chore|build|ci)(\([^)]+\))?:\s*/, '')
-    .replace(/!\s*$/, ''); // Remove breaking change indicator
+const GROUPS = [
+  ["feat", "Features"],
+  ["fix", "Bug Fixes"],
+  ["perf", "Performance"],
+  ["refactor", "Refactoring"],
+  ["docs", "Documentation"],
+  ["test", "Tests"],
+  ["chore", "Maintenance"],
+  ["ci", "CI"],
+  ["build", "Build"],
+  ["style", "Style"],
+];
 
-  return `- ${cleanSubject} (${commit.hash.substring(0, 7)})`;
+function parseSubject(subject) {
+  const m = subject.match(/^([a-z]+)(?:\([^)]*\))?!?:\s*(.+)$/i);
+  if (m) return { type: m[1].toLowerCase(), text: m[2].trim() };
+  return { type: "other", text: subject.trim() };
 }
 
-/**
- * Group commits by category
- */
-function groupCommits(commits) {
-  const groups = {
-    feat: [],
-    fix: [],
-    docs: [],
-    style: [],
-    refactor: [],
-    perf: [],
-    test: [],
-    chore: [],
-    build: [],
-    ci: [],
-    other: [],
-  };
-  
-  for (const commit of commits) {
-    const category = categorizeCommit(commit.subject);
-    groups[category].push(commit);
-  }
-  
-  return groups;
+function collectCommits() {
+  const range = resolveRange();
+  const fmt = "%h%x09%s";
+  const log = git(["log", range, `--pretty=format:${fmt}`, "--no-merges"]);
+  return log
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean)
+    .map((l) => {
+      const [hash, ...rest] = l.split("\t");
+      return { hash, subject: rest.join("\t") };
+    })
+    .filter((c) => c.hash && c.subject);
 }
 
-/**
- * Generate changelog markdown
- */
-function generateChangelog(version, date, groups) {
-  let markdown = `## [${version}] - ${date}\n\n`;
-  
-  const sections = [
-    { title: '### ✨ Features', key: 'feat' },
-    { title: '### 🐛 Bug Fixes', key: 'fix' },
-    { title: '### 📚 Documentation', key: 'docs' },
-    { title: '### ♻️  Refactoring', key: 'refactor' },
-    { title: '### ⚡ Performance', key: 'perf' },
-    { title: '### 🧪 Testing', key: 'test' },
-    { title: '### 🔧 Maintenance', key: 'chore' },
-    { title: '### 📦 Build', key: 'build' },
-    { title: '### 👷 CI', key: 'ci' },
-    { title: '### 🔄 Other', key: 'other' },
+function render(commits) {
+  const today = new Date().toISOString().slice(0, 10);
+  const range = resolveRange();
+  const lines = [
+    "# Changelog",
+    "",
+    "> Generated by `npm run changelog` from git history. Every entry is a",
+    "> real commit — review before publishing. Do not add marketing claims here.",
+    "",
+    `## Unreleased — generated ${today}`,
+    "",
+    `Range: \`${range}\` — ${commits.length} commit(s).`,
+    "",
   ];
-  
-  for (const section of sections) {
-    const commits = groups[section.key];
-    if (commits.length > 0) {
-      markdown += `${section.title}\n\n`;
-      for (const commit of commits) {
-        markdown += formatCommit(commit) + '\n';
-      }
-      markdown += '\n';
-    }
+
+  const buckets = new Map(GROUPS.map(([t, label]) => [t, { label, items: [] }]));
+  buckets.set("other", { label: "Other", items: [] });
+
+  for (const c of commits) {
+    const { type, text } = parseSubject(c.subject);
+    const bucket = buckets.get(type) ?? buckets.get("other");
+    bucket.items.push(`- ${text} (${c.hash})`);
   }
-  
-  return markdown;
+
+  let any = false;
+  for (const [, { label, items }] of buckets) {
+    if (items.length === 0) continue;
+    any = true;
+    lines.push(`### ${label}`, "", ...items, "");
+  }
+  if (!any) lines.push("_No commits in range._", "");
+  return lines.join("\n");
 }
 
-/**
- * Get latest tag
- */
-function getLatestTag() {
-  try {
-    const output = execSync('git describe --tags --abbrev=0', {
-      cwd: REPO_ROOT,
-      encoding: 'utf-8'
-    });
-    return output.trim();
-  } catch (_error) {
-    return null;
+const commits = collectCommits();
+const content = render(commits);
+
+if (checkOnly) {
+  const current = existsSync(OUT) ? readFileSync(OUT, "utf8") : "";
+  // Compare ignoring the volatile "generated <date>" line.
+  const norm = (s) => s.replace(/generated \d{4}-\d{2}-\d{2}/, "generated <date>");
+  if (norm(current) !== norm(content)) {
+    console.error("CHANGELOG.md is stale — run `npm run changelog` and commit the result.");
+    process.exit(1);
   }
+  console.log("CHANGELOG.md is up to date.");
+  process.exit(0);
 }
 
-/**
- * Update existing changelog
- */
-function updateChangelog(newEntry) {
-  let existingContent = '';
-  
-  try {
-    existingContent = readFileSync(CHANGELOG_FILE, 'utf-8');
-  } catch (_error) {
-    // File doesn't exist, create header
-    existingContent = `# Changelog\n\nAll notable changes to BookmarkForge will be documented in this file.\n\n`;
-  }
-  
-  // Insert new entry after header
-  const lines = existingContent.split('\n');
-  const headerEndIndex = lines.findIndex(line => line.startsWith('## [')) || 2;
-  
-  lines.splice(headerEndIndex, 0, newEntry);
-  
-  writeFileSync(CHANGELOG_FILE, lines.join('\n'), 'utf-8');
-}
-
-/**
- * Main execution
- */
-function main() {
-  const args = process.argv.slice(2);
-  const sinceTag = args[0] || getLatestTag();
-  
-  console.log('📝 Generating changelog...\n');
-  
-  if (sinceTag) {
-    console.log(`📦 Since tag: ${sinceTag}`);
-  } else {
-    console.log('📦 Using last 20 commits');
-  }
-  
-  const commits = getCommits(sinceTag);
-  
-  if (commits.length === 0) {
-    console.log('ℹ️  No commits found');
-    return;
-  }
-  
-  console.log(`📊 Found ${commits.length} commits\n`);
-  
-  const groups = groupCommits(commits);
-  
-  // Generate version (can be customized)
-  const version = sinceTag ? process.env.RELEASE_VERSION || 'Unreleased' : 'Latest';
-  const date = new Date().toISOString().split('T')[0];
-  
-  const changelogEntry = generateChangelog(version, date, groups);
-  
-  console.log('📄 Generated changelog entry:\n');
-  console.log(changelogEntry);
-  
-  // Update CHANGELOG.md
-  updateChangelog(changelogEntry);
-  
-  console.log(`\n✅ Updated: ${CHANGELOG_FILE}`);
-}
-
-// Run if executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  main();
-}
-
-export { getCommits, groupCommits, generateChangelog };
+writeFileSync(OUT, content);
+console.log(`Wrote ${OUT} (${commits.length} commits, range ${resolveRange()})`);

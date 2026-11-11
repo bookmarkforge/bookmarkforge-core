@@ -17,7 +17,7 @@ describe("constants/license", () => {
     // Offline-first: a validated license stays trusted for 48 h.
     expect(LICENSE_CONFIG.cacheTtlMs).toBe(48 * 60 * 60 * 1000);
     expect(LICENSE_CONFIG.storageKeys.licenseKey).toBe("bf_license_key");
-    expect(FREE_LIMITS).toEqual({ maxBookmarks: 300, maxDevices: 0 });
+    expect(FREE_LIMITS).toEqual({ maxBookmarks: 500, maxDevices: 0 });
   });
 
   it.each([

@@ -113,9 +113,9 @@ describe("ConsentBanner", () => {
   it("expands preferences when Manage preferences is clicked", () => {
     render(<ConsentBanner onConsentDecided={mockOnConsentDecided} />);
     fireEvent.click(screen.getByRole("button", { name: /Manage preferences/i }));
-    expect(screen.getByText("Product Analytics")).toBeTruthy();
-    expect(screen.getByText("Error Reporting")).toBeTruthy();
-    expect(screen.getByText("Operational Events")).toBeTruthy();
+    expect(screen.getByText("Local usage stats")).toBeTruthy();
+    expect(screen.getByText("Local error logs")).toBeTruthy();
+    expect(screen.getByText("Local usage events")).toBeTruthy();
   });
 
   it("can toggle individual preferences", () => {
@@ -123,7 +123,7 @@ describe("ConsentBanner", () => {
     fireEvent.click(screen.getByRole("button", { name: /Manage preferences/i }));
     
     // Uncheck analytics
-    const analyticsCheckbox = screen.getByRole("checkbox", { name: "Product Analytics" });
+    const analyticsCheckbox = screen.getByRole("checkbox", { name: "Local usage stats" });
     fireEvent.click(analyticsCheckbox);
     
     // Save preferences

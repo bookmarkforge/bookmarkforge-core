@@ -1,19 +1,19 @@
 /**
  * scripts/check-extension-csp.mjs — extension CSP gate (ADR-029 follow-up).
  *
- * Asserts that the browser-extension manifests (Chrome MV3 + Firefox MV3)
+ * Asserts that the browser-extension manifests (Chrome MV3 + Firefox MV2)
  * declare a content_security_policy that exactly matches a single canonical
  * string. The JSON shape follows the manifest's own version (MV3: structured
  * object with `extension_pages`, MV2: flat string) — the canonical string is
  * applied verbatim to the right field in each manifest.
  *
- * ADR-029 fix: `extension/manifest-firefox.json` migrated to MV3 for the
- * Firefox Add-ons submission (browser_specific_settings + strict_min_version
- * 109), while this gate still modeled Firefox as a flat-string MV2 manifest
- * and reported a phantom "no content_security_policy" failure. The Firefox
- * entry is now shape-aware: it reads either form and injects the form the
- * manifest actually uses, so the gate follows the manifest instead of
- * freezing one platform's packaging decision.
+ * History: `extension/manifest-firefox.json` was MV3 at ADR-029 time, then
+ * moved back to MV2 (commit c601154, 2026-10-25) because the Firefox build
+ * relies on the `background.scripts` + `importScripts` bootstrap that MV3
+ * event pages do not support the same way. An earlier MV2 revision kept the
+ * MV3-style `extension_pages` object, which MV2 ignores — the CSP is now the
+ * flat string MV2 requires. The gate reads either form so it follows the
+ * manifest instead of freezing one platform's packaging decision.
  *
  * The extension's CSP is intentionally tighter than the app's: there is no
  * web-app context here, only the extension pages (popup, background). So we
@@ -78,7 +78,7 @@ const MANIFESTS = [
     inject: (fileText, csp) => injectMvsContentSecurityPolicy(fileText, csp),
   },
   {
-    label: "Firefox MV3",
+    label: "Firefox MV2",
     path: "extension/manifest-firefox.json",
     extract: (manifest) => {
       const csp = manifest?.content_security_policy;
@@ -164,6 +164,25 @@ function checkManifest({ label, path, extract }) {
   } catch (error) {
     return { label, path, ok: false, reason: "json-parse", error };
   }
+  // Shape must match manifest_version: MV2 only understands the flat-string
+  // CSP, MV3 the structured { extension_pages } object. A mismatched shape is
+  // silently ignored by the store — the exact drift this gate exists to stop.
+  const cspField = manifest?.content_security_policy;
+  const shapeOk =
+    manifest?.manifest_version === 2
+      ? typeof cspField === "string"
+      : typeof cspField === "object" &&
+        cspField !== null &&
+        typeof cspField.extension_pages === "string";
+  if (!shapeOk) {
+    return {
+      label,
+      path,
+      ok: false,
+      reason: "csp-shape",
+      canonical: CANONICAL_CSP,
+    };
+  }
   const csp = extract(manifest);
   if (csp === null) {
     return {
@@ -216,6 +235,12 @@ function main() {
       console.error(
         `[check-extension-csp] FAIL ${report.label} (${report.path}) — no content_security_policy declared. ` +
           `Expected: ${report.canonical}`,
+      );
+    } else if (report.reason === "csp-shape") {
+      console.error(
+        `[check-extension-csp] FAIL ${report.label} (${report.path}) — CSP shape does not match manifest_version ` +
+          `(MV2 needs a flat string, MV3 the { extension_pages } object). ` +
+          `Expected string: ${report.canonical}`,
       );
     } else {
       console.error(

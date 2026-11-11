@@ -378,7 +378,8 @@ const HomeDashboard = function HomeDashboard({
   }, []);
 
   // Free-tier wall nudge (design doc surface 2): the one full Pro pitch,
-  // shown once — the first time a Free user is AT the wall (count = 1,000).
+  // shown once — the first time a Free user is AT the wall
+  // (count = FREE_LIMITS.maxBookmarks).
   // Dismissal = 30-day cooldown. Yields to data-loss banners: eviction >
   // backup > this.
   const { atWall: freeTierAtWall, isFree: freeTierIsFree } =

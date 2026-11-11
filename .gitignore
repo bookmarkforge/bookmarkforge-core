@@ -123,3 +123,11 @@ pre-scrub-*.bundle
 findings/*.log
 patches/*.log
 reports/*.log
+
+# video renderer artifacts
+video/out/
+video/props.short.json
+
+# playwright recording profile (contains vault data)
+video/.profile/
+video/raw/

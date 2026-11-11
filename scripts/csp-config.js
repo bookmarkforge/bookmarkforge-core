@@ -51,7 +51,11 @@ const CLOUD_AI_AND_SYNC =
   " http://localhost:11434" +
   " https://api.openai.com https://api.anthropic.com https://api.groq.com" +
   " https://openrouter.ai https://generativelanguage.googleapis.com" +
-  " https://huggingface.co https://oauth2.googleapis.com" +
+  // transformers.js / WebLLM resolve huggingface.co URLs onto Hugging Face's
+  // own CDN hosts (Xet bridge, LFS endpoints, regional *.cdn.hf.co). Without
+  // the wildcard the model download 302s into a CSP-blocked origin and local
+  // AI silently fails on every production host.
+  " https://huggingface.co https://*.hf.co https://oauth2.googleapis.com" +
   " https://www.googleapis.com https://api.dropboxapi.com" +
   " https://content.dropboxapi.com https://graph.microsoft.com" +
   " https://api.box.com https://upload.box.com https://api.pcloud.com" +

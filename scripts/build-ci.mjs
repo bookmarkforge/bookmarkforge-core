@@ -382,3 +382,23 @@ for (const file of helpFiles) {
   writeFileSync(dst, readFileSync(src));
 }
 console.log(`[build-ci] copied ${helpFiles.length} help-*.html files to dist/`);
+
+// Copy landing assets (landing.html, *.html, landing.js/css) from public/ to dist/
+const { copyFileSync, existsSync } = await import("node:fs");
+const landingAssets = [
+  'landing.js', 'landing.css', 'help.css', 'theme-init.js',
+  'ar.html', 'bg.html', 'cs.html', 'da.html', 'de.html', 'el.html', 'es.html', 'fi.html',
+  'fr.html', 'he.html', 'hi.html', 'hr.html', 'hu.html', 'id.html', 'it.html', 'ja.html', 'ko.html',
+  'nl.html', 'no.html', 'pl.html', 'pt.html', 'ro.html', 'ru.html', 'sv.html', 'th.html', 'tr.html',
+  'uk.html', 'vi.html', 'zh.html', 'landing.html', '404.html'
+];
+let copiedLanding = 0;
+for (const file of landingAssets) {
+  const src = join(publicDir, file);
+  const dest = join(distDir, file);
+  if (existsSync(src)) {
+    copyFileSync(src, dest);
+    copiedLanding++;
+  }
+}
+console.log(`[build-ci] copied ${copiedLanding} landing assets to dist/`);

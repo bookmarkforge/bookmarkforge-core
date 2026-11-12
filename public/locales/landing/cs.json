@@ -351,7 +351,7 @@
           }
         ],
         "cta": "Vyzkoušejte hned",
-        "ctaHref": "/app?demo=true",
+        "ctaHref": "/app",
         "ctaClass": "btn-sekundární"
       },
       {
@@ -471,7 +471,7 @@
         "/#ai",
         "/#soukromí",
         "/#cena",
-        "/app?demo=true"
+        "/app"
       ]
     },
     "resources": {

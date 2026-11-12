@@ -351,7 +351,7 @@
           }
         ],
         "cta": "Prøv det med det samme",
-        "ctaHref": "/app?demo=true",
+        "ctaHref": "/app",
         "ctaClass": "btn-secondary"
       },
       {
@@ -471,7 +471,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app?demo=true"
+        "/app"
       ]
     },
     "resources": {

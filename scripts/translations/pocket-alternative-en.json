@@ -296,7 +296,7 @@
         },
         {
           "label": "Try It Instantly",
-          "href": "/app?demo=true"
+          "href": "/app"
         }
       ],
       "hrefs": [
@@ -304,7 +304,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app?demo=true"
+        "/app"
       ]
     },
     "resources": {

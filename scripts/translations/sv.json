@@ -358,7 +358,7 @@
           }
         ],
         "cta": "Prova direkt",
-        "ctaHref": "/app?demo=true",
+        "ctaHref": "/app",
         "ctaClass": "btn-secondary"
       },
       {
@@ -478,7 +478,7 @@
         "/#ai",
         "/#privacy",
         "/#pricing",
-        "/app?demo=true"
+        "/app"
       ]
     },
     "resources": {

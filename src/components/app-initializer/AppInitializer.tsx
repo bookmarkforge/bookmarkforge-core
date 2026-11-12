@@ -91,9 +91,14 @@ export function AppInitializer() {
       const initDemo = async () => {
         try {
           safeSet(STORAGE_KEYS.DEMO_ACTIVE, "true");
-          await securityVault.setMasterPasswordFlag();
           const { initDemoDatabase } = await import("./initUtils");
           await initDemoDatabase("demo_vault_password_2026");
+          if (cancelled) {return;}
+          // The password flag flips hasPwd → SecurityManager (unlock
+          // screen). It must be set only AFTER the demo DB exists and right
+          // before unlock(), or visitors sit on a password prompt for a
+          // credential they don't have while the demo vault initializes.
+          await securityVault.setMasterPasswordFlag();
           if (!cancelled) {unlock();}
           if (isDemoParam && !cancelled) {
             const url = new URL(window.location.href);

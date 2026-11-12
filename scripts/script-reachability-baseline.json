@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-11",
+  "updatedAt": "2026-11-12",
   "knownUnreachable": {
     "benchmark:import": "By-hand command. The public export's entry corpus is a strict subset of the private one (staging/nightly/ops workflows and internal docs do not ship), so nothing in this repository reaches it; it stays available for manual use.",
     "build:budget-report": "By-hand budget report (node scripts/build-budget-report.mjs), documented in scripts/tooling/README.md; build:ci enforces the budgets in CI.",

@@ -275,9 +275,8 @@ describe("the header no longer overflows the viewport", () => {
     expect(ruleBody(CSS, ".language-dropdown")).toMatch(/margin-inline-start/);
   });
 
-  it("keeps the skip link and the demo-tour counters on the reading edge", () => {
+  it("keeps the skip link on the reading edge", () => {
     expect(ruleBody(CSS, ".skip-link")).toMatch(/inset-inline-start/);
-    expect(ruleBody(CSS, ".demo-tour-step::before")).toMatch(/inset-inline-start/);
   });
 });
 

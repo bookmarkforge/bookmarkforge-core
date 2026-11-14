@@ -176,41 +176,13 @@
           <p class="hero-subtitle">{{ t.hero.subtitle }}</p>
           <div class="hero-ctas">
             <a href="/app" class="btn-primary">{{ t.hero.ctaPrimary }}</a>
-            <a href="#{{ t.demo.id }}" class="btn-secondary">{{ t.hero.ctaSecondary }}</a>
+            <a href="#{{ t.features.id }}" class="btn-secondary">{{ t.hero.ctaSecondary }}</a>
           </div>
           <div class="hero-pillars">
             {% for pillar in t.hero.pillars %}
             <span><strong>{{ pillar.strong }}</strong> — {{ pillar.text }}</span>
             {% endfor %}
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Product Demo Section — steps and CTA only. The tour GIF this section
-         used to show was retired with the demo-media pipeline; the static
-         screenshot gallery that replaced it shipped four near-identical
-         captures of the same dashboard, so it was removed as well. The
-         demo.* copy still describes the loop: rewriting it has to come with
-         the translations, not from the template. -->
-    <section id="{{ t.demo.id }}" class="demo-tour" aria-labelledby="{{ t.demo.id }}-title">
-      <div class="container">
-        <div class="demo-tour-header">
-          <span class="demo-tour-tag">{{ t.demo.tag }}</span>
-          <h2 id="{{ t.demo.id }}-title" class="demo-tour-title">{{ t.demo.title }}</h2>
-          <p class="demo-tour-subtitle">{{ t.demo.subtitle }}</p>
-        </div>
-
-        <ol class="demo-tour-steps">
-          {% for step in t.demo.steps %}
-          <li class="demo-tour-step">
-            <strong class="demo-tour-step-title">{{ step.title }}</strong>
-            <span class="demo-tour-step-text">{{ step.text }}</span>
-          </li>
-          {% endfor %}
-        </ol>
-        <div class="demo-tour-cta">
-          <a href="/app" class="btn-primary">{{ t.demo.ctaPrimary }}</a>
         </div>
       </div>
     </section>

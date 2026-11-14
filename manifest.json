@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-14T02:56:20.820Z",
+  "generatedAt": "2026-11-14T03:16:54.373Z",
   "version": "1.0.0",
   "source": "private repository (export checkout)",
   "license": "MIT",
@@ -719,6 +719,10 @@
       "reason": "private ops/business script"
     },
     {
+      "file": "scripts\\vercel-request-logs.mjs",
+      "reason": "private ops/business script"
+    },
+    {
       "file": "scripts\\vercel-runtime-logs.mjs",
       "reason": "private ops/business script"
     },
@@ -1184,6 +1188,7 @@
     "deploy:prod",
     "export-public-repo",
     "logs:vercel",
+    "logs:vercel-requests",
     "report:vercel",
     "server",
     "server:watch",

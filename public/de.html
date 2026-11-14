@@ -379,35 +379,17 @@
     </section>
 
     <!-- Product Demo Section — steps and CTA only. The tour GIF this section
-         used to show was retired with the demo-media pipeline; the template kept
-         a dead <img> pointing at it until the ADR-062 smoke gate reported the 404
-         on all 30 landings. The demo.* copy still describes the loop: rewriting it
-         has to come with the translations, not from the template. -->
+         used to show was retired with the demo-media pipeline; the static
+         screenshot gallery that replaced it shipped four near-identical
+         captures of the same dashboard, so it was removed as well. The
+         demo.* copy still describes the loop: rewriting it has to come with
+         the translations, not from the template. -->
     <section id="demo" class="demo-tour" aria-labelledby="demo-title">
       <div class="container">
         <div class="demo-tour-header">
           <span class="demo-tour-tag">Sieh es in Aktion</span>
           <h2 id="demo-title" class="demo-tour-title">Die echte App, kein Modell</h2>
           <p class="demo-tour-subtitle">Keine Anmeldung, kein Stockvideo und kein falscher Cursor. Diese Schleife zeigt die veröffentlichte Version auf einem normalen Rechner: Tresor aufschließen, Seite speichern, Bibliothek durchsuchen und wieder abschließen.</p>
-        </div>
-
-        <div class="demo-gallery">
-          <div class="demo-shot">
-            <img src="/images/app-dashboard.webp" alt="BookmarkForge dashboard with bookmarks, documents and local RAG chat" loading="lazy" />
-            <p class="demo-caption">Dashboard — everything encrypted on your device</p>
-          </div>
-          <div class="demo-shot">
-            <img src="/images/app-bookmarks.webp" alt="Bookmarks view with search and smart filters" loading="lazy" />
-            <p class="demo-caption">Bookmarks — find by keyword or meaning</p>
-          </div>
-          <div class="demo-shot">
-            <img src="/images/app-documents.webp" alt="Documents view for notes and long-form content" loading="lazy" />
-            <p class="demo-caption">Documents — notes, PDFs and long-form content</p>
-          </div>
-          <div class="demo-shot">
-            <img src="/images/app-chat.webp" alt="Local RAG Chat for AI-powered search over your saved content" loading="lazy" />
-            <p class="demo-caption">Local RAG Chat — AI without sending data to the cloud</p>
-          </div>
         </div>
 
         <ol class="demo-tour-steps">

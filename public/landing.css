@@ -336,28 +336,6 @@ body {
 .demo-tour-step-title { display: block; margin-bottom: 6px; font-size: 0.9375rem; color: var(--text-primary); }
 .demo-tour-step-text { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; }
 
-/* Demo gallery of real screenshots */
-.demo-gallery {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 40px auto;
-  max-width: 1400px;
-}
-.demo-shot {
-  border: 1px solid var(--divider); border-radius: var(--radius-card);
-  overflow: hidden; background: var(--bg-card);
-}
-.demo-shot img {
-  width: 100%; height: auto; display: block;
-}
-.demo-caption {
-  padding: 14px; font-size: 0.8125rem; color: var(--text-secondary);
-  text-align: center; line-height: 1.5;
-}
-@media (max-width: 1024px) {
-  .demo-gallery { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 640px) {
-  .demo-gallery { grid-template-columns: 1fr; }
-}
 .demo-tour-cta { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-top: 40px; }
 
 /* ── Pocket Alternative ───────────────────────────────────────────── */

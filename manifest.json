@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-14T01:57:11.696Z",
+  "generatedAt": "2026-11-14T02:10:48.961Z",
   "version": "1.0.0",
   "source": "private repository (export checkout)",
   "license": "MIT",
@@ -24,7 +24,7 @@
     "src/services/webrtc-sync/validation.ts"
   ],
   "proSpecifiersRewritten": 14,
-  "includedCount": 2047,
+  "includedCount": 2039,
   "excluded": [
     {
       "file": ".zap\\authenticated.context",
@@ -493,6 +493,38 @@
     {
       "file": "eslint-rules\\require-adr-template.wiring.test.mjs",
       "reason": "private ops/business script"
+    },
+    {
+      "file": "public\\images\\app-bookmarks.webp",
+      "reason": "deleted from working tree (still in git index)"
+    },
+    {
+      "file": "public\\images\\app-chat.webp",
+      "reason": "deleted from working tree (still in git index)"
+    },
+    {
+      "file": "public\\images\\app-dashboard-full.webp",
+      "reason": "deleted from working tree (still in git index)"
+    },
+    {
+      "file": "public\\images\\app-dashboard.webp",
+      "reason": "deleted from working tree (still in git index)"
+    },
+    {
+      "file": "public\\images\\app-documents.webp",
+      "reason": "deleted from working tree (still in git index)"
+    },
+    {
+      "file": "public\\images\\app-graph-2.webp",
+      "reason": "deleted from working tree (still in git index)"
+    },
+    {
+      "file": "public\\images\\app-graph.webp",
+      "reason": "deleted from working tree (still in git index)"
+    },
+    {
+      "file": "public\\images\\app-local-rag-chat.webp",
+      "reason": "deleted from working tree (still in git index)"
     },
     {
       "file": "scripts\\__tests__\\audit-script-inventory.test.mjs",

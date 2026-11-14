@@ -1859,7 +1859,6 @@
   "app_p2pVerifyTitle": "ודא שזו המכשיר שלך",
   "app_p2pVerifyDesc": "שני המכשירים חייבים להציג את אותו קוד. המשך רק אם הם זהים.",
   "app_p2pVerifyConfirm": "הקודים זהים — המשך",
-  "app_translatorComingSoon": "תרגום בקרוב",
   "app_openP2PSync": "פתח סנכרון P2P",
   "translation_title": "תרגום פרטי",
   "translation_subtitle": "מנועים מקומיים מתרגמים במכשיר הזה. שום דבר לא מועלה.",

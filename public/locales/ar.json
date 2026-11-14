@@ -1859,7 +1859,6 @@
   "app_p2pVerifyTitle": "تحقق من أنه جهازك",
   "app_p2pVerifyDesc": "يجب أن يعرض كلا الجهازين الرمز نفسه. تابع فقط إذا تطابقا.",
   "app_p2pVerifyConfirm": "الرمزان متطابقان — متابعة",
-  "app_translatorComingSoon": "الترجمة قريباً",
   "app_openP2PSync": "فتح مزامنة P2P",
   "translation_title": "ترجمة خاصة",
   "translation_subtitle": "تعمل المحركات المحلية على هذا الجهاز. لا يتم رفع أي شيء.",

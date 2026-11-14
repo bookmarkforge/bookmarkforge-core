@@ -1893,7 +1893,6 @@
   "app_p2pVerifyTitle": "Ověřte, že se jedná o vaše zařízení",
   "app_p2pVerifyDesc": "Oba zařízení musí zobrazovat stejný kód. Pokračujte, pouze pokud souhlasí.",
   "app_p2pVerifyConfirm": "Kódy souhlasí — pokračovat",
-  "app_translatorComingSoon": "Překlad přichází",
   "app_openP2PSync": "Otevřít P2P synchronizaci",
   "translation_title": "Soukromý překlad",
   "translation_subtitle": "Lokální modely překládají v tomto zařízení. Nic se neodesílá.",

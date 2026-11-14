@@ -60,7 +60,8 @@
         "text": "500 zakładek za darmo, Pro tylko jeśli chcesz więcej"
       }
     ],
-    "announce": "⚡ Lokalne tłumaczenie AI (wkrótce)"
+    "announce": "⚡ Lokalne tłumaczenie AI (wkrótce)",
+    "announceApps": "⚡ Natywne aplikacje wkrótce — Windows, macOS, Linux, Android i iOS"
   },
   "demo": {
     "id": "demo",
@@ -244,10 +245,6 @@
           "text": "Wyspecjalizowani asystenci: Coder, Writer, Analyst i Researcher. Wymaga Pro."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Lokalne tłumaczenie AI (wkrótce)",
-      "text": "Czytaj dowolny artykuł w swoim języku ojczystym. Tłumacz całe dokumenty w 100 % prywatnie na swoim komputerze, bez wysyłania tekstu do zewnętrznych serwerów w chmurze. W zestawie z Pro."
     }
   },
   "privacy": {
@@ -351,10 +348,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "Lokalne tłumaczenie AI (wkrótce)"
           },
           {
             "included": true,

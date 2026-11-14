@@ -60,7 +60,8 @@
         "text": "500 záložek zdarma, Pro jen pokud chcete víc"
       }
     ],
-    "announce": "⚡ Lokální překlad pomocí AI (již brzy)"
+    "announce": "⚡ Lokální překlad pomocí AI (již brzy)",
+    "announceApps": "⚡ Nativní aplikace již brzy — Windows, macOS, Linux, Android a iOS"
   },
   "demo": {
     "id": "demo",
@@ -244,10 +245,6 @@
           "text": "Specializovaní pomocníci: kodér, spisovatel, analytik a výzkumník. Vyžaduje Pro."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Lokální překlad pomocí AI (již brzy)",
-      "text": "Čtěte libovolný článek ve svém rodném jazyce. Překládejte celé dokumenty 100% soukromě ve svém počítači, aniž byste text posílali na cizí cloudové servery. Součástí Pro."
     }
   },
   "privacy": {
@@ -351,10 +348,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "Lokální překlad pomocí AI (již brzy)"
           },
           {
             "included": true,

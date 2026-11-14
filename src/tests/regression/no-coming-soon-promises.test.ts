@@ -43,16 +43,17 @@ const PATTERNS: { re: RegExp; label: string }[] = [
 const BENIGN = [/\bas soon as possible\b/i];
 
 /**
- * Committed roadmap feature with a dated "coming soon" label.
+ * Committed roadmap features with a dated "coming soon" label.
  *
- * Local AI Translation is not an out-of-plan promise: it is listed in the Pro
- * column of the pricing matrix ("✅ Local AI Translation (Coming Soon)") and
- * shipped here as the Pro hook. The exemption is deliberately phrase-scoped —
- * only a context that names THIS feature may say "coming soon"; every other
+ * Local AI Translation is not an out-of-plan promise: it is announced in the
+ * hero bar and listed in the pricing matrix. Native desktop/mobile apps
+ * (Windows, macOS, Linux, Android, iOS) are the second committed roadmap
+ * item, announced the same way. The exemption is deliberately phrase-scoped —
+ * only a context that names THESE features may say "coming soon"; every other
  * promise (Team/Empresa tiers, collaboration, admin panel) still fails.
  */
 const PLANNED_FEATURE_RE =
-  /(?:local\s+)?ai\s+translation|traducci[oó]n\s+con\s+ia\s+local/i;
+  /(?:local\s+)?ai\s+translation|traducci[oó]n\s+con\s+ia\s+local|native\s+apps|apps\s+nativas/i;
 
 function stripTsComments(src: string): string {
   // Crude but sufficient for a promise scan: block + line comments. A string

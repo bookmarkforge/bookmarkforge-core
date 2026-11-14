@@ -1893,7 +1893,6 @@
   "app_p2pVerifyTitle": "Sprawdź, czy to Twoje urządzenie",
   "app_p2pVerifyDesc": "Oba urządzenia muszą pokazać ten sam kod. Kontynuuj tylko, jeśli się zgadzają.",
   "app_p2pVerifyConfirm": "Kody się zgadzają — kontynuuj",
-  "app_translatorComingSoon": "Tłumaczenie wkrótce",
   "app_openP2PSync": "Otwórz synchronizację P2P",
   "translation_title": "Prywatne tłumaczenie",
   "translation_subtitle": "Modele lokalne tłumaczą na tym urządzeniu. Nic nie jest wysyłane.",

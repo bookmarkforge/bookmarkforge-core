@@ -53,7 +53,8 @@
         "text": "500 bladwijzers gratis, upgrade alleen als je meer wilt"
       }
     ],
-    "announce": "⚡ Lokale AI-vertaling (binnenkort)"
+    "announce": "⚡ Lokale AI-vertaling (binnenkort)",
+    "announceApps": "⚡ Native apps binnenkort — Windows, macOS, Linux, Android en iOS"
   },
   "demo": {
     "id": "demo",
@@ -237,10 +238,6 @@
           "text": "Gespecialiseerde helpers: Coder, Writer, Analyst en Researcher. Vereist Pro."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Lokale AI-vertaling (binnenkort)",
-      "text": "Lees elk artikel in je moedertaal. Vertaal volledige documenten 100 % privé op je computer, zonder tekst naar externe cloudservers te sturen. Inbegrepen in Pro."
     }
   },
   "privacy": {
@@ -344,10 +341,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "Lokale AI-vertaling (binnenkort)"
           },
           {
             "included": true,

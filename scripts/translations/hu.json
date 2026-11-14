@@ -60,7 +60,8 @@
         "text": "500 könyvjelző ingyen, Pro csak ha többet akarsz"
       }
     ],
-    "announce": "⚡ Helyi AI-fordítás (hamarosan)"
+    "announce": "⚡ Helyi AI-fordítás (hamarosan)",
+    "announceApps": "⚡ Natív alkalmazások hamarosan — Windows, macOS, Linux, Android és iOS"
   },
   "demo": {
     "id": "demo",
@@ -244,10 +245,6 @@
           "text": "Speciális segítők: Coder, Writer, Analyst és Researcher. Pro szükséges."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Helyi AI-fordítás (hamarosan)",
-      "text": "Olvass bármilyen cikket anyanyelveden. Fordíts le teljes dokumentumokat 100 %-ban privát módon a számítógépeden, anélkül hogy szöveget küldenél harmadik féltől származó felhőszerverekre. A Pro része."
     }
   },
   "privacy": {
@@ -351,10 +348,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "Helyi AI-fordítás (hamarosan)"
           },
           {
             "included": true,

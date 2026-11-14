@@ -1859,7 +1859,6 @@
   "app_p2pVerifyTitle": "Bekreft at det er enheten din",
   "app_p2pVerifyDesc": "Begge enheter må vise samme kode. Fortsett bare hvis de samsvarer.",
   "app_p2pVerifyConfirm": "Kodene samsvarer — fortsett",
-  "app_translatorComingSoon": "Oversettelse kommer snart",
   "app_openP2PSync": "Åpne P2P-synkronisering",
   "translation_title": "Privat oversettelse",
   "translation_subtitle": "Lokale modeller oversetter på denne enheten. Ingenting lastes opp.",

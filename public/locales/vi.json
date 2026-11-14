@@ -1859,7 +1859,6 @@
   "app_p2pVerifyTitle": "Xác minh đây là thiết bị của bạn",
   "app_p2pVerifyDesc": "Cả hai thiết bị phải hiển thị cùng một mã. Chỉ tiếp tục nếu chúng khớp.",
   "app_p2pVerifyConfirm": "Mã khớp — tiếp tục",
-  "app_translatorComingSoon": "Dịch sắp có",
   "app_openP2PSync": "Mở đồng bộ hóa P2P",
   "translation_title": "Dịch riêng tư",
   "translation_subtitle": "Các mô hình cục bộ dịch trên thiết bị này. Không có gì được tải lên.",

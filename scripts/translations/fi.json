@@ -60,7 +60,8 @@
         "text": "500 kirjanmerkkiä ilmaiseksi, Pro vain jos haluat lisää"
       }
     ],
-    "announce": "⚡ Paikallinen AI-käännös (tulossa)"
+    "announce": "⚡ Paikallinen AI-käännös (tulossa)",
+    "announceApps": "⚡ Natiivit sovellukset tulossa — Windows, macOS, Linux, Android ja iOS"
   },
   "demo": {
     "id": "demo",
@@ -244,10 +245,6 @@
           "text": "Erikoistuneet auttajat: Koodari, Kirjoittaja, Analyytikko ja Tutkija. Vaatii Pro:n."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Paikallinen AI-käännös (tulossa)",
-      "text": "Lue mikä tahansa artikkeli äidinkielelläsi. Käännä kokonaisia dokumentteja 100 % yksityisesti tietokoneellasi lähettämättä tekstiä kolmannen osapuolen pilvipalvelimille. Sisältyy Prohon."
     }
   },
   "privacy": {
@@ -351,10 +348,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "Paikallinen AI-käännös (tulossa)"
           },
           {
             "included": true,

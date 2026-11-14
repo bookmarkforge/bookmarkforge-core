@@ -379,25 +379,6 @@ body {
 .mode-item h4 { font-size: 0.9375rem; font-weight: 600; margin-bottom: 8px; color: var(--text-primary); }
 .mode-item p { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; }
 
-.ai-translation-teaser {
-  margin-top: 32px;
-  padding: 24px;
-  background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(251, 191, 36, 0.08) 100%);
-  border: 1px solid var(--accent-glow);
-  border-radius: var(--radius-card);
-}
-.ai-translation-teaser h4 {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: var(--accent-primary);
-}
-.ai-translation-teaser p {
-  font-size: 0.9375rem;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
 /* ── Pricing ─────────────────────────────────────────────────────── */
 .pricing-section { padding: 120px 0; }
 .pricing-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; align-items: stretch; }

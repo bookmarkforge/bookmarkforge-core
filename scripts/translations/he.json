@@ -60,7 +60,8 @@
         "text": "500 סימניות בחינם, שדרגו ל-Pro רק אם רוצים יותר"
       }
     ],
-    "announce": "⚡ תרגום AI מקומי (בקרוב)"
+    "announce": "⚡ תרגום AI מקומי (בקרוב)",
+    "announceApps": "⚡ אפליקציות מקוריות בקרוב — Windows,‏ macOS,‏ Linux,‏ Android ו-iOS"
   },
   "demo": {
     "id": "demo",
@@ -244,10 +245,6 @@
           "text": "עוזרים מקצועיים: Coder, Writer, Analyst ו-Researcher. דורש Pro."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ תרגום AI מקומי (בקרוב)",
-      "text": "קראו כל מאמר בשפת האם שלכם. תרגמו מסמכים שלמים באופן פרטי ב-100 % במחשב שלכם, בלי לשלוח את הטקסט לשרתי ענן חיצוניים. כלול ב-Pro."
     }
   },
   "privacy": {
@@ -351,10 +348,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "תרגום AI מקומי (בקרוב)"
           },
           {
             "included": true,

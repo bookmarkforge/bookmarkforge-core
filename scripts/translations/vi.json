@@ -60,7 +60,8 @@
         "text": "500 bookmark miễn phí, nâng cấp Pro chỉ khi bạn muốn thêm"
       }
     ],
-    "announce": "⚡ Dịch bằng AI cục bộ (sắp ra mắt)"
+    "announce": "⚡ Dịch bằng AI cục bộ (sắp ra mắt)",
+    "announceApps": "⚡ Ứng dụng gốc sắp ra mắt — Windows, macOS, Linux, Android và iOS"
   },
   "demo": {
     "id": "demo",
@@ -244,10 +245,6 @@
           "text": "Trợ lý chuyên biệt: Coder, Writer, Analyst và Researcher. Cần gói Pro."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Dịch bằng AI cục bộ (sắp ra mắt)",
-      "text": "Đọc bất kỳ bài viết nào bằng tiếng mẹ đẻ của bạn. Dịch toàn bộ tài liệu 100 % riêng tư ngay trong máy tính, không gửi văn bản đến máy chủ đám mây bên thứ ba. Có trong gói Pro."
     }
   },
   "privacy": {
@@ -351,10 +348,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "Dịch bằng AI cục bộ (sắp ra mắt)"
           },
           {
             "included": true,

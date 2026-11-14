@@ -61,7 +61,8 @@
         "text": "500 favoritos grátis, faça upgrade só se quiser mais"
       }
     ],
-    "announce": "⚡ Tradução com IA local (em breve)"
+    "announce": "⚡ Tradução com IA local (em breve)",
+    "announceApps": "⚡ Apps nativos em breve — Windows, macOS, Linux, Android e iOS"
   },
   "demo": {
     "id": "demo",
@@ -245,10 +246,6 @@
           "text": "Ajudantes especializados: Programador, Escritor, Analista e Investigador. Requer Pro."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Tradução com IA local (em breve)",
-      "text": "Leia qualquer artigo no seu idioma nativo. Traduza documentos completos 100 % em privado dentro do seu computador, sem enviar o texto para servidores externos. Incluído no Pro."
     }
   },
   "privacy": {
@@ -352,10 +349,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "Tradução com IA local (em breve)"
           },
           {
             "included": true,

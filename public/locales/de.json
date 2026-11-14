@@ -1859,7 +1859,6 @@
   "app_p2pVerifyTitle": "Prüfen Sie, ob es Ihr Gerät ist",
   "app_p2pVerifyDesc": "Beide Geräte müssen denselben Code anzeigen. Fahren Sie nur fort, wenn sie übereinstimmen.",
   "app_p2pVerifyConfirm": "Codes stimmen überein — fortfahren",
-  "app_translatorComingSoon": "Übersetzung kommt",
   "app_openP2PSync": "P2P-Sync öffnen",
   "translation_title": "Private Übersetzung",
   "translation_subtitle": "Lokale Modelle übersetzen auf diesem Gerät. Nichts wird hochgeladen.",

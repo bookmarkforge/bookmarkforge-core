@@ -709,9 +709,6 @@ export function useBlockEditorLogic({
       action: string,
       params?: Record<string, unknown>,
     ): Promise<unknown> => {
-      // "translate" is owned by BlockEditor, which opens the bilingual
-      // workspace with the live document text; it must not be routed through
-      // the generic copilot switch.
       setIsCopilotThinking(true);
       setAiError(null);
       try {

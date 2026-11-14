@@ -37,10 +37,6 @@ describe("AICopilotPanel", () => {
     expect(getByText("app_summarizeAll")).toBeTruthy();
     expect(getByText("app_improveWriting")).toBeTruthy();
     expect(getByText("app_continueWriting")).toBeTruthy();
-    // Translation is parked: the copilot shows the coming-soon placeholder instead of an
-    // active "translate" action, so assert on the placeholder key rather than the disabled
-    // action key.
-    expect(getByText("app_translatorComingSoon")).toBeTruthy();
     expect(getByText("app_fixGrammar")).toBeTruthy();
   });
 

@@ -53,7 +53,8 @@
         "text": "500 favoris gratuits, passez Pro seulement si vous voulez plus"
       }
     ],
-    "announce": "⚡ Traduction IA locale (bientôt disponible)"
+    "announce": "⚡ Traduction IA locale (bientôt disponible)",
+    "announceApps": "⚡ Applications natives bientôt — Windows, macOS, Linux, Android et iOS"
   },
   "demo": {
     "id": "demo",
@@ -237,10 +238,6 @@
           "text": "Des aides spécialisés : Codeur, Rédacteur, Analyste et Chercheur. Nécessite Pro."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Traduction IA locale (bientôt disponible)",
-      "text": "Lisez n'importe quel article dans votre langue maternelle. Traduisez des documents entiers en 100 % privé sur votre ordinateur, sans envoyer le texte à des serveurs tiers. Inclus dans Pro."
     }
   },
   "privacy": {
@@ -344,10 +341,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "Traduction IA locale (bientôt disponible)"
           },
           {
             "included": true,

@@ -60,7 +60,8 @@
         "text": "500 bokmerker gratis, oppgrader bare hvis du vil ha mer"
       }
     ],
-    "announce": "⚡ Lokal AI-oversettelse (kommer snart)"
+    "announce": "⚡ Lokal AI-oversettelse (kommer snart)",
+    "announceApps": "⚡ Native apper kommer snart — Windows, macOS, Linux, Android og iOS"
   },
   "demo": {
     "id": "demo",
@@ -244,10 +245,6 @@
           "text": "Spesialiserte hjelpere: Coder, Writer, Analyst og Researcher. Krever Pro."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Lokal AI-oversettelse (kommer snart)",
-      "text": "Les hvilken som helst artikkel på morsmålet ditt. Oversett hele dokumenter 100 % privat på datamaskinen uten å sende teksten til eksterne skyservere. Inkludert i Pro."
     }
   },
   "privacy": {
@@ -351,10 +348,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "Lokal AI-oversettelse (kommer snart)"
           },
           {
             "included": true,

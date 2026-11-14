@@ -14,7 +14,7 @@ interface AICopilotPanelProps {
   isThinking: boolean;
   onAction: (
     action:
-      "summarize" | "improve" | "continue" | "fix" | "translate" | "rewrite",
+      "summarize" | "improve" | "continue" | "fix" | "rewrite",
   ) => void;
 }
 
@@ -83,17 +83,6 @@ function AICopilotPanel({
             </span>
           </div>
           <ChevronRight className="rtl-flip size-3 text-[var(--text-muted)]" />
-        </button>
-        <button
-          onClick={() => {}}
-          disabled
-          title={t("app_translatorComingSoon")}
-          className="truncate cursor-not-allowed select-none w-full px-4 py-3 sm:px-4 text-xs sm:text-sm font-medium text-[var(--text-muted)] dark:text-[var(--text-muted)] rounded-xl bg-[var(--bg-secondary)] dark:bg-[var(--bg-card)]/30 border border-[var(--divider)] dark:border-[var(--divider)]/50 group hover:border-cyan-500/40 hover:text-cyan-500 transition-all"
-        >
-          <div className="flex items-center gap-3">
-            <Sparkles className="size-4 text-[var(--text-muted)]" />
-            <span className="line-clamp-2 max-w-[92%] sm:max-w-full block m-0">{t("app_translatorComingSoon")}</span>
-          </div>
         </button>
         <button
           onClick={() => onAction("fix")}

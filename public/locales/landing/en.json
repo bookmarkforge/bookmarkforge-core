@@ -53,7 +53,8 @@
         "text": "500 bookmarks free, upgrade only if you want more"
       }
     ],
-    "announce": ""
+    "announce": "⚡ Local AI Translation (coming soon)",
+    "announceApps": "⚡ Native apps coming soon — Windows, macOS, Linux, Android & iOS"
   },
   "demo": {
     "id": "demo",
@@ -237,10 +238,6 @@
           "text": "Long article? Get the key points in seconds."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Translate articles privately",
-      "text": "Read foreign articles in your language. Translation happens on your device — no text sent to cloud servers."
     }
   },
   "privacy": {
@@ -344,10 +341,6 @@
           {
             "included": false,
             "text": "Advanced export (7 formats)"
-          },
-          {
-            "included": false,
-            "text": "Local AI Translation (Coming Soon)"
           },
           {
             "included": true,

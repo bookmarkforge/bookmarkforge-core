@@ -53,7 +53,8 @@
         "text": "500 bookmark gratuiti, passa a Pro solo se vuoi di più"
       }
     ],
-    "announce": "⚡ Traduzione con IA locale (in arrivo)"
+    "announce": "⚡ Traduzione con IA locale (in arrivo)",
+    "announceApps": "⚡ App native in arrivo — Windows, macOS, Linux, Android e iOS"
   },
   "demo": {
     "id": "demo",
@@ -237,10 +238,6 @@
           "text": "Aiutanti specializzati: Programmatore, Scrittore, Analista e Ricercatore. Richiede Pro."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Traduzione con IA locale (in arrivo)",
-      "text": "Leggi qualsiasi articolo nella tua lingua madre. Traduci interi documenti al 100 % in privato dentro il tuo computer, senza inviare il testo a server esterni. Incluso in Pro."
     }
   },
   "privacy": {
@@ -344,10 +341,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "Traduzione con IA locale (in arrivo)"
           },
           {
             "included": true,

@@ -1859,7 +1859,6 @@
   "app_p2pVerifyTitle": "Bekräfta att det är din enhet",
   "app_p2pVerifyDesc": "Båda enheterna måste visa samma kod. Fortsätt bara om de matchar.",
   "app_p2pVerifyConfirm": "Koderna matchar — fortsätt",
-  "app_translatorComingSoon": "Översättning kommer snart",
   "app_openP2PSync": "Öppna P2P-synkronisering",
   "translation_title": "Privat översättning",
   "translation_subtitle": "Lokala modeller översätter på den här enheten. Inget laddas upp.",

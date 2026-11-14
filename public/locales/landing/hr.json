@@ -53,7 +53,8 @@
         "text": "500 oznaka besplatno, Pro samo ako želite više"
       }
     ],
-    "announce": "⚡ Lokalno AI prevođenje (uskoro)"
+    "announce": "⚡ Lokalno AI prevođenje (uskoro)",
+    "announceApps": "⚡ Nativne aplikacije uskoro — Windows, macOS, Linux, Android i iOS"
   },
   "demo": {
     "id": "demo",
@@ -237,10 +238,6 @@
           "text": "Specijalizirani pomoćnici: Programer, Pisac, Analitičar i Istraživač. Zahtijeva Pro."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Lokalno AI prevođenje (uskoro)",
-      "text": "Čitajte bilo koji članak na svom materinskom jeziku. Prevedite cijele dokumente 100 % privatno na svom računalu bez slanja teksta na tuđe cloud poslužitelje. Uključeno u Pro."
     }
   },
   "privacy": {
@@ -344,10 +341,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "Lokalno AI prevođenje (uskoro)"
           },
           {
             "included": true,

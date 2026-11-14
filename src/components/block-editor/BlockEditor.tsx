@@ -26,10 +26,6 @@ export default function BlockEditor({
   onSelectDocument?: (id: string) => void;
 }) {
   const state = useBlockEditorState();
-  // Translation workspace is parked for the next feature: the copilot panel
-  // already advertises the "coming soon" entry and we must not expose a
-  // stub workspace or route through the copilot switch. Keep the lazy import
-  // wired only so dead imports do not surface; do not render it here.
   const logic = useBlockEditorLogic({
     documentId,
     state,
@@ -461,21 +457,12 @@ export default function BlockEditor({
                   onClose={() => setShowCopilot(false)}
                   isThinking={isCopilotThinking}
                   onAction={(action) => {
-                    // Translation is parked — the copilot panel already shows
-                    // the "coming soon" entry and must not open a workspace
-                    // or route through the copilot switch.
-                    if (action === "translate") {
-                      return;
-                    }
                     void handleCopilotAction(action as string);
                   }}
                 />
               </Suspense>
             </div>
           )}
-          {/* Translation workspace is parked for the next feature; the
-              disabled copilot entry advertises it, but no workspace renders
-              here until that feature re-enables it. */}
         </div>
         {showChat && (
           <div className="w-full md:w-96 self-center mt-4">

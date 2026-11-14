@@ -53,7 +53,8 @@
         "text": "북마크 500개 무료, 더 원하면 Pro로"
       }
     ],
-    "announce": "⚡ 로컬 AI 번역 (출시 예정)"
+    "announce": "⚡ 로컬 AI 번역 (출시 예정)",
+    "announceApps": "⚡ 네이티브 앱 출시 예정 — Windows, macOS, Linux, Android 및 iOS"
   },
   "demo": {
     "id": "demo",
@@ -237,10 +238,6 @@
           "text": "전문 도우미: Coder, Writer, Analyst, Researcher. Pro 필요."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ 로컬 AI 번역 (출시 예정)",
-      "text": "어떤 기사든 모국어로 읽으세요. 텍스트를 외부 클라우드 서버로 보내지 않고 컴퓨터 안에서 100% 비공개로 문서 전체를 번역합니다. Pro에 포함."
     }
   },
   "privacy": {
@@ -344,10 +341,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "로컬 AI 번역 (출시 예정)"
           },
           {
             "included": true,

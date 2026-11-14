@@ -1859,7 +1859,6 @@
   "app_p2pVerifyTitle": "Ellenőrizze, hogy az Ön eszköze-e",
   "app_p2pVerifyDesc": "Mindkét eszköznek ugyanazt a kódot kell mutatnia. Csak akkor folytassa, ha egyeznek.",
   "app_p2pVerifyConfirm": "A kódok egyeznek — folytatás",
-  "app_translatorComingSoon": "Fordítás hamarosan",
   "app_openP2PSync": "P2P szinkronizálás megnyitása",
   "translation_title": "Privát fordítás",
   "translation_subtitle": "A helyi modellek ezen az eszközön fordítanak. Semmi nem kerül feltöltésre.",

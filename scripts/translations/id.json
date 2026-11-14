@@ -60,7 +60,8 @@
         "text": "500 bookmark gratis, upgrade ke Pro hanya jika mau lebih"
       }
     ],
-    "announce": "⚡ Terjemahan AI lokal (segera hadir)"
+    "announce": "⚡ Terjemahan AI lokal (segera hadir)",
+    "announceApps": "⚡ Aplikasi native segera hadir — Windows, macOS, Linux, Android & iOS"
   },
   "demo": {
     "id": "demo",
@@ -244,10 +245,6 @@
           "text": "Pembantu khusus: Coder, Writer, Analyst dan Researcher. Memerlukan Pro."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Terjemahan AI lokal (segera hadir)",
-      "text": "Baca artikel apa pun dalam bahasa ibu Anda. Terjemahkan seluruh dokumen 100 % privat di dalam komputer Anda tanpa mengirim teks ke server cloud pihak ketiga. Termasuk di Pro."
     }
   },
   "privacy": {
@@ -351,10 +348,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "Terjemahan AI lokal (segera hadir)"
           },
           {
             "included": true,

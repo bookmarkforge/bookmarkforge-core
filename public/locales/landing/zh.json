@@ -53,7 +53,8 @@
         "text": "500 个书签免费，需要更多再升级"
       }
     ],
-    "announce": "⚡ 本地 AI 翻译（即将推出）"
+    "announce": "⚡ 本地 AI 翻译（即将推出）",
+    "announceApps": "⚡ 原生应用即将推出 — Windows、macOS、Linux、Android 和 iOS"
   },
   "demo": {
     "id": "demo",
@@ -237,10 +238,6 @@
           "text": "专职助手：编程、写作、分析、研究。需要 Pro。"
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ 本地 AI 翻译（即将推出）",
-      "text": "用母语阅读任何文章。在电脑本地以 100% 私密的方式翻译整篇文档，不把文本发送到第三方云服务器。Pro 版包含此功能。"
     }
   },
   "privacy": {
@@ -344,10 +341,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "本地 AI 翻译（即将推出）"
           },
           {
             "included": true,

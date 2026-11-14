@@ -1859,7 +1859,6 @@
   "app_p2pVerifyTitle": "Vahvista, että se on laitteesi",
   "app_p2pVerifyDesc": "Molempien laitteiden on näytettävä sama koodi. Jatka vain, jos ne täsmäävät.",
   "app_p2pVerifyConfirm": "Koodit täsmäävät — jatka",
-  "app_translatorComingSoon": "Käännös tulee",
   "app_openP2PSync": "Avaa P2P-synkronointi",
   "translation_title": "Yksityinen käännös",
   "translation_subtitle": "Paikalliset mallit kääntävät tällä laitteella. Mitään ei ladata palvelimelle.",

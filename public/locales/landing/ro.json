@@ -53,7 +53,8 @@
         "text": "500 de bookmarkuri gratuite, Pro doar dacă vrei mai mult"
       }
     ],
-    "announce": "⚡ Traducere AI locală (în curând)"
+    "announce": "⚡ Traducere AI locală (în curând)",
+    "announceApps": "⚡ Aplicații native în curând — Windows, macOS, Linux, Android și iOS"
   },
   "demo": {
     "id": "demo",
@@ -237,10 +238,6 @@
           "text": "Ajutoare specializate: Programator, Scriitor, Analist și Cercetător. Necesită Pro."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Traducere AI locală (în curând)",
-      "text": "Citește orice articol în limba ta maternă. Tradu documente întregi 100 % privat pe calculatorul tău, fără a trimite textul către servere cloud terțe. Inclus în Pro."
     }
   },
   "privacy": {
@@ -344,10 +341,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "Traducere AI locală (în curând)"
           },
           {
             "included": true,

@@ -1859,7 +1859,6 @@
   "app_p2pVerifyTitle": "ยืนยันว่าเป็นอุปกรณ์ของคุณ",
   "app_p2pVerifyDesc": "อุปกรณ์ทั้งสองต้องแสดงรหัสเดียวกัน ดำเนินการต่อเฉพาะเมื่อรหัสตรงกัน",
   "app_p2pVerifyConfirm": "รหัสตรงกัน — ดำเนินการต่อ",
-  "app_translatorComingSoon": "การแปลเร็วๆ นี้",
   "app_openP2PSync": "เปิดการซิงค์ P2P",
   "translation_title": "การแปลแบบส่วนตัว",
   "translation_subtitle": "โมเดลในเครื่องแปลบนอุปกรณ์นี้ ไม่มีการอัปโหลดใด ๆ",

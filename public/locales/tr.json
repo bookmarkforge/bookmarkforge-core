@@ -1859,7 +1859,6 @@
   "app_p2pVerifyTitle": "Bunun sizin cihazınız olduğunu doğrulayın",
   "app_p2pVerifyDesc": "İki cihaz da aynı kodu göstermelidir. Yalnızca eşleşiyorlarsa devam edin.",
   "app_p2pVerifyConfirm": "Kodlar eşleşiyor — devam",
-  "app_translatorComingSoon": "Çeviri yakında",
   "app_openP2PSync": "P2P senkronizasyonunu aç",
   "translation_title": "Özel çeviri",
   "translation_subtitle": "Yerel motorlar bu cihazda çevirir. Hiçbir şey yüklenmez.",

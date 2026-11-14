@@ -53,7 +53,8 @@
         "text": "500件のブックマークは無料、必要ならProへ"
       }
     ],
-    "announce": "⚡ ローカルAI翻訳（近日公開）"
+    "announce": "⚡ ローカルAI翻訳（近日公開）",
+    "announceApps": "⚡ ネイティブアプリ近日公開 — Windows、macOS、Linux、Android、iOS"
   },
   "demo": {
     "id": "demo",
@@ -237,10 +238,6 @@
           "text": "専門ヘルパー：コーダー、ライター、アナリスト、リサーチャー。Proが必要。"
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ ローカルAI翻訳（近日公開）",
-      "text": "あらゆる記事を母語で読めます。テキストを外部クラウドサーバーに送ることなく、コンピュータ内で完全にプライベートに文書全体を翻訳します。Proに含まれます。"
     }
   },
   "privacy": {
@@ -344,10 +341,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "ローカルAI翻訳（近日公開）"
           },
           {
             "included": true,

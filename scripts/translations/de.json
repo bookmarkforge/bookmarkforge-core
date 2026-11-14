@@ -60,7 +60,8 @@
         "text": "500 Lesezeichen gratis, Upgrade nur wenn du mehr willst"
       }
     ],
-    "announce": "⚡ Lokale KI-Übersetzung (demnächst)"
+    "announce": "⚡ Lokale KI-Übersetzung (demnächst)",
+    "announceApps": "⚡ Native Apps demnächst — Windows, macOS, Linux, Android & iOS"
   },
   "demo": {
     "id": "demo",
@@ -244,10 +245,6 @@
           "text": "Spezialisierte Helfer: Coder, Schreiber, Analyst und Forscher. Erfordert Pro."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Lokale KI-Übersetzung (demnächst)",
-      "text": "Lies jeden Artikel in deiner Muttersprache. Übersetze ganze Dokumente 100 % privat auf deinem Computer – ohne Text an Cloud-Server Dritter zu senden. In Pro enthalten."
     }
   },
   "privacy": {
@@ -351,10 +348,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "Lokale KI-Übersetzung (demnächst)"
           },
           {
             "included": true,

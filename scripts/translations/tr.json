@@ -60,7 +60,8 @@
         "text": "500 yer imi ücretsiz, isterseniz Pro'ya geçin"
       }
     ],
-    "announce": "⚡ Yerel AI çevirisi (yakında)"
+    "announce": "⚡ Yerel AI çevirisi (yakında)",
+    "announceApps": "⚡ Yerel uygulamalar yakında — Windows, macOS, Linux, Android ve iOS"
   },
   "demo": {
     "id": "demo",
@@ -244,10 +245,6 @@
           "text": "Uzmanlaşmış yardımcılar: Kodlayıcı, Yazıcı, Analist ve Araştırmacı. Pro gerektirir."
         }
       ]
-    },
-    "aiTranslation": {
-      "title": "⚡ Yerel AI çevirisi (yakında)",
-      "text": "Herhangi bir makaleyi ana dilinizde okuyun. Tüm belgeleri metni üçüncü taraf bulut sunucularına göndermeden, bilgisayarınızda %100 gizli şekilde çevirin. Pro'ya dahildir."
     }
   },
   "privacy": {
@@ -351,10 +348,6 @@
           {
             "included": false,
             "text": "PDF + OCR"
-          },
-          {
-            "included": false,
-            "text": "Yerel AI çevirisi (yakında)"
           },
           {
             "included": true,

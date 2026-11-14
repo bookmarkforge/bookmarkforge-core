@@ -1859,7 +1859,6 @@
   "app_p2pVerifyTitle": "确认这是您的设备",
   "app_p2pVerifyDesc": "两台设备必须显示相同的代码。仅在它们一致时才继续。",
   "app_p2pVerifyConfirm": "代码一致 — 继续",
-  "app_translatorComingSoon": "翻译即将上线",
   "app_openP2PSync": "打开 P2P 同步",
   "translation_title": "私密翻译",
   "translation_subtitle": "本地引擎在此设备上翻译，不会上传任何内容。",

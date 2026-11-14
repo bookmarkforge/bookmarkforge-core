@@ -1876,7 +1876,6 @@
   "app_p2pVerifyTitle": "Проверете дали това е вашето устройство",
   "app_p2pVerifyDesc": "И двете устройства трябва да показват един и същ код. Продължете само ако съвпадат.",
   "app_p2pVerifyConfirm": "Кодовете съвпадат — продължете",
-  "app_translatorComingSoon": "Překlad vadí",
   "app_openP2PSync": "Отвори P2P синхронизация",
   "translation_title": "Поверителен превод",
   "translation_subtitle": "Локалните двигатели превеждат на това устройство. Нищо не се качва.",

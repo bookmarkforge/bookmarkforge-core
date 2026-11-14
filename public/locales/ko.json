@@ -1859,7 +1859,6 @@
   "app_p2pVerifyTitle": "내 기기가 맞는지 확인하세요",
   "app_p2pVerifyDesc": "두 기기에 같은 코드가 표시되어야 합니다. 일치하는 경우에만 계속하세요.",
   "app_p2pVerifyConfirm": "코드가 일치합니다 — 계속",
-  "app_translatorComingSoon": "번역 기능 준비 중",
   "app_openP2PSync": "P2P 동기화 열기",
   "translation_title": "비공개 번역",
   "translation_subtitle": "로컬 엔진은 이 기기에서 번역합니다. 아무것도 업로드되지 않습니다.",

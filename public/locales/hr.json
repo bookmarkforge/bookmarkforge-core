@@ -1890,7 +1890,6 @@
   "app_p2pVerifyTitle": "Provjerite je li to vaš uređaj",
   "app_p2pVerifyDesc": "Oba uređaja moraju prikazivati isti kod. Nastavite samo ako se podudaraju.",
   "app_p2pVerifyConfirm": "Kodovi se podudaraju — nastavi",
-  "app_translatorComingSoon": "Prijevod uskoro",
   "app_openP2PSync": "Otvori P2P sinkronizaciju",
   "translation_title": "Privatno prevođenje",
   "translation_subtitle": "Lokalni modeli prevode na ovom uređaju. Ništa se ne prenosi.",

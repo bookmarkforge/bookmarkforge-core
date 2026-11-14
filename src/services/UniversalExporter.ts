@@ -17,6 +17,8 @@ import {
   exportToHTML,
 } from "./exporter.formatters";
 import { attachmentStore } from "./documentAttachments";
+import { licenseService } from "./LicenseService";
+import { isFreeExportFormat } from "../constants/license";
 
 export type { ExportOptions, ExportResult } from "./exporter.types";
 
@@ -100,6 +102,23 @@ export class UniversalExporter {
       });
       throwIfAborted(options.signal);
       reportProgress(options, 0);
+
+      // Entitlement choke point: Free exports JSON/HTML only (the pricing
+      // table's "JSON/HTML export" line); the other five formats are the
+      // Pro "Advanced export (7 formats)" promise. The dialog locks them
+      // visually — this check is what makes the lock real for any caller.
+      // Returned (not thrown) so exportData keeps its never-throws contract;
+      // "pro-required" is the sentinel ExportDialog maps to upgrade copy.
+      if (!isFreeExportFormat(options.format) && !licenseService.hasProAccess()) {
+        return {
+          success: false,
+          format: options.format,
+          size: 0,
+          filename: "",
+          blob: new Blob(),
+          error: "pro-required",
+        };
+      }
 
       const data = await this.prepareExportData(db, options);
       throwIfAborted(options.signal);

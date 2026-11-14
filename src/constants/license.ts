@@ -70,3 +70,15 @@ export const FREE_LIMITS = {
   maxBookmarks: 500,
   maxDevices: 0,
 } as const;
+
+/**
+ * Export formats included in the Free tier. The pricing table sells
+ * "JSON/HTML export" free and "Advanced export (7 formats)" as Pro, so this
+ * list is the single source for both the ExportDialog lock badges and the
+ * UniversalExporter entitlement check — they cannot drift apart.
+ */
+export const FREE_EXPORT_FORMATS = ["json", "html"] as const;
+
+export function isFreeExportFormat(format: string): boolean {
+  return (FREE_EXPORT_FORMATS as readonly string[]).includes(format);
+}

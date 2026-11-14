@@ -8,8 +8,11 @@ import {
   Tag,
   Filter,
   Settings,
+  Lock,
 } from "lucide-react";
 import { universalExporter } from "../services/UniversalExporter";
+import { licenseService } from "../services/LicenseService";
+import { isFreeExportFormat } from "../constants/license";
 import { initDB } from "../container/database";
 import { logger } from "../utils/logger";
 import { downloadBlob } from "../utils/download";
@@ -52,7 +55,14 @@ export default function ExportDialog({ isOpen, onClose }: ExportDialogProps) {
         setExportProgress(100);
         setExportResult({
           success: false,
-          message: result.error || t("app_exportError"),
+          message:
+            result.error === "pro-required"
+              ? t(
+                  "app_proRequiredFeatureTitle",
+                  "{{feature}} is part of Pro",
+                  { feature: "Advanced export" },
+                )
+              : result.error || t("app_exportError"),
         });
       }
     },
@@ -65,6 +75,11 @@ export default function ExportDialog({ isOpen, onClose }: ExportDialogProps) {
     },
   });
   const [exportProgress, setExportProgress] = useState(0);
+  // Same entitlement the service enforces: Free gets JSON/HTML, the other
+  // five formats are the Pro "Advanced export" promise.
+  const isPro = licenseService.hasProAccess();
+  const isFormatLocked = (format: string) =>
+    !isPro && !isFreeExportFormat(format);
   const [exportResult, setExportResult] = useState<{
     success: boolean;
     message: string;
@@ -219,31 +234,53 @@ export default function ExportDialog({ isOpen, onClose }: ExportDialogProps) {
                   role="radiogroup"
                   aria-label={t("app_exportFormat")}
                 >
-                  {formats.map((format) => (
+                  {formats.map((format) => {
+                    const locked = isFormatLocked(format.value);
+                    return (
                     <button
                       key={format.value}
                       type="button"
                       role="radio"
                       aria-checked={exportOptions.format === format.value}
-                      onClick={() =>
+                      disabled={locked}
+                      title={locked ? t("app_proRequiredTitle", "Available in Pro") : undefined}
+                      onClick={() => {
+                        if (locked) {
+                          window.dispatchEvent(new CustomEvent("forge:open-settings"));
+                          onClose();
+                          return;
+                        }
                         setExportOptions({
                           ...exportOptions,
                           format: format.value,
-                        })
-                      }
+                        });
+                      }}
                       className={`truncate p-3 rounded-lg border-2 transition-colors ${
-                        exportOptions.format === format.value
-                          ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
-                          : "border-[var(--divider)] dark:border-[var(--divider)] hover:border-[var(--divider)] dark:hover:border-[var(--divider)] text-[var(--text-secondary)] dark:text-[var(--text-secondary)]"
+                        locked
+                          ? "border-[var(--divider)] opacity-60 cursor-pointer"
+                          : exportOptions.format === format.value
+                            ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300"
+                            : "border-[var(--divider)] dark:border-[var(--divider)] hover:border-[var(--divider)] dark:hover:border-[var(--divider)] text-[var(--text-secondary)] dark:text-[var(--text-secondary)]"
                       }`}
                     >
-                      <format.icon className="size-4 mb-2 mx-auto" />
-                      <div className="text-sm font-medium">{format.label}</div>
+                      <span className="relative inline-block">
+                        <format.icon className="size-4 mb-2 mx-auto" />
+                        {locked && (
+                          <Lock className="size-3 absolute -top-1 -right-3 text-[var(--text-muted)]" aria-hidden />
+                        )}
+                      </span>
+                      <div className="text-sm font-medium flex items-center justify-center gap-1">
+                        {format.label}
+                        {locked && (
+                          <span className="text-[10px] font-bold uppercase tracking-wide text-[var(--accent-primary)]">Pro</span>
+                        )}
+                      </div>
                       <div className="text-xs text-[var(--text-muted)] dark:text-[var(--text-muted)] mt-1">
                         {t(format.description)}
                       </div>
                     </button>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 

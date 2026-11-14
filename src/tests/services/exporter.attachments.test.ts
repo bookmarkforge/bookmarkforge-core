@@ -11,6 +11,11 @@ vi.mock("../../utils/logger", () => ({
   logger: { error: vi.fn(), info: vi.fn(), warn: vi.fn(), debug: vi.fn() },
 }));
 
+vi.mock("../../services/LicenseService", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../services/LicenseService")>()),
+  licenseService: { hasProAccess: () => true },
+}));
+
 describe("UniversalExporter + persisted document attachments", () => {
   const attachmentRecord = {
     id: "att-doc-1-abc123",

@@ -70,7 +70,7 @@ describe("useClipperSync", () => {
     // used to fall into INTENTIONAL SILENCE (the worst UX in the app).
     const { LicenseError } = await import("../../services/LicenseService");
     const limitError = new LicenseError(
-      "Free plan is limited to 500 bookmarks. Upgrade to Pro for unlimited bookmarks.",
+      "Free plan is limited to 500 bookmarks. Upgrade to Pro for unlimited saving.",
       "FREE_LIMIT_REACHED",
     );
     mockInitDB.mockResolvedValue({

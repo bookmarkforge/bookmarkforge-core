@@ -23,6 +23,12 @@ vi.mock("../../utils/logger", () => ({
   logger: { error: vi.fn(), info: vi.fn(), warn: vi.fn(), debug: vi.fn() },
 }));
 
+const mockHasProAccess = vi.hoisted(() => vi.fn(() => true));
+vi.mock("../../services/LicenseService", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../services/LicenseService")>()),
+  licenseService: { hasProAccess: mockHasProAccess },
+}));
+
 import {
   UniversalExporter,
   universalExporter,
@@ -607,5 +613,28 @@ describe("UniversalExporter", () => {
       // title.includes("Target") → TRUE, mantiene el doc pese a summary/content null
       expect(result.success).toBe(true);
     });
+  });
+
+  describe("free-tier export gate", () => {
+    beforeEach(() => {
+      mockHasProAccess.mockReturnValue(false);
+    });
+    afterEach(() => {
+      mockHasProAccess.mockReturnValue(true);
+    });
+
+    it("rejects Pro-only formats with the pro-required sentinel", async () => {
+      const result = await exporter.exportData(mockDb, { format: "notion" });
+      expect(result.success).toBe(false);
+      expect(result.error).toBe("pro-required");
+    });
+
+    it.each(["json", "html"] as const)(
+      "still exports the free format %s",
+      async (format) => {
+        const result = await exporter.exportData(mockDb, { format });
+        expect(result.success).toBe(true);
+      },
+    );
   });
 });

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
+import { BehaviorSubject } from "rxjs";
 
 const mockInitDB = vi.fn();
 const mockHasProAccess = vi.fn(() => false);
@@ -20,21 +21,21 @@ vi.mock("../../hooks/useSecurityStore", () => ({
 const { useFreeTierUsage } = await import("../../hooks/useFreeTierUsage");
 const { FREE_LIMITS } = await import("../../constants/license");
 
-/** Reactive count$ mock: holds one initial value, emits updates live. */
+/** Reactive count$ mock: a real BehaviorSubject so combineLatest accepts it. */
 function makeCountQuery(initial: number) {
-  const observers = new Set<{ next: (n: number) => void }>();
-  const count = vi.fn(() => ({
-    $: {
-      subscribe: (obs: { next: (n: number) => void }) => {
-        observers.add(obs);
-        queueMicrotask(() => obs.next(initial));
-        return { unsubscribe: () => observers.delete(obs) };
-      },
-    },
-  }));
+  const subject = new BehaviorSubject(initial);
+  const count = vi.fn(() => ({ $: subject }));
   return {
     count,
-    emit: (n: number) => observers.forEach((o) => o.next(n)),
+    emit: (n: number) => subject.next(n),
+  };
+}
+
+/** DB mock with both counted collections (each has its own ceiling). */
+function makeDb(bookmarks: number, documents = 0) {
+  return {
+    bookmarks: makeCountQuery(bookmarks),
+    documents: makeCountQuery(documents),
   };
 }
 
@@ -50,31 +51,53 @@ describe("useFreeTierUsage", () => {
     );
   });
 
-  it("subscribes with the same { isDeleted: false } selector the wall counts", async () => {
-    const q = makeCountQuery(42);
-    mockInitDB.mockResolvedValue({ bookmarks: q });
+  it("subscribes with the same { isDeleted: false } selector on both collections the walls count", async () => {
+    const db = makeDb(30, 12);
+    mockInitDB.mockResolvedValue(db);
     const { result } = renderHook(() => useFreeTierUsage());
-    await waitFor(() => expect(result.current.count).toBe(42));
-    expect(q.count).toHaveBeenCalledWith({ selector: { isDeleted: false } });
+    // The meter reports the fullest collection — here bookmarks (30 > 12).
+    await waitFor(() => expect(result.current.count).toBe(30));
+    expect(db.bookmarks.count).toHaveBeenCalledWith({ selector: { isDeleted: false } });
+    expect(db.documents.count).toHaveBeenCalledWith({ selector: { isDeleted: false } });
     expect(result.current.isFree).toBe(true);
     expect(result.current.limit).toBe(FREE_LIMITS.maxBookmarks);
     expect(result.current.canAddBookmark).toBe(true);
-    expect(mockCanAddBookmarks).toHaveBeenCalledWith(42);
+    expect(mockCanAddBookmarks).toHaveBeenCalledWith(30);
+  });
+
+  it("each collection has its own wall — documents at the cap while bookmarks have room", async () => {
+    const db = makeDb(10, FREE_LIMITS.maxBookmarks);
+    mockInitDB.mockResolvedValue(db);
+    const { result } = renderHook(() => useFreeTierUsage());
+    await waitFor(() => expect(result.current.count).toBe(FREE_LIMITS.maxBookmarks));
+    await waitFor(() => expect(result.current.atWall).toBe(true));
+    // Bookmark saves still fit — the capture hint must not claim otherwise.
+    expect(result.current.canAddBookmark).toBe(true);
+    expect(mockCanAddBookmarks).toHaveBeenLastCalledWith(10);
+  });
+
+  it("bookmarks at the cap block canAddBookmark even with empty documents", async () => {
+    const db = makeDb(FREE_LIMITS.maxBookmarks, 0);
+    mockInitDB.mockResolvedValue(db);
+    const { result } = renderHook(() => useFreeTierUsage());
+    await waitFor(() => expect(result.current.atWall).toBe(true));
+    expect(result.current.canAddBookmark).toBe(false);
+    expect(mockCanAddBookmarks).toHaveBeenLastCalledWith(FREE_LIMITS.maxBookmarks);
   });
 
   it("flags nearWall at ≥90% and atWall at the limit", async () => {
     const belowWall = Math.floor(FREE_LIMITS.maxBookmarks * 0.9) - 1;
-    const q = makeCountQuery(belowWall);
-    mockInitDB.mockResolvedValue({ bookmarks: q });
+    const db = makeDb(belowWall);
+    mockInitDB.mockResolvedValue(db);
     const { result } = renderHook(() => useFreeTierUsage());
     await waitFor(() => expect(result.current.count).toBe(belowWall));
     expect(result.current.nearWall).toBe(false);
 
-    q.emit(Math.floor(FREE_LIMITS.maxBookmarks * 0.9));
+    db.bookmarks.emit(Math.floor(FREE_LIMITS.maxBookmarks * 0.9));
     await waitFor(() => expect(result.current.nearWall).toBe(true));
     expect(result.current.atWall).toBe(false);
 
-    q.emit(FREE_LIMITS.maxBookmarks);
+    db.bookmarks.emit(FREE_LIMITS.maxBookmarks);
     await waitFor(() => expect(result.current.atWall).toBe(true));
     expect(result.current.canAddBookmark).toBe(false);
     expect(mockCanAddBookmarks).toHaveBeenLastCalledWith(FREE_LIMITS.maxBookmarks);
@@ -82,19 +105,20 @@ describe("useFreeTierUsage", () => {
 
   it("is a no-op for Pro users — the nudge must not exist for them", async () => {
     mockHasProAccess.mockReturnValue(true);
-    const q = makeCountQuery(5000);
-    mockInitDB.mockResolvedValue({ bookmarks: q });
+    const db = makeDb(5000);
+    mockInitDB.mockResolvedValue(db);
     const { result } = renderHook(() => useFreeTierUsage());
     await new Promise((r) => setTimeout(r, 10));
-    expect(q.count).not.toHaveBeenCalled();
+    expect(db.bookmarks.count).not.toHaveBeenCalled();
+    expect(db.documents.count).not.toHaveBeenCalled();
     expect(result.current.count).toBeUndefined();
     expect(result.current.isFree).toBe(false);
   });
 
   it("stays quiet while the vault is locked", async () => {
     mockSecurityState.isLocked = true;
-    const q = makeCountQuery(100);
-    mockInitDB.mockResolvedValue({ bookmarks: q });
+    const db = makeDb(100);
+    mockInitDB.mockResolvedValue(db);
     const { result } = renderHook(() => useFreeTierUsage());
     await new Promise((r) => setTimeout(r, 10));
     expect(mockInitDB).not.toHaveBeenCalled();

@@ -24,7 +24,7 @@ export type BfErrorCode =
   | "E106" // Local AI (WebLLM) cannot run on this device
   | "E107" // Backup import failed (wrong password / corrupt file)
   | "E201" // Pro license invalid / expired check
-  | "E202"; // Free limit reached (500 bookmarks)
+  | "E202"; // Free limit reached (500 per collection: bookmarks / notes+documents)
 
 function errorText(error: unknown): string {
   if (error instanceof Error) {return `${error.name} ${error.message}`;}

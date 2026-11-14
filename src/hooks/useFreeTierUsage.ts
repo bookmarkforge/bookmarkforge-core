@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { combineLatest } from "rxjs";
 import { initDB } from "../container/database";
 import { licenseService } from "../services/LicenseService";
 import { FREE_LIMITS } from "../constants/license";
@@ -14,7 +15,11 @@ import { logger } from "../utils/logger";
  * for them.
  */
 interface FreeTierUsage {
-  /** Non-deleted bookmark count (undefined while loading). */
+  /**
+   * Count of the fullest limited collection (bookmarks and documents each
+   * have their own FREE_LIMITS.maxBookmarks ceiling). The meter reports the
+   * collection nearest its wall — undefined while loading.
+   */
   count: number | undefined;
   /** Free ceiling (FREE_LIMITS.maxBookmarks). */
   limit: number;
@@ -76,20 +81,29 @@ export function useFreeTierUsage(): FreeTierUsage {
         ) {
           return;
         }
-        // Reactive query: same shape the preInsert wall counts with
-        // ({ isDeleted: false }), so the meter never disagrees with the wall.
-        const count$ = db.bookmarks.count({
-          selector: { isDeleted: false },
-        }).$;
+        // Reactive query: same { isDeleted: false } shape the preInsert walls
+        // count with — each collection has its OWN ceiling, so the meter
+        // reports the fullest one and never disagrees with either wall.
+        const count$ = combineLatest([
+          db.bookmarks.count({ selector: { isDeleted: false } }).$,
+          db.documents.count({ selector: { isDeleted: false } }).$,
+        ]);
         const sub = count$.subscribe({
-          next: (count: number) => {
+          next: ([bookmarkCount, documentCount]: [number, number]) => {
             if (cancelled || licenseService.hasProAccess()) {return;}
-            void licenseService.canAddBookmarks(count).then((canAddBookmark) => {
+            const count = Math.max(bookmarkCount, documentCount);
+            // canAddBookmark is bookmark-specific: the save-hint surfaces
+            // (Capture, QuickCapture) only create bookmarks, so the document
+            // wall must not pause them.
+            void licenseService.canAddBookmarks(bookmarkCount).then((canAddBookmark) => {
               if (cancelled || licenseService.hasProAccess()) {return;}
               setUsage({
                 count,
                 limit: FREE_LIMITS.maxBookmarks,
-                atWall: !canAddBookmark,
+                // Either collection at its own ceiling counts as "at the
+                // wall" for dashboard-level nudges; capture surfaces use
+                // canAddBookmark (bookmark-specific) instead.
+                atWall: count >= FREE_LIMITS.maxBookmarks,
                 nearWall: count >= Math.floor(FREE_LIMITS.maxBookmarks * 0.9),
                 isFree: true,
                 canAddBookmark,

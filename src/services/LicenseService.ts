@@ -601,7 +601,7 @@ class LicenseService {
       .catch((err) => logger.warn("[License] audit failed", err));
   }
 
-  /** Check whether a new bookmark insert would exceed the free-tier cap. */
+  /** Check whether a new item insert would exceed the free-tier cap. */
   async canAddBookmarks(currentCount: number, incoming = 1): Promise<boolean> {
     if (this.hasProAccess()) {return true;}
     return currentCount + incoming <= FREE_LIMITS.maxBookmarks;

@@ -88,6 +88,11 @@ const mocks = vi.hoisted(() => {
 
 vi.mock("../../db/database", () => ({ initDB: mocks.initDB }));
 
+vi.mock("../../services/LicenseService", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../../services/LicenseService")>()),
+  licenseService: { hasProAccess: () => true },
+}));
+
 const mockCreateObjectURL = vi.fn().mockReturnValue("blob:test-url");
 const mockRevokeObjectURL = vi.fn();
 const _origURL = URL;

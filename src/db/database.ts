@@ -51,7 +51,6 @@ import {
   type CollectionMigrationProgress,
 } from "./migration-progress";
 import type { BookmarkForgeDB } from "./types";
-import type { BookmarkDocType } from "./schema";
 import { licenseService, LicenseError } from "../services/LicenseService";
 import { FREE_LIMITS } from "../constants/license";
 export {
@@ -1110,36 +1109,43 @@ async function createDBInstance(
  * @throws {Error} `DB_INIT_TIMEOUT` if all retries are exhausted
  */
 /**
- * Centralized free-tier enforcement for bookmark inserts. Attached once per
- * db instance (initDB caches the instance, so hooks never double-register).
+ * Centralized free-tier enforcement for bookmark AND document inserts.
+ * Attached once per db instance (initDB caches the instance, so hooks never
+ * double-register).
  *
- * Every insert path (UI, clipper bridge, importer, broadcast) funnels through
- * the bookmarks collection, so a middleware here is the single choke point:
- * Pro inserts always pass; Free users get a
- * LicenseError once FREE_LIMITS.maxBookmarks is reached. The count query
- * only runs for non-Pro, so the O(n) cost is bounded to ≤200 docs.
+ * Each collection gets its OWN ceiling of FREE_LIMITS.maxBookmarks — the
+ * pricing copy promises "500 bookmarks, notes, documents", i.e. 500 of each
+ * kind, not a shared pool. Every insert path (UI, clipper bridge, importer,
+ * broadcast, folder sync) funnels through one of these two collections, so a
+ * middleware on each is the single choke point: Pro inserts always pass;
+ * Free users get a LicenseError once THAT collection's non-deleted count
+ * reaches the cap. The count queries only run for non-Pro.
  */
-function attachBookmarkFreeLimit(db: BookmarkForgeDB): void {
-  const col = db.bookmarks as typeof db.bookmarks & {
-    preInsert(
-      hook: (data: BookmarkDocType) => void | Promise<void>,
-      parallel: boolean,
-    ): void;
-  };
-  try {
-    col.preInsert(async () => {
+function attachFreeTierItemLimit(db: BookmarkForgeDB): void {
+  const limited = [
+    { collection: db.bookmarks, noun: "bookmarks" },
+    { collection: db.documents, noun: "notes and documents" },
+  ] as const;
+  for (const { collection, noun } of limited) {
+    const col = collection as typeof collection & {
+      preInsert(hook: () => void | Promise<void>, parallel: boolean): void;
+    };
+    const guard = async () => {
       if (licenseService.hasProAccess()) {return;}
       const count = await col.count({ selector: { isDeleted: false } }).exec();
       if (count >= FREE_LIMITS.maxBookmarks) {
         throw new LicenseError(
-          `Free plan is limited to ${FREE_LIMITS.maxBookmarks} bookmarks. ` +
-            "Upgrade to Pro for unlimited bookmarks.",
+          `Free plan is limited to ${FREE_LIMITS.maxBookmarks} ${noun}. ` +
+            "Upgrade to Pro for unlimited saving.",
           "FREE_LIMIT_REACHED",
         );
       }
-    }, false);
-  } catch (error) {
-    logger.warn("[DB] Failed to attach bookmark limit middleware", { error });
+    };
+    try {
+      col.preInsert(guard, false);
+    } catch (error) {
+      logger.warn("[DB] Failed to attach free-tier limit middleware", { error });
+    }
   }
 }
 
@@ -1201,7 +1207,7 @@ const initDBInternal = async (password?: string | Uint8Array): Promise<BookmarkF
       // backend rather than crashing the entire init.
       const dbName = import.meta.env.VITE_DB_NAME || "bookmarkforge_v5";
       db = await createDBInstance(dbName, preferredPw, 0);
-      attachBookmarkFreeLimit(db);
+      attachFreeTierItemLimit(db);
     } catch (err) {
       state.initPromise = null;
       // Walk the FULL cause chain before remapping. RxDB/Dexie often

@@ -14,6 +14,10 @@ vi.mock("../../db/database", () => ({ initDB: initDBMock }));
 const downloadBlobMock = vi.hoisted(() => vi.fn());
 vi.mock("../../utils/download", () => ({ downloadBlob: downloadBlobMock }));
 
+vi.mock("../../services/LicenseService", () => ({
+  licenseService: { hasProAccess: () => true },
+}));
+
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string, opts?: any) => {

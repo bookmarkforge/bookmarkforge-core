@@ -39,10 +39,19 @@ jobs:
       # generate-pdf-localized.mjs: pdfDate() respects SOURCE_DATE_EPOCH).
       - run: SOURCE_DATE_EPOCH=$(git log -1 --format=%ct -- docs/ | head -1) && export SOURCE_DATE_EPOCH && echo "SOURCE_DATE_EPOCH=$SOURCE_DATE_EPOCH"
       - run: npm run typecheck:prod
-      # M1 (audit 2026-11-06): tsconfig.prod.json includes only src/, so the
+      # tsconfig.prod.json includes only src/, so the
       # signaling server and the license function were never typechecked here.
       # Keep them behind the same blocking gate.
       - run: npm run typecheck:server
+      # Dedicated gate for the tests tsconfig.json excludes (RxDB dynamic
+      # collections, Pro service imports and the Node-only license-origin
+      # handler). Kept out of the generic `typecheck` so the public export,
+      # which omits the Pro tests, stays valid.
+      - run: npm run typecheck:tests
+      # Umbrella gate: tsconfig.json covers src/, tests/, server/, api/ and the
+      # root configs. The lanes above are scoped subsets, so without this the
+      # bulk of src/tests is never typechecked in CI.
+      - run: npm run typecheck
       - run: npm run lint
       - run: npm run test:fast
       # The pre-deploy checklist (check:blindeo → point 11) loads the packaged
@@ -138,14 +147,6 @@ jobs:
       # of truth (ADR-051). Read-only render + diff; fix with build:landings.
       - name: Enforce landing page freshness
         run: npm run check:landings-fresh
-
-      # docs/audit.md's status table is a contract of "command → observable".
-      # The chain re-executes the cheap rows (chain/exec/self); this named step
-      # is where the expensive and networked ones are enforced (ADR-064), so a
-      # documented observable that stopped matching the tree fails here instead
-      # of ageing into a false claim.
-      - name: Enforce audit ledger freshness
-        run: npm run check:audit-freshness:deep
 
   slow-tests:
     name: Full unit suite (slow profile, timing enforced)
@@ -388,7 +389,7 @@ jobs:
             playwright-report/
 
   e2e-public-relay:
-    # A-3: the one deployment shape the main E2E config cannot exercise — the app
+    # the one deployment shape the main E2E config cannot exercise — the app
     # built WITHOUT VITE_P2P_SIGNALING_URL, i.e. public-relay mode, where the
     # room secret must never reach the relay the app falls back to. Booting it
     # needs its own Vite dev server (Vite bakes the variable at start-up), which
@@ -520,7 +521,7 @@ jobs:
             dist/manifest.webmanifest
             dist/sw.js
 
-  # A1 (audit 2026-11-05): the `api` image installed `npm ci --omit=dev` and then
+  # The `api` image installed `npm ci --omit=dev` and then
   # ran `node_modules/.bin/tsx` — a devDependency — so the self-hosted signaling
   # container exited on start and `docker compose up` left the server down. No
   # gate caught it: nothing built the image. This job builds the real target and
@@ -569,7 +570,7 @@ jobs:
       CI: true
       NODE_ENV: test
     steps:
-      # P-03: one deployment path, gated. `deploy:prod` is manual BY DESIGN
+      # one deployment path, gated. `deploy:prod` is manual BY DESIGN
       # (DEPLOY-POLICY.md), so THIS job executes the policy's Pre-Deploy
       # Checklist (items 1-4; 5-6 are the human commit+push) and is the check
       # that must be green before anyone runs it. The old deploy-and-push

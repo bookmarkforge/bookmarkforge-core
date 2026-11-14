@@ -4,9 +4,12 @@ info:
   version: 1.0.0
   description: |
     Companion server for BookmarkForge — P2P signaling, health, CSP reports and
-    opt-in client telemetry. The license paths declared below are served by the
+    Open Graph cards. Zero telemetry: the client never transmits usage, error or
+    analytics data off-device. The license paths declared below are served by the
     serverless function in `api/license/[action].ts`, not by the companion: its
-    route table declares no license route since 2026-10-19.
+    route table declares no license route since 2026-10-19. That function is
+    private Pro infrastructure and is NOT part of the MIT public export; the
+    public tree carries only the client-side verifier (`src/services/`).
 
     Security model: local-first. The server never receives the user's vault.
     Provider calls happen in the browser with a key stored in the user's own
@@ -36,8 +39,6 @@ servers:
 tags:
   - name: health
   - name: licensing
-  - name: telemetry
-  - name: analytics
   - name: diagnostics
 
 paths:
@@ -80,7 +81,7 @@ paths:
       tags: [licensing]
       summary: Exchange a purchased key for a signed proof
       description: |
-        Binds the key to a device and returns a signed entitlement proof. The
+        Binds the key to a device and returns a signed license proof. The
         caller has no proof yet, so this route cannot require one.
       security: []
       requestBody:
@@ -91,7 +92,7 @@ paths:
               $ref: '#/components/schemas/LicenseKeyRequest'
       responses:
         '200':
-          description: Signed entitlement proof
+          description: Signed license proof
           content:
             application/json:
               schema:
@@ -121,11 +122,11 @@ paths:
               $ref: '#/components/schemas/LicenseKeyRequest'
       responses:
         '200':
-          description: Validation result
+          description: Freshly signed proof (same shape as activate)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LicenseValidation'
+                $ref: '#/components/schemas/LicenseProof'
         '400':
           $ref: '#/components/responses/BadRequest'
         '403':
@@ -172,59 +173,6 @@ paths:
         '503':
           $ref: '#/components/responses/NotConfigured'
 
-  /api/license/entitlement:
-    post:
-      tags: [licensing]
-      summary: Authoritative plan for a presented proof
-      description: |
-        Verifies the license proof the client already holds and answers the
-        resolved plan. This is an entitlement *answer*, not an entitlement gate:
-        it must be reachable by a free or expired client so it can be downgraded
-        explicitly. `free` is a definitive answer, not an error.
-
-        Browser origin must be in `AI_SESSION_ORIGINS` (the historical name for
-        this endpoint's allow-list; it is not an AI session).
-      security: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LicenseProof'
-      responses:
-        '200':
-          description: Definitive plan
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EntitlementResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/OriginDenied'
-        '405':
-          description: Method not allowed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '413':
-          description: Proof is too large
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '429':
-          $ref: '#/components/responses/RateLimited'
-        '503':
-          description: |
-            SIGNING_KEY_INVALID — the deployment's public key is unusable. Not a
-            downgrade: the client keeps its verified offline state.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-
   /admin:
     get:
       tags: [diagnostics]
@@ -237,6 +185,34 @@ paths:
           description: Diagnostic payload
         '403':
           description: Invalid or missing `X-Signaling-Admin-Token`
+
+  /og:
+    get:
+      tags: [diagnostics]
+      summary: Open Graph card HTML wrapper
+      description: Public dynamic social-sharing card; no credentials.
+      security: []
+      responses:
+        '200':
+          description: HTML wrapper referencing the card image
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /og-image.svg:
+    get:
+      tags: [diagnostics]
+      summary: Open Graph card image
+      description: Public SVG card image referenced by `/og`.
+      security: []
+      responses:
+        '200':
+          description: SVG image
+          content:
+            image/svg+xml:
+              schema:
+                type: string
 
   /csp-report:
     get:
@@ -258,99 +234,6 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 
-  /api/client-events:
-    post:
-      tags: [telemetry]
-      summary: Submit opt-in client degradation events
-      description: |
-        Storage-pressure and bundle-integrity signals. Pseudonymous, content-free
-        payload validation plus a per-IP rate limit. Only sent after the user's
-        explicit consent.
-      security: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties: true
-      responses:
-        '204':
-          description: Accepted
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '429':
-          $ref: '#/components/responses/RateLimited'
-    get:
-      tags: [diagnostics]
-      summary: Collector diagnostics
-      security:
-        - clientEventsAdminToken: []
-      responses:
-        '200':
-          description: Collector state
-        '503':
-          $ref: '#/components/responses/NotConfigured'
-
-  /api/client-events/retry-stats:
-    get:
-      tags: [telemetry]
-      summary: Cumulative reporter retry counters
-      security: []
-      responses:
-        '200':
-          description: Retry counters
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: true
-        '429':
-          $ref: '#/components/responses/RateLimited'
-
-  /api/analytics/events:
-    post:
-      tags: [analytics]
-      summary: Submit an opt-in daily aggregate bucket
-      description: |
-        Additive and idempotent per `batchId`: partial batches sum and a retry of
-        the same batch does not double count. Payloads without `batchId` keep the
-        replace-by-day semantics. IP is hashed with a salt; no PII, no content.
-      security: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AnalyticsBatch'
-      responses:
-        '204':
-          description: Recorded (or already recorded for this batchId)
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '429':
-          $ref: '#/components/responses/RateLimited'
-        '503':
-          description: Per-install state is at capacity (fail-closed, with `Retry-After`)
-
-  /api/analytics/kpis:
-    get:
-      tags: [analytics]
-      summary: Aggregate KPIs
-      description: DAU/WAU/MAU, cohort retention and funnel. Aggregate only.
-      security:
-        - analyticsAdminToken: []
-      responses:
-        '200':
-          description: Aggregate buckets
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: true
-        '503':
-          $ref: '#/components/responses/NotConfigured'
-
 components:
   securitySchemes:
     signalingAdminToken:
@@ -361,14 +244,6 @@ components:
       type: apiKey
       in: header
       name: X-CSP-Admin-Token
-    clientEventsAdminToken:
-      type: apiKey
-      in: header
-      name: X-Client-Events-Admin-Token
-    analyticsAdminToken:
-      type: apiKey
-      in: header
-      name: X-Analytics-Admin-Token
 
   responses:
     BadRequest:
@@ -429,69 +304,51 @@ components:
 
     LicenseKeyRequest:
       type: object
-      description: The purchased license key plus the device it should bind to.
-      required: [licenseKey]
+      description: |
+        License identity sent to `/activate`, `/validate` and `/deactivate`.
+        `license_key` is required; at least one of `instance_name` or
+        `instance_id` identifies the device seat (`instance_name` is the
+        per-install UUID the client generates). `seat_token` is the
+        deactivation credential returned by a previous activation.
+      required: [license_key]
       properties:
-        licenseKey:
+        license_key:
           type: string
-        deviceId:
+        instance_name:
+          type: string
+        instance_id:
+          type: string
+        seat_token:
           type: string
 
     LicenseProof:
       type: object
-      description: Signed entitlement payload (base64) and its signature.
+      description: |
+        Signed license payload plus its RSA-PSS signature, returned by
+        `/activate` and `/validate`. `seatToken` is present when the provider
+        issued a new deactivation credential.
       required: [payload, signature]
       properties:
         payload:
-          type: string
+          type: object
+          required: [v, deviceId, validatedAt, instanceId]
+          properties:
+            v:
+              type: integer
+              const: 1
+            deviceId:
+              type: string
+            instanceId:
+              type: string
+            validatedAt:
+              type: integer
+              description: Unix epoch milliseconds.
+            expiresAt:
+              type: integer
+              description: Unix epoch milliseconds; absent for lifetime licenses.
+            activationsLeft:
+              type: integer
         signature:
           type: string
-
-    LicenseValidation:
-      type: object
-      description: Verdict for an existing key.
-      additionalProperties: true
-
-    EntitlementResponse:
-      type: object
-      required: [plan, source]
-      properties:
-        plan:
+        seatToken:
           type: string
-          enum: [pro, free]
-        source:
-          type: string
-          enum: [license, none]
-        reason:
-          type: string
-          description: Present when plan is free.
-        message:
-          type: string
-        deviceId:
-          type: string
-        validatedAt:
-          type: integer
-          description: Unix epoch milliseconds.
-        expiresAt:
-          type: integer
-          description: Unix epoch milliseconds.
-        activationsLeft:
-          type: integer
-        instanceId:
-          type: string
-
-    AnalyticsBatch:
-      type: object
-      description: One opt-in daily aggregate bucket.
-      required: [iid, counts]
-      properties:
-        iid:
-          type: string
-          description: SHA-256 of a random per-installation id. Never a user identity.
-        batchId:
-          type: string
-          description: Makes the ingest additive and idempotent.
-        counts:
-          type: object
-          additionalProperties:
-            type: integer

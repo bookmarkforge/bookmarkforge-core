@@ -86,7 +86,7 @@ export function useMainAppState() {
     }
   }, []);
 
-  const unlockVault = useCallback(async (password: string) => {
+  const unlockVault = useCallback(async (password: string | Uint8Array) => {
     setState((prev) => ({ ...prev, loading: true, error: null }));
     const success = await securityVault.unlock(password);
     if (success) {

@@ -6,7 +6,8 @@ The companion API runs with:
 
 ```text
 NODE_ENV=production
-AI_SESSION_ORIGINS=https://<public-domain>
+LICENSE_ALLOWED_ORIGINS=https://<public-domain>
+# Legacy alias still accepted: AI_SESSION_ORIGINS=https://<public-domain>
 ENFORCE_SIGNAL_HMAC=1
 LICENSE_SIGNING_PRIVATE_KEY_FILE=/run/secrets/license_signing_key
 WHOP_LICENSE_API_URL=https://<verified-adapter>

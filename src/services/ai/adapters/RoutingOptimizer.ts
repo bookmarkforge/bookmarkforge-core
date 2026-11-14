@@ -93,7 +93,7 @@ class RoutingOptimizer {
    * Selects the best provider for a task, restricted to the providers that
    * are actually usable by the caller.
    *
-   * CRITICAL (audit #1): exploration/exploitation must NEVER pick a provider
+   * CRITICAL: exploration/exploitation must NEVER pick a provider
    * the caller has not configured — doing so routes ~10% of requests to
    * providers without an API key (failures) or to more expensive providers.
    * When `availableProviders` is omitted (legacy/tests), the full PROVIDERS

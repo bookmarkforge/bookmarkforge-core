@@ -181,9 +181,9 @@ function mergeAdditiveBlocks(
  * Resolution order:
  * 1. LWW by `updatedAt` when both states provide comparable timestamps.
  * 2. Numeric RxDB revision height, then the revision hash. Malformed
- *    revisions use a deterministic code-unit fallback.
+ * revisions use a deterministic code-unit fallback.
  * 3. `id`, followed by a canonical serialization only for malformed states
- *    that still tie on all documented fields.
+ * that still tie on all documented fields.
  *
  * Tombstones (`isDeleted: true`) are always LWW records and never candidates
  * for block merging. A block merge is considered only for live states with
@@ -399,7 +399,7 @@ const v8BookmarkMigrationStrategies = {
   7: migrateNoop,
   8: migrateToV8Bookmark,
 } as const;
-// v9 (audit A4+A5): `tags` joins the encrypted set and `urlHash` becomes a
+// v9: `tags` joins the encrypted set and `urlHash` becomes a
 // per-vault keyed HMAC. Both are handled by the storage layer — the version
 // bump rewrites every row through authenticatedEncryptionStorage, which
 // encrypts tags and re-keys urlHash from the plaintext url.

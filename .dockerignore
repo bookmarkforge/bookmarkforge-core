@@ -3,10 +3,16 @@
 .env.*
 !.env.example
 !.env.production.example
+!.env.whop.example
 *.pem
 *.key
 *.crt
+*.p12
+*.pfx
+*.pkcs8
+*.der
 server/.license-signing-key.pkcs8
+server/.appsumo-keys-*.csv
 
 # Dependencies and generated output
 node_modules
@@ -36,8 +42,30 @@ nightly-consistency.json
 nightly-consistency.svg
 scripts/__tmp-sw-debug.mjs
 
+# Private workspaces and local-only material — M-3 (audit 2026-11-14): the
+# build stage runs `COPY . .`, so anything not ignored here lands in the
+# intermediate image layers even though final images only ship dist/.
+legal/
+evidence/
+.zap/
+tests/
+docs/
+marketing/
+capture/
+investigation.cany/
+craft.json
+feed.json
+usage.json
+transcript.json
+bookmarkforge-core/
+*bookmarkforge-core/
+pre-scrub-*.bundle
+findings/
+reports/
+
 # VCS and local tooling
 .git
 .github
+.vercel
 .vscode
 .idea

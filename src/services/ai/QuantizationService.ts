@@ -144,7 +144,7 @@ export class QuantizationService {
   }
 
   /**
-   * CRITICAL (audit #3): inverse of quantizePolar4. Each byte packs TWO
+   * CRITICAL: inverse of quantizePolar4. Each byte packs TWO
    * 4-bit nibbles (even index → high nibble, odd index → low nibble);
    * dequantizePolar8 must NOT be used here (it reads one value per byte).
    */

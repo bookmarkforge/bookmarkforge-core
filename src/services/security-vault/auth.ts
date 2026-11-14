@@ -8,7 +8,8 @@
  * `verifyPasswordRateLimited`, `decryptShareWithRateLimit`,
  * `installVaultKdfSaltAndMigrate`) plus an `AuthContext` shaped for it. None of
  * those were imported: SecurityVault keeps its own implementations, and only
- * `verifyPassword` and `unlockDeviceKeyStep` are used. Keeping the duplicate
+ * `verifyPassword` is used (unlock() has its own private device-key step).
+ * Keeping the duplicate
  * was a hazard rather than dead weight — the unused `unlockFromShare` branch
  * did `setMasterPasswordBytes("")`, i.e. it would report the vault unlocked
  * with an empty master password. Removing it leaves exactly one source of
@@ -18,7 +19,12 @@
 import { encryptionService } from "../EncryptionService";
 import { secureStorage } from "../SecureStorage";
 import { logger } from "../../utils/logger";
-import { zeroPasswordBytes } from "../../utils/crypto-core";
+import {
+  LegacyV5FormatRemovedError,
+  isLegacyV5FormatRemovedError,
+  zeroPasswordBytes,
+} from "../../utils/crypto-core";
+import { copyPasswordBytes } from "../../utils/passwordBytes";
 import { SECURE_STORAGE_KEYS, VERIFICATION_PLAINTEXT } from "./constants";
 import { secureStoragePurpose } from "../../utils/envelope-purposes";
 import { constantTimeCompare } from "./compare";
@@ -30,11 +36,6 @@ import { validateVerificationIntegrity } from "./integrity";
 export interface AuthContext {
   hasAnyVaultState: (emptyLocalDatabase?: boolean) => Promise<boolean>;
   recordAudit: (params: Record<string, unknown>) => void;
-  recordFailedAttempt: () => void;
-  getWrappedDeviceKeyBlob: () => Promise<string | null>;
-  unwrapDeviceKeyWithPassword: (password: string) => Promise<void>;
-  ensureDeviceKeyMaterialized: () => Promise<void>;
-  isDeviceKeyMaterialized: () => Promise<boolean>;
 }
 
 /**
@@ -44,7 +45,7 @@ export interface AuthContext {
  *   - On first run (no flag) → accept for the registration flow
  */
 export async function verifyPassword(
-  password: string,
+  password: string | Uint8Array,
   ctx: AuthContext,
 ): Promise<boolean> {
   const stored = await secureStorage.getVerificationToken();
@@ -65,7 +66,9 @@ export async function verifyPassword(
     return true;
   }
 
-  const passwordBytes = new TextEncoder().encode(password);
+  // Bytes at the boundary: a string is encoded once here; a byte caller's
+  // buffer is copied so the finally below zeroizes exactly one owned buffer.
+  const passwordBytes = copyPasswordBytes(password);
   try {
     // P-06: validateVerificationIntegrity only imports the bytes (it does not
     // consume them); decryptWithBytes DOES consume its buffer per the
@@ -86,33 +89,19 @@ export async function verifyPassword(
     );
     return constantTimeCompare(decrypted, VERIFICATION_PLAINTEXT);
   } catch (error) {
+    // ADR-052 Phase 3: a verification token still in the retired v5 format is
+    // NOT a wrong password — no retry can fix it. Surface the typed, actionable
+    // error so the caller can explain the remedy instead of looping on
+    // "invalid password".
+    if (isLegacyV5FormatRemovedError(error)) {
+      logger.warn(
+        "[SecurityVault] Verification token uses the retired v5 legacy format",
+      );
+      throw new LegacyV5FormatRemovedError();
+    }
     logger.warn("[SecurityVault] Password verification failed", { error });
     return false;
   } finally {
     zeroPasswordBytes(passwordBytes);
-  }
-}
-
-/**
- * Performs the device-key unlock step. Returns true on success.
- */
-export async function unlockDeviceKeyStep(ctx: AuthContext, password: string): Promise<boolean> {
-  try {
-    const wrappedBlob = await ctx.getWrappedDeviceKeyBlob();
-    if (wrappedBlob !== null) {
-      await ctx.unwrapDeviceKeyWithPassword(password);
-      logger.info("[SecurityVault] Device key unwrapped (master-password wrapped)");
-    } else {
-      await ctx.ensureDeviceKeyMaterialized();
-    }
-    if (wrappedBlob !== null && !(await ctx.isDeviceKeyMaterialized())) {
-      logger.error("[SecurityVault] Device key not materialized after unwrap — failing closed");
-      return false;
-    }
-    return true;
-  } catch (error) {
-    logger.error("[SecurityVault] Failed to materialize device key", { error });
-    ctx.recordFailedAttempt();
-    return false;
   }
 }

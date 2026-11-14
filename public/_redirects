@@ -16,7 +16,7 @@
 
 # Landing pages (SEO) — the static marketing HTML is the indexable
 # content, served at clean URLs with a 200 rewrite so the canonical
-# stays https://bookmarkforgeapp.com/ and /es/. Must precede the SPA
+# stays https://www.bookmarkforgeapp.com/ and /es/. Must precede the SPA
 # catch-all below.
 /       /landing.html  200
 
@@ -87,8 +87,11 @@
 /zh/    /zh.html       200
 
 
-# Pocket comparison page (SEO)
+# Pocket comparison page (SEO). The clean URL is canonical (it is what the
+# sitemap, canonicals and internal links use); the .html twin 301s to it so
+# link equity stops splitting across two 200s.
 /pocket-alternative  /pocket-alternative.html  200
+/pocket-alternative.html  /pocket-alternative  301
 
 # Help Center — static HTML with same headers as landing/legal
 /help  /help.html  200

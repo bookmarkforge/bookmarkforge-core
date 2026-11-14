@@ -41,7 +41,7 @@ class AutoProcessorService {
     processedItems: 0,
   });
 
-  // Audit #6: per-item retry backoff (in-memory; only survives the session —
+  // per-item retry backoff (in-memory; only survives the session —
   // on reload, unprocessed items simply retry immediately, which is the safe
   // default). Prevents the infinite hot retry loop when the AI pipeline
   // persistently fails (network down, quota exhausted, vault locked).
@@ -116,7 +116,7 @@ class AutoProcessorService {
   }
 
   private async processBatch(results: unknown[]): Promise<void> {
-    // Audit #6: never overlap batches (a retry-timer may fire while a
+    // never overlap batches (a retry-timer may fire while a
     // stream-triggered batch is still running) — defer instead.
     if (this.isProcessing) {
       this.scheduleRetryCheck(this.RETRY_BASE_MS);
@@ -204,7 +204,7 @@ class AutoProcessorService {
       return;
     }
 
-    // Audit #6: skip items still inside their retry backoff window and
+    // skip items still inside their retry backoff window and
     // schedule a re-check for the soonest deadline, so a persistent failure
     // does not hot-loop the AI pipeline on every DB emission.
     const now = Date.now();
@@ -333,7 +333,7 @@ class AutoProcessorService {
     this.statusSubject.next({ ...this.statusSubject.value, ...patch });
   }
 
-  // ── Audit #6: retry backoff ────────────────────────────────────────────
+  // ── retry backoff ────────────────────────────────────────────
 
   private isInBackoff(id: string, now: number): boolean {
     const state = this.retryState.get(id);
@@ -509,7 +509,7 @@ class AutoProcessorService {
       if (signal?.aborted || (error instanceof Error && error.name === "AbortError")) {
         return;
       }
-      // Audit #6: backoff — the item stays unprocessed but won't be retried
+      // backoff — the item stays unprocessed but won't be retried
       // in a hot loop; a retry timer re-checks it after the backoff window.
       this.recordFailure(doc.id);
       logger.error("[AutoProcessor] Error processing document", {
@@ -621,7 +621,7 @@ class AutoProcessorService {
       if (signal?.aborted || (error instanceof Error && error.name === "AbortError")) {
         return;
       }
-      // Audit #6: backoff (see processDocument).
+      // backoff (see processDocument).
       this.recordFailure(bookmark.id);
       logger.error("[AutoProcessor] Error processing bookmark", {
         title:
@@ -939,7 +939,7 @@ class AutoProcessorService {
   private async forceReprocessAllExclusive(): Promise<number> {
     const db = await initDB();
 
-    // Audit #6: a forced re-process must clear any pending backoff state.
+    // a forced re-process must clear any pending backoff state.
     this.retryState.clear();
 
     logger.info("[AutoProcessor] Forcing re-process of all items");
@@ -1006,7 +1006,7 @@ class AutoProcessorService {
       this.subscription.unsubscribe();
       this.subscription = null;
     }
-    // Audit #6: cancel any pending retry re-check and clear backoff state.
+    // cancel any pending retry re-check and clear backoff state.
     if (this.retryTimer) {
       clearTimeout(this.retryTimer);
       this.retryTimer = null;

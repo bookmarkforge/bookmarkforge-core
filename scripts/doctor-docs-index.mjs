@@ -13,7 +13,7 @@
  * The STATE vocabulary below deliberately stays `vivo`/`transitorio`/
  * `archivo`/`retirable`: it is a machine-readable contract shared with
  * `check-docs-retire.mjs`, `check-documented-doc-references.mjs` and
- * `doctor-legacy-schema-map.mjs`, and with the ADR/PENDIENTES prose naming it.
+ * `doctor-legacy-schema-map.mjs`, and with ADR prose naming it.
  * Each row carries exactly one of those tokens, and `check:no-spanish` only
  * counts a line once it holds three distinct Spanish words (or two plus an
  * accent), so the vocabulary costs nothing against the baseline.
@@ -79,7 +79,6 @@ function noteFor(file) {
   if (file.endsWith("openapi.yaml")) return "Versioned OpenAPI contract of the companion server.";
   if (/^docs\/ADR-/.test(file)) return "Architectural decision record.";
   if (MANUAL_BASENAMES.has(file.replace(/^docs\//, "").replace(/\.(?:md|yaml)$/i, ""))) return "Localized user manual.";
-  if (file === "docs/PENDIENTES.md") return "Register of pending work and known debt.";
   return "Document present in the checkout; review its state before retiring it.";
 }
 
@@ -87,14 +86,14 @@ export function generateCanonicalIndex() {
   const files = docsFiles();
   const rows = files.map((file) => ({
     file,
-    state: file === "docs/PENDIENTES.md" ? "transitorio" : "vivo",
+    state: "vivo",
     note: noteFor(file),
   }));
   const table = rows.map((row) => `| \`${row.file}\` | ${row.state} | ${row.note} |`);
   return [
     "# Documentation inventory — BookmarkForge",
     "",
-    "This index is generated from the documents present in the checkout. A deleted document stops appearing here; any retirement must be traced in `docs/PENDIENTES.md` or in an ADR.",
+    "This index is generated from the documents present in the checkout. A deleted document stops appearing here; any retirement must be traced in an ADR.",
     "",
     "## States",
     "",

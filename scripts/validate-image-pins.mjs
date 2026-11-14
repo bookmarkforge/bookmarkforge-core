@@ -11,7 +11,7 @@
  * Project-built images (bookmarkforge/web, bookmarkforge/api) are excluded —
  * they are tagged by SHA via the deploy pipeline, not pulled from a registry.
  *
- * Audit 2026-08-30: previously only GitHub Actions were pinned by SHA;
+ * previously only GitHub Actions were pinned by SHA;
  * Docker images were tag-only.
  */
 import { readFileSync, existsSync } from "node:fs";
@@ -40,7 +40,7 @@ function extractImages(content) {
   // FROM directives (Dockerfile)
   let match;
   while ((match = FROM_PATTERN.exec(content)) !== null) {
-    // Skip FROM ... AS alias — the image is the first token
+    // Skip FROM... AS alias — the image is the first token
     images.push(match[1].split(/\s+AS\s+/i)[0]);
   }
   // image: keys (compose)
@@ -52,8 +52,8 @@ function extractImages(content) {
 
 function isPinnedByDigest(image) {
   // Valid pin formats:
-  //   repo:tag@sha256:...
-  //   repo@sha256:... (rare, tagless)
+  // repo:tag@sha256:...
+  // repo@sha256:... (rare, tagless)
   return /@sha256:[a-f0-9]{64}/.test(image);
 }
 
@@ -67,7 +67,7 @@ function isBuildArg(image) {
 }
 
 function isBuildStageAlias(image) {
-  // Multi-stage build aliases (FROM ... AS base) — internal references,
+  // Multi-stage build aliases (FROM... AS base) — internal references,
   // not registry images. Common aliases: base, deps, build, web, api.
   return /^(base|deps|build|web|api|builder|final|runtime|dev|test)$/i.test(
     image,

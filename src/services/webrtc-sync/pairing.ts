@@ -1,4 +1,4 @@
-// Audit 2026-11-05 M2 (WebRTC peer authentication): mutual pairing proof for
+// M2 (WebRTC peer authentication): mutual pairing proof for
 // the manual QR sync. Possession of the SDP blob alone must not grant
 // read/write access to the vault; a pairing secret established out-of-band
 // (inside the QR payload, or typed by the user as a short code) gates the
@@ -143,9 +143,9 @@ export async function pairHelloMac(
 
 /**
  * Derive the per-session context once both nonces are known:
- *   sessionKey = HKDF-SHA256(secret, salt = hostNonce || clientNonce,
- *                            info = "bmf-p2p-session:v1")
- *   sas        = HMAC-SHA256(sessionKey, "bmf-p2p-sas:v1") → 6 digits
+ * sessionKey = HKDF-SHA256(secret, salt = hostNonce || clientNonce,
+ * info = "bmf-p2p-session:v1")
+ * sas = HMAC-SHA256(sessionKey, "bmf-p2p-sas:v1") → 6 digits
  * Binding the salt to BOTH nonces means a relay that swaps one side's hello
  * produces a different SAS on each screen — exactly what the user compares.
  */

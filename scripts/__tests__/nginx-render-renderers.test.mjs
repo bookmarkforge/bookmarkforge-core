@@ -35,7 +35,7 @@ const HEADERS_LINES = [
 ];
 const REPORTING_VALUE =
   'csp-endpoint="/csp-report"';
-// P1 (audit 2026-11-06): the report endpoint is origin-relative, so a
+// the report endpoint is origin-relative, so a
 // self-hosted deployment never posts violation reports to the product domain.
 const REPORTTO_VALUE =
   '{"group":"csp-endpoint","max_age":86400,"endpoints":[{"url":"/csp-report"}]}';
@@ -74,7 +74,7 @@ const SITEMAP_FIXTURE = `<?xml version="1.0" encoding="UTF-8"?>
     <xhtml:link rel="alternate" hreflang="ar" href="https://DOMAIN/ar/privacy-and-terms.html" />
   </url>
 </urlset>
-`.replaceAll("DOMAIN", "bookmarkforgeapp.com");
+`.replaceAll("DOMAIN", "www.bookmarkforgeapp.com");
 
 // ── rewriteHeadersCspValues ──────────────────────────────────────────────
 
@@ -167,8 +167,8 @@ describe("replaceSitemapLocs", () => {
     const stale = SITEMAP_FIXTURE.replaceAll("bookmarkforgeapp.com", "stale.example");
     const out = replaceSitemapLocs(stale);
     expect(out).not.toContain("stale.example");
-    expect(out).toContain("<loc>https://bookmarkforgeapp.com/ar/privacy-and-terms.html</loc>");
-    expect(out).toContain('hreflang="es" href="https://bookmarkforgeapp.com/es/"');
+    expect(out).toContain("<loc>https://www.bookmarkforgeapp.com/ar/privacy-and-terms.html</loc>");
+    expect(out).toContain('hreflang="es" href="https://www.bookmarkforgeapp.com/es/"');
     // Paths, lastmod, changefreq, priority survive.
     expect(out).toContain("<lastmod>2026-09-09</lastmod>");
     expect(out).toContain("<priority>1.0</priority>");

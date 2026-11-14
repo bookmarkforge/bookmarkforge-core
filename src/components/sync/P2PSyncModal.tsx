@@ -88,7 +88,7 @@ export const P2PSyncModal: React.FC<P2PSyncModalProps> = ({
   const [errorMessage, setErrorMessage] = useState("");
   const [progress, setProgress] = useState(0);
   const [encodedSDP, setEncodedSDP] = useState(""); // Host Offer or Client Answer
-  // Mutual-pairing UI state (audit 2026-11-05 M2): the host picks the mode,
+  // Mutual-pairing UI state: the host picks the mode,
   // the client follows whatever the scanned offer declares.
   const [pairingMode, setPairingMode] = useState<PairingModeChoice>("standard");
   const [sasCode, setSasCode] = useState<string | null>(null);

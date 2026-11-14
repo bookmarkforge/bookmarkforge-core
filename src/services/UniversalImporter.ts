@@ -2,19 +2,16 @@ import type { BookmarkForgeDB } from "../db/types";
 import type {
   BookmarkDocType,
   DocumentDocType,
-  FolderDocType,
 } from "../db/schema";
 import { logger } from "../utils/logger";
 import { generateId } from "../utils/id";
 import { hashString } from "../utils/crypto-core";
 import {
-  sanitizeTags,
   sanitizeUserInput,
   sanitizeUrl,
 } from "./SanitizationService";
 import { SanitizationService } from "./SanitizationService";
 import { isFreeLimitError } from "./LicenseService";
-import { STORAGE_KEYS } from "../constants/storage-keys";
 import JSZip from "jszip";
 import { attachmentStore } from "./documentAttachments";
 import {
@@ -34,315 +31,53 @@ import {
   parsePinboardPosts,
   type ParsedBookmarkCandidate,
 } from "./importer.alt-bookmarks";
+import {
+  clearPersistedRollback,
+  createImportExecutionOptions,
+  FreeTierImportLimitReached,
+  getLimitResult,
+  insertTrackedBookmark,
+  insertTrackedDocument,
+  insertTrackedFolder,
+  loadPendingRollback,
+  persistPendingRollback,
+  rollbackImport,
+  throwIfAborted,
+  type CSVRecordSource,
+  type ImportExecutionOptions,
+  type ImportJournal,
+  type ImportOptions,
+  type ImportResult,
+} from "./importer.journal";
+
+import {
+  normalizeImportDate,
+  normalizeOptionalImportDate,
+  normalizeImportedTitle,
+  normalizeImportedContent,
+  normalizeImportedBlocks,
+  normalizeImportedInteger,
+  normalizeImportedTags,
+  pocketReadStateFields,
+  pocketReadStateTags,
+  pocketHtmlStatus,
+  pocketCsvStatus,
+  normalizePocketHeader,
+  pocketPreviewFromRows,
+  normalizeImportedRelatedLinks,
+  resolveImportedFolderParent,
+  normalizeImportedDocumentLinks,
+  type PocketImportPreview,
+} from "./importer.normalizers";
+export type { PocketImportPreview } from "./importer.normalizers";
+
+// Public API preserved: ImportOptions moved to importer.journal.ts.
+export type { ImportOptions } from "./importer.journal";
 
 /** ZIP safety bounds (shared by the preflight and the per-entry checks). */
 const MAX_ZIP_ENTRY_BYTES = 50 * 1024 * 1024;
 const MAX_ZIP_UNCOMPRESSED_BYTES = 200 * 1024 * 1024;
 
-interface ImportResult {
-  success: boolean;
-  importedCount: number;
-  skippedCount: number;
-  error?: string;
-  rollbackIncomplete?: boolean;
-  /** True when the Free-tier wall stopped the import after a partial save. */
-  limitReached?: boolean;
-}
-
-interface RollbackResult {
-  completed: boolean;
-}
-
-interface ImportJournal {
-  bookmarkIds: string[];
-  documentIds: string[];
-  folderIds: string[];
-}
-
-type CSVRecordSource = Iterable<string> | AsyncIterable<string>;
-
-export interface ImportOptions {
-  /** Abort parsing and database writes for a closing/cancelled import. */
-  signal?: AbortSignal;
-  /** Progress callback in the inclusive range 0..100. */
-  onProgress?: (progress: number) => void;
-}
-
-type ImportExecutionOptions = ImportOptions & {
-  journal: ImportJournal;
-  recordsSeen: number;
-  importedCount: number;
-};
-
-/** Internal control-flow error: a limit is a partial, honest result, not a rollback. */
-class FreeTierImportLimitReached extends Error {
-  constructor(
-    readonly importedCount: number,
-    readonly skippedCount: number,
-  ) {
-    super("FREE_LIMIT_REACHED");
-    this.name = "FreeTierImportLimitReached";
-  }
-}
-
-function createImportExecutionOptions(
-  options: ImportOptions,
-): ImportExecutionOptions {
-  return {
-    ...options,
-    journal: createImportJournal(),
-    recordsSeen: 0,
-    importedCount: 0,
-  };
-}
-
-function createImportJournal(): ImportJournal {
-  return { bookmarkIds: [], documentIds: [], folderIds: [] };
-}
-
-const PENDING_ROLLBACK_STORAGE_KEY = STORAGE_KEYS.PENDING_IMPORT_ROLLBACK;
-const PENDING_ROLLBACK_VERSION = 2;
-const PENDING_ROLLBACK_TTL_MS = 24 * 60 * 60 * 1000;
-const MAX_STORED_ROLLBACK_IDS = 100_000;
-
-function isRollbackIdList(value: unknown): value is string[] {
-  return (
-    Array.isArray(value) &&
-    value.length <= MAX_STORED_ROLLBACK_IDS &&
-    value.every((id) => typeof id === "string" && id.length > 0 && id.length <= 200)
-  );
-}
-
-function loadPendingRollback(): ImportJournal | null {
-  if (typeof sessionStorage === "undefined") {return null;}
-  try {
-    const raw = sessionStorage.getItem(PENDING_ROLLBACK_STORAGE_KEY);
-    if (!raw) {return null;}
-    const parsed: unknown = JSON.parse(raw);
-    if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
-      sessionStorage.removeItem(PENDING_ROLLBACK_STORAGE_KEY);
-      return null;
-    }
-    const record = parsed as Record<string, unknown>;
-    const createdAt = record.createdAt;
-    const age = typeof createdAt === "number" ? Date.now() - createdAt : Infinity;
-    if (
-      record.version !== PENDING_ROLLBACK_VERSION ||
-      !Number.isFinite(createdAt) ||
-      age < 0 ||
-      age > PENDING_ROLLBACK_TTL_MS ||
-      !isRollbackIdList(record.bookmarkIds) ||
-      !isRollbackIdList(record.documentIds) ||
-      !isRollbackIdList(record.folderIds) ||
-      (record.bookmarkIds as string[]).length +
-        (record.documentIds as string[]).length +
-        (record.folderIds as string[]).length >
-        MAX_STORED_ROLLBACK_IDS
-    ) {
-      sessionStorage.removeItem(PENDING_ROLLBACK_STORAGE_KEY);
-      return null;
-    }
-    return {
-      bookmarkIds: record.bookmarkIds as string[],
-      documentIds: record.documentIds as string[],
-      folderIds: record.folderIds as string[],
-    };
-  } catch {
-    return null;
-  }
-}
-
-function persistPendingRollback(journal: ImportJournal): void {
-  if (typeof sessionStorage === "undefined") {return;}
-  try {
-    sessionStorage.setItem(
-      PENDING_ROLLBACK_STORAGE_KEY,
-      JSON.stringify({
-        version: PENDING_ROLLBACK_VERSION,
-        createdAt: Date.now(),
-        bookmarkIds: journal.bookmarkIds,
-        documentIds: journal.documentIds,
-        folderIds: journal.folderIds,
-      }),
-    );
-  } catch {
-    // Memory fallback remains active for this page if sessionStorage is unavailable.
-  }
-}
-
-function clearPersistedRollback(): void {
-  if (typeof sessionStorage === "undefined") {return;}
-  try {
-    sessionStorage.removeItem(PENDING_ROLLBACK_STORAGE_KEY);
-  } catch {
-    // Best-effort cleanup only.
-  }
-}
-
-const ROLLBACK_BATCH_SIZE = 500;
-const ROLLBACK_TIMEOUT_MS = 30_000;
-
-async function yieldRollbackBatch(): Promise<void> {
-  await new Promise<void>((resolve) => setTimeout(resolve, 0));
-}
-
-async function rollbackImport(
-  db: BookmarkForgeDB,
-  journal: ImportJournal,
-): Promise<RollbackResult> {
-  let bookmarkError: unknown;
-  let documentError: unknown;
-  const deadline = Date.now() + ROLLBACK_TIMEOUT_MS;
-  for (
-    let start = 0;
-    start < journal.bookmarkIds.length;
-    start += ROLLBACK_BATCH_SIZE
-  ) {
-    if (Date.now() >= deadline) {
-      bookmarkError ??= new Error("Bookmark rollback timed out");
-      break;
-    }
-    const ids = journal.bookmarkIds.slice(start, start + ROLLBACK_BATCH_SIZE);
-    try {
-      const bookmarks = await db.bookmarks
-        .find({ selector: { id: { $in: ids } } })
-        .exec();
-      if (bookmarks.length > 0) {
-        await db.bookmarks.bulkRemove(bookmarks);
-      }
-      await yieldRollbackBatch();
-    } catch (error) {
-      bookmarkError ??= error;
-    }
-  }
-  for (
-    let start = 0;
-    start < journal.documentIds.length;
-    start += ROLLBACK_BATCH_SIZE
-  ) {
-    if (Date.now() >= deadline) {
-      documentError ??= new Error("Document rollback timed out");
-      break;
-    }
-    const ids = journal.documentIds.slice(start, start + ROLLBACK_BATCH_SIZE);
-    try {
-      const documents = await db.documents
-        .find({ selector: { id: { $in: ids } } })
-        .exec();
-      if (documents.length > 0) {
-        await db.documents.bulkRemove(documents);
-      }
-      await yieldRollbackBatch();
-    } catch (error) {
-      documentError ??= error;
-    }
-  }
-  if (bookmarkError || documentError) {
-    logger.error("[UniversalImporter] Rollback failed", {
-      bookmarkError:
-        bookmarkError instanceof Error
-          ? bookmarkError.message
-          : bookmarkError
-            ? String(bookmarkError)
-            : undefined,
-      documentError:
-        documentError instanceof Error
-          ? documentError.message
-          : documentError
-            ? String(documentError)
-            : undefined,
-      bookmarkCount: journal.bookmarkIds.length,
-      documentCount: journal.documentIds.length,
-      folderCount: journal.folderIds.length,
-    });
-  }
-  let folderError: unknown;
-  for (
-    let start = 0;
-    start < journal.folderIds.length;
-    start += ROLLBACK_BATCH_SIZE
-  ) {
-    if (Date.now() >= deadline) {
-      folderError ??= new Error("Folder rollback timed out");
-      break;
-    }
-    const ids = journal.folderIds.slice(start, start + ROLLBACK_BATCH_SIZE);
-    try {
-      const folders = await db.folders
-        .find({ selector: { id: { $in: ids } } })
-        .exec();
-      if (folders.length > 0) {
-        await db.folders.bulkRemove(folders);
-      }
-      await yieldRollbackBatch();
-    } catch (error) {
-      folderError ??= error;
-    }
-  }
-  if (folderError) {
-    logger.error("[UniversalImporter] Folder rollback failed", {
-      error: folderError instanceof Error ? folderError.message : String(folderError),
-      folderCount: journal.folderIds.length,
-    });
-  }
-  return { completed: !bookmarkError && !documentError && !folderError };
-}
-
-async function insertTrackedBookmark(
-  db: BookmarkForgeDB,
-  document: BookmarkDocType,
-  journal?: ImportJournal,
-): Promise<void> {
-  await db.bookmarks.insert(document);
-  journal?.bookmarkIds.push(document.id);
-}
-
-async function insertTrackedDocument(
-  db: BookmarkForgeDB,
-  document: DocumentDocType,
-  journal?: ImportJournal,
-): Promise<void> {
-  await db.documents.insert(document);
-  journal?.documentIds.push(document.id);
-}
-
-async function insertTrackedFolder(
-  db: BookmarkForgeDB,
-  folder: FolderDocType,
-  journal?: ImportJournal,
-): Promise<void> {
-  await db.folders.insert(folder);
-  journal?.folderIds.push(folder.id);
-}
-
-function getLimitResult(
-  error: unknown,
-  options: ImportExecutionOptions,
-): ImportResult | null {
-  if (!isFreeLimitError(error) && !(error instanceof FreeTierImportLimitReached)) {
-    return null;
-  }
-  const importedCount =
-    error instanceof FreeTierImportLimitReached
-      ? error.importedCount
-      : options.importedCount;
-  const skippedCount =
-    error instanceof FreeTierImportLimitReached ? error.skippedCount : 0;
-  return {
-    success: true,
-    importedCount,
-    skippedCount,
-    limitReached: true,
-    error: `Imported ${importedCount}; Free limit reached. New items were not imported.`,
-  };
-}
-
-function throwIfAborted(signal?: AbortSignal): void {
-  if (!signal?.aborted) {return;}
-  const error = new Error("Import cancelled");
-  error.name = "AbortError";
-  throw error;
-}
 
 function reportProgress(options: ImportOptions, progress: number): void {
   options.onProgress?.(Math.max(0, Math.min(100, progress)));
@@ -354,7 +89,7 @@ const MAX_IMPORT_RECORDS = 100_000;
 /**
  * ZIP cumulative-size guard. Declared sizes are counted in the preflight; an
  * entry whose size JSZip does not expose is measured after decompression and
- * added exactly once. Audit 16-A3: the old code added declared sizes AND the
+ * added exactly once.: the old code added declared sizes AND the
  * measured size of every entry, so a legitimate export close to the limit
  * could be rejected as a bomb.
  */
@@ -630,292 +365,6 @@ async function yieldImportWork(
   throwIfAborted(options.signal);
 }
 
-/**
- * Normalizes an untrusted source timestamp into an ISO-8601 string that
- * satisfies RxDB's `format: "date-time"` validation. Source exports differ:
- * Pocket uses unix seconds, Raindrop uses unix seconds or millis, Notion uses
- * ISO strings, and invalid/empty values must not crash the schema. Falls back
- * to `now` when the value cannot be parsed.
- */
-function normalizeImportDate(value: string | undefined | null): string {
-  if (!value) {return new Date().toISOString();}
-  const trimmed = String(value).trim();
-  if (/^\d+$/.test(trimmed)) {
-    const n = Number(trimmed);
-    const ms = n < 1e12 ? n * 1000 : n; // unix seconds vs millis
-    const date = new Date(ms);
-    return Number.isNaN(date.getTime())
-      ? new Date().toISOString()
-      : date.toISOString();
-  }
-  const date = new Date(trimmed);
-  return Number.isNaN(date.getTime())
-    ? new Date().toISOString()
-    : date.toISOString();
-}
-
-function normalizeOptionalImportDate(value: unknown): string | undefined {
-  if (value === undefined || value === null) {return undefined;}
-  const trimmed = String(value).trim();
-  if (!trimmed) {return undefined;}
-  const numericValue = /^\d+$/.test(trimmed) ? Number(trimmed) : undefined;
-  const timestamp =
-    numericValue === undefined
-      ? new Date(trimmed).getTime()
-      : new Date(numericValue < 1e12 ? numericValue * 1000 : numericValue).getTime();
-  return Number.isNaN(timestamp) ? undefined : new Date(timestamp).toISOString();
-}
-
-const IMPORT_TITLE_MAX_LENGTH = 500;
-const IMPORT_CONTENT_MAX_LENGTH = 10_000;
-
-function normalizeImportedTitle(value: unknown, fallback: string): string {
-  const title =
-    typeof value === "string"
-      ? sanitizeUserInput(value, IMPORT_TITLE_MAX_LENGTH)
-      : "";
-  return title || fallback;
-}
-
-function normalizeImportedContent(value: unknown): string {
-  return typeof value === "string"
-    ? sanitizeUserInput(value, IMPORT_CONTENT_MAX_LENGTH)
-    : "";
-}
-
-function normalizeImportedBlocks(value: unknown): unknown[] {
-  if (!Array.isArray(value)) {return [];}
-
-  const sanitizeValue = (
-    candidate: unknown,
-    key: string | undefined,
-    depth: number,
-  ): unknown => {
-    if (depth > 10) {return undefined;}
-    if (typeof candidate === "string") {
-      const normalizedKey = key?.toLowerCase();
-      if (
-        normalizedKey === "url" ||
-        normalizedKey === "href" ||
-        normalizedKey === "src"
-      ) {
-        return sanitizeUrl(candidate);
-      }
-      return candidate.substring(0, IMPORT_CONTENT_MAX_LENGTH);
-    }
-    if (Array.isArray(candidate)) {
-      return candidate
-        .slice(0, 500)
-        .map((item) => sanitizeValue(item, key, depth + 1))
-        .filter((item) => item !== undefined);
-    }
-    if (candidate && typeof candidate === "object") {
-      return Object.fromEntries(
-        Object.entries(candidate as Record<string, unknown>)
-          .slice(0, 100)
-          .filter(([entryKey]) =>
-            entryKey.length <= 100 &&
-            entryKey !== "__proto__" &&
-            entryKey !== "constructor" &&
-            entryKey !== "prototype",
-          )
-          .map(([entryKey, entryValue]) => [
-            entryKey,
-            sanitizeValue(entryValue, entryKey, depth + 1),
-          ])
-          .filter(([, entryValue]) => entryValue !== undefined),
-      );
-    }
-    return candidate;
-  };
-
-  return normalizeImportedBlocksValue(sanitizeValue(value, undefined, 0));
-}
-
-function normalizeImportedBlocksValue(value: unknown): unknown[] {
-  return Array.isArray(value) ? value.filter((item) => item !== undefined) : [];
-}
-
-function normalizeImportedInteger(
-  value: unknown,
-  maximum: number,
-  fallback = 0,
-): number {
-  const numericValue = typeof value === "number" || typeof value === "string"
-    ? Number(value)
-    : NaN;
-  if (!Number.isFinite(numericValue) || !Number.isInteger(numericValue)) {
-    return fallback;
-  }
-  return Math.min(maximum, Math.max(0, numericValue));
-}
-
-function normalizeImportedTags(value: unknown, maximum = 100): string[] {
-  const candidates = typeof value === "string" ? [value] : value;
-  return sanitizeTags(candidates).slice(0, maximum);
-}
-
-type PocketReadStateFields = {
-  isRead?: boolean;
-  archiveTag?: string;
-};
-
-/**
- * Pocket exports use `Unread`, `Read`, and `Archive` as human-facing status
- * values. Read state belongs in the bookmark schema so it remains queryable
- * and survives exports; archive is kept as a tag because BookmarkForge has no
- * separate archive lifecycle yet (and must never turn it into isDeleted).
- */
-function pocketReadStateFields(value: unknown): PocketReadStateFields {
-  if (typeof value !== "string") {return {};}
-  const normalized = value.trim().toLowerCase().replace(/[._-]+/g, " ");
-  if (!normalized) {return {};}
-  if (/^unread$|^not read$/.test(normalized)) {
-    return { isRead: false };
-  }
-  if (/^read$/.test(normalized)) {
-    return { isRead: true };
-  }
-  if (/^archive$|^archived$/.test(normalized)) {
-    return { isRead: true, archiveTag: "pocket-archive" };
-  }
-  return {};
-}
-
-function pocketReadStateTags(tags: string[], fields: PocketReadStateFields): string[] {
-  return fields.archiveTag && !tags.includes(fields.archiveTag)
-    ? [...tags, fields.archiveTag]
-    : tags;
-}
-
-function pocketHtmlStatus(link: Element, headings: readonly Element[]): string | undefined {
-  let latestHeading: Element | undefined;
-  for (const heading of headings) {
-    // DOCUMENT_POSITION_FOLLOWING = 4. The last heading before this anchor
-    // is the Pocket section that contains it (Unread, Read, or Archive).
-    if ((heading.compareDocumentPosition(link) & 4) !== 0) {
-      latestHeading = heading;
-    }
-  }
-  return latestHeading?.textContent?.trim();
-}
-
-function pocketCsvStatus(getColumn: (name: string) => string): string {
-  return (
-    getColumn("status") ||
-    getColumn("state") ||
-    getColumn("read_status") ||
-    getColumn("readstate") ||
-    getColumn("read_state") ||
-    getColumn("archive") ||
-    getColumn("archived") ||
-    ""
-  );
-}
-
-function normalizePocketHeader(value: string): string {
-  return value
-    .replace(/^\uFEFF/, "")
-    .trim()
-    .toLowerCase()
-    .replace(/[\s-]+/g, "_");
-}
-
-export interface PocketImportPreview {
-  source: "pocket";
-  filename: string;
-  linkCount: number;
-  datedCount: number;
-  uniqueTagCount: number;
-  unreadCount: number;
-  archivedCount: number;
-  sampleTitles: string[];
-}
-
-function pocketPreviewFromRows(
-  filename: string,
-  rows: Array<{ title: string; url: string; date?: string; tags?: string; status?: string }>,
-): PocketImportPreview | null {
-  const links = rows.filter((row) => sanitizeUrl(row.url).startsWith("http"));
-  if (links.length === 0) {return null;}
-  const uniqueTags = new Set<string>();
-  let datedCount = 0;
-  let unreadCount = 0;
-  let archivedCount = 0;
-  for (const row of links) {
-    if (normalizeOptionalImportDate(row.date)) {datedCount++;}
-    for (const tag of (row.tags || "").split(/[,;|]/)) {
-      const normalized = tag.trim().toLowerCase();
-      if (normalized) {uniqueTags.add(normalized);}
-    }
-    const state = pocketReadStateFields(row.status);
-    if (state.isRead === false) {unreadCount++;}
-    if (state.archiveTag) {archivedCount++;}
-  }
-  return {
-    source: "pocket",
-    filename,
-    linkCount: links.length,
-    datedCount,
-    uniqueTagCount: uniqueTags.size,
-    unreadCount,
-    archivedCount,
-    sampleTitles: links
-      .map((row) => row.title.trim())
-      .filter(Boolean)
-      .slice(0, 3),
-  };
-}
-
-function normalizeImportedRelatedLinks(value: unknown): string[] {
-  if (!Array.isArray(value)) {return [];}
-  const links: string[] = [];
-  const seen = new Set<string>();
-  for (const candidate of value) {
-    if (links.length >= 100) {break;}
-    if (typeof candidate !== "string" || candidate.length > 2_000) {continue;}
-    const link = sanitizeUrl(candidate);
-    if (!link.startsWith("http") || seen.has(link)) {continue;}
-    seen.add(link);
-    links.push(link);
-  }
-  return links;
-}
-
-function resolveImportedFolderParent(
-  id: string,
-  requestedParentId: string,
-  parents: ReadonlyMap<string, string>,
-  maxDepth = 20,
-): string {
-  if (requestedParentId === "root") {return "root";}
-  let current = requestedParentId;
-  for (let depth = 0; depth < maxDepth; depth++) {
-    if (current === id) {return "root";}
-    const parent = parents.get(current);
-    if (!parent || parent === "root") {return current;}
-    current = parent;
-  }
-  return "root";
-}
-
-function normalizeImportedDocumentLinks(
-  value: unknown,
-  documentIdMap: ReadonlyMap<string, string>,
-): string[] {
-  if (!Array.isArray(value)) {return [];}
-  const links: string[] = [];
-  const seen = new Set<string>();
-  for (const candidate of value) {
-    if (links.length >= 100) {break;}
-    if (typeof candidate !== "string" || candidate.length > 200) {continue;}
-    const link = documentIdMap.get(candidate);
-    if (!link || seen.has(link)) {continue;}
-    seen.add(link);
-    links.push(link);
-  }
-  return links;
-}
 
 /**
  * UniversalImporter - Handles importing data from multiple formats
@@ -935,9 +384,9 @@ export class UniversalImporter {
   static async previewPocketFile(file: File): Promise<PocketImportPreview | null> {
     const filename = file.name;
     const lowerFilename = filename.toLowerCase();
-    // Audit 16-A3: only Pocket-shaped files are previewable, and the import
+    // only Pocket-shaped files are previewable, and the import
     // size guard must run BEFORE the file is read. The previous order read
-    // any file (including giant .json/.zip imports) in full, defeating the
+    // any file (including giant.json/.zip imports) in full, defeating the
     // guard in the UI path.
     if (
       UniversalImporter.getSizeError(file) !== null ||
@@ -1425,7 +874,7 @@ export class UniversalImporter {
 
   /**
    * Parse Raindrop CSV export format
-   * Columns: title, url, tags, domain, created, ...
+   * Columns: title, url, tags, domain, created,...
    */
   private async importFromRaindropCSV(
     db: BookmarkForgeDB,
@@ -1538,7 +987,7 @@ export class UniversalImporter {
 
   /**
    * Parse Omnivore JSON export format
-   * Structure: { data: { articles: [{ id, title, url, savedAt, description, labels: [{ name }], ... }] } }
+   * Structure: { data: { articles: [{ id, title, url, savedAt, description, labels: [{ name }],... }] } }
    */
   private async importFromOmnivoreJSON(
     db: BookmarkForgeDB,
@@ -2201,7 +1650,7 @@ export class UniversalImporter {
           counters.skippedCount++;
         }
       } else if (line) {
-        // Audit 16-E2: rows with a disallowed scheme (javascript:, data:,
+        // rows with a disallowed scheme (javascript:, data:,
         // file:, …) are counted as skipped instead of falling through the
         // loop silently — the caller can now show an accurate count.
         counters.skippedCount++;
@@ -2250,7 +1699,7 @@ export class UniversalImporter {
         error: `ZIP contains too many entries; maximum is ${UniversalImporter.MAX_ZIP_ENTRIES}.`,
       };
     }
-    // Audit 16-A3: the preflight only READS metadata. It must not add to the
+    // the preflight only READS metadata. It must not add to the
     // running total, because entries whose size is unknown are then measured
     // after decompression below (the old code added both and could abort a
     // legitimate archive on double counting).

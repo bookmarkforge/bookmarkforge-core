@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any -- RxDB's RxStorage
  * generics are intentionally opaque; this wrapper mirrors the any-heavy
  * plumbing of rxdb's own encryption-crypto-js plugin. */
-// F-06 (audit follow-up): authenticated-at-rest encryption for RxDB.
+// Authenticated-at-rest encryption for RxDB.
 //
 // RxDB's bundled `wrappedKeyEncryptionCryptoJsStorage` encrypts schema
 // fields with CryptoJS AES — a deterministic, UNauthenticated cipher. At
@@ -12,8 +12,8 @@
 // Argon2id/HKDF primitives the rest of the vault uses) AROUND the inner
 // CryptoJS ciphertext, WITHOUT removing the inner layer:
 //
-//   raw storage ← outer AES-GCM (authenticated, this file)
-//              ← inner CryptoJS AES (RxDB field encryption, unchanged)
+// raw storage ← outer AES-GCM (authenticated, this file)
+// ← inner CryptoJS AES (RxDB field encryption, unchanged)
 //
 // Why keep both? The inner layer is what RxDB's schema `encrypted` array
 // knows about (it strips those fields into string placeholders); the outer
@@ -25,9 +25,9 @@
 // Legacy compatibility: rows written before this wrapper exist only as
 // inner CryptoJS ciphertext (no outer envelope). Writes always apply the
 // outer envelope; reads accept BOTH shapes:
-//   - values starting with the envelope marker (v4:/v5:/v6:) → decrypt the
-//     outer envelope, hand the inner ciphertext to the inner layer
-//   - anything else → pass through untouched (legacy inner-only row)
+// - values starting with the envelope marker (v4:/v5:/v6:) → decrypt the
+// outer envelope, hand the inner ciphertext to the inner layer
+// - anything else → pass through untouched (legacy inner-only row)
 // Collection schema version bumps force RxDB to rewrite every row through
 // this storage, migrating legacy rows to the authenticated format.
 //
@@ -58,7 +58,7 @@ import { rowFieldPurpose } from "../utils/envelope-purposes";
 import { logger } from "../utils/logger";
 
 /**
- * Envelope wire markers emitted by crypto-core: v4/v5 (legacy) and v6 (A-1:
+ * Envelope wire markers emitted by crypto-core: v4/v5 (legacy) and v6 (
  * per-vault Argon2id salt). A v6 payload that is NOT recognised here would be
  * passed through to RxDB as if it were a pre-F-06 inner-only row, surfacing the
  * raw `v6:` envelope as the field value — the multiuser/migration e2e catches
@@ -134,7 +134,7 @@ export function authenticatedEncryptionStorage(
       // storage as our outer ciphertext alone — losing the inner layer.
       const instance = await storage.createStorageInstance(rawParams);
 
-      // ── A4 (audit 2026-11-05): per-vault keyed `urlHash` ────────────
+      // ── per-vault keyed `urlHash` ────────────
       //
       // `urlHash` remains a deterministic, indexed 64-hex dedup key, but the
       // persisted/matched value is HMAC-SHA256(K_urlHash, sha256hex(url))
@@ -145,11 +145,11 @@ export function authenticatedEncryptionStorage(
       // attack on metadata; the keyed form is useless outside this vault.
       //
       // The transform is symmetric and vault-local:
-      //  - WRITES recompute it from the document's own `url` (falling back
-      //    to the incoming `urlHash`), so a replicated row is re-keyed to
-      //    THIS vault's key instead of carrying the peer's value.
-      //  - QUERIES/COUNT rewrite `urlHash` selector operands the same way,
-      //    so callers keep passing plain SHA-256 hex from `hashString`.
+      // - WRITES recompute it from the document's own `url` (falling back
+      // to the incoming `urlHash`), so a replicated row is re-keyed to
+      // THIS vault's key instead of carrying the peer's value.
+      // - QUERIES/COUNT rewrite `urlHash` selector operands the same way,
+      // so callers keep passing plain SHA-256 hex from `hashString`.
       // Only the bookmarks collection carries urlHash.
       const KEYED_URL_HASH_INFO = "bmf-url-hash:v1";
       const isBookmarksCollection = collectionName === "bookmarks";
@@ -189,7 +189,7 @@ export function authenticatedEncryptionStorage(
           typeof value === "object" &&
           !(value instanceof RegExp)
         ) {
-          // Operator object ({ $in: [...], $eq: ... }): rewrite each leaf.
+          // Operator object ({ $in: [...], $eq:... }): rewrite each leaf.
           const out: AnyDoc = {};
           for (const [op, leaf] of Object.entries(value)) {
             out[op] = await transformUrlHashOperand(leaf);
@@ -267,7 +267,7 @@ export function authenticatedEncryptionStorage(
           return docData;
         }
         const copy: AnyDoc = { ...(docData as AnyDoc) };
-        // A4: re-key urlHash BEFORE the field loop turns `url` into
+        // re-key urlHash BEFORE the field loop turns `url` into
         // ciphertext — the hash must be derived from the plaintext URL.
         // Recomputing from `url` (not trusting the incoming urlHash) is what
         // makes replicated rows adopt THIS vault's key.
@@ -363,7 +363,7 @@ export function authenticatedEncryptionStorage(
             }
             setByPath(copy, path, restored);
           } catch (err) {
-            // B7: only an AES-GCM authentication failure (WebCrypto
+            // only an AES-GCM authentication failure (WebCrypto
             // OperationError) means "wrong password". A malformed envelope,
             // truncated payload or unsupported format is row corruption —
             // reporting it as DB1 would send the user to re-enter a
@@ -402,7 +402,7 @@ export function authenticatedEncryptionStorage(
       }
 
       // ── wrap the instance (self-contained; wrapRxStorageInstance is not
-      //    a public RxDB export) ───────────────────────────────────────
+      // a public RxDB export) ───────────────────────────────────────
       return wrapAuthInstance(
         schema as RxJsonSchemaLike,
         instance,

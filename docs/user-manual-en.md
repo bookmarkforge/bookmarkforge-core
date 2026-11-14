@@ -196,7 +196,7 @@ The brain of the application:
 - No constant tracking
 - License proof signed with RSA-PSS (SHA-256, salt 32)
 - Re-validation every 48 hours when connected
-- Proofs older than 30 days are rejected by the entitlement server
+- Offline grace keeps Pro access until the license expires — proofs have no fixed maximum age
 
 ---
 

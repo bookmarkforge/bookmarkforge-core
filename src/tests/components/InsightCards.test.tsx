@@ -8,7 +8,7 @@ vi.mock("react-i18next", () => {
   return { useTranslation: () => ({ t, i18n: { language: "en" } }) };
 });
 
-// No esparcir props de motion (whileHover/variants/...) al DOM: no son
+// Do not spread motion props (whileHover/variants/...) onto the DOM: they are not
 // valid attributes and React emits warnings that mask the real ones.
 vi.mock("motion/react", async () => {
   const { createMotionMock } = await import("../mocks/motion");

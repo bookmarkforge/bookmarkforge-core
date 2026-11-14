@@ -2,17 +2,17 @@
   "lang": "hi",
   "langName": "हिन्दी",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/hi/",
+  "canonical": "https://www.bookmarkforgeapp.com/hi/",
   "ogLocale": "hi_IN",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: निजी, लोकल-फ़र्स्ट बुकमार्क मैनेजर और रीडिंग लिस्ट",
   "description": "Raindrop आपके बुकमार्क अपने सर्वर पर रखता है। BookmarkForge उन्हें आपके कंप्यूटर पर रखता है — इतना लॉक कि वे भी नहीं पढ़ सकते। एक बार भुगतान: $59 अर्ली बर्ड लाइफ़टाइम एक्सेस (नियमित कीमत से पहले $20 बचाएँ)",
   "ogTitle": "BookmarkForge: निजी, लोकल-फ़र्स्ट बुकमार्क मैनेजर और रीडिंग लिस्ट",
   "ogDescription": "Raindrop आपके बुकमार्क अपने सर्वर पर रखता है। BookmarkForge उन्हें आपके कंप्यूटर पर रखता है — इतना लॉक कि वे भी नहीं पढ़ सकते। एक बार भुगतान: $59 अर्ली बर्ड लाइफ़टाइम एक्सेस (नियमित कीमत से पहले $20 बचाएँ)",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: निजी, लोकल-फ़र्स्ट बुकमार्क मैनेजर और रीडिंग लिस्ट",
   "twitterDescription": "Raindrop आपके बुकमार्क अपने सर्वर पर रखता है। BookmarkForge उन्हें आपके कंप्यूटर पर रखता है — इतना लॉक कि वे भी नहीं पढ़ सकते। एक बार भुगतान: $59 अर्ली बर्ड लाइफ़टाइम एक्सेस (नियमित कीमत से पहले $20 बचाएँ)",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "मुख्य सामग्री पर जाएं",
   "navBrandAria": "BookmarkForge होम",
   "navAriaLabel": "मुख्य नेविगेशन",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "मेनू बंद करें",
   "hero": {
     "badge": "एक बार भुगतान · कोई सब्सक्रिप्शन नहीं",
-    "title": "जो भी आप सेव करते हैं, वो आपके कंप्यूटर पर रहता है। <span class=\"accent-text\">सब कुछ।</span>",
-    "subtitle": "Raindrop आपके बुकमार्क अपने सर्वर पर रखता है — और हर साल पैसे लेता है। BookmarkForge उन्हें आपके कंप्यूटर पर रखता है, ऐसी चाबी से लॉक जो सिर्फ आपके पास है। कोई अकाउंट नहीं। कोई मासिक शुल्क नहीं। कोई आपके कंधे पर नहीं झांक रहा।",
-    "ctaPrimary": "तुरंत आज़माएँ (खाता ज़रूरी नहीं)",
-    "ctaSecondary": "प्राइसिंग देखें",
+    "title": "निजी बुकमार्क मैनेजर जो <span class=\"accent-text\">सब कुछ आपके डिवाइस पर रखता है।</span>",
+    "subtitle": "शोधकर्ताओं, छात्रों और उन सभी के लिए जो अपनी रीडिंग हिस्ट्री किसी क्लाउड कंपनी को नहीं देना चाहते। पेज, लेख और PDF सेव करें, कीवर्ड या अर्थ से खोजें, और सब कुछ अपने कंप्यूटर पर एन्क्रिप्टेड रखें। कोई अकाउंट नहीं। कोई सब्सक्रिप्शन नहीं।",
+    "ctaPrimary": "मुफ़्त शुरू करें — बिना साइनअप",
+    "ctaSecondary": "देखें यह कैसे काम करता है",
     "pillars": [
       {
-        "strong": "प्राइवेट",
-        "text": "आपके सेव किए गए पेज कभी आपके कंप्यूटर से बाहर नहीं जाते"
+        "strong": "निजी",
+        "text": "आपके डिवाइस पर एन्क्रिप्टेड"
       },
       {
-        "strong": "लॉक",
-        "text": "वे भी उन्हें नहीं पढ़ सकते"
+        "strong": "हमेशा के लिए आपका",
+        "text": "कोई सब्सक्रिप्शन या मासिक शुल्क नहीं"
       },
       {
-        "strong": "ऑफ़लाइन",
-        "text": "प्लेन में, टनल में, जहाँ भी हो, काम करता है"
+        "strong": "ऑफ़लाइन काम करता है",
+        "text": "कहीं भी सेव और पढ़ें, इंटरनेट के बिना भी"
       },
       {
-        "strong": "एक बार भुगतान",
-        "text": "$59 अर्ली बर्ड लाइफ़टाइम एक्सेस (नियमित कीमत से पहले $20 बचाएँ)"
+        "strong": "हमेशा मुफ़्त",
+        "text": "500 बुकमार्क मुफ़्त, ज़्यादा चाहिए तभी Pro लें"
       }
     ],
     "announce": "⚡ लोकल AI अनुवाद (जल्द आ रहा है)"
@@ -408,15 +408,11 @@
         "cta": "Pro $59 Early Bird लें",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "फिर $79 रेगुलर",
-        "sla": "सपोर्ट: ईमेल 48h (सोम–शुक्र)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Pro $79 Regular लें",
-        "cta2Class": "btn-secondary"
+        "sla": "सपोर्ट: ईमेल 48h (सोम–शुक्र)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-hi#pricing\">Learn more</a>"
+    "legal": "एक बार भुगतान · 12 महीने के अपडेट शामिल · v1 हमेशा के लिए काम करता है · 30-दिन की मनी-बैक गारंटी। <a href=\"/privacy-and-terms.html#terms\">शर्तें</a>"
   },
   "faq": {
     "title": "आम सवाल",
@@ -509,7 +505,8 @@
         "Contact"
       ],
       "helpCenter": "हेल्प सेंटर",
-      "errorCodes": "एरर कोड्स"
+      "errorCodes": "एरर कोड्स",
+      "hours": "48 घंटे के भीतर जवाब, सोम–शुक्र (CET)"
     },
     "copyright": "© 2026 BookmarkForge. सर्वाधिकार सुरक्षित।",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "आपका प्राइवेट, AI-पावर्ड नॉलेज वॉल्ट। 100% लोकल-फ़र्स्ट। प्राइवेट Pocket विकल्प। फ्री: 500 बुकमार्क।",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "हेल्प सेंटर — FAQ, ट्रबलशूटिंग और सपोर्ट SLA | BookmarkForge",
+    "title": "हेल्प सेंटर — FAQ, ट्रबलशूटिंग और सपोर्ट SLA",
     "description": "BookmarkForge हेल्प सेंटर: लाइफटाइम v1 प्राइसिंग, ट्रबलशूटिंग, एरर कोड्स BF-E*, सपोर्ट SLA और रिडैक्टेड डायग्नॉस्टिक रिपोर्ट कैसे कॉपी करें।",
     "ogTitle": "हेल्प सेंटर — BookmarkForge",
     "ogDescription": "FAQ, ट्रबलशूटिंग, एरर कोड्स और सपोर्ट SLA। जानें लाइफटाइम v1 कैसे काम करता है और डायग्नॉस्टिक रिपोर्ट कैसे कॉपी करें।",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 रेगुलर",
-      "proPriceTraction": "$99 ट्रैक्शन के बाद",
+      "proPriceTraction": "",
       "proDescription": "अनलिमिटेड बुकमार्क, 5 डिवाइस + P2P सिंक, लोकल AI (WebLLM/Ollama) + RAG + एक्सपर्ट एजेंट्स, फ़्लैशकार्ड, PDF/OCR, 7 एक्सपोर्ट फ़ॉर्मैट्स, वॉल्ट। <em>v1 का लाइफटाइम · 12 महीने फ़ीचर अपडेट · सिक्योरिटी हमेशा · v2 60% ऑफ</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "सेल्फ-सर्विस: ये हेल्प सेंटर + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "सेल्फ-सर्विस: ये हेल्प सेंटर + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "बेस्ट एफ़र्ट (कम्युनिटी)",
       "freeWhatToDo": "नीचे BF-E* कोड सर्च करें + पोस्ट करने से पहले डायग्नॉस्टिक कॉपी करें (<a href=\"#diagnostics\">§Diagnostics</a>)",
       "proChannel": "ईमेल <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (सब्जेक्ट: Pro)",

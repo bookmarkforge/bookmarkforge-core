@@ -2,17 +2,17 @@
   "lang": "hr",
   "langName": "Hrvatski",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/hr/",
+  "canonical": "https://www.bookmarkforgeapp.com/hr/",
   "ogLocale": "hr_HR",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: privatni lokalni upravitelj knjižnih oznaka s popisom za čitanje",
   "description": "Raindrop drži vaše zabilješke na svojim poslužiteljima. BookmarkForge drži ih na vašem računalu — zaključane tako da ih ni mi ne možemo pročitati. Jedno plaćanje: $59 doživotni pristup uz early bird (uštedite $20 prije redovne cijene). Besplatno: 500 zabilješki.",
   "ogTitle": "BookmarkForge: privatni lokalni upravitelj knjižnih oznaka s popisom za čitanje",
   "ogDescription": "Raindrop drži vaše zabilješke na svojim poslužiteljima. BookmarkForge drži ih na vašem računalu — zaključane tako da ih ni mi ne možemo pročitati. Jedno plaćanje: $59 doživotni pristup uz early bird (uštedite $20 prije redovne cijene). Besplatno: 500 zabilješki.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: privatni lokalni upravitelj knjižnih oznaka s popisom za čitanje",
   "twitterDescription": "Raindrop drži vaše zabilješke na svojim poslužiteljima. BookmarkForge drži ih na vašem računalu — zaključane tako da ih ni mi ne možemo pročitati. Jedno plaćanje: $59 doživotni pristup uz early bird (uštedite $20 prije redovne cijene). Besplatno: 500 zabilješki.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Preskoči na glavni sadržaj",
   "navBrandAria": "BookmarkForge — početna stranica",
   "navAriaLabel": "Glavna navigacija",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "Zatvori izbornik",
   "hero": {
     "badge": "Jednokratno plaćanje · Bez pretplate",
-    "title": "Sve što spremite ostaje na vašem računalu. <span class=\"accent-text\">Sve.</span>",
-    "subtitle": "Raindrop drži vaše zabilješke na svojim poslužiteljima — i svake godine vam naplaćuje. BookmarkForge drži ih na vašem računalu, zaključane ključem koji imate samo vi. Bez računa. Bez mjesečnih naknada. Bez ikoga tko bi vam gledao preko ramena.",
-    "ctaPrimary": "Isprobajte odmah (bez računa)",
-    "ctaSecondary": "Prikaži cijene",
+    "title": "Privatni upravitelj oznaka koji <span class=\"accent-text\">drži sve na vašem uređaju.</span>",
+    "subtitle": "Za istraživače, studente i sve koji radije ne predaju povijest čitanja nekoj cloud tvrtki. Spremite stranice, članke i PDF-ove, pronađite ih po ključnoj riječi ili značenju i držite sve šifrirano na vlastitom računalu. Bez računa. Bez pretplate.",
+    "ctaPrimary": "Započnite besplatno — bez registracije",
+    "ctaSecondary": "Pogledajte kako radi",
     "pillars": [
       {
         "strong": "Privatno",
-        "text": "vaše spremljene stranice nikada ne napuštaju vaše računalo"
+        "text": "šifrirano na vašem uređaju"
       },
       {
-        "strong": "Zaključano",
-        "text": "čak ni mi ne možemo pročitati"
+        "strong": "Vaše zauvijek",
+        "text": "bez pretplata i mjesečnih naknada"
       },
       {
-        "strong": "Izvan mreže",
-        "text": "radi u zrakoplovu, u tunelu, posvuda"
+        "strong": "Radi offline",
+        "text": "spremite i čitajte bilo gdje, čak i bez interneta"
       },
       {
-        "strong": "Plata jednom",
-        "text": "$59 doživotni pristup uz early bird (uštedite $20 prije redovne cijene)"
+        "strong": "Besplatno zauvijek",
+        "text": "500 oznaka besplatno, Pro samo ako želite više"
       }
     ],
     "announce": "⚡ Lokalno AI prevođenje (uskoro)"
@@ -408,15 +408,11 @@
         "cta": "Kupi Pro $59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "zatim $79 po redovnoj cijeni",
-        "sla": "Podrška: e-pošta 48h (Pon–Pet)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Nabavite Pro za $79 (redovna cijena)",
-        "cta2Class": "btn-secondary"
+        "sla": "Podrška: e-pošta 48h (Pon–Pet)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-hr#pricing\">Learn more</a>"
+    "legal": "Jednokratna uplata · 12 mjeseci ažuriranja uključeno · v1 radi zauvijek · 30-dnevno jamstvo povrata novca. <a href=\"/privacy-and-terms.html#terms\">Uvjeti</a>"
   },
   "faq": {
     "title": "Česta pitanja",
@@ -509,7 +505,8 @@
         "Kontakt"
       ],
       "helpCenter": "Centar za pomoć",
-      "errorCodes": "Šifre pogrešaka"
+      "errorCodes": "Šifre pogrešaka",
+      "hours": "Odgovori unutar 48 h, pon–pet (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Sva prava pridržana.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "Vaš privatni sef znanja s AI-jem. 100% lokalno-prvi. Privatna alternativa za Pocket. Besplatno: 500 zabilješki.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "Centar za pomoć — FAQ, rješavanje problema i SLA podrške | BookmarkForge",
+    "title": "Centar za pomoć — FAQ, rješavanje problema i SLA podrške",
     "description": "Centar za pomoć BookmarkForgea: cijene za Lifetime v1, rješavanje problema, šifre pogrešaka BF-E*, SLA podrške i kako kopirati redigirani izvještaj za dijagnostiku.",
     "ogTitle": "Centar za pomoć — BookmarkForge",
     "ogDescription": "FAQ, rješavanje problema, šifre pogrešaka i SLA podrške. Saznajte kako funkcionira Lifetime v1 i kako kopirati izvještaj za dijagnostiku.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 po redovnoj cijeni",
-      "proPriceTraction": "$99 nakon dokazane potražnje",
+      "proPriceTraction": "",
       "proDescription": "Neograničene zabilješke, 5 uređaja + P2P sinkronizacija, lokalni AI (WebLLM/Ollama) + RAG + stručni agenti, kartice, PDF/OCR, 7 formata izvoza, sef. <em>Lifetime v1 · 12 mjeseci nadogradnji značajki · Sigurnost zauvijek · v2 60% popusta</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "Samopomoć: ovaj Centar za pomoć + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "Samopomoć: ovaj Centar za pomoć + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "Najbolji mogući učinak (zajednica)",
       "freeWhatToDo": "Prije objave pretražite BF-E* šifru u nastavku i kopirajte dijagnostiku (<a href=\"#diagnostics\">§Dijagnostika</a>)",
       "proChannel": "E-pošta <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (tema: Pro)",

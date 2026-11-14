@@ -55,7 +55,6 @@ const KNOWN_GATES = {
   "check:license-keys": "security",
   "check:server-log-ip-privacy": "security",
   "check:static-brand": "meta",
-  "check:audit-drift": "security",
   "check:override-cve": "security",
   // Route-table completeness: every dispatched HTTP route is declared, no
   // policy is dead, and a paid namespace cannot be re-added without an
@@ -134,14 +133,6 @@ const KNOWN_GATES = {
   "check:baseline-drift": "meta",
   "check:baseline-gaps": "meta",
   "check:tailwind-drift": "meta",
-  // Ledger freshness (ADR-064): the status table of docs/audit.md is a
-  // contract of "command → observable" that nothing re-ran — the typecheck row
-  // described a different error census and the chain-size claim counted the
-  // scripts declared in package.json instead of the gates the chain runs. The
-  // gate re-executes the table (chain/exec/self in the chain, deep/network in
-  // CI's named step). Documentation-format gate: ADR-064 names the failure
-  // class and maps it onto ADR-028's drift-detection model, like ADR-047.
-  "check:audit-freshness": "docs",
   // Factual claim-drift (ADR-047): user-visible numbers must match the code
   // constants (password minimum, 24-word phrase, device limits, Argon2id MiB,
   // backup intervals, prices). Documentation-format gate: ADR-047 names the
@@ -212,7 +203,7 @@ const KNOWN_GATES = {
   // clone cannot run it until the maintainer regenerates the snapshot. In the
   // offline chain it would be red everywhere for the wrong reason.
   "check:audit-script-snapshot": "meta",
-  // Assertion-integrity ratchet (docs/ops-nightly.md §1, docs/PENDIENTES.md):
+  // Assertion-integrity ratchet (docs/ops-nightly.md §1):
   // a test that passes when the feature it names is absent is not coverage —
   // the nightly "Human-like E2E" job was green over 1657 such tests. On demand
   // here and in nightly.yml's coverage step, like the other audit gates: it is
@@ -285,8 +276,7 @@ export function chainGateTokens(pkg) {
 
 /**
  * The gate tokens the chain runs; throws when there is no chain to freeze.
- * (check-audit-freshness shares `chainGateTokens` and reports the missing
- * chain as a row failure instead of crashing.)
+ * (Reports the missing chain as a row failure instead of crashing.)
  */
 export function checkChain(pkg) {
   const script = pkg?.scripts?.check;

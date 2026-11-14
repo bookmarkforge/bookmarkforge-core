@@ -339,7 +339,7 @@ describe("DocumentManager", () => {
     expect(gridIcons.length).toBeGreaterThanOrEqual(1);
   });
 
-  // ── Audit 16-D1: a deleted folder must not strand its documents ──
+  // ── a deleted folder must not strand its documents ──
 
   it("resets the folder selection when the selected folder is deleted", async () => {
     const folder = makeFolder({ id: "f-vanish", title: "Vanishing Folder" });
@@ -375,7 +375,7 @@ describe("DocumentManager", () => {
     mockUseRxQuery.mockImplementation(() => ({ result: [] }));
   });
 
-  // ── Audit 16-D2: soft-deleted documents stay visible until refresh ──
+  // ── soft-deleted documents stay visible until refresh ──
 
   it("keeps a soft-deleted document visible in the list (no local refetch after delete)", async () => {
     const mockPatch = vi.fn().mockResolvedValue({});
@@ -408,7 +408,7 @@ describe("DocumentManager", () => {
       );
     });
     await act(async () => {});
-    // Documented gap (16-D2): the deleted document is still rendered because
+    // Documented gap: the deleted document is still rendered because
     // the component relies on RxDB reactivity instead of refetching; it
     // disappears once the live query emits.
     expect(screen.getAllByText("Lingering Doc").length).toBeGreaterThan(0);
@@ -840,7 +840,7 @@ describe("DocumentManager - Branch coverage maximization", () => {
     const sparkleIcons = screen.getAllByTestId("icon-Sparkles");
     await user.click(sparkleIcons[0]!.closest("button")!);
     const input = screen.getByLabelText("app_searchPlaceholder");
-    // Placeholder should change (t() returns the key; ?? fallback not triggered)
+    // Placeholder should change (t() returns the key; the ?? fallback is not triggered)
     expect(input.getAttribute("placeholder")).toBe(
       "app_semanticSearchPlaceholder",
     );

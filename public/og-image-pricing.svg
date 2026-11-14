@@ -74,6 +74,6 @@
   <g>
     <circle cx="667" cy="532" r="9" fill="none" stroke="#00aeef" stroke-width="2"/>
     <path d="M 662.5 532 l 3.5 3.5 l 6 -6.5" stroke="#00aeef" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    <text x="687" y="538" font-family="system-ui, -apple-system, sans-serif" font-size="17" fill="#e5e7eb" text-anchor="start">Email support + early access</text>
+    <text x="687" y="538" font-family="system-ui, -apple-system, sans-serif" font-size="17" fill="#e5e7eb" text-anchor="start">Priority email support</text>
   </g>
 </svg>

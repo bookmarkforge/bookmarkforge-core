@@ -19,7 +19,7 @@
  *     registered KNOWN_GATES security gate — this script re-runs them, it does
  *     not re-implement anything.
  *   - Sub-second subset only: gates that cost >1 s (CVE scans hit the
- *     registry, check:audit-drift scans history) stay in the full chain.
+ *     registry, history scans) stay in the full chain.
  *   - It can never replace `npm run check`: it is a fast signal, not the gate.
  *
  * Reorder candidates: when a gate here fails, remember which one — the person

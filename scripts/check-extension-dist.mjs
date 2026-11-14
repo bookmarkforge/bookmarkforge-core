@@ -342,7 +342,7 @@ function run() {
   return failures;
 }
 
-// Direct-invocation guard (matches scripts/check-extension-csp.mjs, scripts/audit-anchors.mjs).
+// Direct-invocation guard (matches scripts/check-extension-csp.mjs).
 function isDirectInvocation() {
   const entry = process.argv[1];
   if (!entry) return false;

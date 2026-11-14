@@ -92,21 +92,11 @@ const mocks = vi.hoisted(() => ({
   },
 }));
 
-// ADR-052 Fase 3: `v5:` reads fail closed by default (VITE_ALLOW_V5_LEGACY_READ
-// unset → LegacyV5FormatRemovedError). This anchored suite pins the LEGACY v5
-// write shape ("encrypts as v5 without a vault salt") and the migration
-// read-compat path ("reads a legacy v5 payload after a vault salt is
-// installed") — both behaviours live behind the operator opt-in, so the flag
-// must be set BEFORE env.config snapshots it at module load (vi.hoisted runs
-// before the static imports). The afterAll below unsets it so a reused worker
-// cannot leak the migration switch into a later test file's env snapshot.
-vi.hoisted(() => {
-  process.env.VITE_ALLOW_V5_LEGACY_READ = "true";
-});
-
-afterAll(() => {
-  delete process.env.VITE_ALLOW_V5_LEGACY_READ;
-});
+// ADR-052 Phase 4: the `v5:` parser AND the Phase-3 bridge flag are gone. This
+// anchored suite pins the resulting contract: a legacy `v5:` payload (text or
+// session-key layout) is refused with the typed, actionable
+// `LegacyV5FormatRemovedError`, and writes remain fail-closed without a
+// provisioned per-vault salt (A-02).
 
 vi.mock("../../services/SecureStorage", () => ({
   secureStorage: mocks.secureStorage,
@@ -322,13 +312,17 @@ describe("P0 — per-vault Argon2id salt (A-1)", () => {
       await expect(decrypt(payload, "wrong-password")).rejects.toBeDefined();
     });
 
-    it("reads a legacy v5 payload after a vault salt is installed (migration read-compat)", async () => {
+    it("refuses a legacy v5 payload with the typed, actionable error", async () => {
       // Written before the upgrade (fixture captured from the pre-A-02 build)…
       expect(LEGACY_V5_FIXTURE.startsWith("v5:")).toBe(true);
 
-      // …and read after it, with the per-vault salt installed.
+      // …and refused now: the parser is gone, so this is not a wrong password
+      // and installing a per-vault salt cannot bring the read path back.
       setVaultKdfSalt(SALT_A);
-      expect(await decrypt(LEGACY_V5_FIXTURE, PASSWORD)).toBe("pre-migration");
+      await expect(decrypt(LEGACY_V5_FIXTURE, PASSWORD)).rejects.toMatchObject({
+        name: "LegacyV5FormatRemovedError",
+        code: "V5_LEGACY_FORMAT_RETIRED",
+      });
     });
 
     it("rejects a malformed vault salt instead of silently using it", () => {
@@ -426,11 +420,12 @@ describe("P0 — per-vault Argon2id salt (A-1)", () => {
       expect(String(writes[0]!.secret)).toMatch(/^v7:/);
     });
 
-    it("keeps the read path open for payloads written before the change", async () => {
-      // Fail-closed on write, never on read: an existing vault must still
-      // open its v5 blobs (with the migration switch on) even though the app
-      // can no longer produce them.
-      expect(await decrypt(LEGACY_V5_FIXTURE, PASSWORD)).toBe("pre-migration");
+    it("refuses legacy v5 reads while writes stay fail-closed", async () => {
+      // ADR-052 Phase 4: the read path is retired too, so the only exit for a
+      // v5 blob is conversion with an older release or a current backup.
+      await expect(decrypt(LEGACY_V5_FIXTURE, PASSWORD)).rejects.toMatchObject({
+        name: "LegacyV5FormatRemovedError",
+      });
       await expect(encrypt("new-secret", PASSWORD)).rejects.toBeInstanceOf(
         KdfSaltUnavailableError,
       );
@@ -438,20 +433,9 @@ describe("P0 — per-vault Argon2id salt (A-1)", () => {
   });
 
   describe("session-key format", () => {
-    it("round-trips with the vault-salt marker and still reads the legacy layout", async () => {
+    it("round-trips with the vault-salt marker", async () => {
       const data = new TextEncoder().encode("session-payload");
-
-      // Legacy payload (no salt installed): no marker byte, so its length is
-      // exactly hkdf_salt + iv + ciphertext (the marker byte is random for
-      // legacy blobs, hence the length check instead of a marker check).
-      const legacy = await encryptWithSessionKey(data, PASSWORD);
-      expect(legacy.length).toBe(16 + 12 + data.length + 16);
-
-      // After the upgrade: marked layout, and the legacy payload still reads.
       setVaultKdfSalt(SALT_A);
-      expect(Array.from(await decryptWithSessionKey(legacy, PASSWORD))).toEqual(
-        Array.from(data),
-      );
 
       const salted = await encryptWithSessionKey(data, PASSWORD);
       expect(salted[0]).toBe(0x06);
@@ -459,6 +443,28 @@ describe("P0 — per-vault Argon2id salt (A-1)", () => {
       expect(
         Array.from(await decryptWithSessionKey(salted, PASSWORD)),
       ).toEqual(Array.from(data));
+    });
+
+    it("refuses a session payload without the vault-salt marker", async () => {
+      // ADR-052 Phase 4: the legacy (pre-marker) session layout is gone.
+      // Dropping the marker+salt header from a real payload reproduces it.
+      setVaultKdfSalt(SALT_A);
+      const salted = await encryptWithSessionKey(
+        new TextEncoder().encode("payload"),
+        PASSWORD,
+      );
+      const legacyShaped = salted.slice(1 + VAULT_KDF_SALT_BYTES);
+      await expect(
+        decryptWithSessionKey(legacyShaped, PASSWORD),
+      ).rejects.toMatchObject({ name: "LegacyV5FormatRemovedError" });
+    });
+
+    it("refuses to write a session key without a provisioned vault salt", async () => {
+      // Writing the retired layout would persist data no build can read.
+      setVaultKdfSalt(null);
+      await expect(
+        encryptWithSessionKey(new TextEncoder().encode("payload"), PASSWORD),
+      ).rejects.toBeInstanceOf(KdfSaltUnavailableError);
     });
 
     it("fails closed on a corrupted vault-salted session payload", async () => {

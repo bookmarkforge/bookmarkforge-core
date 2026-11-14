@@ -1,13 +1,9 @@
 // Single owner for "which test files does a test profile schedule".
 //
-// Extracted from scripts/test-bounded.mjs: the bounded runner, its curated
-// wrapper (scripts/test-fast.mjs) and the audit-freshness gate
-// (scripts/check-audit-freshness.mjs) must agree on the file count of the fast
-// profile. The gate publishes that number for `npm run test:fast` in
-// docs/audit.md and re-derives it from here, so a collector change that the
-// document did not follow is exactly the drift the ledger promises not to
-// have. Two implementations of the same walk would make that a coincidence
-// instead of a contract.
+// Extracted from scripts/test-bounded.mjs: the bounded runner and its
+// curated wrapper (scripts/test-fast.mjs) must agree on the file count of
+// the fast profile. A single collector keeps that number a contract instead
+// of a coincidence between two implementations of the same walk.
 //
 // The walk matches the runner's historical behavior byte for byte: only
 // *.test.(ts|tsx|mjs), never node_modules/ or dist/, paths relative to the

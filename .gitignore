@@ -8,6 +8,7 @@
 *.key
 *.crt
 server/.license-signing-key.pkcs8
+server/.appsumo-keys-*.csv
 
 # Dependencies and build output
 node_modules/
@@ -131,3 +132,12 @@ video/props.short.json
 # playwright recording profile (contains vault data)
 video/.profile/
 video/raw/
+
+# Local agent-tooling state (craft/cany sessions, transcripts, usage stats)
+craft.json
+feed.json
+usage.json
+transcript.json
+inbox/
+capture/
+investigation.cany/

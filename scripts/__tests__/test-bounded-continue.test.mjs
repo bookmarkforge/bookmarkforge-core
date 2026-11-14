@@ -1,7 +1,7 @@
 /**
  * scripts/__tests__/test-bounded-continue.test.mjs
  *
- * P-15 (docs/PENDIENTES.md, measured 2026-10-13; reproduced 2026-11-01 with
+ * P-15 (measured 2026-10-13; reproduced 2026-11-01 with
  * 103 of 187 files skipped): the runner's worker loop was
  * `while (firstFailure === null)`, so one red batch cancelled the whole tail of
  * the profile and an unrun file read as a pass — which is how locale corruption

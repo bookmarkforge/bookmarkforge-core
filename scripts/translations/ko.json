@@ -2,17 +2,17 @@
   "lang": "ko",
   "langName": "한국어",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/ko/",
+  "canonical": "https://www.bookmarkforgeapp.com/ko/",
   "ogLocale": "ko_KR",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: 프라이빗 로컬 우선 북마크 관리자 및 읽기 목록",
   "description": "Raindrop은 북마크를 서버에 보관합니다. BookmarkForge는 당신의 컴퓨터에 보관합니다 — 우리도 읽을 수 없도록 잠급니다. 한 번만 결제: $59 얼리버드 평생 이용권 (정가 전 $20 절약). 무료: 500개 북마크.",
   "ogTitle": "BookmarkForge: 프라이빗 로컬 우선 북마크 관리자 및 읽기 목록",
   "ogDescription": "Raindrop은 북마크를 서버에 보관합니다. BookmarkForge는 당신의 컴퓨터에 보관합니다 — 우리도 읽을 수 없도록 잠급니다. 한 번만 결제: $59 얼리버드 평생 이용권 (정가 전 $20 절약). 무료: 500개 북마크.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: 프라이빗 로컬 우선 북마크 관리자 및 읽기 목록",
   "twitterDescription": "Raindrop은 북마크를 서버에 보관합니다. BookmarkForge는 당신의 컴퓨터에 보관합니다 — 우리도 읽을 수 없도록 잠급니다. 한 번만 결제: $59 얼리버드 평생 이용권 (정가 전 $20 절약). 무료: 500개 북마크.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "본문으로 건너뛰기",
   "navBrandAria": "BookmarkForge 홈",
   "navAriaLabel": "메인 내비게이션",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "메뉴 닫기",
   "hero": {
     "badge": "일회성 결제 · 구독 없음",
-    "title": "저장한 모든 것이 당신의 컴퓨터에 남습니다. <span class=\"accent-text\">전부.</span>",
-    "subtitle": "Raindrop은 북마크를 서버에 보관하고 매년 요금을 청구합니다. BookmarkForge는 북마크를 당신의 컴퓨터에 보관하며, 오직 당신만 가진 키로 잠급니다. 계정 없음. 월 요금 없음. 누군가 엿보지 않습니다.",
-    "ctaPrimary": "바로 사용해 보기 (계정 불필요)",
-    "ctaSecondary": "가격 보기",
+    "title": "모든 것을 <span class=\"accent-text\">내 기기에</span> 보관하는 비공개 북마크 관리자.",
+    "subtitle": "연구자, 학생, 그리고 읽기 기록을 클라우드 회사에 넘기고 싶지 않은 모든 분을 위해. 페이지, 기사, PDF를 저장하고 키워드나 의미로 찾으며, 전부 내 컴퓨터에 암호화해 보관합니다. 계정 없음. 구독 없음.",
+    "ctaPrimary": "무료로 시작 — 가입 불필요",
+    "ctaSecondary": "작동 방식 보기",
     "pillars": [
       {
-        "strong": "개인정보",
-        "text": "저장한 페이지가 절대 당신의 컴퓨터를 떠나지 않습니다"
+        "strong": "비공개",
+        "text": "기기에서 암호화"
       },
       {
-        "strong": "잠김",
-        "text": "우리조차 읽을 수 없습니다"
+        "strong": "영원히 나의 것",
+        "text": "구독도 월 요금도 없음"
       },
       {
-        "strong": "오프라인",
-        "text": "비행기 안, 터널 안, 어디서든 작동합니다"
+        "strong": "오프라인 작동",
+        "text": "인터넷 없이도 어디서나 저장·열람"
       },
       {
-        "strong": "한 번 결제",
-        "text": "$59 얼리버드 평생 이용권 (정가 전 $20 절약)"
+        "strong": "영구 무료",
+        "text": "북마크 500개 무료, 더 원하면 Pro로"
       }
     ],
     "announce": "⚡ 로컬 AI 번역 (출시 예정)"
@@ -408,15 +408,11 @@
         "cta": "Pro $59 얼리버드 받기",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "이후 일반가 $79",
-        "sla": "지원: 이메일 48시간 (월–금)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Pro $79 일반가 받기",
-        "cta2Class": "btn-secondary"
+        "sla": "지원: 이메일 48시간 (월–금)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-ko#pricing\">Learn more</a>"
+    "legal": "일회성 결제 · 12개월 업데이트 포함 · v1은 영구적으로 사용 가능 · 30일 환불 보장. <a href=\"/privacy-and-terms.html#terms\">약관</a>"
   },
   "faq": {
     "title": "자주 묻는 질문",
@@ -509,7 +505,8 @@
         "Contact"
       ],
       "helpCenter": "도움말 센터",
-      "errorCodes": "오류 코드"
+      "errorCodes": "오류 코드",
+      "hours": "48시간 이내 답변, 월–금 (CET)"
     },
     "copyright": "© 2026 BookmarkForge. 모든 권리 보유.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "당신의 비공개, AI 기반 지식 볼트. 100% 로컬 우선. Private Pocket 대안. 무료: 500개 북마크.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "도움말 센터 — FAQ, 문제 해결 & 지원 SLA | BookmarkForge",
+    "title": "도움말 센터 — FAQ, 문제 해결 & 지원 SLA",
     "description": "BookmarkForge 도움말 센터: v1 lifetime 가격, 문제 해결, BF-E* 오류 코드, 지원 SLA, 축소된 진단 보고서 복사 방법.",
     "ogTitle": "도움말 센터 — BookmarkForge",
     "ogDescription": "FAQ, 문제 해결, 오류 코드, 지원 SLA. lifetime v1 작동 방식과 진단 보고서 복사 방법을 배웁니다.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 일반가",
-      "proPriceTraction": "traction 후 $99",
+      "proPriceTraction": "",
       "proDescription": "무제한 북마크, 5대 기기 + P2P 동기화, 로컬 AI (WebLLM/Ollama) + RAG + 전문 에이전트, 학습 카드, PDF/OCR, 7 내보내기 형식, 볼트. <em>v1의 Lifetime · 12개월 기능 업데이트 · 보안 영원히 · v2 60% 할인</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "셀프서비스: 이 도움말 센터 + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "셀프서비스: 이 도움말 센터 + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "Best effort (커뮤니티)",
       "freeWhatToDo": "아래 BF-E* 코드 검색 + 게시 전 진단 복사 (<a href=\"#diagnostics\">§Diagnostics</a>)",
       "proChannel": "이메일 <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (제목: Pro)",

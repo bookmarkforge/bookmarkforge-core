@@ -196,7 +196,7 @@ export function verifyProdConfig(text) {
   // The tokens are the configuration the server ACTUALLY enforces in
   // production today. Only variables with runtime readers are checked;
   // retired flags from old subsystems are not included.
-  const ok = ["NODE_ENV=production", "AI_SESSION_ORIGINS", "ENFORCE_SIGNAL_HMAC", "LICENSE_SIGNING_PRIVATE_KEY_FILE"].every(
+  const ok = ["NODE_ENV=production", "LICENSE_ALLOWED_ORIGINS", "ENFORCE_SIGNAL_HMAC", "LICENSE_SIGNING_PRIVATE_KEY_FILE"].every(
     (needle) => text.includes(needle),
   );
   return ok
@@ -247,7 +247,7 @@ const isMain = process.argv[1] && import.meta.url === pathToFileURL(process.argv
 if (isMain) {
   const strict = process.argv.includes("--strict");
   const pkg = readJson("package.json");
-  const docs = ["architecture.md", "api.md", "operations.md", "security.md", "audit.md", "openapi.yaml"]
+  const docs = ["architecture.md", "api.md", "operations.md", "security.md", "openapi.yaml"]
     .map((file) => read(`docs/${file}`))
     .filter((text) => text != null);
 

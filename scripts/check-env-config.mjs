@@ -17,12 +17,10 @@
  *
  * Second gate — compose env contract (deploy verification): when
  * docker-compose.prod.yml exists, the required (`${VAR:?...}`) vars must be
- * present in `.env.production` when that file exists, and
- * CLIENT_EVENTS_WEBHOOK_URL (when set) must be https-only (the server
- * rejects plaintext webhooks fail-closed in production — catch it at
- * deploy). Optional vars with `:-` defaults are never violations: their
- * defaults are fail-safe by design. Without `.env.production` (CI/dev) the
- * presence check is skipped and only the declaration is reported.
+ * present in `.env.production` when that file exists. Optional vars with
+ * `:-` defaults are never violations: their defaults are fail-safe by
+ * design. Without `.env.production` (CI/dev) the presence check is skipped
+ * and only the declaration is reported.
  *
  * Dynamic access through `readEnvVar()` / `getEnvVar()` / `env.*` is the
  * sanctioned path and is never flagged. Comments and string literals are
@@ -57,8 +55,6 @@ const WRITE_BASELINE = process.argv.includes("--write-baseline");
 export const SERVER_PROD_REQUIRED_SALTS = Object.freeze([
   "SIGNALING_IP_HASH_SALT",
   "CSP_REPORT_IP_HASH_SALT",
-  "CLIENT_EVENTS_IP_HASH_SALT",
-  "ANALYTICS_IP_HASH_SALT",
 ]);
 
 // ── 1. Allowed names from the registry ───────────────────────────────
@@ -164,9 +160,7 @@ export function runEnvConfigChecks({ allowed, found, baseline }) {
  * `envProdSource` is provided (the deploy host has .env.production):
  *   - every required (`${VAR:?...}`) compose var must be present in
  *     .env.production — a missing one fails inside compose anyway, the gate
- *     reports it early with a clear list,
- *   - CLIENT_EVENTS_WEBHOOK_URL, when set, must be https (the server
- *     rejects http webhooks fail-closed in production).
+ *     reports it early with a clear list.
  * Optional vars (`${VAR:-...}`) are never violations (fail-safe defaults).
  */
 export function runComposeEnvContract({ composeSource, envProdSource, deployInjectedVars = ["IMAGE_TAG"], requiredServerVars = [] }) {
@@ -222,13 +216,6 @@ export function runComposeEnvContract({ composeSource, envProdSource, deployInje
   if (missing.length > 0) {
     violations.push(
       `vars requeridas por docker-compose.prod.yml ausentes en .env.production: ${missing.join(", ")}`,
-    );
-  }
-
-  const webhook = envProdVars.get("CLIENT_EVENTS_WEBHOOK_URL")?.trim() ?? "";
-  if (webhook && !/^https:\/\//i.test(webhook)) {
-    violations.push(
-      "CLIENT_EVENTS_WEBHOOK_URL must be https in production (the server rejects http webhooks fail-closed)",
     );
   }
 

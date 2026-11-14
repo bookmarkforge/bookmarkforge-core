@@ -45,8 +45,8 @@ afterEach(() => {
 });
 
 describe("PAIRS registry", () => {
-  it("covers the three drift gates with script+baseline pairs", () => {
-    expect(PAIRS).toHaveLength(3);
+  it("covers the drift gates with script+baseline pairs", () => {
+    expect(PAIRS).toHaveLength(2);
     for (const pair of PAIRS) {
       expect(pair.gate).toMatch(/^\S+$/);
       expect(pair.script).toMatch(/\.mjs$/);
@@ -58,19 +58,19 @@ describe("PAIRS registry", () => {
 describe("computeStalePairs", () => {
   it("flags a pair whose script is newer than its baseline", () => {
     const root = fixture({
-      "scripts/audit-anchors.mjs": T + 1_000,
-      "scripts/audit-anchors-baseline.json": T,
+      "scripts/doctor-docs-index.mjs": T + 1_000,
+      "docs/docs-state-index.md": T,
     });
     const stale = computeStalePairs(root, T + 2_000);
     expect(stale).toHaveLength(1);
-    expect(stale[0].gate).toBe("audit-drift");
+    expect(stale[0].gate).toBe("docs-state-index");
     expect(stale[0].reason).toContain("script newer than baseline");
   });
 
   it("a baseline newer than its script is fresh (normal post-refresh state)", () => {
     const root = fixture({
-      "scripts/audit-anchors.mjs": T,
-      "scripts/audit-anchors-baseline.json": T + 5_000,
+      "scripts/doctor-docs-index.mjs": T,
+      "docs/docs-state-index.md": T + 5_000,
     });
     expect(computeStalePairs(root, T + 6_000)).toHaveLength(0);
   });
@@ -97,8 +97,8 @@ describe("computeStalePairs", () => {
 
   it("is deterministic for identical inputs, and `now` shapes the delta", () => {
     const root = fixture({
-      "scripts/audit-anchors.mjs": T + 1_000,
-      "scripts/audit-anchors-baseline.json": T,
+      "scripts/doctor-docs-index.mjs": T + 1_000,
+      "docs/docs-state-index.md": T,
     });
     const a = computeStalePairs(root, T + 120_000);
     const b = computeStalePairs(root, T + 120_000);
@@ -110,9 +110,9 @@ describe("computeStalePairs", () => {
 describe("formatStaleReport", () => {
   it("names the gate, the remedy and the mtime escape hatch", () => {
     const report = formatStaleReport([
-      { gate: "audit-drift", script: "s.mjs", baseline: "b.json", reason: "x" },
+      { gate: "docs-state-index", script: "s.mjs", baseline: "b.json", reason: "x" },
     ]);
-    expect(report).toContain("audit-drift");
+    expect(report).toContain("docs-state-index");
     expect(report).toContain("npm run gate:refresh");
     expect(report).toContain("checkout");
     expect(report).toContain("Advisory only");
@@ -122,13 +122,13 @@ describe("formatStaleReport", () => {
 describe("runPreflight", () => {
   const staleRoot = () =>
     fixture({
-      "scripts/audit-anchors.mjs": T + 1_000,
-      "scripts/audit-anchors-baseline.json": T,
+      "scripts/doctor-docs-index.mjs": T + 1_000,
+      "docs/docs-state-index.md": T,
     });
   const freshRoot = () =>
     fixture({
-      "scripts/audit-anchors.mjs": T,
-      "scripts/audit-anchors-baseline.json": T + 1_000,
+      "scripts/doctor-docs-index.mjs": T,
+      "docs/docs-state-index.md": T + 1_000,
     });
 
   it("is advisory: exit 0 and a stderr warning even when stale", () => {
@@ -136,7 +136,7 @@ describe("runPreflight", () => {
     const code = runPreflight({ root: staleRoot(), argv: [], err, now: T + 2_000 });
     expect(code).toBe(0);
     expect(err.text()).toContain("HALF-UPDATED");
-    expect(err.text()).toContain("audit-drift");
+    expect(err.text()).toContain("docs-state-index");
   });
 
   it("is silent when every pair is fresh", () => {
@@ -173,7 +173,7 @@ describe("runPreflight", () => {
     expect(err.text()).toBe("");
     const parsed = JSON.parse(out.text());
     expect(parsed.stale).toBe(1);
-    expect(parsed.pairs[0].gate).toBe("audit-drift");
+    expect(parsed.pairs[0].gate).toBe("docs-state-index");
   });
 
   it("BMF_DRIFT_PREFLIGHT=off disables the check entirely", () => {

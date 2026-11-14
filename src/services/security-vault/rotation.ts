@@ -38,11 +38,11 @@ export interface RotationContext {
     key: Uint8Array,
     purpose?: string,
   ) => Promise<string>;
-  createVerificationToken: (password: string) => Promise<void>;
+  createVerificationToken: (password: string | Uint8Array) => Promise<void>;
   recordAudit: (params: Record<string, unknown>) => void;
   clearRecoveryData: () => Promise<void>;
   loadBackupService: () => Promise<{ clearAutoBackup: () => Promise<void> } | null>;
-  setMasterPasswordBytes: (pw: string) => void;
+  setMasterPasswordBytes: (pw: string | Uint8Array) => void;
   zeroBytes: () => void;
   clearSession: () => void;
   generateSessionToken: () => Promise<void>;

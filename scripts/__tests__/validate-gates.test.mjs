@@ -59,6 +59,40 @@ describe("internal audit gates", () => {
     ).toBe(true);
   });
 
+  it("allows only the scoped Hugging Face wildcard in connect-src", () => {
+    const securityHeaders = [
+      "X-Content-Type-Options: nosniff",
+      "X-Frame-Options: DENY",
+      "Referrer-Policy: no-referrer",
+      "Strict-Transport-Security: max-age=31536000; includeSubDomains",
+      "Permissions-Policy: camera=()",
+      "Content-Security-Policy: default-src 'self'; object-src 'none';",
+    ].join("\n");
+    const nginxWithCsp = (csp) => [
+      "add_header X-Content-Type-Options nosniff;",
+      "add_header X-Frame-Options DENY;",
+      "add_header Referrer-Policy no-referrer;",
+      "add_header Strict-Transport-Security \"max-age=31536000; includeSubDomains;\";",
+      "add_header Permissions-Policy \"camera=();\";",
+      `add_header Content-Security-Policy \"${csp}\";`,
+      "proxy_pass http://bookmarkforge_api:8787;",
+    ].join("\n");
+
+    const allowed = validateHttpConfig(
+      securityHeaders,
+      nginxWithCsp("default-src 'self'; object-src 'none'; connect-src 'self' https://*.hf.co;"),
+    );
+    expect(allowed.errors).toEqual([]);
+
+    const denied = validateHttpConfig(
+      securityHeaders,
+      nginxWithCsp("default-src 'self'; object-src 'none'; connect-src 'self' https://*.jsdelivr.net;"),
+    );
+    expect(denied.errors).toContain(
+      "public/nginx.conf: wildcard CSP source is forbidden: connect-src *.jsdelivr.net",
+    );
+  });
+
   it("accepts the documented env-promotion pattern for conditional steps", () => {
     // The fix shape: secret promoted to job-level env (secrets ARE valid
     // there), condition reads the env context. This is what staging-smoke.yml

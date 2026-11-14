@@ -215,7 +215,7 @@ describe("hooks — graceful degradation when storage returns null", () => {
       expect((await import("../../db/database")).initDB).not.toHaveBeenCalled();
     });
 
-    it("setMasterPassword works when storage is unavailable", async () => {
+    it("keeps no master password in React state when storage is unavailable", async () => {
       vi.doMock("../../db/database", () => ({
         initDB: vi.fn().mockResolvedValue({ id: "mock-db" }),
         getDB: vi.fn().mockResolvedValue(null),
@@ -235,10 +235,10 @@ describe("hooks — graceful degradation when storage returns null", () => {
       const { useDatabaseInit } = await import("../../hooks/useDatabaseInit");
       const { result } = renderHook(() => useDatabaseInit());
 
-      act(() => {
-        result.current.setMasterPassword("my-secret");
-      });
-      expect(result.current.masterPassword).toBe("my-secret");
+      // AGENTS.md §2: the hook never holds the master password — the vault
+      // owns it as bytes — so there is no setter to call and nothing to purge.
+      expect(Object.keys(result.current)).not.toContain("masterPassword");
+      expect(Object.keys(result.current)).not.toContain("setMasterPassword");
     });
   });
 });

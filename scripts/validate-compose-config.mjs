@@ -18,11 +18,11 @@
  * `AI_SESSION_REQUIRE_LICENSE` or `GEMINI_API_*` is describing a server that
  * cannot read them, so it fails the gate instead of silently deploying.
  *
- * P1-3 (review 2026-11-11): the retired-key list was a blocklist, so a NEW
+ * The retired-key list was a blocklist, so a NEW
  * variable with no reader (`READ_ONLY`) could ship and the operator would
  * believe the container honoured it. `declaredApiEnvKeys` + `findOrphanEnvKeys`
  * invert the rule: every variable the `api` service declares must appear in the
- * server sources. The same section requires the production hardening the audit
+ * server sources. The same section requires the production hardening
  * asked for (read-only filesystem, memory/CPU/PID caps, bounded logs).
  */
 import { existsSync, readFileSync, readdirSync } from "node:fs";
@@ -162,7 +162,7 @@ export function validateCompose(name, source, options = {}) {
     if (/^\s*-\s*"?(?!127\.0\.0\.1)[^"\n]*:\d+:/m.test(source)) errors.push(`${name}: production port should not be broadly published by default`);
     if (/^ {2}redis:/m.test(source)) errors.push(`${name}: production must not bundle a Redis service — nothing reads its state any more`);
 
-    // P1-3: hardening the audit asked for, enforced instead of documented.
+    // Hardening enforced instead of documented:
     if (!/read_only:\s*true/.test(api)) {
       errors.push(`${name}: api service must set read_only: true — the runtime writes nothing and a writable rootfs survives a compromise`);
     }

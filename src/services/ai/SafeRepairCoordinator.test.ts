@@ -82,7 +82,7 @@ describe("SafeRepairCoordinator", () => {
     await expect(safeRepairCoordinator.run()).rejects.toMatchObject({ name: "VAULT_LOCKED" });
   });
 
-  it("comparte la misma promesa para llamadas concurrentes", async () => {
+  it("shares the same promise for concurrent calls", async () => {
     let release!: () => void;
     mocks.scan.mockReturnValue(new Promise((resolve) => { release = () => resolve({
       scannedAt: "2026-01-01T00:00:00.000Z", isVaultLocked: false, complete: true,

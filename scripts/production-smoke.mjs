@@ -8,7 +8,7 @@
  *   docker compose -f docker-compose.prod.yml up -d --build
  *   node scripts/production-smoke.mjs
  *
- * The API-surface checks (health, license, client-events, WebSocket signaling)
+ * The API-surface checks (health, license, WebSocket signaling)
  * are exported as `runApiSurfaceChecks` and are also driven Docker-free by
  * scripts/local-smoke.mjs, so both paths share the exact same assertions.
  *
@@ -71,7 +71,7 @@ function makeRequester(baseUrl) {
 }
 
 /**
- * Run the companion-server API checks (health, license, client-events,
+ * Run the companion-server API checks (health, license,
  * WebSocket signaling) against `baseUrl`. Shared by the nginx production smoke
  * and the Docker-free local smoke. Returns `{ ok, checks }`.
  *
@@ -128,23 +128,6 @@ export async function runApiSurfaceChecks({ baseUrl, skipLicense = false }) {
       console.log("SKIP license activation (signing key absent)");
     }
   }
-
-  // ── Client events pipeline (CSP violation spikes) ────────────────
-  // The client dispatches csp-violation-spike (productionMonitor) and
-  // clientEventReporter forwards it to /api/client-events, where the collector
-  // accepts it as inherently critical (cluster alert via CLIENT_CRITICAL). A
-  // 400 here means the deployed api predates the contract — CSP cluster
-  // alerting is dead and this check must fail.
-  const cspEvent = await request("/api/client-events", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ type: "csp-violation-spike", count: 1 }),
-  });
-  check(
-    "client-events accepts csp-violation-spike",
-    cspEvent.response.status === 204,
-    `HTTP ${cspEvent.response.status}`,
-  );
 
   // ── WebSocket signaling ──────────────────────────────────────────
   const wsProto = normalized.startsWith("https:") ? "wss" : "ws";

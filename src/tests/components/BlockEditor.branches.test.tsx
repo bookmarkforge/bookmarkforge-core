@@ -264,7 +264,7 @@ describe("BlockEditor - uncovered branches", () => {
 
   it("uses max-w-6xl when there are no open panels", async () => {
     const { container } = render(<BlockEditor documentId="doc-1" />);
-    // El entorno inyecta <style> como primeros hijos del container;
+    // The environment injects <style> as the first children of the container;
     // the component root is the div with rounded-2xl (unique in the render)
     const root = container.querySelector(".rounded-2xl")!;
     expect(root.className).toContain("max-w-6xl");

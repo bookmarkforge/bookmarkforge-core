@@ -1,5 +1,5 @@
 /**
- * P1 (audit 2026-11-06): single boundary for text rendered to the user.
+ * single boundary for text rendered to the user.
  *
  * AGENTS §4 forbids leaking raw `SyntaxError.message`, stack frames, internal
  * paths or secret material into user-facing errors. The UI still needs the

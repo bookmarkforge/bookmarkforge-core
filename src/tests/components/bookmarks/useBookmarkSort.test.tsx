@@ -134,9 +134,9 @@ describe("useBookmarkSort", () => {
   });
 
   it("should return the same reference when createdAt desc is already sorted", () => {
-    // RxDB entrega los bookmarks ordenados por createdAt desc; el fast path
+    // RxDB delivers bookmarks sorted by createdAt desc; the fast path
     // must return the array as-is (same identity → downstream memos
-    // y el virtualizador no re-trabajan).
+    // and the virtualizer do not redo work).
     const preSorted = [
       {
         id: "bm-1",

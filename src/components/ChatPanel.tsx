@@ -29,7 +29,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
 
   // Single streaming chat action — useGuardedAction + runWithSignal: the
   // guard's signal aborts the in-flight globalChat on a newer send, content
-  // switch or unmount; chunk streaming gates on !signal.aborted; the user
+  // switch or unmount; chunk streaming gates on!signal.aborted; the user
   // message append stays in the handler (it must not run when reentry is
   // blocked), gated by the same isLoading check as before.
   const chat = useGuardedAction<{ text: string; sources: unknown[] }>({
@@ -63,7 +63,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
 
   useEffect(() => {
     let cancelled = false;
-    // I1 (audit 2026-08-13): memory access routed through AgentService so
+    // memory access routed through AgentService so
     // the UI never imports the memory subsystem directly.
     const initMemory = async () => {
       await agentService.ensureMemoryInitialized();

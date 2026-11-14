@@ -1,7 +1,7 @@
 /**
  * scripts/build-server.mjs — production build of the self-hosted signaling server.
  *
- * A1 (audit 2026-11-05): the `api` Docker target installed `npm ci --omit=dev`
+ * the `api` Docker target installed `npm ci --omit=dev`
  * and then ran `node_modules/.bin/tsx server/src/index.ts`. `tsx` is a
  * devDependency, so the image had no loader and the container died on start
  * (`docker compose up` left the signaling server down). Shipping the TypeScript

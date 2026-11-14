@@ -2,17 +2,17 @@
   "lang": "de",
   "langName": "Deutsch",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/de/",
+  "canonical": "https://www.bookmarkforgeapp.com/de/",
   "ogLocale": "de_DE",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: Privater Local-First-Lesezeichen-Manager mit Leseliste",
   "description": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. Einmal zahlen: $59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis). Kostenlos: 500 Lesezeichen.",
   "ogTitle": "BookmarkForge: Privater Local-First-Lesezeichen-Manager mit Leseliste",
   "ogDescription": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. Einmal zahlen: $59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis). Kostenlos: 500 Lesezeichen.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image-de.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image-de.png",
   "twitterTitle": "BookmarkForge: Privater Local-First-Lesezeichen-Manager mit Leseliste",
   "twitterDescription": "Raindrop legt deine Lesezeichen auf seinen Servern und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, gesperrt, sodass nicht mal wir sie lesen können. Einmal zahlen: $59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis). Kostenlos: 500 Lesezeichen.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image-de.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image-de.png",
   "skipLink": "Zum Hauptinhalt springen",
   "navBrandAria": "BookmarkForge Startseite",
   "navAriaLabel": "Hauptnavigation",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "Menü schließen",
   "hero": {
     "badge": "Einmal zahlen · Kein Abo",
-    "title": "Alles, was du speicherst, bleibt auf deinem Computer. <span class=\"accent-text\">Alles.</span>",
-    "subtitle": "Raindrop legt deine Lesezeichen auf seinen Servern ab — und kassiert jedes Jahr. BookmarkForge bewahrt sie auf deinem Computer auf, mit einem Schlüssel gesperrt, den nur du hast. Keine Konten. Keine Monatsgebühren. Und niemand schaut dir über die Schulter.",
-    "ctaPrimary": "Sofort ausprobieren (ohne Konto)",
-    "ctaSecondary": "Preise ansehen",
+    "title": "Der private Bookmark-Manager, der <span class=\"accent-text\">alles auf deinem Gerät behält.</span>",
+    "subtitle": "Für Forschende, Studierende und alle, die ihre Lesehistorie ungern einem Cloud-Unternehmen überlassen. Speichere Seiten, Artikel und PDFs, finde sie per Stichwort oder Bedeutung – und alles bleibt verschlüsselt auf deinem eigenen Computer. Kein Konto. Kein Abo.",
+    "ctaPrimary": "Kostenlos starten — ohne Anmeldung",
+    "ctaSecondary": "So funktioniert's",
     "pillars": [
       {
         "strong": "Privat",
-        "text": "deine gespeicherten Seiten verlassen deinen Computer nie"
+        "text": "auf deinem Gerät verschlüsselt"
       },
       {
-        "strong": "Gesperrt",
-        "text": "nicht mal wir können sie lesen"
+        "strong": "Für immer deins",
+        "text": "keine Abos, keine Monatsgebühren"
       },
       {
-        "strong": "Ohne Netz",
-        "text": "funktioniert im Flugzeug, im Tunnel, wo auch immer"
+        "strong": "Funktioniert offline",
+        "text": "speichern und lesen überall, auch ohne Internet"
       },
       {
-        "strong": "Einmal zahlen",
-        "text": "$59 Early-Bird-Zugang auf Lebenszeit (spare $20 vor dem regulären Preis)"
+        "strong": "Für immer kostenlos",
+        "text": "500 Lesezeichen gratis, Upgrade nur wenn du mehr willst"
       }
     ],
     "announce": "⚡ Lokale KI-Übersetzung (demnächst)"
@@ -408,15 +408,11 @@
         "cta": "Pro für $59 Early Bird holen",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "danach $79 regulär",
-        "sla": "Support: E-Mail 48h (Mo–Fr)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Pro für $79 holen – Regular",
-        "cta2Class": "btn-secondary"
+        "sla": "Support: E-Mail 48h (Mo–Fr)"
       }
     ],
-    "legal": "Lifetime-Lizenz für BookmarkForge v1. Enthält 12 Monate aller Updates (Features, Bugfixes, Sicherheit). Nach 12 Monaten Sicherheits-Updates für immer. Künftige Majors (v2, v3) 60% Rabatt für Besitzer. 30-Tage-Erstattung via Whop. <a href=\"/de/privacy-and-terms.html#terms\">AGB</a> · <a href=\"/help-de#pricing\">Mehr erfahren</a>"
+    "legal": "Einmalzahlung · 12 Monate Updates inklusive · v1 funktioniert für immer · 30 Tage Geld-zurück-Garantie. <a href=\"/de/privacy-and-terms.html#terms\">Bedingungen</a>"
   },
   "faq": {
     "title": "Häufige Fragen",
@@ -509,7 +505,8 @@
         "Kontakt"
       ],
       "helpCenter": "Hilfe-Center",
-      "errorCodes": "Fehlercodes"
+      "errorCodes": "Fehlercodes",
+      "hours": "Antworten innerhalb von 48 Std., Mo–Fr (MEZ)"
     },
     "copyright": "© 2026 BookmarkForge. Alle Rechte vorbehalten.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "Dein privater KI-Wissensspeicher. 100% lokal. Die private Pocket-Alternative. Kostenlos: 500 Lesezeichen.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/de/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/de/",
     "offers": [
       {
         "name": "Kostenlos",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "Hilfezentrum — FAQ, Fehlerbehebung & Support-SLA | BookmarkForge",
+    "title": "Hilfezentrum — FAQ, Fehlerbehebung & Support-SLA",
     "description": "BookmarkForge Help Center: Lifetime v1, Troubleshooting, Fehlercodes BF-E*, Support SLA und Anleitung zum Kopieren eines redigierten Diagnoseberichts.",
     "ogTitle": "Hilfezentrum — BookmarkForge",
     "ogDescription": "FAQ, Troubleshooting, Fehlercodes und Support SLA. Erfahren Sie, wie Lifetime v1 funktioniert und wie Sie einen Diagnosebericht kopieren.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 regulär",
-      "proPriceTraction": "$99 nach Traction",
+      "proPriceTraction": "",
       "proDescription": "Unbegrenzte Lesezeichen, 5 Geräte + P2P-Sync, Local AI (WebLLM/Ollama) + RAG + Expert Agents, Flashcards, PDF/OCR, 7 Exportformate, Vault. <em>Lifetime of v1 · 12 Monate Funktionsupdates · Sicherheit auf Lebenszeit · v2 60% Rabatt</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "Self-Service: dieses Help Center + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "Self-Service: dieses Help Center + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "Bestmöglich (Community)",
       "freeWhatToDo": "Suchen Sie nach dem BF-E*-Code unten + kopieren Sie den Diagnosebericht (<a href=\"#diagnostics\">§Diagnostics</a>) vor dem Posten.",
       "proChannel": "E-Mail <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (Betreff: Pro)",

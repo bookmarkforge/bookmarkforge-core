@@ -5,11 +5,11 @@
  * shipped copies (the runtime meta-override in src/utils/cspReportThrottle.ts
  * is fed from the same source):
  *
- *   1. scripts/csp-config.js            (canonical CSP_MODERATE)
- *   2. public/_headers                  (Cloudflare Pages)
- *   3. public/nginx.conf                (self-hosted Docker / nginx)
- *   4. netlify.toml                     (Netlify)
- *   5. vercel.json                      (the domain the product is served from)
+ * 1. scripts/csp-config.js (canonical CSP_MODERATE)
+ * 2. public/_headers (Cloudflare Pages)
+ * 3. public/nginx.conf (self-hosted Docker / nginx)
+ * 4. netlify.toml (Netlify)
+ * 5. vercel.json (the domain the product is served from)
  *
  * Drift between copies means one deployment path serves a stale policy.
  * vercel.json is the only copy whose values sit inside JSON strings, so its
@@ -53,16 +53,16 @@ export const FORBIDDEN_HOSTS = [
  * Run all invariants against in-memory fixtures.
  *
  * @param {object} inputs
- * @param {string} inputs.cspModerate  canonical CSP_MODERATE value
- * @param {string} inputs.cspOpen      dev-only CSP_OPEN value
- * @param {string} inputs.cspStrict    CSP_STRICT value
- * @param {string} inputs.coep         canonical COEP value
- * @param {string} inputs.coop         canonical COOP value
+ * @param {string} inputs.cspModerate canonical CSP_MODERATE value
+ * @param {string} inputs.cspOpen dev-only CSP_OPEN value
+ * @param {string} inputs.cspStrict CSP_STRICT value
+ * @param {string} inputs.coep canonical COEP value
+ * @param {string} inputs.coop canonical COOP value
  * @param {string} inputs.reportToHeader canonical Report-To header value
  * @param {string} inputs.reportingEndpointsHeader canonical Reporting-Endpoints header value
  * @param {string[]} inputs.forbiddenHosts hosts that must never appear
  * @param {Array<{label: string, content: string|null}>} inputs.copies
- *   label + file content (null = file absent)
+ * label + file content (null = file absent)
  * @returns {{ ok: boolean, oks: string[], failures: string[] }}
  */
 export function runCspSyncChecks({
@@ -166,7 +166,7 @@ export function runCspSyncChecks({
     );
     if (!coepRE.test(content)) fail(`${copy.label}: COEP not found`);
     if (!coopRE.test(content)) fail(`${copy.label}: COOP not found`);
-    // B2: the `report-to` directive is useless without a Report-To header
+    // the `report-to` directive is useless without a Report-To header
     // defining the group — modern browsers silently drop reports.
     if (!content.includes(reportingEndpointsHeader)) {
       fail(`${copy.label}: Reporting-Endpoints header missing (modern reporting group undefined)`);
@@ -235,7 +235,7 @@ export function vercelHeaderValuesText(raw) {
 // ── CLI wrapper (file I/O + output) ──────────────────────────────────
 
 /**
- * P1-2 (review 2026-11-11): every shipped CSP advertises `/csp-report`
+ * every shipped CSP advertises `/csp-report`
  * (report-uri + report-to), so a host whose endpoint is absent — or answers
  * without reading the report, as the Vercel stub did — is a false promise.
  * The gate reads the two serverless collectors and fails when one is missing

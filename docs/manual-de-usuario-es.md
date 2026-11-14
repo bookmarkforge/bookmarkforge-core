@@ -194,7 +194,7 @@ El cerebro de la aplicación:
 - Sin rastreo constante
 - Prueba de licencia firmada con RSA-PSS (SHA-256, salt 32)
 - Re-validación cada 48 horas cuando hay conexión
-- Pruebas antiguas (>30 días) son rechazadas por el servidor de entitlement
+- La gracia sin conexión mantiene Pro hasta que la licencia expire — las pruebas no tienen una antigüedad máxima fija
 
 ---
 

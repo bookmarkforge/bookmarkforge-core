@@ -71,7 +71,7 @@ describe("check-blindeo — rollback target with a valid web image", () => {
     const mixed = [
       "proxy_pass http://bookmarkforge_api/api/license/entitlement;",
       "proxy_pass http://bookmarkforge_api:8787/health;", // sana
-      "proxy_pass http://bookmarkforge_api/api/client-events;",
+      "proxy_pass http://bookmarkforge_api/api/license/validate;",
     ].join("\n");
     const violations = mod.findProxyPassWithoutPort(mixed);
     expect(violations).toHaveLength(2);

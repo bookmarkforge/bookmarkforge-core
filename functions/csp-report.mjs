@@ -34,9 +34,16 @@ function headerValue(headers, name) {
 }
 
 function clientIp(headers) {
+  // M-5 (audit 2026-11-14): platform-attested headers first — cf-connecting-ip
+  // (Cloudflare) and x-nf-client-connection-ip (Netlify) cannot be spoofed by
+  // the client, unlike a leading X-Forwarded-For entry.
+  const cfIp = headerValue(headers, "cf-connecting-ip").trim();
+  if (cfIp) return cfIp.slice(0, 128);
+  const nfIp = headerValue(headers, "x-nf-client-connection-ip").trim();
+  if (nfIp) return nfIp.split(",")[0].slice(0, 128);
   const forwarded = headerValue(headers, "x-forwarded-for");
   const first = forwarded.split(",")[0];
-  return (first || headerValue(headers, "cf-connecting-ip") || "unknown").trim().slice(0, 128);
+  return (first || "unknown").trim().slice(0, 128);
 }
 
 function statusText(status) {

@@ -10,7 +10,7 @@ import { createHash, createHmac } from "node:crypto";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const SERVER_ENTRY = resolve(__dirname, "../../../server/src/index.ts");
 
-// El signaling server (server/src/index.ts) es infraestructura opcional que
+// The signaling server (server/src/index.ts) is optional infrastructure that
 // previously did not exist in the repo. If the entry point were missing, the suite would skip
 // instead of spawning a non-existent process and waiting 8s for a timeout.
 const serverEntryExists = fs.existsSync(SERVER_ENTRY);
@@ -591,7 +591,7 @@ describe.skipIf(!serverEntryExists)("Signaling server — rejection log IP priva
           senderPeerId: init.yourPeerId,
           receiverPeerId: "receiver-peer",
           data: { sdp: "offer" },
-          // A3: the server gate is now format-only (64-hex); a malformed tag
+          // the server gate is now format-only (64-hex); a malformed tag
           // is what still triggers signaling_invalid_hmac + disconnect.
           signalAuth: "deadbeef",
         });
@@ -747,7 +747,7 @@ describe.skipIf(!serverEntryExists)("Signaling server — DoS hardening (env lim
     });
     const spUrl = spServer.url;
     try {
-      // Route through open(): it installs the message queue at socket
+      // Route through open: it installs the message queue at socket
       // creation, so the server's init frame can never race the listener
       // registration and hang nextMessage until the 60s timeout (the
       // legacy queue-less path this helper used to take in CI).
@@ -887,7 +887,7 @@ describe.skipIf(!serverEntryExists)("Signaling server — heartbeat sweep", () =
   }, 15000);
 });
 
-// ─── Signal authentication format gate (audit #4 + A3) ────────────────
+// ─── Signal authentication format gate ────────────────
 //
 // A3 (2026-11-05): the server stores only the join verifier, so it cannot
 // recompute any signal key — cryptographic verification moved to the
@@ -1176,7 +1176,7 @@ describe.skipIf(!serverEntryExists)("Signaling server — HMAC signal auth (defa
   });
 
   it("A3: a WRONG-secret signalAuth is relayed — verification is the receiver's job now", async () => {
-    // Audit A3 (2026-11-05): the server stores only the join verifier, so it
+    // (2026-11-05): the server stores only the join verifier, so it
     // CANNOT recompute the signal key. A well-formed but wrongly-signed tag
     // is relayed verbatim; the receiving peer's socket factory drops it.
     // This test pins the server half of that contract: relay, don't judge.
@@ -1230,15 +1230,13 @@ describe.skipIf(!serverEntryExists)("Signaling server — production HMAC opt-ou
   beforeAll(async () => {
     const started = await startServer(port, {
       NODE_ENV: "production",
-      // M3 (audit 2026-11-06): a production runtime no longer boots with an
+      // a production runtime no longer boots with an
       // empty WS allowlist, and the clients below already send this Origin.
       WS_ALLOWED_ORIGINS: "http://127.0.0.1",
       // Production also requires a 32+ char IP-hash salt (A1) or the process
       // refuses to boot before any assertion can run.
       SIGNALING_IP_HASH_SALT: "production-optout-test-salt-0123456789",
       CSP_REPORT_IP_HASH_SALT: "production-optout-csp-salt-0123456789",
-      CLIENT_EVENTS_IP_HASH_SALT: "production-optout-events-salt-0123456789",
-      ANALYTICS_IP_HASH_SALT: "production-optout-analytics-salt-0123456789",
       AI_SESSION_ORIGINS: "http://127.0.0.1",
       ENFORCE_SIGNAL_HMAC: "0",
       MAX_PAYLOAD_BYTES: "1048576",
@@ -1267,7 +1265,7 @@ describe.skipIf(!serverEntryExists)("Signaling server — production HMAC opt-ou
     send(b, { type: "join", room: "production-optout-room", roomSecret: "s3cret" });
     await nextMessage(b);
 
-    // A3: even with the legacy opt-out requested, production keeps the
+    // even with the legacy opt-out requested, production keeps the
     // signalAuth format gate — an unsigned frame is still disconnected.
     // Raw frame so the `send()` helper does not auto-sign it.
     a.send(
@@ -1285,7 +1283,7 @@ describe.skipIf(!serverEntryExists)("Signaling server — production HMAC opt-ou
 });
 
 // reason: server entry file does not exist in this build
-describe.skipIf(!serverEntryExists)("Signaling server — TURN REST credentials (audit #1)", () => {
+describe.skipIf(!serverEntryExists)("Signaling server — TURN REST credentials", () => {
   it("init includes ephemeral coturn REST iceServers when configured", async () => {
     const turnPort = 8807;
     const turnServer = await startServer(turnPort, {

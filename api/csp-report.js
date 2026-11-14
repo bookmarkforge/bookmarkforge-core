@@ -1,7 +1,7 @@
 /**
  * api/csp-report.js — CSP violation collector for Vercel deployments.
  *
- * P1-2 (review 2026-11-11): this file used to answer `200 {}` without reading
+ * this file used to answer `200 {}` without reading
  * the report ("silences 404 errors in Vercel logs"). Every shipped CSP
  * advertises `/csp-report` through `report-uri` and `report-to`, so a stub here
  * turned the security telemetry the headers promise into a silent discard.
@@ -22,6 +22,17 @@ const collector = createCspCollector({ salt: process.env.CSP_REPORT_IP_HASH_SALT
 const NO_STORE = "no-store";
 
 function clientIp(req) {
+  // prefer platform-attested headers over
+  // client-spoofable X-Forwarded-For. Vercel sets x-real-ip /
+  // x-vercel-forwarded-for itself; a client-supplied XFF is only a fallback.
+  const realIp = req.headers?.["x-real-ip"];
+  if (typeof realIp === "string" && realIp.trim()) {
+    return realIp.trim().split(",")[0].slice(0, 128);
+  }
+  const vercelFwd = req.headers?.["x-vercel-forwarded-for"];
+  const vRaw = Array.isArray(vercelFwd) ? vercelFwd[0] : vercelFwd;
+  const vFirst = typeof vRaw === "string" ? vRaw.split(",")[0].trim() : "";
+  if (vFirst) return vFirst.slice(0, 128);
   const forwarded = req.headers?.["x-forwarded-for"];
   const raw = Array.isArray(forwarded) ? forwarded[0] : forwarded;
   const first = typeof raw === "string" ? raw.split(",")[0] : "";

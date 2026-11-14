@@ -6,11 +6,11 @@
   "description": "Raindrop เก็บบุ๊กมาร์กไว้บนเซิร์ฟเวอร์ของมัน BookmarkForge เก็บไว้ในคอมพิวเตอร์ของคุณ — ล็อกจนแม้แต่เราเองก็อ่านไม่ได้ จ่ายครั้งเดียว: $59 สิทธิ์ใช้งานตลอดชีพแบบ early bird (ประหยัด $20 ก่อนราคาปกติ) ฟรี: 500 บุ๊กมาร์ก",
   "ogTitle": "BookmarkForge: ตัวจัดการบุ๊กมาร์กส่วนตัวแบบ local-first พร้อมรายการอ่าน",
   "ogDescription": "Raindrop เก็บบุ๊กมาร์กไว้บนเซิร์ฟเวอร์ของมัน BookmarkForge เก็บไว้ในคอมพิวเตอร์ของคุณ — ล็อกจนแม้แต่เราเองก็อ่านไม่ได้ จ่ายครั้งเดียว: $59 สิทธิ์ใช้งานตลอดชีพแบบ early bird (ประหยัด $20 ก่อนราคาปกติ) ฟรี: 500 บุ๊กมาร์ก",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "ogImageAlt": "BookmarkForge — แอปบุ๊กมาร์กและโน้ตส่วนตัวที่ขับเคลื่อนด้วย AI",
   "twitterTitle": "BookmarkForge: ตัวจัดการบุ๊กมาร์กส่วนตัวแบบ local-first พร้อมรายการอ่าน",
   "twitterDescription": "Raindrop เก็บบุ๊กมาร์กไว้บนเซิร์ฟเวอร์ของมัน BookmarkForge เก็บไว้ในคอมพิวเตอร์ของคุณ — ล็อกจนแม้แต่เราเองก็อ่านไม่ได้ จ่ายครั้งเดียว: $59 สิทธิ์ใช้งานตลอดชีพแบบ early bird (ประหยัด $20 ก่อนราคาปกติ) ฟรี: 500 บุ๊กมาร์ก",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "ข้ามไปยังเนื้อหาหลัก",
   "navBrandAria": "หน้าแรก BookmarkForge",
   "navAriaLabel": "เมนูหลัก",
@@ -31,26 +31,26 @@
   "githubAria": "ให้ดาว BookmarkForge บน GitHub",
   "hero": {
     "badge": "จ่ายครั้งเดียว · ไม่มีการสมัครสมาชิกรายเดือน",
-    "title": "ทุกอย่างที่คุณบันทึกจะอยู่ในคอมพิวเตอร์ของคุณ <span class=\"accent-text\">ทุกอย่าง</span>",
-    "subtitle": "Raindrop เก็บบุ๊กมาร์กไว้บนเซิร์ฟเวอร์ของมัน — และเรียกเก็บเงินจากคุณทุกปี BookmarkForge เก็บไว้ในคอมพิวเตอร์ของคุณ ล็อกด้วยกุญแจที่มีเพียงคุณเท่านั้น ไม่มีบัญชี ไม่มีค่าธรรมเนียมรายเดือน ไม่มีใครแอบอ่าน",
-    "ctaPrimary": "ลองใช้ทันที (ไม่ต้องมีบัญชี)",
-    "ctaSecondary": "ดูราคา",
+    "title": "ตัวจัดการบุ๊กมาร์กส่วนตัวที่ <span class=\"accent-text\">เก็บทุกอย่างไว้ในอุปกรณ์ของคุณ</span>",
+    "subtitle": "สำหรับนักวิจัย นักศึกษา และทุกคนที่ไม่อยากมอบประวัติการอ่านให้บริษัทคลาวด์ บันทึกหน้าเว็บ บทความ และ PDF ค้นหาด้วยคำสำคัญหรือความหมาย และเก็บทุกอย่างไว้อย่างเข้ารหัสบนคอมพิวเตอร์ของคุณเอง ไม่ต้องมีบัญชี ไม่มีค่าสมัครสมาชิกรายเดือน",
+    "ctaPrimary": "เริ่มฟรี — ไม่ต้องสมัครสมาชิก",
+    "ctaSecondary": "ดูวิธีการทำงาน",
     "pillars": [
       {
-        "strong": "เป็นส่วนตัว",
-        "text": "หน้าที่คุณบันทึกไม่เคยออกจากคอมพิวเตอร์"
+        "strong": "ส่วนตัว",
+        "text": "เข้ารหัสบนอุปกรณ์ของคุณ"
       },
       {
-        "strong": "ล็อกไว้",
-        "text": "แม้แต่เราเองก็อ่านไม่ได้"
+        "strong": "เป็นของคุณตลอดไป",
+        "text": "ไม่มีค่าสมาชิกรายเดือน"
       },
       {
-        "strong": "ออฟไลน์",
-        "text": "ใช้งานได้บนเครื่องบิน ในอุโมงค์ หรือที่ไหนก็ได้"
+        "strong": "ใช้งานออฟไลน์",
+        "text": "บันทึกและอ่านได้ทุกที่แม้ไม่มีอินเทอร์เน็ต"
       },
       {
-        "strong": "จ่ายครั้งเดียว",
-        "text": "$59 สิทธิ์ใช้งานตลอดชีพแบบ early bird (ประหยัด $20 ก่อนราคาปกติ)"
+        "strong": "ฟรีตลอดไป",
+        "text": "บุ๊กมาร์ก 500 รายการฟรี อัปเกรดเป็น Pro เมื่ออยากได้มากกว่านี้"
       }
     ],
     "announce": "⚡ การแปลด้วย AI ภายในเครื่อง (เร็ว ๆ นี้)"
@@ -401,15 +401,11 @@
         "cta": "รับ Pro $59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "แล้ว $79 ราคาปกติ",
-        "sla": "การสนับสนุน: อีเมล 48 ชม. (จันทร์–ศุกร์)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "รับ Pro ราคา $79 (ราคาปกติ)",
-        "cta2Class": "btn-secondary"
+        "sla": "การสนับสนุน: อีเมล 48 ชม. (จันทร์–ศุกร์)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-th#pricing\">Learn more</a>"
+    "legal": "ชำระครั้งเดียว · รวมอัปเดต 12 เดือน · v1 ใช้ได้ตลอดไป · รับประกันคืนเงิน 30 วัน <a href=\"/privacy-and-terms.html#terms\">เงื่อนไข</a>"
   },
   "faq": {
     "title": "คำถามที่พบบ่อย",
@@ -502,7 +498,8 @@
         "ติดต่อ"
       ],
       "helpCenter": "ศูนย์ช่วยเหลือ",
-      "errorCodes": "รหัสข้อผิดพลาด"
+      "errorCodes": "รหัสข้อผิดพลาด",
+      "hours": "ตอบกลับภายใน 48 ชั่วโมง จ.–ศ. (CET)"
     },
     "copyright": "© 2026 BookmarkForge สงวนลิขสิทธิ์",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",

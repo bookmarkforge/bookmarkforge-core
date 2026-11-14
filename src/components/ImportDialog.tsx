@@ -32,7 +32,7 @@ type ImportOutcome = {
 export default function ImportDialog({ isOpen, onClose }: ImportDialogProps) {
   const { t } = useTranslation();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  // Audit 16-A3: a preview is async and must not settle after the dialog was
+  // a preview is async and must not settle after the dialog was
   // closed/reopened or another file was chosen. A generation counter drops
   // stale results (and lets a close skip the unnecessary import).
   const previewGenerationRef = useRef(0);

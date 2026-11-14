@@ -2,17 +2,17 @@
   "lang": "cs",
   "langName": "Čeština",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/cs/",
+  "canonical": "https://www.bookmarkforgeapp.com/cs/",
   "ogLocale": "cs_CZ",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: soukromý lokální správce záložek se seznamem ke čtení",
   "description": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. Jedna platba: $59 doživotní přístup v akci early bird (ušetříte $20 před běžnou cenou). Zdarma: 500 záložek.",
   "ogTitle": "BookmarkForge: soukromý lokální správce záložek se seznamem ke čtení",
   "ogDescription": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. Jedna platba: $59 doživotní přístup v akci early bird (ušetříte $20 před běžnou cenou). Zdarma: 500 záložek.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: soukromý lokální správce záložek se seznamem ke čtení",
   "twitterDescription": "Raindrop uchovává vaše záložky na svých serverech. BookmarkForge je uchovává ve vašem počítači – uzamčené, takže je nemůžeme číst ani my. Jedna platba: $59 doživotní přístup v akci early bird (ušetříte $20 před běžnou cenou). Zdarma: 500 záložek.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Přejít na hlavní obsah",
   "navBrandAria": "Domov BookmarkForge",
   "navAriaLabel": "Hlavní navigace",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "Zavřít menu",
   "hero": {
     "badge": "Jednorázová platba · Žádné předplatné",
-    "title": "Vše, co uložíte, zůstane ve vašem počítači. <span class=\"accent-text\">Všechno.</span>",
-    "subtitle": "Raindrop uchovává vaše záložky na svých serverech – a každý rok vám účtuje poplatky. BookmarkForge je uchovává ve vašem počítači uzamčené klíčem, který máte pouze vy. Žádné účty. Žádné měsíční poplatky. Nikdo ti nečte přes rameno.",
-    "ctaPrimary": "Vyzkoušejte hned (bez účtu)",
-    "ctaSecondary": "Zobrazit ceník",
+    "title": "Soukromý správce záložek, který <span class=\"accent-text\">uchovává všechno na vašem zařízení.</span>",
+    "subtitle": "Pro výzkumníky, studenty a všechny, kdo nechtějí svěřovat historii čtení cloudové společnosti. Ukládejte stránky, články a PDF, vyhledávejte je podle klíčového slova nebo významu a mějte všechno šifrované na vlastním počítači. Bez účtu. Bez předplatného.",
+    "ctaPrimary": "Začít zdarma — bez registrace",
+    "ctaSecondary": "Podívejte se, jak to funguje",
     "pillars": [
       {
         "strong": "Soukromé",
-        "text": "vaše uložené stránky nikdy neopustí váš počítač"
+        "text": "šifrované na vašem zařízení"
       },
       {
-        "strong": "Zamčeno",
-        "text": "ani my je neumíme číst"
+        "strong": "Navždy vaše",
+        "text": "žádná předplatná ani měsíční poplatky"
       },
       {
-        "strong": "Mimo síť",
-        "text": "pracuje v letadle, v tunelu, kdekoli"
+        "strong": "Funguje offline",
+        "text": "ukládejte a čtěte kdekoliv, i bez internetu"
       },
       {
-        "strong": "Zaplaťte jednou",
-        "text": "$59 doživotní přístup v akci early bird (ušetříte $20 před běžnou cenou)"
+        "strong": "Navždy zdarma",
+        "text": "500 záložek zdarma, Pro jen pokud chcete víc"
       }
     ],
     "announce": "⚡ Lokální překlad pomocí AI (již brzy)"
@@ -408,15 +408,11 @@
         "cta": "Získejte Pro $ 59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primární",
-        "priceWas": "$79",
         "priceSub": "pak 79 $ běžných",
-        "sla": "Podpora: E-mail 48 hodin (Po–Pá)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Získat Pro $79 Regular",
-        "cta2Class": "btn-secondary"
+        "sla": "Podpora: E-mail 48 hodin (Po–Pá)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-cs#pricing\">Learn more</a>"
+    "legal": "Jednorázová platba · 12 měsíců aktualizací v ceně · v1 funguje navždy · 30denní záruka vrácení peněz. <a href=\"/privacy-and-terms.html#terms\">Podmínky</a>"
   },
   "faq": {
     "title": "Běžné otázky",
@@ -509,7 +505,8 @@
         "Kontakt"
       ],
       "helpCenter": "Centrum nápovědy",
-      "errorCodes": "Chybové kódy"
+      "errorCodes": "Chybové kódy",
+      "hours": "Odpovídáme do 48 hodin, po–pá (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Všechna práva vyhrazena.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "Váš soukromý trezor znalostí poháněný umělou inteligencí. 100% místní-první. Soukromá kapesní alternativa. Zdarma: 500 záložek.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "Centrum nápovědy — FAQ, odstraňování problémů a podpora SLA | BookmarkForge",
+    "title": "Centrum nápovědy — FAQ, odstraňování problémů a podpora SLA",
     "description": "BookmarkForge Help Center: cenová životnost v1, odstraňování problémů, chybové kódy BF-E*, podpora SLA a jak zkopírovat redigovanou diagnostickou zprávu.",
     "ogTitle": "Centrum nápovědy — BookmarkForge",
     "ogDescription": "Časté dotazy, odstraňování problémů, chybové kódy a podpora SLA. Přečtěte si, jak funguje lifetime v1 a jak zkopírovat diagnostickou zprávu.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "79 $ běžných",
-      "proPriceTraction": "99 $ po trakci",
+      "proPriceTraction": "",
       "proDescription": "Neomezené záložky, 5 zařízení + P2P synchronizace, místní umělá inteligence (WebLLM/Ollama) + RAG + expertní agenti, kartičky, PDF/OCR, 7 exportních formátů, trezor. <em>Životnost verze 1 · 12měsíční aktualizace funkcí · Navždy zabezpečení · 60% sleva v2</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "Samoobsluha: toto centrum nápovědy + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">Diskuze na GitHubu</a>",
+      "freeChannel": "Samoobsluha: toto centrum nápovědy + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">Diskuze na GitHubu</a>",
       "freeResponse": "Nejlepší úsilí (komunita)",
       "freeWhatToDo": "Před odesláním vyhledejte kód BF-E* níže + zkopírujte diagnostiku (<a href=\"#diagnostics\">§Diagnostika</a>)",
       "proChannel": "E-mail <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (předmět: Pro)",

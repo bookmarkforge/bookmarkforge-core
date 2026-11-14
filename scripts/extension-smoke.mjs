@@ -2,17 +2,17 @@
  * scripts/extension-smoke.mjs — loads the PACKAGED extension into a real
  * Chromium browser and verifies the capture flow end-to-end.
  *
- * Why this exists (audit H5): the extension unit tests (extension/__tests__)
+ * Why this exists: the extension unit tests (extension/__tests__)
  * run in jsdom with a mocked `chrome` API, so they cannot catch packaging
  * errors (missing files, broken manifest, popup runtime errors). This script
  * launches Chromium with `--load-extension` against the built output
  * (OUTPUT_DIR, default dist-extension) and asserts:
  *
- *   1. the manifest parses as MV3 and every referenced file ships;
- *   2. the extension service worker starts (background.js boots);
- *   3. the popup renders its controls (popup.html + popup.js boot);
- *   4. the capture URL builder emits the S0/R1 fragment-hash contract
- *      (never GET query params — URLs/titles must not hit server logs).
+ * 1. the manifest parses as MV3 and every referenced file ships;
+ * 2. the extension service worker starts (background.js boots);
+ * 3. the popup renders its controls (popup.html + popup.js boot);
+ * 4. the capture URL builder emits the S0/R1 fragment-hash contract
+ * (never GET query params — URLs/titles must not hit server logs).
  *
  * A click-through probe (5) opens a real tab and clicks Save: in a browser
  * harness that grants `activeTab` (e.g. a headed session with xvfb) it

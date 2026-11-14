@@ -71,7 +71,6 @@ export const Settings = ({ onClose }: SettingsProps) => {
     setApiKey,
     vaultKey,
     setVaultKey,
-    masterPassword: _masterPassword,
     isUpdatingPassword,
     handleUpdateVaultKey,
     provider: _provider,

@@ -2,17 +2,17 @@
   "lang": "ar",
   "langName": "العربية",
   "dir": "rtl",
-  "canonical": "https://bookmarkforgeapp.com/ar/",
+  "canonical": "https://www.bookmarkforgeapp.com/ar/",
   "ogLocale": "ar_AR",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: مدير إشارات مرجعية خاص ومحلي مع قائمة قراءة",
   "description": "تحتفظ Raindrop بإشاراتك المرجعية على خوادمها. تحتفظ BookmarkForge بها على جهازك — مغلقة لدرجة أنه حتى نحن لا نستطيع قراءتها. دفعة واحدة: $59 وصول مدى الحياة بسعر early bird (وفّر $20 قبل السعر العادي). مجانًا: 500 إشارة مرجعية.",
   "ogTitle": "BookmarkForge: مدير إشارات مرجعية خاص ومحلي مع قائمة قراءة",
   "ogDescription": "تحتفظ Raindrop بإشاراتك المرجعية على خوادمها. تحتفظ BookmarkForge بها على جهازك — مغلقة لدرجة أنه حتى نحن لا نستطيع قراءتها. دفعة واحدة: $59 وصول مدى الحياة بسعر early bird (وفّر $20 قبل السعر العادي). مجانًا: 500 إشارة مرجعية.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: مدير إشارات مرجعية خاص ومحلي مع قائمة قراءة",
   "twitterDescription": "تحتفظ Raindrop بإشاراتك المرجعية على خوادمها. تحتفظ BookmarkForge بها على جهازك — مغلقة لدرجة أنه حتى نحن لا نستطيع قراءتها. دفعة واحدة: $59 وصول مدى الحياة بسعر early bird (وفّر $20 قبل السعر العادي). مجانًا: 500 إشارة مرجعية.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "انتقل إلى المحتوى الرئيسي",
   "navBrandAria": "الصفحة الرئيسية لـ BookmarkForge",
   "navAriaLabel": "التنقل الرئيسي",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "إغلاق القائمة",
   "hero": {
     "badge": "دفعة واحدة · لا اشتراك",
-    "title": "كل شيء تحفظه يظل على جهازك. <span class=\"accent-text\">كل شيء.</span>",
-    "subtitle": "تحتفظ Raindrop بإشاراتك المرجعية على خوادمها — وتحصلك رسومًا كل عام. تحتفظ BookmarkForge بها على جهازك، مغلقة بمفتاح لا يملكه سواك. لا حسابات. لا رسوم شهرية. لا أحد يتطفل عليك.",
-    "ctaPrimary": "جرّبه فورًا (بدون حساب)",
-    "ctaSecondary": "عرض التسعير",
+    "title": "مدير الإشارات المرجعية الخاص الذي <span class=\"accent-text\">يحتفظ بكل شيء على جهازك.</span>",
+    "subtitle": "للباحثين والطلاب وكل من يفضّل عدم تسليم سجل قراءته إلى شركة سحابية. احفظ الصفحات والمقالات وملفات PDF، واعثر عليها بالكلمة المفتاحية أو بالمعنى، واحتفظ بكل شيء مشفّرًا على حاسوبك الخاص. بلا حساب. بلا اشتراك.",
+    "ctaPrimary": "ابدأ مجانًا — دون تسجيل",
+    "ctaSecondary": "شاهد كيف يعمل",
     "pillars": [
       {
         "strong": "خاص",
-        "text": "صفحاتك المحفوظة لا تغادر جهازك أبدًا"
+        "text": "مشفّر على جهازك"
       },
       {
-        "strong": "مغلقة",
-        "text": "حتى نحن لا نستطيع قراءتها"
+        "strong": "ملكك للأبد",
+        "text": "بلا اشتراكات أو رسوم شهرية"
       },
       {
-        "strong": "بدون إنترنت",
-        "text": "يعمل على متن طائرة، في نفق، في أي مكان"
+        "strong": "يعمل دون اتصال",
+        "text": "احفظ واقرأ في أي مكان حتى بدون إنترنت"
       },
       {
-        "strong": "ادفع مرة واحدة",
-        "text": "$59 وصول مدى الحياة بسعر early bird (وفّر $20 قبل السعر العادي)"
+        "strong": "مجاني للأبد",
+        "text": "500 إشارة مرجعية مجانًا، الترقية إلى Pro فقط إذا أردت المزيد"
       }
     ],
     "announce": "⚡ ترجمة بالذكاء الاصطناعي محليًا (قريبًا)"
@@ -408,15 +408,11 @@
         "cta": "احصل على Pro بسعر 59 دولارًا لـ Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "ثم 79 دولارًا بشكل منتظم",
-        "sla": "الدعم: بريد إلكتروني 48 ساعة (الاثنين–الجمعة)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "احصل على Pro بسعر $79 (السعر العادي)",
-        "cta2Class": "btn-secondary"
+        "sla": "الدعم: بريد إلكتروني 48 ساعة (الاثنين–الجمعة)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-ar#pricing\">Learn more</a>"
+    "legal": "دفعة لمرة واحدة · 12 شهرًا من التحديثات مشمولة · يعمل الإصدار v1 إلى الأبد · ضمان استرداد الأموال خلال 30 يومًا. <a href=\"/privacy-and-terms.html#terms\">الشروط</a>"
   },
   "faq": {
     "title": "أسئلة شائعة",
@@ -509,7 +505,8 @@
         "اتصل بنا"
       ],
       "helpCenter": "مركز المساعدة",
-      "errorCodes": "أكواد الأخطاء"
+      "errorCodes": "أكواد الأخطاء",
+      "hours": "نرد خلال 48 ساعة، من الاثنين إلى الجمعة (CET)"
     },
     "copyright": "© 2026 BookmarkForge. جميع الحقوق محفوظة.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "خزنة معارفك الخاصة، مدعومة بالذكاء الاصطناعي. 100% محلي أولاً. البديل الخاص لـ Pocket. مجانًا: 500 إشارة مرجعية.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "مركز المساعدة — الأسئلة الشائعة، استكشاف الأخطاء وإصلاحها، ودعم SLA | BookmarkForge",
+    "title": "مركز المساعدة — الأسئلة الشائعة، استكشاف الأخطاء وإصلاحها، ودعم SLA",
     "description": "مركز مساعدة BookmarkForge: تسعير مدى الحياة v1، استكشاف الأخطاء وإصلاحها، أكواد الأخطاء BF-E*، دعم SLA وكيفية نسخ تقرير تشخيصي مسخ.",
     "ogTitle": "مركز المساعدة — BookmarkForge",
     "ogDescription": "الأسئلة الشائعة، استكشاف الأخطاء وإصلاحها، أكواد الأخطاء ودعم SLA. تعرف على كيفية عمل مدى الحياة v1 وكيفية نسخ تقرير تشخيصي.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "79 دولارًا بشكل منتظم",
-      "proPriceTraction": "99 دولارًا بعد الانتشار",
+      "proPriceTraction": "",
       "proDescription": "إشارات مرجعية غير محدودة، 5 أجهزة + مزامنة P2P، ذكاء اصطناعي محلي (WebLLM/Ollama) + RAG + وكلاء خبراء، بطاقات دراسية، PDF/OCR، 7 صيغ تصدير، خزنة. <em>مدى الحياة لـ v1 · 12 شهرًا من تحديثات الميزات · أمان إلى الأبد · خصم 60% على v2</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "خدمة ذاتية: هذا مركز المساعدة + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">مناقشات GitHub</a>",
+      "freeChannel": "خدمة ذاتية: هذا مركز المساعدة + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">مناقشات GitHub</a>",
       "freeResponse": "بذل الجهد الممكن (المجتمع)",
       "freeWhatToDo": "ابحث عن كود BF-E* أدناه + انسخ التشخيص (<a href=\"#diagnostics\">§التشخيص</a>) قبل النشر",
       "proChannel": "بريد إلكتروني <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (الموضوع: Pro)",

@@ -40,7 +40,7 @@ const timingBaseline = (() => {
   const baselinePath = join(ROOT, "scripts", "test-timing-baseline.json");
   // Absent is a legitimate state — a fixture root or any tree that ships no
   // timing baseline — and this module is imported by the runner, the wrapper,
-  // the file collector and check-audit-freshness, so it must stay quiet there
+  // the file collector and the bounded runner, so it must stay quiet there
   // (a gate test asserting clean stderr is what caught the noisy version).
   // Present but unparseable is a defect and is loud.
   if (!existsSync(baselinePath)) return null;
@@ -73,11 +73,6 @@ export function pinnedLabel(repoPath) {
 // is a deliberate, reviewed act.
 export const SLOW_GATE_TESTS = new Set([
   "build-ci-secret-scan.test.mjs",
-  // Re-executes the real audit ledger end-to-end, `npm run lint` included; one
-  // shared run still costs ~28 s (pinned in test-timing-baseline.json). Moved
-  // here by the 2026-11-06 audit after it crossed the 5 s fast-profile bar —
-  // `test-profiles.test.mjs` names any over-bar gate test left in fast.
-  "check-audit-freshness.test.mjs",
   // Spawns the whole-tree ratchet twice (default + --json); a real ~5.5 s of
   // work, not a sleep. Moved here by the 2026-10-20 audit after it crossed the
   // 5 s fast-profile bar — `test-profiles.test.mjs` names it, and moving it is

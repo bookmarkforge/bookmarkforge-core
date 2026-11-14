@@ -83,18 +83,17 @@ export function useSettings() {
   // Security
   const [apiKey, setApiKey] = useState(() => aiManager.getApiKey() || "");
   const [vaultKey, setVaultKey] = useState("");
-  const [masterPassword, setMasterPassword] = useState("");
   const [showApiKey, setShowApiKey] = useState(false);
 
-  // SECURITY (S9): apiKey (decrypted via aiManager.getApiKey()), vaultKey and
-  // masterPassword are secrets held in React state — outside the vault/config
-  // tree — and would survive a vault lock in memory. Purge them synchronously
-  // when the vault locks.
+  // SECURITY (S9): apiKey (decrypted via aiManager.getApiKey()) and vaultKey
+  // are secrets held in React state — outside the vault/config tree — and would
+  // survive a vault lock in memory. Purge them synchronously when the vault
+  // locks. The master password is deliberately NOT held here: it lives only as
+  // bytes inside SecurityVault (AGENTS.md §2).
   useEffect(() => {
     return securityVault.onLock(() => {
       setApiKey("");
       setVaultKey("");
-      setMasterPassword("");
     });
   }, []);
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
@@ -233,7 +232,8 @@ export function useSettings() {
     setIsUpdatingPassword(true);
     try {
       await aiManager.updateMasterPassword(vaultKey);
-      setMasterPassword(vaultKey);
+      // The new password is never copied into React state: SecurityVault keeps
+      // it as bytes and purges it on lock.
       toast.success(t("app_passwordUpdated"));
       setVaultKey("");
     } catch (_err) {
@@ -295,8 +295,6 @@ export function useSettings() {
     setApiKey,
     vaultKey,
     setVaultKey,
-    masterPassword,
-    setMasterPassword,
     showApiKey,
     setShowApiKey,
     isUpdatingPassword,

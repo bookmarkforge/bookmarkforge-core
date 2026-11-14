@@ -1,0 +1,23 @@
+// Dedicated typecheck gate for the test files that the main tsconfig.json
+// excludes because they exercise RxDB dynamic collections, Pro service types
+// or Node-only serverless handlers.
+//
+// The production tree is included so the tests see the same ambient
+// declarations (Window augmentations, FileSystemDirectoryHandle helpers,
+// WorkerGlobalScope) as the app; src/tests is excluded and these files are
+// added explicitly as roots. That keeps every error attributable to one of
+// these tests instead of re-opening the whole test tree.
+//
+// Run with: npm run typecheck:tests
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["src"],
+  "exclude": ["src/tests"],
+  "files": [
+    "src/tests/db/encryption.test.ts"
+  ]
+}

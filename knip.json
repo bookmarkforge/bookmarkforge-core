@@ -7,8 +7,8 @@
     "scripts/**/*.{mjs,cjs,js}",
     "src/modules/translation/index.ts"
   ],
-  "project": ["src/**/*.{ts,tsx,css}", "server/src/**/*.ts", "api/**/*.ts"],
-  "ignore": ["**/*.spec.{ts,tsx}", "src/tests/**", "server/**"],
+  "project": ["src/**/*.{ts,tsx,css}", "api/**/*.ts"],
+  "ignore": ["**/*.spec.{ts,tsx}", "src/tests/**"],
   "ignoreDependencies": ["lint-staged", "buffer"],
   "ignoreBinaries": [
     "vercel",

@@ -6,22 +6,22 @@
   <title>Privacy Policy &amp; Terms of Service | BookmarkForge</title>
   <meta name="description" content="BookmarkForge Privacy Policy and Terms of Service. Your data stays on your device. Local-first, encrypted, zero-knowledge.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://bookmarkforgeapp.com/privacy-and-terms.html">
+  <link rel="canonical" href="https://www.bookmarkforgeapp.com/privacy-and-terms.html">
   <!-- SEO: the full hreflang set (6 languages + x-default) mirrors the
        landing pages — this document is translated into all of them. -->
-  <link rel="alternate" hreflang="en" href="https://bookmarkforgeapp.com/privacy-and-terms.html">
-  <link rel="alternate" hreflang="es" href="https://bookmarkforgeapp.com/es/privacy-and-terms.html">
-  <link rel="alternate" hreflang="fr" href="https://bookmarkforgeapp.com/fr/privacy-and-terms.html">
-  <link rel="alternate" hreflang="de" href="https://bookmarkforgeapp.com/de/privacy-and-terms.html">
-  <link rel="alternate" hreflang="pt" href="https://bookmarkforgeapp.com/pt/privacy-and-terms.html">
-  <link rel="alternate" hreflang="it" href="https://bookmarkforgeapp.com/it/privacy-and-terms.html">
-  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/privacy-and-terms.html">
+  <link rel="alternate" hreflang="en" href="https://www.bookmarkforgeapp.com/privacy-and-terms.html">
+  <link rel="alternate" hreflang="es" href="https://www.bookmarkforgeapp.com/es/privacy-and-terms.html">
+  <link rel="alternate" hreflang="fr" href="https://www.bookmarkforgeapp.com/fr/privacy-and-terms.html">
+  <link rel="alternate" hreflang="de" href="https://www.bookmarkforgeapp.com/de/privacy-and-terms.html">
+  <link rel="alternate" hreflang="pt" href="https://www.bookmarkforgeapp.com/pt/privacy-and-terms.html">
+  <link rel="alternate" hreflang="it" href="https://www.bookmarkforgeapp.com/it/privacy-and-terms.html">
+  <link rel="alternate" hreflang="x-default" href="https://www.bookmarkforgeapp.com/privacy-and-terms.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="BookmarkForge">
   <meta property="og:title" content="Privacy Policy &amp; Terms of Service | BookmarkForge">
   <meta property="og:description" content="BookmarkForge Privacy Policy and Terms of Service. Your data stays on your device. Local-first, encrypted, zero-knowledge.">
-  <meta property="og:url" content="https://bookmarkforgeapp.com/privacy-and-terms.html">
-  <meta property="og:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <meta property="og:url" content="https://www.bookmarkforgeapp.com/privacy-and-terms.html">
+  <meta property="og:image" content="https://www.bookmarkforgeapp.com/og-image.png">
   <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -30,7 +30,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Privacy Policy &amp; Terms of Service | BookmarkForge">
   <meta name="twitter:description" content="BookmarkForge Privacy Policy and Terms of Service. Your data stays on your device. Local-first, encrypted, zero-knowledge.">
-  <meta name="twitter:image" content="https://bookmarkforgeapp.com/og-image.png">
+  <meta name="twitter:image" content="https://www.bookmarkforgeapp.com/og-image.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
   <script src="/theme-init.js"></script>
   <link rel="stylesheet" href="/brand-tokens.css">
@@ -152,7 +152,7 @@
       <li><strong>Right to rectification (Art. 16):</strong> Edit your bookmarks, notes, and documents directly in the app.</li>
       <li><strong>Right to erasure (Art. 17):</strong> Use the built-in data removal (Settings -> Danger Zone / Nuclear Forget). This permanently deletes all local data, including encrypted keys and recovery data. We hold no copy.</li>
       <li><strong>Right to data portability (Art. 20):</strong> Exports are open formats (JSON, Markdown, HTML) usable in other applications.</li>
-      <li><strong>Right to object and restrict processing (Arts. 18/21):</strong> All optional processing (cloud AI, telemetry, error reporting) is strictly opt-in and can be disabled at any time in Settings.</li>
+      <li><strong>Right to object and restrict processing (Arts. 18/21):</strong> All optional processing (cloud AI, local diagnostics) is strictly opt-in and can be disabled at any time in Settings.</li>
       <li><strong>Right to withdraw consent (Art. 7):</strong> Disabling optional features in Settings withdraws consent immediately and stops all associated processing.</li>
     </ul>
     <p>To exercise any right that requires our involvement (e.g. a complaint about server-side processing), contact us at the email in section 17. You also have the right to lodge a complaint with your national data protection authority.</p>
@@ -183,18 +183,6 @@
           <td>Bounded in-memory ring (<= 200 reports) or JSONL file you host</td>
         </tr>
         <tr>
-          <td>Opt-in business analytics -- <strong>self-hosted companion server only</strong>; the hosted service at bookmarkforgeapp.com does not operate this endpoint</td>
-          <td>Daily aggregated counts of a fixed list of event types, plus a SHA-256 hash of a random per-install id; no content, URLs, titles or timestamps</td>
-          <td><strong>Consent</strong> (Art. 6(1)(a)) -- off by default</td>
-          <td><= 180 days of daily totals; <= 200,000 installs of bounded per-install state</td>
-        </tr>
-        <tr>
-          <td>Client degradation events -- <strong>self-hosted companion server only</strong>; not operated on the hosted deployment</td>
-          <td>Anonymized technical error class, hashed IP with per-deployment salt</td>
-          <td><strong>Consent</strong> (Art. 6(1)(a))</td>
-          <td>Bounded ring (<= 200 events), aggregation window <= 10 minutes</td>
-        </tr>
-        <tr>
           <td>P2P sync signaling</td>
           <td>Peer connection metadata (SDP/ICE), ephemeral room secret</td>
           <td><strong>Contract</strong> (Art. 6(1)(b)) -- you initiated the sync</td>
@@ -202,7 +190,7 @@
         </tr>
       </tbody>
     </table>
-    <p>Everything else -- your bookmarks, notes, documents, passwords, encryption keys, analytics events -- is processed <strong>exclusively on your device under your control</strong>, and is therefore outside the scope of GDPR processing by us.</p>
+    <p>Everything else -- your bookmarks, notes, documents, passwords, encryption keys -- is processed <strong>exclusively on your device under your control</strong>, and is therefore outside the scope of GDPR processing by us.</p>
 
     <h2>13. Third-Party Processors &amp; Data Transfers</h2>
     <p>When you use optional features, data may be processed by the following third parties (sub-processors). Each transfer happens only when you explicitly use the feature:</p>
@@ -237,12 +225,12 @@
       <li>Controller: BookmarkForge, operated by Leonardo</li>
       <li>Address: Castrelos, Vigo, Spain</li>
       <li>Published languages: English, Español, Français, Deutsch, Português, Italiano. The other languages we serve redirect to this English version.</li>
-      <li>Repository and issue tracker: <a href="https://bookmarkforgeapp.com/bookmarkforge/bookmarkforge">github.com/bookmarkforge/bookmarkforge</a></li>
+      <li>Repository and issue tracker: <a href="https://www.bookmarkforgeapp.com/bookmarkforge/bookmarkforge-core">github.com/bookmarkforge/bookmarkforge-core</a></li>
     </ul>
 
     <hr>
 
-        <h1 id="terms">Terms of Service</h1>
+        <h2 id="terms">Terms of Service</h2>
     <p class="last-updated"><strong>Last Updated:</strong> September 13, 2026</p>
 
     <h2>1. Acceptance of Terms</h2>

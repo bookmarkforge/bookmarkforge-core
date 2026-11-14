@@ -18,17 +18,15 @@ npm run dev
 ### 🔴 Required for Production
 - `VITE_P2P_SIGNALING_URL` - P2P signaling server
 - `WS_ALLOWED_ORIGINS` - WebSocket origin allow-list
-- `CLIENT_EVENTS_IP_HASH_SALT` - IP privacy salt
+- `SIGNALING_IP_HASH_SALT` / `CSP_REPORT_IP_HASH_SALT` - IP privacy salts
 
 ### 🟡 Recommended for Production
-- `VITE_SENTRY_DSN` - Error reporting (optional but recommended)
 - `VITE_TURN_URL` / `VITE_TURN_USERNAME` / `VITE_TURN_CREDENTIAL` - WebRTC TURN server
-- `CLIENT_EVENTS_WEBHOOK_URL` - Alert webhook
+- `CSP_REPORT_WEBHOOK_URL` - CSP alert webhook
 
 ### 🟢 Optional / Development Only
 - `VITE_DISABLE_NETWORK_FIREWALL` - Disable firewall (dev only)
 - `VITE_FORCE_MEMORY_STORAGE` - In-memory DB (testing only)
-- `VITE_ALLOW_V5_LEGACY_READ` - Legacy v5 vault support (migration only)
 
 ---
 
@@ -42,7 +40,7 @@ These variables are **inlined into the client bundle at build time** by Vite. Th
 |----------|----------|---------|-------------|
 | `VITE_APP_VERSION` | No | `"dev"` | Application version string |
 | `VITE_BUILD_HASH` | No | `""` | Git commit SHA (auto-injected by CI) |
-| `VITE_DB_NAME` | No | `"bookmarkforge"` | IndexedDB database name |
+| `VITE_DB_NAME` | No | `"bookmarkforge_v5"` | IndexedDB database name |
 | `VITE_DEV_MODE` | No | `""` | Development mode flag for experimental features |
 
 ### Storage Overrides (Development/Testing Only)
@@ -57,7 +55,6 @@ These variables are **inlined into the client bundle at build time** by Vite. Th
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `VITE_ALLOW_V5_LEGACY_READ` | No | `false` | Allow reading v5 vault format (⚠️ security risk) |
 
 **Security Note:** The v5 format uses a static salt, making vaults vulnerable to precomputed Argon2id attacks. This is disabled by default (cutoff activated). Only enable temporarily for migration, then disable immediately.
 
@@ -69,13 +66,12 @@ These variables are **inlined into the client bundle at build time** by Vite. Th
 | `VITE_E2E_KDF_DIAGNOSTICS` | No | `false` | Publish KDF parameters for mobile testing |
 | `VITE_TEST_BUILD` | No | `false` | Mark build as test build |
 
-### Telemetry & Error Reporting
+### Error Reporting
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `VITE_SENTRY_DSN` | No | `""` | Sentry DSN for remote error reporting (optional) |
-
-**Privacy Note:** Error reporting is opt-in. Users must consent via banner before any data is sent. Leave empty to keep error reporting strictly local.
+BookmarkForge collects **zero telemetry**: no usage analytics, no client-event
+forwarding, no remote error reporting. `VITE_SENTRY_DSN` is not consumed by the
+application; the build only uses it to widen the CSP `connect-src` allow-list if
+a self-hosted deployment adds its own error reporting. Leave it unset.
 
 ### Network Firewall & P2P Sync
 
@@ -122,6 +118,7 @@ These variables are used by the companion server (`server/src/index.ts`) and Doc
 | `MAX_ROOMS` | No | `"2048"` | Maximum concurrent sync rooms |
 | `MAX_PEERS_PER_ROOM` | No | `"64"` | Peers per room (clamped to `MAX_CONNECTIONS`) |
 | `JOIN_LIMIT` | No | `"120"` | Join attempts per IP per window (rate limit) |
+| `ENFORCE_SIGNAL_HMAC` | No | on | Signal-message HMAC enforcement. Always on in production; `0`/`false` is honored only when `NODE_ENV` is `development` or `test` |
 
 **Example:** `https://bookmarkforgeapp.com https://staging.bookmarkforgeapp.com`
 
@@ -146,30 +143,25 @@ sustained-load harness ships in this repo yet.
 | `TURN_RELAY_HOST` | No | `""` | TURN relay host for WebRTC proxying |
 | `TURN_STATIC_AUTH_SECRET` | No | `""` | Static auth secret for TURN server (⚠️ secret) |
 
-### Client Events Endpoint (Alert Webhook)
+### CSP Report Webhook (Optional)
 
 | Variable | Required | Default | Description |
 |----------|----------|---------|-------------|
-| `CLIENT_EVENTS_WEBHOOK_URL` | No | `""` | HTTPS webhook URL for client event alerts |
-| `CLIENT_EVENTS_ADMIN_TOKEN` | No | `""` | Admin token for diagnostics endpoint |
-| `CLIENT_EVENTS_CRITICAL_CLIENTS` | No | `"3"` | Threshold for triggering alert |
-| `CLIENT_EVENTS_WINDOW_MS` | No | `"600000"` | Time window for counting (10 minutes) |
-| `CLIENT_EVENTS_LIMIT` | No | `"30"` | Rate limit per window |
-| `CLIENT_EVENTS_MAX` | No | `"200"` | Maximum before hard drop |
-| `CLIENT_EVENTS_IP_HASH_SALT` | Yes | `""` | Salt for IP address hashing (privacy) |
+| `CSP_REPORT_WEBHOOK_URL` | No | `""` | HTTPS webhook URL for CSP violation alerts |
+| `CSP_REPORT_ADMIN_TOKEN` | No | `""` | Admin token for the `/csp-report` dashboard |
+| `CSP_REPORT_IP_HASH_SALT` | Yes | `""` | Salt for IP address hashing (privacy) |
 
 **Security Notes:**
-- `CLIENT_EVENTS_WEBHOOK_URL` MUST be https-only (enforced by gate)
+- `CSP_REPORT_WEBHOOK_URL` MUST be https-only (enforced by gate)
 - Alert webhooks are delivered over a socket pinned to the address the server
   validated, and redirects are **not** followed: point
-  `CLIENT_EVENTS_WEBHOOK_URL` / `CSP_REPORT_WEBHOOK_URL` at the final HTTPS
-  endpoint, never at a redirector or URL shortener (a 3xx counts as a failed
-  delivery)
-- `CLIENT_EVENTS_IP_HASH_SALT` is REQUIRED in production for IP privacy (minimum 32 characters)
+  `CSP_REPORT_WEBHOOK_URL` at the final HTTPS endpoint, never at a redirector
+  or URL shortener (a 3xx counts as a failed delivery)
+- `CSP_REPORT_IP_HASH_SALT` is REQUIRED in production for IP privacy (minimum 32 characters)
 - Use a unique random string per deployment
 
 **IP-Hash Salt Requirements (M4):**
-All IP-hash salts (`SIGNALING_IP_HASH_SALT`, `CSP_REPORT_IP_HASH_SALT`, `CLIENT_EVENTS_IP_HASH_SALT`, `ANALYTICS_IP_HASH_SALT`) must be at least 32 characters in production to prevent dictionary attacks on hashed IPs. The server will fail to start if these requirements are not met.
+All IP-hash salts (`SIGNALING_IP_HASH_SALT`, `CSP_REPORT_IP_HASH_SALT`) must be at least 32 characters in production to prevent dictionary attacks on hashed IPs. The server will fail to start if these requirements are not met.
 
 ---
 
@@ -199,7 +191,6 @@ Used by `docker-compose.prod.yml` and `docker-compose.staging.yml`.
 - Commit `.env` files to version control
 - Use weak or predictable salts
 - Set `VITE_DISABLE_NETWORK_FIREWALL=true` in production
-- Set `VITE_ALLOW_V5_LEGACY_READ=true` permanently
 - Include real API keys in `.env.example` files
 
 ---
@@ -256,13 +247,12 @@ VITE_P2P_SIGNALING_URL=wss://signaling.bookmarkforgeapp.com
 VITE_TURN_URL=turn:turn.bookmarkforgeapp.com:3478
 VITE_TURN_USERNAME=${TURN_USERNAME}
 VITE_TURN_CREDENTIAL=${TURN_CREDENTIAL}
-VITE_SENTRY_DSN=${SENTRY_DSN}
-
 # Server
 NODE_ENV=production
 WS_ALLOWED_ORIGINS=https://bookmarkforgeapp.com
-CLIENT_EVENTS_IP_HASH_SALT=${IP_HASH_SALT}
-CLIENT_EVENTS_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
+SIGNALING_IP_HASH_SALT=${SIGNALING_IP_HASH_SALT}
+CSP_REPORT_IP_HASH_SALT=${CSP_REPORT_IP_HASH_SALT}
+CSP_REPORT_WEBHOOK_URL=${CSP_WEBHOOK_URL}
 ```
 
 Deploy using Docker Compose:
@@ -273,9 +263,29 @@ docker-compose -f docker-compose.prod.yml up -d
 
 ---
 
+## License endpoint (serverless)
+
+`api/license/[action].ts` runs as a Vercel function. Relevant environment
+variables (all server-side, never `VITE_`):
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `LICENSE_ALLOWED_ORIGINS` | Yes (production) | Comma/space-separated Origin allow-list; the handler fails closed (503) in production when empty. `AI_SESSION_ORIGINS` is a legacy alias. |
+| `LICENSE_TRUST_PROXY` | Behind a proxy | `1`/`true` to trust `X-Forwarded-For`/`X-Real-IP` for the rate-limit key. Off by default (fail-closed). |
+| `LICENSE_PROVIDER_ALLOW_HTTP` | Dev/E2E only | Allows a plain-HTTP license provider URL; ignored when `NODE_ENV=production`. |
+| `WHOP_LICENSE_API_URL`, `WHOP_API_KEY` | For Whop provider | Provider endpoint and API key. |
+
+**Rate limiting caveat:** the per-IP (`60/min`) and global (`600/min`) limits
+in `api/license/_license-server.ts` are in-memory, per function instance —
+each warm instance keeps its own counters, so the effective ceiling scales
+with concurrency. For production traffic, put a real edge rate limit in
+front (Vercel Firewall / WAF rules, or Cloudflare) keyed on IP + path
+`/api/license/*`.
+
+---
+
 ## Additional Documentation
 
 - [Security Model](security.md)
 - [Self-Hosting Guide](SELF-HOSTING.md)
 - [Deployment Policy](../DEPLOY-POLICY.md)
-- [AGENTS.md](../AGENTS.md) - Engineering conventions

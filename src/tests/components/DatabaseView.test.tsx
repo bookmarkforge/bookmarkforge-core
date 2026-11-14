@@ -600,7 +600,7 @@ describe("DatabaseView", () => {
     expect(payload.tags).toBeUndefined();
     expect(payload.visitCount).toBeUndefined();
     expect(payload.broken).toBeUndefined();
-    // La columna string url se rellena con "".
+    // The string column url is filled with "".
     expect(payload.url).toBe("");
   });
 

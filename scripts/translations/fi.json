@@ -2,17 +2,17 @@
   "lang": "fi",
   "langName": "Suomi",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/fi/",
+  "canonical": "https://www.bookmarkforgeapp.com/fi/",
   "ogLocale": "fi_FI",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: yksityinen local-first kirjanmerkkien hallinta ja lukulista",
   "description": "Raindrop pitää kirjanmerkkisi palvelimillaan. BookmarkForge pitää ne tietokoneellasi — lukittuna niin, ettei edes me voimme lukea niitä. Maksa kerran: $59 early bird -elämänaikainen käyttöoikeus (säästä $20 ennen normaalihintaa). Ilmainen: 500 kirjanmerkkiä.",
   "ogTitle": "BookmarkForge: yksityinen local-first kirjanmerkkien hallinta ja lukulista",
   "ogDescription": "Raindrop pitää kirjanmerkkisi palvelimillaan. BookmarkForge pitää ne tietokoneellasi — lukittuna niin, ettei edes me voimme lukea niitä. Maksa kerran: $59 early bird -elämänaikainen käyttöoikeus (säästä $20 ennen normaalihintaa). Ilmainen: 500 kirjanmerkkiä.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: yksityinen local-first kirjanmerkkien hallinta ja lukulista",
   "twitterDescription": "Raindrop pitää kirjanmerkkisi palvelimillaan. BookmarkForge pitää ne tietokoneellasi — lukittuna niin, ettei edes me voimme lukea niitä. Maksa kerran: $59 early bird -elämänaikainen käyttöoikeus (säästä $20 ennen normaalihintaa). Ilmainen: 500 kirjanmerkkiä.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Siirry pääsisältöön",
   "navBrandAria": "BookmarkForge-etusivu",
   "navAriaLabel": "Päänavigaatio",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "Sulje valikko",
   "hero": {
     "badge": "Kertamaksu · Ei tilausta",
-    "title": "Kaikki mitä tallennat pysyy tietokoneellasi. <span class=\"accent-text\">Kaikki.</span>",
-    "subtitle": "Raindrop pitää kirjanmerkkisi palvelimillaan — ja veloittaa sinulta joka vuosi. BookmarkForge pitää ne tietokoneellasi, lukittuna avaimella, joka on vain sinulla. Ei tilejä. Ei kuukausimaksuja. Ei ketään lukemassa yli olkasi.",
-    "ctaPrimary": "Kokeile heti (ei tiliä)",
-    "ctaSecondary": "Näytä hinnoittelu",
+    "title": "Yksityinen kirjanmerkkien hallinta, joka <span class=\"accent-text\">pitää kaiken omalla laitteellasi.</span>",
+    "subtitle": "Tutkijoille, opiskelijoille ja kaikille, jotka eivät halua luovuttaa lukuhistoriaansa pilvipalvelulle. Tallenna sivuja, artikkeleita ja PDF-tiedostoja, löydä ne avainsanalla tai merkityksellä, ja pidä kaikki salattuna omalla tietokoneellasi. Ei tiliä. Ei tilausta.",
+    "ctaPrimary": "Aloita ilmaiseksi — ilman rekisteröitymistä",
+    "ctaSecondary": "Katso, miten se toimii",
     "pillars": [
       {
         "strong": "Yksityinen",
-        "text": "tallennetut sivusi eivät poistu tietokoneeltasi"
+        "text": "salattu laitteellasi"
       },
       {
-        "strong": "Lukittu",
-        "text": "emme mekään voi lukea niitä"
+        "strong": "Oma ikuisesti",
+        "text": "ei tilauksia eikä kuukausimaksuja"
       },
       {
-        "strong": "Verkottoma",
-        "text": "toimii lentokoneessa, tunnelissa, missä tahansa"
+        "strong": "Toimii offline",
+        "text": "tallenna ja lue missä vain, myös ilman nettiä"
       },
       {
-        "strong": "Maksat kerran",
-        "text": "$59 early bird -elämänaikainen käyttöoikeus (säästä $20 ennen normaalihintaa)"
+        "strong": "Ilmainen ikuisesti",
+        "text": "500 kirjanmerkkiä ilmaiseksi, Pro vain jos haluat lisää"
       }
     ],
     "announce": "⚡ Paikallinen AI-käännös (tulossa)"
@@ -408,15 +408,11 @@
         "cta": "Hanki Pro $59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "sitten $79 normaali",
-        "sla": "Tuki: Sähköposti 48 h (ma–pe)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Hanki Pro $79 Regular",
-        "cta2Class": "btn-secondary"
+        "sla": "Tuki: Sähköposti 48 h (ma–pe)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-fi#pricing\">Learn more</a>"
+    "legal": "Kertamaksu · 12 kuukautta päivityksiä mukana · v1 toimii ikuisesti · 30 päivän rah-back-garanti. <a href=\"/privacy-and-terms.html#terms\">Ehdot</a>"
   },
   "faq": {
     "title": "Yleiset kysymykset",
@@ -509,7 +505,8 @@
         "Yhteydenotto"
       ],
       "helpCenter": "Ohjekeskus",
-      "errorCodes": "Virhekoodit"
+      "errorCodes": "Virhekoodit",
+      "hours": "Vastaukset 48 tunnin kuluessa, ma–pe (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Kaikki oikeudet pidätetään.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "Yksityinen, tekoälyä hyödyntävä tietämysholvisi. 100 % paikallinen. Yksityinen Pocket-vaihtoehto. Ilmainen: 500 kirjanmerkkiä.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "Ohjekeskus — UKK, vianetsintä ja tuen SLA | BookmarkForge",
+    "title": "Ohjekeskus — UKK, vianetsintä ja tuen SLA",
     "description": "BookmarkForgen ohjekeskus: elinikäinen v1-hinnoittelu, vianetsintä, virhekoodit BF-E*, tuen SLA ja ohjeet salatun diagnostiikkaraportin kopioimiseen.",
     "ogTitle": "Ohjekeskus — BookmarkForge",
     "ogDescription": "UKK, vianetsintä, virhekoodit ja tuen SLA. Opi, miten elinikäinen v1 toimii ja miten kopioit diagnostiikkaraportin.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 normaali",
-      "proPriceTraction": "$99 traktion jälkeen",
+      "proPriceTraction": "",
       "proDescription": "Rajoittamattomat kirjanmerkit, 5 laitetta + P2P-synkronointi, paikallinen tekoäly (WebLLM/Ollama) + RAG + asiantuntija-agentit, muistikortit, PDF/OCR, 7 vientimuotoa, holvi. <em>V1:n ikä · 12 kuukauden ominaisuuspäivitykset · Tietoturva ikuisesti · v2 60 % alennuksella</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "Itsepalvelu: tämä Ohjekeskus + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "Itsepalvelu: tämä Ohjekeskus + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "Parhaan mukaan (yhteisö)",
       "freeWhatToDo": "Etsi BF-E*-koodit alta + kopioi diagnostiikka (<a href=\"#diagnostics\">§Diagnostics</a>) ennen julkaisua",
       "proChannel": "Sähköposti <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (aihe: Pro)",

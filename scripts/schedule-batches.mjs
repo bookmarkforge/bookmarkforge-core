@@ -5,7 +5,7 @@
  * (scripts/test-bounded.mjs), extracted so it can be reasoned about and tested
  * without spawning the runner — the runner's own test suite runs inside it.
  *
- * P-15 (docs/PENDIENTES.md, measured 2026-10-13; reproduced 2026-11-01 with
+ * P-15 (measured 2026-10-13; reproduced 2026-11-01 with
  * 103 of 187 files skipped): the scheduler used to stop scheduling at the first
  * red batch (`while (firstFailure === null)`), so one failing file silently
  * dropped the whole tail of the profile. An unrun file read as a pass, which is

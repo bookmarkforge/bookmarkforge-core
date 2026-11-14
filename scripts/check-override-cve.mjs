@@ -16,17 +16,17 @@
  * does: a top-level pin governs every instance of that package, while a
  * nested pin governs only its parent's subtree:
  *
- *   A. A pinned package must not be reported vulnerable. If an override
- *      targets a package that `npm audit` still flags, the pin is either
- *      pointing at an old version or failing to apply — both are CI red.
- *      `fixAvailable` is printed so the fix is one edit away.
- *   B. Every pin must actually apply. Each pinned package must resolve in
- *      package-lock.json to a version its spec accepts (exact, `^` and `~`
- *      are understood; anything else is treated as unknown and skipped
- *      rather than guessed at).
- *   C. No stale pins. A pinned package with no installed instance in the
- *      lockfile is dead weight that hides intent — an override that matches
- *      nothing also protects nothing.
+ * A. A pinned package must not be reported vulnerable. If an override
+ * targets a package that `npm audit` still flags, the pin is either
+ * pointing at an old version or failing to apply — both are CI red.
+ * `fixAvailable` is printed so the fix is one edit away.
+ * B. Every pin must actually apply. Each pinned package must resolve in
+ * package-lock.json to a version its spec accepts (exact, `^` and `~`
+ * are understood; anything else is treated as unknown and skipped
+ * rather than guessed at).
+ * C. No stale pins. A pinned package with no installed instance in the
+ * lockfile is dead weight that hides intent — an override that matches
+ * nothing also protects nothing.
  *
  * FAIL CLOSED: if `npm audit` cannot run (no network, registry outage) the
  * gate exits 2 with the npm error, because "audit is unavailable" is not
@@ -35,9 +35,9 @@
  * the tree twice, and by the unit tests to stay offline).
  *
  * Usage:
- *   node scripts/check-override-cve.mjs
- *   node scripts/check-override-cve.mjs --audit-json audit.json
- *   node scripts/check-override-cve.mjs --include-dev
+ * node scripts/check-override-cve.mjs
+ * node scripts/check-override-cve.mjs --audit-json audit.json
+ * node scripts/check-override-cve.mjs --include-dev
  */
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";

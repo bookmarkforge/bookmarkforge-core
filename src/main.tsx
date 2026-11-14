@@ -34,6 +34,7 @@ import { applyUserCspProfile } from "./utils/cspReportThrottle";
 import { initLicenseStore } from "./store/useLicenseStore";
 import { initSwIntegrityBridge } from "./utils/swIntegrityBridge";
 import { safeGet } from "./store/safeStorage";
+import { isQuotaError } from "./utils/globalGuard";
 import { STORAGE_KEYS } from "./constants/storage-keys";
 
 import i18n from "./i18n";
@@ -184,7 +185,7 @@ if (navigator.storage && navigator.storage.persist) {
 }
 
 window.addEventListener("unhandledrejection", (event) => {
-  if (event.reason && event.reason.name === "QuotaExceededError") {
+  if (event.reason && isQuotaError(event.reason)) {
     navigator.storage
       ?.estimate()
       .then((estimate) => {

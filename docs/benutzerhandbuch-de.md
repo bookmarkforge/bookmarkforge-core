@@ -196,7 +196,7 @@ Das Gehirn der Anwendung:
 - Keine ständige Überwachung
 - Lizenznachweis signiert mit RSA-PSS (SHA-256, Salt 32)
 - Re-Validierung alle 48 Stunden bei Verbindung
-- Nachweise älter als 30 Tage werden vom Entitlement-Server abgelehnt
+- Die Offline-Gnadenfrist erhält Pro bis zum Ablauf der Lizenz — Nachweise haben kein festes Höchstalter
 
 ---
 

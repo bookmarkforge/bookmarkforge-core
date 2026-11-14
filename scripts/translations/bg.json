@@ -2,17 +2,17 @@
   "lang": "bg",
   "langName": "Български",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/bg/",
+  "canonical": "https://www.bookmarkforgeapp.com/bg/",
   "ogLocale": "bg_BG",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: частен локален мениджър на отметки със списък за четене",
   "description": "Raindrop пази отметките ви на своите сървъри. BookmarkForge ги пази на вашия компютър — заключени, така че дори ние да не можем да ги прочетем. Еднократно плащане: $59 доживотен достъп с early bird (спестете $20 преди редовната цена). Безплатно: 500 отметки.",
   "ogTitle": "BookmarkForge: частен локален мениджър на отметки със списък за четене",
   "ogDescription": "Raindrop пази отметките ви на своите сървъри. BookmarkForge ги пази на вашия компютър — заключени, така че дори ние да не можем да ги прочетем. Еднократно плащане: $59 доживотен достъп с early bird (спестете $20 преди редовната цена). Безплатно: 500 отметки.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: частен локален мениджър на отметки със списък за четене",
   "twitterDescription": "Raindrop пази отметките ви на своите сървъри. BookmarkForge ги пази на вашия компютър — заключени, така че дори ние да не можем да ги прочетем. Еднократно плащане: $59 доживотен достъп с early bird (спестете $20 преди редовната цена). Безплатно: 500 отметки.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Към основното съдържание",
   "navBrandAria": "Начална страница на BookmarkForge",
   "navAriaLabel": "Основна навигация",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "Затваряне на менюто",
   "hero": {
     "badge": "Еднократно плащане · Без абонамент",
-    "title": "Всичко, което запазите, остава на вашия компютър. <span class=\"accent-text\">Всичко.</span>",
-    "subtitle": "Raindrop пази отметките ви на своите сървъри — и ви таксува всяка година. BookmarkForge ги пази на вашия компютър, заключени с ключ, който имате само вие. Без акаунти. Без месечни такси. Без никой да наднисква през рамото ви.",
-    "ctaPrimary": "Опитайте веднага (без акаунт)",
-    "ctaSecondary": "Вижте цените",
+    "title": "Поверителният мениджър на отметки, който <span class=\"accent-text\">държи всичко на вашето устройство.</span>",
+    "subtitle": "За изследователи, студенти и всеки, който не иска да предава историята си на четене на облачна компания. Запазвайте страници, статии и PDF файлове, намирайте ги по ключова дума или значение и дръжте всичко криптирано на собствения си компютър. Без акаунт. Без абонамент.",
+    "ctaPrimary": "Започнете безплатно — без регистрация",
+    "ctaSecondary": "Вижте как работи",
     "pillars": [
       {
-        "strong": "Частни",
-        "text": "запазените ви страници никога не напускат компютъра ви"
+        "strong": "Поверително",
+        "text": "криптирано на вашето устройство"
       },
       {
-        "strong": "Заключени",
-        "text": "дори ние не можем да ги прочетем"
+        "strong": "Завинаги вашето",
+        "text": "без абонаменти и месечни такси"
       },
       {
-        "strong": "Офлайн",
-        "text": "работи в самолет, в тунел, навсякъде"
+        "strong": "Работи офлайн",
+        "text": "запазвайте и четете навсякъде, дори без интернет"
       },
       {
-        "strong": "Плащате веднъж",
-        "text": "$59 доживотен достъп с early bird (спестете $20 преди редовната цена)"
+        "strong": "Безплатно завинаги",
+        "text": "500 отметки безплатно, Pro само ако искате повече"
       }
     ],
     "announce": "⚡ Локален AI превод (очаквайте скоро)"
@@ -408,15 +408,11 @@
         "cta": "Вземете Pro за $59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "след това $79 обикновена цена",
-        "sla": "Поддръжка: имейл 48ч (пон–пет)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Вземете Pro за $79 (обикновена цена)",
-        "cta2Class": "btn-secondary"
+        "sla": "Поддръжка: имейл 48ч (пон–пет)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-bg#pricing\">Learn more</a>"
+    "legal": "Еднократно плащане · 12 месеца актуализации включени · v1 работи завинаги · 30-дневна гаранция за връщане на парите. <a href=\"/privacy-and-terms.html#terms\">Условия</a>"
   },
   "faq": {
     "title": "Чести въпроси",
@@ -509,7 +505,8 @@
         "Контакт"
       ],
       "helpCenter": "Помощен център",
-      "errorCodes": "Кодове за грешки"
+      "errorCodes": "Кодове за грешки",
+      "hours": "Отговаряме в рамките на 48 часа, пн–пт (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Всички права запазени.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "Вашият частен, ИИ-засилен трезор на знания. 100% на локална основа. Частната алтернатива на Pocket. Безплатно: 500 отметки.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "Помощен център — чести въпроси, отстраняване на проблеми и SLA за поддръжката | BookmarkForge",
+    "title": "Помощен център — чести въпроси, отстраняване на проблеми и SLA за поддръжката",
     "description": "Помощен център на BookmarkForge: цени и целият живот на v1, отстраняване на проблеми, кодове за грешки BF-E*, SLA за поддръжката и как да копирате редактиран диагностичен доклад.",
     "ogTitle": "Помощен център — BookmarkForge",
     "ogDescription": "Чести въпроси, отстраняване на проблеми, кодове за грешки и SLA за поддръжката. Научете как работи целият живот на v1 и как да копирате диагностичен доклад.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 обикновена цена",
-      "proPriceTraction": "$99 след натрупване на клиентска база",
+      "proPriceTraction": "",
       "proDescription": "Неограничени отметки, 5 устройства + P2P синхронизация, локален ИИ (WebLLM/Ollama) + RAG + експертни агенти, флашкарти, PDF/OCR, 7 формата за експорт, трезор. <em>Целият живот на v1 · 12 месеца актуализации на функции · Сигурност завинаги · v2 с 60% отстъпка</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "Самообслужване: този Помощен център + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "Самообслужване: този Помощен център + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "В рамките на възможностите (общност)",
       "freeWhatToDo": "Потърсете кода BF-E* по-долу и копирайте диагностиката (<a href=\"#diagnostics\">§Диагностика</a>) преди да публикувате",
       "proChannel": "Имейл <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (тема: Pro)",

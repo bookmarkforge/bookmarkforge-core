@@ -1,7 +1,7 @@
 /**
  * api/_csp-report-core.js — shared CSP violation collector logic.
  *
- * P1-2 (review 2026-11-11): every shipped CSP advertises `/csp-report`
+ * every shipped CSP advertises `/csp-report`
  * (report-uri + report-to), but only the self-hosted nginx had a collector.
  * On Vercel the endpoint was a stub that answered 200 and discarded the
  * report; Netlify answered 404. The operator believed violation telemetry was
@@ -43,8 +43,8 @@ function boundedString(value, max) {
 
 /**
  * Accept both wire shapes:
- *   - `report-uri` (legacy):  { "csp-report": { ... } }
- *   - Reporting API (report-to): { type: "csp-violation", body: { ... } }
+ * - `report-uri` (legacy): { "csp-report": {... } }
+ * - Reporting API (report-to): { type: "csp-violation", body: {... } }
  * Anything else is a malformed report and is rejected.
  */
 export function parseCspReport(raw) {
@@ -83,8 +83,12 @@ export function toStoredReport(violation, { ipHash, timestamp }) {
 
 /**
  * One-way IP fingerprint. The salt is per-instance when the deployment does not
- * configure one, so hashes are not comparable across instances but an IP can
- * never be recovered from the record.
+ * configure one — an empty salt made IPv4 hashes
+ * enumerable offline, so the default is now a random per-isolate salt
+ * (crypto.randomUUID, available on Node 19+ and Workers). With a random salt
+ * an IP can never be recovered from the record and hashes are not comparable
+ * across instances; set CSP_REPORT_IP_HASH_SALT for stable cross-instance
+ * correlation.
  */
 export async function hashIp(ip, salt = "") {
   const input = new TextEncoder().encode(`${salt}:${ip}`);
@@ -138,10 +142,17 @@ export function createRateLimiter({
 
 /**
  * Build a collector. `accept()` is the whole endpoint contract:
- *   204 accepted · 400 malformed · 413 too large · 429 rate limited.
+ * 204 accepted · 400 malformed · 413 too large · 429 rate limited.
  * The only side effect is one structured log line per accepted report.
  */
 export function createCspCollector({ salt = "", now = () => Date.now() } = {}) {
+  // never hash with an empty salt — fall back to a random per-isolate
+  // salt so logged ipHash values are not offline-enumerable.
+  const resolvedSalt =
+    salt ||
+    (typeof globalThis.crypto?.randomUUID === "function"
+      ? `isolate:${globalThis.crypto.randomUUID()}`
+      : "");
   const rateLimiter = createRateLimiter({ now });
   const reports = [];
   let accepted = 0;
@@ -160,7 +171,7 @@ export function createCspCollector({ salt = "", now = () => Date.now() } = {}) {
       rejected += 1;
       return { status: 400, reason: parsed.reason };
     }
-    const effectiveSalt = saltOverride ?? salt;
+    const effectiveSalt = saltOverride || resolvedSalt;
     const stored = toStoredReport(parsed.violation, {
       ipHash: await hashIp(ip, effectiveSalt),
       timestamp: new Date(now()).toISOString(),

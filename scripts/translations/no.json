@@ -2,17 +2,17 @@
   "lang": "no",
   "langName": "Norsk",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/no/",
+  "canonical": "https://www.bookmarkforgeapp.com/no/",
   "ogLocale": "no_NO",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: privat local-first bokmerkebehandler med leseliste",
   "description": "Raindrop lagrer bokmerkingene dine på serverne sine. BookmarkForge lagrer dem på datamaskinen din — låst slik at ikke engang vi kan lese dem. Betal én gang: $59 early bird livstidstilgang (spar $20 før ordinær pris). Gratis: 500 bokmerker.",
   "ogTitle": "BookmarkForge: privat local-first bokmerkebehandler med leseliste",
   "ogDescription": "Raindrop lagrer bokmerkingene dine på serverne sine. BookmarkForge lagrer dem på datamaskinen din — låst slik at ikke engang vi kan lese dem. Betal én gang: $59 early bird livstidstilgang (spar $20 før ordinær pris). Gratis: 500 bokmerker.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: privat local-first bokmerkebehandler med leseliste",
   "twitterDescription": "Raindrop lagrer bokmerkingene dine på serverne sine. BookmarkForge lagrer dem på datamaskinen din — låst slik at ikke engang vi kan lese dem. Betal én gang: $59 early bird livstidstilgang (spar $20 før ordinær pris). Gratis: 500 bokmerker.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Hopp til hovedinnhold",
   "navBrandAria": "BookmarkForge-hjem",
   "navAriaLabel": "Hovednavigasjon",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "Lukk meny",
   "hero": {
     "badge": "Engangsbetaling · Ingen abonnement",
-    "title": "Alt du lagrer blir værende på datamaskinen din. <span class=\"accent-text\">Alt.</span>",
-    "subtitle": "Raindrop lagrer bokmerkingene dine på serverne sine — og krever betaling hvert år. BookmarkForge lagrer dem på datamaskinen din, låst med en nøkkel bare du har. Ingen kontoer. Ingen månedlige avgifter. Ingen som skuer over skulderen din.",
-    "ctaPrimary": "Prøv det med en gang (ingen konto)",
-    "ctaSecondary": "Se priser",
+    "title": "Den private bokmerkebehandleren som <span class=\"accent-text\">beholder alt på enheten din.</span>",
+    "subtitle": "For forskere, studenter og alle som heller ikke vil gi lesehistorikken sin til et skylagskap. Lagre sider, artikler og PDF-er, finn dem på nøkkelord eller betydning, og behold alt kryptert på din egen datamaskin. Ingen konto. Ingen abonnement.",
+    "ctaPrimary": "Start gratis — ingen registrering",
+    "ctaSecondary": "Se hvordan det fungerer",
     "pillars": [
       {
         "strong": "Privat",
-        "text": "de lagrede sidene forlater aldri datamaskinen din"
+        "text": "kryptert på enheten din"
       },
       {
-        "strong": "Låst",
-        "text": "ikke engang vi kan lese dem"
+        "strong": "Din for alltid",
+        "text": "ingen abonnementer, ingen månedsavgifter"
       },
       {
-        "strong": "Uten internett",
-        "text": "fungerer på flyet, i en tunnel, hvor som helst"
+        "strong": "Fungerer offline",
+        "text": "lagre og les hvor som helst, også uten nett"
       },
       {
-        "strong": "Betal én gang",
-        "text": "$59 early bird livstidstilgang (spar $20 før ordinær pris)"
+        "strong": "Gratis for alltid",
+        "text": "500 bokmerker gratis, oppgrader bare hvis du vil ha mer"
       }
     ],
     "announce": "⚡ Lokal AI-oversettelse (kommer snart)"
@@ -408,15 +408,11 @@
         "cta": "Få Pro $59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "deretter $79 normalpris",
-        "sla": "Støtte: E-post 48h (man–fre)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Få Pro $79 normalpris",
-        "cta2Class": "btn-secondary"
+        "sla": "Støtte: E-post 48h (man–fre)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-no#pricing\">Learn more</a>"
+    "legal": "Engangsbetaling · 12 måneder med oppdateringer inkludert · v1 fungerer for alltid · 30 dagers angrerett. <a href=\"/privacy-and-terms.html#terms\">Vilkår</a>"
   },
   "faq": {
     "title": "Vanlige spørsmål",
@@ -509,7 +505,8 @@
         "Contact"
       ],
       "helpCenter": "Hjelpesenter",
-      "errorCodes": "Feilkoder"
+      "errorCodes": "Feilkoder",
+      "hours": "Svar innen 48 timer, man–fre (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Alle rettigheter forbeholdt.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "Ditt private, KI-drevne kunnskapshvelv. 100 % lokalt-først. Det private Pocket-alternativet. Gratis: 500 bokmerker.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "Hjelpesenter — FAQ, feilsøking og støtte-SLA | BookmarkForge",
+    "title": "Hjelpesenter — FAQ, feilsøking og støtte-SLA",
     "description": "BookmarkForge Hjelpesenter: prising for Lifetime v1, feilsøking, feilkoder BF-E*, støtte-SLA og hvordan du kopierer en redigert diagnostikkrapport.",
     "ogTitle": "Hjelpesenter — BookmarkForge",
     "ogDescription": "FAQ, feilsøking, feilkoder og støtte-SLA. Lær hvordan Lifetime v1 fungerer, og hvordan du kopierer en diagnostikkrapport.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 normalpris",
-      "proPriceTraction": "$99 etter oppslutning",
+      "proPriceTraction": "",
       "proDescription": "Ubegrensede bokmerker, 5 enheter + P2P-synkronisering, lokal KI (WebLLM/Ollama) + RAG + ekspertagenter, friminnskort, PDF/OCR, 7 eksportformater, hvelv. <em>Lifetime for v1 · 12 måneder med funksjonsoppdateringer · Sikkerhet for alltid · v2 60 % rabatt</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "Selvhjelp: dette Hjelpesenteret + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "Selvhjelp: dette Hjelpesenteret + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "Beste innsats (fellesskapet)",
       "freeWhatToDo": "Søk etter BF-E*-koden nedenfor + kopier diagnostikken (<a href=\"#diagnostics\">§Diagnostikk</a>) før du poster",
       "proChannel": "E-post <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (emne: Pro)",

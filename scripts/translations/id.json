@@ -2,17 +2,17 @@
   "lang": "id",
   "langName": "Bahasa Indonesia",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/id/",
+  "canonical": "https://www.bookmarkforgeapp.com/id/",
   "ogLocale": "id_ID",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: pengelola bookmark privat local-first dengan daftar bacaan",
   "description": "Raindrop menyimpan bookmark Anda di servernya. BookmarkForge menyimpannya di komputer Anda — terkunci sehingga bahkan kami tidak bisa membacanya. Sekali bayar: $59 akses seumur hidup early bird (hemat $20 sebelum harga normal). Gratis: 500 bookmark.",
   "ogTitle": "BookmarkForge: pengelola bookmark privat local-first dengan daftar bacaan",
   "ogDescription": "Raindrop menyimpan bookmark Anda di servernya. BookmarkForge menyimpannya di komputer Anda — terkunci sehingga bahkan kami tidak bisa membacanya. Sekali bayar: $59 akses seumur hidup early bird (hemat $20 sebelum harga normal). Gratis: 500 bookmark.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: pengelola bookmark privat local-first dengan daftar bacaan",
   "twitterDescription": "Raindrop menyimpan bookmark Anda di servernya. BookmarkForge menyimpannya di komputer Anda — terkunci sehingga bahkan kami tidak bisa membacanya. Sekali bayar: $59 akses seumur hidup early bird (hemat $20 sebelum harga normal). Gratis: 500 bookmark.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Lewati ke konten utama",
   "navBrandAria": "Beranda BookmarkForge",
   "navAriaLabel": "Navigasi utama",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "Tutup menu",
   "hero": {
     "badge": "Pembayaran sekali · Tanpa langganan",
-    "title": "Semua yang Anda simpan tetap di komputer Anda. <span class=\"accent-text\">Semuanya.</span>",
-    "subtitle": "Raindrop menyimpan bookmark Anda di servernya — dan menagih Anda setiap tahun. BookmarkForge menyimpannya di komputer Anda, terkunci dengan kunci yang hanya Anda miliki. Tanpa akun. Tanpa biaya bulanan. Tak ada yang mengintip di balik pundak Anda.",
-    "ctaPrimary": "Coba langsung (tanpa akun)",
-    "ctaSecondary": "Lihat Harga",
+    "title": "Pengelola bookmark privat yang <span class=\"accent-text\">menyimpan semuanya di perangkat Anda.</span>",
+    "subtitle": "Untuk peneliti, mahasiswa, dan siapa pun yang tidak ingin menyerahkan riwayat bacanya ke perusahaan cloud. Simpan halaman, artikel, dan PDF, temukan lewat kata kunci atau makna, dan simpan semuanya terenkripsi di komputer Anda sendiri. Tanpa akun. Tanpa langganan.",
+    "ctaPrimary": "Mulai gratis — tanpa daftar",
+    "ctaSecondary": "Lihat cara kerjanya",
     "pillars": [
       {
         "strong": "Privat",
-        "text": "halaman yang Anda simpan tidak pernah meninggalkan komputer Anda"
+        "text": "terenkripsi di perangkat Anda"
       },
       {
-        "strong": "Terkunci",
-        "text": "bahkan kami tidak bisa membacanya"
+        "strong": "Milik Anda selamanya",
+        "text": "tanpa langganan atau biaya bulanan"
       },
       {
-        "strong": "Luring",
-        "text": "bekerja di pesawat, di terowongan, di mana saja"
+        "strong": "Berfungsi offline",
+        "text": "simpan dan baca di mana saja, bahkan tanpa internet"
       },
       {
-        "strong": "Bayar sekali",
-        "text": "$59 akses seumur hidup early bird (hemat $20 sebelum harga normal)"
+        "strong": "Gratis selamanya",
+        "text": "500 bookmark gratis, upgrade ke Pro hanya jika mau lebih"
       }
     ],
     "announce": "⚡ Terjemahan AI lokal (segera hadir)"
@@ -408,15 +408,11 @@
         "cta": "Dapatkan Pro $59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "lalu $79 regular",
-        "sla": "Dukungan: Email 48 jam (Sen–Jum)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Dapatkan Pro $79 Regular",
-        "cta2Class": "btn-secondary"
+        "sla": "Dukungan: Email 48 jam (Sen–Jum)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-id#pricing\">Learn more</a>"
+    "legal": "Pembayaran satu kali · 12 bulan pembaruan termasuk · v1 berfungsi selamanya · garansi uang kembali 30 hari. <a href=\"/privacy-and-terms.html#terms\">Ketentuan</a>"
   },
   "faq": {
     "title": "Pertanyaan Umum",
@@ -509,7 +505,8 @@
         "Contact"
       ],
       "helpCenter": "Pusat Bantuan",
-      "errorCodes": "Kode Kesalahan"
+      "errorCodes": "Kode Kesalahan",
+      "hours": "Balasan dalam 48 jam, Sen–Jum (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Hak cipta dilindungi.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "Vault pengetahuan privat bertenaga AI Anda. 100% Lokal-Pertama. Alternatif Pocket privat. Gratis: 500 bookmark.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "Pusat Bantuan — FAQ, Pemecahan Masalah & SLA Dukungan | BookmarkForge",
+    "title": "Pusat Bantuan — FAQ, Pemecahan Masalah & SLA Dukungan",
     "description": "Pusat Bantuan BookmarkForge: lisensi lifetime v1, pemecahan masalah, kode kesalahan BF-E*, SLA dukungan dan cara menyalin laporan diagnostik yang disensor.",
     "ogTitle": "Pusat Bantuan — BookmarkForge",
     "ogDescription": "FAQ, pemecahan masalah, kode kesalahan dan SLA dukungan. Pelajari cara kerja lifetime v1 dan cara menyalin laporan diagnostik.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 reguler",
-      "proPriceTraction": "$99 setelah traction",
+      "proPriceTraction": "",
       "proDescription": "Bookmark tak terbatas, 5 perangkat + sinkron P2P, AI lokal (WebLLM/Ollama) + RAG + agen ahli, Kartu flash, PDF/OCR, 7 format ekspor, vault. <em>Lifetime v1 · 12 bulan pembaruan fitur · Keamanan selamanya · v2 diskon 60%</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "Layanan mandiri: Pusat Bantuan ini + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "Layanan mandiri: Pusat Bantuan ini + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "Best effort (komunitas)",
       "freeWhatToDo": "Cari kode BF-E* di bawah + salin diagnostik (<a href=\"#diagnostics\">§Diagnostik</a>) sebelum memposting",
       "proChannel": "Email <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (subjek: Pro)",

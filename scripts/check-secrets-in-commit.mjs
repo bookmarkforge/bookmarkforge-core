@@ -15,32 +15,32 @@
  * SCOPE — the default is the whole tree, not the staged set. A staged-only scan
  * is blind to exactly the leak class that matters most here: a live key pasted
  * into an UNTRACKED document or helper script (that happened — a Whop `apik_`
- * key sat in plain text in an untracked .md and an untracked .mjs for days, and
+ * key sat in plain text in an untracked.md and an untracked.mjs for days, and
  * the pre-commit scan never looked at either file). It is also blind in CI,
  * where a clean checkout has nothing staged, so the scan enumerated zero files
  * and reported success — a gate that passes because it scanned nothing is worse
  * than no gate, which is why an empty enumeration is a hard failure below.
  *
- *   - TREE (default)  tracked files (`git ls-files`) + untracked-but-not-ignored
- *                     files (`git ls-files --others --exclude-standard`), minus
- *                     build output, binaries and files over MAX_FILE_BYTES.
- *                     Gitignored files are deliberately OUT of scope: a local
- *                     `.env.production` is a file the developer is supposed to
- *                     have, and the staged mode below is what stops it from
- *                     being committed.
- *   - STAGED          the pre-commit set (`--staged`), as this gate always did.
- *   - EXPLICIT        the paths given on the command line.
+ * - TREE (default) tracked files (`git ls-files`) + untracked-but-not-ignored
+ * files (`git ls-files --others --exclude-standard`), minus
+ * build output, binaries and files over MAX_FILE_BYTES.
+ * Gitignored files are deliberately OUT of scope: a local
+ * `.env.production` is a file the developer is supposed to
+ * have, and the staged mode below is what stops it from
+ * being committed.
+ * - STAGED the pre-commit set (`--staged`), as this gate always did.
+ * - EXPLICIT the paths given on the command line.
  *
  * Failure policy — hard exit 1:
- *   - Any scanned file whose basename matches an env-file pattern (`.env`,
- *     `.env.local`, `.env.production`, …) other than the two committed
- *     templates (`.env.example`, `.env.production.example`).
- *   - Any scanned file whose content matches a live provider-key pattern
- *     (Gemini `AIza…`, AWS `AKIA…`, GitHub `gh[pousr]_…`, Slack `xox…`,
- *     OpenAI `sk-…`, Anthropic `sk-ant-…`, Whop `apik_…` / `sk_live_…`,
- *     private key PEM blocks).
- *   - A mode that enumerated zero files, an unavailable git, or an unreadable
- *     tree.
+ * - Any scanned file whose basename matches an env-file pattern (`.env`,
+ * `.env.local`, `.env.production`, …) other than the two committed
+ * templates (`.env.example`, `.env.production.example`).
+ * - Any scanned file whose content matches a live provider-key pattern
+ * (Gemini `AIza…`, AWS `AKIA…`, GitHub `gh[pousr]_…`, Slack `xox…`,
+ * OpenAI `sk-…`, Anthropic `sk-ant-…`, Whop `apik_…` / `sk_live_…`,
+ * private key PEM blocks).
+ * - A mode that enumerated zero files, an unavailable git, or an unreadable
+ * tree.
  *
  * REDACTION: findings name the file, the line and the PATTERN, never the matched
  * value and never the surrounding line. This output lands in CI logs, so echoing
@@ -58,9 +58,9 @@
  * Bypass (intentionally allowed, audited): `git commit --no-verify`.
  *
  * Usage:
- *   node scripts/check-secrets-in-commit.mjs              # whole tree (CI gate)
- *   node scripts/check-secrets-in-commit.mjs --staged     # staged set only
- *   node scripts/check-secrets-in-commit.mjs <files...>   # explicit files
+ * node scripts/check-secrets-in-commit.mjs # whole tree (CI gate)
+ * node scripts/check-secrets-in-commit.mjs --staged # staged set only
+ * node scripts/check-secrets-in-commit.mjs <files...> # explicit files
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
@@ -78,15 +78,15 @@ const ENV_FILE_RE = /^\.env(\..+)?$/i;
  * Live-key content patterns. Deliberately narrow: each pattern targets a
  * vendor-specific token shape with enough entropy that a false positive would be
  * an actual key, not prose. Tested against:
- *   - Gemini:      AIza[0-9A-Za-z_-]{30,}
- *   - OpenAI:      sk-[A-Za-z0-9]{20,}
- *   - Anthropic:   sk-ant-[A-Za-z0-9-]{20,}
- *   - AWS:         AKIA[0-9A-Z]{16}
- *   - GitHub:      gh[pousr]_[A-Za-z0-9]{30,}
- *   - Slack:       xox[baprs]-[A-Za-z0-9-]{10,}
- *   - Whop API:    apik_[A-Za-z0-9_]{24,}   (dashboard API key, the S-103-class leak)
- *   - Whop live:   sk_live_[A-Za-z0-9]{15,}
- *   - Generic:     PRIVATE KEY PEM block header
+ * - Gemini: AIza[0-9A-Za-z_-]{30,}
+ * - OpenAI: sk-[A-Za-z0-9]{20,}
+ * - Anthropic: sk-ant-[A-Za-z0-9-]{20,}
+ * - AWS: AKIA[0-9A-Z]{16}
+ * - GitHub: gh[pousr]_[A-Za-z0-9]{30,}
+ * - Slack: xox[baprs]-[A-Za-z0-9-]{10,}
+ * - Whop API: apik_[A-Za-z0-9_]{24,} (dashboard API key, the S-103-class leak)
+ * - Whop live: sk_live_[A-Za-z0-9]{15,}
+ * - Generic: PRIVATE KEY PEM block header
  */
 const KEY_PATTERNS = [
   { name: "Gemini", re: /AIza[0-9A-Za-z_-]{30,}/ },
@@ -429,7 +429,7 @@ if (isMain) {
         "   - Templates live in .env.example / .env.production.example (committed, empty).\n" +
         "   - Keep the secret out of the message: reference the variable NAME in prose.\n" +
         "   - If this is a FALSE POSITIVE, verify and bypass with: git commit --no-verify\n" +
-        "     (bypasses are audited: note why in the commit body).\n",
+        " (bypasses are audited: note why in the commit body).\n",
     );
     process.exit(1);
   }

@@ -2,17 +2,17 @@
   "lang": "es",
   "langName": "Español",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/es/",
+  "canonical": "https://www.bookmarkforgeapp.com/es/",
   "ogLocale": "es_ES",
   "ogLocaleAlternate": "en_US",
-  "title": "BookmarkForge: gestor de marcadores privado y local-first con lista de lectura",
-  "description": "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. Un solo pago: $59 acceso de por vida early bird (ahorra $20 antes del precio regular). Gratis: 500 marcadores.",
-  "ogTitle": "BookmarkForge: gestor de marcadores privado y local-first con lista de lectura",
-  "ogDescription": "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. Un solo pago: $59 acceso de por vida early bird (ahorra $20 antes del precio regular). Gratis: 500 marcadores.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image-es.png",
-  "twitterTitle": "BookmarkForge: gestor de marcadores privado y local-first con lista de lectura",
-  "twitterDescription": "Raindrop guarda tus marcadores en sus servidores y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados para que ni siquiera nosotros podamos leerlos. Un solo pago: $59 acceso de por vida early bird (ahorra $20 antes del precio regular). Gratis: 500 marcadores.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image-es.png",
+  "title": "Gestor de marcadores privado y cifrado | BookmarkForge",
+  "description": "Guarda, busca y organiza marcadores en una bóveda cifrada en tu propio dispositivo. Sin cuenta y sin conexión. 500 gratis; Pro, 59 $ una sola vez.",
+  "ogTitle": "Gestor de marcadores privado y cifrado | BookmarkForge",
+  "ogDescription": "Guarda, busca y organiza marcadores en una bóveda cifrada en tu propio dispositivo. Sin cuenta y sin conexión. 500 gratis; Pro, 59 $ una sola vez.",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image-es.png",
+  "twitterTitle": "Gestor de marcadores privado y cifrado | BookmarkForge",
+  "twitterDescription": "Guarda, busca y organiza marcadores en una bóveda cifrada en tu propio dispositivo. Sin cuenta y sin conexión. 500 gratis; Pro, 59 $ una sola vez.",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image-es.png",
   "skipLink": "Saltar al contenido principal",
   "navBrandAria": "BookmarkForge inicio",
   "navAriaLabel": "Navegación principal",
@@ -37,30 +37,30 @@
   "navToggleAria": "Abrir menú",
   "navToggleAriaClose": "Cerrar menú",
   "hero": {
-    "badge": "Pago único · Sin suscripción",
-    "title": "Todo lo que guardas se queda en tu ordenador. <span class=\"accent-text\">Todo.</span>",
-    "subtitle": "Raindrop guarda tus marcadores en sus servidores — y te cobra cada año. BookmarkForge los guarda en tu ordenador, cerrados con una llave que solo tienes tú. Sin cuentas. Sin cuotas mensuales. Y sin nadie mirando por encima de tu hombro.",
-    "ctaPrimary": "Pruébalo al instante (sin crear cuenta)",
-    "ctaSecondary": "Ver Precios",
+    "badge": "Pago único · Sin suscripción · Sin cuenta",
+    "title": "El gestor de marcadores privado que <span class=\"accent-text\">guarda todo en tu dispositivo.</span>",
+    "subtitle": "Para quien investiga, estudia o simplemente no quiere regalar su historial de lectura a una nube ajena. Guarda páginas, artículos y PDF, encuéntralos por palabra o por significado, y todo queda cifrado en tu ordenador. Sin cuenta. Sin suscripción.",
+    "ctaPrimary": "Empieza gratis, sin registro",
+    "ctaSecondary": "Ver cómo funciona",
     "pillars": [
       {
         "strong": "Privado",
-        "text": "tus páginas guardadas nunca salen de tu ordenador"
+        "text": "cifrado en tu dispositivo"
       },
       {
-        "strong": "Cerrado",
-        "text": "ni siquiera nosotros podemos leerlas"
+        "strong": "Tuyo para siempre",
+        "text": "sin suscripciones ni cuotas mensuales"
       },
       {
-        "strong": "Sin conexión",
-        "text": "funciona en un avión, en un túnel, donde sea"
+        "strong": "Funciona sin conexión",
+        "text": "guarda y lee en cualquier lugar, incluso sin internet"
       },
       {
-        "strong": "Paga una vez",
-        "text": "$59 acceso de por vida early bird (ahorra $20 antes del precio regular)"
+        "strong": "Gratis para siempre",
+        "text": "500 marcadores gratis, mejora a Pro solo si quieres más"
       }
     ],
-    "announce": "⚡ Traducción con IA local (próximamente)"
+    "announce": ""
   },
   "demo": {
     "id": "demo",
@@ -91,9 +91,9 @@
   },
   "pocketAlternative": {
     "id": "alternativa-pocket",
-    "tag": "Leer después, sin renunciar a tu privacidad",
+    "tag": "Alternativa a Pocket",
     "title": "La Alternativa Privada a Pocket",
-    "subtitle": "Pocket cerró el 8 de julio de 2025. BookmarkForge mantiene vivo el hábito de leer después — con cada artículo, nota y subrayado cifrado en tu dispositivo.",
+    "subtitle": "Pocket cerró en julio de 2025. Si exportaste tu lista, impórtala a BookmarkForge en un minuto — y esta vez vive en tu dispositivo, así que ninguna empresa puede apagarla.",
     "features": [
       {
         "title": "Guarda artículos para leer después, tuyos para siempre",
@@ -154,7 +154,7 @@
       }
     ],
     "ctaPrimary": "Pruébalo al instante (sin crear cuenta)",
-    "ctaSecondary": "Comparativa completa con Pocket",
+    "ctaSecondary": "Comparativa completa con Raindrop",
     "close": "Raindrop es más simple y gratis — si con eso te basta, úsalo feliz. Pero si prefieres llevar tu vida de lectura en tus propias manos, BookmarkForge está hecho justo para eso."
   },
   "features": {
@@ -364,8 +364,8 @@
       {
         "name": "Pro Lifetime",
         "badge": "Más Popular — Early Bird 200",
-        "price": "$ 59",
-        "period": "Early Bird (luego $79)",
+        "price": "$59",
+        "period": "una vez",
         "description": "De por vida v1 · 12 meses de actualizaciones · Seguridad de por vida · v2 con 60% de descuento",
         "features": [
           {
@@ -405,18 +405,14 @@
             "text": "De por vida v1 · 12 meses de actualizaciones de funciones"
           }
         ],
-        "cta": "Obtener Pro $59 Early Bird",
+        "cta": "Obtener Pro — $59 una vez",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
-        "priceSub": "luego $79 regular",
-        "sla": "Soporte: Email 48h (lun–vie)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Consigue Pro por $79 (precio normal)",
-        "cta2Class": "btn-secondary"
+        "priceSub": "Precio early bird para las primeras 200 licencias, luego $79",
+        "sla": "Respuesta en 48 h, lun–vie (CET)"
       }
     ],
-    "legal": "Licencia Lifetime para BookmarkForge v1. Incluye 12 meses de todas las actualizaciones (novedades, correcciones, seguridad). Después de 12 meses, seguridad para siempre. Futuras majors (v2, v3) 60% dto para propietarios. Reembolso 30 días vía Whop. <a href=\"/es/privacy-and-terms.html#terms\">Términos</a> · <a href=\"/help-es#pricing\">Más info</a>"
+    "legal": "Pago único · 12 meses de actualizaciones incluidas · v1 funciona para siempre · Reembolso de 30 días. <a href=\"/es/privacy-and-terms.html#terms\">Términos</a>"
   },
   "faq": {
     "title": "Preguntas Frecuentes",
@@ -509,7 +505,8 @@
         "Contacto"
       ],
       "helpCenter": "Centro de Ayuda",
-      "errorCodes": "Códigos de error"
+      "errorCodes": "Códigos de error",
+      "hours": "Respondemos en 48 h, lun–vie (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Todos los derechos reservados.",
     "githubStar": "¿Te gusta BookmarkForge? Apóyanos con una estrella en GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "Tu bóveda de conocimiento privada con IA. 100% local. La alternativa privada a Pocket. Gratis: 500 marcadores.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/es/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/es/",
     "offers": [
       {
         "name": "Gratis",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "Centro de Ayuda — FAQ, Solución de Problemas y SLA de Soporte | BookmarkForge",
+    "title": "Centro de Ayuda — FAQ, Solución de Problemas y SLA de Soporte",
     "description": "Centro de Ayuda de BookmarkForge: precios lifetime v1, solución de problemas, códigos de error BF-E*, SLA de soporte y cómo copiar un informe de diagnóstico redactado.",
     "ogTitle": "Centro de Ayuda — BookmarkForge",
     "ogDescription": "FAQ, solución de problemas, códigos de error y SLA de soporte. Aprende cómo funciona lifetime v1 y cómo copiar un informe de diagnóstico.",
@@ -601,7 +598,7 @@
     },
     "pricing": {
       "title": "Precios — Lifetime de v1, sin suscripciones",
-      "intro": "<strong>Modelo:</strong> pagas una vez por <em>BookmarkForge v1</em>. Sin facturación mensual. Comparar: Raindrop Pro yearly–38/año, Instapaper $60/año, Readwise $120/año, Capacities $120/año. $79 lifetime es ~2× Raindrop anual — justificado por lifetime + privacidad.",
+      "intro": "<strong>Modelo:</strong> pagas una vez por <em>BookmarkForge v1</em>. Sin facturación mensual. Pro Early Bird cuesta $59 para las primeras 200 licencias, luego $79 — e incluye 12 meses de actualizaciones de funciones y correcciones de seguridad de por vida, y v1 sigue funcionando para siempre.",
       "table": {
         "tier": "Nivel",
         "price": "Precio",
@@ -618,20 +615,20 @@
       "badge": "Early Bird",
       "proPrice": "$59",
       "proPriceStriked": "$79",
-      "proPriceRegular": "$79 normal",
-      "proPriceTraction": "$99 después de tracción",
+      "proPriceRegular": "$79",
       "proDescription": "Marcadores ilimitados, 5 dispositivos + sincronización P2P, IA Local (WebLLM/Ollama) + RAG + Agentes Expertos, Flashcards, PDF/OCR, 7 formatos de exportación, bóveda. <em>Lifetime de v1 · 12 meses de actualizaciones de funciones · Seguridad para siempre · v2 60% de descuento</em>",
-      "proSupply": "200 Early Bird"
+      "proSupply": "200 Early Bird",
+      "proPriceTraction": ""
     },
     "legal": {
-      "title": "Lifetime de v1 — línea legal:",
+      "title": "Lifetime de v1 — qué incluye la licencia",
       "text": "Licencia lifetime para BookmarkForge v1. Incluye todas las actualizaciones v1.x (correcciones de errores + funciones menores) para siempre y 12 meses de actualizaciones de funciones desde la compra. Actualizaciones de seguridad para siempre. Las versiones principales futuras (v2, v3) son productos separados: $89 para nuevos clientes, $35 para propietarios de v1 (60% de descuento). Si no actualizas, mantienes v1 funcional para siempre. Reembolso de 30 días vía Whop.",
       "refunds": "Reembolsos: 30 días vía Whop. Pagos: tarjeta, PayPal, cripto (Whop — nunca vemos datos de tarjeta).",
       "terms": "Términos § Licencias"
     },
     "upgrade": {
-      "title": "Actualización sin suscripción:",
-      "text": "cada 12–18 meses lanzamos una versión principal de pago (v2.0 a $89 / $35 para propietarios). Sáltala y v1 sigue funcionando. Ese es el ingreso recurrente sin forzar una suscripción — mismo modelo que Affinity/Sketch/Sublime."
+      "title": "¿Por qué pagar una vez?",
+      "text": "Compras BookmarkForge v1 y lo conservas para siempre. Incluye 12 meses de actualizaciones de funciones y correcciones de seguridad de por vida. Si lanzamos v2, los propietarios de v1 la tienen al 60% — o pueden seguir usando v1. Sin suscripción, nunca."
     },
     "sla": {
       "title": "SLA de Soporte — qué tan rápido respondemos",
@@ -646,11 +643,11 @@
         "free": "Gratis",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "Autoservicio: este Centro de Ayuda + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">Discusiones de GitHub</a>",
+      "freeChannel": "Autoservicio: este Centro de Ayuda + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub</a>",
       "freeResponse": "Mejor esfuerzo (comunidad)",
       "freeWhatToDo": "Busca el código BF-E* abajo + copia el diagnóstico (<a href=\"#diagnostics\">§Diagnósticos</a>) antes de publicar",
       "proChannel": "Email <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (asunto: Pro)",
-      "proResponse": "48h",
+      "proResponse": "48 h (lun–vie, CET)",
       "proWhatToDo": "Incluye el texto de diagnóstico de <code>Configuración → Ayuda → Copiar diagnóstico</code>",
       "note": "No podemos ver tus marcadores, notas, URLs o prompts. Incluye solo el diagnóstico abajo — contiene conteos y versiones, nunca contenido de la bóveda."
     },
@@ -733,7 +730,7 @@
     "contact": {
       "title": "Contacto",
       "paid": "Soporte de pago",
-      "paidDetail": "incluye diagnóstico + código BF-E. Pro 48h (Lun–Vie).",
+      "paidDetail": "incluye diagnóstico + código BF-E. Pro responde en 48 h, lun–vie (CET).",
       "community": "Comunidad (Gratis)",
       "communityDetail": "busca <code>BF-E*</code> antes de publicar. Lee <a href=\"/help-es#bf-e\">Códigos de error</a> + pega diagnóstico.",
       "security": "Problemas de seguridad",

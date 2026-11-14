@@ -298,7 +298,7 @@ describe("SecureStorage error paths — formato legacy (fallbacks pre-H5)", () =
     vi.restoreAllMocks();
   });
 
-  it("JWK legacy en IDB (__device_key__) se migra a sessionStorage al usarse", async () => {
+  it("legacy JWK in IDB (__device_key__) migrates to sessionStorage on use", async () => {
     const store = new Map<string, any>();
     setupMockDb(store);
     store.set("__device_key__", await makeJwk());
@@ -318,6 +318,28 @@ describe("SecureStorage error paths — formato legacy (fallbacks pre-H5)", () =
 
     const key = await secureStorage.unwrapDeviceKeyWithPassword("hunter2");
     expect(key.algorithm.name).toBe("AES-GCM");
+  });
+
+  it("v5-wrapped device key → typed retired-format error, not the generic unwrap failure", async () => {
+    // ADR-052: the unwrap path used to replace every decryption failure with
+    // "Failed to unwrap device key", which made a removed-format blob look
+    // like a wrong password. The typed error must survive this layer so
+    // unlock() can show the remedy.
+    const store = new Map<string, any>();
+    setupMockDb(store);
+    // Structurally valid v5 envelope: hkdf_salt(16) || iv(12) || ciphertext.
+    const envelope = new Uint8Array(16 + 12 + 32);
+    store.set(
+      "bmf_device_key_wrapped",
+      "v5:" + btoa(String.fromCharCode(...envelope)),
+    );
+
+    await expect(
+      secureStorage.unwrapDeviceKeyWithPassword("hunter2"),
+    ).rejects.toMatchObject({
+      name: "LegacyV5FormatRemovedError",
+      code: "V5_LEGACY_FORMAT_RETIRED",
+    });
   });
 
   it("getVerificationToken falls back to the legacy (device-key) format when the raw does not exist", async () => {

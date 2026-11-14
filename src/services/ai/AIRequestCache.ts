@@ -31,7 +31,7 @@ export class AIRequestCache {
     options?: { model?: string; provider?: string; isPrivate?: boolean },
   ): string {
     return JSON.stringify({
-      // Audit #4: provider and privacy MUST be part of the key. Without the
+      // provider and privacy MUST be part of the key. Without the
       // provider, a response cached from Gemini would be served to a request
       // that routes to OpenAI/Ollama — different models, costs and privacy
       // guarantees. isPrivate keeps private results from colliding with

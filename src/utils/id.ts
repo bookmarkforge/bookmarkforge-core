@@ -7,7 +7,7 @@ export function generateId(): string {
 
 function fallbackUUID(): string {
   const arr = new Uint8Array(16);
-  // Audit M-01: generateId()'s caller guard only checks randomUUID — a
+  // generateId()'s caller guard only checks randomUUID — a
   // missing crypto entirely must fail with a domain error, not a TypeError.
   if (
     typeof crypto === "undefined" ||

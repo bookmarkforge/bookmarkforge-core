@@ -9,12 +9,10 @@ import {
   ProviderInfo,
 } from "./types";
 import {
-  detectProvider,
   sanitizeErrorMessage,
   getUserFriendlyErrorMessage,
 } from "./utils";
-import { resourceManager } from "./ResourceManager";
-import { loadWebLLMService, ProUnavailableError } from "../pro-access";
+import { loadWebLLMService } from "../pro-access";
 import { rateLimitService } from "../RateLimitService";
 import { getNavigatorExtensions } from "../../utils/browser-types";
 import { logger } from "../../utils/logger";
@@ -22,8 +20,11 @@ import { formatDate } from "../../utils/localization";
 import i18n from "../../i18n";
 import { AIRequestCache } from "./AIRequestCache";
 import { VaultIntegration } from "./VaultIntegration";
-import type { AIProviderId } from "./adapters/RoutingOptimizer";
 import { ProviderConfiguration } from "./ProviderConfiguration";
+import {
+  resolveProviderRouting,
+  type RoutingState,
+} from "./providerResolution";
 import { firewalledFetch } from "../../utils/networkFirewall";
 import { AI_MODELS } from "../../constants/config";
 import { safeGet } from "../../store/safeStorage";
@@ -60,13 +61,7 @@ export class ProviderManager {
   // The exact Q-state consumed by the most recent selectProvider() call,
   // captured by resolveProvider so recordRoutingOutcome() writes under the
   // SAME key the optimizer explored (never a re-read of network/battery).
-  private lastRoutingState:
-    | {
-        complexity: "simple" | "complex";
-        connectivity: "online" | "offline" | "slow";
-        batteryRange: "high" | "low";
-      }
-    | undefined = undefined;
+  private lastRoutingState: RoutingState | undefined = undefined;
 
   /** Creates the ProviderManager with cache, vault, and configuration delegates. */
   constructor() {
@@ -125,10 +120,11 @@ export class ProviderManager {
   /**
    * Unlocks the vault with the user's master password.
    * On success, syncs the API key into provider configuration.
-   * @param password - The user's master password
+   * @param password - The user's master password (bytes preferred; a string
+   * is accepted as a legacy boundary representation)
    * @returns `true` if unlock succeeded
    */
-  async unlockVault(password: string): Promise<boolean> {
+  async unlockVault(password: string | Uint8Array): Promise<boolean> {
     const success = await this.vault.unlockVault(password);
     if (success) {
       // Reconcile persisted provider config from SecureStorage (authoritative
@@ -231,9 +227,9 @@ export class ProviderManager {
    *
    * Implements multi-layer cost optimization:
    * 1. Provider-level prompt caching: structures prompts for provider KV-state caching
-   *    (Anthropic/OpenAI: ~90% discount on cached system prompt prefix)
+   * (Anthropic/OpenAI: ~90% discount on cached system prompt prefix)
    * 2. Model routing: routes simple tasks to cheap local models (Ollama/WebLLM)
-   *    vs complex tasks to premium cloud models
+   * vs complex tasks to premium cloud models
    * 3. Token budget enforcement: prevents runaway costs before API calls
    * 4. Semantic caching: finds semantically similar requests to reuse responses
    * 5. Batch processing: queues non-realtime workloads for 50% batch API discount
@@ -259,23 +255,23 @@ export class ProviderManager {
   //
   // AUDIT FINDINGS this consolidation eliminated — the two entry points had
   // drifted copy-pasted versions of the same checks:
-  //   1. Input validation (prompt ≤ 100k, system prompt ≤ 50k, pre-flight
-  //      abort) was DUPLICATED verbatim in both methods — a future threshold
-  //      or message change could silently diverge (e.g. fix the limit in one
-  //      and not the other).
-  //   2. The POST-RESOLVE abort re-check existed ONLY on generateText: a
-  //      signal aborted while resolveProvider awaited (battery probe,
-  //      availability pings) slipped through streaming and was only caught
-  //      after rate limiting + budget.
-  //   3. The fail-closed isPrivate default was structured differently:
-  //      generateText ALWAYS resolves; streaming resolved only when private
-  //      OR the descriptor was unconfigured — so a configured selected cloud
-  //      provider could skip resolveProvider on the stream path (while the
-  //      non-stream path always resolved it away). The streaming local-only
-  //      refusal message also carried a " for streaming." suffix that the
-  //      non-stream path never had. Both paths now share ONE _mustResolve
-  //      computation (options?.isPrivate !== false) with the "OR
-  //      unconfigured" kept as the streaming-specific extra condition.
+  // 1. Input validation (prompt ≤ 100k, system prompt ≤ 50k, pre-flight
+  // abort) was DUPLICATED verbatim in both methods — a future threshold
+  // or message change could silently diverge (e.g. fix the limit in one
+  // and not the other).
+  // 2. The POST-RESOLVE abort re-check existed ONLY on generateText: a
+  // signal aborted while resolveProvider awaited (battery probe,
+  // availability pings) slipped through streaming and was only caught
+  // after rate limiting + budget.
+  // 3. The fail-closed isPrivate default was structured differently:
+  // generateText ALWAYS resolves; streaming resolved only when private
+  // OR the descriptor was unconfigured — so a configured selected cloud
+  // provider could skip resolveProvider on the stream path (while the
+  // non-stream path always resolved it away). The streaming local-only
+  // refusal message also carried a " for streaming." suffix that the
+  // non-stream path never had. Both paths now share ONE _mustResolve
+  // computation (options?.isPrivate!== false) with the "OR
+  // unconfigured" kept as the streaming-specific extra condition.
   // Callers: generateText and streamGenerateText, at the same position
   // (first statement) so no other check can run before them.
 
@@ -358,7 +354,7 @@ export class ProviderManager {
       );
     }
 
-    // Check strict cache (audit #4: provider + isPrivate form part of the key
+    // Check strict cache (: provider + isPrivate form part of the key
     // so responses never leak across providers or privacy contexts).
     const cached = this.cache.get(prompt, systemPrompt, {
       model,
@@ -369,7 +365,7 @@ export class ProviderManager {
       return cached;
     }
 
-    // CRITICAL (audit #2): enforce the daily cost budget BEFORE spending
+    // CRITICAL: enforce the daily cost budget BEFORE spending
     // money. Local AI is free and never budget-limited. A cache hit above
     // already returned, so this only blocks real paid requests.
     if (provider !== "ollama" && provider !== "webllm" && provider !== "puter") {
@@ -564,9 +560,9 @@ export class ProviderManager {
    * Skips cache (streaming is real-time) and does not cache the result.
    *
    * @param onProvider - Optional callback invoked with the resolved provider
-   *   right before streaming starts (after routing, vault and rate-limit
-   *   guards pass). Lets UIs show which engine is generating while tokens
-   *   are still arriving — the value matches `AIResponse.provider`.
+   * right before streaming starts (after routing, vault and rate-limit
+   * guards pass). Lets UIs show which engine is generating while tokens
+   * are still arriving — the value matches `AIResponse.provider`.
    */
   async streamGenerateText(
     prompt: string,
@@ -632,7 +628,7 @@ export class ProviderManager {
         );
       }
 
-      // CRITICAL (audit #2): enforce the daily cost budget on the streaming
+      // CRITICAL: enforce the daily cost budget on the streaming
       // path too (the primary chat path) BEFORE tokens start flowing.
       const { costTrackerService } = await import("./CostTrackerService");
       await costTrackerService.assertUnderBudget(provider);
@@ -756,7 +752,7 @@ export class ProviderManager {
           prompt.length + (systemPrompt?.length || 0),
         );
         // Cost tracking on the stream path: without it, streaming requests
-        // would bypass the daily budget entirely (audit #2).
+        // would bypass the daily budget entirely.
         const durationMs = performance.now() - startTime;
         const { costTrackerService } = await import("./CostTrackerService");
         await costTrackerService.recordRequest(
@@ -878,7 +874,7 @@ export class ProviderManager {
    * an optimal one: the result depends on privacy flags, connectivity,
    * battery, the user's explicit selection, and two independent device
    * gates. The WebLLM local route requires BOTH the capability verdict
-   * (webLLMService.canRunLocalLLM(): WebGPU surface + shader-f16 + >= 4 GB
+   * (webLLMService.canRunLocalLLM: WebGPU surface + shader-f16 + >= 4 GB
    * RAM) AND the 8 GB comfort tier (resourceManager.isHighEndDevice()) —
    * see the DUAL GATE comments on the local-route branches. An explicit
    * user selection is authoritative over all availability heuristics (and
@@ -891,300 +887,17 @@ export class ProviderManager {
   private async resolveProvider(
     options?: AIRequestOptions,
   ): Promise<ProviderInfo> {
-    // WebLLM is a Pro-gated module (pro-access). For ROUTING that is exactly
-    // what hasWebLLM=false means: a Free or Open-Core user cannot route to
-    // the local LLM, but their cloud and Ollama routes must not depend on it.
-    // Best-effort probe: loadProService rejects with ProUnavailableError
-    // before any Pro bytes are fetched, and we degrade to hasWebLLM=false
-    // instead of failing the whole request resolution (surfaced by the E2E
-    // custom-provider suite: anonymous routing 500'd on the entitlement).
-    let webLLMService: Awaited<ReturnType<typeof loadWebLLMService>> | null = null;
-    try {
-      webLLMService = await loadWebLLMService();
-    } catch (error) {
-      if (!(error instanceof ProUnavailableError)) {
-        throw error;
-      }
-    }
-
-    const isOffline = !navigator.onLine;
-    // hasWebLLM = the device-capability verdict ONLY (WebGPU surface +
-    // shader-f16 + >= 4 GB RAM). It says nothing about the 8 GB comfort
-    // tier, engine/model state, or request success — every local-route
-    // branch below pairs it with resourceManager.isHighEndDevice() as a
-    // second, independent gate (see the DUAL GATE comment there).
-    const hasWebLLM = webLLMService ? await webLLMService.canRunLocalLLM() : false;
-    const hasOllama = await this.config.getOllamaProvider().isAvailable();
-
-    const navigatorAny = getNavigatorExtensions();
-    const connection = navigatorAny.connection;
-    const isSlowConnection =
-      connection?.effectiveType === "3g" || connection?.effectiveType === "2g";
-
-    let isLowBattery = false;
-    if (
-      (
-        getNavigatorExtensions()
-      ).getBattery
-    ) {
-      try {
-        const navBattery = getNavigatorExtensions() as { getBattery: () => Promise<{ level: number; charging: boolean }> };
-        const battery = await navBattery.getBattery();
-        isLowBattery = battery.level < 0.2 && !battery.charging;
-      } catch (e: unknown) {
-        logger.warn("Failed to get battery status", { error: e });
-      }
-    }
-
-    // Missing privacy metadata fails closed: callers must explicitly opt into
-    // the cloud-capable path with `isPrivate: false`.
-    const isPrivate = options?.isPrivate !== false;
-    const complexity = options?.complexity || "simple";
-
-    // Capture the exact Q-state BEFORE any early return, so recordRoutingOutcome
-    // (called later with the selected provider) writes under the same key that
-    // this selection would have explored. Without this, offline/local early
-    // returns would leave lastRoutingState from a PREVIOUS request — feedback
-    // written to the wrong state row.
-    this.lastRoutingState = {
-      complexity,
-      connectivity: isOffline
-        ? "offline"
-        : isSlowConnection
-          ? "slow"
-          : "online",
-      batteryRange: isLowBattery ? "low" : "high",
-    };
-
-    // Offline or private data: use local
-    if (isOffline || isPrivate) {
-      // DUAL GATE (intentional, mirrored at every local-route branch below):
-      // hasWebLLM = canRunLocalLLM() — the CAPABILITY verdict (WebGPU surface
-      // + shader-f16 + the >= 4 GB memory floor) — is necessary but NOT
-      // sufficient. The 8 GB RAM/CPU TIER check (isHighEndDevice) is a
-      // second, independent requirement: WebLLM routing needs a device that
-      // can run the model COMFORTABLY, not merely at the floor. Do not
-      // remove either conjunct: dropping the tier check would route private
-      // data to a 4-7 GB device that only barely clears the capability
-      // floor; dropping the capability check would route to devices that
-      // cannot run WebLLM at all.
-      if (hasWebLLM && resourceManager.isHighEndDevice()) {
-        return {
-          provider: "webllm",
-          model: this.config.getWebLlmModel(),
-          fullSupport: false,
-          name: "WebLLM (Browser)",
-          isConfigured: true,
-        };
-      }
-      if (hasOllama) {
-        return {
-          provider: "ollama",
-          model: this.config.getOllamaSettings().model,
-          fullSupport: false,
-          name: "Ollama (Local)",
-          isConfigured: true,
-        };
-      }
-      if (isPrivate) {
-        throw new Error(
-          "This document is marked as Private, but no Local AI is available.",
-        );
-      }
-    }
-
-    // Never route to an unconfigured cloud provider. In particular, the
-    // default Gemini descriptor is intentionally present for UI purposes even
-    // when no key/session is configured. Prefer a reachable local provider so
-    // an installed Ollama instance is usable without an accidental 404 or
-    // unauthenticated backend request.
-    const defaultInfo = this.config.getProviderInfo();
-    const externalApiKey = this.vault.getApiKey();
-    const selectedProvider = this.config.getSelectedProvider();
-
-    // An explicit provider selection is authoritative. Resolve it before
-    // adaptive routing so availability heuristics cannot silently replace the
-    // provider the user configured.
-    if (!isPrivate && selectedProvider && selectedProvider !== "gemini") {
-      if (selectedProvider === "ollama" || selectedProvider === "webllm") {
-        return {
-          ...defaultInfo,
-          provider: selectedProvider,
-          model: this.getModelForProvider(selectedProvider),
-        };
-      }
-      if (externalApiKey || defaultInfo.isConfigured) {
-        return {
-          ...defaultInfo,
-          provider: selectedProvider,
-          model: defaultInfo.model || this.getModelForProvider(selectedProvider),
-        };
-      }
-    }
-
-    if (!isPrivate && !defaultInfo.isConfigured && !externalApiKey) {
-      // Same dual gate as the offline/private branch: capability
-      // (hasWebLLM = canRunLocalLLM()) AND the 8 GB tier.
-      if (hasWebLLM && resourceManager.isHighEndDevice()) {
-        return {
-          provider: "webllm",
-          model: this.config.getWebLlmModel(),
-          fullSupport: false,
-          name: "WebLLM (Browser)",
-          isConfigured: true,
-        };
-      }
-      if (hasOllama) {
-        return {
-          provider: "ollama",
-          model: this.config.getOllamaSettings().model,
-          fullSupport: false,
-          name: "Ollama (Local)",
-          isConfigured: true,
-        };
-      }
-      throw new Error(
-        "No AI provider is configured. Configure a cloud provider or start a local AI provider.",
-      );
-    }
-
-    // Low battery or slow network: prefer cloud only when the user has not
-    // explicitly selected a provider. An explicit provider choice is a user
-    // contract and must not be silently replaced by a local fallback.
-    if (!isPrivate && !selectedProvider && (isLowBattery || isSlowConnection)) {
-      return {
-        provider: "gemini",
-        model: AI_MODELS.GEMINI_DEFAULT,
-        fullSupport: true,
-        name: "Google Gemini",
-        isConfigured: false,
-      };
-    }
-
-    // Simple tasks: prefer local only when no provider was explicitly chosen.
-// Routes simple queries to local AI (Ollama/WebLLM) which is ~10x cheaper
-// than cloud providers for equivalent quality on narrow tasks.
-    if (!selectedProvider && complexity === "simple") {
-      // Same dual gate as the offline/private branch: capability
-      // (hasWebLLM = canRunLocalLLM()) AND the 8 GB tier.
-      if (hasWebLLM && resourceManager.isHighEndDevice()) {
-        return {
-          provider: "webllm",
-          model: this.config.getWebLlmModel(),
-          fullSupport: false,
-          name: "WebLLM (Browser)",
-          isConfigured: true,
-          // Mark as routed-from-cloud for optimizer learning
-          _routingReason: "simple-task-local-route",
-        };
-      }
-      if (hasOllama) {
-        return {
-          provider: "ollama",
-          model: this.config.getOllamaSettings().model,
-          fullSupport: false,
-          name: "Ollama (Local)",
-          isConfigured: true,
-          _routingReason: "simple-task-local-route",
-        };
-      }
-    }
-
-    // Use selected or external key provider. Local providers (Ollama, WebLLM)
-    // are a deliberate user choice and must not be overridden just because an
-    // API key happens to be stored.
-    const isLocalProvider =
-      selectedProvider === "ollama" || selectedProvider === "webllm";
-    if (
-      selectedProvider &&
-      !isLocalProvider &&
-      selectedProvider !== "gemini" &&
-      externalApiKey
-    ) {
-      // Defense in depth: never route private data to a cloud provider even
-      // if the early return above was refactored away.
-      if (isPrivate) {
-        throw new Error(
-          "This document is marked as Private, but no Local AI is available.",
-        );
-      }
-      return detectProvider(externalApiKey);
-    }
-
-    // Apply learned routing from optimizer (non-blocking)
-    const taskType = options?.complexity === "complex" ? "summarize" : "chat";
-    // Reuse the state captured before the early returns — identical to what
-    // selectProvider receives.
-    const routingState = this.lastRoutingState ?? {
-      complexity: options?.complexity ?? "simple",
-      connectivity: "online",
-      batteryRange: "high",
-    };
-
-    // CRITICAL (audit #1): the optimizer may only consider providers that are
-    // actually usable right now — the locked providers, the provider detected
-    // from the configured API key, and any reachable local AI. Without this
-    // restriction, epsilon-greedy exploration would route requests to
-    // providers with no API key configured.
-    const availableProviders: AIProviderId[] = [];
-    if (defaultInfo.provider !== "unknown") {
-      availableProviders.push(defaultInfo.provider as AIProviderId);
-    }
-    if (externalApiKey) {
-      const detected = detectProvider(externalApiKey);
-      const detectedRaw = detected?.provider;
-      if (
-        detectedRaw &&
-        detectedRaw !== "unknown" &&
-        !availableProviders.includes(detectedRaw as AIProviderId)
-      ) {
-        availableProviders.push(detectedRaw as AIProviderId);
-      }
-    }
-    if (hasWebLLM && !availableProviders.includes("webllm")) {
-      availableProviders.push("webllm");
-    }
-    if (hasOllama && !availableProviders.includes("ollama")) {
-      availableProviders.push("ollama");
-    }
-
-    try {
-      const { routingOptimizer } = await import("./adapters/RoutingOptimizer");
-      const learnedProvider = await routingOptimizer.selectProvider(
-        taskType,
-        routingState,
-        defaultInfo.provider as unknown as Parameters<typeof routingOptimizer.selectProvider>[2],
-        availableProviders,
-      );
-      if (
-        learnedProvider !== (defaultInfo.provider as string) &&
-        learnedProvider !== ("unknown" as string)
-      ) {
-        if (
-          isPrivate &&
-          learnedProvider !== "webllm" &&
-          learnedProvider !== "ollama"
-        ) {
-          logger.warn(
-            "[ProviderManager] RoutingOptimizer suggested a cloud provider for private data; ignoring to honor isPrivate",
-            { suggested: learnedProvider },
-          );
-        } else {
-          return {
-            ...defaultInfo,
-            provider: learnedProvider,
-            model: this.getModelForProvider(learnedProvider),
-          };
-        }
-      }
-    } catch (err) {
-      logger.warn(
-        "[ProviderManager] Routing optimizer unavailable, using default provider",
-        { error: err },
-      );
-    }
-
-    return defaultInfo;
+    return resolveProviderRouting(
+      {
+        config: this.config,
+        getApiKey: () => this.vault.getApiKey(),
+        getModelForProvider: (provider) => this.getModelForProvider(provider),
+        setRoutingState: (state) => {
+          this.lastRoutingState = state;
+        },
+      },
+      options,
+    );
   }
 
   /**

@@ -116,14 +116,13 @@ describe("check:quick tier", () => {
   });
 
   // Contract: sub-second subset only. The slow gates measured in the 62 s
-  // chain (lint 21 s, no-unbounded-text 13.4 s, CVE scans, audit-drift) must
+  // chain (lint 21 s, no-unbounded-text 13.4 s, CVE scans) must
   // never leak into the fast tier — they stay in `npm run check`.
   it("excludes the known slow gates from the fast tier", () => {
     const slowScripts = [
       "check-no-unbounded-text",
       "check-direct-cve",
       "check-override-cve",
-      "check-audit-drift",
       "lint-bounded",
     ];
     const serialized = JSON.stringify(QUICK_GATES);

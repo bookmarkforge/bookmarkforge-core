@@ -2,17 +2,17 @@
   "lang": "hu",
   "langName": "Magyar",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/hu/",
+  "canonical": "https://www.bookmarkforgeapp.com/hu/",
   "ogLocale": "hu_HU",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: privát, helyben futó könyvjelző-kezelő olvasási listával",
   "description": "A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. Egyszeri fizetés: $59 early bird élettartam-hozzáférés (spórolj $20-at a normál ár előtt). Ingyenes: 500 könyvjelző.",
   "ogTitle": "BookmarkForge: privát, helyben futó könyvjelző-kezelő olvasási listával",
   "ogDescription": "A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. Egyszeri fizetés: $59 early bird élettartam-hozzáférés (spórolj $20-at a normál ár előtt). Ingyenes: 500 könyvjelző.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: privát, helyben futó könyvjelző-kezelő olvasási listával",
   "twitterDescription": "A Raindrop a szerverein tartja a könyvjelzőidet. A BookmarkForge a számítógépeden — úgy titkosítva, hogy még mi sem tudjuk elolvasni. Egyszeri fizetés: $59 early bird élettartam-hozzáférés (spórolj $20-at a normál ár előtt). Ingyenes: 500 könyvjelző.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Ugrás a fő tartalomra",
   "navBrandAria": "BookmarkForge kezdőlap",
   "navAriaLabel": "Fő navigáció",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "Menü bezárása",
   "hero": {
     "badge": "Egyszeri fizetés · Nincs előfizetés",
-    "title": "Amit elmentesz, a saját számítógépeden marad. <span class=\"accent-text\">Minden.</span>",
-    "subtitle": "A Raindrop a szerverein tartja a könyvjelzőidet — és minden évben kér érte pénzt. A BookmarkForge a számítógépeden tartja őket, egy kulccsal zárva, amely csak a tiéd. Nincs fiók. Nincs havi díj. Senki sem olvas a vállad fölött.",
-    "ctaPrimary": "Próbáld ki azonnal (fiók nélkül)",
-    "ctaSecondary": "Árak megtekintése",
+    "title": "Az privát könyvjelzőkezelő, amely <span class=\"accent-text\">mindent az eszközödön tart.</span>",
+    "subtitle": "Kutatóknak, hallgatóknak és mindenkinek, aki nem szeretné átadni az olvasási előzményeit egy felhőcégnek. Mentsen oldalakat, cikkeket és PDF-eket, találja meg őket kulcsszó vagy jelentés alapján, és tartson mindent titkosítva a saját számítógépén. Fiók nélkül. Előfizetés nélkül.",
+    "ctaPrimary": "Kezdés ingyen — regisztráció nélkül",
+    "ctaSecondary": "Nézze meg, hogyan működik",
     "pillars": [
       {
         "strong": "Privát",
-        "text": "az elmentett oldalak sosem hagyják el a számítógépedet"
+        "text": "titkosítva az eszközödön"
       },
       {
-        "strong": "Zárt",
-        "text": "még mi sem tudjuk elolvasni őket"
+        "strong": "Örökre a tiéd",
+        "text": "nincs előfizetés vagy havi díj"
       },
       {
-        "strong": "Kapcsolat nélkül",
-        "text": "működik repülőn, alagútban, bárhol"
+        "strong": "Működik offline",
+        "text": "mentés és olvasás bárhol, internet nélkül is"
       },
       {
-        "strong": "Egyszer fizetsz",
-        "text": "$59 early bird élettartam-hozzáférés (spórolj $20-at a normál ár előtt)"
+        "strong": "Ingyenes örökre",
+        "text": "500 könyvjelző ingyen, Pro csak ha többet akarsz"
       }
     ],
     "announce": "⚡ Helyi AI-fordítás (hamarosan)"
@@ -408,15 +408,11 @@
         "cta": "Pro beszerzése $59 Early Bird áron",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "majd $79 normál áron",
-        "sla": "Támogatás: E-mail 48h (H–P)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Szerezd meg a Pro-t: $79 Regular",
-        "cta2Class": "btn-secondary"
+        "sla": "Támogatás: E-mail 48h (H–P)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-hu#pricing\">Learn more</a>"
+    "legal": "Egyszeri fizetés · 12 hónap frissítés tartalmazva · a v1 örökre működik · 30 napos pénzvisszafizetési garancia. <a href=\"/privacy-and-terms.html#terms\">Feltételek</a>"
   },
   "faq": {
     "title": "Gyakori kérdések",
@@ -509,7 +505,8 @@
         "Kapcsolat"
       ],
       "helpCenter": "Súgóközpont",
-      "errorCodes": "Hibakódok"
+      "errorCodes": "Hibakódok",
+      "hours": "Válasz 48 órán belül, h–p (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Minden jog fenntartva.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "A privát, MI-vel működő tudástárad. 100% helyi első. A privát Pocket alternatíva. Ingyenes: 500 könyvjelző.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "Súgóközpont — GYIK, hibaelhárítás és támogatási SLA | BookmarkForge",
+    "title": "Súgóközpont — GYIK, hibaelhárítás és támogatási SLA",
     "description": "BookmarkForge súgóközpont: lifetime v1 árazás, hibaelhárítás, BF-E* hibakódok, támogatási SLA és a redaktált diagnosztikai jelentés másolása.",
     "ogTitle": "Súgóközpont — BookmarkForge",
     "ogDescription": "GYIK, hibaelhárítás, hibakódok és támogatási SLA. Ismerd meg, hogyan működik a lifetime v1 és hogyan másolhatsz diagnosztikai jelentést.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 normál",
-      "proPriceTraction": "$99 a bevezetés után",
+      "proPriceTraction": "",
       "proDescription": "Korlátlan könyvjelző, 5 eszköz + P2P szinkron, Helyi MI (WebLLM/Ollama) + RAG + Szakértő ügynökök, Tanulókártyák, PDF/OCR, 7 export formátum, pince. <em>A v1 örökre · 12 hónap funkciófrissítés · Biztonság örökre · v2 60% kedvezmény</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "Önkiszolgáló: ez a Súgóközpont + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "Önkiszolgáló: ez a Súgóközpont + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "Legjobb erőfeszítés (közösség)",
       "freeWhatToDo": "Keress BF-E* kódot lent + másold a diagnosztikát (<a href=\"#diagnostics\">§Diagnostics</a>) posztolás előtt",
       "proChannel": "E-mail <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (tárgy: Pro)",

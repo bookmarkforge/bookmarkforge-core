@@ -65,9 +65,8 @@ const DEFAULT_ROOT = process.cwd();
 // ── CLI ──────────────────────────────────────────────────────────────────────
 /**
  * Parsed from inside the main-module guard, not at import time: this module is
- * imported by its test file and by scripts/patch-free-plan-copy.mjs, and
- * scanning argv while being imported makes the IMPORTER's own flags fatal
- * ("unknown flag --check" — the migration script died on exactly this).
+ * imported by its test file, and scanning argv while being imported makes the
+ * IMPORTER's own flags fatal ("unknown flag --check").
  */
 function parseCliArgs(argv) {
   let root = DEFAULT_ROOT;

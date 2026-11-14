@@ -6,11 +6,11 @@
   "description": "Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次付费: $59 早鸟价终身授权（比原价省 $20）。免费版：500 个书签。",
   "ogTitle": "BookmarkForge：私密、本地优先的书签管理器与稍后阅读列表",
   "ogDescription": "Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次付费: $59 早鸟价终身授权（比原价省 $20）。免费版：500 个书签。",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "ogImageAlt": "BookmarkForge — 私密 AI 驱动的书签与笔记应用",
   "twitterTitle": "BookmarkForge：私密、本地优先的书签管理器与稍后阅读列表",
   "twitterDescription": "Raindrop 把你的书签存在它的服务器上。BookmarkForge 把它们留在你的电脑上——加密锁住，连我们都读不了。一次付费: $59 早鸟价终身授权（比原价省 $20）。免费版：500 个书签。",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "跳到主要内容",
   "navBrandAria": "BookmarkForge 首页",
   "navAriaLabel": "主导航",
@@ -31,26 +31,26 @@
   "githubAria": "在 GitHub 上为 BookmarkForge 加星",
   "hero": {
     "badge": "一次性付费 · 无订阅",
-    "title": "你保存的一切都留在你的电脑上。<span class=\"accent-text\">全部。</span>",
-    "subtitle": "Raindrop 把你的书签存在它的服务器上，还要你年年付费。BookmarkForge 把它们留在你的电脑上，用只有你掌握的密钥锁住。无需账号。没有月费。没人能在你背后翻看。",
-    "ctaPrimary": "立即试用（无需账号）",
-    "ctaSecondary": "查看定价",
+    "title": "把一切都<span class=\"accent-text\">留在你设备上</span>的私密书签管理器。",
+    "subtitle": "为研究者、学生，以及任何不想把阅读记录交给云端公司的用户而生。保存网页、文章和 PDF，按关键词或含义找到它们，并将一切加密保存在你自己的电脑上。无需账户。无订阅。",
+    "ctaPrimary": "免费开始 — 无需注册",
+    "ctaSecondary": "看看它如何工作",
     "pillars": [
       {
         "strong": "私密",
-        "text": "保存的页面永不离开你的电脑"
+        "text": "在你的设备上加密"
       },
       {
-        "strong": "锁定",
-        "text": "连我们也读不到"
+        "strong": "永远属于你",
+        "text": "无订阅、无月费"
       },
       {
-        "strong": "离线",
-        "text": "飞机上、隧道里，哪儿都能用"
+        "strong": "离线可用",
+        "text": "随时随地保存与阅读，即使没有网络"
       },
       {
-        "strong": "一次付费",
-        "text": "$59 早鸟价终身授权（比原价省 $20）"
+        "strong": "永久免费",
+        "text": "500 个书签免费，需要更多再升级"
       }
     ],
     "announce": "⚡ 本地 AI 翻译（即将推出）"
@@ -401,15 +401,11 @@
         "cta": "Early Bird $59 获得 Pro",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "之后常规价 $79",
-        "sla": "支持：邮件 48 小时（周一至周五）",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "以 $79（标准价）获取 Pro",
-        "cta2Class": "btn-secondary"
+        "sla": "支持：邮件 48 小时（周一至周五）"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-zh#pricing\">Learn more</a>"
+    "legal": "一次性付款 · 含12个月更新 · v1永久可用 · 30天退款保证。 <a href=\"/privacy-and-terms.html#terms\">条款</a>"
   },
   "faq": {
     "title": "常见问题",
@@ -502,7 +498,8 @@
         "联系我们"
       ],
       "helpCenter": "帮助中心",
-      "errorCodes": "错误代码"
+      "errorCodes": "错误代码",
+      "hours": "48小时内回复，周一至周五（CET）"
     },
     "copyright": "© 2026 BookmarkForge。保留所有权利。",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",

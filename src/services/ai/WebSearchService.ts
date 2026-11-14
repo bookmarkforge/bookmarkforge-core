@@ -427,7 +427,7 @@ Include sources when possible.`;
 
       const urlMatch = trimmed.match(/(?:https?:\/\/|www\.)[^\s]+/i);
       if (urlMatch && !current.url) {
-        // Audit #4: the regex can capture malformed URLs (e.g. "www."
+        // the regex can capture malformed URLs (e.g. "www."
         // without scheme, or invalid characters). new URL() would throw and
         // kill the WHOLE search after the paid AI call — guard it.
         const raw = urlMatch[0];

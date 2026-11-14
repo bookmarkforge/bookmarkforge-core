@@ -26,20 +26,20 @@ import { existsSync } from "node:fs";
  *       shipped, and the runner script is responsible for the build step.
  *       Strong Argon2id (128 MiB) applies; per-test timeouts are generous.
  *
- *       The /api proxy in vite.config.ts (isPreview branch) forwards
- *       /api/license/* to the companion server — the same topology as the
- *       production nginx — so the license test exercises the REAL signing
- *       path: Whop-adapter mock → RSA-PSS-signed entitlement → client
- *       verification → cached state.
+ *       The /api proxy in vite.config.ts forwards /api/license/* to the
+ *       dev-only adapter scripts/dev-license-server.ts (port 8788), which
+ *       calls the Whop-adapter mock and signs the entitlement — the REAL
+ *       signing path: Whop-adapter mock → RSA-PSS-signed entitlement →
+ *       client verification → cached state. (The companion stopped serving
+ *       license routes on 2026-10-19; it is signaling-only now.)
  *
- * License wiring: the base config points the companion's WHOP_LICENSE_API_URL
- * at a dead port because no shipped E2E activates a license. This profile
- * overrides it to scripts/license-mock.mjs (Whop-compatible adapter, local
- * only, license-mock-key) and boots the mock as its own webServer;
- * LICENSE_PROVIDER_ALLOW_HTTP=1 permits the loopback http:// endpoint exactly
- * as staging does.
+ * License wiring: the base config already boots the same adapter + mock
+ * pair; this profile overrides the mock key env to match. The companion's
+ * WHOP_* overrides below are inert leftovers of the pre-retirement
+ * topology — kept so a companion that still validates the provider URL at
+ * boot sees a well-formed loopback target.
  *
- * The companion signs entitlements with the gitignored dev key
+ * The license adapter signs entitlements with the gitignored dev key
  * (server/.license-signing-key.pkcs8, picked up automatically via
  * loadSigningPrivateKey). Without ANY signing key the license tests are
  * skipped with an explicit marker — never silently.
@@ -51,14 +51,25 @@ const port = prodMode
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`;
 const readinessURL = prodMode ? `${baseURL}/app` : baseURL;
 const licenseMockPort = Number(process.env.LICENSE_MOCK_PORT ?? 8082);
+// Dev-only adapter serving the real api/license/[action].ts handler; the
+// E2E proxy sends /api/license here (the companion stopped serving it).
+const licenseProxyPort = Number(process.env.LICENSE_PROXY_PORT ?? 8788);
 const signalingPort = Number(process.env.SIGNALING_PORT ?? 8787);
-const LICENSE_MOCK_KEY = process.env.LICENSE_MOCK_KEY ?? "license-mock-key";
+// Must match the license adapter's WHOP_API_KEY: the mock authenticates the
+// adapter's bearer token (same contract as playwright.config.ts).
+const LICENSE_MOCK_KEY = process.env.LICENSE_MOCK_KEY ?? "e2e-license-key";
 
 // Private-infra gating (same contract as playwright.config.ts): the public
 // Core export ships neither server/ nor api/license/, so the companion
 // spread and the license mock compile out there.
 const hasCompanionServer = existsSync("server/src/index.ts");
 const hasLicenseStack = existsSync("api/license/[action].ts");
+const baseWebServers = Array.isArray(baseConfig.webServer)
+  ? baseConfig.webServer
+  : baseConfig.webServer
+    ? [baseConfig.webServer]
+    : [];
+const companionBase = baseWebServers[0];
 
 const hasSigningKey =
   existsSync("server/.license-signing-key.pkcs8") ||
@@ -87,16 +98,17 @@ export default defineConfig({
   retries: 0, // a release gate must report the first failure, not mask it
   reporter: process.env.CI ? [["line"]] : "list",
   use: { ...baseConfig.use, baseURL },
-  // companion server (signaling + /api/license/*, WHOP → license-mock), the
-  // Whop-adapter license mock itself, then either the dev server (test mode)
-  // or `vite preview` over dist/ (prod mode).
+  // companion server (signaling only — license routes retired 2026-10-19),
+  // the dev license adapter (8788), the Whop-adapter license mock (8082),
+  // then either the dev server (test mode) or `vite preview` over dist/
+  // (prod mode).
   webServer: [
-    ...(hasCompanionServer
+    ...(hasCompanionServer && companionBase
       ? [
           {
-            ...baseConfig.webServer[0],
+            ...companionBase,
             env: {
-              ...baseConfig.webServer[0].env,
+              ...companionBase.env,
               WHOP_LICENSE_API_URL: `http://127.0.0.1:${licenseMockPort}/license`,
               WHOP_API_KEY: LICENSE_MOCK_KEY,
               LICENSE_PROVIDER_ALLOW_HTTP: "1",
@@ -106,6 +118,24 @@ export default defineConfig({
       : []),
     ...(hasLicenseStack
       ? [
+          {
+            // Dev-only adapter for the serverless license handler — same
+            // topology as playwright.config.ts: the companion no longer serves
+            // /api/license (retired 2026-10-19), so api/license/[action].ts
+            // runs here and VITE_LICENSE_PROXY_TARGET points the proxy at it.
+            command: "npx tsx scripts/dev-license-server.ts",
+            url: `http://127.0.0.1:${licenseProxyPort}/__health`,
+            reuseExistingServer: !process.env.CI,
+            timeout: 60_000,
+            env: {
+              NODE_ENV: "test",
+              LICENSE_DEV_HOST: "127.0.0.1",
+              LICENSE_DEV_PORT: String(licenseProxyPort),
+              WHOP_LICENSE_API_URL: `http://127.0.0.1:${licenseMockPort}/license`,
+              WHOP_API_KEY: "e2e-license-key",
+              LICENSE_PROVIDER_ALLOW_HTTP: "1",
+            },
+          },
           {
             command: "node scripts/license-mock.mjs",
             url: `http://127.0.0.1:${licenseMockPort}/health`,
@@ -128,12 +158,17 @@ export default defineConfig({
           reuseExistingServer: !process.env.CI,
           timeout: 120_000,
           env: {
-            // /api/license/* lives in the companion (npm run server) process,
-            // which IS the signaling server (single server/src/index.ts on
-            // SIGNALING_PORT). Point the isPreview proxy at it — the crisis
-            // suite's 8799 convention only applies when a spec spawns its
-            // own companion, which this battery does not.
+            // /api/* (non-license) goes to the companion (npm run server)
+            // process on SIGNALING_PORT — the crisis suite's 8799 convention
+            // only applies when a spec spawns its own companion, which this
+            // battery does not. /api/license/* is routed separately by
+            // VITE_LICENSE_PROXY_TARGET to the dev adapter on 8788.
             VITE_API_PROXY_TARGET: `http://127.0.0.1:${signalingPort}`,
+            ...(hasLicenseStack
+              ? {
+                  VITE_LICENSE_PROXY_TARGET: `http://127.0.0.1:${licenseProxyPort}`,
+                }
+              : {}),
           },
         }
       : {
@@ -149,6 +184,11 @@ export default defineConfig({
             // Same rationale as the prod branch above: the proxy must reach
             // the RUNNING companion (signaling server), not a dead port.
             VITE_API_PROXY_TARGET: `http://127.0.0.1:${signalingPort}`,
+            ...(hasLicenseStack
+              ? {
+                  VITE_LICENSE_PROXY_TARGET: `http://127.0.0.1:${licenseProxyPort}`,
+                }
+              : {}),
             SIGNALING_ADMIN_TOKEN:
               process.env.SIGNALING_ADMIN_TOKEN ?? "e2e-admin-token",
           },

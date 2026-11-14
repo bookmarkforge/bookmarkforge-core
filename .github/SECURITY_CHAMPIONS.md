@@ -57,11 +57,11 @@ A Security Champion must meet at least 3 of these 5 criteria:
 - [ ] Review CodeQL and Semgrep results on every CI run
 - [ ] Investigate and remediate any High/Critical severity alert within 48h
 - [ ] Take part in the weekly DAST review
-- [ ] Update `audit-anchors-baseline.json` when new anchors are added
+- [ ] Keep the `src/tests/security/` regression pins in sync when new anchors are added
 
 ### Quarterly
 - [ ] Take part in an external penetration test
-- [ ] Review `AGENTS.md` and update it with newly discovered vulnerabilities
+- [ ] Review `CONTRIBUTING.md` and update it with newly discovered vulnerabilities
 - [ ] Threat-model the new features
 - [ ] Review the supply chain (`npm audit`, dependabot, SLSA)
 

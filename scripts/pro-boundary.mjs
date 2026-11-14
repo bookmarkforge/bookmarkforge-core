@@ -60,6 +60,7 @@ export const PRO_MODULE_PATHS = [
   "src/services/sync/signaling.ts",
   "src/services/sync/replication.ts",
   "src/services/webrtc-sync/protocol.ts",
+  "src/services/webrtc-sync/sdp-codec.ts",
   "src/services/webrtc-sync/validation.ts",
   "src/services/pdfService.ts",
    "src/services/BackupService.ts",

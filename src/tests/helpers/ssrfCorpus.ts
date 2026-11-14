@@ -54,7 +54,7 @@ export const ipv6UrlHosts: string[] = [
   "[fc00::1]", "[fd12:3456:789a::1]",
   "[fe80::1]", "[fe81::1]", "[fec0::1]", "[fef0::1]",
   "[fc0::1]", // 0fc0:: — reserved 0800::/5 space (NOT ULA fc00::/7);
-  // ambos gates lo permiten consistentemente (ninguna regex lo matchea)
+  // both gates allow it consistently (no regex matches it)
   "[::ffff:127.0.0.1]", "[::ffff:7f00:1]", "[::ffff:192.168.1.1]",
   "[::ffff:c0a8:101]", "[::ffff:0:0]", "[::ffff:8.8.8.8]",
   "[::ffff:808:808]", // 8.8.8.8 in hex — public hexMappedIpv4ToDotted path

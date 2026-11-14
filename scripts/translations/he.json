@@ -2,17 +2,17 @@
   "lang": "he",
   "langName": "עברית",
   "dir": "rtl",
-  "canonical": "https://bookmarkforgeapp.com/he/",
+  "canonical": "https://www.bookmarkforgeapp.com/he/",
   "ogLocale": "he_IL",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: מנהל סימניות פרטי מקומי עם רשימת קריאה",
   "description": "Raindrop שומר את הסימניות שלך על שרתים שלו. BookmarkForge שומר אותן על המחשב שלך — נעולות, כך שגם אנחנו לא יכולים לקרוא אותן. תשלום אחד: $59 גישה לכל החיים במחיר early bird (חסכו $20 לפני המחיר הרגיל). Free: 500 סימניות.",
   "ogTitle": "BookmarkForge: מנהל סימניות פרטי מקומי עם רשימת קריאה",
   "ogDescription": "Raindrop שומר את הסימניות שלך על שרתים שלו. BookmarkForge שומר אותן על המחשב שלך — נעולות, כך שגם אנחנו לא יכולים לקרוא אותן. תשלום אחד: $59 גישה לכל החיים במחיר early bird (חסכו $20 לפני המחיר הרגיל). Free: 500 סימניות.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: מנהל סימניות פרטי מקומי עם רשימת קריאה",
   "twitterDescription": "Raindrop שומר את הסימניות שלך על שרתים שלו. BookmarkForge שומר אותן על המחשב שלך — נעולות, כך שגם אנחנו לא יכולים לקרוא אותן. תשלום אחד: $59 גישה לכל החיים במחיר early bird (חסכו $20 לפני המחיר הרגיל). Free: 500 סימניות.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "דלג לתוכן הראשי",
   "navBrandAria": "העמוד הבית של BookmarkForge",
   "navAriaLabel": "ניווט ראשי",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "סגירת התפריט",
   "hero": {
     "badge": "תשלום חד-פעמי · בלי מנוי",
-    "title": "כל מה שאתה שומר נשאר על המחשב שלך. <span class=\"accent-text\">הכול.</span>",
-    "subtitle": "Raindrop שומר את הסימניות שלך על שרתים שלו — וגובה ממך כל שנה. BookmarkForge שומר אותן על המחשב שלך, נעולות במפתח שרק לך יש. בלי חשבונות. בלי דמי חודש. ובלי אף אחד שקורא מעל הכתף שלך.",
-    "ctaPrimary": "נסו עכשיו (בלי חשבון)",
-    "ctaSecondary": "ראה את התמחור",
+    "title": "מנהל הסימניות הפרטי ששומר <span class=\"accent-text\">הכל על המכשיר שלך.</span>",
+    "subtitle": "לחוקרים, לסטודנטים ולכל מי שמעדיף לא מוסר את היסטוריית הקריאה שלו לחברת ענן. שמרו דפים, מאמרים וקובצי PDF, מצאו אותם לפי מילת מפתח או משמעות, ושמרו הכל מוצפן במחשב שלכם. בלי חשבון. בלי מנוי.",
+    "ctaPrimary": "התחילו בחינם — בלי הרשמה",
+    "ctaSecondary": "ראו איך זה עובד",
     "pillars": [
       {
         "strong": "פרטי",
-        "text": "הדפים שאתה שומר לא עוזבים את המחשב שלך"
+        "text": "מוצפן על המכשיר שלך"
       },
       {
-        "strong": "נעול",
-        "text": "גם אנחנו לא יכולים לקרוא אותם"
+        "strong": "שלך לנצח",
+        "text": "בלי מנויים או תשלומים חודשיים"
       },
       {
-        "strong": "ללא אינטרנט",
-        "text": "עובד במטוס, במנהרה, בכל מקום"
+        "strong": "עובד אופליין",
+        "text": "שמרו וקראו בכל מקום, גם בלי אינטרנט"
       },
       {
-        "strong": "תשלום אחד",
-        "text": "$59 גישה לכל החיים במחיר early bird (חסכו $20 לפני המחיר הרגיל)"
+        "strong": "חינם לנצח",
+        "text": "500 סימניות בחינם, שדרגו ל-Pro רק אם רוצים יותר"
       }
     ],
     "announce": "⚡ תרגום AI מקומי (בקרוב)"
@@ -408,15 +408,11 @@
         "cta": "קבל את Pro ב-$59 ב-Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "אחר כך $79 במחיר רגיל",
-        "sla": "תמיכה: אימייל תוך 48 שעות (יום א׳–יום ה׳)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "קבלו Pro במחיר $79 (מחיר רגיל)",
-        "cta2Class": "btn-secondary"
+        "sla": "תמיכה: אימייל תוך 48 שעות (יום א׳–יום ה׳)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-he#pricing\">Learn more</a>"
+    "legal": "תשלום חד-פעמי · 12 חודשי עדכונים כלולים · v1 עובד לנצח · אחריות להחזר כספי תוך 30 יום. <a href=\"/privacy-and-terms.html#terms\">תנאים</a>"
   },
   "faq": {
     "title": "שאלות נפוצות",
@@ -509,7 +505,8 @@
         "יצירת קשר"
       ],
       "helpCenter": "מרכז העזרה",
-      "errorCodes": "קודי שגיאה"
+      "errorCodes": "קודי שגיאה",
+      "hours": "מענה תוך 48 שעות, ב׳–ו׳ (CET)"
     },
     "copyright": "© 2026 BookmarkForge. כל הזכויות שמורות.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "כספת הידע הפרטית שלך, מופעלת באמצעות AI. 100% מקומי-לפני. החלופה הפרטית ל-Pocket. Free: 500 סימניות.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "מרכז העזרה — שאלות נפוצות, פתרון תקלות ו-SLA לתמיכה | BookmarkForge",
+    "title": "מרכז העזרה — שאלות נפוצות, פתרון תקלות ו-SLA לתמיכה",
     "description": "מרכז העזרה של BookmarkForge: תמחור v1 לכל החיים, פתרון תקלות, קודי שגיאה BF-E*, SLA לתמיכה ואיך להעתיק דוח אבחון מצונזר.",
     "ogTitle": "מרכז העזרה — BookmarkForge",
     "ogDescription": "שאלות נפוצות, פתרון תקלות, קודי שגיאה ו-SLA לתמיכה. למדו איך v1 לכל החיים עובד ואיך להעתיק דוח אבחון.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 במחיר רגיל",
-      "proPriceTraction": "$99 אחרי שלב ההתפשטות",
+      "proPriceTraction": "",
       "proDescription": "סימניות בלי הגבלה, 5 מכשירים + סנכרון P2P, AI מקומי (WebLLM/Ollama) + RAG + סוכנים מומחים, כרטיסי חזרה, PDF/OCR, 7 פורמטי ייצוא, כספת. <em>Lifetime של v1 · 12 חודשי עדכוני תכונות · אבטחה לתמיד · הנחה של 60% ל-v2</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "שירות עצמי: מרכז העזרה הזה + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "שירות עצמי: מרכז העזרה הזה + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "במאמץ מיטבי (קהילה)",
       "freeWhatToDo": "חפש את קוד BF-E* למטה + העתק את דוח האבחון (<a href=\"#diagnostics\">§אבחון</a>) לפני שאתה פותח פוסט",
       "proChannel": "אימייל <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (נושא: Pro)",

@@ -6,12 +6,12 @@
  * feeds via `define` in vite.config.ts / vitest.config.ts).
  *
  * Reconstructed from the shipped production policy (dist/_headers):
- *   - MODERATE is EXACTLY the production header policy (no-op at runtime),
- *     directive order included.
- *   - STRICT is the privacy-maximal variant: no cloud AI provider hosts in
- *     connect-src (self + own signaling + cloud-sync OAuth only).
- *   - OPEN is the development profile (unsafe-inline/unsafe-eval + localhost);
- *     cspReportThrottle degrades OPEN to MODERATE in production builds.
+ * - MODERATE is EXACTLY the production header policy (no-op at runtime),
+ * directive order included.
+ * - STRICT is the privacy-maximal variant: no cloud AI provider hosts in
+ * connect-src (self + own signaling + cloud-sync OAuth only).
+ * - OPEN is the development profile (unsafe-inline/unsafe-eval + localhost);
+ * cspReportThrottle degrades OPEN to MODERATE in production builds.
  *
  * NOTE: every directive is `;`-separated — a missing separator makes the
  * whole policy invalid per the CSP spec (the meta override would be
@@ -46,7 +46,25 @@ const TAIL =
   " frame-src 'none'; frame-ancestors 'none'; object-src 'none';" +
   " upgrade-insecure-requests";
 
-/** Cloud AI + sync hosts allowed by the default (MODERATE) profile. */
+/**
+ * Cloud AI + sync hosts allowed by the default (MODERATE) profile.
+ *
+ * `*.hf.co` is the ONLY wildcard this policy allows:
+ * Hugging Face serves model shards from per-region subdomains
+ * (cdn-lfs.hf.co, cas-bridge.xethub.hf.co,...) that cannot be enumerated
+ * safely. `validate-http-config` carries the same narrow allowlist and fails
+ * on every other wildcard. jsDelivr is the ONNX Runtime CDN used by WebLLM and
+ * is pinned to its exact host, never `*.jsdelivr.net`.
+ */
+// `http://localhost:11434` stays in
+// the shipped policy because it is the Ollama endpoint the local-AI feature
+// requires; removing it would break local models on every hosted deployment.
+// Residual risk: any script executing in app context could probe the user's
+// local Ollama. Mitigations already in place: MetadataService/
+// ContentFetchService block loopback targets for remote fetches, script-src
+// has no 'unsafe-inline'/'unsafe-eval', and the allowance is a single
+// host:port (no wildcard). Revisit if Ollama traffic moves behind a
+// same-origin proxy or the browser extension.
 const CLOUD_AI_AND_SYNC =
   " http://localhost:11434" +
   " https://api.openai.com https://api.anthropic.com https://api.groq.com" +
@@ -62,7 +80,7 @@ const CLOUD_AI_AND_SYNC =
   " https://signaling.rxdb.info wss://signaling.rxdb.info" +
   " https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe" +
   ` ${SIGNALING_WS}` +
-  " https://whop.com https://api.whop.com";
+  " https://whop.com https://api.whop.com https://cdn.jsdelivr.net";
 
 /**
  * Optional Sentry ingest host for remote error reporting. Derived from the
@@ -83,7 +101,7 @@ const SENTRY_HOST = (() => {
 const SENTRY_CONNECT = SENTRY_HOST ? ` https://${SENTRY_HOST}` : "";
 
 /** Identical to the shipped production header policy (dist/_headers). */
-// P1 (audit 2026-11-06): the report endpoint is ORIGIN-RELATIVE.
+// the report endpoint is ORIGIN-RELATIVE.
 // `report-uri` accepts a URI-reference and a relative endpoint resolves
 // against whatever origin serves the document, so a self-hosted deployment
 // reports to its own /csp-report collector instead of posting browsing
@@ -92,7 +110,7 @@ const SENTRY_CONNECT = SENTRY_HOST ? ` https://${SENTRY_HOST}` : "";
 // reference to the product domain.
 const REPORT_URI = "/csp-report";
 
-// B2 (audit 2026-08-13): CSP3 `report-to` group, kept ALONGSIDE report-uri.
+// CSP3 `report-to` group, kept ALONGSIDE report-uri.
 // Per the CSP spec, when both directives are present `report-to` takes
 // precedence in supporting engines (Chrome 96+, Firefox 96+); Safari and
 // other legacy engines keep delivering via `report-uri`. The group must be

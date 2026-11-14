@@ -2,17 +2,17 @@
   "lang": "sv",
   "langName": "Svenska",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/sv/",
+  "canonical": "https://www.bookmarkforgeapp.com/sv/",
   "ogLocale": "sv_SE",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: privat local-first bokmärkeshanterare med läslista",
   "description": "Raindrop förvarar dina bokmärken på sina servrar. BookmarkForge förvarar dem på din dator — låsta så att inte ens vi kan läsa dem. Betala en gång: $59 early bird livstidsåtkomst (spara $20 före ordinarie pris). Free: 500 bokmärken.",
   "ogTitle": "BookmarkForge: privat local-first bokmärkeshanterare med läslista",
   "ogDescription": "Raindrop förvarar dina bokmärken på sina servrar. BookmarkForge förvarar dem på din dator — låsta så att inte ens vi kan läsa dem. Betala en gång: $59 early bird livstidsåtkomst (spara $20 före ordinarie pris). Free: 500 bokmärken.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: privat local-first bokmärkeshanterare med läslista",
   "twitterDescription": "Raindrop förvarar dina bokmärken på sina servrar. BookmarkForge förvarar dem på din dator — låsta så att inte ens vi kan läsa dem. Betala en gång: $59 early bird livstidsåtkomst (spara $20 före ordinarie pris). Free: 500 bokmärken.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Hoppa till huvudinnehållet",
   "navBrandAria": "BookmarkForge startsida",
   "navAriaLabel": "Huvudnavigering",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "Stäng menyn",
   "hero": {
     "badge": "Engångsbetalning · Ingen prenumeration",
-    "title": "Allt du sparar stannar på din dator. <span class=\"accent-text\">Allt.</span>",
-    "subtitle": "Raindrop förvarar dina bokmärken på sina servrar — och tar betalt varje år. BookmarkForge förvarar dem på din dator, låsta med en nyckel bara du har. Inga konton. Inga månadsavgifter. Ingen som läser över din axel.",
-    "ctaPrimary": "Prova direkt (inget konto krävs)",
-    "ctaSecondary": "Se priser",
+    "title": "Den privata bokmärkeshanteraren som <span class=\"accent-text\">håller allt på din enhet.</span>",
+    "subtitle": "För forskare, studenter och alla som inte vill lämna ifrån sig sin läshistorik till ett molnföretag. Spara sidor, artiklar och PDF:er, hitta dem med nyckelord eller betydelse, och behåll allt krypterat på din egen dator. Inget konto. Inget abonnemang.",
+    "ctaPrimary": "Börja gratis — ingen registrering",
+    "ctaSecondary": "Se hur det fungerar",
     "pillars": [
       {
         "strong": "Privat",
-        "text": "dina sparade sidor lämnar aldrig din dator"
+        "text": "krypterat på din enhet"
       },
       {
-        "strong": "Låst",
-        "text": "inte ens vi kan läsa dem"
+        "strong": "Din för alltid",
+        "text": "inga abonnemang, inga månadsavgifter"
       },
       {
-        "strong": "Utan internet",
-        "text": "fungerar i flyg, i tunnel, var som helst"
+        "strong": "Fungerar offline",
+        "text": "spara och läs var som helst, även utan internet"
       },
       {
-        "strong": "Betala en gång",
-        "text": "$59 early bird livstidsåtkomst (spara $20 före ordinarie pris)"
+        "strong": "Gratis för alltid",
+        "text": "500 bokmärken gratis, uppgradera bara om du vill ha mer"
       }
     ],
     "announce": "⚡ Lokal AI-översättning (kommer snart)"
@@ -408,15 +408,11 @@
         "cta": "Skaffa Pro $59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "sedan $79 ordinariskt",
-        "sla": "Support: E-post 48h (mån–fre)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Få Pro för $79 (normalt pris)",
-        "cta2Class": "btn-secondary"
+        "sla": "Support: E-post 48h (mån–fre)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-sv#pricing\">Learn more</a>"
+    "legal": "Engångsbetalning · 12 månaders uppdateringar ingår · v1 fungerar för alltid · 30 dagars pengarna-tillbaka-garanti. <a href=\"/privacy-and-terms.html#terms\">Villkor</a>"
   },
   "faq": {
     "title": "Vanliga frågor",
@@ -509,7 +505,8 @@
         "Kontakt"
       ],
       "helpCenter": "Hjälpcenter",
-      "errorCodes": "Felkoder"
+      "errorCodes": "Felkoder",
+      "hours": "Svar inom 48 timmar, mån–fre (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Alla rättigheter förbehållna.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "Ditt privata, AI-drivna kunskapsvalv. 100% lokalförst. Det privata Pocket-alternativet. Free: 500 bokmärken.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "Hjälpcenter — Vanliga frågor, felsökning & support-SLA | BookmarkForge",
+    "title": "Hjälpcenter — Vanliga frågor, felsökning & support-SLA",
     "description": "BookmarkForges hjälpcenter: priser och livstid för v1, felsökning, felkoder BF-E*, support-SLA och hur du kopierar en redigerad diagnostikrapport.",
     "ogTitle": "Hjälpcenter — BookmarkForge",
     "ogDescription": "Vanliga frågor, felsökning, felkoder och support-SLA. Läs hur livstid för v1 fungerar och hur du kopierar en diagnostikrapport.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 ordinariskt",
-      "proPriceTraction": "$99 när vi fått fäste",
+      "proPriceTraction": "",
       "proDescription": "Obebgränsade bokmärken, 5 enheter + P2P-synkronisering, lokal AI (WebLLM/Ollama) + RAG + expertagenter, studiekort, PDF/OCR, 7 exportformat, valv. <em>Livstid för v1 · 12 månaders funktionsuppdateringar · Säkerhet för alltid · 60% rabatt på v2</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "Självbetjäning: denna hjälpcenter + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "Självbetjäning: denna hjälpcenter + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "Efter bästa förmåga (användarcommunity)",
       "freeWhatToDo": "Sök BF-E*-koden nedan + kopiera diagnosen (<a href=\"#diagnostics\">§Diagnostik</a>) innan du skriver",
       "proChannel": "E-post <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (ämne: Pro)",

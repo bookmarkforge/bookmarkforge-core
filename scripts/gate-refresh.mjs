@@ -10,19 +10,17 @@
  *   1. doctor-docs-index --update   canonical docs/docs-state-index.md
  *      (auto-derives ADR rows, so it must run before anything that reads or
  *      validates the index)
- *   2. audit-anchors --fix          anchor catalog + baseline, resolved
- *      against the tree state that step 1 just left behind
- *   3. check-docs-markdown --update docs-markdown baseline (ADR corpus
+ *   2. check-docs-markdown --update docs-markdown baseline (ADR corpus
  *      included), widened to whatever docs/ now contains
- *   4. build-landings               regenerate public/ landing pages from
+ *   3. build-landings               regenerate public/ landing pages from
  *      their translation JSONs (the mechanical fix `check:landings-fresh`
- *      itself prescribes). Independent of steps 1-3 but placed before the
- *      tests so step 5 verifies the post-refresh tree in full.
- *   5. the contract tests of the four gates, green right after refresh —
+ *      itself prescribes). Independent of steps 1-2 but placed before the
+ *      tests so step 4 verifies the post-refresh tree in full.
+ *   4. the contract tests of the remaining gates, green right after refresh —
  *      if these fail, the regeneration produced drift of its own and the
  *      output must be reviewed before committing anything
  *
- * Verification (not regeneration) is step 6: the gates re-run in gate mode.
+ * Verification (not regeneration) is step 5: the gates re-run in gate mode.
  * A refresh that immediately fails its own gate is a bug, not a state.
  *
  * Deliberately NOT here: the i18n baselines (`scripts/i18n-backlog-baseline.json`,
@@ -33,7 +31,7 @@
  *
  * This is a maintainer convenience tool, not a CI gate: it WRITES
  * baselines. Never wire it into `npm run check`; regenerating baselines is
- * a deliberate, reviewed act (AGENTS.md §6). `BMF_GATE_REFRESH_DRY=1`
+ * a deliberate, reviewed act (CONTRIBUTING.md). `BMF_GATE_REFRESH_DRY=1`
  * prints the plan without executing.
  */
 import { spawnSync } from "node:child_process";
@@ -60,34 +58,28 @@ export const STEPS = [
     args: [join(ROOT, "scripts", "doctor-docs-index.mjs"), "--update"],
   },
   {
-    name: "2. audit-anchors --fix (anchor catalog + baseline)",
-    cmd: process.execPath,
-    args: [join(ROOT, "scripts", "audit-anchors.mjs"), "--fix"],
-  },
-  {
-    name: "3. check-docs-markdown --update (docs-markdown baseline)",
+    name: "2. check-docs-markdown --update (docs-markdown baseline)",
     cmd: process.execPath,
     args: [join(ROOT, "scripts", "check-docs-markdown.mjs"), "--update"],
   },
   {
-    name: "4. build-landings (regenerate public/ landing pages)",
+    name: "3. build-landings (regenerate public/ landing pages)",
     cmd: process.execPath,
     args: [join(ROOT, "scripts", "build-landings.cjs")],
   },
   {
-    name: "5. contract tests of the four gates",
+    name: "4. contract tests of the remaining gates",
     cmd: process.execPath,
     args: [
       join(ROOT, "node_modules", "vitest", "vitest.mjs"),
       "run",
       join(ROOT, "scripts", "__tests__", "docs-state-index.test.mjs"),
-      join(ROOT, "scripts", "__tests__", "audit-anchors.test.mjs"),
       join(ROOT, "scripts", "__tests__", "check-docs-markdown.test.mjs"),
       join(ROOT, "scripts", "__tests__", "check-landings-fresh.test.mjs"),
     ],
   },
   {
-    name: "6. gate-mode re-verification (must pass immediately after refresh)",
+    name: "5. gate-mode re-verification (must pass immediately after refresh)",
     cmd: process.execPath,
     args: [
       join(ROOT, "scripts", "check-docs-markdown.mjs"),
@@ -137,7 +129,7 @@ if (failures.length > 0) {
   process.exit(1);
 }
 console.log(
-  `${TAG} OK — 6/6 steps green. Regenerated artifacts are uncommitted: ` +
+  `${TAG} OK — 5/5 steps green. Regenerated artifacts are uncommitted: ` +
     "review the diff (git diff scripts/ docs/) before staging.",
 );
 process.exit(0);

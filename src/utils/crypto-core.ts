@@ -6,16 +6,17 @@
  * directly in a Node environment (which provides globalThis.crypto.subtle).
  *
  * Format timeline:
- *   v2 — PBKDF2 (legacy, read-only)
- *   v4 — Argon2id per operation (stored data)
- *   v5 — Argon2id-once + HKDF per operation, fixed bundle-wide Argon2id salt.
- *        READ-ONLY legacy: decrypt() is gated by VITE_ALLOW_V5_LEGACY_READ and
- *        encrypt() no longer produces it (A-02 — see KdfSaltUnavailableError).
- *   v6 — same as v5 but keyed by a random PER-VAULT Argon2id salt that is
- *        embedded in the payload (see setVaultKdfSalt / VAULT_KDF_SALT_BYTES).
- *   v7 — v6 + the Argon2id PARAMETERS embedded in the payload (A-01) + the
- *        payload's logical purpose authenticated as AES-GCM AAD (M-02).
- *        The ONLY writable format; v6 and older are read-only.
+ * v2 — PBKDF2 (legacy, read-only)
+ * v4 — Argon2id per operation (stored data)
+ * v5 — Argon2id-once + HKDF per operation, fixed bundle-wide Argon2id salt.
+ * REMOVED (ADR-052 Phase 4): the parser is gone, so decrypt() refuses
+ * `v5:` payloads with LegacyV5FormatRemovedError. encrypt() stopped
+ * producing it in A-02 (see KdfSaltUnavailableError).
+ * v6 — same as v5 but keyed by a random PER-VAULT Argon2id salt that is
+ * embedded in the payload (see setVaultKdfSalt / VAULT_KDF_SALT_BYTES).
+ * v7 — v6 + the Argon2id PARAMETERS embedded in the payload (A-01) + the
+ * payload's logical purpose authenticated as AES-GCM AAD (M-02).
+ * The ONLY writable format; v6 and older are read-only.
  */
 
 import {
@@ -31,18 +32,71 @@ import { env } from "../env.config";
 
 export const CRYPTO_ALGORITHM = "AES-GCM";
 
-/** Error thrown when a v5 legacy format read is blocked by the cutoff. */
+/**
+ * Error thrown when a v5 legacy format read is blocked by the cutoff.
+ *
+ * ADR-052 Phase 3 requires this to be TYPED and ACTIONABLE: the caller must be
+ * able to tell it apart from a wrong password (retrying cannot help) and the
+ * message must say what to do. The stable `V5_LEGACY_FORMAT_RETIRED` token is
+ * what survives the Worker boundary, where the error class is reduced to its
+ * message (same contract as KdfSaltUnavailableError.CODE).
+ */
 export class LegacyV5FormatRemovedError extends Error {
-  constructor() {
-    super("[crypto-core] v5 legacy format read is disabled by VITE_ALLOW_V5_LEGACY_READ");
+  static readonly CODE = "V5_LEGACY_FORMAT_RETIRED";
+  readonly code = LegacyV5FormatRemovedError.CODE;
+
+  constructor(detail?: string) {
+    super(
+      `[${LegacyV5FormatRemovedError.CODE}] This data was encrypted with the ` +
+        "retired v5 legacy format (one bundle-wide Argon2id salt), which this " +
+        "build refuses to read. Re-entering the password cannot help. " +
+        "Actionable remedies: (1) open it with an older release that still " +
+        "supports v5, unlock, and re-export/restore so the data is rewritten " +
+        "as v7; or (2) restore a backup exported by a current build. " +
+        "See ADR-052." +
+        (detail ? ` (${detail})` : ""),
+    );
     this.name = "LegacyV5FormatRemovedError";
   }
 }
 
 /**
+ * Recognises the retired-v5 refusal across boundaries that lose the class:
+ * Worker error serialisation, DB error classification and wrapped `cause`
+ * chains. Matches the name, the stable code or the message token so a caller
+ * can decide to show the remedy instead of "invalid password".
+ */
+export function isLegacyV5FormatRemovedError(error: unknown): boolean {
+  if (typeof error === "string") {
+    return error.includes(LegacyV5FormatRemovedError.CODE);
+  }
+  const seen = new Set<unknown>();
+  let current: unknown = error;
+  while (current && typeof current === "object" && !seen.has(current)) {
+    seen.add(current);
+    const candidate = current as {
+      name?: unknown;
+      message?: unknown;
+      code?: unknown;
+      cause?: unknown;
+    };
+    if (candidate.name === "LegacyV5FormatRemovedError") {return true;}
+    if (candidate.code === LegacyV5FormatRemovedError.CODE) {return true;}
+    if (
+      typeof candidate.message === "string" &&
+      candidate.message.includes(LegacyV5FormatRemovedError.CODE)
+    ) {
+      return true;
+    }
+    current = candidate.cause;
+  }
+  return false;
+}
+
+/**
  * Thrown when a write is attempted with no per-vault Argon2id salt installed.
  *
- * A-02: `encrypt()` used to degrade to a `v5:` payload in that state, keyed by
+ * `encrypt()` used to degrade to a `v5:` payload in that state, keyed by
  * the fixed bundle-wide salt. `decrypt()` rejects `v5:` by default
  * (LegacyV5FormatRemovedError), so the degraded payload was persisted
  * successfully and could never be read back — silent, permanent loss of
@@ -71,7 +125,7 @@ export class KdfSaltUnavailableError extends Error {
 
 // ─── Session-key master-key cache ───────────────────────────────────
 //
-// S6: Argon2id runs ONCE per password to derive a session master key.
+// Argon2id runs ONCE per password to derive a session master key.
 // Per-operation keys are derived from it via HKDF-SHA256 (~1000× faster
 // than Argon2id). The cache lives for the lifetime of the module (worker
 // or main-thread fallback) and is cleared on vault lock / reset.
@@ -127,25 +181,25 @@ const HEX_SALT_RE = /^[0-9a-f]{32}$/;
 
 // ─── v7 envelope ────────────────────────────────────────────────────
 //
-// A-01: the Argon2id parameters a payload was written with travel INSIDE it.
+// the Argon2id parameters a payload was written with travel INSIDE it.
 // Before v7 they were resolved from the device/profile at open time, so a blob
 // written on a desktop (128 MiB) and opened on a phone (64 MiB) derived a
 // different key and the app reported "wrong password".
 //
-// M-02: the logical identity of the payload (its "purpose") is authenticated
+// the logical identity of the payload (its "purpose") is authenticated
 // as AES-GCM additional data, so a ciphertext cannot be moved to another slot
 // (`encrypted_api_key` → `encrypted_db_key`) and still decrypt.
 //
 // Wire format (after the `v7:` prefix):
-//   byte 0        params version (1)
-//   bytes 1..4    m, memory cost in KiB (u32 big-endian)
-//   bytes 5..8    t, iterations (u32 big-endian)
-//   byte 9        p, parallelism
-//   byte 10       dkLen, Argon2id output length in bytes
-//   bytes 11..27  per-vault Argon2id salt (16)
-//   bytes 27..43  per-operation HKDF salt (16)
-//   bytes 43..55  IV (12)
-//   bytes 55..    ciphertext || GCM tag
+// byte 0 params version (1)
+// bytes 1..4 m, memory cost in KiB (u32 big-endian)
+// bytes 5..8 t, iterations (u32 big-endian)
+// byte 9 p, parallelism
+// byte 10 dkLen, Argon2id output length in bytes
+// bytes 11..27 per-vault Argon2id salt (16)
+// bytes 27..43 per-operation HKDF salt (16)
+// bytes 43..55 IV (12)
+// bytes 55.. ciphertext || GCM tag
 //
 // Nothing else needs authenticating: m/t/p/salt feed the KDF and the IV feeds
 // GCM, so tampering with any of them fails the tag.
@@ -714,7 +768,7 @@ function getPasswordBytes(password: string | Uint8Array): Uint8Array {
  * without a fresh copy).
  *
  * @param onReuse - Optional reuse-warning sink (e.g. the app logger). Defaults
- *   to `console.warn`, so the worker-side callers keep their existing behaviour.
+ * to `console.warn`, so the worker-side callers keep their existing behaviour.
  * @returns The same buffer (now zero-filled) for chaining.
  */
 export function zeroPasswordBytes(
@@ -747,7 +801,7 @@ export function zeroPasswordBytes(
  * Wire format: see the v7 block above (params ‖ vault salt ‖ HKDF salt ‖ IV ‖
  * ciphertext). There is no other writable format: v6 and older are read-only.
  *
- * A-02: throws KdfSaltUnavailableError when no per-vault KDF salt is
+ * throws KdfSaltUnavailableError when no per-vault KDF salt is
  * installed. The `v5:` write path is gone on purpose — `decrypt()` rejects
  * `v5:` by default, so emitting one meant persisting a secret nobody (not even
  * this session) could read back. Every caller that reaches here without a salt
@@ -778,7 +832,7 @@ export async function encrypt(
   // (password, salt, params) so subsequent encryptions with the same password
   // and profile skip the expensive Argon2id derivation entirely.
   const vaultSalt = vaultKdfSalt;
-  // A-02: fail closed BEFORE deriving anything or touching the caller's
+  // fail closed BEFORE deriving anything or touching the caller's
   // password buffer — a refused write must not consume the credential.
   if (!vaultSalt) {
     throw new KdfSaltUnavailableError();
@@ -989,54 +1043,12 @@ export async function decrypt(
   }
 
   if (encryptedBase64.startsWith("v5:")) {
-    // ADR-052 Fase 3 — cutoff switch. DEFAULT (flag unset/false) activates
-    // the cutoff: `v5:` reads fail closed with
-    // LegacyV5FormatRemovedError. The legacy static-salt read path is dead
-    // by default because the bundle-wide salt is a shared-credential
-    // vulnerability (RFC 9106) — every v5 vault is brute-forceable with one
-    // precomputed Argon2id pass over the common salt. Operators who need
-    // the legacy path for migration must explicitly set
-    // VITE_ALLOW_V5_LEGACY_READ=true.
-    if (env.allowV5LegacyRead !== true) {
-      throw new LegacyV5FormatRemovedError();
-    }
-    // V5 (Argon2id-once + HKDF, legacy fixed salt) — still read for every
-    // payload written before the per-vault salt existed, and for new writes
-    // on code paths that run without a provisioned vault salt.
-    // Wire format: hkdf_salt(16) || iv(12) || ciphertext
-    const data = encryptedBase64.substring(3);
-    const combined = base64ToU8a(data);
-    const hkdfSalt = combined.slice(0, 16);
-    const iv = combined.slice(16, 28);
-    const ciphertext = combined.slice(28);
-
-    const pwBytes = getPasswordBytes(password);
-    let masterKey: CryptoKey;
-    try {
-      masterKey = await getV5MasterKey(pwBytes, null);
-    } finally {
-      zeroPasswordBytes(pwBytes);
-    }
-
-    const opKey = await crypto.subtle.deriveKey(
-      {
-        name: "HKDF",
-        salt: hkdfSalt as Uint8Array<ArrayBuffer>,
-        info: new TextEncoder().encode("bmf-v5-op-key"),
-        hash: "SHA-256",
-      },
-      masterKey,
-      { name: "AES-GCM", length: 256 },
-      false,
-      ["decrypt"],
-    );
-
-    const decrypted = await crypto.subtle.decrypt(
-      { name: CRYPTO_ALGORITHM, iv },
-      opKey,
-      ciphertext,
-    );
-    return new TextDecoder().decode(decrypted);
+    // ADR-052 Phase 4: the v5 parser is REMOVED. The format is not readable by
+    // any build of this codebase; the blob has to be converted by an older
+    // release (Phase 3 kept a bridge flag, Phase 4 deleted both). Throw the
+    // typed, actionable error rather than letting it fall through to the
+    // generic "unsupported format" message.
+    throw new LegacyV5FormatRemovedError();
   }
 
   if (encryptedBase64.startsWith("v4:")) {
@@ -1066,8 +1078,8 @@ export async function decrypt(
   if (encryptedBase64.startsWith("v2:")) {
     // V2 (PBKDF2) — legacy format, used by test helpers and older vault seeds.
     // Supports two layouts:
-    //   a) Colon-separated: v2:<base64(salt)>:<base64(iv)>:<base64(ciphertext)>
-    //   b) Concatenated:    v2:<base64(salt||iv||ciphertext)>
+    // a) Colon-separated: v2:<base64(salt)>:<base64(iv)>:<base64(ciphertext)>
+    // b) Concatenated: v2:<base64(salt||iv||ciphertext)>
     const body = encryptedBase64.substring(3);
     const parts = body.split(":");
 
@@ -1131,9 +1143,9 @@ const SESSION_V6_MARKER = 0x06;
  * Encrypts `data` with a session-scoped HKDF-derived key.
  *
  * Wire format (v6, when a per-vault KDF salt is active):
- *   0x06 || vault_salt(16) || hkdf_salt(16) || iv(12) || ciphertext
+ * 0x06 || vault_salt(16) || hkdf_salt(16) || iv(12) || ciphertext
  * Wire format (legacy, no vault salt):
- *   hkdf_salt(16) || iv(12) || ciphertext
+ * hkdf_salt(16) || iv(12) || ciphertext
  *
  * Ownership contract: when `password` is a `Uint8Array`, the buffer is
  * CONSUMED — zeroized via `zeroPasswordBytes` right after the session
@@ -1145,10 +1157,18 @@ export async function encryptWithSessionKey(
   data: Uint8Array,
   password: string | Uint8Array,
 ): Promise<Uint8Array> {
-  // S6: derive the session master key via Argon2id ONCE (cached per
+  // derive the session master key via Argon2id ONCE (cached per
   // password). Per-operation keys are derived from it via HKDF-SHA256,
   // which is ~1000× faster than a fresh Argon2id per operation.
   const vaultSalt = vaultKdfSalt;
+  if (!vaultSalt) {
+    // ADR-052 Phase 4: the legacy session layout (bundle-wide salt, no marker)
+    // is no longer readable, so writing it would create data this build can
+    // never open. Fail closed on write instead (same contract as encrypt(),
+    // A-02): nothing is persisted and the caller learns the vault is not
+    // writable yet.
+    throw new KdfSaltUnavailableError("session-key write");
+  }
   const hkdfSalt = crypto.getRandomValues(new Uint8Array(16));
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const pwBytes = getPasswordBytes(password);
@@ -1179,15 +1199,12 @@ export async function encryptWithSessionKey(
     data as Uint8Array<ArrayBuffer>,
   );
 
-  // Wire format: [0x06 || vault_salt(16)] || hkdf_salt(16) || iv(12) || ct
-  const headerLength = (vaultSalt ? 1 + vaultSalt.length : 0) + 16 + 12;
+  // Wire format: 0x06 || vault_salt(16) || hkdf_salt(16) || iv(12) || ct
+  const headerLength = 1 + vaultSalt.length + 16 + 12;
   const combined = new Uint8Array(headerLength + ciphertext.byteLength);
-  let offset = 0;
-  if (vaultSalt) {
-    combined[0] = SESSION_V6_MARKER;
-    combined.set(vaultSalt, 1);
-    offset = 1 + vaultSalt.length;
-  }
+  combined[0] = SESSION_V6_MARKER;
+  combined.set(vaultSalt, 1);
+  const offset = 1 + vaultSalt.length;
   combined.set(hkdfSalt, offset);
   combined.set(iv, offset + 16);
   combined.set(new Uint8Array(ciphertext), headerLength);
@@ -1205,64 +1222,30 @@ export async function decryptWithSessionKey(
   data: Uint8Array,
   password: string | Uint8Array,
 ): Promise<Uint8Array> {
-  // Each layout attempt gets its OWN password material. `decryptSessionPayload`
-  // consumes the buffer it is handed (zeroizing it once the master key is
-  // derived), so a Uint8Array password passed straight to the v6 attempt would
-  // reach the legacy retry below all-zero: the retry would then hash zeros,
-  // miss the cache and derive the wrong master key — failing for exactly the
-  // legacy blobs this retry exists for (random first byte equal to
-  // SESSION_V6_MARKER, 1/256). A string password encoded fresh per attempt
-  // never showed this; the service layer always passes bytes.
+  // ADR-052 Phase 4: the legacy (pre-marker, bundle-wide-salt) session layout
+  // is gone. A blob without the v6 marker is retired-format data, not a v7
+  // payload with a corrupt header, so it fails with the typed, actionable
+  // error instead of a generic authentication failure.
   const owned = password instanceof Uint8Array ? password : null;
   const attempt = (): string | Uint8Array => (owned ? owned.slice() : (password as string));
   try {
-    if (data.length > 1 + VAULT_KDF_SALT_BYTES + 28 && data[0] === SESSION_V6_MARKER) {
-      // V6 layout. The marker is not a hard guarantee for LEGACY blobs (their
-      // first byte is random HKDF salt), so a failed v6 attempt falls through
-      // to the legacy layout instead of surfacing an auth error for a blob that
-      // is actually legacy.
-      const vaultSalt = data.slice(1, 1 + VAULT_KDF_SALT_BYTES);
-      const hkdfSalt = data.slice(1 + VAULT_KDF_SALT_BYTES, 1 + VAULT_KDF_SALT_BYTES + 16);
-      const iv = data.slice(1 + VAULT_KDF_SALT_BYTES + 16, 1 + VAULT_KDF_SALT_BYTES + 28);
-      const ciphertext = data.slice(1 + VAULT_KDF_SALT_BYTES + 28);
-      let v6Error: unknown = null;
-      try {
-        return await decryptSessionPayload(
-          ciphertext,
-          iv,
-          hkdfSalt,
-          vaultSalt,
-          attempt(),
-        );
-      } catch (error) {
-        v6Error = error;
-        /* INTENTIONAL SILENCE: an ambiguous legacy payload can start with the
-         * SESSION_V6_MARKER byte by chance (1/256); the v6 attempt then fails
-         * its AES-GCM authentication here, and the legacy-layout retry below
-         * decides whether the blob was actually legacy. The error is
-         * deliberately unused — surfacing it would mislabel a legacy blob as
-         * a v6 authentication failure. */
-      }
-      // M7: If the v6 attempt failed AND the legacy path is disabled,
-      // surface the v6 authentication error instead of LegacyV5FormatRemovedError.
-      // This distinguishes "wrong password" from "legacy format removed".
-      if (env.allowV5LegacyRead !== true) {
-        throw v6Error instanceof Error ? v6Error : new Error("v6 authentication failed");
-      }
-    }
-
-    // M-05: apply the same v5 cutoff gate as decrypt() so the session-key
-    // path cannot resurrect the legacy static-salt layout by the back door.
-    if (env.allowV5LegacyRead !== true) {
+    if (
+      !(
+        data.length > 1 + VAULT_KDF_SALT_BYTES + 28 &&
+        data[0] === SESSION_V6_MARKER
+      )
+    ) {
       throw new LegacyV5FormatRemovedError();
     }
-
-    // Legacy layout: hkdf_salt(16) || iv(12) || ciphertext
+    const vaultSalt = data.slice(1, 1 + VAULT_KDF_SALT_BYTES);
+    const hkdfSalt = data.slice(1 + VAULT_KDF_SALT_BYTES, 1 + VAULT_KDF_SALT_BYTES + 16);
+    const iv = data.slice(1 + VAULT_KDF_SALT_BYTES + 16, 1 + VAULT_KDF_SALT_BYTES + 28);
+    const ciphertext = data.slice(1 + VAULT_KDF_SALT_BYTES + 28);
     return await decryptSessionPayload(
-      data.slice(28),
-      data.slice(16, 28),
-      data.slice(0, 16),
-      null,
+      ciphertext,
+      iv,
+      hkdfSalt,
+      vaultSalt,
       attempt(),
     );
   } finally {
@@ -1272,7 +1255,7 @@ export async function decryptWithSessionKey(
   }
 }
 
-/** Shared body of the session-key decrypt paths (v6 and legacy). */
+/** Shared body of the session-key decrypt path (v7-era marker layout). */
 async function decryptSessionPayload(
   ciphertext: Uint8Array,
   iv: Uint8Array,
@@ -1312,7 +1295,7 @@ async function decryptSessionPayload(
 
 // ─── Portable binary container (BMF2) ───────────────────────────────
 //
-// A2 (audit 2026-11-05): encrypted `.bmf` backups used to be
+// encrypted `.bmf` backups used to be
 // `salt(16) || iv(12) || ciphertext` with NO Argon2id parameters, so the reader
 // re-derived with its LOCAL profile (128 MiB on desktop, 64 MiB on mobile) and
 // reported "wrong password" for a file written on the other class of device —
@@ -1320,15 +1303,15 @@ async function decryptSessionPayload(
 // parameters, mirroring the v7 string envelope (A-01) for the same reason.
 //
 // Wire format (byte offsets):
-//   0..3     magic "BMF2" (0x42 0x4d 0x46 0x32)
-//   4        params version (1)
-//   5..8     m, memory cost in KiB (u32 big-endian)
-//   9..12    t, iterations (u32 big-endian)
-//   13       p, parallelism
-//   14       dkLen, Argon2id output length in bytes
-//   15..30   Argon2id salt (16)
-//   31..42   IV (12)
-//   43..     ciphertext || GCM tag
+// 0..3 magic "BMF2" (0x42 0x4d 0x46 0x32)
+// 4 params version (1)
+// 5..8 m, memory cost in KiB (u32 big-endian)
+// 9..12 t, iterations (u32 big-endian)
+// 13 p, parallelism
+// 14 dkLen, Argon2id output length in bytes
+// 15..30 Argon2id salt (16)
+// 31..42 IV (12)
+// 43.. ciphertext || GCM tag
 //
 // Nothing else needs authenticating: m/t/p/salt feed the KDF and the IV feeds
 // GCM, so tampering with any of them fails the tag.

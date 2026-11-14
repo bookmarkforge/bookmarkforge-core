@@ -7,6 +7,12 @@ import { existsSync } from "node:fs";
 // license mock compile out there.
 const hasCompanionServer = existsSync("server/src/index.ts");
 const hasLicenseStack = existsSync("api/license/[action].ts");
+const baseWebServers = Array.isArray(baseConfig.webServer)
+  ? baseConfig.webServer
+  : baseConfig.webServer
+    ? [baseConfig.webServer]
+    : [];
+const companionBase = baseWebServers[0];
 
 /**
  * Cross-engine profile for the launch-day critical paths — the second and
@@ -17,9 +23,10 @@ const hasLicenseStack = existsSync("api/license/[action].ts");
  *   npm run e2e:engines            # firefox + webkit, test-mode dev server
  *   npm run e2e:engines -- --project=webkit   # just Safari's engine
  *
- * Reuses the launch-smoke topology EXACTLY (companion + license mock + test
- * dev server, spread webServer — see playwright.launch-smoke.config.ts for
- * why the spread is mandatory) and runs the same spec:
+ * Reuses the launch-smoke topology EXACTLY (companion + license adapter +
+ * license mock + test dev server, spread webServer — see
+ * playwright.launch-smoke.config.ts for why the spread is mandatory) and
+ * runs the same spec:
  * tests/e2e/launch-smoke-critical-paths.spec.ts. The license activation
  * describe-block skips with a marker when no signing key is available, so
  * the battery is meaningful on CI runners too.
@@ -37,8 +44,13 @@ const hasLicenseStack = existsSync("api/license/[action].ts");
 const port = Number(process.env.PLAYWRIGHT_PORT ?? 4173);
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`;
 const licenseMockPort = Number(process.env.LICENSE_MOCK_PORT ?? 8082);
+// Dev-only adapter serving the real api/license/[action].ts handler; the
+// E2E proxy sends /api/license here (the companion stopped serving it).
+const licenseProxyPort = Number(process.env.LICENSE_PROXY_PORT ?? 8788);
 const signalingPort = Number(process.env.SIGNALING_PORT ?? 8787);
-const LICENSE_MOCK_KEY = process.env.LICENSE_MOCK_KEY ?? "license-mock-key";
+// Must match the license adapter's WHOP_API_KEY: the mock authenticates the
+// adapter's bearer token (same contract as playwright.config.ts).
+const LICENSE_MOCK_KEY = process.env.LICENSE_MOCK_KEY ?? "e2e-license-key";
 
 export default defineConfig({
   ...baseConfig,
@@ -66,12 +78,12 @@ export default defineConfig({
     // baseConfig.webServer[0] is the companion only when server/ exists —
     // in the public export it is the Vite dev server and must not be
     // duplicated with companion env.
-    ...(hasCompanionServer && hasLicenseStack
+    ...(hasCompanionServer && hasLicenseStack && companionBase
       ? [
           {
-            ...baseConfig.webServer[0],
+            ...companionBase,
             env: {
-              ...baseConfig.webServer[0].env,
+              ...companionBase.env,
               WHOP_LICENSE_API_URL: `http://127.0.0.1:${licenseMockPort}/license`,
               WHOP_API_KEY: LICENSE_MOCK_KEY,
               LICENSE_PROVIDER_ALLOW_HTTP: "1",
@@ -79,6 +91,32 @@ export default defineConfig({
               PORT: String(signalingPort),
             },
           },
+        ]
+      : []),
+    ...(hasLicenseStack
+      ? [
+          {
+            // Dev-only adapter for the serverless license handler — same
+            // topology as playwright.config.ts: the companion no longer serves
+            // /api/license (retired 2026-10-19), so api/license/[action].ts
+            // runs here and VITE_LICENSE_PROXY_TARGET points the dev proxy at it.
+            command: "npx tsx scripts/dev-license-server.ts",
+            url: `http://127.0.0.1:${licenseProxyPort}/__health`,
+            reuseExistingServer: !process.env.CI,
+            timeout: 60_000,
+            env: {
+              NODE_ENV: "test",
+              LICENSE_DEV_HOST: "127.0.0.1",
+              LICENSE_DEV_PORT: String(licenseProxyPort),
+              WHOP_LICENSE_API_URL: `http://127.0.0.1:${licenseMockPort}/license`,
+              WHOP_API_KEY: "e2e-license-key",
+              LICENSE_PROVIDER_ALLOW_HTTP: "1",
+            },
+          },
+        ]
+      : []),
+    ...(hasLicenseStack
+      ? [
           {
             command: "node scripts/license-mock.mjs",
             url: `http://127.0.0.1:${licenseMockPort}/health`,
@@ -103,6 +141,11 @@ export default defineConfig({
         VITE_FORCE_DEXIE_STORAGE: "true",
         VITE_P2P_SIGNALING_URL: `ws://127.0.0.1:${signalingPort}`,
         VITE_API_PROXY_TARGET: `http://127.0.0.1:${signalingPort}`,
+        ...(hasLicenseStack
+          ? {
+              VITE_LICENSE_PROXY_TARGET: `http://127.0.0.1:${licenseProxyPort}`,
+            }
+          : {}),
         SIGNALING_ADMIN_TOKEN:
           process.env.SIGNALING_ADMIN_TOKEN ?? "e2e-admin-token",
       },

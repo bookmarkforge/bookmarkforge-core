@@ -335,6 +335,29 @@ body {
 }
 .demo-tour-step-title { display: block; margin-bottom: 6px; font-size: 0.9375rem; color: var(--text-primary); }
 .demo-tour-step-text { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; }
+
+/* Demo gallery of real screenshots */
+.demo-gallery {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 40px auto;
+  max-width: 1400px;
+}
+.demo-shot {
+  border: 1px solid var(--divider); border-radius: var(--radius-card);
+  overflow: hidden; background: var(--bg-card);
+}
+.demo-shot img {
+  width: 100%; height: auto; display: block;
+}
+.demo-caption {
+  padding: 14px; font-size: 0.8125rem; color: var(--text-secondary);
+  text-align: center; line-height: 1.5;
+}
+@media (max-width: 1024px) {
+  .demo-gallery { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .demo-gallery { grid-template-columns: 1fr; }
+}
 .demo-tour-cta { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-top: 40px; }
 
 /* ── Pocket Alternative ───────────────────────────────────────────── */
@@ -505,17 +528,39 @@ body {
 
 /* ── Footer ──────────────────────────────────────────────────────── */
 .footer { padding: 80px 0 40px; background: var(--bg-card); border-top: 1px solid var(--divider); }
-.footer-grid { display: grid; grid-template-columns: 2fr repeat(4, 1fr); gap: 48px; margin-bottom: 64px; }
+.footer-grid { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 48px; margin-bottom: 64px; }
 .footer-logo { display: flex; align-items: center; gap: 10px; font-size: 1.125rem; font-weight: 700; color: var(--accent-primary); text-decoration: none; margin-bottom: 16px; }
 .footer-brand p { color: var(--text-secondary); max-width: 280px; font-size: 0.9375rem; line-height: 1.6; }
 .footer-links h4 { font-size: 0.875rem; font-weight: 600; margin-bottom: 20px; color: var(--text-secondary); }
 .footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
 .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.15s; padding: 4px 0; }
 .footer-links a:hover { color: var(--accent-primary); }
+.footer-hours { color: var(--text-secondary); font-size: 0.8125rem; margin-top: 12px; }
 .footer-bottom { padding-top: 40px; border-top: 1px solid var(--divider); text-align: center; color: var(--text-secondary); font-size: 0.8125rem; }
 .footer-legal { margin-top: 12px; display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
 .footer-legal a { color: var(--text-secondary); text-decoration: none; }
 .footer-legal a:hover { color: var(--accent-primary); }
+
+/* ── Sticky mobile CTA ─────────────────────────────────────────────
+   The audit found the primary CTA starting at 812px of an 844px viewport:
+   only its top edge showed on a phone. This bar keeps one action pinned to
+   the bottom edge on small screens; it is hidden on desktop and while the
+   nav panel is open (landing.js toggles .nav.is-open on .nav). */
+.mobile-cta-bar {
+  display: none;
+  position: fixed; inset-inline: 0; bottom: 0; z-index: 900;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: var(--bg-primary);
+  border-top: 1px solid var(--divider);
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.18);
+}
+@media (max-width: 768px) {
+  .mobile-cta-bar { display: block; }
+  /* Only pages that actually render the bar (the landings) get the clearance;
+     pocket-alternative.html shares this sheet and has no bar. */
+  body:has(> .mobile-cta-bar) { padding-bottom: 76px; }
+  .nav.is-open ~ .mobile-cta-bar { display: none; }
+}
 
 /* ── Responsive ──────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
@@ -574,12 +619,23 @@ body {
   .rc-row > div { padding: 12px 16px; }
   .rc-us::before { content: "✓ "; color: var(--color-success-text); }
   .rc-them::before { content: "— "; }
+
+  /* Audit #24: on small screens the before/after cards and the Pocket
+     feature grid repeat claims made in the features/AI/privacy sections —
+     collapse them so pricing and FAQ arrive sooner. The Pocket section
+     keeps its heading, pitch and CTA (nav anchors still land somewhere);
+     the before/after block has no nav entry and is purely persuasive.
+     Class-based selectors: section ids are localized. */
+  .comparison-section:has(.features-grid-2) { display: none; }
+  .comparison-section .features-grid-3 { display: none; }
 }
 
 @media (max-width: 480px) {
-  .hero { padding: 100px 20px 80px; }
-  .section-header { margin-bottom: 48px; }
-  .features-section, .ai-section, .privacy-section, .pricing-section, .faq-section, .final-cta, .comparison-section, .raindrop-section { padding: 80px 0; }
+  .hero { padding: 90px 20px 64px; }
+  .section-header { margin-bottom: 32px; }
+  .section-header h2 { font-size: 1.75rem; }
+  .section-header p { font-size: 1rem; }
+  .features-section, .ai-section, .privacy-section, .pricing-section, .faq-section, .final-cta, .comparison-section, .raindrop-section { padding: 56px 0; }
   .container { padding: 0 20px; }
 }
 
@@ -605,7 +661,7 @@ body {
   .affiliate-details { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
-  .affiliate-section { padding: 80px 0; }
+  .affiliate-section { padding: 56px 0; }
   .affiliate-details { grid-template-columns: 1fr; }
   .affiliate-item { padding: 20px; }
   .affiliate-rules, .affiliate-tip { padding: 20px; }

@@ -196,7 +196,7 @@ Le cerveau de l'application :
 - Pas de suivi constant
 - Preuve de licence signée avec RSA-PSS (SHA-256, salt 32)
 - Re-validation toutes les 48 heures lors de la connexion
-- Les preuves de plus de 30 jours sont rejetées par le serveur d'entitlement
+- La grâce hors ligne conserve Pro jusqu'à l'expiration de la licence — les preuves n'ont pas d'âge maximum fixe
 
 ---
 

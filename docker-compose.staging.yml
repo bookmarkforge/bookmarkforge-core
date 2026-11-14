@@ -6,8 +6,8 @@
 # client-side provider) remains.
 services:
   web:
-    # Imagen etiquetada por SHA (igual que prod): permite el rollback
-    # imagen-por-SHA (rollback.mjs CAMINO A) en staging/CI sin rebuild.
+    # SHA-tagged image (same as prod): allows the image-by-SHA rollback
+    # (rollback.mjs path A) in staging/CI without a rebuild.
     image: bookmarkforge/web:${IMAGE_TAG:-staging}
     build:
       context: .
@@ -28,7 +28,7 @@ services:
       - "127.0.0.1:${HTTP_PORT:-18080}:8080"
 
   api:
-    # Imagen etiquetada por SHA — ver nota en el servicio web.
+    # SHA-tagged image — see the note on the web service.
     image: bookmarkforge/api:${IMAGE_TAG:-staging}
     build:
       context: .

@@ -13,6 +13,10 @@ addRxPlugin(RxDBDevModePlugin);
 // Required for the live-migration test (v2 plaintext folders → v3 schema).
 addRxPlugin(RxDBMigrationSchemaPlugin);
 
+// RxDB types collections as optional because addCollections() is dynamic. The
+// test adds each collection immediately before using it, so the non-null
+// assertions below are safe and keep this file inside the strict test gate.
+
 // ── helpers ──────────────────────────────────────────────────────────
 
 /**
@@ -157,7 +161,7 @@ describe("RxDB Encryption At Rest", () => {
     };
 
     await db.addCollections({ secrets: { schema } });
-    await db.secrets.insert({ id: "1", secret: "my-sensitive-data" });
+    await db.secrets!.insert({ id: "1", secret: "my-sensitive-data" });
     await db.close();
 
     try {
@@ -168,7 +172,7 @@ describe("RxDB Encryption At Rest", () => {
         ignoreDuplicate: true,
       });
       await db2.addCollections({ secrets: { schema } });
-      const doc = await db2.secrets.findOne("1").exec();
+      const doc = await db2.secrets!.findOne("1").exec();
       if (doc) {
         const secretValue = (doc as any).secret;
         expect(secretValue).not.toBe("my-sensitive-data");
@@ -220,7 +224,7 @@ describe("RxDB Encryption At Rest", () => {
     };
 
     await db.addCollections({ secrets: { schema } });
-    await db.secrets.insert({ id: "1", secret: "my-sensitive-data" });
+    await db.secrets!.insert({ id: "1", secret: "my-sensitive-data" });
     await db.close();
 
     const db2 = await createRxDatabase({
@@ -230,7 +234,7 @@ describe("RxDB Encryption At Rest", () => {
       ignoreDuplicate: true,
     });
     await db2.addCollections({ secrets: { schema } });
-    const doc = await db2.secrets.findOne("1").exec();
+    const doc = await db2.secrets!.findOne("1").exec();
     expect(doc).not.toBeNull();
     expect((doc as any).secret).toBe("my-sensitive-data");
     await db2.close();
@@ -273,7 +277,7 @@ describe("RxDB Encryption At Rest", () => {
     };
 
     await db.addCollections({ items: { schema } });
-    await db.items.insert({ id: "1", data: "plaintext-data" });
+    await db.items!.insert({ id: "1", data: "plaintext-data" });
     await db.close();
 
     const db2 = await createRxDatabase({
@@ -282,7 +286,7 @@ describe("RxDB Encryption At Rest", () => {
       ignoreDuplicate: true,
     });
     await db2.addCollections({ items: { schema } });
-    const doc = await db2.items.findOne("1").exec();
+    const doc = await db2.items!.findOne("1").exec();
     expect(doc).not.toBeNull();
     expect((doc as any).data).toBe("plaintext-data");
     await db2.close();
@@ -353,7 +357,7 @@ describe("RxDB Encryption At Rest", () => {
       ignoreDuplicate: true,
     });
     await db.addCollections({ bookmarks: { schema: bookmarkSchema } });
-    await db.bookmarks.insert({
+    await db.bookmarks!.insert({
       id: "test-1",
       url: PLAINTEXT.url,
       title: PLAINTEXT.title,
@@ -390,7 +394,7 @@ describe("RxDB Encryption At Rest", () => {
       ignoreDuplicate: true,
     });
     await db2.addCollections({ bookmarks: { schema: bookmarkSchema } });
-    const doc = await db2.bookmarks.findOne("test-1").exec();
+    const doc = await db2.bookmarks!.findOne("test-1").exec();
     expect(doc).not.toBeNull();
     expect(doc!.get("title")).toBe(PLAINTEXT.title);
     expect(doc!.get("url")).toBe(PLAINTEXT.url);
@@ -440,7 +444,7 @@ describe("RxDB Encryption At Rest", () => {
       ignoreDuplicate: true,
     });
     await db.addCollections({ items: { schema } });
-    await db.items.insert({
+    await db.items!.insert({
       id: "1",
       name: "visible-data",
       value: "should-be-readable",
@@ -495,7 +499,7 @@ describe("RxDB Encryption At Rest", () => {
       ignoreDuplicate: true,
     });
     await dbA.addCollections({ items: { schema } });
-    await dbA.items.insert({ id: "1", secret: plaintext });
+    await dbA.items!.insert({ id: "1", secret: plaintext });
     await dbA.close();
     const rawA = await readRawIndexedDBValues(dbNameA);
 
@@ -508,7 +512,7 @@ describe("RxDB Encryption At Rest", () => {
       ignoreDuplicate: true,
     });
     await dbB.addCollections({ items: { schema } });
-    await dbB.items.insert({ id: "1", secret: plaintext });
+    await dbB.items!.insert({ id: "1", secret: plaintext });
     await dbB.close();
     const rawB = await readRawIndexedDBValues(dbNameB);
 
@@ -595,19 +599,19 @@ describe("RxDB Encryption At Rest", () => {
         migrationStrategies: { 1: migrateNoop, 2: migrateNoop, 3: migrateNoop },
       },
     });
-    await db.folders.insert({
+    await db.folders!.insert({
       id: "f1",
       title: PLAINTEXT.folderTitle,
       parentId: "",
       createdAt: now,
     });
-    await db.templates.insert({
+    await db.templates!.insert({
       id: "t1",
       title: PLAINTEXT.templateTitle,
       blocks: [{ type: "h1", text: PLAINTEXT.templateBlockText }],
       createdAt: now,
     });
-    await db.highlights.insert({
+    await db.highlights!.insert({
       id: "h1",
       bookmarkId: "b1",
       text: PLAINTEXT.highlightText,
@@ -615,7 +619,7 @@ describe("RxDB Encryption At Rest", () => {
       note: PLAINTEXT.highlightNote,
       createdAt: now,
     });
-    await db.insights.insert({
+    await db.insights!.insert({
       id: "i1",
       type: "summary",
       title: PLAINTEXT.insightTitle,
@@ -664,20 +668,20 @@ describe("RxDB Encryption At Rest", () => {
         migrationStrategies: { 1: migrateNoop, 2: migrateNoop, 3: migrateNoop },
       },
     });
-    const folder = await db2.folders.findOne("f1").exec();
+    const folder = await db2.folders!.findOne("f1").exec();
     expect(folder).not.toBeNull();
     expect(folder!.get("title")).toBe(PLAINTEXT.folderTitle);
-    const template = await db2.templates.findOne("t1").exec();
+    const template = await db2.templates!.findOne("t1").exec();
     expect(template).not.toBeNull();
     expect(template!.get("title")).toBe(PLAINTEXT.templateTitle);
     expect((template!.get("blocks") as any[])[0].text).toBe(
       PLAINTEXT.templateBlockText,
     );
-    const highlight = await db2.highlights.findOne("h1").exec();
+    const highlight = await db2.highlights!.findOne("h1").exec();
     expect(highlight).not.toBeNull();
     expect(highlight!.get("text")).toBe(PLAINTEXT.highlightText);
     expect(highlight!.get("note")).toBe(PLAINTEXT.highlightNote);
-    const insight = await db2.insights.findOne("i1").exec();
+    const insight = await db2.insights!.findOne("i1").exec();
     expect(insight).not.toBeNull();
     expect(insight!.get("title")).toBe(PLAINTEXT.insightTitle);
     expect(insight!.get("content")).toBe(PLAINTEXT.insightContent);
@@ -735,7 +739,7 @@ describe("RxDB Encryption At Rest", () => {
         migrationStrategies: { 1: migrateNoop, 2: migrateNoop },
       },
     });
-    await db.folders.insert({
+    await db.folders!.insert({
       id: "f1",
       title: SECRET_TITLE,
       parentId: "",
@@ -769,7 +773,7 @@ describe("RxDB Encryption At Rest", () => {
         },
       },
     });
-    const doc = await db2.folders.findOne("f1").exec();
+    const doc = await db2.folders!.findOne("f1").exec();
     expect(doc).not.toBeNull();
     expect(doc!.get("title")).toBe(SECRET_TITLE);
     await db2.close();

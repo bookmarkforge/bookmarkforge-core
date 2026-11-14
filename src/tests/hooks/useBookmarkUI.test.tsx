@@ -152,7 +152,7 @@ describe("useBookmarkUI", () => {
     });
     expect(result.current.apiKeyInput).toBe("sk-secret-123");
 
-    // Lock del vault → la key descifrada en estado React se purga.
+    // Vault lock → the decrypted key in React state is purged.
     expect(lockCb).not.toBeNull();
     act(() => {
       lockCb?.();

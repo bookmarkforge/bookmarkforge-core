@@ -249,10 +249,10 @@ Respond in the language: ${normalizedLang}.`;
    * the full response.
    *
    * @param documentContext - Optional context of the document the user is
-   *   currently viewing: its full text is injected into the prompt as
-   *   CURRENT DOCUMENT CONTEXT (so the assistant can answer about it), and
-   *   its `id` is excluded from the RAG search to avoid redundant
-   *   self-citations.
+   * currently viewing: its full text is injected into the prompt as
+   * CURRENT DOCUMENT CONTEXT (so the assistant can answer about it), and
+   * its `id` is excluded from the RAG search to avoid redundant
+   * self-citations.
    */
   async globalChat(
     question: string,
@@ -593,7 +593,7 @@ INSTRUCTIONS:
 
   /**
    * Get the active memory session or create one with the given title.
-   * I1 (audit 2026-08-13): public wrapper so UI components can manage
+   * public wrapper so UI components can manage
    * memory sessions through AgentService instead of importing the memory
    * subsystem directly (boundary: components -> services).
    */

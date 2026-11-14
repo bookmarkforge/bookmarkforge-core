@@ -36,15 +36,24 @@ playwright/.cache/
 tests/e2e/__diffs__/
 tests/e2e/__snapshots__/
 
-# Environment files (never ship real secrets; examples are fine)
+# Environment files (never ship real secrets; examples are fine).
+# M-2 (audit 2026-11-14): mirror .gitignore — the generic patterns below also
+# cover .env.staging, .env.whop, .env.local.bak, etc. that the old explicit
+# list missed.
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
+!.env.production.example
+!.env.whop.example
 *.pem
 *.key
 *.crt
+*.p12
+*.pfx
+*.pkcs8
+*.der
+server/.license-signing-key.pkcs8
+server/.appsumo-keys-*.csv
 
 # Logs and local runtime state
 logs/
@@ -95,6 +104,37 @@ Thumbs.db
 # export and unversioned by default — do not upload it to a CDN either.
 evidence/
 legal/
+.zap/
+
+# Local agent-tooling state and session captures (transcripts, vault data):
+# M-2 — these were gitignored but still uploaded by `vercel deploy`.
+craft.json
+feed.json
+usage.json
+transcript.json
+inbox/
+capture/
+investigation.cany/
+
+# Public-export checkouts and pre-scrub bundles: contain Pro code that must
+# never leave the private tree (.gitignore C2 note).
+bookmarkforge-core/
+*bookmarkforge-core/
+pre-scrub-*.bundle
+
+# Marketing automation local state
+marketing/syndication-history.json
+marketing/social-listening-history.json
+marketing/response-suggestions.json
+marketing/daily-report.md
+marketing/hn-history.json
+marketing/archive/
+
+# Audit/evidence logs and remaining local state
+demo-output/
+test-results-performance/
+findings/*.log
+reports/*.log
 
 # Vercel CLI local state
 .vercel/

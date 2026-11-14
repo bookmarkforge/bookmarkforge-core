@@ -2,15 +2,15 @@
   "lang": "en",
   "langName": "English",
   "dir": "ltr",
-  "title": "BookmarkForge: Free Bookmark Manager & Reading List App — Private & Offline",
-  "description": "Organize your bookmarks, save articles, and build your knowledge vault. Free forever with 500 bookmarks. Private, offline, no account needed. Pay once for Pro.",
-  "ogTitle": "BookmarkForge: Free Bookmark Manager & Reading List App — Private & Offline",
-  "ogDescription": "Organize your bookmarks, save articles, and build your knowledge vault. Free forever with 500 bookmarks. Private, offline, no account needed. Pay once for Pro.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "title": "Private Encrypted Bookmark Manager | BookmarkForge",
+  "description": "Save, search and organize bookmarks in an encrypted vault on your own device. No account, works offline. 500 bookmarks free; Pro is $59 once.",
+  "ogTitle": "Private Bookmark Manager, Encrypted & Offline | BookmarkForge",
+  "ogDescription": "Save, search and organize bookmarks in an encrypted vault on your own device. No account, works offline. 500 bookmarks free; Pro is $59 once.",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "ogImageAlt": "BookmarkForge — private bookmark manager and reading list app",
-  "twitterTitle": "BookmarkForge: Free Bookmark Manager & Reading List App — Private & Offline",
-  "twitterDescription": "Organize your bookmarks, save articles, and build your knowledge vault. Free forever with 500 bookmarks. Private, offline, no account needed. Pay once for Pro.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterTitle": "Private Bookmark Manager, Encrypted & Offline | BookmarkForge",
+  "twitterDescription": "Save, search and organize bookmarks in an encrypted vault on your own device. No account, works offline. 500 bookmarks free; Pro is $59 once.",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Skip to main content",
   "navBrandAria": "BookmarkForge home",
   "navAriaLabel": "Main navigation",
@@ -31,14 +31,14 @@
   "githubAria": "Star BookmarkForge on GitHub",
   "hero": {
     "badge": "Pay once · No subscription · No account needed",
-    "title": "Stop losing your bookmarks. <span class=\"accent-text\">Start owning them.</span>",
-    "subtitle": "Tired of bookmarks disappearing? Worried about who can see what you save? BookmarkForge keeps everything on your computer — private, organized, and yours forever. No monthly fees. No accounts. Just your stuff, safe and sound.",
-    "ctaPrimary": "Try It Free — No Account Needed",
-    "ctaSecondary": "See How It Works",
+    "title": "The private bookmark manager that <span class=\"accent-text\">keeps everything on your device.</span>",
+    "subtitle": "For researchers, students and anyone who'd rather not hand their reading history to a cloud company. Save pages, articles and PDFs, find them by keyword or meaning, and keep it all encrypted on your own computer. No account. No subscription.",
+    "ctaPrimary": "Start free — no signup",
+    "ctaSecondary": "See how it works",
     "pillars": [
       {
         "strong": "Private",
-        "text": "your saved pages never leave your computer"
+        "text": "encrypted on your device"
       },
       {
         "strong": "Yours forever",
@@ -53,7 +53,7 @@
         "text": "500 bookmarks free, upgrade only if you want more"
       }
     ],
-    "announce": "New: AI assistant that reads your library privately"
+    "announce": ""
   },
   "demo": {
     "id": "demo",
@@ -84,9 +84,9 @@
   },
   "pocketAlternative": {
     "id": "pocket-alternative",
-    "tag": "Read It Later, Reimagined",
+    "tag": "Pocket alternative",
     "title": "The private Pocket alternative",
-    "subtitle": "Pocket charges monthly and stores your reading list on their servers. BookmarkForge keeps your reading list on your device — private, encrypted, and yours forever.",
+    "subtitle": "Pocket shut down in July 2025. If you exported your list, import it into BookmarkForge in about a minute — and this time it lives on your device, so no company can switch it off.",
     "features": [
       {
         "title": "Save articles to read later",
@@ -147,7 +147,7 @@
       }
     ],
     "ctaPrimary": "Try It Free",
-    "ctaSecondary": "Full Pocket comparison",
+    "ctaSecondary": "Full Raindrop comparison",
     "close": "Raindrop is simpler and free — if that is all you need, use it happily. But if you want your bookmarks private and yours forever, BookmarkForge is built for exactly that."
   },
   "features": {
@@ -357,8 +357,8 @@
       {
         "name": "Pro",
         "badge": "Most Popular — Early Bird 200",
-        "price": "$ 59",
-        "period": "Early Bird (then $79)",
+        "price": "$59",
+        "period": "once",
         "description": "Pay once, own it forever. Unlimited bookmarks, sync across 5 devices, AI assistant, and all premium features.",
         "features": [
           {
@@ -398,18 +398,14 @@
             "text": "12 months of v1 updates + security fixes forever"
           }
         ],
-        "cta": "Get Pro $59 Early Bird",
+        "cta": "Get Pro — $59 once",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "cta2": "Get Pro $79 Regular",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2Class": "btn-secondary",
-        "priceWas": "$79",
-        "priceSub": "then $79 regular",
-        "sla": "Support: Email 48h (Mon–Fri)"
+        "priceSub": "Early-bird price for the first 200 licenses, then $79",
+        "sla": "Replies within 48 h, Mon–Fri (CET)"
       }
     ],
-    "legal": "One-time payment, lifetime access. All updates included. 30-day money-back guarantee. <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help#pricing\">Learn more</a>"
+    "legal": "One-time payment · 12 months of updates included · v1 works forever · 30-day money-back guarantee. <a href=\"/privacy-and-terms.html#terms\">Terms</a>"
   },
   "faq": {
     "title": "Common Questions",
@@ -502,7 +498,8 @@
         "Contact"
       ],
       "helpCenter": "Help Center",
-      "errorCodes": "Error Codes"
+      "errorCodes": "Error Codes",
+      "hours": "Replies within 48 h, Mon–Fri (CET)"
     },
     "copyright": "© 2026 BookmarkForge. All rights reserved.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",

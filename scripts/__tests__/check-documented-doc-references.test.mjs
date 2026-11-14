@@ -68,13 +68,13 @@ describe("check-documented-doc-references", () => {
         localPaths: ["docs/api.md"],
         routes: ["/api/license/health"],
       });
-    expect(extractReferencesFromLine("The family /api/analytics/* is documented here."))
+    expect(extractReferencesFromLine("The family /api/removed/* is documented here."))
       .toEqual({ localPaths: [], routes: [] });
   });
 
   it("extracts declared route paths from the route table", () => {
-    expect(extractRoutePolicies('path: "/health", path: "/api/client-events", path: "/health"'))
-      .toEqual(["/health", "/api/client-events"]);
+    expect(extractRoutePolicies('path: "/health", path: "/csp-report", path: "/health"'))
+      .toEqual(["/health", "/csp-report"]);
   });
 
   it("passes when local files and concrete routes resolve", () => {

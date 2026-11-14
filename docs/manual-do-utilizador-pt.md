@@ -196,7 +196,7 @@ O cérebro da aplicação:
 - Sem rastreamento constante
 - Prova de licença assinada com RSA-PSS (SHA-256, salt 32)
 - Re-validação a cada 48 horas quando conectado
-- Provas com mais de 30 dias são rejeitadas pelo servidor de entitlement
+- A tolerância offline mantém o Pro até a licença expirar — as provas não têm idade máxima fixa
 
 ---
 

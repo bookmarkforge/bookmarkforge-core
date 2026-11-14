@@ -22,7 +22,9 @@
 /** The canonical site origin (mirrors check-seo.mjs, derived the same way). */
 import { APP_DOMAIN } from "./csp-config.js";
 
-export const SITE_URL = `https://${APP_DOMAIN}`;
+// The published host is `www`: the apex answers 308 to it, so a canonical or
+// sitemap URL built on APP_DOMAIN would send every crawl through a redirect.
+export const SITE_URL = `https://www.${APP_DOMAIN}`;
 
 /**
  * Every landing language, EN included, in the canonical (alphabetical)

@@ -8,13 +8,6 @@
   },
   {
     "ruleId": "javascript.lang.security.detect-child-process.detect-child-process",
-    "file": "scripts/check-audit-freshness.mjs",
-    "tool": "Semgrep OSS",
-    "approved": true,
-    "justification": "False positive: this checker executes the command lines quoted in docs/audit.md, which are repo-authored and version-controlled, and must reproduce them verbatim (npm run ..., pipelines) or it would stop validating what the document claims. Nothing from outside the repository reaches the call. Reviewed 2026-10-11."
-  },
-  {
-    "ruleId": "javascript.lang.security.detect-child-process.detect-child-process",
     "file": "scripts/ci-local-parallel.mjs",
     "tool": "Semgrep OSS",
     "approved": true,

@@ -6,7 +6,6 @@
     "src/tests/sync/signaling-server.test.ts": 13309,
     "scripts/__tests__/build-ci-secret-scan.test.mjs": 30833,
     "src/tests/services/property-based.test.ts": 6697,
-    "scripts/__tests__/check-audit-freshness.test.mjs": 55112,
     "src/tests/services/SecurityVault.test.ts": 5684,
     "src/tests/components/Omnibar.test.tsx": 4875,
     "src/tests/components/QuickCapture.test.tsx": 1769,
@@ -25,11 +24,10 @@
     "src/tests/components/bookmarks/useBookmarkSearch.test.ts": 6916,
     "src/tests/services/ai/AutoProcessorService.test.ts": 5938,
     "src/tests/sync/csp-collector.test.ts": 7799,
-    "src/tests/components/DocumentManager.test.tsx": 5179,
-    "src/tests/sync/client-events.test.ts": 5234
+    "src/tests/components/DocumentManager.test.tsx": 5179
   },
   "categories": {
-    "src/tests/sync": 30990,
+    "src/tests/sync": 25756,
     "src/tests/services/ai": 17321,
     "scripts/__tests__": 96915,
     "src/tests/components": 69970,

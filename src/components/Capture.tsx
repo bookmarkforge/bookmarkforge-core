@@ -29,9 +29,7 @@ import { FreeTierSaveHint } from "./FreeTierSaveHint";
  * Capture component for quick web clipping.
  * This is designed to be used in a small popup window.
  */
-export const Capture: React.FC<{ masterPassword?: string }> = ({
-  masterPassword,
-}) => {
+export const Capture: React.FC = () => {
   const { t } = useTranslation();
 
   const params = useMemo(() => {
@@ -163,7 +161,9 @@ export const Capture: React.FC<{ masterPassword?: string }> = ({
         return;
       }
       await save.runWithSignal(async (signal) => {
-        const db = await initDB(masterPassword);
+        // No credential argument: initDB() reads a zeroizing copy from the
+        // unlocked vault, so the capture window never holds the password.
+        const db = await initDB();
         // Unmount (or a newer save) aborts the guard's signal: stop before
         // the insert so a discarded capture never writes its bookmark.
         if (signal.aborted) {
@@ -190,7 +190,7 @@ export const Capture: React.FC<{ masterPassword?: string }> = ({
         });
       });
     },
-    [url, title, summary, masterPassword, t, params, save.run],
+    [url, title, summary, t, params, save.run],
   );
 
   useEffect(() => {

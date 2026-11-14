@@ -164,29 +164,13 @@ Guide to compliance with global regulations.
 **Best for:** legal teams, compliance officers, security engineers
 
 ---
-
-## 📊 Audits Performed
-
-### [Independent Audit 2026-11-05](../audits/AUDITORIA-INDEPENDIENTE-2026-11-05.md)
-
-Independent review of the current repository: client and server security,
-deployment topology, supply chain and local gates.
-
-**Summary:**
-- Critical production-compose startup failure and companion route mismatches
-- License rate-limit, CSP report and deployment findings
-- Prioritized remediation plan and reproducibility notes
-
----
 ## 🔗 Project Documentation
 
 ### Core
 - [README.md](../README.md) — project overview
-- [AGENTS.md](../AGENTS.md) — engineering conventions
 - [OPEN-CORE.md](../OPEN-CORE.md) — Open Core model
 
 ### Audit files
-- [docs/audit.md](../docs/audit.md) — project security audit
 - [docs/ADR-*.md](../docs/) — architecture decisions
 - [docs/ROPA.md](../docs/ROPA.md) — processing record (GDPR)
 

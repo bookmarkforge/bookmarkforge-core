@@ -2,7 +2,7 @@
  * Shared motion tokens — single source of truth for animation values.
  *
  * Mirrors the CSS tokens in src/index.css (:root). Values follow the
- * emilkowalski/skills audit bar (AUDIT.md): strong custom curves, UI
+ * emilkowalski/skills): strong custom curves, UI
  * animations under 300ms.
  */
 

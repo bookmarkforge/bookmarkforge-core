@@ -194,19 +194,20 @@ describe("useSettings", () => {
     expect(toast.error).toHaveBeenCalled();
   });
 
-  it("purges apiKey, vaultKey and masterPassword when the vault locks", async () => {
+  it("purges apiKey and vaultKey when the vault locks and holds no masterPassword", async () => {
     aiManager.getApiKey.mockReturnValue("sk-secret-123");
     const { result } = renderHook(() => useSettings());
     expect(result.current.apiKey).toBe("sk-secret-123");
 
     await act(async () => {
       result.current.setVaultKey("newpass123");
-      result.current.setMasterPassword("newpass123");
     });
     expect(result.current.vaultKey).toBe("newpass123");
-    expect(result.current.masterPassword).toBe("newpass123");
+    // AGENTS.md §2: the master password never enters this hook's state, so
+    // there is nothing to purge on lock — assert the contract is absent.
+    expect(Object.keys(result.current)).not.toContain("masterPassword");
 
-    // Lock del vault → los secretos en estado React se purgan.
+    // Vault lock → secrets in React state are purged.
     expect(lockCb).not.toBeNull();
     act(() => {
       lockCb?.();
@@ -214,6 +215,5 @@ describe("useSettings", () => {
 
     expect(result.current.apiKey).toBe("");
     expect(result.current.vaultKey).toBe("");
-    expect(result.current.masterPassword).toBe("");
   });
 });

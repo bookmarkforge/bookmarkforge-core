@@ -1,5 +1,5 @@
 /**
- * Unit tests for scripts/check-coverage-by-area.mjs (audit 2026-08-13,
+ * Unit tests for scripts/check-coverage-by-area.mjs (,
  * per-directory coverage budgets — "mejora de alto impacto" #2).
  *
  * The gate parses coverage/coverage-final.json (v8 provider) and enforces

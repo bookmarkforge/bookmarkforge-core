@@ -34,7 +34,8 @@ import { RxDBLeaderElectionPlugin } from "rxdb/plugins/leader-election";
 import { secureStorage } from "../services/SecureStorage";
 import { logger } from "../utils/logger";
 import { encryptionService } from "../services/EncryptionService";
-import { SECURE_STORAGE_KEYS } from "../services/SecurityVault";
+import { zeroPasswordBytes } from "../utils/crypto-core";
+import { SECURE_STORAGE_KEYS, securityVault } from "../services/SecurityVault";
 import { DB_SALT_DESCRIPTOR } from "../services/security-vault/salt-registry";
 import { DB_CONFIG } from "../constants/config";
 import { safeGet, safeRemove } from "../store/safeStorage";
@@ -68,11 +69,31 @@ export type {
 //
 // NOTE: walkErrorChain, classifyDbError and redactKeyMaterial are
 // exported inline with `export function` below. Do NOT add a separate
-// `export { ... }` block — Vite/ESBuild rejects duplicate exports
+// `export {... }` block — Vite/ESBuild rejects duplicate exports
 // with a SyntaxError.
 
 // NOTE: ErrorFrame is declared and exported inline below (export interface
 // ErrorFrame) — do NOT re-export it here (TS2484 duplicate export).
+
+// Bytes end-to-end (AGENTS.md §2): when a caller does not hand over the DB
+// credential, take a caller-owned copy from the UNLOCKED vault instead of
+// requiring a component to remember the master password.
+const DB_CREDENTIAL_CALLER = {};
+let dbCredentialCallerRegistered = false;
+/**
+ * Registration is LAZY on purpose: SecurityVault and this module are part of
+ * the same import cycle, so touching `securityVault` at module-evaluation time
+ * can observe an uninitialized binding. By the time initDB() runs, both
+ * modules are fully evaluated.
+ */
+function registerDbCredentialCaller(): void {
+  if (dbCredentialCallerRegistered) {return;}
+  // Tests and partial builds may mock SecurityVault with only the constants;
+  // treat that like a locked vault (fall through to the auto-key path).
+  if (typeof securityVault?.registerCaller !== "function") {return;}
+  securityVault.registerCaller(DB_CREDENTIAL_CALLER);
+  dbCredentialCallerRegistered = true;
+}
 
 // ─── Plugin registration (called at module load) ────────────────────
 
@@ -319,7 +340,7 @@ function capFrameMessage(input: string): string {
     : input;
 }
 
-// Phase 1: keyword-anchored matched. Catches "password=..." / "key: ..." /
+// Phase 1: keyword-anchored matched. Catches "password=..." / "key:..." /
 // "cipher:'...'" style runs of 32+ chars adjacent to a secret-ish word.
 const KEYWORD_ANCHORED_REGEX =
   /(password|key|secret|token|cipher)\s*[:=]?\s*["']?([A-Za-z0-9+/=_-]{32,})["']?/gi;
@@ -354,17 +375,17 @@ function safeStringify(v: unknown): string {
  * INACCESSIBLE for UI purposes (lost data / unexpected failure).
  *
  * Recognized codes:
- *   DB1 — wrong password (or empty password against an encrypted vault).
- *         Maps to WRONG_PASSWORD so the UI prompts for re-entry.
- *   DEVICE_KEY_WRAPPED — the vault is locked: the device key is wrapped
- *         by the master password and was not materialized this session.
- *         This is NOT a wrong password (the password may be correct);
- *         it means the vault must be unlocked first. Maps to VAULT_LOCKED
- *         so the UI does not show a misleading "Invalid password".
- *   DB3..DB9 — any other RxDB v15+ storage failure (corrupt IDB state,
- *         schema mismatch, cross-tab conflict, storage destroy in flight,
- *         leader-election failure). All map to INACCESSIBLE so the UI
- *         shows "Database inaccessible" (localized) and offers a recovery path.
+ * DB1 — wrong password (or empty password against an encrypted vault).
+ * Maps to WRONG_PASSWORD so the UI prompts for re-entry.
+ * DEVICE_KEY_WRAPPED — the vault is locked: the device key is wrapped
+ * by the master password and was not materialized this session.
+ * This is NOT a wrong password (the password may be correct);
+ * it means the vault must be unlocked first. Maps to VAULT_LOCKED
+ * so the UI does not show a misleading "Invalid password".
+ * DB3..DB9 — any other RxDB v15+ storage failure (corrupt IDB state,
+ * schema mismatch, cross-tab conflict, storage destroy in flight,
+ * leader-election failure). All map to INACCESSIBLE so the UI
+ * shows "Database inaccessible" (localized) and offers a recovery path.
  *
  * The raw `f.code` value is preserved on the thrown error's
  * `dbErrorCode` property so telemetry can spot common sub-cases later
@@ -438,15 +459,15 @@ export function isVaultLockedError(err: unknown): boolean {
  *
  * `removeData` controls whether the vault data survives the teardown:
  * - `removeData: true` (destroyDB — an explicit user wipe) prefers
- *   `remove()` so a subsequent init with a different password does not
- *   collide with stale auto-key data on the same storage adapter (which
- *   would surface as DB1 "another instance on this adapter has a different
- *   password").
+ * `remove()` so a subsequent init with a different password does not
+ * collide with stale auto-key data on the same storage adapter (which
+ * would surface as DB1 "another instance on this adapter has a different
+ * password").
  * - `removeData: false` (timeout/retry path) NEVER calls `remove()`: the
- *   instance is closed but its data — including a half-migrated vault and
- *   the migration replication checkpoints — is kept so the next attempt
- *   re-opens the same storage and RESUMES the migration instead of
- *   presenting an empty vault.
+ * instance is closed but its data — including a half-migrated vault and
+ * the migration replication checkpoints — is kept so the next attempt
+ * re-opens the same storage and RESUMES the migration instead of
+ * presenting an empty vault.
  */
 async function teardownRxDB(
   instance: unknown,
@@ -498,7 +519,7 @@ async function teardownRxDB(
  * using PBKDF2 with the configured iteration count.
  */
 async function deriveDbKey(password: string | Uint8Array, salt: string): Promise<string> {
-  // Audit 16-A5: never decode master-password bytes into immutable strings.
+  // never decode master-password bytes into immutable strings.
   return password instanceof Uint8Array
     ? encryptionService.deriveDbKeyWithBytes(new Uint8Array(password), salt)
     : encryptionService.deriveDbKey(password, salt);
@@ -514,14 +535,47 @@ async function decryptDbSecret(value: string, password: string | Uint8Array, pur
  * Resolves the database encryption password.
  *
  * Priority order:
- * 1. If an encrypted DB key exists in SecureStorage AND a password is
- *    provided, decrypt and return the stored key.
- * 2. If a password is provided, derive a new key and encrypt-store it.
- * 3. If no password, use or generate a stored auto-key.
+ * 1. If an encrypted DB key exists AND a credential is available, decrypt and
+ * return the stored key.
+ * 2. If a credential is available, derive a new key and encrypt-store it.
+ * 3. If no credential, use or generate a stored auto-key.
+ *
+ * The credential normally comes from the caller (bytes preferred). When it is
+ * omitted — the post-unlock resume path — a caller-owned copy is taken from the
+ * unlocked SecurityVault and zeroized before returning, so no React state ever
+ * holds the master password (AGENTS.md §2). A locked vault yields no
+ * credential and follows priority 3 exactly as before.
  *
  * Handles legacy localStorage migration transparently.
  */
 async function resolveDbPassword(pw?: string | Uint8Array): Promise<string> {
+  if (!pw) {
+    let vaultBytes: Uint8Array | null = null;
+    try {
+      registerDbCredentialCaller();
+      vaultBytes = await securityVault.withMasterPasswordBytes(
+        DB_CREDENTIAL_CALLER,
+        (bytes) => (bytes ? new Uint8Array(bytes) : null),
+      );
+    } catch {
+      /* A locked (or mocked/unavailable) vault has no in-memory credential. */
+      vaultBytes = null;
+    }
+    try {
+      return await resolveDbPasswordFromCredential(vaultBytes ?? undefined);
+    } finally {
+      if (vaultBytes) {
+        // Silent: decrypt/derive may already have zeroized this copy.
+        zeroPasswordBytes(vaultBytes, () => undefined);
+      }
+    }
+  }
+  return resolveDbPasswordFromCredential(pw);
+}
+
+async function resolveDbPasswordFromCredential(
+  pw?: string | Uint8Array,
+): Promise<string> {
   const hasEncryptedDbKey = await secureStorage.hasSecret(SECURE_STORAGE_KEYS.DB_KEY);
 
   if (hasEncryptedDbKey && pw && (pw instanceof Uint8Array ? pw.length > 0 : pw.trim() !== "")) {
@@ -551,7 +605,7 @@ async function resolveDbPassword(pw?: string | Uint8Array): Promise<string> {
         lockedError.name = "VAULT_LOCKED";
         throw lockedError;
       }
-      // M-03: distinguish a corrupted/tampered DB_KEY blob from a wrong
+      // distinguish a corrupted/tampered DB_KEY blob from a wrong
       // password. If the verification token still decrypts with the same
       // password, the password is correct and the DB_KEY blob is damaged.
       let isCorrupted = false;
@@ -654,7 +708,7 @@ const estimateExistingRows = (dbName: string): Promise<number> =>
     })),
   );
 
-/** Structural subset of RxDB's RxMigrationStatus (its published .d.ts does
+/** Structural subset of RxDB's RxMigrationStatus (its published.d.ts does
  * not survive the project's strict lib-check, so we avoid importing it). */
 interface RxMigrationStatusLike {
   collectionName: string;
@@ -773,7 +827,7 @@ async function createDBInstance(
   const MAX_RETRIES = DB_CONFIG.MAX_RETRIES;
 
   const estimatedRows = await estimateExistingRows(name);
-  // Surface the reopen progress to the UI: while createRxDatabase and
+  // Surface the reopen progress to the while createRxDatabase and
   // addCollections open the vault's stores (a normal reopen WITHOUT a
   // schema migration), the shell shows a "Loading vault… N items"
   // indicator instead of a static spinner. If a migration then starts,
@@ -845,7 +899,7 @@ async function createDBInstance(
           typeof wrappedKeyEncryptionCryptoJsStorage
         >[0]["storage"],
       });
-      // F-06: authenticated AES-GCM envelope around the inner CryptoJS
+      // authenticated AES-GCM envelope around the inner CryptoJS
       // field encryption. Schema version bumps rewrite legacy rows through
       // this layer; reads accept both legacy (inner-only) and authenticated
       // rows so existing vaults stay readable.
@@ -1050,7 +1104,7 @@ async function createDBInstance(
  * execution guarantees only one caller enters the initialization path.
  *
  * @param password - Optional vault password to derive the encryption key.
- *   If omitted, uses a stored auto-generated key for encrypted storage.
+ * If omitted, uses a stored auto-generated key for encrypted storage.
  * @returns The initialized RxDB database instance
  * @throws {Error} `INVALID_PASSWORD` if the password doesn't match an existing DB
  * @throws {Error} `DB_INIT_TIMEOUT` if all retries are exhausted
@@ -1089,8 +1143,13 @@ function attachBookmarkFreeLimit(db: BookmarkForgeDB): void {
   }
 }
 
-// Audit 16-A5: consume byte credentials even on cached-instance/error paths.
+// consume byte credentials even on cached-instance/error paths.
 export const initDB = async (password?: string | Uint8Array): Promise<BookmarkForgeDB> => {
+  // AGENTS.md §2: a byte credential is consumed (zeroized) on every path, and
+  // an omitted credential is resolved INSIDE initDBInternal from the unlocked
+  // vault — see resolveDbPassword(). It must not be awaited here: doing so
+  // would delay registering the init promise and make getDB() return null
+  // while an init is legitimately in flight.
   try {
     return await initDBInternal(password);
   } finally {

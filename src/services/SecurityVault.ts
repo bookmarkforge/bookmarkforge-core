@@ -8,17 +8,29 @@ import { auditLog, rotateAuditSessionId } from "./AuditLogService";
 import { safeGet, safeSet } from "../store/safeStorage";
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { SECURITY_CONFIG } from "../constants/config";
-import { deriveDomainHmacKey, zeroPasswordBytes } from "../utils/crypto-core";
+import {
+  LegacyV5FormatRemovedError,
+  deriveDomainHmacKey,
+  isLegacyV5FormatRemovedError,
+  zeroPasswordBytes,
+} from "../utils/crypto-core";
+import {
+  copyPasswordBytes,
+  normalizePasswordBytes,
+  passwordCodePointLength,
+} from "../utils/passwordBytes";
 import { logRateLimited } from "../utils/boundedLog";
 import type { ZeroMemoryProcessor } from "../utils/wasm-zero-memory";
 import {
   SECURE_STORAGE_KEYS,
   VERIFICATION_INTEGRITY_KEY,
 } from "./security-vault/constants";
-import { constantTimeCompare } from "./security-vault/compare";
 import { loadBackupService } from "./pro-access";
 import { createVerificationToken } from "./security-vault/integrity";
-import { deriveShareCredential, parseShareSalt } from "./security-vault/share";
+import {
+  unlockVaultFromShare,
+  type ShareUnlockContext,
+} from "./security-vault/share-unlock";
 import {
   encryptSecret as encryptSecretWithContext,
   decryptSecret as decryptSecretWithContext,
@@ -60,7 +72,7 @@ class SecurityVault {
   // triggers the init path. Prevents stale plaintext API keys from
   // persisting in IndexedDB beyond 7 days when the vault stays locked.
   private static _purgePendingCalled = false;
-  // B1 (audit 2026-08-13): the flag is only set on SUCCESS. A transient
+  // the flag is only set on SUCCESS. A transient
   // failure (e.g. IndexedDB blocked by another tab) retries on the next
   // lifecycle call instead of silently skipping the cleanup for the rest
   // of the process — an expired plaintext pending key must not persist
@@ -174,9 +186,10 @@ class SecurityVault {
 
   // Replaces the master-password buffer. The previous buffer is zeroed first so
   // a re-unlock or a rotation never orphans an un-zeroed copy on the heap.
-  private replaceMasterPasswordBytes(password: string): void {
+  private replaceMasterPasswordBytes(password: string | Uint8Array): void {
     this.zeroBytes();
-    this.masterPasswordBytes = new TextEncoder().encode(password);
+    // Owned copy: the caller's buffer may be zeroized as soon as this returns.
+    this.masterPasswordBytes = copyPasswordBytes(password);
   }
 
   private clearShareCredential(): void {
@@ -236,32 +249,38 @@ class SecurityVault {
    * @param password - The user's password (minimum 12 characters)
    * @returns `true` when unlocked successfully, `false` when rejected or rate limited
    */
-  async unlock(password: string): Promise<boolean> {
-    // Do not race a previous lock's audit flush/device-key teardown. Callers
-    // that ignored lock() still get a safe lifecycle boundary here.
-    if (this.lockPromise) {
-      await this.lockPromise;
-    }
-
+  async unlock(password: string | Uint8Array): Promise<boolean> {
     // Fase 9: best-effort cleanup of expired pending keys on any unlock
-    // attempt. This runs once per process lifetime and is non-blocking.
+    // attempt — including a rejected one. Runs once per process lifetime and
+    // is non-blocking; kept on the wrapper so an empty/short password still
+    // triggers it.
     SecurityVault._purgePendingOnce();
 
-    if (typeof password !== "string" || !password.trim()) {
+    // AGENTS.md §2: credential material stays bytes end to end. A string is
+    // only a BOUNDARY representation (the unlock <input> value, a legacy
+    // caller or a test); it is encoded here and every consumer below receives
+    // bytes. The owned copy is zeroized on every exit path.
+    const passwordBytes = normalizePasswordBytes(password);
+    if (passwordBytes.length === 0) {
+      zeroPasswordBytes(passwordBytes);
       logger.warn(
-        "[SecurityVault] Invalid password input - empty string rejected",
+        "[SecurityVault] Invalid password input - empty password rejected",
       );
       this.recordFailedAttempt();
       return false;
     }
 
-    // Legacy behavior (audit M-05): the stored master password is the
+    // Legacy behavior: the stored master password is the
     // trimmed form — " a" and "a" unlock the same vault. Kept for
     // backward compatibility with vaults created before the whitespace
     // guard was added to rotateMasterPassword(); new and rotated
-    // passwords can no longer be whitespace-padded.
-    const trimmedPassword = password.trim();
-    if (trimmedPassword.length < SECURITY_CONFIG.MIN_PASSWORD_LENGTH) {
+    // passwords can no longer be whitespace-padded. Byte callers get the
+    // same ASCII trim from normalizePasswordBytes().
+    if (
+      passwordCodePointLength(passwordBytes) <
+      SECURITY_CONFIG.MIN_PASSWORD_LENGTH
+    ) {
+      zeroPasswordBytes(passwordBytes);
       logger.warn(
         "[SecurityVault] Password too short - minimum %d characters required",
         SECURITY_CONFIG.MIN_PASSWORD_LENGTH,
@@ -269,6 +288,27 @@ class SecurityVault {
       this.recordFailedAttempt();
       return false;
     }
+
+    try {
+      return await this.unlockWithBytes(passwordBytes);
+    } finally {
+      zeroPasswordBytes(passwordBytes);
+    }
+  }
+
+  /**
+   * Unlock body over caller-owned bytes. The public wrapper owns and zeroizes
+   * the buffer; this method never retains it — the vault keeps its own copy
+   * through `replaceMasterPasswordBytes`.
+   */
+  private async unlockWithBytes(passwordBytes: Uint8Array): Promise<boolean> {
+    // Do not race a previous lock's audit flush/device-key teardown. Callers
+    // that ignored lock() still get a safe lifecycle boundary here.
+    if (this.lockPromise) {
+      await this.lockPromise;
+    }
+
+
 
     const rl = this.rl;
     if (Date.now() < rl.lockoutUntil) {
@@ -283,7 +323,7 @@ class SecurityVault {
     }
 
     // Verify the password against the stored token BEFORE accepting it
-    const passwordValid = await this.verifyPassword(trimmedPassword);
+    const passwordValid = await this.verifyPassword(passwordBytes);
     if (!passwordValid) {
       this.recordFailedAttempt();
 
@@ -305,12 +345,12 @@ class SecurityVault {
     // setup) below.
     const masterPasswordSet = await this.hasMasterPassword();
 
-    // Audit H5: materialize the device key NOW that the password checked
+    // materialize the device key NOW that the password checked
     // out — BEFORE any wrap decision. The verification token is
     // password-encrypted only (readable while locked), so this is the
     // first point where the wrapped device key can be unwrapped. Fail
     // closed — never regenerate.
-    const deviceKeyReady = await this.unlockDeviceKey(trimmedPassword);
+    const deviceKeyReady = await this.unlockDeviceKey(passwordBytes);
     if (!deviceKeyReady) {
       this.recordFailedAttempt();
 
@@ -327,15 +367,15 @@ class SecurityVault {
       return false;
     }
 
-    // ── A-1: per-vault Argon2id salt (best-effort, never blocks the unlock) ──
+    // ── per-vault Argon2id salt (best-effort, never blocks the unlock) ──
     // Runs after the device key is materialized (SecureStorage is readable and
     // writable from here) and before any password-encrypted write below, so a
-    // token minted on this path is already v6-keyed. Legacy blobs are re-wrapped
-    // in the same step; a failure leaves them under the legacy fixed salt, where
-    // they stay readable.
+    // token minted on this path is already v7-keyed. Legacy v6 blobs are
+    // re-wrapped in the same step; a `v5:` blob can no longer be read (ADR-052
+    // phase 4), so the migration marks it failed and leaves it untouched.
     const vaultKdfSaltHex = await this.installVaultKdfSalt();
     if (vaultKdfSaltHex) {
-      await this.migrateVaultToPerVaultSalt(trimmedPassword);
+      await this.migrateVaultToPerVaultSalt(passwordBytes);
     }
 
     // SECURITY: create verification token ATOMICALLY before setting any
@@ -350,7 +390,7 @@ class SecurityVault {
     try {
       hasToken = await secureStorage.hasSecret(this.VERIFICATION_KEY);
       if (!hasToken) {
-        await createVerificationToken(trimmedPassword);
+        await createVerificationToken(passwordBytes);
       }
 
       // A successful unlock without a pre-existing verification token is the
@@ -360,7 +400,7 @@ class SecurityVault {
       // token—the newly written integrity record would make a fresh vault
       // look pre-existing and leave its device key unwrapped.
       if (!masterPasswordSet && !hasToken) {
-        await secureStorage.wrapDeviceKeyWithPassword(trimmedPassword);
+        await secureStorage.wrapDeviceKeyWithPassword(passwordBytes);
       } else if (!masterPasswordSet) {
         // Legacy vaults may have lost only the setup flag. Restore the flag
         // without minting a new wrapper or orphaning existing ciphertext.
@@ -371,7 +411,7 @@ class SecurityVault {
       }
 
       this.clearShareCredential();
-      this.replaceMasterPasswordBytes(trimmedPassword);
+      this.replaceMasterPasswordBytes(passwordBytes);
       this.isUnlocked = true;
       this.initZeroMemoryProcessor().catch((err) =>
         logger.warn("[SecurityVault] Zero-memory init failed post-unlock", {
@@ -416,9 +456,16 @@ class SecurityVault {
         context: { reason: "Decryption or process failure" },
       });
 
+      // ADR-052 Phase 3: a retired v5 payload is a format problem, not a wrong
+      // password. The teardown above already ran; keep the vault locked but let
+      // the typed, actionable error reach the caller/UI.
+      if (isLegacyV5FormatRemovedError(error)) {
+        throw new LegacyV5FormatRemovedError();
+      }
+
       return false;
     } finally {
-      // H2: verify the HMAC attestation chain over the audit log. A broken
+      // verify the HMAC attestation chain over the audit log. A broken
       // link means the stored log was tampered with (or corrupted) outside
       // the unlocked session — surfaced as an audit entry. Fire-and-forget:
       // this must NEVER affect the unlock outcome, so the call is defensive
@@ -490,7 +537,7 @@ class SecurityVault {
    * The token is used in unlock() to validate that the password is correct
    * before marking the vault as unlocked.
    *
-   * Audit H5: stored RAW (password-encrypted only, no device-key layer).
+   * stored RAW (password-encrypted only, no device-key layer).
    * It must be readable while the vault is locked so the password can be
    * verified BEFORE the wrapped device key is unwrapped — the device-key
    * layer would deadlock unlock().
@@ -547,7 +594,7 @@ class SecurityVault {
    * key is not wrapped (legacy localStorage path). Returns false on any
    * failure so unlock() fails closed.
    */
-  private async unlockDeviceKey(password: string): Promise<boolean> {
+  private async unlockDeviceKey(password: string | Uint8Array): Promise<boolean> {
     try {
       // Source of truth is the wrapped blob itself, not the boolean
       // wrapper: materialize the key whenever the blob EXISTS. A vault
@@ -577,6 +624,16 @@ class SecurityVault {
       }
       return true;
     } catch (error) {
+      // ADR-052: a v5-wrapped device key is a removed-format problem, not a
+      // wrong password. Returning false here would be reported as "invalid
+      // password" and offer a retry that can never work — keep the typed error
+      // so unlock()/the UI can show the remedy.
+      if (isLegacyV5FormatRemovedError(error)) {
+        logger.error(
+          "[SecurityVault] Device key is wrapped with the retired v5 legacy format (ADR-052)",
+        );
+        throw new LegacyV5FormatRemovedError();
+      }
       logger.error("[SecurityVault] Failed to materialize device key", {
         error,
       });
@@ -587,17 +644,17 @@ class SecurityVault {
   /**
    * Checks whether a password is correct by attempting to decrypt the
    * stored verification token. When no token exists:
-   *   - If a master password is already configured → reject (tampering)
-   *   - On first run (no flag) → accept for the registration flow
+   * - If a master password is already configured → reject (tampering)
+   * - On first run (no flag) → accept for the registration flow
    */
   /**
-   * A-1: install the per-vault Argon2id salt in the crypto layer.
+   * install the per-vault Argon2id salt in the crypto layer.
    *
    * Best-effort by design: the unlock path must not fail because the salt
-   * could not be provisioned. Existing `v5:` blobs stay readable, but since
-   * A-02 that is a READ-ONLY state: `encrypt()` refuses to write without a
-   * salt, so secrets fail closed at the write instead of being persisted in a
-   * format this app can no longer decrypt.
+   * could not be provisioned. ADR-052 phase 4 removed the `v5:` parser, so a
+   * vault without a per-vault salt simply cannot write: `encrypt()` and
+   * `encryptWithSessionKey()` fail closed at the write instead of persisting a
+   * format this build cannot decrypt.
    *
    * @returns the installed salt (32 hex) or null when unavailable.
    */
@@ -614,23 +671,23 @@ class SecurityVault {
   }
 
   /**
-   * A-1: transparently re-wrap master-password material under the per-vault
+   * transparently re-wrap master-password material under the per-vault
    * salt, once the per-vault salt is installed.
    *
    * Two targets, in order of exposure:
-   *   1. the verification token + its S1 integrity record — this is the blob an
-   *      attacker with device access can mount an offline dictionary against
-   *      while the vault is LOCKED, so it is the primary reason for the fix.
-   *      Re-minted only while it is still a legacy `v5:` payload, and always
-   *      together with its integrity record (one IndexedDB transaction) so a
-   *      crash can never leave a token/HMAC pair that no password unlocks.
-   *   2. the other persisted password-encrypted secrets (see
-   *      migrateVaultSecretsToVaultSalt).
+   * 1. the verification token + its S1 integrity record — this is the blob an
+   * attacker with device access can mount an offline dictionary against
+   * while the vault is LOCKED, so it is the primary reason for the fix.
+   * Re-minted only while it is still a legacy `v5:` payload, and always
+   * together with its integrity record (one IndexedDB transaction) so a
+   * crash can never leave a token/HMAC pair that no password unlocks.
+   * 2. the other persisted password-encrypted secrets (see
+   * migrateVaultSecretsToVaultSalt).
    *
    * Never throws: the password was just verified, so the session is valid
    * whatever the outcome; the caller's unlock result is unaffected.
    */
-  private async migrateVaultToPerVaultSalt(password: string): Promise<void> {
+  private async migrateVaultToPerVaultSalt(password: string | Uint8Array): Promise<void> {
     try {
       const storedToken = await secureStorage.getVerificationToken();
       // Re-mint unless the token is already on the CURRENT envelope. A v6
@@ -646,13 +703,13 @@ class SecurityVault {
       await migrateVaultSecretsToVaultSalt(password);
     } catch (error) {
       logger.warn(
-        "[SecurityVault] Per-vault salt migration incomplete — legacy payloads remain readable",
+        "[SecurityVault] Per-vault salt migration incomplete — legacy payloads left in place (v5 is unreadable, ADR-052 phase 4)",
         { error: error instanceof Error ? error.message : String(error) },
       );
     }
   }
 
-  private async verifyPassword(password: string): Promise<boolean> {
+  private async verifyPassword(password: string | Uint8Array): Promise<boolean> {
     return verifyPasswordWithContext(password, this.buildAuthContext());
   }
 
@@ -665,31 +722,44 @@ class SecurityVault {
    * confirm the master password before wiping, so a caller cannot turn the
    * vault into an unthrottled offline brute-force oracle.
    */
-  async verifyPasswordRateLimited(password: string): Promise<boolean> {
-    if (typeof password !== "string" || !password.trim()) {
+  async verifyPasswordRateLimited(password: string | Uint8Array): Promise<boolean> {
+    // Same bytes-at-the-boundary rule as unlock: normalize once, zeroize
+    // the owned copy on every path.
+    const passwordBytes = normalizePasswordBytes(password);
+    if (passwordBytes.length === 0) {
+      zeroPasswordBytes(passwordBytes);
       this.recordFailedAttempt();
       return false;
     }
-    if (password.trim().length < SECURITY_CONFIG.MIN_PASSWORD_LENGTH) {
+    if (
+      passwordCodePointLength(passwordBytes) <
+      SECURITY_CONFIG.MIN_PASSWORD_LENGTH
+    ) {
+      zeroPasswordBytes(passwordBytes);
       this.recordFailedAttempt();
       return false;
     }
     const rl = this.rl;
     if (Date.now() < rl.lockoutUntil) {
+      zeroPasswordBytes(passwordBytes);
       const remaining = Math.ceil((rl.lockoutUntil - Date.now()) / 1000);
       logger.warn("[SecurityVault] verifyPassword rate limited", {
         remainingSeconds: remaining,
       });
       return false;
     }
-    const valid = await this.verifyPassword(password.trim());
-    if (!valid) {
-      this.recordFailedAttempt();
-      return false;
+    try {
+      const valid = await this.verifyPassword(passwordBytes);
+      if (!valid) {
+        this.recordFailedAttempt();
+        return false;
+      }
+      // Successful verification clears the counter, mirroring unlock().
+      useRateLimitStore.getState().resetAttempts();
+      return true;
+    } finally {
+      zeroPasswordBytes(passwordBytes);
     }
-    // Successful verification clears the counter, mirroring unlock().
-    useRateLimitStore.getState().resetAttempts();
-    return true;
   }
 
   /**
@@ -699,7 +769,7 @@ class SecurityVault {
    * encryptionService directly BEFORE any rate-limit check, letting an
    * attacker brute-force the share password without touching the lockout
    * counter. This method runs the decrypt INSIDE the same lockout gate as
-   * unlock()/unlockFromShare(): while locked out it refuses to decrypt,
+   * unlock()/unlockFromShare: while locked out it refuses to decrypt,
    * and a failed decrypt (wrong share password → AES-GCM auth failure)
    * counts as a failed attempt.
    *
@@ -750,7 +820,7 @@ class SecurityVault {
     if (this.rotationTimer !== null) {
       clearInterval(this.rotationTimer);
     }
-    // L-09: `window` is undefined in SSR/test environments — guard so the
+    // `window` is undefined in SSR/test environments — guard so the
     // rotation start can never crash there (only reached after unlock in the
     // browser today, but the guard keeps it safe for future call sites).
     if (typeof window === "undefined") {return;}
@@ -804,123 +874,12 @@ class SecurityVault {
       emptyLocalDatabase?: boolean;
     } = {},
   ): Promise<boolean> {
-    const rl = this.rl;
-    if (Date.now() < rl.lockoutUntil) {
-      const remaining = Math.ceil((rl.lockoutUntil - Date.now()) / 1000);
-      logger.warn("[SecurityVault] unlockFromShare rate limited", {
-        remainingSeconds: remaining,
-      });
-      return false;
-    }
-
-    if (!/^[0-9a-f]{64}$/i.test(shareSecret)) {
-      this.recordFailedAttempt();
-      return false;
-    }
-
-    const allowFreshDevice = options.allowFreshDevice === true;
-    const salt = parseShareSalt(saltJson, allowFreshDevice ? 16 : 1);
-    if (!salt) {
-      logger.error("[SecurityVault] unlockFromShare HKDF derivation failed", {
-        error: new Error("Invalid share salt"),
-      });
-      this.recordFailedAttempt();
-      return false;
-    }
-
-    // A configured or otherwise populated vault is never converted into a
-    // shared session. This protects legacy installations whose setup flag is
-    // missing but still contain encrypted state.
-    const emptyLocalDatabase = options.emptyLocalDatabase === true;
-    const existingVault = await this.hasExistingVaultState(emptyLocalDatabase);
-
-    try {
-      if (existingVault) {
-        if (!this.masterPasswordBytes) {
-          this.recordFailedAttempt();
-          return false;
-        }
-
-        const baseKey = await crypto.subtle.importKey(
-          "raw",
-          this.masterPasswordBytes as Uint8Array<ArrayBuffer>,
-          { name: "HKDF" },
-          false,
-          ["deriveBits"],
-        );
-        const derivedBits = await crypto.subtle.deriveBits(
-          {
-            name: "HKDF",
-            salt: salt as Uint8Array<ArrayBuffer>,
-            info: new TextEncoder().encode("bookmarkforge-share"),
-            hash: "SHA-256",
-          },
-          baseKey,
-          256,
-        );
-        const expected = Array.from(new Uint8Array(derivedBits), (b) =>
-          b.toString(16).padStart(2, "0"),
-        ).join("");
-
-        if (!constantTimeCompare(expected, shareSecret)) {
-          this.recordFailedAttempt();
-          return false;
-        }
-      } else if (allowFreshDevice && emptyLocalDatabase) {
-        // Fresh-device bootstrap: the caller has already authenticated the
-        // share secret by decrypting the AES-GCM payload with sharePassword.
-        // Requiring an explicit empty-database attestation prevents a direct
-        // caller from turning an unconfigured but populated legacy vault into
-        // a share session.
-        // Derive a separate credential so the raw payload secret is never
-        // retained as the session's operational key.
-        const derivedCredential = await deriveShareCredential(
-          shareSecret,
-          salt,
-        );
-        this.clearShareCredential();
-        this.shareCredentialBytes = derivedCredential;
-      } else {
-        // Legacy payloads, and v2 payloads without an explicit empty-device
-        // attestation, are never allowed to bootstrap a new device. This
-        // preserves the old password-bound behavior while current v2 payloads
-        // opt into the explicit fresh-device flow.
-        this.recordFailedAttempt();
-        return false;
-      }
-    } catch (error) {
-      logger.error("[SecurityVault] unlockFromShare HKDF derivation failed", {
-        error,
-      });
-      this.recordFailedAttempt();
-      return false;
-    }
-
-    try {
-      useRateLimitStore.getState().resetAttempts();
-      this.recordAudit({
-        action: "vault_unlock_from_share",
-        result: "success",
-        origin: "SecurityVault",
-      });
-
-      // SECURITY: derive a fresh session token instead of reusing the share
-      // secret. The share secret is known to the remote peer that generated it;
-      // reusing it as the session token would give the sharing peer a valid
-      // credential for this vault session (cross-session linkability + access).
-      this.isUnlocked = true;
-      await this.generateSessionToken();
-      this.startSessionRotation();
-      this.notifyUnlockListeners();
-      return true;
-    } catch (error) {
-      this.clearShareCredential();
-      this.sessionToken = null;
-      this.sessionExpiry = 0;
-      this.stopSessionRotation();
-      logger.error("[SecurityVault] Share session activation failed", { error });
-      return false;
-    }
+    return unlockVaultFromShare(
+      this.buildShareUnlockContext(),
+      shareSecret,
+      saltJson,
+      options,
+    );
   }
 
   /**
@@ -993,7 +952,7 @@ class SecurityVault {
       } catch (error) {
         logger.warn("[SecurityVault] Failed to flush lock audit", { error });
       } finally {
-        // Audit H5: drop the in-memory device key so no key material survives
+        // drop the in-memory device key so no key material survives
         // the locked vault.
         secureStorage.lockDeviceKey();
 
@@ -1363,18 +1322,46 @@ class SecurityVault {
   }
 
   /** Wrap the materialized device key using the real secure-storage path. */
-  private async wrapDeviceKeyWithPassword(password: string): Promise<void> {
+  private async wrapDeviceKeyWithPassword(
+    password: string | Uint8Array,
+  ): Promise<void> {
     await secureStorage.wrapDeviceKeyWithPassword(password);
     this.isDeviceKeyWrapped = true;
   }
 
   // ── Delegation modules (refactor: split from SecurityVault.ts) ──
 
+  private buildShareUnlockContext(): ShareUnlockContext {
+    return {
+      getRateLimitLockoutUntil: () => this.rl.lockoutUntil,
+      recordFailedAttempt: () => { this.recordFailedAttempt(); },
+      hasExistingVaultState: async (emptyLocalDatabase?: boolean) =>
+        await this.hasExistingVaultState(emptyLocalDatabase),
+      getMasterPasswordBytes: () => this.masterPasswordBytes,
+      installShareCredential: (bytes: Uint8Array) => {
+        this.clearShareCredential();
+        this.shareCredentialBytes = bytes;
+      },
+      clearShareCredential: () => { this.clearShareCredential(); },
+      recordAudit: (params) => { this.recordAudit(params as Parameters<typeof auditLog.record>[0]); },
+      setUnlocked: () => { this.isUnlocked = true; },
+      generateSessionToken: async () => { await this.generateSessionToken(); },
+      startSessionRotation: () => { this.startSessionRotation(); },
+      stopSessionRotation: () => { this.stopSessionRotation(); },
+      notifyUnlockListeners: () => { this.notifyUnlockListeners(); },
+      clearSession: () => {
+        this.sessionToken = null;
+        this.sessionExpiry = 0;
+      },
+    };
+  }
+
+
   private buildAuthContext() {
     return {
       getMasterPasswordBytes: () => this.masterPasswordBytes,
       clearShareCredential: () => this.clearShareCredential(),
-      setMasterPasswordBytes: (pw: string) => {
+      setMasterPasswordBytes: (pw: string | Uint8Array) => {
         this.replaceMasterPasswordBytes(pw);
         this.isUnlocked = true;
       },
@@ -1382,7 +1369,6 @@ class SecurityVault {
         this.zeroBytes();
         this.isUnlocked = false;
       },
-      recordFailedAttempt: () => { this.recordFailedAttempt(); },
       recordAudit: (params: Record<string, unknown>) => { this.recordAudit(params as unknown as Parameters<typeof auditLog.record>[0]); },
       generateSessionToken: async () => { this.sessionToken = await generateSecureToken(); },
       startSessionRotation: () => { this.startSessionRotation(); },
@@ -1390,15 +1376,11 @@ class SecurityVault {
       notifyLockListeners: () => { this.notifyLockListeners(); },
       notifyUnlockListeners: () => { this.notifyUnlockListeners(); },
       installVaultKdfSalt: async () => { return await ensureVaultKdfSalt(); },
-      migrateVaultToPerVaultSalt: async (password: string) => { await migrateVaultSecretsToVaultSalt(password); },
+      migrateVaultToPerVaultSalt: async (password: string | Uint8Array) => { await migrateVaultSecretsToVaultSalt(password); },
       verifyAuditIntegrityAfterUnlock: () => { this.verifyAuditIntegrity(); },
-      unlockDeviceKeyStep: async (password: string) => {
-        const ctx = this.buildAuthContext();
-        return await (await import("./security-vault/auth")).unlockDeviceKeyStep(ctx, password);
-      },
       hasAnyVaultState: async (emptyLocalDatabase?: boolean) => await this.hasAnyVaultState(emptyLocalDatabase),
       hasMasterPassword: async () => await this.hasMasterPassword(),
-      wrapDeviceKeyWithPassword: async (password: string) => await this.wrapDeviceKeyWithPassword(password),
+      wrapDeviceKeyWithPassword: async (password: string | Uint8Array) => await this.wrapDeviceKeyWithPassword(password),
       setMasterPasswordConfiguredFlag: async () => await this.setMasterPasswordFlag(),
       getSessionToken: () => this.sessionToken,
       clearSession: () => { this.sessionToken = null; },
@@ -1407,17 +1389,6 @@ class SecurityVault {
         if (typeof auditLog.flushPending === "function") await auditLog.flushPending();
       },
       clearEncryptionSession: async () => { await encryptionService.clear(); },
-      getWrappedDeviceKeyBlob: async () => await secureStorage.getWrappedDeviceKeyBlob(),
-      unwrapDeviceKeyWithPassword: async (password: string) => {
-        await secureStorage.unwrapDeviceKeyWithPassword(password);
-        this.isDeviceKeyWrapped = true;
-        this.isDeviceKeyMaterialized = secureStorage.isDeviceKeyMaterialized();
-      },
-      ensureDeviceKeyMaterialized: async () => {
-        await secureStorage.ensureDeviceKeyMaterialized();
-        this.isDeviceKeyMaterialized = secureStorage.isDeviceKeyMaterialized();
-      },
-      isDeviceKeyMaterialized: async () => secureStorage.isDeviceKeyMaterialized(),
       lockDeviceKey: () => {
         secureStorage.lockDeviceKey();
         this.isDeviceKeyMaterialized = false;
@@ -1474,11 +1445,11 @@ class SecurityVault {
         await encryptionService.decryptWithBytes(encrypted, key, purpose),
       deriveDbKey: async (password: string, salt: string) =>
         await encryptionService.deriveDbKey(password, salt),
-      createVerificationToken: async (password: string) => await createVerificationToken(password),
+      createVerificationToken: async (password: string | Uint8Array) => await createVerificationToken(password),
       recordAudit: (params: Record<string, unknown>) => { this.recordAudit(params as unknown as Parameters<typeof auditLog.record>[0]); },
       clearRecoveryData: async () => { await this.clearRecoveryData(); },
       loadBackupService: async () => await loadBackupService(),
-      setMasterPasswordBytes: (pw: string) => {
+      setMasterPasswordBytes: (pw: string | Uint8Array) => {
         this.replaceMasterPasswordBytes(pw);
         this.isUnlocked = true;
       },

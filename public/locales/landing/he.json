@@ -6,11 +6,11 @@
   "description": "Raindrop שומר את הסימניות שלך על שרתים שלו. BookmarkForge שומר אותן על המחשב שלך — נעולות, כך שגם אנחנו לא יכולים לקרוא אותן. תשלום אחד: $59 גישה לכל החיים במחיר early bird (חסכו $20 לפני המחיר הרגיל). Free: 500 סימניות.",
   "ogTitle": "BookmarkForge: מנהל סימניות פרטי מקומי עם רשימת קריאה",
   "ogDescription": "Raindrop שומר את הסימניות שלך על שרתים שלו. BookmarkForge שומר אותן על המחשב שלך — נעולות, כך שגם אנחנו לא יכולים לקרוא אותן. תשלום אחד: $59 גישה לכל החיים במחיר early bird (חסכו $20 לפני המחיר הרגיל). Free: 500 סימניות.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "ogImageAlt": "BookmarkForge — אפליקציית סימניות והערות פרטית עם בינה מלאכותית",
   "twitterTitle": "BookmarkForge: מנהל סימניות פרטי מקומי עם רשימת קריאה",
   "twitterDescription": "Raindrop שומר את הסימניות שלך על שרתים שלו. BookmarkForge שומר אותן על המחשב שלך — נעולות, כך שגם אנחנו לא יכולים לקרוא אותן. תשלום אחד: $59 גישה לכל החיים במחיר early bird (חסכו $20 לפני המחיר הרגיל). Free: 500 סימניות.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "דלג לתוכן הראשי",
   "navBrandAria": "העמוד הבית של BookmarkForge",
   "navAriaLabel": "ניווט ראשי",
@@ -31,26 +31,26 @@
   "githubAria": "תנו כוכב ל-BookmarkForge ב-GitHub",
   "hero": {
     "badge": "תשלום חד-פעמי · בלי מנוי",
-    "title": "כל מה שאתה שומר נשאר על המחשב שלך. <span class=\"accent-text\">הכול.</span>",
-    "subtitle": "Raindrop שומר את הסימניות שלך על שרתים שלו — וגובה ממך כל שנה. BookmarkForge שומר אותן על המחשב שלך, נעולות במפתח שרק לך יש. בלי חשבונות. בלי דמי חודש. ובלי אף אחד שקורא מעל הכתף שלך.",
-    "ctaPrimary": "נסו עכשיו (בלי חשבון)",
-    "ctaSecondary": "ראה את התמחור",
+    "title": "מנהל הסימניות הפרטי ששומר <span class=\"accent-text\">הכל על המכשיר שלך.</span>",
+    "subtitle": "לחוקרים, לסטודנטים ולכל מי שמעדיף לא מוסר את היסטוריית הקריאה שלו לחברת ענן. שמרו דפים, מאמרים וקובצי PDF, מצאו אותם לפי מילת מפתח או משמעות, ושמרו הכל מוצפן במחשב שלכם. בלי חשבון. בלי מנוי.",
+    "ctaPrimary": "התחילו בחינם — בלי הרשמה",
+    "ctaSecondary": "ראו איך זה עובד",
     "pillars": [
       {
         "strong": "פרטי",
-        "text": "הדפים שאתה שומר לא עוזבים את המחשב שלך"
+        "text": "מוצפן על המכשיר שלך"
       },
       {
-        "strong": "נעול",
-        "text": "גם אנחנו לא יכולים לקרוא אותם"
+        "strong": "שלך לנצח",
+        "text": "בלי מנויים או תשלומים חודשיים"
       },
       {
-        "strong": "ללא אינטרנט",
-        "text": "עובד במטוס, במנהרה, בכל מקום"
+        "strong": "עובד אופליין",
+        "text": "שמרו וקראו בכל מקום, גם בלי אינטרנט"
       },
       {
-        "strong": "תשלום אחד",
-        "text": "$59 גישה לכל החיים במחיר early bird (חסכו $20 לפני המחיר הרגיל)"
+        "strong": "חינם לנצח",
+        "text": "500 סימניות בחינם, שדרגו ל-Pro רק אם רוצים יותר"
       }
     ],
     "announce": "⚡ תרגום AI מקומי (בקרוב)"
@@ -401,15 +401,11 @@
         "cta": "קבל את Pro ב-$59 ב-Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "אחר כך $79 במחיר רגיל",
-        "sla": "תמיכה: אימייל תוך 48 שעות (יום א׳–יום ה׳)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "קבלו Pro במחיר $79 (מחיר רגיל)",
-        "cta2Class": "btn-secondary"
+        "sla": "תמיכה: אימייל תוך 48 שעות (יום א׳–יום ה׳)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-he#pricing\">Learn more</a>"
+    "legal": "תשלום חד-פעמי · 12 חודשי עדכונים כלולים · v1 עובד לנצח · אחריות להחזר כספי תוך 30 יום. <a href=\"/privacy-and-terms.html#terms\">תנאים</a>"
   },
   "faq": {
     "title": "שאלות נפוצות",
@@ -502,7 +498,8 @@
         "יצירת קשר"
       ],
       "helpCenter": "מרכז העזרה",
-      "errorCodes": "קודי שגיאה"
+      "errorCodes": "קודי שגיאה",
+      "hours": "מענה תוך 48 שעות, ב׳–ו׳ (CET)"
     },
     "copyright": "© 2026 BookmarkForge. כל הזכויות שמורות.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",

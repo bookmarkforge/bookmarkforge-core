@@ -1,6 +1,6 @@
 # Documentation inventory — BookmarkForge
 
-This index is generated from the documents present in the checkout. A deleted document stops appearing here; any retirement must be traced in `docs/PENDIENTES.md` or in an ADR.
+This index is generated from the documents present in the checkout. A deleted document stops appearing here; any retirement must be traced in an ADR.
 
 ## States
 

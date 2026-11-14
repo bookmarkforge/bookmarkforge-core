@@ -2,7 +2,7 @@
   // This file intentionally supports both MV3 module import and Firefox MV2
   // classic-script loading by exposing a small global namespace.
   (function exposeCaptureUrlBuilder(global) {
-    // Audit M3 / self-hosted fix (2026-11-07): any HTTPS host is accepted.
+    // / self-hosted fix (2026-11-07): any HTTPS host is accepted.
     // The base URL is a user-chosen setting (chrome.storage.sync is only
     // writable by this extension or the user's own synced browser profile),
     // and BookmarkForge's core promise is "your bookmarks, your server" —

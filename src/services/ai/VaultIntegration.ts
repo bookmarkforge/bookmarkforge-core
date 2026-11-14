@@ -1,5 +1,9 @@
 import { securityVault, SECURE_STORAGE_KEYS } from "../SecurityVault";
 import { logger } from "../../utils/logger";
+import {
+  LegacyV5FormatRemovedError,
+  isLegacyV5FormatRemovedError,
+} from "../../utils/crypto-core";
 
 type ApiKeyListener = (key: string | null) => void;
 
@@ -97,7 +101,7 @@ export class VaultIntegration {
   /**
    * Unlock the vault with master password
    */
-  async unlockVault(password: string): Promise<boolean> {
+  async unlockVault(password: string | Uint8Array): Promise<boolean> {
     try {
       const unlocked = await securityVault.unlock(password);
       if (!unlocked) {
@@ -127,6 +131,11 @@ export class VaultIntegration {
     } catch (e) {
       logger.error("[VaultIntegration] Failed to unlock vault", { error: e });
       securityVault.lock();
+      // ADR-052 Phase 3: retrying the password cannot fix a retired-format
+      // payload, so propagate the typed error instead of a generic failure.
+      if (isLegacyV5FormatRemovedError(e)) {
+        throw new LegacyV5FormatRemovedError();
+      }
       return false;
     }
   }

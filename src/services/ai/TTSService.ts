@@ -641,7 +641,7 @@ export class TTSService {
   ): Promise<AudioResult | null> {
     if (!text || opts?.signal?.aborted) {return null;}
 
-    // Audit #4 (privacy): never read or write the shared audio cache for
+    // (privacy): never read or write the shared audio cache for
     // private content — a data-URL of a private document's speech would
     // otherwise persist in plaintext in IndexedDB.
     // Missing privacy metadata fails closed to the local/web-speech path.
@@ -897,7 +897,7 @@ export class TTSService {
       !result.url
     ) {return;}
 
-    // Audit #4: OpenAI audio is a data: URL — resolve it directly (data:
+    // OpenAI audio is a data: URL — resolve it directly (data:
     // needs no network/firewall check; firewalledFetch would reject it).
     let blob: Blob;
     if (result.url.startsWith("data:")) {

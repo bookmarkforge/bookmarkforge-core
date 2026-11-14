@@ -97,7 +97,7 @@ function getPresetOrigins(): Record<string, string[]> {
     // ICE servers used by WebRTC (STUN/TURN). Declared here so validateIceServers
     // recognizes them and the firewall whitelist stays consistent (M5).
     //
-    // Audit M2: turn:/turns: protocol wildcards removed. Previously any
+    // turn:/turns: protocol wildcards removed. Previously any
     // TURN/TURNS relay was allowed by the firewall, which is an SSRF
     // amplifier: an attacker who can influence the ICE config (or a
     // malicious operator-configured TURN server) could route traffic
@@ -123,7 +123,7 @@ const MAX_WHITELIST_ENTRY_LENGTH = 2_048;
    * are reduced to their origin so a path-specific allow cannot accidentally
    * fail open for a different request; ICE schemes retain their protocol form
    * because `validateIceServers()` requires host-pinned ICE URLs (no
-   * turn:/turns: wildcards — see audit M2).
+   * turn:/turns: wildcards — see).
    */
 function normalizeWhitelistEntry(value: unknown): string | null {
   if (
@@ -541,7 +541,7 @@ export async function validateIceServers(
       // without a scheme and for non-ICE schemes; silently accepting a bare
       // hostname here would defer validation to the browser/WebRTC stack.
       //
-      // Audit M2: turn:/turns: protocol wildcards are no longer accepted.
+      // turn:/turns: protocol wildcards are no longer accepted.
       // A bare "turn:" or "turns:" would bypass host-pinning and allow
       // any TURN relay; only host-pinned ICE URLs (e.g.
       // "turn:turn.example.com:3478") are whitelisted. STUN servers are
@@ -556,7 +556,7 @@ export async function validateIceServers(
         );
       }
       // Reject bare protocol wildcards ("turn:", "turns:") — they are not
-      // host-pinned and would allow any TURN relay (audit M2).
+      // host-pinned and would allow any TURN relay.
       if (/^(turn|turns):$/i.test(url)) {
         throw new NetworkFirewallError(
           url,

@@ -139,7 +139,7 @@ describe("SLOW_GATE_TESTS — pins derived from the timing baseline", () => {
 
   it("stays quiet in a tree that ships no timing baseline", () => {
     // A fixture root must import this module cleanly and silently: the runner,
-    // the wrapper, the file collector and check-audit-freshness all import it,
+    // the wrapper and the file collector both import it,
     // and a sibling gate test asserting clean stderr is what caught the noisy
     // version of the baseline read.
     const moduleUrl = pathToFileURL(join(ROOT, "scripts", "test-profiles.mjs")).href;

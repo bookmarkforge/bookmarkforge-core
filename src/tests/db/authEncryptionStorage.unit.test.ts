@@ -7,17 +7,17 @@
  * a mock inner RxStorage, so every branch of the wrapper's own logic is
  * asserted in isolation:
  *
- *   - passthrough when the schema has no `encrypted` fields
- *   - password required (fail closed) when encrypted fields exist
- *   - bulkWrite applies the authenticated v4/v5/v6 envelope to encrypted paths
- *     (document AND previous), leaves other fields untouched
- *   - query / findDocumentsById / getChangedDocumentsSince unwrap envelopes
- *   - legacy rows (inner-ciphertext only, no v4/v5/v6 marker) pass through
- *   - non-string fields round-trip with their exact TYPE (JSON_BLOB_PREFIX)
- *   - strings that look like JSON are never type-coerced
- *   - wrong password → tagged WrongPasswordError with code DB1
- *   - changeStream events are decrypted before consumers see them
- *   - write-conflict errors surface decrypted documents
+ * - passthrough when the schema has no `encrypted` fields
+ * - password required (fail closed) when encrypted fields exist
+ * - bulkWrite applies the authenticated v4/v5/v6 envelope to encrypted paths
+ * (document AND previous), leaves other fields untouched
+ * - query / findDocumentsById / getChangedDocumentsSince unwrap envelopes
+ * - legacy rows (inner-ciphertext only, no v4/v5/v6 marker) pass through
+ * - non-string fields round-trip with their exact TYPE (JSON_BLOB_PREFIX)
+ * - strings that look like JSON are never type-coerced
+ * - wrong password → tagged WrongPasswordError with code DB1
+ * - changeStream events are decrypted before consumers see them
+ * - write-conflict errors surface decrypted documents
  */
 import { describe, it, expect, vi } from "vitest";
 import { Subject } from "rxjs";
@@ -409,7 +409,7 @@ describe("authenticatedEncryptionStorage — changeStream", () => {
   });
 });
 
-// ── A4/A5 (audit 2026-11-05): keyed urlHash + encrypted tags ────────────
+// ── A4/A5: keyed urlHash + encrypted tags ────────────
 
 /** Bookmark-flavoured schema: urlHash indexed, tags in the encrypted set. */
 const BOOKMARKS_SCHEMA = {

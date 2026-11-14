@@ -6,11 +6,11 @@
   "description": "O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. Um único pagamento: $59 acesso vitalício early bird (poupe $20 antes do preço normal). Grátis: 500 marcadores.",
   "ogTitle": "BookmarkForge: gestor de marcadores privado e local-first com lista de leitura",
   "ogDescription": "O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. Um único pagamento: $59 acesso vitalício early bird (poupe $20 antes do preço normal). Grátis: 500 marcadores.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image-pt.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image-pt.png",
   "ogImageAlt": "BookmarkForge — aplicação de marcadores e notas com IA privada",
   "twitterTitle": "BookmarkForge: gestor de marcadores privado e local-first com lista de leitura",
   "twitterDescription": "O Raindrop guarda os seus marcadores nos servidores dele e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados para que nem nós os consigamos ler. Um único pagamento: $59 acesso vitalício early bird (poupe $20 antes do preço normal). Grátis: 500 marcadores.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image-pt.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image-pt.png",
   "skipLink": "Saltar para o conteúdo principal",
   "navBrandAria": "BookmarkForge início",
   "navAriaLabel": "Navegação principal",
@@ -31,26 +31,26 @@
   "githubAria": "Dê uma estrela ao BookmarkForge no GitHub",
   "hero": {
     "badge": "Pagamento único · Sem subscrição",
-    "title": "Tudo o que guarda fica no seu computador. <span class=\"accent-text\">Tudo.</span>",
-    "subtitle": "O Raindrop guarda os seus marcadores nos servidores dele — e cobra-lhe todos os anos. O BookmarkForge guarda-os no seu computador, fechados com uma chave que só você tem. Sem contas. Sem mensalidades. E sem ninguém a ler por cima do seu ombro.",
-    "ctaPrimary": "Experimente já (sem conta)",
-    "ctaSecondary": "Ver Preços",
+    "title": "O gerenciador de favoritos privado que <span class=\"accent-text\">guarda tudo no seu dispositivo.</span>",
+    "subtitle": "Para pesquisadores, estudantes e qualquer pessoa que prefira não entregar seu histórico de leitura a uma empresa de nuvem. Salve páginas, artigos e PDFs, encontre-os por palavra-chave ou significado e mantenha tudo criptografado no seu próprio computador. Sem conta. Sem assinatura.",
+    "ctaPrimary": "Comece grátis — sem cadastro",
+    "ctaSecondary": "Veja como funciona",
     "pillars": [
       {
         "strong": "Privado",
-        "text": "as suas páginas guardadas nunca saem do seu computador"
+        "text": "criptografado no seu dispositivo"
       },
       {
-        "strong": "Fechado",
-        "text": "nem nós as conseguimos ler"
+        "strong": "Seu para sempre",
+        "text": "sem assinaturas nem mensalidades"
       },
       {
-        "strong": "Sem ligação",
-        "text": "funciona num avião, num túnel, onde for"
+        "strong": "Funciona offline",
+        "text": "salve e leia em qualquer lugar, mesmo sem internet"
       },
       {
-        "strong": "Pague uma vez",
-        "text": "$59 acesso vitalício early bird (poupe $20 antes do preço normal)"
+        "strong": "Grátis para sempre",
+        "text": "500 favoritos grátis, faça upgrade só se quiser mais"
       }
     ],
     "announce": "⚡ Tradução com IA local (em breve)"
@@ -401,15 +401,11 @@
         "cta": "Obter o Pro $59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "depois $79 regular",
-        "sla": "Suporte: Email 48h (seg–sex)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Obtenha Pro por $79 (preço normal)",
-        "cta2Class": "btn-secondary"
+        "sla": "Suporte: Email 48h (seg–sex)"
       }
     ],
-    "legal": "Licença Lifetime para BookmarkForge v1. Inclui todas as v1.x e 12 meses de novidades. Segurança para sempre. Futuras majors (v2, v3) 60% off para proprietários. Reembolso 30 dias via Whop. <a href=\"/pt/privacy-and-terms.html#terms\">Termos</a> · <a href=\"/help-pt#pricing\">Saiba mais</a>"
+    "legal": "Pagamento único · 12 meses de atualizações incluídos · o v1 funciona para sempre · garantia de reembolso de 30 dias. <a href=\"/pt/privacy-and-terms.html#terms\">Termos</a>"
   },
   "faq": {
     "title": "Perguntas Frequentes",
@@ -502,7 +498,8 @@
         "Contacto"
       ],
       "helpCenter": "Central de Ajuda",
-      "errorCodes": "Códigos de erro"
+      "errorCodes": "Códigos de erro",
+      "hours": "Respostas em até 48 h, seg–sex (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Todos os direitos reservados.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",

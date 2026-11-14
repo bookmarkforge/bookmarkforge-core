@@ -3,10 +3,14 @@ import { logRateLimited } from "../utils/boundedLog";
 import { logger } from "../utils/logger";
 import { getIndexedDB } from "../utils/indexedDB";
 import { safeGet, safeRemove } from "../store/safeStorage";
-import { zeroPasswordBytes } from "../utils/crypto-core";
-// Audit H5: the wrapped device key uses the vault's own Argon2id KDF
-// (crypto-core encrypt/decrypt — the "v4:" format) so the master password
-// protects it with the same memory-hard derivation as every other secret.
+import {
+  LegacyV5FormatRemovedError,
+  isLegacyV5FormatRemovedError,
+  zeroPasswordBytes,
+} from "../utils/crypto-core";
+// the wrapped device key uses the vault's own Argon2id KDF
+// (crypto-core encrypt/decrypt) so the master password protects it with the
+// same memory-hard derivation as every other secret.
 import {
   encrypt as kdfEncrypt,
   decrypt as kdfDecrypt,
@@ -42,7 +46,7 @@ function isDeviceKeyLifecycleError(error: unknown): boolean {
   );
 }
 
-// P-06: an at-rest record that is not valid Base64 can never be decrypted —
+// an at-rest record that is not valid Base64 can never be decrypted —
 // damaged or foreign data in the secrets store, not a crypto failure. It gets
 // its own class so the expected failure is reported once at warn level and
 // real AES-GCM failures stay visible at error level.
@@ -59,12 +63,12 @@ export class SecureStorage {
   private readonly MAX_RETRIES = 5;
   private static readonly BASE_DELAY_MS = 200;
   private static readonly DEVICE_KEY_ID = "__device_key__";
-  // S9: JWK stored in sessionStorage (bmf_device_key_jwk) instead of
+  // JWK stored in sessionStorage (bmf_device_key_jwk) instead of
   // IndexedDB — separates key material from ciphertexts so an attacker
   // who compromises only one storage surface (e.g. IDB via extension,
   // or sessionStorage via XSS) cannot decrypt secrets.
   //
-  // Audit H2: sessionStorage (not localStorage) is used because
+  // sessionStorage (not localStorage) is used because
   // localStorage persists across tab closes and is accessible to any
   // script in the origin for the lifetime of the browser profile. A
   // persistent XSS in any component, extension, or dependency would
@@ -74,7 +78,7 @@ export class SecureStorage {
   // requires re-authentication on reopen. This is acceptable for a
   // local-first vault where the master password is the root of trust.
   private static readonly DEVICE_KEY_JWK_SESSION_KEY = "bmf_device_key_jwk";
-  // Audit H5: master-password wrapping. With a master password the device
+  // master-password wrapping. With a master password the device
   // key JWK is never persisted in plaintext: it lives in IndexedDB wrapped
   // with AES-256-GCM under a master-password-derived key and only exists in
   // memory while unlocked. The raw tokens below stay outside the device-key
@@ -212,7 +216,7 @@ export class SecureStorage {
    * Read the device key JWK from sessionStorage. Returns null if absent
    * or if sessionStorage is unavailable (SSR/worker).
    *
-   * Audit H2: sessionStorage (not localStorage) is used because it is
+   * sessionStorage (not localStorage) is used because it is
    * cleared on tab close, bounding the exposure window for an XSS
    * compromise to the active session. The master password remains the
    * root of trust: re-authentication is required on every tab reopen.
@@ -229,7 +233,7 @@ export class SecureStorage {
   /**
    * Write the device key JWK to sessionStorage. No-op if unavailable.
    *
-   * Audit H2: sessionStorage (not localStorage) — see
+   * sessionStorage (not localStorage) — see
    * readKeyJwkFromSessionStorage for the rationale.
    */
   private writeKeyJwkToSessionStorage(jwk: string): void {
@@ -280,7 +284,7 @@ export class SecureStorage {
     return fn();
   }
 
-  // ─── Audit H5: master-password wrapping of the device key ────────────
+  // ─── master-password wrapping of the device key ────────────
 
   /** True when the device key is wrapped by the master password. */
   async isDeviceKeyWrapped(): Promise<boolean> {
@@ -326,7 +330,7 @@ export class SecureStorage {
    * plaintext copy. Idempotent — no-op when already wrapped. Keeps the
    * in-memory key loaded so the ongoing session stays usable.
    */
-  async wrapDeviceKeyWithPassword(password: string): Promise<void> {
+  async wrapDeviceKeyWithPassword(password: string | Uint8Array): Promise<void> {
     if (this.deviceKeyWrapPromise) {
       return this.deviceKeyWrapPromise;
     }
@@ -343,7 +347,7 @@ export class SecureStorage {
   }
 
   private async wrapDeviceKeyWithPasswordInternal(
-    password: string,
+    password: string | Uint8Array,
   ): Promise<void> {
     const lifecycle = this.deviceKeyLifecycle;
     if (await this.isDeviceKeyWrapped()) {
@@ -364,7 +368,19 @@ export class SecureStorage {
       rawJwk = JSON.stringify(await crypto.subtle.exportKey("jwk", fresh));
     }
 
-    const ciphertext = await kdfEncrypt(rawJwk, password);
+    // Bytes at the boundary (AGENTS.md §2): encode a string once, copy a byte
+    // caller's buffer, hand crypto-core its own private copy (it consumes the
+    // buffer) and zeroize the owned copy on every path.
+    const pwBytes =
+      typeof password === "string"
+        ? new TextEncoder().encode(password)
+        : new Uint8Array(password);
+    let ciphertext: string;
+    try {
+      ciphertext = await kdfEncrypt(rawJwk, new Uint8Array(pwBytes));
+    } finally {
+      zeroPasswordBytes(pwBytes);
+    }
     // close()/lockDeviceKey() may have crossed the async KDF boundary. Do not
     // persist a new wrapper after that lifecycle boundary; otherwise a close
     // racing this operation can write sensitive state after teardown.
@@ -439,7 +455,9 @@ export class SecureStorage {
    * device key while wrapped. NEVER regenerates on failure — a wrong
    * password or corrupted blob throws so callers fail closed.
    */
-  async unwrapDeviceKeyWithPassword(password: string): Promise<CryptoKey> {
+  async unwrapDeviceKeyWithPassword(
+    password: string | Uint8Array,
+  ): Promise<CryptoKey> {
     if (this.deviceKey) {return this.deviceKey;}
     if (this.deviceKeyPromise) {return this.deviceKeyPromise;}
 
@@ -455,10 +473,31 @@ export class SecureStorage {
       );
     }
 
+    // Same bytes-at-the-boundary rule as wrapDeviceKeyWithPassword: the
+    // caller's buffer is never consumed, and the owned copy is zeroized even
+    // when the AES-GCM authentication fails (wrong password).
+    const pwBytes =
+      typeof password === "string"
+        ? new TextEncoder().encode(password)
+        : new Uint8Array(password);
     let rawJwk: string;
     try {
-      rawJwk = await kdfDecrypt(blob, password);
-    } catch (_err) {
+      try {
+        rawJwk = await kdfDecrypt(blob, new Uint8Array(pwBytes));
+      } finally {
+        zeroPasswordBytes(pwBytes);
+      }
+    } catch (error) {
+      // ADR-052: a v5-wrapped device key is retired-format data, not a wrong
+      // password. Rethrowing the generic message below would hide that from
+      // unlock() and the user would be told to retry a password that cannot
+      // work — keep the typed error so the remedy reaches the UI.
+      if (isLegacyV5FormatRemovedError(error)) {
+        logger.error(
+          "[SecureStorage] Device key is wrapped with the retired v5 legacy format (ADR-052)",
+        );
+        throw new LegacyV5FormatRemovedError();
+      }
       logger.error(
         "[SecureStorage] Failed to unwrap device key (wrong password or corrupted blob) — refusing to regenerate",
       );
@@ -587,7 +626,7 @@ try {
     this.deviceKeyPromise = null;
   }
 
-  // ─── Audit H5: raw tokens (readable while the vault is locked) ──────
+  // ─── raw tokens (readable while the vault is locked) ──────
 
   /**
    * The password-encrypted verification token, stored without the
@@ -760,7 +799,7 @@ try {
     if (this.deviceKeyPromise) {return this.deviceKeyPromise;}
     const lifecycle = this.deviceKeyLifecycle;
 
-    // Audit H5: when the device key is wrapped by the master password it
+    // when the device key is wrapped by the master password it
     // must NEVER be lazily regenerated or persisted in plaintext — a
     // regenerated key could never decrypt existing ciphertexts, and
     // writing the fresh JWK to localStorage would undo the wrap. The only
@@ -787,7 +826,7 @@ try {
       // concurrent caller in the SAME tab (same promise) already resolved.
       if (this.deviceKey) {return this.deviceKey;}
 
-      // S9: prefer sessionStorage (separated from IndexedDB ciphertexts).
+      // prefer sessionStorage (separated from IndexedDB ciphertexts).
       // Fall back to legacy IndexedDB location for existing installations.
       // Re-read sessionStorage inside the lock so a key written by another
       // tab is picked up instead of generating a divergent second key.
@@ -936,7 +975,7 @@ try {
     }
     try {
       const key = await this.getDeviceKey();
-      // P-06: classify a non-Base64 at-rest payload before the generic catch
+      // classify a non-Base64 at-rest payload before the generic catch
       // so it never reaches the error-level log.
       let combined: Uint8Array;
       try {
@@ -1024,7 +1063,7 @@ try {
   }
 
   private static isTestEnv(): boolean {
-    // W-2: Vite statically inlines `import.meta.env.PROD` at build time, so
+    // Vite statically inlines `import.meta.env.PROD` at build time, so
     // in a production bundle this guard becomes `if (true) return false;`
     // and is dead-code-eliminated: the plaintext bypass below can NEVER
     // compile into a production build, even if NODE_ENV leaks as "test"
@@ -1312,7 +1351,7 @@ try {
       return await this.decryptValue(ciphertext);
     } catch (error) {
       if (isSecretRecordCorruptError(error)) {
-        // P-06: expected-failure class — one warn that NAMES the record (the
+        // expected-failure class — one warn that NAMES the record (the
         // "locate" half of the repair), never an error record. Rethrown so a
         // fail-closed caller (the exposure report) can still distinguish
         // "absent" from "unreadable".

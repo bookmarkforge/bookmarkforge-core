@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-12T02:44:53.434Z",
+  "generatedAt": "2026-11-14T01:57:11.696Z",
   "version": "1.0.0",
   "source": "private repository (export checkout)",
   "license": "MIT",
@@ -20,10 +20,11 @@
     "src/services/sync/replication.ts",
     "src/services/sync/signaling.ts",
     "src/services/webrtc-sync/protocol.ts",
+    "src/services/webrtc-sync/sdp-codec.ts",
     "src/services/webrtc-sync/validation.ts"
   ],
   "proSpecifiersRewritten": 14,
-  "includedCount": 2071,
+  "includedCount": 2047,
   "excluded": [
     {
       "file": ".zap\\authenticated.context",
@@ -63,22 +64,6 @@
     },
     {
       "file": "api\\license\\_proxy-utils.ts",
-      "reason": "private ops/business script"
-    },
-    {
-      "file": "audits\\AUDITORIA-EXPERTO-2026-11-05.md",
-      "reason": "private ops/business script"
-    },
-    {
-      "file": "audits\\AUDITORIA-EXPERTO-2026-11-07.md",
-      "reason": "private ops/business script"
-    },
-    {
-      "file": "audits\\AUDITORIA-INDEPENDIENTE-2026-11-05.md",
-      "reason": "private ops/business script"
-    },
-    {
-      "file": "audits\\AVD-CSP-LEAK-EXTENSION-LEAKAGE-SURFACES.md",
       "reason": "private ops/business script"
     },
     {
@@ -210,10 +195,6 @@
       "reason": "docs: business/internal documentation"
     },
     {
-      "file": "docs\\ADR-064-audit-freshness-gate.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
       "file": "docs\\ADR-065-export-freshness-gate.md",
       "reason": "docs: business/internal documentation"
     },
@@ -262,19 +243,11 @@
       "reason": "docs: business/internal documentation"
     },
     {
+      "file": "docs\\ADR-075-csp-host-allowlist.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
       "file": "docs\\ARCHITECTURE-TUTORIAL.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\AUDIT-FACTORY-EXAMPLE.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\AUDIT-FACTORY.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\CHANGELOG.md",
       "reason": "docs: business/internal documentation"
     },
     {
@@ -283,10 +256,6 @@
     },
     {
       "file": "docs\\DEVELOPER-GUIDE.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\E2E-HUMAN-LIKE-BROWSERS-REPORT.md",
       "reason": "docs: business/internal documentation"
     },
     {
@@ -318,15 +287,7 @@
       "reason": "docs: business/internal documentation"
     },
     {
-      "file": "docs\\INFORME-E2E-HUMAN-LIKE-BROWSERS.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
       "file": "docs\\ONBOARDING.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\PENDIENTES.md",
       "reason": "docs: business/internal documentation"
     },
     {
@@ -394,47 +355,15 @@
       "reason": "docs: business/internal documentation"
     },
     {
+      "file": "docs\\appsumo-launch-assets.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
+      "file": "docs\\appsumo-license-keys.md",
+      "reason": "docs: business/internal documentation"
+    },
+    {
       "file": "docs\\appsumo-partner-obligations.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\audit-raw.mjs",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\audit.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\audits\\AUDIT-001-security-quality\\AUDIT-001-security-quality.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\audits\\AUDIT-001-security-quality\\execution-report.json",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\audits\\AUDIT-001-security-quality\\spec-review.json",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\audits\\AUDIT-001-security-quality\\spec.json",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\audits\\AUDIT-TEST\\AUDIT-TEST.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\audits\\AUDIT-TEST\\execution-report.json",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\audits\\AUDIT-TEST\\spec-review.json",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\audits\\AUDIT-TEST\\spec.json",
       "reason": "docs: business/internal documentation"
     },
     {
@@ -466,23 +395,7 @@
       "reason": "docs: business/internal documentation"
     },
     {
-      "file": "docs\\history-attribution.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
       "file": "docs\\internal-security-checklist.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ios-day0-session-sheet.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\ios-manual-test-script.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\launch-1000-users.md",
       "reason": "docs: business/internal documentation"
     },
     {
@@ -502,22 +415,6 @@
       "reason": "docs: business/internal documentation"
     },
     {
-      "file": "docs\\marketing\\automation.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\marketing\\n8n-article-to-social.json",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\marketing\\social-proof.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\marketing\\testimonials.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
       "file": "docs\\npm-scripts-guide.md",
       "reason": "docs: business/internal documentation"
     },
@@ -534,14 +431,6 @@
       "reason": "docs: business/internal documentation"
     },
     {
-      "file": "docs\\p2p-sync-manual-test-script.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\p2p-sync-session-prep.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
       "file": "docs\\performance-budget-by-feature.md",
       "reason": "docs: business/internal documentation"
     },
@@ -555,10 +444,6 @@
     },
     {
       "file": "docs\\production-license-launch-checklist.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\sast-triage-log.md",
       "reason": "docs: business/internal documentation"
     },
     {
@@ -602,14 +487,6 @@
       "reason": "docs: business/internal documentation"
     },
     {
-      "file": "docs\\templates\\audit-prd.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
-      "file": "docs\\templates\\audit-prp.md",
-      "reason": "docs: business/internal documentation"
-    },
-    {
       "file": "docs\\whop-setup-runbook.md",
       "reason": "docs: business/internal documentation"
     },
@@ -618,15 +495,7 @@
       "reason": "private ops/business script"
     },
     {
-      "file": "scripts\\__tests__\\audit-anchors.test.mjs",
-      "reason": "private ops/business script"
-    },
-    {
       "file": "scripts\\__tests__\\audit-script-inventory.test.mjs",
-      "reason": "private ops/business script"
-    },
-    {
-      "file": "scripts\\__tests__\\check-audit-freshness.test.mjs",
       "reason": "private ops/business script"
     },
     {
@@ -858,6 +727,10 @@
       "reason": "excluded dir"
     },
     {
+      "file": "server\\src\\__tests__\\admin-throttle.test.ts",
+      "reason": "excluded dir"
+    },
+    {
       "file": "server\\src\\__tests__\\config.test.ts",
       "reason": "excluded dir"
     },
@@ -886,14 +759,6 @@
       "reason": "excluded dir"
     },
     {
-      "file": "server\\src\\business-analytics.ts",
-      "reason": "excluded dir"
-    },
-    {
-      "file": "server\\src\\client-events.ts",
-      "reason": "excluded dir"
-    },
-    {
       "file": "server\\src\\collectors.ts",
       "reason": "excluded dir"
     },
@@ -903,6 +768,10 @@
     },
     {
       "file": "server\\src\\index.ts",
+      "reason": "excluded dir"
+    },
+    {
+      "file": "server\\src\\lib\\admin-throttle.ts",
       "reason": "excluded dir"
     },
     {
@@ -1006,6 +875,10 @@
       "reason": "pro feature implementation"
     },
     {
+      "file": "src\\services\\webrtc-sync\\sdp-codec.ts",
+      "reason": "pro feature implementation"
+    },
+    {
       "file": "src\\services\\webrtc-sync\\validation.ts",
       "reason": "pro feature implementation"
     },
@@ -1054,15 +927,11 @@
       "reason": "pro feature behaviour test"
     },
     {
+      "file": "src\\tests\\security\\p2-license-origin-allowlist.regression.test.ts",
+      "reason": "pro feature behaviour test"
+    },
+    {
       "file": "src\\tests\\security\\signaling-ice-authorization.test.ts",
-      "reason": "pro feature behaviour test"
-    },
-    {
-      "file": "src\\tests\\server\\business-analytics.test.ts",
-      "reason": "pro feature behaviour test"
-    },
-    {
-      "file": "src\\tests\\server\\client-events.test.ts",
       "reason": "pro feature behaviour test"
     },
     {
@@ -1210,6 +1079,10 @@
       "reason": "pro feature tests"
     },
     {
+      "file": "src\\tests\\services\\ai\\providerResolution.test.ts",
+      "reason": "pro feature tests"
+    },
+    {
       "file": "src\\tests\\services\\ai\\puter-provider.test.ts",
       "reason": "pro feature tests"
     },
@@ -1313,6 +1186,7 @@
     "test:load"
   ],
   "scrubbedDocs": [
+    "AGENTS.md",
     "CONTRIBUTING.md"
   ],
   "docsNormalized": [

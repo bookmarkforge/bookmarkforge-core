@@ -133,9 +133,9 @@ describe("runComposeEnvContract (unit)", () => {
     "        VITE_APP_VERSION: ${VITE_APP_VERSION:?VITE_APP_VERSION is required}",
     "  api:",
     "    environment:",
-    "      CLIENT_EVENTS_CRITICAL_CLIENTS: ${CLIENT_EVENTS_CRITICAL_CLIENTS:?CLIENT_EVENTS_CRITICAL_CLIENTS is required}",
-    "      CLIENT_EVENTS_WEBHOOK_URL: ${CLIENT_EVENTS_WEBHOOK_URL:-}",
-    "      CLIENT_EVENTS_ADMIN_TOKEN: ${CLIENT_EVENTS_ADMIN_TOKEN:-}",
+    "      OPS_ALERT_LIMIT: ${OPS_ALERT_LIMIT:?OPS_ALERT_LIMIT is required}",
+    "      OPS_WEBHOOK_URL: ${OPS_WEBHOOK_URL:-}",
+    "      OPS_ADMIN_TOKEN: ${OPS_ADMIN_TOKEN:-}",
     "  redis:",
     "    entrypoint:",
     "      - 'exec redis-server --requirepass \"$${REDIS_PASSWORD}\"'",
@@ -145,41 +145,28 @@ describe("runComposeEnvContract (unit)", () => {
     const r = runComposeEnvContract({
       composeSource: COMPOSE,
       envProdSource: [
-        "CLIENT_EVENTS_ADMIN_TOKEN=secret-token",
-        "CLIENT_EVENTS_WEBHOOK_URL=https://hooks.example.com/x",
+        "OPS_ADMIN_TOKEN=secret-token",
+        "OPS_WEBHOOK_URL=https://hooks.example.com/x",
       ].join("\n"),
     });
     expect(r.ok).toBe(false);
     const all = r.violations.join("\n");
     expect(all).toContain("VITE_APP_VERSION");
-    expect(all).toContain("CLIENT_EVENTS_CRITICAL_CLIENTS");
+    expect(all).toContain("OPS_ALERT_LIMIT");
   });
 
-  it("passes when all required vars are present and the webhook is https", () => {
+  it("passes when all required vars are present", () => {
     const r = runComposeEnvContract({
       composeSource: COMPOSE,
       envProdSource: [
         "VITE_APP_VERSION=1.0.0",
-        "CLIENT_EVENTS_CRITICAL_CLIENTS=3",
-        "CLIENT_EVENTS_ADMIN_TOKEN=super-secret-token",
-        "CLIENT_EVENTS_WEBHOOK_URL=https://hooks.example.com/hook",
+        "OPS_ALERT_LIMIT=3",
+        "OPS_ADMIN_TOKEN=super-secret-token",
+        "OPS_WEBHOOK_URL=https://hooks.example.com/hook",
       ].join("\n"),
     });
     expect(r.ok).toBe(true);
     expect(r.violations).toEqual([]);
-  });
-
-  it("rejects a plaintext http webhook (fail-closed, matches the server)", () => {
-    const r = runComposeEnvContract({
-      composeSource: COMPOSE,
-      envProdSource: [
-        "VITE_APP_VERSION=1",
-        "CLIENT_EVENTS_CRITICAL_CLIENTS=k",
-        "CLIENT_EVENTS_WEBHOOK_URL=http://hooks.example.com/hook",
-      ].join("\n"),
-    });
-    expect(r.ok).toBe(false);
-    expect(r.violations.join("\n")).toContain("CLIENT_EVENTS_WEBHOOK_URL");
   });
 
   it("skips presence checks without .env.production (CI/dev)", () => {
@@ -202,8 +189,8 @@ describe("runComposeEnvContract (unit)", () => {
     // injects IMAGE_TAG=<sha> per deploy; it must NOT live in .env.production
     // or every deploy would silently pin to one tag.
     const r = runComposeEnvContract({
-      composeSource: "services:\n  web:\n    image: app:${IMAGE_TAG:?IMAGE_TAG is required}\n  api:\n    environment:\n      CLIENT_EVENTS_CRITICAL_CLIENTS: ${CLIENT_EVENTS_CRITICAL_CLIENTS:?required}\n",
-      envProdSource: "CLIENT_EVENTS_CRITICAL_CLIENTS=3\n",
+      composeSource: "services:\n  web:\n    image: app:${IMAGE_TAG:?IMAGE_TAG is required}\n  api:\n    environment:\n      OPS_ALERT_LIMIT: ${OPS_ALERT_LIMIT:?required}\n",
+      envProdSource: "OPS_ALERT_LIMIT=3\n",
     });
     expect(r.ok).toBe(true);
     expect(r.violations).toEqual([]);
@@ -211,11 +198,11 @@ describe("runComposeEnvContract (unit)", () => {
 
   it("still flags other required vars while exempting deploy-injected ones", () => {
     const r = runComposeEnvContract({
-      composeSource: "services:\n  web:\n    image: app:${IMAGE_TAG:?required}\n  api:\n    environment:\n      CLIENT_EVENTS_CRITICAL_CLIENTS: ${CLIENT_EVENTS_CRITICAL_CLIENTS:?required}\n",
+      composeSource: "services:\n  web:\n    image: app:${IMAGE_TAG:?required}\n  api:\n    environment:\n      OPS_ALERT_LIMIT: ${OPS_ALERT_LIMIT:?required}\n",
       envProdSource: "",
     });
     expect(r.ok).toBe(false);
-    expect(r.violations.join("\n")).toContain("CLIENT_EVENTS_CRITICAL_CLIENTS");
+    expect(r.violations.join("\n")).toContain("OPS_ALERT_LIMIT");
     expect(r.violations.join("\n")).not.toContain("IMAGE_TAG");
   });
 });

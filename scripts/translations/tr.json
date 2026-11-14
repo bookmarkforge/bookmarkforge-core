@@ -2,17 +2,17 @@
   "lang": "tr",
   "langName": "Türkçe",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/tr/",
+  "canonical": "https://www.bookmarkforgeapp.com/tr/",
   "ogLocale": "tr_TR",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: gizli, yerel öncelikli yer imi yöneticisi ve okuma listesi",
   "description": "Raindrop yer imlerinizi kendi sunucularında tutar. BookmarkForge ise onları bilgisayarınızda tutar — kilitlidir, biz bile okuyamayız. Tek ödeme: $59 early bird ömür boyu erişim (normal fiyattan önce $20 tasarruf). Free: 500 yer imi.",
   "ogTitle": "BookmarkForge: gizli, yerel öncelikli yer imi yöneticisi ve okuma listesi",
   "ogDescription": "Raindrop yer imlerinizi kendi sunucularında tutar. BookmarkForge ise onları bilgisayarınızda tutar — kilitlidir, biz bile okuyamayız. Tek ödeme: $59 early bird ömür boyu erişim (normal fiyattan önce $20 tasarruf). Free: 500 yer imi.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: gizli, yerel öncelikli yer imi yöneticisi ve okuma listesi",
   "twitterDescription": "Raindrop yer imlerinizi kendi sunucularında tutar. BookmarkForge ise onları bilgisayarınızda tutar — kilitlidir, biz bile okuyamayız. Tek ödeme: $59 early bird ömür boyu erişim (normal fiyattan önce $20 tasarruf). Free: 500 yer imi.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Ana içeriğe geç",
   "navBrandAria": "BookmarkForge ana sayfası",
   "navAriaLabel": "Ana gezinme",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "Menüyü kapat",
   "hero": {
     "badge": "Tek seferlik ödeme · Abonelik yok",
-    "title": "Kaydettiğiniz her şey bilgisayarınızda kalır. <span class=\"accent-text\">Her şey.</span>",
-    "subtitle": "Raindrop yer imlerinizi kendi sunucularında tutar — ve her yıl sizden ücret alır. BookmarkForge onları bilgisayarınızda tutar, yalnızca sizde olan bir anahtarla kilitler. Hesap yok. Aylık ücret yok. Omzunuzun üstünden bakan kimse yok.",
-    "ctaPrimary": "Hemen dene (hesap gerekmez)",
-    "ctaSecondary": "Fiyatlandırmayı Gör",
+    "title": "Her şeyi <span class=\"accent-text\">cihazınızda tutan</span> gizli yer imi yöneticisi.",
+    "subtitle": "Araştırmacılar, öğrenciler ve okuma geçmişini bir bulut şirketine vermek istemeyen herkes için. Sayfaları, makaleleri ve PDF'leri kaydedin, anahtar kelimeyle veya anlamla bulun, hepsini kendi bilgisayarınızda şifreli tutun. Hesap yok. Abonelik yok.",
+    "ctaPrimary": "Ücretsiz başla — kayıt yok",
+    "ctaSecondary": "Nasıl çalıştığını görün",
     "pillars": [
       {
         "strong": "Gizli",
-        "text": "kaydettiğiniz sayfalar bilgisayarınızdan hiç ayrılmaz"
+        "text": "cihazınızda şifreli"
       },
       {
-        "strong": "Kilitli",
-        "text": "biz bile okuyamayız"
+        "strong": "Sonsuza dek sizin",
+        "text": "abonelik veya aylık ücret yok"
       },
       {
-        "strong": "Çevrimdışı",
-        "text": "uçakta, tünelde, her yerde çalışır"
+        "strong": "Çevrimdışı çalışır",
+        "text": "her yerde kaydedin ve okuyun, internet olmasa bile"
       },
       {
-        "strong": "Tek seferlik ödeme",
-        "text": "$59 early bird ömür boyu erişim (normal fiyattan önce $20 tasarruf)"
+        "strong": "Sonsuza dek ücretsiz",
+        "text": "500 yer imi ücretsiz, isterseniz Pro'ya geçin"
       }
     ],
     "announce": "⚡ Yerel AI çevirisi (yakında)"
@@ -408,15 +408,11 @@
         "cta": "Pro'yu edinin — $59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "sonra normal fiyat $79",
-        "sla": "Destek: E-posta 48 saat (Pzt–Cum)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Pro'yu edinin — $79 normal fiyat",
-        "cta2Class": "btn-secondary"
+        "sla": "Destek: E-posta 48 saat (Pzt–Cum)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-tr#pricing\">Learn more</a>"
+    "legal": "Tek seferlik ödeme · 12 ay güncelleme dahil · v1 sonsuza kadar çalışır · 30 gün para iade garantisi. <a href=\"/privacy-and-terms.html#terms\">Koşullar</a>"
   },
   "faq": {
     "title": "Sık Sorulan Sorular",
@@ -509,7 +505,8 @@
         "Contact"
       ],
       "helpCenter": "Yardım Merkezi",
-      "errorCodes": "Hata Kodları"
+      "errorCodes": "Hata Kodları",
+      "hours": "48 saat içinde yanıt, Pzt–Cum (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Tüm hakları saklıdır.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "Size özel, AI destekli bilgi kasanız. 100% Yerel Öncelikli. Gizli Pocket alternatifi. Free: 500 yer imi.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "Yardım Merkezi — SSS, Sorun Giderme ve Destek SLA | BookmarkForge",
+    "title": "Yardım Merkezi — SSS, Sorun Giderme ve Destek SLA",
     "description": "BookmarkForge Yardım Merkezi: v1 için Lifetime fiyatlandırması, sorun giderme, BF-E* hata kodları, destek SLA'sı ve maskelenmiş tanılama raporunun nasıl kopyalanacağı.",
     "ogTitle": "Yardım Merkezi — BookmarkForge",
     "ogDescription": "SSS, sorun giderme, hata kodları ve destek SLA'sı. v1 için Lifetime'ın nasıl işlediğini ve tanılama raporunun nasıl kopyalanacağını öğrenin.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 normal fiyat",
-      "proPriceTraction": "ivme sonrası $99",
+      "proPriceTraction": "",
       "proDescription": "Sınırsız yer imi, 5 cihaz + P2P eşitleme, Yerel AI (WebLLM/Ollama) + RAG + Uzman ajanlar, bilgi kartları, PDF/OCR, 7 dışa aktarma formatı, kasa. <em>v1 için Lifetime · 12 ay özellik güncellemesi · Güvenlik sonsuza dek · v2 60% indirim</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "Kendiniz çözün: bu Yardım Merkezi + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "Kendiniz çözün: bu Yardım Merkezi + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "Elden geldiğince (topluluk)",
       "freeWhatToDo": "Gönderi paylaşmadan önce aşağıdaki BF-E* kodunu arayın ve tanılamayı kopyalayın (<a href=\"#diagnostics\">§Tanılama</a>)",
       "proChannel": "E-posta <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (konu: Pro)",

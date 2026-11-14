@@ -41,7 +41,8 @@ export interface LegacyCompatRow {
     | "supported-read-only"
     | "deprecated"
     | "migration-required"
-    | "migration-in-progress";
+    | "migration-in-progress"
+    | "removed";
   /** Why this row exists and what operators should do about it. */
   note: string;
   /** Concrete update/migration action, if any. */
@@ -94,16 +95,19 @@ const CRYPTO_FORMATS: LegacyCompatRow[] = [
   },
   {
     id: "crypto-v5-hkdf",
-    label: "Crypto v5 — Argon2id-once + HKDF per operation",
-    severity: "info",
+    label: "Crypto v5 — Argon2id-once + HKDF per operation (retired)",
+    severity: "legacy-read-only",
     subject: "crypto-format",
-    source: { file: "src/utils/crypto-core.ts", symbol: "encrypt" },
-    contexts: ["browser", "node-test", "worker", "e2e-seeder"],
-    status: "supported",
+    source: { file: "src/utils/crypto-core.ts", symbol: "decrypt" },
+    contexts: ["browser", "node-test", "worker"],
+    status: "removed",
     note:
-      "Current text encryption path. Master key is derived once per password session and per-operation keys " +
-      "come from HKDF-SHA256.",
-    recommendedAction: null,
+      "ADR-052 phase 4 retired the v5 parser: decrypt() throws LegacyV5FormatRemovedError " +
+      "(`V5_LEGACY_FORMAT_RETIRED`) for a `v5:` payload, and the legacy session-key layout " +
+      "(no marker byte) is refused the same way. Writes never produced it after A-02.",
+    recommendedAction:
+      "Convert the blob with a release that still reads v5 (unlock, then re-export/restore as v7), " +
+      "or restore a backup exported by the current version.",
   },
   {
     id: "kdf-argon2id",

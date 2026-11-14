@@ -614,7 +614,7 @@ describe("NetworkFirewall — unit tests", () => {
       ).rejects.toThrow(NetworkFirewallError);
     });
 
-    it("rejects non-whitelisted turn: and turns: servers (audit M2 — host-pinned only)", async () => {
+    it("rejects non-whitelisted turn: and turns: servers", async () => {
       await expect(
         validateIceServers({
           iceServers: [{ urls: "turn:evil.example.com:3478" }],
@@ -838,9 +838,9 @@ describe("NetworkFirewall — unit tests", () => {
 
     it("precision: no private-non-loopback host in the corpus is loopback", () => {
       const privateNonLoopback = ipv4Bases
-        .filter(([a]) => a !== 127) // excluye 127/8
+        .filter(([a]) => a !== 127) // excludes 127/8
         .flatMap(([a, b, c, d]) => ipv4Forms(a, b, c, d));
-      // Excluir los hosts IPv6 loopback del corpus (::1, ::, forma completa,
+      // Exclude the IPv6 loopback hosts from the corpus (::1,::, full form,
       // mapped-127) — those ARE loopback; the rest must be non-loopback.
       const loopbackIpv6 = new Set([
         "[::1]", "[::]", "[0:0:0:0:0:0:0:1]", "[0:0:0:0:0:0:0:0]",

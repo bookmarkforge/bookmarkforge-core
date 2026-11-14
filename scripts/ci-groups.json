@@ -95,12 +95,11 @@
       "label": "Deep security",
       "commands": [
         "check:security",
-        "check:audit-drift",
         "check:license-claims",
         "check:license-keys",
         "check:pro-history"
       ],
-      "purpose": "Full security chain (CVE, CSP, legal), audit drift, licenses and Pro-history boundaries",
+      "purpose": "Full security chain (CVE, CSP, legal), licenses and Pro-history boundaries",
       "typical_time_ms": 20000,
       "timeout_ms": 600000,
       "fail_frequency": "low"

@@ -128,10 +128,8 @@ export const STORAGE_KEYS = {
   /** @deprecated Historical local diagnostics consent; kept for migration. */
   CONSENT_ERROR_REPORTING: "forge_consent_error_reporting",
   CONSENT_CLIENT_EVENTS: "forge_consent_client_events",
-  ANALYTICS_INSTALL_ID: "bmf_analytics_install_id",
-  PENDING_CLIENT_EVENT: "bmf_pending_client_event",
 
-  // Local error storage opt-in (I2, audit 2026-08-13): renamed from the
+  // Local error storage opt-in: renamed from the
   // misleading bmf_telemetry_optin — this key NEVER enabled external
   // telemetry, only local IndexedDB error storage. Legacy key is honored
   // as a read-only migration fallback (see src/telemetry/errorReporter.ts).

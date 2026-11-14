@@ -9,16 +9,16 @@ Contact: mailto:bookmarkforge@proton.me
 Encryption: https://keys.openpgp.org/pks/lookup?op=get&search=security@proton.me
 
 # Acknowledgments
-Acknowledgments: https://bookmarkforgeapp.com/security/acknowledgments
+Acknowledgments: https://www.bookmarkforgeapp.com/security/acknowledgments
 
 # Policy URL
-Policy: https://bookmarkforgeapp.com/security/policy
+Policy: https://www.bookmarkforgeapp.com/security/policy
 
 # Preferred Languages
 Preferred-Languages: en, es, fr, de, pt
 
 # Canonical
-Canonical: https://bookmarkforgeapp.com/.well-known/security.txt
+Canonical: https://www.bookmarkforgeapp.com/.well-known/security.txt
 
 # Expires (RFC 9116 required field)
 Expires: 2027-10-26T00:00:00.000Z

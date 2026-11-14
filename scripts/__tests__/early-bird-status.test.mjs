@@ -197,22 +197,31 @@ describe("landing.js wiring — the switch can actually reach the artifact", () 
     expect(STATUS_URL).toBe(`/${STATUS_RELPATH}`);
   });
 
-  it("selects on checkout plan ids that exist in a landing page", () => {
-    const urls = (text) =>
-      new Set(text.match(/https:\/\/whop\.com\/checkout\/plan_[A-Za-z0-9]+/g) ?? []);
+  it("keeps the active checkout in a landing page and the regular fallback reachable", () => {
     const rendered = new Set(
       readdirSync(PUBLIC_DIR)
         .filter((f) => f.endsWith(".html"))
-        .flatMap((f) => [...urls(readFileSync(join(PUBLIC_DIR, f), "utf8"))]),
+        .flatMap((f) =>
+          [...(readFileSync(join(PUBLIC_DIR, f), "utf8").match(/https:\/\/whop\.com\/checkout\/plan_[A-Za-z0-9]+/g) ?? [])],
+        ),
     );
-    const referenced = [...urls(LANDING_JS)];
-    expect(referenced.length).toBeGreaterThan(0);
-    for (const url of referenced) {
-      expect(
-        rendered.has(url),
-        `${url} is referenced by landing.js but no landing page links it — the pricing-card switch would silently no-op`,
-      ).toBe(true);
-    }
+    const early = LANDING_JS.match(/const EARLY_CHECKOUT = '([^']+)'/)?.[1];
+    const regular = LANDING_JS.match(/const REGULAR_CHECKOUT = '([^']+)'/)?.[1];
+    expect(early).toBeTruthy();
+    expect(regular).toBeTruthy();
+    expect(
+      rendered.has(early),
+      `${early} is the static Early Bird offer but no landing page links it — the pricing card would have no purchase path`,
+    ).toBe(true);
+    // The Regular plan is allowed to be absent from the HTML: landing.js
+    // materializes it only when the status probe reports the Early Bird sold
+    // out. It must still be wired, not merely referenced in a comment.
+    const regularReachable =
+      rendered.has(regular) || /proLink\.href = REGULAR_CHECKOUT/.test(LANDING_JS);
+    expect(
+      regularReachable,
+      `${regular} is neither linked by a landing page nor created by landing.js — the sold-out switch would silently no-op`,
+    ).toBe(true);
   });
 });
 

@@ -11,7 +11,7 @@
   <link rel="manifest" href="/manifest.json">
   <!-- SEO: this page is currently English-only; x-default points at the EN landing -->
   <link rel="canonical" href="{{ t.canonical }}">
-  <link rel="alternate" hreflang="x-default" href="https://bookmarkforgeapp.com/">
+  <link rel="alternate" hreflang="x-default" href="https://www.bookmarkforgeapp.com/">
   <!-- Open Graph (og-image.png is 1200x630) -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="BookmarkForge">
@@ -32,6 +32,7 @@
   <meta name="twitter:image" content="{{ t.twitterImage }}">
   <script src="/theme-init.js"></script>
   <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/landing.css">
   <link rel="stylesheet" href="/pocket-alternative.css">
   <!-- Structured data: WebPage / WebSite / Organization / SoftwareApplication / FAQPage -->
@@ -46,13 +47,13 @@
         "name": "{{ t.structuredData.webpage.name }}",
         "description": "{{ t.structuredData.webpage.description }}",
         "inLanguage": "{{ t.lang }}",
-        "isPartOf": { "@id": "https://bookmarkforgeapp.com/#website" },
-        "about": { "@id": "https://bookmarkforgeapp.com/#software" }
+        "isPartOf": { "@id": "https://www.bookmarkforgeapp.com/#website" },
+        "about": { "@id": "https://www.bookmarkforgeapp.com/#software" }
       },
       {
         "@type": "WebSite",
-        "@id": "https://bookmarkforgeapp.com/#website",
-        "url": "https://bookmarkforgeapp.com/",
+        "@id": "https://www.bookmarkforgeapp.com/#website",
+        "url": "https://www.bookmarkforgeapp.com/",
         "name": "{{ t.structuredData.website.name }}",
         "description": "{{ t.structuredData.website.description }}",
         "inLanguage": "{{ t.lang }}",
@@ -60,28 +61,28 @@
           "@type": "SearchAction",
           "target": {
             "@type": "EntryPoint",
-            "urlTemplate": "https://bookmarkforgeapp.com/?s={search_term_string}"
+            "urlTemplate": "https://www.bookmarkforgeapp.com/?s={search_term_string}"
           },
           "query-input": "required name=search_term_string"
         },
-        "publisher": { "@id": "https://bookmarkforgeapp.com/#organization" }
+        "publisher": { "@id": "https://www.bookmarkforgeapp.com/#organization" }
       },
       {
         "@type": "Organization",
-        "@id": "https://bookmarkforgeapp.com/#organization",
+        "@id": "https://www.bookmarkforgeapp.com/#organization",
         "name": "{{ t.structuredData.organization.name }}",
         "url": "{{ t.structuredData.organization.url }}",
-        "logo": { "@type": "ImageObject", "url": "https://bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
+        "logo": { "@type": "ImageObject", "url": "https://www.bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
         "email": "{{ t.structuredData.organization.email }}"
       },
       {
         "@type": "SoftwareApplication",
-        "@id": "https://bookmarkforgeapp.com/#software",
+        "@id": "https://www.bookmarkforgeapp.com/#software",
         "name": "{{ t.structuredData.software.name }}",
         "applicationCategory": "{{ t.structuredData.software.category }}",
         "operatingSystem": "{{ t.structuredData.software.os }}",
         "url": "{{ t.structuredData.software.url }}",
-        "image": "https://bookmarkforgeapp.com/og-image.png",
+        "image": "https://www.bookmarkforgeapp.com/og-image.png",
         "description": "{{ t.structuredData.software.description | escapejs }}",
         "offers": [
           {%- for offer in t.structuredData.software.offers %}

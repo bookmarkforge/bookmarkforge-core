@@ -168,10 +168,6 @@ export const UNPROXIED_ROUTE_ALLOWLIST = new Map([
     "/admin",
     "operator-only signaling diagnostics; keep the token-gated admin surface off the public web edge and reach the api origin directly",
   ],
-  [
-    "/api/analytics/kpis",
-    "token-gated aggregate report with no public client caller; keep it off the web edge",
-  ],
 ]);
 
 /**

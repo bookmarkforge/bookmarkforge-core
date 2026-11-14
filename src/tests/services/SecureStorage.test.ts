@@ -152,7 +152,7 @@ beforeAll(async () => {
   const mod = await import("../../services/SecureStorage");
   secureStorage = mod.secureStorage;
   SecureStorageClass = mod.SecureStorage;
-  // A7: Reduce retry delay for tests to avoid 6s+ waits on error paths.
+  // Reduce retry delay for tests to avoid 6s+ waits on error paths.
   // The production BASE_DELAY_MS=200 with MAX_RETRIES=5 causes ~6.4s total delay.
   // Tests patch it to 1ms to keep the suite fast while preserving retry behavior.
   (SecureStorageClass as any).BASE_DELAY_MS = 1;
@@ -225,7 +225,7 @@ describe("SecureStorage", () => {
           rejection = err;
         });
 
-        // MAX_RETRIES=5 + BASE_DELAY_MS=200 (audit 2026-10-28) is 1 initial
+        // MAX_RETRIES=5 + BASE_DELAY_MS=200 is 1 initial
         // attempt + 5 retries, backing off 200+400+800+1600+3200 = 6200ms.
         await vi.advanceTimersByTimeAsync(7000);
 
@@ -1019,7 +1019,7 @@ describe("SecureStorage", () => {
     });
   });
 
-  // ── Audit H5: master-password wrapping of the device key ────────────
+  // ── master-password wrapping of the device key ────────────
   // Uses REAL node webcrypto (not the XOR simulator) so AES-GCM auth
   // failures are exercised — wrong-password unwrap MUST throw.
 
@@ -1035,7 +1035,7 @@ describe("SecureStorage", () => {
       (secureStorage as any).initPromise = null;
       (secureStorage as any).db = null;
       localStorage.clear();
-      // H2: the device-key JWK lives in sessionStorage. An earlier suite
+      // the device-key JWK lives in sessionStorage. An earlier suite
       // ("encryption at rest") can leave a SIMULATED-crypto JWK (k:"AAAA")
       // behind; importing it with real webcrypto fails and would leave
       // deviceKey null — each H5 test must start from clean storage.

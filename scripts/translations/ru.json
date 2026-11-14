@@ -2,17 +2,17 @@
   "lang": "ru",
   "langName": "Русский",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/ru/",
+  "canonical": "https://www.bookmarkforgeapp.com/ru/",
   "ogLocale": "ru_RU",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: приватный локальный менеджер закладок со списком для чтения",
   "description": "Raindrop хранит закладки на своих серверах. BookmarkForge хранит их на вашем компьютере — зашифрованными так, что даже мы их прочитать не можем. Одна оплата: $59 пожизненный доступ по early bird (экономия $20 до обычной цены). Free: 500 закладок.",
   "ogTitle": "BookmarkForge: приватный локальный менеджер закладок со списком для чтения",
   "ogDescription": "Raindrop хранит закладки на своих серверах. BookmarkForge хранит их на вашем компьютере — зашифрованными так, что даже мы их прочитать не можем. Одна оплата: $59 пожизненный доступ по early bird (экономия $20 до обычной цены). Free: 500 закладок.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: приватный локальный менеджер закладок со списком для чтения",
   "twitterDescription": "Raindrop хранит закладки на своих серверах. BookmarkForge хранит их на вашем компьютере — зашифрованными так, что даже мы их прочитать не можем. Одна оплата: $59 пожизненный доступ по early bird (экономия $20 до обычной цены). Free: 500 закладок.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Перейти к основному содержимому",
   "navBrandAria": "Главная BookmarkForge",
   "navAriaLabel": "Основная навигация",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "Закрыть меню",
   "hero": {
     "badge": "Разовая оплата · Без подписки",
-    "title": "Всё, что вы сохраняете, остаётся на вашем компьютере. <span class=\"accent-text\">Всё.</span>",
-    "subtitle": "Raindrop хранит ваши закладки на своих серверах — и берёт деньги каждый год. BookmarkForge хранит их на вашем компьютере, зашифрованными ключом, который есть только у вас. Никаких аккаунтов. Никаких ежемесячных платежей. Никто не читает через ваше плечо.",
-    "ctaPrimary": "Попробуйте сразу (без аккаунта)",
-    "ctaSecondary": "Посмотреть цены",
+    "title": "Приватный менеджер закладок, который <span class=\"accent-text\">хранит всё на вашем устройстве.</span>",
+    "subtitle": "Для исследователей, студентов и всех, кто не хочет отдавать историю чтения облачной компании. Сохраняйте страницы, статьи и PDF, находите их по ключевому слову или смыслу — и всё это остаётся зашифрованным на вашем компьютере. Без аккаунта. Без подписки.",
+    "ctaPrimary": "Начать бесплатно — без регистрации",
+    "ctaSecondary": "Как это работает",
     "pillars": [
       {
-        "strong": "Приватно",
-        "text": "ваши сохранённые страницы никогда не покидают ваш компьютер"
+        "strong": "Приватный",
+        "text": "зашифрован на вашем устройстве"
       },
       {
-        "strong": "Зашифровано",
-        "text": "даже мы их прочитать не можем"
+        "strong": "Ваш навсегда",
+        "text": "без подписок и ежемесячных платежей"
       },
       {
-        "strong": "Оффлайн",
-        "text": "работает в самолёте, в туннеле, где угодно"
+        "strong": "Работает офлайн",
+        "text": "сохраняйте и читайте где угодно, даже без интернета"
       },
       {
-        "strong": "Оплата один раз",
-        "text": "$59 пожизненный доступ по early bird (экономия $20 до обычной цены)"
+        "strong": "Бесплатно навсегда",
+        "text": "500 закладок бесплатно, Pro — только если нужно больше"
       }
     ],
     "announce": "⚡ Локальный AI-перевод (скоро)"
@@ -408,15 +408,11 @@
         "cta": "Получить Pro $59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "затем $79 regular",
-        "sla": "Поддержка: Email 48 ч (пн–пт)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Получить Pro $79 Regular",
-        "cta2Class": "btn-secondary"
+        "sla": "Поддержка: Email 48 ч (пн–пт)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-ru#pricing\">Learn more</a>"
+    "legal": "Разовый платёж · 12 месяцев обновлений включено · v1 работает вечно · 30-дневная гарантия возврата денег. <a href=\"/privacy-and-terms.html#terms\">Условия</a>"
   },
   "faq": {
     "title": "Частые вопросы",
@@ -509,7 +505,8 @@
         "Contact"
       ],
       "helpCenter": "Центр помощи",
-      "errorCodes": "Коды ошибок"
+      "errorCodes": "Коды ошибок",
+      "hours": "Ответы в течение 48 часов, пн–пт (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Все права защищены.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "Ваше приватное AI-хранилище знаний. 100% Local-First. Приватная альтернатива Pocket. Free: 500 закладок.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "Центр помощи — FAQ, устранение неполадок и SLA поддержки | BookmarkForge",
+    "title": "Центр помощи — FAQ, устранение неполадок и SLA поддержки",
     "description": "Центр помощи BookmarkForge: lifetime v1, устранение неполадок, коды ошибок BF-E*, SLA поддержки и как скопировать обезличенный диагностический отчёт.",
     "ogTitle": "Центр помощи — BookmarkForge",
     "ogDescription": "FAQ, устранение неполадок, коды ошибок и SLA поддержки. Узнайте, как работает lifetime v1, и как скопировать диагностический отчёт.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 обычная цена",
-      "proPriceTraction": "$99 после роста спроса",
+      "proPriceTraction": "",
       "proDescription": "Неограниченные закладки, 5 устройств + P2P-синхронизация, Локальный AI (WebLLM/Ollama) + RAG + Экспертные агенты, Карточки, PDF/OCR, 7 форматов экспорта, хранилище. <em>Lifetime v1 · 12 месяцев функциональных обновлений · Безопасность навсегда · v2 со скидкой 60%</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "Самообслуживание: этот Центр помощи + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "Самообслуживание: этот Центр помощи + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "По возможности (сообщество)",
       "freeWhatToDo": "Ищите код BF-E* ниже + скопируйте диагностику (<a href=\"#diagnostics\">§Диагностика</a>) перед публикацией",
       "proChannel": "Email <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (тема: Pro)",

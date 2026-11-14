@@ -988,7 +988,7 @@ describe("BulkActionsBar", () => {
         isSummarizingCollection={true}
       />,
     );
-    // Con flags de procesamiento activos, los labels cambian a
+    // With processing flags active, the labels switch to
     // "Generating..." / "Synthesizing..." (isGeneratingAllOverviews /
     // isSummarizingCollection) and the button stays disabled
     const autoTagBtn = getByText("Auto Tag").closest("button")!;

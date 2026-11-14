@@ -1,5 +1,10 @@
 # Companion Server API — BookmarkForge
 
+> **Private infrastructure.** The companion server (`server/src`) and the
+> license function (`api/license/`) are NOT part of the MIT public export —
+> this index documents the hosted deployment's backend for operators. See
+> `OPEN-CORE.md` for the boundary.
+
 The companion server is BookmarkForge's minimal backend. It resides in `server/src` and runs with:
 
 ```bash
@@ -60,9 +65,11 @@ no longer mounts license routes.
 ### 2.2 `GET /api/license/health`
 
 - **Purpose:** health of the license provider integration.
-- **Authentication:** none; origin allow-list + rate limit by IP.
-- **Response:** `200` if the provider responds, `503` if the signing service is
-  not configured.
+- **Authentication:** none; public liveness probe. The origin allow-list,
+  Origin gate and rate limit apply to the POST license actions, not here.
+- **Response:** `200` if the signing service and provider are configured,
+  `503` otherwise; in production a missing allowlist also returns `503`
+  (`ORIGIN_NOT_CONFIGURED`) before the readiness payload.
 
 ---
 
@@ -70,7 +77,8 @@ no longer mounts license routes.
 
 - **Purpose:** exchange a purchased key for a signed entitlement proof.
   Public by design: the caller does not yet have a proof to present.
-- **Body:** JSON with license identity (`licenseKey`, `deviceId`).
+- **Body:** JSON `{ license_key, instance_name | instance_id, seat_token? }`
+  (snake_case; `license_key` required, at least one instance identifier).
 - **Response:** `200 { payload, signature }` with the signed proof.
 - **Errors:** `400` invalid body · `403` origin · `429` rate limit ·
   `502` provider failure · `503` signing service not configured.
@@ -96,27 +104,7 @@ no longer mounts license routes.
 
 ---
 
-### 2.6 `POST /api/license/entitlement`
-
-- **Purpose:** authoritative response of the **plan** by verifying the proof the
-  client already possesses.
-- **Body:** `{ payload, signature }`.
-- **Response `200`:**
-  - `{ plan: "pro", source: "license", deviceId, validatedAt, … }`
-  - `{ plan: "free", source: "none", reason, message }` — a definitive
-    response, not an error: allows explicitly degrading to Free instead of
-    staying in the offline grace window.
-- **`503 SIGNING_KEY_INVALID`:** the deployment's public key is unusable.
-  Not a degradation; the client retains its verified offline state.
-- **Others:** `400` invalid body · `403` origin · `405` method · `413` proof
-  too large · `429` rate limit.
-- **Origins:** allow-list `AI_SESSION_ORIGINS` (historical name: the endpoint
-  responds to the license plan, not an AI session). Empty is only tolerated
-  outside production.
-
----
-
-### 2.7 `GET /admin`
+### 2.6 `GET /admin`
 
 - **Purpose:** signaling server diagnostics.
 - **Authentication:** `X-Signaling-Admin-Token`.
@@ -124,7 +112,7 @@ no longer mounts license routes.
 
 ---
 
-### 2.8 `POST /csp-report` and `GET /csp-report`
+### 2.7 `POST /csp-report` and `GET /csp-report`
 
 - **Purpose:** receive CSP violation reports and read collected ones.
 - **`POST`:** public; the browser does not attach credentials. Filtered by origin
@@ -134,57 +122,24 @@ no longer mounts license routes.
 
 ---
 
-### 2.9 `POST /api/client-events` and `GET /api/client-events`
+### 2.8 `GET /og` and `GET /og-image.svg`
 
-- **Purpose:** client degradation telemetry (storage pressure, bundle integrity
-  spikes).
-- **`POST`:** sent **only** after explicit user consent.
-  Pseudonymous payload with no content; shape validation + rate limit by IP.
-- **`GET`:** collector diagnostics with `X-Client-Events-Admin-Token`;
-  responds `503` if not configured.
-- **CRITICAL threshold:** can trigger an HTTPS webhook if configured.
-- **Retention:** bounded in-memory ring; does not persist by default.
-
----
-
-### 2.10 `GET /api/client-events/retry-stats`
-
-- **Purpose:** accumulated retry counters from the client reporter.
-- **Authentication:** none; rate limit by IP.
-
----
-
-### 2.11 `POST /api/analytics/events`
-
-- **Purpose:** ingest an aggregated opt-in daily bucket.
-- **Body:** `{ iid, batchId, counts }`. `iid` is the SHA-256 of a random id per
-  installation (never a user identity); `counts` are daily totals of a closed
-  list of event types.
-- **Idempotency:** `batchId` makes ingestion additive; a retry of the same batch
-  does not duplicate. Without `batchId` the per-day replacement semantics is
-  preserved.
-- **Response:** `204`. `503` with `Retry-After` if the per-installation state
-  reaches its cap (fail-closed, without silently discarding data).
-- **Privacy:** IP is hashed with salt; no PII and no content.
-
----
-
-### 2.12 `GET /api/analytics/kpis`
-
-- **Purpose:** aggregated KPIs (DAU/WAU/MAU, cohort retention, funnel).
-- **Authentication:** `X-Analytics-Admin-Token`; `503` if not configured.
-- **Privacy:** only aggregates.
+- **Purpose:** public Open Graph card generation for social sharing.
+- **Authentication:** none.
+- **Response:** `/og` returns the HTML wrapper; `/og-image.svg` serves the SVG
+  card image it references.
 
 ---
 
 ## 3. HTTP routing and general security
 
 - **Origins:** `hasValidOrigin()` compares the received `Origin` with an explicit
-  allow-list and, failing that, with the origin derived from `Host` (plus
-  `X-Forwarded-Proto` when `TRUST_PROXY` is active). Endpoints that receive
-  browsers — licenses and entitlement — apply it.
-- **Single admission per request:** the license proof is verified once per
-  request on the license surface; signaling handlers never re-verify it.
+  allow-list. The license surface (`api/license/*`) requires that list in
+  production and never derives it from `Host`; an empty list returns `503` and a
+  request without `Origin` returns `403`.
+- **Rate limits:** the license actions apply
+  per-IP windows inside their handlers; signaling handlers never re-verify a
+  license proof (plan resolution is client-side from the signed payload).
 - **Tokens:** admin tokens are compared in constant time. Identity tokens are
   hashed before use as a policy key.
 - **Body:** all endpoints with body validate maximum size. Malformed JSON or
@@ -235,8 +190,6 @@ is part of its contract.
 
 ## 5. State and persistence
 
-- **Analytics:** memory + optional `ANALYTICS_STATE_FILE` with atomic write.
-- **Client events:** bounded in-memory ring; does not persist by default.
 - **CSP reports:** bounded in-memory ring; optional JSONL persistence.
 - **Licenses:** no own state; depends on external provider and signing key.
 - **Signaling:** in-process memory state; does not persist across restarts.
@@ -252,14 +205,12 @@ that directly affect the endpoints:
 - `NODE_ENV`
 - `TRUST_PROXY`
 - `WS_ALLOWED_ORIGINS`
-- `AI_SESSION_ORIGINS` — allow-list for `POST /api/license/entitlement`
-  (mandatory in production)
+- `LICENSE_ALLOWED_ORIGINS` — allow-list for `POST /api/license/*`
+  (mandatory in production; `AI_SESSION_ORIGINS` remains a legacy alias)
 - `LICENSE_SIGNING_PRIVATE_KEY_FILE` / `LICENSE_SIGNING_PRIVATE_KEY_PKCS8`
 - `WHOP_LICENSE_API_URL`, `WHOP_API_KEY`, `LICENSE_PROVIDER_ALLOW_HTTP`
 - `SIGNALING_ADMIN_TOKEN`
 - `CSP_REPORT_ADMIN_TOKEN`, `CSP_REPORT_*`
-- `CLIENT_EVENTS_ADMIN_TOKEN`, `CLIENT_EVENTS_*`, `CLIENT_EVENTS_WEBHOOK_URL`
-- `ANALYTICS_ADMIN_TOKEN`, `ANALYTICS_*`
 - `TURN_RELAY_HOST`, `TURN_STATIC_AUTH_SECRET`, `TURN_*`
 - `ENFORCE_SIGNAL_HMAC`
 

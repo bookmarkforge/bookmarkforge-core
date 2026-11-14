@@ -892,9 +892,10 @@ describe("UniversalImporter", () => {
 
       // Documents inside folders get a non-root folderId; the root-level
       // note stays at "root".
-      const docFolderIds = mockDb.documents.insert.mock.calls.map(
-        (call: unknown[]) => (call[0] as { folderId?: string }).folderId,
-      );
+      const docFolderIds: Array<string | undefined> =
+        mockDb.documents.insert.mock.calls.map(
+          (call: unknown[]) => (call[0] as { folderId?: string }).folderId,
+        );
       expect(docFolderIds.filter((id) => id === "root")).toHaveLength(1);
       expect(docFolderIds.filter((id) => id && id !== "root")).toHaveLength(2);
     });
@@ -1087,8 +1088,8 @@ describe("UniversalImporter", () => {
   });
 });
 
-// Audit 16-A3 regressions — preview must never read a file it will reject.
-describe("preview guardrails (audit 16-A3)", () => {
+// regressions — preview must never read a file it will reject.
+describe("preview guardrails", () => {
   it("does not read an oversized Pocket export", async () => {
     const text = vi.fn().mockResolvedValue("<html></html>");
     const file = {

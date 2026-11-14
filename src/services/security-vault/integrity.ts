@@ -11,6 +11,7 @@ import { logger } from "../../utils/logger";
 import { SECURE_STORAGE_KEYS, VERIFICATION_PLAINTEXT } from "./constants";
 import { secureStoragePurpose } from "../../utils/envelope-purposes";
 import { zeroPasswordBytes } from "../../utils/crypto-core";
+import { copyPasswordBytes } from "../../utils/passwordBytes";
 import { deriveArgon2idKey } from "../../utils/argon2-kdf";
 
 /**
@@ -119,8 +120,12 @@ export async function validateVerificationIntegrity(
  * the password must be verified BEFORE the wrapped device key is materialized;
  * the device-key layer would deadlock unlock().
  */
-export async function createVerificationToken(password: string): Promise<void> {
-  const passwordBytes = new TextEncoder().encode(password);
+export async function createVerificationToken(
+  password: string | Uint8Array,
+): Promise<void> {
+  // Bytes at the boundary (AGENTS.md §2): encode a string once, copy a byte
+  // caller's buffer, and zeroize the owned copy on every exit path below.
+  const passwordBytes = copyPasswordBytes(password);
   // Tracks the early zeroization so the finally block zeroizes only when the
   // early path did not run (error before the HMAC step). Avoids a false
   // "possible reuse" warning on every successful token creation.

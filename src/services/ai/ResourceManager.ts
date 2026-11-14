@@ -84,7 +84,13 @@ class ResourceManager {
   private criticalPressurePromise: Promise<void> | null = null;
 
   private electionTimer: ReturnType<typeof setTimeout> | null = null;
-  private leaderId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  private leaderId = (() => {
+    try {
+      return crypto.randomUUID();
+    } catch {
+      return `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    }
+  })();
 
   constructor() {
     // Start monitoring immediately (backward-compatible: tests expect

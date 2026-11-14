@@ -1,13 +1,11 @@
 /**
  * scripts/audit-core.mjs — reusable core of the locale audit.
  *
- * Extracted from scripts/gen-audit-report.mjs (batch-29) so the SAME
- * classification feeds two consumers:
- *   - gen-audit-report.mjs    → generates auditoria_placeholders.md (report)
- *   - check-audit-drift.mjs   → CI gate with baseline (delta > 0 = FAIL)
+ * Core of the locale-audit classification, consumed by
+ * check-i18n-quality.mjs (CI gate).
  *
  * The classification (skip regex, loanwords, batch-24 blind spot, type A/B)
- * lives ONLY here; any threshold change is reflected in both.
+ * lives ONLY here.
  */
 
 import { readFileSync, readdirSync } from "node:fs";

@@ -40,7 +40,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
 }) => {
   const { t } = useTranslation();
   const [telemetryOptIn, setTelemetryOptIn] = useState(() => {
-    // Audit 2026-08-30: read the consent keys that ConsentBanner writes
+    // read the consent keys that ConsentBanner writes
     // (forge_consent_*). The legacy bmf_local_error_storage and
     // bmf_telemetry_optin keys are read-only migration fallbacks.
     const errorConsent = safeGet(STORAGE_KEYS.CONSENT_ERROR_REPORTING);
@@ -296,12 +296,12 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
             </div>
             <div>
               <h4 className="text-sm font-semibold text-[var(--text-muted)]">
-                {t("app_telemetryOptInLabel", "Share anonymous error reports")}
+                {t("app_telemetryOptInLabel", "Local error logs")}
               </h4>
               <p className="text-[11px] text-[var(--text-muted)]">
                 {t(
                   "app_telemetryOptInDesc",
-                  "Help us improve BookmarkForge by sharing diagnostic reports. No bookmarks or document contents are ever sent.",
+                  "Crash reports stay in this browser's local storage — we never receive them",
                 )}
               </p>
             </div>
@@ -317,7 +317,7 @@ export const SecuritySection: React.FC<SecuritySectionProps> = ({
             aria-checked={telemetryOptIn}
             aria-label={t(
               "app_telemetryOptInLabel",
-              "Share anonymous error reports",
+              "Local error logs",
             )}
           >
             <span

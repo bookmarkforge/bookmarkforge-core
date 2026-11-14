@@ -124,19 +124,6 @@ export const ENV_REGISTRY = {
   disableNetworkFirewall: { envVar: "VITE_DISABLE_NETWORK_FIREWALL", parser: parseBool, default: false},
   forceMemoryStorage:     { envVar: "VITE_FORCE_MEMORY_STORAGE",     parser: parseBool, default: false},
   forceDexieStorage:      { envVar: "VITE_FORCE_DEXIE_STORAGE",      parser: parseBool, default: false},
-  // ADR-052 Fase 3 — cutoff switch for the v5 legacy read-path.
-  // DEFAULT (false) = cutoff ACTIVATED: `v5:` payloads fail closed with
-  // LegacyV5FormatRemovedError in every build (dev, test, prod). The
-  // legacy static-salt read path is dead by default; operators who need
-  // it for migration must explicitly set VITE_ALLOW_V5_LEGACY_READ=true.
-  //
-  // This flips the previous default (unset = legacy open) because the
-  // static salt is a shared-credential vulnerability (RFC 9106): every
-  // v5 vault in the world is brute-forceable with one precomputed
-  // Argon2id pass over the common salt. The sunset criterion (zero
-  // residual v5 across two consecutive unlocks) was met, so the read
-  // path is retired. Only cutoff builds set false.
-  allowV5LegacyRead:      { envVar: "VITE_ALLOW_V5_LEGACY_READ",     parser: parseBool, default: false},
   // E2E-preview build flag: lets the production build publish the storage
   // backend diagnostic hook so the Playwright preview run can assert the
   // durable backend. NEVER set in real production builds (no hook shipped).

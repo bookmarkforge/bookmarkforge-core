@@ -54,7 +54,7 @@ import { defineConfig, type Plugin } from "vite";
 // secure context: WebCrypto/camera/clipboard/PWA install all gate on it).
 // Enabled ONLY via VITE_DEV_HTTPS=1 — never active for the e2e batteries,
 // CI, or normal dev. Uses a self-signed cert: the iPhone must trust it once
-// (see docs/ios-manual-test-script.md preparation).
+// (the device must trust the self-signed cert once before testing).
 import basicSsl from "@vitejs/plugin-basic-ssl";
 import { VitePWA } from "vite-plugin-pwa";
 import { CSP_MODERATE, CSP_OPEN, CSP_STRICT } from "./scripts/csp-config.js";
@@ -451,23 +451,24 @@ export default defineConfig(({ mode, isPreview }) => ({
     format: "es",
   },
   // In test mode (Playwright E2E) the companion server is real: the spec
-  // spawns it on 8799, and /api/* is proxied to it so the client event
-  // reporter reaches the REAL /api/client-events endpoint over the real
-  // network path (page → Vite proxy → companion server), matching the
-  // production topology where nginx proxies /api to the companion. Normal
-  // `npm run dev` is untouched (no proxy outside test mode).
+  // spawns it on 8799, and /api/* is proxied to it so requests reach the
+  // REAL companion over the real network path (page → Vite proxy →
+  // companion server), matching the production topology where nginx
+  // proxies /api to the companion. Normal `npm run dev` is untouched
+  // (no proxy outside test mode).
   server:
     mode === "test"
       ? {
           proxy: {
             // E2E: send license routes to the signing origin instead of the
             // crisis companion that owns the generic /api space. The target is
-            // VITE_LICENSE_PROXY_TARGET (default: the 8787 port). NOTE — the
-            // companion no longer serves them: the license/entitlement server
-            // surface was retired on 2026-10-19 (server/src/route-table.ts) and
-            // the only handler is api/license/[action].ts, so until a dev-only
-            // adapter serves that handler on this target these paths answer the
-            // companion's 426 catch-all and Pro seeding cannot activate.
+            // VITE_LICENSE_PROXY_TARGET (default: the 8787 port). The companion
+            // no longer serves them: the license server surface was retired on
+            // 2026-10-19 (server/src/route-table.ts) and the only handler is
+            // api/license/[action].ts. Playwright mounts the dev-only adapter
+            // scripts/dev-license-server.ts on LICENSE_PROXY_PORT and sets
+            // VITE_LICENSE_PROXY_TARGET to it; plain `npm run dev` without that
+            // env var still lands on the companion's 426 catch-all.
             // Vite preserves the Host header, so the handler's Origin/Host
             // checks still match the app origin.
             // MUST be declared BEFORE the generic "/api" rule below: Vite

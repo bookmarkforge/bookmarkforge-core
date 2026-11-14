@@ -1,18 +1,18 @@
 /**
- * Audit 16-P5 — adversarial-input verification for the import/export area.
+ * — adversarial-input verification for the import/export area.
  *
- * These tests close the outstanding-verification items of the audit's
+ * These tests close the outstanding-verification items of the
  * tracking list that can be verified with vitest (no browser required):
  *
- *   - ZIP with tampered declared sizes (declared < actual): the preflight
- *     trusts JSZip metadata only when the post-decompression measurement
- *     agrees; a bomb that lies about its size must still be caught.
- *   - ZIP entries whose declared size is absent: measured after decompression,
- *     counted exactly once (no double counting — audit 16-A3 contract).
- *   - CSV with formula cells and URL schemes: import sanitization behavior
- *     (title/text sanitization, URL scheme guard) asserted on real inputs.
- *   - CSV export of an imported adversarial record: the export path escapes
- *     the formula prefix (round-trip sanity).
+ * - ZIP with tampered declared sizes (declared < actual): the preflight
+ * trusts JSZip metadata only when the post-decompression measurement
+ * agrees; a bomb that lies about its size must still be caught.
+ * - ZIP entries whose declared size is absent: measured after decompression,
+ * counted exactly once.
+ * - CSV with formula cells and URL schemes: import sanitization behavior
+ * (title/text sanitization, URL scheme guard) asserted on real inputs.
+ * - CSV export of an imported adversarial record: the export path escapes
+ * the formula prefix (round-trip sanity).
  *
  * The private-repo suite lives at src/tests/services/adversarial-import.test.ts
  * and runs with the SAME mocks as UniversalImporter.branches.test.ts.
@@ -122,7 +122,7 @@ describe("P5 — ZIP with tampered / missing declared sizes", () => {
     const file = new File([blob], "unknown-sizes.zip", { type: "application/zip" });
     const result = await new UniversalImporter().importData(makeDb() as never, file);
     // 4 MiB total is well under the limit: both notes import, proving the
-    // unknown-size path does not abort legitimate archives (16-A3 contract).
+    // unknown-size path does not abort legitimate archives.
     expect(result.success).toBe(true);
     expect(result.importedCount).toBe(2);
   });

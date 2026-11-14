@@ -56,7 +56,7 @@ export const PRICING_CONFIG = {
         { text: "P2P sync across devices", included: false },
         { text: "Local AI (WebLLM/Ollama) & RAG chat", included: false },
         { text: "Flashcards + PDF/OCR", included: false },
-        { text: "Advanced export (10+ formats)", included: false },
+        { text: "Advanced export (7 formats)", included: false },
       ],
       limitations: {
         maxBookmarks: 500,
@@ -94,7 +94,7 @@ export const PRICING_CONFIG = {
         { text: "RAG chat over your data + Expert agents", included: true },
         { text: "Flashcards with spaced repetition", included: true },
         { text: "PDF + OCR", included: true },
-        { text: "Advanced export (10+ formats)", included: true },
+        { text: "Advanced export (7 formats)", included: true },
         { text: "Cloud backup sync to your own storage", included: true },
         { text: "Security vault (AES-GCM)", included: true },
         { text: "Lifetime of v1 · 12 months feature updates", included: true },

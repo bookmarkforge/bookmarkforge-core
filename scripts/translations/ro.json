@@ -2,17 +2,17 @@
   "lang": "ro",
   "langName": "Română",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/ro/",
+  "canonical": "https://www.bookmarkforgeapp.com/ro/",
   "ogLocale": "ro_RO",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: manager privat de marcaje, local-first, cu listă de citit",
   "description": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. O singură plată: $59 acces pe viață early bird (economisești $20 înainte de prețul normal). Free: 500 marcaje.",
   "ogTitle": "BookmarkForge: manager privat de marcaje, local-first, cu listă de citit",
   "ogDescription": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. O singură plată: $59 acces pe viață early bird (economisești $20 înainte de prețul normal). Free: 500 marcaje.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: manager privat de marcaje, local-first, cu listă de citit",
   "twitterDescription": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. O singură plată: $59 acces pe viață early bird (economisești $20 înainte de prețul normal). Free: 500 marcaje.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Sari la conținutul principal",
   "navBrandAria": "Pagina principală BookmarkForge",
   "navAriaLabel": "Navigație principală",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "Închide meniul",
   "hero": {
     "badge": "Plată unică · Fără abonament",
-    "title": "Tot ce salvezi rămâne pe computerul tău. <span class=\"accent-text\">Totul.</span>",
-    "subtitle": "Raindrop îți ține marcajele pe serverele lui — și te taxă în fiecare an. BookmarkForge le ține pe computerul tău, blocate cu o cheie pe care o ai doar tu. Fără conturi. Fără abonamente lunare. Nimeni nu îți citește peste umăr.",
-    "ctaPrimary": "Încearcă acum (fără cont)",
-    "ctaSecondary": "Vezi prețurile",
+    "title": "Managerul privat de bookmarkuri care <span class=\"accent-text\">păstrează totul pe dispozitivul tău.</span>",
+    "subtitle": "Pentru cercetători, studenți și oricine preferă să nu predea istoricul de lectură unei companii cloud. Salvează pagini, articole și PDF-uri, găsește-le după cuvânt cheie sau sens, și păstrează totul criptat pe propriul computer. Fără cont. Fără abonament.",
+    "ctaPrimary": "Începe gratuit — fără înregistrare",
+    "ctaSecondary": "Vezi cum funcționează",
     "pillars": [
       {
         "strong": "Privat",
-        "text": "paginile salvate nu părăsesc niciodată computerul tău"
+        "text": "criptat pe dispozitivul tău"
       },
       {
-        "strong": "Blocat",
-        "text": "nici noi nu le putem citi"
+        "strong": "Al tău pentru totdeauna",
+        "text": "fără abonamente sau taxe lunare"
       },
       {
-        "strong": "Fără internet",
-        "text": "funcționează în avion, în tunel, oriunde"
+        "strong": "Funcționează offline",
+        "text": "salvează și citește oriunde, chiar fără internet"
       },
       {
-        "strong": "Plătești o singură dată",
-        "text": "$59 acces pe viață early bird (economisești $20 înainte de prețul normal)"
+        "strong": "Gratuit pentru totdeauna",
+        "text": "500 de bookmarkuri gratuite, Pro doar dacă vrei mai mult"
       }
     ],
     "announce": "⚡ Traducere AI locală (în curând)"
@@ -408,15 +408,11 @@
         "cta": "Ia Pro $59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "apoi $79 preț normal",
-        "sla": "Suport: e-mail 48h (Lun–Vin)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Obține Pro $79 Regular",
-        "cta2Class": "btn-secondary"
+        "sla": "Suport: e-mail 48h (Lun–Vin)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-ro#pricing\">Learn more</a>"
+    "legal": "Plată unică · 12 luni de actualizări incluse · v1 funcționează pentru totdeauna · garanție de rambursare de 30 de zile. <a href=\"/privacy-and-terms.html#terms\">Termeni</a>"
   },
   "faq": {
     "title": "Întrebări frecvente",
@@ -509,7 +505,8 @@
         "Contact"
       ],
       "helpCenter": "Centru de ajutor",
-      "errorCodes": "Coduri de eroare"
+      "errorCodes": "Coduri de eroare",
+      "hours": "Răspunsuri în 48 de ore, lun–vin (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Toate drepturile rezervate.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "Seiful tău privat de cunoștințe, cu AI. 100% local. Alternativa privată la Pocket. Free: 500 marcaje.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "Centru de ajutor — FAQ, diagnosticare și SLA de suport | BookmarkForge",
+    "title": "Centru de ajutor — FAQ, diagnosticare și SLA de suport",
     "description": "Centrul de ajutor BookmarkForge: prețuri lifetime v1, diagnosticare, coduri de eroare BF-E*, SLA de suport și cum să copiezi un raport de diagnosticare redactat.",
     "ogTitle": "Centru de ajutor — BookmarkForge",
     "ogDescription": "FAQ, diagnosticare, coduri de eroare și SLA de suport. Află cum funcționează lifetime v1 și cum să copiezi un raport de diagnosticare.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 preț normal",
-      "proPriceTraction": "$99 după atingerea pragului de tracțiune",
+      "proPriceTraction": "",
       "proDescription": "Marcaje nelimitate, 5 dispozitive + sincronizare P2P, AI local (WebLLM/Ollama) + RAG + agenți experți, flashcards, PDF/OCR, 7 formate de export, seif. <em>Lifetime de v1 · 12 luni de actualizări de funcționalități · Securitate pentru totdeauna · v2 cu 60% reducere</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "Autoajutor: acest Centru de ajutor + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "Autoajutor: acest Centru de ajutor + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "În măsura posibilului (comunitate)",
       "freeWhatToDo": "Caută codul BF-E* mai jos și copiază raportul de diagnosticare (<a href=\"#diagnostics\">§Diagnosticare</a>) înainte de a posta",
       "proChannel": "E-mail <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (subiect: Pro)",

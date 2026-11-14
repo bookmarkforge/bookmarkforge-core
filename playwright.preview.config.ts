@@ -1,9 +1,13 @@
 import baseConfig from "./playwright.config";
-import { defineConfig, type WebServerConfig } from "@playwright/test";
+import { defineConfig, type PlaywrightTestConfig } from "@playwright/test";
 
 const port = Number(process.env.PLAYWRIGHT_PORT ?? 4173);
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`;
-const baseServers: WebServerConfig[] = Array.isArray(baseConfig.webServer)
+type WebServerEntry = Exclude<
+  NonNullable<PlaywrightTestConfig["webServer"]>,
+  readonly unknown[]
+>;
+const baseServers: WebServerEntry[] = Array.isArray(baseConfig.webServer)
   ? baseConfig.webServer
   : baseConfig.webServer
     ? [baseConfig.webServer]

@@ -271,7 +271,7 @@ describe("DEFAULT_PIPELINE_CONFIG — constantes por defecto", () => {
   });
 
   it("the object is not extensible (implicit Object.freeze)", () => {
-    // Comprobamos que es un objeto plano con valores fijos
+    // Check that it is a plain object with fixed values
     expect(Object.keys(DEFAULT_PIPELINE_CONFIG)).toHaveLength(8);
   });
 });

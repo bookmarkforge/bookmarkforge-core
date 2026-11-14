@@ -6,11 +6,11 @@
   "description": "Raindrop зберігає ваші закладки на своїх серверах. BookmarkForge зберігає їх на вашому комп’ютері — захищені так, що навіть ми не можемо їх прочитати. Одна оплата: $59 довічний доступ за early bird (заощаджуєте $20 до звичайної ціни). Безкоштовно: 500 закладок.",
   "ogTitle": "BookmarkForge: приватний локальний менеджер закладок зі списком для читання",
   "ogDescription": "Raindrop зберігає ваші закладки на своїх серверах. BookmarkForge зберігає їх на вашому комп’ютері — захищені так, що навіть ми не можемо їх прочитати. Одна оплата: $59 довічний доступ за early bird (заощаджуєте $20 до звичайної ціни). Безкоштовно: 500 закладок.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "ogImageAlt": "BookmarkForge — приватний застосунок для закладок і нотаток зі штучним інтелектом",
   "twitterTitle": "BookmarkForge: приватний локальний менеджер закладок зі списком для читання",
   "twitterDescription": "Raindrop зберігає ваші закладки на своїх серверах. BookmarkForge зберігає їх на вашому комп’ютері — захищені так, що навіть ми не можемо їх прочитати. Одна оплата: $59 довічний доступ за early bird (заощаджуєте $20 до звичайної ціни). Безкоштовно: 500 закладок.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Перейти до основного вмісту",
   "navBrandAria": "Головна BookmarkForge",
   "navAriaLabel": "Основна навігація",
@@ -31,26 +31,26 @@
   "githubAria": "Поставте зірку BookmarkForge на GitHub",
   "hero": {
     "badge": "Одноразова оплата · Без підписки",
-    "title": "Усе, що ви зберігаєте, лишається на вашому комп’ютері. <span class=\"accent-text\">Усе.</span>",
-    "subtitle": "Raindrop зберігає ваші закладки на своїх серверах — і стягує плату щороку. BookmarkForge зберігає їх на вашому комп’ютері, захищені ключем, який є лише у вас. Без акаунтів. Без щомісячних платежів. Ніхто не читає через ваше плече.",
-    "ctaPrimary": "Спробуйте одразу (без акаунта)",
-    "ctaSecondary": "Переглянути ціни",
+    "title": "Приватний менеджер закладок, який <span class=\"accent-text\">зберігає все на вашому пристрої.</span>",
+    "subtitle": "Для дослідників, студентів і всіх, хто не хоче віддавати історію читання хмарній компанії. Зберігайте сторінки, статті та PDF, знаходьте їх за ключовим словом або змістом — і все це лишається зашифрованим на вашому комп'ютері. Без акаунта. Без підписки.",
+    "ctaPrimary": "Почати безкоштовно — без реєстрації",
+    "ctaSecondary": "Як це працює",
     "pillars": [
       {
-        "strong": "Приватно",
-        "text": "ваші збережені сторінки ніколи не залишають ваш комп’ютер"
+        "strong": "Приватний",
+        "text": "зашифрований на вашому пристрої"
       },
       {
-        "strong": "Захищено",
-        "text": "навіть ми не можемо їх прочитати"
+        "strong": "Ваш назавжди",
+        "text": "без підписок і щомісячних платежів"
       },
       {
-        "strong": "Офлайн",
-        "text": "працює в літаку, у тунелі, де завгодно"
+        "strong": "Працює офлайн",
+        "text": "зберігайте й читайте будь-де, навіть без інтернету"
       },
       {
-        "strong": "Оплата разова",
-        "text": "$59 довічний доступ за early bird (заощаджуєте $20 до звичайної ціни)"
+        "strong": "Безкоштовно назавжди",
+        "text": "500 закладок безкоштовно, Pro — лише якщо потрібно більше"
       }
     ],
     "announce": "⚡ Локальний AI-переклад (скоро)"
@@ -401,15 +401,11 @@
         "cta": "Отримати Pro $59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "потім $79 за звичайною ціною",
-        "sla": "Підтримка: електронна пошта 48 год (пн–пт)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Отримайте Pro за $79 (звичайна ціна)",
-        "cta2Class": "btn-secondary"
+        "sla": "Підтримка: електронна пошта 48 год (пн–пт)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-uk#pricing\">Learn more</a>"
+    "legal": "Одноразовий платіж · 12 місяців оновлень включено · v1 працює вічно · 30-денна гарантія повернення коштів. <a href=\"/privacy-and-terms.html#terms\">Умови</a>"
   },
   "faq": {
     "title": "Часті запитання",
@@ -502,7 +498,8 @@
         "Контакти"
       ],
       "helpCenter": "Центр допомоги",
-      "errorCodes": "Коди помилок"
+      "errorCodes": "Коди помилок",
+      "hours": "Відповіді протягом 48 год, пн–пт (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Усі права захищено.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",

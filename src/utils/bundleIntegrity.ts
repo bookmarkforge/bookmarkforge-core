@@ -333,7 +333,7 @@ export async function checkBundleIntegrity(): Promise<IntegrityCheckResult> {
     // The string is static (no user data), so innerHTML is safe here.
     const integrityErrorHtml =
       '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0f172a;color:#ef4444;font-family:system-ui;text-align:center;padding:2rem"><div><h1 style="font-size:1.5rem;margin-bottom:1rem">Integrity Check Failed</h1><p style="color:#94a3b8;margin-bottom:0.5rem">The application bundle has been tampered with.</p><p style="color:#64748b;font-size:0.875rem">Please reinstall the application from a trusted source.</p></div></div>';
-    // L-06: body may not exist yet (this can run before parse completes) —
+    // body may not exist yet (this can run before parse completes) —
     // falling back to <html> instead of throwing a TypeError that would leave
     // the app with no error screen at all.
     if (document.body) {
@@ -344,7 +344,7 @@ export async function checkBundleIntegrity(): Promise<IntegrityCheckResult> {
         integrityErrorHtml,
       );
     }
-    // L-06: surface the failure in the tab title as well.
+    // surface the failure in the tab title as well.
     document.title = "Integrity Check Failed";
   } else {
     logger.info("[BundleIntegrity] Integrity check passed", {
@@ -493,8 +493,8 @@ export function stopScriptInjectionGuard(): void {
 /**
  * Best-effort build hash for diagnostics. Prefers the CSP-safe JSON
  * integrity manifest element — the only production source, since the old
- * inline `window.__BMF_BUILD_HASH__ = ...` script is blocked by the strict
- * CSP (audit R71) — with the window property as fallback for tests/dev.
+ * inline `window.__BMF_BUILD_HASH__ =...` script is blocked by the strict
+ * CSP — with the window property as fallback for tests/dev.
  */
 export function getBuildHash(): string {
   // Read the element DIRECTLY (not via getBuildManifest, which caches): the

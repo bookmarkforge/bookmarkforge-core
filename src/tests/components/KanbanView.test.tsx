@@ -278,7 +278,7 @@ describe("KanbanView", () => {
     expect(screen.getByText("New Kanban Card")).toBeDefined();
   });
 
-  it("confirma tarjeta con Enter en el input inline", async () => {
+  it("confirms the card with Enter in the inline input", async () => {
     render(<KanbanView columns={mockColumns} />);
     await userEvent.click(getFirstColumnPlusBtn());
     const input = screen.getByPlaceholderText("Card title...");
@@ -382,7 +382,7 @@ describe("KanbanView", () => {
     expect(onItemMove).toHaveBeenCalledWith("t1", "c1", "c2");
   });
 
-  it("drop con draggedItem pero sin dragOver previo no llama onItemMove", () => {
+  it("drop with draggedItem but no prior dragOver does not call onItemMove", () => {
     const onItemMove = vi.fn();
     render(<KanbanView columns={mockColumns} onItemMove={onItemMove} />);
     const card = screen.getByText("Task 1").closest("[data-drag-index]")!;
@@ -655,7 +655,7 @@ describe("KanbanView", () => {
   });
 
   it("P92: drop on the same column in uncontrolled mode does not touch RxDB (early return)", async () => {
-    // El early-return `draggedItem.from === toColId` del modo no controlado
+    // The uncontrolled mode early-returns on `draggedItem.from === toColId`
     // must not call findOne or patch (nothing to persist).
     const findOne = vi.fn();
     mockUseRxCollection.mockReturnValue({ find: () => chainQuery, findOne });

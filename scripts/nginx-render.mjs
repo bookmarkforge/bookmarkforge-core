@@ -3,30 +3,30 @@
  * canonical CSP from csp-config.js) to every static file that carries it.
  *
  * OWNERSHIP (per file, one and only one kind):
- *   - public/nginx.conf   GENERATED WHOLESALE from this script (self-hosted
- *                         nginx server block). This script is its single owner.
- *   - public/robots.txt   GENERATED WHOLESALE from this script. Single owner.
- *   - public/_headers     HAND-MAINTAINED (A9-1). Cloudflare Pages applies only
- *                         the most-specific rule, so every path block repeats
- *                         the security headers. This script NEVER regenerates
- *                         the file: it surgically rewrites only the three
- *                         CSP-derived header values (Content-Security-Policy,
- *                         Report-To, Reporting-Endpoints) so a
- *                         BOOKMARKFORGE_DOMAIN change still propagates.
- *   - public/sitemap.xml  HAND-MAINTAINED (A9-1). 37 URLs across 30 languages,
- *                         pinned by scripts/check-seo.mjs. This script NEVER
- *                         regenerates the file: it surgically rewrites the URL
- *                         host inside <loc> elements and xhtml:link href
- *                         attributes, preserving paths and structure.
- *   - netlify.toml        HAND-MAINTAINED; only the three CSP-derived lines are
- *                         surgically replaced (see renderNetlifyToml).
- *   - vercel.json         HAND-MAINTAINED; only the three CSP-derived header
- *                         VALUES are surgically replaced — inside JSON strings,
- *                         so the replacement is JSON-escaped (see
- *                         renderVercelJson).
- *   - Everything in TARGETS_SURGICAL (HTML pages, manifest, extension files):
- *                         hand-maintained; only domain-bearing substrings are
- *                         replaced.
+ * - public/nginx.conf GENERATED WHOLESALE from this script (self-hosted
+ * nginx server block). This script is its single owner.
+ * - public/robots.txt GENERATED WHOLESALE from this script. Single owner.
+ * - public/_headers HAND-MAINTAINED (A9-1). Cloudflare Pages applies only
+ * the most-specific rule, so every path block repeats
+ * the security headers. This script NEVER regenerates
+ * the file: it surgically rewrites only the three
+ * CSP-derived header values (Content-Security-Policy,
+ * Report-To, Reporting-Endpoints) so a
+ * BOOKMARKFORGE_DOMAIN change still propagates.
+ * - public/sitemap.xml HAND-MAINTAINED (A9-1). 37 URLs across 30 languages,
+ * pinned by scripts/check-seo.mjs. This script NEVER
+ * regenerates the file: it surgically rewrites the URL
+ * host inside <loc> elements and xhtml:link href
+ * attributes, preserving paths and structure.
+ * - netlify.toml HAND-MAINTAINED; only the three CSP-derived lines are
+ * surgically replaced (see renderNetlifyToml).
+ * - vercel.json HAND-MAINTAINED; only the three CSP-derived header
+ * VALUES are surgically replaced — inside JSON strings,
+ * so the replacement is JSON-escaped (see
+ * renderVercelJson).
+ * - Everything in TARGETS_SURGICAL (HTML pages, manifest, extension files):
+ * hand-maintained; only domain-bearing substrings are
+ * replaced.
  *
  * The rendered files must stay byte-identical (modulo trailing whitespace and
  * CRLF) to the committed copies — the verify mode of this script and
@@ -35,8 +35,8 @@
  * fails its safety checks, nothing is written.
  *
  * Usage:
- *   node scripts/nginx-render.mjs            # verify (fail on drift)
- *   node scripts/nginx-render.mjs --write    # rewrite all targets (all-or-nothing)
+ * node scripts/nginx-render.mjs # verify (fail on drift)
+ * node scripts/nginx-render.mjs --write # rewrite all targets (all-or-nothing)
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -55,6 +55,13 @@ import {
   PREF_LANGS as REGISTRY_PREF,
 } from "./landing-registry.mjs";
 import { shellRoutes } from "./app-routes.mjs";
+
+/**
+ * The host every published URL must use. The apex answers 308 to `www`, so a
+ * canonical, sitemap entry, manifest URL or extension base built on APP_DOMAIN
+ * would send users and crawlers through a redirect on every hit.
+ */
+const SITE_DOMAIN = `www.${APP_DOMAIN}`;
 
 const ROOT = process.cwd();
 
@@ -88,33 +95,33 @@ const CSP_COMMENT = [
 ].join("\n");
 
 /** Landing languages (besides the default /). Kept in sync with the
- *  hreflang sets in scripts/check-seo.mjs LANDING_PAGES — a new language
- *  must be added in both places. */
+ * hreflang sets in scripts/check-seo.mjs LANDING_PAGES — a new language
+ * must be added in both places. */
 /** All localized landing routes shipped in public/ and listed in the sitemap.
  * Keep this registry aligned with generate-landing-pages.mjs / _redirects.
  * English is the root landing and is intentionally omitted here. */
 /** The 29 localized landing routes shipped in public/<code>.html —
- *  registry-derived (EN is the root landing, intentionally absent here).
- *  Kept aligned with generate-landing-pages.mjs / _redirects. */
+ * registry-derived (EN is the root landing, intentionally absent here).
+ * Kept aligned with generate-landing-pages.mjs / _redirects. */
 export const LANDING_LANGS = REGISTRY_LOCALIZED;
 
 /** The locales whose legal notice has NO reviewed translation: their
- *  /<lang>/privacy-and-terms.html URLs answer with the English notice
- *  instead of an English page wearing a localized <html lang>. */
+ * /<lang>/privacy-and-terms.html URLs answer with the English notice
+ * instead of an English page wearing a localized <html lang>. */
 export const RETIRED_LEGAL_LANGS = REGISTRY_LOCALIZED.filter(
   (lang) => !REGISTRY_LEGAL.includes(lang),
 );
 
 /** Every preference language (?lang= and bf_lang cookie values), en
- *  included ("en" means "stop negotiating, serve the EN landing").
- *  Registry-derived: the preference set IS the negotiation set by design
- *  (Netlify has no separate preference mechanism — see the middleware). */
+ * included ("en" means "stop negotiating, serve the EN landing").
+ * Registry-derived: the preference set IS the negotiation set by design
+ * (Netlify has no separate preference mechanism — see the middleware). */
 export const PREF_LANGS = REGISTRY_PREF;
 
 /** Preference cookie, shared by every host. nf_lang is Netlify's native
- *  override for its Language conditions; bf_lang is read by this nginx
- *  config and functions/_middleware.js. Same cookie in landing.js and
- *  pinned by scripts/check-seo.mjs. */
+ * override for its Language conditions; bf_lang is read by this nginx
+ * config and functions/_middleware.js. Same cookie in landing.js and
+ * pinned by scripts/check-seo.mjs. */
 export const LANG_COOKIE_ATTRS = "Path=/; Max-Age=31536000; SameSite=Lax; Secure";
 
 /** Render the nginx server block (matches public/nginx.conf). */
@@ -165,7 +172,7 @@ ${repeat}
     location ~ ^/(${LANDING_LANGS.join("|")})/(?!privacy-and-terms)(.+)$ {
         # [a-z][a-z] instead of {2}: nginx parses an unquoted brace in a rewrite
         # regex as a block delimiter and refuses to start ("rewrite is not
-        # terminated by ;") — the alternation above already limits this to the
+        # terminated by;") — the alternation above already limits this to the
         # real locale codes, so the two letters are the locale.
         rewrite ^/([a-z][a-z])/ /$1.html last;
     }`;
@@ -276,7 +283,7 @@ ${cspHeader}
     # redirect to /404.html (the 404 status is preserved), which matches
     # the ~*\\.html$ location below and therefore gets all the security
     # headers — including the CSP — from that location automatically.
-    # No headers need repeating here: add_header ... always already
+    # No headers need repeating here: add_header... always already
     # applies the security directives to every other response (nginx default
     # error pages and any 301/302 redirect) at the level that handles it.
     # 5xx (500/502/503/504) intentionally keep nginx's default page: the
@@ -286,8 +293,8 @@ ${cspHeader}
 
     # ── Same-origin companion API ────────────────────────────────────
     # Only routes the companion actually serves are proxied here (see
-    # server/src/route-table.ts): health, CSP reports, client events and
-    # analytics. License and affiliate traffic is NOT served by this container
+    # server/src/route-table.ts): health, CSP reports and Open Graph. License
+    # and affiliate traffic is NOT served by this container
     # (api/license is the separate serverless function; affiliate endpoints are
     # Pro-only), so those prefixes answer an explicit 404 instead of falling
     # through to the SPA shell, which would return app.html with HTTP 200 and
@@ -306,7 +313,7 @@ ${cspHeader}
     # nginx otherwise holds every request for a minute before 502, hanging
     # health checks, smoke and monitoring-alerts. Fail fast = detect fast.
     #
-    # A2 (audit 2026-11-05): these two prefixes used to be proxied to the
+    # these two prefixes used to be proxied to the
     # companion, whose dispatcher answers 426 for every undeclared route.
     location ^~ /api/license/ {
         default_type application/json;
@@ -320,39 +327,6 @@ ${cspHeader}
 
     location = /csp-report {
         proxy_pass http://bookmarkforge_api:8787/csp-report;
-        proxy_http_version 1.1;
-        proxy_connect_timeout 5s;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_read_timeout 10s;
-        proxy_send_timeout 10s;
-        proxy_buffering off;
-    }
-
-    # Client events pipeline (storage-pressure / bundle-integrity-spike /
-    # error-spike / csp-violation-spike): the PWA reporter POSTs here and the
-    # monitoring cron reads the collector's threshold log. Without this rule
-    # the endpoint is unreachable behind nginx and CLIENT_CRITICAL alerting
-    # dies silently — the production-smoke check 'client-events accepts
-    # csp-violation-spike' fails with 405/404.
-    location = /api/client-events {
-        proxy_pass http://bookmarkforge_api:8787/api/client-events;
-        proxy_http_version 1.1;
-        proxy_connect_timeout 5s;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_read_timeout 10s;
-        proxy_send_timeout 10s;
-        proxy_buffering off;
-    }
-
-    # Retry-stats diagnostics: the reporter POSTs cumulative delivery counters
-    # here; without this rule the telemetry fell on the 426 catch-all and the
-    # degraded-delivery alert (client_events_retry_degraded) was dead.
-    location = /api/client-events/retry-stats {
-        proxy_pass http://bookmarkforge_api:8787/api/client-events/retry-stats;
         proxy_http_version 1.1;
         proxy_connect_timeout 5s;
         proxy_set_header Host $host;
@@ -406,22 +380,6 @@ ${cspHeader}
         proxy_buffering off;
     }
 
-    # Opt-in product analytics ingest: unauthenticated by design (bounded,
-    # pseudonymous, per-IP rate-limited). The token-gated /api/analytics/kpis
-    # report is deliberately NOT exposed; see UNPROXIED_ROUTE_ALLOWLIST in
-    # scripts/check-pro-routes.mjs.
-    location = /api/analytics/events {
-        proxy_pass http://bookmarkforge_api:8787/api/analytics/events;
-        proxy_http_version 1.1;
-        proxy_connect_timeout 5s;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_read_timeout 10s;
-        proxy_send_timeout 10s;
-        proxy_buffering off;
-    }
-
     # ── WebSocket signaling (wss://<domain>/) ────────────────────────
     # The PWA connects to the origin ROOT for signaling. nginx must route
     # the Upgrade to the companion server while every plain HTTP request
@@ -454,7 +412,7 @@ ${repeat}
     # nginx evaluates regex locations in order of appearance: the retired-
     # legal rule (/<lang>/privacy-and-terms.html → the English notice) and
     # the localized-subtree rule (/<lang>/<path> → /<lang>.html) both match
-    # .html-suffixed URLs, so emitted after the ~*\.html$ block they never
+    #.html-suffixed URLs, so emitted after the ~*\.html$ block they never
     # ran — /ar/privacy-and-terms.html 404'd on the self-hosted path while
     # Netlify/Vercel answered 200 (found by check-landing-smoke --base-url
     # against the staging compose stack, 2026-11-11).
@@ -490,21 +448,21 @@ ${repeat}
     # content: serve it at / with an INTERNAL 200 rewrite so the canonical
     # URL stays https://<domain>/ instead of the private SPA shell (which
     # is noindexed — see robots.txt). /es/ is the Spanish landing
-    # (hreflang pair of the English one). Both files are plain .html, so
+    # (hreflang pair of the English one). Both files are plain.html, so
     # the ~*.html$ location below applies the security headers and the
     # no-cache Cache-Control automatically.
     # WebSocket upgrades to the root (same-origin signaling) must keep
     # routing to /_ws_ exactly as before — only plain HTTP goes to the
     # landing page.
     # Language negotiation with a manual preference override. Order in
-    # location = /: (1) explicit ?lang= choice wins over everything — it
+    # location = /: (1) explicit?lang= choice wins over everything — it
     # sets a persistent preference cookie (internal /_lang/<lang> target)
-    # and bounces to the clean URL; (2) the bf_lang cookie (set by ?lang=
+    # and bounces to the clean URL; (2) the bf_lang cookie (set by?lang=
     # or landing.js) overrides Accept-Language so a manual choice stops
     # the redirect from bouncing the user back; (3) only visitors WITHOUT
     # a preference cookie get Accept-Language negotiation (internal
     # /_negotiate): a browser whose PRIMARY language is one of the
-    # localized landings gets a 302 to it (/fr/, /es/, ...). 302 (not 301)
+    # localized landings gets a 302 to it (/fr/, /es/,...). 302 (not 301)
     # on purpose — language negotiation must stay temporary so search
     # engines keep the en canonical at / (Google's guidance). Covers
     # "fr-FR,fr;q=0.9" and "FR" alike (case-insensitive ^ match). Kept in
@@ -559,7 +517,7 @@ ${LANDING_LANGS.map(
         rewrite ^ /landing.html last;
     }
 
-    # /_lang/<lang> — internal targets of the ?lang= choice: set the
+    # /_lang/<lang> — internal targets of the?lang= choice: set the
     # persistent preference cookie (bf_lang read by this config and the
     # Cloudflare middleware; nf_lang is Netlify's native override for its
     # Language conditions) and 302 to the clean landing URL (no query).
@@ -592,9 +550,15 @@ ${LANDING_LANGS.map(
     }`,
     ).join("\n\n")}
 
-    # Pocket comparison page (SEO) — static HTML at a clean URL
+    # Pocket comparison page (SEO) — static HTML at a clean URL. The clean
+    # URL is canonical (sitemap, canonicals, internal links); the.html twin
+    # 301s to it so the two 200s stop splitting link equity.
     location = /pocket-alternative {
         rewrite ^ /pocket-alternative.html last;
+    }
+
+    location = /pocket-alternative.html {
+        return 301 /pocket-alternative;
     }
 
 ${appRouteLocation}
@@ -680,7 +644,7 @@ export function rewriteHeadersCspValues(existing, csp = CSP_MODERATE) {
  * (xmlns="http://www.w3.org/…" and sitemaps.org) live in xmlns attributes,
  * which this function never matches, so they survive untouched.
  */
-export function replaceSitemapLocs(existing, domain = APP_DOMAIN) {
+export function replaceSitemapLocs(existing, domain = SITE_DOMAIN) {
   if (existing === null) return null;
   if (!existing.includes("<urlset")) {
     throw new Error(
@@ -711,7 +675,7 @@ export function replaceSitemapLocs(existing, domain = APP_DOMAIN) {
 }
 
 /** Render public/robots.txt with the current deployment domain. */
-export function renderRobotsTxt(domain = APP_DOMAIN) {
+export function renderRobotsTxt(domain = SITE_DOMAIN) {
   return `# robots.txt for BookmarkForge
 
 # Only the marketing landing (served at / and /es/) is indexable content.
@@ -815,7 +779,7 @@ function renderNetlifyToml(existing, csp = CSP_MODERATE) {
 // Surgical domain-localisation renderers.
 //
 // These files are NOT generated wholesale — they contain static prose, HTML
-// structure, JSON keys, and comments that must survive untouched.  Only the
+// structure, JSON keys, and comments that must survive untouched. Only the
 // domain-bearing lines are replaced so a BOOKMARKFORGE_DOMAIN change
 // propagates everywhere with a single `npm run nginx:render`.
 // ---------------------------------------------------------------------------
@@ -841,7 +805,7 @@ function replaceDomainInFile(existing, domain) {
 }
 
 /** Replace only a top-level JSON string field value. Never touches nested
- *  objects — safe for manifests whose CSP lives in a separate value. */
+ * objects — safe for manifests whose CSP lives in a separate value. */
 function replaceManifestField(existing, field, domain) {
   if (existing === null) return null;
   return existing.replace(
@@ -854,11 +818,11 @@ const TARGETS_SURGICAL = [
   // ── Public static pages (canonical links) ─────────────────────────
   {
     label: "public/404.html",
-    render: (existing) => replaceDomainInFile(existing, APP_DOMAIN),
+    render: (existing) => replaceDomainInFile(existing, SITE_DOMAIN),
   },
   {
     label: "public/privacy-and-terms.html",
-    render: (existing) => replaceDomainInFile(existing, APP_DOMAIN),
+    render: (existing) => replaceDomainInFile(existing, SITE_DOMAIN),
   },
   // Localized legal pages (canonical/hreflang/OG links carry the domain).
   // EN's root page is handled explicitly above; the rest come from the
@@ -866,12 +830,12 @@ const TARGETS_SURGICAL = [
   // graph use, so a legal locale cannot be added to one and missed here.
   ...REGISTRY_LEGAL.filter((lang) => lang !== "en").map((lang) => ({
     label: `public/${lang}/privacy-and-terms.html`,
-    render: (existing) => replaceDomainInFile(existing, APP_DOMAIN),
+    render: (existing) => replaceDomainInFile(existing, SITE_DOMAIN),
   })),
   // ── PWA manifest (related_applications url) ───────────────────────
   {
     label: "public/manifest.json",
-    render: (existing) => replaceDomainInFile(existing, APP_DOMAIN),
+    render: (existing) => replaceDomainInFile(existing, SITE_DOMAIN),
   },
   // ── Extension JS (DEFAULT_BASE_URL default) ───────────────────────
   {

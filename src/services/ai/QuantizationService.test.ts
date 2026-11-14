@@ -191,7 +191,7 @@ describe("QuantizationService", () => {
       }
     });
 
-    it("decompresses polar4 vector by unpacking nibbles (audit #3)", () => {
+    it("decompresses polar4 vector by unpacking nibbles", () => {
       const vector = [0.5, -0.3, 0.8, -0.1, 0.2, -0.7, 0.4, -0.6];
       const quantized = QuantizationService.quantize(vector, "polar4");
       expect(quantized.data.length).toBe(4); // 2 nibbles por byte

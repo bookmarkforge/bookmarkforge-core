@@ -10,7 +10,6 @@ import { logger } from "../../utils/logger";
 
 export function CaptureApp() {
   const { isLocked, forceSetup } = useSecurityStore();
-  const [masterPassword] = useState<string>("");
   const [hasPwd, setHasPwd] = useState(
     () => safeGet(STORAGE_KEYS.HAS_MASTER_PASSWORD) === "true",
   );
@@ -33,5 +32,5 @@ export function CaptureApp() {
     );
   }
 
-  return <Capture masterPassword={masterPassword || undefined} />;
+  return <Capture />;
 }

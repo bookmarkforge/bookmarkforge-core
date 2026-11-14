@@ -156,7 +156,7 @@ export const bookmarkSchema: RxJsonSchema<BookmarkDocType> = {
   // Archive is not overloaded into deletion; Pocket archive is retained as
   // the `pocket-archive` tag until a first-class archive lifecycle exists.
   //
-  // v9 (audit A4+A5, 2026-11-05): `tags` joins the encrypted set — tags are
+  // v9: `tags` joins the encrypted set — tags are
   // the user's most sensitive classification and were stored in clear text.
   // `urlHash` stays indexed and non-encrypted, but the storage layer now
   // persists HMAC-SHA256(K_urlHash, sha256hex(url)) instead of the bare
@@ -268,7 +268,7 @@ export const documentAttachmentSchema: RxJsonSchema<DocumentAttachmentDocType> =
 export const documentSchema: RxJsonSchema<DocumentDocType> = {
   title: "document schema",
   // v2: authenticated-at-rest envelope (F-06) — identity migration.
-  // v3 (audit A5, 2026-11-05): `tags` joins the encrypted set, matching the
+  // v3: `tags` joins the encrypted set, matching the
   // bookmark schema — document tags carry the same sensitive classifications.
   version: 3,
   primaryKey: "id",

@@ -133,7 +133,7 @@ const BACKTICKED_SPAN_RE = /`([^`\n]+)`/g;
 export const RELATIVE_LINK_FINGERPRINT =
   "relative-links/v1: markdown-link-targets, extension-gated, resolved against the document directory";
 const HISTORICAL_DOC_RE = /^docs\/(?:ADR-\d+.*\.md|audit\.md|docs-state-index\.md)$/;
-const EXAMPLE_DOC_RE = /^docs\/(?:sast-triage\.md|scripts-inventory-scanner-limits\.md|staging-smoke\.md|AUDIT-FACTORY-EXAMPLE\.md)$/;
+const EXAMPLE_DOC_RE = /^docs\/(?:sast-triage\.md|scripts-inventory-scanner-limits\.md|staging-smoke\.md)$/;
 const EXPLICIT_HISTORICAL_REFS = new Set(["scripts/test-upstream-server.mjs"]);
 /**
  * Scripts the docs must keep naming even though the checkout does not ship

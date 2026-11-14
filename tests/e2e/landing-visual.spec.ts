@@ -17,30 +17,30 @@
  *      background, so a broken or renamed token fails here even though the CSS
  *      text still says the right thing. This is the half that has teeth on
  *      Linux CI today.
- *   2. PIXEL BASELINES (Windows-captured). The two committed PNGs are the
+ *   2. PIXEL BASELINES (committed for win32 and linux). The PNGs are the
  *      artifact a reviewer looks at when a change is visual but not
  *      expressible as one property. They are what AGENTS.md §9 means by
  *      "regenerating baselines is an intentional act".
  *
- * ── THE PLATFORM BOUNDARY, STATED PLAINLY ──────────────────────────────────
- * Pixel baselines are captured on the platform that has a browser AND a
- * checkout: this one (win32). Playwright's default snapshot path carries the
- * platform token, so on Linux it looks for `-chromium-linux.png`, does not find
- * it and FAILS ("a snapshot doesn't exist"). Every runner in
- * .github/workflows is ubuntu-latest, so those baselines are compared on
- * Windows checkouts and skipped elsewhere — the same documented boundary
- * `tests/e2e/text-fit.spec.ts` carries, and for the same reason. The skip is
- * explicit and reasoned rather than a silent pass, and the debt is registered
- * as P-33 in docs/PENDIENTES.md (§3, verification gaps).
+ * ── ONE BASELINE PER PLATFORM, BOTH COMMITTED ──────────────────────────────
+ * Playwright's default snapshot path carries the platform token, so each
+ * platform compares its own file: `-chromium-win32.png` on a Windows checkout
+ * and `-chromium-linux.png` on the ubuntu-latest runners in .github/workflows.
+ * Both sets are committed, so the comparison runs everywhere instead of being
+ * skipped off win32 (debt P-33, recorded before the pendientes ledger was retired).
  *
- * To close it, capture the Linux variants on a Linux box (or the
- * `mcr.microsoft.com/playwright` image) with:
+ * To regenerate, run on the platform you are updating and commit only that
+ * set — a diff in the other one is a signal that the change is not
+ * platform-specific:
  *
  *   npx playwright test tests/e2e/landing-visual.spec.ts \
- *     --config=playwright.config.ts --project=chromium --update-snapshots
+ *     --config=playwright.config.ts --project=chromium --update-snapshots=all
  *
- * and commit the resulting `*-chromium-linux.png` files next to the win32 ones;
- * then drop the skip below and the baselines are enforced in CI as well.
+ * The linux pair was captured in `mcr.microsoft.com/playwright:v1.62.1-noble`
+ * (the ubuntu-latest family, x86_64) from a clean `git archive HEAD` tree, on
+ * an ARM64 host through Docker's x64 emulation, where Chromium needs
+ * `--no-zygote` to survive QEMU; that flag changes how the browser is spawned,
+ * not what it renders. Re-capture on Windows when the landing changes.
  *
  * ── DETERMINISM ────────────────────────────────────────────────────────────
  *   - the colour scheme is pinned to `light` (the landing reads
@@ -129,6 +129,36 @@ async function injectSecondBadge(page: Page): Promise<void> {
     return ribbon.querySelectorAll(".badge").length;
   }, SECOND_BADGE_TEXT);
   expect(injected, "the popular card must expose a badge ribbon to extend").toBe(2);
+}
+
+/**
+ * Frame the pricing grid so the capture is one clean image.
+ *
+ * At this width the two cards stack into a box taller than the viewport, and a
+ * taller-than-viewport element capture is stitched by scrolling: the fixed nav
+ * and the mobile CTA bar land in the middle of the PNG, and the Windows run
+ * left ~1300 px of blank band where the off-screen half should be. Growing the
+ * viewport to the grid's own height keeps the shot in a single frame, and the
+ * fixed chrome is hidden for that frame so it cannot overlay the cards. Both
+ * adjustments are capture-only.
+ */
+async function framePricingGrid(page: Page): Promise<void> {
+  const box = await page.locator(".pricing-cards").boundingBox();
+  expect(box, "the pricing grid must have a box to capture").not.toBeNull();
+  await page.setViewportSize({
+    width: NARROW.width,
+    height: Math.ceil(box?.height ?? NARROW.height) + 80,
+  });
+  await page.evaluate(() => {
+    for (const selector of [".nav", ".mobile-cta-bar"]) {
+      document.querySelectorAll<HTMLElement>(selector).forEach((el) => {
+        el.style.visibility = "hidden";
+      });
+    }
+  });
+  await page.locator(".pricing-cards").evaluate((el) => el.scrollIntoView({ block: "start" }));
+  await stabilizeRender(page);
+  await revealAndSettle(page, ".price-card.popular");
 }
 
 /**
@@ -247,14 +277,8 @@ test.describe("landing appearance: resolved style properties (every platform)", 
 });
 
 test.describe("landing appearance: committed pixel baselines", () => {
-  // See the file header: the PNGs are captured on win32 and Playwright looks
-  // for a platform-suffixed file, so elsewhere this is skipped explicitly
-  // instead of failing on a baseline that was never captured. The resolved
-  // style contract above still runs everywhere.
-  test.skip(
-    process.platform !== "win32",
-    "landing baselines are committed for chromium-win32 only; capture the -chromium-linux set (see file header) before running this part on Linux",
-  );
+  // Both platform baselines are committed (see the file header), so this part
+  // runs on Windows and on the Linux CI runners alike.
 
   // Serial on purpose: these captures share one dev server, and the last test
   // reads the two PNGs the first two write — running them in parallel let the
@@ -281,6 +305,7 @@ test.describe("landing appearance: committed pixel baselines", () => {
     // The ribbon is positioned 12px ABOVE the card's top edge on purpose, so an
     // element capture of the card would clip the very thing this baseline is
     // about; the grid box contains the overhang and is captured instead.
+    await framePricingGrid(page);
     await expect(page.locator(".pricing-cards")).toHaveScreenshot(`${PRICE_BASELINE}.png`, {
       maxDiffPixels: 250,
     });

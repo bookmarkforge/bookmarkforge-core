@@ -18,9 +18,9 @@ import { publishKdfParams } from "./e2e-diagnostics";
  * what a browser tab is. Memory (§3.1) is the parameter doing the work here.
  *
  * Memory cost (m) is adaptive:
- *   - Desktop: 131072 KiB (128 MiB) — OWASP recommended for sensitive data
- *   - Mobile/tablet: 65536 KiB (64 MiB) — conserves RAM on constrained devices
- *   - Test: 8192 KiB (8 MiB) — keeps tests fast
+ * - Desktop: 131072 KiB (128 MiB) — OWASP recommended for sensitive data
+ * - Mobile/tablet: 65536 KiB (64 MiB) — conserves RAM on constrained devices
+ * - Test: 8192 KiB (8 MiB) — keeps tests fast
  */
 
 // Pre-compiled regex for mobile detection (avoid recompilation on each call)
@@ -31,9 +31,9 @@ const MOBILE_UA_REGEX = /mobile|android|iphone|ipad|ipod|tablet/;
  * Works in both main-thread and Web Worker contexts.
  *
  * Heuristic:
- *   1. `navigator.maxTouchPoints > 0` — touch-capable device.
- *   2. UA check for mobile/tablet keywords — distinguishes phones/tablets
- *      from desktop machines that happen to have a touchscreen.
+ * 1. `navigator.maxTouchPoints > 0` — touch-capable device.
+ * 2. UA check for mobile/tablet keywords — distinguishes phones/tablets
+ * from desktop machines that happen to have a touchscreen.
  *
  * Falls back to `false` (desktop) when `navigator` is unavailable (SSR,
  * test environments) so the stronger 128 MiB parameters are the default.
@@ -200,7 +200,7 @@ export async function deriveArgon2idAesKey(
 }
 
 /**
- * AES-GCM key from an EXPLICIT parameter set (A2, audit 2026-11-05).
+ * AES-GCM key from an EXPLICIT parameter set.
  *
  * The portable binary backup container (`encryptBinary`/`decryptBinary`) carries
  * its Argon2id parameters, so a `.bmf` file written on a desktop (128 MiB) opens

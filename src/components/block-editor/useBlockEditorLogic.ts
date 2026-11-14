@@ -640,7 +640,7 @@ export function useBlockEditorLogic({
       if (!text.trim()) {
         throw new Error(
           t("editor_no_content_for_flashcards") ??
-            "No hay contenido para generar flashcards",
+            "There is no content to make flashcards from",
         );
       }
       return extractFlashcards(text);

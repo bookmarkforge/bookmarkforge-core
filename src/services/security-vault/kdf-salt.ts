@@ -19,9 +19,10 @@
  * are `v6:` and EMBED the salt, so:
  *   - decryption never depends on local storage state (shares, backups and
  *     pre-migration blobs all keep working, even if the stored salt is lost);
- *   - `v5:` payloads written before the upgrade keep decrypting with the legacy
- *     fixed salt (read-compat, no data loss), and are re-wrapped opportunistically
- *     (see `migrateVaultSecretsToVaultSalt` + `createVerificationToken`).
+ *   - `v6:` payloads written before the upgrade keep decrypting from their own
+ *     embedded salt and are re-wrapped opportunistically (see
+ *     `migrateVaultSecretsToVaultSalt` + `createVerificationToken`). `v5:` is
+ *     REMOVED (ADR-052 phase 4): it cannot be read or migrated in-tree.
  *
  * The salt is public metadata, not key material: it is never required to be
  * secret, only unique per vault.
@@ -158,7 +159,10 @@ export interface VaultSaltMigrationResult {
 }
 
 /**
- * Re-wraps legacy (`v5:`) master-password secrets under the per-vault salt.
+ * Re-wraps legacy (`v6:`) master-password secrets under the per-vault salt.
+ *
+ * `v5:` blobs cannot be decrypted any more (ADR-052 phase 4), so they are
+ * reported as failed and left untouched instead of being silently deleted.
  *
  * Per-key and non-fatal: a key that cannot be decrypted/rewritten is left
  * exactly as it was, so the vault keeps working with the legacy derivation and
@@ -170,12 +174,19 @@ export interface VaultSaltMigrationResult {
  * EncryptionService consumes (zeroizes) byte buffers it receives.
  */
 export async function migrateVaultSecretsToVaultSalt(
-  password: string,
+  password: string | Uint8Array,
 ): Promise<VaultSaltMigrationResult> {
   const result: VaultSaltMigrationResult = { migrated: [], failed: [] };
-  if (!password) {return result;}
-
-  const passwordBytes = new TextEncoder().encode(password);
+  // Bytes at the boundary (AGENTS.md §2): encode a string once, copy a byte
+  // caller's buffer, and zeroize the owned copy in the finally below.
+  const passwordBytes =
+    typeof password === "string"
+      ? new TextEncoder().encode(password)
+      : new Uint8Array(password);
+  if (passwordBytes.length === 0) {
+    zeroPasswordBytes(passwordBytes);
+    return result;
+  }
   try {
     for (const key of MIGRATED_SECRET_KEYS) {
       let stored: string | null = null;

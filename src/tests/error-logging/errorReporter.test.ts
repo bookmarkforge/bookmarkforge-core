@@ -502,7 +502,7 @@ describe("telemetry lifecycle and bounds", () => {
 });
 
 /*
- * Consent integration (audit 2026-08-30): the ConsentBanner writes to
+ * Consent integration: the ConsentBanner writes to
  * STORAGE_KEYS.CONSENT_ERROR_REPORTING ("forge_consent_error_reporting").
  * Previously the reporter read bmf_local_error_storage instead — the
  * banner choice had no effect. These tests pin the correct contract.

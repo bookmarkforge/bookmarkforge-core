@@ -243,9 +243,17 @@ describe("P0 regression — legacy share mismatch rejection (SecurityVault uncha
       const result = await securityVault.unlock("correct_password");
 
       expect(secureStorage.getWrappedDeviceKeyBlob).toHaveBeenCalled();
+      // Bytes end-to-end (AGENTS.md §2): the consumer receives a Uint8Array;
+      // the owning buffer is zeroized when unlock() returns.
       expect(secureStorage.unwrapDeviceKeyWithPassword).toHaveBeenCalledWith(
-        "correct_password",
+        expect.any(Uint8Array),
       );
+      const unwrapCalls = (
+        secureStorage.unwrapDeviceKeyWithPassword as unknown as {
+          mock: { calls: Array<[Uint8Array]> };
+        }
+      ).mock.calls;
+      expect(unwrapCalls[0]![0]).toHaveLength("correct_password".length);
       expect(secureStorage.isDeviceKeyMaterialized).toHaveBeenCalled();
       expect(result).toBe(false);
       expect(securityVault.isLocked()).toBe(true);

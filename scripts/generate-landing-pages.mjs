@@ -57,13 +57,13 @@ function generatePage(code, t) {
   // Use localized OG image if it exists, otherwise fall back to default
   const ogImageFile = resolve(PUBLIC, `og-image-${code}.png`);
   const ogImageUrl = existsSync(ogImageFile)
-    ? `https://bookmarkforgeapp.com/og-image-${code}.png`
-    : "https://bookmarkforgeapp.com/og-image.png";
+    ? `https://www.bookmarkforgeapp.com/og-image-${code}.png`
+    : "https://www.bookmarkforgeapp.com/og-image.png";
 
   const hreflangLinks = ALL_LOCALES.map(l => {
-    const url = l === "en" ? "https://bookmarkforgeapp.com/" : `https://bookmarkforgeapp.com/${l}/`;
+    const url = l === "en" ? "https://www.bookmarkforgeapp.com/" : `https://www.bookmarkforgeapp.com/${l}/`;
     return `  <link rel="alternate" hreflang="${l}" href="${url}">`;
-  }).join("\n") + "\n  <link rel=\"alternate\" hreflang=\"x-default\" href=\"https://bookmarkforgeapp.com/\">";
+  }).join("\n") + "\n  <link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.bookmarkforgeapp.com/\">";
 
   const ogLocaleAlts = ALL_LOCALES.filter(l => l !== code && l !== "en").map(l => {
     return `  <meta property="og:locale:alternate" content="${OG_LOCALE[l]}">`;
@@ -137,14 +137,14 @@ function generatePage(code, t) {
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/manifest.json">
   <!-- SEO: canonical + hreflang -->
-  <link rel="canonical" href="https://bookmarkforgeapp.com/${code}/">
+  <link rel="canonical" href="https://www.bookmarkforgeapp.com/${code}/">
 ${hreflangLinks}
   <!-- Open Graph (og-image.png is 1200x630) -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="BookmarkForge">
   <meta property="og:title" content="${t.title}">
   <meta property="og:description" content="${t.metaDesc}">
-  <meta property="og:url" content="https://bookmarkforgeapp.com/${code}/">
+  <meta property="og:url" content="https://www.bookmarkforgeapp.com/${code}/">
   <meta property="og:image" content="${ogImageUrl}">
   <meta property="og:image:alt" content="BookmarkForge — private AI-powered bookmark and notes app">
   <meta property="og:image:width" content="1200">

@@ -41,10 +41,10 @@ import { applyLanguageDirection } from "./utils/localization";
  * Translation namespaces — the split that keeps the public copy out of the
  * app's boot payload.
  *
- *   app      /locales/<lng>.json          internal UI + AI assistant (eager:
- *                                        this is what the shell renders)
- *   landing  /locales/landing/<lng>.json  public/marketing copy, fetched only
- *                                        when a public surface asks for it
+ * app /locales/<lng>.json internal UI + AI assistant (eager:
+ * this is what the shell renders)
+ * landing /locales/landing/<lng>.json public/marketing copy, fetched only
+ * when a public surface asks for it
  *
  * Neither namespace ships more than the ACTIVE language: i18next + the HTTP
  * backend fetch exactly one file per namespace, and vite.config.ts keeps
@@ -102,7 +102,7 @@ export function detectUserLanguage(): string {
 // code if a component renders a translation via innerHTML without DOMPurify.
 export const SCRIPT_INJECTION = /<script|on\w+\s*=|javascript:/i;
 
-// SECURITY (audit L-11): SCRIPT_INJECTION only sees raw markup — HTML
+// SECURITY: SCRIPT_INJECTION only sees raw markup — HTML
 // numeric/named entities (`&#x3c;`, `&lt;`) and JS unicode escapes
 // (`\u003c`) evade it. Decode the forms a browser DOM pass (or a later
 // JSON.parse) would interpret BEFORE the regex test, so entity-encoded
@@ -163,7 +163,7 @@ export function validateLocale(
   }
   const walk = (node: unknown, path = ""): void => {
     if (typeof node === "string") {
-      // L-11: test the DOM-equivalent decoded form so entity/escape-encoded
+      // test the DOM-equivalent decoded form so entity/escape-encoded
       // payloads (`&#x3c;script&#x3e;`, `\u003cscript\u003e`) are rejected
       // too, not only raw `<script>` markup.
       if (SCRIPT_INJECTION.test(decodeMarkupEscapes(node))) {
@@ -200,12 +200,12 @@ i18n
     fallbackLng: "en",
     supportedLngs: SUPPORTED_LANGUAGES.map((l) => l.code),
     // Asynchronous, on-demand loading:
-    //  - `ns` lists ONLY the eager namespace; `landing` is fetched by
-    //    loadLandingNamespace() when a public surface asks for it.
-    //  - nothing is bundled or preloaded per language, so the browser holds
-    //    exactly one language file for the namespace it is rendering.
-    //  - `load: 'currentOnly'` stops i18next from also requesting the bare
-    //    `en` fallback file when the active locale is a regional tag.
+    // - `ns` lists ONLY the eager namespace; `landing` is fetched by
+    // loadLandingNamespace() when a public surface asks for it.
+    // - nothing is bundled or preloaded per language, so the browser holds
+    // exactly one language file for the namespace it is rendering.
+    // - `load: 'currentOnly'` stops i18next from also requesting the bare
+    // `en` fallback file when the active locale is a regional tag.
     ns: [APP_NAMESPACE],
     defaultNS: APP_NAMESPACE,
     load: "currentOnly",

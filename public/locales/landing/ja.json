@@ -6,11 +6,11 @@
   "description": "Raindropはブックマークをサーバーに保存します。BookmarkForgeはブックマークをあなたのコンピュータに保存します — 私たちでさえ読めないようにロックされています。一度だけの支払い: $59 アーリーバード価格で永久ライセンス（通常価格前に$20お得）。無料：500件のブックマーク。",
   "ogTitle": "BookmarkForge：プライベートなローカルファーストのブックマーク管理とリーディングリスト",
   "ogDescription": "Raindropはブックマークをサーバーに保存します。BookmarkForgeはブックマークをあなたのコンピュータに保存します — 私たちでさえ読めないようにロックされています。一度だけの支払い: $59 アーリーバード価格で永久ライセンス（通常価格前に$20お得）。無料：500件のブックマーク。",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "ogImageAlt": "BookmarkForge — AI を活用したプライベートなブックマーク＆ノートアプリ",
   "twitterTitle": "BookmarkForge：プライベートなローカルファーストのブックマーク管理とリーディングリスト",
   "twitterDescription": "Raindropはブックマークをサーバーに保存します。BookmarkForgeはブックマークをあなたのコンピュータに保存します — 私たちでさえ読めないようにロックされています。一度だけの支払い: $59 アーリーバード価格で永久ライセンス（通常価格前に$20お得）。無料：500件のブックマーク。",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "メインコンテンツにスキップ",
   "navBrandAria": "BookmarkForge ホーム",
   "navAriaLabel": "メインナビゲーション",
@@ -31,26 +31,26 @@
   "githubAria": "GitHubでBookmarkForgeに星を付ける",
   "hero": {
     "badge": "一回限りの支払い · サブスクリプションなし",
-    "title": "保存したものはすべてあなたのコンピュータに残ります。<span class=\"accent-text\">すべて。</span>",
-    "subtitle": "Raindropはブックマークをサーバーに保存し、毎年課金します。BookmarkForgeはブックマークをあなたのコンピュータに保存し、あなただけが持つ鍵でロックします。アカウント不要。月額料金なし。誰も肩越しに見ません。",
-    "ctaPrimary": "今すぐ試す（アカウント不要）",
-    "ctaSecondary": "料金を表示",
+    "title": "プライベートなブックマークマネージャー。<span class=\"accent-text\">すべてはあなたのデバイスに。</span>",
+    "subtitle": "研究者、学生、そして読書履歴をクラウド企業に渡したくないすべての人のために。ページ、記事、PDFを保存し、キーワードや意味で見つけ、すべてを自分のコンピューターに暗号化して保管します。アカウント不要。サブスクリプションなし。",
+    "ctaPrimary": "無料で始める — 登録不要",
+    "ctaSecondary": "仕組みを見る",
     "pillars": [
       {
         "strong": "プライベート",
-        "text": "保存したページはあなたのコンピュータから出ません"
+        "text": "デバイス上で暗号化"
       },
       {
-        "strong": "ロック済み",
-        "text": "私たちでさえ読めません"
+        "strong": "永久にあなたのもの",
+        "text": "サブスクも月額料金もなし"
       },
       {
-        "strong": "オフライン",
-        "text": "飛行機でも、トンネルでも、どこでも動作します"
+        "strong": "オフラインで動作",
+        "text": "どこでも保存・閲覧、インターネットなしでも"
       },
       {
-        "strong": "一度だけ支払う",
-        "text": "$59 アーリーバード価格で永久ライセンス（通常価格前に$20お得）"
+        "strong": "永久に無料",
+        "text": "500件のブックマークは無料、必要ならProへ"
       }
     ],
     "announce": "⚡ ローカルAI翻訳（近日公開）"
@@ -401,15 +401,11 @@
         "cta": "Pro $59 アーリーバードを取得",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "その後$79通常",
-        "sla": "サポート：メール48時間（月〜金）",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Pro を $79（通常価格）で購入",
-        "cta2Class": "btn-secondary"
+        "sla": "サポート：メール48時間（月〜金）"
       }
     ],
-    "legal": "BookmarkForge v1のライフタイムライセンス。すべてのv1.x更新と12ヶ月の機能更新を含む。セキュリティ更新は永遠に。将来のメジャーバージョン（v2、v3）は既存オーナーに対して60%オフ。Whop経由で30日返金。<a href=\"/privacy-and-terms.html#terms\">利用規約</a> · <a href=\"/help-ja#pricing\">詳細</a>"
+    "legal": "買い切り · 12か月のアップデート付き · v1は永久に使えます · 30日間の返金保証。 <a href=\"/privacy-and-terms.html#terms\">利用規約</a>"
   },
   "faq": {
     "title": "よくある質問",
@@ -502,7 +498,8 @@
         "連絡先"
       ],
       "helpCenter": "ヘルプセンター",
-      "errorCodes": "エラーコード"
+      "errorCodes": "エラーコード",
+      "hours": "48時間以内に返信、月〜金（CET）"
     },
     "copyright": "© 2026 BookmarkForge. すべての権利を留保します。",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",

@@ -39,7 +39,7 @@ const MAX_CONTEXT_VALUE_LENGTH = 512;
 /**
  * Consent key for local IndexedDB-based error storage.
  *
- * Audit 2026-08-30: this previously read `bmf_local_error_storage`, a key
+ * this previously read `bmf_local_error_storage`, a key
  * the ConsentBanner never writes. The user's error-reporting choice in the
  * banner (forge_consent_error_reporting) therefore had no effect — the
  * reporter was gated by a key that only the settings UI toggled. Now reads

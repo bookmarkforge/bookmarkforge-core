@@ -24,7 +24,6 @@ export function useDatabaseInit() {
   const [dbErrorClass, setDbErrorClass] = useState<DbErrorClass | null>(
     null,
   );
-  const [masterPassword, setMasterPassword] = useState("");
   const [hasPwd, setHasPwd] = useState(getHasPwd);
   const [retryToken, setRetryToken] = useState(0);
   const initAttemptedRef = useRef(false);
@@ -162,7 +161,10 @@ export function useDatabaseInit() {
 
             // RxDB is loaded only when the unlocked app actually needs it.
             const { initDB, getDB } = await import("../container/database");
-            const dbInstance = await initDB(masterPassword || undefined);
+            // No credential is passed: initDB() takes a zeroizing copy from
+            // the unlocked vault (bytes end-to-end — AGENTS.md §2), so this
+            // hook never holds the master password in React state.
+            const dbInstance = await initDB();
             if (cancelled) {return;}
             dbInitializedRef.current = true;
             setDb(dbInstance as RxDatabase);
@@ -265,14 +267,12 @@ export function useDatabaseInit() {
     return () => {
       cancelled = true;
     };
-  }, [masterPassword, isLocked, retryToken]);
+  }, [isLocked, retryToken]);
 
   return {
     db,
     dbError,
     dbErrorClass,
-    masterPassword,
-    setMasterPassword,
     hasPwd,
     retry,
   };

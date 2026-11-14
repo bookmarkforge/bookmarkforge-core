@@ -13,6 +13,8 @@ import {
   hashString,
   type EnvelopeOptions,
   KdfSaltUnavailableError,
+  LegacyV5FormatRemovedError,
+  isLegacyV5FormatRemovedError,
   resetSessionKeyCache,
   setVaultKdfSalt,
   zeroPasswordBytes,
@@ -20,22 +22,30 @@ import {
 import { SECURITY_CONFIG } from "../constants/config";
 
 /**
- * AES-256-GCM encryption service using Argon2id (V4/V5) key derivation.
+ * AES-256-GCM encryption service using Argon2id key derivation.
  * All crypto operations are offloaded to a Web Worker in production.
  *
- * Encrypted format (V6 — current, the only writable one):
- *   `v6:<base64(vault_salt+hkdf_salt+iv+ciphertext)>`
- * vault salt = 16 bytes, HKDF salt = 16 bytes, IV = 12 bytes.
+ * Encrypted format (v7 — current, the ONLY writable one):
+ * `v7:<base64(params(11) + vault_salt(16) + hkdf_salt(16) + iv(12) +
+ * ciphertext)>`, where params = version(1) + m(u32) + t(u32) + p(1) +
+ * dkLen(1). The KDF parameters and the per-vault salt are
+ * embedded, so a payload written on one device opens on another (A-01);
+ * `purpose` is authenticated as AES-GCM AAD (`bmf-v7|<purpose>`, M-02), and
+ * readers enforce both structural bounds and the production KDF floor.
  *
- * Encrypted format (V5 — READ-ONLY legacy): `v5:<base64(hkdf_salt+iv+ciphertext)>`
- * HKDF salt = 16 bytes, IV = 12 bytes, ciphertext = variable.
+ * Encrypted format (v6 — READ-ONLY legacy):
+ * `v6:<base64(vault_salt(16)+hkdf_salt(16)+iv(12)+ciphertext)>`
  *
- * Encrypted format (V4 — stored data): `v4:<base64(salt+iv+ciphertext)>`
+ * Encrypted format (v5 — REMOVED in ADR-052 phase 4: the parser and its flag
+ * are gone, so a `v5:` payload throws the typed `V5_LEGACY_FORMAT_RETIRED`
+ * error)
+ *
+ * Encrypted format (v4 — READ-ONLY legacy): `v4:<base64(salt+iv+ciphertext)>`
  * Salt = 16 bytes, IV = 12 bytes, ciphertext = variable.
  *
- * V5 derives a master key via Argon2id once (cached per password) and
- * then uses HKDF-SHA256 per operation — ~1000× faster for batches than
- * V4 which ran Argon2id per operation.
+ * v7/v6 derive the master key via Argon2id once (cached per password, salt
+ * and KDF params) and then use HKDF-SHA256 per operation — ~1000× faster for
+ * batches than v4, which ran Argon2id per operation.
  *
  * SECURITY: in production builds the KDF/encryption runs inside a Web
  * Worker (the worker is the only place a derived AES key is materialised,
@@ -62,7 +72,7 @@ function localizedError(key: string): string {
 }
 
 /**
- * A-02: recognises the fail-closed "no vault KDF salt" refusal across the
+ * recognises the fail-closed "no vault KDF salt" refusal across the
  * worker boundary. The worker serialises errors as `{ error: message }`, so the
  * class does not survive; the stable `KDF_SALT_UNAVAILABLE` token in the
  * message does. Callers need the distinction because retrying or re-entering a
@@ -100,7 +110,7 @@ export class EncryptionService {
   /** When false, crypto runs on the main thread (test/headless fallback). */
   private useWorker = !IS_TEST_ENV;
   /**
-   * A-1: per-vault Argon2id salt (32 hex chars) currently installed, or null
+   * per-vault Argon2id salt (32 hex chars) currently installed, or null
    * for legacy mode. Not key material — see crypto-core.setVaultKdfSalt — but
    * it is retained across clear() so that re-initialising the worker (lock /
    * reset) can never silently downgrade new writes to the legacy fixed salt.
@@ -231,7 +241,7 @@ export class EncryptionService {
    * Double-fill zeroization with reuse guard (fail-closed).
    *
    * XORs every byte with 0xAA between two zero-fills to defeat
-   * compiler optimisations that might elide a single fill.  Also
+   * compiler optimisations that might elide a single fill. Also
    * warns if the buffer was already all-zeros before the first
    * fill — the caller likely reused a consumed password.
    */
@@ -437,7 +447,7 @@ export class EncryptionService {
   }
 
   /**
-   * A-1: install (or clear) the per-vault Argon2id salt used by the v5/v6 and
+   * install (or clear) the per-vault Argon2id salt used by the v5/v6 and
    * session-key derivations.
    *
    * Callers own persistence: the security vault stores the salt in
@@ -491,7 +501,7 @@ export class EncryptionService {
       }) as string;
     } catch (error) {
       if (isKdfSaltUnavailable(error)) {
-        // A-02: the write was refused, not attempted and failed. Say so, and
+        // the write was refused, not attempted and failed. Say so, and
         // let the typed error through so callers do not retry a password.
         logger.error(
           "[EncryptionService] Encryption refused: no per-vault KDF salt — write aborted (A-02)",
@@ -509,7 +519,7 @@ export class EncryptionService {
     purpose?: string,
   ): Promise<string> {
     // Same ownership contract as encryptBinary/decryptBinary: the copy is
-    // wiped whether the worker succeeds or fails (audit 16-A5).
+    // wiped whether the worker succeeds or fails.
     await this.ensureInitialized();
     try {
       return await this.runInWorker("encrypt", { text, purpose }, new Uint8Array(password)) as string;
@@ -540,6 +550,15 @@ export class EncryptionService {
         purpose,
       }) as string;
     } catch (error) {
+      if (isLegacyV5FormatRemovedError(error)) {
+        // ADR-052 Phase 3: a retired-format payload is a data-format problem,
+        // not a decryption failure the user can retry. Preserve the typed,
+        // actionable error across the Worker boundary.
+        logger.warn(
+          "[EncryptionService] Decryption refused: retired v5 legacy format (ADR-052)",
+        );
+        throw new LegacyV5FormatRemovedError();
+      }
       logger.error("[EncryptionService] Decryption failed", { error: redactSecrets(error instanceof Error ? error.message : String(error)) });
       throw new Error(localizedError("decryptionError"));
     }
@@ -558,6 +577,12 @@ export class EncryptionService {
         new Uint8Array(password),
       ) as string;
     } catch (error) {
+      if (isLegacyV5FormatRemovedError(error)) {
+        logger.warn(
+          "[EncryptionService] decryptWithBytes refused: retired v5 legacy format (ADR-052)",
+        );
+        throw new LegacyV5FormatRemovedError();
+      }
       logger.error("[EncryptionService] decryptWithBytes failed", { error: redactSecrets(error instanceof Error ? error.message : String(error)) });
       throw new Error(localizedError("decryptionError"));
     } finally {
@@ -594,6 +619,12 @@ export class EncryptionService {
         password,
       }) as Uint8Array;
     } catch (error) {
+      if (isLegacyV5FormatRemovedError(error)) {
+        logger.warn(
+          "[EncryptionService] SessionKey decryption refused: retired v5 legacy format (ADR-052)",
+        );
+        throw new LegacyV5FormatRemovedError();
+      }
       logger.error("[EncryptionService] SessionKey decryption failed", {
         error: redactSecrets(error instanceof Error ? error.message : String(error)),
       });
@@ -605,7 +636,7 @@ export class EncryptionService {
     try {
       await this.ensureInitialized();
       // The worker gets a private clone so this method can wipe the caller's
-      // buffer in finally without corrupting an in-flight operation (16-A5).
+      // buffer in finally without corrupting an in-flight operation.
       return await this.runInWorker("encryptBinary", password instanceof Uint8Array ? { data } : { data, password }, password instanceof Uint8Array ? new Uint8Array(password) : undefined) as Uint8Array;
     } catch (error) {
       logger.error("[EncryptionService] Binary encryption failed", { error: redactSecrets(error instanceof Error ? error.message : String(error)) });

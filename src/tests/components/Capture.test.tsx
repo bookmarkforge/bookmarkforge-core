@@ -166,14 +166,16 @@ describe("Capture", () => {
     expect(screen.getByText("savedDesc")).toBeTruthy();
   });
 
-  it("pasa masterPassword a initDB", async () => {
-    render(<Capture masterPassword="mypass" />);
+  it("opens the database without a credential (the vault supplies the bytes)", async () => {
+    // The capture window no longer takes a master password: initDB() resolves a
+    // zeroizing copy from the unlocked vault.
+    render(<Capture />);
     const urlInput = screen.getByLabelText("URL") as HTMLInputElement;
     await userEvent.type(urlInput, "https://example.com");
     const btn = screen.getByText("saveToForge").closest("button")!;
     await userEvent.click(btn);
     await waitFor(() => {
-      expect(initDBMock).toHaveBeenCalledWith("mypass");
+      expect(initDBMock).toHaveBeenCalledWith();
     });
   });
 

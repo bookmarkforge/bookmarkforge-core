@@ -221,7 +221,17 @@ describe("SecurityManager", () => {
       fireEvent.click(screen.getByText("app_unlock"));
 
       await waitFor(() => {
-        expect(aiManager.unlockVault).toHaveBeenCalledWith("mypassword");
+        // Bytes end-to-end: unlock consumes and zeroizes its copy, so the
+        // assertion is on the call shape + length, never a decoded string.
+        expect(aiManager.unlockVault).toHaveBeenCalledWith(
+          expect.any(Uint8Array),
+        );
+        const [unlockArg] = (
+          aiManager.unlockVault as unknown as {
+            mock: { calls: Array<[Uint8Array]> };
+          }
+        ).mock.calls[0]!;
+        expect(unlockArg.length).toBe("mypassword".length);
         expect(initDB).toHaveBeenCalled();
         const { unlock } = mockUseSecurityStore();
         expect(unlock).toHaveBeenCalled();
@@ -252,6 +262,43 @@ describe("SecurityManager", () => {
         expect(screen.getByText("app_vault_unlock_error")).toBeTruthy();
       });
       expect(initDB).not.toHaveBeenCalled();
+    });
+
+    it("shows the retired-v5 copy instead of the password error", async () => {
+      // ADR-052: a verification token still in the removed v5 format is not a
+      // wrong password — retrying cannot help. The unlock flow must surface the
+      // translated remedy and never the invalid-password message.
+      const { aiManager } = await import("../../services/ai/ProviderManager");
+      const { initDB } = await import("../../db/database");
+      const { LegacyV5FormatRemovedError } = await import(
+        "../../utils/crypto-core"
+      );
+      (aiManager.unlockVault as any).mockRejectedValue(
+        new LegacyV5FormatRemovedError(),
+      );
+
+      render(
+        <SecurityManager>
+          <span>content</span>
+        </SecurityManager>,
+      );
+
+      fireEvent.change(screen.getByPlaceholderText("app_master_password"), {
+        target: { value: "legacy-vault-password" },
+      });
+      fireEvent.click(screen.getByText("app_unlock"));
+
+      await waitFor(() => {
+        expect(screen.getByText("app_v5FormatRetired")).toBeTruthy();
+      });
+      // The two wrong buckets: retry-the-password and generic unlock failure.
+      expect(screen.queryByText("app_invalid_password")).toBeNull();
+      expect(
+        screen.queryByText("Invalid password. Please try again."),
+      ).toBeNull();
+      expect(screen.queryByText("app_vault_unlock_error")).toBeNull();
+      expect(initDB).not.toHaveBeenCalled();
+      expect(mockUseSecurityStore().unlock).not.toHaveBeenCalled();
     });
 
     it("unlock error shows error message", async () => {
@@ -316,7 +363,17 @@ describe("SecurityManager", () => {
       fireEvent.keyDown(input, { key: "Enter" });
 
       await waitFor(() => {
-        expect(aiManager.unlockVault).toHaveBeenCalledWith("mypassword");
+        // Bytes end-to-end: unlock consumes and zeroizes its copy, so the
+        // assertion is on the call shape + length, never a decoded string.
+        expect(aiManager.unlockVault).toHaveBeenCalledWith(
+          expect.any(Uint8Array),
+        );
+        const [unlockArg] = (
+          aiManager.unlockVault as unknown as {
+            mock: { calls: Array<[Uint8Array]> };
+          }
+        ).mock.calls[0]!;
+        expect(unlockArg.length).toBe("mypassword".length);
       });
     });
 
@@ -463,7 +520,16 @@ describe("SecurityManager", () => {
         expect(unlock).toHaveBeenCalled();
       });
       expect(securityVault.setMasterPasswordFlag).toHaveBeenCalled();
-      expect(aiManager.unlockVault).toHaveBeenCalledWith("longenoughpw");
+      // Bytes end-to-end: see the unlock-flow assertion above.
+      expect(aiManager.unlockVault).toHaveBeenCalledWith(
+        expect.any(Uint8Array),
+      );
+      const [setupUnlockArg] = (
+        aiManager.unlockVault as unknown as {
+          mock: { calls: Array<[Uint8Array]> };
+        }
+      ).mock.calls[0]!;
+      expect(setupUnlockArg.length).toBe("longenoughpw".length);
     });
 
     it("shows the optional .bmf recovery kit on the setup screen", () => {
@@ -509,9 +575,17 @@ describe("SecurityManager", () => {
       fireEvent.click(screen.getByText("Save recovery kit (.bmf)"));
 
       await waitFor(() => {
+        // The recovery kit export receives its own byte copy, consumed by
+        // BackupService (zeroized before this assertion runs).
         expect(BackupService.exportBackup).toHaveBeenCalledWith(
-          "longenoughpw",
+          expect.any(Uint8Array),
         );
+        const [exportArg] = (
+          BackupService.exportBackup as unknown as {
+            mock: { calls: Array<[Uint8Array]> };
+          }
+        ).mock.calls[0]!;
+        expect(exportArg.length).toBe("longenoughpw".length);
         const { unlock } = mockUseSecurityStore();
         expect(unlock).toHaveBeenCalled();
       });
@@ -696,7 +770,17 @@ describe("SecurityManager", () => {
         expect(
           recoveryService.decryptMasterPasswordWithRecovery,
         ).toHaveBeenCalled();
-        expect(aiManager.unlockVault).toHaveBeenCalledWith("recovered-pass");
+        // Bytes end-to-end: the recovered string is encoded once and the
+        // buffer is zeroized when the attempt finishes.
+        expect(aiManager.unlockVault).toHaveBeenCalledWith(
+          expect.any(Uint8Array),
+        );
+        const [recoveryArg] = (
+          aiManager.unlockVault as unknown as {
+            mock: { calls: Array<[Uint8Array]> };
+          }
+        ).mock.calls[0]!;
+        expect(recoveryArg.length).toBe("recovered-pass".length);
         expect(initDB).toHaveBeenCalled();
         const { unlock } = mockUseSecurityStore();
         expect(unlock).toHaveBeenCalled();

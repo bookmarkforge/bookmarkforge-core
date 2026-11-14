@@ -3,35 +3,35 @@
  *
  * Verifies translation quality vs the English source for keys that DO
  * exist in a locale:
- *   - empty string values (translation exists but is blank),
- *   - placeholder set mismatch: `{{var}}` placeholders in the translation
- *     must match en's exactly (a missing/renamed placeholder breaks the UI),
- *   - common UI action labels (Save, Cancel, Delete, …) whose value is
- *     byte-identical to the English source — a sign the key was added to
- *     en.json after the locale was translated and never localized,
- *   - untranslated multi-word values byte-identical to the CURRENT English
- *     reference (same failure mode as the action labels, but for any
- *     phrase — the class the 2026-08 audit found in bg/el/th/hi/ar),
- *   - cross-script contamination: a value mixing ≥2 distinct non-Latin
- *     writing systems (Cyrillic inside Hebrew, Chinese inside Korean, …) —
- *     the signature of an MT pipeline gluing the wrong source fragment
- *     into an otherwise-correct translation (fixed across 17 locales for
- *     the 2026-08 audit),
- *   - embedded-Latin contamination: ASCII letters inside an otherwise
- *     non-Latin word ("Πlease", "תAGים", "บุ๊คมาrk") — the same MT
- *     accident class where ASCII is NOT neutral, because Latin fragments
- *     glued into Cyrillic/Greek/Hebrew/Thai words are the signal (fixed
- *     across 16 locales in the 2026-08 follow-up; brand/tech tokens like
- *     "WebLLM" or "AI" legitimately appear inside Japanese/Korean/Chinese
- *     text and are allowlisted).
+ * - empty string values (translation exists but is blank),
+ * - placeholder set mismatch: `{{var}}` placeholders in the translation
+ * must match en's exactly (a missing/renamed placeholder breaks the UI),
+ * - common UI action labels (Save, Cancel, Delete, …) whose value is
+ * byte-identical to the English source — a sign the key was added to
+ * en.json after the locale was translated and never localized,
+ * - untranslated multi-word values byte-identical to the CURRENT English
+ * reference (same failure mode as the action labels, but for any
+ * phrase — the class found in bg/el/th/hi/ar),
+ * - cross-script contamination: a value mixing ≥2 distinct non-Latin
+ * writing systems (Cyrillic inside Hebrew, Chinese inside Korean, …) —
+ * the signature of an MT pipeline gluing the wrong source fragment
+ * into an otherwise-correct translation (fixed across 17 locales for
+ * previously),
+ * - embedded-Latin contamination: ASCII letters inside an otherwise
+ * non-Latin word ("Πlease", "תAGים", "บุ๊คมาrk") — the same MT
+ * accident class where ASCII is NOT neutral, because Latin fragments
+ * glued into Cyrillic/Greek/Hebrew/Thai words are the signal (fixed
+ * across 16 locales in the 2026-08 follow-up; brand/tech tokens like
+ * "WebLLM" or "AI" legitimately appear inside Japanese/Korean/Chinese
+ * text and are allowlisted).
  *
  * Known, intentional issues are recorded in
  * scripts/i18n-quality-baseline.json; the gate fails only on NEW issues
  * beyond that baseline.
  *
  * Usage:
- *   node scripts/check-i18n-quality.mjs            # gate
- *   node scripts/check-i18n-quality.mjs --fix      # rebaseline
+ * node scripts/check-i18n-quality.mjs # gate
+ * node scripts/check-i18n-quality.mjs --fix # rebaseline
  */
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -90,7 +90,7 @@ function findSingleBrace(value) {
  * in this list, so they never false-positive.
  */
 /**
- * Cross-script contamination detector (2026-08 audit fix).
+ * Cross-script contamination detector (2026-08).
  *
  * A value whose non-ASCII characters belong to ≥2 DISTINCT writing systems
  * is almost always a machine-translation pipeline accident: a fragment of
@@ -136,7 +136,7 @@ function nonLatinScripts(value) {
 const CROSS_SCRIPT_KEY_EXCEPTIONS = new Set([]);
 
 /**
- * Embedded-Latin contamination detector (2026-08 audit follow-up).
+ * Embedded-Latin contamination detector (2026-08).
  *
  * A WORD (letter run) that mixes ASCII Latin with a genuinely non-Latin
  * script is almost always an MT accident: the pipeline glued a wrong-script
@@ -240,7 +240,7 @@ const UI_ACTION_KEY_EXCEPTIONS = new Set([
 ]);
 
 /**
- * Untranslated-value detector (2026-08 audit fix).
+ * Untranslated-value detector (2026-08).
  *
  * A locale value byte-identical to the CURRENT English reference and
  * containing whitespace is the classic "key added to en.json, locale never
@@ -323,7 +323,7 @@ let failures = 0;
  * en.json is the reference; when its wording changes (e.g. "Simulates
  * concurrent operations blocking the DB" from "...locking the DB"), locales
  * translated against the OLD wording keep the OLD ENGLISH VALUE byte-
- * identical across languages. That value is invisible to the audit's type B
+ * identical across languages. That value is invisible to the type B
  * (which only catches values equal to the CURRENT en reference) and to every
  * per-locale gate (completeness / length / placeholders all pass — it is
  * just the wrong, older English).
@@ -331,11 +331,11 @@ let failures = 0;
  * Signal: an English-looking value byte-identical in >= STALE_MIN_SHARE
  * locales that DIFFERS from the current en reference. Two exclusions keep
  * it false-positive-free on legitimate shared values:
- *   - values equal to current en are the audit's type-B class, not stale;
- *   - STALE_SKIP_VALUES covers deliberate loanword/technical labels whose
- *     locale form intentionally keeps English word order ("URL WebDAV" is
- *     the native Romance/loanword order; "AI sommelier" is a loanword
- *     title whose only drift vs en is capitalization).
+ * - values equal to current en are the type-B class, not stale;
+ * - STALE_SKIP_VALUES covers deliberate loanword/technical labels whose
+ * locale form intentionally keeps English word order ("URL WebDAV" is
+ * the native Romance/loanword order; "AI sommelier" is a loanword
+ * title whose only drift vs en is capitalization).
  *
  * Like every other issue type here it is baseline-able via the per-locale
  * counts: each affected locale gets a `stale English` issue, --fix records

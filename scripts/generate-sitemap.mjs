@@ -19,7 +19,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const PUBLIC_DIR = join(__dirname, '..', 'public');
-const SITE_URL = 'https://bookmarkforgeapp.com';
+const SITE_URL = 'https://www.bookmarkforgeapp.com';
 const OUTPUT_FILE = join(PUBLIC_DIR, 'sitemap.xml');
 
 // Language codes for hreflang

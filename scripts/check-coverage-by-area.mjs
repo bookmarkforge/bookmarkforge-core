@@ -6,22 +6,22 @@
  * the average. vitest.config.ts imports that same global object, and this
  * gate enforces the per-area budgets on top of the same v8 coverage output
  * (coverage/coverage-final.json produced by `npm run test:coverage`),
- * following the audit 2026-08-13 "mejora de alto impacto" #2.
+ * following the "mejora de alto impacto" #2.
  *
  * Budgets live in scripts/coverage-area-budgets.json:
- *   { "global": { "statements": 90, "branches": 82, "functions": 85,
- *                 "lines": 90 }, "areas": { "src/services": { ... } } }
+ * { "global": { "statements": 90, "branches": 82, "functions": 85,
+ * "lines": 90 }, "areas": { "src/services": {... } } }
  *
  * Rules:
- *  - A file belongs to the area with the longest matching directory prefix.
- *  - Percentages are computed per metric over the union of the area's files
- *    (sum(covered) / sum(total)), matching how vitest reports aggregates.
- *  - Only metrics explicitly listed in a budget are gated; areas absent
- *    from the budgets file are reported but never fail the gate.
+ * - A file belongs to the area with the longest matching directory prefix.
+ * - Percentages are computed per metric over the union of the area's files
+ * (sum(covered) / sum(total)), matching how vitest reports aggregates.
+ * - Only metrics explicitly listed in a budget are gated; areas absent
+ * from the budgets file are reported but never fail the gate.
  *
  * Usage:
- *   node scripts/check-coverage-by-area.mjs            # gate (exit 1 on regression)
- *   node scripts/check-coverage-by-area.mjs --report   # print all areas, never fails
+ * node scripts/check-coverage-by-area.mjs # gate (exit 1 on regression)
+ * node scripts/check-coverage-by-area.mjs --report # print all areas, never fails
  */
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -45,7 +45,7 @@ export function toRelativeKey(absPath) {
 
 /**
  * Extract per-metric {total, covered} from one coverage-final.json entry.
- * Handles both the v8 object form ({ statements: { total, covered }, ... })
+ * Handles both the v8 object form ({ statements: { total, covered },... })
  * and the istanbul map form ({ s, statementMap, f, fnMap, b, branchMap, l }).
  */
 export function fileMetrics(entry) {

@@ -94,7 +94,6 @@ vi.mock("../../hooks/useSettings", () => ({
     setApiKey: vi.fn(),
     vaultKey: "test-pass-123",
     setVaultKey: vi.fn(),
-    masterPassword: "test-pass-123",
     isUpdatingPassword: mockUseSettingsState.isUpdatingPassword,
     handleUpdateVaultKey: mockHandleUpdateVaultKey,
     provider: "openai",

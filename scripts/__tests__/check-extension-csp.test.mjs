@@ -431,7 +431,7 @@ describe("check-extension-csp gate — seven contract assertions", () => {
 
     expect(proc.status, `stdout=${proc.stdout}\nstderr=${proc.stderr}`).toBe(0);
     expect(proc.stdout).toMatch(/--fix rewrote 1 manifest\(s\)/);
-    expect(proc.stderr).toMatch(/--fix skipped Firefox MV3 — malformed JSON left untouched/);
+    expect(proc.stderr).toMatch(/--fix skipped Firefox MV2 — malformed JSON left untouched/);
 
     const afterMv3 = JSON.parse(
       readFileSync(join(repo, "extension/manifest.json"), "utf8"),

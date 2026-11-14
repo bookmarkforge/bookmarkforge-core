@@ -519,7 +519,7 @@ describe("SupportChat", () => {
   });
 
   // --- Branch: default fallback via agentService ---
-  it("llama agentService.supportChat para queries sin match conocido", async () => {
+  it("calls agentService.supportChat for queries with no known match", async () => {
     vi.mocked(agentService.supportChat).mockResolvedValueOnce(
       "AI response text",
     );

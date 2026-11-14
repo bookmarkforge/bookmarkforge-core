@@ -96,7 +96,8 @@ describe("useDatabaseInit", () => {
 
     mockSecurityStore.mockReturnValue({ isLocked: false, forceSetup: false });
     rerender();
-    await waitFor(() => expect(mockInitDB).toHaveBeenCalledWith(undefined));
+    // No credential argument: initDB() reads a zeroizing copy from the vault.
+    await waitFor(() => expect(mockInitDB).toHaveBeenCalledWith());
     await waitFor(() => expect(result.current.db).toEqual(mockDb));
   });
 
@@ -187,13 +188,13 @@ describe("useDatabaseInit", () => {
     await waitFor(() => expect(result.current.hasPwd).toBe(true));
   });
 
-  it("setMasterPassword updates the state", () => {
+  it("never exposes master-password state (bytes live only in the vault)", () => {
     mockSecurityStore.mockReturnValue({ isLocked: true, forceSetup: false });
     const { result } = renderHook(() => useDatabaseInit());
-    act(() => {
-      result.current.setMasterPassword("secret");
-    });
-    expect(result.current.masterPassword).toBe("secret");
+    // AGENTS.md §2: the hook must not hold the credential — initDB() takes a
+    // zeroizing copy from the unlocked vault instead.
+    expect("masterPassword" in result.current).toBe(false);
+    expect("setMasterPassword" in result.current).toBe(false);
   });
 
   it("initializes hasPwd as true when localStorage has the key", () => {

@@ -216,7 +216,7 @@ describe("QuantizationPanel", () => {
     const mod = await import("../../services/ai/VectorIndexService");
     const vis = mod.vectorIndexService as any;
     const { toast } = await import("sonner");
-    // deviceMemory > 4 → recomienda polar8, que ya es el modo actual
+    // deviceMemory > 4 → recommends polar8, which is already the current mode
     Object.defineProperty(navigator, "deviceMemory", {
       value: 8,
       configurable: true,

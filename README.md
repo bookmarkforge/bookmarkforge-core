@@ -177,7 +177,6 @@ This repository contains the MIT-licensed **Core**. The private distribution add
 └────────┬────────┘     └────────┬────────┘
          │                     │
          │                     ├─► P2P WebSocket signaling
-         │                     ├─► License endpoints (/api/license/*)
          │                     ├─► Health, CSP reports
          │                     └─► Opt-in telemetry
          │

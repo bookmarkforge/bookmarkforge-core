@@ -2,17 +2,17 @@
   "lang": "vi",
   "langName": "Tiếng Việt",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/vi/",
+  "canonical": "https://www.bookmarkforgeapp.com/vi/",
   "ogLocale": "vi_VN",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: trình quản lý dấu trang riêng tư, local-first kèm danh sách đọc",
   "description": "Raindrop giữ dấu trang của bạn trên máy chủ của họ. BookmarkForge giữ chúng trên máy của bạn — có khóa bảo vệ, đến mức chúng tôi cũng không đọc được. Trả một lần: $59 quyền truy cập trọn đời giá early bird (tiết kiệm $20 trước giá thường). Free: 500 dấu trang.",
   "ogTitle": "BookmarkForge: trình quản lý dấu trang riêng tư, local-first kèm danh sách đọc",
   "ogDescription": "Raindrop giữ dấu trang của bạn trên máy chủ của họ. BookmarkForge giữ chúng trên máy của bạn — có khóa bảo vệ, đến mức chúng tôi cũng không đọc được. Trả một lần: $59 quyền truy cập trọn đời giá early bird (tiết kiệm $20 trước giá thường). Free: 500 dấu trang.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: trình quản lý dấu trang riêng tư, local-first kèm danh sách đọc",
   "twitterDescription": "Raindrop giữ dấu trang của bạn trên máy chủ của họ. BookmarkForge giữ chúng trên máy của bạn — có khóa bảo vệ, đến mức chúng tôi cũng không đọc được. Trả một lần: $59 quyền truy cập trọn đời giá early bird (tiết kiệm $20 trước giá thường). Free: 500 dấu trang.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Bỏ qua, tới nội dung chính",
   "navBrandAria": "Trang chủ BookmarkForge",
   "navAriaLabel": "Điều hướng chính",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "Đóng menu",
   "hero": {
     "badge": "Thanh toán một lần · Không đăng ký",
-    "title": "Mọi thứ bạn lưu đều nằm trên máy của bạn. <span class=\"accent-text\">Tất cả.</span>",
-    "subtitle": "Raindrop giữ dấu trang của bạn trên máy chủ của họ — và thu phí bạn hằng năm. BookmarkForge giữ chúng trên máy của bạn, khóa bằng khóa chỉ mình bạn có. Không tài khoản. Không phí tháng. Không ai lén theo dõi bạn.",
-    "ctaPrimary": "Dùng thử ngay (không cần tài khoản)",
-    "ctaSecondary": "Xem bảng giá",
+    "title": "Trình quản lý bookmark riêng tư <span class=\"accent-text\">giữ mọi thứ trên thiết bị của bạn.</span>",
+    "subtitle": "Dành cho nhà nghiên cứu, sinh viên và bất kỳ ai không muốn trao lịch sử đọc của mình cho một công ty đám mây. Lưu trang, bài viết và PDF, tìm chúng bằng từ khóa hoặc ý nghĩa, và giữ tất cả được mã hóa trên máy tính của riêng bạn. Không cần tài khoản. Không thuê bao.",
+    "ctaPrimary": "Bắt đầu miễn phí — không cần đăng ký",
+    "ctaSecondary": "Xem cách hoạt động",
     "pillars": [
       {
         "strong": "Riêng tư",
-        "text": "các trang bạn lưu không bao giờ rời khỏi máy của bạn"
+        "text": "mã hóa trên thiết bị của bạn"
       },
       {
-        "strong": "Đã khóa",
-        "text": "đến chúng tôi cũng không đọc được"
+        "strong": "Của bạn mãi mãi",
+        "text": "không thuê bao, không phí hàng tháng"
       },
       {
-        "strong": "Ngoại tuyến",
-        "text": "chạy được trên máy bay, trong hầm, ở bất cứ đâu"
+        "strong": "Hoạt động ngoại tuyến",
+        "text": "lưu và đọc ở mọi nơi, kể cả khi không có internet"
       },
       {
-        "strong": "Trả một lần",
-        "text": "$59 quyền truy cập trọn đời giá early bird (tiết kiệm $20 trước giá thường)"
+        "strong": "Miễn phí mãi mãi",
+        "text": "500 bookmark miễn phí, nâng cấp Pro chỉ khi bạn muốn thêm"
       }
     ],
     "announce": "⚡ Dịch bằng AI cục bộ (sắp ra mắt)"
@@ -408,15 +408,11 @@
         "cta": "Nhận Pro $59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "sau đó $79 giá thường",
-        "sla": "Hỗ trợ: Email 48h (Thứ hai–Thứ sáu)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Nhận Pro $79 giá thường",
-        "cta2Class": "btn-secondary"
+        "sla": "Hỗ trợ: Email 48h (Thứ hai–Thứ sáu)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-vi#pricing\">Learn more</a>"
+    "legal": "Thanh toán một lần · bao gồm 12 tháng cập nhật · v1 hoạt động mãi mãi · bảo đảm hoàn tiền trong 30 ngày. <a href=\"/privacy-and-terms.html#terms\">Điều khoản</a>"
   },
   "faq": {
     "title": "Câu hỏi thường gặp",
@@ -509,7 +505,8 @@
         "Contact"
       ],
       "helpCenter": "Trung tâm trợ giúp",
-      "errorCodes": "Mã lỗi"
+      "errorCodes": "Mã lỗi",
+      "hours": "Trả lời trong vòng 48 giờ, T2–T6 (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Bảo lưu mọi quyền.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "Kho tri thức riêng tư, chạy bằng AI của bạn. 100% Local-First. Lựa chọn thay thế Pocket riêng tư. Free: 500 dấu trang.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "Trung tâm trợ giúp — FAQ, khắc phục sự cố & Support SLA | BookmarkForge",
+    "title": "Trung tâm trợ giúp — FAQ, khắc phục sự cố & Support SLA",
     "description": "Trung tâm trợ giúp BookmarkForge: bảng giá lifetime v1, khắc phục sự cố, mã lỗi BF-E*, support SLA và cách sao chép một báo cáo chẩn đoán đã che thông tin.",
     "ogTitle": "Trung tâm trợ giúp — BookmarkForge",
     "ogDescription": "FAQ, khắc phục sự cố, mã lỗi và support SLA. Tìm hiểu về lifetime v1 và cách sao chép báo cáo chẩn đoán.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 giá thường",
-      "proPriceTraction": "$99 sau khi có sức bật",
+      "proPriceTraction": "",
       "proDescription": "Dấu trang không giới hạn, 5 thiết bị + đồng bộ P2P, AI cục bộ (WebLLM/Ollama) + RAG + agent chuyên biệt, Flashcard, PDF/OCR, hơn 10 định dạng xuất, vault. <em>Lifetime của v1 · 12 tháng cập nhật tính năng · Bảo mật mãi mãi · v2 giảm 60%</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "Tự phục vụ: Trung tâm trợ giúp này + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "Tự phục vụ: Trung tâm trợ giúp này + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "Theo khả năng (cộng đồng)",
       "freeWhatToDo": "Tìm mã BF-E* bên dưới + sao chép báo cáo chẩn đoán (<a href=\"#diagnostics\">§Chẩn đoán</a>) trước khi đăng bài",
       "proChannel": "Email <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (tiêu đề: Pro)",

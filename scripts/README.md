@@ -1,225 +1,56 @@
 # BookmarkForge Scripts
 
-This directory contains **all build, verification, and operational tools**
-for the project. Each script is designed for a specific purpose and is
-invoked from `package.json`.
+This directory contains the build, verification, and operational tooling for
+the project. **The authoritative inventory is `package.json`** (156 declared
+scripts) plus the ~230 standalone files in this folder — this README explains
+how they are organized rather than listing each one.
 
-## Script Classification
+## How scripts are invoked
 
-### 🔒 Security and Verification (42 scripts)
+Almost everything runs through npm scripts defined in `package.json`. The
+consolidated entry points are:
 
-| Script | Purpose |
-|--------|---------|
-| `check-secrets-in-commit.mjs` | Scans git history for secrets |
-| `check-server-log-ip-privacy.mjs` | Verifies server logs don't expose IPs |
-| `check-blindeo.mjs` | Blindeo security scanner |
-| `check-zap-baseline.mjs` | OWASP ZAP baseline scan |
-| `validate-zap-workflow.mjs` | Validates the ZAP workflow |
-| `check-workflow-security.mjs` | Verifies CI/CD workflow security |
-| `check-workflow-vars-documented.mjs` | Ensures workflow variables are documented |
-| `validate-workflow-artifacts.mjs` | Validates workflow artifacts |
-| `validate-workflows.mjs` | Validates all YAML workflows |
-| `validate-http-config.mjs` | HTTP configuration security |
-| `validate-compose-config.mjs` | Docker Compose security |
-| `validate-runtime-config.mjs` | Validates runtime configuration |
-| `validate-docker-context.mjs` | Docker context security |
-| `validate-image-pins.mjs` | Verifies container image digests |
-| `validate-repository-hygiene.mjs` | Repository hygiene |
-| `check-override-cve.mjs` | CVE override gate |
-| `check-direct-cve.mjs` | Direct CVE scan |
-| `check-sarif-severity.mjs` | SARIF result severity |
-| `generate-license-keys.mjs` | Generates license keys |
-| `sync-server-key.mjs` | Syncs server public key |
-| `check-license-keys.mjs` | Verifies license key parity |
-| `pro-boundary.mjs` | Core/Pro build boundary |
-| `check-pro-imports.mjs` | Detects static Pro imports in Core |
-| `check-open-core-export.mjs` | Verifies the Open Core export |
-| `check-export-fresh.mjs` | Fails when the public export is stale vs. the private tree (audit recommendation 2) |
-| `check-pro-routes.mjs` | Verifies Pro routes are protected |
-| `audit-core.mjs` | Core audit |
-| `audit-anchors.mjs` | Manages audit anchors |
-| `check-audit-drift.mjs` | Detects audit drift |
-| `check-inspector-freeze.mjs` | Inspector freeze gate |
-| `check-csp-sync.mjs` | Syncs CSP |
-| `check-extension-csp.mjs` | Extension CSP |
-| `check-docs-markdown.mjs` | Validates Markdown docs |
-| `check-baseline-drift.mjs` | Visual baseline drift |
-| `check-baseline-gaps.mjs` | Baseline gaps |
-| `check-brand-logo-consistency.mjs` | Brand consistency |
-| `check-static-brand-tokens.mjs` | Static brand tokens |
-| `check-tailwind-rule-drift.mjs` | Tailwind rule drift |
-| `check-rxdb17.mjs` | RxDB 17 compatibility |
-| `check-i18n-quality.mjs` | i18n quality |
-| `check-code-i18n.mjs` | Code i18n |
-| `check-english-only.mjs` | Verifies exclusive English |
-| `check-no-unbounded-text.mjs` | Unbounded text |
-| `check-claim-drift.mjs` | Claim drift |
-| `check-licensing.mjs` | Verifies licenses |
+| Command | What it runs |
+|---------|--------------|
+| `npm run check` | Full offline gate chain (~60 gates) |
+| `npm run check:all` | The five big groups: security, quality, content, brand, build |
+| `npm run check:pr` | PR gate: typecheck + lint + fast tests + security/config gates |
+| `npm run check:deploy` / `check:nightly` | Release/nightly chains |
+| `npm run ci:local` | What CI runs locally (all typechecks + lint + tests + build + check) |
+| `npm run test:fast` / `test:slow` / `test:all` | Bounded test profiles |
+| `npm run e2e:smoke` / `e2e` | Playwright batteries |
+| `npm run help` | Prints the common-command cheat sheet |
 
-### 📦 Build and Generation (24 scripts)
+Individual gates are also runnable directly, e.g.
+`node scripts/check-secrets-in-commit.mjs` or `npm run check:seo`.
 
-| Script | Purpose |
-|--------|---------|
-| `export-public-repo.mjs` | Exports the MIT public repository |
-| `build-ci.mjs` | CI build with additional gates |
-| `build-extension.cjs` | Browser extension build |
-| `build-landings.cjs` | Generates landing pages |
-| `generate-pdf-localized.mjs` | Generates localized PDFs (reproducible; `--only`, `--out-dir`) |
-| `generate-landing-pages.mjs` | Generates landing pages |
-| `nginx-render.mjs` | Renders nginx configuration |
-| `ci-local-parallel.mjs` | Local CI in parallel |
-| `command-runner.mjs` | Command runner |
-| `deploy-prod.mjs` | Deploy to production |
-| `staging-deploy.mjs` | Deploy to staging |
-| `staging-rollback.mjs` | Staging rollback |
-| `staging-smoke.mjs` | Staging smoke test |
-| `production-smoke.mjs` | Production smoke test |
-| `local-smoke.mjs` | Local smoke test |
-| `launch-smoke.mjs` | Launch smoke test |
-| `extension-smoke.mjs` | Extension smoke test |
-| `mock-openai-server.mjs` | OpenAI mock server |
-| `webrtc-recovery-history.mjs` | WebRTC recovery history |
-| `render-webrtc-recovery-charts.mjs` | WebRTC recovery charts |
-| `summarize-webrtc-e2e.mjs` | WebRTC E2E summary |
-| `summarize-webrtc-handshake.mjs` | WebRTC handshake summary |
-| `check-webrtc-certification.mjs` | WebRTC certification |
+## Naming conventions
 
-### 🧪 Testing and Metrics (22 scripts)
+- `check-*` — verification gates that fail fast (the `check:*` npm aliases map to these)
+- `validate-*` — configuration/security validation of deploy artifacts
+- `build-*` / `generate-*` — build and content generation
+- `test-*` / `run-*` — test runners and profiles
+- `benchmark-*` / `drill-*` / `load-test-*` — performance and disaster-recovery drills
+- `doctor-*` / `audit-*` — diagnostics and audit machinery
+- `deploy-*` / `staging-*` / `production-*` / `rollback*` — operations (private infra)
+- `monitoring-*` / `nightly-*` — alerting and nightly reporting
+- `export-public-repo.mjs` — produces the public MIT export (private tooling)
 
-| Script | Purpose |
-|--------|---------|
-| `test-bounded.mjs` | Bounded test runner |
-| `test-fast.mjs` | Fast tests |
-| `test-profiles.mjs` | Test profiles |
-| `test-timing-baseline.json` | Test timing baseline |
-| `check-test-timing.mjs` | Verifies test timing |
-| `test-timing-report.mjs` | Timing report |
-| `run-coverage-gates.mjs` | Coverage gates |
-| `test-coverage-history.mjs` | Coverage history |
-| `run-e2e-batched.mjs` | Batched E2E |
-| `run-launch-smoke.mjs` | Launch smoke test |
-| `run-mobile-smoke.mjs` | Mobile smoke test |
-| `test-ollama-contract.mjs` | Ollama contract |
-| `load-test-server.mjs` | Server load test |
-| `benchmark-storage.mjs` | Storage benchmark |
-| `benchmark-import-csv.mjs` | CSV import benchmark |
-| `calibrate-first-summary.mjs` | First summary calibration |
-| `health-dashboard.mjs` | Health dashboard |
-| `drill-backup-restore.mjs` | Backup/restore drill |
-| `drill-rollback.mjs` | Rollback drill |
-| `rollback.mjs` | Rollback |
-| `gate-refresh.mjs` | Refreshes gates |
+## Key subdirectories
 
-### 📊 Monitoring and DevOps (18 scripts)
+- `__tests__/` — vitest suites for the scripts themselves
+- `tooling/` — internal helpers (e.g. the bounded linter)
+- `translations/` — landing translation sources (30 locales)
+- `templates/` — landing page templates
+- `public-export/` — overlay files applied by `export-public-repo.mjs`
+  (excluded from the export itself; they become the public tree's files)
 
-| Script | Purpose |
-|--------|---------|
-| `check-env-config.mjs` | Environment configuration |
-| `check-quick.mjs` | Quick gate tier (~2.5s) |
-| `check-quick.mjs` | Quick pre-commit tier |
-| `validate-input-contracts.mjs` | Input contracts |
-| `check-input-contracts.mjs` | Input contract checks |
-| `check-staging-http.mjs` | Staging HTTP |
-| `staging-target-policy.mjs` | Target policy |
-| `doctor-docs-index.mjs` | Docs index doctor |
-| `doctor-legacy-schema-map.mjs` | Legacy schema doctor |
-| `env-direct-reads.baseline.json` | Direct reads baseline |
-| `pull-prod-images.mjs` | Pull production images |
-| `push-images-lib.mjs` | Image push library |
-| `registry-policy.mjs` | Registry policy |
-| `monitoring-alerts.mjs` | Monitoring alerts |
-| `monitoring-cron.example` | Monitoring cron |
-| `nightly-alert.mjs` | Nightly alerts |
-| `nightly-consistency.mjs` | Nightly consistency |
-| `nightly-trends.mjs` | Nightly trends |
-| `merge-nightly-blobs.mjs` | Merge nightly blobs |
+## Notes
 
-### 🎨 Generation and Utilities (various scripts)
-
-| Script | Purpose |
-|--------|---------|
-| `i18n-completeness.mjs` | i18n completeness |
-| `i18n-quality-baseline.json` | i18n quality baseline |
-| `i18n-backlog-baseline.json` | i18n backlog baseline |
-| `translations/` | Translations directory |
-| `locales/` | Locales directory |
-| `public-export/` | Public export |
-| `tooling/` | Auxiliary tooling |
-| `templates/` | Templates |
-| `structured-data/` | Structured data |
-| `sitemap-coverage.mjs` | Sitemap coverage |
-| `check-sitemap-coverage.mjs` | Sitemap coverage check |
-| `check-hreflang-graph.mjs` | Hreflang graph |
-| `landing-translations.json` | Landing translations |
-| `og-image-locale-gen.mjs` | Generates OG images per locale |
-| `generate-legacy-schema-map.mjs` | Generates legacy schema map |
-| `build-legacy-schema-map.mjs` | Builds legacy schema map |
-
-### 🗑️ Retired / Obsolete (5 scripts)
-
-| Script | Status | Reason |
-|--------|--------|--------|
-| `patch-landing-copy.mjs` | Retired | One-shot landing copy migration applied in 2026-09; the copy now lives in `scripts/translations/` |
-| `test-upstream-server.mjs` | Retired | Gemini proxy removed |
-| `ai-upstream/` | Retired | AI proxy no longer exists |
-| `check-webrtc-certification.mjs` | Active | Only used in specific CI |
-| `penetration-test.mjs` | Active | Penetration test |
-
-## Naming Conventions
-
-- `check-*`: Verification scripts (fail fast)
-- `validate-*`: Configuration validation scripts
-- `build-*`: Build scripts
-- `generate-*`: Content generation scripts
-- `run-*`: Execution scripts
-- `test-*`: Testing-related scripts
-- `check-*`: Verification scripts
-- `drill-*`: Emergency simulation scripts
-- `benchmark-*`: Benchmarking scripts
-- `merge-*`: Data merge scripts
-- `render-*`: Rendering scripts
-- `summarize-*`: Summary scripts
-- `doctor-*`: Diagnostic scripts
-- `sync-*`: Synchronization scripts
-- `pin-*`: Version pinning scripts
-- `plan-*`: Planning scripts
-- `deploy-*`: Deployment scripts
-
-## Execution
-
-All scripts are executable from the project root:
-
-```bash
-# Directly
-node scripts/check-secrets-in-commit.mjs
-node scripts/export-public-repo.mjs --dry-run
-node scripts/build-ci.mjs
-
-# Through npm scripts
-npm run check:env
-npm run test:fast
-npm run build:ci
-```
-
-## Contributing New Scripts
-
-1. Place the script in the appropriate category
-2. Use the correct naming prefix
-3. Document the purpose in the file header
-4. Add an entry to this README
-5. If it is a CI gate, make sure it works in `npm run check:quick`
-
-## Performance
-
-- `check:quick`: ~2.5s (sub-second gates)
-- `npm run check`: ~62s (full chain)
-- `npm run test:fast`: ~30s
-- `npm run test:slow`: ~5 min
-- `npm run build:ci`: ~2 min
-
-## Permissions and Security
-
-- Scripts that touch secrets are in `check-secrets-in-commit.mjs`
-- Deploy scripts require explicit tokens
-- Export scripts (`export-public-repo.mjs`) never expose Pro code
-- Build scripts (`build-ci.mjs`) scan for secrets in the resulting bundle
+- Gates listed in the `check` chain are frozen by `check-inspector-freeze`;
+  adding a new chain gate requires an ADR that names it.
+- Baseline JSON files (`*-baseline.json`) are ratchets: they freeze current
+  debt and fail when it grows. Regenerate only with the documented update
+  flag, never by hand.
+- Scripts that touch secrets, deploys, or the public export are private-repo
+  tooling and are excluded from the MIT export by `export-public-repo.mjs`.

@@ -293,7 +293,11 @@ describe("the page census the smoke derives", () => {
       ]),
     );
 
-    const pageOwned = /^\/og-image(?:-[a-z-]+)?\.png$|^\/pocket-alternative\.css$/;
+    // Landing-only demo screenshots are content, not shared chrome: the Pocket
+    // comparison page deliberately does not carry the demo gallery, so these
+    // images sit outside the 31-page intersection by design.
+    const pageOwned =
+      /^\/og-image(?:-[a-z-]+)?\.png$|^\/pocket-alternative\.css$|^\/images\/app-(?:dashboard|bookmarks|documents|chat)\.webp$/;
     for (const { file, resources: pageResources } of perPage) {
       for (const resource of pageResources) {
         if (!shared.includes(resource) && !pageOwned.test(resource)) {

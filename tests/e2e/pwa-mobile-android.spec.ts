@@ -70,11 +70,15 @@ async function stubInstallable(page: Page): Promise<void> {
     // The app attaches its listener when React mounts (Header effect), which
     // is seconds after document creation — a one-shot dispatch at macrotask 0
     // fires into the void. Re-dispatch FRESH event objects (an Event cannot
-    // be dispatched twice) until the app boot window has passed.
+    // be dispatched twice) until the app boot window has passed. The window
+    // must outlive the vault setup that precedes the Header mount: the mobile
+    // Argon2id KDF alone takes ~30 s on emulated Android, so a 30 s stub
+    // window expires before the listener exists. Bound it by the test
+    // timeout instead (300 s) plus margin.
     const timer = setInterval(() => {
       window.dispatchEvent(makeEvent());
     }, 600);
-    setTimeout(() => clearInterval(timer), 30_000);
+    setTimeout(() => clearInterval(timer), 540_000);
   });
 }
 
@@ -132,7 +136,9 @@ test.describe("PWA install surface (emulated Android Chrome)", () => {
     page,
     request,
   }) => {
-    await page.goto("/");
+    // The SPA shell (manifest link + SW registration via main.tsx) lives at
+    // /app; / is the marketing landing every host serves.
+    await page.goto("/app");
 
     // Manifest link present in the served HTML.
     const manifestHref = await page
@@ -174,7 +180,7 @@ test.describe("PWA install surface (emulated Android Chrome)", () => {
     page,
   }) => {
     await stubInstallable(page);
-    await page.goto("/");
+    await page.goto("/app");
 
     // The install button lives in the app Header, which mounts only in the
     // main (unlocked) app — create the vault so the Header exists. The app's

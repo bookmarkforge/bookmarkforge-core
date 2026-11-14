@@ -280,7 +280,7 @@ describe("MemoryEngine", () => {
       },
     );
 
-    // ── Privacidad: el flag isPrivate se persiste y se propaga ──
+    // ── Privacy: the isPrivate flag is persisted and propagated ──
     it("persists isPrivate=true on the inserted message", async () => {
       mockDb.memory.findOne = vi
         .fn()

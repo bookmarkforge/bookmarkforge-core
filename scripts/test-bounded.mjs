@@ -12,8 +12,7 @@ import {
 } from "./check-test-timing.mjs";
 import { PROFILE_DEFAULTS } from "./test-profiles.mjs";
 // Which files a profile schedules is owned by scripts/test-files.mjs (shared
-// with scripts/check-audit-freshness.mjs, which re-derives the fast-profile
-// count docs/audit.md publishes); this runner must not grow a second walk.
+// with the curated fast wrapper); this runner must not grow a second walk.
 import {
   allTestFiles as collectAllTestFiles,
   collectRequestedTestFiles,

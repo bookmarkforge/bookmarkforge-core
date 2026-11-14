@@ -63,14 +63,12 @@ services:
       TRUST_PROXY: "1"
       WS_ALLOWED_ORIGINS: ${WS_ALLOWED_ORIGINS:?WS_ALLOWED_ORIGINS is required}
       # A1 (audit 2026-11-05): the server refuses to start in production
-      # without these four IP-hash salts (>= 32 chars each). Declare them as
+      # without these two IP-hash salts (>= 32 chars each). Declare them as
       # REQUIRED: an optional `:-` default passes an empty value, the API
       # throws during import, and `web` never starts because it waits for
       # `api` to become healthy.
       SIGNALING_IP_HASH_SALT: ${SIGNALING_IP_HASH_SALT:?SIGNALING_IP_HASH_SALT is required (>= 32 chars)}
       CSP_REPORT_IP_HASH_SALT: ${CSP_REPORT_IP_HASH_SALT:?CSP_REPORT_IP_HASH_SALT is required (>= 32 chars)}
-      ANALYTICS_IP_HASH_SALT: ${ANALYTICS_IP_HASH_SALT:?ANALYTICS_IP_HASH_SALT is required (>= 32 chars)}
-      CLIENT_EVENTS_IP_HASH_SALT: ${CLIENT_EVENTS_IP_HASH_SALT:?CLIENT_EVENTS_IP_HASH_SALT is required (>= 32 chars)}
       # P1-3 (review 2026-11-11): the old `READ_ONLY: "true"` variable had no
       # reader in server/src, so the operator believed the container was
       # read-only while the rootfs stayed writable. The real control is the
@@ -79,17 +77,6 @@ services:
       # sources never mention.
       TURN_RELAY_HOST: ${TURN_RELAY_HOST:-}
       TURN_STATIC_AUTH_SECRET: ${TURN_STATIC_AUTH_SECRET:-}
-      # Client events endpoint (/api/client-events): alert webhook fired on
-      # the >= CRITICAL_CLIENTS threshold, and the admin token for the
-      # diagnostics GET. Empty defaults are fail-safe: no webhook (no leak)
-      # and no diagnostics (503). check-env-config.mjs verifies the webhook
-      # is https-only and required compose vars are present at deploy time.
-      CLIENT_EVENTS_WEBHOOK_URL: ${CLIENT_EVENTS_WEBHOOK_URL:-}
-      CLIENT_EVENTS_ADMIN_TOKEN: ${CLIENT_EVENTS_ADMIN_TOKEN:-}
-      CLIENT_EVENTS_CRITICAL_CLIENTS: ${CLIENT_EVENTS_CRITICAL_CLIENTS:-3}
-      CLIENT_EVENTS_WINDOW_MS: ${CLIENT_EVENTS_WINDOW_MS:-600000}
-      CLIENT_EVENTS_LIMIT: ${CLIENT_EVENTS_LIMIT:-30}
-      CLIENT_EVENTS_MAX: ${CLIENT_EVENTS_MAX:-200}
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
     # P1-3 (review 2026-11-11): Docker-enforced read-only rootfs. The companion

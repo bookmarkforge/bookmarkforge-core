@@ -195,6 +195,20 @@ describe("crypto-core fuzz — binary encrypt/decrypt", () => {
 // ── Session key encrypt/decrypt ──────────────────────────────────────
 
 describe("crypto-core fuzz — session key", () => {
+  // ADR-052 Phase 4: session-key writes require a provisioned per-vault salt
+  // (the legacy no-marker layout is no longer readable).
+  const VAULT_SALT = "6b".repeat(16);
+
+  beforeEach(() => {
+    setVaultKdfSalt(VAULT_SALT);
+    resetSessionKeyCache();
+  });
+
+  afterEach(() => {
+    setVaultKdfSalt(null);
+    resetSessionKeyCache();
+  });
+
   it("round-trip: decryptWithSessionKey(encryptWithSessionKey(data, pw), pw) === data", async () => {
     await fc.assert(
       fc.asyncProperty(binaryArb, passwordArb, async (data, password) => {
@@ -231,9 +245,10 @@ describe("crypto-core fuzz — session key", () => {
         const data = new Uint8Array([1, 2, 3]);
         const e1 = await encryptWithSessionKey(data, password);
         const e2 = await encryptWithSessionKey(data, password);
-        // S6: first 16 bytes are the HKDF salt — they must differ.
-        const salt1 = e1.slice(0, 16);
-        const salt2 = e2.slice(0, 16);
+        // S6: the per-operation HKDF salt follows the marker+salt header
+        // (1 + 16 bytes) — the two must differ.
+        const salt1 = e1.slice(17, 33);
+        const salt2 = e2.slice(17, 33);
         return !uint8Equal(new Uint8Array(salt1), new Uint8Array(salt2));
       }),
       { numRuns: FUZZ_RUNS },

@@ -2,22 +2,13 @@
  * src/tests/security-integration.test.ts
  *
  * Integration tests for post-audit security hardening:
- *   - V6 encryption round-trip, V5 read-only legacy, V4 backward compatibility
+ *   - V7 encryption round-trip, V4 backward compatibility
  *   - HKDF session-key batching (1× Argon2id → N× HKDF)
  *   - Web Locks device-key cross-tab serialization
  *
  * @vitest-environment node
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-
-// ADR-052 Fase 3: `v5:` reads fail closed unless the operator opts in with
-// VITE_ALLOW_V5_LEGACY_READ=true. This suite pins the read-only legacy v5
-// path (its fixture was written by an older build), so it sets the migration
-// switch BEFORE crypto-core/env.config load and snapshot the flag — the
-// same opt-in an operator performs for a migration. Static imports would be
-// hoisted above this line and snapshot the flag as false, hence the dynamic
-// imports below.
-vi.stubEnv("VITE_ALLOW_V5_LEGACY_READ", "true");
 
 const {
   encrypt,
@@ -141,8 +132,17 @@ describe("V7 encryption format (v5/v6 are read-only)", () => {
 
 describe("HKDF session-key batching", () => {
   const password = "session-password";
+  // ADR-052 Phase 4: session-key writes require a provisioned per-vault salt
+  // (the legacy no-marker layout is no longer readable, so it is not written).
+  const VAULT_SALT = "6b".repeat(16);
+
+  beforeEach(() => {
+    setVaultKdfSalt(VAULT_SALT);
+    resetSessionKeyCache();
+  });
 
   afterEach(() => {
+    setVaultKdfSalt(null);
     resetSessionKeyCache();
   });
 

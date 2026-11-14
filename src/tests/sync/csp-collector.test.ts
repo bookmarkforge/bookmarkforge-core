@@ -820,8 +820,6 @@ describe.skipIf(!serverEntryExists)("CSP report collector — webhook URL harden
         WS_ALLOWED_ORIGINS: "http://127.0.0.1",
         SIGNALING_IP_HASH_SALT: "csp-collector-test-salt-0123456789",
         CSP_REPORT_IP_HASH_SALT: "csp-collector-csp-salt-0123456789",
-        CLIENT_EVENTS_IP_HASH_SALT: "csp-collector-events-salt-0123456789",
-        ANALYTICS_IP_HASH_SALT: "csp-collector-analytics-salt-0123456789",
         AI_SESSION_ORIGINS: "http://127.0.0.1",
         PORT: String(port),
         HOST: "127.0.0.1",

@@ -26,8 +26,8 @@ const ORGANIZATION = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'BookmarkForge',
-  url: 'https://bookmarkforgeapp.com',
-  logo: 'https://bookmarkforgeapp.com/logo.png',
+  url: 'https://www.bookmarkforgeapp.com',
+  logo: 'https://www.bookmarkforgeapp.com/logo.png',
   description: 'Local-first, privacy-preserving AI knowledge vault with end-to-end encryption',
   sameAs: [
     'https://github.com/bookmarkforge/bookmarkforge-core',
@@ -46,11 +46,11 @@ const WEBSITE = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: 'BookmarkForge',
-  url: 'https://bookmarkforgeapp.com',
+  url: 'https://www.bookmarkforgeapp.com',
   description: 'Local-first bookmark manager with AI-powered knowledge management',
   potentialAction: {
     '@type': 'SearchAction',
-    target: 'https://bookmarkforgeapp.com/search?q={search_term_string}',
+    target: 'https://www.bookmarkforgeapp.com/search?q={search_term_string}',
     'query-input': 'required name=search_term_string',
   },
   publisher: {
@@ -89,7 +89,7 @@ const SOFTWARE_APPLICATION = {
     'Cross-platform (PWA)',
   ],
   description: 'BookmarkForge is a local-first, privacy-preserving bookmark manager and AI-powered knowledge vault. Your data stays on your device, encrypted with AES-256-GCM and protected by Argon2id.',
-  downloadUrl: 'https://bookmarkforgeapp.com',
+  downloadUrl: 'https://www.bookmarkforgeapp.com',
   license: 'https://github.com/bookmarkforge/bookmarkforge-core/blob/main/LICENSE',
   publisher: {
     '@type': 'Organization',
@@ -154,19 +154,19 @@ const BREADCRUMB_LIST = {
       '@type': 'ListItem',
       position: 1,
       name: 'Home',
-      item: 'https://bookmarkforgeapp.com/',
+      item: 'https://www.bookmarkforgeapp.com/',
     },
     {
       '@type': 'ListItem',
       position: 2,
       name: 'Help',
-      item: 'https://bookmarkforgeapp.com/help',
+      item: 'https://www.bookmarkforgeapp.com/help',
     },
     {
       '@type': 'ListItem',
       position: 3,
       name: 'Privacy',
-      item: 'https://bookmarkforgeapp.com/privacy',
+      item: 'https://www.bookmarkforgeapp.com/privacy',
     },
   ],
 };
@@ -180,7 +180,7 @@ function generateArticleSchema(post) {
     '@type': 'Article',
     headline: post.title,
     description: post.description,
-    image: post.main_image || 'https://bookmarkforgeapp.com/og-image.png',
+    image: post.main_image || 'https://www.bookmarkforgeapp.com/og-image.png',
     author: {
       '@type': 'Organization',
       name: 'BookmarkForge Team',
@@ -190,7 +190,7 @@ function generateArticleSchema(post) {
       name: 'BookmarkForge',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://bookmarkforgeapp.com/logo.png',
+        url: 'https://www.bookmarkforgeapp.com/logo.png',
       },
     },
     datePublished: post.datePublished || new Date().toISOString(),

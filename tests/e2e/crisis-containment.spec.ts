@@ -2,8 +2,6 @@ import { test, expect, type Page } from "@playwright/test";
 import { spawn, type ChildProcess } from "node:child_process";
 import { existsSync } from "node:fs";
 import { createServer, type Server as NetServer } from "node:net";
-import { createServer as createHttpServer, type Server as HttpServer } from "node:http";
-import { randomBytes } from "node:crypto";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { skipPassword } from "./vault-helpers";
@@ -16,21 +14,15 @@ const QUOTA_FILL_CHUNK_BYTES = Number.parseInt(process.env.CRISIS_QUOTA_CHUNK_BY
 const QUOTA_FILL_MAX_ITERATIONS = Number.parseInt(process.env.CRISIS_QUOTA_MAX_ITERATIONS ?? "4000", 10);
 let companionPort = 0;
 let companionUrl = "";
-let adminToken = "";
 // Default must match the vite dev-server proxy target (playwright.config.ts
 // passes CRISIS_COMPANION_PORT=8799 to the webServer env, and vite.config.ts
 // proxies /api/* to CRISIS_COMPANION_PORT || 8799). Reserving a random port
 // here would strand the companion on a port the proxy never forwards to.
 const configuredCompanionPort = Number.parseInt(process.env.CRISIS_COMPANION_PORT ?? "8799", 10);
-const configuredAdminToken = process.env.CRISIS_ADMIN_TOKEN?.trim() ?? "";
-const ADMIN_TOKEN_BYTES = 24;
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const SIGNING_KEY = join(ROOT, "server", ".license-signing-key.pkcs8");
 let companion: ChildProcess | null = null;
 let companionLog = "";
-let webhookServer: HttpServer | null = null;
-let webhookPort = 0;
-const webhookPayloads: Array<Record<string, unknown>> = [];
 
 async function reserveCompanionPort(): Promise<number> {
   if (Number.isInteger(configuredCompanionPort) && configuredCompanionPort > 0) return configuredCompanionPort;
@@ -46,7 +38,6 @@ async function reserveCompanionPort(): Promise<number> {
 }
 async function configureCompanionIdentity(): Promise<void> {
   companionPort = await reserveCompanionPort();
-  adminToken = configuredAdminToken || randomBytes(ADMIN_TOKEN_BYTES).toString("hex");
   companionUrl = `http://127.0.0.1:${companionPort}`;
 }
 function startCompanion(): Promise<void> {
@@ -56,7 +47,7 @@ function startCompanion(): Promise<void> {
     const rejectStartup = (error: Error) => { if (!settled) { settled = true; reject(error); } };
     const child = spawn(process.execPath, ["--import", "tsx", join(ROOT, "server", "src", "index.ts")], {
       cwd: ROOT,
-      env: { ...process.env, NODE_ENV: "test", PORT: String(companionPort), CLIENT_EVENTS_ADMIN_TOKEN: adminToken, CLIENT_EVENTS_WEBHOOK_URL: `http://127.0.0.1:${webhookPort}/client-events-hook`, CLIENT_EVENTS_WEBHOOK_ALLOW_HTTP: "1", HOST: "127.0.0.1", TRUST_PROXY: "1", WHOP_LICENSE_API_URL: "http://127.0.0.1:9/license", WHOP_API_KEY: "e2e-license-key", LICENSE_PROVIDER_ALLOW_HTTP: "1", ...(existsSync(SIGNING_KEY) ? { LICENSE_SIGNING_PRIVATE_KEY_FILE: SIGNING_KEY } : {}) },
+      env: { ...process.env, NODE_ENV: "test", PORT: String(companionPort), HOST: "127.0.0.1", TRUST_PROXY: "1", WHOP_LICENSE_API_URL: "http://127.0.0.1:9/license", WHOP_API_KEY: "e2e-license-key", LICENSE_PROVIDER_ALLOW_HTTP: "1", ...(existsSync(SIGNING_KEY) ? { LICENSE_SIGNING_PRIVATE_KEY_FILE: SIGNING_KEY } : {}) },
       stdio: ["ignore", "pipe", "pipe"],
     });
     companion = child;
@@ -141,14 +132,6 @@ async function startCompanionWithRetry(): Promise<void> {
   }
   throw lastError ?? new Error("companion failed to start");
 }
-async function startWebhookCapture(): Promise<void> {
-  webhookServer = createHttpServer((req, res) => {
-    const chunks: Buffer[] = [];
-    req.on("data", (chunk) => chunks.push(chunk));
-    req.on("end", () => { try { webhookPayloads.push(JSON.parse(Buffer.concat(chunks).toString("utf8")) as Record<string, unknown>); } catch { /* ignore malformed */ } res.writeHead(204); res.end(); });
-  });
-  await new Promise<void>((resolve, reject) => { webhookServer!.once("error", reject); webhookServer!.listen(0, "127.0.0.1", () => { const address = webhookServer!.address(); webhookPort = typeof address === "object" && address ? address.port : 0; resolve(); }); });
-}
 async function readStoredErrors(page: Page): Promise<Array<Record<string, unknown>>> { return page.evaluate(async ({ dbName, storeName }) => { const db = await new Promise<IDBDatabase>((resolve, reject) => { const request = indexedDB.open(dbName, 1); request.onupgradeneeded = () => { const database = request.result; if (!database.objectStoreNames.contains(storeName)) { const store = database.createObjectStore(storeName, { keyPath: "id" }); store.createIndex("timestamp", "timestamp", { unique: false }); } }; request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error); }); try { if (!db.objectStoreNames.contains(storeName)) return []; return await new Promise<Array<Record<string, unknown>>>((resolve, reject) => { const request = db.transaction(storeName, "readonly").objectStore(storeName).getAll(); request.onsuccess = () => resolve((request.result ?? []) as Array<Record<string, unknown>>); request.onerror = () => reject(request.error); }); } finally { db.close(); } }, { dbName: ERROR_DB, storeName: ERROR_STORE }); }
 async function enableDiagnosticsOptIn(page: Page): Promise<void> { await page.evaluate(() => window.localStorage.setItem("bmf_local_error_storage", "true")); }
 async function skipAndAlive(page: Page): Promise<void> { await skipPassword(page); await expect(page.getByTestId("settings-button")).toBeVisible({ timeout: 10_000 }); }
@@ -160,7 +143,6 @@ test.describe.serial("crisis containment", () => {
 let companionReady = false;
 test.beforeAll(async () => {
   await configureCompanionIdentity();
-  await startWebhookCapture();
   try {
     await startCompanionWithRetry();
     companionReady = true;
@@ -169,7 +151,7 @@ test.beforeAll(async () => {
     companionReady = false;
   }
 });
-test.afterAll(async () => { companion?.kill(); companion = null; if (webhookServer) await new Promise<void>((resolve) => webhookServer!.close(() => resolve())); webhookServer = null; });
+test.afterAll(async () => { companion?.kill(); companion = null; });
 
 test("global error, unhandled rejection, CSP burst and quota pressure never kill the UI and are recorded locally", async ({ page }) => {
   test.skip(!companionReady, "crisis companion server not available");
@@ -190,26 +172,9 @@ test("global error, unhandled rejection, CSP burst and quota pressure never kill
   // here would require seeding model downloads, which is orthogonal to the
   // quota-pressure scenario this test covers.
   const clearButton = page.getByRole("button", { name: /Clear AI (Models|cache)/i }).first(); await expect(clearButton).toBeVisible(); await expect(clearButton).toBeDisabled(); await skipAndAlive(page); await page.keyboard.press("Escape");
-  // The companion deduplicates critical clients by IP fingerprint.
-  // All E2E cluster contexts share 127.0.0.1, so browser-dispatched
-  // events collapse to 1 critical client. To exercise the 3-client
-  // threshold, POST directly to the companion with distinct
-  // X-Forwarded-For IPs (TRUST_PROXY=1 is set in startCompanion).
-  // Runtime health check: verify the companion is reachable at test time,
-  // not just at beforeAll time. The Vite proxy may be unable to forward
-  // events if the companion crashed after startup (ECONNREFUSED).
-  let companionHealthy = false;
-  try { const probe = await fetch(`${companionUrl}/health`); companionHealthy = probe.ok; } catch { companionHealthy = false; }
-  if (companionHealthy) {
-  const clusterContexts = await Promise.all([0, 1, 2].map(async (index) => { const context = await page.context().browser()!.newContext(); const clientPage = await context.newPage(); await clientPage.goto("/"); await skipAndAlive(clientPage); await enableDiagnosticsOptIn(clientPage); await clientPage.evaluate((clientIndex) => window.dispatchEvent(new CustomEvent("bundle-integrity-spike", { detail: { count: 3, reason: `e2e-cluster-client-${clientIndex}` } })), index); return { context, clientPage }; }));
-  try {
-    // Also POST directly with distinct source IPs to reach the 3-client
-    // threshold the companion's aggregation expects.
-    await Promise.all([0, 1, 2].map(async (index) => { try { await fetch(`${companionUrl}/api/client-events`, { method: "POST", headers: { "content-type": "application/json", "x-forwarded-for": `10.0.0.${10 + index}` }, body: JSON.stringify({ type: "bundle-integrity-spike", count: 3, reason: `e2e-direct-client-${index}` }) }); } catch { /* non-fatal */ } }));
-    await expect.poll(async () => { try { const response = await fetch(`${companionUrl}/api/client-events`, { headers: { "x-client-events-admin-token": adminToken } }); if (!response.ok) return false; const data = (await response.json()) as { recent?: Array<{ type: string; critical?: boolean }> }; return (data.recent ?? []).filter((entry) => entry.type === "bundle-integrity-spike" && entry.critical).length >= 3; } catch { return false; } }, { timeout: 15_000 }).toBe(true); await expect.poll(() => companionLog.includes('"event":"client_events_critical_threshold"'), { timeout: 15_000 }).toBe(true); expect(companionLog).toContain('"criticalClients":3'); await expect.poll(() => webhookPayloads.length, { timeout: 15_000 }).toBeGreaterThanOrEqual(1); expect(webhookPayloads.at(-1)).toMatchObject({ alert: "client-events-critical-threshold", criticalClients: 3, threshold: 3, windowMs: 600_000 }); } finally { await Promise.all(clusterContexts.map(({ context }) => context.close())); }
-  } else {
-    console.warn("[crisis] companion not reachable at test time — skipping cluster events assertions");
-  }
+  // Zero telemetry: bundle-integrity and error spikes are recorded in local
+  // storage only — the companion mounts no client-event endpoint, so there is
+  // no cluster aggregation or webhook to assert here.
   const spikeCount = await page.evaluate(() => new Promise<number>((resolve) => { const timer = window.setTimeout(() => resolve(0), 8_000); window.addEventListener("bundle-integrity-spike", (event) => { window.clearTimeout(timer); resolve((event as CustomEvent<{ count?: number }>).detail?.count ?? 0); }, { once: true }); for (let i = 0; i < 3; i += 1) window.dispatchEvent(new CustomEvent("bundle-integrity-failed", { detail: { mismatchedFiles: [`/assets/evil-${i}.js`], reason: "runtime-injection", checkedAt: new Date().toISOString() } })); })); expect(spikeCount).toBeGreaterThanOrEqual(3); await expect.poll(async () => (await readStoredErrors(page)).some((entry) => /integrity spike/i.test(String(entry.message))), { timeout: 10_000 }).toBe(true); await skipAndAlive(page);
   // Abort non-entry script chunks to force the GraphView route error
   // boundary. In dev mode all components are bundled — there is no

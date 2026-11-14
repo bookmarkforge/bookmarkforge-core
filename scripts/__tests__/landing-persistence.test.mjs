@@ -104,9 +104,13 @@ describe("the 404 page shares the theme instead of resetting it", () => {
 });
 
 describe("landing.js — the language choice survives the tour", () => {
-  it("records the language the page was served in", () => {
+  it("does not record the served language as a preference", () => {
     expect(LANDING_JS).toMatch(/const servedLanguage = pageLanguage\(\);/);
-    expect(LANDING_JS).toMatch(/setLangPreference\(servedLanguage\)/);
+    // Being served /es/ is not a choice: only ?lang=, an explicit language
+    // click, or the stored-preference redirect may write bf_lang/nf_lang.
+    expect(LANDING_JS).not.toMatch(/setLangPreference\(servedLanguage\)/);
+    expect(LANDING_JS).toMatch(/setLangPreference\(lang\)/);
+    expect(LANDING_JS).toMatch(/setLangPreference\(match\[1\]\.toLowerCase\(\)\)/);
   });
 
   it("treats the EN root landing as English and general pages as no language", () => {

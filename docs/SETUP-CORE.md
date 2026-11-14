@@ -255,12 +255,12 @@ bookmarkforge/
 ├── vite.config.ts          # Vite configuration
 ├── tsconfig.json           # TypeScript config (dev)
 ├── tsconfig.prod.json      # TypeScript config (prod)
-└── AGENTS.md               # Engineering conventions
+└── CONTRIBUTING.md               # Engineering conventions
 ```
 
 ### Key Files to Know
 
-- **AGENTS.md** - Read this first! Engineering conventions (Core-only)
+- **CONTRIBUTING.md** - Read this first! Engineering conventions (Core-only)
 - **CONTRIBUTING.md** - How to contribute to Core
 - **docs/architecture.md** - System architecture
 - **docs/ENVIRONMENT.md** - Environment variables reference
@@ -377,7 +377,7 @@ npm run check:security
 
 ### Learn the Codebase
 
-1. Read **AGENTS.md** - Engineering conventions (mandatory)
+1. Read **CONTRIBUTING.md** - Engineering conventions (mandatory)
 2. Read **docs/architecture.md** - System architecture
 3. Read **docs/security.md** - Security model
 4. Explore **src/components/** - React components
@@ -488,7 +488,7 @@ docker-compose -f docker-compose.staging.yml logs -f
 - [ ] Linting passes (`npm run lint`)
 - [ ] Fast tests pass (`npm run test:fast`)
 - [ ] Open Core boundary verified (`npm run check:open-core`)
-- [ ] Read AGENTS.md
+- [ ] Read CONTRIBUTING.md
 - [ ] Read docs/ENVIRONMENT.md
 - [ ] Read CONTRIBUTING.md
 - [ ] VS Code extensions installed (optional)

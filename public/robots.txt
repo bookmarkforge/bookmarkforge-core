@@ -13,4 +13,4 @@ Disallow: /capture
 Disallow: /offline
 Disallow: /api
 
-Sitemap: https://bookmarkforgeapp.com/sitemap.xml
+Sitemap: https://www.bookmarkforgeapp.com/sitemap.xml

@@ -101,12 +101,12 @@ function hasLocalizedCard(lang) {
  * test can mutate exactly one piece and assert the gate catches it.
  */
 function buildValidPage(overrides = {}) {
-  const canonical = overrides.canonical ?? "https://bookmarkforgeapp.com/";
+  const canonical = overrides.canonical ?? "https://www.bookmarkforgeapp.com/";
   const lang = overrides.lang ?? "en";
   const locale = overrides.locale ?? "en_US";
   const alternateLocale = overrides.alternateLocale ?? "es_ES";
-  const esHref = overrides.esHref ?? "https://bookmarkforgeapp.com/es/";
-  const ogImage = overrides.ogImage ?? "https://bookmarkforgeapp.com/og-image.png";
+  const esHref = overrides.esHref ?? "https://www.bookmarkforgeapp.com/es/";
+  const ogImage = overrides.ogImage ?? "https://www.bookmarkforgeapp.com/og-image.png";
   const alternates = overrides.alternates ?? fixtureAlternates(lang, canonical, esHref);
   const alternateTags = alternates
     .map((a) => `<link rel="alternate" hreflang="${a.hreflang}" href="${a.href}">`)
@@ -248,9 +248,9 @@ ${langs.map((lang) => `[[redirects]]\n  from = "/"\n  to = "/${lang}/"\n  status
  * so each test can mutate exactly one piece and assert the gate catches it.
  */
 function buildValidAuxPage(overrides = {}) {
-  const canonical = overrides.canonical ?? "https://bookmarkforgeapp.com/404.html";
+  const canonical = overrides.canonical ?? "https://www.bookmarkforgeapp.com/404.html";
   const siteName = overrides.siteName ?? "BookmarkForge";
-  const ogImage = overrides.ogImage ?? "https://bookmarkforgeapp.com/og-image.png";
+  const ogImage = overrides.ogImage ?? "https://www.bookmarkforgeapp.com/og-image.png";
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -278,9 +278,9 @@ function buildValidAuxPage(overrides = {}) {
 
 const AUX_CFG = {
   file: "public/404.html",
-  canonical: "https://bookmarkforgeapp.com/404.html",
+  canonical: "https://www.bookmarkforgeapp.com/404.html",
   siteName: "BookmarkForge",
-  ogImage: "https://bookmarkforgeapp.com/og-image.png",
+  ogImage: "https://www.bookmarkforgeapp.com/og-image.png",
 };
 
 /** Sitemap matching the gate's contract: all 6 landing locales with the
@@ -289,16 +289,16 @@ const AUX_CFG = {
 function buildValidSitemap() {
   const landingPaths = ["/", "/es/", "/fr/", "/de/", "/pt/", "/it/"];
   const linkLangs = [
-    ["en", "https://bookmarkforgeapp.com/"],
-    ["es", "https://bookmarkforgeapp.com/es/"],
-    ["fr", "https://bookmarkforgeapp.com/fr/"],
-    ["de", "https://bookmarkforgeapp.com/de/"],
-    ["pt", "https://bookmarkforgeapp.com/pt/"],
-    ["it", "https://bookmarkforgeapp.com/it/"],
-    ["x-default", "https://bookmarkforgeapp.com/"],
+    ["en", "https://www.bookmarkforgeapp.com/"],
+    ["es", "https://www.bookmarkforgeapp.com/es/"],
+    ["fr", "https://www.bookmarkforgeapp.com/fr/"],
+    ["de", "https://www.bookmarkforgeapp.com/de/"],
+    ["pt", "https://www.bookmarkforgeapp.com/pt/"],
+    ["it", "https://www.bookmarkforgeapp.com/it/"],
+    ["x-default", "https://www.bookmarkforgeapp.com/"],
   ];
   const landingUrlXml = (path) =>
-    `<url>\n    <loc>https://bookmarkforgeapp.com${path}</loc>\n${linkLangs
+    `<url>\n    <loc>https://www.bookmarkforgeapp.com${path}</loc>\n${linkLangs
       .map(([h, href]) => `    <xhtml:link rel="alternate" hreflang="${h}" href="${href}" />`)
       .join("\n")}\n  </url>`;
   // The legal pages form their own 6-language cluster: every legal <url>
@@ -313,17 +313,17 @@ function buildValidSitemap() {
   ];
   const legalLinkLangs = legalPaths.map((p) => [
     p === "/privacy-and-terms.html" ? "en" : p.split("/")[1],
-    `https://bookmarkforgeapp.com${p}`,
+    `https://www.bookmarkforgeapp.com${p}`,
   ]);
-  legalLinkLangs.push(["x-default", "https://bookmarkforgeapp.com/privacy-and-terms.html"]);
+  legalLinkLangs.push(["x-default", "https://www.bookmarkforgeapp.com/privacy-and-terms.html"]);
   const legalUrlXml = (path) =>
-    `<url>\n    <loc>https://bookmarkforgeapp.com${path}</loc>\n${legalLinkLangs
+    `<url>\n    <loc>https://www.bookmarkforgeapp.com${path}</loc>\n${legalLinkLangs
       .map(([h, href]) => `    <xhtml:link rel="alternate" hreflang="${h}" href="${href}" />`)
       .join("\n")}\n  </url>`;
   return [
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
     ...landingPaths.map(landingUrlXml),
-    "<url><loc>https://bookmarkforgeapp.com/pocket-alternative</loc></url>",
+    "<url><loc>https://www.bookmarkforgeapp.com/pocket-alternative</loc></url>",
     ...legalPaths.map(legalUrlXml),
     "</urlset>",
   ].join("\n");
@@ -443,7 +443,7 @@ describe("check-seo gate", () => {
 
   it("flags a missing canonical and a wrong hreflang=es target", () => {
     const html = buildValidPage({
-      esHref: "https://bookmarkforgeapp.com/fr/",
+      esHref: "https://www.bookmarkforgeapp.com/fr/",
     }).replace(/<link rel="canonical"[^>]*>\n/, "");
     const fails = validateLandingHtml(html, CFG);
     expect(fails.some((f) => f.includes("canonical"))).toBe(true);
@@ -458,7 +458,7 @@ describe("check-seo gate", () => {
     const fails = validateLandingHtml(noImage, CFG);
     expect(fails.some((f) => f.includes("og:image missing"))).toBe(true);
 
-    const broken = buildValidPage({ ogImage: "https://bookmarkforgeapp.com/gone.png" });
+    const broken = buildValidPage({ ogImage: "https://www.bookmarkforgeapp.com/gone.png" });
     const failsBroken = validateLandingHtml(broken, {
       ...CFG,
       assetExists: (rel) => rel !== "gone.png",
@@ -494,9 +494,9 @@ describe("check-seo gate", () => {
   {
     "@context": "https://schema.org",
     "@graph": [
-      { "@type": "WebSite", "url": "https://bookmarkforgeapp.com/" },
-      { "@type": "Organization", "url": "https://bookmarkforgeapp.com/" },
-      { "@type": "SoftwareApplication", "url": "https://bookmarkforgeapp.com/" },
+      { "@type": "WebSite", "url": "https://www.bookmarkforgeapp.com/" },
+      { "@type": "Organization", "url": "https://www.bookmarkforgeapp.com/" },
+      { "@type": "SoftwareApplication", "url": "https://www.bookmarkforgeapp.com/" },
       { "@type": "FAQPage", "mainEntity": [
         { "@type": "Question", "name": "Q?", "acceptedAnswer": { "@type": "Answer", "text": "A." } }
       ]}
@@ -515,15 +515,15 @@ describe("check-seo gate", () => {
     "@graph": [
       {
         "@type": "WebSite",
-        "url": "https://bookmarkforgeapp.com/",
+        "url": "https://www.bookmarkforgeapp.com/",
         "potentialAction": {
           "@type": "SearchAction",
-          "target": { "@type": "EntryPoint", "urlTemplate": "https://bookmarkforgeapp.com/?s={search_term_string}" },
+          "target": { "@type": "EntryPoint", "urlTemplate": "https://www.bookmarkforgeapp.com/?s={search_term_string}" },
           "query-input": "required name=search_term_string"
         }
       },
-      { "@type": "Organization", "url": "https://bookmarkforgeapp.com/" },
-      { "@type": "SoftwareApplication", "url": "https://bookmarkforgeapp.com/" },
+      { "@type": "Organization", "url": "https://www.bookmarkforgeapp.com/" },
+      { "@type": "SoftwareApplication", "url": "https://www.bookmarkforgeapp.com/" },
       { "@type": "FAQPage", "mainEntity": [
         { "@type": "Question", "name": "Q?", "acceptedAnswer": { "@type": "Answer", "text": "A." } }
       ]}
@@ -539,34 +539,34 @@ describe("check-seo gate", () => {
 
     // WebSite present, no potentialAction.
     const noPa = [
-      { "@type": "WebSite", "url": "https://bookmarkforgeapp.com/" },
-      { "@type": "Organization", "url": "https://bookmarkforgeapp.com/" },
+      { "@type": "WebSite", "url": "https://www.bookmarkforgeapp.com/" },
+      { "@type": "Organization", "url": "https://www.bookmarkforgeapp.com/" },
     ];
     expect(validateSearchAction(noPa).some((f) => f.includes("SearchAction"))).toBe(true);
 
     // potentialAction present but wrong type.
     const wrongType = [
-      { "@type": "WebSite", "url": "https://bookmarkforgeapp.com/", "potentialAction": { "@type": "SomethingElse" } },
+      { "@type": "WebSite", "url": "https://www.bookmarkforgeapp.com/", "potentialAction": { "@type": "SomethingElse" } },
     ];
     expect(validateSearchAction(wrongType).some((f) => f.includes('"SomethingElse"'))).toBe(true);
 
     // SearchAction present but missing urlTemplate.
     const noUrl = [
-      { "@type": "WebSite", "url": "https://bookmarkforgeapp.com/", "potentialAction": { "@type": "SearchAction" } },
+      { "@type": "WebSite", "url": "https://www.bookmarkforgeapp.com/", "potentialAction": { "@type": "SearchAction" } },
     ];
     expect(validateSearchAction(noUrl).some((f) => f.includes("urlTemplate"))).toBe(true);
 
     // SearchAction present but missing query-input.
     const noQuery = [
-      { "@type": "WebSite", "url": "https://bookmarkforgeapp.com/", "potentialAction": { "@type": "SearchAction", "target": { "@type": "EntryPoint", "urlTemplate": "https://bookmarkforgeapp.com/?s=q" } } },
+      { "@type": "WebSite", "url": "https://www.bookmarkforgeapp.com/", "potentialAction": { "@type": "SearchAction", "target": { "@type": "EntryPoint", "urlTemplate": "https://www.bookmarkforgeapp.com/?s=q" } } },
     ];
     expect(validateSearchAction(noQuery).some((f) => f.includes("query-input"))).toBe(true);
 
     // Fully valid SearchAction.
     const valid = [
-      { "@type": "WebSite", "url": "https://bookmarkforgeapp.com/", "potentialAction": {
+      { "@type": "WebSite", "url": "https://www.bookmarkforgeapp.com/", "potentialAction": {
         "@type": "SearchAction",
-        "target": { "@type": "EntryPoint", "urlTemplate": "https://bookmarkforgeapp.com/?s={search_term_string}" },
+        "target": { "@type": "EntryPoint", "urlTemplate": "https://www.bookmarkforgeapp.com/?s={search_term_string}" },
         "query-input": "required name=search_term_string"
       }},
     ];
@@ -596,17 +596,17 @@ describe("check-seo gate", () => {
       const langs = new Set(cfg.alternates.map((a) => a.hreflang));
       expect(langs, cfg.file).toEqual(expected);
       for (const alt of cfg.alternates) {
-        expect(alt.href, `${cfg.file} ${alt.hreflang}`).toMatch(/^https:\/\/bookmarkforgeapp\.com\//);
+        expect(alt.href, `${cfg.file} ${alt.hreflang}`).toMatch(/^https:\/\/www\.bookmarkforgeapp\.com\//);
       }
     }
   });
 
   it("accepts fully-compliant auxiliary pages (SPA shell and 404)", () => {
     expect(validateAuxHtml(buildValidAuxPage(), AUX_CFG)).toEqual([]);
-    const shellCfg = { ...AUX_CFG, file: "app.html", canonical: "https://bookmarkforgeapp.com/" };
+    const shellCfg = { ...AUX_CFG, file: "app.html", canonical: "https://www.bookmarkforgeapp.com/" };
     expect(
       validateAuxHtml(
-        buildValidAuxPage({ canonical: "https://bookmarkforgeapp.com/" }),
+        buildValidAuxPage({ canonical: "https://www.bookmarkforgeapp.com/" }),
         shellCfg,
       ),
     ).toEqual([]);
@@ -624,8 +624,8 @@ describe("check-seo gate", () => {
     ).toBe(true);
 
     const wrongUrl = buildValidAuxPage().replace(
-      'og:url" content="https://bookmarkforgeapp.com/404.html"',
-      'og:url" content="https://bookmarkforgeapp.com/other"',
+      'og:url" content="https://www.bookmarkforgeapp.com/404.html"',
+      'og:url" content="https://www.bookmarkforgeapp.com/other"',
     );
     expect(
       validateAuxHtml(wrongUrl, AUX_CFG).some((f) => f.includes("og:url must match")),
@@ -633,7 +633,7 @@ describe("check-seo gate", () => {
   });
 
   it("flags auxiliary pages whose brand identity drifts from the landing", () => {
-    const wrongImage = buildValidAuxPage({ ogImage: "https://bookmarkforgeapp.com/other.png" });
+    const wrongImage = buildValidAuxPage({ ogImage: "https://www.bookmarkforgeapp.com/other.png" });
     const imageFails = validateAuxHtml(wrongImage, AUX_CFG);
     expect(imageFails.some((f) => f.includes("og:image must match the landing"))).toBe(true);
 
@@ -714,7 +714,7 @@ describe("check-seo gate", () => {
         "pt",
         "x-default",
       ]);
-      expect(cfg.canonical).toMatch(/^https:\/\/bookmarkforgeapp\.com\/([a-z]{2}\/)?privacy-and-terms\.html$/);
+      expect(cfg.canonical).toMatch(/^https:\/\/www\.bookmarkforgeapp\.com\/([a-z]{2}\/)?privacy-and-terms\.html$/);
     }
   });
 
@@ -722,7 +722,7 @@ describe("check-seo gate", () => {
     const base = validNoindexContent().sitemapXml;
     const noLegal = validNoindexContent({
       sitemapXml: base.replace(
-        /<url>\n    <loc>https:\/\/bookmarkforgeapp\.com\/es\/privacy-and-terms\.html<\/loc>[\s\S]*?<\/url>\n/,
+        /<url>\n    <loc>https:\/\/www\.bookmarkforgeapp\.com\/es\/privacy-and-terms\.html<\/loc>[\s\S]*?<\/url>\n/,
         "",
       ),
     });
@@ -739,10 +739,10 @@ describe("check-seo gate", () => {
       "public/404.html",
     ]);
     expect(AUX_PAGES.find((p) => p.file === "app.html").canonical).toBe(
-      "https://bookmarkforgeapp.com/",
+      "https://www.bookmarkforgeapp.com/",
     );
     expect(AUX_PAGES.find((p) => p.file === "public/404.html").canonical).toBe(
-      "https://bookmarkforgeapp.com/404.html",
+      "https://www.bookmarkforgeapp.com/404.html",
     );
   });
 
@@ -767,7 +767,7 @@ describe("check-seo gate", () => {
       lang: "es",
       locale: "es_ES",
       alternateLocale: "en_US",
-      canonical: "https://bookmarkforgeapp.com/es/",
+      canonical: "https://www.bookmarkforgeapp.com/es/",
       ogImage: ogImageForFile("public/es.html"),
     });
     expect(validateLandingHtml(es, esCfg)).toEqual([]);
@@ -1021,7 +1021,7 @@ describe("check-seo gate", () => {
 
     const sitemapLeaksApp = validNoindexContent({
       sitemapXml:
-        "<urlset><url><loc>https://bookmarkforgeapp.com/app</loc></url></urlset>",
+        "<urlset><url><loc>https://www.bookmarkforgeapp.com/app</loc></url></urlset>",
     });
     expect(
       validateNoindexContent(sitemapLeaksApp).some((f) => f.includes("must not be listed")),
@@ -1029,7 +1029,7 @@ describe("check-seo gate", () => {
 
     const sitemapMissingLanding = validNoindexContent({
       sitemapXml:
-        "<urlset><url><loc>https://bookmarkforgeapp.com/privacy-and-terms.html</loc></url></urlset>",
+        "<urlset><url><loc>https://www.bookmarkforgeapp.com/privacy-and-terms.html</loc></url></urlset>",
     });
     const missingFails = validateNoindexContent(sitemapMissingLanding);
     expect(missingFails.some((f) => f.includes("missing /"))).toBe(true);
@@ -1046,7 +1046,7 @@ describe("check-seo gate", () => {
     // A landing URL missing one alternate (fr) from its annotation set.
     const missingFr = validNoindexContent({
       sitemapXml: base.replace(
-        /    <xhtml:link rel="alternate" hreflang="fr" href="https:\/\/bookmarkforgeapp\.com\/fr\/" \/>\n/g,
+        /    <xhtml:link rel="alternate" hreflang="fr" href="https:\/\/www\.bookmarkforgeapp\.com\/fr\/" \/>\n/g,
         "",
       ),
     });
@@ -1057,8 +1057,8 @@ describe("check-seo gate", () => {
     // An alternate pointing at the wrong locale URL.
     const wrongHref = validNoindexContent({
       sitemapXml: base.replace(
-        'hreflang="es" href="https://bookmarkforgeapp.com/es/"',
-        'hreflang="es" href="https://bookmarkforgeapp.com/fr/"',
+        'hreflang="es" href="https://www.bookmarkforgeapp.com/es/"',
+        'hreflang="es" href="https://www.bookmarkforgeapp.com/fr/"',
       ),
     });
     expect(
@@ -1075,7 +1075,7 @@ describe("check-seo gate", () => {
 
     // The sitemap must list every landing locale, not only / and /es/.
     const noIt = validNoindexContent({
-      sitemapXml: base.replace(/<url>\n    <loc>https:\/\/bookmarkforgeapp\.com\/it\/<\/loc>[\s\S]*?<\/url>\n/, ""),
+      sitemapXml: base.replace(/<url>\n    <loc>https:\/\/www\.bookmarkforgeapp\.com\/it\/<\/loc>[\s\S]*?<\/url>\n/, ""),
     });
     expect(
       validateNoindexContent(noIt).some((f) => f.includes("missing /it/")),
@@ -1085,7 +1085,7 @@ describe("check-seo gate", () => {
     // alternate (fr) or pointing its x-default at the landing is drift.
     const legalNoFr = validNoindexContent({
       sitemapXml: base.replace(
-        /    <xhtml:link rel="alternate" hreflang="fr" href="https:\/\/bookmarkforgeapp\.com\/fr\/privacy-and-terms\.html" \/>\n/g,
+        /    <xhtml:link rel="alternate" hreflang="fr" href="https:\/\/www\.bookmarkforgeapp\.com\/fr\/privacy-and-terms\.html" \/>\n/g,
         "",
       ),
     });
@@ -1098,8 +1098,8 @@ describe("check-seo gate", () => {
 
     const legalWrongDefault = validNoindexContent({
       sitemapXml: base.replace(
-        'hreflang="x-default" href="https://bookmarkforgeapp.com/privacy-and-terms.html"',
-        'hreflang="x-default" href="https://bookmarkforgeapp.com/"',
+        'hreflang="x-default" href="https://www.bookmarkforgeapp.com/privacy-and-terms.html"',
+        'hreflang="x-default" href="https://www.bookmarkforgeapp.com/"',
       ),
     });
     expect(

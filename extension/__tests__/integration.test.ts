@@ -41,7 +41,7 @@ describe('Extension Integration', () => {
 
     const popupUrl = (globalThis as any).chrome.tabs.create.mock.calls[0]?.[0]?.url;
 
-    // Both use fragment hash (no ? query strings)
+    // Both use fragment hash (no? query strings)
     expect(bgUrl).toContain('#');
     expect(bgUrl).not.toContain('?');
     expect(popupUrl).toContain('#');
@@ -129,7 +129,7 @@ describe('Extension Integration', () => {
     expect((globalThis as any).BookmarkForgeCaptureUrl.isValidBaseUrl('https://vault.mydomain.org')).toBe(true);
   });
 
-  it('isValidBaseUrl rejects userinfo (audit M3 — credential theft vector)', () => {
+  it('isValidBaseUrl rejects userinfo', () => {
     expect((globalThis as any).BookmarkForgeCaptureUrl.isValidBaseUrl('https://user:pass@bookmarkforgeapp.com')).toBe(false);
   });
 

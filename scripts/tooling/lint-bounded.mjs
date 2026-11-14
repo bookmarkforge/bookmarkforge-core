@@ -39,7 +39,6 @@ const ROOT_FILES = new Set([
   "playwright.launch-smoke.config.ts",
   "playwright.mobile.config.ts",
   "playwright.human-like.config.ts",
-  "playwright.human-like.browsers.config.ts",
   "playwright.multiuser.config.ts",
   "playwright.nightly.config.ts",
   "playwright.performance.config.ts",

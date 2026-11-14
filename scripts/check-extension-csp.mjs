@@ -3,8 +3,8 @@
  *
  * Asserts that the browser-extension manifests (Chrome MV3 + Firefox MV2)
  * declare a content_security_policy that exactly matches a single canonical
- * string. The JSON shape follows the manifest's own version (MV3: structured
- * object with `extension_pages`, MV2: flat string) — the canonical string is
+ * string. The JSON shape follows the manifest's own version (structured
+ * object with `extension_pages`, flat string) — the canonical string is
  * applied verbatim to the right field in each manifest.
  *
  * History: `extension/manifest-firefox.json` was MV3 at ADR-029 time, then
@@ -24,9 +24,9 @@
  * `chrome.storage.sync` remains compatible.
  *
  * Usage:
- *   node scripts/check-extension-csp.mjs           # gate (exit 1 on drift)
- *   node scripts/check-extension-csp.mjs --print   # print the canonical CSP
- *   node scripts/check-extension-csp.mjs --fix     # rewrite the manifests
+ * node scripts/check-extension-csp.mjs # gate (exit 1 on drift)
+ * node scripts/check-extension-csp.mjs --print # print the canonical CSP
+ * node scripts/check-extension-csp.mjs --fix # rewrite the manifests
  *
  * `--fix` writes the canonical CSP into both manifests (verbatim) without
  * touching any other field. It is intentionally narrow: removing or renaming
@@ -101,7 +101,7 @@ const MANIFESTS = [
 
 /**
  * MV3 manifest uses the structured form:
- *   "content_security_policy": { "extension_pages": "…" }
+ * "content_security_policy": { "extension_pages": "…" }
  * If the block is missing, inject a new top-level field in the correct
  * position (alphabetical ordering inside the trailing close brace) with the
  * project's 2-space indent. If it exists, replace only the `extension_pages`
@@ -168,6 +168,17 @@ function checkManifest({ label, path, extract }) {
   // CSP, MV3 the structured { extension_pages } object. A mismatched shape is
   // silently ignored by the store — the exact drift this gate exists to stop.
   const cspField = manifest?.content_security_policy;
+  // a missing field is "no CSP", not a shape error;
+  // keep the two failure modes distinguishable (the contract test asserts it).
+  if (cspField === undefined || cspField === null) {
+    return {
+      label,
+      path,
+      ok: false,
+      reason: "no-csp",
+      canonical: CANONICAL_CSP,
+    };
+  }
   const shapeOk =
     manifest?.manifest_version === 2
       ? typeof cspField === "string"
@@ -283,7 +294,7 @@ function main() {
   }
 }
 
-// Direct-invocation guard (matches the pattern in scripts/audit-anchors.mjs).
+// Direct-invocation guard.
 function isDirectInvocation() {
   const entry = process.argv[1];
   if (!entry) return false;

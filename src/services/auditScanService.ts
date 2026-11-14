@@ -8,8 +8,6 @@
  * MAX_AUDIT_SAMPLE bookmarks, so the worst case stays sub-second even
  * on the main thread.
  */
-import { getWorkerPool } from "../utils/WorkerPool";
-import { logger } from "../utils/logger";
 import {
   computeAuditScan,
   type AuditBookmark,
@@ -20,48 +18,12 @@ import {
 // getWorkerPool(), and Vite's static worker detection only compiles workers
 // for `new Worker(new URL(...))` patterns (see RAGEngine's embedding worker).
 import auditScanWorkerUrl from "../workers/auditScan.worker.ts?worker&url";
-
-const POOL_NAME = "audit-scan";
-const SCAN_TIMEOUT_MS = 10_000;
-// After two consecutive worker failures (timeout, reject, capacity error)
-// stop trying the worker for this session: a permanently broken worker must
-// not add a 10s delay to every scan. Transient failures self-heal inside
-// WorkerPool (retries + worker retirement), so a single failure still falls
-// back inline without disabling the pool.
-const MAX_CONSECUTIVE_FAILURES = 2;
+import { createScanWorkerBridge } from "./scanWorkerBridge";
 
 function createAbortError(): Error {
   const error = new Error("Audit scan aborted");
   error.name = "AbortError";
   return error;
-}
-
-let poolUnavailable = false;
-let consecutiveFailures = 0;
-
-function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    let settled = false;
-    const timer = setTimeout(() => {
-      if (settled) {return;}
-      settled = true;
-      reject(new Error("Audit scan timed out"));
-    }, ms);
-    promise.then(
-      (value) => {
-        if (settled) {return;}
-        settled = true;
-        clearTimeout(timer);
-        resolve(value);
-      },
-      (error: unknown) => {
-        if (settled) {return;}
-        settled = true;
-        clearTimeout(timer);
-        reject(error);
-      },
-    );
-  });
 }
 
 function isAuditResult(value: unknown): value is AuditScanResult {
@@ -74,6 +36,18 @@ function isAuditResult(value: unknown): value is AuditScanResult {
     Array.isArray(record.coverageByTag)
   );
 }
+
+const runWorkerScan = createScanWorkerBridge<readonly AuditBookmark[], AuditScanResult>({
+  poolName: "audit-scan",
+  workerUrl: auditScanWorkerUrl,
+  taskName: "auditScan",
+  timeoutMs: 10_000,
+  abortMessage: "Audit scan aborted",
+  timeoutMessage: "Audit scan timed out",
+  logTag: "[auditScan]",
+  isValidResult: isAuditResult,
+  payload: (bookmarks) => ({ bookmarks: [...bookmarks] }),
+});
 
 /**
  * Computes the audit metrics, preferring the Web Worker. Worker failures
@@ -100,51 +74,10 @@ export async function runAuditScan(
     });
   };
 
-  if (typeof Worker === "undefined" || poolUnavailable) {
-    return inline();
-  }
-
-  try {
-    // 1 worker is enough: scans are serialized by the caller's guard, and a
-    // pool of N would only add idle memory for this lightweight workload.
-    const pool = getWorkerPool(POOL_NAME, auditScanWorkerUrl, 1);
-    const result = await withTimeout(
-      pool.execute<{ bookmarks: AuditBookmark[] }, AuditScanResult>(
-        "auditScan",
-        { bookmarks: [...bookmarks] },
-        undefined,
-        (_taskId, phase, _message, fraction) => {
-          if (fraction !== undefined) {
-            onProgress?.(
-              phase as AuditScanPhase,
-              fraction,
-            );
-          }
-        },
-        signal,
-      ),
-      SCAN_TIMEOUT_MS,
-    );
-    if (isAuditResult(result)) {
-      if (signal?.aborted) {throw createAbortError();}
-      consecutiveFailures = 0;
-      return result;
-    }
-    // A malformed result is not a valid audit — fall through.
-  } catch (error) {
-    if (error instanceof Error && error.name === "AbortError") {
-      // Cancellation is expected and must never restart the scan inline.
-      throw error;
-    }
-    consecutiveFailures += 1;
-    if (consecutiveFailures >= MAX_CONSECUTIVE_FAILURES) {
-      poolUnavailable = true;
-    }
-    logger.warn(
-      "[auditScan] worker scan failed, falling back to inline",
-      { error: error instanceof Error ? error.message : String(error) },
-    );
-  }
-
-  return inline();
+  return runWorkerScan(bookmarks, inline, {
+    signal,
+    onProgress: onProgress
+      ? (phase, fraction) => onProgress(phase as AuditScanPhase, fraction)
+      : undefined,
+  });
 }

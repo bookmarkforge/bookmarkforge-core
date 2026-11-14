@@ -6,11 +6,11 @@
   "description": "Το Raindrop κρατά τους σελιδοδείκτες σου στους διακομιστές του. Το BookmarkForge τους κρατά στον υπολογιστή σου — κλειδωμένους ώστε ούτε εμείς να μπορούμε να τους διαβάσουμε. Μία πληρωμή: $59 εφ' όρου ζωής πρόσβαση early bird (εξοικονομείτε $20 πριν από την κανονική τιμή). Δωρεάν: 500 σελιδοδείκτες.",
   "ogTitle": "BookmarkForge: ιδιωτικός τοπικός διαχειριστής σελιδοδεικτών με λίστα ανάγνωσης",
   "ogDescription": "Το Raindrop κρατά τους σελιδοδείκτες σου στους διακομιστές του. Το BookmarkForge τους κρατά στον υπολογιστή σου — κλειδωμένους ώστε ούτε εμείς να μπορούμε να τους διαβάσουμε. Μία πληρωμή: $59 εφ' όρου ζωής πρόσβαση early bird (εξοικονομείτε $20 πριν από την κανονική τιμή). Δωρεάν: 500 σελιδοδείκτες.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "ogImageAlt": "BookmarkForge — ιδιωτική εφαρμογή σελιδοδεικτών και σημειώσεων με τεχνητή νοημοσύνη",
   "twitterTitle": "BookmarkForge: ιδιωτικός τοπικός διαχειριστής σελιδοδεικτών με λίστα ανάγνωσης",
   "twitterDescription": "Το Raindrop κρατά τους σελιδοδείκτες σου στους διακομιστές του. Το BookmarkForge τους κρατά στον υπολογιστή σου — κλειδωμένους ώστε ούτε εμείς να μπορούμε να τους διαβάσουμε. Μία πληρωμή: $59 εφ' όρου ζωής πρόσβαση early bird (εξοικονομείτε $20 πριν από την κανονική τιμή). Δωρεάν: 500 σελιδοδείκτες.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Μετάβαση στο κύριο περιεχόμενο",
   "navBrandAria": "Αρχική BookmarkForge",
   "navAriaLabel": "Κύρια πλοήγηση",
@@ -31,26 +31,26 @@
   "githubAria": "Δώστε ένα αστέρι στο BookmarkForge στο GitHub",
   "hero": {
     "badge": "Μία πληρωμή · Χωρίς συνδρομή",
-    "title": "Ό,τι αποθηκεύεις παραμένει στον υπολογιστή σου. <span class=\"accent-text\">Όλα.</span>",
-    "subtitle": "Το Raindrop κρατά τους σελιδοδείκτες σου στους διακομιστές του — και σου χρεώνει κάθε χρόνο. Το BookmarkForge τους κρατά στον υπολογιστή σου, κλειδωμένους με κλειδί που έχεις μόνο εσύ. Χωρίς λογαριασμούς. Χωρίς μηνιαία τέλη. Κανείς να κοιτάζει πάνω από τον ώμο σου.",
-    "ctaPrimary": "Δοκιμάστε το τώρα (χωρίς λογαριασμό)",
-    "ctaSecondary": "Δες τις τιμές",
+    "title": "Ο ιδιωτικός διαχειριστής σελιδοδεικτών που <span class=\"accent-text\">κρατά τα πάντα στη συσκευή σας.</span>",
+    "subtitle": "Για ερευνητές, φοιτητές και όσους δεν θέλουν να παραχωρούν το ιστορικό ανάγνωσής τους σε μια εταιρεία cloud. Αποθηκεύστε σελίδες, άρθρα και PDF, βρείτε τα με λέξη-κλειδί ή νόημα, και κρατήστε τα όλα κρυπτογραφημένα στον υπολογιστή σας. Χωρίς λογαριασμό. Χωρίς συνδρομή.",
+    "ctaPrimary": "Ξεκινήστε δωρεάν — χωρίς εγγραφή",
+    "ctaSecondary": "Δείτε πώς λειτουργεί",
     "pillars": [
       {
         "strong": "Ιδιωτικό",
-        "text": "οι αποθηκευμένες σελίδες σου δεν φεύγουν ποτέ από τον υπολογιστή σου"
+        "text": "κρυπτογραφημένο στη συσκευή σας"
       },
       {
-        "strong": "Κλειδωμένο",
-        "text": "ούτε εμείς δεν μπορούμε να τις διαβάσουμε"
+        "strong": "Δικό σας για πάντα",
+        "text": "χωρίς συνδρομές ή μηνιαίες χρεώσεις"
       },
       {
-        "strong": "Εκτός σύνδεσης",
-        "text": "λειτουργεί στο αεροπλάνο, σε σήραγγα, όπου κι αν βρίσκεσαι"
+        "strong": "Λειτουργεί εκτός σύνδεσης",
+        "text": "αποθηκεύστε και διαβάστε οπουδήποτε, ακόμα και χωρίς internet"
       },
       {
-        "strong": "Πληρώνεις μία φορά",
-        "text": "$59 εφ' όρου ζωής πρόσβαση early bird (εξοικονομείτε $20 πριν από την κανονική τιμή)"
+        "strong": "Δωρεάν για πάντα",
+        "text": "500 σελιδοδείκτες δωρεάν, Pro μόνο αν θέλετε περισσότερα"
       }
     ],
     "announce": "⚡ Τοπική μετάφραση AI (έρχεται σύντομα)"
@@ -401,15 +401,11 @@
         "cta": "Λήψη Pro $59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "μετά $79 κανονική",
-        "sla": "Υποστήριξη: Email 48h (Δευ–Παρ)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Αποκτήστε Pro με $79 (κανονική τιμή)",
-        "cta2Class": "btn-secondary"
+        "sla": "Υποστήριξη: Email 48h (Δευ–Παρ)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-el#pricing\">Learn more</a>"
+    "legal": "Εφάπαξ πληρωμή · 12 μήνες ενημερώσεων περιλαμβάνονται · το v1 λειτουργεί για πάντα · εγγύηση επιστροφής χρημάτων 30 ημερών. <a href=\"/privacy-and-terms.html#terms\">Όροι</a>"
   },
   "faq": {
     "title": "Συχνές ερωτήσεις",
@@ -502,7 +498,8 @@
         "Επικοινωνία"
       ],
       "helpCenter": "Κέντρο βοήθειας",
-      "errorCodes": "Κωδικοί σφαλμάτων"
+      "errorCodes": "Κωδικοί σφαλμάτων",
+      "hours": "Απαντήσεις εντός 48 ωρών, Δευ–Παρ (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Με επιφύλαξη παντός δικαιώματος.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",

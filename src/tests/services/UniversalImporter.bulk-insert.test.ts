@@ -15,6 +15,7 @@ vi.mock("../../services/documentAttachments", () => ({
 
 import { UniversalImporter } from "../../services/UniversalImporter";
 import { LicenseError } from "../../services/LicenseService";
+import type { BookmarkForgeDB } from "../../db/types";
 import { createStreamingCsvRowsFile } from "../helpers/csvFixtures";
 
 type BulkInsertOutcome =
@@ -74,7 +75,7 @@ describe("UniversalImporter batched bookmark insert", () => {
   it("writes a dedup window with one bulkInsert call instead of per-row inserts", async () => {
     const db = makeDb();
 
-    const result = await importer.importData(db, jsonFile(urls(3)));
+    const result = await importer.importData(db as unknown as BookmarkForgeDB, jsonFile(urls(3)));
 
     expect(result.success).toBe(true);
     expect(result.importedCount).toBe(3);
@@ -87,7 +88,7 @@ describe("UniversalImporter batched bookmark insert", () => {
   it("splits a large window into bounded chunks", async () => {
     const db = makeDb();
 
-    const result = await importer.importData(db, jsonFile(urls(250)));
+    const result = await importer.importData(db as unknown as BookmarkForgeDB, jsonFile(urls(250)));
 
     expect(result.success).toBe(true);
     expect(result.importedCount).toBe(250);
@@ -110,7 +111,7 @@ describe("UniversalImporter batched bookmark insert", () => {
       };
     });
 
-    const result = await importer.importData(db, jsonFile(urls(2)));
+    const result = await importer.importData(db as unknown as BookmarkForgeDB, jsonFile(urls(2)));
 
     expect(result.success).toBe(true);
     expect(result.importedCount).toBe(1);
@@ -132,7 +133,7 @@ describe("UniversalImporter batched bookmark insert", () => {
       .mockResolvedValueOnce({})
       .mockRejectedValue(limitError);
 
-    const result = await importer.importData(db, jsonFile(urls(3)));
+    const result = await importer.importData(db as unknown as BookmarkForgeDB, jsonFile(urls(3)));
 
     // One row lands before the wall; the rest never reach the collection.
     expect(result).toMatchObject({
@@ -149,7 +150,7 @@ describe("UniversalImporter batched bookmark insert", () => {
     const db = makeDb();
     delete (db.bookmarks as { bulkInsert?: unknown }).bulkInsert;
 
-    const result = await importer.importData(db, jsonFile(urls(2)));
+    const result = await importer.importData(db as unknown as BookmarkForgeDB, jsonFile(urls(2)));
 
     expect(result.success).toBe(true);
     expect(result.importedCount).toBe(2);
@@ -166,7 +167,7 @@ describe("UniversalImporter batched bookmark insert", () => {
       row: (index) => `Site ${index},https://site${index}.com\n`,
     });
 
-    const result = await importer.importData(db, file, {
+    const result = await importer.importData(db as unknown as BookmarkForgeDB, file, {
       signal: controller.signal,
       onProgress: () => {
         progressCalls += 1;
@@ -190,7 +191,9 @@ describe("UniversalImporter batched bookmark insert", () => {
     // Rollback looks the journal ids up by `$in`; the union across its batches
     // must be exactly what the bulk writes landed.
     const rollbackIds = (
-      db.bookmarks.find.mock.calls as Array<[{ selector?: { id?: { $in?: string[] } } }]>
+      db.bookmarks.find.mock.calls as unknown as Array<[
+        { selector?: { id?: { $in?: string[] } } },
+      ]>
     )
       .map(([query]) => query?.selector?.id?.$in)
       .filter((ids): ids is string[] => Array.isArray(ids))

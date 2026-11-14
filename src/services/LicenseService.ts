@@ -8,7 +8,7 @@
 // key (licenseKeys.ts) on every boot and before granting Pro, then caches
 // the signed record locally for offline-first access.
 //
-// A6 (audit 2026-11-05): the previous direct-to-Whop path is gone. It read
+// the previous direct-to-Whop path is gone. It read
 // `VITE_WHOP_PUBLIC_API_KEY` (inlined into the public bundle — a credential
 // shipped to every user) and persisted an UNSIGNED {deviceId, validatedAt}
 // blob in localStorage that anyone could forge into a permanent Pro

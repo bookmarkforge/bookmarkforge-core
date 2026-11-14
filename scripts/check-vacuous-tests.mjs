@@ -40,11 +40,16 @@
  *  6. the suite table declares a size the tree does not have → FAIL;
  *  7. a row of the table that declares no verifiable surface, and that the
  *     baseline does not excuse with a reason → FAIL (as does an excuse for a
- *     job the table no longer declares).
+ *     job the table no longer declares);
+ *  8. `--update` would add a vacuous entry or raise an existing one → FAIL
+ *     without writing (a ratchet may only shrink; new theatre is fixed, never
+ *     re-pinned).
  *
- * The debt itself is deliberately baselined rather than deleted here: turning
- * 94 spec files into real tests is a product decision, and it is recorded in
- * `docs/PENDIENTES.md`. What this gate refuses to allow is the number growing.
+ * The debt itself is deliberately baselined rather than deleted here: rewriting
+ * the suite into real tests is a product decision, and the baseline records it.
+ * What this gate refuses to allow is the number growing — including through the
+ * `--update` escape hatch. Every reviewed payment tightens the file entries and
+ * the next run fails until it does, so the trajectory is monotonically down.
  *
  * Usage:
  *   node scripts/check-vacuous-tests.mjs            # verify
@@ -81,6 +86,57 @@ export function suiteRelativeName(suiteDir, repoPath) {
 }
 
 /**
+ * Rule 8: `--update` is downward-only. Returns the entries the rewrite would
+ * add or raise. An absent baseline is a bootstrap, not a widening: the first
+ * reviewed run has no previous number to widen. Exported so the contract tests
+ * can drive the escape hatch directly.
+ */
+export function baselineUpdateFailures(measured, baseline) {
+  const failures = [];
+  if (!baseline || typeof baseline !== "object") return failures;
+  for (const suite of measured) {
+    const baselined = baseline?.suites?.[suite.dir]?.files;
+    const next = baselineFilesFor(suite);
+    if (typeof baselined !== "object" || baselined === null || Array.isArray(baselined)) {
+      for (const [name, current] of Object.entries(next)) {
+        failures.push(
+          `ratchet violation: --update would introduce suites["${suite.dir}"].files["${name}"] ` +
+            `with ${current} vacuous test(s); a suite that has no reviewed baseline ` +
+            `cannot be opened by re-pinning debt`,
+        );
+      }
+      continue;
+    }
+    for (const [name, current] of Object.entries(next)) {
+      if (!(name in baselined)) {
+        failures.push(
+          `ratchet violation: --update would introduce ${suite.dir}/${name} with ` +
+            `${current} vacuous test(s); the ratchet only shrinks — fix the test ` +
+            `instead of adding a baseline entry`,
+        );
+        continue;
+      }
+      const known = baselined[name];
+      if (!Number.isInteger(known) || known < 0) {
+        failures.push(
+          `ratchet violation: --update cannot rewrite a malformed baseline entry ` +
+            `(suites["${suite.dir}"].files["${name}"] = ${JSON.stringify(known)})`,
+        );
+        continue;
+      }
+      if (current > known) {
+        failures.push(
+          `ratchet violation: --update would raise ${suite.dir}/${name} from ${known} ` +
+            `to ${current} vacuous test(s); the ratchet only shrinks — fix the test, ` +
+            `do not re-pin the debt`,
+        );
+      }
+    }
+  }
+  return failures;
+}
+
+/**
  * Rules 2-5: the ratchet. `measured` is the output of `measureSuites`.
  * Exported so the contract tests can drive every failure class with fixtures.
  */
@@ -110,8 +166,8 @@ export function ratchetFailures(measured, baseline) {
         if (current === 0) continue;
         failures.push(
           `undeclared vacuous coverage: ${file.file} has ${current} vacuous ` +
-            `test(s) and is not in ${BASELINE_PATH} — assert unconditionally, ` +
-            `or declare the new debt with --update and a reason`,
+            `test(s) and is not in ${BASELINE_PATH} — assert unconditionally; ` +
+            `--update is downward-only and will not declare new debt`,
         );
         continue;
       }
@@ -297,22 +353,27 @@ function main() {
   const { measured, failures: measureFailures } = measureSuites(root);
   failures = [...failures, ...measureFailures];
 
-  if (update) {
-    const next = {
-      updatedAt: new Date().toISOString().slice(0, 10),
-      suites: {},
-      declaredSurface: { notEnforced: baseline?.declaredSurface?.notEnforced ?? {} },
-    };
-    for (const suite of measured) {
-      const reason = baseline?.suites?.[suite.dir]?.reason;
-      next.suites[suite.dir] = {
-        ...(typeof reason === "string" && reason.trim() ? { reason } : {}),
-        files: baselineFilesFor(suite),
+  if (update && failures.length === 0) {
+    const widening = baselineUpdateFailures(measured, baseline);
+    if (widening.length > 0) {
+      failures = [...failures, ...widening];
+    } else {
+      const next = {
+        updatedAt: new Date().toISOString().slice(0, 10),
+        suites: {},
+        declaredSurface: { notEnforced: baseline?.declaredSurface?.notEnforced ?? {} },
       };
+      for (const suite of measured) {
+        const reason = baseline?.suites?.[suite.dir]?.reason;
+        next.suites[suite.dir] = {
+          ...(typeof reason === "string" && reason.trim() ? { reason } : {}),
+          files: baselineFilesFor(suite),
+        };
+      }
+      writeFileSync(baselinePath, `${JSON.stringify(next, null, 2)}\n`);
+      baseline = next;
+      console.log(`[check:vacuous-tests] rewrote ${BASELINE_PATH} (downward-only)`);
     }
-    writeFileSync(baselinePath, `${JSON.stringify(next, null, 2)}\n`);
-    baseline = next;
-    console.log(`[check:vacuous-tests] rewrote ${BASELINE_PATH}`);
   }
 
   if (baseline && failures.length === 0) {
@@ -362,8 +423,8 @@ function main() {
     for (const failure of failures) console.error(`[check:vacuous-tests] ${failure}`);
     console.error(
       "[check:vacuous-tests] remedy: a test that cannot fail is not coverage — " +
-        "assert unconditionally, or record the debt in the baseline with a reason " +
-        "(and in docs/PENDIENTES.md) so it is a decision instead of an oversight.",
+        "assert unconditionally; new debt cannot be re-pinned, and a paid entry " +
+        "tightens with --update so it is a decision instead of an oversight.",
     );
     return 1;
   }

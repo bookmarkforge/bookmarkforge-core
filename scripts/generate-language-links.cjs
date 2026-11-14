@@ -69,14 +69,14 @@ function buildHreflangLinks() {
   for (const lang of languageLinks) {
     hreflangLinks.push({
       hreflang: lang.hreflang,
-      href: `https://bookmarkforgeapp.com${lang.href === '/' ? '/' : lang.href}`
+      href: `https://www.bookmarkforgeapp.com${lang.href === '/' ? '/' : lang.href}`
     });
   }
 
   // Add x-default pointing to English root
   hreflangLinks.push({
     hreflang: 'x-default',
-    href: 'https://bookmarkforgeapp.com/'
+    href: 'https://www.bookmarkforgeapp.com/'
   });
 
   return hreflangLinks;

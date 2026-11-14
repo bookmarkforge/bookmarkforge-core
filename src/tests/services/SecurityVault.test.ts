@@ -20,7 +20,7 @@ vi.mock("../../services/EncryptionService", () => ({
     clearDatabase: vi.fn().mockResolvedValue(undefined),
     clear: vi.fn().mockResolvedValue(undefined),
     destroy: vi.fn().mockResolvedValue(undefined),
-    // A-1: per-vault Argon2id salt installation (unlock provisions it).
+    // per-vault Argon2id salt installation (unlock provisions it).
     configureVaultKdfSalt: vi.fn().mockResolvedValue(undefined),
     getVaultKdfSaltHex: vi.fn(() => null),
   },
@@ -32,7 +32,7 @@ vi.mock("../../utils/wasm-zero-memory", () => ({
     .mockResolvedValue({ zeroBytes: vi.fn() }),
 }));
 
-// Valid integrity record format for tests: 64-hex-nonce : 64-hex-hmac
+// Valid integrity record format for tests: 64-hex-nonce: 64-hex-hmac
 const TEST_INTEGRITY_RECORD =
   "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f" +
   ":aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899";
@@ -41,7 +41,7 @@ const secureStorageMock = {
   _store: new Map<string, string>(),
   getSecret: vi.fn((key: string) => {
     if (key === "vault_verification") return Promise.resolve(null);
-    // S1: return a valid integrity record by default so tests that use
+    // return a valid integrity record by default so tests that use
     // verification tokens don't need to set up the integrity mock explicitly.
     if (key === "vault_verification_integrity") return Promise.resolve(TEST_INTEGRITY_RECORD);
     return Promise.resolve(null);
@@ -53,12 +53,12 @@ const secureStorageMock = {
   hasSecret: vi.fn((_key: string) => Promise.resolve(false)),
   deleteSecret: vi.fn().mockResolvedValue(undefined),
   migrateFromLocalStorage: vi.fn().mockResolvedValue(true),
-  // Audit H5 — master-password wrapping + raw tokens
+  // — master-password wrapping + raw tokens
   getVerificationToken: vi.fn((): Promise<string | null> => Promise.resolve(null)),
   storeVerificationToken: vi.fn(() => Promise.resolve(undefined)),
-  // A-1: token + integrity record are written in ONE transaction.
+  // token + integrity record are written in ONE transaction.
   storeVerificationTokenWithIntegrity: vi.fn(() => Promise.resolve(undefined)),
-  // S1: raw integrity record (readable while the vault is locked).
+  // raw integrity record (readable while the vault is locked).
   getVerificationIntegrity: vi.fn((): Promise<string | null> =>
     Promise.resolve(TEST_INTEGRITY_RECORD),
   ),
@@ -101,7 +101,7 @@ vi.mock("../../services/AuditLogService", () => ({
   auditLog: {
     record: vi.fn().mockResolvedValue(undefined),
     flushPending: vi.fn().mockResolvedValue(undefined),
-    // P1: the H2 post-unlock hook guards on this member — without it the
+    // the H2 post-unlock hook guards on this member — without it the
     // audit-chain verification was silently skipped on every unlock.
     verifyIntegrity: vi.fn().mockResolvedValue({
       valid: true,
@@ -122,7 +122,7 @@ vi.mock("../../services/security-vault/kdf-salt-sync", () => ({
   stopVaultKdfSaltSync: vi.fn(),
 }));
 
-// A-1: the KDF-salt module is intentionally NOT mocked. Provisioning on
+// the KDF-salt module is intentionally NOT mocked. Provisioning on
 // unlock, rotation with the password and the rollback restore are the
 // behaviour under test; mocking them would assert the mock's return value
 // instead of the salt lifecycle. Its real dependencies (SecureStorage and
@@ -329,7 +329,7 @@ describe("SecurityVault", () => {
       (encryptionService.decryptWithBytes as any).mockResolvedValueOnce(
         "wrong_decrypted_value",
       );
-      // S1: mock the integrity record so HMAC validation passes.
+      // mock the integrity record so HMAC validation passes.
       (secureStorage.getSecret as any).mockImplementation((key: string) => {
         if (key === "vault_verification_integrity") {
           return Promise.resolve(
@@ -359,7 +359,7 @@ describe("SecurityVault", () => {
       (secureStorage.getVerificationToken as any).mockResolvedValueOnce("corrupted_token");      (encryptionService.decryptWithBytes as any).mockRejectedValueOnce(
         new Error("Decrypt failed"),
       );
-      // S1: mock the integrity record so HMAC validation passes.
+      // mock the integrity record so HMAC validation passes.
       (secureStorage.getSecret as any).mockImplementation((key: string) => {
         if (key === "vault_verification_integrity") {
           return Promise.resolve(
@@ -409,14 +409,14 @@ describe("SecurityVault", () => {
 
       await securityVault.unlock("first_time_password");
 
-      // S1: createVerificationToken now calls encryptWithBytes with Uint8Array
+      // createVerificationToken now calls encryptWithBytes with Uint8Array
       expect(encryptionService.encryptWithBytes).toHaveBeenCalledWith(
         "bookmarkforge-verify-ok",
         expect.any(Uint8Array),
         "secure-storage:vault_verification",
       );
-      // Audit H5: token is stored raw (password-encrypted only), so it
-      // stays readable while the vault is locked. A-1: the token and its S1
+      // token is stored raw (password-encrypted only), so it
+      // stays readable while the vault is locked. the token and its S1
       // integrity record are persisted in ONE transaction so a crash can
       // never leave a token/HMAC pair that no password unlocks.
       expect(
@@ -425,13 +425,24 @@ describe("SecurityVault", () => {
         "encrypted_data",
         expect.stringMatching(/^[0-9a-f]{64}:[0-9a-f]{64}$/),
       );
-      // H5: first unlock wraps the device key with the master password.
+      // first unlock wraps the device key with the master password.
+      // Bytes end-to-end (AGENTS.md §2): the vault hands the consumer a
+      // Uint8Array and zeroizes that buffer once unlock completes, so the
+      // assertion is on the call shape and length — a decoded value would
+      // already be zeroed by design.
       expect(secureStorage.wrapDeviceKeyWithPassword).toHaveBeenCalledWith(
-        "first_time_password",
+        expect.any(Uint8Array),
       );
+      const wrapCalls = (
+        secureStorage.wrapDeviceKeyWithPassword as unknown as {
+          mock: { calls: Array<[Uint8Array]> };
+        }
+      ).mock.calls;
+      expect(wrapCalls).toHaveLength(1);
+      expect(wrapCalls[0]![0]).toHaveLength("first_time_password".length);
     });
 
-    // ── A-1: per-vault Argon2id salt + transparent migration ─────────────
+    // ── per-vault Argon2id salt + transparent migration ─────────────
 
     it("provisions a per-vault KDF salt on unlock and re-wraps a legacy token", async () => {
       const { secureStorage } = await import("../../services/SecureStorage");
@@ -803,7 +814,7 @@ describe("SecurityVault", () => {
       const tokenDespues = securityVault.getSessionToken();
       // The token is NOT null - rotation renewed it
       expect(tokenDespues).not.toBeNull();
-      // El token es diferente al original (fue rotado)
+      // The token differs from the original (it was rotated)
       expect(tokenDespues).not.toBe(tokenOriginal);
     });
 
@@ -1150,14 +1161,14 @@ describe("SecurityVault", () => {
       await securityVault.unlock("old_password123");
       await securityVault.rotateMasterPassword("new_password_123", "old_password123");
       expect(encryptionService.decryptWithBytes).toHaveBeenCalled();
-      // S1: createVerificationToken calls encryptWithBytes first, so the
+      // createVerificationToken calls encryptWithBytes first, so the
       // first decryptWithBytes call is at index 0 (the secret decryption).
       const decryptCall = (encryptionService.decryptWithBytes as any).mock
         .calls[0];
       expect(decryptCall[0]).toBe("encrypted-secret");
       expect(decryptCall[1]).toBeDefined();
       expect(encryptionService.encryptWithBytes).toHaveBeenCalled();
-      // S1: the first encryptWithBytes call is from createVerificationToken
+      // the first encryptWithBytes call is from createVerificationToken
       // (encrypting "bookmarkforge-verify-ok"), the second is the secret re-encryption.
       const encryptCalls = (encryptionService.encryptWithBytes as any).mock.calls;
       const hasPlaintextCall = encryptCalls.some((call: unknown[]) => call[0] === "plaintext");
@@ -1467,14 +1478,14 @@ describe("SecurityVault", () => {
       expect(result).toBe(true);
 
       // Each key was decrypted with the old password and re-encrypted with the new one.
-      // S1: createVerificationToken also calls encryptWithBytes (for the
+      // createVerificationToken also calls encryptWithBytes (for the
       // verification token and potentially other operations), so the total
       // is higher than 2. Just verify each secret was processed.
       expect(encryptionService.decryptWithBytes).toHaveBeenCalledTimes(2);
       expect(encryptionService.encryptWithBytes).toHaveBeenCalled();
 
       // Each key was saved with the new re-encrypted value.
-      // S1: setSecret is also called for the verification token and integrity record,
+      // setSecret is also called for the verification token and integrity record,
       // so the total calls are higher. Just verify the api/db re-encryptions happened.
       expect(secureStorage.setSecret).toHaveBeenCalledWith(
         "encrypted_api_key",
@@ -1497,7 +1508,7 @@ describe("SecurityVault", () => {
         "new_password_123",
       );
 
-      // A new verification token was created (S1: now uses encryptWithBytes with Uint8Array)
+      // A new verification token was created (now uses encryptWithBytes with Uint8Array)
       expect(encryptionService.encryptWithBytes).toHaveBeenCalledWith(
         "bookmarkforge-verify-ok",
         expect.any(Uint8Array),
@@ -1906,7 +1917,7 @@ describe("SecurityVault", () => {
       );
     });
 
-    // La rama else del intervalo (isLocked=true → stopSessionRotation) es un safety net
+    // The interval's else branch (isLocked=true → stopSessionRotation) is a safety net
     // for real-time race conditions that fake timers cannot reproduce.
     // lock() always clears the timer synchronously before the callback can run.
 
@@ -2112,7 +2123,7 @@ describe("SecurityVault", () => {
     });
   });
 
-  // ── Audit H5: master-password wrapping of the device key ────────────
+  // ── master-password wrapping of the device key ────────────
 
   describe("H5 — device key wrapping", () => {
     it("unwraps the device key after verifying the password in a wrapped vault", async () => {
@@ -2135,9 +2146,17 @@ describe("SecurityVault", () => {
       const result = await securityVault.unlock("correct_password");
 
       expect(result).toBe(true);
+      // Bytes end-to-end: same call-shape assertion as the wrap path (the
+      // buffer is zeroized when unlock() returns).
       expect(secureStorage.unwrapDeviceKeyWithPassword).toHaveBeenCalledWith(
-        "correct_password",
+        expect.any(Uint8Array),
       );
+      const unwrapCalls = (
+        secureStorage.unwrapDeviceKeyWithPassword as unknown as {
+          mock: { calls: Array<[Uint8Array]> };
+        }
+      ).mock.calls;
+      expect(unwrapCalls[0]![0]).toHaveLength("correct_password".length);
     });
 
     it("does not unwrap when the device key is not wrapped (legacy path intact)", async () => {
@@ -2193,6 +2212,38 @@ describe("SecurityVault", () => {
       expect(useRateLimitStore.getState().unlockAttempts).toBeGreaterThan(0);
     });
 
+    it("surfaces the retired-v5 error instead of a wrong-password failure", async () => {
+      // ADR-052: a v5-wrapped device key cannot be opened by any password.
+      // unlock() must reject with the typed error (the UI shows the remedy),
+      // not resolve false and send the user back to re-enter the password.
+      const { secureStorage } = await import("../../services/SecureStorage");
+      const { encryptionService } =
+        await import("../../services/EncryptionService");
+      const { LegacyV5FormatRemovedError } = await import(
+        "../../utils/crypto-core"
+      );
+      secureStorageMock.getWrappedDeviceKeyBlob.mockResolvedValue(
+        "v5:wrapped-blob",
+      );
+      secureStorageMock.getVerificationToken.mockResolvedValue(
+        "encrypted_vault_verification",
+      );
+      secureStorageMock.getVerificationIntegrity.mockResolvedValue(
+        TEST_INTEGRITY_RECORD,
+      );
+      (encryptionService.decryptWithBytes as any).mockResolvedValue(
+        "bookmarkforge-verify-ok",
+      );
+      secureStorageMock.unwrapDeviceKeyWithPassword.mockRejectedValue(
+        new LegacyV5FormatRemovedError(),
+      );
+
+      await expect(securityVault.unlock("correct_password")).rejects.toMatchObject({
+        code: LegacyV5FormatRemovedError.CODE,
+      });
+      expect(securityVault.isLocked()).toBe(true);
+    });
+
     it("lock() discards the in-memory device key", async () => {
       await securityVault.unlock("password123456");
       await resetMocks();
@@ -2217,7 +2268,7 @@ describe("SecurityVault", () => {
 
       expect(result).toBe(true);
       expect(secureStorage.getVerificationToken).toHaveBeenCalled();
-      // S1: verifyPassword now calls decryptWithBytes with a Uint8Array
+      // verifyPassword now calls decryptWithBytes with a Uint8Array
       expect(encryptionService.decryptWithBytes).toHaveBeenCalledWith(
         "encrypted_vault_verification",
         expect.any(Uint8Array),

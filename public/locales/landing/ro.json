@@ -6,11 +6,11 @@
   "description": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. O singură plată: $59 acces pe viață early bird (economisești $20 înainte de prețul normal). Free: 500 marcaje.",
   "ogTitle": "BookmarkForge: manager privat de marcaje, local-first, cu listă de citit",
   "ogDescription": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. O singură plată: $59 acces pe viață early bird (economisești $20 înainte de prețul normal). Free: 500 marcaje.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "ogImageAlt": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. 59 de dolari, o singură dată. Free: 500 marcaje.",
   "twitterTitle": "BookmarkForge: manager privat de marcaje, local-first, cu listă de citit",
   "twitterDescription": "Raindrop îți ține marcajele pe serverele lui. BookmarkForge le ține pe computerul tău — blocate, încât nici noi să nu le putem citi. O singură plată: $59 acces pe viață early bird (economisești $20 înainte de prețul normal). Free: 500 marcaje.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Sari la conținutul principal",
   "navBrandAria": "Pagina principală BookmarkForge",
   "navAriaLabel": "Navigație principală",
@@ -31,26 +31,26 @@
   "githubAria": "Dă o stea BookmarkForge pe GitHub",
   "hero": {
     "badge": "Plată unică · Fără abonament",
-    "title": "Tot ce salvezi rămâne pe computerul tău. <span class=\"accent-text\">Totul.</span>",
-    "subtitle": "Raindrop îți ține marcajele pe serverele lui — și te taxă în fiecare an. BookmarkForge le ține pe computerul tău, blocate cu o cheie pe care o ai doar tu. Fără conturi. Fără abonamente lunare. Nimeni nu îți citește peste umăr.",
-    "ctaPrimary": "Încearcă acum (fără cont)",
-    "ctaSecondary": "Vezi prețurile",
+    "title": "Managerul privat de bookmarkuri care <span class=\"accent-text\">păstrează totul pe dispozitivul tău.</span>",
+    "subtitle": "Pentru cercetători, studenți și oricine preferă să nu predea istoricul de lectură unei companii cloud. Salvează pagini, articole și PDF-uri, găsește-le după cuvânt cheie sau sens, și păstrează totul criptat pe propriul computer. Fără cont. Fără abonament.",
+    "ctaPrimary": "Începe gratuit — fără înregistrare",
+    "ctaSecondary": "Vezi cum funcționează",
     "pillars": [
       {
         "strong": "Privat",
-        "text": "paginile salvate nu părăsesc niciodată computerul tău"
+        "text": "criptat pe dispozitivul tău"
       },
       {
-        "strong": "Blocat",
-        "text": "nici noi nu le putem citi"
+        "strong": "Al tău pentru totdeauna",
+        "text": "fără abonamente sau taxe lunare"
       },
       {
-        "strong": "Fără internet",
-        "text": "funcționează în avion, în tunel, oriunde"
+        "strong": "Funcționează offline",
+        "text": "salvează și citește oriunde, chiar fără internet"
       },
       {
-        "strong": "Plătești o singură dată",
-        "text": "$59 acces pe viață early bird (economisești $20 înainte de prețul normal)"
+        "strong": "Gratuit pentru totdeauna",
+        "text": "500 de bookmarkuri gratuite, Pro doar dacă vrei mai mult"
       }
     ],
     "announce": "⚡ Traducere AI locală (în curând)"
@@ -401,15 +401,11 @@
         "cta": "Ia Pro $59 Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "apoi $79 preț normal",
-        "sla": "Suport: e-mail 48h (Lun–Vin)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Obține Pro $79 Regular",
-        "cta2Class": "btn-secondary"
+        "sla": "Suport: e-mail 48h (Lun–Vin)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-ro#pricing\">Learn more</a>"
+    "legal": "Plată unică · 12 luni de actualizări incluse · v1 funcționează pentru totdeauna · garanție de rambursare de 30 de zile. <a href=\"/privacy-and-terms.html#terms\">Termeni</a>"
   },
   "faq": {
     "title": "Întrebări frecvente",
@@ -502,7 +498,8 @@
         "Contact"
       ],
       "helpCenter": "Centru de ajutor",
-      "errorCodes": "Coduri de eroare"
+      "errorCodes": "Coduri de eroare",
+      "hours": "Răspunsuri în 48 de ore, lun–vin (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Toate drepturile rezervate.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",

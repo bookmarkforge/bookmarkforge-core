@@ -657,8 +657,8 @@ describe("EncryptionService", () => {
   });
 });
 
-// Audit 16-A5 — binary helpers own their credential copy.
-describe("binary credential ownership (audit 16-A5)", () => {
+// — binary helpers own their credential copy.
+describe("binary credential ownership", () => {
   it("encryptBinary wipes the byte credential after success and failure", async () => {
     const service = Object.create(
       (await import("../../services/EncryptionService")).encryptionService!,
@@ -683,7 +683,7 @@ describe("binary credential ownership (audit 16-A5)", () => {
   });
 });
 
-// A2 (audit 2026-11-05) — the encrypted `.bmf` container must be portable: a
+// A2 — the encrypted `.bmf` container must be portable: a
 // backup written on a desktop vault (128 MiB Argon2id) has to open on a mobile
 // build (64 MiB) and vice versa. The parameters therefore travel INSIDE the
 // file; reading them from the local profile is what made a backup unreadable

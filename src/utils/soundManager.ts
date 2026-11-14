@@ -56,7 +56,7 @@ class SoundManager {
     if (!state.enabled) {return;}
     const ctx = this.getContext();
     if (!ctx) {return;}
-    // Audit M-02: under the autoplay policy the context can sit in
+    // under the autoplay policy the context can sit in
     // "suspended" with a frozen clock — oscillators would be scheduled but
     // never heard. Resume on the first play attempt (user gesture already
     // required to enable sounds, so this rarely rejects).

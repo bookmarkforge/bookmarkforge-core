@@ -77,7 +77,7 @@ export default defineConfig({
       "eslint-rules/**/*.test.mjs",
       // Quality-gate script tests live under scripts/__tests__/. Adding
       // them here lets us run vitest assertions against the gate logic
-      // (e.g. audit-anchors) without standing up a separate test runner.
+      // (e.g. check-docs-markdown) without standing up a separate test runner.
       "scripts/__tests__/**/*.test.mjs",
       // Server-side tests are asserted next to server sources; include both
       // config and security suites.

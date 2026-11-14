@@ -137,7 +137,7 @@ describe("declared api environment", () => {
   });
 
   /**
-   * P1-3 (review 2026-11-11): `READ_ONLY: "true"` sat in the production compose
+   * `READ_ONLY: "true"` sat in the production compose
    * with no reader in server/src, so the operator believed the container was
    * read-only while it was not. The inverted rule catches the next one: any api
    * variable the server never mentions fails the gate.

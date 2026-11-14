@@ -256,16 +256,15 @@
     return null;
   }
 
-  // Recording a language the moment the page is served is what makes a choice
-  // stick across landings: the visible language links are clean (/es/, not
-  // ?lang=es — the SEO gate forbids the query on 29 of the 30 pages), so a
-  // click is no longer a signal the handler below can see on every host. It is
-  // also what stops the worst case: choosing "English" on /es/ used to leave
-  // ?lang=es in the cookie, so the next visit to / was bounced straight back to
-  // /es/ by any host that negotiates (nginx, Cloudflare, Netlify).
+  // Recording a language the moment the page is served used to pin whatever
+  // locale a visitor merely LANDED on (Accept-Language negotiation, an old
+  // link, a shared URL) as their preference — after one visit to /es/ the EN
+  // root kept bouncing them back forever. The preference is now recorded
+  // only on an explicit choice: the click handler below (?lang= and the
+  // clean /<lang>/ links) and handleLangParam. Server-side negotiation still
+  // works for first visits; it just no longer writes the cookie.
   const storedLanguage = readStoredLanguage();
   const servedLanguage = pageLanguage();
-  if (servedLanguage) setLangPreference(servedLanguage);
 
   // Hosts that negotiate (nginx, the Cloudflare middleware, Netlify's Language
   // conditions) already bounce / to the locale recorded in bf_lang — nginx.conf

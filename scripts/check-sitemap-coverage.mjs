@@ -5,7 +5,7 @@
  *
  * This is intentionally a repository-level gate, not a live HTTP probe:
  * production deployment can point at an older artifact (as documented in
- * docs/audit.md), while CI must still prove that the current checkout is
+ * the SEO contract), while CI must still prove that the current checkout is
  * internally coherent before deployment.
  *
  * Contracts checked:

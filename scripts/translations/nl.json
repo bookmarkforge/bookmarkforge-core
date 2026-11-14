@@ -2,17 +2,17 @@
   "lang": "nl",
   "langName": "Nederlands",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/nl/",
+  "canonical": "https://www.bookmarkforgeapp.com/nl/",
   "ogLocale": "nl_NL",
   "ogLocaleAlternate": "en_US",
   "title": "BookmarkForge: privé local-first bladwijzerbeheer met leeslijst",
   "description": "Raindrop bewaart je bladwijzers op zijn servers. BookmarkForge bewaart ze op je eigen computer — versleuteld, zodat zelfs wij ze niet kunnen lezen. Eén keer betalen: $59 early bird levenslange toegang (bespaar $20 vóór de normale prijs). Gratis: 500 bladwijzers.",
   "ogTitle": "BookmarkForge: privé local-first bladwijzerbeheer met leeslijst",
   "ogDescription": "Raindrop bewaart je bladwijzers op zijn servers. BookmarkForge bewaart ze op je eigen computer — versleuteld, zodat zelfs wij ze niet kunnen lezen. Eén keer betalen: $59 early bird levenslange toegang (bespaar $20 vóór de normale prijs). Gratis: 500 bladwijzers.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "twitterTitle": "BookmarkForge: privé local-first bladwijzerbeheer met leeslijst",
   "twitterDescription": "Raindrop bewaart je bladwijzers op zijn servers. BookmarkForge bewaart ze op je eigen computer — versleuteld, zodat zelfs wij ze niet kunnen lezen. Eén keer betalen: $59 early bird levenslange toegang (bespaar $20 vóór de normale prijs). Gratis: 500 bladwijzers.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Naar hoofdinhoud",
   "navBrandAria": "Home van BookmarkForge",
   "navAriaLabel": "Hoofdnavigatie",
@@ -38,26 +38,26 @@
   "navToggleAriaClose": "Menu sluiten",
   "hero": {
     "badge": "Eenmalige betaling · Geen abonnement",
-    "title": "Alles wat je bewaart, blijft op je computer. <span class=\"accent-text\">Alles.</span>",
-    "subtitle": "Raindrop bewaart je bladwijzers op zijn servers — en rekent je elk jaar opnieuw. BookmarkForge bewaart ze op je computer, vergrendeld met een sleutel die alleen jij hebt. Geen accounts. Geen maandelijkse kosten. Niemand die over je schouder meeleest.",
-    "ctaPrimary": "Probeer het meteen (geen account nodig)",
-    "ctaSecondary": "Bekijk prijzen",
+    "title": "De privé-bladwijzerbeheerder die <span class=\"accent-text\">alles op je apparaat bewaart.</span>",
+    "subtitle": "Voor onderzoekers, studenten en iedereen die zijn leesgeschiedenis liever niet afstaat aan een cloudbedrijf. Sla pagina's, artikelen en pdf's op, vind ze op trefwoord of betekenis, en bewaar alles versleuteld op je eigen computer. Geen account. Geen abonnement.",
+    "ctaPrimary": "Begin gratis — zonder aanmelding",
+    "ctaSecondary": "Zo werkt het",
     "pillars": [
       {
         "strong": "Privé",
-        "text": "je opgeslagen pagina's verlaten nooit je computer"
+        "text": "versleuteld op je apparaat"
       },
       {
-        "strong": "Vergrendeld",
-        "text": "zelfs wij kunnen ze niet lezen"
+        "strong": "Voor altijd van jou",
+        "text": "geen abonnementen, geen maandelijkse kosten"
       },
       {
-        "strong": "Offline",
-        "text": "werkt in het vliegtuig, in een tunnel, overal"
+        "strong": "Werkt offline",
+        "text": "sla op en lees overal, ook zonder internet"
       },
       {
-        "strong": "Eén keer betalen",
-        "text": "$59 early bird levenslange toegang (bespaar $20 vóór de normale prijs)"
+        "strong": "Altijd gratis",
+        "text": "500 bladwijzers gratis, upgrade alleen als je meer wilt"
       }
     ],
     "announce": "⚡ Lokale AI-vertaling (binnenkort)"
@@ -408,15 +408,11 @@
         "cta": "Pro $59 Early Bird kopen",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "dan $79 regulier",
-        "sla": "Ondersteuning: e-mail 48u (ma–vr)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Koop Pro $79 Regular",
-        "cta2Class": "btn-secondary"
+        "sla": "Ondersteuning: e-mail 48u (ma–vr)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-nl#pricing\">Learn more</a>"
+    "legal": "Eenmalige betaling · 12 maanden updates inbegrepen · v1 werkt voor altijd · 30 dagen geld-terug-garantie. <a href=\"/privacy-and-terms.html#terms\">Voorwaarden</a>"
   },
   "faq": {
     "title": "Veelgestelde vragen",
@@ -509,7 +505,8 @@
         "Contact"
       ],
       "helpCenter": "Hulpercentrum",
-      "errorCodes": "Foutcodes"
+      "errorCodes": "Foutcodes",
+      "hours": "Antwoorden binnen 48 uur, ma–vr (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Alle rechten voorbehouden.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
@@ -523,12 +520,12 @@
     "websiteName": "BookmarkForge",
     "websiteDescription": "Je privé, AI-aangedreven kennisvault. 100% Local-First. Het privé Pocket-alternatief. Gratis: 500 bladwijzers.",
     "organizationName": "BookmarkForge",
-    "organizationUrl": "https://bookmarkforgeapp.com/",
+    "organizationUrl": "https://www.bookmarkforgeapp.com/",
     "organizationEmail": "bookmarkforge@proton.me",
     "softwareName": "BookmarkForge",
     "softwareCategory": "ProductivityApplication",
     "softwareOs": "Web",
-    "softwareUrl": "https://bookmarkforgeapp.com/",
+    "softwareUrl": "https://www.bookmarkforgeapp.com/",
     "offers": [
       {
         "name": "Free",
@@ -582,7 +579,7 @@
     ]
   },
   "help": {
-    "title": "Hulpercentrum — FAQ, probleemoplossing & Support-SLA | BookmarkForge",
+    "title": "Hulpercentrum — FAQ, probleemoplossing & Support-SLA",
     "description": "BookmarkForge Hulpercentrum: prijzen Lifetime v1, probleemoplossing, foutcodes BF-E*, Support-SLA en hoe je een geredigeerd diagnostisch rapport kopieert.",
     "ogTitle": "Hulpercentrum — BookmarkForge",
     "ogDescription": "FAQ, probleemoplossing, foutcodes en Support-SLA. Leer hoe Lifetime v1 werkt en hoe je een diagnostisch rapport kopieert.",
@@ -619,7 +616,7 @@
       "proPrice": "$59",
       "proPriceStriked": "$79",
       "proPriceRegular": "$79 regulier",
-      "proPriceTraction": "$99 na traction",
+      "proPriceTraction": "",
       "proDescription": "Onbeperkte bladwijzers, 5 apparaten + P2P-sync, Lokale AI (WebLLM/Ollama) + RAG + Expert-agents, Studiekaarten, PDF/OCR, 7 exportformaten, kluis. <em>Lifetime van v1 · 12 maanden feature-updates · Beveiliging voor altijd · v2 60% korting</em>",
       "proSupply": "200 Early Bird"
     },
@@ -646,7 +643,7 @@
         "free": "Free",
         "pro": "Pro v1 Lifetime"
       },
-      "freeChannel": "Zelfbediening: dit Hulpercentrum + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core/discussions\">GitHub Discussions</a>",
+      "freeChannel": "Zelfbediening: dit Hulpercentrum + <a href=\"https://github.com/bookmarkforge/bookmarkforge-core\">GitHub Discussions</a>",
       "freeResponse": "Beste inspanning (community)",
       "freeWhatToDo": "Zoek BF-E*-codes hieronder + kopieer diagnose (<a href=\"#diagnostics\">§Diagnostics</a>) voordat je post",
       "proChannel": "E-mail <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a> (onderwerp: Pro)",

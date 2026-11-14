@@ -6,7 +6,7 @@
  * files / 613 findings of which 22 were direct-import) ran on the real
  * checkout and was NEVER committed — it does not exist in this snapshot. This
  * file reconstructs the verifiable part here: it pins the 22 P1 findings
- * (docs/PENDING-ITEMS.md § P1) so no factory can lose those members again.
+ * (the P1 findings of the original sweep) so no factory can lose those members again.
  *
  * Usage:
  *   node scripts/tooling/mock-contract-audit.mjs            # all

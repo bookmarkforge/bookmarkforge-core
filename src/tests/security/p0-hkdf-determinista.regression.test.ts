@@ -17,7 +17,7 @@ describe("P0 regression — HKDF determinista", () => {
       const fs = await import("fs");
       const path = await import("path");
       const src = fs.readFileSync(
-        path.resolve(__dirname, "../../services/SecurityVault.ts"),
+        path.resolve(__dirname, "../../services/security-vault/share-unlock.ts"),
         "utf-8",
       );
       expect(src).toMatch(/bookmarkforge-share/);

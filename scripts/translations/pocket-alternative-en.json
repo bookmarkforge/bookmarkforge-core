@@ -2,17 +2,17 @@
   "lang": "en",
   "langName": "English",
   "dir": "ltr",
-  "canonical": "https://bookmarkforgeapp.com/pocket-alternative",
+  "canonical": "https://www.bookmarkforgeapp.com/pocket-alternative",
   "ogLocale": "en_US",
   "ogLocaleAlternate": "",
-  "title": "Best Private Pocket Alternative 2026: Local-First & Encrypted",
-  "description": "Pocket charges monthly and stores your reading list on their servers. BookmarkForge keeps everything encrypted on your device. Smart search is included free — Raindrop charges yearly for it. Free works on any device with no device cap.",
-  "ogTitle": "BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide",
+  "title": "Best Pocket Alternative After the Shutdown (2026): Local-First & Encrypted",
+  "description": "Pocket shut down in July 2025. If you exported your list, import it into BookmarkForge in about a minute — encrypted on your device, smart search included free, no account needed.",
+  "ogTitle": "Best Pocket Alternative After the Shutdown (2026) — BookmarkForge",
   "ogDescription": "Compare Pocket and BookmarkForge feature by feature, then migrate your library locally. Smart search is included free — Raindrop charges yearly for it.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image-pricing.png",
-  "twitterTitle": "BookmarkForge vs Pocket — Full Comparison &amp; Migration Guide",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image-pricing.png",
+  "twitterTitle": "Best Pocket Alternative After the Shutdown (2026) — BookmarkForge",
   "twitterDescription": "Compare every feature and migrate your Pocket library to a private, local-first vault in minutes.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image-pricing.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image-pricing.png",
   "skipLink": "Skip to main content",
   "navBrandAria": "BookmarkForge home",
   "navAriaLabel": "Main navigation",
@@ -36,7 +36,7 @@
   "hero": {
     "badge": "Pocket Alternative",
     "title": "BookmarkForge vs Pocket: <span class=\"accent-text\">The Full Comparison</span>",
-    "subtitle": "Pocket charges monthly and stores your reading list on their servers. BookmarkForge works on any device with no device cap on Free, while your reading list stays encrypted and yours."
+    "subtitle": "Pocket shut down in July 2025 and Mozilla began deleting saved data in November 2025. If you exported your list, BookmarkForge imports it in about a minute — this time it lives encrypted on your device, so no company can switch it off."
   },
   "whyMatters": {
     "id": "context",
@@ -204,13 +204,13 @@
         "feature": "Price",
         "pocket": "⚠️ Free tier + Premium",
         "pocketClass": "partial",
-        "bookmarkforge": "✅ Free forever + one-time $79 Pro",
+        "bookmarkforge": "✅ Free forever + one-time $59 Pro",
         "bookmarkforgeClass": "yes"
       },
       {
         "feature": "Status",
-        "pocket": "⚠️ Cloud service",
-        "pocketClass": "partial",
+        "pocket": "🔴 Shut down July 2025",
+        "pocketClass": "no",
         "bookmarkforge": "✅ Active",
         "bookmarkforgeClass": "yes"
       }
@@ -224,7 +224,7 @@
     "steps": [
       {
         "title": "Export your Pocket library",
-        "text": "If you still have access to Pocket, use its export feature to download the HTML file of your saved list. The file contains every link with its title, tags and original save date."
+        "text": "Pocket shut down in July 2025 and Mozilla began deleting saved data on November 12, 2025. If you exported your library before then, use that HTML file — it contains every link with its title, tags and original save date."
       },
       {
         "title": "Open the BookmarkForge importer",
@@ -344,7 +344,7 @@
         }
       ],
       "hrefs": [
-        "/pocket-alternative.html",
+        "/pocket-alternative",
         "/raindrop-alternative.html",
         "/geneziz-alternative.html",
         "/karakeep-alternative.html",
@@ -407,7 +407,7 @@
   },
   "structuredData": {
     "webpage": {
-      "url": "https://bookmarkforgeapp.com/pocket-alternative",
+      "url": "https://www.bookmarkforgeapp.com/pocket-alternative",
       "name": "BookmarkForge vs Pocket — Full Comparison & Migration Guide",
       "description": "Feature-by-feature comparison between Pocket and BookmarkForge, plus a step-by-step guide to migrate your Pocket library."
     },
@@ -417,7 +417,7 @@
     },
     "organization": {
       "name": "BookmarkForge",
-      "url": "https://bookmarkforgeapp.com/",
+      "url": "https://www.bookmarkforgeapp.com/",
       "email": "bookmarkforge@proton.me"
     },
     "software": {
@@ -425,7 +425,7 @@
       "description": "Save articles, notes and documents in a private, encrypted, local-first vault. AI search, Notion-style editor, P2P sync. The private Pocket alternative.",
       "category": "ProductivityApplication",
       "os": "Web",
-      "url": "https://bookmarkforgeapp.com/",
+      "url": "https://www.bookmarkforgeapp.com/",
       "offers": [
         {
           "name": "Free",
@@ -434,7 +434,7 @@
         },
         {
           "name": "Pro v1 Lifetime",
-          "price": "79",
+          "price": "59",
           "currency": "USD"
         }
       ],

@@ -46,7 +46,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net https://*.jsdelivr.net https://cdn.jsdelivr.net https://*.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
+          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
         }
       ]
     },
@@ -91,7 +91,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net https://*.jsdelivr.net https://cdn.jsdelivr.net https://*.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
+          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
         },
         {
           "key": "X-Robots-Tag",
@@ -140,7 +140,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net https://*.jsdelivr.net https://cdn.jsdelivr.net https://*.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
+          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
         },
         {
           "key": "X-Robots-Tag",
@@ -189,7 +189,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net https://*.jsdelivr.net https://cdn.jsdelivr.net https://*.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
+          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
         },
         {
           "key": "X-Robots-Tag",
@@ -238,7 +238,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net https://*.jsdelivr.net https://cdn.jsdelivr.net https://*.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
+          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
         },
         {
           "key": "X-Robots-Tag",
@@ -287,7 +287,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net https://*.jsdelivr.net https://cdn.jsdelivr.net https://*.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
+          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
         },
         {
           "key": "X-Robots-Tag",
@@ -336,7 +336,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net https://*.jsdelivr.net https://cdn.jsdelivr.net https://*.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
+          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
         },
         {
           "key": "X-Robots-Tag",
@@ -385,7 +385,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net https://*.jsdelivr.net https://cdn.jsdelivr.net https://*.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
+          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' blob: data: https://storage.ko-fi.com; connect-src 'self' http://localhost:11434 https://api.openai.com https://api.anthropic.com https://api.groq.com https://openrouter.ai https://generativelanguage.googleapis.com https://huggingface.co https://*.hf.co https://oauth2.googleapis.com https://www.googleapis.com https://api.dropboxapi.com https://content.dropboxapi.com https://graph.microsoft.com https://api.box.com https://upload.box.com https://api.pcloud.com https://signaling.rxdb.info wss://signaling.rxdb.info https://signaling.pubnub.com wss://signaling.pubnub.com/v1/subscribe wss://signal.bookmarkforgeapp.com https://whop.com https://api.whop.com https://cdn.jsdelivr.net; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-src 'none'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests; report-uri /csp-report; report-to csp-endpoint"
         },
         {
           "key": "X-Robots-Tag",
@@ -398,6 +398,11 @@
     {
       "source": "/index.html",
       "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/pocket-alternative.html",
+      "destination": "/pocket-alternative",
       "permanent": true
     }
   ],
@@ -412,23 +417,15 @@
     },
     {
       "source": "/(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)/help",
-      "destination": "/$1/help-$1.html"
+      "destination": "/help-$1.html"
     },
     {
       "source": "/(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)/help/",
-      "destination": "/$1/help-$1.html"
+      "destination": "/help-$1.html"
     },
     {
       "source": "/(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)/help/:path*",
-      "destination": "/$1/help-$1.html"
-    },
-    {
-      "source": "/help-(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)",
-      "destination": "/$1/help-$1.html"
-    },
-    {
-      "source": "/help-(ar|bg|cs|da|de|el|es|fi|fr|he|hi|hr|hu|id|it|ja|ko|nl|no|pl|pt|ro|ru|sv|th|tr|uk|vi|zh)/",
-      "destination": "/$1/help-$1.html"
+      "destination": "/help-$1.html"
     },
     {
       "source": "/(es|fr|de|pt|it)/privacy-and-terms",

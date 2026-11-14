@@ -15,8 +15,9 @@
  * Contract (ADR-052 Fase 2):
  *   - The notice appears only when the residual v5 counter has stayed > 0
  *     for N consecutive post-unlock samples (RESIDUE_NOTICE_THRESHOLD).
- *   - It is strictly non-blocking: it never gates unlock or reading. A
- *     `v5:` blob keeps decrypting (legacy read-only path).
+ *   - It is strictly non-blocking: it never gates unlock or reading. Since
+ *     ADR-052 phase 4 a `v5:` blob no longer decrypts, so the notice explains
+ *     how to recover the data (current backup or an older release).
  *   - An unreadable storage sample (status "unknown") is NEVER counted as
  *     residue — silence is the fail-quiet direction for a diagnostic.
  *   - A sample with zero residue clears the streak (migration done).

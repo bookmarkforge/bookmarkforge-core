@@ -217,7 +217,7 @@ class CostTrackerService {
   }
 
   /**
-   * CRITICAL (audit #2): real hard-stop enforcement. Callers MUST invoke
+   * CRITICAL: real hard-stop enforcement. Callers MUST invoke
    * this BEFORE spending money on a paid request. Throws when the provider's
    * daily budget is exhausted (alertLevel === "hard-stop"), so the request
    * is blocked instead of merely being logged.

@@ -357,7 +357,7 @@ describe("DiagnosticService", () => {
       expect(typeof diag.environment.userAgent).toBe("string");
     });
 
-    it("environment: isARM64 por userAgent con aarch64", async () => {
+    it("environment: isARM64 from userAgent with aarch64", async () => {
       vi.stubGlobal("navigator", {
         ...navigator,
         userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X) aarch64",
@@ -367,7 +367,7 @@ describe("DiagnosticService", () => {
       expect(diag.environment.isARM64).toBe(true);
     });
 
-    it("environment: isARM64 por userAgent con arm64", async () => {
+    it("environment: isARM64 from userAgent with arm64", async () => {
       vi.stubGlobal("navigator", {
         ...navigator,
         userAgent: "arm64 Linux",
@@ -377,7 +377,7 @@ describe("DiagnosticService", () => {
       expect(diag.environment.isARM64).toBe(true);
     });
 
-    it("environment: isARM64 por platform con ARM", async () => {
+    it("environment: isARM64 from platform with ARM", async () => {
       vi.stubGlobal("navigator", {
         ...navigator,
         userAgent: "Mozilla/5.0",

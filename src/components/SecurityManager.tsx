@@ -10,6 +10,8 @@ import {
 import { safeGet, safeSet } from "../store/safeStorage";
 import { STORAGE_KEYS } from "../constants/storage-keys";
 import { logger } from "../utils/logger";
+import { zeroPasswordBytes } from "../utils/crypto-core";
+import { copyPasswordBytes } from "../utils/passwordBytes";
 import { SECURITY_CONFIG, UI_CONFIG } from "../constants/config";
 import { downloadBlob } from "../utils/download";
 import { loadBackupService } from "../services/pro-access";
@@ -120,6 +122,14 @@ export const SecurityManager: React.FC<{ children: React.ReactNode }> = ({
     fallback: string,
   ): Promise<string> => {
     try {
+      // ADR-052: the retired-v5 refusal is not a password error — show the
+      // remedy (current backup / older release) instead of asking again.
+      const { isLegacyV5FormatRemovedError } = await import(
+        "../utils/crypto-core"
+      );
+      if (isLegacyV5FormatRemovedError(err)) {
+        return t("app_v5FormatRetired");
+      }
       const {
         isInvalidDbPasswordError,
         isDbInaccessibleError,
@@ -249,6 +259,11 @@ Date Generated: ${formatDate(new Date(), {
     setIsUnlocking(true);
     setError("");
 
+    // Bytes at the boundary (AGENTS.md §2): the <input> value is a string, so
+    // it is encoded once here and every consumer gets a private copy. The
+    // owned buffer is zeroized in the finally below and the input is cleared on
+    // success, so the password does not linger in component state.
+    const passwordBytes = copyPasswordBytes(passwordInput);
     try {
       const { aiManager } = await import("../services/ai/ProviderManager");
       // S0/R24: unlockVault() returns false (it does NOT throw) when the
@@ -258,14 +273,20 @@ Date Generated: ${formatDate(new Date(), {
       // WRONG password silently unlocked the app. Fail fast on the vault's
       // authoritative answer so the error path is identical on every storage
       // backend.
-      const vaultUnlocked = await aiManager.unlockVault(passwordInput);
+      // Each consumer consumes its own copy: securityVault.unlock() normalizes
+      // (copies) and initDB() zeroizes a byte credential.
+      const vaultUnlocked = await aiManager.unlockVault(
+        new Uint8Array(passwordBytes),
+      );
       if (!vaultUnlocked) {
         throw new Error(t("app_invalid_password", "Invalid password. Please try again."));
       }
       const { initDB } = await import("../container/database");
-      await initDB(passwordInput);
+      await initDB(new Uint8Array(passwordBytes));
       unlock();
       setError("");
+      // Drop the password from React state as soon as the vault is open.
+      setPasswordInput("");
       // ADR-052 Fase 2: post-unlock exposure sample. Fire-and-forget —
       // every failure mode is silent; never gates the unlocked state.
       void sampleV5ResidueAfterUnlock();
@@ -279,6 +300,7 @@ Date Generated: ${formatDate(new Date(), {
     } finally {
       vaultOperationInFlightRef.current = false;
       setIsUnlocking(false);
+      zeroPasswordBytes(passwordBytes);
     }
   };
 
@@ -295,6 +317,10 @@ Date Generated: ${formatDate(new Date(), {
 
     vaultOperationInFlightRef.current = true;
     setIsUnlocking(true);
+    // Bytes at the boundary (AGENTS.md §2): encode the input once; every
+    // consumer below receives a private copy and the owned buffer is zeroized
+    // in the finally block.
+    const passwordBytes = copyPasswordBytes(passwordInput);
     try {
       // P1/E2E: provision the per-vault KDF salt before encrypting the master password
       // with the recovery phrase. The encryption is v7 (A-02 fails it closed when no salt is installed).
@@ -318,7 +344,9 @@ Date Generated: ${formatDate(new Date(), {
       // verifyPassword() returns false and the vault rejects the
       // just-created password, breaking the entire first-run setup
       // (regression caught by the E2E vault-init smoke test).
-      const vaultUnlocked = await aiManager.unlockVault(passwordInput);
+      const vaultUnlocked = await aiManager.unlockVault(
+        new Uint8Array(passwordBytes),
+      );
       if (!vaultUnlocked) {
         throw new Error(t("app_invalid_password", "Invalid password. Please try again."));
       }
@@ -326,7 +354,7 @@ Date Generated: ${formatDate(new Date(), {
       await securityVault.setRecoveryData(encryptedMasterPassword);
       const { destroyDB, initDB } = await import("../container/database");
       await destroyDB();
-      const db = await initDB(passwordInput);
+      const db = await initDB(new Uint8Array(passwordBytes));
 
       // F0-4: export the optional .bmf recovery kit NOW — the vault is
       // fully created (verification token, flags, recovery data and DB key
@@ -340,7 +368,9 @@ Date Generated: ${formatDate(new Date(), {
         try {
           // BackupService is a proprietary module loaded lazily via pro-access (free tier included).
           const backup = await loadBackupService();
-          await backup.exportBackup(passwordInput);
+          // Byte credentials are consumed (zeroized) by BackupService; hand it
+          // a private copy rather than the unlock buffer.
+          await backup.exportBackup(new Uint8Array(passwordBytes));
         } catch (kitError) {
           logger.error("[SecurityManager] Recovery kit export failed", {
             error: kitError,
@@ -376,6 +406,7 @@ Date Generated: ${formatDate(new Date(), {
     } finally {
       vaultOperationInFlightRef.current = false;
       setIsUnlocking(false);
+      zeroPasswordBytes(passwordBytes);
     }
   };
 
@@ -385,6 +416,8 @@ Date Generated: ${formatDate(new Date(), {
     setIsUnlocking(true);
     setError("");
 
+    // Declared outside try so the finally can zeroize it on every path.
+    let recoveredPasswordBytes: Uint8Array | null = null;
     try {
       const encryptedMasterPassword = await securityVault.getRecoveryData();
       if (!encryptedMasterPassword) {
@@ -398,16 +431,23 @@ Date Generated: ${formatDate(new Date(), {
           encryptedMasterPassword,
           recoveryInput.trim(),
         );
+      // RecoveryService returns a string (its own API); encode it immediately
+      // so the unlock path stays byte-only from here on. The string copy is
+      // outside our control and cannot be zeroized — that residual belongs to
+      // the recovery API, not to the unlock path.
+      recoveredPasswordBytes = copyPasswordBytes(recoveredPassword);
 
       // S0/R24: fail fast when the recovered password fails vault
       // verification instead of falling through to initDB (which silently
       // accepts under Memory storage).
-      const vaultUnlocked = await aiManager.unlockVault(recoveredPassword);
+      const vaultUnlocked = await aiManager.unlockVault(
+        new Uint8Array(recoveredPasswordBytes),
+      );
       if (!vaultUnlocked) {
         throw new Error(t("app_invalid_password", "Invalid password. Please try again."));
       }
       const { initDB } = await import("../container/database");
-      await initDB(recoveredPassword);
+      await initDB(new Uint8Array(recoveredPasswordBytes));
 
       unlock();
       // ADR-052 Fase 2: post-unlock exposure sample (fire-and-forget).
@@ -421,6 +461,7 @@ Date Generated: ${formatDate(new Date(), {
     } finally {
       vaultOperationInFlightRef.current = false;
       setIsUnlocking(false);
+      if (recoveredPasswordBytes) {zeroPasswordBytes(recoveredPasswordBytes);}
     }
   };
 

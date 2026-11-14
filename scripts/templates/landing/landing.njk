@@ -35,6 +35,7 @@
   <meta name="twitter:image" content="{{ t.twitterImage }}">
   <script src="/theme-init.js"></script>
   <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/landing.css">
   <!-- Structured data (GEO): WebSite / Organization / SoftwareApplication / FAQPage.
        The permanent offer deliberately carries NO priceValidUntil: the lifetime
@@ -59,14 +60,14 @@
           },
           "query-input": "required name=search_term_string"
         },
-        "publisher": { "@id": "https://bookmarkforgeapp.com/#organization" }
+        "publisher": { "@id": "https://www.bookmarkforgeapp.com/#organization" }
       },
       {
         "@type": "Organization",
-        "@id": "https://bookmarkforgeapp.com/#organization",
+        "@id": "https://www.bookmarkforgeapp.com/#organization",
         "name": "{{ t.structuredData.organizationName | escapejs }}",
         "url": "{{ t.structuredData.organizationUrl }}",
-        "logo": { "@type": "ImageObject", "url": "https://bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
+        "logo": { "@type": "ImageObject", "url": "https://www.bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
         "email": "{{ t.structuredData.organizationEmail }}"
       },
       {
@@ -126,7 +127,8 @@
         <a href="#{{ t.privacy.id }}">{{ t.navLinks.privacy }}</a>
         <a href="#{{ t.pricing.id }}">{{ t.navLinks.pricing }}</a>
         <a href="{% if t.lang == 'en' %}/help{% else %}/help-{{ t.lang }}{% endif %}">{{ t.navLinks.help | default('Help') }}</a>
-        
+        <a href="mailto:bookmarkforge@proton.me">{{ t.footer.support.links[0] }}</a>
+
         <!-- Language Dropdown -->
         <div class="language-dropdown">
           <button class="language-toggle" aria-label="{{ t.languageToggleAria }}" aria-expanded="false">
@@ -168,13 +170,13 @@
       <div class="container">
         <div class="hero-content">
           {% if t.hero.announceApps %}<div class="announce-bar">{{ t.hero.announceApps }}</div>{% endif %}
-          <div class="announce-bar">{{ t.hero.announce }}</div>
-          <span class="hero-badge">{{ t.hero.badge }}</span>
+          {% if t.hero.announce %}<div class="announce-bar">{{ t.hero.announce }}</div>{% endif %}
+          {% if t.hero.badge %}<span class="hero-badge">{{ t.hero.badge }}</span>{% endif %}
           <h1 id="hero-title">{{ t.hero.title | safe }}</h1>
           <p class="hero-subtitle">{{ t.hero.subtitle }}</p>
           <div class="hero-ctas">
             <a href="/app" class="btn-primary">{{ t.hero.ctaPrimary }}</a>
-            <a href="#{{ t.pricing.id }}" class="btn-secondary">{{ t.hero.ctaSecondary }}</a>
+            <a href="#{{ t.demo.id }}" class="btn-secondary">{{ t.hero.ctaSecondary }}</a>
           </div>
           <div class="hero-pillars">
             {% for pillar in t.hero.pillars %}
@@ -197,6 +199,26 @@
           <h2 id="{{ t.demo.id }}-title" class="demo-tour-title">{{ t.demo.title }}</h2>
           <p class="demo-tour-subtitle">{{ t.demo.subtitle }}</p>
         </div>
+
+        <div class="demo-gallery">
+          <div class="demo-shot">
+            <img src="/images/app-dashboard.webp" alt="BookmarkForge dashboard with bookmarks, documents and local RAG chat" loading="lazy" />
+            <p class="demo-caption">Dashboard — everything encrypted on your device</p>
+          </div>
+          <div class="demo-shot">
+            <img src="/images/app-bookmarks.webp" alt="Bookmarks view with search and smart filters" loading="lazy" />
+            <p class="demo-caption">Bookmarks — find by keyword or meaning</p>
+          </div>
+          <div class="demo-shot">
+            <img src="/images/app-documents.webp" alt="Documents view for notes and long-form content" loading="lazy" />
+            <p class="demo-caption">Documents — notes, PDFs and long-form content</p>
+          </div>
+          <div class="demo-shot">
+            <img src="/images/app-chat.webp" alt="Local RAG Chat for AI-powered search over your saved content" loading="lazy" />
+            <p class="demo-caption">Local RAG Chat — AI without sending data to the cloud</p>
+          </div>
+        </div>
+
         <ol class="demo-tour-steps">
           {% for step in t.demo.steps %}
           <li class="demo-tour-step">
@@ -292,57 +314,8 @@
         <p class="rc-close">{{ t.raindropCompare.close }}</p>
         <div class="center-cta">
           <a href="/app" class="btn-primary">{{ t.raindropCompare.ctaPrimary }}</a>
-          <a href="{{ t.pocketAlternative.ctaSecondaryHref }}" class="btn-link">{{ t.raindropCompare.ctaSecondary }}</a>
+          <a href="/raindrop-alternative.html" class="btn-link">{{ t.raindropCompare.ctaSecondary }}</a>
         </div>
-      </div>
-    </section>
-
-    <!-- Competitor Comparison Section -->
-    <section id="competitor-compare" class="comparison-section" aria-labelledby="competitor-compare-title">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Why BookmarkForge</span>
-          <h2 id="competitor-compare-title">How BookmarkForge Compares</h2>
-          <p class="section-subtitle">Honest comparison with popular alternatives. Different tools solve different problems.</p>
-        </div>
-        <div class="rc-table" role="table" aria-label="BookmarkForge comparison">
-          <div class="rc-row rc-head" role="row">
-            <div class="rc-topic" role="columnheader"></div>
-            <div class="rc-us" role="columnheader">BookmarkForge</div>
-            <div class="rc-them" role="columnheader">Others</div>
-          </div>
-          <div class="rc-row" role="row">
-            <div class="rc-topic" role="rowheader">Data location</div>
-            <div class="rc-us" role="cell">On your device, encrypted</div>
-            <div class="rc-them" role="cell">Cloud servers or self-hosted Docker</div>
-          </div>
-          <div class="rc-row" role="row">
-            <div class="rc-topic" role="rowheader">Open source</div>
-            <div class="rc-us" role="cell">MIT Core (auditable)</div>
-            <div class="rc-them" role="cell">Varies (Karakeep OSS, Geneziz closed)</div>
-          </div>
-          <div class="rc-row" role="row">
-            <div class="rc-topic" role="rowheader">Languages</div>
-            <div class="rc-us" role="cell">30 languages</div>
-            <div class="rc-them" role="cell">English only (most)</div>
-          </div>
-          <div class="rc-row" role="row">
-            <div class="rc-topic" role="rowheader">Price model</div>
-            <div class="rc-us" role="cell">Free + $59 one-time Pro</div>
-            <div class="rc-them" role="cell">Subscription or one-time (varies)</div>
-          </div>
-          <div class="rc-row" role="row">
-            <div class="rc-topic" role="rowheader">Sync</div>
-            <div class="rc-us" role="cell">P2P, no server</div>
-            <div class="rc-them" role="cell">Cloud sync or manual export</div>
-          </div>
-          <div class="rc-row" role="row">
-            <div class="rc-topic" role="rowheader">AI</div>
-            <div class="rc-us" role="cell">Local (WebLLM/Ollama) or BYOK</div>
-            <div class="rc-them" role="cell">Cloud only or requires setup</div>
-          </div>
-        </div>
-        <p class="rc-close">Raindrop is simpler if you don't need privacy. Geneziz is great for markdown purists. Karakeep is for self-hosters. BookmarkForge is for users who want local-first privacy without Docker or subscriptions.</p>
       </div>
     </section>
 
@@ -508,6 +481,14 @@
     </section>
   </main>
 
+  <!-- Sticky mobile CTA: on a phone the primary button used to start below the
+       fold (two pills + a long subtitle pushed it past 812px of 844px). The bar
+       keeps one action always visible; landing.js hides it while the nav panel
+       is open so it never covers the menu. -->
+  <div class="mobile-cta-bar" id="mobileCtaBar">
+    <a href="/app" class="btn-primary btn-block">{{ t.hero.ctaPrimary }}</a>
+  </div>
+
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -527,7 +508,7 @@
       <div class="footer-links">
         <h4>{{ t.footer.resources.title }}</h4>
         <ul>
-          <li><a href="/pocket-alternative.html">{{ t.footer.resources.links[0] }}</a></li>
+          <li><a href="/pocket-alternative">{{ t.footer.resources.links[0] }}</a></li>
           <li><a href="/raindrop-alternative.html">Raindrop.io</a></li>
           <li><a href="/geneziz-alternative.html">Geneziz</a></li>
           <li><a href="/karakeep-alternative.html">Karakeep</a></li>
@@ -535,14 +516,6 @@
           <li><a href="/omnivore-alternative.html">Omnivore</a></li>
           <li><a href="/instapaper-alternative.html">Instapaper</a></li>
           <li><a href="/privacy-and-terms.html">{{ t.footer.resources.links[1] }}</a></li>
-        </ul>
-      </div>
-      <div class="footer-links">
-        <h4>{{ t.footer.languages.title }}</h4>
-        <ul>
-          {% for lang in languageLinks %}
-          <li><a href="{{ lang.href }}" hreflang="{{ lang.hreflang }}" lang="{{ lang.lang }}">{{ lang.name }}</a></li>
-          {% endfor %}
         </ul>
       </div>
       <div class="footer-links">
@@ -555,22 +528,28 @@
           <li><a href="mailto:bookmarkforge@proton.me">{{ link }}</a></li>
           {% endfor %}
         </ul>
+        <p class="footer-hours">{{ t.footer.support.hours }}</p>
       </div>
     </div>
     <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         Every other locale has its own directory. The rule has one owner —
-         scripts/landing-registry.mjs (LEGAL_LOCALE_CODES), already encoded by
-         check-seo, check-sitemap-coverage, check-hreflang-graph and
-         check-page-figures. Emitting "/{{ t.lang }}/…" unconditionally shipped a
-         404 footer link on every EN landing until the ADR-062 smoke gate opened it. -->
+         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+         the other 24 have no legal page, so their footer points at the English
+         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>{{ t.footer.copyright }}</p>
-      {% set legalHref = "/privacy-and-terms.html" if t.lang == "en" else "/" + t.lang + "/privacy-and-terms.html" %}
+      {% if t.lang == "en" %}
+        {% set legalHref = "/privacy-and-terms.html" %}
+      {% elif t.lang in ["es", "fr", "de", "pt", "it"] %}
+        {% set legalHref = "/" + t.lang + "/privacy-and-terms.html" %}
+      {% else %}
+        {% set legalHref = "/privacy-and-terms.html" %}
+      {% endif %}
       <a href="{{ legalHref }}">{{ t.footer.legal[0] }}</a> · <a href="{{ legalHref }}#terms">{{ t.footer.legal[1] }}</a> · <a href="mailto:bookmarkforge@proton.me">{{ t.footer.legal[2] }}</a>
       <span class="github-star">
         <a href="https://github.com/bookmarkforge/bookmarkforge-core" target="_blank" rel="noopener noreferrer" aria-label="{{ t.githubAria }}">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="12 2 15.09 8.36 17.77 15.53 17.77 20.27 15.09 12 15.09 3.73 8.44 6.24 3.73 3.73 6.24 8.44 3.73 15.09 12 3.73 17.77 20.27 15.09 15.09 17.77 12 2"/>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2l2.9 6.26 6.6.56-5 4.4 1.5 6.53L12 16.9l-6 2.85 1.5-6.53-5-4.4 6.6-.56L12 2z"/>
           </svg>
           {{ t.footer.githubStar | default('Like BookmarkForge? Star us on GitHub ⭐') }}
         </a>

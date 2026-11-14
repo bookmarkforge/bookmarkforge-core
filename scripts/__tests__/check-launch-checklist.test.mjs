@@ -255,7 +255,7 @@ describe("verifyProdConfig", () => {
   it("passes when the required config is documented", () => {
     const text = [
       "NODE_ENV=production",
-      "AI_SESSION_ORIGINS=https://a",
+      "LICENSE_ALLOWED_ORIGINS=https://a",
       "ENFORCE_SIGNAL_HMAC=1",
       "LICENSE_SIGNING_PRIVATE_KEY_FILE montado como secreto",
     ].join("\n");

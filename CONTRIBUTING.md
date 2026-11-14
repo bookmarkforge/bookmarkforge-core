@@ -8,13 +8,12 @@ and must not be copied into the public export. Read `OPEN-CORE.md` and
 > BookmarkForge is a **local-first, privacy-preserving** AI knowledge vault
 > (React 19 / Vite 8 / RxDB 17 / IndexedDB / WebCrypto AES-GCM + Argon2id).
 > It stores personal data: **default to fail-closed, zeroize, least privilege**.
-> These contracts are enforced by real gates — read `AGENTS.md` before touching
+> These contracts are enforced by real gates — §3 applies before touching
 > security-adjacent code.
 
 This document describes the development workflow for code, tests, docs, and
-release hygiene. It is a companion to `AGENTS.md` (engineering conventions) and
-`docs/audit.md` (audit record); where they differ, the more specific document
-wins.
+release hygiene. It is the engineering contract of this repository; where
+documents differ, the more specific document wins.
 
 ---
 
@@ -43,7 +42,7 @@ enforced by `npm run check:quality`.
 ## 2. Communication and issue hygiene
 
 - Prefer the existing docs over a fresh question. If something in this document
-  or in `AGENTS.md` is ambiguous, say so in the issue/PR rather than guessing.
+  or in this document is ambiguous, say so in the issue/PR rather than guessing.
 - Security-sensitive reports should follow the project's existing disclosure
   expectations; do not file sensitive security details in a public issue until
   the maintainer says to.
@@ -65,7 +64,8 @@ enforced by `npm run check:quality`.
   before logging or persisting. User-facing errors must never leak raw
   `SyntaxError.message`, stack frames, or secret material.
 - Keep secrets as bytes end to end. Do not decode them into immutable JS strings.
-  See `AGENTS.md` §1 for the password-buffer ownership and zeroization contract.
+  The password-buffer ownership and zeroization contract is enforced by
+  `src/utils/crypto-core.ts` and `src/utils/passwordBytes.ts`.
 
 ### Layer rules (enforced by `npm run check:quality`)
 
@@ -123,8 +123,8 @@ If you are reviewing a PR (even your own), at minimum:
 
 The project aims for linear protection on `main`:
 `required_linear_history`, no force-push, PR-only landing, with required status
-checks. `AGENTS.md` notes that this checkout currently has **no
-`.husky/pre-commit` hook file** — CI is the enforcement point, not a local hook.
+checks. This checkout has a `.husky/pre-commit` hook (lint-staged) and CI is
+the full enforcement point.
 
 ---
 
@@ -173,7 +173,7 @@ here still exists.
 | `npm run gate:refresh` | One ordered regeneration pass for the drift-sensitive artifacts. |
 | `check:landing-smoke (mapped to landing smoke checks)` | Opens the 31 landing routes in Chromium: navigation, critical resources, links and console errors (ADR-062). Needs `npx playwright install chromium`. |
 | `npm run report:all` | Renders `webrtc-recovery-history.json` as a self-contained HTML trend page. |
-| `npm run check:vacuous-tests` | Assertion-integrity ratchet for the E2E suites: fails if a test that passes when its feature is absent is added without a baseline entry, and verifies the declared suite sizes in `docs/ops-nightly.md` match the tree. The current debt (1589 of 2050 tests in the human-like suite) is baselined on purpose — see `scripts/vacuous-tests-baseline.json`. |
+| `npm run check:vacuous-tests` | Assertion-integrity ratchet for the E2E suites: fails if a test that passes when its feature is absent is added without a baseline entry, and verifies the declared suite sizes in `docs/ops-nightly.md` match the tree. `--update` is downward-only: it refuses to add an entry or raise an existing count, so paying debt tightens the baseline and can never widen it. The current debt (1569 of 2038 tests in the human-like suite) is baselined on purpose — see `scripts/vacuous-tests-baseline.json`. |
 | `npm run report:all` | Appends one WebRTC recovery summary to the nightly history file. |
 | `npm run report:webrtc` | Per-browser handshake diagnostics from a saved Playwright report. |
 | `npm run report:webrtc` | Renders the convergence summary as a Markdown table for PR comments. |
@@ -231,7 +231,7 @@ npm run check                   # the full gate chain (~40 check commands + lint
                                  # extension-csp, i18n, claim-drift,
                                  # landing-free-plan, pocket-onboarding-copy,
                                  # license-claims, manual-figures, page-figures,
-                                 # landings-fresh, english-only, audit-drift,
+                                 # landings-fresh, english-only,
                                  # override-cve, direct-cve, no-unbounded-text,
                                  # tailwind-drift, rxdb17, static-brand,
                                  # brand-logo, seo, license-keys,
@@ -251,8 +251,8 @@ touching the surfaces they guard:
   test:fast && build:ci && check`).
 - Before a release: `npm run check:launch-checklist:strict` (Sentry DSN/DPA,
   RPO/RTO sign-off and manual WCAG are tracked as open operational items in
-  `docs/launch-checklist.md` — see `docs/audit.md` for the known-gap ledger
-  and `docs/ROPA.md` for GDPR processing records). This repository is operated
+  `docs/launch-checklist.md`; `docs/ROPA.md` tracks GDPR processing records).
+  This repository is operated
   by a single maintainer; automated checks remain the release control.
 - **i18n:** every user-facing string goes through `t()` — hardcoded UI strings
   fail `check:i18n`/`check:english-only`. All 30 locales must stay
@@ -325,10 +325,9 @@ touching the surfaces they guard:
   lock/unlock lifecycle symmetry when mocking `SecurityVault`.
 
 When you add tests, prefer the existing area mirror (`src/tests/<area>/…`). If
-you are testing a security regression, use the pinned regression layout under
-`src/tests/security/p<severity>-<slug>.regression.test.ts` and coordinate with
-`scripts/audit-anchors.mjs`; removing or renaming an anchored test is an
-ADR-level change.
+you are testing a security regression, use the regression layout under
+`src/tests/security/p<severity>-<slug>.regression.test.ts`; removing or
+renaming one is an ADR-level change.
 
 ---
 
@@ -338,10 +337,8 @@ ADR-level change.
   `Status / Date` then `Context / Decision / Consequences`
   (see `docs/ADR-001-check-static-brand.md`).
 - Post-audit security regressions live at
-  `src/tests/security/p<severity>-<slug>.regression.test.ts` and are **pinned
-  by `scripts/audit-anchors.mjs`** (catalog + `audit-anchors-baseline.json`).
-  Removing or renaming an anchored test is an ADR-level change;
-  `npm run check:content` fails on drift.
+  `src/tests/security/p<severity>-<slug>.regression.test.ts`. Removing or
+  renaming one is an ADR-level change.
 - README completeness, architecture coverage, and `eslint-rules/` coverage in
   `eslint-rules/README.md` are documented gaps to close when you touch the area.
 
@@ -386,8 +383,8 @@ ADR-level change.
   environment-only (not verifiable from the repository) items.
 - Before a release: `npm run check:launch-checklist:strict` (Sentry DSN/DPA,
   RPO/RTO sign-off and manual WCAG are tracked as open operational items in
-  `docs/launch-checklist.md` — see `docs/audit.md` for the known-gap ledger
-  and `docs/ROPA.md` for GDPR processing records). This repository is operated
+  `docs/launch-checklist.md`; `docs/ROPA.md` tracks GDPR processing records).
+  This repository is operated
   by a single maintainer; automated checks remain the release control.
 
 ---
@@ -423,11 +420,11 @@ Before marking a PR ready:
 
 ## 13. When you are unsure
 
-- Read `AGENTS.md` first; it is the engineering contract.
+- This document is the engineering contract — start at §3.
 - If the question is legal/GDPR, read `docs/ROPA.md` and note that it is an
   **operational template, not legal advice**.
-- If the question is audit-related, read `docs/audit.md` and the anchored
-  regression tests; do not remove an anchored test without an ADR.
+- If the question is audit-related, review the security regression tests
+  under `src/tests/security/`; do not remove one without an ADR.
 
 ---
 

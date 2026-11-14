@@ -555,13 +555,6 @@ describe("AppInitializer", () => {
 
     it("does not call unlock when cancelled", async () => {
       mocks.mockIsLocked = true;
-      let resolveFlag: (v?: any) => void;
-      mocks.mockSetMasterPasswordFlag.mockImplementationOnce(
-        () =>
-          new Promise((r) => {
-            resolveFlag = r;
-          }),
-      );
       let resolveInitDB: (v?: any) => void;
       mocks.mockInitDB.mockImplementationOnce(
         () =>
@@ -571,16 +564,22 @@ describe("AppInitializer", () => {
       );
       setUrlSearch("/?demo=true");
       const { unmount } = render(<AppInitializer />);
-      // initDemo is paused at setMasterPasswordFlag
-      unmount(); // cleanup sets cancelled = true
-      // Let setMasterPasswordFlag resolve -> initDemo continues to initDB
+      // Let the demo initializer finish its dynamic imports and pause at the
+      // pending initDB call. The master-password flag is deliberately set
+      // only after the demo DB exists (commit 87a4c4f), so initDB is the
+      // pause point now, not setMasterPasswordFlag.
       await act(async () => {
-        resolveFlag!();
+        await vi.dynamicImportSettled();
+        vi.advanceTimersByTime(0);
       });
-      // resolveInitDB is now assigned
+      // initDemo is paused at initDemoDatabase -> initDB
+      unmount(); // cleanup sets cancelled = true
+      // Let initDB resolve -> initDemo sees cancelled and returns before
+      // setMasterPasswordFlag/unlock.
       await act(async () => {
         resolveInitDB!();
       });
+      expect(mocks.mockSetMasterPasswordFlag).not.toHaveBeenCalled();
       expect(mocks.mockUnlock).not.toHaveBeenCalled();
     });
   });

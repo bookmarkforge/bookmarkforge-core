@@ -29,7 +29,10 @@ const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`;
 
 const previewServer = {
   command: `npm run preview -- --host 127.0.0.1 --port ${port}`,
-  url: baseURL,
+  // / has no index.html in the built bundle (the SPA shell lives at /app and
+  // hosts serve the landing at / via redirects), so / answers 404 and
+  // Playwright's readiness probe never sees a ready status. Probe /app.
+  url: `${baseURL}/app`,
   // Fresh preview per run: a stale preview serving an OLD dist/ would let a
   // KDF-flag regression pass ("green" against yesterday's bundle).
   reuseExistingServer: false,

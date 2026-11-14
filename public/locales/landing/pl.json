@@ -6,11 +6,11 @@
   "description": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. Jedna płatność: $59 dostęp na zawsze w cenie early bird (oszczędzasz $20 przed ceną regularną). Free: 500 zakładek.",
   "ogTitle": "BookmarkForge: prywatny lokalny menedżer zakładek z listą do przeczytania",
   "ogDescription": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. Jedna płatność: $59 dostęp na zawsze w cenie early bird (oszczędzasz $20 przed ceną regularną). Free: 500 zakładek.",
-  "ogImage": "https://bookmarkforgeapp.com/og-image.png",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "ogImageAlt": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. 59 dolarów raz. Free: 500 zakładek.",
   "twitterTitle": "BookmarkForge: prywatny lokalny menedżer zakładek z listą do przeczytania",
   "twitterDescription": "Raindrop trzyma Twoje zakładki na swoich serwerach. BookmarkForge trzyma je na Twoim komputerze — zamknięte tak, że nawet my ich nie odczytamy. Jedna płatność: $59 dostęp na zawsze w cenie early bird (oszczędzasz $20 przed ceną regularną). Free: 500 zakładek.",
-  "twitterImage": "https://bookmarkforgeapp.com/og-image.png",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
   "skipLink": "Przejdź do treści głównej",
   "navBrandAria": "Strona główna BookmarkForge",
   "navAriaLabel": "Główna nawigacja",
@@ -31,26 +31,26 @@
   "githubAria": "Dodaj gwiazdkę BookmarkForge na GitHubie",
   "hero": {
     "badge": "Jednorazowa opłata · Bez subskrypcji",
-    "title": "Wszystko, co zapisujesz, zostaje na Twoim komputerze. <span class=\"accent-text\">Wszystko.</span>",
-    "subtitle": "Raindrop trzyma Twoje zakładki na swoich serwerach — i każdego roku każe płacić. BookmarkForge trzyma je na Twoim komputerze, zamknięte kluczem, który masz tylko Ty. Bez kont. Bez opłat miesięcznych. Bez nikogo, kto zagląda Ci przez ramię.",
-    "ctaPrimary": "Wypróbuj od razu (bez konta)",
-    "ctaSecondary": "Zobacz cennik",
+    "title": "Prywatny menedżer zakładek, który <span class=\"accent-text\">trzyma wszystko na twoim urządzeniu.</span>",
+    "subtitle": "Dla badaczy, studentów i wszystkich, którzy wolą nie oddawać historii czytania firmie chmurowej. Zapisuj strony, artykuły i PDF-y, znajduj je po słowie kluczowym lub znaczeniu, a wszystko trzymaj zaszyfrowane na własnym komputerze. Bez konta. Bez subskrypcji.",
+    "ctaPrimary": "Zacznij za darmo — bez rejestracji",
+    "ctaSecondary": "Zobacz, jak to działa",
     "pillars": [
       {
-        "strong": "Prywatność",
-        "text": "Twoje zapisane strony nigdy nie opuszczają Twojego komputera"
+        "strong": "Prywatny",
+        "text": "zaszyfrowany na twoim urządzeniu"
       },
       {
-        "strong": "Zamknięte kluczem",
-        "text": "nawet my nie odczytamy Twoich zakładek"
+        "strong": "Twój na zawsze",
+        "text": "bez subskrypcji i opłat miesięcznych"
       },
       {
-        "strong": "Bez sieci",
-        "text": "działa w samolocie, w tunelu, wszędzie"
+        "strong": "Działa offline",
+        "text": "zapisuj i czytaj wszędzie, nawet bez internetu"
       },
       {
-        "strong": "Zapłać raz",
-        "text": "$59 dostęp na zawsze w cenie early bird (oszczędzasz $20 przed ceną regularną)"
+        "strong": "Darmowy na zawsze",
+        "text": "500 zakładek za darmo, Pro tylko jeśli chcesz więcej"
       }
     ],
     "announce": "⚡ Lokalne tłumaczenie AI (wkrótce)"
@@ -401,15 +401,11 @@
         "cta": "Weź Pro za $59 w Early Bird",
         "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
         "ctaClass": "btn-primary",
-        "priceWas": "$79",
         "priceSub": "potem $79 standard",
-        "sla": "Wsparcie: e-mail 48h (pon.–pt.)",
-        "cta2Href": "https://whop.com/checkout/plan_wFiqyaojHKXmG",
-        "cta2": "Zdobądź Pro $79 Regular",
-        "cta2Class": "btn-secondary"
+        "sla": "Wsparcie: e-mail 48h (pon.–pt.)"
       }
     ],
-    "legal": "Lifetime license for BookmarkForge v1. Includes 12 months of all updates (features, bugfixes, security). After 12 months, security updates forever. Future major versions (v2, v3) 60% off for existing owners. 30-day refund via Whop. <strong>Lifetime means lifetime of v1, not lifetime of the product.</strong> <a href=\"/privacy-and-terms.html#terms\">Terms</a> · <a href=\"/help-pl#pricing\">Learn more</a>"
+    "legal": "Płatność jednorazowa · 12 miesięcy aktualizacji w cenie · v1 działa na zawsze · 30-dniowa gwarancja zwrotu pieniędzy. <a href=\"/privacy-and-terms.html#terms\">Warunki</a>"
   },
   "faq": {
     "title": "Najczęstsze pytania",
@@ -502,7 +498,8 @@
         "Kontakt"
       ],
       "helpCenter": "Centrum pomocy",
-      "errorCodes": "Kody błędów"
+      "errorCodes": "Kody błędów",
+      "hours": "Odpowiedzi w ciągu 48 h, pon–pt (CET)"
     },
     "copyright": "© 2026 BookmarkForge. Wszelkie prawa zastrzeżone.",
     "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",

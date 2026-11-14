@@ -708,7 +708,7 @@ describe("database.ts - initDB, getDB, destroyDB", () => {
   });
 
   afterEach(async () => {
-    // Restaurar un mock de deleteDatabase que resuelva onsuccess: los
+    // Restore a deleteDatabase mock that resolves onsuccess: the
     // edge-case tests leave controllable versions that never resolve and
     // would hang destroyDB() of this hook (hook timeout of 60s).
     (globalThis.indexedDB.deleteDatabase as any).mockImplementation((): any => {
@@ -1837,7 +1837,7 @@ describe("database.ts - initDB, getDB, destroyDB", () => {
       const initDbPromise = initDB();
       const getResult = await getDB();
       expect(getResult).toBeNull();
-      // ADR-019: el error crudo se clasifica como DB_INACCESSIBLE.
+      // ADR-019: the raw error is classified as DB_INACCESSIBLE.
       await expect(initDbPromise).rejects.toThrow("Database inaccessible");
     });
 
@@ -2182,7 +2182,7 @@ describe("database.ts - initDB, getDB, destroyDB", () => {
           error: null,
         };
         finishDelete = () => {
-          // destroyDB ya seteo req.onsuccess = () => resolve() en este req
+          // destroyDB already set req.onsuccess = () => resolve() on this req
           Promise.resolve().then(() => req.onsuccess?.());
         };
         return req;
@@ -2197,7 +2197,7 @@ describe("database.ts - initDB, getDB, destroyDB", () => {
       const secondDestroy = mod.destroyDB();
 
       // Esperamos a que destroyDB llegue a deleteDatabase y asigne el
-      // callback (destroy es async: deleteDatabase se invoca tras microtasks).
+      // callback (destroy is async: deleteDatabase is invoked after microtasks).
       await vi.waitFor(() => {
         expect(finishDelete).not.toBeNull();
       });
@@ -2270,7 +2270,7 @@ describe("database.ts - initDB, getDB, destroyDB", () => {
       await mod.initDB();
 
       // Iniciamos destroy (cuelga en deleteDatabase; dbInstance ya nulled).
-      // destroyDB eventualmente rechaza (dbDestroyError se relanza al final).
+      // destroyDB eventually rejects (dbDestroyError is rethrown at the end).
       // We suppress the unhandled rejection that vitest would detect.
       const destroyP = mod.destroyDB().catch(() => { /* INTENTIONAL SILENCE: this test intentionally observes rejection without an unhandled-promise warning. */ });
 

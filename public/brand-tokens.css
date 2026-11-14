@@ -18,7 +18,10 @@
 @font-face {
   font-family: 'Inter Variable';
   font-style: normal;
-  font-display: swap;
+  /* optional (not swap): the landing preloads this face, so it arrives in
+     time; when it doesn't, the system fallback stays instead of swapping
+     mid-render — that swap was the landing's largest CLS source. */
+  font-display: optional;
   font-weight: 100 900;
   src: url(/fonts/inter-latin-wght-normal.woff2) format('woff2-variations');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
@@ -29,7 +32,7 @@
 @font-face {
   font-family: 'Inter Variable';
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
   font-weight: 100 900;
   src: url(/fonts/inter-latin-ext-wght-normal.woff2) format('woff2-variations');
   unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF,
@@ -136,16 +139,20 @@
   /* Text on accent-colored fills */
   --text-on-accent: #ffffff;
 
-  --accent-primary: #0284c7;
-  --accent-secondary: #0369a1;
-  --accent-glow: rgba(2, 132, 199, 0.25);
-  --accent-primary-hover: rgba(2, 132, 199, 0.12);
-  --accent-primary-glow: rgba(2, 132, 199, 0.30);
+  /* #0369a1 (was #0284c7): white text on the old accent measured 4.09:1 —
+     under the 4.5:1 WCAG minimum on every "Try it free" button. The deeper
+     step gives ≈5.9:1; --accent-secondary moves one step darker so the
+     hover state still reads as a change. */
+  --accent-primary: #0369a1;
+  --accent-secondary: #075985;
+  --accent-glow: rgba(3, 105, 161, 0.25);
+  --accent-primary-hover: rgba(3, 105, 161, 0.12);
+  --accent-primary-glow: rgba(3, 105, 161, 0.30);
   --text-on-accent: #ffffff;
 
-  --state-active-border: #0284c7;
+  --state-active-border: #0369a1;
   --state-inactive-border: #cbd5e1;
-  --state-hover-bg: rgba(2, 132, 199, 0.08);
+  --state-hover-bg: rgba(3, 105, 161, 0.08);
   --state-selected-bg: #bae6fd;
 
   --color-success: #16a34a;
@@ -163,7 +170,7 @@
   --danger-soft: rgba(220, 38, 38, 0.12);
   --danger-soft-border: rgba(220, 38, 38, 0.25);
 
-  --toggle-on: #0284c7;
+  --toggle-on: #0369a1;
   --toggle-off: #cbd5e1;
 
   --divider: #cbd5e1;
@@ -172,10 +179,10 @@
   --modal-overlay: rgba(0, 0, 0, 0.50);
   --scrim-on-accent: rgba(0, 0, 0, 0.20);
 
-  --accent-soft: rgba(2, 132, 199, 0.10);
-  --accent-faint: rgba(2, 132, 199, 0.05);
-  --accent-glow-soft: rgba(2, 132, 199, 0.18);
-  --accent-primary-glow-strong: rgba(2, 132, 199, 0.40);
+  --accent-soft: rgba(3, 105, 161, 0.10);
+  --accent-faint: rgba(3, 105, 161, 0.05);
+  --accent-glow-soft: rgba(3, 105, 161, 0.18);
+  --accent-primary-glow-strong: rgba(3, 105, 161, 0.40);
 
   /* Border radius & spacing same as dark */
 }

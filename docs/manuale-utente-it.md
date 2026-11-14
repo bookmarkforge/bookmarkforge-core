@@ -196,7 +196,7 @@ Il cervello dell'applicazione:
 - Nessun tracciamento costante
 - Prova di licenza firmata con RSA-PSS (SHA-256, salt 32)
 - Ri-validazione ogni 48 ore quando connesso
-- Prove più vecchie di 30 giorni sono rifiutate dal server di entitlement
+- La grazia offline mantiene Pro fino alla scadenza della licenza — le prove non hanno un'età massima fissa
 
 ---
 

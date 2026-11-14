@@ -171,7 +171,7 @@ export class HttpClient {
         },
       });
     } catch (error) {
-      // Audit M-07: interceptor failures must surface as normalized
+      // interceptor failures must surface as normalized
       // HttpError values (isTimeout/isNetworkError/status defined) so
       // callers never crash reading undefined fields.
       throw this.normalizeError(error as Error, fullUrl);
@@ -204,7 +204,7 @@ export class HttpClient {
         const requestMethod = (finalConfig.method || "GET").toUpperCase();
         const isIdempotent = ["GET", "HEAD", "OPTIONS"].includes(requestMethod);
 
-        // L-08: hoist the Idempotency-Key check into a named constant with
+        // hoist the Idempotency-Key check into a named constant with
         // explicit undefined/null handling so the retry condition's precedence
         // is readable (and the Headers wrapper is only built when needed).
         const hasIdempotencyKey = (() => {

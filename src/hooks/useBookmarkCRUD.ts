@@ -16,7 +16,7 @@ const MAX_IMPORTED_TITLE_LENGTH = 500;
  * Links processed per batch (hash + existence query + insert). Batching keeps
  * the import off the critical path: each batch ends with a macrotask yield so
  * the UI can paint progress and handle cancellation between batches, instead
- * of one unbroken sequential pass over up to 100k links (audit M-10).
+ * of one unbroken sequential pass over up to 100k links.
  */
 const HTML_IMPORT_BATCH_SIZE = 200;
 
@@ -325,7 +325,7 @@ export function useBookmarkCRUD(t: TranslationFunction) {
           const existingDocs = await db.bookmarks
             .find({ selector: { urlHash: { $in: urlHashes } } })
             .exec();
-          // A4: stored urlHash is a per-vault keyed HMAC — it cannot be
+          // stored urlHash is a per-vault keyed HMAC — it cannot be
           // compared against the plain SHA-256 candidates. The decrypted
           // `url` is the same identity the hash was computed from, so URL
           // equality is the equivalent dedup check.

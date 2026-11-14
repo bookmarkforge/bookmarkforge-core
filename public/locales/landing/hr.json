@@ -275,6 +275,10 @@
       {
         "title": "Samo Vercel nas hosta — nula analitike",
         "text": "Stranica radi isključivo na Vercelu bez ikakve analitike: bez trackera, bez fingerprintinga, bez skripti trećih strana. Provjerite sami na kartici Mreža u svom pregledniku."
+      },
+      {
+        "title": "Oblaczni AI je neobavezan",
+        "text": "Lokalni AI radi u potpunosti na vašem uređaju. Ako dodate vlastiti API ključ za pružatelja usluga u oblaku, samo vaši upiti odlaze k njemu — oznake nikada."
       }
     ]
   },

@@ -631,6 +631,10 @@
             <h3>Only Vercel hosts us — zero analytics</h3>
             <p>The site runs exclusively on Vercel with no analytics of any kind: no trackers, no fingerprinting, no third-party scripts. Verify it yourself in your browser's network tab.</p>
           </div>
+          <div class="feature-item">
+            <h3>Cloud AI is opt-in</h3>
+            <p>Local AI runs entirely on your device. If you add your own API key for a cloud provider, only your prompts go to them — your bookmarks never do.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">Start free — no signup</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">Replies within 48 h, Mon–Fri (CET)</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. All rights reserved.</p>
       <a href="/privacy-and-terms.html">Privacy Policy</a> · <a href="/privacy-and-terms.html#terms">Terms of Service</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

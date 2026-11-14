@@ -631,6 +631,10 @@
             <h3>Pouze Vercel nás hostuje — nula analytiky</h3>
             <p>Web běží výhradně na Vercelu bez jakékoli analytiky: žádné trackery, žádný fingerprinting, žádné skripty třetích stran. Ověřte si to sami na kartě sítě ve svém prohlížeči.</p>
           </div>
+          <div class="feature-item">
+            <h3>Cloudová AI je volitelná</h3>
+            <p>Místní AI běží zcela na vašem zařízení. Pokud přidáte vlastní API klíč pro cloudového poskytovatele, odcházejí k němu jen vaše prompty — záložky nikdy.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">Začít zdarma — bez registrace</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">Odpovídáme do 48 hodin, po–pá (CET)</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. Všechna práva vyhrazena.</p>
       <a href="/privacy-and-terms.html">Zásady ochrany osobních údajů</a> · <a href="/privacy-and-terms.html#terms">Podmínky služby</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

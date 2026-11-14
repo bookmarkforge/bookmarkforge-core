@@ -275,6 +275,10 @@
       {
         "title": "Seul Vercel nous héberge — zéro analytique",
         "text": "Le site fonctionne exclusivement sur Vercel sans aucune analytique : pas de traceurs, pas d'empreinte digitale, pas de scripts tiers. Vérifiez-le vous-même dans l'onglet réseau de votre navigateur."
+      },
+      {
+        "title": "L'IA cloud est optionnelle",
+        "text": "L'IA locale fonctionne entièrement sur votre appareil. Si vous ajoutez votre propre clé API pour un fournisseur cloud, seuls vos prompts lui sont envoyés — jamais vos favoris."
       }
     ]
   },

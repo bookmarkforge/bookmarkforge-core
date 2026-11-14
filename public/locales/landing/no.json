@@ -275,6 +275,10 @@
       {
         "title": "Kun Vercel hoster oss — null analyse",
         "text": "Nettstedet kjører utelukkende på Vercel uten analyser av noe slag: ingen sporere, ingen fingerprinting, ingen tredjepartsskript. Verifiser det selv i nettleserens nettverksfane."
+      },
+      {
+        "title": "Sky-AI er valgfritt",
+        "text": "Lokal AI kjører helt på enheten din. Hvis du legger til din egen API-nøkkel for en skytilbyder, går bare promptene dine til dem — bokmerkene dine aldri."
       }
     ]
   },

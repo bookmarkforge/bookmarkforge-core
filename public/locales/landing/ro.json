@@ -275,6 +275,10 @@
       {
         "title": "Doar Vercel ne găzduiește — zero analitice",
         "text": "Site-ul rulează exclusiv pe Vercel fără analitice de niciun fel: fără trackere, fără fingerprinting, fără scripturi terțe. Verifică tu însuți în fila de rețea a browserului."
+      },
+      {
+        "title": "AI-ul din cloud este opțional",
+        "text": "AI-ul local rulează integral pe dispozitivul tău. Dacă adaugi propria cheie API pentru un furnizor cloud, doar prompturile tale ajung la el — semnele de carte niciodată."
       }
     ]
   },

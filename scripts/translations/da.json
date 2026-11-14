@@ -282,6 +282,10 @@
       {
         "title": "Kun Vercel hoster os — nul analyser",
         "text": "Siden kører udelukkende på Vercel uden analyser af nogen art: ingen trackere, ingen fingerprinting, ingen tredjepartsscripts. Verificer det selv i netværksfanen i din browser."
+      },
+      {
+        "title": "Cloud-AI er valgfri",
+        "text": "Lokal AI kører fuldstændig på din enhed. Hvis du tilføjer din egen API-nøgle til en cloud-udbyder, går kun dine prompts til dem — dine bogmærker aldrig."
       }
     ]
   },

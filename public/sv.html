@@ -631,6 +631,10 @@
             <h3>Endast Vercel hostar oss — noll analys</h3>
             <p>Webbplatsen körs enbart på Vercel utan analys av något slag: inga trackers, ingen fingerprinting, inga tredjepartsskript. Verifiera det själv i webbläsarens nätverksflik.</p>
           </div>
+          <div class="feature-item">
+            <h3>Moln-AI är valfritt</h3>
+            <p>Lokal AI körs helt på din enhet. Om du lägger till din egen API-nyckel för en molnleverantör går bara dina prompts till dem — dina bokmärken aldrig.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">Börja gratis — ingen registrering</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">Svar inom 48 timmar, mån–fre (CET)</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. Alla rättigheter förbehållna.</p>
       <a href="/privacy-and-terms.html">Integritetspolicy</a> · <a href="/privacy-and-terms.html#terms">Användarvillkor</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

@@ -275,6 +275,10 @@
       {
         "title": "Apenas a Vercel nos aloja — zero análises",
         "text": "O site funciona exclusivamente na Vercel sem análises de nenhum tipo: sem rastreadores, sem fingerprinting, sem scripts de terceiros. Verifique você mesmo no separador de rede do seu navegador."
+      },
+      {
+        "title": "A IA na nuvem é opcional",
+        "text": "A IA local corre inteiramente no seu dispositivo. Se adicionar a sua própria chave de API para um fornecedor na nuvem, apenas os seus prompts vão para ele — os seus marcadores nunca."
       }
     ]
   },

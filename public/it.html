@@ -631,6 +631,10 @@
             <h3>Solo Vercel ci ospita — zero analisi</h3>
             <p>Il sito funziona esclusivamente su Vercel senza analisi di alcun tipo: nessun tracciatore, nessun fingerprinting, nessuno script di terze parti. Verificalo tu stesso nella scheda rete del tuo browser.</p>
           </div>
+          <div class="feature-item">
+            <h3>L'IA cloud è facoltativa</h3>
+            <p>L'IA locale gira interamente sul tuo dispositivo. Se aggiungi la tua chiave API per un provider cloud, solo i tuoi prompt vanno a lui — i tuoi segnalibri mai.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">Inizia gratis — senza registrazione</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -782,7 +791,7 @@
           <li><a href="/readwise-alternative.html">Readwise</a></li>
           <li><a href="/omnivore-alternative.html">Omnivore</a></li>
           <li><a href="/instapaper-alternative.html">Instapaper</a></li>
-          <li><a href="/privacy-and-terms.html">Privacy e Termini</a></li>
+          <li><a href="/it/privacy-and-terms.html">Privacy e Termini</a></li>
         </ul>
       </div>
       <div class="footer-links">
@@ -796,11 +805,6 @@
         <p class="footer-hours">Risposte entro 48 ore, lun–ven (CET)</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. Tutti i diritti riservati.</p>
       <a href="/it/privacy-and-terms.html">Informativa sulla privacy</a> · <a href="/it/privacy-and-terms.html#terms">Termini di servizio</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

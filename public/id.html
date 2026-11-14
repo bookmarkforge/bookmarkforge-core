@@ -631,6 +631,10 @@
             <h3>Hanya Vercel yang menghosting kami — nol analitik</h3>
             <p>Situs ini berjalan secara eksklusif di Vercel tanpa analitik jenis apa pun: tanpa pelacak, tanpa fingerprinting, tanpa skrip pihak ketiga. Verifikasi sendiri di tab jaringan browser Anda.</p>
           </div>
+          <div class="feature-item">
+            <h3>AI cloud bersifat opsional</h3>
+            <p>AI lokal berjalan sepenuhnya di perangkat Anda. Jika Anda menambahkan kunci API sendiri untuk penyedia cloud, hanya prompt Anda yang dikirim ke sana — bookmark Anda tidak pernah.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">Mulai gratis — tanpa daftar</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">Balasan dalam 48 jam, Sen–Jum (CET)</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. Hak cipta dilindungi.</p>
       <a href="/privacy-and-terms.html">Kebijakan Privasi</a> · <a href="/privacy-and-terms.html#terms">Syarat Layanan</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

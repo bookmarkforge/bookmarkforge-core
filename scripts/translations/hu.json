@@ -282,6 +282,10 @@
       {
         "title": "Csak a Vercel hostol minket — nulla analitika",
         "text": "Az oldal kizárólag a Vercelen fut bármilyen analitika nélkül: nincsenek nyomkövetők, ujjlenyomatolás vagy harmadik féltől származó szkriptek. Ellenőrizd magad a böngésződ hálózati fülén."
+      },
+      {
+        "title": "A felhőalapú AI opcionális",
+        "text": "A helyi AI teljesen az eszközödön fut. Ha saját API-kulcsot adsz meg egy felhőszolgáltatónak, csak a promptjaid mennek hozzá — a könyvjelzőid soha."
       }
     ]
   },

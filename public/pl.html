@@ -631,6 +631,10 @@
             <h3>Tylko Vercel nas hostuje — zero analityki</h3>
             <p>Strona działa wyłącznie na Vercel bez jakiejkolwiek analityki: bez trackerów, bez fingerprintingu, bez skryptów stron trzecich. Sprawdź sam w zakładce sieciowej swojej przeglądarki.</p>
           </div>
+          <div class="feature-item">
+            <h3>AI w chmurze jest opcjonalne</h3>
+            <p>Lokalna AI działa w całości na Twoim urządzeniu. Jeśli dodasz własny klucz API dostawcy chmurowego, do niego trafiają tylko Twoje prompty — zakładki nigdy.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">Zacznij za darmo — bez rejestracji</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">Odpowiedzi w ciągu 48 h, pon–pt (CET)</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. Wszelkie prawa zastrzeżone.</p>
       <a href="/privacy-and-terms.html">Polityka prywatności</a> · <a href="/privacy-and-terms.html#terms">Regulamin</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

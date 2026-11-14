@@ -631,6 +631,10 @@
             <h3>Kun Vercel hoster os — nul analyser</h3>
             <p>Siden kører udelukkende på Vercel uden analyser af nogen art: ingen trackere, ingen fingerprinting, ingen tredjepartsscripts. Verificer det selv i netværksfanen i din browser.</p>
           </div>
+          <div class="feature-item">
+            <h3>Cloud-AI er valgfri</h3>
+            <p>Lokal AI kører fuldstændig på din enhed. Hvis du tilføjer din egen API-nøgle til en cloud-udbyder, går kun dine prompts til dem — dine bogmærker aldrig.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">Start gratis — ingen tilmelding</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">Svar inden for 48 timer, man–fre (CET)</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. Alle rettigheder forbeholdes.</p>
       <a href="/privacy-and-terms.html">Privatlivspolitik</a> · <a href="/privacy-and-terms.html#terms">Servicevilkår</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

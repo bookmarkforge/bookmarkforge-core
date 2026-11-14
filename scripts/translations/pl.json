@@ -282,6 +282,10 @@
       {
         "title": "Tylko Vercel nas hostuje — zero analityki",
         "text": "Strona działa wyłącznie na Vercel bez jakiejkolwiek analityki: bez trackerów, bez fingerprintingu, bez skryptów stron trzecich. Sprawdź sam w zakładce sieciowej swojej przeglądarki."
+      },
+      {
+        "title": "AI w chmurze jest opcjonalne",
+        "text": "Lokalna AI działa w całości na Twoim urządzeniu. Jeśli dodasz własny klucz API dostawcy chmurowego, do niego trafiają tylko Twoje prompty — zakładki nigdy."
       }
     ]
   },

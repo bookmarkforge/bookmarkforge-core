@@ -631,6 +631,10 @@
             <h3>רק Vercel מארח אותנו — אפס אנליטיקה</h3>
             <p>האתר רץ בלעדית על Vercel ללא כל אנליטיקה: בלי עוקבים, בלי טביעת אצבע, בלי סקריפטים של צד שלישי. אמת זאת בעצמך בלשונית הרשת של הדפדפן שלך.</p>
           </div>
+          <div class="feature-item">
+            <h3>בינה מלאכותית בענן היא אופציונלית</h3>
+            <p>הבינה המלאכותית המקומית פועלת כולה במכשיר שלך. אם תוסיף מפתח API משלך לספק ענן, רק ה-promptים שלך נשלחים אליו — הסימניות שלך לעולם לא.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">התחילו בחינם — בלי הרשמה</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">מענה תוך 48 שעות, ב׳–ו׳ (CET)</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. כל הזכויות שמורות.</p>
       <a href="/privacy-and-terms.html">מדיניות פרטיות</a> · <a href="/privacy-and-terms.html#terms">תנאי שירות</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

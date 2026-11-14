@@ -631,6 +631,10 @@
             <h3>仅由 Vercel 托管——零分析</h3>
             <p>本站仅在 Vercel 上运行，没有任何形式的分析：无跟踪器、无设备指纹、无第三方脚本。你可以在浏览器的网络标签页中自行验证。</p>
           </div>
+          <div class="feature-item">
+            <h3>云端 AI 是可选的</h3>
+            <p>本地 AI 完全在您的设备上运行。如果您为云服务商添加自己的 API 密钥，只有您的提示词会发送给他们 — 书签永远不会。</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">免费开始 — 无需注册</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">48小时内回复，周一至周五（CET）</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge。保留所有权利。</p>
       <a href="/privacy-and-terms.html">隐私政策</a> · <a href="/privacy-and-terms.html#terms">服务条款</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

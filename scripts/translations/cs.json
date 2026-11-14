@@ -282,6 +282,10 @@
       {
         "title": "Pouze Vercel nás hostuje — nula analytiky",
         "text": "Web běží výhradně na Vercelu bez jakékoli analytiky: žádné trackery, žádný fingerprinting, žádné skripty třetích stran. Ověřte si to sami na kartě sítě ve svém prohlížeči."
+      },
+      {
+        "title": "Cloudová AI je volitelná",
+        "text": "Místní AI běží zcela na vašem zařízení. Pokud přidáte vlastní API klíč pro cloudového poskytovatele, odcházejí k němu jen vaše prompty — záložky nikdy."
       }
     ]
   },

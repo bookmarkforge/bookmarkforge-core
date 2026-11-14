@@ -275,6 +275,10 @@
       {
         "title": "Chỉ Vercel lưu trữ — không phân tích",
         "text": "Trang web chạy độc quyền trên Vercel mà không có bất kỳ phân tích nào: không trình theo dõi, không dấu vân tay, không tập lệnh bên thứ ba. Hãy tự xác minh trong tab mạng của trình duyệt."
+      },
+      {
+        "title": "AI đám mây là tùy chọn",
+        "text": "AI cục bộ chạy hoàn toàn trên thiết bị của bạn. Nếu bạn thêm khóa API của riêng mình cho nhà cung cấp đám mây, chỉ có prompt của bạn được gửi đến họ — bookmark của bạn không bao giờ."
       }
     ]
   },

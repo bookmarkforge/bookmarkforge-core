@@ -631,6 +631,10 @@
             <h3>Alleen Vercel host ons — nul analyses</h3>
             <p>De site draait exclusief op Vercel zonder enige vorm van analyse: geen trackers, geen fingerprinting, geen scripts van derden. Verifieer het zelf in het netwerktabblad van je browser.</p>
           </div>
+          <div class="feature-item">
+            <h3>Cloud-AI is optioneel</h3>
+            <p>Lokale AI draait volledig op uw apparaat. Als u uw eigen API-sleutel voor een cloudprovider toevoegt, gaan alleen uw prompts naar hen — uw bladwijzers nooit.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">Begin gratis — zonder aanmelding</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">Antwoorden binnen 48 uur, ma–vr (CET)</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. Alle rechten voorbehouden.</p>
       <a href="/privacy-and-terms.html">Privacybeleid</a> · <a href="/privacy-and-terms.html#terms">Servicevoorwaarden</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

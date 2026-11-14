@@ -311,6 +311,10 @@
       {
         "title": "Only Vercel hosts us — zero analytics",
         "text": "The site runs exclusively on Vercel with no analytics of any kind: no trackers, no fingerprinting, no third-party scripts. Verify it yourself in your browser's network tab."
+      },
+      {
+        "title": "Cloud AI is opt-in",
+        "text": "Local AI runs entirely on your device. If you add your own API key for a cloud provider, only your prompts go to them — your bookmarks never do."
       }
     ]
   },

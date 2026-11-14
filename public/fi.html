@@ -631,6 +631,10 @@
             <h3>Vain Vercel hostaa meidät — ei analytiikkaa</h3>
             <p>Sivusto toimii yksinomaan Vercelissä ilman minkäänlaista analytiikkaa: ei seurantaa, ei sormenjälkiä, ei kolmannen osapuolen skriptejä. Vahvista itse selaimen verkko-välilehdellä.</p>
           </div>
+          <div class="feature-item">
+            <h3>Pilvi-AI on valinnainen</h3>
+            <p>Paikallinen AI toimii täysin laitteellasi. Jos lisäät oman API-avaimesi pilvipalveluntarjoajalle, vain kehotteesi menevät sille — kirjanmerkkisi eivät koskaan.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">Aloita ilmaiseksi — ilman rekisteröitymistä</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">Vastaukset 48 tunnin kuluessa, ma–pe (CET)</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. Kaikki oikeudet pidätetään.</p>
       <a href="/privacy-and-terms.html">Tietosuojakäytäntö</a> · <a href="/privacy-and-terms.html#terms">Käyttöehdot</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

@@ -282,6 +282,10 @@
       {
         "title": "Hanya Vercel yang menghosting kami — nol analitik",
         "text": "Situs ini berjalan secara eksklusif di Vercel tanpa analitik jenis apa pun: tanpa pelacak, tanpa fingerprinting, tanpa skrip pihak ketiga. Verifikasi sendiri di tab jaringan browser Anda."
+      },
+      {
+        "title": "AI cloud bersifat opsional",
+        "text": "AI lokal berjalan sepenuhnya di perangkat Anda. Jika Anda menambahkan kunci API sendiri untuk penyedia cloud, hanya prompt Anda yang dikirim ke sana — bookmark Anda tidak pernah."
       }
     ]
   },

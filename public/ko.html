@@ -631,6 +631,10 @@
             <h3>Vercel만 호스팅 — 분석 제로</h3>
             <p>이 사이트는 Vercel에서만 실행되며 어떤 종류의 분석도 없습니다: 트래커 없음, 핑거프린팅 없음, 서드파티 스크립트 없음. 브라우저의 네트워크 탭에서 직접 확인하세요.</p>
           </div>
+          <div class="feature-item">
+            <h3>클라우드 AI는 선택 사항입니다</h3>
+            <p>로컬 AI는 전적으로 기기에서 실행됩니다. 클라우드 제공업체의 API 키를 추가하면 프롬프트만 전송됩니다 — 북마크는 절대 전송되지 않습니다.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">무료로 시작 — 가입 불필요</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">48시간 이내 답변, 월–금 (CET)</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. 모든 권리 보유.</p>
       <a href="/privacy-and-terms.html">개인정보 처리방침</a> · <a href="/privacy-and-terms.html#terms">서비스 약관</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

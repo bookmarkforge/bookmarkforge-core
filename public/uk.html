@@ -631,6 +631,10 @@
             <h3>Хостинг лише на Vercel — нуль аналітики</h3>
             <p>Сайт працює виключно на Vercel без жодної аналітики: без трекерів, без фінгерпринтингу, без сторонніх скриптів. Перевірте самі у вкладці «Мережа» вашого браузера.</p>
           </div>
+          <div class="feature-item">
+            <h3>Хмарний ШІ — за бажанням</h3>
+            <p>Локальний ШІ працює повністю на вашому пристрої. Якщо ви додасте власний API-ключ хмарного провайдера, до нього йдуть лише ваші запити — закладки ніколи.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">Почати безкоштовно — без реєстрації</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">Відповіді протягом 48 год, пн–пт (CET)</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. Усі права захищено.</p>
       <a href="/privacy-and-terms.html">Політика конфіденційності</a> · <a href="/privacy-and-terms.html#terms">Умови використання</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

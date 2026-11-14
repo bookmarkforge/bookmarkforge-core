@@ -282,6 +282,10 @@
       {
         "title": "Alleen Vercel host ons — nul analyses",
         "text": "De site draait exclusief op Vercel zonder enige vorm van analyse: geen trackers, geen fingerprinting, geen scripts van derden. Verifieer het zelf in het netwerktabblad van je browser."
+      },
+      {
+        "title": "Cloud-AI is optioneel",
+        "text": "Lokale AI draait volledig op uw apparaat. Als u uw eigen API-sleutel voor een cloudprovider toevoegt, gaan alleen uw prompts naar hen — uw bladwijzers nooit."
       }
     ]
   },

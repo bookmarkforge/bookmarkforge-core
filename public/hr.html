@@ -631,6 +631,10 @@
             <h3>Samo Vercel nas hosta — nula analitike</h3>
             <p>Stranica radi isključivo na Vercelu bez ikakve analitike: bez trackera, bez fingerprintinga, bez skripti trećih strana. Provjerite sami na kartici Mreža u svom pregledniku.</p>
           </div>
+          <div class="feature-item">
+            <h3>Oblaczni AI je neobavezan</h3>
+            <p>Lokalni AI radi u potpunosti na vašem uređaju. Ako dodate vlastiti API ključ za pružatelja usluga u oblaku, samo vaši upiti odlaze k njemu — oznake nikada.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">Započnite besplatno — bez registracije</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">Odgovori unutar 48 h, pon–pet (CET)</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. Sva prava pridržana.</p>
       <a href="/privacy-and-terms.html">Pravila o privatnosti</a> · <a href="/privacy-and-terms.html#terms">Uvjeti korištenja</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

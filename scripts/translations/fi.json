@@ -282,6 +282,10 @@
       {
         "title": "Vain Vercel hostaa meidät — ei analytiikkaa",
         "text": "Sivusto toimii yksinomaan Vercelissä ilman minkäänlaista analytiikkaa: ei seurantaa, ei sormenjälkiä, ei kolmannen osapuolen skriptejä. Vahvista itse selaimen verkko-välilehdellä."
+      },
+      {
+        "title": "Pilvi-AI on valinnainen",
+        "text": "Paikallinen AI toimii täysin laitteellasi. Jos lisäät oman API-avaimesi pilvipalveluntarjoajalle, vain kehotteesi menevät sille — kirjanmerkkisi eivät koskaan."
       }
     ]
   },

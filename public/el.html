@@ -631,6 +631,10 @@
             <h3>Μόνο το Vercel μας φιλοξενεί — μηδενική αναλυτική</h3>
             <p>Ο ιστότοπος λειτουργεί αποκλειστικά στο Vercel χωρίς αναλυτική κανενός είδους: χωρίς ιχνηλάτες, χωρίς δακτυλική αποτύπωση, χωρίς σενάρια τρίτων. Επαληθεύστε το μόνοις σας στην καρτέλα δικτύου του προγράμματος περιήγησής σας.</p>
           </div>
+          <div class="feature-item">
+            <h3>Το cloud AI είναι προαιρετικό</h3>
+            <p>Το τοπικό AI τρέχει εξ ολοκλήρου στη συσκευή σας. Αν προσθέσετε το δικό σας κλειδί API για πάροχο cloud, μόνο τα prompts σας αποστέλλονται σε αυτόν — οι σελιδοδείκτες σας ποτέ.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">Ξεκινήστε δωρεάν — χωρίς εγγραφή</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">Απαντήσεις εντός 48 ωρών, Δευ–Παρ (CET)</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. Με επιφύλαξη παντός δικαιώματος.</p>
       <a href="/privacy-and-terms.html">Πολιτική απορρήτου</a> · <a href="/privacy-and-terms.html#terms">Όροι χρήσης</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

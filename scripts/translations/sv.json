@@ -282,6 +282,10 @@
       {
         "title": "Endast Vercel hostar oss — noll analys",
         "text": "Webbplatsen körs enbart på Vercel utan analys av något slag: inga trackers, ingen fingerprinting, inga tredjepartsskript. Verifiera det själv i webbläsarens nätverksflik."
+      },
+      {
+        "title": "Moln-AI är valfritt",
+        "text": "Lokal AI körs helt på din enhet. Om du lägger till din egen API-nyckel för en molnleverantör går bara dina prompts till dem — dina bokmärken aldrig."
       }
     ]
   },

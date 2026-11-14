@@ -275,6 +275,10 @@
       {
         "title": "Nur Vercel hostet uns — null Analysen",
         "text": "Die Website läuft ausschließlich auf Vercel ganz ohne Analysen: keine Tracker, kein Fingerprinting, keine Drittanbieter-Skripte. Überprüfe es selbst im Netzwerk-Tab deines Browsers."
+      },
+      {
+        "title": "Cloud-KI ist optional",
+        "text": "Die lokale KI läuft vollständig auf Ihrem Gerät. Wenn Sie Ihren eigenen API-Schlüssel für einen Cloud-Anbieter hinzufügen, gehen nur Ihre Prompts an ihn — Ihre Lesezeichen nie."
       }
     ]
   },

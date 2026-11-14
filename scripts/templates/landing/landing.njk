@@ -443,6 +443,18 @@
     <a href="/app" class="btn-primary btn-block">{{ t.hero.ctaPrimary }}</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
+  {% if t.lang == "en" %}
+    {% set legalHref = "/privacy-and-terms.html" %}
+  {% elif t.lang in ["es", "fr", "de", "pt", "it"] %}
+    {% set legalHref = "/" + t.lang + "/privacy-and-terms.html" %}
+  {% else %}
+    {% set legalHref = "/privacy-and-terms.html" %}
+  {% endif %}
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -469,7 +481,7 @@
           <li><a href="/readwise-alternative.html">Readwise</a></li>
           <li><a href="/omnivore-alternative.html">Omnivore</a></li>
           <li><a href="/instapaper-alternative.html">Instapaper</a></li>
-          <li><a href="/privacy-and-terms.html">{{ t.footer.resources.links[1] }}</a></li>
+          <li><a href="{{ legalHref }}">{{ t.footer.resources.links[1] }}</a></li>
         </ul>
       </div>
       <div class="footer-links">
@@ -485,20 +497,8 @@
         <p class="footer-hours">{{ t.footer.support.hours }}</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>{{ t.footer.copyright }}</p>
-      {% if t.lang == "en" %}
-        {% set legalHref = "/privacy-and-terms.html" %}
-      {% elif t.lang in ["es", "fr", "de", "pt", "it"] %}
-        {% set legalHref = "/" + t.lang + "/privacy-and-terms.html" %}
-      {% else %}
-        {% set legalHref = "/privacy-and-terms.html" %}
-      {% endif %}
       <a href="{{ legalHref }}">{{ t.footer.legal[0] }}</a> · <a href="{{ legalHref }}#terms">{{ t.footer.legal[1] }}</a> · <a href="mailto:bookmarkforge@proton.me">{{ t.footer.legal[2] }}</a>
       <span class="github-star">
         <a href="https://github.com/bookmarkforge/bookmarkforge-core" target="_blank" rel="noopener noreferrer" aria-label="{{ t.githubAria }}">

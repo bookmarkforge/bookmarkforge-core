@@ -631,6 +631,10 @@
             <h3>Doar Vercel ne găzduiește — zero analitice</h3>
             <p>Site-ul rulează exclusiv pe Vercel fără analitice de niciun fel: fără trackere, fără fingerprinting, fără scripturi terțe. Verifică tu însuți în fila de rețea a browserului.</p>
           </div>
+          <div class="feature-item">
+            <h3>AI-ul din cloud este opțional</h3>
+            <p>AI-ul local rulează integral pe dispozitivul tău. Dacă adaugi propria cheie API pentru un furnizor cloud, doar prompturile tale ajung la el — semnele de carte niciodată.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">Începe gratuit — fără înregistrare</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">Răspunsuri în 48 de ore, lun–vin (CET)</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. Toate drepturile rezervate.</p>
       <a href="/privacy-and-terms.html">Politica de confidențialitate</a> · <a href="/privacy-and-terms.html#terms">Termeni și condiții</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

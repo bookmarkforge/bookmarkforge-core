@@ -631,6 +631,10 @@
             <h3>ホスティングはVercelのみ — アナリティクスゼロ</h3>
             <p>このサイトはVercel上でのみ動作し、あらゆる種類のアナリティクスがありません：トラッカーなし、フィンガープリンティングなし、サードパーティスクリプトなし。ブラウザのネットワークタブでご自身で確認できます。</p>
           </div>
+          <div class="feature-item">
+            <h3>クラウドAIはオプトインです</h3>
+            <p>ローカルAIはすべてデバイス上で動作します。クラウドプロバイダーのAPIキーを追加した場合、送信されるのはプロンプトだけです — ブックマークは決して送信されません。</p>
+          </div>
         </div>
       </div>
     </section>
@@ -756,6 +760,11 @@
     <a href="/app" class="btn-primary btn-block">無料で始める — 登録不要</a>
   </div>
 
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
@@ -796,11 +805,6 @@
         <p class="footer-hours">48時間以内に返信、月〜金（CET）</p>
       </div>
     </div>
-    <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
-         The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
-         in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
-         the other 24 have no legal page, so their footer points at the English
-         notice directly instead of a URL that only answers through a 301. -->
     <div class="footer-bottom">
       <p>© 2026 BookmarkForge. すべての権利を留保します。</p>
       <a href="/privacy-and-terms.html">プライバシーポリシー</a> · <a href="/privacy-and-terms.html#terms">利用規約</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>

@@ -275,6 +275,10 @@
       {
         "title": "Solo Vercel ci ospita — zero analisi",
         "text": "Il sito funziona esclusivamente su Vercel senza analisi di alcun tipo: nessun tracciatore, nessun fingerprinting, nessuno script di terze parti. Verificalo tu stesso nella scheda rete del tuo browser."
+      },
+      {
+        "title": "L'IA cloud è facoltativa",
+        "text": "L'IA locale gira interamente sul tuo dispositivo. Se aggiungi la tua chiave API per un provider cloud, solo i tuoi prompt vanno a lui — i tuoi segnalibri mai."
       }
     ]
   },

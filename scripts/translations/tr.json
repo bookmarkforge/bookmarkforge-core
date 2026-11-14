@@ -282,6 +282,10 @@
       {
         "title": "Bizi yalnızca Vercel barındırıyor — sıfır analitik",
         "text": "Site yalnızca Vercel üzerinde çalışır ve hiçbir türde analitik içermez: izleyici yok, parmak izi yok, üçüncü taraf betiği yok. Tarayıcınızın ağ sekmesinde kendiniz doğrulayın."
+      },
+      {
+        "title": "Bulut AI isteğe bağlıdır",
+        "text": "Yerel AI tamamen cihazınızda çalışır. Bir bulut sağlayıcısı için kendi API anahtarınızı eklerseniz, yalnızca istemleriniz ona gider — yer imleriniz asla gitmez."
       }
     ]
   },

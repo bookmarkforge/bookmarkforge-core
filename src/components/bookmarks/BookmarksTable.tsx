@@ -412,6 +412,10 @@ export default function BookmarksTable() {
       const bookmarkId = sortedBookmarks[index]?.id;
       return expandedIds.has(bookmarkId || "") ? 200 : 80;
     },
+    // Rows measure themselves via measureElement below: wrapped tags/actions
+    // or expanded content make a row taller than the estimate, and a fixed
+    // height used to let the next absolutely-positioned row paint over it.
+    gap: 8,
     overscan: 5,
   });
 
@@ -523,7 +527,12 @@ export default function BookmarksTable() {
 
       {/* Table */}
       <div className="bg-white dark:bg-[var(--bg-primary)]/40 border border-[var(--divider)] dark:border-[var(--divider)]/50 rounded-2xl overflow-hidden">
-        <div className="grid grid-cols-[48px_1fr_80px] md:grid-cols-[48px_1.5fr_1fr_2fr_1.5fr_120px_180px] text-xs font-bold uppercase tracking-wider ds-border-b ds-bg-topbar ds-text-muted">
+        {/* Single horizontal scroll context for header + rows: on medium
+            widths the 7-column grid needs more room than the viewport and
+            both sections must scroll together to stay aligned. */}
+        <div className="overflow-x-auto">
+          <div className="md:min-w-[1080px]">
+        <div className="grid grid-cols-[48px_1fr_80px] md:grid-cols-[48px_minmax(0,1.5fr)_minmax(0,1fr)_minmax(0,2fr)_minmax(0,1.5fr)_120px_minmax(240px,auto)] text-xs font-bold uppercase tracking-wider ds-border-b ds-bg-topbar ds-text-muted">
           <div className="p-4 flex items-center justify-center">
             <button
               type="button"
@@ -638,17 +647,22 @@ export default function BookmarksTable() {
                   <div
                     key={bookmark.id}
                     role="listitem"
-                    ref={
-                      isSelected
-                        ? (selectedRowRef as React.RefObject<HTMLDivElement>)
-                        : null
-                    }
+                    data-index={virtualItem.index}
+                    ref={(el) => {
+                      // measureElement is optional-called: test doubles of
+                      // useVirtualizer don't implement it.
+                      rowVirtualizer.measureElement?.(el);
+                      if (selectedRowRef) {
+                        (
+                          selectedRowRef as React.MutableRefObject<HTMLElement | null>
+                        ).current = isSelected ? el : null;
+                      }
+                    }}
                     style={{
                       position: "absolute",
                       top: 0,
                       left: 0,
                       width: "100%",
-                      height: `${virtualItem.size}px`,
                       transform: `translateY(${virtualItem.start}px)`,
                     }}
                   >
@@ -704,6 +718,8 @@ export default function BookmarksTable() {
               })}
             </div>
           )}
+        </div>
+          </div>
         </div>
       </div>
 

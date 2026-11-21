@@ -185,7 +185,7 @@ export const TagManager = ({
                 <X className="size-3" />
               </button>
               {showColorPicker === tag && (
-                <div className="absolute top-full start-0 mt-1.5 bg-white dark:bg-[var(--bg-card)] border border-[var(--divider)] dark:border-[var(--divider)] rounded-lg shadow-xl z-50 p-2 flex gap-1.5">
+                <div className="absolute top-full start-0 mt-1.5 bg-white dark:bg-[var(--bg-card)] border border-[var(--divider)] dark:border-[var(--divider)] rounded-lg shadow-xl z-50 p-2 flex flex-wrap gap-1.5 max-w-44">
                   {tagColorService.getColorPalette().map((color) => (
                     <button
                       key={color}
@@ -240,7 +240,7 @@ export const TagManager = ({
               placeholder={t("app_typeTag")}
             />
             {suggestions.length > 0 && (
-              <div className="absolute top-full start-0 mt-1.5 w-36 bg-white dark:bg-[var(--bg-card)] border border-[var(--divider)] dark:border-[var(--divider)] rounded-lg shadow-xl z-50 overflow-hidden">
+              <div className="absolute top-full start-0 mt-1.5 w-36 max-w-full bg-white dark:bg-[var(--bg-card)] border border-[var(--divider)] dark:border-[var(--divider)] rounded-lg shadow-xl z-50 overflow-hidden">
                 {suggestions.map((suggestion, idx) => (
                   <div
                     key={suggestion}
@@ -262,7 +262,7 @@ export const TagManager = ({
                         setIsAdding(false);
                       }
                     }}
-                    className={`px-3 py-2 text-xs font-medium cursor-pointer transition-colors ${
+                    className={`px-3 py-2 text-xs font-medium cursor-pointer transition-colors truncate ${
                       idx === selectedIndex
                         ? "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400"
                         : "text-[var(--text-secondary)] dark:text-[var(--text-secondary)] hover:bg-[var(--state-hover-bg)] dark:hover:bg-[var(--state-hover-bg)]/50"

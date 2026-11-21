@@ -140,7 +140,7 @@ export const BookmarkRow = ({
         role="button"
         tabIndex={0}
         aria-label={bookmark.title || bookmark.url}
-        className={`grid grid-cols-[48px_1fr_80px] md:grid-cols-[48px_1.5fr_1fr_2fr_1.5fr_120px_180px] items-center transition-all duration-200 group mb-2`}
+        className={`grid grid-cols-[48px_1fr_80px] md:grid-cols-[48px_minmax(0,1.5fr)_minmax(0,1fr)_minmax(0,2fr)_minmax(0,1.5fr)_120px_minmax(240px,auto)] items-center transition-all duration-200 group`}
         style={{
           borderRadius: "var(--radius-item)",
           background: isSelected ? "var(--state-hover-bg)" : "transparent",
@@ -168,7 +168,7 @@ export const BookmarkRow = ({
           }
         }}
       >
-        <div className="p-4">
+        <div className="p-4 overflow-hidden">
           <div className="flex items-center gap-2">
             {isAutoTagging === bookmark.id ? (
               <div className="relative flex items-center justify-center">
@@ -213,10 +213,10 @@ export const BookmarkRow = ({
             </button>
           </div>
         </div>
-        <div className="p-4 font-semibold truncate ds-text-primary">
+        <div className="p-4 font-semibold truncate ds-text-primary overflow-hidden">
           <EditableTitle bookmark={bookmark} onSave={handleUpdateTitle} />
         </div>
-        <div className="hidden md:block p-4 truncate ds-text-secondary">
+        <div className="hidden md:block p-4 truncate ds-text-secondary overflow-hidden">
           <a
             href={sanitizeUrl(bookmark.url)}
             target="_blank"
@@ -232,7 +232,7 @@ export const BookmarkRow = ({
             )}
           </a>
         </div>
-        <div className="hidden md:block p-4 ds-text-secondary">
+        <div className="hidden md:block p-4 ds-text-secondary overflow-hidden">
           {bookmark.summary ? (
             <p className="line-clamp-2 text-sm leading-relaxed">
               {bookmark.summary}
@@ -250,7 +250,7 @@ export const BookmarkRow = ({
             </button>
           )}
         </div>
-        <div className="hidden md:block p-4">
+        <div className="hidden md:block p-4 overflow-hidden">
           <TagManager
             tags={bookmark.tags || []}
             allTags={allTags}
@@ -260,105 +260,112 @@ export const BookmarkRow = ({
             isPrivate={bookmark.isPrivate}
           />
         </div>
-        <div className="hidden md:block p-4 text-sm font-medium ds-text-muted">
+        <div className="hidden md:block p-4 text-sm font-medium ds-text-muted overflow-hidden whitespace-nowrap truncate">
           {formatDate(bookmark.createdAt, {}, i18n.language)}
         </div>
-        <div className="p-4 text-end">
-          <div className="flex items-center justify-end gap-2 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 relative z-50">
-            <button
-              onClick={() => handleViewContent(bookmark)}
-              className="truncate text-xs font-medium flex items-center gap-1.5 ds-text-success dark:ds-text-success hover:ds-text-success dark:hover:ds-text-success ds-bg-success-soft dark:ds-bg-success/10 p-2 md:px-2.5 md:py-1.5 rounded-lg transition-all hover:scale-105 active:scale-95"
-              title={t("app_read")}
-            >
-              <Eye className="size-4 md:w-3.5 md:h-3.5" />
-              <span className="hidden xl:inline">{t("app_read")}</span>
-            </button>
-            <div className="hidden md:flex items-center gap-2">
-              <a
-                href={sanitizeUrl(bookmark.url)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-medium flex items-center gap-1.5 text-[var(--text-secondary)] dark:text-[var(--text-muted)] hover:text-[var(--text-primary)] dark:hover:white bg-[var(--bg-secondary)] dark:bg-[var(--bg-card)] hover:bg-[var(--state-hover-bg)] dark:hover:bg-[var(--state-hover-bg)] px-2.5 py-1.5 rounded-lg transition-all hover:scale-105 active:scale-95"
-                title={t("app_visit")}
+        <div className="p-4 text-end overflow-hidden">
+          {/* Actions scroll horizontally inside their own cell instead of
+              wrapping: wrapped buttons used to grow the row past the
+              virtualizer's fixed estimate and paint over the next row. */}
+          <div className="flex md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 relative z-50 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="flex items-center justify-end gap-1.5 md:gap-2 w-max min-w-full ms-auto shrink-0">
+              <button
+                onClick={() => handleViewContent(bookmark)}
+                className="truncate text-xs font-medium flex items-center gap-1.5 ds-text-success dark:ds-text-success hover:ds-text-success dark:hover:ds-text-success ds-bg-success-soft dark:ds-bg-success/10 p-2 md:px-2.5 md:py-1.5 rounded-lg transition-all hover:scale-105 active:scale-95"
+                title={t("app_read")}
               >
-                <ExternalLink className="size-3.5" />
-                <span className="hidden xl:inline">{t("app_visit")}</span>
-              </a>
-              {!bookmark.summary && (
-                <button
-                  onClick={() => handleSummarize(bookmark, t, aiManager)}
-                  disabled={isSummarizing === bookmark.id}
-                  className="truncate text-xs font-medium flex items-center gap-1.5 ds-text-warning dark:ds-text-warning hover:ds-text-warning dark:hover:ds-text-warning ds-bg-warning-soft dark:bg-[var(--color-warning)]/10 px-2.5 py-1.5 rounded-lg transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
-                  title={t("app_summarize")}
+                <Eye className="size-4 md:w-3.5 md:h-3.5" />
+                <span className="hidden xl:inline">{t("app_read")}</span>
+              </button>
+              <div className="hidden md:flex items-center gap-2">
+                <a
+                  href={sanitizeUrl(bookmark.url)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-medium flex items-center gap-1.5 text-[var(--text-secondary)] dark:text-[var(--text-muted)] hover:text-[var(--text-primary)] dark:hover:white bg-[var(--bg-secondary)] dark:bg-[var(--bg-card)] hover:bg-[var(--state-hover-bg)] dark:hover:bg-[var(--state-hover-bg)] px-2.5 py-1.5 rounded-lg transition-all hover:scale-105 active:scale-95"
+                  title={t("app_visit")}
                 >
-                  {isSummarizing === bookmark.id ? (
+                  <ExternalLink className="size-3.5" />
+                  <span className="hidden xl:inline">{t("app_visit")}</span>
+                </a>
+                {!bookmark.summary && (
+                  <button
+                    onClick={() => handleSummarize(bookmark, t, aiManager)}
+                    disabled={isSummarizing === bookmark.id}
+                    className="truncate text-xs font-medium flex items-center gap-1.5 ds-text-warning dark:ds-text-warning hover:ds-text-warning dark:hover:ds-text-warning ds-bg-warning-soft dark:bg-[var(--color-warning)]/10 px-2.5 py-1.5 rounded-lg transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
+                    title={t("app_summarize")}
+                  >
+                    {isSummarizing === bookmark.id ? (
+                      <Loader2 className="size-3.5 animate-spin" />
+                    ) : (
+                      <Sparkles className="size-3.5" />
+                    )}
+                    <span className="hidden xl:inline">
+                      {t("app_summarize")}
+                    </span>
+                  </button>
+                )}
+                <button
+                  onClick={() =>
+                    handleGenerateDetailedContent(
+                      bookmark,
+                      t,
+                      aiManager,
+                      true,
+                      setViewingContent,
+                    )
+                  }
+                  disabled={isGeneratingContent === bookmark.id}
+                  className="truncate text-xs font-medium flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 bg-blue-50 dark:bg-blue-500/10 px-2.5 py-1.5 rounded-lg transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
+                  title={t("app_generateOverview")}
+                >
+                  <FileText className="size-3.5" />
+                  <span className="hidden xl:inline">
+                    {isGeneratingContent === bookmark.id
+                      ? t("app_generating")
+                      : t("app_generateOverview")}
+                  </span>
+                </button>
+                <button
+                  onClick={() => handleAudioSummary(bookmark)}
+                  disabled={isSpeaking}
+                  className="truncate text-xs font-medium flex items-center gap-1.5 ds-text-warning dark:ds-text-warning hover:ds-text-warning dark:hover:ds-text-warning ds-bg-warning-soft dark:bg-[var(--color-warning)]/10 px-2.5 py-1.5 rounded-lg transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
+                  title={t("app_listen")}
+                >
+                  {isSpeaking ? (
                     <Loader2 className="size-3.5 animate-spin" />
                   ) : (
-                    <Sparkles className="size-3.5" />
+                    <Volume2 className="size-3.5" />
                   )}
-                  <span className="hidden xl:inline">{t("app_summarize")}</span>
+                  <span className="hidden xl:inline">{t("app_listen")}</span>
                 </button>
-              )}
-              <button
-                onClick={() =>
-                  handleGenerateDetailedContent(
-                    bookmark,
-                    t,
-                    aiManager,
-                    true,
-                    setViewingContent,
-                  )
-                }
-                disabled={isGeneratingContent === bookmark.id}
-                className="truncate text-xs font-medium flex items-center gap-1.5 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 bg-blue-50 dark:bg-blue-500/10 px-2.5 py-1.5 rounded-lg transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
-                title={t("app_generateOverview")}
-              >
-                <FileText className="size-3.5" />
-                <span className="hidden xl:inline">
-                  {isGeneratingContent === bookmark.id
-                    ? t("app_generating")
-                    : t("app_generateOverview")}
-                </span>
-              </button>
-              <button
-                onClick={() => handleAudioSummary(bookmark)}
-                disabled={isSpeaking}
-                className="truncate text-xs font-medium flex items-center gap-1.5 ds-text-warning dark:ds-text-warning hover:ds-text-warning dark:hover:ds-text-warning ds-bg-warning-soft dark:bg-[var(--color-warning)]/10 px-2.5 py-1.5 rounded-lg transition-all hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
-                title={t("app_listen")}
-              >
-                {isSpeaking ? (
-                  <Loader2 className="size-3.5 animate-spin" />
-                ) : (
-                  <Volume2 className="size-3.5" />
-                )}
-                <span className="hidden xl:inline">{t("app_listen")}</span>
-              </button>
-              <button
-                onClick={handleNativeShare}
-                className="truncate text-xs font-medium flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 bg-cyan-50 dark:bg-cyan-500/10 px-2.5 py-1.5 rounded-lg transition-all hover:scale-105 active:scale-95"
-                title={t("app_shareNative")}
-              >
-                <Share2 className="size-3.5" />
-                <span className="hidden xl:inline">{t("app_share")}</span>
-              </button>
-              <button
-                onClick={() => handleToggleExpand(bookmark.id)}
-                data-testid="edit-bookmark-button"
-                className="text-[var(--text-muted)] hover:ds-text-accent dark:text-[var(--text-muted)] dark:hover:ds-text-accent transition-colors p-1.5 rounded-lg hover:bg-[var(--accent-soft)] dark:hover:bg-[var(--accent-primary)]/10"
-                title={t("app_edit")}
-                aria-label={t("app_edit")}
-              >
-                <FileText className="size-4.5" />
-              </button>
-              <button
-                onClick={() => handleDelete(bookmark.id)}
-                data-testid="delete-bookmark-button"
-                className="text-[var(--text-muted)] hover:ds-text-danger dark:text-[var(--text-muted)] dark:hover:ds-text-danger transition-colors p-1.5 rounded-lg hover:bg-[var(--danger-soft)] dark:hover:bg-[var(--color-danger)]/10"
-                title={t("app_delete")}
-                aria-label={t("app_delete")}
-              >
-                <Trash2 className="size-4.5" />
-              </button>
+                <button
+                  onClick={handleNativeShare}
+                  className="truncate text-xs font-medium flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 bg-cyan-50 dark:bg-cyan-500/10 px-2.5 py-1.5 rounded-lg transition-all hover:scale-105 active:scale-95"
+                  title={t("app_shareNative")}
+                >
+                  <Share2 className="size-3.5" />
+                  <span className="hidden xl:inline">{t("app_share")}</span>
+                </button>
+                <button
+                  onClick={() => handleToggleExpand(bookmark.id)}
+                  data-testid="edit-bookmark-button"
+                  className="text-[var(--text-muted)] hover:ds-text-accent dark:text-[var(--text-muted)] dark:hover:ds-text-accent transition-colors p-1.5 rounded-lg hover:bg-[var(--accent-soft)] dark:hover:bg-[var(--accent-primary)]/10"
+                  title={t("app_edit")}
+                  aria-label={t("app_edit")}
+                >
+                  <FileText className="size-4.5" />
+                </button>
+                <button
+                  onClick={() => handleDelete(bookmark.id)}
+                  data-testid="delete-bookmark-button"
+                  className="text-[var(--text-muted)] hover:ds-text-danger dark:text-[var(--text-muted)] dark:hover:ds-text-danger transition-colors p-1.5 rounded-lg hover:bg-[var(--danger-soft)] dark:hover:bg-[var(--color-danger)]/10"
+                  title={t("app_delete")}
+                  aria-label={t("app_delete")}
+                >
+                  <Trash2 className="size-4.5" />
+                </button>
+              </div>
             </div>
           </div>
         </div>

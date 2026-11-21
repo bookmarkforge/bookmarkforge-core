@@ -628,9 +628,9 @@ const DocumentManager = ({ onSelectDocument }: { onSelectDocument: (id: string) 
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="border border-[var(--divider)] dark:border-[var(--divider)] rounded-xl overflow-hidden"
+                  className="border border-[var(--divider)] dark:border-[var(--divider)] rounded-xl overflow-x-auto"
                 >
-                  <table className="w-full text-start text-sm">
+                  <table className="w-full min-w-[640px] text-start text-sm">
                     <thead className="bg-[var(--bg-secondary)] dark:bg-[var(--bg-primary)]/50 border-bottom border-[var(--divider)] dark:border-[var(--divider)]">
                       <tr>
                         <th className="px-6 py-3 font-bold text-[var(--text-muted)] uppercase tracking-wider text-[10px]">
@@ -664,7 +664,7 @@ const DocumentManager = ({ onSelectDocument }: { onSelectDocument: (id: string) 
                             </button>
                           </td>
                           <td className="truncate px-6 py-4">
-                            <div className="flex gap-1">
+                            <div className="flex flex-wrap gap-1 max-w-[220px]">
                               {doc.tags?.map((tag) => (
                                 <span
                                   key={tag}

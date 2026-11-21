@@ -1,0 +1,296 @@
+name: CI
+
+# PUBLIC-CORE VARIANT of the private ci.yml (written by
+# scripts/export-public-repo.mjs into .github/workflows/ci.yml).
+#
+# Jobs that cannot exist in the open-source tree are removed:
+#   - e2e-ai-performance / e2e-sync / e2e-public-relay: they need the private
+#     companion signaling server and the license-signing stack.
+#   - api-image-smoke: the `api` Docker target bundles server/, which is
+#     private infrastructure and never ships publicly.
+# Everything else runs unchanged; Pro-seeded E2E specs skip themselves via
+# BMF_E2E_LICENSE_STACK=0 (see playwright.config.ts + pro-entitlement-helpers).
+
+on:
+  push:
+    branches: [main, master, develop, release/v1.0.0]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: true
+  NODE_ENV: test
+
+jobs:
+  quality:
+    name: Typecheck, lint, tests and security gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - run: SOURCE_DATE_EPOCH=$(git log -1 --format=%ct -- docs/ | head -1) && export SOURCE_DATE_EPOCH && echo "SOURCE_DATE_EPOCH=$SOURCE_DATE_EPOCH"
+      - run: npm run typecheck:prod
+      - run: npm run typecheck:server
+      - run: npm run typecheck:tests
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run test:fast
+      # In the public tree check:blindeo resolves to boundary guards (the
+      # rollback-tag/deploy checklist is private release operations), so no
+      # Chromium install is needed here.
+      - name: Enforce mandatory security gates
+        run: |
+          npm run check:security-internal
+          npm run check:server-log-ip-privacy
+          npm run check:blindeo
+      - name: Enforce the Open Core Pro import boundary
+        run: |
+          npm run check:open-core
+          npm run check:pro-imports
+      - name: Enforce the public export history boundary
+        run: npm run check:pro-history
+      - name: Enforce brand logo consistency
+        run: npm run check:brand-logo
+      - name: Enforce SEO visibility contract
+        run: npm run check:seo
+      - name: Validate workflow, artifact, HTTP, Compose and repository safety
+        run: npm run check:workflows && npm run check:workflow-artifacts && npm run check:http-config && npm run check:spa-routes && npm run check:compose-config && npm run check:runtime-config && npm run check:docker-context && npm run check:repository-hygiene
+      - name: Enforce E2E selector reality
+        run: npm run check:e2e-selectors
+      - name: Enforce factual claim consistency
+        run: npm run check:claim-drift
+      - name: Enforce MIT license claims
+        run: npm run check:license-claims
+      - name: Enforce manual figure claims
+        run: npm run check:manual-figures
+      - name: Enforce page figure claims
+        run: npm run check:page-figures
+      - name: Enforce landing page freshness
+        run: npm run check:landings-fresh
+
+  slow-tests:
+    name: Full unit suite (slow profile, timing enforced)
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - run: npm run test:slow
+
+  e2e:
+    name: Playwright E2E
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 30
+    env:
+      VITE_TEST_BUILD: 'true'
+      VITE_FORCE_DEXIE_STORAGE: 'true'
+      # No companion server or license stack exists in this tree: the
+      # playwright config compiles those webServers out and Pro-seeded specs
+      # skip via BMF_E2E_LICENSE_STACK=0.
+      VITE_P2P_SIGNALING_URL: ws://127.0.0.1:8787
+      SIGNALING_ADMIN_TOKEN: e2e-admin-token
+      SIGNALING_PORT: '8787'
+      CRISIS_COMPANION_PORT: '8799'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      - name: Build browser extension bundle
+        run: npm run build:extension:custom
+      - name: Run Playwright E2E
+        run: npm run e2e -- --config=playwright.config.ts --grep-invert "@nightly|@multiuser|@visual|@performance"
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: playwright-artifacts
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results/
+            playwright-report/
+
+  e2e-engines:
+    name: Playwright E2E (firefox + webkit)
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - name: Install firefox + webkit browsers
+        run: npx playwright install --with-deps firefox webkit
+      - name: Run critical paths on firefox + webkit
+        run: npm run e2e:engines
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: playwright-engines-artifacts
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results/
+            playwright-report/
+
+  e2e-mobile:
+    name: Playwright E2E (emulated Android — 64 MiB KDF + PWA)
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - name: Install Playwright chromium (mobile Chrome IS chromium)
+        run: npx playwright install --with-deps chromium
+      - name: Run mobile battery (prod build + emulated Android)
+        run: npm run e2e:mobile
+      - name: Upload Playwright artifacts
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: playwright-mobile-artifacts
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            test-results/
+            playwright-report/
+
+  visual-baseline-drift:
+    name: Visual baseline drift gate
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - name: Flag visual baselines regenerated with >10% pixel drift
+        run: node scripts/check-baseline-drift.mjs --base "${BASE_REF}" --max-ratio 0.10
+        env:
+          BASE_REF: ${{ github.base_ref && format('origin/{0}', github.base_ref) || format('HEAD~1') }}
+      - name: Fail on toHaveScreenshot references to untracked baselines
+        run: node scripts/check-baseline-gaps.mjs
+
+  build:
+    name: Production build and repository checks
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 30
+    env:
+      NODE_ENV: production
+      VITE_APP_VERSION: ci
+      VITE_DB_NAME: bookmarkforge_ci
+      VITE_P2P_SIGNALING_URL: wss://signal.bookmarkforgeapp.com
+      VITE_WHOP_CHECKOUT_URL: https://example.invalid/ci-checkout
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci --include=dev
+      - run: npm run build:ci
+      - name: Install Chromium for performance budget
+        run: npx playwright install --with-deps chromium
+      - name: Measure first interaction performance budget
+        run: npm run test:performance
+      - name: Enforce complete performance budget
+        run: npm run check:performance
+      - name: Smoke the landing routes in a real browser
+        run: npm run check:landing-smoke
+      - run: npm run check
+      - run: npm audit --omit=dev --audit-level=high
+      - name: Upload build diagnostics
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: build-diagnostics
+          if-no-files-found: ignore
+          retention-days: 14
+          path: |
+            bundle-report.md
+            ci-chunk-report.json
+            performance-budget-report.json
+            dist/manifest.webmanifest
+            dist/sw.js
+
+  release-gate:
+    name: Release gate (DEPLOY-POLICY pre-deploy checklist)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.17.0'
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck:prod
+      - run: npm run lint
+      - run: npm run test:fast
+      - run: npm run build:ci
+
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48

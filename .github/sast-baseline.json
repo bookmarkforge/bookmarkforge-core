@@ -1,0 +1,247 @@
+[
+  {
+    "ruleId": "javascript.lang.security.detect-child-process.detect-child-process",
+    "file": "scripts/command-runner.mjs",
+    "tool": "Semgrep OSS",
+    "approved": true,
+    "justification": "Accepted boundary: this module IS the audited subprocess boundary of the repository. Every helper is argv-first (runCommand, runCommandOk, captureCommand, runCommandLine, captureCommandLine) and the only shell paths are the deliberate captureShell escape hatch and the Windows .cmd shim fallback, which exists because npm/vercel/gh are batch files Node cannot exec without one. All callers pass repo-authored literals, never data. Fix at the call sites, not here. Reviewed 2026-10-11."
+  },
+  {
+    "ruleId": "javascript.lang.security.detect-child-process.detect-child-process",
+    "file": "scripts/ci-local-parallel.mjs",
+    "tool": "Semgrep OSS",
+    "approved": true,
+    "justification": "False positive: already argv-based (spawn(phase.command[0], phase.command.slice(1))) and never a command string. USE_SHELL is true only on Windows, where npm resolves to npm.cmd and Node cannot exec it without a shell; every phase command is a static literal in this file, as the comment above the constant records. Reviewed 2026-10-11."
+  },
+  {
+    "ruleId": "javascript.lang.security.detect-child-process.detect-child-process",
+    "file": "scripts/drill-rollback.mjs",
+    "tool": "Semgrep OSS",
+    "approved": true,
+    "justification": "False positive: spawn(command, args) with an argv array, for the local drill stack (license mock + companion server). No shell, no string interpolation, no external input. Reviewed 2026-10-11."
+  },
+  {
+    "ruleId": "javascript.lang.security.detect-child-process.detect-child-process",
+    "file": "scripts/local-smoke.mjs",
+    "tool": "Semgrep OSS",
+    "approved": true,
+    "justification": "False positive: spawn(command, args) with an argv array, for the local smoke stack started by this script. No shell, no string interpolation, no external input. Reviewed 2026-10-11."
+  },
+  {
+    "ruleId": "javascript.lang.security.detect-child-process.detect-child-process",
+    "file": "scripts/prod-blindeo-checklist.mjs",
+    "tool": "Semgrep OSS",
+    "approved": true,
+    "justification": "False positive: spawnSync(cmd, args) with an argv array; every checklist command is a literal in the same file. No shell and no interpolation. Reviewed 2026-10-11."
+  },
+  {
+    "ruleId": "js/biased-cryptographic-random",
+    "file": "src/services/webrtc-sync/pairing.ts",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "False positive: PAIRING_CODE_ALPHABET has exactly 32 characters (power of 2), so the modulo operation does not introduce bias. crypto.getRandomValues provides cryptographically secure randomness. The pairing code is a convenience for UX, not a security boundary — the actual HMAC key is derived separately. Reviewed 2026-11-07."
+  },
+  {
+    "ruleId": "js/file-system-race",
+    "file": "vite.config.ts",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "False positive: build-time configuration code, not runtime production code. The file system operations occur during Vite build, not in the deployed application. No race condition is exploitable in production. Reviewed 2026-11-07."
+  },
+  {
+    "ruleId": "js/remote-property-injection",
+    "file": "src/workers/crypto.worker.ts",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "False positive: the code already sanitizes the payload (limits string length to 50MB, clears sensitive references). The Object.entries iteration is over an internal postMessage payload from the worker's own context, not external untrusted input. The sanitization prevents oversized allocations and cleans up references after use. Reviewed 2026-11-07."
+  },
+  {
+    "ruleId": "js/redos",
+    "file": "scripts/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Repository CI/dev tooling — not shipped in the app bundle; inputs are repo-authored constants or operator-controlled CLI/env values. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/incomplete-sanitization",
+    "file": "scripts/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Repository CI/dev tooling — not shipped in the app bundle; inputs are repo-authored constants or operator-controlled CLI/env values. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/bad-tag-filter",
+    "file": "scripts/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Repository CI/dev tooling — not shipped in the app bundle; inputs are repo-authored constants or operator-controlled CLI/env values. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/bad-tag-filter",
+    "file": "src/tests/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Test fixtures and specs — not part of the shipped bundle; inputs are synthetic test data controlled by the suite itself. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/double-escaping",
+    "file": "scripts/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Repository CI/dev tooling — not shipped in the app bundle; inputs are repo-authored constants or operator-controlled CLI/env values. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/incomplete-multi-character-sanitization",
+    "file": "src/tests/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Test fixtures and specs — not part of the shipped bundle; inputs are synthetic test data controlled by the suite itself. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/clear-text-logging",
+    "file": "scripts/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Repository CI/dev tooling — not shipped in the app bundle; inputs are repo-authored constants or operator-controlled CLI/env values. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/weak-cryptographic-algorithm",
+    "file": "src/tests/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Test fixtures and specs — not part of the shipped bundle; inputs are synthetic test data controlled by the suite itself. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/incomplete-url-scheme-check",
+    "file": "scripts/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Repository CI/dev tooling — not shipped in the app bundle; inputs are repo-authored constants or operator-controlled CLI/env values. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/incomplete-url-scheme-check",
+    "file": "src/tests/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Test fixtures and specs — not part of the shipped bundle; inputs are synthetic test data controlled by the suite itself. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/incomplete-url-substring-sanitization",
+    "file": "src/tests/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Test fixtures and specs — not part of the shipped bundle; inputs are synthetic test data controlled by the suite itself. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/useless-regexp-character-escape",
+    "file": "scripts/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Repository CI/dev tooling — not shipped in the app bundle; inputs are repo-authored constants or operator-controlled CLI/env values. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/insecure-temporary-file",
+    "file": "scripts/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Repository CI/dev tooling — not shipped in the app bundle; inputs are repo-authored constants or operator-controlled CLI/env values. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/insecure-temporary-file",
+    "file": "src/tests/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Test fixtures and specs — not part of the shipped bundle; inputs are synthetic test data controlled by the suite itself. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/insecure-temporary-file",
+    "file": "tests/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "E2E/fixture specs — not part of the shipped bundle; inputs are synthetic test data controlled by the suite itself. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/file-system-race",
+    "file": "scripts/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Repository CI/dev tooling — not shipped in the app bundle; inputs are repo-authored constants or operator-controlled CLI/env values. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/file-system-race",
+    "file": "src/tests/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Test fixtures and specs — not part of the shipped bundle; inputs are synthetic test data controlled by the suite itself. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/regex/missing-regexp-anchor",
+    "file": "scripts/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Repository CI/dev tooling — not shipped in the app bundle; inputs are repo-authored constants or operator-controlled CLI/env values. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/regex/missing-regexp-anchor",
+    "file": "src/tests/**",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Test fixtures and specs — not part of the shipped bundle; inputs are synthetic test data controlled by the suite itself. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/request-forgery",
+    "file": "src/utils/networkFirewall.ts",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "This module IS the egress firewall: checkNetworkRequest validates the URL against the origin whitelist immediately before fetch, and redirect:'error' forbids redirect-based bypass. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/bad-tag-filter",
+    "file": "src/features/quick-capture/watchedFolder.ts",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "htmlToText output is stored as plain-text document content, never injected as HTML; an unmatched '</script >' variant leaves inert text, not markup. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/double-escaping",
+    "file": "src/features/quick-capture/watchedFolder.ts",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "htmlToText output is stored as plain-text document content, never injected as HTML; entity decoding order cannot produce markup in a text sink. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/incomplete-multi-character-sanitization",
+    "file": "src/services/integrations/cloudSync.adapters.config.ts",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Display names/ids have all <...> tags stripped, then pass safeWebDavSegment which rejects schemes, traversal, backslashes and control chars; a residual '<script' fragment cannot survive as a usable path segment. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/clear-text-storage-of-sensitive-data",
+    "file": "src/store/safeStorage.ts",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Generic localStorage KV wrapper for UI prefs/state. Secrets route through secureStorage/EncryptionService; the only sensitive keys read here (vault_salt, vault_crypto_key) are a legacy migration path that copies them into secureStorage and immediately safeRemove()s the plaintext. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/biased-cryptographic-random",
+    "file": "src/services/TagColorService.ts",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "Modulo bias on a 10-entry cosmetic color palette — non-security UI data; same accepted pattern as the already-baselined pairing.ts entry. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/xss-through-dom",
+    "file": "src/services/UniversalImporter.ts",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "DOMParser parses untrusted import files into a detached document; only text/attribute values are extracted into the vault as data — the parsed document is never inserted into the live DOM. Reviewed 2026-11-18."
+  },
+  {
+    "ruleId": "js/xss-through-dom",
+    "file": "src/services/importer.enex.ts",
+    "tool": "CodeQL",
+    "approved": true,
+    "justification": "DOMParser parses untrusted ENEX XML into a detached document; only text/attribute values are extracted into the vault as data — the parsed document is never inserted into the live DOM. Reviewed 2026-11-18."
+  }
+]

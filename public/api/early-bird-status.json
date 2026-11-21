@@ -1,0 +1,9 @@
+{
+  "available": true,
+  "phase": "early",
+  "label": "Early Bird",
+  "price": 59,
+  "regularPrice": 79,
+  "cap": 200,
+  "currency": "USD"
+}

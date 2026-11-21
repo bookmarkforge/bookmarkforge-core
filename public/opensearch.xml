@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>bf</ShortName>
+  <LongName>BookmarkForge — Encrypted Vault Search</LongName>
+  <Description>Search your encrypted BookmarkForge vault locally — nothing leaves your device.</Description>
+  <InputEncoding>UTF-8</InputEncoding>
+  <Language>en</Language>
+  <Url type="text/html" method="get" template="https://www.bookmarkforgeapp.com/app?q={searchTerms}"/>
+</OpenSearchDescription>

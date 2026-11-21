@@ -1,0 +1,514 @@
+{
+  "lang": "en",
+  "langName": "English",
+  "dir": "ltr",
+  "title": "Private Encrypted Bookmark Manager | BookmarkForge",
+  "description": "Save, search and organize bookmarks in an encrypted vault on your own device. No account, works offline. 500 bookmarks free; Pro is $59 once.",
+  "ogTitle": "Private Bookmark Manager, Encrypted & Offline | BookmarkForge",
+  "ogDescription": "Save, search and organize bookmarks in an encrypted vault on your own device. No account, works offline. 500 bookmarks free; Pro is $59 once.",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image.png",
+  "ogImageAlt": "BookmarkForge — private bookmark manager and reading list app",
+  "twitterTitle": "Private Bookmark Manager, Encrypted & Offline | BookmarkForge",
+  "twitterDescription": "Save, search and organize bookmarks in an encrypted vault on your own device. No account, works offline. 500 bookmarks free; Pro is $59 once.",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image.png",
+  "skipLink": "Skip to main content",
+  "navBrandAria": "BookmarkForge home",
+  "navAriaLabel": "Main navigation",
+  "navLinks": {
+    "pocketAlternative": "Why Switch",
+    "features": "Features",
+    "ai": "AI Assistant",
+    "privacy": "Privacy",
+    "pricing": "Pricing",
+    "help": "Help",
+    "raindropCompare": "vs Raindrop"
+  },
+  "navCta": "Try It Instantly (No Account Required)",
+  "themeToggleAria": "Toggle theme",
+  "navToggleAria": "Open menu",
+  "navToggleAriaClose": "Close menu",
+  "languageToggleAria": "Change language",
+  "githubAria": "Star BookmarkForge on GitHub",
+  "hero": {
+    "badge": "Pay once · No subscription · No account needed",
+    "title": "The private bookmark manager that <span class=\"accent-text\">keeps everything on your device.</span>",
+    "subtitle": "For researchers, students and anyone who'd rather not hand their reading history to a cloud company. Save pages, articles and PDFs, find them by keyword or meaning, and keep it all encrypted on your own computer. No account. No subscription.",
+    "ctaPrimary": "Start free — no signup",
+    "ctaSecondary": "See how it works",
+    "pillars": [
+      {
+        "strong": "Private",
+        "text": "encrypted on your device"
+      },
+      {
+        "strong": "Yours forever",
+        "text": "no subscriptions, no monthly fees"
+      },
+      {
+        "strong": "Works offline",
+        "text": "save and read anywhere, even without internet"
+      },
+      {
+        "strong": "Free forever",
+        "text": "500 bookmarks free, upgrade only if you want more"
+      }
+    ],
+    "announce": "⚡ Local AI Translation (coming soon)",
+    "announceApps": "⚡ Native apps coming soon — Windows, macOS, Linux, Android & iOS",
+    "announceQuickCapture": "⚡ Quick Capture is live — bookmarklet, paste anywhere, PWA shortcuts"
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "See It Working",
+    "title": "Simple enough for anyone, powerful enough for everyone",
+    "subtitle": "No tech skills needed. Save a page, find it later, organize it your way. That's it.",
+    "imageAlt": "Animated loop of BookmarkForge: unlocking the vault, capturing a bookmark, searching the library and locking it again",
+    "caption": "Recorded from the desktop app with demo data. The full walkthrough ships with the project.",
+    "steps": [
+      {
+        "title": "Save anything",
+        "text": "Click once to save any webpage, article, or video. It stays on your computer."
+      },
+      {
+        "title": "Find it fast",
+        "text": "Search by keyword or by meaning — even when you don't remember exact words."
+      },
+      {
+        "title": "Organize your way",
+        "text": "Tags, folders, notes — make it yours. No rigid structure required."
+      },
+      {
+        "title": "Keep it private",
+        "text": "Everything encrypted on your device. Nobody else can see it."
+      }
+    ],
+    "ctaPrimary": "Try It Free"
+  },
+  "pocketAlternative": {
+    "id": "pocket-alternative",
+    "tag": "Pocket alternative",
+    "title": "The private Pocket alternative",
+    "subtitle": "Pocket shut down in July 2025. If you exported your list, import it into BookmarkForge in about a minute — and this time it lives on your device, so no company can switch it off.",
+    "features": [
+      {
+        "title": "Save articles to read later",
+        "text": "Click once to save any article, video, or PDF. It stays on your device, encrypted, and works offline."
+      },
+      {
+        "title": "Take notes on articles",
+        "text": "Highlight, summarize, and add notes to any saved article. Turn reading into knowledge."
+      },
+      {
+        "title": "No tracking, no ads",
+        "text": "No accounts, no analytics, no ads. Your reading habits are nobody's business but yours."
+      }
+    ],
+    "ctaPrimary": "Try It Free",
+    "ctaSecondary": "Full Comparison & Migration Guide",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "Plain words, no marketing",
+    "title": "BookmarkForge vs Raindrop, without the fine print",
+    "subtitle": "Raindrop is a good app. The big difference is where your stuff lives.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Where your bookmarks live",
+        "us": "On your computer",
+        "them": "On their servers"
+      },
+      {
+        "topic": "Who can see what you save",
+        "us": "Nobody — locked with your password",
+        "them": "The company, and whoever demands it"
+      },
+      {
+        "topic": "Without internet",
+        "us": "Everything keeps working",
+        "them": "Only basic features"
+      },
+      {
+        "topic": "What you pay",
+        "us": "$59 once, forever",
+        "them": "charged yearly, forever"
+      },
+      {
+        "topic": "If the company shuts down",
+        "us": "Nothing changes — your data is already yours",
+        "them": "You export and start over"
+      },
+      {
+        "topic": "AI assistant",
+        "us": "Runs on your device — private",
+        "them": "Sends your data to the cloud"
+      }
+    ],
+    "ctaPrimary": "Try It Free",
+    "ctaSecondary": "Full Raindrop comparison",
+    "close": "Raindrop is simpler and free — if that is all you need, use it happily. But if you want your bookmarks private and yours forever, BookmarkForge is built for exactly that."
+  },
+  "features": {
+    "id": "features",
+    "tag": "Everything You Need",
+    "title": "Simple features that just work",
+    "items": [
+      {
+        "title": "Save anything with one click",
+        "text": "Webpages, articles, videos, PDFs — save them all instantly. No complicated setup, no learning curve."
+      },
+      {
+        "title": "Capture from anywhere",
+        "text": "A bookmarklet on any page, paste URLs or text anywhere in the app, PWA shortcuts and OpenSearch — everything lands in your encrypted vault."
+      },
+      {
+        "title": "Find anything instantly",
+        "text": "Search by keyword or by meaning. Even when you don't remember exact words, you'll find what you need."
+      },
+      {
+        "title": "Chat with your saved content",
+        "text": "Ask questions about what you've saved and get answers with sources. Works offline, completely private."
+      },
+      {
+        "title": "Sync across your devices",
+        "text": "Your bookmarks follow you everywhere — phone, laptop, tablet. No cloud middleman, just direct sync. Requires Pro."
+      },
+      {
+        "title": "Automatic backups",
+        "text": "Never lose your data. Encrypted backups run automatically and you can export everything anytime."
+      },
+      {
+        "title": "Organize your way",
+        "text": "Tags, folders, notes — make it yours. No rigid structure, no forced categories."
+      },
+      {
+        "title": "Study cards that help you remember",
+        "text": "Turn saved articles into flashcards that resurface right before you'd forget them."
+      },
+      {
+        "title": "Private by default",
+        "text": "No accounts, no tracking, no ads. Your data stays on your device, encrypted and safe."
+      },
+      {
+        "title": "Works offline",
+        "text": "Save and read anywhere, even without internet. Your library is always available."
+      }
+    ],
+    "tierNote": {
+      "freeLabel": "Free includes",
+      "free": "smart search, 500 bookmarks, AI with your own keys, encrypted backups and export — forever",
+      "proLabel": "Pro adds",
+      "pro": "unlimited bookmarks, sync across 5 devices, local AI and chat over your vault, flashcards, PDF/OCR"
+    }
+  },
+  "ai": {
+    "id": "ai",
+    "tag": "AI That Helps You",
+    "title": "Ask questions, get answers",
+    "subtitle": "BookmarkForge's AI assistant reads your saved articles and answers your questions — privately, on your device, or with your own AI keys.",
+    "providers": {
+      "title": "How the AI works",
+      "list": [
+        {
+          "type": "local",
+          "name": "Private mode — runs on your device, nothing sent anywhere"
+        },
+        {
+          "type": "local",
+          "name": "Your own AI — connect OpenAI, Claude, Gemini, or any provider"
+        },
+        {
+          "type": "cloud",
+          "name": "Works offline — no internet needed for private mode"
+        }
+      ]
+    },
+    "modes": {
+      "title": "What you can do",
+      "items": [
+        {
+          "title": "Ask questions",
+          "text": "\"What did that article say about X?\" Get answers with sources cited."
+        },
+        {
+          "title": "Search by meaning",
+          "text": "Find articles even when you don't remember exact words."
+        },
+        {
+          "title": "Get summaries",
+          "text": "Long article? Get the key points in seconds."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacy",
+    "title": "Your data stays yours",
+    "subtitle": "No tracking, no ads, no data selling. Just your bookmarks, safe on your device.",
+    "items": [
+      {
+        "title": "Nobody can read your bookmarks",
+        "text": "Everything is encrypted on your device. Even we can't see what you save."
+      },
+      {
+        "title": "Stored on your device, not our servers",
+        "text": "Your bookmarks live on your computer or phone. We don't store them anywhere else."
+      },
+      {
+        "title": "No tracking, no ads",
+        "text": "We don't track you, show ads, or sell your data. Period."
+      },
+      {
+        "title": "You control your data",
+        "text": "Export everything anytime. Delete your account (if you make one) and your data is gone."
+      },
+      {
+        "title": "Works offline",
+        "text": "No internet? No problem. Your bookmarks work everywhere, always."
+      },
+      {
+        "title": "No lock-in",
+        "text": "Export to open formats (JSON, Markdown, PDF). Your data is portable, always."
+      },
+      {
+        "title": "Only Vercel hosts us — zero analytics",
+        "text": "The site runs exclusively on Vercel with no analytics of any kind: no trackers, no fingerprinting, no third-party scripts. Verify it yourself in your browser's network tab."
+      },
+      {
+        "title": "Cloud AI is opt-in",
+        "text": "Local AI runs entirely on your device. If you add your own API key for a cloud provider, only your prompts go to them — your bookmarks never do."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "pricing",
+    "title": "Simple, Fair Pricing — No Subscriptions",
+    "subtitle": "Start free with 500 bookmarks. Upgrade to Pro when you want unlimited bookmarks, sync across devices, and AI features. Pay once, own it forever.",
+    "plans": [
+      {
+        "name": "Free",
+        "price": "$ 0",
+        "period": "/forever",
+        "description": "Free forever: 500 bookmarks plus the smart search others charge yearly for. At 500 your vault stays whole — reading, search and export never stop; only new saves pause.",
+        "features": [
+          {
+            "included": true,
+            "text": "Smart search (full-text + semantic) — included free; Raindrop charges yearly for this"
+          },
+          {
+            "included": true,
+            "text": "500 bookmarks, notes, documents"
+          },
+          {
+            "included": true,
+            "text": "Works on any device — each keeps its own vault"
+          },
+          {
+            "included": true,
+            "text": "AI with your own API key (you pay the provider)"
+          },
+          {
+            "included": true,
+            "text": "Knowledge graph"
+          },
+          {
+            "included": true,
+            "text": "Basic templates"
+          },
+          {
+            "included": true,
+            "text": "JSON/HTML export"
+          },
+          {
+            "included": true,
+            "text": "PWA + browser extensions"
+          },
+          {
+            "included": false,
+            "text": "P2P sync across devices"
+          },
+          {
+            "included": false,
+            "text": "Local AI (WebLLM/Ollama) & RAG chat"
+          },
+          {
+            "included": false,
+            "text": "Flashcards with spaced repetition"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": false,
+            "text": "Advanced export (7 formats)"
+          },
+          {
+            "included": true,
+            "text": "Encrypted .bmf backups — automatic daily + disk copy"
+          }
+        ],
+        "cta": "Try It Instantly",
+        "ctaHref": "/app",
+        "ctaClass": "btn-secondary"
+      },
+      {
+        "name": "Pro",
+        "badge": "Most Popular — Early Bird 200",
+        "price": "$59",
+        "period": "once",
+        "description": "Pay once, own it forever. Unlimited bookmarks, sync across 5 devices, AI assistant, and all premium features.",
+        "features": [
+          {
+            "included": true,
+            "text": "Everything in Free"
+          },
+          {
+            "included": true,
+            "text": "Unlimited bookmarks"
+          },
+          {
+            "included": true,
+            "text": "Sync across 5 devices"
+          },
+          {
+            "included": true,
+            "text": "AI assistant that reads your library"
+          },
+          {
+            "included": true,
+            "text": "Flashcards for studying"
+          },
+          {
+            "included": true,
+            "text": "PDF and document support"
+          },
+          {
+            "included": true,
+            "text": "Export in 7 formats"
+          },
+          {
+            "included": true,
+            "text": "Priority email support"
+          },
+          {
+            "included": true,
+            "text": "12 months of v1 updates + security fixes forever"
+          }
+        ],
+        "cta": "Get Pro — $59 once",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primary",
+        "priceSub": "Early-bird price for the first 200 licenses, then $79",
+        "sla": "Replies within 48 h, Mon–Fri (CET)"
+      }
+    ],
+    "legal": "One-time payment · 12 months of updates included · v1 works forever · 30-day money-back guarantee. <a href=\"/privacy-and-terms.html#terms\">Terms</a>"
+  },
+  "faq": {
+    "title": "Common Questions",
+    "items": [
+      {
+        "question": "Is BookmarkForge really free?",
+        "answer": "Yes! The free tier gives you 500 bookmarks, smart search, and all the basics — forever. No trial, no credit card, no catch. Upgrade to Pro only if you want unlimited bookmarks, sync across devices, or AI features."
+      },
+      {
+        "question": "Do I need to create an account?",
+        "answer": "Nope! BookmarkForge works instantly in your browser. No sign-up, no email, no password. Just open the app and start saving."
+      },
+      {
+        "question": "What happens to my data if I stop using it?",
+        "answer": "Your data stays on your device. You can export everything anytime to Markdown, JSON, CSV, or PDF. No lock-in, no hostage situations."
+      },
+      {
+        "question": "Is my data really private?",
+        "answer": "Absolutely. Everything is encrypted on your device with a key only you have. We never see your bookmarks, notes, or passwords. Even we can't read your data."
+      },
+      {
+        "question": "What if I forget my password?",
+        "answer": "When you first set up BookmarkForge, we show you a 24-word recovery phrase. Write it down and keep it safe. Without it, no one (including us) can access your vault."
+      },
+      {
+        "question": "Can I use it on my phone?",
+        "answer": "Yes! BookmarkForge works on any device with a web browser. The free tier works on unlimited devices (each has its own vault). Pro syncs across up to 5 devices."
+      },
+      {
+        "question": "How do I import my bookmarks from Chrome/Firefox?",
+        "answer": "Easy! Go to Settings → Import and choose your browser. BookmarkForge will automatically bring in all your bookmarks, folders, and tags."
+      },
+      {
+        "question": "What payment methods do you accept?",
+        "answer": "We use Whop for payments: credit card, PayPal, and crypto. We never see your payment details. 30-day money-back guarantee — no questions asked."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Ready to organize your bookmarks?",
+    "text": "Start saving and organizing your bookmarks today. Free forever, no account needed, works instantly in your browser.",
+    "ctaPrimary": "Try It Free",
+    "ctaSecondary": "See Pricing",
+    "note": "Free forever: 500 bookmarks. No credit card required."
+  },
+  "footer": {
+    "brand": "Your private bookmark manager. Free forever, pay once for Pro.",
+    "product": {
+      "title": "Product",
+      "links": [
+        "Features",
+        "AI Capabilities",
+        "Privacy",
+        "Pricing",
+        "Try It Instantly"
+      ],
+      "hrefs": [
+        "/#features",
+        "/#ai",
+        "/#privacy",
+        "/#pricing",
+        "/app"
+      ]
+    },
+    "resources": {
+      "title": "Resources",
+      "links": [
+        "Pocket Comparison",
+        "Privacy & Terms"
+      ],
+      "hrefs": [
+        "/pocket-alternative.html",
+        "/privacy-and-terms.html"
+      ]
+    },
+    "languages": {
+      "title": "Languages",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Support",
+      "links": [
+        "Contact"
+      ],
+      "helpCenter": "Help Center",
+      "errorCodes": "Error Codes",
+      "hours": "Replies within 48 h, Mon–Fri (CET)"
+    },
+    "copyright": "© 2026 BookmarkForge. All rights reserved.",
+    "githubStar": "Like BookmarkForge? Star us on GitHub ⭐",
+    "legal": [
+      "Privacy Policy",
+      "Terms of Service",
+      "bookmarkforge@proton.me"
+    ]
+  }
+}

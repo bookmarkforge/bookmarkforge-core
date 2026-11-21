@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Redeem your AppSumo code — BookmarkForge</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: #0f172a; color: #e2e8f0; padding: 1.5rem;
+  }
+  .card {
+    width: 100%; max-width: 480px; background: #1e293b; border: 1px solid #334155;
+    border-radius: 16px; padding: 2rem;
+  }
+  h1 { font-size: 1.4rem; margin: 0 0 .25rem; }
+  .sub { color: #94a3b8; font-size: .9rem; margin: 0 0 1.5rem; }
+  label { display: block; font-size: .85rem; color: #cbd5e1; margin: 1rem 0 .35rem; }
+  input {
+    width: 100%; padding: .7rem .8rem; border-radius: 10px; border: 1px solid #475569;
+    background: #0f172a; color: #e2e8f0; font-size: 1rem; font-family: inherit;
+  }
+  input:focus { outline: 2px solid #38bdf8; outline-offset: 1px; border-color: transparent; }
+  button {
+    width: 100%; margin-top: 1.5rem; padding: .8rem; border: 0; border-radius: 10px;
+    background: #facc15; color: #0f172a; font-weight: 700; font-size: 1rem; cursor: pointer;
+  }
+  button:disabled { opacity: .6; cursor: default; }
+  .error { color: #fca5a5; font-size: .85rem; margin-top: 1rem; display: none; }
+  .success { display: none; }
+  .key-box {
+    margin-top: 1.25rem; padding: 1rem; background: #0f172a; border: 1px dashed #38bdf8;
+    border-radius: 10px; word-break: break-all; font-family: ui-monospace, monospace; font-size: 1.05rem;
+    text-align: center; user-select: all;
+  }
+  .hint { color: #94a3b8; font-size: .85rem; margin-top: 1rem; line-height: 1.5; }
+  a { color: #38bdf8; }
+</style>
+</head>
+<body>
+<main class="card">
+  <h1>Redeem your AppSumo code</h1>
+  <p class="sub">Enter the code from your AppSumo purchase to get your BookmarkForge Pro license key.</p>
+
+  <form id="redeem-form" novalidate>
+    <label for="f-name">Name (optional)</label>
+    <input id="f-name" name="name" type="text" autocomplete="name" maxlength="120">
+
+    <label for="f-email">Email (optional, for your records)</label>
+    <input id="f-email" name="email" type="email" autocomplete="email" maxlength="254">
+
+    <label for="f-code">AppSumo code</label>
+    <input id="f-code" name="code" type="text" required autocomplete="off"
+           placeholder="BMKF-XXXX-XXXX" autocapitalize="characters" spellcheck="false">
+
+    <button id="redeem-btn" type="submit">Redeem now</button>
+    <p class="error" id="redeem-error" role="alert"></p>
+  </form>
+
+  <div class="success" id="redeem-success">
+    <p><strong>Your license key</strong> — copy it now, it is shown only once:</p>
+    <div class="key-box" id="license-key"></div>
+    <p class="hint">
+      Activate it in the app: <strong>Settings → Pro → Activate Pro License</strong> and paste the key.
+      The key works on up to 5 devices. Lost it? Contact
+      <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a> from your purchase email.
+    </p>
+  </div>
+</main>
+<script src="/redeem.js" defer></script>
+</body>
+</html>

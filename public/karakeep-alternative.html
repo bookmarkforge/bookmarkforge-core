@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef">
+  <meta name="description" content="Compare BookmarkForge vs Karakeep. PWA-based bookmark manager vs self-hosted bookmark service. See which is right for you.">
+  <title>BookmarkForge vs Karakeep — PWA Bookmark Manager Comparison</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="canonical" href="https://www.bookmarkforgeapp.com/karakeep-alternative.html">
+  <link rel="alternate" hreflang="x-default" href="https://www.bookmarkforgeapp.com/">
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge vs Karakeep — PWA Bookmark Manager">
+  <meta property="og:description" content="Compare BookmarkForge vs Karakeep. PWA-based bookmark manager vs self-hosted bookmark service.">
+  <meta property="og:url" content="https://www.bookmarkforgeapp.com/karakeep-alternative.html">
+  <meta property="og:image" content="https://www.bookmarkforgeapp.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge vs Karakeep — PWA Bookmark Manager">
+  <meta name="twitter:description" content="Compare BookmarkForge vs Karakeep. PWA-based bookmark manager vs self-hosted bookmark service.">
+  <meta name="twitter:image" content="https://www.bookmarkforgeapp.com/og-image.png">
+  <script src="/theme-init.js"></script>
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="stylesheet" href="/landing.css">
+  <link rel="stylesheet" href="/pocket-alternative.css">
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://www.bookmarkforgeapp.com/karakeep-alternative.html#webpage",
+        "url": "https://www.bookmarkforgeapp.com/karakeep-alternative.html",
+        "name": "BookmarkForge vs Karakeep",
+        "description": "Compare BookmarkForge vs Karakeep. PWA-based bookmark manager vs self-hosted bookmark service.",
+        "inLanguage": "en",
+        "isPartOf": { "@id": "https://www.bookmarkforgeapp.com/#website" },
+        "about": { "@id": "https://www.bookmarkforgeapp.com/#software" }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://www.bookmarkforgeapp.com/#software",
+        "name": "BookmarkForge",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Web",
+        "url": "https://www.bookmarkforgeapp.com/",
+        "description": "Private, local-first bookmark manager. Your data stays on your device, encrypted with AES-256-GCM. Free forever, pay once for Pro.",
+        "offers": [
+          { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
+          { "@type": "Offer", "name": "Pro", "price": "59", "priceCurrency": "USD" }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://www.bookmarkforgeapp.com/karakeep-alternative.html#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is BookmarkForge better than Karakeep?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "BookmarkForge is better for users who want a simple PWA experience without Docker setup. Karakeep is better for self-hosters who want full control."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is BookmarkForge free?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, BookmarkForge has a free tier with 500 bookmarks. Pro is a one-time payment of $59 for lifetime access to v1."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does BookmarkForge require Docker?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No, BookmarkForge is a PWA that works in any modern browser. No Docker or server setup required."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="container nav-container">
+      <a href="/" class="nav-logo" aria-label="BookmarkForge home">
+        <img src="/logo.png" alt="BookmarkForge" width="32" height="32">
+        <span>BookmarkForge</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Open menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="nav-links" id="navLinks">
+        <a href="/#features">Features</a>
+        <a href="/#pricing">Pricing</a>
+        <a href="/help">Help</a>
+        <a href="/app" class="btn-primary">Try It Free</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <section class="hero">
+      <div class="container">
+        <div class="hero-content">
+          <h1>BookmarkForge vs Karakeep</h1>
+          <p class="hero-subtitle">Compare PWA bookmark manager vs self-hosted solution</p>
+          <div class="hero-cta">
+            <a href="/app" class="btn-primary">Try BookmarkForge Free</a>
+            <a href="/#pricing" class="btn-secondary">See Pricing</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="comparison-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Feature Comparison</h2>
+          <p class="section-subtitle">Side-by-side comparison of BookmarkForge and Karakeep</p>
+        </div>
+        <div class="rc-table" role="table" aria-label="BookmarkForge vs Karakeep comparison">
+          <div class="rc-row rc-head" role="row">
+            <div class="rc-topic" role="columnheader"></div>
+            <div class="rc-us" role="columnheader">BookmarkForge</div>
+            <div class="rc-them" role="columnheader">Karakeep</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Setup</div>
+            <div class="rc-us" role="cell">Just open in browser</div>
+            <div class="rc-them" role="cell">Docker + server setup</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Data Location</div>
+            <div class="rc-us" role="cell">On your device, encrypted</div>
+            <div class="rc-them" role="cell">Self-hosted server</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Encryption</div>
+            <div class="rc-us" role="cell">AES-256-GCM, end-to-end</div>
+            <div class="rc-them" role="cell">Server-side only</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Open Source</div>
+            <div class="rc-us" role="cell">MIT Core</div>
+            <div class="rc-them" role="cell">AGPL-3.0</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Price Model</div>
+            <div class="rc-us" role="cell">Free + $59 one-time</div>
+            <div class="rc-them" role="cell">Free (self-hosted)</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Sync</div>
+            <div class="rc-us" role="cell">P2P, no server</div>
+            <div class="rc-them" role="cell">Server-based</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Languages</div>
+            <div class="rc-us" role="cell">30 languages</div>
+            <div class="rc-them" role="cell">English only</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">AI Features</div>
+            <div class="rc-us" role="cell">Local AI or BYOK</div>
+            <div class="rc-them" role="cell">Optional — BYOK (OpenAI/Ollama), runs on your server</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Offline</div>
+            <div class="rc-us" role="cell">Full offline support</div>
+            <div class="rc-them" role="cell">Limited</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="comparison-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>When to Choose BookmarkForge</h2>
+          <p class="section-subtitle">BookmarkForge is the better choice if you want simplicity and privacy</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Easy Setup</h3>
+            <p>Just open in browser. No Docker, no server.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Privacy First</h3>
+            <p>Your data is encrypted on your device.</p>
+          </div>
+          <div class="feature-item">
+            <h3>P2P Sync</h3>
+            <p>Sync without a central server.</p>
+          </div>
+          <div class="feature-item">
+            <h3>30 Languages</h3>
+            <p>Native support for 30 languages.</p>
+          </div>
+          <div class="feature-item">
+            <h3>AI Features</h3>
+            <p>Local AI for smart search and summaries.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Free Tier</h3>
+            <p>500 bookmarks free forever.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="comparison-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>When to Choose Karakeep</h2>
+          <p class="section-subtitle">Karakeep is the better choice if you want self-hosting control</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Self-Hosted</h3>
+            <p>Full control over your data.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Open Source</h3>
+            <p>AGPL-3.0 licensed, fully auditable.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Free</h3>
+            <p>No cost if you self-host.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Server Features</h3>
+            <p>Team collaboration, API access.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Proven</h3>
+            <p>Been around since 2022.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Docker</h3>
+            <p>Containerized deployment.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cmp-section alt" aria-labelledby="migration-title">
+      <div class="container">
+        <header class="section-head">
+          <h2 id="migration-title">Move from Karakeep in 4 Steps</h2>
+          <p>Karakeep is a capable self-hosted bookmark manager, but it needs a server, Docker and ongoing maintenance. BookmarkForge gives you the same local-first idea as a zero-setup PWA — encrypted on your device, no server to run. BookmarkForge Pro is $59 early bird ($79 regular), a single payment that includes 12 months of updates; v1 keeps working forever.</p>
+        </header>
+
+        <ol class="steps">
+          <li class="step">
+            <h3>Export your Karakeep bookmarks</h3>
+            <p>Use Karakeep's export feature or its API to get your bookmarks out as JSON/CSV, or fall back to your browser's bookmark export if you saved through the extension.</p>
+          </li>
+          <li class="step">
+            <h3>Open the BookmarkForge importer</h3>
+            <p>Open <a href="/app">BookmarkForge</a> — no account, no Docker — and click <strong>Open Importer</strong> on the dashboard. It accepts <code>.json</code>, <code>.csv</code>, <code>.html</code>, <code>.md</code> and <code>.zip</code> files.</p>
+          </li>
+          <li class="step">
+            <h3>Import your library</h3>
+            <p>BookmarkForge maps titles, URLs, tags and notes into your encrypted vault. Lists you curated in Karakeep become tags or folders you can search instantly.</p>
+          </li>
+          <li class="step">
+            <h3>Retire the server (optional)</h3>
+            <p>Once your library is in BookmarkForge you can stop running the Karakeep container. Your data lives on your devices — keep a BookmarkForge encrypted backup and you no longer depend on a host.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="faq-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Frequently Asked Questions</h2>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <h3>Is BookmarkForge better than Karakeep?</h3>
+            <p>BookmarkForge is better for users who want a simple PWA experience without Docker setup. Karakeep is better for self-hosters who want full control.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Is BookmarkForge free?</h3>
+            <p>Yes, BookmarkForge has a free tier with 500 bookmarks. Pro is a one-time payment of $59 for lifetime access to v1.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does BookmarkForge require Docker?</h3>
+            <p>No, BookmarkForge is a PWA that works in any modern browser. No Docker or server setup required.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Can I import from Karakeep?</h3>
+            <p>Yes, you can export your bookmarks from Karakeep and import them into BookmarkForge.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Which is more private?</h3>
+            <p>BookmarkForge is more private because your data never leaves your device unless you choose to sync.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does BookmarkForge have AI features like Karakeep?</h3>
+            <p>Yes — smart search by keyword or meaning, summaries and AI chat over your saved content. It can run models locally on your device or use your own API keys, so your data does not have to go to a third-party server the way Karakeep's optional OpenAI integration does.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Is the pricing on this page up to date?</h3>
+            <p>BookmarkForge pricing is current: Free with 500 bookmarks, Pro at $59 early bird for the first 200 licenses then $79, one-time payment including 12 months of updates, and a 30-day money-back guarantee. Karakeep itself is free open source — you pay for the server and upkeep instead.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Does BookmarkForge support lists and tags like Karakeep?</h3>
+            <p>Yes — folders, tags and smart collections cover what Karakeep calls lists, and smart search by keyword or meaning finds things Karakeep's tag-only browsing would miss.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Is BookmarkForge really free?</h3>
+            <p>The Free tier includes 500 bookmarks, smart search and offline use with no account and no device cap. Pro is a single $59 early-bird payment ($79 regular) covering v1 forever plus 12 months of updates.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Is BookmarkForge open source?</h3>
+            <p>The Core is MIT-licensed open source — you can audit the code yourself. Pro features (sync, unlimited bookmarks, advanced AI) stay in the private repo under the one-time license.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div class="container">
+        <div class="cta-content">
+          <h2>Ready to try BookmarkForge?</h2>
+          <p>Start organizing your bookmarks today. Free forever, no account needed.</p>
+          <div class="hero-cta">
+            <a href="/app" class="btn-primary">Try It Free</a>
+            <a href="/" class="btn-secondary">Back to Home</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>Your private bookmark manager. Free forever, pay once for Pro.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="/#features">Features</a></li>
+          <li><a href="/#ai">AI Capabilities</a></li>
+          <li><a href="/#privacy">Privacy</a></li>
+          <li><a href="/#pricing">Pricing</a></li>
+          <li><a href="/app">Try It Instantly</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/pocket-alternative.html">Pocket Comparison</a></li>
+          <li><a href="/raindrop-alternative.html">Raindrop.io Comparison</a></li>
+          <li><a href="/geneziz-alternative.html">Geneziz Comparison</a></li>
+          <li><a href="/karakeep-alternative.html">Karakeep Comparison</a></li>
+          <li><a href="/readwise-alternative.html">Readwise Comparison</a></li>
+          <li><a href="/omnivore-alternative.html">Omnivore Comparison</a></li>
+          <li><a href="/instapaper-alternative.html">Instapaper Comparison</a></li>
+          <li><a href="/privacy-and-terms.html">Privacy & Terms</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="/help">Help Center</a></li>
+          <li><a href="mailto:bookmarkforge@proton.me">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. All rights reserved.</p>
+      <a href="/privacy-and-terms.html">Privacy Policy</a> · <a href="/privacy-and-terms.html#terms">Terms of Service</a> · <a href="mailto:bookmarkforge@proton.me">Contact</a>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

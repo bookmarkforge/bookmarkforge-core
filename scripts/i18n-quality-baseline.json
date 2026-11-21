@@ -1,0 +1,92 @@
+{
+  "locales": {
+    "ar": {
+      "issues": 4
+    },
+    "bg": {
+      "issues": 1
+    },
+    "cs": {
+      "issues": 6
+    },
+    "da": {
+      "issues": 9
+    },
+    "de": {
+      "issues": 8
+    },
+    "el": {
+      "issues": 2
+    },
+    "es": {
+      "issues": 42
+    },
+    "fi": {
+      "issues": 6
+    },
+    "fr": {
+      "issues": 4
+    },
+    "he": {
+      "issues": 3
+    },
+    "hi": {
+      "issues": 2
+    },
+    "hr": {
+      "issues": 5
+    },
+    "hu": {
+      "issues": 2
+    },
+    "id": {
+      "issues": 6
+    },
+    "it": {
+      "issues": 7
+    },
+    "ja": {
+      "issues": 12
+    },
+    "ko": {
+      "issues": 9
+    },
+    "nl": {
+      "issues": 12
+    },
+    "no": {
+      "issues": 8
+    },
+    "pl": {
+      "issues": 4
+    },
+    "pt": {
+      "issues": 5
+    },
+    "ro": {
+      "issues": 6
+    },
+    "ru": {
+      "issues": 1
+    },
+    "sv": {
+      "issues": 7
+    },
+    "th": {
+      "issues": 1
+    },
+    "tr": {
+      "issues": 3
+    },
+    "uk": {
+      "issues": 1
+    },
+    "vi": {
+      "issues": 1
+    },
+    "zh": {
+      "issues": 8
+    }
+  },
+  "updatedAt": "2026-11-01T03:19:08.352Z"
+}

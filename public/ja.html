@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="ja"
+  dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Raindropはブックマークをサーバーに保存します。BookmarkForgeはブックマークをあなたのコンピュータに保存します — 私たちでさえ読めないようにロックされています。一度だけの支払い: $59 アーリーバード価格で永久ライセンス（通常価格前に$20お得）。無料：500件のブックマーク。">
+  <title>BookmarkForge：プライベートなローカルファーストのブックマーク管理とリーディングリスト</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="search" type="application/opensearchdescription+xml" title="BookmarkForge" href="/opensearch.xml">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://www.bookmarkforgeapp.com/ja/">
+  <link rel="alternate" hreflang="id" href="https://www.bookmarkforgeapp.com/id/">
+  <link rel="alternate" hreflang="cs" href="https://www.bookmarkforgeapp.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://www.bookmarkforgeapp.com/da/">
+  <link rel="alternate" hreflang="de" href="https://www.bookmarkforgeapp.com/de/">
+  <link rel="alternate" hreflang="en" href="https://www.bookmarkforgeapp.com/">
+  <link rel="alternate" hreflang="es" href="https://www.bookmarkforgeapp.com/es/">
+  <link rel="alternate" hreflang="fr" href="https://www.bookmarkforgeapp.com/fr/">
+  <link rel="alternate" hreflang="hr" href="https://www.bookmarkforgeapp.com/hr/">
+  <link rel="alternate" hreflang="it" href="https://www.bookmarkforgeapp.com/it/">
+  <link rel="alternate" hreflang="hu" href="https://www.bookmarkforgeapp.com/hu/">
+  <link rel="alternate" hreflang="nl" href="https://www.bookmarkforgeapp.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://www.bookmarkforgeapp.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://www.bookmarkforgeapp.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://www.bookmarkforgeapp.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://www.bookmarkforgeapp.com/ro/">
+  <link rel="alternate" hreflang="fi" href="https://www.bookmarkforgeapp.com/fi/">
+  <link rel="alternate" hreflang="sv" href="https://www.bookmarkforgeapp.com/sv/">
+  <link rel="alternate" hreflang="vi" href="https://www.bookmarkforgeapp.com/vi/">
+  <link rel="alternate" hreflang="tr" href="https://www.bookmarkforgeapp.com/tr/">
+  <link rel="alternate" hreflang="el" href="https://www.bookmarkforgeapp.com/el/">
+  <link rel="alternate" hreflang="bg" href="https://www.bookmarkforgeapp.com/bg/">
+  <link rel="alternate" hreflang="ru" href="https://www.bookmarkforgeapp.com/ru/">
+  <link rel="alternate" hreflang="uk" href="https://www.bookmarkforgeapp.com/uk/">
+  <link rel="alternate" hreflang="he" href="https://www.bookmarkforgeapp.com/he/">
+  <link rel="alternate" hreflang="ar" href="https://www.bookmarkforgeapp.com/ar/">
+  <link rel="alternate" hreflang="hi" href="https://www.bookmarkforgeapp.com/hi/">
+  <link rel="alternate" hreflang="th" href="https://www.bookmarkforgeapp.com/th/">
+  <link rel="alternate" hreflang="ko" href="https://www.bookmarkforgeapp.com/ko/">
+  <link rel="alternate" hreflang="zh" href="https://www.bookmarkforgeapp.com/zh/">
+  <link rel="alternate" hreflang="ja" href="https://www.bookmarkforgeapp.com/ja/">
+  <link rel="alternate" hreflang="x-default" href="https://www.bookmarkforgeapp.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="BookmarkForge：プライベートなローカルファーストのブックマーク管理とリーディングリスト">
+  <meta property="og:description" content="Raindropはブックマークをサーバーに保存します。BookmarkForgeはブックマークをあなたのコンピュータに保存します — 私たちでさえ読めないようにロックされています。一度だけの支払い: $59 アーリーバード価格で永久ライセンス（通常価格前に$20お得）。無料：500件のブックマーク。">
+  <meta property="og:url" content="https://www.bookmarkforgeapp.com/ja/">
+  <meta property="og:image" content="https://www.bookmarkforgeapp.com/og-image.png">
+  <meta property="og:image:alt" content="BookmarkForge — AI を活用したプライベートなブックマーク＆ノートアプリ">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="ja_JP">
+  <meta property="og:locale:alternate" content="en_US">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="BookmarkForge：プライベートなローカルファーストのブックマーク管理とリーディングリスト">
+  <meta name="twitter:description" content="Raindropはブックマークをサーバーに保存します。BookmarkForgeはブックマークをあなたのコンピュータに保存します — 私たちでさえ読めないようにロックされています。一度だけの支払い: $59 アーリーバード価格で永久ライセンス（通常価格前に$20お得）。無料：500件のブックマーク。">
+  <meta name="twitter:image" content="https://www.bookmarkforgeapp.com/og-image.png">
+  <script src="/theme-init.js"></script>
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data (GEO): WebSite / Organization / SoftwareApplication / FAQPage.
+       The permanent offer deliberately carries NO priceValidUntil: the lifetime
+       licence does not expire, and an expiry date would let crawlers and AI
+       answer engines retire a live offer. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.bookmarkforgeapp.com/ja/#website",
+        "url": "https://www.bookmarkforgeapp.com/ja/",
+        "name": "BookmarkForge",
+        "description": "あなた専用のAIナレッジボールト。100%ローカルファースト。プライベートなPocketの代替",
+        "inLanguage": "ja",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://www.bookmarkforgeapp.com/ja/?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": { "@id": "https://www.bookmarkforgeapp.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.bookmarkforgeapp.com/#organization",
+        "name": "BookmarkForge",
+        "url": "https://www.bookmarkforgeapp.com/",
+        "logo": { "@type": "ImageObject", "url": "https://www.bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
+        "email": "bookmarkforge@proton.me"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://www.bookmarkforgeapp.com/ja/#software",
+        "name": "BookmarkForge",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Windows, macOS, Linux, Browser (PWA)",
+        "url": "https://www.bookmarkforgeapp.com/ja/",
+        "image": "https://www.bookmarkforgeapp.com/og-image.png",
+        "inLanguage": "ja",
+        "description": "A local-first, privacy-preserving, encrypted knowledge and bookmark manager powered by local AI.",
+        "offers": {
+          "@type": "Offer",
+          "price": "59.00",
+          "priceCurrency": "USD",
+          "valueAddedTaxIncluded": "false"
+        },
+        "featureList": [
+          "100% local storage",          "エンドツーエンド暗号化",          "Offline-first",          "AI検索",          "Notion風エディター",          "P2P同期"        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://www.bookmarkforgeapp.com/ja/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Freeティアは本当に永遠に無料ですか？",
+            "acceptedAnswer": { "@type": "Answer", "text": "はい。トライアルなし、サブスクリプションなし。Freeティアには500件のブックマーク、全文と意味検索、ナレッジグラフ、独自のAPIキーでのAI（あなたがプロバイダーに支払う）が含まれています。" }
+          },          {
+            "@type": "Question",
+            "name": "Proの「v1のライフタイム」はどういう意味ですか？",
+            "acceptedAnswer": { "@type": "Answer", "text": "一度支払い、v1を永遠に所有。すべてのv1.x更新（バグ修正 + マイナー機能）を永遠に、購入から12ヶ月の機能更新を含む。セキュリティ更新は永遠に。13ヶ月後もv1は機能し続けますが、新機能はありません。将来のメジャーバージョン（v2、v3）は別製品：新規顧客$89、v1オーナー$35（60%オフ）。" }
+          },          {
+            "@type": "Question",
+            "name": "支払い方法と返金？",
+            "acceptedAnswer": { "@type": "Answer", "text": "Whop経由：クレジットカード、PayPal、暗号通貨。私たちはあなたの支払い詳細を見ません。30日返金 — \u003ca href=\"mailto:bookmarkforge@proton.me\"\u003ebookmarkforge@proton.me\u003c/a\u003eまで連絡。" }
+          },          {
+            "@type": "Question",
+            "name": "サポート — どのくらい早く回答しますか？",
+            "acceptedAnswer": { "@type": "Answer", "text": "Free：\u003ca href=\"/help\"\u003eヘルプセンター\u003c/a\u003e + GitHubディスカッション（ベストエフォート）経由のコミュニティヘルプ。Pro：営業日48時間メール。ボールトは暗号化されているため、私たちはあなたのデータを見られないため、パスワードやリカバリーフレーズを尋ねません。\u003ca href=\"/help-ja#sla\"\u003eサポートSLA\u003c/a\u003eを参照。" }
+          },          {
+            "@type": "Question",
+            "name": "ボールトのパスワードを忘れた場合は？",
+            "acceptedAnswer": { "@type": "Answer", "text": "回復できません。ボールトを作成すると、24単語のリカバリーフレーズを一度だけ表示します — 紙に書いてください。それがないと、誰（私たちを含む）もボールトを開けません。\u003ca href=\"/help-ja#bf-e101\"\u003eBF-E101\u003c/a\u003eを参照。" }
+          },          {
+            "@type": "Question",
+            "name": "使わなくなったらデータはどうなりますか？",
+            "acceptedAnswer": { "@type": "Answer", "text": "データはデバイスに残ります。いつでもMarkdown、JSON、CSV、PDFにエクスポートできます。ロックインなし、強制なし。" }
+          },          {
+            "@type": "Question",
+            "name": "データは本当にプライベートですか？",
+            "acceptedAnswer": { "@type": "Answer", "text": "絶対に。すべてがあなただけのキーでデバイス上で暗号化されています。私たちはあなたのブックマーク、メモ、パスワードを見ることはありません。私たちですらあなたのデータを読むことはできません。" }
+          },          {
+            "@type": "Question",
+            "name": "携帯電話で使えますか？",
+            "acceptedAnswer": { "@type": "Answer", "text": "はい！BookmarkForgeはウェブブラウザのあるあらゆるデバイスで動作します。無料版は無制限のデバイスで動作します（各デバイスが独自のボルトを持ちます）。Proは最大5台のデバイスで同期します。" }
+          }        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">メインコンテンツにスキップ</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/ja/" class="nav-brand" aria-label="BookmarkForge ホーム">
+        <img src="/logo-64.png" width="32" height="32" alt="BookmarkForge logo" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" id="navLinks" aria-label="メインナビゲーション">
+        <a href="#pocket-alternative">後で読む機能の復活</a>
+        <a href="#raindrop-compare">Raindropとの比較</a>
+        <a href="#features">機能</a>
+        <a href="#ai">AI</a>
+        <a href="#privacy">プライバシー</a>
+        <a href="#pricing">料金</a>
+        <a href="/help-ja">ヘルプ</a>
+        <a href="mailto:bookmarkforge@proton.me">連絡先</a>
+
+        <!-- Language Dropdown -->
+        <div class="language-dropdown">
+          <button class="language-toggle" aria-label="言語を変更" aria-expanded="false">
+            <span class="current-lang">日本語</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 4 L6 8 L10 4"/>
+            </svg>
+          </button>
+          <ul class="language-menu" role="menu" aria-hidden="true">
+            <li role="none">
+              <a href="/id/" hreflang="id" lang="id" role="menuitem">
+                Bahasa Indonesia
+              </a>
+            </li>
+            <li role="none">
+              <a href="/cs/" hreflang="cs" lang="cs" role="menuitem">
+                Čeština
+              </a>
+            </li>
+            <li role="none">
+              <a href="/da/" hreflang="da" lang="da" role="menuitem">
+                Dansk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/de/" hreflang="de" lang="de" role="menuitem">
+                Deutsch
+              </a>
+            </li>
+            <li role="none">
+              <a href="/" hreflang="en" lang="en" role="menuitem">
+                English
+              </a>
+            </li>
+            <li role="none">
+              <a href="/es/" hreflang="es" lang="es" role="menuitem">
+                Español
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fr/" hreflang="fr" lang="fr" role="menuitem">
+                Français
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hr/" hreflang="hr" lang="hr" role="menuitem">
+                Hrvatski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/it/" hreflang="it" lang="it" role="menuitem">
+                Italiano
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hu/" hreflang="hu" lang="hu" role="menuitem">
+                Magyar
+              </a>
+            </li>
+            <li role="none">
+              <a href="/nl/" hreflang="nl" lang="nl" role="menuitem">
+                Nederlands
+              </a>
+            </li>
+            <li role="none">
+              <a href="/no/" hreflang="no" lang="no" role="menuitem">
+                Norsk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pl/" hreflang="pl" lang="pl" role="menuitem">
+                Polski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pt/" hreflang="pt" lang="pt" role="menuitem">
+                Português
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ro/" hreflang="ro" lang="ro" role="menuitem">
+                Română
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fi/" hreflang="fi" lang="fi" role="menuitem">
+                Suomi
+              </a>
+            </li>
+            <li role="none">
+              <a href="/sv/" hreflang="sv" lang="sv" role="menuitem">
+                Svenska
+              </a>
+            </li>
+            <li role="none">
+              <a href="/vi/" hreflang="vi" lang="vi" role="menuitem">
+                Tiếng Việt
+              </a>
+            </li>
+            <li role="none">
+              <a href="/tr/" hreflang="tr" lang="tr" role="menuitem">
+                Türkçe
+              </a>
+            </li>
+            <li role="none">
+              <a href="/el/" hreflang="el" lang="el" role="menuitem">
+                Ελληνικά
+              </a>
+            </li>
+            <li role="none">
+              <a href="/bg/" hreflang="bg" lang="bg" role="menuitem">
+                Български
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ru/" hreflang="ru" lang="ru" role="menuitem">
+                Русский
+              </a>
+            </li>
+            <li role="none">
+              <a href="/uk/" hreflang="uk" lang="uk" role="menuitem">
+                Українська
+              </a>
+            </li>
+            <li role="none">
+              <a href="/he/" hreflang="he" lang="he" role="menuitem">
+                עברית
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ar/" hreflang="ar" lang="ar" role="menuitem">
+                العربية
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hi/" hreflang="hi" lang="hi" role="menuitem">
+                हिन्दी
+              </a>
+            </li>
+            <li role="none">
+              <a href="/th/" hreflang="th" lang="th" role="menuitem">
+                ไทย
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ko/" hreflang="ko" lang="ko" role="menuitem">
+                한국어
+              </a>
+            </li>
+            <li role="none">
+              <a href="/zh/" hreflang="zh" lang="zh" role="menuitem">
+                中文
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ja/" hreflang="ja" lang="ja" role="menuitem" class="current">
+                日本語
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <a href="/app" class="btn-primary nav-cta">今すぐ試す（アカウント不要）</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="メニューを開く" data-label-close="メニューを閉じる">
+          <svg class="icon-menu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+          <svg class="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <button class="theme-toggle" id="themeToggle" aria-label="テーマを切り替え" aria-pressed="false">
+          <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+<div class="announce-bar">⚡ クイックキャプチャが登場 — ブックマークレット、どこでも貼り付け、PWAショートカット</div><div class="announce-bar">⚡ ネイティブアプリ近日公開 — Windows、macOS、Linux、Android、iOS</div><div class="announce-bar">⚡ ローカルAI翻訳（近日公開）</div><span class="hero-badge">一回限りの支払い · サブスクリプションなし</span>          <h1 id="hero-title">プライベートなブックマークマネージャー。<span class="accent-text">すべてはあなたのデバイスに。</span></h1>
+          <p class="hero-subtitle">研究者、学生、そして読書履歴をクラウド企業に渡したくないすべての人のために。ページ、記事、PDFを保存し、キーワードや意味で見つけ、すべてを自分のコンピューターに暗号化して保管します。アカウント不要。サブスクリプションなし。</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">無料で始める — 登録不要</a>
+            <a href="#features" class="btn-secondary">仕組みを見る</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>プライベート</strong> — デバイス上で暗号化</span>
+            <span><strong>永久にあなたのもの</strong> — サブスクも月額料金もなし</span>
+            <span><strong>オフラインで動作</strong> — どこでも保存・閲覧、インターネットなしでも</span>
+            <span><strong>永久に無料</strong> — 500件のブックマークは無料、必要ならProへ</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Before/After Section -->
+    <section id="before-after" class="comparison-section" aria-labelledby="before-after-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">なぜ切り替えるのか</span>
+          <h2 id="before-after-title">混沌から明確さへ、30秒で</h2>
+          <p class="section-subtitle">ブラウザのブックマークと本当のナレッジボールトの違いを見てください。</p>
+        </div>
+        <div class="features-grid-2">
+          <div class="feat-card feat-card-before">
+            <h3>前：ブラウザのブックマーク</h3>
+            <ul class="feat-list">
+              <li>忘れられたフォルダに埋もれたブックマーク</li>
+              <li>意味での検索方法なし</li>
+              <li>ブラウザデータをクリアすると消える</li>
+              <li>メモや整理なし</li>
+              <li>1台のデバイスでのみアクセス可能</li>
+            </ul>
+          </div>
+          <div class="feat-card feat-card-after">
+            <h3>後：BookmarkForge</h3>
+            <ul class="feat-list">
+              <li>すべてが即座に検索可能</li>
+              <li>キーワードや意味で検索</li>
+              <li>デバイス上で暗号化、常に安全</li>
+              <li>メモ、タグ、スマート整理</li>
+              <li>すべてのデバイスで同期（Pro）</li>
+            </ul>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">無料で試す</a>
+          <a href="#features" class="btn-link">機能を見る</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="pocket-alternative" class="comparison-section" aria-labelledby="pocket-alternative-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">後で読む機能の復活</span>
+          <h2 id="pocket-alternative-title">プライベートなPocketの代替</h2>
+          <p class="section-subtitle">Pocketは2025年7月8日に閉鎖されました。BookmarkForgeは後で読む習慣を維持します — すべての記事、メモ、ハイライトがデバイスに暗号化されて保存されます。</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>後で読む、永遠にあなたのもの</h3>
+            <p>PWA、ブラウザ拡張機能、シェアメニューからワンクリックで記事、動画、PDFを保存。Pocketとは異なり、読書リストはデバイスに保存され、暗号化され、オフラインでも動作します。</p>
+          </div>
+          <div class="feat-card">
+            <h3>すべての記事にNotionスタイルのメモ</h3>
+            <p>ハイライト、要約、ブロックベースのメモを任意のブックマークに添付。保存した記事を独自のナレッジベースに変換 — リンクリストではありません。</p>
+          </div>
+          <div class="feat-card">
+            <h3>ゼロ追跡、ゼロ広告</h3>
+            <p>BookmarkForgeにはデフォルトでアカウント、分析、広告がありません。読書習慣はあなたのビジネスだけです。</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">今すぐ試す（アカウント不要）</a>
+          <a href="/pocket-alternative" class="btn-link">完全な比較と移行ガイド</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Raindrop Comparison Section -->
+    <section id="raindrop-compare" class="raindrop-section" aria-labelledby="raindrop-compare-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">シンプルな言葉、マーケティングなし</span>
+          <h2 id="raindrop-compare-title">BookmarkForge vs Raindrop、細かい条件なし</h2>
+          <p class="section-subtitle">Raindropは良いアプリです。大きな違いはあなたのものがどこにあるかです。</p>
+        </div>
+        <div class="rc-table" role="table" aria-label="BookmarkForge vs Raindrop、細かい条件なし">
+          <div class="rc-row rc-head" role="row">
+            <div class="rc-topic" role="columnheader"></div>
+            <div class="rc-us" role="columnheader">BookmarkForge</div>
+            <div class="rc-them" role="columnheader">Raindrop</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">リストがどこにあるか</div>
+            <div class="rc-us" role="cell">あなたのコンピュータ上</div>
+            <div class="rc-them" role="cell">彼らのサーバー上</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">誰が保存したものを読めるか</div>
+            <div class="rc-us" role="cell">誰も — あなたの鍵でロックされており、私たちでも読めません</div>
+            <div class="rc-them" role="cell">会社と、彼らに要求する誰でも</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">インターネットなし</div>
+            <div class="rc-us" role="cell">すべてが動作し続けます</div>
+            <div class="rc-them" role="cell">基本機能のみ</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">支払うもの</div>
+            <div class="rc-us" role="cell">$59 アーリーバード価格で永久ライセンス（通常価格前に$20お得）</div>
+            <div class="rc-them" role="cell">毎年28ドル、永遠に</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">会社が消えた場合（RIP Pocket）</div>
+            <div class="rc-us" role="cell">何も変わりません — すでにあなたの手元にあります</div>
+            <div class="rc-them" role="cell">エクスポートして再開</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">AIアシスタント</div>
+            <div class="rc-us" role="cell">プライベートモードであなたのコンピュータ内で実行 — 何もどこにも送信されません</div>
+            <div class="rc-them" role="cell">あなたの読書は考えるためにクラウドに行きます</div>
+          </div>
+        </div>
+        <p class="rc-close">Raindropはシンプルで無料 — それだけで十分なら、喜んで使ってください。しかし、読書生活を自分の手に保ちたいなら、BookmarkForgeはまさにそのために構築されています。</p>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">今すぐ試す（アカウント不要）</a>
+          <a href="/raindrop-alternative.html" class="btn-link">完全なPocket比較</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">必要なすべて</span>
+          <h2 id="features-title">必要なすべて、シンプルな言葉で</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>ブックマークとドキュメント</h3>
+            <p>ワンクリックで任意のページを保存。横にメモを書き、クリーンでシンプルなエディタで。100,000個の保存アイテムでも高速を維持。</p>
+          </div>
+          <div class="feature-item">
+            <h3>どこからでもキャプチャ</h3>
+            <p>どのページでも使えるブックマークレット、アプリ内どこでもURLやテキストを貼り付け、PWAショートカットとOpenSearch — すべてが暗号化保管庫に届きます。</p>
+          </div>
+          <div class="feature-item">
+            <h3>スマート検索</h3>
+            <p>キーワードまたは意味で物を見つける — 正確な言葉を覚えていなくても。Raindropはこれに年間28ドルを課金しますが、ここでは無料で含まれています。</p>
+          </div>
+          <div class="feature-item">
+            <h3>あなたのライブラリを読むAI、あなたのコンピュータ内</h3>
+            <p>保存したものについて質問し、ソースが表示された回答を得る。何もクラウドに送信されず、インターネットなしで動作。Proが必要。</p>
+          </div>
+          <div class="feature-item">
+            <h3>独自のライブラリとチャット</h3>
+            <p>ブックマークとメモについて何でも質問し、引用された回答を得る。プライベートモードは100%あなたのマシンで実行。Proが必要。</p>
+          </div>
+          <div class="feature-item">
+            <h3>独自のデバイス間で同期</h3>
+            <p>デバイスが直接相互に通信 — サーバーは中間になく、すべてが暗号化されたまま。QRコードをスキャンしてペアリング。最大5台のデバイス。Proが必要。</p>
+          </div>
+          <div class="feature-item">
+            <h3>あなたが所有するバックアップ</h3>
+            <p>外部ドライブ、クラウドフォルダ、どこでも好きな場所に保持できる自動バックアップ。いつでもMarkdown、JSON、CSV、PDFにすべてをエクスポート。あなたが鍵を保持します。</p>
+          </div>
+          <div class="feature-item">
+            <h3>あなたのナレッジのマップ</h3>
+            <p>メモとブックマークがどのように接続されているかを確認。タグ、日付、類似性でフィルタリングし、無限のキャンバス周りをズーム。</p>
+          </div>
+          <div class="feature-item">
+            <h3>忘却を防ぐ学習カード</h3>
+            <p>任意の保存ドキュメントを質問カードに変換し、忘れる直前に再表示 — Ankiと同じスケジューリングアイデア。Proが必要。</p>
+          </div>
+          <div class="feature-item">
+            <h3>デフォルトでプライベート</h3>
+            <p>アカウントなし、追跡なし、広告なし。あなたは顧客であり、製品ではありません。使用状況の共有は存在し、オプションで、オンにするまでオフのままです。</p>
+          </div>
+        </div>
+        <p class="tier-note">
+          <strong>無料版に含まれるもの:</strong> スマート検索、500件のブックマーク、独自キーでのAI、暗号化バックアップとエクスポート — 永久に
+          <span class="tier-note-sep" aria-hidden="true">·</span>
+          <strong>Proで追加:</strong> 無制限のブックマーク、5台間の同期、ローカルAIとボルトへのチャット、フラッシュカード、PDF/OCR
+        </p>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">あなたを尊重するAI</span>
+          <h2 id="ai-title">あなたのナレッジ、増幅されました</h2>
+          <p class="section-subtitle">アシスタントをあなたのコンピュータ内で実行 — 何もそこから出ず、オフラインで動作。大きなクラウドモデルを好む？独自の鍵を接続：あなたの質問と回答に必要なページがそのプロバイダーに行き、あなたのコストで。あなたのプロンプト、あなたのデータ、あなたのルール。</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>対応プロバイダー</h3>
+            <ul class="providers-list">
+              <li>あなたのコンピュータ内 — WebLLMモデル（TinyLlama、Llama 3.2、Phi-3.5-mini） — Proのみ</li>
+              <li>独自のマシン上 — Ollama（実行する任意のモデル）</li>
+              <li>クラウド — Google Gemini（独自の鍵を使用）</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>チャットモード</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>プライベートモード</h4>
+                <p>アシスタントは完全にあなたのコンピュータ内で実行。何もそこから出ず、インターネット不要。Proが必要。</p>
+              </div>
+              <div class="mode-item">
+                <h4>ウェブ検索モード</h4>
+                <p>ライブラリとウェブからのライブ結果を組み合わせ（クラウドプロバイダー）。</p>
+              </div>
+              <div class="mode-item">
+                <h4>エキスパートエージェント</h4>
+                <p>専門ヘルパー：コーダー、ライター、アナリスト、リサーチャー。Proが必要。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">プライバシーは機能ではありません — 基盤です</h2>
+          <p class="section-subtitle">すべてのアーキテクチャ上の決定があなたをコントロールにします</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>誰も読めないようにロック — 私たちでも</h3>
+            <p>ライブラリはマスターパスワードから派生した鍵で暗号化されます。私たちはあなたのパスワードもコンテンツも見ません。</p>
+          </div>
+          <div class="feature-item">
+            <h3>独自のデバイスに保存</h3>
+            <p>すべてはあなたのコンピュータに存在します。コンパニオンサーバーはライセンス、デバイスペアリング、クラウドモードAI質問の中継のみを処理 — コンテンツは処理しません。</p>
+          </div>
+          <div class="feature-item">
+            <h3>デフォルトで追跡なし</h3>
+            <p>分析、クラッシュレポート、追跡なし。使用統計やエラーレポートの共有は別の選択で、デフォルトでオフ。</p>
+          </div>
+          <div class="feature-item">
+            <h3>あなたが鍵を保持</h3>
+            <p>マスターパスワードなしはアクセスなし — 「パスワードを忘れた」バックドアはありません。24単語のリカバリーフレーズが唯一の入り口です。安全に保管してください。</p>
+          </div>
+          <div class="feature-item">
+            <h3>あなたの権利、尊重</h3>
+            <p>アクセス、修正、削除、またはデータを持ち帰る — すべてローカルで可能、いつでも。</p>
+          </div>
+          <div class="feature-item">
+            <h3>ロックインなし</h3>
+            <p>いつでもオープン形式（JSON、Markdown、CSV、PDF）でデータをエクスポート。あなたのナレッジはあなたのもののまま、ポータブル。</p>
+          </div>
+          <div class="feature-item">
+            <h3>ホスティングはVercelのみ — アナリティクスゼロ</h3>
+            <p>このサイトはVercel上でのみ動作し、あらゆる種類のアナリティクスがありません：トラッカーなし、フィンガープリンティングなし、サードパーティスクリプトなし。ブラウザのネットワークタブでご自身で確認できます。</p>
+          </div>
+          <div class="feature-item">
+            <h3>クラウドAIはオプトインです</h3>
+            <p>ローカルAIはすべてデバイス上で動作します。クラウドプロバイダーのAPIキーを追加した場合、送信されるのはプロンプトだけです — ブックマークは決して送信されません。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">シンプルで公平な料金 — サブスクリプションなし</h2>
+          <p class="section-subtitle">無料で500件のブックマークを永遠に。Proはv1のライフタイムライセンス — 一度支払い、v1を永遠に所有。すべてのv1.x更新と12ヶ月の機能更新を含む。セキュリティ更新は永遠に。月額請求なし。</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Free</h3>
+            <div class="price">$ 0<span>/永久</span></div>
+            <p>個人用アーカイブとして（500件のブックマーク、どのデバイスでも動作 — 各デバイスが独自のボルトを持つ）</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> 500件のブックマーク、メモ、ドキュメント</li>
+              <li><span aria-hidden="true">✅</span> スマート検索（全文 + セマンティック）— 無料で搭載。Raindropはこれに年額を課しています</li>
+              <li><span aria-hidden="true">✅</span> 独自のAPIキーでAI（プロバイダーに支払い）</li>
+              <li><span aria-hidden="true">✅</span> どのデバイスでも動作 — 各デバイスが独自のボルトを持つ</li>
+              <li><span aria-hidden="true">✅</span> ナレッジグラフ</li>
+              <li><span aria-hidden="true">✅</span> 基本テンプレート</li>
+              <li><span aria-hidden="true">✅</span> JSON/HTMLエクスポート</li>
+              <li><span aria-hidden="true">✅</span> PWA + ブラウザ拡張機能</li>
+              <li><span aria-hidden="true">❌</span> デバイス間のP2P同期</li>
+              <li><span aria-hidden="true">❌</span> ローカルAI (WebLLM/Ollama)</li>
+              <li><span aria-hidden="true">❌</span> データ上のRAGチャット</li>
+              <li><span aria-hidden="true">❌</span> 間隔反復によるフラッシュカード</li>
+              <li><span aria-hidden="true">❌</span> PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> 暗号化 .bmf バックアップ — 自動デイリー + ディスクコピー</li>
+            </ul>
+            <a href="/app" class="btn-secondary " >今すぐ試す</a>
+          </div>
+          <div class="price-card popular">
+            <div class="price-badges">
+              <span class="badge">最も人気 — アーリーバード200</span>
+            </div>
+            <h3>Pro Lifetime</h3>
+            <div class="price">$ 59<span>アーリーバード（その後$79）</span></div>
+            <div class="price-sub">その後$79通常</div>
+            <p>v1のライフタイム · 12ヶ月の機能更新 · セキュリティ永遠 · v2 60%オフ</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Freeのすべて</li>
+              <li><span aria-hidden="true">✅</span> 無制限のブックマーク</li>
+              <li><span aria-hidden="true">✅</span> 5台のデバイス · 5台のデバイス間でP2P同期</li>
+              <li><span aria-hidden="true">✅</span> ローカルAIモデル（WebLLM、APIキー不要） · RAGチャット</li>
+              <li><span aria-hidden="true">✅</span> エキスパートエージェント（コーダー、ライター、アナリスト、リサーチャー）</li>
+              <li><span aria-hidden="true">✅</span> 間隔反復付きフラッシュカード · PDF + OCR</li>
+              <li><span aria-hidden="true">✅</span> 高度なエクスポート（10以上の形式）</li>
+              <li><span aria-hidden="true">✅</span> セキュリティボールト（AES-GCM）</li>
+              <li><span aria-hidden="true">✅</span> v1のライフタイム · 12ヶ月の機能更新</li>
+            </ul>
+            <a href="https://whop.com/checkout/plan_g4oAakLGDjaoM" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Pro $59 アーリーバードを取得</a>
+            <p class="sla-note">サポート：メール48時間（月〜金） · <a href="/help-ja#sla">SLA</a></p>
+          </div>
+        </div>
+        <p class="pricing-legal">買い切り · 12か月のアップデート付き · v1は永久に使えます · 30日間の返金保証。 <a href="/privacy-and-terms.html#terms">利用規約</a></p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">よくある質問</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Freeティアは本当に永遠に無料ですか？</h3>
+            <p>はい。トライアルなし、サブスクリプションなし。Freeティアには500件のブックマーク、全文と意味検索、ナレッジグラフ、独自のAPIキーでのAI（あなたがプロバイダーに支払う）が含まれています。</p>
+          </div>
+          <div class="faq-item">
+            <h3>Proの「v1のライフタイム」はどういう意味ですか？</h3>
+            <p>一度支払い、v1を永遠に所有。すべてのv1.x更新（バグ修正 + マイナー機能）を永遠に、購入から12ヶ月の機能更新を含む。セキュリティ更新は永遠に。13ヶ月後もv1は機能し続けますが、新機能はありません。将来のメジャーバージョン（v2、v3）は別製品：新規顧客$89、v1オーナー$35（60%オフ）。</p>
+          </div>
+          <div class="faq-item">
+            <h3>支払い方法と返金？</h3>
+            <p>Whop経由：クレジットカード、PayPal、暗号通貨。私たちはあなたの支払い詳細を見ません。30日返金 — <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>まで連絡。</p>
+          </div>
+          <div class="faq-item">
+            <h3>サポート — どのくらい早く回答しますか？</h3>
+            <p>Free：<a href="/help">ヘルプセンター</a> + GitHubディスカッション（ベストエフォート）経由のコミュニティヘルプ。Pro：営業日48時間メール。ボールトは暗号化されているため、私たちはあなたのデータを見られないため、パスワードやリカバリーフレーズを尋ねません。<a href="/help-ja#sla">サポートSLA</a>を参照。</p>
+          </div>
+          <div class="faq-item">
+            <h3>ボールトのパスワードを忘れた場合は？</h3>
+            <p>回復できません。ボールトを作成すると、24単語のリカバリーフレーズを一度だけ表示します — 紙に書いてください。それがないと、誰（私たちを含む）もボールトを開けません。<a href="/help-ja#bf-e101">BF-E101</a>を参照。</p>
+          </div>
+          <div class="faq-item">
+            <h3>使わなくなったらデータはどうなりますか？</h3>
+            <p>データはデバイスに残ります。いつでもMarkdown、JSON、CSV、PDFにエクスポートできます。ロックインなし、強制なし。</p>
+          </div>
+          <div class="faq-item">
+            <h3>データは本当にプライベートですか？</h3>
+            <p>絶対に。すべてがあなただけのキーでデバイス上で暗号化されています。私たちはあなたのブックマーク、メモ、パスワードを見ることはありません。私たちですらあなたのデータを読むことはできません。</p>
+          </div>
+          <div class="faq-item">
+            <h3>携帯電話で使えますか？</h3>
+            <p>はい！BookmarkForgeはウェブブラウザのあるあらゆるデバイスで動作します。無料版は無制限のデバイスで動作します（各デバイスが独自のボルトを持ちます）。Proは最大5台のデバイスで同期します。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>あなたのナレッジを所有する準備はできましたか？</h2>
+        <p>今日からプライベートAIナレッジボールトの構築を始めましょう。データはデバイス上に残ります — 暗号化、検索可能、そして永遠にあなたのもの。</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">今すぐ試す（アカウント不要）</a>
+          <a href="#pricing" class="btn-secondary">Proにアップグレード</a>
+        </div>
+        <p class="note">アカウント不要。ブラウザで即座に動作。Freeティア：500件のブックマーク。</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Sticky mobile CTA: on a phone the primary button used to start below the
+       fold (two pills + a long subtitle pushed it past 812px of 844px). The bar
+       keeps one action always visible; landing.js hides it while the nav panel
+       is open so it never covers the menu. -->
+  <div class="mobile-cta-bar" id="mobileCtaBar">
+    <a href="/app" class="btn-primary btn-block">無料で始める — 登録不要</a>
+  </div>
+
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>あなたのプライベートなAI搭載ナレッジボールト。100%ローカルファースト。</p>
+      </div>
+      <div class="footer-links">
+        <h3>製品</h3>
+        <ul>
+          <li><a href="/#features">機能</a></li>
+          <li><a href="/#ai">AI機能</a></li>
+          <li><a href="/#privacy">プライバシー</a></li>
+          <li><a href="/#pricing">料金</a></li>
+          <li><a href="/app">今すぐ試す</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h3>リソース</h3>
+        <ul>
+          <li><a href="/pocket-alternative">Pocket比較</a></li>
+          <li><a href="/raindrop-alternative.html">Raindrop.io</a></li>
+          <li><a href="/geneziz-alternative.html">Geneziz</a></li>
+          <li><a href="/karakeep-alternative.html">Karakeep</a></li>
+          <li><a href="/readwise-alternative.html">Readwise</a></li>
+          <li><a href="/omnivore-alternative.html">Omnivore</a></li>
+          <li><a href="/instapaper-alternative.html">Instapaper</a></li>
+          <li><a href="/privacy-and-terms.html">プライバシーと利用規約</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h3>サポート</h3>
+        <ul>
+          <li><a href="/help-ja">ヘルプセンター</a></li>
+          <li><a href="/help-ja#sla">SLA</a></li>
+          <li><a href="/help-ja#bf-e">エラーコード</a></li>
+          <li><a href="mailto:bookmarkforge@proton.me">連絡先</a></li>
+        </ul>
+        <p class="footer-hours">48時間以内に返信、月〜金（CET）</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. すべての権利を留保します。</p>
+      <a href="/privacy-and-terms.html">プライバシーポリシー</a> · <a href="/privacy-and-terms.html#terms">利用規約</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+      <span class="github-star">
+        <a href="https://github.com/bookmarkforge/bookmarkforge-core" target="_blank" rel="noopener noreferrer" aria-label="GitHubでBookmarkForgeに星を付ける">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2l2.9 6.26 6.6.56-5 4.4 1.5 6.53L12 16.9l-6 2.85 1.5-6.53-5-4.4 6.6-.56L12 2z"/>
+          </svg>
+          Like BookmarkForge? Star us on GitHub ⭐
+        </a>
+      </span>
+    </div>
+    <!-- Social Share Section -->
+    <div class="social-share" id="social-share">
+      <p class="share-text">BookmarkForgeをと</p>
+      <div class="share-buttons">
+        <a href="https://twitter.com/intent/tweet?text=BookmarkForgeをチェック - プライベート、ローカルファーストのブックマークマネージャー&url=https://www.bookmarkforgeapp.com/ja/%3Futm_source%3Dtwitter%26utm_medium%3Dsocial%26utm_campaign%3Dshare" target="_blank" rel="noopener noreferrer" class="share-btn share-twitter" aria-label="Share on Twitter">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Twitter
+        </a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.bookmarkforgeapp.com/ja/%3Futm_source%3Dfacebook%26utm_medium%3Dsocial%26utm_campaign%3Dshare" target="_blank" rel="noopener noreferrer" class="share-btn share-facebook" aria-label="Share on Facebook">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Facebook
+        </a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.bookmarkforgeapp.com/ja/%3Futm_source%3Dlinkedin%26utm_medium%3Dsocial%26utm_campaign%3Dshare" target="_blank" rel="noopener noreferrer" class="share-btn share-linkedin" aria-label="Share on LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://news.ycombinator.com/submitlink?u=https://www.bookmarkforgeapp.com/ja/%3Futm_source%3Dhackernews%26utm_medium%3Dsocial%26utm_campaign%3Dlaunch&t=BookmarkForge" target="_blank" rel="noopener noreferrer" class="share-btn share-hackernews" aria-label="Share on Hacker News">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0v24h24V0H0zm12.898 7.5l3.5 4.5-3.5 4.5v-3h-6v-3h6V7.5zM3 18h18v2H3v-2z"/></svg>
+          Hacker News
+        </a>
+        <button class="share-btn share-copy" type="button" aria-label="Copy link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy Link
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>

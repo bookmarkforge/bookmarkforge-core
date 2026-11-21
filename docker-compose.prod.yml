@@ -1,0 +1,110 @@
+# BookmarkForge production topology. All provider credentials and endpoints
+# are required at deploy time; this file contains no mock services or defaults.
+#
+# The stack is two stateless services. AI requests go from the browser directly
+# to the provider the user configured, so the server never holds an AI key and
+# has no cross-replica session state to share.
+services:
+  web:
+    # Imagen etiquetada por SHA (deploy-prod.mjs) para rollback determinista
+    # sin rebuild: IMAGE_TAG=<sha> docker compose up -d web api.
+    image: bookmarkforge/web:${IMAGE_TAG:?IMAGE_TAG is required}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web
+      args:
+        VITE_APP_VERSION: ${VITE_APP_VERSION:?VITE_APP_VERSION is required}
+        VITE_DB_NAME: ${VITE_DB_NAME:?VITE_DB_NAME is required}
+        VITE_P2P_SIGNALING_URL: ${VITE_P2P_SIGNALING_URL:?VITE_P2P_SIGNALING_URL is required}
+        VITE_WHOP_CHECKOUT_URL: ${VITE_WHOP_CHECKOUT_URL:?VITE_WHOP_CHECKOUT_URL is required}
+
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${HTTP_PORT:-8080}:8080"
+    restart: unless-stopped
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    # P1-3 (review 2026-11-11): resource and log caps. Without them a memory
+    # spike or a log flood on one container degrades the host and the other
+    # service. The web image is nginx: it needs a writable /var/cache/nginx and
+    # /var/run, so `read_only` stays off here (the api service, which writes
+    # nothing, is read-only).
+    mem_limit: ${WEB_MEM_LIMIT:-256m}
+    cpus: ${WEB_CPUS:-1.0}
+    pids_limit: ${WEB_PIDS_LIMIT:-256}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/"]
+      interval: 15s
+      timeout: 3s
+      retries: 6
+      start_period: 10s
+    networks: [prod]
+
+  api:
+    # Imagen etiquetada por SHA (deploy-prod.mjs). Ver nota en el servicio web.
+    image: bookmarkforge/api:${IMAGE_TAG:?IMAGE_TAG is required}
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 8787
+      TRUST_PROXY: "1"
+      WS_ALLOWED_ORIGINS: ${WS_ALLOWED_ORIGINS:?WS_ALLOWED_ORIGINS is required}
+      # A1 (audit 2026-11-05): the server refuses to start in production
+      # without these two IP-hash salts (>= 32 chars each). Declare them as
+      # REQUIRED: an optional `:-` default passes an empty value, the API
+      # throws during import, and `web` never starts because it waits for
+      # `api` to become healthy.
+      SIGNALING_IP_HASH_SALT: ${SIGNALING_IP_HASH_SALT:?SIGNALING_IP_HASH_SALT is required (>= 32 chars)}
+      CSP_REPORT_IP_HASH_SALT: ${CSP_REPORT_IP_HASH_SALT:?CSP_REPORT_IP_HASH_SALT is required (>= 32 chars)}
+      # P1-3 (review 2026-11-11): the old `READ_ONLY: "true"` variable had no
+      # reader in server/src, so the operator believed the container was
+      # read-only while the rootfs stayed writable. The real control is the
+      # compose key below (read_only: true + a /tmp tmpfs), which Docker
+      # enforces; check:compose-config now fails on any api variable the server
+      # sources never mention.
+      TURN_RELAY_HOST: ${TURN_RELAY_HOST:-}
+      TURN_STATIC_AUTH_SECRET: ${TURN_STATIC_AUTH_SECRET:-}
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    # P1-3 (review 2026-11-11): Docker-enforced read-only rootfs. The companion
+    # writes nothing at runtime (csp persistence is opt-in and off here), so
+    # only /tmp is mounted writable for Node's scratch use.
+    read_only: true
+    tmpfs:
+      - /tmp
+    mem_limit: ${API_MEM_LIMIT:-512m}
+    cpus: ${API_CPUS:-1.0}
+    pids_limit: ${API_PIDS_LIMIT:-256}
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8787/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 3s
+      retries: 12
+    networks:
+      prod:
+        # La imagen web hornea public/nginx.conf con upstream
+        # `bookmarkforge_api:8787`; sin este alias el DNS de compose no
+        # resuelve el nombre y nginx muere con "host not found in upstream".
+        aliases: [bookmarkforge_api]
+
+networks:
+  prod:
+    driver: bridge

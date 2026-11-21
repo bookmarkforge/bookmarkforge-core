@@ -1,0 +1,514 @@
+{
+  "lang": "es",
+  "langName": "Español",
+  "dir": "ltr",
+  "title": "Gestor de marcadores privado y cifrado | BookmarkForge",
+  "description": "Guarda, busca y organiza marcadores en una bóveda cifrada en tu propio dispositivo. Sin cuenta y sin conexión. 500 gratis; Pro, 59 $ una sola vez.",
+  "ogTitle": "Gestor de marcadores privado y cifrado | BookmarkForge",
+  "ogDescription": "Guarda, busca y organiza marcadores en una bóveda cifrada en tu propio dispositivo. Sin cuenta y sin conexión. 500 gratis; Pro, 59 $ una sola vez.",
+  "ogImage": "https://www.bookmarkforgeapp.com/og-image-es.png",
+  "ogImageAlt": "BookmarkForge: aplicación privada de notas y marcadores basada en IA",
+  "twitterTitle": "Gestor de marcadores privado y cifrado | BookmarkForge",
+  "twitterDescription": "Guarda, busca y organiza marcadores en una bóveda cifrada en tu propio dispositivo. Sin cuenta y sin conexión. 500 gratis; Pro, 59 $ una sola vez.",
+  "twitterImage": "https://www.bookmarkforgeapp.com/og-image-es.png",
+  "skipLink": "Saltar al contenido principal",
+  "navBrandAria": "BookmarkForge inicio",
+  "navAriaLabel": "Navegación principal",
+  "navLinks": {
+    "pocketAlternative": "Alternativa a Pocket",
+    "features": "Funciones",
+    "ai": "IA",
+    "privacy": "Privacidad",
+    "pricing": "Precios",
+    "help": "Ayuda",
+    "raindropCompare": "Comparación con Raindrop"
+  },
+  "navCta": "Pruébalo al instante (sin crear cuenta)",
+  "themeToggleAria": "Cambiar tema",
+  "navToggleAria": "Abrir menú",
+  "navToggleAriaClose": "Cerrar menú",
+  "languageToggleAria": "Cambiar idioma",
+  "githubAria": "Da una estrella a BookmarkForge en GitHub",
+  "hero": {
+    "badge": "Pago único · Sin suscripción · Sin cuenta",
+    "title": "El gestor de marcadores privado que <span class=\"accent-text\">guarda todo en tu dispositivo.</span>",
+    "subtitle": "Para quien investiga, estudia o simplemente no quiere regalar su historial de lectura a una nube ajena. Guarda páginas, artículos y PDF, encuéntralos por palabra o por significado, y todo queda cifrado en tu ordenador. Sin cuenta. Sin suscripción.",
+    "ctaPrimary": "Empieza gratis, sin registro",
+    "ctaSecondary": "Ver cómo funciona",
+    "pillars": [
+      {
+        "strong": "Privado",
+        "text": "cifrado en tu dispositivo"
+      },
+      {
+        "strong": "Tuyo para siempre",
+        "text": "sin suscripciones ni cuotas mensuales"
+      },
+      {
+        "strong": "Funciona sin conexión",
+        "text": "guarda y lee en cualquier lugar, incluso sin internet"
+      },
+      {
+        "strong": "Gratis para siempre",
+        "text": "500 marcadores gratis, mejora a Pro solo si quieres más"
+      }
+    ],
+    "announce": "⚡ Traducción con IA local (próximamente)",
+    "announceApps": "⚡ Apps nativas próximamente — Windows, macOS, Linux, Android e iOS",
+    "announceQuickCapture": "⚡ Captura rápida ya disponible — bookmarklet, pega en cualquier sitio y accesos directos PWA"
+  },
+  "demo": {
+    "id": "demo",
+    "tag": "Míralo funcionando",
+    "title": "La aplicación real, no una maqueta",
+    "subtitle": "Sin registro previo, sin vídeo de archivo y sin cursor falso. Este bucle es la versión publicada en un equipo normal: desbloquea la bóveda, guarda una página, busca en tu biblioteca y vuelve a bloquearla.",
+    "imageAlt": "Bucle animado de BookmarkForge: desbloquear la bóveda, capturar un marcador, buscar en la biblioteca y volver a bloquearla",
+    "caption": "Grabado desde la aplicación de escritorio con datos de demostración. El recorrido completo acompaña al proyecto.",
+    "steps": [
+      {
+        "title": "Desbloquea",
+        "text": "La bóveda se abre con una contraseña que eliges tú; la clave se queda en tu dispositivo."
+      },
+      {
+        "title": "Captura",
+        "text": "Guarda una página desde la propia aplicación, sin cuenta y sin extensión."
+      },
+      {
+        "title": "Encuentra",
+        "text": "Busca por palabra clave o por significado y ve las fuentes de cada respuesta."
+      },
+      {
+        "title": "Bloquea",
+        "text": "Cierra la bóveda y la clave de descifrado desaparece de la memoria."
+      }
+    ],
+    "ctaPrimary": "Pruébalo al instante"
+  },
+  "pocketAlternative": {
+    "id": "alternativa-pocket",
+    "tag": "Alternativa a Pocket",
+    "title": "La Alternativa Privada a Pocket",
+    "subtitle": "Pocket cerró en julio de 2025. Si exportaste tu lista, impórtala a BookmarkForge en un minuto — y esta vez vive en tu dispositivo, así que ninguna empresa puede apagarla.",
+    "features": [
+      {
+        "title": "Guarda artículos para leer después, tuyos para siempre",
+        "text": "Guarda artículos, vídeos y PDF con un clic — desde la app PWA, la extensión del navegador o el menú compartir. A diferencia de Pocket, tu lista de lectura vive en tu dispositivo, cifrada, y sigue funcionando sin conexión."
+      },
+      {
+        "title": "Notas estilo Notion en cada artículo",
+        "text": "Subraya, resume y toma notas por bloques en cualquier marcador. Convierte un artículo guardado en tu propia base de conocimiento — no solo en una lista de enlaces."
+      },
+      {
+        "title": "Cero seguimiento, cero anuncios",
+        "text": "BookmarkForge no tiene cuentas, ni analíticas, ni anuncios por defecto. Tus hábitos de lectura no son asunto de nadie más que tuyo."
+      }
+    ],
+    "ctaPrimary": "Pruébalo al instante (sin crear cuenta)",
+    "ctaSecondary": "Comparativa completa y guía de migración",
+    "ctaSecondaryHref": "/pocket-alternative"
+  },
+  "raindropCompare": {
+    "id": "raindrop-compare",
+    "tag": "En palabras sencillas, sin marketing",
+    "title": "BookmarkForge frente a Raindrop, sin letra pequeña",
+    "subtitle": "Raindrop es una buena aplicación. La gran diferencia está en dónde vive lo tuyo.",
+    "columns": {
+      "us": "BookmarkForge",
+      "them": "Raindrop"
+    },
+    "rows": [
+      {
+        "topic": "Dónde vive tu lista",
+        "us": "En tu ordenador",
+        "them": "En sus servidores"
+      },
+      {
+        "topic": "Quién puede leer lo que guardas",
+        "us": "Nadie: va cerrado con tu llave, ni siquiera nosotros",
+        "them": "La empresa, y quien se lo exija"
+      },
+      {
+        "topic": "Sin internet",
+        "us": "Todo sigue funcionando",
+        "them": "Solo lo básico"
+      },
+      {
+        "topic": "Cuánto pagas",
+        "us": "$59 acceso de por vida early bird (ahorra $20 antes del precio regular)",
+        "them": "28 dólares cada año, para siempre"
+      },
+      {
+        "topic": "Si la empresa desaparece (RIP Pocket)",
+        "us": "Nada cambia: ya está en tus manos",
+        "them": "Exportas y empiezas de cero"
+      },
+      {
+        "topic": "El asistente de IA",
+        "us": "Trabaja dentro de tu ordenador en el modo privado — nada viaja a ningún sitio",
+        "them": "Tu lectura se va a la nube a pensar"
+      }
+    ],
+    "ctaPrimary": "Pruébalo al instante (sin crear cuenta)",
+    "ctaSecondary": "Comparativa completa con Raindrop",
+    "close": "Raindrop es más simple y gratis — si con eso te basta, úsalo feliz. Pero si prefieres llevar tu vida de lectura en tus propias manos, BookmarkForge está hecho justo para eso."
+  },
+  "features": {
+    "id": "funciones",
+    "tag": "Todo lo que Necesitas",
+    "title": "Todo lo que necesitas, sin palabras raras",
+    "items": [
+      {
+        "title": "Marcadores y documentos",
+        "text": "Guarda cualquier página con un clic. Escribe notas justo al lado, en un editor limpio y sencillo. Sigue siendo rápido incluso con 100.000 elementos guardados."
+      },
+      {
+        "title": "Captura desde cualquier lugar",
+        "text": "Bookmarklet en cualquier página, pega URLs o texto en cualquier parte de la app, accesos directos PWA y OpenSearch — todo llega a tu bóveda cifrada."
+      },
+      {
+        "title": "Búsqueda inteligente",
+        "text": "Encuentra por palabra o por significado, aunque no recuerdes las palabras exactas. Raindrop cobra 28 dólares al año por esto; aquí va incluido gratis."
+      },
+      {
+        "title": "Una IA que lee tu biblioteca, dentro de tu ordenador",
+        "text": "Pregunta por lo que has guardado y recibe respuestas con sus fuentes a la vista. Nada se envía a la nube y funciona sin internet. Requiere Pro."
+      },
+      {
+        "title": "Charla con tu propia biblioteca",
+        "text": "Pregunta lo que quieras sobre tus marcadores y notas y recibe respuestas con citas. El modo privado funciona 100% en tu máquina. Requiere Pro."
+      },
+      {
+        "title": "Sincroniza entre tus propios dispositivos",
+        "text": "Tus dispositivos se hablan directamente — sin servidor en medio y con todo cifrado. Emparéjalos escaneando un código QR. Hasta 5 dispositivos. Requiere Pro."
+      },
+      {
+        "title": "Copias de seguridad que son tuyas",
+        "text": "Copias automáticas que puedes guardar donde quieras: un disco externo, una carpeta en la nube, lo que sea. Exporta todo a Markdown, JSON, CSV o PDF cuando quieras. Las llaves las tienes tú."
+      },
+      {
+        "title": "Mapa de tu conocimiento",
+        "text": "Mira cómo se conectan tus notas y tus marcadores. Filtra por etiquetas, fechas y parecido, y muévete por un lienzo infinito."
+      },
+      {
+        "title": "Tarjetas de estudio que vencen al olvido",
+        "text": "Convierte cualquier documento guardado en tarjetas de preguntas que reaparecen justo antes de que lo olvides — la misma idea de repaso que Anki. Requiere Pro."
+      },
+      {
+        "title": "Privado por defecto",
+        "text": "Sin cuentas, sin rastreo, sin anuncios. Eres el cliente, no el producto. Compartir estadísticas existe, es opcional y está apagado hasta que tú lo enciendas."
+      }
+    ],
+    "tierNote": {
+      "freeLabel": "Gratis incluye",
+      "free": "búsqueda inteligente, 500 marcadores, IA con tus propias claves, copias cifradas y exportación — para siempre",
+      "proLabel": "Pro añade",
+      "pro": "marcadores ilimitados, sincronización en 5 dispositivos, IA local y chat sobre tu bóveda, flashcards, PDF/OCR"
+    }
+  },
+  "ai": {
+    "id": "ia",
+    "tag": "IA que Te Respeta",
+    "title": "Tu Conocimiento, Amplificado",
+    "subtitle": "Ejecuta el asistente dentro de tu ordenador — nada sale de él y funciona sin conexión. ¿Prefieres un modelo grande de la nube? Conecta tu propia clave: tus preguntas y las páginas necesarias para responderlas viajan a ese proveedor, a tu costa. Tus preguntas, tus datos, tus reglas.",
+    "providers": {
+      "title": "Proveedores Compatibles",
+      "list": [
+        {
+          "type": "local",
+          "name": "Dentro de tu ordenador — modelos WebLLM (TinyLlama, Llama 3.2, Phi-3.5-mini) — Solo Pro"
+        },
+        {
+          "type": "local",
+          "name": "En tu propia máquina — Ollama (cualquier modelo que ejecutes)"
+        },
+        {
+          "type": "cloud",
+          "name": "En la nube — Google Gemini (con tu propia clave)"
+        }
+      ]
+    },
+    "modes": {
+      "title": "Modos de Chat",
+      "items": [
+        {
+          "title": "Modo privado",
+          "text": "El asistente funciona por completo dentro de tu ordenador. Nada sale de él y no necesita internet. Requiere Pro."
+        },
+        {
+          "title": "Modo búsqueda web",
+          "text": "Combina tu biblioteca con resultados en vivo de la web (proveedores en la nube)."
+        },
+        {
+          "title": "Agentes expertos",
+          "text": "Ayudantes especializados: Programador, Escritor, Analista e Investigador. Requiere Pro."
+        }
+      ]
+    }
+  },
+  "privacy": {
+    "id": "privacidad",
+    "title": "La Privacidad No Es una Función — Es la Base",
+    "subtitle": "Cada decisión de arquitectura te pone a ti en control",
+    "items": [
+      {
+        "title": "Cerrado para que nadie lo lea — ni siquiera nosotros",
+        "text": "Tu biblioteca se cifra con una llave derivada de tu contraseña maestra. Nunca vemos tu contraseña ni tu contenido."
+      },
+      {
+        "title": "Guardado en tu propio dispositivo",
+        "text": "Todo vive en tu ordenador. El servidor auxiliar solo gestiona licencias, el emparejamiento de dispositivos y retransmitir tus preguntas de IA en el modo nube — nunca tu contenido."
+      },
+      {
+        "title": "Sin rastreo por defecto",
+        "text": "Ni analíticas, ni informes de errores, ni rastreo. Compartir estadísticas de uso o informes de fallos es una opción aparte, apagada por defecto."
+      },
+      {
+        "title": "Las llaves las tienes tú",
+        "text": "Sin contraseña maestra no hay acceso — no existe la puerta trasera de «he olvidado la contraseña». Tu frase de recuperación de 24 palabras es la única llave; guárdala bien."
+      },
+      {
+        "title": "Tus derechos, respetados",
+        "text": "Consultar, corregir, borrar o llevarte tus datos — todo en local, cuando quieras."
+      },
+      {
+        "title": "Sin encierro",
+        "text": "Exporta tus datos cuando quieras en formatos abiertos (JSON, Markdown, CSV, PDF). Tu conocimiento sigue siendo tuyo y portable."
+      },
+      {
+        "title": "Solo Vercel nos aloja — cero analíticas",
+        "text": "El sitio funciona exclusivamente en Vercel sin analíticas de ningún tipo: sin rastreadores, sin huella digital, sin scripts de terceros. Compruébalo tú mismo en la pestaña de red de tu navegador."
+      },
+      {
+        "title": "La IA en la nube es opcional",
+        "text": "La IA local funciona enteramente en tu dispositivo. Si añades tu propia clave API para un proveedor en la nube, solo tus prompts van a él — tus marcadores nunca."
+      }
+    ]
+  },
+  "pricing": {
+    "id": "precios",
+    "title": "Precios simples y justos — Sin suscripciones",
+    "subtitle": "500 marcadores gratis para siempre. Pro es una licencia Lifetime para v1 — paga una vez, tuya para siempre. Incluye todas las v1.x y 12 meses de novedades. Seguridad para siempre. Sin cuotas mensuales.",
+    "plans": [
+      {
+        "name": "Gratis",
+        "price": "$ 0",
+        "period": "/para siempre",
+        "description": "Gratis para siempre: 500 marcadores y la búsqueda inteligente que otros cobran cada año. Al llegar a 500 tu bóveda sigue entera: leer, buscar y exportar nunca se detienen; solo se pausan los guardados nuevos.",
+        "features": [
+          {
+            "included": true,
+            "text": "Búsqueda inteligente (texto completo + semántica) — incluida gratis; Raindrop cobra cada año por esto"
+          },
+          {
+            "included": true,
+            "text": "500 marcadores, notas y documentos"
+          },
+          {
+            "included": true,
+            "text": "Funciona en cualquier dispositivo — cada uno con su propia bóveda"
+          },
+          {
+            "included": true,
+            "text": "IA con tu propia clave de API (tú pagas al proveedor)"
+          },
+          {
+            "included": true,
+            "text": "Grafo de conocimiento"
+          },
+          {
+            "included": true,
+            "text": "Plantillas básicas"
+          },
+          {
+            "included": true,
+            "text": "Exportación JSON/HTML"
+          },
+          {
+            "included": true,
+            "text": "PWA + extensiones de navegador"
+          },
+          {
+            "included": false,
+            "text": "Sincronización P2P entre dispositivos"
+          },
+          {
+            "included": false,
+            "text": "IA local (WebLLM/Ollama)"
+          },
+          {
+            "included": false,
+            "text": "Chat RAG sobre tus datos"
+          },
+          {
+            "included": false,
+            "text": "Tarjetas de estudio con repetición espaciada"
+          },
+          {
+            "included": false,
+            "text": "PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Copias de seguridad .bmf cifradas — automáticas diarias + copia en disco"
+          }
+        ],
+        "cta": "Pruébalo al instante",
+        "ctaHref": "/app",
+        "ctaClass": "btn-outline"
+      },
+      {
+        "name": "Pro Lifetime",
+        "badge": "Más Popular — Early Bird 200",
+        "price": "$59",
+        "period": "una vez",
+        "description": "De por vida v1 · 12 meses de actualizaciones · Seguridad de por vida · v2 con 60% de descuento",
+        "features": [
+          {
+            "included": true,
+            "text": "Todo lo de Free"
+          },
+          {
+            "included": true,
+            "text": "Marcadores ilimitados"
+          },
+          {
+            "included": true,
+            "text": "5 dispositivos · sincronización P2P entre 5 dispositivos"
+          },
+          {
+            "included": true,
+            "text": "Modelos de IA locales (WebLLM, sin clave API) · chat RAG"
+          },
+          {
+            "included": true,
+            "text": "Agentes expertos (Coder, Writer, Analyst, Researcher)"
+          },
+          {
+            "included": true,
+            "text": "Tarjetas de estudio con repetición espaciada · PDF + OCR"
+          },
+          {
+            "included": true,
+            "text": "Exportación avanzada (7 formatos)"
+          },
+          {
+            "included": true,
+            "text": "Bóveda de seguridad (AES-GCM)"
+          },
+          {
+            "included": true,
+            "text": "De por vida v1 · 12 meses de actualizaciones de funciones"
+          }
+        ],
+        "cta": "Obtener Pro — $59 una vez",
+        "ctaHref": "https://whop.com/checkout/plan_g4oAakLGDjaoM",
+        "ctaClass": "btn-primary",
+        "priceSub": "Precio early bird para las primeras 200 licencias, luego $79",
+        "sla": "Respuesta en 48 h, lun–vie (CET)"
+      }
+    ],
+    "legal": "Pago único · 12 meses de actualizaciones incluidas · v1 funciona para siempre · Reembolso de 30 días. <a href=\"/es/privacy-and-terms.html#terms\">Términos</a>"
+  },
+  "faq": {
+    "title": "Preguntas Frecuentes",
+    "items": [
+      {
+        "question": "¿El plan Gratis es realmente gratis para siempre?",
+        "answer": "Sí. Sin prueba ni suscripción. Incluye 500 marcadores, búsqueda completa y semántica, grafo de conocimiento e IA con tu propia clave API (pagas al proveedor)."
+      },
+      {
+        "question": "¿Qué significa \"Lifetime de v1\" en Pro?",
+        "answer": "Paga una vez, tuya para siempre. Incluye todas las v1.x para siempre y 12 meses de novedades desde la compra. Seguridad para siempre. Tras el mes 13 sigues con v1 funcional, solo sin novedades. Futuras majors (v2, v3) son productos aparte: 89 $ para nuevos, 35 $ para propietarios v1 (60% dto)."
+      },
+      {
+        "question": "¿Qué métodos de pago y reembolsos?",
+        "answer": "Vía Whop: tarjeta, PayPal, cripto. Nunca vemos tus datos de pago. Reembolso 30 días: <a href=\"mailto:bookmarkforge@proton.me\">bookmarkforge@proton.me</a>."
+      },
+      {
+        "question": "Soporte — ¿qué tan rápido responden?",
+        "answer": "Gratis: ayuda comunitaria vía <a href=\"/help-es\">Centro de Ayuda</a> + GitHub Discussions (mejor esfuerzo). Pro: 48h laborables por email. La bóveda está cifrada — nunca te pedimos contraseña ni frase. Ver <a href=\"/help-es#sla\">SLA</a>."
+      },
+      {
+        "question": "¿Qué pasa si olvido la contraseña de mi bóveda?",
+        "answer": "No podemos recuperarla. Al crear la bóveda te mostramos una frase semilla de 24 palabras una sola vez — escríbela en papel. Sin ella nadie (ni nosotros) puede abrir la bóveda. Ver <a href=\"/help-es#bf-e101\">BF-E101</a>."
+      },
+      {
+        "question": "¿Qué pasa con mis datos si dejo de usarlo?",
+        "answer": "Tus datos se quedan en tu dispositivo. Puedes exportar todo en cualquier momento a Markdown, JSON, CSV o PDF. Sin ataduras, sin rehenes."
+      },
+      {
+        "question": "¿Mis datos son realmente privados?",
+        "answer": "Absolutamente. Todo está encriptado en tu dispositivo con una llave que solo tú tienes. Nunca vemos tus marcadores, notas o contraseñas. Ni siquiera nosotros podemos leer tus datos."
+      },
+      {
+        "question": "¿Puedo usarlo en mi teléfono?",
+        "answer": "¡Sí! BookmarkForge funciona en cualquier dispositivo con navegador web. El nivel gratuito funciona en dispositivos ilimitados (cada uno tiene su propio vault). Pro sincroniza hasta 5 dispositivos."
+      }
+    ]
+  },
+  "cta": {
+    "title": "¿Listo para Ser Dueño de tu Conocimiento?",
+    "text": "Comienza a construir tu bóveda de conocimiento con IA privada hoy. Tus datos permanecen en tu dispositivo — cifrados, buscables y tuyos para siempre.",
+    "ctaPrimary": "Pruébalo al instante (sin crear cuenta)",
+    "ctaSecondary": "Pasar a Pro",
+    "note": "Sin necesidad de cuenta. Funciona al instante en tu navegador. Nivel gratis: 500 marcadores."
+  },
+  "footer": {
+    "brand": "Tu bóveda de conocimiento privada con IA. 100% local.",
+    "product": {
+      "title": "Producto",
+      "links": [
+        "Funciones",
+        "Capacidades de IA",
+        "Privacidad",
+        "Precios",
+        "Pruébalo al instante"
+      ],
+      "hrefs": [
+        "/#features",
+        "/#ai",
+        "/#privacy",
+        "/#pricing",
+        "/app"
+      ]
+    },
+    "resources": {
+      "title": "Recursos",
+      "links": [
+        "Comparativa con Pocket",
+        "Privacidad y Términos"
+      ],
+      "hrefs": [
+        "/pocket-alternative.html",
+        "/privacy-and-terms.html"
+      ]
+    },
+    "languages": {
+      "title": "Idiomas",
+      "links": [
+        "English",
+        "Español",
+        "Français",
+        "Deutsch",
+        "Português",
+        "Italiano"
+      ]
+    },
+    "support": {
+      "title": "Soporte",
+      "links": [
+        "Contacto"
+      ],
+      "helpCenter": "Centro de Ayuda",
+      "errorCodes": "Códigos de error",
+      "hours": "Respondemos en 48 h, lun–vie (CET)"
+    },
+    "copyright": "© 2026 BookmarkForge. Todos los derechos reservados.",
+    "githubStar": "¿Te gusta BookmarkForge? Apóyanos con una estrella en GitHub ⭐",
+    "legal": [
+      "Política de Privacidad",
+      "Términos de Servicio",
+      "bookmarkforge@proton.me"
+    ]
+  }
+}

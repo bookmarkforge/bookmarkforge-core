@@ -1,0 +1,27 @@
+// M1 (audit 2026-11-06): `tsconfig.prod.json` only includes `src`, so the
+// signaling server (`server/`) and the license function (`api/`) were never
+// typechecked by the blocking CI job. This config extends the shared compiler
+// options and covers exactly those surfaces; test files are excluded because
+// they import vitest globals and are exercised by the test suites instead.
+//
+// The public Core ships `api/` without `server/` (see
+// api/license/_license-signing.ts); a missing `server` directory in the
+// exported tree is not an error for TypeScript, so this config is safe there.
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["api"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "server/dist",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/__tests__/**"
+  ]
+}

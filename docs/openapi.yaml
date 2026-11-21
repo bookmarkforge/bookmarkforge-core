@@ -1,0 +1,354 @@
+openapi: 3.1.0
+info:
+  title: BookmarkForge Companion Server API
+  version: 1.0.0
+  description: |
+    Companion server for BookmarkForge — P2P signaling, health, CSP reports and
+    Open Graph cards. Zero telemetry: the client never transmits usage, error or
+    analytics data off-device. The license paths declared below are served by the
+    serverless function in `api/license/[action].ts`, not by the companion: its
+    route table declares no license route since 2026-10-19. That function is
+    private Pro infrastructure and is NOT part of the MIT public export; the
+    public tree carries only the client-side verifier (`src/services/`).
+
+    Security model: local-first. The server never receives the user's vault.
+    Provider calls happen in the browser with a key stored in the user's own
+    vault. Consequently this API carries no AI credentials and no AI endpoints.
+
+    The authoritative route table (path, methods, access level) lives in
+    `server/src/route-table.ts`; `npm run check:security` fails when the router
+    and that table disagree. See `docs/security.md` and `docs/api.md`.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  contact:
+    email: bookmarkforge@proton.me
+
+servers:
+  - url: https://{host}
+    description: Production (behind reverse proxy TLS)
+    variables:
+      host:
+        default: bookmarkforgeapp.com
+  - url: http://127.0.0.1:{port}
+    description: Local development / load testing
+    variables:
+      port:
+        default: '8787'
+
+tags:
+  - name: health
+  - name: licensing
+  - name: diagnostics
+
+paths:
+  /health:
+    get:
+      tags: [health]
+      summary: Liveness probe
+      description: Minimal, non-sensitive liveness probe. No-store.
+      security: []
+      responses:
+        '200':
+          description: Process is up
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /api/license/health:
+    get:
+      tags: [licensing]
+      summary: License provider health
+      description: Health of the configured license provider integration.
+      security: []
+      responses:
+        '200':
+          description: License provider reachable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseHealth'
+        '503':
+          description: License signing service is not configured or not ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/license/activate:
+    post:
+      tags: [licensing]
+      summary: Exchange a purchased key for a signed proof
+      description: |
+        Binds the key to a device and returns a signed license proof. The
+        caller has no proof yet, so this route cannot require one.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LicenseKeyRequest'
+      responses:
+        '200':
+          description: Signed license proof
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseProof'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/OriginDenied'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '502':
+          $ref: '#/components/responses/ProviderError'
+        '503':
+          $ref: '#/components/responses/NotConfigured'
+
+  /api/license/validate:
+    post:
+      tags: [licensing]
+      summary: Revalidate an existing key
+      description: Reached while the vault may still be locked, so it carries no proof.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LicenseKeyRequest'
+      responses:
+        '200':
+          description: Freshly signed proof (same shape as activate)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseProof'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/OriginDenied'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '502':
+          $ref: '#/components/responses/ProviderError'
+        '503':
+          $ref: '#/components/responses/NotConfigured'
+
+  /api/license/deactivate:
+    post:
+      tags: [licensing]
+      summary: Release an activation slot
+      description: Frees a device slot. Requiring a proof here would strand a lost device.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LicenseKeyRequest'
+      responses:
+        '200':
+          description: Slot released
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [ok]
+                properties:
+                  ok:
+                    type: boolean
+                    const: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/OriginDenied'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '502':
+          $ref: '#/components/responses/ProviderError'
+        '503':
+          $ref: '#/components/responses/NotConfigured'
+
+  /admin:
+    get:
+      tags: [diagnostics]
+      summary: Signaling diagnostics
+      description: Never carries customer data.
+      security:
+        - signalingAdminToken: []
+      responses:
+        '200':
+          description: Diagnostic payload
+        '403':
+          description: Invalid or missing `X-Signaling-Admin-Token`
+
+  /og:
+    get:
+      tags: [diagnostics]
+      summary: Open Graph card HTML wrapper
+      description: Public dynamic social-sharing card; no credentials.
+      security: []
+      responses:
+        '200':
+          description: HTML wrapper referencing the card image
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /og-image.svg:
+    get:
+      tags: [diagnostics]
+      summary: Open Graph card image
+      description: Public SVG card image referenced by `/og`.
+      security: []
+      responses:
+        '200':
+          description: SVG image
+          content:
+            image/svg+xml:
+              schema:
+                type: string
+
+  /csp-report:
+    get:
+      tags: [diagnostics]
+      summary: Read collected CSP violations
+      security:
+        - cspAdminToken: []
+      responses:
+        '200':
+          description: Collected CSP reports
+    post:
+      tags: [diagnostics]
+      summary: Submit a CSP violation report
+      description: The browser posts these without credentials; origin filtered and rate limited.
+      security: []
+      responses:
+        '204':
+          description: Report accepted
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+components:
+  securitySchemes:
+    signalingAdminToken:
+      type: apiKey
+      in: header
+      name: X-Signaling-Admin-Token
+    cspAdminToken:
+      type: apiKey
+      in: header
+      name: X-CSP-Admin-Token
+
+  responses:
+    BadRequest:
+      description: Malformed request body
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    OriginDenied:
+      description: CSRF_ORIGIN — the browser origin is not in the allow-list
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    RateLimited:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ProviderError:
+      description: The upstream license provider failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotConfigured:
+      description: The required token or signing key is not configured
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              examples: [INVALID_REQUEST, CSRF_ORIGIN, RATE_LIMITED, SIGNING_KEY_INVALID]
+            message:
+              type: string
+            reason:
+              type: string
+
+    HealthResponse:
+      type: object
+      additionalProperties: true
+
+    LicenseHealth:
+      type: object
+      additionalProperties: true
+
+    LicenseKeyRequest:
+      type: object
+      description: |
+        License identity sent to `/activate`, `/validate` and `/deactivate`.
+        `license_key` is required; at least one of `instance_name` or
+        `instance_id` identifies the device seat (`instance_name` is the
+        per-install UUID the client generates). `seat_token` is the
+        deactivation credential returned by a previous activation.
+      required: [license_key]
+      properties:
+        license_key:
+          type: string
+        instance_name:
+          type: string
+        instance_id:
+          type: string
+        seat_token:
+          type: string
+
+    LicenseProof:
+      type: object
+      description: |
+        Signed license payload plus its RSA-PSS signature, returned by
+        `/activate` and `/validate`. `seatToken` is present when the provider
+        issued a new deactivation credential.
+      required: [payload, signature]
+      properties:
+        payload:
+          type: object
+          required: [v, deviceId, validatedAt, instanceId]
+          properties:
+            v:
+              type: integer
+              const: 1
+            deviceId:
+              type: string
+            instanceId:
+              type: string
+            validatedAt:
+              type: integer
+              description: Unix epoch milliseconds.
+            expiresAt:
+              type: integer
+              description: Unix epoch milliseconds; absent for lifetime licenses.
+            activationsLeft:
+              type: integer
+        signature:
+          type: string
+        seatToken:
+          type: string

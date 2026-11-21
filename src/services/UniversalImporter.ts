@@ -1,0 +1,2347 @@
+import type { BookmarkForgeDB } from "../db/types";
+import type {
+  BookmarkDocType,
+  DocumentDocType,
+} from "../db/schema";
+import { logger } from "../utils/logger";
+import { generateId } from "../utils/id";
+import { hashString } from "../utils/crypto-core";
+import {
+  sanitizeUserInput,
+  sanitizeUrl,
+} from "./SanitizationService";
+import { SanitizationService } from "./SanitizationService";
+import { isFreeLimitError } from "./LicenseService";
+import JSZip from "jszip";
+import { attachmentStore } from "./documentAttachments";
+import {
+  isAttachmentPath,
+  isMarkdownFilePath,
+  mimeFromFilename,
+  normalizeAttachmentRefPath,
+  parseMarkdownNote,
+  rewriteAttachmentRef,
+  sanitizeFolderPath,
+  type MarkdownLink,
+  type ParsedMarkdownNote,
+} from "./importer.markdown";
+import { parseEnexDocument } from "./importer.enex";
+import {
+  parseFirefoxPlaces,
+  parsePinboardPosts,
+  type ParsedBookmarkCandidate,
+} from "./importer.alt-bookmarks";
+import {
+  clearPersistedRollback,
+  createImportExecutionOptions,
+  FreeTierImportLimitReached,
+  getLimitResult,
+  insertTrackedBookmark,
+  insertTrackedDocument,
+  insertTrackedFolder,
+  loadPendingRollback,
+  persistPendingRollback,
+  rollbackImport,
+  throwIfAborted,
+  type CSVRecordSource,
+  type ImportExecutionOptions,
+  type ImportJournal,
+  type ImportOptions,
+  type ImportResult,
+} from "./importer.journal";
+
+import {
+  normalizeImportDate,
+  normalizeOptionalImportDate,
+  normalizeImportedTitle,
+  normalizeImportedContent,
+  normalizeImportedBlocks,
+  normalizeImportedInteger,
+  normalizeImportedTags,
+  pocketReadStateFields,
+  pocketReadStateTags,
+  pocketHtmlStatus,
+  pocketCsvStatus,
+  normalizePocketHeader,
+  pocketPreviewFromRows,
+  normalizeImportedRelatedLinks,
+  resolveImportedFolderParent,
+  normalizeImportedDocumentLinks,
+  type PocketImportPreview,
+} from "./importer.normalizers";
+export type { PocketImportPreview } from "./importer.normalizers";
+
+// Public API preserved: ImportOptions moved to importer.journal.ts.
+export type { ImportOptions } from "./importer.journal";
+
+/** ZIP safety bounds (shared by the preflight and the per-entry checks). */
+const MAX_ZIP_ENTRY_BYTES = 50 * 1024 * 1024;
+const MAX_ZIP_UNCOMPRESSED_BYTES = 200 * 1024 * 1024;
+
+
+function reportProgress(options: ImportOptions, progress: number): void {
+  options.onProgress?.(Math.max(0, Math.min(100, progress)));
+}
+
+const IMPORT_YIELD_EVERY = 50;
+const MAX_IMPORT_RECORDS = 100_000;
+
+/**
+ * ZIP cumulative-size guard. Declared sizes are counted in the preflight; an
+ * entry whose size JSZip does not expose is measured after decompression and
+ * added exactly once.: the old code added declared sizes AND the
+ * measured size of every entry, so a legitimate export close to the limit
+ * could be rejected as a bomb.
+ */
+function hasCrossedZipLimit(
+  accumulatedBytes: number,
+  sizeUnknown: boolean,
+  entryBytes: number,
+): boolean {
+  if (entryBytes > MAX_ZIP_ENTRY_BYTES) {return true;}
+  return sizeUnknown
+    ? accumulatedBytes > MAX_ZIP_UNCOMPRESSED_BYTES - entryBytes
+    : accumulatedBytes > MAX_ZIP_UNCOMPRESSED_BYTES;
+}
+
+function enforceImportRecordLimit(count: number): void {
+  if (count > MAX_IMPORT_RECORDS) {
+    throw new Error(
+      `Import contains too many records (${count}); maximum is ${MAX_IMPORT_RECORDS}`,
+    );
+  }
+}
+
+/** Records buffered between batched dedup queries during bookmark import. */
+const IMPORT_DEDUP_WINDOW = 400;
+/** urlHash operands per `$in` existence query (IndexedDB-friendly bound). */
+const EXISTENCE_QUERY_BATCH = 400;
+/** Documents per `bulkInsert` call inside one dedup window. */
+const BOOKMARK_BULK_INSERT_CHUNK = 100;
+
+interface PendingBookmarkInsert {
+  /** Plain SHA-256 hex of the sanitized URL — the query operand callers pass. */
+  urlHash: string;
+  /** Fully-built document; the storage layer re-keys urlHash on write (A4). */
+  doc: BookmarkDocType;
+}
+
+interface ImportCounters {
+  importedCount: number;
+  skippedCount: number;
+}
+
+/**
+ * Batched urlHash existence check for bookmark dedup.
+ *
+ * The per-record `findOne({ urlHash })` pattern cost one IndexedDB query —
+ * and one keyed-HMAC rewrite — per imported row, which dominates large
+ * HTML/CSV imports. Querying `$in` chunks returns the same information in
+ * ~1/400th of the round-trips; the storage layer already rewrites `$in`
+ * operands (authEncryptionStorage.transformUrlHashOperand).
+ *
+ * Returned documents carry the KEYED stored urlHash, so matches are mapped
+ * back through the decrypted `url` field: `hashString(doc.url)` reproduces
+ * the plain SHA-256 basis the callers computed. The result maps each
+ * existing plain hash to the stored document id (the Markdown importer
+ * needs the id for wikilink resolution). A failed chunk falls back to
+ * per-hash findOne lookups, and a failed lookup marks the hash as
+ * existing — the same fail-closed skip the old per-record catch produced.
+ */
+async function collectExistingUrlHashes(
+  db: BookmarkForgeDB,
+  urlHashes: readonly string[],
+  signal: AbortSignal | undefined,
+): Promise<Map<string, string>> {
+  const existing = new Map<string, string>();
+  const unique = Array.from(new Set(urlHashes));
+  for (let start = 0; start < unique.length; start += EXISTENCE_QUERY_BATCH) {
+    throwIfAborted(signal);
+    const slice = unique.slice(start, start + EXISTENCE_QUERY_BATCH);
+    try {
+      const docs = await db.bookmarks
+        .find({ selector: { urlHash: { $in: slice } } })
+        .exec();
+      await Promise.all(
+        docs.map(async (doc) => {
+          const storedUrl = typeof doc.url === "string" ? doc.url : "";
+          if (storedUrl && typeof doc.id === "string") {
+            existing.set(await hashString(storedUrl), doc.id);
+          }
+        }),
+      );
+    } catch (error) {
+      logger.warn(
+        "[UniversalImporter] Batched urlHash lookup failed; falling back to per-URL queries",
+        { error: error instanceof Error ? error.message : String(error) },
+      );
+      for (const hash of slice) {
+        throwIfAborted(signal);
+        try {
+          const doc = await db.bookmarks
+            .findOne({ selector: { urlHash: hash } })
+            .exec();
+          if (doc) {
+            const storedUrl = typeof doc.url === "string" ? doc.url : "";
+            existing.set(
+              storedUrl ? await hashString(storedUrl) : hash,
+              typeof doc.id === "string" ? doc.id : "",
+            );
+          }
+        } catch {
+          // Fail-closed: an unverifiable URL is skipped, matching the
+          // per-record catch → skippedCount path this replaces.
+          existing.set(hash, "");
+        }
+      }
+    }
+    if (start + EXISTENCE_QUERY_BATCH < unique.length) {
+      await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    }
+  }
+  return existing;
+}
+
+interface BulkInsertResultShape {
+  readonly success?: readonly unknown[];
+  readonly error?: readonly { readonly documentId?: string }[];
+}
+
+type BulkInsertCapable = {
+  bulkInsert?: (
+    documents: BookmarkDocType[],
+  ) => Promise<BulkInsertResultShape | undefined>;
+};
+
+/**
+ * Per-record write path: one `insert` per candidate, in order.
+ *
+ * Used for adapters without `bulkInsert` (test doubles, legacy mocks) and as
+ * the fallback for a chunk whose `bulkInsert` rejected. The Free wall is a
+ * `preInsert` hook, and RxDB runs pre-insert hooks through `Promise.all`
+ * BEFORE writing, so a FREE_LIMIT_REACHED rejects the whole batch with
+ * nothing written. Retrying row by row then reproduces the old partial-import
+ * accounting exactly: rows before the wall are counted, the wall itself is
+ * surfaced as `FreeTierImportLimitReached`.
+ */
+async function insertTrackedRowsIndividually(
+  db: BookmarkForgeDB,
+  items: readonly PendingBookmarkInsert[],
+  options: ImportExecutionOptions,
+  counters: ImportCounters,
+  completedHashes: Set<string>,
+): Promise<void> {
+  for (const item of items) {
+    throwIfAborted(options.signal);
+    try {
+      await insertTrackedBookmark(db, item.doc, options.journal);
+      counters.importedCount++;
+      options.importedCount++;
+    } catch (error) {
+      // Release the reservation so a later duplicate of this URL retries —
+      // the old path only ever recorded a hash after a successful insert.
+      completedHashes.delete(item.urlHash);
+      if (isFreeLimitError(error)) {
+        throw new FreeTierImportLimitReached(
+          options.importedCount,
+          counters.skippedCount,
+        );
+      }
+      counters.skippedCount++;
+    }
+  }
+}
+
+/**
+ * Inserts one window of pre-parsed bookmark candidates.
+ *
+ * Replaces the old per-record `findOne` + `insert` pair: existence is
+ * resolved once per window via `collectExistingUrlHashes`, then the surviving
+ * candidates are written with `bulkInsert` chunks — one storage write per
+ * chunk instead of one per row, which is the dominant cost of a large import
+ * once dedup is batched. The rollback journal, the Free-tier per-record limit
+ * and per-record error isolation are preserved: `bulkInsert` resolves with a
+ * per-document `error` array (skipped, never journaled), and any whole-chunk
+ * rejection falls back to the per-record path described above.
+ * `completedHashes` carries DB-existing AND successfully inserted hashes
+ * across windows, so a repeated URL in the same file is skipped after its
+ * first insert — and a FAILED first insert releases its hash, letting a later
+ * duplicate retry.
+ */
+async function flushBookmarkInsertWindow(
+  db: BookmarkForgeDB,
+  batch: readonly PendingBookmarkInsert[],
+  options: ImportExecutionOptions,
+  counters: ImportCounters,
+  completedHashes: Set<string>,
+): Promise<void> {
+  const existingHashes = await collectExistingUrlHashes(
+    db,
+    batch.map((item) => item.urlHash),
+    options.signal,
+  );
+  for (const hash of existingHashes.keys()) {
+    completedHashes.add(hash);
+  }
+
+  const pending: PendingBookmarkInsert[] = [];
+  for (const item of batch) {
+    throwIfAborted(options.signal);
+    if (completedHashes.has(item.urlHash)) {
+      counters.skippedCount++;
+      continue;
+    }
+    // Reserve while the chunk is in flight so a repeated URL inside this
+    // window is skipped; a failed row releases the reservation again.
+    completedHashes.add(item.urlHash);
+    pending.push(item);
+  }
+
+  const collection = db.bookmarks as unknown as BulkInsertCapable;
+  const bulkInsert = collection.bulkInsert;
+  if (typeof bulkInsert !== "function") {
+    await insertTrackedRowsIndividually(
+      db,
+      pending,
+      options,
+      counters,
+      completedHashes,
+    );
+    return;
+  }
+
+  for (let start = 0; start < pending.length; start += BOOKMARK_BULK_INSERT_CHUNK) {
+    throwIfAborted(options.signal);
+    const chunk = pending.slice(start, start + BOOKMARK_BULK_INSERT_CHUNK);
+    const failed = new Set<string>();
+    try {
+      const result = await bulkInsert.call(
+        collection,
+        chunk.map((item) => item.doc),
+      );
+      for (const entry of result?.error ?? []) {
+        if (entry && typeof entry.documentId === "string") {
+          failed.add(entry.documentId);
+        }
+      }
+    } catch {
+      // Whole-chunk rejection: nothing was written (pre-insert hooks run
+      // before the storage write), so the per-record retry cannot duplicate
+      // a row. This is the Free wall's path and the exact-accounting path.
+      await insertTrackedRowsIndividually(
+        db,
+        chunk,
+        options,
+        counters,
+        completedHashes,
+      );
+      continue;
+    }
+    for (const item of chunk) {
+      if (failed.has(item.doc.id)) {
+        completedHashes.delete(item.urlHash);
+        counters.skippedCount++;
+        continue;
+      }
+      options.journal.bookmarkIds.push(item.doc.id);
+      counters.importedCount++;
+      options.importedCount++;
+    }
+  }
+}
+
+/** Yield periodically so large imports do not monopolize the main thread. */
+async function yieldImportWork(
+  index: number,
+  total: number,
+  options: ImportExecutionOptions,
+): Promise<void> {
+  options.recordsSeen = Math.max(options.recordsSeen, index + 1);
+  if (index === 0 || index % IMPORT_YIELD_EVERY !== 0) {return;}
+  throwIfAborted(options.signal);
+  const progress = total > 0 ? 10 + Math.round((index / total) * 85) : 10;
+  reportProgress(options, progress);
+  await new Promise<void>((resolve) => setTimeout(resolve, 0));
+  throwIfAborted(options.signal);
+}
+
+
+/**
+ * UniversalImporter - Handles importing data from multiple formats
+ * Supports Notion (JSON), Generic JSON, CSV, Pocket (HTML), Raindrop (CSV), Omnivore (JSON)
+ */
+export class UniversalImporter {
+  private static readonly MAX_IMPORT_BYTES = 50 * 1024 * 1024;
+  private static readonly MAX_ZIP_ENTRIES = 10_000;
+  private pendingRollback: ImportJournal | null = loadPendingRollback();
+  private pendingRollbackPromise: Promise<boolean> | null = null;
+
+  /** Inspect a Pocket export without touching the database. */
+  async previewPocketFile(file: File): Promise<PocketImportPreview | null> {
+    return UniversalImporter.previewPocketFile(file);
+  }
+
+  static async previewPocketFile(file: File): Promise<PocketImportPreview | null> {
+    const filename = file.name;
+    const lowerFilename = filename.toLowerCase();
+    // only Pocket-shaped files are previewable, and the import
+    // size guard must run BEFORE the file is read. The previous order read
+    // any file (including giant.json/.zip imports) in full, defeating the
+    // guard in the UI path.
+    if (
+      UniversalImporter.getSizeError(file) !== null ||
+      !(
+        lowerFilename.endsWith(".html") ||
+        lowerFilename.endsWith(".htm") ||
+        lowerFilename.endsWith(".csv")
+      )
+    ) {
+      return null;
+    }
+    const content = await file.text();
+
+    if (lowerFilename.endsWith(".html") || lowerFilename.endsWith(".htm")) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(content, "text/html");
+      const anchors = Array.from(doc.querySelectorAll("a"));
+      const pocketShape =
+        lowerFilename === "ril_export.html" ||
+        content.includes("<!DOCTYPE NETSCAPE-Bookmark-file-1") ||
+        anchors.some((anchor) =>
+          anchor.hasAttribute("add_date") ||
+          anchor.hasAttribute("tags") ||
+          anchor.hasAttribute("data-status"),
+        );
+      if (!pocketShape) {return null;}
+      return pocketPreviewFromRows(
+        filename,
+        anchors.map((anchor) => ({
+          title: anchor.textContent || "",
+          url: anchor.getAttribute("href") || "",
+          date: anchor.getAttribute("add_date") || undefined,
+          tags: anchor.getAttribute("tags") || "",
+          status:
+            anchor.getAttribute("status") ||
+            anchor.getAttribute("data-status") ||
+            anchor.getAttribute("data-read") ||
+            pocketHtmlStatus(anchor, Array.from(doc.querySelectorAll("h3"))),
+        })),
+      );
+    }
+
+    if (lowerFilename.endsWith(".csv")) {
+      const records = Array.from(this.iterateCSVRecords(content));
+      const headerRecord = records.shift();
+      if (!headerRecord) {return null;}
+      const headers = this.parseCSVLine(headerRecord).map(normalizePocketHeader);
+      const hasUrl = headers.includes("url") || headers.includes("link");
+      const hasPocketField = headers.some((header) =>
+        [
+          "tags", "tag", "status", "state", "read_status", "read_state",
+          "time_added", "time_read", "add_date", "date_added", "created", "created_at",
+        ].includes(header),
+      );
+      if (!hasUrl || !hasPocketField) {return null;}
+      const rows = records.map((record) => {
+        const parts = this.parseCSVLine(record);
+        const getByHeader = (names: string[]) => {
+          const index = names.map(normalizePocketHeader).map((name) => headers.indexOf(name)).find((value) => value >= 0) ?? -1;
+          return index >= 0 ? parts[index] || "" : "";
+        };
+        return {
+          title: getByHeader(["title", "name"]),
+          url: getByHeader(["url", "link"]),
+          date: getByHeader(["time_added", "add_date", "created", "created_at", "date_added"]),
+          tags: getByHeader(["tags", "tag"]),
+          status: getByHeader(["status", "state", "read_status", "read_state", "archive", "archived"]),
+        };
+      });
+      return pocketPreviewFromRows(filename, rows);
+    }
+    return null;
+  }
+
+  private static getSizeError(file: File): ImportResult | null {
+    if (file.size <= UniversalImporter.MAX_IMPORT_BYTES) return null;
+    return {
+      success: false,
+      importedCount: 0,
+      skippedCount: 0,
+      error: `File too large (${(file.size / 1e6).toFixed(0)} MB). Maximum: ${UniversalImporter.MAX_IMPORT_BYTES / 1e6} MB.`,
+    };
+  }
+
+  /** Retries cleanup from the previous failed import before allowing another. */
+  async retryPendingRollback(db: BookmarkForgeDB): Promise<boolean> {
+    if (this.pendingRollbackPromise) {return this.pendingRollbackPromise;}
+    const operation = (async () => {
+      if (!this.pendingRollback) {return true;}
+      const rollback = await rollbackImport(db, this.pendingRollback);
+      if (rollback.completed) {
+        this.pendingRollback = null;
+        clearPersistedRollback();
+      }
+      return rollback.completed;
+    })();
+    const tracked = operation.finally(() => {
+      if (this.pendingRollbackPromise === tracked) {
+        this.pendingRollbackPromise = null;
+      }
+    });
+    this.pendingRollbackPromise = tracked;
+    return tracked;
+  }
+
+  private async importContent(
+    db: BookmarkForgeDB,
+    filename: string,
+    content: string,
+    options: ImportExecutionOptions,
+  ): Promise<ImportResult> {
+    throwIfAborted(options.signal);
+    const normalizedFilename = filename.toLowerCase();
+    if (normalizedFilename.endsWith(".json")) {
+      // Pinboard posts exports are a top-level JSON array; Firefox backups
+      // are { children: [...] } trees. Both are bookmark lists, not the
+      // BookmarkForge document format — sniff before the generic parser.
+      const trimmed = content.trimStart();
+      if (trimmed.startsWith("[")) {
+        const pinboard = parsePinboardPosts(content);
+        if (pinboard) {return this.importBookmarkCandidates(db, pinboard, options, "pinboard");}
+      } else if (content.includes('"children"') && content.includes('"typeCode"')) {
+        const firefox = parseFirefoxPlaces(content);
+        if (firefox) {return this.importBookmarkCandidates(db, firefox, options, "firefox");}
+      }
+      return this.importFromJSON(db, content, options);
+    }
+    if (normalizedFilename.endsWith(".csv")) {
+      return this.importFromCSV(db, content, options);
+    }
+    if (
+      normalizedFilename.endsWith(".html") ||
+      normalizedFilename.endsWith(".htm")
+    ) {
+      return this.importFromPocketHTML(db, content, options);
+    }
+    if (normalizedFilename.endsWith(".md")) {
+      const note = parseMarkdownNote(filename, content);
+      return this.importParsedMarkdown(db, [note], new Map(), options);
+    }
+    if (normalizedFilename.endsWith(".enex")) {
+      return this.importFromEnex(db, content, options);
+    }
+    throw new Error(
+      "Unsupported file format. Please use .json, .csv, .html, .md, .enex, or .zip (Markdown/Obsidian vault) files.",
+    );
+  }
+
+  /**
+   * Main import function
+   */
+  async importData(
+    db: BookmarkForgeDB,
+    file: File,
+    options: ImportOptions = {},
+  ): Promise<ImportResult> {
+    const sizeError = UniversalImporter.getSizeError(file);
+    if (sizeError) return sizeError;
+    if (!(await this.retryPendingRollback(db))) {
+      return {
+        success: false,
+        importedCount: 0,
+        skippedCount: 0,
+        error: "A previous import rollback is incomplete; retry cleanup before importing again.",
+      };
+    }
+    const importOptions = createImportExecutionOptions(options);
+    try {
+      throwIfAborted(importOptions.signal);
+      reportProgress(importOptions, 10);
+      const filename = file.name.toLowerCase();
+      let result: ImportResult;
+
+      if (filename.endsWith(".zip")) {
+        result = await this.importFromMarkdownZip(db, file, importOptions);
+      } else if (filename.endsWith(".csv")) {
+        const records = UniversalImporter.iterateFileCSVRecords(
+          file,
+          importOptions.signal,
+        );
+        result =
+          filename.includes("raindrop") || filename.includes("rain-drop")
+            ? await this.importFromRaindropCSV(db, records, importOptions)
+            : await this.importFromCSV(db, records, importOptions);
+      } else {
+        const content = await file.text();
+        throwIfAborted(importOptions.signal);
+        result = await this.importContent(
+          db,
+          file.name,
+          content,
+          importOptions,
+        );
+      }
+
+      reportProgress(importOptions, 100);
+      return result;
+    } catch (error) {
+      const limitResult = getLimitResult(error, importOptions);
+      if (limitResult) {
+        logger.info("[UniversalImporter] Free-tier limit reached", {
+          importedCount: limitResult.importedCount,
+        });
+        return limitResult;
+      }
+      const rollback = await rollbackImport(db, importOptions.journal);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      logger.error("[UniversalImporter] Import failed", {
+        error: errorMessage,
+        recordsSeen: importOptions.recordsSeen,
+        rollbackCompleted: rollback.completed,
+      });
+      if (!rollback.completed) {
+        this.pendingRollback = importOptions.journal;
+        persistPendingRollback(this.pendingRollback);
+      }
+      return {
+        success: false,
+        importedCount: 0,
+        skippedCount: 0,
+        error: rollback.completed
+          ? errorMessage
+          : `${errorMessage}. Rollback incomplete; some imported records may remain.`,
+        rollbackIncomplete: !rollback.completed,
+      };
+    }
+  }
+
+  /**
+   * Detect source from file name and content, then dispatch
+   */
+  async importDataWithDetection(
+    db: BookmarkForgeDB,
+    file: File,
+    options: ImportOptions = {},
+  ): Promise<ImportResult> {
+    const sizeError = UniversalImporter.getSizeError(file);
+    if (sizeError) return sizeError;
+    if (!(await this.retryPendingRollback(db))) {
+      return {
+        success: false,
+        importedCount: 0,
+        skippedCount: 0,
+        error: "A previous import rollback is incomplete; retry cleanup before importing again.",
+      };
+    }
+    const importOptions = createImportExecutionOptions(options);
+    try {
+      throwIfAborted(importOptions.signal);
+      reportProgress(importOptions, 10);
+      const filename = file.name.toLowerCase();
+
+      // A CSV file can be dispatched from its extension without reading the
+      // complete file first. This keeps automatic detection consistent with
+      // importData() and preserves the streaming path for large CSV exports.
+      if (filename.endsWith(".csv")) {
+        const records = UniversalImporter.iterateFileCSVRecords(
+          file,
+          importOptions.signal,
+        );
+        const result =
+          filename.includes("raindrop") || filename.includes("rain-drop")
+            ? await this.importFromRaindropCSV(db, records, importOptions)
+            : await this.importFromCSV(db, records, importOptions);
+        reportProgress(importOptions, 100);
+        return result;
+      }
+
+      if (filename.endsWith(".zip")) {
+        const zipResult = await this.importFromMarkdownZip(
+          db,
+          file,
+          importOptions,
+        );
+        reportProgress(importOptions, 100);
+        return zipResult;
+      }
+      if (filename.endsWith(".md")) {
+        const markdownResult = await this.importFromMarkdownFile(
+          db,
+          file,
+          importOptions,
+        );
+        reportProgress(importOptions, 100);
+        return markdownResult;
+      }
+
+      const content = await file.text();
+      throwIfAborted(importOptions.signal);
+
+      let detectedResult: ImportResult | undefined;
+      if (
+        content.includes("<!DOCTYPE NETSCAPE-Bookmark-file-1") ||
+        content.includes("<DT><A")
+      ) {
+        detectedResult = await this.importFromPocketHTML(
+          db,
+          content,
+          importOptions,
+        );
+      } else if (
+        filename.includes("raindrop") ||
+        filename.includes("rain-drop")
+      ) {
+        detectedResult = await this.importFromRaindropCSV(
+          db,
+          content,
+          importOptions,
+        );
+      } else if (
+        filename.includes("omnivore") ||
+        content.includes('"type":"article"') ||
+        content.includes('"savedAt"')
+      ) {
+        detectedResult = await this.importFromOmnivoreJSON(
+          db,
+          content,
+          importOptions,
+        );
+      } else if (content.includes("<en-export")) {
+        detectedResult = await this.importFromEnex(db, content, importOptions);
+      } else if (content.trimStart().startsWith("[")) {
+        const pinboard = parsePinboardPosts(content);
+        if (pinboard) {
+          detectedResult = await this.importBookmarkCandidates(
+            db, pinboard, importOptions, "pinboard",
+          );
+        }
+      } else if (
+        content.includes('"children"') && content.includes('"typeCode"')
+      ) {
+        const firefox = parseFirefoxPlaces(content);
+        if (firefox) {
+          detectedResult = await this.importBookmarkCandidates(
+            db, firefox, importOptions, "firefox",
+          );
+        }
+      }
+      if (detectedResult) {
+        reportProgress(importOptions, 100);
+        return detectedResult;
+      }
+      // Reuse the content already read for detection. Calling importData here
+      // would read the entire file a second time and temporarily double peak
+      // memory for large (but still allowed) imports.
+      const result = await this.importContent(
+        db,
+        filename,
+        content,
+        importOptions,
+      );
+      reportProgress(importOptions, 100);
+      return result;
+    } catch (error) {
+      const limitResult = getLimitResult(error, importOptions);
+      if (limitResult) {
+        logger.info("[UniversalImporter] Free-tier limit reached", {
+          importedCount: limitResult.importedCount,
+        });
+        return limitResult;
+      }
+      const rollback = await rollbackImport(db, importOptions.journal);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      logger.error("[UniversalImporter] Detection failed", {
+        error: errorMessage,
+        recordsSeen: importOptions.recordsSeen,
+        rollbackCompleted: rollback.completed,
+      });
+      if (!rollback.completed) {
+        this.pendingRollback = importOptions.journal;
+        persistPendingRollback(this.pendingRollback);
+      }
+      return {
+        success: false,
+        importedCount: 0,
+        skippedCount: 0,
+        error: rollback.completed
+          ? errorMessage
+          : `${errorMessage}. Rollback incomplete; some imported records may remain.`,
+        rollbackIncomplete: !rollback.completed,
+      };
+    }
+  }
+
+  /**
+   * Parse Pocket HTML export format.
+   * Uses DOMParser instead of a fragile regex so that attribute order,
+   * whitespace variation, and malformed HTML don't silently skip bookmarks.
+   * Format: <DT><A HREF="url" ADD_DATE="ts" TAGS="tag1,tag2">title</A>
+   */
+  private async importFromPocketHTML(
+    db: BookmarkForgeDB,
+    content: string,
+    options: ImportExecutionOptions,
+  ): Promise<ImportResult> {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, "text/html");
+    const links = doc.querySelectorAll("a");
+    const headings = Array.from(doc.querySelectorAll("h3"));
+    enforceImportRecordLimit(links.length);
+
+    const counters: ImportCounters = { importedCount: 0, skippedCount: 0 };
+    const pending: PendingBookmarkInsert[] = [];
+    const completedHashes = new Set<string>();
+    const flushPending = async (): Promise<void> => {
+      if (pending.length === 0) {return;}
+      const batch = pending.splice(0, pending.length);
+      await flushBookmarkInsertWindow(
+        db,
+        batch,
+        options,
+        counters,
+        completedHashes,
+      );
+    };
+
+    for (let index = 0; index < links.length; index++) {
+      await yieldImportWork(index, links.length, options);
+      const link = links[index]!;
+      throwIfAborted(options.signal);
+      try {
+        const href = link.getAttribute("href");
+        const addDateAttr = link.getAttribute("add_date");
+        const tagsAttr = link.getAttribute("tags");
+        const rawTitle = (link.textContent || "").trim();
+        const statusValue =
+          link.getAttribute("status") ||
+          link.getAttribute("data-status") ||
+          link.getAttribute("data-read") ||
+          pocketHtmlStatus(link, headings);
+        const readState = pocketReadStateFields(statusValue);
+
+        const url = sanitizeUrl(href || "");
+        if (!url || !url.startsWith("http")) {
+          counters.skippedCount++;
+          continue;
+        }
+
+        const title = normalizeImportedTitle(rawTitle, "Untitled");
+        const tags = normalizeImportedTags((tagsAttr || "").split(","));
+        const createdAt = normalizeImportDate(addDateAttr);
+        const urlHash = await hashString(url);
+
+        pending.push({
+          urlHash,
+          doc: {
+            id: generateId(),
+            url,
+            urlHash,
+            title,
+            content: "",
+            summary: "",
+            tags: pocketReadStateTags(
+              tags.length ? tags : ["pocket-import"],
+              readState,
+            ),
+            ...(readState.isRead === undefined ? {} : { isRead: readState.isRead }),
+            createdAt,
+            updatedAt: new Date().toISOString(),
+            isDeleted: false,
+            isPrivate: false,
+            processed: false,
+            relatedLinks: [],
+            visitCount: 0,
+          } as BookmarkDocType,
+        });
+        if (pending.length >= IMPORT_DEDUP_WINDOW) {
+          await flushPending();
+        }
+      } catch (error) {
+        if (isFreeLimitError(error)) {
+          throw new FreeTierImportLimitReached(options.importedCount, counters.skippedCount);
+        }
+        counters.skippedCount++;
+      }
+    }
+    await flushPending();
+
+    return {
+      success: true,
+      importedCount: counters.importedCount,
+      skippedCount: counters.skippedCount,
+    };
+  }
+
+  /**
+   * Parse Raindrop CSV export format
+   * Columns: title, url, tags, domain, created,...
+   */
+  private async importFromRaindropCSV(
+    db: BookmarkForgeDB,
+    content: string | CSVRecordSource,
+    options: ImportExecutionOptions,
+  ): Promise<ImportResult> {
+    const counters: ImportCounters = { importedCount: 0, skippedCount: 0 };
+    let headers: string[] = [];
+    let recordIndex = 0;
+    const pending: PendingBookmarkInsert[] = [];
+    const completedHashes = new Set<string>();
+    const flushPending = async (): Promise<void> => {
+      if (pending.length === 0) {return;}
+      const batch = pending.splice(0, pending.length);
+      await flushBookmarkInsertWindow(
+        db,
+        batch,
+        options,
+        counters,
+        completedHashes,
+      );
+    };
+    const records =
+      typeof content === "string"
+        ? UniversalImporter.iterateCSVRecords(content)
+        : content;
+
+    for await (const record of records) {
+      const index = recordIndex++;
+      enforceImportRecordLimit(recordIndex);
+      await yieldImportWork(index, MAX_IMPORT_RECORDS, options);
+      throwIfAborted(options.signal);
+      const line = record.trim();
+      if (!line) {continue;}
+
+      const parts = UniversalImporter.parseCSVLine(line);
+
+      if (index === 0) {
+        headers = parts.map((h) => h.toLowerCase());
+        continue;
+      }
+
+      const getCol = (name: string): string => {
+        const idx = headers.indexOf(name);
+        return idx >= 0 ? parts[idx] || "" : "";
+      };
+      const readState = pocketReadStateFields(pocketCsvStatus(getCol));
+
+      try {
+        const url = sanitizeUrl(getCol("url") || parts[1] || "");
+        const title = normalizeImportedTitle(
+          getCol("title") || getCol("name") || parts[0],
+          "Untitled",
+        );
+        const rawTags = getCol("tags") || getCol("tag") || "";
+        const tags = normalizeImportedTags(rawTags.split(/[,;]/));
+
+        if (!url || !url.startsWith("http")) {
+          counters.skippedCount++;
+          continue;
+        }
+
+        const urlHash = await hashString(url);
+        pending.push({
+          urlHash,
+          doc: {
+            id: generateId(),
+            url,
+            urlHash,
+            title,
+            content: "",
+            summary: SanitizationService.sanitizeHtml(
+              normalizeImportedContent(
+                getCol("description") || getCol("note") || "",
+              ),
+              true,
+            ),
+            tags: pocketReadStateTags(
+              tags.length ? tags : ["raindrop-import"],
+              readState,
+            ),
+            ...(readState.isRead === undefined ? {} : { isRead: readState.isRead }),
+            createdAt: normalizeImportDate(getCol("created")),
+            updatedAt: new Date().toISOString(),
+            isDeleted: false,
+            isPrivate: false,
+            processed: false,
+            relatedLinks: [],
+            visitCount: 0,
+          } as BookmarkDocType,
+        });
+        if (pending.length >= IMPORT_DEDUP_WINDOW) {
+          await flushPending();
+        }
+      } catch (error) {
+        if (isFreeLimitError(error)) {
+          throw new FreeTierImportLimitReached(options.importedCount, counters.skippedCount);
+        }
+        counters.skippedCount++;
+      }
+    }
+    await flushPending();
+
+    return {
+      success: true,
+      importedCount: counters.importedCount,
+      skippedCount: counters.skippedCount,
+    };
+  }
+
+  /**
+   * Parse Omnivore JSON export format
+   * Structure: { data: { articles: [{ id, title, url, savedAt, description, labels: [{ name }],... }] } }
+   */
+  private async importFromOmnivoreJSON(
+    db: BookmarkForgeDB,
+    content: string,
+    options: ImportExecutionOptions,
+  ): Promise<ImportResult> {
+    const counters: ImportCounters = { importedCount: 0, skippedCount: 0 };
+
+    try {
+      const parsed = JSON.parse(content);
+      const articles =
+        parsed?.data?.articles || parsed?.articles || parsed || [];
+
+      if (!Array.isArray(articles)) {
+        return {
+          success: true,
+          importedCount: 0,
+          skippedCount: 0,
+          error: "No articles array found",
+        };
+      }
+
+      const pending: PendingBookmarkInsert[] = [];
+      const completedHashes = new Set<string>();
+      const flushPending = async (): Promise<void> => {
+        if (pending.length === 0) {return;}
+        const batch = pending.splice(0, pending.length);
+        await flushBookmarkInsertWindow(
+          db,
+          batch,
+          options,
+          counters,
+          completedHashes,
+        );
+      };
+
+      enforceImportRecordLimit(articles.length);
+      for (let index = 0; index < articles.length; index++) {
+        await yieldImportWork(index, articles.length, options);
+        throwIfAborted(options.signal);
+        const article = articles[index]!;
+        try {
+          const url = sanitizeUrl(article.url || article.originalUrl || "");
+          const title = normalizeImportedTitle(
+            article.title || article.slug,
+            "Untitled",
+          );
+          const tags = normalizeImportedTags(
+            Array.isArray(article.labels)
+              ? article.labels.map((label: unknown) =>
+                  typeof label === "string"
+                    ? label
+                    : typeof label === "object" && label !== null
+                      ? String((label as { name?: unknown }).name || "")
+                      : "",
+                )
+              : [],
+          );
+
+          if (!url || !url.startsWith("http")) {
+            counters.skippedCount++;
+            continue;
+          }
+
+          const urlHash = await hashString(url);
+          pending.push({
+            urlHash,
+            doc: {
+              id: generateId(),
+              url,
+              urlHash,
+              title,
+              content: SanitizationService.sanitizeHtml(
+                normalizeImportedContent(
+                  article.description || article.content || "",
+                ),
+                true,
+              ),
+              summary: SanitizationService.sanitizeHtml(
+                normalizeImportedContent(article.description || ""),
+                true,
+              ),
+              tags: tags.length ? tags : ["omnivore-import"],
+              createdAt: normalizeImportDate(
+                article.savedAt || article.createdAt,
+              ),
+              updatedAt: normalizeImportDate(article.updatedAt),
+              processed: false,
+              isPrivate: false,
+              isDeleted: false,
+              relatedLinks: [],
+              visitCount: 0,
+            } as BookmarkDocType,
+          });
+          if (pending.length >= IMPORT_DEDUP_WINDOW) {
+            await flushPending();
+          }
+        } catch (error) {
+          if (isFreeLimitError(error)) {
+            throw new FreeTierImportLimitReached(options.importedCount, counters.skippedCount);
+          }
+          counters.skippedCount++;
+        }
+      }
+      await flushPending();
+    } catch (error) {
+      if (error instanceof FreeTierImportLimitReached || isFreeLimitError(error)) {
+        throw error;
+      }
+      return {
+        success: false,
+        importedCount: 0,
+        skippedCount: 0,
+        error: "Invalid Omnivore JSON format",
+      };
+    }
+
+    return {
+      success: true,
+      importedCount: counters.importedCount,
+      skippedCount: counters.skippedCount,
+    };
+  }
+
+  /**
+   * Imports from Notion-style JSON or generic JSON
+   */
+  private static safeParseJSON(content: string): Record<string, unknown> {
+    const data = JSON.parse(content);
+    if (data === null || typeof data !== "object" || Array.isArray(data))
+      {return data;}
+    const proto = Object.getPrototypeOf(data);
+    if (proto !== null && proto !== Object.prototype) {
+      return Object.assign({}, data);
+    }
+    const unsafeKeys = ["__proto__", "constructor", "prototype"];
+    for (const key of unsafeKeys) {
+      if (key in data) {
+        const sanitized = { ...data };
+        delete sanitized[key];
+        return sanitized;
+      }
+    }
+    return data;
+  }
+
+  private async importFromJSON(
+    db: BookmarkForgeDB,
+    content: string,
+    options: ImportExecutionOptions,
+  ): Promise<ImportResult> {
+    const parsedData = UniversalImporter.safeParseJSON(content) as Record<
+      string,
+      unknown
+    >;
+    // UniversalExporter wraps collections under `data`; older Notion-style
+    // files place them at the root. Accept both shapes for lossless roundtrip.
+    const nestedData = parsedData.data;
+    const data =
+      nestedData &&
+      typeof nestedData === "object" &&
+      !Array.isArray(nestedData) &&
+      (Array.isArray((nestedData as Record<string, unknown>).bookmarks) ||
+        Array.isArray((nestedData as Record<string, unknown>).documents))
+        ? (nestedData as Record<string, unknown>)
+        : parsedData;
+    let importedCount = 0;
+    let skippedCount = 0;
+
+    // 1. Handle Notion-style exports (structured JSON from BookmarkForge or similar)
+    if (data.bookmarks || data.documents) {
+      const bookmarkRecords = Array.isArray(data.bookmarks)
+        ? data.bookmarks
+        : [];
+      const documentRecords = Array.isArray(data.documents)
+        ? data.documents
+        : [];
+      const folderRecords = Array.isArray(data.folders) ? data.folders : [];
+      enforceImportRecordLimit(
+        bookmarkRecords.length + documentRecords.length + folderRecords.length,
+      );
+
+      const availableFolderIds = new Set<string>(["root"]);
+      const folderParentMap = new Map<string, string>();
+      const documentsReferenceFolders = documentRecords.some(
+        (record) =>
+          typeof record === "object" &&
+          record !== null &&
+          !Array.isArray(record) &&
+          typeof (record as Record<string, unknown>).folderId === "string",
+      );
+      if (folderRecords.length > 0 || documentsReferenceFolders) {
+        const existingFolders = await db.folders.find().exec();
+        for (const folder of existingFolders) {
+          if (typeof folder.id === "string") {
+            availableFolderIds.add(folder.id);
+            if (typeof folder.parentId === "string") {
+              folderParentMap.set(folder.id, folder.parentId);
+            }
+          }
+        }
+      }
+      for (let index = 0; index < folderRecords.length; index++) {
+        await yieldImportWork(index, folderRecords.length, options);
+        throwIfAborted(options.signal);
+        const rawFolder = folderRecords[index];
+        if (
+          typeof rawFolder !== "object" ||
+          rawFolder === null ||
+          Array.isArray(rawFolder)
+        ) {
+          continue;
+        }
+        const folder = rawFolder as Record<string, unknown>;
+        const id = typeof folder.id === "string" ? folder.id : "";
+        if (!id || id.length > 100 || id === "root") {continue;}
+        const existing = await db.folders
+          .findOne({ selector: { id } })
+          .exec();
+        if (existing) {
+          availableFolderIds.add(id);
+          continue;
+        }
+        const rawParentId =
+          typeof folder.parentId === "string" ? folder.parentId : "root";
+        const parentId = availableFolderIds.has(rawParentId)
+          ? resolveImportedFolderParent(id, rawParentId, folderParentMap)
+          : "root";
+        await insertTrackedFolder(
+          db,
+          {
+            id,
+            title: normalizeImportedTitle(folder.title, "Untitled Folder"),
+            parentId,
+            createdAt: normalizeImportDate(
+              typeof folder.createdAt === "string" ? folder.createdAt : null,
+            ),
+          },
+          options.journal,
+        );
+        availableFolderIds.add(id);
+        folderParentMap.set(id, parentId);
+        importedCount++;
+        options.importedCount++;
+      }
+
+      // Import Bookmarks
+      if (Array.isArray(data.bookmarks)) {
+        const bookmarkCounters: ImportCounters = {
+          importedCount: 0,
+          skippedCount: 0,
+        };
+        const pending: PendingBookmarkInsert[] = [];
+        const completedHashes = new Set<string>();
+        const flushPending = async (): Promise<void> => {
+          if (pending.length === 0) {return;}
+          const batch = pending.splice(0, pending.length);
+          await flushBookmarkInsertWindow(
+            db,
+            batch,
+            options,
+            bookmarkCounters,
+            completedHashes,
+          );
+        };
+        for (let index = 0; index < data.bookmarks.length; index++) {
+          await yieldImportWork(index, data.bookmarks.length, options);
+          throwIfAborted(options.signal);
+          const item = data.bookmarks[index]!;
+          try {
+            // Same contract as the CSV/HTML importers: a URL rejected by
+            // sanitizeUrl (private/loopback/SSRF guard, invalid scheme) must
+            // SKIP the row, never insert a bookmark with an empty url.
+            const url = sanitizeUrl(item.url || "");
+            if (!url || !url.startsWith("http")) {
+              bookmarkCounters.skippedCount++;
+              continue;
+            }
+
+            // Query only after sanitization so raw attacker-controlled URLs do
+            // not enter database selectors or duplicate checks.
+            const urlHash = await hashString(url);
+            const lastChecked = normalizeOptionalImportDate(item.lastChecked);
+            const lastVisitedAt = normalizeOptionalImportDate(item.lastVisitedAt);
+            const broken =
+              typeof item.broken === "boolean" ? item.broken : undefined;
+            pending.push({
+              urlHash,
+              doc: {
+                id: generateId(),
+                url,
+                urlHash,
+                title: normalizeImportedTitle(
+                  item.title,
+                  "Untitled Bookmark",
+                ),
+                content: SanitizationService.sanitizeHtml(
+                  normalizeImportedContent(
+                    item.description || item.content || "",
+                  ),
+                  true,
+                ),
+                // BMF self-exports carry the AI summary in `summary`; the
+                // legacy Notion field `description` is kept as a fallback.
+                // Reading only `description` silently dropped every bookmark
+                // summary on a JSON export → import round-trip.
+                summary: SanitizationService.sanitizeHtml(
+                  normalizeImportedContent(
+                    item.description || item.summary || "",
+                  ),
+                  true,
+                ),
+                tags: normalizeImportedTags(item.tags),
+                createdAt: normalizeImportDate(
+                  item.created_time || item.createdAt,
+                ),
+                updatedAt: normalizeImportDate(
+                  item.last_edited_time || item.updatedAt,
+                ),
+                processed: false,
+                isPrivate: false,
+                isDeleted: false,
+                ...(broken === undefined ? {} : { broken }),
+                ...(lastChecked === undefined ? {} : { lastChecked }),
+                ...(lastVisitedAt === undefined ? {} : { lastVisitedAt }),
+                relatedLinks: normalizeImportedRelatedLinks(item.relatedLinks),
+                visitCount: normalizeImportedInteger(item.visitCount, 1_000_000),
+              } as BookmarkDocType,
+            });
+            if (pending.length >= IMPORT_DEDUP_WINDOW) {
+              await flushPending();
+            }
+          } catch (e) {
+            if (isFreeLimitError(e)) {
+              throw new FreeTierImportLimitReached(options.importedCount, bookmarkCounters.skippedCount);
+            }
+            logger.warn("[UniversalImporter] Failed to import bookmark", {
+              error: e instanceof Error ? e.message : String(e),
+            });
+            bookmarkCounters.skippedCount++;
+          }
+        }
+        await flushPending();
+        importedCount += bookmarkCounters.importedCount;
+        skippedCount += bookmarkCounters.skippedCount;
+      }
+
+      // Pre-allocate document IDs so links can be restored regardless of
+      // document ordering in the backup file.
+      const documentIdMap = new Map<string, string>();
+      const documentIdsByIndex = new Map<number, string>();
+      for (let index = 0; index < documentRecords.length; index++) {
+        const rawDocument = documentRecords[index];
+        const sourceId =
+          typeof rawDocument === "object" &&
+          rawDocument !== null &&
+          !Array.isArray(rawDocument) &&
+          typeof (rawDocument as Record<string, unknown>).id === "string" &&
+          ((rawDocument as Record<string, unknown>).id as string).length <= 200
+            ? ((rawDocument as Record<string, unknown>).id as string)
+            : undefined;
+        const newId = generateId();
+        documentIdsByIndex.set(index, newId);
+        if (sourceId && !documentIdMap.has(sourceId)) {
+          documentIdMap.set(sourceId, newId);
+        }
+      }
+
+      // Import Documents
+      if (Array.isArray(data.documents)) {
+        for (let index = 0; index < data.documents.length; index++) {
+          await yieldImportWork(index, data.documents.length, options);
+          throwIfAborted(options.signal);
+          const item = data.documents[index]!;
+          try {
+            await insertTrackedDocument(db, {
+              id: documentIdsByIndex.get(index) ?? generateId(),
+              title: normalizeImportedTitle(
+                item.title,
+                "Untitled Document",
+              ),
+              textContent: normalizeImportedContent(
+                item.textContent || item.content || "",
+              ),
+              // BMF self-exports carry the AI summary in `summary`; it was
+              // previously never read, so document summaries were lost on a
+              // JSON export → import round-trip.
+              ...(typeof item.summary === "string"
+                ? { summary: normalizeImportedContent(item.summary) }
+                : {}),
+              tags: Array.isArray(item.tags)
+                ? item.tags.map((t: unknown) =>
+                    sanitizeUserInput(String(t), 50),
+                  )
+                : [],
+              createdAt: normalizeImportDate(
+                item.created_time || item.createdAt,
+              ),
+              updatedAt: normalizeImportDate(
+                item.last_edited_time || item.updatedAt,
+              ),
+              isDeleted: false,
+              isPrivate: false,
+              processed: false,
+              folderId:
+                typeof item.folderId === "string" &&
+                availableFolderIds.has(item.folderId)
+                  ? item.folderId
+                  : "root",
+              blocks: normalizeImportedBlocks(item.blocks),
+              links: normalizeImportedDocumentLinks(
+                item.links,
+                documentIdMap,
+              ),
+            } as DocumentDocType, options.journal);
+            importedCount++;
+            options.importedCount++;
+          } catch (e) {
+            if (isFreeLimitError(e)) {
+              throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+            }
+            logger.warn("[UniversalImporter] Failed to import document", {
+              error: e instanceof Error ? e.message : String(e),
+            });
+            skippedCount++;
+          }
+        }
+      }
+    } else {
+      throw new Error(
+        "JSON format not recognized. Ensure it follows the Notion/BookmarkForge export structure.",
+      );
+    }
+
+    return { success: true, importedCount, skippedCount };
+  }
+
+  /**
+   * Iterates logical CSV records without allocating a full `split("\\n")`
+   * array. Quoted newlines remain inside the same record.
+   */
+  private static async *iterateFileCSVRecords(
+    file: File,
+    signal?: AbortSignal,
+  ): AsyncGenerator<string> {
+    if (typeof file.stream !== "function") {
+      const content = await file.text();
+      yield* UniversalImporter.iterateCSVRecords(content);
+      return;
+    }
+
+    const reader = file.stream().getReader();
+    const cancelReader = () => {
+      void reader.cancel().catch(() => undefined);
+    };
+    signal?.addEventListener("abort", cancelReader, { once: true });
+    const decoder = new TextDecoder();
+    let record = "";
+    let inQuotes = false;
+    let pendingQuote = false;
+
+    try {
+      for (;;) {
+        throwIfAborted(signal);
+        const { value, done } = await reader.read();
+        const chunk = decoder.decode(value, { stream: !done });
+        const text = pendingQuote ? `"${chunk}` : chunk;
+        pendingQuote = false;
+
+        for (let index = 0; index < text.length; index++) {
+          const character = text[index]!;
+          if (character === '"') {
+            if (index === text.length - 1 && !done) {
+              pendingQuote = true;
+              continue;
+            }
+            if (inQuotes && text[index + 1] === '"') {
+              record += '""';
+              index++;
+            } else {
+              record += character;
+              inQuotes = !inQuotes;
+            }
+          } else if (character === "\n" && !inQuotes) {
+            yield record.endsWith("\r") ? record.slice(0, -1) : record;
+            record = "";
+          } else {
+            record += character;
+          }
+        }
+
+        if (done) {break;}
+      }
+
+      throwIfAborted(signal);
+      if (pendingQuote) {
+        record += '"';
+        inQuotes = !inQuotes;
+      }
+      if (record.length > 0) {
+        yield record;
+      }
+    } finally {
+      signal?.removeEventListener("abort", cancelReader);
+      reader.releaseLock();
+    }
+  }
+
+  private static *iterateCSVRecords(content: string): Generator<string> {
+    let recordStart = 0;
+    let inQuotes = false;
+
+    for (let index = 0; index < content.length; index++) {
+      const character = content[index]!;
+      if (character === '"') {
+        if (inQuotes && content[index + 1] === '"') {
+          index++;
+        } else {
+          inQuotes = !inQuotes;
+        }
+        continue;
+      }
+      if (character === "\n" && !inQuotes) {
+        const record = content.slice(recordStart, index);
+        yield record.endsWith("\r") ? record.slice(0, -1) : record;
+        recordStart = index + 1;
+      }
+    }
+
+    if (recordStart < content.length) {
+      yield content.slice(recordStart);
+    }
+  }
+
+  /**
+   * Parse a single CSV line respecting RFC 4180 quoting.
+   * Handles quoted fields with embedded commas, newlines, and escaped quotes.
+   */
+  private static parseCSVLine(line: string): string[] {
+    const fields: string[] = [];
+    let current = "";
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i]!;
+
+      if (inQuotes) {
+        if (ch === '"') {
+          // Peek ahead for escaped quote ""
+          if (line[i + 1] === '"') {
+            current += '"';
+            i++; // skip the second quote
+          } else {
+            inQuotes = false;
+          }
+        } else {
+          current += ch;
+        }
+      } else {
+        if (ch === '"') {
+          inQuotes = true;
+        } else if (ch === ",") {
+          fields.push(current.trim());
+          current = "";
+        } else {
+          current += ch;
+        }
+      }
+    }
+    fields.push(current.trim()); // last field
+    return fields;
+  }
+
+  /**
+   * Basic CSV Importer (URLs only or Title,URL)
+   */
+  private async importFromCSV(
+    db: BookmarkForgeDB,
+    content: string | CSVRecordSource,
+    options: ImportExecutionOptions,
+  ): Promise<ImportResult> {
+    const counters: ImportCounters = { importedCount: 0, skippedCount: 0 };
+    let recordIndex = 0;
+    let headers: string[] = [];
+    const pending: PendingBookmarkInsert[] = [];
+    const completedHashes = new Set<string>();
+    const flushPending = async (): Promise<void> => {
+      if (pending.length === 0) {return;}
+      const batch = pending.splice(0, pending.length);
+      await flushBookmarkInsertWindow(
+        db,
+        batch,
+        options,
+        counters,
+        completedHashes,
+      );
+    };
+    const records =
+      typeof content === "string"
+        ? UniversalImporter.iterateCSVRecords(content)
+        : content;
+
+    for await (const record of records) {
+      const index = recordIndex++;
+      enforceImportRecordLimit(recordIndex);
+      await yieldImportWork(index, MAX_IMPORT_RECORDS, options);
+      throwIfAborted(options.signal);
+      // Skip header, but retain names so Pocket-style status columns are mapped.
+      if (index === 0) {
+        headers = UniversalImporter.parseCSVLine(record).map((h) => h.toLowerCase());
+        continue;
+      }
+      const line = record.trim();
+      if (!line) {continue;}
+
+      const parts = UniversalImporter.parseCSVLine(line);
+      // Assume Format: Title, URL
+      const rawTitle = parts[0]! || "";
+      const rawUrl = parts[1]! || parts[0]! || "";
+
+      // Sanitize against XSS and prototype pollution
+      const title = normalizeImportedTitle(rawTitle, "");
+      const url = sanitizeUrl(rawUrl);
+      const getCol = (name: string): string => {
+        const idx = headers.indexOf(name);
+        return idx >= 0 ? parts[idx] || "" : "";
+      };
+      const readState = pocketReadStateFields(pocketCsvStatus(getCol));
+
+      if (url && url.startsWith("http")) {
+        try {
+          const urlHash = await hashString(url);
+          pending.push({
+            urlHash,
+            doc: {
+              id: generateId(),
+              url,
+              urlHash,
+              title: title || url,
+              content: "",
+              summary: "",
+              tags: pocketReadStateTags(["imported-csv"], readState),
+              ...(readState.isRead === undefined ? {} : { isRead: readState.isRead }),
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+              processed: false,
+              isPrivate: false,
+              isDeleted: false,
+              relatedLinks: [],
+              visitCount: 0,
+            } as BookmarkDocType,
+          });
+          if (pending.length >= IMPORT_DEDUP_WINDOW) {
+            await flushPending();
+          }
+        } catch (error) {
+          if (isFreeLimitError(error)) {
+            throw new FreeTierImportLimitReached(options.importedCount, counters.skippedCount);
+          }
+          counters.skippedCount++;
+        }
+      } else if (line) {
+        // rows with a disallowed scheme (javascript:, data:,
+        // file:, …) are counted as skipped instead of falling through the
+        // loop silently — the caller can now show an accurate count.
+        counters.skippedCount++;
+      }
+    }
+    await flushPending();
+
+    return {
+      success: true,
+      importedCount: counters.importedCount,
+      skippedCount: counters.skippedCount,
+    };
+  }
+  /**
+   * Import a Markdown/Obsidian vault ZIP (the format UniversalExporter's
+   * `exportToObsidian` emits): `.md` notes, mirrored `attachments/` files,
+   * and `folder` frontmatter paths. Rejects ZIPs without Markdown notes.
+   */
+  private async importFromMarkdownZip(
+    db: BookmarkForgeDB,
+    file: File,
+    options: ImportExecutionOptions,
+  ): Promise<ImportResult> {
+    throwIfAborted(options.signal);
+    let zip: JSZip;
+    try {
+      zip = await JSZip.loadAsync(await file.arrayBuffer());
+    } catch {
+      return {
+        success: false,
+        importedCount: 0,
+        skippedCount: 0,
+        error: "Invalid ZIP file. Upload a BookmarkForge or Obsidian export.",
+      };
+    }
+    throwIfAborted(options.signal);
+
+    const notes: ParsedMarkdownNote[] = [];
+    const attachmentByBasename = new Map<string, Uint8Array>();
+    const entryNames = Object.keys(zip.files);
+    if (entryNames.length > UniversalImporter.MAX_ZIP_ENTRIES) {
+      return {
+        success: false,
+        importedCount: 0,
+        skippedCount: 0,
+        error: `ZIP contains too many entries; maximum is ${UniversalImporter.MAX_ZIP_ENTRIES}.`,
+      };
+    }
+    // the preflight only READS metadata. It must not add to the
+    // running total, because entries whose size is unknown are then measured
+    // after decompression below (the old code added both and could abort a
+    // legitimate archive on double counting).
+    const unknownSizeEntries = new Set<string>();
+    let declaredUncompressedBytes = 0;
+    for (const entryName of entryNames) {
+      const entry = zip.files[entryName]!;
+      const uncompressedSize = (entry as unknown as {
+        _data?: { uncompressedSize?: number };
+      })._data?.uncompressedSize;
+      if (typeof uncompressedSize === "number" && Number.isFinite(uncompressedSize)) {
+        if (uncompressedSize > MAX_ZIP_ENTRY_BYTES ||
+            declaredUncompressedBytes > MAX_ZIP_UNCOMPRESSED_BYTES - uncompressedSize) {
+          return {
+            success: false,
+            importedCount: 0,
+            skippedCount: 0,
+            error: "ZIP contents exceed the safety size limit.",
+          };
+        }
+        declaredUncompressedBytes += uncompressedSize;
+      } else {
+        unknownSizeEntries.add(entryName);
+      }
+    }
+    enforceImportRecordLimit(entryNames.length);
+    // Actual decompressed bytes, accumulated exactly once per known entry.
+    let totalUncompressedBytes = declaredUncompressedBytes;
+    for (let index = 0; index < entryNames.length; index++) {
+      await yieldImportWork(index, entryNames.length, options);
+      const entryName = entryNames[index]!;
+      const entry = zip.files[entryName]!;
+      if (entry.dir) {continue;}
+      const normalized = entryName.replace(/\\/g, "/");
+      if (isMarkdownFilePath(normalized)) {
+        const content = await entry.async("string");
+        throwIfAborted(options.signal);
+        // Post-decompression fallback: when JSZip does not expose the
+        // uncompressed size via the private _data property (streaming entries,
+        // future JSZip versions), we enforce the per-entry and cumulative
+        // limits against the actual decompressed byte length to prevent zip
+        // bombs from bypassing the preflight check.
+        const contentBytes = new TextEncoder().encode(content).length;
+        if (
+          contentBytes > MAX_ZIP_ENTRY_BYTES ||
+          hasCrossedZipLimit(
+            totalUncompressedBytes,
+            unknownSizeEntries.has(entryName),
+            contentBytes,
+          )
+        ) {
+          return {
+            success: false,
+            importedCount: 0,
+            skippedCount: 0,
+            error: "ZIP contents exceed the safety size limit.",
+          };
+        }
+        if (unknownSizeEntries.has(entryName)) {
+          totalUncompressedBytes += contentBytes;
+        }
+        const note = parseMarkdownNote(normalized, content);
+        // Folder inference: exports without `folder` frontmatter (Notion
+        // Markdown & CSV ZIPs, plain vaults) still carry their hierarchy in
+        // the entry path ("Folder/Sub/page.md"). Mirror the directory portion
+        // into folderPath so the two-pass pipeline recreates the tree; the
+        // value is re-validated by sanitizeFolderPath before use.
+        if (note.kind === "document" && !note.folderPath) {
+          const slash = normalized.lastIndexOf("/");
+          if (slash > 0) {
+            note.folderPath = normalized.slice(0, slash);
+          }
+        }
+        notes.push(note);
+      } else if (isAttachmentPath(normalized)) {
+        const bytes = await entry.async("uint8array");
+        throwIfAborted(options.signal);
+        // Post-decompression fallback for attachments: same rationale as
+        // above — enforce limits against the actual byte length.
+        if (
+          bytes.length > MAX_ZIP_ENTRY_BYTES ||
+          hasCrossedZipLimit(
+            totalUncompressedBytes,
+            unknownSizeEntries.has(entryName),
+            bytes.length,
+          )
+        ) {
+          return {
+            success: false,
+            importedCount: 0,
+            skippedCount: 0,
+            error: "ZIP contents exceed the safety size limit.",
+          };
+        }
+        if (unknownSizeEntries.has(entryName)) {
+          totalUncompressedBytes += bytes.length;
+        }
+        const basename = normalized.split("/").pop()!;
+        if (!attachmentByBasename.has(basename)) {
+          attachmentByBasename.set(basename, bytes);
+        }
+      } else {
+        // Non-markdown, non-attachment entries still consume decompressed
+        // memory during extraction. Account for their size toward the
+        // cumulative limit to prevent ZIP bombs that use many small
+        // non-matching files to bypass the per-entry check.
+        const entryBytes = await entry.async("uint8array");
+        if (
+          entryBytes.length > MAX_ZIP_ENTRY_BYTES ||
+          hasCrossedZipLimit(
+            totalUncompressedBytes,
+            unknownSizeEntries.has(entryName),
+            entryBytes.length,
+          )
+        ) {
+          return {
+            success: false,
+            importedCount: 0,
+            skippedCount: 0,
+            error: "ZIP contents exceed the safety size limit.",
+          };
+        }
+        if (unknownSizeEntries.has(entryName)) {
+          totalUncompressedBytes += entryBytes.length;
+        }
+      }
+    }
+    if (notes.length === 0) {
+      return {
+        success: false,
+        importedCount: 0,
+        skippedCount: 0,
+        error: "No Markdown notes found in the ZIP file.",
+      };
+    }
+    return this.importParsedMarkdown(db, notes, attachmentByBasename, options);
+  }
+
+  /** Import a single `.md` note (raw file or one exported note). */
+  private async importFromMarkdownFile(
+    db: BookmarkForgeDB,
+    file: File,
+    options: ImportExecutionOptions,
+  ): Promise<ImportResult> {
+    const content = await file.text();
+    throwIfAborted(options.signal);
+    const note = parseMarkdownNote(file.name, content);
+    return this.importParsedMarkdown(db, [note], new Map(), options);
+  }
+
+  /**
+   * Two-pass Markdown import shared by the ZIP and single-file paths.
+   *
+   * Pass 1 assigns every note its final id and builds the slug → record map
+   * so `[[wikilinks]]` resolve regardless of note order (and to notes that
+   * were skipped as duplicates). Pass 2 mirrors `folder` frontmatter paths,
+   * persists `attachments/` refs through AttachmentStore, resolves links and
+   * inserts records — all tracked in the shared journal for rollback.
+   */
+  private async importParsedMarkdown(
+    db: BookmarkForgeDB,
+    notes: readonly ParsedMarkdownNote[],
+    attachmentByBasename: ReadonlyMap<string, Uint8Array>,
+    options: ImportExecutionOptions,
+  ): Promise<ImportResult> {
+    let importedCount = 0;
+    let skippedCount = 0;
+    enforceImportRecordLimit(notes.length);
+
+    const slugMap = new Map<
+      string,
+      { type: "bookmark" | "document"; id: string; url?: string }
+    >();
+    const assignedIds = new Map<string, string>();
+    const plan: Array<{
+      note: ParsedMarkdownNote;
+      id: string;
+      folderId?: string;
+      /** Sanitized URL + plain hash cached from the dedup pre-pass. */
+      url?: string;
+      urlHash?: string;
+    }> = [];
+
+    // Dedup pre-pass: bookmark notes without the stable bmf_id contract are
+    // checked by URL hash. Collecting them first lets the existence lookup
+    // run as chunked `$in` queries instead of one findOne per note, and the
+    // sanitized url/hash are reused by pass 2 instead of being recomputed.
+    const urlInfoByNote = new Map<
+      ParsedMarkdownNote,
+      { url: string; urlHash: string }
+    >();
+    const dedupRequests: string[] = [];
+    for (const note of notes) {
+      if (note.kind !== "bookmark" || !note.url || note.bmfId) {continue;}
+      const url = sanitizeUrl(note.url);
+      if (!url || !url.startsWith("http")) {continue;}
+      const urlHash = await hashString(url);
+      urlInfoByNote.set(note, { url, urlHash });
+      dedupRequests.push(urlHash);
+    }
+    const existingUrlIds = await collectExistingUrlHashes(
+      db,
+      dedupRequests,
+      options.signal,
+    );
+
+    for (let index = 0; index < notes.length; index++) {
+      throwIfAborted(options.signal);
+      const note = notes[index]!;
+
+      // Bookmarks without the stable id contract dedup by URL hash, matching
+      // the CSV/HTML/JSON importers.
+      const urlInfo = urlInfoByNote.get(note);
+      if (urlInfo) {
+        const existingId = existingUrlIds.get(urlInfo.urlHash);
+        if (existingId !== undefined) {
+          slugMap.set(note.slug, {
+            type: "bookmark",
+            id: existingId,
+            url: urlInfo.url,
+          });
+          skippedCount++;
+          continue;
+        }
+      }
+
+      // Stable dedup contract: bmf_id is the RxDB primary key, so a note
+      // whose id already exists is the same record re-exported.
+      if (note.bmfId) {
+        const existing =
+          note.kind === "bookmark"
+            ? await db.bookmarks
+                .findOne({ selector: { id: note.bmfId } })
+                .exec()
+            : await db.documents
+                .findOne({ selector: { id: note.bmfId } })
+                .exec();
+        if (existing) {
+          slugMap.set(note.slug, {
+            type: note.kind,
+            id: note.bmfId,
+            url: note.url,
+          });
+          skippedCount++;
+          continue;
+        }
+      }
+
+      const id = note.bmfId && !assignedIds.has(note.bmfId)
+        ? note.bmfId
+        : generateId();
+      if (note.bmfId) {assignedIds.set(note.bmfId, id);}
+      plan.push({ note, id, url: urlInfo?.url, urlHash: urlInfo?.urlHash });
+      slugMap.set(note.slug, { type: note.kind, id, url: note.url });
+    }
+
+    // Mirror document `folder` frontmatter paths into the folder tree.
+    const folderPathToId = new Map<string, string>();
+    for (const entry of plan) {
+      const folderPath =
+        entry.note.kind === "document" ? entry.note.folderPath : undefined;
+      if (!folderPath) {continue;}
+      const sanitized = sanitizeFolderPath(folderPath);
+      if (!sanitized) {continue;}
+      entry.folderId = await this.ensureFolderTree(
+        db,
+        sanitized,
+        folderPathToId,
+        options.journal,
+      );
+    }
+
+    for (let index = 0; index < plan.length; index++) {
+      await yieldImportWork(index, plan.length, options);
+      throwIfAborted(options.signal);
+      const entry = plan[index]!;
+      const { note, id, folderId } = entry;
+      try {
+        if (note.kind === "bookmark") {
+          // url/urlHash were sanitized + hashed in the dedup pre-pass when
+          // the note had no bmf_id; bmf_id notes still compute them here.
+          const url = entry.url ?? sanitizeUrl(note.url || "");
+          if (!url || !url.startsWith("http")) {
+            skippedCount++;
+            continue;
+          }
+          const urlHash = entry.urlHash ?? (await hashString(url));
+          const relatedLinks = resolveBookmarkRelatedLinks(
+            note.relatedLinks,
+            slugMap,
+          );
+          await insertTrackedBookmark(
+            db,
+            {
+              id,
+              url,
+              urlHash,
+              title: normalizeImportedTitle(note.title, "Untitled Bookmark"),
+              content: normalizeImportedContent(note.content),
+              summary: normalizeImportedContent(note.summary),
+              tags: normalizeImportedTags(note.tags),
+              createdAt: normalizeImportDate(note.createdAt),
+              updatedAt: normalizeImportDate(note.updatedAt),
+              processed: false,
+              isPrivate: false,
+              isDeleted: false,
+              relatedLinks,
+              visitCount: 0,
+            } as BookmarkDocType,
+            options.journal,
+          );
+          importedCount++;
+          options.importedCount++;
+        } else {
+          const textContent = await this.importNoteAttachments(
+            db,
+            id,
+            note,
+            attachmentByBasename,
+          );
+          const links = resolveDocumentLinks(note.linkedNotes, slugMap);
+          await insertTrackedDocument(
+            db,
+            {
+              id,
+              folderId: folderId ?? "root",
+              title: normalizeImportedTitle(note.title, "Untitled Document"),
+              textContent: normalizeImportedContent(textContent),
+              tags: normalizeImportedTags(note.tags),
+              createdAt: normalizeImportDate(note.createdAt),
+              updatedAt: normalizeImportDate(note.updatedAt),
+              processed: false,
+              isPrivate: false,
+              isDeleted: false,
+              blocks: [],
+              links,
+            } as DocumentDocType,
+            options.journal,
+          );
+          importedCount++;
+          options.importedCount++;
+        }
+      } catch (error) {
+        if (isFreeLimitError(error)) {
+          throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+        }
+        logger.warn("[UniversalImporter] Failed to import markdown note", {
+          error: error instanceof Error ? error.message : String(error),
+          slug: note.slug,
+        });
+        skippedCount++;
+      }
+    }
+
+    return { success: true, importedCount, skippedCount };
+  }
+
+  /**
+   * Import an Evernote `.enex` export: every `<note>` becomes a document.
+   * `<guid>` doubles as the document id so re-importing the same export
+   * deduplicates instead of duplicating the whole vault.
+   */
+  private async importFromEnex(
+    db: BookmarkForgeDB,
+    content: string,
+    options: ImportExecutionOptions,
+  ): Promise<ImportResult> {
+    throwIfAborted(options.signal);
+    const notes = parseEnexDocument(content);
+    if (!notes || notes.length === 0) {
+      return {
+        success: false,
+        importedCount: 0,
+        skippedCount: 0,
+        error: 'Not a valid Evernote export (.enex). Export from Evernote via Settings → Export → "Notebooks" or "Notes".',
+      };
+    }
+    enforceImportRecordLimit(notes.length);
+
+    let importedCount = 0;
+    let skippedCount = 0;
+    let notesWithResources = 0;
+
+    for (let index = 0; index < notes.length; index++) {
+      await yieldImportWork(index, notes.length, options);
+      throwIfAborted(options.signal);
+      const note = notes[index]!;
+      if (note.hasResources) {notesWithResources++;}
+      try {
+        const id = note.guid ?? generateId();
+        if (note.guid) {
+          const existing = await db.documents
+            .findOne({ selector: { id: note.guid } })
+            .exec();
+          if (existing) {
+            skippedCount++;
+            continue;
+          }
+        }
+        await insertTrackedDocument(
+          db,
+          {
+            id,
+            folderId: "root",
+            title: normalizeImportedTitle(note.title, "Untitled Note"),
+            textContent: normalizeImportedContent(note.textContent),
+            tags: normalizeImportedTags(note.tags),
+            createdAt: normalizeImportDate(note.createdAt),
+            updatedAt: normalizeImportDate(note.updatedAt),
+            processed: false,
+            isPrivate: false,
+            isDeleted: false,
+            blocks: [],
+            links: [],
+          } as DocumentDocType,
+          options.journal,
+        );
+        importedCount++;
+        options.importedCount++;
+      } catch (error) {
+        if (isFreeLimitError(error)) {
+          throw new FreeTierImportLimitReached(options.importedCount, skippedCount);
+        }
+        logger.warn("[UniversalImporter] Failed to import Evernote note", {
+          error: error instanceof Error ? error.message : String(error),
+        });
+        skippedCount++;
+      }
+    }
+
+    if (notesWithResources > 0) {
+      logger.info("[UniversalImporter] Evernote attachments skipped", {
+        notesWithResources,
+        importedCount,
+      });
+    }
+
+    return { success: true, importedCount, skippedCount };
+  }
+
+  /**
+   * Shared bookmark import for Pinboard/Firefox-style candidate lists:
+   * sanitize URL → urlHash dedup window → bulk insert, same machinery as the
+   * HTML/CSV importers.
+   */
+  private async importBookmarkCandidates(
+    db: BookmarkForgeDB,
+    candidates: readonly ParsedBookmarkCandidate[],
+    options: ImportExecutionOptions,
+    source: string,
+  ): Promise<ImportResult> {
+    enforceImportRecordLimit(candidates.length);
+    const counters: ImportCounters = { importedCount: 0, skippedCount: 0 };
+    const pending: PendingBookmarkInsert[] = [];
+    const completedHashes = new Set<string>();
+    const flushPending = async (): Promise<void> => {
+      if (pending.length === 0) {return;}
+      const batch = pending.splice(0, pending.length);
+      await flushBookmarkInsertWindow(db, batch, options, counters, completedHashes);
+    };
+
+    for (let index = 0; index < candidates.length; index++) {
+      await yieldImportWork(index, candidates.length, options);
+      throwIfAborted(options.signal);
+      const candidate = candidates[index]!;
+      try {
+        const url = sanitizeUrl(candidate.url);
+        if (!url || !url.startsWith("http")) {
+          counters.skippedCount++;
+          continue;
+        }
+        const urlHash = await hashString(url);
+        const tags = normalizeImportedTags(candidate.tags);
+        pending.push({
+          urlHash,
+          doc: {
+            id: generateId(),
+            url,
+            urlHash,
+            title: normalizeImportedTitle(candidate.title, "Untitled Bookmark"),
+            content: "",
+            summary: SanitizationService.sanitizeHtml(
+              normalizeImportedContent(candidate.summary ?? ""),
+              true,
+            ),
+            tags: tags.length ? tags : [`${source}-import`],
+            createdAt: normalizeImportDate(candidate.createdAt),
+            updatedAt: new Date().toISOString(),
+            processed: false,
+            isPrivate: false,
+            isDeleted: false,
+            relatedLinks: [],
+            visitCount: 0,
+          } as BookmarkDocType,
+        });
+        if (pending.length >= IMPORT_DEDUP_WINDOW) {await flushPending();}
+      } catch (error) {
+        if (isFreeLimitError(error)) {
+          throw new FreeTierImportLimitReached(options.importedCount, counters.skippedCount);
+        }
+        logger.warn(`[UniversalImporter] Failed to import ${source} bookmark`, {
+          error: error instanceof Error ? error.message : String(error),
+        });
+        counters.skippedCount++;
+      }
+    }
+    await flushPending();
+    return { success: true, importedCount: counters.importedCount, skippedCount: counters.skippedCount };
+  }
+
+  /**
+   * Persist the note's `attachments/` refs through AttachmentStore and
+   * rewrite them to `bmf-attachment://<id>` refs (the inverse of the
+   * exporter's data-URL extraction). Unmatched refs stay verbatim.
+   */
+  private async importNoteAttachments(
+    db: BookmarkForgeDB,
+    documentId: string,
+    note: ParsedMarkdownNote,
+    attachmentByBasename: ReadonlyMap<string, Uint8Array>,
+  ): Promise<string> {
+    if (note.attachmentRefs.length === 0 || attachmentByBasename.size === 0) {
+      return note.textContent ?? "";
+    }
+    let text = note.textContent ?? "";
+    const pathToStoredId = new Map<string, string>();
+    for (const ref of note.attachmentRefs) {
+      const normalized = normalizeAttachmentRefPath(ref.path);
+      if (!normalized) {continue;}
+      const basename = normalized.split("/").pop()!;
+      const bytes = attachmentByBasename.get(basename);
+      if (!bytes) {continue;}
+      // SECURITY: never persist SVG attachments from an import. Backing a
+      // vault can be attacker-controlled; an SVG may carry inline scripts
+      // that execute when the exported attachment is opened as a file
+      // (e.g. Obsidian/DOM renderers). The editor's own uploads are user
+      // gestures, but imports are untrusted by the same policy that blocks
+      // `data:` URIs in <img> (SanitizationService). Leave the ref verbatim.
+      if (mimeFromFilename(basename) === "image/svg+xml") {continue;}
+      const cacheKey = pathToStoredId.has(normalized) ? normalized : basename;
+      let storedId = pathToStoredId.get(cacheKey);
+      if (!storedId) {
+        storedId = await attachmentStore.persistFile(
+          documentId,
+          new Blob([bytes.buffer as ArrayBuffer], {
+            type: mimeFromFilename(basename),
+          }),
+          basename,
+          db,
+        );
+        pathToStoredId.set(normalized, storedId);
+        pathToStoredId.set(basename, storedId);
+      }
+      text = rewriteAttachmentRef(text, ref, storedId);
+    }
+    return text;
+  }
+
+  /** Create (and reuse) the folder tree for a document's `folder` path. */
+  private async ensureFolderTree(
+    db: BookmarkForgeDB,
+    path: string,
+    folderPathToId: Map<string, string>,
+    journal?: ImportJournal,
+  ): Promise<string | undefined> {
+    const segments = path.split("/");
+    let parentId = "root";
+    let current = "";
+    for (const segment of segments) {
+      current = current ? `${current}/${segment}` : segment;
+      const existing = folderPathToId.get(current);
+      if (existing) {
+        parentId = existing;
+        continue;
+      }
+      const id = generateId();
+      await insertTrackedFolder(
+        db,
+        {
+          id,
+          title: segment,
+          parentId,
+          createdAt: new Date().toISOString(),
+        },
+        journal,
+      );
+      folderPathToId.set(current, id);
+      parentId = id;
+    }
+    return folderPathToId.get(path);
+  }
+}
+
+/** Resolve `## Related` links: wikilinks → target bookmark URLs, URLs kept. */
+function resolveBookmarkRelatedLinks(
+  links: readonly MarkdownLink[],
+  slugMap: ReadonlyMap<
+    string,
+    { type: "bookmark" | "document"; id: string; url?: string }
+  >,
+): string[] {
+  const resolved: string[] = [];
+  const seen = new Set<string>();
+  for (const link of links) {
+    if (resolved.length >= 100) {break;}
+    if (link.kind === "url") {
+      const url = sanitizeUrl(link.target);
+      if (url.startsWith("http") && !seen.has(url)) {
+        seen.add(url);
+        resolved.push(url);
+      }
+      continue;
+    }
+    const target = slugMap.get(link.target);
+    const url =
+      target && target.type === "bookmark" ? sanitizeUrl(target.url || "") : "";
+    if (url.startsWith("http") && !seen.has(url)) {
+      seen.add(url);
+      resolved.push(url);
+    }
+  }
+  return resolved;
+}
+
+/** Resolve `## Linked notes` wikilinks to imported document ids. */
+function resolveDocumentLinks(
+  links: readonly string[],
+  slugMap: ReadonlyMap<
+    string,
+    { type: "bookmark" | "document"; id: string; url?: string }
+  >,
+): string[] {
+  const resolved: string[] = [];
+  const seen = new Set<string>();
+  for (const targetName of links) {
+    if (resolved.length >= 100) {break;}
+    const target = slugMap.get(targetName);
+    if (!target || target.type !== "document" || seen.has(target.id)) {continue;}
+    seen.add(target.id);
+    resolved.push(target.id);
+  }
+  return resolved;
+}
+
+export const universalImporter = new UniversalImporter();

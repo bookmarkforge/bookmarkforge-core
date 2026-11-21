@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en"
+  dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#00aeef" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <meta name="description" content="Save, search and organize bookmarks in an encrypted vault on your own device. No account, works offline. 500 bookmarks free; Pro is $59 once.">
+  <title>Private Encrypted Bookmark Manager | BookmarkForge</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="search" type="application/opensearchdescription+xml" title="BookmarkForge" href="/opensearch.xml">
+  <!-- SEO: canonical + hreflang -->
+  <link rel="canonical" href="https://www.bookmarkforgeapp.com/">
+  <link rel="alternate" hreflang="id" href="https://www.bookmarkforgeapp.com/id/">
+  <link rel="alternate" hreflang="cs" href="https://www.bookmarkforgeapp.com/cs/">
+  <link rel="alternate" hreflang="da" href="https://www.bookmarkforgeapp.com/da/">
+  <link rel="alternate" hreflang="de" href="https://www.bookmarkforgeapp.com/de/">
+  <link rel="alternate" hreflang="en" href="https://www.bookmarkforgeapp.com/">
+  <link rel="alternate" hreflang="es" href="https://www.bookmarkforgeapp.com/es/">
+  <link rel="alternate" hreflang="fr" href="https://www.bookmarkforgeapp.com/fr/">
+  <link rel="alternate" hreflang="hr" href="https://www.bookmarkforgeapp.com/hr/">
+  <link rel="alternate" hreflang="it" href="https://www.bookmarkforgeapp.com/it/">
+  <link rel="alternate" hreflang="hu" href="https://www.bookmarkforgeapp.com/hu/">
+  <link rel="alternate" hreflang="nl" href="https://www.bookmarkforgeapp.com/nl/">
+  <link rel="alternate" hreflang="no" href="https://www.bookmarkforgeapp.com/no/">
+  <link rel="alternate" hreflang="pl" href="https://www.bookmarkforgeapp.com/pl/">
+  <link rel="alternate" hreflang="pt" href="https://www.bookmarkforgeapp.com/pt/">
+  <link rel="alternate" hreflang="ro" href="https://www.bookmarkforgeapp.com/ro/">
+  <link rel="alternate" hreflang="fi" href="https://www.bookmarkforgeapp.com/fi/">
+  <link rel="alternate" hreflang="sv" href="https://www.bookmarkforgeapp.com/sv/">
+  <link rel="alternate" hreflang="vi" href="https://www.bookmarkforgeapp.com/vi/">
+  <link rel="alternate" hreflang="tr" href="https://www.bookmarkforgeapp.com/tr/">
+  <link rel="alternate" hreflang="el" href="https://www.bookmarkforgeapp.com/el/">
+  <link rel="alternate" hreflang="bg" href="https://www.bookmarkforgeapp.com/bg/">
+  <link rel="alternate" hreflang="ru" href="https://www.bookmarkforgeapp.com/ru/">
+  <link rel="alternate" hreflang="uk" href="https://www.bookmarkforgeapp.com/uk/">
+  <link rel="alternate" hreflang="he" href="https://www.bookmarkforgeapp.com/he/">
+  <link rel="alternate" hreflang="ar" href="https://www.bookmarkforgeapp.com/ar/">
+  <link rel="alternate" hreflang="hi" href="https://www.bookmarkforgeapp.com/hi/">
+  <link rel="alternate" hreflang="th" href="https://www.bookmarkforgeapp.com/th/">
+  <link rel="alternate" hreflang="ko" href="https://www.bookmarkforgeapp.com/ko/">
+  <link rel="alternate" hreflang="zh" href="https://www.bookmarkforgeapp.com/zh/">
+  <link rel="alternate" hreflang="ja" href="https://www.bookmarkforgeapp.com/ja/">
+  <link rel="alternate" hreflang="x-default" href="https://www.bookmarkforgeapp.com/">
+  <!-- Open Graph (og-image.png is 1200x630) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="BookmarkForge">
+  <meta property="og:title" content="Private Bookmark Manager, Encrypted & Offline | BookmarkForge">
+  <meta property="og:description" content="Save, search and organize bookmarks in an encrypted vault on your own device. No account, works offline. 500 bookmarks free; Pro is $59 once.">
+  <meta property="og:url" content="https://www.bookmarkforgeapp.com/">
+  <meta property="og:image" content="https://www.bookmarkforgeapp.com/og-image.png">
+  <meta property="og:image:alt" content="BookmarkForge — private bookmark manager and reading list app">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="es_ES">
+  <!-- Twitter Cards -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Private Bookmark Manager, Encrypted & Offline | BookmarkForge">
+  <meta name="twitter:description" content="Save, search and organize bookmarks in an encrypted vault on your own device. No account, works offline. 500 bookmarks free; Pro is $59 once.">
+  <meta name="twitter:image" content="https://www.bookmarkforgeapp.com/og-image.png">
+  <script src="/theme-init.js"></script>
+  <link rel="stylesheet" href="/brand-tokens.css">
+  <link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/landing.css">
+  <!-- Structured data (GEO): WebSite / Organization / SoftwareApplication / FAQPage.
+       The permanent offer deliberately carries NO priceValidUntil: the lifetime
+       licence does not expire, and an expiry date would let crawlers and AI
+       answer engines retire a live offer. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.bookmarkforgeapp.com/#website",
+        "url": "https://www.bookmarkforgeapp.com/",
+        "name": "BookmarkForge",
+        "description": "Free bookmark manager and reading list app. Private, offline, no account needed. 500 bookmarks free forever.",
+        "inLanguage": "en",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://www.bookmarkforgeapp.com/?s={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
+        "publisher": { "@id": "https://www.bookmarkforgeapp.com/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.bookmarkforgeapp.com/#organization",
+        "name": "BookmarkForge",
+        "url": "https://www.bookmarkforgeapp.com/",
+        "logo": { "@type": "ImageObject", "url": "https://www.bookmarkforgeapp.com/logo.png", "width": 64, "height": 64 },
+        "email": "bookmarkforge@proton.me"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://www.bookmarkforgeapp.com/#software",
+        "name": "BookmarkForge",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "Windows, macOS, Linux, Browser (PWA)",
+        "url": "https://www.bookmarkforgeapp.com/",
+        "image": "https://www.bookmarkforgeapp.com/og-image.png",
+        "inLanguage": "en",
+        "description": "A local-first, privacy-preserving, encrypted knowledge and bookmark manager powered by local AI.",
+        "offers": {
+          "@type": "Offer",
+          "price": "59.00",
+          "priceCurrency": "USD",
+          "valueAddedTaxIncluded": "false"
+        },
+        "featureList": [
+          "Local-first storage",          "End-to-end encryption",          "Works offline",          "AI search",          "Notion-style editor",          "P2P sync"        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://www.bookmarkforgeapp.com/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is BookmarkForge really free?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes! The free tier gives you 500 bookmarks, smart search, and all the basics — forever. No trial, no credit card, no catch. Upgrade to Pro only if you want unlimited bookmarks, sync across devices, or AI features." }
+          },          {
+            "@type": "Question",
+            "name": "Do I need to create an account?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Nope! BookmarkForge works instantly in your browser. No sign-up, no email, no password. Just open the app and start saving." }
+          },          {
+            "@type": "Question",
+            "name": "What happens to my data if I stop using it?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Your data stays on your device. You can export everything anytime to Markdown, JSON, CSV, or PDF. No lock-in, no hostage situations." }
+          },          {
+            "@type": "Question",
+            "name": "Is my data really private?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Absolutely. Everything is encrypted on your device with a key only you have. We never see your bookmarks, notes, or passwords. Even we can\u0027t read your data." }
+          },          {
+            "@type": "Question",
+            "name": "What if I forget my password?",
+            "acceptedAnswer": { "@type": "Answer", "text": "When you first set up BookmarkForge, we show you a 24-word recovery phrase. Write it down and keep it safe. Without it, no one (including us) can access your vault." }
+          },          {
+            "@type": "Question",
+            "name": "Can I use it on my phone?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Yes! BookmarkForge works on any device with a web browser. The free tier works on unlimited devices (each has its own vault). Pro syncs across up to 5 devices." }
+          },          {
+            "@type": "Question",
+            "name": "How do I import my bookmarks from Chrome/Firefox?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Easy! Go to Settings → Import and choose your browser. BookmarkForge will automatically bring in all your bookmarks, folders, and tags." }
+          },          {
+            "@type": "Question",
+            "name": "What payment methods do you accept?",
+            "acceptedAnswer": { "@type": "Answer", "text": "We use Whop for payments: credit card, PayPal, and crypto. We never see your payment details. 30-day money-back guarantee — no questions asked." }
+          }        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <header class="nav" role="banner">
+    <div class="nav-inner">
+      <a href="/" class="nav-brand" aria-label="BookmarkForge home">
+        <img src="/logo-64.png" width="32" height="32" alt="BookmarkForge logo" />
+        <span>BookmarkForge</span>
+      </a>
+
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
+        <a href="#pocket-alternative">Pocket alternative</a>
+        <a href="#raindrop-compare">vs Raindrop</a>
+        <a href="#features">Features</a>
+        <a href="#ai">AI Assistant</a>
+        <a href="#privacy">Privacy</a>
+        <a href="#pricing">Pricing</a>
+        <a href="/help">Help</a>
+        <a href="mailto:bookmarkforge@proton.me">Contact</a>
+
+        <!-- Language Dropdown -->
+        <div class="language-dropdown">
+          <button class="language-toggle" aria-label="Change language" aria-expanded="false">
+            <span class="current-lang">English</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 4 L6 8 L10 4"/>
+            </svg>
+          </button>
+          <ul class="language-menu" role="menu" aria-hidden="true">
+            <li role="none">
+              <a href="/id/" hreflang="id" lang="id" role="menuitem">
+                Bahasa Indonesia
+              </a>
+            </li>
+            <li role="none">
+              <a href="/cs/" hreflang="cs" lang="cs" role="menuitem">
+                Čeština
+              </a>
+            </li>
+            <li role="none">
+              <a href="/da/" hreflang="da" lang="da" role="menuitem">
+                Dansk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/de/" hreflang="de" lang="de" role="menuitem">
+                Deutsch
+              </a>
+            </li>
+            <li role="none">
+              <a href="/" hreflang="en" lang="en" role="menuitem" class="current">
+                English
+              </a>
+            </li>
+            <li role="none">
+              <a href="/es/" hreflang="es" lang="es" role="menuitem">
+                Español
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fr/" hreflang="fr" lang="fr" role="menuitem">
+                Français
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hr/" hreflang="hr" lang="hr" role="menuitem">
+                Hrvatski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/it/" hreflang="it" lang="it" role="menuitem">
+                Italiano
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hu/" hreflang="hu" lang="hu" role="menuitem">
+                Magyar
+              </a>
+            </li>
+            <li role="none">
+              <a href="/nl/" hreflang="nl" lang="nl" role="menuitem">
+                Nederlands
+              </a>
+            </li>
+            <li role="none">
+              <a href="/no/" hreflang="no" lang="no" role="menuitem">
+                Norsk
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pl/" hreflang="pl" lang="pl" role="menuitem">
+                Polski
+              </a>
+            </li>
+            <li role="none">
+              <a href="/pt/" hreflang="pt" lang="pt" role="menuitem">
+                Português
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ro/" hreflang="ro" lang="ro" role="menuitem">
+                Română
+              </a>
+            </li>
+            <li role="none">
+              <a href="/fi/" hreflang="fi" lang="fi" role="menuitem">
+                Suomi
+              </a>
+            </li>
+            <li role="none">
+              <a href="/sv/" hreflang="sv" lang="sv" role="menuitem">
+                Svenska
+              </a>
+            </li>
+            <li role="none">
+              <a href="/vi/" hreflang="vi" lang="vi" role="menuitem">
+                Tiếng Việt
+              </a>
+            </li>
+            <li role="none">
+              <a href="/tr/" hreflang="tr" lang="tr" role="menuitem">
+                Türkçe
+              </a>
+            </li>
+            <li role="none">
+              <a href="/el/" hreflang="el" lang="el" role="menuitem">
+                Ελληνικά
+              </a>
+            </li>
+            <li role="none">
+              <a href="/bg/" hreflang="bg" lang="bg" role="menuitem">
+                Български
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ru/" hreflang="ru" lang="ru" role="menuitem">
+                Русский
+              </a>
+            </li>
+            <li role="none">
+              <a href="/uk/" hreflang="uk" lang="uk" role="menuitem">
+                Українська
+              </a>
+            </li>
+            <li role="none">
+              <a href="/he/" hreflang="he" lang="he" role="menuitem">
+                עברית
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ar/" hreflang="ar" lang="ar" role="menuitem">
+                العربية
+              </a>
+            </li>
+            <li role="none">
+              <a href="/hi/" hreflang="hi" lang="hi" role="menuitem">
+                हिन्दी
+              </a>
+            </li>
+            <li role="none">
+              <a href="/th/" hreflang="th" lang="th" role="menuitem">
+                ไทย
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ko/" hreflang="ko" lang="ko" role="menuitem">
+                한국어
+              </a>
+            </li>
+            <li role="none">
+              <a href="/zh/" hreflang="zh" lang="zh" role="menuitem">
+                中文
+              </a>
+            </li>
+            <li role="none">
+              <a href="/ja/" hreflang="ja" lang="ja" role="menuitem">
+                日本語
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <a href="/app" class="btn-primary nav-cta">Try It Instantly (No Account Required)</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Open menu" data-label-close="Close menu">
+          <svg class="icon-menu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+          <svg class="icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" aria-pressed="false">
+          <svg class="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          <svg class="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="display:none"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container">
+        <div class="hero-content">
+<div class="announce-bar">⚡ Quick Capture is live — bookmarklet, paste anywhere, PWA shortcuts</div><div class="announce-bar">⚡ Native apps coming soon — Windows, macOS, Linux, Android & iOS</div><div class="announce-bar">⚡ Local AI Translation (coming soon)</div><span class="hero-badge">Pay once · No subscription · No account needed</span>          <h1 id="hero-title">The private bookmark manager that <span class="accent-text">keeps everything on your device.</span></h1>
+          <p class="hero-subtitle">For researchers, students and anyone who'd rather not hand their reading history to a cloud company. Save pages, articles and PDFs, find them by keyword or meaning, and keep it all encrypted on your own computer. No account. No subscription.</p>
+          <div class="hero-ctas">
+            <a href="/app" class="btn-primary">Start free — no signup</a>
+            <a href="#features" class="btn-secondary">See how it works</a>
+          </div>
+          <div class="hero-pillars">
+            <span><strong>Private</strong> — encrypted on your device</span>
+            <span><strong>Yours forever</strong> — no subscriptions, no monthly fees</span>
+            <span><strong>Works offline</strong> — save and read anywhere, even without internet</span>
+            <span><strong>Free forever</strong> — 500 bookmarks free, upgrade only if you want more</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Before/After Section -->
+    <section id="before-after" class="comparison-section" aria-labelledby="before-after-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Why Switch</span>
+          <h2 id="before-after-title">From chaos to clarity in 30 seconds</h2>
+          <p class="section-subtitle">See the difference between browser bookmarks and a real knowledge vault.</p>
+        </div>
+        <div class="features-grid-2">
+          <div class="feat-card feat-card-before">
+            <h3>Before: Browser bookmarks</h3>
+            <ul class="feat-list">
+              <li>Bookmarks buried in folders you forgot</li>
+              <li>No way to search by meaning</li>
+              <li>Lost when you clear browser data</li>
+              <li>No notes or organization</li>
+              <li>Accessible only on one device</li>
+            </ul>
+          </div>
+          <div class="feat-card feat-card-after">
+            <h3>After: BookmarkForge</h3>
+            <ul class="feat-list">
+              <li>Everything searchable instantly</li>
+              <li>Find by keyword or meaning</li>
+              <li>Encrypted on your device, always safe</li>
+              <li>Notes, tags, and smart organization</li>
+              <li>Syncs across all your devices (Pro)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Try It Free</a>
+          <a href="#features" class="btn-link">See Features</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pocket Alternative Section -->
+    <section id="pocket-alternative" class="comparison-section" aria-labelledby="pocket-alternative-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Pocket alternative</span>
+          <h2 id="pocket-alternative-title">The private Pocket alternative</h2>
+          <p class="section-subtitle">Pocket shut down in July 2025. If you exported your list, import it into BookmarkForge in about a minute — and this time it lives on your device, so no company can switch it off.</p>
+        </div>
+        <div class="features-grid-3">
+          <div class="feat-card">
+            <h3>Save articles to read later</h3>
+            <p>Click once to save any article, video, or PDF. It stays on your device, encrypted, and works offline.</p>
+          </div>
+          <div class="feat-card">
+            <h3>Take notes on articles</h3>
+            <p>Highlight, summarize, and add notes to any saved article. Turn reading into knowledge.</p>
+          </div>
+          <div class="feat-card">
+            <h3>No tracking, no ads</h3>
+            <p>No accounts, no analytics, no ads. Your reading habits are nobody's business but yours.</p>
+          </div>
+        </div>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Try It Free</a>
+          <a href="/pocket-alternative" class="btn-link">Full Comparison & Migration Guide</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Raindrop Comparison Section -->
+    <section id="raindrop-compare" class="raindrop-section" aria-labelledby="raindrop-compare-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Plain words, no marketing</span>
+          <h2 id="raindrop-compare-title">BookmarkForge vs Raindrop, without the fine print</h2>
+          <p class="section-subtitle">Raindrop is a good app. The big difference is where your stuff lives.</p>
+        </div>
+        <div class="rc-table" role="table" aria-label="BookmarkForge vs Raindrop, without the fine print">
+          <div class="rc-row rc-head" role="row">
+            <div class="rc-topic" role="columnheader"></div>
+            <div class="rc-us" role="columnheader">BookmarkForge</div>
+            <div class="rc-them" role="columnheader">Raindrop</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Where your bookmarks live</div>
+            <div class="rc-us" role="cell">On your computer</div>
+            <div class="rc-them" role="cell">On their servers</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Who can see what you save</div>
+            <div class="rc-us" role="cell">Nobody — locked with your password</div>
+            <div class="rc-them" role="cell">The company, and whoever demands it</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">Without internet</div>
+            <div class="rc-us" role="cell">Everything keeps working</div>
+            <div class="rc-them" role="cell">Only basic features</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">What you pay</div>
+            <div class="rc-us" role="cell">$59 once, forever</div>
+            <div class="rc-them" role="cell">charged yearly, forever</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">If the company shuts down</div>
+            <div class="rc-us" role="cell">Nothing changes — your data is already yours</div>
+            <div class="rc-them" role="cell">You export and start over</div>
+          </div>
+          <div class="rc-row" role="row">
+            <div class="rc-topic" role="rowheader">AI assistant</div>
+            <div class="rc-us" role="cell">Runs on your device — private</div>
+            <div class="rc-them" role="cell">Sends your data to the cloud</div>
+          </div>
+        </div>
+        <p class="rc-close">Raindrop is simpler and free — if that is all you need, use it happily. But if you want your bookmarks private and yours forever, BookmarkForge is built for exactly that.</p>
+        <div class="center-cta">
+          <a href="/app" class="btn-primary">Try It Free</a>
+          <a href="/raindrop-alternative.html" class="btn-link">Full Raindrop comparison</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Everything You Need</span>
+          <h2 id="features-title">Simple features that just work</h2>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Save anything with one click</h3>
+            <p>Webpages, articles, videos, PDFs — save them all instantly. No complicated setup, no learning curve.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Capture from anywhere</h3>
+            <p>A bookmarklet on any page, paste URLs or text anywhere in the app, PWA shortcuts and OpenSearch — everything lands in your encrypted vault.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Find anything instantly</h3>
+            <p>Search by keyword or by meaning. Even when you don't remember exact words, you'll find what you need.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Chat with your saved content</h3>
+            <p>Ask questions about what you've saved and get answers with sources. Works offline, completely private.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Sync across your devices</h3>
+            <p>Your bookmarks follow you everywhere — phone, laptop, tablet. No cloud middleman, just direct sync. Requires Pro.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Automatic backups</h3>
+            <p>Never lose your data. Encrypted backups run automatically and you can export everything anytime.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Organize your way</h3>
+            <p>Tags, folders, notes — make it yours. No rigid structure, no forced categories.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Study cards that help you remember</h3>
+            <p>Turn saved articles into flashcards that resurface right before you'd forget them.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Private by default</h3>
+            <p>No accounts, no tracking, no ads. Your data stays on your device, encrypted and safe.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Works offline</h3>
+            <p>Save and read anywhere, even without internet. Your library is always available.</p>
+          </div>
+        </div>
+        <p class="tier-note">
+          <strong>Free includes:</strong> smart search, 500 bookmarks, AI with your own keys, encrypted backups and export — forever
+          <span class="tier-note-sep" aria-hidden="true">·</span>
+          <strong>Pro adds:</strong> unlimited bookmarks, sync across 5 devices, local AI and chat over your vault, flashcards, PDF/OCR
+        </p>
+      </div>
+    </section>
+
+    <!-- AI Section -->
+    <section id="ai" class="ai-section" aria-labelledby="ai-title">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">AI That Helps You</span>
+          <h2 id="ai-title">Ask questions, get answers</h2>
+          <p class="section-subtitle">BookmarkForge's AI assistant reads your saved articles and answers your questions — privately, on your device, or with your own AI keys.</p>
+        </div>
+
+        <div class="ai-split">
+          <div class="ai-column">
+            <h3>How the AI works</h3>
+            <ul class="providers-list">
+              <li>Private mode — runs on your device, nothing sent anywhere</li>
+              <li>Your own AI — connect OpenAI, Claude, Gemini, or any provider</li>
+              <li>Works offline — no internet needed for private mode</li>
+            </ul>
+          </div>
+
+          <div class="ai-column">
+            <h3>What you can do</h3>
+            <div class="mode-items">
+              <div class="mode-item">
+                <h4>Ask questions</h4>
+                <p>"What did that article say about X?" Get answers with sources cited.</p>
+              </div>
+              <div class="mode-item">
+                <h4>Search by meaning</h4>
+                <p>Find articles even when you don't remember exact words.</p>
+              </div>
+              <div class="mode-item">
+                <h4>Get summaries</h4>
+                <p>Long article? Get the key points in seconds.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section id="privacy" class="privacy-section" aria-labelledby="privacy-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="privacy-title">Your data stays yours</h2>
+          <p class="section-subtitle">No tracking, no ads, no data selling. Just your bookmarks, safe on your device.</p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-item">
+            <h3>Nobody can read your bookmarks</h3>
+            <p>Everything is encrypted on your device. Even we can't see what you save.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Stored on your device, not our servers</h3>
+            <p>Your bookmarks live on your computer or phone. We don't store them anywhere else.</p>
+          </div>
+          <div class="feature-item">
+            <h3>No tracking, no ads</h3>
+            <p>We don't track you, show ads, or sell your data. Period.</p>
+          </div>
+          <div class="feature-item">
+            <h3>You control your data</h3>
+            <p>Export everything anytime. Delete your account (if you make one) and your data is gone.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Works offline</h3>
+            <p>No internet? No problem. Your bookmarks work everywhere, always.</p>
+          </div>
+          <div class="feature-item">
+            <h3>No lock-in</h3>
+            <p>Export to open formats (JSON, Markdown, PDF). Your data is portable, always.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Only Vercel hosts us — zero analytics</h3>
+            <p>The site runs exclusively on Vercel with no analytics of any kind: no trackers, no fingerprinting, no third-party scripts. Verify it yourself in your browser's network tab.</p>
+          </div>
+          <div class="feature-item">
+            <h3>Cloud AI is opt-in</h3>
+            <p>Local AI runs entirely on your device. If you add your own API key for a cloud provider, only your prompts go to them — your bookmarks never do.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section" aria-labelledby="pricing-title">
+      <div class="container">
+        <div class="section-header">
+          <h2 id="pricing-title">Simple, Fair Pricing — No Subscriptions</h2>
+          <p class="section-subtitle">Start free with 500 bookmarks. Upgrade to Pro when you want unlimited bookmarks, sync across devices, and AI features. Pay once, own it forever.</p>
+        </div>
+        <div class="pricing-cards">
+          <div class="price-card ">
+            <h3>Free</h3>
+            <div class="price">$ 0<span>/forever</span></div>
+            <p>Free forever: 500 bookmarks plus the smart search others charge yearly for. At 500 your vault stays whole — reading, search and export never stop; only new saves pause.</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Smart search (full-text + semantic) — included free; Raindrop charges yearly for this</li>
+              <li><span aria-hidden="true">✅</span> 500 bookmarks, notes, documents</li>
+              <li><span aria-hidden="true">✅</span> Works on any device — each keeps its own vault</li>
+              <li><span aria-hidden="true">✅</span> AI with your own API key (you pay the provider)</li>
+              <li><span aria-hidden="true">✅</span> Knowledge graph</li>
+              <li><span aria-hidden="true">✅</span> Basic templates</li>
+              <li><span aria-hidden="true">✅</span> JSON/HTML export</li>
+              <li><span aria-hidden="true">✅</span> PWA + browser extensions</li>
+              <li><span aria-hidden="true">❌</span> P2P sync across devices</li>
+              <li><span aria-hidden="true">❌</span> Local AI (WebLLM/Ollama) & RAG chat</li>
+              <li><span aria-hidden="true">❌</span> Flashcards with spaced repetition</li>
+              <li><span aria-hidden="true">❌</span> PDF + OCR</li>
+              <li><span aria-hidden="true">❌</span> Advanced export (7 formats)</li>
+              <li><span aria-hidden="true">✅</span> Encrypted .bmf backups — automatic daily + disk copy</li>
+            </ul>
+            <a href="/app" class="btn-secondary " >Try It Instantly</a>
+          </div>
+          <div class="price-card popular">
+            <div class="price-badges">
+              <span class="badge">Most Popular — Early Bird 200</span>
+            </div>
+            <h3>Pro</h3>
+            <div class="price">$59<span>once</span></div>
+            <div class="price-sub">Early-bird price for the first 200 licenses, then $79</div>
+            <p>Pay once, own it forever. Unlimited bookmarks, sync across 5 devices, AI assistant, and all premium features.</p>
+            <ul>
+              <li><span aria-hidden="true">✅</span> Everything in Free</li>
+              <li><span aria-hidden="true">✅</span> Unlimited bookmarks</li>
+              <li><span aria-hidden="true">✅</span> Sync across 5 devices</li>
+              <li><span aria-hidden="true">✅</span> AI assistant that reads your library</li>
+              <li><span aria-hidden="true">✅</span> Flashcards for studying</li>
+              <li><span aria-hidden="true">✅</span> PDF and document support</li>
+              <li><span aria-hidden="true">✅</span> Export in 7 formats</li>
+              <li><span aria-hidden="true">✅</span> Priority email support</li>
+              <li><span aria-hidden="true">✅</span> 12 months of v1 updates + security fixes forever</li>
+            </ul>
+            <a href="https://whop.com/checkout/plan_g4oAakLGDjaoM" class="btn-primary btn-block" target="_blank" rel="noopener noreferrer">Get Pro — $59 once</a>
+            <p class="sla-note">Replies within 48 h, Mon–Fri (CET) · <a href="/help#sla">SLA</a></p>
+          </div>
+        </div>
+        <p class="pricing-legal">One-time payment · 12 months of updates included · v1 works forever · 30-day money-back guarantee. <a href="/privacy-and-terms.html#terms">Terms</a></p>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">Common Questions</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>Is BookmarkForge really free?</h3>
+            <p>Yes! The free tier gives you 500 bookmarks, smart search, and all the basics — forever. No trial, no credit card, no catch. Upgrade to Pro only if you want unlimited bookmarks, sync across devices, or AI features.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Do I need to create an account?</h3>
+            <p>Nope! BookmarkForge works instantly in your browser. No sign-up, no email, no password. Just open the app and start saving.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What happens to my data if I stop using it?</h3>
+            <p>Your data stays on your device. You can export everything anytime to Markdown, JSON, CSV, or PDF. No lock-in, no hostage situations.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Is my data really private?</h3>
+            <p>Absolutely. Everything is encrypted on your device with a key only you have. We never see your bookmarks, notes, or passwords. Even we can't read your data.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What if I forget my password?</h3>
+            <p>When you first set up BookmarkForge, we show you a 24-word recovery phrase. Write it down and keep it safe. Without it, no one (including us) can access your vault.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Can I use it on my phone?</h3>
+            <p>Yes! BookmarkForge works on any device with a web browser. The free tier works on unlimited devices (each has its own vault). Pro syncs across up to 5 devices.</p>
+          </div>
+          <div class="faq-item">
+            <h3>How do I import my bookmarks from Chrome/Firefox?</h3>
+            <p>Easy! Go to Settings → Import and choose your browser. BookmarkForge will automatically bring in all your bookmarks, folders, and tags.</p>
+          </div>
+          <div class="faq-item">
+            <h3>What payment methods do you accept?</h3>
+            <p>We use Whop for payments: credit card, PayPal, and crypto. We never see your payment details. 30-day money-back guarantee — no questions asked.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>Ready to organize your bookmarks?</h2>
+        <p>Start saving and organizing your bookmarks today. Free forever, no account needed, works instantly in your browser.</p>
+        <div class="ctas">
+          <a href="/app" class="btn-primary">Try It Free</a>
+          <a href="#pricing" class="btn-secondary">See Pricing</a>
+        </div>
+        <p class="note">Free forever: 500 bookmarks. No credit card required.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Sticky mobile CTA: on a phone the primary button used to start below the
+       fold (two pills + a long subtitle pushed it past 812px of 844px). The bar
+       keeps one action always visible; landing.js hides it while the nav panel
+       is open so it never covers the menu. -->
+  <div class="mobile-cta-bar" id="mobileCtaBar">
+    <a href="/app" class="btn-primary btn-block">Start free — no signup</a>
+  </div>
+
+  <!-- EN is the root landing: its legal page lives at /privacy-and-terms.html.
+       The six reviewed legal locales (en, es, fr, de, pt, it — LEGAL_LOCALE_CODES
+       in scripts/landing-registry.mjs) keep their own notice under /<lang>/;
+       the other 24 have no legal page, so their footer points at the English
+       notice directly instead of a URL that only answers through a 301. -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>BookmarkForge</span>
+        <p>Your private bookmark manager. Free forever, pay once for Pro.</p>
+      </div>
+      <div class="footer-links">
+        <h3>Product</h3>
+        <ul>
+          <li><a href="/#features">Features</a></li>
+          <li><a href="/#ai">AI Capabilities</a></li>
+          <li><a href="/#privacy">Privacy</a></li>
+          <li><a href="/#pricing">Pricing</a></li>
+          <li><a href="/app">Try It Instantly</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="/pocket-alternative">Pocket Comparison</a></li>
+          <li><a href="/raindrop-alternative.html">Raindrop.io</a></li>
+          <li><a href="/geneziz-alternative.html">Geneziz</a></li>
+          <li><a href="/karakeep-alternative.html">Karakeep</a></li>
+          <li><a href="/readwise-alternative.html">Readwise</a></li>
+          <li><a href="/omnivore-alternative.html">Omnivore</a></li>
+          <li><a href="/instapaper-alternative.html">Instapaper</a></li>
+          <li><a href="/privacy-and-terms.html">Privacy & Terms</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h3>Support</h3>
+        <ul>
+          <li><a href="/help">Help Center</a></li>
+          <li><a href="/help#sla">SLA</a></li>
+          <li><a href="/help#bf-e">Error Codes</a></li>
+          <li><a href="mailto:bookmarkforge@proton.me">Contact</a></li>
+        </ul>
+        <p class="footer-hours">Replies within 48 h, Mon–Fri (CET)</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BookmarkForge. All rights reserved.</p>
+      <a href="/privacy-and-terms.html">Privacy Policy</a> · <a href="/privacy-and-terms.html#terms">Terms of Service</a> · <a href="mailto:bookmarkforge@proton.me">bookmarkforge@proton.me</a>
+      <span class="github-star">
+        <a href="https://github.com/bookmarkforge/bookmarkforge-core" target="_blank" rel="noopener noreferrer" aria-label="Star BookmarkForge on GitHub">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 2l2.9 6.26 6.6.56-5 4.4 1.5 6.53L12 16.9l-6 2.85 1.5-6.53-5-4.4 6.6-.56L12 2z"/>
+          </svg>
+          Like BookmarkForge? Star us on GitHub ⭐
+        </a>
+      </span>
+    </div>
+    <!-- Social Share Section -->
+    <div class="social-share" id="social-share">
+      <p class="share-text">Share BookmarkForge with friends</p>
+      <div class="share-buttons">
+        <a href="https://twitter.com/intent/tweet?text=Check out BookmarkForge - private, local-first bookmark manager&url=https://www.bookmarkforgeapp.com/%3Futm_source%3Dtwitter%26utm_medium%3Dsocial%26utm_campaign%3Dshare" target="_blank" rel="noopener noreferrer" class="share-btn share-twitter" aria-label="Share on Twitter">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Twitter
+        </a>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.bookmarkforgeapp.com/%3Futm_source%3Dfacebook%26utm_medium%3Dsocial%26utm_campaign%3Dshare" target="_blank" rel="noopener noreferrer" class="share-btn share-facebook" aria-label="Share on Facebook">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Facebook
+        </a>
+        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://www.bookmarkforgeapp.com/%3Futm_source%3Dlinkedin%26utm_medium%3Dsocial%26utm_campaign%3Dshare" target="_blank" rel="noopener noreferrer" class="share-btn share-linkedin" aria-label="Share on LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://news.ycombinator.com/submitlink?u=https://www.bookmarkforgeapp.com/%3Futm_source%3Dhackernews%26utm_medium%3Dsocial%26utm_campaign%3Dlaunch&t=BookmarkForge" target="_blank" rel="noopener noreferrer" class="share-btn share-hackernews" aria-label="Share on Hacker News">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M0 0v24h24V0H0zm12.898 7.5l3.5 4.5-3.5 4.5v-3h-6v-3h6V7.5zM3 18h18v2H3v-2z"/></svg>
+          Hacker News
+        </a>
+        <button class="share-btn share-copy" type="button" aria-label="Copy link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy Link
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/landing.js" defer></script>
+</body>
+</html>
